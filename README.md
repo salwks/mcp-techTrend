@@ -1,5 +1,7 @@
 # trends-mcp
 
+[![mcp-techTrend MCP server](https://glama.ai/mcp/servers/salwks/mcp-techTrend/badges/score.svg)](https://glama.ai/mcp/servers/salwks/mcp-techTrend)
+
 > 한국어 문서: **[README.ko.md](README.ko.md)**
 
 A single MCP server that pulls **academic + code + medical-device-regulatory**
