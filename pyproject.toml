@@ -1,0 +1,63 @@
+[project]
+name = "mcp-techtrend"
+version = "0.1.0"
+description = "MCP server for academic / code / medical-device regulatory trend monitoring (newspaper-style briefings across arXiv, PubMed, GitHub, Hugging Face, openFDA)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "trends-mcp contributors" },
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "arxiv",
+    "pubmed",
+    "github",
+    "huggingface",
+    "openfda",
+    "trends",
+    "research",
+    "medical-imaging",
+    "regulatory",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "beautifulsoup4>=4.12.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/salwks/mcp-techTrend"
+Documentation = "https://github.com/salwks/mcp-techTrend#readme"
+Repository = "https://github.com/salwks/mcp-techTrend.git"
+Issues = "https://github.com/salwks/mcp-techTrend/issues"
+Changelog = "https://github.com/salwks/mcp-techTrend/blob/main/CHANGELOG.md"
+
+[project.scripts]
+trends-mcp = "trends_mcp:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["trends_mcp", "run", "configure"]
