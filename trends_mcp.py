@@ -25,7 +25,8 @@ from pydantic import BaseModel, ConfigDict, Field
 # ---------------------------------------------------------------------------
 
 USER_AGENT = "trends-mcp/0.1"
-HTTP_TIMEOUT = 25.0
+HTTP_TIMEOUT = 20.0  # tight enough that 4-category arxiv round-robin stays
+                     # under the MCP client's overall request timeout (~60-120s)
 
 # TTL caching: keep recent API responses in memory to avoid repeated upstream
 # calls within a short window. Tune per source — fast-moving pages get a short
@@ -35,7 +36,7 @@ TTL_TRENDING = 300       # 5 min — github trending, hf trending, pwc trending
 TTL_DEFAULT = 600        # 10 min — arxiv recent, github search, hf with filters
 TTL_STATIC = 3600        # 1 h   — pubmed, fda, arxiv search (immutable history)
 
-ARXIV_API = "http://export.arxiv.org/api/query"
+ARXIV_API = "https://export.arxiv.org/api/query"
 PUBMED_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 # Papers with Code's API was sunset after Hugging Face acquired PwC in 2024;
 # paperswithcode.com now serves HTML. We use HF's daily_papers feed instead —
@@ -115,11 +116,16 @@ async def _http_get(
     *,
     params: dict[str, Any] | None = None,
     headers: dict[str, str] | None = None,
+    timeout: float | None = None,
 ) -> httpx.Response:
+    """`timeout` overrides the global HTTP_TIMEOUT for this single call —
+    useful for sources like arXiv where we want a tighter budget so a single
+    hung category doesn't blow the multi-source briefing's overall budget."""
     h = {"User-Agent": USER_AGENT}
     if headers:
         h.update(headers)
-    async with httpx.AsyncClient(timeout=HTTP_TIMEOUT, follow_redirects=True) as client:
+    effective_timeout = timeout if timeout is not None else HTTP_TIMEOUT
+    async with httpx.AsyncClient(timeout=effective_timeout, follow_redirects=True) as client:
         resp = await client.get(url, params=params, headers=h)
         resp.raise_for_status()
         return resp
@@ -220,11 +226,12 @@ async def _http_get_text(
     params: dict[str, Any] | None = None,
     headers: dict[str, str] | None = None,
     ttl: float = TTL_DEFAULT,
+    timeout: float | None = None,
 ) -> str:
     key = _cache_key("text", url, params, headers)
 
     async def fetch() -> str:
-        r = await _http_get(url, params=params, headers=headers)
+        r = await _http_get(url, params=params, headers=headers, timeout=timeout)
         return r.text
 
     return await _cached(key, ttl, fetch)
@@ -1773,10 +1780,32 @@ _BRIEFING_GROUPS: list[tuple[str, list[str]]] = [
 ]
 
 
+# arXiv fetch tuning. We prioritize completeness over latency: a slow
+# category should still surface its papers rather than getting dropped.
+#
+# Layout: categories are processed in batches of `ARXIV_BATCH_SIZE`,
+# parallel within a batch, sequential across batches. With 4 categories
+# and BATCH_SIZE=2, that's `(B1 parallel) → 3s gap → (B2 parallel)`.
+# Worst case: max(b1) + 3s + max(b2). Best case (cache hit or fast
+# response): about max-of-batch ≈ a few seconds.
+#
+# `INTER_BATCH_DELAY=3.0` matches arXiv's recommended request spacing
+# so we stay polite even under a fresh-cache run.
+# `PER_CATEGORY_TIMEOUT=25.0` is generous enough that genuinely-slow
+# categories still complete instead of being silently dropped.
+ARXIV_BATCH_SIZE = 2
+ARXIV_INTER_BATCH_DELAY = 3.0
+ARXIV_PER_CATEGORY_TIMEOUT = 25.0
+
+
 async def _fetch_arxiv_for_category(
     category: str, count: int, days: int
 ) -> list[dict[str, Any]]:
-    """Fetch up to `count` papers from one arXiv category, time-cut to `days`."""
+    """Fetch up to `count` papers from one arXiv category, time-cut to `days`.
+
+    Uses an arxiv-specific short timeout (`ARXIV_PER_CATEGORY_TIMEOUT`) so a
+    hung category fails fast instead of eating 20s of the briefing budget.
+    """
     fetch_n = min(max(count * 4, 12), 100)  # over-fetch for date filter
     params = {
         "search_query": f"cat:{category}",
@@ -1784,7 +1813,10 @@ async def _fetch_arxiv_for_category(
         "sortOrder": "descending",
         "max_results": fetch_n,
     }
-    text = await _http_get_text(ARXIV_API, params=params, ttl=TTL_DEFAULT)
+    text = await _http_get_text(
+        ARXIV_API, params=params, ttl=TTL_DEFAULT,
+        timeout=ARXIV_PER_CATEGORY_TIMEOUT,
+    )
     papers = _parse_arxiv_atom(text)
     cutoff = _utc_now() - timedelta(days=days)
     kept: list[dict[str, Any]] = []
@@ -1798,6 +1830,40 @@ async def _fetch_arxiv_for_category(
         if len(kept) >= count:
             break
     return kept
+
+
+async def _fetch_arxiv_for_category_safe(
+    category: str, count: int, days: int
+) -> list[dict[str, Any]]:
+    """Failure-isolated wrapper. Returns [] on any error so a single bad
+    category doesn't poison the whole arXiv section.
+
+    Retry policy (deliberately conservative — budget for 4 sequential
+    categories must fit under the MCP client's request timeout):
+      - 429 (rate limit): one retry after 2s backoff (likely to succeed)
+      - 5xx (server error): one retry after 1s
+      - timeout / connect / parse: NO retry, fail fast — when arXiv is
+        actually unresponsive, retrying only burns budget and risks
+        knocking out the whole briefing.
+    """
+    try:
+        return await _fetch_arxiv_for_category(category, count, days)
+    except httpx.HTTPStatusError as e:
+        code = e.response.status_code
+        if code == 429:
+            await asyncio.sleep(2.0)
+        elif 500 <= code < 600:
+            await asyncio.sleep(1.0)
+        else:
+            return []
+    except Exception:
+        # timeout, connect error, parse error — fail fast, no retry.
+        return []
+    # Retry only for 429 / 5xx that fell through above.
+    try:
+        return await _fetch_arxiv_for_category(category, count, days)
+    except Exception:
+        return []
 
 
 async def _briefing_call(
@@ -1837,29 +1903,30 @@ async def _briefing_call(
             # exactly its configured count — small categories don't get drowned
             # out by large ones (e.g. cs.HC ~50/wk vs cs.LG ~1500/wk).
             #
-            # IMPORTANT: arXiv enforces a burst rate limit; firing N concurrent
-            # category fetches reliably trips a 429. We call sequentially with
-            # a small spacing instead. Subsequent calls hit the cache (TTL_DEFAULT
-            # = 10min), so steady-state cost is just the first run.
+            # FETCH STRATEGY: batched parallel (ARXIV_BATCH_SIZE per batch),
+            # sequential across batches with `ARXIV_INTER_BATCH_DELAY` spacing.
+            # Faster than fully-sequential, gentler on arXiv than fully-parallel.
+            #
+            # FAILURE ISOLATION: each category is wrapped independently in
+            # `_fetch_arxiv_for_category_safe`. A single timeout / 429 / 5xx
+            # / parse failure no longer wipes out the entire arXiv section —
+            # that category just contributes 0 papers while siblings keep
+            # their results.
             if not arxiv_weights:
                 return source, None, []
             per_cat_results: list[list[dict[str, Any]]] = []
-            for idx, (cat, count) in enumerate(arxiv_weights):
-                if idx > 0:
-                    await asyncio.sleep(0.35)  # arXiv burst-limit avoidance
-                try:
-                    r = await _fetch_arxiv_for_category(cat, count, days)
-                except httpx.HTTPStatusError as e:
-                    if e.response.status_code == 429:
-                        # Single retry with longer backoff before giving up.
-                        await asyncio.sleep(2.0)
-                        try:
-                            r = await _fetch_arxiv_for_category(cat, count, days)
-                        except Exception:
-                            r = []
-                    else:
-                        raise
-                per_cat_results.append(r)
+            for batch_start in range(0, len(arxiv_weights), ARXIV_BATCH_SIZE):
+                if batch_start > 0:
+                    await asyncio.sleep(ARXIV_INTER_BATCH_DELAY)
+                batch = arxiv_weights[batch_start : batch_start + ARXIV_BATCH_SIZE]
+                # Parallel fetch within the batch. asyncio.gather collects
+                # all results; each call is already failure-isolated so a
+                # bad sibling doesn't poison the rest of the batch.
+                batch_results = await asyncio.gather(*[
+                    _fetch_arxiv_for_category_safe(cat, count, days)
+                    for cat, count in batch
+                ])
+                per_cat_results.extend(batch_results)
             merged: list[dict[str, Any]] = []
             for r in per_cat_results:
                 merged.extend(r)
