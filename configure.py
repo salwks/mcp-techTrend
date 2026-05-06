@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import ast
+import json
 import os
 import re
 import shutil
@@ -137,18 +138,23 @@ class Config:
                 cfg.tokens[name] = sval
         return cfg
 
+    # Match a Python double-quoted string literal, properly handling escape
+    # sequences like `\"` and `\\`. Naïve `"[^"]*"` truncates mid-value when
+    # a value contains `\"`, leaving residual chars after the substitution.
+    _PY_STR_LIT = r'"(?:[^"\\]|\\.)*"'
+
     def save(self) -> None:
         text = RUN_PY.read_text()
         # Backup once per save.
         BACKUP_PY.write_text(text)
         # Replace simple string assignments.
         text = re.sub(
-            r'(TRENDS_ENABLED_SOURCES\s*=\s*)"[^"]*"',
+            rf'(TRENDS_ENABLED_SOURCES\s*=\s*){self._PY_STR_LIT}',
             lambda m: f'{m.group(1)}"{self.enabled_sources}"',
             text,
         )
         text = re.sub(
-            r'(TRENDS_ARXIV_CATEGORIES\s*=\s*)"[^"]*"',
+            rf'(TRENDS_ARXIV_CATEGORIES\s*=\s*){self._PY_STR_LIT}',
             lambda m: f'{m.group(1)}"{self.arxiv_categories}"',
             text,
         )
@@ -159,27 +165,34 @@ class Config:
         new_pubmed = self._format_pubmed_literal(self.pubmed_query)
         text = self._replace_assignment(text, "TRENDS_DEFAULT_PUBMED_QUERY", new_pubmed)
         # Tokens — toggle commented vs uncommented based on value.
+        # SECURITY: token value is encoded via json.dumps to prevent quote
+        # escape (a token containing `"` would otherwise break out of the
+        # string literal and inject Python at the next MCP spawn). Real
+        # GitHub PATs / HF tokens / NCBI keys never contain `"`, but the
+        # chat-side `trends_set_token` exposes this path to arbitrary input.
         for key, val in self.tokens.items():
             if val is None:
                 # Re-comment the line (preserve indent).
                 text = re.sub(
-                    rf'^(\s*){key}(\s*=\s*)"[^"]*"',
+                    rf'^(\s*){key}(\s*=\s*){self._PY_STR_LIT}',
                     lambda m, k=key: f'{m.group(1)}# {k}{m.group(2)}"..."',
                     text, count=1, flags=re.MULTILINE,
                 )
             else:
-                # Uncomment + set value.
-                text = re.sub(
-                    rf'^(\s*)#\s*{key}(\s*=\s*)"[^"]*"',
-                    lambda m, k=key, v=val: f'{m.group(1)}{k}{m.group(2)}"{v}"',
+                v_lit = json.dumps(val)
+                # Try the commented form first; if that doesn't match, the line
+                # is already uncommented — handle that case alone.
+                text, n = re.subn(
+                    rf'^(\s*)#\s*{key}(\s*=\s*){self._PY_STR_LIT}',
+                    lambda m, k=key, lit=v_lit: f'{m.group(1)}{k}{m.group(2)}{lit}',
                     text, count=1, flags=re.MULTILINE,
                 )
-                # If already uncommented, just update the value.
-                text = re.sub(
-                    rf'^(\s*){key}(\s*=\s*)"[^"]*"',
-                    lambda m, k=key, v=val: f'{m.group(1)}{k}{m.group(2)}"{v}"',
-                    text, count=1, flags=re.MULTILINE,
-                )
+                if n == 0:
+                    text = re.sub(
+                        rf'^(\s*){key}(\s*=\s*){self._PY_STR_LIT}',
+                        lambda m, k=key, lit=v_lit: f'{m.group(1)}{k}{m.group(2)}{lit}',
+                        text, count=1, flags=re.MULTILINE,
+                    )
         RUN_PY.write_text(text)
 
     @staticmethod
@@ -205,9 +218,17 @@ class Config:
     @staticmethod
     def _format_pubmed_literal(query: str) -> str:
         """Format a query string as Python parenthesized concatenated literals,
-        wrapping at clause boundaries for readability."""
+        wrapping at clause boundaries for readability.
+
+        SECURITY: each chunk is encoded with json.dumps() rather than
+        f-string-interpolated. JSON string syntax is a strict subset of
+        Python string syntax, so json.dumps output is always a valid Python
+        string literal — and any embedded `"`, `\\`, or control chars are
+        properly escaped. The earlier `f'"{p}"'` form let a query like
+        `foo" + __import__("os").system("...") + "bar` break out of the
+        literal and become executable code at the next MCP spawn (RCE)."""
         if not query:
-            return '("")'
+            return json.dumps("")
         # Wrap roughly every 80 chars at AND/OR boundaries.
         parts: list[str] = []
         remaining = query
@@ -223,8 +244,10 @@ class Config:
             parts.append(remaining[:cut].rstrip())
             remaining = remaining[cut:]
         parts.append(remaining)
-        body = "\n    ".join(f'"{p} "' if i + 1 < len(parts) else f'"{p}"'
-                              for i, p in enumerate(parts))
+        body = "\n    ".join(
+            json.dumps(p + " ") if i + 1 < len(parts) else json.dumps(p)
+            for i, p in enumerate(parts)
+        )
         # Match run.py's existing 4-space indent so save() is idempotent on
         # files that haven't otherwise changed.
         return f'(\n    {body}\n)'
