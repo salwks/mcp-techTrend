@@ -2552,7 +2552,10 @@ async def trends_set_enabled_sources(sources: list[str]) -> str:
                 f"Valid: {sorted(_CFG_ALL_SOURCES)}"
             )
         cfg.set_sources({s for s in sources})  # canonical ordering via Config
-        after = cfg.enabled_sources or "(none)"
+        # Config.set_sources stores "" when ALL sources are passed (its
+        # "enable everything" sentinel) — so empty string here means (all),
+        # not (none). Mirror the same convention as `before` above.
+        after = cfg.enabled_sources or "(all)"
 
     cfg.save()
     return f"✅ enabled_sources: {before} → {after}{_restart_hint()}"
