@@ -19,6 +19,13 @@
 | `fda_recalls_recent` | 규제 | FDA 의료기기 리콜 최신 (Class 필터 가능) |
 | `trends_digest` | 통합 | 토픽 하나로 여러 소스 병렬 호출 → 마크다운 다이제스트(불릿) |
 | `trends_briefing` | 통합 | "주간 뉴스" 스타일 — 토픽 없어도 활성 소스 전부 신문 포맷으로 흘림 |
+| `trends_get_config` | 설정 | 현재 활성 소스/카테고리/쿼리/토큰 존재 여부 (토큰 값은 반환 안 함) |
+| `trends_set_enabled_sources` | 설정 | 활성 소스 토글. `["*"]` / `["all"]` 로 전부 활성 |
+| `trends_set_arxiv_categories` | 설정 | arXiv 카테고리 + 가중치. 예: `["cs.LG:5", "cs.HC:3"]` |
+| `trends_set_pubmed_query` | 설정 | 기본 PubMed 쿼리. PubMed 문법 (MeSH, `[Title/Abstract]` 등) |
+| `trends_set_token` | 설정 | 토큰 set/clear. `provider` ∈ {github, hf, ncbi, openfda} |
+
+설정 도구 5개는 `configure.py`와 같은 `run.py`를 읽고 씁니다 — chat과 TUI 어느 쪽으로 바꿔도 다른 쪽에서 보입니다. 자세한 사용법은 아래 [방법 C](#방법-c-chat에서--trends_set_-도구) 참조.
 
 모든 검색 도구는 `days` 파라미터로 최근 기간 필터링이 가능합니다. API가 자체 날짜 필터를 지원하지 않는 소스(arXiv search, Papers with Code, Hugging Face)는 충분히 오버페치 후 클라이언트에서 컷합니다.
 
@@ -133,6 +140,28 @@ TRENDS_DEFAULT_PUBMED_QUERY = (
 ```
 
 **적용 방법**: 편집 후 Claude Desktop **Cmd+Q → 재실행**. 잔존 trends 프로세스가 있으면 `pkill -f trends_mcp` 한 번.
+
+### 방법 C: chat에서 — `trends_set_*` 도구
+
+`configure.py`와 같은 `run.py` SETTINGS 블록을 chat의 MCP 도구 호출로 편집합니다. 두 경로가 같은 파일을 읽고 쓰므로 어느 쪽에서 바꿔도 다른 쪽에 보입니다.
+
+chat에서 그냥 말하면 됩니다:
+
+> "트렌드에서 PubMed 쿼리를 cardiology 쪽으로 바꿔줘"
+> "github와 arxiv만 켜둬"
+> "GitHub 토큰 등록할게: ghp_..."
+
+호스트 Claude가 적절한 `trends_set_*` 도구를 골라 호출하고 변경 내역을 확인해 줍니다. 변경 후 **Claude Desktop 재시작** (또는 터미널에서 `pkill -f trends_mcp`) — MCP 서버는 spawn 시점에 SETTINGS를 읽기 때문입니다.
+
+| 도구 | 용도 |
+|---|---|
+| `trends_get_config` | 현재 sources/categories/query/토큰 존재 여부 (토큰 값은 반환 안 함) |
+| `trends_set_enabled_sources(sources)` | 일부만 활성. `["*"]` / `["all"]` 로 전부 |
+| `trends_set_arxiv_categories(categories)` | `["cs.LG:5", "cs.HC:3"]` 형식 리스트 |
+| `trends_set_pubmed_query(query)` | PubMed 문법 (MeSH, `[Title/Abstract]` 태그) |
+| `trends_set_token(provider, value)` | `provider` ∈ {github, hf, ncbi, openfda}; 빈 문자열 = clear |
+
+> **토큰 주의**: trends-mcp는 read만 하므로 **minimal scope**로 만드세요 — GitHub은 scope 0 (인증만 해도 rate limit 풀림). `repo` scope PAT는 여기 넣지 마세요. 과권한입니다.
 
 ### 워크플로우별 프리셋
 

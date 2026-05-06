@@ -76,7 +76,8 @@ Connect to Claude Desktop by editing
 > ⚠️ `args` points at `run.py` (the launcher), **not** `trends_mcp.py`.
 > The launcher sets domain-specific env vars before the server starts.
 
-Restart Claude Desktop. The `trends` server should appear with 11 tools.
+Restart Claude Desktop. The `trends` server should appear with the tools
+listed below (count depends on your enabled sources).
 
 ---
 
@@ -129,6 +130,34 @@ TRENDS_DEFAULT_PUBMED_QUERY = "(deep learning OR AI) AND (medical OR clinical)"
 ```
 
 Restart Claude Desktop after saving (or `pkill -f trends_mcp`).
+
+### C. From chat — `trends_set_*` tools
+
+Same SETTINGS block, edited via MCP tool calls. The chat path and `configure.py`
+read & write the same `run.py` (single source of truth), so changes from either
+side are visible to the other.
+
+Just say it in chat:
+
+> "트렌드에서 PubMed 쿼리를 cardiology 쪽으로 바꿔줘"
+> "github와 arxiv만 켜둬"
+> "GitHub 토큰 등록할게: ghp_..."
+
+The host Claude picks the right `trends_set_*` tool and confirms what changed.
+After any change, **restart Claude Desktop** (or run `pkill -f trends_mcp` in
+a terminal) — the MCP server reads the SETTINGS block at spawn time.
+
+| Tool | Purpose |
+|---|---|
+| `trends_get_config` | Show current sources, categories, query, and which tokens are set (values never returned) |
+| `trends_set_enabled_sources(sources)` | Enable a subset; `["*"]` or `["all"]` for all |
+| `trends_set_arxiv_categories(categories)` | `["cs.LG:5", "cs.HC:3"]`-style list |
+| `trends_set_pubmed_query(query)` | PubMed syntax (MeSH, `[Title/Abstract]` tags) |
+| `trends_set_token(provider, value)` | `provider` ∈ {github, hf, ncbi, openfda}; empty value clears |
+
+> **Tokens**: trends-mcp only does read operations, so create tokens with
+> **minimal scope** — for GitHub, no scope at all (just authentication for
+> rate limit). Don't put a `repo`-scoped PAT here; it'd be over-permission.
 
 ### Presets
 
@@ -194,9 +223,16 @@ their tools, so the chat tool list itself shrinks. `trends_digest` and
 | `fda_recalls_recent` | Recent FDA medical-device recalls (class filter) |
 | `trends_digest` | Multi-source bullet-list digest, given a topic |
 | `trends_briefing` | Multi-source newspaper briefing; topic optional |
+| `trends_get_config` | Show current settings (token values never returned) |
+| `trends_set_enabled_sources` | Toggle which sources are active |
+| `trends_set_arxiv_categories` | Set arXiv categories + per-category weights |
+| `trends_set_pubmed_query` | Set the default PubMed query |
+| `trends_set_token` | Set / clear a rate-limit booster token |
 
 All search tools accept `days=N` for recent-N-days filtering. `trends_briefing`
 groups results into 🎓 Research / 💻 Code & Models / 🏥 Regulatory sections.
+The five `trends_*_config` / `trends_set_*` tools are configuration mirrors
+of `configure.py` — see [Configuration § C](#c-from-chat--trends_set_-tools).
 
 ### `trends_digest` vs `trends_briefing`
 

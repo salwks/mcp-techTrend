@@ -2455,6 +2455,225 @@ async def trends_briefing(
 
 
 # ---------------------------------------------------------------------------
+# Configuration tools — chat-side parity with configure.py
+# ---------------------------------------------------------------------------
+# Both this MCP and configure.py read & write the same SETTINGS block at the
+# top of run.py. We import Config from configure.py so there's a single
+# load/save implementation; otherwise the two interfaces would drift.
+#
+# Changes apply on the next MCP spawn: quit Claude Desktop (Cmd+Q) and reopen,
+# or run `pkill -f trends_mcp` in a terminal. We deliberately do NOT pkill
+# from inside these tools — that would kill the very process responding to
+# the request.
+
+from configure import (  # noqa: E402  (intentional late import — keeps the rest of the file independent)
+    Config as _Config,
+    ALL_SOURCES as _CFG_ALL_SOURCES,
+    RUN_PY as _RUN_PY,
+)
+
+_TOKEN_PROVIDERS: dict[str, str] = {
+    "github": "GITHUB_TOKEN",
+    "hf": "HF_TOKEN",
+    "ncbi": "NCBI_API_KEY",
+    "openfda": "OPENFDA_API_KEY",
+}
+
+
+def _restart_hint() -> str:
+    return (
+        "\n\n⚠️ Restart Claude Desktop (Cmd+Q then reopen) to apply, or run "
+        "`pkill -f trends_mcp` in a terminal to force the next call to respawn."
+    )
+
+
+@mcp.tool(
+    name="trends_get_config",
+    description=(
+        "Show current trends-mcp configuration: enabled sources, arXiv "
+        "categories, PubMed default query, and which optional rate-limit "
+        "tokens are set. Token VALUES are never returned (only whether they "
+        "are configured). Use this to confirm state before or after a "
+        "trends_set_* call."
+    ),
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    },
+)
+async def trends_get_config() -> dict[str, Any]:
+    cfg = _Config.load()
+    return {
+        "enabled_sources": sorted(cfg.sources_set()),  # always normalized; empty → all
+        "all_sources": sorted(_CFG_ALL_SOURCES),
+        "arxiv_categories": cfg.arxiv_categories,
+        "pubmed_query": cfg.pubmed_query,
+        "tokens_set": {
+            "github": cfg.tokens["GITHUB_TOKEN"] is not None,
+            "hf": cfg.tokens["HF_TOKEN"] is not None,
+            "ncbi": cfg.tokens["NCBI_API_KEY"] is not None,
+            "openfda": cfg.tokens["OPENFDA_API_KEY"] is not None,
+        },
+        "config_file": str(_RUN_PY),
+    }
+
+
+@mcp.tool(
+    name="trends_set_enabled_sources",
+    description=(
+        "Set which sources are enabled. Pass a list like ['arxiv', 'github']. "
+        "Valid: arxiv, github, huggingface, paperswithcode, pubmed, fda_510k, "
+        "fda_recalls. Pass ['*'] or ['all'] to enable all. "
+        "Disabled sources' tools won't appear in the tool list at all "
+        "(requires restart to take effect)."
+    ),
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    },
+)
+async def trends_set_enabled_sources(sources: list[str]) -> str:
+    cfg = _Config.load()
+    before = cfg.enabled_sources or "(all)"
+
+    # "*" / "all" → empty string, which downstream interprets as "enable all".
+    if any(s.strip().lower() in ("*", "all") for s in sources):
+        cfg.enabled_sources = ""
+        after = "(all)"
+    else:
+        unknown = [s for s in sources if s not in _CFG_ALL_SOURCES]
+        if unknown:
+            return (
+                f"Error: unknown sources {unknown}. "
+                f"Valid: {sorted(_CFG_ALL_SOURCES)}"
+            )
+        cfg.set_sources({s for s in sources})  # canonical ordering via Config
+        after = cfg.enabled_sources or "(none)"
+
+    cfg.save()
+    return f"✅ enabled_sources: {before} → {after}{_restart_hint()}"
+
+
+@mcp.tool(
+    name="trends_set_arxiv_categories",
+    description=(
+        "Set the default arXiv categories used by trends_briefing. "
+        "Pass a list of entries; each entry is 'code' (e.g. 'cs.HC') or "
+        "'code:weight' (e.g. 'cs.HC:5'). Weight = papers per briefing per "
+        "category (default 3). Example: ['cs.LG:5', 'cs.CV:3', 'cs.CL:2']. "
+        "See ARXIV_CATEGORIES.md for the full list of valid codes."
+    ),
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    },
+)
+async def trends_set_arxiv_categories(categories: list[str]) -> str:
+    cfg = _Config.load()
+    before = cfg.arxiv_categories or "(none)"
+
+    pairs: list[tuple[str, int]] = []
+    invalid: list[str] = []
+    for entry in categories:
+        entry = entry.strip()
+        if not entry:
+            continue
+        if ":" in entry:
+            code, count_str = entry.split(":", 1)
+            code = code.strip()
+            try:
+                count = max(1, int(count_str.strip()))
+            except ValueError:
+                invalid.append(entry)
+                continue
+        else:
+            code = entry
+            count = 3  # default weight
+        if not _is_valid_arxiv_category(code):
+            invalid.append(code)
+            continue
+        pairs.append((code, count))
+
+    if invalid:
+        return (
+            f"Error: invalid category codes: {invalid}. "
+            f"See ARXIV_CATEGORIES.md for the valid set."
+        )
+
+    cfg.set_arxiv_pairs(pairs)
+    cfg.save()
+    return f"✅ arxiv_categories: {before} → {cfg.arxiv_categories}{_restart_hint()}"
+
+
+@mcp.tool(
+    name="trends_set_pubmed_query",
+    description=(
+        "Set the default PubMed query used by trends_briefing when no topic "
+        "is provided. Use PubMed syntax: MeSH terms, [Title/Abstract] tags, "
+        "AND/OR/NOT. [Title/Abstract] tags keep matches precise. "
+        "Example: '(deep learning) AND (radiology[Title/Abstract])'."
+    ),
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    },
+)
+async def trends_set_pubmed_query(query: str) -> str:
+    cfg = _Config.load()
+    q = query.strip()
+    before_short = (cfg.pubmed_query[:60] + "...") if len(cfg.pubmed_query) > 60 else cfg.pubmed_query
+    cfg.pubmed_query = q
+    cfg.save()
+    after_short = (q[:60] + "...") if len(q) > 60 else q
+    return f"✅ pubmed_query: {before_short!r} → {after_short!r}{_restart_hint()}"
+
+
+@mcp.tool(
+    name="trends_set_token",
+    description=(
+        "Set or clear an optional rate-limit booster token. trends-mcp ONLY "
+        "needs read access — when creating these tokens use the MINIMAL scope:\n"
+        "  - github: NO scope at all (just authentication for rate limit). "
+        "Do NOT use a token with 'repo' scope here.\n"
+        "  - hf: read access only.\n"
+        "  - ncbi / openfda: API keys (no scope concept).\n"
+        "Pass empty string for value to remove a token. "
+        "Provider must be one of: github, hf, ncbi, openfda."
+    ),
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    },
+)
+async def trends_set_token(provider: str, value: str) -> str:
+    key = _TOKEN_PROVIDERS.get(provider.lower())
+    if key is None:
+        return (
+            f"Error: unknown provider {provider!r}. "
+            f"Valid: {sorted(_TOKEN_PROVIDERS)}"
+        )
+    cfg = _Config.load()
+    was_set = cfg.tokens[key] is not None
+    if value.strip() == "":
+        cfg.tokens[key] = None
+        cfg.save()
+        return f"✅ {key} cleared (was {'set' if was_set else 'unset'}).{_restart_hint()}"
+    cfg.tokens[key] = value.strip()
+    cfg.save()
+    return f"✅ {key} {'replaced' if was_set else 'set'}.{_restart_hint()}"
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 

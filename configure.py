@@ -152,13 +152,12 @@ class Config:
             lambda m: f'{m.group(1)}"{self.arxiv_categories}"',
             text,
         )
-        # PubMed query — replace the parenthesized concatenated literal.
+        # PubMed query — multi-line parenthesized concat. Regex `\(.*?\)` would
+        # stop at the first `)` inside the query (e.g. inside "(mammography…)"),
+        # corrupting the file. Use AST line ranges so the full assignment node
+        # is replaced atomically.
         new_pubmed = self._format_pubmed_literal(self.pubmed_query)
-        text = re.sub(
-            r'(TRENDS_DEFAULT_PUBMED_QUERY\s*=\s*)\(.*?\)',
-            lambda m: f'{m.group(1)}{new_pubmed}',
-            text, count=1, flags=re.DOTALL,
-        )
+        text = self._replace_assignment(text, "TRENDS_DEFAULT_PUBMED_QUERY", new_pubmed)
         # Tokens — toggle commented vs uncommented based on value.
         for key, val in self.tokens.items():
             if val is None:
@@ -184,6 +183,26 @@ class Config:
         RUN_PY.write_text(text)
 
     @staticmethod
+    def _replace_assignment(text: str, name: str, new_rhs: str) -> str:
+        """Replace a top-level `name = ...` assignment with `name = new_rhs`,
+        using AST line ranges so multi-line RHS values are handled atomically.
+        Falls back to leaving `text` unchanged if the name isn't found."""
+        try:
+            tree = ast.parse(text)
+        except SyntaxError:
+            return text
+        for node in tree.body:
+            if (isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == name):
+                lines = text.splitlines(keepends=True)
+                # ast lineno/end_lineno are 1-based inclusive.
+                replacement = f"{name} = {new_rhs}\n"
+                return "".join(lines[: node.lineno - 1] + [replacement] + lines[node.end_lineno :])
+        return text
+
+    @staticmethod
     def _format_pubmed_literal(query: str) -> str:
         """Format a query string as Python parenthesized concatenated literals,
         wrapping at clause boundaries for readability."""
@@ -204,10 +223,11 @@ class Config:
             parts.append(remaining[:cut].rstrip())
             remaining = remaining[cut:]
         parts.append(remaining)
-        body = "\n        ".join(f'"{p} "' if i + 1 < len(parts) else f'"{p}"'
-                                  for i, p in enumerate(parts))
-        # Strip trailing spaces in each literal.
-        return f'(\n        {body}\n    )'
+        body = "\n    ".join(f'"{p} "' if i + 1 < len(parts) else f'"{p}"'
+                              for i, p in enumerate(parts))
+        # Match run.py's existing 4-space indent so save() is idempotent on
+        # files that haven't otherwise changed.
+        return f'(\n    {body}\n)'
 
     # --- helpers ---
 
