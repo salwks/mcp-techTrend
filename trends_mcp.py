@@ -1596,11 +1596,14 @@ _DIGEST_SECTION = {
     description=(
         "One-shot multi-source digest for a topic. Calls sources in parallel; "
         "partial failures don't break the report.\n\n"
-        "PRESENTATION: source content (paper abstracts, descriptions, recall "
-        "reasons) is in its original language (mostly English). When showing "
-        "this digest to the user, translate the content into the user's "
-        "current conversation language. Keep proper nouns, IDs (PMID, k_number, "
-        "arXiv IDs), URLs, and metric values (stars, downloads) untouched."
+        "PRESENTATION RULES — follow strictly:\n"
+        "1) PRESERVE SECTION STRUCTURE. The output has separate per-source "
+        "sections (📌 arXiv, 📌 PubMed, 📌 GitHub, etc.). Do NOT merge them.\n"
+        "2) TRANSLATE INLINE TEXT into the user's conversation language; keep "
+        "section headers and emoji as-is.\n"
+        "3) PRESERVE VERBATIM: proper nouns, IDs (PMID, k_number, arXiv IDs), "
+        "URLs, repository names, metric values.\n"
+        "4) Render every item — no summarization at the digest level."
     ),
     annotations={
         "readOnlyHint": True,
@@ -1657,9 +1660,10 @@ async def trends_digest(
         lines.extend(render(items))
         lines.append("")
     lines.append(
-        "<!-- Presentation hint: source text is in its original language. "
-        "Translate the content into the user's current conversation language "
-        "for the user-facing response. Preserve URLs, IDs, and metric values. -->"
+        "<!-- PRESENTATION HINT: keep per-source sections (📌 arXiv, 📌 PubMed, "
+        "etc.) separate — do NOT merge. Translate inline content to the user's "
+        "conversation language; preserve URLs, IDs, author/repo/journal names, "
+        "and metric values verbatim. Render every item, no summarization. -->"
     )
     return "\n".join(lines)
 
@@ -2302,13 +2306,24 @@ _BRIEFING_RENDERERS: dict[str, tuple[str, Callable[[list[dict[str, Any]]], str]]
     description=(
         "Newspaper-style weekly briefing across all enabled sources. "
         "Topic is optional — without it, each source shows its 'what's new' feed. "
-        "Use this when the user asks for '주간 뉴스' / 'weekly news' / 'briefing' style output.\n\n"
-        "PRESENTATION: source content (paper abstracts, descriptions, recall "
-        "reasons) is in its original language (mostly English). When showing "
-        "this briefing to the user, translate the content into the user's "
-        "current conversation language so they can read it directly. Keep "
-        "proper nouns, IDs (PMID, k_number, arXiv IDs), URLs, repository "
-        "names, and metric values (stars, downloads, dates) untouched."
+        "Use this when the user asks for '주간 뉴스' / '주간 트렌드' / 'weekly news' / 'briefing' style output.\n\n"
+        "PRESENTATION RULES — follow strictly:\n"
+        "1) PRESERVE STRUCTURE EXACTLY. The output is already organized into "
+        "three groups (🎓 연구 동향 / 💻 코드 / 모델 / 🏥 규제 / 의료기기) and "
+        "seven distinct source sections (arXiv, PubMed, Papers with Code, "
+        "GitHub, Hugging Face, FDA 510(k), FDA Recalls). Do NOT merge sections "
+        "(e.g. don't combine arXiv + PubMed into one 'papers' list). Do NOT "
+        "reorder sections or items within a section. Do NOT change emoji or "
+        "section headers.\n"
+        "2) TRANSLATE INLINE TEXT ONLY. Translate paper titles, abstracts, "
+        "descriptions, and recall reasons into the user's current conversation "
+        "language. Keep section headers, group titles, emoji, and metadata "
+        "labels in their original form.\n"
+        "3) PRESERVE VERBATIM: proper nouns, author names, journal names, "
+        "repository names (e.g. 'mattpocock/skills'), arXiv IDs, PMIDs, "
+        "k_numbers, URLs, dates, and metric values (stars, downloads, etc.).\n"
+        "4) NO SUMMARIZATION at the briefing level. Render every item the "
+        "tool returned. The user wants the full feed, not your synthesis."
     ),
     annotations={
         "readOnlyHint": True,
@@ -2418,12 +2433,15 @@ async def trends_briefing(
         lines.append("---")
         lines.append("")
 
-    # Translation hint footer — picked up by the assistant when presenting.
+    # Presentation hint — picked up by the assistant when rendering.
     lines.append(
-        "<!-- Presentation hint: this briefing's source text is in its "
-        "original language. Translate the content into the user's current "
-        "conversation language for the user-facing response. Preserve URLs, "
-        "IDs, repository names, and metric values verbatim. -->"
+        "<!-- PRESENTATION HINT: render this briefing EXACTLY as structured. "
+        "Keep all section headers (### arXiv, ### PubMed, etc.) separate — do "
+        "NOT merge them into combined lists. Translate inline content "
+        "(titles, abstracts, descriptions, reasons) into the user's "
+        "conversation language; keep URLs, IDs, author names, journal names, "
+        "repository names, and metric values verbatim. Render every item — "
+        "do not summarize at the briefing level. -->"
     )
 
     return "\n".join(lines)
