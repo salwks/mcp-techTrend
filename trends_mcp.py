@@ -2323,7 +2323,14 @@ _BRIEFING_RENDERERS: dict[str, tuple[str, Callable[[list[dict[str, Any]]], str]]
         "repository names (e.g. 'mattpocock/skills'), arXiv IDs, PMIDs, "
         "k_numbers, URLs, dates, and metric values (stars, downloads, etc.).\n"
         "4) NO SUMMARIZATION at the briefing level. Render every item the "
-        "tool returned. The user wants the full feed, not your synthesis."
+        "tool returned. The user wants the full feed, not your synthesis.\n"
+        "5) ITEM-LEVEL DEPTH. For each paper, repo, model, or recall, preserve "
+        "enough of the upstream abstract/description to convey *what's new "
+        "and why it matters* — typically 2–4 sentences (around 150–300 chars "
+        "of translated content per item). Do NOT collapse to a single "
+        "headline-length sentence; the user wants to grasp each item without "
+        "clicking through. Carry the problem → method → result/contribution "
+        "structure when present in the source abstract."
     ),
     annotations={
         "readOnlyHint": True,
