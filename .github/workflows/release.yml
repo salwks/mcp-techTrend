@@ -1,0 +1,51 @@
+# Auto-create a GitHub Release when a `vX.Y.Z` tag is pushed.
+#
+# Flow on `git push origin v0.2.1`:
+#   1. extract the matching `## [0.2.1] — ...` section from CHANGELOG.md
+#   2. `gh release create v0.2.1 --notes-file ... --latest`
+#
+# If no matching CHANGELOG section exists, the workflow fails loudly so
+# nothing half-published lands. Update CHANGELOG.md *before* tagging.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract CHANGELOG section
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v ver="$VERSION" '
+            /^## \[/ {
+              if (in_section) exit
+              if (index($0, "[" ver "]")) in_section = 1
+              next
+            }
+            in_section { print }
+          ' CHANGELOG.md > /tmp/notes.md
+          if [ ! -s /tmp/notes.md ]; then
+            echo "::error::No CHANGELOG entry for $VERSION — add a '## [$VERSION] — YYYY-MM-DD' section before tagging."
+            exit 1
+          fi
+          echo "Notes for $GITHUB_REF_NAME ($(wc -l < /tmp/notes.md) lines):"
+          head -5 /tmp/notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --notes-file /tmp/notes.md \
+            --latest
