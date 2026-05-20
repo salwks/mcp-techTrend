@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] — 2026-05-21
+
+### Fixed — arXiv briefing reliability
+
+- **Fully serial per-category fetch.** The briefing previously fetched
+  arXiv categories 2-at-a-time (`ARXIV_BATCH_SIZE=2`) with a 3s gap.
+  arXiv's API TOU asks for *serial* access with ≥3s spacing, and in
+  practice the 2-concurrent pattern tripped HTTP 429 even on light,
+  single-user traffic. Now `ARXIV_BATCH_SIZE=1` with a 5s gap (~20-25s
+  for 4 categories — well inside the MCP client timeout).
+- **Rate-limit failures are now visible.** `_fetch_arxiv_for_category_safe`
+  used to swallow every error into `[]`, so a 429 made the briefing's
+  arXiv section silently empty — indistinguishable from "no new papers"
+  and easy to misdiagnose as a server bug. It now returns
+  `(error_msg, papers)`; the briefing aggregates per-category results
+  and surfaces a representative error when all categories fail (partial
+  success still degrades gracefully — available papers are shown).
+- **Dropped the 2s-after-429 retry.** arXiv expects a 30-60s cooldown
+  after a 429; a 2s retry almost always hit 429 again and just burned
+  the briefing's time budget. 5xx still gets one 1s retry.
+
 ## [0.2.0] — 2026-05-06
 
 ### Added — chat-side configuration tools (5)
