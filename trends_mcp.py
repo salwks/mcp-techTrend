@@ -1797,8 +1797,13 @@ _BRIEFING_GROUPS: list[tuple[str, list[str]]] = [
 # so we stay polite even under a fresh-cache run.
 # `PER_CATEGORY_TIMEOUT=25.0` is generous enough that genuinely-slow
 # categories still complete instead of being silently dropped.
-ARXIV_BATCH_SIZE = 2
-ARXIV_INTER_BATCH_DELAY = 3.0
+# Sequential per-category fetches with a 5s gap — arxiv's API docs explicitly
+# request serial (not parallel) access with at least a 3s spacing. Earlier
+# we ran 2-at-a-time with 3s between batches; in practice arxiv still flagged
+# that as bursty and rate-limited even single-user traffic. Going fully serial
+# trades ~10-15s of briefing latency for a near-zero 429 rate.
+ARXIV_BATCH_SIZE = 1
+ARXIV_INTER_BATCH_DELAY = 5.0
 ARXIV_PER_CATEGORY_TIMEOUT = 25.0
 
 
@@ -1838,36 +1843,37 @@ async def _fetch_arxiv_for_category(
 
 async def _fetch_arxiv_for_category_safe(
     category: str, count: int, days: int
-) -> list[dict[str, Any]]:
-    """Failure-isolated wrapper. Returns [] on any error so a single bad
-    category doesn't poison the whole arXiv section.
+) -> tuple[str | None, list[dict[str, Any]]]:
+    """Failure-isolated wrapper around `_fetch_arxiv_for_category`.
 
-    Retry policy (deliberately conservative — budget for 4 sequential
-    categories must fit under the MCP client's request timeout):
-      - 429 (rate limit): one retry after 2s backoff (likely to succeed)
-      - 5xx (server error): one retry after 1s
-      - timeout / connect / parse: NO retry, fail fast — when arXiv is
-        actually unresponsive, retrying only burns budget and risks
-        knocking out the whole briefing.
+    Returns `(error_msg, papers)`. `error_msg` is None on success and a
+    short human-readable string on failure (with `papers=[]`).
+
+    Retry policy:
+      - 429 (rate limit): NO retry. arXiv's TOU asks for ~30-60s cooldown
+        after a 429, which is too long to absorb inside a briefing — the
+        old 2s retry almost always hit 429 again anyway. Surface the rate
+        limit instead so the caller can show it to the user.
+      - 5xx: one retry after 1s. Transient server errors usually recover.
+      - timeout / connect / parse: fail fast, no retry.
     """
     try:
-        return await _fetch_arxiv_for_category(category, count, days)
+        return None, await _fetch_arxiv_for_category(category, count, days)
     except httpx.HTTPStatusError as e:
         code = e.response.status_code
         if code == 429:
-            await asyncio.sleep(2.0)
-        elif 500 <= code < 600:
+            return "rate limited (HTTP 429) — arXiv expects 30-60s cooldown before retry", []
+        if 500 <= code < 600:
             await asyncio.sleep(1.0)
-        else:
-            return []
-    except Exception:
-        # timeout, connect error, parse error — fail fast, no retry.
-        return []
-    # Retry only for 429 / 5xx that fell through above.
-    try:
-        return await _fetch_arxiv_for_category(category, count, days)
-    except Exception:
-        return []
+            try:
+                return None, await _fetch_arxiv_for_category(category, count, days)
+            except Exception:
+                return f"HTTP {code} after retry", []
+        return f"HTTP {code}", []
+    except httpx.TimeoutException:
+        return "timeout", []
+    except Exception as e:
+        return type(e).__name__, []
 
 
 async def _briefing_call(
@@ -1918,23 +1924,36 @@ async def _briefing_call(
             # their results.
             if not arxiv_weights:
                 return source, None, []
-            per_cat_results: list[list[dict[str, Any]]] = []
+            per_cat_results: list[tuple[str | None, list[dict[str, Any]]]] = []
             for batch_start in range(0, len(arxiv_weights), ARXIV_BATCH_SIZE):
                 if batch_start > 0:
                     await asyncio.sleep(ARXIV_INTER_BATCH_DELAY)
                 batch = arxiv_weights[batch_start : batch_start + ARXIV_BATCH_SIZE]
-                # Parallel fetch within the batch. asyncio.gather collects
-                # all results; each call is already failure-isolated so a
-                # bad sibling doesn't poison the rest of the batch.
+                # Parallel fetch within the batch. With ARXIV_BATCH_SIZE=1
+                # this is effectively serial; kept as gather so the batching
+                # knob still works if it's ever tuned back up.
                 batch_results = await asyncio.gather(*[
                     _fetch_arxiv_for_category_safe(cat, count, days)
                     for cat, count in batch
                 ])
                 per_cat_results.extend(batch_results)
+            # Aggregate. Partial success (≥1 category returned papers) → use
+            # what we have, no global error — graceful degradation. All-fail
+            # → surface a representative error so the briefing makes the cause
+            # visible instead of an empty arXiv section (the old behaviour,
+            # which led to "is this broken?" diagnoses upstream).
             merged: list[dict[str, Any]] = []
-            for r in per_cat_results:
-                merged.extend(r)
-            return source, None, merged
+            errors: list[str] = []
+            for err, papers in per_cat_results:
+                if err is not None:
+                    errors.append(err)
+                merged.extend(papers)
+            if merged:
+                return source, None, merged
+            if errors:
+                rate_err = next((e for e in errors if "rate limited" in e), None)
+                return source, rate_err or errors[0], []
+            return source, None, []
 
         if source == "github":
             if topic:
