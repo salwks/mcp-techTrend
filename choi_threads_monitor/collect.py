@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Workflow trigger: monitor initialized after workflow registration.
 import json
 import os
 import shutil
