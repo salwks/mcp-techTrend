@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Workflow trigger: monitor initialized after workflow registration.
+# PR smoke test marker.
 import json
 import os
 import shutil
