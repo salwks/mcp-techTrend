@@ -39,13 +39,19 @@
     "3991819757506330255",
     "3991789689186163029",
     "3991744304208417654",
-    "3991698833843062336"
+    "3991698833843062336",
+    "3993058243840071917",
+    "3993012789471421521",
+    "3993012766101196970",
+    "3992967405575693699",
+    "3992922023131216672"
   ],
   "emitted_permalinks": [],
   "notes": [
     "Seeded from reports already delivered in this conversation, including the separate Trump correction.",
     "Posts observed later but absent from emitted_post_ids must be emitted once in the delayed-collection catch-up section even if they are older than the current six-hour wall-clock window.",
-    "2026-09-24 catch-up report emitted the one current-window post plus all 17 archive posts missing from the initial report state; subsequent runs should not repeat this baseline catch-up."
+    "2026-09-24 catch-up report emitted the one current-window post plus all 17 archive posts missing from the initial report state; subsequent runs should not repeat this baseline catch-up.",
+    "2026-09-24 20:09 KST manual recovery report emitted 1 current-window post and 4 delayed-collection catch-up posts."
   ],
-  "last_reported_at": "2026-09-24T06:07:45Z"
+  "last_reported_at": "2026-09-24T11:09:36Z"
 }
