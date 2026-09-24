@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Workflow trigger: monitor initialized after workflow registration.
 import json
 import os
 import shutil
@@ -12,17 +11,21 @@ LIMIT = 100
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 OUTPUT = DATA_DIR / "choi_latest.json"
+ARCHIVE = DATA_DIR / "choi_archive.json"
+
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
-def load_previous():
-    if not OUTPUT.exists():
+
+def load_json(path):
+    if not path.exists():
         return {}
     try:
-        return json.loads(OUTPUT.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return {}
+
 
 def find_th():
     candidates = [
@@ -35,6 +38,7 @@ def find_th():
             return candidate
     raise FileNotFoundError("threads-cli binary 'th' not found")
 
+
 def first(obj, *keys):
     if not isinstance(obj, dict):
         return None
@@ -43,6 +47,7 @@ def first(obj, *keys):
         if value not in (None, "", [], {}):
             return value
     return None
+
 
 def normalize_post(post):
     if not isinstance(post, dict):
@@ -62,6 +67,7 @@ def normalize_post(post):
         "raw": post,
     }
 
+
 def extract_posts(payload):
     if isinstance(payload, list):
         return payload
@@ -73,13 +79,83 @@ def extract_posts(payload):
         return [payload]
     return []
 
-def write_payload(payload):
+
+def post_key(post):
+    return post.get("post_id") or post.get("permalink")
+
+
+def archive_view(post):
+    return {
+        "post_id": post.get("post_id"),
+        "published_at": post.get("published_at"),
+        "text": post.get("text"),
+        "permalink": post.get("permalink"),
+        "media": post.get("media"),
+        "engagement": post.get("engagement"),
+    }
+
+
+def merge_archive(previous_archive, posts, seen_at):
+    existing = {}
+    for item in previous_archive.get("posts", []):
+        key = post_key(item)
+        if key:
+            existing[key] = dict(item)
+
+    # If the archive did not exist yet, seed it from the last successful snapshot.
+    if not existing:
+        previous_latest = load_json(OUTPUT)
+        seed_seen_at = previous_latest.get("latest_good_generated_at") or previous_latest.get("generated_at") or seen_at
+        for item in previous_latest.get("posts", []):
+            key = post_key(item)
+            if key:
+                lean = archive_view(item)
+                lean["first_seen_at"] = seed_seen_at
+                lean["last_seen_at"] = seed_seen_at
+                existing[key] = lean
+
+    for post in posts:
+        key = post_key(post)
+        if not key:
+            continue
+        lean = archive_view(post)
+        if key in existing:
+            first_seen_at = existing[key].get("first_seen_at") or seen_at
+            existing[key].update(lean)
+            existing[key]["first_seen_at"] = first_seen_at
+            existing[key]["last_seen_at"] = seen_at
+        else:
+            lean["first_seen_at"] = seen_at
+            lean["last_seen_at"] = seen_at
+            existing[key] = lean
+
+    merged = list(existing.values())
+    merged.sort(key=lambda p: p.get("published_at") or "", reverse=True)
+    return {
+        "account": ACCOUNT,
+        "generated_at": seen_at,
+        "source": "merged successful snapshots from tamnd/threads-cli anonymous public crawler",
+        "archive_count": len(merged),
+        "limitations": [
+            "Archive contains only posts that were observed by a successful collector run.",
+            "Anonymous Threads access exposes only the recent public window and can change without notice.",
+            "A post cannot be recovered if it disappears from the crawler surface before any successful collection sees it.",
+        ],
+        "posts": merged,
+    }
+
+
+def write_json(path, payload):
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
 
 def main():
-    previous = load_previous()
+    previous = load_json(OUTPUT)
+    previous_archive = load_json(ARCHIVE)
     generated_at = now_iso()
+    archive_payload = None
+
     base = {
         "account": ACCOUNT,
         "generated_at": generated_at,
@@ -122,26 +198,34 @@ def main():
                 "latest_good_generated_at": generated_at,
                 "limitations": [
                     "Anonymous crawler surface exposes recent public posts, not guaranteed full account history.",
-                    "At most 100 recent records are collected per run; the report layer should filter the requested time window by published_at.",
+                    "At most 100 recent records are collected per run.",
+                    "Use choi_archive.json for reporting so delayed posts remain available after they fall out of choi_latest.json.",
                 ],
                 "post_count": len(normalized),
                 "posts": normalized,
             })
+            archive_payload = merge_archive(previous_archive, normalized, generated_at)
     except Exception as exc:
         base["collection_status"] = "error"
         base["error"] = str(exc)
         base["limitations"] = [
             "Current collection failed; previous successful posts, if any, were preserved.",
             "Do not infer or fabricate missing posts.",
+            "Use the existing archive for historical coverage, but mark the newest interval as stale until collection succeeds again.",
         ]
 
-    write_payload(base)
+    write_json(OUTPUT, base)
+    if archive_payload is not None:
+        write_json(ARCHIVE, archive_payload)
+
     print(json.dumps({
         "collection_status": base["collection_status"],
         "post_count": base["post_count"],
         "generated_at": base["generated_at"],
+        "archive_count": archive_payload.get("archive_count") if archive_payload else previous_archive.get("archive_count"),
         "error": base.get("error"),
     }, ensure_ascii=False))
+
 
 if __name__ == "__main__":
     main()
