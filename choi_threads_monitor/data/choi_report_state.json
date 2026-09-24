@@ -1,0 +1,31 @@
+{
+  "state_version": 1,
+  "account": "choi.openai",
+  "purpose": "Tracks posts already emitted by the ChatGPT 6-hour report so delayed collector arrivals are surfaced exactly once.",
+  "emitted_post_ids": [
+    "3992133226617963452",
+    "3992130147722671784",
+    "3992182232915616184",
+    "3992212415563075249",
+    "3992242501699340041",
+    "3992272906704534346",
+    "3992303134499975915",
+    "3992332991518601624",
+    "3992363634809405541",
+    "3992393621466710121",
+    "3992408621421772105",
+    "3992494085692687666",
+    "3992544467454501035",
+    "3992665640560330222",
+    "3992680474739847461",
+    "3992695429976364246",
+    "3992725743351298676",
+    "3992756214214793715",
+    "3992786340860802123"
+  ],
+  "emitted_permalinks": [],
+  "notes": [
+    "Seeded from reports already delivered in this conversation, including the separate Trump correction.",
+    "Posts observed later but absent from emitted_post_ids must be emitted once in the delayed-collection catch-up section even if they are older than the current six-hour wall-clock window."
+  ]
+}
