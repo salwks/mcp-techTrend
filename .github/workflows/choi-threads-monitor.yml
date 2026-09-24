@@ -3,7 +3,7 @@ name: CHOI Threads Monitor
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17,47 * * * *"
+    - cron: "7,22,37,52 * * * *"
   push:
     paths:
       - ".github/workflows/choi-threads-monitor.yml"
@@ -35,15 +35,18 @@ jobs:
       - name: Collect @choi.openai
         run: python3 choi_threads_monitor/collect.py
 
-      - name: Commit updated snapshot
+      - name: Commit updated snapshot and archive
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add choi_threads_monitor/data/choi_latest.json
+          if [ -f choi_threads_monitor/data/choi_archive.json ]; then
+            git add choi_threads_monitor/data/choi_archive.json
+          fi
           if git diff --cached --quiet; then
-            echo "No snapshot change."
+            echo "No monitor data change."
             exit 0
           fi
-          git commit -m "chore: update choi.openai Threads snapshot"
+          git commit -m "chore: update choi.openai Threads monitor data"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
