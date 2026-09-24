@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 OUTPUT = DATA_DIR / "choi_latest.json"
 ARCHIVE = DATA_DIR / "choi_archive.json"
+# The archive is cumulative; scheduled snapshot gaps must not create permanent report omissions.
 
 
 def now_iso():
