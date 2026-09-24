@@ -21,11 +21,31 @@
     "3992695429976364246",
     "3992725743351298676",
     "3992756214214793715",
-    "3992786340860802123"
+    "3992786340860802123",
+    "3992880918482084315",
+    "3992816538087339323",
+    "3992635302707377027",
+    "3992605038589286376",
+    "3992599067460871821",
+    "3992574734650767073",
+    "3992462639997322421",
+    "3992423872246657150",
+    "3992061271193257343",
+    "3992016246178796174",
+    "3991970923494434296",
+    "3991925518198752084",
+    "3991880179130621370",
+    "3991835162908192795",
+    "3991819757506330255",
+    "3991789689186163029",
+    "3991744304208417654",
+    "3991698833843062336"
   ],
   "emitted_permalinks": [],
   "notes": [
     "Seeded from reports already delivered in this conversation, including the separate Trump correction.",
-    "Posts observed later but absent from emitted_post_ids must be emitted once in the delayed-collection catch-up section even if they are older than the current six-hour wall-clock window."
-  ]
+    "Posts observed later but absent from emitted_post_ids must be emitted once in the delayed-collection catch-up section even if they are older than the current six-hour wall-clock window.",
+    "2026-09-24 catch-up report emitted the one current-window post plus all 17 archive posts missing from the initial report state; subsequent runs should not repeat this baseline catch-up."
+  ],
+  "last_reported_at": "2026-09-24T06:07:45Z"
 }
