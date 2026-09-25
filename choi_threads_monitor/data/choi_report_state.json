@@ -64,7 +64,20 @@
     "3993329740089809852",
     "3993299693756541883",
     "3993269192022940521",
-    "3993239408245697134"
+    "3993239408245697134",
+    "3994220450740838669",
+    "3994175184663718540",
+    "3994130280612964576",
+    "3994084878529370614",
+    "3994039616705515734",
+    "3993994096360509641",
+    "3993949018035660763",
+    "3993903801290549524",
+    "3993842968070926436",
+    "3993813179620206387",
+    "3993752490491476366",
+    "3993722367250645451",
+    "3993662087628337416"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -72,7 +85,8 @@
     "Posts observed later but absent from emitted_post_ids must be emitted once in the delayed-collection catch-up section even if they are older than the current six-hour wall-clock window.",
     "2026-09-24 catch-up report emitted the one current-window post plus all 17 archive posts missing from the initial report state; subsequent runs should not repeat this baseline catch-up.",
     "2026-09-24 20:09 KST manual recovery report emitted 1 current-window post and 4 delayed-collection catch-up posts.",
-    "2026-09-25 14:00 KST report emitted 3 current-window posts and 11 delayed/catch-up posts. Nine catch-up posts had appeared in the prior user-visible report but were absent from state because that run's state write failed."
+    "2026-09-25 14:00 KST report emitted 3 current-window posts and 11 delayed/catch-up posts. Nine catch-up posts had appeared in the prior user-visible report but were absent from state because that run's state write failed.",
+    "2026-09-26 08:00 KST report emitted 3 current-window posts and 10 delayed-collection catch-up posts."
   ],
-  "last_reported_at": "2026-09-25T05:00:21Z"
+  "last_reported_at": "2026-09-25T23:00:04.000Z"
 }
