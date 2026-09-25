@@ -19,6 +19,8 @@ type cacheState struct {
 }
 
 var cache cacheState
+var seenMu sync.Mutex
+var seen = map[string]bool{}
 
 func collect() ([]byte, error) {
 	cache.mu.Lock()
@@ -95,6 +97,71 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func rawPosts(payload any) []map[string]any {
+	var src []any
+	switch v := payload.(type) {
+	case []any:
+		src = v
+	case map[string]any:
+		for _, key := range []string{"posts", "items", "data", "results"} {
+			if arr, ok := v[key].([]any); ok {
+				src = arr
+				break
+			}
+		}
+		if src == nil {
+			src = []any{v}
+		}
+	}
+	out := make([]map[string]any, 0, len(src))
+	for _, item := range src {
+		if m, ok := item.(map[string]any); ok {
+			out = append(out, m)
+		}
+	}
+	return out
+}
+
+func pick(m map[string]any, keys ...string) any {
+	for _, key := range keys {
+		if v, ok := m[key]; ok && v != nil && fmt.Sprint(v) != "" {
+			return v
+		}
+	}
+	return nil
+}
+
+func logNewPosts(payload any) int {
+	posts := rawPosts(payload)
+	newCount := 0
+	seenMu.Lock()
+	defer seenMu.Unlock()
+
+	for _, post := range posts {
+		id := pick(post, "post_id", "id", "pk", "code")
+		link := pick(post, "permalink", "url", "link")
+		key := fmt.Sprint(id)
+		if key == "<nil>" || key == "" {
+			key = fmt.Sprint(link)
+		}
+		if key == "<nil>" || key == "" || seen[key] {
+			continue
+		}
+		seen[key] = true
+		newCount++
+
+		lean := map[string]any{
+			"post_id":      id,
+			"published_at": pick(post, "published_at", "timestamp", "taken_at", "created_at", "created_time"),
+			"text":         pick(post, "text", "caption", "body", "content"),
+			"permalink":    link,
+		}
+		b, _ := json.Marshal(lean)
+		fmt.Printf("BACKUP_POST %s\n", string(b))
+	}
+	return newCount
+}
+
 func backgroundCollector() {
 	for {
 		body, err := collect()
@@ -103,20 +170,10 @@ func backgroundCollector() {
 		} else {
 			var wrapped map[string]any
 			_ = json.Unmarshal(body, &wrapped)
-			payload, _ := wrapped["payload"]
-			count := 0
-			switch v := payload.(type) {
-			case []any:
-				count = len(v)
-			case map[string]any:
-				for _, key := range []string{"posts", "items", "data", "results"} {
-					if arr, ok := v[key].([]any); ok {
-						count = len(arr)
-						break
-					}
-				}
-			}
-			fmt.Printf("BACKGROUND_COLLECT_OK collected_at=%v count=%d\n", wrapped["collected_at"], count)
+			payload := wrapped["payload"]
+			posts := rawPosts(payload)
+			newCount := logNewPosts(payload)
+			fmt.Printf("BACKGROUND_COLLECT_OK collected_at=%v count=%d new=%d\n", wrapped["collected_at"], len(posts), newCount)
 		}
 		time.Sleep(15 * time.Minute)
 	}
