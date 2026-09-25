@@ -88,6 +88,26 @@ func collectHandler(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(body)
 }
 
+func triggerHandler(w http.ResponseWriter, r *http.Request) {
+	body, err := collect()
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	if err != nil {
+		w.WriteHeader(http.StatusBadGateway)
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"ok": false,
+			"error": err.Error(),
+		})
+		return
+	}
+	var wrapped map[string]any
+	_ = json.Unmarshal(body, &wrapped)
+	_ = json.NewEncoder(w).Encode(map[string]any{
+		"ok": true,
+		"collected_at": wrapped["collected_at"],
+	})
+}
+
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	cache.mu.Lock()
@@ -184,6 +204,7 @@ func backgroundCollector() {
 
 func main() {
 	http.HandleFunc("/collect", collectHandler)
+	http.HandleFunc("/trigger", triggerHandler)
 	http.HandleFunc("/health", healthHandler)
 
 	go backgroundCollector()
