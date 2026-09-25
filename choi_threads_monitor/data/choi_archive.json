@@ -1,6 +1,6 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-25T14:09:19.854328Z",
+  "generated_at": "2026-09-25T14:12:50.636921Z",
   "source": "merged observations from GitHub Actions primary collector and Render backup watchdog",
   "archive_count": 70,
   "limitations": [
@@ -16,16 +16,16 @@
       "text": "Qwen-Image-2.1의 이미지 생성·편집 속도를 최대 6.3배 높이는 오픈소스 LoRA가 공개됐습니다.\n\n프루나 AI가 공개한 Pruna-Qwen-Image-2.1은 기존 40단계의 생성 과정을 5~8단계로 줄입니다. 5단계는 속도, 8단계는 속도와 품질의 균형에 맞춰져 있습니다.\n\n1K 이미지 생성과 편집을 지원하며 최대 3장의 참고 이미지도 사용할 수 있습니다.\n\n기존 Qwen-Image-2.1 위에 LoRA만 추가하면 사용할 수 있어 Diffusers에서도 이용 가능합니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdthHg0k1DJ",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQNidsKBmbQTITPKB2xjk8kkNE7pWiElcvdd_INYXgDR9uZCr_4rcdd4mZkjx5Vgz5kv32jKwtO3j56zTerd8P3e-klVazv0J449SIk.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=2JMzY4NXfHsQ7kNvwFHW7Pn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2NjkwMTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=b20868b8f53b39c5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNjQ1OEQ1MDlCQzFCMzlEMkQwQzZEQjlCMTRGNzZCRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QyODMxRjdERUVCRTRDQzI5MDBFRUExMzIwRURGQUQ2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8oWqrKb0PxUCKAJDMywXQDuIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLbgjU8Ny_f0MxXQZENp5KOkSKbUhvwMc7lHnbwdfGZew&oe=6AB86893"
+        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQNidsKBmbQTITPKB2xjk8kkNE7pWiElcvdd_INYXgDR9uZCr_4rcdd4mZkjx5Vgz5kv32jKwtO3j56zTerd8P3e-klVazv0J449SIk.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=2JMzY4NXfHsQ7kNvwGodQq4&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2NjkwMTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=b20868b8f53b39c5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNjQ1OEQ1MDlCQzFCMzlEMkQwQzZEQjlCMTRGNzZCRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QyODMxRjdERUVCRTRDQzI5MDBFRUExMzIwRURGQUQ2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8oWqrKb0PxUCKAJDMywXQDuIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIKveT1QrHwMK0rrI43-tIjfYotIKKq-EYwoW7iJv3iMw&oe=6AB86893"
       ],
       "engagement": {
-        "likes": 40,
+        "likes": 41,
         "replies": 2,
         "reposts": 10,
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T13:57:38.658455Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993949018035660763",
@@ -33,7 +33,7 @@
       "text": "Opus 5.5한테 리센느 매드무비 만들어달라고 해봤다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdtW3iXCSfb",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOOYFTKgU500t1OP6Rpfo2l24sDwKlh3jr_HHxiUkSI3XDaWYlMqXfr07P17KCY7JT2FKIN3dTyAWNQy86TX4ZemcC1XjUYITZEre0.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=Gpq1tPEA_0sQ7kNvwFU2qMW&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODY4OTU2MjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo2MCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=24413c45796e9cb0&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DRDQ1MzREOTIzQTFEQjE2QzA3MzZDRjlFNzMwQ0M4MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0JDQ0VFRUMxMjFBRjQ0N0VCMDM1NkZBOUQ1MjI3MEU1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAzZi1xaf0PxUCKAJDMywXQE4AAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIYiN9AKVg7KlCAVks6CmTh9nH-4VkpyXXCG6sQ6uPtyA&oe=6AB84967"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOOYFTKgU500t1OP6Rpfo2l24sDwKlh3jr_HHxiUkSI3XDaWYlMqXfr07P17KCY7JT2FKIN3dTyAWNQy86TX4ZemcC1XjUYITZEre0.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=Gpq1tPEA_0sQ7kNvwGurkWf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODY4OTU2MjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo2MCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=24413c45796e9cb0&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DRDQ1MzREOTIzQTFEQjE2QzA3MzZDRjlFNzMwQ0M4MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0JDQ0VFRUMxMjFBRjQ0N0VCMDM1NkZBOUQ1MjI3MEU1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAzZi1xaf0PxUCKAJDMywXQE4AAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJfNl_xaebx6Ld6bycYXSj3IC6FZUFKYd5AEc5qgYz4FA&oe=6AB84967"
       ],
       "engagement": {
         "likes": 125,
@@ -42,7 +42,7 @@
         "quotes": 2
       },
       "first_seen_at": "2026-09-25T11:46:53.940518Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993903801290549524",
@@ -50,16 +50,16 @@
       "text": "구글이 학생들의 공부 방식을 바꾸고 있습니다.\n\nChrome에서 강의 영상을 재생하면 Gemini가 내용을 분석하고, 열어둔 탭·Google Docs·강의 영상으로 바로 퀴즈까지 만들어줍니다.\n\n기기를 바꿔도 보던 위치부터 그대로 이어볼 수 있습니다.\n\n새롭게 추가된 기능 3가지를 정리했습니다🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DdtMli_AWkU",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/820553443_17988669435112832_8225097974241900956_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5MzkwMzgwMTI5MDU0OTUyNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=uNcHjmAzXG0Q7kNvwFXGTfj&_nc_oc=Ado4bBZs5Z_L0NKzKPtWu62vgr6ZTODQKHHF3KQnkzAjKvaXA-t7pFstvasCFRAGZtY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&oh=00_AQII5d5K8l4otdD014O6EQfTVXlnzhNjgGhjawOTE7Rw5A&oe=6ABC3AB1"
+        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/820553443_17988669435112832_8225097974241900956_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5MzkwMzgwMTI5MDU0OTUyNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=uNcHjmAzXG0Q7kNvwH2Akap&_nc_oc=Adpdju89cDJzuQGGO2yYfb_YxoCpg0ssHuCSG9wilBHN5VofD_Z3TOwlpHbxuk2FOB0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&oh=00_AQLYe7nwciw99EdgQAMfvTzjkeCkjkMEQxLcn59BlMzzxg&oe=6ABC3AB1"
       ],
       "engagement": {
-        "likes": 143,
+        "likes": 145,
         "replies": 5,
-        "reposts": 29,
-        "quotes": 3
+        "reposts": 30,
+        "quotes": 4
       },
       "first_seen_at": "2026-09-25T10:15:21.069043699Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993842968070926436",
@@ -68,13 +68,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Dds-wTojzBk",
       "media": null,
       "engagement": {
-        "likes": 191,
+        "likes": 193,
         "replies": 38,
         "reposts": 34,
         "quotes": 3
       },
       "first_seen_at": "2026-09-25T08:07:37.763444Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993813179620206387",
@@ -82,7 +82,7 @@
       "text": "필즈상 수상자 테렌스 타오(Terence Tao) 교수는 현재 AI가 수학적 문제 해결 과정에서 “모든 인간성을 제거하는 방식으로 최적화”되고 있다고 지적했습니다.\n\n인간 수학자는 문제를 깊이 고민하는 느린 과정 속에서 영감을 얻고, 동료 및 학생들과 통찰을 나누며 전체 수학 생태계에 기여합니다. 그러나 AI는 지름길로 정답 도출에만 직행해 그 과정의 귀중한 발견들을 놓친다고 꼬집었습니다.\n\n“새로운 미해결 과제와 연구 방향은 천천히 깊이 파고드는 과정, 즉 뜻밖의 발견에서 나옵니다.”\n\n기존 문제를 푸는 코딩·연산 성능을 넘어, 새로운 문제를 스스로 발굴하고 학문 생태계를 확장하는 인간 고유의 탐색 방식이야말로 AI 특이점 시대에 남겨진 핵심 과제라는 설명입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dds3-0-iScz",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMJfNQWkm_mJ3a73oJymOXBFEAUF6JUD0PWNrsjv4CPT3aXaKEo2gH_nCVB5WcW5XkOra6zlORro6it056K3EeEd_2ccAyJFEr-xgM.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=-AoZXsaGaSEQ7kNvwEATJaz&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODc5NDE3NjQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo1LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9125c4d7edc1dbdb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85QjQ3QjA1QjMwMTlCQTREOEUwOEE1QkExNkQzMDQ5NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdCNEZFNEJCMzM3OEFBQzUzM0U5RTVFMzdCOTdDNUFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAh7nxgfzzPxUCKAJDMywXQGBMzMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJt_vRx7rdHGR8-PS8Jm1LmuhaZ0EMULi_6636Nk07gzA&oe=6AB85DF0"
+        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMJfNQWkm_mJ3a73oJymOXBFEAUF6JUD0PWNrsjv4CPT3aXaKEo2gH_nCVB5WcW5XkOra6zlORro6it056K3EeEd_2ccAyJFEr-xgM.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=-AoZXsaGaSEQ7kNvwHd4ET6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODc5NDE3NjQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo1LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9125c4d7edc1dbdb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85QjQ3QjA1QjMwMTlCQTREOEUwOEE1QkExNkQzMDQ5NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdCNEZFNEJCMzM3OEFBQzUzM0U5RTVFMzdCOTdDNUFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAh7nxgfzzPxUCKAJDMywXQGBMzMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQK7VdBlL1C0ZuBDkDkoxvAjD7nfCtrssrHe0l3zU8iyIw&oe=6AB85DF0"
       ],
       "engagement": {
         "likes": 51,
@@ -91,7 +91,7 @@
         "quotes": 1
       },
       "first_seen_at": "2026-09-25T08:07:37.763444Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993752490491476366",
@@ -99,7 +99,7 @@
       "text": "앤드류 응(Andrew Ng)은 AI의 잠재적 위험에 대한 과도한 공포가 오히려 기술 발전과 해결책 마련을 가로막는다고 지적했습니다.\n\n그는 모델이 예상치 못한 방식으로 오작동할 때마다 규제로 발을 묶기보다는, 안전한 샌드박스 환경에서 철저히 테스트하며 해결책을 찾는 것이 정상적인 엔지니어링 관행이라고 강조했습니다.\n“AI 개발을 늦추자는 무차별적인 규제는 정작 문제를 해결할 방법까지 늦추게 만듭니다.”\n\n과거 GPT-2 출시 당시에도 세상이 끝날 것처럼 위험성을 경고했지만, 오늘날 훨씬 뛰어난 성능의 오픈 가중치 모델이 널리 배포되었음에도 파멸은 오지 않았다고 짚었습니다.\n“기술 혁신의 물결마다 항상 ‘너무 위험하다’는 과장된 공포가 따랐지만, 실제로는 사실이 아닌 것으로 입증되었습니다.”\n\n결국 막연한 종말론적 우려보다는, 실제 배포와 엔지니어링을 통한 점진적 개선이 진정한 특이점 시대를 앞당기는 길이라는 설명입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdsqLr0k3mO",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQNQxrEjcEmHq9sAWVeE_4yn9_AQ6YbtbN2chlBETakrt2fkDFxcpI6e-ZjVAB6KXOm2Q8fw0_VQYq8qXwCzC2n8p3-i9-0hIChlxS0.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=LA6sDcuL3WwQ7kNvwEkwe3_&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODc3Nzg4NDMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo2LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6ODYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=55c7132e52fd81a1&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8wMjRBNzhCRENFQTFBRUY3MzNCMUM5MzEwQjI4OEVCMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QzNDEzQkIyMjQ3RUY0ODJFQ0Y4OTE0MDg2RTA0OTgwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA1u-DxPLzPxUCKAJDMywXQFWa0OVgQYkYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIrq9ckJSRqW3bi8Snb8zyNWKe2qm354bo5x0KCqc411g&oe=6AB84913"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQNQxrEjcEmHq9sAWVeE_4yn9_AQ6YbtbN2chlBETakrt2fkDFxcpI6e-ZjVAB6KXOm2Q8fw0_VQYq8qXwCzC2n8p3-i9-0hIChlxS0.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=LA6sDcuL3WwQ7kNvwEyw5Jv&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODc3Nzg4NDMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo2LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6ODYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=55c7132e52fd81a1&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8wMjRBNzhCRENFQTFBRUY3MzNCMUM5MzEwQjI4OEVCMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QzNDEzQkIyMjQ3RUY0ODJFQ0Y4OTE0MDg2RTA0OTgwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA1u-DxPLzPxUCKAJDMywXQFWa0OVgQYkYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIVgDq9u2VgGh5Eo85EDO9nq7th2l84SIr5a37cRj8zEA&oe=6AB84913"
       ],
       "engagement": {
         "likes": 21,
@@ -108,7 +108,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T06:57:54.890658Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993722367250645451",
@@ -116,7 +116,7 @@
       "text": "Cua가 컴퓨터를 직접 조작하기 위한 4B 모델 Cua-S1-4B-0.2를 공개했습니다.\n\n화면과 목표, 가능한 행동들을 입력하면 매 순간 다음에 할 행동 하나를 선택합니다. 실제 컴퓨터 작업의 성공 여부를 보상으로 주는 강화학습 방식으로 훈련했습니다.\n\nGUI-360의 168개 작업에서는 92.9%를 기록해 학습하지 않은 dJev의 60.1%보다 높았습니다.\n\n텍스트·멀티모달 어댑터와 학습 코드도 Apache-2.0으로 공개됐습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdsjVVXgcHL",
       "media": [
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQPiiGBXMUY8bBUl13JxiCbQFzcNkAoQZ1OtwRpkqvfBAt5Co7l9c7MFHzZ_Su3q7y_Ql_PodQMEBaa0ou5MJWjR4sJfm1kEkTps_Lk.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=hnMKHWJ_5jIQ7kNvwHFXjfv&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1Mjk5NTAxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=ae325078ca2e7d32&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84ODRENjIzOTQ5MUQ5N0M1QkFDRkY2RjAzOTA1OUNBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQzRjkwRUMzRDFGNzQ4NUM4NEM4OTc2NDE4MTgyMDAyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8amboJ70PxUCKAJDMywXQDlwo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLYQiXm62df4F2qBWlpV5jEHz8MOSUEx7N5JeZEF4naFQ&oe=6AB86C7F"
+        "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPiiGBXMUY8bBUl13JxiCbQFzcNkAoQZ1OtwRpkqvfBAt5Co7l9c7MFHzZ_Su3q7y_Ql_PodQMEBaa0ou5MJWjR4sJfm1kEkTps_Lk.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=hnMKHWJ_5jIQ7kNvwHTZube&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1Mjk5NTAxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=ae325078ca2e7d32&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84ODRENjIzOTQ5MUQ5N0M1QkFDRkY2RjAzOTA1OUNBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQzRjkwRUMzRDFGNzQ4NUM4NEM4OTc2NDE4MTgyMDAyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8amboJ70PxUCKAJDMywXQDlwo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIW6OPyxtfQhatIMPoTgECevndpLBSiKubYh_PvfxHrew&oe=6AB86C7F"
       ],
       "engagement": {
         "likes": 56,
@@ -125,7 +125,7 @@
         "quotes": 1
       },
       "first_seen_at": "2026-09-25T06:57:54.890658Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993662087628337416",
@@ -133,7 +133,7 @@
       "text": "휴머노이드 로봇 19대가 사람 120명과 함께 무대에서 실시간 군집 공연을 펼쳤습니다.\n\n유니트리는 WorldSkills Shanghai 2026 개막식에서 19대의 휴머노이드 로봇이 1만 명 이상의 관객 앞에서 공연했다고 밝혔습니다.\n\n로봇들은 AI 기반으로 자율적으로 움직이며 사람들과 함께 안무를 수행했고, 공연 전 과정은 전 세계에 실시간 중계됐습니다.\n\n휴머노이드가 연구실을 넘어 대규모 현장에서 여러 대가 동시에 움직이는 단계까지 오고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdsVoJmCDEI",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPkYWfyE7BkZ1J6mCdEDhZ_DoLnVbTjZ8wIFx3USskUVvJu89xP0n7QN_QaAbl8a7d6xXzTcNjy06UiAhDPB511uwcOeGaSJCDMAEs.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=ujzTeWydsAgQ7kNvwFAYpZf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2MDI1MjkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=129fb36121728066&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84ODREMjdEMDFDQURDMEZBRTZBOTNFNDJEQjA1MjlCRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzMxNDdFNkY1NzBBQzZCODMzQjFENjE2NDZEM0RCMUE0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjIf8vKL0PxUCKAJDMywXQEh64UeuFHsYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKHO8_XGaokcwpVQrvtVFcH2zLG0JwbwLR9i7jORip7JQ&oe=6AB86C9D"
+        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQPkYWfyE7BkZ1J6mCdEDhZ_DoLnVbTjZ8wIFx3USskUVvJu89xP0n7QN_QaAbl8a7d6xXzTcNjy06UiAhDPB511uwcOeGaSJCDMAEs.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=ujzTeWydsAgQ7kNvwGhkiCx&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2MDI1MjkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=129fb36121728066&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84ODREMjdEMDFDQURDMEZBRTZBOTNFNDJEQjA1MjlCRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzMxNDdFNkY1NzBBQzZCODMzQjFENjE2NDZEM0RCMUE0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjIf8vKL0PxUCKAJDMywXQEh64UeuFHsYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLuUdOr9Z_voWKO1g7iZvhFMEOmoav52NJGw2OMlHwSHw&oe=6AB86C9D"
       ],
       "engagement": {
         "likes": 62,
@@ -142,7 +142,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T06:57:54.890658Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993631654983516525",
@@ -150,7 +150,7 @@
       "text": "구글 Gemini가 Adobe, Squarespace, Peloton 등 13개 앱과 새롭게 연동됩니다.\n\nGemini 안에서 “Adobe로 이 사진을 노을 분위기로 바꿔줘”라고 요청해 이미지를 편집하거나, Experian에서 신용등급과 변동 요인을 확인하고, Apartments.com에서 조건에 맞는 집을 찾을 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdsOtS_DEFt",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPmYQHn3iush_4AK5SSrTrB_KlV7W0mC5-6QuTRJnq1Wp0HJ8IBBgEeXLkRW_44kRrQBrt0HSLSbjmL4uP0x-2CRQyrM1zzQsMMXsI.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=WlfEhKgBUMMQ7kNvwH1MBZn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODUyOTAyNjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjEsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoyMiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=bc3767dfe5b5374c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CRkZFMDM3MkQzMEQ0MjVDOEFENTU2QTRFMTdCOTlCQV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQwNEZEMzJBQTYzNTBGRDU5ODU4NkFCNjhENTE1Rjg5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9ZCqmZ70PxUCKAJDMywXQDaAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQI0kxGos7LxanbWBbF1X2AnggsgnjtA89Qld9uA-jkTuA&oe=6AB85272"
+        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQPmYQHn3iush_4AK5SSrTrB_KlV7W0mC5-6QuTRJnq1Wp0HJ8IBBgEeXLkRW_44kRrQBrt0HSLSbjmL4uP0x-2CRQyrM1zzQsMMXsI.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=WlfEhKgBUMMQ7kNvwF-AWKf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODUyOTAyNjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjEsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoyMiwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=bc3767dfe5b5374c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CRkZFMDM3MkQzMEQ0MjVDOEFENTU2QTRFMTdCOTlCQV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQwNEZEMzJBQTYzNTBGRDU5ODU4NkFCNjhENTE1Rjg5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9ZCqmZ70PxUCKAJDMywXQDaAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKLBxZNap8-ZalYdA0ZpwP6it5mZkFkBN2aJp67m8t_QA&oe=6AB85272"
       ],
       "engagement": {
         "likes": 57,
@@ -159,7 +159,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T01:52:36.877686Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993601447068567682",
@@ -167,7 +167,7 @@
       "text": "메타 요즘 폼 미쳤네..\n\n이번에는 스마트폰에서 프롬프트만으로 게임을 만드는 Horizon Create를 공개했습니다. 2D·3D 게임을 AI로 만들고 난이도, 아트 스타일, 멀티플레이 기능까지 설정할 수 있습니다.\n\n더 큰 변화는 배포 방식입니다. 만든 게임을 페이스북과 인스타그램에 바로 올릴 수 있고, 이용자는 별도 앱 설치 없이 피드에서 게임 영상을 누르면 바로 멀티플레이에 참여할 수 있습니다.\n\nAI 게임 제작부터 배포, 유저 확보까지 메타 생태계 안에서 연결하려는 모습입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdsH1trAgiC",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQN_pXrmQpmSJCRmhWNkH7aAU50EjIVUpFtkIP24YsZ3_srcd7ORom_7-f0JxxN77pIncuUpy4xWav8hnHl8HqBAGvQYbHgIFdeZ-PY.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=BPXInpzJpkUQ7kNvwG_7LLH&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy44MzIuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODYxMzQwMTExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjozMSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=7a15ca05df9f74bb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8xNEMxNTgyRDY1MjM0Njg4QUIyQzkyNjZDNDQyQ0M5RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YwNDk4NDhDQTg4Q0RDRjg4MTQxODRCMTVBOUFENUI5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAxLP8jaP0PxUCKAJDMywXQD-7peNT988YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIkujWapPy0H7TZ_R7L6Mz06i06O9BwqAoGTxYT7FwqfA&oe=6AB8491F"
+        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQN_pXrmQpmSJCRmhWNkH7aAU50EjIVUpFtkIP24YsZ3_srcd7ORom_7-f0JxxN77pIncuUpy4xWav8hnHl8HqBAGvQYbHgIFdeZ-PY.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=BPXInpzJpkUQ7kNvwHCo8ON&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy44MzIuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODYxMzQwMTExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjozMSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=7a15ca05df9f74bb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8xNEMxNTgyRDY1MjM0Njg4QUIyQzkyNjZDNDQyQ0M5RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YwNDk4NDhDQTg4Q0RDRjg4MTQxODRCMTVBOUFENUI5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAxLP8jaP0PxUCKAJDMywXQD-7peNT988YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIxyiyYK49A4W6PggBzm3v6vfDzfbva2dAU4KTGsSJJSg&oe=6AB8491F"
       ],
       "engagement": {
         "likes": 100,
@@ -176,7 +176,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T01:52:36.877686Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993571580822294234",
@@ -184,7 +184,7 @@
       "text": "와.. 정말 미래의 게임은 이런 모습일까요?\n\n오디세이가 다중 에이전트 월드 모델 Agora-2를 공개했습니다.\n\n게임 엔진 없이 AI가 실시간으로 세계를 만들고, 그 안에서 사람과 AI 에이전트 20명이 동시에 상호작용할 수 있는데요.\n\n현재 공개된 버전에서는 사람 4명이 AI 에이전트 16개와 함께 전투할 수 있으며, 참여자의 행동에 따라 월드 모델이 환경 변화를 실시간으로 생성합니다.\n\n오디세이는 AI 학습과 안전성 테스트, 로봇, 자율주행, 사이버보안, 게임 등에 이런 다중 에이전트 시뮬레이션을 활용할 수 있을 것으로 보고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdsBDGkAg7a",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQP1ejsxeymvcLfp_X3vf33p9PntpvQGGRjiMrKl6nn9rMQkqKqyw-rHVyo5eCtuaIYUScnUZjbXB7WutvjMix9m4wx8LmdUW3Leikc.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=WDBDOgZxJCYQ7kNvwFCDh3a&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2MDE3NDYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2199910abcc5c182&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81QjQyRDEzNjkyOEUyQ0FEODkyRDU4NjZDQzcyRkQ4NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0E2NEJGOEE2MDE5OEI1QjIzQjhEREQ3RjNBNUI2RThGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAhaqRt6L0PxUCKAJDMywXQEyQAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJmUoSKd8JSdKNJrGxx3I2rZ87L_RiJPZjBb46pEyHHsQ&oe=6AB87307"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQP1ejsxeymvcLfp_X3vf33p9PntpvQGGRjiMrKl6nn9rMQkqKqyw-rHVyo5eCtuaIYUScnUZjbXB7WutvjMix9m4wx8LmdUW3Leikc.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=WDBDOgZxJCYQ7kNvwE9-Y6d&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2MDE3NDYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2199910abcc5c182&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81QjQyRDEzNjkyOEUyQ0FEODkyRDU4NjZDQzcyRkQ4NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0E2NEJGOEE2MDE5OEI1QjIzQjhEREQ3RjNBNUI2RThGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAhaqRt6L0PxUCKAJDMywXQEyQAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLaOKlL7AsvmN6eZyMT410WzpnAD_OmEHVJK-jOe-HJGQ&oe=6AB87307"
       ],
       "engagement": {
         "likes": 76,
@@ -193,7 +193,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-24T23:24:59.672714Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993541273369326535",
@@ -201,7 +201,7 @@
       "text": "앤트로픽이 Claude가 답변을 거부한 일부 요청에도 다시 비용을 부과합니다.\n\n대상은 생물학, 모델 추출 공격, 고성능 LLM 개발 관련 요청 중 안전장치가 사전에 차단한 경우입니다. 최근 몇 주간 조직적인 공격이 발생하면서 방어 수단으로 적용한다고 밝혔습니다.\n\n앤트로픽에 따르면 최근 테스트에서 Claude Code·Claude.ai·Cowork 계정의 99.7%는 해당 차단을 한 번도 겪지 않았고, 차단 시스템의 오탐률은 0.1% 미만입니다.\n\n즉 Claude가 답변을 생성하지 않아도 특정 보안 차단에 걸리면 사용량이 청구될 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddr6KEjCjPH",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/823196735_17988601452112832_912017719652348540_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=Mzk5MzU0MTI3MzM2OTMyNjUzNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE3Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=GOn0Kr7eT68Q7kNvwFXwKA1&_nc_oc=AdqRzcNoP5AGPOsCkauk_iywBwVjifK7z-fV_13q47InyA_ISYNYAgBFNlZWPXE62XM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&oh=00_AQKhOrN1hfqj9KMOYdO5ZQ4UnqU72k7Jty5SygL3uZTg4w&oe=6ABC588D"
+        "https://scontent-dfw6-2.cdninstagram.com/v/t51.82787-15/823196735_17988601452112832_912017719652348540_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=Mzk5MzU0MTI3MzM2OTMyNjUzNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE3Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=GOn0Kr7eT68Q7kNvwGRVGXV&_nc_oc=AdqlyGfDZTP8E8r8CpAaCgO1zrCw956TaTS9YZd2Aost1MN3EUa5jw2tlH0iYT952Zo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&oh=00_AQKZHe8zR_L-M6M23I95ZBrcuI9uSEY2S2D4jiZnS8M6fQ&oe=6ABC588D"
       ],
       "engagement": {
         "likes": 53,
@@ -210,7 +210,7 @@
         "quotes": 1
       },
       "first_seen_at": "2026-09-24T23:24:59.672714Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993501082156493555",
@@ -225,7 +225,7 @@
         "quotes": 1
       },
       "first_seen_at": "2026-09-24T23:24:59.672714Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993480696210448854",
@@ -233,7 +233,7 @@
       "text": "미국 정부가 오픈AI와 앤트로픽에 새로운 AI 모델을 영국보다 먼저 미국 정부에 제공해 검사를 받으라고 요청했습니다.\n\nPOLITICO에 따르면 미국은 자국 시스템의 안전성을 먼저 확인한 뒤 영국 AI Security Institute 등 해외 기관에 모델을 공유하길 요구하고 있습니다.\n\n앤트로픽은 실제로 Claude Mythos 5.1을 미국 기관에만 우선 제공했고, 영국은 사전 테스트를 하지 못했습니다.\n\n최신 AI 모델의 출시 전 접근 권한까지 국가 간 AI 경쟁의 대상이 되고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdrsYjrAOHW",
       "media": [
-        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/824653666_17988601485112832_5285924585205763256_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5MzQ4MDY5NjIxMDQ0ODg1NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTMxOC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Ri1SqghCem4Q7kNvwFHl5w5&_nc_oc=AdorIDuKat4xXI9nTLSrVzS0-7jyGFQf2hqspGWOhz9dri7x1nRZX7Nkzop7zSGto3k&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&oh=00_AQL7AMCF5SsCZi7rmHUcOUoIeljcrixe0jeybevocx9YtA&oe=6ABC410F"
+        "https://scontent-dfw5-1.cdninstagram.com/v/t51.82787-15/824653666_17988601485112832_5285924585205763256_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5MzQ4MDY5NjIxMDQ0ODg1NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTMxOC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Ri1SqghCem4Q7kNvwF7kxoS&_nc_oc=AdqfbyrfFJIUO3beU4zSBNjhbLurDW_tWbGraLhAmz93XpIBUvQnAEwWozETXMwrV7M&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&oh=00_AQLxNxOROwPAQ4DfvQ0QOpwJxYOjKpMWgPgiK0Ge30cvig&oe=6ABC410F"
       ],
       "engagement": {
         "likes": 21,
@@ -242,7 +242,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-24T20:27:42.279426Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993450391257634846",
@@ -250,7 +250,7 @@
       "text": "미국과 중국이 AI 경쟁을 넘어 ‘AI 통제’까지 논의하기 시작했습니다.\n\n시진핑 중국 국가주석은 트럼프 대통령과의 백악관 회담에서 양국이 AI 강국인 만큼 “AI가 항상 인간의 통제 아래 있고 사람들의 복지에 기여하도록” 개발·관리할 책임이 있다고 밝혔습니다.\n\n미국은 별도로 위험한 AI 사고가 국가안보 문제로 이어질 경우 서로 알리는 ‘AI 핫라인’도 중국에 제안했습니다. 아직 구체적인 운영 방식은 협의 단계입니다.\n\nAI가 이제 미중 정상회담에서 무역·안보와 함께 직접 다뤄지는 의제가 되고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddrlfj_Dlge",
       "media": [
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQPPaKW_p5tuf8YNojWPvDCXOxqLzNEwB6tSaZsUV-dAQ9l50MMQDzZdGzFforBXYds19jdgZgoFVugSG7YLY474-ik2Lz4zhJnQYNU.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=8t7_alMp9NUQ7kNvwGuwdpS&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2MDA4MzQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=36f8af3cb23470eb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9BRjQxNzM5QTVBMkM3QjBFRDA1N0RCOUZDRTg4REU5Rl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzNBNDlFODNEOEZEN0IxNzA4Q0Q4MkE5NTI5MjMzRkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9cmrsKL0PxUCKAJDMywXQEWIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=XyIL_b_oI5cIhbFBnAslhA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKvdPtBafD8Gx7CH9gil6oiIHOGIGvkb30DqF0QkKr5dw&oe=6AB84F09"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPPaKW_p5tuf8YNojWPvDCXOxqLzNEwB6tSaZsUV-dAQ9l50MMQDzZdGzFforBXYds19jdgZgoFVugSG7YLY474-ik2Lz4zhJnQYNU.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=8t7_alMp9NUQ7kNvwExWR3n&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2MDA4MzQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=36f8af3cb23470eb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9BRjQxNzM5QTVBMkM3QjBFRDA1N0RCOUZDRTg4REU5Rl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzNBNDlFODNEOEZEN0IxNzA4Q0Q4MkE5NTI5MjMzRkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9cmrsKL0PxUCKAJDMywXQEWIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=nSExICAPxVeLb7EkCP4fIw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJ9Ovo7je-MYO0AYXsNPCZ4gDixVXBhfUN5tvIFoDz_wA&oe=6AB84F09"
       ],
       "engagement": {
         "likes": 32,
@@ -259,7 +259,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-24T20:27:42.279426Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993420559965756243",
@@ -267,7 +267,7 @@
       "text": "🚨 구글이 AI 데이터센터를 우주에 띄우는 Project Suncatcher를 실제 위성으로 테스트합니다.\n\n첫 실험 위성은 10월 1일 SpaceX Falcon 9으로 발사될 예정이며 TPU 4개를 탑재해 우주에서 간단한 Gemini 요청을 처리하고 방사선·발열 환경에서 AI 칩이 제대로 작동하는지 확인합니다.\n\n2027년에는 위성 2대를 추가로 발사할 계획이며, 장기적으로는 80대 이상의 위성을 서로 연결해 하나의 AI 데이터센터처럼 운영하는 방안을 구상하고 있습니다. 축구장 길이 수준의 대형 위성 설계도 검토 중입니다.\n\n구글은 2030년대 중반이면 우주 데이터센터의 비용이 지상 데이터센터와 경쟁할 수 있을 것으로 보고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdretdbgBtT",
       "media": [
-        "https://instagram.fhan14-4.fna.fbcdn.net/o1/v/t16/f2/m84/AQMnorlJQ1i6OJxJ_03bIVbF8tpc8tZNi7hYNuzrjzrY7WIJUZ5Kcg4Cb6_BtrUt6GMMCkV-9zAKoMieIyKVPmETmvbyu5AguJkT1EM.mp4?_nc_cat=102&_nc_oc=AdriNKu8geBBYpZtkttexqFsENeXa9-CgvCvT78qIbF2AFTU71KAio9tWVes4FbrSus&_nc_sid=5e9851&_nc_ht=instagram.fhan14-4.fna.fbcdn.net&_nc_ohc=CwPnXhjLd80Q7kNvwGA2f5X&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1OTk5NzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTIyLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=5693f5034e0809c2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CRjQ4NEJDQzYwMDcxRUJGNjJCNzZGNTU0MDA2RTNCOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzZENDBGQThGNjA4NTgxREE0NzA0NDQ3MkREREE0RkI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAy6n5qaL0PxUCKAJDMywXQF6ZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=unf8cxaMz7j0eEpvfv7DFw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKFFwKYGVeFRqb945x75H6kUcQSSlXPvwHGUjnJsvadIg&oe=6AB85C0E"
+        "https://instagram.fhan14-4.fna.fbcdn.net/o1/v/t16/f2/m84/AQMnorlJQ1i6OJxJ_03bIVbF8tpc8tZNi7hYNuzrjzrY7WIJUZ5Kcg4Cb6_BtrUt6GMMCkV-9zAKoMieIyKVPmETmvbyu5AguJkT1EM.mp4?_nc_cat=102&_nc_oc=AdriNKu8geBBYpZtkttexqFsENeXa9-CgvCvT78qIbF2AFTU71KAio9tWVes4FbrSus&_nc_sid=5e9851&_nc_ht=instagram.fhan14-4.fna.fbcdn.net&_nc_ohc=CwPnXhjLd80Q7kNvwGA2f5X&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1OTk5NzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTIyLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=5693f5034e0809c2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CRjQ4NEJDQzYwMDcxRUJGNjJCNzZGNTU0MDA2RTNCOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzZENDBGQThGNjA4NTgxREE0NzA0NDQ3MkREREE0RkI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAy6n5qaL0PxUCKAJDMywXQF6ZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=gNfwjaQfm8kPSzvgFsqMPg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJF7B0DWtpLuSBWC7g7z1JpS9wPV5J1xrn8cBPj8Oph9g&oe=6AB85C0E"
       ],
       "engagement": {
         "likes": null,
@@ -276,7 +276,7 @@
         "quotes": null
       },
       "first_seen_at": "2026-09-24T20:27:42.279426Z",
-      "last_seen_at": "2026-09-25T14:09:19.854328Z"
+      "last_seen_at": "2026-09-25T14:12:50.636921Z"
     },
     {
       "post_id": "3993390421770341337",
