@@ -1,0 +1,28 @@
+name: CHOI Render Watchdog Ping
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/choi-render-watchdog-ping.yml"
+  schedule:
+    - cron: "2,7,12,17,22,27,32,37,42,47,52,57 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: choi-render-watchdog-ping
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Wake and collect Render backup
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error             --retry 3 --retry-delay 5 --max-time 210             https://choi-threads-backup-collector.onrender.com/trigger
+          echo
