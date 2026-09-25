@@ -3,6 +3,8 @@ import json
 import os
 import shutil
 import subprocess
+import urllib.error
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,6 +14,10 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 OUTPUT = DATA_DIR / "choi_latest.json"
 ARCHIVE = DATA_DIR / "choi_archive.json"
+BACKUP_BASE_URL = os.environ.get(
+    "CHOI_BACKUP_BASE_URL",
+    "https://choi-threads-backup-collector.onrender.com",
+).rstrip("/")
 # The archive is cumulative; scheduled snapshot gaps must not create permanent report omissions.
 
 
@@ -85,6 +91,29 @@ def post_key(post):
     return post.get("post_id") or post.get("permalink")
 
 
+def dedupe_posts(posts):
+    merged = {}
+    for post in posts:
+        key = post_key(post)
+        if key:
+            merged[key] = post
+    return list(merged.values())
+
+
+def combine_observations(primary_posts, backup_posts):
+    # Backup fills gaps; the primary snapshot wins if both saw the same post.
+    merged = {}
+    for post in backup_posts:
+        key = post_key(post)
+        if key:
+            merged[key] = post
+    for post in primary_posts:
+        key = post_key(post)
+        if key:
+            merged[key] = post
+    return list(merged.values())
+
+
 def archive_view(post):
     return {
         "post_id": post.get("post_id"),
@@ -135,15 +164,58 @@ def merge_archive(previous_archive, posts, seen_at):
     return {
         "account": ACCOUNT,
         "generated_at": seen_at,
-        "source": "merged successful snapshots from tamnd/threads-cli anonymous public crawler",
+        "source": "merged observations from GitHub Actions primary collector and Render backup watchdog",
         "archive_count": len(merged),
         "limitations": [
-            "Archive contains only posts that were observed by a successful collector run.",
-            "Anonymous Threads access exposes only the recent public window and can change without notice.",
-            "A post cannot be recovered if it disappears from the crawler surface before any successful collection sees it.",
+            "Archive contains only posts observed by at least one successful collector.",
+            "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
+            "A post can still be missed if it disappears before either collector observes it.",
+            "Use report_state catch-up logic so posts discovered late are emitted exactly once.",
         ],
         "posts": merged,
     }
+
+
+def fetch_json(url, timeout=75):
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "application/json",
+            "User-Agent": "choi-threads-monitor-watchdog/1.0",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def fetch_backup_posts():
+    errors = []
+    for endpoint in ("/archive", "/collect"):
+        url = BACKUP_BASE_URL + endpoint
+        try:
+            payload = fetch_json(url)
+            if isinstance(payload, dict) and isinstance(payload.get("posts"), list):
+                raw_posts = payload["posts"]
+            elif isinstance(payload, dict) and "payload" in payload:
+                raw_posts = extract_posts(payload["payload"])
+            else:
+                raw_posts = extract_posts(payload)
+
+            normalized = dedupe_posts(normalize_post(post) for post in raw_posts)
+            if not normalized:
+                raise RuntimeError("backup collector returned no posts")
+
+            meta = {
+                "endpoint": endpoint,
+                "collected_at": first(payload, "collected_at", "generated_at") if isinstance(payload, dict) else None,
+                "archive_count": payload.get("archive_count") if isinstance(payload, dict) else None,
+                "collection_ok": payload.get("collection_ok") if isinstance(payload, dict) else None,
+            }
+            return normalized, meta
+        except Exception as exc:
+            errors.append(f"{endpoint}: {exc}")
+
+    raise RuntimeError("; ".join(errors))
 
 
 def write_json(path, payload):
@@ -156,6 +228,8 @@ def main():
     previous_archive = load_json(ARCHIVE)
     generated_at = now_iso()
     archive_payload = None
+    primary_posts = []
+    backup_posts = []
 
     base = {
         "account": ACCOUNT,
@@ -167,8 +241,17 @@ def main():
         "limitations": [],
         "post_count": len(previous.get("posts", [])),
         "posts": previous.get("posts", []),
+        "watchdog": {
+            "status": "not_checked",
+            "checked_at": generated_at,
+            "backup_base_url": BACKUP_BASE_URL,
+            "backup_post_count": 0,
+            "backup_only_current_count": 0,
+            "recovered_to_archive_count": 0,
+        },
     }
 
+    primary_error = None
     try:
         th = find_th()
         proc = subprocess.run(
@@ -184,14 +267,13 @@ def main():
             )
 
         raw = json.loads(proc.stdout)
-        posts = extract_posts(raw)
-        normalized = [normalize_post(p) for p in posts]
+        primary_posts = dedupe_posts(normalize_post(p) for p in extract_posts(raw))
 
-        if not normalized:
+        if not primary_posts:
             base["collection_status"] = "degraded"
             base["limitations"] = [
-                "Collector returned no public posts. Previous successful posts, if any, were preserved.",
-                "Anonymous Threads access exposes only the recent public window and can change without notice.",
+                "Primary collector returned no public posts. Previous successful latest snapshot was preserved.",
+                "The Render watchdog may still recover posts into choi_archive.json.",
             ]
         else:
             base.update({
@@ -199,21 +281,78 @@ def main():
                 "latest_good_generated_at": generated_at,
                 "limitations": [
                     "Anonymous crawler surface exposes recent public posts, not guaranteed full account history.",
-                    "At most 100 recent records are collected per run.",
-                    "Use choi_archive.json for reporting so delayed posts remain available after they fall out of choi_latest.json.",
+                    "At most 100 recent records are collected per primary run.",
+                    "Use choi_archive.json for reporting; the Render watchdog can recover posts missed between primary runs.",
                 ],
-                "post_count": len(normalized),
-                "posts": normalized,
+                "post_count": len(primary_posts),
+                "posts": primary_posts,
             })
-            archive_payload = merge_archive(previous_archive, normalized, generated_at)
     except Exception as exc:
+        primary_error = str(exc)
         base["collection_status"] = "error"
-        base["error"] = str(exc)
+        base["error"] = primary_error
         base["limitations"] = [
-            "Current collection failed; previous successful posts, if any, were preserved.",
+            "Current primary collection failed; previous successful latest snapshot was preserved.",
+            "The Render watchdog is checked independently and can still add observed posts to the archive.",
             "Do not infer or fabricate missing posts.",
-            "Use the existing archive for historical coverage, but mark the newest interval as stale until collection succeeds again.",
         ]
+
+    backup_meta = {}
+    try:
+        backup_posts, backup_meta = fetch_backup_posts()
+        primary_keys = {post_key(p) for p in primary_posts if post_key(p)}
+        previous_keys = {post_key(p) for p in previous_archive.get("posts", []) if post_key(p)}
+        backup_keys = {post_key(p) for p in backup_posts if post_key(p)}
+        recovered_keys = sorted(backup_keys - primary_keys - previous_keys)
+        backup_only_keys = backup_keys - primary_keys
+
+        base["watchdog"] = {
+            "status": "ok",
+            "checked_at": generated_at,
+            "backup_base_url": BACKUP_BASE_URL,
+            "endpoint": backup_meta.get("endpoint"),
+            "backup_collected_at": backup_meta.get("collected_at"),
+            "backup_archive_count": backup_meta.get("archive_count"),
+            "backup_post_count": len(backup_posts),
+            "backup_only_current_count": len(backup_only_keys),
+            "recovered_to_archive_count": len(recovered_keys),
+            "recovered_keys": recovered_keys,
+            "limitations": [
+                "The watchdog is an independent runtime, but it uses the same anonymous Threads crawler family.",
+                "Its in-memory archive is drained into GitHub before commit-triggered Render redeploys.",
+            ],
+        }
+
+        if primary_error is not None:
+            base["collection_status"] = "degraded"
+            base["limitations"].append(
+                "Primary collection failed, but the independent Render watchdog responded successfully."
+            )
+    except Exception as exc:
+        base["watchdog"] = {
+            "status": "error",
+            "checked_at": generated_at,
+            "backup_base_url": BACKUP_BASE_URL,
+            "backup_post_count": 0,
+            "backup_only_current_count": 0,
+            "recovered_to_archive_count": 0,
+            "error": str(exc),
+            "limitations": [
+                "Backup watchdog was unavailable for this run; the primary collector result is still usable if collection_status is ok.",
+            ],
+        }
+
+    observed_posts = combine_observations(primary_posts, backup_posts)
+    if observed_posts:
+        archive_payload = merge_archive(previous_archive, observed_posts, generated_at)
+        archive_payload["watchdog"] = {
+            "status": base["watchdog"].get("status"),
+            "recovered_to_archive_count": base["watchdog"].get("recovered_to_archive_count", 0),
+            "backup_only_current_count": base["watchdog"].get("backup_only_current_count", 0),
+        }
+
+    if not primary_posts and not backup_posts and primary_error is not None:
+        base["collection_status"] = "error"
 
     write_json(OUTPUT, base)
     if archive_payload is not None:
@@ -224,6 +363,9 @@ def main():
         "post_count": base["post_count"],
         "generated_at": base["generated_at"],
         "archive_count": archive_payload.get("archive_count") if archive_payload else previous_archive.get("archive_count"),
+        "watchdog_status": base["watchdog"].get("status"),
+        "watchdog_backup_post_count": base["watchdog"].get("backup_post_count"),
+        "watchdog_recovered_count": base["watchdog"].get("recovered_to_archive_count"),
         "error": base.get("error"),
     }, ensure_ascii=False))
 

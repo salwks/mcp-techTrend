@@ -2,8 +2,6 @@ name: CHOI Threads Monitor
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "7,22,37,52 * * * *"
   push:
     paths:
       - ".github/workflows/choi-threads-monitor.yml"
