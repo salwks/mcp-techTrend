@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "7 * * * *"
+  push:
+    paths:
+      - ".github/workflows/choi-threads-monitor-07.yml"
 
 permissions:
   contents: write
