@@ -50,14 +50,29 @@
     "3993148458252707221",
     "3993132723371722529",
     "3993118156352219396",
-    "3993088339229614904"
+    "3993088339229614904",
+    "3993631654983516525",
+    "3993601447068567682",
+    "3993571580822294234",
+    "3993541273369326535",
+    "3993501082156493555",
+    "3993480696210448854",
+    "3993450391257634846",
+    "3993420559965756243",
+    "3993390421770341337",
+    "3993360153482933750",
+    "3993329740089809852",
+    "3993299693756541883",
+    "3993269192022940521",
+    "3993239408245697134"
   ],
   "emitted_permalinks": [],
   "notes": [
     "Seeded from reports already delivered in this conversation, including the separate Trump correction.",
     "Posts observed later but absent from emitted_post_ids must be emitted once in the delayed-collection catch-up section even if they are older than the current six-hour wall-clock window.",
     "2026-09-24 catch-up report emitted the one current-window post plus all 17 archive posts missing from the initial report state; subsequent runs should not repeat this baseline catch-up.",
-    "2026-09-24 20:09 KST manual recovery report emitted 1 current-window post and 4 delayed-collection catch-up posts."
+    "2026-09-24 20:09 KST manual recovery report emitted 1 current-window post and 4 delayed-collection catch-up posts.",
+    "2026-09-25 14:00 KST report emitted 3 current-window posts and 11 delayed/catch-up posts. Nine catch-up posts had appeared in the prior user-visible report but were absent from state because that run's state write failed."
   ],
-  "last_reported_at": "2026-09-24T17:00:40Z"
+  "last_reported_at": "2026-09-25T05:00:21Z"
 }
