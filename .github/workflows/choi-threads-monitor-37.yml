@@ -1,0 +1,33 @@
+name: CHOI Threads Monitor 37
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "37 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: choi-threads-monitor
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      - run: go install github.com/tamnd/threads-cli/cmd/th@latest
+      - run: python3 choi_threads_monitor/collect.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add choi_threads_monitor/data/choi_latest.json choi_threads_monitor/data/choi_archive.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: update choi.openai Threads monitor data"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
