@@ -1,14 +1,25 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-25T09:26:00.103612Z",
+  "generated_at": "2026-09-25T10:17:33Z",
   "source": "merged successful snapshots from tamnd/threads-cli anonymous public crawler",
-  "archive_count": 67,
+  "archive_count": 68,
   "limitations": [
     "Archive contains only posts that were observed by a successful collector run.",
     "Anonymous Threads access exposes only the recent public window and can change without notice.",
-    "A post cannot be recovered if it disappears from the crawler surface before any successful collection sees it."
+    "A post cannot be recovered if it disappears from the crawler surface before any successful collection sees it.",
+    "Render backup collector can recover posts observed independently when GitHub scheduled collection misses them."
   ],
   "posts": [
+    {
+      "post_id": "3993903801290549524",
+      "published_at": "2026-09-25T10:00:56Z",
+      "text": "구글이 학생들의 공부 방식을 바꾸고 있습니다.\n\nChrome에서 강의 영상을 재생하면 Gemini가 내용을 분석하고, 열어둔 탭·Google Docs·강의 영상으로 바로 퀴즈까지 만들어줍니다.\n\n기기를 바꿔도 보던 위치부터 그대로 이어볼 수 있습니다.\n\n새롭게 추가된 기능 3가지를 정리했습니다🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DdtMli_AWkU",
+      "media": null,
+      "engagement": null,
+      "first_seen_at": "2026-09-25T10:15:21.069043699Z",
+      "last_seen_at": "2026-09-25T10:15:21.069043699Z"
+    },
     {
       "post_id": "3993842968070926436",
       "published_at": "2026-09-25T08:00:04Z",
