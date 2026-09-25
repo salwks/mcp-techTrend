@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/choi-threads-monitor.yml"
       - "choi_threads_monitor/collect.py"
+      - "choi_threads_monitor/watchdog_trigger.txt"
 
 permissions:
   contents: write
