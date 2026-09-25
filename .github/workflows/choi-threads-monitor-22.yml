@@ -18,18 +18,48 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-go@v5
         with:
           go-version: "stable"
+
       - run: go install github.com/tamnd/threads-cli/cmd/th@latest
-      - run: python3 choi_threads_monitor/collect.py
-      - run: |
+
+      - name: Collect and push safely
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add choi_threads_monitor/data/choi_latest.json choi_threads_monitor/data/choi_archive.json
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "chore: update choi.openai Threads monitor data"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+          for attempt in 1 2 3; do
+            echo "Collection attempt $attempt"
+            git fetch origin "${GITHUB_REF_NAME}"
+            git reset --hard "origin/${GITHUB_REF_NAME}"
+
+            python3 choi_threads_monitor/collect.py
+
+            git add choi_threads_monitor/data/choi_latest.json
+            if [ -f choi_threads_monitor/data/choi_archive.json ]; then
+              git add choi_threads_monitor/data/choi_archive.json
+            fi
+
+            if git diff --cached --quiet; then
+              echo "No monitor data change."
+              exit 0
+            fi
+
+            git commit -m "chore: update choi.openai Threads monitor data"
+
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "Monitor data pushed successfully."
+              exit 0
+            fi
+
+            echo "Push raced with another commit; retrying from fresh main."
+          done
+
+          echo "Failed to persist monitor data after 3 attempts."
+          exit 1
