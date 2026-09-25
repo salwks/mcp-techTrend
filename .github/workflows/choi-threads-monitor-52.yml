@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: choi-threads-monitor
+  group: choi-threads-monitor-52
   cancel-in-progress: false
 
 jobs:
