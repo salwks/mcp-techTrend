@@ -95,9 +95,38 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func backgroundCollector() {
+	for {
+		body, err := collect()
+		if err != nil {
+			fmt.Printf("BACKGROUND_COLLECT_ERROR %s\n", err)
+		} else {
+			var wrapped map[string]any
+			_ = json.Unmarshal(body, &wrapped)
+			payload, _ := wrapped["payload"]
+			count := 0
+			switch v := payload.(type) {
+			case []any:
+				count = len(v)
+			case map[string]any:
+				for _, key := range []string{"posts", "items", "data", "results"} {
+					if arr, ok := v[key].([]any); ok {
+						count = len(arr)
+						break
+					}
+				}
+			}
+			fmt.Printf("BACKGROUND_COLLECT_OK collected_at=%v count=%d\n", wrapped["collected_at"], count)
+		}
+		time.Sleep(15 * time.Minute)
+	}
+}
+
 func main() {
 	http.HandleFunc("/collect", collectHandler)
 	http.HandleFunc("/health", healthHandler)
+
+	go backgroundCollector()
 
 	port := os.Getenv("PORT")
 	if port == "" {
