@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -39,9 +40,11 @@ func collect() ([]byte, error) {
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, th, "profile", "choi.openai", "--posts", "-n", "100", "-o", "json", "--no-cache")
-	out, err := cmd.CombinedOutput()
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	out, err := cmd.Output()
 	if err != nil {
-		cache.errText = fmt.Sprintf("%v: %s", err, string(out))
+		cache.errText = fmt.Sprintf("%v: %s", err, stderr.String())
 		return nil, fmt.Errorf("%s", cache.errText)
 	}
 
