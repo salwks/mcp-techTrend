@@ -1,0 +1,43 @@
+name: Siheung Policy Map (weekly)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 매주 월요일 08:17 KST (일요일 23:17 UTC)
+    - cron: "17 23 * * 0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: siheung-policy-map
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Collect and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          status=0
+          python3 siheung_policy_map/collect.py || status=$?
+          git add siheung_policy_map/data/projects.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update Siheung policy map data"
+            for attempt in 1 2 3; do
+              git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && break
+              sleep $((attempt * 5))
+            done
+          fi
+          exit $status

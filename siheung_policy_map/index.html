@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시흥 정책 지도</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css">
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --text: #1d232b; --muted: #5c6773; --line: #e2e6ea;
+  --accent: #0b6bcb; --chip: #eef1f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171b; --panel: #1c2026; --text: #e7eaee; --muted: #9aa4af; --line: #2c323a;
+    --accent: #5aa7f0; --chip: #262b33;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; display: flex; flex-direction: column; }
+header { padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--line); }
+header h1 { margin: 0; font-size: 18px; }
+header .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+.controls input, .controls select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+.controls input[type=search] { flex: 1 1 200px; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { border: 1px solid var(--line); background: var(--chip); color: var(--text); border-radius: 999px; padding: 3px 10px; font: inherit; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.chip[aria-pressed="false"] { opacity: .45; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+main { flex: 1; display: flex; min-height: 0; }
+#map { flex: 1; min-height: 300px; }
+aside { width: 380px; max-width: 45%; background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; }
+.count { padding: 10px 16px; color: var(--muted); font-size: 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); z-index: 1; }
+.item { padding: 10px 16px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.item:hover, .item.active { background: var(--chip); }
+.item .t { font-weight: 600; }
+.item .s { color: var(--muted); font-size: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 2px; }
+.empty { padding: 24px 16px; color: var(--muted); }
+.popup a { color: var(--accent); }
+.popup .s { color: #5c6773; font-size: 12px; }
+.warn { color: #b25e00; }
+@media (max-width: 720px) {
+  main { flex-direction: column; }
+  #map { flex: none; height: 55vh; }
+  aside { width: 100%; max-width: none; border-left: 0; border-top: 1px solid var(--line); flex: 1; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>시흥시 정책·사업 지도</h1>
+  <div class="meta" id="meta">불러오는 중…</div>
+  <div class="controls">
+    <input type="search" id="q" placeholder="사업명, 동 이름 검색" aria-label="검색">
+    <select id="period" aria-label="기간">
+      <option value="30">최근 1개월</option>
+      <option value="90" selected>최근 3개월</option>
+      <option value="365">최근 1년</option>
+      <option value="0">전체</option>
+    </select>
+    <select id="source" aria-label="출처"><option value="">전체 출처</option></select>
+  </div>
+  <div class="chips" id="chips"></div>
+</header>
+<main>
+  <div id="map" role="region" aria-label="지도"></div>
+  <aside><div class="count" id="count"></div><div id="list"></div></aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+<script>
+const COLORS = {
+  "복지": "#d6457a", "교통": "#1f77d0", "도시개발": "#8a5a2b", "환경": "#2e9a4f",
+  "경제·일자리": "#d18a00", "문화·관광": "#8b4fd1", "교육·청년": "#0e9aa7", "안전": "#d9412b", "행정 일반": "#6b7785"
+};
+const PRECISION = { place: "지점", dong: "동 단위 추정", citywide: "시 전역/위치 미상" };
+
+const map = L.map("map", { zoomControl: true }).fitBounds([[37.305, 126.68], [37.455, 126.86]]);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 45 });
+map.addLayer(cluster);
+
+let all = [], active = new Set(Object.keys(COLORS)), markers = new Map();
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function icon(color) {
+  return L.divIcon({ className: "", iconSize: [16, 16], iconAnchor: [8, 8],
+    html: `<span style="display:block;width:16px;height:16px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)"></span>` });
+}
+
+// 같은 좌표(동 중심)에 몰린 항목을 살짝 흩어 겹침을 줄인다
+function jitter(p, i) {
+  if (p.location.precision === "place") return [p.location.lat, p.location.lng];
+  const a = i * 2.39996, r = 0.0006 * Math.sqrt(i);
+  return [p.location.lat + r * Math.sin(a), p.location.lng + r * Math.cos(a)];
+}
+
+function renderChips() {
+  $("chips").innerHTML = Object.entries(COLORS).map(([k, c]) =>
+    `<button class="chip" data-k="${esc(k)}" aria-pressed="${active.has(k)}"><span class="dot" style="background:${c}"></span>${esc(k)}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    const k = b.dataset.k; active.has(k) ? active.delete(k) : active.add(k); renderChips(); render();
+  });
+}
+
+function filtered() {
+  const q = $("q").value.trim(), days = +$("period").value, src = $("source").value;
+  const since = days ? new Date(Date.now() - days * 864e5).toISOString().slice(0, 10) : "";
+  return all.filter(p => active.has(p.category) && (!src || p.source === src) && (!since || p.date >= since) &&
+    (!q || (p.title + " " + p.location.name + " " + (p.summary || "")).includes(q)));
+}
+
+function render() {
+  const items = filtered();
+  cluster.clearLayers(); markers.clear();
+  const perSpot = {};
+  items.forEach(p => {
+    const key = p.location.lat + "," + p.location.lng;
+    const i = perSpot[key] = (perSpot[key] ?? -1) + 1;
+    const m = L.marker(jitter(p, i), { icon: icon(COLORS[p.category] || COLORS["행정 일반"]), title: p.title });
+    m.bindPopup(`<div class="popup"><strong>${esc(p.title)}</strong><div class="s">${esc(p.date)} · ${esc(p.source)} · ${esc(p.category)}</div>
+      <div class="s">위치: ${esc(p.location.name)} (${esc(PRECISION[p.location.precision] || "")})</div>
+      ${p.summary ? `<p>${esc(p.summary)}…</p>` : ""}<a href="${esc(p.url)}" target="_blank" rel="noopener">원문 보기 ↗</a></div>`);
+    m.on("click", () => highlight(p.id, false));
+    cluster.addLayer(m); markers.set(p.id, m);
+  });
+  $("count").textContent = `${items.length}건 표시 / 전체 ${all.length}건`;
+  $("list").innerHTML = items.length ? items.map(p => `
+    <div class="item" data-id="${esc(p.id)}">
+      <div class="t">${esc(p.title)}</div>
+      <div class="s"><span class="dot" style="background:${COLORS[p.category] || "#6b7785"}"></span>${esc(p.category)} · ${esc(p.date)} · ${esc(p.source)} · ${esc(p.location.name)}</div>
+    </div>`).join("") : `<div class="empty">${all.length ? "조건에 맞는 사업이 없습니다." : "아직 수집된 데이터가 없습니다. 주간 수집이 한 번 실행되면 표시됩니다."}</div>`;
+  $("list").querySelectorAll(".item").forEach(el => el.onclick = () => highlight(el.dataset.id, true));
+}
+
+function highlight(id, pan) {
+  document.querySelectorAll(".item.active").forEach(e => e.classList.remove("active"));
+  const el = document.querySelector(`.item[data-id="${CSS.escape(id)}"]`);
+  if (el) { el.classList.add("active"); if (!pan) el.scrollIntoView({ block: "nearest" }); }
+  const m = markers.get(id);
+  if (m && pan) cluster.zoomToShowLayer(m, () => m.openPopup());
+}
+
+["q", "period", "source"].forEach(id => $(id).addEventListener("input", render));
+
+fetch("data/projects.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => {
+  all = d.projects || [];
+  const srcs = [...new Set(all.map(p => p.source))];
+  $("source").innerHTML += srcs.map(s => `<option>${esc(s)}</option>`).join("");
+  const fmt = t => t ? new Date(t).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }) : "없음";
+  const failed = (d.sources || []).filter(s => s.errors && s.errors.length).map(s => s.name);
+  $("meta").innerHTML = `매주 자동 갱신 · 마지막 확인 ${esc(fmt(d.checked_at))} · 신규 ${d.new_this_run ?? 0}건` +
+    (failed.length ? ` · <span class="warn">수집 오류: ${esc(failed.join(", "))}</span>` : "");
+  renderChips(); render();
+}).catch(e => { $("meta").textContent = "데이터를 불러오지 못했습니다 (" + e + ")"; renderChips(); render(); });
+</script>
+</body>
+</html>
