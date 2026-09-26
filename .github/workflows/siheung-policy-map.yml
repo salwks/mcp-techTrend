@@ -34,7 +34,7 @@ jobs:
           if [ "${GITHUB_REF_NAME}" != "main" ]; then
             # 작업 브랜치에서는 수집만 해보고 결과를 로그로 확인한다 (커밋하지 않음)
             python3 siheung_policy_map/collect.py || true
-            python3 -c "import json; d=json.load(open('siheung_policy_map/data/projects.json')); [print(p['date'], p['category'], p['location']['name'], p['title'][:40], '|', len(p['_body']), p['url']) for p in d['projects'][:25]]; print([p['summary'][:120] for p in d['projects'][:3]])"
+            python3 -c "import json; d=json.load(open('siheung_policy_map/data/projects.json')); ps=d['projects']; [print(p['source'], p['date'], p['category'], p['location']['name'], p['title'][:40], '|', len(p['_body']), p['url'], '|', p['summary'][:80]) for src in ('보도자료','고시·공고') for p in [x for x in ps if x['source']==src][:12]]"
             exit 0
           fi
           python3 siheung_policy_map/collect.py || status=$?

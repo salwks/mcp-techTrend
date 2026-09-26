@@ -218,15 +218,24 @@ class TextParser(HTMLParser):
             self.parts.append(data)
 
 
+BODY_END_MARKERS = ("이전글", "다음글", "목록으로", "목록 보기", "만족도 조사", "콘텐츠 만족도", "자료관리 담당부서", "담당부서")
+
+
 def extract_body(html, title):
+    """페이지 전체 텍스트에서 메뉴·꼬리말을 빼고 게시물 본문만 남긴다."""
     p = TextParser()
     p.feed(html)
     text = clean(" ".join(p.parts))
-    # 본문은 보통 제목이 다시 나온 뒤에 시작한다
-    idx = text.find(title[:20]) if title else -1
-    if idx >= 0:
-        text = text[idx + len(title[:20]):]
-    return text[:BODY_CHARS]
+    # 본문 제목에는 목록의 "[부서명]" 머리말이 없으므로 떼고 찾는다
+    core = re.sub(r"^\s*\[[^\]]*\]\s*", "", title or "")[:15]
+    idx = text.find(core) if core else -1
+    if idx < 0:
+        return ""  # 본문 위치를 못 찾으면 메뉴 텍스트로 위치를 오판하지 않도록 비운다
+    text = text[idx + len(core):]
+    ends = [i for i in (text.find(m, 30) for m in BODY_END_MARKERS) if i > 0]
+    if ends:
+        text = text[:min(ends)]
+    return text.strip()[:BODY_CHARS]
 
 
 def fetch_body(url, title, post_first=False):

@@ -78,3 +78,15 @@ def test_siheung_data_action_links():
     assert items[1]["title"] == "[소상공인과] 전통시장 상인 격려"
     assert items[1]["url"] == "https://www.siheung.go.kr/media/bbs/view.do?bIdx=190377&ptIdx=82&mId=0100000000"
     assert collect.item_id("gosi", items[0]) == "gosi:86008"
+
+
+def test_extract_body_skips_menu_and_footer():
+    html = """<html><body><div>본문 바로가기 주메뉴 정왕동 배곧동 목감동 월곶동</div>
+    <h3>임병택 시흥시장, 추석 앞두고 전통시장 찾아 상인 격려</h3>
+    <div>작성일 2026-09-23</div><p>시흥시는 23일 삼미시장을 방문해 상인들을 격려했다고 밝혔다. 신천동 일대 전통시장 활성화 방안도 논의했다.</p>
+    <div>이전글 다음글 목록</div><footer>정왕동 거북섬 오이도</footer></body></html>"""
+    body = collect.extract_body(html, "[소상공인과] 임병택 시흥시장, 추석 앞두고 전통시장 찾아 상인 격려")
+    assert "삼미시장" in body and "신천동" in body
+    assert "주메뉴" not in body and "이전글" not in body and "거북섬" not in body
+    loc = collect.locate("[소상공인과] 임병택 시흥시장, 추석 앞두고 전통시장 찾아 상인 격려", body, PLACES)
+    assert loc["name"] == "신천동"
