@@ -25,7 +25,7 @@ PLACES_FILE = ROOT / "places.json"
 KST = timezone(timedelta(hours=9))
 USER_AGENT = "Mozilla/5.0 (compatible; siheung-policy-map/0.1; +https://github.com/salwks/mcp-techTrend)"
 REQUEST_DELAY = 1.0      # 시청 서버 부담을 줄이기 위한 요청 간격(초)
-MAX_DETAIL_FETCH = 60    # 1회 실행에서 본문을 새로 읽을 최대 건수
+MAX_DETAIL_FETCH = 150   # 1회 실행에서 본문을 새로 읽을 최대 건수
 BODY_CHARS = 4000        # 위치 추정에 쓰는 본문 길이
 
 CATEGORIES = [
@@ -56,19 +56,24 @@ def load_json(path, default):
         return default
 
 
-def fetch(url, timeout=30, retries=3):
+def fetch(url, timeout=30, retries=3, post=False):
     """시청 서버가 해외(GitHub Actions) 연결을 간헐적으로 끊어서 재시도한다."""
     for attempt in range(retries):
         try:
-            return _fetch_once(url, timeout)
+            return _fetch_once(url, timeout, post)
         except (urllib.error.URLError, TimeoutError, OSError):
             if attempt == retries - 1:
                 raise
             time.sleep(5 * (attempt + 1))
 
 
-def _fetch_once(url, timeout):
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "ko-KR,ko;q=0.9"})
+def _fetch_once(url, timeout, post=False):
+    data = None
+    if post:  # 쿼리스트링을 폼 데이터로 보낸다 (req.post 방식 게시판)
+        parts = urllib.parse.urlsplit(url)
+        url = urllib.parse.urlunsplit(parts._replace(query=""))
+        data = parts.query.encode("ascii")
+    req = urllib.request.Request(url, data=data, headers={"User-Agent": USER_AGENT, "Accept-Language": "ko-KR,ko;q=0.9"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         raw = resp.read()
         charset = resp.headers.get_content_charset()
@@ -151,7 +156,14 @@ def is_nav_link(href):
 def resolve_link(link, base_url, source):
     # 시흥시청 게시판은 href="#" 이고 실제 주소를 data-action 에 둔다
     if link.get("action"):
-        return urllib.parse.urljoin(base_url, link["action"].strip())
+        # HTMLParser 가 "?&notAncmtMgtNo=" 의 "&not" 을 "¬" 로 바꿔버리므로 되돌린다
+        action = link["action"].strip().replace("\u00ac", "&not")
+        url = urllib.parse.urljoin(base_url, action)
+        # 보도자료 view.do 는 목록의 mId 가 없으면 알림창만 돌려준다
+        list_q = urllib.parse.parse_qs(urllib.parse.urlsplit(base_url).query)
+        if "mId=" not in url and list_q.get("mId"):
+            url += "&mId=" + list_q["mId"][0]
+        return url.replace("?&", "?")
     href = link["href"].strip()
     if not is_nav_link(href):
         return urllib.parse.urljoin(base_url, href)
@@ -215,6 +227,14 @@ def extract_body(html, title):
     if idx >= 0:
         text = text[idx + len(title[:20]):]
     return text[:BODY_CHARS]
+
+
+def fetch_body(url, title, post_first=False):
+    for post in ([True, False] if post_first else [False, True]):
+        body = extract_body(fetch(url, post=post), title)
+        if len(body) > 40 and not body.startswith("알림창"):
+            return body
+    return ""
 
 
 def classify(text):
@@ -284,7 +304,7 @@ def collect_source(source, known, places, budget):
         if not prev and it["url"] and budget[0] > 0:
             budget[0] -= 1
             try:
-                body = extract_body(fetch(it["url"]), it["title"])
+                body = fetch_body(it["url"], it["title"], source.get("view_method") == "post")
             except (urllib.error.URLError, TimeoutError, OSError) as e:
                 errors.append(f"{it['url']}: {e}")
             time.sleep(REQUEST_DELAY)
@@ -312,7 +332,8 @@ def main():
         return 2
 
     previous = load_json(OUTPUT, {})
-    known = {p["id"]: p for p in previous.get("projects", [])}
+    list_urls = {s["url"] for s in sources}
+    known = {p["id"]: p for p in previous.get("projects", []) if p.get("url") not in list_urls}
     budget = [MAX_DETAIL_FETCH]
     report, fresh = [], {}
 

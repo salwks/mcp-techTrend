@@ -59,3 +59,22 @@ def test_classify():
 def test_item_id_uses_board_index():
     it = {"url": "https://x/view.do?bIdx=181408&ptIdx=82", "date": "2025-12-05", "title": "t"}
     assert collect.item_id("press", it) == "press:181408"
+
+
+SIHEUNG_HTML = """
+<table><tbody>
+<tr><td>33216</td><td class="taL tit">
+<a href="#" data-action="/main/saeol/gosi/view.do?&notAncmtMgtNo=86008&mId=0401040100" onclick="req.post(this); return false;"> 무연고 사망자 공시송달 공고 </a>
+</td><td class="date"> 2026-09-23</td></tr>
+</tbody></table>
+<ul><li><a href="#" onclick="goTo.view('list','190377','82','0100000000'); return false;" data-action="/media/bbs/view.do?bIdx=190377&ptIdx=82">
+<strong>[소상공인과] 전통시장 상인 격려</strong> 작성일 2026-09-23</a></li></ul>
+"""
+
+
+def test_siheung_data_action_links():
+    items = collect.parse_list(SIHEUNG_HTML, "https://www.siheung.go.kr/media/bbs/list.do?ptIdx=82&mId=0100000000", SRC)
+    assert items[0]["url"] == "https://www.siheung.go.kr/main/saeol/gosi/view.do?notAncmtMgtNo=86008&mId=0401040100"
+    assert items[1]["title"] == "[소상공인과] 전통시장 상인 격려"
+    assert items[1]["url"] == "https://www.siheung.go.kr/media/bbs/view.do?bIdx=190377&ptIdx=82&mId=0100000000"
+    assert collect.item_id("gosi", items[0]) == "gosi:86008"

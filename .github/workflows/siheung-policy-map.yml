@@ -31,7 +31,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           status=0
-          if [ "${GITHUB_REF_NAME}" != "main" ]; then python3 siheung_policy_map/tools/diagnose.py || true; exit 0; fi
+          if [ "${GITHUB_REF_NAME}" != "main" ]; then
+            # 작업 브랜치에서는 수집만 해보고 결과를 로그로 확인한다 (커밋하지 않음)
+            python3 siheung_policy_map/collect.py || true
+            python3 -c "import json; d=json.load(open('siheung_policy_map/data/projects.json')); [print(p['date'], p['category'], p['location']['name'], p['title'][:40], '|', len(p['_body']), p['url']) for p in d['projects'][:25]]; print([p['summary'][:120] for p in d['projects'][:3]])"
+            exit 0
+          fi
           python3 siheung_policy_map/collect.py || status=$?
           git add siheung_policy_map/data/projects.json
           if ! git diff --cached --quiet; then
