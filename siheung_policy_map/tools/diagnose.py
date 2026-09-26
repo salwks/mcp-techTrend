@@ -9,7 +9,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import collect  # noqa: E402
 
 for src in json.loads(collect.SOURCES_FILE.read_text(encoding="utf-8")):
-    html = collect.fetch(src["url"])
+    try:
+        html = collect.fetch(src["url"])
+    except Exception as e:  # noqa: BLE001
+        print(f"===== {src['id']} FAILED: {e}")
+        continue
     print(f"===== {src['id']} {src['url']} ({len(html)} bytes)")
     anchors = re.findall(r"<a\b[^>]*>", html)
     for a in anchors:

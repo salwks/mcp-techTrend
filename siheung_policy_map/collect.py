@@ -56,7 +56,18 @@ def load_json(path, default):
         return default
 
 
-def fetch(url, timeout=30):
+def fetch(url, timeout=30, retries=3):
+    """시청 서버가 해외(GitHub Actions) 연결을 간헐적으로 끊어서 재시도한다."""
+    for attempt in range(retries):
+        try:
+            return _fetch_once(url, timeout)
+        except (urllib.error.URLError, TimeoutError, OSError):
+            if attempt == retries - 1:
+                raise
+            time.sleep(5 * (attempt + 1))
+
+
+def _fetch_once(url, timeout):
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "ko-KR,ko;q=0.9"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         raw = resp.read()
