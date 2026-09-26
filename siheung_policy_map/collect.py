@@ -121,6 +121,7 @@ class RowParser(HTMLParser):
             self.stack.append({"text": [], "links": []})
         elif tag == "a" and self.stack:
             self.stack[-1]["links"].append({"href": attrs.get("href") or "", "onclick": attrs.get("onclick") or "",
+                                            "action": attrs.get("data-action") or "",
                                             "title": attrs.get("title") or "", "text": [], "open": True})
 
     def handle_endtag(self, tag):
@@ -148,6 +149,9 @@ def is_nav_link(href):
 
 
 def resolve_link(link, base_url, source):
+    # 시흥시청 게시판은 href="#" 이고 실제 주소를 data-action 에 둔다
+    if link.get("action"):
+        return urllib.parse.urljoin(base_url, link["action"].strip())
     href = link["href"].strip()
     if not is_nav_link(href):
         return urllib.parse.urljoin(base_url, href)
@@ -171,6 +175,7 @@ def parse_list(html, base_url, source):
             continue
         best = max(row["links"], key=lambda l: len(clean(" ".join(l["text"])) or l["title"]))
         title = clean(" ".join(best["text"])) or clean(best["title"])
+        title = re.sub(r"\s*(작성일|등록일)\s*20\d\d.*$", "", title)
         title = re.sub(r"\s*(새글|new|NEW|첨부파일 있음)\s*$", "", title)
         if len(title) < 4:
             continue
