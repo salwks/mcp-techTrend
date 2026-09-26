@@ -31,6 +31,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           status=0
+          if [ "${GITHUB_REF_NAME}" != "main" ]; then python3 siheung_policy_map/tools/diagnose.py || true; exit 0; fi
           python3 siheung_policy_map/collect.py || status=$?
           git add siheung_policy_map/data/projects.json
           if ! git diff --cached --quiet; then
