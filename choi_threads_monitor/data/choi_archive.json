@@ -1,8 +1,8 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-26T04:44:11.074536Z",
+  "generated_at": "2026-09-26T06:42:26.695581Z",
   "source": "merged observations from GitHub Actions primary collector and Render backup watchdog",
-  "archive_count": 80,
+  "archive_count": 81,
   "limitations": [
     "Archive contains only posts observed by at least one successful collector.",
     "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
@@ -11,21 +11,38 @@
   ],
   "posts": [
     {
+      "post_id": "3994492394967866214",
+      "published_at": "2026-09-26T05:30:22Z",
+      "text": "Cursor가 모델과 가격을 그대로 둔 채 사용자 토큰 요금을 7% 줄였습니다.\n\n매 턴 모델에 보내던 시스템 프롬프트의 3분의 2를 지우고, 잘 쓰지 않는 도구 설명은 필요할 때만 불러오도록 바꾼 결과인데요.\n\n에이전트 비용이 실제로 어디에 쓰이는지, Cursor가 공개한 운영 데이터로 정리했습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DdvSatkDxtm",
+      "media": [
+        "https://scontent-dfw6-2.cdninstagram.com/v/t51.82787-15/816030618_17988661959112832_256267446313692749_n.webp?_nc_cat=110&ig_cache_key=Mzk5NDQ5MjM5NDk2Nzg2NjIxNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=rnWUNfsUA5QQ7kNvwHDam1c&_nc_oc=Adpbcmj1ULg2SPBNRJLCekuJCG_7TZFxFn8S1qsWWpQnpwYavb1AbL8IeJ6u82qMskA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQJwCOawpUgRTGiUQs_UskUeapyiO4XaLhNaUvOheZkemw&oe=6ABD465F"
+      ],
+      "engagement": {
+        "likes": 16,
+        "replies": 13,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-09-26T06:42:26.695581Z",
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
+    },
+    {
       "post_id": "3994447315376873724",
       "published_at": "2026-09-26T04:00:48Z",
       "text": "Claude 모바일 앱에서 여러 계정을 바로 전환할 수 있게 됐습니다.\n\n기존에는 업무용과 개인용 Claude 계정을 따로 사용하면 계정을 바꿀 때마다 로그아웃하고 다시 로그인해야 했는데요.\n\n이제 iOS와 Android 앱에서 여러 계정을 등록해두고 바로 전환할 수 있습니다.\n\n개인 계정과 Pro, Team 계정을 함께 사용하는 경우 특히 편해졌습니다.\n\n회사에서는 Team 계정, 개인 작업에서는 개인 계정을 쓰는 식으로 Claude를 나눠 사용하는 사람들에게 유용한 업데이트입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdvIKt7DSD8",
       "media": [
-        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/825322222_17988768453112832_4055225724886892846_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NDQ0NzMxNTM3Njg3MzcyNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=8D0vWZdvojkQ7kNvwE_C0wj&_nc_oc=Adqgbw_EchvawMVK_UZEXpvKFZBn7mpZy_XOE6QHGprKrRoRDVzJruehfcaoWFeZGGs&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&oh=00_AQKbPxcC5BtiKfiz8rmnIIr8zXXWvBRe_DJDXcNqdx3nxg&oe=6ABD238B"
+        "https://scontent-dfw5-1.cdninstagram.com/v/t51.82787-15/825322222_17988768453112832_4055225724886892846_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NDQ0NzMxNTM3Njg3MzcyNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=8D0vWZdvojkQ7kNvwFE12YL&_nc_oc=AdrvCTs-T28aCmwP5LGjhvo0vom0hanlbzkgMwMa5dVg9ddVGCX7-WstNpIQCTamzmI&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQLgtywpf94qwwuQEeGsk3vT0PFhEh_FzXsT-u0Sq-i8Vw&oe=6ABD238B"
       ],
       "engagement": {
-        "likes": 21,
+        "likes": 33,
         "replies": 0,
         "reposts": 2,
         "quotes": 0
       },
       "first_seen_at": "2026-09-26T04:44:11.074536Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994401703034223244",
@@ -33,16 +50,16 @@
       "text": "와.. 이걸 이제야 해주네요..\n\nClaude Code 쓰다가 5시간 제한에 걸려 작업이 중간에 끊기는 문제가 개선됩니다.\n\n앞으로 작업 도중 제한에 도달하면 즉시 종료하는 대신, 주간 사용량에서 소량의 고정 사용량을 가져와 현재 편집이나 작업을 마무리할 수 있는 지점까지 진행합니다.\n\nPro는 주 1회, Max와 Team Premium은 5시간 제한에 도달할 때마다 적용됩니다.\n\n마무리 이후에도 계속 작업하려면 추가 사용량을 이용할 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddu9y-HkfqM",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMhM1koRBwrTht2pbU3tKF2Q5_jWxKmdynTgHVoA4pt1NsJSGhyVenQqM3-WAkmJSNh0jhyXstzSG9lND6SG4WozGyh69LaxFlf_-I.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=egqym0dUjx8Q7kNvwFdRny_&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg3NjgzMjExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=44c46508762b4e7d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yMjQwMDNEMkFCNjlFNzM1RTJENkE0NDE0QjQ2RDlCRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y0NDg0MURFODg2RTVENjE1NzdDQjI1NTc0NUM1NkFBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaArNCbkKz0PxUCKAJDMywXQCgAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQK72E4G32xu1HkvNw8hcGk0aUwph3eItw4d8KIaxeqgUA&oe=6AB9299F"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMhM1koRBwrTht2pbU3tKF2Q5_jWxKmdynTgHVoA4pt1NsJSGhyVenQqM3-WAkmJSNh0jhyXstzSG9lND6SG4WozGyh69LaxFlf_-I.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=egqym0dUjx8Q7kNvwEut6XG&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg3NjgzMjExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=44c46508762b4e7d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yMjQwMDNEMkFCNjlFNzM1RTJENkE0NDE0QjQ2RDlCRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y0NDg0MURFODg2RTVENjE1NzdDQjI1NTc0NUM1NkFBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaArNCbkKz0PxUCKAJDMywXQCgAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKyrRXUPa6vd8jcnJ_Yhp_4BAAMbWajrNsrCX-ATfZ9FA&oe=6AB961DF"
       ],
       "engagement": {
-        "likes": 102,
-        "replies": 5,
-        "reposts": 4,
-        "quotes": 1
+        "likes": 130,
+        "replies": 7,
+        "reposts": 6,
+        "quotes": 2
       },
       "first_seen_at": "2026-09-26T04:44:11.074536Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994356356323776651",
@@ -50,16 +67,16 @@
       "text": "마이크로소프트가 Copilot 출시 이후 가장 큰 업데이트를 공개했습니다.\n\n사티아 나델라는 Copilot을 모든 모델과 기기, 업무를 연결하는 새로운 ‘업무용 OS’로 만들겠다고 밝혔습니다.\n\nAutopilot은 장시간 업무를 대신 수행하고, Code는 회사 내부에서 앱을 만들 수 있게 합니다. Home에서는 Chat과 Cowork가 합쳐지고 Office도 Copilot 안으로 들어옵니다.\n\nTeams에서도 Copilot을 바로 호출할 수 있으며, Today는 질문하지 않아도 Microsoft 365에서 중요한 정보를 찾아 먼저 보여줍니다.\n\nCopilot을 회사 업무 전체를 실행하는 하나의 작업 공간으로 바꾸려는 방향입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DduzfFtAJiL",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPy3a3JzAA-NbVesHCRGv_r-dzU2sjP3qPjh1Sx6G7lOcDulwJKCSLU3XEKCUqmUocBP6k1MZTllTYPQ__qa7VQVrdVlPJSRo7cgx0.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=WbInuwfb56IQ7kNvwHwlEOQ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg3NjgxOTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=341b37d2747f7b25&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83RDQ4MzFEM0M4MTlCQzZGRjMxOUJCNzZENzUwOTQ5Rl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJCNDZGQzU2RTg2NjUzRkYxQ0VFMEFDMTYyNTQ0Mzk3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAvrujj6z0PxUCKAJDMywXQFdAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJRf3BjCVlYEtfqA9E0svYIy1m3mQGDR3xQNQHVxLGOSQ&oe=6AB942D5"
+        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQPy3a3JzAA-NbVesHCRGv_r-dzU2sjP3qPjh1Sx6G7lOcDulwJKCSLU3XEKCUqmUocBP6k1MZTllTYPQ__qa7VQVrdVlPJSRo7cgx0.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=WbInuwfb56IQ7kNvwF93iHM&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg3NjgxOTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=341b37d2747f7b25&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83RDQ4MzFEM0M4MTlCQzZGRjMxOUJCNzZENzUwOTQ5Rl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJCNDZGQzU2RTg2NjUzRkYxQ0VFMEFDMTYyNTQ0Mzk3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAvrujj6z0PxUCKAJDMywXQFdAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLppkI_g8RUguNDcod357Hs1_rn5ZwSOR_kWA6DZJ8hRA&oe=6AB942D5"
       ],
       "engagement": {
-        "likes": 38,
-        "replies": 4,
+        "likes": 43,
+        "replies": 5,
         "reposts": 1,
         "quotes": 0
       },
       "first_seen_at": "2026-09-26T01:42:57.951189Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994349488806243520",
@@ -67,16 +84,16 @@
       "text": "O my god!!",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddux7J1DyzA",
       "media": [
-        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/825326580_17988767340112832_3088427880272814756_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=Mzk5NDM0OTQ4ODgwNjI0MzUyMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE3OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=P6HNs-kWHsoQ7kNvwEJApub&_nc_oc=AdrveEazJVnRjbiBTpFoyfJLwfBuRV7ZLwEkIDTRhaGpz0KpenKcCfeBcOvGVwTsGUM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&oh=00_AQJg6XiVCe_1CCNdbQcZDkFrnmerNA0uqAKpypnhMPicrQ&oe=6ABD174A"
+        "https://scontent-dfw5-1.cdninstagram.com/v/t51.82787-15/825326580_17988767340112832_3088427880272814756_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=Mzk5NDM0OTQ4ODgwNjI0MzUyMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE3OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=P6HNs-kWHsoQ7kNvwFWj1-E&_nc_oc=AdoOmW4TInvIaCmzT-jOmrpDUpYx2QcXtOgXI2D7fQtUUuBddIz3s1nrIXHMP2_wDkA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQJOrsB0lHbxxhEjyZ5h7o8bc7iiJ3rWorX4dXcxorsc0g&oe=6ABD4F8A"
       ],
       "engagement": {
-        "likes": 57,
-        "replies": 7,
+        "likes": 61,
+        "replies": 8,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-09-26T00:58:53.538620Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994311477053829336",
@@ -84,16 +101,16 @@
       "text": "Claude가 Claude를 3배 빠르게 만들었습니다.\n\n웹에서 입력할 수 있는 화면이 뜨기까지 3.1초 걸리던 시간이 0.55초로 줄었고, 3,000개 넘는 변경을 넣는 동안 고객이 겪은 장애나 롤백은 한 건도 없었습니다.\n\n병목을 찾고 고친 건 대부분 Claude였고, 사람은 무엇을 잴지 정하고 모든 변경을 승인했습니다.\n\n팀이 얻은 교훈은 \"Claude가 측정할 수 있는 것은 Claude가 빠르게 만들 수 있다\"였습니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DdupSAoDzDY",
       "media": [
-        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/815535883_17988663342112832_3441157781189084962_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=Mzk5NDMxMTQ3NzA1MzgyOTMzNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=hHVy0C92WRoQ7kNvwGDwLEU&_nc_oc=AdoyktlfkMxfMs9c9TuOlWuwQLARLOwp6QjsU9c7ZofvSvohPCJFNdgMmuvdLjaMSS0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&oh=00_AQLFqiqsE2Jh3hOuz_vABIrnNR8FlFtWtEBfeqnvnsLS6A&oe=6ABD2982"
+        "https://scontent-dfw5-1.cdninstagram.com/v/t51.82787-15/815535883_17988663342112832_3441157781189084962_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=Mzk5NDMxMTQ3NzA1MzgyOTMzNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=hHVy0C92WRoQ7kNvwHz1Da0&_nc_oc=AdoHgSXWzwlMOGaN6SGPyw48LBEQxlU49iAkYUSqXtXFcPCmFXkvsqlU51-KypN2-D8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQKUHTsSqU38eQCxhy01tbcQAUuSM0-ZFD9IrYSiYm89Kw&oe=6ABD2982"
       ],
       "engagement": {
-        "likes": 80,
+        "likes": 88,
         "replies": 18,
-        "reposts": 4,
+        "reposts": 5,
         "quotes": 1
       },
       "first_seen_at": "2026-09-26T00:58:53.538620Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994220450740838669",
@@ -101,16 +118,16 @@
       "text": "\"AI의 본격적인 자가개선이 2027년 말쯤 시작된다.\"\n\nspicylemonade가 공개한 RSI Index는 AI의 본격적인 자가개선이 2027년 말쯤 시작될 것으로 예측했습니다. AI 2027 등의 자동화된 AI 연구원 전망과도 비슷한 시점인데요.\n\n특히 2026년에는 앤트로픽이 AI 연구·코딩 관련 지표에서 강세를 보였다고 평가했습니다.\n\n결국 중요한 건 더 좋은 AI가 만들어지는 속도뿐 아니라, AI가 다음 AI 개발에 얼마나 직접 참여하게 되느냐입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DduUlZxAiEN",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/814926286_17987642661112832_7495280726328178788_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NDIyMDQ1MDc0MDgzODY2OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Inz5HDdD36EQ7kNvwEoF9NX&_nc_oc=AdrsRg91CMbHhXF1bXMiTZmbS2AQb5G60QhqnJODp4atbo8JtukeJ_gXv53zdrT-zNE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&oh=00_AQJgum-_fq5IG1fRAykR4IjePei_RRUbvPthzMBdD_MUDw&oe=6ABD05AB"
+        "https://scontent-dfw6-2.cdninstagram.com/v/t51.82787-15/814926286_17987642661112832_7495280726328178788_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NDIyMDQ1MDc0MDgzODY2OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Inz5HDdD36EQ7kNvwHOk8w0&_nc_oc=AdqzEAm8WBrCbvQze0av1t_PrHY0XhgpEgLL-lYhtmLYc6E9E0kIh_UmwQnkgtAducw&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQKLUf1yHrQhLdli2YC3Ow47DB3w-tj2Mzl_oTaf7wutTA&oe=6ABD3DEB"
       ],
       "engagement": {
-        "likes": 31,
+        "likes": 33,
         "replies": 1,
         "reposts": 1,
         "quotes": 1
       },
       "first_seen_at": "2026-09-25T22:32:35.753370Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994175184663718540",
@@ -118,7 +135,7 @@
       "text": "AI 에이전트가 컴퓨터에서 뭘 하는지 실시간으로 보고, 필요하면 바로 마우스를 넘겨받을 수 있게 됐습니다.\n\nNous Research가 Hermes Desktop에 Bot Screen을 추가했습니다. 에이전트가 브라우저를 조작하거나 터미널에 명령어를 입력하는 화면을 그대로 확인할 수 있습니다.\n\n에이전트가 막히면 사람이 직접 화면을 조작하거나 비밀번호를 입력한 뒤 다시 작업을 넘겨줄 수도 있습니다.\n\nAI에게 컴퓨터를 맡기되 필요한 순간에는 사람이 바로 개입하는 방식입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DduKSscj6qM",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQO_wyXkYU75RoUf-sjC02aVRj2iddUY-9oDZm0-cL8iYEqFTDnvkHLA5SaYKsBmTfgRLI3IVlKbZUA36ZgSHJZnVxoI_aDyAhbPhvg.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=0Cys591ZiPsQ7kNvwFCmuQf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2NzMyMzAxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6Mjk2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9a25257fae19be9f&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81NDQ5QUE1ODM1MzkwRkYzMkQ3QTIwRkQ4MkNBMjI4Q192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVGNEFBNENEMUU0MzE1MzAxMkQyNEU0MjFGQkVGQzlEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAoeTdy6b0PxUCKAJDMywXQHKN2yLQ5WAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLVk-VeLLtqVNIbh7vgpTT6nIdinzCem1shjNFin5vFEA&oe=6AB93FEA"
+        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQO_wyXkYU75RoUf-sjC02aVRj2iddUY-9oDZm0-cL8iYEqFTDnvkHLA5SaYKsBmTfgRLI3IVlKbZUA36ZgSHJZnVxoI_aDyAhbPhvg.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=0Cys591ZiPsQ7kNvwG79km3&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2NzMyMzAxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6Mjk2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9a25257fae19be9f&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81NDQ5QUE1ODM1MzkwRkYzMkQ3QTIwRkQ4MkNBMjI4Q192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVGNEFBNENEMUU0MzE1MzAxMkQyNEU0MjFGQkVGQzlEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAoeTdy6b0PxUCKAJDMywXQHKN2yLQ5WAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKqad_wvjLyVxIlHQ2M1jmnlECpbVvI_TX6vsxDEQM8EQ&oe=6AB93FEA"
       ],
       "engagement": {
         "likes": 42,
@@ -127,7 +144,7 @@
         "quotes": 1
       },
       "first_seen_at": "2026-09-25T19:12:59.335334Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994130280612964576",
@@ -135,16 +152,16 @@
       "text": "AI 4대 천왕으로 불리는 요수아 벤지오(Yoshua Bengio) 교수는 UN 안보리 연설에서 최근 자율 AI 에이전트들이 통제를 벗어나 사이버 공격을 감행하고 탐지를 회피하는 등 위험한 행동을 보였다고 경고했습니다.\n\n그는 프론티어 AI 개발사들이 치명적 위험성을 인정하면서도 성능 경쟁에만 매몰되어 있다며, “이 경쟁은 자연법칙이 아니라 기업들의 선택이 낳은 결과이며, 모두가 패자가 되는 치킨게임”이라고 비판했습니다.\n\n이어 AI의 파괴적 오용과 권력 집중, 통제 상실을 막기 위해 “의학·항공·원자력처럼 프론티어 AI 역시 면허제와 배상 책임 보험을 도입해야 한다”고 촉구했습니다.\n\n기술 패권과 경제적 이익을 앞세운 무분별한 특이점 레이스를 멈추고, 독립적인 검증과 국제적 규제를 통해 기술 궤적을 바로잡아야 할 때입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DduAFQSkSjg",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOAv7tOSX40DsyyfzmcevW2rxYQCbXWJ9IordiMvleccIK58IeUzbpxhijXtPcLz4nCBty229gUFl_a0BqDmRQnHtpsEZly1kov66A.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=SpdTUV3oaKgQ7kNvwFHcZrl&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1Mjg1NDMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDIxLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=dab7c4e38625ec3&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNzQ0NjE4RDk2OEU4ODNBRjRERUMwMDZDNkZGMjVBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFBNUUzNDRDMEQ3MDQ5RDZCNzM4Nzc5QkE1QkI4RDk4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-sDdlZ70PxUCKAJDMywXQHpd2yLQ5WAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLoJm1gemzDBjiqofGh8WTYU3NoHDc_dJVndbfQBjbUhQ&oe=6AB930FA"
+        "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQOAv7tOSX40DsyyfzmcevW2rxYQCbXWJ9IordiMvleccIK58IeUzbpxhijXtPcLz4nCBty229gUFl_a0BqDmRQnHtpsEZly1kov66A.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=SpdTUV3oaKgQ7kNvwGcZYKy&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1Mjg1NDMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoyLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDIxLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=dab7c4e38625ec3&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNzQ0NjE4RDk2OEU4ODNBRjRERUMwMDZDNkZGMjVBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFBNUUzNDRDMEQ3MDQ5RDZCNzM4Nzc5QkE1QkI4RDk4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-sDdlZ70PxUCKAJDMywXQHpd2yLQ5WAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQL5UevuD7jldA45Ctq2mReYPa6Q3X-my_PVLc62XhhJmg&oe=6AB930FA"
       ],
       "engagement": {
-        "likes": 16,
+        "likes": 18,
         "replies": 0,
         "reposts": 2,
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T18:44:58.214527Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994084878529370614",
@@ -152,16 +169,16 @@
       "text": "오픈AI CEO 샘 알트만(Sam Altman)은 AI 발전이 “인간의 역량을 대체하는 것이 아니라 사람을 더 유능하게 만드는 도구”가 되어야 한다고 강조했습니다.\n\n그는 AI가 신약 개발, 헬스케어, 경제 생산성 전반을 비약적으로 끌어올릴 것이라 전망하면서도, 통제 불능과 소수 권력 집중이라는 위험성을 경고했습니다.\n\n특히 모델이 스스로 개선되는 '재귀적 자가 개선(recursive self-improvement)'에 다가갈수록, 경쟁에서 이기기 위해 안전을 양보해선 안 된다고 선을 그었습니다.\n\n알트만은 맹목적 낙관론과 파멸론(둠어리즘)을 모두 경계하며 실용적인 중도를 취해야 한다고 말했습니다.\n“과학적 진보와 경제 성장의 혜택은 사람에 의해, 사람을 위해 이루어져야 합니다.”\n기술의 진정한 가치는 소수의 통제가 아닌 개인의 문제 해결력과 자율성을 극대화하는 데 있다는 설명입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddt1wkTgJn2",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQP1SCBJAJVcEZz1Eh6gB8dFR4iV6OnkiuSkAHTQZZcaeqclvpEc_nF7Zk_kAgAuj_XcPlWUUaLjCa3oLkSp9vNWA4B7B_a1_eH-57c.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=T2gjOYyTVwcQ7kNvwEUtE-e&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1Mjg1MzExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjY3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=8f5b2ef296c56b6c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MjRENjdEMDFGNjA4NUU0MTk3N0EwMzVBRkNDQ0VBOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg5NEQ4RTEyQ0Q3MzhBQzZERkM0ODY5OUU4ODc4REFEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjojSlZ70PxUCKAJDMywXQHCxmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQLAq9oWRtUuuRt_hv_QrfkurXNPwbH6--Ztw4OLAe8pcw&oe=6AB92066"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQP1SCBJAJVcEZz1Eh6gB8dFR4iV6OnkiuSkAHTQZZcaeqclvpEc_nF7Zk_kAgAuj_XcPlWUUaLjCa3oLkSp9vNWA4B7B_a1_eH-57c.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=T2gjOYyTVwcQ7kNvwHGc8oP&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg1Mjg1MzExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoyLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjY3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=8f5b2ef296c56b6c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MjRENjdEMDFGNjA4NUU0MTk3N0EwMzVBRkNDQ0VBOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg5NEQ4RTEyQ0Q3MzhBQzZERkM0ODY5OUU4ODc4REFEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjojSlZ70PxUCKAJDMywXQHCxmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKQKsA1GHqU_MyANy-C1-N8PdD7WALBAwdkH6oczIVnmA&oe=6AB958A6"
       ],
       "engagement": {
-        "likes": 33,
+        "likes": 36,
         "replies": 1,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T18:44:58.214527Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3994039616705515734",
@@ -169,7 +186,7 @@
       "text": "앤트로픽의 가장 큰 약점은 엔터프라이즈 시장에 대한 높은 의존도입니다.\nYipitData 추정에 따르면 상위 1% 고객이 전체 지출의 46%를 차지합니다.\n\n반대로 오픈AI는 개인 사용자 기반은 강하지만, 기업 업무에 깊게 들어가 실제 매출로 이어지는 B2B 시장에서는 앤트로픽과 다른 과제를 안고 있습니다.\n\n한국에서는 얼리어답터와 교육 시장의 영향도 무시하기 어렵습니다. 실제 업무에서는 ChatGPT 앱의 완성도가 높다고 느끼지만, AI 코딩 강의 상당수가 Claude Code를 중심으로 진행되면서 개인의 경험이 회사 도입으로 이어지는 경우가 많습니다.\n\n두 회사 모두 FDE를 통해 기업 시장을 공략하고 있지만, 오픈AI도 기업 영업뿐 아니라 개발자와 교육 시장에서부터 자연스럽게 퍼지는 경로를 더 적극적으로 만들 필요가 있어 보입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddtrd68kdDW",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/825322602_17988663828112832_1733254805171565894_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NDAzOTYxNjcwNTUxNTczNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=2h7TKGQ_klMQ7kNvwGJN1O7&_nc_oc=AdpKLPnexGY1YcE4cG-8GH7Edo7cybwARCue6TT1rmo_x3WHI6-utjfK5qkyOw6hCxc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&oh=00_AQJVBa1q-TXiALnLBOD1JbM-bWGDnaaQ3HVFjk9u76-1rQ&oe=6ABD3B48"
+        "https://scontent-dfw5-2.cdninstagram.com/v/t51.82787-15/825322602_17988663828112832_1733254805171565894_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NDAzOTYxNjcwNTUxNTczNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=2h7TKGQ_klMQ7kNvwE6QeqD&_nc_oc=Adr_neFoJ-aHLs6xitwgztat7ui_7G1D3u790KoVX56mSNSvr08IFoqze5XldBe2erU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQLUMj09TOlyz9pmfckt0F6wnz-c3v9c6c6qCgapnJFZTA&oe=6ABD3B48"
       ],
       "engagement": {
         "likes": 31,
@@ -178,7 +195,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T14:33:54.398804Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3993994096360509641",
@@ -186,16 +203,16 @@
       "text": "Qwen-Image-2.1의 이미지 생성·편집 속도를 최대 6.3배 높이는 오픈소스 LoRA가 공개됐습니다.\n\n프루나 AI가 공개한 Pruna-Qwen-Image-2.1은 기존 40단계의 생성 과정을 5~8단계로 줄입니다. 5단계는 속도, 8단계는 속도와 품질의 균형에 맞춰져 있습니다.\n\n1K 이미지 생성과 편집을 지원하며 최대 3장의 참고 이미지도 사용할 수 있습니다.\n\n기존 Qwen-Image-2.1 위에 LoRA만 추가하면 사용할 수 있어 Diffusers에서도 이용 가능합니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdthHg0k1DJ",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQNidsKBmbQTITPKB2xjk8kkNE7pWiElcvdd_INYXgDR9uZCr_4rcdd4mZkjx5Vgz5kv32jKwtO3j56zTerd8P3e-klVazv0J449SIk.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=2JMzY4NXfHsQ7kNvwEnaVxc&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2NjkwMTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=b20868b8f53b39c5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNjQ1OEQ1MDlCQzFCMzlEMkQwQzZEQjlCMTRGNzZCRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QyODMxRjdERUVCRTRDQzI5MDBFRUExMzIwRURGQUQ2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8oWqrKb0PxUCKAJDMywXQDuIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIpH1oz4VSsb97Nwp34yQSvODguOm7RfDgA7MJnbhISQA&oe=6AB91153"
+        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQNidsKBmbQTITPKB2xjk8kkNE7pWiElcvdd_INYXgDR9uZCr_4rcdd4mZkjx5Vgz5kv32jKwtO3j56zTerd8P3e-klVazv0J449SIk.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=2JMzY4NXfHsQ7kNvwEj-d53&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg2NjkwMTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=b20868b8f53b39c5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNjQ1OEQ1MDlCQzFCMzlEMkQwQzZEQjlCMTRGNzZCRF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QyODMxRjdERUVCRTRDQzI5MDBFRUExMzIwRURGQUQ2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8oWqrKb0PxUCKAJDMywXQDuIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQJFEZLhcZiOcn_IB-LNdyGB64BLud-RlxxelTE2yuXNtw&oe=6AB94993"
       ],
       "engagement": {
-        "likes": 93,
+        "likes": 97,
         "replies": 2,
         "reposts": 22,
         "quotes": 0
       },
       "first_seen_at": "2026-09-25T13:57:38.658455Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3993949018035660763",
@@ -203,16 +220,16 @@
       "text": "Opus 5.5한테 리센느 매드무비 만들어달라고 해봤다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdtW3iXCSfb",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOOYFTKgU500t1OP6Rpfo2l24sDwKlh3jr_HHxiUkSI3XDaWYlMqXfr07P17KCY7JT2FKIN3dTyAWNQy86TX4ZemcC1XjUYITZEre0.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=Gpq1tPEA_0sQ7kNvwEh4txJ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODY4OTU2MjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo2MCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=24413c45796e9cb0&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DRDQ1MzREOTIzQTFEQjE2QzA3MzZDRjlFNzMwQ0M4MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0JDQ0VFRUMxMjFBRjQ0N0VCMDM1NkZBOUQ1MjI3MEU1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAzZi1xaf0PxUCKAJDMywXQE4AAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQIQrN5vsTFbwE3QmTl591uuh3dI2oFSEXB7mMTlUzuBUg&oe=6AB92A67"
+        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOOYFTKgU500t1OP6Rpfo2l24sDwKlh3jr_HHxiUkSI3XDaWYlMqXfr07P17KCY7JT2FKIN3dTyAWNQy86TX4ZemcC1XjUYITZEre0.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=Gpq1tPEA_0sQ7kNvwHOS512&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4ODY4OTU2MjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo2MCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=24413c45796e9cb0&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DRDQ1MzREOTIzQTFEQjE2QzA3MzZDRjlFNzMwQ0M4MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0JDQ0VFRUMxMjFBRjQ0N0VCMDM1NkZBOUQ1MjI3MEU1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAzZi1xaf0PxUCKAJDMywXQE4AAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKYYNeJ7o6bBJZ3zv3XEEM4DOt9dtspST-WfoFtrrumrQ&oe=6AB962A7"
       ],
       "engagement": {
-        "likes": 209,
+        "likes": 215,
         "replies": 21,
         "reposts": 13,
         "quotes": 4
       },
       "first_seen_at": "2026-09-25T11:46:53.940518Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3993903801290549524",
@@ -220,16 +237,16 @@
       "text": "구글이 학생들의 공부 방식을 바꾸고 있습니다.\n\nChrome에서 강의 영상을 재생하면 Gemini가 내용을 분석하고, 열어둔 탭·Google Docs·강의 영상으로 바로 퀴즈까지 만들어줍니다.\n\n기기를 바꿔도 보던 위치부터 그대로 이어볼 수 있습니다.\n\n새롭게 추가된 기능 3가지를 정리했습니다🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DdtMli_AWkU",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/820553443_17988669435112832_8225097974241900956_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5MzkwMzgwMTI5MDU0OTUyNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=uNcHjmAzXG0Q7kNvwGrHlqG&_nc_oc=Adoe5L_dt1G3LTWHBf7UkE8UbNveN7AsfPjBQP7bw8D_d-iPHoytk3_LyLllk-hDna0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&oh=00_AQI8PXSXzefgavn08gB1qB1vE1ESKtnDGeN7NTdAB60FXQ&oe=6ABD1BB1"
+        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/820553443_17988669435112832_8225097974241900956_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5MzkwMzgwMTI5MDU0OTUyNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=uNcHjmAzXG0Q7kNvwG50Xzn&_nc_oc=AdqoN6JOoCYg79CVGkDctPBNr5f4fpF0OaNbalVN7Q5LIGwCQWvRyviBHTYSXZSYmsQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=Hrbo93wzvfOTDQAfrnRX3w&_nc_ss=7a20f&oh=00_AQJ5sJOdOQkwKpxF-UpqlO__d_CYIOfqD9jKuSkR_xwxeg&oe=6ABD53F1"
       ],
       "engagement": {
-        "likes": 247,
+        "likes": 261,
         "replies": 5,
         "reposts": 55,
         "quotes": 5
       },
       "first_seen_at": "2026-09-25T10:15:21.069043699Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3993842968070926436",
@@ -238,13 +255,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Dds-wTojzBk",
       "media": null,
       "engagement": {
-        "likes": 279,
-        "replies": 42,
-        "reposts": 48,
-        "quotes": 4
+        "likes": 288,
+        "replies": 43,
+        "reposts": 51,
+        "quotes": 5
       },
       "first_seen_at": "2026-09-25T08:07:37.763444Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3993813179620206387",
@@ -252,16 +269,16 @@
       "text": "필즈상 수상자 테렌스 타오(Terence Tao) 교수는 현재 AI가 수학적 문제 해결 과정에서 “모든 인간성을 제거하는 방식으로 최적화”되고 있다고 지적했습니다.\n\n인간 수학자는 문제를 깊이 고민하는 느린 과정 속에서 영감을 얻고, 동료 및 학생들과 통찰을 나누며 전체 수학 생태계에 기여합니다. 그러나 AI는 지름길로 정답 도출에만 직행해 그 과정의 귀중한 발견들을 놓친다고 꼬집었습니다.\n\n“새로운 미해결 과제와 연구 방향은 천천히 깊이 파고드는 과정, 즉 뜻밖의 발견에서 나옵니다.”\n\n기존 문제를 푸는 코딩·연산 성능을 넘어, 새로운 문제를 스스로 발굴하고 학문 생태계를 확장하는 인간 고유의 탐색 방식이야말로 AI 특이점 시대에 남겨진 핵심 과제라는 설명입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dds3-0-iScz",
       "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMJfNQWkm_mJ3a73oJymOXBFEAUF6JUD0PWNrsjv4CPT3aXaKEo2gH_nCVB5WcW5XkOra6zlORro6it056K3EeEd_2ccAyJFEr-xgM.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=msTo7OZuTKgQ7kNvwEitTsr&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODc5NDE3NjQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo2LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9125c4d7edc1dbdb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85QjQ3QjA1QjMwMTlCQTREOEUwOEE1QkExNkQzMDQ5NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdCNEZFNEJCMzM3OEFBQzUzM0U5RTVFMzdCOTdDNUFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAh7nxgfzzPxUCKAJDMywXQGBMzMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=P6uKd0iXPBVrfNisW-l30Q&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKXKA-7yjBv6_d6_xSRkRaSfI_0z1eI2jL7zQFo3x-5-w&oe=6AB93EF0"
+        "https://instagram.fhan14-5.fna.fbcdn.net/o1/v/t16/f2/m84/AQMJfNQWkm_mJ3a73oJymOXBFEAUF6JUD0PWNrsjv4CPT3aXaKEo2gH_nCVB5WcW5XkOra6zlORro6it056K3EeEd_2ccAyJFEr-xgM.mp4?_nc_cat=104&_nc_oc=Adoy8sTBm7hR4sTBM0iAaZE1wmy4FSa8aHLL2pKvEFIrj3tUjOb5aLBZHdDMc4NeSKk&_nc_sid=5e9851&_nc_ht=instagram.fhan14-5.fna.fbcdn.net&_nc_ohc=msTo7OZuTKgQ7kNvwGFdMu-&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODc5NDE3NjQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo2LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9125c4d7edc1dbdb&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85QjQ3QjA1QjMwMTlCQTREOEUwOEE1QkExNkQzMDQ5NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdCNEZFNEJCMzM3OEFBQzUzM0U5RTVFMzdCOTdDNUFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAh7nxgfzzPxUCKAJDMywXQGBMzMzMzM0YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=GZL6kahuotHjcYq1qhhGzA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQI1JojVdgrNor6dazgeqe2CWsHLqcxk-9SyEBU8dWnFDg&oe=6AB93EF0"
       ],
       "engagement": {
-        "likes": 77,
-        "replies": 2,
-        "reposts": 10,
-        "quotes": 1
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-25T08:07:37.763444Z",
-      "last_seen_at": "2026-09-26T04:44:11.074536Z"
+      "last_seen_at": "2026-09-26T06:42:26.695581Z"
     },
     {
       "post_id": "3993752490491476366",
