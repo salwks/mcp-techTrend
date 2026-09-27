@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-27T12:56:01.506431Z",
+  "generated_at": "2026-09-27T14:11:26.091288Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 1,
-  "pending_count": 1,
-  "observed_total_count": 97,
+  "archive_count": 2,
+  "pending_count": 2,
+  "observed_total_count": 98,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,19 +14,34 @@
   ],
   "posts": [
     {
+      "post_id": "3995444745849535483",
+      "published_at": "2026-09-27T13:02:31Z",
+      "text": "놓치면 안 될 AI 소식 45개를 정리했습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Ddyq9PcD_v7",
+      "media": null,
+      "engagement": {
+        "likes": 40,
+        "replies": 46,
+        "reposts": 4,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-09-27T14:11:26.091288Z",
+      "last_seen_at": "2026-09-27T14:11:26.091288Z"
+    },
+    {
       "post_id": "3995386985736771878",
       "published_at": "2026-09-27T11:07:45Z",
       "text": "Claude Opus 5.5로 만든 결과물들이 점점 미쳐가고 있습니다.\n\n텍스트 지시만으로 Raptor 3 엔진을 분해해보는 3D 교육 자료부터 게임, 모션 그래픽, After Effects 작업까지 만들어냅니다.\n\n특히 3D 결과물의 완성도가 눈에 띄게 올라왔습니다.\n\n놀라운 활용 사례 16가지를 정리했습니다🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddyd0uJDxkm",
       "media": null,
       "engagement": {
-        "likes": 101,
+        "likes": 126,
         "replies": 15,
-        "reposts": 8,
-        "quotes": 0
+        "reposts": 12,
+        "quotes": 1
       },
       "first_seen_at": "2026-09-27T12:43:45.304597Z",
-      "last_seen_at": "2026-09-27T12:56:01.506431Z"
+      "last_seen_at": "2026-09-27T14:11:26.091288Z"
     }
   ],
   "watchdog": {
