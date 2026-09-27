@@ -14,11 +14,12 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 OUTPUT = DATA_DIR / "choi_latest.json"
 ARCHIVE = DATA_DIR / "choi_archive.json"
+REPORT_STATE = DATA_DIR / "choi_report_state.json"
 BACKUP_BASE_URL = os.environ.get(
     "CHOI_BACKUP_BASE_URL",
     "https://choi-threads-backup-collector.onrender.com",
 ).rstrip("/")
-# The archive is cumulative; scheduled snapshot gaps must not create permanent report omissions.
+# choi_archive.json is a pending/unreported queue. Posts already acknowledged in report_state are not re-added.
 
 
 def now_iso():
@@ -88,7 +89,21 @@ def extract_posts(payload):
 
 
 def post_key(post):
-    return post.get("post_id") or post.get("permalink")
+    key = post.get("post_id") or post.get("permalink")
+    if key in (None, ""):
+        return None
+    return str(key)
+
+
+def report_state_keys(report_state):
+    keys = set()
+    for post_id in report_state.get("emitted_post_ids", []):
+        if post_id not in (None, ""):
+            keys.add(str(post_id))
+    for permalink in report_state.get("emitted_permalinks", []):
+        if permalink:
+            keys.add(str(permalink))
+    return keys
 
 
 def dedupe_posts(posts):
@@ -125,28 +140,33 @@ def archive_view(post):
     }
 
 
-def merge_archive(previous_archive, posts, seen_at):
+def merge_archive(previous_archive, posts, seen_at, report_state):
+    emitted = report_state_keys(report_state)
     existing = {}
+
+    # Keep only posts that have not yet been emitted in a ChatGPT report.
     for item in previous_archive.get("posts", []):
         key = post_key(item)
-        if key:
+        if key and key not in emitted:
             existing[key] = dict(item)
 
-    # If the archive did not exist yet, seed it from the last successful snapshot.
-    if not existing:
+    # Seed from the last successful latest snapshot only when needed, but never
+    # resurrect an already-emitted post.
+    if not existing and not previous_archive.get("posts"):
         previous_latest = load_json(OUTPUT)
         seed_seen_at = previous_latest.get("latest_good_generated_at") or previous_latest.get("generated_at") or seen_at
         for item in previous_latest.get("posts", []):
             key = post_key(item)
-            if key:
+            if key and key not in emitted:
                 lean = archive_view(item)
                 lean["first_seen_at"] = seed_seen_at
                 lean["last_seen_at"] = seed_seen_at
                 existing[key] = lean
 
+    new_pending_count = 0
     for post in posts:
         key = post_key(post)
-        if not key:
+        if not key or key in emitted:
             continue
         lean = archive_view(post)
         if key in existing:
@@ -158,23 +178,35 @@ def merge_archive(previous_archive, posts, seen_at):
             lean["first_seen_at"] = seen_at
             lean["last_seen_at"] = seen_at
             existing[key] = lean
+            new_pending_count += 1
 
     merged = list(existing.values())
     merged.sort(key=lambda p: p.get("published_at") or "", reverse=True)
+
+    observed_total_count = previous_archive.get("observed_total_count")
+    if not isinstance(observed_total_count, int):
+        # Migration from the old cumulative archive.
+        observed_total_count = previous_archive.get("archive_count")
+    if not isinstance(observed_total_count, int):
+        observed_total_count = 0
+    observed_total_count += new_pending_count
+
     return {
         "account": ACCOUNT,
         "generated_at": seen_at,
-        "source": "merged observations from GitHub Actions primary collector and Render backup watchdog",
+        "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
+        "queue_mode": "pending_unreported",
         "archive_count": len(merged),
+        "pending_count": len(merged),
+        "observed_total_count": observed_total_count,
         "limitations": [
-            "Archive contains only posts observed by at least one successful collector.",
+            "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
+            "Already-emitted posts are not re-added even if the crawler sees them again.",
             "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
             "A post can still be missed if it disappears before either collector observes it.",
-            "Use report_state catch-up logic so posts discovered late are emitted exactly once.",
         ],
         "posts": merged,
     }
-
 
 def fetch_json(url, timeout=75):
     req = urllib.request.Request(
@@ -226,6 +258,7 @@ def write_json(path, payload):
 def main():
     previous = load_json(OUTPUT)
     previous_archive = load_json(ARCHIVE)
+    report_state = load_json(REPORT_STATE)
     generated_at = now_iso()
     archive_payload = None
     primary_posts = []
@@ -273,7 +306,7 @@ def main():
             base["collection_status"] = "degraded"
             base["limitations"] = [
                 "Primary collector returned no public posts. Previous successful latest snapshot was preserved.",
-                "The Render watchdog may still recover posts into choi_archive.json.",
+                "The Render watchdog may still recover unreported posts into choi_archive.json.",
             ]
         else:
             base.update({
@@ -282,7 +315,7 @@ def main():
                 "limitations": [
                     "Anonymous crawler surface exposes recent public posts, not guaranteed full account history.",
                     "At most 100 recent records are collected per primary run.",
-                    "Use choi_archive.json for reporting; the Render watchdog can recover posts missed between primary runs.",
+                    "Use choi_archive.json as the pending/unreported reporting queue; the Render watchdog can recover posts missed between primary runs.",
                 ],
                 "post_count": len(primary_posts),
                 "posts": primary_posts,
@@ -293,7 +326,7 @@ def main():
         base["error"] = primary_error
         base["limitations"] = [
             "Current primary collection failed; previous successful latest snapshot was preserved.",
-            "The Render watchdog is checked independently and can still add observed posts to the archive.",
+            "The Render watchdog is checked independently and can still add observed unreported posts to the pending queue.",
             "Do not infer or fabricate missing posts.",
         ]
 
@@ -302,6 +335,7 @@ def main():
         backup_posts, backup_meta = fetch_backup_posts()
         primary_keys = {post_key(p) for p in primary_posts if post_key(p)}
         previous_keys = {post_key(p) for p in previous_archive.get("posts", []) if post_key(p)}
+        previous_keys.update(report_state_keys(report_state))
         backup_keys = {post_key(p) for p in backup_posts if post_key(p)}
         recovered_keys = sorted(backup_keys - primary_keys - previous_keys)
         backup_only_keys = backup_keys - primary_keys
@@ -344,7 +378,7 @@ def main():
 
     observed_posts = combine_observations(primary_posts, backup_posts)
     if observed_posts:
-        archive_payload = merge_archive(previous_archive, observed_posts, generated_at)
+        archive_payload = merge_archive(previous_archive, observed_posts, generated_at, report_state)
         archive_payload["watchdog"] = {
             "status": base["watchdog"].get("status"),
             "recovered_to_archive_count": base["watchdog"].get("recovered_to_archive_count", 0),
