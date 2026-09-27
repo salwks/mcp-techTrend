@@ -2,62 +2,51 @@
 
 Monitors the public Threads account `@choi.openai` for the ChatGPT 6-hour briefing workflow.
 
-## Data
+## Data model
 
-The monitor separates three reporting responsibilities:
+The monitor now uses a **pending queue** instead of a permanent cumulative post archive:
 
 - `choi_threads_monitor/data/choi_latest.json`: newest primary crawler snapshot and collection health.
-- `choi_threads_monitor/data/choi_archive.json`: cumulative deduplicated posts observed by either collector.
-- `choi_threads_monitor/data/choi_report_state.json`: post IDs/permalinks already emitted by the 6-hour briefing.
+- `choi_threads_monitor/data/choi_archive.json`: **only posts that have been observed but not yet acknowledged by a ChatGPT report**.
+- `choi_threads_monitor/data/choi_report_state.json`: recent acknowledgement keys for already-emitted posts. Keep at most the newest 300 IDs/permalinks.
 
-The collector keeps up to 100 recent public posts per primary fetch and merges every observed post into the cumulative archive. If the primary collection fails, the previous successful latest snapshot is preserved.
+Once a post has been delivered in a successful report, its ID/permalink is added to `choi_report_state.json`. A state change triggers the monitor workflow, and the next collector pass removes that acknowledged post from `choi_archive.json`. If the same Threads post appears again in later crawler snapshots, its recent acknowledgement key prevents it from being re-added.
+
+This means old full post bodies and media URLs no longer accumulate indefinitely.
 
 ## Dual collector watchdog
 
-There are now two independent runtimes:
+There are two collector runtimes:
 
-1. **GitHub Actions primary collector** — scheduled every 15 minutes.
-2. **Render backup watchdog** — polls every 5 minutes and retains an in-memory archive of every post seen since the current Render boot.
+1. **GitHub Actions primary collector** — scheduled by the four shard workflows.
+2. **Render backup watchdog** — polls every 5 minutes and retains an in-memory observation window.
 
-Before each GitHub run writes its new archive, `collect.py` asks the Render service for `/archive`. Any post present in the backup archive but missing from both the current primary snapshot and the existing GitHub archive is merged into `choi_archive.json` as a watchdog recovery.
+Before GitHub writes the pending queue, `collect.py` asks Render for `/archive`. A post seen only by the backup can therefore enter the pending queue even if a GitHub schedule was delayed.
 
-This is designed around the current Render deployment behavior: monitor data commits may restart the Render service, so the GitHub collector drains the Render in-memory archive **before** its commit. The next Render boot then starts a fresh observation window.
+Both runtimes use anonymous public Threads access, so they are independent runtimes but not independent upstream APIs. A post can still be missed if it disappears before either collector observes it.
 
-`choi_latest.json` includes a `watchdog` object with:
+## Reporting / acknowledgement flow
 
-- `status`
-- `backup_collected_at`
-- `backup_post_count`
-- `backup_only_current_count`
-- `recovered_to_archive_count`
-- `recovered_keys`
+A 6-hour report should:
 
-A watchdog failure does not invalidate a successful primary snapshot, but it means the independent safety net was unavailable for that run.
+1. read `choi_latest.json` first and report collection freshness/limitations;
+2. read `choi_archive.json` as the authoritative **unreported-post queue**;
+3. read `choi_report_state.json` for recent acknowledgement keys;
+4. from the pending queue, put posts in the exact last-six-hour wall-clock interval into the main section;
+5. put older pending posts into the delayed-collection catch-up section;
+6. after a successful report, add every actually emitted post ID (or permalink when no ID exists) to `choi_report_state.json`;
+7. deduplicate and retain only the newest 300 acknowledgement keys;
+8. re-read the state after writing and verify that every emitted key is present;
+9. if state verification fails, do not delete pending posts and report the state-write failure.
 
-## Scheduling
+Updating `choi_report_state.json` triggers `.github/workflows/choi-threads-monitor.yml`, so acknowledged posts are pruned from the pending queue promptly. The workflow does not trigger on its own latest/archive data commit, avoiding a loop.
 
-The four shard workflows run at minute 7, 22, 37 and 52 of every hour. They share the same concurrency group so delayed GitHub schedules serialize instead of racing each other.
+## Why this is safer
 
-The umbrella `choi-threads-monitor.yml` remains available for manual runs and code-change triggers, but does not also carry a cron schedule. This avoids duplicate collectors running at the same minute and causing duplicate commits/redeploys.
+- **Late discovery:** a post remains pending until it has actually been reported.
+- **State-write failure:** the post stays in the pending queue, so it may repeat but will not be silently lost.
+- **Successful report:** the post is acknowledged and then physically removed from the pending queue.
+- **Storage:** old post text/media is deleted instead of accumulating forever.
+- **Deduplication:** only a rolling recent acknowledgement window is kept.
 
-The Render watchdog polls every 5 minutes. Both collectors use anonymous public Threads access, so they are independent runtimes but not independent upstream APIs.
-
-## Reporting logic
-
-A downstream 6-hour report should:
-
-1. read `choi_latest.json` first for `collection_status`, `generated_at`, `latest_good_generated_at`, `limitations`, `post_count`, and `watchdog`;
-2. read `choi_archive.json` as the authoritative observed-post set;
-3. select the exact wall-clock last 6 hours by `published_at` for the main report;
-4. deduplicate by `post_id` or `permalink`;
-5. read `choi_report_state.json` and automatically add any previously unreported archived post older than the current 6-hour window under a separate delayed-collection catch-up section;
-6. after a successful report, add every emitted post ID/permalink to `choi_report_state.json`;
-7. if the latest successful primary collection is stale or the watchdog failed, state that the newest interval may still be incomplete;
-8. never invent posts that are absent from the GitHub archive.
-
-This combination addresses two different failure modes:
-
-- **late discovery**: archive + report_state catch-up prevents an observed post from falling permanently between report windows;
-- **primary snapshot miss**: the 5-minute Render in-memory watchdog can recover a post observed between GitHub runs.
-
-It still cannot guarantee recovery of a post that disappears before **both** anonymous collectors observe it.
+The design prioritizes avoiding permanent omissions over avoiding a rare duplicate.

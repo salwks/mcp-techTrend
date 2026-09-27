@@ -1,7 +1,7 @@
 {
-  "state_version": 1,
+  "state_version": 2,
   "account": "choi.openai",
-  "purpose": "Tracks posts already emitted by the ChatGPT 6-hour report so delayed collector arrivals are surfaced exactly once.",
+  "purpose": "Recent acknowledgement keys for posts already emitted by the ChatGPT 6-hour report. choi_archive.json now stores only pending/unreported posts.",
   "emitted_post_ids": [
     "3992133226617963452",
     "3992130147722671784",
@@ -95,7 +95,10 @@
     "3994574957493295904",
     "3994538247317353836",
     "3994538050059187489",
-    "3994492394967866214"
+    "3994492394967866214",
+    "3995340151424911214",
+    "3995165984059012457",
+    "3995105780042762673"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -105,7 +108,10 @@
     "2026-09-24 20:09 KST manual recovery report emitted 1 current-window post and 4 delayed-collection catch-up posts.",
     "2026-09-25 14:00 KST report emitted 3 current-window posts and 11 delayed/catch-up posts. Nine catch-up posts had appeared in the prior user-visible report but were absent from state because that run's state write failed.",
     "2026-09-26 08:00 KST report emitted 3 current-window posts and 10 delayed-collection catch-up posts.",
-    "2026-09-27 state repair: restored 13 posts that had been delivered in prior reports but remained absent because repeated report-state writes failed."
+    "2026-09-27 state repair: restored 13 posts that had been delivered in prior reports but remained absent because repeated report-state writes failed.",
+    "2026-09-27 migration: archive changed from cumulative history to a pending/unreported queue. Report-state history is bounded to the most recent 300 acknowledgement keys.",
+    "2026-09-27 20:02 KST report acknowledged 3 posts before the pending-queue migration."
   ],
-  "last_reported_at": "2026-09-27T05:01:15.000Z"
+  "last_reported_at": "2026-09-27T11:02:14.000Z",
+  "retention_limit": 300
 }

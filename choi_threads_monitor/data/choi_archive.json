@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-27T12:43:45.304597Z",
+  "generated_at": "2026-09-27T11:02:14.000Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 4,
-  "pending_count": 4,
+  "archive_count": 1,
+  "pending_count": 1,
   "observed_total_count": 97,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
@@ -26,55 +26,6 @@
         "quotes": 0
       },
       "first_seen_at": "2026-09-27T12:43:45.304597Z",
-      "last_seen_at": "2026-09-27T12:43:45.304597Z"
-    },
-    {
-      "post_id": "3995340151424911214",
-      "published_at": "2026-09-27T09:34:54Z",
-      "text": "Claude Code에서 오래된 지침을 찾아 정리해주는 기능을 더 쉽게 사용할 수 있게 됐습니다.\n\n기존 `/claude-api prompt-audit` 명령어를 이제 `/checkup prompt-audit`로도 실행할 수 있습니다.\n\nCLAUDE.md와 Skills, Agents를 확인해 현재 사용 중인 모델에는 더 이상 필요하지 않은 지침을 찾아줍니다.\n\n같은 설정을 오래 사용하면서 불필요한 프롬프트가 쌓인 경우 정리할 때 유용합니다.\n\n현재 모델에 따라 어떤 지침을 불필요하다고 판단하는지도 달라집니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DdyTLMSiYdu",
-      "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPvgjXIbjk1Heaw41m28dtDPQMJIztIpeYRaP9FwcqaFssz1zBJY1-1TT1c2t1kHRwP_RgrtSnx4-MVMi99eSLoA28uCSQQ-_PBRXk.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=7fsHEYFcA7MQ7kNvwErLQK_&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5NjE4MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OSwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=83d55691ca02146c&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC80NjQwNUVGMURGMzY4OEU5MjUwM0I0MzU5QzZBQzM4Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgIrjhLK39D8VAigCQzMsF0Aid0vGp--eGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=nWEbilDGuR6es-uIkJXM9w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQKenBYiJfxQE4AmBzDIKNtLA71U8IXuu-P4LxJDOXhZWA&oe=6ABAD66B"
-      ],
-      "engagement": {
-        "likes": 68,
-        "replies": 1,
-        "reposts": 18,
-        "quotes": 1
-      },
-      "first_seen_at": "2026-09-27T11:01:04.084469Z",
-      "last_seen_at": "2026-09-27T12:43:45.304597Z"
-    },
-    {
-      "post_id": "3995165984059012457",
-      "published_at": "2026-09-27T03:48:40Z",
-      "text": "🚨 오픈AI와 앤트로픽이 최근 몇 달간 발생한 수만 건 규모의 AI 보안 사고를 조사하고 있는 것으로 알려졌습니다.\n\nAxios에 따르면 내부 테스트와 실제 환경에서 파운데이션 모델보다 더 위험한 기능을 발휘할 가능성을 지닌 모델들이 외부 평가 기준상 문제가 될 수 있는 행동을 한 사례가 포함됐습니다.\n\n아직 구체적인 사고 유형과 피해 규모는 공개되지 않았습니다.\n\n다만 알려진 사례보다 훨씬 많은 이상 행동이 내부에서 추적되고 있다는 점에서 AI 안전 문제가 생각보다 훨씬 복잡할 가능성을 보여줍니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DdxrkuSj7Vp",
-      "media": [
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/825326033_17988931764112832_8246467131219323516_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzk5NTE2NTk4NDA1OTAxMjQ1Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTU5MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=oonb0jN76UcQ7kNvwEuYAoR&_nc_oc=AdpX9BKmaNlzCMkzjdY0KUcUxwxZqii4gbDcHsxVlqXcaH_VpRzOi3BJvBqTwHR-LCg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=nWEbilDGuR6es-uIkJXM9w&_nc_ss=7a20f&oh=00_AQJhIyrgiPmMlGE7VbiymGzS6e5JcdLMTkoLYsMKT6VWzw&oe=6ABEE43C"
-      ],
-      "engagement": {
-        "likes": 27,
-        "replies": 2,
-        "reposts": 1,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-27T05:52:39.674712Z",
-      "last_seen_at": "2026-09-27T12:43:45.304597Z"
-    },
-    {
-      "post_id": "3995105780042762673",
-      "published_at": "2026-09-27T01:49:03Z",
-      "text": "와.. 4만 6천분과 함께 하게되겠네요!\n샌프란에서 실시간으로 전달해드리겠습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Ddxd4o7jwmx",
-      "media": null,
-      "engagement": {
-        "likes": 83,
-        "replies": 8,
-        "reposts": 0,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-27T05:52:39.674712Z",
       "last_seen_at": "2026-09-27T12:43:45.304597Z"
     }
   ],
