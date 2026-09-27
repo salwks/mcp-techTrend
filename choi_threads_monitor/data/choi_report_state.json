@@ -82,7 +82,20 @@
     "3994401703034223244",
     "3994356356323776651",
     "3994349488806243520",
-    "3994311477053829336"
+    "3994311477053829336",
+    "3994945616861775477",
+    "3994900285017487988",
+    "3994854936637748597",
+    "3994809519079266692",
+    "3994764371607940395",
+    "3994718964173229542",
+    "3994673504410627311",
+    "3994628407556043797",
+    "3994575227010876847",
+    "3994574957493295904",
+    "3994538247317353836",
+    "3994538050059187489",
+    "3994492394967866214"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -91,7 +104,8 @@
     "2026-09-24 catch-up report emitted the one current-window post plus all 17 archive posts missing from the initial report state; subsequent runs should not repeat this baseline catch-up.",
     "2026-09-24 20:09 KST manual recovery report emitted 1 current-window post and 4 delayed-collection catch-up posts.",
     "2026-09-25 14:00 KST report emitted 3 current-window posts and 11 delayed/catch-up posts. Nine catch-up posts had appeared in the prior user-visible report but were absent from state because that run's state write failed.",
-    "2026-09-26 08:00 KST report emitted 3 current-window posts and 10 delayed-collection catch-up posts."
+    "2026-09-26 08:00 KST report emitted 3 current-window posts and 10 delayed-collection catch-up posts.",
+    "2026-09-27 state repair: restored 13 posts that had been delivered in prior reports but remained absent because repeated report-state writes failed."
   ],
-  "last_reported_at": "2026-09-25T23:00:04.000Z"
+  "last_reported_at": "2026-09-27T05:01:15.000Z"
 }
