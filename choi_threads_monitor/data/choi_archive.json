@@ -1,6 +1,6 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-28T07:36:22.989974Z",
+  "generated_at": "2026-09-28T07:45:50.940376Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
   "archive_count": 2,
@@ -19,16 +19,16 @@
       "text": "Jev를 활용해 코딩 에이전트 비용을 40% 줄였다는 도구 jevgrep이 공개됐습니다.\n\n코딩 에이전트는 코드를 작성하기 전 관련 파일과 코드를 찾는 데 전체 토큰의 30~60%를 사용한다고 하는데요.\n\njevgrep은 Jev를 이용한 별도의 리서치 에이전트가 코드베이스를 반복적으로 탐색해 필요한 부분만 추려 코딩 에이전트에 전달합니다.\n\n개발자 자체 SWE-bench 테스트에서는 비용을 40% 줄였다고 하며, GPT-6 Astra를 약 70시간 동안 돌려 API 호출과 결과 형식도 최적화했다고 합니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd0pw80jvlj",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQM4lxwQDnkgvldbFoCHnXeumqvNcAfZ6MpG1ih6n0hF7qZh6zXFcwizEbx52aDv3OoLLFT3BINN8uBDbnYkI8sSPITCWuE56ubLBvE.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=RaNcF5mEKhQQ7kNvwEQc49K&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM5MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=4607e94eac8e4784&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81OTRDMDZCMjQ2Q0IyNTVCNjE1NENFNEYzMzU1RkI4RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QxNEQxRjhEOTA5RDM5OUY4MDJGQjA0ODQxRTlBNzlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjtyZobn0PxUCKAJDMywXQD6Q5WBBiTcYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=jgxsFBHp7MBfv6wer_CREQ&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNkbWCWL6uK84IKz_jtT1-Wcu1LQ71MMy3RFD1yl7TAWA&oe=6ABC068C"
+        "https://scontent-sea5-1.cdninstagram.com/o1/v/t16/f2/m84/AQM4lxwQDnkgvldbFoCHnXeumqvNcAfZ6MpG1ih6n0hF7qZh6zXFcwizEbx52aDv3OoLLFT3BINN8uBDbnYkI8sSPITCWuE56ubLBvE.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-sea5-1.cdninstagram.com&_nc_ohc=RaNcF5mEKhQQ7kNvwHi1VHS&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM5MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=4607e94eac8e4784&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81OTRDMDZCMjQ2Q0IyNTVCNjE1NENFNEYzMzU1RkI4RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QxNEQxRjhEOTA5RDM5OUY4MDJGQjA0ODQxRTlBNzlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjtyZobn0PxUCKAJDMywXQD6Q5WBBiTcYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=xWCw3faSSDSR6WewkOL3Cg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPMqXM-QOl8mKaVh0s0yv5g4WRZxW67wigmy7FcTJfPdA&oe=6ABC068C"
       ],
       "engagement": {
-        "likes": 13,
+        "likes": 20,
         "replies": 1,
-        "reposts": 2,
+        "reposts": 3,
         "quotes": 0
       },
       "first_seen_at": "2026-09-28T07:36:22.989974Z",
-      "last_seen_at": "2026-09-28T07:36:22.989974Z"
+      "last_seen_at": "2026-09-28T07:45:50.940376Z"
     },
     {
       "post_id": "3995956987573374114",
@@ -36,21 +36,21 @@
       "text": "이미지 한 장을 편집 가능한 3D 공간으로 바꿔주는 오픈소스 모델 Mira-Scene이 공개됐습니다.\n\nMira-Scene은 이미지 속 물체를 분리한 뒤 각각의 3D 형태와 위치 관계를 복원해 하나의 3D 장면으로 만듭니다.\n만들어진 장면은 WebUI에서 물체를 선택하고 직접 편집할 수도 있습니다.\n\n연구진 자체 평가에서는 입력 이미지와 3D 공간의 구조를 얼마나 일관되게 복원하는지 평가한 항목에서 GPT-6 Astra보다 높은 결과를 기록했다고 합니다.\n\n모델과 코드가 모두 공개돼 직접 실행해볼 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd0fbVuDQyi",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwFs7rbJ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=jgxsFBHp7MBfv6wer_CREQ&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOCLQWZMxP7UoQkDsIgmN-_tCqhtAJLsyxnbS1BwNkCcQ&oe=6ABBF24B"
+        "https://scontent-sea5-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-sea5-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwFaF06k&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=xWCw3faSSDSR6WewkOL3Cg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOlBoqSTWrIB8RKWt5wBnHM3DfQT2-aU-bAVATNNLhghg&oe=6ABBF24B"
       ],
       "engagement": {
-        "likes": 24,
+        "likes": 25,
         "replies": 1,
         "reposts": 5,
         "quotes": 0
       },
       "first_seen_at": "2026-09-28T06:37:51.853842Z",
-      "last_seen_at": "2026-09-28T07:36:22.989974Z"
+      "last_seen_at": "2026-09-28T07:45:50.940376Z"
     }
   ],
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
-    "backup_only_current_count": 1
+    "backup_only_current_count": 0
   }
 }
