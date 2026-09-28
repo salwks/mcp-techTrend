@@ -1,6 +1,6 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-28T07:21:11.679320Z",
+  "generated_at": "2026-09-28T07:29:36.006099Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
   "archive_count": 1,
@@ -19,16 +19,16 @@
       "text": "이미지 한 장을 편집 가능한 3D 공간으로 바꿔주는 오픈소스 모델 Mira-Scene이 공개됐습니다.\n\nMira-Scene은 이미지 속 물체를 분리한 뒤 각각의 3D 형태와 위치 관계를 복원해 하나의 3D 장면으로 만듭니다.\n만들어진 장면은 WebUI에서 물체를 선택하고 직접 편집할 수도 있습니다.\n\n연구진 자체 평가에서는 입력 이미지와 3D 공간의 구조를 얼마나 일관되게 복원하는지 평가한 항목에서 GPT-6 Astra보다 높은 결과를 기록했다고 합니다.\n\n모델과 코드가 모두 공개돼 직접 실행해볼 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd0fbVuDQyi",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwF9_Txp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=i6vXDr8QvleCO39rqin8xA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPp6zU1ebk3uFVxvNrN5lBBLyOMsYFuOX9qKB5hhkOUzQ&oe=6ABBF24B"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwF4ju7e&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Rmb5Ahwi7YFY_7HBafGyxg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNPsaipxKEEJlhaePrnNOW327L8LL8JjNF9q5Wgw_YcZA&oe=6ABBF24B"
       ],
       "engagement": {
-        "likes": 21,
+        "likes": 23,
         "replies": 1,
         "reposts": 5,
         "quotes": 0
       },
       "first_seen_at": "2026-09-28T06:37:51.853842Z",
-      "last_seen_at": "2026-09-28T07:21:11.679320Z"
+      "last_seen_at": "2026-09-28T07:29:36.006099Z"
     }
   ],
   "watchdog": {
