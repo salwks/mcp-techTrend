@@ -4,73 +4,66 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Daily AI News</title>
-<meta name="description" content="지난 24시간 AI 핵심 뉴스를 매일 아침 8시에 정리해 보내드립니다.">
+<meta name="description" content="지난 24시간의 AI 뉴스를 매일 아침 전달합니다.">
 <style>
-:root{--bg:#08111f;--panel:#101b2e;--text:#f5f7fb;--muted:#9eacc0;--line:#24334c;--accent:#95b9ff}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#08111f,#0d1830 55%,#101d36);color:var(--text);font-family:Inter,Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.wrap{width:min(1080px,calc(100% - 36px));margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:28px 0}.brand{font-weight:800;font-size:19px}.brand span{color:var(--accent)}.muted{color:var(--muted)}
-.hero{min-height:620px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center;padding:48px 0 86px}
-.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:#c8d8f6;font-size:13px}
-h1{font-size:clamp(48px,7vw,82px);line-height:.99;letter-spacing:-.055em;margin:22px 0}.lead{font-size:21px;line-height:1.65;color:#d9e0ea;max-width:720px}
-.card{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.28)}
-.card h2{margin:0 0 8px;font-size:26px}.card p{margin:0 0 20px;color:var(--muted)}
-form{display:grid;gap:12px}.input,.btn{height:54px;border-radius:14px}.input{border:1px solid var(--line);background:#091321;color:white;font-size:16px;padding:0 15px}.btn{border:0;background:#9abaff;color:#07101f;font-weight:800;font-size:16px;cursor:pointer}.btn:disabled{opacity:.6}
-.consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted)}.status{min-height:22px;font-size:13px}.ok{color:#9ce0b8}.err{color:#ffb7b7}.hp{position:absolute;left:-9999px}
-section.info{border-top:1px solid var(--line);padding:80px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.box{border:1px solid var(--line);border-radius:18px;padding:22px;background:rgba(255,255,255,.025)}.box b{display:block;margin-bottom:8px;font-size:18px}.box span{color:var(--muted);font-size:14px}
-footer{border-top:1px solid var(--line);padding:32px 0 52px;color:var(--muted);font-size:12px}
-@media(max-width:820px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+:root{--bg:#08111f;--text:#f5f7fb;--muted:#9eacc0;--line:#24334c;--accent:#95b9ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#08111f,#0d1830 55%,#101d36);color:var(--text);font-family:Inter,Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{width:min(520px,calc(100% - 36px));text-align:center}
+h1{margin:0;font-size:clamp(42px,9vw,68px);letter-spacing:-.055em;line-height:1}
+h1 span{color:var(--accent)}
+p{margin:20px 0 8px;font-size:18px;line-height:1.7;color:#dce4ef}
+.limit{margin:0 0 28px;color:var(--muted);font-size:14px}
+form{display:grid;gap:12px;text-align:left}
+input[type=email]{height:54px;border-radius:14px;border:1px solid var(--line);background:#091321;color:white;font-size:16px;padding:0 15px;outline:none}
+button{height:54px;border:0;border-radius:14px;background:#9abaff;color:#07101f;font-weight:800;font-size:16px;cursor:pointer}
+button:disabled{opacity:.6}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.5}
+.status{min-height:22px;font-size:13px;text-align:center}
+.ok{color:#9ce0b8}.err{color:#ffb7b7}.hp{position:absolute;left:-9999px}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-<div class="brand">Daily <span>AI</span> News</div>
-<div class="muted">매일 오전 8시</div>
-</header>
 <main>
-<section class="hero">
-<div>
-<span class="badge">지난 24시간 AI 핵심 뉴스</span>
-<h1>AI 뉴스는 많고,<br>읽을 시간은 짧습니다.</h1>
-<p class="lead">지난 24시간의 중요한 AI 소식을 골라 사실을 확인하고, 서로 이어지는 흐름까지 기사처럼 정리해 매일 아침 이메일로 보내드립니다.</p>
-</div>
-<div class="card">
-<h2>무료 구독</h2>
-<p>AI 모델, 에이전트, 로봇, 산업·기업, 투자 흐름을 아침 한 번에 읽어보세요.</p>
+<h1>Daily <span>AI</span> News</h1>
+<p>지난 24시간의 AI 뉴스를 매일 아침 전달합니다.</p>
+<div class="limit" id="limit">limit -/300</div>
+
 <form id="subscribe-form">
 <label class="hp">Website<input id="website" tabindex="-1" autocomplete="off"></label>
-<input class="input" id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-<label class="consent"><input id="consent" type="checkbox" required><span>뉴스레터 수신 및 발송을 위한 이메일 주소 저장에 동의합니다. 언제든 구독을 해지할 수 있습니다.</span></label>
-<button class="btn" id="submit-btn" type="submit">무료로 구독하기</button>
+<input id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+<label class="consent"><input id="consent" type="checkbox" required><span>뉴스레터 수신 및 이메일 주소 저장에 동의합니다.</span></label>
+<button id="submit-btn" type="submit">구독하기</button>
 <div id="status" class="status" aria-live="polite"></div>
 </form>
-</div>
-</section>
-<section class="info">
-<div class="grid">
-<div class="box"><b>핵심 뉴스만</b><span>지난 24시간 동안 실제로 의미 있는 변화만 골라 정리합니다.</span></div>
-<div class="box"><b>사실 확인</b><span>가능한 경우 공식 발표, 논문, 기업 문서를 기준으로 내용을 확인합니다.</span></div>
-<div class="box"><b>흐름까지 설명</b><span>개별 뉴스 나열이 아니라 오늘 무엇이 달라졌는지 맥락까지 연결합니다.</span></div>
-</div>
-</section>
 </main>
-<footer>Daily AI News · 구독 이메일은 뉴스레터 발송 목적으로만 사용됩니다.</footer>
-</div>
+
 <script>
-const endpoint="https://tiabwoiuohfvtqutulsb.supabase.co/functions/v1/subscribe-daily-ai-news";
+const subscribeEndpoint="https://tiabwoiuohfvtqutulsb.supabase.co/functions/v1/subscribe-daily-ai-news";
+const countEndpoint="https://tiabwoiuohfvtqutulsb.supabase.co/functions/v1/daily-ai-news-count";
+
+async function refreshCount(){
+  try{
+    const r=await fetch(countEndpoint,{cache:"no-store"});
+    const d=await r.json();
+    if(r.ok && Number.isFinite(d.count)) document.getElementById("limit").textContent="limit "+d.count+"/300";
+  }catch(e){}
+}
+refreshCount();
+
 const form=document.getElementById("subscribe-form"),email=document.getElementById("email"),consent=document.getElementById("consent"),website=document.getElementById("website"),status=document.getElementById("status"),button=document.getElementById("submit-btn");
 form.addEventListener("submit",async e=>{
-e.preventDefault();status.className="status";status.textContent="";
-if(!email.validity.valid){status.classList.add("err");status.textContent="이메일 주소를 확인해 주세요.";return}
-if(!consent.checked){status.classList.add("err");status.textContent="뉴스레터 수신 동의가 필요합니다.";return}
-button.disabled=true;button.textContent="등록 중...";
-try{
-const r=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.value.trim(),website:website.value})});
-const data=await r.json().catch(()=>({}));
-if(!r.ok||data.error)throw new Error();
-status.classList.add("ok");status.textContent="구독이 등록되었습니다. 매일 아침 8시에 만나요.";email.value="";consent.checked=false;
-}catch(err){status.classList.add("err");status.textContent="등록 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요."}
-finally{button.disabled=false;button.textContent="무료로 구독하기"}
+  e.preventDefault();status.className="status";status.textContent="";
+  if(!email.validity.valid){status.classList.add("err");status.textContent="이메일 주소를 확인해 주세요.";return}
+  if(!consent.checked){status.classList.add("err");status.textContent="수신 동의가 필요합니다.";return}
+  button.disabled=true;button.textContent="등록 중...";
+  try{
+    const r=await fetch(subscribeEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.value.trim(),website:website.value})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||d.error)throw new Error();
+    status.classList.add("ok");status.textContent="구독되었습니다.";email.value="";consent.checked=false;await refreshCount();
+  }catch(err){status.classList.add("err");status.textContent="등록 중 문제가 발생했습니다."}
+  finally{button.disabled=false;button.textContent="구독하기"}
 });
 </script>
 </body>
