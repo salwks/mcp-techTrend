@@ -107,7 +107,9 @@
     "3995549465893308336",
     "3995504283977710694",
     "3995444745849535483",
-    "3995386985736771878"
+    "3995386985736771878",
+    "3995911624724481338",
+    "3995866526099608939"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -120,8 +122,9 @@
     "2026-09-27 state repair: restored 13 posts that had been delivered in prior reports but remained absent because repeated report-state writes failed.",
     "2026-09-27 migration: archive changed from cumulative history to a pending/unreported queue. Report-state history is bounded to the most recent 300 acknowledgement keys.",
     "2026-09-27 20:02 KST report acknowledged 3 posts before the pending-queue migration.",
-    "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts."
+    "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts.",
+    "2026-09-28 16:04 KST manual recovery of the missed 14:01 KST delivery: emitted 2 pending posts whose published_at fell inside the 08:01-14:01 KST report window; 15:00 KST Mira-Scene remains pending for the next report."
   ],
-  "last_reported_at": "2026-09-28T04:59:29.000Z",
+  "last_reported_at": "2026-09-28T05:01:00.000Z",
   "retention_limit": 300
 }
