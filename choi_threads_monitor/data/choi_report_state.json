@@ -123,7 +123,8 @@
     "2026-09-27 migration: archive changed from cumulative history to a pending/unreported queue. Report-state history is bounded to the most recent 300 acknowledgement keys.",
     "2026-09-27 20:02 KST report acknowledged 3 posts before the pending-queue migration.",
     "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts.",
-    "2026-09-28 16:04 KST manual recovery of the missed 14:01 KST delivery: emitted 2 pending posts whose published_at fell inside the 08:01-14:01 KST report window; 15:00 KST Mira-Scene remains pending for the next report."
+    "2026-09-28 16:04 KST manual recovery of the missed 14:01 KST delivery: emitted 2 pending posts whose published_at fell inside the 08:01-14:01 KST report window; 15:00 KST Mira-Scene remains pending for the next report.",
+    "2026-09-28 16:04 KST manual recovery of missed 14:01 KST delivery: emitted 2 pending posts from the 08:01-14:01 KST window; 15:00 KST Mira-Scene remains pending for the next report."
   ],
   "last_reported_at": "2026-09-28T05:01:00.000Z",
   "retention_limit": 300
