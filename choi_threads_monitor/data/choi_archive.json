@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-27T22:36:33.207561Z",
+  "generated_at": "2026-09-28T00:30:19.801463Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 7,
-  "pending_count": 7,
-  "observed_total_count": 103,
+  "archive_count": 8,
+  "pending_count": 8,
+  "observed_total_count": 104,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,38 @@
   ],
   "posts": [
     {
+      "post_id": "3995775846253137497",
+      "published_at": "2026-09-28T00:00:21Z",
+      "text": "Jev와 비슷한 역할을 하는 새로운 분류 모델 Julia-1이 공개됐습니다.\n\n슈퍼소닉 랩스가 공개한 Julia-1은 다양한 기기에서 로컬로 실행하는 데 초점을 맞춘 모델입니다. WebGPU도 지원해 브라우저에서도 실행할 수 있습니다.\n\n실제로 한 개발자가 M1 Pro에서 구현한 버전은 하나의 프로세스에서 10개 요청을 약 0.93~0.96초에 처리했다고 공개했습니다.\n\nJev처럼 빠른 판단이 필요한 작업에 활용할 수 있지만, 공개된 내용만으로 두 모델의 성능을 직접 비교하기는 어렵습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Ddz2PYuAQ5Z",
+      "media": [
+        "https://instagram.fhan14-3.fna.fbcdn.net/v/t51.82787-15/825996806_17988993123112832_5013327162189274060_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NTc3NTg0NjI1MzEzNzQ5Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=CS8tUK9dVTMQ7kNvwHJ0k2l&_nc_oc=AdoGN3HLhBh_pnYxzsEwQd0zB4uZfJedgTghVWWXN2kuTU3AjMmIEJ5GfjD7cabHMEU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhan14-3.fna&_nc_gid=Hqpgltq_nDvKxELh_9n3NA&_nc_ss=7a20f&oh=00_AQN0hNQ-AiMAmeSV8ftpZiLlBOgdTabfb7ZjhveHO2u92Q&oe=6ABF76B1"
+      ],
+      "engagement": {
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
+      },
+      "first_seen_at": "2026-09-28T00:30:19.801463Z",
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
+    },
+    {
       "post_id": "3995730452501491437",
       "published_at": "2026-09-27T22:30:10Z",
       "text": "미니맥스가 새로운 코딩용 AI 모델 M3.1-Flash-Preview를 공개했습니다.\n\nMiniMax Code에서 먼저 제공되며, 빠른 버그 수정부터 전체 기능 개발까지 일상적인 개발 작업에 초점을 맞춘 텍스트 모델입니다.\n\n다만 현재 공식 게시물에는 파라미터 수나 벤치마크, 오픈웨이트 제공 여부 등 구체적인 정보가 공개되지 않았습니다.\n\n최근 OpenRouter에 등장했던 정체불명의 모델 Space Bunny Alpha가 미니맥스 모델이라는 분석도 있었지만, M3.1-Flash-Preview와 같은 모델인지는 확인되지 않았습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddzr60fj-7t",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-15/826271401_17988993087112832_2594229607385033613_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5NTczMDQ1MjUwMTQ5MTQzNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=1bimb0lj5dYQ7kNvwEy8riG&_nc_oc=AdpBFNCgScWKg1d-_bxPEDpO4bIUP4D8DCJTBg44Jg_2GxfYaUlJdzDTz-2FgA5IJGg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=1QHhwkDXBVUFvbzBIlGKAg&_nc_ss=7a20f&oh=00_AQMnX7fjLzo8L3lufzyx-ByfMOFV7yK-NbZJeSEwuopJjw&oe=6ABF527F"
+        "https://instagram.fhan14-4.fna.fbcdn.net/v/t51.82787-15/826271401_17988993087112832_2594229607385033613_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5NTczMDQ1MjUwMTQ5MTQzNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=1bimb0lj5dYQ7kNvwEjJkQQ&_nc_oc=AdqY43WR_DvulZE5JPzDTKcsE178Wa4DpMnAYJUmVRIPWDZVFYBaL4dKWXcLexsURFM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhan14-4.fna&_nc_gid=Hqpgltq_nDvKxELh_9n3NA&_nc_ss=7a20f&oh=00_AQNB1kmhiHme0SHiDeSbcksWxvbi3p1CVqcwOQW_UeR4WQ&oe=6ABF8ABF"
       ],
       "engagement": {
-        "likes": 4,
-        "replies": 0,
-        "reposts": 0,
-        "quotes": 0
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T22:33:10.956832Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     },
     {
       "post_id": "3995640127300936066",
@@ -36,16 +53,16 @@
       "text": "우크라이나가 드론에 이어 전쟁의 로봇화를 추진합니다.\n\n미하일로 페도로우 우크라이나 국방장관은 ‘Army of Robots’를 출범한다고 밝혔습니다.\n\n부상자 후송, 탄약 운반, 지뢰 설치·제거, 정찰, 진지 방어와 표적 공격처럼 위험한 임무를 로봇에 맡기는 것이 목표입니다.\n\n특정 기업의 로봇을 도입하는 방식이 아니라 국방 기술 기업에 투자하고, 군과 직접 시험한 뒤 성과가 확인된 기술을 전장에 확대하는 생태계를 만들겠다는 계획입니다.\n\n우크라이나 국방부는 이미 2026년 지상 무인 시스템을 실제 전장에서 운용하고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdzXYamEaGC",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPj0tGWHkn335pHeitqo2iOQbiWZKqcqC58Y6nFoodoSCtmf18bo6gJNtRv5fIwsSDnfmvza_RNXaL9M19Z7n6fZ_I2IoxADRetvZQ.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=NDox4fV1ROAQ7kNvwFzsz-o&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM4NzMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=c8074383c26af3b7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8wMDQyNzYwMTExQjRDNjk1NUYwNzM3MzBDRThEOTQ4Q192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc3NENGRjIwQzJBMTJCRUIxNEM1MjRBRDE5NDYxMzhGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAvOPaoLn0PxUCKAJDMywXQE3wo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=1QHhwkDXBVUFvbzBIlGKAg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMD-bg8qOfFF-CSOomEj4QHT2b2cYA-h0fwR3Ox6rOeBw&oe=6ABB6B3B"
+        "https://instagram.fhan14-1.fna.fbcdn.net/o1/v/t16/f2/m84/AQPj0tGWHkn335pHeitqo2iOQbiWZKqcqC58Y6nFoodoSCtmf18bo6gJNtRv5fIwsSDnfmvza_RNXaL9M19Z7n6fZ_I2IoxADRetvZQ.mp4?_nc_cat=101&_nc_oc=Adrmx3YU1J68cKZqrRPhd49rU22n1Pgu1YnxSN0C46Je9iRUA0DXHRpEuD8hKPamw0w&_nc_sid=5e9851&_nc_ht=instagram.fhan14-1.fna.fbcdn.net&_nc_ohc=NDox4fV1ROAQ7kNvwHuMsY6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM4NzMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=c8074383c26af3b7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8wMDQyNzYwMTExQjRDNjk1NUYwNzM3MzBDRThEOTQ4Q192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc3NENGRjIwQzJBMTJCRUIxNEM1MjRBRDE5NDYxMzhGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAvOPaoLn0PxUCKAJDMywXQE3wo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hqpgltq_nDvKxELh_9n3NA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPXV9-Y7kx8vZ8n46noiESJG8BsGESTtX9AbGSYGbJY7g&oe=6ABBA37B"
       ],
       "engagement": {
-        "likes": 20,
-        "replies": 1,
-        "reposts": 0,
-        "quotes": 0
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T21:15:31.040499Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     },
     {
       "post_id": "3995594863713250639",
@@ -53,16 +70,16 @@
       "text": "트럼프 대통령이 앤트로픽 CEO 다리오 아모데이를 백악관 비공개 만찬에 직접 초대했습니다.\n\nAxios에 따르면 두 사람이 1대1로 만나는 것은 처음입니다.\n앤트로픽은 AI 개발 속도와 안전 문제를 두고 트럼프 행정부와 갈등을 겪어왔으며, 최근에는 트럼프 측 인사들이 아모데이의 AI 안전론을 공개적으로 비판하기도 했습니다.\n\n특히 앤트로픽이 대규모 IPO를 준비하는 것으로 알려진 상황이라, 이번 만찬에서 AI 개발 속도와 정부와의 관계가 어떻게 논의될지 주목받고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdzNFvmAO1P",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-15/825269463_17989014465112832_4474132046195376630_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NTU5NDg2MzcxMzI1MDYzOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTU3Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=wlAwi2UgjqUQ7kNvwFXiQty&_nc_oc=AdpkHlf9Cs-HL9a3BCkMwQqNbhMqjCtLxQL1xpO2FGjDcV6bZkrNlGnCjLskakAqRrI&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=1QHhwkDXBVUFvbzBIlGKAg&_nc_ss=7a20f&oh=00_AQN5YDfX6YDtsC0_Zji7zDjQB0tLmlg2QtLMnxwFUCRBDA&oe=6ABF74C0"
+        "https://instagram.fhan14-5.fna.fbcdn.net/v/t51.82787-15/825269463_17989014465112832_4474132046195376630_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NTU5NDg2MzcxMzI1MDYzOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTU3Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=wlAwi2UgjqUQ7kNvwGA3KqS&_nc_oc=Adr3Ly4e62rL9wfv5ddbeQP8PJSeV422N-7RlcYerf1u-N_uFYmzpGBObAgftJmN_x4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fhan14-5.fna&_nc_gid=Hqpgltq_nDvKxELh_9n3NA&_nc_ss=7a20f&oh=00_AQPcdStgc6T6La94n7zzHViTXi506Llfscqp6eE89hciKQ&oe=6ABF74C0"
       ],
       "engagement": {
-        "likes": 20,
-        "replies": 1,
-        "reposts": 0,
-        "quotes": 0
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T18:32:01.881999Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     },
     {
       "post_id": "3995549465893308336",
@@ -70,16 +87,16 @@
       "text": "🚨 Seedance 2.5를 한 달 동안 약 $1.5에 사용할 수 있는 프로모션이 진행 중입니다.\n\nDreamina Basic 월간 멤버십을 최대 90% 할인해주는 행사로, Seedance 2.5를 포함한 Seedance 모델을 이용할 수 있습니다.\n\n기간은 9월 23일부터 10월 9일까지이며 한국도 대상 국가에 포함됩니다. 다만 Dreamina에서 결제한 적이 없는 사용자의 첫 결제에만 적용됩니다.\n\nDreamina에서 회원가입 후 Membership → Monthly → Basic을 선택하면 확인할 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DdzCxHlEoew",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQN0zTy7xm1cdJFq1urwKoTa0uqI4Ylb_CiR6RV7IcmhR1oXMYuIKFcxpjCyJl9lZI0Wm7GOhcipw4nxAlVWCdUqv09kHMwQleWocuk.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=DOauUiw_MjQQ7kNvwEAEygg&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMDIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDMyMDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a36599cee620e5c2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85NTQ1Q0U0M0ZEQjMzRTIzQTVFMjVBRDdGMDM0MTBCOF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc2MzRBMTdFQzlCNTQ5MDFBQzAzNDBBQTNGRDI5MDI3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9KOi5rn0PxUCKAJDMywXQC13S8an754YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=1QHhwkDXBVUFvbzBIlGKAg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMivmMVE9CXdIUmRObqjbw8Lj6_cPzG_Pv2v3utnLF5ig&oe=6ABB8D0E"
+        "https://instagram.fhan14-4.fna.fbcdn.net/o1/v/t16/f2/m84/AQN0zTy7xm1cdJFq1urwKoTa0uqI4Ylb_CiR6RV7IcmhR1oXMYuIKFcxpjCyJl9lZI0Wm7GOhcipw4nxAlVWCdUqv09kHMwQleWocuk.mp4?_nc_cat=102&_nc_oc=AdpeoOBHcYWohEU49v9u7LnT1nnpOuku1iUCPVT0ahsHPphG3yLzgbEg-24LhcwJIo0&_nc_sid=5e9851&_nc_ht=instagram.fhan14-4.fna.fbcdn.net&_nc_ohc=DOauUiw_MjQQ7kNvwEWMMa7&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMDIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDMyMDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a36599cee620e5c2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85NTQ1Q0U0M0ZEQjMzRTIzQTVFMjVBRDdGMDM0MTBCOF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc2MzRBMTdFQzlCNTQ5MDFBQzAzNDBBQTNGRDI5MDI3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9KOi5rn0PxUCKAJDMywXQC13S8an754YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Hqpgltq_nDvKxELh_9n3NA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNU1HmddSVhJl_w8jsQOG4h62n_Jo8WdmOHAOJpLnf7fw&oe=6ABB8D0E"
       ],
       "engagement": {
-        "likes": 99,
-        "replies": 7,
-        "reposts": 28,
-        "quotes": 5
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T17:39:34.556661Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     },
     {
       "post_id": "3995504283977710694",
@@ -87,16 +104,16 @@
       "text": "GPT Astra를 휴머노이드 로봇에 연결하면 어디까지 가능할까요?\n\n스탠퍼드 연구진이 GPT Astra로 휴머노이드를 제어하는 HomeBody를 공개했습니다.\n\n처음 보는 주방에서도 해당 환경을 위한 별도 학습 없이 방을 돌아다니며 물건을 정리하고, 이전에 봤던 물건을 기억해 “아까 그 물건 가져와” 같은 모호한 요청도 수행합니다.\n\n로봇마다 모든 행동을 새로 학습시키는 대신, 범용 AI의 추론과 기억 능력을 로봇의 몸에 연결하는 방식입니다.\n\nAI 모델이 발전할수록 로봇의 작업 능력도 함께 좋아질 수 있다는 방향을 보여줍니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Ddy4fopCvxm",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPr_GFv9tq1ZKfN-2Rcw0XDPZnQFCtWG6yXGoF_MAuVI6Q0Yjy8I7iiabGRsR3_43X0h4xLOGZ_F7eqy2uWhq_jxPcxd2JZVPnyGyU.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=R2aAJw0n39AQ7kNvwFGdJnY&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTI5NTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=7f595d066b4611db&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC80MjRBOEI4MTE3MDQyRTQ5MUFFQTQ5RjIyQjQwODlCRV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgPam75m59D8VAigCQzMsF0BKQAAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=1QHhwkDXBVUFvbzBIlGKAg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOHgNGq6rVul9HkGVmrw4a_pXgae8lN9myv8uouchqSBw&oe=6ABB6C1C"
+        "https://instagram.fhan14-2.fna.fbcdn.net/o1/v/t16/f2/m84/AQPr_GFv9tq1ZKfN-2Rcw0XDPZnQFCtWG6yXGoF_MAuVI6Q0Yjy8I7iiabGRsR3_43X0h4xLOGZ_F7eqy2uWhq_jxPcxd2JZVPnyGyU.mp4?_nc_cat=100&_nc_oc=AdovehKH2vXUkcpUJVSHaKRCoZQyCbXf-hcNWH3ktoF9zsVS9rCnJ1ZaIsFPLMOZEVk&_nc_sid=5e9851&_nc_ht=instagram.fhan14-2.fna.fbcdn.net&_nc_ohc=R2aAJw0n39AQ7kNvwH7ZhPb&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTI5NTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=7f595d066b4611db&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC80MjRBOEI4MTE3MDQyRTQ5MUFFQTQ5RjIyQjQwODlCRV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgPam75m59D8VAigCQzMsF0BKQAAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=Hqpgltq_nDvKxELh_9n3NA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNAeOaWZbUm88Pvf_niAV3FQ3GZqnhcM5AzMOwCLPfX3Q&oe=6ABBA45C"
       ],
       "engagement": {
-        "likes": 54,
-        "replies": 2,
-        "reposts": 4,
-        "quotes": 1
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T15:50:33.111630Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     },
     {
       "post_id": "3995444745849535483",
@@ -105,13 +122,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Ddyq9PcD_v7",
       "media": null,
       "engagement": {
-        "likes": 94,
-        "replies": 47,
-        "reposts": 10,
-        "quotes": 0
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T14:11:26.091288Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     },
     {
       "post_id": "3995386985736771878",
@@ -120,18 +137,18 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Ddyd0uJDxkm",
       "media": null,
       "engagement": {
-        "likes": 189,
-        "replies": 16,
-        "reposts": 19,
-        "quotes": 1
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-09-27T12:43:45.304597Z",
-      "last_seen_at": "2026-09-27T22:36:33.207561Z"
+      "last_seen_at": "2026-09-28T00:30:19.801463Z"
     }
   ],
   "watchdog": {
     "status": "ok",
-    "recovered_to_archive_count": 0,
-    "backup_only_current_count": 0
+    "recovered_to_archive_count": 1,
+    "backup_only_current_count": 15
   }
 }
