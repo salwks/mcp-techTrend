@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-28T08:48:44.072342Z",
+  "generated_at": "2026-09-28T11:06:30.111647Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
   "archive_count": 2,
   "pending_count": 2,
-  "observed_total_count": 109,
+  "observed_total_count": 111,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,38 +14,38 @@
   ],
   "posts": [
     {
-      "post_id": "3996002453132605795",
-      "published_at": "2026-09-28T07:30:35Z",
-      "text": "Jev를 활용해 코딩 에이전트 비용을 40% 줄였다는 도구 jevgrep이 공개됐습니다.\n\n코딩 에이전트는 코드를 작성하기 전 관련 파일과 코드를 찾는 데 전체 토큰의 30~60%를 사용한다고 하는데요.\n\njevgrep은 Jev를 이용한 별도의 리서치 에이전트가 코드베이스를 반복적으로 탐색해 필요한 부분만 추려 코딩 에이전트에 전달합니다.\n\n개발자 자체 SWE-bench 테스트에서는 비용을 40% 줄였다고 하며, GPT-6 Astra를 약 70시간 동안 돌려 API 호출과 결과 형식도 최적화했다고 합니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd0pw80jvlj",
+      "post_id": "3996092894985391014",
+      "published_at": "2026-09-28T10:30:16Z",
+      "text": "AI 에이전트가 만든 PPT를 사람이 직접 마무리하기 쉬워졌습니다.\n\n오픈소스 프레젠테이션 도구 open-slide 2.0이 공개됐습니다. \n\nAI가 슬라이드를 만든 뒤 화면에서 요소를 드래그하거나 크기·위치·회전을 조절하고, 텍스트도 바로 수정할 수 있습니다.\n\n완성된 자료는 편집 가능한 PPTX로 내보낼 수 있으며 텍스트·도형·이미지가 PowerPoint 객체로 유지됩니다.\n\nAI에게 초안을 맡기고 마지막 디자인과 문구만 직접 다듬는 방식으로 활용하기 좋은 업데이트입니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd0-VDXEQum",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQM4lxwQDnkgvldbFoCHnXeumqvNcAfZ6MpG1ih6n0hF7qZh6zXFcwizEbx52aDv3OoLLFT3BINN8uBDbnYkI8sSPITCWuE56ubLBvE.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=RaNcF5mEKhQQ7kNvwEAz_f4&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM5MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=4607e94eac8e4784&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81OTRDMDZCMjQ2Q0IyNTVCNjE1NENFNEYzMzU1RkI4RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QxNEQxRjhEOTA5RDM5OUY4MDJGQjA0ODQxRTlBNzlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjtyZobn0PxUCKAJDMywXQD6Q5WBBiTcYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ciktqiNjS2EQoFwoU1jmjg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOABpowoRzWTnsLdVk_60xiX1HCD2Ed4Y6haJPHPtchaA&oe=6ABC068C"
+        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQNpJRLGi-T8Pl0TfAItnyRnlfSnvTPnEckLgOCRH4QnskO8xfZQIYicU3vtF39ZiRL6he_bmpZJB7abW41Pc7F2SBtwOWWtLBbPFKA.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=nsJhNCnbVvUQ7kNvwFGU5FV&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5Njk3NTkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=98225f41dac8bd2a&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QzRCNjhGRTU2NTAyRjYxQjc1QUYxQzk5NDExOEI5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzY5NDBCMDgzNzgwQTU3Njk5MDUwRDhEQjU4Njg2QkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-u-F7bf0PxUCKAJDMywXQFOAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=2E6Hzm57JLcmqBgIWdqUaQ&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMQEC4SZzMtau7KrN6ZUV8JWrVKGsGQGVx2VGdA8W8zjQ&oe=6ABC3D05"
       ],
       "engagement": {
-        "likes": 58,
-        "replies": 3,
+        "likes": 48,
+        "replies": 1,
         "reposts": 10,
-        "quotes": 0
+        "quotes": 1
       },
-      "first_seen_at": "2026-09-28T07:36:22.989974Z",
-      "last_seen_at": "2026-09-28T08:48:44.072342Z"
+      "first_seen_at": "2026-09-28T11:06:30.111647Z",
+      "last_seen_at": "2026-09-28T11:06:30.111647Z"
     },
     {
-      "post_id": "3995956987573374114",
-      "published_at": "2026-09-28T06:00:15Z",
-      "text": "이미지 한 장을 편집 가능한 3D 공간으로 바꿔주는 오픈소스 모델 Mira-Scene이 공개됐습니다.\n\nMira-Scene은 이미지 속 물체를 분리한 뒤 각각의 3D 형태와 위치 관계를 복원해 하나의 3D 장면으로 만듭니다.\n만들어진 장면은 WebUI에서 물체를 선택하고 직접 편집할 수도 있습니다.\n\n연구진 자체 평가에서는 입력 이미지와 3D 공간의 구조를 얼마나 일관되게 복원하는지 평가한 항목에서 GPT-6 Astra보다 높은 결과를 기록했다고 합니다.\n\n모델과 코드가 모두 공개돼 직접 실행해볼 수 있습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd0fbVuDQyi",
+      "post_id": "3996047755742834408",
+      "published_at": "2026-09-28T09:00:35Z",
+      "text": "차마스 팔리하피티야(Chamath Palihapitiya)는 전 세계가 “소수 기업에 약 10조 달러 규모의 막대한 부를 안겨주기 직전”에 놓여 있다고 경고했습니다.\n\nAI 산업의 폭발적 성장이 가져올 경제적 이득의 대부분이 소수 빅테크에 집중될 것이라는 지적입니다.\n\n특히 이들 프론티어 기업들의 성향과 자금 흐름을 짚으며 “이것은 기술적 번영의 문제가 아니라 매우 단순한 정치적 계산의 문제”라고 꼬집었습니다.\n\nAI가 창출한 엄청난 자본이 소비나 저축 대신 기부 펀드와 정치 자금(PAC)으로 유입되면서, 경제적 독점이 곧 정치적 권력 강화로 이어지는 구조적 편중을 낳는다는 분석입니다.\n\n현재의 경제 구조가 그대로 고착된다면 소수의 기업이 “경제적 이익의 사자 몫(대부분)을 독식”하게 될 것이라며 경계의 목소리를 높였습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd00EMKjG7o",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwEK_hib&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ciktqiNjS2EQoFwoU1jmjg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQO4KmpedTn_NlB2pa0qI8QcGgM5-JjVLvN0sOHkzzlwhg&oe=6ABBF24B"
+        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQN2COoCtTZ1kuB-i9G_6wDelPGKTnzj_9ji6T3fsTd0QKJKy8XIM_aPRhoctL6esV0Z6jlpNujy3N6M5FS-9q9RNrhGkTboP_wFegM.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=ccZE13bTUUUQ7kNvwGHacSx&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM0ODMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6ODEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=76509f2d3497151d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EMjRCQUExQTJBNzI2MDEyNEVCOTU3NjM0OUUxNjA4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NDNDYxQ0QzOTRBMzMyMjVERTQ1RDU0RUU1RDhCNjhBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAhuzmnbn0PxUCKAJDMywXQFRg5WBBiTcYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=2E6Hzm57JLcmqBgIWdqUaQ&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNh4ocilYFzf5GGZj236tqmDl9flWekVJSKBYEC60PNGw&oe=6ABC2179"
       ],
       "engagement": {
-        "likes": 30,
-        "replies": 1,
-        "reposts": 5,
+        "likes": 24,
+        "replies": 2,
+        "reposts": 2,
         "quotes": 0
       },
-      "first_seen_at": "2026-09-28T06:37:51.853842Z",
-      "last_seen_at": "2026-09-28T08:48:44.072342Z"
+      "first_seen_at": "2026-09-28T11:06:30.111647Z",
+      "last_seen_at": "2026-09-28T11:06:30.111647Z"
     }
   ],
   "watchdog": {
