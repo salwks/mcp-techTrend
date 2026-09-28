@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-28T06:37:51.853842Z",
+  "generated_at": "2026-09-28T07:21:11.679320Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 3,
-  "pending_count": 3,
+  "archive_count": 1,
+  "pending_count": 1,
   "observed_total_count": 108,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
@@ -19,50 +19,16 @@
       "text": "이미지 한 장을 편집 가능한 3D 공간으로 바꿔주는 오픈소스 모델 Mira-Scene이 공개됐습니다.\n\nMira-Scene은 이미지 속 물체를 분리한 뒤 각각의 3D 형태와 위치 관계를 복원해 하나의 3D 장면으로 만듭니다.\n만들어진 장면은 WebUI에서 물체를 선택하고 직접 편집할 수도 있습니다.\n\n연구진 자체 평가에서는 입력 이미지와 3D 공간의 구조를 얼마나 일관되게 복원하는지 평가한 항목에서 GPT-6 Astra보다 높은 결과를 기록했다고 합니다.\n\n모델과 코드가 모두 공개돼 직접 실행해볼 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd0fbVuDQyi",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwGnDk94&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=zFTBzBCc8I6NkjshNuU56A&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPjaqtGHBrzZ_FpaIcGCzL6b1EDGccJrJ7dEoMam5becg&oe=6ABBF24B"
+        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOrGTqNeEfbOgkXkJ8dIEAZ0emuIBPsEboKxwbsf1wCVEpyh1cQfMWafAi7L96kiWJCyJWcen_bbZvEw-hgRW7cDlhE-NdCVzbokMs.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=qX1ZEaGyAwoQ7kNvwF9_Txp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDE3NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3c2a8fe88c71cc56&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EQTQ4NDlGNDFFQ0M3MjQ0OUUxMjc3Q0JFNUMyM0Y4M192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Q3NDY2RTA0MEVFMTA1MDc5REU3M0M1NzlBQzA1QkIzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsumz27n0PxUCKAJDMywXQDpmZmZmZmYYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=i6vXDr8QvleCO39rqin8xA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPp6zU1ebk3uFVxvNrN5lBBLyOMsYFuOX9qKB5hhkOUzQ&oe=6ABBF24B"
       ],
       "engagement": {
-        "likes": 16,
+        "likes": 21,
         "replies": 1,
         "reposts": 5,
         "quotes": 0
       },
       "first_seen_at": "2026-09-28T06:37:51.853842Z",
-      "last_seen_at": "2026-09-28T06:37:51.853842Z"
-    },
-    {
-      "post_id": "3995911624724481338",
-      "published_at": "2026-09-28T04:30:07Z",
-      "text": "직접 서버에 설치해 사용하는 오픈소스 개인 AI 비서 OpenMuse가 공개됐습니다.\n\nOpenMuse는 브라우저·터미널·파일을 직접 조작할 수 있고, 개인 앱과 연결하거나 아이디어·목표·진행 상황을 관리할 수 있습니다.\n모바일과 웹을 모두 지원하며 다양한 AI 모델과 에이전트 환경에 연결할 수 있습니다.\n\n특히 직접 호스팅할 수 있어 개인 비서가 접근하는 데이터를 어디에 저장하고 관리할지 직접 결정할 수 있습니다.\n\n코드 전체가 공개돼 기업용 내부 AI 비서나 자신만의 에이전트 서비스로 수정해서 사용할 수도 있습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd0VHORjoU6",
-      "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPbGwoCjlKGjSCVZHcEOYBFwH0ZigMFybmXMrDVZrG1jDMBOBsdP_LdmcCRE06aNW-295byEZ4K5QvSKpZg9E_SLInOG2dTxgsYDDw.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=7LDHpp0AFR0Q7kNvwEIFvJr&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwMDI0NTMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1ab51ff0f54dcbca&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82OTQ1NzBDOUI1MkI2QTA1RTREMTZFNkM5RUQ4QTNBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0NDJERjQwQUYxMzU1NEFEMDk3MkRFMUZEMTExNzgyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA4KbR4Ln0PxUCKAJDMywXQFCAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=zFTBzBCc8I6NkjshNuU56A&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOsRX--CZtKQ2pN3RTeQXZHEEodOX7Mqnn10GE2hHJHHg&oe=6ABBE286"
-      ],
-      "engagement": {
-        "likes": 88,
-        "replies": 4,
-        "reposts": 8,
-        "quotes": 1
-      },
-      "first_seen_at": "2026-09-28T05:01:15.341745Z",
-      "last_seen_at": "2026-09-28T06:37:51.853842Z"
-    },
-    {
-      "post_id": "3995866526099608939",
-      "published_at": "2026-09-28T03:00:31Z",
-      "text": "오픈AI 응용 연구 책임자 보리스 파워(Boris Power)는 “오픈AI 연구의 80~90%는 GPT-7, GPT-8 및 그 이상에 집중되어 있다”고 밝혔습니다.\n\n근본적인 가치와 비약적인 성능 도약은 결국 차세대 프론티어 모델에서 나온다는 것입니다.\n\n또한 고성능 소형 모델을 구축하는 핵심 전략으로 ‘증류(Distillation)’를 꼽았습니다.\n\n“작고 특화된 모델을 훈련하는 가장 좋은 방법은, 초고성능 거대 모델을 먼저 훈련한 뒤 이를 ‘선생님(Teacher)’으로 삼는 것입니다.”",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd0K286CpVr",
-      "media": [
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMYEk_tTlCb4XL2KnyJWta9QRCA0WyL3UtEKwpN05hs56x8DU3F1MD9Se5oysqR3uDL1b3dv-3ed0ASfD7Lt6N7nT3l9nfII1TBaoY.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=znvFkIF3YrUQ7kNvwFis0W5&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTQ0MDcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=44324f1e0285f346&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85QzhGMzg3MzQ4NkM0OTdDODJFMDg0RUREOTBEQTYxM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzIzNENDQzQ1NUQyNDM3RjY2MkNFMjU4QkY3ODA3MTg1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAgoXYpLn0PxUCKAJDMywXQEPZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=zFTBzBCc8I6NkjshNuU56A&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMEs4lEsqtX3fklH0NdJwTICLX3p0-3ji9GhBoVrCmItQ&oe=6ABBD8A9"
-      ],
-      "engagement": {
-        "likes": 37,
-        "replies": 1,
-        "reposts": 1,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-28T05:01:15.341745Z",
-      "last_seen_at": "2026-09-28T06:37:51.853842Z"
+      "last_seen_at": "2026-09-28T07:21:11.679320Z"
     }
   ],
   "watchdog": {
