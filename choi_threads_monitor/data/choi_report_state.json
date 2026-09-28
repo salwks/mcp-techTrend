@@ -98,7 +98,16 @@
     "3994492394967866214",
     "3995340151424911214",
     "3995165984059012457",
-    "3995105780042762673"
+    "3995105780042762673",
+    "3995821146783285114",
+    "3995775846253137497",
+    "3995730452501491437",
+    "3995640127300936066",
+    "3995594863713250639",
+    "3995549465893308336",
+    "3995504283977710694",
+    "3995444745849535483",
+    "3995386985736771878"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -110,8 +119,9 @@
     "2026-09-26 08:00 KST report emitted 3 current-window posts and 10 delayed-collection catch-up posts.",
     "2026-09-27 state repair: restored 13 posts that had been delivered in prior reports but remained absent because repeated report-state writes failed.",
     "2026-09-27 migration: archive changed from cumulative history to a pending/unreported queue. Report-state history is bounded to the most recent 300 acknowledgement keys.",
-    "2026-09-27 20:02 KST report acknowledged 3 posts before the pending-queue migration."
+    "2026-09-27 20:02 KST report acknowledged 3 posts before the pending-queue migration.",
+    "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts."
   ],
-  "last_reported_at": "2026-09-27T11:02:14.000Z",
+  "last_reported_at": "2026-09-28T04:59:29.000Z",
   "retention_limit": 300
 }
