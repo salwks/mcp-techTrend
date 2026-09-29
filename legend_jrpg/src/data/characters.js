@@ -1,0 +1,66 @@
+// 파티 캐릭터 기본 데이터 (코어 소유)
+// 레벨 L의 능력치 = floor(base + growth * (L - 1)) + 장비 보너스
+export const CHARACTERS = {
+  ren: {
+    name: '렌',
+    role: '용사',
+    color: '#4a8cff',
+    base: { hp: 42, mp: 8, atk: 12, def: 8, mag: 5, spd: 9 },
+    growth: { hp: 9, mp: 2, atk: 3, def: 2, mag: 1.2, spd: 1.5 },
+    learnset: [
+      { level: 2, skill: 'power_slash' },
+      { level: 7, skill: 'holy_blade' },
+      { level: 12, skill: 'brave_cry' },
+      { level: 18, skill: 'star_blade' },
+    ],
+    startEquip: { weapon: 'sealed_sword', armor: 'travel_clothes', accessory: null },
+  },
+  mia: {
+    name: '미아',
+    role: '사제',
+    color: '#ffd65a',
+    base: { hp: 30, mp: 20, atk: 6, def: 6, mag: 12, spd: 8 },
+    growth: { hp: 6, mp: 4, atk: 1.2, def: 1.5, mag: 3, spd: 1.4 },
+    learnset: [
+      { level: 1, skill: 'heal' },
+      { level: 1, skill: 'cure' },
+      { level: 5, skill: 'protect' },
+      { level: 8, skill: 'heal_all' },
+      { level: 11, skill: 'revive' },
+      { level: 14, skill: 'holy_light' },
+      { level: 18, skill: 'full_heal' },
+    ],
+    startEquip: { weapon: 'oak_staff', armor: 'cloth_robe', accessory: null },
+  },
+  garen: {
+    name: '가렌',
+    role: '기사',
+    color: '#c0c6d0',
+    base: { hp: 60, mp: 4, atk: 14, def: 14, mag: 3, spd: 5 },
+    growth: { hp: 12, mp: 1.2, atk: 3.2, def: 3, mag: 0.6, spd: 1 },
+    learnset: [
+      { level: 7, skill: 'shield_bash' },
+      { level: 9, skill: 'provoke' },
+      { level: 12, skill: 'iron_wall' },
+      { level: 16, skill: 'earth_splitter' },
+    ],
+    startEquip: { weapon: 'iron_spear', armor: 'chain_mail', accessory: null },
+  },
+  sela: {
+    name: '셀라',
+    role: '마법사',
+    color: '#c77dff',
+    base: { hp: 26, mp: 26, atk: 5, def: 5, mag: 16, spd: 10 },
+    growth: { hp: 5.5, mp: 5, atk: 1, def: 1.2, mag: 3.6, spd: 1.6 },
+    learnset: [
+      { level: 11, skill: 'flame' },
+      { level: 11, skill: 'frost' },
+      { level: 11, skill: 'spark' },
+      { level: 14, skill: 'blaze' },
+      { level: 16, skill: 'blizzard' },
+      { level: 18, skill: 'thunderstorm' },
+      { level: 22, skill: 'meteor' },
+    ],
+    startEquip: { weapon: 'magic_rod', armor: 'silk_robe', accessory: null },
+  },
+};

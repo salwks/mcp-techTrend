@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>빛의 계승자</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #05060d; --pad: rgba(255,255,255,0.12); --pad-on: rgba(255,214,90,0.45); --pad-text: #e8ecff; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--pad-text); overflow: hidden;
+      font-family: "Noto Sans KR", sans-serif; user-select: none; -webkit-user-select: none; touch-action: none; }
+    #wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 12px; padding: 8px 16px; }
+    #screen { width: min(100%, calc((100dvh - 16px) * 4 / 3)); aspect-ratio: 4 / 3; image-rendering: pixelated;
+      background: #000; border-radius: 4px; box-shadow: 0 0 0 2px #1d2450, 0 10px 40px rgba(0,0,0,.6); }
+    #pad { display: none; width: 100%; max-width: 520px; justify-content: space-between; align-items: center; }
+    .dpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(3, 56px); gap: 4px; }
+    .btns { display: grid; grid-template-columns: 64px 64px; grid-template-rows: 64px 40px; gap: 10px; align-items: center; }
+    .b { background: var(--pad); border: 1px solid rgba(255,255,255,.25); border-radius: 12px; color: var(--pad-text);
+      display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; touch-action: none; }
+    .b.on { background: var(--pad-on); }
+    .b.round { border-radius: 50%; }
+    .b.small { font-size: 13px; border-radius: 20px; grid-column: span 2; }
+    #hint { font-size: 12px; opacity: .55; text-align: center; }
+    @media (pointer: coarse) { #pad { display: flex; } #hint { display: none; }
+      #screen { width: min(100%, calc((100dvh - 260px) * 4 / 3)); } }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <canvas id="screen"></canvas>
+    <div id="hint">이동: 방향키/WASD · 확인: Z/Enter/Space · 취소: X · 메뉴: Esc/M</div>
+    <div id="pad">
+      <div class="dpad">
+        <span></span><div class="b" data-action="up">▲</div><span></span>
+        <div class="b" data-action="left">◀</div><span></span><div class="b" data-action="right">▶</div>
+        <span></span><div class="b" data-action="down">▼</div><span></span>
+      </div>
+      <div class="btns">
+        <div class="b round" data-action="cancel">B</div>
+        <div class="b round" data-action="confirm">A</div>
+        <div class="b small" data-action="menu">메뉴</div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
