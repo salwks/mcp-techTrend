@@ -149,7 +149,7 @@ export class ShopScene extends Scene {
   // ---- 그리기 ----
   draw(ctx) {
     if (!this.state) return;
-    ctx.fillStyle = 'rgba(0,0,10,0.3)';
+    ctx.fillStyle = 'rgba(0,0,10,0.45)';
     ctx.fillRect(0, 0, 640, 480);
 
     // 머리

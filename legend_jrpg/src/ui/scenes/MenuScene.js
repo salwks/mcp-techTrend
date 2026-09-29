@@ -8,7 +8,7 @@ import * as Effects from '../../systems/effects.js';
 import {
   Flow, SLOTS, SLOT_NAMES, STAT_LABELS, UP, DOWN,
   item, itemName, skill, skillName, charName, mapName, sortedInventory, previewStats, isLockedWeapon,
-  drawFitText, statusTags, drawPortrait,
+  drawFitText, statusTags, drawPortrait, josa,
 } from './uiCommon.js';
 
 const COMMANDS = ['아이템', '스킬', '장비', '상태', '저장', '닫기'];
@@ -136,7 +136,7 @@ export class MenuScene extends Scene {
   async useItem(id) {
     const it = item(id) || {};
     const name = itemName(id);
-    if (it.target === 'allAllies' || it.target === 'allEnemies' || it.target === 'enemy') {
+    if (it.target === 'allAllies' || it.target === 'allEnemies' || it.target === 'enemy' || it.effect?.kind === 'healAll') {
       await this.applyItem(id, null);
       return;
     }
@@ -307,7 +307,7 @@ export class MenuScene extends Scene {
     const i = await this.flow.choose(list, (k) => {
       const c = cands[k];
       this.eqPreview = previewStats(this.state, cid, slot, c.id);
-      this.help = c.id ? (item(c.id)?.desc || '') : `${SLOT_NAMES[slot]}을(를) 해제한다.`;
+      this.help = c.id ? (item(c.id)?.desc || '') : `${josa(SLOT_NAMES[slot], '을', '를')} 해제한다.`;
     });
     this.eqCands = null;
     this.eqPreview = null;
@@ -336,7 +336,7 @@ export class MenuScene extends Scene {
   // ------------------------------------------------------------------
   draw(ctx) {
     if (!this.state) return;
-    ctx.fillStyle = 'rgba(0,0,10,0.35)';
+    ctx.fillStyle = 'rgba(0,0,10,0.45)';
     ctx.fillRect(0, 0, 640, 480);
 
     if (this.view === 'status') {
@@ -472,7 +472,7 @@ export class MenuScene extends Scene {
     const m = this.state.members[id];
     if (!m) return;
     const st = this.state.getStats(id);
-    drawWindow(ctx, 12, 12, 616, 456);
+    drawWindow(ctx, 12, 12, 616, 456, { alpha: 1 });
     const dead = m.hp <= 0;
     drawPortrait(ctx, id, 36, 36, 80, dead);
     drawText(ctx, charName(id), 136, 36, { size: 28, bold: true });

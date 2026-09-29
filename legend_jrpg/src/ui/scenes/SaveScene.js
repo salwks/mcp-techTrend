@@ -59,7 +59,8 @@ export class SaveScene extends Scene {
   async doSave(slot) {
     sfx('confirm');
     if (slot.summary) {
-      this.confirm = new ChoiceList(['덮어쓴다', '그만둔다'], { x: 400, y: SLOT_Y + (slot.slot - 1) * (SLOT_H + 4) + 20, w: 180, index: 1 });
+      this.confirmSlot = slot.slot;
+      this.confirm = new ChoiceList(['덮어쓴다', '그만둔다'], { x: 230, y: 232, w: 180, index: 1, window: false });
       const c = await this.flow.choose(this.confirm);
       this.confirm = null;
       if (c !== 0) return false;
@@ -98,14 +99,14 @@ export class SaveScene extends Scene {
   draw(ctx) {
     ctx.fillStyle = 'rgba(0,0,12,0.6)';
     ctx.fillRect(0, 0, 640, 480);
-    drawWindow(ctx, 12, 12, 616, 56);
+    drawWindow(ctx, 12, 12, 616, 56, { alpha: 1 });
     drawText(ctx, this.mode === 'save' ? '기록하기' : '불러오기', 32, 28, { size: 20, bold: true, color: COLORS.accent });
     drawText(ctx, this.mode === 'save' ? '어느 슬롯에 기록하시겠습니까?' : '어느 기록을 불러오시겠습니까?', 150, 30, { size: 17 });
 
     const active = this.flow.isWaiting() && !this.confirm && !this.busy;
     this.slots.forEach((s, i) => {
       const y = SLOT_Y + i * (SLOT_H + 4);
-      drawWindow(ctx, 12, y, 616, SLOT_H);
+      drawWindow(ctx, 12, y, 616, SLOT_H, { alpha: 1 });
       if (i === this.cursor) {
         ctx.save();
         ctx.fillStyle = 'rgba(255,214,90,0.08)';
@@ -129,7 +130,13 @@ export class SaveScene extends Scene {
       drawText(ctx, `플레이 시간 ${formatPlayTime(sm.playTime)}`, 606, y + 80, { size: 16, align: 'right' });
     });
 
-    if (this.confirm) this.confirm.draw(ctx, this.flow.isWaiting());
+    if (this.confirm) {
+      ctx.fillStyle = 'rgba(0,0,12,0.5)';
+      ctx.fillRect(0, 0, 640, 480);
+      drawWindow(ctx, 170, 180, 300, 130, { alpha: 1 });
+      drawText(ctx, `슬롯 ${this.confirmSlot}에 덮어쓰시겠습니까?`, 320, 198, { size: 17, align: 'center' });
+      this.confirm.draw(ctx, this.flow.isWaiting());
+    }
     this.flow.msg.draw(ctx);
   }
 }

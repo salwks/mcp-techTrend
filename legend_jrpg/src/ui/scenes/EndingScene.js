@@ -57,7 +57,8 @@ export class EndingScene extends Scene {
   // 0 = 밤, 1 = 새벽
   get dawn() {
     if (this.phase !== 'pages') return 1;
-    return Math.min(1, (this.page + Math.min(1, this.pageT / 2)) / 2);
+    if (this.page === 0) return 0;
+    return Math.min(1, (this.page - 1 + Math.min(1, this.pageT / 2)) / 2);
   }
 
   update(dt) {
