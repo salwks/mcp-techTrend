@@ -111,7 +111,30 @@
     "3995911624724481338",
     "3995866526099608939",
     "3996002453132605795",
-    "3995956987573374114"
+    "3995956987573374114",
+    "3996893244901392659",
+    "3996712379458977065",
+    "3996802763715127241",
+    "3996802594323326221",
+    "3996757253142273036",
+    "3996678611646418674",
+    "3996703062560066878",
+    "3996666580377132434",
+    "3996621712832744221",
+    "3996576074703083212",
+    "3996530804935795126",
+    "3996477496698375886",
+    "3996470390691481578",
+    "3996455276617794312",
+    "3996409833154664470",
+    "3996364896102693121",
+    "3996319466396605506",
+    "3996274423211583655",
+    "3996228705886264041",
+    "3996183746260591461",
+    "3996138290750246287",
+    "3996092894985391014",
+    "3996047755742834408"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -126,8 +149,9 @@
     "2026-09-27 20:02 KST report acknowledged 3 posts before the pending-queue migration.",
     "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts.",
     "2026-09-28 16:04 KST manual recovery of the missed 14:01 KST delivery: emitted 2 pending posts whose published_at fell inside the 08:01-14:01 KST report window; 15:00 KST Mira-Scene remains pending for the next report.",
-    "2026-09-28 16:04 KST manual recovery of missed 14:01 KST delivery: emitted 2 pending posts from the 08:01-14:01 KST window; 15:00 KST Mira-Scene remains pending for the next report."
+    "2026-09-28 16:04 KST manual recovery of missed 14:01 KST delivery: emitted 2 pending posts from the 08:01-14:01 KST window; 15:00 KST Mira-Scene remains pending for the next report.",
+    "2026-09-29 23:09 KST state repair: acknowledged all 19 posts already delivered in the 20:03 KST report so pending queue can drain on the next collector run."
   ],
-  "last_reported_at": "2026-09-28T11:03:49.000Z",
+  "last_reported_at": "2026-09-29T11:03:49.000Z",
   "retention_limit": 300
 }
