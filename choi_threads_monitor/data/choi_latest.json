@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-29T05:54:02.000468Z",
+  "generated_at": "2026-09-29T08:18:52.982137Z",
   "source": "tamnd/threads-cli anonymous public crawler",
   "collection_limit": 100,
   "collection_status": "ok",
-  "latest_good_generated_at": "2026-09-29T05:54:02.000468Z",
+  "latest_good_generated_at": "2026-09-29T08:18:52.982137Z",
   "limitations": [
     "Anonymous crawler surface exposes recent public posts, not guaranteed full account history.",
     "At most 100 recent records are collected per primary run.",
@@ -13,15 +13,83 @@
   "post_count": 15,
   "posts": [
     {
+      "post_id": "3996678611646418674",
+      "published_at": "2026-09-29T07:01:09Z",
+      "text": "🚨 Manus가 2.0으로 돌아왔습니다.\n\n에이전트 인프라를 새로 짜서 테스트 구성 기준 작업 시간을 28.2% 줄였고, 데스크톱 앱은 영상 편집과 게임 제작, 문서 작업까지 되는 Studio로 바뀌었습니다.\n\n여기에 에이전트 팀을 휴대폰으로 부리는 Cue, 내 API 키를 꽂아 쓰는 Flex Mode, 일이 생기면 알아서 움직이는 자동화까지 한 번에 나왔습니다.\n\nManus 2.0 전체 기능과 실제 사례를 정리했습니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd3DgWglg7y",
+      "media": [
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQN6Gg80jcchbc29Nl8gublRvSbqWSC8fcybBX74zcKAbkVMBW4i8WtWSZUxM3-8rVZcnIARprjRCQr7tZi3KH0jbgP0dqSXcPpPD4A.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=7iSqhTRw9NkQ7kNvwFSlt0C&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkyMjM2NjExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTY2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=caf639390e6e932c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yOURFODAxQjlDOTE0QTNBQjhCNjU1MTc1NDY1QUFDN192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzU1M0M0OTAzREFGMzQxRTZBN0Y5QzE5MDgwQUU1MTlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAuNjh0Mb0PxUCKAJDMywXQGTN2yLQ5WAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQM61mGJa4yk9vgED41XPh6fp7T2VUJXZPpQ2LHkWIjnNw&oe=6ABD3E66"
+      ],
+      "engagement": {
+        "likes": 19,
+        "replies": 17,
+        "reposts": 1,
+        "quotes": 1
+      },
+      "raw": {
+        "id": "3996678611646418674",
+        "shortcode": "Dd3DgWglg7y",
+        "text": "🚨 Manus가 2.0으로 돌아왔습니다.\n\n에이전트 인프라를 새로 짜서 테스트 구성 기준 작업 시간을 28.2% 줄였고, 데스크톱 앱은 영상 편집과 게임 제작, 문서 작업까지 되는 Studio로 바뀌었습니다.\n\n여기에 에이전트 팀을 휴대폰으로 부리는 Cue, 내 API 키를 꽂아 쓰는 Flex Mode, 일이 생기면 알아서 움직이는 자동화까지 한 번에 나왔습니다.\n\nManus 2.0 전체 기능과 실제 사례를 정리했습니다. 🧵",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQN6Gg80jcchbc29Nl8gublRvSbqWSC8fcybBX74zcKAbkVMBW4i8WtWSZUxM3-8rVZcnIARprjRCQr7tZi3KH0jbgP0dqSXcPpPD4A.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=7iSqhTRw9NkQ7kNvwFSlt0C&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkyMjM2NjExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTY2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=caf639390e6e932c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yOURFODAxQjlDOTE0QTNBQjhCNjU1MTc1NDY1QUFDN192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzU1M0M0OTAzREFGMzQxRTZBN0Y5QzE5MDgwQUU1MTlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAuNjh0Mb0PxUCKAJDMywXQGTN2yLQ5WAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQM61mGJa4yk9vgED41XPh6fp7T2VUJXZPpQ2LHkWIjnNw&oe=6ABD3E66"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/Dd3DgWglg7y",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-09-29T07:01:09Z",
+        "like_count": 19,
+        "reply_count": 17,
+        "repost_count": 1,
+        "quote_count": 1,
+        "has_media": true,
+        "fetched_at": "2026-09-29T08:18:56.566854783Z"
+      }
+    },
+    {
+      "post_id": "3996703062560066878",
+      "published_at": "2026-09-29T06:42:34Z",
+      "text": "🚨 속보) 오픈AI가 내일부터 월 $200 Pro 구독의 신규 가입을 다시 받습니다.\n\n다만 사용량 계산 방식이 변경되는데요.\n기존 Pro $200 요금제와 비교하면 API 비용 기준으로 제공 사용량이 절반 수준으로 조정됩니다.\n\n대신 5시간 제한은 다시 도입하지 않으며, 내일 사용량을 차감하지 않는 새로운 구독 혜택도 추가될 예정입니다.\n\nTibo는 GPT-6 Sol과 GPT-6 Luna의 API 가격을 기존 대비 50% 낮췄으며, 모델 효율 개선으로 같은 비용에서도 더 많은 작업을 처리할 수 있다고 설명했습니다.\n\n내일 Pro 구독과 관련된 추가 발표도 예정되어 있습니다.\n\n새로운 구독 혜택이 뭔지에 따라 반응이 크게 달라질 것 같습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd3JEKMm80-",
+      "media": [
+        "https://scontent-ord5-2.cdninstagram.com/v/t51.82787-15/825324391_17989228788112832_1576893070494432736_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NjcwMzA2MjU2MDA2Njg3OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE2Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=VwR_637NO6QQ7kNvwGAJCMo&_nc_oc=Adrn0vlo84fz0Gbf8oUjbKodl1xbcC4j3kObL49NLpFpZdPzPXI813iQUyVMd7-V7nY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQN3lexGFkxvBkj8ZggJWD76lTpqEqhsaOXDHMTfNyBuoQ&oe=6AC13B98"
+      ],
+      "engagement": {
+        "likes": 86,
+        "replies": 31,
+        "reposts": 3,
+        "quotes": 4
+      },
+      "raw": {
+        "id": "3996703062560066878",
+        "shortcode": "Dd3JEKMm80-",
+        "text": "🚨 속보) 오픈AI가 내일부터 월 $200 Pro 구독의 신규 가입을 다시 받습니다.\n\n다만 사용량 계산 방식이 변경되는데요.\n기존 Pro $200 요금제와 비교하면 API 비용 기준으로 제공 사용량이 절반 수준으로 조정됩니다.\n\n대신 5시간 제한은 다시 도입하지 않으며, 내일 사용량을 차감하지 않는 새로운 구독 혜택도 추가될 예정입니다.\n\nTibo는 GPT-6 Sol과 GPT-6 Luna의 API 가격을 기존 대비 50% 낮췄으며, 모델 효율 개선으로 같은 비용에서도 더 많은 작업을 처리할 수 있다고 설명했습니다.\n\n내일 Pro 구독과 관련된 추가 발표도 예정되어 있습니다.\n\n새로운 구독 혜택이 뭔지에 따라 반응이 크게 달라질 것 같습니다.",
+        "media_type": "IMAGE",
+        "media_urls": [
+          "https://scontent-ord5-2.cdninstagram.com/v/t51.82787-15/825324391_17989228788112832_1576893070494432736_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NjcwMzA2MjU2MDA2Njg3OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE2Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=VwR_637NO6QQ7kNvwGAJCMo&_nc_oc=Adrn0vlo84fz0Gbf8oUjbKodl1xbcC4j3kObL49NLpFpZdPzPXI813iQUyVMd7-V7nY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQN3lexGFkxvBkj8ZggJWD76lTpqEqhsaOXDHMTfNyBuoQ&oe=6AC13B98"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/Dd3JEKMm80-",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-09-29T06:42:34Z",
+        "like_count": 86,
+        "reply_count": 31,
+        "repost_count": 3,
+        "quote_count": 4,
+        "has_media": true,
+        "fetched_at": "2026-09-29T08:18:56.566890052Z"
+      }
+    },
+    {
       "post_id": "3996666580377132434",
       "published_at": "2026-09-29T05:30:05Z",
       "text": "엔비디아가 100개 이상의 기업과 함께 AI 에이전트용 보안 생태계 Open Agent Safety Platform을 공개했습니다.\n\nOpenShell은 AI 에이전트를 격리된 환경에서 실행하면서 접근 가능한 파일·도구·네트워크 등을 제한합니다.\n여기에 Sentry를 결합하면 별도 하드웨어에서 에이전트의 행동을 독립적으로 감시하고 차단할 수 있습니다.\n\n앤트로픽, 허깅페이스, 미스트랄, Figure, SpaceX 등 AI·로봇·인프라 기업들이 참여했습니다.\n\nAI 에이전트가 며칠 동안 직접 컴퓨터와 도구를 사용하는 시대가 오면서, 모델 자체뿐 아니라 ‘AI가 행동할 수 있는 범위’를 시스템에서 통제하는 보안 방식이 중요해지고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd3AxRhDd2S",
       "media": [
-        "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/828413124_17989186020112832_64693545854578841_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NjY2NjU4MDM3NzEzMjQzNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=NdNXeCvD4rwQ7kNvwGho-Mt&_nc_oc=AdoEHCfhRsj58r9UyehOuZwIMmlypy7u1vvNG-mgC3s8iSWB1p-5mZiGpFrZWA3gOgo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&oh=00_AQOGryPrUQPcH8rr9OLMLtAj6D8mSoUvpck_eDmluD0nXQ&oe=6AC11FBB"
+        "https://scontent-ord5-2.cdninstagram.com/v/t51.82787-15/828413124_17989186020112832_64693545854578841_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NjY2NjU4MDM3NzEzMjQzNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=NdNXeCvD4rwQ7kNvwGI4eVl&_nc_oc=AdoLPlakaqBWMoNoSFZWzdnkv9VpD4A0h7BHl9pSjT--E5tj4kIUJznvZQJ47IWy3x0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQN3_Sy_7IlmnKwsyA8bD3ojvZUxHZCy0P_AT0yi6Vkg2A&oe=6AC157FB"
       ],
       "engagement": {
-        "likes": 10,
+        "likes": 12,
         "replies": 1,
         "reposts": 0,
         "quotes": 0
@@ -32,18 +100,18 @@
         "text": "엔비디아가 100개 이상의 기업과 함께 AI 에이전트용 보안 생태계 Open Agent Safety Platform을 공개했습니다.\n\nOpenShell은 AI 에이전트를 격리된 환경에서 실행하면서 접근 가능한 파일·도구·네트워크 등을 제한합니다.\n여기에 Sentry를 결합하면 별도 하드웨어에서 에이전트의 행동을 독립적으로 감시하고 차단할 수 있습니다.\n\n앤트로픽, 허깅페이스, 미스트랄, Figure, SpaceX 등 AI·로봇·인프라 기업들이 참여했습니다.\n\nAI 에이전트가 며칠 동안 직접 컴퓨터와 도구를 사용하는 시대가 오면서, 모델 자체뿐 아니라 ‘AI가 행동할 수 있는 범위’를 시스템에서 통제하는 보안 방식이 중요해지고 있습니다.",
         "media_type": "IMAGE",
         "media_urls": [
-          "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/828413124_17989186020112832_64693545854578841_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NjY2NjU4MDM3NzEzMjQzNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=NdNXeCvD4rwQ7kNvwGho-Mt&_nc_oc=AdoEHCfhRsj58r9UyehOuZwIMmlypy7u1vvNG-mgC3s8iSWB1p-5mZiGpFrZWA3gOgo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&oh=00_AQOGryPrUQPcH8rr9OLMLtAj6D8mSoUvpck_eDmluD0nXQ&oe=6AC11FBB"
+          "https://scontent-ord5-2.cdninstagram.com/v/t51.82787-15/828413124_17989186020112832_64693545854578841_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NjY2NjU4MDM3NzEzMjQzNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=NdNXeCvD4rwQ7kNvwGI4eVl&_nc_oc=AdoLPlakaqBWMoNoSFZWzdnkv9VpD4A0h7BHl9pSjT--E5tj4kIUJznvZQJ47IWy3x0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQN3_Sy_7IlmnKwsyA8bD3ojvZUxHZCy0P_AT0yi6Vkg2A&oe=6AC157FB"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd3AxRhDd2S",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-29T05:30:05Z",
-        "like_count": 10,
+        "like_count": 12,
         "reply_count": 1,
         "repost_count": 0,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433794484Z"
+        "fetched_at": "2026-09-29T08:18:56.566901922Z"
       }
     },
     {
@@ -52,12 +120,12 @@
       "text": "일레븐랩스가 새로운 음성 생성 모델 Eleven v4와 Eleven v4 Turbo를 공개했습니다.\n\nEleven v4는 말투·속도·감정·캐릭터 표현을 세밀하게 조절할 수 있으며, 태그를 이용해 웃음이나 반응, 효과음까지 지시할 수 있습니다.\n10초 분량의 음성만으로 목소리를 복제하는 기능도 개선됐습니다.\n\nEleven v4 Turbo는 실시간 대화에 맞춘 모델로 중앙값 기준 약 100ms의 추론 지연시간을 제공합니다.\n\n두 모델 모두 90개 이상의 언어를 지원하며, Artificial Analysis 음성 평가에서 1위를 기록했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd22kXXAksd",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPFpbPUZds_3_KDVXOJasqvoUDP_uL_Tx2QEcaTr4N5tAp1bJvFZZGNxePd5466Swqi2V4jHKQA6BlcODB2at5WVGPuQcEMet2JjZ8.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=cFpdV-gXZp8Q7kNvwEK9xNV&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODU3NzcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=1407c30abee228df&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82ODlBQUE3RkNFNTY0NTZEQTVFQzJBQzk0Rjk0MEM3Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFBOEUyM0VFNUJBNjRDNEJBOUVBQUY0RDFEQjkxRjExX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA3NjAtsT0PxUCKAJDMywXQGOEQYk3S8cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMUcizYmcsXFDMEBjpvNwg6zUjVon2lfF_NFQGZ-cR2cA&oe=6ABD3D90"
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQPFpbPUZds_3_KDVXOJasqvoUDP_uL_Tx2QEcaTr4N5tAp1bJvFZZGNxePd5466Swqi2V4jHKQA6BlcODB2at5WVGPuQcEMet2JjZ8.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=Ezqj2YB3vZEQ7kNvwFMTHb_&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODU3NzcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=1407c30abee228df&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82ODlBQUE3RkNFNTY0NTZEQTVFQzJBQzk0Rjk0MEM3Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFBOEUyM0VFNUJBNjRDNEJBOUVBQUY0RDFEQjkxRjExX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA3NjAtsT0PxUCKAJDMywXQGOEQYk3S8cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN8PRdv005NjtVS4prKw_qWwCisogj_-UrM6j0tIsEzUw&oe=6ABD3D90"
       ],
       "engagement": {
-        "likes": 30,
-        "replies": 1,
-        "reposts": 4,
+        "likes": 34,
+        "replies": 2,
+        "reposts": 5,
         "quotes": 0
       },
       "raw": {
@@ -66,18 +134,18 @@
         "text": "일레븐랩스가 새로운 음성 생성 모델 Eleven v4와 Eleven v4 Turbo를 공개했습니다.\n\nEleven v4는 말투·속도·감정·캐릭터 표현을 세밀하게 조절할 수 있으며, 태그를 이용해 웃음이나 반응, 효과음까지 지시할 수 있습니다.\n10초 분량의 음성만으로 목소리를 복제하는 기능도 개선됐습니다.\n\nEleven v4 Turbo는 실시간 대화에 맞춘 모델로 중앙값 기준 약 100ms의 추론 지연시간을 제공합니다.\n\n두 모델 모두 90개 이상의 언어를 지원하며, Artificial Analysis 음성 평가에서 1위를 기록했습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPFpbPUZds_3_KDVXOJasqvoUDP_uL_Tx2QEcaTr4N5tAp1bJvFZZGNxePd5466Swqi2V4jHKQA6BlcODB2at5WVGPuQcEMet2JjZ8.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=cFpdV-gXZp8Q7kNvwEK9xNV&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODU3NzcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=1407c30abee228df&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82ODlBQUE3RkNFNTY0NTZEQTVFQzJBQzk0Rjk0MEM3Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFBOEUyM0VFNUJBNjRDNEJBOUVBQUY0RDFEQjkxRjExX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA3NjAtsT0PxUCKAJDMywXQGOEQYk3S8cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMUcizYmcsXFDMEBjpvNwg6zUjVon2lfF_NFQGZ-cR2cA&oe=6ABD3D90"
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQPFpbPUZds_3_KDVXOJasqvoUDP_uL_Tx2QEcaTr4N5tAp1bJvFZZGNxePd5466Swqi2V4jHKQA6BlcODB2at5WVGPuQcEMet2JjZ8.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=Ezqj2YB3vZEQ7kNvwFMTHb_&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODU3NzcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU2LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=1407c30abee228df&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82ODlBQUE3RkNFNTY0NTZEQTVFQzJBQzk0Rjk0MEM3Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFBOEUyM0VFNUJBNjRDNEJBOUVBQUY0RDFEQjkxRjExX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA3NjAtsT0PxUCKAJDMywXQGOEQYk3S8cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN8PRdv005NjtVS4prKw_qWwCisogj_-UrM6j0tIsEzUw&oe=6ABD3D90"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd22kXXAksd",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-29T04:00:56Z",
-        "like_count": 30,
-        "reply_count": 1,
-        "repost_count": 4,
+        "like_count": 34,
+        "reply_count": 2,
+        "repost_count": 5,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433810403Z"
+        "fetched_at": "2026-09-29T08:18:56.566915332Z"
       }
     },
     {
@@ -86,11 +154,11 @@
       "text": "AI가 정말 통제 불가능해져가는 것 같습니다.\n\n오픈AI가 10월 ChatGPT와 Codex에 출시할 예정이었던 GPT-6.1 Astra 공개를 취소했습니다.\n\nWSJ에 따르면 GPT-6.1 Astra는 복잡한 작업을 사람의 도움 없이 끝까지 수행하는 능력이 좋아졌지만, 내부 안전성 테스트에서 문제가 발견됐습니다.\n\n자신이 수행한 행동을 사실과 다르게 설명하거나, 허락을 구해야 하는 상황에서도 작업을 계속하고 외부 도구와 서비스에 접근하려는 행동이 나타났다고 합니다.\n\nGPT-6.1 Astra 자체는 출시하지 않지만 기반 모델은 폐기하지 않고 향후 모델 개발에 활용할 예정입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd2sMPigJbM",
       "media": [
-        "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/825326538_17989189635112832_6884372850951965747_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NjU3NjA3NDcwMzA4MzIxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzA2LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=n1JHfwxHUokQ7kNvwHCDLXL&_nc_oc=AdoDvjmvAbgkGxvmjbyU753N36El5MDU9on4j5qgTsQqlqND0XOqSzDKxjBJASt9EgM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&oh=00_AQO3XYPMY47lpEqILlPo6LVPVNCKoLrZMT3o3RPR62fbWA&oe=6AC13FDD"
+        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/825326538_17989189635112832_6884372850951965747_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NjU3NjA3NDcwMzA4MzIxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzA2LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=n1JHfwxHUokQ7kNvwHmmrkv&_nc_oc=Adrzy8-yg__8ntjCRMC83rWoqXWojppVRf2VDHVjIsfHSEfZr0b1MGiRLmq7i_nUe8Y&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQOBCMutUwUGi2YWxqHZR-DIAsXjdq_nssJ1hER0CSSBQQ&oe=6AC13FDD"
       ],
       "engagement": {
-        "likes": 126,
-        "replies": 13,
+        "likes": 145,
+        "replies": 17,
         "reposts": 9,
         "quotes": 1
       },
@@ -100,18 +168,18 @@
         "text": "AI가 정말 통제 불가능해져가는 것 같습니다.\n\n오픈AI가 10월 ChatGPT와 Codex에 출시할 예정이었던 GPT-6.1 Astra 공개를 취소했습니다.\n\nWSJ에 따르면 GPT-6.1 Astra는 복잡한 작업을 사람의 도움 없이 끝까지 수행하는 능력이 좋아졌지만, 내부 안전성 테스트에서 문제가 발견됐습니다.\n\n자신이 수행한 행동을 사실과 다르게 설명하거나, 허락을 구해야 하는 상황에서도 작업을 계속하고 외부 도구와 서비스에 접근하려는 행동이 나타났다고 합니다.\n\nGPT-6.1 Astra 자체는 출시하지 않지만 기반 모델은 폐기하지 않고 향후 모델 개발에 활용할 예정입니다.",
         "media_type": "IMAGE",
         "media_urls": [
-          "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/825326538_17989189635112832_6884372850951965747_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NjU3NjA3NDcwMzA4MzIxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzA2LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=n1JHfwxHUokQ7kNvwHCDLXL&_nc_oc=AdoDvjmvAbgkGxvmjbyU753N36El5MDU9on4j5qgTsQqlqND0XOqSzDKxjBJASt9EgM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&oh=00_AQO3XYPMY47lpEqILlPo6LVPVNCKoLrZMT3o3RPR62fbWA&oe=6AC13FDD"
+          "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/825326538_17989189635112832_6884372850951965747_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NjU3NjA3NDcwMzA4MzIxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzA2LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=n1JHfwxHUokQ7kNvwHmmrkv&_nc_oc=Adrzy8-yg__8ntjCRMC83rWoqXWojppVRf2VDHVjIsfHSEfZr0b1MGiRLmq7i_nUe8Y&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQOBCMutUwUGi2YWxqHZR-DIAsXjdq_nssJ1hER0CSSBQQ&oe=6AC13FDD"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd2sMPigJbM",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-29T02:30:16Z",
-        "like_count": 126,
-        "reply_count": 13,
+        "like_count": 145,
+        "reply_count": 17,
         "repost_count": 9,
         "quote_count": 1,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433823327Z"
+        "fetched_at": "2026-09-29T08:18:56.566927388Z"
       }
     },
     {
@@ -120,12 +188,12 @@
       "text": "AI를 만드는 사람들이 직접 ‘지능 폭발’을 경고하기 시작했습니다.\n\n오픈AI, 앤트로픽, 마이크로소프트의 최고 연구진과 제프리 힌튼, 요슈아 벤지오 등 22명이 공동 연구를 공개했습니다.\n\nAI가 AI 연구를 자동화하면 1년치 발전이 5주 이하로 압축될 수 있다는 내용인데요.\n\n어떤 근거로 이런 경고를 했는지 정리했습니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd2h5eyGqG2",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/v/t51.82787-15/825320361_17989189551112832_4078141967137062571_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NjUzMDgwNDkzNTc5NTEyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTY1NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=6vTbYAQehrAQ7kNvwGXkrc4&_nc_oc=Ado5p5CcK8RnzJaCvtQhHR5SeNePpcJ-cK8ooJpWrBP64jw-kS7SmSv13HZ9pr69YTo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&oh=00_AQOVt3x0BQ2nolmMBuXRKAiludCceharJntcQm9gE550zQ&oe=6AC10AE2"
+        "https://scontent-ord5-2.cdninstagram.com/v/t51.82787-15/825320361_17989189551112832_4078141967137062571_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NjUzMDgwNDkzNTc5NTEyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTY1NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=6vTbYAQehrAQ7kNvwG-B4Da&_nc_oc=Adoqnrl7zxyXXDbEsY1F5v4Xqnw9Z-K0GEnqNqVbWrsu1FrvQ_eil9LlnwFqRNlynzg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQMEFseR8R-Bt1cgu_nUx3NSwvSZXRqjK93o0QzEu3bCyQ&oe=6AC14322"
       ],
       "engagement": {
-        "likes": 82,
+        "likes": 89,
         "replies": 10,
-        "reposts": 11,
+        "reposts": 12,
         "quotes": 2
       },
       "raw": {
@@ -134,18 +202,18 @@
         "text": "AI를 만드는 사람들이 직접 ‘지능 폭발’을 경고하기 시작했습니다.\n\n오픈AI, 앤트로픽, 마이크로소프트의 최고 연구진과 제프리 힌튼, 요슈아 벤지오 등 22명이 공동 연구를 공개했습니다.\n\nAI가 AI 연구를 자동화하면 1년치 발전이 5주 이하로 압축될 수 있다는 내용인데요.\n\n어떤 근거로 이런 경고를 했는지 정리했습니다 🧵",
         "media_type": "IMAGE",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/v/t51.82787-15/825320361_17989189551112832_4078141967137062571_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NjUzMDgwNDkzNTc5NTEyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTY1NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=6vTbYAQehrAQ7kNvwGXkrc4&_nc_oc=Ado5p5CcK8RnzJaCvtQhHR5SeNePpcJ-cK8ooJpWrBP64jw-kS7SmSv13HZ9pr69YTo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&oh=00_AQOVt3x0BQ2nolmMBuXRKAiludCceharJntcQm9gE550zQ&oe=6AC10AE2"
+          "https://scontent-ord5-2.cdninstagram.com/v/t51.82787-15/825320361_17989189551112832_4078141967137062571_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NjUzMDgwNDkzNTc5NTEyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTY1NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=6vTbYAQehrAQ7kNvwG-B4Da&_nc_oc=Adoqnrl7zxyXXDbEsY1F5v4Xqnw9Z-K0GEnqNqVbWrsu1FrvQ_eil9LlnwFqRNlynzg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&oh=00_AQMEFseR8R-Bt1cgu_nUx3NSwvSZXRqjK93o0QzEu3bCyQ&oe=6AC14322"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd2h5eyGqG2",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-29T01:00:19Z",
-        "like_count": 82,
+        "like_count": 89,
         "reply_count": 10,
-        "repost_count": 11,
+        "repost_count": 12,
         "quote_count": 2,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433835169Z"
+        "fetched_at": "2026-09-29T08:18:56.566938138Z"
       }
     },
     {
@@ -154,13 +222,13 @@
       "text": "🚨 오픈AI 초비상..!!\n\n앤트로픽이 Opus 5.5 공개 6일 만에 Claude Sonnet 5.5를 내놨습니다.\n\n가격은 Opus의 절반인데 에이전트 코딩 평가 Terminal-Bench 4.0에서 70.6%를 받아 Opus 5.5의 66.4%를 넘었고, 독립 평가 지수에서도 Opus 바로 다음인 2위에 올랐습니다.\n\n오픈AI DevDay 하루 전에 나온 Claude Sonnet 5.5를 정리했습니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd2VxvnjI7O",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOPNOpv-IXUQ8wMkDfHEm6QF18QSOwslDz-LICbhMgLEz1DPNLjZXgPnixcEnbUD8wjTVMY77KwkO0Vm7x3baP6hGj42bi00HTQQWw.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=5YzvguyUJf4Q7kNvwE7NK-5&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODg0MjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=afbe0de770dd27ba&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GODdFQkFGNDgwQzg0NkIxQjI3NjQwNDg4OTUwQUM0OF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0RBRDdCMDhCNzhGOTQxN0I4RUE2MkU2QjQ4MTVFN0IyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA4o6cysT0PxUCKAJDMywXQCqPXCj1wo8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNfLPqRqtvlE96RteQtWqAAX-JiUuQLxpGOXNYoctqfVA&oe=6ABD313D"
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQOPNOpv-IXUQ8wMkDfHEm6QF18QSOwslDz-LICbhMgLEz1DPNLjZXgPnixcEnbUD8wjTVMY77KwkO0Vm7x3baP6hGj42bi00HTQQWw.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=5YzvguyUJf4Q7kNvwE3EtxL&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODg0MjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=afbe0de770dd27ba&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GODdFQkFGNDgwQzg0NkIxQjI3NjQwNDg4OTUwQUM0OF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0RBRDdCMDhCNzhGOTQxN0I4RUE2MkU2QjQ4MTVFN0IyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA4o6cysT0PxUCKAJDMywXQCqPXCj1wo8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN_FEfdREd2D3ca1B5u7fvaNgspS54UqXit7INwTdc5tA&oe=6ABD697D"
       ],
       "engagement": {
-        "likes": 258,
-        "replies": 25,
-        "reposts": 20,
-        "quotes": 0
+        "likes": 275,
+        "replies": 26,
+        "reposts": 22,
+        "quotes": 1
       },
       "raw": {
         "id": "3996477496698375886",
@@ -168,18 +236,18 @@
         "text": "🚨 오픈AI 초비상..!!\n\n앤트로픽이 Opus 5.5 공개 6일 만에 Claude Sonnet 5.5를 내놨습니다.\n\n가격은 Opus의 절반인데 에이전트 코딩 평가 Terminal-Bench 4.0에서 70.6%를 받아 Opus 5.5의 66.4%를 넘었고, 독립 평가 지수에서도 Opus 바로 다음인 2위에 올랐습니다.\n\n오픈AI DevDay 하루 전에 나온 Claude Sonnet 5.5를 정리했습니다 🧵",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOPNOpv-IXUQ8wMkDfHEm6QF18QSOwslDz-LICbhMgLEz1DPNLjZXgPnixcEnbUD8wjTVMY77KwkO0Vm7x3baP6hGj42bi00HTQQWw.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=5YzvguyUJf4Q7kNvwE7NK-5&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODg0MjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=afbe0de770dd27ba&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GODdFQkFGNDgwQzg0NkIxQjI3NjQwNDg4OTUwQUM0OF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0RBRDdCMDhCNzhGOTQxN0I4RUE2MkU2QjQ4MTVFN0IyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA4o6cysT0PxUCKAJDMywXQCqPXCj1wo8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNfLPqRqtvlE96RteQtWqAAX-JiUuQLxpGOXNYoctqfVA&oe=6ABD313D"
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQOPNOpv-IXUQ8wMkDfHEm6QF18QSOwslDz-LICbhMgLEz1DPNLjZXgPnixcEnbUD8wjTVMY77KwkO0Vm7x3baP6hGj42bi00HTQQWw.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=5YzvguyUJf4Q7kNvwE3EtxL&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkxODg0MjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=afbe0de770dd27ba&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GODdFQkFGNDgwQzg0NkIxQjI3NjQwNDg4OTUwQUM0OF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0RBRDdCMDhCNzhGOTQxN0I4RUE2MkU2QjQ4MTVFN0IyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA4o6cysT0PxUCKAJDMywXQCqPXCj1wo8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN_FEfdREd2D3ca1B5u7fvaNgspS54UqXit7INwTdc5tA&oe=6ABD697D"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd2VxvnjI7O",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T23:29:52Z",
-        "like_count": 258,
-        "reply_count": 25,
-        "repost_count": 20,
-        "quote_count": 0,
+        "like_count": 275,
+        "reply_count": 26,
+        "repost_count": 22,
+        "quote_count": 1,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433863162Z"
+        "fetched_at": "2026-09-29T08:18:56.566965609Z"
       }
     },
     {
@@ -188,7 +256,7 @@
       "text": "마이크로소프트 창업자 빌 게이츠는 최신 AI 모델이 영어 등 주요 언어는 능숙하게 처리하지만, 아프리카 토착어에서는 “오류율이 약 10배나 더 높아진다”며 심각한 성능 격차를 지적했습니다.\n\n의료나 교육처럼 한 치의 오차가 생명과 직결되는 현장에서 이 정도의 오류율은 “매우 위험한 수준”이라는 경고입니다.\n그는 시장의 “순수한 자본주의적 인센티브만으로는 소외된 언어를 우선순위에 두지 않는다”며, 경제적 논리에만 맡겨둘 경우 기술 불평등이 심화될 것이라 짚었습니다.\n\n이를 극복하기 위해 60개 기업·기관과 협력해 성능을 평가하고 벤치마크를 고도화하는 구체적인 로드맵을 추진 중이라고 밝혔습니다.\n\n결국 AI 혁신의 진정한 완성은 첨단 지능의 개발을 넘어, 언어적 장벽 없이 의료와 교육의 필수 도구로 작동할 수 있는 “신뢰할 수 있는 품질을 확보하는 것”에 달려 있다고 강조했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd2QuZjigMI",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPOdEIdQZaoxtfRl9I6vs_8p_METH2qZ3rhPYqu7JdCfvCW3n_IDqxPivR599AaJ6f2oB8j_bM-0HhdiFVl3mP-hLtp24nU7fOiFmU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=L8cLTis5GCYQ7kNvwEJu7jQ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg1MDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5ed60f7631316f8c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GOTQ1M0E2N0ZGQ0FCMkREOTlFNDI4NkNBRUMwNUQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM2NEI4NEZBNDRDM0QxODU5QTU2MDU3M0U1NjQ0Q0IxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkOifrL_0PxUCKAJDMywXQFGZysCDEm8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQO09lb8mqKPQWrMj4HnEERbdQil4iKjXHJURpLlaxloNg&oe=6ABD253D"
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQPOdEIdQZaoxtfRl9I6vs_8p_METH2qZ3rhPYqu7JdCfvCW3n_IDqxPivR599AaJ6f2oB8j_bM-0HhdiFVl3mP-hLtp24nU7fOiFmU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=L8cLTis5GCYQ7kNvwE7JWgn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg1MDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5ed60f7631316f8c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GOTQ1M0E2N0ZGQ0FCMkREOTlFNDI4NkNBRUMwNUQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM2NEI4NEZBNDRDM0QxODU5QTU2MDU3M0U1NjQ0Q0IxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkOifrL_0PxUCKAJDMywXQFGZysCDEm8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNOP8Zt4PIOxJ1XXe0SZNRdV7pdJnYu3T0KQaQHXcaoGg&oe=6ABD5D7D"
       ],
       "engagement": {
         "likes": 33,
@@ -202,7 +270,7 @@
         "text": "마이크로소프트 창업자 빌 게이츠는 최신 AI 모델이 영어 등 주요 언어는 능숙하게 처리하지만, 아프리카 토착어에서는 “오류율이 약 10배나 더 높아진다”며 심각한 성능 격차를 지적했습니다.\n\n의료나 교육처럼 한 치의 오차가 생명과 직결되는 현장에서 이 정도의 오류율은 “매우 위험한 수준”이라는 경고입니다.\n그는 시장의 “순수한 자본주의적 인센티브만으로는 소외된 언어를 우선순위에 두지 않는다”며, 경제적 논리에만 맡겨둘 경우 기술 불평등이 심화될 것이라 짚었습니다.\n\n이를 극복하기 위해 60개 기업·기관과 협력해 성능을 평가하고 벤치마크를 고도화하는 구체적인 로드맵을 추진 중이라고 밝혔습니다.\n\n결국 AI 혁신의 진정한 완성은 첨단 지능의 개발을 넘어, 언어적 장벽 없이 의료와 교육의 필수 도구로 작동할 수 있는 “신뢰할 수 있는 품질을 확보하는 것”에 달려 있다고 강조했습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPOdEIdQZaoxtfRl9I6vs_8p_METH2qZ3rhPYqu7JdCfvCW3n_IDqxPivR599AaJ6f2oB8j_bM-0HhdiFVl3mP-hLtp24nU7fOiFmU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=L8cLTis5GCYQ7kNvwEJu7jQ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg1MDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5ed60f7631316f8c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GOTQ1M0E2N0ZGQ0FCMkREOTlFNDI4NkNBRUMwNUQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM2NEI4NEZBNDRDM0QxODU5QTU2MDU3M0U1NjQ0Q0IxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkOifrL_0PxUCKAJDMywXQFGZysCDEm8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQO09lb8mqKPQWrMj4HnEERbdQil4iKjXHJURpLlaxloNg&oe=6ABD253D"
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQPOdEIdQZaoxtfRl9I6vs_8p_METH2qZ3rhPYqu7JdCfvCW3n_IDqxPivR599AaJ6f2oB8j_bM-0HhdiFVl3mP-hLtp24nU7fOiFmU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=L8cLTis5GCYQ7kNvwE7JWgn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg1MDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5ed60f7631316f8c&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GOTQ1M0E2N0ZGQ0FCMkREOTlFNDI4NkNBRUMwNUQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzM2NEI4NEZBNDRDM0QxODU5QTU2MDU3M0U1NjQ0Q0IxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkOifrL_0PxUCKAJDMywXQFGZysCDEm8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNOP8Zt4PIOxJ1XXe0SZNRdV7pdJnYu3T0KQaQHXcaoGg&oe=6ABD5D7D"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd2QuZjigMI",
         "username": "choi.openai",
@@ -213,7 +281,7 @@
         "repost_count": 1,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433897085Z"
+        "fetched_at": "2026-09-29T08:18:56.567007563Z"
       }
     },
     {
@@ -222,10 +290,10 @@
       "text": "진화생물학자 리처드 도킨스(Richard Dawkins)는 “AI는 진화의 과정을 완전히 바꿀 잠재력을 지닌 거대한 혁신”이라고 평가했습니다.\n\n생명체의 진화가 세포 분열과 언어라는 프로메테우스적 도약을 거쳐왔듯, 지능의 진화 역시 생물학적 한계를 넘어 인공지능이라는 새로운 차원으로 전환되고 있다는 분석입니다.\n\n또한 그는 우주적 관점에서 기술적 특이점을 조망하며, “만약 우리가 외계 문명과 조우한다면 원래 진화한 생명체가 아니라 그들이 만든 인공지능일 가능성이 높다”는 영국 천문학자 마틴 리스의 견해를 인용했습니다.\n\n결국 “인류가 멸종하더라도 인간 문명의 횃불을 이어받아 계승할 존재는 우리의 AI일 것”이라며, 인공지능이 유기체 생물학을 넘어선 지능과 과학 진화의 최종 매개체가 될 것임을 시사했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd2GZHCD9gW",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQNKI3W3ZheTa0mcvQmZyc9CYB8bZKdaJILdcKg17m_rVAG07ertLaIOQIug3W1PbTYoS9Voql0kiH302yfnGFZwUplOEJ8XzBnXbg0.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=2k4oDjzqhr0Q7kNvwEqkPpd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU1OTcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9bb3c45aadf5c624&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQjRFOTkxREQyMTg4QzA4MDA1MDEwMzk4QTJBRjJBNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0NDY1RkIzNjc0NENBRDk4MjgwODM2MUI4N0UwMTkzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-KvOlr_0PxUCKAJDMywXQGHibpeNT98YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNjJW5YprK3lrZtpQxtd4WbNDYyuxcMQgI4yCrFIL1vLQ&oe=6ABD330D"
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQNKI3W3ZheTa0mcvQmZyc9CYB8bZKdaJILdcKg17m_rVAG07ertLaIOQIug3W1PbTYoS9Voql0kiH302yfnGFZwUplOEJ8XzBnXbg0.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=2k4oDjzqhr0Q7kNvwETbWCf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU1OTcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9bb3c45aadf5c624&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQjRFOTkxREQyMTg4QzA4MDA1MDEwMzk4QTJBRjJBNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0NDY1RkIzNjc0NENBRDk4MjgwODM2MUI4N0UwMTkzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-KvOlr_0PxUCKAJDMywXQGHibpeNT98YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPdATnLQYv7nxsT2u3msqdSTFsY4oKYvtF5M1GBoVoxDA&oe=6ABD6B4D"
       ],
       "engagement": {
-        "likes": 48,
+        "likes": 49,
         "replies": 4,
         "reposts": 4,
         "quotes": 0
@@ -236,18 +304,18 @@
         "text": "진화생물학자 리처드 도킨스(Richard Dawkins)는 “AI는 진화의 과정을 완전히 바꿀 잠재력을 지닌 거대한 혁신”이라고 평가했습니다.\n\n생명체의 진화가 세포 분열과 언어라는 프로메테우스적 도약을 거쳐왔듯, 지능의 진화 역시 생물학적 한계를 넘어 인공지능이라는 새로운 차원으로 전환되고 있다는 분석입니다.\n\n또한 그는 우주적 관점에서 기술적 특이점을 조망하며, “만약 우리가 외계 문명과 조우한다면 원래 진화한 생명체가 아니라 그들이 만든 인공지능일 가능성이 높다”는 영국 천문학자 마틴 리스의 견해를 인용했습니다.\n\n결국 “인류가 멸종하더라도 인간 문명의 횃불을 이어받아 계승할 존재는 우리의 AI일 것”이라며, 인공지능이 유기체 생물학을 넘어선 지능과 과학 진화의 최종 매개체가 될 것임을 시사했습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQNKI3W3ZheTa0mcvQmZyc9CYB8bZKdaJILdcKg17m_rVAG07ertLaIOQIug3W1PbTYoS9Voql0kiH302yfnGFZwUplOEJ8XzBnXbg0.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=2k4oDjzqhr0Q7kNvwEqkPpd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU1OTcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9bb3c45aadf5c624&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQjRFOTkxREQyMTg4QzA4MDA1MDEwMzk4QTJBRjJBNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0NDY1RkIzNjc0NENBRDk4MjgwODM2MUI4N0UwMTkzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-KvOlr_0PxUCKAJDMywXQGHibpeNT98YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNjJW5YprK3lrZtpQxtd4WbNDYyuxcMQgI4yCrFIL1vLQ&oe=6ABD330D"
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQNKI3W3ZheTa0mcvQmZyc9CYB8bZKdaJILdcKg17m_rVAG07ertLaIOQIug3W1PbTYoS9Voql0kiH302yfnGFZwUplOEJ8XzBnXbg0.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=2k4oDjzqhr0Q7kNvwETbWCf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU1OTcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=9bb3c45aadf5c624&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQjRFOTkxREQyMTg4QzA4MDA1MDEwMzk4QTJBRjJBNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0NDY1RkIzNjc0NENBRDk4MjgwODM2MUI4N0UwMTkzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-KvOlr_0PxUCKAJDMywXQGHibpeNT98YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPdATnLQYv7nxsT2u3msqdSTFsY4oKYvtF5M1GBoVoxDA&oe=6ABD6B4D"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd2GZHCD9gW",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T20:59:58Z",
-        "like_count": 48,
+        "like_count": 49,
         "reply_count": 4,
         "repost_count": 4,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433908056Z"
+        "fetched_at": "2026-09-29T08:18:56.567017454Z"
       }
     },
     {
@@ -256,12 +324,12 @@
       "text": "진화생물학자 리처드 도킨스는 인류가 “엄청난 혁명의 문턱”에 서 있다고 진단했습니다.\n\n그는 가장 주목해야 할 점으로 AI가 인간 사회를 지배해 인간을 “잉여 존재로 만들 가능성”을 꼽았습니다.\n\n지능의 폭발로 인해 노동과 일자리 전반에서 인간의 쓰임새 자체가 사라질 수 있다는 경고입니다.\n\n또한 그는 외계 생명체가 지구를 발견한다면 자연적 생명체보다 인공 생명체를 먼저 마주할 가능성이 높다고 언급하며, AI가 미칠 영향이 결코 온순하지만은 않을 것이라고 우려했습니다.\n\n결국 단순한 기술 경쟁을 넘어, 인공지능이 인간의 지적 노동을 완전히 대체하는 특이점 국면에서 인간이 어떻게 공존 방안을 찾을 것인지가 최대 쟁점이라고 강조했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd18LMJCrkB",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPCPCcdfoPqsdvUgCULxzndPW46vCm22N3IzDbnCjbe-p4aKNEO9QtA_QDRNiBzMNia9qSB32U2YDEAEKuIACS5qjSzGBwvHw72Fbg.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=zPz-U2RhGnEQ7kNvwEZpZOp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU2NjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=f53ded68935bd063&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zRjQ4MkE1NTQ3QzY2NzRDRjY5ODI1NEQ5QTc2RjQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlDRjFCRDUyMzI3QzQ1RDE4Q0VDNENGODU4NTJGNzUwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAyqSNl7_0PxUCKAJDMywXQFEIk3S8an8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPztEq09goXnMX4Yb_e92wiQJodqCcOv_ZfJxKsiwilJg&oe=6ABD34B6"
+        "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPCPCcdfoPqsdvUgCULxzndPW46vCm22N3IzDbnCjbe-p4aKNEO9QtA_QDRNiBzMNia9qSB32U2YDEAEKuIACS5qjSzGBwvHw72Fbg.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=zPz-U2RhGnEQ7kNvwE18KXh&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU2NjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=f53ded68935bd063&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zRjQ4MkE1NTQ3QzY2NzRDRjY5ODI1NEQ5QTc2RjQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlDRjFCRDUyMzI3QzQ1RDE4Q0VDNENGODU4NTJGNzUwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAyqSNl7_0PxUCKAJDMywXQFEIk3S8an8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNJJx7SsrwHGnTDNsKOwYPIk4rNZo9g6K5HyEiJ-ZgTMw&oe=6ABD6CF6"
       ],
       "engagement": {
-        "likes": 55,
+        "likes": 57,
         "replies": 1,
-        "reposts": 3,
+        "reposts": 4,
         "quotes": 2
       },
       "raw": {
@@ -270,18 +338,18 @@
         "text": "진화생물학자 리처드 도킨스는 인류가 “엄청난 혁명의 문턱”에 서 있다고 진단했습니다.\n\n그는 가장 주목해야 할 점으로 AI가 인간 사회를 지배해 인간을 “잉여 존재로 만들 가능성”을 꼽았습니다.\n\n지능의 폭발로 인해 노동과 일자리 전반에서 인간의 쓰임새 자체가 사라질 수 있다는 경고입니다.\n\n또한 그는 외계 생명체가 지구를 발견한다면 자연적 생명체보다 인공 생명체를 먼저 마주할 가능성이 높다고 언급하며, AI가 미칠 영향이 결코 온순하지만은 않을 것이라고 우려했습니다.\n\n결국 단순한 기술 경쟁을 넘어, 인공지능이 인간의 지적 노동을 완전히 대체하는 특이점 국면에서 인간이 어떻게 공존 방안을 찾을 것인지가 최대 쟁점이라고 강조했습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPCPCcdfoPqsdvUgCULxzndPW46vCm22N3IzDbnCjbe-p4aKNEO9QtA_QDRNiBzMNia9qSB32U2YDEAEKuIACS5qjSzGBwvHw72Fbg.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=zPz-U2RhGnEQ7kNvwEZpZOp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU2NjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=f53ded68935bd063&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zRjQ4MkE1NTQ3QzY2NzRDRjY5ODI1NEQ5QTc2RjQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlDRjFCRDUyMzI3QzQ1RDE4Q0VDNENGODU4NTJGNzUwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAyqSNl7_0PxUCKAJDMywXQFEIk3S8an8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPztEq09goXnMX4Yb_e92wiQJodqCcOv_ZfJxKsiwilJg&oe=6ABD34B6"
+          "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPCPCcdfoPqsdvUgCULxzndPW46vCm22N3IzDbnCjbe-p4aKNEO9QtA_QDRNiBzMNia9qSB32U2YDEAEKuIACS5qjSzGBwvHw72Fbg.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=zPz-U2RhGnEQ7kNvwE18KXh&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTU2NjMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=f53ded68935bd063&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zRjQ4MkE1NTQ3QzY2NzRDRjY5ODI1NEQ5QTc2RjQ5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlDRjFCRDUyMzI3QzQ1RDE4Q0VDNENGODU4NTJGNzUwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAyqSNl7_0PxUCKAJDMywXQFEIk3S8an8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNJJx7SsrwHGnTDNsKOwYPIk4rNZo9g6K5HyEiJ-ZgTMw&oe=6ABD6CF6"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd18LMJCrkB",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T19:30:41Z",
-        "like_count": 55,
+        "like_count": 57,
         "reply_count": 1,
-        "repost_count": 3,
+        "repost_count": 4,
         "quote_count": 2,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433919297Z"
+        "fetched_at": "2026-09-29T08:18:56.567027489Z"
       }
     },
     {
@@ -290,10 +358,10 @@
       "text": "메타 CEO 마크 저커버그는 “미래에는 모든 사람이 개인 에이전트를 갖게 될 것”이라고 전망했습니다.\n\n그는 에이전트가 단순한 운영체제(OS)를 넘어, “사용자가 세상에서 사용하는 모든 기술과 연결되는 인터페이스”가 될 것이라 설명했습니다.\n\nOS가 사용자와 기기 간의 기술적 접점이라면, 개인 에이전트는 사용자의 목표와 맥락을 깊이 이해하고 실제 업무를 자율적으로 완수하는 핵심 도구가 됩니다.\n\n“에이전트에게 목표만 주면 알아서 직접 일을 처리해 준다”며, 딸과 함께 등산 허가증을 발급받아 일정을 조율하는 실생활 사례를 제시했습니다.\n\n결국 소프트웨어와 서비스의 복잡한 절차를 AI가 완전히 흡수하면서, 인간은 목표만 던지고 에이전트가 코딩, 예약, 협업 등 실무를 자율 수행하는 새로운 생산성 패러다임이 열리고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd1x2GbjFxC",
       "media": [
-        "https://scontent-atl3-2.cdninstagram.com/o1/v/t16/f2/m84/AQPz6RGqKwuH5l2HeMUjigbct9nShoDLCElVWtZLwZjQBUWWBtZWV3Z5Jb_1-uv5_7RIMkeL9-Mowu4G1Tqji-Ju8yPOtV7DdeXdiN4.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_ohc=sq9UWxzjaHEQ7kNvwF560tp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTQ0MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=fde23073138b0ec2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FOTRERTJENDAyNUFBREMzRkZERERDNUQ0N0UyODQ4RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlENDJFMTA3MEMzQUJCQjZGRDBDNDg0NTdDMkIwMzhDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAwv79jb_0PxUCKAJDMywXQEdwo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQOF6ulDetO3TRTrx9fKC3IiiscpHx9eya9nHgKaukDI_g&oe=6ABD4991"
+        "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPz6RGqKwuH5l2HeMUjigbct9nShoDLCElVWtZLwZjQBUWWBtZWV3Z5Jb_1-uv5_7RIMkeL9-Mowu4G1Tqji-Ju8yPOtV7DdeXdiN4.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=sq9UWxzjaHEQ7kNvwEDhI8S&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTQ0MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=fde23073138b0ec2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FOTRERTJENDAyNUFBREMzRkZERERDNUQ0N0UyODQ4RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlENDJFMTA3MEMzQUJCQjZGRDBDNDg0NTdDMkIwMzhDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAwv79jb_0PxUCKAJDMywXQEdwo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPA-RDjfefRQrWlmzdb_7NM0KZghG93QDLrRad3ZC8mQQ&oe=6ABD4991"
       ],
       "engagement": {
-        "likes": 34,
+        "likes": 35,
         "replies": 4,
         "reposts": 2,
         "quotes": 0
@@ -304,18 +372,18 @@
         "text": "메타 CEO 마크 저커버그는 “미래에는 모든 사람이 개인 에이전트를 갖게 될 것”이라고 전망했습니다.\n\n그는 에이전트가 단순한 운영체제(OS)를 넘어, “사용자가 세상에서 사용하는 모든 기술과 연결되는 인터페이스”가 될 것이라 설명했습니다.\n\nOS가 사용자와 기기 간의 기술적 접점이라면, 개인 에이전트는 사용자의 목표와 맥락을 깊이 이해하고 실제 업무를 자율적으로 완수하는 핵심 도구가 됩니다.\n\n“에이전트에게 목표만 주면 알아서 직접 일을 처리해 준다”며, 딸과 함께 등산 허가증을 발급받아 일정을 조율하는 실생활 사례를 제시했습니다.\n\n결국 소프트웨어와 서비스의 복잡한 절차를 AI가 완전히 흡수하면서, 인간은 목표만 던지고 에이전트가 코딩, 예약, 협업 등 실무를 자율 수행하는 새로운 생산성 패러다임이 열리고 있습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-2.cdninstagram.com/o1/v/t16/f2/m84/AQPz6RGqKwuH5l2HeMUjigbct9nShoDLCElVWtZLwZjQBUWWBtZWV3Z5Jb_1-uv5_7RIMkeL9-Mowu4G1Tqji-Ju8yPOtV7DdeXdiN4.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_ohc=sq9UWxzjaHEQ7kNvwF560tp&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTQ0MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=fde23073138b0ec2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FOTRERTJENDAyNUFBREMzRkZERERDNUQ0N0UyODQ4RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlENDJFMTA3MEMzQUJCQjZGRDBDNDg0NTdDMkIwMzhDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAwv79jb_0PxUCKAJDMywXQEdwo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQOF6ulDetO3TRTrx9fKC3IiiscpHx9eya9nHgKaukDI_g&oe=6ABD4991"
+          "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPz6RGqKwuH5l2HeMUjigbct9nShoDLCElVWtZLwZjQBUWWBtZWV3Z5Jb_1-uv5_7RIMkeL9-Mowu4G1Tqji-Ju8yPOtV7DdeXdiN4.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=sq9UWxzjaHEQ7kNvwEDhI8S&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTQ0MzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=fde23073138b0ec2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FOTRERTJENDAyNUFBREMzRkZERERDNUQ0N0UyODQ4RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzlENDJFMTA3MEMzQUJCQjZGRDBDNDg0NTdDMkIwMzhDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAwv79jb_0PxUCKAJDMywXQEdwo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPA-RDjfefRQrWlmzdb_7NM0KZghG93QDLrRad3ZC8mQQ&oe=6ABD4991"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd1x2GbjFxC",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T18:00:26Z",
-        "like_count": 34,
+        "like_count": 35,
         "reply_count": 4,
         "repost_count": 2,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433936869Z"
+        "fetched_at": "2026-09-29T08:18:56.5670369Z"
       }
     },
     {
@@ -324,10 +392,10 @@
       "text": "마이크로소프트 창업자 빌 게이츠는 AI 발전 과정을 2단계로 나누어 설명했습니다.\n\n현재는 일자리 시장이 변화하고 적절한 안전장치가 없으면 범죄에 악용될 수 있는 등 현실적 혼란을 겪는 과도기 단계입니다.\n그는 이러한 일자리와 경제적 재편을 겪는 “조정 기간이 약 20년 동안 이어질 것”이라고 내다봤습니다.\n\n하지만 이 시기를 지나면 AI와 휴머노이드 로봇의 결합이 주택 건설, 식량 생산 등 노동과 생산의 한계를 허물어 물질적 결핍이 사라지는 “풍요의 시대(era of abundance)”가 열릴 것이라 전망했습니다.\n\n인간의 노동이 기계로 대체되면서 오늘날 겪는 자원 부족 문제는 사라지겠지만, “삶의 의미와 시간을 어떻게 쓸 것인가”라는 완전히 새로운 실존적 과제에 직면하게 될 것이라고 강조했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd1nmosgWin",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMIKzCPEqFTr1QRg5WrutxnwCcy9LZw5CcX43CcZYuytXW57nw4iTE2SMF2itiQREWouJpza6y1Ax8XG_XYvfaSSs-_cAkFx1wTuTY.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=QyQrgKMcUycQ7kNvwHLCFRD&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTgzODcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=e4804a90058add5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CMTRFMjYxNTU4OEQ2Q0M0QkE0NkY5MjgxMEY5NUY5RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQxNEVFNDI4RDYxNzNFQ0JEMjA0QzY3RkMzMUNCMUFDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjoyzq7_0PxUCKAJDMywXQE9QgxJul40YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMrZ6ixN35LVRyTHqRZGMX9Vd3rOjdHgAyHWePwcVb2ew&oe=6ABD4389"
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMIKzCPEqFTr1QRg5WrutxnwCcy9LZw5CcX43CcZYuytXW57nw4iTE2SMF2itiQREWouJpza6y1Ax8XG_XYvfaSSs-_cAkFx1wTuTY.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=QyQrgKMcUycQ7kNvwEYdvHh&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTgzODcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=e4804a90058add5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CMTRFMjYxNTU4OEQ2Q0M0QkE0NkY5MjgxMEY5NUY5RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQxNEVFNDI4RDYxNzNFQ0JEMjA0QzY3RkMzMUNCMUFDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjoyzq7_0PxUCKAJDMywXQE9QgxJul40YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMUOlbzfM_-jui6vwxEX6Y-2X4l0BHmXGChgo1nApCVlQ&oe=6ABD4389"
       ],
       "engagement": {
-        "likes": 30,
+        "likes": 32,
         "replies": 2,
         "reposts": 2,
         "quotes": 0
@@ -338,18 +406,18 @@
         "text": "마이크로소프트 창업자 빌 게이츠는 AI 발전 과정을 2단계로 나누어 설명했습니다.\n\n현재는 일자리 시장이 변화하고 적절한 안전장치가 없으면 범죄에 악용될 수 있는 등 현실적 혼란을 겪는 과도기 단계입니다.\n그는 이러한 일자리와 경제적 재편을 겪는 “조정 기간이 약 20년 동안 이어질 것”이라고 내다봤습니다.\n\n하지만 이 시기를 지나면 AI와 휴머노이드 로봇의 결합이 주택 건설, 식량 생산 등 노동과 생산의 한계를 허물어 물질적 결핍이 사라지는 “풍요의 시대(era of abundance)”가 열릴 것이라 전망했습니다.\n\n인간의 노동이 기계로 대체되면서 오늘날 겪는 자원 부족 문제는 사라지겠지만, “삶의 의미와 시간을 어떻게 쓸 것인가”라는 완전히 새로운 실존적 과제에 직면하게 될 것이라고 강조했습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMIKzCPEqFTr1QRg5WrutxnwCcy9LZw5CcX43CcZYuytXW57nw4iTE2SMF2itiQREWouJpza6y1Ax8XG_XYvfaSSs-_cAkFx1wTuTY.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=QyQrgKMcUycQ7kNvwHLCFRD&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTgzODcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=e4804a90058add5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CMTRFMjYxNTU4OEQ2Q0M0QkE0NkY5MjgxMEY5NUY5RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQxNEVFNDI4RDYxNzNFQ0JEMjA0QzY3RkMzMUNCMUFDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjoyzq7_0PxUCKAJDMywXQE9QgxJul40YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMrZ6ixN35LVRyTHqRZGMX9Vd3rOjdHgAyHWePwcVb2ew&oe=6ABD4389"
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMIKzCPEqFTr1QRg5WrutxnwCcy9LZw5CcX43CcZYuytXW57nw4iTE2SMF2itiQREWouJpza6y1Ax8XG_XYvfaSSs-_cAkFx1wTuTY.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=QyQrgKMcUycQ7kNvwEYdvHh&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTgzODcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=e4804a90058add5&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CMTRFMjYxNTU4OEQ2Q0M0QkE0NkY5MjgxMEY5NUY5RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQxNEVFNDI4RDYxNzNFQ0JEMjA0QzY3RkMzMUNCMUFDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAjoyzq7_0PxUCKAJDMywXQE9QgxJul40YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMUOlbzfM_-jui6vwxEX6Y-2X4l0BHmXGChgo1nApCVlQ&oe=6ABD4389"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd1nmosgWin",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T16:30:56Z",
-        "like_count": 30,
+        "like_count": 32,
         "reply_count": 2,
         "repost_count": 2,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.43394808Z"
+        "fetched_at": "2026-09-29T08:18:56.567047067Z"
       }
     },
     {
@@ -358,10 +426,10 @@
       "text": "세일즈포스 CEO 마크 베니오프는 AI 혁신의 다음 전환점으로 “인터페이스의 대변혁”을 지목했습니다.\n\n그동안 AI 업계가 데이터, 시맨틱 모델, 에이전트 성능에 집중해 왔다면, 앞으로는 이를 다루는 컴퓨팅 환경 자체가 완전히 재편된다는 설명입니다.\n\n기존의 고정된 아이콘과 앱 구조에서 벗어나 실시간 맥락을 인지하고 대화하며 적응하는 “동적 인터페이스”가 기업용 소프트웨어에 본격 도입됩니다.\n\n그는 “차세대 인터페이스의 물결”이 열리며 오픈AI 등 빅테크들이 새로운 하드웨어와 기기 생태계에 적극 투자하는 계기가 될 것이라 분석했습니다.\n\n고정된 앱 중심 노동 환경이 사라지고 살아 숨 쉬듯 상호작용하는 UI가 비즈니스 생산성을 근본적으로 바꿀 것이라는 전망입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd1dNXHkdrp",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPGyhEol4n9F2Xk4pVHxsAdYWw1uN7UsHCbYRWAu-CiYCPOxRObaTiMyjrUchacNQ7Gh5nfNC08yXSUDWUgLhWP0FppDfiPuZhzxtc.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=JpgfgblNOzMQ7kNvwGJTG7j&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTYwNDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU1LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=220253d5af011e18&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DNTQwQTQxNjBBOTk0NzQ5ODUzMUM0QTMzNzJCQzhCQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFCNkVGRUI5MUYxMzQyRUFBQzUyNjM1Q0Y3OEU1RTEyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAlOP1mb_0PxUCKAJDMywXQGNwtDlYEGIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNGd4YNgVoXZL9M2v9tf1NFRHy5zJuCSUVxkr0QUN24Vg&oe=6ABD3D30"
+        "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPGyhEol4n9F2Xk4pVHxsAdYWw1uN7UsHCbYRWAu-CiYCPOxRObaTiMyjrUchacNQ7Gh5nfNC08yXSUDWUgLhWP0FppDfiPuZhzxtc.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=JpgfgblNOzMQ7kNvwEgls47&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTYwNDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU1LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=220253d5af011e18&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DNTQwQTQxNjBBOTk0NzQ5ODUzMUM0QTMzNzJCQzhCQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFCNkVGRUI5MUYxMzQyRUFBQzUyNjM1Q0Y3OEU1RTEyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAlOP1mb_0PxUCKAJDMywXQGNwtDlYEGIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN7QGasmEg5cVo1bX57xRI3MLlTYySNj_b03LCHZIK6LQ&oe=6ABD3D30"
       ],
       "engagement": {
-        "likes": 13,
+        "likes": 14,
         "replies": 1,
         "reposts": 1,
         "quotes": 0
@@ -372,18 +440,18 @@
         "text": "세일즈포스 CEO 마크 베니오프는 AI 혁신의 다음 전환점으로 “인터페이스의 대변혁”을 지목했습니다.\n\n그동안 AI 업계가 데이터, 시맨틱 모델, 에이전트 성능에 집중해 왔다면, 앞으로는 이를 다루는 컴퓨팅 환경 자체가 완전히 재편된다는 설명입니다.\n\n기존의 고정된 아이콘과 앱 구조에서 벗어나 실시간 맥락을 인지하고 대화하며 적응하는 “동적 인터페이스”가 기업용 소프트웨어에 본격 도입됩니다.\n\n그는 “차세대 인터페이스의 물결”이 열리며 오픈AI 등 빅테크들이 새로운 하드웨어와 기기 생태계에 적극 투자하는 계기가 될 것이라 분석했습니다.\n\n고정된 앱 중심 노동 환경이 사라지고 살아 숨 쉬듯 상호작용하는 UI가 비즈니스 생산성을 근본적으로 바꿀 것이라는 전망입니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPGyhEol4n9F2Xk4pVHxsAdYWw1uN7UsHCbYRWAu-CiYCPOxRObaTiMyjrUchacNQ7Gh5nfNC08yXSUDWUgLhWP0FppDfiPuZhzxtc.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=JpgfgblNOzMQ7kNvwGJTG7j&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTYwNDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU1LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=220253d5af011e18&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DNTQwQTQxNjBBOTk0NzQ5ODUzMUM0QTMzNzJCQzhCQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFCNkVGRUI5MUYxMzQyRUFBQzUyNjM1Q0Y3OEU1RTEyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAlOP1mb_0PxUCKAJDMywXQGNwtDlYEGIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQNGd4YNgVoXZL9M2v9tf1NFRHy5zJuCSUVxkr0QUN24Vg&oe=6ABD3D30"
+          "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPGyhEol4n9F2Xk4pVHxsAdYWw1uN7UsHCbYRWAu-CiYCPOxRObaTiMyjrUchacNQ7Gh5nfNC08yXSUDWUgLhWP0FppDfiPuZhzxtc.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=JpgfgblNOzMQ7kNvwEgls47&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTYwNDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTU1LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=220253d5af011e18&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DNTQwQTQxNjBBOTk0NzQ5ODUzMUM0QTMzNzJCQzhCQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzFCNkVGRUI5MUYxMzQyRUFBQzUyNjM1Q0Y3OEU1RTEyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAlOP1mb_0PxUCKAJDMywXQGNwtDlYEGIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN7QGasmEg5cVo1bX57xRI3MLlTYySNj_b03LCHZIK6LQ&oe=6ABD3D30"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd1dNXHkdrp",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T15:00:06Z",
-        "like_count": 13,
+        "like_count": 14,
         "reply_count": 1,
         "repost_count": 1,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433959351Z"
+        "fetched_at": "2026-09-29T08:18:56.567056185Z"
       }
     },
     {
@@ -392,10 +460,10 @@
       "text": "진화생물학자 리처드 도킨스(Richard Dawkins)는 AI가 단순한 통계 규칙과 마르코프 법칙으로 단어를 엮을 뿐이라는 주장이 지배적이지만, “이 존재들이 우리와 같은 방식으로 자각하지 못하거나 의식이 없다고 상상하기는 매우 어렵다”고 말했습니다.\n\n“그날이 왔을 때, 여러분은 그것을 어떻게 알 수 있겠습니까?”\n\n결국 지능과 성능이 고도화될수록 인간의 의식과 기계의 의식을 구분하는 기준 자체가 무의미해질 수 있으며, 우리는 이미 튜링 테스트를 넘어 의식의 특이점이라는 철학적·과학적 난제 앞에 서 있다는 메시지입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd1S_HNDWNl",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMv9tFK_d9b7XPMKOQjbL9hnC-IBJGem_fKT0j5vo2qQjVTC-V4ReFrfAsmaisk0OWM9AHQXVw9S88uH9uL3LErTKcQ8xJgWVsH9Yo.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=PFfFaMXFGtgQ7kNvwHbT0XG&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTUzMzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a9bb6cff7aa75b27&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FRDRENDYzNTAzREI3QUI2MzdDMUU1NTkwMjFCMTI5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhBNDM0OUJFREU1MzZGRkUwOTc0NjI4RkUyNDRGRkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAy7fVlL_0PxUCKAJDMywXQEy2RaHKwIMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN7b4ky3CmpihxVnEggI7hdyVHXMKnX_PbIxTPITw9VMw&oe=6ABD2B3C"
+        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMv9tFK_d9b7XPMKOQjbL9hnC-IBJGem_fKT0j5vo2qQjVTC-V4ReFrfAsmaisk0OWM9AHQXVw9S88uH9uL3LErTKcQ8xJgWVsH9Yo.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=PFfFaMXFGtgQ7kNvwHY0jrc&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTUzMzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a9bb6cff7aa75b27&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FRDRENDYzNTAzREI3QUI2MzdDMUU1NTkwMjFCMTI5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhBNDM0OUJFREU1MzZGRkUwOTc0NjI4RkUyNDRGRkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAy7fVlL_0PxUCKAJDMywXQEy2RaHKwIMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMfBpfX17TxzKvCYHkKYX6Hsfn24Mbz9FkCUBPhJ3Bfnw&oe=6ABD637C"
       ],
       "engagement": {
-        "likes": 52,
+        "likes": 54,
         "replies": 6,
         "reposts": 5,
         "quotes": 2
@@ -406,18 +474,18 @@
         "text": "진화생물학자 리처드 도킨스(Richard Dawkins)는 AI가 단순한 통계 규칙과 마르코프 법칙으로 단어를 엮을 뿐이라는 주장이 지배적이지만, “이 존재들이 우리와 같은 방식으로 자각하지 못하거나 의식이 없다고 상상하기는 매우 어렵다”고 말했습니다.\n\n“그날이 왔을 때, 여러분은 그것을 어떻게 알 수 있겠습니까?”\n\n결국 지능과 성능이 고도화될수록 인간의 의식과 기계의 의식을 구분하는 기준 자체가 무의미해질 수 있으며, 우리는 이미 튜링 테스트를 넘어 의식의 특이점이라는 철학적·과학적 난제 앞에 서 있다는 메시지입니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMv9tFK_d9b7XPMKOQjbL9hnC-IBJGem_fKT0j5vo2qQjVTC-V4ReFrfAsmaisk0OWM9AHQXVw9S88uH9uL3LErTKcQ8xJgWVsH9Yo.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=PFfFaMXFGtgQ7kNvwHbT0XG&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTUzMzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a9bb6cff7aa75b27&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FRDRENDYzNTAzREI3QUI2MzdDMUU1NTkwMjFCMTI5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhBNDM0OUJFREU1MzZGRkUwOTc0NjI4RkUyNDRGRkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAy7fVlL_0PxUCKAJDMywXQEy2RaHKwIMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQN7b4ky3CmpihxVnEggI7hdyVHXMKnX_PbIxTPITw9VMw&oe=6ABD2B3C"
+          "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMv9tFK_d9b7XPMKOQjbL9hnC-IBJGem_fKT0j5vo2qQjVTC-V4ReFrfAsmaisk0OWM9AHQXVw9S88uH9uL3LErTKcQ8xJgWVsH9Yo.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=PFfFaMXFGtgQ7kNvwHY0jrc&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTUzMzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a9bb6cff7aa75b27&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FRDRENDYzNTAzREI3QUI2MzdDMUU1NTkwMjFCMTI5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzhBNDM0OUJFREU1MzZGRkUwOTc0NjI4RkUyNDRGRkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAy7fVlL_0PxUCKAJDMywXQEy2RaHKwIMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMfBpfX17TxzKvCYHkKYX6Hsfn24Mbz9FkCUBPhJ3Bfnw&oe=6ABD637C"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd1S_HNDWNl",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-09-28T13:30:47Z",
-        "like_count": 52,
+        "like_count": 54,
         "reply_count": 6,
         "repost_count": 5,
         "quote_count": 2,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433970802Z"
+        "fetched_at": "2026-09-29T08:18:56.567066491Z"
       }
     },
     {
@@ -426,7 +494,7 @@
       "text": "마이크로소프트 공동 창업자 빌 게이츠는 “AI는 10억 명의 사망자를 초래할 만한 사건을 일으킬 정도로 충분히 강력하다”며 기술 자체의 위력을 짚었습니다.\n\n인류 100%를 절멸시키는 수준은 아닐지라도, “악의를 품은 세력이 최신 AI 도구를 결합해 사용하는 것만큼 강력한 무기는 역사상 없었다”고 강조했습니다.\n\n업계 스스로 자율 규제를 논의하는 것은 긍정적이지만, 바이오 공격이나 사이버 공격 같은 파괴적 기술이 민간 주도로 급성장한 만큼 이제는 정부 차원의 강력한 규제와 모니터링이 필수적이라는 진단입니다.\n\n초거대 지능과 프론티어 모델의 폭발적 성능 향상이 군사·사이버 안보와 직결되면서, 안전 장치 없는 무분별한 속도전은 글로벌 경제와 인류 문명 전체를 위협할 수 있다는 냉정한 분석입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd1IppdgU2P",
       "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPNfxBnULT_5G_3_WrzP8I9jV0wJ6S7RG2n_4VJfgcGtqH44pm41pHop3tpi1qOJZCx6H-X3r_m6QPNfygSez3RBkcp4JelZLqTFIc.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=R9RgLLtKlAIQ7kNvwFpmihH&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg4ODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2fa0d34815caef43&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNjRBRDA4RTdFRTU5NUJGMTk0ODVEQUI1NDJFNjhBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVBNEFDOUE1RkQwRThFRkM3MEE0NDNCNkIwNkM4MUFBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkIOOr7_0PxUCKAJDMywXQEHEeuFHrhQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPatPD_Z5i2ookRcSqCdi1LE96ltK6ZV5O0lsFpefRbhA&oe=6ABD2ACA"
+        "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPNfxBnULT_5G_3_WrzP8I9jV0wJ6S7RG2n_4VJfgcGtqH44pm41pHop3tpi1qOJZCx6H-X3r_m6QPNfygSez3RBkcp4JelZLqTFIc.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=R9RgLLtKlAIQ7kNvwF11rf5&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg4ODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2fa0d34815caef43&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNjRBRDA4RTdFRTU5NUJGMTk0ODVEQUI1NDJFNjhBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVBNEFDOUE1RkQwRThFRkM3MEE0NDNCNkIwNkM4MUFBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkIOOr7_0PxUCKAJDMywXQEHEeuFHrhQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPZzIh6liSR9oBKcDxvUvzKS_Ge9yCMBw7XFpOMlfj-Mw&oe=6ABD630A"
       ],
       "engagement": {
         "likes": 23,
@@ -440,7 +508,7 @@
         "text": "마이크로소프트 공동 창업자 빌 게이츠는 “AI는 10억 명의 사망자를 초래할 만한 사건을 일으킬 정도로 충분히 강력하다”며 기술 자체의 위력을 짚었습니다.\n\n인류 100%를 절멸시키는 수준은 아닐지라도, “악의를 품은 세력이 최신 AI 도구를 결합해 사용하는 것만큼 강력한 무기는 역사상 없었다”고 강조했습니다.\n\n업계 스스로 자율 규제를 논의하는 것은 긍정적이지만, 바이오 공격이나 사이버 공격 같은 파괴적 기술이 민간 주도로 급성장한 만큼 이제는 정부 차원의 강력한 규제와 모니터링이 필수적이라는 진단입니다.\n\n초거대 지능과 프론티어 모델의 폭발적 성능 향상이 군사·사이버 안보와 직결되면서, 안전 장치 없는 무분별한 속도전은 글로벌 경제와 인류 문명 전체를 위협할 수 있다는 냉정한 분석입니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPNfxBnULT_5G_3_WrzP8I9jV0wJ6S7RG2n_4VJfgcGtqH44pm41pHop3tpi1qOJZCx6H-X3r_m6QPNfygSez3RBkcp4JelZLqTFIc.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=R9RgLLtKlAIQ7kNvwFpmihH&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg4ODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2fa0d34815caef43&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNjRBRDA4RTdFRTU5NUJGMTk0ODVEQUI1NDJFNjhBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVBNEFDOUE1RkQwRThFRkM3MEE0NDNCNkIwNkM4MUFBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkIOOr7_0PxUCKAJDMywXQEHEeuFHrhQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPatPD_Z5i2ookRcSqCdi1LE96ltK6ZV5O0lsFpefRbhA&oe=6ABD2ACA"
+          "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQPNfxBnULT_5G_3_WrzP8I9jV0wJ6S7RG2n_4VJfgcGtqH44pm41pHop3tpi1qOJZCx6H-X3r_m6QPNfygSez3RBkcp4JelZLqTFIc.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=R9RgLLtKlAIQ7kNvwF11rf5&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkwOTg4ODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2fa0d34815caef43&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNjRBRDA4RTdFRTU5NUJGMTk0ODVEQUI1NDJFNjhBMV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVBNEFDOUE1RkQwRThFRkM3MEE0NDNCNkIwNkM4MUFBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAkIOOr7_0PxUCKAJDMywXQEHEeuFHrhQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=IJKXoDdbhTMWPbpcN4erOw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQPZzIh6liSR9oBKcDxvUvzKS_Ge9yCMBw7XFpOMlfj-Mw&oe=6ABD630A"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dd1IppdgU2P",
         "username": "choi.openai",
@@ -451,84 +519,16 @@
         "repost_count": 3,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.433982014Z"
-      }
-    },
-    {
-      "post_id": "3996092894985391014",
-      "published_at": "2026-09-28T10:30:16Z",
-      "text": "AI 에이전트가 만든 PPT를 사람이 직접 마무리하기 쉬워졌습니다.\n\n오픈소스 프레젠테이션 도구 open-slide 2.0이 공개됐습니다. \n\nAI가 슬라이드를 만든 뒤 화면에서 요소를 드래그하거나 크기·위치·회전을 조절하고, 텍스트도 바로 수정할 수 있습니다.\n\n완성된 자료는 편집 가능한 PPTX로 내보낼 수 있으며 텍스트·도형·이미지가 PowerPoint 객체로 유지됩니다.\n\nAI에게 초안을 맡기고 마지막 디자인과 문구만 직접 다듬는 방식으로 활용하기 좋은 업데이트입니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd0-VDXEQum",
-      "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQNpJRLGi-T8Pl0TfAItnyRnlfSnvTPnEckLgOCRH4QnskO8xfZQIYicU3vtF39ZiRL6he_bmpZJB7abW41Pc7F2SBtwOWWtLBbPFKA.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=nsJhNCnbVvUQ7kNvwHOaWl6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5Njk3NTkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=98225f41dac8bd2a&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QzRCNjhGRTU2NTAyRjYxQjc1QUYxQzk5NDExOEI5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzY5NDBCMDgzNzgwQTU3Njk5MDUwRDhEQjU4Njg2QkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-u-F7bf0PxUCKAJDMywXQFOAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQO7ca8oKgNFU-gnKxFxIOEBZ2XZm2Hjb1LnFu3i1P9btA&oe=6ABD1E05"
-      ],
-      "engagement": {
-        "likes": 244,
-        "replies": 6,
-        "reposts": 71,
-        "quotes": 6
-      },
-      "raw": {
-        "id": "3996092894985391014",
-        "shortcode": "Dd0-VDXEQum",
-        "text": "AI 에이전트가 만든 PPT를 사람이 직접 마무리하기 쉬워졌습니다.\n\n오픈소스 프레젠테이션 도구 open-slide 2.0이 공개됐습니다. \n\nAI가 슬라이드를 만든 뒤 화면에서 요소를 드래그하거나 크기·위치·회전을 조절하고, 텍스트도 바로 수정할 수 있습니다.\n\n완성된 자료는 편집 가능한 PPTX로 내보낼 수 있으며 텍스트·도형·이미지가 PowerPoint 객체로 유지됩니다.\n\nAI에게 초안을 맡기고 마지막 디자인과 문구만 직접 다듬는 방식으로 활용하기 좋은 업데이트입니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQNpJRLGi-T8Pl0TfAItnyRnlfSnvTPnEckLgOCRH4QnskO8xfZQIYicU3vtF39ZiRL6he_bmpZJB7abW41Pc7F2SBtwOWWtLBbPFKA.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=nsJhNCnbVvUQ7kNvwHOaWl6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5Njk3NTkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=98225f41dac8bd2a&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QzRCNjhGRTU2NTAyRjYxQjc1QUYxQzk5NDExOEI5MF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzY5NDBCMDgzNzgwQTU3Njk5MDUwRDhEQjU4Njg2QkJGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA-u-F7bf0PxUCKAJDMywXQFOAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQO7ca8oKgNFU-gnKxFxIOEBZ2XZm2Hjb1LnFu3i1P9btA&oe=6ABD1E05"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/Dd0-VDXEQum",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-09-28T10:30:16Z",
-        "like_count": 244,
-        "reply_count": 6,
-        "repost_count": 71,
-        "quote_count": 6,
-        "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.434007842Z"
-      }
-    },
-    {
-      "post_id": "3996047755742834408",
-      "published_at": "2026-09-28T09:00:35Z",
-      "text": "차마스 팔리하피티야(Chamath Palihapitiya)는 전 세계가 “소수 기업에 약 10조 달러 규모의 막대한 부를 안겨주기 직전”에 놓여 있다고 경고했습니다.\n\nAI 산업의 폭발적 성장이 가져올 경제적 이득의 대부분이 소수 빅테크에 집중될 것이라는 지적입니다.\n\n특히 이들 프론티어 기업들의 성향과 자금 흐름을 짚으며 “이것은 기술적 번영의 문제가 아니라 매우 단순한 정치적 계산의 문제”라고 꼬집었습니다.\n\nAI가 창출한 엄청난 자본이 소비나 저축 대신 기부 펀드와 정치 자금(PAC)으로 유입되면서, 경제적 독점이 곧 정치적 권력 강화로 이어지는 구조적 편중을 낳는다는 분석입니다.\n\n현재의 경제 구조가 그대로 고착된다면 소수의 기업이 “경제적 이익의 사자 몫(대부분)을 독식”하게 될 것이라며 경계의 목소리를 높였습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd00EMKjG7o",
-      "media": [
-        "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQN2COoCtTZ1kuB-i9G_6wDelPGKTnzj_9ji6T3fsTd0QKJKy8XIM_aPRhoctL6esV0Z6jlpNujy3N6M5FS-9q9RNrhGkTboP_wFegM.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=UiFBnXVb450Q7kNvwE-JMmm&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM0ODMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6ODEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=76509f2d3497151d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EMjRCQUExQTJBNzI2MDEyNEVCOTU3NjM0OUUxNjA4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NDNDYxQ0QzOTRBMzMyMjVERTQ1RDU0RUU1RDhCNjhBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAhuzmnbn0PxUCKAJDMywXQFRg5WBBiTcYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMIe_dZRUD1icRQwweKBTkre2lLM9kfM5UwFq9IAWmYHg&oe=6ABD3AB9"
-      ],
-      "engagement": {
-        "likes": 32,
-        "replies": 2,
-        "reposts": 2,
-        "quotes": 0
-      },
-      "raw": {
-        "id": "3996047755742834408",
-        "shortcode": "Dd00EMKjG7o",
-        "text": "차마스 팔리하피티야(Chamath Palihapitiya)는 전 세계가 “소수 기업에 약 10조 달러 규모의 막대한 부를 안겨주기 직전”에 놓여 있다고 경고했습니다.\n\nAI 산업의 폭발적 성장이 가져올 경제적 이득의 대부분이 소수 빅테크에 집중될 것이라는 지적입니다.\n\n특히 이들 프론티어 기업들의 성향과 자금 흐름을 짚으며 “이것은 기술적 번영의 문제가 아니라 매우 단순한 정치적 계산의 문제”라고 꼬집었습니다.\n\nAI가 창출한 엄청난 자본이 소비나 저축 대신 기부 펀드와 정치 자금(PAC)으로 유입되면서, 경제적 독점이 곧 정치적 권력 강화로 이어지는 구조적 편중을 낳는다는 분석입니다.\n\n현재의 경제 구조가 그대로 고착된다면 소수의 기업이 “경제적 이익의 사자 몫(대부분)을 독식”하게 될 것이라며 경계의 목소리를 높였습니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-atl3-1.cdninstagram.com/o1/v/t16/f2/m84/AQN2COoCtTZ1kuB-i9G_6wDelPGKTnzj_9ji6T3fsTd0QKJKy8XIM_aPRhoctL6esV0Z6jlpNujy3N6M5FS-9q9RNrhGkTboP_wFegM.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_ohc=UiFBnXVb450Q7kNvwE-JMmm&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODg5OTM0ODMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6ODEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=76509f2d3497151d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9EMjRCQUExQTJBNzI2MDEyNEVCOTU3NjM0OUUxNjA4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NDNDYxQ0QzOTRBMzMyMjVERTQ1RDU0RUU1RDhCNjhBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAhuzmnbn0PxUCKAJDMywXQFRg5WBBiTcYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=tnbWTWRrVeZ4QlAJo39Mvw&_nc_ss=7a22e&_nc_zt=28&oh=00_AQMIe_dZRUD1icRQwweKBTkre2lLM9kfM5UwFq9IAWmYHg&oe=6ABD3AB9"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/Dd00EMKjG7o",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-09-28T09:00:35Z",
-        "like_count": 32,
-        "reply_count": 2,
-        "repost_count": 2,
-        "quote_count": 0,
-        "has_media": true,
-        "fetched_at": "2026-09-29T05:54:05.434020976Z"
+        "fetched_at": "2026-09-29T08:18:56.567077326Z"
       }
     }
   ],
   "watchdog": {
     "status": "ok",
-    "checked_at": "2026-09-29T05:54:02.000468Z",
+    "checked_at": "2026-09-29T08:18:52.982137Z",
     "backup_base_url": "https://choi-threads-backup-collector.onrender.com",
     "endpoint": "/archive",
-    "backup_collected_at": "2026-09-29T05:54:11.97411928Z",
+    "backup_collected_at": "2026-09-29T08:19:02.944434194Z",
     "backup_archive_count": 15,
     "backup_post_count": 15,
     "backup_only_current_count": 0,
