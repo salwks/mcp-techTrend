@@ -324,7 +324,7 @@ export class BattleCore {
 
   _physicalHit(a, t, power, element, ev, sk) {
     const opts = {};
-    if (a.boss) opts.critRate = 1 / 32;
+    if (!a.isParty) opts.critRate = a.boss ? 1 / 40 : 1 / 32; // 적의 통렬한 일격은 드물게
     const r = physicalDamage(a.atk, t.def, power, opts);
     if (r.miss) {
       ev.push({ t: 'miss', target: t, text: t.isParty ? `${josa(t.name, '은')} 재빨리 몸을 피했다!` : `미스! ${josa(t.name, '에게')} 데미지를 줄 수 없었다!` });

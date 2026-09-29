@@ -669,7 +669,7 @@ export class FieldScene extends Scene {
     const g = this.darkCanvas.getContext('2d');
     g.globalCompositeOperation = 'source-over';
     g.clearRect(0, 0, WIDTH, HEIGHT);
-    g.fillStyle = 'rgba(4,2,12,0.9)';
+    g.fillStyle = 'rgba(4,2,12,0.86)';
     g.fillRect(0, 0, WIDTH, HEIGHT);
     g.globalCompositeOperation = 'destination-out';
     const light = (x, y, r, a = 1) => {
@@ -680,7 +680,7 @@ export class FieldScene extends Scene {
       g.fillRect(x - r, y - r, r * 2, r * 2);
     };
     const flick = 1 + Math.sin(this.t * 7) * 0.02 + Math.sin(this.t * 13) * 0.015;
-    light(this.player.px - camX + 16, this.player.py - camY + 16, 130 * flick);
+    light(this.player.px - camX + 16, this.player.py - camY + 16, 150 * flick);
     for (const o of this.map.objects || []) {
       if (o.sprite === 'save_crystal' && isVisible(this.state, o)) light(o.x * TILE - camX + 16, o.y * TILE - camY + 12, 70, 0.9);
     }

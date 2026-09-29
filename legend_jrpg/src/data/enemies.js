@@ -12,7 +12,7 @@ export const ENEMIES = {
     weak: [], resist: [], sprite: 'slime',
   },
   wolf: {
-    name: '숲늑대', hp: 28, mp: 0, atk: 12, def: 4, mag: 0, spd: 11, exp: 8, gold: 4,
+    name: '숲늑대', hp: 28, mp: 0, atk: 11, def: 4, mag: 0, spd: 11, exp: 8, gold: 4,
     drops: [{ item: 'herb', rate: 0.1 }], skills: [{ id: 'attack', w: 3 }, { id: 'bite', w: 1 }],
     weak: ['fire'], resist: [], sprite: 'wolf',
   },
