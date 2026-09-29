@@ -130,7 +130,15 @@
     "3996183746260591461",
     "3996138290750246287",
     "3996092894985391014",
-    "3996047755742834408"
+    "3996047755742834408",
+    "3996938680513158779",
+    "3996983953084386686",
+    "3996893244901392659",
+    "3996712379458977065",
+    "3996973341655937675",
+    "3996987158011988493",
+    "3996802763715127241",
+    "3996802594323326221"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -146,8 +154,9 @@
     "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts.",
     "2026-09-28 16:04 KST manual recovery of the missed 14:01 KST delivery: emitted 2 pending posts whose published_at fell inside the 08:01-14:01 KST report window; 15:00 KST Mira-Scene remains pending for the next report.",
     "2026-09-28 16:04 KST manual recovery of missed 14:01 KST delivery: emitted 2 pending posts from the 08:01-14:01 KST window; 15:00 KST Mira-Scene remains pending for the next report.",
-    "2026-09-29 23:09 KST state repair: acknowledged only the 19 posts delivered in the 20:03 KST report; four newer posts (Fo, AMD/World Labs, Google AI Mode, Kling 4.0) remain pending."
+    "2026-09-29 23:09 KST state repair: acknowledged only the 19 posts delivered in the 20:03 KST report; four newer posts (Fo, AMD/World Labs, Google AI Mode, Kling 4.0) remain pending.",
+    "2026-09-30 07:00 KST repair: acknowledged the 8 posts delivered in the 02:05 KST report whose state write had failed."
   ],
-  "last_reported_at": "2026-09-29T11:03:49.000Z",
+  "last_reported_at": "2026-09-29T17:05:01.000Z",
   "retention_limit": 300
 }
