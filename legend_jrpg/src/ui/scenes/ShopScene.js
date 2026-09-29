@@ -165,9 +165,11 @@ export class ShopScene extends Scene {
     } else if (this.view === 'buy' || this.view === 'sell') {
       this.list.draw(ctx, waiting);
       this.drawInfo(ctx);
-      drawWindow(ctx, DESC.x, DESC.y, DESC.w, DESC.h);
-      const d = this.cur ? (item(this.cur)?.desc || '') : '';
-      wrapText(ctx, d, DESC.w - 40, 16).slice(0, 2).forEach((l, i) => drawText(ctx, l, DESC.x + 20, DESC.y + 10 + i * 22, { size: 16 }));
+      if (!this.flow.msg.active) {
+        drawWindow(ctx, DESC.x, DESC.y, DESC.w, DESC.h);
+        const d = this.cur ? (item(this.cur)?.desc || '') : '';
+        wrapText(ctx, d, DESC.w - 40, 16).slice(0, 2).forEach((l, i) => drawText(ctx, l, DESC.x + 20, DESC.y + 10 + i * 22, { size: 16 }));
+      }
       if (this.qty) this.drawQty(ctx);
     }
     this.flow.msg.draw(ctx);

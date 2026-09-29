@@ -233,10 +233,18 @@ export class MenuScene extends Scene {
 
   // ---- 장비 ----
   async equipMenu() {
-    this.view = 'party';
-    const mi = await this.selectMember('누구의 장비를 바꾸시겠습니까?', 0);
-    if (mi < 0) return;
-    this.eqMember = mi;
+    let cur = 0;
+    while (!this._dead) {
+      this.view = 'party';
+      const mi = await this.selectMember('누구의 장비를 바꾸시겠습니까?', cur);
+      if (mi < 0) return;
+      this.eqMember = mi;
+      await this.equipScreen();
+      cur = this.eqMember;
+    }
+  }
+
+  async equipScreen() {
     const slotList = new ChoiceList([], { x: PANEL.x, y: PANEL.y + 42, w: PANEL.w, rowH: 32, window: false });
     this.eqSlotList = slotList;
     const refresh = () => {
@@ -348,11 +356,13 @@ export class MenuScene extends Scene {
     else if (this.view === 'equip') this.drawEquip(ctx);
     else this.drawParty(ctx);
 
-    // 도움말
-    drawWindow(ctx, HELP.x, HELP.y, HELP.w, HELP.h);
-    const help = this.help == null ? COMMAND_HELP[this.cmd.index] : this.help;
-    const lines = wrapText(ctx, help || '', HELP.w - 40, 17).slice(0, 2);
-    lines.forEach((l, i) => drawText(ctx, l, HELP.x + 20, HELP.y + 16 + i * 24, { size: 17 }));
+    // 도움말 (메시지 표시 중에는 가린다)
+    if (!this.flow.msg.active) {
+      drawWindow(ctx, HELP.x, HELP.y, HELP.w, HELP.h);
+      const help = this.help == null ? COMMAND_HELP[this.cmd.index] : this.help;
+      const lines = wrapText(ctx, help || '', HELP.w - 40, 17).slice(0, 2);
+      lines.forEach((l, i) => drawText(ctx, l, HELP.x + 20, HELP.y + 16 + i * 24, { size: 17 }));
+    }
 
     this.flow.msg.draw(ctx);
   }

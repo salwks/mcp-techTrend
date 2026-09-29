@@ -8,7 +8,7 @@ export const TROOPS = {
   troop_mia_rescue: { enemies: ['wolf', 'wolf'] },
   boss_treant: { enemies: ['treant'], boss: true, bgm: 'boss' },
   boss_sea_serpent: { enemies: ['sea_serpent'], boss: true, bgm: 'boss' },
-  boss_lich: { enemies: ['skeleton_knight', 'lich', 'skeleton_knight'], boss: true, bgm: 'boss' },
+  boss_lich: { enemies: ['skeleton', 'lich', 'skeleton'], boss: true, bgm: 'boss' },
   boss_black_dragon: { enemies: ['black_dragon'], boss: true, bgm: 'boss' },
   boss_general_vorg: { enemies: ['vorg'], boss: true, bgm: 'boss' },
   boss_demon_king: { enemies: ['demon_king'], boss: true, bgm: 'final_boss', quickEnd: true },
