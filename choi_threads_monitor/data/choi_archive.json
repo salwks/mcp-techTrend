@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-29T23:05:49.933446Z",
+  "generated_at": "2026-09-29T23:09:40.115Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 6,
-  "pending_count": 6,
+  "archive_count": 0,
+  "pending_count": 0,
   "observed_total_count": 142,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
@@ -12,110 +12,7 @@
     "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
     "A post can still be missed if it disappears before either collector observes it."
   ],
-  "posts": [
-    {
-      "post_id": "3997177260645651229",
-      "published_at": "2026-09-29T22:25:07Z",
-      "text": "오픈AI가 ChatGPT 안에 팀과 AI가 함께 쓰는 문서 공간 Space를 공개했습니다.\n\n페이지는 연결된 앱에서 스스로 내용을 갱신하고, 댓글로 dot을 부르면 다음 작업까지 넘겨받습니다.\n\n같은 날 나온 dots가 일하는 곳이 바로 여기입니다 🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd404plDZMd",
-      "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQM9MdsmvO1xMNVwEeCczydwVLJvo8_XIGoPyT1_iE40YszAosPFOdA8BnBRg9cRIiOSiGF5hXT_88mghY9QFddv_aTXOUZho06j1Bc.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=2e_6T7vFWFkQ7kNvwFyWrY3&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4OTMyODQwMDExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo2MCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=4213923e94a88d4a&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC85RjhDNzY5RkM0Qzk0MUNFODdBQUM0RjIwNDhEM0Q2N192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgPPKkN3M9D8VAigCQzMsF0BOAAAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=JUs99ORLjlK9X2aZco3L9g&_nc_ss=7a20f&_nc_zt=28&oh=00_AQM22975ByWmhvneDRkfk0Z79pQyLEtMkQ0yHQUJIDYIQQ&oe=6ABE3878"
-      ],
-      "engagement": {
-        "likes": 21,
-        "replies": 12,
-        "reposts": 4,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-29T23:02:55.753180Z",
-      "last_seen_at": "2026-09-29T23:05:49.933446Z"
-    },
-    {
-      "post_id": "3997117413221530708",
-      "published_at": "2026-09-29T20:43:24Z",
-      "text": "🚨 와.. 오픈AI가 24시간 일하는 상시 에이전트 dots를 공개했습니다.\n\n목표와 권한만 정해주면 전용 클라우드 컴퓨터에서 혼자 일을 이어가고, 대화를 닫아도 멈추지 않습니다.\n\n오픈AI가 그리는 미래를 보면 세상이 정말 달라보일 것입니다.\n\n작년 Pulse부터 이어진 신호와 다음 사이클이 왜 컴퓨터인지 정리했습니다 🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd4nRwUmPxU",
-      "media": [
-        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPYwKAzg1laFlbonUEP_yUeyxHgROC6QIywkY01bITRKMvgIUgxf43akRISvtCzEdUQdkFXcuuBjsRdVCwdPAgbE9tp-fR_SmYw4c4.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=WYeZhTR6mkgQ7kNvwH7kbYe&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzMTUwNTYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQ3LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=66821081d4ba1550&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8wQjc4QTkyRDM4QjQ0RUIyODREOUJCREY2OUQ2QkI0OV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzVBQTc1RkMyMEU1ODRFNTc5NjRFNUVBMkI4RUNDQzAwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA0-Da-cv0PxUCKAJDMywXQGJ7ZFocrAgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=JUs99ORLjlK9X2aZco3L9g&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOG3GrLFJj5bW8_-8q-TwbirWEOrOdJfhnmpzX84cGjjQ&oe=6ABE1774"
-      ],
-      "engagement": {
-        "likes": 88,
-        "replies": 27,
-        "reposts": 12,
-        "quotes": 3
-      },
-      "first_seen_at": "2026-09-29T21:01:22.709446Z",
-      "last_seen_at": "2026-09-29T23:05:49.933446Z"
-    },
-    {
-      "post_id": "3997095164459750542",
-      "published_at": "2026-09-29T19:42:26Z",
-      "text": "🚨 오픈AI가 GPT-6 Sol을 출시한 지 일주일 만에 후속 모델 GPT-6.1 Sol을 공개했습니다.\n\nAstra에 근접한 성능을 최대 7분의 1 수준의 작업 비용으로 제공하며, 일부 코딩 평가에서는 Astra까지 넘어섰는데요.\n\n모델 경쟁의 기준이 성능에서 ‘작업당 비용’으로 바뀌고 있습니다.\n\nGPT-6.1 Sol의 달라진 점을 정리했습니다. 🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd4iN_jDhSO",
-      "media": [
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMbP_Z_oZ4hpirLtI7toqySweoykyqVPjRAe50NWxv2e5rph_sqBa7xW206wDHv-qcSOXEKFAMyuO-c_9iFU36GySWX4tRRhQnGafA.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=LdQTEHs-MCIQ7kNvwGuKblN&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzMTA0NDUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=e654847ee21eb469&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84NDMyQjhGRDQwNDE0OEI5ODY1RjNDREJEOUFCNTBCNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgLiurdfL9D8VAigCQzMsF0Agu2RaHKwIGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=JUs99ORLjlK9X2aZco3L9g&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNRXF-oCBLJ5u2XyJ8pt8ff6ec1piGBi0JEmuQuC7q9Ow&oe=6ABE1595"
-      ],
-      "engagement": {
-        "likes": 49,
-        "replies": 15,
-        "reposts": 5,
-        "quotes": 1
-      },
-      "first_seen_at": "2026-09-29T20:39:49.478652Z",
-      "last_seen_at": "2026-09-29T23:05:49.933446Z"
-    },
-    {
-      "post_id": "3997075234452636640",
-      "published_at": "2026-09-29T19:02:00Z",
-      "text": "Openclaw의 아버지",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd4dr-SD4Pg",
-      "media": [
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/830999721_17989305504112832_5492140547965749587_n.jpg?stp=cp6_dst-jpegr_e35_tt6&_nc_cat=110&ig_cache_key=Mzk5NzA3NTIzNDQ1MjYzNjY0MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNDA5Ni5oZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=nxCjjfBlVVwQ7kNvwEQXi4Y&_nc_oc=Adq5x2NKan3PnjXaODBrRMhE2YafP2MC2c652nyU95eOYevdpovnhCGz_1dnhqFKB_c&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&se=-1&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=JUs99ORLjlK9X2aZco3L9g&_nc_ss=7a20f&oh=00_AQOcOdv2Valuz5zqIVj47BTc7bemZTMzP8zO5TZBOdxkPw&oe=6AC1FB97"
-      ],
-      "engagement": {
-        "likes": 31,
-        "replies": 3,
-        "reposts": 0,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-29T20:39:49.478652Z",
-      "last_seen_at": "2026-09-29T23:05:49.933446Z"
-    },
-    {
-      "post_id": "3997029509845670735",
-      "published_at": "2026-09-29T17:31:09Z",
-      "text": "OpenAI DevDay 2026 실시간 정리 시작합니다.\n\n대화 사이에도 계속 일하는 ‘dots’, 함께 만드는 문서 공간 ‘Space’, GPT-6.1 Sol까지 공개되고 있습니다.\n\n발표 내용을 실시간으로 정리했습니다. 🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd4TSl7GttP",
-      "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/825320735_17989294239112832_8851108556615955649_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=Mzk5NzAyOTUwOTg0NTY3MDczNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNDA5Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=DP8MER3kUOsQ7kNvwGMWpr8&_nc_oc=AdoPz7NEk25Cv_uJtHZZvFd4BbGLTUKn2KXMyVGq0nAJfQ-2f_4HhzlBahPXJE2jfeQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=JUs99ORLjlK9X2aZco3L9g&_nc_ss=7a20f&oh=00_AQOy47lUfJHr985vyEe9rBXcKOH_a-Cu29omowmJOabAQw&oe=6AC20BD0"
-      ],
-      "engagement": {
-        "likes": 90,
-        "replies": 27,
-        "reposts": 11,
-        "quotes": 3
-      },
-      "first_seen_at": "2026-09-29T18:43:40.218898Z",
-      "last_seen_at": "2026-09-29T23:05:49.933446Z"
-    },
-    {
-      "post_id": "3997024361027140057",
-      "published_at": "2026-09-29T17:20:56Z",
-      "text": "🚨 속보: GPT 6.1 Sol 출시.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd4SHqtmvnZ",
-      "media": [
-        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/825325876_17989293381112832_6953573765437179844_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=Mzk5NzAyNDM2MTAyNzE0MDA1Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMjQ3Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=QeZjayWJtnUQ7kNvwGMwl-v&_nc_oc=AdodVJhLLnpD3oeYr9HwYDBR4W-6nns-mtNwpr1A3WrHpdANkKnxZxXI6PvT9CmaeoM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=JUs99ORLjlK9X2aZco3L9g&_nc_ss=7a20f&oh=00_AQN9_ckoATsmlEGDJ1qaufZWp6QCs8yl5PjapQ48vMVhvQ&oe=6AC1FEAC"
-      ],
-      "engagement": {
-        "likes": 242,
-        "replies": 12,
-        "reposts": 11,
-        "quotes": 1
-      },
-      "first_seen_at": "2026-09-29T18:43:40.218898Z",
-      "last_seen_at": "2026-09-29T23:05:49.933446Z"
-    }
-  ],
+  "posts": [],
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
