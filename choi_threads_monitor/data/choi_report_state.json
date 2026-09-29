@@ -112,10 +112,6 @@
     "3995866526099608939",
     "3996002453132605795",
     "3995956987573374114",
-    "3996893244901392659",
-    "3996712379458977065",
-    "3996802763715127241",
-    "3996802594323326221",
     "3996757253142273036",
     "3996678611646418674",
     "3996703062560066878",
@@ -150,7 +146,7 @@
     "2026-09-28 13:59 KST report emitted 2 current-window posts and 7 delayed-collection catch-up posts.",
     "2026-09-28 16:04 KST manual recovery of the missed 14:01 KST delivery: emitted 2 pending posts whose published_at fell inside the 08:01-14:01 KST report window; 15:00 KST Mira-Scene remains pending for the next report.",
     "2026-09-28 16:04 KST manual recovery of missed 14:01 KST delivery: emitted 2 pending posts from the 08:01-14:01 KST window; 15:00 KST Mira-Scene remains pending for the next report.",
-    "2026-09-29 23:09 KST state repair: acknowledged all 19 posts already delivered in the 20:03 KST report so pending queue can drain on the next collector run."
+    "2026-09-29 23:09 KST state repair: acknowledged only the 19 posts delivered in the 20:03 KST report; four newer posts (Fo, AMD/World Labs, Google AI Mode, Kling 4.0) remain pending."
   ],
   "last_reported_at": "2026-09-29T11:03:49.000Z",
   "retention_limit": 300
