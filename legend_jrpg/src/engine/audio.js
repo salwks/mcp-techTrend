@@ -297,7 +297,7 @@ const SFX = {
     noise(c, o, t + 0.03, { dur: 0.25, vol: 0.55, f: 4000, f2: 200 });
     tone(c, o, t + 0.03, { w: 'p25', f: 500, f2: 45, dur: 0.22, vol: 0.22 });
   },
-  miss: (c, o, t) => noise(c, o, t, { dur: 0.18, vol: 0.25, type: 'bandpass', f: 600, f2: 3500, q: 2 }),
+  miss: (c, o, t) => noise(c, o, t, { dur: 0.18, vol: 0.6, type: 'bandpass', f: 600, f2: 3500, q: 2 }),
   magic: (c, o, t) => seq(c, o, t, ['C6', 'E6', 'G6', 'B6', 'D7', 'G7'], 0.035, { w: 'p125', dur: 0.08, vol: 0.1 }),
   fire: (c, o, t) => {
     noise(c, o, t, { dur: 0.25, vol: 0.4, f: 400, f2: 3000 });
@@ -332,7 +332,7 @@ const SFX = {
     seq(c, o, t + 0.08, ['G5', 'B5', 'D6', 'G6'], 0.05, { w: 'p50', dur: 0.07, vol: 0.1 });
   },
   door: (c, o, t) => { noise(c, o, t, { dur: 0.2, vol: 0.35, f: 600, f2: 120 }); tone(c, o, t, { w: 'p50', f: 150, f2: 70, dur: 0.12, vol: 0.12 }); },
-  step: (c, o, t) => noise(c, o, t, { dur: 0.035, vol: 0.07, type: 'bandpass', f: 1200, q: 1 }),
+  step: (c, o, t) => noise(c, o, t, { dur: 0.035, vol: 0.12, type: 'bandpass', f: 1200, q: 1 }),
   item: (c, o, t) => seq(c, o, t, ['E6', 'B6'], 0.07, { w: 'p50', dur: 0.1, vol: 0.1 }),
   enemy_die: (c, o, t) => { noise(c, o, t, { dur: 0.4, vol: 0.3, f: 3000, f2: 100 }); tone(c, o, t, { w: 'p25', f: 700, f2: 40, dur: 0.35, vol: 0.14 }); },
   victory: (c, o, t) => {
