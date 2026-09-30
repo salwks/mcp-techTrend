@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { clamp, lerp, smoothstep, fbm, vnoise, rng } from './util.js';
 import { PATH, BRANCH, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
 
-export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 0.7 };
+export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 0.8 };
 
 // ---- 형상(길·터) ----
 function segShapes(pts, r0, r1) {
@@ -119,8 +119,13 @@ export function makeHeightAt(ground) {
   const hz0 = HOUSE.z - HOUSE.d / 2, hz1 = HOUSE.z + HOUSE.d / 2;
   const floor = HOUSE.pad + HOUSE.F;
   return function heightAt(x, z) {
-    if (Math.abs(x - BRIDGE.x) <= BRIDGE.hw + 0.25 && z >= BRIDGE.z0 && z <= BRIDGE.z1) {
-      return Math.max(bridgeDeck(z), ground(x, z));
+    const ax = Math.abs(x - BRIDGE.x);
+    if (ax <= BRIDGE.hw + 0.3 && z >= BRIDGE.z0 && z <= BRIDGE.z1) {
+      const g = ground(x, z);
+      // 끝단 0.9m와 가장자리 0.3m는 지면과 이어지도록 섞는다(계단 없이 오르내림)
+      const e = Math.min(z - BRIDGE.z0, BRIDGE.z1 - z);
+      const k = smoothstep(0, 0.9, e) * (1 - smoothstep(BRIDGE.hw, BRIDGE.hw + 0.3, ax));
+      return lerp(g, Math.max(bridgeDeck(z), g), k);
     }
     if (x >= hx0 && x <= hx1 && z >= hz0 && z <= hz1) return floor;
     if (x >= HOUSE.x - 1.1 && x <= HOUSE.x + 1.1 && z > hz1 && z < hz1 + 1.3) {
@@ -133,9 +138,9 @@ export function makeHeightAt(ground) {
 // ---- 지형 메시 ----
 const C = (h) => new THREE.Color(h);
 const COL = {
-  grass: C('#a7a56e'), grass2: C('#8f9a5e'), dry: C('#bfae78'),
+  grass: C('#9da66b'), grass2: C('#86985c'), dry: C('#b5ab76'),
   forest: C('#6e7a4e'), forest2: C('#56633f'),
-  lane: C('#c2a676'), path: C('#b69a68'),
+  lane: C('#c9ab78'), path: C('#b69a68'),
   rock: C('#8e8676'), cliff: C('#6a655b'),
   bank: C('#a89d84'), bed: C('#5d5f53'), paddy: C('#7c6a4b'),
   high: C('#8d937c'),
@@ -158,13 +163,18 @@ export function buildTerrainMesh(hg) {
     c.lerp(COL.dry, clamp(n2 * 0.4, 0, 0.35));
     t2.copy(COL.forest).lerp(COL.forest2, clamp(0.5 + n1 * 1.2, 0, 1));
     c.lerp(t2, clamp(mtn, 0, 1));
+    // 붓질 같은 얼룩
+    const br = fbm(x * 0.35 + z * 0.12, z * 0.5, 2);
+    c.lerp(COL.forest2, clamp(br - 0.15, 0, 0.3) * (0.4 + mtn));
+    c.lerp(COL.dry, clamp(-br - 0.2, 0, 0.25));
     // 높은 곳은 조금 차갑고 옅게(대기원근)
     c.lerp(COL.high, smoothstep(10, 30, h) * 0.5);
     // 길
     const pd = pathDist(x, z);
     c.lerp(COL.path, (1 - smoothstep(1.0, 2.2, pd + n2 * 0.4)) * 0.85);
-    c.lerp(COL.lane, laneMask(x, z) * 0.8 * (0.85 + n2 * 0.15));
+    c.lerp(COL.lane, laneMask(x + n2 * 0.5, z - n2 * 0.4) * 0.7 * (0.8 + n2 * 0.2));
     // 경사 → 흙·바위·절벽
+    c.lerp(COL.path, smoothstep(0.3, 0.6, slope) * 0.3);
     c.lerp(COL.rock, smoothstep(0.55, 1.0, slope) * 0.8);
     c.lerp(COL.cliff, smoothstep(1.1, 1.9, slope) * 0.9);
     // 개울 둑과 바닥
@@ -210,7 +220,7 @@ export function buildStream(tex) {
   const t = tex.clone();
   t.needsUpdate = true;
   t.repeat.set(1, 1);
-  const mat = new THREE.MeshStandardMaterial({ map: t, color: 0xc9d6cf, roughness: 0.25, metalness: 0.0, transparent: true, opacity: 0.88 });
+  const mat = new THREE.MeshStandardMaterial({ map: t, color: 0xb4cac8, roughness: 0.25, metalness: 0.0, transparent: true, opacity: 0.88 });
   const m = new THREE.Mesh(g, mat);
   m.receiveShadow = true;
   m.name = 'stream';
@@ -222,10 +232,10 @@ export function buildBackdrop() {
   const grp = new THREE.Group();
   grp.name = 'backdrop';
   const layers = [
-    { z: -100, base: 6, amp: 20, top: '#4d5a52', bot: '#b9bba7', seed: 1, f: 0.035 },
-    { z: -130, base: 14, amp: 28, top: '#667068', bot: '#cfcdb9', seed: 2, f: 0.028 },
-    { z: -175, base: 24, amp: 38, top: '#838a84', bot: '#dcd8c6', seed: 3, f: 0.02 },
-    { z: -230, base: 36, amp: 46, top: '#a2a59d', bot: '#e3dfcf', seed: 4, f: 0.015 },
+    { z: -96, base: 7, amp: 9, top: '#46534b', bot: '#a9ae9a', seed: 1, f: 0.045 },
+    { z: -125, base: 1, amp: 12, top: '#5f6b63', bot: '#c3c4b0', seed: 2, f: 0.035 },
+    { z: -165, base: -6, amp: 16, top: '#7c847e', bot: '#d5d2c0', seed: 3, f: 0.026 },
+    { z: -220, base: -14, amp: 24, top: '#9da19a', bot: '#e0dccc', seed: 4, f: 0.018 },
   ];
   for (const L of layers) {
     const pos = [], col = [], idx = [];
@@ -249,7 +259,7 @@ export function buildBackdrop() {
     g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
     g.setIndex(idx);
     g.computeVertexNormals();
-    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, fog: true }));
+    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, fog: true, side: THREE.DoubleSide }));
     m.name = 'ridge';
     grp.add(m);
   }
@@ -257,14 +267,14 @@ export function buildBackdrop() {
   const cc = document.createElement('canvas'); cc.width = 256; cc.height = 64;
   const x = cc.getContext('2d');
   const r = rng(99);
-  for (let i = 0; i < 26; i++) {
-    const gx = r() * 256, gy = 26 + (r() - 0.5) * 18, rad = 18 + r() * 30;
+  for (let i = 0; i < 14; i++) {
+    const gx = 30 + r() * 196, gy = 32 + (r() - 0.5) * 12, rad = 14 + r() * 18;
     const gr = x.createRadialGradient(gx, gy, 0, gx, gy, rad);
-    gr.addColorStop(0, 'rgba(246,242,230,0.55)'); gr.addColorStop(1, 'rgba(246,242,230,0)');
+    gr.addColorStop(0, 'rgba(246,242,230,0.3)'); gr.addColorStop(1, 'rgba(246,242,230,0)');
     x.fillStyle = gr; x.fillRect(0, 0, 256, 64);
   }
   const ct = new THREE.CanvasTexture(cc); ct.colorSpace = THREE.SRGBColorSpace;
-  for (const [z, y, w, hh] of [[-112, 12, 260, 22], [-150, 24, 300, 30], [-200, 36, 360, 36]]) {
+  for (const [z, y, w, hh] of [[-110, 4, 260, 12], [-145, -1, 300, 16], [-192, -6, 360, 20]]) {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, hh), new THREE.MeshBasicMaterial({ map: ct, transparent: true, depthWrite: false, fog: true }));
     m.position.set(10, y, z);
     m.name = 'mist-band';

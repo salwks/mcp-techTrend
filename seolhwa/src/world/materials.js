@@ -42,9 +42,9 @@ export function textures() {
     const x = r() * 256, y = r() * 128;
     tx.beginPath(); tx.moveTo(x, y); tx.lineTo(x + (r() - 0.5) * 3, y - 6 - r() * 8); tx.stroke();
   }
-  tx.fillStyle = 'rgba(92,72,45,0.85)';
-  for (let i = 0; i < 16; i++) tx.fillRect(i * 16, 0, 2, 128);
-  for (const y of [34, 70, 100]) tx.fillRect(0, y, 256, 2);
+  tx.fillStyle = 'rgba(110,88,56,0.45)';
+  for (let i = 0; i < 24; i++) tx.fillRect(Math.round(i * 256 / 24), 0, 1, 128);
+  for (const y of [40, 76, 104]) tx.fillRect(0, y, 256, 1);
   const thatch = tex(tc);
 
   // 기와: 세로 골 줄무늬

@@ -387,13 +387,13 @@ export function stoneWall(add, rnd, ax, az, bx, bz, h = 1.3) {
   const put = (g) => g.applyMatrix4(m);
   add('p', 'flat', put(paint(box(len, h, 0.55, 0, h / 2 - 0.05, 0), '#a39a86', '#857c6a', 0.05, rnd)), 0.03);
   const n = Math.max(2, Math.round(len / 0.5));
-  for (let row = 0; row < 3; row++) for (let i = 0; i < n; i++) {
+  for (let row = 0; row < 2; row++) for (let i = 0; i < n; i++) {
     const x = -len / 2 + (i + 0.5 + (row % 2) * 0.4) * (len / n) - 0.1;
     if (x > len / 2 - 0.15) continue;
-    for (const side of [-1, 1]) {
+    for (const side of [1]) {
       const r = 0.22 + rnd() * 0.08;
       const g = lump(r, 0, rnd, 0.35, 0.7);
-      xf(g, x, 0.25 + row * 0.38 + (rnd() - 0.5) * 0.06, side * 0.26, 0, rnd() * 3, 0, 1, 1, 0.55);
+      xf(g, x, 0.3 + row * 0.5 * (h / 1.3) + (rnd() - 0.5) * 0.06, side * 0.26, 0, rnd() * 3, 0, 1.15, 1.2, 0.55);
       add('p', 'flat', put(paint(g, '#bdb6a6', '#8f887a', 0.08, rnd)), 0.02);
     }
   }

@@ -115,6 +115,12 @@ const panel = new Panel(hud, {
   warp: teleport,
 });
 
+// 0(낮) ~ 1(밤): 18.5~19.5시에 켜지고 5~6.5시에 꺼진다
+function nightFactor(h) {
+  const s = (a, b, x) => Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return h >= 12 ? s(18.5, 19.5, h) : 1 - s(5, 6.5, h);
+}
+
 function currentInterior() {
   return (world.interiors || []).find((i) => inBox(i, player.pos.x, player.pos.z)) || null;
 }
@@ -178,6 +184,7 @@ function frame() {
   occlusion.update(dt, player.pos, player.char.height, interior);
   dialog.update(dt);
 
+  if (world.setNight) world.setNight(nightFactor(fx.getTime()));
   if (world.update) world.update(dt, time);
   for (const a of actors) a.char.update(dt, camera);
   focus.set(player.pos.x, player.pos.y, player.pos.z);
