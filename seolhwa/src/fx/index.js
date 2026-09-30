@@ -5,6 +5,7 @@ import { createSky } from './sky.js';
 import { createLighting, patchFogChunks } from './lighting.js';
 import { createNightLights } from './nightlights.js';
 import { createPost } from './post.js';
+import { createCombatFX } from './combat.js';
 
 const HOURS_PER_SEC = 1 / 20; // 실제 20초 = 게임 1시간
 
@@ -33,6 +34,7 @@ export function createFX({ renderer, scene, camera, world }) {
   scene.background = new THREE.Color();
   const lamps = createNightLights(scene, world && world.lights);
   const post = createPost(renderer, scene, camera);
+  const combat = createCombatFX({ scene, world });
 
   let hour = 12;
   let clock = 0;
@@ -89,6 +91,8 @@ export function createFX({ renderer, scene, camera, world }) {
       focusY += (y - focusY) * Math.min(1, dt * 6);
       post.setFocusY(focusY);
       lamps.update(dt, clock, focus, lampFactor(hour), opts.quality === 'low' ? 4 : 6);
+      combat.setNight(state.night);
+      combat.update(dt);
     },
     render() { post.render(lastDt); },
     resize,
@@ -102,6 +106,7 @@ export function createFX({ renderer, scene, camera, world }) {
       applyTime();
     },
     getOptions() { return { ...opts }; },
+    combat, // 전투 효과 (COMBAT §4.3): spawn(type, pos, opts) → { remove() }
     // 디버그/코어용 부가 정보
     get state() { return state; },
     get lightDirection() { return lightDir; },

@@ -1,6 +1,6 @@
 // 설화록 — 월드(조선 산골 마을 디오라마). 계약: docs/CONTRACTS.md §2
 import * as THREE from 'three';
-import { Batch, rng, xf, paint, box, cyl, limb, smoothstep, fbm } from './util.js';
+import { Batch, rng, xf, paint, box, cyl, limb, lump, smoothstep, fbm } from './util.js';
 import { makeMaterialFactory, inkMat, textures } from './materials.js';
 import {
   PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, CHOGA, GIWA, JEONGJA, ZELKOVA, WELL, JANGDOK, SEONANG, WATER_Y, streamZ,
@@ -460,6 +460,27 @@ export function buildWorld(scene) {
           put('p', 'flat', paint(g, '#d6c17e', '#b39d62'), 0);
         }
       }
+    }
+    // 밤 가독성: 버려진 포수의 초롱(남서) + 꺼져 가는 횃불(북동)
+    {
+      const x = A.x + Math.cos(2.5) * 10.3, z = A.z + Math.sin(2.5) * 10.3, y = ground(x, z);
+      const put = at(x, y, z, 0.3);
+      put('p', 'flat', paint(cyl(0.06, 0.08, 2.3, 6, 0, 1.1, 0, 0, 0, 0.08), '#6b5038', '#4d3826'), 0.012);
+      put('p', 'flat', paint(box(0.9, 0.07, 0.07, 0.4, 2.15, 0), '#6b5038'), 0.01);
+      put('p', 'flat', paint(cyl(0.008, 0.008, 0.3, 3, 0.75, 1.98, 0), '#2d2520'), 0);
+      put('p', 'lamp', paint(cyl(0.14, 0.12, 0.3, 8, 0.75, 1.7, 0), '#d8c49a', '#c9a86a'), 0.012);
+      put('p', 'flat', paint(cyl(0.1, 0.1, 0.04, 8, 0.75, 1.87, 0), '#2d2520'), 0.006);
+      put('p', 'glow', paint(xf(new THREE.ConeGeometry(0.04, 0.1, 6), 0.75, 1.68, 0), '#ffd27a', '#ff9a3a'), 0);
+      for (let i = 0; i < 4; i++) put('p', 'flat', paint(xf(lump(0.16, 0, ar, 0.3, 0.6), Math.cos(i * 1.6) * 0.25, 0.05, Math.sin(i * 1.6) * 0.25), '#a19b8f', '#77726a'), 0.01);
+      circle(x, z, 0.3);
+      const c = Math.cos(0.3), sn = Math.sin(0.3);
+      lights.push({ x: x + 0.75 * c, y: y + 1.72, z: z - 0.75 * sn, kind: 'lantern' });
+    }
+    {
+      const x = A.x + Math.cos(-0.8) * 10.2, z = A.z + Math.sin(-0.8) * 10.2, y = ground(x, z);
+      torchPost(at(x, y - 0.35, z, 0.5), ar);
+      circle(x, z, 0.3);
+      lights.push({ x, y: y + 1.8, z, kind: 'torch' });
     }
     const ent = ARENA_TRAIL[ARENA_TRAIL.length - 1];
     arena = {
