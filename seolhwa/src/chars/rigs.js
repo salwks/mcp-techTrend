@@ -233,13 +233,12 @@ function drawHead(p, view, S, sp) {
     }
   } else if (side) {
     // 옆얼굴
-    const face = p.poly([
+    p.poly([
       [cx + rx * 0.2, hy - ry], [cx - rx * 0.6, hy - ry * 0.85], [cx - rx * 0.98, hy - ry * 0.25],
       [cx - rx * 1.02, hy + ry * 0.08], [cx - rx * 1.2, hy + ry * 0.26], [cx - rx * 0.98, hy + ry * 0.42],
       [cx - rx * 0.86, hy + ry * 0.78], [cx - rx * 0.4, hy + ry * 0.98], [cx + rx * 0.3, hy + ry * 0.85],
       [cx + rx * 0.9, hy + ry * 0.3], [cx + rx, hy - ry * 0.3], [cx + rx * 0.7, hy - ry * 0.85],
     ], skin, { w: 2.3 });
-    void face;
     // 뒤·윗머리
     const col = hair === 'white' ? '#9a958c' : hc;
     let hp;
@@ -841,8 +840,7 @@ function tigerLeg(p, len, w0, w1, stripes = 3, paw = false, pawDir = -1, front =
   stripeClip(p, path, lines, 5);
   if (paw) {
     const px = front ? 0 : pawDir * 7;
-    const pp = p.ellipse(px, len + 3, front ? w1 * 0.8 : w1 * 0.95, front ? w1 * 0.45 : w1 * 0.42, TIGER.body, { w: 2.5 });
-    void pp;
+    p.ellipse(px, len + 3, front ? w1 * 0.8 : w1 * 0.95, front ? w1 * 0.45 : w1 * 0.42, TIGER.body, { w: 2.5 });
     const tw = front ? w1 * 0.35 : w1 * 0.3;
     for (let i = -1; i <= 1; i++) p.stroke([[px + i * tw + (front ? 0 : pawDir * 4), len + 5], [px + i * tw + (front ? 0 : pawDir * 7), len + 10]], { w: 1.4 });
   }
@@ -1025,12 +1023,11 @@ function tigerPose(view, anim, t, rig) {
   if (walk) {
     const A = anim === 'run' ? 0.55 : 0.32;
     if (side) {
-      set('front2', 0.05 + A * s); set('front2_l', -0.05 - 0.7 * max(0, c));
-      set('hind1', 0.28 + A * s); set('hind1_l', -0.5 + 0.5 * max(0, c));
-      set('front1', 0.05 - A * s); set('front1_l', -0.05 - 0.7 * max(0, -c));
-      set('hind2', 0.28 - A * s); set('hind2_l', -0.5 + 0.5 * max(0, -c));
-      for (const n of ['front1', 'front2', 'hind1', 'hind2']) P[n].r -= n.startsWith('front') ? 0.05 : 0.28;
-      for (const n of ['front1_l', 'front2_l', 'hind1_l', 'hind2_l']) P[n].r -= n.startsWith('front') ? -0.05 : -0.5;
+      // 대각선 보행: 가까운 앞다리 ↔ 먼 뒷다리가 같은 위상 (값은 기본 자세 r0에 더하는 변화량)
+      set('front2', A * s); set('front2_l', -0.7 * max(0, c));
+      set('hind1', A * s); set('hind1_l', 0.5 * max(0, c));
+      set('front1', -A * s); set('front1_l', -0.7 * max(0, -c));
+      set('hind2', -A * s); set('hind2_l', 0.5 * max(0, -c));
       set('root', 0.02 * s, 0, -(1 - abs(s)) * 4);
       set('head', 0.03 * sin(ph * 2), 0, 2 * sin(ph * 2));
     } else {

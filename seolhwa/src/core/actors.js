@@ -1,8 +1,8 @@
 // 플레이어와 NPC 이동·배회·대화 대상 찾기
 import { moveCircle, facingFrom } from './motion.js';
 
-const WALK = 3.0;
-const RUN = 6.0;
+const WALK = 2.2;
+const RUN = 4.6;
 
 export class Actor {
   constructor(char, world, x, z, opts = {}) {
