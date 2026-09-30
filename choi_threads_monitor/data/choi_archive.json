@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-30T05:02:49.002477Z",
+  "generated_at": "2026-09-30T05:06:46.981733Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 4,
-  "pending_count": 4,
+  "archive_count": 0,
+  "pending_count": 0,
   "observed_total_count": 146,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
@@ -12,76 +12,7 @@
     "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
     "A post can still be missed if it disappears before either collector observes it."
   ],
-  "posts": [
-    {
-      "post_id": "3997346460488110186",
-      "published_at": "2026-09-30T04:00:53Z",
-      "text": "Cursor에서 AI와 대화하면서 바로 차트와 다이어그램을 만들 수 있게 됐습니다.\n\nAgents Window에서 `/visualize`를 입력하면 커서가 데이터를 분석한 뒤 결과를 그래프나 다이어그램으로 만들어 채팅 안에 바로 보여줍니다.\n\n예를 들어 코드의 데이터 흐름을 다이어그램으로 정리하거나, 데이터셋을 분석해 그래프로 시각화하는 식으로 활용할 수 있습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd5bW1NjxBq",
-      "media": [
-        "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQOZeMGnVpLsRCpr6Y6LvPPI4ay_RtrcY_O_x5amRa-sUcy1E5EmhE6WdAlH_D2JusWMdmTZxdMQ2AaPqxoz2uoAks-qFAScyZll4D4.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=syERUappzSgQ7kNvwGfVj0c&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzMzg4NzkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2a41cb1ef984c512&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DRjY3RUY2RjA0Nzc0RENDODRCNzVBMDc4MzFFMUYwM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzkwNkQyNzcwMkVCQjQyOEU5NzI1REIzMDYxMEZDNkM0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA2pGaq830PxUCKAJDMywXQEBzMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=pCo3xOGj5UIZj7lgrxW9ug&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPAAr3mnLaXxUbB2O4cadLIjdnb_PBQTSQhz0A4RppsMA&oe=6ABE78C1"
-      ],
-      "engagement": {
-        "likes": 7,
-        "replies": 0,
-        "reposts": 0,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-30T05:02:49.002477Z",
-      "last_seen_at": "2026-09-30T05:02:49.002477Z"
-    },
-    {
-      "post_id": "3997300825344552309",
-      "published_at": "2026-09-30T02:30:13Z",
-      "text": "앤트로픽 CEO 다리오 아모데이는 백악관 브리핑에서 AI 패권 경쟁과 안전성의 양립을 역설했습니다.\n\n그는 “AI는 놀라운 이점을 지니고 있다”며 의학 혁신 등 인류에게 미칠 긍정적 잠재력을 높이 평가했습니다.\n\n특히 “AI 경쟁에서 이기는 자가 모든 것을 얻는다”는 트럼프 대통령의 견해에 동의하며 글로벌 기술 주도권 확보의 중요성을 인정했습니다.\n\n그러나 기술의 위력이 강력한 만큼 치명적인 리스크 역시 실재한다고 경고했습니다.\n\n아모데이는 “우리가 올바르게 대처하고 함께 협력한다면 안전하게 승리할 수 있다”며, 규제 메커니즘을 정립하고 안전장치를 동반한 개발이 필수적이라고 강조했습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd5Q-wLCa11",
-      "media": [
-        "https://scontent-ord5-1.cdninstagram.com/o1/v/t16/f2/m84/AQMbjHhJFNdueTMoU3q_pYNWX5DfJxcyROaORNYHef_QJSSBuX7IAYwc8IkWZdDsmepdwyF-WJDXGtIO_qrbB-p4B3aLwsIb9_t8a78.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_ohc=QtM9Mlax47QQ7kNvwGhE3CZ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzMzg1ODgxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=dec2512935db09ea&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84REM4MTIzREM5MDg0MUJFOTkyNkYxMjQzQkRCMDA4MV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzA5OEU3ODgwREYxMjQzOTBCRkNFQkZEQTlGOTBFQ0JCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAn8-Eqc30PxUCKAJDMywXQFFO6XjU_fQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=pCo3xOGj5UIZj7lgrxW9ug&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOPjHplbPRxCSKtd_U5NuMnSLzdYtx3eMx8RbhJXHAEmQ&oe=6ABE62F3"
-      ],
-      "engagement": {
-        "likes": 32,
-        "replies": 2,
-        "reposts": 1,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-30T05:02:49.002477Z",
-      "last_seen_at": "2026-09-30T05:02:49.002477Z"
-    },
-    {
-      "post_id": "3997256106414631780",
-      "published_at": "2026-09-30T01:01:22Z",
-      "text": "🚨 오픈AI가 DevDay에서 20개가 넘는 업데이트를 한꺼번에 공개했습니다.\n\n1년 전 DevDay에서 스타트업 수천 곳의 자리를 가져갔던 오픈AI가 올해는 24시간 일하는 에이전트 dots, GPT-6.1 Sol, 최대 8배 빠른 Ultrafast, 팀 문서 Space까지 20개가 넘는 업데이트를 하루에 풀었습니다.\n\n우리와 경쟁하지 말라는 오픈AI의 다음 1년의 방향을 정리했습니다. 🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd5G0AbGutk",
-      "media": [
-        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/831278745_17989335537112832_367795302257465502_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzk5NzI1NjEwNjQxNDYzMTc4MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=b2E1KmjCIMQQ7kNvwE_Y449&_nc_oc=AdrtciI8UdxjQTnmsfzlvcVs2cao-lzFqC6PrkLqNN7xhqJh3CbZmfF91OYk9PRhbso&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=pCo3xOGj5UIZj7lgrxW9ug&_nc_ss=7a20f&oh=00_AQMoEmfnGm-XPt8lOXo5KfbuBc58L9TE98kMpqSDfgP1dw&oe=6AC25E52"
-      ],
-      "engagement": {
-        "likes": 52,
-        "replies": 22,
-        "reposts": 8,
-        "quotes": 1
-      },
-      "first_seen_at": "2026-09-30T02:12:45.448190Z",
-      "last_seen_at": "2026-09-30T05:02:49.002477Z"
-    },
-    {
-      "post_id": "3997210345391227397",
-      "published_at": "2026-09-29T23:30:27Z",
-      "text": "🚨 오픈AI가 Jev가 나온 지 2주 만에 같은 방식의 Decisions API를 내놨습니다.\n\nGPT-6 Luna가 미리 정한 선택지 중 하나를 고르는데, 응답까지 0.15초로 일반 Luna 호출보다 약 10배 빠릅니다 🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd48aGJj4IF",
-      "media": [
-        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/829197395_17989330722112832_3494973888623466105_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NzIxMDM0NTM5MTIyNzM5Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE5OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=v4YLrdMx5hgQ7kNvwH9LVYD&_nc_oc=AdrWl9_BIOLzEeFragdsMxNxMI0Yjg6p12Z-1gQB64VewsB1xBUBfATCl6OdPz_Jv5E&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=pCo3xOGj5UIZj7lgrxW9ug&_nc_ss=7a20f&oh=00_AQMUgtTinIkP-5JCgKs1ktui1-j66sojILC060cgwVY5TA&oe=6AC2644B"
-      ],
-      "engagement": {
-        "likes": 114,
-        "replies": 7,
-        "reposts": 9,
-        "quotes": 3
-      },
-      "first_seen_at": "2026-09-30T00:18:04.092760Z",
-      "last_seen_at": "2026-09-30T05:02:49.002477Z"
-    }
-  ],
+  "posts": [],
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
