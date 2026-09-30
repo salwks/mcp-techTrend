@@ -1,6 +1,7 @@
 // 지형: 높이장(격자) + heightAt(렌더 면과 같은 삼각형 보간) + 지형 메시·개울·논물·원경 산
 import * as THREE from 'three';
 import { clamp, lerp, smoothstep, fbm, vnoise, rng } from './util.js';
+import { terrainMaterial } from './materials.js';
 import { PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
 
 export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 1.0 };
@@ -150,11 +151,12 @@ const COL = {
 export function buildTerrainMesh(hg) {
   const { x0, z0, s } = GRID;
   const { H, nx, nz } = hg;
-  const pos = new Float32Array(nx * nz * 3), col = new Float32Array(nx * nz * 3);
+  const pos = new Float32Array(nx * nz * 3), col = new Float32Array(nx * nz * 3), uv = new Float32Array(nx * nz * 2);
   const c = new THREE.Color(), t2 = new THREE.Color();
   for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
     const k = j * nx + i, x = x0 + i * s, z = z0 + j * s, h = H[k];
     pos[k * 3] = x; pos[k * 3 + 1] = h; pos[k * 3 + 2] = z;
+    uv[k * 2] = x / 7; uv[k * 2 + 1] = z / 7;
     const hl = H[j * nx + Math.max(0, i - 1)], hr = H[j * nx + Math.min(nx - 1, i + 1)];
     const hd = H[Math.max(0, j - 1) * nx + i], hu = H[Math.min(nz - 1, j + 1) * nx + i];
     const slope = Math.hypot(hr - hl, hu - hd) / (2 * s);
@@ -197,9 +199,10 @@ export function buildTerrainMesh(hg) {
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
   g.setIndex(idx);
   g.computeVertexNormals();
-  const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true }));
+  const m = new THREE.Mesh(g, terrainMaterial());
   m.receiveShadow = true;
   m.name = 'terrain';
   return m;
@@ -242,48 +245,61 @@ export function buildBackdrop() {
     { z: -165, base: -6, amp: 16, top: '#7c847e', bot: '#d5d2c0', seed: 3, f: 0.026 },
     { z: -220, base: -14, amp: 24, top: '#9da19a', bot: '#e0dccc', seed: 4, f: 0.018 },
   ];
+  const RP = [], RC = [], RI = [];
   for (const L of layers) {
-    const pos = [], col = [], idx = [];
-    const ct = new THREE.Color(L.top), cb = new THREE.Color(L.bot), c = new THREE.Color();
-    const n = 120, xa = -220, xb = 240;
+    const ct = new THREE.Color(L.top), cb = new THREE.Color(L.bot), cm = new THREE.Color(L.bot).lerp(ct, 0.35);
+    const n = 150, xa = -220, xb = 240, base = RP.length / 3;
     for (let i = 0; i <= n; i++) {
       const x = xa + (xb - xa) * i / n;
-      // 둥글고 뾰족한 산봉우리
+      // 둥글고 뾰족한 봉우리(진경산수)
       let r = fbm(x * L.f + L.seed * 13, L.seed * 3.1, 4);
       r = Math.pow(clamp(0.5 + r, 0, 1.2), 1.6);
       const peak = Math.pow(Math.abs(Math.sin(x * L.f * 1.7 + L.seed)), 6);
       const top = L.base + L.amp * (r + peak * 0.45);
       const zz = L.z + Math.sin(x * 0.05 + L.seed) * 6;
-      pos.push(x, top, zz, x, -12, zz + 8);
-      c.copy(ct); col.push(c.r, c.g, c.b);
-      c.copy(cb); col.push(c.r, c.g, c.b);
-      if (i < n) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 2, a + 1, a + 3); }
+      // 능선 바로 아래 짙은 먹 → 중턱 옅어짐 → 산발치 안개
+      RP.push(x, top, zz, x, top - L.amp * 0.35 - 3, zz + 2, x, -12, zz + 8);
+      const ink = 0.85 + 0.3 * vnoise(x * 0.3, L.seed);
+      RC.push(ct.r * ink, ct.g * ink, ct.b * ink, cm.r, cm.g, cm.b, cb.r, cb.g, cb.b);
+      if (i < n) {
+        const a0 = base + i * 3;
+        RI.push(a0, a0 + 1, a0 + 3, a0 + 3, a0 + 1, a0 + 4, a0 + 1, a0 + 2, a0 + 4, a0 + 4, a0 + 2, a0 + 5);
+      }
     }
+  }
+  {
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
-    g.setIndex(idx);
-    g.computeVertexNormals();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(RP, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(RC, 3));
+    g.setIndex(RI);
     const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, fog: true, side: THREE.DoubleSide }));
-    m.name = 'ridge';
+    m.name = 'ridges';
     grp.add(m);
   }
-  // 능선 사이 옅은 구름띠
+  // 능선 사이·골짜기 안개띠(한 메시)
   const cc = document.createElement('canvas'); cc.width = 256; cc.height = 64;
   const x = cc.getContext('2d');
   const r = rng(99);
-  for (let i = 0; i < 14; i++) {
-    const gx = 30 + r() * 196, gy = 32 + (r() - 0.5) * 12, rad = 14 + r() * 18;
+  for (let i = 0; i < 16; i++) {
+    const gx = 30 + r() * 196, gy = 32 + (r() - 0.5) * 12, rad = 14 + r() * 20;
     const gr = x.createRadialGradient(gx, gy, 0, gx, gy, rad);
-    gr.addColorStop(0, 'rgba(246,242,230,0.3)'); gr.addColorStop(1, 'rgba(246,242,230,0)');
+    gr.addColorStop(0, 'rgba(246,242,230,0.32)'); gr.addColorStop(1, 'rgba(246,242,230,0)');
     x.fillStyle = gr; x.fillRect(0, 0, 256, 64);
   }
   const ct = new THREE.CanvasTexture(cc); ct.colorSpace = THREE.SRGBColorSpace;
-  for (const [z, y, w, hh] of [[-110, 4, 260, 12], [-145, -1, 300, 16], [-192, -6, 360, 20]]) {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, hh), new THREE.MeshBasicMaterial({ map: ct, transparent: true, depthWrite: false, fog: true }));
-    m.position.set(10, y, z);
-    m.name = 'mist-band';
-    grp.add(m);
+  const MP = [], MU = [], MI = [];
+  for (const [cx, y, z, w, hh] of [[10, 4, -110, 260, 12], [10, -1, -145, 300, 16], [10, -6, -192, 360, 20], [8, 8, -88, 50, 7], [-46, 10, -45, 30, 6], [50, 9, -30, 30, 6], [-50, 6, 5, 30, 5]]) {
+    const b0 = MP.length / 3;
+    MP.push(cx - w / 2, y - hh / 2, z, cx + w / 2, y - hh / 2, z, cx - w / 2, y + hh / 2, z, cx + w / 2, y + hh / 2, z);
+    MU.push(0, 0, 1, 0, 0, 1, 1, 1);
+    MI.push(b0, b0 + 1, b0 + 2, b0 + 2, b0 + 1, b0 + 3);
   }
+  const mg = new THREE.BufferGeometry();
+  mg.setAttribute('position', new THREE.Float32BufferAttribute(MP, 3));
+  mg.setAttribute('uv', new THREE.Float32BufferAttribute(MU, 2));
+  mg.setIndex(MI);
+  const mm = new THREE.Mesh(mg, new THREE.MeshBasicMaterial({ map: ct, transparent: true, depthWrite: false, fog: true }));
+  mm.name = 'mist-bands';
+  grp.add(mm);
   return grp;
 }

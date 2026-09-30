@@ -143,33 +143,105 @@ export function inflate(g, t) {
   return out;
 }
 
-// 재질 키별로 모아 한 번에 병합하는 묶음. outline>0이면 먹선 껍질도 모은다.
+// ---- 텍스처 아틀라스 영역(px, 1024x512). materials.js가 같은 표로 그린다 ----
+export const ATLAS_W = 1024, ATLAS_H = 512;
+export const REG = {
+  lattice: [0, 0, 128, 128], thatch: [128, 0, 384, 128], tile: [384, 0, 512, 128], makse: [512, 0, 640, 128],
+  rock: [640, 0, 896, 128], mud: [896, 0, 1024, 128],
+  needle: [0, 128, 256, 256], leaf: [256, 128, 512, 256], bark: [512, 128, 640, 256],
+  face0: [640, 128, 704, 384], face1: [704, 128, 768, 384], white: [768, 128, 896, 256], lamp: [896, 128, 1024, 256],
+  wood: [0, 256, 256, 384], stone: [256, 256, 512, 384], cloth: [512, 256, 640, 384],
+};
+// 재질 키 → 아틀라스 영역
+const KEY_REG = {
+  flat: 'white', smooth: 'white', organic: 'white', onggi: 'white', cloth: 'white',
+  paper: 'lattice', thatch: 'thatch', tile: 'tile', makse: 'makse', rock: 'rock', mud: 'mud',
+  needle: 'needle', leaf: 'leaf', bark: 'bark', face0: 'face0', face1: 'face1', lamp: 'lamp', glow: 'lamp',
+  wood: 'wood', stone: 'stone',
+};
+// 각진(면 법선) 음영을 쓸 인공물 키. 나머지는 부드러운 법선(붓 번짐 느낌)
+const FACETED = new Set(['flat', 'wood', 'mud', 'paper', 'tile', 'makse', 'stone']);
+const INK_LIN = new THREE.Color(0x2b2622);
+export const OUTLINE_SCALE = 0.7;
+
+export function remapUV(g, key) {
+  const r = REG[KEY_REG[key] || 'white'];
+  const inset = 3;
+  const u0 = (r[0] + inset) / ATLAS_W, u1 = (r[2] - inset) / ATLAS_W;
+  const v0 = 1 - (r[3] - inset) / ATLAS_H, v1 = 1 - (r[1] + inset) / ATLAS_H;
+  const uv = g.attributes.uv, solid = r === REG.white || r === REG.lamp;
+  for (let i = 0; i < uv.count; i++) {
+    const u = solid ? 0.5 : clamp(uv.getX(i), 0, 1), v = solid ? 0.5 : clamp(uv.getY(i), 0, 1);
+    uv.setXY(i, u0 + (u1 - u0) * u, v0 + (v1 - v0) * v);
+  }
+  uv.needsUpdate = true;
+}
+
+// 같은 위치 꼭짓점의 면 법선을 평균해 부드러운 법선을 만든다(비인덱스 지오메트리)
+export function smoothNormals(g) {
+  const pos = g.attributes.position, n = pos.count;
+  const acc = new Map(), keys = new Array(n);
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), fn = new THREE.Vector3();
+  for (let i = 0; i + 2 < n; i += 3) {
+    a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
+    fn.subVectors(c, b).cross(a.sub(b));
+    for (let k = 0; k < 3; k++) {
+      const key = `${Math.round(pos.getX(i + k) * 500)},${Math.round(pos.getY(i + k) * 500)},${Math.round(pos.getZ(i + k) * 500)}`;
+      keys[i + k] = key;
+      let v = acc.get(key);
+      if (!v) { v = new THREE.Vector3(); acc.set(key, v); }
+      v.add(fn);
+    }
+  }
+  const N = g.attributes.normal;
+  for (let i = 0; i < n; i++) { const v = acc.get(keys[i]); const l = v.length() || 1; N.setXYZ(i, v.x / l, v.y / l, v.z / l); }
+  N.needsUpdate = true;
+  return g;
+}
+
+// 먹선 껍질을 본 지오메트리와 같은 재질로 합칠 수 있게: 감김을 뒤집어(앞면 컬링으로 뒷면만 보임) 먹색 칠
+export function hull(g, t) {
+  const h = inflate(g, t);
+  const P = h.attributes.position.array, n = P.length / 3;
+  for (let i = 0; i + 2 < n; i++) {
+    if (i % 3) continue;
+    for (let k = 0; k < 3; k++) { const tmp = P[(i + 1) * 3 + k]; P[(i + 1) * 3 + k] = P[(i + 2) * 3 + k]; P[(i + 2) * 3 + k] = tmp; }
+  }
+  const out = prep(h);
+  out.computeVertexNormals();
+  const C = out.attributes.color;
+  for (let i = 0; i < n; i++) C.setXYZ(i, INK_LIN.r, INK_LIN.g, INK_LIN.b);
+  remapUV(out, 'white');
+  return out;
+}
+
+// 재질 키별 조각을 아틀라스 재질 하나로 합치는 묶음(먹선 포함 1 드로콜). 'cloth'만 양면 재질로 따로.
 export class Batch {
-  constructor() { this.parts = new Map(); this.lines = []; }
+  constructor() { this.parts = new Map(); this.tris = 0; }
   add(key, geo, outline = 0.03) {
     const g = prep(geo);
-    if (!this.parts.has(key)) this.parts.set(key, []);
-    this.parts.get(key).push(g);
-    if (outline > 0) this.lines.push(inflate(g, outline));
+    if (FACETED.has(key)) g.computeVertexNormals(); else smoothNormals(g);
+    remapUV(g, key);
+    const mk = key === 'cloth' ? 'cloth' : 'atlas';
+    if (!this.parts.has(mk)) this.parts.set(mk, []);
+    this.parts.get(mk).push(g);
+    if (outline > 0) {
+      if (!this.parts.has('atlas')) this.parts.set('atlas', []);
+      this.parts.get('atlas').push(hull(g, outline * OUTLINE_SCALE));
+    }
     return g;
   }
   get empty() { return this.parts.size === 0; }
-  // makeMat(key) → Material (새 인스턴스), ink → 먹선 재질
-  build(makeMat, ink, { cast = true, receive = true, name = '' } = {}) {
+  build(makeMat, _ink, { cast = true, receive = true, name = '' } = {}) {
     const grp = new THREE.Group();
     grp.name = name;
     for (const [key, list] of this.parts) {
+      if (!list.length) continue;
       const m = new THREE.Mesh(merge(list), makeMat(key));
-      m.castShadow = cast && key !== 'water' && key !== 'glow';
+      m.castShadow = cast;
       m.receiveShadow = receive;
       m.name = `${name}:${key}`;
       grp.add(m);
-    }
-    if (this.lines.length && ink) {
-      const o = new THREE.Mesh(mergePos(this.lines), ink);
-      o.name = `${name}:ink`;
-      o.castShadow = false; o.receiveShadow = false;
-      grp.add(o);
     }
     return grp;
   }

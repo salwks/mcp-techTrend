@@ -1,7 +1,7 @@
 // 설화록 — 월드(조선 산골 마을 디오라마). 계약: docs/CONTRACTS.md §2
 import * as THREE from 'three';
 import { Batch, rng, xf, paint, box, cyl, limb, lump, smoothstep, fbm } from './util.js';
-import { makeMaterialFactory, inkMat, textures } from './materials.js';
+import { makeMaterialFactory, textures } from './materials.js';
 import {
   PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, CHOGA, GIWA, JEONGJA, ZELKOVA, WELL, JANGDOK, SEONANG, WATER_Y, streamZ,
 } from './layout.js';
@@ -9,7 +9,7 @@ import { GRID, buildHeights, makeHeightAt, buildTerrainMesh, buildStream, buildB
 import {
   choga, chogaInterior, giwa, jeongja, bigTree, well, jangdok, haystack, jangseung, torchPost, stoneWall, fence, stoneBridge, cairn, curvedRoof,
 } from './buildings.js';
-import { pine, fir, bush, rock, reeds, riceTuft } from './vegetation.js';
+import { pine, fir, bush, rock, reeds, riceTuft, flowers } from './vegetation.js';
 
 export function buildWorld(scene) {
   const root = new THREE.Group();
@@ -33,18 +33,25 @@ export function buildWorld(scene) {
   root.add(stream.mesh);
   root.add(buildBackdrop());
 
-  // 정적 묶음(한 번에 병합)
-  const stat = new Batch();
-  const sharedInk = inkMat();
-  const at = (x, y, z, ry = 0) => {
-    const m = new THREE.Matrix4().makeRotationY(ry).setPosition(x, y, z);
-    return (part, key, geo, outline = 0.03) => stat.add(key, geo.applyMatrix4(m), outline);
+  // 정적 묶음: 24m 칸마다 그림자 드리우는 것(cast)과 안 드리우는 잔것(small)을 따로 병합 → 칸당 1 드로콜
+  const CELL = 24;
+  const chunks = new Map();
+  const chunkOf = (x, z, small) => {
+    const key = `${Math.floor((x + 64) / CELL)}:${Math.floor((z + 96) / CELL)}:${small ? 's' : 'c'}`;
+    if (!chunks.has(key)) chunks.set(key, { b: new Batch(), small });
+    return chunks.get(key).b;
   };
-  // 가림 물체: 자기 재질을 가진 그룹
-  function occGroup(name, x, y, z, fn, { occ = true, ry = 0 } = {}) {
+  // at(x,y,z,ry,{small}) → 그 자리에 조각을 놓는 add 함수. abs:true면 지오메트리가 이미 월드 좌표(칸은 x,z로 고름)
+  const at = (x, y, z, ry = 0, { small = false, abs = false, cx = x, cz = z } = {}) => {
+    const m = abs ? null : new THREE.Matrix4().makeRotationY(ry).setPosition(x, y, z);
+    const b = chunkOf(cx, cz, small);
+    return (part, key, geo, outline = 0.03) => b.add(key, m ? geo.applyMatrix4(m) : geo, outline);
+  };
+  // 가림 물체: 자기 재질을 가진 그룹(코어가 반투명 처리). fn은 add 콜백을 받는다
+  function occGroup(name, x, y, z, fn, { occ = true, ry = 0, cast = true } = {}) {
     const b = new Batch();
     fn((part, key, geo, outline = 0.03) => b.add(key, geo, outline));
-    const g = b.build(make, inkMat(), { name });
+    const g = b.build(make, null, { name, cast });
     g.position.set(x, y, z);
     g.rotation.y = ry;
     root.add(g);
@@ -56,7 +63,7 @@ export function buildWorld(scene) {
   for (const c of CHOGA) {
     const y = ground(c.x, c.z);
     const rnd = rng(c.seed);
-    occGroup('초가', c.x, y, c.z, (add) => choga(add, { w: c.w, d: c.d, rnd, hump: (rnd() - 0.5) * 0.3 }));
+    occGroup('초가', c.x, y, c.z, (add) => choga(add, { w: c.w, d: c.d, rnd, hump: (rnd() - 0.5) * 0.3, gourd: c.seed === 12 || c.seed === 14 }));
     boxC(c.x - c.w / 2 - 0.45, c.x + c.w / 2 + 0.45, c.z - c.d / 2 - 0.45, c.z + c.d / 2 + 0.75);
     circle(c.x + c.w / 2 + 0.55, c.z - c.d / 2 + 0.4, 0.4);
     lights.push({ x: c.x, y: y + 1.25, z: c.z + c.d / 2 + 0.2, kind: 'window' });
@@ -71,27 +78,29 @@ export function buildWorld(scene) {
     lights.push({ x: GIWA.x + 1.8, y: y + 2.0, z: GIWA.z + GIWA.d / 2 + 0.2, kind: 'window' });
     const wz = -1.2;
     const walls = [[3.4, wz, 7.9, wz], [10.1, wz, 14.6, wz], [3.4, -10.2, 3.4, wz], [14.6, -10.2, 14.6, wz]];
-    for (const [ax, az, bx, bz] of walls) {
-      occGroup('돌담', 0, 0, 0, (add) => stoneWall(add, rng(Math.round(ax * 10 + az)), ax, az, bx, bz));
-      boxC(Math.min(ax, bx) - 0.3, Math.max(ax, bx) + 0.3, Math.min(az, bz) - 0.3, Math.max(az, bz) + 0.3);
-    }
-    // 대문: 기둥 둘 + 작은 기와지붕 + 초롱
-    occGroup('대문', GIWA.x, 0, wz, (add) => {
-      for (const s of [-1, 1]) add('p', 'flat', paint(box(0.22, 2.3, 0.22, s * 1.0, 1.15, 0), '#6b5038', '#4d3826'), 0.02);
-      add('p', 'flat', paint(box(2.3, 0.18, 0.26, 0, 2.3, 0), '#6b5038', '#4d3826'), 0.02);
-      const r = curvedRoof({ hw: 1.75, hd: 0.95, eaveY: 2.5, rise: 0.75, lift: 0.28, k: 2.6, thick: 0.16, nx: 16, nz: 8 });
-      add('p', 'tile', r, 0.035);
-      add('p', 'flat', paint(box(r.userData.ridgeHalf * 2 + 0.3, 0.16, 0.22, 0, r.userData.ridgeY + 0.05, 0), '#3d3f42'), 0.02);
-      for (const s of [-1, 1]) add('p', 'flat', paint(box(0.9, 1.9, 0.06, s * 0.5, 1.05, -0.35), '#5a4432', '#3f2f22'), 0.01);
-      add('p', 'lamp', paint(cyl(0.15, 0.15, 0.3, 8, 1.3, 1.8, 0.25), '#c0443a'), 0.01);
+    occGroup('기와집 담·대문', 0, 0, 0, (add) => {
+      for (const [ax, az, bx, bz] of walls) stoneWall(add, rng(Math.round(ax * 10 + az)), ax, az, bx, bz);
+      // 대문: 기둥 둘 + 작은 기와지붕 + 초롱
+      const gm = new THREE.Matrix4().makeTranslation(GIWA.x, 0, wz);
+      const ga = (part, key, geo, o) => add(part, key, geo.applyMatrix4(gm), o);
+      for (const s of [-1, 1]) ga('p', 'wood', paint(box(0.22, 2.3, 0.22, s * 1.0, 1.15, 0), '#6b5038', '#4d3826'), 0.02);
+      ga('p', 'wood', paint(box(2.3, 0.18, 0.26, 0, 2.3, 0), '#6b5038', '#4d3826'), 0.02);
+      const r = curvedRoof({ hw: 1.75, hd: 0.95, eaveY: 2.5, rise: 0.75, lift: 0.28, k: 2.6, thick: 0.16, nx: 8, nz: 4 });
+      ga('p', 'tile', r, 0.035);
+      ga('p', 'makse', r.userData.edge, 0);
+      ga('p', 'flat', paint(box(r.userData.ridgeHalf * 2 + 0.3, 0.16, 0.22, 0, r.userData.ridgeY + 0.05, 0), '#3d3f42'), 0.02);
+      for (const s of [-1, 1]) ga('p', 'wood', paint(box(0.9, 1.9, 0.06, s * 0.5, 1.05, -0.35), '#5a4432', '#3f2f22'), 0.01);
+      ga('p', 'lamp', paint(cyl(0.15, 0.15, 0.3, 8, 1.3, 1.8, 0.25), '#c0443a'), 0.01);
     });
+    for (const [ax, az, bx, bz] of walls) boxC(Math.min(ax, bx) - 0.3, Math.max(ax, bx) + 0.3, Math.min(az, bz) - 0.3, Math.max(az, bz) + 0.3);
     lights.push({ x: GIWA.x + 1.3, y: 1.8, z: wz + 0.25, kind: 'lantern' });
   }
 
   // 마을 북쪽 돌담(개울 쪽)
-  for (const [ax, az, bx, bz] of [[-26, -10.6, -14, -10.6], [-12.5, -10.6, -3.5, -10.6], [17, -10.2, 27, -10.2]]) {
-    occGroup('돌담', 0, 0, 0, (add) => stoneWall(add, rng(Math.round(ax * 7)), ax, az, bx, bz, 1.15));
-    boxC(Math.min(ax, bx) - 0.3, Math.max(ax, bx) + 0.3, az - 0.35, az + 0.35);
+  {
+    const nw = [[-26, -10.6, -14, -10.6], [-12.5, -10.6, -3.5, -10.6], [17, -10.2, 27, -10.2]];
+    occGroup('북쪽 돌담', 0, 0, 0, (add) => { for (const [ax, az, bx, bz] of nw) stoneWall(add, rng(Math.round(ax * 7)), ax, az, bx, bz, 1.15); });
+    for (const [ax, az, bx, bz] of nw) boxC(Math.min(ax, bx) - 0.3, Math.max(ax, bx) + 0.3, az - 0.35, az + 0.35);
   }
 
   // ---- 정자 + 느티나무 ----
@@ -118,7 +127,7 @@ export function buildWorld(scene) {
 
   // ---- 싸리 울타리 ----
   for (const [ax, az, bx, bz] of [[-21.5, 13.6, -18, 13.6], [-16, 13.6, -12.5, 13.6], [11.5, 13.6, 14, 13.6], [16, 13.6, 18.7, 13.6], [18.7, 13.6, 18.7, 6.5], [-21.5, 13.6, -21.5, 7]]) {
-    fence(at(0, 0, 0), rng(Math.round(ax * 13 + az)), ax, az, bx, bz);
+    fence(at(ax, 0, az, 0, { abs: true }), rng(Math.round(ax * 13 + az)), ax, az, bx, bz);
     boxC(Math.min(ax, bx) - 0.12, Math.max(ax, bx) + 0.12, Math.min(az, bz) - 0.12, Math.max(az, bz) + 0.12);
   }
 
@@ -153,8 +162,8 @@ export function buildWorld(scene) {
     const pos = [], idx = [];
     let n = 0;
     const rnd = rng(91);
-    const ra = at(0, 0, 0);
     for (const p of PADDIES) {
+      const ra = at((p.minX + p.maxX) / 2, 0, (p.minZ + p.maxZ) / 2, 0, { abs: true, small: true });
       const y = p.h + 0.07, m = 0.3;
       pos.push(p.minX + m, y, p.minZ + m, p.maxX - m, y, p.minZ + m, p.minX + m, y, p.maxZ - m, p.maxX - m, y, p.maxZ - m);
       idx.push(n, n + 2, n + 1, n + 1, n + 2, n + 3);
@@ -179,24 +188,23 @@ export function buildWorld(scene) {
   }
 
   // ---- 돌다리 ----
-  stoneBridge(at(BRIDGE.x, 0, 0), rng(101), BRIDGE.z0, BRIDGE.z1, BRIDGE.hw, bridgeDeck);
+  stoneBridge(at(BRIDGE.x, 0, 0, 0, { cz: -16 }), rng(101), BRIDGE.z0, BRIDGE.z1, BRIDGE.hw, bridgeDeck);
   for (const s of [-1, 1]) boxC(BRIDGE.x + s * BRIDGE.hw - 0.15, BRIDGE.x + s * BRIDGE.hw + 0.15, BRIDGE.z0 + 0.15, BRIDGE.z1 - 0.15);
 
   // ---- 외딴 초가(들어갈 수 있는 집) ----
   let interior;
   {
     const hx = HOUSE.x, hz = HOUSE.z, y = HOUSE.pad, rnd = rng(111);
-    const parts = { base: new Batch(), body: new Batch(), front: new Batch(), roof: new Batch(), interior: new Batch() };
+    const parts = { base: new Batch(), body: new Batch(), front: new Batch(), roof: new Batch() };
+    parts.interior = parts.base; // 기단과 실내는 한 덩이(가려지지 않음)
     const add = (part, key, geo, outline = 0.03) => parts[part].add(key, geo, outline);
     const info = choga(add, { w: HOUSE.w, d: HOUSE.d, rnd, open: true, hump: 0.1 });
     const inn = chogaInterior(add, HOUSE.w, HOUSE.d, info.F, rnd);
-    const mk = (b, name) => { const g = b.build(make, inkMat(), { name }); g.position.set(hx, y, hz); root.add(g); return g; };
-    const gRest = mk(parts.base, '외딴집-기단');
+    const mk = (b, name, cast = true) => { const g = b.build(make, null, { name, cast }); g.position.set(hx, y, hz); root.add(g); return g; };
+    mk(parts.base, '외딴집-기단·실내', false);
     const gBody = mk(parts.body, '외딴집-벽');
     const gFront = mk(parts.front, '외딴집-앞벽');
     const gRoof = mk(parts.roof, '외딴집-지붕');
-    const gIn = mk(parts.interior, '외딴집-실내');
-    void gRest; void gIn;
     occluders.push(gRoof, gFront, gBody);
     const W = HOUSE.w, D = HOUSE.d, t = 0.12;
     const x0 = hx - W / 2, x1 = hx + W / 2, z0 = hz - D / 2, z1 = hz + D / 2;
@@ -268,7 +276,7 @@ export function buildWorld(scene) {
     g.setIndex(idx);
     g.computeVertexNormals();
     const m = new THREE.Mesh(g, make('cloth'));
-    m.castShadow = true;
+    m.castShadow = false;
     m.name = 'ribbons';
     m.frustumCulled = false;
     root.add(m);
@@ -276,15 +284,7 @@ export function buildWorld(scene) {
   }
 
   // ---- 나무·바위·덤불 배치 ----
-  // 배경 묶음은 구역별로 나눠 절두체 컬링이 먹게 한다
-  const bgChunks = new Map();
-  const bgAt = (x, y, z, ry = 0) => {
-    const mtx = new THREE.Matrix4().makeRotationY(ry).setPosition(x, y, z);
-    const key = `${Math.floor((x + 60) / 40)}:${Math.floor((z + 90) / 22)}`;
-    if (!bgChunks.has(key)) bgChunks.set(key, new Batch());
-    const b = bgChunks.get(key);
-    return (part, k, geo, outline = 0.03) => b.add(k, geo.applyMatrix4(mtx), outline);
-  };
+  const bgAt = (x, y, z, ry = 0, small = false) => at(x, y, z, ry, { small });
   const inBounds = (x, z) => x > -44 && x < 44 && z > -79 && z < 29;
   const hxr = { minX: HOUSE.x - 5.5, maxX: HOUSE.x + 5.5, minZ: HOUSE.z - 4.5, maxZ: HOUSE.z + 5.5 };
   const nearHouse = (x, z, m = 0) => x > hxr.minX - m && x < hxr.maxX + m && z > hxr.minZ - m && z < hxr.maxZ + m;
@@ -297,6 +297,10 @@ export function buildWorld(scene) {
   }
   walkPts.push([ARENA.x, ARENA.z], [ARENA.x - 6, ARENA.z + 2], [ARENA.x + 6, ARENA.z + 2], [HOUSE.x, HOUSE.z + 3], [HOUSE.x - 3, HOUSE.z + 3], [HOUSE.x + 3, HOUSE.z + 3], [PASS.x, PASS.z], [PASS.x - 4, PASS.z], [PASS.x + 4, PASS.z]);
   const camSide = (x, z) => walkPts.some(([wx, wz]) => z - wz > 0 && z - wz < 10 && Math.abs(x - wx) < 4.5);
+  // 가림 판정용: 산 표본점 + 마을 평지 격자. 나무가 걷는 곳의 남쪽(카메라 쪽) 12m 안에 있을 때만 따로 둔다
+  const occPts = walkPts.slice();
+  for (let x = -40; x <= 40; x += 4) for (let z = -12; z <= 28; z += 4) occPts.push([x, z]);
+  const occNear = (x, z) => occPts.some(([wx, wz]) => z - wz > -1.5 && z - wz < 12 && Math.abs(x - wx) < 4.5);
   const trng = rng(2024);
   let treeCount = 0, occTrees = 0;
   const STEP = 3.3;
@@ -326,7 +330,7 @@ export function buildWorld(scene) {
       if (r > p) continue;
       const y = ground(px, pz);
       const inside = inBounds(px, pz);
-      const near = inside && (pathDist(px, pz) < 9 || nearHouse(px, pz, 5) || (pz > -24 && pz < 31));
+      const near = inside && occNear(px, pz);
       const conifer = trng() < (pz < -40 ? 0.35 : 0.2);
       const s = 0.85 + trng() * 0.45;
       const seed = Math.floor(trng() * 1e9);
@@ -335,16 +339,31 @@ export function buildWorld(scene) {
         occTrees++;
       } else {
         if ((Math.abs(px) > 46 || pz < -82) && trng() < 0.45) continue;
-        (conifer ? fir : pine)(bgAt(px, y, pz, trng() * 6), rng(seed), s, 1);
+        (conifer ? fir : pine)(bgAt(px, y, pz, trng() * 6), rng(seed), s, inside && pathDist(px, pz) < 14 ? 0 : 1);
       }
       if (inside) circle(px, pz, 0.35 * s);
       treeCount++;
     }
   }
   // 마을 가장자리 몇 그루(감나무 느낌의 활엽수)
-  for (const [x, z, s] of [[-27, -11, 0.7], [27.5, -8, 0.75], [-14, 24, 0.6], [24, 3, 0.62], [-30, 25, 0.7]]) {
-    occGroup('활엽수', x, ground(x, z), z, (add) => bigTree(add, rng(Math.round(x * z)), { h: 6 * s + 1.5, spread: 3.4 * s + 0.6, trunk: 0.32, branches: 3, leaf: [['#a8a468', '#6a6a3e'], ['#b59c5a', '#7a6a3e']] }));
+  for (const [x, z, s, fruit] of [[-27, -11, 0.7, true], [27.5, -8, 0.75, false], [-14, 24, 0.6, true], [24, 3, 0.62, true], [-30, 25, 0.7, false]]) {
+    occGroup(fruit ? '감나무' : '활엽수', x, ground(x, z), z, (add) => bigTree(add, rng(Math.round(x * z)), { h: 6 * s + 1.5, spread: 3.4 * s + 0.6, trunk: 0.32, branches: 3, fruit, leaf: fruit ? [['#b2a660', '#6f6a3a'], ['#c0a256', '#7e6a3a']] : [['#a8a468', '#6a6a3e'], ['#9aa262', '#5e663a']] }));
     circle(x, z, 0.4);
+  }
+  // 개울가 버드나무
+  for (const [x, z] of [[-9, -12.6], [-30, -12.0]]) {
+    occGroup('버드나무', x, ground(x, z), z, (add) => bigTree(add, rng(Math.round(x * 13)), { h: 5.2, spread: 3.2, trunk: 0.3, branches: 3, willow: true, leaf: [['#a9b87a', '#6d7e4a'], ['#b4bf82', '#76844e']] }));
+    circle(x, z, 0.4);
+  }
+  // 빨래줄(초가 마당)
+  {
+    const a = at(12.7, ground(12.7, 12.8), 12.8);
+    for (const dx of [-1.1, 1.1]) a('p', 'wood', paint(cyl(0.04, 0.05, 1.9, 5, dx, 0.95, 0), '#6b5038'), 0.01);
+    a('p', 'flat', paint(cyl(0.008, 0.008, 2.2, 3, 0, 1.8, 0, 0, 0, Math.PI / 2), '#cdbf9a'), 0);
+    for (const [dx, w, h, c] of [[-0.6, 0.55, 0.7, '#f0ead8'], [0.05, 0.45, 0.55, '#4f6a8a'], [0.6, 0.5, 0.8, '#e9e1c8']]) {
+      a('p', 'cloth', paint(xf(new THREE.PlaneGeometry(w, h, 1, 2), dx, 1.8 - h / 2, 0), c, c), 0);
+    }
+    circle(11.6, 12.8, 0.15); circle(13.8, 12.8, 0.15);
   }
 
   // 바위: 산길 가장자리, 비탈, 개울가
@@ -362,7 +381,7 @@ export function buildWorld(scene) {
     if (pz > -13 && Math.abs(px) < 28) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
     const y = ground(px, pz);
-    rock(bgAt(px, y - s * 0.15, pz), rr, s);
+    rock(bgAt(px, y - s * 0.15, pz, 0, s < 0.8), rr, s);
     if (inBounds(px, pz) && s > 0.45) circle(px, pz, s * 0.85);
   }
   // 고갯마루 주변 큰 바위 몇 개(무대 장식)
@@ -377,12 +396,15 @@ export function buildWorld(scene) {
     const dzs = Math.abs(pz - streamZ(px));
     const pd = pathDist(px, pz);
     const y = ground(px, pz);
-    if (dzs > 2.0 && dzs < 3.6 && Math.abs(px) > 3) { reeds(bgAt(px, y, pz), br, 6); continue; }
+    if (dzs > 2.0 && dzs < 3.6 && Math.abs(px) > 3) { reeds(bgAt(px, y, pz, 0, true), br, 6); continue; }
     if (inPaddy(px, pz, 1) || nearHouse(px, pz)) continue;
     if (pz > -13 && Math.abs(px) < 27 && !(Math.abs(pz + 10.5) < 1.2)) continue;
     if (pd < 2.4 || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
-    bush(bgAt(px, y, pz), br, 0.8 + br() * 0.5);
+    // 산에는 진달래, 들에는 덤불. 가끔 들꽃
+    const az = pz < -22 && br() < 0.35;
+    bush(bgAt(px, y, pz, 0, true), br, 0.8 + br() * 0.5, az);
+    if (br() < 0.3) flowers(bgAt(px + 1, ground(px + 1, pz + 0.6), pz + 0.6, 0, true), br, br() < 0.5 ? '#f2e6a0' : '#e8e2f0');
   }
   // 풀포기(먹선 없음, 값싼 삼각뿔 셋)
   const gr = rng(555);
@@ -392,7 +414,7 @@ export function buildWorld(scene) {
     if (Math.abs(pz - streamZ(px)) < 2.6) continue;
     if (pathDist(px, pz) < 1.3) continue;
     if (pz > -13 && pz < 30 && Math.abs(px) < 27 && gr() < 0.55) continue;
-    const y = ground(px, pz), a = bgAt(px, y, pz, gr() * 6);
+    const y = ground(px, pz), a = bgAt(px, y, pz, gr() * 6, true);
     const tone = gr() < 0.5 ? ['#a9ad6c', '#6d7a44'] : ['#bfb27a', '#7f7a4a'];
     for (let k = 0; k < 2; k++) {
       const h = 0.25 + gr() * 0.3;
@@ -407,10 +429,10 @@ export function buildWorld(scene) {
     const ang = br() * Math.PI * 2, rad = 2.6 + br() * 3.5;
     const px = w[0] + Math.cos(ang) * rad, pz = w[1] + Math.sin(ang) * rad;
     if (pathDist(px, pz) < 2.4 || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
-    bush(bgAt(px, ground(px, pz), pz), br, 0.6 + br() * 0.5);
+    bush(bgAt(px, ground(px, pz), pz, 0, true), br, 0.6 + br() * 0.5, pz < -22 && br() < 0.3);
   }
   // 마을 안 소소한 덤불(담 밑, 집 곁)
-  for (const [x, z] of [[-4, -9.6], [-25, -9.8], [19, -9.3], [-11, 12.4], [12, 12.4], [4.5, -3], [-24, 12], [22, 5]]) bush(at(x, ground(x, z), z), rng(Math.round(x * 17 + z)), 0.8);
+  for (const [x, z] of [[-4, -9.6], [-25, -9.8], [19, -9.3], [-11, 12.4], [12, 12.4], [4.5, -3], [-24, 12], [22, 5]]) bush(at(x, ground(x, z), z, 0, { small: true }), rng(Math.round(x * 17 + z)), 0.8);
 
   // ---- 호랑이의 영역(숲속 빈터) ----
   let arena;
@@ -447,7 +469,7 @@ export function buildWorld(scene) {
     // 뼈와 흩어진 짚
     for (let i = 0; i < 9; i++) {
       const a = ar() * 6.28, rad = 2 + ar() * 7, x = A.x + Math.cos(a) * rad, z = A.z + Math.sin(a) * rad;
-      const put = at(x, ground(x, z), z, ar() * 6.28);
+      const put = at(x, ground(x, z), z, ar() * 6.28, { small: true });
       if (i < 5) {
         put('p', 'flat', paint(xf(new THREE.CylinderGeometry(0.035, 0.03, 0.45 + ar() * 0.3, 5), 0, 0.04, 0, 0, 0, Math.PI / 2), '#e8e0cc', '#cfc5ad'), 0.008);
         put('p', 'flat', paint(xf(new THREE.SphereGeometry(0.06, 5, 3), 0.22, 0.05, 0), '#e8e0cc'), 0);
@@ -492,10 +514,7 @@ export function buildWorld(scene) {
   }
 
   // 정적 묶음 올리기
-  const statG = stat.build(make, sharedInk, { name: '마을 소품' });
-  root.add(statG);
-  const bgInk = inkMat();
-  for (const b of bgChunks.values()) root.add(b.build(make, bgInk, { name: '숲' }));
+  for (const [key, c] of chunks) root.add(c.b.build(make, null, { name: `묶음 ${key}`, cast: !c.small }));
 
   // ---- 가파른 비탈·물 충돌(격자 → 상자 병합) ----
   {

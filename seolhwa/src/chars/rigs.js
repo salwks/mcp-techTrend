@@ -49,7 +49,7 @@ function finishView(parts) {
 // ---------------------------------------------------------------------------
 // 사람
 // ---------------------------------------------------------------------------
-const ADULT = { hip: 132, torso: 96, neck: 8, headRX: 27, headRY: 31, shHalf: 29, waistHalf: 27, uArm: 50, lArm: 46, thigh: 60, shin: 72, legX: 12, ws: 1 };
+const ADULT = { hip: 134, torso: 98, neck: 8, headRX: 25.5, headRY: 29.5, shHalf: 29, waistHalf: 27, uArm: 50, lArm: 46, thigh: 60, shin: 72, legX: 12, ws: 1 };
 const CHILD = { hip: 80, torso: 58, neck: 4, headRX: 24, headRY: 27, shHalf: 20, waistHalf: 18, uArm: 30, lArm: 30, thigh: 38, shin: 42, legX: 8, ws: 0.72 };
 
 const headY = (S) => -(S.neck + S.headRY) - 4 * S.ws;
@@ -63,8 +63,14 @@ function faceFront(p, cx, hy, S, sp) {
     // 눈썹: 가늘고 긴 붓선
     p.stroke([[x - s * 6 * ws, ey - 9 * ws], [x + s * 1 * ws, ey - 11.5 * ws], [x + s * 7.5 * ws, ey - 10 * ws]], { w: (sp.browW || 1.9) * ws, color: sp.browColor || INK });
     // 눈: 눈꼬리가 살짝 올라간 윗눈꺼풀 + 검은 눈동자
-    p.stroke([[x - s * 5 * ws, ey + 0.8 * ws], [x + s * 0.5 * ws, ey - 2 * ws], [x + s * 6.5 * ws, ey - 1.2 * ws]], { w: 2.3 * ws, rough: 0.2 });
-    p.dot(x + s * 0.6 * ws, ey + 1.1 * ws, 2.6 * ws);
+    // 풍속화식 가늘고 긴 눈: 윗눈꺼풀 붓선 + 작은 눈동자 (눈 감으면 아래로 휜 선 하나)
+    if (sp._blink) {
+      p.stroke([[x - s * 5 * ws, ey], [x + s * 0.5 * ws, ey + 1.6 * ws], [x + s * 6.5 * ws, ey + 0.2 * ws]], { w: 1.8 * ws, rough: 0.1 });
+    } else {
+      p.stroke([[x - s * 5 * ws, ey + 0.8 * ws], [x + s * 0.5 * ws, ey - 1.4 * ws], [x + s * 7 * ws, ey - 1.6 * ws]], { w: 2.1 * ws, rough: 0.2 });
+      p.dot(x + s * 0.8 * ws, ey + 0.9 * ws, 2.1 * ws);
+      p.stroke([[x - s * 3 * ws, ey + 2.6 * ws], [x + s * 4 * ws, ey + 2.4 * ws]], { w: 0.7 * ws, color: shade(sp.skin || PAL.skin, -0.4), taper: true });
+    }
     // 볼 연지
     p.blush(cx + s * rx * 0.6, hy + ry * 0.42, 8 * ws, PAL.red, sp.cheek == null ? 0.22 : sp.cheek);
   }
@@ -84,8 +90,11 @@ function faceSide(p, cx, hy, S, sp) {
   const ws = S.ws, rx = S.headRX, ry = S.headRY;
   const ey = hy + ry * 0.14, x = cx - rx * 0.5;
   p.stroke([[x + 6 * ws, ey - 9.5 * ws], [x - 1 * ws, ey - 11.5 * ws], [x - 6 * ws, ey - 9.5 * ws]], { w: (sp.browW || 1.9) * ws, color: sp.browColor || INK });
-  p.stroke([[x + 4.5 * ws, ey + 0.6 * ws], [x, ey - 1.8 * ws], [x - 4.5 * ws, ey - 1.4 * ws]], { w: 2.3 * ws, rough: 0.2 });
-  p.dot(x - 1.2 * ws, ey + 1.1 * ws, 2.5 * ws);
+  if (sp._blink) p.stroke([[x + 4.5 * ws, ey], [x, ey + 1.5 * ws], [x - 5 * ws, ey + 0.2 * ws]], { w: 1.8 * ws, rough: 0.1 });
+  else {
+    p.stroke([[x + 4.5 * ws, ey + 0.6 * ws], [x, ey - 1.4 * ws], [x - 5.5 * ws, ey - 1.6 * ws]], { w: 2.1 * ws, rough: 0.2 });
+    p.dot(x - 1.4 * ws, ey + 0.9 * ws, 2 * ws);
+  }
   p.blush(cx - rx * 0.28, hy + ry * 0.42, 8 * ws, PAL.red, sp.cheek == null ? 0.22 : sp.cheek);
   const my = hy + ry * 0.6;
   p.fill(ellipsePts(cx - rx * 0.76, my, 2.6 * ws, 1.7 * ws, 10), sp.lip || '#a8453c', { smooth: false });
@@ -123,12 +132,13 @@ function hairStreaks(p, pts, col) {
 // ---- 모자 ----
 function satgat(p, cx, hy, S, sp, view) {
   const ws = S.ws, ry = S.headRY;
-  const by = hy - ry * 0.3, W = 62 * ws, ay = by - 40 * ws;
+  const by = hy - ry * 0.3, W = 72 * ws, ay = by - 42 * ws;
   const col = sp.hatColor || '#5b4b37';
   if (view === 'side') {
     const path = p.poly([[cx + 5 * ws, ay, 'c'], [cx + W * 0.55, by - 17 * ws], [cx + W + 3, by - 1, 'c'], [cx + W * 0.4, by + 4 * ws], [cx - W * 0.45, by + 5 * ws], [cx - W - 3, by + 1, 'c'], [cx - W * 0.5, by - 16 * ws]], col, { w: 2.6, shadeDown: 0.3 });
     p.clip(path, () => {
-      for (let i = -3; i <= 3; i++) p.stroke([[cx + 5 * ws, ay], [cx + i * W * 0.3, by + 4]], { w: 1, color: shade(col, 0.35), taper: false });
+      for (let i = -5; i <= 5; i++) p.stroke([[cx + 5 * ws, ay], [cx + i * W * 0.2, by + 4]], { w: 0.8, color: shade(col, 0.35), taper: false });
+      for (let k = 0.25; k < 1; k += 0.14) p.stroke([[cx + 5 - W * k, ay + (by - ay) * k + 2], [cx + 5 + W * k, ay + (by - ay) * k]], { w: 0.7, color: shade(col, 0.28), taper: false, dry: true });
     });
     p.stroke([[cx - W * 0.9, by + 1], [cx, by + 3.5], [cx + W * 0.9, by]], { w: 1.2, color: shade(col, 0.4) });
     p.dot(cx + 5 * ws, ay + 1, 3 * ws);
@@ -142,9 +152,14 @@ function satgat(p, cx, hy, S, sp, view) {
       const t = i / 6;
       p.stroke([[cx, ay], [cx + t * W * 1.02, by + (1 - t * t) * 8 * ws]], { w: 0.9, color: shade(col, 0.32), taper: false, rough: 0.2 });
     }
-    for (const k of [0.45, 0.78]) {
+    // 대오리 엮음: 가는 동심 결 + 짙은 테 두 줄
+    for (let k = 0.18; k < 1; k += 0.09) {
       const yy = ay + (by - ay) * k;
-      p.stroke([[cx - W * k * 1.02, yy + 2], [cx, yy + 6 * k * ws + 2], [cx + W * k * 1.02, yy + 2]], { w: 1.3, color: shade(col, -0.35), taper: false });
+      p.stroke([[cx - W * k * 1.02, yy + 2], [cx, yy + 6 * k * ws + 2], [cx + W * k * 1.02, yy + 2]], { w: 0.7, color: shade(col, 0.22), taper: false, rough: 0.4 });
+    }
+    for (const k of [0.45, 0.8]) {
+      const yy = ay + (by - ay) * k;
+      p.stroke([[cx - W * k * 1.02, yy + 2], [cx, yy + 6 * k * ws + 2], [cx + W * k * 1.02, yy + 2]], { w: 1.5, color: shade(col, -0.4), taper: false });
     }
   });
   p.stroke([[cx - W * 0.95, by], [cx, by + 7 * ws], [cx + W * 0.95, by]], { w: 1.1, color: shade(col, 0.45) });
@@ -262,6 +277,7 @@ function drawHead(p, view, S, sp) {
     }
     faceSide(p, cx, hy, S, sp);
     if (sp.beard) beardSide(p, cx, hy, rx, ry, ws);
+    if (sp.pipe) drawPipe(p, cx - rx * 0.8, hy + ry * 0.62, -1, S);
   } else {
     // 정면
     const face = p.ellipse(cx, hy, rx, ry, skin, { w: 2.4 });
@@ -287,6 +303,7 @@ function drawHead(p, view, S, sp) {
     }
     faceFront(p, cx, hy, S, sp);
     if (sp.beard) beardFront(p, cx, hy, rx, ry, ws);
+    if (sp.pipe) drawPipe(p, cx + 3, hy + ry * 0.62, 1, S);
     if (sp.stubble) p.clip(face, (g) => { g.fillStyle = 'rgba(60,50,45,0.13)'; g.beginPath(); g.ellipse(cx, hy + ry * 0.75, rx * 0.7, ry * 0.35, 0, 0, 2 * PI); g.fill(); });
     if (hair === 'braid') braidFront(p, cx, hy, rx, ry, ws, sp);
     if (sp.hat === 'satgat') {
@@ -295,6 +312,7 @@ function drawHead(p, view, S, sp) {
     }
   }
 
+  if (sp.carry === 'basket') drawBasket(p, cx, hy - ry - 3 * ws, S);
   if (sp.hat === 'satgat') satgat(p, cx, hy, S, sp, view);
   else if (sp.hat === 'gat') gat(p, cx, hy, S, sp, view);
   else if (sp.hat === 'beonggeoji') beonggeoji(p, cx, hy, S, sp, view);
@@ -482,13 +500,19 @@ function drawSkirt(p, view, S, sp) {
   const len = sp.robeLen || 92;
   const col = sp.coat;
   let pts;
-  if (side) pts = [[-22 * ws, -4], [21 * ws, -4], [26 * ws, len * 0.5], [33 * ws, len, 'c'], [5, len + 2], [-27 * ws, len, 'c'], [-24 * ws, len * 0.5]];
-  else pts = [[-wa - 4, -4], [wa + 4, -4], [wa + 11, len * 0.55], [wa + 18, len, 'c'], [0, len + 3], [-wa - 18, len, 'c'], [-wa - 11, len * 0.55]];
-  const path = p.poly(pts, col, { w: 2.4, shadeDown: 0.26 });
+  // 안자락(속옷 단)이 겉자락 아래로 살짝 겹쳐 보이게
+  const under = shade(sp.pants || col, -0.08);
+  if (side) p.poly([[-20 * ws, len * 0.4], [24 * ws, len * 0.4], [31 * ws, len + 7 * ws, 'c'], [-24 * ws, len + 6 * ws, 'c']], under, { w: 1.8, blot: false });
+  else p.poly([[-wa - 10, len * 0.5], [wa + 10, len * 0.5], [wa + 15, len + 7 * ws, 'c'], [-wa - 15, len + 7 * ws, 'c']], under, { w: 1.8, blot: false });
+  if (side) pts = [[-22 * ws, -4], [21 * ws, -4], [27 * ws, len * 0.45], [37 * ws, len - 2, 'c'], [18 * ws, len + 1], [2, len + 3], [-27 * ws, len, 'c'], [-24 * ws, len * 0.5]];
+  else pts = [[-wa - 4, -4], [wa + 4, -4], [wa + 11, len * 0.55], [wa + 19, len, 'c'], [wa * 0.4, len + 4], [0, len + 2], [-wa * 0.5, len + 5], [-wa - 19, len, 'c'], [-wa - 11, len * 0.55]];
+  const path = p.poly(pts, col, { w: 2.4, shadeDown: 0.3 });
   p.clip(path, () => {
+    const fold = shade(col, -0.42);
     if (side) {
-      p.stroke([[-4, 0], [-8, len * 0.5], [-10, len]], { w: 1.2, color: shade(col, -0.35) });
-      p.stroke([[10, 4], [14, len]], { w: 1, color: shade(col, -0.3) });
+      p.stroke([[-4, 0], [-9, len * 0.45], [-7, len * 0.8], [-12, len]], { w: 1.2, color: fold });
+      p.stroke([[10, 4], [13, len * 0.5], [22, len]], { w: 1, color: fold });
+      p.stroke([[3, len * 0.3], [6, len * 0.75], [4, len]], { w: 0.8, color: fold });
     } else if (back) {
       p.stroke([[0, 0], [0, len]], { w: 1.2, color: shade(col, -0.35), taper: false });
       p.stroke([[-wa * 0.7, 6], [-wa - 6, len]], { w: 1, color: shade(col, -0.28) });
@@ -496,8 +520,10 @@ function drawSkirt(p, view, S, sp) {
     } else {
       // 섶 겹침선
       p.stroke([[4, -2], [0, len * 0.5], [-5, len + 2]], { w: 1.6, color: shade(col, -0.5) });
-      p.stroke([[-wa * 0.6, 6], [-wa - 6, len]], { w: 1, color: shade(col, -0.28) });
-      p.stroke([[wa * 0.7, 6], [wa + 7, len]], { w: 1, color: shade(col, -0.28) });
+      p.stroke([[-wa * 0.6, 6], [-wa * 0.8, len * 0.5], [-wa - 8, len]], { w: 1, color: fold });
+      p.stroke([[wa * 0.7, 6], [wa * 0.9, len * 0.55], [wa + 9, len]], { w: 1, color: fold });
+      p.stroke([[-wa * 0.2, len * 0.35], [-wa * 0.35, len * 0.95]], { w: 0.8, color: fold });
+      p.stroke([[wa * 0.35, len * 0.4], [wa * 0.5, len * 0.97]], { w: 0.8, color: fold });
     }
   });
 }
@@ -513,10 +539,12 @@ function drawLowerArm(p, S, sp) {
   // 손
   p.poly([[-5 * ws, L - 4 * ws], [5 * ws, L - 4 * ws], [6.5 * ws, L + 3 * ws], [3 * ws, L + 8 * ws], [-3 * ws, L + 8 * ws], [-6.5 * ws, L + 3 * ws]], skin, { w: 1.8 });
   // 배래 곡선 소매
-  const path = p.poly([[-10.5 * ws, -3], [10.5 * ws, -3], [12.5 * ws, L * 0.45], [14 * ws, L - 8 * ws], [11 * ws, L - 1 * ws, 'c'], [-9 * ws, L - 1 * ws, 'c'], [-12 * ws, L - 7 * ws], [-12 * ws, L * 0.45]], sp.coat, { w: 2.2 });
+  // 배래: 손목은 좁고 아래로 둥글게 흘러내리는 넓은 소매
+  const path = p.poly([[-10.5 * ws, -3], [10.5 * ws, -3], [14 * ws, L * 0.4], [18 * ws, L - 10 * ws], [15 * ws, L - 1 * ws, 'c'], [3 * ws, L + 1 * ws], [-8 * ws, L - 1 * ws, 'c'], [-11.5 * ws, L - 7 * ws], [-12 * ws, L * 0.45]], sp.coat, { w: 2.2, shadeDown: 0.35 });
   p.clip(path, () => {
-    if (sp.cuff) p.stroke([[-14 * ws, L - 5 * ws], [14 * ws, L - 5 * ws]], { w: 8 * ws, color: sp.cuff, taper: false });
-    p.stroke([[-3 * ws, 4], [2 * ws, L * 0.6]], { w: 1, color: shade(sp.coat, -0.3) });
+    if (sp.cuff) p.stroke([[-14 * ws, L - 5 * ws], [18 * ws, L - 6 * ws]], { w: 8 * ws, color: sp.cuff, taper: false });
+    p.stroke([[-3 * ws, 4], [0, L * 0.5], [4 * ws, L * 0.85]], { w: 0.9, color: shade(sp.coat, -0.42) });
+    p.stroke([[6 * ws, L * 0.3], [12 * ws, L * 0.7], [15 * ws, L - 4 * ws]], { w: 0.8, color: shade(sp.coat, -0.42) });
   });
 }
 
@@ -539,6 +567,9 @@ function drawShin(p, S, sp, view) {
   if (sp.legwrap) {
     const lw = p.poly([[-10 * ws, L * 0.3], [10 * ws, L * 0.3], [8 * ws, L - 9 * ws], [-8 * ws, L - 9 * ws]], sp.legwrap, { w: 1.8, smooth: false });
     p.clip(lw, () => { for (let i = 0; i < 5; i++) p.stroke([[-10 * ws, L * 0.34 + i * 8 * ws], [10 * ws, L * 0.3 + i * 8 * ws + 6]], { w: 0.9, color: shade(sp.legwrap, -0.35), taper: false }); });
+    // 행전 끈
+    p.stroke([[-6 * ws, L * 0.3 + 1], [-11 * ws, L * 0.3 + 8 * ws]], { w: 1.4, color: shade(sp.legwrap, -0.5) });
+    p.stroke([[-4 * ws, L * 0.3 + 1], [-7 * ws, L * 0.3 + 10 * ws]], { w: 1.2, color: shade(sp.legwrap, -0.5) });
   }
   // 대님
   p.poly([[-8 * ws, L - 15 * ws], [8 * ws, L - 15 * ws], [7.5 * ws, L - 10 * ws], [-7.5 * ws, L - 10 * ws]], sp.daenim || shade(pc, -0.2), { w: 1.5, smooth: false });
@@ -550,6 +581,62 @@ function drawShin(p, S, sp, view) {
     p.poly([[-7 * ws, L - 12 * ws], [7 * ws, L - 12 * ws], [8 * ws, L - 3 * ws], [0, L - 1], [-8 * ws, L - 3 * ws]], sock, { w: 1.9 });
     p.poly(ellipsePts(0, L - 1 * ws, 9.5 * ws, 4.5 * ws, 16, 0, PI).concat([[-9.5 * ws, L - 5 * ws], [9.5 * ws, L - 5 * ws]]), shoe, { w: 1.8 });
   }
+}
+
+
+// ---- 마을 사람 소품 ----
+/** 지게: 두 가닥 나무 + 가로대 + 위로 뻗은 가지 */
+function drawJige(p, view, S) {
+  const ws = S.ws, wood = '#8a6a44', dk = shade(wood, -0.35);
+  const bar = (a, b, w = 5) => { p.stroke([a, b], { w: w + 2.4, color: INK, taper: false, rough: 0.4 }); p.stroke([a, b], { w, color: wood, taper: false, rough: 0.2 }); };
+  if (view === 'side') {
+    // 뒤로 비스듬히 선 지게: 몸에서 뒤쪽(+x)으로
+    bar([-4, -52 * ws], [20 * ws, 116 * ws], 6);
+    bar([4, -60 * ws], [28 * ws, 112 * ws], 5);
+    bar([-2, -8], [40 * ws, -26 * ws], 4);          // 가지
+    bar([6, 20 * ws], [44 * ws, 4 * ws], 4);
+    for (const y of [10, 50, 86]) bar([y * 0.13 * ws, y * ws], [(y * 0.14 + 8) * ws, y * ws], 3);
+    p.poly([[4, 30 * ws], [34 * ws, 20 * ws], [36 * ws, 60 * ws], [12 * ws, 70 * ws]], '#b89a64', { w: 1.8 });   // 짚 짐
+    return;
+  }
+  const back = view === 'back';
+  // 두 다리가 위로 벌어지는 A자
+  bar([-20 * ws, 118 * ws], [-12 * ws, -62 * ws], 6);
+  bar([20 * ws, 118 * ws], [12 * ws, -62 * ws], 6);
+  for (const y of [-40, 0, 40, 84]) bar([-(14 + y * 0.04) * ws, y * ws], [(14 + y * 0.04) * ws, y * ws], 3.5);
+  if (back) {
+    bar([-16 * ws, 30 * ws], [-34 * ws, 6 * ws], 4);
+    bar([16 * ws, 30 * ws], [34 * ws, 6 * ws], 4);
+    // 짚단 짐
+    const load = p.poly([[-26 * ws, -30 * ws], [26 * ws, -30 * ws], [30 * ws, 30 * ws], [-30 * ws, 30 * ws]], '#c4a86d', { w: 2.2 });
+    p.clip(load, () => { for (let i = -5; i <= 5; i++) p.stroke([[i * 5 * ws, -30 * ws], [i * 5.6 * ws, 30 * ws]], { w: 0.8, color: shade('#c4a86d', -0.35), dry: true }); });
+    p.stroke([[-30 * ws, 0], [30 * ws, 0]], { w: 2.5, color: '#6b5436', taper: false });
+  }
+}
+/** 광주리(머리에 인 바구니)와 똬리 */
+function drawBasket(p, cx, topY, S) {
+  const ws = S.ws, c = '#b38f58';
+  p.ellipse(cx, topY + 3 * ws, 12 * ws, 4 * ws, '#e8dfc8', { w: 1.4 });
+  // 담긴 것: 무청과 고추
+  p.poly([[cx - 20 * ws, topY - 10 * ws], [cx - 14 * ws, topY - 26 * ws], [cx - 6 * ws, topY - 12 * ws]], '#6f8a4a', { w: 1.5 });
+  p.poly([[cx - 4 * ws, topY - 11 * ws], [cx + 4 * ws, topY - 30 * ws], [cx + 9 * ws, topY - 11 * ws]], '#7d9651', { w: 1.5 });
+  for (let i = 0; i < 4; i++) p.ellipse(cx + (8 + i * 5) * ws, topY - 12 * ws - (i % 2) * 3, 3.6 * ws, 2.4 * ws, PAL.red, { w: 1.1 });
+  const b = p.poly([[cx - 36 * ws, topY - 12 * ws], [cx + 36 * ws, topY - 12 * ws], [cx + 30 * ws, topY, 'c'], [cx - 30 * ws, topY, 'c']], c, { w: 2.2, smooth: false });
+  p.clip(b, () => {
+    for (let i = -8; i <= 8; i++) p.stroke([[cx + i * 4.5 * ws, topY - 12 * ws], [cx + i * 4 * ws, topY]], { w: 0.8, color: shade(c, -0.4), taper: false });
+    p.stroke([[cx - 36 * ws, topY - 6 * ws], [cx + 36 * ws, topY - 6 * ws]], { w: 1, color: shade(c, -0.4), taper: false });
+  });
+  p.ellipse(cx, topY - 12 * ws, 36 * ws, 3.5 * ws, shade(c, 0.15), { w: 1.8 });
+}
+/** 곰방대(짧은 담뱃대) */
+function drawPipe(p, x0, y0, dir, S) {
+  const ws = S.ws;
+  const x1 = x0 + dir * 26 * ws, y1 = y0 + 14 * ws;
+  p.stroke([[x0, y0], [x1, y1]], { w: 4, color: INK, taper: false });
+  p.stroke([[x0, y0], [x1, y1]], { w: 2, color: '#6d4a2c', taper: false, rough: 0 });
+  p.poly([[x1 - 3 * ws, y1 - 7 * ws], [x1 + 4 * ws, y1 - 7 * ws], [x1 + 3 * ws, y1 + 2 * ws], [x1 - 2 * ws, y1 + 2 * ws]], '#a88b4a', { w: 1.4, smooth: false });
+  // 연기 한 가닥
+  p.stroke([[x1, y1 - 8 * ws], [x1 + dir * 3, y1 - 16 * ws], [x1 - dir * 2, y1 - 24 * ws], [x1 + dir * 2, y1 - 32 * ws]], { w: 1.1, color: '#b9b3a6' });
 }
 
 // ---- 등짐 / 지팡이 ----
@@ -616,6 +703,10 @@ function drawSword(p, S) {
   // 환도: 손잡이(붉은 끈) + 둥근 코등이 + 살짝 휜 외날
   p.poly([[-3.5 * ws, -12 * ws], [3.5 * ws, -12 * ws], [3.5 * ws, 12 * ws], [-3.5 * ws, 12 * ws]], '#7a2e2a', { w: 1.6, smooth: false });
   for (let i = 0; i < 4; i++) p.stroke([[-3.5 * ws, (-9 + i * 6) * ws], [3.5 * ws, (-6 + i * 6) * ws]], { w: 1, color: '#d9b36a', taper: false });
+  // 칼자루 끝의 붉은 술(매듭 + 늘어진 술)
+  p.ellipse(0, -14 * ws, 3.5 * ws, 3 * ws, PAL.red, { w: 1.3 });
+  p.poly([[-2 * ws, -15 * ws], [2 * ws, -15 * ws], [7 * ws, -34 * ws], [3 * ws, -36 * ws, 'c'], [-1 * ws, -30 * ws]], PAL.red, { w: 1.4 });
+  p.stroke([[4 * ws, -22 * ws], [6 * ws, -33 * ws]], { w: 0.8, color: shade(PAL.red, -0.5) });
   p.ellipse(0, 14 * ws, 8 * ws, 3.2 * ws, '#b39245', { w: 1.6 });
   const L = 118 * ws;
   p.poly([[-3.4 * ws, 16 * ws], [3.2 * ws, 16 * ws], [5 * ws, L * 0.6], [3 * ws, L - 8 * ws], [-1 * ws, L + 4 * ws, 'c'], [-3.6 * ws, L * 0.6]], '#dfe3dc', { w: 2, grain: 0.3, shadeDown: 0.15 });
@@ -742,6 +833,10 @@ function humanView(view, S, sp) {
   if (sp.back === 'bundle') {
     if (back) part(L, 'pack', 'torso', [0, -T + 6 * ws], 9, (p) => drawBundle(p, view, S, sp), { ls });
     else if (side) part(L, 'pack', 'torso', [17 * ws, -T + 8 * ws], 2, (p) => drawBundle(p, view, S, sp), { ls });
+  } else if (sp.back === 'jige') {
+    if (back) part(L, 'pack', 'torso', [0, -T + 6 * ws], 9, (p) => drawJige(p, view, S), { ls });
+    else if (side) part(L, 'pack', 'torso', [15 * ws, -T + 12 * ws], 2, (p) => drawJige(p, view, S), { ls });
+    else part(L, 'pack', 'torso', [0, -T + 6 * ws], 0.5, (p) => drawJige(p, view, S), { ls });
   } else if (sp.back === 'bow') {
     if (back) part(L, 'pack', 'torso', [0, -T + 34], 9, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
     else if (side) part(L, 'pack', 'torso', [18 * ws, -T + 30], 2, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
