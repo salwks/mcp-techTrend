@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-30T19:37:06.655760Z",
+  "generated_at": "2026-09-30T20:53:25.642628Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 3,
-  "pending_count": 3,
-  "observed_total_count": 157,
+  "archive_count": 4,
+  "pending_count": 4,
+  "observed_total_count": 158,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,38 @@
   ],
   "posts": [
     {
+      "post_id": "3997846322992330289",
+      "published_at": "2026-09-30T20:34:01Z",
+      "text": "🚨속보) 미친.. Gemini 4 Argon 출시",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd7NAycjzYx",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/828895974_17989457019112832_2625087113892981733_n.webp?_nc_cat=102&ig_cache_key=Mzk5Nzg0NjMyMjk5MjMzMDI4OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuOTg0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=VlOcRrB8tnEQ7kNvwFkEOGQ&_nc_oc=Ado3XFqzxTv9ukUTFOz__3lq4LW5Fqqm4lAlFsrcbgujoG-dHvNYlq7gjd4Sg-n-RFo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=hSfya3stSNj1nraMq2a-bQ&_nc_ss=7a20f&oh=00_AQO1tp0eqg7to5d6eS5dSh2feiV7ucsD-OakAFnXd0aOeQ&oe=6AC36410"
+      ],
+      "engagement": {
+        "likes": 37,
+        "replies": 14,
+        "reposts": 2,
+        "quotes": 3
+      },
+      "first_seen_at": "2026-09-30T20:53:25.642628Z",
+      "last_seen_at": "2026-09-30T20:53:25.642628Z"
+    },
+    {
       "post_id": "3997799427175551936",
       "published_at": "2026-09-30T19:00:51Z",
       "text": "Inception이 음성 AI 에이전트용 확산 언어 모델 Mercury Voice를 공개했습니다.\n\n음성 대화는 사람이 답변을 기다린다고 느끼지 않으려면 약 500ms 안에 반응해야 하는데요.\n\nInception은 Mercury Voice가 GPT-6 Luna, Gemma 4 31B, Claude Haiku 4.5보다 2배 이상 낮은 지연시간을 기록하면서 τ³-bench에서도 더 높은 성능을 냈다고 밝혔습니다.\n\n텍스트 생성에서 시작된 확산 모델 경쟁이 이제 실시간 음성 에이전트까지 들어오고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd7CWXUDxPA",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQM94Gq5mfvNMaYKQBd4wGAy6KRAfgkE7VOd_dDSBOv6RHchQEcfak-p1PsyUgaCpZ4ZqD5wNA0CZnq3XyJHp6K7XHw4tQdgNB8u_PQ.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=n6HXe3f0HEIQ7kNvwGknHjA&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjcyOTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=21687509e5022554&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MDJENTVGQjA3RDE0RDREQkE3MkVCMkNFQUJBNDEzNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJGRjQ4MzE2NUZGQjQ5RkE5RTAxRDFBQzk2RDYzMzI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA2t_1_s70PxUCKAJDMywXQDQAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=Bkp3tuqWKE51mSmIPP_5cA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMgmSZ6CuXYqp5NO_6kQ_YT1E4cu_oV3lujMrXLqsiPCQ&oe=6ABF2CAA"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQM94Gq5mfvNMaYKQBd4wGAy6KRAfgkE7VOd_dDSBOv6RHchQEcfak-p1PsyUgaCpZ4ZqD5wNA0CZnq3XyJHp6K7XHw4tQdgNB8u_PQ.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=n6HXe3f0HEIQ7kNvwERxtdX&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjcyOTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=21687509e5022554&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MDJENTVGQjA3RDE0RDREQkE3MkVCMkNFQUJBNDEzNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJGRjQ4MzE2NUZGQjQ5RkE5RTAxRDFBQzk2RDYzMzI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA2t_1_s70PxUCKAJDMywXQDQAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=hSfya3stSNj1nraMq2a-bQ&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNof2lfHODczqzdeGIzO1ZX4Lf_AaBC7Ft3Js_4FGZJOg&oe=6ABF64EA"
       ],
       "engagement": {
-        "likes": 3,
-        "replies": 1,
-        "reposts": 0,
+        "likes": 6,
+        "replies": 2,
+        "reposts": 1,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T19:04:30.672768Z",
-      "last_seen_at": "2026-09-30T19:37:06.655760Z"
+      "last_seen_at": "2026-09-30T20:53:25.642628Z"
     },
     {
       "post_id": "3997753802216851067",
@@ -37,13 +54,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Dd63-bwmkZ7",
       "media": null,
       "engagement": {
-        "likes": 19,
+        "likes": 23,
         "replies": 12,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T18:37:10.078629Z",
-      "last_seen_at": "2026-09-30T19:37:06.655760Z"
+      "last_seen_at": "2026-09-30T20:53:25.642628Z"
     },
     {
       "post_id": "3997742124016210806",
@@ -52,18 +69,18 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Dd61UflmhN2",
       "media": null,
       "engagement": {
-        "likes": 17,
+        "likes": 18,
         "replies": 1,
         "reposts": 1,
-        "quotes": 0
+        "quotes": 1
       },
       "first_seen_at": "2026-09-30T18:37:10.078629Z",
-      "last_seen_at": "2026-09-30T19:37:06.655760Z"
+      "last_seen_at": "2026-09-30T20:53:25.642628Z"
     }
   ],
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
-    "backup_only_current_count": 0
+    "backup_only_current_count": 1
   }
 }
