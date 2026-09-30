@@ -300,6 +300,7 @@ export class FieldScene extends Scene {
   // ---------------------------------------------------------------
   async subScene(name, params) {
     let res;
+    this.banner = null;
     try {
       res = await this.game.runScene(name, params);
     } catch (err) {
@@ -314,6 +315,7 @@ export class FieldScene extends Scene {
 
   async battle({ troop, canEscape = true, bg, bgm, random = false }) {
     if (random) { sfx('encounter'); this.game.flash('#ffffff', 180); await this.game.wait(260); }
+    this.banner = null;
     const params = { troop, canEscape, bg: bg || this.map.battleBg || 'plains' };
     if (bgm) params.bgm = bgm;
     let res;

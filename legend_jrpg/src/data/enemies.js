@@ -38,7 +38,7 @@ export const ENEMIES = {
     weak: [], resist: [], sprite: 'goblin_chief',
   },
   treant: {
-    name: '고목의 정령 트렌트', hp: 360, mp: 0, atk: 15, def: 10, mag: 14, spd: 6, exp: 60, gold: 120,
+    name: '고목의 정령 트렌트', hp: 440, mp: 0, atk: 15, def: 10, mag: 14, spd: 6, exp: 60, gold: 120,
     drops: [{ item: 'potion', rate: 1 }], boss: true, immune: BOSS_IMMUNE,
     skills: [{ id: 'attack', w: 4 }, { id: 'tail_sweep', w: 2 }, { id: 'poison_spore', w: 1 }, { id: 'regen', w: 1, hpBelow: 0.4 }],
     phases: [{ hpBelow: 0.4, text: '{a의} 가지가 붉게 물들었다!', atk: 1.1 }],
