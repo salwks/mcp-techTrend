@@ -6,6 +6,7 @@ import { Occlusion } from './core/occlusion.js';
 import { Actor, playerSpeed, findTalkTarget } from './core/actors.js';
 import { Dialog, PlaceBanner } from './core/dialog.js';
 import { Panel } from './core/panel.js';
+import { Hud } from './core/hud.js';
 import { blocked, inBox } from './core/motion.js';
 import { fallbackWorld, fallbackCharacter, fallbackFX } from './core/fallback.js';
 
@@ -19,16 +20,17 @@ async function load(path, name) {
 }
 
 const canvas = document.getElementById('view');
-const hud = document.getElementById('hud');
+const hudRoot = document.getElementById('hud');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 600);
 
-const [worldMod, charMod, fxMod] = await Promise.all([
+const [worldMod, charMod, fxMod, combatMod] = await Promise.all([
   load('./world/index.js', 'world'),
   load('./chars/index.js', 'chars'),
   load('./fx/index.js', 'fx'),
+  load('./combat/index.js', 'combat'),
 ]);
 
 let world;
@@ -59,15 +61,15 @@ const actors = [player, ...npcs];
 // NPC가 서 있는 자리는 플레이어가 통과하지 못하게(충돌체로 추가하지 않고 actor 간 판정으로 처리)
 
 // ---- 시스템 ----
-const input = new Input(hud);
+const input = new Input(hudRoot);
 const rig = new CameraRig(camera, world);
 const occlusion = new Occlusion(camera, world);
-const dialog = new Dialog(hud);
-const banner = new PlaceBanner(hud);
+const dialog = new Dialog(hudRoot);
+const banner = new PlaceBanner(hudRoot);
 const prompt = document.createElement('div');
 prompt.className = 'prompt';
 prompt.hidden = true;
-hud.appendChild(prompt);
+hudRoot.appendChild(prompt);
 
 let spriteMode = '4dir';
 let silhouette = true;
@@ -102,7 +104,7 @@ function teleport(w) {
   rig.update(0, player.pos, player.facing, currentInterior(), true);
 }
 
-const panel = new Panel(hud, {
+const panel = new Panel(hudRoot, {
   getTime: () => fx.getTime(),
   setTime: (t) => fx.setTime(t),
   getOptions: () => fx.getOptions(),
@@ -119,6 +121,60 @@ const panel = new Panel(hud, {
 function nightFactor(h) {
   const s = (a, b, x) => Math.min(1, Math.max(0, (x - a) / (b - a)));
   return h >= 12 ? s(18.5, 19.5, h) : 1 - s(5, 6.5, h);
+}
+
+// ---- 전투 ----
+const hud = new Hud(hudRoot);
+let hitStopLeft = 0;
+let combat = null;
+let arenaCooldown = 0;
+const npcTiger = npcs.find((n) => n.data && (n.data.id === 'tiger' || n.data.kind === 'tiger'));
+if (combatMod && world.arenas && world.arenas.length) {
+  try {
+    combat = combatMod.createCombat({
+      scene, world, camera, fx, hud, input, player, makeChar,
+      hitStop: (ms) => { if (combatOpts.hitStop !== false) hitStopLeft = Math.max(hitStopLeft, ms / 1000); },
+      shake: (power, ms) => rig.shake(power, ms),
+      blocked: (x, z, r) => blocked(world, x, z, r),
+    });
+  } catch (err) { console.error('[설화록] createCombat 오류', err); combat = null; }
+}
+const combatOpts = combat ? { ...(combat.options || {}) } : {};
+if (combat) {
+  const opt = (id, label) => ({ id, label, checked: combatOpts[id] !== false, onChange: (v) => { combatOpts[id] = v; combat.setOption(id, v); } });
+  panel.addSection('호랑이 전투', [
+    opt('telegraph', '공격 예고 표시(바닥·문구)'),
+    opt('ranges', '내 공격 범위 표시'),
+    opt('aimAssist', '조준 보정'),
+    opt('hitStop', '타격 멈춤(히트스톱)'),
+    { label: '싸움터로 이동', onClick: () => { const a = world.arenas[0]; teleport({ x: a.playerStart.x, z: a.playerStart.z + 6 }); } },
+  ]);
+}
+function updateCombat(dt) {
+  if (!combat) return false;
+  const arena = world.arenas[0];
+  const inside = Math.hypot(player.pos.x - arena.x, player.pos.z - arena.z) < arena.radius - 1;
+  arenaCooldown = Math.max(0, arenaCooldown - dt);
+  if (!combat.active && inside && arenaCooldown <= 0 && !hud.resultOpen && !dialog.open) {
+    combat.start(arena);
+    hud.combatMode(true);
+    input.setCombat(true);
+    rig.override = arena.camera || null;
+    if (npcTiger) npcTiger.char.object3d.visible = false;
+  }
+  if (combat.active) {
+    try { combat.update(dt); } catch (err) { console.error('[설화록] combat.update 오류', err); combat.active = false; }
+    hud.tick(dt);
+    if (!combat.active) arenaCooldown = 1.5;
+    return true;
+  }
+  if (hud.el && !hud.el.hidden && !hud.resultOpen) {
+    hud.combatMode(false);
+    input.setCombat(false);
+    rig.override = null;
+    if (npcTiger) npcTiger.char.object3d.visible = true;
+  }
+  return hud.resultOpen;
 }
 
 function currentInterior() {
@@ -142,13 +198,18 @@ let talkTarget = null;
 rig.update(0, player.pos, player.facing, null, true);
 
 function frame() {
-  const dt = Math.min(0.05, clock.getDelta());
+  const rawDt = Math.min(0.05, clock.getDelta());
+  let dt = rawDt;
+  if (hitStopLeft > 0) { hitStopLeft -= rawDt; dt = rawDt * 0.04; }
   time += dt;
 
   if (input.pressed('panel')) panel.toggle();
   if (input.pressed('time')) { fx.setTime((Math.floor(fx.getTime() / 6) * 6 + 6) % 24); panel.syncTime(); }
 
-  if (dialog.open) {
+  const fighting = updateCombat(dt);
+  if (fighting) {
+    talkTarget = null;
+  } else if (dialog.open) {
     if (input.pressed('act') || input.pressed('cancel')) dialog.advance();
     player.char.setAnim('idle');
   } else {
@@ -179,7 +240,7 @@ function frame() {
   }
 
   const interior = currentInterior();
-  rig.update(dt, player.pos, player.facing, interior);
+  rig.update(rawDt, player.pos, player.facing, interior);
   banner.set(interior ? interior.name : rig.zoneName);
   occlusion.update(dt, player.pos, player.char.height, interior);
   dialog.update(dt);
@@ -195,6 +256,6 @@ function frame() {
   requestAnimationFrame(frame);
 }
 
-window.__seolhwa = { THREE, scene, camera, renderer, world, fx, player, npcs, rig, teleport, warps, panel };
+window.__seolhwa = { THREE, scene, camera, renderer, world, fx, player, npcs, rig, teleport, warps, panel, get combat() { return combat; }, hud, input };
 requestAnimationFrame(frame);
 document.body.classList.add('ready');

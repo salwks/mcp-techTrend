@@ -66,3 +66,11 @@ export const ZELKOVA = { x: 11.8, z: 18 };
 export const WELL = { x: -5, z: 8 };
 export const JANGDOK = { x: -15, z: -6, w: 3.4, d: 2.4 };
 export const SEONANG = { cairn: { x: 4.6, z: -72.6 }, tree: { x: 2.0, z: -74.2 } };
+
+// 호랑이의 영역: 산길(P3) 동쪽 숲속 빈터
+export const ARENA = { x: 28.5, z: -44, r: 11, h: 5.2 };
+export const ARENA_TRAIL = [
+  [14, -38, 4.4],
+  [18.5, -40.2, 4.9],
+  [21.5, -41.8, 5.2],
+];

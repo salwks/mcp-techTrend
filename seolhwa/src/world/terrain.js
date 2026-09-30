@@ -1,7 +1,7 @@
 // 지형: 높이장(격자) + heightAt(렌더 면과 같은 삼각형 보간) + 지형 메시·개울·논물·원경 산
 import * as THREE from 'three';
 import { clamp, lerp, smoothstep, fbm, vnoise, rng } from './util.js';
-import { PATH, BRANCH, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
+import { PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
 
 export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 1.0 };
 
@@ -17,6 +17,8 @@ function segShapes(pts, r0, r1) {
 const SHAPES = [
   ...segShapes(PATH, 1.7, 5.5),
   ...segShapes(BRANCH, 1.6, 5),
+  ...segShapes(ARENA_TRAIL, 1.5, 5),
+  { t: 'circ', x: ARENA.x, z: ARENA.z, r: ARENA.r - 0.5, h: ARENA.h, r1: ARENA.r + 5, wob: 0.3 },
   { t: 'circ', x: PASS.x, z: PASS.z, r: PASS.r, h: PASS.h, r1: 12 },
   { t: 'rect', minX: HOUSE.x - 4.6, maxX: HOUSE.x + 4.6, minZ: HOUSE.z - 3.8, maxZ: HOUSE.z + 3.6, h: HOUSE.pad, r0: 0, r1: 5 },
   ...PADDIES.map((p) => ({ t: 'rect', ...p, r0: 0, r1: 0.55 })),
@@ -76,7 +78,7 @@ function hRaw(x, z) {
   for (const s of SHAPES) {
     let d, hp, r0, r1;
     if (s.t === 'seg') { const i = segInfo(s, x, z); d = i.d; hp = i.h; r0 = s.r0; r1 = s.r1; }
-    else if (s.t === 'circ') { d = Math.hypot(x - s.x, z - s.z); hp = s.h; r0 = s.r; r1 = s.r1; }
+    else if (s.t === 'circ') { d = Math.hypot(x - s.x, z - s.z); hp = s.h + (s.wob ? s.wob * vnoise(x * 0.18, z * 0.18) : 0); r0 = s.r; r1 = s.r1; }
     else { d = rectDist(s, x, z); hp = s.h; r0 = s.r0; r1 = s.r1; }
     if (d >= r1) continue;
     const k = 1 - smoothstep(r0, r1, d);
@@ -182,6 +184,9 @@ export function buildTerrainMesh(hg) {
     c.lerp(COL.bank, 1 - smoothstep(3.2, 4.8, dzs));
     c.lerp(COL.bed, 1 - smoothstep(1.6, 2.8, dzs));
     if (inPaddy(x, z, -0.3)) c.lerp(COL.paddy, 0.9);
+    // 호랑이의 영역: 짓밟혀 마른 풀밭
+    const da = Math.hypot(x - ARENA.x, z - ARENA.z);
+    c.lerp(COL.dry, (1 - smoothstep(ARENA.r - 3, ARENA.r + 1, da)) * clamp(0.45 + n2 * 0.3, 0, 0.7));
     col[k * 3] = c.r; col[k * 3 + 1] = c.g; col[k * 3 + 2] = c.b;
   }
   const idx = [];

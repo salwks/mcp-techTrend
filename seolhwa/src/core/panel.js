@@ -114,6 +114,37 @@ export class Panel {
     this.syncTime();
   }
 
+  // 추가 섹션: items = [{ id, label, checked, onChange }] 또는 [{ label, onClick }] (버튼)
+  addSection(title, items) {
+    const sec = document.createElement('section');
+    const h = document.createElement('h3');
+    h.textContent = title;
+    sec.appendChild(h);
+    const chips = document.createElement('div');
+    chips.className = 'p-chips';
+    for (const it of items) {
+      if (it.onClick) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = it.label;
+        b.addEventListener('click', it.onClick);
+        chips.appendChild(b);
+        continue;
+      }
+      const l = document.createElement('label');
+      l.className = 'p-check';
+      l.innerHTML = `<input id="p-x-${it.id}" type="checkbox"> <span></span>`;
+      l.querySelector('span').textContent = it.label;
+      const c = l.querySelector('input');
+      c.checked = !!it.checked;
+      c.addEventListener('change', () => it.onChange(c.checked));
+      sec.appendChild(l);
+    }
+    if (chips.children.length) sec.appendChild(chips);
+    const body = this.el.querySelector('.p-body');
+    body.insertBefore(sec, body.querySelector('section:nth-of-type(4)'));
+  }
+
   setOpen(open) {
     this.el.classList.toggle('collapsed', !open);
     this.el.querySelector('.p-toggle').setAttribute('aria-expanded', String(open));

@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Batch, rng, xf, paint, box, cyl, limb, smoothstep, fbm } from './util.js';
 import { makeMaterialFactory, inkMat, textures } from './materials.js';
 import {
-  PATH, BRANCH, PASS, HOUSE, BRIDGE, PADDIES, CHOGA, GIWA, JEONGJA, ZELKOVA, WELL, JANGDOK, SEONANG, WATER_Y, streamZ,
+  PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, CHOGA, GIWA, JEONGJA, ZELKOVA, WELL, JANGDOK, SEONANG, WATER_Y, streamZ,
 } from './layout.js';
 import { GRID, buildHeights, makeHeightAt, buildTerrainMesh, buildStream, buildBackdrop, bridgeDeck, pathDist, inPaddy } from './terrain.js';
 import {
@@ -290,12 +290,12 @@ export function buildWorld(scene) {
   const nearHouse = (x, z, m = 0) => x > hxr.minX - m && x < hxr.maxX + m && z > hxr.minZ - m && z < hxr.maxZ + m;
   // 걷는 곳 표본점(카메라 쪽 나무 솎기용): 산길·오솔길·외딴집·고갯마루
   const walkPts = [];
-  for (const line of [PATH, BRANCH]) for (let i = 0; i < line.length - 1; i++) {
+  for (const line of [PATH, BRANCH, ARENA_TRAIL]) for (let i = 0; i < line.length - 1; i++) {
     const [ax, az] = line[i], [bx, bz] = line[i + 1];
     const n = Math.ceil(Math.hypot(bx - ax, bz - az));
     for (let k = 0; k < n; k++) walkPts.push([ax + (bx - ax) * k / n, az + (bz - az) * k / n]);
   }
-  walkPts.push([HOUSE.x, HOUSE.z + 3], [HOUSE.x - 3, HOUSE.z + 3], [HOUSE.x + 3, HOUSE.z + 3], [PASS.x, PASS.z], [PASS.x - 4, PASS.z], [PASS.x + 4, PASS.z]);
+  walkPts.push([ARENA.x, ARENA.z], [ARENA.x - 6, ARENA.z + 2], [ARENA.x + 6, ARENA.z + 2], [HOUSE.x, HOUSE.z + 3], [HOUSE.x - 3, HOUSE.z + 3], [HOUSE.x + 3, HOUSE.z + 3], [PASS.x, PASS.z], [PASS.x - 4, PASS.z], [PASS.x + 4, PASS.z]);
   const camSide = (x, z) => walkPts.some(([wx, wz]) => z - wz > 0 && z - wz < 10 && Math.abs(x - wx) < 4.5);
   const trng = rng(2024);
   let treeCount = 0, occTrees = 0;
@@ -309,6 +309,7 @@ export function buildWorld(scene) {
       if (pathDist(px, pz) < 3.4) continue;
       if (inPaddy(px, pz, 1.2)) continue;
       if (nearHouse(px, pz)) continue;
+      if (Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 2.5) continue;
       if (Math.hypot(px - PASS.x, pz - PASS.z) < 8.5) continue;
       if (Math.hypot(px - SEONANG.tree.x, pz - SEONANG.tree.z) < 3) continue;
       const village = pz > -13 && Math.abs(px) < 28;
@@ -357,7 +358,7 @@ export function buildWorld(scene) {
     else if (pz < -21 && pd > 2.6 && pd < 6) s = 0.4 + rr() * 0.8;
     else if (pz < -21 && slope > 0.9 && pd > 3) s = 0.8 + rr() * 1.3;
     else continue;
-    if (inPaddy(px, pz, 1) || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.6) continue;
+    if (inPaddy(px, pz, 1) || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.6 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 1) continue;
     if (pz > -13 && Math.abs(px) < 28) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
     const y = ground(px, pz);
@@ -379,7 +380,7 @@ export function buildWorld(scene) {
     if (dzs > 2.0 && dzs < 3.6 && Math.abs(px) > 3) { reeds(bgAt(px, y, pz), br, 6); continue; }
     if (inPaddy(px, pz, 1) || nearHouse(px, pz)) continue;
     if (pz > -13 && Math.abs(px) < 27 && !(Math.abs(pz + 10.5) < 1.2)) continue;
-    if (pd < 2.4 || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5) continue;
+    if (pd < 2.4 || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
     bush(bgAt(px, y, pz), br, 0.8 + br() * 0.5);
   }
@@ -405,11 +406,69 @@ export function buildWorld(scene) {
     const w = walkPts[Math.floor(br() * walkPts.length)];
     const ang = br() * Math.PI * 2, rad = 2.6 + br() * 3.5;
     const px = w[0] + Math.cos(ang) * rad, pz = w[1] + Math.sin(ang) * rad;
-    if (pathDist(px, pz) < 2.4 || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5) continue;
+    if (pathDist(px, pz) < 2.4 || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
     bush(bgAt(px, ground(px, pz), pz), br, 0.6 + br() * 0.5);
   }
   // 마을 안 소소한 덤불(담 밑, 집 곁)
   for (const [x, z] of [[-4, -9.6], [-25, -9.8], [19, -9.3], [-11, 12.4], [12, 12.4], [4.5, -3], [-24, 12], [22, 5]]) bush(at(x, ground(x, z), z), rng(Math.round(x * 17 + z)), 0.8);
+
+  // ---- 호랑이의 영역(숲속 빈터) ----
+  let arena;
+  {
+    const A = ARENA, ar = rng(4242);
+    const rimTree = (ang, rad, kind, claw) => {
+      const x = A.x + Math.cos(ang) * rad, z = A.z + Math.sin(ang) * rad, y = ground(x, z);
+      occGroup(claw ? '발톱자국 나무' : '빈터 소나무', x, y, z, (add) => {
+        if (kind === 'fir') fir(add, rng(Math.floor(ar() * 1e9)), 1.1);
+        else pine(add, rng(Math.floor(ar() * 1e9)), 1.15);
+        if (claw) {
+          // 줄기에 할퀸 자국 세 줄(껍질이 벗겨진 밝은 속살 + 먹빛 테)
+          const face = Math.atan2(A.z - z, A.x - x);
+          for (let i = 0; i < 3; i++) {
+            const g = new THREE.BoxGeometry(0.05, 0.85, 0.04);
+            xf(g, 0, 1.55 + i * 0.05, 0, 0, 0, 0.35);
+            g.translate((i - 1) * 0.1, 0, 0.2);
+            g.rotateY(Math.PI / 2 - face);
+            add('p', 'flat', paint(g, '#e2cfa4', '#c9b27f'), 0.012);
+          }
+        }
+      });
+      circle(x, z, 0.4);
+    };
+    // 가장자리 나무(남쪽 한 그루는 가림 검증용)
+    const trees = [[-2.6, 11.2, 'pine'], [-1.9, 11.8, 'fir'], [-1.2, 11.0, 'pine', true], [-0.4, 12.0, 'fir'], [0.35, 11.4, 'pine'], [1.05, 11.8, 'pine'], [1.6, 10.8, 'pine'], [2.35, 11.6, 'fir']];
+    for (const [a, rad, kind, claw] of trees) rimTree(a, rad, kind, claw);
+    // 엄폐용 바위(가장자리 안쪽)
+    for (const [a, rad, sz] of [[-2.2, 7.8, 1.3], [-0.5, 8.4, 1.1], [0.8, 7.9, 1.5], [2.0, 8.3, 1.0], [-2.9, 9.0, 0.9]]) {
+      const x = A.x + Math.cos(a) * rad, z = A.z + Math.sin(a) * rad;
+      rock(at(x, ground(x, z) - 0.2, z), rng(Math.floor(ar() * 1e9)), sz, false);
+      circle(x, z, sz * 0.85);
+    }
+    // 뼈와 흩어진 짚
+    for (let i = 0; i < 9; i++) {
+      const a = ar() * 6.28, rad = 2 + ar() * 7, x = A.x + Math.cos(a) * rad, z = A.z + Math.sin(a) * rad;
+      const put = at(x, ground(x, z), z, ar() * 6.28);
+      if (i < 5) {
+        put('p', 'flat', paint(xf(new THREE.CylinderGeometry(0.035, 0.03, 0.45 + ar() * 0.3, 5), 0, 0.04, 0, 0, 0, Math.PI / 2), '#e8e0cc', '#cfc5ad'), 0.008);
+        put('p', 'flat', paint(xf(new THREE.SphereGeometry(0.06, 5, 3), 0.22, 0.05, 0), '#e8e0cc'), 0);
+        put('p', 'flat', paint(xf(new THREE.SphereGeometry(0.06, 5, 3), -0.22, 0.05, 0), '#e8e0cc'), 0);
+        if (i === 0) put('p', 'flat', paint(xf(new THREE.SphereGeometry(0.16, 7, 5), 0.5, 0.1, 0.3, 0, 0, 0, 1, 0.8, 1.25), '#ece4d0', '#c8bea6'), 0.01);
+      } else {
+        for (let k = 0; k < 6; k++) {
+          const g = new THREE.CylinderGeometry(0.012, 0.012, 0.5 + ar() * 0.4, 3);
+          xf(g, (ar() - 0.5) * 0.8, 0.03, (ar() - 0.5) * 0.8, Math.PI / 2, ar() * 6, 0);
+          put('p', 'flat', paint(g, '#d6c17e', '#b39d62'), 0);
+        }
+      }
+    }
+    const ent = ARENA_TRAIL[ARENA_TRAIL.length - 1];
+    arena = {
+      name: '호랑이의 영역', x: A.x, z: A.z, radius: A.r,
+      playerStart: { x: ent[0] + 0.3, z: ent[1] - 0.6 }, tigerStart: { x: A.x + 6.5, z: A.z - 2.8 },
+      camera: { pitch: 48, distance: 26, fov: 30 },
+    };
+    labels.push({ x: A.x, y: A.h + 3, z: A.z, text: '호랑이의 영역' });
+  }
 
   // 정적 묶음 올리기
   const statG = stat.build(make, sharedInk, { name: '마을 소품' });
@@ -486,6 +545,7 @@ export function buildWorld(scene) {
     { name: '개울 돌다리', minX: -12, maxX: 12, minZ: -22, maxZ: -11, pitch: 42, distance: 19 },
     { name: '솔숲 산길', minX: -35, maxX: 45, minZ: -63, maxZ: -22, pitch: 48, distance: 20 },
     { name: '숲가 외딴 초가', minX: -30, maxX: -14, minZ: -38, maxZ: -24, pitch: 44, distance: 14 },
+    { name: '호랑이의 영역', minX: ARENA.x - ARENA.r - 2, maxX: Math.min(44, ARENA.x + ARENA.r + 2), minZ: ARENA.z - ARENA.r - 2, maxZ: ARENA.z + ARENA.r + 2, pitch: 48, distance: 26, fov: 30 },
     { name: '고갯마루 서낭당', minX: -8, maxX: 24, minZ: -80, maxZ: -63, pitch: 27, distance: 22, fov: 34 },
   ];
 
@@ -524,7 +584,7 @@ export function buildWorld(scene) {
   }
 
   const world = {
-    heightAt, colliders, spawn: { x: 0, z: 6 }, npcs, cameraZones, interiors: [interior], occluders, lights, labels, update,
+    heightAt, colliders, spawn: { x: 0, z: 6 }, npcs, cameraZones, interiors: [interior], arenas: [arena], occluders, lights, labels, update,
     setNight, glowMaterials: glowMats, root,
     stats: { trees: treeCount, occTrees },
   };

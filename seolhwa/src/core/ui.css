@@ -119,3 +119,60 @@ html, body { margin: 0; height: 100%; background: #1a1712; color: var(--ink); ov
   .place.show { animation-duration: 0.01s; opacity: 1; }
   .dialog.done .d-next { animation: none; }
 }
+
+/* ---------- 전투 HUD ---------- */
+.chud { position: absolute; inset: 0; pointer-events: none; }
+.chud .ch-result { pointer-events: auto; }
+.ch-me { position: absolute; left: calc(64px + env(safe-area-inset-left, 0px)); top: calc(16px + env(safe-area-inset-top, 0px));
+  display: flex; flex-direction: column; gap: 6px; width: min(280px, 46vw); }
+.ch-bar { display: flex; align-items: center; gap: 8px; }
+.ch-label { font: 700 12px var(--display); letter-spacing: 0.2em; color: var(--hanji); text-shadow: 0 1px 2px rgba(0,0,0,.8); min-width: 32px; }
+.ch-bar i, .ch-foe i { position: relative; flex: 1; height: 12px; display: block; overflow: hidden;
+  background: rgba(20,17,13,.55); border-radius: 6px 2px 6px 2px; box-shadow: inset 0 0 0 1px rgba(239,230,210,.35); }
+.ch-bar b, .ch-foe b, .ch-foe s { position: absolute; inset: 0; transform-origin: left center; transition: transform .12s linear;
+  border-radius: 6px 2px 6px 2px; }
+/* 붓획처럼 끝이 거친 게이지 */
+.ch-bar.hp b { background: linear-gradient(90deg, #8e2a24, var(--seal) 70%, #c9564c);
+  -webkit-mask: linear-gradient(90deg, #000 94%, transparent); mask: linear-gradient(90deg, #000 94%, transparent); }
+.ch-bar.st b { background: linear-gradient(90deg, #6f6a4a, #b7a867); }
+.ch-bar.st.low b { background: linear-gradient(90deg, #6f4a2a, #c98a3a); }
+.ch-bar.st i { height: 7px; }
+.ch-ammo { display: flex; gap: 14px; font: 700 13px var(--display); color: var(--hanji); text-shadow: 0 1px 2px rgba(0,0,0,.8);
+  padding-left: 40px; font-variant-numeric: tabular-nums; }
+.ch-foe { position: absolute; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  width: min(520px, calc(100% - 32px)); display: flex; flex-direction: column; gap: 5px; align-items: stretch; }
+.ch-foe-name { font: 700 16px var(--display); letter-spacing: 0.5em; color: var(--hanji); text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,.9); }
+.ch-foe i { flex: none; height: 10px; }
+.ch-foe s { background: rgba(239,230,210,.55); text-decoration: none; }
+.ch-foe b { background: linear-gradient(90deg, #3a2a1a, #7a4a22 40%, #b9772e); z-index: 1; transition-duration: .06s; }
+.ch-say { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); font: 700 clamp(16px, 2.6vw, 21px) var(--display);
+  color: var(--hanji); letter-spacing: 0.12em; text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 16px rgba(0,0,0,.6); opacity: 0;
+  transition: opacity .25s; white-space: nowrap; }
+.ch-say.show { opacity: 1; }
+.ch-keys { position: absolute; left: 50%; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  font-size: 12px; color: rgba(239,230,210,.75); text-shadow: 0 1px 2px rgba(0,0,0,.9); white-space: nowrap; }
+.ch-result { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(15,12,9,.55); padding-inline: 16px; }
+.ch-card { width: min(420px, 100%); background: var(--hanji); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+  padding: 26px 28px 24px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+.ch-kind { font: 700 13px var(--display); letter-spacing: 0.3em; color: var(--hanji); background: var(--seal); padding: 4px 10px; border-radius: 2px; }
+.ch-result[data-kind="lose"] .ch-kind { background: var(--ink); }
+.ch-result[data-kind="escaped"] .ch-kind, .ch-result[data-kind="repelled"] .ch-kind { background: var(--indigo); }
+.ch-title { margin: 4px 0 0; font: 700 clamp(20px, 3.4vw, 26px) var(--display); color: var(--ink); text-wrap: balance; }
+.ch-text { margin: 0; font: 16px/1.7 var(--display); color: var(--ink-soft); max-width: 36ch; }
+.ch-retry { margin-top: 8px; font: 700 15px var(--display); letter-spacing: 0.2em; background: var(--ink); color: var(--hanji);
+  border: 0; padding: 10px 18px; border-radius: 2px; cursor: pointer; }
+.ch-retry:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
+body.in-combat .prompt, body.in-combat .place { display: none; }
+
+/* 모바일 전투 버튼 */
+.combat-btns { display: none; }
+@media (pointer: coarse) {
+  .ch-keys { display: none; }
+  .ch-foe { bottom: auto; top: calc(64px + env(safe-area-inset-top, 0px)); }
+  .touch.in-combat .touch-btns { display: none; }
+  .touch.in-combat .combat-btns { display: grid; position: absolute; right: calc(14px + env(safe-area-inset-right, 0px));
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px)); grid-template-columns: repeat(3, auto); gap: 10px; align-items: end;
+    pointer-events: auto; }
+  .combat-btns .tbtn { width: 58px; height: 58px; font-size: 13px; }
+  .combat-btns .tbtn.big { width: 78px; height: 78px; grid-column: 3; grid-row: 1 / span 2; font-size: 16px; }
+}

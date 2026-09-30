@@ -13,9 +13,21 @@ export class CameraRig {
     this.look = new THREE.Vector3();
     this.mode = 'zones'; // 'zones' | 'fixed'
     this.zoneName = null;
+    this.override = null; // 전투 등에서 강제로 쓰는 카메라 값
+    this.shakeT = 0;
+    this.shakeDur = 0;
+    this.shakePow = 0;
+  }
+
+  shake(power = 0.3, ms = 250) {
+    if (power >= this.shakePow * (this.shakeT / (this.shakeDur || 1))) {
+      this.shakePow = power;
+      this.shakeDur = this.shakeT = ms / 1000;
+    }
   }
 
   params(pos, interior) {
+    if (this.override) return { ...DEFAULT, ...this.override };
     if (this.mode === 'fixed') return DEFAULT;
     if (interior && interior.camera) return { ...DEFAULT, ...interior.camera, lookAhead: 0.3 };
     const zones = this.world.cameraZones || [];
@@ -44,6 +56,13 @@ export class CameraRig {
     const d = this.cur.distance;
     this.camera.position.set(this.target.x, this.target.y + Math.sin(pr) * d, this.target.z + Math.cos(pr) * d);
     this.camera.lookAt(this.target);
+    if (this.shakeT > 0) {
+      this.shakeT = Math.max(0, this.shakeT - dt);
+      const k2 = this.shakeT / this.shakeDur;
+      const p2 = this.shakePow * k2 * k2;
+      this.camera.position.x += (Math.random() * 2 - 1) * p2;
+      this.camera.position.y += (Math.random() * 2 - 1) * p2 * 0.6;
+    }
     if (Math.abs(this.camera.fov - this.cur.fov) > 0.01) {
       this.camera.fov = this.cur.fov;
       this.camera.updateProjectionMatrix();

@@ -5,12 +5,14 @@ const KEYS = {
   ShiftLeft: 'run', ShiftRight: 'run',
   KeyE: 'act', Space: 'act', Enter: 'act', KeyZ: 'act',
   Tab: 'panel', KeyN: 'time', Escape: 'cancel', KeyX: 'cancel',
+  KeyJ: 'attack', KeyK: 'dodge', KeyL: 'guard', KeyI: 'bow', KeyU: 'item',
 };
 
 export class Input {
   constructor(root) {
     this.down = new Set();
     this.pressedSet = new Set();
+    this.releasedSet = new Set();
     this.stick = { x: 0, y: 0, active: false };
     this.runToggle = false;
     window.addEventListener('keydown', (e) => {
@@ -23,9 +25,9 @@ export class Input {
     });
     window.addEventListener('keyup', (e) => {
       const a = KEYS[e.code];
-      if (a) this.down.delete(a);
+      if (a && this.down.has(a)) { this.down.delete(a); this.releasedSet.add(a); }
     });
-    window.addEventListener('blur', () => this.down.clear());
+    window.addEventListener('blur', () => { for (const a of this.down) this.releasedSet.add(a); this.down.clear(); });
     this._buildTouch(root);
   }
 
@@ -37,6 +39,13 @@ export class Input {
       <div class="touch-btns">
         <button class="tbtn" data-a="run" aria-label="달리기">달리기</button>
         <button class="tbtn big" data-a="act" aria-label="조사">조사</button>
+      </div>
+      <div class="combat-btns">
+        <button class="tbtn" data-hold="bow" aria-label="활">활</button>
+        <button class="tbtn" data-hold="item" aria-label="떡 던지기">떡</button>
+        <button class="tbtn" data-hold="guard" aria-label="방어">방어</button>
+        <button class="tbtn" data-hold="dodge" aria-label="회피">회피</button>
+        <button class="tbtn big" data-hold="attack" aria-label="공격">공격</button>
       </div>`;
     root.appendChild(pad);
     const zone = pad.querySelector('.stick-zone');
@@ -69,7 +78,17 @@ export class Input {
     };
     zone.addEventListener('pointerup', end);
     zone.addEventListener('pointercancel', end);
-    pad.querySelectorAll('.tbtn').forEach((b) => {
+    pad.querySelectorAll('[data-hold]').forEach((b) => {
+      const a = b.dataset.hold;
+      const on = (e) => { e.preventDefault(); b.setPointerCapture?.(e.pointerId); b.classList.add('on'); this.pressedSet.add(a); this.down.add(a); };
+      const off = (e) => { e.preventDefault(); if (!b.classList.contains('on')) return; b.classList.remove('on'); this.down.delete(a); this.releasedSet.add(a); };
+      b.addEventListener('pointerdown', on);
+      b.addEventListener('pointerup', off);
+      b.addEventListener('pointercancel', off);
+      b.addEventListener('contextmenu', (e) => e.preventDefault());
+    });
+    this.pad = pad;
+    pad.querySelectorAll('[data-a]').forEach((b) => {
       b.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         const a = b.dataset.a;
@@ -99,5 +118,8 @@ export class Input {
   }
 
   pressed(a) { return this.pressedSet.has(a); }
-  endFrame() { this.pressedSet.clear(); }
+  held(a) { return this.down.has(a); }
+  released(a) { return this.releasedSet.has(a); }
+  setCombat(on) { this.pad.classList.toggle('in-combat', on); }
+  endFrame() { this.pressedSet.clear(); this.releasedSet.clear(); }
 }
