@@ -322,7 +322,7 @@ const TF = {
   ],
 };
 
-export function tigerCombatPose(view, anim, t, at) {
+export function tigerCombatPose(view, anim, t, at, st = {}) {
   const side = view === 'side';
   const info = TIGER_ANIMS[anim];
   if (!info) return null;
@@ -336,7 +336,7 @@ export function tigerCombatPose(view, anim, t, at) {
     return P;
   }
   if (anim === 'prowl') {
-    const ph = (t / info.dur) * PI * 2, s = sin(ph), c = cos(ph);
+    const ph = (st.phase != null ? st.phase : t / info.dur) * PI * 2, s = sin(ph), c = cos(ph);
     if (side) {
       const A = 0.22;
       return kf(0, [[0, {

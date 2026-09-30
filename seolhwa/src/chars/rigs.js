@@ -5,7 +5,7 @@ import { Painter, PAL, INK, shade, mix, ellipsePts, limbPts, darkenCopy } from '
 import { HUMAN_ANIMS, TIGER_ANIMS, humanCombatPose, tigerCombatPose } from './anims.js';
 
 const PI = Math.PI;
-const { sin, cos, max, min, abs } = Math;
+const { sin, cos, max, min, abs, pow } = Math;
 
 // ---------------------------------------------------------------------------
 // 공용
@@ -553,7 +553,14 @@ function drawThigh(p, S, sp) {
   const ws = S.ws;
   const L = S.thigh + 6 * ws, pc = sp.pants || sp.coat;
   const path = p.poly([[-12 * ws, -4], [12 * ws, -4], [15 * ws, L * 0.45], [13 * ws, L - 2 * ws], [6 * ws, L + 4 * ws], [-6 * ws, L + 4 * ws], [-13 * ws, L - 2 * ws], [-15 * ws, L * 0.45]], pc, { w: 2.2 });
-  p.clip(path, () => { p.stroke([[-6 * ws, L * 0.2], [-3 * ws, L * 0.8]], { w: 1, color: shade(pc, -0.3) }); p.stroke([[7 * ws, L * 0.5], [4 * ws, L * 0.95]], { w: 1, color: shade(pc, -0.3) }); });
+  p.clip(path, () => {
+    p.stroke([[-6 * ws, L * 0.2], [-3 * ws, L * 0.8]], { w: 1, color: shade(pc, -0.3) }); p.stroke([[7 * ws, L * 0.5], [4 * ws, L * 0.95]], { w: 1, color: shade(pc, -0.3) });
+    if (sp.patch) {
+      // 기운 자국: 덧댄 천 + 바늘땀
+      p.poly([[-2 * ws, L * 0.55], [11 * ws, L * 0.52], [12 * ws, L * 0.78], [-1 * ws, L * 0.8]], sp.patch, { w: 1.1, smooth: false, rough: 1 });
+      for (let i = 0; i < 6; i++) p.dot(-1 * ws + i * 2.2 * ws, L * 0.555 - i * 0.006 * L, 0.6, INK);
+    }
+  });
 }
 function drawShin(p, S, sp, view) {
   const ws = S.ws, L = S.shin;
@@ -786,14 +793,16 @@ function addCombatParts(L, view, S, sp, ls) {
 // ---- 사람 조립 ----
 function humanView(view, S, sp) {
   const ws = S.ws, T = S.torso;
-  const ls = S === CHILD ? 0.82 : 1;
+  const ls = sp.child ? 0.82 : 1;
   const L = [];
   const side = view === 'side', back = view === 'back';
   part(L, 'root', null, [0, -S.hip], 0, null);
   part(L, 'torso', 'root', [0, 0], side ? 8 : 5, (p) => drawTorso(p, view, S, sp), { ls, seed: view });
   const skirtAt = sp.bottom === 'chima' ? [0, -T * 0.58 + 3 * ws] : [0, 0];
   const hasSkirt = sp.bottom === 'chima' || sp.top === 'durumagi';
-  part(L, 'head', 'torso', [side ? -3 * ws : 0, -T + (side ? 5 : 2) * ws], side ? 9 : 7, (p) => drawHead(p, view, S, sp), { ls, seed: view + 'h' });
+  const headAt = [side ? -3 * ws : 0, -T + (side ? 5 : 2) * ws];
+  part(L, 'head', 'torso', headAt, side ? 9 : 7, (p) => drawHead(p, view, S, sp), { ls, seed: view + 'h' });
+  if (!back) part(L, 'head_blink', 'torso', headAt, side ? 9 : 7, (p) => drawHead(p, view, S, { ...sp, _blink: true }), { ls, seed: view + 'h', tag: 'alt' });
 
   // 팔 (정면/뒷면: arm1=화면 왼쪽, arm2=화면 오른쪽 / 옆면: arm1=먼 팔, arm2=가까운 팔)
   const up = [], lo = [];
@@ -865,7 +874,7 @@ function humanView(view, S, sp) {
 function humanPose(view, anim, t, rig, at = t, st = {}) {
   const C = humanCombatPose(view, anim, t, at, rig);
   if (C) return C;
-  const P = humanBasePose(view, anim, t, rig);
+  const P = humanBasePose(view, anim, t, rig, st);
   if (st.armed) {
     // 칼을 든 채 걷기·대기: 칼끝이 앞쪽 아래를 향함
     const sw = P.sword || (P.sword = { r: 0, x: 0, y: 0, sx: 1, sy: 1 });
@@ -874,41 +883,61 @@ function humanPose(view, anim, t, rig, at = t, st = {}) {
   return P;
 }
 
-function humanBasePose(view, anim, t, rig) {
+/** 걷기·뛰기 보폭(m, 한 주기=두 걸음). Character가 이동 속도로 위상을 진행시킨다. */
+export function strideOf(rig, anim) {
+  if (rig.type === 'tiger') return anim === 'run' ? 2.6 : anim === 'prowl' ? 0.9 : 1.25;
+  const legM = (rig.S.hip / rig.ppm) * rig.scale;
+  const A = anim === 'run' ? RUN_A : WALK_A;
+  const k = rig.spec.bottom === 'chima' ? 0.6 : 1;
+  return 4 * legM * sin(A * k) * (anim === 'run' ? 1.35 : 1);
+}
+const WALK_A = 0.5, RUN_A = 0.78;
+
+function humanBasePose(view, anim, t, rig, st = {}) {
   const sp = rig.spec, k = rig.S.ws;
   const P = {};
   const set = (n, r = 0, x = 0, y = 0, sx = 1, sy = 1) => (P[n] = { r, x, y, sx, sy });
   const stoop = sp.stoop || 0;
   const run = anim === 'run', walk = anim === 'walk' || run;
-  const period = (run ? 0.6 : 0.95) * (sp.child ? 0.82 : 1) * (stoop ? 1.2 : 1);
-  const ph = (t / period) * PI * 2, s = sin(ph), c = cos(ph);
-  const br = sin((t / 3.2) * PI * 2);
+  // 위상: 이동 속도로 진행(없으면 시간)
+  const cyc = st.phase != null ? st.phase : t / ((run ? 0.62 : 0.8) * (sp.child ? 0.82 : 1));
+  const ph = cyc * PI * 2, s = sin(ph), c = cos(ph);
+  const br = sin((t / 3.4) * PI * 2), br2 = sin((t / 3.4) * PI * 2 - 0.6);
   const side = view === 'side';
   const gestArmSide = sp.staff ? 'arm1' : 'arm2';
+  const chimaK = sp.bottom === 'chima' ? 0.6 : 1;
+  // 무게: 디딤(contact) 직후 가장 낮고(down), 두 다리가 스칠 때(pass) 지나 가장 높다(up)
+  const down = cos(2 * (ph - PI / 2 - 0.35));
+  const bob = (run ? 9 : 4.5) * k;
 
   if (side) {
     if (walk) {
-      const A = (run ? 0.72 : 0.42) * (sp.bottom === 'chima' ? 0.6 : 1);
-      set('leg2', A * s);
-      set('leg2_l', -(run ? 1.2 : 0.55) * max(0, c));
-      set('leg1', -A * s);
-      set('leg1_l', -(run ? 1.2 : 0.55) * max(0, -c));
-      set('arm2', -0.7 * A * s, 0, 0);
-      set('arm2_l', (run ? 0.9 : 0.12) + 0.2 * max(0, -s));
-      set('arm1', 0.7 * A * s);
-      set('arm1_l', (run ? 0.9 : 0.12) + 0.2 * max(0, s));
-      set('root', 0, 0, -(1 - abs(s)) * (run ? 7 : 4) * k);
-      set('torso', (run ? -0.16 : -0.04) - stoop);
-      set('head', (run ? 0.1 : 0.02) + stoop * 0.7 + 0.02 * sin(ph * 2));
-      set('skirt', (sp.bottom === 'chima' ? 0.4 : 0.22) * A * sin(ph - 0.7) - (run ? 0.06 : 0), 0, 0, 1 + 0.1 * abs(s));
-      set('braid', -(run ? 0.55 : 0.2) + 0.12 * sin(ph * 2 - 1));
-      set('pack', 0.04 * sin(ph * 2 - 0.8));
-      set('staff', 0.12 * s);
+      const A = (run ? RUN_A : WALK_A) * chimaK;
+      const B = run ? 1.35 : 0.75;
+      set('leg2', A * s + (run ? 0.1 : 0));
+      set('leg2_l', -B * pow(max(0, c), 1.3) - 0.1 * max(0, -s));
+      set('leg1', -A * s + (run ? 0.1 : 0));
+      set('leg1_l', -B * pow(max(0, -c), 1.3) - 0.1 * max(0, s));
+      // 팔은 다리 반대로, 반 박자 늦게, 앞으로 갈 때 팔꿈치가 굽음
+      const as = sin(ph - 0.35);
+      set('arm2', -0.75 * A * as);
+      set('arm2_l', (run ? 1.1 : 0.15) + 0.35 * max(0, -as));
+      set('arm1', 0.75 * A * as);
+      set('arm1_l', (run ? 1.1 : 0.15) + 0.35 * max(0, as));
+      set('root', 0.015 * down, 0, down * bob - (run ? 4 : 0) * k);
+      set('torso', (run ? -0.2 : -0.05) - stoop + 0.02 * down);
+      set('head', (run ? 0.12 : 0.03) + stoop * 0.7 - 0.02 * down);
+      set('skirt', (sp.bottom === 'chima' ? 0.35 : 0.2) * A * sin(ph - 0.9) + (run ? -0.12 : -0.04), 0, 0, 1 + 0.08 * abs(s));
+      set('braid', -(run ? 0.55 : 0.2) + 0.1 * down);
+      set('pack', 0.05 * down);
+      set('staff', 0.14 * s);
     } else {
-      set('torso', -stoop, 0, 0, 1, 1 + 0.013 * br);
-      set('head', stoop * 0.7, 0, -1.2 * br * k);
-      set('arm1', 0.02 * br); set('arm2', -0.02 * br);
-      set('skirt', 0, 0, 0, 1 + 0.01 * br);
+      set('root', 0, 0, 0.6 * br * k);
+      set('torso', -stoop, 0, 0, 1, 1 + 0.014 * br);
+      set('head', stoop * 0.7 + 0.015 * br2, 0, -1.2 * br * k);
+      set('arm1', 0.025 * br2); set('arm2', -0.025 * br2);
+      set('arm1_l', 0.02 * br2); set('arm2_l', 0.02 * br2);
+      set('skirt', 0, 0, 0, 1 + 0.012 * br);
       set('braid', 0.04 * sin(t * 1.3));
       set('staff', 0.05);
       if (anim === 'talk') {
@@ -918,31 +947,34 @@ function humanBasePose(view, anim, t, rig) {
         set(gestArmSide + '_l', 0.9 + 0.25 * g);
       }
     }
+    if (sp.carry === 'basket') { set('arm2', 2.75 + 0.03 * s); set('arm2_l', -0.9); }
   } else {
     const flip = view === 'back' ? -1 : 1;
     if (walk) {
-      const lift = (run ? 9 : 5) * k;
-      const l1 = max(0, s) * lift, l2 = max(0, -s) * lift;
-      set('leg1', 0.05 * s, 0, -l1, 1, 1);
-      set('leg1_l', -0.04 * s, 0, 0, 1, 1 - 0.06 * max(0, s));
-      set('leg2', 0.05 * s, 0, -l2, 1, 1);
-      set('leg2_l', -0.04 * s, 0, 0, 1, 1 - 0.06 * max(0, -s));
-      const as = run ? 0.25 : 0.12;
-      set('arm1', as * 0.5 * s + (run ? 0.15 : 0), 0, 0, 1, 1 - as * 0.6 * max(0, -s * flip));
-      set('arm2', as * 0.5 * s - (run ? 0.15 : 0), 0, 0, 1, 1 - as * 0.6 * max(0, s * flip));
-      set('arm1_l', run ? -0.5 : 0); set('arm2_l', run ? 0.5 : 0);
-      set('root', 0, 1.5 * s * k, -(1 - abs(s)) * (run ? 6 : 3.5) * k);
-      set('torso', 0.02 * s, 0, 0, 1, stoop ? 0.95 : 1);
-      set('head', -0.03 * s, 0, stoop ? 6 : 0);
-      set('skirt', 0.035 * s, 0, 0, 1 + 0.035 * abs(s));
-      set('braid', 0.07 * s);
+      const lift = (run ? 10 : 6) * k * chimaK;
+      const l1 = pow(max(0, s), 1.5) * lift, l2 = pow(max(0, -s), 1.5) * lift;
+      set('leg1', 0.04 * s, 0, -l1, 1, 1);
+      set('leg1_l', -0.05 * s, 0, 0, 1, 1 - 0.08 * max(0, s));
+      set('leg2', 0.04 * s, 0, -l2, 1, 1);
+      set('leg2_l', -0.05 * s, 0, 0, 1, 1 - 0.08 * max(0, -s));
+      const as = run ? 0.28 : 0.14, sa = sin(ph - 0.35);
+      set('arm1', as * 0.5 * sa + (run ? 0.18 : 0), 0, 0, 1, 1 - as * 0.7 * max(0, -sa * flip));
+      set('arm2', as * 0.5 * sa - (run ? 0.18 : 0), 0, 0, 1, 1 - as * 0.7 * max(0, sa * flip));
+      set('arm1_l', run ? -0.6 : -0.05 * sa); set('arm2_l', run ? 0.6 : -0.05 * sa);
+      // 체중 이동: 디딘 발 쪽으로 엉덩이가 실린다
+      set('root', 0.02 * s, 2.2 * s * k, down * bob * 0.8);
+      set('torso', -0.025 * s, 0, 0, 1, (stoop ? 0.95 : 1) - 0.01 * down);
+      set('head', 0.02 * s, 0, (stoop ? 6 : 0));
+      set('skirt', 0.04 * sin(ph - 0.5), 0, 0, 1 + 0.04 * abs(s));
+      set('braid', 0.08 * sin(ph - 0.8));
       set('pack', -0.03 * s);
       set('staff', 0.06 * s);
     } else {
-      set('torso', 0, 0, 0, 1, (stoop ? 0.95 : 1) + 0.013 * br);
-      set('head', 0.01 * sin(t * 0.7), 0, (stoop ? 6 : 0) - 1.2 * br * k);
-      set('arm1', 0.02 * br); set('arm2', -0.02 * br);
-      set('skirt', 0, 0, 0, 1 + 0.008 * br);
+      set('root', 0, 0, 0.5 * br * k);
+      set('torso', 0, 0, 0, 1, (stoop ? 0.95 : 1) + 0.014 * br);
+      set('head', 0.012 * sin(t * 0.7), 0, (stoop ? 6 : 0) - 1.2 * br * k);
+      set('arm1', 0.025 * br2); set('arm2', -0.025 * br2);
+      set('skirt', 0, 0, 0, 1 + 0.01 * br);
       set('braid', 0.03 * sin(t * 1.3));
       if (anim === 'talk') {
         const g = sin(t * PI * 2 * 0.9);
@@ -950,6 +982,10 @@ function humanBasePose(view, anim, t, rig) {
         set('arm1', 0.22 + 0.06 * g);
         set('arm1_l', -1.3 + 0.3 * g, 0, 0, 1, 0.85);
       }
+    }
+    if (sp.carry === 'basket') {
+      const a = view === 'back' ? 'arm2' : 'arm1', sg = view === 'back' ? -1 : 1;
+      set(a, sg * (2.55 + 0.02 * s)); set(a + '_l', sg * -1.05);
     }
   }
   return P;
@@ -959,96 +995,122 @@ function humanBasePose(view, anim, t, rig) {
 // 호랑이 (민화 까치호랑이)
 // ---------------------------------------------------------------------------
 const TIGER = {
-  body: '#d6a24e',
-  belly: '#f0e4c8',
-  stripe: '#231c17',
-  eyeW: '#f3e7b5',
+  body: '#cf9444',
+  back: '#9f6a2c',
+  belly: '#f1e6cc',
+  stripe: '#17120f',
+  eyeW: '#d9cf6a',
 };
 
+const rgbaHex = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; };
+
 function stripeClip(p, path, lines, w = 7) {
-  p.clip(path, () => { for (const l of lines) p.stroke(l, { w, color: TIGER.stripe }); });
+  p.clip(path, () => { for (const l of lines) p.stroke(l, { w, color: TIGER.stripe, dry: w > 5 }); });
 }
 
+/**
+ * 호랑이 얼굴(정면을 노려봄): 넓은 광대와 볼 갈기, 짙은 테를 두른 둥근 눈, 붓으로 친 이마 무늬.
+ * mode: 'normal' | 'roar' | 'dead'
+ */
 function tigerFace(p, cx, cy, sc = 1, turned = 0, mode = 'normal') {
-  // 크고 둥근 머리, 볼 털, 부리부리한 눈
-  const R = (x, y) => [cx + x * sc + turned * (1 - abs(y) / 60) * 4, cy + y * sc];
-  // 귀
-  for (const s of [-1, 1]) {
-    p.ellipse(cx + s * 40 * sc, cy - 40 * sc, 15 * sc, 14 * sc, TIGER.body, { w: 2.6 });
-    p.ellipse(cx + s * 40 * sc, cy - 38 * sc, 8 * sc, 7 * sc, '#3a2a22', { w: 1.4 });
-  }
-  const head = [];
-  const n = 26;
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * PI * 2;
-    let r = 1;
-    // 아래쪽 볼 털 들쭉날쭉
-    const tuft = sin(a) > 0.1 && abs(cos(a)) > 0.45 ? (i % 2 ? (mode === 'roar' ? 1.22 : 1.1) : 0.98) : 1;
-    r *= tuft;
-    head.push([cx + cos(a) * 56 * sc * r, cy + sin(a) * 46 * sc * r + (sin(a) > 0 ? 4 * sc : 0), tuft !== 1 ? 'c' : undefined].filter((v) => v !== undefined));
-  }
-  const hp = p.poly(head, TIGER.body, { w: 3, shadeDown: 0.25 });
-  // 얼굴 줄무늬
-  stripeClip(p, hp, [
-    [R(-12, -40), R(-6, -30), R(-12, -22)], [R(0, -44), R(0, -28)], [R(12, -40), R(6, -30), R(12, -22)],
-    [R(-56, -10), R(-40, -8), R(-34, 0)], [R(56, -10), R(40, -8), R(34, 0)],
-    [R(-58, 8), R(-44, 10), R(-40, 18)], [R(58, 8), R(44, 10), R(40, 18)],
-    [R(-38, -34), R(-30, -22)], [R(38, -34), R(30, -22)],
-  ], 5.5 * sc);
-  // 흰 주둥이 볼
-  for (const s of [-1, 1]) p.ellipse(cx + s * 13 * sc, cy + 20 * sc, 17 * sc, 13 * sc, TIGER.belly, { w: 2 });
-  p.ellipse(cx, cy + 34 * sc, 12 * sc, 7 * sc, TIGER.belly, { w: 1.8 });
   const roar = mode === 'roar', dead = mode === 'dead';
-  // 수염 점
-  for (const s of [-1, 1]) for (let i = 0; i < 3; i++) p.dot(cx + s * (8 + i * 6) * sc, cy + (18 + (i % 2) * 5) * sc, 1.4 * sc);
-  // 코
-  p.poly([[cx - 9 * sc, cy + 5 * sc], [cx + 9 * sc, cy + 5 * sc], [cx, cy + 14 * sc, 'c']], '#4a302a', { w: 2 });
-  if (roar) {
-    // 쩍 벌린 입 + 위아래 송곳니 + 혀
-    p.poly([[cx - 22 * sc, cy + 24 * sc], [cx, cy + 20 * sc], [cx + 22 * sc, cy + 24 * sc], [cx + 18 * sc, cy + 52 * sc], [cx, cy + 62 * sc], [cx - 18 * sc, cy + 52 * sc]], '#6e1f1c', { w: 3 });
-    p.ellipse(cx, cy + 50 * sc, 11 * sc, 7 * sc, '#c0584f', { w: 1.4, ink: '#4a1512' });
+  const X = (x) => cx + x * sc, Y = (y) => cy + y * sc;
+  const R = (x, y) => [X(x) + turned * (1 - abs(y) / 60) * 4, Y(y)];
+  // 귀: 작고 뒤로 붙은 귀, 뒷면은 검고 가운데 흰 점
+  for (const s of [-1, 1]) {
+    p.poly([[X(s * 30), Y(-38)], [X(s * 44), Y(-58)], [X(s * 56), Y(-40)], [X(s * 50), Y(-30)]], TIGER.stripe, { w: 2.4 });
+    p.ellipse(X(s * 45), Y(-44), 4 * sc, 4.5 * sc, TIGER.belly, { w: 0.8, blot: false });
+  }
+  // 얼굴 윤곽: 평평한 이마, 넓은 광대, 아래로 들쭉날쭉한 볼 갈기
+  const ruff = roar ? 1.18 : 1;
+  const head = [
+    [X(0), Y(-44)], [X(24), Y(-42)], [X(44), Y(-30)], [X(58), Y(-8)],
+    [X(66 * ruff), Y(8), 'c'], [X(58), Y(14)], [X(66 * ruff), Y(24), 'c'], [X(52), Y(28)], [X(56 * ruff), Y(40), 'c'], [X(36), Y(40)],
+    [X(20), Y(52)], [X(0), Y(56)], [X(-20), Y(52)], [X(-36), Y(40)],
+    [X(-56 * ruff), Y(40), 'c'], [X(-52), Y(28)], [X(-66 * ruff), Y(24), 'c'], [X(-58), Y(14)], [X(-66 * ruff), Y(8), 'c'],
+    [X(-58), Y(-8)], [X(-44), Y(-30)], [X(-24), Y(-42)],
+  ];
+  const hp = p.poly(head, TIGER.body, { w: 3.2, shadeDown: 0.35 });
+  p.clip(hp, () => {
+    // 흰 털: 눈 위, 볼 아래, 턱
     for (const s of [-1, 1]) {
-      p.poly([[cx + s * 10 * sc, cy + 23 * sc], [cx + s * 18 * sc, cy + 24 * sc], [cx + s * 13 * sc, cy + 38 * sc, 'c']], '#fbf6e8', { w: 1.4, smooth: false });
-      p.poly([[cx + s * 9 * sc, cy + 56 * sc], [cx + s * 16 * sc, cy + 53 * sc], [cx + s * 13 * sc, cy + 44 * sc, 'c']], '#fbf6e8', { w: 1.4, smooth: false });
+      p.poly([[X(s * 8), Y(-18)], [X(s * 26), Y(-26)], [X(s * 38), Y(-18)], [X(s * 24), Y(-14)]], TIGER.belly, { ink: false, grain: 0.7, blot: false });
+      p.poly([[X(s * 30), Y(12)], [X(s * 70), Y(10)], [X(s * 70), Y(44)], [X(s * 26), Y(36)]], TIGER.belly, { ink: false, grain: 0.7 });
+    }
+    p.poly([[X(-22), Y(30)], [X(22), Y(30)], [X(22), Y(60)], [X(-22), Y(60)]], TIGER.belly, { ink: false, grain: 0.7 });
+    // 이마 '王' 무늬와 뺨 줄무늬(붓끝이 빠지는 획)
+    const L = (pts, w) => p.stroke(pts.map((q) => R(q[0], q[1])), { w: w * sc, color: TIGER.stripe, dry: true });
+    L([[-16, -40], [-8, -34], [-14, -26]], 5); L([[16, -40], [8, -34], [14, -26]], 5);
+    L([[-6, -44], [0, -36], [6, -44]], 4); L([[0, -32], [0, -22]], 4.5);
+    L([[-22, -36], [-12, -30]], 3.5); L([[22, -36], [12, -30]], 3.5);
+    for (const s of [-1, 1]) {
+      L([[s * 64, -6], [s * 46, -4], [s * 40, 4]], 6);
+      L([[s * 66, 14], [s * 52, 16], [s * 46, 24]], 5.5);
+      L([[s * 50, -26], [s * 40, -18]], 4);
+      L([[s * 60, 30], [s * 48, 34]], 4);
+    }
+  });
+  // 볼 갈기 갈필 털
+  const fr = [];
+  for (let i = 0; i < 9; i++) {
+    const t = i / 8, y = 6 + t * 36;
+    for (const s of [-1, 1]) fr.push([X(s * (62 - t * 8) * ruff), Y(y), s, 0.35]);
+  }
+  p.fur(fr, (roar ? 16 : 11) * sc, TIGER.stripe, 1.1, 0.5);
+  // 주둥이
+  for (const s of [-1, 1]) p.ellipse(X(s * 12), Y(22), 15 * sc, 11 * sc, TIGER.belly, { w: 1.6, shadeDown: 0.2 });
+  for (const s of [-1, 1]) for (let i = 0; i < 3; i++) p.dot(X(s * (7 + i * 5)), Y(19 + (i % 2) * 4), 1.2 * sc);
+  // 코: 넓은 콧등 + 짙은 코
+  p.stroke([[X(-6), Y(-14)], [X(-8), Y(4)]], { w: 1.2, color: shade(TIGER.body, -0.45) });
+  p.stroke([[X(6), Y(-14)], [X(8), Y(4)]], { w: 1.2, color: shade(TIGER.body, -0.45) });
+  p.poly([[X(-10), Y(6)], [X(10), Y(6)], [X(3), Y(14)], [X(0), Y(16), 'c'], [X(-3), Y(14)]], '#4a2a25', { w: 2 });
+  if (roar) {
+    p.poly([[X(-24), Y(26)], [X(0), Y(22)], [X(24), Y(26)], [X(20), Y(56)], [X(0), Y(66)], [X(-20), Y(56)]], '#5e1a18', { w: 3.2 });
+    p.ellipse(X(0), Y(54), 11 * sc, 7 * sc, '#b8544b', { w: 1.2, ink: '#3a1010' });
+    for (const s of [-1, 1]) {
+      p.poly([[X(s * 11), Y(25)], [X(s * 20), Y(26)], [X(s * 15), Y(42), 'c']], '#fbf6e8', { w: 1.4, smooth: false });
+      p.poly([[X(s * 10), Y(60)], [X(s * 18), Y(57)], [X(s * 14), Y(47), 'c']], '#fbf6e8', { w: 1.4, smooth: false });
     }
   } else if (dead) {
-    p.stroke([[cx - 14 * sc, cy + 32 * sc], [cx, cy + 30 * sc], [cx + 14 * sc, cy + 32 * sc]], { w: 2.2 * sc });
-    p.ellipse(cx + 5 * sc, cy + 38 * sc, 5 * sc, 7 * sc, '#c0584f', { w: 1.4 });
+    p.stroke([[X(-14), Y(32)], [X(0), Y(30)], [X(14), Y(32)]], { w: 2 * sc });
+    p.ellipse(X(5), Y(38), 4.5 * sc, 6.5 * sc, '#b8544b', { w: 1.2 });
   } else {
-    // 입(송곳니 살짝)
-    p.stroke([[cx - 18 * sc, cy + 30 * sc], [cx - 6 * sc, cy + 34 * sc], [cx, cy + 30 * sc], [cx + 6 * sc, cy + 34 * sc], [cx + 18 * sc, cy + 30 * sc]], { w: 2.2 * sc });
-    for (const s of [-1, 1]) p.poly([[cx + s * 5 * sc, cy + 33 * sc], [cx + s * 10 * sc, cy + 32 * sc], [cx + s * 7 * sc, cy + 40 * sc, 'c']], '#fbf6e8', { w: 1.3, smooth: false });
+    // 굳게 다문 입(아래로 처진 선) + 송곳니 끝
+    p.stroke([[X(0), Y(16)], [X(0), Y(26)]], { w: 1.6 * sc });
+    p.stroke([[X(-22), Y(36)], [X(-10), Y(30)], [X(0), Y(28)], [X(10), Y(30)], [X(22), Y(36)]], { w: 2.4 * sc });
+    for (const s of [-1, 1]) p.poly([[X(s * 7), Y(29)], [X(s * 11), Y(30)], [X(s * 9), Y(37), 'c']], '#fbf6e8', { w: 1.1, smooth: false });
   }
+  // 눈
   for (const s of [-1, 1]) {
-    const ex = cx + s * 21 * sc, ey = cy - 6 * sc;
+    const ex = X(s * 21), ey = Y(-6);
     if (dead) {
-      // 감은 눈
-      p.stroke([[cx + s * 10 * sc, cy - 20 * sc], [cx + s * 22 * sc, cy - 22 * sc], [cx + s * 34 * sc, cy - 18 * sc]], { w: 3 * sc, color: '#6b4a2c' });
-      p.stroke([[ex - 11 * sc, ey - 2 * sc], [ex, ey + 5 * sc], [ex + 11 * sc, ey - 2 * sc]], { w: 3 * sc });
+      p.stroke([[ex - 11 * sc, ey], [ex, ey + 4 * sc], [ex + 11 * sc, ey - 1 * sc]], { w: 3 * sc });
       continue;
     }
-    // 눈썹: 포효 땐 안쪽으로 치켜 내린 성난 눈썹
-    if (roar) p.stroke([[cx + s * 6 * sc, cy - 12 * sc], [cx + s * 22 * sc, cy - 22 * sc], [cx + s * 42 * sc, cy - 30 * sc]], { w: 6 * sc });
-    else p.stroke([[cx + s * 8 * sc, cy - 16 * sc], [cx + s * 22 * sc, cy - 24 * sc], [cx + s * 38 * sc, cy - 18 * sc]], { w: 4.5 * sc });
-    // 눈: 둥근 황금빛 눈 + 사팔뜨기 같은 검은 동자
-    p.ellipse(ex, ey, 13 * sc, 12 * sc, TIGER.eyeW, { w: 3.2, grain: 0.4 });
-    p.ellipse(ex, ey, 8 * sc, 8 * sc, '#c98a2c', { w: 1.2, grain: 0.3, blot: false });
-    p.dot(cx + s * (roar ? 21 : 18) * sc, cy - (roar ? 5 : 7) * sc, (roar ? 3 : 5) * sc, '#15100d');
-    if (!roar) p.dot(cx + s * 16 * sc, cy - 9.5 * sc, 1.7 * sc, '#fff8e8');
+    // 눈썹 먹선(화나면 안쪽으로 내리꽂힘)
+    if (roar) p.stroke([[X(s * 6), Y(-12)], [X(s * 22), Y(-22)], [X(s * 42), Y(-28)]], { w: 6 * sc, dry: true });
+    else p.stroke([[X(s * 7), Y(-16)], [X(s * 24), Y(-22)], [X(s * 42), Y(-18)]], { w: 4.2 * sc, dry: true });
+    // 아몬드처럼 치켜 올라간 눈 + 짙은 눈테
+    const ew = 13 * sc, eh = (roar ? 8 : 10) * sc;
+    const eye = [[ex - s * ew, ey + 2 * sc], [ex - s * 3 * sc, ey - eh], [ex + s * ew, ey - 5 * sc, 'c'], [ex + s * 2 * sc, ey + eh * 0.9]];
+    p.poly(eye, TIGER.eyeW, { w: 3.6, grain: 0.35, shadeDown: 0.4 });
+    p.dot(ex, ey - 1 * sc, (roar ? 2.4 : 3.4) * sc, '#0e0a08');
+    p.dot(ex - 2 * sc, ey - 4 * sc, 1.2 * sc, '#fffbe8');
+    // 눈꼬리에서 흘러내리는 검은 줄
+    p.stroke([[ex + s * ew, ey - 4 * sc], [ex + s * (ew + 6 * sc), ey + 6 * sc], [ex + s * (ew + 4 * sc), ey + 16 * sc]], { w: 3 * sc });
   }
-  // 긴 수염 (포효 땐 위로 뻗침)
+  // 수염: 가는 먹 털
   for (const s of [-1, 1]) {
-    for (let i = 0; i < 3; i++) {
-      if (roar) p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (54 + i * 6) * sc, cy + (0 + i * 6) * sc], [cx + s * (82 + i * 4) * sc, cy + (-16 + i * 12) * sc]], { w: 1.6, color: '#2b221c' });
-      else if (dead) p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (46 + i * 6) * sc, cy + (26 + i * 10) * sc], [cx + s * (62 + i * 4) * sc, cy + (40 + i * 14) * sc]], { w: 1.2, color: '#3b3029' });
-      else p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (50 + i * 6) * sc, cy + (12 + i * 10) * sc], [cx + s * (72 + i * 4) * sc, cy + (14 + i * 14) * sc]], { w: 1.2, color: '#3b3029' });
+    for (let i = 0; i < 4; i++) {
+      const y0 = 18 + i * 4;
+      const tip = roar ? [s * (84 + i * 4), -10 + i * 10] : dead ? [s * (60 + i * 4), 40 + i * 12] : [s * (82 + i * 5), 10 + i * 12];
+      p.stroke([[X(s * 20), Y(y0)], [X(s * (48 + i * 4)), Y(y0 + (tip[1] - y0) * 0.4)], [X(tip[0]), Y(tip[1])]], { w: 0.75, color: '#241b16', rough: 0.2 });
     }
   }
   if (roar) {
-    // 포효의 기운: 입 앞 먹선 물결
     for (let i = 0; i < 3; i++) {
-      const r = (70 + i * 16) * sc;
-      p.stroke(ellipsePts(cx, cy + 34 * sc, r, r * 0.55, 20, PI * 0.2, PI * 0.8), { w: 4 - i, color: INK });
+      const r = (74 + i * 16) * sc;
+      p.stroke(ellipsePts(cx, cy + 36 * sc, r, r * 0.55, 20, PI * 0.2, PI * 0.8), { w: 4 - i, color: INK, dry: true });
     }
   }
 }
@@ -1061,20 +1123,22 @@ function tigerLeg(p, len, w0, w1, stripes = 3, paw = false, pawDir = -1, front =
     lines.push([[-w0 / 2 - 2, y], [-w0 * 0.1, y + 4], [w0 * 0.05, y + 1]]);
     lines.push([[w0 / 2 + 2, y + 8], [w0 * 0.15, y + 11]]);
   }
-  stripeClip(p, path, lines, 5);
+  stripeClip(p, path, lines, 7);
   if (paw) {
     const px = front ? 0 : pawDir * 7;
     p.ellipse(px, len + 3, front ? w1 * 0.8 : w1 * 0.95, front ? w1 * 0.45 : w1 * 0.42, TIGER.body, { w: 2.5 });
     const tw = front ? w1 * 0.35 : w1 * 0.3;
     for (let i = -1; i <= 1; i++) p.stroke([[px + i * tw + (front ? 0 : pawDir * 4), len + 5], [px + i * tw + (front ? 0 : pawDir * 7), len + 10]], { w: 1.4 });
+    // 발톱 끝
+    for (let i = -1; i <= 1; i++) p.stroke([[px + i * tw * 1.1 + (front ? 0 : pawDir * 10), len + 9], [px + i * tw * 1.2 + (front ? 0 : pawDir * 14), len + 13]], { w: 1.6, color: '#efe6d0', taper: true });
   }
 }
 
 function tigerTailSeg(p, len, w0, w1, tip) {
   const path = p.poly(limbPts(len, w0, w1), TIGER.body, { w: 2.4 });
   p.clip(path, (g) => {
-    p.stroke([[-w0, len * 0.3], [w0, len * 0.4]], { w: 5, color: TIGER.stripe });
-    p.stroke([[-w0, len * 0.75], [w0, len * 0.82]], { w: 5, color: TIGER.stripe });
+    p.stroke([[-w0, len * 0.28], [0, len * 0.36], [w0, len * 0.3]], { w: 7, color: TIGER.stripe, dry: true });
+    p.stroke([[w0, len * 0.72], [0, len * 0.8], [-w0, len * 0.74]], { w: 6, color: TIGER.stripe, dry: true });
     if (tip) { g.fillStyle = TIGER.stripe; g.fillRect(-w0, len * 0.72, w0 * 2, len); }
   });
 }
@@ -1102,36 +1166,40 @@ function tigerView(view) {
     reuse(L, fu, 'front1', 'root', [-100, 0], 1, { far: true, r0: 0.05 });
     reuse(L, fl, 'front1_l', 'front1', [0, 58], 0.9, { far: true, r0: -0.05 });
     part(L, 'body', 'root', [0, 0], 3, (p) => {
-      const pts = [[-164, -12], [-150, -58], [-104, -82], [-56, -62], [-6, -52], [60, -56], [120, -68], [166, -54], [190, -20], [186, 18], [162, 42], [124, 32], [80, 20], [20, 32], [-50, 50], [-110, 62], [-154, 38]];
-      const path = p.poly(pts, TIGER.body, { w: 3.4, shadeDown: 0.3 });
+      // 무거운 어깨, 깊은 가슴, 잘록한 허리, 단단한 엉덩이
+      const pts = [[-168, -16], [-158, -62], [-118, -94], [-76, -80], [-30, -58], [30, -54], [96, -64], [150, -66], [184, -44], [198, -10], [188, 22], [162, 44], [126, 34], [84, 18], [20, 30], [-50, 54], [-112, 70], [-156, 46]];
+      const path = p.poly(pts, TIGER.body, { w: 3.8, shadeDown: 0.25 });
       p.clip(path, () => {
-        // 등줄기 짙은 주황
-        p.stroke([[-148, -62], [-104, -84], [-56, -64], [-6, -54], [60, -58], [120, -70], [172, -50]], { w: 18, color: shade(TIGER.body, -0.12), taper: false });
+        // 등줄기 농담: 등은 짙고 옆구리로 갈수록 옅게
+        p.stroke([[-160, -64], [-118, -96], [-76, -82], [-30, -60], [30, -56], [96, -66], [150, -68], [186, -46]], { w: 34, color: rgbaHex(TIGER.back, 0.55), taper: false });
+        p.stroke([[-150, -30], [-60, -20], [40, -18], [150, -24]], { w: 26, color: rgbaHex('#e6b565', 0.35), taper: false });
         // 배 쪽 흰 털
-        p.poly([[-158, 20], [-104, 42], [-40, 30], [30, 18], [80, 10], [130, 22], [130, 80], [-158, 80]], TIGER.belly, { ink: false, grain: 0.6 });
-        p.stroke([[-158, 20], [-104, 42], [-40, 30], [30, 18], [80, 10], [130, 22]], { w: 1.6, color: shade(TIGER.body, -0.3) });
-        // 불꽃 같은 줄무늬: 등에서 내려오며 가늘어지고 끝이 갈라짐
+        p.poly([[-164, 22], [-108, 48], [-40, 32], [30, 16], [84, 6], [134, 20], [134, 90], [-164, 90]], TIGER.belly, { ink: false, grain: 0.7 });
+        // 서예 획 같은 줄무늬: 등뼈에서 굵게 시작해 옆구리로 가늘게 빠지고, 몇 개는 둘로 갈라짐
         const R = (i) => ((i * 73) % 17) / 17;
-        for (let i = 0; i < 12; i++) {
-          const x = -122 + i * 25 + R(i) * 6;
-          const top = -76 + abs(i - 5.5) * 1.2;
-          const len = 52 + R(i + 3) * 28;
-          const bend = (i % 2 ? 1 : -1) * 6;
-          p.stroke([[x - 4, top], [x + bend, top + len * 0.35], [x - bend * 0.5, top + len * 0.7], [x + 4, top + len]], { w: 9 - (i % 3), color: TIGER.stripe });
-          if (i % 3 !== 1) p.stroke([[x + bend * 0.2, top + len * 0.45], [x + 10, top + len * 0.6], [x + 13, top + len * 0.85]], { w: 4.5, color: TIGER.stripe });
+        for (let i = 0; i < 13; i++) {
+          const x = -134 + i * 25 + R(i) * 8;
+          const top = -96 + abs(i - 2.5) * 3.2 + (i > 6 ? 6 : 0);
+          const len = 62 + R(i + 3) * 34 - (i === 0 ? 20 : 0);
+          const bend = (i % 2 ? 1 : -1) * 7;
+          p.stroke([[x - 5, top], [x + bend, top + len * 0.35], [x - bend * 0.6, top + len * 0.7], [x + 6, top + len]], { w: 12 - (i % 3) * 1.5, color: TIGER.stripe, dry: true });
+          if (i % 3 !== 1) p.stroke([[x + bend * 0.2, top + len * 0.4], [x + 12, top + len * 0.58], [x + 15, top + len * 0.85]], { w: 5.5, color: TIGER.stripe, dry: true });
         }
-        // 가슴 흰 털 들쭉날쭉
-        p.stroke([[-150, -6], [-142, 4], [-150, 12], [-140, 20], [-146, 28]], { w: 2, color: shade(TIGER.body, -0.4) });
       });
+      // 배와 가슴의 갈필 털
+      const fr = [];
+      for (let i = 0; i < 16; i++) { const t = i / 15; fr.push([-150 + t * 250, 58 - t * 36 + (t > 0.7 ? 8 : 0), 0.15, 1]); }
+      for (let i = 0; i < 6; i++) fr.push([-166 + i * 2, -6 + i * 9, -1, 0.3]);
+      p.fur(fr, 11, INK, 1.1, 0.6);
     });
     reuse(L, hu, 'hind2', 'root', [128, -6], 5, { r0: 0.28 });
     reuse(L, hl, 'hind2_l', 'hind2', [0, 60], 4.9, { r0: -0.5 });
     reuse(L, fu, 'front2', 'root', [-114, 4], 5, { r0: 0.05 });
     reuse(L, fl, 'front2_l', 'front2', [0, 58], 4.9, { r0: -0.05 });
     // 머리: 몸은 옆, 얼굴은 보는 이를 향해 (까치호랑이)
-    part(L, 'head', 'root', [-134, -40], 8, (p) => tigerFace(p, -26, -26, 1.1, -3));
-    part(L, 'head_roar', 'root', [-134, -40], 8, (p) => tigerFace(p, -26, -26, 1.1, -3, 'roar'), { tag: 'alt' });
-    part(L, 'head_dead', 'root', [-134, -40], 8, (p) => tigerFace(p, -26, -26, 1.1, -3, 'dead'), { tag: 'alt' });
+    part(L, 'head', 'root', [-140, -46], 8, (p) => tigerFace(p, -26, -24, 0.98, -3));
+    part(L, 'head_roar', 'root', [-140, -46], 8, (p) => tigerFace(p, -26, -24, 0.98, -3, 'roar'), { tag: 'alt' });
+    part(L, 'head_dead', 'root', [-140, -46], 8, (p) => tigerFace(p, -26, -24, 0.98, -3, 'dead'), { tag: 'alt' });
     part(L, 'fx_claw', 'root', [-215, 40], 9, drawClaw, { tag: 'fx' });
   } else if (back) {
     part(L, 'root', null, [0, -100], 0, null);
@@ -1203,9 +1271,9 @@ function tigerView(view) {
   return finishView(L);
 }
 
-function tigerPose(view, anim, t, rig, at = t) {
+function tigerPose(view, anim, t, rig, at = t, st = {}) {
   if (anim !== 'idle' && anim !== 'walk' && anim !== 'run') {
-    const C = tigerCombatPose(view, anim, t, at);
+    const C = tigerCombatPose(view, anim, t, at, st);
     if (C) return C;
   }
   const P = {};
@@ -1214,7 +1282,7 @@ function tigerPose(view, anim, t, rig, at = t) {
   const br = sin((t / 2.6) * PI * 2);
   const walk = anim === 'walk' || anim === 'run';
   const period = anim === 'run' ? 0.7 : 1.15;
-  const ph = (t / period) * PI * 2, s = sin(ph), c = cos(ph);
+  const ph = (st.phase != null ? st.phase : t / period) * PI * 2, s = sin(ph), c = cos(ph);
   const tail = (amp, speed, base = 0) => { for (let i = 0; i < 4; i++) set('tail' + i, base + amp * sin(t * speed - i * 0.9) * (0.6 + i * 0.25)); };
 
   if (anim === 'crouch') {
@@ -1284,24 +1352,30 @@ function tigerPose(view, anim, t, rig, at = t) {
 // ---------------------------------------------------------------------------
 // 종류별 정의
 // ---------------------------------------------------------------------------
+/** 월드 대비 캐릭터 확대(HD-2D식 가독성). 키·반지름도 이 배율이 곱해진 값으로 보고한다. */
+export const CHAR_SCALE = 1.25;
+
 export const SPECS = {
   player: {
     type: 'human', height: 1.65, radius: 0.3,
     top: 'durumagi', coat: '#ece5d3', pants: '#e4dccb', collar: '#d7ceb9', sash: PAL.red, goreum: '#d9d0bb',
-    hat: 'satgat', hatColor: '#554633', hair: 'short', back: 'bundle', bundle: '#48637a', staff: 'staff', robeLen: 94, cheek: 0.18,
+    hat: 'satgat', hatColor: '#4f412f', hair: 'short', back: 'bundle', bundle: '#48637a', staff: 'staff', robeLen: 94, cheek: 0.16,
+    legwrap: '#efe9da', daenim: '#48637a', build: 1.04,
   },
   villager_m: {
     type: 'human', height: 1.65, radius: 0.3,
-    top: 'jeogori', coat: '#dccfae', pants: '#e6decb', vest: '#5f7688', collar: '#c4b48f', daenim: '#5f7688', hair: 'sangtu', stubble: true, cheek: 0.2,
+    top: 'jeogori', coat: '#d8c9a3', pants: '#ddd3bb', vest: '#5f7688', collar: '#b9a782', daenim: '#5f7688', hair: 'sangtu', stubble: true, cheek: 0.2,
+    back: 'jige', patch: '#b8a47c', build: 1.12, shoe: '#a88a55'
   },
   villager_f: {
     type: 'human', height: 1.6, radius: 0.3,
-    top: 'short', bottom: 'chima', coat: '#ead9a4', skirt: '#46627b', goreum: PAL.red, cuff: '#b0584f', collar: '#b0584f', hair: 'jjok', cheek: 0.3, lip: '#b04438',
+    top: 'short', bottom: 'chima', coat: '#e6d6a6', skirt: '#46627b', goreum: PAL.red, cuff: '#a8574d', collar: '#a8574d', hair: 'jjok', cheek: 0.26, lip: '#a8453c',
+    carry: 'basket', build: 0.94,
   },
   elder: {
     type: 'human', height: 1.6, radius: 0.3,
     top: 'durumagi', coat: '#e9e7df', pants: '#ece9e0', collar: '#cfcbc0', goreum: '#d6d2c6', hat: 'gat', hair: 'white', beard: true, wrinkles: true,
-    stoop: 0.26, staff: 'cane', shoe: '#3a3431', robeLen: 104, browColor: '#8e897f', browW: 2.6, cheek: 0.14,
+    stoop: 0.26, staff: 'cane', shoe: '#3a3431', robeLen: 104, browColor: '#8e897f', browW: 2.6, cheek: 0.12, pipe: true, build: 0.9,
   },
   child_boy: {
     type: 'human', child: true, height: 1.1, radius: 0.25,
@@ -1314,7 +1388,7 @@ export const SPECS = {
   hunter: {
     type: 'human', height: 1.7, radius: 0.3,
     top: 'jeogori', coat: '#9d8664', pants: '#c7b894', vest: '#b98a4e', fur: true, collar: '#6f5a3e', legwrap: '#ede6d4', daenim: '#6f5a3e', sash: PAL.red,
-    hat: 'beonggeoji', hair: 'short', back: 'bow', stubble: true, cheek: 0.16,
+    hat: 'beonggeoji', hair: 'short', back: 'bow', stubble: true, cheek: 0.14, build: 1.14, patch: '#8a7452',
   },
   tiger: { type: 'tiger', height: 1.2, radius: 0.8 },
 };
@@ -1329,20 +1403,21 @@ export function getRig(kind) {
   let rig;
   if (sp.type === 'tiger') {
     rig = {
-      kind, type: 'tiger', spec: sp, W: 640, H: 320, footX: 320, footY: 306, ppm: 160,
-      height: sp.height, radius: sp.radius, pose: tigerPose, anims: TIGER_ANIMS,
+      kind, type: 'tiger', spec: sp, W: 640, H: 320, footX: 320, footY: 306, ppm: 160, scale: CHAR_SCALE,
+      height: sp.height * CHAR_SCALE, radius: sp.radius * CHAR_SCALE, pose: tigerPose, anims: TIGER_ANIMS,
       views: { front: tigerView('front'), back: tigerView('back'), side: tigerView('side') },
     };
   } else {
-    const S = sp.child ? CHILD : ADULT;
+    const B = sp.child ? CHILD : ADULT, b = sp.build || 1;
+    const S = { ...B, shHalf: B.shHalf * b, waistHalf: B.waistHalf * b, legX: B.legX * (0.5 + b * 0.5) };
     // 키 보정: 기준 골격(성인 약 1.62m 상당) 대비 ppm 조정
     const basePx = sp.child ? 205 : 312;
     const ppm = basePx / (sp.height - (sp.stoop ? -0.04 : 0));
     // 넘어짐·베기 궤적이 들어가도록 넉넉한 판 (대부분 투명)
     const W = sp.child ? 256 : 384, H = sp.child ? 320 : 448;
     rig = {
-      kind, type: 'human', spec: sp, S, W, H, footX: W / 2, footY: H - 10, ppm,
-      height: sp.height, radius: sp.radius, pose: humanPose, anims: HUMAN_ANIMS,
+      kind, type: 'human', spec: sp, S, W, H, footX: W / 2, footY: H - 10, ppm, scale: CHAR_SCALE,
+      height: sp.height * CHAR_SCALE, radius: sp.radius * CHAR_SCALE, pose: humanPose, anims: HUMAN_ANIMS,
       views: { front: humanView('front', S, sp), back: humanView('back', S, sp), side: humanView('side', S, sp) },
     };
   }
