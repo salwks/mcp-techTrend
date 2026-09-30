@@ -8,6 +8,7 @@ import { fanHit, segmentHit, facing4, moveBody, turnToward, closestOnSeg } from 
 const G = T.tiger, F = T.feel;
 const _o = { x: 0, z: 0 };
 const _c = { x: 0, z: 0 };
+const _tp = { vx: 0, vz: 1, d: 1 };
 
 const INTERRUPTIBLE = new Set(['prowl', 'stalk', 'home', 'backoff']);
 
@@ -44,10 +45,11 @@ export class TigerAI {
   get tm() { return this.enraged ? G.enrageTime : 1; }   // 예고·빈틈 시간 배율
   get sm() { return this.enraged ? G.enrageSpeed : 1; }  // 이동 속도 배율
 
-  setAnim(name, restart = false) {
+  // dur: 이 동작을 몇 초에 맞춰 재생할지(캐릭터 애니메이션 속도를 맞춘다)
+  setAnim(name, restart = false, dur = 0) {
     if (name === this.anim && !restart) return;
     this.anim = name;
-    this.b.env.anim('tiger', name, { restart });
+    this.b.env.anim('tiger', name, { restart, dur });
   }
 
   setHeading(x, z) {
@@ -65,6 +67,11 @@ export class TigerAI {
 
   go(s) {
     if (this.teleH) { this.b.env.fxRemove(this.teleH); this.teleH = null; }
+    // 떡을 먹지 못하고 다른 행동으로 넘어가면 떡을 놓아준다(다시 먹으러 올 수 있게)
+    if ((this.state === 'toBait' || this.state === 'eat') && s !== 'eat' && this.bait) {
+      if (!this.bait.gone) this.bait.claimed = false;
+      this.bait = null;
+    }
     this.state = s; this.t = 0;
   }
 
@@ -87,11 +94,13 @@ export class TigerAI {
     return moveBody(this.b.env, this.pos, dx, dz, G.radius);
   }
 
+  // 플레이어 쪽 단위벡터와 거리. 매 프레임 새 객체를 만들지 않도록 공유 객체를 돌려준다(저장하지 말 것)
   toPlayer() {
     const p = this.b.player.pos;
     const vx = p.x - this.pos.x, vz = p.z - this.pos.z;
     const d = Math.hypot(vx, vz) || 1e-6;
-    return { vx: vx / d, vz: vz / d, d };
+    _tp.vx = vx / d; _tp.vz = vz / d; _tp.d = d;
+    return _tp;
   }
 
   update(dt) {
@@ -151,7 +160,7 @@ export class TigerAI {
         this.turnTo(tp.vx, tp.vz, dt);
         this.setAnim('walk');
         if (tp.d <= G.swipeRange - 0.3) this.startSwipe(tp);
-        else if (this.t > 0.8 && tp.d >= 5 && tp.d <= G.pounceMax - 1 && b.rand() < dt * 0.9) this.startCrouch(tp);
+        else if (this.t > 0.6 && tp.d >= 5 && tp.d <= G.pounceMax - 1 && b.rand() < dt * G.stalkPounceRate) this.startCrouch(tp);
         else if (this.t > G.stalkTime) this.toProwl();
         break;
       }
@@ -176,7 +185,7 @@ export class TigerAI {
         if (u >= 1) {
           this.y = 0;
           this.go('land');
-          this.setAnim('land', true);
+          this.setAnim('land', true, G.land * this.tm);
           env.fx('dust', this.pos.x, this.pos.z, { scale: 1.4 });
           env.shake(...F.shakePounce);
         }
@@ -187,11 +196,10 @@ export class TigerAI {
         break;
       }
       case 'swipeWind': {
-        this.setAnim('swipe'); // 앞발 드는 자세(애니메이션 앞부분)
         if (this.t >= G.swipeWind * this.tm * (this.swipeChain ? 0.75 : 1)) {
           this.go('swipe'); this.swipeHit = false;
           this.stats.swipes++;
-          env.fx('slash', this.pos.x + this.hx * 0.8, this.pos.z + this.hz * 0.8, { dir: { x: this.hx, z: this.hz }, radius: G.swipeR, arc: G.swipeArc, tiger: true });
+          env.fx('slash', this.pos.x, this.pos.z, { dir: { x: this.hx, z: this.hz }, radius: G.swipeR * 0.9, arc: G.swipeArc, height: 0.6, tiger: true });
         }
         break;
       }
@@ -309,7 +317,7 @@ export class TigerAI {
     const b = this.b, r = b.rand();
     this.decide = (G.decideMin + b.rand() * (G.decideMax - G.decideMin)) * (this.enraged ? G.enrageDecide : 1);
     if (tp.d <= G.swipeRange) { if (r < 0.45) this.startSwipe(tp); else this.startBackoff(); return; }
-    if (tp.d >= G.pounceMin && tp.d <= G.pounceMax && r < 0.55) { this.startCrouch(tp); return; }
+    if (tp.d >= G.pounceMin && tp.d <= G.pounceMax && r < G.pounceChance) { this.startCrouch(tp); return; }
     if (r < 0.8) { this.go('stalk'); return; }
     this.orbit *= -1;
     this.orbitR = G.prowlMin + b.rand() * (G.prowlMax - G.prowlMin);
@@ -361,7 +369,7 @@ export class TigerAI {
       len += step;
     }
     this.pe.x = this.pos.x + this.hx * len; this.pe.z = this.pos.z + this.hz * len;
-    this.setAnim('pounce', true);
+    this.setAnim('pounce', true, (G.pounceTime / this.sm) / G.pounceAirFrac);
     b.env.fx('dust', this.pos.x, this.pos.z, { scale: 0.9 });
   }
 
@@ -369,7 +377,8 @@ export class TigerAI {
     const env = this.b.env;
     this.go('swipeWind');
     this.setHeading(tp.vx, tp.vz);
-    this.setAnim('swipe', true);
+    // 앞발 치기 애니메이션의 '내려치는 순간'(swipeStrikeFrac)이 예고 끝과 맞도록 속도를 맞춘다
+    this.setAnim('swipe', true, (G.swipeWind * this.tm * (chain ? 0.75 : 1)) / G.swipeStrikeFrac);
     if (env.options.telegraph) {
       this.teleH = env.fx('fan', this.pos.x, this.pos.z, { dir: { x: this.hx, z: this.hz }, radius: G.swipeR, arc: G.swipeArc, duration: G.swipeWind * this.tm * (chain ? 0.75 : 1) });
       if (!chain) this.say('swipe', '호랑이가 앞발을 든다!', 900);
@@ -382,7 +391,7 @@ export class TigerAI {
     this.stats.roar = true;
     const tp = this.toPlayer();
     this.setHeading(tp.vx, tp.vz);
-    this.setAnim('roar', true);
+    this.setAnim('roar', true, G.roarWind + G.roarAfter);
     this.b.env.say('호랑이가 크게 숨을 들이쉰다…', 1300);
   }
 
@@ -487,11 +496,11 @@ export class TigerAI {
     this.poise -= dmg; this.poiseWait = G.poiseRegenDelay;
     if (opts.heavy && s !== 'swipe') {
       // 강공격: 예고 동작까지 끊고 경직
-      this.go('stagger'); this.stunFor = G.stagger; this.setAnim('stagger', true); this.poise = G.poise;
+      this.go('stagger'); this.stunFor = G.stagger; this.setAnim('stagger', true, G.stagger); this.poise = G.poise;
       return dmg;
     }
     if (this.poise <= 0 && (INTERRUPTIBLE.has(s) || s === 'land' || s === 'toBait' || s === 'hit')) {
-      this.go('hit'); this.setAnim('hit', true); this.poise = G.poise;
+      this.go('hit'); this.setAnim('hit', true, G.flinch); this.poise = G.poise;
       return dmg;
     }
     if (INTERRUPTIBLE.has(s)) {

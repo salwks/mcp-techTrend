@@ -92,9 +92,25 @@ function stepOk(env, fx, fz, tx, tz, r) {
 }
 export function moveBody(env, pos, dx, dz, r) {
   if (!dx && !dz) return false;
+  // 이미 충돌체에 겹쳐 있으면(시작 위치 등) 빠져나오는 이동은 허용
+  if (env.blocked(pos.x, pos.z, r) && !env.blocked(pos.x + dx * 4, pos.z + dz * 4, r * 0.5)) { pos.x += dx; pos.z += dz; return true; }
   const tx = pos.x + dx, tz = pos.z + dz;
   if (stepOk(env, pos.x, pos.z, tx, tz, r)) { pos.x = tx; pos.z = tz; return true; }
   if (dx && stepOk(env, pos.x, pos.z, tx, pos.z, r)) { pos.x = tx; return true; }
   if (dz && stepOk(env, pos.x, pos.z, pos.x, tz, r)) { pos.z = tz; return true; }
   return false;
+}
+
+// (x,z) 근처에서 막히지 않은 가장 가까운 자리
+export function nearestFree(env, x, z, r, out = { x, z }) {
+  for (let rad = 0; rad < 6; rad += 0.35) {
+    const n = rad === 0 ? 1 : Math.ceil(rad * 8);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const px = x + Math.cos(a) * rad, pz = z + Math.sin(a) * rad;
+      if (!env.blocked(px, pz, r)) { out.x = px; out.z = pz; return out; }
+    }
+  }
+  out.x = x; out.z = z;
+  return out;
 }

@@ -485,8 +485,8 @@ export function buildWorld(scene) {
     const ent = ARENA_TRAIL[ARENA_TRAIL.length - 1];
     arena = {
       name: '호랑이의 영역', x: A.x, z: A.z, radius: A.r,
-      playerStart: { x: ent[0] + 0.3, z: ent[1] - 0.6 }, tigerStart: { x: A.x + 6.5, z: A.z - 2.8 },
-      camera: { pitch: 48, distance: 26, fov: 30 },
+      playerStart: { x: ent[0] + 0.3, z: ent[1] - 0.6 }, tigerStart: { x: A.x + 5.5, z: A.z - 1.2 },
+      camera: { pitch: 48, distance: 23, fov: 30 },
     };
     labels.push({ x: A.x, y: A.h + 3, z: A.z, text: '호랑이의 영역' });
   }
@@ -566,7 +566,7 @@ export function buildWorld(scene) {
     { name: '개울 돌다리', minX: -12, maxX: 12, minZ: -22, maxZ: -11, pitch: 42, distance: 19 },
     { name: '솔숲 산길', minX: -35, maxX: 45, minZ: -63, maxZ: -22, pitch: 48, distance: 20 },
     { name: '숲가 외딴 초가', minX: -30, maxX: -14, minZ: -38, maxZ: -24, pitch: 44, distance: 14 },
-    { name: '호랑이의 영역', minX: ARENA.x - ARENA.r - 2, maxX: Math.min(44, ARENA.x + ARENA.r + 2), minZ: ARENA.z - ARENA.r - 2, maxZ: ARENA.z + ARENA.r + 2, pitch: 48, distance: 26, fov: 30 },
+    { name: '호랑이의 영역', minX: ARENA.x - ARENA.r - 2, maxX: Math.min(44, ARENA.x + ARENA.r + 2), minZ: ARENA.z - ARENA.r - 2, maxZ: ARENA.z + ARENA.r + 2, pitch: 48, distance: 23, fov: 30 },
     { name: '고갯마루 서낭당', minX: -8, maxX: 24, minZ: -80, maxZ: -63, pitch: 27, distance: 22, fov: 34 },
   ];
 

@@ -1,11 +1,12 @@
 // 전투 한 판의 논리(플레이어·호랑이·화살·떡·결말). DOM·three 없이 돌아가므로 노드 시뮬레이션에서도 쓴다.
 import { T } from './tuning.js';
-import { fanHit, mulberry32 } from './hitbox.js';
+import { fanHit, mulberry32, nearestFree } from './hitbox.js';
 import { PlayerCombat } from './player.js';
 import { TigerAI } from './tiger.js';
 import { makeArrow, updateArrow, makeBait, updateBait } from './projectiles.js';
 
 const noop = () => {};
+const xz = (p, x, z) => (p ? [p.x, p.z] : [x, z]);
 export function makeEnv(partial = {}) {
   return {
     heightAt: () => 0,
@@ -42,8 +43,9 @@ export class Battle {
     if (seed !== undefined) this.env.rand = mulberry32(seed);
     this.clearProjectiles();
     this.arena = arena;
-    const ps = arena.playerStart || { x: arena.x, z: arena.z + arena.radius * 0.5 };
-    const ts = arena.tigerStart || { x: arena.x, z: arena.z - arena.radius * 0.4 };
+    // 시작 자리가 바위 등에 겹치면 가까운 빈자리로 옮긴다
+    const ps = nearestFree(this.env, ...xz(arena.playerStart, arena.x, arena.z + arena.radius * 0.5), T.player.radius, {});
+    const ts = nearestFree(this.env, ...xz(arena.tigerStart, arena.x, arena.z - arena.radius * 0.4), T.tiger.radius + 0.1, {});
     this.player.reset(ps.x, ps.z);
     this.tiger.reset(ts.x, ts.z);
     // 서로 마주보게
@@ -106,7 +108,7 @@ export class Battle {
   // 플레이어 근접 공격 판정
   playerStrike(pl, spec, dx, dz, heavy) {
     const env = this.env, tg = this.tiger;
-    env.fx('slash', pl.pos.x + dx * 0.4, pl.pos.z + dz * 0.4, { dir: { x: dx, z: dz }, radius: spec.r, arc: spec.arc, heavy });
+    env.fx('slash', pl.pos.x, pl.pos.z, { dir: { x: dx, z: dz }, radius: spec.r, arc: spec.arc, heavy, flip: spec.anim === 'attack2' });
     if (!tg.targetable) return false;
     const bh = T.tiger.bodyHalf, br = T.tiger.bodyR;
     let hit = false;

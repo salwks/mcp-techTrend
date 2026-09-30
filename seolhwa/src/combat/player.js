@@ -1,10 +1,9 @@
 // 플레이어 전투 상태 기계 (DOM·three 없음).
 // 상태: free · attack · charge · heavy · dodge · guard · guardbreak · bow · bowshot · throw · hit · down · getup · dead
 import { T } from './tuning.js';
-import { DEG, facing4, moveBody, angleBetween } from './hitbox.js';
+import { facing4, moveBody, angleBetween } from './hitbox.js';
 
 const P = T.player;
-const ACTIONS = ['attack', 'dodge', 'guard', 'bow', 'item'];
 
 export class PlayerCombat {
   constructor(battle) {
@@ -36,10 +35,11 @@ export class PlayerCombat {
     return this.state === 'down' || this.state === 'getup' || this.state === 'dead';
   }
 
-  setAnim(name, restart = false) {
+  // dur: 이 동작을 몇 초에 맞춰 재생할지(캐릭터 애니메이션 속도를 맞춘다)
+  setAnim(name, restart = false, dur = 0) {
     if (name === this.anim && !restart) return;
     this.anim = name;
-    this.b.env.anim('player', name, { restart });
+    this.b.env.anim('player', name, { restart, dur });
   }
 
   face(dx, dz) {
@@ -108,7 +108,7 @@ export class PlayerCombat {
         break;
       case 'down':
         this.knock(dt);
-        if (this.t >= P.down) { this.go('getup'); this.setAnim('getup', true); }
+        if (this.t >= P.down) { this.go('getup'); this.setAnim('getup', true, P.getup); }
         break;
       case 'getup': if (this.t >= P.getup) this.toFree(); break;
       case 'dead': break;
@@ -130,7 +130,7 @@ export class PlayerCombat {
       this.go('bow'); this.draw = 0; this.setAnim('bow_draw', true);
       this.bowAuto = !ctl.hasHeld; return true;
     }
-    if (ctl.pressed('item') && this.bait > 0) { this.go('throw'); this.baitThrown = false; this.setAnim('throw', true); this.face(this.fx, this.fz); return true; }
+    if (ctl.pressed('item') && this.bait > 0) { this.go('throw'); this.baitThrown = false; this.setAnim('throw', true, P.throw.dur); this.face(this.fx, this.fz); return true; }
     if (this.tap) {
       if (this.hold >= P.heavy.chargeMin) return this.startHeavy();
       return this.startAttack(this.comboGap < 0.45 ? this.combo + 1 : 1);
@@ -158,7 +158,7 @@ export class PlayerCombat {
     this.go('attack');
     this.aimDir(P.aimAssistDeg, P.aimAssistRange);
     this.face(this.ax, this.az);
-    this.setAnim(spec.anim, true);
+    this.setAnim(spec.anim, true, spec.dur);
     this.showRange(spec);
     return true;
   }
@@ -170,7 +170,7 @@ export class PlayerCombat {
     this.go('heavy');
     this.aimDir(P.aimAssistDeg, P.aimAssistRange + 0.5);
     this.face(this.ax, this.az);
-    this.setAnim(spec.anim, true);
+    this.setAnim(spec.anim, true, spec.dur);
     this.showRange(spec);
     return true;
   }
@@ -240,7 +240,7 @@ export class PlayerCombat {
     this.queued = false; this.queuedHeavy = false;
     this.go('dodge');
     this.face(this.ddx, this.ddz);
-    this.setAnim('dodge', true);
+    this.setAnim('dodge', true, P.dodge.dur);
     this.b.env.fx('dust', this.pos.x, this.pos.z, { scale: 0.6 });
     return true;
   }
@@ -295,7 +295,7 @@ export class PlayerCombat {
         this.arrows--;
         this.b.spawnArrow(this.pos.x, this.pos.z, this.ax, this.az, full ? B.fullDmg : B.dmg, full);
         this.go('bowshot');
-        this.setAnim('bow_shoot', true);
+        this.setAnim('bow_shoot', true, P.bow.recover + 0.1);
       } else this.toFree();
     }
   }
@@ -376,4 +376,3 @@ export class PlayerCombat {
   }
 }
 
-export { ACTIONS, DEG };
