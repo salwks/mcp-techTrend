@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-30T00:48:07.026364Z",
+  "generated_at": "2026-09-30T02:12:45.448190Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 1,
-  "pending_count": 1,
-  "observed_total_count": 143,
+  "archive_count": 2,
+  "pending_count": 2,
+  "observed_total_count": 144,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,38 @@
   ],
   "posts": [
     {
+      "post_id": "3997256106414631780",
+      "published_at": "2026-09-30T01:01:22Z",
+      "text": "🚨 오픈AI가 DevDay에서 20개가 넘는 업데이트를 한꺼번에 공개했습니다.\n\n1년 전 DevDay에서 스타트업 수천 곳의 자리를 가져갔던 오픈AI가 올해는 24시간 일하는 에이전트 dots, GPT-6.1 Sol, 최대 8배 빠른 Ultrafast, 팀 문서 Space까지 20개가 넘는 업데이트를 하루에 풀었습니다.\n\n우리와 경쟁하지 말라는 오픈AI의 다음 1년의 방향을 정리했습니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd5G0AbGutk",
+      "media": [
+        "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-15/831278745_17989335537112832_367795302257465502_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzk5NzI1NjEwNjQxNDYzMTc4MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=b2E1KmjCIMQQ7kNvwFMdz7Q&_nc_oc=Adp2s2L-obRQ1ntrKqEevFkeDbjF37ZG0_Pva-IC5ctvAC8dx_MpND4jldHS5qFfqp0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=ejx75O40oOm7Id82YgPtCg&_nc_ss=7a20f&oh=00_AQOjbHGhQpbsVOUF1fK2U-MPOqSA9Y20wwvx0JHjiEvt0A&oe=6AC25E52"
+      ],
+      "engagement": {
+        "likes": 35,
+        "replies": 22,
+        "reposts": 4,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-09-30T02:12:45.448190Z",
+      "last_seen_at": "2026-09-30T02:12:45.448190Z"
+    },
+    {
       "post_id": "3997210345391227397",
       "published_at": "2026-09-29T23:30:27Z",
       "text": "🚨 오픈AI가 Jev가 나온 지 2주 만에 같은 방식의 Decisions API를 내놨습니다.\n\nGPT-6 Luna가 미리 정한 선택지 중 하나를 고르는데, 응답까지 0.15초로 일반 Luna 호출보다 약 10배 빠릅니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd48aGJj4IF",
       "media": [
-        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/829197395_17989330722112832_3494973888623466105_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NzIxMDM0NTM5MTIyNzM5Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE5OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=v4YLrdMx5hgQ7kNvwEqmupe&_nc_oc=AdqKsSsbMH7zlFpdsbN4Lz2Frh4xnXDkHR5xpJiNUI81FoQ9HpiynoSpk5hJfSRMFQA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=HaX9o4NUyNrjfTPc8TLFuA&_nc_ss=7a20f&oh=00_AQMApriDI2OEr5W47XPeheXLzshLjFn6FS9mhqak1l5Jag&oe=6AC22C0B"
+        "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-15/829197395_17989330722112832_3494973888623466105_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=Mzk5NzIxMDM0NTM5MTIyNzM5Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE5OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=v4YLrdMx5hgQ7kNvwHg7KiD&_nc_oc=AdqTmIufb-LfYJrcGiIcslxg0_x-5GwPQk9sdjqCnDbtUvJpN0V5J6D94BNFLRQmhj8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=ejx75O40oOm7Id82YgPtCg&_nc_ss=7a20f&oh=00_AQOPgzbyd8wbMkvct8Gx47dbAj84cquppok1d5d4QVg8cQ&oe=6AC22C0B"
       ],
       "engagement": {
-        "likes": 57,
+        "likes": 77,
         "replies": 7,
-        "reposts": 3,
-        "quotes": 1
+        "reposts": 4,
+        "quotes": 2
       },
       "first_seen_at": "2026-09-30T00:18:04.092760Z",
-      "last_seen_at": "2026-09-30T00:48:07.026364Z"
+      "last_seen_at": "2026-09-30T02:12:45.448190Z"
     }
   ],
   "watchdog": {
