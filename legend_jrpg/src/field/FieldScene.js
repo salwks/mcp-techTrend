@@ -176,7 +176,7 @@ export class FieldScene extends Scene {
   }
 
   showBanner() {
-    if (this.map && this.map.name) this.banner = { text: this.map.name, t: 0 };
+    if (this.map && this.map.name) this.banner = { text: this.map.name, start: this.game.time };
   }
 
   // ---------------------------------------------------------------
@@ -185,6 +185,28 @@ export class FieldScene extends Scene {
   resetFollowers() {
     const party = this.state?.party || [];
     this.followers = party.slice(1, 4).map((id) => ({ id, mover: new Mover(this.player.x, this.player.y, this.player.dir) }));
+    this.spreadFollowers();
+  }
+
+  // 맵 진입 시 동료를 리더 뒤쪽(바라보는 반대 방향) 빈 칸에 줄 세운다. 자리가 없으면 겹친 채 둔다(겹치면 그리지 않음).
+  spreadFollowers() {
+    const used = new Set([`${this.player.x},${this.player.y}`]);
+    const back = OPPOSITE[this.player.dir] || 'up';
+    let prev = { x: this.player.x, y: this.player.y };
+    for (const f of this.followers) {
+      const order = [back, ...DIR_KEYS.filter((d) => d !== back && d !== this.player.dir), this.player.dir];
+      let spot = null;
+      for (const d of order) {
+        const x = prev.x + DIRS[d].x, y = prev.y + DIRS[d].y;
+        if (used.has(`${x},${y}`) || !this.canPlayerEnter(x, y)) continue;
+        spot = { x, y };
+        break;
+      }
+      if (!spot) spot = prev;
+      used.add(`${spot.x},${spot.y}`);
+      f.mover.place(spot.x, spot.y, this.player.dir);
+      prev = spot;
+    }
   }
 
   refreshParty() {
@@ -408,7 +430,6 @@ export class FieldScene extends Scene {
   update(dt) {
     this.t += dt;
     const input = this.game.input;
-    if (this.banner) { this.banner.t += dt; if (this.banner.t > 3.2) this.banner = null; }
 
     // 엔티티 이동
     for (const n of this.npcs) {
@@ -637,7 +658,13 @@ export class FieldScene extends Scene {
       if (!onScreen(px, py)) continue;
       ents.push({ y: py, o: 1, draw: () => drawSprite(ctx, n.def.sprite || 'villager_m', n.mover.dir, n.mover.pose, px, py, this.t) });
     }
+    const taken = new Set([`${this.player.x},${this.player.y}`]);
     this.followers.forEach((f, i) => {
+      const m = f.mover;
+      // 리더/앞 동료와 같은 칸에 멈춰 겹쳐 있으면 그리지 않는다(분리될 때까지)
+      const k = `${m.x},${m.y}`;
+      if (!m.moving && taken.has(k)) return;
+      taken.add(k);
       const px = Math.round(f.mover.px - camX), py = Math.round(f.mover.py - camY);
       ents.push({ y: py, o: 2 - (i + 1) * 0.1, draw: () => drawSprite(ctx, f.id, f.mover.dir, f.mover.pose, px, py, this.t) });
     });
@@ -699,6 +726,11 @@ export class FieldScene extends Scene {
   drawBanner(ctx) {
     const b = this.banner;
     if (!b) return;
+    // 게임 시간 기준으로 만료(메뉴/상점이 위에 있어도 흘러감), 필드가 최상단일 때만 그림
+    const t = this.game.time - b.start;
+    if (t > 3.2) { this.banner = null; return; }
+    if (this.game.top !== this) return;
+    b.t = t;
     const a = b.t < 0.35 ? b.t / 0.35 : b.t > 2.6 ? Math.max(0, (3.2 - b.t) / 0.6) : 1;
     ctx.save();
     ctx.globalAlpha = a;

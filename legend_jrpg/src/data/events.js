@@ -179,7 +179,7 @@ const VILLAGE = {
   ],
   evt_village_shop: [
     t('도구점 주인', '어서 오게, 렌! 아니지, 이젠 용사님이라고 불러야 하나? 하하!\n필요한 게 있으면 골라 보게.'),
-    { cmd: 'shop', items: ['herb', 'antidote', 'leather_armor', 'cloth_robe', 'oak_staff'] },
+    { cmd: 'shop', items: ['herb', 'antidote', 'leather_armor', 'cloth_robe', 'oak_staff'], title: '루멘 잡화점' },
   ],
   evt_village_farmer: talk('농부 톰', [
     ['sword_awakened', ['요즘 마물이 부쩍 줄었어. 용사님 덕분인가 봐!\n올해 감자 농사는 풍년이겠구먼.']],
@@ -354,14 +354,13 @@ const PORT = {
     '…부두 끝의 가렌 경? 그분이라면 괴물에 대해 누구보다 잘 알 텐데.',
   ]),
   evt_port_item_shop: [
-    t('도구점 주인', '어서 옵쇼! 벨포트 제일의 도구점입니다!'),
-    { cmd: 'shop', items: ['herb', 'potion', 'ether', 'antidote', 'phoenix_feather'] },
+    { cmd: 'shop', items: ['herb', 'potion', 'ether', 'antidote', 'phoenix_feather'], title: '벨포트 도구점' },
   ],
   evt_port_arms_shop: [
     iff('serpent_defeated',
       [t('무기점 주인', '바다가 열리니 좋은 물건이 잔뜩 들어왔소! 천천히 구경하시오.')],
       [t('무기점 주인', '배가 끊겨서 재고가 빠듯하지만… 품질만큼은 자신 있소!')]),
-    { cmd: 'shop', items: ['chain_mail', 'silk_robe', 'silver_staff', 'steel_spear', 'star_rod', 'power_ring', 'guard_ring'] },
+    { cmd: 'shop', items: ['chain_mail', 'silk_robe', 'silver_staff', 'steel_spear', 'star_rod', 'power_ring', 'guard_ring'], title: '벨포트 무기·방어구점' },
   ],
   evt_dorman: talk('도르만', [
     ['tower_cleared', ['오오…! 검이 완전히 깨어났구먼! 이 늙은이 가슴이 다 뛰는군.\n꼭 마왕의 목을 베고 오게, 꼬마… 아니, 용사여!']],
@@ -459,12 +458,10 @@ const TOWER = {
     ]),
   ],
   evt_tower_shop: [
-    iff('sela_met', [
-      t('떠돌이 상인', '어서 오세요~ 탑 입구의 떠돌이 상인이랍니다.'),
-    ], [
-      t('떠돌이 상인', '어서 오세요~ 탑 입구의 떠돌이 상인이랍니다.\n아까 보라색 로브를 입은 여자애가 혼자 올라갔어요. 무시무시한 얼굴로요…'),
+    ifnot('sela_met', [
+      t('떠돌이 상인', '아까 보라색 로브를 입은 여자애가 혼자 올라갔어요.\n무시무시한 얼굴로요… 괜찮으려나.'),
     ]),
-    { cmd: 'shop', items: ['hi_potion', 'hi_ether', 'panacea', 'phoenix_feather', 'fire_bomb', 'silver_mail', 'sage_robe', 'speed_boots', 'magic_earring'] },
+    { cmd: 'shop', items: ['hi_potion', 'hi_ether', 'panacea', 'phoenix_feather', 'fire_bomb', 'silver_mail', 'sage_robe', 'speed_boots', 'magic_earring'], title: '탑의 떠돌이 상인' },
   ],
   evt_tower_scholar: talk('별 연구가', [
     ['tower_cleared', ['정상의 제단이 빛났어요! 삼백 년 만의 일이라고요! 논문을 써야겠어요!']],
@@ -599,7 +596,7 @@ const WASTELAND = {
   ],
   evt_camp_shop: [
     t('캠프 상인', '이런 곳까지 물건을 짊어지고 온 보람이 있군요! 골라 보세요.'),
-    { cmd: 'shop', items: ['hi_potion', 'hi_ether', 'panacea', 'phoenix_feather', 'fire_bomb', 'silver_mail', 'sage_robe', 'speed_boots', 'magic_earring'] },
+    { cmd: 'shop', items: ['hi_potion', 'hi_ether', 'panacea', 'phoenix_feather', 'fire_bomb', 'silver_mail', 'sage_robe', 'speed_boots', 'magic_earring'], title: '황야 캠프 상인' },
   ],
   evt_camp_soldier: talk('부상당한 병사', [
     ['black_dragon_defeated', ['흑룡이 쓰러졌다고…? 동료들의 원수를 갚아 줘서 고맙소…!']],
@@ -637,7 +634,7 @@ const FINALE = {
   ],
   evt_castle_shop: [
     t('수상한 상인', '헤헤… 목숨 걸고 장사합니다요. 마왕성 한정 특가!\n여기까지 오신 분께는 좋은 물건만 드립죠.'),
-    { cmd: 'shop', items: ['elixir', 'mithril_mail', 'saint_staff', 'dragon_spear', 'archmage_rod', 'angel_charm'] },
+    { cmd: 'shop', items: ['elixir', 'mithril_mail', 'saint_staff', 'dragon_spear', 'archmage_rod', 'angel_charm'], title: '마왕성 앞 수상한 상인' },
   ],
   evt_castle_ghost: talk('떠도는 기사의 혼', [
     ['vorg_defeated', ['보르그가 쓰러졌는가… 이제야 편히 잠들 수 있겠구나. 고맙다, 젊은이들이여…']],
