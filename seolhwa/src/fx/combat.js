@@ -206,11 +206,12 @@ void main() {
     float wob = (fbm(vec2(v * 6.0 + uSeed * 10.0, uSeed)) - 0.5) * 0.12;
     float side = min(u, 1.0 - u) + wob;
     float inside = smoothstep(0.0, 0.05, side);
-    float grain = fbm(vec2(u * 7.0, v * 14.0) + uSeed * 4.0);
-    float base = 0.22 + 0.08 * grain;
+    float grain = fbm(vec2(u * 5.0, v * 11.0) + uSeed * 4.0);
+    float streak = n2(vec2(u * 14.0 + uSeed * 3.0, v * 2.5));   // 붓결(진행 방향)
+    float base = 0.1 + 0.14 * grain * streak;
     float fillEdge = uProg + (grain - 0.5) * 0.06;
     float filled = smoothstep(fillEdge + 0.01, fillEdge - 0.03, v);
-    a = mix(base, 0.5 + 0.12 * grain, filled);
+    a = mix(base, 0.38 + 0.3 * grain * (0.6 + 0.4 * streak), filled);
     // 차오르는 앞머리 붓선
     float head = smoothstep(0.05, 0.0, abs(v - fillEdge)) * step(uProg, 0.999);
     // 양쪽 먹선 테두리 (갈필)
@@ -341,6 +342,7 @@ export function createCombatFX({ scene, world }) {
   addPool('slash', 8, 28, 2, SLASH_FRAG, () => ({ uHead: { value: 0 }, uTail: { value: 0 } }), 31);
   addPool('roar', 4, 96, 1, ROAR_FRAG, () => ({ uThick: { value: 0.8 } }), 6);
 
+  const TYPES = Object.keys(pools);
   let clock = 0;
   function takeSlot(type) {
     const pool = pools[type];
@@ -440,28 +442,28 @@ export function createCombatFX({ scene, world }) {
     const k = heavy ? 1.6 : 1;
     const dx = o.dir ? o.dir.x : 0, dz = o.dir ? o.dir.z : 0;
     // 중심 번짐 (2겹)
-    parts.emit(id, p.x, p.y, p.z, 0, 0, 0, 0.6 * k, 0.35 * k, 1.05 * k, 0, INK, 0.95, 0, 0, -1e9);
-    parts.emit(id, p.x + (R() - 0.5) * 0.3, p.y + (R() - 0.5) * 0.3, p.z, 0, 0, 0, 0.5 * k, 0.2 * k, 0.6 * k, 0, SHU, 0.8, 0, 0, -1e9);
+    parts.emit(id, p.x, p.y, p.z, 0, 0, 0, 0.6 * k, 0.7 * k, 1.5 * k, 0, INK, 0.95, 0, 0, -1e9);
+    parts.emit(id, p.x + (R() - 0.5) * 0.3, p.y + (R() - 0.5) * 0.3, p.z, 0, 0, 0, 0.5 * k, 0.4 * k, 0.9 * k, 0, SHU, 0.85, 0, 0, -1e9);
     // 튀는 먹 방울
     const nd = heavy ? 18 : 10;
     for (let i = 0; i < nd; i++) {
       const a = R() * Math.PI * 2, sp = (2 + R() * 4) * k;
       const col = R() < 0.3 ? SHU : INK;
       parts.emit(id, p.x, p.y, p.z, Math.cos(a) * sp + dx * 2, 1.5 + R() * 3, Math.sin(a) * sp + dz * 2,
-        0.45 + R() * 0.35, 0.08 + R() * 0.1, 0.16 + R() * 0.16, 0, col, 0.95, 9, 1.5, fy);
+        0.45 + R() * 0.35, 0.14 + R() * 0.14, 0.26 + R() * 0.2, 0, col, 0.95, 9, 1.5, fy);
     }
     // 붓 획 줄기
     const ns = heavy ? 9 : 4;
     for (let i = 0; i < ns; i++) {
       const a = R() * Math.PI * 2, sp = (7 + R() * 6) * k;
       parts.emit(id, p.x, p.y, p.z, Math.cos(a) * sp + dx * 4, (R() - 0.3) * 4, Math.sin(a) * sp + dz * 4,
-        heavy ? 0.35 : 0.22, 0.18 * k, 0.26 * k, 1, INK, 0.9, 2, 6, -1e9);
+        heavy ? 0.35 : 0.24, 0.28 * k, 0.4 * k, 1, INK, 0.9, 2, 6, -1e9);
     }
     if (heavy) {
       // 크게 긋는 획 3개
       for (let i = 0; i < 3; i++) {
         const a = (i / 3) * Math.PI * 2 + R();
-        parts.emit(id, p.x, p.y, p.z, Math.cos(a) * 16, (R() - 0.5) * 3, Math.sin(a) * 16, 0.4, 0.45, 0.6, 1, i === 0 ? SHU : INK, 0.95, 0, 7, -1e9);
+        parts.emit(id, p.x, p.y, p.z, Math.cos(a) * 16, (R() - 0.5) * 3, Math.sin(a) * 16, 0.4, 0.6, 0.85, 1, i === 0 ? SHU : INK, 0.95, 0, 7, -1e9);
       }
       // 발밑에 번지는 먹
       parts.emit(id, p.x, fy + 0.05, p.z, 0, 0, 0, 1.0, 0.5, 2.0, 0, INK, 0.5, 0, 0, -1e9);
@@ -469,11 +471,11 @@ export function createCombatFX({ scene, world }) {
   }
   function burstBlock(id, p, o) {
     const dx = o.dir ? o.dir.x : 0, dz = o.dir ? o.dir.z : 0;
-    parts.emit(id, p.x, p.y, p.z, 0, 0, 0, 0.18, 0.4, 0.9, 2, PALE, 0.8, 0, 0, -1e9);
+    parts.emit(id, p.x, p.y, p.z, 0, 0, 0, 0.22, 0.7, 1.5, 2, PALE, 0.85, 0, 0, -1e9);
     for (let i = 0; i < 14; i++) {
       const a = R() * Math.PI * 2, sp = 5 + R() * 7;
       parts.emit(id, p.x, p.y, p.z, Math.cos(a) * sp - dx * 3, 1 + R() * 4, Math.sin(a) * sp - dz * 3,
-        0.18 + R() * 0.2, 0.05 + R() * 0.04, 0.03, 3, SPARK, 1, 12, 2, -1e9);
+        0.2 + R() * 0.2, 0.12 + R() * 0.06, 0.06, 3, SPARK, 1, 12, 2, -1e9);
     }
   }
   const _earth = new THREE.Color();
@@ -484,7 +486,7 @@ export function createCombatFX({ scene, world }) {
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2 + R() * 0.6, sp = (1.2 + R() * 1.6) * k;
       parts.emit(id, p.x + Math.cos(a) * 0.3, y + 0.15 + R() * 0.2, p.z + Math.sin(a) * 0.3,
-        Math.cos(a) * sp, 0.4 + R() * 0.6, Math.sin(a) * sp, 0.6 + R() * 0.4, 0.3 * k, (0.8 + R() * 0.5) * k, 2, _earth, 0.55, -0.3, 3, -1e9);
+        Math.cos(a) * sp, 0.4 + R() * 0.6, Math.sin(a) * sp, 0.6 + R() * 0.4, 0.5 * k, (1.2 + R() * 0.6) * k, 2, _earth, 0.7, -0.3, 3, -1e9);
     }
   }
 
@@ -510,6 +512,7 @@ export function createCombatFX({ scene, world }) {
           // 두 번째 고리는 살짝 늦게
           if (!opts._second) { const o2 = Object.assign({}, opts, { _second: true, delay: 0.18 }); api.spawn('roar', pos, o2); }
           s.delay = opts.delay ?? 0;
+          s.mesh.material.uniforms.uColor.value.copy(INK);
           fillRing(s, p, 0.1, 0.1, false, s.ry);
           return handleFor(s);
         }
@@ -533,8 +536,10 @@ export function createCombatFX({ scene, world }) {
       clock += dt;
       parts.mat.uniforms.uNight.value = night;
       parts.update(dt);
-      for (const type in pools) {
-        for (const s of pools[type]) {
+      for (let ti = 0; ti < TYPES.length; ti++) {
+        const type = TYPES[ti], pool = pools[type];
+        for (let si = 0; si < pool.length; si++) {
+          const s = pool[si];
           if (!s.active) continue;
           const U = s.mesh.material.uniforms;
           U.uNight.value = night;

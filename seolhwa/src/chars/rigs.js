@@ -30,13 +30,13 @@ function part(list, name, parent, at, z, draw, opt = {}) {
     ({ img, ox, oy } = P.end());
     if (opt.far) img = darkenCopy(img, 0.2);
   }
-  const p = { name, parent, at, r0: opt.r0 || 0, z, img, ox, oy, abs: !!opt.abs };
+  const p = { name, parent, at, r0: opt.r0 || 0, z, img, ox, oy, abs: !!opt.abs, tag: opt.tag || null };
   list.push(p);
   return p;
 }
 /** 이미 그린 이미지를 재사용해 부위 추가 */
 function reuse(list, src, name, parent, at, z, opt = {}) {
-  const p = { name, parent, at, r0: opt.r0 || 0, z, img: opt.far ? darkenCopy(src.img, 0.2) : src.img, ox: src.ox, oy: src.oy, abs: !!opt.abs };
+  const p = { name, parent, at, r0: opt.r0 || 0, z, img: opt.far ? darkenCopy(src.img, 0.2) : src.img, ox: src.ox, oy: src.oy, abs: !!opt.abs, tag: opt.tag || null };
   list.push(p);
   return p;
 }
@@ -609,6 +609,88 @@ function drawStaff(p, S, sp) {
   }
 }
 
+// ---- 전투 소품 ----
+function drawSword(p, S) {
+  const ws = S.ws;
+  // 환도: 손잡이(붉은 끈) + 둥근 코등이 + 살짝 휜 외날
+  p.poly([[-3.5 * ws, -12 * ws], [3.5 * ws, -12 * ws], [3.5 * ws, 12 * ws], [-3.5 * ws, 12 * ws]], '#7a2e2a', { w: 1.6, smooth: false });
+  for (let i = 0; i < 4; i++) p.stroke([[-3.5 * ws, (-9 + i * 6) * ws], [3.5 * ws, (-6 + i * 6) * ws]], { w: 1, color: '#d9b36a', taper: false });
+  p.ellipse(0, 14 * ws, 8 * ws, 3.2 * ws, '#b39245', { w: 1.6 });
+  const L = 118 * ws;
+  p.poly([[-3.4 * ws, 16 * ws], [3.2 * ws, 16 * ws], [5 * ws, L * 0.6], [3 * ws, L - 8 * ws], [-1 * ws, L + 4 * ws, 'c'], [-3.6 * ws, L * 0.6]], '#dfe3dc', { w: 2, grain: 0.3, shadeDown: 0.15 });
+  p.stroke([[-0.5 * ws, 20 * ws], [0.8 * ws, L - 10 * ws]], { w: 1.1, color: '#8d968f' });
+}
+function drawHandBow(p, S, drawn) {
+  const ws = S.ws, h = 74 * ws, b = drawn ? -20 * ws : -12 * ws, pull = drawn ? 82 * ws : 3 * ws;
+  const bow = [[6 * ws, -h - 4], [0, -h + 6], [b, -h * 0.4], [b - 2, 0], [b, h * 0.4], [0, h - 6], [6 * ws, h + 4]];
+  p.stroke(drawn ? [[4 * ws, -h + 2], [pull, 0], [4 * ws, h - 2]] : [[4 * ws, -h + 2], [pull, 0], [4 * ws, h - 2]], { w: 1.2, color: '#d8ceb6', taper: false, smooth: false });
+  p.stroke(bow, { w: 7 * ws, color: INK });
+  p.stroke(bow, { w: 4 * ws, color: '#7b5230', rough: 0 });
+  p.poly([[b - 5, -7 * ws], [b + 5, -7 * ws], [b + 5, 7 * ws], [b - 5, 7 * ws]], '#c9a449', { w: 1.3, smooth: false });
+  if (drawn) {
+    // 시위에 건 화살
+    p.stroke([[pull, 0], [b - 38 * ws, 0]], { w: 2.4 * ws, color: '#6b5236', taper: false });
+    p.poly([[b - 46 * ws, 0, 'c'], [b - 34 * ws, -5 * ws], [b - 36 * ws, 0], [b - 34 * ws, 5 * ws]], '#9aa19a', { w: 1.3, smooth: false });
+    p.poly([[pull - 2, 0], [pull - 16 * ws, -7 * ws], [pull - 10 * ws, 0], [pull - 16 * ws, 7 * ws]], '#efe8d8', { w: 1.1, smooth: false });
+  }
+}
+function drawRiceCake(p, S) {
+  const ws = S.ws;
+  p.poly([[-9 * ws, -6 * ws], [9 * ws, -7 * ws], [10 * ws, 6 * ws], [-9 * ws, 7 * ws]], '#f6f1e6', { w: 2 });
+  p.ellipse(0, 0, 3 * ws, 2.5 * ws, '#d87d86', { w: 0.8 });
+}
+/** 베기 궤적(먹 붓질 초승달) — 피벗은 어깨 */
+function drawSlash(p, S) {
+  const ws = S.ws, R = 122 * ws;
+  const arc = ellipsePts(0, 0, R, R, 36, -1.6, -3.95);
+  p.stroke(arc, { w: 17 * ws, color: INK });
+  p.stroke(ellipsePts(0, 0, R - 3 * ws, R - 3 * ws, 30, -1.9, -3.7), { w: 5 * ws, color: '#f3efe3' });
+  p.stroke(ellipsePts(0, 0, R - 20 * ws, R - 20 * ws, 24, -2.1, -3.5), { w: 4 * ws, color: INK });
+}
+function drawStreak(p, S) {
+  const ws = S.ws;
+  p.stroke([[-40 * ws, 0], [-150 * ws, -1], [-250 * ws, 0]], { w: 12 * ws, color: INK });
+  p.stroke([[-60 * ws, 0], [-220 * ws, 0]], { w: 3.5 * ws, color: '#f3efe3' });
+  p.stroke([[-50 * ws, -16 * ws], [-170 * ws, -14 * ws]], { w: 3 * ws, color: INK });
+  p.stroke([[-50 * ws, 16 * ws], [-160 * ws, 15 * ws]], { w: 3 * ws, color: INK });
+}
+function drawBurst(p, S) {
+  const ws = S.ws;
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * PI * 2 + (i % 2) * 0.12, r0 = 22 * ws, r1 = (i % 2 ? 52 : 70) * ws;
+    p.stroke([[cos(a) * r0, sin(a) * r0], [cos(a) * r1, sin(a) * r1]], { w: (i % 2 ? 4 : 7) * ws, color: INK });
+  }
+}
+function drawClaw(p) {
+  // 앞발 할퀴기 자국 세 줄
+  for (let i = 0; i < 3; i++) {
+    const o = i * 16;
+    p.stroke([[-30 + o, -70 + o * 0.3], [-12 + o, -20 + o * 0.2], [4 + o, 30], [10 + o, 58 - o * 0.3]], { w: 10, color: INK });
+    p.stroke([[-24 + o, -60 + o * 0.3], [-9 + o, -18 + o * 0.2], [5 + o, 26]], { w: 3, color: '#f3efe3' });
+  }
+}
+
+function addCombatParts(L, view, S, sp, ls) {
+  const ws = S.ws, T = S.torso;
+  const side = view === 'side', back = view === 'back';
+  const hand = side ? 'arm2_l' : back ? 'arm1_l' : 'arm2_l';
+  const handZ = side ? 10.95 : 6.15;
+  part(L, 'sword', hand, [0, S.lArm + 2], handZ, (p) => drawSword(p, S), { ls, tag: 'sword' });
+  part(L, 'bowR', hand, [0, S.lArm + 2], handZ + 0.02, (p) => drawHandBow(p, S, false), { ls, tag: 'alt', abs: true });
+  part(L, 'bowD', hand, [0, S.lArm + 2], handZ + 0.02, (p) => drawHandBow(p, S, true), { ls, tag: 'alt', abs: true });
+  part(L, 'item', hand, [0, S.lArm + 4], handZ + 0.1, (p) => drawRiceCake(p, S), { ls, tag: 'alt' });
+  if (sp.back !== 'bow') {
+    // 싸울 때 등에 멘 활
+    if (back) part(L, 'pack2', 'torso', [0, -T + 30 * ws], 9.5, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
+    else if (side) part(L, 'pack2', 'torso', [14 * ws, -T + 26 * ws], 1.5, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
+    else part(L, 'pack2', 'torso', [0, -T + 30 * ws], 0.5, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
+  }
+  const sh = [0, -T + 10 * ws];
+  part(L, 'fx_slash', 'torso', sh, 14, (p) => drawSlash(p, S), { ls, tag: 'fx' });
+  part(L, 'fx_streak', 'torso', sh, 14, (p) => drawStreak(p, S), { ls, tag: 'fx' });
+  part(L, 'fx_burst', 'torso', [0, -T * 0.4], 14, (p) => drawBurst(p, S), { ls, tag: 'fx' });
+}
+
 // ---- 사람 조립 ----
 function humanView(view, S, sp) {
   const ws = S.ws, T = S.torso;
@@ -660,9 +742,9 @@ function humanView(view, S, sp) {
     if (back) part(L, 'pack', 'torso', [0, -T + 6 * ws], 9, (p) => drawBundle(p, view, S, sp), { ls });
     else if (side) part(L, 'pack', 'torso', [17 * ws, -T + 8 * ws], 2, (p) => drawBundle(p, view, S, sp), { ls });
   } else if (sp.back === 'bow') {
-    if (back) part(L, 'pack', 'torso', [0, -T + 34], 9, (p) => drawBow(p, view, S), { ls });
-    else if (side) part(L, 'pack', 'torso', [18 * ws, -T + 30], 2, (p) => drawBow(p, view, S), { ls });
-    else part(L, 'pack', 'torso', [0, -T + 34], 0.5, (p) => drawBow(p, view, S), { ls });
+    if (back) part(L, 'pack', 'torso', [0, -T + 34], 9, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
+    else if (side) part(L, 'pack', 'torso', [18 * ws, -T + 30], 2, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
+    else part(L, 'pack', 'torso', [0, -T + 34], 0.5, (p) => drawBow(p, view, S), { ls, tag: 'backbow' });
   }
   // 땋은 머리(옆·뒤에서 흔들림)
   if (sp.hair === 'braid' && view !== 'front') {
@@ -677,8 +759,9 @@ function humanView(view, S, sp) {
   // 지팡이
   if (sp.staff) {
     const hand = side ? 'arm2_l' : back ? 'arm1_l' : 'arm2_l';
-    part(L, 'staff', hand, [0, S.lArm + 2], side ? 10.95 : 6.15, (p) => drawStaff(p, S, sp), { abs: true, ls });
+    part(L, 'staff', hand, [0, S.lArm + 2], side ? 10.95 : 6.15, (p) => drawStaff(p, S, sp), { abs: true, ls, tag: 'staff' });
   }
+  addCombatParts(L, view, S, sp, ls);
   return finishView(L);
 }
 
@@ -778,7 +861,7 @@ function stripeClip(p, path, lines, w = 7) {
   p.clip(path, () => { for (const l of lines) p.stroke(l, { w, color: TIGER.stripe }); });
 }
 
-function tigerFace(p, cx, cy, sc = 1, turned = 0) {
+function tigerFace(p, cx, cy, sc = 1, turned = 0, mode = 'normal') {
   // 크고 둥근 머리, 볼 털, 부리부리한 눈
   const R = (x, y) => [cx + x * sc + turned * (1 - abs(y) / 60) * 4, cy + y * sc];
   // 귀
@@ -792,7 +875,7 @@ function tigerFace(p, cx, cy, sc = 1, turned = 0) {
     const a = (i / n) * PI * 2;
     let r = 1;
     // 아래쪽 볼 털 들쭉날쭉
-    const tuft = sin(a) > 0.1 && abs(cos(a)) > 0.45 ? (i % 2 ? 1.1 : 0.98) : 1;
+    const tuft = sin(a) > 0.1 && abs(cos(a)) > 0.45 ? (i % 2 ? (mode === 'roar' ? 1.22 : 1.1) : 0.98) : 1;
     r *= tuft;
     head.push([cx + cos(a) * 56 * sc * r, cy + sin(a) * 46 * sc * r + (sin(a) > 0 ? 4 * sc : 0), tuft !== 1 ? 'c' : undefined].filter((v) => v !== undefined));
   }
@@ -807,25 +890,58 @@ function tigerFace(p, cx, cy, sc = 1, turned = 0) {
   // 흰 주둥이 볼
   for (const s of [-1, 1]) p.ellipse(cx + s * 13 * sc, cy + 20 * sc, 17 * sc, 13 * sc, TIGER.belly, { w: 2 });
   p.ellipse(cx, cy + 34 * sc, 12 * sc, 7 * sc, TIGER.belly, { w: 1.8 });
+  const roar = mode === 'roar', dead = mode === 'dead';
   // 수염 점
   for (const s of [-1, 1]) for (let i = 0; i < 3; i++) p.dot(cx + s * (8 + i * 6) * sc, cy + (18 + (i % 2) * 5) * sc, 1.4 * sc);
   // 코
   p.poly([[cx - 9 * sc, cy + 5 * sc], [cx + 9 * sc, cy + 5 * sc], [cx, cy + 14 * sc, 'c']], '#4a302a', { w: 2 });
-  // 입(송곳니 살짝)
-  p.stroke([[cx - 18 * sc, cy + 30 * sc], [cx - 6 * sc, cy + 34 * sc], [cx, cy + 30 * sc], [cx + 6 * sc, cy + 34 * sc], [cx + 18 * sc, cy + 30 * sc]], { w: 2.2 * sc });
-  for (const s of [-1, 1]) p.poly([[cx + s * 5 * sc, cy + 33 * sc], [cx + s * 10 * sc, cy + 32 * sc], [cx + s * 7 * sc, cy + 40 * sc, 'c']], '#fbf6e8', { w: 1.3, smooth: false });
-  // 눈썹(두꺼운 흰 눈썹 위 먹선)
-  for (const s of [-1, 1]) {
-    p.stroke([[cx + s * 8 * sc, cy - 16 * sc], [cx + s * 22 * sc, cy - 24 * sc], [cx + s * 38 * sc, cy - 18 * sc]], { w: 4.5 * sc });
-    // 눈: 둥근 황금빛 눈 + 사팔뜨기 같은 검은 동자
-    p.ellipse(cx + s * 21 * sc, cy - 6 * sc, 13 * sc, 12 * sc, TIGER.eyeW, { w: 3.2, grain: 0.4 });
-    p.ellipse(cx + s * 21 * sc, cy - 6 * sc, 8 * sc, 8 * sc, '#c98a2c', { w: 1.2, grain: 0.3, blot: false });
-    p.dot(cx + s * 18 * sc, cy - 7 * sc, 5 * sc, '#15100d');
-    p.dot(cx + s * 16 * sc, cy - 9.5 * sc, 1.7 * sc, '#fff8e8');
+  if (roar) {
+    // 쩍 벌린 입 + 위아래 송곳니 + 혀
+    p.poly([[cx - 22 * sc, cy + 24 * sc], [cx, cy + 20 * sc], [cx + 22 * sc, cy + 24 * sc], [cx + 18 * sc, cy + 52 * sc], [cx, cy + 62 * sc], [cx - 18 * sc, cy + 52 * sc]], '#6e1f1c', { w: 3 });
+    p.ellipse(cx, cy + 50 * sc, 11 * sc, 7 * sc, '#c0584f', { w: 1.4, ink: '#4a1512' });
+    for (const s of [-1, 1]) {
+      p.poly([[cx + s * 10 * sc, cy + 23 * sc], [cx + s * 18 * sc, cy + 24 * sc], [cx + s * 13 * sc, cy + 38 * sc, 'c']], '#fbf6e8', { w: 1.4, smooth: false });
+      p.poly([[cx + s * 9 * sc, cy + 56 * sc], [cx + s * 16 * sc, cy + 53 * sc], [cx + s * 13 * sc, cy + 44 * sc, 'c']], '#fbf6e8', { w: 1.4, smooth: false });
+    }
+  } else if (dead) {
+    p.stroke([[cx - 14 * sc, cy + 32 * sc], [cx, cy + 30 * sc], [cx + 14 * sc, cy + 32 * sc]], { w: 2.2 * sc });
+    p.ellipse(cx + 5 * sc, cy + 38 * sc, 5 * sc, 7 * sc, '#c0584f', { w: 1.4 });
+  } else {
+    // 입(송곳니 살짝)
+    p.stroke([[cx - 18 * sc, cy + 30 * sc], [cx - 6 * sc, cy + 34 * sc], [cx, cy + 30 * sc], [cx + 6 * sc, cy + 34 * sc], [cx + 18 * sc, cy + 30 * sc]], { w: 2.2 * sc });
+    for (const s of [-1, 1]) p.poly([[cx + s * 5 * sc, cy + 33 * sc], [cx + s * 10 * sc, cy + 32 * sc], [cx + s * 7 * sc, cy + 40 * sc, 'c']], '#fbf6e8', { w: 1.3, smooth: false });
   }
-  // 긴 수염
   for (const s of [-1, 1]) {
-    for (let i = 0; i < 3; i++) p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (50 + i * 6) * sc, cy + (12 + i * 10) * sc], [cx + s * (72 + i * 4) * sc, cy + (14 + i * 14) * sc]], { w: 1.2, color: '#3b3029' });
+    const ex = cx + s * 21 * sc, ey = cy - 6 * sc;
+    if (dead) {
+      // 감은 눈
+      p.stroke([[cx + s * 10 * sc, cy - 20 * sc], [cx + s * 22 * sc, cy - 22 * sc], [cx + s * 34 * sc, cy - 18 * sc]], { w: 3 * sc, color: '#6b4a2c' });
+      p.stroke([[ex - 11 * sc, ey - 2 * sc], [ex, ey + 5 * sc], [ex + 11 * sc, ey - 2 * sc]], { w: 3 * sc });
+      continue;
+    }
+    // 눈썹: 포효 땐 안쪽으로 치켜 내린 성난 눈썹
+    if (roar) p.stroke([[cx + s * 6 * sc, cy - 12 * sc], [cx + s * 22 * sc, cy - 22 * sc], [cx + s * 42 * sc, cy - 30 * sc]], { w: 6 * sc });
+    else p.stroke([[cx + s * 8 * sc, cy - 16 * sc], [cx + s * 22 * sc, cy - 24 * sc], [cx + s * 38 * sc, cy - 18 * sc]], { w: 4.5 * sc });
+    // 눈: 둥근 황금빛 눈 + 사팔뜨기 같은 검은 동자
+    p.ellipse(ex, ey, 13 * sc, 12 * sc, TIGER.eyeW, { w: 3.2, grain: 0.4 });
+    p.ellipse(ex, ey, 8 * sc, 8 * sc, '#c98a2c', { w: 1.2, grain: 0.3, blot: false });
+    p.dot(cx + s * (roar ? 21 : 18) * sc, cy - (roar ? 5 : 7) * sc, (roar ? 3 : 5) * sc, '#15100d');
+    if (!roar) p.dot(cx + s * 16 * sc, cy - 9.5 * sc, 1.7 * sc, '#fff8e8');
+  }
+  // 긴 수염 (포효 땐 위로 뻗침)
+  for (const s of [-1, 1]) {
+    for (let i = 0; i < 3; i++) {
+      if (roar) p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (54 + i * 6) * sc, cy + (0 + i * 6) * sc], [cx + s * (82 + i * 4) * sc, cy + (-16 + i * 12) * sc]], { w: 1.6, color: '#2b221c' });
+      else if (dead) p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (46 + i * 6) * sc, cy + (26 + i * 10) * sc], [cx + s * (62 + i * 4) * sc, cy + (40 + i * 14) * sc]], { w: 1.2, color: '#3b3029' });
+      else p.stroke([[cx + s * 22 * sc, cy + (18 + i * 5) * sc], [cx + s * (50 + i * 6) * sc, cy + (12 + i * 10) * sc], [cx + s * (72 + i * 4) * sc, cy + (14 + i * 14) * sc]], { w: 1.2, color: '#3b3029' });
+    }
+  }
+  if (roar) {
+    // 포효의 기운: 입 앞 먹선 물결
+    for (let i = 0; i < 3; i++) {
+      const r = (70 + i * 16) * sc;
+      p.stroke(ellipsePts(cx, cy + 34 * sc, r, r * 0.55, 20, PI * 0.2, PI * 0.8), { w: 4 - i, color: INK });
+    }
   }
 }
 
@@ -906,6 +1022,9 @@ function tigerView(view) {
     reuse(L, fl, 'front2_l', 'front2', [0, 58], 4.9, { r0: -0.05 });
     // 머리: 몸은 옆, 얼굴은 보는 이를 향해 (까치호랑이)
     part(L, 'head', 'root', [-134, -40], 8, (p) => tigerFace(p, -26, -26, 1.1, -3));
+    part(L, 'head_roar', 'root', [-134, -40], 8, (p) => tigerFace(p, -26, -26, 1.1, -3, 'roar'), { tag: 'alt' });
+    part(L, 'head_dead', 'root', [-134, -40], 8, (p) => tigerFace(p, -26, -26, 1.1, -3, 'dead'), { tag: 'alt' });
+    part(L, 'fx_claw', 'root', [-215, 40], 9, drawClaw, { tag: 'fx' });
   } else if (back) {
     part(L, 'root', null, [0, -100], 0, null);
     part(L, 'head', 'root', [0, -48], 0.5, (p) => {
@@ -969,6 +1088,9 @@ function tigerView(view) {
     reuse(L, fu, 'front2', 'root', [28, 14], 2, { r0: -0.04 });
     reuse(L, fl, 'front2_l', 'front2', [0, 46], 1.9, { r0: 0.04 });
     part(L, 'head', 'root', [0, -42], 4, (p) => tigerFace(p, 0, -22, 1.0, 0));
+    part(L, 'head_roar', 'root', [0, -42], 4, (p) => tigerFace(p, 0, -22, 1.0, 0, 'roar'), { tag: 'alt' });
+    part(L, 'head_dead', 'root', [0, -42], 4, (p) => tigerFace(p, 0, -22, 1.0, 0, 'dead'), { tag: 'alt' });
+    part(L, 'fx_claw', 'root', [30, 50], 6, drawClaw, { tag: 'fx' });
   }
   return finishView(L);
 }
@@ -1104,7 +1226,8 @@ export function getRig(kind) {
     // 키 보정: 기준 골격(성인 약 1.62m 상당) 대비 ppm 조정
     const basePx = sp.child ? 205 : 312;
     const ppm = basePx / (sp.height - (sp.stoop ? -0.04 : 0));
-    const W = sp.child ? 192 : 256, H = sp.child ? 256 : 384;
+    // 넘어짐·베기 궤적이 들어가도록 넉넉한 판 (대부분 투명)
+    const W = sp.child ? 256 : 384, H = sp.child ? 320 : 448;
     rig = {
       kind, type: 'human', spec: sp, S, W, H, footX: W / 2, footY: H - 10, ppm,
       height: sp.height, radius: sp.radius, pose: humanPose,
