@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>설화록 비주얼 프로토타입</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/core/ui.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/three.module.min.js",
+      "three/addons/": "./vendor/three/addons/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="view"></canvas>
+    <div id="hud"></div>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
