@@ -620,7 +620,7 @@ function humanView(view, S, sp) {
   part(L, 'torso', 'root', [0, 0], side ? 8 : 5, (p) => drawTorso(p, view, S, sp), { ls, seed: view });
   const skirtAt = sp.bottom === 'chima' ? [0, -T * 0.58 + 3 * ws] : [0, 0];
   const hasSkirt = sp.bottom === 'chima' || sp.top === 'durumagi';
-  part(L, 'head', 'torso', [side ? -2 * ws : 0, -T], side ? 9 : 7, (p) => drawHead(p, view, S, sp), { ls, seed: view + 'h' });
+  part(L, 'head', 'torso', [side ? -3 * ws : 0, -T + (side ? 5 : 2) * ws], side ? 9 : 7, (p) => drawHead(p, view, S, sp), { ls, seed: view + 'h' });
 
   // 팔 (정면/뒷면: arm1=화면 왼쪽, arm2=화면 오른쪽 / 옆면: arm1=먼 팔, arm2=가까운 팔)
   const up = [], lo = [];
