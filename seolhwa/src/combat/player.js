@@ -22,7 +22,7 @@ export class PlayerCombat {
     this.combo = 0; this.comboGap = 9; this.queued = false;
     this.holding = false; this.hold = 0; this.tap = false; this.chargedCue = false;
     this.spec = null; this.hitDone = false;
-    this.ddx = 0; this.ddz = 0;
+    this.ddx = 0; this.ddz = 0; this.dodgeBuf = 0; this.wantDodge = false;
     this.draw = 0; this.arrows = P.bow.arrows; this.bait = P.throw.bait;
     this.stunT = 0; this.kx = 0; this.kz = 0;
     this.anim = ''; this.moving = false;
@@ -68,7 +68,7 @@ export class PlayerCombat {
     const b = this.b;
     // 기력 회복
     if (this.stWait > 0) this.stWait -= dt;
-    else if (this.state !== 'guard' || true) this.st = Math.min(P.stamina, this.st + P.staminaRegen * dt * (this.state === 'guard' ? 0.5 : 1));
+    else this.st = Math.min(P.stamina, this.st + P.staminaRegen * dt * (this.state === 'guard' ? 0.5 : 1));
 
     // 공격 버튼: 누름 시간을 재고, 짧게 떼면 '탭'
     this.tap = false;
@@ -80,6 +80,13 @@ export class PlayerCombat {
     }
     this.comboGap += dt;
     this.t += dt;
+    // 회피 입력 버퍼: 공격 중 등 바로 못 구를 때 잠깐 기억했다가 끊을 수 있는 순간에 구른다
+    if (ctl.pressed('dodge')) {
+      this.dodgeBuf = 0.25;
+      const l = Math.hypot(ctl.move.x, ctl.move.z);
+      if (l > 0.1) { this.bdx = ctl.move.x / l; this.bdz = ctl.move.z / l; } else { this.bdx = 0; this.bdz = 0; }
+    } else if (this.dodgeBuf > 0) this.dodgeBuf -= dt;
+    this.wantDodge = this.dodgeBuf > 0;
     this.moving = false;
 
     const mv = ctl.move;
@@ -117,8 +124,8 @@ export class PlayerCombat {
 
   // 공통 행동 시작(자유 상태에서)
   tryActions(ctl) {
-    if (ctl.pressed('dodge')) return this.startDodge(ctl);
-    if (ctl.held('guard') || ctl.pressed('guard')) { this.go('guard'); this.setAnim('guard'); return true; }
+    if (this.wantDodge) return this.startDodge(ctl);
+    if (ctl.held('guard') || ctl.pressed('guard')) { this.go('guard'); this.setAnim('guard'); this.faceTiger(); return true; }
     if (ctl.pressed('bow') && this.arrows > 0) {
       this.go('bow'); this.draw = 0; this.setAnim('bow_draw', true);
       this.bowAuto = !ctl.hasHeld; return true;
@@ -189,7 +196,12 @@ export class PlayerCombat {
     if (this.state === 'attack' && this.tap && this.t >= P.comboQueueFrom) {
       if (this.hold >= P.heavy.chargeMin) this.queuedHeavy = true; else this.queued = true;
     }
-    if (ctl.pressed('dodge') && this.t >= s.hitAt + P.comboCancelAfter) { this.startDodge(ctl); return; }
+    // 회피는 가벼운 베기를 언제든(휘두르기 직전까지 포함) 끊을 수 있고, 강공격은 판정 뒤에만 끊는다
+    if (this.wantDodge && this.t >= (this.state === 'heavy' ? s.hitAt + P.comboCancelAfter : P.dodgeCancelFrom) && this.startDodge(ctl)) return;
+    if (this.t >= s.hitAt + P.comboCancelAfter) {
+      // 판정 뒤에는 방어로 끊을 수 있다
+      if (ctl.held('guard')) { this.queued = false; this.queuedHeavy = false; this.go('guard'); this.setAnim('guard'); this.faceTiger(); return; }
+    }
     if (this.t >= s.dur) {
       this.comboGap = 0;
       if (this.queuedHeavy) { this.queuedHeavy = false; this.startHeavy(); return; }
@@ -201,7 +213,7 @@ export class PlayerCombat {
   }
 
   updCharge(dt, ctl, mv, mlen) {
-    if (ctl.pressed('dodge')) { this.holding = false; this.startDodge(ctl); return; }
+    if (this.wantDodge && this.startDodge(ctl)) { this.holding = false; return; }
     if (mlen > 0.1) {
       this.moving = this.move(mv.x * P.chargeMove * dt / Math.max(1, mlen), mv.z * P.chargeMove * dt / Math.max(1, mlen));
       this.face(mv.x, mv.z);
@@ -219,9 +231,12 @@ export class PlayerCombat {
   startDodge(ctl) {
     if (this.st <= 0) return false;
     const mv = ctl.move, l = Math.hypot(mv.x, mv.z);
-    if (l > 0.1) { this.ddx = mv.x / l; this.ddz = mv.z / l; this.fx = this.ddx; this.fz = this.ddz; }
+    if (l > 0.1) { this.ddx = mv.x / l; this.ddz = mv.z / l; }
+    else if (this.bdx || this.bdz) { this.ddx = this.bdx; this.ddz = this.bdz; }
     else { this.ddx = this.fx; this.ddz = this.fz; }
+    this.fx = this.ddx; this.fz = this.ddz;
     this.useStamina(P.dodge.cost);
+    this.dodgeBuf = 0; this.wantDodge = false; this.bdx = 0; this.bdz = 0;
     this.queued = false; this.queuedHeavy = false;
     this.go('dodge');
     this.face(this.ddx, this.ddz);
@@ -241,24 +256,28 @@ export class PlayerCombat {
 
   updGuard(dt, ctl, mv, mlen) {
     if (!ctl.held('guard')) { this.toFree(); return; }
-    if (ctl.pressed('dodge')) { this.startDodge(ctl); return; }
+    if (this.wantDodge && this.startDodge(ctl)) return;
     this.setAnim('guard');
+    this.faceTiger();
     if (mlen > 0.1) {
       this.moving = this.move(mv.x * P.guardMove * dt / Math.max(1, mlen), mv.z * P.guardMove * dt / Math.max(1, mlen));
-      // 방어 중에는 호랑이 쪽을 바라본다
-      const tg = this.b.tiger;
-      if (tg && tg.targetable) {
-        const vx = tg.pos.x - this.pos.x, vz = tg.pos.z - this.pos.z, d = Math.hypot(vx, vz) || 1;
-        this.fx = vx / d; this.fz = vz / d;
-      }
-      this.face(this.fx, this.fz);
     }
+  }
+
+  // 방어 중에는 가까운 호랑이 쪽을 바라본다(고정 시점에서 방향 맞추기가 어려우므로)
+  faceTiger() {
+    const tg = this.b.tiger;
+    if (!tg || !tg.targetable) return;
+    const vx = tg.pos.x - this.pos.x, vz = tg.pos.z - this.pos.z, d = Math.hypot(vx, vz) || 1;
+    if (d > 8) return;
+    this.fx = vx / d; this.fz = vz / d;
+    this.face(this.fx, this.fz);
   }
 
   updBow(dt, ctl, mv, mlen) {
     const B = P.bow;
     this.draw += dt;
-    if (ctl.pressed('dodge')) { this.startDodge(ctl); return; }
+    if (this.wantDodge && this.startDodge(ctl)) return;
     if (mlen > 0.1) this.moving = this.move(mv.x * P.bowMove * dt / Math.max(1, mlen), mv.z * P.bowMove * dt / Math.max(1, mlen));
     // 조준: 가장 가까운 대상(호랑이)으로 자동 보정
     this.ax = this.fx; this.az = this.fz;

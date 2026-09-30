@@ -9,7 +9,7 @@ const G = T.tiger, F = T.feel;
 const _o = { x: 0, z: 0 };
 const _c = { x: 0, z: 0 };
 
-const INTERRUPTIBLE = new Set(['prowl', 'stalk', 'home']);
+const INTERRUPTIBLE = new Set(['prowl', 'stalk', 'home', 'backoff']);
 
 export class TigerAI {
   constructor(battle) {
@@ -34,7 +34,7 @@ export class TigerAI {
     this.teleH = null;
     this.anim = '';
     this.retreatDir = { x: 0, z: -1 };
-    this.stats = { pounces: 0, pounceHits: 0, swipes: 0, swipeHits: 0, baits: 0, backHits: 0, roar: false };
+    this.stats = { pounces: 0, pounceHits: 0, swipes: 0, swipeHits: 0, baits: 0, backHits: 0, blocks: 0, roar: false, dmg: {}, hitState: {} };
     this.said = {};
   }
 
@@ -170,7 +170,7 @@ export class TigerAI {
           const hx = nx + this.hx * G.bodyHalf, hz = nz + this.hz * G.bodyHalf;
           if (segmentHit(px - this.hx * G.bodyHalf, pz - this.hz * G.bodyHalf, hx, hz, G.pounceWidth * 0.5, pl.pos.x, pl.pos.z, T.player.radius)) {
             const r = pl.takeHit(G.pounceDmg, this.pos.x - this.hx * 2, this.pos.z - this.hz * 2, 'pounce');
-            if (r !== 'miss') { this.pounceHit = true; this.stats.pounceHits++; }
+            if (r !== 'miss') { this.pounceHit = true; if (r !== 'block' && r !== 'break') this.stats.pounceHits++; }
           }
         }
         if (u >= 1) {
@@ -199,13 +199,13 @@ export class TigerAI {
         if (!this.swipeHit && this.t <= G.swipeActive && pl.alive) {
           if (fanHit(this.pos.x, this.pos.z, this.hx, this.hz, G.swipeR, G.swipeArc, pl.pos.x, pl.pos.z, T.player.radius)) {
             const r = pl.takeHit(G.swipeDmg, this.pos.x, this.pos.z, 'swipe');
-            if (r !== 'miss') { this.swipeHit = true; this.stats.swipeHits++; }
+            if (r !== 'miss') { this.swipeHit = true; if (r !== 'block' && r !== 'break') this.stats.swipeHits++; else this.stats.blocks++; }
           }
         }
         if (this.t >= G.swipeActive + G.swipeRecover * this.tm) {
           if (this.enraged && !this.swipeChain && tp.d < G.swipeR + 0.5 && b.rand() < G.doubleSwipe) {
             this.swipeChain = 1; this.startSwipe(tp, true);
-          } else { this.swipeChain = 0; this.toProwl(0.5); }
+          } else { this.swipeChain = 0; if (b.rand() < G.backoffAfterSwipe) this.startBackoff(); else this.toProwl(0.8); }
         }
         break;
       }
@@ -219,6 +219,15 @@ export class TigerAI {
           env.say('포효! 호랑이의 움직임이 빨라졌다.', 2000);
         }
         if (this.t >= G.roarWind + G.roarAfter) this.toProwl(0.4);
+        break;
+      }
+      case 'backoff': {
+        const u = this.t / G.backoffTime;
+        const sp = (G.backoffDist / G.backoffTime) * 1.5 * Math.max(0, 1 - u);
+        this.moveIn(this.bx * sp * dt, this.bz * sp * dt, lim);
+        this.setHeading(tp.vx, tp.vz);
+        this.setAnim('prowl');
+        if (u >= 1) this.toProwl(1.0);
         break;
       }
       case 'hit': {
@@ -299,9 +308,9 @@ export class TigerAI {
   choose(tp) {
     const b = this.b, r = b.rand();
     this.decide = (G.decideMin + b.rand() * (G.decideMax - G.decideMin)) * (this.enraged ? G.enrageDecide : 1);
-    if (tp.d <= G.swipeRange) { this.startSwipe(tp); return; }
+    if (tp.d <= G.swipeRange) { if (r < 0.45) this.startSwipe(tp); else this.startBackoff(); return; }
     if (tp.d >= G.pounceMin && tp.d <= G.pounceMax && r < 0.55) { this.startCrouch(tp); return; }
-    if (r < 0.85) { this.go('stalk'); return; }
+    if (r < 0.8) { this.go('stalk'); return; }
     this.orbit *= -1;
     this.orbitR = G.prowlMin + b.rand() * (G.prowlMax - G.prowlMin);
   }
@@ -311,6 +320,18 @@ export class TigerAI {
     this.decide = decide * (this.enraged ? G.enrageDecide : 1) + this.b.rand() * 0.6;
     this.orbitR = G.prowlMin + this.b.rand() * (G.prowlMax - G.prowlMin);
     if (this.b.rand() < 0.35) this.orbit *= -1;
+  }
+
+  // 뒤로 훌쩍 물러나 거리를 벌린다
+  startBackoff() {
+    const tp = this.toPlayer();
+    this.go('backoff');
+    this.bx = -tp.vx; this.bz = -tp.vz;
+    // 영역 끝이면 옆으로
+    const a = this.b.arena;
+    const ex = this.pos.x + this.bx * 2 - a.x, ez = this.pos.z + this.bz * 2 - a.z;
+    if (Math.hypot(ex, ez) > a.radius - 1) { const o = this.orbit; this.bx = -tp.vz * o; this.bz = tp.vx * o; }
+    this.setAnim('prowl', true);
   }
 
   startCrouch(tp) {
@@ -394,8 +415,10 @@ export class TigerAI {
   afterReact(tp) {
     if (this.b.playerOutside) { this.go('home'); return; }
     // 맞은 뒤: 가까우면 반격, 아니면 거리 벌리기
-    if (tp.d <= G.swipeRange && this.b.rand() < 0.75) this.startSwipe(tp);
-    else this.toProwl(0.5);
+    const r = this.b.rand();
+    if (tp.d <= G.swipeRange && r < 0.5) this.startSwipe(tp);
+    else if (tp.d <= G.swipeRange + 1 && r < 0.8) this.startBackoff();
+    else this.toProwl(0.6);
   }
 
   // 플레이어가 보는 방향 기준 뒤쪽에서 맞았는가
@@ -413,6 +436,9 @@ export class TigerAI {
       back = true; dmg *= G.backAttackMul; this.stats.backHits++;
     }
     this.hp -= dmg;
+    const src = back ? 'back' : opts.kind === 'arrow' ? 'arrow' : opts.heavy ? 'heavy' : 'light';
+    this.stats.dmg[src] = (this.stats.dmg[src] || 0) + dmg;
+    this.stats.hitState[this.state] = (this.stats.hitState[this.state] || 0) + 1;
     env.flash('tiger', back ? '#ffe0a0' : '#ffffff', 120);
     const hx = this.pos.x, hz = this.pos.z;
     if (back) {
@@ -450,8 +476,8 @@ export class TigerAI {
       if (back) {
         if (!this.disturbed) { this.disturbed = true; this.eatLeft = Math.min(this.eatLeft, G.eatAfterHit); }
       } else {
-        // 앞에서 치면 곧바로 먹기를 멈추고 반격
-        if (this.bait) { this.bait.claimed = false; this.bait = null; }
+        // 앞에서 치면 떡을 삼키고 곧바로 반격
+        if (this.bait) { this.b.consumeBait(this.bait); this.bait = null; }
         this.startSwipe(tp);
       }
       return dmg;

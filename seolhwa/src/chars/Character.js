@@ -4,8 +4,10 @@
 import * as THREE from 'three';
 import { getRig } from './rigs.js';
 import { makeCanvas } from './painter.js';
+import { COMBAT_HUMAN } from './anims.js';
 
-const FPS = 12;
+const FPS = 12;      // 평소: 손으로 그린 이야기책 느낌
+const FPS_FAST = 24; // 1회성 동작(공격·회피·덮치기) 중에는 읽히도록 더 자주
 const LEAN = THREE.MathUtils.degToRad(8); // 카메라 쪽으로 살짝 뒤로 젖힘(단축 보정)
 const SIL_COLOR = new THREE.Color('#1b2130');
 
@@ -81,6 +83,10 @@ export class Character {
     this.anim = 'idle';
     this.mode = '4dir';
     this.t = Math.random() * 10; // 인스턴스마다 위상 다르게
+    this.animTime = 0;
+    this.animSpeed = 1;
+    this.armed = false; // 칼을 든 상태(전투 동작을 하면 자동으로 켜짐)
+    this._flash = null;
     this._acc = 0;
     this._dirty = true;
     this._drawnOnce = false;
@@ -154,10 +160,31 @@ export class Character {
     this.facing = dir;
     this._dirty = true;
   }
-  setAnim(name) {
-    if (name === this.anim) return;
+  /** setAnim(name, { restart=false, speed=1 }) — 같은 이름이면 restart일 때만 처음부터 */
+  setAnim(name, opts = {}) {
+    const speed = opts.speed == null ? 1 : opts.speed;
+    this.animSpeed = speed;
+    if (name === this.anim && !opts.restart) return;
     this.anim = name;
+    this.animTime = 0;
+    if (this.rig.type === 'human') {
+      if (COMBAT_HUMAN.has(name)) this.armed = true;
+      else if (name === 'talk') this.armed = false;
+    }
     this._dirty = true;
+  }
+  /** 칼을 들고 있을지(전투 중 걷기·대기). 전투 동작을 하면 자동으로 true, 'talk'이면 false */
+  setArmed(on) { if (this.armed !== !!on) { this.armed = !!on; this._dirty = true; } }
+  _info(name = this.anim) { return this.rig.anims[this._animName(name)] || null; }
+  /** 동작 길이(초). 반복 동작은 한 주기 길이 */
+  animDuration(name = this.anim) { const i = this._info(name); return i ? i.dur : 0; }
+  /** 1회성 동작이 끝났는가(반복 동작은 항상 false) */
+  get animDone() { const i = this._info(); return !!i && !i.loop && this.animTime >= i.dur; }
+  /** 피격 번쩍임(스프라이트만, 실루엣은 그대로) */
+  flash(color = '#ffffff', ms = 120) {
+    this._flash = { color: new THREE.Color(color), t: 0, dur: Math.max(1, ms) / 1000 };
+    this.material.emissive.copy(this._flash.color);
+    this.material.emissiveIntensity = 1;
   }
   setMode(mode) {
     if (mode !== 'front' && mode !== '4dir') return;
@@ -170,11 +197,24 @@ export class Character {
   update(dt, camera) {
     this.t += dt;
     this._acc += dt;
+    const info = this._info();
+    const wasDone = this.animDone;
+    this.animTime += dt * this.animSpeed;
+    if (info && !info.loop && this.animTime > info.dur) this.animTime = info.dur; // 마지막 자세 유지
+    if (this._flash) {
+      const f = this._flash;
+      f.t += dt;
+      const k = Math.max(0, 1 - f.t / f.dur);
+      this.material.emissiveIntensity = k * k;
+      if (k <= 0) { this._flash = null; this.material.emissive.setRGB(0, 0, 0); this.material.emissiveIntensity = 1; }
+    }
     if (camera) this._orient(camera);
-    if (this._dirty || this._acc >= 1 / FPS) {
+    const fast = info && ((!info.loop && !wasDone) || this.anim === 'charge');
+    const step = 1 / (fast ? FPS_FAST : FPS);
+    if (this._dirty || this._acc >= step || (fast && !wasDone && this.animDone)) {
       if (!this._drawnOnce || !camera || this._inView(camera)) {
         this._draw();
-        this._acc %= 1 / FPS;
+        this._acc %= step;
         this._dirty = false;
       }
     }
@@ -202,11 +242,12 @@ export class Character {
     }
   }
 
-  _anim() {
-    const a = this.anim;
-    if (this.rig.type === 'tiger') return a === 'talk' ? 'idle' : a;
-    return a === 'crouch' || a === 'pounce' ? 'idle' : a;
+  _animName(a) {
+    if (this.rig.anims[a]) return a;
+    if (this.rig.type === 'tiger') return a === 'run' ? 'walk' : a === 'hit' ? 'hit' : 'idle';
+    return a === 'prowl' ? 'walk' : a === 'stagger' ? 'hit' : 'idle';
   }
+  _anim() { return this._animName(this.anim); }
 
   _orient(camera) {
     camera.getWorldDirection(_v);
@@ -229,7 +270,8 @@ export class Character {
   }
 
   _inView(camera) {
-    _pm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    camera.updateMatrixWorld();
+    _pm.copy(camera.matrixWorld).invert().premultiply(camera.projectionMatrix);
     _fr.setFromProjectionMatrix(_pm);
     this.object3d.getWorldPosition(_sph.center);
     _sph.center.y += this.rig.H / this.rig.ppm * 0.4;
@@ -249,7 +291,17 @@ export class Character {
     const rig = this.rig, g = this.ctx;
     const [view, mirror] = this._view();
     const parts = rig.views[view];
-    const pose = rig.pose(view, this._anim(), this.t, rig);
+    const anim = this._anim();
+    const info = rig.anims[anim];
+    const at = info && !info.loop ? Math.min(this.animTime, info.dur) : this.animTime;
+    const pose = rig.pose(view, anim, this.t, rig, at, { armed: this.armed });
+    // 소품 보이기: 지팡이(평소) / 환도(전투) / 등의 활 / 손의 활
+    const bowAnim = anim === 'bow_draw' || anim === 'bow_shoot';
+    const vis = {
+      staff: !this.armed,
+      sword: this.armed && !bowAnim && anim !== 'throw',
+      backbow: !bowAnim && (this.armed || rig.spec.back === 'bow'),
+    };
     const M = this._mats;
     for (const p of parts) {
       const ps = pose[p.name];
@@ -260,7 +312,7 @@ export class Character {
       const m = M[p.name] || (M[p.name] = [0, 0, 0, 0, 0, 0]);
       if (p.abs) {
         const wx = parent[0] * x + parent[2] * y + parent[4], wy = parent[1] * x + parent[3] * y + parent[5];
-        trs(wx, wy, r, 1, 1, m);
+        trs(wx, wy, r, sx, sy, m);
       } else {
         mul(parent, trs(x, y, r, sx, sy, _loc), m);
       }
@@ -269,10 +321,17 @@ export class Character {
     g.clearRect(0, 0, rig.W, rig.H);
     const base = mirror ? [-1, 0, 0, 1, rig.footX, rig.footY] : [1, 0, 0, 1, rig.footX, rig.footY];
     for (const p of parts.draw) {
+      const ps = pose[p.name];
+      let a = ps && ps.a != null ? ps.a : 1;
+      if (p.tag === 'fx' || p.tag === 'alt') { if (!ps || !(ps.a > 0)) continue; }
+      else if (p.tag && vis[p.tag] === false) continue;
+      if (a <= 0.02) continue;
       mul(base, M[p.name], _fin);
       g.setTransform(_fin[0], _fin[1], _fin[2], _fin[3], _fin[4], _fin[5]);
+      g.globalAlpha = a < 1 ? a : 1;
       g.drawImage(p.img, p.ox, p.oy);
     }
+    g.globalAlpha = 1;
     g.setTransform(1, 0, 0, 1, 0, 0);
     this.texture.needsUpdate = true;
     this._drawnOnce = true;

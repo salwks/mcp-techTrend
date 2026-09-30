@@ -2,6 +2,7 @@
 // 좌표: 픽셀, 발 중심이 원점, y는 아래가 +. 옆면은 왼쪽을 향한다(오른쪽은 좌우 반전).
 // 각 부위는 피벗(관절)이 원점인 캔버스 이미지로 한 번만 그려진다.
 import { Painter, PAL, INK, shade, mix, ellipsePts, limbPts, darkenCopy } from './painter.js';
+import { HUMAN_ANIMS, TIGER_ANIMS, humanCombatPose, tigerCombatPose } from './anims.js';
 
 const PI = Math.PI;
 const { sin, cos, max, min, abs } = Math;
@@ -766,7 +767,19 @@ function humanView(view, S, sp) {
 }
 
 // ---- 사람 애니메이션 ----
-function humanPose(view, anim, t, rig) {
+function humanPose(view, anim, t, rig, at = t, st = {}) {
+  const C = humanCombatPose(view, anim, t, at, rig);
+  if (C) return C;
+  const P = humanBasePose(view, anim, t, rig);
+  if (st.armed) {
+    // 칼을 든 채 걷기·대기: 칼끝이 앞쪽 아래를 향함
+    const sw = P.sword || (P.sword = { r: 0, x: 0, y: 0, sx: 1, sy: 1 });
+    sw.r += view === 'side' ? 0.6 : view === 'back' ? 0.35 : -0.35;
+  }
+  return P;
+}
+
+function humanBasePose(view, anim, t, rig) {
   const sp = rig.spec, k = rig.S.ws;
   const P = {};
   const set = (n, r = 0, x = 0, y = 0, sx = 1, sy = 1) => (P[n] = { r, x, y, sx, sy });
@@ -1095,7 +1108,11 @@ function tigerView(view) {
   return finishView(L);
 }
 
-function tigerPose(view, anim, t, rig) {
+function tigerPose(view, anim, t, rig, at = t) {
+  if (anim !== 'idle' && anim !== 'walk' && anim !== 'run') {
+    const C = tigerCombatPose(view, anim, t, at);
+    if (C) return C;
+  }
   const P = {};
   const set = (n, r = 0, x = 0, y = 0, sx = 1, sy = 1) => (P[n] = { r, x, y, sx, sy });
   const side = view === 'side';
@@ -1218,7 +1235,7 @@ export function getRig(kind) {
   if (sp.type === 'tiger') {
     rig = {
       kind, type: 'tiger', spec: sp, W: 640, H: 320, footX: 320, footY: 306, ppm: 160,
-      height: sp.height, radius: sp.radius, pose: tigerPose,
+      height: sp.height, radius: sp.radius, pose: tigerPose, anims: TIGER_ANIMS,
       views: { front: tigerView('front'), back: tigerView('back'), side: tigerView('side') },
     };
   } else {
@@ -1230,7 +1247,7 @@ export function getRig(kind) {
     const W = sp.child ? 256 : 384, H = sp.child ? 320 : 448;
     rig = {
       kind, type: 'human', spec: sp, S, W, H, footX: W / 2, footY: H - 10, ppm,
-      height: sp.height, radius: sp.radius, pose: humanPose,
+      height: sp.height, radius: sp.radius, pose: humanPose, anims: HUMAN_ANIMS,
       views: { front: humanView('front', S, sp), back: humanView('back', S, sp), side: humanView('side', S, sp) },
     };
   }

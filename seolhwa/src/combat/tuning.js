@@ -14,7 +14,8 @@ export const T = {
       { anim: 'attack3', dur: 0.52, hitAt: 0.18, dmg: 12, r: 2.3, arc: 150, lunge: 0.55, stop: 85 },
     ],
     comboQueueFrom: 0.06,     // 이 시점 이후 누른 공격은 다음 타로 이어짐
-    comboCancelAfter: 0.05,   // 판정 후 이 시간이 지나면 회피로 끊을 수 있음
+    comboCancelAfter: 0.05,   // 판정 후 이 시간이 지나면 방어(강공격은 회피도)로 끊을 수 있음
+    dodgeCancelFrom: 0.06,    // 가벼운 베기는 이 시점부터 회피로 끊을 수 있음
     chargeStartAfter: 0.18,   // 이만큼 누르고 있으면 모으기 자세로
     heavy: { anim: 'heavy', chargeMin: 0.5, dur: 0.6, hitAt: 0.2, dmg: 24, r: 2.6, arc: 160, lunge: 0.7, stop: 115 },
     dodge: { dur: 0.45, dist: 3.5, iStart: 0.02, iEnd: 0.32, cost: 25 },
@@ -25,20 +26,21 @@ export const T = {
     aimAssistDeg: 50, aimAssistRange: 4.5,
   },
   tiger: {
-    hp: 320,
+    hp: 400,
     radius: 0.7,              // 지형 충돌용
     bodyHalf: 0.8, bodyR: 0.55, // 몸통 = 머리~꼬리 선분(±bodyHalf) + 반지름
     turnRate: 6,
     prowlMin: 6, prowlMax: 9, prowlSpeed: 2.4,
     stalkSpeed: 3.4, stalkTime: 3.0,
-    decideMin: 1.4, decideMax: 2.8,
+    decideMin: 1.8, decideMax: 3.2,
     crouch: 0.8, pounceLen: 8, pounceTime: 0.5, pounceDmg: 30, pounceHeight: 1.3, pounceWidth: 1.7,
     pounceMin: 4.2, pounceMax: 9.8, land: 1.0,
-    swipeRange: 2.6, swipeWind: 0.4, swipeActive: 0.12, swipeRecover: 0.55, swipeDmg: 15, swipeR: 3.0, swipeArc: 110,
+    backoffTime: 0.45, backoffDist: 4.0, backoffAfterSwipe: 0.8,
+    swipeRange: 2.6, swipeWind: 0.4, swipeActive: 0.12, swipeRecover: 0.7, swipeDmg: 15, swipeR: 3.0, swipeArc: 110,
     roarAt: 0.5, roarWind: 0.7, roarAfter: 0.8, roarR: 5.5, roarStun: 1.0,
-    enrageTime: 0.8, enrageSpeed: 1.2, enrageDecide: 0.65, furyTime: 10, doubleSwipe: 0.4,
-    poise: 26, poiseRegenDelay: 2.0, flinch: 0.45, stagger: 0.9, counterChance: 0.5,
-    baitSpeed: 4.0, eat: 3.5, eatAfterHit: 1.1, backAttackMul: 2,
+    enrageTime: 0.88, enrageSpeed: 1.2, enrageDecide: 0.65, furyTime: 10, doubleSwipe: 0.4,
+    poise: 34, poiseRegenDelay: 2.0, flinch: 0.45, stagger: 0.9, counterChance: 0.5,
+    baitSpeed: 4.0, eat: 3.5, eatAfterHit: 2.0, backAttackMul: 2,
     retreatAt: 0.2, retreatPause: 0.8, retreatSpeed: 3.4, retreatStagger: 0.6,
     leash: 1.0, escapeTime: 2.0, escapeFar: 5,
     deathDelay: 1.8,
