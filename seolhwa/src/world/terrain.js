@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { clamp, lerp, smoothstep, fbm, vnoise, rng } from './util.js';
 import { PATH, BRANCH, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
 
-export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 0.8 };
+export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 1.0 };
 
 // ---- 형상(길·터) ----
 function segShapes(pts, r0, r1) {

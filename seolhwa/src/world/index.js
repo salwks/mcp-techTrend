@@ -333,6 +333,7 @@ export function buildWorld(scene) {
         occGroup('소나무', px, y, pz, (add) => (conifer ? fir : pine)(add, rng(seed), s));
         occTrees++;
       } else {
+        if ((Math.abs(px) > 46 || pz < -82) && trng() < 0.45) continue;
         (conifer ? fir : pine)(bgAt(px, y, pz, trng() * 6), rng(seed), s, 1);
       }
       if (inside) circle(px, pz, 0.35 * s);
@@ -384,7 +385,7 @@ export function buildWorld(scene) {
   }
   // 풀포기(먹선 없음, 값싼 삼각뿔 셋)
   const gr = rng(555);
-  for (let i = 0; i < 1600; i++) {
+  for (let i = 0; i < 750; i++) {
     const px = -46 + gr() * 92, pz = -84 + gr() * 116;
     if (inPaddy(px, pz, 0.6) || nearHouse(px, pz, -1.5)) continue;
     if (Math.abs(pz - streamZ(px)) < 2.6) continue;
@@ -392,7 +393,7 @@ export function buildWorld(scene) {
     if (pz > -13 && pz < 30 && Math.abs(px) < 27 && gr() < 0.55) continue;
     const y = ground(px, pz), a = bgAt(px, y, pz, gr() * 6);
     const tone = gr() < 0.5 ? ['#a9ad6c', '#6d7a44'] : ['#bfb27a', '#7f7a4a'];
-    for (let k = 0; k < 3; k++) {
+    for (let k = 0; k < 2; k++) {
       const h = 0.25 + gr() * 0.3;
       const g = new THREE.ConeGeometry(0.06, h, 3, 1, true);
       xf(g, (gr() - 0.5) * 0.3, h / 2, (gr() - 0.5) * 0.2, (gr() - 0.5) * 0.6, 0, (gr() - 0.5) * 0.6);
@@ -481,8 +482,8 @@ export function buildWorld(scene) {
 
   // ---- 카메라 구역(뒤쪽 우선) ----
   const cameraZones = [
-    { name: '느티나무 마을', minX: -45, maxX: 45, minZ: -13, maxZ: 30, pitch: 38, distance: 16 },
-    { name: '개울 돌다리', minX: -12, maxX: 12, minZ: -22, maxZ: -11, pitch: 42, distance: 15 },
+    { name: '느티나무 마을', minX: -45, maxX: 45, minZ: -13, maxZ: 30, pitch: 40, distance: 22, fov: 30 },
+    { name: '개울 돌다리', minX: -12, maxX: 12, minZ: -22, maxZ: -11, pitch: 42, distance: 19 },
     { name: '솔숲 산길', minX: -35, maxX: 45, minZ: -63, maxZ: -22, pitch: 48, distance: 20 },
     { name: '숲가 외딴 초가', minX: -30, maxX: -14, minZ: -38, maxZ: -24, pitch: 44, distance: 14 },
     { name: '고갯마루 서낭당', minX: -8, maxX: 24, minZ: -80, maxZ: -63, pitch: 27, distance: 22, fov: 34 },

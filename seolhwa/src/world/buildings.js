@@ -181,13 +181,13 @@ export function chogaInterior(add, W, D, F, rnd) {
   const bc = ['#a8483a', '#3f5f7a', '#e2d8bf', '#c9a34a'];
   bc.forEach((c, i) => add('interior', 'flat', paint(box(1.0 - i * 0.04, 0.12, 0.6, cx, F + 0.88 + i * 0.12, cz), c, c, 0.03, rnd), 0.01));
   // 소반 + 그릇
-  const tx = 0.1, tz = -0.1;
+  const tx = 0.75, tz = -1.05;
   add('interior', 'flat', paint(cyl(0.42, 0.42, 0.05, 12, tx, F + 0.32, tz), '#7a5234', '#6a4428'), 0.015);
   add('interior', 'flat', paint(cyl(0.34, 0.3, 0.26, 12, tx, F + 0.16, tz), '#5c3c26', '#43291a'), 0.01);
   add('interior', 'flat', paint(cyl(0.1, 0.07, 0.07, 10, tx - 0.12, F + 0.38, tz), '#e8e2d2', '#c8c0ac'), 0.006);
   add('interior', 'flat', paint(cyl(0.09, 0.06, 0.06, 10, tx + 0.15, F + 0.38, tz + 0.08), '#e8e2d2', '#c8c0ac'), 0.006);
   // 방석 두 장
-  for (const [x, z] of [[tx - 0.8, tz + 0.3], [tx + 0.8, tz + 0.2]]) add('interior', 'flat', paint(box(0.55, 0.06, 0.55, x, F + 0.04, z), '#8a3e3a', '#6e302c', 0.03, rnd), 0.01);
+  for (const [x, z] of [[tx - 0.75, tz + 0.15], [tx + 0.7, tz + 0.3]]) add('interior', 'flat', paint(box(0.55, 0.06, 0.55, x, F + 0.04, z), '#8a3e3a', '#6e302c', 0.03, rnd), 0.01);
   // 호롱불: 등잔대 + 등잔 + 불꽃
   const lx = W / 2 - 0.55, lz = -D / 2 + 0.55;
   add('interior', 'flat', paint(cyl(0.16, 0.2, 0.05, 8, lx, F + 0.03, lz), '#5a3f2a'), 0.01);
@@ -397,9 +397,10 @@ export function stoneWall(add, rnd, ax, az, bx, bz, h = 1.3) {
       add('p', 'flat', put(paint(g, '#bdb6a6', '#8f887a', 0.08, rnd)), 0.02);
     }
   }
-  for (let i = 0; i < n; i++) {
-    const x = -len / 2 + (i + 0.5) * (len / n);
-    const g = lump(0.3, 0, rnd, 0.3, 0.55);
+  const nt = Math.max(2, Math.round(len / 0.7));
+  for (let i = 0; i < nt; i++) {
+    const x = -len / 2 + (i + 0.5) * (len / nt);
+    const g = lump(0.38, 0, rnd, 0.3, 0.5);
     xf(g, x, h + 0.02, 0, 0, rnd() * 3, 0);
     add('p', 'flat', put(paint(g, '#b3ac9c', '#90897b', 0.08, rnd)), 0.02);
   }
