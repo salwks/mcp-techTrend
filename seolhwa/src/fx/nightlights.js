@@ -123,6 +123,7 @@ export function createNightLights(scene, lights) {
     mesh,
     update(dt, t, focus, lamp, maxReal) {
       if (!N) { for (const s of slots) s.light.intensity = 0; return; }
+      mesh.visible = lamp > 0.001;   // 낮에는 드로콜 없음
       // 순간이동(워프) 감지: 슬롯을 즉시 비우고 재선택
       const jx = focus.x - lastFocus.x, jz = focus.z - lastFocus.z;
       if (jx * jx + jz * jz > 64) {

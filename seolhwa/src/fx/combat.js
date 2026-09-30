@@ -181,6 +181,7 @@ function createParticles(scene, N) {
       C[i * 4] = vx[i]; C[i * 4 + 1] = vy[i]; C[i * 4 + 2] = vz[i]; C[i * 4 + 3] = t;
     }
     if (any) { aPos.needsUpdate = aA.needsUpdate = aB.needsUpdate = aC.needsUpdate = true; }
+    mesh.visible = any;   // 입자가 없으면 드로콜 없음
   }
 
   return { mesh, mat, emit, kill, killAll, update };

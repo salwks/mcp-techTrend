@@ -72,6 +72,12 @@ export function createLighting(scene, { shadowSize = 2048, shadowExtent = 20 } =
   const _up = new THREE.Vector3(0, 1, 0);
   const DIST = 70;
 
+  function setShadowExtent(e) {
+    if (e === shadowExtent) return;
+    shadowExtent = e;
+    sc.left = -e; sc.right = e; sc.top = e; sc.bottom = -e;
+    sc.updateProjectionMatrix();
+  }
   function setShadowSize(n) {
     if (sun.shadow.mapSize.x === n) return;
     sun.shadow.mapSize.set(n, n);
@@ -80,7 +86,7 @@ export function createLighting(scene, { shadowSize = 2048, shadowExtent = 20 } =
 
   return {
     sun, hemi, fog, dir,
-    setShadowSize,
+    setShadowSize, setShadowExtent,
     apply(state, lightDir, fogOn) {
       dir.copy(lightDir);
       sun.color.copy(state.sun);
