@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-30T14:13:53.483860Z",
+  "generated_at": "2026-09-30T15:59:53.405203Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 2,
-  "pending_count": 2,
-  "observed_total_count": 153,
+  "archive_count": 3,
+  "pending_count": 3,
+  "observed_total_count": 154,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,38 @@
   ],
   "posts": [
     {
+      "post_id": "3997663493398119620",
+      "published_at": "2026-09-30T14:30:46Z",
+      "text": "일론 머스크는 AI와 초지능(Superintelligence)이 가져올 미래를 “풍요의 시대”로 정의했습니다.\n\n그는 미래 사회가 단순히 ‘기본소득’을 넘어 “보편적 고소득”을 누리는 경제 체제가 될 것이며, 로봇과 초지능의 결합으로 누구나 최고 수준의 의료 서비스를 받게 될 것이라고 전망했습니다.\n\n화이트칼라의 일자리 소멸 우려에 대해서는 “과거 인간 계산원의 단순 수치 연산 업무를 디지털 컴퓨터가 대체했듯, 직업의 진화가 일어날 뿐”이라며 기술 발전에 따른 역할 변화를 긍정적으로 평가했습니다.\n\n오히려 AI 도입과 데이터센터 확장이 새로운 수요를 창출하고 경제적 번영을 이끌 것이라는 분석입니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd6jcRHisTE",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPv90HkDV7Vp1thLvE-80KZ_D1SBlDTV-6-boEZvlN-n1To9FApeTW95bGtyBj4pajXLJoWjepyRsjMw-pNWVHZopLv6QzqVtGK6bo.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=cKrYNVB_ruEQ7kNvwFwhCBV&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjY5NjIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTI5LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=f57e3efd92cc0594&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81REJENDU3REM3OTQ0MUVBOEJBQ0VBOTA1RjQ2NUQ3QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NFN0VEMTgxN0M5ODQ4QkY5QUIyNzcwNDJGMjYzOUY5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaApZa4_M70PxUCKAJDMywXQGArtkWhysEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=jRDuNP3y-CA_9oeRG8_j9w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQO4YqjGnqIz2tzlmTPvgEy-TG4Y1yLVBtz8MAllaGuWBg&oe=6ABF0F2A"
+      ],
+      "engagement": {
+        "likes": 28,
+        "replies": 3,
+        "reposts": 2,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-09-30T15:59:53.405203Z",
+      "last_seen_at": "2026-09-30T15:59:53.405203Z"
+    },
+    {
       "post_id": "3997618117521796213",
       "published_at": "2026-09-30T13:00:37Z",
       "text": "OpenClaw이 기업에서 AI 에이전트를 직접 운영할 수 있는 OpenClaw Enterprise를 오픈소스로 공개했습니다.\n\n오픈AI에서 시작된 프로젝트를 OpenClaw Foundation에 기부했으며, 현재 레드햇·엔비디아와 함께 개발하고 있습니다.\n\n기업 자체 서버에서 여러 에이전트를 운영하면서 사용자별 권한, 샌드박스, 감사 기록 등을 관리할 수 있고 모델이나 에이전트 실행 환경도 교체할 수 있습니다.\n\n현재 오픈AI와 레드햇이 내부에서 시험 운영 중이며, 기업은 무료로 직접 호스팅할 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd6ZH9ijWx1",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-15/825324526_17989365279112832_6318015604368132640_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NzYxODExNzUyMTc5NjIxMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=GVxZ6TC-wfMQ7kNvwHaA39O&_nc_oc=AdoZRcBGLoLx8oWHbP5re_xEW7S3PswvY4vUSDOIcVD_-WtRG0EVnDUriMiglWyUl3g&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_gid=YyPnkftkEMezCTqrkvJYEQ&_nc_ss=7a20f&oh=00_AQNn4xLFsR_ewpPzjUsd0BcnE9XSj6nbTgs1ARl1BERhag&oe=6AC2FD62"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/825324526_17989365279112832_6318015604368132640_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=Mzk5NzYxODExNzUyMTc5NjIxMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=GVxZ6TC-wfMQ7kNvwF0SSWy&_nc_oc=Adod3KlbgUqQH8o_fSiCOFCCmjsqGEbxWSnyF6v3hOSceNMXh1hANb6EoiRC8FfriKg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=jRDuNP3y-CA_9oeRG8_j9w&_nc_ss=7a20f&oh=00_AQPkdEZdIJ5l0WxcfJeKJ99NuxxnQmXIdatd2tinPaSqiQ&oe=6AC2FD62"
       ],
       "engagement": {
-        "likes": 20,
+        "likes": 28,
         "replies": 1,
-        "reposts": 2,
+        "reposts": 3,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T13:04:02.516867Z",
-      "last_seen_at": "2026-09-30T14:13:53.483860Z"
+      "last_seen_at": "2026-09-30T15:59:53.405203Z"
     },
     {
       "post_id": "3997572716102296099",
@@ -36,16 +53,16 @@
       "text": "v0에서 ChatGPT Plus·Pro 계정을 연결해 구독에 포함된 토큰으로 서비스를 만들 수 있게 됐습니다.\n\n지금은 오픈AI를 떠났지만, 당시 CPO였던 케빈 웨일은 2025년 “Sign in with OpenAI”를 언급하며 오픈AI 계정을 다른 앱과 서비스로 확장하는 방향을 이야기한 적이 있습니다.\n\n이번 v0 사례를 보면 그 방향이 조금씩 현실화되는 것 같습니다.\n\n결국, 지능을 제공할 테니, 그 위에서 가치를 만드는 가치에 집중을 하라는 의미로도 보입니다.\n\n과거부터 여러 서비스와의 통합 가능성을 준비해왔던 만큼, 못해서 안 하는 게 아니라 생태계가 확장될 때를 기다리고 있는 오픈AI입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd6OzSLEiIj",
       "media": [
-        "https://scontent-sjc6-1.cdninstagram.com/o1/v/t16/f2/m84/AQO1FeKARSnU45X-IZdHY_0RQ0qiDECHYgvYFmwIxrbk95RlVdkw79RQzjSeKeR4y6LxFBpOL_I6Ts3nO2iUenL_gWl2_1CZRecF6bA.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_ohc=_omePENY6_sQ7kNvwHm0TDc&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjU4NzMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=adbe0b16d8397d96&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9COTk2NTg1MThDNDE0MUFEOURBRTAxNEU2Q0JGREUwNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc5RDM0Q0MwMzlDOTRFODBBRDFGODg4QkEzQzZDNjE2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA3M-p9M70PxUCKAJDMywXQD2zMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=YyPnkftkEMezCTqrkvJYEQ&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPNWienB25w8VgEokpFsh_IiBUk8ZSgiyoiVoeB-wnkEA&oe=6ABF0AF0"
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQO1FeKARSnU45X-IZdHY_0RQ0qiDECHYgvYFmwIxrbk95RlVdkw79RQzjSeKeR4y6LxFBpOL_I6Ts3nO2iUenL_gWl2_1CZRecF6bA.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=_omePENY6_sQ7kNvwHscAQM&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjU4NzMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=adbe0b16d8397d96&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9COTk2NTg1MThDNDE0MUFEOURBRTAxNEU2Q0JGREUwNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc5RDM0Q0MwMzlDOTRFODBBRDFGODg4QkEzQzZDNjE2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA3M-p9M70PxUCKAJDMywXQD2zMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=jRDuNP3y-CA_9oeRG8_j9w&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPnWfzjGXTG9eRAG4tb2Erqdj0wPi1mgwprVBpcaxYJoA&oe=6ABF0AF0"
       ],
       "engagement": {
-        "likes": 31,
+        "likes": 35,
         "replies": 2,
         "reposts": 2,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T13:04:02.516867Z",
-      "last_seen_at": "2026-09-30T14:13:53.483860Z"
+      "last_seen_at": "2026-09-30T15:59:53.405203Z"
     }
   ],
   "watchdog": {
