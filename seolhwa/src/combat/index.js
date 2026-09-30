@@ -2,7 +2,7 @@
 // 논리(battle/player/tiger/projectiles/hitbox/tuning)는 three·DOM 없이 돌아가고, 여기서 장면·FX·HUD·입력에 잇는다.
 import * as THREE from 'three';
 import { Battle, makeEnv } from './battle.js';
-import { T } from './tuning.js';
+import { T, syncTimings, applyScale } from './tuning.js';
 import { makeArrowMesh, makeBaitMesh } from './meshes.js';
 
 const ACTIONS = ['attack', 'dodge', 'guard', 'bow', 'item'];
@@ -146,6 +146,19 @@ export function createCombat(ctx) {
     }
   }
 
+  // 실제 지면 이동 속도를 캐릭터에 알려 걸음이 미끄러지지 않게
+  const lastPos = { px: 0, pz: 0, tx: 0, tz: 0 };
+  function reportSpeed(dt) {
+    const pl = battle.player, tg = battle.tiger;
+    if (dt > 1e-4) {
+      const ps = Math.hypot(pl.pos.x - lastPos.px, pl.pos.z - lastPos.pz) / dt;
+      const ts = Math.hypot(tg.pos.x - lastPos.tx, tg.pos.z - lastPos.tz) / dt;
+      if (player.char.setMoveSpeed) safe(() => player.char.setMoveSpeed(Math.min(ps, 12)));
+      if (tigerChar && tigerChar.setMoveSpeed) safe(() => tigerChar.setMoveSpeed(Math.min(ts, 20)));
+    }
+    lastPos.px = pl.pos.x; lastPos.pz = pl.pos.z; lastPos.tx = tg.pos.x; lastPos.tz = tg.pos.z;
+  }
+
   function syncActors() {
     const pl = battle.player, tg = battle.tiger;
     player.pos.x = pl.pos.x; player.pos.z = pl.pos.z;
@@ -196,7 +209,16 @@ export function createCombat(ctx) {
       tigerChar = ctx.makeChar('tiger');
       scene.add(tigerChar.object3d);
       if (tigerChar.setMode && player.char.mode) safe(() => tigerChar.setMode(player.char.mode));
+      // 캐릭터 애니메이션 길이·크기에 판정을 맞춘다(캐릭터 모듈이 바뀌어도 따라가게)
+      const durOf = (name) => {
+        const c = name === 'swipe' || name === 'pounce' ? tigerChar : player.char;
+        return c && typeof c.animDuration === 'function' ? safe(() => c.animDuration(name)) || 0 : 0;
+      };
+      syncTimings(durOf);
+      applyScale(player.char.radius || T.player.radius, tigerChar.radius || 1.0);
       battle.start(arena);
+      lastPos.px = battle.player.pos.x; lastPos.pz = battle.player.pos.z;
+      lastPos.tx = battle.tiger.pos.x; lastPos.tz = battle.tiger.pos.z;
       if (player.char.setArmed) safe(() => player.char.setArmed(true));
       syncActors();
       safe(() => tigerChar.update(0, camera));
@@ -213,6 +235,7 @@ export function createCombat(ctx) {
       ending = false;
       if (hud && hud.setFoe) safe(() => hud.setFoe(null));
       if (player.char.setArmed) safe(() => player.char.setArmed(false));
+      if (player.char.setMoveSpeed) safe(() => player.char.setMoveSpeed(null)); // 코어 이동으로 돌려줌
       safe(() => player.char.setAnim('idle', { restart: true }));
     },
 
@@ -228,6 +251,7 @@ export function createCombat(ctx) {
           showResult(result);
         }
       }
+      reportSpeed(dt);
       syncActors();
       for (const p of battle.arrows) syncProj(p);
       for (const p of battle.baits) syncProj(p);

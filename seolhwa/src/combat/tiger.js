@@ -41,7 +41,7 @@ export class TigerAI {
 
   get alive() { return this.state !== 'dead'; }
   // 공격받을 수 있는가(도약 중엔 판정 없음)
-  get targetable() { return this.state !== 'dead' && this.state !== 'gone' && this.state !== 'pounce'; }
+  get targetable() { return this.state !== 'dead' && this.state !== 'gone' && !(this.state === 'pounce' && this.airborne); }
   get tm() { return this.enraged ? G.enrageTime : 1; }   // 예고·빈틈 시간 배율
   get sm() { return this.enraged ? G.enrageSpeed : 1; }  // 이동 속도 배율
 
@@ -170,7 +170,12 @@ export class TigerAI {
         break;
       }
       case 'pounce': {
-        const u = Math.min(1, this.t / (G.pounceTime / this.sm));
+        // 애니메이션 앞부분(pounceAirFrom)은 박차는 동작: 제자리. 그 뒤 공중 구간 동안 날아간다
+        const air = G.pounceTime / this.sm;
+        const lead = air / (G.pounceAirTo - G.pounceAirFrom) * G.pounceAirFrom;
+        if (this.t < lead) break;
+        this.airborne = true;
+        const u = Math.min(1, (this.t - lead) / air);
         const px = this.pos.x, pz = this.pos.z;
         const nx = this.ps.x + (this.pe.x - this.ps.x) * u, nz = this.ps.z + (this.pe.z - this.ps.z) * u;
         this.pos.x = nx; this.pos.z = nz;
@@ -183,7 +188,7 @@ export class TigerAI {
           }
         }
         if (u >= 1) {
-          this.y = 0;
+          this.y = 0; this.airborne = false;
           this.go('land');
           this.setAnim('land', true, G.land * this.tm);
           env.fx('dust', this.pos.x, this.pos.z, { scale: 1.4 });
@@ -369,7 +374,8 @@ export class TigerAI {
       len += step;
     }
     this.pe.x = this.pos.x + this.hx * len; this.pe.z = this.pos.z + this.hz * len;
-    this.setAnim('pounce', true, (G.pounceTime / this.sm) / G.pounceAirFrac);
+    this.airborne = false;
+    this.setAnim('pounce', true, (G.pounceTime / this.sm) / (G.pounceAirTo - G.pounceAirFrom));
     b.env.fx('dust', this.pos.x, this.pos.z, { scale: 0.9 });
   }
 

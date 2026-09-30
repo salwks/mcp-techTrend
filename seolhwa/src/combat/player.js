@@ -100,7 +100,11 @@ export class PlayerCombat {
       case 'dodge': this.updDodge(dt); break;
       case 'guard': this.updGuard(dt, ctl, mv, mlen); break;
       case 'bow': this.updBow(dt, ctl, mv, mlen); break;
-      case 'bowshot': if (this.t >= P.bow.recover) this.toFree(); break;
+      case 'bowshot':
+        // 시위를 놓는 그림의 순간에 화살이 나간다
+        if (this.shotPending && this.t >= P.bow.releaseAt) { this.shotPending = false; b.spawnArrow(this.pos.x, this.pos.z, this.ax, this.az, this.shotDmg, this.shotFull); }
+        if (this.t >= P.bow.recover) this.toFree();
+        break;
       case 'throw': this.updThrow(dt); break;
       case 'guardbreak': case 'hit':
         this.knock(dt);
@@ -293,9 +297,9 @@ export class PlayerCombat {
       if (this.draw >= B.minDraw) {
         const full = this.draw >= B.fullDraw;
         this.arrows--;
-        this.b.spawnArrow(this.pos.x, this.pos.z, this.ax, this.az, full ? B.fullDmg : B.dmg, full);
+        this.shotDmg = full ? B.fullDmg : B.dmg; this.shotFull = full; this.shotPending = true;
         this.go('bowshot');
-        this.setAnim('bow_shoot', true, P.bow.recover + 0.1);
+        this.setAnim('bow_shoot', true);
       } else this.toFree();
     }
   }
