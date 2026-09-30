@@ -394,7 +394,9 @@ export class Painter {
     for (const p of pts) {
       const a = Math.atan2(p[3], p[2]) + (R() - 0.5) * spread;
       const L = len * (0.6 + R() * 0.6);
-      this.stroke([[p[0], p[1]], [p[0] + Math.cos(a) * L * 0.55 + (R() - 0.5) * 2, p[1] + Math.sin(a) * L * 0.55], [p[0] + Math.cos(a) * L, p[1] + Math.sin(a) * L]], { w, color, rough: 0.2 });
+      // 몸 안쪽에서 시작해 바깥으로 빠지는 붓질(털이 몸에 붙어 있게)
+      const sx = p[0] - Math.cos(a) * L * 0.45, sy = p[1] - Math.sin(a) * L * 0.45;
+      this.stroke([[sx, sy], [p[0] + Math.cos(a) * L * 0.2 + (R() - 0.5) * 2, p[1] + Math.sin(a) * L * 0.2], [p[0] + Math.cos(a) * L * 0.6, p[1] + Math.sin(a) * L * 0.6]], { w, color, rough: 0.2 });
     }
   }
 

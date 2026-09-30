@@ -26,11 +26,20 @@ export const COMBAT_HUMAN = new Set(['attack1', 'attack2', 'attack3', 'charge', 
 // 기본값이 '숨김'인 부위(효과·교체용 이미지)
 const HIDDEN = /^(fx_|head_|bow[RD]$|item$)/;
 
+// 가감속 곡선: 구간이 끝나는 키프레임에 붙인다 ([t, 자세, 곡선])
+const EASE = {
+  io: (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2),
+  in: (k) => k * k * k,
+  out: (k) => 1 - Math.pow(1 - k, 3),
+  snap: (k) => 1 - Math.pow(1 - k, 5),              // 번개처럼 빠르게 들어가 멈춤(베기)
+  back: (k) => { const c = 1.9; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }, // 살짝 지나쳤다 돌아옴
+  lin: (k) => k,
+};
 function kf(u, frames) {
   let i = 0;
   while (i < frames.length - 2 && u >= frames[i + 1][0]) i++;
-  const [t0, A] = frames[i], [t1, B] = frames[min(i + 1, frames.length - 1)];
-  const k = t1 > t0 ? smooth(clamp((u - t0) / (t1 - t0), 0, 1)) : 1;
+  const [t0, A] = frames[i], [t1, B, ez] = frames[min(i + 1, frames.length - 1)];
+  const k = t1 > t0 ? (EASE[ez] || EASE.io)(clamp((u - t0) / (t1 - t0), 0, 1)) : 1;
   const P = {};
   const names = new Set([...Object.keys(A), ...Object.keys(B)]);
   for (const n of names) {
@@ -74,27 +83,37 @@ const DOWN_END = { root: [1.52, -10, 98], torso: [0.05], head: [0.15], arm2: [-2
 const SIDE = {
   attack1: [
     [0, { ...STANCE, arm2: [2.2], arm2_l: [0.2], sword: [0.2], arm1: [0.3], root: [0, 0, 6], torso: [0.04] }],
-    [0.28, { ...STANCE, arm2: [2.9], arm2_l: [0.15], sword: [0.1], arm1: [0.2], root: [0, 2, 6], torso: [0.08] }],
-    [0.5, { ...LUNGE, arm2: [0.55], arm2_l: [0.1], sword: [0.25], arm1: [-0.4], root: [0, -10, 10], torso: [-0.2], head: [0.1], ...FX('fx_slash', 0, 0, 0, 1, 1, 1) }],
-    [1, { ...LUNGE, arm2: [0.7], arm2_l: [0.2], sword: [0.3], arm1: [-0.3], root: [0, -10, 10], torso: [-0.15], head: [0.08], ...FX('fx_slash', 0, 0, 0, 1, 1, 0) }],
+    // 예비 동작: 칼을 뒤로 더 끌어올리며 몸을 젖힘
+    [0.3, { ...STANCE, arm2: [3.05], arm2_l: [0.25], sword: [0.25], arm1: [0.35], root: [0, 4, 8], torso: [0.12], head: [-0.05] }, 'out'],
+    // 베기: 순식간에
+    [0.46, { ...LUNGE, arm2: [0.4], arm2_l: [0.05], sword: [0.1], arm1: [-0.5], root: [0, -12, 11], torso: [-0.24], head: [0.12], skirt: [0.25], ...FX('fx_slash', 0, 0, 0, 1, 1, 1) }, 'snap'],
+    // 뒤따름: 칼끝이 더 흘러가고 손목이 따라감
+    [0.64, { ...LUNGE, arm2: [0.15], arm2_l: [0.2], sword: [0.5], arm1: [-0.55], root: [0, -13, 12], torso: [-0.27], head: [0.14], ...FX('fx_slash', 0, 0, 0, 1.05, 1.05, 1) }, 'out'],
+    [1, { ...LUNGE, arm2: [0.6], arm2_l: [0.2], sword: [0.3], arm1: [-0.3], root: [0, -10, 10], torso: [-0.15], head: [0.08], ...FX('fx_slash', 0, 0, 0, 1.05, 1.05, 0) }, 'io'],
   ],
   attack2: [
     [0, { ...LUNGE, arm2: [0.7], arm2_l: [0.2], sword: [0.3], root: [0, -10, 10], torso: [-0.15] }],
-    [0.3, { ...STANCE, arm2: [-0.6], arm2_l: [0.3], sword: [0.4], root: [0, -2, 8], torso: [0.02], arm1: [0.5], ...FX('fx_slash', 0, 0, 0, 1, -1, 0) }],
-    [0.55, { ...LUNGE, arm2: [2.5], arm2_l: [0.2], sword: [0.1], root: [0, -12, 4], torso: [-0.05], head: [-0.1], arm1: [-0.5], ...FX('fx_slash', 0, 0, 0, 1, -1, 1) }],
-    [1, { ...LUNGE, arm2: [2.4], arm2_l: [0.25], sword: [0.15], root: [0, -12, 6], torso: [-0.08], arm1: [-0.4], ...FX('fx_slash', 0, 0, 0, 1, -1, 0) }],
+    [0.3, { ...STANCE, arm2: [-0.75], arm2_l: [0.35], sword: [0.5], root: [0, 0, 11], torso: [0.06], arm1: [0.55], ...FX('fx_slash', 0, 0, 0, 1, -1, 0) }, 'out'],
+    [0.48, { ...LUNGE, arm2: [2.6], arm2_l: [0.15], sword: [0.05], root: [0, -13, 3], torso: [-0.06], head: [-0.12], arm1: [-0.55], ...FX('fx_slash', 0, 0, 0, 1, -1, 1) }, 'snap'],
+    [0.66, { ...LUNGE, arm2: [2.85], arm2_l: [0.05], sword: [-0.25], root: [0, -14, 2], torso: [-0.02], head: [-0.14], arm1: [-0.6], ...FX('fx_slash', 0, 0, 0, 1.05, -1.05, 1) }, 'out'],
+    [1, { ...LUNGE, arm2: [2.4], arm2_l: [0.25], sword: [0.15], root: [0, -12, 6], torso: [-0.08], arm1: [-0.4], ...FX('fx_slash', 0, 0, 0, 1, -1, 0) }, 'io'],
   ],
   attack3: [
     [0, { ...LUNGE, arm2: [2.4], arm2_l: [0.25], sword: [0.15], root: [0, -12, 6], torso: [-0.08] }],
-    [0.35, { ...STANCE, arm2: [-0.5], arm2_l: [1.9], sword: [-0.3], root: [0, 8, 8], torso: [0.12], arm1: [0.8], arm1_l: [0.4] }],
-    [0.55, { ...BIG, arm2: [1.45], arm2_l: [-0.1], sword: [0.05], root: [0, -18, 16], torso: [-0.3], head: [0.15], arm1: [-0.9], ...FX('fx_streak', 0, 0, 0, 1, 1, 1) }],
-    [1, { ...BIG, arm2: [1.45], arm2_l: [-0.1], sword: [0.05], root: [0, -18, 16], torso: [-0.28], head: [0.12], arm1: [-0.8], ...FX('fx_streak', 0, 0, 0, 1, 1, 0) }],
+    // 칼을 허리로 당겨 몸을 웅크림(찌르기 예비)
+    [0.38, { ...STANCE, arm2: [-0.55], arm2_l: [1.95], sword: [-0.3], root: [0, 10, 12, 1.03, 0.97], torso: [0.16], arm1: [0.85], arm1_l: [0.45] }, 'out'],
+    [0.52, { ...BIG, arm2: [1.5], arm2_l: [-0.12], sword: [0.05], root: [0, -22, 16, 1.02, 0.98], torso: [-0.34], head: [0.18], arm1: [-1.0], skirt: [0.35], ...FX('fx_streak', 0, 0, 0, 1.1, 1, 1) }, 'snap'],
+    [0.7, { ...BIG, arm2: [1.5], arm2_l: [-0.1], sword: [0.05], root: [0, -24, 17], torso: [-0.36], head: [0.2], arm1: [-1.05], ...FX('fx_streak', 0, -10, 0, 1.2, 1, 1) }, 'out'],
+    [1, { ...BIG, arm2: [1.45], arm2_l: [-0.1], sword: [0.05], root: [0, -18, 16], torso: [-0.28], head: [0.12], arm1: [-0.8], ...FX('fx_streak', 0, 0, 0, 1, 1, 0) }, 'io'],
   ],
   heavy: [
     [0, S_CHARGE],
-    [0.35, { ...STANCE, arm2: [-3.3], arm2_l: [0.1], sword: [0], torso: [0.15], head: [-0.1], root: [0, 4, 0], arm1: [-2.8], ...FX('fx_slash', 0, 0, 0, 1.15, 1.15, 0) }],
-    [0.55, { ...BIG, arm2: [-5.6], arm2_l: [0.1], sword: [0.2], torso: [-0.35], head: [0.2], root: [0, -20, 20], arm1: [-5.5], ...FX('fx_slash', 0, 0, 0, 1.15, 1.15, 1) }],
-    [1, { ...BIG, arm2: [-5.5], arm2_l: [0.15], sword: [0.25], torso: [-0.3], head: [0.15], root: [0, -20, 18], arm1: [-5.4], ...FX('fx_slash', 0, 0, 0, 1.15, 1.15, 0) }],
+    // 크게 들어올림(느리게, 무게가 실림)
+    [0.35, { ...STANCE, arm2: [-3.35], arm2_l: [0.1], sword: [0], torso: [0.18], head: [-0.12], root: [0, 6, -2, 0.97, 1.04], arm1: [-2.85], ...FX('fx_slash', 0, 0, 0, 1.2, 1.2, 0) }, 'out'],
+    // 내리찍기
+    [0.5, { ...BIG, arm2: [-5.65], arm2_l: [0.05], sword: [0.15], torso: [-0.38], head: [0.22], root: [0, -22, 22, 1.04, 0.95], arm1: [-5.55], skirt: [0.4], ...FX('fx_slash', 0, 0, 0, 1.2, 1.2, 1) }, 'snap'],
+    [0.7, { ...BIG, arm2: [-5.85], arm2_l: [0.25], sword: [0.45], torso: [-0.42], head: [0.25], root: [0, -23, 24, 1.03, 0.96], arm1: [-5.7], ...FX('fx_slash', 0, 0, 0, 1.25, 1.25, 1) }, 'out'],
+    [1, { ...BIG, arm2: [-5.5], arm2_l: [0.15], sword: [0.25], torso: [-0.3], head: [0.15], root: [0, -20, 18], arm1: [-5.4], ...FX('fx_slash', 0, 0, 0, 1.2, 1.2, 0) }, 'io'],
   ],
   charge: S_CHARGE,
   guard: { ...STANCE, root: [0, 3, 10], torso: [0.05], arm2: [0.9], arm2_l: [1.0], sword: [0.9], arm1: [1.0], arm1_l: [0.9], head: [0.05] },
@@ -112,8 +131,8 @@ const SIDE = {
   ],
   hit: [
     [0, {}],
-    [0.25, { torso: [0.35], head: [0.35], root: [0.08, 12, 6], arm2: [-0.8], arm2_l: [0.6], arm1: [-1.0], arm1_l: [0.5], leg2: [0.35], leg1: [-0.15], sword: [0.3] }],
-    [1, { torso: [0.12], head: [0.1], root: [0.03, 6, 3], arm2: [-0.2], arm1: [-0.3], leg2: [0.2], leg1: [-0.1] }],
+    [0.22, { torso: [0.38], head: [0.4], root: [0.08, 12, 6, 0.96, 1.03], arm2: [-0.85], arm2_l: [0.6], arm1: [-1.05], arm1_l: [0.5], leg2: [0.35], leg1: [-0.15], sword: [0.3], skirt: [-0.3] }, 'snap'],
+    [1, { torso: [0.12], head: [0.1], root: [0.03, 6, 3], arm2: [-0.2], arm1: [-0.3], leg2: [0.2], leg1: [-0.1] }, 'back'],
   ],
   down: [
     [0, {}],
@@ -195,15 +214,17 @@ export function humanCombatPose(view, anim, t, at, rig) {
     const u = clamp(at / info.dur, 0, 1), b = sin(PI * u);
     if (side) {
       const f = (n, r) => [r * b];
+      // 도움닫기 때 눌렸다가(squash) 굴며 늘어나고(stretch) 착지에서 다시 눌림
+      const sq = 1 - 0.16 * Math.exp(-(((u - 0.04) / 0.07) ** 2)) - 0.14 * Math.exp(-(((u - 0.96) / 0.07) ** 2));
       P = kf(0, [[0, {
-        root: [-2 * PI * smooth(u), -6 * b, -34 * b], torso: f(0, -0.9), head: f(0, -0.3), skirt: f(0, 0.6),
+        root: [-2 * PI * EASE.io(u), -6 * b, -34 * b + (1 - sq) * 40, 2 - sq, sq + 0.06 * b], torso: f(0, -0.9), head: f(0, -0.3), skirt: f(0, 0.6),
         leg2: f(0, 1.5), leg2_l: f(0, -2.1), leg1: f(0, 1.3), leg1_l: f(0, -2.1),
         arm2: f(0, 1.1), arm2_l: f(0, 1.2), arm1: f(0, 1.1), arm1_l: f(0, 1.2), sword: [0.3],
       }]]);
     } else {
       // 종이 인형처럼 휙 뒤집히며 뛰어오름
       P = kf(0, [[0, {
-        root: [0, 0, -30 * b, flip(cos(2 * PI * smooth(u))), 1 - 0.25 * b],
+        root: [0, 0, -30 * b, flip(cos(2 * PI * EASE.io(u))), (1 - 0.25 * b) * (1 - 0.14 * Math.exp(-(((u - 0.04) / 0.07) ** 2)) - 0.12 * Math.exp(-(((u - 0.96) / 0.07) ** 2)))],
         arm2: [0.5 * b], arm2_l: [1.0 * b], arm1: [-0.5 * b], arm1_l: [-1.0 * b],
         leg1: [0, 0, -12 * b], leg2: [0, 0, -12 * b], leg1_l: [0, 0, 0, 1, 1 - 0.2 * b], leg2_l: [0, 0, 0, 1, 1 - 0.2 * b], head: [0, 0, 8 * b],
       }]]);
@@ -249,22 +270,27 @@ const TF_CROUCH = { root: [0, 0, 16, 1.04, 0.9], front1: [0.3], front1_l: [-0.35
 const TS = {
   pounce: [
     [0, T_CROUCH],
-    [0.15, { root: [0.18, -8, -6], front1: [1.0], front1_l: [0.3], front2: [1.1], front2_l: [0.3], hind1: [-0.9], hind1_l: [0.3], hind2: [-1.0], hind2_l: [0.3], ...H(0.1, -8, 0), ...STIFF }],
-    [0.5, { root: [0.08, -14, -42, 1.12, 0.94], front1: [1.35], front1_l: [0.25], front2: [1.45], front2_l: [0.3], hind1: [-1.1], hind1_l: [0.2], hind2: [-1.2], hind2_l: [0.2], ...H(0.12, -12, -2), ...STIFF }],
-    [0.85, { root: [-0.08, -10, -12], front1: [0.7], front1_l: [-0.2], front2: [0.8], front2_l: [-0.2], hind1: [-0.6], hind2: [-0.7], ...H(0, -10, 4), ...STIFF }],
-    [1, { root: [-0.05, -8, -2], front1: [0.5], front2: [0.55], hind1: [-0.4], hind2: [-0.45], ...H(0, -8, 4), ...TAIL(0.8, 0.4, -0.8, -1.0) }],
+    // 도약 직전: 더 낮게 눌림(예비 동작)
+    [0.08, { ...T_CROUCH, root: [-0.18, 6, 34, 1.06, 0.9] }, 'out'],
+    // 박차고 오름: 몸이 쭉 늘어남 — 여기(15%)부터 공중
+    [0.15, { root: [0.2, -10, -8, 1.1, 0.92], front1: [1.0], front1_l: [0.3], front2: [1.1], front2_l: [0.3], hind1: [-0.95], hind1_l: [0.3], hind2: [-1.05], hind2_l: [0.3], ...H(0.1, -8, 0), ...STIFF }, 'snap'],
+    [0.5, { root: [0.08, -16, -44, 1.14, 0.93], front1: [1.35], front1_l: [0.25], front2: [1.45], front2_l: [0.3], hind1: [-1.15], hind1_l: [0.2], hind2: [-1.25], hind2_l: [0.2], ...H(0.12, -12, -2), ...STIFF }, 'out'],
+    // 내려오며 앞발을 뻗음 — 85%에 착지
+    [0.85, { root: [-0.1, -10, -10, 1.05, 0.97], front1: [0.75], front1_l: [-0.25], front2: [0.85], front2_l: [-0.25], hind1: [-0.6], hind2: [-0.7], ...H(0, -10, 4), ...STIFF }, 'in'],
+    [1, { root: [-0.05, -8, 6, 1.06, 0.88], front1: [0.5], front2: [0.55], hind1: [-0.4], hind2: [-0.45], ...H(0.04, -8, 8), ...TAIL(0.8, 0.4, -0.8, -1.0) }, 'snap'],
   ],
   land: [
     [0, { root: [-0.05, -8, -2], front1: [0.5], front2: [0.55], hind1: [-0.4], hind2: [-0.45], ...H(0, -8, 4), ...TAIL(0.8, 0.4, -0.8, -1.0) }],
-    [0.3, { root: [0.1, -4, 18], front1: [-0.35], front1_l: [0.75], front2: [-0.3], front2_l: [0.7], hind1: [0.5], hind1_l: [-0.7], hind2: [0.55], hind2_l: [-0.75], ...H(0.1, -4, 12), ...TAIL(0.4, 0.2, -0.3, -0.3) }],
-    [1, { root: [0, 0, 2], ...H(0, 0, 0), ...TAIL(0.1, 0, 0, 0) }],
+    [0.28, { root: [0.1, -4, 18, 1.08, 0.86], front1: [-0.35], front1_l: [0.75], front2: [-0.3], front2_l: [0.7], hind1: [0.5], hind1_l: [-0.7], hind2: [0.55], hind2_l: [-0.75], ...H(0.12, -4, 14), ...TAIL(0.4, 0.2, -0.3, -0.3) }, 'snap'],
+    [1, { root: [0, 0, 2], ...H(0, 0, 0), ...TAIL(0.1, 0, 0, 0) }, 'back'],
   ],
   swipe: [
     [0, { ...H(0, 0, 0) }],
-    [0.45, { root: [0.3, 12, -8], front2: [3.0], front2_l: [1.1], front1: [0.35], hind1: [-0.3], hind1_l: [0.2], hind2: [-0.3], hind2_l: [0.2], ...H(-0.25, 4, -10, 'roar'), ...TAIL(0.3, 0.3, -0.3, -0.4) }],
+    [0.45, { root: [0.3, 12, -8, 0.97, 1.04], front2: [3.0], front2_l: [1.1], front1: [0.35], hind1: [-0.3], hind1_l: [0.2], hind2: [-0.3], hind2_l: [0.2], ...H(-0.25, 4, -10, 'roar'), ...TAIL(0.3, 0.3, -0.3, -0.4) }],
     [0.55, { root: [0.32, 12, -9], front2: [3.1], front2_l: [1.2], front1: [0.35], hind1: [-0.3], hind1_l: [0.2], hind2: [-0.3], hind2_l: [0.2], ...H(-0.27, 4, -11, 'roar'), ...TAIL(0.3, 0.3, -0.3, -0.4), fx_claw: [0, -20, 0, 1.6, 1.6, 0] }],
-    [0.68, { root: [-0.08, -14, 6], front2: [0.35], front2_l: [-0.4], front1: [-0.1], ...H(0.12, -12, 8, 'roar'), ...TAIL(0.6, 0.3, -0.6, -0.8), fx_claw: [0, -20, 0, 1.6, 1.6, 1] }],
-    [1, { root: [-0.05, -10, 4], front2: [0.4], front2_l: [-0.2], ...H(0.08, -8, 6), ...TAIL(0.4, 0.2, -0.3, -0.4), fx_claw: [0, -20, 0, 1.7, 1.7, 0] }],
+    [0.68, { root: [-0.08, -14, 6, 1.05, 0.95], front2: [0.35], front2_l: [-0.4], front1: [-0.1], ...H(0.12, -12, 8, 'roar'), ...TAIL(0.6, 0.3, -0.6, -0.8), fx_claw: [0, -20, 0, 1.6, 1.6, 1] }, 'snap'],
+    [0.8, { root: [-0.11, -17, 8, 1.03, 0.97], front2: [0.1], front2_l: [-0.5], front1: [-0.15], ...H(0.15, -14, 10, 'roar'), ...TAIL(0.7, 0.35, -0.7, -0.9), fx_claw: [0, -20, 0, 1.7, 1.7, 1] }, 'out'],
+    [1, { root: [-0.05, -10, 4], front2: [0.4], front2_l: [-0.2], ...H(0.08, -8, 6), ...TAIL(0.4, 0.2, -0.3, -0.4), fx_claw: [0, -20, 0, 1.7, 1.7, 0] }, 'io'],
   ],
   roar: [
     [0, { ...H(0, 0, 0) }],

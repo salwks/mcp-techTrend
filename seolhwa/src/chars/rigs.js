@@ -37,7 +37,7 @@ function part(list, name, parent, at, z, draw, opt = {}) {
 }
 /** 이미 그린 이미지를 재사용해 부위 추가 */
 function reuse(list, src, name, parent, at, z, opt = {}) {
-  const p = { name, parent, at, r0: opt.r0 || 0, z, img: opt.far ? darkenCopy(src.img, 0.2) : src.img, ox: src.ox, oy: src.oy, abs: !!opt.abs, tag: opt.tag || null };
+  const p = { name, parent, at, r0: opt.r0 || 0, z, img: opt.far ? darkenCopy(src.img, 0.2) : src.img, ox: src.ox, oy: src.oy, abs: !!opt.abs, tag: opt.tag || null, flip: !!opt.flip };
   list.push(p);
   return p;
 }
@@ -540,11 +540,12 @@ function drawLowerArm(p, S, sp) {
   p.poly([[-5 * ws, L - 4 * ws], [5 * ws, L - 4 * ws], [6.5 * ws, L + 3 * ws], [3 * ws, L + 8 * ws], [-3 * ws, L + 8 * ws], [-6.5 * ws, L + 3 * ws]], skin, { w: 1.8 });
   // 배래 곡선 소매
   // 배래: 손목은 좁고 아래로 둥글게 흘러내리는 넓은 소매
-  const path = p.poly([[-10.5 * ws, -3], [10.5 * ws, -3], [14 * ws, L * 0.4], [18 * ws, L - 10 * ws], [15 * ws, L - 1 * ws, 'c'], [3 * ws, L + 1 * ws], [-8 * ws, L - 1 * ws, 'c'], [-11.5 * ws, L - 7 * ws], [-12 * ws, L * 0.45]], sp.coat, { w: 2.2, shadeDown: 0.35 });
+  // 배래: 팔꿈치에서 부드럽게 늘어졌다가 손목(수구)으로 둥글게 모이는 소매 — 바깥(+x)쪽이 흘러내림
+  const path = p.poly([[-10.5 * ws, -3], [10.5 * ws, -3], [13 * ws, L * 0.42], [13.5 * ws, L - 12 * ws], [10 * ws, L - 3 * ws], [3 * ws, L], [-7 * ws, L - 1 * ws, 'c'], [-10 * ws, L - 8 * ws], [-11 * ws, L * 0.45]], sp.coat, { w: 2.2, shadeDown: 0.35 });
   p.clip(path, () => {
-    if (sp.cuff) p.stroke([[-14 * ws, L - 5 * ws], [18 * ws, L - 6 * ws]], { w: 8 * ws, color: sp.cuff, taper: false });
-    p.stroke([[-3 * ws, 4], [0, L * 0.5], [4 * ws, L * 0.85]], { w: 0.9, color: shade(sp.coat, -0.42) });
-    p.stroke([[6 * ws, L * 0.3], [12 * ws, L * 0.7], [15 * ws, L - 4 * ws]], { w: 0.8, color: shade(sp.coat, -0.42) });
+    if (sp.cuff) p.stroke([[-14 * ws, L - 5 * ws], [16 * ws, L - 6 * ws]], { w: 8 * ws, color: sp.cuff, taper: false });
+    p.stroke([[-4 * ws, 3], [-2 * ws, L * 0.5], [1 * ws, L * 0.85]], { w: 0.9, color: shade(sp.coat, -0.42) });
+    p.stroke([[5 * ws, L * 0.25], [9 * ws, L * 0.62], [8 * ws, L - 6 * ws]], { w: 0.8, color: shade(sp.coat, -0.42) });
   });
 }
 
@@ -816,10 +817,10 @@ function humanView(view, S, sp) {
     reuse(L, up[0], 'arm2', 'torso', [0, shY], 10.9, { r0: 0.06 });
     reuse(L, lo[0], 'arm2_l', 'arm2', [0, S.uArm], 11, { r0: 0.12 });
   } else {
-    reuse(L, up[0], 'arm1', 'torso', [-S.shHalf + 5 * ws, shY], 6.1, { r0: 0.14 });
-    reuse(L, lo[0], 'arm1_l', 'arm1', [0, S.uArm], 6.2, { r0: -0.08 });
-    reuse(L, up[0], 'arm2', 'torso', [S.shHalf - 5 * ws, shY], 6.1, { r0: -0.14 });
-    reuse(L, lo[0], 'arm2_l', 'arm2', [0, S.uArm], 6.2, { r0: 0.08 });
+    reuse(L, up[0], 'arm1', 'torso', [-S.shHalf + 7 * ws, shY + 2 * ws], 6.1, { r0: 0.07, flip: true });
+    reuse(L, lo[0], 'arm1_l', 'arm1', [0, S.uArm], 6.2, { r0: -0.03, flip: true });
+    reuse(L, up[0], 'arm2', 'torso', [S.shHalf - 7 * ws, shY + 2 * ws], 6.1, { r0: -0.07 });
+    reuse(L, lo[0], 'arm2_l', 'arm2', [0, S.uArm], 6.2, { r0: 0.03 });
   }
 
   // 다리
@@ -947,7 +948,7 @@ function humanBasePose(view, anim, t, rig, st = {}) {
         set(gestArmSide + '_l', 0.9 + 0.25 * g);
       }
     }
-    if (sp.carry === 'basket') { set('arm2', 2.75 + 0.03 * s); set('arm2_l', -0.9); }
+    if (sp.carry === 'basket') { set('arm2', 2.75 + 0.03 * s); set('arm2_l', 0.4); }
   } else {
     const flip = view === 'back' ? -1 : 1;
     if (walk) {
@@ -985,7 +986,7 @@ function humanBasePose(view, anim, t, rig, st = {}) {
     }
     if (sp.carry === 'basket') {
       const a = view === 'back' ? 'arm2' : 'arm1', sg = view === 'back' ? -1 : 1;
-      set(a, sg * (2.55 + 0.02 * s)); set(a + '_l', sg * -1.05);
+      set(a, sg * (2.6 + 0.02 * s)); set(a + '_l', sg * 0.75);
     }
   }
   return P;
@@ -1188,9 +1189,9 @@ function tigerView(view) {
       });
       // 배와 가슴의 갈필 털
       const fr = [];
-      for (let i = 0; i < 16; i++) { const t = i / 15; fr.push([-150 + t * 250, 58 - t * 36 + (t > 0.7 ? 8 : 0), 0.15, 1]); }
+      for (let i = 0; i < 9; i++) { const t = i / 8; fr.push([-140 + t * 200 + (i % 2) * 6, 56 - t * 30, 0.25 - (i % 3) * 0.2, 1]); }
       for (let i = 0; i < 6; i++) fr.push([-166 + i * 2, -6 + i * 9, -1, 0.3]);
-      p.fur(fr, 11, INK, 1.1, 0.6);
+      p.fur(fr, 11, INK, 1.2, 0.7);
     });
     reuse(L, hu, 'hind2', 'root', [128, -6], 5, { r0: 0.28 });
     reuse(L, hl, 'hind2_l', 'hind2', [0, 60], 4.9, { r0: -0.5 });
@@ -1251,21 +1252,21 @@ function tigerView(view) {
     reuse(L, hl, 'hind1', 'root', [-52, 50], 0.5, { far: true, r0: 0.1 });
     reuse(L, hl, 'hind2', 'root', [52, 50], 0.5, { far: true, r0: -0.1 });
     part(L, 'body', 'root', [0, 0], 1, (p) => {
-      const path = p.poly([[-40, -46], [40, -46], [62, -10], [58, 34], [30, 56], [-30, 56], [-58, 34], [-62, -10]], TIGER.body, { w: 3.2, shadeDown: 0.3 });
+      const path = p.poly([[-48, -58], [0, -66], [48, -58], [76, -18], [70, 34], [36, 60], [-36, 60], [-70, 34], [-76, -18]], TIGER.body, { w: 3.6, shadeDown: 0.3 });
       p.clip(path, () => {
         p.ellipse(0, 22, 28, 40, TIGER.belly, { ink: false, grain: 0.6 });
         for (const s of [-1, 1]) for (let i = 0; i < 4; i++) p.stroke([[s * 70, -30 + i * 20], [s * 48, -24 + i * 20], [s * 34, -28 + i * 20]], { w: 7, color: TIGER.stripe });
       });
     });
-    P.begin(52); tigerLeg(P, 50, 32, 26, 2); const fu = P.end();
-    P.begin(53); tigerLeg(P, 44, 26, 24, 1, true, 0, true); const fl = P.end();
-    reuse(L, fu, 'front1', 'root', [-28, 14], 2, { r0: 0.04 });
+    P.begin(52); tigerLeg(P, 52, 40, 30, 2); const fu = P.end();
+    P.begin(53); tigerLeg(P, 44, 30, 28, 1, true, 0, true); const fl = P.end();
+    reuse(L, fu, 'front1', 'root', [-34, 12], 2, { r0: 0.04 });
     reuse(L, fl, 'front1_l', 'front1', [0, 46], 1.9, { r0: -0.04 });
-    reuse(L, fu, 'front2', 'root', [28, 14], 2, { r0: -0.04 });
+    reuse(L, fu, 'front2', 'root', [34, 12], 2, { r0: -0.04 });
     reuse(L, fl, 'front2_l', 'front2', [0, 46], 1.9, { r0: 0.04 });
-    part(L, 'head', 'root', [0, -42], 4, (p) => tigerFace(p, 0, -22, 1.0, 0));
-    part(L, 'head_roar', 'root', [0, -42], 4, (p) => tigerFace(p, 0, -22, 1.0, 0, 'roar'), { tag: 'alt' });
-    part(L, 'head_dead', 'root', [0, -42], 4, (p) => tigerFace(p, 0, -22, 1.0, 0, 'dead'), { tag: 'alt' });
+    part(L, 'head', 'root', [0, -58], 4, (p) => tigerFace(p, 0, -20, 0.9, 0));
+    part(L, 'head_roar', 'root', [0, -58], 4, (p) => tigerFace(p, 0, -20, 0.9, 0, 'roar'), { tag: 'alt' });
+    part(L, 'head_dead', 'root', [0, -58], 4, (p) => tigerFace(p, 0, -20, 0.9, 0, 'dead'), { tag: 'alt' });
     part(L, 'fx_claw', 'root', [30, 50], 6, drawClaw, { tag: 'fx' });
   }
   return finishView(L);

@@ -4,7 +4,7 @@
 //  - 종류(kind)마다 모든 시점의 부위 그림을 한 번만 그려 아틀라스 텍스처 1장에 모은다(인스턴스 공유).
 //  - 캐릭터 하나 = 부위마다 사각형 하나씩을 담은 동적 BufferGeometry 1개.
 //    매 프레임 부위 변환(2D 아핀)으로 꼭짓점 위치만 갱신한다 → 텍스처 재업로드 0, 화면 주사율 그대로.
-//  - 같은 지오메트리를 네 메시가 공유: 본체(조명 반응) / 한지빛 테두리(halo) / 가림 실루엣 / 해를 향한 그림자 투사판.
+//  - 같은 지오메트리를 세 메시가 공유: 본체(조명 반응, 그림자 패스에선 해 쪽으로 돌림) / 한지빛 테두리(halo) / 가림 실루엣.
 //  - 애니메이션: 키프레임(가감속) + 동작 사이 크로스페이드 + 스프링(옷자락·땋은 머리·꼬리의 뒤따름)
 //    + 이동 속도에 맞춘 걸음 위상 + 가끔 눈 깜빡임.
 import * as THREE from 'three';
@@ -13,12 +13,11 @@ import { makeCanvas, PAPER } from './painter.js';
 import { COMBAT_HUMAN } from './anims.js';
 
 const LEAN = THREE.MathUtils.degToRad(8); // 카메라 쪽으로 살짝 뒤로 젖힘(단축 보정)
-const DZ = 0.004;                          // 부위 사이 앞뒤 간격(m)
-const MARGIN = 4;                          // 아틀라스에서 부위 둘레의 투명 여백(px) — halo가 번질 자리
+const DZ = 0.0006;                         // 부위 사이 앞뒤 간격(m) — 작게 해야 층 사이 시차가 안 보인다
+const MARGIN = 8;                          // 아틀라스에서 부위 둘레의 투명 여백(px) — halo가 번질 자리
 const SIL_COLOR = new THREE.Color('#1b2130');
 const HALO_INK = new THREE.Color('#1a1512');
 const HALO_PAPER = new THREE.Color(PAPER);
-const CASTER_LAYER = 1;                    // 그림자 투사판은 이 레이어에만 → 본 화면 그리기 호출 0
 
 // ---------------------------------------------------------------------------
 // 종류별 공유 자원: 아틀라스, 재질
@@ -63,6 +62,9 @@ function buildAtlas(rig) {
   return { tex, W, H, uvs, bytes: W * H * 4 };
 }
 
+// 좌우 반전된 부위(뒷면으로 보임)도 앞면과 똑같이 빛을 받도록 법선 방향을 뒤집지 않는다
+const NORMAL_FIX = '#include <normal_fragment_begin>\n\tnormal = normalize( vNormal );';
+
 function haloMaterial(tex, W, H) {
   const m = new THREE.MeshLambertMaterial({ color: HALO_PAPER, map: tex, alphaTest: 0.5, side: THREE.DoubleSide, emissive: HALO_PAPER, emissiveIntensity: 0.3 });
   m.onBeforeCompile = (sh) => {
@@ -72,17 +74,21 @@ function haloMaterial(tex, W, H) {
       .replace('void main() {', 'uniform vec2 uTexel;\nuniform vec3 uInk;\nvoid main() {')
       .replace('#include <map_fragment>', `
         // 부위 알파를 두 반경으로 팽창: 안쪽 띠는 먹 테두리(겉 윤곽을 굵게), 바깥 띠는 한지빛 테두리
+        // 반경은 '화면 픽셀' 기준으로도 최소 폭을 보장(멀리서 축소돼도 테두리가 끊기지 않게)
+        vec2 px = fwidth(vMapUv);
+        vec2 r1 = max(uTexel * 1.6, px * 0.9), r2 = max(uTexel * 3.6, px * 1.9);
         float a1 = 0.0, a2 = 0.0;
         for (int i = 0; i < 8; i++) {
           float ang = float(i) * 0.7853982;
-          vec2 d = vec2(cos(ang), sin(ang)) * uTexel;
-          a1 = max(a1, texture2D(map, vMapUv + d * 1.6).a);
-          a2 = max(a2, texture2D(map, vMapUv + d * 3.6).a);
+          vec2 d = vec2(cos(ang), sin(ang));
+          a1 = max(a1, texture2D(map, vMapUv + d * r1).a);
+          a2 = max(a2, texture2D(map, vMapUv + d * r2).a);
         }
         float haloInk = step(0.5, a1);
         diffuseColor = vec4(mix(diffuse, uInk, haloInk), max(a1, a2));
       `)
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n\ttotalEmissiveRadiance *= (1.0 - haloInk);');
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n\ttotalEmissiveRadiance *= (1.0 - haloInk);')
+      .replace('#include <normal_fragment_begin>', NORMAL_FIX);
     sh.vertexShader = sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>\n\ttransformed.z = ${(-1.5 * DZ).toFixed(4)};`);
   };
   m.customProgramCacheKey = () => 'seolhwa-halo';
@@ -104,6 +110,22 @@ function silhouetteMaterial(tex, frontZ) {
   return m;
 }
 
+// 그림자 패스에서만 판을 해 쪽으로 돌린다(본 화면에선 카메라를 향한 그대로).
+// 모든 캐릭터가 같은 카메라·같은 해를 쓰므로 보정 회전 하나를 공유한다.
+const SHADOW_FIX = { value: new THREE.Matrix3() };
+function shadowFixed(m, key) {
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uShadowFix = SHADOW_FIX;
+    sh.vertexShader = sh.vertexShader
+      .replace('void main() {', 'uniform mat3 uShadowFix;\nvoid main() {')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\n\ttransformed = uShadowFix * transformed;');
+  };
+  m.customProgramCacheKey = () => 'seolhwa-shadowfix-' + key;
+  return m;
+}
+const _m4 = new THREE.Matrix4(), _m4b = new THREE.Matrix4();
+let _fixYaw = NaN, _fixSun = NaN;
+
 function kindResources(kind) {
   let r = _kindRes.get(kind);
   if (r) return r;
@@ -115,9 +137,8 @@ function kindResources(kind) {
     rig, atlas, N,
     halo: haloMaterial(atlas.tex, atlas.W, atlas.H),
     silhouette: silhouetteMaterial(atlas.tex, frontZ),
-    casterMat: new THREE.MeshBasicMaterial({ map: atlas.tex, alphaTest: 0.5, side: THREE.DoubleSide }),
-    depthMat: new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: atlas.tex, alphaTest: 0.5, side: THREE.DoubleSide }),
-    distMat: new THREE.MeshDistanceMaterial({ map: atlas.tex, alphaTest: 0.5, side: THREE.DoubleSide }),
+    depthMat: shadowFixed(new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: atlas.tex, alphaTest: 0.5, side: THREE.DoubleSide }), 'd'),
+    distMat: shadowFixed(new THREE.MeshDistanceMaterial({ map: atlas.tex, alphaTest: 0.5, side: THREE.DoubleSide }), 'p'),
   };
   _kindRes.set(kind, r);
   return r;
@@ -155,12 +176,13 @@ function findSun(scene, now) {
   scene.traverseVisible((o) => {
     if (o.isDirectionalLight && o.castShadow && (!best || o.intensity > best.intensity)) best = o;
   });
-  if (best) best.shadow.camera.layers.enable(CASTER_LAYER);
   _sunCache.set(scene, { t: now, light: best });
   return best;
 }
 
 const _v = new THREE.Vector3(), _v2 = new THREE.Vector3(), _sph = new THREE.Sphere(), _fr = new THREE.Frustum(), _pm = new THREE.Matrix4(), _pm2 = new THREE.Matrix4();
+let _frCam = null;
+const _frM = new THREE.Matrix4(), _frP = new THREE.Matrix4();
 
 // 2D 아핀 [a,b,c,d,e,f]
 function mul(m, n, out) {
@@ -209,7 +231,6 @@ export class Character {
     this._lastPos = null;
     this._flash = null;
     this._blend = null;
-    this._last = {};
     this._springs = {};
     this._springCfg = SPRINGS[rig.type];
     this._blinkIn = 1 + Math.random() * 3;
@@ -243,6 +264,8 @@ export class Character {
     this.geometry = geo;
 
     this.material = new THREE.MeshLambertMaterial({ map: res.atlas.tex, alphaTest: 0.5, transparent: false, side: THREE.DoubleSide });
+    this.material.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <normal_fragment_begin>', NORMAL_FIX); };
+    this.material.customProgramCacheKey = () => 'seolhwa-sprite';
 
     this.object3d = new THREE.Group();
     this.object3d.name = 'char:' + kind;
@@ -255,13 +278,10 @@ export class Character {
     this.silhouette.renderOrder = 999;
     this.billboard.add(this.halo, this.sprite, this.silhouette);
 
-    // 그림자 투사판: CASTER_LAYER에만 있어 본 화면에서는 그리지 않고, 해의 그림자 카메라만 본다
-    this.caster = new THREE.Mesh(geo, res.casterMat);
-    this.caster.castShadow = true;
-    this.caster.layers.set(CASTER_LAYER);
-    this.caster.customDepthMaterial = res.depthMat;
-    this.caster.customDistanceMaterial = res.distMat;
-    this.object3d.add(this.caster);
+    // 실제 그림자: 본체가 그림자 패스에서만 해 쪽으로 돌아간 모양으로 그려진다(추가 그리기 호출 없음)
+    this.sprite.castShadow = true;
+    this.sprite.customDepthMaterial = res.depthMat;
+    this.sprite.customDistanceMaterial = res.distMat;
 
     // 발밑 블롭 그림자
     this.blob = new THREE.Mesh(blobGeometry(), new THREE.MeshBasicMaterial({
@@ -290,7 +310,9 @@ export class Character {
     if (name === this.anim && !opts.restart) return;
     const into = this._info(name);
     // 동작 사이 크로스페이드(공격으로 들어갈 땐 아주 짧게 — 반응성 유지)
-    this._blend = { from: this._last, t: 0, dur: into && !into.loop ? 0.05 : 0.13 };
+    const from = {};
+    if (this._P) for (const n in this._P) { const p = this._P[n]; from[n] = { r: p.r, x: p.x, y: p.y, sx: p.sx, sy: p.sy, a: p.a }; }
+    this._blend = { from, t: 0, dur: into && !into.loop ? 0.05 : 0.13 };
     this.anim = name;
     this.animTime = 0;
     if (this.rig.type === 'human') {
@@ -379,19 +401,30 @@ export class Character {
     let root = this.object3d;
     while (root.parent) root = root.parent;
     const sun = root.isScene ? findSun(root, performance.now()) : null;
+    let sunYaw = this.billboard.rotation.y;
     if (sun) {
       sun.getWorldPosition(_v);
       sun.target.getWorldPosition(_v2);
       _v.sub(_v2);
-      if (Math.abs(_v.x) + Math.abs(_v.z) > 1e-4) this.caster.rotation.set(0, Math.atan2(_v.x, _v.z), 0);
-    } else {
-      this.caster.rotation.set(0, this.billboard.rotation.y, 0);
+      if (Math.abs(_v.x) + Math.abs(_v.z) > 1e-4) sunYaw = Math.atan2(_v.x, _v.z);
+    }
+    // 보정 = (빌보드 회전)^-1 · (해 쪽 yaw) — 모두 같은 값이므로 바뀔 때만
+    const by = this.billboard.rotation.y;
+    if (by !== _fixYaw || sunYaw !== _fixSun) {
+      _fixYaw = by; _fixSun = sunYaw;
+      _m4.makeRotationFromEuler(this.billboard.rotation).invert();
+      _m4.multiply(_m4b.makeRotationY(sunYaw));
+      SHADOW_FIX.value.setFromMatrix4(_m4);
     }
   }
 
   _inView(camera) {
-    _pm.multiplyMatrices(camera.projectionMatrix, _pm2.copy(camera.matrixWorld).invert());
-    _fr.setFromProjectionMatrix(_pm);
+    // 절두체는 카메라가 움직였을 때만 다시 계산(모든 캐릭터가 공유)
+    if (_frCam !== camera || !_frM.equals(camera.matrixWorld) || !_frP.equals(camera.projectionMatrix)) {
+      _frCam = camera; _frM.copy(camera.matrixWorld); _frP.copy(camera.projectionMatrix);
+      _pm.multiplyMatrices(camera.projectionMatrix, _pm2.copy(camera.matrixWorld).invert());
+      _fr.setFromProjectionMatrix(_pm);
+    }
     this.object3d.getWorldPosition(_sph.center);
     _sph.center.y += this.height * 0.5;
     _sph.radius = this.height * 1.6 + 1;
@@ -427,9 +460,6 @@ export class Character {
       }
       if (B.t >= B.dur) this._blend = null;
     }
-    const snap = {};
-    for (const n in P) { const p = P[n]; snap[n] = { r: p.r, x: p.x, y: p.y, sx: p.sx, sy: p.sy, a: p.a }; }
-    this._last = snap;
 
     // 스프링: 목표 각도를 늦게 따라가며 출렁임(옷자락·머리채·꼬리)
     if (view !== this._view) { this._springs = {}; this._view = view; }
@@ -523,7 +553,9 @@ export class Character {
       }
       if (hide) { pos.fill(0, o, o + 12); continue; }
       const m = M[p.name];
-      const x0 = p.ox - MARGIN, y0 = p.oy - MARGIN, x1 = p.ox + p.img.width + MARGIN, y1 = p.oy + p.img.height + MARGIN;
+      let x0 = p.ox - MARGIN, x1 = p.ox + p.img.width + MARGIN;
+      if (p.flip) { x0 = -x0; x1 = -x1; }
+      const y0 = p.oy - MARGIN, y1 = p.oy + p.img.height + MARGIN;
       const z = (k + 1) * DZ;
       // TL, TR, BL, BR
       pos[o] = sgn * (m[0] * x0 + m[2] * y0 + m[4]) * inv; pos[o + 1] = -(m[1] * x0 + m[3] * y0 + m[5]) * inv; pos[o + 2] = z;
