@@ -78,6 +78,11 @@ html, body { margin: 0; height: 100%; background: #1a1712; color: var(--ink); ov
 .panel.collapsed .p-body { display: none; }
 .p-toggle { font: 700 13px var(--display); letter-spacing: 0.2em; background: var(--ink); color: var(--hanji); border: 0;
   padding: 9px 14px; cursor: pointer; border-radius: 2px; text-align: left; }
+.p-fps { position: absolute; right: 0; top: calc(100% + 6px); font: 12px var(--body); font-variant-numeric: tabular-nums;
+  color: var(--hanji); background: rgba(20,17,13,.6); padding: 3px 8px; border-radius: 2px; white-space: nowrap; pointer-events: none; }
+.p-fps:empty { display: none; }
+.p-fps.bad { color: #ffb4a8; }
+.panel:not(.collapsed) .p-fps { top: auto; bottom: calc(100% + 6px); }
 .p-toggle::after { content: " ▾"; } .panel.collapsed .p-toggle::after { content: " ▸"; }
 .p-body { overflow-y: auto; padding: 4px 14px 12px; display: flex; flex-direction: column; gap: 4px; }
 .p-body section { display: flex; flex-direction: column; gap: 6px; padding-block: 8px; border-bottom: 1px dashed rgba(38,34,29,.25); }

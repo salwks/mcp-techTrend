@@ -195,6 +195,7 @@ const focus = new THREE.Vector3();
 const clock = new THREE.Clock();
 let time = 0;
 let talkTarget = null;
+let fpsAcc = 0, fpsFrames = 0;
 rig.update(0, player.pos, player.facing, null, true);
 
 function frame() {
@@ -251,6 +252,14 @@ function frame() {
   focus.set(player.pos.x, player.pos.y, player.pos.z);
   fx.update(dt, focus);
   fx.render();
+
+  // 성능 측정 (fx가 통계를 주면 그것을, 아니면 코어가 직접)
+  fpsAcc += rawDt; fpsFrames += 1;
+  if (fpsAcc >= 0.5) {
+    const st = fx.getStats ? fx.getStats() : null;
+    panel.setStats(st && st.fps ? st : { fps: fpsFrames / fpsAcc, frameMs: (fpsAcc / fpsFrames) * 1000 });
+    fpsAcc = 0; fpsFrames = 0;
+  }
 
   input.endFrame();
   requestAnimationFrame(frame);

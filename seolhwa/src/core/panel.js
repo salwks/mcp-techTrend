@@ -22,6 +22,7 @@ export class Panel {
     el.className = 'panel collapsed';
     el.innerHTML = `
       <button class="p-toggle" type="button" aria-expanded="false">검증 패널</button>
+      <div class="p-fps" aria-live="off"></div>
       <div class="p-body">
         <section>
           <h3>시간</h3>
@@ -143,6 +144,14 @@ export class Panel {
     if (chips.children.length) sec.appendChild(chips);
     const body = this.el.querySelector('.p-body');
     body.insertBefore(sec, body.querySelector('section:nth-of-type(4)'));
+  }
+
+  // 성능 표시: fps, 프레임 시간, 화질 단계
+  setStats(st) {
+    if (!this.fpsEl) this.fpsEl = this.el.querySelector('.p-fps');
+    const txt = `${Math.round(st.fps)} fps · ${st.frameMs.toFixed(1)}ms` + (st.level != null ? ` · 화질 ${st.level}` : '');
+    if (this.fpsEl.textContent !== txt) this.fpsEl.textContent = txt;
+    this.fpsEl.classList.toggle('bad', st.fps < 30);
   }
 
   setOpen(open) {
