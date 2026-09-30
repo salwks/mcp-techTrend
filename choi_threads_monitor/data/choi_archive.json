@@ -1,21 +1,52 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-30T17:06:30.879334Z",
+  "generated_at": "2026-09-30T18:37:10.078629Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 0,
-  "pending_count": 0,
-  "observed_total_count": 154,
+  "archive_count": 2,
+  "pending_count": 2,
+  "observed_total_count": 156,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
     "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
     "A post can still be missed if it disappears before either collector observes it."
   ],
-  "posts": [],
+  "posts": [
+    {
+      "post_id": "3997753802216851067",
+      "published_at": "2026-09-30T17:30:12Z",
+      "text": "빌 게이츠가 \"AI는 핵무기를 아무것도 아닌 것처럼 보이게 만든다\"고 말했습니다.\n\n올해 초 사이버와 생물학 위험의 문턱을 넘었는데 업계 밖에서는 완전한 침묵만 돌아왔다는 겁니다.\n\nAI가 일을 끝내면 그 돈은 사람의 급여 대신 토큰 비용으로 나간다는 그의 경고를 정리했습니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd63-bwmkZ7",
+      "media": null,
+      "engagement": {
+        "likes": 13,
+        "replies": 12,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-09-30T18:37:10.078629Z",
+      "last_seen_at": "2026-09-30T18:37:10.078629Z"
+    },
+    {
+      "post_id": "3997742124016210806",
+      "published_at": "2026-09-30T17:07:00Z",
+      "text": "와우.. 이건 미쳤다..\n@openaidevs",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd61UflmhN2",
+      "media": null,
+      "engagement": {
+        "likes": 13,
+        "replies": 1,
+        "reposts": 1,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-09-30T18:37:10.078629Z",
+      "last_seen_at": "2026-09-30T18:37:10.078629Z"
+    }
+  ],
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
-    "backup_only_current_count": 1
+    "backup_only_current_count": 0
   }
 }
