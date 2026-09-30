@@ -2,42 +2,57 @@
 // PointLight 개수는 항상 고정(셰이더 재컴파일 방지) — 낮에는 intensity 0.
 import * as THREE from 'three';
 
+// size = 번짐 반경(m, 월드 단위). shape 0=원, 1=둥근 사각(창호지 문)
 const KIND = {
-  lantern: { color: 0xffa855, glow: 0xffb866, intensity: 18, distance: 9, size: 2.2, flick: 0.07, core: 1.0 },
-  torch:   { color: 0xff8a3c, glow: 0xff9a48, intensity: 22, distance: 10, size: 2.8, flick: 0.16, core: 1.2 },
-  shrine:  { color: 0xff9060, glow: 0xffa070, intensity: 16, distance: 8, size: 1.5, flick: 0.1, core: 0.8 },
-  window:  { color: 0xffc27a, glow: 0xffcf8a, intensity: 8, distance: 7, size: 1.1, flick: 0.02, core: 0.5 },
+  lantern: { color: 0xffa855, glow: 0xffb866, intensity: 22, distance: 9, size: 0.8, flick: 0.07, core: 0.9, shape: 0 },
+  torch:   { color: 0xff8a3c, glow: 0xff9a48, intensity: 22, distance: 10, size: 1.0, flick: 0.16, core: 1.0, shape: 0 },
+  shrine:  { color: 0xff9060, glow: 0xffa868, intensity: 14, distance: 7, size: 0.42, flick: 0.12, core: 0.8, shape: 0 },
+  window:  { color: 0xffc27a, glow: 0xffcf8a, intensity: 8, distance: 7, size: 1.15, flick: 0.02, core: 0.0, shape: 1 },
 };
 
 const vert = /* glsl */`
 attribute vec3 iPos;
 attribute vec3 iColor;
-attribute float iSize;
-attribute vec2 iAmt; // x: 전체 밝기, y: 번짐(실제 광원이 없을 때 더 크게)
+attribute vec3 iSize;   // x: 번짐 반경(m), y: 모양(0 원, 1 둥근 사각), z: 심지 밝기
+attribute vec2 iAmt;    // x: 전체 밝기, y: 번짐 보강(실제 광원이 없을 때)
+uniform float uMaxNdc;  // 화면 높이 대비 최대 반경(NDC)
 varying vec2 vUv;
 varying vec3 vColor;
 varying vec2 vAmt;
+varying float vShape;
+varying float vCore;
 void main() {
   vUv = uv;
+  vCore = iSize.z;
   vColor = iColor;
   vAmt = iAmt;
+  vShape = iSize.y;
   vec4 mv = modelViewMatrix * vec4(iPos, 1.0);
-  mv.xyz += normalize(-mv.xyz) * 0.6;   // 벽에 파묻히지 않게 카메라 쪽으로
-  mv.xy += position.xy * iSize * (1.0 + iAmt.y * 0.8);
+  float z = max(-mv.z, 0.1);
+  float r = iSize.x * (1.0 + iAmt.y * 0.25);
+  // 화면상 크기 상한: 가까운 카메라(실내)에서도 작게
+  r = min(r, uMaxNdc * z / projectionMatrix[1][1]);
+  mv.xyz += normalize(-mv.xyz) * min(0.25, r * 0.5); // 벽/돌에 파묻히지 않게
+  mv.xy += position.xy * 2.0 * r * (iSize.y > 0.5 ? vec2(1.25, 0.85) : vec2(1.0));
   gl_Position = projectionMatrix * mv;
-  if (iAmt.x <= 0.001) gl_Position = vec4(2.0, 2.0, 2.0, 1.0); // 꺼진 것은 클립
+  // 카메라에 너무 가까우면 사라짐
+  vAmt.x *= smoothstep(1.5, 3.0, z);
+  if (vAmt.x <= 0.001) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
 }`;
 const frag = /* glsl */`
 uniform float uCore;
 varying vec2 vUv;
 varying vec3 vColor;
 varying vec2 vAmt;
+varying float vShape;
+varying float vCore;
 void main() {
-  float r = length(vUv - 0.5) * 2.0;
+  vec2 q = abs(vUv - 0.5) * 2.0;
+  float r = vShape > 0.5 ? pow(pow(q.x, 4.0) + pow(q.y, 4.0), 0.25) : length(q);
   if (r > 1.0) discard;
-  float core = exp(-r * r * 45.0) * 1.8;
-  float halo = exp(-r * r * 5.0) * (1.0 - r) * (0.35 + vAmt.y * 0.35);
-  gl_FragColor = vec4(vColor * (core * uCore + halo) * vAmt.x, 1.0);
+  float core = exp(-r * r * 70.0) * uCore * vCore * (0.6 + 0.4 * vAmt.y);
+  float halo = exp(-r * r * 4.0) * (1.0 - r) * (0.28 + vAmt.y * 0.2) * (vShape > 0.5 ? 2.4 : 1.0);
+  gl_FragColor = vec4(vColor * (core + halo) * vAmt.x, 1.0);
 }`;
 
 export function createNightLights(scene, lights) {
@@ -66,23 +81,23 @@ export function createNightLights(scene, lights) {
     g.index = base.index;
     g.setAttribute('position', base.getAttribute('position'));
     g.setAttribute('uv', base.getAttribute('uv'));
-    const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), size = new Float32Array(N), amt = new Float32Array(N * 2);
+    const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), size = new Float32Array(N * 3), amt = new Float32Array(N * 2);
     const c = new THREE.Color();
     list.forEach((l, i) => {
       pos[i * 3] = l.x; pos[i * 3 + 1] = l.y; pos[i * 3 + 2] = l.z;
-      c.set(l.k.glow).multiplyScalar(l.k.core >= 1 ? 1.6 : 1.2);
+      c.set(l.k.glow).multiplyScalar(0.9);
       col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
-      size[i] = l.k.size;
+      size[i * 3] = l.k.size; size[i * 3 + 1] = l.k.shape; size[i * 3 + 2] = l.k.core;
     });
     g.setAttribute('iPos', new THREE.InstancedBufferAttribute(pos, 3));
     g.setAttribute('iColor', new THREE.InstancedBufferAttribute(col, 3));
-    g.setAttribute('iSize', new THREE.InstancedBufferAttribute(size, 1));
+    g.setAttribute('iSize', new THREE.InstancedBufferAttribute(size, 3));
     amtAttr = new THREE.InstancedBufferAttribute(amt, 2);
     amtAttr.setUsage(THREE.DynamicDrawUsage);
     g.setAttribute('iAmt', amtAttr);
     g.instanceCount = N;
     const m = new THREE.ShaderMaterial({
-      uniforms: { uCore: { value: 1 } },
+      uniforms: { uCore: { value: 1 }, uMaxNdc: { value: 0.07 } },
       vertexShader: vert, fragmentShader: frag,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false,
     });
@@ -97,6 +112,7 @@ export function createNightLights(scene, lights) {
   const order = new Int32Array(N);
   const want = new Uint8Array(N);
   let reselect = 0;
+  const lastFocus = new THREE.Vector3(1e9, 0, 1e9);
 
   function flick(l, t) {
     const p = l.phase;
@@ -107,6 +123,13 @@ export function createNightLights(scene, lights) {
     mesh,
     update(dt, t, focus, lamp, maxReal) {
       if (!N) { for (const s of slots) s.light.intensity = 0; return; }
+      // 순간이동(워프) 감지: 슬롯을 즉시 비우고 재선택
+      const jx = focus.x - lastFocus.x, jz = focus.z - lastFocus.z;
+      if (jx * jx + jz * jz > 64) {
+        for (const sl of slots) { if (sl.idx >= 0) list[sl.idx].slot = -1; sl.idx = -1; sl.w = 0; }
+        reselect = 0;
+      }
+      lastFocus.copy(focus);
       // 가까운 순 선택(0.25초마다)
       reselect -= dt;
       if (reselect <= 0) {

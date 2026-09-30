@@ -14,12 +14,12 @@ const RAW = [
     sun: 0x8fa8e0, sunI: 0.95, hemiS: 0x4a5f96, hemiG: 0x151a26, hemiI: 1.05,
     glow: 0x3a4a7a, glowI: 0.15,
     lift: [0.035, 0.045, 0.085], gamma: [1.16, 1.16, 1.1], gain: [0.9, 0.97, 1.12], sat: 0.72,
-    bloom: 0.55, thr: 0.65, night: 1, dayMix: 0 },
+    bloom: 0.45, thr: 0.8, night: 1, dayMix: 0 },
   { h: 4.4, skyTop: 0x0d1534, skyHor: 0x2b3a62, low: 0x223050, fog: 0x202c4a, dens: 0.018,
     sun: 0x8fa8e0, sunI: 0.9, hemiS: 0x4a5f96, hemiG: 0x151a26, hemiI: 1.0,
     glow: 0x3a4a7a, glowI: 0.15,
     lift: [0.035, 0.045, 0.085], gamma: [1.16, 1.16, 1.1], gain: [0.9, 0.97, 1.12], sat: 0.72,
-    bloom: 0.55, thr: 0.65, night: 1, dayMix: 0 },
+    bloom: 0.45, thr: 0.8, night: 1, dayMix: 0 },
   // 새벽: 서늘한 라벤더·옅은 복숭아빛, 짙은 산안개
   { h: 5.6, skyTop: 0x4a5684, skyHor: 0xd9b7ae, low: 0xb4b4c8, fog: 0xb0b2c6, dens: 0.022,
     sun: 0xf6c0a8, sunI: 1.5, hemiS: 0xa0a8cc, hemiG: 0x55525c, hemiI: 1.25,
@@ -58,12 +58,12 @@ const RAW = [
     sun: 0xa89ad0, sunI: 0.9, hemiS: 0x5d6394, hemiG: 0x1d1a26, hemiI: 1.0,
     glow: 0xc0708a, glowI: 0.45,
     lift: [0.04, 0.035, 0.07], gamma: [1.12, 1.1, 1.06], gain: [0.95, 0.95, 1.08], sat: 0.8,
-    bloom: 0.65, thr: 0.66, night: 0.75, dayMix: 0.25 },
+    bloom: 0.45, thr: 0.78, night: 0.75, dayMix: 0.25 },
   { h: 20.6, skyTop: 0x0c1332, skyHor: 0x29386a, low: 0x223052, fog: 0x1f2b4a, dens: 0.017,
     sun: 0x8fa8e0, sunI: 0.95, hemiS: 0x4a5f96, hemiG: 0x151a26, hemiI: 1.05,
     glow: 0x3a4a7a, glowI: 0.15,
     lift: [0.035, 0.045, 0.085], gamma: [1.16, 1.16, 1.1], gain: [0.9, 0.97, 1.12], sat: 0.72,
-    bloom: 0.55, thr: 0.65, night: 1, dayMix: 0 },
+    bloom: 0.45, thr: 0.8, night: 1, dayMix: 0 },
 ];
 
 const COLOR_KEYS = ['skyTop', 'skyHor', 'low', 'fog', 'sun', 'hemiS', 'hemiG', 'glow'];
