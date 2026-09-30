@@ -283,6 +283,16 @@ export function buildWorld(scene) {
     ribbons = { geo: g, base: Float32Array.from(pos), list, rows };
   }
 
+  // ---- 고개 위를 도는 새 몇 마리(먹 획 V자) ----
+  const birds = { n: 6, geo: new THREE.BufferGeometry() };
+  {
+    birds.geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(birds.n * 6 * 3), 3));
+    birds.geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(PASS.x, PASS.h + 16, PASS.z - 18), 30);
+    const m = new THREE.Mesh(birds.geo, new THREE.MeshBasicMaterial({ color: 0x2b2622, side: THREE.DoubleSide, fog: true }));
+    m.name = 'birds';
+    root.add(m);
+  }
+
   // ---- 나무·바위·덤불 배치 ----
   const bgAt = (x, y, z, ry = 0, small = false) => at(x, y, z, ry, { small });
   const inBounds = (x, z) => x > -44 && x < 44 && z > -79 && z < 29;
@@ -402,7 +412,7 @@ export function buildWorld(scene) {
     if (pd < 2.4 || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
     // 산에는 진달래, 들에는 덤불. 가끔 들꽃
-    const az = pz < -22 && br() < 0.35;
+    const az = pz < -22 && br() < 0.25;
     bush(bgAt(px, y, pz, 0, true), br, 0.8 + br() * 0.5, az);
     if (br() < 0.3) flowers(bgAt(px + 1, ground(px + 1, pz + 0.6), pz + 0.6, 0, true), br, br() < 0.5 ? '#f2e6a0' : '#e8e2f0');
   }
@@ -617,10 +627,23 @@ export function buildWorld(scene) {
       }
     }
     tmp.needsUpdate = true;
+    // 새: 고개 너머 하늘에서 느리게 원을 그리며 날갯짓
+    const BP = birds.geo.attributes.position.array;
+    for (let i = 0; i < birds.n; i++) {
+      const ang = time * 0.12 + i * 1.05, rad = 14 + (i % 3) * 5;
+      const cx = PASS.x + Math.cos(ang) * rad, cz = PASS.z - 20 + Math.sin(ang) * rad * 0.5, cy = PASS.h + 12 + (i % 2) * 3 + Math.sin(time * 0.5 + i) * 1.5;
+      const fl = Math.sin(time * 5 + i * 1.7) * 0.35, sz = 0.7;
+      const dx = -Math.sin(ang), dz = Math.cos(ang) * 0.5;
+      const L = [cx - dz * sz, cy + fl, cz + dx * sz], R = [cx + dz * sz, cy + fl, cz - dx * sz];
+      const C = [cx, cy - 0.12, cz], F = [cx + dx * 0.25, cy, cz + dz * 0.25];
+      const tri = [...L, ...C, ...F, ...R, ...F, ...C];
+      BP.set(tri, i * 18);
+    }
+    birds.geo.attributes.position.needsUpdate = true;
   }
   // 밤 정도(0~1)에 따라 창호지·초롱을 밝힌다(fx에서 호출하면 좋음)
   function setNight(k) {
-    for (const m of glowMats) m.emissiveIntensity = k * (m.map ? 0.9 : 1.4);
+    for (const m of glowMats) m.emissiveIntensity = k * 1.1;
   }
 
   const world = {

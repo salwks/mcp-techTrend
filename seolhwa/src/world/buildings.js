@@ -328,9 +328,9 @@ export function bigTree(add, rnd, o = {}) {
     const c = cols[Math.floor(rnd() * cols.length)];
     add('leaf', 'leaf', paint(xf(lump(r, 1, rnd, 0.16, o.willow ? 0.6 : 0.72), x, y, z), c[0], c[1], 0.04, rnd), 0.045);
     // 감: 수관 겉면에 주황 열매
-    if (o.fruit) for (let k = 0; k < 7; k++) {
+    if (o.fruit) for (let k = 0; k < 5; k++) {
       const th = rnd() * Math.PI * 2, ph = 0.3 + rnd() * 1.1;
-      add('leaf', 'organic', paint(xf(new THREE.SphereGeometry(0.11, 6, 4), x + Math.cos(th) * Math.sin(ph) * r * 0.95, y + Math.cos(ph) * r * 0.7, z + Math.sin(th) * Math.sin(ph) * r * 0.95), '#e8782e', '#c85a22'), 0.01);
+      add('leaf', 'organic', paint(xf(new THREE.SphereGeometry(0.12, 5, 3), x + Math.cos(th) * Math.sin(ph) * r * 0.95, y + Math.cos(ph) * r * 0.7, z + Math.sin(th) * Math.sin(ph) * r * 0.95), '#e8782e', '#c85a22'), 0);
     }
     // 버들: 늘어진 가지
     if (o.willow) for (let k = 0; k < 9; k++) {

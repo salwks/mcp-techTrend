@@ -97,7 +97,7 @@ export function textures() {
       stroke(x, pts, 1.2 + r() * 2.2, `rgba(60,58,54,${0.12 + r() * 0.3})`);
     }
     for (let i = 0; i < 10; i++) { const px = r() * w, py = r() * h; x.fillStyle = 'rgba(80,70,60,0.12)'; x.beginPath(); x.ellipse(px, py, 20 + r() * 20, 8 + r() * 8, r(), 0, 7); x.fill(); }
-    for (let i = 0; i < 70; i++) { x.fillStyle = `rgba(52,70,40,${0.35 + r() * 0.4})`; x.beginPath(); x.arc(r() * w, r() * h * 0.5, 1 + r() * 2.2, 0, 7); x.fill(); }
+    for (let i = 0; i < 45; i++) { x.fillStyle = `rgba(52,70,40,${0.3 + r() * 0.35})`; x.beginPath(); x.arc(r() * w, r() * h * 0.4, 0.6 + r() * 1.2, 0, 7); x.fill(); }
   });
   // 돌(담·기단): 부벽준 느낌의 굵고 짧은 사선 획
   region('stone', (x, w, h) => {
@@ -180,10 +180,14 @@ export function textures() {
     const px = r() * 256, py = r() * 256, len = 20 + r() * 50;
     for (const o of [-256, 0, 256]) stroke(gx, [[px + o, py], [px + o + len * 0.5, py + (r() - 0.5) * 3], [px + o + len, py + (r() - 0.5) * 4]], 3 + r() * 7, r() < 0.6 ? `rgba(120,110,80,${0.04 + r() * 0.08})` : `rgba(255,255,245,${0.08 + r() * 0.12})`);
   }
-  for (let i = 0; i < 90; i++) {
-    const px = r() * 256, py = r() * 256, s = 0.8 + r() * 1.8;
-    gx.fillStyle = `rgba(40,52,30,${0.2 + r() * 0.35})`;
-    gx.beginPath(); gx.ellipse(px, py, s * 1.4, s, 0, 0, 7); gx.fill();
+  // 태점: 몇 군데에 무리지어 찍힌 작은 먹점
+  for (let c = 0; c < 6; c++) {
+    const cx = r() * 256, cy = r() * 256;
+    for (let i = 0; i < 7; i++) {
+      const px = cx + (r() - 0.5) * 26, py = cy + (r() - 0.5) * 14, s = 0.6 + r() * 1.1;
+      gx.fillStyle = `rgba(40,52,30,${0.12 + r() * 0.2})`;
+      gx.beginPath(); gx.ellipse(px, py, s * 1.5, s, 0, 0, 7); gx.fill();
+    }
   }
   const ground = new THREE.CanvasTexture(G);
   ground.colorSpace = THREE.SRGBColorSpace; ground.wrapS = ground.wrapT = THREE.RepeatWrapping; ground.anisotropy = 4;

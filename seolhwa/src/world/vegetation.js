@@ -6,11 +6,11 @@ const PINE_LEAF = [['#7d9160', '#34432f'], ['#708a5a', '#2f3e2c'], ['#8a9866', '
 
 // 솔잎 뭉치: 납작한 타원체(윗면 밝고 아랫면 짙은 바림) + 위에 작은 덩이
 function needleClump(add, rnd, cx, cy, cz, r, col, lod, s) {
-  const g = new THREE.SphereGeometry(r, lod ? 7 : 9, lod ? 3 : 4);
+  const g = new THREE.SphereGeometry(r, lod ? 6 : 8, 3);
   xf(g, cx, cy, cz, (rnd() - 0.5) * 0.12, rnd() * 3, (rnd() - 0.5) * 0.12, 1, 0.34, 0.78);
-  add('leaf', 'needle', paint(g, col[0], col[1], 0.03, rnd), 0.045 * s);
+  add('leaf', 'needle', paint(g, col[0], col[1], 0.03, rnd), lod ? 0 : 0.045 * s);
   if (!lod && r > 1.2 * s) {
-    const g2 = new THREE.SphereGeometry(r * 0.6, 7, 3);
+    const g2 = new THREE.SphereGeometry(r * 0.6, 6, 2);
     xf(g2, cx + (rnd() - 0.5) * r * 0.4, cy + r * 0.22, cz, 0, rnd() * 3, 0, 1, 0.34, 0.8);
     add('leaf', 'needle', paint(g2, col[0], col[0], 0.03, rnd), 0.035 * s);
   }
@@ -52,33 +52,35 @@ export function fir(add, rnd, s = 1, lod = 0) {
   const h = (5.5 + rnd() * 2.5) * s;
   add('trunk', 'bark', paint(limb(new THREE.Vector3(0, -0.3, 0), new THREE.Vector3((rnd() - 0.5) * 0.4, h * 0.85, 0), 0.2 * s, 0.1 * s, 5), '#a8694a', '#7a4e38'), lod ? 0 : 0.018 * s);
   const col = PINE_LEAF[Math.floor(rnd() * PINE_LEAF.length)];
-  for (let i = 0; i < 3; i++) {
-    const r = (1.55 - i * 0.35) * s;
-    needleClump(add, rnd, (rnd() - 0.5) * 0.5 * s, h * (0.45 + i * 0.2), (rnd() - 0.5) * 0.3 * s, r, col, 1, s);
+  const tiers = 2 + Math.floor(rnd() * 2);
+  for (let i = 0; i < tiers; i++) {
+    const r = (1.5 - i * 0.3) * s * (0.8 + rnd() * 0.4);
+    const side = (i % 2 ? 1 : -1) * (0.3 + rnd() * 0.5) * s;
+    needleClump(add, rnd, side, h * (0.5 + i * 0.22), (rnd() - 0.5) * 0.4 * s, r, col, 1, s);
   }
   return { h, r: 0.25 * s };
 }
 
 export function bush(add, rnd, s = 1, flowers = false) {
-  const col = flowers ? ['#c96a8a', '#8a4a5e'] : [['#8e9a60', '#55603c'], ['#9aa06a', '#626b42'], ['#7d8c58', '#4a5638']][Math.floor(rnd() * 3)];
+  const col = flowers ? ['#8f9a60', '#55603c'] : [['#8e9a60', '#55603c'], ['#9aa06a', '#626b42'], ['#7d8c58', '#4a5638']][Math.floor(rnd() * 3)];
   const n = 1 + Math.floor(rnd() * 2);
   for (let i = 0; i < n; i++) {
-    const g = new THREE.SphereGeometry((0.5 + rnd() * 0.3) * s, 8, 4);
+    const g = new THREE.SphereGeometry((0.5 + rnd() * 0.3) * s, 7, 3);
     xf(g, (rnd() - 0.5) * 0.8 * s, 0.22 * s, (rnd() - 0.5) * 0.5 * s, 0, rnd() * 3, 0, 1, 0.62, 0.85);
     add('p', 'leaf', paint(g, col[0], col[1], 0.04, rnd), 0.025);
   }
   // 진달래 꽃송이 점
-  if (flowers) for (let i = 0; i < 6; i++) {
+  if (flowers) for (let i = 0; i < 5; i++) {
     const g = new THREE.SphereGeometry(0.09 * s, 5, 3);
     xf(g, (rnd() - 0.5) * 0.9 * s, (0.35 + rnd() * 0.2) * s, (rnd() - 0.5) * 0.6 * s);
-    add('p', 'organic', paint(g, '#f0a0bc', '#d97a9c'), 0);
+    add('p', 'organic', paint(g, '#e79ab2', '#c97890'), 0);
   }
 }
 
 export function rock(add, rnd, s = 1, mossy = true) {
-  const g = lump(s, 1, rnd, 0.32, 0.6 + rnd() * 0.25);
+  const g = lump(s, s > 1.2 ? 1 : 0, rnd, 0.3, 0.6 + rnd() * 0.25);
   xf(g, 0, s * 0.15, 0, 0, rnd() * 6, 0);
-  add('p', 'rock', paint(g, mossy && rnd() < 0.5 ? '#b3b39a' : '#bdb8aa', '#6c685f', 0.05, rnd), 0.022 + s * 0.01);
+  add('p', 'rock', paint(g, mossy && rnd() < 0.5 ? '#a4a58c' : '#aba699', '#5f5b53', 0.05, rnd), 0.022 + s * 0.01);
 }
 
 export function reeds(add, rnd, n = 7) {
