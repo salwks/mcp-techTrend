@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-09-30T11:22:29.275225Z",
+  "generated_at": "2026-09-30T11:26:57.456358Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 5,
-  "pending_count": 5,
+  "archive_count": 0,
+  "pending_count": 0,
   "observed_total_count": 151,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
@@ -12,97 +12,7 @@
     "The primary and backup collectors are independent runtimes but both rely on anonymous Threads public access.",
     "A post can still be missed if it disappears before either collector observes it."
   ],
-  "posts": [
-    {
-      "post_id": "3997527314312244946",
-      "published_at": "2026-09-30T10:00:12Z",
-      "text": "정말 모든 게 Jev가 되고 있습니다.\n\nJev 등장 이후 오픈AI가 GPT-6 Luna 기반 Decisions API를 공개한 데 이어, 리퀴드 AI도 첫 의사결정 모델 d1을 공개했습니다.\n\nd1은 문장을 길게 생성하지 않고 정해진 선택지를 분류·선택·점수화하며 출력 토큰은 0입니다.\n리퀴드 AI는 Hugging Face Decision Index에서 Jev를 처음으로 넘어섰고, 다국어 평가와 프롬프트 인젝션 대응, 긴 입력 처리에서도 강점을 보인다고 밝혔습니다.\n\n2주 전까지만 해도 Jev라는 새로운 모델이 신기했는데, 이제는 오픈AI부터 Ollama, 리퀴드 AI까지 같은 방식으로 움직이고 있습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd6EemdgK7S",
-      "media": [
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/830151327_17989366200112832_1367080520502396652_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=Mzk5NzUyNzMxNDMxMjI0NDk0Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=RVj1mfnWYL0Q7kNvwEDkdC6&_nc_oc=AdqbYOHMyHEldr_dKLE3H20Ey-DV9gLXQubyFmqZZdYG0WTbaA5JGljQV9NOcfBuGuk&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&oh=00_AQMCVSrFirOft8hVtYmnpphmh0S1j1Qd83o0TUtssXh1Aw&oe=6AC2CC5F"
-      ],
-      "engagement": {
-        "likes": 30,
-        "replies": 2,
-        "reposts": 4,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-30T10:59:33.235050Z",
-      "last_seen_at": "2026-09-30T11:22:29.275225Z"
-    },
-    {
-      "post_id": "3997481944551610621",
-      "published_at": "2026-09-30T08:30:04Z",
-      "text": "Ollama에서 Jev처럼 빠르게 판단하는 의사결정 모델을 로컬에서 실행할 수 있게 됐습니다.\n\n긴 답변을 생성하는 대신 주어진 선택지 중 하나를 빠르게 고르는 방식으로, 문의 분류·AI 모델 라우팅·콘텐츠 검수 같은 작업에 활용할 수 있습니다.\n\n새로운 `/v1/systemone` API를 통해 Nimble, Tev1 4B, Tev1 0.8B를 지원하며 `ollama pull nimble`로 내려받아 실행할 수 있습니다.\n\nJev 같은 의사결정 레이어를 API가 아닌 자신의 컴퓨터에서 구축할 수 있게 된 셈입니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd56KYlCVj9",
-      "media": [
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQPZtuzGkhkZkLLxHzv01YEMNKfr1pBsJ5TEZq_C-ga5Ba6axMCAq1YgnjgfuogdvHn9cPDy5Ek05KjQdbRN-AqP7Y47zKb8dvFPBA8.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=tNsuGbsjyk0Q7kNvwHyU4Do&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMTIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjA4OTMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=5de54dd51c01f9fa&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81RDlBQzgxMDI2QkM0MThCQTVDRUFCNkY1OENFMkIyOF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgMipnM_O9D8VAigCQzMsF0A37tkWhysCGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNm-6WkKARFSD0sLMMQ0r-44W3YOvXasdYwBVqIOjJI3A&oe=6ABEDB75"
-      ],
-      "engagement": {
-        "likes": 48,
-        "replies": 4,
-        "reposts": 13,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-30T08:45:23.526549Z",
-      "last_seen_at": "2026-09-30T11:22:29.275225Z"
-    },
-    {
-      "post_id": "3997436970934000385",
-      "published_at": "2026-09-30T07:00:43Z",
-      "text": "감사합니다.. 고맙습니다!",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd5v77oiNsB",
-      "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/829671770_17989367847112832_8437163806163458724_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5NzQzNjk3MDkzNDAwMDM4NQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTI1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=BKTA9JXgrvwQ7kNvwGAIAYL&_nc_oc=AdrmhlyasGdih8rzi6iwvO_fPHTRx0wi5eFQJ_1J8IYa8xMl4lziMrPePH7Am2wET5k&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&oh=00_AQPvIUOxXUi4C09tG8naCCMEfO5wgvXJ-DG7SncK8v5qmQ&oe=6AC2B319"
-      ],
-      "engagement": {
-        "likes": 147,
-        "replies": 31,
-        "reposts": 4,
-        "quotes": 2
-      },
-      "first_seen_at": "2026-09-30T07:23:50.904428Z",
-      "last_seen_at": "2026-09-30T11:22:29.275225Z"
-    },
-    {
-      "post_id": "3997401906327276911",
-      "published_at": "2026-09-30T05:51:03Z",
-      "text": "오픈AI DevDay의 현장은 정말 뜨거웠습니다.\n\n휴엣 대장님도 만나고, 마크첸도 너무 친절하시고\n티보는 신이었고, 알트만형 멋지고, 피터는 근육 개쩔고..",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd5n9rLG01v",
-      "media": [
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMN1KrIcvro_-6Dei7UAsQQ3NZKpbrIjwQs5JJOgpx64EkEu6cvynVUv8C8HgTnYIItlvmmFsefgmWzJCeK2XTCNRv8h7yRaIn4Tc4.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=L3Zs_4JQNo8Q7kNvwGZceL6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0FST1VTRUxfSVRFTS5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4OTM2MjUyMjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo5LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=163d39536509b159&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84NzdDRjQwRjY3MjY0QzQ4OEI4MDk4MDNBRUJDMEQwOF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzRFNkRENEM3RDE5QTRDMzdCOTZDMDlDRTdEQUM2RDlFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAje6t2870PxUCKAJDMywXQCIzMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAde4HZeieAQA&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNYIAESW0hg-4iGLj8hB_uFeSkei_R1MIbd03y6wfxx8w&oe=6ABEBF89",
-        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMfFMcn3WR4-jIH0zZRtMJrMjhovRpj3C98yGh6-T3vF_mXd6EhOjKRTn1NTaOzutDQhOXafRvLz93x0JA88db2ed5aqNJtnZEsSoA.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=V4MaRU4UCNoQ7kNvwFlsR8F&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0FST1VTRUxfSVRFTS5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4OTM2MjU0NjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo5LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=c62dad02da72c87f&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CNkM5RjEzMDE3QjY0ODNDQkMxNTFBMDI1MTM1MzZDQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzUxNjRFMkYyMEY2NTQ0NThCRTNDMUI2M0ZGQjREODZFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA5d_E2870PxUCKAJDMywXQCOIMSbpeNUYEmRhc2hfYmFzZWxpbmVfMV92MREAde4HZeieAQA&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMarQcKbdKTOhqhUkPPpo2nubE3f1_GodheCMpOqqW2-Q&oe=6ABED81D",
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/831323816_17989362513112832_1911643104509838147_n.jpg?stp=cp6_dst-jpegr_e35_tt6&_nc_cat=104&ig_cache_key=Mzk5NzM5OTM0MjY2MjUyNTM0Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuNDA5Ni5oZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=61QvO2D9adsQ7kNvwGk2T6L&_nc_oc=AdrVop-6mSsN84ppWWPLsjzJfsmaHSjgVBS4p39d2JmKD8FBYA2qzXtzawByrD1uis0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&se=-1&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&oh=00_AQOdM3Gu3KZqlSIZJUjG29vlIkBR8qjJSUQTbzYoTPOcSQ&oe=6AC2B22A",
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/825270039_17989362888112832_4698224268145631739_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzk5NzQwMDQ3NDUwNzk2NDQyMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTE3OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=pnAp30bfM70Q7kNvwFixu4I&_nc_oc=AdrM9eG-AcycRmg2_Z9hLt6xaMC9zqyWZSUePHvSi9bEFI152KrIVadFfgjZCoZ79qE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&oh=00_AQMRaJABzUBTfOY0-hK-g9vlfK0bPfGGQL9tR4MSmNCbEQ&oe=6AC2BFCF",
-        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/825325917_17989362927112832_3819805656497163872_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzk5NzQwMDQ3NjY0NzA2OTgwMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTE3OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=by2_pP1o6cIQ7kNvwF5DRTl&_nc_oc=AdpPpa0FEi8PNTN6Yzo5IzTfunOKjr2NnyaEU7a2Qpaa6p_X64wxa6cmBXjO9QKKBqA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&oh=00_AQMuHjH-90qpW77pPJI8x3PBHkSKb8yPpPIC9mIfRr510A&oe=6AC2AA53"
-      ],
-      "engagement": {
-        "likes": 84,
-        "replies": 5,
-        "reposts": 2,
-        "quotes": 0
-      },
-      "first_seen_at": "2026-09-30T06:03:15.854915Z",
-      "last_seen_at": "2026-09-30T11:22:29.275225Z"
-    },
-    {
-      "post_id": "3997391801039250877",
-      "published_at": "2026-09-30T05:30:58Z",
-      "text": "Gemini Notebook의 실시간 음성 대화 기능이 모바일 Pro 사용자에게 전체 공개됐습니다.\n\n자신이 넣어둔 문서와 자료를 기반으로 AI와 실시간 음성 대화를 할 수 있으며, 약 100개 언어를 지원합니다.\n\n예를 들어 공부 자료를 Notebook에 넣어두고 내용을 질문하거나, 이해하기 어려운 부분을 단계별로 설명해달라고 말하면서 거의 손을 쓰지 않고 학습할 수 있습니다.\n\n기존에는 Ultra 사용자에게 먼저 제공됐지만 이제 Pro까지 확대됐습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dd5lqn5AOW9",
-      "media": [
-        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPVBNpIZbu1h1rJoo_s_CNXBtRGccT3gbgQww_nWpGr-i_nivg0NIycphrTj6zcyM9zFu1ZqIhKbYFYpdUL89pYWqSsMGgKjxSQqrU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=rIrfs0uc7WkQ7kNvwEGIoKc&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzMzkyMDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=3b4816a29f7299f8&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9CQjk1MzhDRjAwODM0N0Q4QkQzODhDMThGMjdFNUY0QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc2NEFCRjM4OTc0NjQyOEE4MjUyMkVCMUFFMzI1NkFDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9OzUrc30PxUCKAJDMywXQDZVP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=dNnr-hj1LmnjJ2OTDjObTA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPWJN0EepMw4Z2s8CjqdF3KIdAUKjYPjTWu2mrmQv8Rvg&oe=6ABEB729"
-      ],
-      "engagement": {
-        "likes": 61,
-        "replies": 0,
-        "reposts": 5,
-        "quotes": 1
-      },
-      "first_seen_at": "2026-09-30T06:03:15.854915Z",
-      "last_seen_at": "2026-09-30T11:22:29.275225Z"
-    }
-  ],
+  "posts": [],
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
