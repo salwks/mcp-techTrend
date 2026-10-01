@@ -55,9 +55,11 @@ export function rgba(hex, a) {
   return `rgba(${r},${g},${b},${a})`;
 }
 
+/** 모든 그림 캔버스는 CPU 래스터로 고정(굽기 때 GPU↔CPU 왕복이 없도록) */
 export function makeCanvas(w, h) {
   const c = document.createElement('canvas');
   c.width = w; c.height = h;
+  c.getContext('2d', { willReadFrequently: true });
   return c;
 }
 
@@ -144,7 +146,7 @@ export class Painter {
   constructor(size = 768) {
     this.size = size;
     this.cv = makeCanvas(size, size);
-    this.g = this.cv.getContext('2d', { willReadFrequently: false });
+    this.g = this.cv.getContext('2d', { willReadFrequently: true });
     this.o = size / 2; // 원점(부위 피벗)이 캔버스 중앙
     this.R = rng(1);
     this.lineScale = 1;

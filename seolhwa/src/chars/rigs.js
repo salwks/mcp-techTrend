@@ -37,7 +37,7 @@ function part(list, name, parent, at, z, draw, opt = {}) {
 }
 /** 이미 그린 이미지를 재사용해 부위 추가 */
 function reuse(list, src, name, parent, at, z, opt = {}) {
-  const p = { name, parent, at, r0: opt.r0 || 0, z, img: opt.far ? darkenCopy(src.img, 0.2) : src.img, ox: src.ox, oy: src.oy, abs: !!opt.abs, tag: opt.tag || null, flip: !!opt.flip };
+  const p = { name, parent, at, r0: opt.r0 || 0, z, img: opt.far ? darkenCopy(src.img, 0.2) : src.img, ox: src.ox, oy: src.oy, abs: !!opt.abs, tag: opt.tag || null, flip: !!opt.flip, far: !!opt.far };
   list.push(p);
   return p;
 }
@@ -572,6 +572,14 @@ function drawShin(p, S, sp, view) {
   // 바지 아랫단
   const path = p.poly(limbPts(L - 12 * ws, 23 * ws, 13 * ws), pc, { w: 2.2 });
   p.clip(path, () => p.stroke([[-2 * ws, 6], [1 * ws, L - 18 * ws]], { w: 1, color: shade(pc, -0.3) }));
+  shinDetails(p, S, sp, view);
+}
+function shinDetails(p, S, sp, view) {
+  const ws = S.ws, L = S.shin;
+  const pc = sp.pants || '#e8e1ce';
+  const sock = sp.sock || '#f3efe4';
+  const shoe = sp.shoe || PAL.straw;
+  const side = view === 'side';
   if (sp.legwrap) {
     const lw = p.poly([[-10 * ws, L * 0.3], [10 * ws, L * 0.3], [8 * ws, L - 9 * ws], [-8 * ws, L - 9 * ws]], sp.legwrap, { w: 1.8, smooth: false });
     p.clip(lw, () => { for (let i = 0; i < 5; i++) p.stroke([[-10 * ws, L * 0.34 + i * 8 * ws], [10 * ws, L * 0.3 + i * 8 * ws + 6]], { w: 0.9, color: shade(sp.legwrap, -0.35), taper: false }); });
@@ -869,6 +877,109 @@ function humanView(view, S, sp) {
   }
   addCombatParts(L, view, S, sp, ls);
   return finishView(L);
+}
+
+
+// ---------------------------------------------------------------------------
+// 프레임 스타일용 '이음매 없는' 팔·다리·꼬리 (어깨~손, 엉덩이~발을 한 붓으로)
+// ---------------------------------------------------------------------------
+/** 모든 좌표를 (dx, dy)만큼 옮겨 그리는 화가 대리자 */
+function offsetPainter(p, dx, dy) {
+  const mv = (pts) => pts.map((q) => (q[2] ? [q[0] + dx, q[1] + dy, q[2]] : [q[0] + dx, q[1] + dy]));
+  return {
+    poly: (pts, f, o) => p.poly(mv(pts), f, o),
+    stroke: (pts, o) => p.stroke(mv(pts), o),
+    ellipse: (cx, cy, rx, ry, f, o) => p.ellipse(cx + dx, cy + dy, rx, ry, f, o),
+    fill: (pts, c, o) => p.fill(mv(pts), c, o),
+    dot: (x, y, r, c) => p.dot(x + dx, y + dy, r, c),
+    clip: (path, fn) => p.clip(path, fn),
+    blush: (x, y, r, c, a) => p.blush(x + dx, y + dy, r, c, a),
+  };
+}
+function drawFullArm(p, S, sp) {
+  const ws = S.ws, U = S.uArm, L = S.uArm + S.lArm, skin = sp.skin || PAL.skin;
+  p.poly([[-5 * ws, L - 4 * ws], [5 * ws, L - 4 * ws], [6.5 * ws, L + 3 * ws], [3 * ws, L + 8 * ws], [-3 * ws, L + 8 * ws], [-6.5 * ws, L + 3 * ws]], skin, { w: 1.8 });
+  // 어깨에서 손목까지 한 장의 소매: 위는 좁고, 팔꿈치 아래로 배래가 둥글게 흘러내림
+  const path = p.poly([
+    [-8.5 * ws, -2 * ws], [0, -7 * ws], [8.5 * ws, -2 * ws], [9.5 * ws, U * 0.7], [12 * ws, U + S.lArm * 0.25], [13.5 * ws, L - 12 * ws],
+    [10 * ws, L - 3 * ws], [3 * ws, L], [-7 * ws, L - 1 * ws, 'c'], [-10 * ws, L - 8 * ws], [-10.5 * ws, U + S.lArm * 0.2], [-9 * ws, U * 0.6],
+  ], sp.coat, { w: 2.2, shadeDown: 0.3 });
+  p.clip(path, () => {
+    if (sp.cuff) p.stroke([[-14 * ws, L - 5 * ws], [16 * ws, L - 6 * ws]], { w: 8 * ws, color: sp.cuff, taper: false });
+    const fold = shade(sp.coat, -0.42);
+    p.stroke([[-3 * ws, U * 0.2], [-1 * ws, U * 0.9], [-3 * ws, U + S.lArm * 0.6], [0, L - 6 * ws]], { w: 0.9, color: fold });
+    p.stroke([[5 * ws, U * 0.75], [9 * ws, U + S.lArm * 0.4], [9 * ws, L - 6 * ws]], { w: 0.8, color: fold });
+  });
+}
+function drawFullLeg(p, S, sp, view) {
+  const ws = S.ws, T = S.thigh, L = S.thigh + S.shin, pc = sp.pants || sp.coat;
+  // 엉덩이~발목 한 장의 바지: 허벅지는 넉넉하고 무릎 아래로 모여 대님에서 묶임
+  const path = p.poly([
+    [-12 * ws, -4], [12 * ws, -4], [15 * ws, T * 0.45], [14 * ws, T], [11 * ws, T + S.shin * 0.4], [7.5 * ws, L - 12 * ws],
+    [-7.5 * ws, L - 12 * ws], [-11 * ws, T + S.shin * 0.4], [-14 * ws, T], [-15 * ws, T * 0.45],
+  ], pc, { w: 2.2 });
+  p.clip(path, () => {
+    const fold = shade(pc, -0.3);
+    p.stroke([[-6 * ws, T * 0.2], [-3 * ws, T * 0.85], [-1 * ws, T + S.shin * 0.5]], { w: 1, color: fold });
+    p.stroke([[7 * ws, T * 0.5], [4 * ws, T + 4], [6 * ws, T + S.shin * 0.3]], { w: 1, color: fold });
+    if (sp.patch) {
+      p.poly([[-2 * ws, T * 0.55], [11 * ws, T * 0.52], [12 * ws, T * 0.78], [-1 * ws, T * 0.8]], sp.patch, { w: 1.1, smooth: false, rough: 1 });
+    }
+  });
+  shinDetails(offsetPainter(p, 0, T), S, sp, view);
+}
+function drawFullTigerLeg(p, len, w0, w1, front, pawDir) {
+  tigerLeg(p, len, w0, w1, 3, true, pawDir, front);
+}
+function drawFullTail(p, len) {
+  const path = p.poly(limbPts(len, 20, 9), TIGER.body, { w: 2.6 });
+  p.clip(path, (g) => {
+    for (let i = 0; i < 5; i++) {
+      const y = len * (0.12 + i * 0.16);
+      p.stroke([[-14, y], [0, y + 7], [14, y + 1]], { w: 7, color: TIGER.stripe, dry: true });
+    }
+    g.fillStyle = TIGER.stripe; g.fillRect(-14, len * 0.86, 28, len);
+  });
+}
+
+/**
+ * 프레임 굽기용 이음매 없는 팔다리 그림. name: 'arm1'|'arm2'|'leg1'|'leg2'|'front1'|'front2'|'hind1'|'hind2'|'tail'
+ * 돌려주는 값: { img, ox, oy, L1, L2 } — 피벗(어깨/엉덩이)이 원점, 이미지 +y 방향으로 뻗음
+ */
+const _fullCache = new Map();
+export function frameLimb(rig, view, name) {
+  const key = rig.kind + '|' + view + '|' + name;
+  if (_fullCache.has(key)) return _fullCache.get(key);
+  const parts = rig.views[view];
+  const up = parts.find((q) => q.name === name);
+  const far = !!(up && up.far);
+  const P = painter();
+  P.begin(hashStr(key));
+  P.lineScale = rig.spec.child ? 0.82 : 1;
+  P.tint = null;
+  let L1 = 0, L2 = 0;
+  if (rig.type === 'human') {
+    const S = rig.S;
+    if (name.startsWith('arm')) { drawFullArm(P, S, rig.spec); L1 = S.uArm; L2 = S.lArm; }
+    else { drawFullLeg(P, S, rig.spec, view); L1 = S.thigh; L2 = S.shin; }
+  } else if (name === 'tail') {
+    drawFullTail(P, 160); L1 = 40; L2 = 120;
+  } else {
+    const lo = parts.find((q) => q.name === name + '_l');
+    L1 = lo ? lo.at[1] : 60;
+    const front = view !== 'side';
+    const hind = name.startsWith('hind');
+    if (view === 'side') {
+      if (hind) { drawFullTigerLeg(P, L1 + 54, 56, 24, false, -1); L2 = 54; }
+      else { drawFullTigerLeg(P, L1 + 52, 44, 26, false, -1); L2 = 52; }
+    } else if (view === 'front') { drawFullTigerLeg(P, L1 + 44, 40, 28, true, 0); L2 = 44; }
+    else { drawFullTigerLeg(P, L1 + 42, 40, 22, front, 0); L2 = 42; }
+  }
+  let { img, ox, oy } = P.end();
+  if (far) img = darkenCopy(img, 0.2);
+  const out = { img, ox, oy, L1, L2, flip: !!(up && up.flip) };
+  _fullCache.set(key, out);
+  return out;
 }
 
 // ---- 사람 애니메이션 ----

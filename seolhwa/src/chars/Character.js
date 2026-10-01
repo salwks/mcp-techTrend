@@ -11,6 +11,7 @@ import * as THREE from 'three';
 import { getRig, strideOf } from './rigs.js';
 import { makeCanvas, PAPER } from './painter.js';
 import { COMBAT_HUMAN } from './anims.js';
+import { FRAME_KINDS, frameBank, frameIndex, tickFrameBaking } from './frames.js';
 
 const LEAN = THREE.MathUtils.degToRad(8); // 카메라 쪽으로 살짝 뒤로 젖힘(단축 보정)
 const DZ = 0.0006;                         // 부위 사이 앞뒤 간격(m) — 작게 해야 층 사이 시차가 안 보인다
@@ -295,6 +296,10 @@ export class Character {
     this._blobBase = rig.type === 'tiger' ? [2.4 * sc, 0.85 * sc] : [rig.radius * 2.4, rig.radius * 1.35];
 
     this.object3d.userData.character = this;
+    this._silOn = true;
+    this._frameOn = false;
+    this._bank = FRAME_KINDS.includes(kind) ? frameBank(kind) : null;
+    this.renderStyle = this._bank ? 'frames' : 'cutout';
     this._pose(0);
     this._write();
   }
@@ -322,7 +327,11 @@ export class Character {
   }
   setArmed(on) { this.armed = !!on; }
   setMode(mode) { if (mode === 'front' || mode === '4dir') this.mode = mode; }
-  setSilhouette(on) { this.silhouette.visible = !!on; }
+  setSilhouette(on) {
+    this._silOn = !!on;
+    this.silhouette.visible = this._silOn && !this._frameOn;
+    if (this.fSil) this.fSil.visible = this._silOn && !!this._frameOn;
+  }
   /** 실제 이동 속도(m/s)를 알려주면 걸음 주기가 발 미끄러짐 없이 맞춰진다. null이면 위치 변화로 추정. */
   setMoveSpeed(mps) { this._moveSpeed = mps == null ? null : Math.max(0, mps); }
   _info(name = this.anim) { return this.rig.anims[this._animName(name)] || null; }
@@ -330,9 +339,9 @@ export class Character {
   get animDone() { const i = this._info(); return !!i && !i.loop && this.animTime >= i.dur; }
   flash(color = '#ffffff', ms = 120) {
     this._flash = { color: new THREE.Color(color), t: 0, dur: Math.max(1, ms) / 1000 };
-    this.material.emissive.copy(this._flash.color);
-    this.material.emissiveIntensity = 1;
+    for (const m of this._mats4()) { m.emissive.copy(this._flash.color); m.emissiveIntensity = 1; }
   }
+  _mats4() { return this.fMat ? [this.material, this.fMat] : [this.material]; }
 
   update(dt, camera) {
     this.t += dt;
@@ -343,13 +352,122 @@ export class Character {
       const f = this._flash;
       f.t += dt;
       const k = Math.max(0, 1 - f.t / f.dur);
-      this.material.emissiveIntensity = k * k;
-      if (k <= 0) { this._flash = null; this.material.emissive.setRGB(0, 0, 0); this.material.emissiveIntensity = 1; }
+      for (const m of this._mats4()) {
+        m.emissiveIntensity = k * k;
+        if (k <= 0) { m.emissive.setRGB(0, 0, 0); m.emissiveIntensity = 1; }
+      }
+      if (k <= 0) this._flash = null;
     }
     this._measure(dt);
+    this._advancePhase(dt);
     if (camera) this._orient(camera);
+    const visible = !camera || this._inView(camera);
+    // 프레임 스타일: 구워 둔 그림이 있으면 그것을, 아직이면 컷아웃으로 잠시 대신
+    if (this._bank) tickFrameBaking(2);
+    const useFrames = this.renderStyle === 'frames' && this._bank && this._showFrame(visible);
+    this._setStyleVisible(useFrames);
+    if (useFrames) return;
     this._pose(dt);
-    if (!camera || this._inView(camera)) this._write();
+    if (visible) this._write();
+  }
+
+  /** 'frames'(프레임 바이 프레임) | 'cutout'(컷아웃 리그). 프레임이 없는 종류는 'frames'를 무시. */
+  setRenderStyle(style) {
+    if (style !== 'frames' && style !== 'cutout') return;
+    this.renderStyle = style === 'frames' && !this._bank ? 'cutout' : style;
+  }
+
+  _advancePhase(dt) {
+    const rig = this.rig, anim = this._animName(this.anim);
+    if (anim === 'walk' || anim === 'run' || anim === 'prowl') {
+      const def = rig.type === 'tiger' ? (anim === 'run' ? 5 : anim === 'prowl' ? 1.1 : 1.7) : anim === 'run' ? 4.6 : 2.2;
+      let sp = this._moveSpeed != null ? this._moveSpeed : this._measured > 0.3 ? this._measured : def;
+      sp = Math.max(sp, def * 0.35);
+      this.phase += (dt * sp) / strideOf(rig, anim);
+    }
+  }
+
+  _setStyleVisible(frames) {
+    if (this._frameOn === frames) return;
+    this._frameOn = frames;
+    this.sprite.visible = this.halo.visible = !frames;
+    this.silhouette.visible = !frames && this._silOn;
+    if (this.fSprite) {
+      this.fSprite.visible = this.fHalo.visible = frames;
+      this.fSil.visible = frames && this._silOn;
+    }
+  }
+
+  _buildFrameMeshes() {
+    const geo = new THREE.BufferGeometry();
+    const pos = new THREE.BufferAttribute(new Float32Array(12), 3); pos.setUsage(THREE.DynamicDrawUsage);
+    const uv = new THREE.BufferAttribute(new Float32Array(8), 2); uv.setUsage(THREE.DynamicDrawUsage);
+    const nv = new THREE.Vector3(0, 0.55, 1).normalize();
+    geo.setAttribute('position', pos);
+    geo.setAttribute('uv', uv);
+    geo.setAttribute('normal', new THREE.BufferAttribute(new Float32Array([nv.x, nv.y, nv.z, nv.x, nv.y, nv.z, nv.x, nv.y, nv.z, nv.x, nv.y, nv.z]), 3));
+    geo.setIndex([0, 2, 1, 1, 2, 3]);
+    geo.boundingSphere = this.geometry.boundingSphere.clone();
+    this.fGeo = geo;
+    this.fMat = new THREE.MeshLambertMaterial({ alphaTest: 0.5, side: THREE.DoubleSide });
+    this.fMat.onBeforeCompile = this.material.onBeforeCompile;
+    this.fMat.customProgramCacheKey = this.material.customProgramCacheKey;
+    this.fSprite = new THREE.Mesh(geo, this.fMat);
+    this.fSprite.castShadow = true;
+    this.fHalo = new THREE.Mesh(geo, this.res.halo);
+    this.fSil = new THREE.Mesh(geo, this.res.silhouette);
+    this.fSil.renderOrder = 999;
+    this.fSprite.visible = this.fHalo.visible = this.fSil.visible = false;
+    this.billboard.add(this.fHalo, this.fSprite, this.fSil);
+  }
+
+  /** 지금 그림 한 장을 사각형에 싣는다. 준비 안 됐으면 false */
+  _showFrame(visible) {
+    const [view, mirror] = this._viewOf();
+    const anim = this._animName(this.anim);
+    const clip = this._bank.get(view, anim, this.armed);
+    if (!clip) return false;
+    const f = clip.frames[frameIndex(clip.spec, this.animTime, this.phase, this.t)];
+    if (!f) return false;
+    if (!this.fSprite) this._buildFrameMeshes();
+    const pg = f.page;
+    if (!pg.mats) {
+      pg.mats = {
+        halo: haloMaterial(pg.tex, pg.cv.width, pg.cv.height),
+        sil: silhouetteMaterial(pg.tex, 0.02),
+        depth: shadowFixed(new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: pg.tex, alphaTest: 0.5, side: THREE.DoubleSide }), 'd'),
+        dist: shadowFixed(new THREE.MeshDistanceMaterial({ map: pg.tex, alphaTest: 0.5, side: THREE.DoubleSide }), 'p'),
+      };
+    }
+    if (this._fPage !== pg) {
+      this._fPage = pg;
+      this.fMat.map = pg.tex;
+      this.fMat.needsUpdate = !this._fMapped;
+      this._fMapped = true;
+      this.fHalo.material = pg.mats.halo;
+      this.fSil.material = pg.mats.sil;
+      this.fSprite.customDepthMaterial = pg.mats.depth;
+      this.fSprite.customDistanceMaterial = pg.mats.dist;
+    }
+    if (visible && (this._fFrame !== f || this._fMirror !== mirror)) {
+      this._fFrame = f; this._fMirror = mirror;
+      const sg = mirror ? -1 : 1, p = this.fGeo.attributes.position.array, uv = this.fGeo.attributes.uv.array;
+      p.set([sg * f.x0, f.y1, 0, sg * f.x1, f.y1, 0, sg * f.x0, f.y0, 0, sg * f.x1, f.y0, 0]);
+      uv.set([f.u0, f.v0, f.u1, f.v0, f.u0, f.v1, f.u1, f.v1]);
+      this.fGeo.attributes.position.needsUpdate = true;
+      this.fGeo.attributes.uv.needsUpdate = true;
+    }
+    this._blobFromLift(f.lift);
+    return true;
+  }
+
+  _blobFromLift(lift) {
+    const rig = this.rig;
+    const [a, b] = this._blobBase;
+    const kk = Math.max(0.45, 1 - lift * 0.9);
+    const sideways = rig.type === 'tiger' && (this.facing === 'up' || this.facing === 'down') && this.mode !== 'front';
+    this.blob.scale.set((sideways ? b * 1.1 : a) * kk, 1, (sideways ? a * 0.5 : b) * kk);
+    this.blob.material.opacity = 0.5 * (0.5 + 0.5 * kk);
   }
 
   dispose() {
@@ -437,13 +555,6 @@ export class Character {
     const [view, mirror] = this._viewOf();
     const anim = this._animName(this.anim);
     const info = rig.anims[anim];
-    // 걸음 위상: 실제 이동 속도 / 보폭
-    if (anim === 'walk' || anim === 'run' || anim === 'prowl') {
-      const def = rig.type === 'tiger' ? (anim === 'run' ? 5 : anim === 'prowl' ? 1.1 : 1.7) : anim === 'run' ? 4.6 : 2.2;
-      let sp = this._moveSpeed != null ? this._moveSpeed : this._measured > 0.3 ? this._measured : def;
-      sp = Math.max(sp, def * 0.35);
-      this.phase += (dt * sp) / strideOf(rig, anim);
-    }
     const at = info && !info.loop ? Math.min(this.animTime, info.dur) : this.animTime;
     const P = rig.pose(view, anim, this.t, rig, at, { armed: this.armed, phase: this.phase });
 
@@ -566,11 +677,6 @@ export class Character {
     this.geometry.attributes.position.needsUpdate = true;
     // 블롭: 몸이 뜨면 작고 옅게
     const rootY = P.root ? P.root.y : 0;
-    const lift = Math.max(0, -rootY) * inv;
-    const [a, b] = this._blobBase;
-    const kk = Math.max(0.45, 1 - lift * 0.9);
-    const sideways = rig.type === 'tiger' && (this.facing === 'up' || this.facing === 'down') && this.mode !== 'front';
-    this.blob.scale.set((sideways ? b * 1.1 : a) * kk, 1, (sideways ? a * 0.5 : b) * kk);
-    this.blob.material.opacity = 0.5 * (0.5 + 0.5 * kk);
+    this._blobFromLift(Math.max(0, -rootY) * inv);
   }
 }

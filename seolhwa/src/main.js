@@ -33,6 +33,28 @@ const [worldMod, charMod, fxMod, combatMod] = await Promise.all([
   load('./combat/index.js', 'combat'),
 ]);
 
+// 캐릭터 그림(컷아웃 부위·프레임 그림)을 미리 구워 첫 동작에서 멈칫하지 않게 한다
+async function bakeCharacters() {
+  if (!charMod) return;
+  const veil = document.createElement('div');
+  veil.className = 'loading';
+  veil.innerHTML = '<div class="l-seal">설화록</div><div class="l-text">그림을 펼치는 중…</div>';
+  hudRoot.appendChild(veil);
+  const paint = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  await paint();
+  try {
+    charMod.preloadCharacters?.();
+    for (const k of charMod.FRAME_KINDS || []) {
+      veil.querySelector('.l-text').textContent = k === 'tiger' ? '호랑이를 그리는 중…' : '나그네를 그리는 중…';
+      await paint();
+      charMod.bakeAllFrames?.([k]);
+    }
+  } catch (err) { console.error('[설화록] 캐릭터 그림 굽기 오류', err); }
+  veil.classList.add('done');
+  setTimeout(() => veil.remove(), 600);
+}
+await bakeCharacters();
+
 let world;
 try { world = worldMod ? worldMod.buildWorld(scene) : fallbackWorld(scene); }
 catch (err) { console.error('[설화록] buildWorld 오류', err); world = fallbackWorld(scene); }

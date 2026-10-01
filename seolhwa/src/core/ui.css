@@ -181,3 +181,11 @@ body.in-combat .prompt, body.in-combat .place { display: none; }
   .combat-btns .tbtn { width: 58px; height: 58px; font-size: 13px; }
   .combat-btns .tbtn.big { width: 78px; height: 78px; grid-column: 3; grid-row: 1 / span 2; font-size: 16px; }
 }
+
+/* 불러오기 화면 */
+.loading { position: absolute; inset: 0; z-index: 20; display: grid; place-content: center; justify-items: center; gap: 18px;
+  background: radial-gradient(120% 90% at 50% 45%, var(--hanji) 30%, var(--hanji-deep)); transition: opacity .6s ease; }
+.loading.done { opacity: 0; pointer-events: none; }
+.l-seal { font: 700 22px var(--display); letter-spacing: 0.35em; writing-mode: vertical-rl; color: var(--hanji); background: var(--seal);
+  padding: 14px 9px; border-radius: 3px; }
+.l-text { font: 16px var(--display); color: var(--ink-soft); letter-spacing: 0.15em; }
