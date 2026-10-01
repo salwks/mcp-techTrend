@@ -30,7 +30,7 @@ export const CLIMB_RISE_M = 1.4;
 export const COMBAT_HUMAN = new Set(['attack1', 'attack2', 'attack3', 'charge', 'heavy', 'guard', 'dodge', 'bow_draw', 'bow_shoot', 'throw', 'hit', 'down', 'getup', 'dead']);
 
 // 기본값이 '숨김'인 부위(효과·교체용 이미지)
-const HIDDEN = /^(fx_|head_|bow[RD]$|item$)/;
+const HIDDEN = /^(fx_|head_|bow[RD]$|item$|front[12]_up$)/;
 
 // 가감속 곡선: 구간이 끝나는 키프레임에 붙인다 ([t, 자세, 곡선])
 const EASE = {
@@ -421,7 +421,7 @@ export function humanStoryPose(view, anim, t, at, rig) {
   if (anim === 'cower') {
     F = side
       ? { root: [0, tr, 46 * k], torso: [-0.55], head: [0.3, 0, 3 * k], leg2: [1.5], leg2_l: [-2.3], leg1: [1.35], leg1_l: [-2.25], arm2: [1.15], arm2_l: [1.25], arm1: [1.0], arm1_l: [1.2] }
-      : { root: [0, tr, 30 * k, 1.08, 0.82], leg1: [0.35, -2 * k, 0, 1, 0.6], leg1_l: [-0.5, 0, 0, 1, 0.7], leg2: [-0.35, 2 * k, 0, 1, 0.6], leg2_l: [0.5, 0, 0, 1, 0.7], arm1: [2.5], arm1_l: [1.5], arm2: [-2.5], arm2_l: [-1.5], head: [0, 0, 8 * k] };
+      : { root: [0, tr, 30 * k, 1.08, 0.82], leg1: [0.35, -2 * k, 0, 1, 0.6], leg1_l: [-0.5, 0, 0, 1, 0.7], leg2: [-0.35, 2 * k, 0, 1, 0.6], leg2_l: [0.5, 0, 0, 1, 0.7], arm1: [2.3], arm1_l: [2.55], arm2: [-2.3], arm2_l: [-2.55], head: [0, 0, 8 * k] };
   } else if (anim === 'cry') {
     F = side
       ? { torso: [-0.1, 0, 0, 1, 1 + 0.02 * sob], head: [0.25 + 0.04 * sob, 0, 1.2 * sob * k], arm2: [1.9], arm2_l: [1.8], arm1: [1.7], arm1_l: [1.9] }
@@ -460,8 +460,8 @@ export function tigerStoryPose(view, anim, t, at) {
       front1: [0.9], front1_l: [0.6], front2: [1.55 + 0.35 * kn], front2_l: [-0.5 + 0.45 * kn],
       ...H(-0.85, 0, 0), ...TAIL(1.2, 0.1, -0.2, -0.3),
     }]]);
-    if (back) return kf(0, [[0, { root: [0, 0, -55, 1, 1.35], front1: [2.7 - 0.3 * kn], front2: [-2.6], ...H(0, 0, -62), tail0: [-2.9], tail1: [0.3], tail2: [0.1], tail3: [0.1] }]]);
-    return kf(0, [[0, { root: [0, 0, -50, 1, 1.3], front1: [2.6], front1_l: [-0.6], front2: [-2.6 - 0.3 * kn], front2_l: [0.6], hind1: [0.1], hind2: [-0.1], ...H(0, 0, -40), ...TAIL(0.9, 0.3, 0, 0) }]]);
+    if (back) return kf(0, [[0, { root: [0, 0, -55, 1, 1.35], front1_up: [-0.15 * kn, 0, -8 * kn, 1, 1, 1], front2_up: [0.05, 0, 0, 1, 1, 1], ...H(0, 0, -34), tail0: [-2.9], tail1: [0.3], tail2: [0.1], tail3: [0.1] }]]);
+    return kf(0, [[0, { root: [0, 0, -50, 1, 1.3], front1: [2.6], front1_l: [-0.6], front2: [-2.6 - 0.3 * kn], front2_l: [0.6], hind1: [0.1], hind2: [-0.1], ...H(0, 0, -26), ...TAIL(0.9, 0.3, 0, 0) }]]);
   }
   if (anim === 'sniff') {
     const tw = sin(t * 9);
@@ -480,14 +480,14 @@ export function tigerStoryPose(view, anim, t, at) {
       [0.9, { ...REAR, root: [1.15, -90, -126], front1: [1.9], front1_l: [0.1], front2: [2.0], front2_l: [0.1] }, 'in'],
       [1, { ...REAR, root: [1.14, -90, -122], front1: [1.8], front1_l: [0.2], front2: [1.9], front2_l: [0.2] }, 'out'],
     ]);
-    const a = (x) => (back ? { front1: [x], front2: [-x - 0.2] } : { front1: [x], front1_l: [-0.5], front2: [-x - 0.2], front2_l: [0.5] });
+    const a = (x) => (back ? { front1_up: [x - 2.5, 0, -6 * (x - 2.2), 1, 1, 1], front2_up: [-(x - 2.5), 0, 6 * (x - 2.6), 1, 1, 1] } : { front1: [x], front1_l: [-0.5], front2: [-x - 0.2], front2_l: [0.5] });
     return kf(u(1.4), [
       [0, {}],
-      [0.22, { root: [0, 0, -70, 1, 1.4], ...a(2.3), ...H(0, 0, back ? -70 : -50) }, 'out'],
-      [0.4, { root: [0, 0, -76, 1, 1.42], ...a(2.8), ...H(0, 0, back ? -74 : -54) }, 'snap'],
-      [0.58, { root: [0, 0, -80, 1, 1.43], ...a(2.2), ...H(0, 0, back ? -76 : -56) }, 'snap'],
-      [0.76, { root: [0, 0, -82, 1, 1.44], ...a(2.9), ...H(0, 0, back ? -78 : -58) }, 'snap'],
-      [1, { root: [0, 0, -70, 1, 1.38], ...a(2.4), ...H(0, 0, back ? -70 : -50) }, 'in'],
+      [0.22, { root: [0, 0, -70, 1, 1.4], ...a(2.3), ...H(0, 0, back ? -35 : -25) }, 'out'],
+      [0.4, { root: [0, 0, -76, 1, 1.42], ...a(2.8), ...H(0, 0, back ? -37 : -27) }, 'snap'],
+      [0.58, { root: [0, 0, -80, 1, 1.43], ...a(2.2), ...H(0, 0, back ? -38 : -28) }, 'snap'],
+      [0.76, { root: [0, 0, -82, 1, 1.44], ...a(2.9), ...H(0, 0, back ? -39 : -29) }, 'snap'],
+      [1, { root: [0, 0, -70, 1, 1.38], ...a(2.4), ...H(0, 0, back ? -35 : -25) }, 'in'],
     ]);
   }
   if (anim === 'slip') {
@@ -508,10 +508,10 @@ export function tigerStoryPose(view, anim, t, at) {
         [1, { ...BACK(1, 16), front1: [0.6], front2: [0.9], hind1: [-0.3], hind2: [0.1] }, 'io'],
       ]);
     }
-    const HIGH = { root: [0, 0, -80, 1, 1.42], front1: [2.4], front2: [-2.6], ...H(0, 0, back ? -76 : -56) };
+    const HIGH = { root: [0, 0, -80, 1, 1.42], front1: [2.4], front2: [-2.6], ...H(0, 0, back ? -38 : -28) };
     return kf(u(1.8), [
       [0, HIGH],
-      [0.3, { ...HIGH, root: [0.15, 0, -50, 1, 1.3], ...H(0, 0, back ? -60 : -44, 'roar') }, 'in'],
+      [0.3, { ...HIGH, root: [0.15, 0, -50, 1, 1.3], ...H(0, 0, back ? -30 : -22, 'roar') }, 'in'],
       [0.48, { root: [1.6, 0, -10], front1: [1.2], front2: [-1.6], ...H(0, 0, 0, 'roar') }, 'in'],
       [0.58, { root: [3.14, 0, 40, 1.15, 0.8], front1: [0.6], front2: [-0.6], ...H(0, 0, 0, 'dead'), fx_burst: [0, 0, 60, 1.5, 1.2, 1] }, 'in'],
       [0.66, { root: [3.14, 0, 28, 0.95, 1.05], front1: [0.8], front2: [-0.8], ...H(0, 0, 0, 'dead'), fx_burst: [0, 0, 60, 1.8, 1.4, 1] }, 'out'],

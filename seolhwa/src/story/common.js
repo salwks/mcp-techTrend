@@ -116,7 +116,9 @@ export function perches(S) {
 // ---- 사건 진행 판정 ----
 export const PATH_CLUES = ['cakes', 'torn_skirt', 'blood', 'tracks', 'basket'];
 export function cakesFound(S) { return ['cake_1', 'cake_2', 'cake_3'].filter((k) => S.is(k)).length; }
-export function pathClueCount(S) { return PATH_CLUES.filter((c) => S.hasClue(c)).length; }
+// 떡은 하나하나 센다
+export function pathClueCount(S) { return PATH_CLUES.filter((c) => c !== 'cakes' && S.hasClue(c)).length + cakesFound(S); }
+export function investigation(S) { return S.state.clues.length + Math.max(0, cakesFound(S) - 1); }
 
 export function startCase(S, route) {
   if (S.is('case_started')) return false;
@@ -136,7 +138,7 @@ export function checkFood(S) {
 }
 
 export function canRest(S) {
-  return S.is('case_started') && (S.is('first_encounter') || S.state.clues.length >= 5);
+  return S.is('case_started') && (S.is('first_encounter') || investigation(S) >= 5);
 }
 
 export function warnLevel(S) {

@@ -37,6 +37,8 @@ export class SimpleActor {
   faceToward(x, z) { this.face(facingFrom(x - this.pos.x, z - this.pos.z, this.facing)); }
 }
 
+export class Abort extends Error { constructor() { super('story aborted'); } }
+
 export function newState() {
   return {
     v: 1,
@@ -66,7 +68,12 @@ export class Engine {
     this.letterboxOn = false;
     this.cutsceneDepth = 0;
     this.instant = !!ctx.__instant;
+    this.alias = {};           // 이야기 id → 코어 NPC id
+    this.gen = 0;              // 다시 하기 때 올려서 진행 중 스크립트를 끊는다
+    this.runGen = null;
   }
+
+  _chk() { if (this.runGen != null && this.runGen !== this.gen) throw new Abort(); }
 
   get busy() { return this.busyCount > 0; }
 
@@ -77,10 +84,16 @@ export class Engine {
 
   // ---- 실행기 ----
   async run(fn) {
+    const g = this.gen;
+    this.runGen = g;
     this.busyCount++;
     try { return await fn(this); }
-    catch (err) { console.error('[story] 스크립트 오류', err); this.log('error', String(err && err.stack || err)); return null; }
+    catch (err) {
+      if (err instanceof Abort) return null;
+      console.error('[story] 스크립트 오류', err); this.log('error', String(err && err.stack || err)); return null;
+    }
     finally {
+      if (g !== this.gen) return; // eslint-disable-line no-unsafe-finally
       this.busyCount = Math.max(0, this.busyCount - 1);
       if (!this.busy) {
         if (this.letterboxOn) this.letterbox(false);
@@ -148,6 +161,7 @@ export class Engine {
     else safe(() => this.ctx.hud?.say?.(text, 2200));
   }
   async say(name, lines) {
+    this._chk();
     const arr = Array.isArray(lines) ? lines.filter(Boolean) : [lines];
     if (!arr.length) return;
     this.log('say', [name, arr]);
@@ -155,6 +169,7 @@ export class Engine {
   }
   /** options: [{ id, label, hint?, disabled?, when? }] — when===false면 숨김. 고른 id를 돌려준다 */
   async choice(prompt, options) {
+    this._chk();
     const vis = options.filter((o) => o && o.when !== false);
     if (!vis.length) return null;
     this.log('choice', [prompt, vis.map((o) => o.label)]);
@@ -162,6 +177,7 @@ export class Engine {
     if (this.ctx.ui?.choice) {
       try { idx = await this.ctx.ui.choice(prompt, vis.map((o) => ({ label: o.label, disabled: !!o.disabled, hint: o.hint }))); }
       catch (err) { console.warn('[story] choice', err); }
+      this._chk();
     }
     if (!(idx >= 0 && idx < vis.length) || vis[idx].disabled) {
       if (!this.ctx.ui?.choice && prompt) await this.say('', [prompt]);
@@ -172,11 +188,13 @@ export class Engine {
     return picked ? picked.id : null;
   }
   async examine(title, text, kind = 'clue') {
+    this._chk();
     this.log('examine', [title, text]);
     if (this.ctx.ui?.examine) { try { await this.ctx.ui.examine({ title, text, kind }); return; } catch (err) { console.warn('[story] examine', err); } }
     await this.say(title, Array.isArray(text) ? text : [text]);
   }
   async caption(text, ms = 3000) {
+    this._chk();
     this.log('caption', text);
     if (this.ctx.ui?.caption) { try { await this.ctx.ui.caption(text, ms); return; } catch (err) { console.warn('[story] caption', err); } }
     safe(() => this.ctx.hud?.say?.(text, ms));
@@ -188,11 +206,13 @@ export class Engine {
     return safe(() => this.ctx.ui?.letterbox?.(!!on));
   }
   async wait(ms) {
+    this._chk();
     if (this.instant || !ms) { await Promise.resolve(); return; }
     if (this.ctx.wait) { try { await this.ctx.wait(ms); return; } catch { /* fallthrough */ } }
     await new Promise((r) => setTimeout(r, ms));
   }
   async fade(ms, toBlack) {
+    this._chk();
     this.log('fade', toBlack);
     if (this.ctx.fade) { try { await this.ctx.fade(ms, toBlack); return; } catch (err) { console.warn('[story] fade', err); } }
     await this.wait(ms);
@@ -221,7 +241,7 @@ export class Engine {
     if (!id) return null;
     if (typeof id === 'object') return id;
     if (id === 'player') return this.ctx.player;
-    return this.spawned[id] || this.ctx.npcs?.[id] || null;
+    return this.spawned[id] || this.ctx.npcs?.[this.alias[id] || id] || null;
   }
   spawn(id, kind, pos, facing = 'down', data = null) {
     if (this.spawned[id]) return this.spawned[id];
@@ -344,6 +364,7 @@ export class Engine {
   // ---- 전투 ----
   /** → 'win' | 'repelled' | 'escaped' | 'lose' (retreated는 repelled로 맞춘다) */
   async combat(arena, opts = {}) {
+    this._chk();
     const c = this.ctx.combat;
     this.log('combat', [arena && (arena.id || arena.name), opts.mods]);
     if (!c || !c.start || !arena) {
@@ -352,8 +373,11 @@ export class Engine {
       return r;
     }
     let res = null;
+    const { fade, fallbackResult, ...rest } = opts;
     try {
-      const ret = c.start(arena, { noResultCard: true, ...opts });
+      if (fade) await this.fade(350, true);
+      const ret = c.start(arena, { noResultCard: true, ...rest });
+      if (fade) await this.fade(450, false);
       if (ret && typeof ret.then === 'function') res = await ret;
       else if (c.finished && typeof c.finished.then === 'function') res = await c.finished;
       else {
@@ -362,7 +386,8 @@ export class Engine {
       }
     } catch (err) {
       console.error('[story] 전투 오류', err);
-      res = opts.fallbackResult || 'win';
+      res = fallbackResult || 'win';
+      if (fade) await this.fade(300, false);
     }
     if (res === 'retreated' || res === 'retreat') res = 'repelled';
     if (!res) res = 'escaped';

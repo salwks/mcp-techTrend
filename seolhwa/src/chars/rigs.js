@@ -644,8 +644,8 @@ function drawJige(p, view, S, load = 'straw') {
     bar([16 * ws, 30 * ws], [34 * ws, 6 * ws], 4);
     if (load === 'wood') { woodLoad(p, 0, -6 * ws, 34 * ws, 64 * ws, false); return; }
     // 짚단 짐
-    const load = p.poly([[-26 * ws, -30 * ws], [26 * ws, -30 * ws], [30 * ws, 30 * ws], [-30 * ws, 30 * ws]], '#c4a86d', { w: 2.2 });
-    p.clip(load, () => { for (let i = -5; i <= 5; i++) p.stroke([[i * 5 * ws, -30 * ws], [i * 5.6 * ws, 30 * ws]], { w: 0.8, color: shade('#c4a86d', -0.35), dry: true }); });
+    const straw = p.poly([[-26 * ws, -30 * ws], [26 * ws, -30 * ws], [30 * ws, 30 * ws], [-30 * ws, 30 * ws]], '#c4a86d', { w: 2.2 });
+    p.clip(straw, () => { for (let i = -5; i <= 5; i++) p.stroke([[i * 5 * ws, -30 * ws], [i * 5.6 * ws, 30 * ws]], { w: 0.8, color: shade('#c4a86d', -0.35), dry: true }); });
     p.stroke([[-30 * ws, 0], [30 * ws, 0]], { w: 2.5, color: '#6b5436', taper: false });
   }
 }
@@ -1485,6 +1485,9 @@ function tigerView(view) {
     P.begin(41); P.lineScale = 1; P.tint = null; tigerLeg(P, 52, 30, 26, 2, true, 0, true); const fl = P.end();
     reuse(L, fl, 'front1', 'root', [-34, 44], 0.8, { far: true, r0: 0.08 });
     reuse(L, fl, 'front2', 'root', [34, 44], 0.8, { far: true, r0: -0.08 });
+    // 문을 두드리거나 나무를 할퀼 때 머리 위로 올라오는 앞발(뒷모습) — 평소엔 숨김
+    reuse(L, fl, 'front1_up', 'root', [-30, -70], 6.5, { r0: PI - 0.25, tag: 'alt' });
+    reuse(L, fl, 'front2_up', 'root', [30, -70], 6.5, { r0: PI + 0.25, tag: 'alt' });
     part(L, 'body', 'root', [0, 0], 2, (p) => {
       const path = p.poly([[-44, -40], [0, -48], [44, -40], [64, 0], [58, 40], [30, 62], [-30, 62], [-58, 40], [-64, 0]], TIGER.body, { w: 3.2, shadeDown: 0.3 });
       const lines = [];

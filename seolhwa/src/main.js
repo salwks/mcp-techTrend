@@ -46,10 +46,19 @@ async function bakeCharacters() {
   await paint();
   try {
     charMod.preloadCharacters?.();
-    for (const k of charMod.FRAME_KINDS || []) {
-      veil.querySelector('.l-text').textContent = k === 'tiger' ? '호랑이를 그리는 중…' : '나그네를 그리는 중…';
-      await paint();
-      charMod.bakeAllFrames?.([k]);
+    const txt = veil.querySelector('.l-text');
+    if (charMod.prebakeFrames) {
+      // 워커에서 굽고, 진행률만 표시 (화면이 멈추지 않음)
+      await charMod.prebakeFrames((done, total) => {
+        const pct = total ? Math.round((done / total) * 100) : 100;
+        txt.textContent = `그림을 펼치는 중… ${pct}%`;
+      });
+    } else {
+      for (const k of charMod.FRAME_KINDS || []) {
+        txt.textContent = k === 'tiger' ? '호랑이를 그리는 중…' : '나그네를 그리는 중…';
+        await paint();
+        charMod.bakeAllFrames?.([k]);
+      }
     }
   } catch (err) { console.error('[설화록] 캐릭터 그림 굽기 오류', err); }
   veil.classList.add('done');

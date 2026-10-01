@@ -23,33 +23,33 @@ export function setFrameTier(t) { if (TIERS[t] && !_stores.size) _tier = t; retu
 export function getFrameTier() { return _tier || (_tier = detectTier()); }
 
 // ---------------------------------------------------------------------------
-// 워커
+// 워커: 종류마다 하나(주인공·호랑이를 나란히 굽는다)
 // ---------------------------------------------------------------------------
-let _worker = null, _workerState = 'none'; // none | starting | ready | failed
 let _forceMain = false;
-function startWorker() {
-  if (_workerState !== 'none' || _forceMain) return;
-  if (typeof Worker === 'undefined' || typeof OffscreenCanvas === 'undefined' || typeof createImageBitmap === 'undefined') { _workerState = 'failed'; return; }
-  try {
-    _worker = new Worker(new URL('./frameWorker.js', import.meta.url), { type: 'module' });
-  } catch { _workerState = 'failed'; return; }
-  _workerState = 'starting';
-  _worker.onmessage = (e) => {
+const canWorker = () => typeof Worker !== 'undefined' && typeof OffscreenCanvas !== 'undefined' && typeof createImageBitmap !== 'undefined';
+function startWorker(store) {
+  if (_forceMain || !canWorker()) { store.wstate = 'failed'; return; }
+  let w;
+  try { w = new Worker(new URL('./frameWorker.js', import.meta.url), { type: 'module' }); }
+  catch { store.wstate = 'failed'; return; }
+  store.worker = w;
+  store.wstate = 'starting';
+  w.onmessage = (e) => {
     const m = e.data;
-    if (m.type === 'ready') { _workerState = 'ready'; for (const s of _stores.values()) s._flushToWorker(); }
-    else if (m.type === 'fail') workerFailed(m.error);
-    else if (m.type === 'clip') { const s = _stores.get(m.kind); if (s) s._onClip(m); }
+    if (m.type === 'ready') { store.wstate = 'ready'; store._flushToWorker(); }
+    else if (m.type === 'fail') workerFailed(store, m.error);
+    else if (m.type === 'clip') store._onClip(m);
   };
-  _worker.onerror = (e) => workerFailed(e.message || 'worker error');
-  _worker.postMessage({ type: 'init', tier: getFrameTier() });
+  w.onerror = (e) => workerFailed(store, e.message || 'worker error');
+  w.postMessage({ type: 'init', tier: store.tier });
 }
-function workerFailed(err) {
-  if (_workerState === 'failed') return;
+function workerFailed(store, err) {
+  if (store.wstate === 'failed') return;
   console.warn('[chars] 프레임 굽기 워커를 쓸 수 없어 메인 스레드에서 굽습니다:', err);
-  _workerState = 'failed';
-  try { _worker && _worker.terminate(); } catch { /* */ }
-  _worker = null;
-  for (const s of _stores.values()) s._toMain();
+  store.wstate = 'failed';
+  try { store.worker && store.worker.terminate(); } catch { /* */ }
+  store.worker = null;
+  store._toMain();
 }
 
 // ---------------------------------------------------------------------------
@@ -87,7 +87,9 @@ class FrameStore {
     this.stats = null;
     this.bank = null;            // 메인 스레드 굽기용
     this.mainQueue = [];
-    startWorker();
+    this.worker = null;
+    this.wstate = 'none';
+    startWorker(this);
     for (const k of this.critical) this._request(k, false);
   }
 
@@ -112,12 +114,12 @@ class FrameStore {
 
   _request(key, front) {
     if (this.sent.has(key)) {
-      if (front && _workerState === 'ready') _worker.postMessage({ type: 'bake', kind: this.kind, key, front: true });
+      if (front && this.wstate === 'ready') this.worker.postMessage({ type: 'bake', kind: this.kind, key, front: true });
       else if (front && this.bank) { const i = this.mainQueue.indexOf(key); if (i > 0) this.mainQueue.unshift(...this.mainQueue.splice(i, 1)); }
       return;
     }
-    if (_workerState === 'ready') { this.sent.add(key); _worker.postMessage({ type: 'bake', kind: this.kind, key, front }); }
-    else if (_workerState === 'failed' || _forceMain) { this.sent.add(key); this._mainEnqueue(key, front); }
+    if (this.wstate === 'ready') { this.sent.add(key); this.worker.postMessage({ type: 'bake', kind: this.kind, key, front }); }
+    else if (this.wstate === 'failed' || _forceMain) { this.sent.add(key); this._mainEnqueue(key, front); }
     else if (front) this.wanted.unshift(key); else this.wanted.push(key);
   }
   _flushToWorker() {
@@ -178,7 +180,6 @@ class FrameStore {
 /** 메인 스레드 대체 경로: 한 화면 프레임에 그림 한 장(대개 1~5ms) */
 let _lastTick = 0;
 export function tickFrameBaking() {
-  if (_workerState !== 'failed' && !_forceMain) return;
   const now = performance.now();
   if (now - _lastTick < 6) return;
   _lastTick = now;
@@ -205,8 +206,11 @@ export function frameBakeProgress() {
   return { done: t - l, total: t };
 }
 
-/** 테스트용: 메인 스레드에서 지금 전부(꼭 필요한 것 + 나머지 전부) 굽는다 */
-export function bakeAllFrames(kinds = FRAME_KINDS, all = true) {
+/**
+ * 메인 스레드에서 지금 동기로 굽는다(로딩 화면을 막음 — 가능하면 `await prebakeFrames(onProgress)`를 쓸 것: 워커에서 굽는다).
+ * all=false(기본): 전투·이야기 필수 동작만. all=true: 나머지(변장 장면 등)까지.
+ */
+export function bakeAllFrames(kinds = FRAME_KINDS, all = false) {
   _forceMain = true;
   const out = {};
   for (const k of kinds) {
@@ -228,7 +232,7 @@ const HUMAN_LIST = { talk: 1 };
 const TIGER_LIST = { run: 1 };
 
 export function frameStats() {
-  const out = { tier: getFrameTier(), worker: _workerState };
-  for (const [k, s] of _stores) out[k] = s.stats;
+  const out = { tier: getFrameTier() };
+  for (const [k, s] of _stores) out[k] = { ...s.stats, worker: s.wstate };
   return out;
 }
