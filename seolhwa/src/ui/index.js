@@ -232,7 +232,7 @@ export function createUI(root) {
       wrap.addEventListener('click', (e) => { if (e.target === wrap && cancelIdx >= 0 && performance.now() >= m.armedAt) pick(cancelIdx); });
       pushModal(m);
       if (cur >= 0) sel(cur);
-      else box.tabIndex = -1, box.focus();
+      else { box.tabIndex = -1; box.focus(); }
     });
   }
 
