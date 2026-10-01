@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import { getRig, strideOf } from './rigs.js';
 import { makeCanvas, PAPER } from './painter.js';
 import { COMBAT_HUMAN } from './anims.js';
-import { FRAME_KINDS, frameBank, frameIndex, tickFrameBaking } from './frames.js';
+import { FRAME_KINDS, frameStore, frameIndex, tickFrameBaking } from './frames.js';
 
 const LEAN = THREE.MathUtils.degToRad(8); // 카메라 쪽으로 살짝 뒤로 젖힘(단축 보정)
 const DZ = 0.0006;                         // 부위 사이 앞뒤 간격(m) — 작게 해야 층 사이 시차가 안 보인다
@@ -298,7 +298,8 @@ export class Character {
     this.object3d.userData.character = this;
     this._silOn = true;
     this._frameOn = false;
-    this._bank = FRAME_KINDS.includes(kind) ? frameBank(kind) : null;
+    this._bank = FRAME_KINDS.includes(kind) ? frameStore(kind) : null;
+    this.variant = 'normal';
     this.renderStyle = this._bank ? 'frames' : 'cutout';
     this._pose(0);
     this._write();
@@ -326,6 +327,8 @@ export class Character {
     }
   }
   setArmed(on) { this.armed = !!on; }
+  /** 호랑이 변장: 'disguised'(어미 저고리 + 수건 + 밀가루 묻은 흰 앞발) | 'normal' */
+  setVariant(v) { this.variant = v === 'disguised' ? 'disguised' : 'normal'; }
   setMode(mode) { if (mode === 'front' || mode === '4dir') this.mode = mode; }
   setSilhouette(on) {
     this._silOn = !!on;
@@ -363,7 +366,7 @@ export class Character {
     if (camera) this._orient(camera);
     const visible = !camera || this._inView(camera);
     // 프레임 스타일: 구워 둔 그림이 있으면 그것을, 아직이면 컷아웃으로 잠시 대신
-    if (this._bank) tickFrameBaking(2);
+    if (this._bank) tickFrameBaking();
     const useFrames = this.renderStyle === 'frames' && this._bank && this._showFrame(visible);
     this._setStyleVisible(useFrames);
     if (useFrames) return;
@@ -425,7 +428,7 @@ export class Character {
   _showFrame(visible) {
     const [view, mirror] = this._viewOf();
     const anim = this._animName(this.anim);
-    const clip = this._bank.get(view, anim, this.armed);
+    const clip = this._bank.get(view, anim, this.armed, this.variant);
     if (!clip) return false;
     const f = clip.frames[frameIndex(clip.spec, this.animTime, this.phase, this.t)];
     if (!f) return false;
@@ -433,7 +436,7 @@ export class Character {
     const pg = f.page;
     if (!pg.mats) {
       pg.mats = {
-        halo: haloMaterial(pg.tex, pg.cv.width, pg.cv.height),
+        halo: haloMaterial(pg.tex, pg.size, pg.size),
         sil: silhouetteMaterial(pg.tex, 0.02),
         depth: shadowFixed(new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: pg.tex, alphaTest: 0.5, side: THREE.DoubleSide }), 'd'),
         dist: shadowFixed(new THREE.MeshDistanceMaterial({ map: pg.tex, alphaTest: 0.5, side: THREE.DoubleSide }), 'p'),
@@ -649,6 +652,7 @@ export class Character {
       staff: !this.armed,
       sword: this.armed && !bowAnim && anim !== 'throw',
       backbow: !bowAnim && (this.armed || rig.spec.back === 'bow'),
+      disg: this.variant === 'disguised',
     };
     const pos = this._pos, inv = 1 / this._ppm, sgn = mirror ? -1 : 1;
     const draw = parts.draw;
