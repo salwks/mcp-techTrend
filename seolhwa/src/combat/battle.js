@@ -34,17 +34,26 @@ export class Battle {
     this.time = 0;
     this.outsideT = 0;
     this.playerOutside = false;
+    this.mods = {}; this.allowFlee = true; this.retreatAt = null; this.focus = null; this.retreatTo = null;
     this.stats = { arrowHits: 0, hits: 0, damage: 0 };
   }
 
   get rand() { return this.env.rand; }
 
-  start(arena, seed) {
-    if (seed !== undefined) this.env.rand = mulberry32(seed);
+  // opts: { mods:{stunned, hpRatio, enraged, firstEncounter}, retreatAt:{hpRatio, seconds}, allowFlee,
+  //         playerPos (placePlayer=false일 때 현재 위치), focus:{x,z} (마당: 큰 나무), retreatTo:{x,z} (영역 쪽) }
+  start(arena, seed, opts = {}) {
+    if (seed !== undefined && seed !== null) this.env.rand = mulberry32(seed);
     this.clearProjectiles();
     this.arena = arena;
+    const mods = this.mods = opts.mods || {};
+    this.allowFlee = opts.allowFlee !== false;
+    this.retreatAt = opts.retreatAt || (mods.firstEncounter ? { hpRatio: T.tiger.firstRetreatHp, seconds: T.tiger.firstRetreatTime } : null);
+    this.focus = opts.focus || null;
+    this.retreatTo = opts.retreatTo || null;
     // 시작 자리가 바위 등에 겹치면 가까운 빈자리로 옮긴다
-    const ps = nearestFree(this.env, ...xz(arena.playerStart, arena.x, arena.z + arena.radius * 0.5), T.player.radius, {});
+    const pp = opts.playerPos ? [opts.playerPos.x, opts.playerPos.z] : xz(arena.playerStart, arena.x, arena.z + arena.radius * 0.5);
+    const ps = nearestFree(this.env, ...pp, T.player.radius, {});
     const ts = nearestFree(this.env, ...xz(arena.tigerStart, arena.x, arena.z - arena.radius * 0.4), T.tiger.radius + 0.1, {});
     this.player.reset(ps.x, ps.z);
     this.tiger.reset(ts.x, ts.z);
@@ -56,6 +65,7 @@ export class Battle {
     this.player.setAnim('idle', true);
     this.tiger.setAnim('prowl', true);
     this.tiger.decide = 2.0;
+    this.tiger.applyMods(mods);
     this.outcome = null; this.pending = null; this.pendingT = 0;
     this.time = 0; this.outsideT = 0; this.playerOutside = false;
     this.stats = { arrowHits: 0, hits: 0, damage: 0 };
@@ -83,7 +93,7 @@ export class Battle {
 
     // 영역 판정
     const pd = Math.hypot(pl.pos.x - a.x, pl.pos.z - a.z);
-    this.playerOutside = pd > a.radius + T.tiger.leash && tg.state !== 'retreat' && tg.alive;
+    this.playerOutside = this.allowFlee && pd > a.radius + T.tiger.leash && !tg.retreating && tg.alive;
     if (this.playerOutside && !this.pending) {
       this.outsideT += dt;
       if (this.outsideT >= T.tiger.escapeTime || pd > a.radius + T.tiger.escapeFar) this.finish('escaped', 0.2);

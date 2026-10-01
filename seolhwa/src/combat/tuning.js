@@ -46,6 +46,11 @@ export const T = {
     retreatAt: 0.2, retreatPause: 0.8, retreatSpeed: 3.4, retreatStagger: 0.6,
     leash: 1.0, escapeTime: 2.0, escapeFar: 5,
     deathDelay: 1.8,
+    // 이야기 모드(STORY §3.5)
+    firstSpeed: 1.15, firstDecide: 0.85, firstRetreatHp: 0.75, firstRetreatTime: 60, // 첫 조우: 25% 피해 또는 60초면 물러남
+    retreatRoar: 1.1,          // 'retreated' 전에 포효하는 시간
+    guardThreat: 5, guardForget: 3, treeStop: 2.4, // 마당: 플레이어가 위협하지 않으면 큰 나무 쪽으로
+    getup: 0.6,               // 기절(stunned)에서 일어나는 시간
   },
   feel: {
     hitStopLight: 60, hitStopCombo3: 85, hitStopHeavy: 115, hitStopBack: 120,

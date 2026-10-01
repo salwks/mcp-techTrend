@@ -10,7 +10,7 @@ const _o = { x: 0, z: 0 };
 const _c = { x: 0, z: 0 };
 const _tp = { vx: 0, vz: 1, d: 1 };
 
-const INTERRUPTIBLE = new Set(['prowl', 'stalk', 'home', 'backoff']);
+const INTERRUPTIBLE = new Set(['prowl', 'stalk', 'home', 'backoff', 'toTree']);
 
 export class TigerAI {
   constructor(battle) {
@@ -35,6 +35,7 @@ export class TigerAI {
     this.teleH = null;
     this.anim = '';
     this.retreatDir = { x: 0, z: -1 };
+    this.speedMul = 1; this.decideMul = 1; this.sinceHit = 99; this.retreatKind = 'repelled';
     this.stats = { pounces: 0, pounceHits: 0, swipes: 0, swipeHits: 0, baits: 0, backHits: 0, blocks: 0, roar: false, dmg: {}, hitState: {} };
     this.said = {};
   }
@@ -43,7 +44,8 @@ export class TigerAI {
   // 공격받을 수 있는가(도약 중엔 판정 없음)
   get targetable() { return this.state !== 'dead' && this.state !== 'gone' && !(this.state === 'pounce' && this.airborne); }
   get tm() { return this.enraged ? G.enrageTime : 1; }   // 예고·빈틈 시간 배율
-  get sm() { return this.enraged ? G.enrageSpeed : 1; }  // 이동 속도 배율
+  get sm() { return (this.enraged ? G.enrageSpeed : 1) * this.speedMul; }  // 이동 속도 배율
+  get retreating() { return this.state === 'retreat' || this.state === 'retreatStagger' || this.state === 'retreatRoar' || this.state === 'gone'; }
 
   // dur: 이 동작을 몇 초에 맞춰 재생할지(캐릭터 애니메이션 속도를 맞춘다)
   setAnim(name, restart = false, dur = 0) {
@@ -109,7 +111,7 @@ export class TigerAI {
     if (this.fury > 0) this.fury -= dt;
     if (this.poiseWait > 0) this.poiseWait -= dt; else this.poise = Math.min(G.poise, this.poise + 10 * dt);
     const tp = this.toPlayer();
-    const lim = b.arena.radius - 0.8;
+    const lim = b.arena.radius - 0.8 + (b.allowFlee ? 0 : 6); // 도망 불가면 영역 밖까지 쫓는다
 
     // 플레이어가 쓰러졌으면 배회만
     const playerDown = !pl.alive;
@@ -123,6 +125,14 @@ export class TigerAI {
       env.fx('roar', this.pos.x, this.pos.z, { radius: 3 });
     }
 
+    // 이야기 모드: 정해진 체력·시간이 되면 포효하고 영역 쪽으로 물러남('retreated')
+    this.sinceHit += dt;
+    const ra = b.retreatAt;
+    if (ra && this.alive && !this.retreating && !(this.state === 'pounce' && this.airborne) && this.state !== 'stunned'
+      && ((ra.hpRatio != null && this.hp <= G.hp * ra.hpRatio) || (ra.seconds != null && b.time >= ra.seconds))) {
+      this.startRetreat('retreated');
+    }
+
     // 포효 대기 중이면 끊을 수 있는 순간에 포효
     if (this.pendingRoar && (INTERRUPTIBLE.has(this.state) || this.state === 'hit' || this.state === 'eat' || this.state === 'toBait') && !b.playerOutside) {
       this.pendingRoar = false;
@@ -133,6 +143,7 @@ export class TigerAI {
       case 'prowl': {
         if (playerDown) { this.setAnim('idle'); break; }
         if (this.tryBait()) break;
+        if (this.wantsTree(tp)) { this.go('toTree'); break; }
         // 원을 그리며 거리 유지
         const tx = -tp.vz * this.orbit, tz = tp.vx * this.orbit;
         let rad = 0;
@@ -285,6 +296,37 @@ export class TigerAI {
         else { this.setHeading(tp.vx, tp.vz); this.setAnim('idle'); }
         break;
       }
+      case 'toTree': {
+        // 마당: 아이들이 있는 큰 나무 쪽으로(위협받지 않을 때). 아이들은 공격 대상이 아니다
+        if (playerDown || !this.wantsTree(tp)) { this.toProwl(0.5); break; }
+        if (this.tryBait()) break;
+        const f = b.focus, vx = f.x - this.pos.x, vz = f.z - this.pos.z, d = Math.hypot(vx, vz) || 1;
+        if (d > G.treeStop) {
+          const sp = G.prowlSpeed * this.sm;
+          if (!this.moveIn(vx / d * sp * dt, vz / d * sp * dt, b.arena.radius + 2)) { this.turnTo(vx, vz, dt); this.setAnim('climb_try'); break; }
+          this.turnTo(vx, vz, dt);
+          this.setAnim('prowl');
+        } else { this.turnTo(vx, vz, dt); this.setAnim('climb_try'); }
+        break;
+      }
+      case 'stunned': {
+        // 미끄러져 떨어져 무방비. 시간이 지나면 일어남
+        if (this.t >= this.stunFor) { this.go('getup'); this.setAnim('stagger', true, G.getup); }
+        break;
+      }
+      case 'getup': {
+        if (this.t >= G.getup) this.toProwl(0.6);
+        break;
+      }
+      case 'retreatRoar': {
+        if (!this.roarBlast && this.t >= G.retreatRoar * 0.45) {
+          this.roarBlast = true;
+          env.fx('roar', this.pos.x, this.pos.z, { radius: 4 });
+          env.shake(...F.shakeRoar);
+        }
+        if (this.t >= G.retreatRoar) { this.state = 'retreat'; this.t = G.retreatPause; }
+        break;
+      }
       case 'retreat': {
         if (this.t < G.retreatPause) { this.setAnim('stagger'); break; }
         const sp = G.retreatSpeed;
@@ -294,7 +336,7 @@ export class TigerAI {
         const a = b.arena;
         if (Math.hypot(this.pos.x - a.x, this.pos.z - a.z) > a.radius + 2 || this.t > 9) {
           this.go('gone');
-          b.finish('repelled');
+          b.finish(this.retreatKind);
         }
         break;
       }
@@ -320,7 +362,7 @@ export class TigerAI {
   // 배회 중 다음 행동 고르기
   choose(tp) {
     const b = this.b, r = b.rand();
-    this.decide = (G.decideMin + b.rand() * (G.decideMax - G.decideMin)) * (this.enraged ? G.enrageDecide : 1);
+    this.decide = (G.decideMin + b.rand() * (G.decideMax - G.decideMin)) * (this.enraged ? G.enrageDecide : 1) * this.decideMul;
     if (tp.d <= G.swipeRange) { if (r < 0.45) this.startSwipe(tp); else this.startBackoff(); return; }
     if (tp.d >= G.pounceMin && tp.d <= G.pounceMax && r < G.pounceChance) { this.startCrouch(tp); return; }
     if (r < 0.8) { this.go('stalk'); return; }
@@ -333,6 +375,23 @@ export class TigerAI {
     this.decide = decide * (this.enraged ? G.enrageDecide : 1) + this.b.rand() * 0.6;
     this.orbitR = G.prowlMin + this.b.rand() * (G.prowlMax - G.prowlMin);
     if (this.b.rand() < 0.35) this.orbit *= -1;
+  }
+
+  // 이야기 모드 설정(시작 시 한 번)
+  applyMods(m) {
+    if (m.hpRatio != null) this.hp = Math.max(1, G.hp * m.hpRatio);
+    if (m.enraged) { this.enraged = true; this.roared = true; }
+    if (m.firstEncounter) { this.speedMul = G.firstSpeed; this.decideMul = G.firstDecide; this.roared = true; }
+    if (m.stunned > 0) {
+      this.go('stunned'); this.stunFor = m.stunned; this.y = 0;
+      this.setAnim('slip', true);
+      this.b.env.say('호랑이가 미끄러져 떨어졌다! 지금이 기회다.', 2200);
+    }
+  }
+
+  // 마당 모드: 플레이어가 위협하지 않으면 나무 쪽으로 가려 한다
+  wantsTree(tp) {
+    return !!this.b.focus && tp.d > G.guardThreat && this.sinceHit > G.guardForget && !this.b.playerOutside;
   }
 
   // 뒤로 훌쩍 물러나 거리를 벌린다
@@ -446,6 +505,7 @@ export class TigerAI {
   receiveHit(dmg, opts) {
     const b = this.b, env = b.env;
     if (!this.targetable) return 0;
+    this.sinceHit = 0;
     let back = false;
     if (this.state === 'eat' && opts.kind === 'melee' && this.isBehind(opts.fromX, opts.fromZ)) {
       back = true; dmg *= G.backAttackMul; this.stats.backHits++;
@@ -478,11 +538,17 @@ export class TigerAI {
       b.finish('win', G.deathDelay);
       return dmg;
     }
-    if (this.state === 'retreat' || this.state === 'retreatStagger') {
-      if (opts.heavy) { this.state = 'retreatStagger'; this.t = 0; this.setAnim('stagger', true); }
+    if (this.retreating) {
+      if (opts.heavy && this.state !== 'retreatRoar') { this.state = 'retreatStagger'; this.t = 0; this.setAnim('stagger', true); }
       return dmg;
     }
-    if (this.hp <= G.hp * G.retreatAt) { this.startRetreat(); return dmg; }
+    const ra = b.retreatAt;
+    if (ra && ra.hpRatio != null && this.hp <= G.hp * ra.hpRatio && this.state !== 'stunned') { this.startRetreat('retreated'); return dmg; }
+    if (this.hp <= G.hp * G.retreatAt && this.state !== 'stunned') { this.startRetreat(); return dmg; }
+    if (this.state === 'stunned' || this.state === 'getup') { // 무방비: 반응 없음
+      if (!this.roared && this.hp <= G.hp * G.roarAt) this.pendingRoar = true;
+      return dmg;
+    }
     if (!this.roared && this.hp <= G.hp * G.roarAt) this.pendingRoar = true;
 
     const tp = this.toPlayer();
@@ -520,8 +586,9 @@ export class TigerAI {
     return dmg;
   }
 
-  startRetreat() {
+  startRetreat(kind = 'repelled') {
     const b = this.b, a = b.arena, pl = b.player;
+    this.retreatKind = kind;
     this.go('retreat');
     this.pendingRoar = false;
     if (this.bait) { this.bait.claimed = false; this.bait = null; }
@@ -532,6 +599,17 @@ export class TigerAI {
     vx = vx / l; vz = vz / l - 0.8;
     const l2 = Math.hypot(vx, vz) || 1;
     this.retreatDir.x = vx / l2; this.retreatDir.z = vz / l2;
+    if (kind === 'retreated') {
+      // 영역(산) 쪽으로. 영역 가운데가 주어지면 그쪽
+      const to = b.retreatTo;
+      if (to) { const dx = to.x - this.pos.x, dz = to.z - this.pos.z, d = Math.hypot(dx, dz) || 1; this.retreatDir.x = dx / d; this.retreatDir.z = dz / d; }
+      this.state = 'retreatRoar'; this.t = 0; this.roarBlast = false;
+      const tp = this.toPlayer();
+      this.setHeading(tp.vx, tp.vz);
+      this.setAnim('roar', true, G.retreatRoar);
+      b.env.say('호랑이가 "내 영역에서 나가라"는 듯 크게 포효하고 돌아선다…', 2600);
+      return;
+    }
     void a;
     b.env.say('호랑이가 비틀거리며 물러난다… 몰아붙이면 쓰러뜨릴 수도 있다.', 2600);
   }
