@@ -14,6 +14,7 @@ export class CameraRig {
     this.mode = 'zones'; // 'zones' | 'fixed'
     this.zoneName = null;
     this.override = null; // 전투 등에서 강제로 쓰는 카메라 값
+    this.focus = null;    // 컷신 초점 {x, z, y?}
     this.shakeT = 0;
     this.shakeDur = 0;
     this.shakePow = 0;
@@ -44,9 +45,11 @@ export class CameraRig {
       this.cur[key] += ((p[key] ?? DEFAULT[key]) - this.cur[key]) * k;
     }
     const ahead = { down: [0, 0.6], up: [0, -1], left: [-1, 0], right: [1, 0] }[facing] || [0, 0];
-    const tx = pos.x + ahead[0] * this.cur.lookAhead;
-    const tz = pos.z + ahead[1] * this.cur.lookAhead;
-    const ty = pos.y + 0.9;
+    // 컷신: this.focus = {x, z, y?} 가 있으면 그 지점을 비춘다
+    const f = this.focus;
+    const tx = f ? f.x : pos.x + ahead[0] * this.cur.lookAhead;
+    const tz = f ? f.z : pos.z + ahead[1] * this.cur.lookAhead;
+    const ty = f ? (f.y ?? this.world.heightAt(f.x, f.z)) + 0.9 : pos.y + 0.9;
     const kf = snap ? 1 : 1 - Math.exp(-dt * 4);
     this.target.x += (tx - this.target.x) * kf;
     this.target.y += (ty - this.target.y) * kf;

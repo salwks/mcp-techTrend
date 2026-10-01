@@ -180,9 +180,7 @@ export function makeScenes(S, api) {
       await S.say('순이', ['나무 위요? …돌이야, 누나 손 꼭 잡아.']);
       S.flag('kids_in_tree', true);
       S.setWorldState('kids_in_tree', true);
-      await S.fade(350, true);
-      api.placeKids();
-      await S.fade(350, false);
+      await api.kidsClimb();
       if (!S.is('oil_on_tree') && S.knows('K_CLIMB')) S.toast('범은 나무를 탄다. 이대로 괜찮을까…', 'info');
     } else {
       await S.say('순이', ['네. 문고리 걸고 있을게요.']);
@@ -271,7 +269,7 @@ export function makeScenes(S, api) {
     ]);
     if (go === 'fight') {
       await S.caption('나그네가 칼을 뽑아 들고 마당으로 뛰어들었다!', 2000);
-      return sc.resolve('A', await sc.yardFight('A', { disguised: true }));
+      return sc.resolve('A', await sc.yardFight('A', {}));
     }
     if (S.is('kids_in_tree')) return sc.treeBranch(tiger);
     return sc.doorBranch(tiger);
@@ -296,12 +294,12 @@ export function makeScenes(S, api) {
       try { S.ctx.rig?.shake?.(0.5, 450); } catch { /* */ }
       await S.wait(900);
       await S.caption('범이 등을 땅에 찧고 나뒹군다. 지금이다!', 1800);
-      return sc.resolve('B', await sc.yardFight('B', { stunned: 3, hpRatio: 0.75, disguised: true }));
+      return sc.resolve('B', await sc.yardFight('B', { stunned: 3, hpRatio: 0.75 }));
     }
     for (const k of ['suni', 'dori']) S.anim(k, 'cower');
     await S.say('순이', ['오지 마! 오지 마!']);
     await S.caption('범이 나무를 타고 오른다! 망설일 틈이 없다.', 2000);
-    return sc.resolve('A', await sc.yardFight('A', { disguised: true }));
+    return sc.resolve('A', await sc.yardFight('A', {}));
   };
 
   // 아이들이 집 안에 있을 때
@@ -312,8 +310,8 @@ export function makeScenes(S, api) {
       await S.caption('문고리가 덜컥 벗겨진다—', 1600);
       await S.caption('나그네가 먼저 마당으로 뛰어들었다. 아이들은 뒷문으로 빠져나가 큰 나무 위로 기어오른다.', 2800);
       S.flag('kids_fled_to_tree');
-      api.placeKids(true, true);
-      return sc.resolve('A', await sc.yardFight('A', { disguised: true }));
+      await api.kidsClimb();
+      return sc.resolve('A', await sc.yardFight('A', {}));
     }
     if (S.is('hand_test')) {
       await S.say('순이', ['우리 엄마면 손 좀 보여 주세요.']);
@@ -327,7 +325,7 @@ export function makeScenes(S, api) {
     await S.caption('문밖이 조용해진다. 낮게, 목 깊은 데서 그르렁 소리.', 2200);
     if (!S.is('bait_placed')) {
       await S.caption('범이 어깨의 저고리를 털어 내고 문짝을 할퀸다!', 2000);
-      return sc.resolve('A', await sc.yardFight('A', { disguised: true }));
+      return sc.resolve('A', await sc.yardFight('A', {}));
     }
     // 떡 냄새
     S.anim(tiger, 'sniff');
@@ -339,7 +337,7 @@ export function makeScenes(S, api) {
       await S.caption('범이 떡에 정신이 팔렸다. 등이 무방비다!', 2000);
       const c = await S.choice('', [{ id: 'ambush', label: '뒤에서 덮친다' }]);
       void c;
-      return sc.resolve('A', await sc.yardFight('A', { stunned: 1.5, disguised: true }));
+      return sc.resolve('A', await sc.yardFight('A', { stunned: 1.5 }));
     }
     return sc.lure(tiger);
   };
@@ -360,7 +358,7 @@ export function makeScenes(S, api) {
     await S.fade(700, false);
     await S.caption('고갯길 동쪽, 빈터 어귀. 마지막 떡 앞에서 범이 고개를 든다.', 2400);
     S.face(tiger, 'left');
-    S.anim(tiger, 'roar');
+    S.anim(tiger, 'idle');
     const c = await S.choice('', [
       { id: 'torch', label: '횃불을 치켜든다' },
       { id: 'fight', label: '칼을 뽑는다' },
@@ -369,7 +367,7 @@ export function makeScenes(S, api) {
       S.despawn('tiger_night');
       S.cameraFocus(null);
       S.cameraOverride(null);
-      const res = await sc.fightLoop(ter, 'A', { disguised: true }, { fade: true });
+      const res = await sc.fightLoop(ter, 'A', {}, { fade: true });
       return sc.resolve('A', res);
     }
     await S.caption('횃불이 타닥 튄다. 범이 귀를 젖히고 한 걸음, 또 한 걸음 물러선다.', 2600);
@@ -405,7 +403,7 @@ export function makeScenes(S, api) {
       losses++;
       S.flag('yard_losses', losses);
       await S.caption('눈앞이 캄캄해진다… 아이들의 울음소리가 귓가를 때린다.', 2400);
-      m = { disguised: m.disguised, hpRatio: m.hpRatio ?? 1 };
+      m = { hpRatio: m.hpRatio ?? 1 };
       if (losses >= 2 || S.is('hunter_watch')) {
         await S.say('포수 막쇠', ['버티시오! 내가 한 방 먹였소!']);
         m.hpRatio = Math.min(m.hpRatio, 0.55);
@@ -455,7 +453,9 @@ export function makeScenes(S, api) {
     await S.fade(1000, false);
     await S.caption('날이 밝았다.', 2000);
     S.take('jeogori');
-    await S.caption('나그네는 찢어진 저고리를 순이에게 건넸다.', 2200);
+    const scarf = S.has('headscarf');
+    if (scarf) S.take('headscarf');
+    await S.caption(scarf ? '나그네는 찢어진 저고리와 수건을 순이에게 건넸다.' : '나그네는 찢어진 저고리를 순이에게 건넸다.', 2200);
     await S.say('순이', ['…어머니 저고리예요.', '어머니는… 안 오시는 거죠?']);
     S.anim('dori', 'cry');
     await S.choice('', [

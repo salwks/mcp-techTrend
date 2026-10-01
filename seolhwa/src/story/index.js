@@ -87,6 +87,22 @@ export function createStory(ctx) {
       }
     });
   }
+  // 나무 오르기: climb(1.2초, 그림이 1.4m 올라감) → 횃대 자리로 올리고 perch
+  const CLIMB_RISE = 1.4;
+  async function kidsClimb() {
+    const ps = perches(S);
+    KIDS.forEach((id, i) => {
+      const a = S.actor(id);
+      if (!a) return;
+      const p = ps[i] || ps[0];
+      setVisible(id, true);
+      a.scripted = true;
+      S.place(id, { x: p.x, z: p.z, y: p.y - CLIMB_RISE });
+      S.anim(id, 'climb', { restart: true });
+    });
+    await S.wait(1200);
+    placeKids(false, true);
+  }
   function hideKids(on) {
     if (S.is('kids_in_tree') || S.is('kids_fled_to_tree')) return;
     KIDS.forEach((id) => setVisible(id, !on));
@@ -108,7 +124,7 @@ export function createStory(ctx) {
     restart();
   }
 
-  const api = { placeKids, hideKids, ensureMerchant, showEnding };
+  const api = { placeKids, hideKids, kidsClimb, ensureMerchant, showEnding };
   const scenes = makeScenes(S, api);
 
   // ---- 조사 대상 목록(프레임마다 불림 → 캐시) ----

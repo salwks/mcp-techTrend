@@ -176,7 +176,7 @@ async function kidsNight(S, who, scenes) {
   else await S.say('순이', ['오늘 밤에도 올까요… 그 목소리.']);
   for (;;) {
     const c = await S.choice('', [
-      { id: 'warn', label: warned ? '목소리에 속지 말라 이른다' : '아무에게도 문 열지 말라 이른다', when: !S.is('kids_warned') },
+      { id: 'warn', label: warned ? '목소리에 속지 말라 이른다' : '아무에게도 문 열지 말라 이른다', when: !S.is('kids_warned') && !(warned === 0 && S.is('warn_tried')) },
       { id: 'tree', label: '큰 나무 위로 피신시킨다', when: !S.is('kids_in_tree') },
       { id: 'house', label: '집 안으로 들여보낸다', when: S.is('kids_in_tree') },
       { id: 'bye', label: '문 걸고 기다려라.' },
