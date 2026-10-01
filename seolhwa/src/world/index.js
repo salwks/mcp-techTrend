@@ -10,6 +10,8 @@ import {
   choga, chogaInterior, giwa, jeongja, bigTree, well, jangdok, haystack, jangseung, torchPost, stoneWall, fence, stoneBridge, cairn, curvedRoof,
 } from './buildings.js';
 import { pine, fir, bush, rock, reeds, riceTuft, flowers } from './vegetation.js';
+import { buildStory } from './story.js';
+import { isClear } from './layout.js';
 
 export function buildWorld(scene) {
   const root = new THREE.Group();
@@ -144,7 +146,7 @@ export function buildWorld(scene) {
   }
 
   // ---- 짚가리, 허수아비 ----
-  for (const [x, z, s] of [[-12.5, 16, 1], [-22.3, 22, 0.9], [17, 26.5, 1.05], [-26.5, -5, 0.85]]) {
+  for (const [x, z, s] of [[-14.5, 17.5, 1], [-22.3, 22, 0.9], [17, 26.5, 1.05], [-26.5, -5, 0.85]]) {
     haystack(at(x, ground(x, z), z, x), rng(81 + x), s);
     circle(x, z, 1.2 * s);
   }
@@ -172,7 +174,7 @@ export function buildWorld(scene) {
       for (const [bw, bd, bx, bz] of [[w, 0.36, cx, p.minZ + 0.18], [w, 0.36, cx, p.maxZ - 0.18], [0.36, d, p.minX + 0.18, cz], [0.36, d, p.maxX - 0.18, cz]]) {
         ra('p', 'flat', paint(box(bw, 0.3, bd, bx, p.h + 0.08, bz), '#9ea266', '#7c7550', 0.05, rnd), 0);
       }
-      for (let x = p.minX + 0.75; x < p.maxX - 0.5; x += 0.7) for (let z = p.minZ + 0.75; z < p.maxZ - 0.5; z += 0.75) {
+      for (let x = p.minX + 0.75; x < p.maxX - 0.5; x += 0.85) for (let z = p.minZ + 0.75; z < p.maxZ - 0.5; z += 0.85) {
         riceTuft(ra, rnd, x + (rnd() - 0.5) * 0.1, p.h, z + (rnd() - 0.5) * 0.1);
       }
       boxC(p.minX + 0.15, p.maxX - 0.15, p.minZ + 0.15, p.maxZ - 0.15);
@@ -322,7 +324,7 @@ export function buildWorld(scene) {
       if (dzs < 5.2) continue;
       if (pathDist(px, pz) < 3.4) continue;
       if (inPaddy(px, pz, 1.2)) continue;
-      if (nearHouse(px, pz)) continue;
+      if (nearHouse(px, pz) || isClear(px, pz, 1)) continue;
       if (Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 2.5) continue;
       if (Math.hypot(px - PASS.x, pz - PASS.z) < 8.5) continue;
       if (Math.hypot(px - SEONANG.tree.x, pz - SEONANG.tree.z) < 3) continue;
@@ -348,7 +350,7 @@ export function buildWorld(scene) {
         occGroup('소나무', px, y, pz, (add) => (conifer ? fir : pine)(add, rng(seed), s));
         occTrees++;
       } else {
-        if ((Math.abs(px) > 46 || pz < -82) && trng() < 0.45) continue;
+        if ((Math.abs(px) > 46 || pz < -82) && trng() < 0.6) continue;
         (conifer ? fir : pine)(bgAt(px, y, pz, trng() * 6), rng(seed), s, inside && pathDist(px, pz) < 14 ? 0 : 1);
       }
       if (inside) circle(px, pz, 0.35 * s);
@@ -387,7 +389,7 @@ export function buildWorld(scene) {
     else if (pz < -21 && pd > 2.6 && pd < 6) s = 0.4 + rr() * 0.8;
     else if (pz < -21 && slope > 0.9 && pd > 3) s = 0.8 + rr() * 1.3;
     else continue;
-    if (inPaddy(px, pz, 1) || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.6 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 1) continue;
+    if (inPaddy(px, pz, 1) || nearHouse(px, pz) || isClear(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.6 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 1) continue;
     if (pz > -13 && Math.abs(px) < 28) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
     const y = ground(px, pz);
@@ -407,7 +409,7 @@ export function buildWorld(scene) {
     const pd = pathDist(px, pz);
     const y = ground(px, pz);
     if (dzs > 2.0 && dzs < 3.6 && Math.abs(px) > 3) { reeds(bgAt(px, y, pz, 0, true), br, 6); continue; }
-    if (inPaddy(px, pz, 1) || nearHouse(px, pz)) continue;
+    if (inPaddy(px, pz, 1) || nearHouse(px, pz) || isClear(px, pz)) continue;
     if (pz > -13 && Math.abs(px) < 27 && !(Math.abs(pz + 10.5) < 1.2)) continue;
     if (pd < 2.4 || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
     if (Math.abs(px) < 3 && pz > -22 && pz < -10) continue;
@@ -418,9 +420,9 @@ export function buildWorld(scene) {
   }
   // 풀포기(먹선 없음, 값싼 삼각뿔 셋)
   const gr = rng(555);
-  for (let i = 0; i < 750; i++) {
+  for (let i = 0; i < 420; i++) {
     const px = -46 + gr() * 92, pz = -84 + gr() * 116;
-    if (inPaddy(px, pz, 0.6) || nearHouse(px, pz, -1.5)) continue;
+    if (inPaddy(px, pz, 0.6) || nearHouse(px, pz, -1.5) || isClear(px, pz, -2)) continue;
     if (Math.abs(pz - streamZ(px)) < 2.6) continue;
     if (pathDist(px, pz) < 1.3) continue;
     if (pz > -13 && pz < 30 && Math.abs(px) < 27 && gr() < 0.55) continue;
@@ -438,18 +440,19 @@ export function buildWorld(scene) {
     const w = walkPts[Math.floor(br() * walkPts.length)];
     const ang = br() * Math.PI * 2, rad = 2.6 + br() * 3.5;
     const px = w[0] + Math.cos(ang) * rad, pz = w[1] + Math.sin(ang) * rad;
-    if (pathDist(px, pz) < 2.4 || nearHouse(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
+    if (pathDist(px, pz) < 2.4 || nearHouse(px, pz) || isClear(px, pz) || Math.hypot(px - PASS.x, pz - PASS.z) < 5.5 || Math.hypot(px - ARENA.x, pz - ARENA.z) < ARENA.r + 0.5) continue;
     bush(bgAt(px, ground(px, pz), pz, 0, true), br, 0.6 + br() * 0.5, pz < -22 && br() < 0.3);
   }
   // 마을 안 소소한 덤불(담 밑, 집 곁)
   for (const [x, z] of [[-4, -9.6], [-25, -9.8], [19, -9.3], [-11, 12.4], [12, 12.4], [4.5, -3], [-24, 12], [22, 5]]) bush(at(x, ground(x, z), z, 0, { small: true }), rng(Math.round(x * 17 + z)), 0.8);
 
   // ---- 호랑이의 영역(숲속 빈터) ----
-  let arena;
+  let arena, clawTreeSpot;
   {
     const A = ARENA, ar = rng(4242);
     const rimTree = (ang, rad, kind, claw) => {
       const x = A.x + Math.cos(ang) * rad, z = A.z + Math.sin(ang) * rad, y = ground(x, z);
+      if (claw) clawTreeSpot = { x: x + (A.x - x) / rad * 1.4, z: z + (A.z - z) / rad * 1.4 };
       occGroup(claw ? '발톱자국 나무' : '빈터 소나무', x, y, z, (add) => {
         if (kind === 'fir') fir(add, rng(Math.floor(ar() * 1e9)), 1.1);
         else pine(add, rng(Math.floor(ar() * 1e9)), 1.15);
@@ -524,6 +527,7 @@ export function buildWorld(scene) {
   }
 
   // 정적 묶음 올리기
+  const story = buildStory({ root, ground, at, occGroup, circle, boxC, lights, make, Batch, clawTreeSpot });
   for (const [key, c] of chunks) root.add(c.b.build(make, null, { name: `묶음 ${key}`, cast: !c.small }));
 
   // ---- 가파른 비탈·물 충돌(격자 → 상자 병합) ----
@@ -586,6 +590,12 @@ export function buildWorld(scene) {
       lines: ['어머니가 고개 너머 잔칫집에 일하러 가셨어요. 해 지기 전엔 오신댔는데…', '밤에 누가 문을 두드려도 열어 주지 말랬어요.'] },
     { id: 'suni', kind: 'child_girl', x: -24.3, z: -27.8, facing: 'right', wander: false, name: '순이',
       lines: ['어젯밤 문밖에서 어머니 목소리가 났는데… 목소리가 좀 이상했어요.', '오빠가 문고리를 꼭 잡고 있으래요.'] },
+    { id: 'jumo', kind: 'innkeeper', x: -6.6, z: 23.7, facing: 'down', wander: 0.8, name: '주모',
+      lines: ['어서 오시오. 국밥 한 그릇 하고 가시구려.', '고개 너머 떡장수 아낙 말이오? 사흘째 감감무소식이라오.'] },
+    { id: 'miller', kind: 'miller', x: -8.6, z: -22.0, facing: 'down', wander: 0.6, name: '방앗간 주인',
+      lines: ['밤새 밀가루 자루가 찢겨 있었소. 쥐 짓은 아니오.', '문 앞에 허연 발자국이 산 쪽으로 나 있더구려.'] },
+    { id: 'woodcutter', kind: 'woodcutter', x: 0.9, z: -23.4, facing: 'down', wander: 1.0, name: '나무꾼',
+      lines: ['해 지면 이 길로 안 다니오.', '어젯밤 산에서 여자 목소리가 아이들 이름을 부르더이다.'] },
     { id: 'tiger', kind: 'tiger', x: 11.2, z: -70.6, facing: 'left', wander: 0, name: '???', lines: [] },
   ];
 
@@ -594,7 +604,7 @@ export function buildWorld(scene) {
     { name: '느티나무 마을', minX: -45, maxX: 45, minZ: -13, maxZ: 30, pitch: 40, distance: 22, fov: 30 },
     { name: '개울 돌다리', minX: -12, maxX: 12, minZ: -22, maxZ: -11, pitch: 42, distance: 19 },
     { name: '솔숲 산길', minX: -35, maxX: 45, minZ: -63, maxZ: -22, pitch: 48, distance: 20 },
-    { name: '숲가 외딴 초가', minX: -30, maxX: -14, minZ: -38, maxZ: -24, pitch: 44, distance: 14 },
+    { name: '숲가 외딴 초가', minX: -31, maxX: -13, minZ: -38, maxZ: -19, pitch: 44, distance: 15 },
     { name: '호랑이의 영역', minX: ARENA.x - ARENA.r - 2, maxX: Math.min(44, ARENA.x + ARENA.r + 2), minZ: ARENA.z - ARENA.r - 2, maxZ: ARENA.z + ARENA.r + 2, pitch: 48, distance: 23, fov: 30 },
     { name: '고갯마루 서낭당', minX: -8, maxX: 24, minZ: -80, maxZ: -63, pitch: 27, distance: 22, fov: 34 },
   ];
@@ -608,6 +618,7 @@ export function buildWorld(scene) {
   // ---- 애니메이션 ----
   const tmp = ribbons.geo.attributes.position;
   function update(dt, time) {
+    story.update(dt, time);
     stream.tex.offset.x = -time * 0.045;
     stream.tex.offset.y = Math.sin(time * 0.6) * 0.01;
     const B = ribbons.base, P = tmp.array;
@@ -647,7 +658,7 @@ export function buildWorld(scene) {
   }
 
   const world = {
-    heightAt, colliders, spawn: { x: 0, z: 6 }, npcs, cameraZones, interiors: [interior], arenas: [arena], occluders, lights, labels, update,
+    heightAt, colliders, spawn: { x: 0, z: 6 }, npcs, cameraZones, interiors: [interior], arenas: [{ id: 'territory', ...arena }, story.arena], anchors: story.anchors, setState: story.setState, getState: story.getState, occluders, lights, labels, update,
     setNight, glowMaterials: glowMats, root,
     stats: { trees: treeCount, occTrees },
   };

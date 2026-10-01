@@ -379,8 +379,8 @@ export class Character {
 
   _advancePhase(dt) {
     const rig = this.rig, anim = this._animName(this.anim);
-    if (anim === 'walk' || anim === 'run' || anim === 'prowl') {
-      const def = rig.type === 'tiger' ? (anim === 'run' ? 5 : anim === 'prowl' ? 1.1 : 1.7) : anim === 'run' ? 4.6 : 2.2;
+    if (anim === 'walk' || anim === 'run' || anim === 'prowl' || anim === 'retreat') {
+      const def = rig.type === 'tiger' ? (anim === 'run' ? 5 : anim === 'prowl' ? 1.1 : anim === 'retreat' ? 3.4 : 1.7) : anim === 'run' ? 4.6 : 2.2;
       let sp = this._moveSpeed != null ? this._moveSpeed : this._measured > 0.3 ? this._measured : def;
       sp = Math.max(sp, def * 0.35);
       this.phase += (dt * sp) / strideOf(rig, anim);

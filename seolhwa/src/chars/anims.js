@@ -15,12 +15,18 @@ export const HUMAN_ANIMS = {
   charge: { dur: 0.6, loop: true }, heavy: { dur: 0.6 }, guard: { dur: 1.2, loop: true },
   dodge: { dur: 0.45 }, bow_draw: { dur: 1.0, loop: true }, bow_shoot: { dur: 0.35 }, throw: { dur: 0.45 },
   hit: { dur: 0.35 }, down: { dur: 0.6 }, getup: { dur: 0.7 }, dead: { dur: 0.9 },
+  // 3단계(이야기): 오누이 동작
+  cower: { dur: 0.8, loop: true }, cry: { dur: 1.0, loop: true }, climb: { dur: 1.2 }, perch: { dur: 2.4, loop: true }, hug: { dur: 2.0, loop: true },
 };
 export const TIGER_ANIMS = {
   idle: { dur: 2.6, loop: true }, walk: { dur: 1.15, loop: true }, run: { dur: 0.7, loop: true },
   prowl: { dur: 1.5, loop: true }, crouch: { dur: 0.8, loop: true }, pounce: { dur: 0.6 }, land: { dur: 0.5 },
   swipe: { dur: 0.75 }, roar: { dur: 1.4 }, hit: { dur: 0.3 }, stagger: { dur: 0.8 }, eat: { dur: 1.0, loop: true }, dead: { dur: 1.0 },
+  // 3단계(이야기)
+  knock: { dur: 1.2, loop: true }, climb_try: { dur: 1.4 }, slip: { dur: 1.8 }, sniff: { dur: 1.6, loop: true }, retreat: { dur: 0.8, loop: true },
 };
+/** climb 한 번에 몸이 올라가는 높이(m, 배율 적용 후). 끝나면 이야기 쪽에서 캐릭터를 그만큼 올리고 perch로. */
+export const CLIMB_RISE_M = 1.4;
 export const COMBAT_HUMAN = new Set(['attack1', 'attack2', 'attack3', 'charge', 'heavy', 'guard', 'dodge', 'bow_draw', 'bow_shoot', 'throw', 'hit', 'down', 'getup', 'dead']);
 
 // 기본값이 '숨김'인 부위(효과·교체용 이미지)
@@ -349,6 +355,8 @@ const TF = {
 };
 
 export function tigerCombatPose(view, anim, t, at, st = {}) {
+  const SP = tigerStoryPose(view, anim, t, at);
+  if (SP) return SP;
   const side = view === 'side';
   const info = TIGER_ANIMS[anim];
   if (!info) return null;
@@ -397,4 +405,118 @@ export function tigerCombatPose(view, anim, t, at, st = {}) {
     for (const n of ['head', 'head_roar']) add(P, n, 0, 1.6 * sin(t * 60), 1.2 * sin(t * 47));
   }
   return P;
+}
+
+
+// ---------------------------------------------------------------------------
+// 3단계(이야기) 동작 — 오누이
+// ---------------------------------------------------------------------------
+export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'perch', 'hug']);
+export function humanStoryPose(view, anim, t, at, rig) {
+  if (!STORY_HUMAN.has(anim)) return null;
+  const S = rig.S, k = S.hip / 80;
+  const side = view === 'side';
+  const tr = sin(t * 38) * 0.8 * k, sob = sin(t * 14);
+  let F;
+  if (anim === 'cower') {
+    F = side
+      ? { root: [0, tr, 46 * k], torso: [-0.55], head: [0.3, 0, 3 * k], leg2: [1.5], leg2_l: [-2.3], leg1: [1.35], leg1_l: [-2.25], arm2: [1.15], arm2_l: [1.25], arm1: [1.0], arm1_l: [1.2] }
+      : { root: [0, tr, 30 * k, 1.08, 0.82], leg1: [0.35, -2 * k, 0, 1, 0.6], leg1_l: [-0.5, 0, 0, 1, 0.7], leg2: [-0.35, 2 * k, 0, 1, 0.6], leg2_l: [0.5, 0, 0, 1, 0.7], arm1: [2.5], arm1_l: [1.5], arm2: [-2.5], arm2_l: [-1.5], head: [0, 0, 8 * k] };
+  } else if (anim === 'cry') {
+    F = side
+      ? { torso: [-0.1, 0, 0, 1, 1 + 0.02 * sob], head: [0.25 + 0.04 * sob, 0, 1.2 * sob * k], arm2: [1.9], arm2_l: [1.8], arm1: [1.7], arm1_l: [1.9] }
+      : { torso: [0, 0, 0, 1, 1 + 0.025 * sob], head: [0.04 * sin(t * 3), 0, (4 + 1.2 * sob) * k], arm1: [0.35], arm1_l: [-2.8], arm2: [-0.35], arm2_l: [2.8] };
+  } else if (anim === 'climb') {
+    const u = clamp(at / 1.2, 0, 1), c = sin(PI * 4 * u);
+    const rise = (CLIMB_RISE_M * rig.ppm) / rig.scale;
+    const up = -rise * EASE.io(u) - 3 * k * abs(c);
+    F = side
+      ? { root: [0, -6 * k, up], torso: [-0.25], head: [-0.2], arm2: [2.75 + 0.35 * c], arm2_l: [0.3 - 0.3 * c], arm1: [2.75 - 0.35 * c], arm1_l: [0.3 + 0.3 * c], leg2: [1.1 + 0.5 * c], leg2_l: [-1.7 - 0.2 * c], leg1: [1.1 - 0.5 * c], leg1_l: [-1.7 + 0.2 * c] }
+      : { root: [0, 0, up], arm1: [2.8 + 0.3 * c], arm1_l: [0.3], arm2: [-2.8 + 0.3 * c], arm2_l: [-0.3], leg1: [0.1, 0, -10 * k * max(0, c)], leg2: [-0.1, 0, -10 * k * max(0, -c)], head: [0, 0, -2 * k] };
+  } else if (anim === 'perch') {
+    const sw = sin(t * 2.6), sw2 = sin(t * 2.6 + 1.5);
+    F = side
+      ? { root: [0.05, 0, (S.hip - 4 * k)], torso: [0.04], leg2: [1.45], leg2_l: [-1.45 + 0.25 * sw], leg1: [1.4], leg1_l: [-1.4 + 0.25 * sw2], arm2: [-0.25], arm2_l: [0.1], arm1: [-0.2], head: [0.06 * sin(t * 0.5)] }
+      : { root: [0, 0, (S.hip - 4 * k)], leg1: [0, 0, -S.thigh * 0.95], leg1_l: [0.12 * sw], leg2: [0, 0, -S.thigh * 0.95], leg2_l: [0.12 * sw2], arm1: [0.45], arm1_l: [-0.2], arm2: [-0.45], arm2_l: [0.2], head: [0.05 * sin(t * 0.5)] };
+  } else {
+    const sway = sin(t * 1.6);
+    F = side
+      ? { root: [0.02 * sway, 0, 0.8 * sin(t * 3.2) * k], torso: [-0.12 + 0.03 * sway], head: [0.18], arm2: [1.35], arm2_l: [0.95], arm1: [1.25], arm1_l: [1.05] }
+      : { root: [0.02 * sway, 0, 0.8 * sin(t * 3.2) * k], head: [0.12], arm1: [-0.35, 0, 0, 1, 0.75], arm1_l: [-1.25], arm2: [0.35, 0, 0, 1, 0.75], arm2_l: [1.25] };
+  }
+  const P = kf(0, [[0, F]]);
+  return view === 'back' ? mirror(P) : P;
+}
+
+// ---------------------------------------------------------------------------
+// 3단계(이야기) 동작 — 호랑이
+// ---------------------------------------------------------------------------
+export function tigerStoryPose(view, anim, t, at) {
+  const side = view === 'side', back = view === 'back';
+  if (anim === 'knock') {
+    const kn = Math.pow(max(0, sin((t / 0.6) * PI * 2)), 3);
+    if (side) return kf(0, [[0, {
+      root: [0.95, -84, -106], hind1: [-1.1], hind1_l: [0.4], hind2: [-1.05], hind2_l: [0.4],
+      front1: [0.9], front1_l: [0.6], front2: [1.55 + 0.35 * kn], front2_l: [-0.5 + 0.45 * kn],
+      ...H(-0.85, 0, 0), ...TAIL(1.2, 0.1, -0.2, -0.3),
+    }]]);
+    if (back) return kf(0, [[0, { root: [0, 0, -55, 1, 1.35], front1: [2.7 - 0.3 * kn], front2: [-2.6], ...H(0, 0, -62), tail0: [-2.9], tail1: [0.3], tail2: [0.1], tail3: [0.1] }]]);
+    return kf(0, [[0, { root: [0, 0, -50, 1, 1.3], front1: [2.6], front1_l: [-0.6], front2: [-2.6 - 0.3 * kn], front2_l: [0.6], hind1: [0.1], hind2: [-0.1], ...H(0, 0, -40), ...TAIL(0.9, 0.3, 0, 0) }]]);
+  }
+  if (anim === 'sniff') {
+    const tw = sin(t * 9);
+    if (side) return kf(0, [[0, { root: [-0.05, 0, 10], front1: [-0.15], front1_l: [0.3], front2: [-0.1], front2_l: [0.25], ...H(-0.2 + 0.06 * sin(t * 2.2), -12 + 8 * sin(t * 1.3), 52 + 3 * tw), ...TAIL(0.4 + 0.1 * sin(t * 1.5), 0.2, -0.3, -0.3) }]]);
+    return kf(0, [[0, { root: [0, 0, 8, 1, 0.95], ...H(0.1 * sin(t * 1.3), 10 * sin(t * 1.3), (back ? 20 : 46) + 2 * tw) }]]);
+  }
+  const u = (d) => clamp(at / d, 0, 1);
+  if (anim === 'climb_try') {
+    const REAR = { hind1: [-1.25], hind1_l: [0.45], hind2: [-1.2], hind2_l: [0.45], ...H(-1.0, 0, 0), ...TAIL(1.3, 0.2, -0.2, -0.3) };
+    if (side) return kf(u(1.4), [
+      [0, {}],
+      [0.22, { ...REAR, root: [1.15, -90, -125], front1: [1.6], front1_l: [0.3], front2: [1.9], front2_l: [0.2] }, 'out'],
+      [0.4, { ...REAR, root: [1.18, -92, -132], front1: [1.4], front1_l: [0.4], front2: [2.5], front2_l: [-0.4] }, 'snap'],
+      [0.58, { ...REAR, root: [1.18, -92, -138], front1: [2.5], front1_l: [-0.4], front2: [1.5], front2_l: [0.4] }, 'snap'],
+      [0.76, { ...REAR, root: [1.2, -92, -141], front1: [1.5], front1_l: [0.4], front2: [2.6], front2_l: [-0.5] }, 'snap'],
+      [0.9, { ...REAR, root: [1.15, -90, -126], front1: [1.9], front1_l: [0.1], front2: [2.0], front2_l: [0.1] }, 'in'],
+      [1, { ...REAR, root: [1.14, -90, -122], front1: [1.8], front1_l: [0.2], front2: [1.9], front2_l: [0.2] }, 'out'],
+    ]);
+    const a = (x) => (back ? { front1: [x], front2: [-x - 0.2] } : { front1: [x], front1_l: [-0.5], front2: [-x - 0.2], front2_l: [0.5] });
+    return kf(u(1.4), [
+      [0, {}],
+      [0.22, { root: [0, 0, -70, 1, 1.4], ...a(2.3), ...H(0, 0, back ? -70 : -50) }, 'out'],
+      [0.4, { root: [0, 0, -76, 1, 1.42], ...a(2.8), ...H(0, 0, back ? -74 : -54) }, 'snap'],
+      [0.58, { root: [0, 0, -80, 1, 1.43], ...a(2.2), ...H(0, 0, back ? -76 : -56) }, 'snap'],
+      [0.76, { root: [0, 0, -82, 1, 1.44], ...a(2.9), ...H(0, 0, back ? -78 : -58) }, 'snap'],
+      [1, { root: [0, 0, -70, 1, 1.38], ...a(2.4), ...H(0, 0, back ? -70 : -50) }, 'in'],
+    ]);
+  }
+  if (anim === 'slip') {
+    if (side) {
+      const HIGH = { root: [1.2, -90, -150], hind1: [-1.3], hind1_l: [0.5], hind2: [-1.25], hind2_l: [0.5], front1: [2.0], front1_l: [0.2], front2: [2.4], front2_l: [-0.2], ...H(-1.05, 0, 0), ...TAIL(1.3, 0.2, -0.2, -0.3) };
+      const BACK = (sy, y) => ({ root: [3.14, -10, y, 1 / sy, sy], front1: [0.9], front1_l: [0.6], front2: [1.3], front2_l: [0.4], hind1: [-0.4], hind2: [0.3], ...H(-2.5, 0, 0, 'dead'), ...TAIL(0.4, 0.3, -0.2, -0.3) });
+      return kf(u(1.8), [
+        [0, HIGH],
+        // 미끄러지기 시작: 앞발이 허둥지둥, 눈이 휘둥그레
+        [0.18, { ...HIGH, root: [1.25, -90, -140], front1: [2.6], front2: [2.9], hind1: [-1.0], ...H(-1.1, 0, -4, 'roar') }, 'out'],
+        [0.32, { ...HIGH, root: [1.35, -80, -100], front1: [3.1], front2: [2.4], hind1: [-0.6], hind2: [-0.9], ...H(-1.2, 0, -6, 'roar') }, 'in'],
+        // 뒤로 넘어가며
+        [0.48, { root: [2.3, -40, -60], front1: [1.0], front2: [2.0], hind1: [0.4], hind2: [-0.6], ...H(-1.4, 0, 0, 'roar'), ...TAIL(-0.5, 0.4, 0.3, 0.3) }, 'in'],
+        // 쿵! 등으로 떨어짐(납작)
+        [0.58, { ...BACK(0.82, 32), fx_burst: [0, 0, 70, 1.5, 1.2, 1] }, 'in'],
+        [0.66, { ...BACK(1.06, 6), fx_burst: [0, 0, 70, 1.8, 1.4, 1] }, 'out'],
+        [0.76, { ...BACK(0.97, 20), fx_burst: [0, 0, 70, 2, 1.5, 0] }, 'io'],
+        [1, { ...BACK(1, 16), front1: [0.6], front2: [0.9], hind1: [-0.3], hind2: [0.1] }, 'io'],
+      ]);
+    }
+    const HIGH = { root: [0, 0, -80, 1, 1.42], front1: [2.4], front2: [-2.6], ...H(0, 0, back ? -76 : -56) };
+    return kf(u(1.8), [
+      [0, HIGH],
+      [0.3, { ...HIGH, root: [0.15, 0, -50, 1, 1.3], ...H(0, 0, back ? -60 : -44, 'roar') }, 'in'],
+      [0.48, { root: [1.6, 0, -10], front1: [1.2], front2: [-1.6], ...H(0, 0, 0, 'roar') }, 'in'],
+      [0.58, { root: [3.14, 0, 40, 1.15, 0.8], front1: [0.6], front2: [-0.6], ...H(0, 0, 0, 'dead'), fx_burst: [0, 0, 60, 1.5, 1.2, 1] }, 'in'],
+      [0.66, { root: [3.14, 0, 28, 0.95, 1.05], front1: [0.8], front2: [-0.8], ...H(0, 0, 0, 'dead'), fx_burst: [0, 0, 60, 1.8, 1.4, 1] }, 'out'],
+      [1, { root: [3.14, 0, 36], front1: [0.5], front2: [-0.5], ...H(0, 0, 0, 'dead') }, 'io'],
+    ]);
+  }
+  return null;
 }

@@ -26,7 +26,8 @@ export const WATER_Y = -0.72;
 
 // 개울 중심선
 export function streamZ(x) {
-  return -16 + 1.4 * Math.sin(x * 0.085) + 0.6 * Math.sin(x * 0.21);
+  // 외딴집 마당 앞에서 남쪽으로 살짝 휘어 마당을 넓힌다
+  return -16 + 1.4 * Math.sin(x * 0.085) + 0.6 * Math.sin(x * 0.21) + 1.8 * Math.exp(-(((x + 22) / 7) ** 2));
 }
 
 // 논(사각형, 높이). 서쪽은 계단식 다랑논
@@ -80,7 +81,7 @@ export const INN = { x: -8, z: 20, w: 6, d: 4 };
 export const MILL = { x: -12, z: -23.8, w: 4.6, d: 3.4, pad: 0.8 };
 export const BARN = { x: 23.5, z: 8.5, w: 4.2, d: 3 };
 export const BIG_TREE = { x: -26.2, z: -25.6 };
-export const YARD = { x: -22, z: -25, r: 7.5, pad: 1.75 };
+export const YARD = { x: -21.8, z: -25.2, r: 7.4, pad: 1.75 };
 // 나무·바위를 비워 둘 곳
 export const CLEAR = [
   { x: YARD.x, z: YARD.z, r: YARD.r + 1.5 },

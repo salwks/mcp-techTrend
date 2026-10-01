@@ -154,7 +154,7 @@ export function choga(add, o) {
   // 초가 지붕: 납작한 타원 돔 + 두툼한 이엉 가장자리 + 용마름
   const th = 1.12, X = W / 2 + 0.75, Z = D / 2 + 0.8, Hh = 1.35 + (o.hump || 0);
   const Ry = Hh / (1 - Math.cos(th)), eave = top + 0.12;
-  const dome = new THREE.SphereGeometry(1, 18, 7, 0, Math.PI * 2, 0, th);
+  const dome = new THREE.SphereGeometry(1, 15, 6, 0, Math.PI * 2, 0, th);
   xf(dome, 0, eave - Ry * Math.cos(th), 0, 0, 0, 0, X / Math.sin(th), Ry, Z / Math.sin(th));
   add('roof', 'thatch', paint(dome, '#e0cc98', '#a18a5e', 0.05, rnd), 0.05);
   const lip = new THREE.CylinderGeometry(1, 1.02, 0.34, 18, 1);
