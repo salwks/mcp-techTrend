@@ -27,7 +27,7 @@ button:disabled{opacity:.6}
 <main>
 <h1>Daily <span>AI</span> News</h1>
 <p>지난 24시간의 AI 뉴스를 매일 아침 전달합니다.</p>
-<div class="limit" id="limit">limit -/300</div>
+<div class="limit" id="limit">limit -/100</div>
 
 <form id="subscribe-form">
 <label class="hp">Website<input id="website" tabindex="-1" autocomplete="off"></label>
@@ -46,7 +46,10 @@ async function refreshCount(){
   try{
     const r=await fetch(countEndpoint,{cache:"no-store"});
     const d=await r.json();
-    if(r.ok && Number.isFinite(d.count)) document.getElementById("limit").textContent="limit "+d.count+"/300";
+    if(r.ok && Number.isFinite(d.count)){
+      const limit=Number.isFinite(d.limit)?d.limit:100;
+      document.getElementById("limit").textContent="limit "+d.count+"/"+limit;
+    }
   }catch(e){}
 }
 refreshCount();
@@ -60,6 +63,9 @@ form.addEventListener("submit",async e=>{
   try{
     const r=await fetch(subscribeEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.value.trim(),website:website.value})});
     const d=await r.json().catch(()=>({}));
+    if(d.error==="limit_reached"){
+      status.classList.add("err");status.textContent="현재 구독 정원이 마감되었습니다.";return;
+    }
     if(!r.ok||d.error)throw new Error();
     status.classList.add("ok");status.textContent="구독되었습니다.";email.value="";consent.checked=false;await refreshCount();
   }catch(err){status.classList.add("err");status.textContent="등록 중 문제가 발생했습니다."}
