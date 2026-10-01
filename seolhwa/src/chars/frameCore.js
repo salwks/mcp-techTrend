@@ -18,9 +18,10 @@ const PAGE = 1024;          // 페이지 텍스처 크기
 const MARGIN = 5;           // halo가 번질 투명 여백
 /** 해상도 단계: 화면상 1m(배율 적용 후)당 프레임 픽셀 */
 export const TIERS = {
-  high: { player: 118, tiger: 104 },   // 데스크톱
-  medium: { player: 80, tiger: 70 },   // 휴대폰·작은 화면
-}; // 프레임 해상도: 화면상 1m(배율 적용 후)당 픽셀
+  high: { player: 116, tiger: 98, once: 0.78 },   // 데스크톱
+  medium: { player: 80, tiger: 68, once: 0.85 },  // 휴대폰·작은 화면
+};
+// once: 1회성 동작(공격·도약·넘어짐 등 빠르게 지나가는 그림)은 이 배율로 조금 낮게 굽는다 — 움직임에 묻혀 안 보이고 메모리는 40% 절약 // 프레임 해상도: 화면상 1m(배율 적용 후)당 픽셀
 const BODY_SPRINGS = {
   human: { skirt: [90, 10], braid: [55, 6], pack: [120, 12], head: [260, 26], arm1_l: [170, 16], arm2_l: [170, 16] },
   tiger: { tail0: [80, 9], tail1: [65, 7], tail2: [52, 5.5], tail3: [42, 4.5], head: [210, 22] },
@@ -312,6 +313,30 @@ function chainPath(pts, lens) {
 // ---------------------------------------------------------------------------
 // 종류별 프레임 은행
 // ---------------------------------------------------------------------------
+
+export const clipKey = (view, anim, armed, disg) => `${view}|${anim}${armed ? ':a' : ''}${disg ? ':d' : ''}`;
+
+/** 로딩 중에 미리 굽는 동작(전투 + 이야기에 꼭 필요한 것). 나머지는 처음 쓰일 때 */
+export function criticalKeys(kind) {
+  const views = ['side', 'front', 'back'];
+  const list = kind === 'player'
+    ? ['idle', 'walk', 'run', 'idle:a', 'walk:a', 'run:a', 'attack1', 'attack2', 'attack3', 'dodge', 'guard', 'charge', 'heavy', 'hit', 'down', 'getup', 'dead', 'bow_draw', 'bow_shoot', 'throw']
+    : ['idle', 'walk', 'prowl', 'crouch', 'pounce', 'land', 'swipe', 'roar', 'hit', 'stagger', 'eat', 'dead', 'retreat'];
+  return expandKeys(kind, list);
+}
+/** 변장 장면(밤 외딴집)에 쓰는 것: setVariant('disguised') 때 뒤에서 굽는다 */
+export const DISGUISE_ANIMS = ['idle:d', 'walk:d', 'knock:d', 'sniff:d', 'climb_try:d', 'slip:d', 'retreat:d', 'eat:d'];
+export function expandKeys(kind, list) {
+  const views = ['side', 'front', 'back'];
+  const out = [];
+  for (const a of list) for (const v of views) {
+    const [anim] = a.split(':');
+    const k = resolveView(kind, v, anim) + '|' + a;
+    if (!out.includes(k)) out.push(k);
+  }
+  return out;
+}
+
 export class BakeBank {
   constructor(kind, tier = 'high') {
     this.tier = tier;
@@ -487,13 +512,15 @@ export class BakeBank {
     return out;
   }
   _drawFrame(c, s, idx) {
-    const sig = this._sig(c, s);
+    const cs = c.spec.kind === 'once' ? TIERS[this.tier].once : 1;
+    this.kc = this.k * cs; this.fppmc = this.fppm * cs;
+    const sig = this._sig(c, s) + '@' + cs;
     const dup = this.sigs.get(sig);
     if (dup) return dup;   // 같은 그림은 한 번만(정지·반복 구간, 시작·끝 자세)
     this.uniqueCount = (this.uniqueCount || 0) + 1;
     if (!this.fp) this.fp = new FramePainter();
     const fp = this.fp;
-    fp.begin(this.k, (idx + 1) * 7919 + c.key.length * 131);
+    fp.begin(this.kc, (idx + 1) * 7919 + c.key.length * 131);
     if (this.human) this._drawHuman(fp, c, s);
     else this._drawTiger(fp, c, s);
     // 그린 영역 잘라 페이지에 싣기
@@ -505,7 +532,7 @@ export class BakeBank {
     const r = this._alloc(w, h);
     r.page.g.drawImage(fp.cv, x0, y0, w, h, r.x + MARGIN, r.y + MARGIN, w, h);
     if (this._touched) this._touched.add(r.page.index);
-    const inv = 1 / this.fppm;
+    const inv = 1 / this.fppmc;
     // 사각형(여백 포함) — 발 중심 기준 m, y는 위가 +
     const fx0 = (x0 - MARGIN - TOX) * inv, fx1 = (x1 + MARGIN - TOX) * inv;
     const fy0 = -(y1 + MARGIN - TOY) * inv, fy1 = -(y0 - MARGIN - TOY) * inv;
