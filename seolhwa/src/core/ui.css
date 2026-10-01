@@ -189,3 +189,7 @@ body.in-combat .prompt, body.in-combat .place { display: none; }
 .l-seal { font: 700 22px var(--display); letter-spacing: 0.35em; writing-mode: vertical-rl; color: var(--hanji); background: var(--seal);
   padding: 14px 9px; border-radius: 3px; }
 .l-text { font: 16px var(--display); color: var(--ink-soft); letter-spacing: 0.15em; }
+
+/* 장면 전환 페이드 */
+.fade { position: absolute; inset: 0; background: #0d0b08; opacity: 0; pointer-events: none; transition: opacity .6s ease; z-index: 15; }
+.fade.on { opacity: 1; }

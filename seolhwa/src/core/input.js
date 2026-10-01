@@ -5,7 +5,7 @@ const KEYS = {
   ShiftLeft: 'run', ShiftRight: 'run',
   KeyE: 'act', Space: 'act', Enter: 'act', KeyZ: 'act',
   Tab: 'panel', KeyN: 'time', Escape: 'cancel', KeyX: 'cancel',
-  KeyJ: 'attack', KeyK: 'dodge', KeyL: 'guard', KeyI: 'bow', KeyU: 'item',
+  KeyJ: 'attack', KeyK: 'dodge', KeyL: 'guard', KeyI: 'bow', KeyU: 'item', KeyR: 'journal',
 };
 
 export class Input {

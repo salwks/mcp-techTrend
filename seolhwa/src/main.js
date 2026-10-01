@@ -26,11 +26,13 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 600);
 
-const [worldMod, charMod, fxMod, combatMod] = await Promise.all([
+const [worldMod, charMod, fxMod, combatMod, storyMod, uiMod] = await Promise.all([
   load('./world/index.js', 'world'),
   load('./chars/index.js', 'chars'),
   load('./fx/index.js', 'fx'),
   load('./combat/index.js', 'combat'),
+  load('./story/index.js', 'story'),
+  load('./ui/index.js', 'ui'),
 ]);
 
 // 캐릭터 그림(컷아웃 부위·프레임 그림)을 미리 구워 첫 동작에서 멈칫하지 않게 한다
@@ -189,31 +191,99 @@ if (combat) {
     { label: '싸움터로 이동', onClick: () => { const a = world.arenas[0]; teleport({ x: a.playerStart.x, z: a.playerStart.z + 6 }); } },
   ]);
 }
+let combatArena = null;
+let inCombatUI = false;
+if (combat) {
+  const origStart = combat.start.bind(combat);
+  combat.start = (arena, opts) => { combatArena = arena; return origStart(arena, opts); };
+}
+function arenaAllowed(arena) {
+  if (story && story.allowArena) { try { return !!story.allowArena(arena); } catch { return false; } }
+  return arena === world.arenas[0];
+}
 function updateCombat(dt) {
   if (!combat) return false;
-  const arena = world.arenas[0];
-  const inside = Math.hypot(player.pos.x - arena.x, player.pos.z - arena.z) < arena.radius - 1;
   arenaCooldown = Math.max(0, arenaCooldown - dt);
-  if (!combat.active && inside && arenaCooldown <= 0 && !hud.resultOpen && !dialog.open) {
-    combat.start(arena);
-    hud.combatMode(true);
-    input.setCombat(true);
-    rig.override = arena.camera || null;
-    if (npcTiger) npcTiger.char.object3d.visible = false;
+  if (!combat.active && arenaCooldown <= 0 && !hud.resultOpen && !dialog.open && !(story && story.busy) && !(ui && ui.isModal)) {
+    for (const arena of world.arenas) {
+      const inside = Math.hypot(player.pos.x - arena.x, player.pos.z - arena.z) < arena.radius - 1;
+      if (inside && arenaAllowed(arena)) { combat.start(arena); break; }
+    }
   }
   if (combat.active) {
+    if (!inCombatUI) {
+      inCombatUI = true;
+      hud.combatMode(true);
+      input.setCombat(true);
+      rig.override = (combatArena && combatArena.camera) || null;
+      if (npcTiger) npcTiger.char.object3d.visible = false;
+    }
     try { combat.update(dt); } catch (err) { console.error('[설화록] combat.update 오류', err); combat.active = false; }
     hud.tick(dt);
     if (!combat.active) arenaCooldown = 1.5;
     return true;
   }
-  if (hud.el && !hud.el.hidden && !hud.resultOpen) {
+  if (inCombatUI && !hud.resultOpen) {
+    inCombatUI = false;
     hud.combatMode(false);
     input.setCombat(false);
     rig.override = null;
-    if (npcTiger) npcTiger.char.object3d.visible = true;
+    if (npcTiger && !(story && story.hideIdleTiger)) npcTiger.char.object3d.visible = true;
   }
   return hud.resultOpen;
+}
+
+// ---- 이야기·UI ----
+let ui = null;
+try { ui = uiMod ? uiMod.createUI(hudRoot) : null; } catch (err) { console.error('[설화록] createUI 오류', err); ui = null; }
+const fadeEl = document.createElement('div');
+fadeEl.className = 'fade';
+hudRoot.appendChild(fadeEl);
+const waitMs = (ms) => new Promise((r) => setTimeout(r, ms));
+const npcById = {};
+for (const n of npcs) if (n.data && n.data.id) npcById[n.data.id] = n;
+let story = null;
+if (storyMod) {
+  try {
+    story = storyMod.createStory({
+      scene, world, camera, rig, fx, hud, ui, input, combat, player, npcs: npcById, makeChar,
+      say: (name, lines) => new Promise((resolve) => dialog.show(name, Array.isArray(lines) ? lines : [lines], resolve)),
+      setTime: (h) => { fx.setTime(h); panel.syncTime(); },
+      getTime: () => fx.getTime(),
+      fade: (ms = 600, toBlack = true) => new Promise((resolve) => {
+        fadeEl.style.transitionDuration = `${ms}ms`;
+        fadeEl.classList.toggle('on', toBlack);
+        setTimeout(resolve, ms);
+      }),
+      teleport: (p) => teleport(p),
+      wait: waitMs,
+      setWorldState: (k, v) => { try { world.setState?.(k, v); } catch (err) { console.error('[설화록] setState 오류', k, err); } },
+    });
+  } catch (err) { console.error('[설화록] createStory 오류', err); story = null; }
+}
+if (story) {
+  panel.addSection('사건', [
+    { label: '사건 처음부터', onClick: () => { try { story.restart(); } catch (err) { console.error(err); } } },
+    { label: '사건 기록 열기 (R)', onClick: () => ui && ui.journalToggle(() => story.journal()) },
+  ]);
+}
+
+// 조사·대화 대상: 이야기 모듈이 있으면 그쪽 목록, 없으면 NPC 대화
+function findStoryTarget() {
+  let list;
+  try { list = story.interactTargets() || []; } catch { return null; }
+  const dir = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] }[player.facing];
+  let best = null, bestScore = Infinity;
+  for (const t of list) {
+    const dx = t.x - player.pos.x, dz = t.z - player.pos.z;
+    const d = Math.hypot(dx, dz);
+    const r = t.radius ?? 1.8;
+    if (d > r) continue;
+    const front = (dx * dir[0] + dz * dir[1]) / (d || 1);
+    const score = d - front * 0.6;
+    if (score < bestScore) { best = t; bestScore = score; }
+  }
+  return best;
 }
 
 function currentInterior() {
@@ -246,12 +316,32 @@ function frame() {
   if (input.pressed('panel')) panel.toggle();
   if (input.pressed('time')) { fx.setTime((Math.floor(fx.getTime() / 6) * 6 + 6) % 24); panel.syncTime(); }
 
+  if (input.pressed('journal') && ui && story && !dialog.open) ui.journalToggle(() => story.journal());
+  if (story) { try { story.update(dt); } catch (err) { console.error('[설화록] story.update 오류', err); } }
   const fighting = updateCombat(dt);
+  const modal = ui && ui.isModal;
   if (fighting) {
     talkTarget = null;
   } else if (dialog.open) {
     if (input.pressed('act') || input.pressed('cancel')) dialog.advance();
-    player.char.setAnim('idle');
+    if (!(story && story.busy)) player.char.setAnim('idle');
+  } else if (modal || (story && story.busy)) {
+    talkTarget = null;
+    if (!(story && story.busy)) player.char.setAnim('idle');
+  } else if (story) {
+    const mv = input.moveVector();
+    const speed = playerSpeed(input.running()) * (mv.mag ?? 1);
+    const moved = player.step(dt, mv.x, mv.z, speed, actors);
+    player.char.setAnim(moved ? (input.running() ? 'run' : 'walk') : 'idle');
+    talkTarget = findStoryTarget();
+    if (talkTarget && input.pressed('act')) {
+      const t = talkTarget;
+      const n = npcById[t.id];
+      if (n) { n.faceToward(player.pos.x, player.pos.z); n.talking = true; }
+      player.faceToward(t.x, t.z);
+      Promise.resolve(story.interact(t.id)).catch((err) => console.error('[설화록] interact 오류', err))
+        .finally(() => { if (n) n.talking = false; });
+    }
   } else {
     const mv = input.moveVector();
     const speed = playerSpeed(input.running()) * (mv.mag ?? 1);
@@ -268,9 +358,13 @@ function frame() {
     }
   }
   prompt.hidden = !(talkTarget && !dialog.open);
-  if (!prompt.hidden) prompt.textContent = `${talkTarget.data.name || ''} · 대화`;
+  if (!prompt.hidden) {
+    const label = talkTarget.data ? `${talkTarget.data.name || ''} · 대화` : (talkTarget.label || '조사');
+    if (prompt.textContent !== label) prompt.textContent = label;
+  }
 
   for (const n of npcs) {
+    if (n.scripted) continue; // 이야기가 직접 움직이는 중
     if (!n.talking && !dialog.open && Math.hypot(n.pos.x - player.pos.x, n.pos.z - player.pos.z) < 2.4) {
       n.faceToward(player.pos.x, player.pos.z);
       n.char.setAnim('idle');
@@ -304,6 +398,6 @@ function frame() {
   requestAnimationFrame(frame);
 }
 
-window.__seolhwa = { THREE, scene, camera, renderer, world, fx, player, npcs, rig, teleport, warps, panel, get combat() { return combat; }, hud, input, setRenderStyle, allChars };
+window.__seolhwa = { THREE, scene, camera, renderer, world, fx, player, npcs, rig, teleport, warps, panel, get combat() { return combat; }, get story() { return story; }, get ui() { return ui; }, hud, input, setRenderStyle, allChars, npcById, dialog };
 requestAnimationFrame(frame);
 document.body.classList.add('ready');
