@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-10-01T00:38:18.175778Z",
+  "generated_at": "2026-10-01T01:37:37.748413Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 7,
-  "pending_count": 7,
-  "observed_total_count": 161,
+  "archive_count": 8,
+  "pending_count": 8,
+  "observed_total_count": 162,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,38 @@
   ],
   "posts": [
     {
+      "post_id": "3997980532558168440",
+      "published_at": "2026-10-01T01:00:40Z",
+      "text": "1년 전 Nano Banana가 보여준 이미지 편집 능력에 충격받았는데, 이제 그 수준의 이미지 모델이 오픈 웨이트로 풀리는 시대가 오고 있습니다.\n\nIdeogram 4.5는 같은 이미지를 여러 번 수정해도 원래 구도와 제품 형태를 유지하는 멀티턴 편집에 집중했습니다.\n\n제품은 그대로 두고 색상→조명→문구를 차례대로 바꾸거나, 사진의 흠집 제거→컬러 복원→화질 개선을 단계별로 진행할 수 있습니다.\n\n현재 Ideogram과 API에서 사용할 수 있으며 오픈 웨이트도 곧 공개될 예정입니다.\n\n이미지 생성 모델의 성능 격차가 정말 빠르게 줄어들고 있습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dd7rhy2DoF4",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQNObB13f7_xu0MsU-q-QgfM-nJ7bpE6_aDeBFNPQoO9RX-dMwLpkIUzTNm9aJLmPZotQyKzki_k_pFMDv2dPvcT9IFeIkKBsoMU9as.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=DJxMi23MQqoQ7kNvwGlqexf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODk0Mzk0NTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=c13b5357d5d5f161&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MUZBOTdENjg5NEU0NEYzQjlCRDhDNzREMkQ0RTgzQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJDRTQzQzQzQzZCMTQ3QTI5MEU5MzU3RTVBNTk0RjgwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAlonDmNP0PxUCKAJDMywXQEeqn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MkQ1Exxq_UpNXkyaKwYFEw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNLCLkav_AVaomuxMoCC1CzNJfVFxpomTuQAlELlbO0eA&oe=6ABF913A"
+      ],
+      "engagement": {
+        "likes": 38,
+        "replies": 1,
+        "reposts": 6,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-10-01T01:37:37.748413Z",
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
+    },
+    {
       "post_id": "3997950228107757690",
       "published_at": "2026-10-01T00:00:28Z",
       "text": "구글도 결국 Gemini에 Skills를 넣었습니다.\n\n자주 사용하는 지시사항을 한 번 저장해두면 채팅창에서 `/`만 입력해 반복 실행할 수 있습니다.\n발표 자료 준비, 특정 글쓰기 스타일 적용 같은 작업뿐 아니라 여러 Skills를 동시에 조합할 수도 있습니다.\n\n텍스트·PDF·이미지를 참고자료로 넣을 수 있고 앞으로 Google Drive와 Gemini Notebook도 연결됩니다.\n\n기존 Gems는 Skills로 자동 이전되며 개인 계정에서는 11월부터 Gems 지원이 종료됩니다.\n\nClaude Code를 시작으로 AI 업계에서 Skills가 하나의 표준처럼 자리 잡아가는 모습입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd7kozoDgh6",
       "media": [
-        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQOsoo-hXh1tmetkXe6PI0BB7IPjknbjYmviqur7JQNMHA1LbgEu25TRdE979YTsVyHrYykDxOhoKaFZgLBVmKPLzLRdxlVXJ8fsLRQ.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=ZoriikYW6mEQ7kNvwEy7Ow0&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4OTQzOTk1ODExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo0NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=a2e1e08bf5366d3e&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQUVGRTc1MTkxRkE0NDFGQURBQkYwRjYxRUFCOTE3OV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzIxRDA1MkNFQjY0QTQwQTJCQzdCRUY2MzIxQUExNzIxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA6cqmnNP0PxUCKAJDMywXQEeqn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=5G9F4E2yvJpiR4esTI69JA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOXfnjigGXVdw_G0fFzf67RLSmciz63DchObd1YOrZeCg&oe=6ABF8A55"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOsoo-hXh1tmetkXe6PI0BB7IPjknbjYmviqur7JQNMHA1LbgEu25TRdE979YTsVyHrYykDxOhoKaFZgLBVmKPLzLRdxlVXJ8fsLRQ.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=ZoriikYW6mEQ7kNvwES5hDK&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk4OTQzOTk1ODExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo0NywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=a2e1e08bf5366d3e&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQUVGRTc1MTkxRkE0NDFGQURBQkYwRjYxRUFCOTE3OV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzIxRDA1MkNFQjY0QTQwQTJCQzdCRUY2MzIxQUExNzIxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA6cqmnNP0PxUCKAJDMywXQEeqn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MkQ1Exxq_UpNXkyaKwYFEw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMqndNZRZ0WG83_O4mDl2bDYpRWtZO5j3n5Yz_O2whS9w&oe=6ABF8A55"
       ],
       "engagement": {
-        "likes": 22,
-        "replies": 2,
+        "likes": 34,
+        "replies": 3,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-10-01T00:38:18.175778Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     },
     {
       "post_id": "3997935377754255341",
@@ -36,16 +53,16 @@
       "text": "Gemini 4 Argon이 공개되자마자 또 ‘벤치마크용 모델 아니냐’는 이야기가 나오고 있습니다.\n\n구글 딥마인드는 코딩·기업 업무·사이버 보안에 초점을 맞춘 Gemini 4 Argon을 일부 테스터에게 공개했는데요.\n\n하지만 Bloomberg는 내부 직원들을 인용해 Gemini 4가 벤치마크에서는 좋은 성능을 보였지만, 실제 업무에서는 코딩 등 일부 영역의 성능이 기대에 미치지 못한다는 평가가 있다고 보도했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd7hQtKAm_t",
       "media": [
-        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/831641759_17989463718112832_4699870485074328618_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NzkzNTM3Nzc1NDI1NTM0MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuODk4LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=SumcQGth_fMQ7kNvwGY_qgp&_nc_oc=AdrfUHNV9jFDMNZtINb7MLVeTvSRd8oDPqPIiVUf5ixcJjh8i8ysPZ7tXXwDnuWClI8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=5G9F4E2yvJpiR4esTI69JA&_nc_ss=7a20f&oh=00_AQOX_oAde4XrFBbuqBnuEZvOlL6wQa9vv217ag2OkNYKVg&oe=6AC368AA"
+        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/831641759_17989463718112832_4699870485074328618_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=Mzk5NzkzNTM3Nzc1NDI1NTM0MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuODk4LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=SumcQGth_fMQ7kNvwGd6Ay0&_nc_oc=AdrRG9-YdXbznDNy4WSAW__7pDxbbs3ji3Q3f_p91xuGt9HV16Cql61-41zR96fvRMM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=MkQ1Exxq_UpNXkyaKwYFEw&_nc_ss=7a20f&oh=00_AQOaN-z2WDcmZ_zn2E6t93gUNwNfk7gpjavbsPoaPZtrzg&oe=6AC3A0EA"
       ],
       "engagement": {
-        "likes": 37,
-        "replies": 3,
-        "reposts": 0,
+        "likes": 44,
+        "replies": 4,
+        "reposts": 1,
         "quotes": 0
       },
       "first_seen_at": "2026-10-01T00:38:18.175778Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     },
     {
       "post_id": "3997889653340199717",
@@ -53,16 +70,16 @@
       "text": "🚨 AI 잘한다는 분들 실력 검증 한 번 해보세요.\n\n카카오임팩트의 AI_TOP_100, 이번 대회는 방식 자체가 바뀌었습니다.\n\n정답이 정해진 문제를 푸는 게 아니라, 참가자가 직접 AI 에이전트를 설계·구축해서 겨루는 방식으로 진행됩니다.\n\n저도 작년 대회에 직접 참가했는데, 카카오 팀이 준비를 정말 잘했다고 느꼈습니다.\n\n여러 AI 에이전트를 엮어 워크플로우를 직접 설계·구축해보고 문제를 정의·검증까지 해본 분이라면, 이번 대회에서 실력을 제대로 발휘해 볼 수 있을 것 같습니다.\n\n만 14세 이상이라면 누구나 참가 가능하고, 예선만 통과해도 본선에서 사용할 AI 도구 지원금 50만원이 제공됩니다. 총 상금 규모는 1억 2천 500만원이라고 하니 한 번쯤 도전해볼 만합니다.\n\n예선 모집은 선착순 5,000명. 10월 1일 오전 10시에 접수가 시작됩니다.\n\n일정과 신청 링크는 댓글에 남깁니다. 👇",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd7W3U-jVsl",
       "media": [
-        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/827677794_17989312212112832_7963523964870637140_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzk5Nzg4OTY1MzM0MDE5OTcxNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTI0NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=s0Ei2Jmf53UQ7kNvwFth7GT&_nc_oc=AdpoxlU6axqu_BWZXGbx41TzM2_ZIlAewBeSP0tCBZmDLZl074CNBrtEFFS_-qDZyRQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=5G9F4E2yvJpiR4esTI69JA&_nc_ss=7a20f&oh=00_AQPw7exA2woXti1UL8UsLeEpeSOd12w1gMQtgRgwk0ubMQ&oe=6AC38F51"
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/827677794_17989312212112832_7963523964870637140_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzk5Nzg4OTY1MzM0MDE5OTcxNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTI0NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=s0Ei2Jmf53UQ7kNvwEnQqy3&_nc_oc=Adqn0ozdAompys8BM1v7POpVHRZLZ9l3Xsj_6YSPIw7qFN52ADCGcwwS9dQFLrA8j_c&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=MkQ1Exxq_UpNXkyaKwYFEw&_nc_ss=7a20f&oh=00_AQMavsbpTQqwuDYiysTwVxMpbeyI_bLgLWFF-jjyjyV-RA&oe=6AC38F51"
       ],
       "engagement": {
-        "likes": 79,
+        "likes": 93,
         "replies": 1,
-        "reposts": 14,
+        "reposts": 18,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T22:40:00.889053Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     },
     {
       "post_id": "3997846322992330289",
@@ -70,16 +87,16 @@
       "text": "🚨속보) 미친.. Gemini 4 Argon 출시",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd7NAycjzYx",
       "media": [
-        "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/828895974_17989457019112832_2625087113892981733_n.webp?_nc_cat=1&ig_cache_key=Mzk5Nzg0NjMyMjk5MjMzMDI4OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuOTg0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=VlOcRrB8tnEQ7kNvwHY3uZF&_nc_oc=AdpKtwDGIUCjyzWzl5LxcP7IvQxN6kZbaeGpahcWImUh2ehc8hJQVI7grn_7oWdIHFM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-ord5-1.cdninstagram.com&_nc_gid=5G9F4E2yvJpiR4esTI69JA&_nc_ss=7a20f&oh=00_AQMadtk22DuBeainQBCFfu5RuUVvKPLUYNCclnZWvQ8eGA&oe=6AC36410"
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/828895974_17989457019112832_2625087113892981733_n.webp?_nc_cat=1&ig_cache_key=Mzk5Nzg0NjMyMjk5MjMzMDI4OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuOTg0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=VlOcRrB8tnEQ7kNvwG9ibQk&_nc_oc=AdroW30QyPDa5bAbSA1xKpX9NVu1UuhOIy43s0e-3JvyHJMuIXtRGfBSiJJd-x3bRzA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=MkQ1Exxq_UpNXkyaKwYFEw&_nc_ss=7a20f&oh=00_AQPTOqxjxz9URieQamO0RLjLtBl6pmQiTr6xvzSt6Wa1yg&oe=6AC39C50"
       ],
       "engagement": {
-        "likes": 341,
-        "replies": 51,
-        "reposts": 29,
+        "likes": 371,
+        "replies": 55,
+        "reposts": 34,
         "quotes": 5
       },
       "first_seen_at": "2026-09-30T20:53:25.642628Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     },
     {
       "post_id": "3997799427175551936",
@@ -87,16 +104,16 @@
       "text": "Inception이 음성 AI 에이전트용 확산 언어 모델 Mercury Voice를 공개했습니다.\n\n음성 대화는 사람이 답변을 기다린다고 느끼지 않으려면 약 500ms 안에 반응해야 하는데요.\n\nInception은 Mercury Voice가 GPT-6 Luna, Gemma 4 31B, Claude Haiku 4.5보다 2배 이상 낮은 지연시간을 기록하면서 τ³-bench에서도 더 높은 성능을 냈다고 밝혔습니다.\n\n텍스트 생성에서 시작된 확산 모델 경쟁이 이제 실시간 음성 에이전트까지 들어오고 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dd7CWXUDxPA",
       "media": [
-        "https://scontent-ord5-2.cdninstagram.com/o1/v/t16/f2/m84/AQM94Gq5mfvNMaYKQBd4wGAy6KRAfgkE7VOd_dDSBOv6RHchQEcfak-p1PsyUgaCpZ4ZqD5wNA0CZnq3XyJHp6K7XHw4tQdgNB8u_PQ.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_ohc=n6HXe3f0HEIQ7kNvwHQ6JC9&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjcyOTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=21687509e5022554&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MDJENTVGQjA3RDE0RDREQkE3MkVCMkNFQUJBNDEzNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJGRjQ4MzE2NUZGQjQ5RkE5RTAxRDFBQzk2RDYzMzI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA2t_1_s70PxUCKAJDMywXQDQAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=5G9F4E2yvJpiR4esTI69JA&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPykdO3WO_bbuJQ_7qS3S4EvxVkJSi81KuQaC0Nmbb5OA&oe=6ABF9D2A"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQM94Gq5mfvNMaYKQBd4wGAy6KRAfgkE7VOd_dDSBOv6RHchQEcfak-p1PsyUgaCpZ4ZqD5wNA0CZnq3XyJHp6K7XHw4tQdgNB8u_PQ.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=n6HXe3f0HEIQ7kNvwFnZ4Z7&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5ODkzNjcyOTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=21687509e5022554&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81MDJENTVGQjA3RDE0RDREQkE3MkVCMkNFQUJBNDEzNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJGRjQ4MzE2NUZGQjQ5RkE5RTAxRDFBQzk2RDYzMzI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA2t_1_s70PxUCKAJDMywXQDQAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MkQ1Exxq_UpNXkyaKwYFEw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMgWJ1wWigSoio75cpM61wMAuRVX_FkJ1_uc0BaXVeYiQ&oe=6ABF9D2A"
       ],
       "engagement": {
-        "likes": 20,
+        "likes": 23,
         "replies": 2,
         "reposts": 3,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T19:04:30.672768Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     },
     {
       "post_id": "3997753802216851067",
@@ -105,13 +122,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Dd63-bwmkZ7",
       "media": null,
       "engagement": {
-        "likes": 31,
+        "likes": 32,
         "replies": 12,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-09-30T18:37:10.078629Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     },
     {
       "post_id": "3997742124016210806",
@@ -120,13 +137,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/Dd61UflmhN2",
       "media": null,
       "engagement": {
-        "likes": 41,
+        "likes": 43,
         "replies": 2,
         "reposts": 1,
         "quotes": 1
       },
       "first_seen_at": "2026-09-30T18:37:10.078629Z",
-      "last_seen_at": "2026-10-01T00:38:18.175778Z"
+      "last_seen_at": "2026-10-01T01:37:37.748413Z"
     }
   ],
   "watchdog": {
