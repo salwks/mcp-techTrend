@@ -328,7 +328,10 @@ export class Character {
   }
   setArmed(on) { this.armed = !!on; }
   /** 호랑이 변장: 'disguised'(어미 저고리 + 수건 + 밀가루 묻은 흰 앞발) | 'normal' */
-  setVariant(v) { this.variant = v === 'disguised' ? 'disguised' : 'normal'; }
+  setVariant(v) {
+    this.variant = v === 'disguised' ? 'disguised' : 'normal';
+    if (this._bank) this._bank.prepareVariant(this.variant);
+  }
   setMode(mode) { if (mode === 'front' || mode === '4dir') this.mode = mode; }
   setSilhouette(on) {
     this._silOn = !!on;

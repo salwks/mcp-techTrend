@@ -4,9 +4,10 @@
 //  - 로딩 때 전투·이야기에 꼭 필요한 동작을 먼저(criticalKeys), 나머지는 처음 쓰일 때 굽는다.
 //  - 구워진 페이지는 텍스처로 올리고, 실행 중에는 UV만 바꾼다(Character._showFrame).
 import * as THREE from 'three';
-import { BakeBank, FRAME_KINDS, TIERS, clipKey, criticalKeys, resolveView, frameIndex } from './frameCore.js';
+import { BakeBank, FRAME_KINDS, TIERS, clipKey, criticalKeys, resolveView, frameIndex, expandKeys, DISGUISE_ANIMS } from './frameCore.js';
 
 export { FRAME_KINDS, frameIndex };
+const DISG_SET = new Set(DISGUISE_ANIMS.map((a) => a.split(':')[0]));
 
 /** 기기 단계 판정: 굵은 포인터(터치)나 작은 화면이면 'medium' */
 export function detectTier() {
@@ -90,10 +91,19 @@ class FrameStore {
     for (const k of this.critical) this._request(k, false);
   }
 
+  /** 변장 장면 그림을 뒤에서 미리 굽기 시작 */
+  prepareVariant(v) {
+    if (this.kind !== 'tiger' || v !== 'disguised' || this._disgAsked) return;
+    this._disgAsked = true;
+    for (const k of expandKeys('tiger', DISGUISE_ANIMS)) this._request(k, false);
+  }
+
   /** 준비된 클립이면 돌려주고, 아니면 앞쪽으로 요청 */
   get(view, anim, armed, variant) {
     if (this.kind !== 'player' || !(anim === 'idle' || anim === 'walk' || anim === 'run')) armed = false;
-    const key = clipKey(resolveView(this.kind, view, anim), anim, armed, this.kind === 'tiger' && variant === 'disguised');
+    // 변장 그림은 이야기 장면 동작만(DISGUISE_ANIMS). 싸움이 시작되면 이야기 쪽에서 setVariant('normal')로 벗긴다.
+    const disg = this.kind === 'tiger' && variant === 'disguised' && DISG_SET.has(anim);
+    const key = clipKey(resolveView(this.kind, view, anim), anim, armed, disg);
     const c = this.clips.get(key);
     if (c) return c;
     this._request(key, true);
@@ -202,7 +212,10 @@ export function bakeAllFrames(kinds = FRAME_KINDS, all = true) {
   for (const k of kinds) {
     const s = frameStore(k);
     const keys = new Set(s.critical);
-    if (all) for (const v of ['side', 'front', 'back']) for (const a of Object.keys(s.kind === 'player' ? HUMAN_LIST : TIGER_LIST)) keys.add(clipKey(resolveView(k, v, a), a, false, false));
+    if (all) {
+      for (const v of ['side', 'front', 'back']) for (const a of Object.keys(s.kind === 'player' ? HUMAN_LIST : TIGER_LIST)) keys.add(clipKey(resolveView(k, v, a), a, false, false));
+      if (k === 'tiger') for (const key of expandKeys('tiger', DISGUISE_ANIMS)) keys.add(key);
+    }
     for (const key of [...s.wanted]) keys.add(key);
     s.wanted = [];
     for (const key of keys) { if (!s.clips.has(key)) { s.sent.add(key); s._mainEnqueue(key, false); } }

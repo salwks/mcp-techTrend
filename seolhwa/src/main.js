@@ -261,6 +261,7 @@ if (storyMod) {
     });
   } catch (err) { console.error('[설화록] createStory 오류', err); story = null; }
 }
+if (story && ui && ui.setJournalProvider) ui.setJournalProvider(() => story.journal());
 if (story) {
   panel.addSection('사건', [
     { label: '사건 처음부터', onClick: () => { try { story.restart(); } catch (err) { console.error(err); } } },

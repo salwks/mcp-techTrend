@@ -19,7 +19,7 @@ const MARGIN = 5;           // halo가 번질 투명 여백
 /** 해상도 단계: 화면상 1m(배율 적용 후)당 프레임 픽셀 */
 export const TIERS = {
   high: { player: 116, tiger: 98, once: 0.78 },   // 데스크톱
-  medium: { player: 80, tiger: 68, once: 0.85 },  // 휴대폰·작은 화면
+  medium: { player: 74, tiger: 62, once: 0.82 },  // 휴대폰·작은 화면
 };
 // once: 1회성 동작(공격·도약·넘어짐 등 빠르게 지나가는 그림)은 이 배율로 조금 낮게 굽는다 — 움직임에 묻혀 안 보이고 메모리는 40% 절약 // 프레임 해상도: 화면상 1m(배율 적용 후)당 픽셀
 const BODY_SPRINGS = {
