@@ -39,11 +39,22 @@ catch (err) { console.error('[설화록] buildWorld 오류', err); world = fallb
 world.colliders ||= [];
 world.npcs ||= [];
 
+// 만들어진 모든 캐릭터를 기억해 그림 방식(프레임/컷아웃)을 한 번에 바꿀 수 있게 한다
+const allChars = [];
+let renderStyle = null; // null = 캐릭터 모듈 기본값
 const makeChar = (kind) => {
-  try { if (charMod) return charMod.createCharacter(kind); }
+  let c = null;
+  try { if (charMod) c = charMod.createCharacter(kind); }
   catch (err) { console.error('[설화록] createCharacter 오류', kind, err); }
-  return fallbackCharacter(kind);
+  if (!c) c = fallbackCharacter(kind);
+  if (renderStyle && c.setRenderStyle) c.setRenderStyle(renderStyle);
+  allChars.push(c);
+  return c;
 };
+function setRenderStyle(style) {
+  renderStyle = style;
+  for (const c of allChars) if (c.setRenderStyle) c.setRenderStyle(style);
+}
 
 let fx;
 try { fx = fxMod ? fxMod.createFX({ renderer, scene, camera, world }) : fallbackFX({ renderer, scene, camera, world }); }
@@ -140,6 +151,12 @@ if (combatMod && world.arenas && world.arenas.length) {
   } catch (err) { console.error('[설화록] createCombat 오류', err); combat = null; }
 }
 const combatOpts = combat ? { ...(combat.options || {}) } : {};
+if (charMod && charMod.FRAME_KINDS && charMod.FRAME_KINDS.length) {
+  panel.addSection('캐릭터 그림 방식 (주인공·호랑이)', [
+    { label: '프레임 · 손그림', onClick: () => setRenderStyle('frames') },
+    { label: '컷아웃 · 관절', onClick: () => setRenderStyle('cutout') },
+  ]);
+}
 if (combat) {
   const opt = (id, label) => ({ id, label, checked: combatOpts[id] !== false, onChange: (v) => { combatOpts[id] = v; combat.setOption(id, v); } });
   panel.addSection('호랑이 전투', [
@@ -265,6 +282,6 @@ function frame() {
   requestAnimationFrame(frame);
 }
 
-window.__seolhwa = { THREE, scene, camera, renderer, world, fx, player, npcs, rig, teleport, warps, panel, get combat() { return combat; }, hud, input };
+window.__seolhwa = { THREE, scene, camera, renderer, world, fx, player, npcs, rig, teleport, warps, panel, get combat() { return combat; }, hud, input, setRenderStyle, allChars };
 requestAnimationFrame(frame);
 document.body.classList.add('ready');
