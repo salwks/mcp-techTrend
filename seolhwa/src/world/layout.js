@@ -74,3 +74,16 @@ export const ARENA_TRAIL = [
   [18.5, -40.2, 4.9],
   [21.5, -41.8, 5.2],
 ];
+
+// ---- 3단계 「산길의 실종」 장소 ----
+export const INN = { x: -8, z: 20, w: 6, d: 4 };
+export const MILL = { x: -12, z: -23.8, w: 4.6, d: 3.4, pad: 0.8 };
+export const BARN = { x: 23.5, z: 8.5, w: 4.2, d: 3 };
+export const BIG_TREE = { x: -26.2, z: -25.6 };
+export const YARD = { x: -22, z: -25, r: 7.5, pad: 1.75 };
+// 나무·바위를 비워 둘 곳
+export const CLEAR = [
+  { x: YARD.x, z: YARD.z, r: YARD.r + 1.5 },
+  { x: MILL.x - 1, z: MILL.z + 1, r: 5.5 },
+];
+export const isClear = (x, z, m = 0) => CLEAR.some((c) => Math.hypot(x - c.x, z - c.z) < c.r + m);

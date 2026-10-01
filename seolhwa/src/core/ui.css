@@ -161,7 +161,7 @@ html, body { margin: 0; height: 100%; background: #1a1712; color: var(--ink); ov
   padding: 26px 28px 24px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
 .ch-kind { font: 700 13px var(--display); letter-spacing: 0.3em; color: var(--hanji); background: var(--seal); padding: 4px 10px; border-radius: 2px; }
 .ch-result[data-kind="lose"] .ch-kind { background: var(--ink); }
-.ch-result[data-kind="escaped"] .ch-kind, .ch-result[data-kind="repelled"] .ch-kind { background: var(--indigo); }
+.ch-result[data-kind="escaped"] .ch-kind, .ch-result[data-kind="repelled"] .ch-kind, .ch-result[data-kind="retreated"] .ch-kind { background: var(--indigo); }
 .ch-title { margin: 4px 0 0; font: 700 clamp(20px, 3.4vw, 26px) var(--display); color: var(--ink); text-wrap: balance; }
 .ch-text { margin: 0; font: 16px/1.7 var(--display); color: var(--ink-soft); max-width: 36ch; }
 .ch-retry { margin-top: 8px; font: 700 15px var(--display); letter-spacing: 0.2em; background: var(--ink); color: var(--hanji);

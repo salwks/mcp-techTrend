@@ -13,6 +13,7 @@ const RESULT_TEXT = {
   win: ['호랑이를 쓰러뜨렸다', '산이 조용해졌다. 오늘 밤 마을 사람들은 편히 잠들 것이다.'],
   repelled: ['호랑이는 산속으로 물러났다', '죽이지 않고 물리쳤다. 하지만 밤이 되면 산 너머에서 그 울음소리가 여전히 들려올 것이다.'],
   escaped: ['호랑이의 영역에서 벗어났다', '호랑이는 영역 끝에서 으르렁거릴 뿐, 더는 쫓아오지 않았다.'],
+  retreated: ['호랑이가 물러갔다', '호랑이는 "내 영역에서 나가라"는 듯 포효하고 산으로 돌아갔다. 그 정체만은 똑똑히 보았다.'],
   lose: ['정신이 아득해진다…', '마지막으로 본 것은 먹빛 줄무늬와 번뜩이는 눈이었다.'],
 };
 
@@ -181,15 +182,39 @@ export function createCombat(ctx) {
     }
   }
 
+  // 이번 싸움의 결과 알림(combat.finished 약속 + opts.onEnd)
+  let finishedP = Promise.resolve(null), resolveFinished = null, runOpts = {};
+  function endFight(kind) {
+    const r = resolveFinished, cb = runOpts.onEnd;
+    resolveFinished = null;
+    if (r) r(kind);
+    if (cb) safe(() => cb(kind));
+  }
+
   async function showResult(kind) {
     const my = runId;
+    if (runOpts.noResultCard) {
+      // 이야기가 결말을 직접 보여준다: 카드 없이 끝냄. 호랑이 모습은 다음 start/reset까지 남겨 둔다
+      active = false;
+      safe(() => hud && hud.setFoe(null));
+      if (player.char.setArmed) safe(() => player.char.setArmed(false));
+      if (player.char.setMoveSpeed) safe(() => player.char.setMoveSpeed(null));
+      endFight(kind);
+      return;
+    }
     const [title, text] = RESULT_TEXT[kind] || [kind, ''];
     if (hud && hud.result) {
       try { await hud.result(kind, title, text); } catch (err) { console.warn('[combat] hud.result', err); }
     } else {
       await new Promise((r) => setTimeout(r, 2500));
     }
-    if (my === runId) combat.reset();
+    if (my === runId) { endFight(kind); combat.reset(); }
+  }
+
+  function findArena(a) {
+    const list = world.arenas || [];
+    if (typeof a === 'string') return list.find((x) => x.id === a || x.name === a) || null;
+    return a || null;
   }
 
   const combat = {
@@ -199,12 +224,18 @@ export function createCombat(ctx) {
     get result() { return result; },
     get battle() { return battle; },   // 디버그·QA용
     get tiger() { return tigerChar; },
+    get finished() { return finishedP; }, // 현재 싸움의 결과로 풀리는 약속(start마다 새로)
 
-    start(a) {
+    // opts: { mods:{stunned, hpRatio, enraged, disguised, firstEncounter}, retreatAt:{hpRatio, seconds},
+    //         allowFlee, noResultCard, onEnd(result), placePlayer(기본 true), focus:{x,z}, retreatTo:{x,z} }
+    start(a, opts = {}) {
       if (active || tigerChar) this.reset();
-      arena = a || arena || (world.arenas && world.arenas[0]);
-      if (!arena) { console.warn('[combat] arena 없음'); return; }
+      arena = findArena(a) || arena || (world.arenas && world.arenas[0]);
+      if (!arena) { console.warn('[combat] arena 없음'); return finishedP; }
       runId++;
+      runOpts = opts || {};
+      finishedP = new Promise((r) => { resolveFinished = r; });
+      const mods = runOpts.mods || {};
       result = null; ending = false;
       tigerChar = ctx.makeChar('tiger');
       scene.add(tigerChar.object3d);
@@ -216,7 +247,17 @@ export function createCombat(ctx) {
       };
       syncTimings(durOf);
       applyScale(player.char.radius || T.player.radius, tigerChar.radius || 1.0);
-      battle.start(arena);
+      const anchors = world.anchors || {};
+      const territory = (world.arenas || []).find((x) => x.id === 'territory');
+      battle.start(arena, null, {
+        mods,
+        retreatAt: runOpts.retreatAt,
+        allowFlee: runOpts.allowFlee,
+        playerPos: runOpts.placePlayer === false ? { x: player.pos.x, z: player.pos.z } : null,
+        focus: runOpts.focus || (arena.id === 'house_yard' ? anchors.big_tree || null : null),
+        retreatTo: runOpts.retreatTo || (arena.id !== 'territory' && territory ? { x: territory.x, z: territory.z } : null),
+      });
+      if (mods.disguised && tigerChar.setVariant) safe(() => tigerChar.setVariant('disguised'));
       lastPos.px = battle.player.pos.x; lastPos.pz = battle.player.pos.z;
       lastPos.tx = battle.tiger.pos.x; lastPos.tz = battle.tiger.pos.z;
       if (player.char.setArmed) safe(() => player.char.setArmed(true));
@@ -225,11 +266,17 @@ export function createCombat(ctx) {
       active = true;
       for (const k of ACTIONS) { prevHeld[k] = false; curHeld[k] = false; }
       updateHud(true);
-      env.say('숲이 조용해졌다… 호랑이가 낮게 원을 그리며 다가온다.', 2600);
+      if (!mods.stunned) {
+        env.say(mods.firstEncounter ? '숲 그늘에서 거대한 호랑이가 모습을 드러냈다!'
+          : arena.id === 'house_yard' ? '호랑이가 마당으로 뛰어들었다! 아이들이 있는 나무를 노린다.'
+            : '숲이 조용해졌다… 호랑이가 낮게 원을 그리며 다가온다.', 2600);
+      }
+      return finishedP;
     },
 
     reset() {
       runId++;
+      if (resolveFinished) endFight(null); // 싸움 도중 취소
       clearScene();
       active = false;
       ending = false;

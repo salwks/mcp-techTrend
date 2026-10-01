@@ -57,7 +57,8 @@ export function rgba(hex, a) {
 
 /** 모든 그림 캔버스는 CPU 래스터로 고정(굽기 때 GPU↔CPU 왕복이 없도록) */
 export function makeCanvas(w, h) {
-  const c = document.createElement('canvas');
+  // 워커(OffscreenCanvas)에서도 같은 코드로 굽는다
+  const c = typeof document !== 'undefined' ? document.createElement('canvas') : new OffscreenCanvas(w, h);
   c.width = w; c.height = h;
   c.getContext('2d', { willReadFrequently: true });
   return c;

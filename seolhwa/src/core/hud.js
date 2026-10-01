@@ -84,7 +84,7 @@ export class Hud {
   }
 
   result(kind, title, text) {
-    const labels = { win: '처치', repelled: '물러나게 함', escaped: '도망', lose: '패배' };
+    const labels = { win: '처치', repelled: '물러나게 함', retreated: '물러남', escaped: '도망', lose: '패배' };
     this.resEl.querySelector('.ch-kind').textContent = labels[kind] || kind;
     this.resEl.querySelector('.ch-title').textContent = title;
     this.resEl.querySelector('.ch-text').textContent = text || '';

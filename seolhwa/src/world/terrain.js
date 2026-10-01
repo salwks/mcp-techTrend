@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { clamp, lerp, smoothstep, fbm, vnoise, rng } from './util.js';
 import { terrainMaterial } from './materials.js';
-import { PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
+import { MILL, YARD, PATH, BRANCH, ARENA, ARENA_TRAIL, PASS, HOUSE, BRIDGE, PADDIES, LANES, WATER_Y, streamZ } from './layout.js';
 
 export const GRID = { x0: -60, x1: 60, z0: -90, z1: 44, s: 1.0 };
 
@@ -23,6 +23,8 @@ const SHAPES = [
   { t: 'circ', x: PASS.x, z: PASS.z, r: PASS.r, h: PASS.h, r1: 12 },
   { t: 'rect', minX: HOUSE.x - 4.6, maxX: HOUSE.x + 4.6, minZ: HOUSE.z - 3.8, maxZ: HOUSE.z + 3.6, h: HOUSE.pad, r0: 0, r1: 5 },
   ...PADDIES.map((p) => ({ t: 'rect', ...p, r0: 0, r1: 0.55 })),
+  { t: 'rect', minX: YARD.x - 5, maxX: YARD.x + 5.5, minZ: -28.6, maxZ: -22.2, h: YARD.pad, r0: 0, r1: 3.5 },
+  { t: 'rect', minX: MILL.x - 3.4, maxX: MILL.x + 3, minZ: MILL.z - 2.4, maxZ: MILL.z + 1.9, h: MILL.pad, r0: 0, r1: 3 },
 ];
 
 function segInfo(s, x, z) {
