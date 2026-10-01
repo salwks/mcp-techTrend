@@ -58,7 +58,9 @@ void main() {
 export function createNightLights(scene, lights) {
   const list = (lights || []).map((l, i) => {
     const k = KIND[l.kind] || KIND.lantern;
-    return { x: l.x, y: l.y, z: l.z, k, phase: i * 1.731 + (l.x * 0.37 + l.z * 0.11), d2: 0, slot: -1 };
+    const en = l.enabled !== false;
+    // src를 보관해 enabled를 매 프레임 다시 읽는다(world.setState로 런타임에 켜짐). state 조명은 낮에도 약하게 보임.
+    return { x: l.x, y: l.y, z: l.z, k, phase: i * 1.731 + (l.x * 0.37 + l.z * 0.11), d2: 0, slot: -1, src: l, on: en ? 1 : 0, was: en, flare: 0, dayMin: l.state ? 0.5 : 0, f: 0 };
   });
   const N = list.length;
   const MAX = 6;
@@ -123,7 +125,19 @@ export function createNightLights(scene, lights) {
     mesh,
     update(dt, t, focus, lamp, maxReal) {
       if (!N) { for (const s of slots) s.light.intensity = 0; return; }
-      mesh.visible = lamp > 0.001;   // 낮에는 드로콜 없음
+      
+      // 켜짐 상태 갱신 + 점화 플레어
+      for (let i = 0; i < N; i++) {
+        const l = list[i];
+        const en = l.src.enabled !== false;
+        if (en && !l.was) { l.flare = 1; reselect = 0; }   // 방금 켜짐 → 확 타오름
+        else if (!en && l.was) reselect = 0;
+        l.was = en;
+        l.on = Math.max(0, Math.min(1, l.on + (en ? 4 : -3) * dt));
+        l.flare = Math.max(0, l.flare - dt * 1.2);
+        // 실제 세기 배율: 밤 정도(state 조명은 낮에도 약하게) × 켜짐 × 플레어
+        l.f = Math.max(lamp, en ? l.dayMin : 0) * l.on * (1 + l.flare * 1.6);
+      }
       // 순간이동(워프) 감지: 슬롯을 즉시 비우고 재선택
       const jx = focus.x - lastFocus.x, jz = focus.z - lastFocus.z;
       if (jx * jx + jz * jz > 64) {
@@ -148,7 +162,13 @@ export function createNightLights(scene, lights) {
         }
         want.fill(0);
         const lim = Math.min(maxReal, N);
-        for (let i = 0; i < lim; i++) if (list[order[i]].d2 < 30 * 30) want[order[i]] = 1;
+        let cnt = 0;
+        for (let i = 0; i < N && cnt < lim; i++) {
+          const l = list[order[i]];
+          if (l.d2 >= 30 * 30) break;
+          if (!l.was) continue;          // 꺼진 조명은 실제 광원 후보에서 제외
+          want[order[i]] = 1; cnt++;
+        }
       }
       // 슬롯 갱신: 원치 않는 것은 페이드아웃 후 재배정
       const fade = Math.min(1, dt * 3);
@@ -164,23 +184,26 @@ export function createNightLights(scene, lights) {
           }
         }
         const L = slot.light;
-        if (slot.idx >= 0 && lamp > 0.001) {
+        if (slot.idx >= 0 && list[slot.idx].f > 0.001) {
           const l = list[slot.idx];
           L.position.set(l.x, l.y, l.z);
           L.color.set(l.k.color);
           L.distance = l.k.distance;
-          L.intensity = l.k.intensity * lamp * slot.w * flick(l, t);
+          L.intensity = l.k.intensity * l.f * slot.w * flick(l, t);
         } else L.intensity = 0;
       }
       // 스프라이트
       const a = amtAttr.array;
+      let anyOn = false;
       for (let i = 0; i < N; i++) {
         const l = list[i];
         const real = l.slot >= 0 ? slots[l.slot].w : 0;
-        a[i * 2] = lamp * (0.85 + 0.15 * flick(l, t + 0.3));
+        if (l.f > 0.001) anyOn = true;
+        a[i * 2] = l.f * (0.85 + 0.15 * flick(l, t + 0.3)) * (1 + l.flare * 0.8);
         a[i * 2 + 1] = 1 - real;
       }
       amtAttr.needsUpdate = true;
+      mesh.visible = anyOn;   // 켜진 것이 없으면(낮) 드로콜 없음
     },
   };
 }
