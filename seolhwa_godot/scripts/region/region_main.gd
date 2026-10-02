@@ -428,7 +428,7 @@ func _process(delta: float) -> void:
 		_title.setup(world.region)
 		_map = preload("res://scripts/region/region_map.gd").new()
 		add_child(_map)
-		_map.setup(world, world.data_dir)
+		_map.setup(world, world.data_dir, placement)
 		_btitles = preload("res://scripts/region/building_titles.gd").new()
 		if placement: _btitles.setup(placement)
 	# 불러오기 화면이 걷힌 뒤부터 지명·건물 이름을 띄운다
@@ -455,7 +455,7 @@ func _process(delta: float) -> void:
 		hour = fmod(hour + dt * 0.1, 24.0); _apply_time()
 	_update_loading()
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	if _loading: mv = Vector2.ZERO
+	if _loading or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
 	var speed := RUN if Input.is_action_pressed("run") else WALK
 	if _bench_left > 0.0 and _bench_loading and _loading:
 		_bench_load_t += delta
