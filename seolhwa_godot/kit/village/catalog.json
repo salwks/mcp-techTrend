@@ -1,0 +1,1619 @@
+{
+  "kit": "village",
+  "region": "JL_NAMWON_UNBONG",
+  "era": "1870 전후 조선 후기",
+  "note": "build(params) → {node, colliders, lights, occluder, footprint, anchors, interior?}. 정면 +z. tris는 먹선 포함(kit_preview와 같은 셈)",
+  "budget": {
+    "house": 6000,
+    "prop": 800,
+    "compound": 15000
+  },
+  "models": [
+    {
+      "name": "choga",
+      "file": "res://kit/village/choga.gd",
+      "desc": "초가(초가삼간) — 웹 choga 이식. 방 창·방문·부엌 널문·툇마루·댓돌·굴뚝, 둥근 이엉 지붕. interior=true면 들어갈 수 있는 외딴집(실내·호롱불, roof/front 숨김)",
+      "shot": "shots/kit/village/choga.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1984,
+      "footprint": [
+        8.2,
+        6.4
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "maru",
+        "kitchen"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "w": 5.4,
+            "gourd": true
+          },
+          "tris": 2488,
+          "footprint": [
+            7.6,
+            6.4
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "interior": true
+          },
+          "tris": 3010,
+          "footprint": [
+            8.2,
+            6.4
+          ],
+          "colliders": 9,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": true
+        }
+      ]
+    },
+    {
+      "name": "giwa",
+      "file": "res://kit/village/giwa.gd",
+      "desc": "기와집 — 웹 giwa 이식. 높은 기단·계단, 5칸(대청·방·끝칸), 곡선 팔작 기와지붕. plain=true면 단청 없는 민가 기와집",
+      "shot": "shots/kit/village/giwa.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 4464,
+      "footprint": [
+        12.6,
+        8.8
+      ],
+      "colliders": 1,
+      "lights": 4,
+      "occluder": true,
+      "anchors": [
+        "daecheong",
+        "steps",
+        "maru"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "plain": true,
+            "w": 7.2,
+            "bays": 3
+          },
+          "tris": 3856,
+          "footprint": [
+            10.8,
+            8.8
+          ],
+          "colliders": 1,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "daecheong",
+            "steps",
+            "maru"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jeongja",
+      "file": "res://kit/village/jeongja.gd",
+      "desc": "정자 — 웹 jeongja 이식. 사방 트인 마루·계자난간·사모 기와지붕·청사초롱. plain=true면 마을 모정",
+      "shot": "shots/kit/village/jeongja.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 3296,
+      "footprint": [
+        6.0,
+        6.0
+      ],
+      "colliders": 7,
+      "lights": 1,
+      "occluder": true,
+      "anchors": [
+        "floor",
+        "step"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "s": 3.0,
+            "plain": true
+          },
+          "tris": 3088,
+          "footprint": [
+            5.6,
+            5.6
+          ],
+          "colliders": 7,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [
+            "floor",
+            "step"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "well",
+      "file": "res://kit/village/well.gd",
+      "desc": "우물 — 웹 well 이식. 팔각 돌 우물·도르래 틀·두레박. roof=true면 이엉 덮개(가설)",
+      "shot": "shots/kit/village/well.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 392,
+      "footprint": [
+        2.4,
+        2.0
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "draw"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "roof": true
+          },
+          "tris": 492,
+          "footprint": [
+            2.4,
+            2.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "draw"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jangdok",
+      "file": "res://kit/village/jangdok.gd",
+      "desc": "장독대 — 웹 jangdok 이식. 돌 단 + 옹기 세 줄(n=[3,2,2])",
+      "shot": "shots/kit/village/jangdok.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1244,
+      "footprint": [
+        3.2,
+        2.2
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "w": 2.4,
+            "d": 2.0,
+            "n": [
+              2,
+              2,
+              1
+            ]
+          },
+          "tris": 924,
+          "footprint": [
+            2.4,
+            2.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "haystack",
+      "file": "res://kit/village/haystack.gd",
+      "desc": "짚가리 — 웹 haystack 이식. 볏짚 낟가리 + 주저리 + 새끼 띠",
+      "shot": "shots/kit/village/haystack.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 376,
+      "footprint": [
+        2.4,
+        2.4
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "s": 0.85
+          },
+          "tris": 376,
+          "footprint": [
+            2.0,
+            2.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jangseung",
+      "file": "res://kit/village/jangseung.gd",
+      "desc": "장승 — 웹 jangseung 이식. 천하대장군(갓)/지하여장군(female=true)",
+      "shot": "shots/kit/village/jangseung.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 450,
+      "footprint": [
+        1.2,
+        1.2
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "front"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "female": true
+          },
+          "tris": 370,
+          "footprint": [
+            1.2,
+            1.2
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "front"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "torch_post",
+      "file": "res://kit/village/torch_post.gd",
+      "desc": "횃대 — 웹 torchPost 이식. 마을 어귀 화톳불 기둥(밤에 빛남)",
+      "shot": "shots/kit/village/torch_post.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 262,
+      "footprint": [
+        0.7,
+        0.7
+      ],
+      "colliders": 1,
+      "lights": 1,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": []
+    },
+    {
+      "name": "stone_wall",
+      "file": "res://kit/village/stone_wall.gd",
+      "desc": "돌담 — 웹 stoneWall 이식. 두 점 (ax,az)→(bx,bz) 사이 막돌 허튼층 + 갓돌. 약 220 삼각형/m",
+      "shot": "shots/kit/village/stone_wall.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 984,
+      "footprint": [
+        5.1,
+        0.6
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "ax": 0,
+            "az": 0,
+            "bx": 3,
+            "bz": -4,
+            "h": 1.15
+          },
+          "tris": 1104,
+          "footprint": [
+            3.6,
+            4.6
+          ],
+          "colliders": 12,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "fence",
+      "file": "res://kit/village/fence.gd",
+      "desc": "싸리 울타리(바자울) — 웹 fence 이식. 두 점 사이. lite=true면 톱니 판(~100/m)",
+      "shot": "shots/kit/village/fence.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 640,
+      "footprint": [
+        4.3,
+        0.3
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "len": 6,
+            "lite": true
+          },
+          "tris": 578,
+          "footprint": [
+            6.3,
+            0.3
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "stone_bridge",
+      "file": "res://kit/village/stone_bridge.gd",
+      "desc": "돌다리(홍예교) — 웹 stoneBridge 이식. z방향으로 건넘, y=0 둑, 홍예 밑 y=-1.7",
+      "shot": "shots/kit/village/stone_bridge.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1520,
+      "footprint": [
+        3.0,
+        10.0
+      ],
+      "colliders": 2,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "north",
+        "south",
+        "top"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "len": 8,
+            "hw": 1.1,
+            "arch": 0.45
+          },
+          "tris": 1400,
+          "footprint": [
+            2.6,
+            8.4
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "north",
+            "south",
+            "top"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "cairn",
+      "file": "res://kit/village/cairn.gd",
+      "desc": "돌무더기(누석단) — 웹 cairn 이식. 제단·촛불(altar=false로 생략)",
+      "shot": "shots/kit/village/cairn.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 750,
+      "footprint": [
+        2.8,
+        3.4
+      ],
+      "colliders": 2,
+      "lights": 1,
+      "occluder": false,
+      "anchors": [
+        "altar"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "altar": false
+          },
+          "tris": 580,
+          "footprint": [
+            2.8,
+            3.4
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jumak",
+      "file": "res://kit/village/jumak.gd",
+      "desc": "주막 — 초가(방문 열림) + 평상(소반·술사발·술병) + 한데부뚜막 가마솥 + 용수 장대(흰 천) + 술독 + 장작",
+      "shot": "shots/kit/village/jumak.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 4410,
+      "footprint": [
+        11.2,
+        9.6
+      ],
+      "colliders": 11,
+      "lights": 4,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "maru",
+        "kitchen",
+        "seat",
+        "guest_seat",
+        "cook",
+        "jumo"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "w": 6.0,
+            "flag": false
+          },
+          "tris": 4186,
+          "footprint": [
+            10.0,
+            9.6
+          ],
+          "colliders": 10,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen",
+            "seat",
+            "guest_seat",
+            "cook",
+            "jumo"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "market_shop",
+      "file": "res://kit/village/market_shop.gd",
+      "desc": "장터 가게(가가) — 3칸 트인 초가 맞배 헛집 + 거적 차양 + 길 쪽 판매대 + 물건(goods)",
+      "shot": "shots/kit/village/market_shop.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1696,
+      "footprint": [
+        7.0,
+        6.4
+      ],
+      "colliders": 4,
+      "lights": 1,
+      "occluder": true,
+      "anchors": [
+        "seller",
+        "buyer"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "goods": "onggi"
+          },
+          "tris": 2480,
+          "footprint": [
+            7.0,
+            6.4
+          ],
+          "colliders": 4,
+          "lights": 1,
+          "occluder": true,
+          "anchors": [
+            "seller",
+            "buyer"
+          ],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "goods": "cloth",
+            "w": 4.5
+          },
+          "tris": 1216,
+          "footprint": [
+            5.5,
+            6.4
+          ],
+          "colliders": 4,
+          "lights": 1,
+          "occluder": true,
+          "anchors": [
+            "seller",
+            "buyer"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jwapan",
+      "file": "res://kit/village/jwapan.gd",
+      "desc": "장터 좌판 — 멍석 + 낮은 널 좌판 + 물건 + 뒤쪽 반만 덮는 흰 차일(awning)",
+      "shot": "shots/kit/village/jwapan.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 608,
+      "footprint": [
+        2.4,
+        2.0
+      ],
+      "colliders": 5,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "seller",
+        "buyer"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "goods": "fish",
+            "awning": false
+          },
+          "tris": 288,
+          "footprint": [
+            2.4,
+            2.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "seller",
+            "buyer"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "mulbang_a",
+      "file": "res://kit/village/mulbang_a.gd",
+      "desc": "물레방앗간 — 흙벽 초가 맞배(용마루 남북), 남쪽 박공에 문 + 윗물레 바퀴(r 1.6) + 동쪽 홈통 + 바퀴 밑 도랑",
+      "shot": "shots/kit/village/mulbang_a.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1636,
+      "footprint": [
+        6.4,
+        7.4
+      ],
+      "colliders": 3,
+      "lights": 1,
+      "occluder": true,
+      "anchors": [
+        "door"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "wheel_r": 1.4
+          },
+          "tris": 1636,
+          "footprint": [
+            6.2,
+            7.4
+          ],
+          "colliders": 3,
+          "lights": 1,
+          "occluder": true,
+          "anchors": [
+            "door"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "didil_bang_a",
+      "file": "res://kit/village/didil_bang_a.gd",
+      "desc": "디딜방앗간 — 뒷벽만 있는 초가 헛간 + Y자 디딜방아·볼씨·공이·돌확 + 곡식 자루·키",
+      "shot": "shots/kit/village/didil_bang_a.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 728,
+      "footprint": [
+        5.0,
+        4.2
+      ],
+      "colliders": 8,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [
+        "treader",
+        "feeder"
+      ],
+      "interior": false,
+      "variants": []
+    },
+    {
+      "name": "oeyanggan",
+      "file": "res://kit/village/oeyanggan.gd",
+      "desc": "외양간 — 세 벽 흙벽 + 앞 살대 + 구유·깔짚·여물 짚단 (anchor cow)",
+      "shot": "shots/kit/village/oeyanggan.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 744,
+      "footprint": [
+        5.0,
+        4.2
+      ],
+      "colliders": 5,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [
+        "cow",
+        "gate"
+      ],
+      "interior": false,
+      "variants": []
+    },
+    {
+      "name": "heotgan",
+      "file": "res://kit/village/heotgan.gd",
+      "desc": "헛간 — 앞이 트인 초가 맞배 + 볏단·지게·소쿠리·농기구",
+      "shot": "shots/kit/village/heotgan.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1132,
+      "footprint": [
+        5.0,
+        4.0
+      ],
+      "colliders": 8,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [
+        "front"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "walls": "back",
+            "w": 3.2
+          },
+          "tris": 1084,
+          "footprint": [
+            4.2,
+            4.0
+          ],
+          "colliders": 6,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [
+            "front"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "dwitgan",
+      "file": "res://kit/village/dwitgan.gd",
+      "desc": "뒷간 — 작은 흙벽 초가 + 거적문 + 잿더미",
+      "shot": "shots/kit/village/dwitgan.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 468,
+      "footprint": [
+        2.7,
+        2.5
+      ],
+      "colliders": 2,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [
+        "door"
+      ],
+      "interior": false,
+      "variants": []
+    },
+    {
+      "name": "daemun",
+      "file": "res://kit/village/daemun.gd",
+      "desc": "대문 — style tile(평대문·초롱) / soseul(솟을대문 + 행랑 두 칸) / thatch(초가 대문)",
+      "shot": "shots/kit/village/daemun.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 616,
+      "footprint": [
+        3.5,
+        2.4
+      ],
+      "colliders": 2,
+      "lights": 1,
+      "occluder": true,
+      "anchors": [
+        "gate_out",
+        "gate_in",
+        "wall_l",
+        "wall_r"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "style": "soseul"
+          },
+          "tris": 1724,
+          "footprint": [
+            7.6,
+            2.4
+          ],
+          "colliders": 4,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "gate_out",
+            "gate_in",
+            "wall_l",
+            "wall_r"
+          ],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "style": "thatch",
+            "open": false
+          },
+          "tris": 424,
+          "footprint": [
+            3.5,
+            2.4
+          ],
+          "colliders": 3,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [
+            "gate_out",
+            "gate_in",
+            "wall_l",
+            "wall_r"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "saripmun",
+      "file": "res://kit/village/saripmun.gd",
+      "desc": "사립문 — 문기둥 둘 + 싸리 문짝(가새)",
+      "shot": "shots/kit/village/saripmun.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 376,
+      "footprint": [
+        1.8,
+        1.2
+      ],
+      "colliders": 2,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "gate_out",
+        "gate_in"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "open": false
+          },
+          "tris": 376,
+          "footprint": [
+            1.8,
+            1.2
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "gate_out",
+            "gate_in"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "todam",
+      "file": "res://kit/village/todam.gd",
+      "desc": "토담 — 막돌 박은 흙담 + 갓(cap thatch 이엉 / tile 기와). 두 점 사이, ~50/m",
+      "shot": "shots/kit/village/todam.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 288,
+      "footprint": [
+        5.8,
+        0.8
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "cap": "tile"
+          },
+          "tris": 336,
+          "footprint": [
+            5.8,
+            0.8
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "seonghwangdang",
+      "file": "res://kit/village/seonghwangdang.gd",
+      "desc": "성황당 — 돌무더기 + 신목(금줄·종이 술·오색 천) + (dangjip) 작은 기와 당집. tree=false면 nature 나무 자리만",
+      "shot": "shots/kit/village/seonghwangdang.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1928,
+      "footprint": [
+        5.5,
+        4.6
+      ],
+      "colliders": 3,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "altar",
+        "tree"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "dangjip": true
+          },
+          "tris": 2464,
+          "footprint": [
+            7.5,
+            4.6
+          ],
+          "colliders": 4,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "altar",
+            "tree"
+          ],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "tree": false
+          },
+          "tris": 750,
+          "footprint": [
+            5.5,
+            4.6
+          ],
+          "colliders": 3,
+          "lights": 1,
+          "occluder": true,
+          "anchors": [
+            "altar",
+            "tree"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "sotdae",
+      "file": "res://kit/village/sotdae.gd",
+      "desc": "솟대 — 장대 끝 나무 오리, n개",
+      "shot": "shots/kit/village/sotdae.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 468,
+      "footprint": [
+        2.7,
+        1.0
+      ],
+      "colliders": 3,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "n": 1,
+            "h": 5.0
+          },
+          "tris": 156,
+          "footprint": [
+            1.3,
+            1.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jingeom",
+      "file": "res://kit/village/jingeom.gd",
+      "desc": "징검다리 — 넓적한 디딤돌 줄(z방향, 물 면 y=0). 충돌체 없음",
+      "shot": "shots/kit/village/jingeom.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 360,
+      "footprint": [
+        1.2,
+        6.8
+      ],
+      "colliders": 0,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "s0",
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "north",
+        "south"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "len": 8
+          },
+          "tris": 480,
+          "footprint": [
+            1.2,
+            8.8
+          ],
+          "colliders": 0,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "s0",
+            "s1",
+            "s2",
+            "s3",
+            "s4",
+            "s5",
+            "s6",
+            "s7",
+            "s8",
+            "s9",
+            "s10",
+            "s11",
+            "north",
+            "south"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "seop_bridge",
+      "file": "res://kit/village/seop_bridge.gd",
+      "desc": "섶다리 — Y자 다리발·멍에·장선·솔가지·흙 덮은 임시 나무다리(z방향)",
+      "shot": "shots/kit/village/seop_bridge.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1632,
+      "footprint": [
+        2.4,
+        10.4
+      ],
+      "colliders": 2,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "north",
+        "south",
+        "top"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "len": 14,
+            "spans": 6
+          },
+          "tris": 2080,
+          "footprint": [
+            2.4,
+            14.4
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "north",
+            "south",
+            "top"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "narutbae",
+      "file": "res://kit/village/narutbae.gd",
+      "desc": "나룻배 — 평저 나룻배(이물 -z), 멍에·깔판·삿대. 원점 = 물 면",
+      "shot": "shots/kit/village/narutbae.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 240,
+      "footprint": [
+        1.9,
+        6.6
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "boatman",
+        "passenger",
+        "bow"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "len": 5,
+            "pole": false
+          },
+          "tris": 200,
+          "footprint": [
+            1.9,
+            5.2
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "boatman",
+            "passenger",
+            "bow"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "ppallaeteo",
+      "file": "res://kit/village/ppallaeteo.gd",
+      "desc": "빨래터 — 냇가 빨랫돌 줄 + 방망이 + 젖은 빨래 + 광주리 (+ 물 판)",
+      "shot": "shots/kit/village/ppallaeteo.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 536,
+      "footprint": [
+        4.9,
+        2.6
+      ],
+      "colliders": 0,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "washer0",
+        "washer1",
+        "washer2",
+        "basket"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "n": 2,
+            "water": false
+          },
+          "tris": 376,
+          "footprint": [
+            3.6,
+            2.6
+          ],
+          "colliders": 0,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "washer0",
+            "washer1",
+            "basket"
+          ],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "jige",
+      "file": "res://kit/village/jige.gd",
+      "desc": "지게 — 서 있는 지게 + 작대기, load basket(바소쿠리)/wood(나뭇짐)/none",
+      "shot": "shots/kit/village/jige.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 320,
+      "footprint": [
+        0.9,
+        1.1
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "load": "wood"
+          },
+          "tris": 392,
+          "footprint": [
+            0.9,
+            1.1
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "firewood",
+      "file": "res://kit/village/firewood.gd",
+      "desc": "장작더미 — row(벽 따라 쌓기, cover 이엉) / stack(井자 쌓기)",
+      "shot": "shots/kit/village/firewood.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 640,
+      "footprint": [
+        1.9,
+        1.2
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "style": "stack"
+          },
+          "tris": 720,
+          "footprint": [
+            1.9,
+            1.2
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "props",
+      "file": "res://kit/village/props.gd",
+      "desc": "작은 소품 — kind: pyeongsang 평상 / gamasot 한데부뚜막 / yongsu 용수 장대 / jeolgu 절구 / maetdol 맷돌 / dok 항아리 / soguri 소쿠리 / byeotdan 볏단 / scarecrow 허수아비 / meongseok 멍석",
+      "shot": "shots/kit/village/props.png",
+      "params": {
+        "seed": 1,
+        "kind": "pyeongsang"
+      },
+      "tris": 216,
+      "footprint": [
+        2.0,
+        1.3
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "seat"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "kind": "gamasot"
+          },
+          "tris": 494,
+          "footprint": [
+            1.5,
+            1.4
+          ],
+          "colliders": 1,
+          "lights": 1,
+          "occluder": false,
+          "anchors": [
+            "cook"
+          ],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "yongsu"
+          },
+          "tris": 224,
+          "footprint": [
+            0.8,
+            0.8
+          ],
+          "colliders": 1,
+          "lights": 1,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "jeolgu"
+          },
+          "tris": 208,
+          "footprint": [
+            0.9,
+            0.9
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "maetdol"
+          },
+          "tris": 292,
+          "footprint": [
+            1.0,
+            1.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "dok"
+          },
+          "tris": 480,
+          "footprint": [
+            1.6,
+            1.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "soguri",
+            "fill": "grain"
+          },
+          "tris": 80,
+          "footprint": [
+            0.8,
+            0.8
+          ],
+          "colliders": 0,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "byeotdan"
+          },
+          "tris": 384,
+          "footprint": [
+            1.8,
+            1.4
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "scarecrow"
+          },
+          "tris": 308,
+          "footprint": [
+            1.6,
+            0.6
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "kind": "meongseok"
+          },
+          "tris": 124,
+          "footprint": [
+            2.4,
+            1.8
+          ],
+          "colliders": 0,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false
+        }
+      ]
+    },
+    {
+      "name": "house_compound",
+      "file": "res://kit/village/house_compound.gd",
+      "desc": "집 한 채 프리셋 — small(초가+헛간+뒷간+장독+싸리울+사립문) / medium(초가 안채·사랑채+외양간+헛간+토담+초가대문) / large(기와 안채·사랑채+곳간+기와 토담+솟을대문)",
+      "shot": "shots/kit/village/house_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 10950,
+      "footprint": [
+        14.6,
+        14.0
+      ],
+      "colliders": 21,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_maru",
+        "anchae_kitchen",
+        "heotgan_front",
+        "dwitgan_door",
+        "gate_gate_out",
+        "gate_gate_in",
+        "yard"
+      ],
+      "interior": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 12712,
+          "footprint": [
+            20.0,
+            17.4
+          ],
+          "colliders": 28,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_maru",
+            "anchae_kitchen",
+            "sarang_door",
+            "sarang_maru",
+            "sarang_kitchen",
+            "oeyang_cow",
+            "oeyang_gate",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r",
+            "yard"
+          ],
+          "interior": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 14452,
+          "footprint": [
+            24.8,
+            21.8
+          ],
+          "colliders": 22,
+          "lights": 9,
+          "occluder": true,
+          "anchors": [
+            "anchae_daecheong",
+            "anchae_steps",
+            "anchae_maru",
+            "sarang_daecheong",
+            "sarang_steps",
+            "sarang_maru",
+            "gotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r",
+            "yard"
+          ],
+          "interior": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,456 @@
+{
+ "region": "JL_NAMWON_UNBONG",
+ "kit": "landmark",
+ "era": "1870년 전후 조선 후기",
+ "front": "+z(남)",
+ "shared": {
+  "_roof.gd": "곡선 기와지붕(웹 curvedRoof 이식) + 팔작 합각·맞배 박공·추녀마루",
+  "_common.gd": "범용 목조 건물 hall(), 담장, 창호, 배치 도우미 assemble()/wall_pieces()",
+  "_seong.gd": "성벽 몸체·면석·여장·홍예",
+  "_stone.gd": "석탑·석등 부재"
+ },
+ "models": [
+  {
+   "name": "seong_wall",
+   "file": "res://kit/landmark/seong_wall.gd",
+   "desc": "남원읍성 성벽 직선 구간(판석 협축 석벽 + 여장·타구·총안). 로컬 x 방향, 바깥 +z",
+   "params": {
+    "seed": 1,
+    "length": 20
+   },
+   "footprint": [
+    20.0,
+    5.1
+   ],
+   "tris": 804,
+   "composite": false,
+   "sources": [
+    "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)",
+    "전북일보 2020-07-05 「남원읍성 복원 사업 추진」(네모 반듯한 평지 읍성, 둘레 2.5km, 높이 약 4m), 2024-07-14(북문·북성벽, 해자·양마장 확인)"
+   ],
+   "hypothesis": "치수(윗너비 4.6m·여장 타 3.2m)는 가설",
+   "shot": "shots/kit/landmark/seong_wall.png"
+  },
+  {
+   "name": "seong_corner",
+   "file": "res://kit/landmark/seong_corner.gd",
+   "desc": "성벽 모서리 덩이(바깥 +x·+z, 여장 두 면)",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    5.0,
+    5.0
+   ],
+   "tris": 274,
+   "composite": false,
+   "sources": [
+    "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)"
+   ],
+   "hypothesis": "각루 유무 미확인 → 여장만(가설)",
+   "shot": "shots/kit/landmark/seong_corner.png"
+  },
+  {
+   "name": "seong_chi",
+   "file": "res://kit/landmark/seong_chi.gd",
+   "desc": "치(雉): 성벽 바깥으로 내민 네모 돌출부",
+   "params": {
+    "seed": 1,
+    "width": 8,
+    "depth": 6
+   },
+   "footprint": [
+    8.4,
+    6.4
+   ],
+   "tris": 476,
+   "composite": false,
+   "sources": [
+    "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)"
+   ],
+   "hypothesis": "옹성 16 중 문 옹성 4 외를 치·귀로 해석(가설)",
+   "shot": "shots/kit/landmark/seong_chi.png"
+  },
+  {
+   "name": "seongmun",
+   "file": "res://kit/landmark/seongmun.gd",
+   "desc": "성문: 홍예문 육축 + 단층 팔작 문루(3×2칸) + 반원 옹성(열린 쪽 선택)",
+   "params": {
+    "seed": 1,
+    "name": "완월루",
+    "ongseong": true,
+    "open_side": "east"
+   },
+   "footprint": [
+    25.2,
+    19.3
+   ],
+   "tris": 6636,
+   "composite": false,
+   "sources": [
+    "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)"
+   ],
+   "hypothesis": "문루 층수·옹성 모양은 가설. 문 이름: 남 완월루·북 공신루·서 망미루·동 향일루",
+   "shot": "shots/kit/landmark/seongmun.png"
+  },
+  {
+   "name": "namwon_eupseong",
+   "file": "res://kit/landmark/namwon_eupseong.gd",
+   "desc": "남원읍성 전체 배치(압축 한 변 190m 기본, 4문+옹성, 치 8, 모서리 4). pieces로 조각 목록 반환",
+   "params": {
+    "seed": 1,
+    "side": 190
+   },
+   "footprint": [
+    220.0,
+    220.0
+   ],
+   "tris": 57510,
+   "composite": true,
+   "sources": [
+    "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)",
+    "전북일보 2020-07-05 「남원읍성 복원 사업 추진」(네모 반듯한 평지 읍성, 둘레 2.5km, 높이 약 4m), 2024-07-14(북문·북성벽, 해자·양마장 확인)"
+   ],
+   "hypothesis": "한 변 = 실제 약 625m × K0.30. 해자는 모델에 없음(지형 landuse 5로)",
+   "shot": "shots/kit/landmark/namwon_eupseong.png"
+  },
+  {
+   "name": "dongheon",
+   "file": "res://kit/landmark/dongheon.gd",
+   "desc": "동헌: 정면 7칸(가운데 3칸 대청) 측면 3칸 팔작, 높은 기단, 툇마루·현판. interior(지붕 숨김)",
+   "params": {
+    "seed": 1,
+    "bays": 7
+   },
+   "footprint": [
+    23.7,
+    10.6
+   ],
+   "tris": 6840,
+   "composite": false,
+   "sources": [
+    "현존 조선 후기 동헌 일반형"
+   ],
+   "hypothesis": "남원 동헌 규모 미상(가설)",
+   "shot": "shots/kit/landmark/dongheon.png"
+  },
+  {
+   "name": "naea",
+   "file": "res://kit/landmark/naea.gd",
+   "desc": "내아: ㄱ자 기와집(몸채 5칸 + 부엌 날개 3칸)",
+   "params": {
+    "seed": 1,
+    "wing": true
+   },
+   "footprint": [
+    15.7,
+    15.4
+   ],
+   "tris": 7738,
+   "composite": false,
+   "sources": [
+    "반가 안채·현존 내아 일반형"
+   ],
+   "hypothesis": "가설",
+   "shot": "shots/kit/landmark/naea.png"
+  },
+  {
+   "name": "gaeksa",
+   "file": "res://kit/landmark/gaeksa.gd",
+   "desc": "객사 용성관: 정당 5칸(솟을지붕, 다포) + 좌우 익헌 각 4칸",
+   "params": {
+    "seed": 1,
+    "jeongdang_bays": 5
+   },
+   "footprint": [
+    47.0,
+    14.0
+   ],
+   "tris": 13880,
+   "composite": false,
+   "sources": [
+    "나주 금성관 유추"
+   ],
+   "hypothesis": "용성관 치수 미상 → 금성관 비례(가설)",
+   "shot": "shots/kit/landmark/gaeksa.png"
+  },
+  {
+   "name": "samun",
+   "file": "res://kit/landmark/samun.gd",
+   "desc": "솟을삼문(외삼문/내삼문): 3칸 맞배, 가운데 솟음·열린 판문",
+   "params": {
+    "seed": 1,
+    "kind": "outer"
+   },
+   "footprint": [
+    10.8,
+    5.6
+   ],
+   "tris": 4290,
+   "composite": false,
+   "sources": [
+    "조선 후기 관아·향교 삼문 일반형"
+   ],
+   "hypothesis": "남원 외삼문 누문 여부 미상(가설)",
+   "shot": "shots/kit/landmark/samun.png"
+  },
+  {
+   "name": "gwana_wall",
+   "file": "res://kit/landmark/gwana_wall.gd",
+   "desc": "관아·사찰 담장 직선 모듈(막돌+회벽+기와)",
+   "params": {
+    "seed": 1,
+    "length": 12,
+    "height": 2.2
+   },
+   "footprint": [
+    12.0,
+    1.1
+   ],
+   "tris": 384,
+   "composite": false,
+   "sources": [],
+   "hypothesis": "",
+   "shot": "shots/kit/landmark/gwana_wall.png"
+  },
+  {
+   "name": "gwana",
+   "file": "res://kit/landmark/gwana.gd",
+   "desc": "남원부 관아 일곽 배치(외삼문→내삼문→동헌, 동북 내아, 담장). pieces 반환",
+   "params": {
+    "seed": 1,
+    "width": 60,
+    "depth": 72
+   },
+   "footprint": [
+    62.0,
+    78.0
+   ],
+   "tris": 34536,
+   "composite": true,
+   "sources": [
+    "읍치 관아 일반 배치"
+   ],
+   "hypothesis": "배치 가설",
+   "shot": "shots/kit/landmark/gwana.png"
+  },
+  {
+   "name": "gwanghallu",
+   "file": "res://kit/landmark/gwanghallu.gd",
+   "desc": "광한루: 2층 누각 본루 5×4칸 팔작 익공, 장초석+누하주, 헌함·계자난간, 익루(동). interior",
+   "params": {
+    "seed": 1,
+    "iklu": true
+   },
+   "footprint": [
+    30.0,
+    14.4
+   ],
+   "tris": 13102,
+   "composite": false,
+   "sources": [
+    "국가유산청 국보 지정 예고 보도(2026-07, 본루 정면 5칸·측면 4칸 팔작, 익공, 1626 신감 중건, 익루 정면 3칸·측면 2칸 가운데 온돌방, 월랑 1881)"
+   ],
+   "hypothesis": "칸 폭·높이 비례 가설. 월랑(1881)은 1870 기준 제외",
+   "shot": "shots/kit/landmark/gwanghallu.png"
+  },
+  {
+   "name": "gwanghallu_pond",
+   "file": "res://kit/landmark/gwanghallu_pond.gd",
+   "desc": "광한루원 연못 + 삼신산 섬 셋 + 오작교. water{y,outline} 반환",
+   "params": {
+    "seed": 1,
+    "width": 110,
+    "depth": 46
+   },
+   "footprint": [
+    113.0,
+    58.0
+   ],
+   "tris": 8788,
+   "composite": false,
+   "sources": [
+    "국가유산청 국보 지정 예고 보도(2026-07, 본루 정면 5칸·측면 4칸 팔작, 익공, 1626 신감 중건, 익루 정면 3칸·측면 2칸 가운데 온돌방, 월랑 1881)",
+    "전북일보 2017-12-07 윤주(오작교 길이 57m·폭 2.4m, 홍예 4, 1582 장의국 가설·정철 삼신산)"
+   ],
+   "hypothesis": "못 크기·섬 위치 가설. 물면 불투명 판",
+   "shot": "shots/kit/landmark/gwanghallu_pond.png"
+  },
+  {
+   "name": "ojakgyo",
+   "file": "res://kit/landmark/ojakgyo.gd",
+   "desc": "오작교: 길이 57m·폭 2.4m 돌 홍예다리, 홍예 4",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    2.8,
+    57.0
+   ],
+   "tris": 3176,
+   "composite": false,
+   "sources": [
+    "전북일보 2017-12-07 윤주(오작교 길이 57m·폭 2.4m, 홍예 4, 1582 장의국 가설·정철 삼신산)"
+   ],
+   "hypothesis": "홍예 지름·상판 높이 가설",
+   "shot": "shots/kit/landmark/ojakgyo.png"
+  },
+  {
+   "name": "seoktap",
+   "file": "res://kit/landmark/seoktap.gd",
+   "desc": "실상사 동·서 삼층석탑(이중기단, 상륜부 온전)",
+   "params": {
+    "seed": 1,
+    "height": 8.4
+   },
+   "footprint": [
+    3.6,
+    3.6
+   ],
+   "tris": 1592,
+   "composite": false,
+   "sources": [
+    "전북일보 2025-08-13·2013-08-01, brunch 답사기(보광전 정면 3칸·측면 2칸 다포 맞배, 일주문 대신 해탈교, 석등 보물 높이 약 5m, 쌍탑 상륜 온전, 약사전 철불)"
+   ],
+   "hypothesis": "부재 비례 가설",
+   "shot": "shots/kit/landmark/seoktap.png"
+  },
+  {
+   "name": "seokdeung",
+   "file": "res://kit/landmark/seokdeung.gd",
+   "desc": "실상사 석등(팔각, 장구형 간주석, 앞 돌계단, 화창 발광)",
+   "params": {
+    "seed": 1,
+    "stair": true
+   },
+   "footprint": [
+    2.2,
+    4.0
+   ],
+   "tris": 1128,
+   "composite": false,
+   "sources": [
+    "전북일보 2025-08-13·2013-08-01, brunch 답사기(보광전 정면 3칸·측면 2칸 다포 맞배, 일주문 대신 해탈교, 석등 보물 높이 약 5m, 쌍탑 상륜 온전, 약사전 철불)"
+   ],
+   "hypothesis": "비례 가설",
+   "shot": "shots/kit/landmark/seokdeung.png"
+  },
+  {
+   "name": "bogwangjeon",
+   "file": "res://kit/landmark/bogwangjeon.gd",
+   "desc": "실상사 보광전: 정면 3칸·측면 2칸 다포 맞배",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    14.6,
+    11.2
+   ],
+   "tris": 4174,
+   "composite": false,
+   "sources": [
+    "전북일보 2025-08-13·2013-08-01, brunch 답사기(보광전 정면 3칸·측면 2칸 다포 맞배, 일주문 대신 해탈교, 석등 보물 높이 약 5m, 쌍탑 상륜 온전, 약사전 철불)"
+   ],
+   "hypothesis": "칸 폭 가설",
+   "shot": "shots/kit/landmark/bogwangjeon.png"
+  },
+  {
+   "name": "yaksajeon",
+   "file": "res://kit/landmark/yaksajeon.gd",
+   "desc": "실상사 약사전(철불): 정면 3칸",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    12.2,
+    9.2
+   ],
+   "tris": 4334,
+   "composite": false,
+   "sources": [
+    "전북일보 2025-08-13·2013-08-01, brunch 답사기(보광전 정면 3칸·측면 2칸 다포 맞배, 일주문 대신 해탈교, 석등 보물 높이 약 5m, 쌍탑 상륜 온전, 약사전 철불)"
+   ],
+   "hypothesis": "측면 칸·지붕형식 가설(3×2 팔작)",
+   "shot": "shots/kit/landmark/yaksajeon.png"
+  },
+  {
+   "name": "cheonwangmun",
+   "file": "res://kit/landmark/cheonwangmun.gd",
+   "desc": "실상사 천왕문: 3칸 맞배, 가운데 통로, 사천왕",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    11.8,
+    8.2
+   ],
+   "tris": 4048,
+   "composite": false,
+   "sources": [
+    "전북일보 2025-08-13·2013-08-01, brunch 답사기(보광전 정면 3칸·측면 2칸 다포 맞배, 일주문 대신 해탈교, 석등 보물 높이 약 5m, 쌍탑 상륜 온전, 약사전 철불)"
+   ],
+   "hypothesis": "규모 가설",
+   "shot": "shots/kit/landmark/cheonwangmun.png"
+  },
+  {
+   "name": "silsangsa",
+   "file": "res://kit/landmark/silsangsa.gd",
+   "desc": "실상사 경내 배치(천왕문→쌍탑→석등→보광전, 동쪽 약사전, 담장). pieces 반환",
+   "params": {
+    "seed": 1,
+    "width": 64,
+    "depth": 62
+   },
+   "footprint": [
+    66.0,
+    70.0
+   ],
+   "tris": 25124,
+   "composite": true,
+   "sources": [
+    "전북일보 2025-08-13·2013-08-01, brunch 답사기(보광전 정면 3칸·측면 2칸 다포 맞배, 일주문 대신 해탈교, 석등 보물 높이 약 5m, 쌍탑 상륜 온전, 약사전 철불)"
+   ],
+   "hypothesis": "거리 압축·약사전 방위 가설",
+   "shot": "shots/kit/landmark/silsangsa.png"
+  },
+  {
+   "name": "hwangsan_bigak",
+   "file": "res://kit/landmark/hwangsan_bigak.gd",
+   "desc": "황산대첩비(귀부·비신·이수) + 비각(3×2 팔작, 사방 홍살) + 낮은 담",
+   "params": {
+    "seed": 1,
+    "wall": true
+   },
+   "footprint": [
+    19.0,
+    16.0
+   ],
+   "tris": 7596,
+   "composite": false,
+   "sources": [
+    "전북일보 2013-08-15·2014-02-04(1577 건립, 김귀영 글·송인 글씨, 1945 폭파, 1963 복원, 1973 파비각)"
+   ],
+   "hypothesis": "비각 규모·비 치수 가설. 1870엔 원비(화강암 회색)",
+   "shot": "shots/kit/landmark/hwangsan_bigak.png"
+  },
+  {
+   "name": "hyanggyo",
+   "file": "res://kit/landmark/hyanggyo.gd",
+   "desc": "(선택) 향교: 외삼문·대성전(맞배)·명륜당(팔작)·담장, 전묘후학",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    42.0,
+    62.0
+   ],
+   "tris": 19186,
+   "composite": true,
+   "sources": [
+    "평지 향교 일반형"
+   ],
+   "hypothesis": "남원향교 실제 배치 미확인(가설)",
+   "shot": "shots/kit/landmark/hyanggyo.png"
+  }
+ ]
+}

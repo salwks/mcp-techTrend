@@ -2,7 +2,7 @@
 #   godot --path seolhwa_godot res://scenes/kit_preview.tscn -- --kit=res://kit/village/choga.gd --params='{"w":6}' \
 #         --shot=shots/kit_choga.png [--time=10] [--pitch=38] [--dist=16] [--yaw=0] [--ground=1] [--fit=1]
 # 키트 스크립트는 static func build(params: Dictionary) -> Dictionary 를 가져야 한다(docs/REGION_CONTRACTS.md §4).
-# --kit 대신 --scene=res://... 로 Node3D를 돌려주는 static func make() 스크립트도 찍을 수 있다.
+# --center=x,y,z: 그 점을 중심으로(큰 성곽의 일부를 게임 거리로). --kit 대신 --scene=res://... 로 Node3D를 돌려주는 static func make() 스크립트도 찍을 수 있다.
 extends Node
 
 var args := {}
@@ -11,6 +11,9 @@ var cam: Camera3D
 var post: PostEffect
 
 func _ready() -> void:
+	# 스크립트 오류로 멈춰도 끝나도록 안전 타이머(--stay면 끄기)
+	if not "--stay" in OS.get_cmdline_user_args():
+		get_tree().create_timer(90.0).timeout.connect(func(): push_error("kit_preview: 시간 초과"); get_tree().quit(1))
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
@@ -98,6 +101,9 @@ func _frame_camera(target: Node3D) -> void:
 			box = b if first else box.merge(b); first = false
 		if not first:
 			center = box.get_center(); radius = maxf(box.size.length() * 0.5, 1.0)
+	if args.has("center"): # 큰 모델의 한 부분을 게임 카메라 거리로: --center=x,y,z --dist=22
+		var c: PackedStringArray = args.center.split(",")
+		center = Vector3(float(c[0]), float(c[1]), float(c[2])); radius = 8.0
 	var pitch := deg_to_rad(float(args.get("pitch", "38")))
 	var yaw := deg_to_rad(float(args.get("yaw", "0")))
 	var dist := float(args.get("dist", str(radius / tan(deg_to_rad(cam.fov * 0.5)) * 1.1)))

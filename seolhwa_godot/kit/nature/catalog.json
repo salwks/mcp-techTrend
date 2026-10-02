@@ -1,0 +1,405 @@
+{
+ "kit": "nature",
+ "contract": "docs/REGION_CONTRACTS.md §4 (+mesh: ArrayMesh, tris)",
+ "scatter": "kit/nature/scatter.gd (§6)",
+ "models": [
+  {
+   "name": "pine",
+   "script": "res://kit/nature/pine.gd",
+   "desc": "소나무(적송) — 웹 vegetation.js pine 이식",
+   "params": {
+    "seed": 1,
+    "s": 1,
+    "lod": 0
+   },
+   "footprint": [
+    3.4,
+    3.4
+   ],
+   "tris": 544,
+   "tris_lod1": 128,
+   "note": "웹 이식",
+   "shot": "shots/kit/nature/pine.png"
+  },
+  {
+   "name": "fir",
+   "script": "res://kit/nature/fir.gd",
+   "desc": "곧게 선 소나무(층층 뭉치) — 웹 fir 이식",
+   "params": {
+    "seed": 1,
+    "s": 1,
+    "lod": 0
+   },
+   "footprint": [
+    3.4,
+    3.4
+   ],
+   "tris": 208,
+   "tris_lod1": 68,
+   "note": "웹 이식",
+   "shot": "shots/kit/nature/fir.png"
+  },
+  {
+   "name": "bush",
+   "script": "res://kit/nature/bush.gd",
+   "desc": "덤불(flowers=true면 진달래 꽃점) — 웹 bush 이식",
+   "params": {
+    "seed": 1,
+    "s": 1,
+    "flowers": false
+   },
+   "footprint": [
+    1.6,
+    1.2
+   ],
+   "tris": 56,
+   "tris_lod1": null,
+   "note": "웹 이식",
+   "shot": "shots/kit/nature/bush.png"
+  },
+  {
+   "name": "rock",
+   "script": "res://kit/nature/rock.gd",
+   "desc": "바위 — 웹 rock 이식(s≤1.2 detail 0)",
+   "params": {
+    "seed": 1,
+    "s": 1,
+    "mossy": true
+   },
+   "footprint": [
+    2,
+    2
+   ],
+   "tris": 40,
+   "tris_lod1": null,
+   "note": "웹 이식",
+   "shot": "shots/kit/nature/rock.png"
+  },
+  {
+   "name": "reeds",
+   "script": "res://kit/nature/reeds.gd",
+   "desc": "갈대 — 웹 reeds 이식",
+   "params": {
+    "seed": 1,
+    "n": 7
+   },
+   "footprint": [
+    1.0,
+    0.7
+   ],
+   "tris": 37,
+   "tris_lod1": null,
+   "note": "웹 이식",
+   "shot": "shots/kit/nature/reeds.png"
+  },
+  {
+   "name": "flowers",
+   "script": "res://kit/nature/flowers.gd",
+   "desc": "들꽃 몇 송이(+꽃대) — 웹 flowers 이식",
+   "params": {
+    "seed": 1,
+    "color": "#f2e6a0"
+   },
+   "footprint": [
+    0.8,
+    0.6
+   ],
+   "tris": 44,
+   "tris_lod1": null,
+   "note": "웹 이식",
+   "shot": "shots/kit/nature/flowers.png"
+  },
+  {
+   "name": "rice_tuft",
+   "script": "res://kit/nature/rice_tuft.gd",
+   "desc": "벼 포기 — 웹 riceTuft 이식. patch=n이면 n×n 포기",
+   "params": {
+    "seed": 1,
+    "patch": 1,
+    "spacing": 0.85
+   },
+   "footprint": [
+    0.85,
+    0.85
+   ],
+   "tris": 4,
+   "tris_lod1": null,
+   "note": "웹 이식, patch 4 = 64",
+   "shot": "shots/kit/nature/rice_tuft.png"
+  },
+  {
+   "name": "big_tree",
+   "script": "res://kit/nature/big_tree.gd",
+   "desc": "큰 정자나무 — 웹 bigTree 이식. variant zelkova|willow|broadleaf|persimmon",
+   "params": {
+    "seed": 1,
+    "variant": "zelkova",
+    "lod": 0
+   },
+   "footprint": [
+    10.1,
+    6.4
+   ],
+   "tris": 1448,
+   "tris_lod1": 172,
+   "note": "willow 1224",
+   "shot": "shots/kit/nature/big_tree.png"
+  },
+  {
+   "name": "persimmon",
+   "script": "res://kit/nature/persimmon.gd",
+   "desc": "감나무(big_tree persimmon 변형)",
+   "params": {
+    "seed": 1,
+    "s": 0.7,
+    "lod": 0
+   },
+   "footprint": [
+    6.4,
+    4.1
+   ],
+   "tris": 1200,
+   "tris_lod1": 172,
+   "note": "새",
+   "shot": "shots/kit/nature/persimmon.png"
+  },
+  {
+   "name": "oak",
+   "script": "res://kit/nature/oak.gd",
+   "desc": "참나무류 점엽법 수관. kind sangsuri(상수리·굴참, 저지대)|singal(신갈나무, 고지대)",
+   "params": {
+    "seed": 1,
+    "kind": "sangsuri",
+    "s": 1,
+    "lod": 0
+   },
+   "footprint": [
+    7.5,
+    5.4
+   ],
+   "tris": 1472,
+   "tris_lod1": 132,
+   "note": "새",
+   "shot": "shots/kit/nature/oak.png"
+  },
+  {
+   "name": "korean_fir",
+   "script": "res://kit/nature/korean_fir.gd",
+   "desc": "구상나무 — 층층이 처진 원뿔(지리산 고지대 고유종)",
+   "params": {
+    "seed": 1,
+    "s": 1,
+    "lod": 0
+   },
+   "footprint": [
+    3.2,
+    3.2
+   ],
+   "tris": 280,
+   "tris_lod1": 84,
+   "note": "새",
+   "shot": "shots/kit/nature/korean_fir.png"
+  },
+  {
+   "name": "bamboo",
+   "script": "res://kit/nature/bamboo.gd",
+   "desc": "대숲 한 무리(줄기 12 + 세로 깃털 잎)",
+   "params": {
+    "seed": 1,
+    "n": 12,
+    "r": 1.6,
+    "h": 8,
+    "lod": 0
+   },
+   "footprint": [
+    5.7,
+    5.7
+   ],
+   "tris": 1440,
+   "tris_lod1": 252,
+   "note": "새",
+   "shot": "shots/kit/nature/bamboo.png"
+  },
+  {
+   "name": "azalea",
+   "script": "res://kit/nature/azalea.gd",
+   "desc": "진달래(jindallae)·산철쭉(cheoljjuk) 덤불",
+   "params": {
+    "seed": 1,
+    "kind": "jindallae",
+    "s": 1,
+    "bloom": true
+   },
+   "footprint": [
+    1.8,
+    1.3
+   ],
+   "tris": 260,
+   "tris_lod1": null,
+   "note": "cheoljjuk 332",
+   "shot": "shots/kit/nature/azalea.png"
+  },
+  {
+   "name": "deadwood",
+   "script": "res://kit/nature/deadwood.gd",
+   "desc": "고사목(standing|snag)",
+   "params": {
+    "seed": 1,
+    "kind": "standing",
+    "s": 1,
+    "lod": 0
+   },
+   "footprint": [
+    2.4,
+    2.4
+   ],
+   "tris": 360,
+   "tris_lod1": 76,
+   "note": "snag 136",
+   "shot": "shots/kit/nature/deadwood.png"
+  },
+  {
+   "name": "boulder",
+   "script": "res://kit/nature/boulder.gd",
+   "desc": "큰 화강암 바위(절리로 갈라진 덩이 2~4)",
+   "params": {
+    "seed": 1,
+    "s": 2.2,
+    "mossy": true
+   },
+   "footprint": [
+    5,
+    5
+   ],
+   "tris": 480,
+   "tris_lod1": null,
+   "note": "덩이 수에 따라 480~640",
+   "shot": "shots/kit/nature/boulder.png"
+  },
+  {
+   "name": "cliff",
+   "script": "res://kit/nature/cliff.gd",
+   "desc": "벼랑 조각(세로 절리 각진 바위 기둥, 정면 +z = 내리막)",
+   "params": {
+    "seed": 1,
+    "w": 6,
+    "h": 6,
+    "d": 3
+   },
+   "footprint": [
+    6.6,
+    4.6
+   ],
+   "tris": 340,
+   "tris_lod1": null,
+   "note": "새",
+   "shot": "shots/kit/nature/cliff.png"
+  },
+  {
+   "name": "slab_rock",
+   "script": "res://kit/nature/slab_rock.gd",
+   "desc": "계곡 너럭바위(충돌체 없음, 올라설 수 있음)",
+   "params": {
+    "seed": 1,
+    "w": 4,
+    "d": 2.6
+   },
+   "footprint": [
+    4.8,
+    3.2
+   ],
+   "tris": 200,
+   "tris_lod1": null,
+   "note": "새",
+   "shot": "shots/kit/nature/slab_rock.png"
+  },
+  {
+   "name": "stream_stones",
+   "script": "res://kit/nature/stream_stones.gd",
+   "desc": "여울 돌 넷",
+   "params": {
+    "seed": 1,
+    "s": 1
+   },
+   "footprint": [
+    2.0,
+    1.6
+   ],
+   "tris": 120,
+   "tris_lod1": null,
+   "note": "새",
+   "shot": "shots/kit/nature/stream_stones.png"
+  },
+  {
+   "name": "grass",
+   "script": "res://kit/nature/grass.gd",
+   "desc": "풀 무더기. kind meadow|dry|forest|eoksae(억새)",
+   "params": {
+    "seed": 1,
+    "kind": "meadow",
+    "n": 10
+   },
+   "footprint": [
+    0.8,
+    0.6
+   ],
+   "tris": 30,
+   "tris_lod1": null,
+   "note": "eoksae 36",
+   "shot": "shots/kit/nature/grass.png"
+  },
+  {
+   "name": "gravel",
+   "script": "res://kit/nature/gravel.gd",
+   "desc": "모래톱 자갈 8개",
+   "params": {
+    "seed": 1,
+    "spread": 1.4
+   },
+   "footprint": [
+    1.4,
+    1.1
+   ],
+   "tris": 80,
+   "tris_lod1": null,
+   "note": "새",
+   "shot": "shots/kit/nature/gravel.png"
+  },
+  {
+   "name": "crop",
+   "script": "res://kit/nature/crop.gd",
+   "desc": "밭 작물 한 줄(두둑+포기 5). kind bean|millet|barley",
+   "params": {
+    "seed": 1,
+    "kind": "bean",
+    "len": 2.4
+   },
+   "footprint": [
+    2.4,
+    0.6
+   ],
+   "tris": 116,
+   "tris_lod1": null,
+   "note": "millet 81",
+   "shot": "shots/kit/nature/crop.png"
+  },
+  {
+   "name": "cover",
+   "script": "res://kit/nature/cover.gd",
+   "desc": "흩뿌리기 전용 땅덮개 조각(풀·꽃·자갈·갈대·작은 돌 합성). kind meadow|forest|alpine|riverside|sandbar|rocky",
+   "params": {
+    "seed": 1,
+    "kind": "meadow",
+    "r": 2.0
+   },
+   "footprint": [
+    4,
+    4
+   ],
+   "tris": 208,
+   "tris_lod1": null,
+   "note": "139~252",
+   "shot": "shots/kit/nature/cover.png"
+  }
+ ]
+}

@@ -9,11 +9,11 @@
 
 | 항목 | 값 |
 |---|---|
-| 실제 범위(초안) | 위도 35.355–35.480, 경도 127.340–127.660 (지형 담당이 랜드마크가 다 들어가게 조정 가능, 조정하면 이 표를 고친다) |
+| 실제 범위(초안) | 위도 35.3539–35.4811, 경도 127.3401–127.6599 (terrain-data 확정: 게임 범위를 256m 타일 경계에 맞춤. 남원읍성·광한루·여원재·운봉·황산대첩비·인월·실상사·반선·정령치 모두 포함) |
 | 투영 | 기준점 lat0=35.4175, lon0=127.50 중심의 등장방형: `east_m = (lon-lon0)·cos(lat0)·111320`, `north_m = (lat-lat0)·110574` |
 | 압축 | **K = 0.30** (가로·세로·높이 모두 같은 비율 → 경사는 실제와 같다) |
 | 게임 좌표 | 1단위 = 1m. `x = east_m·K`(동쪽 +), `z = -north_m·K`(남쪽 +, 카메라 쪽), `y = (고도m − 60)·K` |
-| 게임 범위 | 약 x −4350…+4350, z −2100…+2100 (약 8.7×4.2km) |
+| 게임 범위 | x −4352…+4352, z −2112…+2112 (8704×4224m = 34×16.5 타일; height.png 4353×2113, cell 2m) |
 | 타일 | 256m × 256m, 타일 (tx, tz)의 원점 = (tx·256, tz·256) — 계획서 §2.2 |
 | 건물·캐릭터·식생 | **실물 크기(압축하지 않음)**. 마을 배치 간격만 압축된 땅에 맞춘다 |
 
@@ -40,7 +40,7 @@
 - 도형: `Kit.box(w,h,d, x,y,z, ry)`, `Kit.cyl(rt,rb,h,seg, x,y,z, rx,ry,rz)`, `Kit.cone`, `Kit.limb(a,b,r0,r1)`, `Kit.lump(r,detail,rng,rough,sy)`, `Kit.icosphere`, `Kit.plane`, `Kit.extrude(poly2d,h,y0)`, 직접 만들 땐 `Kit.Geo.new()`의 `tri()/quad()`
 - 변환·색: `Kit.xf(g, x,y,z, rx,ry,rz, sx,sy,sz)`, `Kit.apply(g, Transform3D)`, `Kit.paint(g, top, bottom, jitter, rng)` — 색은 `Kit.hex(0xRRGGBB)`(sRGB 16진 → 선형)
 - 난수: `Kit.Rng.new(seed).next()` / `.between(a,b)` (웹 rng와 같은 수열), 잡음 `Kit.vnoise/fbm/hash2`
-- 묶기: `var b := Kit.Batch.new(); b.add(key, geo, outline=0.03); var node := b.build(name)` — 키 → 붓 텍스처: `thatch tile makse rock mud paper(창호지 띠살) needle leaf bark wood stone cloth(양면) lamp/glow(밤에 빛남) flat smooth organic onggi`(무늬 없음). 먹선 두께 0이면 생략.
+- 묶기: `var b := Kit.Batch.new(); b.add(key, geo, outline=0.03); var node := b.build(name)` — 키 → 붓 텍스처: `thatch tile makse rock mud paper(창호지 띠살) needle leaf bark wood stone cloth(양면) lamp/glow(밤에 빛남) flat smooth organic onggi`(무늬 없음). 먹선 두께 0이면 생략. `water` 키는 반투명 물결 재질(UV 1 = 텍스처 한 장, 먹선 없음).
 - 밤에 빛나는 것: `paper`·`lamp` 키는 아틀라스 마스크로 밤에 창호지·초롱이 빛난다(전역 `glow_k`).
 - 미리보기: `godot --path seolhwa_godot res://scenes/kit_preview.tscn -- --kit=res://kit/<칸>/<이름>.gd --params='{"seed":3}' --shot=shots/kit/<칸>/<이름>.png [--time=18.3] [--pitch=38] [--yaw=20] [--dist=30] [--nofog]` — 게임과 같은 조명·후처리. `PREVIEW ... tris=` 로 삼각형 수가 찍힌다.
 
@@ -57,7 +57,9 @@ static func build(params: Dictionary) -> Dictionary
 #   occluder: bool,           # 플레이어를 가릴 만큼 크면 true (코어가 반투명 처리)
 #   footprint: Vector2,       # 차지하는 x·z 크기(m) — 배치 겹침 검사용
 #   anchors: { 이름: Vector3 },  # 문·마루·우물가 등 사건·NPC가 쓸 자리(선택)
-#   interior: { minX, maxX, minZ, maxZ, camera:{pitch,distance}, hide:[Node3D] }  # 들어갈 수 있으면(선택)
+#   interior: { minX, maxX, minZ, maxZ, floor_y, camera:{pitch,distance}, hide:[Node3D] }  # 들어갈 수 있으면(선택). floor_y = 마루 높이
+#   pieces: [ {kit, params, xform: Transform3D(로컬), info: build() 결과} ]  # 배치형(읍성·관아·사찰)만: 조각 단위로 놓아 가림·스트리밍을 따로 처리(선택)
+#   water: { y, outline: PackedVector2Array }  # 연못 등 물면(선택)
 # }
 ```
 - `params`: 최소 `seed`(int). 크기·변형은 각자 정하고 `kit/<칸>/catalog.json`에 목록(이름, 설명, params 예, footprint, 삼각형 수)을 남긴다.

@@ -239,6 +239,8 @@ static func _flip(g: Geo) -> void:
 		var u := g.uv[i + 1]; g.uv[i + 1] = g.uv[i + 2]; g.uv[i + 2] = u
 		var c := g.col[i + 1]; g.col[i + 1] = g.col[i + 2]; g.col[i + 2] = c
 
+static var _paint_rng := Rng.new(20261002) # rng를 안 넘겨도 실행마다 같은 얼룩
+
 # 세로 그라데이션(아래 bottom → 위 top) + 면마다 약간의 얼룩(웹 paint). 색은 Kit.hex()로(선형)
 static func paint(g: Geo, top: Color, bottom = null, jitter := 0.05, rng: Rng = null) -> Geo:
 	var bot: Color = top if bottom == null else bottom
@@ -246,7 +248,7 @@ static func paint(g: Geo, top: Color, bottom = null, jitter := 0.05, rng: Rng = 
 	var y0 := b.position.y
 	var hy := b.size.y if b.size.y > 0.0 else 1.0
 	for i in range(0, g.pos.size(), 3):
-		var j := ((rng.next() if rng else randf()) - 0.5) * jitter
+		var j := ((rng.next() if rng else _paint_rng.next()) - 0.5) * jitter
 		for k in 3:
 			var t := (g.pos[i + k].y - y0) / hy
 			g.col[i + k] = Color(maxf(0, lerpf(bot.r, top.r, t) + j), maxf(0, lerpf(bot.g, top.g, t) + j), maxf(0, lerpf(bot.b, top.b, t) + j * 0.8))
@@ -320,18 +322,40 @@ static func hull(g: Geo, t: float) -> Geo:
 # ---------------------------------------------------------------------------
 static var _tex := {}
 static var _mats := {}
+static var _lock := Mutex.new() # 작업 스레드(타일 흩뿌리기)에서도 부를 수 있게
 
 static func texture(name: String) -> Texture2D:
+	_lock.lock()
 	if not _tex.has(name):
 		var img := Image.load_from_file(ProjectSettings.globalize_path(ASSETS + name + ".png"))
 		img.generate_mipmaps()
 		_tex[name] = ImageTexture.create_from_image(img)
-	return _tex[name]
+	var t: Texture2D = _tex[name]
+	_lock.unlock()
+	return t
 
-# 'atlas'(거의 전부, 창호지·초롱은 밤에 빛남) / 'cloth'(양면 천)
+# 'atlas'(거의 전부, 창호지·초롱은 밤에 빛남) / 'cloth'(양면 천) / 'water'(반투명 물결, 웹 개울과 같은 재질)
 static func material(kind := "atlas") -> ShaderMaterial:
-	if _mats.has(kind): return _mats[kind]
+	_lock.lock()
+	var m0: ShaderMaterial = _mats.get(kind)
+	_lock.unlock()
+	if m0: return m0
+	var made := _make_material(kind)
+	_lock.lock()
+	if not _mats.has(kind): _mats[kind] = made
+	var out: ShaderMaterial = _mats[kind]
+	_lock.unlock()
+	return out
+
+static func _make_material(kind: String) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
+	if kind == "water":
+		m.shader = Materials.world_shader(true, true, false)
+		m.set_shader_parameter("ramp_tex", Materials.ramp_texture())
+		m.set_shader_parameter("albedo_tex", texture("water"))
+		var c := hex(0xb4cac8)
+		m.set_shader_parameter("albedo_color", Vector4(c.r, c.g, c.b, 0.88))
+		return m
 	m.shader = Materials.world_shader(true, false, kind == "cloth")
 	m.set_shader_parameter("ramp_tex", Materials.ramp_texture())
 	m.set_shader_parameter("albedo_tex", texture("atlas") if kind != "cloth" else null)
@@ -339,7 +363,6 @@ static func material(kind := "atlas") -> ShaderMaterial:
 		m.set_shader_parameter("emission_tex", texture("mask"))
 		m.set_shader_parameter("emissive_color", Vector3(1.0, 0.4564, 0.1022)) # 0xffb45a 선형
 		m.set_shader_parameter("use_emission", 1.0)
-	_mats[kind] = m
 	return m
 
 # ---------------------------------------------------------------------------
@@ -351,6 +374,14 @@ class Batch:
 
 	# outline: 먹선 두께(m). 0이면 먹선 없음
 	func add(key: String, g: Geo, outline := 0.03) -> Geo:
+		# 'water': 물 재질(반투명, 물결 텍스처 반복). UV는 그대로(1 = 텍스처 한 장, 약 4m 간격 권장), 먹선 없음
+		if key == "water":
+			Kit.face_normals(g)
+			for i in g.uv.size(): g.uv[i] = Vector2(g.uv[i].x, 1.0 - g.uv[i].y)
+			if not parts.has("water"): parts["water"] = []
+			parts["water"].append(g)
+			tris += g.size() / 3
+			return g
 		if key in Kit.FACETED: Kit.face_normals(g)
 		else: Kit.smooth_normals(g)
 		Kit.remap_uv(g, key)
