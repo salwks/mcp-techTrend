@@ -94,6 +94,22 @@ def simplify(pts, tol=1.5):
         return np.vstack([simplify(pts[:k + 1], tol)[:-1], simplify(pts[k:], tol)])
     return np.vstack([a, b])
 
+def remove_loops(pts, tol=6.0, min_len=16.0):
+    """경유점(물 한가운데 도강점 등)에 들렀다 되돌아 나오는 짧은 고리·되짚기를 잘라낸다."""
+    pts = np.asarray(pts, float); out = []
+    k = 0; n = len(pts)
+    seg = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(pts, axis=0).T))])
+    while k < n:
+        out.append(pts[k])
+        ahead = np.nonzero((seg > seg[k] + min_len) & (seg < seg[k] + 400))[0]
+        if len(ahead):
+            d = np.hypot(pts[ahead, 0] - pts[k, 0], pts[ahead, 1] - pts[k, 1])
+            close = ahead[d < tol]
+            if len(close):
+                k = int(close.max()) + 1; continue
+        k += 1
+    return np.asarray(out)
+
 def route(cost, waypoints_xz):
     out = []
     for (x0, z0), (x1, z1) in zip(waypoints_xz[:-1], waypoints_xz[1:]):
@@ -107,12 +123,13 @@ def route(cost, waypoints_xz):
         seg = np.stack([xs, zs], 1)
         out.append(seg if not out else seg[1:])
     pts = np.vstack(out)
+    pts = remove_loops(pts)
     pts = smooth(pts, 2)
     pts[:, 0] = ndimage.gaussian_filter1d(pts[:, 0], 3, mode="nearest"); pts[:, 1] = ndimage.gaussian_filter1d(pts[:, 1], 3, mode="nearest")
     return simplify(pts, 1.2)
 
 
-def profile_peaks(points, hy, step=8.0, win=60, prom_real=40.0):
+def profile_peaks(points, hy, step=8.0, win=60, prom_real=40.0, rdist=None):
     """도로 고도 단면의 뚜렷한 고점: 양쪽 win칸(step m) 안에서 prom_real(실제 m) 이상 내려가는 곳. → [(x,z,y)]"""
     p = np.asarray(points, float); seg = np.hypot(*np.diff(p, axis=0).T); s = np.concatenate([[0], np.cumsum(seg)])
     t = np.arange(0, s[-1] + 1e-6, step); x = np.interp(t, s, p[:, 0]); z = np.interp(t, s, p[:, 1])
@@ -122,5 +139,72 @@ def profile_peaks(points, hy, step=8.0, win=60, prom_real=40.0):
         if h[k] >= h[k - 1] and h[k] >= h[k + 1]:
             lo = min(h[max(0, k - win):k].min(), h[k + 1:k + win + 1].min())
             if h[k] - lo >= prom_real * C.K:
-                out.append((float(x[k]), float(z[k]), float(h[k])))
+                # 안장 검사: 길에 수직으로 양옆 30~90m 안에 봉우리 쪽(10m 실제 이상 높음)이 둘 다 있어야 고개(능선 넘기).
+                # 한쪽이 물가로 떨어지면 산줄기 끝(코)을 도는 벼룻길 오르내림 → 고개가 아님.
+                k0, k1 = max(k - 2, 0), min(k + 2, len(x) - 1)
+                tx, tz = x[k1] - x[k0], z[k1] - z[k0]; nn = math.hypot(tx, tz) + 1e-9; nx, nz = -tz / nn, tx / nn
+                sides = []
+                for sg in (1, -1):
+                    o = np.arange(6.0, 91.0, 6.0)
+                    px_, pz_ = x[k] + sg * nx * o, z[k] + sg * nz * o
+                    hh = hy(px_, pz_)
+                    if rdist is not None:      # 높아지기 전에 물을 만나면 그쪽은 '물가로 떨어지는 쪽'
+                        rd_ = rdist(px_, pz_); wet = np.nonzero(rd_ < 4.0)[0]; up = np.nonzero(hh > h[k] + 3 * C.K)[0]
+                        if len(wet) and (not len(up) or wet[0] < up[0]):
+                            sides.append(-1e9); continue
+                    sides.append(float(hh.max()))
+                if min(sides) - h[k] >= 10 * C.K:
+                    out.append((float(x[k]), float(z[k]), float(h[k])))
     return out
+
+
+def river_index(rivers, step=2.0):
+    """하천 중심선 조밀 표본: 좌표, 단위 법선, 반폭, 하천 번호 + KD 트리."""
+    from scipy.spatial import cKDTree
+    P, N, HWs, IDs = [], [], [], []
+    for k, r in enumerate(rivers):
+        p = np.asarray(r["points"], float)[:, :2]
+        seg = np.hypot(*np.diff(p, axis=0).T); s = np.concatenate([[0], np.cumsum(seg)])
+        t = np.arange(0, s[-1] + 1e-6, step)
+        x = np.interp(t, s, p[:, 0]); z = np.interp(t, s, p[:, 1])
+        tx = np.gradient(x); tz = np.gradient(z); nn = np.hypot(tx, tz) + 1e-9
+        P.append(np.stack([x, z], 1)); N.append(np.stack([-tz / nn, tx / nn], 1))
+        HWs.append(np.full(len(t), max(r["width_m"] / 2, 2.6))); IDs.append(np.full(len(t), k))
+    P = np.vstack(P); N = np.vstack(N); HWs = np.concatenate(HWs); IDs = np.concatenate(IDs)
+    return dict(P=P, N=N, HW=HWs, ID=IDs, tree=cKDTree(P))
+
+def fix_water_runs(points, RI, margin=1.5, bank=3.5):
+    """길이 물길 안(반폭+margin)을 따라 걷는 구간을 고친다.
+    같은 쪽으로 들어갔다 나오면 그 둑으로 밀어내고, 건너가면 구간 한가운데에서 수직으로 곧게 건너게 한다."""
+    p = np.asarray(points, float)
+    seg = np.hypot(*np.diff(p, axis=0).T); s = np.concatenate([[0], np.cumsum(seg)])
+    t = np.arange(0, s[-1] + 1e-6, 1.0)
+    q = np.stack([np.interp(t, s, p[:, 0]), np.interp(t, s, p[:, 1])], 1)
+    d, k = RI["tree"].query(q)
+    inside = d <= RI["HW"][k] + margin
+    if not inside.any(): return p, 0
+    out = []; i = 0; n = len(q); changed = 0
+    while i < n:
+        if not inside[i]:
+            out.append(q[i]); i += 1; continue
+        j = i
+        while j + 1 < n and inside[j + 1]: j += 1
+        kk = k[(i + j) // 2]; c = RI["P"][kk]; nrm = RI["N"][kk]; hw = RI["HW"][kk]
+        a = q[max(i - 1, 0)]; b = q[min(j + 1, n - 1)]
+        sa = np.sign(np.dot(a - c, nrm)) or 1.0; sb = np.sign(np.dot(b - c, nrm)) or 1.0
+        run = q[i:j + 1]
+        dd, kr = RI["tree"].query(run)
+        off = RI["HW"][kr] + bank
+        if sa == sb or j - i < 3:          # 같은 쪽: 둑으로 밀어냄
+            out.extend(RI["P"][kr] + RI["N"][kr] * (sa * off)[:, None]); changed += len(run)
+        else:                              # 건넘: 한가운데서 수직으로
+            m = (i + j) // 2; km = k[m]
+            cm, nm, hm = RI["P"][km], RI["N"][km], RI["HW"][km] + bank
+            h1 = (j - i) // 2
+            out.extend(RI["P"][kr[:h1]] + RI["N"][kr[:h1]] * (sa * off[:h1])[:, None])
+            out.append(cm + nm * sa * hm); out.append(cm); out.append(cm - nm * sa * hm)
+            out.extend(RI["P"][kr[h1:]] + RI["N"][kr[h1:]] * (sb * off[h1:])[:, None])
+            changed += len(run)
+        i = j + 1
+    out = np.asarray(out)
+    return simplify(out, 0.6), changed

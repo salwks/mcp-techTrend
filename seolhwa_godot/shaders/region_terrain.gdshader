@@ -14,6 +14,7 @@ global uniform float fog_density;
 
 uniform sampler2D ground_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable, hint_default_white;
 uniform sampler2D ramp_tex : filter_linear, repeat_disable;
+uniform sampler2D paint_tex : filter_linear, repeat_disable; // 길·마당 칠하기(region_world._paint_roads, paint_yard)
 uniform sampler2D noise_tex : filter_linear_mipmap, repeat_enable; // 이음매 없는 잡음(픽셀 잡음을 해시 대신 텍스처로 — 빠르다)
 uniform float grid_step = 1.0;     // 격자 간격(근경 1m, 중경 4m) — 법선 계산용
 uniform float skirt = 6.0;         // 가장자리 치마(이음매 틈 가리기) 깊이
@@ -95,9 +96,15 @@ vec3 lu_color(int c, vec2 p, float n1, float n2, vec4 cq, float block_edge, inou
 		field = mix(field, field * 0.8, smoothstep(0.4, 0.95, st) * 0.55);
 		return mix(field, bund, 1.0 - smoothstep(0.3, 0.7, edge));
 	}
-	if (c == 4) return mix(C_PATH, C_LANE, clamp(0.5 + n2 * 0.6, 0.0, 1.0));
+	// 길 래스터(4m)는 밟힌 풀 정도로만 — 흙길은 region.json roads를 칠하기 텍스처로 또렷하게 그린다
+	if (c == 4) return mix(mix(C_GRASS, C_GRASS2, clamp(0.5 + n1, 0.0, 1.0)), C_DRY, 0.35 + 0.15 * n2);
 	if (c == 5) return C_BED;
-	if (c == 6) return mix(mix(C_LANE, C_DRY, clamp(0.4 + n1, 0.0, 1.0)), C_GRASS2, smoothstep(0.1, 0.5, n1) * 0.3);
+	// 마을 터: 웹 마을 땅처럼 풀밭 + 마른 흙 얼룩(맨 흙은 건물 둘레·길에만 — 칠하기 텍스처)
+	if (c == 6) {
+		vec3 g = mix(C_GRASS, C_GRASS2, clamp(0.5 + n1, 0.0, 1.0));
+		g = mix(g, C_DRY, clamp(n2 * 0.5 + 0.1, 0.0, 0.4));
+		return mix(g, C_LANE, smoothstep(0.25, 0.55, n1 + n2 * 0.2) * 0.35);
+	}
 	if (c == 7) return mix(C_ROCK, C_CLIFF, clamp(0.5 + n1 * 1.5, 0.0, 1.0));
 	if (c == 8) return mix(C_SAND, C_BANK, clamp(0.5 + n2, 0.0, 1.0));
 	return mix(C_BAMBOO, C_FOREST2, clamp(0.5 + n1, 0.0, 1.0));
@@ -154,6 +161,28 @@ void fragment() {
 	col = mix(col, C_CLIFF, smoothstep(1.2, 1.9, slope) * 0.9);
 	// 높은 산은 조금 차갑고 옅게
 	col = mix(col, C_HIGH, smoothstep(200.0, 520.0, v_wp.y) * 0.35);
+	// 길·마당 칠하기(웹 마을 가운데 흙길 느낌): 흙길 + 바퀴·발 자국 + 가장자리 풀 섶, 건물 둘레 2~4m 흙 마당
+	vec4 pt = texture(paint_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size));
+	float rd = pt.r * 16.0, rhw = pt.g * 8.0, yd = pt.b * 16.0;
+	float pn = tn(p * 0.21 + vec2(0.31, 0.77));
+	if (yd < 6.0) {
+		float yard = 1.0 - smoothstep(1.2, 3.6, yd + pn * 1.6);
+		vec3 yc = mix(C_LANE, C_DRY, clamp(0.35 + n2 * 0.4, 0.0, 0.7));
+		col = mix(col, yc, yard * 0.9);
+	}
+	if (rd < rhw + 3.0) {
+		float edge = rd - rhw + pn * 0.45;
+		float road = 1.0 - smoothstep(-0.2, 0.2, edge);
+		float verge = (1.0 - smoothstep(0.1, 1.3, edge)) * (1.0 - road);
+		col = mix(col, C_GRASS2 * 0.82, verge * 0.55);   // 길섶: 짙은 풀 띠
+		float cls = pt.a * 255.0 / 60.0;
+		vec3 rc = mix(C_LANE * 1.07, C_PATH, clamp(0.3 + n2 * 0.35, 0.0, 0.7));
+		// 바퀴·발 자국: 중심에서 반폭의 45% 자리 두 줄(대로·지선), 산길은 가운데 한 줄
+		float off = cls >= 2.5 ? rhw * 0.45 : 0.0;
+		float rut = (1.0 - smoothstep(0.1, 0.3, abs(rd - off))) * (0.6 + 0.4 * pn);
+		rc = mix(rc, C_PATH * 0.86, rut * (cls >= 2.5 ? 0.45 : 0.25));
+		col = mix(col, rc, road);
+	}
 	vec3 base = srgb(col) * texture(ground_tex, p / 7.0).rgb;
 	// 물 댄 논: 하늘빛 반사(위를 볼수록 진흙이 비침)
 	vec3 wn = v_wn;

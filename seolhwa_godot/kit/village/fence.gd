@@ -1,5 +1,5 @@
 # 싸리 울타리(바자울) — 웹 buildings.js fence() 이식. 두 점 (ax,az)→(bx,bz).
-# params: seed, ax,az,bx,bz (없으면 len(4) 길이로 x축, 원점 중심), h(1.15), lite(false: true면 살을 톱니 판 하나로 — 집 묶음용, ~45/m)
+# params: seed, ax,az,bx,bz (없으면 len(4) 길이로 x축, 원점 중심), h(1.15), lite(false: true면 살을 톱니 판 하나로, 먹선 생략 — 집 묶음·긴 구간용, ~35/m)
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
 const W := preload("res://kit/village/stone_wall.gd")
@@ -18,8 +18,8 @@ static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.15, 
 	var old := m.xform
 	m.xform = old * C.seg_xform(ax, az, bx, bz, false)
 	var np := maxi(1, roundi(len / 1.6))
-	for i in np + 1: m.add("p", "wood", C.PA(Kit.cyl(0.05, 0.06, h + 0.15, 5, float(i) / np * len, (h + 0.15) / 2, 0), C.WOOD), 0.012)
-	var ns := roundi(len / 0.11)
+	for i in np + 1: m.add("p", "wood", C.PA(Kit.cyl(0.05, 0.06, h + 0.15, 5, float(i) / np * len, (h + 0.15) / 2, 0), C.WOOD), 0.0 if lite else 0.012)
+	var ns := roundi(len / (0.2 if lite else 0.11))
 	if lite:
 		# 톱니 윗변을 가진 앞·뒤 판(살 하나 = 앞뒤 삼각 4개)
 		var g := Kit.Geo.new()
@@ -38,6 +38,6 @@ static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.15, 
 		var x := (i + 0.5) * (len / ns); var hh := h * (0.85 + m.r() * 0.2)
 		var g := Kit.xf(Kit.box(0.035, hh, 0.035), x, hh / 2, (m.r() - 0.5) * 0.05, (m.r() - 0.5) * 0.08, 0, (m.r() - 0.5) * 0.12)
 		m.add("p", "flat", C.P(g, 0x9c8462, 0x6e5a44, 0.08, R), 0)
-	for y in [0.35, 0.8]: m.add("p", "flat", C.P(Kit.box(len, 0.05, 0.08, len / 2, y * h, 0.03), 0x5e4a36), 0.008)
+	for y in [0.35, 0.8]: m.add("p", "flat", C.P(Kit.box(len, 0.05, 0.08, len / 2, y * h, 0.03), 0x5e4a36), 0.0 if lite else 0.008)
 	m.xform = old
 	W.add_line_collider(m, ax, az, bx, bz, 0.12)

@@ -1,4 +1,4 @@
-# 큰 정자나무 — 웹 buildings.js bigTree 이식. variant: zelkova(느티나무, 마을 어귀 정자나무) / willow(버드나무, 개울가)
+# 큰 정자나무 — 웹 buildings.js bigTree 이식. variant: zelkova(느티나무, 마을 어귀 정자나무) / willow(버드나무, 개울가) / chestnut(밤나무, 집 뒤)
 #   / broadleaf(마을 가 활엽수) / persimmon(감나무, 주황 열매). 예산 맞추려고 보조 잎덩이는 detail 0.
 # params: seed, variant("zelkova"), h, spread, trunk, branches, lod(0|1), bare(false)
 extends RefCounted
@@ -8,9 +8,10 @@ const PRESET := {
 	zelkova = { h = 7.2, spread = 4.6, trunk = 0.55, branches = 5, leaf = [["#a2ab66", "#5f6c3e"], ["#94a05e", "#566238"]] },
 	willow = { h = 5.2, spread = 3.2, trunk = 0.3, branches = 3, willow = true, leaf = [["#a9b87a", "#6d7e4a"], ["#b4bf82", "#76844e"]] },
 	broadleaf = { h = 5.6, spread = 3.0, trunk = 0.32, branches = 3, leaf = [["#a8a468", "#6a6a3e"], ["#9aa262", "#5e663a"]] },
+	chestnut = { h = 6.4, spread = 3.8, trunk = 0.38, branches = 4, leaf = [["#94a05a", "#57643a"], ["#8a9854", "#505c36"]] },
 	persimmon = { h = 5.4, spread = 3.0, trunk = 0.32, branches = 3, fruit = true, leaf = [["#b2a660", "#6f6a3a"], ["#c0a256", "#7e6a3a"]] },
 }
-const NAMES := { zelkova = "느티나무", willow = "버드나무", broadleaf = "활엽수", persimmon = "감나무" }
+const NAMES := { chestnut = "밤나무", zelkova = "느티나무", willow = "버드나무", broadleaf = "활엽수", persimmon = "감나무" }
 
 static func build(params: Dictionary) -> Dictionary:
 	var variant := str(params.get("variant", "zelkova"))

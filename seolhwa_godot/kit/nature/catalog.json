@@ -130,7 +130,7 @@
   {
    "name": "big_tree",
    "script": "res://kit/nature/big_tree.gd",
-   "desc": "큰 정자나무 — 웹 bigTree 이식. variant zelkova|willow|broadleaf|persimmon",
+   "desc": "큰 정자나무 — 웹 bigTree 이식. variant zelkova|willow|broadleaf|persimmon|chestnut(밤나무)",
    "params": {
     "seed": 1,
     "variant": "zelkova",
@@ -142,7 +142,7 @@
    ],
    "tris": 1296,
    "tris_lod1": 136,
-   "note": "willow 1120",
+   "note": "willow 1120, chestnut 1112",
    "shot": "shots/kit/nature/big_tree.png"
   },
   {
@@ -333,7 +333,7 @@
   {
    "name": "grass",
    "script": "res://kit/nature/grass.gd",
-   "desc": "풀 무더기. kind meadow|dry|forest|eoksae(억새)",
+   "desc": "풀 무더기. kind short(마을 짧은 풀)|meadow|dry|forest|eoksae(억새)",
    "params": {
     "seed": 1,
     "kind": "meadow",
@@ -368,11 +368,13 @@
   {
    "name": "crop",
    "script": "res://kit/nature/crop.gd",
-   "desc": "밭 작물 한 줄(두둑+포기 5). kind bean|millet|barley",
+   "desc": "밭 작물 한 줄(두둑+포기). kind bean|millet|barley|cabbage(배추)|pepper(고추). n=포기 수, ridge=두둑",
    "params": {
     "seed": 1,
     "kind": "bean",
-    "len": 2.4
+    "len": 2.4,
+    "n": 5,
+    "ridge": true
    },
    "footprint": [
     2.4,
@@ -380,13 +382,13 @@
    ],
    "tris": 116,
    "tris_lod1": null,
-   "note": "millet 81",
+   "note": "cabbage 136, pepper 96",
    "shot": "shots/kit/nature/crop.png"
   },
   {
    "name": "cover",
    "script": "res://kit/nature/cover.gd",
-   "desc": "흩뿌리기 전용 땅덮개 조각(풀·꽃·자갈·갈대·작은 돌 합성). kind meadow|forest|alpine|riverside|sandbar|rocky",
+   "desc": "흩뿌리기 전용 땅덮개 조각(풀·꽃·자갈·갈대·작은 돌 합성). kind yard(마을 터 짧은 풀·들꽃)|meadow|forest|alpine|riverside|sandbar|rocky",
    "params": {
     "seed": 1,
     "kind": "meadow",
@@ -400,10 +402,52 @@
    "tris_lod1": null,
    "note": "139~252",
    "shot": "shots/kit/nature/cover.png"
+  },
+  {
+   "name": "garden_plot",
+   "script": "res://kit/nature/garden_plot.gd",
+   "desc": "텃밭(채마밭) — 흙 바닥 + 이랑 여러 줄 + 이랑마다 작물(배추·고추·콩 등 돌아가며). 이랑은 x 방향, 정면 +z. 충돌체 없음(걸어 들어감). anchors.edge = 앞 가장자리",
+   "params": {
+    "seed": 1,
+    "w": 6,
+    "d": 4,
+    "crops": [
+     "cabbage",
+     "pepper",
+     "bean"
+    ],
+    "spacing": 0.7
+   },
+   "footprint": [
+    6.3,
+    4.3
+   ],
+   "tris": 748,
+   "tris_lod1": null,
+   "note": "w·d 3~8m. 8×6 = 828, 4×4 = 476 (포기 36개 상한)",
+   "shot": "shots/kit/nature/garden_plot.png"
+  },
+  {
+   "name": "pumpkin_vine",
+   "script": "res://kit/nature/pumpkin_vine.gd",
+   "desc": "호박 넝쿨 — 땅을 기는 넓은 잎 6 + 늙은호박/애호박 1~2 (울타리·담 밑)",
+   "params": {
+    "seed": 1,
+    "len": 2.6
+   },
+   "footprint": [
+    2.6,
+    1.0
+   ],
+   "tris": 262,
+   "tris_lod1": null,
+   "note": "새",
+   "shot": "shots/kit/nature/pumpkin_vine.png"
   }
  ],
  "scatter_only_kinds": {
   "undergrowth": "bush.gd 1.6~2.6배(그림자 없음)",
-  "sapling_pine/sapling_gusang": "pine/korean_fir LOD1 메시 0.4~0.65배(그림자·충돌 없음)"
+  "sapling_pine/sapling_gusang": "pine/korean_fir LOD1 메시 0.4~0.65배(그림자·충돌 없음)",
+  "garden/pumpkin/cover_yard/chestnut": "마을 터(landuse 6) 생활 식생 — §8"
  }
 }

@@ -29,8 +29,7 @@ int r_lu_raw(ivec2 p) {
 	p = clamp(p, ivec2(0), lu_size - 1);
 	return int(round(texelFetch(lumap, p, 0).r * 255.0));
 }
-// 고른 터는 마당(6)으로 칠한다(길·물은 그대로)
-int r_lu(ivec2 p) { int v = r_lu_raw(p); int c = v & 127; return (v >= 128 && c != 4 && c != 5) ? 6 : c; }
+int r_lu(ivec2 p) { return r_lu_raw(p) & 127; }
 float r_lu_det(ivec2 p) { int v = r_lu_raw(p); return v >= 128 ? 0.0 : LU_DETAIL[v]; }
 float r_hash(ivec2 p) {
 	uint h = uint(p.x) * 374761393u + uint(p.y) * 668265263u;

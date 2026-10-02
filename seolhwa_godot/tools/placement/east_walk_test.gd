@@ -1,0 +1,34 @@
+extends SceneTree
+func _init():
+	var RW = load("res://scripts/region/region_world.gd")
+	var PL = load("res://scripts/region/placement_loader.gd")
+	var w = RW.new(); w.markers = false; w.use_scatter = false
+	root.add_child(w)
+	w.load_region("")
+	var pl = PL.new(w, [])
+	pl.load_all()
+	var bad := 0; var n := 0
+	for f in pl.files():
+		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
+		for it in d.items:
+			if not (it.kit in ["village/stone_bridge", "village/seop_bridge", "village/jingeom"]) or not String(it.id).begins_with("ea_"): continue
+			n += 1
+			var info = pl._cache.get(pl._key(it.kit, it.params), {})
+			var b := Basis(Vector3.UP, float(it.ry))
+			var L := float(it.params.get("len", 8.0))
+			var line := ""; var blocked := 0; var maxstep := 0.0; var prev = null
+			for i in 21:
+				var zl := -L / 2 - 1.5 + (L + 3.0) * i / 20.0
+				var p: Vector3 = b * Vector3(0, 0, zl)
+				var x: float = float(it.x) + p.x; var z: float = float(it.z) + p.z
+				var h: float = w.height_at(x, z)
+				if w.blocked(x, z, 0.375):
+					blocked += 1
+					print("  BLK ", it.id, " ", x, ",", z, " h=", h, " lu=", w.landuse_at(x,z))
+				if prev != null: maxstep = maxf(maxstep, absf(h - prev))
+				prev = h
+			if blocked > 0 or maxstep > 0.8: bad += 1
+			print("%s %s walk=%s blocked=%d maxstep=%.2f" % [it.id, it.kit.get_file(), info.has("walk"), blocked, maxstep])
+	print("BRIDGES n=%d bad=%d" % [n, bad])
+	w.shutdown()
+	quit()

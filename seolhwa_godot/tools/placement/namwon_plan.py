@@ -89,6 +89,9 @@ def render(R, items, X0, Z0, X1, Z1, S, path, labels=True, title=""):
         rects = []
         if kit == "landmark/namwon_eupseong":
             continue
+        if kit == "village/wall_run":
+            d.line([P(it["x"] + q[0], it["z"] + q[1]) for q in prm["points"]], fill=(90, 80, 70, 255), width=max(1, int(S)))
+            continue
         if kit == "landmark/gwanghallu_pond":
             rects = [(0, 0, prm["width"] + 3, prm["depth"] + 3), (-prm["width"] * 0.18, 0, 2.8, 57)]
         elif kit == "landmark/gwanghallu":
@@ -103,8 +106,12 @@ def render(R, items, X0, Z0, X1, Z1, S, path, labels=True, title=""):
             rects = [(0, 0, 1.4, prm["len"])]
         elif kit == "village/torch_post":
             rects = [(0, 0, 0.7, 0.7)]
+        elif "footprint" in it and kit not in ("village/choga", "village/giwa"):
+            w, dd = it["footprint"]
+            rects = [(0, 0, w, dd)]
         else:
-            (w, dd), _ = NW.FP.get((kit, var), NW.FP.get((kit, None)))
+            if kit == "village/yard_props": var = prm.get("set")
+            (w, dd), _ = NW.FP.get((kit, var), NW.FP.get((kit, None), ((1.5, 1.5), 0)))
             if kit == "village/choga":
                 w += 1.6; dd += 3.0
             if kit == "village/giwa":
@@ -144,7 +151,7 @@ NAMES = {"landmark/gwana": "관아(동헌·내아)", "landmark/gaeksa": "객사 
          "landmark/gwanghallu_pond": "광한루원 못·오작교", "landmark/hyanggyo": "향교(가설)", "village/jumak": "주막",
          "village/seop_bridge": "섶다리", "village/jingeom": "징검다리", "village/stone_bridge": "돌다리", "village/narutbae": "나룻배",
          "village/seonghwangdang": "성황당", "village/ppallaeteo": "빨래터", "village/jangseung": "장승", "village/sotdae": "솟대", "village/well": "우물",
-         "village/giwa": "기와", "village/choga": "초", "village/market_shop": "가가"}
+         "village/giwa": "기와", "village/choga": "초", "village/market_shop": "가가", "village/village_square": "쉼터", "village/stone_jangseung": "돌장승"}
 
 
 def short_name(it):
@@ -159,7 +166,7 @@ def main():
     doc = json.load(open(os.path.join(RDIR, "placement_namwon.json")))
     items = doc["items"]
     os.makedirs(os.path.join(ROOT, "shots", "placement"), exist_ok=True)
-    render(R, items, -3420, -40, -3040, 580, 2.0, os.path.join(ROOT, "shots", "placement", "namwon_plan.png"),
+    render(R, items, -3420, -150, -2800, 580, 1.6, os.path.join(ROOT, "shots", "placement", "namwon_plan.png"),
            title="placement_namwon — 읍내 (2px/m, 위=북, 빨간 점=spawn, 짧은 선=정면)")
     render(R, items, -3460, -620, -2700, 1020, 0.6, os.path.join(ROOT, "shots", "placement", "namwon_plan_wide.png"),
            title="placement_namwon — 넓게 (다리·향교·성황당·어귀)")

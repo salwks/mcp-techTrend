@@ -112,6 +112,17 @@ static func make() -> Node3D:
 	# 제외 구역 시험: --exclude 이면 마을 터 안쪽 사각형 하나 + 원 하나
 	var excl := []
 	if a.has("exclude"): excl = [Rect2(50, 50, 30, 25), { x = -40.0, z = -45.0, r = 10.0 }]
+	# 마을 터에 kit-village 집 묶음(읽기만)을 놓고 그 자리를 exclude로 넘긴다(--nohouses면 생략)
+	var houses := []
+	if not a.has("nohouses") and not a.has("exclude"):
+		for hp in [[52.0, 60.0, "small", 11], [76.0, 58.0, "medium", 12], [58.0, 86.0, "small", 13], [86.0, 84.0, "small", 14]]:
+			var info: Dictionary = load("res://kit/village/house_compound.gd").build({ seed = hp[3], size = hp[2] })
+			var fp: Vector2 = info.footprint
+			(info.node as Node3D).position = Vector3(hp[0], f.height(hp[0], hp[1]), hp[1])
+			houses.append(info.node)
+			excl.append(Rect2(hp[0] - fp.x / 2, hp[1] - fp.y / 2, fp.x, fp.y))
+		# 마을 안 고샅길(동서로 하나)
+		excl.append(Rect2(40, 71, 60, 3.5))
 	var r1 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl)
 	var r2 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl)
 	var same: bool = r1.colliders.size() == r2.colliders.size() and r1.nodes.size() == r2.nodes.size()
@@ -142,6 +153,7 @@ static func make() -> Node3D:
 	var root := Node3D.new()
 	root.name = "scatter_preview"
 	root.add_child(ground_mesh(f))
+	for hn in houses: root.add_child(hn)
 	var veg := Node3D.new(); veg.name = "veg"
 	root.add_child(veg)
 	for n in r1.nodes: veg.add_child(n)

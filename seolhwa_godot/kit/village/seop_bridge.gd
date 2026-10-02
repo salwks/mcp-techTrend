@@ -38,5 +38,10 @@ static func build(params: Dictionary) -> Dictionary:
 	for s in [-1, 1]: m.box_c(minf(s * hw, s * (hw + 0.25)) - 0.05, maxf(s * hw, s * (hw + 0.25)) + 0.05, -L / 2 + 0.4, L / 2 - 0.4)
 	m.anchor("north", Vector3(0, 0.1, -L / 2 - 0.5)); m.anchor("south", Vector3(0, 0.1, L / 2 + 0.5)); m.anchor("top", Vector3(0, 0.67, 0))
 	var res := m.result("섶다리", Vector2(hw * 2 + 0.8, L + 0.4), false)
-	res.deck = "y = 0.05 + 0.55·(1 − smoothstep(0.7, 1, |z|/(len/2))) + 0.12(흙 윗면)"
+	# 계약서 §8 걷기 면: 흙 윗면 = dy(z) + 0.12
+	var zs := []; var ys := []
+	for i in 21:
+		var z := -L / 2 + L * i / 20.0
+		zs.append(z); ys.append(float(dy.call(z)) + 0.12)
+	res.walk = [{ minX = -hw + 0.1, maxX = hw - 0.1, minZ = -L / 2 - 0.3, maxZ = L / 2 + 0.3, z = [-L / 2 - 0.3] + zs + [L / 2 + 0.3], y = [ys[0]] + ys + [ys[ys.size() - 1]] }]
 	return res

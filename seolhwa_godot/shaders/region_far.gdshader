@@ -13,6 +13,7 @@ uniform vec3 u_low = vec3(0.7);
 uniform vec3 u_glow = vec3(1.0);
 uniform float u_glow_i = 0.0;
 uniform float grid_step = 32.0;
+uniform float haze = 1.0;   // 0이면 거리 안개빛 없이(--nofog)
 
 varying vec3 v_wp;
 varying float v_ridge;
@@ -36,6 +37,6 @@ void fragment() {
 	vec3 sea = mix(u_low, u_fog, 0.5);
 	vec3 mist = mix(sea, u_hor, 0.25);
 	// 멀수록, 낮을수록 안개
-	float k = smoothstep(300.0, 2600.0, d) * 0.75 + (1.0 - v_ridge) * 0.35;
+	float k = (smoothstep(300.0, 2600.0, d) * 0.75 + (1.0 - v_ridge) * 0.35) * haze;
 	ALBEDO = mix(mtn, mist, clamp(k, 0.0, 0.92));
 }

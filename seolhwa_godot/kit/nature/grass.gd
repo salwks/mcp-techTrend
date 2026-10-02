@@ -1,8 +1,8 @@
-# 풀 무더기 — 세모뿔 풀잎 여럿(먹선 없음). kind: meadow(들풀) / dry(마른 풀빛) / forest(숲 바닥, 짙음) / eoksae(억새 — 고원·능선, 은빛 이삭)
+# 풀 무더기 — 세모뿔 풀잎 여럿(먹선 없음). kind: short(마당 가 짧은 풀) / meadow(들풀) / dry(마른 풀빛) / forest(숲 바닥, 짙음) / eoksae(억새 — 고원·능선, 은빛 이삭)
 # params: seed, kind("meadow"), n(10)
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
-const TONE := { meadow = ["#a9ad6c", "#6d7a44"], dry = ["#bfb27a", "#7f7a4a"], forest = ["#8a9a5c", "#4c5a34"], eoksae = ["#c4bb8a", "#7a7c4c"] }
+const TONE := { short = ["#a6ae6a", "#78864a"], meadow = ["#a9ad6c", "#6d7a44"], dry = ["#bfb27a", "#7f7a4a"], forest = ["#8a9a5c", "#4c5a34"], eoksae = ["#c4bb8a", "#7a7c4c"] }
 
 # draw(b, r, params): Batch(또는 add(key,g,outline)를 가진 것)에 그려 넣는다 — cover.gd가 여러 개를 한 메시로 합칠 때 쓴다
 static func draw(b, r: Kit.Rng, params: Dictionary) -> void:
@@ -11,7 +11,7 @@ static func draw(b, r: Kit.Rng, params: Dictionary) -> void:
 	var tall := kind == "eoksae"
 	var n := int(params.get("n", 8 if tall else 10))
 	for i in n:
-		var h := (0.9 + r.next() * 0.6) if tall else (0.25 + r.next() * 0.3)
+		var h := (0.9 + r.next() * 0.6) if tall else ((0.12 + r.next() * 0.12) if kind == "short" else (0.25 + r.next() * 0.3))
 		var px := (r.next() - 0.5) * (0.6 if tall else 0.45); var pz := (r.next() - 0.5) * 0.35
 		var tx := (r.next() - 0.5) * (0.5 if tall else 0.7); var tz := (r.next() - 0.5) * 0.6
 		var g := C.cone(0.04 if tall else 0.06, h, 3, true)

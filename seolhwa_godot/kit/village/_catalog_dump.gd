@@ -11,7 +11,7 @@ const ENTRIES := [
 	["haystack", "짚가리 — 웹 haystack 이식. 볏짚 낟가리 + 주저리 + 새끼 띠", { seed = 1 }, [{ seed = 2, s = 0.85 }]],
 	["jangseung", "장승 — 웹 jangseung 이식. 천하대장군(갓)/지하여장군(female=true)", { seed = 1 }, [{ seed = 2, female = true }]],
 	["torch_post", "횃대 — 웹 torchPost 이식. 마을 어귀 화톳불 기둥(밤에 빛남)", { seed = 1 }, []],
-	["stone_wall", "돌담 — 웹 stoneWall 이식. 두 점 (ax,az)→(bx,bz) 사이 막돌 허튼층 + 갓돌. 약 220 삼각형/m", { seed = 1 }, [{ seed = 2, ax = 0, az = 0, bx = 3, bz = -4, h = 1.15 }]],
+	["stone_wall", "돌담 — 웹 stoneWall 이식. 두 점 (ax,az)→(bx,bz) 사이 막돌 허튼층 + 갓돌. 약 220 삼각형/m, lite ~90/m", { seed = 1 }, [{ seed = 2, ax = 0, az = 0, bx = 3, bz = -4, h = 1.15 }, { seed = 3, lite = true }]],
 	["fence", "싸리 울타리(바자울) — 웹 fence 이식. 두 점 사이. lite=true면 톱니 판(~100/m)", { seed = 1 }, [{ seed = 2, len = 6, lite = true }]],
 	["stone_bridge", "돌다리(홍예교) — 웹 stoneBridge 이식. z방향으로 건넘, y=0 둑, 홍예 밑 y=-1.7", { seed = 1 }, [{ seed = 2, len = 8, hw = 1.1, arch = 0.45 }]],
 	["cairn", "돌무더기(누석단) — 웹 cairn 이식. 제단·촛불(altar=false로 생략)", { seed = 1 }, [{ seed = 2, altar = false }]],
@@ -35,7 +35,12 @@ const ENTRIES := [
 	["jige", "지게 — 서 있는 지게 + 작대기, load basket(바소쿠리)/wood(나뭇짐)/none", { seed = 1 }, [{ seed = 2, load = "wood" }]],
 	["firewood", "장작더미 — row(벽 따라 쌓기, cover 이엉) / stack(井자 쌓기)", { seed = 1 }, [{ seed = 2, style = "stack" }]],
 	["props", "작은 소품 — kind: pyeongsang 평상 / gamasot 한데부뚜막 / yongsu 용수 장대 / jeolgu 절구 / maetdol 맷돌 / dok 항아리 / soguri 소쿠리 / byeotdan 볏단 / scarecrow 허수아비 / meongseok 멍석", { seed = 1, kind = "pyeongsang" }, [{ seed = 1, kind = "gamasot" }, { seed = 1, kind = "yongsu" }, { seed = 1, kind = "jeolgu" }, { seed = 1, kind = "maetdol" }, { seed = 1, kind = "dok" }, { seed = 1, kind = "soguri", fill = "grain" }, { seed = 1, kind = "byeotdan" }, { seed = 1, kind = "scarecrow" }, { seed = 1, kind = "meongseok" }]],
-	["house_compound", "집 한 채 프리셋 — small(초가+헛간+뒷간+장독+싸리울+사립문) / medium(초가 안채·사랑채+외양간+헛간+토담+초가대문) / large(기와 안채·사랑채+곳간+기와 토담+솟을대문)", { seed = 1, size = "small" }, [{ seed = 1, size = "medium" }, { seed = 1, size = "large" }]],
+	["house_compound", "집 한 채 프리셋 — small(초가+헛간+뒷간+장독+싸리울+사립문) / medium(초가 안채·사랑채+외양간+헛간+토담+초가대문) / large(기와 안채·사랑채+곳간+기와 토담+솟을대문). layout()·pieces로 건물별 조각, lod=1 가벼운 한 덩이", { seed = 1, size = "small" }, [{ seed = 1, size = "medium" }, { seed = 1, size = "large" }, { seed = 1, size = "small", lod = 1 }, { seed = 1, size = "medium", lod = 1 }, { seed = 1, size = "large", lod = 1 }]],
+	["stone_jangseung", "돌장승(석장승) — 실상사 해탈교 앞 석장승 참고: 벙거지·왕방울 눈·주먹코·송곳니·앞면 새김 띠. variant 0 벙거지 / 1 높은 관 / 2 민머리", { seed = 1, variant = 0 }, [{ seed = 2, variant = 1 }, { seed = 3, variant = 2, h = 2.9 }]],
+	["wall_run", "담 긴 구간 — points 꺾은선 따라 kind stone_lite/stone/todam_thatch/todam_tile/fence_lite/fence, gaps로 구간 비우기, closed", { seed = 1 }, [{ seed = 2, kind = "todam_tile", points = [[-8, 0], [0, 0], [0, -6]] }, { seed = 3, kind = "fence_lite", points = [[-5, 0], [5, 0], [5, -4], [-5, -4]], closed = true, gaps = [0] }]],
+	["teotbat", "텃밭 — 싸리울(lite)로 두른 채소밭: 두둑 + 배추·무·고추·파 + 울 위 호박 넝쿨", { seed = 1 }, [{ seed = 2, w = 3.5, d = 2.6, rows = 3, gourd = false }]],
+	["yard_props", "마당 소품 묶음 — set manure_coop(거름더미+닭장) / jars(장독 모음) / work(멍석·절구·맷돌·키) / woodpile(장작·지게·볏단·모탕)", { seed = 1, set = "manure_coop" }, [{ seed = 1, set = "jars" }, { seed = 1, set = "work" }, { seed = 1, set = "woodpile" }]],
+	["village_square", "마을 공동 마당 — 정자나무(nature/big_tree 느티 또는 own) + 둥근 돌 축대 + 평상 둘 + 돌 의자", { seed = 1 }, [{ seed = 2, tree = "own" }, { seed = 3, tree = "none", pyeongsang = 1, seats = 3 }]],
 ]
 
 func _tris(node: Node3D) -> int:
@@ -50,7 +55,8 @@ func _measure(name: String, p: Dictionary) -> Dictionary:
 	var fp: Vector2 = r.get("footprint", Vector2.ZERO)
 	var out := { params = p, tris = _tris(r.node), footprint = [snappedf(fp.x, 0.1), snappedf(fp.y, 0.1)],
 		colliders = r.colliders.size(), lights = r.lights.size(), occluder = r.get("occluder", false),
-		anchors = (r.get("anchors", {}) as Dictionary).keys(), interior = r.has("interior") }
+		anchors = (r.get("anchors", {}) as Dictionary).keys(), interior = r.has("interior"),
+		walk = r.has("walk"), pieces = (r.get("pieces", []) as Array).size(), layout = load("res://kit/village/%s.gd" % name).has_method("layout") }
 	(r.node as Node3D).free()
 	return out
 
@@ -67,7 +73,7 @@ func _init() -> void:
 		for v in vars: print("    %-40s tris=%5d" % [JSON.stringify(v.params), v.tris])
 	var doc := { kit = "village", region = "JL_NAMWON_UNBONG", era = "1870 전후 조선 후기",
 		note = "build(params) → {node, colliders, lights, occluder, footprint, anchors, interior?}. 정면 +z. tris는 먹선 포함(kit_preview와 같은 셈)",
-		budget = { house = 6000, prop = 800, compound = 15000 }, models = list }
+		budget = { house = 6000, prop = 800, compound = 15000, compound_lod = 4000, yard_set = 2000 }, models = list }
 	var f := FileAccess.open("res://kit/village/catalog.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(doc, "  ", false))
 	f.close()

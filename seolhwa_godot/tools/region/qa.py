@@ -116,7 +116,7 @@ def main():
         f"여원재 둘레 유역 {sorted(cls)}, 운봉={unb}·남원={nwn} (운봉고원=낙동강 수계, 남원=섬진강 수계)", mono_bad=mono_bad, cross_bad=cross_bad)
 
     # Q4(덤): 논 경사·고도
-    lu = np.asarray(Image.open(os.path.join(C.OUT, "landuse.png")))
+    lu = np.asarray(Image.open(os.path.join(C.OUT, "landuse.png"))); lu_shape = lu.shape
     y4 = y[::2, ::2][:lu.shape[0], :lu.shape[1]]
     g4z, g4x = np.gradient(y4, C.LU_CELL); s4 = np.hypot(g4x, g4z)
     pad = lu == 2; fld = lu == 3
@@ -128,6 +128,10 @@ def main():
 
     roads = reg["roads"]; passes = reg["passes"]; crossings = reg["crossings"]
     # Q5: 도로가 대간(섬진/낙동 분수계) 또는 뚜렷한 능선을 넘는 곳 = passes
+    import landuse as LUm
+    wmq = RD.river_masks(rivers, lu_shape)
+    _dr4 = ndimage.distance_transform_edt(~(wmq["B"] | wmq["C"] | wmq["D"])) * C.LU_CELL
+    rdist4 = lambda x, z: C.bilinear(_dr4, *C.xz_to_ij(np.asarray(x), np.asarray(z), C.LU_CELL))
     q5_bad = []; n_div = 0
     for rd in roads:
         p = resample(rd["points"], 8.0)
@@ -137,7 +141,7 @@ def main():
                 n_div += 1
                 d = min(math.hypot(q["x"] - p[k, 0], q["z"] - p[k, 1]) for q in passes)
                 if d > 200: q5_bad.append((rd["id"], round(float(p[k, 0])), round(float(p[k, 1])), round(d)))
-        for (px, pz, ph) in RD.profile_peaks(rd["points"], hy, prom_real=40.0):
+        for (px, pz, ph) in RD.profile_peaks(rd["points"], hy, prom_real=40.0, rdist=rdist4):
             d = min(math.hypot(q["x"] - px, q["z"] - pz) for q in passes)
             if d > 260: q5_bad.append((rd["id"], round(px), round(pz), round(d), "능선"))
     rec("Q5", not q5_bad, f"분수계(섬진↔낙동) 통과 {n_div}회·돌출 40m(실제)↑ 능선 모두 고개(passes {len(passes)}개) 200m 안" if not q5_bad else f"고개 없는 능선 통과 {q5_bad[:6]}", fails=q5_bad)
@@ -250,6 +254,36 @@ def main():
         res.append((s["id"], bool(ok), f"위반 {viol:.2f}, 뒤(산쪽) 숲·밭 {hill:.2f}, 뒤-앞 고도차 {float(hb - hc):+.1f}"))
     npass = sum(1 for r in res if r[1])
     rec("Q14", npass >= 0.75 * len(res), f"마을 단면 {npass}/{len(res)} 통과 (기준 75%)", detail=res)
+
+    # QR: 도강점(반경 10m) 밖에서 길이 물 칸(landuse 5)이나 하천 수면 아래를 지나지 않음
+    import landuse as LUq
+    drq, rsq, rhwq, _ = LUq.river_fields(rivers, y.shape, G=C.CELL)      # 2m 격자(빌드의 둑 보정과 같은 기준)
+    qr_bad = []; n_s = 0
+    for rd in roads:
+        p = resample(rd["points"], 2.0)
+        for x, z in p[:, :2]:
+            if any(math.hypot(c["x"] - x, c["z"] - z) <= max(rid[c["river_id"]]["width_m"], 5.2) / 2 + 4.5 for c in crossings): continue
+            n_s += 1
+            i4, j4 = C.xz_to_ij(x, z, C.LU_CELL); i4 = int(round(float(i4))); j4 = int(round(float(j4)))
+            wet = lu[j4, i4] == 5
+            i4, j4 = C.xz_to_ij(x, z, C.CELL); i4 = int(round(float(i4))); j4 = int(round(float(j4)))
+            low = False
+            if drq[j4, i4] <= max(rhwq[j4, i4], 2.6) + 4:      # 물가 둑 띠(물길 반폭+4m)에서 수면보다 낮으면 실패
+                low = float(hy(x, z)) < rsq[j4, i4] + 0.1
+            if wet or low: qr_bad.append((rd["id"], round(float(x)), round(float(z)), "물칸" if wet else "수면아래"))
+    rec("QR", not qr_bad, f"길 표본 {n_s}점(2m 간격, 도강점 반경 '하천 반폭+4.5m' 밖) 모두 물 칸 아님·수면+0.1 이상(목표 +0.3, 격자 차 허용)" if not qr_bad else f"{len(qr_bad)}점 실패 {qr_bad[:8]}", fails=qr_bad[:200])
+
+    # QW(덤): 남원읍성 성벽(한 변 186m, 중심선 ±90.7m)을 넘는 길은 성문 통로(문 중심 9m 안)로만
+    eup = lm["namwon_eupseong"]; cx, cz = eup["x"], eup["z"]; hz = 93.0 - 2.3
+    gates = [(cx, cz + hz), (cx, cz - hz), (cx + hz, cz), (cx - hz, cz)]
+    wall_bad = []
+    for rd in roads:
+        p = resample(rd["points"], 1.0)
+        ins = (np.abs(p[:, 0] - cx) < hz) & (np.abs(p[:, 1] - cz) < hz)
+        for k in np.nonzero(ins[1:] != ins[:-1])[0]:
+            x, z = p[k + 1, 0], p[k + 1, 1]
+            if min(math.hypot(x - gx, z - gz) for gx, gz in gates) > 9: wall_bad.append((rd["id"], round(float(x)), round(float(z))))
+    rec("QW", not wall_bad, "읍성 성벽을 넘는 길은 모두 성문 통로" if not wall_bad else f"성문 아닌 곳에서 성벽 통과 {wall_bad[:6]}", fails=wall_bad)
 
     os.makedirs(C.OUT, exist_ok=True)
     json.dump(R, open(os.path.join(C.OUT, "qa.json"), "w"), ensure_ascii=False, indent=1, default=str)

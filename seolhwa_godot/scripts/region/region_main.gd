@@ -53,6 +53,9 @@ var clock := 0.0
 var focus_y := 0.45
 var fog_on := true
 var _occ_frame := 0
+var _occ_near := []
+var _occ_near_t := 0
+var _occ_count := -1
 var _hidden_interior := []
 var _state: Dictionary
 var _render_scale := 1.0
@@ -313,6 +316,7 @@ func _apply_time() -> void:
 	world.set_far_param("u_glow", s.glow)
 	world.set_far_param("u_glow_i", s.glowI)
 	world.set_far_param("u_ink", ink)
+	world.set_far_param("haze", 1.0 if fog_on else 0.0)  # --nofog면 원경 운해·안개빛도 끈다
 	world.set_terrain_param("far_ink", s.skyHor.lerp(ink, 0.45))
 	# 안개가 97%가 되는 거리 너머 식생은 그리지 않는다
 	world.scatter_far = clampf(1.9 / maxf(float(s.dens), 0.001), 90.0, 320.0) if fog_on else 600.0
@@ -356,12 +360,25 @@ func _update_occlusion(dt: float, interior) -> void:
 	for o in want: o.visible = false
 	_hidden_interior = want.duplicate()
 	_occ_frame = (_occ_frame + 1) % 3
+	# 권역에는 가림 물체가 수천 개라, 15프레임마다 플레이어 50m 안 것만 골라 둔다(+ 아직 흐려져 있는 것)
+	_occ_near_t -= 1
+	if _occ_near_t <= 0 or _occ_count != world.occluders.size():
+		_occ_near_t = 15; _occ_count = world.occluders.size()
+		var keep := []
+		for occ in _occ_near:
+			if occ.alpha < 0.999 and world.occluders.has(occ): keep.append(occ)
+		var pc := Vector2(player_pos.x, player_pos.z)
+		for occ in world.occluders:
+			var b: AABB = occ.aabb
+			var cx := clampf(pc.x, b.position.x, b.end.x); var cz := clampf(pc.y, b.position.z, b.end.z)
+			if pc.distance_squared_to(Vector2(cx, cz)) < 2500.0 and not keep.has(occ): keep.append(occ)
+		_occ_near = keep
 	if _occ_frame == 0:
-		for occ in world.occluders: occ.target = 1.0
+		for occ in _occ_near: occ.target = 1.0
 		if interior == null:
 			var c := cam.global_position
-			for occ in world.occluders:
-				if not occ.node.visible: continue
+			for occ in _occ_near:
+				if not occ.node.visible or not occ.node.is_inside_tree(): continue
 				var box: AABB = occ.aabb
 				for h in [0.35, player.height * 0.6, player.height]:
 					var p := player_pos + Vector3(0, h, 0)
@@ -370,7 +387,7 @@ func _update_occlusion(dt: float, interior) -> void:
 					if _seg_box(c, end, box) and _seg_hits_mesh(occ, c, end):
 						occ.target = FADED; break
 	var k := 1.0 - exp(-dt * 8.0)
-	for occ in world.occluders:
+	for occ in _occ_near:
 		if absf(occ.alpha - occ.target) < 0.002: continue
 		occ.alpha += (occ.target - occ.alpha) * k
 		if absf(occ.alpha - occ.target) < 0.01: occ.alpha = occ.target
@@ -405,7 +422,7 @@ func _process(delta: float) -> void:
 	if _bench_left > 0.0 and _bench_loading:
 		# 처음 불러오기(시작 화면에 해당)가 끝난 뒤부터 잰다
 		_bench_load_t += delta
-		if (world.stats.jobs == 0 and _bench_load_t > 1.0) or _bench_load_t > 90.0:
+		if (world.stats.jobs == 0 and not placement.busy() and _bench_load_t > 1.0) or _bench_load_t > 90.0:
 			_bench_loading = false
 			print("BENCH initial_load_s=%.1f" % _bench_load_t)
 	elif _bench_left > 0.0:
@@ -449,6 +466,7 @@ func _process(delta: float) -> void:
 	world.set_terrain_param("mist_base", player_pos.y)
 	RenderingServer.global_shader_parameter_set("fog_base", player_pos.y) # 키트·캐릭터 산안개도 발 높이 기준
 	var interior = world.interior_at(player_pos.x, player_pos.z)
+	world.update_camera_zone(player_pos)
 	rig.update(dt, player_pos, player.facing, interior)
 	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
@@ -459,6 +477,7 @@ func _process(delta: float) -> void:
 	world.update_scatter_lod(player_pos)
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)
+	placement.update()
 	var _t3 := Time.get_ticks_usec()
 	_update_lamps(clock)
 	sky_mat.set_shader_parameter("u_time", clock)
@@ -489,7 +508,7 @@ func _save(path: String) -> void:
 	var img := scene_vp.get_texture().get_image()
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	img.save_png(path)
-	print("SHOT ", path, " ", img.get_size(), " pos=", player_pos, " lu=", world.landuse_at(player_pos.x, player_pos.z), " fps=", Engine.get_frames_per_second())
+	print("SHOT ", path, " ", img.get_size(), " cam=%.1f/%.0f %s" % [rig.cur.distance, rig.cur.pitch, rig.zone_name], " pos=", player_pos, " lu=", world.landuse_at(player_pos.x, player_pos.z), " fps=", Engine.get_frames_per_second())
 
 func _shot_at(x: float, z: float, h: float) -> void:
 	hour = h
@@ -497,7 +516,7 @@ func _shot_at(x: float, z: float, h: float) -> void:
 	_apply_time()
 	await _wait_frames(20)
 	var n := 0
-	while world.stats.jobs > 0 and n < 300:
+	while (world.stats.jobs > 0 or placement.busy()) and n < 600:
 		await _wait_frames(1); n += 1
 	rig.update(0, player_pos, player.facing, world.interior_at(player_pos.x, player_pos.z), true)
 	await _wait_frames(20)
@@ -539,7 +558,7 @@ func _run_tour(dir: String) -> void:
 			var c: PackedStringArray = r[4].split(",")
 			rig.override = { distance = float(c[0]), pitch = float(c[1]), fov = float(c[2]) }
 		else: _tour_camera()
-		fog_on = not (r.size() > 5 and r[5] == "nofog")  # 높은 시점 점검용: 안개 끄고 지형·타일 이음매 보기
+		fog_on = not args.has("nofog") and not (r.size() > 5 and r[5] == "nofog")  # 높은 시점 점검용: 안개 끄고 지형·타일 이음매 보기
 		await _shot_at(p.x, p.y + r[3], r[2])
 		if world.landuse_at(player_pos.x, player_pos.z) == 5: print("TOUR 물 위: ", r[1])
 		_save(_abs(dir).path_join("region_%s.png" % r[0]))
@@ -578,11 +597,14 @@ func _reload_place() -> void:
 	player_pos.y = world.height_at(player_pos.x, player_pos.z)
 
 func _quit() -> void:
+	placement.stop()
 	world.shutdown()
 	get_tree().quit()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST and world != null: world.shutdown()
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and world != null:
+		if placement != null: placement.stop()
+		world.shutdown()
 
 static func _abs(p: String) -> String:
 	return p if p.is_absolute_path() else ProjectSettings.globalize_path("res://").path_join(p)

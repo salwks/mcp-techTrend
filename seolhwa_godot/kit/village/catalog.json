@@ -6,7 +6,9 @@
   "budget": {
     "house": 6000,
     "prop": 800,
-    "compound": 15000
+    "compound": 15000,
+    "compound_lod": 4000,
+    "yard_set": 2000
   },
   "models": [
     {
@@ -31,6 +33,9 @@
         "kitchen"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -51,7 +56,10 @@
             "maru",
             "kitchen"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -71,7 +79,10 @@
             "maru",
             "kitchen"
           ],
-          "interior": true
+          "interior": true,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -97,6 +108,9 @@
         "maru"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -118,7 +132,10 @@
             "steps",
             "maru"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -143,6 +160,9 @@
         "step"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -162,7 +182,10 @@
             "floor",
             "step"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -186,6 +209,9 @@
         "draw"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -203,7 +229,10 @@
           "anchors": [
             "draw"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -225,6 +254,9 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -246,7 +278,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -268,6 +303,9 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -283,7 +321,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -307,6 +348,9 @@
         "front"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -324,7 +368,10 @@
           "anchors": [
             "front"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -346,12 +393,15 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": []
     },
     {
       "name": "stone_wall",
       "file": "res://kit/village/stone_wall.gd",
-      "desc": "돌담 — 웹 stoneWall 이식. 두 점 (ax,az)→(bx,bz) 사이 막돌 허튼층 + 갓돌. 약 220 삼각형/m",
+      "desc": "돌담 — 웹 stoneWall 이식. 두 점 (ax,az)→(bx,bz) 사이 막돌 허튼층 + 갓돌. 약 220 삼각형/m, lite ~90/m",
       "shot": "shots/kit/village/stone_wall.png",
       "params": {
         "seed": 1
@@ -366,6 +416,9 @@
       "occluder": true,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -385,7 +438,29 @@
           "lights": 0,
           "occluder": true,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "lite": true
+          },
+          "tris": 344,
+          "footprint": [
+            5.1,
+            0.6
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -407,6 +482,9 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -414,7 +492,7 @@
             "len": 6,
             "lite": true
           },
-          "tris": 578,
+          "tris": 304,
           "footprint": [
             6.3,
             0.3
@@ -423,7 +501,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -449,6 +530,9 @@
         "top"
       ],
       "interior": false,
+      "walk": true,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -470,7 +554,10 @@
             "south",
             "top"
           ],
-          "interior": false
+          "interior": false,
+          "walk": true,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -494,6 +581,9 @@
         "altar"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -509,7 +599,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -539,6 +632,9 @@
         "jumo"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -563,7 +659,10 @@
             "cook",
             "jumo"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -588,6 +687,9 @@
         "buyer"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -606,7 +708,10 @@
             "seller",
             "buyer"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -626,7 +731,10 @@
             "seller",
             "buyer"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -651,6 +759,9 @@
         "buyer"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -670,7 +781,10 @@
             "seller",
             "buyer"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -694,6 +808,9 @@
         "door"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -711,7 +828,10 @@
           "anchors": [
             "door"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -736,6 +856,9 @@
         "feeder"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": []
     },
     {
@@ -759,6 +882,9 @@
         "gate"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": []
     },
     {
@@ -781,6 +907,9 @@
         "front"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -799,7 +928,10 @@
           "anchors": [
             "front"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -823,6 +955,9 @@
         "door"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": []
     },
     {
@@ -848,6 +983,9 @@
         "wall_r"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -868,7 +1006,10 @@
             "wall_l",
             "wall_r"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -890,7 +1031,10 @@
             "wall_l",
             "wall_r"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -915,6 +1059,9 @@
         "gate_in"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -933,7 +1080,10 @@
             "gate_out",
             "gate_in"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -955,6 +1105,9 @@
       "occluder": true,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -970,7 +1123,10 @@
           "lights": 0,
           "occluder": true,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -995,6 +1151,9 @@
         "tree"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1013,7 +1172,10 @@
             "altar",
             "tree"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1032,7 +1194,10 @@
             "altar",
             "tree"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1054,6 +1219,9 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1070,7 +1238,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1104,6 +1275,9 @@
         "south"
       ],
       "interior": false,
+      "walk": true,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1134,7 +1308,10 @@
             "north",
             "south"
           ],
-          "interior": false
+          "interior": false,
+          "walk": true,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1160,6 +1337,9 @@
         "top"
       ],
       "interior": false,
+      "walk": true,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1180,7 +1360,10 @@
             "south",
             "top"
           ],
-          "interior": false
+          "interior": false,
+          "walk": true,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1206,6 +1389,9 @@
         "bow"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1226,7 +1412,10 @@
             "passenger",
             "bow"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1253,6 +1442,9 @@
         "basket"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1273,7 +1465,10 @@
             "washer1",
             "basket"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1295,6 +1490,9 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1310,7 +1508,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1332,6 +1533,9 @@
       "occluder": false,
       "anchors": [],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1347,7 +1551,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -1372,6 +1579,9 @@
         "seat"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
       "variants": [
         {
           "params": {
@@ -1389,7 +1599,10 @@
           "anchors": [
             "cook"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1405,7 +1618,10 @@
           "lights": 1,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1421,7 +1637,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1437,7 +1656,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1453,7 +1675,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1470,7 +1695,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1486,7 +1714,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1502,7 +1733,10 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         },
         {
           "params": {
@@ -1518,22 +1752,25 @@
           "lights": 0,
           "occluder": false,
           "anchors": [],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
     {
       "name": "house_compound",
       "file": "res://kit/village/house_compound.gd",
-      "desc": "집 한 채 프리셋 — small(초가+헛간+뒷간+장독+싸리울+사립문) / medium(초가 안채·사랑채+외양간+헛간+토담+초가대문) / large(기와 안채·사랑채+곳간+기와 토담+솟을대문)",
+      "desc": "집 한 채 프리셋 — small(초가+헛간+뒷간+장독+싸리울+사립문) / medium(초가 안채·사랑채+외양간+헛간+토담+초가대문) / large(기와 안채·사랑채+곳간+기와 토담+솟을대문). layout()·pieces로 건물별 조각, lod=1 가벼운 한 덩이",
       "shot": "shots/kit/village/house_compound.png",
       "params": {
         "seed": 1,
         "size": "small"
       },
-      "tris": 10950,
+      "tris": 8780,
       "footprint": [
-        14.6,
+        14.8,
         14.0
       ],
       "colliders": 21,
@@ -1546,20 +1783,22 @@
         "heotgan_front",
         "dwitgan_door",
         "gate_gate_out",
-        "gate_gate_in",
-        "yard"
+        "gate_gate_in"
       ],
       "interior": false,
+      "walk": false,
+      "pieces": 11,
+      "layout": true,
       "variants": [
         {
           "params": {
             "seed": 1,
             "size": "medium"
           },
-          "tris": 12712,
+          "tris": 12972,
           "footprint": [
             20.0,
-            17.4
+            16.8
           ],
           "colliders": 28,
           "lights": 4,
@@ -1578,17 +1817,19 @@
             "gate_gate_out",
             "gate_gate_in",
             "gate_wall_l",
-            "gate_wall_r",
-            "yard"
+            "gate_wall_r"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 13,
+          "layout": true
         },
         {
           "params": {
             "seed": 1,
             "size": "large"
           },
-          "tris": 14452,
+          "tris": 14792,
           "footprint": [
             24.8,
             21.8
@@ -1608,10 +1849,467 @@
             "gate_gate_out",
             "gate_gate_in",
             "gate_wall_l",
-            "gate_wall_r",
-            "yard"
+            "gate_wall_r"
           ],
-          "interior": false
+          "interior": false,
+          "walk": false,
+          "pieces": 11,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "small",
+            "lod": 1
+          },
+          "tris": 726,
+          "footprint": [
+            14.8,
+            14.0
+          ],
+          "colliders": 11,
+          "lights": 1,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium",
+            "lod": 1
+          },
+          "tris": 1348,
+          "footprint": [
+            20.0,
+            16.8
+          ],
+          "colliders": 13,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large",
+            "lod": 1
+          },
+          "tris": 2120,
+          "footprint": [
+            24.8,
+            21.8
+          ],
+          "colliders": 14,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "stone_jangseung",
+      "file": "res://kit/village/stone_jangseung.gd",
+      "desc": "돌장승(석장승) — 실상사 해탈교 앞 석장승 참고: 벙거지·왕방울 눈·주먹코·송곳니·앞면 새김 띠. variant 0 벙거지 / 1 높은 관 / 2 민머리",
+      "shot": "shots/kit/village/stone_jangseung.png",
+      "params": {
+        "seed": 1,
+        "variant": 0
+      },
+      "tris": 780,
+      "footprint": [
+        1.2,
+        1.2
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "front"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "variant": 1
+          },
+          "tris": 764,
+          "footprint": [
+            1.2,
+            1.2
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "front"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "variant": 2,
+            "h": 2.9
+          },
+          "tris": 660,
+          "footprint": [
+            1.2,
+            1.2
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "front"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "wall_run",
+      "file": "res://kit/village/wall_run.gd",
+      "desc": "담 긴 구간 — points 꺾은선 따라 kind stone_lite/stone/todam_thatch/todam_tile/fence_lite/fence, gaps로 구간 비우기, closed",
+      "shot": "shots/kit/village/wall_run.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1376,
+      "footprint": [
+        18.8,
+        1.8
+      ],
+      "colliders": 44,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "kind": "todam_tile",
+            "points": [
+              [
+                -8,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                -6
+              ]
+            ]
+          },
+          "tris": 848,
+          "footprint": [
+            8.8,
+            6.8
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "kind": "fence_lite",
+            "points": [
+              [
+                -5,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                5,
+                -4
+              ],
+              [
+                -5,
+                -4
+              ]
+            ],
+            "closed": true,
+            "gaps": [
+              0
+            ]
+          },
+          "tris": 912,
+          "footprint": [
+            10.8,
+            4.8
+          ],
+          "colliders": 3,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "teotbat",
+      "file": "res://kit/village/teotbat.gd",
+      "desc": "텃밭 — 싸리울(lite)로 두른 채소밭: 두둑 + 배추·무·고추·파 + 울 위 호박 넝쿨",
+      "shot": "shots/kit/village/teotbat.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1646,
+      "footprint": [
+        4.8,
+        3.5
+      ],
+      "colliders": 5,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "gap"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "w": 3.5,
+            "d": 2.6,
+            "rows": 3,
+            "gourd": false
+          },
+          "tris": 1028,
+          "footprint": [
+            3.8,
+            2.9
+          ],
+          "colliders": 5,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "gap"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "yard_props",
+      "file": "res://kit/village/yard_props.gd",
+      "desc": "마당 소품 묶음 — set manure_coop(거름더미+닭장) / jars(장독 모음) / work(멍석·절구·맷돌·키) / woodpile(장작·지게·볏단·모탕)",
+      "shot": "shots/kit/village/yard_props.png",
+      "params": {
+        "seed": 1,
+        "set": "manure_coop"
+      },
+      "tris": 548,
+      "footprint": [
+        4.4,
+        3.0
+      ],
+      "colliders": 2,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "chickens"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "set": "jars"
+          },
+          "tris": 1288,
+          "footprint": [
+            3.6,
+            2.2
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "set": "work"
+          },
+          "tris": 708,
+          "footprint": [
+            4.6,
+            3.0
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "worker"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "set": "woodpile"
+          },
+          "tris": 1896,
+          "footprint": [
+            4.6,
+            3.2
+          ],
+          "colliders": 3,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "chopper"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "village_square",
+      "file": "res://kit/village/village_square.gd",
+      "desc": "마을 공동 마당 — 정자나무(nature/big_tree 느티 또는 own) + 둥근 돌 축대 + 평상 둘 + 돌 의자",
+      "shot": "shots/kit/village/village_square.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 2296,
+      "footprint": [
+        8.0,
+        7.6
+      ],
+      "colliders": 4,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [
+        "tree",
+        "seat",
+        "pyeongsang0",
+        "pyeongsang1",
+        "seat0",
+        "seat1",
+        "seat2",
+        "seat3"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "tree": "own"
+          },
+          "tris": 2178,
+          "footprint": [
+            8.0,
+            7.6
+          ],
+          "colliders": 4,
+          "lights": 1,
+          "occluder": true,
+          "anchors": [
+            "tree",
+            "seat",
+            "pyeongsang0",
+            "pyeongsang1",
+            "seat0",
+            "seat1",
+            "seat2",
+            "seat3"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "tree": "none",
+            "pyeongsang": 1,
+            "seats": 3
+          },
+          "tris": 744,
+          "footprint": [
+            8.0,
+            7.6
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [
+            "tree",
+            "seat",
+            "pyeongsang0",
+            "seat0",
+            "seat1",
+            "seat2"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     }

@@ -13,8 +13,8 @@ def hash01(i, j, seed=1):
     v = np.sin(i * 12.9898 + j * 78.233 + seed * 37.719) * 43758.5453
     return v - np.floor(v)
 
-def river_fields(rivers, shape):
-    """4m 격자: 하천 중심선까지 거리(게임 m), 그 점의 수면 y, 반폭, 등급."""
+def river_fields(rivers, shape, G=G):
+    """격자(기본 4m): 하천 중심선까지 거리(게임 m), 그 점의 수면 y, 반폭, 등급."""
     Hh, Ww = shape
     surf = np.full(shape, np.nan); hw = np.zeros(shape); gr = np.zeros(shape, np.int8)
     for r in sorted(rivers, key=lambda r: "DCB".index(r["grade"])):
@@ -27,6 +27,16 @@ def river_fields(rivers, shape):
     has = ~np.isnan(surf)
     d, (nj, ni) = ndimage.distance_transform_edt(~has, return_indices=True)
     return d * G, surf[nj, ni], hw[nj, ni], gr[nj, ni]
+
+AREA = {"L": 45000.0, "M": 14000.0, "S": 5000.0}
+AREA_ID = {"namwon_eup": 85000.0,      # 성 안 정방형은 별도(전부 마을 터) + 성 밖 85,000m²
+           "inwol_yeok": 16000.0, "inwol_jang": 18000.0, "unbong_jang": 12000.0, "namwon_jang": 9000.0, "namwon_hyanggyo": 3000.0}
+
+def village_area(s):
+    if s["id"] in AREA_ID: return AREA_ID[s["id"]]
+    if s["type"] == "주막": return 1200.0
+    if s.get("auto"): return 4500.0
+    return AREA.get(s.get("size", "S"), 5000.0)
 
 def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
     Hh, Ww = y4.shape
@@ -69,26 +79,61 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
         if abs(x) > 4250 or abs(z) > 2020: continue
         if all(math.hypot(x - a, z - b) > 450 for a, b in taken):
             taken.append((x, z)); autos.append((x, z))
-    vill = Image.new("L", (Ww, Hh), 0); dv = ImageDraw.Draw(vill)
-    bam = Image.new("L", (Ww, Hh), 0); dbm = ImageDraw.Draw(bam)
-    def stamp(x, z, r):
-        i, j = C.xz_to_ij(x, z, G); rr = r / G
-        dv.ellipse([i - rr, j - rr, i + rr, j + rr], fill=255)
-        # 대숲: 마을 뒤(북쪽, 카메라 반대) 반원띠
-        dbm.pieslice([i - rr * 1.5, j - rr * 1.5, i + rr * 1.5, j + rr * 1.5], 200, 340, fill=255)
-    for s in settlements_fixed:
-        if s["type"] in ("성황당",): continue
-        stamp(s["x"], s["z"], s["radius_m"])
-    for x, z in autos: stamp(x, z, 32)
-    vm = np.asarray(vill) > 0; bm = (np.asarray(bam) > 0) & ~vm & (nz < 0.55) & (slope < 0.5)
-    lu[bm & (lu == FOREST) | bm & (lu == FIELD)] = BAMBOO
-    lu[vm & ~water] = VILLAGE
-    # 길
+    # ── 마을 터: 원 대신 '길을 따라 늘어서고 산기슭에 기대는' 모양으로 키운다(명세 §24 배산임수)
     rd = Image.new("L", (Ww, Hh), 0); dd = ImageDraw.Draw(rd)
     for r in roads:
         p = np.array(r["points"]); i, j = C.xz_to_ij(p[:, 0], p[:, 1], G)
         dd.line(list(zip(i.tolist(), j.tolist())), fill=255, width=max(1, int(round(r["width_m"] / G))))
-    lu[(np.asarray(rd) > 0) & ~water] = ROAD
+    road_m = np.asarray(rd) > 0
+    d_road = ndimage.distance_transform_edt(~road_m) * G
+    excl = water | (dr <= rhw + 5)
+    vm = np.zeros(lu.shape, bool)
+    shapes = {}
+    for s in list(settlements_fixed) + [dict(id=f"auto_village_{n:02d}", x=x, z=z, type="마을", size="S", auto=True) for n, (x, z) in enumerate(autos)]:
+        if s["type"] in ("성황당", "사찰"): continue
+        target = village_area(s)
+        core = s.get("core")                                   # 남원: 성 안 정방형(게임 좌표 x0,z0,x1,z1)
+        req = math.sqrt(target / math.pi)
+        rmax = max(70.0, 2.6 * req) + (110 if core else 0)
+        ci, cj = C.xz_to_ij(s["x"], s["z"], G); R = int(rmax / G) + 2
+        j0, j1, i0, i1 = max(int(cj) - R, 0), min(int(cj) + R + 1, Hh), max(int(ci) - R, 0), min(int(ci) + R + 1, Ww)
+        sx, sz = xs[j0:j1, i0:i1], zs[j0:j1, i0:i1]
+        if core:
+            x0, z0, x1, z1 = core
+            dx = np.maximum(np.maximum(x0 - sx, sx - x1), 0); dz = np.maximum(np.maximum(z0 - sz, sz - z1), 0)
+            dc = np.hypot(dx, dz); inside_core = (dx == 0) & (dz == 0)
+        else:
+            dc = np.hypot(sx - s["x"], sz - s["z"]); inside_core = np.zeros(sx.shape, bool)
+        sl_ = sl_s[j0:j1, i0:i1]; hd = hand[j0:j1, i0:i1]
+        sc = (dc / max(req, 20.0)) * 0.9 + np.minimum(d_road[j0:j1, i0:i1], 90) / 28.0 \
+             + 3.0 * (sl_ > 0.28) + 0.5 * ((sl_ < 0.02) & (hd < 6)) - 0.45 * ((sl_ > 0.03) & (sl_ < 0.18)) + 0.25 * nz[j0:j1, i0:i1]
+        sc[excl[j0:j1, i0:i1] | (dc > rmax)] = 99
+        sc[inside_core] = -99
+        n_px = int(target / (G * G)) + int(inside_core.sum())
+        order_ = np.argsort(sc, axis=None)[:n_px]
+        m = np.zeros(sc.shape, bool); m.flat[order_] = True
+        m &= sc < 50
+        m = ndimage.binary_closing(m, iterations=2) & ~excl[j0:j1, i0:i1]
+        m = ndimage.binary_opening(m, iterations=1) | (m & inside_core)
+        lab_, n_ = ndimage.label(m)
+        if n_ > 1:   # 중심(또는 core)에 닿은 덩어리 + 큰 덩어리만
+            sizes_ = ndimage.sum(np.ones_like(m), lab_, range(1, n_ + 1))
+            keep = [k + 1 for k in range(n_) if sizes_[k] >= 0.12 * sizes_.max()]
+            m = np.isin(lab_, keep)
+        vm[j0:j1, i0:i1] |= m
+        if m.any():
+            jj_, ii_ = np.nonzero(m)
+            ex, ez = sx[jj_, ii_], sz[jj_, ii_]
+            shapes[s["id"]] = dict(area_m2=round(float(m.sum() * G * G)), extent_m=round(float(np.hypot(ex - s["x"], ez - s["z"]).max()), 1),
+                                   bbox=[round(float(ex.min()), 1), round(float(ez.min()), 1), round(float(ex.max()), 1), round(float(ez.max()), 1)])
+    # 대숲: 마을 둘레 20m 안, 마을보다 높은 쪽(산 쪽) — 배산
+    ring = ndimage.binary_dilation(vm, iterations=int(20 / G)) & ~vm
+    vill_h = ndimage.grey_dilation(np.where(vm, y4, -1e9), size=int(40 / G))
+    bm = ring & (y4 > vill_h - 0.3) & (nz < 0.55) & (slope < 0.5)
+    lu[bm & ((lu == FOREST) | (lu == FIELD))] = BAMBOO
+    lu[vm & ~water] = VILLAGE
+    # 길
+    lu[road_m & ~water] = ROAD
     lu[water] = WATER
-    info = dict(slope=slope, hand=hand, dr=dr, rhw=rhw)
+    info = dict(slope=slope, hand=hand, dr=dr, rhw=rhw, shapes=shapes)
     return lu, autos, info

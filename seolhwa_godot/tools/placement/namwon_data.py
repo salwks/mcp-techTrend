@@ -130,3 +130,59 @@ def poly_overlap(a, b):
             if max(pa) <= min(pb) + 1e-6 or max(pb) <= min(pa) + 1e-6:
                 return False
     return True
+
+
+class Fields:
+    """1m 격자 래스터: 길 가장자리·물 가장자리까지 거리, 토지이용, 높이 — 빠른 자리 검사용"""
+
+    def __init__(self, R, x0, z0, x1, z1, cell=1.0):
+        from PIL import ImageDraw
+        from scipy import ndimage
+        self.R = R
+        self.x0, self.z0, self.cell = x0, z0, cell
+        self.w = int((x1 - x0) / cell); self.h = int((z1 - z0) / cell)
+        P = lambda x, z: ((x - x0) / cell, (z - z0) / cell)
+
+        def dist(polys):
+            im = Image.new("L", (self.w, self.h), 0)
+            d = ImageDraw.Draw(im)
+            for pts, width in polys:
+                d.line([P(p[0], p[1]) for p in pts], fill=255, width=max(1, int(round(width / cell))))
+                r = width / 2 / cell
+                for p in pts:
+                    cx, cz = P(p[0], p[1]); d.ellipse([cx - r, cz - r, cx + r, cz + r], fill=255)
+            m = np.array(im) > 0
+            return ndimage.distance_transform_edt(~m) * cell, m
+        self.road_d, self.road_m = dist([(rd["points"], rd["width_m"]) for rd in R.roads])
+        self.river_d, _ = dist([(rv["points"], max(rv["width_m"], 5.2) * 1.18) for rv in R.rivers])
+        xs = x0 + (np.arange(self.w) + 0.5) * cell; zs = z0 + (np.arange(self.h) + 0.5) * cell
+        l = R.lm
+        li = np.clip(np.round((xs - l["x0"]) / l["cell"]).astype(int), 0, l["w"] - 1)
+        lj = np.clip(np.round((zs - l["z0"]) / l["cell"]).astype(int), 0, l["h"] - 1)
+        self.lu = R.L[np.ix_(lj, li)]
+        hm = R.hm
+        hi = np.clip(np.round((xs - hm["x0"]) / hm["cell"]).astype(int), 0, hm["w"] - 1)
+        hj = np.clip(np.round((zs - hm["z0"]) / hm["cell"]).astype(int), 0, hm["h"] - 1)
+        self.H = R.H[np.ix_(hj, hi)]
+
+    def ij(self, x, z):
+        i = int((x - self.x0) / self.cell); j = int((z - self.z0) / self.cell)
+        if 0 <= i < self.w and 0 <= j < self.h:
+            return i, j
+        return None
+
+    def road(self, x, z):
+        k = self.ij(x, z)
+        return float(self.road_d[k[1], k[0]]) if k else 99.0
+
+    def river(self, x, z):
+        k = self.ij(x, z)
+        return float(self.river_d[k[1], k[0]]) if k else 99.0
+
+    def landuse(self, x, z):
+        k = self.ij(x, z)
+        return int(self.lu[k[1], k[0]]) if k else self.R.landuse(x, z)
+
+    def height(self, x, z):
+        k = self.ij(x, z)
+        return float(self.H[k[1], k[0]]) if k else self.R.height(x, z)

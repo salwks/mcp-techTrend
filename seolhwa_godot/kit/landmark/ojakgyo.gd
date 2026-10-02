@@ -90,5 +90,16 @@ static func build(params: Dictionary) -> Dictionary:
 		node = b.build("오작교"), colliders = cols, lights = [], occluder = false,
 		footprint = Vector2(Wd + 0.4, L),
 		anchors = { north_end = Vector3(0, deck(-L / 2, L), -L / 2), south_end = Vector3(0, deck(L / 2, L), L / 2), middle = Vector3(0, deck(0, L), 0) },
-		deck_height = "0.35 + 1.75·clamp((L/2-|z|)/9, 0, 1)",
+		walk = walk(L, Wd),
 	}
+
+# 계약서 §8 걷기 면: 상판 박석 윗면(deck(z)+0.1)을 따라 오르내림. 양 끝은 둑(y≈0.1)으로 0.6m 이어 붙임. 양옆 턱돌 안쪽만
+static func walk(L: float, Wd: float, y0 := 0.0) -> Array:
+	var zs := [-L / 2 - 0.6]; var ys := [y0 + 0.1]
+	var n := 24
+	for i in n + 1:
+		var z := -L / 2 + L * i / n
+		zs.append(z); ys.append(y0 + deck(z, L) + 0.1)
+	zs.append(L / 2 + 0.6); ys.append(y0 + 0.1)
+	var hw := Wd / 2 - 0.22
+	return [{ minX = -hw, maxX = hw, minZ = -L / 2 - 0.6, maxZ = L / 2 + 0.6, z = zs, y = ys }]

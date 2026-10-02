@@ -1,6 +1,6 @@
 # 토담(흙돌담) — 흙에 막돌을 박아 쌓은 담 + 갓(이엉 또는 기와). 두 점 (ax,az)→(bx,bz).
 # 고증: 조선 후기 남부 민가는 돌담·토석담이 흔하고, 담 위는 이엉을 얹거나(초가) 기와를 얹었다(양반가).
-# params: seed, ax,az,bx,bz (없으면 len(5)), h(1.5), cap:"thatch"|"tile"
+# params: seed, ax,az,bx,bz (없으면 len(5)), h(1.5), cap:"thatch"|"tile", tile_seg(0.4: 기와 갓 마디 길이)
 # 삼각형: 약 40~60/m(돌담보다 싸서 집 묶음 둘레에 쓴다).
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
@@ -11,7 +11,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var L: float = params.get("len", 5.0)
 	var ax: float = params.get("ax", -L / 2); var az: float = params.get("az", 0.0)
 	var bx: float = params.get("bx", L / 2); var bz: float = params.get("bz", 0.0)
-	draw(m, ax, az, bx, bz, params.get("h", 1.5), params.get("cap", "thatch"))
+	draw(m, ax, az, bx, bz, params.get("h", 1.5), params.get("cap", "thatch"), params.get("tile_seg", 0.4))
 	return m.result("토담", Vector2(absf(bx - ax) + 0.8, absf(bz - az) + 0.8), true)
 
 static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.5, cap := "thatch", tile_seg := 0.4) -> void:

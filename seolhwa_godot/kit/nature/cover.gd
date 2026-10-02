@@ -1,6 +1,6 @@
 # 땅덮개 조각(흩뿌리기 전용 합성 모델) — 풀·들꽃·자갈·여울돌·갈대·작은 돌을 지름 ~4m 한 메시로 합친다.
 # 종류마다 MultiMesh 하나씩이면 그리기 호출이 너무 많아져서, 토지이용별 덮개 한 종류로 묶는다.
-# kind: meadow(풀밭) / forest(숲 바닥) / alpine(고원 — 억새·원추리) / riverside(물가 — 갈대) / sandbar(모래톱 — 자갈) / rocky(바위터 — 마른 풀·돌)
+# kind: yard(마을 터 — 짧은 풀·들꽃) / meadow(풀밭) / forest(숲 바닥) / alpine(고원 — 억새·원추리) / riverside(물가 — 갈대) / sandbar(모래톱 — 자갈) / rocky(바위터 — 마른 풀·돌)
 # params: seed, kind("meadow"), r(2.0 퍼짐 반지름)
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
@@ -30,6 +30,8 @@ const RECIPE := {
 		["grass", { kind = "eoksae", n = 5 }], ["grass", { kind = "dry", n = 5 }], ["flowers", { color = "#e39a4a" }]],
 	riverside = [["reeds", { n = 6 }], ["grass", { kind = "meadow", n = 6 }], ["reeds", { n = 5 }], ["reeds", { n = 6 }], ["grass", { kind = "meadow", n = 5 }], ["reeds", { n = 5 }]],
 	sandbar = [["gravel", { spread = 1.2 }], ["gravel", { spread = 1.0 }], ["grass", { kind = "dry", n = 4 }], ["gravel", { spread = 1.3 }]],
+	yard = [["grass", { kind = "short", n = 6 }], ["flowers", {}], ["grass", { kind = "short", n = 6 }], ["grass", { kind = "short", n = 5 }],
+		["flowers", {}], ["grass", { kind = "short", n = 6 }], ["grass", { kind = "meadow", n = 4 }]],
 	rocky = [["grass", { kind = "dry", n = 6 }], ["rock", { s = 0.38, mossy = false }], ["grass", { kind = "dry", n = 5 }], ["rock", { s = 0.28 }],
 		["grass", { kind = "dry", n = 5 }], ["grass", { kind = "meadow", n = 5 }]],
 }

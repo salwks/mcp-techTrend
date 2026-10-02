@@ -3,6 +3,7 @@
 import json, math, os, sys, time
 import numpy as np
 from scipy import ndimage
+from PIL import Image, ImageDraw
 import common as C, dem, modern_fix, hydro, roads as R, landuse as LU, export, places as P
 
 T0 = time.time()
@@ -89,16 +90,25 @@ def main():
         sets.append(dict(id=s["id"], name=s["name"], type=s["type"], x=x, z=z, radius_m=s["radius_m"], size=s["size"],
                          notes=s["notes"], confidence=s["confidence"], source=s["source"], lat=round(s["lat"], 5), lon=round(s["lon"], 5)))
     S = {s["id"]: s for s in sets}; L = {l["id"]: l for l in lms}
+    # 3단계: 배치 에이전트 자리로 옮김(신뢰도는 그대로)
+    OVR = {"yongseonggwan": (-3271.8, 210.0, "원 좌표(용성초 터)는 읍내 동서길에 걸려 placement-namwon 배치 자리로 옮김(동서길 북쪽, 남향)"),
+           "namwon_hyanggyo": (-3247.3, -97.8, "원 좌표가 광치천에 걸리고, 3단계 북쪽 길이 지나가 placement-namwon 배치 자리(서쪽)로 옮김")}
+    for oid, (ox, oz, why) in OVR.items():
+        for o in (L.get(oid), S.get(oid)):
+            if o is None: continue
+            o["x"], o["z"] = ox, oz; o["notes"] = (o["notes"] + " " if o["notes"] else "") + f"[3단계 위치 조정: {why}]"
+    S["namwon_eup"]["core"] = [L["namwon_eupseong"]["x"] - 93, L["namwon_eupseong"]["z"] - 93, L["namwon_eupseong"]["x"] + 93, L["namwon_eupseong"]["z"] + 93]
 
     # 2m 격자 하천 거리
-    surf2 = np.zeros(alt2.shape, bool); hw2 = np.zeros(alt2.shape)
+    surf2 = np.zeros(alt2.shape, bool); hw2 = np.zeros(alt2.shape); sv2 = np.zeros(alt2.shape)
     for r in rivers:
         p = np.array(r["points"]); seg = np.hypot(*np.diff(p[:, :2], axis=0).T); s = np.concatenate([[0], np.cumsum(seg)])
         t = np.arange(0, s[-1], 1.0); x = np.interp(t, s, p[:, 0]); z = np.interp(t, s, p[:, 1])
         i, j = C.xz_to_ij(x, z); i = np.clip(np.round(i).astype(int), 0, alt2.shape[1] - 1); j = np.clip(np.round(j).astype(int), 0, alt2.shape[0] - 1)
         surf2[j, i] = True; hw2[j, i] = np.maximum(hw2[j, i], r["width_m"] / 2)
+        sv2[j, i] = np.interp(t, s, p[:, 2])
     d2, (nj, ni) = ndimage.distance_transform_edt(~surf2, return_indices=True)
-    d2 = d2 * C.CELL; HW2 = hw2[nj, ni]
+    d2 = d2 * C.CELL; HW2 = hw2[nj, ni]; SV2 = sv2[nj, ni]
     river_keep = np.clip(1 - (d2 - HW2 - 3) / 8.0, 0, 1)
     # 확정이 아닌 마을 자리를 사람이 살 만한 땅(완경사·골 바닥 가까이·물가 아님)으로 최대 250m(게임) 옮김
     yy = C.alt_to_y(alt2); gz_, gx_ = np.gradient(ndimage.uniform_filter(yy, 5), C.CELL); slp = np.hypot(gx_, gz_)
@@ -130,9 +140,10 @@ def main():
         dict(id="yocheon_south_naru", name="요천 광한루 앞 나루", type="나루", river_id="yocheon", road_id="namwon_gurye_road",
              pos=on_river("yocheon", 35.4010, 127.3840), confidence="가설",
              notes="광한루 남쪽, 구례·곡성 방면 길. 큰물 때 배로 건넘(가설)."),
-        dict(id="ramcheon_unbong_ford", name="람천 운봉 동쪽 징검다리", type="징검다리", river_id="ramcheon", road_id="tongyeong_byeolro",
-             pos=on_river("ramcheon", 35.4470, 127.5400), confidence="가설", notes="고원 위 람천은 폭이 좁고 얕다."),
-        dict(id="haetal_bridge", name="실상사 앞 해탈교 자리", type="섶다리", river_id="ramcheon", road_id="inwol_banseon_road",
+        dict(id="ramcheon_unbong_ford", name="람천 운봉 서쪽 건널목", type="섶다리", river_id="ramcheon", road_id="tongyeong_byeolro",
+             pos=on_river("ramcheon", 35.4395, 127.5262), confidence="가설",
+             notes="여원재에서 내려와 읍치로 드는 자리(람천이 읍치 서·북쪽을 감아 돎). 고원 위 람천은 얕다 — 섶다리/징검다리(가설)."),
+        dict(id="haetal_bridge", name="실상사 앞 해탈교 자리", type="섶다리", river_id="ramcheon", road_id="haetal_lane",
              pos=on_river("ramcheon", 35.4163, 127.6355), confidence="추정",
              notes="OSM 'Haetal Bridge'(현대 다리) 자리 — 1870년 다리 형식은 가설(섶다리/외나무다리)."),
     ]
@@ -146,43 +157,175 @@ def main():
     cost, slope4 = R.cost_field(y4, wm, cross_xz)
     eg = L["namwon_east_gate"]; sg = L["namwon_south_gate"]; ng = L["namwon_north_gate"]; wg = L["namwon_west_gate"]
     D = {c["id"]: c["pos"] for c in designated}
+    # 랜드마크 경내(실상사 등)는 길이 가로지르지 않게 비싸게
+    base_c = cost[0].copy()
+    xs4_, zs4_ = C.ij_to_xz(*np.meshgrid(np.arange(base_c.shape[1]), np.arange(base_c.shape[0])), C.LU_CELL)
+    for l_ in lms:
+        if not l_.get("size_m") or l_["id"] in ("namwon_eupseong", "ojakgyo", "gwanghallu") or max(l_["size_m"]) < 30: continue
+        m_ = (np.abs(xs4_ - l_["x"]) <= l_["size_m"][0] / 2 + 4) & (np.abs(zs4_ - l_["z"]) <= l_["size_m"][1] / 2 + 4)
+        base_c[m_] += 60.0
+    cost = (base_c, cost[1])
+    # ── 남원읍성 성문 통로(kit/landmark/namwon_eupseong.gd·seongmun.gd 기하): 성문 중심 = 성벽 중심선(중심에서 90.7m),
+    #    옹성 반지름 11, 열린 쪽 S=정면(남), N=서, E=남, W=북(세계 방위). 길은 문 → 옹성 마당 → 옹성 출구로만 드나든다.
+    CXe, CZe = L["namwon_eupseong"]["x"], L["namwon_eupseong"]["z"]
+    GZC = 93.0 - 4.6 / 2
+    def gate_path(side):
+        ry = {"S": 0.0, "E": math.pi / 2, "N": math.pi, "W": -math.pi / 2}[side]
+        opn = {"S": "front", "N": "west", "E": "south", "W": "north"}[side]
+        lpx = {"S": "east", "E": "north", "N": "west", "W": "south"}[side]
+        def w(lx, lz):   # 변 로컬(+z 바깥, 원점 성 중심) → 세계
+            lz = lz + GZC
+            return (round(CXe + lx * math.cos(ry) + lz * math.sin(ry), 1), round(CZe - lx * math.sin(ry) + lz * math.cos(ry), 1))
+        zo, Rg = 5.6 / 2 - 0.5, 11.0
+        if opn == "front":
+            out = [w(0, -6), w(0, 0), w(0, zo + Rg * 0.5), w(0, zo + Rg + 3.0), w(0, zo + Rg + 9.0)]
+        else:
+            sx_ = 1.0 if opn == lpx else -1.0
+            out = [w(0, -6), w(0, 0), w(0, zo + Rg * 0.5), w(sx_ * 6.5, zo + 3.0), w(sx_ * 11.9, zo + 1.5), w(sx_ * 18.0, zo + 1.5)]
+        return out                                   # [성 안, 문 통로, 옹성 마당, …, 옹성 밖]
+    GP = {k: gate_path(k) for k in "SNEW"}
+    gate_center = {k: GP[k][1] for k in "SNEW"}
+
+    def bank_waypoints(rid, a, b, spacing=120.0, extra=5.0, side_ref=None):
+        """하천 rid를 따라 a→b 사이 물가(벼룻길) 경유점: 반폭+extra만큼 떨어진 양안 중 덜 높은 쪽(DP, 건너기 벌점)."""
+        rp = np.asarray(riv[rid]["points"])
+        ka = int(np.argmin(np.hypot(rp[:, 0] - a[0], rp[:, 1] - a[1]))); kb = int(np.argmin(np.hypot(rp[:, 0] - b[0], rp[:, 1] - b[1])))
+        lo_, hi_ = sorted((ka, kb))
+        seg = rp[lo_:hi_ + 1]
+        if len(seg) < 4: return []
+        L_ = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(seg[:, :2], axis=0).T))])
+        ts = np.arange(spacing / 2, L_[-1] - spacing / 3, spacing)
+        if len(ts) == 0: return []
+        px_ = np.interp(ts, L_, seg[:, 0]); pz_ = np.interp(ts, L_, seg[:, 1]); sy = np.interp(ts, L_, seg[:, 2])
+        tg = np.stack([np.interp(ts + 2, L_, seg[:, 0]) - np.interp(ts - 2, L_, seg[:, 0]), np.interp(ts + 2, L_, seg[:, 1]) - np.interp(ts - 2, L_, seg[:, 1])], 1)
+        tg /= np.linalg.norm(tg, axis=1, keepdims=True) + 1e-9
+        nrm = np.stack([-tg[:, 1], tg[:, 0]], 1)
+        off = riv[rid]["width_m"] / 2 + extra
+        cand = []
+        for sgn in (1, -1):
+            qx = px_ + sgn * nrm[:, 0] * off; qz = pz_ + sgn * nrm[:, 1] * off
+            hgt = np.maximum.reduce([C.bilinear(y2a, *C.xz_to_ij(px_ + sgn * nrm[:, 0] * o, pz_ + sgn * nrm[:, 1] * o)) for o in (off, off + 6, off + 12)]) - sy
+            cand.append((qx, qz, hgt))
+        n = len(ts); INF = 1e9; SW = 10.0
+        if side_ref is not None:      # 한쪽 기슭으로 고정(기준점이 있는 쪽)
+            sd_ = 0 if np.dot(np.asarray(side_ref) - np.array([px_[0], pz_[0]]), nrm[0]) * 1 >= 0 else 1
+            wp = [(float(cand[sd_][0][t]), float(cand[sd_][1][t])) for t in range(n)]
+            return wp if ka <= kb else wp[::-1]
+        dp = np.full((n, 2), INF); bk = np.zeros((n, 2), int)
+        dp[0] = [cand[0][2][0], cand[1][2][0]]
+        for t in range(1, n):
+            for s_ in range(2):
+                c0 = dp[t - 1, s_]; c1 = dp[t - 1, 1 - s_] + SW
+                bk[t, s_] = s_ if c0 <= c1 else 1 - s_
+                dp[t, s_] = min(c0, c1) + max(cand[s_][2][t], 0)
+        side = [int(np.argmin(dp[-1]))]
+        for t in range(n - 1, 0, -1): side.append(bk[t, side[-1]])
+        side = side[::-1]
+        wp = [(float(cand[sd][0][t]), float(cand[sd][1][t])) for t, sd in enumerate(side)]
+        return wp if ka <= kb else wp[::-1]
+
+    y2a = C.alt_to_y(alt2)
+    sil_front = (L["silsangsa"]["x"], L["silsangsa"]["z"] + 70)
+    MS_MOUTH = tuple(riv["mansucheon"]["points"][-1][:2])
+    def _ht():
+        rp = np.asarray(riv["ramcheon"]["points"]); pos = np.asarray(D_pos_haetal)
+        k = int(np.argmin(np.hypot(rp[:, 0] - pos[0], rp[:, 1] - pos[1])))
+        t = rp[min(k + 2, len(rp) - 1), :2] - rp[max(k - 2, 0), :2]; t = t / (np.linalg.norm(t) + 1e-9); n = np.array([-t[1], t[0]])
+        sl_ = L["silsangsa"]; toward = np.array([sl_["x"], sl_["z"]]) - pos
+        sgn = 1.0 if np.dot(toward, n) >= 0 else -1.0
+        off = riv["ramcheon"]["width_m"] / 2
+        return tuple(pos + n * sgn * (off + 25)), tuple(pos - n * sgn * (off + 30))
+    D_pos_haetal = [c["pos"] for c in designated if c["id"] == "haetal_bridge"][0]
+    HT_NEAR, HT_FAR = _ht()
     road_defs = [
-        dict(id="tongyeong_byeolro", name="통영별로(남원→여원재→운봉→인월→함양)", cls="대로", width=5.0,
-             wps=[(eg["x"], eg["z"]), (eg["x"] + 20, eg["z"]), D["yocheon_east_ford"], (S["ibaek"]["x"], S["ibaek"]["z"]), (S["yeowon_jumak"]["x"], S["yeowon_jumak"]["z"]), PASS_YW,
-                  (S["unbong_eup"]["x"], S["unbong_eup"]["z"]), D["ramcheon_unbong_ford"], (S["bijeon"]["x"], S["bijeon"]["z"]),
+        dict(id="tongyeong_byeolro", name="통영별로(남원→여원재→운봉→인월→함양)", cls="대로", width=5.0, prefix=GP["E"][1:],
+             wps=[GP["E"][-1], (GP["E"][-1][0] + 8, GP["E"][-1][1] + 10), D["yocheon_east_ford"], (S["ibaek"]["x"], S["ibaek"]["z"]), (S["yeowon_jumak"]["x"], S["yeowon_jumak"]["z"]), PASS_YW,
+                  D["ramcheon_unbong_ford"], (S["unbong_eup"]["x"] - 25, S["unbong_eup"]["z"] - 45), (S["bijeon"]["x"], S["bijeon"]["z"]),
                   (S["inwol_yeok"]["x"], S["inwol_yeok"]["z"]), xz(35.4700, 127.6597)],
              source=["신경준 『도로고』 통영별로(전주–남원–운봉–함양–…–통영) 노선 체계(지식 기반, 원문 대조 필요)", "여원치: 한국민족문화대백과 E0067255"],
-             confidence="추정", notes="경로 세부는 A*(경사·하천 비용). 경유 순서(남원→여원재→운봉→황산 앞→인월→함양)만 고증."),
-        dict(id="inwol_banseon_road", name="인월–실상사–산내–반선 길", cls="지선", width=3.5,
-             wps=[(S["inwol_yeok"]["x"], S["inwol_yeok"]["z"]), D["haetal_bridge"], (L["silsangsa"]["x"], L["silsangsa"]["z"] + 70),
-                  (S["sannae"]["x"], S["sannae"]["z"]), (S["banseon"]["x"], S["banseon"]["z"])],
-             source=["실상사·산내·반선 위치(OSM)", "만수천 계곡을 따르는 길(지형 필연, 가설)"], confidence="가설", notes=""),
-        dict(id="namwon_gurye_road", name="남원 남문–광한루–요천 나루–구례 방면 길", cls="지선", width=3.5,
-             wps=[(sg["x"], sg["z"] + 8), (L["gwanghallu"]["x"] + 40, L["gwanghallu"]["z"] - 15), D["yocheon_south_naru"], xz(35.3545, 127.4000)],
-             source=["광한루가 남문 밖 요천가에 있음(OSM 위치)"], confidence="가설", notes="권역 밖 구례 방면 노선은 노정 담당이 이어 받음."),
-        dict(id="namwon_north_road", name="남원 북문–전주 방면 길(통영별로 북쪽)", cls="대로", width=5.0,
-             wps=[(ng["x"], ng["z"] - 8), (S["namwon_hyanggyo"]["x"] + 30, S["namwon_hyanggyo"]["z"] + 10), xz(35.4805, 127.3720)],
-             source=["통영별로는 전주–임실–오수–남원으로 내려옴(지식 기반)"], confidence="가설", notes="북쪽 권역 경계는 노정(남원→전주) 포털."),
-        dict(id="namwon_eup_street", name="남원 읍내 남북길(북문–남문)", cls="마을길", width=4.0,
-             wps=[(ng["x"], ng["z"] + 6), (sg["x"], sg["z"] - 6)], source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="읍성 안 십자로(남북)."),
-        dict(id="namwon_eup_street_ew", name="남원 읍내 동서길(서문–동문)", cls="마을길", width=4.0,
-             wps=[(wg["x"] + 6, wg["z"]), (eg["x"] - 6, eg["z"])], source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="읍성 안 십자로(동서)."),
-        dict(id="namwon_market_lane", name="남문 밖 장터길", cls="마을길", width=3.0,
-             wps=[(sg["x"], sg["z"] + 8), (S["namwon_jang"]["x"], S["namwon_jang"]["z"]), (wg["x"] - 6, wg["z"])], source=["가설"], confidence="가설", notes=""),
-        dict(id="unbong_eup_street", name="운봉 읍내길(관아–장터–큰길)", cls="마을길", width=3.0,
-             wps=[(L["unbong_gwana"]["x"], L["unbong_gwana"]["z"] + 20), (S["unbong_jang"]["x"], S["unbong_jang"]["z"]), (S["unbong_eup"]["x"] - 40, S["unbong_eup"]["z"] + 30)],
-             source=["가설"], confidence="가설", notes="읍치 안길. 통영별로에 붙음."),
+             confidence="추정", notes="동문(향일루) 옹성 남쪽 출구로 나감. 경유 순서(남원→여원재→람천 건너 운봉 읍치 북쪽 큰길→황산 앞→인월→함양)만 고증, 세부는 A*."),
+        dict(id="inwol_banseon_road", name="인월–산내–반선 길(람천·만수천 물가)", cls="지선", width=3.5,
+             wps=[(S["inwol_yeok"]["x"], S["inwol_yeok"]["z"])] + bank_waypoints("ramcheon", (S["inwol_yeok"]["x"], S["inwol_yeok"]["z"]), MS_MOUTH, side_ref=sil_front)
+                 + bank_waypoints("mansucheon", MS_MOUTH, (S["sannae"]["x"], S["sannae"]["z"]))
+                 + [(S["sannae"]["x"], S["sannae"]["z"])] + bank_waypoints("mansucheon", (S["sannae"]["x"], S["sannae"]["z"]), (S["banseon"]["x"], S["banseon"]["z"]))
+                 + [(S["banseon"]["x"], S["banseon"]["z"])],
+             source=["실상사·산내·반선 위치(OSM)", "람천·만수천 물가를 따르는 벼룻길(지형 필연, 가설)"], confidence="가설",
+             notes="물가 경유점(하천 반폭+5m)으로 계곡을 따르게 함. 람천은 인월 아래에서 한 번 건너 실상사 쪽(서·남안)을 따라 내려감. 실상사 정면은 지선, 해탈교는 절 동쪽에서 람천 건너편으로 가는 마을길."),
+        dict(id="silsangsa_lane", name="실상사 길", cls="마을길", width=3.0, branch_of="inwol_banseon_road",
+             wps=[sil_front],
+             source=["OSM 실상사 위치"], confidence="추정", notes="큰길에서 갈라져 실상사 남쪽 정면에 닿음(경내는 비켜 감)."),
+        dict(id="haetal_lane", name="해탈교 길(실상사 동쪽 → 람천 건너)", cls="마을길", width=2.5, branch_of="inwol_banseon_road",
+             wps=[HT_NEAR, D["haetal_bridge"], HT_FAR],
+             source=["OSM 'Haetal Bridge' 위치"], confidence="추정", notes="실상사 동쪽에서 해탈교 자리로 람천을 건너 동안 들로. 다리 형식은 가설(섶다리)."),
+        dict(id="namwon_gurye_road", name="남원 남문–광한루–요천 나루–구례 방면 길", cls="지선", width=3.5, prefix=GP["S"][1:],
+             wps=[GP["S"][-1], (L["gwanghallu"]["x"] + 40, L["gwanghallu"]["z"] - 15), D["yocheon_south_naru"], xz(35.3545, 127.4000)],
+             source=["광한루가 남문 밖 요천가에 있음(OSM 위치)"], confidence="가설", notes="남문(완월루) 옹성 정면 출구로 나감. 권역 밖 구례 방면은 노정 담당."),
+        dict(id="namwon_north_road", name="남원 북문–전주 방면 길(통영별로 북쪽)", cls="대로", width=5.0, prefix=GP["N"][1:],
+             wps=[GP["N"][-1], (S["namwon_hyanggyo"]["x"] + 30, S["namwon_hyanggyo"]["z"] + 10), xz(35.4805, 127.3720)],
+             source=["통영별로는 전주–임실–오수–남원으로 내려옴(지식 기반)"], confidence="가설", notes="북문(공신루) 옹성 서쪽 출구로 나감. 북쪽 경계는 노정(남원→전주) 포털."),
+        dict(id="namwon_eup_street", name="남원 읍내 남북길(북문–남문)", cls="마을길", width=4.0, fixed=[gate_center["N"], gate_center["S"]],
+             source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="성 안 십자로(남북). 양끝은 성문 통로."),
+        dict(id="namwon_eup_street_ew", name="남원 읍내 동서길(서문–동문)", cls="마을길", width=4.0, fixed=[gate_center["W"], gate_center["E"]],
+             source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="성 안 십자로(동서). 양끝은 성문 통로."),
+        dict(id="namwon_gaeksa_lane", name="객사(용성관) 앞길", cls="마을길", width=3.0, fixed=[(-3271.8, CZe), (-3271.8, 233.0)],
+             source=["가설"], confidence="가설", notes="동서길 → 객사 삼문(남향)."),
+        dict(id="namwon_gwana_lane", name="관아 앞길", cls="마을길", width=3.0, fixed=[(-3183.8, CZe), (-3183.8, 240.5)],
+             source=["가설"], confidence="가설", notes="동서길 → 관아 외삼문(placement-namwon 배치 nw_gwana 앞)."),
+        dict(id="namwon_market_lane", name="남문 밖 장터길(성 밖으로 돌아 서문)", cls="마을길", width=3.0,
+             fixed=[GP["S"][-2], (CXe - 4, CZe + GZC + 24), (CXe - 40, CZe + GZC + 28), (S["namwon_jang"]["x"], S["namwon_jang"]["z"]),
+                    (CXe - 112, CZe + 112), (CXe - 114, CZe + 40), (CXe - 112, GP["W"][-1][1] - 4), GP["W"][-1], GP["W"][-2]],
+             source=["가설"], confidence="가설", notes="남문 옹성 출구 → 장터 → 서벽 바깥(성벽에서 약 20m) → 서문 옹성 북쪽 출구. 성벽을 넘지 않음."),
+        dict(id="namwon_west_gate_lane", name="서문 통로", cls="마을길", width=3.0, fixed=GP["W"][1:-1],
+             source=["가설"], confidence="가설", notes="서문 → 옹성 마당 → 북쪽 출구."),
+        dict(id="unbong_eup_street", name="운봉 읍치 지선(큰길–관아–장터)", cls="마을길", width=3.0, branch_of="tongyeong_byeolro",
+             wps=[(L["unbong_gwana"]["x"], L["unbong_gwana"]["z"] + 20), (S["unbong_jang"]["x"], S["unbong_jang"]["z"])],
+             source=["가설"], confidence="가설", notes="통영별로에서 갈라져 읍치로 들어가는 지선(되돌아 나오지 않게 대로와 분리)."),
         dict(id="baemsagol_trail", name="반선–뱀사골 산길", cls="산길", width=1.5,
              wps=[(S["banseon"]["x"], S["banseon"]["z"]), xz(35.3560, 127.5880)], source=["뱀사골(OSM 계곡선)"], confidence="가설", notes="화개재 방면 계곡 길."),
     ]
+    # 지정 도강점 경유점 → 하천에 수직인 양안 두 점(가까운 쪽 먼저)으로 바꿔 길이 물길을 따라 걷지 않고 곧게 건너게
+    des_by_pos = {tuple(c["pos"]): c for c in designated}
+    def ford_pair(pos, prev):
+        c_ = des_by_pos[tuple(pos)]; rp = np.asarray(riv[c_["river_id"]]["points"])
+        k = int(np.argmin(np.hypot(rp[:, 0] - pos[0], rp[:, 1] - pos[1])))
+        t = rp[min(k + 2, len(rp) - 1), :2] - rp[max(k - 2, 0), :2]; t = t / (np.linalg.norm(t) + 1e-9)
+        n = np.array([-t[1], t[0]]); off = riv[c_["river_id"]]["width_m"] / 2 + 7.0
+        a_, b_ = tuple(np.asarray(pos) + n * off), tuple(np.asarray(pos) - n * off)
+        if prev is not None and math.hypot(b_[0] - prev[0], b_[1] - prev[1]) < math.hypot(a_[0] - prev[0], a_[1] - prev[1]):
+            a_, b_ = b_, a_
+        return [a_, tuple(pos), b_]
+    for rd in road_defs:
+        if rd.get("wps"):
+            out_ = []
+            for w_ in rd["wps"]:
+                if tuple(w_) in des_by_pos:
+                    out_ += ford_pair(w_, out_[-1] if out_ else None)
+                else:
+                    out_.append(w_)
+            rd["wps"] = out_
+    RI = R.river_index(rivers)
     roads = []
     for rd in road_defs:
-        pts = R.route(cost, rd["wps"])
+        if False:
+            pass
+        elif rd.get("fixed"):
+            pts = np.asarray(rd["fixed"], float)
+        else:
+            wps = rd["wps"]
+            if rd.get("branch_of"):
+                main = np.asarray(next(r for r in roads if r["id"] == rd["branch_of"])["points"])
+                d_ = np.hypot(main[:, 0] - wps[0][0], main[:, 1] - wps[0][1]); d_[d_ < 25] = 1e9; k_ = int(np.argmin(d_))
+                wps = [tuple(main[k_])] + list(wps)
+            pts = R.route(cost, wps)
+            pts, nch = R.fix_water_runs(pts, RI)
+            pts = R.remove_loops(pts)
+            if nch: say("  물길 따라 걷던", nch, "m 고침", rd["id"])
+            if rd.get("prefix"):
+                pts = np.vstack([np.asarray(rd["prefix"][:-1], float), pts])
         roads.append(dict(id=rd["id"], name=rd["name"], **{"class": rd["cls"]}, width_m=rd["width"],
                           points=[[round(float(p[0]), 1), round(float(p[1]), 1)] for p in pts],
                           confidence=rd["confidence"], source=rd["source"], notes=rd["notes"]))
         say("road", rd["id"], len(pts))
-
     # ── 도강점: 도로×하천 교차 전부
     crossings = []
     for rd in roads:
@@ -192,6 +335,8 @@ def main():
                 for c in designated:
                     if c["river_id"] == r["id"] and math.hypot(c["pos"][0] - x, c["pos"][1] - z) < 40:
                         des = c
+                if any(c["river_id"] == r["id"] and math.hypot(c["x"] - x, c["z"] - z) < 4 for c in crossings):
+                    continue
                 if des and any(c["id"] == des["id"] for c in crossings):
                     n_same = sum(1 for c in crossings if c["id"].startswith(des["id"]))
                     crossings.append(dict(id=f"{des['id']}_{n_same + 1}", name=des["name"] + f" ({n_same + 1})", type=des["type"], river_id=r["id"], road_id=rd["id"],
@@ -218,8 +363,10 @@ def main():
     passes = [dict(id="yeowonjae", name="여원재(여원치)", x=PASS_YW[0], z=PASS_YW[1], y=None, confidence="확정",
                    source=P.PASSES[0]["source"], notes="백두대간 — 서쪽 요천(섬진강)·동쪽 람천(낙동강) 분수계")]
     hy2 = lambda x, z: C.bilinear(y2, *C.xz_to_ij(np.asarray(x), np.asarray(z)))
+    _dr4 = ndimage.distance_transform_edt(~(wm["B"] | wm["C"] | wm["D"])) * C.LU_CELL
+    rdist4 = lambda x, z: C.bilinear(_dr4, *C.xz_to_ij(np.asarray(x), np.asarray(z), C.LU_CELL))
     for rd in roads:
-        for (px, pz, ph) in R.profile_peaks(rd["points"], hy2, prom_real=35.0):
+        for (px, pz, ph) in R.profile_peaks(rd["points"], hy2, prom_real=35.0, rdist=rdist4):
             near = [q for q in passes if math.hypot(q["x"] - px, q["z"] - pz) < 260]
             if near:
                 q = near[0]
@@ -238,6 +385,11 @@ def main():
                          notes="입지 규칙(산기슭·남향·아래 논) 자동 후보", confidence="가설",
                          source=["명세서 §24 산→마을→밭→논→하천 입지 규칙(자동)"]))
     say("autos", len(autos))
+    for s_ in sets:
+        sh = info["shapes"].get(s_["id"])
+        if sh:
+            s_["area_m2"] = sh["area_m2"]; s_["extent_m"] = sh["extent_m"]; s_["bbox"] = sh["bbox"]
+            s_["radius_m"] = round(math.sqrt(sh["area_m2"] / math.pi), 1)
     # 랜드마크 바닥: 건물 = 마을 터(6), 광한루·오작교 둘레 = 풀밭 정원(1)
     jj4, ii4 = np.mgrid[0:lu.shape[0], 0:lu.shape[1]]; xs4, zs4 = C.ij_to_xz(ii4, jj4, C.LU_CELL)
     for l in lms:
@@ -246,12 +398,58 @@ def main():
         if l["id"] in ("gwanghallu", "ojakgyo"): hx, hz = 45, 30
         m = (np.abs(xs4 - l["x"]) <= hx) & (np.abs(zs4 - l["z"]) <= hz) & (lu != LU.WATER)
         lu[m] = LU.GRASS if l["id"] in ("gwanghallu", "ojakgyo") else LU.VILLAGE
+    for s_ in sets:
+        if s_["id"].startswith("auto_village") and s_["id"] in info["shapes"]:
+            sh = info["shapes"][s_["id"]]; s_["area_m2"] = sh["area_m2"]; s_["extent_m"] = sh["extent_m"]; s_["bbox"] = sh["bbox"]
+            s_["radius_m"] = round(math.sqrt(sh["area_m2"] / math.pi), 1)
     # 마을 바닥 살짝 고르기
     flatten_alt = (y2 / C.K + C.Y_BASE_ALT)
     flatten_pads(flatten_alt, [(x, z, 22) for x, z in autos], river_keep)
     y2 = C.alt_to_y(flatten_alt)
 
     # ── 쓰기
+    # ── 길이 도강점 밖에서 물 칸·수면 아래를 지나지 않게(QR): 길 칸을 수면+0.3 이상 둑으로 돋우고 landuse 4로
+    def road_mask(cell, extra=0.0):
+        Hm, Wm = int(round(-2 * C.Z0 / cell)) + 1, int(round(-2 * C.X0 / cell)) + 1
+        im_ = Image.new("L", (Wm, Hm), 0); dd_ = ImageDraw.Draw(im_)
+        for r_ in roads:
+            p_ = np.asarray(r_["points"]); i_, j_ = C.xz_to_ij(p_[:, 0], p_[:, 1], cell)
+            dd_.line(list(zip(i_.tolist(), j_.tolist())), fill=255, width=max(1, int(round((r_["width_m"] + extra) / cell))))
+        return np.asarray(im_) > 0
+    def cross_zone(cell, rad=10.0):
+        Hm, Wm = int(round(-2 * C.Z0 / cell)) + 1, int(round(-2 * C.X0 / cell)) + 1
+        im_ = Image.new("L", (Wm, Hm), 0); dd_ = ImageDraw.Draw(im_)
+        for c_ in crossings:
+            i_, j_ = C.xz_to_ij(c_["x"], c_["z"], cell); rr_ = rad / cell
+            dd_.ellipse([i_ - rr_, j_ - rr_, i_ + rr_, j_ + rr_], fill=255)
+        return np.asarray(im_) > 0
+    rm2 = road_mask(C.CELL); rm2w = road_mask(C.CELL, 4.0); cz2 = cross_zone(C.CELL, 8.0)
+    near_r = d2 <= HW2 + 12.0
+    SVm = SV2
+    fix = rm2w & ~cz2 & near_r & (d2 > HW2) & (y2 < SVm + 0.35)        # 물길 안은 돋우지 않음(물을 막지 않게)
+    n_fix = int((rm2 & ~cz2 & near_r & (d2 > HW2) & (y2 < SVm + 0.35)).sum())
+    y2 = np.where(fix, SVm + 0.35, y2)
+    y2 = np.where(ndimage.binary_dilation(fix, iterations=2) & ~fix, ndimage.uniform_filter(y2, 3), y2)
+    # 마무리: QA(QR)와 같은 기준(2m 최근접 중심선 수면)으로 길 표본마다 한 번 더 확인해 둑 위로
+    drq, rsq, rhwq, _ = LU.river_fields(rivers, y2.shape, G=C.CELL)
+    rmap = {r_["id"]: r_ for r_ in rivers}; n_last = 0
+    for r_ in roads:
+        p_ = np.asarray(r_["points"], float); sg_ = np.hypot(*np.diff(p_, axis=0).T); ss_ = np.concatenate([[0], np.cumsum(sg_)])
+        tt_ = np.arange(0, ss_[-1] + 1e-6, 1.0)
+        for x_, z_ in zip(np.interp(tt_, ss_, p_[:, 0]), np.interp(tt_, ss_, p_[:, 1])):
+            if any(math.hypot(c_["x"] - x_, c_["z"] - z_) <= max(rmap[c_["river_id"]]["width_m"], 5.2) / 2 + 4.0 for c_ in crossings): continue
+            i_, j_ = C.xz_to_ij(x_, z_); i_ = int(round(float(i_))); j_ = int(round(float(j_)))
+            if drq[j_, i_] > max(rhwq[j_, i_], 2.6) + 5: continue
+            need = rsq[j_, i_] + 0.35
+            sl_ = (slice(max(j_ - 1, 0), j_ + 2), slice(max(i_ - 1, 0), i_ + 2))
+            blk = y2[sl_]; inch = d2[sl_] <= HW2[sl_]
+            upd = (blk < need) & ~inch
+            if upd.any(): blk[upd] = need; n_last += int(upd.sum())
+    say("길 둑 마무리", n_last, "칸")
+    rm4 = road_mask(C.LU_CELL, 8.0); cz4 = cross_zone(C.LU_CELL, 8.0)
+    n_lu = int((rm4 & ~cz4 & (lu == LU.WATER)).sum())
+    lu[rm4 & ~cz4 & (lu == LU.WATER)] = LU.ROAD
+    say("길 둑 보정", n_fix, "칸(2m) 돋움,", n_lu, "칸(4m) 물→길")
     hm = export.write_height(y2.astype(np.float32))
     lum = export.write_landuse(lu)
     sx, sz = L["namwon_south_gate"]["x"], L["namwon_south_gate"]["z"] + 25

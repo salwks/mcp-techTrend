@@ -2,7 +2,7 @@
 # 1582년 정철이 삼신산을 조성(검색 근거). 못 크기·섬 위치는 현재 광한루원 항공사진 비례로 잡은 가설.
 # 원점 = 못 가운데, 물면 높이 y = water_y(기본 0.08, 지형 엔진은 이 자리 땅을 물면보다 낮게 파 둔다).
 # 광한루 본루는 따로(gwanghallu.gd) — anchors.gwanghallu 자리(못 북서쪽 둑)에 놓는다.
-# 물면은 불투명 판(버텍스 색: 가운데 짙고 가장자리 옅게). params: seed, width(110), depth(46), bridge(true), water_y(0.08)
+# 물면은 Kit "water" 키(반투명) + 0.7m 아래 어두운 못 바닥. params: seed, width(110), depth(46), bridge(true), water_y(0.08)
 extends RefCounted
 
 const Co = preload("res://kit/landmark/_common.gd")
@@ -30,27 +30,35 @@ static func build(params: Dictionary) -> Dictionary:
 	var b := Kit.Batch.new()
 	var n := 56
 	var ol := outline(W, D, n, seed)
-	# 물면: 가운데→가장자리 부채꼴
+	# 못 바닥(어두운 진흙, 반투명 물 아래로 비침): 물면보다 0.7m 아래
+	var bed := Kit.Geo.new()
+	var by := wy - 0.7
+	for i in n:
+		var a := ol[i]; var c := ol[(i + 1) % n]
+		Roof.tri_facing(bed, Vector3(0, by - 0.4, 0), Vector3(a.x, by, a.y), Vector3(c.x, by, c.y), Vector3.UP)
+	b.add("flat", Co.pnt(bed, [0x4a5244, 0x3a4236], 0.03, rng), 0.0)
+	# 물면: Kit 'water' 키(반투명 물결, UV 1 = 4m). 가운데 짙고 가장자리 옅게(버텍스 색)
 	var g := Kit.Geo.new()
-	var cdeep := Kit.hex(0x3f5a5a); var cedge := Kit.hex(0x6d8a7e)
+	var cdeep := Kit.hex(0x8aa4a2); var cedge := Kit.hex(0xe2ece8)
+	var uvs := func(p: Vector3) -> Vector2: return Vector2(p.x / 4.0, p.z / 4.0)
 	for i in n:
 		var a := ol[i]; var c := ol[(i + 1) % n]
 		var A := Vector3(a.x, wy, a.y); var C := Vector3(c.x, wy, c.y)
 		var Am := Vector3(a.x * 0.55, wy, a.y * 0.55); var Cm := Vector3(c.x * 0.55, wy, c.y * 0.55)
+		var O := Vector3(0, wy, 0)
 		var base := g.size()
-		Roof.quad_facing(g, Am, Cm, C, A, Vector3.UP)
+		Roof.quad_facing(g, Am, Cm, C, A, Vector3.UP, uvs.call(Am), uvs.call(Cm), uvs.call(C), uvs.call(A))
+		Roof.tri_facing(g, O, Am, Cm, Vector3.UP, uvs.call(O), uvs.call(Am), uvs.call(Cm))
 		for q in range(base, g.size()):
-			g.col[q] = cdeep.lerp(cedge, clampf((Vector2(g.pos[q].x, g.pos[q].z).length() / (Vector2(a.x, a.y).length() + 0.01) - 0.55) / 0.45, 0, 1))
-		base = g.size()
-		Roof.tri_facing(g, Vector3(0, wy, 0), Am, Cm, Vector3.UP)
-		for q in range(base, g.size()): g.col[q] = cdeep
-	b.add("flat", g, 0.0)
+			var rr := Vector2(g.pos[q].x, g.pos[q].z).length() / (Vector2(a.x, a.y).length() + 0.01)
+			g.col[q] = cdeep.lerp(cedge, clampf((rr - 0.4) / 0.6, 0, 1))
+	b.add("water", g, 0.0)
 	# 호안: 낮은 막돌 띠(바깥으로 기울어진 띠 면) + 군데군데 큰 돌
 	var bank := Kit.Geo.new()
 	for i in n:
 		var a := ol[i]; var c := ol[(i + 1) % n]
 		var na := a.normalized(); var nc := c.normalized()
-		var A0 := Vector3(a.x, wy - 0.3, a.y); var C0 := Vector3(c.x, wy - 0.3, c.y)
+		var A0 := Vector3(a.x, wy - 0.8, a.y); var C0 := Vector3(c.x, wy - 0.8, c.y)
 		var A1 := Vector3(a.x + na.x * 0.5, 0.35, a.y + na.y * 0.5); var C1 := Vector3(c.x + nc.x * 0.5, 0.35, c.y + nc.y * 0.5)
 		var inward := -Vector3((na.x + nc.x) / 2, 0, (na.y + nc.y) / 2)
 		Roof.quad_facing(bank, A0, C0, C1, A1, inward + Vector3(0, 0.6, 0))
@@ -89,6 +97,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var root := Node3D.new(); root.name = "광한루원_연못"
 	root.add_child(b.build("못"))
 	var bx := -W * 0.18
+	var walks := []
 	if params.get("bridge", true):
 		var br: Dictionary = load("res://kit/landmark/ojakgyo.gd").build({ seed = seed + 5 })
 		var bn: Node3D = br.node
@@ -96,10 +105,16 @@ static func build(params: Dictionary) -> Dictionary:
 		root.add_child(bn)
 		for c in br.colliders:
 			cols.append({ type = "box", minX = c.minX + bx, maxX = c.maxX + bx, minZ = c.minZ, maxZ = c.maxZ })
+		for w in br.walk:
+			var ww: Dictionary = w.duplicate(true)
+			ww.minX += bx; ww.maxX += bx
+			for i in ww.y.size(): ww.y[i] += wy
+			walks.append(ww)
 		anchors.ojakgyo_north = Vector3(bx, wy + 0.35, -28.5); anchors.ojakgyo_south = Vector3(bx, wy + 0.35, 28.5); anchors.ojakgyo_mid = Vector3(bx, wy + 2.1, 0)
 	anchors.gwanghallu = Vector3(-W * 0.32, 0, -D / 2 - 12.0)
 	return {
 		node = root, colliders = cols, lights = [], occluder = false,
 		footprint = Vector2(W + 3, maxf(D + 3, 58.0)), anchors = anchors,
 		water = { y = wy, outline = ol, kind = "pond" },
+		walk = walks,
 	}

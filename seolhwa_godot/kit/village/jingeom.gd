@@ -17,5 +17,6 @@ static func build(params: Dictionary) -> Dictionary:
 		m.anchor("s%d" % i, Vector3(x, 0.15, z))
 	m.anchor("north", Vector3(0, 0, -L / 2 - 0.6)); m.anchor("south", Vector3(0, 0, L / 2 + 0.6))
 	var res := m.result("징검다리", Vector2(1.2, L + 0.8), false)
-	res.walk = "디딤돌 위로 걸어 건넌다(충돌체 없음). 물 깊이는 지형 담당이 얕게"
+	# 계약서 §8 걷기 면: 디딤돌 윗면 높이(약 0.15)로 줄 전체. 돌 사이 물 위도 걷게(징검 걷기를 따로 만들지 않음)
+	res.walk = [{ minX = -0.55, maxX = 0.55, minZ = -L / 2 - 0.6, maxZ = L / 2 + 0.6, z = [-L / 2 - 0.6, -L / 2, L / 2, L / 2 + 0.6], y = [0.05, 0.15, 0.15, 0.05] }]
 	return res

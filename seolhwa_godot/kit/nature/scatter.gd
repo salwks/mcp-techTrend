@@ -35,6 +35,11 @@ const KINDS := {
 	willow = { s = "big_tree.gd", p = { variant = "willow" }, v = 1, cast = true, col = 0.45, tree = true },
 	broadleaf = { s = "big_tree.gd", p = { variant = "broadleaf" }, v = 1, cast = true, col = 0.47, tree = true },
 	persimmon = { s = "persimmon.gd", p = {}, v = 1, cast = true, col = 0.45, tree = true },
+	chestnut = { s = "big_tree.gd", p = { variant = "chestnut" }, v = 1, cast = true, col = 0.45, tree = true },
+	# 마을 생활 식생(§8): 텃밭·호박 넝쿨·마당 가 짧은 풀. mg = 제외 구역(건물·마당) 여유(m)
+	garden = { s = "garden_plot.gd", p = { w = 6.0, d = 4.0 }, v = 2, cast = false, col = 0.0, mg = 3.7 },
+	pumpkin = { s = "pumpkin_vine.gd", p = {}, v = 1, cast = false, col = 0.0, mg = 0.6 },
+	cover_yard = { s = "cover.gd", p = { kind = "yard" }, v = 1, cast = false, col = 0.0 },
 	bamboo = { s = "bamboo.gd", p = {}, v = 2, cast = true, col = 1.2, tree = true },
 	# 어린나무: 원거리(LOD1) 메시를 작게(0.4~0.6배) — 숲 바닥을 싸게 메운다. 그림자·충돌 없음
 	sapling_pine = { s = "pine.gd", p = {}, flod = 1, v = 2, cast = false, col = 0.0 },
@@ -66,7 +71,7 @@ const KINDS := {
 # 크기 배율 범위
 const SCALE := {
 	pine = [1.05, 1.45], fir = [1.0, 1.35], sangsuri = [1.0, 1.35], singal = [0.9, 1.25], gusang = [0.9, 1.3], deadwood = [0.8, 1.2], snag = [0.8, 1.3],
-	zelkova = [0.95, 1.1], willow = [0.9, 1.15], broadleaf = [0.85, 1.1], persimmon = [0.85, 1.1], bamboo = [0.85, 1.15],
+	zelkova = [0.95, 1.1], willow = [0.9, 1.15], broadleaf = [0.85, 1.1], persimmon = [0.85, 1.1], chestnut = [0.85, 1.15], garden = [1.0, 1.0], pumpkin = [0.8, 1.2], bamboo = [0.85, 1.15],
 	bush = [0.7, 1.2], undergrowth = [1.6, 2.6], sapling_pine = [0.4, 0.6], sapling_oak = [0.4, 0.6], sapling_singal = [0.4, 0.6], sapling_gusang = [0.45, 0.65], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
 	stones = [0.8, 1.2], rice = [1.0, 1.0], crop_bean = [1.0, 1.0], crop_millet = [1.0, 1.0], crop_barley = [1.0, 1.0],
 }
@@ -81,6 +86,7 @@ static var _ktree := PackedByteArray()
 static var _kfar := PackedByteArray()
 static var _ks0 := PackedFloat32Array()
 static var _ks1 := PackedFloat32Array()
+static var _kmg := PackedFloat32Array()
 
 static func _init_tables() -> void:
 	_mtx.lock()
@@ -93,7 +99,7 @@ static func _init_tables() -> void:
 			_kv.append(int(sp.v)); _kcol.append(float(sp.col))
 			_ktree.append(1 if sp.get("tree", false) else 0); _kfar.append(1 if sp.get("far_skip", false) else 0)
 			var sr: Array = SCALE.get(n, [0.8, 1.25])
-			_ks0.append(sr[0]); _ks1.append(sr[1])
+			_ks0.append(sr[0]); _ks1.append(sr[1]); _kmg.append(float(sp.get("mg", -1.0)))
 		_names = names
 	_mtx.unlock()
 
@@ -207,6 +213,7 @@ class Job:
 	var kfar_: PackedByteArray
 	var kcol_: PackedFloat32Array
 	var kv_: PackedInt32Array
+	var kmg_: PackedFloat32Array
 	var names_: PackedStringArray
 	var model_fn: Callable
 
@@ -232,6 +239,24 @@ class Job:
 		elif rng.randf() < f: n += 1
 		return n
 
+	# 집(제외 사각형) 뒤: 이 점의 남쪽 10m 안에 사각형이 있고 x가 겹치면(북쪽 = -z, 카메라 반대편)
+	# 단, 그 점이 어느 exclude 안이나 둘레 2m 안이면, 또는 북쪽 12m 안에 다른 사각형이 있으면(= 그 건물의 앞마당) 아니다
+	func behind_house(x: float, z: float) -> bool:
+		var pt := Vector2(x, z)
+		var hit := false
+		for rr in ex_rects:
+			if rr.grow(2.0).has_point(pt): return false
+			if x > rr.position.x - 2.0 and x < rr.end.x + 2.0:
+				if z < rr.position.y and z > rr.position.y - 10.0: hit = true
+				elif z > rr.end.y and z < rr.end.y + 12.0: return false   # 이 점의 북쪽에 건물 → 남향 건물의 앞마당
+		return hit
+
+	# 울타리 가: 사각형 테두리 바깥 0~4m
+	func near_fence(x: float, z: float) -> bool:
+		for rr in ex_rects:
+			if rr.grow(4.0).has_point(Vector2(x, z)) and not rr.has_point(Vector2(x, z)): return true
+		return false
+
 	# 섞인 수종에서 골라 ex개
 	func emit_mix(mix: Array, ex: float, cx: float, cz: float, slope: float, r_d: int, bi := -1) -> void:
 		if bi >= 0: even = (BAYER[bi] + 0.5) / 16.0
@@ -252,32 +277,32 @@ class Job:
 			put(k, px, pz, rng.randf() * TAU, lerpf(ks0_[k], ks1_[k], rng.randf()), slope, r_d, true)
 
 	# 하나 놓기: 길 가장자리 정밀 검사 → 높이 → 변환 → 묶음에 추가 → 충돌체
-	func put(k: int, px: float, pz: float, ry: float, sc: float, slope: float, r_d: int, check: bool, sink := -1.0) -> void:
+	func put(k: int, px: float, pz: float, ry: float, sc: float, slope: float, r_d: int, check: bool, sink := -999.0) -> bool:
 		var tree := ktree_[k] == 1
-		if lod >= 1 and kfar_[k] == 1: return
+		if lod >= 1 and kfar_[k] == 1: return false
 		# 타일 밖으로 지터된 것은 버림(이웃 타일과 겹치지 않게)
-		if px < x0 or pz < z0 or px >= x0 + nch * CHUNK or pz >= z0 + nch * CHUNK: return
+		if px < x0 or pz < z0 or px >= x0 + nch * CHUNK or pz >= z0 + nch * CHUNK: return false
 		if check:
 			# 길 옆 칸(1칸 안)이면 실제 점과 둘레가 길이 아닌지 본다. 나무는 점 자체의 토지이용도 확인
 			if r_d <= 1:
 				var cl := maxf(3.0, 1.0 + 2.0 * sc) if tree else (0.7 if kcol_[k] == 0.0 else 1.4)
-				if int(lcall.call(px, pz)) == K_ROAD: return
-				if int(lcall.call(px + cl, pz)) == K_ROAD or int(lcall.call(px - cl, pz)) == K_ROAD: return
-				if int(lcall.call(px, pz + cl)) == K_ROAD or int(lcall.call(px, pz - cl)) == K_ROAD: return
+				if int(lcall.call(px, pz)) == K_ROAD: return false
+				if int(lcall.call(px + cl, pz)) == K_ROAD or int(lcall.call(px - cl, pz)) == K_ROAD: return false
+				if int(lcall.call(px, pz + cl)) == K_ROAD or int(lcall.call(px, pz - cl)) == K_ROAD: return false
 			if tree and not pure:
 				var lp := int(lcall.call(px, pz))
-				if lp == 4 or lp == 5 or lp == 2: return
+				if lp == 4 or lp == 5 or lp == 2: return false
 		if not ex_rects.is_empty() or not ex_circles.is_empty():
 			# 제외 구역 안(나무는 수관이 걸치지 않게 2m, 큰 바위·벼랑 1.5m, 나머지 0.3m 여유)이면 놓지 않는다
-			var mg := 2.0 if tree else (1.5 if (kcol_[k] >= 1.0 or kcol_[k] < 0.0) else 0.3)
+			var mg := kmg_[k] if kmg_[k] >= 0.0 else (2.0 if tree else (1.5 if (kcol_[k] >= 1.0 or kcol_[k] < 0.0) else 0.3))
 			var pt := Vector2(px, pz)
 			for rr in ex_rects:
-				if rr.grow(mg).has_point(pt): return
+				if rr.grow(mg).has_point(pt): return false
 			for q in range(0, ex_circles.size(), 3):
 				var dx := px - ex_circles[q]; var dz := pz - ex_circles[q + 1]; var lim := ex_circles[q + 2] + mg
-				if dx * dx + dz * dz < lim * lim: return
+				if dx * dx + dz * dz < lim * lim: return false
 		var y: float = hcall.call(px, pz)
-		if sink < 0.0:
+		if sink <= -999.0:   # 기본: 경사·종류로 자동
 			sink = 0.05 + minf(slope, 1.5) * (0.25 if tree else 0.12) * sc
 			if kcol_[k] >= 1.0: sink += 0.3 * sc
 		y -= sink
@@ -307,6 +332,7 @@ class Job:
 				# 로컬(x,z) → 월드: y축 회전 ry, 배율 sc (x' = cos·x + sin·z, z' = -sin·x + cos·z)
 				var lx: float = cc.x; var lz: float = cc.z
 				colliders.append({ type = "circle", x = px + c * lx + s * lz, z = pz - s * lx + c * lz, r = float(cc.r) * sc })
+		return true
 
 # ---------------------------------------------------------------------------
 static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = []) -> Dictionary:
@@ -369,11 +395,12 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 		elif e is Dictionary:
 			var ex: float = e.x; var ez: float = e.z; var er: float = e.r
 			if big.grow(er).has_point(Vector2(ex, ez)): J.ex_circles.append_array([ex, ez, er])
-	J.ks0_ = _ks0; J.ks1_ = _ks1; J.ktree_ = _ktree; J.kfar_ = _kfar; J.kcol_ = _kcol; J.kv_ = _kv; J.names_ = _names
+	J.ks0_ = _ks0; J.ks1_ = _ks1; J.ktree_ = _ktree; J.kfar_ = _kfar; J.kcol_ = _kcol; J.kv_ = _kv; J.kmg_ = _kmg; J.names_ = _names
 	J.model_fn = model
 	var rng := J.rng
 	var crop_axis := 0.0 if rng.randf() < 0.5 else PI / 2
 	var zelkova_done := false
+	var k_cyard := kid("cover_yard"); var k_chest := kid("chestnut"); var k_pump := kid("pumpkin"); var k_garden := kid("garden")
 	var k_under := kid("undergrowth"); var k_bush := kid("bush"); var k_jin := kid("jindallae"); var k_cheol := kid("cheoljjuk"); var k_rock := kid("rock"); var k_rockb := kid("rock_big")
 	var k_cf := kid("cover_forest"); var k_cm := kid("cover_meadow"); var k_ca := kid("cover_alpine"); var k_cr := kid("cover_riverside")
 	var k_cs := kid("cover_sandbar"); var k_ck := kid("cover_rocky"); var k_snag := kid("snag"); var k_stones := kid("stones"); var k_slab := kid("slab")
@@ -437,16 +464,43 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					if land[k - 1] == 1 or land[k + 1] == 1 or land[k - W] == 1 or land[k + W] == 1:
 						J.emit(k_stones, 0.35 if (slope > 0.12 or alt > 300.0) else 0.12, cx, cz, slope, r_d)
 						if alt > 250.0: J.emit(k_slab, 0.04, cx, cz, slope, r_d)
-				6: # 마을 터 — 가장자리에만 감나무·활엽수·덤불(집 자리는 kit-village 몫)
+				6: # 마을 터 — 생활 식생(§8). 건물·마당·길은 exclude가 비운다
+					var behind := J.behind_house(cx, cz)
+					var fence := J.near_fence(cx, cz)
+					J.emit(k_cyard, 0.8, cx, cz, slope, r_d)
+					if behind:
+						# 집 뒤: 대숲·감나무·밤나무
+						if tree_ok:
+							J.emit(k_bam, 0.25, cx, cz, slope, r_d)
+							J.emit(k_pers, 0.15, cx, cz, slope, r_d)
+							J.emit(k_chest, 0.08, cx, cz, slope, r_d)
+					elif tree_ok:
+						J.emit(k_pers, 0.05, cx, cz, slope, r_d)
+						J.emit(k_chest, 0.02, cx, cz, slope, r_d)
+					if fence:
+						# 울타리·담 따라 덤불·호박 넝쿨
+						J.emit(k_bush, 0.4, cx, cz, slope, r_d)
+						J.emit(k_pump, 0.25, cx, cz, slope, r_d)
+					# 텃밭: 축에 맞춰(0°/90°), 길에서 8m 밖
+					if r_d >= 2 and rng.randf() < (0.18 if behind or fence else 0.06):
+						var gx := cx + (rng.randf() - 0.5) * 2.0; var gz := cz + (rng.randf() - 0.5) * 2.0
+						var rot := rng.randf() < 0.6
+						# 흙판이 지형에 묻히지 않게 네 귀퉁이 중 가장 높은 곳에 맞춘다(sink 음수 = 올림)
+						var hw0 := 3.15 if rot else 2.15; var hd0 := 2.15 if rot else 3.15
+						var yc: float = J.hcall.call(gx, gz)
+						var ym := yc
+						for o in [Vector2(-hw0, -hd0), Vector2(hw0, -hd0), Vector2(-hw0, hd0), Vector2(hw0, hd0)]:
+							ym = maxf(ym, float(J.hcall.call(gx + o.x, gz + o.y)))
+						if J.put(k_garden, gx, gz, 0.0 if rot else PI / 2, 1.0, slope, r_d, true, yc - ym - 0.02):
+							# 놓인 텃밭 자리는 뒤에 오는 것들이 피하게 제외 구역에 더한다
+							var hw := 3.15 if rot else 2.15; var hd := 2.15 if rot else 3.15
+							J.ex_rects.append(Rect2(gx - hw, gz - hd, hw * 2, hd * 2))
 					if _edge(vil, W, k):
-						if tree_ok: 
-							J.emit(k_pers, 0.045, cx, cz, slope, r_d)
-							J.emit(k_broad, 0.02, cx, cz, slope, r_d)
-						J.emit(k_bush, 0.08, cx, cz, slope, r_d)
+						J.emit(k_bush, 0.06, cx, cz, slope, r_d)
 						if not zelkova_done and tree_ok and r_d <= 4 and rng.randf() < 0.08:
+							# 어귀 느티나무: 타일마다 최대 한 그루
 							zelkova_done = true
 							J.emit(k_zel, 1.0, cx, cz, slope, r_d)
-					J.emit(k_cm, 0.06, cx, cz, slope, r_d)
 				7: # 바위·벼랑
 					if slope > 0.7 and r_d >= 3 and rng.randf() < 0.07:
 						var ry := atan2(-gxv, -gzv)   # 정면(+z)을 내리막으로

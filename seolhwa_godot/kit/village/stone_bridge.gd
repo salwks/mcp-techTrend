@@ -11,8 +11,18 @@ static func build(params: Dictionary) -> Dictionary:
 	for s in [-1, 1]: m.box_c(s * hw - 0.15, s * hw + 0.15, -L / 2 + 0.15, L / 2 - 0.15)
 	m.anchor("north", Vector3(0, 0.1, -L / 2 - 0.5)); m.anchor("south", Vector3(0, 0.1, L / 2 + 0.5)); m.anchor("top", Vector3(0, 0.65, 0))
 	var res := m.result("돌다리", Vector2(hw * 2 + 0.4, L + 0.4), false)
-	res.deck = "y = 0.1 + arch·(1 − t²), t = z/(len/2)"
+	res.walk = walk(L, hw, ar)
 	return res
+
+# 계약서 §8 걷기 면: 상판 윗면 = deck(z), 양 끝은 둑(y≈0.1)으로 0.3m 이어 붙임
+static func walk(L: float, hw: float, ar: float) -> Array:
+	var zs := []; var ys := []
+	zs.append(-L / 2 - 0.3); ys.append(0.1)
+	for i in 17:
+		var z := -L / 2 + L * i / 16.0
+		zs.append(z); ys.append(deck(z, -L / 2, L / 2, ar))
+	zs.append(L / 2 + 0.3); ys.append(0.1)
+	return [{ minX = -hw + 0.2, maxX = hw - 0.2, minZ = -L / 2 - 0.3, maxZ = L / 2 + 0.3, z = zs, y = ys }]
 
 static func deck(z: float, z0: float, z1: float, ar: float) -> float:
 	var t := (z - (z0 + z1) / 2) / ((z1 - z0) / 2)

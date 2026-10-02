@@ -216,7 +216,7 @@ class Placer:
             wx, wz = l2w(x, z, ry, lx, lz)
             rect = Rect(wx, wz, ry + lry, self.aabb(kit, params, fl))
             rects.append((rect, fl))
-            if fl.get("nocheck"):
+            if fl.get("nocheck") or fl.get("inner"):
                 continue
             pts = rect.samples(2.0)
             if fl.get("ground", True):
@@ -273,11 +273,14 @@ class Placer:
                 "clear_veg": fl.get("clear_veg", True),
                 "group": group,
                 "_cat": fl.get("cat", "house"), "_label": fl.get("label"), "_bkey": bkey(kit, params),
-                "_aabb": self.aabb(kit, params, fl), "_tris": 0,
+                "_aabb": self.aabb(kit, params, fl), "_tris": 0, "_inner": bool(fl.get("inner")),
             }
+            if fl.get("footprint"):
+                it["footprint"] = fl["footprint"]
             self.items.append(it)
-            rect = Rect(wx, wz, ry + lry, self.aabb(kit, params, fl))
-            self.rects.append((rect, len(self.items) - 1))
+            if not fl.get("inner"):
+                rect = Rect(wx, wz, ry + lry, self.aabb(kit, params, fl))
+                self.rects.append((rect, len(self.items) - 1))
             out.append(it)
         return out
 

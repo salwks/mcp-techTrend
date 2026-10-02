@@ -62,6 +62,12 @@ var water_root: Node3D
 var statics_root: Node3D
 var scatter_root: Node3D
 var height_tex: ImageTexture
+# 칠하기 텍스처(높이 격자와 같은 2m, RGBA8): R = 가장 가까운 길 중심선까지 거리(×16, 0~16m), G = 그 길 반폭(×32, 0~8m),
+# B = 가장 가까운 건물 footprint 바깥 거리(×16, 0~16m, 마당 흙), A = 길 등급(대로 4·지선 3·마을길 2·산길 1, ×60)
+var pbytes: PackedByteArray
+var _p_roads: PackedByteArray   # 길만 그린 상태(배치 다시 읽기 때 되돌림)
+var paint_tex: ImageTexture
+var _paint_dirty := false
 var landuse_tex: ImageTexture
 var lights_version := 0
 var stats := { near = 0, mid = 0, jobs = 0, scatter_done = 0, statics = 0 }
@@ -85,6 +91,8 @@ var _terrain_dirty := false
 var _veg_excl := []             # [{c: Vector2, ry, half: Vector2}] 월드
 var _walk_grid := {}            # 칸 → [walk]
 var _walks := []
+var tile_listener := Callable()
+var _ponds := []                # [{poly: PackedVector2Array(월드), bb: Rect2, y}] 못(걸어 들어가지 못함)   # 새 타일이 생길 때 불림(배치 지연 짓기)
 var _river_grid := {}
 var lod0_dist := 32.0       # 이 거리(플레이어→묶음 사각형) 안의 식생 묶음은 lod 0
 var scatter_far := 220.0    # 이 너머 식생은 안개 속이라 그리지 않는다(region_main이 안개 농도로 정한다)
@@ -134,12 +142,15 @@ func load_region(dir := "") -> void:
 	lcell = float(lm.get("cell", hstep * float(hnx - 1) / maxf(1.0, lw - 1)))
 	var sp: Dictionary = region.get("spawn", { x = 0.0, z = 0.0 })
 	spawn = Vector2(float(sp.x), float(sp.z))
-	camera_zones = region.get("camera_zones", [])
+	_build_camera_zones()
 	for c in region.get("crossings", []): _crossings.append(Vector2(float(c.x), float(c.z)))
 	_crossings_all = _crossings.duplicate()
 	_h_orig = hbytes.duplicate(); _l_orig = lbytes.duplicate()
 	tile_min = Vector2i(floori(hx0 / TILE), floori(hz0 / TILE))
 	tile_max = Vector2i(floori((hx0 + (hnx - 1) * hstep) / TILE), floori((hz0 + (hnz - 1) * hstep) / TILE))
+	var tp := Time.get_ticks_msec()
+	_paint_roads()
+	print("REGION roads painted ms=", Time.get_ticks_msec() - tp)
 	_make_textures()
 	_make_materials()
 	terrain_root = Node3D.new(); terrain_root.name = "terrain"; add_child(terrain_root)
@@ -170,11 +181,102 @@ func load_region(dir := "") -> void:
 	if markers: _place_markers()
 	print("REGION data=%s %dx%d cell=%.1f tiles=%s..%s scatter=%s load_ms=%d" % [data_dir, hnx, hnz, hstep, tile_min, tile_max, _scatter_script != null, Time.get_ticks_msec() - t0])
 
+const ROAD_CLASS := { "대로": 4, "지선": 3, "마을길": 2, "산길": 1 }
+
+# region.json roads를 칠하기 텍스처에 그린다(선분 둘레 반폭+6m 안 픽셀만)
+func _paint_roads() -> void:
+	var img := Image.create(hnx, hnz, false, Image.FORMAT_RGBA8)
+	img.fill(Color(1, 0, 1, 0))
+	pbytes = img.get_data()
+	for r in region.get("roads", []):
+		var hw := float(r.get("width_m", 3.0)) * 0.5
+		var cls: int = ROAD_CLASS.get(String(r.get("class", "")), 2)
+		if cls == 4: hw += 0.4  # 대로는 조금 더 넓게
+		var pts: Array = r.get("points", [])
+		for q in pts.size() - 1:
+			var a := Vector2(float(pts[q][0]), float(pts[q][1])); var b := Vector2(float(pts[q + 1][0]), float(pts[q + 1][1]))
+			var R := hw + 6.0
+			var i0 := clampi(floori((minf(a.x, b.x) - R - hx0) / hstep), 0, hnx - 1); var i1 := clampi(ceili((maxf(a.x, b.x) + R - hx0) / hstep), 0, hnx - 1)
+			var j0 := clampi(floori((minf(a.y, b.y) - R - hz0) / hstep), 0, hnz - 1); var j1 := clampi(ceili((maxf(a.y, b.y) + R - hz0) / hstep), 0, hnz - 1)
+			var ab := b - a; var l2 := maxf(ab.length_squared(), 1e-6)
+			for j in range(j0, j1 + 1):
+				for i in range(i0, i1 + 1):
+					var pp := Vector2(hx0 + i * hstep, hz0 + j * hstep)
+					var t := clampf((pp - a).dot(ab) / l2, 0.0, 1.0)
+					var d := pp.distance_to(a + ab * t)
+					var k := (j * hnx + i) * 4
+					var dq := clampi(roundi(d * 16.0), 0, 255)
+					if dq < pbytes[k]:
+						pbytes[k] = dq; pbytes[k + 1] = clampi(roundi(hw * 32.0), 0, 255); pbytes[k + 3] = cls * 60
+	_p_roads = pbytes.duplicate()
+
+# 건물 둘레 마당 흙: 회전 사각형(반폭 half) 바깥 거리를 B에 최소값으로
+func paint_yard(c: Vector2, ry: float, half: Vector2) -> void:
+	var ca := cos(ry); var sa := sin(ry)
+	var R := half.length() + 16.0
+	var i0 := clampi(floori((c.x - R - hx0) / hstep), 0, hnx - 1); var i1 := clampi(ceili((c.x + R - hx0) / hstep), 0, hnx - 1)
+	var j0 := clampi(floori((c.y - R - hz0) / hstep), 0, hnz - 1); var j1 := clampi(ceili((c.y + R - hz0) / hstep), 0, hnz - 1)
+	for j in range(j0, j1 + 1):
+		for i in range(i0, i1 + 1):
+			var l := _to_local(Vector2(hx0 + i * hstep, hz0 + j * hstep) - c, ca, sa)
+			var d := Vector2(maxf(absf(l.x) - half.x, 0.0), maxf(absf(l.y) - half.y, 0.0)).length()
+			var k := (j * hnx + i) * 4 + 2
+			var dq := clampi(roundi(d * 16.0), 0, 255)
+			if dq < pbytes[k]: pbytes[k] = dq
+	_paint_dirty = true
+
+# 카메라 구역(웹 마을과 같은 값): 권역 기본 22m·40°, 고을·장터 22/40, 숲·산길 20/48(플레이어 둘레 숲을 보고 움직이는 구역),
+# 고개 22/30(웹 고갯마루). 뒤에 있는 구역이 이긴다(CameraRig). region.json.camera_zones가 있으면 맨 뒤에 붙인다.
+const CAM_DEFAULT := { pitch = 40.0, distance = 22.0 }
+const CAM_TOWN := { pitch = 40.0, distance = 22.0 }
+const CAM_FOREST := { pitch = 48.0, distance = 20.0 }
+const CAM_PASS := { pitch = 30.0, distance = 22.0 }
+var _forest_zone := {}
+var _settle_boxes := []
+var _cz_frame := 0
+
+func _build_camera_zones() -> void:
+	camera_zones = []
+	var big := 1e6
+	camera_zones.append(_zone("권역", -big, big, -big, big, CAM_DEFAULT))
+	_settle_boxes = []
+	for s in region.get("settlements", []):
+		var r := clampf(float(s.get("radius_m", 60.0)), 30.0, 220.0)
+		var z := _zone(String(s.get("name", "")), float(s.x) - r, float(s.x) + r, float(s.z) - r, float(s.z) + r, CAM_TOWN)
+		camera_zones.append(z); _settle_boxes.append(z)
+	_forest_zone = _zone("숲·산길", big, big, big, big, CAM_FOREST)
+	camera_zones.append(_forest_zone)
+	for p in region.get("passes", []):
+		var r := 45.0
+		camera_zones.append(_zone(String(p.get("name", "고개")), float(p.x) - r, float(p.x) + r, float(p.z) - r, float(p.z) + r, CAM_PASS))
+	for z in region.get("camera_zones", []): camera_zones.append(z)
+
+static func _zone(name: String, x0: float, x1: float, z0: float, z1: float, cam: Dictionary) -> Dictionary:
+	return { name = name, minX = x0, maxX = x1, minZ = z0, maxZ = z1, pitch = cam.pitch, distance = cam.distance }
+
+# 플레이어 둘레(반경 14m 9점) 반 넘게 숲·대숲이고 고을 안이 아니면 숲 구역을 플레이어에 씌운다(10프레임마다)
+func update_camera_zone(pos: Vector3) -> void:
+	_cz_frame += 1
+	if _cz_frame % 10 != 0: return
+	var n := 0
+	for dz in [-14.0, 0.0, 14.0]:
+		for dx in [-14.0, 0.0, 14.0]:
+			var c := landuse_at(pos.x + dx, pos.z + dz)
+			if c == 0 or c == 9: n += 1
+	var in_town := false
+	for b in _settle_boxes:
+		if in_box(b, pos.x, pos.z): in_town = true; break
+	if n >= 5 and not in_town:
+		_forest_zone.minX = pos.x - 40.0; _forest_zone.maxX = pos.x + 40.0; _forest_zone.minZ = pos.z - 40.0; _forest_zone.maxZ = pos.z + 40.0
+	elif not in_box(_forest_zone, pos.x, pos.z) or n <= 2 or in_town:
+		_forest_zone.minX = 1e6; _forest_zone.maxX = 1e6
+
 func _make_textures() -> void:
 	var himg := Image.create_from_data(hnx, hnz, false, Image.FORMAT_RG8 if hbpp == 2 else Image.FORMAT_R8, hbytes)
 	height_tex = ImageTexture.create_from_image(himg)
 	var limg := Image.create_from_data(lw, lh, false, Image.FORMAT_R8, lbytes)
 	landuse_tex = ImageTexture.create_from_image(limg)
+	paint_tex = ImageTexture.create_from_image(Image.create_from_data(hnx, hnz, false, Image.FORMAT_RGBA8, pbytes))
 
 func _common_params(m: ShaderMaterial) -> void:
 	m.set_shader_parameter("hmap", height_tex)
@@ -184,6 +286,7 @@ func _common_params(m: ShaderMaterial) -> void:
 	m.set_shader_parameter("h_size", Vector2i(hnx, hnz))
 	m.set_shader_parameter("lu_meta", Vector4(lx0, lz0, 1.0 / lcell, 0.0))
 	m.set_shader_parameter("lu_size", Vector2i(lw, lh))
+	m.set_shader_parameter("paint_tex", paint_tex)
 
 func _make_materials() -> void:
 	var sh: Shader = load("res://shaders/region_terrain.gdshader")
@@ -248,9 +351,7 @@ func _lu_raw(i: int, j: int) -> int:
 	return lbytes[clampi(j, 0, lh - 1) * lw + clampi(i, 0, lw - 1)]
 
 func _lu(i: int, j: int) -> int:
-	var v := _lu_raw(i, j)
-	var c := v & 127
-	return 6 if (v >= 128 and c != 4 and c != 5) else c  # 고른 터 = 마당
+	return _lu_raw(i, j) & 127
 
 func _lu_det(i: int, j: int) -> float:
 	var v := _lu_raw(i, j)
@@ -533,6 +634,7 @@ func _set_tile(t: Vector2i, lod: int) -> void:
 				mi.custom_aabb = AABB(Vector3(-1, yr.x - SKIRT - 2.0, -1), Vector3(CHUNK + 2, yr.y - yr.x + SKIRT + 4.0, CHUNK + 2))
 		node.get_child(0).custom_aabb = AABB(Vector3(-1, all.x - SKIRT * 2.0 - 2.0, -1), Vector3(TILE + 2, all.y - all.x + SKIRT * 2.0 + 4.0, TILE + 2))
 		terrain_root.add_child(node)
+		if tile_listener.is_valid(): tile_listener.call(t)
 		_gen += 1
 		st = { lod = -1, node = node, scatter_nodes = [], scatter_job = -1, scatter_hold = null, has0 = false, has1 = false, gen = _gen }
 		tiles[t] = st
@@ -607,8 +709,10 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 	var temps := []
 	var ex_arg := []   # scatter(…, exclude)용: 축 정렬 Rect2 또는 {x,z,r} 원
 	for e in excl:
-		if absf(sin(e.ry)) < 0.02: ex_arg.append(Rect2(e.c - e.half, e.half * 2.0))
-		else: ex_arg.append({ x = e.c.x, z = e.c.y, r = e.half.length() })
+		# 회전 반영 축 정렬 사각형(kit-nature 요청)
+		var ca := absf(cos(e.ry)); var sa := absf(sin(e.ry))
+		var hb := Vector2(e.half.x * ca + e.half.y * sa, e.half.x * sa + e.half.y * ca)
+		ex_arg.append(Rect2(e.c - hb, hb * 2.0))
 	var takes_ex := false
 	for m in scr.get_script_method_list():
 		if m.name == "scatter" and m.args.size() >= 6: takes_ex = true
@@ -935,6 +1039,7 @@ static func _hit(c: Dictionary, x: float, z: float, r: float) -> bool:
 func blocked(x: float, z: float, r: float) -> bool:
 	if x < hx0 + 2.0 or z < hz0 + 2.0 or x > hx0 + (hnx - 1) * hstep - 2.0 or z > hz0 + (hnz - 1) * hstep - 2.0: return true
 	if block_water and _in_river(x, z, r) and not _near_crossing(x, z): return true
+	if not _ponds.is_empty() and in_pond(x, z) and (_walk_grid.is_empty() or walk_at(x, z) == null): return true
 	var ci := floori(x / GRID); var cj := floori(z / GRID)
 	var t := tile_of(x, z)
 	var sg = _scatter_grid.get(t)
@@ -1060,7 +1165,10 @@ func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
 # ---------------------------------------------------------------------------
 # 손댄 높이·토지이용·걷기 면·식생 제외를 처음 상태로
 func reset_edits() -> void:
+	_walk_grid.clear()
+	_ponds.clear()
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
+	pbytes = _p_roads.duplicate(); _paint_dirty = true
 	_veg_excl.clear(); _walk_grid.clear(); _walks.clear()
 	_crossings = _crossings_all.duplicate()
 	_terrain_dirty = true
@@ -1113,6 +1221,9 @@ static func _to_local(d: Vector2, ca: float, sa: float) -> Vector2:
 
 # 고친 높이·토지이용을 GPU 텍스처에 올리고, 타일(높이 범위·식생)을 다시 만든다
 func commit_terrain() -> void:
+	if _paint_dirty:
+		_paint_dirty = false
+		paint_tex.update(Image.create_from_data(hnx, hnz, false, Image.FORMAT_RGBA8, pbytes))
 	if not _terrain_dirty: return
 	_terrain_dirty = false
 	height_tex.update(Image.create_from_data(hnx, hnz, false, Image.FORMAT_RG8 if hbpp == 2 else Image.FORMAT_R8, hbytes))
@@ -1140,6 +1251,45 @@ func reset_tiles() -> void:
 	var c := _center
 	_center = Vector2i(1 << 20, 1 << 20)
 	if c.x < (1 << 19): focus(Vector3(c.x * TILE + TILE * 0.5, 0, c.y * TILE + TILE * 0.5))
+
+# 못 파기: 물체 변환 xf, 로컬 테두리(x,z), 로컬 물면 높이 wy. 테두리 안 땅을 물면 - depth로 낮추고(텍스처·height_at 둘 다)
+# 걸어 들어가지 못하게 등록한다(걷기 면 위는 예외)
+func carve_water(xf: Transform3D, outline: PackedVector2Array, wy: float, depth := 0.95) -> void:
+	if outline.size() < 3: return
+	var poly := PackedVector2Array()
+	var lo := Vector2(INF, INF); var hi := Vector2(-INF, -INF)
+	for q in outline:
+		var w := xf * Vector3(q.x, 0, q.y)
+		poly.append(Vector2(w.x, w.z))
+		lo = Vector2(minf(lo.x, w.x), minf(lo.y, w.z)); hi = Vector2(maxf(hi.x, w.x), maxf(hi.y, w.z))
+	var target := xf.origin.y + wy - depth
+	var yq := clampf((target - hy0) / hscale, 0.0, 65535.0 if hbpp == 2 else 255.0 * 256.0)
+	var i0 := clampi(floori((lo.x - hx0) / hstep) - 1, 0, hnx - 1); var i1 := clampi(ceili((hi.x - hx0) / hstep) + 1, 0, hnx - 1)
+	var j0 := clampi(floori((lo.y - hz0) / hstep) - 1, 0, hnz - 1); var j1 := clampi(ceili((hi.y - hz0) / hstep) + 1, 0, hnz - 1)
+	for j in range(j0, j1 + 1):
+		for i in range(i0, i1 + 1):
+			var pp := Vector2(hx0 + i * hstep, hz0 + j * hstep)
+			if not Geometry2D.is_point_in_polygon(pp, poly): continue
+			var k := j * hnx + i
+			if hbpp == 2:
+				var v0 := hbytes[k * 2] * 256 + hbytes[k * 2 + 1]
+				var v := mini(v0, roundi(yq))
+				hbytes[k * 2] = v >> 8; hbytes[k * 2 + 1] = v & 255
+			else:
+				hbytes[k] = mini(hbytes[k], roundi(yq / 256.0))
+	var li0 := clampi(floori((lo.x - lx0) / lcell) - 1, 0, lw - 1); var li1 := clampi(ceili((hi.x - lx0) / lcell) + 1, 0, lw - 1)
+	var lj0 := clampi(floori((lo.y - lz0) / lcell) - 1, 0, lh - 1); var lj1 := clampi(ceili((hi.y - lz0) / lcell) + 1, 0, lh - 1)
+	for j in range(lj0, lj1 + 1):
+		for i in range(li0, li1 + 1):
+			if Geometry2D.is_point_in_polygon(Vector2(lx0 + i * lcell, lz0 + j * lcell), poly): lbytes[j * lw + i] = lbytes[j * lw + i] | 128
+	_ponds.append({ poly = poly, bb = Rect2(lo, hi - lo), y = xf.origin.y + wy })
+	_terrain_dirty = true
+
+func in_pond(x: float, z: float) -> bool:
+	var p := Vector2(x, z)
+	for pd in _ponds:
+		if pd.bb.has_point(p) and Geometry2D.is_point_in_polygon(p, pd.poly): return true
+	return false
 
 func add_veg_exclusion(c: Vector2, ry: float, half: Vector2) -> void:
 	_veg_excl.append({ c = c, ry = ry, half = half })

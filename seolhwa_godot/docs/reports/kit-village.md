@@ -108,9 +108,60 @@
 2. **kit_preview**: 스크립트 오류가 나면 종료하지 않고 멈춘다(`get_tree().quit()`에 닿지 못함). 오류가 나면 바로 끝나도록 바꾸거나 `--timeout`을 넣어 주기 바란다. 실내 미리보기에서 `interior.hide`를 숨기는 `--interior` 옵션도 있으면 좋겠다.
 3. **배치(terrain-engine)**:
    - `stone_bridge`, `seop_bridge`, `jingeom`은 로컬 z가 건너는 방향이다(강은 x로 흐른다). 둑 높이가 y=0이고 다리발과 홍예는 그 아래로 내려간다.
-   - 결과에 `deck` 높이식 문자열을 넣었다(stone_bridge, seop_bridge). 걷기 높이로 쓰려면 엔진이 이 함수를 써야 한다.
+   - (3단계에서 `deck` 문자열을 §8 `walk` 배열로 바꿨다 — 아래 3단계 절.)
    - `narutbae`와 `ppallaeteo`는 원점이 물 면이다.
    - `mulbang_a`의 도랑 물 판은 키트 안의 장식이라 지형 수계와 맞춰야 한다.
 4. **kit-nature**: 성황당은 `tree:false` + `anchors.tree` 자리에 nature의 큰 느티·당산나무를 놓고 금줄만 남기는 방식으로 바꿀 수 있다. 지금 신목은 자체 단순판(약 1,200)이다.
 5. **집 묶음 occluder**: 묶음 하나가 노드 하나(병합)라 가림 반투명이 묶음 전체에 걸린다. 건물별로 따로 페이드하려면 묶음 대신 개별 모델을 배치하거나, `merged=false` part 분리를 요청해 달라.
 6. `godot --import`는 돌리지 않았다. 새 스크립트 `.uid`와 `shots/kit/village/*.png`의 import는 총괄이 해야 한다.
+
+
+## 3단계 (총괄 요청 반영)
+
+### 3-1. 다리 걷기 면 `walk` (§8 형식)
+`deck` 문자열은 없앴다. 대신 build() 결과에 `walk: [{minX, maxX, minZ, maxZ, z:[…], y:[…]}]` 배열을 돌려준다. 축은 z, 높이는 로컬 y이고 z는 오름차순이다.
+- `stone_bridge`: 상판 윗면 deck(z)를 17점으로 잡고, 양 끝 둑(y 0.1)으로 0.3m 이어 붙였다. 사각형 x는 ±(hw−0.2).
+- `seop_bridge`: 흙 윗면 dy(z)+0.12를 21점으로 잡고 양 끝을 0.3m 늘렸다. x는 ±(hw−0.1).
+- `jingeom`: 디딤돌 윗면 0.15, 양 끝 0.6m에서 0.05로 내려간다. x는 ±0.55.
+- 로더의 params 대체식과 값이 같도록 맞췄다. 이제 로더는 결과의 walk를 그대로 쓴다.
+
+### 3-2. 집 묶음 `house_compound`: 건물별 조각 + LOD
+- **`static func layout(params)`**(§8 배치형): 조각 목록 `{tag, kit, params, x, z, ry}`를 돌려준다. 안채·사랑채·헛간·외양간·뒷간·장독대·장작과 담 다섯 토막(north/west/east/south 양쪽, 점은 마당 로컬)·대문이다. 로더가 건물마다 따로 지으므로 가림 반투명·스트리밍이 건물 단위로 된다. 조각 params는 그 키트 build()가 같은 모양을 내도록 hump 같은 무작위 값을 숫자로 굳혀 넣었다.
+- **build()**: 같은 조각을 지어 자식 노드(`anchae`, `sarang`, `gate`, `wall_n` …)로 묶은 한 덩이를 돌려준다. 함께 `pieces`(§4: kit, params, x, z, ry, tag, **xform**)도 준다. 조각의 `info`는 두 번 짓지 않으려고 넣지 않았다. 앵커는 `<tag>_<이름>`이다(예: `anchae_door`, `gate_gate_out`).
+- **`params.lod = 1`**: 몸체 상자 + 창호 띠 + 지붕(초가 둥근 이엉 10×3, 기와 곡선 10×5) + 담 상자와 갓을 한 덩이로 만든다. 소품은 뺐고 먹선은 몸체·지붕에만 넣었다. **small 726 / medium 1,348 / large 2,120** (≤ 4,000). 충돌체·창 조명 자리는 유지한다.
+- `lod=1`이나 `merged=true`이면 layout()은 자기 자신 한 조각(merged)만 돌려준다. 그래서 먼 읍내는 한 덩이로 놓인다.
+- lod 0 한 덩이: small 8,780 / medium 12,972 / large 14,792 (≤ 15,000). 싸리울 lite 살 간격을 0.2m로 넓혀 small이 줄었다.
+- 같은 담 토막에 쓰려고 `stone_wall.lite`(막돌 한 줄, 약 90/m), `fence.lite`(살 0.2m 간격, 먹선 없음, 약 35~50/m), `todam.tile_seg` params를 보탰다.
+
+### 3-3. 돌장승 `stone_jangseung`
+- 고증 참고: 실상사 해탈교 앞 석장승(1725, 화강암, 현재 3기). 둥근 벙거지 모자, 왕방울 눈, 주먹코, 입 밖 송곳니를 살렸다. 몸 앞면의 이름 새김은 얕게 판 세로 띠와 글자 자리 넷으로 단순화했다(글자 아틀라스 없음, **가설적 단순화**).
+- 납작한 팔각 몸통과 받침돌로 만들었다. `variant` 0 벙거지 / 1 높은 관 / 2 민머리 상투, `h`(2.6)로 바꾼다.
+- 삼각형 780 / 764 / 660 (소품 ≤ 800). 사진: `stone_jangseung.png`, `_v1`, `_v2`.
+
+### 3-4. 길가 채우기
+- **`wall_run`**: 꺾은선 담 프리셋. `points:[[x,z],…]`(로컬), `kind` stone_lite(기본)/stone/todam_thatch/todam_tile/fence_lite/fence, `gaps`(비울 구간 번호), `closed`, `jitter`. 결과에 `bounds`도 준다. 기본 18m 곡선 stone_lite는 1,376 삼각형(약 75/m).
+- **`teotbat`**: 텃밭. 싸리울(lite)에 앞쪽 드나드는 틈을 두고, 두둑 4줄에 배추·무·고추(붉은 열매)·파를 심고 울 위에 호박 넝쿨과 호박을 올렸다. 4.5×3.2m, 1,646 삼각형.
+- **`yard_props`**(footprint 3~6m) `set`:
+  - manure_coop: 거름더미, 쇠스랑, 다리 달린 닭장과 초가 덮개·사다리, 짚둥우리. 548
+  - jars: 돌 위 독 6, 소래기, 물동이. 1,288
+  - work: 멍석, 절구, 맷돌, 키, 소쿠리. 708
+  - woodpile: 장작(이엉 덮개), 지게 나뭇짐, 볏단, 모탕과 도끼. 1,896
+  - 소품 묶음이라 ≤ 2,000으로 잡았다.
+
+### 3-5. 마을 공동 마당 `village_square`
+- 정자나무 + 둥근 돌 축대(지름 3.6m) + 평상 둘 + 넓적 돌 의자 넷 + 짚신이다. 8×7.6m.
+- `tree`:
+  - "nature"(기본): `kit/nature/big_tree.gd` 느티를 불러 자식으로 붙인다(읽기만 함). 결과에 `tree_kit`(kit/params/x/z/y)도 넣어 둬서, 로더가 원하면 나무를 따로 놓을 수 있다.
+  - "own": 성황당 신목 단순판.
+  - "none": 자리만 남긴다.
+- 삼각형 2,296 (nature 느티 포함) / own 2,178 / none 744. 앵커는 `tree`, `pyeongsang0..1`, `seat0..3`.
+
+### 3-6. 목록·사진
+- `kit/village/catalog.json` 갱신(38개 모델, 변형 포함). 모델마다 `walk`·`pieces`·`layout` 여부를 적었다.
+- 새 사진: `house_compound_{small,medium,large}_lod`, `stone_jangseung*`, `wall_run`, `wall_run_todam`, `teotbat`, `yard_props_{manure_coop,jars,work,woodpile}`, `village_square`, `village_square_own`, `fence_lite`.
+- 전체 모음 `contact_sheet.png`를 다시 만들었다(80장).
+
+### 3-7. 총괄·terrain-engine에 요청
+1. **배치형 footprint**: 로더는 layout() 조각 자리 +8m로 footprint를 어림한다(`_fp_from_pieces`). 집 묶음은 이렇게 하면 터 고르기가 실제보다 크게 잡힌다(small 약 27m, 실제 14.8m). 배치 JSON 항목에 catalog의 footprint를 `footprint:[w,d]`로 넣거나, 로더가 키트의 `static func footprint(params)`(house_compound에 있음)를 먼저 부르도록 해 주기 바란다.
+2. 집 묶음 조각의 담 토막은 조각 자리가 (0,0)이고 점이 params(ax..bz)에 들어 있다. 로더가 조각마다 footprint 겹침 검사를 한다면 담 조각은 빼야 한다.
+3. `village_square`의 `tree_kit`은 참고용이다. 지금은 나무가 노드 안에 붙어 있어 따로 놓을 필요가 없다.

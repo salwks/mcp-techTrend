@@ -1,7 +1,8 @@
 # 읍성 성문 — 홍예문을 낸 육축(석축) + 그 위 문루(단층 팔작, 3×2칸) + (선택) 반원 옹성.
 # 남원읍성 4문: 남 완월루(翫月樓)·북 공신루(拱宸樓)·서 망미루(望美樓)·동 향일루(向日樓) (위키백과 '남원읍성').
 # 성벽 모듈과 같은 규칙: 로컬 x축이 성벽 방향, 바깥 +z, 원점 = 문 가운데 바닥(성벽 두께 중심).
-# 문루 층수(단층)·옹성 모양(반원)·열린 쪽은 가설. params: seed, name("완월루"), width(14), ongseong(true), open_side("east"|"west"), radius(10)
+# 문루 층수(단층)·옹성 모양(반원)·열린 쪽은 가설. params: seed, name("완월루"), width(16), radius(11),
+#   open: 옹성 열린 쪽 "east"(로컬 +x) | "west"(로컬 −x) | "front"(정면 가운데) | "none"(옹성 없음). 예전 이름 open_side, ongseong=false도 받는다
 extends RefCounted
 
 const Co = preload("res://kit/landmark/_common.gd")
@@ -62,18 +63,23 @@ static func build(params: Dictionary) -> Dictionary:
 	var lights := [{ x = -aw / 2 - 0.6, y = 2.2, z = dep / 2 + 0.3, kind = "torch" }, { x = aw / 2 + 0.6, y = 2.2, z = dep / 2 + 0.3, kind = "torch" }]
 	var foot := Vector2(Wg, dep)
 	# 옹성(반원)
-	if params.get("ongseong", true):
+	var open: String = str(params.get("open", params.get("open_side", "east")))
+	if not params.get("ongseong", true): open = "none"
+	if open != "none":
 		var R: float = float(params.get("radius", 11.0))
 		var tt := 3.2
 		var zo := dep / 2 - 0.5
-		var east: bool = params.get("open_side", "east") == "east"
+		var east: bool = open == "east"
+		var front: bool = open == "front"
 		var n := 12
 		for i in n:
 			var a0 := PI * i / n; var a1 := PI * (i + 1) / n
 			var mid := (a0 + a1) / 2
 			# 열린 쪽: east면 θ 0 근처(＋x), west면 π 근처
-			if east and mid < 0.75: continue
-			if not east and mid > PI - 0.75: continue
+			if front:
+				if absf(mid - PI / 2) < 0.3: continue
+			elif east and mid < 0.75: continue
+			elif not east and mid > PI - 0.75: continue
 			var p0 := Vector2(cos(a0) * R, zo + sin(a0) * R); var p1 := Vector2(cos(a1) * R, zo + sin(a1) * R)
 			var ext := (p1 - p0).normalized() * 0.12
 			p0 -= ext; p1 += ext
@@ -89,7 +95,7 @@ static func build(params: Dictionary) -> Dictionary:
 			cols.append({ type = "circle", x = m.x, z = m.y, r = tt / 2 + 0.6 })
 		fz = zo + R + 3.0
 		var ox := (R + 3.0) if east else -(R + 3.0)
-		anchors.outside = Vector3(ox * 0.85, 0, zo + 1.5)
+		anchors.outside = Vector3(0, 0, zo + R + 3.0) if front else Vector3(ox * 0.85, 0, zo + 1.5)
 		anchors.ongseong_yard = Vector3(0, 0, zo + R * 0.5)
 		foot = Vector2(maxf(Wg, 2 * R + tt), dep / 2 + zo + R + tt)
 	var node := Co.node2("성문_" + str(params.get("name", "완월루")), b, roof)

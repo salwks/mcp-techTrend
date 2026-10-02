@@ -3,13 +3,18 @@
 # 실제 한 변 ≈ 2.5km/4 ≈ 625m → ×0.30 ≈ 190m. 그래서 기본 side = 190.
 # layout(params) → 조각 목록 [{kit, params, x, z, ry}]: 지형 엔진이 조각마다 add_static 하면 성벽마다 가림·타일 스트리밍이 따로 된다.
 # build(params) → 전체를 한 Node3D로(미리보기·작은 맵용).
-# params: seed, side(190), chi_per_side(2), seg_max(24), gates({S:"완월루",N:"공신루",W:"망미루",E:"향일루"}), ongseong(true)
+# params: seed, side(190), chi_per_side(2), seg_max(24), gates({S:"완월루",N:"공신루",W:"망미루",E:"향일루"}),
+#   ongseong: true/false 또는 문별 사전 {S:"front", N:"west", E:"south", W:"north"} — 값은 세계 방위 east|west|north|south(문 양옆 중 하나) | "front" | "none".
+#   기본: 남문은 구례길이 곧장 남으로 나가므로 "front"(앞으로 열림), 나머지는 옆으로 열림(가설)
 extends RefCounted
 
 const S = preload("res://kit/landmark/_seong.gd")
 
 const GATES := { S = "완월루", N = "공신루", W = "망미루", E = "향일루" }
 const GATE_W := 16.0
+const ONG_DEFAULT := { S = "front", N = "west", E = "south", W = "north" }
+# 각 변의 로컬 +x가 가리키는 세계 방위
+const LOCAL_PX := { S = "east", E = "north", N = "west", W = "south" }
 
 # 변별 회전: 로컬 바깥 +z가 그 변의 바깥을 보게
 const SIDE_RY := { S = 0.0, E = PI / 2, N = PI, W = -PI / 2 }
@@ -20,7 +25,12 @@ static func layout(params: Dictionary) -> Array:
 	var seg_max: float = float(params.get("seg_max", 24.0))
 	var seed: int = int(params.get("seed", 1))
 	var gates: Dictionary = params.get("gates", GATES)
-	var ong: bool = params.get("ongseong", true)
+	var ong_p = params.get("ongseong", true)
+	var ong: Dictionary = ONG_DEFAULT.duplicate()
+	if ong_p is bool and not ong_p:
+		for kk in ong: ong[kk] = "none"
+	elif ong_p is Dictionary:
+		for kk in ong_p: ong[kk] = str(ong_p[kk])
 	var h := side / 2
 	var t := S.T
 	var out := []
@@ -40,7 +50,10 @@ static func layout(params: Dictionary) -> Array:
 		var g0 := -h + t; var g1 := h - t
 		var spans := []
 		if gname != "":
-			put.call("seongmun", { seed = seed + k, name = gname, width = GATE_W, ongseong = ong, open_side = "east" if sd in ["S", "N"] else "west" }, 0.0, zc); k += 1
+			var ow: String = ong.get(sd, "none")
+			var ol := ow
+			if ow not in ["front", "none"]: ol = "east" if ow == LOCAL_PX[sd] else "west"
+			put.call("seongmun", { seed = seed + k, name = gname, width = GATE_W, open = ol }, 0.0, zc); k += 1
 			spans = [[g0, -GATE_W / 2], [GATE_W / 2, g1]]
 		else:
 			spans = [[g0, g1]]

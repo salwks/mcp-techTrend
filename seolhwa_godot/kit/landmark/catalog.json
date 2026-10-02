@@ -74,18 +74,17 @@
   {
    "name": "seongmun",
    "file": "res://kit/landmark/seongmun.gd",
-   "desc": "성문: 홍예문 육축 + 단층 팔작 문루(3×2칸) + 반원 옹성(열린 쪽 선택)",
+   "desc": "성문: 홍예문 육축 + 단층 팔작 문루(3×2칸) + 반원 옹성. open: east|west(로컬 ±x)|front|none",
    "params": {
     "seed": 1,
     "name": "완월루",
-    "ongseong": true,
-    "open_side": "east"
+    "open": "front"
    },
    "footprint": [
     25.2,
     19.3
    ],
-   "tris": 6636,
+   "tris": 6518,
    "composite": false,
    "sources": [
     "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)"
@@ -96,16 +95,22 @@
   {
    "name": "namwon_eupseong",
    "file": "res://kit/landmark/namwon_eupseong.gd",
-   "desc": "남원읍성 전체 배치(압축 한 변 190m 기본, 4문+옹성, 치 8, 모서리 4). pieces로 조각 목록 반환",
+   "desc": "남원읍성 전체 배치(압축 한 변 190m 기본, 4문+옹성, 치 8, 모서리 4). pieces로 조각 목록 반환 ongseong=문별 세계 방위(east|west|north|south)|front|none 사전 또는 bool",
    "params": {
     "seed": 1,
-    "side": 190
+    "side": 190,
+    "ongseong": {
+     "S": "front",
+     "N": "west",
+     "E": "south",
+     "W": "north"
+    }
    },
    "footprint": [
     220.0,
     220.0
    ],
-   "tris": 57510,
+   "tris": 57398,
    "composite": true,
    "sources": [
     "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)",
@@ -257,7 +262,7 @@
   {
    "name": "gwanghallu_pond",
    "file": "res://kit/landmark/gwanghallu_pond.gd",
-   "desc": "광한루원 연못 + 삼신산 섬 셋 + 오작교. water{y,outline} 반환",
+   "desc": "광한루원 연못 + 삼신산 섬 셋 + 오작교. 물면 Kit 'water'(반투명) + 0.7m 아래 못 바닥. water{y,outline} 반환",
    "params": {
     "seed": 1,
     "width": 110,
@@ -267,13 +272,13 @@
     113.0,
     58.0
    ],
-   "tris": 8788,
+   "tris": 8844,
    "composite": false,
    "sources": [
     "국가유산청 국보 지정 예고 보도(2026-07, 본루 정면 5칸·측면 4칸 팔작, 익공, 1626 신감 중건, 익루 정면 3칸·측면 2칸 가운데 온돌방, 월랑 1881)",
     "전북일보 2017-12-07 윤주(오작교 길이 57m·폭 2.4m, 홍예 4, 1582 장의국 가설·정철 삼신산)"
    ],
-   "hypothesis": "못 크기·섬 위치 가설. 물면 불투명 판",
+   "hypothesis": "못 크기·섬 위치 가설",
    "shot": "shots/kit/landmark/gwanghallu_pond.png"
   },
   {
@@ -451,6 +456,50 @@
    ],
    "hypothesis": "남원향교 실제 배치 미확인(가설)",
    "shot": "shots/kit/landmark/hyanggyo.png"
+  },
+  {
+   "name": "hyeon_gwana",
+   "file": "res://kit/landmark/hyeon_gwana.gd",
+   "desc": "작은 현 관아 일곽(외삼문·동헌 5칸·내아·칸막이 담·담장, 약 36×36m). pieces 반환",
+   "params": {
+    "seed": 1,
+    "width": 36,
+    "depth": 36,
+    "naesammun": false
+   },
+   "footprint": [
+    38.0,
+    42.0
+   ],
+   "tris": 20574,
+   "composite": true,
+   "sources": [
+    "현 단위 읍치 관아 일반형"
+   ],
+   "hypothesis": "운봉현 관아 실측 미상, 내삼문 생략(가설)",
+   "shot": "shots/kit/landmark/hyeon_gwana.png"
+  },
+  {
+   "name": "maaebul_rock",
+   "file": "res://kit/landmark/maaebul_rock.gd",
+   "desc": "여원치 마애불: 큰 바위 앞면에 새긴 고려 좌상(높이 2.5m) 부조 + 음각 두광·U자 주름, 앞 제단돌·촛불. 보호각 없음(pillars=true면 흔적 돌기둥 2)",
+   "params": {
+    "seed": 1,
+    "pillars": false,
+    "offering": true
+   },
+   "footprint": [
+    8.0,
+    6.5
+   ],
+   "tris": 2310,
+   "composite": false,
+   "sources": [
+    "한국민족문화대백과 「남원 여원치 마애여래좌상」(검색 요약: 높이 2.5m·어깨너비 1.09m, 고려, 1998 전북 유형문화재, 보호각 흔적 돌기둥 2·기와편)",
+    "전북일보 2023-09-12 후백제 문화유산 연재(여상 전설)"
+   ],
+   "hypothesis": "바위 크기·부조 비례 가설, 1870년 보호각 유무 미상",
+   "shot": "shots/kit/landmark/maaebul_rock.png"
   }
  ]
 }
