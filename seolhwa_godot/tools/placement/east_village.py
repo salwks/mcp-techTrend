@@ -83,6 +83,7 @@ def props_set(seed):
 
 
 MIX = {
+    "gwan": [("hc_large", 0.35), ("hc_medium", 0.40), ("garden", 0.15), ("props", 0.10)],
     "fringe": [("garden", 0.45), ("props", 0.25), ("yard", 0.20), ("hc_small", 0.10)],
     "eup": [("yard", 0.42), ("hc_small", 0.14), ("hc_medium", 0.16), ("hc_large", 0.10), ("garden", 0.12), ("props", 0.06)],
     "village": [("yard", 0.55), ("hc_small", 0.14), ("hc_medium", 0.08), ("garden", 0.15), ("props", 0.08)],
@@ -182,7 +183,8 @@ def contour_ry(T, cells):
 
 
 def fill_rows(pl, T, L, cells, group, gcode, mix_name, seed, pitch=18.0, gap=(1.6, 3.2), max_drop=2.6,
-              skip=0.06, limit=999, ry=None, in_frac=0.55, stats=None, phase=0.0, lu_ok=(6,), alleys=True):
+              skip=0.06, limit=999, ry=None, in_frac=0.55, stats=None, phase=0.0, lu_ok=(6,), alleys=True, zone=None):
+    """zone = (x, z, R, mix_name): 그 둘레 R 안의 줄 자리는 다른 섞음(예: 관아 앞 기와집)."""
     """마을 터 칸을 줄로 채운다. 반환: 놓은 집터 수."""
     if len(cells) == 0:
         return 0
@@ -221,7 +223,13 @@ def fill_rows(pl, T, L, cells, group, gcode, mix_name, seed, pitch=18.0, gap=(1.
             if h < skip:
                 cur += 4.0
                 continue
-            kind = pick(mix, random.Random(seed * 7 + row * 131 + k * 17).random())
+            mx = mix
+            if zone:
+                px_ = cx + ux * cur + vx * b0
+                pz_ = cz + uz * cur + vz * b0
+                if (px_ - zone[0]) ** 2 + (pz_ - zone[1]) ** 2 < zone[2] ** 2:
+                    mx = MIX[zone[3]]
+            kind = pick(mx, random.Random(seed * 7 + row * 131 + k * 17).random())
             sseed = seed * 100 + row * 37 + k
             pcs = make_slot(kind, sseed)
             w, xmin, d = slot_width(pl, pcs)

@@ -329,7 +329,7 @@ class Placer:
                 x, z = cx + r * math.cos(a), cz + r * math.sin(a)
             nr = L.nearest_road(x, z)
             if ry_fixed is not None:
-                ry = ry_fixed + rng.uniform(-0.08, 0.08)
+                ry = ry_fixed + rng.uniform(-0.02, 0.02)
             elif face == "road" and nr and nr[0] < 40:
                 ry = clamp_ry(ry_along(*nr[3]))
             else:

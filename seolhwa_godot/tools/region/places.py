@@ -30,7 +30,7 @@ LANDMARKS = [
          confidence="가설", source=[SRC_WIKI_EUPSEONG], notes="서벽 중앙으로 가정.", size_m=[14, 9]),
     dict(id="yongseonggwan", name="용성관(남원 객사)", kit="landmark/namwon_gaeksa_yongseonggwan", lat=35.40984, lon=127.37984, ry=0,
          confidence="추정", source=[SRC_EKC_YONGSEONG, SRC_OSM + " — 남원용성초등학교 위치"],
-         notes="정청+좌우 익헌, 남향. 실물 약 50×15m, 앞마당·삼문 포함 약 60×45m. 현재 돌층계·축대만 남음.", size_m=[60, 45]),
+         notes="정청+좌우 익헌, 남향. 실물 약 50×15m, 담·삼문 포함 약 72×40m(성 중심축 T자 끝). 현재 돌층계·축대만 남음.", size_m=[72, 40]),
     dict(id="namwon_dongheon", name="남원도호부 관아(동헌)", kit="landmark/namwon_gwana", lat=35.4108, lon=127.3830, ry=0,
          confidence="가설", source=["위치 근거 없음 — 읍성 안 객사 동쪽에 두는 일반 배치(가설)", "OSM 도로명 '동헌길'(죽항동, 35.4077~35.4079 N, 127.380~127.387 E) — 성 안 남쪽(게임 z≈315)에 동헌이 있었을 가능성(검수 필요)"],
          notes="동헌·내아·삼문. 약 50×40m.", size_m=[50, 40]),

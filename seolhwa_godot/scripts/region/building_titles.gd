@@ -7,6 +7,8 @@ const NAMES := {
 	"landmark/gaeksa": "용성관", "landmark/gwanghallu": "광한루", "landmark/gwanghallu_pond": "광한루원",
 	"landmark/hyanggyo": "남원향교", "landmark/maaebul_rock": "여원치 마애불", "landmark/hwangsan_bigak": "황산대첩비",
 	"landmark/silsangsa": "실상사", "village/jumak": "주막", "village/seonghwangdang": "성황당",
+	"landmark/dongheon": "동헌", "landmark/naea": "내아",
+	"landmark/sajikdan": "사직단", "landmark/yeodan": "여단", "landmark/seonghwangsa": "성황사",
 	"village/mulbang_a": "물레방앗간", "village/jeongja": "정자", "village/village_square": "쉼터",
 }
 const EXIT_EXTRA := 3.0

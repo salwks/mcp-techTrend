@@ -257,3 +257,48 @@ H, Q1, Q2, Q4, Q5(고개 3), Q6, Q8, Q10, Q11, Q14, QR, QL, QW.
 - **crossings**: **새로** `inwol_south_seopdari`(인월–산내 물가길도 함께 씀). 자동 `x_*`는 다시 번호를 매겼다.
 - **settlements**: **새로** `inwol_south_village`. `namwon_hyanggyo`(confidence 추정, notes·source), `namwon_jang`·`unbong_jang`·`inwol_jang`(장날 notes)이 바뀌었다.
 - **landmarks**: `namwon_dongheon`(source 추가, 좌표 그대로).
+
+---
+
+## 13. 읍치 공간 구성(진산·안산 축, 제향 시설, 오솔길)
+
+고증은 참고용이고 게임성을 우선했다. 이번에 확인한 근거: 교룡산이 남원 진산이라는 것(공개 해설), "용정마을에 사직단이 있다"(전북일보), OSM 도로명 '성황단길'(성 서쪽). 운봉은 문헌을 찾지 못해 원칙대로 두었다.
+
+### region.json `axes` (새 최상위 필드)
+| 읍치 | 진산 (x, z) | 안산 (x, z) | axis_ry |
+|---|---|---|---|
+| 남원부 읍성 (−3227.8, 248.8) | 교룡산 (−4018.1, −414.9) y 132.8, 추정 | 남쪽 안산(이름 미상) (−2850.0, 790.0) y 33.3, 가설 | 0.770 |
+| 운봉현 읍치 (843.7, −696.6) | 이름 미상 (910.0, −1010.0) y 143.2, 가설 | 이름 미상 (1016.0, 46.0) y 183.7, 가설 | 0.100 |
+
+- `axis_ry`는 진산→안산 방향을 로컬 +z(정면)로 두는 Godot ry(라디안)다.
+- 남원의 실제 축은 교룡산 때문에 북서–남동(약 44°)이다. 읍성 자체는 정남향 그대로 두었다.
+
+### 새 landmarks (제향 시설)
+| id | kit | x, z | confidence | 근거 |
+|---|---|---|---|---|
+| `namwon_sajikdan` | landmark/sajikdan | (−3202.0, −544.0) | 추정 | 용정마을 사직단(전북일보) — 원칙(서쪽)과 달리 성 북쪽 |
+| `namwon_yeodan` | landmark/yeodan | (−3238.0, 36.0) | 가설 | 원칙: 성 북쪽 120m |
+| `namwon_seonghwangsa` | landmark/seonghwangsa | (−3642.0, 256.0) | 추정 | '성황단길'(성 서쪽 산기슭) |
+| `unbong_sajikdan` | landmark/sajikdan | (724.0, −696.0) | 가설 | 원칙: 읍치 서쪽 |
+| `unbong_yeodan` | landmark/yeodan | (844.0, −814.0) | 가설 | 원칙: 읍치 북쪽 |
+| `unbong_seonghwangsa` | landmark/seonghwangsa | (872.0, −802.0) — 읍치에서 109m, 진산 쪽 기슭, 오솔길 59m(unbong_eup_street에서) | 가설 | 원칙: 진산 기슭(읍치 쪽 완경사, 80~150m) |
+
+- 크기(`size_m`): 사직단 20×20, 여단 14×14, 성황사 16×14.
+- 자리는 방향·거리 범위 안에서 완경사이고 물가(반폭+15m)와 길(10m)을 피한 곳으로 자동 선정했다.
+
+### 새 roads (산길, 폭 1.5m)
+`path_namwon_sajikdan`(115m, 북쪽 길에서), `path_namwon_yeodan`(26m, 북쪽 길에서), `path_namwon_seonghwangsa`(444m, 장터길에서), `path_unbong_sajikdan`(43m, 통영별로에서), `path_unbong_yeodan`(64m, 통영별로에서), `path_unbong_seonghwangsa`(59m, 운봉 읍내길에서 — 성황사 보정 후).
+
+향교는 지금 자리 그대로다. 기존 길·도강점 id는 그대로이고, 자동 `x_*`는 새 오솔길 교차가 생기면 번호가 바뀔 수 있다.
+
+### QA
+13항목 전부 PASS.
+
+---
+
+## 14. 남원 성 안 T자형 가로
+- `namwon_eup_street`: 남문 통로 (−3227.8, 339.5) → 동서 네거리 → 객사 삼문 앞 (−3227.8, 238.0)에서 끝난다.
+- **새 `namwon_north_gate_street`**: 북문 통로 (−3227.8, 158.1) → (−3227.8, 176) → 객사 담 북쪽을 지나 동쪽 (−3185.8, 176) → 남으로 동서길 (−3185.8, 248.8)에 붙는다. 이 길은 지금 관아(`nw_gwana`) 자리를 지나므로 관아 배치를 옮겨야 한다.
+- **삭제**: `namwon_gaeksa_lane`(객사가 축 정면으로 옮겨 불필요), `namwon_gwana_lane`(북문길 동쪽 구간과 2m 간격으로 겹침).
+- `yongseonggwan`: (−3227.8, 205.0)으로 옮기고 size_m을 72×40으로 바꿨다(담 z 185~225 비움). confidence는 추정 그대로이고 notes에 이유를 적었다.
+- QA 13항목 전부 PASS(QW·QL·Q8 포함).

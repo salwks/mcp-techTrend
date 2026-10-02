@@ -412,3 +412,43 @@ static func wall_pieces(pts: Array, closed: bool, gaps: Array, seed: int, h := 2
 				out.append({ kit = "landmark/gwana_wall", params = { seed = seed + k, length = t1 - t0 + 0.25, height = h }, x = c.x, z = c.y, ry = -atan2(dir.y, dir.x) })
 				k += 1
 	return out
+
+# 홍살문: 붉은 둥근 기둥 둘 + 위 가로대 + 살대 + 가운데 태극(삼지창 대신 간략). 로컬 x 방향 폭 w, 높이 h, 중심 (x,z)
+static func hongsal_gate(b, x: float, z: float, w := 4.2, h := 5.6) -> void:
+	var g := []
+	for s in [-1, 1]:
+		g.append(Kit.cyl(0.13, 0.15, h, 8, x + s * w / 2, h / 2, z, 0, 0, 0, false))
+	g.append(Kit.box(w + 0.6, 0.18, 0.18, x, h - 0.6, z))
+	g.append(Kit.box(w + 0.3, 0.14, 0.14, x, h - 1.4, z))
+	var n := roundi(w / 0.3)
+	for i in n + 1:
+		var px := x - w / 2 + w * i / n
+		g.append(Kit.box(0.06, 1.4 if i % 2 == 0 else 1.2, 0.06, px, h - 0.6 + (0.1 if i % 2 == 0 else 0.0) - 0.0, z))
+	b.add("flat", pnt(Kit.merge(g), DAN_R, 0.0), 0.015)
+	var tg := Kit.cyl(0.32, 0.32, 0.06, 12, x, h - 0.05, z, PI / 2, 0, 0)
+	b.add("flat", pnt(tg, [0x3c5f86, 0xa3503a]), 0.01)
+	for s in [-1, 1]:
+		b.add("stone", pnt(Kit.box(0.5, 0.35, 0.5, x + s * w / 2, 0.17, z), STONE_L), 0.015)
+
+# 흙담(낮은 유 壝): 기와 없는 흙돌담. 꼭짓점 목록 닫힘 + 틈
+static func low_wall_loop(b, pts: Array, gaps: Array, h: float, rng: Kit.Rng, th := 0.6) -> Array:
+	var cols := []
+	var n := pts.size()
+	for i in n:
+		var a: Vector2 = pts[i]; var c: Vector2 = pts[(i + 1) % n]
+		var L := a.distance_to(c); var dir := (c - a) / L
+		var cuts := []
+		for g in gaps:
+			var gp := Vector2(g[0], g[1]); var t := (gp - a).dot(dir)
+			if absf((gp - a).cross(dir)) < 1.0 and t > 0 and t < L: cuts.append([t - g[2], t + g[2]])
+		var s0 := 0.0
+		var spans := []
+		for cu in cuts:
+			spans.append([s0, cu[0]]); s0 = cu[1]
+		spans.append([s0, L])
+		for sp in spans:
+			if sp[1] - sp[0] < 0.3: continue
+			var p0: Vector2 = a + dir * float(sp[0]); var p1: Vector2 = a + dir * float(sp[1])
+			tile_wall(b, p0.x, p0.y, p1.x, p1.y, h, rng, th, 0.5)
+			cols.append(wall_collider(p0.x, p0.y, p1.x, p1.y, th + 0.1))
+	return cols

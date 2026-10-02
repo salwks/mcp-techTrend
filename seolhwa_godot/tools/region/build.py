@@ -91,7 +91,7 @@ def main():
                          notes=s["notes"], confidence=s["confidence"], source=s["source"], lat=round(s["lat"], 5), lon=round(s["lon"], 5)))
     S = {s["id"]: s for s in sets}; L = {l["id"]: l for l in lms}
     # 3단계: 배치 에이전트 자리로 옮김(신뢰도는 그대로)
-    OVR = {"yongseonggwan": (-3271.8, 210.0, "원 좌표(용성초 터)는 읍내 동서길에 걸려 placement-namwon 배치 자리로 옮김(동서길 북쪽, 남향)"),
+    OVR = {"yongseonggwan": (-3227.8, 205.0, "T자형 가로: 남문에서 올라온 남북길 끝 정면(성 중심축)에 객사를 둠(담 약 72×40m). 원 좌표(용성초 터)보다 동쪽 약 40m — 게임성 우선"),
            "namwon_hyanggyo": (-3247.3, -97.8, "원 좌표가 광치천에 걸리고, 3단계 북쪽 길이 지나가 placement-namwon 배치 자리(서쪽)로 옮김")}
     for oid, (ox, oz, why) in OVR.items():
         for o in (L.get(oid), S.get(oid)):
@@ -271,14 +271,13 @@ def main():
         dict(id="namwon_north_road", name="남원 북문–전주 방면 길(통영별로 북쪽)", cls="대로", width=5.0, prefix=GP["N"][1:],
              wps=[GP["N"][-1], (S["namwon_hyanggyo"]["x"] + 30, S["namwon_hyanggyo"]["z"] + 10), xz(35.4805, 127.3720)],
              source=["통영별로는 전주–임실–오수–남원으로 내려옴(지식 기반)"], confidence="가설", notes="북문(공신루) 옹성 서쪽 출구로 나감. 북쪽 경계는 노정(남원→전주) 포털."),
-        dict(id="namwon_eup_street", name="남원 읍내 남북길(북문–남문)", cls="마을길", width=4.0, fixed=[gate_center["N"], gate_center["S"]],
-             source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="성 안 십자로(남북). 양끝은 성문 통로."),
+        dict(id="namwon_eup_street", name="남원 읍내 남북길(남문–네거리–객사 삼문 앞)", cls="마을길", width=4.0, fixed=[gate_center["S"], (CXe, 238.0)],
+             source=["조선 읍성 T자형 가로(남문→객사 정면) 일반형"], confidence="가설", notes="남문 통로에서 올라와 동서길 네거리를 지나 객사 삼문 앞(z≈238)에서 끝남(T자)."),
+        dict(id="namwon_north_gate_street", name="남원 북문길(북문–객사 담 동쪽–동서길)", cls="마을길", width=4.0,
+             fixed=[gate_center["N"], (CXe, 176.0), (CXe + 42.0, 176.0), (CXe + 42.0, CZe)],
+             source=["조선 읍성 T자형 가로 일반형"], confidence="가설", notes="북문 통로에서 내려와 객사 담(72×40m, z 185~225) 북쪽을 지나 동쪽으로 돌아 동서길에 붙음."),
         dict(id="namwon_eup_street_ew", name="남원 읍내 동서길(서문–동문)", cls="마을길", width=4.0, fixed=[gate_center["W"], gate_center["E"]],
-             source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="성 안 십자로(동서). 양끝은 성문 통로."),
-        dict(id="namwon_gaeksa_lane", name="객사(용성관) 앞길", cls="마을길", width=3.0, fixed=[(-3271.8, CZe), (-3271.8, 233.0)],
-             source=["가설"], confidence="가설", notes="동서길 → 객사 삼문(남향)."),
-        dict(id="namwon_gwana_lane", name="관아 앞길", cls="마을길", width=3.0, fixed=[(-3183.8, CZe), (-3183.8, 240.5)],
-             source=["가설"], confidence="가설", notes="동서길 → 관아 외삼문(placement-namwon 배치 nw_gwana 앞)."),
+             source=["방형 읍성 십자가로 일반형"], confidence="가설", notes="성 안 동서길. 양끝은 성문 통로."),
         dict(id="namwon_market_lane", name="남문 밖 장터길(성 밖으로 돌아 서문)", cls="마을길", width=3.0,
              fixed=[GP["S"][-2], (CXe - 4, CZe + GZC + 24), (CXe - 40, CZe + GZC + 28), (S["namwon_jang"]["x"], S["namwon_jang"]["z"]),
                     (CXe - 112, CZe + 112), (CXe - 114, CZe + 40), (CXe - 112, GP["W"][-1][1] - 4), GP["W"][-1], GP["W"][-2]],
@@ -341,6 +340,89 @@ def main():
                           points=[[round(float(p[0]), 1), round(float(p[1]), 1)] for p in pts],
                           confidence=rd["confidence"], source=rd["source"], notes=rd["notes"]))
         say("road", rd["id"], len(pts))
+    # ── 읍치 공간 구성(진산–읍치–안산 축, 제향 시설: 사직단 서·여단 북·성황사 진산 기슭) + 오솔길
+    gzs, gxs = np.gradient(y2a, C.CELL); slope2 = np.hypot(gxs, gzs)
+    rdmask = np.zeros(y2a.shape, bool)
+    for r_ in roads:
+        p_ = np.asarray(r_["points"]); sg_ = np.hypot(*np.diff(p_, axis=0).T); ss_ = np.concatenate([[0], np.cumsum(sg_)])
+        tt_ = np.arange(0, ss_[-1] + 1e-6, 1.0)
+        i_, j_ = C.xz_to_ij(np.interp(tt_, ss_, p_[:, 0]), np.interp(tt_, ss_, p_[:, 1]))
+        rdmask[np.clip(np.round(j_).astype(int), 0, rdmask.shape[0] - 1), np.clip(np.round(i_).astype(int), 0, rdmask.shape[1] - 1)] = True
+    d_rd = ndimage.distance_transform_edt(~rdmask) * C.CELL
+    def site(cx, cz, ang_deg, rmin, rmax, max_slope=0.2, spread=40.0, prefer="flat"):
+        """방향(ang: 0=남 +z, 90=동 +x, 180=북, 270=서)·거리 범위 안에서 평탄·물/길 피한 자리."""
+        R_ = int(rmax / C.CELL) + 2
+        i0_, j0_ = [int(v) for v in C.xz_to_ij(cx, cz)]
+        sl = (slice(max(j0_ - R_, 0), j0_ + R_), slice(max(i0_ - R_, 0), i0_ + R_))
+        jj_, ii_ = np.mgrid[sl]; xx_, zz_ = C.ij_to_xz(ii_, jj_)
+        dx_, dz_ = xx_ - cx, zz_ - cz; dist_ = np.hypot(dx_, dz_)
+        ang_ = (np.degrees(np.arctan2(dx_, dz_)) + 360) % 360
+        dang = np.abs((ang_ - ang_deg + 180) % 360 - 180)
+        ok = (dist_ >= rmin) & (dist_ <= rmax) & (dang <= spread) & (slope2[sl] <= max_slope) & (d2[sl] > HW2[sl] + 15) & (d_rd[sl] > 10)
+        sc = np.abs(dist_ - (rmin + rmax) / 2) / 60 + dang / 30 + slope2[sl] * 6
+        if prefer == "high": sc = sc - (y2a[sl] - y2a[j0_, i0_]) / 4
+        sc[~ok] = 1e9
+        k_ = np.unravel_index(np.argmin(sc), sc.shape)
+        if sc[k_] >= 1e9: return None
+        return round(float(xx_[k_]), 1), round(float(zz_[k_]), 1)
+    def peak(cx, cz, ang_deg, rmin, rmax, spread=40.0):
+        R_ = int(rmax / C.CELL) + 2
+        i0_, j0_ = [int(v) for v in C.xz_to_ij(cx, cz)]
+        sl = (slice(max(j0_ - R_, 0), j0_ + R_), slice(max(i0_ - R_, 0), i0_ + R_))
+        jj_, ii_ = np.mgrid[sl]; xx_, zz_ = C.ij_to_xz(ii_, jj_)
+        dx_, dz_ = xx_ - cx, zz_ - cz; dist_ = np.hypot(dx_, dz_)
+        dang = np.abs(((np.degrees(np.arctan2(dx_, dz_)) + 360) % 360 - ang_deg + 180) % 360 - 180)
+        h_ = np.where((dist_ >= rmin) & (dist_ <= rmax) & (dang <= spread), y2a[sl], -1e9)
+        k_ = np.unravel_index(np.argmax(h_), h_.shape)
+        return round(float(xx_[k_]), 1), round(float(zz_[k_]), 1)
+    axes = []; new_lm = []
+    NW_C = (L["namwon_eupseong"]["x"], L["namwon_eupseong"]["z"]); UB_C = (S["unbong_eup"]["x"], S["unbong_eup"]["z"])
+    jin_nw = xz(35.4300083, 127.3523639)                       # 교룡산 봉우리(OSM natural=peak)
+    an_nw = peak(NW_C[0], NW_C[1], 0, 250, 750, 35)            # 남쪽 요천 건너 낮은 산(이름 미상)
+    jin_ub = peak(UB_C[0], UB_C[1], 180, 250, 900, 45)
+    an_ub = peak(UB_C[0], UB_C[1], 0, 200, 800, 45)
+    for town, (jn, jnn, jconf, jsrc), (an, ann) in [
+            ("남원부 읍성", (jin_nw, "교룡산", "추정", ["교룡산: 남원 진산(전북일보 등 공개 해설) + OSM 봉우리 35.43001,127.35236"]), (an_nw, "남쪽 안산(이름 미상)")),
+            ("운봉현 읍치", (jin_ub, "운봉 진산(이름 미상)", "가설", ["원칙: 읍치 북쪽 뒷산 — DEM 북쪽 최고점(문헌 미확인)"]), (an_ub, "운봉 안산(이름 미상)"))]:
+        c_ = NW_C if town.startswith("남원") else UB_C
+        dx_, dz_ = an[0] - jn[0], an[1] - jn[1]
+        axes.append(dict(town=town, center=dict(x=c_[0], z=c_[1]),
+                         jinsan=dict(name=jnn, x=jn[0], z=jn[1], confidence=jconf, source=jsrc),
+                         ansan=dict(name=ann, x=an[0], z=an[1], confidence="가설", source=["원칙: 읍치 남쪽 앞산 — DEM 남쪽 봉우리(문헌 미확인)"]),
+                         axis_ry=round(math.atan2(dx_, dz_), 3),
+                         note="axis_ry: 진산→안산 방향을 로컬 +z(정면)로 두는 Godot ry(라디안). 고증 참고용 — 게임성 우선."))
+    def add_fac(fid, name, kit, pos, conf, src, note, size):
+        if pos is None: return
+        new_lm.append(dict(id=fid, name=name, kit=kit, x=pos[0], z=pos[1], ry=0, confidence=conf, source=src, notes=note, size_m=size))
+    # 남원: 사직단 — 용정마을에 사직단(전북일보) → 용정동(35.4331,127.3823) 쪽, 성 북쪽 산기슭. 성황사 — '성황단길'(OSM, 성 서쪽) 근처
+    yj = xz(35.4331024, 127.3823458)
+    add_fac("namwon_sajikdan", "남원부 사직단", "landmark/sajikdan", site(yj[0], yj[1] + 60, 180, 0, 160, 0.2, 180), "추정",
+            ["전북일보: 용정마을에 (남원향교와 연관된) 사직단", "OSM 용정동 35.4331,127.3823"], "원칙(성 서쪽)과 달리 문헌·지명이 성 북쪽 용정동을 가리켜 그쪽에 둠. 단(壇)·담장 약 20×20m.", [20, 20])
+    add_fac("namwon_yeodan", "남원부 여단", "landmark/yeodan", site(NW_C[0], NW_C[1] - 93, 180, 60, 180, 0.2, 40), "가설",
+            ["원칙: 읍성 북쪽 교외(문헌 미확인)"], "여제단. 약 14×14m.", [14, 14])
+    sh = xz(35.40931, 127.36959)
+    add_fac("namwon_seonghwangsa", "남원 성황사(성황단)", "landmark/seonghwangsa", site(sh[0], sh[1], 270, 0, 120, 0.35, 180, "high"), "추정",
+            ["OSM 도로명 '성황단길'(35.40931,127.36959) — 성 서쪽 산기슭", "원칙: 진산(교룡산) 쪽 기슭"], "성황당 사당 약 10×8m + 마당. 지명 근거로 성 서쪽.", [16, 14])
+    # 운봉: 원칙대로
+    add_fac("unbong_sajikdan", "운봉현 사직단", "landmark/sajikdan", site(UB_C[0], UB_C[1], 270, 60, 180, 0.2, 45), "가설", ["원칙: 읍치 서쪽(문헌 미확인)"], "약 20×20m.", [20, 20])
+    add_fac("unbong_yeodan", "운봉현 여단", "landmark/yeodan", site(UB_C[0], UB_C[1], 180, 60, 180, 0.2, 45), "가설", ["원칙: 읍치 북쪽(문헌 미확인)"], "약 14×14m.", [14, 14])
+    add_fac("unbong_seonghwangsa", "운봉 성황사", "landmark/seonghwangsa", site(UB_C[0], UB_C[1], (math.degrees(math.atan2(jin_ub[0] - UB_C[0], jin_ub[1] - UB_C[1])) + 360) % 360, 80, 150, 0.25, 35, "high"), "가설",
+            ["원칙: 진산 기슭(문헌 미확인)"], "진산에서 읍치 쪽으로 내려온 완경사 기슭(읍치에서 80~150m). 약 16×14m.", [16, 14])
+    lms.extend(new_lm); L.update({l_["id"]: l_ for l_ in new_lm})
+    # 오솔길(산길): 가장 가까운 길에서 시설 앞(남쪽 10m)까지
+    for l_ in new_lm:
+        tgt = (l_["x"], l_["z"] + l_["size_m"][1] / 2 + 6)
+        best = None
+        for r_ in roads:
+            if r_["class"] == "산길": continue
+            p_ = np.asarray(r_["points"]); d_ = np.hypot(p_[:, 0] - tgt[0], p_[:, 1] - tgt[1]); k_ = int(np.argmin(d_))
+            if best is None or d_[k_] < best[0]: best = (d_[k_], tuple(p_[k_]), r_["id"])
+        pts = R.route(cost, [best[1], tgt]); pts, _ = R.fix_water_runs(pts, RI); pts = R.remove_loops(pts)
+        roads.append(dict(id=f"path_{l_['id']}", name=f"{l_['name']} 오솔길", **{"class": "산길"}, width_m=1.5,
+                          points=[[round(float(q[0]), 1), round(float(q[1]), 1)] for q in pts], confidence=l_["confidence"],
+                          source=["제향 시설 진입로(가설)"], notes=f"{best[2]}에서 갈라짐."))
+        say("fac", l_["id"], l_["x"], l_["z"], "path", len(pts))
+
     # ── 도강점: 도로×하천 교차 전부
     crossings = []
     hits = []
@@ -511,6 +593,7 @@ def main():
                  "한국관광공사 '황산대첩비지'", "대동여지도 해당 첩(디지타이징 대기)", "읍지(용성지 등, 검수 필요)"],
         projection=dict(lat0=C.LAT0, lon0=C.LON0, K=C.K, y_base_alt=C.Y_BASE_ALT,
                         formula="x=(lon-lon0)*cos(lat0)*111320*K, z=-(lat-lat0)*110574*K, y=(alt-60)*K"),
+        axes=axes,
         height=hm, landuse=lum, rivers=rivers, roads=roads, passes=passes,
         crossings=crossings, settlements=sets, landmarks=lms,
         spawn=dict(x=sx, z=sz, note=P.SPAWN_NOTE),

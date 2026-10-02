@@ -243,18 +243,16 @@ def place_landmarks(P, R, rng):
         P.keepout("문안광장", gx, gz, w, d)
     P.keepout("남문밖광장", CX, CZ + HALF + 20, 18, 12)
 
-    # 관아 일곽
-    gx, gz = CX + 44.0, CZ - 44.5
-    P.add("nw_gwana", "landmark/gwana", {"seed": 1871, "width": 60, "depth": 72}, gx, gz, 0.0,
-          rects=[(0, 0, 62, 78)], tris=34536, group="남원도호부 관아", kind="landmark", footprint=(62, 78),
-          note="동헌·내아·내외삼문 일곽. 위치 가설(성 안 동북). 외삼문 (−3183.8, 240.5)에 관아 앞길이 닿는다")
-    # 객사 용성관
-    kx = CX - 44.0
-    wall_z0, wall_z1 = CZ - 50.0, CZ - 6.0
-    kw = 72.0          # 객사 67.2m(익헌 각 6칸, kit-landmark 고증) + 양옆 2.4m
-    P.add("nw_gaeksa", "landmark/gaeksa", {"seed": 1872, "jeongdang_bays": 5}, kx, CZ - 38.8, 0.0,
+    # ── 성 안 T자 짜임(terrain-data §13 뒤): 남문→네거리→객사 삼문 앞(z 238)에서 남북길이 끝나고,
+    #    북문길은 객사 북쪽(z 176)을 돌아 동쪽(x −3185.8)으로 내려와 동서길에 닿는다.
+    # 객사 용성관: 남북 중심축 정면, 남문을 바라봄
+    kx = CX
+    wall_z1 = 236.0                 # 앞 담(삼문) — 남북길 끝(238) 바로 뒤
+    wall_z0 = 186.0                 # 뒤 담 — 북문길(176, 반폭 2) 남쪽 8m
+    kw = 72.0                       # 객사 67.2m(익헌 각 6칸) + 양옆 2.4m
+    P.add("nw_gaeksa", "landmark/gaeksa", {"seed": 1872, "jeongdang_bays": 5}, kx, wall_z0 + 10.0, 0.0,
           rects=[(0, 0, 67.2, 14)], tris=13880, group="객사 용성관", kind="landmark", footprint=(67.2, 14),
-          note="용성관: 정당 5칸 + 익헌 각 6칸(67.2m, 디지털남원문화대전 고증). region.json yongseonggwan(−3271.8, 210)")
+          note="용성관: 정당 5칸 + 익헌 각 6칸(67.2m). 읍치 원칙대로 남북 중심축 정면에서 남문을 바라봄(region.json yongseonggwan −3227.8, 205)")
     P.add("nw_gaeksa_samun", "landmark/samun", {"seed": 1873, "kind": "outer", "name": "용성관"}, kx, wall_z1, 0.0,
           rects=[(0, 0, 11.0, 5.6)], tris=4290, group="객사 용성관", kind="landmark")
     walls = wall_pieces([(kx - kw / 2, wall_z0), (kx + kw / 2, wall_z0), (kx + kw / 2, wall_z1), (kx - kw / 2, wall_z1)],
@@ -263,8 +261,34 @@ def place_landmarks(P, R, rng):
         P.add("nw_gaeksa_wall_%02d" % i, "landmark/gwana_wall", w["params"], w["x"], w["z"], w["ry"],
               rects=[(0, 0, w["params"]["length"], 1.1)], tris=int(384 * w["params"]["length"] / 12), group="객사 용성관",
               kind="wall", flatten=False)
-    # 객사 담 안 마당(빈 채로)
-    P.keepout("객사마당", kx, (CZ - 31.8 + wall_z1) / 2, kw - 2, wall_z1 - (CZ - 31.8) - 2)
+    # 담 안 전체와 삼문 앞마당은 무엇도 들이지 않는다(가게채 채우기도 넘지 못하는 'yard')
+    P.add_shape(rect_corners(kx, (wall_z0 + wall_z1) / 2, kw - 1.2, wall_z1 - wall_z0 - 1.2, 0.0), "객사담안", "yard")
+    P.add_shape(rect_corners(kx, wall_z1 + 5.0, 22.0, 8.0, 0.0), "객사앞마당", "yard")
+
+    # 관아(동헌 일곽): 객사 동쪽 곁 — 북문길 동쪽 구간(x −3185.8) 동쪽·동서길 북쪽 블록(폭 41m).
+    # gwana 키트(최소 폭 50)가 안 들어가 조각 키트로 짠다: 외삼문 → 내삼문 → 동헌, 내아는 동헌 뒤(원칙)
+    gx0, gx1 = -3182.6, -3141.6
+    gz0, gz1 = 164.0, 239.5
+    gcx = (gx0 + gx1) / 2
+    gzi = gz1 - 20.0
+    G = "남원도호부 관아"
+    P.add("nw_gwana_oesammun", "landmark/samun", {"seed": 1871, "kind": "outer", "name": "남원부 관아"}, gcx, gz1, 0.0,
+          rects=[(0, 0, 11.0, 5.6)], tris=4290, group=G, kind="landmark")
+    P.add("nw_gwana_naesammun", "landmark/samun", {"seed": 1874, "kind": "inner"}, gcx, gzi, 0.0,
+          rects=[(0, 0, 11.0, 5.6)], tris=4290, group=G, kind="landmark")
+    P.add("nw_dongheon", "landmark/dongheon", {"seed": 1875, "bays": 7}, gcx, gzi - 16.0, 0.0,
+          rects=[(0, 0, 23.7, 10.6)], tris=6840, group=G, kind="landmark", footprint=(23.7, 10.6),
+          note="동헌 7칸 — 객사 동쪽 곁(원칙). 정확한 터는 가설(OSM '동헌길'은 성 안 남쪽을 가리킴, terrain-data 메모)")
+    P.add("nw_naea", "landmark/naea", {"seed": 1876, "wing": True}, gcx + 4.0, gz0 + 13.0, 0.0,
+          rects=[(0, 0, 15.7, 15.4)], tris=7738, group=G, kind="landmark", footprint=(15.7, 15.4), note="내아 — 동헌 뒤(원칙)")
+    gw = wall_pieces([(gx0, gz0), (gx1, gz0), (gx1, gz1), (gx0, gz1)], True, [(gcx, gz1, 4.8)], 1890, 2.4)
+    gw += wall_pieces([(gx0, gzi), (gx1, gzi)], False, [(gcx, gzi, 4.2)], 1920, 2.2)
+    for i, w in enumerate(gw):
+        P.add("nw_gwana_wall_%02d" % i, "landmark/gwana_wall", w["params"], w["x"], w["z"], w["ry"],
+              rects=[(0, 0, w["params"]["length"], 1.1)], tris=int(384 * w["params"]["length"] / 12), group=G,
+              kind="wall", flatten=False)
+    P.add_shape(rect_corners(gcx, (gz0 + gz1) / 2, gx1 - gx0 - 1.2, gz1 - gz0 - 1.2, 0.0), "관아담안", "yard")
+    P.add_shape(rect_corners(gcx, gz1 + 4.5, 18.0, 7.0, 0.0), "관아앞마당", "yard")
 
     # 광한루원
     lx, lz = -3271.4, 450.1
@@ -297,6 +321,28 @@ def place_landmarks(P, R, rng):
           rects=[(0, 0, hw + 2, hd + 6)], tris=19186, group="남원향교", kind="landmark", footprint=(hw + 2, hd + 6),
           note="가설 위치: 읍성 북쪽 광치천 건너 산기슭(region.json namwon_hyanggyo). 전묘후학, 남향")
     notes["hyanggyo"] = (round(hx, 1), round(hz, 1), "옮긴 거리 %.1f" % best[0])
+
+    # 읍치 제의 시설(terrain-data §13 landmarks 좌표 그대로): 사직단·여단·성황사(+신목 느티)
+    lm = {l["id"]: l for l in R.r["landmarks"]}
+    for (lid, kit, params, fp, note) in [
+        ("namwon_sajikdan", "landmark/sajikdan", {"seed": 1394, "dual": False}, (25.0, 25.0),
+         "남원부 사직단 — 문헌·지명(용정동) 근거로 성 북쪽. 주현은 사·직 한 단(社稷共壇)으로 보고 dual=false(가설)"),
+        ("namwon_yeodan", "landmark/yeodan", {"seed": 1395}, (19.0, 19.0), "남원부 여단 — 원칙: 읍성 북쪽 교외(가설)"),
+        ("namwon_seonghwangsa", "landmark/seonghwangsa", {"seed": 1396, "tree_stub": True}, (20.0, 18.0),
+         "남원 성황사 — 지명 '성황단길' 근거로 성 서쪽 기슭"),
+    ]:
+        l = lm.get(lid)
+        if not l:
+            continue
+        x, z = l["x"], l["z"]
+        P.add("nw_" + lid.replace("namwon_", ""), kit, params, x, z, 0.0, rects=[(0, 0, fp[0], fp[1])], tris=3000,
+              group="읍치 제의 시설", kind="landmark", footprint=fp, note=note)
+        if lid == "namwon_seonghwangsa":
+            tx, tz = x + 10.5, z + 1.0         # seonghwangsa.gd anchors.tree = (hw+3.5, 0, 1.0)
+            P.add("nw_seonghwangsa_sinmok", "nature/big_tree", {"seed": 1397, "variant": "zelkova"}, tx, tz, 0.0,
+                  rects=[(0, 0, 1.6, 1.6)], tris=1296, group="읍치 제의 시설", kind="prop", flatten=False,
+                  note="성황사 신목(느티) — anchors.tree 자리, 금줄 밑동(tree_stub)과 겹쳐 선다")
+        notes[lid] = (x, z)
     return notes
 
 
@@ -312,6 +358,9 @@ HOUSE = {
 # 단독 초가·기와는 마당·장독 자리까지 조금 넓게(겹침 검사용)
 APRON = {"choga": (1.6, 3.0), "choga_gourd": (1.6, 3.0), "giwa": (1.0, 3.0)}
 W_IN = {"large": 3, "medium": 4, "giwa": 3, "small": 2, "choga": 2}
+# 읍치 공간 원칙: 성 안 축 길(남북·동서 십자길) 양옆은 관아 부속·이속의 기와집, 서민 초가는 성 안 바깥쪽·성 밖으로
+W_IN_AXIS = {"giwa": 5, "large": 3, "medium": 1}
+W_IN_EDGE = {"choga": 4, "choga_gourd": 1, "small": 3}
 W_OUT = {"small": 5, "medium": 3, "large": 0.6, "choga": 3, "choga_gourd": 1, "giwa": 0.6}
 W_EDGE = {"small": 4, "choga": 4, "choga_gourd": 1, "medium": 1}
 
@@ -352,7 +401,10 @@ class Houses:
 
     def pick(self, x, z, edge=False):
         W, _ = self.weights(x, z)
-        if edge and not in_walls(x, z):
+        if in_walls(x, z, -2):
+            nw_block = x < CX - 36 and z < CZ - 4      # 옛 객사 자리(서북): 관아 부속·기와집
+            W = W_IN_AXIS if (min(abs(x - CX), abs(z - CZ)) < 24 or nw_block) else W_IN_EDGE
+        elif edge:
             W = W_EDGE
         return self.rng.choices(list(W.keys()), list(W.values()))[0]
 
@@ -388,7 +440,7 @@ class Houses:
                             t += 4.0; continue
                         south = nz > 0.5      # 길 남쪽(카메라 쪽) 집
                         if only:
-                            ty = self.rng.choice(only)
+                            ty = "giwa" if in_walls(x, z, -2) else self.rng.choice(only)
                         elif south and not in_walls(x, z):
                             ty = self.rng.choices(["choga", "choga_gourd", "small"], [3, 1, 2])[0]
                         else:
@@ -427,7 +479,7 @@ class Houses:
 
 def place_houses(P, R, rng):
     H = Houses(P, rng)
-    town_roads = {"namwon_eup_street", "namwon_eup_street_ew", "namwon_gaeksa_lane", "namwon_gwana_lane", "namwon_market_lane",
+    town_roads = {"namwon_eup_street", "namwon_eup_street_ew", "namwon_north_gate_street", "namwon_gaeksa_lane", "namwon_gwana_lane", "namwon_market_lane",
                   "namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_west_gate_lane"}
     H.frontage(town_roads)
     H.frontage(town_roads, step=0.5, only=["choga", "choga", "choga_gourd"])   # 둘째 판: 남은 길가 틈을 초가로
@@ -803,7 +855,7 @@ def place_fill(P, R, rng, houses):
                 break
 
     # 길가 돌담(wall_run stone_lite): 길 가장자리 1.2m 밖, 집 사이 빈 길가 8~22m 구간
-    town = {"namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_market_lane", "namwon_eup_street", "namwon_eup_street_ew"}
+    town = {"namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_market_lane", "namwon_eup_street", "namwon_eup_street_ew", "namwon_north_gate_street"}
     for rd in R.roads:
         if rd["id"] not in town:
             continue
@@ -894,7 +946,7 @@ def place_fill(P, R, rng, houses):
 
 
 # ─────────────────────────────── 통계 ───────────────────────────────
-SCREEN_KITS = HOUSE_KITS | {"village/jumak", "village/market_shop", "landmark/gwana", "landmark/gaeksa", "landmark/samun",
+SCREEN_KITS = HOUSE_KITS | {"village/jumak", "village/market_shop", "landmark/gwana", "landmark/gaeksa", "landmark/samun", "landmark/dongheon", "landmark/naea",
                              "landmark/gwanghallu", "landmark/hyanggyo"}
 
 
@@ -913,7 +965,7 @@ def screen_houses(P):
 def road_samples(P, R):
     """읍내(bbox) 안 길 위 10m 간격 표본"""
     out = []
-    town = {"namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_market_lane", "namwon_eup_street", "namwon_eup_street_ew"}
+    town = {"namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_market_lane", "namwon_eup_street", "namwon_eup_street_ew", "namwon_north_gate_street"}
     bx0, bz0, bx1, bz1 = TOWN_BBOX
     for rd in R.roads:
         if rd["id"] not in town: continue
@@ -976,7 +1028,7 @@ def fill_to_target(P, R, H, target=3, shops=False):
                     added["주막"] += 1; need -= 1
                     continue
             done = False
-            for ty in (() if shops else (("small", "choga") if not in_walls(x, z) else ("giwa", "choga"))):
+            for ty in (() if shops else (("small", "choga") if not in_walls(x, z) else (("giwa",) if min(abs(x - CX), abs(z - CZ)) < 24 else ("choga", "small")))):
                 w, d, _, _ = house_dims(ty)
                 if H.try_put(ty, x, z, 0.0, "화면 채우기", gap=0.7, road_min=1.0, lu_min=0.6, lu_ok=(6, 4, 1, 3)):
                     added["초가" if ty != "small" else "small"] += 1; need -= 1; done = True
@@ -1038,8 +1090,8 @@ def main():
 
     # 최종 검사: 겹침(파이썬 SAT). 같은 무리(읍성 조각끼리, 객사 담끼리, 담 토막끼리)는 뺀다
     bad = []
-    shp = [s for s in P.shapes if s[2] != "keepout"]
-    grp = lambda sid: "읍성" if sid.startswith("읍성") else ("객사담" if sid.startswith(("nw_gaeksa_wall", "nw_gaeksa_samun")) else sid)
+    shp = [s for s in P.shapes if s[2] not in ("keepout", "yard")]
+    grp = lambda sid: "읍성" if sid.startswith("읍성") else "성황사" if sid.startswith("nw_seonghwangsa") else "관아담" if sid.startswith(("nw_gwana_wall", "nw_gwana_oesammun", "nw_gwana_naesammun")) else ("객사담" if sid.startswith(("nw_gaeksa_wall", "nw_gaeksa_samun")) else sid)
     for i in range(len(shp)):
         for j in range(i + 1, len(shp)):
             a, b = shp[i], shp[j]

@@ -57,6 +57,10 @@ def choga_set(seed, rng=None, extra=None):
     return pcs
 
 
+def compound_set_civ(seed, size):
+    return EV.compound_set(seed, size)
+
+
 def compound(seed, size):
     return [P("village/house_compound", {"seed": seed, "size": size}, cat="house", kind="house_" + size)]
 
@@ -443,7 +447,7 @@ def extra_bridge(pl, T, river_id, x, z, group, gcode, kit="village/seop_bridge",
 
 # ---------------------------------------------------------------- 장소들
 def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square=True, pitch=18.0, max_drop=2.6,
-             limit=999, extra_ids=(), wells=1, cells=None, stats=None):
+             limit=999, extra_ids=(), wells=1, cells=None, stats=None, zone=None):
     """3단계 마을: 마을 터(landuse 6) 모양 그대로 줄 지어 채운다. 어귀 장승·솟대, 공동 마당(정자나무·평상), 우물."""
     reg = T.region
     s = next(x for x in reg["settlements"] if x["id"] == sid)
@@ -487,11 +491,11 @@ def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square
     for w in range(wells):
         pl.place_search(L, [P("village/well", {"seed": seed + w, "roof": (seed + w) % 2 == 0}, cat="prop", kind="well",
                               margin=1.2)], cx, cz, R * 0.6, group, gcode, rng, {"max_drop": 1.8}, face="none")
-    n = EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed, pitch=pitch, max_drop=max_drop, limit=limit, stats=stats)
+    n = EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed, pitch=pitch, max_drop=max_drop, limit=limit, stats=stats, zone=zone)
     if n < limit:
         # 둘째 줄 걸음: 반 칸 어긋난 줄로 빈 데를 메운다
         n += EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed + 1, pitch=pitch, max_drop=max_drop, limit=limit - n,
-                          stats=stats, phase=pitch / 2, gap=(1.2, 2.4))
+                          stats=stats, phase=pitch / 2, gap=(1.2, 2.4), zone=zone)
     pl.log.append(f"[village2] {group}({sid}) 마을 터 {len(cells) * 16}m² → 집터 {n}")
     return n
 
@@ -568,8 +572,36 @@ def build(pl, T):
     gw = [P("landmark/hyeon_gwana", {"seed": 7, "width": 36, "depth": 36, "naesammun": False}, cat="civic", kind="hyeon_gwana",
             label="운봉현 관아", footprint=[38.0, 42.0], aabb=[-19.0, 19.0, -19.0, 21.5]),
           P("reserve", {}, 0.0, 0.0, reserve=True, aabb=[-6.0, 6.0, 21.5, 30.0], margin=0.0, nocheck=True)]
-    pl.place_search(L, gw, ga["x"], ga["z"], 22, g, gc, rng, {"max_drop": 3.2, "road_min": 0.5}, ry_fixed=0.0, n=500,
-                    road_pref=(0.5, 10.0))
+    ax = next((a for a in reg.get("axes", []) if a["town"].startswith("운봉")), None)
+    axis_ry = clamp_ry(float(ax["axis_ry"])) if ax else 0.0
+    gwr = pl.place_search(L, gw, ga["x"], ga["z"], 22, g, gc, rng, {"max_drop": 3.2, "road_min": 0.5}, ry_fixed=axis_ry, n=500,
+                          road_pref=(0.5, 10.0))
+    gwx, gwz = (gwr[0]["x"], gwr[0]["z"]) if gwr else (ga["x"], ga["z"])
+    # 읍치 제향 시설(terrain-data §13): 사직단(서)·여단(북)·성황사(진산 기슭) — 집보다 먼저
+    for lid, kit, fp in [("unbong_sajikdan", "landmark/sajikdan", [25.0, 25.0]), ("unbong_yeodan", "landmark/yeodan", [19.0, 19.0]),
+                         ("unbong_seonghwangsa", "landmark/seonghwangsa", [20.0, 18.0])]:
+        if lid not in lm:
+            continue
+        lmk = lm[lid]
+        pcs_ = [P(kit, {"seed": 1}, cat="landmark", kind=kit.split("/")[1], label=lmk["name"], footprint=fp, road_min=0.3)]
+        if kit.endswith("seonghwangsa"):
+            anc_ = pl.bounds.get(bkey(kit, {"seed": 1}), {}).get("anchors", {}).get("tree")
+            if anc_:
+                pcs_.append(P("nature/big_tree", {"seed": 21, "variant": "zelkova"}, anc_[0], anc_[2], cat="prop", kind="sinmok",
+                              aabb=[-1.2, 1.2, -1.2, 1.2], flatten=False, nocheck=True, tree=True))
+        r_ = pl.place_search(Local(T, lmk["x"], lmk["z"], 120), pcs_, lmk["x"], lmk["z"], 30, g, gc, rng, {"max_drop": 3.0},
+                             ry_fixed=axis_ry, n=400, road_pref=(0.3, 30.0))
+        if not r_ and kit.endswith("seonghwangsa"):
+            # 신목이 카메라 통로에 걸리면 밑동(tree_stub)만
+            pl.place_search(Local(T, lmk["x"], lmk["z"], 120), pcs_[:1], lmk["x"], lmk["z"], 14, g, gc, rng, {"max_drop": 3.0},
+                            ry_fixed=axis_ry, n=400, road_pref=(0.3, 30.0))
+    # 관아 앞 길가: 관속(아전) 기와집
+    ust_ = T.road("unbong_eup_street")
+    s_g, _ = polyline_project(ust_["points"], gwx, gwz + 21)
+    for k_, ds_ in enumerate((10, 24, 38, 52, 66, 80)):
+        x_, z_, d_ = polyline_at(ust_["points"], s_g + ds_)
+        pl.place_search(L, compound_set_civ(330 + k_, "large" if k_ % 2 == 0 else "medium"), x_, z_, 18, g, gc, rng,
+                        {"max_drop": 2.6}, road_pref=(1.0, 6.0), n=300)
     # 운봉장: 읍내길 따라 가가·좌판 + 장마당 줄
     ust = T.road("unbong_eup_street")
     s_j, _ = polyline_project(ust["points"], st["unbong_jang"]["x"], st["unbong_jang"]["z"])
@@ -578,7 +610,8 @@ def build(pl, T):
     jc = EV.cells_of(T, st["unbong_jang"], reg["settlements"])
     EV.fill_rows(pl, T, Lm, jc, g, gc, "market", 331, pitch=8.5, gap=(1.0, 2.0), max_drop=1.8, limit=14, stats=stats)
     village2(pl, T, "unbong_eup", g, gc, "eup", 303, road="tongyeong_byeolro",
-             toward=[(1050, -960), (1000, -850), (980, -700), (650, -800)], wells=3, extra_ids=("unbong_jang",), stats=stats)
+             toward=[(1050, -960), (1000, -850), (980, -700), (650, -800)], wells=3, extra_ids=("unbong_jang",), stats=stats,
+             zone=(gwx, gwz + 40, 70.0, "gwan"))
     # 장마당 칸에 남은 자리도 집으로
     EV.fill_rows(pl, T, Lm, jc, g, gc, "eup", 332, max_drop=2.6, stats=stats)
     # 다듬기: 마을 터 둘레 20m 안 풀밭·밭 칸도 텃밭·일거리·작은 집터로 메운다(가운데 빈 곳)
@@ -771,7 +804,7 @@ def verify(pl):
                 if ("wall" in cats and len(cats) == 1):
                     continue
                 if ia["kit"] == "nature/big_tree" or ib["kit"] == "nature/big_tree":
-                    if "seonghwangdang" in (ia["kit"] + ib["kit"]):
+                    if "seonghwang" in (ia["kit"] + ib["kit"]):
                         continue
                 bad.append((ia["id"], ib["id"]))
     return bad

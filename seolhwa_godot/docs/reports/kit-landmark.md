@@ -172,3 +172,15 @@ catalog.json과 contact_sheet.png도 갱신했다(24항목).
 | `landmark/namwon_eupseong` | 220×220 (side 190) | **288×288 (side 258)** |
 | `landmark/gaeksa` | 47×14 | **67.2×14** |
 | `landmark/maaebul_rock` | 8×6.5 | **9×6.5** |
+
+## 8. 읍치 제향 시설 (사직단·여단·성황사)
+
+| 키트 | 내용 | 삼각형 | footprint |
+|---|---|---|---|
+| `sajikdan` | 네모 토단(돌 가장자리·사방 계단) + 위패 돌상 + 낮은 담 24×24 + 홍살문(+z). `dual`이면 사단·직단 둘, `jaesil`이면 담 밖 서남쪽에 재실 | 3,632 (재실 5,740) | 25×25 (재실 44×25) |
+| `yeodan` | 낮은 토단 + 계단 + 신위 돌상 + 담 18×18 + 홍살문, 둘레 흩어진 돌 | 3,100 | 19×19 |
+| `seonghwangsa` | 정면 1칸 맞배 사당 + 담 14×13(앞 협문) + 담 앞 홍살문. `anchors.tree` = 담 동쪽 신목 자리(`tree_stub`이면 금줄 두른 밑동) | 3,974 | 20×18 |
+
+- 공용 도구를 `_common.gd`에 더했다: `hongsal_gate()`(붉은 기둥 둘·가로대·살대·태극판), `low_wall_loop()`(낮은 담 + 틈 + 충돌체).
+- 미리보기: `shots/kit/landmark/sajikdan.png`, `sajikdan_jaesil.png`, `yeodan.png`, `seonghwangsa.png`
+- 고증은 조선 주현 일반형(『국조오례의』 참고)을 따랐고 치수·형식은 모두 가설이다. 실제 사직단은 북쪽 신문이 정문이지만, 카메라가 남쪽에서 보므로 홍살문을 남쪽에 두었다.

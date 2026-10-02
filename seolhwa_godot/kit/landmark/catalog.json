@@ -503,6 +503,71 @@
    ],
    "hypothesis": "바위 크기·부조 두께, 1870 보호각 유무",
    "shot": "shots/kit/landmark/maaebul_rock.png"
+  },
+  {
+   "name": "sajikdan",
+   "file": "res://kit/landmark/sajikdan.gd",
+   "desc": "사직단: 네모 토단(돌 가장자리, 사방 계단) + 위패 돌상 + 낮은 담(유, 24×24) + 홍살문(+z). dual=true면 사단·직단 둘, jaesil=true면 담 밖 서남 재실",
+   "params": {
+    "seed": 1,
+    "dual": false,
+    "jaesil": false
+   },
+   "footprint": [
+    25.0,
+    25.0
+   ],
+   "footprint_jaesil": [
+    44.0,
+    25.0
+   ],
+   "tris": 3632,
+   "tris_jaesil": 5740,
+   "composite": false,
+   "sources": [
+    "『국조오례의』 주현 사직(참고, 빠른 고증)"
+   ],
+   "hypothesis": "치수 전부, 홍살문 방향(실제는 북문이 정문 — 게임 편의상 남)",
+   "shot": "shots/kit/landmark/sajikdan.png"
+  },
+  {
+   "name": "yeodan",
+   "file": "res://kit/landmark/yeodan.gd",
+   "desc": "여단: 낮은 토단 + 앞 계단 + 신위 돌상 + 낮은 담(18×18) + 홍살문, 둘레 흩어진 돌",
+   "params": {
+    "seed": 1
+   },
+   "footprint": [
+    19.0,
+    19.0
+   ],
+   "tris": 3100,
+   "composite": false,
+   "sources": [
+    "조선 주현 여단 일반(참고)"
+   ],
+   "hypothesis": "치수 전부",
+   "shot": "shots/kit/landmark/yeodan.png"
+  },
+  {
+   "name": "seonghwangsa",
+   "file": "res://kit/landmark/seonghwangsa.gd",
+   "desc": "성황사: 정면 1칸 맞배 사당 + 낮은 담(14×13, 앞 협문 틈) + 담 앞 홍살문 + 신목 자리 anchors.tree(동쪽, tree_stub=true면 금줄 두른 밑동)",
+   "params": {
+    "seed": 1,
+    "tree_stub": true
+   },
+   "footprint": [
+    20.0,
+    18.0
+   ],
+   "tris": 3974,
+   "composite": false,
+   "sources": [
+    "조선 읍치 성황사 일반(참고)"
+   ],
+   "hypothesis": "규모·형식 전부",
+   "shot": "shots/kit/landmark/seonghwangsa.png"
   }
  ]
 }
