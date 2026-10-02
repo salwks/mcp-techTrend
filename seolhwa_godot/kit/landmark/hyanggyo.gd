@@ -29,5 +29,5 @@ static func build(params: Dictionary) -> Dictionary:
 	r.anchors.myeongnyundang = Vector3(0, i2.F, -D / 2 + 9.0)
 	r.occluder = true
 	r.footprint = Vector2(W + 2, D + 6)
-	r.pieces = pieces
+	# pieces를 돌려주지 않는다: 대성전·명륜당이 조각 목록 밖(모델 안)에 있어, 로더가 조각만 놓으면 두 건물이 빠진다
 	return r
