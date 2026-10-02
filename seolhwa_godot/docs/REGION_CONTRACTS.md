@@ -1,0 +1,95 @@
+# 권역 제작 계약서 — JL_NAMWON_UNBONG (남원·운봉·지리산 서부)
+
+월드 개발계획서 v1.1(`seolhwa/docs/WORLD_DEV_PLAN.md`) W2~W3의 첫 권역. 여러 에이전트가 동시에 만든다.
+**모든 에이전트는 이 문서와 계획서 §2·§3·§32·§33을 먼저 읽는다.** 명세서 원칙: 조선을 그리지 말고 조선이 생겨날 수밖에 없는 땅을 먼저 만든다.
+
+시대: 1870년 전후 조선 후기. 근대·현대 요소(전봇대, 아스팔트, 콘크리트, 직강 제방, 댐 호수, 철도, 유리창) 금지.
+
+## 1. 좌표와 축척
+
+| 항목 | 값 |
+|---|---|
+| 실제 범위(초안) | 위도 35.355–35.480, 경도 127.340–127.660 (지형 담당이 랜드마크가 다 들어가게 조정 가능, 조정하면 이 표를 고친다) |
+| 투영 | 기준점 lat0=35.4175, lon0=127.50 중심의 등장방형: `east_m = (lon-lon0)·cos(lat0)·111320`, `north_m = (lat-lat0)·110574` |
+| 압축 | **K = 0.30** (가로·세로·높이 모두 같은 비율 → 경사는 실제와 같다) |
+| 게임 좌표 | 1단위 = 1m. `x = east_m·K`(동쪽 +), `z = -north_m·K`(남쪽 +, 카메라 쪽), `y = (고도m − 60)·K` |
+| 게임 범위 | 약 x −4350…+4350, z −2100…+2100 (약 8.7×4.2km) |
+| 타일 | 256m × 256m, 타일 (tx, tz)의 원점 = (tx·256, tz·256) — 계획서 §2.2 |
+| 건물·캐릭터·식생 | **실물 크기(압축하지 않음)**. 마을 배치 간격만 압축된 땅에 맞춘다 |
+
+카메라는 남쪽(+z)에서 북쪽(−z)을 내려다보고 회전하지 않는다(yaw 고정, pitch 27~50°, 거리 15~23m, fov 30). 건물 북쪽 면은 보이지 않으므로 단순하게 해도 된다(무대 세트 원칙). 한국 전통 건물은 대개 남향이라 잘 맞는다.
+
+## 2. 파일 소유권 (자기 칸 밖의 파일은 고치지 않는다 — 필요하면 보고서에 요청)
+
+| 경로 | 담당 |
+|---|---|
+| `tools/region/**`, `region_data/JL_NAMWON_UNBONG/**`, `shots/region_data/**` | **terrain-data** (실측 DEM·고증·수계·도로·토지이용 파이프라인, Python) |
+| `scripts/region/**`, `scenes/region.tscn`, `shaders/region_*`, `shots/region/**` | **terrain-engine** (Godot 지형 메시·타일 스트리밍·물·원경·권역 실행 장면) |
+| `kit/village/**`, `shots/kit/village/**` | **kit-village** (민가·마을 소품·다리·주막·장터) |
+| `kit/landmark/**`, `shots/kit/landmark/**` | **kit-landmark** (남원읍성·관아·객사·광한루·실상사·비각) |
+| `kit/nature/**`, `shots/kit/nature/**` | **kit-nature** (나무·풀·바위·벼랑·여울 + 타일별 식생 흩뿌리기) |
+| `scripts/kit/kit.gd`, `scripts/kit/kit_preview.gd`, `scripts/materials.gd`, `scripts/main.gd` 등 기존 파일, 이 문서 | 총괄 |
+
+- `class_name`을 새로 만들지 않는다(전역 클래스 등록이 겹친다). 같은 칸 안의 공용 코드는 `preload("res://kit/village/_common.gd")`처럼 불러 쓴다.
+- `godot --import`는 돌리지 않는다(총괄이 한다). git 커밋도 하지 않는다(총괄이 통합할 때 한다).
+- 웹 원본 코드: `../seolhwa/src/world/` (buildings.js, vegetation.js, terrain.js, materials.js, util.js) — 옮길 때 참고.
+
+## 3. 공용 모델링 도구 `Kit` (`scripts/kit/kit.gd`)
+
+웹 util.js를 옮긴 것. 좌표는 three.js 규칙(반시계 앞면, v 위가 1)으로 만들고 `Batch`가 Godot 규칙으로 바꾼다.
+- 도형: `Kit.box(w,h,d, x,y,z, ry)`, `Kit.cyl(rt,rb,h,seg, x,y,z, rx,ry,rz)`, `Kit.cone`, `Kit.limb(a,b,r0,r1)`, `Kit.lump(r,detail,rng,rough,sy)`, `Kit.icosphere`, `Kit.plane`, `Kit.extrude(poly2d,h,y0)`, 직접 만들 땐 `Kit.Geo.new()`의 `tri()/quad()`
+- 변환·색: `Kit.xf(g, x,y,z, rx,ry,rz, sx,sy,sz)`, `Kit.apply(g, Transform3D)`, `Kit.paint(g, top, bottom, jitter, rng)` — 색은 `Kit.hex(0xRRGGBB)`(sRGB 16진 → 선형)
+- 난수: `Kit.Rng.new(seed).next()` / `.between(a,b)` (웹 rng와 같은 수열), 잡음 `Kit.vnoise/fbm/hash2`
+- 묶기: `var b := Kit.Batch.new(); b.add(key, geo, outline=0.03); var node := b.build(name)` — 키 → 붓 텍스처: `thatch tile makse rock mud paper(창호지 띠살) needle leaf bark wood stone cloth(양면) lamp/glow(밤에 빛남) flat smooth organic onggi`(무늬 없음). 먹선 두께 0이면 생략.
+- 밤에 빛나는 것: `paper`·`lamp` 키는 아틀라스 마스크로 밤에 창호지·초롱이 빛난다(전역 `glow_k`).
+- 미리보기: `godot --path seolhwa_godot res://scenes/kit_preview.tscn -- --kit=res://kit/<칸>/<이름>.gd --params='{"seed":3}' --shot=shots/kit/<칸>/<이름>.png [--time=18.3] [--pitch=38] [--yaw=20] [--dist=30] [--nofog]` — 게임과 같은 조명·후처리. `PREVIEW ... tris=` 로 삼각형 수가 찍힌다.
+
+## 4. 키트(모델) 계약
+
+각 모델은 `kit/<칸>/<이름>.gd` 하나, `extends RefCounted`, 다음 함수 하나:
+```gdscript
+static func build(params: Dictionary) -> Dictionary
+# 반환:
+# {
+#   node: Node3D,             # 원점 = 바닥 중심. 정면(대문·마루)이 +z(남쪽, 카메라 쪽)를 향한다
+#   colliders: [ {type:"circle", x, z, r} | {type:"box", minX, maxX, minZ, maxZ} ],  # 로컬 좌표, 통과 불가
+#   lights: [ {x, y, z, kind:"lantern"|"window"|"torch"|"shrine"} ],               # 밤 조명 자리
+#   occluder: bool,           # 플레이어를 가릴 만큼 크면 true (코어가 반투명 처리)
+#   footprint: Vector2,       # 차지하는 x·z 크기(m) — 배치 겹침 검사용
+#   anchors: { 이름: Vector3 },  # 문·마루·우물가 등 사건·NPC가 쓸 자리(선택)
+#   interior: { minX, maxX, minZ, maxZ, camera:{pitch,distance}, hide:[Node3D] }  # 들어갈 수 있으면(선택)
+# }
+```
+- `params`: 최소 `seed`(int). 크기·변형은 각자 정하고 `kit/<칸>/catalog.json`에 목록(이름, 설명, params 예, footprint, 삼각형 수)을 남긴다.
+- 성능 예산(먹선 포함 삼각형): 큰 건물 ≤ 15,000 / 민가 ≤ 6,000 / 소품 ≤ 800 / 나무 ≤ 1,500(LOD용 `params.lod=1`이면 ≤ 300) / 풀·작은 돌 ≤ 120. 같은 모델을 수백 번 놓을 식생은 `node` 대신 `mesh: ArrayMesh`도 함께 돌려주면 MultiMesh로 찍는다(`Batch.mesh()`).
+- 화풍: 웹 CONTRACTS §2 — 낮은 폴리곤 + 부드러운 버텍스 색 그라데이션 + 먹선 + 채도 낮은 자연색(오방색 절제). 사실주의 텍스처 금지. 웹 마을(`data/ref/ref_*.png`, 원본 seolhwa/src/world)과 나란히 놓아도 어색하지 않아야 한다.
+- 고증: 1870년 전후 조선 후기 기준. 확실하지 않으면 보고서에 "가설"로 적는다.
+
+## 5. 권역 데이터 (`region_data/JL_NAMWON_UNBONG/`, terrain-data가 만들고 terrain-engine이 읽는다)
+
+| 파일 | 내용 |
+|---|---|
+| `region.json` | 계획서 §8 양식(region_id, main_river, …, status, sources) + 아래 목록. 좌표는 모두 **게임 좌표(m)** |
+| `height.png` | 16비트 회색조 높이맵. `region.json.height = {file, x0, z0, cell, w, h, y_min, y_max}` — 픽셀 (i,j) 중심이 게임 좌표 (x0+i·cell, z0+j·cell), 값 v → y = y_min + v/65535·(y_max−y_min). cell ≤ 2m 권장 |
+| `landuse.png` | 8비트 인덱스(같은 격자 또는 2배 거친 격자, `region.json.landuse`에 메타): 0 숲, 1 풀밭·초지, 2 논, 3 밭, 4 길·맨땅, 5 물, 6 마을 터, 7 바위·벼랑, 8 모래톱·자갈, 9 대숲 |
+| `region.json.rivers` | `[{id, name, grade:"S|A|B|C|D", width_m(게임), points:[[x,z,y수면],…], flows_to}]` 상류→하류 |
+| `region.json.roads` | `[{id, name, class:"대로|지선|마을길|산길", width_m, points:[[x,z],…]}]` |
+| `region.json.passes` / `crossings` | 고개 `{id,name,x,z,y}` / 나루·여울·다리 `{id,type,river_id,road_id,x,z}` |
+| `region.json.settlements` | `[{id, name, type:"읍성|마을|역|원|주막|사찰|성황당|장시", x, z, radius_m, size, notes, confidence}]` |
+| `region.json.landmarks` | `[{id, name, kit:"landmark/…", x, z, ry, confidence, source}]` (광한루, 남원읍성, 용성관, 실상사, 황산대첩비 등) |
+| `region.json.spawn` | 플레이어 시작점 `{x, z}` (남원읍성 남문 앞 권장) |
+
+## 6. 지형 엔진 계약 (`scripts/region/region_world.gd`, terrain-engine)
+
+기존 `scripts/world.gd`(World)와 **같은 이름의 필드·함수**를 제공해 기존 코드(카메라·가림 처리·이동)를 그대로 쓸 수 있게 한다:
+`height_at(x,z)`, `blocked(x,z,r)`, `move_circle(pos,dx,dz,r,extra)`, `interior_at(x,z)`, `camera_zones`, `interiors`, `occluders`, `lights`, `npcs`, `spawn`, `update(dt,time)`.
+추가: `landuse_at(x,z) -> int`, `focus(pos: Vector3)`(스트리밍 중심 갱신), `add_static(node: Node3D, world_xform: Transform3D, info: Dictionary)`(키트 build() 결과를 놓고 충돌체·조명·가림을 등록 — 타일 단위로 붙였다 뗀다).
+식생은 kit-nature의 `kit/nature/scatter.gd`를 타일마다 부른다:
+```gdscript
+static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int) -> Dictionary
+# 반환 { nodes: [Node3D…(MultiMeshInstance3D 권장, 좌표는 월드)], colliders: [ {type:"circle", x, z, r} ] }  # 월드 좌표
+```
+
+## 7. 보고서
+
+각 에이전트는 끝나면 `docs/reports/<담당>.md`에 남긴다: 만든 것, 미리보기 스크린샷 경로, 삼각형 수·성능, 고증 근거와 "가설" 목록, 총괄에게 요청할 것. 최종 응답은 이 보고서 요약.
