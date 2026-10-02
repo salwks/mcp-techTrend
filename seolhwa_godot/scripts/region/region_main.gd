@@ -190,7 +190,7 @@ func _build_scene() -> void:
 	cam.current = true
 
 	world = RegionWorld.new()
-	world.markers = not args.has("nomarkers")
+	world.markers = args.has("markers") # 임시 위치 표지(이름표 달린 기둥)는 개발 확인용 — 기본 끔
 	world.use_scatter = not args.has("noscatter")
 	world.split_scatter = not args.has("nosplit")
 	root.add_child(world)
@@ -403,7 +403,14 @@ static func _seg_hits_mesh(occ: Dictionary, a: Vector3, b: Vector3) -> bool:
 	return false
 
 # ---- 루프 ----
+var _title: CanvasLayer = null
+
 func _process(delta: float) -> void:
+	if _title == null and world and not world.region.is_empty():
+		_title = preload("res://scripts/region/place_title.gd").new()
+		add_child(_title)
+		_title.setup(world.region)
+	if _title: _title.update(minf(delta, 0.05), player_pos)
 	var dt := minf(0.05, delta)
 	clock += dt
 	if Input.is_action_just_pressed("time_step"):
@@ -506,7 +513,8 @@ func _wait_frames(n: int) -> void:
 	for i in n: await RenderingServer.frame_post_draw
 
 func _save(path: String) -> void:
-	var img := scene_vp.get_texture().get_image()
+	# --winshot: 창에 실제로 보이는 화면(지명 표시 등 2D 포함)
+	var img := (get_viewport() if args.has("winshot") else scene_vp).get_texture().get_image()
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	img.save_png(path)
 	print("SHOT ", path, " ", img.get_size(), " cam=%.1f/%.0f %s" % [rig.cur.distance, rig.cur.pitch, rig.zone_name], " pos=", player_pos, " lu=", world.landuse_at(player_pos.x, player_pos.z), " fps=", Engine.get_frames_per_second())
