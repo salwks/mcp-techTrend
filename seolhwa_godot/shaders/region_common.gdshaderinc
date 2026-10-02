@@ -24,10 +24,14 @@ float r_hdata(vec2 xz) {
 	float a = r_hraw(i), b = r_hraw(i + ivec2(1, 0)), c = r_hraw(i + ivec2(0, 1)), d = r_hraw(i + ivec2(1, 1));
 	return mix(mix(a, b, t.x), mix(c, d, t.x), t.y);
 }
-int r_lu(ivec2 p) {
+// 토지이용 바이트: 아래 7비트 = 분류, 128 비트 = 배치 로더가 터를 고른 땅(잡음 디테일 0)
+int r_lu_raw(ivec2 p) {
 	p = clamp(p, ivec2(0), lu_size - 1);
 	return int(round(texelFetch(lumap, p, 0).r * 255.0));
 }
+// 고른 터는 마당(6)으로 칠한다(길·물은 그대로)
+int r_lu(ivec2 p) { int v = r_lu_raw(p); int c = v & 127; return (v >= 128 && c != 4 && c != 5) ? 6 : c; }
+float r_lu_det(ivec2 p) { int v = r_lu_raw(p); return v >= 128 ? 0.0 : LU_DETAIL[v]; }
 float r_hash(ivec2 p) {
 	uint h = uint(p.x) * 374761393u + uint(p.y) * 668265263u;
 	h = (h ^ (h >> 13u)) * 1274126177u;
@@ -47,8 +51,8 @@ float r_detail_mask(vec2 xz) {
 	f = clamp(f, vec2(0.0), vec2(lu_size - 1) - 0.001);
 	ivec2 i = ivec2(floor(f));
 	vec2 t = f - vec2(i);
-	float a = LU_DETAIL[r_lu(i)], b = LU_DETAIL[r_lu(i + ivec2(1, 0))];
-	float c = LU_DETAIL[r_lu(i + ivec2(0, 1))], d = LU_DETAIL[r_lu(i + ivec2(1, 1))];
+	float a = r_lu_det(i), b = r_lu_det(i + ivec2(1, 0));
+	float c = r_lu_det(i + ivec2(0, 1)), d = r_lu_det(i + ivec2(1, 1));
 	return mix(mix(a, b, t.x), mix(c, d, t.x), t.y);
 }
 float r_detail(vec2 xz) {

@@ -24,7 +24,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var ol := 0.0 if lod else 1.0
 	var base := Vector3(0, -0.2, 0)
 	var fork := Vector3((r.next() - 0.5) * 0.6, hgt * 0.38, (r.next() - 0.5) * 0.3)
-	b.add("bark", Kit.paint(Kit.limb(base, fork, tr, tr * 0.72, 6 if lod else 8), C.c("#6a5a48"), C.c("#4a3e32"), 0.05, r), 0.03 * ol)
+	b.add("bark", Kit.paint(C.limb_open(base, fork, tr, tr * 0.72, 6 if lod else 8), C.c("#6a5a48"), C.c("#4a3e32"), 0.05, r), 0.03 * ol)
 	if not lod: b.add("bark", Kit.paint(Kit.cyl(tr * 0.9, tr * 1.6, 0.5, 8, 0, 0.05, 0), C.c("#5a4c3e"), C.c("#44392e"), 0.05, r), 0.03)
 	var tips := []
 	var nb := int(o.branches)
@@ -32,7 +32,7 @@ static func build(params: Dictionary) -> Dictionary:
 	for i in nb:
 		var a := TAU * i / nb + r.next() * 0.6
 		var tip := Vector3(cos(a) * spread * (0.5 + r.next() * 0.3), hgt * (0.7 + r.next() * 0.2), sin(a) * spread * 0.5 * (0.5 + r.next() * 0.3))
-		b.add("bark", Kit.paint(Kit.limb(fork, tip, tr * 0.6, tr * 0.22, 4 if lod else 6), C.c("#6a5a48"), C.c("#4a3e32"), 0.05, r), 0.025 * ol)
+		b.add("bark", Kit.paint(C.limb_open(fork, tip, tr * 0.6, tr * 0.22, 4 if lod else 6), C.c("#6a5a48"), C.c("#4a3e32"), 0.05, r), 0.025 * ol)
 		tips.append(tip)
 	var cols := [{ type = "circle", x = 0.0, z = 0.0, r = tr + 0.15 }]
 	var fp := Vector2(spread * 2.2, spread * 1.4)

@@ -26,21 +26,21 @@ static func build(params: Dictionary) -> Dictionary:
 	var p0 := Vector3(0, -0.3, 0)
 	var p1 := Vector3((r.next() - 0.5) * K.twist * s, h * 0.28, (r.next() - 0.5) * 0.3 * s)
 	var fork := Vector3(p1.x + (r.next() - 0.5) * K.twist * s, h * 0.4, p1.z + (r.next() - 0.5) * 0.3 * s)
-	b.add("bark", Kit.paint(Kit.limb(p0, p1, tr, tr * 0.85, 5 if lod else 7), C.c(bark[0]), C.c(bark[1]), 0.05, r), 0.025 * s * ol)
-	b.add("bark", Kit.paint(Kit.limb(p1, fork, tr * 0.85, tr * 0.68, 5 if lod else 7), C.c(bark[0]), C.c(bark[1]), 0.05, r), 0.022 * s * ol)
-	var nb := 2 if lod else 4
+	b.add("bark", Kit.paint(C.limb_open(p0, p1, tr, tr * 0.85, 5 if lod else 6), C.c(bark[0]), C.c(bark[1]), 0.05, r), 0.025 * s * ol)
+	b.add("bark", Kit.paint(C.limb_open(p1, fork, tr * 0.85, tr * 0.68, 5 if lod else 6), C.c(bark[0]), C.c(bark[1]), 0.05, r), 0.022 * s * ol)
+	var nb := 2 if lod else 3
 	var tips := []
 	for i in nb:
 		var a := TAU * i / nb + r.next() * 0.9
 		var tip := Vector3(fork.x + cos(a) * sp * (0.45 + r.next() * 0.25), h * (0.6 + r.next() * 0.14), fork.z + sin(a) * sp * 0.4 * (0.5 + r.next() * 0.4))
-		b.add("bark", Kit.paint(Kit.limb(fork, tip, tr * 0.55, tr * 0.2, 4 if lod else 5), C.c(bark[0]), C.c(bark[1]), 0.05, r), 0.018 * s * ol)
+		b.add("bark", Kit.paint(C.limb_open(fork, tip, tr * 0.55, tr * 0.2, 4 if lod else 5), C.c(bark[0]), C.c(bark[1]), 0.05, r), 0.018 * s * ol)
 		tips.append(tip)
 	# 잎덩이: 꼭대기 하나 + 가지 끝마다 + (가까이선) 사이를 메우는 작은 덩이. 납작(sy)하게 겹쳐 층을 낸다
 	var leaf: Array = K.leaf
 	var blobs := [[fork.x, h * 0.86, fork.z, sp * 0.6, 1]]
-	for t in tips: blobs.append([t.x, t.y + 0.25 * s, t.z, sp * (0.44 + r.next() * 0.1), 1])
+	for t in tips: blobs.append([t.x, t.y + 0.25 * s, t.z, sp * (0.48 + r.next() * 0.1), 1])
 	if not lod:
-		for i in 4:
+		for i in 1:
 			var a := r.next() * TAU
 			blobs.append([fork.x + cos(a) * sp * 0.55, h * (0.62 + r.next() * 0.3), fork.z + sin(a) * sp * 0.35, sp * (0.3 + r.next() * 0.08), 0])
 	var dots := 0
@@ -48,10 +48,11 @@ static func build(params: Dictionary) -> Dictionary:
 		var x: float = bl[0]; var y: float = bl[1]; var z: float = bl[2]; var rad: float = bl[3]
 		var c: Array = C.pick(leaf, r)
 		var det := 0 if lod else int(bl[4])
-		b.add("leaf", Kit.paint(Kit.xf(Kit.lump(rad, det, r, 0.2, 0.58), x, y, z), C.c(c[0]), C.c(c[1]), 0.05, r), 0.04 * s * ol)
+		var blob := Kit.lump(rad, 0, r, 0.2, 0.58) if det == 0 else C.lumpy(rad, r, 0.2, 0.58)
+		b.add("leaf", Kit.paint(Kit.xf(blob, x, y, z), C.c(c[0]), C.c(c[1]), 0.05, r), 0.04 * s * ol)
 		# 점엽: 덩이 윗면·앞면에 짙은 잎점(납작한 작은 덩이)
 		if not lod and bl[4] == 1:
-			for k in 6:
+			for k in 4:
 				var th := r.next() * TAU; var ph := 0.15 + r.next() * 1.1
 				var d := C.sphere(0.26 * s, 4, 2)
 				Kit.xf(d, x + cos(th) * sin(ph) * rad * 1.08, y + cos(ph) * rad * 0.58 * 1.12, z + sin(th) * sin(ph) * rad * 1.08, 0, r.next() * 3, 0, 1, 0.4, 1)

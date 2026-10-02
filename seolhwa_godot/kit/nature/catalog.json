@@ -1,7 +1,7 @@
 {
  "kit": "nature",
  "contract": "docs/REGION_CONTRACTS.md §4 (+mesh: ArrayMesh, tris)",
- "scatter": "kit/nature/scatter.gd (§6)",
+ "scatter": "kit/nature/scatter.gd (§6, exclude 인자·buffers 결과 포함)",
  "models": [
   {
    "name": "pine",
@@ -16,9 +16,9 @@
     3.4,
     3.4
    ],
-   "tris": 544,
-   "tris_lod1": 128,
-   "note": "웹 이식",
+   "tris": 424,
+   "tris_lod1": 112,
+   "note": "3단계: 뚜껑 없는 줄기(544→424)",
    "shot": "shots/kit/nature/pine.png"
   },
   {
@@ -34,8 +34,8 @@
     3.4,
     3.4
    ],
-   "tris": 208,
-   "tris_lod1": 68,
+   "tris": 188,
+   "tris_lod1": 58,
    "note": "웹 이식",
    "shot": "shots/kit/nature/fir.png"
   },
@@ -140,9 +140,9 @@
     10.1,
     6.4
    ],
-   "tris": 1448,
-   "tris_lod1": 172,
-   "note": "willow 1224",
+   "tris": 1296,
+   "tris_lod1": 136,
+   "note": "willow 1120",
    "shot": "shots/kit/nature/big_tree.png"
   },
   {
@@ -158,8 +158,8 @@
     6.4,
     4.1
    ],
-   "tris": 1200,
-   "tris_lod1": 172,
+   "tris": 1096,
+   "tris_lod1": 136,
    "note": "새",
    "shot": "shots/kit/nature/persimmon.png"
   },
@@ -177,9 +177,9 @@
     7.5,
     5.4
    ],
-   "tris": 1472,
-   "tris_lod1": 132,
-   "note": "새",
+   "tris": 660,
+   "tris_lod1": 96,
+   "note": "3단계: 가벼운 UV구 잎덩이(1472→660)",
    "shot": "shots/kit/nature/oak.png"
   },
   {
@@ -195,8 +195,8 @@
     3.2,
     3.2
    ],
-   "tris": 280,
-   "tris_lod1": 84,
+   "tris": 260,
+   "tris_lod1": 74,
    "note": "새",
    "shot": "shots/kit/nature/korean_fir.png"
   },
@@ -401,5 +401,9 @@
    "note": "139~252",
    "shot": "shots/kit/nature/cover.png"
   }
- ]
+ ],
+ "scatter_only_kinds": {
+  "undergrowth": "bush.gd 1.6~2.6배(그림자 없음)",
+  "sapling_pine/sapling_gusang": "pine/korean_fir LOD1 메시 0.4~0.65배(그림자·충돌 없음)"
+ }
 }

@@ -27,7 +27,7 @@ static func build(params: Dictionary) -> Dictionary:
 		x += lean * 0.3 + (r.next() - 0.5) * 0.7 * s; z += (r.next() - 0.5) * 0.35 * s
 		pts.append(Vector3(x, h * i / 4.0, z))
 	for i in 4:
-		b.add("bark", Kit.paint(Kit.limb(pts[i], pts[i + 1], (0.24 - i * 0.045) * s, (0.2 - i * 0.045) * s, 5 if lod else 6), C.c("#b8744c"), C.c("#7a4e38"), 0.04, r), 0.0 if lod else 0.02 * s)
+		b.add("bark", Kit.paint(C.limb_open(pts[i], pts[i + 1], (0.24 - i * 0.045) * s, (0.2 - i * 0.045) * s, 5 if lod else 6), C.c("#b8744c"), C.c("#7a4e38"), 0.04, r), 0.0 if lod else 0.02 * s)
 	var col: Array = C.pick(LEAF, r)
 	var top: Vector3 = pts[4]
 	var clumps := [[top.x, top.y + 0.15 * s, top.z, 1.55 * s]]
@@ -39,7 +39,7 @@ static func build(params: Dictionary) -> Dictionary:
 		var a := r.next() * TAU
 		var L := (1.3 + r.next() * 1.1) * s
 		var tip := Vector3(from.x + cos(a) * L, from.y + 0.35 * s, from.z + sin(a) * L * 0.6)
-		if not lod: b.add("bark", Kit.paint(Kit.limb(from, tip, 0.07 * s, 0.04 * s, 4), C.c("#9a6244"), C.c("#7a4e38"), 0.05, r), 0.0)
+		if not lod: b.add("bark", Kit.paint(C.limb_open(from, tip, 0.07 * s, 0.04 * s, 4), C.c("#9a6244"), C.c("#7a4e38"), 0.05, r), 0.0)
 		clumps.append([tip.x, tip.y + 0.1 * s, tip.z, (0.95 + r.next() * 0.5) * s])
 	var ext := 0.0
 	for cl in clumps:

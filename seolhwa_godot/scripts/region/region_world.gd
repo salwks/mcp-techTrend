@@ -77,6 +77,14 @@ var _attach_q := []         # [타일, 묶음, 세대] 붙이기 대기
 var _gen := 0
 const ATTACH_PER_FRAME := 24
 var _crossings := []
+var _crossings_all := []
+# 배치(§8): 터 고르기·식생 비우기·걷기 면
+var _h_orig: PackedByteArray     # 손대기 전 높이·토지이용(다시 읽기 때 되돌림)
+var _l_orig: PackedByteArray
+var _terrain_dirty := false
+var _veg_excl := []             # [{c: Vector2, ry, half: Vector2}] 월드
+var _walk_grid := {}            # 칸 → [walk]
+var _walks := []
 var _river_grid := {}
 var lod0_dist := 32.0       # 이 거리(플레이어→묶음 사각형) 안의 식생 묶음은 lod 0
 var scatter_far := 220.0    # 이 너머 식생은 안개 속이라 그리지 않는다(region_main이 안개 농도로 정한다)
@@ -128,6 +136,8 @@ func load_region(dir := "") -> void:
 	spawn = Vector2(float(sp.x), float(sp.z))
 	camera_zones = region.get("camera_zones", [])
 	for c in region.get("crossings", []): _crossings.append(Vector2(float(c.x), float(c.z)))
+	_crossings_all = _crossings.duplicate()
+	_h_orig = hbytes.duplicate(); _l_orig = lbytes.duplicate()
 	tile_min = Vector2i(floori(hx0 / TILE), floori(hz0 / TILE))
 	tile_max = Vector2i(floori((hx0 + (hnx - 1) * hstep) / TILE), floori((hz0 + (hnz - 1) * hstep) / TILE))
 	_make_textures()
@@ -233,8 +243,18 @@ func data_height(x: float, z: float) -> float:
 	var tx := fx - i; var tz := fz - j
 	return lerpf(lerpf(_hraw(i, j), _hraw(i + 1, j), tx), lerpf(_hraw(i, j + 1), _hraw(i + 1, j + 1), tx), tz)
 
-func _lu(i: int, j: int) -> int:
+# 토지이용 바이트의 128 비트 = "터 고르기 한 땅"(배치 로더가 켬): 분류는 아래 7비트, 잡음 디테일은 0
+func _lu_raw(i: int, j: int) -> int:
 	return lbytes[clampi(j, 0, lh - 1) * lw + clampi(i, 0, lw - 1)]
+
+func _lu(i: int, j: int) -> int:
+	var v := _lu_raw(i, j)
+	var c := v & 127
+	return 6 if (v >= 128 and c != 4 and c != 5) else c  # 고른 터 = 마당
+
+func _lu_det(i: int, j: int) -> float:
+	var v := _lu_raw(i, j)
+	return 0.0 if v >= 128 else LU_DETAIL[v]
 
 func landuse_at(x: float, z: float) -> int:
 	return _lu(roundi((x - lx0) / lcell), roundi((z - lz0) / lcell))
@@ -257,7 +277,7 @@ func _detail_mask(x: float, z: float) -> float:
 	var fz := clampf((z - lz0) / lcell, 0.0, lh - 1.001)
 	var i := int(fx); var j := int(fz)
 	var tx := fx - i; var tz := fz - j
-	return lerpf(lerpf(LU_DETAIL[_lu(i, j)], LU_DETAIL[_lu(i + 1, j)], tx), lerpf(LU_DETAIL[_lu(i, j + 1)], LU_DETAIL[_lu(i + 1, j + 1)], tx), tz)
+	return lerpf(lerpf(_lu_det(i, j), _lu_det(i + 1, j), tx), lerpf(_lu_det(i, j + 1), _lu_det(i + 1, j + 1), tx), tz)
 
 static func _detail(x: float, z: float) -> float:
 	return (_vnoise(x * 0.14, z * 0.14) - 0.5) * 0.36 + (_vnoise(x * 0.45 + 31.0, z * 0.45 + 17.0) - 0.5) * 0.10
@@ -281,12 +301,19 @@ func height_fast(x: float, z: float) -> float:
 		h = hy0 + lerpf(lerpf(a, b, tx), lerpf(c, d, tx), tz) * hscale
 	else:
 		h = data_height(x, z)
-	var m: float = LU_DETAIL[landuse_at(x, z)]
+	var m: float = _lu_det(roundi((x - lx0) / lcell), roundi((z - lz0) / lcell))
 	if m == 0.0: return h
 	return h + _detail(x, z) * m
 
-# 렌더 면과 같은 삼각형 보간(대각선 (i+1,j)–(i,j+1), _grid_mesh와 같음)
+# 걸을 수 있는 높이: 지형 + 걷기 면(다리 상판 등, §8 walk)
 func height_at(x: float, z: float) -> float:
+	var h := ground_at(x, z)
+	if _walk_grid.is_empty(): return h
+	var w = walk_at(x, z)
+	return maxf(h, w) if w != null else h
+
+# 렌더 면과 같은 삼각형 보간(대각선 (i+1,j)–(i,j+1), _grid_mesh와 같음)
+func ground_at(x: float, z: float) -> float:
 	var fx := floorf(x); var fz := floorf(z)
 	var tx := x - fx; var tz := z - fz
 	var b := lattice_height(fx + 1.0, fz); var c := lattice_height(fx, fz + 1.0)
@@ -573,15 +600,24 @@ func _unscatter(t: Vector2i) -> void:
 # 작업 스레드에서는 렌더링 서버를 거의 건드리지 않는다: 원본 MultiMesh 버퍼를 묶음마다 한 번만 읽어
 # SUB m 칸으로 나눈 "자료"만 만들고, MultiMesh·노드 생성은 메인 스레드가 프레임마다 조금씩 한다(_poll_jobs).
 # (작업 스레드에서 MultiMesh를 수백 개 만들거나 버퍼를 여러 번 읽으면 렌더 스레드와 엉켜 프레임이 100ms 넘게 튄다)
-static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, seed: int, lods: Array, split: bool, hold: Dictionary) -> void:
+static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, seed: int, lods: Array, split: bool, excl: Array, hold: Dictionary) -> void:
 	var out := []
 	var cols = null
 	var tall := {}
 	var temps := []
+	var ex_arg := []   # scatter(…, exclude)용: 축 정렬 Rect2 또는 {x,z,r} 원
+	for e in excl:
+		if absf(sin(e.ry)) < 0.02: ex_arg.append(Rect2(e.c - e.half, e.half * 2.0))
+		else: ex_arg.append({ x = e.c.x, z = e.c.y, r = e.half.length() })
+	var takes_ex := false
+	for m in scr.get_script_method_list():
+		if m.name == "scatter" and m.args.size() >= 6: takes_ex = true
 	for lod in lods:
-		var res: Dictionary = scr.scatter(rect, ha, la, seed, lod)
+		var res: Dictionary = scr.scatter(rect, ha, la, seed, lod, ex_arg) if takes_ex else scr.scatter(rect, ha, la, seed, lod)
 		if lod == 0 or cols == null:
-			cols = res.get("colliders", [])
+			cols = []
+			for c in res.get("colliders", []):
+				if not _excluded(excl, Vector2(float(c.get("x", 0.0)), float(c.get("z", 0.0))), 0.0): cols.append(c)
 		for n0 in res.get("nodes", []):
 			if not (n0 is MultiMeshInstance3D) or n0.multimesh == null or n0.multimesh.transform_format != MultiMesh.TRANSFORM_3D:
 				out.append({ node = n0, lod = lod, rect = Rect2(n0.position.x, n0.position.z, 0, 0) if n0 is Node3D else Rect2() })
@@ -600,6 +636,7 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 				var o := i * stride
 				if o + stride > buf.size(): break
 				var w := base * Vector3(buf[o + 3], buf[o + 7], buf[o + 11])
+				if not excl.is_empty() and _excluded(excl, Vector2(w.x, w.z), 0.5): continue  # 배치 자리 식생 비우기
 				var k := Vector2i(floori(w.x / SUB), floori(w.z / SUB)) if split else Vector2i.ZERO
 				if not groups.has(k): groups[k] = { buf = PackedFloat32Array(), lo = Vector2(INF, INF), hi = Vector2(-INF, -INF), n = 0 }
 				var g: Dictionary = groups[k]
@@ -673,7 +710,7 @@ func _start_jobs() -> void:
 		var rect := Rect2(t.x * TILE, t.y * TILE, TILE, TILE)
 		var seed := String(region.get("region_id", "region")).hash() & 0x7fffffff  # 권역 시드(타일 구분은 scatter가 rect로)
 		var ha := Callable(self, "height_fast"); var la := Callable(self, "landuse_at")
-		tiles[t].scatter_job = WorkerThreadPool.add_task(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, hold), false, "scatter")
+		tiles[t].scatter_job = WorkerThreadPool.add_task(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, _excl_for(rect), hold), false, "scatter")
 		tiles[t].scatter_hold = hold
 		running += 1
 	stats.jobs = running + _queue.size() + (1 if not _attach_q.is_empty() else 0)
@@ -740,7 +777,7 @@ func update_scatter_lod(player: Vector3, force := false) -> void:
 # 정적 물체(키트 build() 결과)
 # ---------------------------------------------------------------------------
 # node: 키트 node(원점 = 바닥 중심), world_xform: 놓을 자리, info: build()가 돌려준 사전(colliders/lights/occluder/interior…)
-func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}) -> void:
+func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, tag := "") -> void:
 	node.transform = world_xform
 	var cols := []
 	for c in info.get("colliders", []):
@@ -768,13 +805,47 @@ func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}) -
 		var b := _xf_box(it, world_xform)
 		it.merge(b, true)
 		interior = it
-	var fp: Vector2 = info.get("footprint", Vector2.ZERO)
+	var fp := to_v2(info.get("footprint", Vector2.ZERO))
 	var t := tile_of(world_xform.origin.x, world_xform.origin.z)
-	var e := { node = node, colliders = cols, lights = ls, occ = occ, interior = interior, attached = false, big = fp.length() > 40.0 }
+	var e := { node = node, colliders = cols, lights = ls, occ = occ, interior = interior, attached = false, big = fp.length() > 40.0, tag = tag, tile = t }
 	if not _statics.has(t): _statics[t] = []
 	_statics[t].append(e)
 	stats.statics += 1
 	if tiles.has(t): _attach_one(e, tiles[t].lod)
+
+# n의 변환을 root(포함)까지 곱한다 — 트리 밖에서도 쓰려고(global_transform 대신)
+static func _xf_to(n: Node3D, root: Node3D) -> Transform3D:
+	var xf := n.transform
+	var p := n.get_parent()
+	while n != root and p != null and p is Node3D:
+		if n == root: break
+		xf = (p as Node3D).transform * xf if p != root else root.transform * xf
+		if p == root: return xf
+		n = p; p = p.get_parent()
+	return xf
+
+static func to_v2(v) -> Vector2:
+	if v is Vector2: return v
+	if v is Array and v.size() >= 2: return Vector2(float(v[0]), float(v[1]))
+	if v is Dictionary: return Vector2(float(v.get("x", 0.0)), float(v.get("y", v.get("z", 0.0))))
+	return Vector2.ZERO
+
+# 꼬리표(tag)가 같은 정적 물체를 모두 지운다(배치 다시 읽기용)
+func remove_tagged(tag: String) -> void:
+	for t in _statics.keys():
+		var keep := []
+		for e in _statics[t]:
+			if e.tag != tag: keep.append(e); continue
+			_attach_one(e, 2)
+			if is_instance_valid(e.node): e.node.free()
+			stats.statics -= 1
+		_statics[t] = keep
+	# 충돌체 격자 다시
+	_static_grid.clear(); colliders.clear()
+	for t in _statics:
+		for e in _statics[t]:
+			for c in e.colliders:
+				_grid_insert(_static_grid, c); colliders.append(c)
 
 func _attach_statics(t: Vector2i, lod: int) -> void:
 	for e in _statics.get(t, []): _attach_one(e, lod)
@@ -790,7 +861,7 @@ func _attach_one(e: Dictionary, lod: int) -> void:
 		if e.occ != null:
 			var box := AABB(); var first := true
 			for m in e.occ.meshes:
-				var bb: AABB = m.global_transform * m.get_aabb()
+				var bb: AABB = _xf_to(m, e.node) * m.get_aabb()
 				box = bb if first else box.merge(bb); first = false
 			e.occ.aabb = box
 			occluders.append(e.occ)
@@ -810,9 +881,21 @@ static func _xf_collider(c: Dictionary, xf: Transform3D) -> Dictionary:
 	if c.get("type", "circle") == "circle":
 		var p := xf * Vector3(float(c.x), 0, float(c.z))
 		return { type = "circle", x = p.x, z = p.z, r = float(c.r) * xf.basis.get_scale().x }
-	var b := _xf_box(c, xf)
-	b.type = "box"
-	return b
+	# 돌린 상자는 방향 있는 상자(obox)로 — 축 정렬로 감싸면 다리 난간 상자가 다리 가운데까지 덮는다
+	var bs := xf.basis.orthonormalized()
+	var ang := atan2(-bs.x.z, bs.x.x)
+	if absf(sin(ang * 2.0)) < 1e-3:
+		var b := _xf_box(c, xf)
+		b.type = "box"
+		return b
+	var sc := xf.basis.get_scale().x
+	var cl := Vector3((float(c.minX) + float(c.maxX)) * 0.5, 0, (float(c.minZ) + float(c.maxZ)) * 0.5)
+	var cw := xf * cl
+	var o := { type = "obox", cx = cw.x, cz = cw.z, hx = (float(c.maxX) - float(c.minX)) * 0.5 * sc, hz = (float(c.maxZ) - float(c.minZ)) * 0.5 * sc,
+		ca = cos(ang), sa = sin(ang) }
+	var bb := _xf_box(c, xf)
+	o.minX = bb.minX; o.maxX = bb.maxX; o.minZ = bb.minZ; o.maxZ = bb.maxZ
+	return o
 
 static func _xf_box(b: Dictionary, xf: Transform3D) -> Dictionary:
 	var mnx := INF; var mxx := -INF; var mnz := INF; var mxz := -INF
@@ -841,6 +924,10 @@ static func _hit(c: Dictionary, x: float, z: float, r: float) -> bool:
 	if c.type == "circle":
 		var dx: float = x - c.x; var dz: float = z - c.z; var rr: float = r + c.r
 		return dx * dx + dz * dz < rr * rr
+	if c.type == "obox":
+		var l := _to_local(Vector2(x - c.cx, z - c.cz), c.ca, c.sa)
+		var ox := maxf(absf(l.x) - c.hx, 0.0); var oz := maxf(absf(l.y) - c.hz, 0.0)
+		return ox * ox + oz * oz < r * r
 	var nx := clampf(x, c.minX, c.maxX); var nz := clampf(z, c.minZ, c.maxZ)
 	var dx := x - nx; var dz := z - nz
 	return dx * dx + dz * dz < r * r
@@ -872,6 +959,7 @@ func blocked(x: float, z: float, r: float) -> bool:
 	return false
 
 func _in_river(x: float, z: float, r: float) -> bool:
+	if not _walk_grid.is_empty() and walk_at(x, z) != null: return false  # 다리·징검다리 위
 	if landuse_at(x, z) == 5: return true
 	var p := Vector2(x, z)
 	for c in _river_grid.get(Vector2i(floori(x / GRID), floori(z / GRID)), []):
@@ -880,7 +968,7 @@ func _in_river(x: float, z: float, r: float) -> bool:
 		var t := clampf((p - sg.a).dot(ab) / maxf(ab.length_squared(), 1e-6), 0.0, 1.0)
 		if p.distance_to(sg.a + ab * t) < sg.r:
 			# 물가: 땅이 수면보다 낮으면 물 속
-			if height_at(x, z) < lerpf(sg.ya, sg.yb, t) + 0.05: return true
+			if ground_at(x, z) < lerpf(sg.ya, sg.yb, t) + 0.05: return true
 	return false
 
 # 나루·여울·다리 근처는 물에 들어갈 수 있다(다리 상판은 아직 없음 — kit-village 다리가 놓이면 높이를 넘겨받아야 한다)
@@ -922,6 +1010,8 @@ func _notification(what: int) -> void:
 			for e in _statics[t]:
 				if not e.attached and is_instance_valid(e.node): e.node.free()
 
+var use_cutaway := false   # 키트 재질 점무늬 가림(occ_*)이 생겨 기본은 끔(--cutaway로 켬)
+
 func update(_dt: float, _time: float) -> void:
 	_poll_jobs()
 
@@ -930,6 +1020,7 @@ func update(_dt: float, _time: float) -> void:
 # 식생은 MultiMesh라 기존 occluders(물체 반투명)로는 못 하므로 인스턴스 단위로 처리한다.
 # ---------------------------------------------------------------------------
 func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
+	if not use_cutaway and _cut.is_empty(): return
 	for k in _cut: _cut[k].want = 1.0
 	var lo := Vector2(minf(player.x, cam.x) - 6.0, player.z - 1.0)
 	var hi := Vector2(maxf(player.x, cam.x) + 6.0, cam.z + 2.0)
@@ -965,6 +1056,157 @@ func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
 		if c.k >= 1.0 and c.want >= 1.0: _cut.erase(key)
 
 # ---------------------------------------------------------------------------
+# 배치 지원(§8): 터 고르기 · 식생 비우기 · 걷기 면. placement_loader.gd가 부른다.
+# ---------------------------------------------------------------------------
+# 손댄 높이·토지이용·걷기 면·식생 제외를 처음 상태로
+func reset_edits() -> void:
+	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
+	_veg_excl.clear(); _walk_grid.clear(); _walks.clear()
+	_crossings = _crossings_all.duplicate()
+	_terrain_dirty = true
+
+# 회전된 사각형(중심 c, y축 회전 ry, 반폭 half) 안을 높이 y로 고른다. 바깥 edge m에 걸쳐 원래 땅으로 부드럽게.
+# 안쪽 토지이용 칸에는 "고른 땅" 비트를 켜 잡음 디테일을 없앤다. y가 NAN이면 사각형 안 데이터 높이의 평균.
+func flatten_rect(c: Vector2, ry: float, half: Vector2, y: float, edge := 5.0) -> float:
+	var ca := cos(ry); var sa := sin(ry)
+	var R := half.length() + edge
+	var i0 := floori((c.x - R - hx0) / hstep); var i1 := ceili((c.x + R - hx0) / hstep)
+	var j0 := floori((c.y - R - hz0) / hstep); var j1 := ceili((c.y + R - hz0) / hstep)
+	i0 = clampi(i0, 0, hnx - 1); i1 = clampi(i1, 0, hnx - 1); j0 = clampi(j0, 0, hnz - 1); j1 = clampi(j1, 0, hnz - 1)
+	if is_nan(y):
+		var sum := 0.0; var n := 0
+		for j in range(j0, j1 + 1):
+			for i in range(i0, i1 + 1):
+				var l := _to_local(Vector2(hx0 + i * hstep, hz0 + j * hstep) - c, ca, sa)
+				if absf(l.x) <= half.x and absf(l.y) <= half.y:
+					sum += _hraw(i, j); n += 1
+		y = sum / n if n > 0 else data_height(c.x, c.y)
+	var yq := clampf((y - hy0) / hscale, 0.0, 65535.0 if hbpp == 2 else 255.0 * 256.0)
+	for j in range(j0, j1 + 1):
+		for i in range(i0, i1 + 1):
+			var l := _to_local(Vector2(hx0 + i * hstep, hz0 + j * hstep) - c, ca, sa)
+			var d := Vector2(maxf(absf(l.x) - half.x, 0.0), maxf(absf(l.y) - half.y, 0.0)).length()
+			if d >= edge: continue
+			var w := 1.0 - smoothstep(0.0, edge, d)
+			var k := j * hnx + i
+			if hbpp == 2:
+				var v0 := float(hbytes[k * 2] * 256 + hbytes[k * 2 + 1])
+				var v := clampi(roundi(lerpf(v0, yq, w)), 0, 65535)
+				hbytes[k * 2] = v >> 8; hbytes[k * 2 + 1] = v & 255
+			else:
+				var v0 := float(hbytes[k] * 256)
+				hbytes[k] = clampi(roundi(lerpf(v0, yq, w) / 256.0), 0, 255)
+	# 토지이용 칸: 사각형 안쪽(+1칸)은 잡음 없음
+	var li0 := clampi(floori((c.x - R - lx0) / lcell), 0, lw - 1); var li1 := clampi(ceili((c.x + R - lx0) / lcell), 0, lw - 1)
+	var lj0 := clampi(floori((c.y - R - lz0) / lcell), 0, lh - 1); var lj1 := clampi(ceili((c.y + R - lz0) / lcell), 0, lh - 1)
+	for j in range(lj0, lj1 + 1):
+		for i in range(li0, li1 + 1):
+			var l := _to_local(Vector2(lx0 + i * lcell, lz0 + j * lcell) - c, ca, sa)
+			if absf(l.x) <= half.x + lcell and absf(l.y) <= half.y + lcell:
+				lbytes[j * lw + i] = lbytes[j * lw + i] | 128
+	_terrain_dirty = true
+	return y
+
+static func _to_local(d: Vector2, ca: float, sa: float) -> Vector2:
+	# 월드 → 로컬(Basis(UP, ry)의 역회전): x' = x·cos − z·sin … Godot y축 회전 규칙과 같게
+	return Vector2(d.x * ca - d.y * sa, d.x * sa + d.y * ca)
+
+# 고친 높이·토지이용을 GPU 텍스처에 올리고, 타일(높이 범위·식생)을 다시 만든다
+func commit_terrain() -> void:
+	if not _terrain_dirty: return
+	_terrain_dirty = false
+	height_tex.update(Image.create_from_data(hnx, hnz, false, Image.FORMAT_RG8 if hbpp == 2 else Image.FORMAT_R8, hbytes))
+	landuse_tex.update(Image.create_from_data(lw, lh, false, Image.FORMAT_R8, lbytes))
+	reset_tiles()
+
+# 모든 타일을 내렸다가 다시 올린다(높이 범위·식생 다시)
+func reset_tiles() -> void:
+	for t in tiles.keys():
+		if tiles[t].scatter_job >= 0:
+			WorkerThreadPool.wait_for_task_completion(tiles[t].scatter_job)
+			tiles[t].scatter_job = -1
+			var hold = tiles[t].scatter_hold
+			tiles[t].scatter_hold = null
+			if hold != null:
+				for tn in hold.get("temps", []): tn.free()
+				for e in hold.get("entries", []):
+					if e.node != null and not e.node.is_inside_tree(): e.node.free()
+		_drop_tile(t)
+	for it in _attach_q:
+		if it[1].node != null and not it[1].node.is_inside_tree(): it[1].node.free()
+	_attach_q.clear()
+	for n in _pool: n.free()
+	_pool.clear()
+	var c := _center
+	_center = Vector2i(1 << 20, 1 << 20)
+	if c.x < (1 << 19): focus(Vector3(c.x * TILE + TILE * 0.5, 0, c.y * TILE + TILE * 0.5))
+
+func add_veg_exclusion(c: Vector2, ry: float, half: Vector2) -> void:
+	_veg_excl.append({ c = c, ry = ry, half = half })
+
+func _excl_for(rect: Rect2) -> Array:
+	var out := []
+	var r2 := rect.grow(4.0)
+	for e in _veg_excl:
+		var R: float = e.half.length()
+		if Rect2(e.c - Vector2(R, R), Vector2(R, R) * 2.0).intersects(r2): out.append(e)
+	return out
+
+static func _excluded(excl: Array, p: Vector2, pad: float) -> bool:
+	for e in excl:
+		var l := _to_local(p - e.c, cos(e.ry), sin(e.ry))
+		if absf(l.x) <= e.half.x + pad and absf(l.y) <= e.half.y + pad: return true
+	return false
+
+# 걷기 면(§8 walk): xf = 물체의 월드 변환, w = { minX, maxX, minZ, maxZ, z:[…], y:[…] } (로컬, y는 원점 기준) 또는 axis:"x"와 x:[…]
+func add_walk(xf: Transform3D, w: Dictionary) -> void:
+	var axis: String = w.get("axis", "z")
+	var ks := PackedFloat32Array(w.get(axis, [])); var ys := PackedFloat32Array(w.get("y", []))
+	if ks.size() < 2 or ks.size() != ys.size(): return
+	var e := { inv = xf.affine_inverse(), y0 = xf.origin.y, minX = float(w.minX), maxX = float(w.maxX), minZ = float(w.minZ), maxZ = float(w.maxZ), axis = axis, ks = ks, ys = ys, c = Vector2(xf.origin.x, xf.origin.z) }
+	_walks.append(e)
+	var bb := _xf_box(w, xf)
+	_grid_insert(_walk_grid, { type = "box", minX = bb.minX, maxX = bb.maxX, minZ = bb.minZ, maxZ = bb.maxZ, walk = e })
+	# 다리가 놓인 나루·여울 자리에서는 물을 걸어 건너는 임시 허용을 끈다
+	var keep := []
+	for cr in _crossings:
+		if cr.distance_to(e.c) > 25.0: keep.append(cr)
+	_crossings = keep
+
+# 걷기 면 높이(없으면 null)
+func walk_at(x: float, z: float) -> Variant:
+	var best = null
+	for c in _walk_grid.get(Vector2i(floori(x / GRID), floori(z / GRID)), []):
+		var e: Dictionary = c.walk
+		var l: Vector3 = e.inv * Vector3(x, e.y0, z)
+		if l.x < e.minX or l.x > e.maxX or l.z < e.minZ or l.z > e.maxZ: continue
+		var k: float = l.z if e.axis == "z" else l.x
+		var ks: PackedFloat32Array = e.ks; var ys: PackedFloat32Array = e.ys
+		var y: float = ys[0] if k <= ks[0] else ys[ys.size() - 1]
+		for i in ks.size() - 1:
+			if k >= ks[i] and k <= ks[i + 1]:
+				y = lerpf(ys[i], ys[i + 1], (k - ks[i]) / maxf(ks[i + 1] - ks[i], 1e-5)); break
+		var wy: float = e.y0 + y
+		if best == null or wy > best: best = wy
+	return best
+
+# 가까운 하천 수면 높이(radius m 안, 없으면 NAN)
+func river_surface_at(x: float, z: float, radius := 40.0) -> float:
+	var p := Vector2(x, z)
+	var best := INF; var by := NAN
+	var ci := floori(x / GRID); var cj := floori(z / GRID)
+	var n := ceili(radius / GRID)
+	for j in range(cj - n, cj + n + 1):
+		for i in range(ci - n, ci + n + 1):
+			for c in _river_grid.get(Vector2i(i, j), []):
+				var sg: Dictionary = c.seg
+				var ab: Vector2 = sg.b - sg.a
+				var t := clampf((p - sg.a).dot(ab) / maxf(ab.length_squared(), 1e-6), 0.0, 1.0)
+				var d := p.distance_to(sg.a + ab * t)
+				if d < best and d < radius: best = d; by = lerpf(sg.ya, sg.yb, t)
+	return by
+
+# ---------------------------------------------------------------------------
 # 임시 표지: 마을·랜드마크·고개 자리에 장승 같은 기둥(위치 확인용, 키트 배치는 이번 범위 밖)
 # ---------------------------------------------------------------------------
 func _place_markers() -> void:
@@ -989,4 +1231,4 @@ func _place_markers() -> void:
 		lab.modulate = Color(0.12, 0.1, 0.09); lab.outline_modulate = Color(0.95, 0.92, 0.85); lab.outline_size = 12
 		node.add_child(lab)
 		var y := height_at(x, z)
-		add_static(node, Transform3D(Basis(), Vector3(x, y, z)), { colliders = [{ type = "circle", x = 0.0, z = 0.0, r = 0.3 }], footprint = Vector2(1, 1) })
+		add_static(node, Transform3D(Basis(), Vector3(x, y, z)), { colliders = [{ type = "circle", x = 0.0, z = 0.0, r = 0.3 }], footprint = Vector2(1, 1) }, "marker")

@@ -90,7 +90,8 @@ static func build(params: Dictionary) -> Dictionary
 ```gdscript
 static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = []) -> Dictionary
 # exclude: 월드 xz Rect2(축정렬) 또는 {x, z, r} — 그 안에는 놓지 않음(건물·광장 자리)
-# 반환 { nodes: [Node3D…(MultiMeshInstance3D 권장, 좌표는 월드)], colliders: [ {type:"circle", x, z, r} ] }  # 월드 좌표
+# 반환 { nodes: [Node3D…(MultiMeshInstance3D 권장, 좌표는 월드)], buffers: [PackedFloat32Array|null …(nodes와 같은 순서, MultiMesh.buffer 형식)], colliders: [ {type:"circle", x, z, r} ], stats }  # 월드 좌표
+# 이름 끝이 "_shadow"인 노드는 그림자 전용(보이지 않음)
 ```
 
 ## 7. 보고서
@@ -111,7 +112,22 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 ]}
 ```
 - `kit`은 `kit/` 아래 경로(확장자 없이). 배치형(읍성·관아·실상사·향교)은 로더가 `pieces`로 풀어 조각마다 등록한다.
-- 다리·징검다리·섶다리: build() 결과 `walk`(걷기 면) 정보를 로더가 지형 높이 위에 덧씌운다. 형식은 terrain-engine이 정해 이 절에 적는다.
+- 다리·징검다리·섶다리: build() 결과 `walk`(걷기 면) 정보를 로더가 지형 높이 위에 덧씌운다. 형식(terrain-engine):
+  ```gdscript
+  walk: [ { minX, maxX, minZ, maxZ,            # 로컬 사각형(m) — 이 안에서만 걷기 면이 있다
+            z: [z0, z1, …], y: [y0, y1, …] } ]  # 로컬 z를 따라 걷는 높이(로컬 y, 원점 기준) 꺾은선. 같은 개수, z 오름차순
+  # 건너는 축이 x면 "axis": "x"와 x: […]. 사각형 안의 걷는 높이 = max(지형, 원점 y + 꺾은선 y)
+  ```
+  - 걷기 면 위에서는 하천 막기를 하지 않는다. 다리가 놓인 crossings(25m 안)에서는 "물 걸어 건너기" 임시 허용을 끈다.
+  - walk가 없으면 로더가 `village/stone_bridge`(len·hw·arch), `village/seop_bridge`(len·hw), `village/jingeom`(len)은 params로 만든다.
+  - 다리 `y`가 null이면 둑 높이(다리 양 끝 1m 바깥 지형 평균), `jingeom`·`narutbae`·`ppallaeteo`는 가까운 하천 수면(40m 안).
+- 로더 동작(terrain-engine, `scripts/region/placement_loader.gd`):
+  - 배치형은 키트에 `static func layout(params) -> Array`가 있으면 그것만 부르고(짓지 않음), 없으면 build() 결과 `pieces`를 쓴다. 조각 `{kit, params, x, z, ry, y?}`는 부모 기준 로컬. 조각의 y는 지형(터 고르기 후), `y`가 있으면 부모 높이 + y.
+  - `footprint`를 항목에 `[w, d]`로 직접 줄 수 있다(없으면 build() 결과, 배치형은 조각 자리 + 8m).
+  - flatten: footprint + 2m(회전 반영) 안을 평평하게(높이 = 항목 y, 없으면 그 안 평균), 바깥 5m에 걸쳐 원래 땅으로. 고른 터는 마당색(토지이용 6)으로 칠하고 잡음 디테일을 없앤다.
+  - clear_veg(기본 true): footprint + 1m(flatten이면 고른 터 전체) 안 식생을 비운다. `kit/nature/scatter.gd`가 6번째 인자 `exclude: Array`(월드 xz `Rect2` 또는 `{x,z,r}`)를 받으면 넘기고, 결과에서도 거른다.
+  - 같은 kit+params는 한 번만 짓는다(작업 스레드 여러 개). 돌린 상자 충돌체는 방향 있는 상자로 처리한다.
+  - 다시 읽기: 실행 중 F5, 또는 `--reload`(파일이 바뀌면 1초 안에). 시험용 폴더는 `--placedir=res://…`(세미콜론으로 여러 개).
 - 회전은 남향(ry=0)을 기본으로, 길·물길에 맞춰 ±30° 안에서. 카메라가 남쪽에 고정이라 북향 건물은 등만 보인다.
 - 고증: 건물 수·간격은 압축된 땅(K=0.30)에 맞춘 근사. 위치는 region.json settlements·landmarks·roads를 따른다. 근거와 가설은 보고서에.
 - 확인 방법: `godot --path . res://scenes/region.tscn -- --warp=x,z --time=10 --shot=shots/... --frames=200 --quit` (+ `--cam=` 등 region_main 인자, 보고서 terrain-engine.md 참고)

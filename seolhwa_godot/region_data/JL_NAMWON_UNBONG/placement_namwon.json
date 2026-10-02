@@ -1,0 +1,3564 @@
+{
+ "area": "namwon",
+ "generator": "tools/placement/namwon.py (seed 1870)",
+ "note": "남원 읍내(1870 전후 남원도호부 읍치). 게임 좌표, ry 라디안(0=정면 남향). 근거·가설은 docs/reports/placement-namwon.md",
+ "items": [
+  {
+   "id": "nw_eupseong",
+   "kit": "landmark/namwon_eupseong",
+   "params": {
+    "seed": 1870,
+    "side": 186.0
+   },
+   "x": -3227.8,
+   "z": 248.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원읍성",
+   "note": "방형 평지 읍성. 4문 남 완월루·북 공신루·서 망미루·동 향일루(옹성). 성 안은 terrain-data가 반경 85m를 이미 고르게 함 → flatten 끔(조각마다 땅속 1.2m)"
+  },
+  {
+   "id": "nw_gwana",
+   "kit": "landmark/gwana",
+   "params": {
+    "seed": 1871,
+    "width": 60,
+    "depth": 72
+   },
+   "x": -3183.8,
+   "z": 204.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원도호부 관아",
+   "note": "동헌·내아·내외삼문 일곽. 위치 가설(성 안 동북, region.json namwon_dongheon −3184,222 근처)"
+  },
+  {
+   "id": "nw_gaeksa",
+   "kit": "landmark/gaeksa",
+   "params": {
+    "seed": 1872,
+    "jeongdang_bays": 5
+   },
+   "x": -3271.8,
+   "z": 210.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "객사 용성관",
+   "note": "용성관: 정당 5칸 + 익헌 둘. region.json(−3270,254)은 동서길 위라 담 안쪽 북쪽(z≈210)으로 옮김"
+  },
+  {
+   "id": "nw_gaeksa_samun",
+   "kit": "landmark/samun",
+   "params": {
+    "seed": 1873,
+    "kind": "outer",
+    "name": "용성관"
+   },
+   "x": -3271.8,
+   "z": 242.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_00",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1880,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -3295.0,
+   "z": 198.8,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_01",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1881,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -3283.4,
+   "z": 198.8,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_02",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1882,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -3271.8,
+   "z": 198.8,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_03",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1883,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -3260.2,
+   "z": 198.8,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_04",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1884,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -3248.6,
+   "z": 198.8,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_05",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1885,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3242.8,
+   "z": 204.3,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_06",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1886,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3242.8,
+   "z": 215.3,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_07",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1887,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3242.8,
+   "z": 226.3,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_08",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1888,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3242.8,
+   "z": 237.3,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_09",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1889,
+    "length": 8.32,
+    "height": 2.2
+   },
+   "x": -3246.83,
+   "z": 242.8,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_10",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1890,
+    "length": 8.32,
+    "height": 2.2
+   },
+   "x": -3254.9,
+   "z": 242.8,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_11",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1891,
+    "length": 8.32,
+    "height": 2.2
+   },
+   "x": -3262.97,
+   "z": 242.8,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_12",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1892,
+    "length": 8.32,
+    "height": 2.2
+   },
+   "x": -3280.63,
+   "z": 242.8,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_13",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1893,
+    "length": 8.32,
+    "height": 2.2
+   },
+   "x": -3288.7,
+   "z": 242.8,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_14",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1894,
+    "length": 8.32,
+    "height": 2.2
+   },
+   "x": -3296.77,
+   "z": 242.8,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_15",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1895,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3300.8,
+   "z": 237.3,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_16",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1896,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3300.8,
+   "z": 226.3,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_17",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1897,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3300.8,
+   "z": 215.3,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gaeksa_wall_18",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 1898,
+    "length": 11.25,
+    "height": 2.2
+   },
+   "x": -3300.8,
+   "z": 204.3,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 용성관"
+  },
+  {
+   "id": "nw_gwanghallu_pond",
+   "kit": "landmark/gwanghallu_pond",
+   "params": {
+    "seed": 1582,
+    "width": 84.0,
+    "depth": 40.0,
+    "bridge": true
+   },
+   "x": -3279.0,
+   "z": 483.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "광한루원",
+   "note": "못 84×40(1870년 정원은 지금보다 작았다는 가설) + 삼신산 섬 셋 + 오작교(모델에 포함, 57m 남북). 오작교 x≈−3294(OSM −3283)"
+  },
+  {
+   "id": "nw_gwanghallu",
+   "kit": "landmark/gwanghallu",
+   "params": {
+    "seed": 1626,
+    "iklu": true
+   },
+   "x": -3271.4,
+   "z": 450.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "광한루원",
+   "note": "OSM 위치 그대로(확정). 못 북쪽 둑, 익루는 동쪽"
+  },
+  {
+   "id": "nw_hyanggyo",
+   "kit": "landmark/hyanggyo",
+   "params": {
+    "seed": 1392,
+    "width": 36.0,
+    "depth": 50.0
+   },
+   "x": -3235.3,
+   "z": -97.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원향교",
+   "note": "가설 위치: 향교동 지명(region.json −3184,−50) 북쪽, 광치천 건너 산기슭에서 논·물·길을 피한 가장 가까운 자리. 전묘후학, 남향"
+  },
+  {
+   "id": "nw_house_001",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 101,
+    "size": "medium"
+   },
+   "x": -3290.0,
+   "z": 270.85,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서남 / medium"
+  },
+  {
+   "id": "nw_house_002",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 102,
+    "size": "medium"
+   },
+   "x": -3266.83,
+   "z": 271.73,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서남 / medium"
+  },
+  {
+   "id": "nw_house_003",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 103,
+    "size": "small"
+   },
+   "x": -3247.95,
+   "z": 269.94,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서남 / small"
+  },
+  {
+   "id": "nw_house_004",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 104,
+    "size": "large"
+   },
+   "x": -3287.6,
+   "z": 304.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서남 / large"
+  },
+  {
+   "id": "nw_house_005",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 105,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": -3267.23,
+   "z": 300.44,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서남 / giwa"
+  },
+  {
+   "id": "nw_house_006",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 106,
+    "size": "medium"
+   },
+   "x": -3249.33,
+   "z": 303.42,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서남 / medium"
+  },
+  {
+   "id": "nw_house_007",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 107,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": -3215.9,
+   "z": 268.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / giwa"
+  },
+  {
+   "id": "nw_house_008",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 108,
+    "size": "medium"
+   },
+   "x": -3198.5,
+   "z": 270.59,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / medium"
+  },
+  {
+   "id": "nw_house_009",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 109,
+    "size": "medium"
+   },
+   "x": -3175.29,
+   "z": 270.52,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / medium"
+  },
+  {
+   "id": "nw_house_010",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 110,
+    "size": "medium"
+   },
+   "x": -3153.21,
+   "z": 270.74,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / medium"
+  },
+  {
+   "id": "nw_house_011",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 111,
+    "size": "large"
+   },
+   "x": -3209.4,
+   "z": 304.73,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / large"
+  },
+  {
+   "id": "nw_house_012",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 112,
+    "size": "large"
+   },
+   "x": -3181.84,
+   "z": 305.78,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / large"
+  },
+  {
+   "id": "nw_house_013",
+   "kit": "village/choga",
+   "params": {
+    "seed": 113
+   },
+   "x": -3161.63,
+   "z": 299.22,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / choga"
+  },
+  {
+   "id": "nw_house_014",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 114,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": -3149.17,
+   "z": 299.75,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 동남 / giwa"
+  },
+  {
+   "id": "nw_house_015",
+   "kit": "village/choga",
+   "params": {
+    "seed": 115
+   },
+   "x": -3308.3,
+   "z": 168.13,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서북 / choga"
+  },
+  {
+   "id": "nw_house_016",
+   "kit": "village/choga",
+   "params": {
+    "seed": 116
+   },
+   "x": -3295.98,
+   "z": 168.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서북 / choga"
+  },
+  {
+   "id": "nw_house_017",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 117,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": -3283.48,
+   "z": 169.83,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서북 / giwa"
+  },
+  {
+   "id": "nw_house_018",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 118,
+    "size": "small"
+   },
+   "x": -3267.63,
+   "z": 171.39,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서북 / small"
+  },
+  {
+   "id": "nw_house_019",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 119,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": -3252.22,
+   "z": 169.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서북 / giwa"
+  },
+  {
+   "id": "nw_house_020",
+   "kit": "village/choga",
+   "params": {
+    "seed": 120
+   },
+   "x": -3308.3,
+   "z": 204.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 안)",
+   "note": "성안 서쪽 / choga"
+  },
+  {
+   "id": "nw_house_021",
+   "kit": "village/choga",
+   "params": {
+    "seed": 121
+   },
+   "x": -3114.9,
+   "z": 237.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "동문 밖 / choga"
+  },
+  {
+   "id": "nw_house_022",
+   "kit": "village/choga",
+   "params": {
+    "seed": 122,
+    "w": 5.4,
+    "gourd": true
+   },
+   "x": -3102.82,
+   "z": 238.38,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "동문 밖 / choga_gourd"
+  },
+  {
+   "id": "nw_house_023",
+   "kit": "village/choga",
+   "params": {
+    "seed": 123
+   },
+   "x": -3114.9,
+   "z": 262.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "동문 밖 / choga"
+  },
+  {
+   "id": "nw_house_024",
+   "kit": "village/choga",
+   "params": {
+    "seed": 124
+   },
+   "x": -3100.25,
+   "z": 262.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "동문 밖 / choga"
+  },
+  {
+   "id": "nw_house_025",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 125,
+    "size": "small"
+   },
+   "x": -3198.5,
+   "z": 357.95,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "남문 밖 동쪽 / small"
+  },
+  {
+   "id": "nw_house_026",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 126,
+    "size": "small"
+   },
+   "x": -3181.83,
+   "z": 357.72,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "남문 밖 동쪽 / small"
+  },
+  {
+   "id": "nw_house_027",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 127,
+    "size": "small"
+   },
+   "x": -3164.87,
+   "z": 357.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "남문 밖 동쪽 / small"
+  },
+  {
+   "id": "nw_house_028",
+   "kit": "village/choga",
+   "params": {
+    "seed": 128,
+    "w": 5.4,
+    "gourd": true
+   },
+   "x": -3309.1,
+   "z": 142.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / choga_gourd"
+  },
+  {
+   "id": "nw_house_029",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 129,
+    "size": "medium"
+   },
+   "x": -3292.69,
+   "z": 137.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / medium"
+  },
+  {
+   "id": "nw_house_030",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 130,
+    "size": "small"
+   },
+   "x": -3273.74,
+   "z": 139.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / small"
+  },
+  {
+   "id": "nw_house_031",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 131,
+    "size": "small"
+   },
+   "x": -3256.59,
+   "z": 140.02,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / small"
+  },
+  {
+   "id": "nw_house_032",
+   "kit": "village/choga",
+   "params": {
+    "seed": 132
+   },
+   "x": -3206.97,
+   "z": 142.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / choga"
+  },
+  {
+   "id": "nw_house_033",
+   "kit": "village/choga",
+   "params": {
+    "seed": 133
+   },
+   "x": -3194.29,
+   "z": 142.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / choga"
+  },
+  {
+   "id": "nw_house_034",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 134,
+    "size": "small"
+   },
+   "x": -3179.09,
+   "z": 140.38,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / small"
+  },
+  {
+   "id": "nw_house_035",
+   "kit": "village/choga",
+   "params": {
+    "seed": 135
+   },
+   "x": -3164.63,
+   "z": 141.87,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / choga"
+  },
+  {
+   "id": "nw_house_036",
+   "kit": "village/choga",
+   "params": {
+    "seed": 136
+   },
+   "x": -3221.1,
+   "z": 106.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "북문 밖 / choga"
+  },
+  {
+   "id": "nw_house_037",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 137,
+    "size": "small"
+   },
+   "x": -3349.7,
+   "z": 196.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / small"
+  },
+  {
+   "id": "nw_house_038",
+   "kit": "village/choga",
+   "params": {
+    "seed": 138
+   },
+   "x": -3335.11,
+   "z": 198.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / choga"
+  },
+  {
+   "id": "nw_house_039",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 139,
+    "size": "small"
+   },
+   "x": -3357.7,
+   "z": 235.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / small"
+  },
+  {
+   "id": "nw_house_040",
+   "kit": "village/choga",
+   "params": {
+    "seed": 140
+   },
+   "x": -3342.08,
+   "z": 237.56,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / choga"
+  },
+  {
+   "id": "nw_house_041",
+   "kit": "village/choga",
+   "params": {
+    "seed": 141
+   },
+   "x": -3360.1,
+   "z": 261.69,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / choga"
+  },
+  {
+   "id": "nw_house_042",
+   "kit": "village/choga",
+   "params": {
+    "seed": 142
+   },
+   "x": -3348.0,
+   "z": 261.58,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / choga"
+  },
+  {
+   "id": "nw_house_043",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 143,
+    "size": "small"
+   },
+   "x": -3343.7,
+   "z": 306.72,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "note": "서문 밖 / small"
+  },
+  {
+   "id": "nw_shop_01",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 300,
+    "goods": "mixed"
+   },
+   "x": -3330.5,
+   "z": 386.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) mixed"
+  },
+  {
+   "id": "nw_shop_02",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 301,
+    "goods": "onggi"
+   },
+   "x": -3322.7,
+   "z": 386.29,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) onggi"
+  },
+  {
+   "id": "nw_shop_03",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 302,
+    "goods": "grain"
+   },
+   "x": -3314.9,
+   "z": 386.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) grain"
+  },
+  {
+   "id": "nw_shop_04",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 303,
+    "goods": "straw"
+   },
+   "x": -3307.1,
+   "z": 386.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) straw"
+  },
+  {
+   "id": "nw_shop_05",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 304,
+    "goods": "straw"
+   },
+   "x": -3299.3,
+   "z": 385.91,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) straw"
+  },
+  {
+   "id": "nw_shop_06",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 305,
+    "goods": "fish"
+   },
+   "x": -3291.5,
+   "z": 386.83,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) fish"
+  },
+  {
+   "id": "nw_shop_07",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 306,
+    "goods": "cloth",
+    "w": 4.5
+   },
+   "x": -3283.7,
+   "z": 386.06,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) cloth"
+  },
+  {
+   "id": "nw_shop_08",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 307,
+    "goods": "mixed"
+   },
+   "x": -3275.9,
+   "z": 385.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) mixed"
+  },
+  {
+   "id": "nw_shop_09",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 308,
+    "goods": "straw"
+   },
+   "x": -3268.1,
+   "z": 386.19,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) straw"
+  },
+  {
+   "id": "nw_shop_10",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 309,
+    "goods": "fish"
+   },
+   "x": -3260.3,
+   "z": 386.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) fish"
+  },
+  {
+   "id": "nw_shop_11",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 310,
+    "goods": "straw"
+   },
+   "x": -3308.5,
+   "z": 420.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) straw"
+  },
+  {
+   "id": "nw_shop_12",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 311,
+    "goods": "cloth",
+    "w": 4.5
+   },
+   "x": -3294.7,
+   "z": 420.45,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 장터",
+   "note": "가가(假家) cloth"
+  },
+  {
+   "id": "nw_jwapan_01",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 401,
+    "goods": "mixed"
+   },
+   "x": -3331.73,
+   "z": 397.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_02",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 402,
+    "goods": "straw"
+   },
+   "x": -3327.66,
+   "z": 397.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_03",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 403,
+    "goods": "fish",
+    "awning": false
+   },
+   "x": -3322.36,
+   "z": 397.87,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_04",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 404,
+    "goods": "mixed"
+   },
+   "x": -3317.33,
+   "z": 398.44,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_05",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 405,
+    "goods": "mixed"
+   },
+   "x": -3313.37,
+   "z": 397.81,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_06",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 406,
+    "goods": "mixed"
+   },
+   "x": -3308.08,
+   "z": 397.82,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_07",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 407,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3303.02,
+   "z": 398.47,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_08",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 408,
+    "goods": "fish"
+   },
+   "x": -3298.22,
+   "z": 397.69,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_09",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 409,
+    "goods": "cloth"
+   },
+   "x": -3294.47,
+   "z": 398.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_10",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 410,
+    "goods": "cloth"
+   },
+   "x": -3289.34,
+   "z": 397.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_11",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 411,
+    "goods": "onggi"
+   },
+   "x": -3285.29,
+   "z": 397.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_12",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 412,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": -3281.05,
+   "z": 398.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_13",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 413,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3275.98,
+   "z": 397.62,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_14",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 414,
+    "goods": "mixed"
+   },
+   "x": -3271.79,
+   "z": 398.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_15",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 415,
+    "goods": "mixed",
+    "awning": false
+   },
+   "x": -3267.0,
+   "z": 398.39,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_16",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 416,
+    "goods": "grain"
+   },
+   "x": -3262.81,
+   "z": 398.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_17",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 417,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": -3257.88,
+   "z": 398.08,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_18",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 418,
+    "goods": "mixed"
+   },
+   "x": -3253.68,
+   "z": 397.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_19",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 419,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3249.99,
+   "z": 398.22,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_20",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 420,
+    "goods": "straw"
+   },
+   "x": -3245.18,
+   "z": 398.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_21",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 421,
+    "goods": "grain"
+   },
+   "x": -3241.33,
+   "z": 397.75,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_22",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 422,
+    "goods": "mixed",
+    "awning": false
+   },
+   "x": -3331.21,
+   "z": 405.18,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_23",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 423,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": -3327.36,
+   "z": 405.09,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_24",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 424,
+    "goods": "fish"
+   },
+   "x": -3323.25,
+   "z": 405.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_25",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 425,
+    "goods": "straw",
+    "awning": false
+   },
+   "x": -3319.61,
+   "z": 405.75,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_26",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 426,
+    "goods": "fish",
+    "awning": false
+   },
+   "x": -3314.92,
+   "z": 405.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_27",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 427,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3310.48,
+   "z": 405.13,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_28",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 428,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": -3306.43,
+   "z": 405.65,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_29",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 429,
+    "goods": "straw",
+    "awning": false
+   },
+   "x": -3301.56,
+   "z": 405.86,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_30",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 430,
+    "goods": "mixed"
+   },
+   "x": -3297.76,
+   "z": 405.45,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_31",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 431,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3292.86,
+   "z": 405.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_32",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 432,
+    "goods": "onggi"
+   },
+   "x": -3287.6,
+   "z": 405.28,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_33",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 433,
+    "goods": "fish"
+   },
+   "x": -3283.6,
+   "z": 405.01,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_34",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 434,
+    "goods": "grain"
+   },
+   "x": -3279.21,
+   "z": 405.37,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_35",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 435,
+    "goods": "mixed"
+   },
+   "x": -3274.46,
+   "z": 405.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_36",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 436,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3269.9,
+   "z": 405.24,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_37",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 437,
+    "goods": "mixed"
+   },
+   "x": -3264.58,
+   "z": 405.12,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_38",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 438,
+    "goods": "mixed"
+   },
+   "x": -3259.36,
+   "z": 405.73,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_39",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 439,
+    "goods": "cloth"
+   },
+   "x": -3255.33,
+   "z": 405.41,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_40",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 440,
+    "goods": "grain"
+   },
+   "x": -3250.45,
+   "z": 405.33,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_41",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 441,
+    "goods": "mixed",
+    "awning": false
+   },
+   "x": -3246.5,
+   "z": 405.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_42",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 442,
+    "goods": "fish"
+   },
+   "x": -3240.78,
+   "z": 405.85,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_43",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 443,
+    "goods": "straw"
+   },
+   "x": -3244.2,
+   "z": 350.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_44",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 444,
+    "goods": "mixed",
+    "awning": false
+   },
+   "x": -3248.4,
+   "z": 354.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_45",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 445,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3252.6,
+   "z": 355.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_46",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 446,
+    "goods": "fish",
+    "awning": false
+   },
+   "x": -3256.8,
+   "z": 355.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_47",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 447,
+    "goods": "grain"
+   },
+   "x": -3261.0,
+   "z": 357.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_48",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 448,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3265.2,
+   "z": 359.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_49",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 449,
+    "goods": "cloth"
+   },
+   "x": -3269.4,
+   "z": 362.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_50",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 450,
+    "goods": "straw"
+   },
+   "x": -3273.6,
+   "z": 364.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_51",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 451,
+    "goods": "cloth"
+   },
+   "x": -3277.8,
+   "z": 366.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_52",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 452,
+    "goods": "mixed",
+    "awning": false
+   },
+   "x": -3282.0,
+   "z": 367.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_53",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 453,
+    "goods": "straw"
+   },
+   "x": -3286.2,
+   "z": 367.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_54",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 454,
+    "goods": "onggi"
+   },
+   "x": -3236.71,
+   "z": 373.41,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_55",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 455,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": -3227.41,
+   "z": 374.65,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_56",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 456,
+    "goods": "mixed"
+   },
+   "x": -3227.12,
+   "z": 378.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_57",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 457,
+    "goods": "onggi"
+   },
+   "x": -3226.68,
+   "z": 383.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_58",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 458,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3236.68,
+   "z": 389.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_59",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 459,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": -3236.08,
+   "z": 394.26,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_60",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 460,
+    "goods": "cloth"
+   },
+   "x": -3236.48,
+   "z": 399.55,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_61",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 461,
+    "goods": "fish",
+    "awning": false
+   },
+   "x": -3226.79,
+   "z": 399.13,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_62",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 462,
+    "goods": "cloth"
+   },
+   "x": -3226.67,
+   "z": 404.75,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_63",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 463,
+    "goods": "grain"
+   },
+   "x": -3236.87,
+   "z": 408.86,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_64",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 464,
+    "goods": "straw"
+   },
+   "x": -3226.85,
+   "z": 409.42,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_65",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 465,
+    "goods": "grain"
+   },
+   "x": -3236.66,
+   "z": 413.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_66",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 466,
+    "goods": "fish"
+   },
+   "x": -3227.29,
+   "z": 413.67,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_67",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 467,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3236.36,
+   "z": 419.49,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_68",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 468,
+    "goods": "cloth"
+   },
+   "x": -3227.38,
+   "z": 418.33,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_69",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 469,
+    "goods": "onggi"
+   },
+   "x": -3236.49,
+   "z": 424.24,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_70",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 470,
+    "goods": "mixed"
+   },
+   "x": -3226.91,
+   "z": 424.61,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_71",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 471,
+    "goods": "cloth"
+   },
+   "x": -3236.82,
+   "z": 429.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_72",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 472,
+    "goods": "cloth"
+   },
+   "x": -3236.95,
+   "z": 434.08,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_73",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 473,
+    "goods": "cloth"
+   },
+   "x": -3227.28,
+   "z": 434.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jwapan_74",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 474,
+    "goods": "onggi"
+   },
+   "x": -3236.1,
+   "z": 439.56,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 장터"
+  },
+  {
+   "id": "nw_jumak_naru",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 12,
+    "flag": true
+   },
+   "x": -3213.5,
+   "z": 496.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "주막",
+   "note": "요천 광한루 앞 나루 길가 주막(구례·곡성 방면)"
+  },
+  {
+   "id": "nw_jumak_east",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 63,
+    "flag": true
+   },
+   "x": -3070.0,
+   "z": 230.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "주막",
+   "note": "동문 밖 통영별로(운봉 가는 길) 길가 주막"
+  },
+  {
+   "id": "nw_cross_yocheon_east_ford",
+   "kit": "village/seop_bridge",
+   "params": {
+    "seed": 51,
+    "len": 23.7,
+    "spans": 8,
+    "hw": 1.0
+   },
+   "x": -2784.2,
+   "z": 131.1,
+   "ry": -1.5468,
+   "y": 12.411,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "요천 건널목",
+   "note": "요천 동쪽 건널목(남원→운봉 길) 섶다리(겨울~봄, 가설). 길이 23.7m, y=둑 높이. walk 면은 엔진(deck 식)"
+  },
+  {
+   "id": "nw_cross_yocheon_south_naru_boat",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 54,
+    "len": 6.4
+   },
+   "x": -3203.67,
+   "z": 512.83,
+   "ry": -0.4636,
+   "y": 9.84,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "요천 건널목",
+   "note": "요천 광한루 앞 나루 나룻배(가설). 원점=수면"
+  },
+  {
+   "id": "nw_cross_yocheon_south_naru_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 55
+   },
+   "x": -3198.93,
+   "z": 508.28,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "요천 건널목"
+  },
+  {
+   "id": "nw_cross_x_namwon_gur_r018_18",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 52,
+    "len": 14.6
+   },
+   "x": -3036.8,
+   "z": 978.0,
+   "ry": -0.4986,
+   "y": 13.24,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "건널목",
+   "note": "주촌천 건널목 징검다리(가설). y=수면"
+  },
+  {
+   "id": "nw_cross_x_namwon_nor_r017_19",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 52,
+    "len": 14.7
+   },
+   "x": -3131.4,
+   "z": -105.6,
+   "ry": 0.7104,
+   "y": 13.65,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "건널목",
+   "note": "광치천 건널목 징검다리(가설). y=수면"
+  },
+  {
+   "id": "nw_cross_x_namwon_nor_r057_20",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 53,
+    "len": 12.1,
+    "hw": 1.2,
+    "arch": 0.5
+   },
+   "x": -3326.4,
+   "z": -553.5,
+   "ry": -0.265,
+   "y": 18.089,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "건널목",
+   "note": "내척천 건널목 홍예 돌다리(가설, 대로). y=둑 높이"
+  },
+  {
+   "id": "nw_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 61,
+    "female": false
+   },
+   "x": -3229.33,
+   "z": 557.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "남쪽 어귀(요천 건너 구례길)"
+  },
+  {
+   "id": "nw_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 62,
+    "female": true
+   },
+   "x": -3235.52,
+   "z": 554.16,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "남쪽 어귀(요천 건너 구례길)"
+  },
+  {
+   "id": "nw_sotdae_03",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 73,
+    "n": 3
+   },
+   "x": -3225.98,
+   "z": 559.83,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "남쪽 어귀(요천 건너 구례길)"
+  },
+  {
+   "id": "nw_jangseung_04",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 64,
+    "female": false
+   },
+   "x": -3063.05,
+   "z": 240.02,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "동쪽 어귀(통영별로)"
+  },
+  {
+   "id": "nw_jangseung_05",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 65,
+    "female": true
+   },
+   "x": -3060.95,
+   "z": 246.9,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "동쪽 어귀(통영별로)"
+  },
+  {
+   "id": "nw_sotdae_06",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 76,
+    "n": 3
+   },
+   "x": -3064.2,
+   "z": 236.29,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "동쪽 어귀(통영별로)"
+  },
+  {
+   "id": "nw_jangseung_07",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 67,
+    "female": false
+   },
+   "x": -3215.53,
+   "z": 79.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "북쪽 어귀(전주길)"
+  },
+  {
+   "id": "nw_jangseung_08",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 68,
+    "female": true
+   },
+   "x": -3208.33,
+   "z": 80.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "북쪽 어귀(전주길)"
+  },
+  {
+   "id": "nw_sotdae_09",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 79,
+    "n": 3
+   },
+   "x": -3219.43,
+   "z": 79.92,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "북쪽 어귀(전주길)"
+  },
+  {
+   "id": "nw_seonghwangdang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 81
+   },
+   "x": -3167.1,
+   "z": -227.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "마을 어귀",
+   "note": "북쪽 길 고갯마루 성황당(가설)"
+  },
+  {
+   "id": "nw_ppallaeteo_1",
+   "kit": "village/ppallaeteo",
+   "params": {
+    "seed": 91,
+    "n": 3
+   },
+   "x": -3149.74,
+   "z": 436.45,
+   "ry": -3.0032,
+   "y": 9.89,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "요천 빨래터",
+   "note": "요천 읍내 쪽 물가 빨래터. 원점=수면"
+  },
+  {
+   "id": "nw_ppallaeteo_2",
+   "kit": "village/ppallaeteo",
+   "params": {
+    "seed": 92,
+    "n": 3
+   },
+   "x": -3254.3,
+   "z": 517.41,
+   "ry": -2.954,
+   "y": 9.82,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "요천 빨래터",
+   "note": "요천 읍내 쪽 물가 빨래터. 원점=수면"
+  },
+  {
+   "id": "nw_ppallaeteo_3",
+   "kit": "village/ppallaeteo",
+   "params": {
+    "seed": 93,
+    "n": 3
+   },
+   "x": -3048.42,
+   "z": 349.78,
+   "ry": -2.3562,
+   "y": 11.18,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "요천 빨래터",
+   "note": "요천 읍내 쪽 물가 빨래터. 원점=수면"
+  },
+  {
+   "id": "nw_well_1",
+   "kit": "village/well",
+   "params": {
+    "seed": 96,
+    "roof": false
+   },
+   "x": -3236.8,
+   "z": 260.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내"
+  },
+  {
+   "id": "nw_well_2",
+   "kit": "village/well",
+   "params": {
+    "seed": 97,
+    "roof": false
+   },
+   "x": -3218.8,
+   "z": 235.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내"
+  },
+  {
+   "id": "nw_well_3",
+   "kit": "village/well",
+   "params": {
+    "seed": 98,
+    "roof": true
+   },
+   "x": -3107,
+   "z": 265,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내"
+  },
+  {
+   "id": "nw_well_4",
+   "kit": "village/well",
+   "params": {
+    "seed": 99,
+    "roof": true
+   },
+   "x": -3244.8,
+   "z": 133.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내"
+  },
+  {
+   "id": "nw_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 701,
+    "s": 1.0
+   },
+   "x": -3111.42,
+   "z": 252.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)"
+  },
+  {
+   "id": "nw_haystack_02",
+   "kit": "village/props",
+   "params": {
+    "seed": 702,
+    "kind": "byeotdan"
+   },
+   "x": -3097.6,
+   "z": 253.38,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)"
+  },
+  {
+   "id": "nw_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 703,
+    "s": 0.84
+   },
+   "x": -3258.06,
+   "z": 153.02,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)"
+  },
+  {
+   "id": "nw_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 704,
+    "s": 1.0
+   },
+   "x": -3335.48,
+   "z": 211.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)"
+  },
+  {
+   "id": "nw_haystack_05",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 705,
+    "s": 0.85
+   },
+   "x": -3346.27,
+   "z": 274.58,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)"
+  },
+  {
+   "id": "nw_haystack_06",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 706,
+    "s": 0.92
+   },
+   "x": -3342.27,
+   "z": 319.72,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)"
+  },
+  {
+   "id": "nw_prop_001",
+   "kit": "village/props",
+   "params": {
+    "seed": 501,
+    "kind": "pyeongsang"
+   },
+   "x": -3079.29,
+   "z": 252.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_002",
+   "kit": "village/props",
+   "params": {
+    "seed": 502,
+    "kind": "meongseok"
+   },
+   "x": -3075.0,
+   "z": 252.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_003",
+   "kit": "village/jige",
+   "params": {
+    "seed": 503,
+    "load": "basket"
+   },
+   "x": -3071.38,
+   "z": 240.71,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_004",
+   "kit": "village/props",
+   "params": {
+    "seed": 504,
+    "kind": "dok"
+   },
+   "x": -3227.76,
+   "z": 361.49,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_005",
+   "kit": "village/props",
+   "params": {
+    "seed": 505,
+    "kind": "jeolgu"
+   },
+   "x": -3236.54,
+   "z": 368.52,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_006",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 506,
+    "style": "stack"
+   },
+   "x": -3236.21,
+   "z": 375.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_007",
+   "kit": "village/jige",
+   "params": {
+    "seed": 507,
+    "load": "wood"
+   },
+   "x": -3215.81,
+   "z": 138.72,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_008",
+   "kit": "village/props",
+   "params": {
+    "seed": 508,
+    "kind": "pyeongsang"
+   },
+   "x": -3206.95,
+   "z": 111.56,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_009",
+   "kit": "village/props",
+   "params": {
+    "seed": 509,
+    "kind": "meongseok"
+   },
+   "x": -3217.56,
+   "z": 97.45,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_010",
+   "kit": "village/props",
+   "params": {
+    "seed": 510,
+    "kind": "meongseok"
+   },
+   "x": -3206.96,
+   "z": 76.55,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_011",
+   "kit": "village/props",
+   "params": {
+    "seed": 511,
+    "kind": "pyeongsang"
+   },
+   "x": -3231.72,
+   "z": 167.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_012",
+   "kit": "village/props",
+   "params": {
+    "seed": 512,
+    "kind": "meongseok"
+   },
+   "x": -3223.08,
+   "z": 174.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_013",
+   "kit": "village/jige",
+   "params": {
+    "seed": 513,
+    "load": "wood"
+   },
+   "x": -3222.98,
+   "z": 181.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_014",
+   "kit": "village/jige",
+   "params": {
+    "seed": 514,
+    "load": "basket"
+   },
+   "x": -3231.8,
+   "z": 188.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_015",
+   "kit": "village/jige",
+   "params": {
+    "seed": 515,
+    "load": "wood"
+   },
+   "x": -3224.36,
+   "z": 202.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_016",
+   "kit": "village/props",
+   "params": {
+    "seed": 516,
+    "kind": "pyeongsang"
+   },
+   "x": -3224.08,
+   "z": 216.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_017",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 517,
+    "style": "stack"
+   },
+   "x": -3232.82,
+   "z": 237.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_018",
+   "kit": "village/props",
+   "params": {
+    "seed": 518,
+    "kind": "soguri",
+    "fill": "grain"
+   },
+   "x": -3232.31,
+   "z": 244.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_019",
+   "kit": "village/jige",
+   "params": {
+    "seed": 519,
+    "load": "wood"
+   },
+   "x": -3231.77,
+   "z": 251.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_020",
+   "kit": "village/props",
+   "params": {
+    "seed": 520,
+    "kind": "meongseok"
+   },
+   "x": -3231.72,
+   "z": 265.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_021",
+   "kit": "village/jige",
+   "params": {
+    "seed": 521,
+    "load": "basket"
+   },
+   "x": -3232.63,
+   "z": 272.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_022",
+   "kit": "village/props",
+   "params": {
+    "seed": 522,
+    "kind": "pyeongsang"
+   },
+   "x": -3232.54,
+   "z": 279.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_023",
+   "kit": "village/props",
+   "params": {
+    "seed": 523,
+    "kind": "soguri",
+    "fill": "grain"
+   },
+   "x": -3222.84,
+   "z": 286.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_024",
+   "kit": "village/props",
+   "params": {
+    "seed": 524,
+    "kind": "soguri",
+    "fill": "grain"
+   },
+   "x": -3223.76,
+   "z": 293.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_025",
+   "kit": "village/jige",
+   "params": {
+    "seed": 525,
+    "load": "wood"
+   },
+   "x": -3224.12,
+   "z": 314.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_026",
+   "kit": "village/jige",
+   "params": {
+    "seed": 526,
+    "load": "wood"
+   },
+   "x": -3232.84,
+   "z": 321.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_027",
+   "kit": "village/jige",
+   "params": {
+    "seed": 527,
+    "load": "basket"
+   },
+   "x": -3308.3,
+   "z": 252.76,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_028",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 528,
+    "style": "stack"
+   },
+   "x": -3280.3,
+   "z": 252.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_029",
+   "kit": "village/props",
+   "params": {
+    "seed": 529,
+    "kind": "soguri",
+    "fill": "grain"
+   },
+   "x": -3245.3,
+   "z": 252.48,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_030",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 530,
+    "style": "stack"
+   },
+   "x": -3238.3,
+   "z": 252.81,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_031",
+   "kit": "village/props",
+   "params": {
+    "seed": 531,
+    "kind": "dok"
+   },
+   "x": -3217.3,
+   "z": 251.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_032",
+   "kit": "village/props",
+   "params": {
+    "seed": 532,
+    "kind": "jeolgu"
+   },
+   "x": -3189.3,
+   "z": 252.82,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_033",
+   "kit": "village/props",
+   "params": {
+    "seed": 533,
+    "kind": "jeolgu"
+   },
+   "x": -3182.3,
+   "z": 252.29,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_034",
+   "kit": "village/jige",
+   "params": {
+    "seed": 534,
+    "load": "wood"
+   },
+   "x": -3168.3,
+   "z": 244.38,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_035",
+   "kit": "village/props",
+   "params": {
+    "seed": 535,
+    "kind": "jeolgu"
+   },
+   "x": -3147.3,
+   "z": 252.44,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_036",
+   "kit": "village/props",
+   "params": {
+    "seed": 536,
+    "kind": "jeolgu"
+   },
+   "x": -3298.16,
+   "z": 367.67,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_037",
+   "kit": "village/props",
+   "params": {
+    "seed": 537,
+    "kind": "meongseok"
+   },
+   "x": -3299.09,
+   "z": 364.63,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_038",
+   "kit": "village/props",
+   "params": {
+    "seed": 538,
+    "kind": "jeolgu"
+   },
+   "x": -3292.29,
+   "z": 357.36,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_039",
+   "kit": "village/props",
+   "params": {
+    "seed": 539,
+    "kind": "dok"
+   },
+   "x": -3300.54,
+   "z": 350.67,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_040",
+   "kit": "village/props",
+   "params": {
+    "seed": 540,
+    "kind": "dok"
+   },
+   "x": -3300.51,
+   "z": 343.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_041",
+   "kit": "village/props",
+   "params": {
+    "seed": 541,
+    "kind": "pyeongsang"
+   },
+   "x": -3299.27,
+   "z": 323.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_042",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 542,
+    "style": "stack"
+   },
+   "x": -3307.29,
+   "z": 294.37,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  }
+ ]
+}

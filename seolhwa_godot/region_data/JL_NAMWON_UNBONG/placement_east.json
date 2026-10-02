@@ -1,0 +1,4899 @@
+{
+ "area": "east",
+ "note": "placement-east 생성(tools/placement/east.py, 결정적). 남원 읍내를 뺀 x > −2300 — 여원재·운봉·황산·인월·실상사·산내·반선·들마을·길가·도강점. 근거·가설: docs/reports/placement-east.md",
+ "items": [
+  {
+   "id": "ea_br_ramcheon_unbong_ford",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 21,
+    "len": 16.8
+   },
+   "x": 1045.9,
+   "z": -973.9,
+   "ry": 0.4636,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_ramcheon_unbong_ford_2",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 22,
+    "len": 22.0
+   },
+   "x": 1064.2,
+   "z": -992.2,
+   "ry": -0.4932,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_tongyeong__r041_3",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 23,
+    "len": 8.0
+   },
+   "x": 1463.0,
+   "z": -1366.7,
+   "ry": -0.8803,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_tongyeong__r044_4",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 44,
+    "len": 10.3,
+    "hw": 1.3
+   },
+   "x": 982.0,
+   "z": -874.8,
+   "ry": -0.97,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_tongyeong__r068_6",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 45,
+    "len": 8.2,
+    "hw": 1.3
+   },
+   "x": -2284.9,
+   "z": -101.8,
+   "ry": -0.4864,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_tongyeong__r069_7",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 26,
+    "len": 8.8
+   },
+   "x": -1370.3,
+   "z": -187.0,
+   "ry": -1.0708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_tongyeong__r070_8",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 47,
+    "len": 8.7,
+    "hw": 1.3
+   },
+   "x": -1146.4,
+   "z": -328.1,
+   "ry": -0.4432,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_tongyeong__r083_9",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 48,
+    "len": 9.3,
+    "hw": 1.3
+   },
+   "x": 354.4,
+   "z": -960.0,
+   "ry": -1.5686,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_haetal_bridge",
+   "kit": "village/seop_bridge",
+   "params": {
+    "seed": 39,
+    "len": 26.0,
+    "spans": 10
+   },
+   "x": 3756.8,
+   "z": 11.2,
+   "ry": 0.0295,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_inwol_bans_r032_12",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 30,
+    "len": 6.7
+   },
+   "x": 3205.2,
+   "z": -669.0,
+   "ry": 0.3202,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_inwol_bans_r036_13",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 31,
+    "len": 6.2
+   },
+   "x": 2930.5,
+   "z": -1376.2,
+   "ry": 1.124,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_inwol_bans_r075_14",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 32,
+    "len": 6.2
+   },
+   "x": 3214.6,
+   "z": 376.7,
+   "ry": -0.7795,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_inwol_bans_r077_15",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 33,
+    "len": 6.2
+   },
+   "x": 2718.9,
+   "z": 735.6,
+   "ry": -0.2373,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_inwol_bans_r078_16",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 34,
+    "len": 6.6
+   },
+   "x": 2571.5,
+   "z": 1024.1,
+   "ry": -1.5573,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_baemsagol__r080_21",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 35,
+    "len": 6.7
+   },
+   "x": 2177.3,
+   "z": 1601.2,
+   "ry": -0.3638,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_baemsagol__r080_22",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 36,
+    "len": 9.7
+   },
+   "x": 2271.2,
+   "z": 1618.0,
+   "ry": 0.5734,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_br_x_baemsagol__r080_23",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 37,
+    "len": 8.6
+   },
+   "x": 2280.1,
+   "z": 1806.6,
+   "ry": -0.741,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)"
+  },
+  {
+   "id": "ea_yw_seonghwangdang_01",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 3,
+    "tree": false
+   },
+   "x": 34.71,
+   "z": -986.15,
+   "ry": -0.0021,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여원재"
+  },
+  {
+   "id": "ea_yw_sinmok_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 9,
+    "variant": "zelkova",
+    "h": 8.0,
+    "spread": 5.0
+   },
+   "x": 33.11,
+   "z": -986.95,
+   "ry": -0.0021,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원재"
+  },
+  {
+   "id": "ea_yw_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 46.84,
+   "z": -973.99,
+   "ry": 0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원재"
+  },
+  {
+   "id": "ea_yw_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 50.69,
+   "z": -980.78,
+   "ry": 0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원재"
+  },
+  {
+   "id": "ea_yw_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 5
+   },
+   "x": 75.29,
+   "z": -985.8,
+   "ry": -0.2502,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여원재"
+  },
+  {
+   "id": "ea_yj_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 6
+   },
+   "x": -321.68,
+   "z": -890.29,
+   "ry": 0.1732,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여원재 아랫주막"
+  },
+  {
+   "id": "ea_yj_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 61
+   },
+   "x": -289.4,
+   "z": -892.44,
+   "ry": -0.4266,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여원재 아랫주막"
+  },
+  {
+   "id": "ea_yj_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 61,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -285.14,
+   "z": -896.0,
+   "ry": -0.4266,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원재 아랫주막"
+  },
+  {
+   "id": "ea_yj_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 61,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": -295.85,
+   "z": -894.93,
+   "ry": -0.4266,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여원재 아랫주막"
+  },
+  {
+   "id": "ea_yj_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 62,
+    "variant": "zelkova"
+   },
+   "x": -330.28,
+   "z": -886.91,
+   "ry": -0.0979,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원재 아랫주막"
+  },
+  {
+   "id": "ea_ib_house_medium_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 843,
+    "size": "medium"
+   },
+   "x": -1236.15,
+   "z": -201.0,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_house_small_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 850,
+    "size": "small"
+   },
+   "x": -1273.32,
+   "z": -214.96,
+   "ry": 0.3157,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_house_small_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 857,
+    "size": "small"
+   },
+   "x": -1246.98,
+   "z": -231.18,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 864,
+    "w": 5.4
+   },
+   "x": -1258.81,
+   "z": -184.55,
+   "ry": -0.1407,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 864,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -1255.73,
+   "z": -189.17,
+   "ry": -0.1407,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 864,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": -1252.03,
+   "z": -183.19,
+   "ry": -0.1407,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 871,
+    "w": 6.0
+   },
+   "x": -1279.06,
+   "z": -232.23,
+   "ry": 0.3157,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 871,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -1278.33,
+   "z": -237.73,
+   "ry": 0.3157,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_heotgan_02",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 871,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": -1272.38,
+   "z": -234.0,
+   "ry": 0.3157,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 878,
+    "w": 6.0
+   },
+   "x": -1302.48,
+   "z": -193.1,
+   "ry": 0.0686,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 878,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -1300.43,
+   "z": -198.25,
+   "ry": 0.0686,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_heotgan_03",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 878,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": -1309.34,
+   "z": -192.22,
+   "ry": 0.0686,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_choga_04",
+   "kit": "village/choga",
+   "params": {
+    "seed": 885
+   },
+   "x": -1248.53,
+   "z": -209.27,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 885,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -1248.95,
+   "z": -214.8,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_firewood_01",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 885,
+    "style": "stack"
+   },
+   "x": -1242.88,
+   "z": -210.68,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 843,
+    "roof": false
+   },
+   "x": -1285.35,
+   "z": -229.61,
+   "ry": -0.0589,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 893,
+    "variant": "persimmon"
+   },
+   "x": -1267.05,
+   "z": -237.34,
+   "ry": -0.124,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": -1337.32,
+   "z": -204.93,
+   "ry": 0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": -1339.75,
+   "z": -212.34,
+   "ry": 0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 7,
+    "n": 3
+   },
+   "x": -1334.54,
+   "z": -204.16,
+   "ry": 0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ib_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 923,
+    "variant": "zelkova"
+   },
+   "x": -1339.76,
+   "z": -216.59,
+   "ry": 0.0202,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이백 마을"
+  },
+  {
+   "id": "ea_ub_samun_01",
+   "kit": "landmark/samun",
+   "params": {
+    "seed": 7,
+    "kind": "outer",
+    "name": "운봉현"
+   },
+   "x": 904.36,
+   "z": -747.63,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_dongheon_01",
+   "kit": "landmark/dongheon",
+   "params": {
+    "seed": 8,
+    "bays": 5
+   },
+   "x": 900.65,
+   "z": -773.35,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_naea_01",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 9,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": 916.25,
+   "z": -775.07,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_torch_01",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 7
+   },
+   "x": 896.06,
+   "z": -746.05,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_torch_02",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 8
+   },
+   "x": 912.44,
+   "z": -745.22,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_01",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 27,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 894.19,
+   "z": -784.19,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_02",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 28,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 906.17,
+   "z": -783.59,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_03",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 29,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 918.16,
+   "z": -782.98,
+   "ry": -0.0505,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_04",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 30,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 923.85,
+   "z": -776.69,
+   "ry": -1.6213,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_05",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 31,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 923.24,
+   "z": -764.7,
+   "ry": -1.6213,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_06",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 32,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 922.64,
+   "z": -752.72,
+   "ry": -1.6213,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_07",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 33,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 886.68,
+   "z": -754.53,
+   "ry": 1.5203,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_08",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 34,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 887.29,
+   "z": -766.52,
+   "ry": 1.5203,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_09",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 35,
+    "length": 12.25,
+    "height": 2.2
+   },
+   "x": 887.89,
+   "z": -778.5,
+   "ry": 1.5203,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_10",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 36,
+    "length": 10.85,
+    "height": 2.2
+   },
+   "x": 917.04,
+   "z": -746.99,
+   "ry": -3.1921,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_wall_11",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 37,
+    "length": 10.85,
+    "height": 2.2
+   },
+   "x": 891.67,
+   "z": -748.27,
+   "ry": -3.1921,
+   "y": 120.01,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_shop_01",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 301,
+    "goods": "onggi"
+   },
+   "x": 874.28,
+   "z": -733.22,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_shop_02",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 302,
+    "goods": "cloth",
+    "w": 4.5
+   },
+   "x": 869.25,
+   "z": -726.08,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_shop_03",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 303,
+    "goods": "grain"
+   },
+   "x": 863.17,
+   "z": -722.13,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_01",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 400,
+    "goods": "straw"
+   },
+   "x": 882.62,
+   "z": -724.86,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_02",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 401,
+    "goods": "fish"
+   },
+   "x": 879.65,
+   "z": -721.89,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_03",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 402,
+    "goods": "mixed",
+    "awning": false
+   },
+   "x": 876.67,
+   "z": -718.93,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_04",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 403,
+    "goods": "onggi"
+   },
+   "x": 873.7,
+   "z": -715.96,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_05",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 404,
+    "goods": "cloth"
+   },
+   "x": 870.73,
+   "z": -712.99,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_06",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 405,
+    "goods": "grain",
+    "awning": false
+   },
+   "x": 867.75,
+   "z": -710.03,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_07",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 406,
+    "goods": "straw"
+   },
+   "x": 864.78,
+   "z": -707.06,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jwapan_08",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 407,
+    "goods": "fish"
+   },
+   "x": 861.81,
+   "z": -704.1,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_house_large_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 171,
+    "size": "large"
+   },
+   "x": 782.02,
+   "z": -676.4,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_house_large_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 178,
+    "size": "large"
+   },
+   "x": 824.87,
+   "z": -698.19,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_house_medium_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 185,
+    "size": "medium"
+   },
+   "x": 816.31,
+   "z": -722.31,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_house_medium_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 192,
+    "size": "medium"
+   },
+   "x": 820.04,
+   "z": -757.93,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_house_small_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 199,
+    "size": "small"
+   },
+   "x": 860.71,
+   "z": -743.45,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_house_small_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 206,
+    "size": "small"
+   },
+   "x": 833.59,
+   "z": -772.39,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 213,
+    "w": 5.4
+   },
+   "x": 830.8,
+   "z": -738.74,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 213,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 830.38,
+   "z": -744.27,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 213,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 836.98,
+   "z": -741.84,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 220,
+    "gourd": true
+   },
+   "x": 803.76,
+   "z": -692.84,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 220,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 808.34,
+   "z": -695.97,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_heotgan_02",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 220,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 797.58,
+   "z": -695.95,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 227,
+    "w": 6.0
+   },
+   "x": 853.17,
+   "z": -711.41,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 227,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 852.75,
+   "z": -716.94,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 227
+   },
+   "x": 858.94,
+   "z": -713.82,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_04",
+   "kit": "village/choga",
+   "params": {
+    "seed": 234,
+    "gourd": true
+   },
+   "x": 818.63,
+   "z": -739.62,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 234,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 818.21,
+   "z": -745.15,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_heotgan_03",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 234,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 812.86,
+   "z": -735.82,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_05",
+   "kit": "village/choga",
+   "params": {
+    "seed": 241,
+    "w": 5.4
+   },
+   "x": 806.8,
+   "z": -674.21,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_05",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 241,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 811.38,
+   "z": -677.34,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_heotgan_04",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 241,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 812.58,
+   "z": -670.41,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_06",
+   "kit": "village/choga",
+   "params": {
+    "seed": 248,
+    "w": 6.0
+   },
+   "x": 874.16,
+   "z": -748.7,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_06",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 248,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 873.74,
+   "z": -754.23,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_firewood_01",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 248,
+    "style": "stack"
+   },
+   "x": 870.11,
+   "z": -744.52,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_07",
+   "kit": "village/choga",
+   "params": {
+    "seed": 255
+   },
+   "x": 788.55,
+   "z": -695.69,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_07",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 255,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 793.13,
+   "z": -698.82,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 255
+   },
+   "x": 793.52,
+   "z": -691.89,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_08",
+   "kit": "village/choga",
+   "params": {
+    "seed": 262,
+    "gourd": true
+   },
+   "x": 841.84,
+   "z": -790.3,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_08",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 262,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 841.42,
+   "z": -795.83,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_firewood_02",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 262,
+    "style": "stack"
+   },
+   "x": 847.49,
+   "z": -791.71,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_09",
+   "kit": "village/choga",
+   "params": {
+    "seed": 269,
+    "w": 5.4,
+    "gourd": true
+   },
+   "x": 809.42,
+   "z": -745.57,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_09",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 269,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 809.0,
+   "z": -751.1,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 269
+   },
+   "x": 804.45,
+   "z": -741.78,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_10",
+   "kit": "village/choga",
+   "params": {
+    "seed": 276,
+    "w": 5.4
+   },
+   "x": 882.39,
+   "z": -740.75,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_10",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 276,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 881.97,
+   "z": -746.28,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_firewood_03",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 276,
+    "style": "stack"
+   },
+   "x": 888.04,
+   "z": -742.16,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_11",
+   "kit": "village/choga",
+   "params": {
+    "seed": 283,
+    "w": 6.0
+   },
+   "x": 851.84,
+   "z": -675.5,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_11",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 283,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 851.42,
+   "z": -681.03,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 283
+   },
+   "x": 857.61,
+   "z": -677.91,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_choga_12",
+   "kit": "village/choga",
+   "params": {
+    "seed": 290
+   },
+   "x": 852.01,
+   "z": -781.8,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangdok_12",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 290,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 851.59,
+   "z": -787.33,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_firewood_04",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 290,
+    "style": "stack"
+   },
+   "x": 857.66,
+   "z": -783.21,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 171,
+    "roof": false
+   },
+   "x": 836.89,
+   "z": -718.44,
+   "ry": 0.0739,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 221,
+    "variant": "persimmon"
+   },
+   "x": 822.27,
+   "z": -676.45,
+   "ry": -0.0468,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_tree_persimmon_02",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 222,
+    "variant": "persimmon"
+   },
+   "x": 813.68,
+   "z": -686.09,
+   "ry": 0.0205,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 901.01,
+   "z": -799.53,
+   "ry": -0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 895.51,
+   "z": -805.06,
+   "ry": -0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 3,
+    "n": 3
+   },
+   "x": 903.84,
+   "z": -800.09,
+   "ry": -0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 251,
+    "variant": "zelkova"
+   },
+   "x": 892.73,
+   "z": -807.64,
+   "ry": -0.0111,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 31
+   },
+   "x": 905.46,
+   "z": -825.91,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_ub_mulbang_01",
+   "kit": "village/mulbang_a",
+   "params": {
+    "seed": 32
+   },
+   "x": 777.67,
+   "z": -786.75,
+   "ry": -0.0501,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "운봉 읍치"
+  },
+  {
+   "id": "ea_hs_bigak_01",
+   "kit": "landmark/hwangsan_bigak",
+   "params": {
+    "seed": 1,
+    "wall": true
+   },
+   "x": 1670.8,
+   "z": -1345.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_house_small_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 105,
+    "size": "small"
+   },
+   "x": 1640.51,
+   "z": -1312.92,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_house_medium_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 112,
+    "size": "medium"
+   },
+   "x": 1613.6,
+   "z": -1348.87,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 119,
+    "w": 5.4
+   },
+   "x": 1604.41,
+   "z": -1315.24,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 119,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1608.98,
+   "z": -1318.37,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_firewood_01",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 119,
+    "style": "stack"
+   },
+   "x": 1598.76,
+   "z": -1316.65,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 126
+   },
+   "x": 1588.16,
+   "z": -1350.46,
+   "ry": -0.0729,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 126,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1590.92,
+   "z": -1355.28,
+   "ry": -0.0729,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 126
+   },
+   "x": 1581.92,
+   "z": -1350.12,
+   "ry": -0.0729,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 133,
+    "w": 6.0
+   },
+   "x": 1594.76,
+   "z": -1324.67,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 133,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1599.34,
+   "z": -1327.8,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 133,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 1588.58,
+   "z": -1327.77,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 105,
+    "roof": false
+   },
+   "x": 1618.78,
+   "z": -1330.1,
+   "ry": -0.0684,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 155,
+    "variant": "persimmon"
+   },
+   "x": 1622.25,
+   "z": -1326.04,
+   "ry": -0.0557,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 1562.19,
+   "z": -1343.9,
+   "ry": -0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 1565.41,
+   "z": -1351.0,
+   "ry": -0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 4,
+    "n": 3
+   },
+   "x": 1563.71,
+   "z": -1341.45,
+   "ry": -0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_hs_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 185,
+    "variant": "zelkova"
+   },
+   "x": 1564.91,
+   "z": -1355.19,
+   "ry": 0.0479,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황산대첩비·비전"
+  },
+  {
+   "id": "ea_iw_shop_01",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 301,
+    "goods": "onggi"
+   },
+   "x": 2736.0,
+   "z": -1479.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_shop_02",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 302,
+    "goods": "cloth",
+    "w": 4.5
+   },
+   "x": 2744.6,
+   "z": -1479.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_shop_03",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 303,
+    "goods": "grain"
+   },
+   "x": 2751.7,
+   "z": -1479.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_shop_04",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 304,
+    "goods": "straw"
+   },
+   "x": 2760.3,
+   "z": -1479.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_shop_05",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 305,
+    "goods": "fish"
+   },
+   "x": 2768.9,
+   "z": -1479.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_01",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 400,
+    "goods": "mixed"
+   },
+   "x": 2750.0,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_02",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 401,
+    "goods": "onggi"
+   },
+   "x": 2754.2,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_03",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 402,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": 2758.4,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_04",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 403,
+    "goods": "grain"
+   },
+   "x": 2762.6,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_05",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 404,
+    "goods": "straw"
+   },
+   "x": 2766.8,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_06",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 405,
+    "goods": "fish",
+    "awning": false
+   },
+   "x": 2771.0,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_07",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 406,
+    "goods": "mixed"
+   },
+   "x": 2775.2,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_08",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 407,
+    "goods": "onggi"
+   },
+   "x": 2779.4,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_09",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 408,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": 2783.6,
+   "z": -1467.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_10",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 409,
+    "goods": "grain"
+   },
+   "x": 2789.15,
+   "z": -1467.55,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_11",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 410,
+    "goods": "straw"
+   },
+   "x": 2793.19,
+   "z": -1468.7,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jwapan_12",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 411,
+    "goods": "fish",
+    "awning": false
+   },
+   "x": 2797.23,
+   "z": -1469.85,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_yeoksa_01",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 5,
+    "plain": true,
+    "w": 7.2,
+    "bays": 3
+   },
+   "x": 2693.96,
+   "z": -1492.66,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_mabang_01",
+   "kit": "village/oeyanggan",
+   "params": {
+    "seed": 5
+   },
+   "x": 2684.97,
+   "z": -1493.27,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_mabang_02",
+   "kit": "village/oeyanggan",
+   "params": {
+    "seed": 6
+   },
+   "x": 2684.84,
+   "z": -1487.77,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 5
+   },
+   "x": 2702.95,
+   "z": -1492.34,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_daemun_01",
+   "kit": "village/daemun",
+   "params": {
+    "seed": 5,
+    "style": "tile"
+   },
+   "x": 2693.7,
+   "z": -1481.56,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_torch_01",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 5
+   },
+   "x": 2696.25,
+   "z": -1479.6,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_todam_01",
+   "kit": "village/todam",
+   "params": {
+    "seed": -1,
+    "ax": -12.5,
+    "az": 6.5,
+    "bx": -2.2,
+    "bz": 6.5,
+    "cap": "tile"
+   },
+   "x": 2693.85,
+   "z": -1488.06,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_todam_02",
+   "kit": "village/todam",
+   "params": {
+    "seed": 13,
+    "ax": 2.2,
+    "az": 6.5,
+    "bx": 12.5,
+    "bz": 6.5,
+    "cap": "tile"
+   },
+   "x": 2693.85,
+   "z": -1488.06,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_todam_03",
+   "kit": "village/todam",
+   "params": {
+    "seed": -1,
+    "ax": -12.5,
+    "az": 6.5,
+    "bx": -12.5,
+    "bz": -11.8,
+    "cap": "tile"
+   },
+   "x": 2693.85,
+   "z": -1488.06,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_todam_04",
+   "kit": "village/todam",
+   "params": {
+    "seed": 24,
+    "ax": 12.5,
+    "az": 6.5,
+    "bx": 12.5,
+    "bz": -11.8,
+    "cap": "tile"
+   },
+   "x": 2693.85,
+   "z": -1488.06,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_todam_05",
+   "kit": "village/todam",
+   "params": {
+    "seed": -19,
+    "ax": -12.5,
+    "az": -11.8,
+    "bx": 12.5,
+    "bz": -11.8,
+    "cap": "tile"
+   },
+   "x": 2693.85,
+   "z": -1488.06,
+   "ry": -0.0237,
+   "y": 109.26,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 51
+   },
+   "x": 2718.05,
+   "z": -1481.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jumak_02",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 52
+   },
+   "x": 2883.13,
+   "z": -1491.22,
+   "ry": 0.3163,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_house_medium_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 474,
+    "size": "medium"
+   },
+   "x": 2783.88,
+   "z": -1501.78,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_house_medium_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 481,
+    "size": "medium"
+   },
+   "x": 2815.1,
+   "z": -1505.91,
+   "ry": 0.3081,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_house_small_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 488,
+    "size": "small"
+   },
+   "x": 2752.6,
+   "z": -1498.34,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_house_large_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 495,
+    "size": "large"
+   },
+   "x": 2846.08,
+   "z": -1513.28,
+   "ry": 0.0054,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 502
+   },
+   "x": 2789.63,
+   "z": -1484.05,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 502,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2790.57,
+   "z": -1489.52,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 502
+   },
+   "x": 2783.88,
+   "z": -1481.59,
+   "ry": 0.2773,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 509
+   },
+   "x": 2766.65,
+   "z": -1513.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 509,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2769.05,
+   "z": -1518.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_heotgan_02",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 509,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 2773.55,
+   "z": -1513.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 516
+   },
+   "x": 2766.08,
+   "z": -1486.63,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 516,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2768.48,
+   "z": -1491.63,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_firewood_01",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 516,
+    "style": "stack"
+   },
+   "x": 2771.68,
+   "z": -1485.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_04",
+   "kit": "village/choga",
+   "params": {
+    "seed": 523,
+    "gourd": true
+   },
+   "x": 2796.38,
+   "z": -1520.14,
+   "ry": -0.0614,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 523,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2799.08,
+   "z": -1524.99,
+   "ry": -0.0614,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_heotgan_03",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 523,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 2803.24,
+   "z": -1519.32,
+   "ry": -0.0614,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_05",
+   "kit": "village/choga",
+   "params": {
+    "seed": 530,
+    "w": 5.4,
+    "gourd": true
+   },
+   "x": 2803.31,
+   "z": -1482.99,
+   "ry": 0.0333,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_05",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 530,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2805.54,
+   "z": -1488.07,
+   "ry": 0.0333,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_firewood_02",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 530,
+    "style": "stack"
+   },
+   "x": 2797.76,
+   "z": -1481.2,
+   "ry": 0.0333,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 474,
+    "roof": true
+   },
+   "x": 2770.63,
+   "z": -1499.74,
+   "ry": -0.0911,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 524,
+    "variant": "persimmon"
+   },
+   "x": 2779.89,
+   "z": -1515.04,
+   "ry": 0.0589,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_tree_persimmon_02",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 525,
+    "variant": "persimmon"
+   },
+   "x": 2783.75,
+   "z": -1515.86,
+   "ry": -0.1283,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 2700.07,
+   "z": -1468.2,
+   "ry": -0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 2700.07,
+   "z": -1476.0,
+   "ry": -0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 3,
+    "n": 3
+   },
+   "x": 2702.47,
+   "z": -1466.6,
+   "ry": -0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 554,
+    "variant": "zelkova"
+   },
+   "x": 2696.49,
+   "z": -1466.56,
+   "ry": -0.024,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_seop_bridge_01",
+   "kit": "village/seop_bridge",
+   "params": {
+    "seed": 77,
+    "len": 18.5,
+    "spans": 7
+   },
+   "x": 2766.2,
+   "z": -1405.9,
+   "ry": -0.3059,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_house_small_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 34,
+    "size": "small"
+   },
+   "x": 2775.6,
+   "z": -1369.09,
+   "ry": -0.0211,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_06",
+   "kit": "village/choga",
+   "params": {
+    "seed": 41
+   },
+   "x": 2754.03,
+   "z": -1372.61,
+   "ry": -0.0653,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_06",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 41,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2756.75,
+   "z": -1377.44,
+   "ry": -0.0653,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_firewood_03",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 41,
+    "style": "stack"
+   },
+   "x": 2759.51,
+   "z": -1370.65,
+   "ry": -0.0653,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_07",
+   "kit": "village/choga",
+   "params": {
+    "seed": 48,
+    "w": 5.4
+   },
+   "x": 2745.85,
+   "z": -1362.89,
+   "ry": -0.1231,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_07",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 48,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2748.84,
+   "z": -1367.56,
+   "ry": -0.1231,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 48
+   },
+   "x": 2751.9,
+   "z": -1361.33,
+   "ry": -0.1231,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_choga_08",
+   "kit": "village/choga",
+   "params": {
+    "seed": 55,
+    "w": 6.0,
+    "gourd": true
+   },
+   "x": 2743.73,
+   "z": -1372.62,
+   "ry": 0.1214,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangdok_08",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 55,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2745.5,
+   "z": -1377.87,
+   "ry": 0.1214,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_firewood_04",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 55,
+    "style": "stack"
+   },
+   "x": 2738.36,
+   "z": -1370.35,
+   "ry": 0.1214,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_well_02",
+   "kit": "village/well",
+   "params": {
+    "seed": 34,
+    "roof": true
+   },
+   "x": 2763.57,
+   "z": -1370.58,
+   "ry": -0.1031,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_tree_persimmon_03",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 84,
+    "variant": "persimmon"
+   },
+   "x": 2760.42,
+   "z": -1366.6,
+   "ry": 0.1379,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_mulbang_01",
+   "kit": "village/mulbang_a",
+   "params": {
+    "seed": 53
+   },
+   "x": 2700.16,
+   "z": -1440.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangseung_03",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 2888.09,
+   "z": -1477.27,
+   "ry": 0.16,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_jangseung_04",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 2885.67,
+   "z": -1484.69,
+   "ry": 0.16,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_iw_sotdae_02",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 1,
+    "n": 3
+   },
+   "x": 2890.87,
+   "z": -1476.5,
+   "ry": 0.16,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "인월"
+  },
+  {
+   "id": "ea_ss_silsangsa_01",
+   "kit": "landmark/silsangsa",
+   "params": {
+    "seed": 1
+   },
+   "x": 3682.3,
+   "z": 16.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "실상사"
+  },
+  {
+   "id": "ea_ss_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 3756.42,
+   "z": 29.6,
+   "ry": 0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "실상사"
+  },
+  {
+   "id": "ea_ss_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 3759.78,
+   "z": 34.93,
+   "ry": 0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "실상사"
+  },
+  {
+   "id": "ea_ss_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 61
+   },
+   "x": 3629.46,
+   "z": 74.27,
+   "ry": -0.475,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "실상사"
+  },
+  {
+   "id": "ea_sn_house_small_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 765,
+    "size": "small"
+   },
+   "x": 3026.83,
+   "z": 501.76,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 772,
+    "w": 6.0
+   },
+   "x": 3025.35,
+   "z": 489.77,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 772,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 3024.93,
+   "z": 484.24,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 772
+   },
+   "x": 3020.38,
+   "z": 493.56,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 779,
+    "w": 5.4,
+    "gourd": true
+   },
+   "x": 3013.28,
+   "z": 472.02,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 779,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 3012.86,
+   "z": 466.49,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_firewood_01",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 779,
+    "style": "stack"
+   },
+   "x": 3009.23,
+   "z": 476.21,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 786
+   },
+   "x": 3020.69,
+   "z": 463.75,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 786,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 3020.27,
+   "z": 458.22,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_firewood_02",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 786,
+    "style": "stack"
+   },
+   "x": 3026.34,
+   "z": 462.34,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_choga_04",
+   "kit": "village/choga",
+   "params": {
+    "seed": 793,
+    "w": 5.4
+   },
+   "x": 3040.35,
+   "z": 454.22,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 793,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 3039.92,
+   "z": 448.69,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_firewood_03",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 793,
+    "style": "stack"
+   },
+   "x": 3046.0,
+   "z": 452.81,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_choga_05",
+   "kit": "village/choga",
+   "params": {
+    "seed": 800
+   },
+   "x": 3017.28,
+   "z": 514.14,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangdok_05",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 800,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 3016.86,
+   "z": 508.61,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 800,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 3011.5,
+   "z": 517.93,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 765,
+    "roof": false
+   },
+   "x": 3013.94,
+   "z": 479.21,
+   "ry": 0.1476,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 815,
+    "variant": "persimmon"
+   },
+   "x": 3009.62,
+   "z": 482.14,
+   "ry": 0.1294,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 3051.42,
+   "z": 449.37,
+   "ry": 0.16,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 3055.69,
+   "z": 454.01,
+   "ry": 0.16,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 7,
+    "n": 3
+   },
+   "x": 3055.0,
+   "z": 456.81,
+   "ry": 0.16,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 845,
+    "variant": "zelkova"
+   },
+   "x": 3049.15,
+   "z": 445.65,
+   "ry": 0.0899,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_sn_mulbang_01",
+   "kit": "village/mulbang_a",
+   "params": {
+    "seed": 62
+   },
+   "x": 2983.08,
+   "z": 486.94,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산내 마을"
+  },
+  {
+   "id": "ea_bs_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 191,
+    "gourd": true
+   },
+   "x": 2163.35,
+   "z": 1543.68,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 191,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2167.93,
+   "z": 1540.55,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 191
+   },
+   "x": 2168.32,
+   "z": 1547.48,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 198
+   },
+   "x": 2165.82,
+   "z": 1532.95,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 198,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2165.4,
+   "z": 1527.42,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 198
+   },
+   "x": 2171.59,
+   "z": 1530.55,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 205
+   },
+   "x": 2171.9,
+   "z": 1557.56,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 205,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2176.48,
+   "z": 1554.43,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 205
+   },
+   "x": 2166.13,
+   "z": 1555.15,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_choga_04",
+   "kit": "village/choga",
+   "params": {
+    "seed": 212,
+    "gourd": true
+   },
+   "x": 2194.86,
+   "z": 1516.45,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 212,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 2199.44,
+   "z": 1513.32,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 212
+   },
+   "x": 2199.83,
+   "z": 1520.24,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 191,
+    "roof": false
+   },
+   "x": 2165.51,
+   "z": 1508.5,
+   "ry": 0.0464,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 241,
+    "variant": "persimmon"
+   },
+   "x": 2156.25,
+   "z": 1504.34,
+   "ry": -0.1168,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 2178.2,
+   "z": 1468.04,
+   "ry": 0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 2183.24,
+   "z": 1471.82,
+   "ry": 0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 1,
+    "n": 3
+   },
+   "x": 2183.08,
+   "z": 1474.7,
+   "ry": 0.08,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_tree_zelkova_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 271,
+    "variant": "zelkova"
+   },
+   "x": 2180.32,
+   "z": 1459.86,
+   "ry": -0.0374,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 71
+   },
+   "x": 2208.35,
+   "z": 1517.99,
+   "ry": 0.0449,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_bs_mulbang_01",
+   "kit": "village/mulbang_a",
+   "params": {
+    "seed": 72
+   },
+   "x": 2175.25,
+   "z": 1419.44,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반선 마을"
+  },
+  {
+   "id": "ea_av_house_small_01",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 256,
+    "size": "small"
+   },
+   "x": -2213.91,
+   "z": -192.74,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_choga_01",
+   "kit": "village/choga",
+   "params": {
+    "seed": 263,
+    "w": 5.4
+   },
+   "x": -2227.3,
+   "z": -182.55,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 263,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -2227.72,
+   "z": -188.08,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 263
+   },
+   "x": -2221.53,
+   "z": -184.96,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_choga_02",
+   "kit": "village/choga",
+   "params": {
+    "seed": 270,
+    "gourd": true
+   },
+   "x": -2200.37,
+   "z": -198.23,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 270,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -2200.79,
+   "z": -203.76,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_firewood_01",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 270,
+    "style": "stack"
+   },
+   "x": -2204.42,
+   "z": -194.04,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_choga_03",
+   "kit": "village/choga",
+   "params": {
+    "seed": 277
+   },
+   "x": -2203.13,
+   "z": -181.81,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 277,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -2203.55,
+   "z": -187.34,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_heotgan_01",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 277,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": -2208.9,
+   "z": -178.02,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 256,
+    "roof": true
+   },
+   "x": -2220.83,
+   "z": -200.76,
+   "ry": 0.1169,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_tree_persimmon_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 306,
+    "variant": "persimmon"
+   },
+   "x": -2216.59,
+   "z": -202.72,
+   "ry": -0.0712,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "ea_av_house_small_02",
+   "kit": "village/house_compound",
+   "params": {
+    "seed": 631,
+    "size": "small"
+   },
+   "x": 1208.16,
+   "z": -1102.3,
+   "ry": 0.1393,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_choga_04",
+   "kit": "village/choga",
+   "params": {
+    "seed": 638
+   },
+   "x": 1206.83,
+   "z": -1138.58,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 638,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1206.41,
+   "z": -1144.11,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_firewood_02",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 638,
+    "style": "stack"
+   },
+   "x": 1212.48,
+   "z": -1140.0,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_choga_05",
+   "kit": "village/choga",
+   "params": {
+    "seed": 645,
+    "w": 6.0
+   },
+   "x": 1220.7,
+   "z": -1102.5,
+   "ry": 0.0612,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_jangdok_05",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 645,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1222.79,
+   "z": -1107.63,
+   "ry": 0.0612,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_firewood_03",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 645,
+    "style": "stack"
+   },
+   "x": 1226.39,
+   "z": -1101.24,
+   "ry": 0.0612,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_choga_06",
+   "kit": "village/choga",
+   "params": {
+    "seed": 652,
+    "gourd": true
+   },
+   "x": 1196.14,
+   "z": -1097.57,
+   "ry": 0.0474,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_jangdok_06",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 652,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1198.3,
+   "z": -1102.68,
+   "ry": 0.0474,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 652
+   },
+   "x": 1189.99,
+   "z": -1096.48,
+   "ry": 0.0474,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_choga_07",
+   "kit": "village/choga",
+   "params": {
+    "seed": 659,
+    "w": 6.0
+   },
+   "x": 1222.97,
+   "z": -1143.89,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_jangdok_07",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 659,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 1222.55,
+   "z": -1149.42,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_heotgan_02",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 659,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 1217.19,
+   "z": -1140.1,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_tree_persimmon_02",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 681,
+    "variant": "persimmon"
+   },
+   "x": 1200.64,
+   "z": -1131.59,
+   "ry": -0.0724,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_04)"
+  },
+  {
+   "id": "ea_av_choga_08",
+   "kit": "village/choga",
+   "params": {
+    "seed": 245
+   },
+   "x": 640.0,
+   "z": -92.0,
+   "ry": -0.1172,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_jangdok_08",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 245,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 642.97,
+   "z": -96.68,
+   "ry": -0.1172,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 245
+   },
+   "x": 633.75,
+   "z": -91.93,
+   "ry": -0.1172,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_choga_09",
+   "kit": "village/choga",
+   "params": {
+    "seed": 252,
+    "w": 5.4,
+    "gourd": true
+   },
+   "x": 637.93,
+   "z": -80.78,
+   "ry": 0.0881,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_jangdok_09",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 252,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 639.88,
+   "z": -85.97,
+   "ry": 0.0881,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 252
+   },
+   "x": 631.82,
+   "z": -79.44,
+   "ry": 0.0881,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_choga_10",
+   "kit": "village/choga",
+   "params": {
+    "seed": 259
+   },
+   "x": 646.24,
+   "z": -73.68,
+   "ry": 0.1356,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_jangdok_10",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 259,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 647.94,
+   "z": -78.96,
+   "ry": 0.1356,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_heotgan_03",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 259,
+    "walls": "back",
+    "w": 3.2
+   },
+   "x": 653.13,
+   "z": -74.22,
+   "ry": 0.1356,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_well_02",
+   "kit": "village/well",
+   "params": {
+    "seed": 245,
+    "roof": false
+   },
+   "x": 634.15,
+   "z": -96.17,
+   "ry": -0.1043,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_av_tree_persimmon_03",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 295,
+    "variant": "persimmon"
+   },
+   "x": 636.38,
+   "z": -85.39,
+   "ry": 0.0933,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "ea_rd_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 905
+   },
+   "x": -849.44,
+   "z": -634.74,
+   "ry": 0.5124,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막"
+  },
+  {
+   "id": "ea_rd_jumak_02",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 982
+   },
+   "x": 1289.66,
+   "z": -1239.84,
+   "ry": 0.2121,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막"
+  },
+  {
+   "id": "ea_rd_jumak_03",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 963
+   },
+   "x": 2010.77,
+   "z": -1673.19,
+   "ry": 0.0062,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막"
+  },
+  {
+   "id": "ea_rd_jumak_04",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 953
+   },
+   "x": 3483.84,
+   "z": -1624.99,
+   "ry": 0.0111,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막"
+  },
+  {
+   "id": "ea_rd_jumak_05",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 938
+   },
+   "x": 3233.09,
+   "z": -593.9,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막"
+  },
+  {
+   "id": "ea_rd_jumak_06",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 974
+   },
+   "x": 2732.47,
+   "z": 723.35,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막"
+  }
+ ]
+}

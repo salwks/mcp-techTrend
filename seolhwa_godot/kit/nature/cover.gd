@@ -25,7 +25,7 @@ const RECIPE := {
 	meadow = [["grass", { kind = "meadow", n = 7 }], ["grass", { kind = "dry", n = 6 }], ["grass", { kind = "meadow", n = 6 }], ["flowers", {}], ["grass", { kind = "meadow", n = 5 }],
 		["grass", { kind = "dry", n = 5 }], ["grass", { kind = "meadow", n = 6 }], ["flowers", {}], ["grass", { kind = "meadow", n = 5 }]],
 	forest = [["grass", { kind = "forest", n = 7 }], ["grass", { kind = "forest", n = 6 }], ["rock", { s = 0.32 }], ["grass", { kind = "forest", n = 5 }],
-		["grass", { kind = "forest", n = 6 }], ["grass", { kind = "dry", n = 4 }], ["grass", { kind = "forest", n = 5 }]],
+		["grass", { kind = "forest", n = 6 }], ["grass", { kind = "dry", n = 4 }]],
 	alpine = [["grass", { kind = "eoksae", n = 6 }], ["grass", { kind = "dry", n = 6 }], ["flowers", { color = "#e39a4a" }], ["grass", { kind = "meadow", n = 6 }],
 		["grass", { kind = "eoksae", n = 5 }], ["grass", { kind = "dry", n = 5 }], ["flowers", { color = "#e39a4a" }]],
 	riverside = [["reeds", { n = 6 }], ["grass", { kind = "meadow", n = 6 }], ["reeds", { n = 5 }], ["reeds", { n = 6 }], ["grass", { kind = "meadow", n = 5 }], ["reeds", { n = 5 }]],

@@ -18,6 +18,8 @@ const MAX_MM := 8        # 묶음마다 MultiMesh는 개수 많은 종류부터 
 const MERGE_MAX := 16    # 그 밖에서 묶음 안 개수가 이 이하인 드문 것은 정적 메시 하나로 합친다(합치기는 꼭짓점 수에 비례해 느리므로 드문 것만)
 const MERGE_VERTS := 12000  # 한 종류를 합칠 때 꼭짓점 상한(나무 몇 그루면 넘는다 → 그건 MultiMesh로)
 const K := 0.30
+const BAYER := [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5]
+const HWIDE := 1.3      # 나무 가로 배율(수관 넓게)
 const N := "res://kit/nature/"
 
 # 종류: 스크립트, 기본 params, 변형 수(seed 다름), 그림자, 줄기 충돌 반지름(배율 1 기준, 0=없음), 원거리(lod1)에서 뺄지
@@ -34,7 +36,14 @@ const KINDS := {
 	broadleaf = { s = "big_tree.gd", p = { variant = "broadleaf" }, v = 1, cast = true, col = 0.47, tree = true },
 	persimmon = { s = "persimmon.gd", p = {}, v = 1, cast = true, col = 0.45, tree = true },
 	bamboo = { s = "bamboo.gd", p = {}, v = 2, cast = true, col = 1.2, tree = true },
-	bush = { s = "bush.gd", p = {}, v = 3, cast = true, col = 0.0 },
+	# 어린나무: 원거리(LOD1) 메시를 작게(0.4~0.6배) — 숲 바닥을 싸게 메운다. 그림자·충돌 없음
+	sapling_pine = { s = "pine.gd", p = {}, flod = 1, v = 2, cast = false, col = 0.0 },
+	sapling_oak = { s = "oak.gd", p = { kind = "sangsuri" }, flod = 1, v = 2, cast = false, col = 0.0 },
+	sapling_singal = { s = "oak.gd", p = { kind = "singal" }, flod = 1, v = 1, cast = false, col = 0.0 },
+	sapling_gusang = { s = "korean_fir.gd", p = {}, flod = 1, v = 2, cast = false, col = 0.0 },
+	# 숲 밑 덤불: 같은 덤불을 1.2~2배로 크게(배율은 삼각형이 들지 않으니 바닥을 싸게 덮는다)
+	undergrowth = { s = "bush.gd", p = {}, v = 2, cast = false, col = 0.0 },
+	bush = { s = "bush.gd", p = {}, v = 3, cast = false, col = 0.0 },
 	jindallae = { s = "azalea.gd", p = { kind = "jindallae" }, v = 1, cast = false, col = 0.0 },
 	cheoljjuk = { s = "azalea.gd", p = { kind = "cheoljjuk" }, v = 1, cast = false, col = 0.0 },
 	rock = { s = "rock.gd", p = { s = 0.7 }, v = 3, cast = false, col = 0.6, far_skip = true },
@@ -56,9 +65,9 @@ const KINDS := {
 }
 # 크기 배율 범위
 const SCALE := {
-	pine = [0.85, 1.3], fir = [0.85, 1.25], sangsuri = [0.8, 1.2], singal = [0.75, 1.15], gusang = [0.75, 1.2], deadwood = [0.8, 1.2], snag = [0.8, 1.3],
+	pine = [1.05, 1.45], fir = [1.0, 1.35], sangsuri = [1.0, 1.35], singal = [0.9, 1.25], gusang = [0.9, 1.3], deadwood = [0.8, 1.2], snag = [0.8, 1.3],
 	zelkova = [0.95, 1.1], willow = [0.9, 1.15], broadleaf = [0.85, 1.1], persimmon = [0.85, 1.1], bamboo = [0.85, 1.15],
-	bush = [0.7, 1.2], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
+	bush = [0.7, 1.2], undergrowth = [1.6, 2.6], sapling_pine = [0.4, 0.6], sapling_oak = [0.4, 0.6], sapling_singal = [0.4, 0.6], sapling_gusang = [0.45, 0.65], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
 	stones = [0.8, 1.2], rice = [1.0, 1.0], crop_bean = [1.0, 1.0], crop_millet = [1.0, 1.0], crop_barley = [1.0, 1.0],
 }
 
@@ -103,7 +112,7 @@ static func model(kind: String, variant: int, lod: int) -> Dictionary:
 	var spec: Dictionary = KINDS[kind]
 	var p: Dictionary = (spec.p as Dictionary).duplicate()
 	p.seed = 101 + variant * 7919 + kind.hash() % 1000
-	p.lod = lod
+	p.lod = int(spec.get("flod", lod))   # flod: 어린나무처럼 늘 원거리 메시를 쓰는 종류
 	var info: Dictionary = load(N + spec.s).build(p)
 	var mesh: ArrayMesh = info.mesh
 	var out := { mesh = mesh, arrays = mesh.surface_get_arrays(0), colliders = info.colliders, tris = info.get("tris", 0) }
@@ -119,15 +128,17 @@ static func warm(lod := 0) -> int:
 	var t := Time.get_ticks_usec()
 	for kind in KINDS:
 		for v in int(KINDS[kind].v):
-			model(kind, v, lod if KINDS[kind].get("tree", false) else 0)
+			var tr: bool = KINDS[kind].get("tree", false)
+			model(kind, v, lod if tr else 0)
+			if tr: model(kind, v, 1)   # 그림자 전용 대리(LOD1)
 	return Time.get_ticks_usec() - t
 
 # 해발(m)에 따른 숲 수종 비율 [종류, 가중치] — 지리산 서부: 저지대 소나무·상수리/굴참, 중턱 신갈나무, 1,300m 위 구상나무·고사목
 static func forest_mix(alt: float) -> Array:
-	if alt < 350.0: return [["pine", 0.55], ["fir", 0.1], ["sangsuri", 0.35]]
+	if alt < 350.0: return [["pine", 0.8], ["sangsuri", 0.2]]
 	if alt < 800.0:
 		var t := (alt - 350.0) / 450.0
-		return [["pine", lerpf(0.5, 0.25, t)], ["fir", 0.08], ["sangsuri", lerpf(0.3, 0.1, t)], ["singal", lerpf(0.12, 0.55, t)]]
+		return [["pine", lerpf(0.58, 0.33, t)], ["sangsuri", lerpf(0.3, 0.1, t)], ["singal", lerpf(0.12, 0.55, t)]]
 	if alt < 1300.0:
 		var t := (alt - 800.0) / 500.0
 		return [["singal", lerpf(0.6, 0.45, t)], ["pine", lerpf(0.22, 0.05, t)], ["gusang", lerpf(0.0, 0.35, t)], ["deadwood", lerpf(0.0, 0.05, t)]]
@@ -187,6 +198,8 @@ class Job:
 	var counts := PackedInt32Array()
 	var K_ROAD := 4
 	var salt := 0
+	var ex_rects: Array[Rect2] = []
+	var ex_circles := PackedFloat32Array()   # x, z, r 반복
 	var pure := false       # 지금 칸과 네 이웃의 토지이용이 같으면 점마다 다시 묻지 않는다
 	var ks0_: PackedFloat32Array
 	var ks1_: PackedFloat32Array
@@ -199,16 +212,31 @@ class Job:
 
 	# 기대 개수 ex만큼(정수부 + 확률) 칸 안 아무 데나
 	func emit(k: int, ex: float, cx: float, cz: float, slope: float, r_d: int) -> void:
-		var n := int(ex)
-		if rng.randf() < ex - n: n += 1
+		var n := _count(ex)
 		for q in n:
 			var px := cx + (rng.randf() - 0.5) * CELL; var pz := cz + (rng.randf() - 0.5) * CELL
 			put(k, px, pz, rng.randf() * TAU, lerpf(ks0_[k], ks1_[k], rng.randf()), slope, r_d, true)
 
-	# 섞인 수종에서 골라 ex개
-	func emit_mix(mix: Array, ex: float, cx: float, cz: float, slope: float, r_d: int) -> void:
+	# 고르게(4×4 베이어 문턱): 확률 대신 칸 위치로 개수를 정해 뭉침·빈터 없이 퍼뜨린다
+	var even := -1.0
+	func emit_even(k: int, ex: float, cx: float, cz: float, slope: float, r_d: int, bi: int) -> void:
+		even = (BAYER[bi] + 0.5) / 16.0
+		emit(k, ex, cx, cz, slope, r_d)
+		even = -1.0
+
+	func _count(ex: float) -> int:
 		var n := int(ex)
-		if rng.randf() < ex - n: n += 1
+		var f := ex - n
+		if even >= 0.0:
+			if even < f: n += 1
+		elif rng.randf() < f: n += 1
+		return n
+
+	# 섞인 수종에서 골라 ex개
+	func emit_mix(mix: Array, ex: float, cx: float, cz: float, slope: float, r_d: int, bi := -1) -> void:
+		if bi >= 0: even = (BAYER[bi] + 0.5) / 16.0
+		var n := _count(ex)
+		even = -1.0
 		for q in n:
 			var px := cx + (rng.randf() - 0.5) * CELL; var pz := cz + (rng.randf() - 0.5) * CELL
 			var u := rng.randf()
@@ -232,13 +260,22 @@ class Job:
 		if check:
 			# 길 옆 칸(1칸 안)이면 실제 점과 둘레가 길이 아닌지 본다. 나무는 점 자체의 토지이용도 확인
 			if r_d <= 1:
-				var cl := 3.0 if tree else (0.7 if kcol_[k] == 0.0 else 1.4)
+				var cl := maxf(3.0, 1.0 + 2.0 * sc) if tree else (0.7 if kcol_[k] == 0.0 else 1.4)
 				if int(lcall.call(px, pz)) == K_ROAD: return
 				if int(lcall.call(px + cl, pz)) == K_ROAD or int(lcall.call(px - cl, pz)) == K_ROAD: return
 				if int(lcall.call(px, pz + cl)) == K_ROAD or int(lcall.call(px, pz - cl)) == K_ROAD: return
 			if tree and not pure:
 				var lp := int(lcall.call(px, pz))
 				if lp == 4 or lp == 5 or lp == 2: return
+		if not ex_rects.is_empty() or not ex_circles.is_empty():
+			# 제외 구역 안(나무는 수관이 걸치지 않게 2m, 큰 바위·벼랑 1.5m, 나머지 0.3m 여유)이면 놓지 않는다
+			var mg := 2.0 if tree else (1.5 if (kcol_[k] >= 1.0 or kcol_[k] < 0.0) else 0.3)
+			var pt := Vector2(px, pz)
+			for rr in ex_rects:
+				if rr.grow(mg).has_point(pt): return
+			for q in range(0, ex_circles.size(), 3):
+				var dx := px - ex_circles[q]; var dz := pz - ex_circles[q + 1]; var lim := ex_circles[q + 2] + mg
+				if dx * dx + dz * dz < lim * lim: return
 		var y: float = hcall.call(px, pz)
 		if sink < 0.0:
 			sink = 0.05 + minf(slope, 1.5) * (0.25 if tree else 0.12) * sc
@@ -256,7 +293,9 @@ class Job:
 			arr = []
 			groups[key] = arr
 		# MultiMesh 버퍼: 기저 행 우선 3×4
-		(arr as Array).append_array([c, 0.0, s, px, 0.0, sc, 0.0, y, -s, 0.0, c, pz])
+		# 나무는 수관을 가로로 더 넓힌다(삼각형 없이 숲을 덮는 면적을 키움, 가로 HWIDE배·세로 그대로)
+		var hw := HWIDE if tree else 1.0
+		(arr as Array).append_array([c * hw, 0.0, s * hw, px, 0.0, sc, 0.0, y, -s * hw, 0.0, c * hw, pz])
 		counts[k] += 1
 		var cr := kcol_[k]
 		if cr > 0.0:
@@ -270,7 +309,7 @@ class Job:
 				colliders.append({ type = "circle", x = px + c * lx + s * lz, z = pz - s * lx + c * lz, r = float(cc.r) * sc })
 
 # ---------------------------------------------------------------------------
-static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int) -> Dictionary:
+static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = []) -> Dictionary:
 	_init_tables()
 	var t0 := Time.get_ticks_usec()
 	var x0 := tile_rect.position.x; var z0 := tile_rect.position.y
@@ -322,16 +361,29 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 	J.rng.state = 0x2545F4914F6CDD1D ^ J.rng.seed
 	J.salt = absi(seed + roundi(x0 / 256.0) * 3 + roundi(z0 / 256.0) * 5) % 97
 	J.counts.resize(_names.size())
+	# 제외 구역(건물·광장): 월드 xz Rect2 또는 {x, z, r}. 타일(+8m)에 걸치는 것만 남긴다
+	var big := tile_rect.grow(8.0)
+	for e in exclude:
+		if e is Rect2:
+			if (e as Rect2).intersects(big): J.ex_rects.append(e)
+		elif e is Dictionary:
+			var ex: float = e.x; var ez: float = e.z; var er: float = e.r
+			if big.grow(er).has_point(Vector2(ex, ez)): J.ex_circles.append_array([ex, ez, er])
 	J.ks0_ = _ks0; J.ks1_ = _ks1; J.ktree_ = _ktree; J.kfar_ = _kfar; J.kcol_ = _kcol; J.kv_ = _kv; J.names_ = _names
 	J.model_fn = model
 	var rng := J.rng
 	var crop_axis := 0.0 if rng.randf() < 0.5 else PI / 2
 	var zelkova_done := false
-	var k_bush := kid("bush"); var k_jin := kid("jindallae"); var k_cheol := kid("cheoljjuk"); var k_rock := kid("rock"); var k_rockb := kid("rock_big")
+	var k_under := kid("undergrowth"); var k_bush := kid("bush"); var k_jin := kid("jindallae"); var k_cheol := kid("cheoljjuk"); var k_rock := kid("rock"); var k_rockb := kid("rock_big")
 	var k_cf := kid("cover_forest"); var k_cm := kid("cover_meadow"); var k_ca := kid("cover_alpine"); var k_cr := kid("cover_riverside")
 	var k_cs := kid("cover_sandbar"); var k_ck := kid("cover_rocky"); var k_snag := kid("snag"); var k_stones := kid("stones"); var k_slab := kid("slab")
 	var k_pers := kid("persimmon"); var k_broad := kid("broadleaf"); var k_zel := kid("zelkova"); var k_cliff := kid("cliff"); var k_boul := kid("boulder")
 	var k_pine := kid("pine"); var k_gus := kid("gusang"); var k_dead := kid("deadwood"); var k_wil := kid("willow"); var k_bam := kid("bamboo"); var k_rice := kid("rice")
+	# 원거리(lod1) 타일은 나무 0.6배, 덤불 0.5배
+	var tree_k := 1.0 if lod == 0 else 0.6
+	var bush_k := 1.0 if lod == 0 else 0.5
+	var sap_lo := ids([["sapling_pine", 1.0]])   # 묶음당 종류 수(그리기 호출)를 아끼려 한 가지씩
+	var sap_hi := ids([["sapling_gusang", 1.0]])
 	var gtree_lo := ids([["pine", 0.5], ["sangsuri", 0.3], ["broadleaf", 0.2]])
 	var gtree_hi := ids([["singal", 0.6], ["pine", 0.25], ["deadwood", 0.15]])
 	var k_crops := [kid("crop_bean"), kid("crop_millet"), kid("crop_barley")]
@@ -347,19 +399,22 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			var slope := sqrt(gxv * gxv + gzv * gzv)   # tan(경사각)
 			var r_d := rd[k]; var w_d := wd[k]
 			# 길 북쪽(카메라 반대편, -z) 12m 안에 길이 있으면 이 칸의 큰 나무는 길을 가린다 → 나무 대신 낮은 것(§32 시각 간격)
-			var road_n := road[k - W] == 1 or road[k - 2 * W] == 1 or road[k - 3 * W] == 1
+			var road_n := road[k - W] == 1   # 3단계: 바로 북쪽 칸(4m)에 길이 있을 때만 — 길 3m 밖부터 빽빽하게
 			# 나무: 길 칸 바로 옆(1칸)도 허용하되 put()이 줄기에서 3m 안에 길이 있으면 버린다
-			var tree_ok := r_d >= 1 and not (road_n and r_d <= 3) and w_d >= 1
+			var tree_ok := r_d >= 1 and not road_n and w_d >= 1
 			J.pure = lu[k - 1] == l and lu[k + 1] == l and lu[k - W] == l and lu[k + W] == l
 			match l:
 				0: # 숲
-					if tree_ok: J.emit_mix(mix_ids(alt), 0.62 if slope < 1.0 else 0.32, cx, cz, slope, r_d)
-					elif r_d >= 1: 
+					# 3단계: 큰 나무 0.22/칸으로 되올리고, 어린나무·덤불·덮개로 바닥을 메운다(길 3m 밖부터 빽빽)
+					if tree_ok: J.emit_mix(mix_ids(alt), (0.28 if slope < 1.0 else 0.18) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					if r_d >= 1: J.emit_mix(sap_lo if alt < 800.0 else sap_hi, 0.05 * bush_k, cx, cz, slope, r_d)
+					if not tree_ok and r_d >= 1: 
 						J.emit(k_bush, 0.3, cx, cz, slope, r_d)
-						J.emit(k_cf, 0.3, cx, cz, slope, r_d)
-					J.emit(k_bush, 0.1, cx, cz, slope, r_d)
-					J.emit(k_jin if alt < 900.0 else k_cheol, 0.07 if alt < 900.0 else 0.15, cx, cz, slope, r_d)
-					J.emit(k_cf, 0.22, cx, cz, slope, r_d)
+						J.emit(k_cf, 0.18, cx, cz, slope, r_d)
+					# 큰 나무를 줄인 빈자리는 덤불·풀로 채운다(2단계: 숲 삼각형 절반 이하)
+					J.emit_even(k_under, 0.22 * bush_k, cx, cz, slope, r_d, ((j + 2) % 4) * 4 + ((i + 1) % 4))
+					J.emit(k_jin if alt < 900.0 else k_cheol, (0.02 if alt < 900.0 else 0.05) * bush_k, cx, cz, slope, r_d)
+					J.emit(k_cf, 0.05, cx, cz, slope, r_d)
 					J.emit(k_rock, 0.05 + (0.12 if slope > 0.8 else 0.0), cx, cz, slope, r_d)
 					if alt > 600.0 and alt < 1300.0: J.emit(k_snag, 0.012, cx, cz, slope, r_d)
 				1: # 풀밭·초지
@@ -396,10 +451,10 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					if slope > 0.7 and r_d >= 3 and rng.randf() < 0.07:
 						var ry := atan2(-gxv, -gzv)   # 정면(+z)을 내리막으로
 						J.put(k_cliff, cx + (rng.randf() - 0.5) * 2, cz + (rng.randf() - 0.5) * 2, ry, lerpf(0.8, 1.2, rng.randf()), slope, r_d, false, 0.4 + slope * 1.2)
-					J.emit(k_boul, 0.08, cx, cz, slope, r_d)
-					J.emit(k_rockb, 0.08, cx, cz, slope, r_d)
-					J.emit(k_rock, 0.22, cx, cz, slope, r_d)
-					J.emit(k_ck, 0.22, cx, cz, slope, r_d)
+					J.emit(k_boul, 0.04, cx, cz, slope, r_d)
+					J.emit(k_rockb, 0.07, cx, cz, slope, r_d)
+					J.emit(k_rock, 0.2, cx, cz, slope, r_d)
+					J.emit(k_ck, 0.07, cx, cz, slope, r_d)
 					if tree_ok:
 						J.emit(k_pine if alt < 1100.0 else k_gus, 0.07, cx, cz, slope, r_d)
 						if alt > 1000.0: J.emit(k_dead, 0.04, cx, cz, slope, r_d)
@@ -409,7 +464,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					if w_d <= 1: J.emit(k_cr, 0.15, cx, cz, slope, r_d)
 					if tree_ok: J.emit(k_wil, 0.005, cx, cz, slope, r_d)
 				9: # 대숲
-					if r_d >= 1 and w_d >= 1: J.emit(k_bam, 0.55 if r_d >= 2 else 0.2, cx, cz, slope, r_d)
+					if r_d >= 1 and w_d >= 1: J.emit(k_bam, (0.35 if r_d >= 2 else 0.15) * tree_k, cx, cz, slope, r_d)
 					J.emit(k_cf, 0.08, cx, cz, slope, r_d)
 			# 물가(땅 칸): 갈대·버드나무, 산골이면 너럭바위·큰 바위
 			if l != 5 and l != 8 and w_d >= 1 and w_d <= 2:
@@ -434,45 +489,70 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 		if not by_chunk.has(ch): by_chunk[ch] = []
 		by_chunk[ch].append(key)
 	var nodes := []
+	var buffers := []     # nodes와 같은 순서: MultiMeshInstance3D면 그 버퍼(PackedFloat32Array, 12 float/개), 합친 메시면 null
 	var chunks := by_chunk.keys(); chunks.sort()
 	var merged_inst := 0
+	var tris_main := 0; var tris_shadow := 0
 	for ch in chunks:
 		var keys: Array = by_chunk[ch]
 		keys.sort_custom(func(a, b):
 			var na: int = J.groups[a].size(); var nb: int = J.groups[b].size()
 			return na > nb or (na == nb and a < b))
-		var rest := []
+		var rest_cast := []; var rest_flat := []
 		for idx in keys.size():
 			var key: int = keys[idx]
 			var kk := key / 64 / 8; var v := (key / 64) % 8
 			var tree := _ktree[kk] == 1
+			var cast: bool = KINDS[_names[kk]].cast
 			var m := model(_names[kk], v, lod if tree else 0)
-			var verts: int = (J.groups[key].size() / 12) * (m.arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
-			if idx >= MAX_MM and J.groups[key].size() / 12 <= MERGE_MAX and verts <= MERGE_VERTS:
-				rest.append([m, J.groups[key]])
-				merged_inst += J.groups[key].size() / 12
+			var n_inst: int = J.groups[key].size() / 12
+			var mtris: int = m.tris
+			var verts: int = n_inst * (m.arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+			if idx >= MAX_MM and n_inst <= MERGE_MAX and verts <= MERGE_VERTS:
+				(rest_cast if cast else rest_flat).append([m, J.groups[key]])
+				merged_inst += n_inst
+				tris_main += n_inst * mtris
+				if cast: tris_shadow += n_inst * mtris
 				continue
-			var mm := MultiMesh.new()
-			mm.transform_format = MultiMesh.TRANSFORM_3D
-			mm.mesh = m.mesh
 			var buf := PackedFloat32Array(J.groups[key])
-			mm.instance_count = buf.size() / 12
-			mm.buffer = buf
-			var mmi := MultiMeshInstance3D.new()
-			mmi.name = "%s_v%d_c%d" % [_names[kk], v, ch]
-			mmi.multimesh = mm
-			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if KINDS[_names[kk]].cast else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			nodes.append(mmi)
-		if not rest.is_empty():
+			var mmi := _mmi(m.mesh, buf, "%s_v%d_c%d" % [_names[kk], v, ch])
+			tris_main += n_inst * mtris
+			if tree and cast and lod == 0:
+				# 나무: 본 그림은 그림자를 끄고, 같은 버퍼로 LOD1 메시를 그림자 전용으로(그림자 패스 삼각형 ≈1/7)
+				mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				var sm := model(_names[kk], v, 1)
+				var smi := _mmi(sm.mesh, buf, "%s_v%d_c%d_shadow" % [_names[kk], v, ch])
+				smi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+				nodes.append(mmi); buffers.append(buf)
+				nodes.append(smi); buffers.append(buf)
+				tris_shadow += n_inst * int(sm.tris)
+				continue
+			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if cast else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			if cast: tris_shadow += n_inst * mtris
+			nodes.append(mmi); buffers.append(buf)
+		for pair in [[rest_cast, true], [rest_flat, false]]:
+			if (pair[0] as Array).is_empty(): continue
 			var mi := MeshInstance3D.new()
-			mi.name = "merged_c%d" % ch
-			mi.mesh = _merge(rest)
-			nodes.append(mi)
+			mi.name = "merged_c%d%s" % [ch, "" if pair[1] else "_noshadow"]
+			mi.mesh = _merge(pair[0])
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if pair[1] else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			nodes.append(mi); buffers.append(null)
 	var total := Time.get_ticks_usec() - t0
 	var counts := {}
 	for i in _names.size():
 		if J.counts[i] > 0: counts[_names[i]] = J.counts[i]
-	return { nodes = nodes, colliders = J.colliders, stats = { usec = total, grid_usec = t_grid, sample_usec = t_sample, place_usec = t_place, counts = counts, draw_nodes = nodes.size(), merged_instances = merged_inst } }
+	return { nodes = nodes, buffers = buffers, colliders = J.colliders, stats = { tris_main = tris_main, tris_shadow = tris_shadow, usec = total, grid_usec = t_grid, sample_usec = t_sample, place_usec = t_place, counts = counts, draw_nodes = nodes.size(), merged_instances = merged_inst } }
+
+static func _mmi(mesh: Mesh, buf: PackedFloat32Array, name: String) -> MultiMeshInstance3D:
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = mesh
+	mm.instance_count = buf.size() / 12
+	mm.buffer = buf
+	var mmi := MultiMeshInstance3D.new()
+	mmi.name = name
+	mmi.multimesh = mm
+	return mmi
 
 # 드문 것들을 한 메시로: 캐시한 표면 배열을 인스턴스 변환으로 옮겨 이어 붙인다(엔진 내장 배열 연산이라 빠르다)
 static func _merge(items: Array) -> ArrayMesh:

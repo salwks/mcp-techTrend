@@ -109,8 +109,11 @@ static func make() -> Node3D:
 	# 차가운 캐시(모델 메시 생성 포함) → 데운 캐시 두 번(결정성 비교)
 	var t := Time.get_ticks_usec()
 	var warm_us := Scatter.warm(lod)
-	var r1 := Scatter.scatter(rect, hcall, lcall, seed, lod)
-	var r2 := Scatter.scatter(rect, hcall, lcall, seed, lod)
+	# 제외 구역 시험: --exclude 이면 마을 터 안쪽 사각형 하나 + 원 하나
+	var excl := []
+	if a.has("exclude"): excl = [Rect2(50, 50, 30, 25), { x = -40.0, z = -45.0, r = 10.0 }]
+	var r1 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl)
+	var r2 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl)
 	var same: bool = r1.colliders.size() == r2.colliders.size() and r1.nodes.size() == r2.nodes.size()
 	for i in r1.nodes.size():
 		if not same: break
@@ -121,6 +124,7 @@ static func make() -> Node3D:
 	var inst := 0; var tris := 0
 	for n in r1.nodes:
 		if n is MultiMeshInstance3D:
+			if n.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY: continue
 			var mm: MultiMesh = n.multimesh
 			inst += mm.instance_count
 			for s in mm.mesh.get_surface_count(): tris += mm.instance_count * mm.mesh.surface_get_array_len(s) / 3
@@ -129,6 +133,7 @@ static func make() -> Node3D:
 	print("SCATTER warm_models_ms=%.1f tile_ms=%.1f (grid %.1f, place %.1f) tile2_ms=%.1f tile3_ms=%.1f deterministic=%s nodes=%d mm_instances=%d merged_instances=%d tris=%d colliders=%d" % [
 		warm_us / 1000.0, r1.stats.usec / 1000.0, r1.stats.grid_usec / 1000.0, r1.stats.place_usec / 1000.0, r2.stats.usec / 1000.0, r3.stats.usec / 1000.0,
 		same, r1.nodes.size(), inst, r1.stats.merged_instances, tris, r1.colliders.size()])
+	print("SCATTER tris main=%d shadow=%d effective=%d | tile3 main=%d shadow=%d effective=%d | buffers=%d" % [r1.stats.tris_main, r1.stats.tris_shadow, r1.stats.tris_main + r1.stats.tris_shadow, r3.stats.tris_main, r3.stats.tris_shadow, r3.stats.tris_main + r3.stats.tris_shadow, r1.buffers.filter(func(b): return b != null).size()])
 	print("SCATTER counts ", r1.stats.counts, " sample_ms=", r1.stats.sample_usec / 1000.0)
 	print("SCATTER tile3 (산) grid=%.1f place=%.1f total=%.1f nodes=%d merged=%d counts=%s" % [r3.stats.grid_usec / 1000.0, r3.stats.place_usec / 1000.0, r3.stats.usec / 1000.0, r3.nodes.size(), r3.stats.merged_instances, r3.stats.counts])
 	for n in r2.nodes: n.free()
@@ -145,6 +150,11 @@ static func make() -> Node3D:
 		for c in r1.colliders:
 			b.add("flat", Kit.paint(Kit.cyl(c.r, c.r, 0.3, 8, c.x, f.height(c.x, c.z) + 0.2, c.z), Kit.hex(0xd04030)), 0.0)
 		root.add_child(b.build("colliders"))
+	if a.has("exclude"):   # 제외 구역을 붉은 판으로 표시 (excl_vis)
+		var eb := Kit.Batch.new()
+		eb.add("flat", Kit.paint(Kit.box(30, 0.2, 25, 65, f.height(65, 62.5) + 0.3, 62.5), Kit.hex(0xc04030)), 0.0)
+		eb.add("flat", Kit.paint(Kit.cyl(10, 10, 0.2, 24, -40, f.height(-40, -45) + 0.3, -45), Kit.hex(0xc04030)), 0.0)
+		root.add_child(eb.build("excl_vis", false))
 	if a.has("focus"):
 		var p: PackedStringArray = str(a.focus).split(",")
 		var fx := float(p[0]); var fz := float(p[1])

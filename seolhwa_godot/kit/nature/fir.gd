@@ -10,7 +10,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var lod := int(params.get("lod", 0))
 	var b := Kit.Batch.new()
 	var h := (5.5 + r.next() * 2.5) * s
-	b.add("bark", Kit.paint(Kit.limb(Vector3(0, -0.3, 0), Vector3((r.next() - 0.5) * 0.4, h * 0.85, 0), 0.2 * s, 0.1 * s, 5), C.c("#a8694a"), C.c("#7a4e38"), 0.05, r), 0.0 if lod else 0.018 * s)
+	b.add("bark", Kit.paint(C.limb_open(Vector3(0, -0.3, 0), Vector3((r.next() - 0.5) * 0.4, h * 0.85, 0), 0.2 * s, 0.1 * s, 5), C.c("#a8694a"), C.c("#7a4e38"), 0.05, r), 0.0 if lod else 0.018 * s)
 	var col: Array = C.pick(Pine.LEAF, r)
 	var tiers := 2 + int(r.next() * 2)
 	if not lod: tiers += 1

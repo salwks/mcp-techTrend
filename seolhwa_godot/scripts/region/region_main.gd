@@ -6,11 +6,14 @@
 #   --data=res://…/   권역 데이터 폴더(기본: region_data/JL_NAMWON_UNBONG, 없으면 shots/region/tmp_data)
 #   --benchspeed=30   --bench 자동 걷기 속도(m/s, 기본 4.6 = 달리기). 크게 하면 타일 로딩을 몰아서 시험한다
 #   --cam=거리,피치[,fov]  시점 바꿔 보기(원경·이음매 점검)
+#   --placedir=폴더[;폴더]  배치 파일(placement_*.json)을 더 읽을 폴더   --noplace  배치 안 읽기   --serialbuild  키트를 한 줄로 짓기
+#   --reload   배치 파일이 바뀌면 다시 읽기(F5 키도 같음)   --markers  배치가 있어도 임시 표지 보이기   --cutaway  나무 줄여 숨기기(옛 가림)
 #   --nomarkers       임시 표지(장승 기둥) 끄기   --noscatter  식생(kit/nature/scatter.gd) 끄기
 # 비교용 끄기: --nofog --nopost --notilt --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
 const RegionWorld := preload("res://scripts/region/region_world.gd")
+const PlacementLoader := preload("res://scripts/region/placement_loader.gd")
 
 const WALK := 2.2
 const RUN := 4.6
@@ -68,6 +71,8 @@ var _bench_dist := 0.0
 var _bench_start := Vector3.ZERO
 var _lights_seen := -1
 var _glow_shader: Shader
+var placement  # PlacementLoader
+var _reload_t := 0.0
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -94,6 +99,7 @@ func _ready() -> void:
 	view.stretch_mode = TextureRect.STRETCH_SCALE
 	add_child(view)
 	_build_scene()
+	_prewarm_shaders()
 	if args.has("nomsaa"): scene_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if args.has("noshadow"): sun.shadow_enabled = false
 	if args.has("nolamps"):
@@ -136,7 +142,7 @@ func _fit_viewport() -> void:
 func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
-		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P],
+		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5],
 	}
 	for act in keys:
 		if not InputMap.has_action(act): InputMap.add_action(act)
@@ -186,6 +192,12 @@ func _build_scene() -> void:
 	world.split_scatter = not args.has("nosplit")
 	root.add_child(world)
 	world.load_region(args.get("data", ""))
+	world.use_cutaway = args.has("cutaway")
+	# 배치(§8): placement_*.json → 키트 → add_static (+ --placedir=폴더1;폴더2 추가 폴더)
+	placement = PlacementLoader.new(world, args.get("placedir", "").split(";", false) if args.has("placedir") else [])
+	placement.parallel = not args.has("serialbuild")
+	if not args.has("noplace"): placement.load_all()
+	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
 	rig = CameraRig.new(cam, world)
 
 	for i in 6:
@@ -379,6 +391,11 @@ func _process(delta: float) -> void:
 	clock += dt
 	if Input.is_action_just_pressed("time_step"):
 		hour = fmod(floor(hour / 6.0) * 6.0 + 6.0, 24.0); _apply_time()
+	# 배치 다시 읽기: F5, 또는 --reload면 파일이 바뀔 때마다(1초마다 확인)
+	_reload_t += delta
+	if Input.is_action_just_pressed("reload_place") or (args.has("reload") and _reload_t > 1.0 and placement.changed()):
+		_reload_place()
+	if args.has("reload") and _reload_t > 1.0: _reload_t = 0.0
 	if Input.is_action_just_pressed("toggle_post"):
 		post.tilt = not post.tilt; post.paper = post.tilt
 	if time_flow:
@@ -527,6 +544,38 @@ func _run_tour(dir: String) -> void:
 		if world.landuse_at(player_pos.x, player_pos.z) == 5: print("TOUR 물 위: ", r[1])
 		_save(_abs(dir).path_join("region_%s.png" % r[0]))
 	_quit()
+
+# 가림 처리(반투명) 재질은 처음 쓰일 때 파이프라인을 만들며 프레임이 튄다 → 시작할 때 화면 밖이 아닌 곳에 몇 프레임 그려 둔다
+func _prewarm_shaders() -> void:
+	var mats := []
+	for k in ["atlas", "cloth"]:
+		var m: ShaderMaterial = Kit.material(k)
+		mats.append(m); mats.append(Materials.faded_copy(m))
+	for lit in [true, false]:
+		for ds in [true, false]:
+			for bl in [true, false]:
+				var m := ShaderMaterial.new(); m.shader = Materials.world_shader(lit, bl, ds); mats.append(m)
+	var nodes := []
+	var i := 0
+	for m in mats:
+		var mi := MeshInstance3D.new()
+		var q := QuadMesh.new(); q.size = Vector2(0.05, 0.05)
+		mi.mesh = q; mi.material_override = m
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		cam.add_child(mi)
+		mi.position = Vector3((i % 8) * 0.06 - 0.2, (i / 8) * 0.06, -1.0)  # 카메라 바로 앞
+		nodes.append(mi); i += 1
+	_free_later.call_deferred(nodes, 3)
+
+func _free_later(nodes: Array, frames: int) -> void:
+	await _wait_frames(frames)
+	for n in nodes: n.queue_free()
+
+func _reload_place() -> void:
+	_reload_t = 0.0
+	placement.reload()
+	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
+	player_pos.y = world.height_at(player_pos.x, player_pos.z)
 
 func _quit() -> void:
 	world.shutdown()

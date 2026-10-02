@@ -69,3 +69,26 @@ static func result(b: Kit.Batch, name: String, colliders: Array, footprint: Vect
 	var out := { node = root, mesh = m, colliders = colliders, lights = [], occluder = occluder, footprint = footprint, anchors = {}, tris = b.tris }
 	for k in extra: if k != "cast": out[k] = extra[k]
 	return out
+
+# 뚜껑 없는 가지(Kit.limb와 같은 변환, 위·아래 뚜껑 생략) — 땅속 밑동·잎덩이 속 끝처럼 안 보이는 뚜껑 삼각형을 아낀다
+static func limb_open(a: Vector3, b: Vector3, r0: float, r1: float, seg := 6) -> Kit.Geo:
+	var d := b - a
+	var len := d.length()
+	var g := Kit.cyl(r1, r0, len, seg, 0, len / 2, 0, 0, 0, 0, false)
+	var dir := d / maxf(len, 1e-6)
+	var axis := Vector3.UP.cross(dir)
+	var basis := Basis.IDENTITY
+	if axis.length() > 1e-6: basis = Basis(axis.normalized(), Vector3.UP.angle_to(dir))
+	elif dir.y < 0.0: basis = Basis(Vector3.RIGHT, PI)
+	return Kit.apply(g, Transform3D(basis, a))
+
+# 가벼운 덩이: UV구(ws×hs)에 Kit.lump과 같은 잡음 — detail 1 정이십면체(80)보다 싸다(8×4 → 48삼각형)
+static func lumpy(r: float, rng: Kit.Rng, rough := 0.2, sy := 1.0, ws := 8, hs := 4) -> Kit.Geo:
+	var g := sphere(1.0, ws, hs)
+	var sd := rng.next() * 100.0
+	for i in g.pos.size():
+		var p := g.pos[i]
+		var n := Kit.vnoise(p.x * 1.7 + sd, p.z * 1.7 + p.y * 1.3 - sd) * 0.6 + Kit.vnoise(p.x * 3.9 - sd, p.y * 3.1 + sd) * 0.4
+		var k := 1.0 + n * rough
+		g.pos[i] = Vector3(p.x * r * k, p.y * r * k * sy, p.z * r * k)
+	return g
