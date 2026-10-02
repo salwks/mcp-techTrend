@@ -7,7 +7,7 @@
 import json, math, os, random, sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from namwon_data import Region, Fields, ROOT, RDIR, rect_corners, rect_points, poly_overlap, local_to_world
+from namwon_data import Region, Fields, add_village_dist, ROOT, RDIR, rect_corners, rect_points, poly_overlap, local_to_world
 
 SEED = 1870
 OUT = os.path.join(RDIR, "placement_namwon.json")
@@ -268,7 +268,7 @@ def place_landmarks(P, R, rng):
           rects=[(4.0, 0, 30.0, 14.4)], tris=13102, group="광한루원", kind="landmark",
           note="OSM 위치 그대로(확정). 못 북쪽 둑, 익루는 동쪽")
     # 광한루원 정원(풀밭) 안은 민가를 들이지 않는다
-    P.keepout("광한루원", -3277, 462, 110, 80)
+    P.keepout("광한루원", -3277, 474, 110, 64)
 
     # 향교 — region.json namwon_hyanggyo(−3235.3, −97.8) 그대로, 겹치면 가까운 자리
     hw, hd = 36.0, 50.0
@@ -322,9 +322,9 @@ class Houses:
             return W_IN, "남원 읍내(성 안)"
         return W_OUT, "남원 읍내(성 밖)"
 
-    def try_put(self, t, x, z, ry, tag, gap=1.0, gz=None, road_min=1.0, lu_min=0.7):
+    def try_put(self, t, x, z, ry, tag, gap=1.0, gz=None, road_min=1.0, lu_min=0.7, lu_ok=(6,)):
         w, d, tris, fp = house_dims(t)
-        why = self.P.check_site(x, z, w, d, ry, gap=gap, gz=gz, road_min=road_min, lu_min=lu_min, lu_ok=(6,), slope_max=3.0)
+        why = self.P.check_site(x, z, w, d, ry, gap=gap, gz=gz, road_min=road_min, lu_min=lu_min, lu_ok=lu_ok, slope_max=3.0)
         if why:
             self.P.reject(why)
             return False
@@ -342,7 +342,7 @@ class Houses:
             W = W_EDGE
         return self.rng.choices(list(W.keys()), list(W.values()))[0]
 
-    def frontage(self, roads, step=1.0):
+    def frontage(self, roads, step=1.0, only=None):
         """길 양쪽에 길과 나란히 집을 늘어놓는다(길에서 1.5~2.5m). 집 방향은 남향 기준 ±25° 안에서 길과 맞춘다."""
         R = self.P.R
         for rd in R.roads:
@@ -369,15 +369,25 @@ class Houses:
                         x, z = a[0] + ux * t, a[1] + uz * t
                         if not (AX0 + 20 < x < AX1 - 20 and AZ0 + 20 < z < AZ1 - 20):
                             t += 4.0; continue
-                        ty = self.pick(x, z, edge=False)
+                        # 마을 터에서 25m 넘게 떨어진 길(들판·산길)은 건너뛴다
+                        if self.P.F.village_dist(x, z) > 25 and not in_walls(x, z):
+                            t += 4.0; continue
+                        south = nz > 0.5      # 길 남쪽(카메라 쪽) 집
+                        if only:
+                            ty = self.rng.choice(only)
+                        elif south and not in_walls(x, z):
+                            ty = self.rng.choices(["choga", "choga_gourd", "small"], [3, 1, 2])[0]
+                        else:
+                            ty = self.pick(x, z, edge=False)
                         w, d, _, _ = house_dims(ty)
                         # 회전 사각형의 법선 방향 반폭
                         c, s = math.cos(ry), math.sin(ry)
                         ex = abs((nx * c - nz * s)) * w / 2 + abs((nx * s + nz * c)) * d / 2
                         along = abs((ux * c - uz * s)) * w / 2 + abs((ux * s + uz * c)) * d / 2
-                        set_back = hw + self.rng.uniform(1.3, 2.6)
+                        # 길 남쪽 집은 카메라–플레이어 시선에 걸리지 않게 더 물린다(가림 반투명이 겹치지 않게)
+                        set_back = hw + (self.rng.uniform(4.5, 6.0) if south else self.rng.uniform(1.3, 2.6))
                         cx, cz = x + ux * along + nx * (set_back + ex), z + uz * along + nz * (set_back + ex)
-                        if self.try_put(ty, cx, cz, ry, "길가:" + rd["id"], gap=0.8, road_min=1.0, lu_min=0.45):
+                        if self.try_put(ty, cx, cz, ry, "길가:" + rd["id"], gap=0.8, road_min=1.0, lu_min=0.75, lu_ok=(6, 3, 1, 2, 4)):
                             t += 2 * along + self.rng.choice([1.6, 1.6, 2.2, 3.4])
                         else:
                             t += step
@@ -406,6 +416,7 @@ def place_houses(P, R, rng):
     town_roads = {"namwon_eup_street", "namwon_eup_street_ew", "namwon_gaeksa_lane", "namwon_gwana_lane", "namwon_market_lane",
                   "namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_west_gate_lane"}
     H.frontage(town_roads)
+    H.frontage(town_roads, step=0.5, only=["choga", "choga", "choga_gourd"])   # 둘째 판: 남은 길가 틈을 초가로
     H.pack(AX0 + 140, AZ0 + 150, AX1 - 80, AZ1 - 100, "마을 터 채우기")
     return H
 
@@ -473,7 +484,7 @@ def place_market(P, R, rng):
                     jwa(x + uz * sgn * 3.4, z - ux * sgn * 3.4)
             t += 4.2
     # 남문 → 광한루 길(구례길) 양쪽 좌판
-    for zz in range(372, 440, 5):
+    for zz in range(372, 397, 5):
         for sgn in (-1, 1):
             if rng.random() < 0.35:
                 continue
@@ -492,6 +503,19 @@ def road_pt(R, rid, v, axis):
             t = (v - a[k]) / (b[k] - a[k])
             return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, b[0] - a[0], b[1] - a[1])
     return None
+
+
+def in_camera_band(F, x, z, r=3.0):
+    """나무(수관 반지름 r)가 어떤 길의 남쪽 4~18m 띠에 드나: 북쪽으로 훑어 길을 만나는 거리"""
+    for ox in (-r, 0.0, r):
+        s = 0.0
+        while s <= 18.0 + r:
+            if F.road(x + ox, z - s) <= 0.0:
+                if s >= 4.0 - r:
+                    return True
+                break
+            s += 0.5
+    return False
 
 
 def place_fixed_misc(P, R, rng):
@@ -644,13 +668,18 @@ def place_fixed_misc(P, R, rng):
                     break
         # 쉼터: 길 옆 8×7.6
         sq = False
-        for off in (-7.5, 7.5, -9.0, 9.0, -11.0, 11.0):
+        # 정자나무가 길 남쪽 4~18m 띠(카메라 통로)에 들지 않게: 길 북쪽 먼저, 남쪽이면 나무 없이
+        nsg = -1 if nz > 0 else 1                   # 길 북쪽으로 가는 법선 부호
+        for off in (7.5 * nsg, 9.0 * nsg, 11.0 * nsg, -7.5 * nsg, -9.0 * nsg, -11.0 * nsg):
             for slide in (0, 6, -6, 12, -12):
                 ux, uz = dx / L, dz / L
                 qx, qz = x + ux * slide + nx * off, z + uz * slide + nz * off
                 if not P.check_site(qx, qz, 8.0, 7.6, 0.0, gap=0.6, road_min=0.8, lu_ok=None, river_min=3.0, slope_max=2.5):
                     k += 1
-                    P.add("nw_square_%02d" % k, "village/village_square", {"seed": 80 + k}, qx, qz, 0.0, rects=[(0, 0, 8.0, 7.6)],
+                    sp = {"seed": 80 + k}
+                    if in_camera_band(P.F, qx, qz):
+                        sp["tree"] = "none"
+                    P.add("nw_square_%02d" % k, "village/village_square", sp, qx, qz, 0.0, rects=[(0, 0, 8.0, 7.6)],
                           tris=2296, group="마을 어귀", kind="prop", note=name + " 쉼터(정자나무·평상)", footprint=(8.0, 7.6))
                     sq = True; break
             if sq: break
@@ -662,7 +691,7 @@ def place_fixed_misc(P, R, rng):
         ps = ps[0]
         for (ox, oz) in [(-7, 4), (7, 4), (-8, -2), (8, -2), (-10, 6), (10, 6)]:
             x, z = ps["x"] + ox, ps["z"] + oz
-            if not P.check_site(x, z, 5.5, 4.6, 0.0, gap=0.5, road_min=0.8, lu_ok=None, slope_max=5):
+            if not P.check_site(x, z, 5.5, 4.6, 0.0, gap=0.5, road_min=0.8, lu_ok=None, slope_max=5) and not in_camera_band(P.F, x, z):
                 P.add("nw_seonghwangdang", "village/seonghwangdang", {"seed": 81}, x, z, 0.0, rects=[(0, 0, 5.5, 4.6)], tris=1928,
                       group="마을 어귀", kind="prop", note="북쪽 전주길 고갯마루 성황당(가설)", footprint=(5.5, 4.6))
                 s["성황당"] = (round(x, 1), round(z, 1))
@@ -850,7 +879,7 @@ def place_fill(P, R, rng, houses):
 
 # ─────────────────────────────── 통계 ───────────────────────────────
 def screen_stats(P, R):
-    """게임 카메라(거리 22·pitch 40, 화면 폭 35~40m): 플레이어 기준 x±20, z −26…+8 창에 들어오는 집 수,
+    """게임 카메라(거리 22·pitch 40, 화면 폭 35~40m): 플레이어 기준 x±20, z −22…+14 창에 들어오는 집 수,
     그리고 넓은 창(x±35, z −85…+12)의 삼각형 합 최대"""
     houses = [(it["x"], it["z"]) for it in P.items if it["kit"] in HOUSE_KITS or it["kit"] in ("village/jumak", "village/market_shop")
               or it["kit"] in ("landmark/gwana", "landmark/gaeksa", "landmark/samun", "landmark/gwanghallu", "landmark/hyanggyo")]
@@ -873,7 +902,7 @@ def screen_stats(P, R):
                 x, z = a[0] + (b[0] - a[0]) * t / max(L, 1e-6), a[1] + (b[1] - a[1]) * t / max(L, 1e-6)
                 if not (AX0 < x < -2790 and AZ0 < z < 600): continue
                 if in_walls(x, z) or any(P.F.landuse(x + ox, z + oz) == 6 for (ox, oz) in ((6, 0), (-6, 0), (0, 6), (0, -6))):
-                    samples.append(sum(1 for (hx, hz) in houses if abs(hx - x) <= 20 and z - 26 <= hz <= z + 8))
+                    samples.append(sum(1 for (hx, hz) in houses if abs(hx - x) <= 20 and z - 22 <= hz <= z + 14))
     samples.sort()
     best = (0, None)
     for px in range(-3400, -2820, 10):
@@ -889,6 +918,7 @@ def screen_stats(P, R):
 def main():
     R = Region()
     F = Fields(R, AX0, AZ0, AX1, AZ1)
+    add_village_dist(F)
     rng = random.Random(SEED)
     P = Placer(R, F)
     notes = place_landmarks(P, R, rng)

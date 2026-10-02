@@ -88,7 +88,8 @@ static func build(params: Dictionary) -> Dictionary
 추가: `landuse_at(x,z) -> int`, `focus(pos: Vector3)`(스트리밍 중심 갱신), `add_static(node: Node3D, world_xform: Transform3D, info: Dictionary)`(키트 build() 결과를 놓고 충돌체·조명·가림을 등록 — 타일 단위로 붙였다 뗀다).
 식생은 kit-nature의 `kit/nature/scatter.gd`를 타일마다 부른다:
 ```gdscript
-static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = []) -> Dictionary
+static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = [], roads = null) -> Dictionary
+# roads: region.json roads 형식(null이면 scatter가 region.json을 직접 읽음). 중심선 폭/2+1m 안은 길로 보고 비우며, 길 남쪽 카메라 통로(4~20m)엔 큰 나무를 두지 않음
 # exclude: 월드 xz Rect2(축정렬) 또는 {x, z, r} — 그 안에는 놓지 않음(건물·광장 자리)
 # 반환 { nodes: [Node3D…(MultiMeshInstance3D 권장, 좌표는 월드)], buffers: [PackedFloat32Array|null …(nodes와 같은 순서, MultiMesh.buffer 형식)], colliders: [ {type:"circle", x, z, r} ], stats }  # 월드 좌표
 # 이름 끝이 "_shadow"인 노드는 그림자 전용(보이지 않음)

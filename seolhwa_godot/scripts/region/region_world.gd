@@ -188,7 +188,15 @@ func _paint_roads() -> void:
 	var img := Image.create(hnx, hnz, false, Image.FORMAT_RGBA8)
 	img.fill(Color(1, 0, 1, 0))
 	pbytes = img.get_data()
-	for r in region.get("roads", []):
+	var all_roads: Array = region.get("roads", []).duplicate()
+	# 배치가 내보낸 마을 고샅(placement_*.json 최상위 alleys)도 마을길로 칠한다
+	for f in DirAccess.get_files_at(data_dir):
+		if f.begins_with("placement_") and f.ends_with(".json"):
+			var pj = JSON.parse_string(FileAccess.get_file_as_string(data_dir.path_join(f)))
+			if pj is Dictionary:
+				for al in pj.get("alleys", []):
+					all_roads.append({ "width_m": float(al.get("width_m", 3.0)), "class": "마을길", "points": al.get("points", []) })
+	for r in all_roads:
 		var hw := float(r.get("width_m", 3.0)) * 0.5
 		var cls: int = ROAD_CLASS.get(String(r.get("class", "")), 2)
 		if cls == 4: hw += 0.4  # 대로는 조금 더 넓게

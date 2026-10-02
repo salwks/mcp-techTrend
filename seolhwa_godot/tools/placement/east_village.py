@@ -83,6 +83,7 @@ def props_set(seed):
 
 
 MIX = {
+    "fringe": [("garden", 0.45), ("props", 0.25), ("yard", 0.20), ("hc_small", 0.10)],
     "eup": [("yard", 0.42), ("hc_small", 0.14), ("hc_medium", 0.16), ("hc_large", 0.10), ("garden", 0.12), ("props", 0.06)],
     "village": [("yard", 0.55), ("hc_small", 0.14), ("hc_medium", 0.08), ("garden", 0.15), ("props", 0.08)],
     "market": [("jw", 0.72), ("shop", 0.22), ("props", 0.06)],
@@ -181,7 +182,7 @@ def contour_ry(T, cells):
 
 
 def fill_rows(pl, T, L, cells, group, gcode, mix_name, seed, pitch=18.0, gap=(1.6, 3.2), max_drop=2.6,
-              skip=0.06, limit=999, ry=None, in_frac=0.55, stats=None, phase=0.0):
+              skip=0.06, limit=999, ry=None, in_frac=0.55, stats=None, phase=0.0, lu_ok=(6,), alleys=True):
     """마을 터 칸을 줄로 채운다. 반환: 놓은 집터 수."""
     if len(cells) == 0:
         return 0
@@ -199,7 +200,7 @@ def fill_rows(pl, T, L, cells, group, gcode, mix_name, seed, pitch=18.0, gap=(1.
 
     def in_mask(x, z):
         i = int(round((x - lm["x0"]) / lm["cell"])); j = int(round((z - lm["z0"]) / lm["cell"]))
-        return T.L[j, i] == 6
+        return T.L[j, i] in lu_ok
 
     placed = 0
     b0 = b.min() + rng.uniform(4, 9) + phase
@@ -213,6 +214,7 @@ def fill_rows(pl, T, L, cells, group, gcode, mix_name, seed, pitch=18.0, gap=(1.
         amin, amax = a[sel].min() - 2, a[sel].max() + 2
         cur = amin + rng.uniform(0, 3)
         k = 0
+        row_hits = []   # (a0, a1, 앞 끝 b)
         while cur < amax and placed < limit:
             h = random.Random(seed * 1000 + row * 97 + k).random()
             k += 1
@@ -239,12 +241,29 @@ def fill_rows(pl, T, L, cells, group, gcode, mix_name, seed, pitch=18.0, gap=(1.
                 res = pl.check(L, pcs, x, z, rr, {"max_drop": max_drop, "road_min": 0.8})
                 if res[0]:
                     pl.commit(pcs, x, z, rr, group, gcode)
+                    row_hits.append((cur, cur + w, b0 + db + d / 2))
                     placed += 1
                     if stats is not None:
                         stats[kind] = stats.get(kind, 0) + 1
                     ok = True
                     break
             cur += (w + rng.uniform(*gap)) if ok else 3.0
+        if alleys and len(row_hits) >= 2:
+            # 고샅: 이 줄 집터들 앞(남쪽) 2.2m — 끊긴 데(12m 넘는 틈)에서 나눈다
+            segs = [[row_hits[0]]]
+            for h in row_hits[1:]:
+                if h[0] - segs[-1][-1][1] > 12.0:
+                    segs.append([h])
+                else:
+                    segs[-1].append(h)
+            for sg in segs:
+                if len(sg) < 2:
+                    continue
+                bl = max(h[2] for h in sg) + 2.2
+                pts = []
+                for aa in (sg[0][0], sg[-1][1]):
+                    pts.append([round(cx + ux * aa + vx * bl, 2), round(cz + uz * aa + vz * bl, 2)])
+                pl.alleys.append({"group": group, "width_m": 3.0, "points": pts})
         b0 += pitch + rng.uniform(-1.0, 1.0)
         row += 1
     return placed

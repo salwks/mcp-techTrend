@@ -449,6 +449,21 @@ def main():
     rm4 = road_mask(C.LU_CELL, 8.0); cz4 = cross_zone(C.LU_CELL, 8.0)
     n_lu = int((rm4 & ~cz4 & (lu == LU.WATER)).sum())
     lu[rm4 & ~cz4 & (lu == LU.WATER)] = LU.ROAD
+    # 길 칸 빈틈없이(QL): 중심선 0.5m 표본 → 4m 격자 거리장, 칸 중심이 width/2 + 칸 반대각(2.83m) 안이면 길.
+    #  도강점 구간의 물 칸(5)은 그대로(건너는 자리는 물로 남김).
+    cl4 = np.zeros(lu.shape, bool); hw4 = np.zeros(lu.shape)
+    for r_ in roads:
+        p_ = np.asarray(r_["points"], float); sg_ = np.hypot(*np.diff(p_, axis=0).T); ss_ = np.concatenate([[0], np.cumsum(sg_)])
+        tt_ = np.arange(0, ss_[-1] + 1e-6, 0.5)
+        i_, j_ = C.xz_to_ij(np.interp(tt_, ss_, p_[:, 0]), np.interp(tt_, ss_, p_[:, 1]), C.LU_CELL)
+        i_ = np.clip(np.round(i_).astype(int), 0, lu.shape[1] - 1); j_ = np.clip(np.round(j_).astype(int), 0, lu.shape[0] - 1)
+        cl4[j_, i_] = True; hw4[j_, i_] = np.maximum(hw4[j_, i_], r_["width_m"] / 2)
+    dl4, (nj4, ni4) = ndimage.distance_transform_edt(~cl4, return_indices=True)
+    road4 = dl4 * C.LU_CELL <= hw4[nj4, ni4] + C.LU_CELL * 0.71
+    keep_w = cz4 & (lu == LU.WATER)
+    n_road = int((road4 & ~keep_w & (lu != LU.ROAD)).sum())
+    lu[road4 & ~keep_w] = LU.ROAD
+    say("길 칸 채움", n_road, "칸(4m) 새로 4")
     say("길 둑 보정", n_fix, "칸(2m) 돋움,", n_lu, "칸(4m) 물→길")
     hm = export.write_height(y2.astype(np.float32))
     lum = export.write_landuse(lu)

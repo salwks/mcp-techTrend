@@ -273,6 +273,18 @@ def main():
             if wet or low: qr_bad.append((rd["id"], round(float(x)), round(float(z)), "물칸" if wet else "수면아래"))
     rec("QR", not qr_bad, f"길 표본 {n_s}점(2m 간격, 도강점 반경 '하천 반폭+4.5m' 밖) 모두 물 칸 아님·수면+0.1 이상(목표 +0.3, 격자 차 허용)" if not qr_bad else f"{len(qr_bad)}점 실패 {qr_bad[:8]}", fails=qr_bad[:200])
 
+    # QL: 길 중심선 표본(2m)의 95% 이상이 landuse 4 (도강점 반경 안의 물 칸은 제외)
+    tot = 0; hit = 0; per = {}
+    for rd in roads:
+        p = resample(rd["points"], 2.0); t_ = h_ = 0
+        for x, z in p[:, :2]:
+            i4, j4 = C.xz_to_ij(x, z, C.LU_CELL); i4 = int(round(float(i4))); j4 = int(round(float(j4)))
+            v = lu[j4, i4]
+            if v == 5 and any(math.hypot(c["x"] - x, c["z"] - z) <= max(rid[c["river_id"]]["width_m"], 5.2) / 2 + 4.5 for c in crossings): continue
+            t_ += 1; h_ += int(v == 4)
+        per[rd["id"]] = round(h_ / max(t_, 1), 3); tot += t_; hit += h_
+    rec("QL", hit / max(tot, 1) >= 0.95 and min(per.values()) >= 0.9, f"길 중심선 표본 {tot}점 중 landuse 4 비율 {hit / max(tot, 1):.3f} (길별 최소 {min(per.values()):.3f})", per_road=per)
+
     # QW(덤): 남원읍성 성벽(한 변 186m, 중심선 ±90.7m)을 넘는 길은 성문 통로(문 중심 9m 안)로만
     eup = lm["namwon_eupseong"]; cx, cz = eup["x"], eup["z"]; hz = 93.0 - 2.3
     gates = [(cx, cz + hz), (cx, cz - hz), (cx + hz, cz), (cx - hz, cz)]

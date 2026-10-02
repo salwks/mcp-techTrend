@@ -186,3 +186,10 @@ class Fields:
     def height(self, x, z):
         k = self.ij(x, z)
         return float(self.H[k[1], k[0]]) if k else self.R.height(x, z)
+
+
+def add_village_dist(F):
+    """마을 터(landuse 6)까지 거리 필드"""
+    from scipy import ndimage
+    F.v6_d = ndimage.distance_transform_edt(F.lu != 6) * F.cell
+    F.village_dist = lambda x, z: (float(F.v6_d[F.ij(x, z)[1], F.ij(x, z)[0]]) if F.ij(x, z) else 99.0)

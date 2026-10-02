@@ -93,6 +93,14 @@ class Local:
         self.T = T
         self.rv = self._filter(T._river_segs, cx, cz, R + 150)
         self.rd = self._filter(T._road_segs, cx, cz, R + 150)
+        # 길 표본(1m) — 카메라 통로 검사용
+        A, B, W, I = self.rd
+        pts = []
+        for p, q in zip(A, B):
+            n = max(1, int(np.hypot(*(q - p))))
+            for k in range(n + 1):
+                pts.append(p + (q - p) * k / n)
+        self.road_pts = np.array(pts) if pts else np.zeros((0, 2))
         # 하천 수면 y 표본(징검다리·나룻 높이)
         pts = []
         for r in T.rivers:
@@ -187,6 +195,7 @@ class Placer:
         self.missing = {}
         self.counter = {}
         self.log = []
+        self.alleys = []
 
     # ---- 크기 ----
     def aabb(self, kit, params, fl=None):
@@ -216,6 +225,8 @@ class Placer:
             wx, wz = l2w(x, z, ry, lx, lz)
             rect = Rect(wx, wz, ry + lry, self.aabb(kit, params, fl))
             rects.append((rect, fl))
+            if fl.get("tree") and self.in_cam_corridor(L, wx, wz, fl.get("tree_dx", 5.0)):
+                return False, 0, "cam_corridor"
             if fl.get("nocheck") or fl.get("inner"):
                 continue
             pts = rect.samples(2.0)
@@ -248,6 +259,15 @@ class Placer:
         else:
             drop = 0.0
         return True, drop, rects
+
+    @staticmethod
+    def in_cam_corridor(L, x, z, dx=5.0):
+        """큰 나무가 길 남쪽 3~19m 띠(카메라가 플레이어 남쪽 13~17m, 높이 14~15m에 있는 자리)에 있나."""
+        P_ = L.road_pts
+        if len(P_) == 0:
+            return False
+        m = (np.abs(P_[:, 0] - x) < dx) & ((z - P_[:, 1]) > 3.0) & ((z - P_[:, 1]) < 19.0)
+        return bool(m.any())
 
     # ---- 놓기 ----
     def new_id(self, grp, kind):

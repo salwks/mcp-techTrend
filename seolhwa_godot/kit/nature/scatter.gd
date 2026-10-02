@@ -12,7 +12,7 @@
 extends RefCounted
 
 const CELL := 4.0        # 판정 격자(m)
-const PAD := 3           # 타일 밖으로 더 보는 칸(길·물 거리, 길 북쪽 가림 판정)
+const PAD := 5           # 타일 밖으로 더 보는 칸(길·물 거리, 길 남쪽 카메라 통로 판정 20m)
 const CHUNK := 128.0     # 묶음 크기(m) — 타일당 2×2. 화면(약 50×50m)은 보통 1~2묶음만 걸린다
 const MAX_MM := 8        # 묶음마다 MultiMesh는 개수 많은 종류부터 이만큼은 꼭,
 const MERGE_MAX := 16    # 그 밖에서 묶음 안 개수가 이 이하인 드문 것은 정적 메시 하나로 합친다(합치기는 꼭짓점 수에 비례해 느리므로 드문 것만)
@@ -48,6 +48,10 @@ const KINDS := {
 	sapling_gusang = { s = "korean_fir.gd", p = {}, flod = 1, v = 2, cast = false, col = 0.0 },
 	# 숲 밑 덤불: 같은 덤불을 1.2~2배로 크게(배율은 삼각형이 들지 않으니 바닥을 싸게 덮는다)
 	undergrowth = { s = "bush.gd", p = {}, v = 2, cast = false, col = 0.0 },
+	# 카메라 통로(§9)용 작은 나무: 수관 꼭대기 6m 이하가 되게 배율을 묶는다. LOD0 메시, 그림자 대리 없이 직접 그림자
+	small_pine = { s = "pine.gd", p = {}, v = 2, cast = true, col = 0.2 },
+	small_oak = { s = "oak.gd", p = { kind = "sangsuri" }, v = 1, cast = true, col = 0.2 },
+	small_gusang = { s = "korean_fir.gd", p = {}, v = 1, cast = true, col = 0.18 },
 	bush = { s = "bush.gd", p = {}, v = 3, cast = false, col = 0.0 },
 	jindallae = { s = "azalea.gd", p = { kind = "jindallae" }, v = 1, cast = false, col = 0.0 },
 	cheoljjuk = { s = "azalea.gd", p = { kind = "cheoljjuk" }, v = 1, cast = false, col = 0.0 },
@@ -72,7 +76,7 @@ const KINDS := {
 const SCALE := {
 	pine = [1.05, 1.45], fir = [1.0, 1.35], sangsuri = [1.0, 1.35], singal = [0.9, 1.25], gusang = [0.9, 1.3], deadwood = [0.8, 1.2], snag = [0.8, 1.3],
 	zelkova = [0.95, 1.1], willow = [0.9, 1.15], broadleaf = [0.85, 1.1], persimmon = [0.85, 1.1], chestnut = [0.85, 1.15], garden = [1.0, 1.0], pumpkin = [0.8, 1.2], bamboo = [0.85, 1.15],
-	bush = [0.7, 1.2], undergrowth = [1.6, 2.6], sapling_pine = [0.4, 0.6], sapling_oak = [0.4, 0.6], sapling_singal = [0.4, 0.6], sapling_gusang = [0.45, 0.65], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
+	bush = [0.7, 1.2], small_pine = [0.55, 0.7], small_oak = [0.45, 0.6], small_gusang = [0.5, 0.65], undergrowth = [1.6, 2.6], sapling_pine = [0.4, 0.6], sapling_oak = [0.4, 0.6], sapling_singal = [0.4, 0.6], sapling_gusang = [0.45, 0.65], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
 	stones = [0.8, 1.2], rice = [1.0, 1.0], crop_bean = [1.0, 1.0], crop_millet = [1.0, 1.0], crop_barley = [1.0, 1.0],
 }
 
@@ -165,6 +169,41 @@ static func ids(mix: Array) -> Array:
 	var out := []
 	for m in mix: out.append([kid(m[0]), m[1]])
 	return out
+
+const ROADS_JSON := "res://region_data/JL_NAMWON_UNBONG/region.json"
+static var _roads_cache = null
+
+static func _auto_roads() -> Array:
+	_mtx.lock()
+	if _roads_cache == null:
+		_roads_cache = []
+		if FileAccess.file_exists(ROADS_JSON):
+			var d = JSON.parse_string(FileAccess.get_file_as_string(ROADS_JSON))
+			if d is Dictionary: _roads_cache = d.get("roads", [])
+	_mtx.unlock()
+	return _roads_cache
+
+static func _raster_roads(rl: Array, road: PackedByteArray, lu: PackedByteArray, gx0: float, gz0: float, W: int, H: int) -> void:
+	var box := Rect2(gx0 - 10.0, gz0 - 10.0, W * CELL + 20.0, H * CELL + 20.0)
+	for rd in rl:
+		var pts: Array = rd.get("points", [])
+		var rr: float = float(rd.get("width_m", 4.0)) * 0.5 + 1.0
+		for q in range(pts.size() - 1):
+			var a := Vector2(pts[q][0], pts[q][1]); var b := Vector2(pts[q + 1][0], pts[q + 1][1])
+			if not box.has_point(a) and not box.has_point(b) and not Rect2(a, Vector2.ZERO).expand(b).intersects(box): continue
+			var n := maxi(1, int(a.distance_to(b) / 1.5))
+			for t in n + 1:
+				var p := a.lerp(b, float(t) / n)
+				var i0 := int(floorf((p.x - rr - gx0) / CELL)); var i1 := int(floorf((p.x + rr - gx0) / CELL))
+				var j0 := int(floorf((p.y - rr - gz0) / CELL)); var j1 := int(floorf((p.y + rr - gz0) / CELL))
+				for j in range(maxi(j0, 0), mini(j1, H - 1) + 1):
+					var cz := gz0 + (j + 0.5) * CELL
+					for i in range(maxi(i0, 0), mini(i1, W - 1) + 1):
+						var cx := gx0 + (i + 0.5) * CELL
+						if (cx - p.x) * (cx - p.x) + (cz - p.y) * (cz - p.y) <= rr * rr:
+							var k := j * W + i
+							road[k] = 1
+							if lu[k] != 5: lu[k] = 4
 
 # 칸 거리(체스판 거리, 2-pass, 최대 255) — 두 마스크(a, b)를 한 번에 돈다(루프 비용을 반으로)
 static func _dist2(ma: PackedByteArray, mb: PackedByteArray, w: int, h: int) -> Array:
@@ -335,7 +374,9 @@ class Job:
 		return true
 
 # ---------------------------------------------------------------------------
-static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = []) -> Dictionary:
+# roads: [{width_m, points:[[x,z],…]}…] 길 중심선(region.json roads 형식). null이면 ROADS_JSON에서 한 번 읽어 쓴다(엔진이 넘기기 전 임시),
+#   []이면 쓰지 않는다. landuse.png의 길(4)이 4m 격자에서 군데군데 끊겨 있어, 길 칸·카메라 통로 판정을 중심선으로 보강한다.
+static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = [], roads = null) -> Dictionary:
 	_init_tables()
 	var t0 := Time.get_ticks_usec()
 	var x0 := tile_rect.position.x; var z0 := tile_rect.position.y
@@ -373,6 +414,10 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 		for i in range(1, W - 1, 2):
 			var k := j * W + i
 			hg[k] = (hg[k - 1] + hg[k + 1]) * 0.5
+	# 길 중심선 보강: 폭/2 + 1m 안 칸을 길로(배치 안 함, 거리·카메라 통로 판정에도 씀)
+	var rl: Array = _auto_roads() if roads == null else roads
+	if OS.get_environment("SCATTER_NO_CAMBAND") == "1": rl = []   # 비교 시험: 이전 결과 재현
+	if not rl.is_empty(): _raster_roads(rl, road, lu, gx0, gz0, W, H)
 	var dd := _dist2(road, water, W, H)
 	var rd: PackedByteArray = dd[0]
 	var wd: PackedByteArray = dd[1]
@@ -411,6 +456,10 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 	var bush_k := 1.0 if lod == 0 else 0.5
 	var sap_lo := ids([["sapling_pine", 1.0]])   # 묶음당 종류 수(그리기 호출)를 아끼려 한 가지씩
 	var sap_hi := ids([["sapling_gusang", 1.0]])
+	# 비교 시험용: 환경변수 SCATTER_NO_CAMBAND=1 이면 §9 카메라 통로 규칙을 끈다(이전 결과 재현)
+	var cam_band := OS.get_environment("SCATTER_NO_CAMBAND") != "1"
+	var small_lo := ids([["small_pine", 0.65], ["small_oak", 0.35]])
+	var small_hi := ids([["small_gusang", 0.6], ["small_pine", 0.25], ["snag", 0.15]])
 	var gtree_lo := ids([["pine", 0.5], ["sangsuri", 0.3], ["broadleaf", 0.2]])
 	var gtree_hi := ids([["singal", 0.6], ["pine", 0.25], ["deadwood", 0.15]])
 	var k_crops := [kid("crop_bean"), kid("crop_millet"), kid("crop_barley")]
@@ -426,7 +475,16 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			var slope := sqrt(gxv * gxv + gzv * gzv)   # tan(경사각)
 			var r_d := rd[k]; var w_d := wd[k]
 			# 길 북쪽(카메라 반대편, -z) 12m 안에 길이 있으면 이 칸의 큰 나무는 길을 가린다 → 나무 대신 낮은 것(§32 시각 간격)
-			var road_n := road[k - W] == 1   # 3단계: 바로 북쪽 칸(4m)에 길이 있을 때만 — 길 3m 밖부터 빽빽하게
+			# §9 카메라 통로: 이 칸의 북쪽 4~20m(1~5칸)에 길이 있으면 = 길 남쪽 띠. 카메라가 플레이어 남쪽 13~17m·높이 14~15m에
+			# 있으므로 수관 6m 넘는 나무를 두지 않고 작은 나무·어린나무·덤불로 대신한다. 길 북쪽은 그대로
+			var road_n := road[k - W] == 1
+			if cam_band and not road_n:
+				# 굽은 길·남북 길도 잡게 북쪽 1~5칸 × 좌우 2칸(±8m) — 카메라는 플레이어 바로 남쪽이라 길 양옆 나무도 화면 아래를 덮는다
+				for n in range(1, 6):
+					var kn := k - n * W
+					if road[kn] == 1 or road[kn - 1] == 1 or road[kn + 1] == 1 or road[kn - 2] == 1 or road[kn + 2] == 1:
+						road_n = true
+						break
 			# 나무: 길 칸 바로 옆(1칸)도 허용하되 put()이 줄기에서 3m 안에 길이 있으면 버린다
 			var tree_ok := r_d >= 1 and not road_n and w_d >= 1
 			J.pure = lu[k - 1] == l and lu[k + 1] == l and lu[k - W] == l and lu[k + W] == l
@@ -434,6 +492,10 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 				0: # 숲
 					# 3단계: 큰 나무 0.22/칸으로 되올리고, 어린나무·덤불·덮개로 바닥을 메운다(길 3m 밖부터 빽빽)
 					if tree_ok: J.emit_mix(mix_ids(alt), (0.28 if slope < 1.0 else 0.18) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					elif road_n and r_d >= 1 and w_d >= 1:
+						# 카메라 통로: 작은 나무로 숲 느낌만(수관 ≤ 6m)
+						J.emit_mix(small_lo if alt < 900.0 else small_hi, 0.3 * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+						J.emit(k_under, 0.2 * bush_k, cx, cz, slope, r_d)
 					if r_d >= 1: J.emit_mix(sap_lo if alt < 800.0 else sap_hi, 0.05 * bush_k, cx, cz, slope, r_d)
 					if not tree_ok and r_d >= 1: 
 						J.emit(k_bush, 0.3, cx, cz, slope, r_d)
@@ -518,7 +580,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					if w_d <= 1: J.emit(k_cr, 0.15, cx, cz, slope, r_d)
 					if tree_ok: J.emit(k_wil, 0.005, cx, cz, slope, r_d)
 				9: # 대숲
-					if r_d >= 1 and w_d >= 1: J.emit(k_bam, (0.35 if r_d >= 2 else 0.15) * tree_k, cx, cz, slope, r_d)
+					if r_d >= 1 and w_d >= 1 and not road_n: J.emit(k_bam, (0.35 if r_d >= 2 else 0.15) * tree_k, cx, cz, slope, r_d)
+					elif road_n and r_d >= 1: J.emit(k_under, 0.4, cx, cz, slope, r_d)   # 카메라 통로: 대숲(8m) 대신 덤불
 					J.emit(k_cf, 0.08, cx, cz, slope, r_d)
 			# 물가(땅 칸): 갈대·버드나무, 산골이면 너럭바위·큰 바위
 			if l != 5 and l != 8 and w_d >= 1 and w_d <= 2:

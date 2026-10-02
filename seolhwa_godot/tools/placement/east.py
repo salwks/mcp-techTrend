@@ -62,9 +62,9 @@ def compound(seed, size):
 
 
 def tree(variant, seed, lx=0.0, lz=0.0):
-    # 나무는 줄기 둘레만 겹침 검사(수관은 지붕 위로 겹쳐도 된다)
+    # 나무는 줄기 둘레만 겹침 검사(수관은 지붕 위로 겹쳐도 된다). 길 남쪽 카메라 통로는 피한다
     return P("nature/big_tree", {"seed": seed, "variant": variant}, lx, lz, cat="prop", kind="tree_" + variant,
-             aabb=[-1.2, 1.2, -1.2, 1.2], flatten=False, margin=0.6, river_min=1.0)
+             aabb=[-1.2, 1.2, -1.2, 1.2], flatten=False, margin=0.6, river_min=1.0, tree=True)
 
 
 # ---------------------------------------------------------------- 도우미
@@ -92,7 +92,7 @@ def entrance(T, rid, cx, cz, R, toward):
     return best
 
 
-def gate_props(pl, T, L, rid, s, group, gcode, rng, sotdae=True, both=True, kit="village/jangseung"):
+def gate_props(pl, T, L, rid, s, group, gcode, rng, sotdae=True, both=True, kit="village/jangseung", quiet=False):
     """길 위 호 길이 s 자리에 장승 한 쌍(길 양쪽) + 솟대. 길이 막히지 않게 길 가장자리 밖에."""
     pts = T.road(rid)["points"]
     w = T.road(rid)["width_m"]
@@ -125,7 +125,8 @@ def gate_props(pl, T, L, rid, s, group, gcode, rng, sotdae=True, both=True, kit=
                         placed += pl.commit(sp, sx, sz, ry, group, gcode)
                         break
             return placed
-    pl.log.append(f"[gate] {group} 장승 자리 못 찾음 (s={s:.0f})")
+    if not quiet:
+        pl.log.append(f"[gate] {group} 장승 자리 못 찾음 (s={s:.0f})")
     return placed
 
 
@@ -282,8 +283,8 @@ def jumak_set(seed):
     return [P("village/jumak", {"seed": seed}, cat="jumak", kind="jumak", label="주막")]
 
 
-def mill(seed):
-    return [P("village/mulbang_a", {"seed": seed}, cat="mill", kind="mulbang", label="물레방아", river_min=0.6, river_max=7.0)]
+def mill(seed, rmax=7.0):
+    return [P("village/mulbang_a", {"seed": seed}, cat="mill", kind="mulbang", label="물레방아", river_min=0.6, river_max=rmax)]
 
 
 # ---------------------------------------------------------------- 다리(도강점)
@@ -456,16 +457,32 @@ def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square
     rng = random.Random(seed)
     ent = None
     if road and toward:
-        ent = entrance(T, road, cx, cz, min(R, 70), toward) or entrance(T, road, cx, cz, min(R, 70) * 0.7, toward)
-        if ent:
-            gate_props(pl, T, L, road, ent[1], group, gcode, rng)
+        towards = toward if isinstance(toward[0], (tuple, list)) else [toward]
+        ent = None
+        for tw in towards:
+            for rr in (min(R, 70), min(R, 70) * 0.7, min(R, 70) * 1.25, min(R, 70) * 0.5):
+                e_ = entrance(T, road, cx, cz, rr, tw)
+                if not e_:
+                    continue
+                if gate_props(pl, T, Local(T, e_[2], e_[3], 60), road, e_[1], group, gcode, rng, quiet=True):
+                    ent = e_
+                    break
+            if ent:
+                break
+        if not ent:
+            pl.log.append(f"[gate] {group} 어귀 장승 자리 못 찾음")
     if square:
         sx, sz = (ent[2], ent[3]) if ent else (cx, cz)
         # 어귀에서 마을 안쪽으로 조금
         sx, sz = sx + (cx - sx) * 0.25, sz + (cz - sz) * 0.25
-        pl.place_search(L, [P("village/village_square", {"seed": seed % 50 + 1}, cat="prop", kind="village_square",
-                              label="공동 마당", margin=1.0, footprint=[8.0, 7.6])],
-                        sx, sz, 22, group, gcode, rng, {"max_drop": 1.8}, face="road", road_pref=(1.0, 8.0))
+        sq = pl.place_search(L, [P("village/village_square", {"seed": seed % 50 + 1}, cat="prop", kind="village_square",
+                              label="공동 마당", margin=1.0, footprint=[8.0, 7.6], tree=True, tree_dx=7.0)],
+                        sx, sz, 40, group, gcode, rng, {"max_drop": 2.4}, face="road", road_pref=(1.0, 10.0), n=400)
+        if not sq:
+            # 나무 없는 마당(평상·돌 의자만)으로 다시 — 산촌 기슭·카메라 통로
+            pl.place_search(L, [P("village/village_square", {"seed": seed % 50 + 1, "tree": "none", "pyeongsang": 1, "seats": 3},
+                                  cat="prop", kind="village_square", label="공동 마당", margin=0.8, footprint=[8.0, 7.6])],
+                            sx, sz, 50, group, gcode, rng, {"max_drop": 3.0}, face="road", road_pref=(1.0, 12.0), n=500)
     for w in range(wells):
         pl.place_search(L, [P("village/well", {"seed": seed + w, "roof": (seed + w) % 2 == 0}, cat="prop", kind="well",
                               margin=1.2)], cx, cz, R * 0.6, group, gcode, rng, {"max_drop": 1.8}, face="none")
@@ -476,6 +493,28 @@ def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square
                           stats=stats, phase=pitch / 2, gap=(1.2, 2.4))
     pl.log.append(f"[village2] {group}({sid}) 마을 터 {len(cells) * 16}m² → 집터 {n}")
     return n
+
+
+def fringe(pl, T, sid, group, gcode, seed, stats):
+    """마을 터 둘레 20m 안 풀밭(1)·밭(3) 칸과 남은 마을 터 칸을 텃밭·일거리 위주로 채운다."""
+    from scipy.ndimage import binary_dilation
+    s = next(x for x in T.region["settlements"] if x["id"] == sid)
+    lm = T.lm
+    b = s["bbox"]
+    i0 = int((b[0] - 24 - lm["x0"]) / lm["cell"]); i1 = int((b[2] + 24 - lm["x0"]) / lm["cell"]) + 1
+    j0 = int((b[1] - 24 - lm["z0"]) / lm["cell"]); j1 = int((b[3] + 24 - lm["z0"]) / lm["cell"]) + 1
+    sub = T.L[j0:j1, i0:i1]
+    m6 = sub == 6
+    near = binary_dilation(m6, iterations=5)
+    ok = near & np.isin(sub, [1, 3, 6])
+    jj, ii = np.nonzero(ok)
+    cells = np.stack([lm["x0"] + (ii + i0) * lm["cell"], lm["z0"] + (jj + j0) * lm["cell"]], 1).astype(float)
+    L = Local(T, float(cells[:, 0].mean()), float(cells[:, 1].mean()), 300)
+    n = EV.fill_rows(pl, T, L, cells, group, gcode, "fringe", seed, pitch=13.0, gap=(1.5, 3.0), max_drop=2.6, in_frac=0.5,
+                     lu_ok=(1, 3, 6), stats=stats)
+    n += EV.fill_rows(pl, T, L, cells, group, gcode, "fringe", seed + 1, pitch=13.0, gap=(1.5, 3.0), max_drop=2.6, in_frac=0.5,
+                      lu_ok=(1, 3, 6), stats=stats, phase=6.5)
+    pl.log.append(f"[fringe] {group}({sid}) 둘레 칸 {len(cells)} → {n}")
 
 
 SILSANG_DZ = 8.0   # 3단계: 인월–산내 물가길이 경내 북쪽 담을 지나 실상사를 8m 남쪽으로(가설)
@@ -499,8 +538,10 @@ def build(pl, T):
     anc = pl.bounds.get(bkey("village/seonghwangdang", sh_params), {}).get("anchors", {}).get("tree", [0, 0, -1.2])
     sh = [P("village/seonghwangdang", sh_params, cat="shrine", kind="seonghwangdang", label="성황당", road_min=0.8),
           P("nature/big_tree", {"seed": 9, "variant": "zelkova", "h": 8.0, "spread": 5.0}, anc[0], anc[2], cat="prop", kind="sinmok",
-            aabb=[-1.2, 1.2, -1.2, 1.2], flatten=False, nocheck=True)]
-    pl.place_search(L, sh, ps["x"], ps["z"] - 6, 22, g, gc, rng, {"max_drop": 2.6}, road_pref=(0.8, 6.0))
+            aabb=[-1.2, 1.2, -1.2, 1.2], flatten=False, nocheck=True, tree=True)]
+    # 성황당은 길 북쪽(신목이 카메라 통로 밖) — 다듬기 단계
+    pl.place_search(L, sh, ps["x"], ps["z"] - 10, 26, g, gc, rng, {"max_drop": 2.8}, road_pref=(0.8, 7.0),
+                    pref=(ps["x"], ps["z"] - 10), north_bias=0.0)
     s_pass, _ = polyline_project(T.road("tongyeong_byeolro")["points"], ps["x"], ps["z"])
     gate_props(pl, T, L, "tongyeong_byeolro", s_pass + 14, g, gc, rng, sotdae=False)
     pl.place_search(L, jumak_set(5), ps["x"] + 40, ps["z"], 60, g, gc, rng, {"max_drop": 3.0}, road_pref=(1.0, 8.0))
@@ -535,10 +576,13 @@ def build(pl, T):
     market(pl, T, Lm, "unbong_eup_street", max(0, s_j - 45), s_j + 45, g, gc, rng, shops=5, jwapan=10)
     jc = EV.cells_of(T, st["unbong_jang"], reg["settlements"])
     EV.fill_rows(pl, T, Lm, jc, g, gc, "market", 331, pitch=8.5, gap=(1.0, 2.0), max_drop=1.8, limit=14, stats=stats)
-    village2(pl, T, "unbong_eup", g, gc, "eup", 303, road="tongyeong_byeolro", toward=(1050, -960), wells=3,
-             extra_ids=("unbong_jang",), stats=stats)
+    village2(pl, T, "unbong_eup", g, gc, "eup", 303, road="tongyeong_byeolro",
+             toward=[(1050, -960), (1000, -850), (980, -700), (650, -800)], wells=3, extra_ids=("unbong_jang",), stats=stats)
     # 장마당 칸에 남은 자리도 집으로
     EV.fill_rows(pl, T, Lm, jc, g, gc, "eup", 332, max_drop=2.6, stats=stats)
+    # 다듬기: 마을 터 둘레 20m 안 풀밭·밭 칸도 텃밭·일거리·작은 집터로 메운다(가운데 빈 곳)
+    fringe(pl, T, "unbong_eup", g, gc, 333, stats)
+    fringe(pl, T, "unbong_jang", g, gc, 334, stats)
     pl.place_search(L, jumak_set(31), 900, -830, 60, g, gc, rng, {"max_drop": 2.6}, road_pref=(1.0, 6.0))
     pl.place_search(Local(T, 720, -770, 160), mill(32), 720, -790, 90, g, gc, rng, {"max_drop": 2.4, "river_min": 0.6},
                     allow_cross=True)
@@ -605,18 +649,20 @@ def build(pl, T):
                     pref=(sm["x"] - 55, sm["z"] + 70))
 
     # ===== 7. 산내·반선 =====
-    village2(pl, T, "sannae", "산내 마을", "sn", "mountain", 616, road="inwol_banseon_road", toward=(3200, 380), max_drop=4.2,
+    village2(pl, T, "sannae", "산내 마을", "sn", "mountain", 616, road="inwol_banseon_road",
+             toward=[(3200, 380), (2900, 600)], max_drop=4.2,
              pitch=15.5, stats=stats)
     sn = st["sannae"]
-    pl.place_search(Local(T, sn["x"], sn["z"], 160), mill(62), sn["x"] + 20, sn["z"] - 10, 100, "산내 마을", "sn",
-                    random.Random(617), {"max_drop": 3.6}, allow_cross=True)
-    village2(pl, T, "banseon", "반선 마을", "bs", "mountain", 707, road="inwol_banseon_road", toward=(2300, 1250), max_drop=4.5,
+    pl.place_search(Local(T, sn["x"], sn["z"], 160), mill(62, rmax=11.0), sn["x"] + 20, sn["z"] - 10, 140, "산내 마을", "sn",
+                    random.Random(617), {"max_drop": 4.6}, allow_cross=True, n=600)
+    village2(pl, T, "banseon", "반선 마을", "bs", "mountain", 707, road="inwol_banseon_road",
+             toward=[(2300, 1250), (2150, 1650), (2200, 1400)], max_drop=4.5,
              pitch=15.0, stats=stats)
     bs = st["banseon"]
     pl.place_search(Local(T, bs["x"], bs["z"], 140), jumak_set(71), bs["x"] + 10, bs["z"] - 30, 60, "반선 마을", "bs",
                     random.Random(708), {"max_drop": 4.0}, road_pref=(1.0, 6.0))
-    pl.place_search(Local(T, bs["x"], bs["z"], 160), mill(72), bs["x"] + 20, bs["z"] - 60, 100, "반선 마을", "bs",
-                    random.Random(709), {"max_drop": 3.6}, allow_cross=True)
+    pl.place_search(Local(T, bs["x"], bs["z"], 160), mill(72, rmax=11.0), bs["x"] + 10, bs["z"] - 40, 140, "반선 마을", "bs",
+                    random.Random(709), {"max_drop": 4.6}, allow_cross=True, n=600)
 
     # ===== 8. 들마을(3곳만, 작게) =====
     for sid, sd in [("auto_village_03", 801), ("auto_village_04", 802), ("auto_village_06", 803)]:
@@ -693,7 +739,8 @@ def write(T, pl, bounds):
         items.append({k: v for k, v in it.items() if not k.startswith("_")})
     doc = {"area": "east",
            "note": "placement-east 생성(tools/placement/east.py, 결정적). 남원 읍내를 뺀 x > −2300 — 여원재·운봉·황산·인월·실상사·산내·반선·들마을·길가·도강점. 근거·가설: docs/reports/placement-east.md",
-           "items": items}
+           "items": items,
+           "alleys": [dict(id=f"ea_alley_{i:03d}", **a) for i, a in enumerate(pl.alleys)]}
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(doc, f, ensure_ascii=False, indent=1)
     return doc

@@ -123,15 +123,15 @@ static func make() -> Node3D:
 			excl.append(Rect2(hp[0] - fp.x / 2, hp[1] - fp.y / 2, fp.x, fp.y))
 		# 마을 안 고샅길(동서로 하나)
 		excl.append(Rect2(40, 71, 60, 3.5))
-	var r1 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl)
-	var r2 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl)
+	var r1 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl, [])
+	var r2 := Scatter.scatter(rect, hcall, lcall, seed, lod, excl, [])
 	var same: bool = r1.colliders.size() == r2.colliders.size() and r1.nodes.size() == r2.nodes.size()
 	for i in r1.nodes.size():
 		if not same: break
 		if r1.nodes[i] is MultiMeshInstance3D: same = r1.nodes[i].multimesh.buffer == r2.nodes[i].multimesh.buffer
 		else: same = r1.nodes[i].mesh.surface_get_arrays(0)[0] == r2.nodes[i].mesh.surface_get_arrays(0)[0]
 	# 다른 타일 하나 더(데운 캐시) — 시간 표본
-	var r3 := Scatter.scatter(Rect2(-128, -384, 256, 256), hcall, lcall, seed, lod)
+	var r3 := Scatter.scatter(Rect2(-128, -384, 256, 256), hcall, lcall, seed, lod, [], [])
 	var inst := 0; var tris := 0
 	for n in r1.nodes:
 		if n is MultiMeshInstance3D:

@@ -1,12 +1,12 @@
 {
  "H": {
   "ok": true,
-  "msg": "PNG 16bit 회색조(type 0) 4353×2113 cell 2.0m, y 3.0…386.0 (실제 70…1347m), 클립 0.0e+00, 광한루 y=12.0(실제 100m), 운봉 관아 y=120.0(실제 460m), 경사 tan 중앙값 0.27/99% 0.80, region_data 합계 12.6MB",
+  "msg": "PNG 16bit 회색조(type 0) 4353×2113 cell 2.0m, y 3.0…386.0 (실제 70…1347m), 클립 0.0e+00, 광한루 y=12.0(실제 100m), 운봉 관아 y=120.0(실제 460m), 경사 tan 중앙값 0.27/99% 0.80, region_data 합계 12.8MB",
   "sizes": {
-   "qa.json": 5378,
-   "placement_namwon.json": 286380,
-   "landuse.png": 117995,
-   "placement_east.json": 261343,
+   "qa.json": 5947,
+   "placement_namwon.json": 299837,
+   "landuse.png": 118568,
+   "placement_east.json": 432351,
    "height.png": 11318998,
    "region.json": 585302
   }
@@ -24,15 +24,15 @@
  },
  "Q4": {
   "ok": true,
-  "msg": "논 4.6% (경사>10% 비율 0.1%, 실제 고도 99% 532m), 밭 11.3% (경사>30% 0.1%)",
+  "msg": "논 4.5% (경사>10% 비율 0.1%, 실제 고도 99% 532m), 밭 11.2% (경사>30% 0.1%)",
   "landuse_share": {
-   "0": 0.8031,
+   "0": 0.8008,
    "1": 0.0039,
-   "2": 0.0458,
-   "3": 0.1125,
-   "4": 0.0022,
+   "2": 0.0454,
+   "3": 0.1117,
+   "4": 0.0067,
    "5": 0.0131,
-   "6": 0.0073,
+   "6": 0.0065,
    "7": 0.0097,
    "8": 0.0016,
    "9": 0.0006
@@ -103,7 +103,7 @@
    [
     "unbong_eup",
     true,
-    "위반 0.00, 뒤(산쪽) 숲·밭 0.74, 뒤-앞 고도차 -2.0"
+    "위반 0.00, 뒤(산쪽) 숲·밭 0.59, 뒤-앞 고도차 -2.0"
    ],
    [
     "bijeon",
@@ -123,7 +123,7 @@
    [
     "banseon",
     false,
-    "위반 0.25, 뒤(산쪽) 숲·밭 0.93, 뒤-앞 고도차 +17.9"
+    "위반 0.25, 뒤(산쪽) 숲·밭 0.89, 뒤-앞 고도차 +17.9"
    ],
    [
     "auto_village_00",
@@ -143,7 +143,7 @@
    [
     "auto_village_03",
     true,
-    "위반 0.00, 뒤(산쪽) 숲·밭 0.70, 뒤-앞 고도차 +2.1"
+    "위반 0.00, 뒤(산쪽) 숲·밭 0.67, 뒤-앞 고도차 +2.1"
    ],
    [
     "auto_village_04",
@@ -201,6 +201,26 @@
   "ok": true,
   "msg": "길 표본 10447점(2m 간격, 도강점 반경 '하천 반폭+4.5m' 밖) 모두 물 칸 아님·수면+0.1 이상(목표 +0.3, 격자 차 허용)",
   "fails": []
+ },
+ "QL": {
+  "ok": true,
+  "msg": "길 중심선 표본 10661점 중 landuse 4 비율 1.000 (길별 최소 1.000)",
+  "per_road": {
+   "tongyeong_byeolro": 1.0,
+   "inwol_banseon_road": 1.0,
+   "silsangsa_lane": 1.0,
+   "haetal_lane": 1.0,
+   "namwon_gurye_road": 1.0,
+   "namwon_north_road": 1.0,
+   "namwon_eup_street": 1.0,
+   "namwon_eup_street_ew": 1.0,
+   "namwon_gaeksa_lane": 1.0,
+   "namwon_gwana_lane": 1.0,
+   "namwon_market_lane": 1.0,
+   "namwon_west_gate_lane": 1.0,
+   "unbong_eup_street": 1.0,
+   "baemsagol_trail": 1.0
+  }
  },
  "QW": {
   "ok": true,
