@@ -1,0 +1,7 @@
+.godot/
+*.import
+*.uid
+/shots/
+# 웹 프로토타입에서 내보낸 산출물(tools/export_from_web.js로 다시 만든다)
+/data/*
+!/data/.gdignore

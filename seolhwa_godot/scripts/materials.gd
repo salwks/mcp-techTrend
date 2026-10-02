@@ -1,0 +1,122 @@
+# 재질: 웹의 MeshToonMaterial(붓 바림 단계) + 반구광 + 높이 안개를 셰이더로 옮긴다.
+# glTF에서 읽은 StandardMaterial3D를 보고 같은 성질(양면·반투명·무광)의 셰이더 재질로 바꾼다.
+#
+# 밝기 맞추기: three는 직접광에 BRDF_Lambert(색/π)를 곱한다. Godot의 LIGHT_COLOR는 (색 × 세기 × π)이므로
+# DIFFUSE_LIGHT에 LIGHT_COLOR / π² 를 더하면 웹과 같은 세기(intensity) 값을 그대로 쓸 수 있다.
+class_name Materials
+extends RefCounted
+
+const RAMP := [105, 150, 196, 232, 255] # 툰 명암 단계(웹 materials.js gradient)
+
+static var _shaders := {}
+static var _ramp: ImageTexture
+
+static func ramp_texture() -> ImageTexture:
+	if _ramp == null:
+		var img := Image.create(RAMP.size(), 1, false, Image.FORMAT_R8)
+		for i in RAMP.size():
+			img.set_pixel(i, 0, Color(RAMP[i] / 255.0, 0, 0))
+		_ramp = ImageTexture.create_from_image(img)
+	return _ramp
+
+const FOG_CODE := """
+	float fog_d = -VERTEX.z;
+	vec3 fog_wp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
+	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
+	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
+	FOG = vec4(fog_color, fog_f);
+"""
+
+const GLOBALS := """
+global uniform vec3 hemi_sky;
+global uniform vec3 hemi_ground;
+global uniform float hemi_i;
+global uniform vec3 fog_color;
+global uniform float fog_density;
+global uniform float glow_k;
+"""
+
+# lit: 툰 조명 / unlit: 무광(MeshBasic) / blend: 반투명 / cull: 양면 여부
+static func world_shader(lit: bool, blend: bool, double_sided: bool) -> Shader:
+	var key := "%s%s%s" % [int(lit), int(blend), int(double_sided)]
+	if _shaders.has(key):
+		return _shaders[key]
+	var modes := ["specular_disabled", "cull_disabled" if double_sided else "cull_back"]
+	if not lit:
+		modes.append("unshaded")
+	if blend:
+		# 깊이를 기록해야 반투명으로 흐려진 물체 안에서 먼 면(먹선 껍질 안쪽)이 가까운 면을 덮지 않는다
+		modes.append("blend_mix")
+		modes.append("depth_draw_always")
+	var code := "shader_type spatial;\nrender_mode %s;\n" % ", ".join(modes)
+	code += GLOBALS
+	code += """
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable, hint_default_white;
+uniform sampler2D emission_tex : filter_linear_mipmap, repeat_enable, hint_default_black;
+uniform sampler2D ramp_tex : filter_linear, repeat_disable;
+uniform vec4 albedo_color = vec4(1.0);
+uniform vec3 emissive_color = vec3(0.0);
+uniform float use_emission = 0.0;
+uniform vec2 uv_offset = vec2(0.0);
+uniform float fade = 1.0;
+
+void fragment() {
+	vec4 t = texture(albedo_tex, UV + uv_offset);
+	vec3 base = albedo_color.rgb * t.rgb * COLOR.rgb;
+	ALBEDO = base;
+"""
+	if lit:
+		code += """
+	vec3 wn = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * wn.y + 0.5) * hemi_i;
+	EMISSION = base * hemi / PI + emissive_color * texture(emission_tex, UV).rgb * glow_k * use_emission;
+"""
+	if blend:
+		code += "\tALPHA = albedo_color.a * t.a * fade;\n"
+	code += FOG_CODE + "}\n"
+	if lit:
+		code += """
+void light() {
+	float ndl = dot(NORMAL, LIGHT);
+	float ramp = texture(ramp_tex, vec2(ndl * 0.5 + 0.5, 0.5)).r;
+	DIFFUSE_LIGHT += ramp * ATTENUATION * LIGHT_COLOR / (PI * PI);
+}
+"""
+	var sh := Shader.new()
+	sh.code = code
+	_shaders[key] = sh
+	return sh
+
+# glTF 재질 → 셰이더 재질
+static func from_standard(m: BaseMaterial3D, glow: bool) -> ShaderMaterial:
+	var lit := m.shading_mode != BaseMaterial3D.SHADING_MODE_UNSHADED
+	var blend := m.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED
+	var ds := m.cull_mode == BaseMaterial3D.CULL_DISABLED
+	var sm := ShaderMaterial.new()
+	sm.shader = world_shader(lit, blend, ds)
+	var c := m.albedo_color
+	var lin := c.srgb_to_linear()
+	sm.set_shader_parameter("albedo_color", Vector4(lin.r, lin.g, lin.b, c.a))
+	if m.albedo_texture:
+		sm.set_shader_parameter("albedo_tex", m.albedo_texture)
+	sm.set_shader_parameter("ramp_tex", ramp_texture())
+	if glow and m.emission_texture:
+		var e := m.emission.srgb_to_linear()
+		sm.set_shader_parameter("emissive_color", Vector3(e.r, e.g, e.b))
+		sm.set_shader_parameter("emission_tex", m.emission_texture)
+		sm.set_shader_parameter("use_emission", 1.0)
+	return sm
+
+# 가림 처리용: 같은 재질을 반투명 셰이더로
+static func faded_copy(sm: ShaderMaterial) -> ShaderMaterial:
+	var code := sm.shader.code
+	var lit := not code.contains("unshaded")
+	var ds := code.contains("cull_disabled")
+	var f := ShaderMaterial.new()
+	f.shader = world_shader(lit, true, ds)
+	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset"]:
+		var v = sm.get_shader_parameter(p)
+		if v != null:
+			f.set_shader_parameter(p, v)
+	return f
