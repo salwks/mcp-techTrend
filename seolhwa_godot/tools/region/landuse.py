@@ -29,7 +29,7 @@ def river_fields(rivers, shape, G=G):
     return d * G, surf[nj, ni], hw[nj, ni], gr[nj, ni]
 
 AREA = {"L": 45000.0, "M": 14000.0, "S": 5000.0}
-AREA_ID = {"namwon_eup": 85000.0,      # 성 안 정방형은 별도(전부 마을 터) + 성 밖 85,000m²
+AREA_ID = {"namwon_eup": 33500.0,      # 성 안 정방형은 별도(전부 마을 터) + 성 밖 38,000m²(사용자 요청: 성벽 120m 안으로 바짝)
            "inwol_yeok": 16000.0, "inwol_jang": 18000.0, "unbong_jang": 12000.0, "namwon_jang": 9000.0, "namwon_hyanggyo": 3000.0}
 
 def village_area(s):
@@ -94,7 +94,7 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
         target = village_area(s)
         core = s.get("core")                                   # 남원: 성 안 정방형(게임 좌표 x0,z0,x1,z1)
         req = math.sqrt(target / math.pi)
-        rmax = max(70.0, 2.6 * req) + (110 if core else 0)
+        rmax = (s.get("core_max", 120.0) + 132.0) if core else max(70.0, 2.6 * req)
         ci, cj = C.xz_to_ij(s["x"], s["z"], G); R = int(rmax / G) + 2
         j0, j1, i0, i1 = max(int(cj) - R, 0), min(int(cj) + R + 1, Hh), max(int(ci) - R, 0), min(int(ci) + R + 1, Ww)
         sx, sz = xs[j0:j1, i0:i1], zs[j0:j1, i0:i1]
@@ -107,6 +107,10 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
         sl_ = sl_s[j0:j1, i0:i1]; hd = hand[j0:j1, i0:i1]
         sc = (dc / max(req, 20.0)) * 0.9 + np.minimum(d_road[j0:j1, i0:i1], 90) / 28.0 \
              + 3.0 * (sl_ > 0.28) + 0.5 * ((sl_ < 0.02) & (hd < 6)) - 0.45 * ((sl_ > 0.03) & (sl_ < 0.18)) + 0.25 * nz[j0:j1, i0:i1]
+        if core:
+            # 성 밖: 성벽에서 core_max(120m) 안만. 남쪽(남문 밖 장터·광한루 쪽) 우선, 그다음 동·서문 밖 길가
+            sc = sc - 0.9 * (sz > z1) - 0.35 * ((sx < x0) | (sx > x1)) * (np.abs(sz - (z0 + z1) / 2) < 60)
+            sc[dc > s.get("core_max", 120.0)] = 99
         sc[excl[j0:j1, i0:i1] | (dc > rmax)] = 99
         sc[inside_core] = -99
         n_px = int(target / (G * G)) + int(inside_core.sum())

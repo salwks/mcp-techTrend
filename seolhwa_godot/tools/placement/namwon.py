@@ -20,6 +20,16 @@ WALL_T = 4.6
 INNER = HALF - WALL_T
 ONGSEONG = {"S": "front", "N": "west", "E": "south", "W": "north"}   # terrain-data 길과 맞춘 옹성 출구(총괄 지정)
 
+# 읍내 범위: region.json settlements namwon_eup.bbox(§11에서 성벽 120m 안으로 좁힘)
+def _town_bbox():
+    try:
+        r = json.load(open(os.path.join(RDIR, "region.json")))
+        b = [st for st in r["settlements"] if st["id"] == "namwon_eup"][0]["bbox"]
+        return tuple(float(v) for v in b)
+    except Exception:
+        return (-3384.0, 36.0, -3016.0, 460.0)
+TOWN_BBOX = _town_bbox()
+
 # 작업 영역(래스터)
 AX0, AZ0, AX1, AZ1 = -3560.0, -260.0, -2700.0, 640.0
 
@@ -324,6 +334,10 @@ class Houses:
 
     def try_put(self, t, x, z, ry, tag, gap=1.0, gz=None, road_min=1.0, lu_min=0.7, lu_ok=(6,)):
         w, d, tris, fp = house_dims(t)
+        # 읍내 범위(terrain-data §11 namwon_eup bbox) 밖에는 집을 두지 않는다
+        bx0, bz0, bx1, bz1 = TOWN_BBOX
+        if not (bx0 + w / 2 <= x <= bx1 - w / 2 and bz0 + d / 2 <= z <= bz1 - d / 2):
+            self.P.reject("읍내 밖"); return False
         why = self.P.check_site(x, z, w, d, ry, gap=gap, gz=gz, road_min=road_min, lu_min=lu_min, lu_ok=lu_ok, slope_max=3.0)
         if why:
             self.P.reject(why)
@@ -778,6 +792,8 @@ def place_fill(P, R, rng, houses):
     targets = [(CX - 9, CZ + 12), (CX + 9, CZ - 13), (CX - 14, CZ + HALF + 14), (-3105, 290), (-3360, 240), (CX - 26, CZ - HALF - 22),
                (-3255, 300), (-3190, 300), (-3020, 250), (-2930, 180), (-3240, 40), (-3225, 110), (-3370, 330), (-3215, 400), (-3360, 180)]
     for (x, z) in targets:
+        if not (TOWN_BBOX[0] <= x <= TOWN_BBOX[2] and TOWN_BBOX[1] <= z <= TOWN_BBOX[3]):
+            continue
         for (ox, oz) in [(0, 0), (3, 0), (-3, 0), (0, 3), (0, -3), (5, 4), (-5, 4), (6, -4), (-6, -4), (8, 0), (-8, 0)]:
             if not P.check_site(x + ox, z + oz, 2.4, 2.0, 0.0, gap=0.8, road_min=0.6, lu_ok=None):
                 s["우물"] += 1
