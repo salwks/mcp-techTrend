@@ -514,13 +514,20 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 						J.emit(k_cheol, 0.22, cx, cz, slope, r_d)
 						J.emit(k_ca, 0.35, cx, cz, slope, r_d)
 					else: J.emit(k_cm, 0.45, cx, cz, slope, r_d)
-				2: # 논 — 칸마다 벼 4×4 포기(1m 간격, 칸 가득 → 줄이 이어짐)
+				2: # 논 — 칸마다 벼 4×4 포기(1m 간격, 칸 가득 → 줄이 이어짐). 가장자리(논두렁)엔 짧은 풀 줄
+					if lu[k - 1] != 2 or lu[k + 1] != 2 or lu[k - W] != 2 or lu[k + W] != 2:
+						J.emit(k_cyard, 0.75, cx, cz, slope, r_d)
 					_rice(J, lu, W, i, j, cx, cz, k_rice)
 					continue
 				3: # 밭 — 고랑 작물 약간 + 가장자리 덤불
 					var ck: int = k_crops[int((Kit.vnoise(cx * 0.02, cz * 0.02) * 0.5 + 0.5) * 2.99)]
-					if rng.randf() < 0.55: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz + (rng.randf() - 0.5) * 1.2, crop_axis, 1.0, 1.0, r_d, false)
-					if rng.randf() < 0.35: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz + 1.3 + (rng.randf() - 0.5) * 0.3, crop_axis, 1.0, 1.0, r_d, false)
+					# 고랑을 빽빽하게: 칸마다 세 줄(−1.3, 0, +1.3m)
+					if rng.randf() < 0.9: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz + (rng.randf() - 0.5) * 0.4, crop_axis, 1.0, 1.0, r_d, false)
+					if rng.randf() < 0.8: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz + 1.3 + (rng.randf() - 0.5) * 0.3, crop_axis, 1.0, 1.0, r_d, false)
+					if rng.randf() < 0.8: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz - 1.3 + (rng.randf() - 0.5) * 0.3, crop_axis, 1.0, 1.0, r_d, false)
+					# 밭둑(가장자리)엔 짧은 풀 줄
+					if lu[k - 1] != 3 or lu[k + 1] != 3 or lu[k - W] != 3 or lu[k + W] != 3:
+						J.emit(k_cyard, 0.7, cx, cz, slope, r_d)
 					J.emit(k_bush, 0.015, cx, cz, slope, r_d)
 				5: # 물 — 기슭 가까이 여울 돌, 산골 개울엔 너럭바위
 					if land[k - 1] == 1 or land[k + 1] == 1 or land[k - W] == 1 or land[k + W] == 1:
