@@ -70,4 +70,4 @@ await (await import('/__tools/export_from_web.js')).done
 ## 아직 안 옮긴 것 (G0 2차 이후)
 
 호랑이 전투(`combat/`), 사건 「산길의 실종」(`story/`), UI(`ui/`), 대화창·장소 이름, 검증 패널, 날씨·바람(천 흔들림), 타일 스트리밍 시제품, 호랑이 NPC.
-`tools/setup_godot.sh`·`tools/run.sh`는 클라우드(Xvfb + lavapipe)용으로 만들다 만 것이고, 지금은 맥 로컬에서만 개발한다.
+개발은 맥 로컬에서만 한다(클라우드용 설치 스크립트는 지웠다).
