@@ -40,7 +40,12 @@ const DITHER := """
 			keep = smoothstep(occ_r * 0.55, occ_r, od);
 		}
 		// 카메라 바로 앞(큰 나무 잎덩이 등 카메라가 그 안에 들어간 면)도 비운다 — 실내에서도
-		if (occ_near > 0.0) keep = min(keep, smoothstep(6.0, 12.0, length(owp - occ_a)));
+		if (occ_near > 0.0) {
+			float cd = length(owp - occ_a);
+			// 먹선 껍질(먹색 버텍스)은 카메라 16m 안에서 그리지 않는다 — 카메라가 잎덩이 안에 들면 껍질 안쪽이 화면을 검게 덮는다
+			if (cd < 16.0 && distance(COLOR.rgb, vec3(0.0242, 0.0194, 0.0160)) < 0.012) discard;
+			keep = min(keep, smoothstep(6.0, 12.0, cd));
+		}
 		ivec2 q = ivec2(FRAGCOORD.xy) % 4;
 		const float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
 		// 선분 둘레는 30%는 남긴다(형태가 읽히게), 카메라 바로 앞은 모두 비울 수 있다
