@@ -23,9 +23,24 @@ const FOG_CODE := """
 	float fog_d = -VERTEX.z;
 	vec3 fog_wp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
-	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
+	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
 	FOG = vec4(fog_color, fog_f);
+"""
+
+const DITHER := """
+	// 가림 점무늬: 카메라(occ_a)→플레이어 머리(occ_b) 선분 둘레 occ_r 안의 면을 점무늬로 비운다(나무·건물이 플레이어를 가릴 때)
+	if (occ_r > 0.0) {
+		vec3 owp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		vec3 ab = occ_b - occ_a;
+		float ot = clamp(dot(owp - occ_a, ab) / max(dot(ab, ab), 1e-4), 0.0, 0.92);
+		float od = length(owp - (occ_a + ab * ot));
+		float keep = smoothstep(occ_r * 0.55, occ_r, od);
+		ivec2 q = ivec2(FRAGCOORD.xy) % 4;
+		const float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
+		// 가장 가까운 곳도 30%는 남긴다(형태가 읽히게)
+		if ((BAYER[q.y * 4 + q.x] + 0.5) / 16.0 > max(keep, 0.3)) discard;
+	}
 """
 
 const GLOBALS := """
@@ -34,7 +49,11 @@ global uniform vec3 hemi_ground;
 global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
+global uniform float fog_base;
 global uniform float glow_k;
+global uniform vec3 occ_a;
+global uniform vec3 occ_b;
+global uniform float occ_r;
 """
 
 # lit: 툰 조명 / unlit: 무광(MeshBasic) / blend: 반투명 / cull: 양면 여부
@@ -65,7 +84,9 @@ void fragment() {
 	vec4 t = texture(albedo_tex, UV + uv_offset);
 	vec3 base = albedo_color.rgb * t.rgb * COLOR.rgb;
 	ALBEDO = base;
+%DITHER%
 """
+	code = code.replace("%DITHER%", "" if blend else DITHER)
 	if lit:
 		code += """
 	vec3 wn = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);

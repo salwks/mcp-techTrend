@@ -48,3 +48,19 @@ glow_k={
 "type": "float",
 "value": 0.0
 }
+fog_base={
+"type": "float",
+"value": 0.0
+}
+occ_a={
+"type": "vec3",
+"value": Vector3(0, 0, 0)
+}
+occ_b={
+"type": "vec3",
+"value": Vector3(0, 0, 0)
+}
+occ_r={
+"type": "float",
+"value": 0.0
+}

@@ -88,10 +88,30 @@ static func build(params: Dictionary) -> Dictionary
 추가: `landuse_at(x,z) -> int`, `focus(pos: Vector3)`(스트리밍 중심 갱신), `add_static(node: Node3D, world_xform: Transform3D, info: Dictionary)`(키트 build() 결과를 놓고 충돌체·조명·가림을 등록 — 타일 단위로 붙였다 뗀다).
 식생은 kit-nature의 `kit/nature/scatter.gd`를 타일마다 부른다:
 ```gdscript
-static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int) -> Dictionary
+static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable, seed: int, lod: int, exclude: Array = []) -> Dictionary
+# exclude: 월드 xz Rect2(축정렬) 또는 {x, z, r} — 그 안에는 놓지 않음(건물·광장 자리)
 # 반환 { nodes: [Node3D…(MultiMeshInstance3D 권장, 좌표는 월드)], colliders: [ {type:"circle", x, z, r} ] }  # 월드 좌표
 ```
 
 ## 7. 보고서
 
 각 에이전트는 끝나면 `docs/reports/<담당>.md`에 남긴다: 만든 것, 미리보기 스크린샷 경로, 삼각형 수·성능, 고증 근거와 "가설" 목록, 총괄에게 요청할 것. 최종 응답은 이 보고서 요약.
+
+## 8. 배치 (2단계)
+
+배치는 데이터로 한다. 배치 담당이 `region_data/JL_NAMWON_UNBONG/placement_<구역>.json`을 쓰고, terrain-engine의 `scripts/region/placement_loader.gd`가 모든 `placement_*.json`을 읽어 놓는다.
+```json
+{ "area": "namwon", "items": [
+  { "id": "nw_house_012", "kit": "village/house_compound", "params": {"seed": 12, "size": "medium"},
+    "x": -3200.0, "z": 340.0, "ry": 0.0,            // 게임 좌표, ry = y축 회전(라디안). 정면 +z가 기본(남향)
+    "y": null,                                     // null이면 지형 높이(터 고르기 후)
+    "flatten": true,                               // footprint(+여유 2m) 안의 땅을 평평하게(가장자리는 부드럽게)
+    "clear_veg": true,                             // footprint 안 식생 비우기 (기본 true)
+    "group": "남원 읍내" }
+]}
+```
+- `kit`은 `kit/` 아래 경로(확장자 없이). 배치형(읍성·관아·실상사·향교)은 로더가 `pieces`로 풀어 조각마다 등록한다.
+- 다리·징검다리·섶다리: build() 결과 `walk`(걷기 면) 정보를 로더가 지형 높이 위에 덧씌운다. 형식은 terrain-engine이 정해 이 절에 적는다.
+- 회전은 남향(ry=0)을 기본으로, 길·물길에 맞춰 ±30° 안에서. 카메라가 남쪽에 고정이라 북향 건물은 등만 보인다.
+- 고증: 건물 수·간격은 압축된 땅(K=0.30)에 맞춘 근사. 위치는 region.json settlements·landmarks·roads를 따른다. 근거와 가설은 보고서에.
+- 확인 방법: `godot --path . res://scenes/region.tscn -- --warp=x,z --time=10 --shot=shots/... --frames=200 --quit` (+ `--cam=` 등 region_main 인자, 보고서 terrain-engine.md 참고)

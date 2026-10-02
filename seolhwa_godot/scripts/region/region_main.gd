@@ -430,8 +430,13 @@ func _process(delta: float) -> void:
 	world.focus(player_pos)
 	var _t1 := Time.get_ticks_usec()
 	world.set_terrain_param("mist_base", player_pos.y)
+	RenderingServer.global_shader_parameter_set("fog_base", player_pos.y) # 키트·캐릭터 산안개도 발 높이 기준
 	var interior = world.interior_at(player_pos.x, player_pos.z)
 	rig.update(dt, player_pos, player.facing, interior)
+	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
+	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
+	RenderingServer.global_shader_parameter_set("occ_b", player_pos + Vector3(0, player.height * 0.8, 0))
+	RenderingServer.global_shader_parameter_set("occ_r", 0.0 if interior != null or args.has("nodither") else 2.4)
 	_update_occlusion(dt, interior)
 	if interior == null: world.update_cutaway(dt, player_pos, cam.global_position)
 	world.update_scatter_lod(player_pos)

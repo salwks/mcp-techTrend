@@ -63,12 +63,13 @@ global uniform vec3 hemi_ground;
 global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
+global uniform float fog_base;
 """
 const FOG := """
 	float fog_d = -VERTEX.z;
 	vec3 fog_wp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
-	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
+	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
 	FOG = vec4(fog_color, fog_f);
 """
