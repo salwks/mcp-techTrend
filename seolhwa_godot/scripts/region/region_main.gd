@@ -417,13 +417,29 @@ static func _seg_hits_mesh(occ: Dictionary, a: Vector3, b: Vector3) -> bool:
 
 # ---- 루프 ----
 var _title: CanvasLayer = null
+var _map: CanvasLayer = null
+var _btitles = null
+var _map_opened := false
 
 func _process(delta: float) -> void:
 	if _title == null and world and not world.region.is_empty():
 		_title = preload("res://scripts/region/place_title.gd").new()
 		add_child(_title)
 		_title.setup(world.region)
-	if _title: _title.update(minf(delta, 0.05), player_pos)
+		_map = preload("res://scripts/region/region_map.gd").new()
+		add_child(_map)
+		_map.setup(world, world.data_dir)
+		_btitles = preload("res://scripts/region/building_titles.gd").new()
+		if placement: _btitles.setup(placement)
+	# 불러오기 화면이 걷힌 뒤부터 지명·건물 이름을 띄운다
+	if _title and not _loading: _title.update(minf(delta, 0.05), player_pos)
+	if _btitles and not _loading:
+		var bn: String = _btitles.update(player_pos)
+		if bn != "":
+			_title.show_title(bn); if args.has("logtitle"): print("BUILDING ", bn)
+	if _map:
+		if args.has("openmap") and not _loading and not _map.visible and not _map_opened: _map.toggle(); _map_opened = true
+		_map.update(player_pos, player.facing)
 	var dt := minf(0.05, delta)
 	clock += dt
 	if Input.is_action_just_pressed("time_step"):
