@@ -41,6 +41,7 @@ var fog_on := true
 var _occ_frame := 0
 var _hidden_interior := []
 var _state: Dictionary
+var _render_scale := 1.0
 var _bench_left := 0.0
 var _bench_frames := 0
 var _bench_time := 0.0
@@ -52,13 +53,15 @@ func _ready() -> void:
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	_setup_input()
 	var scale := float(args.get("scale", DisplayServer.screen_get_scale()))
-	var win := get_window().size
+	_render_scale = scale
 	scene_vp = SubViewport.new()
 	scene_vp.own_world_3d = true
 	scene_vp.msaa_3d = Viewport.MSAA_4X
 	scene_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	scene_vp.size = Vector2i(int(win.x * scale), int(win.y * scale))
 	add_child(scene_vp)
+	_fit_viewport()
+	# 창 크기가 바뀌면 장면 해상도도 같은 비율로 바꾼다(늘려 붙이지 않음 → 찌그러지지 않음, 웹 resize와 같음)
+	get_window().size_changed.connect(_fit_viewport)
 	post = PostEffect.new()
 	post.paper_ratio = scale
 	post.lum_mult = 2.0 if RenderingServer.get_current_rendering_method() == "mobile" else 1.0
@@ -94,6 +97,14 @@ func _ready() -> void:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	if args.has("refset"): _run_refset.call_deferred(args.refset)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
+
+const MAX_RENDER_EDGE := 3840 # 아주 큰 창에서 장면 해상도 상한
+
+func _fit_viewport() -> void:
+	var win := get_window().size
+	var k := minf(_render_scale, float(MAX_RENDER_EDGE) / maxf(1.0, maxf(win.x, win.y)))
+	var s := Vector2i(maxi(1, roundi(win.x * k)), maxi(1, roundi(win.y * k)))
+	if scene_vp.size != s: scene_vp.size = s
 
 func _setup_input() -> void:
 	var keys := {
@@ -398,7 +409,8 @@ func _wait_frames(n: int) -> void:
 	for i in n: await RenderingServer.frame_post_draw
 
 func _save(path: String) -> void:
-	var img := scene_vp.get_texture().get_image()
+	# --winshot: 창에 실제로 보이는 화면을 찍는다(크기 변경 시험용)
+	var img := (get_viewport() if args.has("winshot") else scene_vp).get_texture().get_image()
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	img.save_png(path)
 	print("SHOT ", path, " ", img.get_size(), " fps=", Engine.get_frames_per_second())
@@ -415,6 +427,10 @@ func _shot_at(x: float, z: float, h: float) -> void:
 	await _wait_frames(4)
 
 func _run_shot(path: String, frames: int) -> void:
+	await _wait_frames(10)
+	if args.has("winsize"): # 창 크기 바꾸기 시험: --winsize=1400x600
+		var p: PackedStringArray = args.winsize.split("x")
+		get_window().size = Vector2i(int(p[0]), int(p[1]))
 	await _wait_frames(frames)
 	_save(_abs(path))
 	if args.has("quit"): get_tree().quit()
