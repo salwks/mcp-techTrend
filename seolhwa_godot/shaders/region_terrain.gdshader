@@ -124,6 +124,16 @@ void fragment() {
 	ivec2 i = ivec2(floor(f));
 	vec2 t = smoothstep(0.2, 0.8, f - vec2(i));
 	int ca = r_lu(i), cb = r_lu(i + ivec2(1, 0)), cc = r_lu(i + ivec2(0, 1)), cd = r_lu(i + ivec2(1, 1));
+	// 토지이용 길 칸(4)은 넓게 칠해져 있다 → 주변 토지이용 색으로 바꾸고, 흙길은 roads 칠하기(실제 폭)로만 그린다
+	if (ca == 4 || cb == 4 || cc == 4 || cd == 4) {
+		int sub = 1;
+		ivec2 offs[8] = ivec2[](ivec2(-2, 0), ivec2(3, 0), ivec2(0, -2), ivec2(0, 3), ivec2(-3, -3), ivec2(4, 4), ivec2(-3, 4), ivec2(4, -3));
+		for (int q = 0; q < 8; q++) {
+			int v = r_lu(i + offs[q]);
+			if (v != 4 && v != 5) { sub = v; break; }
+		}
+		if (ca == 4) ca = sub; if (cb == 4) cb = sub; if (cc == 4) cc = sub; if (cd == 4) cd = sub;
+	}
 	vec3 col;
 	float water = 0.0;
 	// 논·밭이 있으면 필지 좌표(48m 구역 중심의 지형 기울기로 돌림)

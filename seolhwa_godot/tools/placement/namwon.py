@@ -251,10 +251,10 @@ def place_landmarks(P, R, rng):
     # 객사 용성관
     kx = CX - 44.0
     wall_z0, wall_z1 = CZ - 50.0, CZ - 6.0
-    kw = 58.0
+    kw = 72.0          # 객사 67.2m(익헌 각 6칸, kit-landmark 고증) + 양옆 2.4m
     P.add("nw_gaeksa", "landmark/gaeksa", {"seed": 1872, "jeongdang_bays": 5}, kx, CZ - 38.8, 0.0,
-          rects=[(0, 0, 47, 14)], tris=13880, group="객사 용성관", kind="landmark", footprint=(47, 14),
-          note="용성관: 정당 5칸 + 익헌 둘. region.json yongseonggwan(−3271.8, 210)")
+          rects=[(0, 0, 67.2, 14)], tris=13880, group="객사 용성관", kind="landmark", footprint=(67.2, 14),
+          note="용성관: 정당 5칸 + 익헌 각 6칸(67.2m, 디지털남원문화대전 고증). region.json yongseonggwan(−3271.8, 210)")
     P.add("nw_gaeksa_samun", "landmark/samun", {"seed": 1873, "kind": "outer", "name": "용성관"}, kx, wall_z1, 0.0,
           rects=[(0, 0, 11.0, 5.6)], tris=4290, group="객사 용성관", kind="landmark")
     walls = wall_pieces([(kx - kw / 2, wall_z0), (kx + kw / 2, wall_z0), (kx + kw / 2, wall_z1), (kx - kw / 2, wall_z1)],
@@ -894,11 +894,12 @@ def place_fill(P, R, rng, houses):
 
 
 # ─────────────────────────────── 통계 ───────────────────────────────
-def screen_stats(P, R):
-    """게임 카메라(거리 22·pitch 40, 화면 폭 35~40m): 플레이어 기준 x±20, z −22…+14 창에 들어오는 집 수,
-    그리고 넓은 창(x±35, z −85…+12)의 삼각형 합 최대"""
-    houses = [(it["x"], it["z"]) for it in P.items if it["kit"] in HOUSE_KITS or it["kit"] in ("village/jumak", "village/market_shop")
-              or it["kit"] in ("landmark/gwana", "landmark/gaeksa", "landmark/samun", "landmark/gwanghallu", "landmark/hyanggyo")]
+SCREEN_KITS = HOUSE_KITS | {"village/jumak", "village/market_shop", "landmark/gwana", "landmark/gaeksa", "landmark/samun",
+                             "landmark/gwanghallu", "landmark/hyanggyo"}
+
+
+def screen_houses(P):
+    houses = [(it["x"], it["z"]) for it in P.items if it["kit"] in SCREEN_KITS]
     # 관아·향교는 화면을 여럿 채우므로 조각 자리도 센다
     for it in P.items:
         if it["kit"] in ("landmark/gwana", "landmark/hyanggyo"):
@@ -906,8 +907,14 @@ def screen_stats(P, R):
             for ox in (-w / 3, w / 3):
                 for oz in (-d / 3, d / 3):
                     houses.append((it["x"] + ox, it["z"] + oz))
-    samples = []
+    return houses
+
+
+def road_samples(P, R):
+    """읍내(bbox) 안 길 위 10m 간격 표본"""
+    out = []
     town = {"namwon_gurye_road", "tongyeong_byeolro", "namwon_north_road", "namwon_market_lane", "namwon_eup_street", "namwon_eup_street_ew"}
+    bx0, bz0, bx1, bz1 = TOWN_BBOX
     for rd in R.roads:
         if rd["id"] not in town: continue
         pts = rd["points"]
@@ -916,9 +923,90 @@ def screen_stats(P, R):
             L = math.hypot(b[0] - a[0], b[1] - a[1])
             for t in range(0, int(L), 10):
                 x, z = a[0] + (b[0] - a[0]) * t / max(L, 1e-6), a[1] + (b[1] - a[1]) * t / max(L, 1e-6)
-                if not (AX0 < x < -2790 and AZ0 < z < 600): continue
+                if not (bx0 < x < bx1 and bz0 < z < bz1): continue
                 if in_walls(x, z) or any(P.F.landuse(x + ox, z + oz) == 6 for (ox, oz) in ((6, 0), (-6, 0), (0, 6), (0, -6))):
-                    samples.append(sum(1 for (hx, hz) in houses if abs(hx - x) <= 20 and z - 22 <= hz <= z + 14))
+                    out.append((x, z, rd["id"]))
+    return out
+
+
+def count_in_screen(houses, x, z):
+    return sum(1 for (hx, hz) in houses if abs(hx - x) <= 20 and z - 22 <= hz <= z + 14)
+
+
+def fill_to_target(P, R, H, target=3, shops=False):
+    """화면 집이 target 채 미만인 길 위 지점마다, 그 화면 창 안 빈 칸에 집(장터면 가가, 나루면 주막·초가)을 더한다.
+    길 북쪽 자리를 먼저(가림 반투명이 덜 생기게), bbox 밖은 try_put이 막는다."""
+    added = {"초가": 0, "small": 0, "가가": 0, "주막": 0}
+    samples = road_samples(P, R)
+    n_jumak = sum(1 for it in P.items if it["kit"] == "village/jumak")
+    for (sx, sz, rid) in samples:
+        houses = screen_houses(P)
+        need = target - count_in_screen(houses, sx, sz)
+        if need <= 0:
+            continue
+        cands = []
+        for ix in range(-9, 10):
+            for jz in range(-10, 7):
+                x, z = sx + ix * 2.0, sz + jz * 2.0
+                if P.F.road(x, z) < 3.0:
+                    continue
+                north = z < sz
+                cands.append((0 if north else 1, abs(ix) * 2.0 + abs(jz) * 2.0, x, z))
+        cands.sort()
+        market = -3345 < sx < -3225 and 350 < sz < 435
+        naru = P.F.river(sx, sz) < 40
+        for (_, _, x, z) in cands:
+            if need <= 0:
+                break
+            if market:
+                (w, d), tris = FP[("village/market_shop", None)]
+                if not P.check_site(x, z, w, d, 0.0, gap=0.5, road_min=1.0, lu_ok=(6, 4, 1, 3), lu_min=0.6) and in_bbox(x, z, w, d):
+                    k = sum(1 for it in P.items if it["kit"] == "village/market_shop") + 1
+                    g = random.Random(SEED + k).choice(GOODS)
+                    P.add("nw_shop_%02d" % k, "village/market_shop", {"seed": 300 + k, "goods": g}, x, z, 0.0, rects=[(0, 0, w, d)],
+                          tris=tris, group="남원 장터", note="가가(假家) %s — 화면 채우기" % g, footprint=(w, d))
+                    added["가가"] += 1; need -= 1
+                continue
+            if naru and n_jumak < 4:
+                (w, d), tris = FP[("village/jumak", None)]
+                if not P.check_site(x, z, w, d, 0.0, gap=0.6, road_min=1.0, lu_ok=(6, 4, 1, 3), lu_min=0.6, river_min=3.0) and in_bbox(x, z, w, d):
+                    n_jumak += 1
+                    P.add("nw_jumak_%02d" % n_jumak, "village/jumak", {"seed": 40 + n_jumak, "flag": n_jumak % 2 == 1}, x, z, 0.0,
+                          rects=[(0, 0, w, d)], tris=tris, group="주막", note="요천 나루 길가 주막 — 화면 채우기", footprint=(w, d))
+                    added["주막"] += 1; need -= 1
+                    continue
+            done = False
+            for ty in (() if shops else (("small", "choga") if not in_walls(x, z) else ("giwa", "choga"))):
+                w, d, _, _ = house_dims(ty)
+                if H.try_put(ty, x, z, 0.0, "화면 채우기", gap=0.7, road_min=1.0, lu_min=0.6, lu_ok=(6, 4, 1, 3)):
+                    added["초가" if ty != "small" else "small"] += 1; need -= 1; done = True
+                    break
+            if done or not shops:
+                continue
+            # 성문 앞·성 안 길가: 문 앞 광장 비움 구역 가장자리에도 작은 가게채(가가)를 들인다(길에서 1.5m, 성벽·건물과는 겹치지 않게)
+            (w, d), tris = FP[("village/market_shop", "cloth")]
+            if (not P.check_site(x, z, w, d, 0.0, gap=0.5, road_min=1.5, lu_ok=(6, 4, 1, 3), lu_min=0.6, skip_keepout=True)
+                    and in_bbox(x, z, w, d)):
+                k = sum(1 for it in P.items if it["kit"] == "village/market_shop") + 1
+                g = random.Random(SEED + 50 + k).choice(["cloth", "straw", "grain", "mixed"])
+                params = {"seed": 300 + k, "goods": g}
+                if g == "cloth": params["w"] = 4.5
+                P.add("nw_shop_%02d" % k, "village/market_shop", params, x, z, 0.0, rects=[(0, 0, w, d)], tris=tris,
+                      group="남원 읍내(길가 가게채)", note="문 앞·길가 가게채 — 화면 채우기", footprint=(w, d))
+                added["가가"] += 1; need -= 1
+    return added
+
+
+def in_bbox(x, z, w=0, d=0):
+    bx0, bz0, bx1, bz1 = TOWN_BBOX
+    return bx0 + w / 2 <= x <= bx1 - w / 2 and bz0 + d / 2 <= z <= bz1 - d / 2
+
+
+def screen_stats(P, R):
+    """게임 카메라(거리 22·pitch 40, 화면 폭 35~40m): 플레이어 기준 x±20, z −22…+14 창에 들어오는 집 수(읍내 bbox 안 길 위),
+    그리고 넓은 창(x±35, z −85…+12)의 삼각형 합 최대"""
+    houses = screen_houses(P)
+    samples = [count_in_screen(houses, x, z) for (x, z, _) in road_samples(P, R)]
     samples.sort()
     best = (0, None)
     for px in range(-3400, -2820, 10):
@@ -941,6 +1029,11 @@ def main():
     mk = place_market(P, R, rng)
     ms = place_fixed_misc(P, R, rng)
     H = place_houses(P, R, rng)
+    st0, _ = screen_stats(P, R)
+    ft = fill_to_target(P, R, H)                 # 집 먼저
+    ft2 = fill_to_target(P, R, H, shops=True)    # 그래도 모자라면 문 앞·길가 가게채
+    ft = {k: ft[k] + ft2[k] for k in ft}
+    print("화면 채우기 전", st0, "더함", ft)
     fs = place_fill(P, R, rng, H)
 
     # 최종 검사: 겹침(파이썬 SAT). 같은 무리(읍성 조각끼리, 객사 담끼리, 담 토막끼리)는 뺀다

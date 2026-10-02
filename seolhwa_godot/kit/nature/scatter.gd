@@ -62,9 +62,9 @@ const KINDS := {
 	slab = { s = "slab_rock.gd", p = {}, v = 1, cast = true, col = 0.0 },
 	stones = { s = "stream_stones.gd", p = {}, v = 1, cast = false, col = 0.0, far_skip = true },
 	rice = { s = "rice_tuft.gd", p = { patch = 4, spacing = 1.0 }, v = 1, cast = false, col = 0.0 },
-	crop_bean = { s = "crop.gd", p = { kind = "bean", len = 3.6 }, v = 1, cast = false, col = 0.0, far_skip = true },
-	crop_millet = { s = "crop.gd", p = { kind = "millet", len = 3.6 }, v = 1, cast = false, col = 0.0, far_skip = true },
-	crop_barley = { s = "crop.gd", p = { kind = "barley", len = 3.6 }, v = 1, cast = false, col = 0.0, far_skip = true },
+	crop_bean = { s = "crop.gd", p = { kind = "bean", len = 3.6, rows = 3 }, v = 2, cast = false, col = 0.0, far_skip = true },
+	crop_millet = { s = "crop.gd", p = { kind = "millet", len = 3.6, rows = 3 }, v = 2, cast = false, col = 0.0, far_skip = true },
+	crop_barley = { s = "crop.gd", p = { kind = "barley", len = 3.6, rows = 3 }, v = 2, cast = false, col = 0.0, far_skip = true },
 	cover_meadow = { s = "cover.gd", p = { kind = "meadow" }, v = 2, cast = false, col = 0.0, far_skip = true },
 	cover_forest = { s = "cover.gd", p = { kind = "forest" }, v = 1, cast = false, col = 0.0, far_skip = true },
 	cover_alpine = { s = "cover.gd", p = { kind = "alpine" }, v = 1, cast = false, col = 0.0, far_skip = true },
@@ -418,9 +418,29 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 	var rl: Array = _auto_roads() if roads == null else roads
 	if OS.get_environment("SCATTER_NO_CAMBAND") == "1": rl = []   # 비교 시험: 이전 결과 재현
 	if not rl.is_empty(): _raster_roads(rl, road, lu, gx0, gz0, W, H)
+	# §9 카메라 통로 띠: 길을 좌우 ±2칸 넓힌 뒤, 각 칸의 북쪽 1~5칸 안에 그 길이 있으면 1 (열마다 한 번 훑기)
+	var band := PackedByteArray(); band.resize(W * H)
+	var wide := PackedByteArray(); wide.resize(W * H)
+	for j in H:
+		for i in range(2, W - 2):
+			var k := j * W + i
+			if road[k] == 1 or road[k - 1] == 1 or road[k + 1] == 1 or road[k - 2] == 1 or road[k + 2] == 1: wide[k] = 1
+	for i in W:
+		var last := -100
+		for j in H:
+			var k := j * W + i
+			if j - last >= 1 and j - last <= 5: band[k] = 1
+			if wide[k] == 1: last = j
 	var dd := _dist2(road, water, W, H)
 	var rd: PackedByteArray = dd[0]
 	var wd: PackedByteArray = dd[1]
+	# §10 1870년 경관: 타일 안 논·밭·마을 터 비율로 '사람 사는 땅' 정도(settled 0~1)를 잡는다.
+	# 조선 후기 마을 가까운 낮은 산은 땔감·풀베기·화전으로 성긴 소나무 숲과 민둥한 풀밭이 많았다(보고서 §10)
+	var n_set := 0
+	for q in range(0, lu.size(), 3):
+		var lq := lu[q]
+		if lq == 2 or lq == 3 or lq == 6: n_set += 1
+	var settled := clampf(float(n_set * 3) / lu.size() * 4.0, 0.0, 1.0)
 	var t_grid := Time.get_ticks_usec() - t0
 
 	# 2) 배치
@@ -458,6 +478,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 	var sap_hi := ids([["sapling_gusang", 1.0]])
 	# 비교 시험용: 환경변수 SCATTER_NO_CAMBAND=1 이면 §9 카메라 통로 규칙을 끈다(이전 결과 재현)
 	var cam_band := OS.get_environment("SCATTER_NO_CAMBAND") != "1"
+	var mix_village_ids := ids([["pine", 0.92], ["sangsuri", 0.08]])   # 마을 가까운 산: 거의 소나무
 	var small_lo := ids([["small_pine", 0.65], ["small_oak", 0.35]])
 	var small_hi := ids([["small_gusang", 0.6], ["small_pine", 0.25], ["snag", 0.15]])
 	var gtree_lo := ids([["pine", 0.5], ["sangsuri", 0.3], ["broadleaf", 0.2]])
@@ -477,21 +498,22 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			# 길 북쪽(카메라 반대편, -z) 12m 안에 길이 있으면 이 칸의 큰 나무는 길을 가린다 → 나무 대신 낮은 것(§32 시각 간격)
 			# §9 카메라 통로: 이 칸의 북쪽 4~20m(1~5칸)에 길이 있으면 = 길 남쪽 띠. 카메라가 플레이어 남쪽 13~17m·높이 14~15m에
 			# 있으므로 수관 6m 넘는 나무를 두지 않고 작은 나무·어린나무·덤불로 대신한다. 길 북쪽은 그대로
-			var road_n := road[k - W] == 1
-			if cam_band and not road_n:
-				# 굽은 길·남북 길도 잡게 북쪽 1~5칸 × 좌우 2칸(±8m) — 카메라는 플레이어 바로 남쪽이라 길 양옆 나무도 화면 아래를 덮는다
-				for n in range(1, 6):
-					var kn := k - n * W
-					if road[kn] == 1 or road[kn - 1] == 1 or road[kn + 1] == 1 or road[kn - 2] == 1 or road[kn + 2] == 1:
-						road_n = true
-						break
+			var road_n := road[k - W] == 1 or (cam_band and band[k] == 1)
 			# 나무: 길 칸 바로 옆(1칸)도 허용하되 put()이 줄기에서 3m 안에 길이 있으면 버린다
 			var tree_ok := r_d >= 1 and not road_n and w_d >= 1
 			J.pure = lu[k - 1] == l and lu[k + 1] == l and lu[k - W] == l and lu[k + W] == l
 			match l:
 				0: # 숲
 					# 3단계: 큰 나무 0.22/칸으로 되올리고, 어린나무·덤불·덮개로 바닥을 메운다(길 3m 밖부터 빽빽)
-					if tree_ok: J.emit_mix(mix_ids(alt), (0.28 if slope < 1.0 else 0.18) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					# 마을 가까운 낮은 산(해발 450m 아래, settled>0): 소나무 더 많이, 군데군데 민둥한 풀밭·진달래(나무 1/4)
+					var near := settled * clampf((450.0 - alt) / 150.0, 0.0, 1.0)
+					var bald := near > 0.5 and Kit.vnoise(cx * 0.015 + 3.1, cz * 0.015 - 7.7) > 0.62 - near * 0.12   # 마을 쪽 산의 15~20%쯤
+					if tree_ok:
+						var tk := (0.28 if slope < 1.0 else 0.18) * tree_k * (0.35 if bald else 1.0)
+						J.emit_mix(mix_village_ids if near > 0.3 else mix_ids(alt), tk, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					if bald:
+						J.emit(k_cm, 0.3, cx, cz, slope, r_d)
+						J.emit(k_jin, 0.1 * bush_k, cx, cz, slope, r_d)
 					elif road_n and r_d >= 1 and w_d >= 1:
 						# 카메라 통로: 작은 나무로 숲 느낌만(수관 ≤ 6m)
 						J.emit_mix(small_lo if alt < 900.0 else small_hi, 0.3 * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
@@ -522,9 +544,9 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 				3: # 밭 — 고랑 작물 약간 + 가장자리 덤불
 					var ck: int = k_crops[int((Kit.vnoise(cx * 0.02, cz * 0.02) * 0.5 + 0.5) * 2.99)]
 					# 고랑을 빽빽하게: 칸마다 세 줄(−1.3, 0, +1.3m)
-					if rng.randf() < 0.9: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz + (rng.randf() - 0.5) * 0.4, crop_axis, 1.0, 1.0, r_d, false)
-					if rng.randf() < 0.8: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz + 1.3 + (rng.randf() - 0.5) * 0.3, crop_axis, 1.0, 1.0, r_d, false)
-					if rng.randf() < 0.8: J.put(ck, cx + (rng.randf() - 0.5) * 0.4, cz - 1.3 + (rng.randf() - 0.5) * 0.3, crop_axis, 1.0, 1.0, r_d, false)
+					# 줄 간격은 줄 방향에 수직으로(crop_axis가 90°면 x로 벌린다 — 같은 축으로 벌리면 줄이 겹쳐 4m마다 한 줄만 보였다)
+					# 세 줄(1.3m 간격)을 한 메시로(crop rows=3) — 줄 방향에 수직으로 벌어진다. 인스턴스 수를 1/3로
+					if rng.randf() < 0.9: J.put(ck, cx + (rng.randf() - 0.5) * 0.3, cz + (rng.randf() - 0.5) * 0.3, crop_axis, 1.0, 1.0, r_d, false)
 					# 밭둑(가장자리)엔 짧은 풀 줄
 					if lu[k - 1] != 3 or lu[k + 1] != 3 or lu[k - W] != 3 or lu[k + W] != 3:
 						J.emit(k_cyard, 0.7, cx, cz, slope, r_d)

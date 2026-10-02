@@ -30,7 +30,7 @@ def river_fields(rivers, shape, G=G):
 
 AREA = {"L": 45000.0, "M": 14000.0, "S": 5000.0}
 AREA_ID = {"namwon_eup": 33500.0,      # 성 안 정방형은 별도(전부 마을 터) + 성 밖 38,000m²(사용자 요청: 성벽 120m 안으로 바짝)
-           "inwol_yeok": 16000.0, "inwol_jang": 18000.0, "unbong_jang": 12000.0, "namwon_jang": 9000.0, "namwon_hyanggyo": 3000.0}
+           "inwol_yeok": 16000.0, "inwol_jang": 18000.0, "unbong_jang": 12000.0, "namwon_jang": 9000.0, "namwon_hyanggyo": 3000.0, "inwol_south_village": 6000.0}
 
 def village_area(s):
     if s["id"] in AREA_ID: return AREA_ID[s["id"]]
@@ -111,6 +111,7 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
             # 성 밖: 성벽에서 core_max(120m) 안만. 남쪽(남문 밖 장터·광한루 쪽) 우선, 그다음 동·서문 밖 길가
             sc = sc - 0.9 * (sz > z1) - 0.35 * ((sx < x0) | (sx > x1)) * (np.abs(sz - (z0 + z1) / 2) < 60)
             sc[dc > s.get("core_max", 120.0)] = 99
+        if s.get("min_z") is not None: sc[sz < s["min_z"]] = 99      # 강 건너(북쪽)로 번지지 않게
         sc[excl[j0:j1, i0:i1] | (dc > rmax)] = 99
         sc[inside_core] = -99
         n_px = int(target / (G * G)) + int(inside_core.sum())

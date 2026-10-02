@@ -41,6 +41,7 @@ class Geo:
 	var uv := PackedVector2Array()
 	var col := PackedColorArray()   # 선형(linear) 색
 	var nrm := PackedVector3Array() # build 때 채움
+	var rect := PackedFloat32Array() # 꼭짓점마다 아틀라스 영역 4개(u0,v0,u1,v1) — remap_uv가 채움(붓 무늬 반복용)
 
 	func tri(a: Vector3, b: Vector3, c: Vector3, ua := Vector2.ZERO, ub := Vector2.ZERO, uc := Vector2.ZERO) -> void:
 		pos.append(a); pos.append(b); pos.append(c)
@@ -54,7 +55,7 @@ class Geo:
 
 	func copy() -> Geo:
 		var g := Geo.new()
-		g.pos = pos.duplicate(); g.uv = uv.duplicate(); g.col = col.duplicate(); g.nrm = nrm.duplicate()
+		g.pos = pos.duplicate(); g.uv = uv.duplicate(); g.col = col.duplicate(); g.nrm = nrm.duplicate(); g.rect = rect.duplicate()
 		return g
 
 	func size() -> int:
@@ -256,8 +257,15 @@ static func paint(g: Geo, top: Color, bottom = null, jitter := 0.05, rng: Rng = 
 
 static func merge(list: Array) -> Geo:
 	var out := Geo.new()
+	var any_rect := false
+	for g in list:
+		if not g.rect.is_empty(): any_rect = true
 	for g in list:
 		out.pos.append_array(g.pos); out.uv.append_array(g.uv); out.col.append_array(g.col); out.nrm.append_array(g.nrm)
+		if any_rect:
+			if g.rect.size() == g.pos.size() * 4: out.rect.append_array(g.rect)
+			else:
+				var z := PackedFloat32Array(); z.resize(g.pos.size() * 4); out.rect.append_array(z)
 	return out
 
 # ---------------------------------------------------------------------------
@@ -283,6 +291,8 @@ static func smooth_normals(g: Geo) -> void:
 	for i in g.pos.size():
 		g.nrm[i] = (acc[_key(g.pos[i])] as Vector3).normalized()
 
+const TILE_M := 2.0   # 아틀라스 128px = 2m: 이보다 훨씬 긴 면은 영역 안에서 붓 무늬를 반복한다
+
 static func remap_uv(g: Geo, key: String) -> void:
 	var rname: String = KEY_REG.get(key, "white")
 	var r: Array = REG[rname]
@@ -290,11 +300,33 @@ static func remap_uv(g: Geo, key: String) -> void:
 	var u0: float = (r[0] + inset) / ATLAS_W; var u1: float = (r[2] - inset) / ATLAS_W
 	var v_top: float = (r[1] + inset) / ATLAS_H; var v_bot: float = (r[3] - inset) / ATLAS_H
 	var solid := rname == "white" or rname == "lamp"
-	for i in g.uv.size():
-		var u := 0.5 if solid else clampf(g.uv[i].x, 0, 1)
-		var v := 0.5 if solid else clampf(g.uv[i].y, 0, 1)
-		# three의 v(위가 1) → Godot 이미지 좌표(위가 0)
-		g.uv[i] = Vector2(u0 + (u1 - u0) * u, v_top + (v_bot - v_top) * (1.0 - v))
+	g.rect.resize(g.uv.size() * 4)
+	if solid:
+		for i in g.uv.size():
+			g.uv[i] = Vector2(u0 + (u1 - u0) * 0.5, v_top + (v_bot - v_top) * 0.5)
+			g.rect[i * 4] = 0.0; g.rect[i * 4 + 1] = 0.0; g.rect[i * 4 + 2] = 0.0; g.rect[i * 4 + 3] = 0.0
+		return
+	var tu: float = (r[2] - r[0]) / 128.0 * TILE_M; var tv: float = (r[3] - r[1]) / 128.0 * TILE_M
+	for t in range(0, g.uv.size() - 2, 3):
+		var l := [Vector2(clampf(g.uv[t].x, 0, 1), 1.0 - clampf(g.uv[t].y, 0, 1)), Vector2(clampf(g.uv[t + 1].x, 0, 1), 1.0 - clampf(g.uv[t + 1].y, 0, 1)), Vector2(clampf(g.uv[t + 2].x, 0, 1), 1.0 - clampf(g.uv[t + 2].y, 0, 1))]
+		# 삼각형의 UV → 위치 미분(접선): u·v 1당 몇 m인가
+		var e1: Vector3 = g.pos[t + 1] - g.pos[t]; var e2: Vector3 = g.pos[t + 2] - g.pos[t]
+		var d1: Vector2 = l[1] - l[0]; var d2: Vector2 = l[2] - l[0]
+		var det := d1.x * d2.y - d2.x * d1.y
+		var nu := 1.0; var nv := 1.0
+		if absf(det) > 1e-8:
+			var T := (e1 * d2.y - e2 * d1.y) / det; var B := (e2 * d1.x - e1 * d2.x) / det
+			nu = maxf(1.0, roundf(T.length() / tu)); nv = maxf(1.0, roundf(B.length() / tv))
+		for k in 3:
+			var i := t + k
+			var q: Vector2 = l[k]
+			if nu <= 1.0 and nv <= 1.0:
+				# 반복 없음: 예전처럼 아틀라스 좌표 그대로(영역 0 = 셰이더가 그대로 씀)
+				g.uv[i] = Vector2(u0 + (u1 - u0) * q.x, v_top + (v_bot - v_top) * q.y)
+				g.rect[i * 4] = 0.0; g.rect[i * 4 + 1] = 0.0; g.rect[i * 4 + 2] = 0.0; g.rect[i * 4 + 3] = 0.0
+			else:
+				g.uv[i] = Vector2(0.0005 + q.x * (nu - 0.001), 0.0005 + q.y * (nv - 0.001))
+				g.rect[i * 4] = u0; g.rect[i * 4 + 1] = v_top; g.rect[i * 4 + 2] = u1; g.rect[i * 4 + 3] = v_bot
 
 # 먹선 껍질: 같은 위치 꼭짓점을 면 법선 평균 방향으로 t만큼 밀고 감김을 뒤집어 먹색으로
 static func hull(g: Geo, t: float) -> Geo:
@@ -358,6 +390,7 @@ static func _make_material(kind: String) -> ShaderMaterial:
 		return m
 	m.shader = Materials.world_shader(true, false, kind == "cloth")
 	m.set_shader_parameter("ramp_tex", Materials.ramp_texture())
+	m.set_shader_parameter("kit_tiling", 1.0)
 	m.set_shader_parameter("albedo_tex", texture("atlas") if kind != "cloth" else null)
 	if kind == "atlas":
 		m.set_shader_parameter("emission_tex", texture("mask"))
@@ -409,13 +442,22 @@ class Batch:
 			arr.resize(Mesh.ARRAY_MAX)
 			# three(반시계) → Godot(시계): 두 번째·세 번째 꼭짓점 교환
 			var P := g.pos.duplicate(); var N := g.nrm.duplicate(); var U := g.uv.duplicate(); var C := g.col.duplicate()
+			var has_rect := g.rect.size() == g.pos.size() * 4
+			var R := g.rect.duplicate() if has_rect else PackedFloat32Array()
 			for i in range(0, P.size(), 3):
 				var p := P[i + 1]; P[i + 1] = P[i + 2]; P[i + 2] = p
 				var n := N[i + 1]; N[i + 1] = N[i + 2]; N[i + 2] = n
 				var u := U[i + 1]; U[i + 1] = U[i + 2]; U[i + 2] = u
 				var c := C[i + 1]; C[i + 1] = C[i + 2]; C[i + 2] = c
+				if has_rect:
+					for q in 4:
+						var tmp := R[(i + 1) * 4 + q]; R[(i + 1) * 4 + q] = R[(i + 2) * 4 + q]; R[(i + 2) * 4 + q] = tmp
 			arr[Mesh.ARRAY_VERTEX] = P; arr[Mesh.ARRAY_NORMAL] = N; arr[Mesh.ARRAY_TEX_UV] = U; arr[Mesh.ARRAY_COLOR] = C
-			am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+			var fmt := 0
+			if has_rect:
+				arr[Mesh.ARRAY_CUSTOM0] = R
+				fmt = Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT
+			am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr, [], {}, fmt)
 			am.surface_set_material(am.get_surface_count() - 1, Kit.material(mk))
 		return am
 

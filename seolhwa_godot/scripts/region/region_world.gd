@@ -25,6 +25,8 @@ const FAR_STEP := 32
 const SKIRT := 6.0
 const GRID := 32.0       # 충돌체 격자 칸(m)
 const MAX_JOBS := 2
+const MAX_JOBS_LOADING := 6   # 시작 불러오기 화면 동안은 프레임 예산을 따지지 않는다
+var loading := false
 const SCATTER_PATH := "res://kit/nature/scatter.gd"
 const DEFAULT_DIRS := ["res://region_data/JL_NAMWON_UNBONG/", "res://shots/region/tmp_data/"]
 # shaders/region_common.gdshaderinc의 LU_DETAIL과 같아야 한다
@@ -237,7 +239,9 @@ func paint_yard(c: Vector2, ry: float, half: Vector2) -> void:
 # 고개 22/30(웹 고갯마루). 뒤에 있는 구역이 이긴다(CameraRig). region.json.camera_zones가 있으면 맨 뒤에 붙인다.
 const CAM_DEFAULT := { pitch = 40.0, distance = 22.0 }
 const CAM_TOWN := { pitch = 40.0, distance = 22.0 }
-const CAM_FOREST := { pitch = 48.0, distance = 20.0 }
+const CAM_FOREST := { pitch = 48.0, distance = 20.0 }       # 숲길(길 위)
+const CAM_DEEP := { pitch = 55.0, distance = 17.0 }         # 길 밖 숲 한가운데: 잎덩이 위로 내려다본다
+var forest_active := false   # 숲 구역 안(region_main이 가림 점무늬를 넓힌다)
 const CAM_PASS := { pitch = 30.0, distance = 22.0 }
 var _forest_zone := {}
 var _settle_boxes := []
@@ -276,8 +280,17 @@ func update_camera_zone(pos: Vector3) -> void:
 		if in_box(b, pos.x, pos.z): in_town = true; break
 	if n >= 5 and not in_town:
 		_forest_zone.minX = pos.x - 40.0; _forest_zone.maxX = pos.x + 40.0; _forest_zone.minZ = pos.z - 40.0; _forest_zone.maxZ = pos.z + 40.0
+		var cam: Dictionary = CAM_DEEP if road_distance(pos.x, pos.z) > 6.0 else CAM_FOREST
+		_forest_zone.pitch = cam.pitch; _forest_zone.distance = cam.distance
 	elif not in_box(_forest_zone, pos.x, pos.z) or n <= 2 or in_town:
 		_forest_zone.minX = 1e6; _forest_zone.maxX = 1e6
+	forest_active = in_box(_forest_zone, pos.x, pos.z)
+
+# 가장 가까운 길(region.json roads) 가장자리까지 거리(m, 칠하기 텍스처 R·G)
+func road_distance(x: float, z: float) -> float:
+	var i := clampi(roundi((x - hx0) / hstep), 0, hnx - 1); var j := clampi(roundi((z - hz0) / hstep), 0, hnz - 1)
+	var k := (j * hnx + i) * 4
+	return pbytes[k] / 16.0 - pbytes[k + 1] / 32.0
 
 func _make_textures() -> void:
 	var himg := Image.create_from_data(hnx, hnz, false, Image.FORMAT_RG8 if hbpp == 2 else Image.FORMAT_R8, hbytes)
@@ -417,6 +430,8 @@ func height_fast(x: float, z: float) -> float:
 # 걸을 수 있는 높이: 지형 + 걷기 면(다리 상판 등, §8 walk)
 func height_at(x: float, z: float) -> float:
 	var h := ground_at(x, z)
+	for it in interiors:
+		if it.has("floor_world") and in_box(it, x, z): h = maxf(h, it.floor_world)
 	if _walk_grid.is_empty(): return h
 	var w = walk_at(x, z)
 	return maxf(h, w) if w != null else h
@@ -813,7 +828,7 @@ func _start_jobs() -> void:
 	var running := 0
 	for t in tiles:
 		if tiles[t].scatter_job >= 0: running += 1
-	while running < MAX_JOBS and not _queue.is_empty():
+	while running < (MAX_JOBS_LOADING if loading else MAX_JOBS) and not _queue.is_empty():
 		var t: Vector2i = _queue.pop_front()
 		if not tiles.has(t) or tiles[t].lod != 0: continue
 		var need := _scatter_need(t)
@@ -830,7 +845,7 @@ func _start_jobs() -> void:
 func _poll_jobs() -> void:
 	# 붙이기는 프레임당 ATTACH_PER_FRAME 묶음까지(한 번에 수백 개를 붙이면 프레임이 튄다)
 	var n := 0
-	while not _attach_q.is_empty() and n < ATTACH_PER_FRAME:
+	while not _attach_q.is_empty() and n < (ATTACH_PER_FRAME * 8 if loading else ATTACH_PER_FRAME):
 		var it: Array = _attach_q.pop_front()
 		var t: Vector2i = it[0]; var e: Dictionary = it[1]
 		if not tiles.has(t) or tiles[t].lod != 0 or tiles[t].gen != it[2]:
@@ -916,6 +931,7 @@ func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, t
 		var it: Dictionary = info.interior.duplicate()
 		var b := _xf_box(it, world_xform)
 		it.merge(b, true)
+		if it.has("floor_y"): it.floor_world = world_xform.origin.y + float(it.floor_y)  # 마루 높이(§4 보완)
 		interior = it
 	var fp := to_v2(info.get("footprint", Vector2.ZERO))
 	var t := tile_of(world_xform.origin.x, world_xform.origin.z)

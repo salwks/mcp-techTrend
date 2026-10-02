@@ -1,5 +1,5 @@
 # 밭 작물 한 줄(두둑 + 포기). kind: bean(콩) / millet(조) / barley(보리) / cabbage(배추 — 연둣빛 포기) / pepper(고추 — 짙은 포기 + 붉은 열매)
-# params: seed, kind("bean"), len(2.4), n(5, 포기 수), ridge(true) — 줄은 x 방향
+# params: seed, kind("bean"), len(2.4), n(5, 포기 수), ridge(true), rows(1, 1.3m 간격 여러 줄) — 줄은 x 방향
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
 
@@ -49,5 +49,15 @@ static func draw(b, r: Kit.Rng, params: Dictionary) -> void:
 static func build(params: Dictionary) -> Dictionary:
 	var r := Kit.Rng.new(int(params.get("seed", 1)))
 	var b := Kit.Batch.new()
-	draw(b, r, params)
-	return C.result(b, "밭작물", [], Vector2(float(params.get("len", 2.4)), 0.6), false, { cast = false })
+	# rows>1: 1.3m 간격(z)으로 여러 줄을 한 메시로 — 흩뿌리기 인스턴스 수를 줄인다
+	var rows := int(params.get("rows", 1))
+	if rows <= 1:
+		draw(b, r, params)
+	else:
+		var Cover := load("res://kit/nature/cover.gd")
+		var o = Cover.Off.new()
+		o.b = b
+		for q in rows:
+			o.ox = 0.0; o.oz = (q - (rows - 1) * 0.5) * 1.3; o.ry = 0.0
+			draw(o, r, params)
+	return C.result(b, "밭작물", [], Vector2(float(params.get("len", 2.4)), 0.6 + 1.3 * (int(params.get("rows", 1)) - 1)), false, { cast = false })

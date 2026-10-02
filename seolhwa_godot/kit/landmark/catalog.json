@@ -95,10 +95,10 @@
   {
    "name": "namwon_eupseong",
    "file": "res://kit/landmark/namwon_eupseong.gd",
-   "desc": "남원읍성 전체 배치(압축 한 변 190m 기본, 4문+옹성, 치 8, 모서리 4). pieces로 조각 목록 반환 ongseong=문별 세계 방위(east|west|north|south)|front|none 사전 또는 bool",
+   "desc": "남원읍성 전체 배치(압축 한 변 258m 기본, 4문+옹성, 치 8, 모서리 4). pieces로 조각 목록 반환 ongseong=문별 세계 방위(east|west|north|south)|front|none 사전 또는 bool",
    "params": {
     "seed": 1,
-    "side": 190,
+    "side": 258,
     "ongseong": {
      "S": "front",
      "N": "west",
@@ -107,16 +107,17 @@
     }
    },
    "footprint": [
-    220.0,
-    220.0
+    288.0,
+    288.0
    ],
-   "tris": 57398,
+   "tris": 68700,
    "composite": true,
    "sources": [
     "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)",
-    "전북일보 2020-07-05 「남원읍성 복원 사업 추진」(네모 반듯한 평지 읍성, 둘레 2.5km, 높이 약 4m), 2024-07-14(북문·북성벽, 해자·양마장 확인)"
+    "전북일보 2020-07-05 「남원읍성 복원 사업 추진」(네모 반듯한 평지 읍성, 둘레 2.5km, 높이 약 4m), 2024-07-14(북문·북성벽, 해자·양마장 확인)",
+    "디지털남원문화대전 「남원읍성」(1915 실측 남870·동866·북855·서850m 둘레 3,441m, 높이 약 5.4m, 1692 정협 사대문 명명, 치성·해자·양마장 발굴), 세계일보 2019-07-04(신증동국여지승람 8,199자·13자)"
    ],
-   "hypothesis": "한 변 = 실제 약 625m × K0.30. 해자는 모델에 없음(지형 landuse 5로)",
+   "hypothesis": "몸체/여장 높이 배분, 옹성 모양·열린 쪽, 치 위치(16=문4+귀4+치8 해석)",
    "shot": "shots/kit/landmark/namwon_eupseong.png"
   },
   {
@@ -162,21 +163,23 @@
   {
    "name": "gaeksa",
    "file": "res://kit/landmark/gaeksa.gd",
-   "desc": "객사 용성관: 정당 5칸(솟을지붕, 다포) + 좌우 익헌 각 4칸",
+   "desc": "객사 용성관: 정당 5칸(솟을지붕, 다포, 앞 돌계단 소맷돌) + 좌우 익헌 각 6칸 — 전체 길이 약 67m(남은 기단 약 70m)",
    "params": {
     "seed": 1,
-    "jeongdang_bays": 5
+    "jeongdang_bays": 5,
+    "wing_bays": 6
    },
    "footprint": [
-    47.0,
+    67.2,
     14.0
    ],
-   "tris": 13880,
+   "tris": 13772,
    "composite": false,
    "sources": [
-    "나주 금성관 유추"
+    "디지털남원문화대전 「용성관지」(기단 약 70m·돌계단·석물 29점 잔존, 1620·1680~90 중건, 6·25 소실)",
+    "나주 금성관 비례 유추"
    ],
-   "hypothesis": "용성관 치수 미상 → 금성관 비례(가설)",
+   "hypothesis": "칸 수·칸 폭·높이(전체 길이만 확정)",
    "shot": "shots/kit/landmark/gaeksa.png"
   },
   {
@@ -482,23 +485,23 @@
   {
    "name": "maaebul_rock",
    "file": "res://kit/landmark/maaebul_rock.gd",
-   "desc": "여원치 마애불: 큰 바위 앞면에 새긴 고려 좌상(높이 2.5m) 부조 + 음각 두광·U자 주름, 앞 제단돌·촛불. 보호각 없음(pillars=true면 흔적 돌기둥 2)",
+   "desc": "여원치 마애불상: 암벽 판에 새긴 고려 전기 불상(광배 포함 3.2m) — 넓적한 얼굴, 오른쪽 머리·얼굴·오른손 결실, 왼팔 가슴에 댐, U자 옷주름, 희미한 두광, 하체 흐림. 보호각 없음",
    "params": {
     "seed": 1,
     "pillars": false,
     "offering": true
    },
    "footprint": [
-    8.0,
+    9.0,
     6.5
    ],
-   "tris": 2310,
+   "tris": 2780,
    "composite": false,
    "sources": [
-    "한국민족문화대백과 「남원 여원치 마애여래좌상」(검색 요약: 높이 2.5m·어깨너비 1.09m, 고려, 1998 전북 유형문화재, 보호각 흔적 돌기둥 2·기와편)",
-    "전북일보 2023-09-12 후백제 문화유산 연재(여상 전설)"
+    "디지털남원문화대전 「여원치마애불상」(이백면 양가리, 높이 3.2m, 형태 서술)",
+    "한국민족문화대백과 검색 요약(높이 2.5m·어깨 1.09m, 보호각 흔적 돌기둥 2)"
    ],
-   "hypothesis": "바위 크기·부조 비례 가설, 1870년 보호각 유무 미상",
+   "hypothesis": "바위 크기·부조 두께, 1870 보호각 유무",
    "shot": "shots/kit/landmark/maaebul_rock.png"
   }
  ]

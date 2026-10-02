@@ -1,9 +1,11 @@
 # 남원읍성 배치 도우미 — 평지 방형 석성(실제 둘레 약 2.5km, 높이 약 4m)을 권역 압축(K=0.30)에 맞춰 한 변 side m로 줄여
 # 성벽·모서리·치·성문(옹성) 모듈로 조립한다. 원점 = 성 한가운데 바닥, 남쪽(+z)이 남문(완월루).
-# 실제 한 변 ≈ 2.5km/4 ≈ 625m → ×0.30 ≈ 190m. 그래서 기본 side = 190.
+# 확정(디지털남원문화대전 「남원읍성」, 1915년 실측): 남벽 870·동벽 866·북벽 855·서벽 850m, 둘레 3,441m, 높이 약 5.4m.
+# (『신증동국여지승람』의 둘레 8,199자·높이 13자는 정유재란 뒤 확장 이전 규모.) 1870년은 확장 뒤 → 한 변 ≈ 860m × K0.30 ≈ 258m.
+# 높이 5.4m는 성벽 몸체 4.0m + 여장 1.35m로 나눔(나눈 비율은 가설). 1692년 부사 정협이 사대문 중창·이름 붙임.
 # layout(params) → 조각 목록 [{kit, params, x, z, ry}]: 지형 엔진이 조각마다 add_static 하면 성벽마다 가림·타일 스트리밍이 따로 된다.
 # build(params) → 전체를 한 Node3D로(미리보기·작은 맵용).
-# params: seed, side(190), chi_per_side(2), seg_max(24), gates({S:"완월루",N:"공신루",W:"망미루",E:"향일루"}),
+# params: seed, side(258), chi_per_side(2), seg_max(24), gates({S:"완월루",N:"공신루",W:"망미루",E:"향일루"}),
 #   ongseong: true/false 또는 문별 사전 {S:"front", N:"west", E:"south", W:"north"} — 값은 세계 방위 east|west|north|south(문 양옆 중 하나) | "front" | "none".
 #   기본: 남문은 구례길이 곧장 남으로 나가므로 "front"(앞으로 열림), 나머지는 옆으로 열림(가설)
 extends RefCounted
@@ -20,7 +22,7 @@ const LOCAL_PX := { S = "east", E = "north", N = "west", W = "south" }
 const SIDE_RY := { S = 0.0, E = PI / 2, N = PI, W = -PI / 2 }
 
 static func layout(params: Dictionary) -> Array:
-	var side: float = float(params.get("side", 190.0))
+	var side: float = float(params.get("side", 258.0))
 	var nchi: int = int(params.get("chi_per_side", 2))
 	var seg_max: float = float(params.get("seg_max", 24.0))
 	var seed: int = int(params.get("seed", 1))
@@ -72,7 +74,7 @@ static func layout(params: Dictionary) -> Array:
 	return out
 
 static func build(params: Dictionary) -> Dictionary:
-	var side: float = float(params.get("side", 190.0))
+	var side: float = float(params.get("side", 258.0))
 	var root := Node3D.new(); root.name = "남원읍성"
 	var colliders := []; var lights := []; var anchors := {}
 	var pieces := layout(params)

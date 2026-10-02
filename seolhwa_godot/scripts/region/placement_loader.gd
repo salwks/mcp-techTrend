@@ -13,6 +13,8 @@
 #     다리 y가 null이면 둑 높이(다리 양 끝 지형 평균), 징검다리·나루배·빨래터는 가까운 하천 수면.
 extends RefCounted
 
+const KitCache := preload("res://scripts/region/kit_cache.gd")
+
 const FLAT_MARGIN := 2.0
 const FLAT_EDGE := 5.0
 const VEG_MARGIN := 1.0
@@ -201,6 +203,22 @@ const PLACE_PER_FRAME := 8
 func request_tile(t: Vector2i) -> void:
 	if _pending.has(t) and not _requested.has(t) and not _jobs.has(t): _requested.append(t)
 
+# 반경 r 타일 안에 아직 짓거나 놓을 것이 있나(시작 화면)
+func busy_near(c: Vector2i, r: int) -> bool:
+	for t in _requested:
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
+	for t in _jobs:
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
+	for q in _place_q:
+		var t: Vector2i = world.tile_of(q.x, q.z)
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
+	return false
+
+func pending_count() -> int:
+	var n := _place_q.size()
+	for t in _pending: n += _pending[t].size()
+	return n
+
 func busy() -> bool:
 	return not _requested.is_empty() or not _jobs.is_empty() or not _place_q.is_empty()
 
@@ -236,14 +254,14 @@ func update() -> void:
 			_pending.erase(t)
 			_requested.remove_at(i)
 			continue
-		if not todo.is_empty() and _jobs.size() < MAX_BUILD_JOBS:
+		if not todo.is_empty() and _jobs.size() < (MAX_BUILD_JOBS * 3 if world.loading else MAX_BUILD_JOBS):
 			var holders := []
 			for k in todo:
-				holders.append({ key = k, s = _script(todo[k].kit), params = todo[k].params, info = null })
+				holders.append({ key = k, kit = todo[k].kit, s = _script(todo[k].kit), params = todo[k].params, info = null })
 				_inflight[k] = true
 			var job := func(n: int) -> void:
 				var h: Dictionary = holders[n]
-				h.info = h.s.build(h.params)
+				h.info = KitCache.build(h.kit, h.s, h.params)
 			var id := WorkerThreadPool.add_group_task(job, holders.size(), mini(holders.size(), 4), true, "kit build")
 			_jobs[t] = { id = id, holders = holders }
 			_requested.remove_at(i)
@@ -251,7 +269,7 @@ func update() -> void:
 		i += 1
 	# 놓기(프레임당 몇 개)
 	var n := 0
-	while not _place_q.is_empty() and n < PLACE_PER_FRAME:
+	while not _place_q.is_empty() and n < (PLACE_PER_FRAME * 16 if world.loading else PLACE_PER_FRAME):
 		_place_one(_place_q.pop_front())
 		n += 1
 
@@ -259,6 +277,7 @@ func _place_one(r: Dictionary) -> void:
 	var k := _key(r.kit, r.params)
 	var info = _cache.get(k)
 	if not (info is Dictionary) or info.get("node") == null: return
+	if not _used.has(k): KitCache.save_if_needed(info)
 	var node: Node3D = info.node.duplicate() if _used.has(k) else info.node
 	_used[k] = true
 	node.name = String(r.id) if r.id != "" else node.name
@@ -396,10 +415,10 @@ func _build_all(todo: Dictionary, cache: Dictionary) -> void:
 	var keys := todo.keys()
 	var holders := []
 	for k in keys:
-		holders.append({ s = _script(todo[k].kit), params = todo[k].params, info = null })
+		holders.append({ kit = todo[k].kit, s = _script(todo[k].kit), params = todo[k].params, info = null })
 	var job := func(i: int) -> void:
 		var h: Dictionary = holders[i]
-		h.info = h.s.build(h.params)
+		h.info = KitCache.build(h.kit, h.s, h.params)
 	if parallel and keys.size() > 1:
 		var gid := WorkerThreadPool.add_group_task(job, keys.size(), -1, true, "kit build")
 		WorkerThreadPool.wait_for_group_task_completion(gid)

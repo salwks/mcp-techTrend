@@ -75,6 +75,12 @@ var _bench_start := Vector3.ZERO
 var _lights_seen := -1
 var _glow_shader: Shader
 var placement  # PlacementLoader
+var _loading := true      # 시작 불러오기 화면(플레이어 둘레 반경 2타일 건물·식생이 다 붙을 때까지)
+var _load_ui: CanvasLayer
+var _load_label: Label
+var _load_t0 := 0
+var _fill: OmniLight3D     # 실내 보조광(지붕을 숨긴 실내가 벽 그림자로 거의 검게 나오는 것을 막는다)
+var _fill_k := 0.0
 var _reload_t := 0.0
 
 func _ready() -> void:
@@ -101,8 +107,10 @@ func _ready() -> void:
 	view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	view.stretch_mode = TextureRect.STRETCH_SCALE
 	add_child(view)
+	_load_t0 = Time.get_ticks_msec()
 	_build_scene()
 	_prewarm_shaders()
+	_make_load_ui()
 	if args.has("nomsaa"): scene_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if args.has("noshadow"): sun.shadow_enabled = false
 	if args.has("nolamps"):
@@ -194,6 +202,7 @@ func _build_scene() -> void:
 	world.use_scatter = not args.has("noscatter")
 	world.split_scatter = not args.has("nosplit")
 	root.add_child(world)
+	world.loading = true
 	world.load_region(args.get("data", ""))
 	world.use_cutaway = args.has("cutaway")
 	# 배치(§8): placement_*.json → 키트 → add_static (+ --placedir=폴더1;폴더2 추가 폴더)
@@ -211,6 +220,10 @@ func _build_scene() -> void:
 		root.add_child(o)
 		lamp_slots.append(o)
 	_glow_shader = Shader.new(); _glow_shader.code = GLOW_CODE
+	_fill = OmniLight3D.new()
+	_fill.light_color = Color("#ffe6c4"); _fill.omni_range = 9.0; _fill.omni_attenuation = 1.2
+	_fill.shadow_enabled = false; _fill.light_energy = 0.0
+	root.add_child(_fill)
 
 	SpriteChar.load_bank("player", "frames.json")
 	player = SpriteChar.new("player")
@@ -424,9 +437,13 @@ func _process(delta: float) -> void:
 		post.tilt = not post.tilt; post.paper = post.tilt
 	if time_flow:
 		hour = fmod(hour + dt * 0.1, 24.0); _apply_time()
+	_update_loading()
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if _loading: mv = Vector2.ZERO
 	var speed := RUN if Input.is_action_pressed("run") else WALK
-	if _bench_left > 0.0 and _bench_loading:
+	if _bench_left > 0.0 and _bench_loading and _loading:
+		_bench_load_t += delta
+	elif _bench_left > 0.0 and _bench_loading:
 		# 처음 불러오기(시작 화면에 해당)가 끝난 뒤부터 잰다
 		_bench_load_t += delta
 		if (world.stats.jobs == 0 and not placement.busy() and _bench_load_t > 1.0) or _bench_load_t > 90.0:
@@ -478,8 +495,14 @@ func _process(delta: float) -> void:
 	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
 	RenderingServer.global_shader_parameter_set("occ_b", player_pos + Vector3(0, player.height * 0.8, 0))
-	RenderingServer.global_shader_parameter_set("occ_r", 0.0 if interior != null or args.has("nodither") else 2.4)
+	var occ_r: float = 0.0 if interior != null or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게
+	RenderingServer.global_shader_parameter_set("occ_r", occ_r)
 	RenderingServer.global_shader_parameter_set("occ_near", 0.0 if args.has("nodither") else 1.0)
+	# 실내 보조광: 들어가면 서서히 켠다(밤에는 조금 더 — 호롱불 느낌)
+	_fill_k += ((1.0 if interior != null else 0.0) - _fill_k) * minf(1.0, dt * 3.0)
+	_fill.position = player_pos + Vector3(0, 2.4, 0.8)
+	_fill.light_energy = _fill_k * (3.0 + 4.0 * TimeOfDay.night_factor(hour))
+	_fill.visible = _fill_k > 0.01
 	_update_occlusion(dt, interior)
 	if interior == null: world.update_cutaway(dt, player_pos, cam.global_position)
 	world.update_scatter_lod(player_pos)
@@ -494,7 +517,7 @@ func _process(delta: float) -> void:
 	var y := clampf(1.0 - sp.y / float(scene_vp.size.y), 0.15, 0.85)
 	focus_y += (y - focus_y) * minf(1.0, dt * 6.0)
 	post.focus_y = focus_y
-	if args.has("bench") and _bench_time > 2.0 and delta > 0.03:
+	if args.has("bench") and _bench_time > 2.0 and delta > 0.03 and not _bench_loading:
 		print("  SLOW f=%d %.1fms focus=%.1f update=%.1f near=%d jobs=%d done=%d" % [Engine.get_process_frames(), delta * 1000.0, (_t1 - _t0) / 1000.0, (_t3 - _t2) / 1000.0, world.stats.near, world.stats.jobs, world.stats.scatter_done])
 
 func _bench_report() -> void:
@@ -574,6 +597,40 @@ func _run_tour(dir: String) -> void:
 	_quit()
 
 # 가림 처리(반투명) 재질은 처음 쓰일 때 파이프라인을 만들며 프레임이 튄다 → 시작할 때 화면 밖이 아닌 곳에 몇 프레임 그려 둔다
+func _make_load_ui() -> void:
+	_load_ui = CanvasLayer.new(); _load_ui.layer = 10
+	var bg := ColorRect.new(); bg.color = Color("#efe6d2"); bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_load_ui.add_child(bg)
+	var title := Label.new(); title.text = "설화록"
+	title.add_theme_font_size_override("font_size", 72); title.add_theme_color_override("font_color", Color("#2b2622"))
+	title.set_anchors_preset(Control.PRESET_CENTER); title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.position = Vector2(-200, -90); title.size = Vector2(400, 100)
+	bg.add_child(title)
+	_load_label = Label.new(); _load_label.add_theme_color_override("font_color", Color("#5a5048"))
+	_load_label.set_anchors_preset(Control.PRESET_CENTER); _load_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_load_label.position = Vector2(-200, 30); _load_label.size = Vector2(400, 40)
+	bg.add_child(_load_label)
+	add_child(_load_ui)
+
+func _update_loading() -> void:
+	if not _loading: return
+	var c: Vector2i = world.tile_of(player_pos.x, player_pos.z)
+	var near_busy: bool = world.stats.jobs > 0 or placement.busy_near(c, 2)
+	var left: int = placement.pending_count()
+	_load_label.text = "산천을 그리는 중…  식생 %d타일 · 건물 %d 남음" % [world.stats.jobs, left]
+	if not near_busy and Time.get_ticks_msec() - _load_t0 > 300:
+		_loading = false
+		world.loading = false
+		_load_ui.queue_free()
+		player_pos.y = world.height_at(player_pos.x, player_pos.z)
+		if args.has("gointerior") and not world.interiors.is_empty():  # 시험: n번째 실내 가운데로
+			var it: Dictionary = world.interiors[clampi(int(args.gointerior), 0, world.interiors.size() - 1)]
+			var cx: float = (it.minX + it.maxX) * 0.5; var cz: float = (it.minZ + it.maxZ) * 0.5
+			player_pos = Vector3(cx, world.height_at(cx, cz), cz); player.position = player_pos
+			rig.update(0, player_pos, player.facing, it, true)
+			print("INTERIOR ", it.get("name", ""), " ", player_pos, " of ", world.interiors.size())
+		print("LOAD ready_s=%.2f kit_cache hits=%d misses=%d" % [(Time.get_ticks_msec() - _load_t0) / 1000.0, PlacementLoader.KitCache.hits, PlacementLoader.KitCache.misses])
+
 func _prewarm_shaders() -> void:
 	var mats := []
 	for k in ["atlas", "cloth"]:

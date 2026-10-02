@@ -393,6 +393,7 @@ def bridges(pl, T, rng):
         road_a = math.atan2(dz, dx)
         cands = [road_a, base, (road_a + base) / 2 if abs(road_a - base) < math.pi else base,
                  base + 0.25, base - 0.25, road_a + 0.3, road_a - 0.3, base + 0.5, base - 0.5]
+        cands += [base + math.radians(d_) for d_ in range(-75, 76, 15)]
         for k, ang in enumerate(cands):
             ddx, ddz = math.cos(ang), math.sin(ang)
             tA, tB, y, step = fit_span(T, L, c["x"], c["z"], ddx, ddz, wy, jg)
@@ -416,7 +417,7 @@ def bridges(pl, T, rng):
                  id=f"ea_br_{c['id']}")]
         pl.commit(pcs, bx, bz, ry, "다리·징검다리(도강점)", "br")
         done.append((c["x"], c["z"]))
-        pl.log.append(f"[bridge] {c['id']} {c['type']}→{label} 길이 {ln} 방향 {['길','법선','사이','법선+','법선-','길+','길-','법선++','법선--'][k]} "
+        pl.log.append(f"[bridge] {c['id']} {c['type']}→{label} 길이 {ln} 방향 {(['길','법선','사이','법선+','법선-','길+','길-','법선++','법선--'] + ['법선%+d°' % d_ for d_ in range(-75, 76, 15)])[k]} "
                       f"ry {math.degrees(ry):.0f}° y {y:.2f} (수면 {wy:.2f}) 예상 턱 {step:.2f}")
 
 
@@ -548,7 +549,7 @@ def build(pl, T):
     # 여원치 마애불(kit-landmark 3단계): 고개 서쪽 길가 암벽. 카메라가 남쪽이라 ry는 −30°까지만(원래 −60°)
     mb = lm["yeowonchi_maaebul"]
     pl.place_search(L, [P("landmark/maaebul_rock", {"seed": 1, "pillars": False, "offering": True}, cat="landmark",
-                          kind="maaebul", label="여원치 마애불", footprint=[8.0, 6.5], road_min=0.6)],
+                          kind="maaebul", label="여원치 마애불", footprint=[9.0, 6.5], road_min=0.6)],
                     mb["x"], mb["z"], 14, g, gc, rng, {"max_drop": 4.0}, ry_fixed=-0.5, road_pref=(0.6, 5.0))
     yj = st["yeowon_jumak"]
     L2 = Local(T, yj["x"], yj["z"], 80)
@@ -614,9 +615,12 @@ def build(pl, T):
     village2(pl, T, "inwol_yeok", g, gc, "eup", 505, road="tongyeong_byeolro", toward=(2560, -1500), wells=2, stats=stats)
     EV.fill_rows(pl, T, L, jcells, g, gc, "village", 552, max_drop=2.6, stats=stats)
     # 람천 남쪽 마을 + 섶다리(가설) — 좌표는 보고서에
-    _, a_end, b_end = extra_bridge(pl, T, "ramcheon", iw["x"] + 5, iw["z"] + 25, g, gc, note="인월장 남쪽 람천 건너 마을")
-    south = a_end if a_end[1] > b_end[1] else b_end
-    pl.south_hamlet = south
+    # 람천 남쪽 마을(terrain-data §12: inwol_south_seopdari 도강점 + inwol_south_lane + inwol_south_village)
+    if any(s_["id"] == "inwol_south_village" for s_ in reg["settlements"]):
+        village2(pl, T, "inwol_south_village", "인월 남쪽 마을", "is", "village", 560, road="inwol_south_lane",
+                 toward=[(2760, -1380), (2900, -1340)], square=False, limit=10, stats=stats)
+    else:
+        extra_bridge(pl, T, "ramcheon", iw["x"] + 5, iw["z"] + 25, g, gc, note="인월장 남쪽 람천 건너 마을")
     # 3단계: 남쪽 기슭엔 이제 인월–산내 물가길이 지나고 마을 터가 없어 집은 두지 않고 다리만 둔다(장터 ↔ 물가길 지름길)
     pl.place_search(L, mill(53), iw["x"] - 70, iw["z"] + 20, 80, g, gc, rng, {"max_drop": 2.0}, allow_cross=True)
     e = entrance(T, "tongyeong_byeolro", iw["x"], iw["z"], 140, (3000, -1500))
@@ -644,7 +648,10 @@ def build(pl, T):
     rp = T.road(hb_["road_id"])["points"]
     s_h, _ = polyline_project(rp, hb_["x"], hb_["z"])
     gate_props(pl, T, L, hb_["road_id"], s_h - 19, g, gc, rng, sotdae=False, kit="village/stone_jangseung")
-    gate_props(pl, T, L, hb_["road_id"], s_h + 19, g, gc, rng, sotdae=False, both=False, kit="village/stone_jangseung")
+    for ds_ in (19, 26, 33, 12):
+        if gate_props(pl, T, L, hb_["road_id"], s_h + ds_, g, gc, rng, sotdae=False, both=False, kit="village/stone_jangseung",
+                      quiet=True):
+            break
     pl.place_search(L, jumak_set(61), sm["x"] - 45, sm["z"] + 70, 40, g, gc, rng, {"max_drop": 2.6}, road_pref=(1.0, 6.0),
                     pref=(sm["x"] - 55, sm["z"] + 70))
 

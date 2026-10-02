@@ -89,9 +89,27 @@ uniform vec3 emissive_color = vec3(0.0);
 uniform float use_emission = 0.0;
 uniform vec2 uv_offset = vec2(0.0);
 uniform float fade = 1.0;
+// Kit 아틀라스 붓 무늬 반복: CUSTOM0 = 아틀라스 영역(u0, v0, u1, v1), UV = 영역 안 반복 좌표(긴 면은 1을 넘음).
+// kit_tiling = 0(glTF 마을 등)이면 예전과 똑같이 UV를 그대로 쓴다.
+uniform float kit_tiling = 0.0;
+varying vec4 v_rect;
+
+void vertex() {
+	v_rect = CUSTOM0;
+}
+
+vec2 atlas_uv(vec2 uv, out vec2 cont) {
+	cont = uv;
+	if (kit_tiling < 0.5 || v_rect.z <= v_rect.x) return uv;
+	vec2 sz = v_rect.zw - v_rect.xy;
+	cont = v_rect.xy + uv * sz;
+	return v_rect.xy + fract(uv) * sz;
+}
 
 void fragment() {
-	vec4 t = texture(albedo_tex, UV + uv_offset);
+	vec2 a_cont;
+	vec2 a_uv = atlas_uv(UV, a_cont);
+	vec4 t = kit_tiling > 0.5 ? textureGrad(albedo_tex, a_uv + uv_offset, dFdx(a_cont), dFdy(a_cont)) : texture(albedo_tex, UV + uv_offset);
 	vec3 base = albedo_color.rgb * t.rgb * COLOR.rgb;
 	ALBEDO = base;
 %DITHER%
@@ -101,7 +119,7 @@ void fragment() {
 		code += """
 	vec3 wn = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * wn.y + 0.5) * hemi_i;
-	EMISSION = base * hemi / PI + emissive_color * texture(emission_tex, UV).rgb * glow_k * use_emission;
+	EMISSION = base * hemi / PI + emissive_color * texture(emission_tex, a_uv).rgb * glow_k * use_emission;
 """
 	if blend:
 		code += "\tALPHA = albedo_color.a * t.a * fade;\n"
@@ -146,7 +164,7 @@ static func faded_copy(sm: ShaderMaterial) -> ShaderMaterial:
 	var ds := code.contains("cull_disabled")
 	var f := ShaderMaterial.new()
 	f.shader = world_shader(lit, true, ds)
-	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset"]:
+	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset", "kit_tiling"]:
 		var v = sm.get_shader_parameter(p)
 		if v != null:
 			f.set_shader_parameter(p, v)
