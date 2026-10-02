@@ -30,18 +30,22 @@ const FOG_CODE := """
 
 const DITHER := """
 	// 가림 점무늬: 카메라(occ_a)→플레이어 머리(occ_b) 선분 둘레 occ_r 안의 면을 점무늬로 비운다(나무·건물이 플레이어를 가릴 때)
-	if (occ_r > 0.0) {
+	if (occ_r > 0.0 || occ_near > 0.0) {
 		vec3 owp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-		vec3 ab = occ_b - occ_a;
-		float ot = clamp(dot(owp - occ_a, ab) / max(dot(ab, ab), 1e-4), 0.0, 0.92);
-		float od = length(owp - (occ_a + ab * ot));
-		float keep = smoothstep(occ_r * 0.55, occ_r, od);
+		float keep = 1.0;
+		if (occ_r > 0.0) {
+			vec3 ab = occ_b - occ_a;
+			float ot = clamp(dot(owp - occ_a, ab) / max(dot(ab, ab), 1e-4), 0.0, 0.92);
+			float od = length(owp - (occ_a + ab * ot));
+			keep = smoothstep(occ_r * 0.55, occ_r, od);
+		}
+		// 카메라 바로 앞(큰 나무 잎덩이 등 카메라가 그 안에 들어간 면)도 비운다 — 실내에서도
+		if (occ_near > 0.0) keep = min(keep, smoothstep(6.0, 12.0, length(owp - occ_a)));
 		ivec2 q = ivec2(FRAGCOORD.xy) % 4;
 		const float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
-		// 가장 가까운 곳도 30%는 남긴다(형태가 읽히게)
-		if ((BAYER[q.y * 4 + q.x] + 0.5) / 16.0 > max(keep, 0.3)) discard;
-	}
-"""
+		// 선분 둘레는 30%는 남긴다(형태가 읽히게), 카메라 바로 앞은 모두 비울 수 있다
+		if ((BAYER[q.y * 4 + q.x] + 0.5) / 16.0 > keep) discard;
+	}"""
 
 const GLOBALS := """
 global uniform vec3 hemi_sky;
@@ -54,6 +58,7 @@ global uniform float glow_k;
 global uniform vec3 occ_a;
 global uniform vec3 occ_b;
 global uniform float occ_r;
+global uniform float occ_near;
 """
 
 # lit: 툰 조명 / unlit: 무광(MeshBasic) / blend: 반투명 / cull: 양면 여부

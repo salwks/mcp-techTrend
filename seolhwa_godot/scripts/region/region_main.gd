@@ -472,6 +472,7 @@ func _process(delta: float) -> void:
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
 	RenderingServer.global_shader_parameter_set("occ_b", player_pos + Vector3(0, player.height * 0.8, 0))
 	RenderingServer.global_shader_parameter_set("occ_r", 0.0 if interior != null or args.has("nodither") else 2.4)
+	RenderingServer.global_shader_parameter_set("occ_near", 0.0 if args.has("nodither") else 1.0)
 	_update_occlusion(dt, interior)
 	if interior == null: world.update_cutaway(dt, player_pos, cam.global_position)
 	world.update_scatter_lod(player_pos)
