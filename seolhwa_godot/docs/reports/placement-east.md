@@ -346,3 +346,182 @@ python3 tools/placement/east.py --noplan
   - 산내와 인월 민가는 성격표가 둘 다 초가+토담이라 집만 보면 비슷하다. 구별은 어귀(돌장승)·장거리·짜임에 기댄다. A3(어귀)·A4(스님·말)이 들어가면 더 확실해진다. 성격표에서 산내를 기와 비율 높이거나 다른 담으로 바꿀지는 총괄 판단.
   - 반선은 마을 터가 작은 조각이라 단마다 1~3채. 축대 앞 계단은 아직 없다(kit-village 요청 1과 같음).
   - 헛간·외양간·주막은 아직 초가(키트 쪽 다음 단계).
+
+---
+
+# 대표 도시 3곳 배치 (2026-10-03, placement-east 2차): 경주 · 강릉 · 제주목
+
+> 위 1~6절은 남원 권역 동쪽 배치 보고서다. 이 절은 새 권역 세 곳(GS_GYEONGJU, GW_GANGNEUNG, JJ_JEJU)을 다룬다.
+
+## 1. 다시 만들기
+```bash
+python3 tools/placement/hubs.py all              # region_data/<id>/placement_hub.json 3개 + 평면도 shots/placement/hub_<gs|gw|jj>_*.png
+python3 tools/placement/hubs.py JJ_JEJU --noplan
+python3 tools/placement/hubs.py all --profiles   # 고을 성격표(hub_profiles.py)를 region.json settlements[].profile·title에 합쳐 쓰기
+```
+- 결정적이다(장소별 고정 seed). 키트 크기는 `tools/placement/east_measure.gd`로 재고 `tools/placement/hubs_bounds.json`에 캐시한다. 처음 돌릴 때만 Godot 측정에 권역마다 몇 분 걸리고, 그 뒤에는 권역당 약 20초다.
+- 코드
+  - `tools/placement/hubs.py`: 생성기. 남원 동쪽 생성기(`east_*.py`)의 배치기·마을 짜임·다리 맞추기를 그대로 쓰고, 지형 폴더만 바꾼다(`east_terrain.DATA`). 마을 집터 고르기(`east_village.make_slot`·`house_piece`)를 덮어써서 **문화권 가옥형**(`kit/culture/<문화권>/`)을 놓는다. 남원 생성 결과는 바뀌지 않는다(같은 프로세스 안에서만 덮어씀).
+  - `tools/placement/hub_profiles.py`: 고을 성격표(계약서 §9) + `culture` 키 + 지명.
+- 결과 파일: `region_data/GS_GYEONGJU/placement_hub.json`(885항목), `region_data/GW_GANGNEUNG/placement_hub.json`(851), `region_data/JJ_JEJU/placement_hub.json`(1,237). 이름 있는 건물 항목에는 `title`을 넣었다(건물 이름 표시용).
+- 겹침 전수 검사: 경주 1(망부석 바위와 옆 돌무더기 — 의도), 강릉 1(헌화 벼랑 바위 두 덩이 — 의도), 제주 0.
+
+## 2. 고을 성격표(문화권)
+`region.json` settlements마다 `profile`(archetype, culture, climate, roof, wall, layout, entrance, people, animals, signature, trades, notes)과 `title`을 썼다. 최상위에 `culture_key`(yeongnam|gwandong|tamna)도 넣었다. 집 키트 고르기는 문화권 + 지붕 재료로 한다.
+
+| 문화권 | 지붕 키 | 놓는 집 |
+|---|---|---|
+| 영남(경주) | giwa | `culture/yeongnam/compound` medium roof=giwa(ㅁ자 기와 뜰집), large = 종가(ㅁ자 + 사당 + 행랑) |
+| | choga | 반은 `culture/yeongnam/tteuljip` roof=choga(ㅁ자 초가 뜰집), 반은 이엉 토담 안 `culture/yeongnam/choga`(一자·ㄱ자, 붉은 흙벽) |
+| | choga_low | 갯마을(감포·대본) `village/choga_low` + 돌담 |
+| 관동(강릉) | giwa | `culture/gwandong/compound` large(강릉 반가 — 위에서 '二') |
+| | choga | `culture/gwandong/haean`(잿빛 ㄱ자 그물 이엉) + 돌담 / `compound` medium |
+| | neowa·guitul | 산촌·고개 `village/neowa_house`·`guitul_house` + 돌축대 |
+| 탐라(제주) | jeju_stone | 외거리집(`tamna/stone_house` an + 현무암 집담 `tamna/doldam` + 어귀 정낭) 2/3, 두거리 `tamna/compound` 1/3 |
+| | giwa(7%) | 관속 기와집(가설): `culture/chae` roof=giwa wall=basalt + 현무암 집담 |
+
+## 3. 놓은 것
+집터 수는 집 한 터(울·안채·장독·마당 소품) 또는 묶음 하나를 1로 센다. 묶음 하나에는 채가 2~5개 있다.
+
+### 경주(GS_GYEONGJU, 영남)
+| 무리 | 내용 |
+|---|---|
+| 경주읍성 | 방형 150m(압축) 석성. `landmark/seong_wall` 24토막 + 모서리 + 치 6 + `gj_eupseong_gate` 4문(남 징례문·동 향일문·북 공진문·서 망미문, 옹성 없음 — 길이 곧장 통하게). 문 안·밖 광장과 성벽 안 순성로 3m·밖 8m는 비웠다 |
+| 객사 동경관 | `gj_dongyeonggwan` + 외삼문 + 담. 남문→네거리 남북 축 끝에서 남문을 바라봄(읍치 원칙). 북문길(z −2292)과 동서길 사이 띠가 22m라 앞마당이 좁다 |
+| 경주부 관아 | 외삼문(동서길) → 내삼문 → 동헌 일승각(7칸) → 내아, 담 37×62. 객사 서쪽 곁(가설 — region 점은 성 안 서남, 앞이 성벽을 보게 되어 옮김) |
+| 성 안·밖 민가 | 성 안 18터(ㅁ자 기와·초가 뜰집 위주), 성 밖 51터(길가 띠 + 마을 터 채우기), 우물, 어귀 장승·솟대 3곳 |
+| 서문 밖 장 | 영천길 따라 가가 6·좌판 14 + 장마당 11터, 주막 2(서문 밖, 동문 밖) |
+| 고분 | 봉황대(반지름 30m·높이 15m), 노서·대릉원 쪽 고분 12(황남대총은 표형분). 경주의 첫 신호 — 장터·들 가운데 풀 덮인 봉분 |
+| 제의 시설 | 사직단(서), 여단(북), 성황사(동쪽 기슭) — 원칙 방향의 가설 자리 |
+| 남쪽 들 | 첨성대, 계림(비각 + 느티·회화 숲), 반월성 터(190×60 둔덕), 향교(남천 북쪽 둔치로 옮김 — 가설), 교촌 5터(종가·ㅁ자), 오릉(봉분 5 + 숭덕전 = `yeongnam/sadang`), 나정(우물 + 비각 + 솔숲) |
+| 분황사·황룡사 터 | `gj_mojeon_tap` + 작은 법당(`bogwangjeon`) + 담, 남쪽 빈 들에 초석 22 |
+| 서천 나루(§25) | 나룻배 2, 주막, 사공 집, 창고 2 |
+| 불국사·진현·석굴암 | `gj_bulguksa`(대지 높이 = 석축 앞 땅), 진현 길가 마을 5터 + 돌장승 + 주막, `gj_seokguram`(ry 0.55 — 굴 입구를 남동으로, 카메라에 보이게) |
+| 추령·장항 | 고개 성황당(돌무더기 + 신목), 장항 주막 + 집 1 + 느티 |
+| 감은사 터·대본 | 삼층석탑 둘(13.4m) + 흩어진 초석, 이견대 터(돌무더기 + 솔), 대왕암(`gj_cheoyongam` 다른 seed, 바다 위), 대본 갯마을 9터 + 배 3 |
+| 감포 포구(§26) | 갯마을 19터, 객주 창고 4, 생선 좌판 4, 주막, 배 5. 처용 바위·연오랑 바위는 가장 가까운 바닷가 물 칸으로 옮김(게임성 이전) |
+| 치술령 | 계단식 산촌 6터, 고개 성황당, 망부석(큰 바위 + 돌무더기) |
+| 들마을 5곳 | 각 4~7터 + 공동 마당 + 우물 |
+| 길가 주막 2 | 울산길·감포길 고개 아래(§27) |
+
+읍내(성 안 + 성 밖 + 장) 집터 **80** + 관아·객사 건물 6 + 성문 4. 권역 전체 집터 132, 항목 885, 삼각형 합 약 121만.
+
+### 강릉(GW_GANGNEUNG, 관동)
+| 무리 | 내용 |
+|---|---|
+| 객사 임영관 | `gn_imyeonggwan`(삼문 국보 + 전대청·익헌 + 담) — region 확정 점, 관동대로가 삼문으로 들어감 |
+| 대도호부 관아 | `gn_gwana`(칠사당 + 내아), 객사 동북 곁 |
+| 향교 | 교동 언덕(region 추정 점 근처에서 찾음) |
+| 읍내 | 성벽 없음(가설 유지). 길촌: 관동대로·경포길·북쪽 해안길·향교길·안목길·학산길 양쪽에 반가(二)와 잿빛 그물 이엉 ㄱ자집. 집터 **76** + 우물 3, 어귀 장승·솟대 3 |
+| 단오장 | 남대천 둑 안목길 따라 가가 6·좌판 16 + 장마당, 굿당(당집 있는 성황당 + 신목), 나루 주막 |
+| 제의 시설 | 사직단(서), 여단(북), 대성황사(서쪽 기슭) — 가설 자리 |
+| 경포 | 오죽헌(+ 반가 안채 + 대숲 5), 선교장(반가 둘 + 활래정 = `village/jeongja`), 경포대(+ 솔 8), 홍장암(호수 안 바위), 경포 마을 8터(반가 비율 높음) |
+| 안목 갯마을 | 8터 + 배 4, 헌화 벼랑(벼랑 둘 + 철쭉 7) |
+| 학산 | 둥근 무리 8터, 굴산사 터 `gn_dangganjiju`(+ 부도), 석천 우물 |
+| 구산역 | 역사(기와 一자 채) + 마방 2 + 헛간 + 대문 + 돌담, 주막 2(너와·초가), 너와·귀틀 집 4, 남대천 나루(배 2 + 사공 집 + 창고) |
+| 반정·대관령 | 너와 주막 + 성황 돌무더기, 대관령 마루 성황당, `gn_guksa_seonghwangdang` |
+| 들마을 4곳 | 각 3~7터 |
+
+항목 851, 권역 집터 130, 삼각형 합 약 120만.
+
+### 제주목(JJ_JEJU, 탐라)
+| 무리 | 내용 |
+|---|---|
+| 제주성 | 280×230 직사각(압축 가설) 현무암 성벽 — **새 키트 `landmark/jj_eupseong_wall`**(높이 3.6m·두께 3m, 20m 약 3,900 삼각형) 53토막. 문 3(남 정원루·동 제중루·서 진서루, `seongmun` lu=1 width 14), 북쪽은 바다라 문 없음. 문마다 돌하르방 한 쌍. 산지천·병문천이 성벽 선을 지나는 자리는 수구로 비움 |
+| 관덕정·목관아 | 관덕정(앞 광장 비움)이 동서길을 보고, 그 뒤(북)에 `jj_mokgwana` |
+| 객사 영주관 | 남북길 축 끝 북쪽(가설) — `gaeksa`(정당 3·익헌 3, name 영주관) + 삼문 + 현무암 담 |
+| 성 안·밖 | 성 안 **69터**, 성 밖 35터 — 낮은 돌집, 현무암 집담, 굽은 올레, 정낭, 우영밭(현무암 밭담). 성 안 용천수 물통 1 |
+| 제주 장 | 동문 안 산지천 가 가가 4·좌판(생선·잡화) |
+| 성 밖 | 삼성혈(+ 솔숲 10), 제주향교(서쪽, 가설), 동문 밖 주막(탐라 돌집 주막) |
+| 제의 시설 | 사직단(서), 여단(북쪽이 바다라 동쪽 언덕 — 가설), 성황사(남쪽 기슭) |
+| 산지포(§26) | 산지물 물통·빨래터, 갯마을, 객주 창고 3(띠지붕 현무암 채), 주막, 배 4 |
+| 화북포 | 해신사(`seonghwangsa` 재사용, title 화북포 해신사), 화북진(현무암 담 44×30 + 진사), 마을 17터, 창고 3, 주막, 배 5, 용천수 물통 |
+| 조천 | `jj_yeonbukjeong`(조천진 돌 성 위 정자), 용천수 물통 2, 해녀 마을 14터, 주막, 불턱, 배 3 |
+| 송당 | 7터 + 본향당(팽나무 신목 + 현무암 당담 + 제단) + 잣성(목장 돌담) 4줄 |
+| 김녕 | 6터 + 물통 + 불턱 + 배, 김녕사굴 |
+| 용천수 마을 6곳 | 각 2~6터 + 물통 + 불턱 + 어귀 방사탑 |
+
+항목 1,237, 권역 집터 175, 삼각형 합 약 145만. 논은 없다(토지이용 자료 그대로). 장승 대신 어귀마다 방사탑 한 쌍, 주막도 돌집으로 했다.
+
+## 4. 새로 만든 키트와 지명
+- `kit/landmark/jj_eupseong_wall.gd`(이 에이전트). 보조 에이전트가 만든 것: `gj_tumulus`(봉분, twin), `gj_mojeon_tap`, `gj_seokguram`, `gn_dangganjiju`, `jj_yeonbukjeong`(kit-landmark.md §10, catalog 추가).
+- region.json이 이름만 적은 키트의 대응:
+
+| region.json kit | 실제 |
+|---|---|
+| gyeongju_eupseong | seong_wall·seong_corner·seong_chi + gj_eupseong_gate(조각 항목) |
+| gaeksa_donggyeonggwan / gwana_buyun | gj_dongyeonggwan + samun + 담 / samun·dongheon·naea·gwana_wall 조합 |
+| royal_tumulus / royal_tumulus_group | gj_tumulus / gj_tumulus 5 + yeongnam/sadang |
+| cheomseongdae·gyerim_grove·banwolseong_ruin·bulguksa | gj_cheomseongdae·gj_gyerim_bigak + 나무·gj_banwolseong·gj_bulguksa |
+| sacred_well | village/well + gj_gyerim_bigak + pine |
+| bunhwangsa | gj_mojeon_tap + bogwangjeon + 담 |
+| seokguram / mangbuseok_rock | gj_seokguram / nature/boulder + village/cairn |
+| twin_pagodas / pavilion_sea | seoktap ×2(13.4m) / village/cairn + pine(1870년엔 터만) |
+| sea_rock_tomb / sea_rock | gj_cheoyongam(seed 바꿈) |
+| gaeksa_imyeonggwan / gwana_daedohobu / ojukheon / gyeongpodae | gn_imyeonggwan / gn_gwana / gn_ojukheon / gn_gyeongpodae |
+| seongyojang | gwandong/banga ×2 + village/jeongja(활래정) |
+| seonghwangsa(대관령) / dangganjiju | gn_guksa_seonghwangdang / gn_dangganjiju |
+| lake_rock / sea_cliff_flowers | nature/boulder / nature/cliff ×2 + azalea |
+| jeju_eupseong / gwandeokjeong / jeju_mokgwana / samseonghyeol | jj_eupseong_wall + seongmun + jj_dolhareubang / jj_* |
+| yeonbukjeong / sindang_grove / lava_cave_mouth / haesinsa_shrine | jj_yeonbukjeong / big_tree + jj_basalt_wall + cairn / jj_gimnyeongsagul / seonghwangsa |
+
+- `scripts/region/place_title.gd` TITLES에 세 권역 지명을 더했다(흰 글자·가는 검은 테두리 그대로). 경주·교촌·진현·불국사·치술령·대본·감포·장항 / 강릉·경포·안목·학산·구산역·반정·대관령 / 제주목·산지포·화북포·조천·송당·김녕.
+- `scripts/region/building_titles.gd`
+  - 배치 항목의 `title`이 있으면 그것을 띄운다(같은 `gaeksa` 키트라도 남원 용성관 / 제주 영주관). 없으면 기존 키트 이름표를 쓴다. 남원 배치에는 title이 없으므로 남원 동작은 바뀌지 않는다.
+  - 대표 도시 키트 이름표를 더했다.
+
+## 5. 확인
+- 실행: `godot --path . res://scenes/region.tscn -- --region=<id> --warp=x,z --cam=거리,피치 --shot=… --waitload --quit`. 세 권역 모두 로그에 ERROR 0이다.
+- 스크린샷: `shots/placement/hub/`
+  - 넓은 시점: `gs_wide`, `gw_wide`, `jj_wide`, `nw_wide`(220m·55°, 안개 끔)
+  - 게임 시점: `gs_inside`·`gs_street`·`gs_market`·`gs_tumuli`·`gs_gaeksa`, `gw_street`·`gw_gwana`·`gw_market`, `jj_gate`·`jj_inside`·`jj_gwandeok`
+  - 도시 지도(`--openmap --winshot`): `map_gs`, `map_gw`, `map_jj`
+  - 평면도: `shots/placement/hub_<gs|gw|jj>_*.png`
+- fps(스크린샷 때 표시): 게임 시점 106~121, 넓은 시점 78~106. 화면 창(반경 60m) 삼각형 최대는 경주 13.5만, 강릉 17.2만, 제주 16.9만이다(목표 50만 안). 벤치 결과는 아래 6절.
+
+### 눈가림 시험(`shots/placement/hub/blind_sheet.png` — 게임 시점 23m·40°, 이름 가림, 맑음)
+| 화면 | 맞힐 수 있나 | 단서 |
+|---|---|---|
+| 제주 | **예** | 검은 현무암 집담, 정낭, 촘촘한 집줄 격자의 낮은 잿빛 지붕, 논 없음 |
+| 강릉 | **예** | 잿빛 이엉에 새끼 그물 격자를 친 ㄱ자집 + 막돌 담, 읍내 반가는 위에서 '二' |
+| 남원 | 예 | 기와집이 길 양쪽으로 촘촘한 성 안, 둥근 노란 이엉 |
+| 경주 | **넓은 시점에서는 예, 게임 시점 한 칸에서는 약함** | 넓게 보면 ㅁ자 지붕 고리(기와·초가), 4문 방형 석성, 들판의 봉분이 뚜렷하다(`gs_wide`, `gs_tumuli`). 게임 시점에 一자 영남 초가 한 터만 걸리면 호남 초가와 헷갈릴 수 있다. 그래서 초가 집터 절반을 ㅁ자 초가 뜰집으로 바꿨다 |
+
+넓은 시점(`*_wide`) 네 장은 서로 헷갈리지 않는다. 경주는 ㅁ 고리, 강릉은 二와 그물 지붕, 제주는 검은 담과 격자, 남원은 기와 줄이다.
+
+## 6. 성능
+`--bench=15 --weather=clear`, 읍내 성문 앞에서 시작해 자동으로 걸었다. 2048×1536 해상도다.
+
+| 권역 | avg fps | worst ms | p99 ms | 33ms 넘은 프레임 | 그린 삼각형 | statics |
+|---|---|---|---|---|---|---|
+| 경주 | 111.2 | 11.4 | 11.1 | 0 | 186k | 865 |
+| 강릉 | 119.9 | 8.3 | 8.3 | 0 | 166k | 747 |
+| 제주 | 115.8 | 10.4 | 10.0 | 0 | 178k | 1,212 |
+
+처음 불러오기는 약 14초다(kit 캐시가 비어 있을 때. 경주 misses 784).
+
+## 7. 가설과 원칙 적용
+- 성 안 배치: 경주는 객사를 남북 축 끝에 두고 관아를 그 곁에 두었다. 제주는 관덕정을 앞(광장)에, 목관아를 뒤에, 영주관을 축 끝에 두었다. 강릉은 region 확정 점을 그대로 썼다.
+- 제의 시설: 사직단은 서쪽, 여단은 북쪽(제주는 바다라 동쪽), 성황사는 진산 기슭에 두었다. 모두 가설 자리 둘레에서 마을 터·물·바위를 피해 찾았다.
+- 경주부 관아·향교, 제주 영주관·향교·사직단·여단·성황사, 강릉 사직단·여단·대성황사의 자리는 **가설**이다.
+- 읍성 크기는 data-east 값(경주 150m, 제주 280×230)을 따랐다. 제주성의 불규칙한 모양은 직사각형으로 근사했다(가설).
+- 고분 크기와 자리(봉황대 반지름 30·높이 15 — 실물보다 조금 작게, 대릉원·노서동 무리)는 게임성 근사다.
+- 석굴암은 실제로 동향이지만 카메라가 남쪽에 있어 남동(ry 0.55)으로 돌렸다.
+- 처용·연오랑 바위는 data-east의 게임성 이전 자리 근처 바닷가 물 칸에 놓았다.
+- §27 주막은 고개 전후, 나루, 역, 장터, 읍성 밖에만 두었다. §26 포구(감포·산지포·화북포)에는 객주 창고·좌판·배를 나루보다 많이 두었다. §29 성황당은 고개·어귀·장터 둑에 두었다. §33 금지 항목(모든 마을에 장터, 모든 강에 다리 등)은 지켰다. 장은 대표 도시 셋에만 있고, 다리는 region crossings 자리에만 있다.
+
+## 8. 남은 문제·요청
+1. **엔진(region_map.gd, 손대지 않음)**
+   - 도시 지도가 `culture/*` 키트를 지붕으로 그리지 않는다. 그래서 세 도시 민가가 지도에 거의 비어 보인다(밭만 보임).
+   - 이름표를 `BuildingTitles.NAMES[kit]`로만 붙인다. 그래서 제주 객사가 '용성관', 향교가 '남원향교'로 나온다.
+   - 요청: `ROOF_*` 판정에 `culture/` 접두를 넣고(`roof` param이나 문화권으로 색), 항목 `title`을 먼저 쓰게 해 달라. building_titles.gd에는 이미 그렇게 했다.
+2. **엔진**: 제주 산지천·병문천은 건천이라 물이 그려지지 않고, 성 안을 지나는 검은 골로 보인다. 바다·강 폭 렌더는 다른 에이전트 작업 중이다.
+3. **밀도**
+   - 경주 성 안은 ㅁ자 묶음(22m)이 커서 18터에서 멈춘다. 읍내 마을 터(landuse 6)도 좁아서, 게임 시점 한 화면의 집 수가 남원보다 적다.
+   - data-east에 읍내 마을 터를 길가 쪽으로 넓혀 달라고 요청한다. 또는 kit-culture에 작은 영남 기와 一자·ㄱ자 집을 요청한다.
+4. 강릉 임영관 일곽 안으로 길(관동대로·경포길·북쪽 해안길·향교길의 시작 토막)이 지나간다. region 길이 객사 한가운데 점에서 출발해서다. 마당 안 흙길로 보인다. data-east에 길 시작을 삼문 앞(z≈−418)으로 옮겨 달라고 요청한다.
+5. 경주 객사 동경관 앞마당이 4~6m로 좁다(북문길이 객사 뒤 22m에서 꺾임). 북문길을 객사 뒤로 돌려 주면 넓힐 수 있다.
+6. 제주성 성문은 `seongmun`(화강암 육축)을 썼다. 현무암 육축 변형이 있으면 더 맞다(kit-landmark 요청).
+7. 남원의 `town_profile.py`·`east_*.py`는 고치지 않았다. 문화권 연결은 `hubs.py` 안에서만 한다. 공용으로 옮길지는 총괄이 정한다.
+8. `region.json`(세 권역)의 settlements[].profile·title·culture_key를 이 에이전트가 덮어썼다. data-east가 region.json을 다시 빌드하면 `python3 tools/placement/hubs.py all --profiles`를 다시 돌려야 한다. 아니면 `tools/region/regions/<id>.json`에 옮겨 달라.
+9. `godot --import` 필요: 새 스크립트 `kit/landmark/jj_eupseong_wall.gd`, 보조 키트 5개, 새 png들.

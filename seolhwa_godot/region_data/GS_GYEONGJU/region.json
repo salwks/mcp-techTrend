@@ -103255,29 +103255,39 @@
     -2096.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "yeongnam",
     "climate": "south",
+    "archetype": "eupchi",
     "roof": {
      "giwa": 0.55,
      "choga": 0.45
     },
     "wall": "todam",
+    "layout": "walled_grid",
+    "entrance": "gate",
     "people": [
      "관속",
      "양반",
-     "장꾼",
-     "유생"
+     "유생",
+     "장꾼"
     ],
     "animals": [
      "소"
     ],
-    "signature": "고분(능) 사이 기와 골목 — 성 밖 들판에 첨성대가 보이는 옛 도읍",
+    "signature": "방형 석성 4문 안 ㅁ자 기와 뜰집 골목, 성 밖 들판에 봉분(고분)이 솟은 옛 도읍",
     "trades": [
      "관아",
-     "장시"
+     "장시",
+     "향교"
     ],
-    "notes": "영남 ㅁ자 뜰집 양반가 섞임"
-   }
+    "houses": [
+     "culture/yeongnam/compound(large=종가)",
+     "culture/yeongnam/tteuljip(giwa)",
+     "culture/yeongnam/choga"
+    ],
+    "notes": "경주부(부윤 종2품) 읍치. 성 안 T자 가로: 객사 동경관이 남북 축 끝, 관아는 객사 서쪽 곁(가설). 성 안은 이속·향리 기와 뜰집 위주"
+   },
+   "title": "경주"
   },
   {
    "id": "gyeongju_jang",
@@ -103305,13 +103315,32 @@
     -2164.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "yeongnam",
     "climate": "south",
+    "archetype": "eupchi",
+    "roof": {
+     "choga": 0.8,
+     "giwa": 0.2
+    },
+    "wall": "todam",
+    "layout": "linear_street",
+    "entrance": "tumulus_market",
+    "people": [
+     "장꾼",
+     "보부상",
+     "주모"
+    ],
+    "animals": [
+     "소"
+    ],
     "signature": "봉황대 고분 그늘 아래 장 — 정만서가 장꾼을 놀리는 곳",
     "trades": [
-     "장시"
-    ]
-   }
+     "장시",
+     "주막"
+    ],
+    "notes": "서문 밖 영천길 가 장(가설: 1870년 경주 읍내장은 서문 밖 봉황대 둘레)"
+   },
+   "title": "경주"
   },
   {
    "id": "gyochon",
@@ -103338,23 +103367,35 @@
     -1788.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
+    "archetype": "plain",
     "roof": {
      "giwa": 0.7,
      "choga": 0.3
     },
     "wall": "todam",
-    "signature": "향교 옆 큰 기와집(최부잣집) 곳간과 남천 월정교 터",
-    "trades": [
-     "논농사"
-    ],
+    "layout": "round_cluster",
+    "entrance": "hyanggyo_hongsal",
     "people": [
      "양반",
      "유생",
      "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "향교 옆 큰 ㅁ자 종가(최부잣집 곳간)와 계림 숲",
+    "trades": [
+     "논농사",
+     "향교"
+    ],
+    "houses": [
+     "culture/yeongnam/jongga",
+     "culture/yeongnam/compound"
     ]
-   }
+   },
+   "title": "교촌"
   },
   {
    "id": "bulguksa_village",
@@ -103381,14 +103422,29 @@
     -504.0
    ],
    "profile": {
-    "archetype": "temple",
+    "culture": "yeongnam",
     "climate": "south",
+    "archetype": "temple",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "along_temple_road",
+    "entrance": "stone_jangseung",
+    "people": [
+     "스님",
+     "보살",
+     "농부"
+    ],
+    "animals": [],
     "signature": "석축 절 아래 석장승과 공양 떡집",
     "trades": [
      "논농사",
      "절 시주"
     ]
-   }
+   },
+   "title": "진현"
   },
   {
    "id": "bulguksa_temple",
@@ -103406,13 +103462,25 @@
    "lat": 35.789,
    "lon": 129.332,
    "profile": {
-    "archetype": "temple",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "청운교·백운교 석축 위 다보탑",
+    "archetype": "temple",
+    "roof": {
+     "giwa": 1.0
+    },
+    "wall": "todam",
+    "layout": "along_temple_road",
+    "entrance": "stone_jangseung",
+    "people": [
+     "스님"
+    ],
+    "animals": [],
+    "signature": "청운교·백운교 석축 위 다보탑 — 회랑은 초석만 남은 퇴락한 절",
     "trades": [
      "절"
     ]
-   }
+   },
+   "title": "불국사"
   },
   {
    "id": "chisul_village",
@@ -103439,15 +103507,32 @@
     2564.0
    ],
    "profile": {
-    "archetype": "mountain",
+    "culture": "yeongnam",
     "climate": "south",
+    "archetype": "mountain",
+    "roof": {
+     "choga": 0.8,
+     "neowa": 0.2
+    },
+    "wall": "stone_terrace",
+    "layout": "terraced",
+    "entrance": "sotdae_toward_pass",
+    "people": [
+     "농부",
+     "숯쟁이",
+     "약초꾼"
+    ],
+    "animals": [
+     "개"
+    ],
     "signature": "고개 쪽을 바라보는 솟대와 은을암(새바위) 이야기",
     "trades": [
      "밭농사",
      "숯",
      "약초"
     ]
-   }
+   },
+   "title": "치술령"
   },
   {
    "id": "daebon",
@@ -103474,19 +103559,30 @@
     512.0
    ],
    "profile": {
-    "archetype": "coast",
+    "culture": "yeongnam",
     "climate": "coast",
-    "signature": "대왕암을 향한 용왕굿 당집과 몽돌 해변",
-    "trades": [
-     "고기잡이",
-     "미역"
-    ],
+    "archetype": "coast",
+    "roof": {
+     "choga_low": 1.0
+    },
+    "wall": "stone_net",
+    "layout": "linear_shore",
+    "entrance": "wharf",
     "people": [
      "어부",
      "해녀",
      "무당"
+    ],
+    "animals": [
+     "갈매기"
+    ],
+    "signature": "대왕암을 향한 이견대 터와 몽돌 해변 갯마을",
+    "trades": [
+     "고기잡이",
+     "미역"
     ]
-   }
+   },
+   "title": "대본"
   },
   {
    "id": "gampo",
@@ -103513,20 +103609,33 @@
     -1116.0
    ],
    "profile": {
-    "archetype": "coast",
+    "culture": "yeongnam",
     "climate": "coast",
-    "signature": "배 끌어올린 포구와 미역 말리는 돌담",
+    "archetype": "coast",
+    "roof": {
+     "choga_low": 0.85,
+     "choga": 0.15
+    },
+    "wall": "stone_net",
+    "layout": "linear_shore",
+    "entrance": "wharf",
+    "people": [
+     "어부",
+     "객주",
+     "해녀"
+    ],
+    "animals": [
+     "갈매기"
+    ],
+    "signature": "배 끌어올린 포구와 객주 창고, 미역 말리는 돌담",
     "trades": [
      "고기잡이",
      "미역",
      "객주"
     ],
-    "people": [
-     "어부",
-     "객주",
-     "해녀"
-    ]
-   }
+    "notes": "포구(§26): 객주·창고·상인이 나루보다 많다"
+   },
+   "title": "감포"
   },
   {
    "id": "jangang",
@@ -103553,13 +103662,26 @@
     -804.0
    ],
    "profile": {
-    "archetype": "pass",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "골짜기 주막과 성황 돌무더기",
+    "archetype": "pass",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "none",
+    "layout": "few_roadside",
+    "entrance": "seonghwang_cairn",
+    "people": [
+     "나그네",
+     "주모"
+    ],
+    "animals": [],
+    "signature": "추령 넘은 골짜기 주막과 성황 돌무더기",
     "trades": [
      "주막"
     ]
-   }
+   },
+   "title": "장항"
   },
   {
    "id": "auto_village_00",
@@ -103583,13 +103705,26 @@
     432.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 31m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103614,13 +103749,26 @@
     -1176.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 26m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103645,13 +103793,26 @@
     -1280.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 17m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103676,13 +103837,26 @@
     852.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 36m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103707,13 +103881,26 @@
     -568.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 26m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103738,13 +103925,26 @@
     -2924.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 58m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103769,13 +103969,26 @@
     2372.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 37m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103800,13 +104013,26 @@
     212.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "yeongnam",
     "climate": "south",
-    "signature": "논 가 정자나무 들마을",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 32m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -103831,15 +104057,26 @@
     1808.0
    ],
    "profile": {
-    "archetype": "coast",
-    "climate": "coast",
-    "signature": "몽돌 바닷가 낮은 초가와 미역 너는 돌담",
-    "trades": [
-     "고기잡이",
-     "미역",
-     "밭농사"
+    "culture": "yeongnam",
+    "climate": "south",
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 바다에서 40m(게임) — 해안 마을"
+    "animals": [
+     "소"
+    ],
+    "signature": "논 가운데 고분 곁 초가 들마을",
+    "trades": [
+     "논농사"
+    ]
    }
   }
  ],
@@ -105913,5 +106150,6 @@
    "x": -2529.2,
    "z": -3261.9
   }
- ]
+ ],
+ "culture_key": "yeongnam"
 }
