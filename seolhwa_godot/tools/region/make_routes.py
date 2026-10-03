@@ -247,7 +247,7 @@ ROUTES = [
       ]),
  dict(id="PA_PYEONGYANG-HG_HAMHEUNG", name="평양→함흥(성천·양덕·고원길)", climate="north", alpine={"2": 650.0},
       frm=P("PA_PYEONGYANG", "to_hamheung", name="칠성문 밖 북쪽 끝"),
-      to=P("HG_HAMHEUNG", "to_cheollyeong", name="정평·영흥 방면 남서 끝"),
+      to=P("HG_HAMHEUNG", "to_pyeongyang", name="정평·영흥 방면 남서 끝"),
       stops=[
         dict(key="seongcheon", name="성천(강선루 아래 마을)", title="성천", kind="village", lat=39.2470, lon=126.2200, a=140, culture="gwanseo",
              extra=["pavilion"], tales=[("—", "성천 강선루 — 관서 명루(지나가는 고을)", "배경"), ("JG03", "선녀와 나무꾼", "D")]),

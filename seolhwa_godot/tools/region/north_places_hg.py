@@ -63,6 +63,9 @@ ROADS = [
     dict(id="seoho_road", name="서호길(본궁→서호진 포구)", cls="지선", width_m=4.0, via=[(39.8760, 127.5600), (39.8600, 127.5750), (39.8460, 127.5850)],
          notes="남쪽 끝(권역 밖 서호진 포구 — 지도에만)."),
     dict(id="unheung_lane", name="운흥 마을길", cls="마을길", width_m=3.5, via=[(39.9132, 127.5320), (39.9300, 127.5320)]),
+    dict(id="cheollyeong_road", name="철령길(정평 갈림→안변·철령, 한양 노정)", cls="대로", width_m=5.0, astar=False,
+         via=[(39.86408, 127.4463), (39.86366, 127.4449), (39.86327, 127.44357), (39.86279, 127.44228), (39.8624, 127.44123)],
+         notes="경흥대로 남서쪽에서 갈라져 철령(한양 노정 GG_HANYANG-HG_HAMHEUNG) 포털로. placement-north가 region.json에 넣은 것을 빌드에 옮김(2026-10-04)."),
     dict(id="bannyong_trail", name="반룡산 산길(구천각·치마대)", cls="산길", width_m=1.5, via=[(39.9140, 127.5239), (39.9200, 127.5235), (39.9235, 127.5262)]),
 ]
 
@@ -75,12 +78,14 @@ AXES = [dict(town="함흥 읍성", center=(39.9115, 127.5245), jinsan=("반룡�
              note="반룡산을 등지고 성천강 평야를 내려다봄.")]
 
 PORTALS = [
-    dict(id="to_cheollyeong", name="→ 철령(정평·안변 · 한양/평양 노정)", road="gyeongheung_daero", to_route="PA_PYEONGYANG-HG_HAMHEUNG", note="경흥대로 남서쪽: 정평 → 영흥 → 안변 → 철령"),
+    # routes 보고(1b20f7c)에 따라 옛 to_cheollyeong을 평양 노정 포털로 이름을 바꾸고, 한양(철령) 노정 포털을 따로 둠
+    dict(id="to_pyeongyang", name="→ 평양(양덕 길)", road="gyeongheung_daero", to_route="PA_PYEONGYANG-HG_HAMHEUNG", note="경흥대로 남서 끝 → 정평 갈림 → 양덕·고원 길 → 평양(옛 id to_cheollyeong)"),
+    dict(id="to_hanyang_cheollyeong", name="→ 한양(경흥대로·철령)", road="cheollyeong_road", to_route="GG_HANYANG-HG_HAMHEUNG", note="정평 갈림에서 남서 철령 길(routes 담당 좌표 −2530, 1745)"),
     dict(id="to_bukcheong", name="→ 북청(홍원)", road="bukcheong_road", to_route="HG_HAMHEUNG-BUKCHEONG", note="홍원 → 북청(사자놀음) — 노정 미정"),
 ]
 for _p in PORTALS:
     r_ = next(r for r in ROADS if r["id"] == _p["road"])
-    _p["ref"] = list(r_["via"][0] if _p["id"] == "to_cheollyeong" else r_["via"][-1])
+    _p["ref"] = list(r_["via"][0] if _p["id"] == "to_pyeongyang" else r_["via"][-1])
 
 SPAWN = dict(lat=39.9122, lon=127.5185, note="만세교 동쪽 머리, 낙민루 앞")
 
