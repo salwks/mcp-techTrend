@@ -109,11 +109,22 @@ def town_house(seed, st):
     return yard_c(seed, h, "todam_tile" if giwa else "todam_thatch", hx=8.6, z0=-7.0, z1=6.4)
 
 
+def city_props(seed):
+    """도성 안 마당·길가 소품(짚가리·디딜방아 같은 시골 것 없이): 장독 모음·작업 마당 + 평상·독·소쿠리·절구."""
+    r = seed % 24
+    return [P("village/yard_props", {"seed": r + 1, "set": ("jars", "work")[r % 2]}, cat="prop", kind="yard_props", flatten=False,
+              margin=0.4),
+            P("village/props", {"seed": r + 1, "kind": ("pyeongsang", "dok", "soguri", "jeolgu")[r % 4]}, 4.6, 0.2, cat="prop",
+              kind="props", flatten=False, margin=0.3)]
+
+
 _orig_make_slot = EV.make_slot
 
 
 def make_slot(kind, seed, st=None):
     cul = getattr(st, "culture", None)
+    if kind == "cprops":
+        return city_props(seed)
     if kind in ("jw", "shop", "garden", "props") and not (kind == "props" and cul == "gwanbuk"):
         return _orig_make_slot(kind, seed % 24 + 1, st)     # 소품 모양은 24가지로 접는다(모델 수·재기)
     if cul not in NORTH_CULT:
@@ -138,14 +149,18 @@ def make_slot(kind, seed, st=None):
 
 EV.make_slot = make_slot
 EV.MIX.update({
-    "hy_city": [("city", 0.56), ("hc_large", 0.12), ("hc_medium", 0.12), ("yard", 0.08), ("garden", 0.04), ("props", 0.08)],
-    "hy_bukchon": [("city", 0.46), ("hc_large", 0.34), ("hc_medium", 0.10), ("props", 0.10)],
-    "hy_jongno": [("city", 0.62), ("shop", 0.26), ("props", 0.12)],
-    "hy_jungchon": [("city", 0.50), ("hc_medium", 0.26), ("hc_large", 0.08), ("props", 0.10), ("garden", 0.06)],
-    "hy_namchon": [("hc_small", 0.34), ("hc_medium", 0.28), ("city", 0.16), ("garden", 0.12), ("props", 0.10)],
-    "hy_east": [("city", 0.30), ("hc_medium", 0.20), ("hc_small", 0.14), ("garden", 0.26), ("props", 0.10)],
+    "hy_city": [("city", 0.60), ("hc_large", 0.12), ("hc_medium", 0.12), ("yard", 0.08), ("cprops", 0.08)],
+    "hy_bukchon": [("city", 0.50), ("hc_large", 0.34), ("hc_medium", 0.10), ("cprops", 0.06)],
+    "hy_jongno": [("city", 0.62), ("shop", 0.28), ("cprops", 0.10)],
+    "hy_jungchon": [("city", 0.54), ("hc_medium", 0.26), ("hc_large", 0.08), ("cprops", 0.08), ("garden", 0.04)],
+    "hy_namchon": [("hc_small", 0.38), ("hc_medium", 0.28), ("city", 0.18), ("garden", 0.08), ("cprops", 0.08)],
+    "hy_east": [("city", 0.36), ("hc_medium", 0.20), ("hc_small", 0.18), ("garden", 0.16), ("cprops", 0.10)],
+    "hy_lane": [("city", 0.86), ("hc_small", 0.08), ("cprops", 0.06)],
+    "hy_lane_bukchon": [("city", 0.94), ("cprops", 0.06)],
+    "hy_lane_namchon": [("hc_small", 0.52), ("city", 0.38), ("cprops", 0.10)],
     "hy_out": [("hc_small", 0.40), ("hc_medium", 0.24), ("city", 0.12), ("garden", 0.14), ("props", 0.10)],
     "nb_eup": [("town", 0.40), ("yard", 0.18), ("hc_large", 0.14), ("hc_medium", 0.14), ("garden", 0.07), ("props", 0.07)],
+    "nb_eup_in": [("town", 0.74), ("hc_small", 0.10), ("props", 0.10), ("garden", 0.06)],
     "nb_eup_small": [("hc_small", 0.55), ("garden", 0.20), ("props", 0.25)],
     "nb_eup_out": [("yard", 0.56), ("hc_medium", 0.14), ("hc_small", 0.12), ("garden", 0.10), ("props", 0.08)],
     "py_in": [("hc_large", 0.36), ("town", 0.34), ("hc_medium", 0.14), ("props", 0.10), ("garden", 0.06)],
@@ -394,6 +409,135 @@ def streets(pl, T, cells, rids, g, gc, mix, seed, st, limit=999, max_drop=2.8, i
     return n
 
 
+def _in_any_rect(pl, x, z, pad=1.5):
+    for o, _ in pl.near_rects(x, z, 40.0):
+        dx, dz = x - o.cx, z - o.cz
+        if abs(dx * o.ux + dz * o.uz) <= o.hx + pad and abs(dx * o.vx + dz * o.vz) <= o.hz + pad:
+            return True
+    return False
+
+
+def add_lane(pl, T, g, pts, w=3.0):
+    """골목 하나: 배치기 지형(T.roads)에 더해 집이 길 위에 앉지 않게 하고, placement alleys로 내보내 엔진이 마을길로 칠하게 한다."""
+    rid = f"{pl.prefix}_lane_{len(pl.alleys):03d}"
+    T.roads.append({"id": rid, "name": "골목", "class": "마을길", "width_m": w, "points": pts})
+    T._road_segs = T._segs([(r["points"], r["width_m"], r["id"]) for r in T.roads])
+    pl.alleys.append({"group": g, "width_m": w, "points": pts})
+    return rid
+
+
+def lane_grid(pl, T, cells, rect, g, pitch=21.0, ns_every=72.0, w=3.0, min_len=24.0, seed=0, lu_ok=(1, 2, 3, 6)):
+    """도시 구역 골목 격자: 동서 골목을 pitch 간격으로(집이 골목 북쪽에 붙어 남쪽 골목을 본다), 남북 골목을 ns_every 간격으로.
+    구역 칸·마을 터 위만, 이미 놓인 것(궁궐·관청·큰길가 집·예약 띠)은 끊고 지나간다. 반환: 동서 골목 id 목록."""
+    if len(cells) == 0:
+        return []
+    cellset = set((int(round(x / 4.0)), int(round(z / 4.0))) for x, z in cells)
+    rng = random.Random(seed)
+    A, B, W_, _ = T._road_segs          # 이 구역 골목을 더하기 전 길(남북 골목이 동서 골목에 끊기지 않게)
+    x0, z0, x1, z1 = rect
+    m = (np.maximum(A[:, 0], B[:, 0]) > x0 - 20) & (np.minimum(A[:, 0], B[:, 0]) < x1 + 20) & \
+        (np.maximum(A[:, 1], B[:, 1]) > z0 - 20) & (np.minimum(A[:, 1], B[:, 1]) < z1 + 20)
+    A, B, W_ = A[m], B[m], W_[m]
+    AB = B - A
+    L2 = (AB ** 2).sum(1)
+    L2[L2 == 0] = 1e-9
+
+    def clear(x, z):
+        if len(A) == 0:
+            return 1e9
+        P_ = np.array([x, z])
+        t = np.clip(((P_ - A) * AB).sum(1) / L2, 0, 1)
+        return float((np.sqrt(((A + AB * t[:, None] - P_) ** 2).sum(1)) - W_ / 2).min())
+
+    def ok(x, z):
+        return (int(round(x / 4.0)), int(round(z / 4.0))) in cellset and T.landuse(x, z) in lu_ok and \
+            clear(x, z) > 1.0 and not _in_any_rect(pl, x, z)
+
+    def runs(samples):
+        out, cur = [], []
+        for q, good in samples:
+            if good:
+                cur.append(q)
+            else:
+                if len(cur) >= 2:
+                    out.append(cur)
+                cur = []
+        if len(cur) >= 2:
+            out.append(cur)
+        return out
+    ew = []
+    z = z0 + pitch * 0.6 + rng.uniform(0, 3.0)
+    while z < z1 - 6:
+        xs = np.arange(x0, x1 + 0.1, 2.0)
+        for r in runs([((float(x), z), ok(float(x), z)) for x in xs]):
+            if r[-1][0] - r[0][0] >= min_len:
+                ew.append(add_lane(pl, T, g, [[round(r[0][0], 1), round(z, 1)], [round(r[-1][0], 1), round(z, 1)]], w))
+        z += pitch
+    x = x0 + ns_every * 0.5 + rng.uniform(0, 8.0)
+    while x < x1 - 6:
+        zs = np.arange(z0, z1 + 0.1, 2.0)
+        for r in runs([((x, float(z)), ok(x, float(z))) for z in zs]):
+            if r[-1][1] - r[0][1] >= min_len:
+                add_lane(pl, T, g, [[round(x, 1), round(r[0][1], 1)], [round(x, 1), round(r[-1][1], 1)]], w)
+        x += ns_every
+    pl.log.append(f"[lanes] {g}: 동서 {len(ew)}")
+    return ew
+
+
+def lane_rows(pl, T, cells, lane_ids, g, gc, mix, seed, st, limit=999, setback=0.5, max_drop=3.2):
+    """골목 북쪽에 집을 바짝(물림 setback m) 붙여 늘어놓는다 — 대문·정면이 골목(남쪽)을 본다."""
+    if len(cells) == 0 or not lane_ids:
+        return 0
+    cx, cz = float(cells[:, 0].mean()), float(cells[:, 1].mean())
+    R = float(np.sqrt(((cells - [cx, cz]) ** 2).sum(1)).max()) + 20
+    L = Local(T, cx, cz, R + 60)
+    n = 0
+    for k, rid in enumerate(lane_ids):
+        rd = T.road(rid)
+        n += EV.street_rows(pl, T, L, cells, rd["points"], rd["width_m"], g, gc, mix, seed + k * 17, st, stats=pl.stats_, sides=(-1,),
+                            setback=(setback, setback), max_drop=max_drop, limit=limit - n, in_frac=0.3)
+        if n >= limit:
+            break
+    pl.log.append(f"[lane rows] {g} → {n}")
+    return n
+
+
+def block_rows(pl, T, rect, g, gc, seed, st, kit_fn, depth=8.9, lane_w=3.0, setback=0.5, gap=(0.9, 1.8), max_drop=2.4):
+    """읍내 구획을 남향 집 줄로 촘촘히: 남쪽 끝부터 골목(폭 lane_w) + 그 북쪽에 집 앞을 골목에 바짝(setback) 붙인 줄을 되풀이.
+    kit_fn(seed) → (kit, params). 집은 마당 울 없이 몸채만(읍내 거리집). 반환: 놓은 집 수."""
+    x0, z0, x1, z1 = rect
+    rng = random.Random(seed)
+    L = Local(T, (x0 + x1) / 2, (z0 + z1) / 2, max(x1 - x0, z1 - z0) / 2 + 40)
+    pitch = lane_w + setback + depth + 0.8
+    zl = z1 - lane_w / 2
+    n = 0
+    k = 0
+    while zl - lane_w / 2 - setback - depth > z0 - 0.5:
+        add_lane(pl, T, g, [[round(x0, 1), round(zl, 1)], [round(x1, 1), round(zl, 1)]], lane_w)
+        L = Local(T, (x0 + x1) / 2, (z0 + z1) / 2, max(x1 - x0, z1 - z0) / 2 + 40)
+        x = x0 + rng.uniform(0.0, 1.5)
+        while x < x1:
+            k += 1
+            kit, prm = kit_fn(seed * 100 + k)
+            bb = pl.aabb(kit, prm)
+            w = bb[1] - bb[0]
+            if x + w > x1 + 0.5:
+                break
+            hx = x - bb[0]
+            hz = zl - lane_w / 2 - setback - bb[3]
+            pcs = [P(kit, prm, cat="house", kind=kit.split("/")[-1], margin=0.4, road_min=0.2)]
+            ok = pl.check(L, pcs, hx, hz, 0.0, {"max_drop": max_drop, "road_min": 0.2})
+            if ok[0]:
+                pl.commit(EV.fit_terrace(T, pcs, hx, hz, 0.0), hx, hz, 0.0, g, gc)
+                n += 1
+                x += w + rng.uniform(*gap)
+            else:
+                x += 3.0
+        zl -= pitch
+    pl.log.append(f"[block] {g} {tuple(round(v) for v in rect)} → {n}")
+    return n
+
+
 def first_land(T, x0, z0, x1, z1, step=1.0):
     """(x0,z0)(물)에서 (x1,z1) 쪽으로 가며 처음 뭍(토지이용≠5)이 되는 점."""
     L = math.hypot(x1 - x0, z1 - z0)
@@ -484,14 +628,14 @@ def build_hwangju(pl, T):
     opens = {"S": "front", "E": "front", "N": "front", "W": "front"}
     NC.eupseong(pl, T, CX, CZ, H, H, names, "landmark/seong_wall", WT,
                 lambda sd, nm: ("landmark/hj_eupseong_gate", {"seed": 11 + "SENW".index(sd), "name": nm, "open": opens[sd]}),
-                "황주읍성", "seong", 1100, gate_w=18.0)
+                "황주읍성", "seong", 1100, gate_w=24.0)   # 문 키트가 양옆 성벽 머리를 품는다(폭 23.8m) — 18m면 성벽 조각과 겹쳤다
     # 객사 제안관: 성 안 서북 구획, 동서길을 바라봄(가설: 사신 길 큰 객사)
     gz = -941.0
     pcs = [P("landmark/hj_gaeksa", {"seed": 21, "wing_bays": 4}, 0.0, -20.0, cat="civic", kind="gaeksa", label="제안관(객사)",
              footprint=[52.0, 14.0], nocheck=True),
            P("landmark/samun", {"seed": 22, "kind": "outer", "name": "제안관"}, 0.0, 0.0, cat="civic", kind="samun", label="제안관 삼문",
              nocheck=True)]
-    pcs += court_pcs(2200, -29.0, 29.0, -54.0, 0.0, 0.0, 5.8)
+    pcs += court_pcs(2200, -29.0, 29.0, -52.5, 0.0, 0.0, 5.8)   # 북쪽 담을 북문 안쪽 머리(z −995.3)에서 1.5m 물림
     pl.commit(pcs, CX - 33.0, gz, 0.0, "객사 제안관", "gaeksa")
     # 황주목 관아: 성 안 동북 구획(외삼문 → 동헌 → 내아)
     pl.commit([P("landmark/hyeon_gwana", {"seed": 31, "width": 36, "depth": 40, "naesammun": True}, cat="civic", kind="gwana",
@@ -502,12 +646,22 @@ def build_hwangju(pl, T):
     # 성 안 민가
     inner = (CX - H + WT + 1.5, CZ - H + WT + 1.5, CX + H - WT - 1.5, CZ + H - WT - 1.5)
     cin = cells_rect(T, inner, lu=(1, 2, 3, 6))
-    for k, rid_ in enumerate(["eup_ns", "eup_ew"]):
-        streets(pl, T, cin, [rid_], G + "(성 안)", GC, "nb_eup", 410 + k * 7, HS, max_drop=2.4)
-    grid_fill(pl, T, cin, G + "(성 안)", GC, "nb_eup", 420, HS, step=(18.0, 17.0), in_frac=0.3)
-    for k, (wx, wz) in enumerate([(CX - 30, CZ + 30), (CX + 30, CZ + 28)]):
-        NC.search(pl, [P("village/well", {"seed": 440 + k, "roof": False}, cat="prop", kind="well", margin=1.0)], wx, wz, 25, G, GC,
-                  440 + k, face="none")
+    # 성 안: 큰 집 묶음 대신 해서 겹집 몸채(一자, 울 없이)를 남향 줄로 촘촘히 — 남쪽 두 구획은 골목(3m)마다 한 줄, 관아 북쪽 띠도 한 줄.
+    # 동서 큰길(eup_ew) 남쪽 첫 줄은 큰길을 등지고, 그다음 줄부터 골목 앞. 읍내 거리 짜임(평지 해서 고을)
+    def hj_house(sd):
+        r = random.Random(sd)
+        return "culture/haeseo/gyeopjip", {"seed": sv(sd, 5), "plan": "il", "roof": "giwa" if r.random() < 0.3 else "thatch"}
+    WI = WT + 1.0
+    # 우물(§18 필수): 줄 짓기 전에 동서 큰길 남쪽 가에 둘
+    for k, (wx, wz) in enumerate([(CX - 30, CZ + 7.0), (CX + 30, CZ + 7.0)]):
+        NC.search(pl, [P("village/well", {"seed": 440 + k, "roof": k == 0}, cat="prop", kind="well", label="읍내 우물", margin=0.8)], wx, wz,
+                  12, G, GC, 440 + k, face="none")
+    for k, rect in enumerate([(CX - H + WI, CZ + 4.0, CX - 4.5, CZ + H - WI),          # 서남
+                              (CX + 4.5, CZ + 4.0, CX + H - WI, CZ + H - WI),          # 동남
+                              (CX + 4.5, CZ - H + WI, CX + H - WI, CZ - 49.5)]):       # 관아 북쪽 띠
+        block_rows(pl, T, rect, G + "(성 안)", GC, 430 + k * 7, HS, hj_house)
+    grid_fill(pl, T, cin, G + "(성 안)", GC, "nb_eup_in", 420, HS, step=(15.0, 15.0), in_frac=0.3,
+              fallback=("town", "props", "garden"), small_p=0.5)
     # 남문 밖 장(의주대로 장거리)
     rng = random.Random(501)
     Lm = Local(T, CX, -800, 160)
@@ -523,8 +677,9 @@ def build_hwangju(pl, T):
     b = s_["bbox"]
     cout = cells_rect(T, (b[0], b[1], b[2], b[3]), lu=(6,))
     cout = minus_rects(cout, [(CX - H - 10, CZ - H - 10, CX + H + 10, CZ + H + 10)])
-    streets(pl, T, cout, ["uiju_north", "gyeomipo_road", "east_lane", "uiju_south"], G + "(성 밖)", GC, "nb_eup_out", 450, HS)
-    fill(pl, T, cout, G + "(성 밖)", GC, "nb_eup_out", 470, HS, pitch=18.0)
+    # 성 밖은 길가 줄 위주로 줄임(성 안을 채운 만큼) — 읍내 전체가 §18 일반 읍성 40~100동 안에 들게
+    streets(pl, T, cout, ["uiju_north", "gyeomipo_road", "east_lane", "uiju_south"], G + "(성 밖)", GC, "nb_eup_out", 450, HS, limit=52)
+    fill(pl, T, cout, G + "(성 밖)", GC, "nb_eup_out", 470, HS, pitch=18.0, limit=16)
     for rid_, tw in [("uiju_south", (40, -560)), ("uiju_north", (40, -1200)), ("gyeomipo_road", (-300, -945))]:
         e = E.entrance(T, rid_, CX, CZ, 130, tw)
         if e:
@@ -940,18 +1095,27 @@ def build_hanyang(pl, T):
         "namdaemun": ["namdaemunro", "mapo_road"],
         "gwanghui": ["gwanghuimun_lane", "hangangjin_road"],
     }
-    all_roads = [r_["id"] for r_ in reg["roads"] if r_["class"] != "산길" and "ferry" not in r_["id"]]
+    # 시전 행랑을 운종가 밖 큰길에도: 남대문로(숭례문→종루), 돈화문로 남쪽 끝(종로 쪽) — 19세기 말 사진에 가게 줄이 보이는 길
+    sajeon_row(pl, T, "namdaemunro", 30.0, polyline_len(T.road("namdaemunro")["points"]) - 40.0, "남대문로 시전", "ndm_sj", 160, bays=8,
+               goods=["cloth", "mixed", "paper", "fish", "silk"], setback=0.8)
+    dh = T.road("donhwamun_ro")["points"]
+    sajeon_row(pl, T, "donhwamun_ro", polyline_len(dh) - 190.0, polyline_len(dh) - 24.0, "돈화문로 시전", "dhm_sj", 170, bays=6,
+               goods=["paper", "silk", "mixed"], setback=0.8)
+    # 구역마다: ① 큰길가 집 줄(큰 집) → ② 골목 격자(동서 21m 간격, 남북 72m) 북쪽에 도시 한옥을 골목에 바짝 → ③ 남은 틈 채우기
+    # (도성 안 땅은 north_post가 마을 터로 칠함 — 예전처럼 큰길 70m 띠 밖을 채마밭으로 비워 두지 않는다)
     for k, (nm, code, rect, mix, sid, pitch, lim) in enumerate(HY_DISTRICTS):
         st = NC.style(T, rid, sid)
         c = cin[(cin[:, 0] >= rect[0]) & (cin[:, 0] <= rect[2]) & (cin[:, 1] >= rect[1]) & (cin[:, 1] <= rect[3])]
-        # 길에서 70m 안만 촘촘히(나머지는 도성 안 채마밭·빈터로 남김 — 가설), 상한은 넉넉히
-        c = near_road_cells(T, c, all_roads, 70.0)
-        lim = int(lim * 2.2)
+        lim = int(lim * 3.2)
         n = 0
         if road_sets.get(code):
-            n += streets(pl, T, c, road_sets[code], nm, code, mix, 2000 + k * 50, st, limit=lim // 2, max_drop=3.0, setback=(1.0, 3.6))
+            n += streets(pl, T, c, road_sets[code], nm, code, mix, 2000 + k * 50, st, limit=lim // 3, max_drop=3.0, setback=(0.6, 3.0))
+        lanes = lane_grid(pl, T, c, rect, nm, pitch=21.0, ns_every=72.0, seed=2020 + k * 50)
+        lmix = "hy_lane_namchon" if code == "namchon" else ("hy_lane_bukchon" if code == "bukchon" else "hy_lane")
+        n += lane_rows(pl, T, c, lanes, nm, code, lmix, 2030 + k * 50, st, limit=lim - n)
         stp = (13.4, 17.5) if mix in ("hy_city", "hy_jongno", "hy_jungchon", "hy_bukchon") else (19.0, 19.0)
-        n += grid_fill(pl, T, c, nm, code, mix, 2010 + k * 50, st, step=stp, limit=lim - n, max_drop=3.6)
+        n += grid_fill(pl, T, c, nm, code, mix, 2010 + k * 50, st, step=stp, limit=max(0, lim - n), max_drop=3.6,
+                       fallback=("city", "hc_small", "cprops"), small_p=0.2)
         pl.log.append(f"[district] {nm}: {n}")
     for k, (wx, wz) in enumerate([(-250, -1320), (-120, -1080), (150, -1060), (-150, -800), (300, -760), (-80, -420), (540, -700),
                                   (-780, -1050), (480, -1200)]):
@@ -1024,6 +1188,8 @@ def write(rid, T, pl, bounds):
         b = bounds.get(it["_bkey"], {})
         it["_tris"] = b.get("tris", 0)
         o = {k: v for k, v in it.items() if not k.startswith("_")}
+        if rid == "GG_HANYANG" and it["kit"] in ("village/yard_props", "village/props", "village/haystack", "village/didil_bang_a"):
+            o["yard"] = False     # 도성 안 소품은 제 마당 흙을 칠하지 않음(불러오기 시간 — 둘레 집 마당이 이미 칠함)
         if it.get("_label") and (it["_cat"] in TITLE_CATS or it["kit"] in ("village/well",)) and it["_label"] not in ("나루",):
             o["title"] = it["_label"]
         items.append(o)

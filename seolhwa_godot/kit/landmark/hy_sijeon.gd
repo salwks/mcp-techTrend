@@ -1,6 +1,6 @@
 # 운종가(雲從街, 종로) 시전 행랑 — 태종 때(1412~1414) 나라가 지어 상인에게 빌려준 긴 줄 가게채. 칸마다 가게(앞 트임·덧문), 단층 맞배 기와(일부 다락), 칸 폭 약 2.4~3m.
 # 육의전(비단·무명·명주·종이·모시·어물) 등. 1870년 무렵 모습은 19세기 말 사진 비례 가설. 정면(가게 앞) +z = 거리. 로컬 x 방향 bays칸.
-# params: seed, bays(12), bay(2.7), depth(5.0), goods("silk"|"cloth"|"paper"|"fish"|"mixed")
+# params: seed, bays(12), bay(2.7), depth(5.0), goods("silk"|"cloth"|"paper"|"fish"|"mixed"), signs(true: 처마 밑 가로 현판·세로 간판 — 큰길 가게 신호)
 extends RefCounted
 
 const Co = preload("res://kit/landmark/_common.gd")
@@ -30,6 +30,26 @@ static func build(params: Dictionary) -> Dictionary:
 				var c: int = gl[int(rng.next() * gl.size()) % gl.size()]
 				var gg := Kit.box(0.5, 0.18 + rng.next() * 0.2, 0.6, x - bay * 0.3 + m * bay * 0.3, 0.95, d / 2 - 0.3)
 				goods.append(Co.pnt(gg, [c]))
+	# 간판: 칸 절반쯤에 처마 밑 가로 현판(먹빛 판 + 흰 글자 자리), 몇 칸마다 기둥 앞 세로 간판(19세기 말 종로 사진 비례 가설)
+	var boards := []; var letters := []
+	if bool(params.get("signs", true)):
+		for i in n:
+			var x := -W / 2 + bay * (i + 0.5)
+			var k2 := rng.next()
+			if k2 < 0.55:
+				var bw := bay * (0.55 + 0.2 * rng.next())
+				boards.append(Kit.box(bw, 0.46, 0.06, x, 2.42, d / 2 + 0.12))
+				var nl := 2 + int(rng.next() * 2.0)
+				for q in nl:
+					letters.append(Kit.box(0.16, 0.22, 0.02, x + (q - (nl - 1) * 0.5) * bw / (nl + 0.6), 2.42, d / 2 + 0.16))
+			elif k2 < 0.8:
+				var sx := x - bay / 2 + 0.25
+				boards.append(Kit.box(0.34, 1.3, 0.06, sx, 1.75, d / 2 + 0.45))
+				for q in 3:
+					letters.append(Kit.box(0.18, 0.2, 0.02, sx, 2.2 - q * 0.36, d / 2 + 0.49))
+	if not boards.is_empty():
+		b.add("flat", Co.pnt(Kit.merge(boards), [0x2a2018, 0x33261c]), 0.012)
+		b.add("flat", Co.pnt(Kit.merge(letters), [0xe8dcc0, 0xd8b04a]), 0.0)
 	b.add("flat", Co.pnt(Kit.merge(dark), [0x2e241c, 0x241c16]), 0.0)
 	b.add("wood", Co.pnt(Kit.merge(shut), [0x7a5c3e, 0x5e4630], 0.03, rng), 0.012)
 	if not stall.is_empty(): b.add("wood", Co.pnt(Kit.merge(stall), Co.WOOD_L, 0.03, rng), 0.012)
