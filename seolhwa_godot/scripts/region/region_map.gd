@@ -443,7 +443,10 @@ func _n_to_geo(p: Vector2) -> Vector2:
 
 func _show_nation() -> void:
 	mode = "nation"
-	if _nation.is_empty(): _nation = { regions = Travel.regions(), routes = Travel.routes() }
+	if _nation.is_empty():
+		_nation = { regions = Travel.regions(), routes = Travel.routes(), strongholds = [] }
+		var sj = JSON.parse_string(FileAccess.get_file_as_string("res://region_data/strongholds.json"))
+		if sj is Dictionary: _nation.strongholds = sj.get("strongholds", [])
 	_nk = _n_fit()
 	_ncenter = Travel.OUTLINE_BOX.get_center()
 	_update_hint(); _canvas.queue_redraw()
@@ -531,6 +534,20 @@ func _draw_nation() -> void:
 			taken.append(box)
 			_text(nm, at, 14, Color(0.35, 0.22, 0.15))
 			break
+	# 명세서 §21 거점(지도에만 있는 곳 포함, region_data/strongholds.json): 작은 네모, 겹치지 않을 때만 이름
+	for s in _nation.get("strongholds", []):
+		var sp := _n_px(Vector2(float(s.lon), float(s.lat)))
+		var built: bool = s.status != "map"
+		_canvas.draw_rect(Rect2(sp - Vector2(3, 3), Vector2(6, 6)), Color(0.45, 0.35, 0.25) if built else Color(0.55, 0.5, 0.45))
+		if s.status == "region": continue
+		var sw := _font.get_string_size(String(s.name), HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 6.0
+		var sb := Rect2(sp + Vector2(-sw / 2.0, 4), Vector2(sw, 16))
+		var hit := false
+		for t in taken:
+			if (t as Rect2).intersects(sb): hit = true; break
+		if hit: continue
+		taken.append(sb)
+		_text(String(s.name), sp + Vector2(0, 12), 12, Color(0.3, 0.26, 0.22) if built else Color(0.45, 0.4, 0.36))
 	for r in _nation.regions:
 		if r.lonlat == null: continue
 		var c := _n_px(r.lonlat)

@@ -1,0 +1,621 @@
+{
+ "note": "명세서 v0.3 §21 거점 마스터 목록. 삭제하지 않는다 — status: region=권역으로 지음, route=노정 길목으로 지음, map=지도에만(2026-10-04 사용자 결정). 좌표는 대략.",
+ "strongholds": [
+  {
+   "id": "GG-01",
+   "name": "한양",
+   "lat": 37.57,
+   "lon": 126.977,
+   "status": "region"
+  },
+  {
+   "id": "GG-02",
+   "name": "마포·서강",
+   "lat": 37.54,
+   "lon": 126.94,
+   "status": "region"
+  },
+  {
+   "id": "GG-03",
+   "name": "노량진",
+   "lat": 37.513,
+   "lon": 126.94,
+   "status": "region"
+  },
+  {
+   "id": "GG-04",
+   "name": "송파",
+   "lat": 37.505,
+   "lon": 127.105,
+   "status": "route"
+  },
+  {
+   "id": "GG-05",
+   "name": "수원 화성",
+   "lat": 37.287,
+   "lon": 127.014,
+   "status": "map"
+  },
+  {
+   "id": "GG-06",
+   "name": "남한산성",
+   "lat": 37.478,
+   "lon": 127.182,
+   "status": "map"
+  },
+  {
+   "id": "GG-07",
+   "name": "강화도",
+   "lat": 37.747,
+   "lon": 126.487,
+   "status": "map"
+  },
+  {
+   "id": "GG-08",
+   "name": "임진나루",
+   "lat": 37.89,
+   "lon": 126.74,
+   "status": "route"
+  },
+  {
+   "id": "GG-09",
+   "name": "연천·한탄강",
+   "lat": 38.096,
+   "lon": 127.075,
+   "status": "map"
+  },
+  {
+   "id": "GG-10",
+   "name": "개성",
+   "lat": 37.97,
+   "lon": 126.555,
+   "status": "route"
+  },
+  {
+   "id": "GW-01",
+   "name": "원주",
+   "lat": 37.342,
+   "lon": 127.92,
+   "status": "route"
+  },
+  {
+   "id": "GW-02",
+   "name": "치악산 상원사",
+   "lat": 37.36,
+   "lon": 128.05,
+   "status": "route"
+  },
+  {
+   "id": "GW-03",
+   "name": "춘천",
+   "lat": 37.881,
+   "lon": 127.73,
+   "status": "map"
+  },
+  {
+   "id": "GW-04",
+   "name": "홍천",
+   "lat": 37.697,
+   "lon": 127.889,
+   "status": "map"
+  },
+  {
+   "id": "GW-05",
+   "name": "오대산",
+   "lat": 37.73,
+   "lon": 128.59,
+   "status": "map"
+  },
+  {
+   "id": "GW-06",
+   "name": "대관령",
+   "lat": 37.688,
+   "lon": 128.755,
+   "status": "region"
+  },
+  {
+   "id": "GW-07",
+   "name": "강릉",
+   "lat": 37.752,
+   "lon": 128.896,
+   "status": "region"
+  },
+  {
+   "id": "GW-08",
+   "name": "설악산",
+   "lat": 38.119,
+   "lon": 128.465,
+   "status": "map"
+  },
+  {
+   "id": "GW-09",
+   "name": "금강산",
+   "lat": 38.66,
+   "lon": 128.09,
+   "status": "map"
+  },
+  {
+   "id": "CC-01",
+   "name": "충주",
+   "lat": 36.991,
+   "lon": 127.926,
+   "status": "map"
+  },
+  {
+   "id": "CC-02",
+   "name": "목계진",
+   "lat": 37.04,
+   "lon": 127.85,
+   "status": "map"
+  },
+  {
+   "id": "CC-03",
+   "name": "제천·청풍",
+   "lat": 37.0,
+   "lon": 128.17,
+   "status": "map"
+  },
+  {
+   "id": "CC-04",
+   "name": "단양",
+   "lat": 36.985,
+   "lon": 128.366,
+   "status": "map"
+  },
+  {
+   "id": "CC-05",
+   "name": "죽령",
+   "lat": 36.873,
+   "lon": 128.433,
+   "status": "map"
+  },
+  {
+   "id": "CC-06",
+   "name": "청주",
+   "lat": 36.636,
+   "lon": 127.489,
+   "status": "map"
+  },
+  {
+   "id": "CC-07",
+   "name": "공주",
+   "lat": 36.465,
+   "lon": 127.119,
+   "status": "route"
+  },
+  {
+   "id": "CC-08",
+   "name": "부여",
+   "lat": 36.276,
+   "lon": 126.91,
+   "status": "map"
+  },
+  {
+   "id": "CC-09",
+   "name": "강경",
+   "lat": 36.159,
+   "lon": 127.012,
+   "status": "map"
+  },
+  {
+   "id": "CC-10",
+   "name": "계룡산",
+   "lat": 36.344,
+   "lon": 127.205,
+   "status": "map"
+  },
+  {
+   "id": "CC-11",
+   "name": "속리산 법주사",
+   "lat": 36.543,
+   "lon": 127.833,
+   "status": "map"
+  },
+  {
+   "id": "JL-01",
+   "name": "전주",
+   "lat": 35.816,
+   "lon": 127.15,
+   "status": "route"
+  },
+  {
+   "id": "JL-02",
+   "name": "만경강 평야",
+   "lat": 35.85,
+   "lon": 126.9,
+   "status": "map"
+  },
+  {
+   "id": "JL-03",
+   "name": "남원",
+   "lat": 35.41,
+   "lon": 127.385,
+   "status": "region"
+  },
+  {
+   "id": "JL-04",
+   "name": "운봉고원",
+   "lat": 35.437,
+   "lon": 127.527,
+   "status": "region"
+  },
+  {
+   "id": "JL-05",
+   "name": "지리산 서부",
+   "lat": 35.3,
+   "lon": 127.53,
+   "status": "region"
+  },
+  {
+   "id": "JL-06",
+   "name": "곡성",
+   "lat": 35.282,
+   "lon": 127.292,
+   "status": "map"
+  },
+  {
+   "id": "JL-07",
+   "name": "구례",
+   "lat": 35.202,
+   "lon": 127.463,
+   "status": "map"
+  },
+  {
+   "id": "JL-08",
+   "name": "나주",
+   "lat": 35.016,
+   "lon": 126.711,
+   "status": "map"
+  },
+  {
+   "id": "JL-09",
+   "name": "영산포",
+   "lat": 35.0,
+   "lon": 126.716,
+   "status": "map"
+  },
+  {
+   "id": "JL-10",
+   "name": "순천",
+   "lat": 34.95,
+   "lon": 127.487,
+   "status": "map"
+  },
+  {
+   "id": "JL-11",
+   "name": "낙안읍성",
+   "lat": 34.907,
+   "lon": 127.341,
+   "status": "map"
+  },
+  {
+   "id": "JL-12",
+   "name": "진도",
+   "lat": 34.487,
+   "lon": 126.263,
+   "status": "map"
+  },
+  {
+   "id": "GS-01",
+   "name": "문경새재",
+   "lat": 36.765,
+   "lon": 128.077,
+   "status": "route"
+  },
+  {
+   "id": "GS-02",
+   "name": "상주",
+   "lat": 36.411,
+   "lon": 128.159,
+   "status": "route"
+  },
+  {
+   "id": "GS-03",
+   "name": "안동",
+   "lat": 36.568,
+   "lon": 128.729,
+   "status": "route"
+  },
+  {
+   "id": "GS-04",
+   "name": "하회마을",
+   "lat": 36.539,
+   "lon": 128.518,
+   "status": "route"
+  },
+  {
+   "id": "GS-05",
+   "name": "영주·풍기",
+   "lat": 36.806,
+   "lon": 128.624,
+   "status": "map"
+  },
+  {
+   "id": "GS-06",
+   "name": "대구",
+   "lat": 35.871,
+   "lon": 128.601,
+   "status": "map"
+  },
+  {
+   "id": "GS-07",
+   "name": "경주",
+   "lat": 35.856,
+   "lon": 129.225,
+   "status": "region"
+  },
+  {
+   "id": "GS-08",
+   "name": "밀양",
+   "lat": 35.503,
+   "lon": 128.746,
+   "status": "map"
+  },
+  {
+   "id": "GS-09",
+   "name": "삼랑진",
+   "lat": 35.4,
+   "lon": 128.837,
+   "status": "map"
+  },
+  {
+   "id": "GS-10",
+   "name": "진주",
+   "lat": 35.18,
+   "lon": 128.084,
+   "status": "map"
+  },
+  {
+   "id": "GS-11",
+   "name": "하동",
+   "lat": 35.067,
+   "lon": 127.751,
+   "status": "map"
+  },
+  {
+   "id": "GS-12",
+   "name": "통영",
+   "lat": 34.854,
+   "lon": 128.433,
+   "status": "map"
+  },
+  {
+   "id": "GS-13",
+   "name": "동래·부산포",
+   "lat": 35.205,
+   "lon": 129.084,
+   "status": "map"
+  },
+  {
+   "id": "GS-14",
+   "name": "낙동강 하구",
+   "lat": 35.1,
+   "lon": 128.95,
+   "status": "map"
+  },
+  {
+   "id": "HH-01",
+   "name": "예성강",
+   "lat": 37.99,
+   "lon": 126.42,
+   "status": "map"
+  },
+  {
+   "id": "HH-02",
+   "name": "황주",
+   "lat": 38.667,
+   "lon": 125.783,
+   "status": "region"
+  },
+  {
+   "id": "HH-03",
+   "name": "재령평야",
+   "lat": 38.4,
+   "lon": 125.62,
+   "status": "route"
+  },
+  {
+   "id": "HH-04",
+   "name": "해주",
+   "lat": 38.04,
+   "lon": 125.714,
+   "status": "map"
+  },
+  {
+   "id": "HH-05",
+   "name": "장산곶",
+   "lat": 38.13,
+   "lon": 124.72,
+   "status": "route"
+  },
+  {
+   "id": "HH-06",
+   "name": "백령도",
+   "lat": 37.96,
+   "lon": 124.68,
+   "status": "map"
+  },
+  {
+   "id": "HH-07",
+   "name": "옹진 해안",
+   "lat": 37.93,
+   "lon": 125.36,
+   "status": "map"
+  },
+  {
+   "id": "PA-01",
+   "name": "평양",
+   "lat": 39.019,
+   "lon": 125.738,
+   "status": "region"
+  },
+  {
+   "id": "PA-02",
+   "name": "대동강 하류",
+   "lat": 38.8,
+   "lon": 125.4,
+   "status": "map"
+  },
+  {
+   "id": "PA-03",
+   "name": "안주",
+   "lat": 39.62,
+   "lon": 125.66,
+   "status": "map"
+  },
+  {
+   "id": "PA-04",
+   "name": "묘향산",
+   "lat": 40.0,
+   "lon": 126.2,
+   "status": "map"
+  },
+  {
+   "id": "PA-05",
+   "name": "영변",
+   "lat": 39.8,
+   "lon": 125.81,
+   "status": "map"
+  },
+  {
+   "id": "PA-06",
+   "name": "철산",
+   "lat": 39.77,
+   "lon": 124.64,
+   "status": "map"
+  },
+  {
+   "id": "PA-07",
+   "name": "정주",
+   "lat": 39.69,
+   "lon": 125.33,
+   "status": "map"
+  },
+  {
+   "id": "PA-08",
+   "name": "의주",
+   "lat": 40.2,
+   "lon": 124.53,
+   "status": "map"
+  },
+  {
+   "id": "HG-01",
+   "name": "철령",
+   "lat": 38.9,
+   "lon": 127.47,
+   "status": "route"
+  },
+  {
+   "id": "HG-02",
+   "name": "안변",
+   "lat": 39.0,
+   "lon": 127.53,
+   "status": "map"
+  },
+  {
+   "id": "HG-03",
+   "name": "함흥",
+   "lat": 39.918,
+   "lon": 127.536,
+   "status": "region"
+  },
+  {
+   "id": "HG-04",
+   "name": "북청",
+   "lat": 40.2,
+   "lon": 128.33,
+   "status": "route"
+  },
+  {
+   "id": "HG-05",
+   "name": "길주·명천",
+   "lat": 40.96,
+   "lon": 129.32,
+   "status": "map"
+  },
+  {
+   "id": "HG-06",
+   "name": "경성",
+   "lat": 41.59,
+   "lon": 129.61,
+   "status": "map"
+  },
+  {
+   "id": "HG-07",
+   "name": "회령",
+   "lat": 42.44,
+   "lon": 129.75,
+   "status": "map"
+  },
+  {
+   "id": "HG-08",
+   "name": "종성·온성·경원·경흥",
+   "lat": 42.6,
+   "lon": 130.2,
+   "status": "map"
+  },
+  {
+   "id": "HG-09",
+   "name": "백두산",
+   "lat": 42.006,
+   "lon": 128.056,
+   "status": "map"
+  },
+  {
+   "id": "JJ-01",
+   "name": "한라산",
+   "lat": 33.362,
+   "lon": 126.533,
+   "status": "region"
+  },
+  {
+   "id": "JJ-02",
+   "name": "오름",
+   "lat": 33.42,
+   "lon": 126.7,
+   "status": "region"
+  },
+  {
+   "id": "JJ-03",
+   "name": "제주목",
+   "lat": 33.513,
+   "lon": 126.522,
+   "status": "region"
+  },
+  {
+   "id": "JJ-04",
+   "name": "정의현",
+   "lat": 33.39,
+   "lon": 126.8,
+   "status": "map"
+  },
+  {
+   "id": "JJ-05",
+   "name": "대정현",
+   "lat": 33.225,
+   "lon": 126.258,
+   "status": "map"
+  },
+  {
+   "id": "JJ-06",
+   "name": "해안촌",
+   "lat": 33.54,
+   "lon": 126.68,
+   "status": "region"
+  },
+  {
+   "id": "JJ-07",
+   "name": "곶자왈",
+   "lat": 33.33,
+   "lon": 126.3,
+   "status": "map"
+  },
+  {
+   "id": "JJ-08",
+   "name": "성산·산방산",
+   "lat": 33.458,
+   "lon": 126.94,
+   "status": "map"
+  }
+ ]
+}
