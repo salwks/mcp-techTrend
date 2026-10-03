@@ -23,6 +23,7 @@ const RegionWorld := preload("res://scripts/region/region_world.gd")
 const PlacementLoader := preload("res://scripts/region/placement_loader.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const Weather := preload("res://scripts/region/weather.gd")
+const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
@@ -100,6 +101,7 @@ var _fill: OmniLight3D     # 실내 보조광(지붕을 숨긴 실내가 벽 그
 var _fill_k := 0.0
 var _reload_t := 0.0
 var weather    # Weather
+var npcs_amb    # NpcAmbient(주변 인물·짐승) — --nonpc로 끔
 var _base_state: Dictionary
 var _base_dir := Vector3.UP
 var _pending := {}        # 다른 공간에서 넘어왔으면 그 예약(Travel)
@@ -277,6 +279,8 @@ func _build_scene() -> void:
 	player = SpriteChar.new("player")
 	player.facing = "up"
 	root.add_child(player)
+	if not args.has("nonpc") and not args.has("nochars"):
+		npcs_amb = NpcAmbient.new(); root.add_child(npcs_amb); npcs_amb.setup(world, weather, cam, placement)
 	teleport(world.spawn.x, world.spawn.y)
 
 const GLOW_CODE := """shader_type spatial;
@@ -627,6 +631,7 @@ func _process(delta: float) -> void:
 	_update_lamps(clock)
 	sky_mat.set_shader_parameter("u_time", clock)
 	player.update_char(dt, cam)
+	if npcs_amb: npcs_amb.update(dt, player_pos, hour, _loading or _leaving)
 	var sp := cam.unproject_position(player_pos + Vector3(0, 0.8, 0))
 	var y := clampf(1.0 - sp.y / float(scene_vp.size.y), 0.15, 0.85)
 	focus_y += (y - focus_y) * minf(1.0, dt * 6.0)
