@@ -406,3 +406,5 @@ world/db/
 - §5.2 권역 확장은 **대표 도시 8곳 + 위성 마을 + 길목 쉼터 + 노정**으로 좁힌다(필요한 만큼). 상세: `seolhwa_godot/docs/WORLD_SCOPE_PLAN.md`, 설화 근거: `seolhwa_godot/docs/FOLKTALE_CATALOG.md`.
 - 고을 정체성은 L0 시대 · L1 기후대/문화권 · L2 권역 · L3 고을(입지 유형) · L4 장소의 층으로 물려받는다. 고을 차이·기후대 업무: `seolhwa_godot/docs/TOWN_IDENTITY_CLIMATE_PLAN.md`.
 - 슬라이스 권역(남원·운봉·지리산 서부)은 Godot으로 완성되어 호남 대표 도시 견본이 되었다.
+
+- 원본 명세서 v0.3 보관: `seolhwa/docs/WORLD_SPEC_v0.3.md` (§18 규모, §25~29 나루·포구·주막·사찰·성황당 배치, §22~23 설화 등급, §33 금지, §36 QA)
