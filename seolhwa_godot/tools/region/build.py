@@ -627,6 +627,7 @@ def main():
 if __name__ == "__main__":
     if C.REGION_ID == "JL_NAMWON_UNBONG":
         main()
+        import namwon_widths      # 하천 점별 widths만 덧붙임(엔진 5단계 요청, 다른 내용 그대로)
     else:                                   # 그 밖 권역: 설정 기반 일반 빌더
         import build_region
         build_region.main()

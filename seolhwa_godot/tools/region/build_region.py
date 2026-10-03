@@ -540,6 +540,17 @@ def main():
     lu[road4 & ~keep_w] = LU.ROAD
     say("길 둑", n_fix, n_last, "바닷가 길 돋움", int(low_rd.sum()))
 
+    # ── 호수 마무리(엔진 5단계 요청 1·2): 윤곽 안은 호수 바닥으로 누르고(하천 둑 지움), 윤곽 바로 바깥(60m) 호수면보다 낮은 들·풀 칸은 호수면 +0.25 위로
+    for l in lakes:
+        m_ = poly_mask([l["outline"]], y2.shape, C.CELL); ly = float(C.alt_to_y(l["surface_alt"]))
+        dpt = ndimage.distance_transform_edt(m_) * C.CELL
+        bed = ly - C.K * (0.8 + 1.5 * np.clip(dpt / 30.0, 0, 1))
+        y2 = np.where(m_, np.minimum(y2, bed), y2)
+        lu2m = np.repeat(np.repeat(lu, 2, 0), 2, 1)[:y2.shape[0], :y2.shape[1]]
+        ring = ndimage.binary_dilation(m_, iterations=int(60 / C.CELL)) & ~m_ & ~sea & np.isin(lu2m, [LU.GRASS, LU.PADDY, LU.FIELD, LU.SAND, LU.FOREST])
+        lowr = ring & (y2 < ly + 0.25)
+        y2 = np.where(lowr, ly + 0.25, y2)
+        say("호수", l["name"], "바닥 누름", int(m_.sum()), "칸, 둘레 낮은 칸 돋움", int(lowr.sum()))
     hm = export.write_height(y2.astype(np.float32))
     lum = export.write_landuse(lu)
     coast_km = (sea_d4 / C.K / 1000.0) if sea4.any() else None
@@ -607,6 +618,12 @@ def main():
         build=dict(tool=f"tools/region/build.py {C.REGION_ID} (build_region.py, 설정 tools/region/regions/{C.REGION_ID}.json)",
                    warnings=[f"지정 도강점을 길이 지나지 않음: {m}" for m in missing]),
     )
+    if CFG.get("dry_streams"):          # 탐라 건천: 비 올 때만 흐름(엔진은 마른 돌 바닥으로 그림)
+        for r in rivers: r["dry"] = True; r["flow"] = "intermittent"
+    if sea.any():                        # 하구: 마지막 점(과 그 위 모든 점) 수면 ≥ sea.y + 0.05 (단조 감소 유지)
+        sy_ = float(C.alt_to_y(0.0)) + 0.05
+        for r in rivers:
+            for p_ in r["points"]: p_[2] = round(max(p_[2], sy_), 2)
     if sea.any():
         reg["sea"] = dict(y=round(float(C.alt_to_y(0.0)), 2), name=CFG["hydro"].get("sea_name", "바다"),
                           note="바다 수면 y(해발 0m). landuse 5(물) 중 하천·호수가 아닌 칸이 바다. 바닥은 해발 −1.5…" + f"{CFG.get('sea_floor_alt', -20):g}m로 잘랐다. 물 메시는 이 높이의 평면으로.",

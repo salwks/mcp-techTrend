@@ -18,119 +18,6 @@
   "portals": []
  },
  {
-  "id": "GS_GYEONGJU",
-  "name": "경주·토함산·감포",
-  "culture": "영남",
-  "climate": "south",
-  "entry": {
-   "x": -2935.7,
-   "z": -2159.8
-  },
-  "lat": 35.8406,
-  "lon": 129.215,
-  "map_pos": {
-   "x": 0.745,
-   "y": 0.7159
-  },
-  "K": 0.25,
-  "portals": [
-   {
-    "id": "portal_west",
-    "name": "서쪽 영천 방면(→한양)",
-    "x": -3940.7,
-    "z": -2335.9,
-    "to": "route:GG_HANYANG-GS_GYEONGJU"
-   },
-   {
-    "id": "portal_south",
-    "name": "남쪽 울산 방면",
-    "x": -158.1,
-    "z": 3234.3,
-    "to": "map_only"
-   },
-   {
-    "id": "portal_north",
-    "name": "북쪽 안강·포항 방면",
-    "x": -2529.2,
-    "z": -3261.9,
-    "to": "map_only"
-   }
-  ]
- },
- {
-  "id": "GW_GANGNEUNG",
-  "name": "강릉·경포·대관령",
-  "culture": "관동",
-  "climate": "central",
-  "entry": {
-   "x": 1204.3,
-   "z": -401.2
-  },
-  "lat": 37.7521,
-  "lon": 128.8956,
-  "map_pos": {
-   "x": 0.6994,
-   "y": 0.5248
-  },
-  "K": 0.3,
-  "portals": [
-   {
-    "id": "portal_daegwallyeong",
-    "name": "대관령 서쪽(→원주·한양)",
-    "x": -3261.6,
-    "z": 1857.6,
-    "to": "route:GG_HANYANG-GW_GANGNEUNG"
-   },
-   {
-    "id": "portal_north",
-    "name": "북쪽 해안(→양양)",
-    "x": 396.1,
-    "z": -2537.7,
-    "to": "map_only"
-   }
-  ]
- },
- {
-  "id": "JJ_JEJU",
-  "name": "제주목·조천·구좌",
-  "culture": "탐라",
-  "climate": "coast",
-  "entry": {
-   "x": -2994.0,
-   "z": -6.8
-  },
-  "lat": 33.5077,
-  "lon": 126.5248,
-  "map_pos": {
-   "x": 0.3607,
-   "y": 0.9492
-  },
-  "K": 0.28,
-  "portals": [
-   {
-    "id": "portal_hwabuk_ferry",
-    "name": "화북포 뱃길(→남해·해남)",
-    "x": -1923.2,
-    "z": -418.0,
-    "to": "route:SEA_NAMHAE_JEJU"
-   },
-   {
-    "id": "portal_east",
-    "name": "동쪽 해안길 끝(정의현 방면)",
-    "x": 4119.4,
-    "z": -1424.2,
-    "to": "map_only"
-   },
-   {
-    "id": "portal_west",
-    "name": "서쪽 해안길 끝(애월·대정 방면)",
-    "x": -4119.4,
-    "z": 278.6,
-    "to": "map_only"
-   }
-  ]
- },
- {
   "id": "GG_HANYANG",
   "name": "한양(도성·한강 나루)",
   "culture": "기호",
@@ -287,6 +174,119 @@
     "x": 2558.9,
     "z": -431.2,
     "to": "route:HG_HAMHEUNG-BUKCHEONG"
+   }
+  ]
+ },
+ {
+  "id": "GS_GYEONGJU",
+  "name": "경주·토함산·감포",
+  "culture": "영남",
+  "climate": "south",
+  "entry": {
+   "x": -2935.7,
+   "z": -2159.8
+  },
+  "lat": 35.8406,
+  "lon": 129.215,
+  "map_pos": {
+   "x": 0.745,
+   "y": 0.7159
+  },
+  "K": 0.25,
+  "portals": [
+   {
+    "id": "portal_west",
+    "name": "서쪽 영천 방면(→한양)",
+    "x": -3940.7,
+    "z": -2335.9,
+    "to": "route:GG_HANYANG-GS_GYEONGJU"
+   },
+   {
+    "id": "portal_south",
+    "name": "남쪽 울산 방면",
+    "x": -158.1,
+    "z": 3234.3,
+    "to": "map_only"
+   },
+   {
+    "id": "portal_north",
+    "name": "북쪽 안강·포항 방면",
+    "x": -2529.2,
+    "z": -3261.9,
+    "to": "map_only"
+   }
+  ]
+ },
+ {
+  "id": "GW_GANGNEUNG",
+  "name": "강릉·경포·대관령",
+  "culture": "관동",
+  "climate": "central",
+  "entry": {
+   "x": 1204.3,
+   "z": -401.2
+  },
+  "lat": 37.7521,
+  "lon": 128.8956,
+  "map_pos": {
+   "x": 0.6994,
+   "y": 0.5248
+  },
+  "K": 0.3,
+  "portals": [
+   {
+    "id": "portal_daegwallyeong",
+    "name": "대관령 서쪽(→원주·한양)",
+    "x": -3261.6,
+    "z": 1857.6,
+    "to": "route:GG_HANYANG-GW_GANGNEUNG"
+   },
+   {
+    "id": "portal_north",
+    "name": "북쪽 해안(→양양)",
+    "x": 396.1,
+    "z": -2537.7,
+    "to": "map_only"
+   }
+  ]
+ },
+ {
+  "id": "JJ_JEJU",
+  "name": "제주목·조천·구좌",
+  "culture": "탐라",
+  "climate": "coast",
+  "entry": {
+   "x": -2994.0,
+   "z": -6.8
+  },
+  "lat": 33.5077,
+  "lon": 126.5248,
+  "map_pos": {
+   "x": 0.3607,
+   "y": 0.9492
+  },
+  "K": 0.28,
+  "portals": [
+   {
+    "id": "portal_hwabuk_ferry",
+    "name": "화북포 뱃길(→남해·해남)",
+    "x": -1923.2,
+    "z": -418.0,
+    "to": "route:SEA_NAMHAE_JEJU"
+   },
+   {
+    "id": "portal_east",
+    "name": "동쪽 해안길 끝(정의현 방면)",
+    "x": 4119.4,
+    "z": -1424.2,
+    "to": "map_only"
+   },
+   {
+    "id": "portal_west",
+    "name": "서쪽 해안길 끝(애월·대정 방면)",
+    "x": -4119.4,
+    "z": 278.6,
+    "to": "map_only"
    }
   ]
  }

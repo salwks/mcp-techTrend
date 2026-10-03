@@ -386,3 +386,16 @@ H, Q1, Q2, Q4, Q5(고개 3), Q6, Q8, Q10, Q11, Q14, QR, QL, QW.
    - 경포호를 `lakes`(y·outline)로 그려 달라.
    - 하천 물 폭은 `widths`(점별)를 쓰면 상류가 좁아진다.
    - kit-landmark에 새 kit 이름(`landmark/gyeongju_eupseong`·`jeju_eupseong`·`gwandeokjeong` 등)이 필요하다. 목록은 region.json의 `landmarks.kit`에 있다.
+
+### 16-1. 엔진 5단계 요청 반영
+1. **경포호 안**: 윤곽 안 높이를 호수 바닥(호수면 −0.8…−2.3m 실제)으로 눌렀다. 위촌천 둑이 사라졌고 윤곽 안 최고 y는 −0.15다(호수 y 0.12).
+2. **경포호 둘레**: 윤곽 밖 60m 안에서 호수면보다 낮던 논·밭·풀·모래·숲 칸 2,343칸(2m)을 호수면 +0.25로 돋웠다.
+   - 남은 낮은 칸은 물길·바다 칸과 길 12칸뿐이다.
+   - 마을·랜드마크 중 영향받은 것은 호수 안 홍장암 하나다. 경포대는 12m 떨어져 있고 y는 1.62 그대로다.
+3. **제주 건천**: 하천 38개 모두 `dry: true`, `flow: "intermittent"`를 달았다.
+4. **남원 `widths`**: 새 `tools/region/namwon_widths.py`가 region.json 하천에 점별 폭만 더한다.
+   - 폭 규칙: 그 자리 집수면적 등급 폭, 하류로 갈수록 줄지 않음, 강의 width_m 이하. 9,111점, 폭이 변하는 하천 12개.
+   - widths를 뺀 내용은 이전과 같다(검증함). height·landuse·climate png는 md5 그대로다.
+   - `build.py`(남원)가 끝에 이 스크립트를 부른다.
+5. **하구**: 바다가 있는 권역은 하천 수면을 모두 `sea.y + 0.05` 이상으로 맞췄다(단조 유지). 마지막 점의 최솟값은 0.05다.
+- QA: GS·GW·JJ 18항목, 남원 15항목 전부 PASS. regions.json에는 data-north 4권역과 합쳐 8권역이 있다.
