@@ -28904,5 +28904,18 @@
    "notes": "내성 남쪽 중성(문 위치 미확인 — 길이 지나는 곳에 문을 두면 됨)"
   }
  ],
- "culture_key": "gwanseo"
+ "culture_key": "gwanseo",
+ "camera_zones": [
+  {
+   "name": "평양 내성",
+   "minX": -210.0,
+   "maxX": 332.0,
+   "minZ": -300.0,
+   "maxZ": 215.0,
+   "pitch": 45.0,
+   "distance": 28.0,
+   "aimZ": -2.5,
+   "src": "north"
+  }
+ ]
 }

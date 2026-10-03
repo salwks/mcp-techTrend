@@ -39167,5 +39167,18 @@
    "notes": "북쪽은 반룡산 능선(구천각)까지 올라감."
   }
  ],
- "culture_key": "gwanbuk"
+ "culture_key": "gwanbuk",
+ "camera_zones": [
+  {
+   "name": "함흥 성 안",
+   "minX": -543.0,
+   "maxX": -205.0,
+   "minZ": -166.0,
+   "maxZ": 279.0,
+   "pitch": 45.0,
+   "distance": 28.0,
+   "aimZ": -2.5,
+   "src": "north"
+  }
+ ]
 }

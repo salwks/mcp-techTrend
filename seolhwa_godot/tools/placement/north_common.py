@@ -191,6 +191,8 @@ class NorthPlacer(Placer):
         super().__init__(*a, **k)
         self.buckets = {}
         self._nidx = 0
+        self.urban = []           # 도시 땅 사각형(placement urban)
+        self.lane_local = {}      # 골목 id → (틀, xa, xb, z) — lane_rows가 돌린 틀에서 집을 줄 세운다
 
     def _index(self):
         while self._nidx < len(self.rects):

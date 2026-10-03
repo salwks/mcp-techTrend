@@ -27487,5 +27487,40 @@
    "notes": "산 능선 성곽: 높이 평지 약 7m·산 4m(실물). 선은 성벽 중심. 길은 문(gates)으로만 드나든다."
   }
  ],
- "culture_key": "giho"
+ "culture_key": "giho",
+ "camera_zones": [
+  {
+   "name": "도성 안",
+   "minX": -900.0,
+   "maxX": 860.0,
+   "minZ": -1600.0,
+   "maxZ": -140.0,
+   "pitch": 45.0,
+   "distance": 28.0,
+   "aimZ": -2.5,
+   "src": "north"
+  },
+  {
+   "name": "운종가 큰길",
+   "minX": -600.0,
+   "maxX": 800.0,
+   "minZ": -965.0,
+   "maxZ": -868.0,
+   "pitch": 47.0,
+   "distance": 32.0,
+   "aimZ": -5.0,
+   "src": "north"
+  },
+  {
+   "name": "육조거리",
+   "minX": -640.0,
+   "maxX": -520.0,
+   "minZ": -1205.0,
+   "maxZ": -935.0,
+   "pitch": 47.0,
+   "distance": 32.0,
+   "aimZ": -3.0,
+   "src": "north"
+  }
+ ]
 }
