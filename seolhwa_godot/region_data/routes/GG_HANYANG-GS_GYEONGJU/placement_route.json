@@ -1,0 +1,1518 @@
+{
+ "area": "route_GG_HANYANG-GS_GYEONGJU",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_songpa_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 101
+   },
+   "x": -2192.03,
+   "z": 10.34,
+   "ry": 0.1572,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 102,
+    "kind": "stack"
+   },
+   "x": -2185.14,
+   "z": 2.01,
+   "ry": 0.1994,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 103,
+    "load": "wood"
+   },
+   "x": -2198.6,
+   "z": 18.85,
+   "ry": 0.1287,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_boatman",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 104
+   },
+   "x": -2179.07,
+   "z": 37.49,
+   "ry": 0.194,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_songpa_store",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 105
+   },
+   "x": -2209.04,
+   "z": 13.51,
+   "ry": 0.1038,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장",
+   "note": "나루 창고"
+  },
+  {
+   "id": "rt_songpa_ppallae",
+   "kit": "village/ppallaeteo",
+   "params": {
+    "seed": 106
+   },
+   "x": -2160.5,
+   "z": -14.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_narutbae0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 107
+   },
+   "x": -2146.42,
+   "z": 22.9,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_narutbae1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 108
+   },
+   "x": -2146.42,
+   "z": 31.9,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_narutbae_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 109
+   },
+   "x": -2145.93,
+   "z": -2.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_far1",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 110
+   },
+   "x": -2109.98,
+   "z": -17.02,
+   "ry": 0.2553,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_far2",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 111
+   },
+   "x": -2082.8,
+   "z": 9.43,
+   "ry": 0.1109,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 112,
+    "female": false
+   },
+   "x": -2056.82,
+   "z": -13.13,
+   "ry": 0.039,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 113,
+    "female": true
+   },
+   "x": -2056.43,
+   "z": -3.14,
+   "ry": 0.039,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_shop0",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 114
+   },
+   "x": -2041.4,
+   "z": -19.92,
+   "ry": 0.0683,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 115
+   },
+   "x": -2024.02,
+   "z": -21.56,
+   "ry": 0.117,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 116
+   },
+   "x": -2006.16,
+   "z": -23.79,
+   "ry": 0.1175,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_shop3",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 117
+   },
+   "x": -1987.54,
+   "z": -25.47,
+   "ry": 0.0535,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jwapan0",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 118
+   },
+   "x": -2036.1,
+   "z": -2.25,
+   "ry": 0.0799,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jwapan1",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 119
+   },
+   "x": -2023.93,
+   "z": -3.45,
+   "ry": 0.1133,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jwapan2",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 120
+   },
+   "x": -2011.93,
+   "z": -4.93,
+   "ry": 0.1259,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jwapan3",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 121
+   },
+   "x": -2000.14,
+   "z": -6.35,
+   "ry": 0.1087,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_jwapan4",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 122
+   },
+   "x": -1988.51,
+   "z": -7.39,
+   "ry": 0.0627,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "송파나루와 송파장"
+  },
+  {
+   "id": "rt_songpa_square",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 123
+   },
+   "x": -1977.05,
+   "z": -28.78,
+   "ry": 0.007,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "송파나루와 송파장",
+   "note": "송파 산대놀이 판 자리"
+  },
+  {
+   "id": "rt_saejae_gate3",
+   "kit": "landmark/seongmun",
+   "params": {
+    "seed": 124,
+    "name": "조령관(제3관문)",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1
+   },
+   "x": -946.56,
+   "z": 11.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate3_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 125,
+    "length": 20.0,
+    "rise": -2.4,
+    "height": 4.5
+   },
+   "x": -964.06,
+   "z": 11.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate3_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 126,
+    "length": 20.0,
+    "rise": -4.89,
+    "height": 4.5
+   },
+   "x": -984.06,
+   "z": 11.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate3_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 128,
+    "length": 20.0,
+    "rise": -6.95,
+    "height": 4.5
+   },
+   "x": -929.06,
+   "z": 11.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate3_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 129,
+    "length": 20.0,
+    "rise": -2.43,
+    "height": 4.5
+   },
+   "x": -909.06,
+   "z": 11.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate2",
+   "kit": "landmark/seongmun",
+   "params": {
+    "seed": 131,
+    "name": "조곡관(제2관문)",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1
+   },
+   "x": -521.93,
+   "z": 57.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate2_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 132,
+    "length": 20.0,
+    "rise": 0.97,
+    "height": 4.5
+   },
+   "x": -539.43,
+   "z": 57.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate2_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 133,
+    "length": 20.0,
+    "rise": -5.64,
+    "height": 4.5
+   },
+   "x": -559.43,
+   "z": 57.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate2_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 135,
+    "length": 20.0,
+    "rise": -3.72,
+    "height": 4.5
+   },
+   "x": -504.43,
+   "z": 57.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate2_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 136,
+    "length": 20.0,
+    "rise": 1.04,
+    "height": 4.5
+   },
+   "x": -484.43,
+   "z": 57.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1",
+   "kit": "landmark/seongmun",
+   "params": {
+    "seed": 138,
+    "name": "주흘관(제1관문)",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1
+   },
+   "x": -98.03,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 139,
+    "length": 20.0,
+    "rise": 0.76,
+    "height": 4.5
+   },
+   "x": -115.53,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 140,
+    "length": 20.0,
+    "rise": -0.61,
+    "height": 4.5
+   },
+   "x": -135.53,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1_wallw2",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 141,
+    "length": 20.0,
+    "rise": -1.74,
+    "height": 4.5
+   },
+   "x": -155.53,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 142,
+    "length": 20.0,
+    "rise": -1.16,
+    "height": 4.5
+   },
+   "x": -80.53,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 143,
+    "length": 20.0,
+    "rise": -0.94,
+    "height": 4.5
+   },
+   "x": -60.53,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_gate1_walle2",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 144,
+    "length": 20.0,
+    "rise": 1.14,
+    "height": 4.5
+   },
+   "x": -40.53,
+   "z": -40.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_cairn_top",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 145
+   },
+   "x": -899.92,
+   "z": -16.77,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 146,
+    "dangjip": true
+   },
+   "x": -457.09,
+   "z": 41.88,
+   "ry": -0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 147
+   },
+   "x": -454.92,
+   "z": 50.14,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_seonghwang_tree",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 148,
+    "variant": "broadleaf"
+   },
+   "x": -457.44,
+   "z": 30.35,
+   "ry": 0.0461,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jumak_a",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 149
+   },
+   "x": -598.33,
+   "z": 40.1,
+   "ry": -0.005,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jumak_a_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 150,
+    "kind": "stack"
+   },
+   "x": -589.38,
+   "z": 33.12,
+   "ry": -0.0011,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jumak_a_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 151,
+    "load": "wood"
+   },
+   "x": -606.31,
+   "z": 46.53,
+   "ry": -0.014,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jumak_b",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 152
+   },
+   "x": -285.71,
+   "z": 10.44,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jumak_b_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 153,
+    "kind": "stack"
+   },
+   "x": -282.36,
+   "z": 0.31,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jumak_b_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 154,
+    "load": "wood"
+   },
+   "x": -289.36,
+   "z": 19.67,
+   "ry": 0.449,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_wonteo_wall",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 155,
+    "kind": "stone_lite",
+    "h": 0.7,
+    "closed": true,
+    "gaps": [
+     2
+    ],
+    "points": [
+     [
+      -11,
+      -8
+     ],
+     [
+      11,
+      -8
+     ],
+     [
+      11,
+      8
+     ],
+     [
+      -11,
+      8
+     ]
+    ],
+    "jitter": 0.4
+   },
+   "x": -354.6,
+   "z": 1.82,
+   "ry": 0.3464,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)",
+   "note": "조령원 터 — 허물어진 원(院) 담장 터(가설)"
+  },
+  {
+   "id": "rt_saejae_wonteo_house",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 156
+   },
+   "x": -325.97,
+   "z": 21.39,
+   "ry": 0.3306,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)",
+   "note": "원터 곁 길손 집"
+  },
+  {
+   "id": "rt_saejae_gyogwi",
+   "kit": "village/jeongja",
+   "params": {
+    "seed": 157,
+    "plain": true
+   },
+   "x": -404.23,
+   "z": 39.63,
+   "ry": 0.0594,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)",
+   "note": "교귀정 자리(새재 안 정자, 가설)"
+  },
+  {
+   "id": "rt_saejae_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 158,
+    "female": false
+   },
+   "x": -46.27,
+   "z": -60.96,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_saejae_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 159,
+    "female": true
+   },
+   "x": -53.36,
+   "z": -53.91,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
+  },
+  {
+   "id": "rt_sangju_gate",
+   "kit": "landmark/seongmun",
+   "params": {
+    "seed": 160,
+    "name": "상주 남문",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1
+   },
+   "x": 869.31,
+   "z": -8.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_gate_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 161,
+    "length": 20.0,
+    "rise": -0.85,
+    "height": 4.5
+   },
+   "x": 851.81,
+   "z": -8.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_gate_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 162,
+    "length": 20.0,
+    "rise": 0.31,
+    "height": 4.5
+   },
+   "x": 831.81,
+   "z": -8.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_gate_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 164,
+    "length": 20.0,
+    "rise": 0.44,
+    "height": 4.5
+   },
+   "x": 886.81,
+   "z": -8.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_gate_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 165,
+    "length": 20.0,
+    "rise": -0.15,
+    "height": 4.5
+   },
+   "x": 906.81,
+   "z": -8.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_shop0",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 167
+   },
+   "x": 939.36,
+   "z": -19.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 168
+   },
+   "x": 957.36,
+   "z": -19.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 169
+   },
+   "x": 975.36,
+   "z": -19.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_jwapan0",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 170
+   },
+   "x": 945.36,
+   "z": -1.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_jwapan1",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 171
+   },
+   "x": 963.36,
+   "z": -1.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_house1",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 172
+   },
+   "x": 1001.36,
+   "z": -24.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_house2",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 173
+   },
+   "x": 1023.36,
+   "z": -38.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_giwa",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 174,
+    "plain": true
+   },
+   "x": 969.36,
+   "z": -40.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 175
+   },
+   "x": 991.36,
+   "z": 1.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_house3",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 176
+   },
+   "x": 851.64,
+   "z": 9.13,
+   "ry": 0.207,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_house4",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 177
+   },
+   "x": 829.24,
+   "z": 35.81,
+   "ry": -0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 178,
+    "female": false
+   },
+   "x": 825.33,
+   "z": 3.41,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_sangju_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 179,
+    "female": true
+   },
+   "x": 817.73,
+   "z": 9.9,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "상주 읍성 남문 밖"
+  },
+  {
+   "id": "rt_hahoe_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 180
+   },
+   "x": 1396.62,
+   "z": -14.38,
+   "ry": -0.0569,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 181,
+    "kind": "stack"
+   },
+   "x": 1405.8,
+   "z": -20.94,
+   "ry": -0.0471,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 182,
+    "load": "wood"
+   },
+   "x": 1388.33,
+   "z": -7.4,
+   "ry": -0.0746,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_boatman",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 183
+   },
+   "x": 1403.1,
+   "z": 14.98,
+   "ry": -0.0476,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_hahoe_store",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 184
+   },
+   "x": 1379.21,
+   "z": -14.75,
+   "ry": -0.1026,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)",
+   "note": "나루 창고"
+  },
+  {
+   "id": "rt_hahoe_ppallae",
+   "kit": "village/ppallaeteo",
+   "params": {
+    "seed": 185
+   },
+   "x": 1427.5,
+   "z": -24.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_narutbae0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 186
+   },
+   "x": 1440.7,
+   "z": 13.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_narutbae1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 187
+   },
+   "x": 1441.09,
+   "z": 22.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_narutbae_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 188
+   },
+   "x": 1439.22,
+   "z": -12.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_far1",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 189
+   },
+   "x": 1479.97,
+   "z": -11.2,
+   "ry": -0.017,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_far2",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 190
+   },
+   "x": 1501.67,
+   "z": 19.98,
+   "ry": -0.0026,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 191,
+    "female": false
+   },
+   "x": 1529.71,
+   "z": -1.0,
+   "ry": -0.0001,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 192,
+    "female": true
+   },
+   "x": 1529.71,
+   "z": 9.0,
+   "ry": -0.0001,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_jongga",
+   "kit": "culture/yeongnam/jongga",
+   "params": {
+    "seed": 193
+   },
+   "x": 1569.71,
+   "z": -26.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)",
+   "note": "하회 종가(양진당·충효당 성격, 가설)"
+  },
+  {
+   "id": "rt_hahoe_tteul1",
+   "kit": "culture/yeongnam/tteuljip",
+   "params": {
+    "seed": 194,
+    "roof": "giwa"
+   },
+   "x": 1535.71,
+   "z": -30.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_tteul2",
+   "kit": "culture/yeongnam/tteuljip",
+   "params": {
+    "seed": 195,
+    "roof": "choga"
+   },
+   "x": 1605.71,
+   "z": -22.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)"
+  },
+  {
+   "id": "rt_hahoe_bigtree",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 196,
+    "variant": "zelkova"
+   },
+   "x": 1577.71,
+   "z": 18.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "하회 마을과 하회 나루(낙동강)",
+   "note": "하회 삼신당 느티나무 자리(가설)"
+  },
+  {
+   "id": "rt_jebiwon_maaebul",
+   "kit": "landmark/maaebul_rock",
+   "params": {
+    "seed": 197,
+    "offering": true,
+    "pillars": false
+   },
+   "x": 2112.45,
+   "z": 4.81,
+   "ry": 0.3034,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집",
+   "note": "제비원 석불(연미사 마애여래) — 여원치 마애불 키트를 빌려 씀(크기·얼굴은 다름, 가설)"
+  },
+  {
+   "id": "rt_jebiwon_won",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 198,
+    "plain": true
+   },
+   "x": 2074.41,
+   "z": 16.89,
+   "ry": 0.0806,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집",
+   "note": "제비원(연미원) 원집 — 길손 숙소(가설)"
+  },
+  {
+   "id": "rt_jebiwon_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 199
+   },
+   "x": 2153.84,
+   "z": -2.52,
+   "ry": 0.3183,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집"
+  },
+  {
+   "id": "rt_jebiwon_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 200,
+    "kind": "stack"
+   },
+   "x": 2161.76,
+   "z": -12.11,
+   "ry": 0.245,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집"
+  },
+  {
+   "id": "rt_jebiwon_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 201,
+    "load": "wood"
+   },
+   "x": 2148.36,
+   "z": 7.43,
+   "ry": 0.3672,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집"
+  },
+  {
+   "id": "rt_jebiwon_house1",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 202
+   },
+   "x": 2187.41,
+   "z": -25.13,
+   "ry": 0.0717,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집"
+  },
+  {
+   "id": "rt_jebiwon_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 203,
+    "dangjip": false
+   },
+   "x": 2031.6,
+   "z": 20.68,
+   "ry": -0.1488,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집"
+  },
+  {
+   "id": "rt_jebiwon_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 204
+   },
+   "x": 2038.61,
+   "z": 24.58,
+   "ry": -0.0955,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "제비원(연미사 석불)·원집"
+  }
+ ]
+}

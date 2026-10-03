@@ -1,0 +1,267 @@
+{
+ "area": "route_HG_HAMHEUNG-BUKCHEONG",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_hongwon_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 101
+   },
+   "x": -0.9,
+   "z": -4.39,
+   "ry": 0.0514,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 102,
+    "kind": "stack"
+   },
+   "x": 8.25,
+   "z": -11.74,
+   "ry": 0.0251,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 103,
+    "load": "wood"
+   },
+   "x": -8.78,
+   "z": 2.67,
+   "ry": 0.0868,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_coast0",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 104
+   },
+   "x": -32.99,
+   "z": -2.33,
+   "ry": 0.2034,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_coast1",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 105
+   },
+   "x": 25.68,
+   "z": -7.96,
+   "ry": 0.0045,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_coast2",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 106
+   },
+   "x": -46.38,
+   "z": 31.39,
+   "ry": 0.2083,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_coast3",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 107
+   },
+   "x": 47.76,
+   "z": 23.0,
+   "ry": 0.0002,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_hongwon_dok",
+   "kit": "village/props",
+   "params": {
+    "seed": 108,
+    "kind": "dok"
+   },
+   "x": 9.94,
+   "z": 16.22,
+   "ry": 0.0234,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "홍원 바닷가 주막"
+  },
+  {
+   "id": "rt_bukcheong_madang",
+   "kit": "landmark/hh_bukcheong_madang",
+   "params": {
+    "seed": 109
+   },
+   "x": 568.33,
+   "z": -139.57,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_comp0",
+   "kit": "culture/gwanbuk/compound",
+   "params": {
+    "size": "small",
+    "seed": 110
+   },
+   "x": 543.2,
+   "z": -113.21,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_comp1",
+   "kit": "culture/gwanbuk/jeonja",
+   "params": {
+    "seed": 111
+   },
+   "x": 603.84,
+   "z": -157.61,
+   "ry": 0.4245,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_comp2",
+   "kit": "culture/gwanbuk/compound",
+   "params": {
+    "size": "small",
+    "seed": 112
+   },
+   "x": 542.66,
+   "z": -150.01,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_comp3",
+   "kit": "culture/gwanbuk/jeonja",
+   "params": {
+    "seed": 113
+   },
+   "x": 617.82,
+   "z": -187.02,
+   "ry": 0.3526,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 114
+   },
+   "x": 511.82,
+   "z": -80.2,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 115,
+    "kind": "stack"
+   },
+   "x": 513.6,
+   "z": -91.06,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 116,
+    "load": "wood"
+   },
+   "x": 510.06,
+   "z": -70.3,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 118,
+    "female": false
+   },
+   "x": 493.53,
+   "z": -57.03,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  },
+  {
+   "id": "rt_bukcheong_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 119,
+    "female": true
+   },
+   "x": 498.52,
+   "z": -48.37,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "북청 고을(사자놀음 마당)"
+  }
+ ]
+}

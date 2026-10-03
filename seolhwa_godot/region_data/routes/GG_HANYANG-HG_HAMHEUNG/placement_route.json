@@ -1,0 +1,694 @@
+{
+ "area": "route_GG_HANYANG-HG_HAMHEUNG",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_chukseok_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 101,
+    "dangjip": true
+   },
+   "x": -1717.6,
+   "z": -28.37,
+   "ry": -0.2479,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_chukseok_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 102
+   },
+   "x": -1710.84,
+   "z": -23.71,
+   "ry": -0.2099,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_chukseok_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 103
+   },
+   "x": -1831.11,
+   "z": -43.48,
+   "ry": 0.2365,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_chukseok_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 104,
+    "kind": "stack"
+   },
+   "x": -1822.56,
+   "z": -52.37,
+   "ry": 0.1662,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_chukseok_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 105,
+    "load": "wood"
+   },
+   "x": -1837.59,
+   "z": -35.0,
+   "ry": 0.2804,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_chukseok_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 106
+   },
+   "x": -1853.95,
+   "z": -39.87,
+   "ry": 0.3038,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_chukseok_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 107
+   },
+   "x": -1813.57,
+   "z": -27.38,
+   "ry": 0.1223,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "축석령(효자와 호랑이)"
+  },
+  {
+   "id": "rt_cheorwon_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 108
+   },
+   "x": -1200.86,
+   "z": -11.48,
+   "ry": 0.0641,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 109,
+    "kind": "stack"
+   },
+   "x": -1192.08,
+   "z": -19.0,
+   "ry": 0.052,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 110,
+    "load": "wood"
+   },
+   "x": -1208.46,
+   "z": -4.46,
+   "ry": 0.0698,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_house1",
+   "kit": "village/neowa_house",
+   "params": {
+    "seed": 111
+   },
+   "x": -1227.04,
+   "z": -11.66,
+   "ry": 0.0718,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_house2",
+   "kit": "culture/gwandong/compound",
+   "params": {
+    "size": "small",
+    "seed": 112
+   },
+   "x": -1172.4,
+   "z": -15.73,
+   "ry": 0.0215,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 113,
+    "female": false
+   },
+   "x": -1255.51,
+   "z": 1.09,
+   "ry": 0.1375,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 114,
+    "female": true
+   },
+   "x": -1254.14,
+   "z": 11.0,
+   "ry": 0.1375,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheorwon_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 115,
+    "n": 3
+   },
+   "x": -1261.64,
+   "z": -5.1,
+   "ry": 0.1561,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철원 길가 마을"
+  },
+  {
+   "id": "rt_cheollyeong_gate",
+   "kit": "landmark/seongmun",
+   "params": {
+    "seed": 116,
+    "name": "철령관",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1
+   },
+   "x": -189.51,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_gate_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 117,
+    "length": 20.0,
+    "rise": -1.94,
+    "height": 4.5
+   },
+   "x": -207.01,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_gate_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 118,
+    "length": 20.0,
+    "rise": -6.51,
+    "height": 4.5
+   },
+   "x": -227.01,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_gate_wallw2",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 119,
+    "length": 20.0,
+    "rise": -4.08,
+    "height": 4.5
+   },
+   "x": -247.01,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_gate_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 120,
+    "length": 20.0,
+    "rise": -7.53,
+    "height": 4.5
+   },
+   "x": -172.01,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_gate_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 121,
+    "length": 20.0,
+    "rise": -1.78,
+    "height": 4.5
+   },
+   "x": -152.01,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_gate_walle2",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 122,
+    "length": 20.0,
+    "rise": -3.87,
+    "height": 4.5
+   },
+   "x": -132.01,
+   "z": 66.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 123,
+    "dangjip": true
+   },
+   "x": -138.95,
+   "z": 32.49,
+   "ry": -0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 124
+   },
+   "x": -134.6,
+   "z": 40.58,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 125
+   },
+   "x": -264.75,
+   "z": 61.27,
+   "ry": 0.1501,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 126,
+    "kind": "stack"
+   },
+   "x": -258.08,
+   "z": 52.94,
+   "ry": 0.2075,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 127,
+    "load": "wood"
+   },
+   "x": -271.31,
+   "z": 68.59,
+   "ry": 0.0859,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_guitul1",
+   "kit": "village/guitul_house",
+   "params": {
+    "seed": 128
+   },
+   "x": -286.68,
+   "z": 57.05,
+   "ry": -0.113,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_cheollyeong_house1",
+   "kit": "culture/gwanbuk/jeonja",
+   "params": {
+    "seed": 129
+   },
+   "x": -102.47,
+   "z": 48.77,
+   "ry": -0.201,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "철령(철령관)"
+  },
+  {
+   "id": "rt_wonsan_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 130
+   },
+   "x": 1168.52,
+   "z": -13.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 131,
+    "kind": "stack"
+   },
+   "x": 1177.52,
+   "z": -20.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 132,
+    "load": "wood"
+   },
+   "x": 1160.52,
+   "z": -6.5,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_coast0",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 133
+   },
+   "x": 1138.52,
+   "z": -15.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_coast1",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 134
+   },
+   "x": 1194.52,
+   "z": -16.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_coast2",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 135
+   },
+   "x": 1118.52,
+   "z": 15.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_coast3",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 136
+   },
+   "x": 1216.52,
+   "z": 15.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_dok",
+   "kit": "village/props",
+   "params": {
+    "seed": 137,
+    "kind": "dok"
+   },
+   "x": 1178.52,
+   "z": 8.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "원산포 바닷가 마을"
+  },
+  {
+   "id": "rt_wonsan_boat0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 138
+   },
+   "x": 1288.0,
+   "z": 134.0,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "원산포 바닷가 마을",
+   "note": "포구 배(바다 수면 y=0)"
+  },
+  {
+   "id": "rt_yeongheung_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 139
+   },
+   "x": 1717.97,
+   "z": -1.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 140,
+    "kind": "stack"
+   },
+   "x": 1726.97,
+   "z": -8.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 141,
+    "load": "wood"
+   },
+   "x": 1709.97,
+   "z": 5.5,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_house1",
+   "kit": "culture/gwanbuk/jeonja",
+   "params": {
+    "seed": 142
+   },
+   "x": 1691.97,
+   "z": -3.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_house2",
+   "kit": "culture/gwanbuk/compound",
+   "params": {
+    "size": "small",
+    "seed": 143
+   },
+   "x": 1745.97,
+   "z": -4.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 144,
+    "female": false
+   },
+   "x": 1662.97,
+   "z": 7.0,
+   "ry": -0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 145,
+    "female": true
+   },
+   "x": 1662.97,
+   "z": 17.0,
+   "ry": -0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  },
+  {
+   "id": "rt_yeongheung_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 146,
+    "n": 3
+   },
+   "x": 1657.98,
+   "z": -0.0,
+   "ry": -0.0006,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영흥 길가 주막(이성계 고향)"
+  }
+ ]
+}

@@ -1,0 +1,209 @@
+{
+ "area": "route_HH_HWANGJU-PA_PYEONGYANG",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_junghwa_square",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 101
+   },
+   "x": 4.0,
+   "z": 14.8,
+   "ry": -0.3043,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_comp0",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 102
+   },
+   "x": -23.12,
+   "z": 1.77,
+   "ry": -0.3182,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_comp1",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 103
+   },
+   "x": 27.96,
+   "z": 15.5,
+   "ry": -0.2532,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_comp2",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 104
+   },
+   "x": 4.45,
+   "z": -12.35,
+   "ry": -0.3121,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_comp3",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 105
+   },
+   "x": 47.42,
+   "z": -2.5,
+   "ry": -0.2116,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_comp4",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 106
+   },
+   "x": -32.31,
+   "z": -28.6,
+   "ry": -0.3126,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 107
+   },
+   "x": 11.6,
+   "z": 37.99,
+   "ry": -0.2787,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 108
+   },
+   "x": -22.37,
+   "z": 31.5,
+   "ry": -0.317,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 109
+   },
+   "x": 25.98,
+   "z": 48.0,
+   "ry": -0.2375,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 110,
+    "female": false
+   },
+   "x": -74.79,
+   "z": -2.42,
+   "ry": -0.2349,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 111,
+    "female": true
+   },
+   "x": -77.11,
+   "z": 7.3,
+   "ry": -0.2349,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 112
+   },
+   "x": 70.15,
+   "z": 28.78,
+   "ry": -0.121,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 113,
+    "kind": "stack"
+   },
+   "x": 79.26,
+   "z": 22.7,
+   "ry": -0.0865,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_junghwa_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 114,
+    "load": "wood"
+   },
+   "x": 61.62,
+   "z": 34.17,
+   "ry": -0.1497,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "중화 고을(평안도 첫 고을)"
+  }
+ ]
+}

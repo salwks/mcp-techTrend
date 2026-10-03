@@ -1,0 +1,288 @@
+{
+ "area": "route_SEA_NAMHAE_JEJU",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_deokjin_bridge",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 101,
+    "len": 12.0,
+    "hw": 1.6,
+    "arch": 0.6
+   },
+   "x": 80.0,
+   "z": -0.03,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영암 덕진다리 주막"
+  },
+  {
+   "id": "rt_deokjin_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 102
+   },
+   "x": -44.48,
+   "z": -15.83,
+   "ry": 0.176,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영암 덕진다리 주막"
+  },
+  {
+   "id": "rt_deokjin_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 103,
+    "kind": "stack"
+   },
+   "x": -36.17,
+   "z": -24.28,
+   "ry": 0.1432,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영암 덕진다리 주막"
+  },
+  {
+   "id": "rt_deokjin_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 104,
+    "load": "wood"
+   },
+   "x": -51.26,
+   "z": -7.97,
+   "ry": 0.1845,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영암 덕진다리 주막"
+  },
+  {
+   "id": "rt_deokjin_house1",
+   "kit": "village/choga",
+   "params": {
+    "seed": 105
+   },
+   "x": 23.41,
+   "z": -19.13,
+   "ry": -0.1233,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영암 덕진다리 주막"
+  },
+  {
+   "id": "rt_deokjin_house2",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 106
+   },
+   "x": 40.12,
+   "z": 14.78,
+   "ry": -0.0759,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영암 덕진다리 주막"
+  },
+  {
+   "id": "rt_gwandu_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 107
+   },
+   "x": 525.17,
+   "z": -150.99,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 108,
+    "kind": "stack"
+   },
+   "x": 528.49,
+   "z": -161.12,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 109,
+    "load": "wood"
+   },
+   "x": 521.55,
+   "z": -141.83,
+   "ry": 0.4386,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_coast0",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 110
+   },
+   "x": 503.45,
+   "z": -148.19,
+   "ry": 0.3193,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_coast1",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 111
+   },
+   "x": 534.71,
+   "z": -179.93,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_coast2",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 112
+   },
+   "x": 487.13,
+   "z": -95.37,
+   "ry": 0.3158,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_dok",
+   "kit": "village/props",
+   "params": {
+    "seed": 114,
+    "kind": "dok"
+   },
+   "x": 544.33,
+   "z": -137.99,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+  },
+  {
+   "id": "rt_gwandu_store0",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 115
+   },
+   "x": 592.22,
+   "z": -183.86,
+   "ry": 0.0241,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "note": "포구 창고(객주 짐)"
+  },
+  {
+   "id": "rt_gwandu_store1",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 116
+   },
+   "x": 611.93,
+   "z": -180.65,
+   "ry": -0.3193,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "note": "포구 창고(객주 짐)"
+  },
+  {
+   "id": "rt_gwandu_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 117,
+    "plain": true
+   },
+   "x": 448.4,
+   "z": -128.07,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "note": "객주 집(가설)"
+  },
+  {
+   "id": "rt_gwandu_boat0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 118
+   },
+   "x": 602.0,
+   "z": -122.0,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "note": "포구 배(바다 수면 y=0)"
+  },
+  {
+   "id": "rt_gwandu_boat1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 119
+   },
+   "x": 608.0,
+   "z": -82.0,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "note": "포구 배(바다 수면 y=0)"
+  },
+  {
+   "id": "rt_gwandu_boat2",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 120
+   },
+   "x": 596.0,
+   "z": -58.0,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "note": "포구 배(바다 수면 y=0)"
+  }
+ ]
+}

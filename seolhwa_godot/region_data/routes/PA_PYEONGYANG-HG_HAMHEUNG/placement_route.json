@@ -1,0 +1,428 @@
+{
+ "area": "route_PA_PYEONGYANG-HG_HAMHEUNG",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_seongcheon_square",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 101
+   },
+   "x": -634.67,
+   "z": -14.77,
+   "ry": 0.0611,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_comp0",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 102
+   },
+   "x": -664.69,
+   "z": -16.9,
+   "ry": 0.0502,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_comp1",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 103
+   },
+   "x": -610.76,
+   "z": -21.98,
+   "ry": 0.0439,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_comp2",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 104
+   },
+   "x": -644.43,
+   "z": -40.2,
+   "ry": 0.0659,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_comp3",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 105
+   },
+   "x": -596.13,
+   "z": -44.69,
+   "ry": 0.0534,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_comp4",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 106
+   },
+   "x": -682.8,
+   "z": -42.26,
+   "ry": 0.0221,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 107
+   },
+   "x": -619.58,
+   "z": 4.44,
+   "ry": 0.0479,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 108
+   },
+   "x": -653.14,
+   "z": 10.49,
+   "ry": 0.0631,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 109
+   },
+   "x": -603.35,
+   "z": 9.72,
+   "ry": 0.0453,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 110,
+    "female": false
+   },
+   "x": -713.88,
+   "z": -5.01,
+   "ry": 0.0013,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 111,
+    "female": true
+   },
+   "x": -713.86,
+   "z": 4.99,
+   "ry": 0.0013,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)"
+  },
+  {
+   "id": "rt_seongcheon_jeongja",
+   "kit": "village/jeongja",
+   "params": {
+    "seed": 112,
+    "plain": false
+   },
+   "x": -560.4,
+   "z": -30.9,
+   "ry": 0.0559,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "성천(강선루 아래 마을)",
+   "note": "성천 강선루 대신 정자(관서 명루 표지, 가설)"
+  },
+  {
+   "id": "rt_yangdeok_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 113,
+    "dangjip": true
+   },
+   "x": -14.93,
+   "z": -3.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 114
+   },
+   "x": -6.93,
+   "z": 0.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 115
+   },
+   "x": -124.47,
+   "z": -5.36,
+   "ry": -0.0355,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 116,
+    "kind": "stack"
+   },
+   "x": -115.61,
+   "z": -12.14,
+   "ry": -0.016,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 117,
+    "load": "wood"
+   },
+   "x": -132.49,
+   "z": 0.75,
+   "ry": -0.0662,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_house1",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 118
+   },
+   "x": -144.36,
+   "z": -10.04,
+   "ry": -0.1554,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 119
+   },
+   "x": -110.99,
+   "z": 13.92,
+   "ry": -0.0095,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_guitul0",
+   "kit": "village/guitul_house",
+   "params": {
+    "seed": 120
+   },
+   "x": 45.12,
+   "z": -9.98,
+   "ry": -0.0028,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_yangdeok_guitul1",
+   "kit": "village/guitul_house",
+   "params": {
+    "seed": 121
+   },
+   "x": 65.43,
+   "z": -15.82,
+   "ry": -0.015,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양덕 산골 고갯길"
+  },
+  {
+   "id": "rt_gowon_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 122
+   },
+   "x": 653.62,
+   "z": -9.02,
+   "ry": -0.0035,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 123,
+    "kind": "stack"
+   },
+   "x": 662.6,
+   "z": -16.01,
+   "ry": -0.0011,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 124,
+    "load": "wood"
+   },
+   "x": 645.63,
+   "z": -2.56,
+   "ry": -0.0084,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_house1",
+   "kit": "culture/gwanbuk/jeonja",
+   "params": {
+    "seed": 125
+   },
+   "x": 628.22,
+   "z": -11.44,
+   "ry": -0.0421,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_house2",
+   "kit": "culture/gwanbuk/compound",
+   "params": {
+    "size": "small",
+    "seed": 126
+   },
+   "x": 681.58,
+   "z": -12.0,
+   "ry": -0.0001,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 127,
+    "female": false
+   },
+   "x": 599.73,
+   "z": -4.52,
+   "ry": -0.1898,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 128,
+    "female": true
+   },
+   "x": 597.84,
+   "z": 5.3,
+   "ry": -0.1898,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  },
+  {
+   "id": "rt_gowon_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 129,
+    "n": 3
+   },
+   "x": 596.47,
+   "z": -12.37,
+   "ry": -0.216,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고원 길가 주막"
+  }
+ ]
+}

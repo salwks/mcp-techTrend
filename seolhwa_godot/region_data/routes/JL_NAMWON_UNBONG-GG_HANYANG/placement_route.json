@@ -1,0 +1,1170 @@
+{
+ "area": "route_JL_NAMWON_UNBONG-GG_HANYANG",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_osu_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 101
+   },
+   "x": -1420.26,
+   "z": -5.0,
+   "ry": 0.0001,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 102,
+    "kind": "stack"
+   },
+   "x": -1411.27,
+   "z": -12.0,
+   "ry": 0.0005,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 103,
+    "load": "wood"
+   },
+   "x": -1428.26,
+   "z": 1.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_house1",
+   "kit": "village/choga",
+   "params": {
+    "seed": 104
+   },
+   "x": -1446.26,
+   "z": -7.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_house2",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 105
+   },
+   "x": -1392.35,
+   "z": -8.04,
+   "ry": 0.0057,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 106,
+    "female": false
+   },
+   "x": -1475.26,
+   "z": 3.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 107,
+    "female": true
+   },
+   "x": -1475.26,
+   "z": 13.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 108,
+    "n": 3
+   },
+   "x": -1480.26,
+   "z": -4.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_osu_bigak",
+   "kit": "landmark/gj_gyerim_bigak",
+   "params": {
+    "seed": 109,
+    "marker": false
+   },
+   "x": -1363.26,
+   "z": -6.86,
+   "ry": 0.0702,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)",
+   "note": "의견비(오수 개 무덤 비) 비각 — 계림 비각 키트를 일반 비각으로 빌려 씀(가설)"
+  },
+  {
+   "id": "rt_osu_bigtree",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 110,
+    "variant": "zelkova"
+   },
+   "x": -1351.43,
+   "z": -16.13,
+   "ry": 0.1403,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "오수 역마을(의견비)"
+  },
+  {
+   "id": "rt_jeonju_gate",
+   "kit": "landmark/seongmun",
+   "params": {
+    "seed": 111,
+    "name": "풍남문",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1
+   },
+   "x": -890.0,
+   "z": -10.89,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_gate_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 112,
+    "length": 20.0,
+    "rise": -0.19,
+    "height": 4.5
+   },
+   "x": -907.5,
+   "z": -10.89,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_gate_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 113,
+    "length": 20.0,
+    "rise": 0.5,
+    "height": 4.5
+   },
+   "x": -927.5,
+   "z": -10.89,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_gate_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 115,
+    "length": 20.0,
+    "rise": 0.73,
+    "height": 4.5
+   },
+   "x": -872.5,
+   "z": -10.89,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_gate_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "seed": 116,
+    "length": 20.0,
+    "rise": 0.31,
+    "height": 4.5
+   },
+   "x": -852.5,
+   "z": -10.89,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_shop0",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 118
+   },
+   "x": -819.68,
+   "z": -23.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 119
+   },
+   "x": -801.68,
+   "z": -23.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 120
+   },
+   "x": -783.68,
+   "z": -23.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_jwapan0",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 121
+   },
+   "x": -813.68,
+   "z": -5.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_jwapan1",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 122
+   },
+   "x": -795.68,
+   "z": -5.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_house1",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 123
+   },
+   "x": -757.68,
+   "z": -28.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_house2",
+   "kit": "village/choga",
+   "params": {
+    "seed": 124
+   },
+   "x": -735.68,
+   "z": -42.0,
+   "ry": -0.0001,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_giwa",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 125,
+    "plain": true
+   },
+   "x": -789.68,
+   "z": -44.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 126
+   },
+   "x": -767.68,
+   "z": -3.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_house3",
+   "kit": "village/choga",
+   "params": {
+    "seed": 127
+   },
+   "x": -907.27,
+   "z": 6.11,
+   "ry": 0.2068,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_house4",
+   "kit": "village/choga",
+   "params": {
+    "seed": 128
+   },
+   "x": -929.23,
+   "z": 33.36,
+   "ry": -0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 129,
+    "female": false
+   },
+   "x": -934.05,
+   "z": 1.01,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_jeonju_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 130,
+    "female": true
+   },
+   "x": -941.53,
+   "z": 7.64,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "전주 남문(풍남문) 밖 — 감영 고을"
+  },
+  {
+   "id": "rt_aenggok_square",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 131
+   },
+   "x": -279.04,
+   "z": -18.23,
+   "ry": -0.0647,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_comp0",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 132
+   },
+   "x": -309.38,
+   "z": -23.67,
+   "ry": -0.0249,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_comp1",
+   "kit": "village/choga",
+   "params": {
+    "seed": 133
+   },
+   "x": -255.02,
+   "z": -22.78,
+   "ry": -0.0465,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_comp2",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 134
+   },
+   "x": -285.58,
+   "z": -44.69,
+   "ry": -0.0583,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_comp3",
+   "kit": "village/choga",
+   "params": {
+    "seed": 135
+   },
+   "x": -238.99,
+   "z": -44.25,
+   "ry": -0.0218,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_comp4",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 136
+   },
+   "x": -327.49,
+   "z": -49.94,
+   "ry": -0.0068,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 137
+   },
+   "x": -266.32,
+   "z": 2.64,
+   "ry": -0.0602,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 138
+   },
+   "x": -300.27,
+   "z": 4.64,
+   "ry": -0.0407,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 139
+   },
+   "x": -250.38,
+   "z": 9.43,
+   "ry": -0.0368,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 140,
+    "female": false
+   },
+   "x": -359.77,
+   "z": -13.0,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 141,
+    "female": true
+   },
+   "x": -359.77,
+   "z": -3.0,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_jangdok",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 142
+   },
+   "x": -296.47,
+   "z": -37.24,
+   "ry": -0.0439,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_aenggok_dok",
+   "kit": "village/props",
+   "params": {
+    "seed": 143,
+    "kind": "dok"
+   },
+   "x": -284.43,
+   "z": 3.48,
+   "ry": -0.0629,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)",
+   "note": "콩쥐 '밑 빠진 독' 사건 자리(두꺼비)"
+  },
+  {
+   "id": "rt_aenggok_teotbat",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 144
+   },
+   "x": -221.76,
+   "z": -24.05,
+   "ry": -0.0054,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이서 앵곡 마을(콩쥐팥쥐)"
+  },
+  {
+   "id": "rt_gomnaru_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 145
+   },
+   "x": 259.35,
+   "z": -23.8,
+   "ry": -0.1641,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 146,
+    "kind": "stack"
+   },
+   "x": 269.19,
+   "z": -29.3,
+   "ry": -0.1553,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 147,
+    "load": "wood"
+   },
+   "x": 250.27,
+   "z": -17.72,
+   "ry": -0.1695,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_boatman",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 148
+   },
+   "x": 262.62,
+   "z": 6.11,
+   "ry": -0.1564,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_gomnaru_store",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 149
+   },
+   "x": 241.65,
+   "z": -25.83,
+   "ry": -0.18,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)",
+   "note": "나루 창고"
+  },
+  {
+   "id": "rt_gomnaru_ppallae",
+   "kit": "village/ppallaeteo",
+   "params": {
+    "seed": 150
+   },
+   "x": 288.5,
+   "z": -30.64,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_narutbae0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 151
+   },
+   "x": 301.71,
+   "z": 6.36,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_narutbae1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 152
+   },
+   "x": 301.24,
+   "z": 15.36,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_narutbae_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 153
+   },
+   "x": 302.6,
+   "z": -18.64,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_far1",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 154
+   },
+   "x": 342.72,
+   "z": -19.01,
+   "ry": -0.0012,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_far2",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 155
+   },
+   "x": 364.7,
+   "z": 12.0,
+   "ry": -0.0001,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 156,
+    "female": false
+   },
+   "x": 392.71,
+   "z": -8.99,
+   "ry": -0.0016,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 157,
+    "female": true
+   },
+   "x": 392.69,
+   "z": 1.01,
+   "ry": -0.0016,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_ungsindan",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 158,
+    "dangjip": true
+   },
+   "x": 227.94,
+   "z": -45.87,
+   "ry": -0.2109,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_gomnaru_ungsindan_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 159
+   },
+   "x": 234.79,
+   "z": -41.39,
+   "ry": -0.1972,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "공주 곰나루(고마나루)"
+  },
+  {
+   "id": "rt_charyeong_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 160,
+    "dangjip": true
+   },
+   "x": 828.74,
+   "z": -9.51,
+   "ry": 0.1456,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_charyeong_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 161
+   },
+   "x": 836.8,
+   "z": -7.81,
+   "ry": 0.1792,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_charyeong_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 162
+   },
+   "x": 718.97,
+   "z": 3.84,
+   "ry": 0.2151,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_charyeong_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 163,
+    "kind": "stack"
+   },
+   "x": 725.66,
+   "z": -4.92,
+   "ry": 0.2445,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_charyeong_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 164,
+    "load": "wood"
+   },
+   "x": 712.71,
+   "z": 11.74,
+   "ry": 0.1849,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_charyeong_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 165
+   },
+   "x": 697.72,
+   "z": 4.58,
+   "ry": 0.1486,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_charyeong_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 166
+   },
+   "x": 736.85,
+   "z": 19.06,
+   "ry": 0.2522,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "차령 고개(성황당)"
+  },
+  {
+   "id": "rt_samgeori_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 167,
+    "variant": "willow"
+   },
+   "x": 1375.7,
+   "z": 7.44,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)",
+   "note": "능소 버들(천안삼거리 능수버들)"
+  },
+  {
+   "id": "rt_samgeori_jumak_a",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 168
+   },
+   "x": 1352.55,
+   "z": 15.36,
+   "ry": 0.1804,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_a_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 169,
+    "kind": "stack"
+   },
+   "x": 1358.76,
+   "z": 6.86,
+   "ry": 0.245,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_a_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 170,
+    "load": "wood"
+   },
+   "x": 1346.35,
+   "z": 23.89,
+   "ry": 0.1237,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_b",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 171
+   },
+   "x": 1429.05,
+   "z": -3.39,
+   "ry": 0.1209,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_b_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 172,
+    "kind": "stack"
+   },
+   "x": 1436.71,
+   "z": -11.41,
+   "ry": 0.1404,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_b_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 173,
+    "load": "wood"
+   },
+   "x": 1422.1,
+   "z": 6.01,
+   "ry": 0.1263,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_c",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 174
+   },
+   "x": 1403.25,
+   "z": 32.21,
+   "ry": 0.2487,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_c_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 175,
+    "kind": "stack"
+   },
+   "x": 1409.82,
+   "z": 23.55,
+   "ry": 0.1931,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jumak_c_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 176,
+    "load": "wood"
+   },
+   "x": 1387.48,
+   "z": 4.94,
+   "ry": 0.2882,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_house1",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 177
+   },
+   "x": 1326.63,
+   "z": 15.81,
+   "ry": 0.0367,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_house2",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 178
+   },
+   "x": 1457.62,
+   "z": -23.53,
+   "ry": 0.226,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 179,
+    "female": false
+   },
+   "x": 1301.15,
+   "z": 27.34,
+   "ry": 0.0143,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 180,
+    "female": true
+   },
+   "x": 1301.29,
+   "z": 37.34,
+   "ry": 0.0143,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  },
+  {
+   "id": "rt_samgeori_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 181
+   },
+   "x": 1411.88,
+   "z": 6.97,
+   "ry": 0.1638,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천안삼거리(능소 버들·주막거리)"
+  }
+ ]
+}

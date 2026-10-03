@@ -15,7 +15,24 @@
    "y": 0.7594
   },
   "K": 0.3,
-  "portals": []
+  "portals": [
+   {
+    "id": "to_hanyang",
+    "name": "→ 한양(삼남대로·전주)",
+    "x": -3495.0,
+    "z": -2077.4,
+    "to": "route:JL_NAMWON_UNBONG-GG_HANYANG",
+    "note": "routes 담당 추가(2026-10-03) — 이 권역 region.json에는 없고 엔진은 route.json portals에서 이 포털을 만든다"
+   },
+   {
+    "id": "to_jeju_sea",
+    "name": "→ 해남 관두포·제주 뱃길",
+    "x": -2726.0,
+    "z": 2074.0,
+    "to": "route:SEA_NAMHAE_JEJU",
+    "note": "routes 담당 추가(2026-10-03) — 이 권역 region.json에는 없고 엔진은 route.json portals에서 이 포털을 만든다"
+   }
+  ]
  },
  {
   "id": "GG_HANYANG",
@@ -68,6 +85,14 @@
     "x": 1456.2,
     "z": -2559.8,
     "to": "route:GG_HANYANG-HG_HAMHEUNG"
+   },
+   {
+    "id": "to_gangneung",
+    "name": "→ 강릉(관동대로)",
+    "x": 2540.0,
+    "z": -560.0,
+    "to": "route:GG_HANYANG-GW_GANGNEUNG",
+    "note": "routes 담당 추가(2026-10-03) — 이 권역 region.json에는 없고 엔진은 route.json portals에서 이 포털을 만든다"
    }
   ]
  },
@@ -174,6 +199,14 @@
     "x": 2558.9,
     "z": -431.2,
     "to": "route:HG_HAMHEUNG-BUKCHEONG"
+   },
+   {
+    "id": "to_hanyang_cheollyeong",
+    "name": "→ 한양(경흥대로·철령)",
+    "x": -2530.0,
+    "z": 1745.0,
+    "to": "route:GG_HANYANG-HG_HAMHEUNG",
+    "note": "routes 담당 추가(2026-10-03) — 이 권역 region.json에는 없고 엔진은 route.json portals에서 이 포털을 만든다"
    }
   ]
  },

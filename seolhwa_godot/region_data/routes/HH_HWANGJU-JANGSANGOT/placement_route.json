@@ -1,0 +1,486 @@
+{
+ "area": "route_HH_HWANGJU-JANGSANGOT",
+ "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_jaeryeong_square",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 101
+   },
+   "x": -408.02,
+   "z": -11.86,
+   "ry": -0.0139,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_comp0",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 102
+   },
+   "x": -438.18,
+   "z": -16.0,
+   "ry": -0.0007,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_comp1",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 103
+   },
+   "x": -383.14,
+   "z": -17.04,
+   "ry": -0.059,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_comp2",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 104
+   },
+   "x": -415.92,
+   "z": -37.94,
+   "ry": -0.0071,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_comp3",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 105
+   },
+   "x": -364.36,
+   "z": -37.62,
+   "ry": -0.0977,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_comp4",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 106
+   },
+   "x": -456.14,
+   "z": -42.01,
+   "ry": -0.0013,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 107
+   },
+   "x": -394.48,
+   "z": 8.47,
+   "ry": -0.0357,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 108
+   },
+   "x": -428.21,
+   "z": 12.02,
+   "ry": -0.002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 109
+   },
+   "x": -379.26,
+   "z": 15.3,
+   "ry": -0.0742,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 110,
+    "female": false
+   },
+   "x": -488.01,
+   "z": -5.35,
+   "ry": -0.0359,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 111,
+    "female": true
+   },
+   "x": -488.37,
+   "z": 4.64,
+   "ry": -0.0359,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_haystack_f0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 112
+   },
+   "x": -341.53,
+   "z": 35.36,
+   "ry": -0.1032,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_haystack_f1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 113
+   },
+   "x": -328.77,
+   "z": 36.52,
+   "ry": -0.076,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_jaeryeong_haystack_f2",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 114
+   },
+   "x": -315.89,
+   "z": 37.3,
+   "ry": -0.046,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "재령 들 마을"
+  },
+  {
+   "id": "rt_guwol_samun",
+   "kit": "landmark/samun",
+   "params": {
+    "seed": 115,
+    "kind": "outer"
+   },
+   "x": 233.5,
+   "z": -36.93,
+   "ry": 0.1306,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_sadang",
+   "kit": "village/giwa",
+   "params": {
+    "seed": 116,
+    "plain": true
+   },
+   "x": 231.15,
+   "z": -54.77,
+   "ry": 0.1306,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)",
+   "note": "삼성사(환인·환웅·단군 사당) — 민가 기와집 키트로 대신(가설)"
+  },
+  {
+   "id": "rt_guwol_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 117,
+    "dangjip": false
+   },
+   "x": 195.68,
+   "z": -24.75,
+   "ry": 0.0557,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 118
+   },
+   "x": 203.6,
+   "z": -22.28,
+   "ry": 0.0816,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 119
+   },
+   "x": 146.36,
+   "z": -25.0,
+   "ry": 0.0004,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_jumak_wood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 120,
+    "kind": "stack"
+   },
+   "x": 155.34,
+   "z": -32.01,
+   "ry": 0.0014,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_jumak_jige",
+   "kit": "village/jige",
+   "params": {
+    "seed": 121,
+    "load": "wood"
+   },
+   "x": 138.36,
+   "z": -18.5,
+   "ry": 0.0001,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_house1",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 122
+   },
+   "x": 272.87,
+   "z": -37.89,
+   "ry": 0.1821,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)"
+  },
+  {
+   "id": "rt_guwol_sanchae0",
+   "kit": "village/guitul_house",
+   "params": {
+    "seed": 123
+   },
+   "x": 280.63,
+   "z": -107.93,
+   "ry": 0.4237,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)",
+   "note": "임꺽정 산채 자리(가설)"
+  },
+  {
+   "id": "rt_guwol_sanchae1",
+   "kit": "village/guitul_house",
+   "params": {
+    "seed": 124
+   },
+   "x": 293.93,
+   "z": -126.85,
+   "ry": 0.3813,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "구월산 기슭(삼성사·청석골 산채 길)",
+   "note": "임꺽정 산채 자리(가설)"
+  },
+  {
+   "id": "rt_jangsan_coast0",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 125
+   },
+   "x": 785.4,
+   "z": -16.24,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_coast1",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 126
+   },
+   "x": 832.23,
+   "z": -46.85,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_coast2",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 127
+   },
+   "x": 790.23,
+   "z": 20.17,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_coast3",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 128
+   },
+   "x": 862.95,
+   "z": -26.09,
+   "ry": 0.1583,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_dok",
+   "kit": "village/props",
+   "params": {
+    "seed": 129,
+    "kind": "dok"
+   },
+   "x": 831.24,
+   "z": -17.68,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_rock",
+   "kit": "landmark/hj_jangsangot_rock",
+   "params": {
+    "seed": 130
+   },
+   "x": 1017.84,
+   "z": -30.21,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)",
+   "note": "장산곶 바위 벼랑(인당수 쪽)"
+  },
+  {
+   "id": "rt_jangsan_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 131,
+    "dangjip": false
+   },
+   "x": 752.15,
+   "z": 6.96,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_seonghwang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 132
+   },
+   "x": 760.51,
+   "z": 5.33,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "장산곶(인당수 바라보는 곶)"
+  },
+  {
+   "id": "rt_jangsan_boat0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 133
+   },
+   "x": 912.0,
+   "z": -176.0,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "장산곶(인당수 바라보는 곶)",
+   "note": "포구 배(바다 수면 y=0)"
+  }
+ ]
+}
