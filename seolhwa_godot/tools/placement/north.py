@@ -193,8 +193,21 @@ def cells_in_poly(T, poly, lu=(1, 2, 3, 6), rect=None):
     if x0 >= x1 or z0 >= z1:
         return np.zeros((0, 2))
     c = NC.rect_cells(T, x0, z0, x1, z1, lu=lu)
-    keep = np.array([poly_contains(poly, x, z) for x, z in c], bool) if len(c) else np.zeros(0, bool)
-    return c[keep] if len(c) else c
+    return c[poly_contains_np(poly, c)] if len(c) else c
+
+
+def poly_contains_np(poly, pts):
+    """poly_contains를 점 배열에(같은 식)."""
+    x, z = pts[:, 0], pts[:, 1]
+    inside = np.zeros(len(pts), bool)
+    n = len(poly)
+    j = n - 1
+    for i in range(n):
+        xi, zi = poly[i][0], poly[i][1]
+        xj, zj = poly[j][0], poly[j][1]
+        inside ^= ((zi > z) != (zj > z)) & (x < (xj - xi) * (z - zi) / ((zj - zi) or 1e-9) + xi)
+        j = i
+    return inside
 
 
 def cells_rect(T, rect, lu=(1, 2, 3, 6)):
@@ -922,7 +935,7 @@ def build_hamheung(pl, T):
     E.market(pl, T, Lm, "bongung_road", s_gate + 20, s_gate + 120, "함흥 장", "jang", rng, shops=7, jwapan=16,
              goods=["fish", "cloth", "grain", "straw", "mixed", "fish"])
     jc = EV.cells_of(T, NC.stl(T, "hamheung_jang"), reg["settlements"])
-    jc = np.array([c_ for c_ in jc if not poly_contains(hw, c_[0], c_[1])]) if len(jc) else jc
+    jc = np.asarray(jc)[~poly_contains_np(hw, np.asarray(jc))] if len(jc) else jc
     streets(pl, T, jc, ["bongung_road", "gyeongheung_daero", "seoho_road"], "함흥 장", "jang", "nb_cold", 55, jst, max_drop=2.8, limit=60)
     fill(pl, T, jc, "함흥 장", "jang", "nb_cold", 56, jst, pitch=18.0, limit=50)
     NC.search(pl, NC.jumak_c(57, None), -440, 330, 40, "함흥 장", "jang", 57)
@@ -1157,7 +1170,7 @@ def build_hanyang(pl, T):
     streets(pl, T, cc, ["samnam_daero", "mapo_road"], "칠패 장", "chilpae", "hy_out", 205, cst, limit=30)
     out = [c for c in NC.rect_cells(T, -1400, -1300, 1300, 200, lu=(1, 3, 6))]
     out = np.array(out) if out else np.zeros((0, 2))
-    out = np.array([c for c in out if not poly_contains(wall, c[0], c[1])]) if len(out) else out
+    out = out[~poly_contains_np(wall, out)] if len(out) else out
     for k, (rids, nm, code, lim) in enumerate([(["samnam_daero"], "청파 길가", "cheongpa", 40), (["seomun_ro"], "서대문 밖", "seomun", 40),
                                                 (["dongdaemun_out"], "동대문 밖", "dongmun", 40), (["mapo_road"], "아현 길가", "ahyeon", 30)]):
         streets(pl, T, near_road_cells(T, out, rids, 36.0), rids, nm, code, "hy_out", 220 + k * 9, HY, limit=lim, max_drop=3.0)

@@ -27,6 +27,161 @@ P = E.P
 ROOT = ET.ROOT
 
 
+# ================================================================ 속도(2026-10-04 §8): 결과는 그대로, 계산만 빠르게
+# east_*.py는 다른 생성기도 쓰므로 파일은 고치지 않고, 북쪽 생성기 프로세스 안에서만 갈아 끼운다.
+# 모두 원래 식과 같은 순서·같은 자료형(높이는 float32)으로 셈 → 같은 값(무작위 점 비교·배치 결과 비교로 확인, 보고서 §8).
+def _sub_dist(A, B, P_):
+    """east_place.Local._dist와 같은 식(선분 일부만)."""
+    AB = B - A
+    L2 = (AB ** 2).sum(1)
+    L2[L2 == 0] = 1e-9
+    AP = P_[:, None, :] - A[None, :, :]
+    t = np.clip((AP * AB[None]).sum(2) / L2[None], 0, 1)
+    C = A[None] + AB[None] * t[..., None]
+    d = np.sqrt(((C - P_[:, None, :]) ** 2).sum(2))
+    return d, C
+
+
+def _local_min(self, which, P_, adj):
+    """점마다 min_k(d_k − adj_k)와 그 선분 번호(전체 기준) — 가지치기:
+    lb_k = (점 묶음 상자 ↔ 선분 상자 거리) − adj_k ≤ 모든 점의 d_k − adj_k. 가장 작은 lb의 선분 k0로 U = max_p(v_p,k0)를 잡으면
+    lb_k > U인 선분은 어느 점의 최솟값도 될 수 없다. 남은 선분만 원래 식으로 센다(번호순이라 첫 최소 번호도 같다)."""
+    A, B, W, I = getattr(self, which)
+    c = self.__dict__.setdefault("_nb_box", {})
+    if which not in c:
+        c[which] = (np.minimum(A[:, 0], B[:, 0]), np.maximum(A[:, 0], B[:, 0]), np.minimum(A[:, 1], B[:, 1]), np.maximum(A[:, 1], B[:, 1]))
+    sx0, sx1, sz0, sz1 = c[which]
+    qx0, qx1 = P_[:, 0].min(), P_[:, 0].max()
+    qz0, qz1 = P_[:, 1].min(), P_[:, 1].max()
+    dx = np.maximum(np.maximum(sx0 - qx1, qx0 - sx1), 0.0)
+    dz = np.maximum(np.maximum(sz0 - qz1, qz0 - sz1), 0.0)
+    lb = np.hypot(dx, dz) - adj
+    k0 = int(np.argmin(lb))
+    d0, _ = _sub_dist(A[k0:k0 + 1], B[k0:k0 + 1], P_)
+    U = float((d0[:, 0] - adj[k0]).max())
+    idx = np.nonzero(lb <= U + 1e-6)[0]
+    d, _ = _sub_dist(A[idx], B[idx], P_)
+    v = d - adj[idx][None]
+    k = v.argmin(1)
+    return v[np.arange(len(P_)), k], idx[k]
+
+
+def _adj(self, which, kind):
+    c = self.__dict__.setdefault("_nb_adj", {})
+    key = (which, kind)
+    if key not in c:
+        W = getattr(self, which)[2]
+        c[key] = np.maximum(W / 2, 2.6) if kind == "river" else (W / 2 if kind == "road" else np.zeros(len(W)))
+    return c[key]
+
+
+def _river_clear(self, pts):
+    P_ = np.asarray(pts, float)
+    if len(self.rv[0]) == 0:
+        return np.full(len(P_), 1e9)
+    return _local_min(self, "rv", P_, _adj(self, "rv", "river"))[0]
+
+
+def _road_clear(self, pts):
+    P_ = np.asarray(pts, float)
+    if len(self.rd[0]) == 0:
+        return np.full(len(P_), 1e9)
+    return _local_min(self, "rd", P_, _adj(self, "rd", "road"))[0]
+
+
+def _nearest(self, which, kind, x, z):
+    A, B, W, I = getattr(self, which)
+    if len(A) == 0:
+        return None
+    P_ = np.array([[x, z]], float)
+    _, k = _local_min(self, which, P_, _adj(self, which, kind))
+    k = int(k[0])
+    d, C = _sub_dist(A[k:k + 1], B[k:k + 1], P_)
+    ab = B[k] - A[k]
+    L = float(np.hypot(*ab)) or 1.0
+    dist = float(d[0, 0] - W[k] / 2) if kind == "road" else float(d[0, 0])
+    return dist, float(W[k]), I[k], (ab[0] / L, ab[1] / L), (float(C[0, 0, 0]), float(C[0, 0, 1]))
+
+
+def _local_init(self, T, cx, cz, R):
+    """east_place.Local.__init__와 같은 값 — 길 1m 표본만 배열로."""
+    self.T = T
+    self.rv = self._filter(T._river_segs, cx, cz, R + 150)
+    self.rd = self._filter(T._road_segs, cx, cz, R + 150)
+    A, B, W, I = self.rd
+    parts = []
+    for p, q in zip(A, B):
+        n = max(1, int(np.hypot(*(q - p))))
+        k = np.arange(n + 1, dtype=float)[:, None]
+        parts.append(p + (q - p) * k / n)
+    self.road_pts = np.concatenate(parts) if parts else np.zeros((0, 2))
+    pts = []
+    for r in T.rivers:
+        for p in r["points"]:
+            if abs(p[0] - cx) < R + 150 and abs(p[1] - cz) < R + 150:
+                pts.append((p[0], p[1], p[2], r["id"]))
+    self.rpts = pts
+
+
+_ORIG_LOCAL = {k: getattr(EP.Local, k) for k in ("river_clear", "road_clear", "nearest_road", "nearest_river")}
+EP.Local.__init__ = _local_init
+EP.Local.river_clear = _river_clear
+EP.Local.road_clear = _road_clear
+EP.Local.nearest_road = lambda self, x, z: _nearest(self, "rd", "road", x, z)
+EP.Local.nearest_river = lambda self, x, z: _nearest(self, "rv", "none", x, z)
+
+
+def heights(T, pts, f32=True):
+    """T.height를 점 여러 개에 — 같은 식. T.height는 x가 파이썬 float이면 float32로, numpy float이면 float64로 셈한다
+    (float32 스칼라 × 파이썬 float = float32) — f32로 그 차이까지 따라 한다."""
+    h = T.hm
+    P_ = np.asarray(pts, float).reshape(-1, 2)
+    fx = (P_[:, 0] - h["x0"]) / h["cell"]; fz = (P_[:, 1] - h["z0"]) / h["cell"]
+    i = np.minimum(np.maximum(np.floor(fx).astype(int), 0), h["w"] - 2)
+    j = np.minimum(np.maximum(np.floor(fz).astype(int), 0), h["h"] - 2)
+    tx = fx - i; tz = fz - j
+    H = T.H
+    if f32:
+        a, b = (1 - tx).astype(np.float32), tx.astype(np.float32)
+        c, e = (1 - tz).astype(np.float32), tz.astype(np.float32)
+    else:
+        a, b, c, e = 1 - tx, tx, 1 - tz, tz
+    return ((H[j, i] * a + H[j, i + 1] * b) * c + (H[j + 1, i] * a + H[j + 1, i + 1] * b) * e).astype(np.float64)
+
+
+def landuses(T, pts):
+    l = T.lm
+    P_ = np.asarray(pts, float).reshape(-1, 2)
+    i = np.minimum(np.maximum(np.rint((P_[:, 0] - l["x0"]) / l["cell"]).astype(int), 0), l["w"] - 1)
+    j = np.minimum(np.maximum(np.rint((P_[:, 1] - l["z0"]) / l["cell"]).astype(int), 0), l["h"] - 1)
+    return T.L[j, i]
+
+
+def rect_samples(r, step=2.0):
+    """Rect.samples와 같은 점·같은 순서(배열)."""
+    nx = max(2, int(math.ceil(2 * r.hx / step)) + 1)
+    nz = max(2, int(math.ceil(2 * r.hz / step)) + 1)
+    a = -r.hx + 2 * r.hx * np.arange(nx) / (nx - 1)
+    b = -r.hz + 2 * r.hz * np.arange(nz) / (nz - 1)
+    A_, B_ = np.repeat(a, nz), np.tile(b, nx)
+    return np.stack([r.cx + r.ux * A_ + r.vx * B_, r.cz + r.uz * A_ + r.vz * B_], 1)
+
+
+_ORIG_MASK = EV._mask_frac
+
+
+def _mask_frac_fast(T, x, z, ry, box, lu_ok=(6,)):
+    smp = rect_samples(Rect(x, z, ry, box), 3.0)
+    lm = T.lm
+    i = np.rint((smp[:, 0] - lm["x0"]) / lm["cell"]).astype(int); j = np.rint((smp[:, 1] - lm["z0"]) / lm["cell"]).astype(int)
+    m = (j >= 0) & (j < T.L.shape[0]) & (i >= 0) & (i < T.L.shape[1])
+    n = int(np.isin(T.L[j[m], i[m]], lu_ok).sum())
+    return n / len(smp)
+
+
+EV._mask_frac = _mask_frac_fast
+
+
 class NorthPlacer(Placer):
     """east_place.Placer + 32m 버킷 공간 해시(겹침 검사가 항목 수에 비례하지 않게 — 한양은 수천 개)."""
     prefix = "nb"
@@ -59,22 +214,54 @@ class NorthPlacer(Placer):
         return out
 
     def check(self, L, pieces, x, z, ry, rules, ignore_overlap=False):
-        # 겹침만 버킷으로: 원래 check를 겹침 없이 돌리고, 겹침은 가까운 사각형만 본다
-        ok, drop, info = Placer.check(self, L, pieces, x, z, ry, rules, ignore_overlap=True)
-        if not ok or ignore_overlap:
-            return ok, drop, info
+        """east_place.Placer.check와 같은 판정(같은 순서): 표본 점을 배열로 한 번에, 겹침은 가까운 버킷만."""
         R = dict(EP.DEFAULT_RULES)
         R.update(rules or {})
+        allpts = []
+        rects = []
+        lu_bad = np.asarray(R["lu_bad"], int) if len(R["lu_bad"]) else np.zeros(0, int)
+        bigs = []
         for kit, params, lx, lz, lry, fl in pieces:
+            wx, wz = l2w(x, z, ry, lx, lz)
+            bb = self.aabb(kit, params, fl)
+            rect = Rect(wx, wz, ry + lry, bb)
+            rects.append((rect, fl))
+            if fl.get("tree") and self.in_cam_corridor(L, wx, wz, fl.get("tree_dx", 5.0)):
+                return False, 0, "cam_corridor"
             if fl.get("nocheck") or fl.get("inner"):
                 continue
-            wx, wz = l2w(x, z, ry, lx, lz)
-            big = Rect(wx, wz, ry + lry, self.aabb(kit, params, fl), fl.get("margin", R["margin"]))
-            rr = math.hypot(big.hx, big.hz) + 2.0
-            for o, _ in self.near_rects(big.cx, big.cz, rr):
-                if big.overlaps(o):
-                    return False, 0, "overlap"
-        return ok, drop, info
+            pts = rect_samples(rect, 2.0)
+            if fl.get("ground", True):
+                allpts.append(pts)
+            if pts[:, 0].min() < R["xmin"]:
+                return False, 0, "xmin"
+            rc = L.river_clear(pts)
+            if rc.min() < fl.get("river_min", R["river_min"]):
+                return False, 0, "river"
+            if "river_max" in fl and rc.min() > fl["river_max"]:
+                return False, 0, "river_far"
+            dc = L.road_clear(pts)
+            if dc.min() < fl.get("road_min", R["road_min"]):
+                return False, 0, "road"
+            lus = landuses(self.T, pts)
+            bad = int(np.isin(lus, lu_bad).sum()) / len(lus)
+            if bad > R["lu_bad_frac"] or (fl.get("no_water", True) and bool((lus == 5).any())):
+                return False, 0, "landuse"
+            bigs.append(Rect(wx, wz, ry + lry, bb, fl.get("margin", R["margin"])))
+        if allpts:
+            hs = heights(self.T, np.concatenate(allpts), f32=not isinstance(x, np.generic))
+            drop = float(hs.max() - hs.min())
+            if drop > R["max_drop"]:
+                return False, drop, "drop"
+        else:
+            drop = 0.0
+        if not ignore_overlap:
+            for big in bigs:
+                rr = math.hypot(big.hx, big.hz) + 2.0
+                for o, _ in self.near_rects(big.cx, big.cz, rr):
+                    if big.overlaps(o):
+                        return False, 0, "overlap"
+        return True, drop, rects
 
     def new_id(self, grp, kind):
         k = (grp, kind)
