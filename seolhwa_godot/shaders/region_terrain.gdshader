@@ -25,6 +25,7 @@ uniform vec3 far_ink = vec3(0.07, 0.085, 0.08); // 원경 먹빛(선형) — reg
 uniform float far_k = 0.0;         // 먼 능선을 먹빛으로 남기는 정도(0 = 기존 안개 그대로 — 식생·키트 재질과 맞추려면 0. 공용 안개에 같은 규칙이 들어오면 켠다)
 uniform sampler2D dry_tex : filter_nearest, repeat_disable;   // 건천 바닥 칸(토지이용 격자, region_world.dry_mask)
 uniform float has_dry = 0.0;
+uniform float urban_ground = 0.0;  // 도시 땅이 있는 권역(배치 urban): 마당 흙(yd≈0) 위에서는 길섶 풀 띠를 끈다
 uniform float mist_base = 0.0;     // 낮은 안개 기준 높이(플레이어 발 높이). 기존 Materials는 마을 바닥 y=0 기준         // 먼 능선을 먹빛으로 남기는 정도(0 = 기존 안개 그대로)
 
 varying vec3 v_wp;
@@ -203,6 +204,7 @@ void fragment() {
 		float edge = rd - rhw + pn * 0.45;
 		float road = 1.0 - smoothstep(-0.2, 0.2, edge);
 		float verge = (1.0 - smoothstep(0.1, 1.3, edge)) * (1.0 - road);
+		verge *= 1.0 - urban_ground * (1.0 - smoothstep(0.3, 1.2, yd));
 		col = mix(col, C_GRASS2 * 0.82, verge * 0.55);   // 길섶: 짙은 풀 띠
 		float cls = pt.a * 255.0 / 60.0;
 		vec3 rc = mix(C_LANE * 1.07, C_PATH, clamp(0.3 + n2 * 0.35, 0.0, 0.7));

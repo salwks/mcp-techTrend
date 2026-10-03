@@ -216,6 +216,7 @@ func _paint_roads() -> void:
 			if pj is Dictionary:
 				for al in pj.get("alleys", []):
 					all_roads.append({ "width_m": float(al.get("width_m", 3.0)), "class": "마을길", "points": al.get("points", []) })
+				for u in pj.get("urban", []): _urban.append(Rect2(float(u[0]), float(u[1]), float(u[2]) - float(u[0]), float(u[3]) - float(u[1])))
 	for r in all_roads:
 		var hw := float(r.get("width_m", 3.0)) * 0.5
 		var cls: int = ROAD_CLASS.get(String(r.get("class", "")), 2)
@@ -236,7 +237,27 @@ func _paint_roads() -> void:
 					var dq := clampi(roundi(d * 16.0), 0, 255)
 					if dq < pbytes[k]:
 						pbytes[k] = dq; pbytes[k + 1] = clampi(roundi(hw * 32.0), 0, 255); pbytes[k + 3] = cls * 60
+	_paint_urban()
 	_p_roads = pbytes.duplicate()
+
+# 도시 땅(placement_*.json 최상위 urban: [[x0,z0,x1,z1],…] — 도성·평양 내성 골목 구역): 마을 터(6)·길(4) 칸을 모두 마당 흙(B=0)으로,
+# 그 사각형 안 식생(풀·꽃·나무)은 비운다. 궁궐·종묘·정원 자리는 배치가 사각형에서 뺐다. 지형 셰이더 urban_ground=1이면 길섶 풀 띠도 흙 위에선 끈다.
+var _urban: Array = []
+func _paint_urban() -> void:
+	for u: Rect2 in _urban:
+		var i0 := clampi(floori((u.position.x - hx0) / hstep), 0, hnx - 1); var i1 := clampi(ceili((u.end.x - hx0) / hstep), 0, hnx - 1)
+		var j0 := clampi(floori((u.position.y - hz0) / hstep), 0, hnz - 1); var j1 := clampi(ceili((u.end.y - hz0) / hstep), 0, hnz - 1)
+		for j in range(j0, j1 + 1):
+			var lj := clampi(roundi((hz0 + j * hstep - lz0) / lcell), 0, lh - 1) * lw
+			var k := (j * hnx + i0) * 4 + 2
+			for i in range(i0, i1 + 1):
+				var lu := lbytes[lj + clampi(roundi((hx0 + i * hstep - lx0) / lcell), 0, lw - 1)] & 127
+				if lu == 6 or lu == 4: pbytes[k] = 0   # 마을 터 + 길 칸(길 칸은 셰이더가 둘레 풀빛으로 바꾸므로)
+				k += 4
+	_urban_veg()
+
+func _urban_veg() -> void:
+	for u: Rect2 in _urban: add_veg_exclusion(u.get_center(), 0.0, u.size * 0.5)
 
 # 건물 둘레 마당 흙: 회전 사각형(반폭 half) 바깥 거리를 B에 최소값으로
 func paint_yard(c: Vector2, ry: float, half: Vector2) -> void:
@@ -346,6 +367,7 @@ func _make_materials() -> void:
 	mat_near.set_shader_parameter("grid_step", 1.0)
 	mat_near.set_shader_parameter("noise_tex", _noise_texture())
 	mat_near.set_shader_parameter("skirt", SKIRT)
+	mat_near.set_shader_parameter("urban_ground", 1.0 if not _urban.is_empty() else 0.0)
 	mat_mid = mat_near.duplicate()
 	mat_mid.set_shader_parameter("grid_step", float(MID_STEP))
 	mat_mid.set_shader_parameter("detail_amp", 0.0)
@@ -1726,6 +1748,7 @@ func reset_edits() -> void:
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
 	pbytes = _p_roads.duplicate(); _paint_dirty = true
 	_veg_excl.clear(); _walk_grid.clear(); _walks.clear()
+	_urban_veg()
 	_crossings = _crossings_all.duplicate()
 	_terrain_dirty = true
 
