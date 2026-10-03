@@ -39076,12 +39076,12 @@
  },
  "portals": [
   {
-   "id": "to_pyeongyang",
-   "name": "→ 평양(양덕 길)",
-   "to": "route:PA_PYEONGYANG-HG_HAMHEUNG",
-   "to_route": "PA_PYEONGYANG-HG_HAMHEUNG",
+   "id": "to_yeongheung",
+   "name": "→ 영흥 갈림(한양 철령길·평양 양덕길)",
+   "to": "route:GG_HANYANG-HG_HAMHEUNG",
+   "to_route": "GG_HANYANG-HG_HAMHEUNG",
    "road": "gyeongheung_daero",
-   "note": "경흥대로 남서 끝 → 정평 갈림 → 양덕·고원 길 → 평양(노정 PA_PYEONGYANG-HG_HAMHEUNG). routes 보고(1b20f7c)에 따라 이름을 바꿈(옛 id to_cheollyeong)",
+   "note": "경흥대로 남서 끝 → 정평 → 영흥 갈림길(노정 GG_HANYANG-HG_HAMHEUNG 안). 평양 양덕길(PA_PYEONGYANG-HG_HAMHEUNG)은 영흥에서 갈라진다 — routes 2차(2026-10-04)에서 옛 to_pyeongyang·to_hanyang_cheollyeong 두 포털을 하나로 합침",
    "x": -2510.2,
    "z": 1824.5
   },
@@ -39094,16 +39094,6 @@
    "note": "홍원 → 북청(사자놀음) — 노정 미정 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
    "x": 2558.9,
    "z": -431.2
-  },
-  {
-   "id": "to_hanyang_cheollyeong",
-   "name": "→ 한양(경흥대로·철령)",
-   "to": "route:GG_HANYANG-HG_HAMHEUNG",
-   "to_route": "GG_HANYANG-HG_HAMHEUNG",
-   "road": "cheollyeong_road",
-   "note": "정평 갈림에서 남서 철령 길(노정 GG_HANYANG-HG_HAMHEUNG, routes 담당 좌표)",
-   "x": -2530.0,
-   "z": 1745.0
   }
  ],
  "walls": [

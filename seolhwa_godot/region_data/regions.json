@@ -187,11 +187,12 @@
   "K": 0.3,
   "portals": [
    {
-    "id": "to_pyeongyang",
-    "name": "→ 평양(양덕 길)",
+    "id": "to_yeongheung",
+    "name": "→ 영흥 갈림(한양 철령길·평양 양덕길)",
     "x": -2510.2,
     "z": 1824.5,
-    "to": "route:PA_PYEONGYANG-HG_HAMHEUNG"
+    "to": "route:GG_HANYANG-HG_HAMHEUNG",
+    "note": "평양 양덕길은 노정 안 영흥 갈림길에서 갈라진다(routes 2차, 옛 to_pyeongyang·to_hanyang_cheollyeong 합침)"
    },
    {
     "id": "to_bukcheong",
@@ -199,14 +200,6 @@
     "x": 2558.9,
     "z": -431.2,
     "to": "route:HG_HAMHEUNG-BUKCHEONG"
-   },
-   {
-    "id": "to_hanyang_cheollyeong",
-    "name": "→ 한양(경흥대로·철령)",
-    "x": -2530.0,
-    "z": 1745.0,
-    "to": "route:GG_HANYANG-HG_HAMHEUNG",
-    "note": "HG_HAMHEUNG/region.json에도 있음(cheollyeong_road 끝)"
    }
   ]
  },

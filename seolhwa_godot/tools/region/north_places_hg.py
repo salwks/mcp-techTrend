@@ -78,14 +78,14 @@ AXES = [dict(town="함흥 읍성", center=(39.9115, 127.5245), jinsan=("반룡�
              note="반룡산을 등지고 성천강 평야를 내려다봄.")]
 
 PORTALS = [
-    # routes 보고(1b20f7c)에 따라 옛 to_cheollyeong을 평양 노정 포털로 이름을 바꾸고, 한양(철령) 노정 포털을 따로 둠
-    dict(id="to_pyeongyang", name="→ 평양(양덕 길)", road="gyeongheung_daero", to_route="PA_PYEONGYANG-HG_HAMHEUNG", note="경흥대로 남서 끝 → 정평 갈림 → 양덕·고원 길 → 평양(옛 id to_cheollyeong)"),
-    dict(id="to_hanyang_cheollyeong", name="→ 한양(경흥대로·철령)", road="cheollyeong_road", to_route="GG_HANYANG-HG_HAMHEUNG", note="정평 갈림에서 남서 철령 길(routes 담당 좌표 −2530, 1745)"),
+    # routes 2차(2026-10-04): 한양 철령길과 평양 양덕길은 영흥에서 만나므로 함흥 남서 포털은 하나(경흥대로 노정 → 영흥 갈림길에서 평양 노정으로)
+    dict(id="to_yeongheung", name="→ 영흥 갈림(한양 철령길·평양 양덕길)", road="gyeongheung_daero", to_route="GG_HANYANG-HG_HAMHEUNG",
+         note="경흥대로 남서 끝 → 정평 → 영흥 갈림길(노정 GG_HANYANG-HG_HAMHEUNG 안). 평양 양덕길(PA_PYEONGYANG-HG_HAMHEUNG)은 영흥에서 갈라진다 — 옛 to_pyeongyang·to_hanyang_cheollyeong을 합침"),
     dict(id="to_bukcheong", name="→ 북청(홍원)", road="bukcheong_road", to_route="HG_HAMHEUNG-BUKCHEONG", note="홍원 → 북청(사자놀음) — 노정 미정"),
 ]
 for _p in PORTALS:
     r_ = next(r for r in ROADS if r["id"] == _p["road"])
-    _p["ref"] = list(r_["via"][0] if _p["id"] == "to_pyeongyang" else r_["via"][-1])
+    _p["ref"] = list(r_["via"][0] if _p["id"] == "to_yeongheung" else r_["via"][-1])
 
 SPAWN = dict(lat=39.9122, lon=127.5185, note="만세교 동쪽 머리, 낙민루 앞")
 
