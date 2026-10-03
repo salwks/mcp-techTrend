@@ -85,6 +85,12 @@ var _bench_dist := 0.0
 var _bench_start := Vector3.ZERO
 var _lights_seen := -1
 var _glow_shader: Shader
+var _glow_mats := {}   # 종류 → [ShaderMaterial, QuadMesh]
+var _glow_k := 0.0
+var _glow_on := false
+var _glow_at := Vector3(INF, 0, INF)
+var _near_lights := []
+const GLOW_R := 110.0
 var placement  # PlacementLoader
 var _loading := true      # 시작 불러오기 화면(플레이어 둘레 반경 2타일 건물·식생이 다 붙을 때까지)
 var _load_ui: CanvasLayer
@@ -277,13 +283,17 @@ const GLOW_CODE := """shader_type spatial;
 render_mode unshaded, blend_add, depth_draw_never, cull_disabled, fog_disabled;
 uniform vec3 color;
 uniform float k = 0.0;
+uniform float flick = 0.0;
+varying float v_fl;
 void vertex() {
+	float seed = fract(sin(dot(MODEL_MATRIX[3].xz, vec2(12.9898, 78.233))) * 43758.5453) * 100.0;   // 등불마다 다른 깜빡임(자리로)
+	v_fl = 1.0 + flick * (sin(TIME * 13.0 + seed) * 0.6 + sin(TIME * 7.3 + seed * 2.0) * 0.4);
 	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
 }
 void fragment() {
 	float r = length(UV - 0.5) * 2.0;
 	float g = exp(-r * r * 4.0) * (1.0 - smoothstep(0.8, 1.0, r));
-	ALBEDO = color * g * k * 2.0;
+	ALBEDO = color * g * k * v_fl * 2.0;
 }
 """
 
@@ -291,28 +301,38 @@ void fragment() {
 func _sync_glows() -> void:
 	if _lights_seen == world.lights_version: return
 	_lights_seen = world.lights_version
+	# 등불이 수천 개(한양)라 목록 비교는 사전으로(전에는 has()로 N²), 재질은 종류마다 하나(깜빡임 위상은 셰이더가 자리로)
+	var cur := {}
+	for l in world.lights: cur[l] = true
 	var have := {}
 	var keep := []
 	for g in lamp_glows:
-		if world.lights.has(g.light):
+		if cur.has(g.light):
 			keep.append(g); have[g.light] = true
 		else:
 			g.mesh.queue_free()
 	lamp_glows = keep
+	_glow_at = Vector3(INF, 0, INF)   # 목록이 바뀌었으니 둘레를 다시 고른다
 	for l in world.lights:
 		if have.has(l): continue
-		var kd: Dictionary = LAMP_KINDS.get(l.kind, LAMP_KINDS.lantern)
+		var kname: String = l.kind if LAMP_KINDS.has(l.kind) else "lantern"
+		var kd: Dictionary = LAMP_KINDS[kname]
+		if not _glow_mats.has(kname):
+			var m := ShaderMaterial.new(); m.shader = _glow_shader
+			var c := Color.hex((int(kd.glow) << 8) | 0xff).srgb_to_linear()
+			m.set_shader_parameter("color", Vector3(c.r, c.g, c.b))
+			m.set_shader_parameter("flick", float(kd.flick))
+			m.set_shader_parameter("k", _glow_k)
+			var q := QuadMesh.new(); q.size = Vector2.ONE * kd.size * 2.0
+			_glow_mats[kname] = [m, q]
 		var mi := MeshInstance3D.new()
-		var q := QuadMesh.new(); q.size = Vector2.ONE * kd.size * 2.0
-		mi.mesh = q
-		var m := ShaderMaterial.new(); m.shader = _glow_shader
-		var c := Color.hex((int(kd.glow) << 8) | 0xff).srgb_to_linear()
-		m.set_shader_parameter("color", Vector3(c.r, c.g, c.b))
-		mi.material_override = m
+		mi.mesh = _glow_mats[kname][1]
+		mi.material_override = _glow_mats[kname][0]
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		mi.position = Vector3(l.x, l.y, l.z)
+		mi.visible = false
 		scene_vp.add_child(mi)
-		lamp_glows.append({ mesh = mi, mat = m, light = l, kind = kd, seed = randf() * 100.0 })
+		lamp_glows.append({ mesh = mi, light = l, kind = kd })
 
 func teleport(x: float, z: float) -> void:
 	world.focus(Vector3(x, 0, z))
@@ -397,15 +417,26 @@ static func _srgb(v: Vector3) -> Color:
 func _update_lamps(t: float) -> void:
 	_sync_glows()
 	var f := TimeOfDay.lamp_factor(hour)
-	for g in lamp_glows:
-		var fl: float = 1.0 + g.kind.flick * (sin(t * 13.0 + g.seed) * 0.6 + sin(t * 7.3 + g.seed * 2.0) * 0.4)
-		g.mat.set_shader_parameter("k", f * fl)
-		g.mesh.visible = f > 0.001
+	# 발광 판: 재질(종류마다 하나)의 k만 바꾸고, 켜짐/꺼짐이 바뀔 때만 판마다 visible을 손댄다(전에는 매 프레임 판마다 — 한양 16ms)
+	if absf(f - _glow_k) > 0.0005:
+		var was_on := _glow_k > 0.001
+		_glow_k = f
+		for kn in _glow_mats: _glow_mats[kn][0].set_shader_parameter("k", f)
+		if was_on != (f > 0.001): _glow_at = Vector3(INF, 0, INF)
+	# 밤: 플레이어 둘레 GLOW_R 안 발광 판만 보인다(한양 수천 개 — 판마다 그리기 호출). 8m 넘게 움직였을 때만 다시 고른다
+	if (f > 0.001) != _glow_on or (f > 0.001 and Vector2(player_pos.x - _glow_at.x, player_pos.z - _glow_at.z).length_squared() > 64.0):
+		_glow_on = f > 0.001
+		_glow_at = player_pos
+		_near_lights.clear()
+		for g in lamp_glows:
+			var d2: float = Vector2(g.light.x - player_pos.x, g.light.z - player_pos.z).length_squared()
+			g.mesh.visible = _glow_on and d2 < GLOW_R * GLOW_R
+			if d2 < 60.0 * 60.0: _near_lights.append(g.light)
+		_near_lights.sort_custom(func(a, b): return Vector2(a.x - player_pos.x, a.z - player_pos.z).length_squared() < Vector2(b.x - player_pos.x, b.z - player_pos.z).length_squared())
 	if f <= 0.001:
 		for o in lamp_slots: o.light_energy = 0.0
 		return
-	var near: Array = world.lights.duplicate()
-	near.sort_custom(func(a, b): return Vector2(a.x - player_pos.x, a.z - player_pos.z).length_squared() < Vector2(b.x - player_pos.x, b.z - player_pos.z).length_squared())
+	var near: Array = _near_lights   # 둘레 60m 안, 가까운 순(위에서 8m마다 다시 고름)
 	for i in lamp_slots.size():
 		var o: OmniLight3D = lamp_slots[i]
 		if i >= near.size(): o.light_energy = 0.0; continue
