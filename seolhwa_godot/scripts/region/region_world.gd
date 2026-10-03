@@ -548,7 +548,9 @@ var _water_mats: Array = []      # mist_base 등 공용 값을 같이 받을 물
 
 func _build_sea() -> void:
 	var sea = region.get("sea")
-	if sea is Dictionary: sea_y = float(sea.get("y", 0.0))
+	if sea is Dictionary:
+		sea_y = float(sea.get("y", 0.0))
+		sea_is_river = String(sea.get("kind", "sea")) == "river"
 	for l in region.get("lakes", []):
 		var poly := PackedVector2Array()
 		for q in l.get("outline", []): poly.append(Vector2(float(q[0]), float(q[1])))
@@ -569,9 +571,20 @@ func _build_sea() -> void:
 	proto.set_shader_parameter("mask_blur", mtex_blur)
 	proto.set_shader_parameter("mask_meta", Vector4(lx0 - lcell * 0.5, lz0 - lcell * 0.5, 1.0 / (lcell * lw), 1.0 / (lcell * lh)))
 	if not is_nan(sea_y):
-		# 높이맵 범위 + 3km 여유. 지도 밖은 가장자리 칸이 이어지므로 바다 쪽 가장자리에서만 수평선까지 물이 보인다
-		var x0 := hx0 - 3000.0; var z0 := hz0 - 3000.0
-		var x1 := hx0 + (hnx - 1) * hstep + 3000.0; var z1 := hz0 + (hnz - 1) * hstep + 3000.0
+		# 높이맵 범위 + 3km 여유. 지도 밖은 가장자리 칸이 이어지므로 바다 쪽 가장자리에서만 수평선까지 물이 보인다.
+		# 큰 강(sea.kind="river")은 지도 밖으로 물 띠가 허공에 뻗지 않게 높이맵 범위까지만
+		var mg := 0.0 if sea_is_river else 3000.0
+		var x0 := hx0 - mg; var z0 := hz0 - mg
+		var x1 := hx0 + (hnx - 1) * hstep + mg; var z1 := hz0 + (hnz - 1) * hstep + mg
+		if sea_is_river:
+			# 강물 결: 흐름 방향 지도(큰 강 중심선 → 32m 칸) + 강 빛깔, 바다 물결 띠·흰 파도 없음
+			proto.set_shader_parameter("is_river", 1.0)
+			proto.set_shader_parameter("deep_col", Vector3(0.24, 0.34, 0.31))
+			proto.set_shader_parameter("shallow_col", Vector3(0.42, 0.53, 0.45))
+			var fm := _make_flow_map()
+			if fm != null:
+				proto.set_shader_parameter("flow_tex", ImageTexture.create_from_image(fm))
+				proto.set_shader_parameter("flow_meta", Vector4(hx0 - FLOW_CELL * 0.5, hz0 - FLOW_CELL * 0.5, 1.0 / (FLOW_CELL * fm.get_width()), 1.0 / (FLOW_CELL * fm.get_height())))
 		var v := PackedVector3Array(); var idx := PackedInt32Array()
 		var n := 16
 		for j in n + 1:
@@ -593,7 +606,7 @@ func _build_sea() -> void:
 		mat.set_shader_parameter("deep_col", Vector3(0.27, 0.40, 0.42))
 		mat.set_shader_parameter("shallow_col", Vector3(0.45, 0.60, 0.56))
 		_flat_water("lake_" + l.name, v, tri, mat)
-	print("REGION sea y=%s lakes=%d mask_ms=%d" % [sea_y, lakes.size(), Time.get_ticks_msec() - t0])
+	print("REGION sea y=%s kind=%s lakes=%d mask_ms=%d" % [sea_y, "river" if sea_is_river else "sea", lakes.size(), Time.get_ticks_msec() - t0])
 
 func _flat_water(nm: String, v: PackedVector3Array, idx: PackedInt32Array, mat: ShaderMaterial) -> MeshInstance3D:
 	var nrm := PackedVector3Array(); nrm.resize(v.size()); nrm.fill(Vector3.UP)
@@ -659,6 +672,285 @@ func _make_water_mask() -> void:
 	water_mask = Image.create_from_data(lw, lh, false, Image.FORMAT_RG8, out)
 	sea_map = Image.create_from_data(lw, lh, false, Image.FORMAT_LA8, la)
 
+# ---------------------------------------------------------------------------
+# 6단계: 큰 강(sea.kind="river") 흐름 지도 · 건천(dry) · 나루 뱃길 · 성곽(walls) 대신 벽
+# ---------------------------------------------------------------------------
+const FLOW_CELL := 32.0
+var sea_is_river := false        # region.json sea.kind == "river" (한강·대동강 물면 — terrain-data-north §3.2)
+var big_river_ids := {}          # render:false / spec_grade S 하천 id (중심선은 흐름 방향에만 쓰고 리본은 그리지 않는다)
+
+static func _is_big_river(r: Dictionary) -> bool:
+	return r.get("render") == false or String(r.get("spec_grade", "")) == "S"
+
+# 큰 강 중심선(점 순서 = 하류 방향)을 32m 칸에 찍고, 가까운 칸으로 번지게(BFS) 한 뒤 두 번 흐려 RG8(방향*0.5+0.5)로
+func _make_flow_map() -> Image:
+	var W := int(ceil((hnx - 1) * hstep / FLOW_CELL)) + 1; var H := int(ceil((hnz - 1) * hstep / FLOW_CELL)) + 1
+	var fx := PackedFloat32Array(); fx.resize(W * H)
+	var fz := PackedFloat32Array(); fz.resize(W * H)
+	var seen := PackedByteArray(); seen.resize(W * H)
+	var q := PackedInt32Array()
+	for r in region.get("rivers", []):
+		if not _is_big_river(r): continue
+		var pts := []
+		for p in r.points: pts.append(Vector3(float(p[0]), 0.0, float(p[1])))
+		if pts.size() < 2: continue
+		pts = _resample(pts, FLOW_CELL * 0.5)
+		for k in pts.size():
+			var a: Vector3 = pts[maxi(k - 2, 0)]; var b: Vector3 = pts[mini(k + 2, pts.size() - 1)]
+			var d := Vector2(b.x - a.x, b.z - a.z).normalized()
+			var i := clampi(roundi((pts[k].x - hx0) / FLOW_CELL), 0, W - 1); var j := clampi(roundi((pts[k].z - hz0) / FLOW_CELL), 0, H - 1)
+			var c := j * W + i
+			fx[c] += d.x; fz[c] += d.y
+			if seen[c] == 0: seen[c] = 1; q.append(c)
+	if q.is_empty(): return null
+	var head := 0
+	while head < q.size():
+		var c := q[head]; head += 1
+		var i := c % W; var j := c / W
+		for o in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var ii: int = i + o.x; var jj: int = j + o.y
+			if ii < 0 or jj < 0 or ii >= W or jj >= H: continue
+			var n := jj * W + ii
+			if seen[n] != 0: continue
+			seen[n] = 1; fx[n] = fx[c]; fz[n] = fz[c]; q.append(n)
+	for pass_i in 3:
+		var ax := fx.duplicate(); var az := fz.duplicate()
+		for j in H:
+			for i in W:
+				var sx := 0.0; var sz := 0.0
+				for dj in range(-1, 2):
+					for di in range(-1, 2):
+						var n := clampi(j + dj, 0, H - 1) * W + clampi(i + di, 0, W - 1)
+						sx += ax[n]; sz += az[n]
+				fx[j * W + i] = sx; fz[j * W + i] = sz
+	var out := PackedByteArray(); out.resize(W * H * 2)
+	for c in W * H:
+		var d := Vector2(fx[c], fz[c]).normalized()
+		out[c * 2] = clampi(roundi(d.x * 127.5 + 127.5), 0, 255); out[c * 2 + 1] = clampi(roundi(d.y * 127.5 + 127.5), 0, 255)
+	return Image.create_from_data(W, H, false, Image.FORMAT_RG8, out)
+
+# ---- 건천(rivers[].dry = true, 제주): 물 띠 대신 마른 돌 바닥. 토지이용 물(5) 칸 중 건천 중심선 가까운 칸을 표시(dry_mask) →
+# 지형 셰이더가 현무암 자갈·바위 바닥으로 칠하고, 걷기는 막지 않는다. 비가 오면(wet) 가는 물줄기 리본만 드러난다.
+var dry_mask: PackedByteArray     # lw×lh, 1 = 건천 바닥
+var _dry_ribbons: Array = []
+var _mat_dry: ShaderMaterial
+var wet_level := 0.0              # region_main이 weather.wet을 넣는다
+
+func _mark_dry(pts: Array, ws: PackedFloat32Array) -> void:
+	if dry_mask.is_empty(): dry_mask.resize(lw * lh)
+	for k in pts.size():
+		var rr := ws[k] * 0.5 + 6.0
+		var p: Vector3 = pts[k]
+		var i0 := clampi(floori((p.x - rr - lx0) / lcell), 0, lw - 1); var i1 := clampi(ceili((p.x + rr - lx0) / lcell), 0, lw - 1)
+		var j0 := clampi(floori((p.z - rr - lz0) / lcell), 0, lh - 1); var j1 := clampi(ceili((p.z + rr - lz0) / lcell), 0, lh - 1)
+		for j in range(j0, j1 + 1):
+			for i in range(i0, i1 + 1):
+				var c := j * lw + i
+				if lbytes[c] & 127 != 5: continue
+				if Vector2(lx0 + i * lcell - p.x, lz0 + j * lcell - p.z).length() <= rr: dry_mask[c] = 1
+
+func is_dry_bed(x: float, z: float) -> bool:
+	if dry_mask.is_empty(): return false
+	return dry_mask[clampi(roundi((z - lz0) / lcell), 0, lh - 1) * lw + clampi(roundi((x - lx0) / lcell), 0, lw - 1)] == 1
+
+func _finish_dry() -> void:
+	if dry_mask.is_empty(): return
+	var tex := ImageTexture.create_from_image(Image.create_from_data(lw, lh, false, Image.FORMAT_R8, dry_mask))
+	for m in [mat_near, mat_mid]:
+		m.set_shader_parameter("dry_tex", tex)
+		m.set_shader_parameter("has_dry", 1.0)
+
+# 비 올 때만: 젖음 0.35 넘으면 건천 돌 바닥 가운데에 물줄기가 드러난다(셰이더 gate)
+var _dry_gate := -1.0
+func _update_dry() -> void:
+	if _mat_dry == null: return
+	var g := snappedf(smoothstep(0.35, 0.85, wet_level), 0.01)
+	if g != _dry_gate:
+		_dry_gate = g
+		_mat_dry.set_shader_parameter("gate", g)
+
+# ---- 나루 뱃길(큰 강, 다리 없음 — 명세 §6): crossings type "나루" + ends[2]. 뱃길 위는 배 갑판 높이의 걷기 면,
+# 나룻배(kit/village/narutbae) 한 척이 플레이어가 뱃길 물 위에 있는 동안 발밑을 따라온다(내리면 그 자리에 남는다).
+var ferries: Array = []          # [{id, name, a: Vector2, b: Vector2, len, dir: Vector2, boat: Node3D, s}]
+const FERRY_HW := 1.9            # 뱃길 반폭(배 폭 1.7 + 여유)
+const FERRY_DECK := 0.32         # 물 면 위 갑판 높이
+
+func _build_ferries() -> void:
+	if is_nan(sea_y) or not sea_is_river: return
+	var boat_scr: Script = load("res://kit/village/narutbae.gd") if FileAccess.file_exists("res://kit/village/narutbae.gd") else null
+	var drop := {}
+	for c in region.get("crossings", []):
+		if String(c.get("type", "")) != "나루" or not (c.get("ends") is Array) or c.ends.size() < 2: continue
+		var a := Vector2(float(c.ends[0][0]), float(c.ends[0][1])); var b := Vector2(float(c.ends[1][0]), float(c.ends[1][1]))
+		var L := a.distance_to(b)
+		if L < 4.0: continue
+		var d := (b - a) / L
+		drop[String(c.get("id", ""))] = true
+		# 걷기 면: 뱃길 가운데를 원점으로, 로컬 z = 뱃길 방향. 양 끝 4m는 둑 위로 이어진다(height_at은 땅과 큰 값)
+		var mid := (a + b) * 0.5
+		var ry := atan2(d.x, d.y)
+		var xf := Transform3D(Basis(Vector3.UP, ry), Vector3(mid.x, sea_y, mid.y))
+		add_walk(xf, { minX = -FERRY_HW, maxX = FERRY_HW, minZ = -L * 0.5 - 4.0, maxZ = L * 0.5 + 4.0, z = [-L * 0.5 - 4.0, L * 0.5 + 4.0], y = [FERRY_DECK, FERRY_DECK] })
+		var f := { id = String(c.get("id", "")), name = String(c.get("name", "나루")), a = a, b = b, len = L, dir = d, ry = ry, boat = null, s = 6.0 }
+		if boat_scr != null and boat_scr.can_instantiate():
+			var info = boat_scr.build({ seed = hash(f.id) & 0xffff })
+			if info is Dictionary and info.get("node") is Node3D:
+				f.boat = info.node
+				f.boat.name = "나룻배_" + f.id
+				water_root.add_child(f.boat)
+		ferries.append(f)
+		_place_boat(f, f.s)
+	# 나루 표지점(뱃길 가운데 part_of 포함)은 '물에 걸어 들어가기 허용' 자리에서 뺀다 — 큰 강 바닥으로 빠지지 않게
+	if not drop.is_empty():
+		var keep := []
+		for c in region.get("crossings", []):
+			if drop.has(String(c.get("id", ""))) or drop.has(String(c.get("part_of", ""))): continue
+			keep.append(Vector2(float(c.x), float(c.z)))
+		_crossings = keep
+		_crossings_all = keep.duplicate()
+	if not ferries.is_empty(): print("REGION ferries=%s" % [ferries.map(func(f): return "%s(%.0fm)" % [f.id, f.len])])
+
+func _place_boat(f: Dictionary, s: float, lat := 0.0) -> void:
+	f.s = clampf(s, 3.4, f.len - 3.4)
+	if f.boat == null: return
+	var p: Vector2 = f.a + f.dir * f.s + Vector2(-f.dir.y, f.dir.x) * clampf(lat, -0.6, 0.6)
+	f.boat.transform = Transform3D(Basis(Vector3.UP, f.ry), Vector3(p.x, sea_y + 0.02, p.y))
+
+# 플레이어가 뱃길 물 위(땅이 물 면 아래)에 있으면 배가 발밑으로 온다
+func update_ferries(player: Vector3) -> void:
+	for f in ferries:
+		var rel := Vector2(player.x, player.z) - (f.a as Vector2)
+		var s: float = rel.dot(f.dir)
+		var lat: float = rel.dot(Vector2(-f.dir.y, f.dir.x))
+		if absf(lat) > FERRY_HW + 0.5 or s < -2.0 or s > f.len + 2.0: continue
+		if ground_at(player.x, player.z) > sea_y + 0.1: continue
+		_place_boat(f, s, lat)
+
+# ---- 성곽(region.json walls): 배치(키트)가 그 구간에 성벽·문을 놓았으면 그대로 두고, 안 놓인 구간만 싼 돌벽(대신 벽)을 깐다.
+# 문(gates의 랜드마크 자리)·길이 지나는 곳·물(토지이용 5) 위는 비운다. 배치를 다시 읽으면 다시 계산한다.
+const WALL_TAG := "wall_proxy"
+const WALL_STEP := 4.0
+const WALL_T := 4.0
+var wall_stats := {}
+
+func build_wall_proxies(loader = null) -> void:
+	remove_tagged(WALL_TAG)
+	wall_stats = { walls = 0, proxy_m = 0.0, covered_m = 0.0, gap_m = 0.0, chunks = 0 }
+	var walls = region.get("walls")
+	if not (walls is Array) or walls.is_empty(): return
+	var t0 := Time.get_ticks_msec()
+	# 배치가 놓은 성벽·문 키트 자리(+반경): 이 안의 성벽 선은 이미 덮였다
+	var cover := []
+	if loader != null and "_pending" in loader:
+		for t in loader._pending:
+			for r in loader._pending[t]:
+				var k := String(r.kit)
+				if not (k.contains("wall") or k.contains("seong") or k.contains("gate") or k.ends_with("mun") or k.contains("eupseong")): continue
+				if k.contains("gwana_wall") or k.contains("basalt_wall") or k == "village/wall_run": continue   # 관아·집 담은 성벽이 아니다
+				var fp: Vector2 = r.fp if r.fp is Vector2 else Vector2.ZERO
+				cover.append([Vector2(r.x, r.z), maxf(fp.x, fp.y) * 0.5 + 3.0])
+	var gate_pts := []
+	var lm_by_id := {}
+	for l in region.get("landmarks", []): lm_by_id[String(l.get("id", ""))] = l
+	for w in walls:
+		for g in w.get("gates", []):
+			var l = lm_by_id.get(String(g))
+			if l != null: gate_pts.append(Vector2(float(l.x), float(l.z)))
+	for w in walls:
+		var pts := []
+		for p in w.get("points", []): pts.append(Vector3(float(p[0]), 0.0, float(p[1])))
+		if pts.size() < 2: continue
+		if bool(w.get("closed", false)) and (pts[0] as Vector3).distance_to(pts[pts.size() - 1]) > 1.0: pts.append(pts[0])
+		wall_stats.walls += 1
+		# 바깥 방향: 닫힌 선이면 넓이 부호로(바깥에 여장), 열린 선이면 오른쪽
+		var area := 0.0
+		for k in pts.size() - 1: area += pts[k].x * pts[k + 1].z - pts[k + 1].x * pts[k].z
+		var out_sign := 1.0 if area < 0.0 else -1.0
+		var hm = w.get("height_m", [5.0, 7.0])
+		var h_lo := float(hm[0]) if hm is Array else float(hm); var h_hi := float(hm[hm.size() - 1]) if hm is Array else float(hm)
+		var sp := _resample(pts, WALL_STEP)
+		var keep := PackedByteArray(); keep.resize(sp.size())
+		for k in sp.size():
+			var q := Vector2(sp[k].x, sp[k].z)
+			var ok := true
+			for gp in gate_pts:
+				if q.distance_to(gp) < 9.0: ok = false; break
+			if ok and (road_distance(q.x, q.y) < 2.5 or landuse_at(q.x, q.y) == 5): ok = false
+			if ok:
+				for c in cover:
+					if q.distance_to(c[0]) < c[1]: ok = false; wall_stats.covered_m += WALL_STEP; break
+			else: wall_stats.gap_m += WALL_STEP
+			keep[k] = 1 if ok else 0
+		# 이어진 구간을 48m 조각으로(타일 스트리밍에 맞춰 붙였다 뗀다)
+		var k := 0
+		while k < sp.size() - 1:
+			if keep[k] == 0 or keep[k + 1] == 0: k += 1; continue
+			var e := k
+			while e < sp.size() - 1 and keep[e + 1] == 1 and e - k < 12: e += 1
+			_wall_chunk(sp, k, e, out_sign, h_lo, h_hi, String(w.get("name", w.get("id", "성벽"))))
+			wall_stats.proxy_m += (e - k) * WALL_STEP
+			k = e
+	print("REGION walls=%d proxy=%.0fm covered=%.0fm gaps=%.0fm chunks=%d ms=%d" % [wall_stats.walls, wall_stats.proxy_m, wall_stats.covered_m, wall_stats.gap_m, wall_stats.chunks, Time.get_ticks_msec() - t0])
+
+func _wall_chunk(sp: Array, s: int, e: int, out_sign: float, h_lo: float, h_hi: float, nm: String) -> void:
+	var o: Vector3 = sp[s]
+	var oy := ground_at(o.x, o.z)
+	var org := Vector3(o.x, oy, o.z)
+	var body := Kit.Geo.new(); var para := Kit.Geo.new()
+	var cols := []
+	var L := []   # [바깥 아래, 바깥 위, 안 아래, 안 위, 여장 안 위] 점마다
+	for k in range(s, e + 1):
+		var p: Vector3 = sp[k]
+		var a: Vector3 = sp[maxi(k - 1, 0)]; var b: Vector3 = sp[mini(k + 1, sp.size() - 1)]
+		var d := Vector2(b.x - a.x, b.z - a.z).normalized()
+		var n := Vector2(-d.y, d.x) * out_sign
+		var g0 := ground_at(p.x + n.x * WALL_T * 0.5, p.z + n.y * WALL_T * 0.5); var g1 := ground_at(p.x - n.x * WALL_T * 0.5, p.z - n.y * WALL_T * 0.5)
+		var gl := minf(g0, g1); var gh := maxf(g0, g1)
+		var slope := absf(ground_at(b.x, b.z) - ground_at(a.x, a.z)) / maxf(Vector2(b.x - a.x, b.z - a.z).length(), 1.0)
+		var top := gh + lerpf(h_hi, h_lo, smoothstep(0.06, 0.3, slope)) - oy
+		var c := Vector3(p.x, 0.0, p.z) - Vector3(org.x, 0.0, org.z)
+		var no := Vector3(n.x, 0.0, n.y)
+		L.append([c + no * WALL_T * 0.5 + Vector3(0, gl - 1.2 - oy, 0), c + no * WALL_T * 0.5 + Vector3(0, top, 0),
+			c - no * WALL_T * 0.5 + Vector3(0, gl - 1.2 - oy, 0), c - no * WALL_T * 0.5 + Vector3(0, top, 0), c + no * (WALL_T * 0.5 - 0.6) + Vector3(0, top, 0), no])
+		cols.append({ type = "circle", x = c.x, z = c.z, r = WALL_T * 0.5 + 0.2 })
+		if k < e:
+			var m: Vector3 = (sp[k] + sp[k + 1]) * 0.5 - Vector3(org.x, 0.0, org.z)
+			cols.append({ type = "circle", x = m.x, z = m.z, r = WALL_T * 0.5 + 0.2 })
+			# 성벽 둘레 식생 비우기(성 밑 6m씩 — 나무가 성벽을 뚫고 나오지 않게)
+			var q0: Vector3 = sp[k]; var q1: Vector3 = sp[k + 1]
+			add_veg_exclusion(Vector2((q0.x + q1.x) * 0.5, (q0.z + q1.z) * 0.5), atan2(q1.z - q0.z, q1.x - q0.x) * -1.0, Vector2(WALL_STEP * 0.5 + 1.0, WALL_T * 0.5 + 6.0))
+	for i in L.size() - 1:
+		var A: Array = L[i]; var B: Array = L[i + 1]
+		var u0 := float(i) * WALL_STEP / 4.0; var u1 := u0 + WALL_STEP / 4.0
+		body.quad(A[0], B[0], B[1], A[1], Vector2(u0, 0), Vector2(u1, 0), Vector2(u1, 1), Vector2(u0, 1))   # 바깥 면
+		body.quad(B[2], A[2], A[3], B[3], Vector2(u1, 0), Vector2(u0, 0), Vector2(u0, 1), Vector2(u1, 1))   # 안 면
+		body.quad(A[1], B[1], B[3], A[3])                                                                  # 윗면
+		# 여장(바깥 가장자리 1.1m 담, 2m마다 타구 틈)
+		var up := Vector3(0, 1.1, 0)
+		var na: Vector3 = A[5]
+		for half in 2:
+			var t0 := half * 0.5; var t1 := t0 + 0.38
+			var p0: Vector3 = (A[1] as Vector3).lerp(B[1], t0); var p1: Vector3 = (A[1] as Vector3).lerp(B[1], t1)
+			var q0: Vector3 = (A[4] as Vector3).lerp(B[4], t0); var q1: Vector3 = (A[4] as Vector3).lerp(B[4], t1)
+			para.quad(p0, p1, p1 + up, p0 + up)
+			para.quad(q1, q0, q0 + up, q1 + up)
+			para.quad(p0 + up, p1 + up, q1 + up, q0 + up)
+			para.quad(q0, p0, p0 + up, q0 + up)
+			para.quad(p1, q1, q1 + up, p1 + up)
+	# 웹 Geo는 반시계 앞면 — 바깥 방향이 뒤집힌 선이면 면을 뒤집는다
+	if out_sign < 0.0:
+		for g in [body, para]:
+			for i in range(0, g.pos.size(), 3):
+				var tp: Vector3 = g.pos[i + 1]; g.pos[i + 1] = g.pos[i + 2]; g.pos[i + 2] = tp
+				var tu: Vector2 = g.uv[i + 1]; g.uv[i + 1] = g.uv[i + 2]; g.uv[i + 2] = tu
+	var rng := Kit.Rng.new(hash(nm) + s)
+	var bt := Kit.Batch.new()
+	bt.add("stone", Kit.paint(body, Kit.hex(0xc9c2b0), Kit.hex(0x9d968a), 0.04, rng), 0.03)
+	bt.add("stone", Kit.paint(para, Kit.hex(0xb9b2a2), Kit.hex(0xa8a091), 0.03, rng), 0.02)
+	var node := bt.build("%s_대신벽_%d" % [nm, s])
+	add_static(node, Transform3D(Basis(), org), { colliders = cols, footprint = Vector2((e - s) * WALL_STEP, WALL_T), occluder = true }, WALL_TAG)
+	wall_stats.chunks += 1
+
 # 바다 칸인가(물 가림 R) — 지도·걷기 판정용
 func is_sea(x: float, z: float) -> bool:
 	if water_mask == null: return false
@@ -694,12 +986,21 @@ func _river_widths(r: Dictionary, n: int) -> PackedFloat32Array:
 func _build_rivers() -> void:
 	_build_sea()
 	for r in region.get("rivers", []):
+		# 큰 강(render:false·S급): 물면은 sea(kind river) 판이 그리고 걷기도 그쪽이 막는다 — 중심선은 흐름 지도에만
+		if _is_big_river(r):
+			big_river_ids[String(r.get("id", ""))] = true
+			continue
 		var pts := []
 		for p in r.points: pts.append(Vector3(float(p[0]), float(p[2]) if p.size() > 2 else data_height(p[0], p[1]), float(p[1])))
 		if pts.size() < 2: continue
 		var ws := _river_widths(r, pts.size())
+		var dry: bool = r.get("dry") == true or String(r.get("flow", "")) == "intermittent"
+		if dry:
+			# 건천: 바닥 표시(걷기 허용·지형 셰이더 돌 바닥) + 마른 돌 바닥 리본(비 오면 가운데에 물줄기)
+			_mark_dry(pts, ws)
+			for k in ws.size(): ws[k] = maxf(ws[k] * 0.8, 2.4)
 		# 걷기 막기용 선분 격자: 중심선에서 폭의 80% 안쪽이고 땅이 수면보다 낮으면 물 속
-		for k in pts.size() - 1:
+		for k in (0 if dry else pts.size() - 1):
 			var rr := maxf(ws[k], ws[k + 1]) * 0.8
 			var sg := { a = Vector2(pts[k].x, pts[k].z), b = Vector2(pts[k + 1].x, pts[k + 1].z), r = rr, ya = pts[k].y, yb = pts[k + 1].y }
 			_grid_insert(_river_grid, { type = "box", minX = minf(sg.a.x, sg.b.x) - sg.r, maxX = maxf(sg.a.x, sg.b.x) + sg.r,
@@ -725,8 +1026,18 @@ func _build_rivers() -> void:
 			var s := 0
 			while s < rp.size() - 1:
 				var e := mini(s + chunk, rp.size() - 1)
-				water_root.add_child(_river_chunk(rp, wp, s, e, String(r.get("id", "river"))))
+				var ch := _river_chunk(rp, wp, s, e, String(r.get("id", "river")))
+				if dry:
+					if _mat_dry == null:
+						_mat_dry = mat_water.duplicate()
+						_mat_dry.set_shader_parameter("gate", 0.0)
+						_mat_dry.set_shader_parameter("dry", 1.0)
+					ch.material_override = _mat_dry
+					_dry_ribbons.append(ch)
+				water_root.add_child(ch)
 				s = e
+	_finish_dry()
+	_build_ferries()
 
 static func _chaikin(p: Array) -> Array:
 	var o := [p[0]]
@@ -1285,7 +1596,7 @@ func blocked(x: float, z: float, r: float) -> bool:
 
 func _in_river(x: float, z: float, r: float) -> bool:
 	if not _walk_grid.is_empty() and walk_at(x, z) != null: return false  # 다리·징검다리 위
-	if landuse_at(x, z) == 5: return true
+	if landuse_at(x, z) == 5 and not is_dry_bed(x, z): return true
 	if not is_nan(sea_y) and ground_at(x, z) < sea_y - 0.15: return true   # 바다 밑 바위·모래(토지이용이 물이 아닌 칸)
 	if not lakes.is_empty():
 		var lk = lake_at(x, z)
@@ -1343,6 +1654,7 @@ var use_cutaway := false   # 키트 재질 점무늬 가림(occ_*)이 생겨 기
 
 func update(_dt: float, _time: float) -> void:
 	_poll_jobs()
+	_update_dry()
 
 # ---------------------------------------------------------------------------
 # 식생 가림 처리: 카메라와 플레이어 사이의 키 큰 식생(나무·대숲)을 잠시 줄여 숨긴다.
@@ -1578,6 +1890,19 @@ func river_surface_at(x: float, z: float, radius := 40.0) -> float:
 				var t := clampf((p - sg.a).dot(ab) / maxf(ab.length_squared(), 1e-6), 0.0, 1.0)
 				var d := p.distance_to(sg.a + ab * t)
 				if d < best and d < radius: best = d; by = lerpf(sg.ya, sg.yb, t)
+	# 호수 안이면 호수 면
+	var lk = lake_at(x, z) if not lakes.is_empty() else null
+	if lk != null: return float(lk.y)
+	# 바다·큰 강 물면(sea): 그 자리나 가까이(반경 안 8방향)가 바다 칸이고 작은 하천이 더 가깝지 않으면 sea.y
+	# (배치 로더가 나룻배·배를 물 면에 앉힐 때 — 노정 포구 배도)
+	if not is_nan(sea_y) and water_mask != null:
+		var near := is_sea(x, z)
+		var dd := 4.0
+		while not near and dd <= radius:
+			for a in 8:
+				if is_sea(x + cos(a * PI / 4.0) * dd, z + sin(a * PI / 4.0) * dd): near = true; break
+			dd *= 2.0
+		if near and (is_nan(by) or best > dd * 0.5): return sea_y
 	return by
 
 # ---------------------------------------------------------------------------

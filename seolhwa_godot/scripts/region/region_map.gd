@@ -85,6 +85,14 @@ func _collect_water(w) -> void:
 		if s.has("x"): _springs.append([String(s.get("name", "용천수")), Vector2(float(s.x), float(s.z))])
 	for o in w.region.get("oreums", []):
 		if o.has("x"): _oreums.append([String(o.get("name", "")), Vector2(float(o.x), float(o.z)), float(o.get("radius_m", 60.0))])
+	# 성곽 꺾은선(region.json walls — 한양도성·평양성·함흥읍성): 늘 그린다(키트 성벽 조각은 지도 항목에서 빠지므로 겹치지 않는다)
+	for wl in w.region.get("walls", []):
+		var wp: Array = wl.get("points", [])
+		for i in wp.size() - 1:
+			_walls.append([Vector2(float(wp[i][0]), float(wp[i][1])), Vector2(float(wp[i + 1][0]), float(wp[i + 1][1]))])
+		if bool(wl.get("closed", false)) and wp.size() > 2:
+			_walls.append([Vector2(float(wp[-1][0]), float(wp[-1][1])), Vector2(float(wp[0][0]), float(wp[0][1]))])
+	_sea_col = RIVER_COL if ("sea_is_river" in w and w.sea_is_river) else SEA_COL
 	# 읍성: 배치가 성벽을 주지 않으면 랜드마크 size_m 사각형으로
 	for l in w.region.get("landmarks", []):
 		var kit := String(l.get("kit", ""))
@@ -300,6 +308,9 @@ func _draw_map() -> void:
 		for r in world.region.get("roads", []):
 			var line := PackedVector2Array()
 			for p in r.points: line.append(_to_px(Vector2(float(p[0]), float(p[1]))))
+			if String(r.get("id", "")).contains("ferry"):   # 나룻배 뱃길: 물 위 점선
+				for i in line.size() - 1: _canvas.draw_dashed_line(line[i], line[i + 1], Color(0.45, 0.32, 0.2), 2.0, 8.0)
+				continue
 			_canvas.draw_polyline(line, Color(0.80, 0.70, 0.52), maxf(1.5, float(r.get("width_m", 3.0)) * _k), true)
 		for it in _items:
 			var c: Vector2 = it.c
@@ -345,6 +356,8 @@ func _text(s: String, at: Vector2, size: int, col: Color) -> void:
 
 # ---- 바다·호수(먹선 물가)·용천수·오름 ----
 const SEA_COL := Color(0.60, 0.71, 0.72, 0.92)
+const RIVER_COL := Color(0.58, 0.69, 0.64, 0.92)   # 큰 강(sea.kind river) — 바다보다 조금 푸른 녹빛
+var _sea_col := SEA_COL
 const INK := Color(0.22, 0.24, 0.24)
 func _draw_water(view: Rect2) -> void:
 	if _sea_tex:
@@ -352,7 +365,7 @@ func _draw_water(view: Rect2) -> void:
 		# 물가 먹선: 조금 짙은 판을 1.5px씩 네 방향으로 밀어 깔고 그 위에 바다색
 		for o in [Vector2(1.5, 0), Vector2(-1.5, 0), Vector2(0, 1.5), Vector2(0, -1.5)]:
 			_canvas.draw_texture_rect(_sea_tex, Rect2(r.position + o, r.size), false, Color(0.30, 0.36, 0.37, 0.8))
-		_canvas.draw_texture_rect(_sea_tex, r, false, SEA_COL)
+		_canvas.draw_texture_rect(_sea_tex, r, false, _sea_col)
 	for l in _lakes:
 		var px := PackedVector2Array()
 		for q in l[1]: px.append(_to_px(q))
@@ -434,6 +447,17 @@ func _route_line(r: Dictionary) -> PackedVector2Array:
 	if a != null and b != null and a != b: out.append(a); out.append(b)
 	return out
 
+# 꺾은선 위 길이 비율 f 자리
+static func _polyline_at(px: PackedVector2Array, f: float) -> Vector2:
+	var total := 0.0
+	for i in px.size() - 1: total += px[i].distance_to(px[i + 1])
+	var want := total * f
+	for i in px.size() - 1:
+		var l := px[i].distance_to(px[i + 1])
+		if want <= l: return px[i].lerp(px[i + 1], want / maxf(l, 1e-6))
+		want -= l
+	return px[px.size() - 1]
+
 func _here_ll() -> Variant:
 	if not world.is_route:
 		var ll = Travel.local_to_lonlat(world.region, _player.x, _player.z)
@@ -468,6 +492,10 @@ func _draw_nation() -> void:
 	_canvas.draw_colored_polygon(jj, Color(0.93, 0.90, 0.81))
 	_canvas.draw_polyline(jj, Color(0.25, 0.22, 0.2), 2.0, true)
 	var here_id := String(world.region.get("region_id", ""))
+	# 노정 이름: route.json `short`(없으면 이름 앞부분). 고을 점과 이미 쓴 이름에 겹치면 선을 따라 자리를 옮기고, 끝내 겹치면 안 쓴다
+	var taken: Array = []   # Rect2
+	for r in _nation.regions:
+		if r.lonlat != null: taken.append(Rect2(_n_px(r.lonlat) - Vector2(40, 34), Vector2(80, 44)))
 	for r in _nation.routes:
 		var line := _route_line(r)
 		if line.size() < 2: continue
@@ -475,7 +503,18 @@ func _draw_nation() -> void:
 		for g in line: px.append(_n_px(g))
 		var on: bool = r.id == here_id
 		_canvas.draw_polyline(px, Color(0.62, 0.2, 0.12) if on else Color(0.45, 0.35, 0.25), 4.0 if on else 2.5, true)
-		_text(String(r.name), px[px.size() / 2] + Vector2(0, -14), 14, Color(0.35, 0.22, 0.15))
+		var nm := String(r.get("short", r.name)) if not on else String(r.name)
+		var w := _font.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x + 8.0
+		for f in [0.5, 0.35, 0.65, 0.2, 0.8]:
+			var at := _polyline_at(px, f) + Vector2(0, -14)
+			var box := Rect2(at - Vector2(w / 2.0, 10), Vector2(w, 20))
+			var hit := false
+			for t in taken:
+				if (t as Rect2).intersects(box): hit = true; break
+			if hit and not on: continue
+			taken.append(box)
+			_text(nm, at, 14, Color(0.35, 0.22, 0.15))
+			break
 	for r in _nation.regions:
 		if r.lonlat == null: continue
 		var c := _n_px(r.lonlat)

@@ -73,6 +73,10 @@ func setup(w, data_dir: String, forced_kind := "") -> void:
 	var cm = reg.get("climate")
 	# 기본 기후대: regions.json/region.json climate 문자열 → 위도
 	default_zone = _zone_from_any(reg.get("climate_zone", cm if cm is String else ""))
+	# 위도 띠 덮어쓰기: climate.rule.band(또는 climate.band) — terrain-data-north §5 요청(황주 38.7°N → 중부)
+	if default_zone == "" and cm is Dictionary:
+		var rule = cm.get("rule", {})
+		default_zone = _zone_from_any(cm.get("band", rule.get("band", "") if rule is Dictionary else ""))
 	if default_zone == "":
 		var lat0 := float(reg.get("projection", {}).get("lat0", 35.5)) if reg.get("projection") is Dictionary else 35.5
 		default_zone = "south" if lat0 < 36.0 else ("central" if lat0 < 38.0 else "north")
@@ -81,6 +85,17 @@ func setup(w, data_dir: String, forced_kind := "") -> void:
 		if not d.is_empty() and d.bpp == 1:
 			codes = d.bytes; cw = d.w; ch = d.h
 			cx0 = float(cm.get("x0", w.hx0)); cz0 = float(cm.get("z0", w.hz0)); ccell = float(cm.get("cell", 4.0))
+		# 덮어쓰기 표시가 없으면 climate.png의 남부·중부·북부 칸 중 가장 많은 것을 기본 기후대로(데이터가 이미 칠해 둔 띠를 따른다)
+		if not _zone_given(reg, cm) and cw > 0:
+			var cnt := [0, 0, 0]
+			for j in range(0, ch, 8):
+				for i in range(0, cw, 8):
+					var c := codes[j * cw + i]
+					if c < 3: cnt[c] += 1
+			var best := 0
+			for b in 3:
+				if cnt[b] > cnt[best]: best = b
+			if cnt[best] > 0: default_zone = ZONES[best]
 		snow_line = _snow_line(reg, cm)
 	elif reg.get("projection") is Dictionary:
 		snow_line = _snow_line(reg, {})
@@ -99,6 +114,13 @@ func setup(w, data_dir: String, forced_kind := "") -> void:
 		_snap()
 	print("WEATHER zone=%s kind=%s snow_line=%.0f climate=%s" % [zone, kind, snow_line, "%dx%d" % [cw, ch] if cw > 0 else "없음"])
 
+func _zone_given(reg: Dictionary, cm) -> bool:
+	if _zone_from_any(reg.get("climate_zone", "")) != "": return true
+	if cm is Dictionary:
+		var rule = cm.get("rule", {})
+		if _zone_from_any(cm.get("band", rule.get("band", "") if rule is Dictionary else "")) != "": return true
+	return false
+
 static func _zone_from_any(v) -> String:
 	var s := String(v).to_lower()
 	if s == "": return ""
@@ -116,6 +138,8 @@ func _snow_line(reg: Dictionary, cm: Dictionary) -> float:
 	if rule is Dictionary and rule.get("alpine_alt_m") is Dictionary:
 		var lat0 := float(pj.get("lat0", 35.5))
 		var band := "0" if lat0 < 36.0 else ("1" if lat0 < 38.0 else "2")
+		var zi := ZONES.find(default_zone)   # 위도 띠 덮어쓰기(band·climate.png 다수)를 눈선에도
+		if zi >= 0 and zi < 3: band = str(zi)
 		var alt = rule.alpine_alt_m.get(band)
 		if alt != null: return (float(alt) - base) * K - 15.0   # 눈 덮기는 눈선 위 30m에 걸쳐 짙어지므로 조금 아래서 시작
 	if cw > 0:

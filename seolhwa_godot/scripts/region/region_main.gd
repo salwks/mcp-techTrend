@@ -12,7 +12,9 @@
 #   --region=<id>      권역(region_data/<id>/, 기본 JL_NAMWON_UNBONG)   --route=<id>  노정(region_data/routes/<id>/route.json)
 #   --routedir=폴더[;폴더]  노정을 더 찾을 폴더(시험: res://shots/region/test_route/)
 #   --weather=clear|cloudy|rain|fog|snow|wind  날씨 고정(U 키: 날씨 돌리기)
+#   --walkroute[=n] [--walkspeed=12]  --portaltest처럼 공간을 넘되, 노정에서는 주 도로를 끝까지 실제로 걷는다(막힘을 WALK stuck으로 남김)
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
+#   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 # 비교용 끄기: --nofog --nopost --notilt --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
@@ -164,8 +166,9 @@ func _ready() -> void:
 		_bench_start = player_pos
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-	if args.has("portaltest"):
-		_ptest = _pending.get("ptest", { left = int(args.portaltest) if args.portaltest != "1" else 2, n = 0 })
+	if args.has("portaltest") or args.has("walkroute"):
+		var a0: String = args.get("walkroute", args.get("portaltest", "1"))
+		_ptest = _pending.get("ptest", { left = int(a0) if a0 != "1" else 2, n = 0, walk = args.has("walkroute") })
 	elif not _pending.is_empty(): pass   # 넘어온 장면에서는 투어·찍기를 다시 하지 않는다
 	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
@@ -243,6 +246,7 @@ func _build_scene() -> void:
 	placement.parallel = not args.has("serialbuild")
 	if not args.has("noplace"): placement.load_all()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
+	if not args.has("nowallproxy"): world.build_wall_proxies(placement)   # region.json walls 중 키트가 안 덮은 구간만
 	portals = Travel.portals_for(world.region, world.is_route)
 	_place_portals()
 	rig = CameraRig.new(cam, world)
@@ -508,6 +512,7 @@ func _process(delta: float) -> void:
 	var speed := RUN if Input.is_action_pressed("run") else WALK
 	if not _ptest.is_empty() and not _loading and not _leaving:
 		mv = _ptest_step(delta); speed = RUN
+		if not _pt_path.is_empty(): speed = float(args.get("walkspeed", "12"))
 	if _bench_left > 0.0 and _bench_loading and _loading:
 		_bench_load_t += delta
 	elif _bench_left > 0.0 and _bench_loading:
@@ -575,9 +580,11 @@ func _process(delta: float) -> void:
 	world.update_scatter_lod(player_pos)
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)
+	world.update_ferries(player_pos)
 	placement.update()
 	if weather != null:
 		weather.update(dt, player_pos, cam.global_position, interior != null)
+		world.wet_level = weather.wet
 		if weather.dirty and Engine.get_process_frames() % 3 == 0: _apply_atmo()
 	if not _loading and not _leaving: _check_portals()
 	if _hud and _hud_t > 0.0:
@@ -742,6 +749,7 @@ func _reload_place() -> void:
 	_reload_t = 0.0
 	placement.reload()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
+	if not args.has("nowallproxy"): world.build_wall_proxies(placement)
 	player_pos.y = world.height_at(player_pos.x, player_pos.z)
 
 func _quit() -> void:
@@ -828,7 +836,7 @@ func _check_portals() -> void:
 	for pt in portals:
 		var d := Vector2(pt.x, pt.z).distance_to(pp)
 		if not _portal_armed.get(pt.id, true):
-			if d > PORTAL_ARM: _portal_armed[pt.id] = true
+			if d > PORTAL_ARM and _pt_path.is_empty(): _portal_armed[pt.id] = true
 			continue
 		if d < PORTAL_R:
 			_travel(pt); return
@@ -847,6 +855,9 @@ func _travel(pt: Dictionary) -> void:
 	var title := String(pt.label)
 	var nxt := { kind = pt.kind, id = pt.target, dir = dir, at = at, hour = hour, via = world.region.get("region_id", ""), title = title + " (으)로",
 		weather = weather.forced if weather else "", wet = weather.wet if weather else 0.0, snow = weather.snow if weather else 0.0 }
+	if not _pt_path.is_empty():
+		print("WALK done route=%s dist=%.0fm time=%.0fs stuck=%d skipped=%.0fm waypoints=%d/%d" % [world.region.get("region_id", ""), _pt_walk.dist, _pt_walk.t,
+			_pt_walk.stuck, _pt_walk.skipped, _pt_i, _pt_path.size()])
 	if not _ptest.is_empty():
 		var pt2 := _ptest.duplicate(); pt2.left = int(_ptest.left) - 1; pt2.n = int(_ptest.n) + 1
 		nxt.ptest = pt2
@@ -891,12 +902,41 @@ var _pt_shot_done := false
 var _pt_stuck := 0.0
 var _pt_last := Vector3.ZERO
 
+# --walkroute[=n] (--portaltest 확장): 노정 공간에서는 순간이동 없이 주 도로(Travel.main_road)를 처음부터 끝까지 걷는다.
+#   --walkspeed=12(m/s). 1.5초 넘게 막히면 "WALK stuck"을 남기고 다음 길 점으로 옮긴다. 다 걸으면 끝 포털로 들어가 다음 공간으로.
+#   권역 공간에서는 예전 --portaltest처럼 가장 먼 포털로 간다.
+var _pt_path := PackedVector2Array()
+var _pt_i := 0
+var _pt_walk := {}
+
+func _walk_step(delta: float) -> Vector2:
+	var pp := Vector2(player_pos.x, player_pos.z)
+	_pt_walk.t += delta
+	_pt_walk.dist += pp.distance_to(_pt_walk.last)
+	_pt_walk.last = pp
+	while _pt_i < _pt_path.size() - 1 and pp.distance_to(_pt_path[_pt_i]) < 3.0: _pt_i += 1
+	var tp := _pt_path[_pt_i]
+	if player_pos.distance_to(_pt_last) < 0.02: _pt_stuck += delta
+	else: _pt_stuck = 0.0
+	_pt_last = player_pos
+	if _pt_stuck > 1.5:
+		_pt_walk.stuck += 1
+		var why := "물" if world._in_river(pp.x, pp.y, player.radius) else ("물체" if world.blocked(pp.x, pp.y, player.radius) else "경사·가장자리")
+		print("WALK stuck #%d at (%.0f,%.0f) wp=%d/%d lu=%d near=%s" % [_pt_walk.stuck, pp.x, pp.y, _pt_i, _pt_path.size(), world.landuse_at(pp.x, pp.y), why])
+		var ni := mini(_pt_i + 1, _pt_path.size() - 1)
+		_pt_walk.skipped += pp.distance_to(_pt_path[ni])
+		_pt_i = ni
+		teleport(_pt_path[ni].x, _pt_path[ni].y); _pt_stuck = 0.0
+		_pt_walk.last = Vector2(player_pos.x, player_pos.z)
+	return (tp - pp).normalized()
+
 func _ptest_step(delta: float) -> Vector2:
 	if not _pt_shot_done:
 		_pt_shot_done = true
 		_ptest_shot.call_deferred()
 		_pt_target = false
 		return Vector2.ZERO
+	if not _pt_path.is_empty(): return _walk_step(delta)
 	if not (_pt_target is Dictionary): return Vector2.ZERO
 	var tp := Vector2(_pt_target.x, _pt_target.z)
 	var d := tp - Vector2(player_pos.x, player_pos.z)
@@ -925,6 +965,21 @@ func _ptest_shot() -> void:
 		if d > bd: bd = d; best = pt
 	_pt_target = best
 	_portal_armed[best.id] = true
+	if bool(_ptest.get("walk", false)) and world.is_route:
+		# 주 도로를 플레이어 쪽 끝부터, 마지막은 포털 자리
+		var road := Travel.main_road(world.region)
+		if road.size() >= 2:
+			var here := Vector2(player_pos.x, player_pos.z)
+			if here.distance_to(road[road.size() - 1]) < here.distance_to(road[0]): road.reverse()
+			var path := PackedVector2Array()
+			for i in road.size():
+				if i == 0 or road[i].distance_to(path[path.size() - 1]) >= 6.0: path.append(road[i])
+			path.append(Vector2(best.x, best.z))
+			_pt_path = path; _pt_i = 0
+			for pt in portals: _portal_armed[pt.id] = pt.id == best.id   # 걷는 동안 출발 끝 포털에 다시 걸리지 않게
+			_pt_walk = { t = 0.0, dist = 0.0, stuck = 0, skipped = 0.0, last = here }
+			print("WALK start route=%s waypoints=%d to=%s" % [world.region.get("region_id", ""), path.size(), best.id])
+			return
 	var tp := Vector2(best.x, best.z)
 	var q := tp + (Vector2(player_pos.x, player_pos.z) - tp).normalized() * 18.0
 	teleport(q.x, q.y)

@@ -20,6 +20,7 @@ const FLAT_EDGE := 5.0
 const VEG_MARGIN := 1.0
 const TAG := "placement"
 const WATER_KITS := ["village/jingeom", "village/narutbae", "village/ppallaeteo"]
+const BOAT_KITS := ["village/narutbae"]
 const BRIDGE_KITS := ["village/stone_bridge", "village/seop_bridge"]
 const YARD_COMPOSITES := ["house_compound", "gwana", "hyanggyo", "silsangsa", "jumak"]
 
@@ -365,6 +366,10 @@ func _piece(parent: Dictionary, p: Dictionary) -> Dictionary:
 	return r
 
 func _y_for(r: Dictionary, info: Dictionary) -> float:
+	# 배(나룻배)는 손으로 적은 y보다 찾은 물 면(하천·호수·바다·큰 강 — RegionWorld.river_surface_at)을 따른다
+	if r.kit in BOAT_KITS and not r.get("is_piece", false):
+		var bs: float = world.river_surface_at(r.x, r.z, 40.0)
+		if not is_nan(bs): return bs
 	if r.y != null: return r.y
 	if r.get("is_piece", false) and r.py != null:
 		var par: Dictionary = r.parent

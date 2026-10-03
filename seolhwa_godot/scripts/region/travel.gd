@@ -57,7 +57,8 @@ static func routes() -> Array:
 			var id := String(j.get("route_id", j.get("id", d.trim_suffix("/").get_file())))
 			if seen.has(id): continue
 			seen[id] = true
-			out.append({ id = id, dir = d, name = String(j.get("name", j.get("route_name", id))), from = String(j.get("from_region", _portal(j, "from").get("region", ""))),
+			var nm := String(j.get("name", j.get("route_name", id)))
+			out.append({ id = id, dir = d, name = nm, short = String(j.get("short", short_name(nm))), from = String(j.get("from_region", _portal(j, "from").get("region", ""))),
 				to = String(j.get("to_region", _portal(j, "to").get("region", ""))), json = j })
 	_routes_cache = out
 	return out
@@ -155,6 +156,7 @@ static func portals_for(space: Dictionary, is_route: bool) -> Array:
 			var nm := String(p.get("name", ""))
 			out.append({ id = "%s_%s" % [r.id, end], name = nm, x = float(p.x), z = float(p.z), kind = "route", target = r.id,
 				tx = ends[end].x, tz = ends[end].y, label = "%s%s" % [r.name, " · " + nm if nm != "" else ""] })
+	var from_routes := out.size()
 	for p in (space.get("portals") if space.get("portals") is Array else []):
 		if not (p is Dictionary) or not p.has("x"): continue
 		var to: Dictionary = p.get("to", {}) if p.get("to") is Dictionary else {}
@@ -164,9 +166,37 @@ static func portals_for(space: Dictionary, is_route: bool) -> Array:
 		var kind := "route" if to.has("route") else "region"
 		var tgt := String(to.get("route", to.get("region", "")))
 		if tgt == "": continue
-		out.append({ id = String(p.get("id", tgt)), name = String(p.get("name", "")), x = float(p.x), z = float(p.z), kind = kind, target = tgt,
-			tx = float(to.get("x", NAN)), tz = float(to.get("z", NAN)), label = String(p.get("name", tgt)) })
+		var px := float(p.x); var pz := float(p.z)
+		# 같은 대상·같은 자리(MERGE_R m 안)는 노정 파일에서 온 포털 하나로 합친다(장승·글씨 겹침 방지)
+		var dup := false
+		for i in from_routes:
+			var q: Dictionary = out[i]
+			if q.kind == kind and q.target == tgt and Vector2(q.x, q.z).distance_to(Vector2(px, pz)) < MERGE_R:
+				dup = true; break
+		if dup: continue
+		var tx := float(to.get("x", NAN)); var tz := float(to.get("z", NAN))
+		var label := String(p.get("name", tgt))
+		# 노정으로 들어가는데 도착 자리가 없으면: 이 권역이 붙은 노정 끝(from/to)에 선다 — 노정 spawn(from 끝)이 아니라
+		if kind == "route" and is_nan(tx):
+			for r in routes():
+				if r.id != tgt: continue
+				var ends := route_ends(r.json)
+				var end := ""
+				if String(_portal(r.json, "to").get("region", r.to)) == my_id: end = "to"
+				if String(_portal(r.json, "from").get("region", r.from)) == my_id:
+					# 양 끝이 같은 권역(드묾)이면 포털 자리에 가까운 쪽
+					if end == "" or Vector2(px, pz).distance_to(Vector2(float(_portal(r.json, "from").get("x", 1e9)), float(_portal(r.json, "from").get("z", 1e9)))) \
+							< Vector2(px, pz).distance_to(Vector2(float(_portal(r.json, "to").get("x", 1e9)), float(_portal(r.json, "to").get("z", 1e9)))):
+						end = "from"
+				if end != "":
+					tx = ends[end].x; tz = ends[end].y
+				if String(p.get("name", "")) == "": label = r.name
+				break
+		out.append({ id = String(p.get("id", tgt)), name = String(p.get("name", "")), x = px, z = pz, kind = kind, target = tgt,
+			tx = tx, tz = tz, label = label })
 	return out
+
+const MERGE_R := 10.0
 
 # 노정 양 끝(노정 좌표): portals.*.route_x/route_z, 없으면 주 도로(대로 중 가장 긴 길, 없으면 roads[0])의 첫·끝 점, 없으면 spawn
 static func route_ends(j: Dictionary) -> Dictionary:

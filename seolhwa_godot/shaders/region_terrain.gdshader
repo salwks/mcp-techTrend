@@ -23,6 +23,8 @@ uniform float grid_step = 1.0;     // 격자 간격(근경 1m, 중경 4m) — �
 uniform float skirt = 6.0;         // 가장자리 치마(이음매 틈 가리기) 깊이
 uniform vec3 far_ink = vec3(0.07, 0.085, 0.08); // 원경 먹빛(선형) — region_main이 시간대에 맞춰 넣는다
 uniform float far_k = 0.0;         // 먼 능선을 먹빛으로 남기는 정도(0 = 기존 안개 그대로 — 식생·키트 재질과 맞추려면 0. 공용 안개에 같은 규칙이 들어오면 켠다)
+uniform sampler2D dry_tex : filter_nearest, repeat_disable;   // 건천 바닥 칸(토지이용 격자, region_world.dry_mask)
+uniform float has_dry = 0.0;
 uniform float mist_base = 0.0;     // 낮은 안개 기준 높이(플레이어 발 높이). 기존 Materials는 마을 바닥 y=0 기준         // 먼 능선을 먹빛으로 남기는 정도(0 = 기존 안개 그대로)
 
 varying vec3 v_wp;
@@ -62,6 +64,9 @@ const vec3 C_SOIL = vec3(0.640, 0.540, 0.370);
 const vec3 C_CROP = vec3(0.560, 0.610, 0.360);
 const vec3 C_SAND = vec3(0.800, 0.760, 0.640);
 const vec3 C_BAMBOO = vec3(0.400, 0.470, 0.280);
+const vec3 C_BASALT = vec3(0.330, 0.320, 0.300);  // 건천 자갈(현무암)
+const vec3 C_BASALT2 = vec3(0.420, 0.405, 0.375);
+const vec3 C_BOULDER = vec3(0.560, 0.540, 0.500);
 
 
 // 토지이용 한 칸의 색. water: 논물(하늘 반사) 비율을 돌려준다
@@ -101,7 +106,18 @@ vec3 lu_color(int c, vec2 p, float n1, float n2, vec4 cq, float block_edge, inou
 	}
 	// 길 래스터(4m)는 밟힌 풀 정도로만 — 흙길은 region.json roads를 칠하기 텍스처로 또렷하게 그린다
 	if (c == 4) return mix(mix(C_GRASS, C_GRASS2, clamp(0.5 + n1, 0.0, 1.0)), C_DRY, 0.35 + 0.15 * n2);
-	if (c == 5) return C_BED;
+	if (c == 5) {
+		// 건천(제주): 물 없는 현무암 바닥 — 짙은 자갈 바탕에 둥근 바위(밝은 윗면·먹빛 테)
+		if (has_dry > 0.5 && texelFetch(dry_tex, clamp(ivec2(round((p - lu_meta.xy) * lu_meta.z)), ivec2(0), lu_size - 1), 0).r > 0.5) {
+			vec3 grav = mix(C_BASALT, C_BASALT2, clamp(0.5 + n2 * 0.6, 0.0, 1.0));
+			float bv = r_vnoise(p * 0.55) * 0.7 + r_vnoise(p * 1.6 + vec2(7.1, 3.3)) * 0.3;
+			float rock = smoothstep(0.6, 0.66, bv);
+			float rim = smoothstep(0.55, 0.6, bv) * (1.0 - rock);
+			vec3 c5 = mix(grav, C_BOULDER * (0.9 + 0.2 * n1), rock);
+			return mix(c5, C_BASALT * 0.6, rim * 0.7);
+		}
+		return C_BED;
+	}
 	// 마을 터: 웹 마을 땅처럼 풀밭 + 마른 흙 얼룩(맨 흙은 건물 둘레·길에만 — 칠하기 텍스처)
 	if (c == 6) {
 		vec3 g = mix(C_GRASS, C_GRASS2, clamp(0.5 + n1, 0.0, 1.0));
