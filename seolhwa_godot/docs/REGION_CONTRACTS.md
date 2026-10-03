@@ -132,3 +132,23 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 - 회전은 남향(ry=0)을 기본으로, 길·물길에 맞춰 ±30° 안에서. 카메라가 남쪽에 고정이라 북향 건물은 등만 보인다.
 - 고증: 건물 수·간격은 압축된 땅(K=0.30)에 맞춘 근사. 위치는 region.json settlements·landmarks·roads를 따른다. 근거와 가설은 보고서에.
 - 확인 방법: `godot --path . res://scenes/region.tscn -- --warp=x,z --time=10 --shot=shots/... --frames=200 --quit` (+ `--cam=` 등 region_main 인자, 보고서 terrain-engine.md 참고)
+
+## 9. 고을 성격표 (고을 차이 — docs/TOWN_IDENTITY_CLIMATE_PLAN.md A0·A0.5)
+
+`region.json` 최상위 `archetypes`(입지 유형 기본값)와 각 settlement의 `profile`(유형 + 고유값 덮어쓰기). 배치 생성기와 엔진은 `profile`을 유형 기본값과 합쳐 읽는다.
+```json
+"archetypes": {
+  "eupchi":   { "roof": {"giwa": 0.45, "choga": 0.55}, "wall": "todam", "layout": "walled_grid", "entrance": "gate", "people": ["관속","양반","장꾼"], "animals": [], "mood": {"fog": 0.3, "wind": 0.2} },
+  "plain":    { "roof": {"choga": 0.9, "giwa": 0.1}, "wall": "fence", "layout": "round_cluster", "entrance": "zelkova_square", "people": ["농부"], "animals": ["소"] },
+  "river":    { "roof": {"choga": 0.85, "giwa": 0.15}, "wall": "todam", "layout": "fan_from_ferry", "entrance": "ferry", "people": ["뱃사공","장꾼"], "animals": ["소"] },
+  "mountain": { "roof": {"neowa": 0.6, "gulpi": 0.2, "choga": 0.2}, "wall": "stone_terrace", "layout": "terraced", "entrance": "watermill_bridge", "people": ["약초꾼","사냥꾼","숯쟁이"], "animals": ["개"] },
+  "pass":     { "roof": {"choga": 1.0}, "wall": "none", "layout": "few_roadside", "entrance": "seonghwang_cairn", "people": ["나그네","주모"], "animals": [] },
+  "temple":   { "roof": {"choga": 0.8, "giwa": 0.2}, "wall": "todam", "layout": "along_temple_road", "entrance": "stone_jangseung", "people": ["스님","보살"], "animals": [] },
+  "coast":    { "roof": {"choga_low": 1.0}, "wall": "stone_net", "layout": "linear_shore", "entrance": "wharf", "people": ["어부","객주"], "animals": ["갈매기"] },
+  "island":   { "roof": {"jeju_stone": 1.0}, "wall": "basalt", "layout": "olle_alleys", "entrance": "dolhareubang", "people": ["해녀"], "animals": ["말"] },
+  "capital":  { "special": true }
+},
+"settlements": [ { "id": "unbong_eup", …, "profile": { "archetype": "plain", "climate": "south", "roof": {"choga": 0.8, "giwa": 0.2}, "wall": "stone", "signature": "억새 들판 + 돌장승", "trades": ["장시"], "notes": "고원 들, 동편제 고장" } } ]
+```
+- 키: `roof`(지붕 비율: giwa·choga·choga_low·neowa·gulpi·guitul·jeju_stone), `wall`(stone·stone_terrace·todam·fence·none·stone_net·basalt), `layout`(walled_grid·round_cluster·linear_street·fan_from_ferry·terraced·few_roadside·along_temple_road·linear_shore·olle_alleys), `entrance`(어귀 장면 키), `people`·`animals`(NPC 종류), `climate`(south·central·north·alpine·coast — §B 기후대), `signature`(고을 상징 한 줄), `trades`(생업).
+- 통과 기준: 고을 이름을 가린 게임 화면으로 어느 고을인지 맞힐 수 있어야 한다(눈가림 시험).
