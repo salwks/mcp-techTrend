@@ -24,6 +24,7 @@ const PlacementLoader := preload("res://scripts/region/placement_loader.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const Weather := preload("res://scripts/region/weather.gd")
 const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
+const Progress := preload("res://scripts/region/progress.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
@@ -112,6 +113,8 @@ var _leaving := false
 var _hud: Label
 var _hud_t := 0.0
 var _ptest := {}          # --portaltest 진행 상태
+var _route_entry := ""    # 노정에 들어온 끝 포털 id — 다른 끝 포털로 나가면 그 노정을 '지나옴'(Progress)
+var _fast_hint := ""      # 역마 안내를 띄운 포털 id
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -195,7 +198,7 @@ func _fit_viewport() -> void:
 func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
-		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5], weather_step = [KEY_U],
+		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5], weather_step = [KEY_U], fast_travel = [KEY_H],
 	}
 	for act in keys:
 		if not InputMap.has_action(act): InputMap.add_action(act)
@@ -260,6 +263,7 @@ func _build_scene() -> void:
 	if not args.has("nowallproxy"): world.build_wall_proxies(placement)   # region.json walls 중 키트가 안 덮은 구간만
 	portals = Travel.portals_for(world.region, world.is_route)
 	_place_portals()
+	if world.is_route: _route_entry = _nearest_portal(world.spawn)
 	rig = CameraRig.new(cam, world)
 
 	for i in 6:
@@ -855,6 +859,7 @@ func _arrive(at) -> void:
 	p += inward * 16.0
 	teleport(p.x, p.y)
 	for pt in portals: _portal_armed[pt.id] = Vector2(pt.x, pt.z).distance_to(Vector2(player_pos.x, player_pos.z)) > PORTAL_ARM
+	if world.is_route: _route_entry = _nearest_portal(Vector2(player_pos.x, player_pos.z))
 	print("TRAVEL arrive space=%s at=%s from=%s" % [world.region.get("region_id", "?"), player_pos, _pending.get("via", "")])
 
 # 포털 자리: 장승 한 쌍 + 이정표 글씨(어디로 가는 길인지)
@@ -884,10 +889,29 @@ func _place_portals() -> void:
 		_portal_armed[pt.id] = true
 	if not portals.is_empty(): print("PORTALS ", portals.map(func(p): return "%s(%.0f,%.0f)->%s:%s" % [p.id, p.x, p.z, p.kind, p.target]))
 
+func _nearest_portal(p: Vector2) -> String:
+	var best := ""; var bd := INF
+	for pt in portals:
+		var d := Vector2(pt.x, pt.z).distance_to(p)
+		if d < bd: bd = d; best = String(pt.id)
+	return best
+
 func _check_portals() -> void:
 	var pp := Vector2(player_pos.x, player_pos.z)
 	for pt in portals:
 		var d := Vector2(pt.x, pt.z).distance_to(pp)
+		# 역마: 이미 지나온 노정이면 권역 쪽 포털 곁에서 H로 반대쪽 끝까지 건너뛴다
+		if not world.is_route and pt.kind == "route" and d < 16.0 and Progress.route_done(String(pt.target)):
+			var ft := Travel.fast_target(String(pt.target), String(world.region.get("region_id", "")))
+			if not ft.is_empty():
+				if _fast_hint != String(pt.id):
+					_fast_hint = String(pt.id)
+					_show_hud("H: 역마 타고 %s까지 (지나온 길 건너뛰기)" % String(ft.label))
+				if Input.is_action_just_pressed("fast_travel") or (args.has("fasttest") and _fast_hint == String(pt.id)):
+					ft.id = "fast_" + String(pt.id); ft.fast = true
+					ft.label = "%s (역마)" % String(ft.label)
+					_travel(ft); return
+		elif _fast_hint == String(pt.id) and d > 20.0: _fast_hint = ""
 		if not _portal_armed.get(pt.id, true):
 			if d > PORTAL_ARM and _pt_path.is_empty(): _portal_armed[pt.id] = true
 			continue
@@ -895,6 +919,8 @@ func _check_portals() -> void:
 			_travel(pt); return
 
 func _travel(pt: Dictionary) -> void:
+	if world.is_route and String(pt.id) != _route_entry and not pt.get("fast", false):
+		Progress.mark_route_done(String(world.region.get("route_id", world.region.get("region_id", ""))))
 	var dir := Travel.find_route_dir(pt.target) if pt.kind == "route" else Travel.region_dir(pt.target)
 	if dir == "" or world.space_file(dir) == "":
 		_show_hud("길이 아직 닦이지 않았다: " + String(pt.label))

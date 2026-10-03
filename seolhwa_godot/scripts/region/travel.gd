@@ -213,6 +213,31 @@ static func portals_for(space: Dictionary, is_route: bool) -> Array:
 
 const MERGE_R := 10.0
 
+# 역마(지나온 노정 건너뛰기): 권역 here_region에서 노정 route_id의 반대쪽 끝으로 바로 가는 대상.
+# 반대쪽 끝이 권역이면 그 권역 포털 자리, 다른 노정(갈림길)이면 그 노정에서 이 노정으로 이어진 끝. 없으면 {}
+static func fast_target(route_id: String, here_region: String) -> Dictionary:
+	for r in routes():
+		if r.id != route_id: continue
+		var j: Dictionary = r.json
+		var ps = j.get("portals", {})
+		if not (ps is Dictionary): return {}
+		for end in ["to", "from"] + ps.keys():
+			var p := _portal(j, String(end))
+			if p.is_empty() or String(p.get("region", "")) == here_region: continue
+			if p.has("region") and p.has("x"):
+				var info := region_info(String(p.region))
+				return { kind = "region", target = String(p.region), tx = float(p.x), tz = float(p.z),
+					label = String(info.get("short", short_name(String(p.region)))) }
+			if p.has("route"):
+				for r2 in routes():
+					if r2.id != String(p.route): continue
+					var oe := route_ends(r2.json)
+					for e2 in oe:
+						if String(_portal(r2.json, e2).get("route", "")) == route_id:
+							return { kind = "route", target = r2.id, tx = oe[e2].x, tz = oe[e2].y, label = String(p.get("name", r2.short)) }
+		return {}
+	return {}
+
 # 노정 양 끝(노정 좌표): portals.*.route_x/route_z, 없으면 주 도로(대로 중 가장 긴 길, 없으면 roads[0])의 첫·끝 점, 없으면 spawn
 static func route_ends(j: Dictionary) -> Dictionary:
 	var main := main_road(j)
