@@ -11,6 +11,9 @@ global uniform vec3 hemi_ground;
 global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
+global uniform float wet;        // 젖음 0~1(scripts/region/weather.gd)
+global uniform float snow;       // 눈 덮기 0~1
+global uniform float snow_line;  // 이 높이(y) 위는 잔설(고산 기후대) — 기본 1e5 = 없음
 
 uniform sampler2D ground_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable, hint_default_white;
 uniform sampler2D ramp_tex : filter_linear, repeat_disable;
@@ -194,6 +197,25 @@ void fragment() {
 		col = mix(col, rc, road);
 	}
 	vec3 base = srgb(col) * texture(ground_tex, p / 7.0).rgb;
+	// 날씨: 젖은 땅은 어둡고 길·마당·평지에 물웅덩이(하늘 반사), 눈은 평평한 곳부터 덮고 길은 밟혀 덜 덮인다
+	if (wet > 0.0 || snow > 0.0 || snow_line < 9e4) {
+		float flat_k = smoothstep(0.86, 0.97, v_wn.y);
+		float on_road = (rd < rhw + 0.3) ? 1.0 : (yd < 2.0 ? 0.6 : 0.0);
+		float sc = max(snow, smoothstep(snow_line, snow_line + 30.0, v_wp.y) * (0.75 + 0.25 * n1));
+		float cov = 0.0;
+		if (sc > 0.0) {
+			float sn = tn(p * 0.11 + vec2(0.13, 0.57));
+			cov = clamp(sc * 1.6 - 0.5 + sn * 0.45, 0.0, 1.0) * smoothstep(0.35, 0.8, v_wn.y);
+			cov *= 1.0 - on_road * (0.45 + 0.25 * pn);   // 밟힌 길·마당은 흙이 비친다
+			cov = min(cov, 0.9 + 0.1 * sn);
+		}
+		base *= 1.0 - 0.32 * wet * (1.0 - cov);
+		float puddle = wet * flat_k * smoothstep(0.45, 0.75, tn(p * 0.09 + vec2(0.7, 0.2)) + on_road * 0.25) * (1.0 - cov);
+		water = max(water, puddle * 0.45);
+		vec3 gt = texture(ground_tex, p / 7.0).rgb;
+		base = mix(base, vec3(0.80, 0.83, 0.88) * (0.9 + 0.1 * n2) * mix(vec3(1.0), gt / max(dot(gt, vec3(0.333)), 0.05), 0.35), cov);
+		water *= 1.0 - cov;
+	}
 	// 물 댄 논: 하늘빛 반사(위를 볼수록 진흙이 비침)
 	vec3 wn = v_wn;
 	vec3 vdir = normalize((INV_VIEW_MATRIX * vec4(VIEW, 0.0)).xyz);

@@ -64,6 +64,7 @@ global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
 global uniform float fog_base;
+global uniform float wet;
 """
 const FOG := """
 	float fog_d = -VERTEX.z;
@@ -79,6 +80,7 @@ uniform sampler2D page : source_color, filter_linear_mipmap;
 void fragment() {
 	vec4 c = texture(page, UV);
 	if (!FRONT_FACING) NORMAL = -NORMAL;
+	c.rgb *= 1.0 - 0.12 * wet; // 비에 젖은 옷(권역 날씨, 기본 0)
 	ALBEDO = c.rgb;
 	ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;

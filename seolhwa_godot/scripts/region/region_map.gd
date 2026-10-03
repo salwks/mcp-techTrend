@@ -1,8 +1,9 @@
-# 지도 — M: 지금 고을의 도시 지도(건물·길·성벽·텃밭), Tab: 전체 지도로 전환, 휠·+/-: 확대·축소,
+# 지도 — M: 지금 고을의 도시 지도(건물·길·성벽·텃밭), Tab: 도시 → 권역(전체) → 전국 지도 차례로 전환, 휠·+/-: 확대·축소,
 # 드래그·방향키: 옮기기, Esc·M: 닫기. 바탕은 고지도풍 그림(map.png), 그 위 길·건물은 벡터로 그려 확대해도 선명하다.
 extends CanvasLayer
 
 const PlaceTitle := preload("res://scripts/region/place_title.gd")
+const Travel := preload("res://scripts/region/travel.gd")
 const BuildingTitles := preload("res://scripts/region/building_titles.gd")
 
 # 지도에 그릴 건물 키트 → 지붕 색 종류
@@ -29,18 +30,25 @@ var _k := 1.0                 # 화면 px / 게임 m
 var _k_min := 0.1
 var _drag := false
 var mode := "city"
+var _nk := 1.0                # 전국 지도: 화면 px / 경도 1도
+var _ncenter := Vector2(127.5, 38.0)   # 전국 지도 가운데(경도, 위도)
+var _nation := {}             # 전국 지도 자료(처음 열 때 만든다)
 
 func setup(w, data_dir: String, loader = null) -> void:
 	world = w
 	var mp := data_dir.path_join("map.json")
-	if not FileAccess.file_exists(mp): return
-	_meta = JSON.parse_string(FileAccess.get_file_as_string(mp))
-	var img := Image.load_from_file(ProjectSettings.globalize_path(data_dir.path_join(_meta.file)))
-	img.generate_mipmaps()
-	_tex = ImageTexture.create_from_image(img)
+	if FileAccess.file_exists(mp):
+		_meta = JSON.parse_string(FileAccess.get_file_as_string(mp))
+		var img := Image.load_from_file(ProjectSettings.globalize_path(data_dir.path_join(_meta.file)))
+		img.generate_mipmaps()
+		_tex = ImageTexture.create_from_image(img)
+	else:
+		# 지도 그림(map.png)이 없는 공간(노정·새 권역): 높이맵 범위에 길·물·고을을 벡터로만 그린다
+		_meta = { x0 = w.hx0, z0 = w.hz0, w = (w.hnx - 1) * w.hstep, h = (w.hnz - 1) * w.hstep, scale = 1.0 }
 	var groups := {}
+	var own := PlaceTitle.uses_own_titles(w.region)
 	for s in w.region.get("settlements", []):
-		var t: String = PlaceTitle.TITLES.get(String(s.get("id", "")), "")
+		var t: String = PlaceTitle.title_for(s, own)
 		if t == "": continue
 		var bb = s.get("bbox")
 		var r: Rect2
@@ -123,6 +131,11 @@ func toggle() -> void:
 	if town != null: _show_city(town)
 	else: _show_all()
 
+func show_mode(m: String) -> void:
+	if not visible: toggle()
+	if m == "nation": _show_nation()
+	elif m == "all": _show_all()
+
 func _town_at(p: Vector2):
 	var best = null; var bd := INF
 	for t in _towns:
@@ -153,7 +166,7 @@ func _show_all() -> void:
 	_update_hint(); _canvas.queue_redraw()
 
 func _update_hint() -> void:
-	_hint.text = ("도시 지도" if mode == "city" else "전체 지도") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기"
+	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기"
 	_hint.reset_size()
 	var vs := get_viewport().get_visible_rect().size
 	_hint.position = Vector2((vs.x - _hint.size.x) / 2.0, vs.y - _hint.size.y - 14)
@@ -172,12 +185,14 @@ func _unhandled_input(e: InputEvent) -> void:
 	if not visible: return
 	match kc:
 		KEY_ESCAPE: visible = false
-		KEY_TAB:
+		KEY_TAB:   # 도시 → 권역 전체 → 전국 → 도시
 			if mode == "city": _show_all()
+			elif mode == "all": _show_nation()
 			else:
 				var t = _town_at(Vector2(_player.x, _player.z))
 				if t == null: t = _nearest_town(_center)
 				if t != null: _show_city(t)
+				else: _show_all()
 		KEY_EQUAL, KEY_KP_ADD: _zoom(1.25, _canvas.size / 2.0)
 		KEY_MINUS, KEY_KP_SUBTRACT: _zoom(0.8, _canvas.size / 2.0)
 		KEY_LEFT: _pan(Vector2(80, 0))
@@ -200,6 +215,11 @@ func _on_input(e: InputEvent) -> void:
 		_pan(-e.delta * 8.0)
 
 func _zoom(f: float, at: Vector2) -> void:
+	if mode == "nation":
+		var b := _n_to_geo(at)
+		_nk = clampf(_nk * f, _n_fit() * 0.8, _n_fit() * 12.0)
+		_ncenter += b - _n_to_geo(at)
+		_canvas.queue_redraw(); return
 	var before := _to_world(at)
 	_k = clampf(_k * f, _k_min, MAX_K)
 	_center += before - _to_world(at)
@@ -207,6 +227,8 @@ func _zoom(f: float, at: Vector2) -> void:
 	_update_hint(); _canvas.queue_redraw()
 
 func _pan(d: Vector2) -> void:
+	if mode == "nation":
+		_ncenter -= Vector2(d.x, -d.y) / _nk; _canvas.queue_redraw(); return
 	_center -= d / _k
 	_canvas.queue_redraw()
 
@@ -224,11 +246,14 @@ func update(pos: Vector3, facing: String) -> void:
 func _draw_map() -> void:
 	var cs := _canvas.size
 	_canvas.draw_rect(Rect2(Vector2.ZERO, cs), Color(0.94, 0.91, 0.84))
+	if mode == "nation":
+		_draw_nation(); return
 	var tl := _to_px(Vector2(float(_meta.x0), float(_meta.z0)))
 	var sz := Vector2(float(_meta.w), float(_meta.h)) * float(_meta.scale) * _k
-	_canvas.draw_texture_rect(_tex, Rect2(tl, sz), false)
+	if _tex: _canvas.draw_texture_rect(_tex, Rect2(tl, sz), false)
+	else: _draw_vector_base(tl, sz)
 	var view := Rect2(_to_world(Vector2.ZERO), cs / _k).grow(20.0)
-	if _k > 0.6:   # 도시 축척에서만 길·건물을 벡터로
+	if _k > 0.6 or _tex == null:   # 도시 축척에서만 길·건물을 벡터로(지도 그림이 없으면 늘)
 		for r in world.region.get("roads", []):
 			var line := PackedVector2Array()
 			for p in r.points: line.append(_to_px(Vector2(float(p[0]), float(p[1]))))
@@ -274,3 +299,115 @@ func _text(s: String, at: Vector2, size: int, col: Color) -> void:
 	var pos := at + Vector2(-w / 2.0, size * 0.35)
 	_canvas.draw_string_outline(_font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 5, Color(0.96, 0.93, 0.85, 0.9))
 	_canvas.draw_string(_font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)
+
+# ---- 지도 그림이 없는 공간: 물·길·고을·포털을 벡터로 ----
+func _draw_vector_base(tl: Vector2, sz: Vector2) -> void:
+	_canvas.draw_rect(Rect2(tl, sz), Color(0.86, 0.85, 0.74))
+	_canvas.draw_rect(Rect2(tl, sz), Color(0.3, 0.27, 0.22), false, 2.0)
+	for r in world.region.get("rivers", []):
+		var line := PackedVector2Array()
+		for p in r.points: line.append(_to_px(Vector2(float(p[0]), float(p[1]))))
+		_canvas.draw_polyline(line, Color(0.42, 0.58, 0.66), maxf(2.0, float(r.get("width_m", 6.0)) * _k), true)
+	for r in world.region.get("roads", []):
+		var line := PackedVector2Array()
+		for p in r.points: line.append(_to_px(Vector2(float(p[0]), float(p[1]))))
+		_canvas.draw_polyline(line, Color(0.62, 0.45, 0.3), maxf(2.0, float(r.get("width_m", 3.0)) * _k), true)
+	for s in (world.region.get("stops", world.region.get("settlements", [])) if _towns.is_empty() else []):
+		if s.has("x"): _text(String(s.get("name", "")), _to_px(Vector2(float(s.x), float(s.z))) + Vector2(0, -16), 16, Color(0.1, 0.08, 0.07))
+	var main := get_parent()
+	for pt in main.portals if "portals" in main else []:
+		var c := _to_px(Vector2(pt.x, pt.z))
+		_canvas.draw_circle(c, 7.0, Color(0.55, 0.12, 0.08))
+		_text("→ " + String(pt.label), c + Vector2(0, 18), 15, Color(0.45, 0.1, 0.06))
+
+# ---- 전국 지도: 한반도 윤곽(travel.gd PENINSULA) + 권역 자리(regions.json map_pos 또는 region.json 투영 기준점) + 노정 선 + 지금 자리 ----
+func _n_fit() -> float:
+	var b: Rect2 = Travel.OUTLINE_BOX
+	return minf(_canvas.size.x / (b.size.x * cos(deg_to_rad(38.0))), _canvas.size.y / b.size.y) * 0.95
+
+func _n_px(g: Vector2) -> Vector2:
+	# 경도는 위도 38°의 cos로 줄여 모양을 맞춘다(간단 등장방형)
+	return Vector2((g.x - _ncenter.x) * cos(deg_to_rad(38.0)), -(g.y - _ncenter.y)) * _nk + _canvas.size / 2.0
+
+func _n_to_geo(p: Vector2) -> Vector2:
+	var d := (p - _canvas.size / 2.0) / _nk
+	return Vector2(_ncenter.x + d.x / cos(deg_to_rad(38.0)), _ncenter.y - d.y)
+
+func _show_nation() -> void:
+	mode = "nation"
+	if _nation.is_empty(): _nation = { regions = Travel.regions(), routes = Travel.routes() }
+	_nk = _n_fit()
+	_ncenter = Travel.OUTLINE_BOX.get_center()
+	_update_hint(); _canvas.queue_redraw()
+
+func _region_ll(id: String) -> Variant:
+	for r in _nation.regions:
+		if String(r.get("id", "")) == id: return r.lonlat
+	return null
+
+func _route_line(r: Dictionary) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	var gl = r.json.get("geo_line")
+	if gl is Array and gl.size() >= 2:
+		for p in gl: out.append(Vector2(float(p[0]), float(p[1])))
+		return out
+	var a = _region_ll(r.from); var b = _region_ll(r.to)
+	if a != null and b != null and a != b: out.append(a); out.append(b)
+	return out
+
+func _here_ll() -> Variant:
+	if not world.is_route:
+		var ll = Travel.local_to_lonlat(world.region, _player.x, _player.z)
+		return ll if ll != null else _region_ll(String(world.region.get("region_id", "")))
+	var rid := String(world.region.get("region_id", ""))
+	for r in _nation.routes:
+		if r.id != rid: continue
+		var line := _route_line(r)
+		if line.size() < 2: return null
+		var t := Travel.route_progress(r.json, _player.x, _player.z)
+		var total := 0.0
+		for i in line.size() - 1: total += line[i].distance_to(line[i + 1])
+		var want := t * total
+		for i in line.size() - 1:
+			var l := line[i].distance_to(line[i + 1])
+			if want <= l: return line[i].lerp(line[i + 1], want / maxf(l, 1e-9))
+			want -= l
+		return line[line.size() - 1]
+	return null
+
+func _draw_nation() -> void:
+	var cs := _canvas.size
+	_canvas.draw_rect(Rect2(Vector2.ZERO, cs), Color(0.80, 0.84, 0.82))   # 바다
+	var land := PackedVector2Array()
+	for p in Travel.PENINSULA: land.append(_n_px(Vector2(p[0], p[1])))
+	var tris := Geometry2D.triangulate_polygon(land)
+	if not tris.is_empty(): _canvas.draw_colored_polygon(land, Color(0.93, 0.90, 0.81))
+	land.append(land[0])
+	_canvas.draw_polyline(land, Color(0.25, 0.22, 0.2), 2.0, true)
+	var jj := PackedVector2Array()
+	for p in Travel.jeju(): jj.append(_n_px(p))
+	_canvas.draw_colored_polygon(jj, Color(0.93, 0.90, 0.81))
+	_canvas.draw_polyline(jj, Color(0.25, 0.22, 0.2), 2.0, true)
+	var here_id := String(world.region.get("region_id", ""))
+	for r in _nation.routes:
+		var line := _route_line(r)
+		if line.size() < 2: continue
+		var px := PackedVector2Array()
+		for g in line: px.append(_n_px(g))
+		var on: bool = r.id == here_id
+		_canvas.draw_polyline(px, Color(0.62, 0.2, 0.12) if on else Color(0.45, 0.35, 0.25), 4.0 if on else 2.5, true)
+		_text(String(r.name), px[px.size() / 2] + Vector2(0, -14), 14, Color(0.35, 0.22, 0.15))
+	for r in _nation.regions:
+		if r.lonlat == null: continue
+		var c := _n_px(r.lonlat)
+		var on: bool = String(r.get("id", "")) == here_id
+		_canvas.draw_circle(c, 9.0 if on else 6.0, Color(0.2, 0.17, 0.15))
+		_canvas.draw_circle(c, 6.0 if on else 4.0, Color(0.85, 0.3, 0.2) if on else Color(0.95, 0.92, 0.85))
+		_text(String(r.get("short", r.get("name", ""))), c + Vector2(0, -20), 20, Color(0.1, 0.08, 0.07))
+	var here = _here_ll()
+	if here != null:
+		var p := _n_px(here)
+		_canvas.draw_circle(p, 14.0, Color(0.75, 0.15, 0.1, 0.25))
+		_canvas.draw_circle(p, 6.0, Color(0.75, 0.15, 0.1))
+		_canvas.draw_arc(p, 9.0, 0, TAU, 24, Color(1, 1, 1), 2.0)
+	_canvas.draw_rect(Rect2(Vector2.ZERO, cs), Color(0.17, 0.15, 0.13), false, 3.0)

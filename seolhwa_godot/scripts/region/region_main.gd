@@ -9,11 +9,19 @@
 #   --placedir=폴더[;폴더]  배치 파일(placement_*.json)을 더 읽을 폴더   --noplace  배치 안 읽기   --serialbuild  키트를 한 줄로 짓기
 #   --reload   배치 파일이 바뀌면 다시 읽기(F5 키도 같음)   --markers  배치가 있어도 임시 표지 보이기   --cutaway  나무 줄여 숨기기(옛 가림)
 #   --nomarkers       임시 표지(장승 기둥) 끄기   --noscatter  식생(kit/nature/scatter.gd) 끄기
+#   --region=<id>      권역(region_data/<id>/, 기본 JL_NAMWON_UNBONG)   --route=<id>  노정(region_data/routes/<id>/route.json)
+#   --routedir=폴더[;폴더]  노정을 더 찾을 폴더(시험: res://shots/region/test_route/)
+#   --weather=clear|cloudy|rain|fog|snow|wind  날씨 고정(U 키: 날씨 돌리기)
+#   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 # 비교용 끄기: --nofog --nopost --notilt --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
 const RegionWorld := preload("res://scripts/region/region_world.gd")
 const PlacementLoader := preload("res://scripts/region/placement_loader.gd")
+const Travel := preload("res://scripts/region/travel.gd")
+const Weather := preload("res://scripts/region/weather.gd")
+const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
+const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
 const WALK := 2.2
 const RUN := 4.6
@@ -82,12 +90,26 @@ var _load_t0 := 0
 var _fill: OmniLight3D     # 실내 보조광(지붕을 숨긴 실내가 벽 그림자로 거의 검게 나오는 것을 막는다)
 var _fill_k := 0.0
 var _reload_t := 0.0
+var weather    # Weather
+var _base_state: Dictionary
+var _base_dir := Vector3.UP
+var _pending := {}        # 다른 공간에서 넘어왔으면 그 예약(Travel)
+var _data_dir := ""
+var portals := []         # Travel.portals_for
+var _portal_armed := {}
+var _leaving := false
+var _hud: Label
+var _hud_t := 0.0
+var _ptest := {}          # --portaltest 진행 상태
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	_setup_input()
+	if args.has("routedir"): Travel.extra_route_dirs = args.routedir.split(";", false)
+	_pending = Travel.take_pending()
+	_data_dir = _pick_dir()
 	var scale := float(args.get("scale", DisplayServer.screen_get_scale()))
 	_render_scale = scale
 	scene_vp = SubViewport.new()
@@ -125,7 +147,10 @@ func _ready() -> void:
 	if args.has("nopost"): post.enabled = false
 	if args.has("time"): hour = float(args.time)
 	if args.has("nofog"): fog_on = false
-	if args.has("warp"):
+	if not _pending.is_empty():
+		hour = float(_pending.get("hour", hour))
+		_arrive(_pending.get("at"))
+	elif args.has("warp"):
 		var p: PackedStringArray = args.warp.split(",")
 		teleport(float(p[0]), float(p[1]))
 	_apply_time()
@@ -139,7 +164,10 @@ func _ready() -> void:
 		_bench_start = player_pos
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-	if args.has("tour"): _run_tour.call_deferred(args.tour)
+	if args.has("portaltest"):
+		_ptest = _pending.get("ptest", { left = int(args.portaltest) if args.portaltest != "1" else 2, n = 0 })
+	elif not _pending.is_empty(): pass   # 넘어온 장면에서는 투어·찍기를 다시 하지 않는다
+	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
 
 const MAX_RENDER_EDGE := 3840
@@ -153,7 +181,7 @@ func _fit_viewport() -> void:
 func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
-		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5],
+		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5], weather_step = [KEY_U],
 	}
 	for act in keys:
 		if not InputMap.has_action(act): InputMap.add_action(act)
@@ -203,13 +231,20 @@ func _build_scene() -> void:
 	world.split_scatter = not args.has("nosplit")
 	root.add_child(world)
 	world.loading = true
-	world.load_region(args.get("data", ""))
+	world.load_region(_data_dir)
+	weather = Weather.new()
+	root.add_child(weather)
+	weather.setup(world, world.data_dir, String(_pending.get("weather", args.get("weather", ""))))
+	if not _pending.is_empty() and _pending.has("wet"):
+		weather.wet = float(_pending.wet); weather.snow = maxf(weather.snow, float(_pending.get("snow", 0.0)))
 	world.use_cutaway = args.has("cutaway")
 	# 배치(§8): placement_*.json → 키트 → add_static (+ --placedir=폴더1;폴더2 추가 폴더)
 	placement = PlacementLoader.new(world, args.get("placedir", "").split(";", false) if args.has("placedir") else [])
 	placement.parallel = not args.has("serialbuild")
 	if not args.has("noplace"): placement.load_all()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
+	portals = Travel.portals_for(world.region, world.is_route)
+	_place_portals()
 	rig = CameraRig.new(cam, world)
 
 	for i in 6:
@@ -301,9 +336,20 @@ static func facing_from(dx: float, dz: float, prev: String) -> String:
 
 # ---- 시간대 ----
 func _apply_time() -> void:
-	var s := TimeOfDay.sample(hour)
+	_base_state = TimeOfDay.sample(hour)
+	_base_dir = TimeOfDay.light_direction(hour, _base_state.dayMix)
+	_apply_atmo()
+	world.update_scatter_lod(player_pos, true)
+
+# 시간대 상태 + 기후대·날씨 보정(weather.modify)을 장면에 칠한다. 날씨가 옮겨 가는 동안은 몇 프레임마다 다시 부른다
+func _apply_atmo() -> void:
+	var s: Dictionary = _base_state
+	var dir: Vector3 = _base_dir
+	if weather != null:
+		var md: Array = weather.modify(_base_state, _base_dir)
+		s = md[0]; dir = md[1]
+		weather.dirty = false
 	_state = s
-	var dir := TimeOfDay.light_direction(hour, s.dayMix)
 	sun.light_color = _srgb(s.sun)
 	sun.light_energy = s.sunI
 	sun.basis = Basis.looking_at(-dir, Vector3.UP if absf(dir.y) < 0.99 else Vector3.FORWARD)
@@ -335,7 +381,6 @@ func _apply_time() -> void:
 	world.scatter_far = clampf(1.9 / maxf(float(s.dens), 0.001), 90.0, 320.0) if fog_on else 600.0
 	if args.has("lod0"): world.lod0_dist = float(args.lod0)
 	if args.has("scatterfar"): world.scatter_far = float(args.scatterfar)
-	world.update_scatter_lod(player_pos, true)
 	post.state = s
 
 static func _srgb(v: Vector3) -> Color:
@@ -438,12 +483,16 @@ func _process(delta: float) -> void:
 		if bn != "":
 			_title.show_title(bn); if args.has("logtitle"): print("BUILDING ", bn)
 	if _map:
-		if args.has("openmap") and not _loading and not _map.visible and not _map_opened: _map.toggle(); _map_opened = true
+		if args.has("openmap") and not _loading and not _map.visible and not _map_opened:
+			_map.toggle(); _map_opened = true
+			if args.has("mapmode"): _map.show_mode(args.mapmode)   # --mapmode=all|nation (시험)
 		_map.update(player_pos, player.facing)
 	var dt := minf(0.05, delta)
 	clock += dt
 	if Input.is_action_just_pressed("time_step"):
 		hour = fmod(floor(hour / 6.0) * 6.0 + 6.0, 24.0); _apply_time()
+	if Input.is_action_just_pressed("weather_step") and weather != null:
+		_show_hud("날씨: " + weather.cycle())
 	# 배치 다시 읽기: F5, 또는 --reload면 파일이 바뀔 때마다(1초마다 확인)
 	_reload_t += delta
 	if Input.is_action_just_pressed("reload_place") or (args.has("reload") and _reload_t > 1.0 and placement.changed()):
@@ -455,8 +504,10 @@ func _process(delta: float) -> void:
 		hour = fmod(hour + dt * 0.1, 24.0); _apply_time()
 	_update_loading()
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	if _loading or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
+	if _loading or _leaving or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
 	var speed := RUN if Input.is_action_pressed("run") else WALK
+	if not _ptest.is_empty() and not _loading and not _leaving:
+		mv = _ptest_step(delta); speed = RUN
 	if _bench_left > 0.0 and _bench_loading and _loading:
 		_bench_load_t += delta
 	elif _bench_left > 0.0 and _bench_loading:
@@ -525,6 +576,12 @@ func _process(delta: float) -> void:
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)
 	placement.update()
+	if weather != null:
+		weather.update(dt, player_pos, cam.global_position, interior != null)
+		if weather.dirty and Engine.get_process_frames() % 3 == 0: _apply_atmo()
+	if not _loading and not _leaving: _check_portals()
+	if _hud and _hud_t > 0.0:
+		_hud_t -= delta; _hud.modulate.a = clampf(_hud_t, 0.0, 1.0)
 	var _t3 := Time.get_ticks_usec()
 	_update_lamps(clock)
 	sky_mat.set_shader_parameter("u_time", clock)
@@ -542,6 +599,7 @@ func _bench_report() -> void:
 	var over := 0
 	for d in a:
 		if d > 0.0334: over += 1
+	print("BENCH weather=%s wet=%.2f snow=%.2f" % [weather.kind if weather else "-", weather.wet if weather else 0.0, weather.snow if weather else 0.0])
 	print("BENCH avg_fps=%.1f tris=%dk draws=%d worst_ms=%.1f p99_ms=%.1f over33=%d frames=%d render=%s speed=%.1f dist=%.0fm tiles_near=%d mid=%d scatter=%d statics=%d" % [
 		_bench_frames / _bench_time, int(_bench_gpu / maxf(1.0, a.size()) / 1000.0), int(_bench_draws / maxf(1.0, a.size())), _bench_worst * 1000.0, p99 * 1000.0, over, _bench_frames, scene_vp.size, _bench_speed,
 		_bench_dist, world.stats.near, world.stats.mid, world.stats.scatter_done, world.stats.statics])
@@ -578,6 +636,9 @@ func _tour_camera() -> void:
 
 func _run_shot(path: String, frames: int) -> void:
 	await _wait_frames(10)
+	var n := 0
+	while _loading and n < 3000 and args.has("waitload"):   # --waitload: 불러오기 화면이 걷힌 뒤 찍기
+		await _wait_frames(1); n += 1
 	await _wait_frames(frames)
 	_save(_abs(path))
 	if args.has("quit"): _quit()
@@ -618,6 +679,10 @@ func _make_load_ui() -> void:
 	var bg := ColorRect.new(); bg.color = Color("#efe6d2"); bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_load_ui.add_child(bg)
 	var title := Label.new(); title.text = "설화록"
+	var sub := Label.new(); sub.text = _space_title()
+	sub.add_theme_font_size_override("font_size", 26); sub.add_theme_color_override("font_color", Color("#5a5048"))
+	sub.set_anchors_preset(Control.PRESET_CENTER); sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub.position = Vector2(-300, -10); sub.size = Vector2(600, 36)
 	title.add_theme_font_size_override("font_size", 72); title.add_theme_color_override("font_color", Color("#2b2622"))
 	title.set_anchors_preset(Control.PRESET_CENTER); title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.position = Vector2(-200, -90); title.size = Vector2(400, 100)
@@ -626,6 +691,7 @@ func _make_load_ui() -> void:
 	_load_label.set_anchors_preset(Control.PRESET_CENTER); _load_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_load_label.position = Vector2(-200, 30); _load_label.size = Vector2(400, 40)
 	bg.add_child(_load_label)
+	bg.add_child(sub)
 	add_child(_load_ui)
 
 func _update_loading() -> void:
@@ -681,6 +747,7 @@ func _reload_place() -> void:
 func _quit() -> void:
 	placement.stop()
 	world.shutdown()
+	if weather: weather.reset_globals()
 	get_tree().quit()
 
 func _notification(what: int) -> void:
@@ -690,3 +757,174 @@ func _notification(what: int) -> void:
 
 static func _abs(p: String) -> String:
 	return p if p.is_absolute_path() else ProjectSettings.globalize_path("res://").path_join(p)
+
+# =====================================================================
+# 여러 권역·노정(계약서 §10) — 공간 고르기, 포털, 넘어가기
+# =====================================================================
+func _pick_dir() -> String:
+	if not _pending.is_empty(): return String(_pending.dir)
+	if args.has("route"):
+		var d := Travel.find_route_dir(args.route)
+		if d == "": push_error("노정을 찾을 수 없다: %s (region_data/routes/ 또는 --routedir)" % args.route)
+		return d
+	if args.has("region"): return Travel.region_dir(args.region)
+	return args.get("data", "")
+
+func _space_title() -> String:
+	if not _pending.is_empty(): return String(_pending.get("title", ""))
+	return String(world.region.get("region_name", world.region.get("name", ""))) if world else ""
+
+# 넘어온 자리: 도착 공간 좌표 at(포털 맞은편 끝). 공간 안쪽으로 16m 들어선 빈자리에 선다(바로 다시 넘어가지 않게)
+func _arrive(at) -> void:
+	var p: Vector2 = world.spawn
+	if at is Vector2 and not is_nan(at.x): p = at
+	elif at is Array and at.size() >= 2 and not is_nan(float(at[0])): p = Vector2(float(at[0]), float(at[1]))
+	var c := Vector2(world.hx0 + (world.hnx - 1) * world.hstep * 0.5, world.hz0 + (world.hnz - 1) * world.hstep * 0.5)
+	var inward := (c - p).normalized() if c.distance_to(p) > 1.0 else Vector2.ZERO
+	# 길이 있으면 길을 따라 안쪽으로(가장 가까운 길 점에서 안쪽 이웃 점 방향)
+	var road := Travel.main_road(world.region)
+	if road.size() >= 2:
+		var bi := 0; var bd := INF
+		for i in road.size():
+			var d := road[i].distance_to(p)
+			if d < bd: bd = d; bi = i
+		if bd < 60.0:
+			var nb := road[mini(bi + 3, road.size() - 1)] if road[mini(bi + 3, road.size() - 1)].distance_to(c) < road[maxi(bi - 3, 0)].distance_to(c) else road[maxi(bi - 3, 0)]
+			if nb.distance_to(road[bi]) > 1.0: inward = (nb - road[bi]).normalized(); p = road[bi]
+	p += inward * 16.0
+	teleport(p.x, p.y)
+	for pt in portals: _portal_armed[pt.id] = Vector2(pt.x, pt.z).distance_to(Vector2(player_pos.x, player_pos.z)) > PORTAL_ARM
+	print("TRAVEL arrive space=%s at=%s from=%s" % [world.region.get("region_id", "?"), player_pos, _pending.get("via", "")])
+
+# 포털 자리: 장승 한 쌍 + 이정표 글씨(어디로 가는 길인지)
+func _place_portals() -> void:
+	var js = load("res://kit/village/jangseung.gd") if FileAccess.file_exists("res://kit/village/jangseung.gd") else null
+	for pt in portals:
+		var x: float = pt.x; var z: float = pt.z
+		var y: float = world.height_at(x, z)
+		var root := Node3D.new(); root.name = "portal_" + String(pt.id)
+		var cols := []
+		if js != null:
+			for i in 2:
+				var info: Dictionary = js.build({ seed = 31 + i, female = i == 1 })
+				var n: Node3D = info.node
+				n.position = Vector3(-2.6 if i == 0 else 2.6, 0, 0)
+				root.add_child(n)
+				cols.append({ type = "circle", x = n.position.x, z = 0.0, r = 0.35 })
+		var lb := Label3D.new()
+		lb.text = "→ " + String(pt.label)
+		lb.font_size = 64; lb.pixel_size = 0.012
+		lb.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		lb.modulate = Color(1, 0.97, 0.9); lb.outline_modulate = Color(0.1, 0.08, 0.07); lb.outline_size = 14
+		lb.position = Vector3(0, 3.6, 0)
+		lb.no_depth_test = false
+		root.add_child(lb)
+		world.add_static(root, Transform3D(Basis(), Vector3(x, y, z)), { colliders = cols, footprint = Vector2(7, 2) }, "portal")
+		_portal_armed[pt.id] = true
+	if not portals.is_empty(): print("PORTALS ", portals.map(func(p): return "%s(%.0f,%.0f)->%s:%s" % [p.id, p.x, p.z, p.kind, p.target]))
+
+func _check_portals() -> void:
+	var pp := Vector2(player_pos.x, player_pos.z)
+	for pt in portals:
+		var d := Vector2(pt.x, pt.z).distance_to(pp)
+		if not _portal_armed.get(pt.id, true):
+			if d > PORTAL_ARM: _portal_armed[pt.id] = true
+			continue
+		if d < PORTAL_R:
+			_travel(pt); return
+
+func _travel(pt: Dictionary) -> void:
+	var dir := Travel.find_route_dir(pt.target) if pt.kind == "route" else Travel.region_dir(pt.target)
+	if dir == "" or world.space_file(dir) == "":
+		_show_hud("길이 아직 닦이지 않았다: " + String(pt.label))
+		_portal_armed[pt.id] = false
+		return
+	_leaving = true
+	var at = Vector2(float(pt.tx), float(pt.tz))
+	if is_nan(float(pt.tx)):
+		var info := Travel.region_info(pt.target)
+		at = Vector2(float(info.entry.x), float(info.entry.z)) if info.get("entry") is Dictionary else null
+	var title := String(pt.label)
+	var nxt := { kind = pt.kind, id = pt.target, dir = dir, at = at, hour = hour, via = world.region.get("region_id", ""), title = title + " (으)로",
+		weather = weather.forced if weather else "", wet = weather.wet if weather else 0.0, snow = weather.snow if weather else 0.0 }
+	if not _ptest.is_empty():
+		var pt2 := _ptest.duplicate(); pt2.left = int(_ptest.left) - 1; pt2.n = int(_ptest.n) + 1
+		nxt.ptest = pt2
+	print("TRAVEL leave %s -> %s %s at=%s objects=%d nodes=%d orphans=%d mem=%.0fMB" % [world.region.get("region_id", ""), pt.kind, pt.target, at,
+		Performance.get_monitor(Performance.OBJECT_COUNT), Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+		Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT), Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])
+	# 짧은 불러오기 화면을 먼저 띄우고, 다음 프레임에 정리하고 장면을 다시 연다
+	var ui := CanvasLayer.new(); ui.layer = 20
+	var bg := ColorRect.new(); bg.color = Color("#efe6d2"); bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ui.add_child(bg)
+	var lb := Label.new(); lb.text = title + " 가는 길…"
+	lb.add_theme_font_size_override("font_size", 34); lb.add_theme_color_override("font_color", Color("#2b2622"))
+	lb.set_anchors_preset(Control.PRESET_CENTER); lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lb.position = Vector2(-400, -20); lb.size = Vector2(800, 50)
+	bg.add_child(lb)
+	add_child(ui)
+	Travel.set_pending(nxt)
+	_leave.call_deferred()
+
+func _leave() -> void:
+	await _wait_frames(2)
+	placement.stop()
+	world.shutdown()
+	weather.reset_globals()
+	get_tree().reload_current_scene()
+
+func _show_hud(t: String) -> void:
+	if _hud == null:
+		_hud = Label.new()
+		_hud.add_theme_font_size_override("font_size", 22)
+		_hud.add_theme_color_override("font_color", Color(1, 1, 1))
+		_hud.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+		_hud.add_theme_constant_override("outline_size", 5)
+		_hud.position = Vector2(24, 20)
+		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(_hud); add_child(cl)
+	_hud.text = t; _hud_t = 3.0; _hud.modulate.a = 1.0
+	print("HUD ", t)
+
+# ---- --portaltest: 불러오기가 끝나면 도착 화면을 찍고, 아직 남았으면 가장 먼 포털로 걸어간다 ----
+var _pt_target = null
+var _pt_shot_done := false
+var _pt_stuck := 0.0
+var _pt_last := Vector3.ZERO
+
+func _ptest_step(delta: float) -> Vector2:
+	if not _pt_shot_done:
+		_pt_shot_done = true
+		_ptest_shot.call_deferred()
+		_pt_target = false
+		return Vector2.ZERO
+	if not (_pt_target is Dictionary): return Vector2.ZERO
+	var tp := Vector2(_pt_target.x, _pt_target.z)
+	var d := tp - Vector2(player_pos.x, player_pos.z)
+	if player_pos.distance_to(_pt_last) < 0.02: _pt_stuck += delta
+	else: _pt_stuck = 0.0
+	_pt_last = player_pos
+	if _pt_stuck > 0.6 or d.length() > 40.0:   # 막히거나 멀면 가까이 옮겨 놓고 다시 걷는다
+		var q := tp - d.normalized() * minf(d.length() - 1.0, 14.0)
+		teleport(q.x, q.y); _pt_stuck = 0.0
+	return d.normalized()
+
+func _ptest_shot() -> void:
+	await _wait_frames(30)
+	var dir: String = _abs(args.get("shotdir", "shots/region/travel"))
+	var name := "travel_%d_%s.png" % [int(_ptest.n), String(world.region.get("region_id", "space")).to_lower()]
+	_save(dir.path_join(name))
+	print("PTEST n=%d space=%s portals=%d weather=%s objects=%d nodes=%d orphans=%d mem=%.0fMB" % [_ptest.n, world.region.get("region_id", ""), portals.size(), weather.label(),
+		Performance.get_monitor(Performance.OBJECT_COUNT), Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+		Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT), Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])
+	if int(_ptest.left) <= 0 or portals.is_empty():
+		_quit(); return
+	# 도착한 곳에서 가장 먼 포털로
+	var best = null; var bd := -1.0
+	for pt in portals:
+		var d := Vector2(pt.x, pt.z).distance_to(Vector2(player_pos.x, player_pos.z))
+		if d > bd: bd = d; best = pt
+	_pt_target = best
+	_portal_armed[best.id] = true
+	var tp := Vector2(best.x, best.z)
+	var q := tp + (Vector2(player_pos.x, player_pos.z) - tp).normalized() * 18.0
+	teleport(q.x, q.y)

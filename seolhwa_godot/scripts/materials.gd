@@ -52,6 +52,24 @@ const DITHER := """
 		if ((BAYER[q.y * 4 + q.x] + 0.5) / 16.0 > keep) discard;
 	}"""
 
+# 날씨(권역 — scripts/region/weather.gd가 넣는다. 기본값 wet=0, snow=0, snow_line=1e5 이면 아무 일도 하지 않는다):
+# 눈 덮기 = max(snow, 눈선 snow_line 위 높이) × 윗면(법선 y), 젖음 = 어둡게. 마을 장면(--refset)은 기본값 그대로.
+const WEATHER_CODE := """
+	if (wet > 0.0 || snow > 0.0 || snow_line < 9e4) {
+		vec3 w_wp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		vec3 w_n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+		float w_sc = max(snow, smoothstep(snow_line, snow_line + 30.0, w_wp.y));
+		float w_cov = 0.0;
+		if (w_sc > 0.0) {
+			float w_nz = 0.5 + 0.25 * sin(w_wp.x * 1.3 + sin(w_wp.z * 0.7)) + 0.25 * sin(w_wp.z * 1.1 + sin(w_wp.x * 0.9));
+			w_cov = clamp(w_sc * 1.5 - 0.45 + (w_nz - 0.5) * 0.35, 0.0, 1.0) * smoothstep(0.2, 0.7, w_n.y);
+		}
+		base *= 1.0 - 0.3 * wet * (1.0 - w_cov);
+		base = mix(base, vec3(0.80, 0.83, 0.88), w_cov);
+		ALBEDO = base;
+	}
+"""
+
 const GLOBALS := """
 global uniform vec3 hemi_sky;
 global uniform vec3 hemi_ground;
@@ -64,6 +82,9 @@ global uniform vec3 occ_a;
 global uniform vec3 occ_b;
 global uniform float occ_r;
 global uniform float occ_near;
+global uniform float wet;
+global uniform float snow;
+global uniform float snow_line;
 """
 
 # lit: 툰 조명 / unlit: 무광(MeshBasic) / blend: 반투명 / cull: 양면 여부
@@ -116,7 +137,7 @@ void fragment() {
 """
 	code = code.replace("%DITHER%", "" if blend else DITHER)
 	if lit:
-		code += """
+		code += WEATHER_CODE + """
 	vec3 wn = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * wn.y + 0.5) * hemi_i;
 	EMISSION = base * hemi / PI + emissive_color * texture(emission_tex, a_uv).rgb * glow_k * use_emission;

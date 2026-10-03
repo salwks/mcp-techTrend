@@ -248,3 +248,69 @@ Godot 이미지 로더는 16비트 PNG를 8비트로 줄인다(직접 시험: �
 | 14 붓 무늬 늘어남 | `kit.gd`: 삼각형마다 UV 1당 길이를 재서 2m(아틀라스 128px)보다 긴 면은 영역 안에서 반복한다. UV = 반복 좌표, CUSTOM0 = 아틀라스 영역. `materials.gd`: `kit_tiling=1`(Kit 재질만)이면 영역 안에서 fract와 textureGrad로 이음매 없이 읽는다. glTF 마을 재질은 0이라 예전과 같은 경로 | 성벽·담 확인. 기존 마을 refset 차이 1.2/2.3/1.4/5.0/1.2/18.8/4.1. 1단계와 거의 같고, 남은 차이는 총괄의 안개·점무늬 변경분으로 본다 |
 
 그 밖: 시험용 `--gointerior=n`(불러오기가 끝나면 n번째 실내로)을 더했다. 공용 파일은 `scripts/kit/kit.gd`(Geo.rect, remap_uv, Batch.mesh의 CUSTOM0)와 `scripts/materials.gd`(kit_tiling) 두 곳만 고쳤다.
+
+---
+
+# 4단계 — 여러 권역·노정 · 전국 지도 · 기후대·날씨 (계약서 §10, 계획서 §2.1, TOWN_IDENTITY_CLIMATE_PLAN B2·B3·B4)
+
+## 실행
+```bash
+godot --path . res://scenes/region.tscn -- --region=JJ_JEJU                 # 권역 고르기(기본 JL_NAMWON_UNBONG, --data도 그대로)
+godot --path . res://scenes/region.tscn -- --route=<id> [--routedir=res://shots/region/test_route/]
+godot --path . res://scenes/region.tscn -- --routedir=res://shots/region/test_route/ --portaltest=2 --weather=rain   # 포털 넘나들기 자동 시험
+godot --path . res://scenes/region.tscn -- --weather=clear|cloudy|rain|fog|snow|wind     # 날씨 고정. 게임 중 U = 날씨 돌리기(…→자동)
+```
+그 밖: `--waitload`(불러오기 화면이 걷힌 뒤 --shot), `--openmap --mapmode=all|nation --winshot`(지도 찍기), `--shotdir`(portaltest 출력).
+
+## 만든 것
+| 파일 | 내용 |
+|---|---|
+| `scripts/region/travel.gd` (새) | 공간 목록·포털·넘어가기 예약. regions.json(없으면 region_data/*/region.json을 훑음), 노정 찾기(region_data/routes/ + --routedir), 권역 좌표→경위도, 노정 진행도, 간단한 한반도·제주 윤곽(경위도 꺾은선) |
+| `scripts/region/weather.gd` (새) | climate.png 기후대 → 날씨 확률표·전환·젖음/눈 쌓임·기후대 빛 보정·입자 |
+| `shaders/region_precip.gdshader` (새) | 비·눈·바람 티끌 입자(카메라 둘레 상자, 정점 셰이더가 움직임, 높이맵 아래 낱알 버림, 그리기 1번) |
+| `scripts/region/tools/make_test_route.py` (새) | 시험 노정 `shots/region/test_route/TEST_PALLYANG/`(2048×384m 띠, 주막→고개·성황당(고산 기후대)→나루→장승, 배치 7개, 양 끝 포털 = 남원 동쪽 끝·북쪽 끝 고리) |
+| `region_world.gd` | `region.json` 또는 `route.json`을 같은 방식으로 읽음(`is_route`, `K` = projection.K). scatter에 **이 공간의 roads를 7번째 인자로** 넘김(전에는 scatter가 남원 region.json을 직접 읽었음). `region.json.sea {y}`이면 바다 수면 한 장(제주) |
+| `region_main.gd` | `--region/--route/--routedir`, 포털(장승 한 쌍 + "→ 목적지" 글씨, add_static 꼬리표 `portal`), 넘어가기, 날씨 연결(U, --weather), 시간대 상태 위에 기후대·날씨 보정(`_apply_atmo`) |
+| `region_map.gd` | Tab: 도시(L3) → 권역(L2) → **전국(L0)** → 도시. 전국 지도 = 한반도 윤곽 + 권역 점 + 노정 선(route.json `geo_line` 또는 두 권역을 잇는 직선) + 지금 자리(권역은 투영으로 경위도, 노정은 주 도로 진행도로 선 위 보간). map.json이 없는 공간(노정·새 권역)은 길·물·고을·포털을 벡터로 그린다 |
+| `place_title.gd` | 남원 TITLES는 그대로, 다른 공간은 settlement `title/short` 또는 이름 앞부분 |
+| 공용 `materials.gd` · `sprite_char.gd` · `project.godot` | 전역 `wet`(0)·`snow`(0)·`snow_line`(1e5) 추가. Kit·glTF 재질(lit): 눈선 위·snow만큼 윗면(법선 y)부터 눈 덮기, 젖으면 어둡게. 캐릭터: 젖으면 조금 어둡게. 기본값이면 분기를 건너뜀 |
+| `region_terrain/far.gdshader` | 젖은 땅(어둡게 + 평지·길 물웅덩이 하늘 반사), 눈 덮기(평평한 곳부터, 밟힌 길·마당은 흙이 비침, 붓 텍스처 유지), 원경 산도 눈선 위 하얗게 |
+
+### 노정·포털 규칙(엔진 해석 — 데이터 담당과 맞출 것)
+- `route.json` = region.json 형식 + `route_id, name, from_region, to_region, stops, portals{from:{region,x,z,name}, to:{…}}`, 선택 `geo_line:[[경도,위도]…]`(전국 지도 선), `climate_zone`.
+- `portals.from.x,z` = **그 권역 안** 포털 자리(권역 좌표). 노정 쪽 자리는 `route_x/route_z`, 없으면 주 도로(가장 긴 대로)의 첫 점(from)·끝 점(to).
+- 권역 쪽 포털은 노정 파일들에서 모은다. `region.json.portals:[{id,name,x,z,to}]`도 읽는다 — `to`는 `{route|region, x?, z?}` 또는 문자열 `"route:<id>"`·`"region:<id>"`(제주 형식), `"map_only"`는 넘어가지 않는다. 대상이 아직 없으면 "길이 아직 닦이지 않았다" 알림만.
+- 포털 반경 5m에 들어서면 넘어간다. 도착은 맞은편 끝에서 길을 따라(없으면 공간 가운데 쪽으로) 16m 안쪽 빈자리, 12m 벗어나야 그 포털이 다시 켜진다.
+- 넘어가기: 짧은 한지색 화면("○○ (으)로 가는 길…") → `placement.stop()`·`world.shutdown()`(식생 작업 기다림)·날씨 전역값 되돌림 → Engine 메타에 예약 → `reload_current_scene()`. 새 장면은 명령줄보다 예약을 먼저 본다(시각·날씨 고정·젖음/눈 이어받음). 키트 디스크 캐시·Kit 재질은 정적이라 이어 쓴다.
+
+## 확인
+- **포털 왕복**(`--portaltest=2 --weather=rain`): 남원 → 시험 노정 → 남원 북쪽 끝, 도착 화면 `shots/region/travel/travel_0/1/2_*.png`. 넘어갈 때 정리 확인: 남원을 떠날 때 389MB·노드 4.5k → 노정 198MB·노드 1.4k, 남원 재진입 343MB(키트 캐시 덕에 불러오기 1.5s). 고아 노드 3k는 떼어 둔 정적 물체(설계상)이고 장면을 지우면 같이 지워진다.
+- **새 권역** `--region=JJ_JEJU`(data-east, K=0.28): 지형·식생·바다·포털(화북포 뱃길 → 아직 없는 노정) 정상. `shots/region/travel/jeju_*.png`.
+- 기후대: 남원 climate.png = 남부 + 고산(지리산 고지). 눈선 = rule.alpine_alt_m(위도대) → y − 15m(남원 297, 제주 293). `w_jiri_snowline.png`: 맑은 날에도 지리산 고지만 잔설(나무 윗면·땅). 고산 칸에 들어서면 고산 확률로 날씨를 다시 고른다.
+- 날씨 비교 `shots/region/weather/w_contact.png`(남원 남문 앞: 맑음·비·눈·안개).
+- 지도 `shots/region/travel/map_nation_namwon.png`, `map_nation_route.png`(노정 위 자리), `map_route_all.png`(노정 벡터 지도).
+- 마을 장면 `--refset` 웹 기준 차이 1.1/2.1/1.2/5.2/2.2/21.8/4.2 — 이전과 같음(village_day는 이전 결과와 픽셀 차 0). 기본값(wet=0·snow=0·snow_line=1e5)에서는 그대로.
+
+## 성능 (2048×1536, MSAA 4×, `--bench=25`, 다른 에이전트와 같은 맥)
+| 장소·날씨 | 평균 fps | p99 | 33ms 넘은 프레임 |
+|---|---|---|---|
+| 남원 spawn 맑음 | 110 | 19.9ms | 8 / 2745 |
+| 남원 spawn 비(입자 7000 → 줄여 5000) | 104 | 32ms | 20 / 2604 |
+| 남원 spawn 눈(4500) | 104 | 33.7ms | 24 / 2605 |
+| 지리산 숲(2000,−300) 눈 | 119 | 11ms | 3 / 2977 |
+| 시험 노정 비 | 123 | 8.5ms | 0 |
+| 제주 화북 맑음(바다 포함) | 128 | 11ms | 1 |
+목표 평균 55 이상은 모두 넘는다. 비·눈에서 p99가 맑음보다 높다(반투명 입자 겹침 그리기 — 비는 5000개로 줄였다).
+
+## 기후대·날씨 값(weather.gd)
+- 확률: 남부 맑음 .42·흐림 .22·비 .24·안개 .12 / 중부 + 눈 .08·강풍 .03 / 북부 눈 .40·맑음 .25 / 고산 눈 .28·안개 .25·강풍 .12 / 해안섬 해무 .30·강풍 .10. 120~260초마다, 기후대가 바뀌면 다시 고른다. 전환 약 10초.
+- 젖음: 비 40초에 젖고 2분에 마름(안개는 0.3까지). 눈: 1분에 쌓이고 5분에 걸쳐 기후대 바탕(북부 0.55)으로 녹음.
+- 빛(B3): 남부 해 따뜻·안개 ×1.12·채도 ↑ / 북부 해 차갑게·세기 0.9·**해 높이 ×0.62**·채도 0.88·후처리 gain 차갑게 / 고산 차갑고 안개 ×1.2 / 해안 안개 ×1.25·푸른 회색. 흐림·비는 해 세기·채도·번짐을 줄이고 하늘·안개를 회색으로, 반구광은 고르게. 눈이 쌓이면 땅 되비침을 밝고 차갑게.
+
+## 남은 문제·요청
+1. **노정 데이터 형식**: 위 '노정·포털 규칙'을 data 담당이 확인해 주길(특히 portals x,z가 권역 좌표라는 점, 노정 쪽 끝은 주 도로 끝). 진짜 노정이 오면 `--portaltest`로 바로 시험할 수 있다. 시험 노정 `shots/region/test_route/`는 그때 지워도 된다.
+2. **regions.json**이 아직 없다 → 엔진이 region_data/*/region.json을 훑어 이름·투영 기준점으로 대신한다. `map_pos`는 0~1(전국 지도 상자 비율, 위가 0) 또는 경위도로 읽는다.
+3. **kit-nature scatter.gd**: 엔진이 이제 roads를 넘기므로 `ROADS_JSON`(남원 고정) 기본값은 안 쓰인다. 수종 고도(`forest_mix(alt)`)가 y에서 해발을 거꾸로 낼 때 K=0.30을 가정한다면 권역 K(제주 0.28, 한양 0.5)를 받아야 한다 — 엔진에서 넘길 인자가 필요하면 말해 달라.
+4. 제주 climate.png는 제주성(해안)도 남부(0)로 나온다 — 해안섬(4) 판정은 data-east 쪽 확인 필요.
+5. 비 오는 동안 지붕 아래로도 빗줄기가 지나간다(높이맵만 보고 버림). 실내에 들어가면 입자를 끈다.
+6. 원본 명세 v0.3 §31(L0~L3)은 지도 단계(도시 L3·권역 L2·전국 L0)로 맞췄다. L1(팔도) 단계는 전국 지도를 확대하면 되지만 도 경계 자료가 없어 그리지 않았다.

@@ -23,9 +23,27 @@ var _label: Label
 var _rule: ColorRect
 var _t := -1.0
 
-func setup(region: Dictionary) -> void:
+# 남원 권역은 위 TITLES(기존 동작 그대로). 다른 권역·노정은 settlement의 title/short, 없으면 이름 앞부분(들마을 후보 등은 뺀다)
+static func uses_own_titles(region: Dictionary) -> bool:
 	for s in region.get("settlements", []):
-		var title: String = TITLES.get(String(s.get("id", "")), "")
+		if TITLES.has(String(s.get("id", ""))): return true
+	return false
+
+static func title_for(s: Dictionary, own: bool) -> String:
+	if own: return TITLES.get(String(s.get("id", "")), "")
+	for k in ["title", "short"]:
+		if String(s.get(k, "")) != "": return String(s[k])
+	var id := String(s.get("id", "")); var n := String(s.get("name", ""))
+	if id.begins_with("auto_") or n.contains("후보") or n == "": return ""
+	for sep in [" ", "(", "·"]:
+		var i := n.find(sep)
+		if i > 0: n = n.substr(0, i)
+	return n
+
+func setup(region: Dictionary) -> void:
+	var own := uses_own_titles(region)
+	for s in region.get("settlements", []):
+		var title: String = title_for(s, own)
 		if title == "": continue
 		var r: Rect2
 		var bb = s.get("bbox")

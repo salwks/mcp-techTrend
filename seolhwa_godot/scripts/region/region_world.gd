@@ -35,6 +35,8 @@ const M32 := 0xffffffff
 
 var data_dir := ""
 var region := {}
+var is_route := false       # 노정(route.json) 공간
+var K := 0.30               # 압축(region.json projection.K) — 권역마다 다르다
 var block_water := true
 var markers := true
 var use_scatter := true
@@ -116,13 +118,28 @@ static func find_data_dir(pref := "") -> String:
 		if FileAccess.file_exists(d + "region.json") and FileAccess.file_exists(d + "height.png"): return d
 	return ""
 
+# 공간 정의 파일: 권역 region.json, 노정 route.json(같은 형식 + from_region·to_region·stops·portals — 계약서 §10)
+static func space_file(dir: String) -> String:
+	if FileAccess.file_exists(dir + "region.json"): return dir + "region.json"
+	if FileAccess.file_exists(dir + "route.json"): return dir + "route.json"
+	return ""
+
 func load_region(dir := "") -> void:
 	data_dir = find_data_dir(dir)
 	if data_dir == "":
 		push_error("권역 데이터가 없다: region_data/JL_NAMWON_UNBONG 또는 shots/region/tmp_data (scripts/region/tools/make_tmp_region.py)")
 		return
 	var t0 := Time.get_ticks_msec()
-	region = JSON.parse_string(FileAccess.get_file_as_string(data_dir + "region.json"))
+	var sf := space_file(data_dir)
+	if sf == "":
+		push_error("공간 파일(region.json/route.json)이 없다: " + data_dir)
+		data_dir = ""
+		return
+	region = JSON.parse_string(FileAccess.get_file_as_string(sf))
+	is_route = sf.ends_with("route.json")
+	if is_route and not region.has("region_id"): region.region_id = String(region.get("route_id", region.get("id", "route")))
+	var pj = region.get("projection")
+	K = float(pj.get("K", 0.3)) if pj is Dictionary else 0.3
 	var hm: Dictionary = region.height
 	var hd := PngRaw.load_gray(ProjectSettings.globalize_path(data_dir + hm.file))
 	hbytes = hd.bytes; hbpp = hd.bpp
@@ -150,6 +167,7 @@ func load_region(dir := "") -> void:
 	_h_orig = hbytes.duplicate(); _l_orig = lbytes.duplicate()
 	tile_min = Vector2i(floori(hx0 / TILE), floori(hz0 / TILE))
 	tile_max = Vector2i(floori((hx0 + (hnx - 1) * hstep) / TILE), floori((hz0 + (hnz - 1) * hstep) / TILE))
+	_roads_arg = region.get("roads", []) if region.get("roads") is Array else []
 	var tp := Time.get_ticks_msec()
 	_paint_roads()
 	print("REGION roads painted ms=", Time.get_ticks_msec() - tp)
@@ -519,7 +537,35 @@ func _build_far() -> void:
 # ---------------------------------------------------------------------------
 # 하천 물: region.json.rivers의 수면 높이·폭으로 띠 메시(약 250m씩 잘라 화면 밖은 그리지 않게)
 # ---------------------------------------------------------------------------
+# 바다(region.json sea {y}): 높이맵 범위 + 여유를 덮는 수면 한 장(물결 재질, 고요한 '소' 설정). 땅이 위에 있으면 깊이로 가려진다
+func _build_sea() -> void:
+	var sea = region.get("sea")
+	if not (sea is Dictionary): return
+	var y := float(sea.get("y", 0.0))
+	var x0 := hx0 - 3000.0; var z0 := hz0 - 3000.0
+	var x1 := hx0 + (hnx - 1) * hstep + 3000.0; var z1 := hz0 + (hnz - 1) * hstep + 3000.0
+	var v := PackedVector3Array(); var uv := PackedVector2Array(); var col := PackedColorArray(); var idx := PackedInt32Array()
+	var n := 16
+	for j in n + 1:
+		for i in n + 1:
+			var x := lerpf(x0, x1, float(i) / n); var z := lerpf(z0, z1, float(j) / n)
+			v.append(Vector3(x, y, z)); uv.append(Vector2(x / 7.0, 0.5 + z / 2000.0)); col.append(Color(0.0, 0.55, 1.0 / 40.0, 1.0))
+	for j in n:
+		for i in n:
+			var a := j * (n + 1) + i
+			idx.append_array(PackedInt32Array([a, a + n + 1, a + 1, a + 1, a + n + 1, a + n + 2]))
+	var arr := []; arr.resize(Mesh.ARRAY_MAX)
+	arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_TEX_UV] = uv; arr[Mesh.ARRAY_COLOR] = col; arr[Mesh.ARRAY_INDEX] = idx
+	var m := ArrayMesh.new(); m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+	var mi := MeshInstance3D.new(); mi.name = "sea"; mi.mesh = m
+	var mat: ShaderMaterial = mat_water.duplicate()
+	mat.set_shader_parameter("albedo", Vector4(0.36, 0.5, 0.52, 1.0))
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	water_root.add_child(mi)
+
 func _build_rivers() -> void:
+	_build_sea()
 	for r in region.get("rivers", []):
 		var pts := []
 		for p in r.points: pts.append(Vector3(float(p[0]), float(p[2]) if p.size() > 2 else data_height(p[0], p[1]), float(p[1])))
@@ -725,7 +771,7 @@ func _unscatter(t: Vector2i) -> void:
 # 작업 스레드에서는 렌더링 서버를 거의 건드리지 않는다: 원본 MultiMesh 버퍼를 묶음마다 한 번만 읽어
 # SUB m 칸으로 나눈 "자료"만 만들고, MultiMesh·노드 생성은 메인 스레드가 프레임마다 조금씩 한다(_poll_jobs).
 # (작업 스레드에서 MultiMesh를 수백 개 만들거나 버퍼를 여러 번 읽으면 렌더 스레드와 엉켜 프레임이 100ms 넘게 튄다)
-static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, seed: int, lods: Array, split: bool, excl: Array, hold: Dictionary) -> void:
+static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, seed: int, lods: Array, split: bool, excl: Array, hold: Dictionary, roads: Array = []) -> void:
 	var out := []
 	var cols = null
 	var tall := {}
@@ -737,10 +783,13 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 		var hb := Vector2(e.half.x * ca + e.half.y * sa, e.half.x * sa + e.half.y * ca)
 		ex_arg.append(Rect2(e.c - hb, hb * 2.0))
 	var takes_ex := false
+	var takes_roads := false
 	for m in scr.get_script_method_list():
 		if m.name == "scatter" and m.args.size() >= 6: takes_ex = true
+		if m.name == "scatter" and m.args.size() >= 7: takes_roads = true
 	for lod in lods:
-		var res: Dictionary = scr.scatter(rect, ha, la, seed, lod, ex_arg) if takes_ex else scr.scatter(rect, ha, la, seed, lod)
+		# 길은 이 공간의 roads를 넘긴다(scatter가 남원 region.json을 직접 읽지 않게 — 여러 권역·노정)
+		var res: Dictionary = scr.scatter(rect, ha, la, seed, lod, ex_arg, roads) if takes_roads else (scr.scatter(rect, ha, la, seed, lod, ex_arg) if takes_ex else scr.scatter(rect, ha, la, seed, lod))
 		if lod == 0 or cols == null:
 			cols = []
 			for c in res.get("colliders", []):
@@ -824,6 +873,8 @@ func _queue_scatter() -> void:
 		if not _scatter_need(t).is_empty(): _queue.append(t)
 	_queue.sort_custom(func(a, b): return _ring(a, _center) < _ring(b, _center))
 
+var _roads_arg: Array = []
+
 func _start_jobs() -> void:
 	var running := 0
 	for t in tiles:
@@ -837,7 +888,7 @@ func _start_jobs() -> void:
 		var rect := Rect2(t.x * TILE, t.y * TILE, TILE, TILE)
 		var seed := String(region.get("region_id", "region")).hash() & 0x7fffffff  # 권역 시드(타일 구분은 scatter가 rect로)
 		var ha := Callable(self, "height_fast"); var la := Callable(self, "landuse_at")
-		tiles[t].scatter_job = WorkerThreadPool.add_task(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, _excl_for(rect), hold), false, "scatter")
+		tiles[t].scatter_job = WorkerThreadPool.add_task(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, _excl_for(rect), hold, _roads_arg), false, "scatter")
 		tiles[t].scatter_hold = hold
 		running += 1
 	stats.jobs = running + _queue.size() + (1 if not _attach_q.is_empty() else 0)

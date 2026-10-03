@@ -13,7 +13,9 @@ uniform vec3 u_low = vec3(0.7);
 uniform vec3 u_glow = vec3(1.0);
 uniform float u_glow_i = 0.0;
 uniform float grid_step = 32.0;
-uniform float haze = 1.0;   // 0이면 거리 안개빛 없이(--nofog)
+uniform float haze = 1.0;
+global uniform float snow;       // 눈 덮기(날씨) — 원경 산도 하얗게
+global uniform float snow_line;  // 이 높이 위 잔설   // 0이면 거리 안개빛 없이(--nofog)
 
 varying vec3 v_wp;
 varying float v_ridge;
@@ -34,6 +36,8 @@ void fragment() {
 	float d = length(VERTEX);
 	vec3 mtn = mix(u_hor, u_ink, 0.26 + 0.17 * v_ridge);
 	mtn = mix(mtn, u_glow, 0.18 * u_glow_i);
+	float sc = max(snow * 0.85, smoothstep(snow_line, snow_line + 40.0, v_wp.y) * 0.8);
+	mtn = mix(mtn, mix(u_hor, vec3(0.80, 0.83, 0.88), 0.6), sc * (0.55 + 0.45 * v_ridge));
 	vec3 sea = mix(u_low, u_fog, 0.5);
 	vec3 mist = mix(sea, u_hor, 0.25);
 	// 멀수록, 낮을수록 안개
