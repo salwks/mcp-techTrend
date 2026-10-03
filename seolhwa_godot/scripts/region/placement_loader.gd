@@ -20,7 +20,7 @@ const FLAT_EDGE := 5.0
 const VEG_MARGIN := 1.0
 const TAG := "placement"
 const WATER_KITS := ["village/jingeom", "village/narutbae", "village/ppallaeteo"]
-const BOAT_KITS := ["village/narutbae"]
+const BOAT_KITS := ["village/narutbae", "route/dotbae"]
 const BRIDGE_KITS := ["village/stone_bridge", "village/seop_bridge"]
 const YARD_COMPOSITES := ["house_compound", "gwana", "hyanggyo", "silsangsa", "jumak"]
 
@@ -326,7 +326,7 @@ static func _yard_kit(r: Dictionary) -> bool:
 var _cat := {}
 func _load_catalogs() -> void:
 	if not _cat.is_empty(): return
-	for d in ["village", "landmark", "nature"]:
+	for d in ["village", "landmark", "nature", "route"]:
 		var path := "res://kit/%s/catalog.json" % d
 		if not FileAccess.file_exists(path): continue
 		var c = JSON.parse_string(FileAccess.get_file_as_string(path))

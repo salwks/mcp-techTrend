@@ -137,12 +137,27 @@ static func portals_for(space: Dictionary, is_route: bool) -> Array:
 	if is_route:
 		var rid := String(space.get("route_id", space.get("id", "")))
 		var ends := route_ends(space)
-		for end in ["from", "to"]:
+		for end in ends:
 			var p := _portal(space, end)
-			var reg := String(p.get("region", space.get("from_region" if end == "from" else "to_region", "")))
+			var nm := String(p.get("name", ""))
+			# 노정 → 노정(갈림길): portals.<끝>.route. 도착 자리는 그 노정 portals 중 route == 이 노정인 끝
+			if p.has("route"):
+				var tgt := String(p.route)
+				var tx := float(p.get("x", NAN)); var tz := float(p.get("z", NAN))
+				var tr := ""
+				for r in routes():
+					if r.id != tgt: continue
+					tr = r.name
+					if is_nan(tx):
+						var oe := route_ends(r.json)
+						for e2 in oe:
+							if String(_portal(r.json, e2).get("route", "")) == rid: tx = oe[e2].x; tz = oe[e2].y
+				out.append({ id = "%s_%s" % [rid, end], name = nm, x = ends[end].x, z = ends[end].y, kind = "route", target = tgt,
+					tx = tx, tz = tz, label = nm if nm != "" else tr })
+				continue
+			var reg := String(p.get("region", space.get("from_region" if end == "from" else ("to_region" if end == "to" else ""), "")))
 			if reg == "" or not p.has("x"): continue
 			var info := region_info(reg)
-			var nm := String(p.get("name", ""))
 			out.append({ id = "%s_%s" % [rid, end], name = nm, x = ends[end].x, z = ends[end].y, kind = "region", target = reg,
 				tx = float(p.x), tz = float(p.z), label = "%s%s" % [String(info.get("short", short_name(reg))), " · " + nm if nm != "" else ""] })
 		return out
@@ -207,9 +222,11 @@ static func route_ends(j: Dictionary) -> Dictionary:
 	elif j.get("spawn") is Dictionary:
 		a = Vector2(float(j.spawn.x), float(j.spawn.z)); b = a
 	var out := { from = a, to = b }
-	for end in ["from", "to"]:
-		var p := _portal(j, end)
-		if p.has("route_x") and p.has("route_z"): out[end] = Vector2(float(p.route_x), float(p.route_z))
+	var ps = j.get("portals", {})
+	if ps is Dictionary:
+		for end in ps:   # from·to 말고도 갈림길(branch 등)은 route_x/route_z가 있어야 한다
+			var p := _portal(j, String(end))
+			if p.has("route_x") and p.has("route_z"): out[String(end)] = Vector2(float(p.route_x), float(p.route_z))
 	return out
 
 static func main_road(j: Dictionary) -> PackedVector2Array:

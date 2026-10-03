@@ -551,6 +551,12 @@ func _process(delta: float) -> void:
 	if not _ptest.is_empty() and not _loading and not _leaving:
 		mv = _ptest_step(delta); speed = RUN
 		if not _pt_path.is_empty(): speed = float(args.get("walkspeed", "12"))
+	# 바다 뱃길(auto): 배에 오르면 저절로 건너편 포구로(입력·걷기 시험보다 앞선다)
+	if not _loading and not _leaving:
+		var sail: Dictionary = world.ferry_auto(player_pos)
+		if not sail.is_empty():
+			mv = sail.dir; speed = float(sail.speed)
+			if sail.start: _show_hud("배에 올랐다 — %s" % String(sail.name))
 	if _bench_left > 0.0 and _bench_loading and _loading:
 		_bench_load_t += delta
 	elif _bench_left > 0.0 and _bench_loading:
@@ -833,12 +839,16 @@ func _arrive(at) -> void:
 	var c := Vector2(world.hx0 + (world.hnx - 1) * world.hstep * 0.5, world.hz0 + (world.hnz - 1) * world.hstep * 0.5)
 	var inward := (c - p).normalized() if c.distance_to(p) > 1.0 else Vector2.ZERO
 	# 길이 있으면 길을 따라 안쪽으로(가장 가까운 길 점에서 안쪽 이웃 점 방향)
+	# 가장 가까운 길(주 도로뿐 아니라 갈림길 지선도 — 노정 갈림길로 들어오면 그 갈래길 끝에 선다)
 	var road := Travel.main_road(world.region)
+	var bi := 0; var bd := INF
+	for rr in (world.region.get("roads", []) if world.is_route else [{ points = Array(road).map(func(v): return [v.x, v.y]) }]):
+		var pts := PackedVector2Array()
+		for q in rr.get("points", []): pts.append(Vector2(float(q[0]), float(q[1])))
+		for i in pts.size():
+			var d := pts[i].distance_to(p)
+			if d < bd: bd = d; bi = i; road = pts
 	if road.size() >= 2:
-		var bi := 0; var bd := INF
-		for i in road.size():
-			var d := road[i].distance_to(p)
-			if d < bd: bd = d; bi = i
 		if bd < 60.0:
 			var nb := road[mini(bi + 3, road.size() - 1)] if road[mini(bi + 3, road.size() - 1)].distance_to(c) < road[maxi(bi - 3, 0)].distance_to(c) else road[maxi(bi - 3, 0)]
 			if nb.distance_to(road[bi]) > 1.0: inward = (nb - road[bi]).normalized(); p = road[bi]
@@ -1014,6 +1024,11 @@ func _ptest_shot() -> void:
 		if road.size() >= 2:
 			var here := Vector2(player_pos.x, player_pos.z)
 			if here.distance_to(road[road.size() - 1]) < here.distance_to(road[0]): road.reverse()
+			# 플레이어 둘레 가장 가까운 길 점부터(출발 포털 뒤쪽 길 끝으로 되돌아가지 않게)
+			var i0 := 0; var d0 := INF
+			for i in road.size():
+				if road[i].distance_to(here) < d0: d0 = road[i].distance_to(here); i0 = i
+			road = road.slice(i0)
 			var path := PackedVector2Array()
 			for i in road.size():
 				if i == 0 or road[i].distance_to(path[path.size() - 1]) >= 6.0: path.append(road[i])

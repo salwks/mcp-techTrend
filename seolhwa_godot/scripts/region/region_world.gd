@@ -807,11 +807,14 @@ const FERRY_HW := 1.9            # 뱃길 반폭(배 폭 1.7 + 여유)
 const FERRY_DECK := 0.32         # 물 면 위 갑판 높이
 
 func _build_ferries() -> void:
-	if is_nan(sea_y) or not sea_is_river: return
-	var boat_scr: Script = load("res://kit/village/narutbae.gd") if FileAccess.file_exists("res://kit/village/narutbae.gd") else null
+	if is_nan(sea_y): return
 	var drop := {}
 	for c in region.get("crossings", []):
 		if String(c.get("type", "")) != "나루" or not (c.get("ends") is Array) or c.ends.size() < 2: continue
+		# 바다(강 아님)에서는 노정 바다 뱃길(sea_lane)만 — 제주 권역 등 바다 나루 표지는 그대로
+		if not sea_is_river and not bool(c.get("sea_lane", false)): continue
+		var bk := String(c.get("boat_kit", "village/narutbae"))
+		var boat_scr: Script = load("res://kit/%s.gd" % bk) if FileAccess.file_exists("res://kit/%s.gd" % bk) else null
 		var a := Vector2(float(c.ends[0][0]), float(c.ends[0][1])); var b := Vector2(float(c.ends[1][0]), float(c.ends[1][1]))
 		var L := a.distance_to(b)
 		if L < 4.0: continue
@@ -822,7 +825,8 @@ func _build_ferries() -> void:
 		var ry := atan2(d.x, d.y)
 		var xf := Transform3D(Basis(Vector3.UP, ry), Vector3(mid.x, sea_y, mid.y))
 		add_walk(xf, { minX = -FERRY_HW, maxX = FERRY_HW, minZ = -L * 0.5 - 4.0, maxZ = L * 0.5 + 4.0, z = [-L * 0.5 - 4.0, L * 0.5 + 4.0], y = [FERRY_DECK, FERRY_DECK] })
-		var f := { id = String(c.get("id", "")), name = String(c.get("name", "나루")), a = a, b = b, len = L, dir = d, ry = ry, boat = null, s = 6.0 }
+		var f := { id = String(c.get("id", "")), name = String(c.get("name", "나루")), a = a, b = b, len = L, dir = d, ry = ry, boat = null, s = 6.0,
+			auto = bool(c.get("auto", false)), sail = 0, sea = bool(c.get("sea_lane", false)) }
 		if boat_scr != null and boat_scr.can_instantiate():
 			var info = boat_scr.build({ seed = hash(f.id) & 0xffff })
 			if info is Dictionary and info.get("node") is Node3D:
@@ -845,7 +849,35 @@ func _place_boat(f: Dictionary, s: float, lat := 0.0) -> void:
 	f.s = clampf(s, 3.4, f.len - 3.4)
 	if f.boat == null: return
 	var p: Vector2 = f.a + f.dir * f.s + Vector2(-f.dir.y, f.dir.x) * clampf(lat, -0.6, 0.6)
-	f.boat.transform = Transform3D(Basis(Vector3.UP, f.ry), Vector3(p.x, sea_y + 0.02, p.y))
+	var bs := Basis(Vector3.UP, f.ry)
+	var bob := 0.0
+	if f.get("sea", false):   # 바다: 너울에 조금 흔들림(갑판 걷기 면은 그대로)
+		var t := Time.get_ticks_msec() / 1000.0
+		bs = bs * Basis(Vector3(0, 0, 1), sin(t * 0.9) * 0.035) * Basis(Vector3(1, 0, 0), sin(t * 0.63 + 1.0) * 0.02)
+		bob = sin(t * 1.1) * 0.06
+	f.boat.transform = Transform3D(bs, Vector3(p.x, sea_y + 0.02 + bob, p.y))
+
+# 바다 뱃길 auto: 플레이어가 배(뱃길 물 위)에 오르면 저절로 건너편 포구로 간다 — region_main이 움직임을 이것으로 바꾼다.
+# 돌려주는 값 {dir: Vector2, speed, name, start: bool} 또는 {}
+const SAIL_SPEED := 9.0
+func ferry_auto(player: Vector3) -> Dictionary:
+	for f in ferries:
+		if not f.auto: continue
+		var rel := Vector2(player.x, player.z) - (f.a as Vector2)
+		var s: float = rel.dot(f.dir)
+		var lat: float = rel.dot(Vector2(-f.dir.y, f.dir.x))
+		var on: bool = absf(lat) < FERRY_HW + 0.5 and s > -1.0 and s < f.len + 1.0 and ground_at(player.x, player.z) < sea_y + 0.1
+		if not on:
+			f.sail = 0
+			continue
+		var start := false
+		if f.sail == 0:
+			f.sail = 1 if s < f.len * 0.5 else -1
+			start = true
+		var d: Vector2 = f.dir * float(f.sail)
+		d += Vector2(-f.dir.y, f.dir.x) * clampf(-lat * 0.5, -0.5, 0.5)   # 뱃길 가운데로
+		return { dir = d.normalized(), speed = SAIL_SPEED, name = String(f.name), start = start, to = "b" if f.sail > 0 else "a" }
+	return {}
 
 # 플레이어가 뱃길 물 위(땅이 물 면 아래)에 있으면 배가 발밑으로 온다
 func update_ferries(player: Vector3) -> void:

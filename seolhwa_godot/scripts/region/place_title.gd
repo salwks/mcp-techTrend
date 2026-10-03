@@ -61,7 +61,11 @@ static func uses_own_titles(region: Dictionary) -> bool:
 	return false
 
 static func title_for(s: Dictionary, own: bool) -> String:
-	if own: return TITLES.get(String(s.get("id", "")), "")
+	if own:
+		var t: String = TITLES.get(String(s.get("id", "")), "")
+		# 노정 길목(rt_*)은 TITLES에 없으면 route.json title(routes 2차 — 길가 마을·나루)
+		if t == "" and String(s.get("id", "")).begins_with("rt_"): t = String(s.get("title", ""))
+		return t
 	for k in ["title", "short"]:
 		if String(s.get(k, "")) != "": return String(s[k])
 	var id := String(s.get("id", "")); var n := String(s.get("name", ""))
@@ -73,7 +77,13 @@ static func title_for(s: Dictionary, own: bool) -> String:
 
 func setup(region: Dictionary) -> void:
 	var own := uses_own_titles(region)
-	for s in region.get("settlements", []):
+	# 노정 길목 볼거리(route.json sights — 서낭당·신목·원터·소 등): 마을이 아니어도 지나갈 때 이름을 띄운다
+	var named := {}
+	for s in region.get("settlements", []): named[String(s.get("id", ""))] = true
+	var extra := []
+	for s in region.get("sights", []):
+		if s is Dictionary and not named.has(String(s.get("id", ""))) and String(s.get("title", "")) != "": extra.append(s)
+	for s in region.get("settlements", []) + extra:
 		var title: String = title_for(s, own)
 		if title == "": continue
 		var r: Rect2
