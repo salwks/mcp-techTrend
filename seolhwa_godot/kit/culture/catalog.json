@@ -1,0 +1,1698 @@
+{
+  "kit": "culture",
+  "era": "1870 전후 조선 후기",
+  "note": "build(params) → {node, colliders, lights, occluder, footprint, anchors, pieces?}. 정면 +z. tris는 먹선 포함. 묶음은 layout(params)로 조각 배치(§8), 조각마다 예산 안",
+  "budget": {
+    "house": 6000,
+    "big_house": 15000,
+    "prop": 800
+  },
+  "cultures": {
+    "영남": "yeongnam",
+    "기호": "giho",
+    "관동": "gwandong",
+    "해서": "haeseo",
+    "관서": "gwanseo",
+    "관북": "gwanbuk",
+    "탐라": "tamna",
+    "호남": "village(기존 kit/village)"
+  },
+  "compare": [
+    "shots/kit/culture/compare.png",
+    "shots/kit/culture/compare_large.png"
+  ],
+  "models": [
+    {
+      "name": "chae",
+      "culture": "",
+      "file": "res://kit/culture/chae.gd",
+      "desc": "채 하나(一자) 범용 — 사랑채·행랑채·밖거리·곳간채. bays 글자(_cc.gd), roof giwa/giwa_dark/thatch/thatch_old/thatch_sea/thatch_nw/tti, wall mud/plaster/red/basalt/urban",
+      "shot": "shots/kit/culture/chae.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1704,
+      "footprint": [
+        11.8,
+        7.0
+      ],
+      "colliders": 1,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "daecheong"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "bays": "bcbgbbc",
+            "l": 16,
+            "d": 3.2,
+            "F": 0.4
+          },
+          "tris": 2600,
+          "footprint": [
+            18.8,
+            6.0
+          ],
+          "colliders": 4,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [
+            "cow",
+            "gate",
+            "gate_in"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 2,
+            "roof": "thatch",
+            "bays": "kdd",
+            "l": 7.5
+          },
+          "tris": 928,
+          "footprint": [
+            9.1,
+            5.8
+          ],
+          "colliders": 1,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "kitchen",
+            "door"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "yeongnam/tteuljip",
+      "culture": "영남",
+      "file": "res://kit/culture/yeongnam/tteuljip.gd",
+      "desc": "ㅁ자 뜰집(안동형) — 안채·익랑·사랑대문채가 안마당을 막은 ㅁ자, 지붕 한 덩이(가운데 하늘 구멍). roof giwa/choga",
+      "shot": "shots/kit/culture/yeongnam_tteuljip.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 5942,
+      "footprint": [
+        17.0,
+        17.0
+      ],
+      "colliders": 8,
+      "lights": 8,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_daecheong",
+        "west_kitchen",
+        "east_door",
+        "sarang_cow",
+        "sarang_gate",
+        "sarang_gate_in",
+        "sarang_door",
+        "sarang_daecheong",
+        "sarang_maru"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "roof": "choga"
+          },
+          "tris": 3926,
+          "footprint": [
+            15.6,
+            15.8
+          ],
+          "colliders": 8,
+          "lights": 8,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_daecheong",
+            "west_kitchen",
+            "east_door",
+            "sarang_cow",
+            "sarang_gate",
+            "sarang_gate_in",
+            "sarang_door",
+            "sarang_maru"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "yeongnam/jongga",
+      "culture": "영남",
+      "file": "res://kit/culture/yeongnam/jongga.gd",
+      "desc": "종가 — ㅁ자 기와 뜰집 + 동북 뒤 사당(담·일각문) + 앞 행랑채 + 곳간 + 기와 토담. 배치형(layout/pieces)",
+      "shot": "shots/kit/culture/yeongnam_jongga.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 21058,
+      "footprint": [
+        27.0,
+        36.0
+      ],
+      "colliders": 28,
+      "lights": 11,
+      "occluder": true,
+      "anchors": [
+        "momchae_anchae_door",
+        "momchae_anchae_daecheong",
+        "momchae_west_kitchen",
+        "momchae_east_door",
+        "momchae_sarang_cow",
+        "momchae_sarang_gate",
+        "momchae_sarang_gate_in",
+        "momchae_sarang_door",
+        "momchae_sarang_daecheong",
+        "momchae_sarang_maru",
+        "sadang_sadang_door",
+        "sadang_gate_out",
+        "sadang_gate_in",
+        "sadang_wall_l",
+        "sadang_wall_r",
+        "sadang_gate",
+        "haengrang_cow",
+        "haengrang_gate",
+        "haengrang_gate_in",
+        "gotgan_kitchen"
+      ],
+      "pieces": 10,
+      "max_piece_tris": 5942,
+      "layout": true,
+      "variants": []
+    },
+    {
+      "name": "yeongnam/sadang",
+      "culture": "영남",
+      "file": "res://kit/culture/yeongnam/sadang.gd",
+      "desc": "사당 — 3칸 맞배 기와(높은 기단) + 기와 토담 + 일각문. 종가 조각",
+      "shot": "shots/kit/culture/yeongnam_sadang.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 3960,
+      "footprint": [
+        11.2,
+        10.0
+      ],
+      "colliders": 9,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "sadang_door",
+        "gate_out",
+        "gate_in",
+        "wall_l",
+        "wall_r",
+        "gate"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "wall": false
+          },
+          "tris": 1196,
+          "footprint": [
+            11.2,
+            10.0
+          ],
+          "colliders": 1,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "sadang_door"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "yeongnam/choga",
+      "culture": "영남",
+      "file": "res://kit/culture/yeongnam/choga.gd",
+      "desc": "영남 초가 — 一자 4칸(붉은 흙벽·넓은 마루·낮은 굴뚝) / ㄱ자(plan giyeok)",
+      "shot": "shots/kit/culture/yeongnam_choga.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1152,
+      "footprint": [
+        11.4,
+        6.8
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "anchae_kitchen",
+        "anchae_door",
+        "anchae_daecheong",
+        "anchae_maru"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "plan": "giyeok"
+          },
+          "tris": 2006,
+          "footprint": [
+            11.4,
+            10.7
+          ],
+          "colliders": 3,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "anchae_kitchen",
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru",
+            "wing_cow"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "yeongnam/compound",
+      "culture": "영남",
+      "file": "res://kit/culture/yeongnam/compound.gd",
+      "desc": "영남 집 프리셋 — small 초가 一자+토담 / medium ㅁ자 초가 뜰집(담 없음) / large 종가",
+      "shot": "shots/kit/culture/yeongnam_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 7124,
+      "footprint": [
+        16.0,
+        15.0
+      ],
+      "colliders": 20,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "anchae_anchae_kitchen",
+        "anchae_anchae_door",
+        "anchae_anchae_daecheong",
+        "anchae_anchae_maru",
+        "heotgan_front",
+        "dwitgan_door",
+        "gate_gate_out",
+        "gate_gate_in"
+      ],
+      "pieces": 10,
+      "max_piece_tris": 1152,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 6894,
+          "footprint": [
+            22.0,
+            22.0
+          ],
+          "colliders": 13,
+          "lights": 8,
+          "occluder": true,
+          "anchors": [
+            "momchae_anchae_door",
+            "momchae_anchae_daecheong",
+            "momchae_west_kitchen",
+            "momchae_east_door",
+            "momchae_sarang_cow",
+            "momchae_sarang_gate",
+            "momchae_sarang_gate_in",
+            "momchae_sarang_door",
+            "momchae_sarang_maru",
+            "dwitgan_door"
+          ],
+          "pieces": 5,
+          "max_piece_tris": 3926,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 21058,
+          "footprint": [
+            27.0,
+            36.0
+          ],
+          "colliders": 28,
+          "lights": 11,
+          "occluder": true,
+          "anchors": [
+            "momchae_anchae_door",
+            "momchae_anchae_daecheong",
+            "momchae_west_kitchen",
+            "momchae_east_door",
+            "momchae_sarang_cow",
+            "momchae_sarang_gate",
+            "momchae_sarang_gate_in",
+            "momchae_sarang_door",
+            "momchae_sarang_daecheong",
+            "momchae_sarang_maru",
+            "sadang_sadang_door",
+            "sadang_gate_out",
+            "sadang_gate_in",
+            "sadang_wall_l",
+            "sadang_wall_r",
+            "sadang_gate",
+            "haengrang_cow",
+            "haengrang_gate",
+            "haengrang_gate_in",
+            "gotgan_kitchen"
+          ],
+          "pieces": 10,
+          "max_piece_tris": 5942,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 2,
+            "size": "medium",
+            "roof": "giwa"
+          },
+          "tris": 8910,
+          "footprint": [
+            22.0,
+            22.0
+          ],
+          "colliders": 13,
+          "lights": 8,
+          "occluder": true,
+          "anchors": [
+            "momchae_anchae_door",
+            "momchae_anchae_daecheong",
+            "momchae_west_kitchen",
+            "momchae_east_door",
+            "momchae_sarang_cow",
+            "momchae_sarang_gate",
+            "momchae_sarang_gate_in",
+            "momchae_sarang_door",
+            "momchae_sarang_daecheong",
+            "momchae_sarang_maru",
+            "dwitgan_door"
+          ],
+          "pieces": 5,
+          "max_piece_tris": 5942,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "giho/giyeok",
+      "culture": "기호",
+      "file": "res://kit/culture/giho/giyeok.gd",
+      "desc": "ㄱ자집 — ㄱ자 안채(서쪽 부엌칸 꺾임) + 앞 오른쪽 一자 사랑채. roof giwa/choga, sarang",
+      "shot": "shots/kit/culture/giho_giyeok.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 4404,
+      "footprint": [
+        16.5,
+        17.5
+      ],
+      "colliders": 4,
+      "lights": 6,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_daecheong",
+        "anchae_maru",
+        "wing_kitchen",
+        "wing_door",
+        "sarang_door",
+        "sarang_daecheong",
+        "sarang_maru"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "roof": "choga"
+          },
+          "tris": 3136,
+          "footprint": [
+            16.5,
+            17.5
+          ],
+          "colliders": 4,
+          "lights": 6,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru",
+            "wing_kitchen",
+            "wing_door",
+            "sarang_door",
+            "sarang_daecheong",
+            "sarang_maru"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "sarang": false
+          },
+          "tris": 3058,
+          "footprint": [
+            16.5,
+            17.5
+          ],
+          "colliders": 3,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru",
+            "wing_kitchen",
+            "wing_door"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "giho/choga_giyeok",
+      "culture": "기호",
+      "file": "res://kit/culture/giho/choga_giyeok.gd",
+      "desc": "기호 초가 ㄱ자 — 몸채 3칸 + 앞으로 꺾인 부엌·외양간 칸",
+      "shot": "shots/kit/culture/giho_choga_giyeok.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1710,
+      "footprint": [
+        10.8,
+        9.4
+      ],
+      "colliders": 3,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_maru",
+        "wing_kitchen",
+        "wing_cow"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": []
+    },
+    {
+      "name": "giho/hanok_city",
+      "culture": "기호",
+      "file": "res://kit/culture/giho/hanok_city.gd",
+      "desc": "한양 도시 한옥 — 좁은 필지 ㄷ자(길에 붙은 화방벽+평대문, 기본) / ㅁ자(문간채가 길, 사괴석 바깥벽·들창)",
+      "shot": "shots/kit/culture/giho_hanok_city.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 5244,
+      "footprint": [
+        13.5,
+        16.0
+      ],
+      "colliders": 8,
+      "lights": 7,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_daecheong",
+        "anchae_maru",
+        "west_kitchen",
+        "west_door",
+        "east_door",
+        "east_daecheong",
+        "gate_out",
+        "gate_in",
+        "wall_l",
+        "wall_r",
+        "gate"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "shape": "ㅁ"
+          },
+          "tris": 5418,
+          "footprint": [
+            13.5,
+            16.0
+          ],
+          "colliders": 7,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru",
+            "west_kitchen",
+            "west_door",
+            "east_door",
+            "east_daecheong",
+            "mungan_gate",
+            "mungan_gate_in"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "giho/compound",
+      "culture": "기호",
+      "file": "res://kit/culture/giho/compound.gd",
+      "desc": "기호 집 프리셋 — small 초가 ㄱ자+싸리울 / medium ㄱ자 초가+사랑+토담 / large ㄱ자 기와+사랑+행랑+기와 토담 / city 도시 한옥",
+      "shot": "shots/kit/culture/giho_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 7252,
+      "footprint": [
+        16.0,
+        15.0
+      ],
+      "colliders": 21,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_anchae_door",
+        "anchae_anchae_maru",
+        "anchae_wing_kitchen",
+        "anchae_wing_cow",
+        "heotgan_front",
+        "dwitgan_door",
+        "gate_gate_out",
+        "gate_gate_in"
+      ],
+      "pieces": 10,
+      "max_piece_tris": 1710,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 10204,
+          "footprint": [
+            20.0,
+            21.0
+          ],
+          "colliders": 15,
+          "lights": 6,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_door",
+            "anchae_anchae_daecheong",
+            "anchae_anchae_maru",
+            "anchae_wing_kitchen",
+            "anchae_wing_door",
+            "anchae_sarang_door",
+            "anchae_sarang_daecheong",
+            "anchae_sarang_maru",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r"
+          ],
+          "pieces": 10,
+          "max_piece_tris": 3136,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 13996,
+          "footprint": [
+            24.0,
+            26.0
+          ],
+          "colliders": 22,
+          "lights": 6,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_door",
+            "anchae_anchae_daecheong",
+            "anchae_anchae_maru",
+            "anchae_wing_kitchen",
+            "anchae_wing_door",
+            "anchae_sarang_door",
+            "anchae_sarang_daecheong",
+            "anchae_sarang_maru",
+            "haengrang_gate",
+            "haengrang_gate_in",
+            "haengrang_cow",
+            "gotgan_front"
+          ],
+          "pieces": 9,
+          "max_piece_tris": 4404,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "city"
+          },
+          "tris": 5244,
+          "footprint": [
+            11.5,
+            14.0
+          ],
+          "colliders": 8,
+          "lights": 7,
+          "occluder": true,
+          "anchors": [
+            "house_anchae_door",
+            "house_anchae_daecheong",
+            "house_anchae_maru",
+            "house_west_kitchen",
+            "house_west_door",
+            "house_east_door",
+            "house_east_daecheong",
+            "house_gate_out",
+            "house_gate_in",
+            "house_wall_l",
+            "house_wall_r",
+            "house_gate"
+          ],
+          "pieces": 1,
+          "max_piece_tris": 5244,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "gwandong/banga",
+      "culture": "관동",
+      "file": "res://kit/culture/gwandong/banga.gd",
+      "desc": "강릉 반가 — 높은 기단 긴 一자 기와 안채 + 나란한 긴 행랑채(위에서 二)",
+      "shot": "shots/kit/culture/gwandong_banga.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 5980,
+      "footprint": [
+        23.1,
+        18.0
+      ],
+      "colliders": 5,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_daecheong",
+        "anchae_maru",
+        "haengrang_cow",
+        "haengrang_gate",
+        "haengrang_gate_in"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "haengrang": false
+          },
+          "tris": 3020,
+          "footprint": [
+            23.1,
+            10.2
+          ],
+          "colliders": 1,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "gwandong/haean",
+      "culture": "관동",
+      "file": "res://kit/culture/gwandong/haean.gd",
+      "desc": "영동 해안 ㄱ자 초가 — 잿빛 이엉을 새끼 그물로 얽고 처마에 돌을 매닮",
+      "shot": "shots/kit/culture/gwandong_haean.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 3472,
+      "footprint": [
+        10.6,
+        9.0
+      ],
+      "colliders": 2,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_kitchen",
+        "anchae_door",
+        "anchae_maru",
+        "wing_cow"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": []
+    },
+    {
+      "name": "gwandong/compound",
+      "culture": "관동",
+      "file": "res://kit/culture/gwandong/compound.gd",
+      "desc": "관동 집 프리셋 — small 산간(너와 ㄱ자+귀틀 곳간+돌축대) / medium 해안 ㄱ자 초가+돌담 / large 강릉 반가+기와 토담",
+      "shot": "shots/kit/culture/gwandong_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 13598,
+      "footprint": [
+        18.0,
+        15.0
+      ],
+      "colliders": 14,
+      "lights": 4,
+      "occluder": true,
+      "anchors": [
+        "anchae_door",
+        "anchae_maru",
+        "anchae_kitchen",
+        "gotgan_door",
+        "gotgan_maru",
+        "gotgan_kitchen",
+        "gate_gate_out",
+        "gate_gate_in"
+      ],
+      "pieces": 10,
+      "max_piece_tris": 5704,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 8504,
+          "footprint": [
+            16.0,
+            15.0
+          ],
+          "colliders": 18,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_kitchen",
+            "anchae_anchae_door",
+            "anchae_anchae_maru",
+            "anchae_wing_cow",
+            "heotgan_front",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "pieces": 9,
+          "max_piece_tris": 3472,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 10976,
+          "footprint": [
+            26.0,
+            22.0
+          ],
+          "colliders": 9,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "house_anchae_door",
+            "house_anchae_daecheong",
+            "house_anchae_maru",
+            "house_haengrang_cow",
+            "house_haengrang_gate",
+            "house_haengrang_gate_in"
+          ],
+          "pieces": 5,
+          "max_piece_tris": 5980,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "haeseo/gyeopjip",
+      "culture": "해서",
+      "file": "res://kit/culture/haeseo/gyeopjip.gd",
+      "desc": "해서 겹집 — 방 두 줄의 깊은 一자/ㄱ자 초가(툇마루 없음, 따로 선 높은 굴뚝). roof thatch/giwa",
+      "shot": "shots/kit/culture/haeseo_gyeopjip.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1534,
+      "footprint": [
+        12.4,
+        8.2
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "anchae_cow",
+        "anchae_kitchen",
+        "anchae_door"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "plan": "giyeok"
+          },
+          "tris": 2426,
+          "footprint": [
+            12.4,
+            11.7
+          ],
+          "colliders": 3,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "anchae_cow",
+            "anchae_kitchen",
+            "anchae_door",
+            "wing_door",
+            "wing_cow"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 2,
+            "roof": "giwa"
+          },
+          "tris": 2382,
+          "footprint": [
+            12.4,
+            8.2
+          ],
+          "colliders": 2,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "anchae_kitchen",
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "haeseo/compound",
+      "culture": "해서",
+      "file": "res://kit/culture/haeseo/compound.gd",
+      "desc": "해서 집 프리셋 — small 一자 겹집+바자울 / medium 넓은 一자 겹집+헛간+바자울 / large 一자 겹집 기와+곳간+기와 토담",
+      "shot": "shots/kit/culture/haeseo_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 5692,
+      "footprint": [
+        16.0,
+        15.0
+      ],
+      "colliders": 11,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "anchae_anchae_cow",
+        "anchae_anchae_kitchen",
+        "anchae_anchae_door",
+        "gate_gate_out",
+        "gate_gate_in"
+      ],
+      "pieces": 9,
+      "max_piece_tris": 1534,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 7692,
+          "footprint": [
+            19.0,
+            18.0
+          ],
+          "colliders": 20,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_cow",
+            "anchae_anchae_kitchen",
+            "anchae_anchae_door",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "pieces": 10,
+          "max_piece_tris": 1630,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 10642,
+          "footprint": [
+            22.0,
+            22.0
+          ],
+          "colliders": 11,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_kitchen",
+            "anchae_anchae_door",
+            "anchae_anchae_daecheong",
+            "anchae_anchae_maru",
+            "gotgan_kitchen",
+            "gotgan_cow",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r"
+          ],
+          "pieces": 9,
+          "max_piece_tris": 2670,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "gwanseo/pyeongyang_giwa",
+      "culture": "관서",
+      "file": "res://kit/culture/gwanseo/pyeongyang_giwa.gd",
+      "desc": "평양 도시 기와집 — 깊은 一자/ㄱ자, 아주 넓은 처마, 짙은 기와",
+      "shot": "shots/kit/culture/gwanseo_pyeongyang_giwa.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 3348,
+      "footprint": [
+        17.6,
+        10.4
+      ],
+      "colliders": 4,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_gate",
+        "anchae_gate_in",
+        "anchae_door",
+        "anchae_daecheong",
+        "anchae_maru"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "plan": "giyeok"
+          },
+          "tris": 4280,
+          "footprint": [
+            17.6,
+            14.8
+          ],
+          "colliders": 5,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_daecheong",
+            "anchae_maru",
+            "wing_gate",
+            "wing_gate_in",
+            "wing_door"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "gwanseo/choga",
+      "culture": "관서",
+      "file": "res://kit/culture/gwanseo/choga.gd",
+      "desc": "서북 초가 — 낮고 넓은 잿빛 겹집 초가 + 가로 새끼 띠 + 따로 선 높은 굴뚝",
+      "shot": "shots/kit/culture/gwanseo_choga.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 2238,
+      "footprint": [
+        14.4,
+        8.8
+      ],
+      "colliders": 2,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_cow",
+        "anchae_kitchen",
+        "anchae_door"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": []
+    },
+    {
+      "name": "gwanseo/city_wall",
+      "culture": "관서",
+      "file": "res://kit/culture/gwanseo/city_wall.gd",
+      "desc": "도시 담 둘레 — 사괴석 아랫단+회벽+기와 갓, 남쪽 평대문(gate_x). 평양·한양 골목",
+      "shot": "shots/kit/culture/gwanseo_city_wall.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1968,
+      "footprint": [
+        17.0,
+        17.0
+      ],
+      "colliders": 7,
+      "lights": 1,
+      "occluder": true,
+      "anchors": [
+        "gate_out",
+        "gate_in",
+        "wall_l",
+        "wall_r",
+        "gate"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "gate_x": null,
+            "sides": "s"
+          },
+          "tris": 328,
+          "footprint": [
+            17.0,
+            17.0
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "gwanseo/compound",
+      "culture": "관서",
+      "file": "res://kit/culture/gwanseo/compound.gd",
+      "desc": "관서 집 프리셋 — small/medium 서북 초가 / large 평양 기와집 ㄱ자+곳간+도시 담",
+      "shot": "shots/kit/culture/gwanseo_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 6478,
+      "footprint": [
+        17.0,
+        15.0
+      ],
+      "colliders": 11,
+      "lights": 3,
+      "occluder": true,
+      "anchors": [
+        "anchae_anchae_cow",
+        "anchae_anchae_kitchen",
+        "anchae_anchae_door",
+        "gate_gate_out",
+        "gate_gate_in"
+      ],
+      "pieces": 9,
+      "max_piece_tris": 2206,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 8862,
+          "footprint": [
+            19.0,
+            17.0
+          ],
+          "colliders": 20,
+          "lights": 3,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_cow",
+            "anchae_anchae_kitchen",
+            "anchae_anchae_door",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r"
+          ],
+          "pieces": 10,
+          "max_piece_tris": 2238,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 9276,
+          "footprint": [
+            22.0,
+            22.0
+          ],
+          "colliders": 14,
+          "lights": 5,
+          "occluder": true,
+          "anchors": [
+            "anchae_anchae_door",
+            "anchae_anchae_daecheong",
+            "anchae_anchae_maru",
+            "anchae_wing_gate",
+            "anchae_wing_gate_in",
+            "anchae_wing_door",
+            "gotgan_kitchen",
+            "walls_gate_out",
+            "walls_gate_in",
+            "walls_wall_l",
+            "walls_wall_r",
+            "walls_gate"
+          ],
+          "pieces": 4,
+          "max_piece_tris": 4280,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "gwanbuk/jeonja",
+      "culture": "관북",
+      "file": "res://kit/culture/gwanbuk/jeonja.gd",
+      "desc": "田자 겹집 — 방 두 줄+부엌·정주간·외양간이 한 지붕, 두꺼운 짙은 이엉, 작은 창, 따로 선 높은 굴뚝",
+      "shot": "shots/kit/culture/gwanbuk_jeonja.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 2032,
+      "footprint": [
+        15.1,
+        11.6
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "house_cow",
+        "house_kitchen",
+        "house_door",
+        "house_jeongju"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "w": 13.2,
+            "d": 10.0
+          },
+          "tris": 2336,
+          "footprint": [
+            16.7,
+            12.0
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "house_cow",
+            "house_kitchen",
+            "house_door",
+            "house_jeongju"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "gwanbuk/compound",
+      "culture": "관북",
+      "file": "res://kit/culture/gwanbuk/compound.gd",
+      "desc": "관북 집 프리셋 — small 田자+장작더미+바자울 / medium +헛간·뒷간 / large 큰 田자+곳간채+이엉 토담",
+      "shot": "shots/kit/culture/gwanbuk_compound.png",
+      "params": {
+        "seed": 1,
+        "size": "small"
+      },
+      "tris": 7104,
+      "footprint": [
+        18.0,
+        17.0
+      ],
+      "colliders": 12,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "house_house_cow",
+        "house_house_kitchen",
+        "house_house_door",
+        "house_house_jeongju",
+        "gate_gate_out",
+        "gate_gate_in"
+      ],
+      "pieces": 10,
+      "max_piece_tris": 1904,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium"
+          },
+          "tris": 9000,
+          "footprint": [
+            20.0,
+            19.0
+          ],
+          "colliders": 21,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "house_house_cow",
+            "house_house_kitchen",
+            "house_house_door",
+            "house_house_jeongju",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "pieces": 11,
+          "max_piece_tris": 2032,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "large"
+          },
+          "tris": 9696,
+          "footprint": [
+            24.0,
+            22.0
+          ],
+          "colliders": 11,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "house_house_cow",
+            "house_house_kitchen",
+            "house_house_door",
+            "house_house_jeongju",
+            "gotgan_kitchen",
+            "gotgan_cow",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r"
+          ],
+          "pieces": 9,
+          "max_piece_tris": 2336,
+          "layout": true
+        }
+      ]
+    },
+    {
+      "name": "tamna/stone_house",
+      "culture": "탐라",
+      "file": "res://kit/culture/tamna/stone_house.gd",
+      "desc": "제주 돌집 — 현무암 돌벽+낮은 띠지붕 집줄 격자+상방 풍채. kind an(안거리 5칸)/bak(밖거리 3칸)",
+      "shot": "shots/kit/culture/tamna_stone_house.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 2242,
+      "footprint": [
+        11.8,
+        7.2
+      ],
+      "colliders": 3,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "house_kitchen",
+        "house_door",
+        "house_sangbang"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "kind": "bak"
+          },
+          "tris": 1656,
+          "footprint": [
+            8.8,
+            6.6
+          ],
+          "colliders": 3,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "house_door",
+            "house_sangbang"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "tamna/doldam",
+      "culture": "탐라",
+      "file": "res://kit/culture/tamna/doldam.gd",
+      "desc": "현무암 돌담 — 한 겹 검은 구멍돌, 위 덩이 줄. 두 점 또는 points, lite(기본) ~70/m",
+      "shot": "shots/kit/culture/tamna_doldam.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 424,
+      "footprint": [
+        5.8,
+        0.8
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "points": [
+              [
+                -4,
+                0
+              ],
+              [
+                0,
+                0.6
+              ],
+              [
+                4,
+                -0.4
+              ]
+            ],
+            "lite": false
+          },
+          "tris": 1148,
+          "footprint": [
+            8.8,
+            1.8
+          ],
+          "colliders": 20,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "tamna/jeongnang",
+      "culture": "탐라",
+      "file": "res://kit/culture/tamna/jeongnang.gd",
+      "desc": "정낭 — 정주석 둘+정낭 셋(across 걸친 수 0~3 = 집 비운 정도)",
+      "shot": "shots/kit/culture/tamna_jeongnang.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 264,
+      "footprint": [
+        3.6,
+        1.0
+      ],
+      "colliders": 2,
+      "lights": 0,
+      "occluder": false,
+      "anchors": [
+        "gate",
+        "gate_in"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "across": 3
+          },
+          "tris": 264,
+          "footprint": [
+            3.6,
+            1.0
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "gate",
+            "gate_in"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "across": 0
+          },
+          "tris": 264,
+          "footprint": [
+            3.6,
+            1.0
+          ],
+          "colliders": 2,
+          "lights": 0,
+          "occluder": false,
+          "anchors": [
+            "gate",
+            "gate_in"
+          ],
+          "pieces": 0,
+          "max_piece_tris": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "tamna/compound",
+      "culture": "탐라",
+      "file": "res://kit/culture/tamna/compound.gd",
+      "desc": "탐라 집 프리셋 — 안거리+밖거리(동쪽 서향)+현무암 집담+굽은 올레+정낭+돗통시+우영밭. size small(외거리)/medium/large(+모커리)",
+      "shot": "shots/kit/culture/tamna_compound.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 11896,
+      "footprint": [
+        19.0,
+        22.0
+      ],
+      "colliders": 64,
+      "lights": 4,
+      "occluder": true,
+      "anchors": [
+        "an_house_kitchen",
+        "an_house_door",
+        "an_house_sangbang",
+        "bak_house_door",
+        "bak_house_sangbang",
+        "uyeong_gap",
+        "gate_gate",
+        "gate_gate_in"
+      ],
+      "pieces": 13,
+      "max_piece_tris": 2282,
+      "layout": true,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "size": "small"
+          },
+          "tris": 10256,
+          "footprint": [
+            19.0,
+            22.0
+          ],
+          "colliders": 61,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "an_house_kitchen",
+            "an_house_door",
+            "an_house_sangbang",
+            "uyeong_gap",
+            "gate_gate",
+            "gate_gate_in"
+          ],
+          "pieces": 12,
+          "max_piece_tris": 2262,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 3,
+            "size": "large"
+          },
+          "tris": 11958,
+          "footprint": [
+            19.0,
+            22.0
+          ],
+          "colliders": 60,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "an_house_kitchen",
+            "an_house_door",
+            "an_house_sangbang",
+            "bak_house_door",
+            "bak_house_sangbang",
+            "mokeori_kitchen",
+            "gate_gate",
+            "gate_gate_in"
+          ],
+          "pieces": 13,
+          "max_piece_tris": 2262,
+          "layout": true
+        }
+      ]
+    }
+  ]
+}
