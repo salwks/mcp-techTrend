@@ -2095,6 +2095,121 @@
    ],
    "hypothesis": "강가 바위 축대 위(높이 2m — 가설). 현판 '천하제일강산'. 정면 +z = 강 쪽(배치 때 강을 보게 돌림). params: seed",
    "shot": "shots/kit/landmark/py_ryeongwangjeong.png"
+  },
+  {
+   "name": "gj_tumulus",
+   "file": "res://kit/landmark/gj_tumulus.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "신라 왕릉·대형 고분 봉분 — 풀 덮인 매끈한 둥근 둔덕, 밑동 둘레 조금 어두운 띠. twin=true면 표형분(황남대총처럼 두 봉분이 이어진 조롱박 모양). 밑동을 sink(0.5m)만큼 땅속으로 내려 flatten:false 배치에서도 뜨지 않음. 충돌 원 0.85·radius(오를 수 없음).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, radius(20), height(8), twin(false), trees(0: 비탈의 작은 소나무 수), sink(0.5)",
+   "footprint": [
+    40.0,
+    40.0
+   ],
+   "footprint_twin": [
+    68.8,
+    40.0
+   ],
+   "tris": 840,
+   "tris_note": "twin+trees4 = 1,488, trees3 = 1,056",
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함 (기억 기반·확인 필요)"
+   ],
+   "hypothesis": "1870년에 호석·상석이 드러나 있었는지, 봉분 위 나무 유무는 가설(옛 사진 기억). 표형분은 -x(남분)를 조금 크게 둔 가설.",
+   "shot": "shots/kit/landmark/gj_tumulus.png"
+  },
+  {
+   "name": "gj_mojeon_tap",
+   "file": "res://kit/landmark/gj_mojeon_tap.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "분황사 모전석탑(634) — 낮은 막돌 단(13m) 위 짙은 회색 안산암 '벽돌' 켜(색 띠)로 쌓은 3층 네모 탑, 층마다 층급 내쌓기 처마와 계단식 들임 지붕, 1층 네 면 감실 문(화강암 문틀), 남문 양옆 인왕상 둘, 단 네 귀 돌사자 넷, 남쪽 돌계단.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    14.0,
+    14.0
+   ],
+   "tris": 2784,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함 (기억 기반·확인 필요)"
+   ],
+   "hypothesis": "1870년(1915 일제 수리 전) 꼭대기는 무너진 돌 더미에 풀이 난 모습으로 둔 가설. 탑 기단 화강암 띠·층별 치수는 사진 비례 가설. 인왕상은 실제로 네 문 모두에 있으나 요청대로 남문만.",
+   "shot": "shots/kit/landmark/gj_mojeon_tap.png"
+  },
+  {
+   "name": "gj_seokguram",
+   "file": "res://kit/landmark/gj_seokguram.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "석굴암 1870 — 산비탈에 반쯤 묻힌 풀 덮인 흙 둔덕, 지붕 없이 허물어진 앞 돌벽(전실)과 어두운 홍예 입구(+z), 양옆 무너진 날개벽, 막돌 깐 앞마당 + 앞 축대, 오른쪽(+x)에 3칸 초가 암자(village/choga, 마당을 보도록 −90°).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, hut(true), sink(0.6)",
+   "footprint": [
+    23.0,
+    24.0
+   ],
+   "tris": 4886,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함 (기억 기반·확인 필요)"
+   ],
+   "hypothesis": "1907 재발견·1913 해체 수리 전의 퇴락한 모습(전실 지붕 없음, 입구 열림)은 가설. 암자 이름·위치·칸 수는 가설. 실제 굴은 동해(동)를 보므로 배치 ry=+90°.",
+   "shot": "shots/kit/landmark/gj_seokguram.png"
+  },
+  {
+   "name": "gn_dangganjiju",
+   "file": "res://kit/landmark/gn_dangganjiju.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "굴산사지 당간지주(9세기) — 밭 가운데 거친 화강암 기둥 둘(높이 5.4m, 0.6m 사이로 마주 봄, 바깥 위 둥근 머리, 간공 구멍), 밑동 흙 둔덕. budo=true면 옆에 팔각원당형 승탑(부도) 하나.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, budo(true)",
+   "footprint": [
+    10.0,
+    8.0
+   ],
+   "tris": 834,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함 (기억 기반·확인 필요)"
+   ],
+   "hypothesis": "1870년 밑동이 묻혀 받침이 안 보였다는 것, 기둥 단면(0.82×1.2m), 부도의 위치(실제로는 조금 떨어진 곳)와 높이(3.2m로 줄임)는 가설.",
+   "shot": "shots/kit/landmark/gn_dangganjiju.png"
+  },
+  {
+   "name": "jj_yeonbukjeong",
+   "file": "res://kit/landmark/jj_yeonbukjeong.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "조천 연북정 — 둥글고 들쭉날쭉한 현무암 진성(조천진성, 높이 2.5m, 약 16×12m, 안은 흙 대지) 위 정면 3칸·측면 2칸 팔작 정자(사방 트임, 현판). 남쪽 가운데 돌계단(성담 끊김), walk(계단 경사 + 대지 위 높이 H), top_y.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, height(2.5)",
+   "footprint": [
+    18.0,
+    16.0
+   ],
+   "tris": 8476,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함 (기억 기반·확인 필요)"
+   ],
+   "hypothesis": "1870년 모습은 지금과 비슷했다고 봄. 진성 둘레·높이·계단 위치는 가설. 정자 난간 없음, 기둥 색은 바랜 붉은 갈색 가설.",
+   "shot": "shots/kit/landmark/jj_yeonbukjeong.png"
   }
  ],
  "era_note": "대표 도시 키트(gj_ gn_ jj_ hy_ hj_ py_ hh_)도 1870년 기준. sources 중 \"기억\"이라 적은 것은 이번에 웹 확인을 하지 않은 일반 문화재 설명값(확인 필요)",
