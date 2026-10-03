@@ -33,7 +33,7 @@ const TARGET := {
 const LOOK := {
 	south = { sun = Vector3(1.04, 1.0, 0.92), sunI = 1.0, elev = 1.0, dens = 1.12, fog = Vector3(1.02, 1.0, 0.96), sky = Vector3(1.02, 1.0, 0.97), gain = Vector3(1.02, 1.0, 0.97), sat = 1.04, snow = 0.0 },
 	central = { sun = Vector3(1.0, 1.0, 1.0), sunI = 1.0, elev = 0.92, dens = 1.0, fog = Vector3(1.0, 1.0, 1.0), sky = Vector3(1.0, 1.0, 1.0), gain = Vector3(1.0, 1.0, 1.0), sat = 1.0, snow = 0.0 },
-	north = { sun = Vector3(0.9, 0.96, 1.08), sunI = 0.9, elev = 0.62, dens = 0.95, fog = Vector3(0.94, 0.98, 1.06), sky = Vector3(0.92, 0.98, 1.08), gain = Vector3(0.96, 0.99, 1.05), sat = 0.88, snow = 0.55 },
+	north = { sun = Vector3(0.9, 0.96, 1.08), sunI = 0.9, elev = 0.62, dens = 0.95, fog = Vector3(0.94, 0.98, 1.06), sky = Vector3(0.92, 0.98, 1.08), gain = Vector3(0.96, 0.99, 1.05), sat = 0.88, snow = 0.0 },   # 맑은 날 바탕 눈 없음 — 눈은 눈 날씨와 눈선 위(고산)만
 	alpine = { sun = Vector3(0.96, 0.99, 1.05), sunI = 1.05, elev = 0.9, dens = 1.2, fog = Vector3(0.96, 0.99, 1.04), sky = Vector3(0.95, 0.99, 1.05), gain = Vector3(0.98, 1.0, 1.03), sat = 0.9, snow = 0.0 },
 	coast = { sun = Vector3(1.0, 1.0, 0.98), sunI = 0.97, elev = 1.0, dens = 1.25, fog = Vector3(0.95, 0.99, 1.04), sky = Vector3(0.97, 1.0, 1.04), gain = Vector3(0.99, 1.0, 1.02), sat = 0.95, snow = 0.0 },
 }
