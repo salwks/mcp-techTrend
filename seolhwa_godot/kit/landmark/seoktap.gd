@@ -1,6 +1,6 @@
 # 실상사 동·서 삼층석탑(통일신라 9세기, 높이 약 8.4m) — 이중 기단 + 3층 탑신·옥개석(층급받침 4단) + 상륜부가 거의 온전히 남은 드문 예
 # (불국사 석가탑 상륜 복원의 본보기, 검색 근거). 부재 치수는 높이 8.4m에 맞춘 비례 가설.
-# params: seed, height(8.4), weather(0..1 이끼·얼룩 정도)
+# params: seed, height(8.4), weather(0..1 이끼·얼룩 정도), sangryun("full" | "nobang": 노반만 남음)
 extends RefCounted
 
 const Co = preload("res://kit/landmark/_common.gd")
@@ -44,6 +44,13 @@ static func build(params: Dictionary) -> Dictionary:
 	# 상륜부: 노반·복발·앙화·보륜5·보개·수연·용차·보주 (청동이 아니라 돌, 짙은 회색)
 	var sr := []
 	sr.append(Kit.box(0.6 * s, 0.28 * s, 0.6 * s, 0, y + 0.14 * s, 0)); y += 0.28 * s
+	if str(params.get("sangryun", "full")) == "nobang":
+		# 상륜이 노반만 남은 탑(불국사 석가탑 1870 무렵 — 지금 상륜은 1973년 실상사 탑을 본떠 복원)
+		b.add("flat", Co.pnt(Kit.merge(sr), [0x8a877e, 0x6c6961], 0.03, rng), 0.015)
+		return {
+			node = b.build("삼층석탑"), colliders = [{ type = "box", minX = -1.8 * s, maxX = 1.8 * s, minZ = -1.8 * s, maxZ = 1.8 * s }],
+			lights = [], occluder = false, footprint = Vector2(3.6 * s, 3.6 * s), anchors = { front = Vector3(0, 0, 2.8 * s) }, height = y,
+		}
 	sr.append(Kit.cyl(0.24 * s, 0.3 * s, 0.24 * s, 8, 0, y + 0.12 * s, 0)); y += 0.24 * s
 	sr.append(Kit.cyl(0.34 * s, 0.18 * s, 0.22 * s, 8, 0, y + 0.11 * s, 0)); y += 0.22 * s
 	sr.append(Kit.cyl(0.05 * s, 0.05 * s, 1.6 * s, 6, 0, y + 0.8 * s, 0))

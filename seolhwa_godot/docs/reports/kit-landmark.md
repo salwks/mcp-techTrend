@@ -184,3 +184,64 @@ catalog.json과 contact_sheet.png도 갱신했다(24항목).
 - 공용 도구를 `_common.gd`에 더했다: `hongsal_gate()`(붉은 기둥 둘·가로대·살대·태극판), `low_wall_loop()`(낮은 담 + 틈 + 충돌체).
 - 미리보기: `shots/kit/landmark/sajikdan.png`, `sajikdan_jaesil.png`, `yeodan.png`, `seonghwangsa.png`
 - 고증은 조선 주현 일반형(『국조오례의』 참고)을 따랐고 치수·형식은 모두 가설이다. 실제 사직단은 북쪽 신문이 정문이지만, 카메라가 남쪽에서 보므로 홍살문을 남쪽에 두었다.
+
+## 9. 대표 도시 7곳 랜드마크 (경주·강릉·제주목·한양·황주·평양·함흥)
+
+파일 이름 앞머리로 도시를 나눴다: `gj_`(경주) `gn_`(강릉) `jj_`(제주) `hy_`(한양) `hj_`(황주) `py_`(평양) `hh_`(함흥). 모두 계약서 §4 형식이고 정면은 +z다. 단독 모델은 모두 15,000 이하이고, 한양 성벽은 20m에 1,002(rise 4m면 1,152)다. 배치형은 `pieces`/`layout()`을 돌려주며 조각 하나하나가 예산 안에 든다. 모델마다 미리보기는 `shots/kit/landmark/<이름>.png`(pitch 32, yaw 20, 안개 끔)이고, 큰 것은 `_c.png`(`--center`)로 따로 찍었다. 도시별 모음은 `hubs_<도시>.png` 일곱 장이다. 목록·삼각형·footprint·가설은 `catalog.json`(95항목, `city`·`region` 필드 포함)에 있다.
+
+### 공용 추가
+- **`_hub.gd`(새 파일)**: `pavilion`(누정: 누하주·마루·계자난간·뒤 계단), `skirt`/`jungcheung`(중층 건물의 아래 차양 지붕 + 위층. `up_inset_x/z` 지원), `woldae`·`stone_rail`, `haenglang`(긴 줄 맞배), `stele`, `rock`, `cave_mouth`, `basalt_wall`/`basalt_loop`(제주 현무암 막쌓기), `plaque`, `merged`, `composite`.
+- **`seongmun.gd` 확장**(기본값은 그대로라 남원 모델은 바뀌지 않는다. 다만 홍예 위 면석이 더해져 6,518에서 6,648로 늘었다)
+  - `lu`: 0이면 문루 없음, 1이면 단층, 2면 중층이다.
+  - 나머지 새 params: `lu_roof`(ujin 가능), `lu_bays`, `lu_depth`, `lu_H`, `bracket`, `height`, `depth`, `aw`, `spring`, `arch_x`(홍예 여러 개 — 광화문 3), `doors`(closed).
+- **`seoktap.gd`**: `sangryun="nobang"`이면 상륜을 노반만 남긴다(불국사 석가탑 1870).
+- **`gaeksa.gd`**: `name` param을 더했다.
+- **`_common.assemble()`**: 조각의 `y`(부모 높이 + y)를 반영한다. 불국사 대지 위 탑·대웅전에 쓴다.
+
+### 도시별 목록
+| 도시 | 단독 | 배치형(pieces) |
+|---|---|---|
+| 경주 | `gj_eupseong_gate`(징례문), `gj_dongyeonggwan`, `gj_cheomseongdae`, `gj_gyerim_bigak`(1803 비각 + 표지석), `gj_banwolseong`(반달 토성 대지 240×80, 석빙고 포함), `gj_seokbinggo`, `gj_daeungjeon`(바랜 단청), `gj_dabotap`(돌사자 4), `gj_bulguksa_seokchuk`(석축·청운교백운교·연화교칠보교·자하문·범영루 + 6m 대지, walk), `gj_cheoyongam` | `gj_bulguksa`(24.6k/5조각, 회랑은 초석만) |
+| 강릉 | `gn_imyeong_samun`(평삼문 맞배), `gn_chilsadang`(1867 중건, 누마루), `gn_gyeongpodae`(6×5칸), `gn_ojukheon`(오죽 덤불), `gn_guksa_seonghwangdang`(성황사 + 산신각 + 신목) | `gn_imyeonggwan`, `gn_gwana` |
+| 제주 | `jj_oedaemun`(진해루 2층 누문), `jj_gwandeokjeong`(1924년에 자르기 전의 긴 처마), `jj_samseonghyeol`(品자 구멍 셋 + 담 + 홍살문 + 사당), `jj_dolhareubang`, `jj_bangsatap`, `jj_gimnyeongsagul`(+ 서련 비), `jj_basalt_wall` | `jj_mokgwana`(외대문·중대문·홍화각·연희각·현무암 담) |
+| 한양 | `hy_seong_wall`(`rise`로 경사를 계단식 단으로), `hy_sungnyemun`, `hy_heunginjimun`(1869 새 문, 옹성), `hy_donuimun`, `hy_sukjeongmun`(문루 없음·닫힘), `hy_gwanghwamun`(3홍예 + 해태), `hy_palace_gate`, `hy_jeongjeon` → `hy_geunjeongjeon`·`hy_injeongjeon`, `hy_haenggak`, `hy_gyeonghoeru`(연못·돌다리·water·walk), `hy_jongmyo`(19칸 + 월랑 + 월대), `hy_sajikdan`(사·직단 + 유 + 주원), `hy_yukjo`, `hy_sijeon`, `hy_bosingak`(1869 단층 종각), `hy_cheonggye_seokchuk`, `hy_gwangtonggyo`, `hy_supyogyo`(+ 수표) | `hy_gyeongbokgung`(86k/48), `hy_changdeokgung`(53k/21), `hy_unjongga`(37k/9), `hy_yukjo_geori`(81k/7) |
+| 황주 | `hj_eupseong_gate`, `hj_gaeksa`(제안관), `hj_dohwadong`(새김 바위 + 복숭아나무), `hj_jangsangot_rock` | — |
+| 평양 | `py_daedongmun`(중층), `py_botongmun`, `py_chilseongmun`, `py_ryeongwangjeong`(두 채), `py_bubyeongnu`, `py_eulmildae`(축대 6.5m), `py_giringgul`(+ 조천석), `py_daedong_naru`(선창·잔교 walk) | — |
+| 함흥 | `hh_eupseong_gate`(중층 + 앞 옹성), `hh_bongung_jeongjeon`, `hh_bansong`, `hh_mansegyo`(나무다리 120m·walk), `hh_bukcheong_madang` | `hh_bongung` |
+
+### 1870 기준으로 뺀 것과 바꾼 것
+**뺀 것**
+- 오죽헌 문성사(1975)
+- 숙정문 문루(1976 복원)
+- 종각 2층(1979). 1870년 종각은 단층으로 했다.
+
+**1870년 상태로 바꾼 것**
+- 광화문·근정전·경회루·흥인지문·칠사당은 1860년대 중건 직후의 새 건물이다.
+- 관덕정 처마는 1924년에 잘리기 전이라 길게 했다.
+- 석가탑 상륜은 노반만 남겼다.
+- 다보탑 돌사자는 넷을 두었다.
+- 불국사는 퇴락한 모습이다(회랑은 초석만, 단청은 바랜 색).
+- 반월성은 건물 없는 토성 둔덕이다.
+
+### 고증 한계
+이번에는 웹 검색을 하지 않았다. 근거는 문화재 일반 설명을 기억으로 요약한 것이라 catalog `sources`에 "기억 기반·확인 필요"라고 적었다. 특히 다음은 확인하지 못한 가설이다.
+- 1869년 종각의 칸 수
+- 경주·황주·함흥 읍성의 문 이름과 문루 층수
+- 평양 대동문 옹성의 유무
+- 함흥본궁 배치
+- 삼성혈 사당의 1870년 모습
+- 육조 관청 순서
+- 모든 배치형의 압축 거리
+
+### 총괄·배치에게
+1. **방향을 돌려 놓는 문**
+   - 흥인지문 `ry=+90°`: 이때 `open="east"`는 북쪽 옹성이 된다.
+   - 돈의문·보통문 `ry=−90°`, 대동문 `ry=+90°`.
+   - 칠성문은 `ry=π`를 권장한다.
+   - `hy_yukjo_geori`의 관청은 길을 보도록 ±90° 돌려 놓았다. §8의 ±30° 원칙에서 벗어나는 예외다.
+2. **물 위·물가 모델**
+   - 처용암과 장산곶은 `sink 1.5`라 물 위에 놓는다.
+   - 대동강 나루는 물면을 y −1.2로 가정했다.
+   - 청계천 모듈은 원점이 개천 바닥이고 축대 위가 땅 높이(3m)다. 광통교·수표교 상판 높이 3.0과 맞춘다.
+3. **반월성 둔덕**: `gj_banwolseong`은 메시로 된 대지다. `walk_top`(높이 + 윤곽)을 비표준 필드로 돌려준다. 지형 엔진이 이 둔덕을 높이맵으로 대신 올리는 쪽이 더 낫다.
+4. **불국사**: 석축 조각이 대지(6m)와 `walk`를 가진다. flatten은 석축 앞 땅 높이로 해 달라.

@@ -2,14 +2,14 @@
 # 디지털남원문화대전 「용성관지」: 691년 처음 세움(휼민관), 1620 최여립 중건, 1680~1690 정동설·정협 때 정당 완성 → 1870년에 서 있었다.
 # 6·25 때 폭격으로 소실, 지금은 용성초등학교 안에 길이 약 70m 돌 기단·도깨비 얼굴 새긴 소맷돌 돌계단·석물 29점이 남음.
 # → 전체 길이(정당+좌우 익헌 기단)를 약 64~70m로 맞췄다(확정: 전체 길이 / 가설: 칸 수·칸 폭·높이 — 나주 금성관 비례).
-# params: seed, jeongdang_bays(5|3), wing_bays(6), wings(true)
+# params: seed, jeongdang_bays(5|3), wing_bays(6), wings(true), name("용성관": 노드 이름·현판 — 다른 고을 객사로 쓸 때)
 extends RefCounted
 
 const Co = preload("res://kit/landmark/_common.gd")
 
 static func build(params: Dictionary) -> Dictionary:
 	var rng := Kit.Rng.new(int(params.get("seed", 1)))
-	var root := Node3D.new(); root.name = "객사_용성관"
+	var root := Node3D.new(); root.name = "객사_" + str(params.get("name", "용성관"))
 	var nb: int = int(params.get("jeongdang_bays", 5))
 	var jb := []
 	for i in nb: jb.append(4.0 if i != nb / 2 else 4.4)

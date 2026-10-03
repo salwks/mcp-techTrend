@@ -359,7 +359,7 @@ static func assemble(name: String, pieces: Array) -> Dictionary:
 		if not cache.has(path): cache[path] = load(path)
 		var info: Dictionary = cache[path].build(p.params)
 		var n: Node3D = info.node
-		var xf := Transform3D(Basis(Vector3.UP, float(p.get("ry", 0.0))), Vector3(p.x, 0, p.z))
+		var xf := Transform3D(Basis(Vector3.UP, float(p.get("ry", 0.0))), Vector3(p.x, float(p.get("y", 0.0)), p.z))
 		n.transform = xf
 		var tag: String = p.get("tag", p.kit.get_file())
 		n.name = "%s_%d" % [tag, i]; i += 1

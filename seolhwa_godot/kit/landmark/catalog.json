@@ -7,7 +7,8 @@
   "_roof.gd": "곡선 기와지붕(웹 curvedRoof 이식) + 팔작 합각·맞배 박공·추녀마루",
   "_common.gd": "범용 목조 건물 hall(), 담장, 창호, 배치 도우미 assemble()/wall_pieces()",
   "_seong.gd": "성벽 몸체·면석·여장·홍예",
-  "_stone.gd": "석탑·석등 부재"
+  "_stone.gd": "석탑·석등 부재",
+  "_hub.gd": "대표 도시 공용: 누정 pavilion·계자난간·중층 차양 skirt·jungcheung·월대 woldae·돌난간·행랑 haenglang·비석 stele·바위 rock·굴 입구 cave_mouth·현무암 돌담 basalt_wall·merged/composite"
  },
  "models": [
   {
@@ -74,7 +75,7 @@
   {
    "name": "seongmun",
    "file": "res://kit/landmark/seongmun.gd",
-   "desc": "성문: 홍예문 육축 + 단층 팔작 문루(3×2칸) + 반원 옹성. open: east|west(로컬 ±x)|front|none",
+   "desc": "성문: 홍예문 육축 + 단층 팔작 문루(3×2칸) + 반원 옹성. open: east|west(로컬 ±x)|front|none / 새 params: lu(0|1|2 문루 없음·단층·중층), lu_roof, lu_bays, lu_depth, lu_H, bracket, height, depth, aw, spring, arch_x(홍예 여럿), doors(open|closed)",
    "params": {
     "seed": 1,
     "name": "완월루",
@@ -84,7 +85,7 @@
     25.2,
     19.3
    ],
-   "tris": 6518,
+   "tris": 6648,
    "composite": false,
    "sources": [
     "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)"
@@ -110,7 +111,7 @@
     288.0,
     288.0
    ],
-   "tris": 68700,
+   "tris": 68754,
    "composite": true,
    "sources": [
     "위키백과 「남원읍성」(성문 4·옹성 16·여장 1,016, 둘레 약 2.5km·높이 약 4m, 판상할석 협축 방형 평지성)",
@@ -163,7 +164,7 @@
   {
    "name": "gaeksa",
    "file": "res://kit/landmark/gaeksa.gd",
-   "desc": "객사 용성관: 정당 5칸(솟을지붕, 다포, 앞 돌계단 소맷돌) + 좌우 익헌 각 6칸 — 전체 길이 약 67m(남은 기단 약 70m)",
+   "desc": "객사 용성관: 정당 5칸(솟을지붕, 다포, 앞 돌계단 소맷돌) + 좌우 익헌 각 6칸 — 전체 길이 약 67m(남은 기단 약 70m) / name param(다른 고을 객사)",
    "params": {
     "seed": 1,
     "jeongdang_bays": 5,
@@ -306,7 +307,7 @@
   {
    "name": "seoktap",
    "file": "res://kit/landmark/seoktap.gd",
-   "desc": "실상사 동·서 삼층석탑(이중기단, 상륜부 온전)",
+   "desc": "실상사 동·서 삼층석탑(이중기단, 상륜부 온전) / sangryun=\"nobang\"이면 상륜이 노반만(불국사 석가탑 1870)",
    "params": {
     "seed": 1,
     "height": 8.4
@@ -568,6 +569,1542 @@
    ],
    "hypothesis": "규모·형식 전부",
    "shot": "shots/kit/landmark/seonghwangsa.png"
+  },
+  {
+   "name": "gj_banwolseong",
+   "file": "res://kit/landmark/gj_banwolseong.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "반월성(半月城, 월성) 터 — 신라 왕성 터. 1870년에는 성벽·건물 없이 반달 모양 흙 둔덕(토성)과 그 위 평평한 들, 남쪽은 남천.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(240), width(80), height(6), seokbinggo(true)",
+   "footprint": [
+    240.0,
+    80.0
+   ],
+   "tris": 1966,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "실제 동서 약 860m·남북 약 250m → 게임 압축(K≈0.3) 근사로 동서 240m·남북 80m 반달 대지, 둘레 비탈 높이 6m(가설).",
+   "shot": "shots/kit/landmark/gj_banwolseong.png"
+  },
+  {
+   "name": "gj_bulguksa",
+   "file": "res://kit/landmark/gj_bulguksa.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "불국사 경내 배치형(1870 무렵 퇴락한 모습) — 석축·청운교백운교·자하문(gj_bulguksa_seokchuk, 대지 높이 6m 포함) → 마당의 석가탑(서, 상륜은 노반만)·",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환(조각마다 예산 안). 탑·대웅전 조각은 y=6(대지 위)",
+   "footprint": [
+    66.0,
+    62.0
+   ],
+   "tris": 24614,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "다보탑(동) → 대웅전. 회랑은 초석만. 거리는 게임 압축(실제보다 좁힘, 가설). 원점 = 경내 가운데 바닥(석축 앞 땅 높이), 정면 +z.",
+   "shot": "shots/kit/landmark/gj_bulguksa.png",
+   "pieces": 5,
+   "max_piece_tris": 11862
+  },
+  {
+   "name": "gj_bulguksa_seokchuk",
+   "file": "res://kit/landmark/gj_bulguksa_seokchuk.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "불국사 앞 석축 + 청운교·백운교 + 자하문 + 범영루 — 경내 대지(높이 6m)를 함께 만든다(마당 윗면 = 걷기 면).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, width(64), depth(52), height(6)",
+   "footprint": [
+    64.0,
+    60.0
+   ],
+   "tris": 11862,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "1870년 무렵 퇴락: 회랑은 무너져 초석만 남음(corridor_ruin), 다리 난간 일부 결실(가설), 단청 바램. 범영루는 18세기 중창본이 있었다고 보고 작게(가설).",
+   "shot": "shots/kit/landmark/gj_bulguksa_seokchuk.png",
+   "walk": true
+  },
+  {
+   "name": "gj_cheomseongdae",
+   "file": "res://kit/landmark/gj_cheomseongdae.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "첨성대(瞻星臺) — 신라 선덕여왕 때(7세기) 화강암 석조. 높이 약 9.17m, 밑지름 약 4.93m, 윗지름 약 2.85m, 27단 원통(병 모양),",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    5.4,
+    5.4
+   ],
+   "tris": 1946,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/gj_cheomseongdae.png"
+  },
+  {
+   "name": "gj_cheoyongam",
+   "file": "res://kit/landmark/gj_cheoyongam.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "처용암(處容巖) — 울산 개운포(외황강 하구) 바다 가운데 작은 바위섬. 『삼국유사』 처용랑 망해사조: 헌강왕 행차 때 동해 용이 일곱 아들을 데리고",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, size(1.0)",
+   "footprint": [
+    20.0,
+    13.0
+   ],
+   "tris": 1328,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "나타난 곳, 처용이 바다에서 올라온 바위. 실제 길이 약 30m 남짓의 낮은 갯바위섬 → 게임용 18×11m, 물 위 높이 4.5m(가설).",
+   "shot": "shots/kit/landmark/gj_cheoyongam.png"
+  },
+  {
+   "name": "gj_dabotap",
+   "file": "res://kit/landmark/gj_dabotap.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "불국사 다보탑(多寶塔) — 통일신라 751년 무렵, 높이 약 10.3m. 네모 기단(사방 계단 10단) + 네 모서리 기둥·가운데 기둥 위 네모 옥개 +",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, lions(4)",
+   "footprint": [
+    6.0,
+    6.0
+   ],
+   "tris": 4816,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "기단 계단 위 돌사자: 본래 넷(일제강점기에 셋이 사라짐) → 1870년 기준 넷(가설). 부재 치수는 높이에 맞춘 비례 가설. params: seed, lions(4)",
+   "shot": "shots/kit/landmark/gj_dabotap.png"
+  },
+  {
+   "name": "gj_daeungjeon",
+   "file": "res://kit/landmark/gj_daeungjeon.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "불국사 대웅전 — 1765년(영조 41) 중창, 정면 5칸·측면 5칸 다포 팔작(현존 규모). 1870년 무렵 절 전체가 퇴락(회랑 무너짐)했으나",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, fade(true)",
+   "footprint": [
+    18.4,
+    16.5
+   ],
+   "tris": 5920,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "대웅전은 서 있었다 → 단청을 바랜 색으로(fade=true). 기단 높이·칸 폭은 사진 비례 가설. params: seed, fade(true)",
+   "shot": "shots/kit/landmark/gj_daeungjeon.png"
+  },
+  {
+   "name": "gj_dongyeonggwan",
+   "file": "res://kit/landmark/gj_dongyeonggwan.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "경주 객사 동경관(東京館) — 경주부 객사. 정당(전패) + 동·서 익헌. 1870년에 서 있었다(지금은 동경관 일부만 옮겨 남음).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, jeongdang_bays(3), wing_bays(4)",
+   "footprint": [
+    45.6,
+    14.0
+   ],
+   "tris": 11636,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "gaeksa 감싸기: 정당 3칸·익헌 각 4칸(가설 — 실측 기록 못 찾음). params: seed, jeongdang_bays(3), wing_bays(4)",
+   "shot": "shots/kit/landmark/gj_dongyeonggwan.png"
+  },
+  {
+   "name": "gj_eupseong_gate",
+   "file": "res://kit/landmark/gj_eupseong_gate.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "경주읍성 성문 — 1012년(고려 현종) 쌓고 조선 때 고쳐 쌓은 방형 석성(둘레 약 2.3km, 높이 약 4m). 4문: 남 징례문(徵禮門)·동 향일문(向日門)·북 공진문(拱辰門)·서 망미문(望美門).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, name, open, lu",
+   "footprint": [
+    18.0,
+    5.6
+   ],
+   "tris": 5680,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "seongmun 감싸기: 단층 문루 + 옹성(가설: 남문은 옹성 없이 큰길로 곧장, 나머지는 옆으로 열림). params: seed, name, open, lu",
+   "shot": "shots/kit/landmark/gj_eupseong_gate.png"
+  },
+  {
+   "name": "gj_gyerim_bigak",
+   "file": "res://kit/landmark/gj_gyerim_bigak.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "계림(鷄林) 비각 — 김알지 탄생 설화의 숲. 숲은 kit/nature가 맡고, 여기는 1803년(순조 3) 세운 「계림김씨시조탄강유허비」와",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, marker(true)",
+   "footprint": [
+    10.0,
+    7.0
+   ],
+   "tris": 3332,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "그 비각(정면·측면 1칸, 사방 홍살, 팔작) + 숲 어귀 작은 표지석. 비각 치수는 가설. params: seed, marker(true)",
+   "shot": "shots/kit/landmark/gj_gyerim_bigak.png"
+  },
+  {
+   "name": "gj_seokbinggo",
+   "file": "res://kit/landmark/gj_seokbinggo.gd",
+   "city": "경주",
+   "region": "GS_GYEONGJU",
+   "desc": "경주 석빙고(石氷庫) — 반월성 북쪽 안. 1738년 쌓고 1741년 지금 자리로 옮김(입구 이마돌 명문) → 1870년에 있었다.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    9.4,
+    23.0
+   ],
+   "tris": 930,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "봉분 높이·입구 비례는 가설. 정면(입구) +z. params: seed",
+   "shot": "shots/kit/landmark/gj_seokbinggo.png"
+  },
+  {
+   "name": "gn_chilsadang",
+   "file": "res://kit/landmark/gn_chilsadang.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "강릉대도호부 칠사당(七事堂) — 부사가 칠사(농사·호구·교육·병무·세금·재판·풍속)를 보던 동헌 성격 건물. 1867년(고종 4) 화재 뒤 다시 지어 1870년에 새 건물.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    20.5,
+    9.8
+   ],
+   "tris": 8248,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "정면 7칸 一자 팔작 + 서쪽 끝 2칸은 바닥을 높인 누마루(계자난간). 칸 폭·높이는 사진 비례 가설. params: seed",
+   "shot": "shots/kit/landmark/gn_chilsadang.png"
+  },
+  {
+   "name": "gn_guksa_seonghwangdang",
+   "file": "res://kit/landmark/gn_guksa_seonghwangdang.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "대관령 국사성황당(國師城隍堂) — 대관령 마루 아래 숲. 범일국사(국사성황)를 모신 성황사 + 산신각, 강릉단오제 때 신목(단풍나무)을 베어 모셔 감.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, sanshingak(true)",
+   "footprint": [
+    17.0,
+    10.0
+   ],
+   "tris": 4860,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "1870년 건물 규모는 기록을 못 찾음 → 정면 1칸 맞배 성황사(지금 건물 비례) + 옆 작은 산신각 + 돌담 + 신목 자리(가설).",
+   "shot": "shots/kit/landmark/gn_guksa_seonghwangdang.png"
+  },
+  {
+   "name": "gn_gwana",
+   "file": "res://kit/landmark/gn_gwana.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "강릉대도호부 관아 일곽 — 외삼문(솟을) → 마당 → 칠사당(gn_chilsadang, 1867 중건) + 동북쪽 내아. 강릉대도호부 관아(사적)는 객사 임영관 서쪽에 붙어 있었다.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환",
+   "footprint": [
+    46.0,
+    46.0
+   ],
+   "tris": 23582,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "동헌·내아·문 배치는 현 관아 복원 배치를 단순화한 가설. 원점 = 일곽 가운데, 정면 +z. params: seed. pieces 반환",
+   "shot": "shots/kit/landmark/gn_gwana.png",
+   "pieces": 23,
+   "max_piece_tris": 8248
+  },
+  {
+   "name": "gn_gyeongpodae",
+   "file": "res://kit/landmark/gn_gyeongpodae.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "경포대(鏡浦臺) — 경포호 북쪽 언덕의 누정. 1326년 창건, 1508년 지금 자리로, 1745년(영조 21) 중수본이 1870년에 있었다.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    18.6,
+    14.0
+   ],
+   "tris": 7908,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "정면 6칸·측면 5칸 팔작(기둥 48), 마루 안쪽 일부를 한 단 높인 우물마루(득월헌 자리), 낮은 누하. 칸 폭·높이는 사진 비례 가설.",
+   "shot": "shots/kit/landmark/gn_gyeongpodae.png"
+  },
+  {
+   "name": "gn_imyeong_samun",
+   "file": "res://kit/landmark/gn_imyeong_samun.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "강릉 임영관 삼문(臨瀛館 三門, 국보) — 고려 말 객사 정문. 정면 3칸·측면 2칸 맞배, 주심포, 배흘림 기둥, 칸마다 판문.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    10.5,
+    6.2
+   ],
+   "tris": 3322,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "솟을삼문과 달리 지붕 하나(평삼문). 1870년에도 지금 모습. 칸 폭·높이는 사진 비례 가설. params: seed",
+   "shot": "shots/kit/landmark/gn_imyeong_samun.png"
+  },
+  {
+   "name": "gn_imyeonggwan",
+   "file": "res://kit/landmark/gn_imyeonggwan.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "강릉 객사 임영관(臨瀛館) 일곽 — 삼문(gn_imyeong_samun) → 마당 → 정당 전대청(3칸) + 동대청·서헌(익헌). 고려 936년 창건, 조선 후기까지 객사.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환",
+   "footprint": [
+    54.0,
+    46.0
+   ],
+   "tris": 20750,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "1870년에 일곽이 서 있었다(일제강점기 학교로 쓰이며 헐리고 삼문만 남음 → 2006 복원). 정당·익헌 규모는 복원 건물 비례 가설.",
+   "shot": "shots/kit/landmark/gn_imyeonggwan.png",
+   "pieces": 19,
+   "max_piece_tris": 11636
+  },
+  {
+   "name": "gn_ojukheon",
+   "file": "res://kit/landmark/gn_ojukheon.gd",
+   "city": "강릉",
+   "region": "GW_GANGNEUNG",
+   "desc": "오죽헌(烏竹軒, 보물) — 율곡 이이가 태어난 별당. 15세기 말~16세기 초 건물(1870년에도 같은 건물). 정면 3칸·측면 2칸 팔작, 겹처마 익공,",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, bamboo(true)",
+   "footprint": [
+    13.0,
+    16.0
+   ],
+   "tris": 4800,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "칸 폭·기단 높이는 사진 비례 가설. params: seed, bamboo(true)",
+   "shot": "shots/kit/landmark/gn_ojukheon.png"
+  },
+  {
+   "name": "hh_bansong",
+   "file": "res://kit/landmark/hh_bansong.gd",
+   "city": "함흥",
+   "region": "HG_HAMHEUNG",
+   "desc": "함흥본궁 반송(盤松) — 태조 이성계가 손수 심었다는 소나무(옆으로 넓게 퍼진 반송) + 둘레 낮은 돌 테두리. 나무 모양은 웹 소나무 화풍의 간략형(본격 식생은 kit/nature).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "tris": 1552,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hh_bansong.png"
+  },
+  {
+   "name": "hh_bongung",
+   "file": "res://kit/landmark/hh_bongung.gd",
+   "city": "함흥",
+   "region": "HG_HAMHEUNG",
+   "desc": "함흥본궁(咸興本宮) 일곽 — 외삼문 → 마당(이성계가 심었다는 반송 자리) → 정전(hh_bongung_jeongjeon) + 동쪽 작은 이안청(위패 옮겨 모시는 집, 가설) + 담.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환",
+   "footprint": [
+    66.0,
+    54.0
+   ],
+   "tris": 28812,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "함흥본궁(咸興本宮) 일곽 — 외삼문 → 마당(이성계가 심었다는 반송 자리) → 정전(hh_bongung_jeongjeon) + 동쪽 작은 이안청(위패 옮겨 모시는 집, 가설) + 담. / 「함흥차사」 설화의 무대(태조가 머문 곳). 배치·거리는 가설. 원점 = 일곽 가운데, 정면 +z. params: seed. pieces 반환",
+   "shot": "shots/kit/landmark/hh_bongung.png",
+   "pieces": 31,
+   "max_piece_tris": 5936
+  },
+  {
+   "name": "hh_bongung_jeongjeon",
+   "file": "res://kit/landmark/hh_bongung_jeongjeon.gd",
+   "city": "함흥",
+   "region": "HG_HAMHEUNG",
+   "desc": "함흥본궁 정전 — 태조 이성계가 왕위에 오르기 전 살던 집 자리(함흥 운전리)에 세운 본궁의 정전. 태조와 4대조 위패를 모심(1870년 제향 중, 고종 때 중수 기록).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    27.0,
+    19.0
+   ],
+   "tris": 5936,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "정면 5칸·측면 3칸 팔작, 앞 낮은 월대(돌난간 없음). 치수는 일제강점기 사진 비례 가설. params: seed",
+   "shot": "shots/kit/landmark/hh_bongung_jeongjeon.png"
+  },
+  {
+   "name": "hh_bukcheong_madang",
+   "file": "res://kit/landmark/hh_bukcheong_madang.gd",
+   "city": "함흥",
+   "region": "HG_HAMHEUNG",
+   "desc": "북청 사자놀음 마당 표지 — 함경도 북청 정월 대보름 사자놀음(마을마다 사자를 앞세워 집집을 돌고 마당에서 놂, 조선 후기 성행). 놀이 마당(다진 흙 + 테두리 돌) +",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    15.0,
+    15.0
+   ],
+   "tris": 2204,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "대보름 등 장대(종이 등 줄) + 사자탈 놓는 틀(큰 사자 머리, 털 — 회색·흰색 거친 털) + 북. 모두 가설(정해진 시설 없음 → 게임 표지). params: seed",
+   "shot": "shots/kit/landmark/hh_bukcheong_madang.png"
+  },
+  {
+   "name": "hh_eupseong_gate",
+   "file": "res://kit/landmark/hh_eupseong_gate.gd",
+   "city": "함흥",
+   "region": "HG_HAMHEUNG",
+   "desc": "함흥읍성 성문 — 함경도 감영이 있던 함흥부 읍성(반룡산 기슭~성천강 사이 석성). 남문 주변에 만세교로 이어지는 길. 1870년에 성벽·문이 있었다고 봄.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, name, open, lu",
+   "footprint": [
+    27.2,
+    22.7
+   ],
+   "tris": 8446,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "문 이름·문루 모양은 기록 확인 못 함 → 북부 감영 읍성답게 중층 문루(정면 3칸, 팔작) + 앞 반원 옹성(front)으로 둔 가설. params: seed, name, open, lu",
+   "shot": "shots/kit/landmark/hh_eupseong_gate.png"
+  },
+  {
+   "name": "hh_mansegyo",
+   "file": "res://kit/landmark/hh_mansegyo.gd",
+   "city": "함흥",
+   "region": "HG_HAMHEUNG",
+   "desc": "만세교(萬歲橋) — 함흥 성천강을 건너는 긴 나무다리(조선 후기 길이 약 1km라 전함, 큰물에 자주 쓸려 고쳐 놓음). 나무 말뚝 교각(가로보) 위 널 상판 + 낮은 난간.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(120), width(4.0), deck(2.4), span(5.0)",
+   "footprint": [
+    5.0,
+    122.0
+   ],
+   "tris": 4452,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "게임 압축 길이 기본 120m(params.length), 너비 4m, 상판 높이 2.4m(가설). 로컬 z가 건너는 방향, 원점 = 다리 가운데 물 바닥 높이. §8 walk 포함.",
+   "shot": "shots/kit/landmark/hh_mansegyo.png",
+   "walk": true
+  },
+  {
+   "name": "hj_dohwadong",
+   "file": "res://kit/landmark/hj_dohwadong.gd",
+   "city": "황주",
+   "region": "HH_HWANGJU",
+   "desc": "심청 도화동(桃花洞) 표지 — 「심청전」의 고향 '황주 도화동'(소설 속 지명). 1870년에 실제 사당·비가 있었다는 근거는 못 찾음 → 게임용 표지:",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, trees(true)",
+   "footprint": [
+    9.0,
+    5.0
+   ],
+   "tris": 1254,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "마을 어귀 큰 바위에 '桃花洞' 새김 자리 + 앞 제단돌 + 복숭아나무 둘(꽃). 모두 가설. params: seed, trees(true)",
+   "shot": "shots/kit/landmark/hj_dohwadong.png"
+  },
+  {
+   "name": "hj_eupseong_gate",
+   "file": "res://kit/landmark/hj_eupseong_gate.gd",
+   "city": "황주",
+   "region": "HH_HWANGJU",
+   "desc": "황주읍성 성문 — 황해도 황주목 읍성(평양 가는 의주대로 길목, 산을 낀 석성). 1870년에 성벽·문이 있었다고 봄. 문 이름·문루 모양은 기록을 못 찾아 가설",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, name(\"남문\"), open(\"west\"), lu(1)",
+   "footprint": [
+    23.2,
+    18.3
+   ],
+   "tris": 6624,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "황주읍성 성문 — 황해도 황주목 읍성(평양 가는 의주대로 길목, 산을 낀 석성). 1870년에 성벽·문이 있었다고 봄. 문 이름·문루 모양은 기록을 못 찾아 가설",
+   "shot": "shots/kit/landmark/hj_eupseong_gate.png"
+  },
+  {
+   "name": "hj_gaeksa",
+   "file": "res://kit/landmark/hj_gaeksa.gd",
+   "city": "황주",
+   "region": "HH_HWANGJU",
+   "desc": "황주 객사 제안관(齊安館) — 황주목 객사(황주의 옛 이름 제안). 의주대로 사신 길의 큰 객사라 정당 5칸·익헌 각 5칸으로 둠(규모 가설). gaeksa 감싸기.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, jeongdang_bays(5), wing_bays(5)",
+   "footprint": [
+    60.4,
+    14.0
+   ],
+   "tris": 13176,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "황주 객사 제안관(齊安館) — 황주목 객사(황주의 옛 이름 제안). 의주대로 사신 길의 큰 객사라 정당 5칸·익헌 각 5칸으로 둠(규모 가설). gaeksa 감싸기.",
+   "shot": "shots/kit/landmark/hj_gaeksa.png"
+  },
+  {
+   "name": "hj_jangsangot_rock",
+   "file": "res://kit/landmark/hj_jangsangot_rock.gd",
+   "city": "황주",
+   "region": "HH_HWANGJU",
+   "desc": "장산곶 바위 — 황해도 장연 장산곶 끝 바닷가 벼랑(「장산곶 매」 설화, 인당수 바다를 바라보는 곶). 물가로 솟은 큰 바위 벼랑 + 앞 갯바위 + 벼랑 위 해송,",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    28.0,
+    18.0
+   ],
+   "tris": 1840,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "꼭대기에 매가 앉는 자리(anchors.hawk). 크기는 게임용 가설(폭 24m·높이 12m). 밑은 물속까지(sink 1.5). 정면 +z = 바다 쪽. params: seed",
+   "shot": "shots/kit/landmark/hj_jangsangot_rock.png"
+  },
+  {
+   "name": "hy_bosingak",
+   "file": "res://kit/landmark/hy_bosingak.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "보신각(普信閣, 종각) — 운종가 네거리의 종루. 임진왜란 뒤 여러 번 고쳐 짓고, 1869년(고종 6) 화재 뒤 다시 지음 → 1870년에 새 종각.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    13.6,
+    10.0
+   ],
+   "tris": 6290,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "19세기 말 사진의 단층 팔작(정면 3칸·측면 2칸 가설 — 지금 2층 누각은 1979년). 기둥 사이 아래 홍살, 가운데 큰 종(약 3m, 1468년 주조 종).",
+   "shot": "shots/kit/landmark/hy_bosingak.png"
+  },
+  {
+   "name": "hy_changdeokgung",
+   "file": "res://kit/landmark/hy_changdeokgung.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "창덕궁 간략 배치형 — 돈화문(정면 5칸 중층 우진각, 1609 중건본 — 현존 가장 오래된 궁궐 정문) → 금천교(1411 돌다리) → 진선문 → 인정문 + 행각 → 인정전.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환",
+   "footprint": [
+    122.0,
+    100.0
+   ],
+   "tris": 52880,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_changdeokgung.png",
+   "pieces": 21,
+   "max_piece_tris": 12662
+  },
+  {
+   "name": "hy_cheonggye_seokchuk",
+   "file": "res://kit/landmark/hy_cheonggye_seokchuk.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "청계천(개천 開川) 석축 구간 모듈 — 태종 때 개천 공사, 영조 36년(1760) 경진준천으로 양안을 돌로 쌓음 → 1870년 돌 축대 개천.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(20), width(16), height(3.0), water(true)",
+   "footprint": [
+    20.0,
+    20.0
+   ],
+   "tris": 960,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "로컬 x 방향 length m, 물길 너비 width(양 축대 사이), 축대 높이 height. 바닥은 모래·자갈, 가운데 얕은 물(water). 실제 너비 약 20~25m → 기본 16m(압축 가설).",
+   "shot": "shots/kit/landmark/hy_cheonggye_seokchuk.png",
+   "water": true
+  },
+  {
+   "name": "hy_donuimun",
+   "file": "res://kit/landmark/hy_donuimun.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "돈의문(敦義門, 서대문) — 1422년 지금 자리(새문), 1711년 개축. 홍예 1 + 단층 문루(정면 3칸·측면 2칸, 우진각). 1870년에 있었다(1915년 헐림).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    20.0,
+    8.0
+   ],
+   "tris": 5766,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "옹성 없음(가설). 서쪽을 보는 문: 배치 때 ry = −90°. params: seed",
+   "shot": "shots/kit/landmark/hy_donuimun.png"
+  },
+  {
+   "name": "hy_geunjeongjeon",
+   "file": "res://kit/landmark/hy_geunjeongjeon.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "경복궁 근정전(勤政殿) — 1867년(고종 4) 중건 → 1870년에 새 건물. 2단 월대(상·하월대, 돌난간·12지신·삼도 계단) 위 중층 팔작, 정면 5칸·측면 5칸 다포.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    48.0,
+    44.0
+   ],
+   "tris": 13796,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "실측 정면 약 30m·측면 21m, 높이 약 23m(월대 포함). 위층은 측면 한 칸씩 들어감(up_inset_z 1). 월대 크기는 압축(실제 하월대 약 50×60m → 46×40m, 가설).",
+   "shot": "shots/kit/landmark/hy_geunjeongjeon.png",
+   "walk": true
+  },
+  {
+   "name": "hy_gwanghwamun",
+   "file": "res://kit/landmark/hy_gwanghwamun.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "광화문(光化門) — 경복궁 정문. 1395년 창건, 임진왜란 소실 뒤 270여 년 폐허 → 1865~1868년 흥선대원군 중건 → 1870년에는 막 다시 세운 새 문.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, haetae(true)",
+   "footprint": [
+    34.0,
+    34.0
+   ],
+   "tris": 10370,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "석축 너비·높이는 실측 근사(약 34×6m — 가설 포함). params: seed, haetae(true)",
+   "shot": "shots/kit/landmark/hy_gwanghwamun.png"
+  },
+  {
+   "name": "hy_gwangtonggyo",
+   "file": "res://kit/landmark/hy_gwangtonggyo.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "광통교(廣通橋, 대광통교) — 운종가에서 남대문으로 가는 큰길이 청계천을 건너던 돌다리. 1410년(태종 10) 신덕왕후 정릉의 병풍석·돌을 옮겨 돌다리로 놓음",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(12+축대 사이 맞춤 16), width(15), deck(3.0)",
+   "footprint": [
+    15.6,
+    17.0
+   ],
+   "tris": 1048,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_gwangtonggyo.png",
+   "walk": true
+  },
+  {
+   "name": "hy_gyeongbokgung",
+   "file": "res://kit/landmark/hy_gyeongbokgung.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "경복궁(1865~1868 중건, 1870년 새 궁궐) 간략 배치형 — 광화문 → 흥례문 → 근정문 + 행각 → 근정전(2단 월대) / 서쪽 경회루 연못.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환",
+   "footprint": [
+    172.0,
+    140.0
+   ],
+   "tris": 86356,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "실제 남북 약 700m를 크게 압축(광화문~근정전 약 110m), 침전·동궁·후원은 뺌(게임 구역 압축 가설). 원점 = 궁 가운데, 정면 +z.",
+   "shot": "shots/kit/landmark/hy_gyeongbokgung.png",
+   "pieces": 48,
+   "max_piece_tris": 13796
+  },
+  {
+   "name": "hy_gyeonghoeru",
+   "file": "res://kit/landmark/hy_gyeonghoeru.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "경회루(慶會樓) — 경복궁 서쪽 네모 연못 속 누각. 1412년 창건, 임진왜란 소실(돌기둥만 남음) → 1867년 중건 → 1870년 새 건물.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, pond(true)",
+   "footprint": [
+    62.4,
+    54.4
+   ],
+   "tris": 13064,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "연못(실제 약 128×113m)은 압축해 60×52m(가설). 정면 +z(남). params: seed, pond(true)",
+   "shot": "shots/kit/landmark/hy_gyeonghoeru.png",
+   "walk": true,
+   "water": true
+  },
+  {
+   "name": "hy_haenggak",
+   "file": "res://kit/landmark/hy_haenggak.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "궁궐 행각(回廊) 직선 모듈 — 안쪽(+z)으로 트인 기둥 줄 + 바깥(−z) 벽, 맞배. 근정전·인정전 마당 둘레에 이어 붙인다. 로컬 x 방향 length m.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(24), bay(3.0), depth(4.0), open_side(\"front\"|\"both\")",
+   "footprint": [
+    25.0,
+    6.0
+   ],
+   "tris": 2388,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_haenggak.png"
+  },
+  {
+   "name": "hy_heunginjimun",
+   "file": "res://kit/landmark/hy_heunginjimun.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "흥인지문(興仁之門, 동대문) — 1398년 준공, 1869년(고종 6) 새로 지음 → 1870년에는 막 다시 지은 새 문. 홍예 1 + 중층 문루(정면 5칸·측면 2칸, 우진각) + 반원 옹성.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, open",
+   "footprint": [
+    31.2,
+    25.7
+   ],
+   "tris": 10078,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_heunginjimun.png"
+  },
+  {
+   "name": "hy_injeongjeon",
+   "file": "res://kit/landmark/hy_injeongjeon.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "창덕궁 인정전(仁政殿) — 1804년(순조 4) 화재 뒤 1805년 중건본이 1870년에 있었다. 2단 월대 위 중층 팔작, 정면 5칸·측면 4칸 다포(겉은 2층, 안은 통층).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    38.0,
+    34.0
+   ],
+   "tris": 12662,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "근정전보다 작다(정면 약 25m). 월대 크기는 압축 가설. hy_jeongjeon 감싸기. params: seed",
+   "shot": "shots/kit/landmark/hy_injeongjeon.png",
+   "walk": true
+  },
+  {
+   "name": "hy_jeongjeon",
+   "file": "res://kit/landmark/hy_jeongjeon.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "궁궐 정전(법전) 공용 — 2단 월대(돌난간·삼도 계단) 위 중층 팔작 건물. 근정전·인정전이 이 형식.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, name, bays, depth, dbays, H, up_inset_x, up_inset_z, woldae([[w,d,h],…] 아래부터), plaque_w",
+   "footprint": [
+    48.0,
+    44.0
+   ],
+   "tris": 13796,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_jeongjeon.png",
+   "walk": true
+  },
+  {
+   "name": "hy_jongmyo",
+   "file": "res://kit/landmark/hy_jongmyo.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "종묘 정전(正殿) — 역대 왕·왕비 신주를 모신 긴 맞배 건물. 1608년 중건 뒤 1726·1836년 증축 → 1870년에는 신실 19칸(지금과 같음).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, bays(19)",
+   "footprint": [
+    112.6,
+    50.0
+   ],
+   "tris": 11530,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "실측 정면 약 101m·월대 약 109×69m → 월대만 압축(100×46m, 가설). 원점 = 월대 가운데. params: seed, bays(19)",
+   "shot": "shots/kit/landmark/hy_jongmyo.png",
+   "walk": true
+  },
+  {
+   "name": "hy_palace_gate",
+   "file": "res://kit/landmark/hy_palace_gate.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "궁궐 문(목조 문, 석축 없음) — 돈화문(정면 5칸 중층 우진각)·흥례문·근정문(3칸 중층 우진각)·진선문·인정문(3칸 단층) 같은 궁궐 안팎 문.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, name, bays([3.6,4.4,3.6]), depth(5.6), stories(1|2), roof(\"ujin\"|\"paljak\"), H(3.8)",
+   "footprint": [
+    13.6,
+    8.6
+   ],
+   "tris": 6870,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "칸마다 판문(가운데 열림), 낮은 돌 기단 + 앞 계단(가운데 어도). 칸 폭·높이는 사진 비례 가설.",
+   "shot": "shots/kit/landmark/hy_palace_gate.png"
+  },
+  {
+   "name": "hy_sajikdan",
+   "file": "res://kit/landmark/hy_sajikdan.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "한양 사직단(社稷壇) — 1395년 설치. 동쪽 사단(社壇)·서쪽 직단(稷壇) 두 네모 단(각 변 약 7.65m·높이 약 0.9m, 사방 3단 계단) +",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    57.0,
+    57.0
+   ],
+   "tris": 13056,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "담 크기는 압축(실제 유 약 33m 안팎 → 34m, 주원 약 56m, 가설). 단은 sajikdan.altar() 재사용. params: seed",
+   "shot": "shots/kit/landmark/hy_sajikdan.png"
+  },
+  {
+   "name": "hy_seong_wall",
+   "file": "res://kit/landmark/hy_seong_wall.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "한양도성 성벽 모듈(산 능선용) — 로컬 x축 방향 length m, 바깥 +z. rise(m)만큼 x+ 쪽이 높아지는 경사를 계단식 단(step)으로 나눠 쌓는다",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(20), rise(0: 평지, ±값: x+ 끝이 그만큼 높음), height(5.5), step(4.0: 단 길이 최소)",
+   "footprint": [
+    20.0,
+    4.8
+   ],
+   "tris": 1002,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "1870년에는 전 구간이 서 있었다. 높이·단 길이는 가설. 각 단은 땅속으로 (단 높이차 + 1.2m) 내려 경사에서 뜨지 않음.",
+   "shot": "shots/kit/landmark/hy_seong_wall.png"
+  },
+  {
+   "name": "hy_sijeon",
+   "file": "res://kit/landmark/hy_sijeon.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "운종가(雲從街, 종로) 시전 행랑 — 태종 때(1412~1414) 나라가 지어 상인에게 빌려준 긴 줄 가게채. 칸마다 가게(앞 트임·덧문), 단층 맞배 기와(일부 다락), 칸 폭 약 2.4~3m.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, bays(12), bay(2.7), depth(5.0), goods(\"silk\"|\"cloth\"|\"paper\"|\"fish\"|\"mixed\")",
+   "footprint": [
+    33.4,
+    7.0
+   ],
+   "tris": 3816,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "육의전(비단·무명·명주·종이·모시·어물) 등. 1870년 무렵 모습은 19세기 말 사진 비례 가설. 정면(가게 앞) +z = 거리. 로컬 x 방향 bays칸.",
+   "shot": "shots/kit/landmark/hy_sijeon.png"
+  },
+  {
+   "name": "hy_sukjeongmun",
+   "file": "res://kit/landmark/hy_sukjeongmun.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "숙정문(肅靖門, 북대문) — 북악 동쪽 능선의 북문. 풍수상 음기를 막는다 하여 평소 닫아 둠(가뭄 때만 열었다는 기록). 조선 후기에는 문루가 없는 암문 모양 홍예문이었다",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, doors(\"closed\")",
+   "footprint": [
+    14.0,
+    7.0
+   ],
+   "tris": 1580,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_sukjeongmun.png"
+  },
+  {
+   "name": "hy_sungnyemun",
+   "file": "res://kit/landmark/hy_sungnyemun.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "숭례문(崇禮門, 남대문) — 1398년 준공, 1448년 개축, 1479년 중수. 육축 가운데 홍예 1 + 중층 문루(정면 5칸·측면 2칸, 우진각, 다포). 옹성 없음.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    30.0,
+    10.0
+   ],
+   "tris": 9266,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "1870년에는 양옆으로 한양도성 성벽이 이어졌다(1907년 헐림). 현판은 세로(양녕대군 글씨 전함). 육축 너비·높이는 실측 근사(가설 포함).",
+   "shot": "shots/kit/landmark/hy_sungnyemun.png"
+  },
+  {
+   "name": "hy_supyogyo",
+   "file": "res://kit/landmark/hy_supyogyo.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "수표교(水標橋) — 1420년(세종 2) 청계천에 놓은 돌다리(길이 약 27.5m·너비 약 7.5m). 2단 돌기둥 교각(물 흐름 쪽 마름모꼴 위 네모 기둥) 위 멍에돌·청판석, 돌난간.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(27.5), width(7.5), deck(3.0), supyo(true)",
+   "footprint": [
+    13.5,
+    27.5
+   ],
+   "tris": 2604,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/hy_supyogyo.png",
+   "walk": true
+  },
+  {
+   "name": "hy_unjongga",
+   "file": "res://kit/landmark/hy_unjongga.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "운종가(종로) 네거리 배치형 — 동서 큰길 양옆 시전 행랑(hy_sijeon) 줄 + 네거리 북동 모서리 종각(hy_bosingak). 남쪽으로 광통교 길이 갈라짐.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(200: 동서 전체 길이). pieces 반환",
+   "footprint": [
+    204.0,
+    40.0
+   ],
+   "tris": 37106,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "길 너비(약 17m)·행랑 길이는 압축 가설. 원점 = 네거리 가운데, 큰길은 x 방향. 북쪽 줄은 정면 +z(길 쪽), 남쪽 줄은 ry=π(길 쪽을 봄 — 카메라에는 등).",
+   "shot": "shots/kit/landmark/hy_unjongga.png",
+   "pieces": 9,
+   "max_piece_tris": 6290
+  },
+  {
+   "name": "hy_yukjo",
+   "file": "res://kit/landmark/hy_yukjo.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "육조(六曹) 관청 모듈 — 광화문 앞 육조거리 양옆에 늘어선 관청(이조·호조·예조·병조·형조·공조 + 의정부·한성부 등) 한 곳.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, name(\"예조\"), width(36), depth(30)",
+   "footprint": [
+    36.0,
+    30.0
+   ],
+   "tris": 11880,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "거리에 면한 긴 행랑(벽 + 작은 창) 가운데 솟을대문 → 마당 → 정청(정면 5칸 팔작). 「육조앞」 옛 사진·『한양도』 비례 가설.",
+   "shot": "shots/kit/landmark/hy_yukjo.png"
+  },
+  {
+   "name": "hy_yukjo_geori",
+   "file": "res://kit/landmark/hy_yukjo_geori.gd",
+   "city": "한양",
+   "region": "GG_HANYANG",
+   "desc": "육조거리(광화문 앞 큰길) 배치형 — 광화문(hy_gwanghwamun) 앞 너비 약 60m(압축 40m) 길 양옆에 관청(hy_yukjo) 셋씩.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, length(130), gate(true). pieces 반환",
+   "footprint": [
+    110.0,
+    150.0
+   ],
+   "tris": 81242,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "동쪽: 의정부·이조·호조(한성부 생략), 서쪽: 예조·병조·형조·공조(공조 생략) — 실제 순서 근사(가설). 관청은 길을 봄(동 ry=+π/2? — 정면 +z가 길 쪽이 되게 동쪽 줄 ry=−π/2, 서쪽 줄 ry=+π/2).",
+   "shot": "shots/kit/landmark/hy_yukjo_geori.png",
+   "pieces": 7,
+   "max_piece_tris": 11812
+  },
+  {
+   "name": "jj_bangsatap",
+   "file": "res://kit/landmark/jj_bangsatap.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "방사탑(防邪塔, 거욱대) — 제주 마을 어귀·허한 방위에 쌓은 돌탑(액막이). 현무암 막돌을 원뿔대로 쌓고(높이 2~4m) 꼭대기에 새(까마귀) 모양 돌이나 사람 모양 석상을 얹음.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, height(3.2), top(\"bird\"|\"man\"|\"stone\")",
+   "footprint": [
+    4.4,
+    4.4
+   ],
+   "tris": 1216,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "조선 후기 마을 신앙(1870 무렵 있었다고 봄). 크기는 현존 탑 평균 가설. params: seed, height(3.2), top(\"bird\"|\"man\"|\"stone\")",
+   "shot": "shots/kit/landmark/jj_bangsatap.png"
+  },
+  {
+   "name": "jj_basalt_wall",
+   "file": "res://kit/landmark/jj_basalt_wall.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "제주 현무암 돌담(관아·삼성혈 둘레): 네모 둘레(w×d, 원점 가운데) 또는 꺾은선(line). gates = [[x, z, 반폭]] 틈.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, w, d, line([[x,z],…] 있으면 둘레 대신), gates, height(1.6)",
+   "footprint": [
+    20.0,
+    20.0
+   ],
+   "tris": 3612,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "높이 1.6m 막쌓기(가설). params: seed, w, d, line([[x,z],…] 있으면 둘레 대신), gates, height(1.6)",
+   "shot": "shots/kit/landmark/jj_basalt_wall.png"
+  },
+  {
+   "name": "jj_dolhareubang",
+   "file": "res://kit/landmark/jj_dolhareubang.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "돌하르방(우석목·벅수머리) — 제주목·정의현·대정현 성문 앞에 둘씩 세운 현무암 석상. 1754년(영조 30) 김몽규 목사 때 세웠다는 기록(『탐라지』 계열) → 1870년에 성문 앞에 있었다.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, height(1.8), hand(\"right\"|\"left\": 위에 얹은 손)",
+   "footprint": [
+    1.0,
+    1.0
+   ],
+   "tris": 728,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/jj_dolhareubang.png"
+  },
+  {
+   "name": "jj_gimnyeongsagul",
+   "file": "res://kit/landmark/jj_gimnyeongsagul.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "김녕사굴(金寧蛇窟) 입구 — 제주 구좌 김녕리 용암동굴. 큰 뱀에게 처녀를 바치던 굴, 1515년 판관 서련이 뱀을 죽였다는 설화(김녕사굴 설화).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, stele(true)",
+   "footprint": [
+    17.0,
+    14.0
+   ],
+   "tris": 2338,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "입구는 땅이 꺼진 낮고 넓은 굴 아가리(현무암), 둘레 덩굴·풀. 1870년에도 자연 동굴 그대로. 입구 크기는 게임용 가설(폭 5m·높이 3m).",
+   "shot": "shots/kit/landmark/jj_gimnyeongsagul.png"
+  },
+  {
+   "name": "jj_gwandeokjeong",
+   "file": "res://kit/landmark/jj_gwandeokjeong.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "관덕정(觀德亭, 보물) — 제주목 관아 앞 활쏘기·열무 정자. 1448년(세종 30) 창건, 여러 번 중수(1690·1882 등). 정면 5칸·측면 4칸 팔작, 사방 트임,",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, hareubang(true)",
+   "footprint": [
+    24.2,
+    24.0
+   ],
+   "tris": 6698,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "낮은 기단. 지금 처마는 1924년 일제가 잘라 짧아진 것 → 1870년 기준 처마를 길게(ox 2.6). 앞에 돌하르방 한 쌍(관아 앞 — 위치 가설). / 칸 폭·높이는 사진 비례 가설. params: seed, hareubang(true)",
+   "shot": "shots/kit/landmark/jj_gwandeokjeong.png"
+  },
+  {
+   "name": "jj_mokgwana",
+   "file": "res://kit/landmark/jj_mokgwana.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "제주목 관아 일곽(간략 배치형) — 외대문(진해루, 돌하르방) → 중대문(솟을삼문) → 홍화각(弘化閣, 1435 창건 목사 집무 — 정면 5칸 팔작) + 연희각(延曦閣, 정면 5칸)",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed. pieces 반환",
+   "footprint": [
+    50.0,
+    62.0
+   ],
+   "tris": 34412,
+   "composite": true,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "건물 칸수·배치 거리는 복원 배치를 압축한 가설. 원점 = 일곽 가운데, 정면 +z. params: seed. pieces 반환",
+   "shot": "shots/kit/landmark/jj_mokgwana.png",
+   "pieces": 6,
+   "max_piece_tris": 8532
+  },
+  {
+   "name": "jj_oedaemun",
+   "file": "res://kit/landmark/jj_oedaemun.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "제주목 관아 외대문(外大門, 진해루 鎭海樓) — 2층 누문, 정면 3칸·측면 2칸 팔작. 아래층 가운데 칸 판문(좌우 칸은 판벽), 위층 계자난간 마루.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, hareubang(true)",
+   "footprint": [
+    11.2,
+    9.0
+   ],
+   "tris": 7292,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "1870년에 서 있었다(일제강점기 헐림 → 2002 복원). 칸 폭·높이는 복원 건물 비례 가설. 앞에 돌하르방 한 쌍(hareubang). params: seed, hareubang(true)",
+   "shot": "shots/kit/landmark/jj_oedaemun.png"
+  },
+  {
+   "name": "jj_samseonghyeol",
+   "file": "res://kit/landmark/jj_samseonghyeol.gd",
+   "city": "제주목",
+   "region": "JJ_JEJU",
+   "desc": "삼성혈(三姓穴) — 탐라 시조 고·양·부 세 신인이 솟아났다는 땅 구멍 셋(品자 배치), 둘레를 낮게 판 잔디 마당과 돌담. 1526년 목사 이수동이 담을 두르고",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, shrine(true)",
+   "footprint": [
+    25.0,
+    24.0
+   ],
+   "tris": 7234,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "홍문·제단을 세움, 1698년 삼성사(사당) 건립 기록 → 1870년에 담·홍살문·작은 사당이 있었다(사당 규모·위치는 가설). 구멍 지름·깊이는 실물 비례 근사.",
+   "shot": "shots/kit/landmark/jj_samseonghyeol.png"
+  },
+  {
+   "name": "py_botongmun",
+   "file": "res://kit/landmark/py_botongmun.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "평양성 보통문(普通門) — 중성 서문, 의주로 가는 길. 1473년 중건(현존 — 평양에서 가장 오래된 목조 건물 축). 홍예 육축 + 단층 문루(정면 3칸·측면 2칸, 팔작).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    20.0,
+    9.0
+   ],
+   "tris": 6150,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "치수·비례는 사진 비례 가설",
+   "shot": "shots/kit/landmark/py_botongmun.png"
+  },
+  {
+   "name": "py_bubyeongnu",
+   "file": "res://kit/landmark/py_bubyeongnu.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "부벽루(浮碧樓) — 평양 모란봉 동쪽 청류벽 위, 영명사 부속 누각. 1614년 중건본. 정면 5칸·측면 3칸 팔작, 사방 트인 마루, 낮은 돌 기단.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    19.6,
+    13.0
+   ],
+   "tris": 6612,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "대동강을 내려다봄(정면 +z = 강 쪽). 치수는 사진 비례 가설. params: seed",
+   "shot": "shots/kit/landmark/py_bubyeongnu.png"
+  },
+  {
+   "name": "py_chilseongmun",
+   "file": "res://kit/landmark/py_chilseongmun.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "평양성 칠성문(七星門) — 내성 북문(모란봉 쪽). 1711년 중건. 작은 홍예 육축 + 단층 문루(정면 1칸·측면 1칸, 팔작 — 가설). 북향이라 카메라엔 안쪽(뒤)이 보임 → 배치 때 ry=π 권장.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    12.0,
+    7.0
+   ],
+   "tris": 5180,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "평양성 칠성문(七星門) — 내성 북문(모란봉 쪽). 1711년 중건. 작은 홍예 육축 + 단층 문루(정면 1칸·측면 1칸, 팔작 — 가설). 북향이라 카메라엔 안쪽(뒤)이 보임 → 배치 때 ry=π 권장.",
+   "shot": "shots/kit/landmark/py_chilseongmun.png"
+  },
+  {
+   "name": "py_daedong_naru",
+   "file": "res://kit/landmark/py_daedong_naru.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "대동강 나루 표지 — 평양 대동문 앞 강가 나루터. 물로 내려가는 돌계단 선창 + 나무 잔교 + 배 매는 말뚝 + 나루 표지 장대(깃발)·표지석.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, pier(8)",
+   "footprint": [
+    10.0,
+    14.8
+   ],
+   "tris": 998,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "『평양성도』의 대동문 앞 나루 모습을 단순화한 가설. 원점 = 강둑 가장자리 바닥, 정면 +z = 물 쪽(물면 y −1.2 가정). params: seed, pier(8)",
+   "shot": "shots/kit/landmark/py_daedong_naru.png",
+   "walk": true
+  },
+  {
+   "name": "py_daedongmun",
+   "file": "res://kit/landmark/py_daedongmun.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "평양성 대동문(大同門) — 내성 동문, 대동강을 향함. 1635년 중건본(현존). 홍예 육축 + 중층 문루(정면 3칸·측면 3칸, 팔작). 1870년에 지금 모습.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    24.0,
+    10.0
+   ],
+   "tris": 8048,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "옹성은 남아 있지 않다고 보고 뺌(가설). 강을 보는 동향 문: 배치 때 ry=+90°. seongmun 감싸기. params: seed",
+   "shot": "shots/kit/landmark/py_daedongmun.png"
+  },
+  {
+   "name": "py_eulmildae",
+   "file": "res://kit/landmark/py_eulmildae.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "을밀대(乙密臺) — 평양 모란봉 을밀봉 위 대. 6세기 고구려 평양성 북장대 터의 높은 축대(약 11m) 위에 1714년 세운 정자(정면 3칸·측면 2칸 팔작, 사방 트임).",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed, height(6.5)",
+   "footprint": [
+    17.4,
+    21.4
+   ],
+   "tris": 5132,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "축대 높이는 게임용으로 낮춤(6.5m, 가설). 뒤(북)에 돌계단. 정면 +z. params: seed, height(6.5)",
+   "shot": "shots/kit/landmark/py_eulmildae.png"
+  },
+  {
+   "name": "py_giringgul",
+   "file": "res://kit/landmark/py_giringgul.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "기린굴(麒麟窟) 입구 — 평양 모란봉 부벽루 아래 바위 굴. 동명왕(주몽)이 기린마를 기르고 그 말을 타고 굴로 들어가 조천석(朝天石)으로 하늘에 올랐다는 전설.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    13.0,
+    14.0
+   ],
+   "tris": 1378,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "『신증동국여지승람』 평양 고적. 입구 앞 바위에 '麒麟窟' 각자 자리(1870 무렵 각자 유무는 가설), 앞 강가 쪽 조천석(납작 바위). params: seed",
+   "shot": "shots/kit/landmark/py_giringgul.png"
+  },
+  {
+   "name": "py_ryeongwangjeong",
+   "file": "res://kit/landmark/py_ryeongwangjeong.gd",
+   "city": "평양",
+   "region": "PA_PYEONGYANG",
+   "desc": "연광정(練光亭) — 평양 대동강가 덕바위 위 정자. 1670년 중건본. 두 정자(남쪽 큰 채 정면 3칸·측면 3칸 + 북쪽 작은 채 정면 3칸·측면 2칸)를 비스듬히 잇댄 모양, 팔작.",
+   "params": {
+    "seed": 1
+   },
+   "params_doc": "seed",
+   "footprint": [
+    28.0,
+    20.0
+   ],
+   "tris": 10542,
+   "composite": false,
+   "sources": [
+    "문화재 일반 설명(국가유산청 국가유산포털·한국민족문화대백과 계열) — 기억 기반 요약, 이번 작업에서 웹 재확인 안 함"
+   ],
+   "hypothesis": "강가 바위 축대 위(높이 2m — 가설). 현판 '천하제일강산'. 정면 +z = 강 쪽(배치 때 강을 보게 돌림). params: seed",
+   "shot": "shots/kit/landmark/py_ryeongwangjeong.png"
   }
- ]
+ ],
+ "era_note": "대표 도시 키트(gj_ gn_ jj_ hy_ hj_ py_ hh_)도 1870년 기준. sources 중 \"기억\"이라 적은 것은 이번에 웹 확인을 하지 않은 일반 문화재 설명값(확인 필요)",
+ "hubs": {
+  "gyeongju": "shots/kit/landmark/hubs_gyeongju.png",
+  "gangneung": "shots/kit/landmark/hubs_gangneung.png",
+  "jeju": "shots/kit/landmark/hubs_jeju.png",
+  "hanyang": "shots/kit/landmark/hubs_hanyang.png",
+  "hwangju": "shots/kit/landmark/hubs_hwangju.png",
+  "pyeongyang": "shots/kit/landmark/hubs_pyeongyang.png",
+  "hamheung": "shots/kit/landmark/hubs_hamheung.png"
+ }
 }
