@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from east_terrain import Terrain, ROOT, DATA, polyline_at, polyline_len, polyline_project  # noqa: E402
 from east_place import Placer, Local, bkey, l2w, ry_along, ry_cross, clamp_ry, wrap_half, Rect  # noqa: E402
 import east_village as EV  # noqa: E402
+import town_profile as PR  # noqa: E402
 import numpy as np  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -447,7 +448,10 @@ def extra_bridge(pl, T, river_id, x, z, group, gcode, kit="village/seop_bridge",
 
 # ---------------------------------------------------------------- 장소들
 def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square=True, pitch=18.0, max_drop=2.6,
-             limit=999, extra_ids=(), wells=1, cells=None, stats=None, zone=None):
+             limit=999, extra_ids=(), wells=1, cells=None, stats=None, zone=None, style=None, layout=None, street=None,
+             center=None):
+    """layout(고을 짜임, 성격표 profile.layout): rows(기본 줄) | linear_street/along_temple_road(street = 길 id) |
+    round_cluster(center 둘레 고리) | terraced(등고 단마다 한 줄)."""
     """3단계 마을: 마을 터(landuse 6) 모양 그대로 줄 지어 채운다. 어귀 장승·솟대, 공동 마당(정자나무·평상), 우물."""
     reg = T.region
     s = next(x for x in reg["settlements"] if x["id"] == sid)
@@ -469,7 +473,9 @@ def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square
                 e_ = entrance(T, road, cx, cz, rr, tw)
                 if not e_:
                     continue
-                if gate_props(pl, T, Local(T, e_[2], e_[3], 60), road, e_[1], group, gcode, rng, quiet=True):
+                # 절 아래 마을(성격표 entrance stone_jangseung)은 돌장승
+                gk_ = "village/stone_jangseung" if PR.resolve(reg, sid).archetype == "temple" else "village/jangseung"
+                if gate_props(pl, T, Local(T, e_[2], e_[3], 60), road, e_[1], group, gcode, rng, quiet=True, kit=gk_):
                     ent = e_
                     break
             if ent:
@@ -491,16 +497,33 @@ def village2(pl, T, sid, group, gcode, mix, seed, road=None, toward=None, square
     for w in range(wells):
         pl.place_search(L, [P("village/well", {"seed": seed + w, "roof": (seed + w) % 2 == 0}, cat="prop", kind="well",
                               margin=1.2)], cx, cz, R * 0.6, group, gcode, rng, {"max_drop": 1.8}, face="none")
-    n = EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed, pitch=pitch, max_drop=max_drop, limit=limit, stats=stats, zone=zone)
-    if n < limit:
-        # 둘째 줄 걸음: 반 칸 어긋난 줄로 빈 데를 메운다
-        n += EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed + 1, pitch=pitch, max_drop=max_drop, limit=limit - n,
-                          stats=stats, phase=pitch / 2, gap=(1.2, 2.4), zone=zone)
+    style = style or PR.resolve(reg, sid)
+    layout = layout or style.layout
+    if layout in ("linear_street", "along_temple_road") and street:
+        n = 0
+        for k_, rid_ in enumerate([street] if isinstance(street, str) else street):
+            rd = T.road(rid_)
+            n += EV.street_rows(pl, T, L, cells, rd["points"], rd.get("width_m", 3.0), group, gcode, mix, seed + k_ * 101, style,
+                                stats=stats, max_drop=max_drop, limit=limit - n)
+    elif layout == "round_cluster" and center:
+        n = EV.ring_rows(pl, T, L, cells, center[0], center[1], group, gcode, mix, seed, style, stats=stats,
+                         max_drop=max_drop, limit=limit, zone=zone)
+    elif layout == "terraced":
+        # 돌축대가 단 높이를 받으므로 터 안 높이차를 더 받아 준다
+        n = EV.terrace_fill(pl, T, L, cells, group, gcode, mix, seed, style, stats=stats, max_drop=max(max_drop, 6.0))
+    else:
+        n = EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed, pitch=pitch, max_drop=max_drop, limit=limit, stats=stats,
+                         zone=zone, style=style)
+        if n < limit:
+            # 둘째 줄 걸음: 반 칸 어긋난 줄로 빈 데를 메운다
+            n += EV.fill_rows(pl, T, L, cells, group, gcode, mix, seed + 1, pitch=pitch, max_drop=max_drop, limit=limit - n,
+                              stats=stats, phase=pitch / 2, gap=(1.2, 2.4), zone=zone, style=style)
+    pl.log.append(f"[village2] {sid} 짜임 {layout} {style}")
     pl.log.append(f"[village2] {group}({sid}) 마을 터 {len(cells) * 16}m² → 집터 {n}")
     return n
 
 
-def fringe(pl, T, sid, group, gcode, seed, stats):
+def fringe(pl, T, sid, group, gcode, seed, stats, style=None):
     """마을 터 둘레 20m 안 풀밭(1)·밭(3) 칸과 남은 마을 터 칸을 텃밭·일거리 위주로 채운다."""
     from scipy.ndimage import binary_dilation
     s = next(x for x in T.region["settlements"] if x["id"] == sid)
@@ -515,10 +538,11 @@ def fringe(pl, T, sid, group, gcode, seed, stats):
     jj, ii = np.nonzero(ok)
     cells = np.stack([lm["x0"] + (ii + i0) * lm["cell"], lm["z0"] + (jj + j0) * lm["cell"]], 1).astype(float)
     L = Local(T, float(cells[:, 0].mean()), float(cells[:, 1].mean()), 300)
+    style = style or PR.resolve(T.region, sid)
     n = EV.fill_rows(pl, T, L, cells, group, gcode, "fringe", seed, pitch=13.0, gap=(1.5, 3.0), max_drop=2.6, in_frac=0.5,
-                     lu_ok=(1, 3, 6), stats=stats)
+                     lu_ok=(1, 3, 6), stats=stats, style=style)
     n += EV.fill_rows(pl, T, L, cells, group, gcode, "fringe", seed + 1, pitch=13.0, gap=(1.5, 3.0), max_drop=2.6, in_frac=0.5,
-                      lu_ok=(1, 3, 6), stats=stats, phase=6.5)
+                      lu_ok=(1, 3, 6), stats=stats, phase=6.5, style=style)
     pl.log.append(f"[fringe] {group}({sid}) 둘레 칸 {len(cells)} → {n}")
 
 
@@ -558,7 +582,7 @@ def build(pl, T):
     yj = st["yeowon_jumak"]
     L2 = Local(T, yj["x"], yj["z"], 80)
     pl.place_search(L2, jumak_set(6), yj["x"], yj["z"], 40, "여원재 아랫주막", "yj", rng, {"max_drop": 3.0}, road_pref=(1.0, 8.0))
-    pl.place_search(L2, EV.yard_set(61), yj["x"], yj["z"], 45, "여원재 아랫주막", "yj", rng, {"max_drop": 3.0})
+    pl.place_search(L2, EV.yard_set(61, style=PR.resolve(reg, "yeowon_jumak")), yj["x"], yj["z"], 45, "여원재 아랫주막", "yj", rng, {"max_drop": 3.0})
     pl.place_search(L2, [tree("zelkova", 62)], yj["x"], yj["z"], 30, "여원재 아랫주막", "yj", rng, {"max_drop": 3.0}, face="none")
 
     # ===== 2. 이백 마을 =====
@@ -611,9 +635,10 @@ def build(pl, T):
     EV.fill_rows(pl, T, Lm, jc, g, gc, "market", 331, pitch=8.5, gap=(1.0, 2.0), max_drop=1.8, limit=14, stats=stats)
     village2(pl, T, "unbong_eup", g, gc, "eup", 303, road="tongyeong_byeolro",
              toward=[(1050, -960), (1000, -850), (980, -700), (650, -800)], wells=3, extra_ids=("unbong_jang",), stats=stats,
-             zone=(gwx, gwz + 40, 70.0, "gwan"))
-    # 장마당 칸에 남은 자리도 집으로
-    EV.fill_rows(pl, T, Lm, jc, g, gc, "eup", 332, max_drop=2.6, stats=stats)
+             zone=(gwx, gwz + 40, 70.0, "gwan"), center=(st["unbong_jang"]["x"], st["unbong_jang"]["z"]))
+    # 장마당 칸에 남은 자리도 집으로 — 장터 둘레 고리(둥근 무리, A2)
+    EV.ring_rows(pl, T, Lm, jc, st["unbong_jang"]["x"], st["unbong_jang"]["z"], g, gc, "eup", 332, PR.resolve(reg, "unbong_jang"),
+                 stats=stats, r0=16.0, pitch=15.0)
     # 다듬기: 마을 터 둘레 20m 안 풀밭·밭 칸도 텃밭·일거리·작은 집터로 메운다(가운데 빈 곳)
     fringe(pl, T, "unbong_eup", g, gc, 333, stats)
     fringe(pl, T, "unbong_jang", g, gc, 334, stats)
@@ -645,13 +670,17 @@ def build(pl, T):
                     road_pref=(1.0, 14.0), group_y=True)
     pl.place_search(L, jumak_set(51), 2722, -1462, 30, g, gc, rng, {"max_drop": 2.6}, road_pref=(1.0, 6.0))
     pl.place_search(L, jumak_set(52), 2880, -1470, 40, g, gc, rng, {"max_drop": 2.6}, road_pref=(1.0, 6.0))
-    village2(pl, T, "inwol_yeok", g, gc, "eup", 505, road="tongyeong_byeolro", toward=(2560, -1500), wells=2, stats=stats)
-    EV.fill_rows(pl, T, L, jcells, g, gc, "village", 552, max_drop=2.6, stats=stats)
+    village2(pl, T, "inwol_yeok", g, gc, "eup", 505, road="tongyeong_byeolro", toward=(2560, -1500), wells=2, stats=stats,
+             street="tongyeong_byeolro")
+    # 길촌(A2): 장 쪽 남은 띠도 통영별로 양쪽에 길 따라
+    rd_ = T.road("tongyeong_byeolro")
+    EV.street_rows(pl, T, L, jcells, rd_["points"], rd_.get("width_m", 5.0), g, gc, "street", 552, PR.resolve(reg, "inwol_jang"),
+                   stats=stats)
     # 람천 남쪽 마을 + 섶다리(가설) — 좌표는 보고서에
     # 람천 남쪽 마을(terrain-data §12: inwol_south_seopdari 도강점 + inwol_south_lane + inwol_south_village)
     if any(s_["id"] == "inwol_south_village" for s_ in reg["settlements"]):
-        village2(pl, T, "inwol_south_village", "인월 남쪽 마을", "is", "village", 560, road="inwol_south_lane",
-                 toward=[(2760, -1380), (2900, -1340)], square=False, limit=10, stats=stats)
+        village2(pl, T, "inwol_south_village", "인월 남쪽 마을", "is", "street", 560, road="inwol_south_lane",
+                 toward=[(2760, -1380), (2900, -1340)], square=False, limit=10, stats=stats, street=["inwol_south_lane", "inwol_banseon_road"])
     else:
         extra_bridge(pl, T, "ramcheon", iw["x"] + 5, iw["z"] + 25, g, gc, note="인월장 남쪽 람천 건너 마을")
     # 3단계: 남쪽 기슭엔 이제 인월–산내 물가길이 지나고 마을 터가 없어 집은 두지 않고 다리만 둔다(장터 ↔ 물가길 지름길)
@@ -689,9 +718,9 @@ def build(pl, T):
                     pref=(sm["x"] - 55, sm["z"] + 70))
 
     # ===== 7. 산내·반선 =====
-    village2(pl, T, "sannae", "산내 마을", "sn", "mountain", 616, road="inwol_banseon_road",
+    village2(pl, T, "sannae", "산내 마을", "sn", "street", 616, road="inwol_banseon_road",
              toward=[(3200, 380), (2900, 600)], max_drop=4.2,
-             pitch=15.5, stats=stats)
+             pitch=15.5, stats=stats, street="inwol_banseon_road")
     sn = st["sannae"]
     pl.place_search(Local(T, sn["x"], sn["z"], 160), mill(62, rmax=11.0), sn["x"] + 20, sn["z"] - 10, 140, "산내 마을", "sn",
                     random.Random(617), {"max_drop": 4.6}, allow_cross=True, n=600)

@@ -3087,7 +3087,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 101,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il"
    },
    "x": -3109.36,
    "z": 263.28,
@@ -3109,7 +3110,8 @@
     "seed": 102,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3091.77,
    "z": 265.39,
@@ -3129,7 +3131,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 103,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3061.77,
    "z": 254.49,
@@ -3149,7 +3153,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 104,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3051.82,
    "z": 235.46,
@@ -3170,7 +3176,8 @@
    "params": {
     "seed": 105,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3031.83,
    "z": 224.93,
@@ -3190,7 +3197,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 106,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3148.9,
    "z": 265.04,
@@ -3211,7 +3221,8 @@
    "params": {
     "seed": 107,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3115.82,
    "z": 287.9,
@@ -3230,7 +3241,8 @@
    "id": "nw_house_008",
    "kit": "village/choga",
    "params": {
-    "seed": 108
+    "seed": 108,
+    "plan": "il"
    },
    "x": -3104.72,
    "z": 289.0,
@@ -3249,7 +3261,8 @@
    "id": "nw_house_009",
    "kit": "village/choga",
    "params": {
-    "seed": 109
+    "seed": 109,
+    "plan": "il"
    },
    "x": -3093.32,
    "z": 287.9,
@@ -3268,7 +3281,8 @@
    "id": "nw_house_010",
    "kit": "village/choga",
    "params": {
-    "seed": 110
+    "seed": 110,
+    "plan": "il"
    },
    "x": -3081.92,
    "z": 287.77,
@@ -3289,7 +3303,8 @@
    "params": {
     "seed": 111,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3066.72,
    "z": 283.12,
@@ -3309,7 +3324,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 112,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3052.96,
    "z": 279.16,
@@ -3329,7 +3347,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 113,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3031.1,
    "z": 264.75,
@@ -3349,7 +3369,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 114,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3218.18,
    "z": 376.45,
@@ -3369,7 +3392,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 115,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3220.81,
    "z": 395.34,
@@ -3389,7 +3414,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 116,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3218.25,
    "z": 413.0,
@@ -3408,7 +3435,8 @@
    "id": "nw_house_017",
    "kit": "village/choga",
    "params": {
-    "seed": 117
+    "seed": 117,
+    "plan": "il"
    },
    "x": -3223.28,
    "z": 427.78,
@@ -3428,7 +3456,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 118,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3242.87,
    "z": 415.14,
@@ -3448,7 +3479,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 119,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3242.34,
    "z": 432.6,
@@ -3467,7 +3500,8 @@
    "id": "nw_house_020",
    "kit": "village/choga",
    "params": {
-    "seed": 120
+    "seed": 120,
+    "plan": "il"
    },
    "x": -3243.3,
    "z": 167.64,
@@ -3487,7 +3521,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 121,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3255.27,
    "z": 139.46,
@@ -3506,7 +3542,8 @@
    "id": "nw_house_022",
    "kit": "village/choga",
    "params": {
-    "seed": 122
+    "seed": 122,
+    "plan": "il"
    },
    "x": -3253.43,
    "z": 126.03,
@@ -3526,7 +3563,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 123,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3255.48,
    "z": 112.55,
@@ -3546,7 +3585,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 124,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3257.98,
    "z": 93.51,
@@ -3566,7 +3607,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 125,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il"
    },
    "x": -3242.57,
    "z": 62.12,
@@ -3587,7 +3629,8 @@
    "params": {
     "seed": 126,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3235.18,
    "z": 135.43,
@@ -3607,7 +3650,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 127,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3232.19,
    "z": 120.22,
@@ -3626,7 +3671,8 @@
    "id": "nw_house_028",
    "kit": "village/choga",
    "params": {
-    "seed": 128
+    "seed": 128,
+    "plan": "il"
    },
    "x": -3234.26,
    "z": 106.75,
@@ -3645,7 +3691,8 @@
    "id": "nw_house_029",
    "kit": "village/choga",
    "params": {
-    "seed": 129
+    "seed": 129,
+    "plan": "il"
    },
    "x": -3226.81,
    "z": 93.94,
@@ -3666,7 +3713,8 @@
    "params": {
     "seed": 130,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3215.93,
    "z": 79.84,
@@ -3686,7 +3734,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 131,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3198.72,
    "z": 67.22,
@@ -3708,7 +3758,8 @@
     "seed": 132,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3237.62,
    "z": 316.6,
@@ -3730,7 +3781,8 @@
     "seed": 133,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3237.14,
    "z": 301.4,
@@ -3752,7 +3804,8 @@
     "seed": 134,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3238.05,
    "z": 286.2,
@@ -3774,7 +3827,8 @@
     "seed": 135,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3238.27,
    "z": 272.8,
@@ -3796,7 +3850,8 @@
     "seed": 136,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3238.27,
    "z": 258.8,
@@ -3816,7 +3871,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 137,
-    "size": "large"
+    "size": "large",
+    "plan": "il"
    },
    "x": -3211.0,
    "z": 311.6,
@@ -3838,7 +3894,8 @@
     "seed": 138,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3217.76,
    "z": 291.4,
@@ -3858,7 +3915,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 139,
-    "size": "large"
+    "size": "large",
+    "plan": "il"
    },
    "x": -3211.36,
    "z": 273.0,
@@ -3877,7 +3935,8 @@
    "id": "nw_house_040",
    "kit": "village/choga",
    "params": {
-    "seed": 140
+    "seed": 140,
+    "plan": "il"
    },
    "x": -3197.8,
    "z": 167.17,
@@ -3899,7 +3958,8 @@
     "seed": 141,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3295.6,
    "z": 238.72,
@@ -3921,7 +3981,8 @@
     "seed": 142,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3280.6,
    "z": 238.4,
@@ -3941,7 +4002,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 143,
-    "size": "large"
+    "size": "large",
+    "plan": "il"
    },
    "x": -3289.1,
    "z": 267.25,
@@ -3963,7 +4025,8 @@
     "seed": 144,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3269.2,
    "z": 261.97,
@@ -3985,7 +4048,8 @@
     "seed": 145,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3254.8,
    "z": 261.69,
@@ -4005,7 +4069,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 146,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3187.5,
    "z": 264.47,
@@ -4027,7 +4093,8 @@
     "seed": 147,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3167.2,
    "z": 261.93,
@@ -4048,7 +4115,8 @@
    "params": {
     "seed": 148,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3243.41,
    "z": 376.06,
@@ -4067,7 +4135,8 @@
    "id": "nw_house_049",
    "kit": "village/choga",
    "params": {
-    "seed": 149
+    "seed": 149,
+    "plan": "il"
    },
    "x": -3329.94,
    "z": 375.55,
@@ -4086,7 +4155,8 @@
    "id": "nw_house_050",
    "kit": "village/choga",
    "params": {
-    "seed": 150
+    "seed": 150,
+    "plan": "il"
    },
    "x": -3341.46,
    "z": 372.19,
@@ -4106,7 +4176,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 151,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il"
    },
    "x": -3355.4,
    "z": 305.92,
@@ -4126,7 +4197,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 152,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3353.2,
    "z": 286.78,
@@ -4146,7 +4220,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 153,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il"
    },
    "x": -3354.8,
    "z": 268.51,
@@ -4166,7 +4241,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 154,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3351.05,
    "z": 249.27,
@@ -4186,7 +4264,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 155,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il"
    },
    "x": -3353.69,
    "z": 229.82,
@@ -4206,7 +4285,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 156,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3258.54,
    "z": 355.81,
@@ -4226,7 +4308,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 157,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3278.07,
    "z": 359.69,
@@ -4245,7 +4329,8 @@
    "id": "nw_house_058",
    "kit": "village/choga",
    "params": {
-    "seed": 158
+    "seed": 158,
+    "plan": "il"
    },
    "x": -3333.04,
    "z": 288.33,
@@ -4265,7 +4350,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 159,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3330.33,
    "z": 274.27,
@@ -4286,7 +4373,8 @@
    "params": {
     "seed": 160,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3246.76,
    "z": 76.83,
@@ -4305,7 +4393,8 @@
    "id": "nw_house_061",
    "kit": "village/choga",
    "params": {
-    "seed": 161
+    "seed": 161,
+    "plan": "il"
    },
    "x": -3202.67,
    "z": 54.51,
@@ -4324,7 +4413,8 @@
    "id": "nw_house_062",
    "kit": "village/choga",
    "params": {
-    "seed": 162
+    "seed": 162,
+    "plan": "il"
    },
    "x": -3332.86,
    "z": 220.48,
@@ -4343,7 +4433,8 @@
    "id": "nw_house_063",
    "kit": "village/choga",
    "params": {
-    "seed": 163
+    "seed": 163,
+    "plan": "il"
    },
    "x": -3217.71,
    "z": 126.56,
@@ -4362,7 +4453,8 @@
    "id": "nw_house_064",
    "kit": "village/choga",
    "params": {
-    "seed": 164
+    "seed": 164,
+    "plan": "il"
    },
    "x": -3270.44,
    "z": 132.61,
@@ -4381,7 +4473,8 @@
    "id": "nw_house_065",
    "kit": "village/choga",
    "params": {
-    "seed": 165
+    "seed": 165,
+    "plan": "il"
    },
    "x": -3205.1,
    "z": 134.94,
@@ -4400,7 +4493,8 @@
    "id": "nw_house_066",
    "kit": "village/choga",
    "params": {
-    "seed": 166
+    "seed": 166,
+    "plan": "il"
    },
    "x": -3206.42,
    "z": 147.26,
@@ -4420,7 +4514,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 167,
-    "size": "large"
+    "size": "large",
+    "plan": "il"
    },
    "x": -3302.22,
    "z": 174.88,
@@ -4442,7 +4537,8 @@
     "seed": 168,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3281.32,
    "z": 168.98,
@@ -4464,7 +4560,8 @@
     "seed": 169,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3267.52,
    "z": 169.0,
@@ -4483,7 +4580,8 @@
    "id": "nw_house_070",
    "kit": "village/choga",
    "params": {
-    "seed": 170
+    "seed": 170,
+    "plan": "il"
    },
    "x": -3254.39,
    "z": 177.49,
@@ -4505,7 +4603,8 @@
     "seed": 171,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3277.12,
    "z": 184.52,
@@ -4524,7 +4623,8 @@
    "id": "nw_house_072",
    "kit": "village/choga",
    "params": {
-    "seed": 172
+    "seed": 172,
+    "plan": "il"
    },
    "x": -3347.08,
    "z": 194.97,
@@ -4546,7 +4646,8 @@
     "seed": 173,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3307.68,
    "z": 195.92,
@@ -4568,7 +4669,8 @@
     "seed": 174,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3294.28,
    "z": 196.01,
@@ -4589,7 +4691,8 @@
    "params": {
     "seed": 175,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3333.23,
    "z": 198.78,
@@ -4611,7 +4714,8 @@
     "seed": 176,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3280.13,
    "z": 199.12,
@@ -4631,7 +4735,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 177,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3353.04,
    "z": 210.13,
@@ -4653,7 +4759,8 @@
     "seed": 178,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3307.75,
    "z": 211.19,
@@ -4675,7 +4782,8 @@
     "seed": 179,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3292.75,
    "z": 213.97,
@@ -4697,7 +4805,8 @@
     "seed": 180,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3278.35,
    "z": 214.61,
@@ -4717,7 +4826,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 181,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3125.65,
    "z": 215.93,
@@ -4736,7 +4847,8 @@
    "id": "nw_house_082",
    "kit": "village/choga",
    "params": {
-    "seed": 182
+    "seed": 182,
+    "plan": "il"
    },
    "x": -3113.97,
    "z": 231.49,
@@ -4756,7 +4868,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 183,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3099.64,
    "z": 242.79,
@@ -4775,7 +4889,8 @@
    "id": "nw_house_084",
    "kit": "village/choga",
    "params": {
-    "seed": 184
+    "seed": 184,
+    "plan": "il"
    },
    "x": -3113.09,
    "z": 242.74,
@@ -4795,7 +4910,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 185,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3082.79,
    "z": 245.14,
@@ -4814,7 +4931,8 @@
    "id": "nw_house_086",
    "kit": "village/choga",
    "params": {
-    "seed": 186
+    "seed": 186,
+    "plan": "il"
    },
    "x": -3365.79,
    "z": 246.3,
@@ -4834,7 +4952,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 187,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3377.72,
    "z": 260.46,
@@ -4854,7 +4974,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 188,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3395.87,
    "z": 270.04,
@@ -4876,7 +4999,8 @@
     "seed": 189,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3308.62,
    "z": 271.98,
@@ -4896,7 +5020,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 190,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3377.15,
    "z": 278.72,
@@ -4916,7 +5043,8 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 191,
-    "size": "large"
+    "size": "large",
+    "plan": "il"
    },
    "x": -3262.75,
    "z": 282.74,
@@ -4938,7 +5066,8 @@
     "seed": 192,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3165.85,
    "z": 277.59,
@@ -4958,7 +5087,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 193,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3184.33,
    "z": 281.68,
@@ -4977,7 +5108,8 @@
    "id": "nw_house_094",
    "kit": "village/choga",
    "params": {
-    "seed": 194
+    "seed": 194,
+    "plan": "il"
    },
    "x": -3153.43,
    "z": 279.82,
@@ -4996,7 +5128,8 @@
    "id": "nw_house_095",
    "kit": "village/choga",
    "params": {
-    "seed": 195
+    "seed": 195,
+    "plan": "il"
    },
    "x": -3402.76,
    "z": 284.86,
@@ -5015,7 +5148,8 @@
    "id": "nw_house_096",
    "kit": "village/choga",
    "params": {
-    "seed": 196
+    "seed": 196,
+    "plan": "il"
    },
    "x": -3309.56,
    "z": 285.36,
@@ -5034,7 +5168,8 @@
    "id": "nw_house_097",
    "kit": "village/choga",
    "params": {
-    "seed": 197
+    "seed": 197,
+    "plan": "il"
    },
    "x": -3298.16,
    "z": 284.88,
@@ -5053,7 +5188,8 @@
    "id": "nw_house_098",
    "kit": "village/choga",
    "params": {
-    "seed": 198
+    "seed": 198,
+    "plan": "il"
    },
    "x": -3286.36,
    "z": 285.35,
@@ -5075,7 +5211,8 @@
     "seed": 199,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3204.1,
    "z": 292.3,
@@ -5095,7 +5232,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 200,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3168.8,
    "z": 293.7,
@@ -5115,7 +5255,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 201,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3151.4,
    "z": 293.89,
@@ -5135,7 +5277,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 202,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3374.67,
    "z": 296.64,
@@ -5155,7 +5300,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 203,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3306.96,
    "z": 300.18,
@@ -5175,7 +5322,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 204,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3290.16,
    "z": 299.52,
@@ -5194,7 +5344,8 @@
    "id": "nw_house_105",
    "kit": "village/choga",
    "params": {
-    "seed": 205
+    "seed": 205,
+    "plan": "il"
    },
    "x": -3190.46,
    "z": 297.4,
@@ -5213,7 +5364,8 @@
    "id": "nw_house_106",
    "kit": "village/choga",
    "params": {
-    "seed": 206
+    "seed": 206,
+    "plan": "il"
    },
    "x": -3409.97,
    "z": 300.74,
@@ -5232,7 +5384,8 @@
    "id": "nw_house_107",
    "kit": "village/choga",
    "params": {
-    "seed": 207
+    "seed": 207,
+    "plan": "il"
    },
    "x": -3276.17,
    "z": 299.79,
@@ -5251,7 +5404,8 @@
    "id": "nw_house_108",
    "kit": "village/choga",
    "params": {
-    "seed": 208
+    "seed": 208,
+    "plan": "il"
    },
    "x": -3251.77,
    "z": 300.69,
@@ -5272,7 +5426,8 @@
    "params": {
     "seed": 209,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3388.58,
    "z": 306.39,
@@ -5291,7 +5446,8 @@
    "id": "nw_house_110",
    "kit": "village/choga",
    "params": {
-    "seed": 210
+    "seed": 210,
+    "plan": "il"
    },
    "x": -3329.08,
    "z": 306.25,
@@ -5310,7 +5466,8 @@
    "id": "nw_house_111",
    "kit": "village/choga",
    "params": {
-    "seed": 211
+    "seed": 211,
+    "plan": "il"
    },
    "x": -3263.88,
    "z": 306.4,
@@ -5329,7 +5486,8 @@
    "id": "nw_house_112",
    "kit": "village/choga",
    "params": {
-    "seed": 212
+    "seed": 212,
+    "plan": "il"
    },
    "x": -3192.43,
    "z": 309.24,
@@ -5348,7 +5506,8 @@
    "id": "nw_house_113",
    "kit": "village/choga",
    "params": {
-    "seed": 213
+    "seed": 213,
+    "plan": "il"
    },
    "x": -3179.23,
    "z": 309.26,
@@ -5368,7 +5527,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 214,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3164.93,
    "z": 311.97,
@@ -5387,7 +5549,8 @@
    "id": "nw_house_115",
    "kit": "village/choga",
    "params": {
-    "seed": 215
+    "seed": 215,
+    "plan": "il"
    },
    "x": -3149.23,
    "z": 309.06,
@@ -5407,7 +5570,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 216,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3276.96,
    "z": 315.01,
@@ -5426,7 +5592,8 @@
    "id": "nw_house_117",
    "kit": "village/choga",
    "params": {
-    "seed": 217
+    "seed": 217,
+    "plan": "il"
    },
    "x": -3253.06,
    "z": 312.31,
@@ -5445,7 +5612,8 @@
    "id": "nw_house_118",
    "kit": "village/choga",
    "params": {
-    "seed": 218
+    "seed": 218,
+    "plan": "il"
    },
    "x": -3309.27,
    "z": 315.47,
@@ -5466,7 +5634,8 @@
    "params": {
     "seed": 219,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3297.77,
    "z": 315.74,
@@ -5487,7 +5656,8 @@
    "params": {
     "seed": 220,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3404.02,
    "z": 318.78,
@@ -5506,7 +5676,8 @@
    "id": "nw_house_121",
    "kit": "village/choga",
    "params": {
-    "seed": 221
+    "seed": 221,
+    "plan": "il"
    },
    "x": -3330.52,
    "z": 317.88,
@@ -5526,7 +5697,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 222,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3188.44,
    "z": 323.74,
@@ -5545,7 +5719,8 @@
    "id": "nw_house_123",
    "kit": "village/choga",
    "params": {
-    "seed": 223
+    "seed": 223,
+    "plan": "il"
    },
    "x": -3150.74,
    "z": 320.71,
@@ -5564,7 +5739,8 @@
    "id": "nw_house_124",
    "kit": "village/choga",
    "params": {
-    "seed": 224
+    "seed": 224,
+    "plan": "il"
    },
    "x": -3355.08,
    "z": 324.59,
@@ -5583,7 +5759,8 @@
    "id": "nw_house_125",
    "kit": "village/choga",
    "params": {
-    "seed": 225
+    "seed": 225,
+    "plan": "il"
    },
    "x": -3263.28,
    "z": 324.83,
@@ -5602,7 +5779,8 @@
    "id": "nw_house_126",
    "kit": "village/choga",
    "params": {
-    "seed": 226
+    "seed": 226,
+    "plan": "il"
    },
    "x": -3308.97,
    "z": 327.61,
@@ -5621,7 +5799,8 @@
    "id": "nw_house_127",
    "kit": "village/choga",
    "params": {
-    "seed": 227
+    "seed": 227,
+    "plan": "il"
    },
    "x": -3251.77,
    "z": 327.81,
@@ -5640,7 +5819,8 @@
    "id": "nw_house_128",
    "kit": "village/choga",
    "params": {
-    "seed": 228
+    "seed": 228,
+    "plan": "il"
    },
    "x": -3174.37,
    "z": 327.12,
@@ -5661,7 +5841,8 @@
    "params": {
     "seed": 229,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3161.47,
    "z": 327.58,
@@ -5680,7 +5861,8 @@
    "id": "nw_house_130",
    "kit": "village/choga",
    "params": {
-    "seed": 230
+    "seed": 230,
+    "plan": "il"
    },
    "x": -3327.17,
    "z": 329.88,
@@ -5699,7 +5881,8 @@
    "id": "nw_house_131",
    "kit": "village/choga",
    "params": {
-    "seed": 231
+    "seed": 231,
+    "plan": "il"
    },
    "x": -3295.37,
    "z": 330.21,
@@ -5718,7 +5901,8 @@
    "id": "nw_house_132",
    "kit": "village/choga",
    "params": {
-    "seed": 232
+    "seed": 232,
+    "plan": "il"
    },
    "x": -3275.97,
    "z": 329.88,
@@ -5737,7 +5921,8 @@
    "id": "nw_house_133",
    "kit": "village/choga",
    "params": {
-    "seed": 233
+    "seed": 233,
+    "plan": "il"
    },
    "x": -3411.51,
    "z": 333.37,
@@ -5757,7 +5942,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 234,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3369.78,
    "z": 339.05,
@@ -5776,7 +5964,8 @@
    "id": "nw_house_135",
    "kit": "village/choga",
    "params": {
-    "seed": 235
+    "seed": 235,
+    "plan": "il"
    },
    "x": -3353.88,
    "z": 336.0,
@@ -5795,7 +5984,8 @@
    "id": "nw_house_136",
    "kit": "village/choga",
    "params": {
-    "seed": 236
+    "seed": 236,
+    "plan": "il"
    },
    "x": -3328.78,
    "z": 341.77,
@@ -5814,7 +6004,8 @@
    "id": "nw_house_137",
    "kit": "village/choga",
    "params": {
-    "seed": 237
+    "seed": 237,
+    "plan": "il"
    },
    "x": -3413.01,
    "z": 345.01,
@@ -5833,7 +6024,8 @@
    "id": "nw_house_138",
    "kit": "village/choga",
    "params": {
-    "seed": 238
+    "seed": 238,
+    "plan": "il"
    },
    "x": -3356.13,
    "z": 348.78,
@@ -5852,7 +6044,8 @@
    "id": "nw_house_139",
    "kit": "village/choga",
    "params": {
-    "seed": 239
+    "seed": 239,
+    "plan": "il"
    },
    "x": -3308.33,
    "z": 348.77,
@@ -5872,7 +6065,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 240,
-    "size": "medium"
+    "size": "medium",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3200.83,
    "z": 352.24,
@@ -5892,7 +6087,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 241,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3370.18,
    "z": 356.58,
@@ -5911,7 +6108,8 @@
    "id": "nw_house_142",
    "kit": "village/choga",
    "params": {
-    "seed": 242
+    "seed": 242,
+    "plan": "il"
    },
    "x": -3184.28,
    "z": 354.89,
@@ -5930,7 +6128,8 @@
    "id": "nw_house_143",
    "kit": "village/choga",
    "params": {
-    "seed": 243
+    "seed": 243,
+    "plan": "il"
    },
    "x": -3296.32,
    "z": 357.74,
@@ -5949,7 +6148,8 @@
    "id": "nw_house_144",
    "kit": "village/choga",
    "params": {
-    "seed": 244
+    "seed": 244,
+    "plan": "il"
    },
    "x": -3355.15,
    "z": 360.42,
@@ -5969,7 +6169,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 245,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3201.16,
    "z": 371.24,
@@ -5988,7 +6190,8 @@
    "id": "nw_house_146",
    "kit": "village/choga",
    "params": {
-    "seed": 246
+    "seed": 246,
+    "plan": "il"
    },
    "x": -3187.26,
    "z": 369.88,
@@ -6007,7 +6210,8 @@
    "id": "nw_house_147",
    "kit": "village/choga",
    "params": {
-    "seed": 247
+    "seed": 247,
+    "plan": "il"
    },
    "x": -3374.72,
    "z": 372.3,
@@ -6026,7 +6230,8 @@
    "id": "nw_house_148",
    "kit": "village/choga",
    "params": {
-    "seed": 248
+    "seed": 248,
+    "plan": "il"
    },
    "x": -3362.92,
    "z": 372.84,
@@ -6045,7 +6250,8 @@
    "id": "nw_house_149",
    "kit": "village/choga",
    "params": {
-    "seed": 249
+    "seed": 249,
+    "plan": "il"
    },
    "x": -3185.5,
    "z": 381.66,
@@ -6064,7 +6270,8 @@
    "id": "nw_house_150",
    "kit": "village/choga",
    "params": {
-    "seed": 250
+    "seed": 250,
+    "plan": "il"
    },
    "x": -3359.73,
    "z": 384.49,
@@ -6083,7 +6290,8 @@
    "id": "nw_house_151",
    "kit": "village/choga",
    "params": {
-    "seed": 251
+    "seed": 251,
+    "plan": "il"
    },
    "x": -3347.33,
    "z": 384.28,
@@ -6102,7 +6310,8 @@
    "id": "nw_house_152",
    "kit": "village/choga",
    "params": {
-    "seed": 252
+    "seed": 252,
+    "plan": "il"
    },
    "x": -3203.82,
    "z": 387.19,
@@ -6121,7 +6330,8 @@
    "id": "nw_house_153",
    "kit": "village/choga",
    "params": {
-    "seed": 253
+    "seed": 253,
+    "plan": "il"
    },
    "x": -3345.01,
    "z": 396.19,
@@ -6141,7 +6351,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 254,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3198.35,
    "z": 401.41,
@@ -6160,7 +6373,8 @@
    "id": "nw_house_155",
    "kit": "village/choga",
    "params": {
-    "seed": 255
+    "seed": 255,
+    "plan": "il"
    },
    "x": -3257.99,
    "z": 414.8,
@@ -6181,7 +6395,8 @@
    "params": {
     "seed": 256,
     "w": 5.4,
-    "gourd": true
+    "gourd": true,
+    "plan": "il"
    },
    "x": -3201.03,
    "z": 417.52,
@@ -6201,7 +6416,9 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 257,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il"
    },
    "x": -3209.2,
    "z": 432.01,
@@ -6221,7 +6438,10 @@
    "kit": "village/house_compound",
    "params": {
     "seed": 258,
-    "size": "small"
+    "size": "small",
+    "wall": "todam",
+    "plan": "il",
+    "roof": "giwa"
    },
    "x": -3212.99,
    "z": 449.82,
@@ -6240,7 +6460,8 @@
    "id": "nw_house_159",
    "kit": "village/choga",
    "params": {
-    "seed": 259
+    "seed": 259,
+    "plan": "il"
    },
    "x": -3127.1,
    "z": 228.8,
@@ -6259,7 +6480,8 @@
    "id": "nw_house_160",
    "kit": "village/choga",
    "params": {
-    "seed": 260
+    "seed": 260,
+    "plan": "il"
    },
    "x": -3031.52,
    "z": 251.99,
@@ -6281,7 +6503,8 @@
     "seed": 261,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3211.8,
    "z": 329.5,
@@ -6363,7 +6586,8 @@
     "seed": 262,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3211.8,
    "z": 168.1,
@@ -6385,7 +6609,8 @@
     "seed": 263,
     "plain": true,
     "w": 7.2,
-    "bays": 3
+    "bays": 3,
+    "plan": "il"
    },
    "x": -3308.5,
    "z": 232.8,
@@ -6464,7 +6689,8 @@
    "id": "nw_house_164",
    "kit": "village/choga",
    "params": {
-    "seed": 264
+    "seed": 264,
+    "plan": "il"
    },
    "x": -3334.05,
    "z": 209.03,
@@ -7904,7 +8130,7 @@
    "kit": "village/wall_run",
    "params": {
     "seed": 801,
-    "kind": "stone_lite",
+    "kind": "todam_tile",
     "points": [
      [
       0.0,
@@ -7941,7 +8167,7 @@
    "kit": "village/wall_run",
    "params": {
     "seed": 802,
-    "kind": "stone_lite",
+    "kind": "todam_tile",
     "points": [
      [
       0.0,
@@ -7974,7 +8200,7 @@
    "kit": "village/wall_run",
    "params": {
     "seed": 803,
-    "kind": "stone_lite",
+    "kind": "todam_tile",
     "points": [
      [
       0.0,
@@ -8007,7 +8233,7 @@
    "kit": "village/wall_run",
    "params": {
     "seed": 804,
-    "kind": "fence_lite",
+    "kind": "stone_lite",
     "points": [
      [
       0.0,
@@ -8040,36 +8266,40 @@
    "kit": "village/wall_run",
    "params": {
     "seed": 805,
-    "kind": "stone_lite",
+    "kind": "todam_thatch",
     "points": [
      [
       0.0,
       0.0
      ],
      [
-      2.14,
-      2.1
+      3.0,
+      -0.01
      ],
      [
-      4.28,
-      4.21
+      6.0,
+      -0.03
      ],
      [
-      6.42,
-      6.31
+      9.0,
+      -0.04
      ],
      [
-      8.56,
-      8.41
+      12.0,
+      -0.06
      ],
      [
-      10.69,
-      10.52
+      15.0,
+      -0.07
+     ],
+     [
+      16.0,
+      -0.08
      ]
     ]
    },
-   "x": 665.11,
-   "z": -799.65,
+   "x": 759.48,
+   "z": -724.0,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8113,8 +8343,8 @@
      ]
     ]
    },
-   "x": 759.48,
-   "z": -724.0,
+   "x": 779.48,
+   "z": -724.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8126,51 +8356,6 @@
    "kit": "village/wall_run",
    "params": {
     "seed": 807,
-    "kind": "fence_lite",
-    "points": [
-     [
-      0.0,
-      0.0
-     ],
-     [
-      3.0,
-      -0.01
-     ],
-     [
-      6.0,
-      -0.03
-     ],
-     [
-      9.0,
-      -0.04
-     ],
-     [
-      12.0,
-      -0.06
-     ],
-     [
-      15.0,
-      -0.07
-     ],
-     [
-      16.0,
-      -0.08
-     ]
-    ]
-   },
-   "x": 779.48,
-   "z": -724.1,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 담)"
-  },
-  {
-   "id": "nw_wallrun_008",
-   "kit": "village/wall_run",
-   "params": {
-    "seed": 808,
     "kind": "stone_lite",
     "points": [
      [
@@ -8200,11 +8385,11 @@
    "group": "남원 읍내(길가 담)"
   },
   {
-   "id": "nw_wallrun_009",
+   "id": "nw_wallrun_008",
    "kit": "village/wall_run",
    "params": {
-    "seed": 809,
-    "kind": "fence_lite",
+    "seed": 808,
+    "kind": "todam_thatch",
     "points": [
      [
       0.0,
@@ -8237,10 +8422,10 @@
    "group": "남원 읍내(길가 담)"
   },
   {
-   "id": "nw_wallrun_010",
+   "id": "nw_wallrun_009",
    "kit": "village/wall_run",
    "params": {
-    "seed": 810,
+    "seed": 809,
     "kind": "stone_lite",
     "points": [
      [
@@ -8274,11 +8459,11 @@
    "group": "남원 읍내(길가 담)"
   },
   {
-   "id": "nw_wallrun_011",
+   "id": "nw_wallrun_010",
    "kit": "village/wall_run",
    "params": {
-    "seed": 811,
-    "kind": "stone_lite",
+    "seed": 810,
+    "kind": "todam_thatch",
     "points": [
      [
       0.0,
@@ -8300,6 +8485,47 @@
    },
    "x": -1262.67,
    "z": -229.04,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 담)"
+  },
+  {
+   "id": "nw_wallrun_011",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 811,
+    "kind": "todam_thatch",
+    "points": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      2.13,
+      -2.11
+     ],
+     [
+      4.27,
+      -4.22
+     ],
+     [
+      6.4,
+      -6.33
+     ],
+     [
+      8.53,
+      -8.44
+     ],
+     [
+      10.66,
+      -10.55
+     ]
+    ]
+   },
+   "x": -1254.84,
+   "z": -236.34,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8339,8 +8565,8 @@
      ]
     ]
    },
-   "x": -1254.84,
-   "z": -236.34,
+   "x": -1242.76,
+   "z": -248.3,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8353,47 +8579,6 @@
    "params": {
     "seed": 813,
     "kind": "todam_thatch",
-    "points": [
-     [
-      0.0,
-      0.0
-     ],
-     [
-      2.13,
-      -2.11
-     ],
-     [
-      4.27,
-      -4.22
-     ],
-     [
-      6.4,
-      -6.33
-     ],
-     [
-      8.53,
-      -8.44
-     ],
-     [
-      10.66,
-      -10.55
-     ]
-    ]
-   },
-   "x": -1242.76,
-   "z": -248.3,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 담)"
-  },
-  {
-   "id": "nw_wallrun_014",
-   "kit": "village/wall_run",
-   "params": {
-    "seed": 814,
-    "kind": "stone_lite",
     "points": [
      [
       0.0,
@@ -8422,48 +8607,11 @@
    "group": "남원 읍내(길가 담)"
   },
   {
-   "id": "nw_wallrun_015",
+   "id": "nw_wallrun_014",
    "kit": "village/wall_run",
    "params": {
-    "seed": 815,
-    "kind": "stone_lite",
-    "points": [
-     [
-      0.0,
-      0.0
-     ],
-     [
-      2.14,
-      2.1
-     ],
-     [
-      4.28,
-      4.21
-     ],
-     [
-      6.42,
-      6.31
-     ],
-     [
-      7.13,
-      7.01
-     ]
-    ]
-   },
-   "x": 663.76,
-   "z": -791.16,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 담)"
-  },
-  {
-   "id": "nw_wallrun_016",
-   "kit": "village/wall_run",
-   "params": {
-    "seed": 816,
-    "kind": "stone_lite",
+    "seed": 814,
+    "kind": "todam_thatch",
     "points": [
      [
       0.0,
@@ -8496,11 +8644,11 @@
    "group": "남원 읍내(길가 담)"
   },
   {
-   "id": "nw_wallrun_017",
+   "id": "nw_wallrun_015",
    "kit": "village/wall_run",
    "params": {
-    "seed": 817,
-    "kind": "todam_thatch",
+    "seed": 815,
+    "kind": "todam_tile",
     "points": [
      [
       0.0,
@@ -8541,11 +8689,11 @@
    "group": "남원 읍내(길가 담)"
   },
   {
-   "id": "nw_wallrun_018",
+   "id": "nw_wallrun_016",
    "kit": "village/wall_run",
    "params": {
-    "seed": 818,
-    "kind": "stone_lite",
+    "seed": 816,
+    "kind": "todam_thatch",
     "points": [
      [
       0.0,
@@ -8578,10 +8726,10 @@
    "kit": "village/props",
    "params": {
     "seed": 501,
-    "kind": "dok"
+    "kind": "jeolgu"
    },
-   "x": -3090.51,
-   "z": 280.17,
+   "x": -3077.68,
+   "z": 269.61,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8595,8 +8743,8 @@
     "seed": 502,
     "kind": "byeotdan"
    },
-   "x": -3074.3,
-   "z": 277.45,
+   "x": -3063.28,
+   "z": 272.69,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8610,8 +8758,8 @@
     "seed": 503,
     "load": "wood"
    },
-   "x": -3052.25,
-   "z": 265.39,
+   "x": -3043.45,
+   "z": 257.23,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8625,8 +8773,8 @@
     "seed": 504,
     "kind": "pyeongsang"
    },
-   "x": -3043.61,
-   "z": 257.06,
+   "x": -3022.26,
+   "z": 241.15,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8638,10 +8786,10 @@
    "kit": "village/props",
    "params": {
     "seed": 505,
-    "kind": "pyeongsang"
+    "kind": "dok"
    },
-   "x": -3040.1,
-   "z": 243.2,
+   "x": -2735.22,
+   "z": 107.9,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8653,10 +8801,10 @@
    "kit": "village/props",
    "params": {
     "seed": 506,
-    "kind": "jeolgu"
+    "kind": "dok"
    },
-   "x": -3035.6,
-   "z": 239.23,
+   "x": -2255.96,
+   "z": -124.6,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8668,10 +8816,10 @@
    "kit": "village/props",
    "params": {
     "seed": 507,
-    "kind": "pyeongsang"
+    "kind": "dok"
    },
-   "x": -3025.94,
-   "z": 240.81,
+   "x": -2202.45,
+   "z": -156.63,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8685,8 +8833,8 @@
     "seed": 508,
     "kind": "pyeongsang"
    },
-   "x": -3022.29,
-   "z": 240.95,
+   "x": -2192.97,
+   "z": -154.31,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8698,51 +8846,6 @@
    "kit": "village/props",
    "params": {
     "seed": 509,
-    "kind": "byeotdan"
-   },
-   "x": -2237.75,
-   "z": -132.83,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_010",
-   "kit": "village/props",
-   "params": {
-    "seed": 510,
-    "kind": "dok"
-   },
-   "x": -2202.45,
-   "z": -156.63,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_011",
-   "kit": "village/props",
-   "params": {
-    "seed": 511,
-    "kind": "pyeongsang"
-   },
-   "x": -2192.97,
-   "z": -154.31,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_012",
-   "kit": "village/props",
-   "params": {
-    "seed": 512,
     "kind": "pyeongsang"
    },
    "x": -2178.23,
@@ -8754,10 +8857,10 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_013",
+   "id": "nw_prop_010",
    "kit": "village/props",
    "params": {
-    "seed": 513,
+    "seed": 510,
     "kind": "pyeongsang"
    },
    "x": -1366.72,
@@ -8769,10 +8872,10 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_014",
+   "id": "nw_prop_011",
    "kit": "village/props",
    "params": {
-    "seed": 514,
+    "seed": 511,
     "kind": "byeotdan"
    },
    "x": -1362.05,
@@ -8784,10 +8887,10 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_015",
+   "id": "nw_prop_012",
    "kit": "village/props",
    "params": {
-    "seed": 515,
+    "seed": 512,
     "kind": "byeotdan"
    },
    "x": -1356.52,
@@ -8799,14 +8902,59 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_016",
+   "id": "nw_prop_013",
    "kit": "village/props",
    "params": {
-    "seed": 516,
+    "seed": 513,
     "kind": "dok"
    },
    "x": -1346.68,
    "z": -198.94,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_014",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 514,
+    "style": "stack"
+   },
+   "x": -1346.97,
+   "z": -208.55,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_015",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 515,
+    "style": "stack"
+   },
+   "x": -1318.22,
+   "z": -216.52,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_016",
+   "kit": "village/jige",
+   "params": {
+    "seed": 516,
+    "load": "wood"
+   },
+   "x": -1296.43,
+   "z": -215.47,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8820,8 +8968,8 @@
     "seed": 517,
     "style": "stack"
    },
-   "x": -1346.97,
-   "z": -208.55,
+   "x": -1273.38,
+   "z": -221.63,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8830,13 +8978,13 @@
   },
   {
    "id": "nw_prop_018",
-   "kit": "village/firewood",
+   "kit": "village/props",
    "params": {
     "seed": 518,
-    "style": "stack"
+    "kind": "jeolgu"
    },
-   "x": -1318.22,
-   "z": -216.52,
+   "x": -1228.17,
+   "z": -273.37,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8845,13 +8993,13 @@
   },
   {
    "id": "nw_prop_019",
-   "kit": "village/jige",
+   "kit": "village/props",
    "params": {
     "seed": 519,
-    "load": "wood"
+    "kind": "byeotdan"
    },
-   "x": -1296.43,
-   "z": -215.47,
+   "x": -1189.39,
+   "z": -304.61,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8865,8 +9013,8 @@
     "seed": 520,
     "style": "stack"
    },
-   "x": -1273.38,
-   "z": -221.63,
+   "x": -1184.8,
+   "z": -308.47,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8878,10 +9026,10 @@
    "kit": "village/props",
    "params": {
     "seed": 521,
-    "kind": "jeolgu"
+    "kind": "dok"
    },
-   "x": -1228.17,
-   "z": -273.37,
+   "x": -1164.13,
+   "z": -316.55,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8890,13 +9038,13 @@
   },
   {
    "id": "nw_prop_022",
-   "kit": "village/props",
+   "kit": "village/firewood",
    "params": {
     "seed": 522,
-    "kind": "byeotdan"
+    "style": "stack"
    },
-   "x": -1189.39,
-   "z": -304.61,
+   "x": -1156.96,
+   "z": -310.65,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8910,8 +9058,8 @@
     "seed": 523,
     "style": "stack"
    },
-   "x": -1184.8,
-   "z": -308.47,
+   "x": 801.09,
+   "z": -717.4,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -8923,66 +9071,6 @@
    "kit": "village/props",
    "params": {
     "seed": 524,
-    "kind": "dok"
-   },
-   "x": -1164.13,
-   "z": -316.55,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_025",
-   "kit": "village/firewood",
-   "params": {
-    "seed": 525,
-    "style": "stack"
-   },
-   "x": -1156.96,
-   "z": -310.65,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_026",
-   "kit": "village/jige",
-   "params": {
-    "seed": 526,
-    "load": "wood"
-   },
-   "x": 678.11,
-   "z": -758.29,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_027",
-   "kit": "village/firewood",
-   "params": {
-    "seed": 527,
-    "style": "stack"
-   },
-   "x": 801.09,
-   "z": -717.4,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_028",
-   "kit": "village/props",
-   "params": {
-    "seed": 528,
     "kind": "pyeongsang"
    },
    "x": 806.58,
@@ -8994,10 +9082,10 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_029",
+   "id": "nw_prop_025",
    "kit": "village/props",
    "params": {
-    "seed": 529,
+    "seed": 525,
     "kind": "meongseok"
    },
    "x": 773.91,
@@ -9009,10 +9097,10 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_030",
+   "id": "nw_prop_026",
    "kit": "village/props",
    "params": {
-    "seed": 530,
+    "seed": 526,
     "kind": "jeolgu"
    },
    "x": 750.01,
@@ -9024,14 +9112,74 @@
    "group": "남원 읍내(길가 소품)"
   },
   {
-   "id": "nw_prop_031",
+   "id": "nw_prop_027",
    "kit": "village/props",
    "params": {
-    "seed": 531,
+    "seed": 527,
     "kind": "pyeongsang"
    },
-   "x": 703.68,
-   "z": -788.99,
+   "x": 1157.57,
+   "z": -1187.97,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_028",
+   "kit": "village/props",
+   "params": {
+    "seed": 528,
+    "kind": "jeolgu"
+   },
+   "x": 1169.42,
+   "z": -1196.39,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_029",
+   "kit": "village/props",
+   "params": {
+    "seed": 529,
+    "kind": "byeotdan"
+   },
+   "x": 1576.36,
+   "z": -1339.72,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_030",
+   "kit": "village/props",
+   "params": {
+    "seed": 530,
+    "kind": "dok"
+   },
+   "x": 1608.15,
+   "z": -1337.24,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "남원 읍내(길가 소품)"
+  },
+  {
+   "id": "nw_prop_031",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 531,
+    "style": "stack"
+   },
+   "x": 1616.99,
+   "z": -1329.12,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9043,10 +9191,10 @@
    "kit": "village/props",
    "params": {
     "seed": 532,
-    "kind": "byeotdan"
+    "kind": "meongseok"
    },
-   "x": 703.98,
-   "z": -807.92,
+   "x": 1620.53,
+   "z": -1315.23,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9055,13 +9203,13 @@
   },
   {
    "id": "nw_prop_033",
-   "kit": "village/jige",
+   "kit": "village/props",
    "params": {
     "seed": 533,
-    "load": "wood"
+    "kind": "pyeongsang"
    },
-   "x": 716.16,
-   "z": -856.51,
+   "x": 1632.14,
+   "z": -1332.39,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9070,13 +9218,13 @@
   },
   {
    "id": "nw_prop_034",
-   "kit": "village/jige",
+   "kit": "village/props",
    "params": {
     "seed": 534,
-    "load": "wood"
+    "kind": "jeolgu"
    },
-   "x": 720.19,
-   "z": -901.97,
+   "x": 1627.68,
+   "z": -1346.94,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9088,10 +9236,10 @@
    "kit": "village/props",
    "params": {
     "seed": 535,
-    "kind": "jeolgu"
+    "kind": "pyeongsang"
    },
-   "x": 714.1,
-   "z": -921.8,
+   "x": 1636.19,
+   "z": -1352.44,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9105,8 +9253,8 @@
     "seed": 536,
     "load": "wood"
    },
-   "x": 1150.7,
-   "z": -1186.93,
+   "x": 2542.78,
+   "z": -1500.32,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9118,10 +9266,10 @@
    "kit": "village/props",
    "params": {
     "seed": 537,
-    "kind": "byeotdan"
+    "kind": "dok"
    },
-   "x": 1163.42,
-   "z": -1196.29,
+   "x": 2618.08,
+   "z": -1479.64,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9135,8 +9283,8 @@
     "seed": 538,
     "kind": "byeotdan"
    },
-   "x": 1184.77,
-   "z": -1200.16,
+   "x": 2627.98,
+   "z": -1479.83,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9145,13 +9293,13 @@
   },
   {
    "id": "nw_prop_039",
-   "kit": "village/props",
+   "kit": "village/firewood",
    "params": {
     "seed": 539,
-    "kind": "dok"
+    "style": "stack"
    },
-   "x": 1608.15,
-   "z": -1337.24,
+   "x": 2641.51,
+   "z": -1475.35,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9160,13 +9308,13 @@
   },
   {
    "id": "nw_prop_040",
-   "kit": "village/firewood",
+   "kit": "village/jige",
    "params": {
     "seed": 540,
-    "style": "stack"
+    "load": "wood"
    },
-   "x": 1616.99,
-   "z": -1329.12,
+   "x": 2655.99,
+   "z": -1477.21,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9180,8 +9328,8 @@
     "seed": 541,
     "kind": "meongseok"
    },
-   "x": 1620.53,
-   "z": -1315.23,
+   "x": 2674.7,
+   "z": -1476.4,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9190,13 +9338,13 @@
   },
   {
    "id": "nw_prop_042",
-   "kit": "village/props",
+   "kit": "village/firewood",
    "params": {
     "seed": 542,
-    "kind": "pyeongsang"
+    "style": "stack"
    },
-   "x": 1632.14,
-   "z": -1332.39,
+   "x": 2680.7,
+   "z": -1476.39,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9205,13 +9353,13 @@
   },
   {
    "id": "nw_prop_043",
-   "kit": "village/props",
+   "kit": "village/jige",
    "params": {
     "seed": 543,
-    "kind": "jeolgu"
+    "load": "wood"
    },
-   "x": 1627.68,
-   "z": -1346.94,
+   "x": 2811.03,
+   "z": -1480.42,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9223,10 +9371,10 @@
    "kit": "village/props",
    "params": {
     "seed": 544,
-    "kind": "pyeongsang"
+    "kind": "dok"
    },
-   "x": 1636.19,
-   "z": -1352.44,
+   "x": 2840.67,
+   "z": -1484.02,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9235,13 +9383,13 @@
   },
   {
    "id": "nw_prop_045",
-   "kit": "village/props",
+   "kit": "village/jige",
    "params": {
     "seed": 545,
-    "kind": "byeotdan"
+    "load": "wood"
    },
-   "x": 2624.09,
-   "z": -1479.88,
+   "x": 2882.67,
+   "z": -1484.04,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9250,13 +9398,13 @@
   },
   {
    "id": "nw_prop_046",
-   "kit": "village/firewood",
+   "kit": "village/props",
    "params": {
     "seed": 546,
-    "style": "stack"
+    "kind": "meongseok"
    },
-   "x": 2668.7,
-   "z": -1467.99,
+   "x": 2897.32,
+   "z": -1479.71,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9265,13 +9413,13 @@
   },
   {
    "id": "nw_prop_047",
-   "kit": "village/jige",
+   "kit": "village/firewood",
    "params": {
     "seed": 547,
-    "load": "wood"
+    "style": "stack"
    },
-   "x": 2680.7,
-   "z": -1476.31,
+   "x": 2913.96,
+   "z": -1488.05,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9283,10 +9431,10 @@
    "kit": "village/props",
    "params": {
     "seed": 548,
-    "kind": "meongseok"
+    "kind": "dok"
    },
-   "x": 2704.7,
-   "z": -1476.4,
+   "x": -3246.32,
+   "z": 86.55,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9295,13 +9443,13 @@
   },
   {
    "id": "nw_prop_049",
-   "kit": "village/firewood",
+   "kit": "village/props",
    "params": {
     "seed": 549,
-    "style": "stack"
+    "kind": "jeolgu"
    },
-   "x": 2710.7,
-   "z": -1476.39,
+   "x": -3220.58,
+   "z": -85.86,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9313,10 +9461,10 @@
    "kit": "village/props",
    "params": {
     "seed": 550,
-    "kind": "jeolgu"
+    "kind": "dok"
    },
-   "x": 2811.36,
-   "z": -1471.91,
+   "x": -3224.61,
+   "z": 255.5,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9325,13 +9473,13 @@
   },
   {
    "id": "nw_prop_051",
-   "kit": "village/props",
+   "kit": "village/jige",
    "params": {
     "seed": 551,
-    "kind": "jeolgu"
+    "load": "wood"
    },
-   "x": 2821.76,
-   "z": -1482.02,
+   "x": -3221.8,
+   "z": 172.34,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9340,13 +9488,13 @@
   },
   {
    "id": "nw_prop_052",
-   "kit": "village/jige",
+   "kit": "village/props",
    "params": {
     "seed": 552,
-    "load": "wood"
+    "kind": "pyeongsang"
    },
-   "x": 2840.67,
-   "z": -1484.24,
+   "x": -3197.8,
+   "z": 172.89,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9358,10 +9506,10 @@
    "kit": "village/props",
    "params": {
     "seed": 553,
-    "kind": "dok"
+    "kind": "pyeongsang"
    },
-   "x": 2882.67,
-   "z": -1484.32,
+   "x": -3191.8,
+   "z": 179.65,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9370,13 +9518,13 @@
   },
   {
    "id": "nw_prop_054",
-   "kit": "village/props",
+   "kit": "village/jige",
    "params": {
     "seed": 554,
-    "kind": "meongseok"
+    "load": "wood"
    },
-   "x": 2891.42,
-   "z": -1478.51,
+   "x": -3189.33,
+   "z": 182.0,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9388,10 +9536,10 @@
    "kit": "village/props",
    "params": {
     "seed": 555,
-    "kind": "dok"
+    "kind": "byeotdan"
    },
-   "x": -3239.57,
-   "z": 95.35,
+   "x": -3189.43,
+   "z": 218.0,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9405,8 +9553,8 @@
     "seed": 556,
     "kind": "dok"
    },
-   "x": -3222.05,
-   "z": 59.97,
+   "x": -3312.5,
+   "z": 245.89,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9418,10 +9566,10 @@
    "kit": "village/props",
    "params": {
     "seed": 557,
-    "kind": "byeotdan"
+    "kind": "dok"
    },
-   "x": -3213.96,
-   "z": -81.73,
+   "x": -3282.5,
+   "z": 245.62,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9433,10 +9581,10 @@
    "kit": "village/props",
    "params": {
     "seed": 558,
-    "kind": "pyeongsang"
+    "kind": "jeolgu"
    },
-   "x": -3210.95,
-   "z": -86.92,
+   "x": -3270.5,
+   "z": 252.35,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9448,10 +9596,10 @@
    "kit": "village/props",
    "params": {
     "seed": 559,
-    "kind": "jeolgu"
+    "kind": "pyeongsang"
    },
-   "x": -3212.12,
-   "z": -103.66,
+   "x": -3258.5,
+   "z": 245.81,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9463,10 +9611,10 @@
    "kit": "village/props",
    "params": {
     "seed": 560,
-    "kind": "pyeongsang"
+    "kind": "byeotdan"
    },
-   "x": -3224.03,
-   "z": 333.5,
+   "x": -3252.5,
+   "z": 252.15,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9478,10 +9626,10 @@
    "kit": "village/props",
    "params": {
     "seed": 561,
-    "kind": "dok"
+    "kind": "meongseok"
    },
-   "x": -3230.99,
-   "z": 170.1,
+   "x": -3222.5,
+   "z": 252.09,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9493,10 +9641,10 @@
    "kit": "village/props",
    "params": {
     "seed": 562,
-    "kind": "dok"
+    "kind": "pyeongsang"
    },
-   "x": -3221.8,
-   "z": 172.32,
+   "x": -3198.5,
+   "z": 252.58,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9505,13 +9653,13 @@
   },
   {
    "id": "nw_prop_063",
-   "kit": "village/jige",
+   "kit": "village/props",
    "params": {
     "seed": 563,
-    "load": "wood"
+    "kind": "pyeongsang"
    },
-   "x": -3191.8,
-   "z": 172.34,
+   "x": -3180.5,
+   "z": 252.22,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9525,8 +9673,8 @@
     "seed": 564,
     "kind": "jeolgu"
    },
-   "x": -3188.99,
-   "z": 188.0,
+   "x": -3156.5,
+   "z": 251.99,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9535,13 +9683,13 @@
   },
   {
    "id": "nw_prop_065",
-   "kit": "village/props",
+   "kit": "village/firewood",
    "params": {
     "seed": 565,
-    "kind": "pyeongsang"
+    "style": "stack"
    },
-   "x": -3189.45,
-   "z": 200.0,
+   "x": -3150.5,
+   "z": 245.09,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -9550,268 +9698,13 @@
   },
   {
    "id": "nw_prop_066",
-   "kit": "village/firewood",
+   "kit": "village/jige",
    "params": {
     "seed": 566,
-    "style": "stack"
-   },
-   "x": -3189.32,
-   "z": 206.0,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_067",
-   "kit": "village/jige",
-   "params": {
-    "seed": 567,
     "load": "wood"
    },
-   "x": -3189.33,
-   "z": 212.0,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_068",
-   "kit": "village/jige",
-   "params": {
-    "seed": 568,
-    "load": "wood"
-   },
-   "x": -3182.32,
-   "z": 242.0,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_069",
-   "kit": "village/props",
-   "params": {
-    "seed": 569,
-    "kind": "meongseok"
-   },
-   "x": -3300.5,
-   "z": 252.57,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_070",
-   "kit": "village/props",
-   "params": {
-    "seed": 570,
-    "kind": "jeolgu"
-   },
-   "x": -3294.5,
-   "z": 251.76,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_071",
-   "kit": "village/props",
-   "params": {
-    "seed": 571,
-    "kind": "byeotdan"
-   },
-   "x": -3288.5,
-   "z": 245.46,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_072",
-   "kit": "village/props",
-   "params": {
-    "seed": 572,
-    "kind": "dok"
-   },
-   "x": -3282.5,
-   "z": 245.89,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_073",
-   "kit": "village/firewood",
-   "params": {
-    "seed": 573,
-    "style": "stack"
-   },
-   "x": -3270.5,
-   "z": 245.47,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_074",
-   "kit": "village/props",
-   "params": {
-    "seed": 574,
-    "kind": "dok"
-   },
-   "x": -3252.5,
-   "z": 245.62,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_075",
-   "kit": "village/props",
-   "params": {
-    "seed": 575,
-    "kind": "byeotdan"
-   },
-   "x": -3222.5,
-   "z": 252.15,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_076",
-   "kit": "village/props",
-   "params": {
-    "seed": 576,
-    "kind": "pyeongsang"
-   },
-   "x": -3204.5,
-   "z": 252.37,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_077",
-   "kit": "village/props",
-   "params": {
-    "seed": 577,
-    "kind": "meongseok"
-   },
-   "x": -3192.5,
-   "z": 252.09,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_078",
-   "kit": "village/props",
-   "params": {
-    "seed": 578,
-    "kind": "meongseok"
-   },
-   "x": -3180.5,
-   "z": 245.8,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_079",
-   "kit": "village/props",
-   "params": {
-    "seed": 579,
-    "kind": "pyeongsang"
-   },
-   "x": -3168.5,
-   "z": 252.58,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_080",
-   "kit": "village/props",
-   "params": {
-    "seed": 580,
-    "kind": "pyeongsang"
-   },
-   "x": -3150.5,
-   "z": 252.22,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_081",
-   "kit": "village/props",
-   "params": {
-    "seed": 581,
-    "kind": "byeotdan"
-   },
-   "x": -3311.12,
-   "z": 372.22,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_082",
-   "kit": "village/jige",
-   "params": {
-    "seed": 582,
-    "load": "wood"
-   },
-   "x": -3344.57,
-   "z": 300.91,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "남원 읍내(길가 소품)"
-  },
-  {
-   "id": "nw_prop_083",
-   "kit": "village/jige",
-   "params": {
-    "seed": 583,
-    "load": "wood"
-   },
-   "x": -3344.26,
-   "z": 282.72,
+   "x": -3344.01,
+   "z": 270.72,
    "ry": 0.0,
    "y": null,
    "flatten": false,

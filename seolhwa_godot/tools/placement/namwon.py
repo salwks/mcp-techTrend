@@ -347,14 +347,26 @@ def place_landmarks(P, R, rng):
 
 
 # ─────────────────────────────── 민가 ───────────────────────────────
+# 고을 성격표(region.json namwon_eup.profile → eupchi): 기와+초가, 토담, 남부 一자 홑집(plan il)
+import town_profile as _PR
+STYLE = _PR.resolve(json.load(open(os.path.join(RDIR, "region.json"))), "namwon_eup")
+_PL = {"plan": STYLE.plan} if STYLE.plan else {}
+_WL = {"wall": STYLE.wall} if STYLE.wall != "todam" else {}
 HOUSE = {
-    "large": ("village/house_compound", lambda s: {"seed": s, "size": "large"}, ("village/house_compound", "large")),
-    "medium": ("village/house_compound", lambda s: {"seed": s, "size": "medium"}, ("village/house_compound", "medium")),
-    "small": ("village/house_compound", lambda s: {"seed": s, "size": "small"}, ("village/house_compound", "small")),
-    "giwa": ("village/giwa", lambda s: {"seed": s, "plain": True, "w": 7.2, "bays": 3}, ("village/giwa", "plain")),
-    "choga": ("village/choga", lambda s: {"seed": s}, ("village/choga", None)),
-    "choga_gourd": ("village/choga", lambda s: {"seed": s, "w": 5.4, "gourd": True}, ("village/choga", "gourd")),
+    "large": ("village/house_compound", lambda s: {"seed": s, "size": "large", **_PL}, ("village/house_compound", "large")),
+    # 묶음 둘에 하나는 기와 안채(읍치 기와 비율 ~0.4 — 묶음 크기는 그대로라 자리·밀도는 안 바뀐다)
+    "medium": ("village/house_compound", lambda s: {"seed": s, "size": "medium", **_PL, **_WL, **({"roof": "giwa"} if s % 2 == 0 else {})},
+               ("village/house_compound", "medium")),
+    "small": ("village/house_compound", lambda s: {"seed": s, "size": "small", "wall": STYLE.wall, **_PL, **({"roof": "giwa"} if s % 2 == 0 else {})},
+              ("village/house_compound", "small")),
+    "giwa": ("village/giwa", lambda s: {"seed": s, "plain": True, "w": 7.2, "bays": 3, **_PL}, ("village/giwa", "plain")),
+    "choga": ("village/choga", lambda s: {"seed": s, **_PL}, ("village/choga", None)),
+    "choga_gourd": ("village/choga", lambda s: {"seed": s, "w": 5.4, "gourd": True, **_PL}, ("village/choga", "gourd")),
 }
+# 길가 담 재료(성격표 wall): 넷 중 하나 고르기(난수 소비 수는 그대로)
+ROADWALL = {"todam": ["todam_thatch", "todam_tile", "todam_thatch", "stone_lite"],
+            "stone": ["stone_lite", "stone_lite", "todam_thatch", "stone_lite"],
+            "fence": ["fence_lite", "fence_lite", "stone_lite", "fence_lite"]}.get(STYLE.wall, ["stone_lite", "stone_lite", "todam_thatch", "fence_lite"])
 # 단독 초가·기와는 마당·장독 자리까지 조금 넓게(겹침 검사용)
 APRON = {"choga": (1.6, 3.0), "choga_gourd": (1.6, 3.0), "giwa": (1.0, 3.0)}
 W_IN = {"large": 3, "medium": 4, "giwa": 3, "small": 2, "choga": 2}
@@ -875,7 +887,7 @@ def place_fill(P, R, rng, houses):
                         if pl[-1] != [round(part[-1][0] - ox, 2), round(part[-1][1] - oz, 2)]:
                             pl.append([round(part[-1][0] - ox, 2), round(part[-1][1] - oz, 2)])
                         s["길가담"] += 1
-                        kind = rng2.choice(["stone_lite", "stone_lite", "todam_thatch", "fence_lite"])
+                        kind = rng2.choice(ROADWALL)
                         rects = []
                         for q in range(len(pl) - 1):
                             ax_, az_ = pl[q]; bx_, bz_ = pl[q + 1]
