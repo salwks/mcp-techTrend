@@ -1,4 +1,4 @@
-"""자동 QA (계획서 §6 중 데이터로 가능한 것): H(높이맵 범위·형식), Q1, Q2, Q4(덤), Q5, Q6, Q8, Q10, Q11(덤), Q14.
+"""자동 QA (계획서 §6 중 데이터로 가능한 것): H(높이맵 범위·형식), Q1, Q2, Q4(덤), Q5, Q6, Q8, Q10, Q11(덤), Q14, QR, QL, QW, QP(고을 성격표), QC(기후대).
 실행: python3 tools/region/qa.py  → 표 출력 + region_data/<id>/qa.json"""
 import json, math, os, re, sys
 import numpy as np
@@ -296,6 +296,33 @@ def main():
             x, z = p[k + 1, 0], p[k + 1, 1]
             if min(math.hypot(x - gx, z - gz) for gx, gz in gates) > 9: wall_bad.append((rd["id"], round(float(x)), round(float(z))))
     rec("QW", not wall_bad, "읍성 성벽을 넘는 길은 모두 성문 통로" if not wall_bad else f"성문 아닌 곳에서 성벽 통과 {wall_bad[:6]}", fails=wall_bad)
+
+    # QP: 고을 성격표(계약서 §9) — archetypes 있음, 마을 터가 있는 settlement·사찰·성황당 모두 profile(유형·기후대·signature)
+    arch = reg.get("archetypes", {}); okc = {"south", "central", "north", "alpine", "coast"}
+    lays = {"walled_grid", "round_cluster", "linear_street", "fan_from_ferry", "terraced", "few_roadside", "along_temple_road", "linear_shore", "olle_alleys"}
+    qp_bad = []
+    for s in reg["settlements"]:
+        pf = s.get("profile")
+        if not pf: qp_bad.append((s["id"], "profile 없음")); continue
+        if pf.get("archetype") not in arch: qp_bad.append((s["id"], f"유형 {pf.get('archetype')}"))
+        if pf.get("climate") not in okc: qp_bad.append((s["id"], f"기후대 {pf.get('climate')}"))
+        if not pf.get("signature"): qp_bad.append((s["id"], "signature 없음"))
+        lay = pf.get("layout", arch.get(pf.get("archetype"), {}).get("layout"))
+        if lay not in lays: qp_bad.append((s["id"], f"짜임 {lay}"))
+    cnt = {}
+    for s in reg["settlements"]:
+        a_ = s.get("profile", {}).get("archetype"); cnt[a_] = cnt.get(a_, 0) + 1
+    rec("QP", len(arch) >= 9 and not qp_bad, f"archetypes {len(arch)}개, settlement {len(reg['settlements'])}곳 모두 profile — 유형별 {cnt}" if not qp_bad else f"실패 {qp_bad[:6]}", fails=qp_bad)
+
+    # QC: 기후대 지도 — landuse와 같은 격자, 코드 0~4, 이 권역은 south + 해발 1,100m 이상 alpine만
+    cm = reg.get("climate", {})
+    cl = np.asarray(Image.open(os.path.join(C.OUT, cm.get("file", "climate.png"))))
+    alt4 = C.y_to_alt(ndimage.uniform_filter(y[::2, ::2], 7))
+    same = cl.shape == lu_shape and cm.get("cell") == reg["landuse"]["cell"] and cl.dtype == np.uint8
+    codes = sorted(int(v) for v in np.unique(cl))
+    mism = float(((cl == 3) != (alt4 >= 1100.0)).mean())
+    rec("QC", same and set(codes) <= {0, 3} and mism < 0.001 and set(cm.get("codes", {}).values()) == okc,
+        f"climate.png {cl.shape[1]}×{cl.shape[0]} 8bit(landuse와 같은 격자 {same}), 코드 {codes} — south {float((cl == 0).mean()):.3f}, alpine {float((cl == 3).mean()):.4f}(해발 1,100m↑ 불일치 {mism:.5f})")
 
     os.makedirs(C.OUT, exist_ok=True)
     json.dump(R, open(os.path.join(C.OUT, "qa.json"), "w"), ensure_ascii=False, indent=1, default=str)

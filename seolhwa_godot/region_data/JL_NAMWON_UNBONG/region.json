@@ -138,6 +138,161 @@
    "note": "axis_ry: 진산→안산 방향을 로컬 +z(정면)로 두는 Godot ry(라디안). 고증 참고용 — 게임성 우선."
   }
  ],
+ "archetypes": {
+  "eupchi": {
+   "roof": {
+    "giwa": 0.45,
+    "choga": 0.55
+   },
+   "wall": "todam",
+   "layout": "walled_grid",
+   "entrance": "gate",
+   "people": [
+    "관속",
+    "양반",
+    "장꾼"
+   ],
+   "animals": [],
+   "mood": {
+    "fog": 0.3,
+    "wind": 0.2
+   }
+  },
+  "plain": {
+   "roof": {
+    "choga": 0.9,
+    "giwa": 0.1
+   },
+   "wall": "fence",
+   "layout": "round_cluster",
+   "entrance": "zelkova_square",
+   "people": [
+    "농부"
+   ],
+   "animals": [
+    "소"
+   ]
+  },
+  "river": {
+   "roof": {
+    "choga": 0.85,
+    "giwa": 0.15
+   },
+   "wall": "todam",
+   "layout": "fan_from_ferry",
+   "entrance": "ferry",
+   "people": [
+    "뱃사공",
+    "장꾼"
+   ],
+   "animals": [
+    "소"
+   ]
+  },
+  "mountain": {
+   "roof": {
+    "neowa": 0.6,
+    "gulpi": 0.2,
+    "choga": 0.2
+   },
+   "wall": "stone_terrace",
+   "layout": "terraced",
+   "entrance": "watermill_bridge",
+   "people": [
+    "약초꾼",
+    "사냥꾼",
+    "숯쟁이"
+   ],
+   "animals": [
+    "개"
+   ]
+  },
+  "pass": {
+   "roof": {
+    "choga": 1.0
+   },
+   "wall": "none",
+   "layout": "few_roadside",
+   "entrance": "seonghwang_cairn",
+   "people": [
+    "나그네",
+    "주모"
+   ],
+   "animals": []
+  },
+  "temple": {
+   "roof": {
+    "choga": 0.8,
+    "giwa": 0.2
+   },
+   "wall": "todam",
+   "layout": "along_temple_road",
+   "entrance": "stone_jangseung",
+   "people": [
+    "스님",
+    "보살"
+   ],
+   "animals": []
+  },
+  "coast": {
+   "roof": {
+    "choga_low": 1.0
+   },
+   "wall": "stone_net",
+   "layout": "linear_shore",
+   "entrance": "wharf",
+   "people": [
+    "어부",
+    "객주"
+   ],
+   "animals": [
+    "갈매기"
+   ]
+  },
+  "island": {
+   "roof": {
+    "jeju_stone": 1.0
+   },
+   "wall": "basalt",
+   "layout": "olle_alleys",
+   "entrance": "dolhareubang",
+   "people": [
+    "해녀"
+   ],
+   "animals": [
+    "말"
+   ]
+  },
+  "capital": {
+   "special": true
+  }
+ },
+ "climate": {
+  "file": "climate.png",
+  "x0": -4352.0,
+  "z0": -2112.0,
+  "cell": 4.0,
+  "w": 2177,
+  "h": 1057,
+  "codes": {
+   "0": "south",
+   "1": "central",
+   "2": "north",
+   "3": "alpine",
+   "4": "coast"
+  },
+  "rule": {
+   "alpine_alt_m": {
+    "0": 1100.0,
+    "1": 1000.0,
+    "2": 850.0
+   },
+   "coast_km": 5.0,
+   "lat_bands": "lat<36 south, <38 central, else north",
+   "coast": "권역에 바다 없음 — 해안 거리 무한"
+  },
+  "note": "landuse와 같은 격자(4m). 8비트 코드: 0 south, 1 central, 2 north, 3 alpine, 4 coast. 위도·해발(28m 평균)·해안 거리로 계산"
+ },
  "height": {
   "file": "height.png",
   "x0": -4352.0,
@@ -52676,7 +52831,17 @@
     44.0,
     -3020.0,
     460.0
-   ]
+   ],
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "south",
+    "signature": "성문과 광한루",
+    "trades": [
+     "관아",
+     "장시"
+    ],
+    "notes": "남원도호부 읍치, 평지 방형 읍성"
+   }
   },
   {
    "id": "namwon_jang",
@@ -52701,7 +52866,15 @@
     324.0,
     -3216.0,
     428.0
-   ]
+   ],
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "south",
+    "signature": "남문 밖 장터 차일과 광한루 가는 길",
+    "trades": [
+     "장시"
+    ]
+   }
   },
   {
    "id": "namwon_hyanggyo",
@@ -52726,7 +52899,15 @@
     -128.0,
     -3204.0,
     -56.0
-   ]
+   ],
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "south",
+    "signature": "향교 홍살문과 은행나무",
+    "trades": [
+     "향교"
+    ]
+   }
   },
   {
    "id": "ibaek",
@@ -52750,7 +52931,16 @@
     -324.0,
     -1148.0,
     -168.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "여원재 아래 길가 들마을, 정자나무 마당",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "고원으로 오르기 전 들"
+   }
   },
   {
    "id": "yeowon_jumak",
@@ -52774,7 +52964,15 @@
     -892.0,
     -296.0,
     -864.0
-   ]
+   ],
+   "profile": {
+    "archetype": "pass",
+    "climate": "south",
+    "signature": "성황당 돌무더기·오색 천",
+    "trades": [
+     "주막"
+    ]
+   }
   },
   {
    "id": "yeowon_seonghwang",
@@ -52791,7 +52989,13 @@
     "고개 성황당 일반 배치(가설)"
    ],
    "lat": 35.447,
-   "lon": 127.5013
+   "lon": 127.5013,
+   "profile": {
+    "archetype": "pass",
+    "climate": "south",
+    "signature": "성황당 돌무더기·오색 천",
+    "trades": []
+   }
   },
   {
    "id": "unbong_eup",
@@ -52799,7 +53003,7 @@
    "type": "마을",
    "x": 843.7,
    "z": -696.6,
-   "radius_m": 120.6,
+   "radius_m": 115.1,
    "size": "L",
    "notes": "운봉현 읍치(고원 분지). 읍성 유무는 검수 필요.",
    "confidence": "추정",
@@ -52808,14 +53012,29 @@
    ],
    "lat": 35.4385,
    "lon": 127.531,
-   "area_m2": 45680,
-   "extent_m": 264.1,
+   "area_m2": 41600,
+   "extent_m": 130.8,
    "bbox": [
-    616.0,
-    -932.0,
-    932.0,
-    -616.0
-   ]
+    720.0,
+    -824.0,
+    948.0,
+    -568.0
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "roof": {
+     "choga": 0.8,
+     "giwa": 0.2
+    },
+    "wall": "stone",
+    "signature": "억새 들판 + 돌장승",
+    "trades": [
+     "논농사",
+     "장시"
+    ],
+    "notes": "고원 들, 동편제 고장. 장터 둘레 둥근 무리"
+   }
   },
   {
    "id": "unbong_jang",
@@ -52823,7 +53042,7 @@
    "type": "장시",
    "x": 810.0,
    "z": -656.0,
-   "radius_m": 64.0,
+   "radius_m": 61.8,
    "size": "M",
    "notes": "장날 현대 1·6일. [입지 보정: 원 좌표에서 27m(게임) 옮김 — 완경사 골 바닥]",
    "confidence": "가설",
@@ -52833,14 +53052,28 @@
    ],
    "lat": 35.4365,
    "lon": 127.53,
-   "area_m2": 12880,
-   "extent_m": 112.4,
+   "area_m2": 12016,
+   "extent_m": 64.4,
    "bbox": [
-    720.0,
-    -768.0,
-    888.0,
-    -628.0
-   ]
+    752.0,
+    -720.0,
+    868.0,
+    -596.0
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "roof": {
+     "choga": 0.8,
+     "giwa": 0.2
+    },
+    "wall": "stone",
+    "signature": "억새 들판 + 돌장승(장터 둘레 둥근 무리)",
+    "trades": [
+     "장시"
+    ],
+    "notes": "고원 들 장시"
+   }
   },
   {
    "id": "bijeon",
@@ -52865,7 +53098,16 @@
     -1388.0,
     1656.0,
     -1304.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "황산대첩비 비각 앞 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "동편제 송흥록 마을로 전함"
+   }
   },
   {
    "id": "inwol_yeok",
@@ -52873,7 +53115,7 @@
    "type": "역",
    "x": 2722.0,
    "z": -1470.0,
-   "radius_m": 70.0,
+   "radius_m": 65.4,
    "size": "M",
    "notes": "역참 위치는 인월 들 안쪽으로 가정. 함양 방면 길 갈림. [입지 보정: 원 좌표에서 23m(게임) 옮김 — 완경사 골 바닥]",
    "confidence": "가설",
@@ -52882,14 +53124,36 @@
    ],
    "lat": 35.4625,
    "lon": 127.6,
-   "area_m2": 15408,
-   "extent_m": 150.7,
+   "area_m2": 13440,
+   "extent_m": 185.1,
    "bbox": [
-    2604.0,
-    -1516.0,
-    2872.0,
-    -1408.0
-   ]
+    2540.0,
+    -1512.0,
+    2904.0,
+    -1456.0
+   ],
+   "profile": {
+    "archetype": "river",
+    "climate": "south",
+    "layout": "linear_street",
+    "entrance": "mabang_station_flag",
+    "people": [
+     "역졸",
+     "보부상",
+     "장꾼",
+     "뱃사공"
+    ],
+    "animals": [
+     "말",
+     "소"
+    ],
+    "trades": [
+     "역참",
+     "장시"
+    ],
+    "signature": "마방과 역 깃발",
+    "notes": "통영별로 길가 띠 마을(길촌)"
+   }
   },
   {
    "id": "inwol_jang",
@@ -52897,7 +53161,7 @@
    "type": "장시",
    "x": 2776.0,
    "z": -1459.6,
-   "radius_m": 71.7,
+   "radius_m": 67.3,
    "size": "M",
    "notes": "지리산 동북 산간 물산 장. 장날 현대 3·8일.",
    "confidence": "추정",
@@ -52907,14 +53171,36 @@
    ],
    "lat": 35.4615,
    "lon": 127.602,
-   "area_m2": 16160,
-   "extent_m": 141.5,
+   "area_m2": 14224,
+   "extent_m": 196.7,
    "bbox": [
-    2636.0,
-    -1512.0,
-    2912.0,
-    -1396.0
-   ]
+    2580.0,
+    -1516.0,
+    2968.0,
+    -1456.0
+   ],
+   "profile": {
+    "archetype": "river",
+    "climate": "south",
+    "layout": "linear_street",
+    "entrance": "mabang_station_flag",
+    "people": [
+     "역졸",
+     "보부상",
+     "장꾼",
+     "뱃사공"
+    ],
+    "animals": [
+     "말",
+     "소"
+    ],
+    "trades": [
+     "역참",
+     "장시"
+    ],
+    "signature": "마방과 역 깃발(장날 보부상 행렬)",
+    "notes": "통영별로 길가 띠 장시"
+   }
   },
   {
    "id": "sannae",
@@ -52922,7 +53208,7 @@
    "type": "마을",
    "x": 3018.0,
    "z": 486.0,
-   "radius_m": 38.4,
+   "radius_m": 39.9,
    "size": "S",
    "notes": "만수천가 산촌. [입지 보정: 원 좌표에서 169m(게임) 옮김 — 완경사 골 바닥]",
    "confidence": "추정",
@@ -52931,14 +53217,24 @@
    ],
    "lat": 35.4005,
    "lon": 127.6164,
-   "area_m2": 4640,
-   "extent_m": 99.5,
+   "area_m2": 5008,
+   "extent_m": 168.3,
    "bbox": [
-    2944.0,
-    440.0,
-    3056.0,
-    572.0
-   ]
+    2920.0,
+    424.0,
+    3176.0,
+    620.0
+   ],
+   "profile": {
+    "archetype": "temple",
+    "climate": "south",
+    "signature": "절길·석장승",
+    "trades": [
+     "논농사",
+     "절 시주"
+    ],
+    "notes": "실상사 가는 절길 따라"
+   }
   },
   {
    "id": "silsangsa_temple",
@@ -52954,7 +53250,16 @@
     "OpenStreetMap (Nominatim/Overpass, 2026-10 조회)"
    ],
    "lat": 35.417,
-   "lon": 127.6353
+   "lon": 127.6353,
+   "profile": {
+    "archetype": "temple",
+    "climate": "south",
+    "signature": "들 가운데 평지 절 + 석장승",
+    "trades": [
+     "절"
+    ],
+    "notes": "실상사 둘레"
+   }
   },
   {
    "id": "banseon",
@@ -52962,7 +53267,7 @@
    "type": "마을",
    "x": 2164.0,
    "z": 1504.0,
-   "radius_m": 37.2,
+   "radius_m": 38.1,
    "size": "S",
    "notes": "뱀사골·달궁 물이 만나는 계곡 어귀 산촌. [입지 보정: 원 좌표에서 46m(게임) 옮김 — 완경사 골 바닥]",
    "confidence": "추정",
@@ -52971,14 +53276,25 @@
    ],
    "lat": 35.3735,
    "lon": 127.58,
-   "area_m2": 4352,
-   "extent_m": 80.9,
+   "area_m2": 4560,
+   "extent_m": 103.2,
    "bbox": [
-    2120.0,
-    1444.0,
-    2200.0,
-    1584.0
-   ]
+    2076.0,
+    1408.0,
+    2264.0,
+    1600.0
+   ],
+   "profile": {
+    "archetype": "mountain",
+    "climate": "alpine",
+    "signature": "물레방아 줄 + 계곡 다리",
+    "trades": [
+     "약초",
+     "숯",
+     "사냥"
+    ],
+    "notes": "뱀사골 어귀 계곡 비탈 계단식. 기후대는 지리산 고지 쪽(잔설·안개) 성격으로 alpine"
+   }
   },
   {
    "id": "inwol_south_village",
@@ -52986,7 +53302,7 @@
    "type": "마을",
    "x": 2758.0,
    "z": -1365.0,
-   "radius_m": 43.6,
+   "radius_m": 31.5,
    "size": "S",
    "notes": "placement-east 섶다리(ea_iw_seop_bridge_01) 남쪽 기슭의 작은 마을(약 6,000m²). 인월장으로 섶다리 건너 다님.",
    "confidence": "가설",
@@ -52996,14 +53312,36 @@
    ],
    "nosnap": true,
    "min_z": -1392.0,
-   "area_m2": 5968,
-   "extent_m": 106.0,
+   "area_m2": 3120,
+   "extent_m": 168.8,
    "bbox": [
-    2716.0,
+    2748.0,
     -1392.0,
-    2860.0,
-    -1320.0
-   ]
+    2912.0,
+    -1292.0
+   ],
+   "profile": {
+    "archetype": "river",
+    "climate": "south",
+    "layout": "linear_street",
+    "entrance": "mabang_station_flag",
+    "people": [
+     "역졸",
+     "보부상",
+     "장꾼",
+     "뱃사공"
+    ],
+    "animals": [
+     "말",
+     "소"
+    ],
+    "trades": [
+     "역참",
+     "장시"
+    ],
+    "signature": "섶다리 건너 강 남쪽 길가 마을",
+    "notes": "인월장 맞은편 길가 띠"
+   }
   },
   {
    "id": "auto_village_00",
@@ -53025,7 +53363,16 @@
     -1564.0,
     -1412.0,
     -1476.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 30m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_01",
@@ -53047,7 +53394,16 @@
     -1164.0,
     -1688.0,
     -1076.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 87m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_02",
@@ -53069,7 +53425,16 @@
     604.0,
     -3992.0,
     684.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 38m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_03",
@@ -53091,7 +53456,16 @@
     -204.0,
     -2168.0,
     -124.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 40m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_04",
@@ -53113,7 +53487,16 @@
     -1208.0,
     1236.0,
     -1136.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 33m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_05",
@@ -53135,7 +53518,16 @@
     924.0,
     -1552.0,
     1004.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 71m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_06",
@@ -53157,7 +53549,16 @@
     -136.0,
     688.0,
     -44.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 50m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_07",
@@ -53179,7 +53580,16 @@
     -840.0,
     -2024.0,
     -756.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 113m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_08",
@@ -53201,7 +53611,16 @@
     -2024.0,
     -792.0,
     -1948.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.06, 둘레 160m 기복 73m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_09",
@@ -53223,7 +53642,16 @@
     68.0,
     -2712.0,
     128.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 62m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_10",
@@ -53245,7 +53673,16 @@
     1068.0,
     -4100.0,
     1164.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.06, 둘레 160m 기복 63m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_11",
@@ -53267,7 +53704,16 @@
     280.0,
     864.0,
     356.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 72m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_12",
@@ -53289,7 +53735,16 @@
     564.0,
     204.0,
     636.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 66m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   },
   {
    "id": "auto_village_13",
@@ -53311,7 +53766,16 @@
     -2048.0,
     -2508.0,
     -1976.0
-   ]
+   ],
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "signature": "논 가 정자나무 들마을",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "자동: 둘레 60m 경사 중앙값 0.06, 둘레 160m 기복 98m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+   }
   }
  ],
  "landmarks": [

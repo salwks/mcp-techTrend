@@ -331,7 +331,7 @@ static func thatch_cap(m: M, part: String, X: float, Z: float, eave: float, hh: 
 	m.add(part, "thatch", PA(lip, THATCH_LIP, 0.04, m.rng), 0.035)
 
 # 맞배 이엉 지붕(길쭉한 헛간·외양간용): 용마름 있는 박공형. 길이 L(x), 깊이 D(z), 처마 높이 eave, 지붕 높이 rh
-static func thatch_gable(m: M, part: String, L: float, D: float, eave: float, rh: float) -> void:
+static func thatch_gable(m: M, part: String, L: float, D: float, eave: float, rh: float, cols: Array = THATCH, ridge_cols: Array = [0xb39d6c, 0x8f7b52]) -> void:
 	var hz := D / 2
 	# 이엉 비탈: 처마에서 용마루로 둥글게 부푼 단면(3띠) — 초가 맞배의 도톰한 느낌
 	var K := 3
@@ -349,7 +349,7 @@ static func thatch_gable(m: M, part: String, L: float, D: float, eave: float, rh
 		var a0 := Vector3(-L / 2, eave, s * hz); var b0 := Vector3(L / 2, eave, s * hz); var t := Vector3(0, -0.24, 0)
 		if s > 0: g.quad(a0 + t, b0 + t, b0, a0)
 		else: g.quad(b0 + t, a0 + t, a0, b0)
-		m.add(part, "thatch", PA(g, THATCH, 0.05, m.rng), 0.04)
+		m.add(part, "thatch", PA(g, cols, 0.05, m.rng), 0.04)
 	# 박공 끝 이엉 삼각
 	for sx in [-1, 1]:
 		var g2 := Kit.Geo.new()
@@ -358,7 +358,7 @@ static func thatch_gable(m: M, part: String, L: float, D: float, eave: float, rh
 		if sx > 0: g2.tri(p0, p2, p1)
 		else: g2.tri(p0, p1, p2)
 		m.add(part, "mud", PA(g2, [0x8f7a55, 0x6f5d40], 0.03, m.rng), 0.02)
-	m.add(part, "thatch", PA(Kit.cyl(0.15, 0.15, L - 0.1, 8, 0, eave + rh - 0.02, 0, 0, 0, PI / 2), [0xb39d6c, 0x8f7b52]), 0.03)
+	m.add(part, "thatch", PA(Kit.cyl(0.15, 0.15, L - 0.1, 8, 0, eave + rh - 0.02, 0, 0, 0, PI / 2), ridge_cols), 0.03)
 
 # 기와 맞배(작은) 지붕 — 대문·가게
 static func tile_roof(m: M, part: String, hw: float, hd: float, eave: float, rise: float, nx := 10, nz := 4, lift := 0.25, k := 2.6) -> Dictionary:
@@ -398,3 +398,125 @@ static func shed(m: M, W: float, D: float, wallH := 2.0, walls := "three", bays 
 # 어두운 문간(실내 없음): 문 구멍 안쪽을 어두운 판으로
 static func dark_door(m: M, x: float, y0: float, w: float, h: float, z: float) -> void:
 	m.add("p", "flat", P(Kit.box(w, h, 0.03, x, y0 + h / 2, z - 0.25), 0x3a2f25, 0x241c15), 0)
+
+# ---------------------------------------------------------------------------
+# 지붕 재료(고을 성격표 §9: neowa·gulpi·eoksae·choga_low) — 위에서 내려다볼 때 서로 확실히 달라 보이게
+# ---------------------------------------------------------------------------
+# 사각형 a-b-c-d를 want 쪽을 보게(감김 자동)
+static func qf(g: Kit.Geo, a: Vector3, b: Vector3, c: Vector3, d: Vector3, want: Vector3) -> void:
+	if (b - a).cross(c - a).dot(want) < 0.0: g.quad(a, d, c, b)
+	else: g.quad(a, b, c, d)
+
+static func tf(g: Kit.Geo, a: Vector3, b: Vector3, c: Vector3, want: Vector3) -> void:
+	if (b - a).cross(c - a).dot(want) < 0.0: g.tri(a, c, b)
+	else: g.tri(a, b, c)
+
+# 판 지붕(맞배, 용마루 x방향): style "neowa"(너와: 회갈색 나무판 + 누름돌) | "gulpi"(굴피: 짙은 갈색 껍질 + 누름목).
+# L 길이(x), D 깊이(z, 처마 끝끼리), eave 처마 높이, rh 용마루까지 높이. bw·bd·wall_top > 0이면 박공벽 + 까치구멍.
+# 판은 처마에서 위로 줄(course)마다 겹쳐 얹고, 아랫단 끝(butt)을 어둡게 해서 판 결이 위에서 줄무늬로 보인다.
+static func board_roof(m: M, part: String, L: float, D: float, eave: float, rh: float, style := "neowa", bw := 0.0, bd := 0.0, wall_top := 0.0, lod := false, small := false) -> float:
+	var R := m.rng
+	var hz := D / 2
+	var ridge := eave + rh
+	var neo := style == "neowa"
+	var rows: int = 2 if lod else (7 if neo else 5) - (2 if small else 0)
+	var pw: float = L if lod else (0.46 if neo else 0.82)
+	var th := 0.1
+	var under: Array = [0x5f564c, 0x4a433b] if neo else [0x3a2a1f, 0x2e2119]
+	for s in [-1.0, 1.0]:
+		var out := Vector3(0, hz, s * rh).normalized()   # 비탈 바깥 법선
+		var down := Vector3(0, -rh, s * hz).normalized()  # 처마 쪽(비탈 아래)
+		var Pt := func(x: float, t: float) -> Vector3: return Vector3(x, eave + rh * t, s * hz * (1.0 - t))
+		# 밑판(외곽 먹선 = 지붕 윤곽)
+		var g := Kit.Geo.new()
+		var a: Vector3 = Pt.call(-L / 2, 0.0); var b: Vector3 = Pt.call(L / 2, 0.0); var c: Vector3 = Pt.call(L / 2, 1.0); var d: Vector3 = Pt.call(-L / 2, 1.0)
+		var dn := Vector3(0, -th, 0)
+		qf(g, a, b, c, d, out)
+		qf(g, a + dn, b + dn, b, a, down)
+		qf(g, a + dn, b + dn, c + dn, d + dn, -out)
+		qf(g, b + dn, c + dn, c, b, Vector3.RIGHT)
+		qf(g, a + dn, d + dn, d, a, Vector3.LEFT)
+		m.add(part, "flat", PA(g, under, 0.02, R), 0.045)
+		# 판(줄마다 겹침)
+		var tops := []; var butts := []
+		for k in rows:
+			var t0 := float(k) / rows - (0.035 if k > 0 else -0.0)
+			var t1 := minf(1.0, float(k + 1) / rows + 0.06)
+			var x := -L / 2 - (R.next() * pw * 0.5 if k % 2 == 1 else 0.0)
+			while x < L / 2 - 0.02:
+				var w := pw * R.between(0.8, 1.2) if not lod else L
+				var xa := maxf(-L / 2, x) + (0.012 if not lod else 0.0); var xb := minf(L / 2, x + w) - (0.012 if not lod else 0.0)
+				x += w
+				if xb - xa < 0.08: continue
+				var tb := t0 + (R.between(-0.015, 0.015) if not lod else 0.0)
+				var lb := 0.075; var lt := 0.03
+				var A: Vector3 = Pt.call(xa, tb) + out * lb; var B: Vector3 = Pt.call(xb, tb) + out * lb
+				var Cc: Vector3 = Pt.call(xb, t1) + out * lt; var Dd: Vector3 = Pt.call(xa, t1) + out * lt
+				var pg := Kit.Geo.new()
+				qf(pg, A, B, Cc, Dd, out)
+				var tone := R.next()
+				var top_c: int; var bot_c: int
+				if neo:
+					top_c = 0x9b9284 if tone < 0.45 else (0x8d7a62 if tone < 0.8 else 0xa7a092)
+					bot_c = 0x7c7466 if tone < 0.45 else (0x6f5e4a if tone < 0.8 else 0x878073)
+				else:
+					top_c = 0x5e4434 if tone < 0.5 else (0x4e3828 if tone < 0.85 else 0x6a4e3a)
+					bot_c = 0x45311f if tone < 0.5 else (0x3a2a1d if tone < 0.85 else 0x50392a)
+				tops.append(P(pg, top_c, bot_c, 0.03, R))
+				var bg := Kit.Geo.new()
+				var A0: Vector3 = Pt.call(xa, tb) + out * 0.005; var B0: Vector3 = Pt.call(xb, tb) + out * 0.005
+				qf(bg, A0, B0, B, A, down)
+				butts.append(P(bg, 0x3a332c if neo else 0x231810, -1, 0.02, R))
+		m.add(part, "wood" if neo else "bark", Kit.merge(tops), 0.0 if lod else 0.014)
+		m.add(part, "flat", Kit.merge(butts), 0)
+		if lod: continue
+		# 누름대·누름목(가로 장대)
+		var poles: Array = [0.62] if neo else [0.2, 0.5, 0.8]
+		for tp in poles:
+			var pc: Vector3 = Pt.call(0.0, tp) + out * 0.15
+			m.add(part, "wood", P(Kit.cyl(0.075 if neo else 0.09, 0.075 if neo else 0.09, L - 0.3, 6, pc.x, pc.y, pc.z, 0, 0, PI / 2),
+				0x7a6a58 if neo else 0x8a7a64, 0x5a4c3e if neo else 0x655845, 0.04, R), 0.02)
+		# 누름돌
+		var stones := []
+		var ns := (10 if neo else 4) / (2 if small else 1)
+		for i in ns:
+			var tx := -L / 2 + 0.45 + (L - 0.9) * (float(i) + R.between(0.1, 0.9)) / ns
+			var tk := (R.between(0.0, rows - 1.0) if neo else R.between(0.1, 0.9))
+			var tt := clampf(floorf(tk) / rows + 0.07, 0.05, 0.9) if neo else tk
+			var sp: Vector3 = Pt.call(tx, tt) + out * 0.13
+			var lg := Kit.lump(R.between(0.13, 0.2), 0, R, 0.3, 0.6)
+			stones.append(P(Kit.xf(lg, sp.x, sp.y, sp.z, 0, R.next() * 3, 0), 0xb0aa9c, 0x7f796d, 0.06, R))
+		m.add(part, "stone", Kit.merge(stones), 0.018)
+	# 용마루 덮개(엎은 V 판)
+	var cap := Kit.Geo.new()
+	for s in [-1.0, 1.0]:
+		var out := Vector3(0, hz, s * rh).normalized()
+		var lo := Vector3(0, ridge - rh * 0.11, s * hz * 0.11) + out * 0.1
+		var hi := Vector3(0, ridge + 0.13, 0)
+		qf(cap, Vector3(-L / 2 - 0.05, lo.y, lo.z), Vector3(L / 2 + 0.05, lo.y, lo.z), Vector3(L / 2 + 0.05, hi.y, hi.z), Vector3(-L / 2 - 0.05, hi.y, hi.z), out)
+	m.add(part, "wood" if neo else "bark", P(cap, 0x8a8174 if neo else 0x4a3426, 0x6e665a if neo else 0x3a291d, 0.03, R), 0.02)
+	if not neo and not lod:
+		m.add(part, "wood", P(Kit.cyl(0.1, 0.1, L - 0.1, 6, 0, ridge + 0.2, 0, 0, 0, PI / 2), 0x8a7a64, 0x655845, 0.04, R), 0.02)
+	elif not lod:
+		for i in 3:
+			var lg := Kit.lump(0.17, 0, R, 0.3, 0.6)
+			m.add(part, "stone", P(Kit.xf(lg, -L / 3 + i * L / 3, ridge + 0.2, 0), 0xb0aa9c, 0x7f796d, 0.06, R), 0.018)
+	# 박공벽 + 까치구멍(너와집·굴피집 박공 위 연기 구멍)
+	if bw > 0.0:
+		for sx in [-1.0, 1.0]:
+			var x: float = sx * bw / 2
+			var apex := ridge - 0.25
+			var gb := Kit.Geo.new()
+			tf(gb, Vector3(x, wall_top, -bd / 2), Vector3(x, wall_top, bd / 2), Vector3(x, apex, 0), Vector3(sx, 0, 0))
+			m.add(part, "wood", PA(gb, WOOD, 0.03, R), 0.02)
+			var kh := Kit.Geo.new()
+			tf(kh, Vector3(x + sx * 0.015, apex - 0.6, -0.28), Vector3(x + sx * 0.015, apex - 0.6, 0.28), Vector3(x + sx * 0.015, apex - 0.18, 0), Vector3(sx, 0, 0))
+			m.add(part, "flat", P(kh, 0x1e1813), 0)
+	return ridge
+
+# 억새 지붕(맞배) 색 — 볏짚보다 희고 잿빛(고산 귀틀집)
+const EOKSAE := [0xc4c3ba, 0x83837c]
+const EOKSAE_RIDGE := [0x9d9b90, 0x74736b]
+# 낡은 바닷가 이엉(잿빛 갈색)
+const THATCH_SEA := [0xaea58f, 0x77705f]
+const THATCH_SEA_LIP := [0x857d6a, 0x635c4d]

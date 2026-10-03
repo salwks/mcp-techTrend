@@ -1,5 +1,6 @@
 # 기와집(양반·향리 안채/사랑채) — 웹 buildings.js giwa() 이식.
-# params: seed, w(9, 5칸), d(5.4), bays(5), plain(false: true면 단청 띠 대신 민가식 밤색 창방 — 민가 기와집)
+# params: seed, w(9, 5칸), d(5.4), bays(5), plain(false: true면 단청 띠 대신 민가식 밤색 창방 — 민가 기와집),
+#         plan: ""(기본) | "il"(남부 一자: 깊은 툇마루) | "giyeok"(중부 ㄱ자: 오른쪽 끝 칸이 앞으로 꺾여 나오고 지붕도 꺾임), wing_len(3.2)
 # 앞(+z): 높은 돌 기단 + 3단 계단, 가운데 대청(열림), 양옆 방문, 끝칸 벽+창, 툇마루.
 # 성능: 웹 지붕 격자 36×20은 먹선 포함 6천 삼각형을 넘어 24×12로 줄임(기와 골이 조금 굵어짐).
 extends RefCounted
@@ -58,7 +59,16 @@ static func draw(m: C.M, o: Dictionary) -> Dictionary:
 	m.add("body", "flat", C.PA(Kit.box(W + 0.5, 0.3, 0.3, 0, top + 0.15, -zf), beam), 0.02)
 	for s in [-1, 1]: m.add("body", "flat", C.PA(Kit.box(0.3, 0.3, D + 0.4, s * W / 2, top + 0.15, 0), beam), 0.02)
 	# 툇마루
-	m.add("front", "wood", C.PA(Kit.box(W - 0.2, 0.08, 0.7, 0, F - 0.02, zf + 0.35), C.WOOD_L), 0.015)
+	var plan: String = o.get("plan", "")
+	var wing_len: float = o.get("wing_len", 3.2)
+	if plan == "il":
+		m.add("front", "wood", C.PA(Kit.box(W + 0.2, 0.08, 1.05, 0, F - 0.02, zf + 0.52), C.WOOD_L), 0.015)
+	elif plan == "giyeok":
+		var mx1 := W / 2 - bw - 0.1
+		m.add("front", "wood", C.PA(Kit.box(mx1 + W / 2 + 0.1, 0.08, 0.7, (mx1 - W / 2 - 0.1) / 2, F - 0.02, zf + 0.35), C.WOOD_L), 0.015)
+		preload("res://kit/village/choga.gd").wing(m, W / 2 - bw, W / 2, zf, zf + wing_len, F, top, t, C.PLASTER, "mud", [0xaaa498, 0x7b766c])
+	else:
+		m.add("front", "wood", C.PA(Kit.box(W - 0.2, 0.08, 0.7, 0, F - 0.02, zf + 0.35), C.WOOD_L), 0.015)
 	# 지붕
 	var eave := top + 0.55
 	var nx: int = o.get("roof_nx", 24); var nz: int = o.get("roof_nz", 12)
@@ -66,6 +76,16 @@ static func draw(m: C.M, o: Dictionary) -> Dictionary:
 	m.add("roof", "tile", r.roof, 0.05)
 	m.add("roof", "makse", r.edge, 0)
 	C.ridge_cap(m, "roof", r.ridge_half + 0.2, r.ridge_y)
+	if plan == "giyeok":
+		# 꺾인 칸 지붕: 용마루가 남북(z)으로, 안채 지붕 아래로 파고든다
+		var z0 := zf - 1.2; var z1 := zf + wing_len + 1.45
+		var old := m.push(W / 2 - bw / 2, 0, (z0 + z1) / 2, PI / 2)
+		var r2 := C.curved_roof((z1 - z0) / 2, bw / 2 + 1.45, eave, 2.0, 0.5, 1.9, 0.24, maxi(8, nx / 2), maxi(4, nz / 2))
+		m.add("roof", "tile", r2.roof, 0.05)
+		m.add("roof", "makse", r2.edge, 0)
+		C.ridge_cap(m, "roof", r2.ridge_half + 0.1, r2.ridge_y)
+		m.pop(old)
+		m.box_c(W / 2 - bw - 0.6, W / 2 + 0.6, zf, zf + wing_len + 0.6)
 	m.box_c(-W / 2 - 0.6, W / 2 + 0.6, -D / 2 - 0.6, D / 2 + 1.45)
 	m.anchor("daecheong", Vector3(0, F, zf - 0.6))
 	m.anchor("steps", Vector3(0, 0, zf + 1.7))

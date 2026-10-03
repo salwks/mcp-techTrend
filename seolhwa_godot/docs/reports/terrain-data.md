@@ -302,3 +302,24 @@ H, Q1, Q2, Q4, Q5(고개 3), Q6, Q8, Q10, Q11, Q14, QR, QL, QW.
 - **삭제**: `namwon_gaeksa_lane`(객사가 축 정면으로 옮겨 불필요), `namwon_gwana_lane`(북문길 동쪽 구간과 2m 간격으로 겹침).
 - `yongseonggwan`: (−3227.8, 205.0)으로 옮기고 size_m을 72×40으로 바꿨다(담 z 185~225 비움). confidence는 추정 그대로이고 notes에 이유를 적었다.
 - QA 13항목 전부 PASS(QW·QL·Q8 포함).
+
+---
+
+## 15. 고을 성격표·마을 짜임·기후대 (계획서 A0.5·A2·B1)
+(지시는 §14였지만 §14가 이미 있어 §15로 적는다.)
+- **`archetypes`**(region.json 최상위): 계약서 §9 예시 값 그대로 9유형. 정의는 `tools/region/profiles.py`.
+- **settlement `profile`** (29곳 전부): 남원 3곳 eupchi · 운봉 2곳·이백·비전 plain · 인월 3곳(`inwol_yeok`·`inwol_jang`·`inwol_south_village`) river + `layout: linear_street`, trades 역참·장시, 말·보부상 · 여원재 2곳 pass · 산내·실상사 temple · 반선 mountain(climate **alpine**) · 들마을 후보 14곳은 지형으로 자동 판정(둘레 60m 경사 0.12 또는 둘레 160m 기복 200m 초과면 mountain). 지금은 14곳 모두 plain이다. 후보는 원래 논 옆 완경사에서 고르기 때문이다. 각 고을에 signature 한 줄.
+- **마을 터 모양(A2)**: `landuse.classify`가 settlement의 `_shape`를 읽는다(내부 키라 json에는 쓰지 않음).
+  - 인월: `tongyeong_byeolro` 중심선 ±18m 띠(폭 약 36m). 남쪽 마을은 `inwol_south_lane`·물가길 ±16m 띠.
+  - 운봉 읍치·장: 중심 거리 위주의 둥근 무리.
+  - 산내: `inwol_banseon_road` ±16m 띠, 실상사 쪽으로 치우침.
+  - 반선: 28m 평균 고도로 등고선 위상을 매겨(한 단 7m 게임 고도, 평균 경사가 가팔라 상한에 걸림) 띠의 55%만 남기고, 경사 0.42 넘는 곳은 뺀다. 띠 사이를 메우지 않으려고 닫기·열기를 건너뛰었다.
+  - 남원·여원재·이백·비전은 그대로다.
+- **기후대 지도 `climate.png`**: landuse와 같은 4m 격자, 8비트. region.json `climate: {file, x0, z0, cell, w, h, codes, rule}`.
+  - 규칙: 위도(<36° south, <38° central, 그 밖 north) → 해안 5km 안 coast(이 권역에는 바다가 없음) → 28m 평균 해발이 하한(남 1,100m·중 1,000m·북 850m) 이상이면 alpine.
+  - 결과: south 98.4%, alpine 1.55%(정령치·만복대·바래봉 쪽 고지).
+  - 반선의 profile은 alpine이지만, 마을 자리 지도 값은 south다(해발 약 500m).
+- **QA 15항목 전부 PASS**: 새로 **QP**(모든 settlement에 profile·유형·기후대·signature·짜임 유효)와 **QC**(같은 격자, 코드 {0,3}, alpine 칸이 해발 1,100m 이상과 일치)를 더했다.
+  - 높이맵, 길(id·선형), 도강점은 이전과 같다(height.png md5 같음).
+  - 그림: `shots/region_data/` 전부 다시 그렸고, **climate_map.png**를 새로 추가했다.
+- **바뀐 settlement(마을 터 모양·area·bbox)**: `inwol_yeok`, `inwol_jang`, `inwol_south_village`(6,000→3,120m², 강과 길 사이 띠), `unbong_eup`, `unbong_jang`, `sannae`, `banseon`. 나머지는 profile만 더했다.

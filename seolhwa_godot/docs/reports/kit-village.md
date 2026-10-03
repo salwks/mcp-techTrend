@@ -165,3 +165,41 @@
 1. **배치형 footprint**: 로더는 layout() 조각 자리 +8m로 footprint를 어림한다(`_fp_from_pieces`). 집 묶음은 이렇게 하면 터 고르기가 실제보다 크게 잡힌다(small 약 27m, 실제 14.8m). 배치 JSON 항목에 catalog의 footprint를 `footprint:[w,d]`로 넣거나, 로더가 키트의 `static func footprint(params)`(house_compound에 있음)를 먼저 부르도록 해 주기 바란다.
 2. 집 묶음 조각의 담 토막은 조각 자리가 (0,0)이고 점이 params(ax..bz)에 들어 있다. 로더가 조각마다 footprint 겹침 검사를 한다면 담 조각은 빼야 한다.
 3. `village_square`의 `tree_kit`은 참고용이다. 지금은 나무가 노드 안에 붙어 있어 따로 놓을 필요가 없다.
+
+## 4단계 — 고을 차이 A1·B7: 지붕·담 재료 (2026-10-03)
+
+### 새 모델 (먹선 포함 삼각형, 민가 ≤ 6,000)
+| 모델 | 위에서 보이는 신호 | tris |
+|---|---|---|
+| `neowa_house` 너와집 | 회갈색 나무판 줄무늬(판마다 색 다름, 아랫단 끝 어둡게) + 회색 누름돌 + 누름대 하나, 박공 까치구멍, 통나무 굴뚝 | 4,012 / giyeok 5,698 |
+| `gulpi_house` 굴피집 | 짙은 갈색 넓은 껍질판 + 밝은 누름목 가로 세 줄 + 용마루 통나무 | 2,752 / il 2,800 |
+| `guitul_house` 귀틀집 | 네 귀가 엇물려 튀어나온 통나무 벽 + 잿빛 억새 맞배(기본). `roof` neowa/gulpi | 3,094 / neowa 5,446 |
+| `choga_low` 낮은 해안 초가 | 낮은 몸체 + 납작한 잿빛 이엉 + 어두운 새끼 그물 격자 + 처마 둘레 매단 돌 | 3,412 |
+| `stone_terrace` 돌축대 | 막돌 박은 계단식 축대(tiers·drop·step) + 위 돌담. 원점 = 위 단 땅(`origin:"bottom"`이면 아래 땅 + 위 흙판) | 1,858 |
+
+- 공용: `_common.gd`에 `board_roof()`(너와·굴피 판 지붕, lod·small), `qf/tf`(감김 자동), 색 `EOKSAE`·`THATCH_SEA` 추가. `thatch_gable()`에 색 인자(기본값 그대로).
+- 비교 사진: `shots/kit/village/roof_compare.png`(초가·기와·너와·굴피·귀틀·해안 초가 6장). 색·모양(둥근/곡면/판 줄/누름목/잿빛 맞배/격자)이 모두 달라 눈가림 구별이 된다.
+
+### 지역 가옥형 `plan` (choga·giwa, 그리고 neowa·gulpi가 물려받음)
+- `"il"` 남부 一자 홑집: 앞면 전체 깊은 툇마루(초가 0.95m, 기와 1.05m), 초가는 지붕을 앞으로 0.3m 더 내밈. choga 2,032 / giwa 4,440.
+- `"giyeok"` 중부 ㄱ자: 오른쪽 부엌 칸이 앞으로 2.8m(기와 3.2m) 꺾여 나옴(서쪽 벽 부엌문, 남쪽 창). 지붕도 꺾임(초가 둘째 이엉, 기와 남북 용마루 곡면, 너와·굴피 판 맞배). choga 2,810 / giwa 5,594.
+- 기본값(`plan` 없음)은 이전과 같은 모양·삼각형 수.
+
+### 담 확인
+- `stone_wall`·`todam`·`fence`: 그대로. `stone_wall`에 `sparse`(lite에서 막돌·갓돌 간격 넓힘, 4.5m 244 = 약 50/m) 추가. 집 묶음 둘레·축대 위 돌담이 이것을 쓴다.
+
+### `house_compound` 새 params
+- `roof`: choga·giwa·neowa·gulpi·guitul·choga_low — 안채·사랑채 키트를 바꾼다(기와로 바꾸면 plain, 칸 수·지붕 격자를 크기에 맞춤).
+- `wall`: fence·todam(large면 기와 갓)·stone·stone_terrace(앞 남쪽 두 토막 = 축대 + 돌담, 나머지 돌담)·none. todam 말고는 대문 대신 사립문, none은 문 없음. 아직 없는 재료(stone_net·basalt)는 stone으로 대신.
+- `plan`: 안채에만 적용.
+- 삼각형(한 덩이): small 너와+축대 12,562 / medium 굴피+돌담 13,704 / small 해안초가+돌담 9,712 / small 귀틀+싸리울 9,386 / medium 기와 ㄱ자 13,586 / medium 一자 12,576 (≤ 15,000). lod=1(새 지붕도 단순판) medium 너와 908.
+- 사진: `house_compound_{neowa,gulpi,choga_low,guitul,giwa_giyeok,choga_il,neowa_lod}.png`.
+
+### 고증 가설
+- 지리산 서부(반선·뱀사골) 너와·굴피집 분포, 1870년 귀틀집 존재, 해안 초가 돌 매달기 방식은 "가설"(20세기 조사 사진 기준 단순화).
+- 너와 판 크기(약 45×50cm)와 줄 수(7)는 화면 판독성을 위해 정했다.
+
+### 요청·남은 일
+1. 배치: 산촌(archetype mountain) 집 묶음은 `{"roof":"neowa","wall":"stone_terrace"}` 식으로 성격표 `roof` 비율에서 뽑아 넣으면 된다. stone_terrace 원점은 위 단 땅이라, 비탈 아래쪽 지형 높이는 로더 flatten이 맞춰야 한다(축대 앞 계단은 아직 없음).
+2. 헛간·외양간·뒷간·대문은 아직 초가 지붕이다. 산촌 묶음에서 이것까지 너와로 바꿀지는 다음 단계(눈가림 시험 결과 보고 결정).
+3. `godot --import`·contact_sheet 재생성은 하지 않았다. 새 `.gd`(neowa_house, gulpi_house, guitul_house, choga_low, stone_terrace)와 새 사진 import는 총괄이.

@@ -95,6 +95,7 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
         core = s.get("core")                                   # 남원: 성 안 정방형(게임 좌표 x0,z0,x1,z1)
         req = math.sqrt(target / math.pi)
         rmax = (s.get("core_max", 120.0) + 132.0) if core else max(70.0, 2.6 * req)
+        if s.get("_shape", {}).get("roads"): rmax = max(rmax, 170.0)      # 길가 띠는 길게
         ci, cj = C.xz_to_ij(s["x"], s["z"], G); R = int(rmax / G) + 2
         j0, j1, i0, i1 = max(int(cj) - R, 0), min(int(cj) + R + 1, Hh), max(int(ci) - R, 0), min(int(ci) + R + 1, Ww)
         sx, sz = xs[j0:j1, i0:i1], zs[j0:j1, i0:i1]
@@ -107,6 +108,40 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
         sl_ = sl_s[j0:j1, i0:i1]; hd = hand[j0:j1, i0:i1]
         sc = (dc / max(req, 20.0)) * 0.9 + np.minimum(d_road[j0:j1, i0:i1], 90) / 28.0 \
              + 3.0 * (sl_ > 0.28) + 0.5 * ((sl_ < 0.02) & (hd < 6)) - 0.45 * ((sl_ > 0.03) & (sl_ < 0.18)) + 0.25 * nz[j0:j1, i0:i1]
+        shp = s.get("_shape")
+        if shp:
+            lay = shp["layout"]; dsel = None
+            if shp.get("roads"):
+                pts = []
+                for r in roads:
+                    if r["id"] not in shp["roads"]: continue
+                    p_ = np.asarray(r["points"], float); sg_ = np.hypot(*np.diff(p_, axis=0).T); ss_ = np.concatenate([[0], np.cumsum(sg_)])
+                    tt_ = np.arange(0, ss_[-1] + 1e-6, 1.0)
+                    pts.append(np.c_[np.interp(tt_, ss_, p_[:, 0]), np.interp(tt_, ss_, p_[:, 1])])
+                from scipy.spatial import cKDTree
+                dsel, _ = cKDTree(np.vstack(pts)).query(np.c_[sx.ravel(), sz.ravel()]); dsel = dsel.reshape(sx.shape)
+            nzw = nz[j0:j1, i0:i1]
+            if lay in ("linear_street", "along_temple_road"):
+                # 길가 띠: 길에서 half(m) 안만, 길을 따라 길게(중심 거리 가중 약하게)
+                sc = dc / (3.0 * max(req, 20.0)) + 0.15 * nzw + 3.0 * (sl_ > 0.28) + dsel / (4.0 * shp["half"])
+                if shp.get("toward"):
+                    ux, uz = shp["toward"][0] - s["x"], shp["toward"][1] - s["z"]; ul = math.hypot(ux, uz) + 1e-9
+                    sc = sc - 0.35 * ((sx - s["x"]) * ux + (sz - s["z"]) * uz) / ul / max(req, 20.0)
+                sc[dsel > shp["half"]] = 99
+            elif lay == "round_cluster":
+                # 장터 둘레 둥근 무리: 중심 거리 위주 + 가장자리만 살짝 들쭉날쭉
+                sc = dc / max(req, 20.0) + 0.12 * nzw + 3.0 * (sl_ > 0.28)
+            elif lay == "terraced":
+                # 계곡 비탈 계단식: 등고선 따라 좁은 띠 여러 단(띠 사이는 비움)
+                ysm = ndimage.uniform_filter(y4[j0:j1, i0:i1].astype(float), 7)      # 28m 평균 등고선(띠가 매끈하게)
+                yw = ysm; yc = float(ysm[int(cj) - j0, int(ci) - i0])
+                ring = (dc < 90) & (sl_ > 0.04)
+                med = float(np.median(sl_[ring])) if ring.any() else 0.2
+                step = float(np.clip(med * 28.0, 1.5, 7.0))          # 띠 한 단 ≈ 28m(수평) 주기
+                ph = ((yw - yc) / step) % 1.0
+                sc = dc / max(req, 20.0) + 0.15 * nzw + 3.0 * (sl_ > 0.45) + 1.0 * (sl_ < 0.04)
+                sc[(ph > 0.55) | (yw < yc - 0.5 * step) | (sl_ > 0.42)] = 99
+                shp["_step"] = step
         if core:
             # 성 밖: 성벽에서 core_max(120m) 안만. 남쪽(남문 밖 장터·광한루 쪽) 우선, 그다음 동·서문 밖 길가
             sc = sc - 0.9 * (sz > z1) - 0.35 * ((sx < x0) | (sx > x1)) * (np.abs(sz - (z0 + z1) / 2) < 60)
@@ -118,12 +153,17 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
         order_ = np.argsort(sc, axis=None)[:n_px]
         m = np.zeros(sc.shape, bool); m.flat[order_] = True
         m &= sc < 50
-        m = ndimage.binary_closing(m, iterations=2) & ~excl[j0:j1, i0:i1]
-        m = ndimage.binary_opening(m, iterations=1) | (m & inside_core)
+        if shp and shp["layout"] == "terraced":       # 띠 사이 틈을 메우지 않게: 닫기·열기 대신 작은 점만 지움
+            lab_t, n_t = ndimage.label(m)
+            if n_t: m = np.isin(lab_t, [k + 1 for k, v in enumerate(ndimage.sum(m, lab_t, range(1, n_t + 1))) if v >= 4])
+        else:
+            m = ndimage.binary_closing(m, iterations=2) & ~excl[j0:j1, i0:i1]
+            if shp and shp.get("roads"): m &= ndimage.binary_dilation(sc < 50, iterations=1)   # 띠 폭 유지
+            m = ndimage.binary_opening(m, iterations=1) | (m & inside_core)
         lab_, n_ = ndimage.label(m)
         if n_ > 1:   # 중심(또는 core)에 닿은 덩어리 + 큰 덩어리만
             sizes_ = ndimage.sum(np.ones_like(m), lab_, range(1, n_ + 1))
-            keep = [k + 1 for k in range(n_) if sizes_[k] >= 0.12 * sizes_.max()]
+            keep = [k + 1 for k in range(n_) if sizes_[k] >= (0.04 if shp and shp["layout"] == "terraced" else 0.12) * sizes_.max()]
             m = np.isin(lab_, keep)
         vm[j0:j1, i0:i1] |= m
         if m.any():

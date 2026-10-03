@@ -3,13 +3,14 @@
   "ok": true,
   "msg": "PNG 16bit 회색조(type 0) 4353×2113 cell 2.0m, y 3.0…386.0 (실제 70…1347m), 클립 0.0e+00, 광한루 y=12.0(실제 100m), 운봉 관아 y=120.0(실제 460m), 경사 tan 중앙값 0.27/99% 0.80, region_data 합계 14.8MB",
   "sizes": {
-   "qa.json": 6301,
+   "climate.png": 5303,
+   "qa.json": 6676,
    "map.png": 2109078,
-   "placement_namwon.json": 155778,
-   "landuse.png": 118629,
-   "placement_east.json": 443481,
+   "placement_namwon.json": 170615,
+   "landuse.png": 118851,
+   "placement_east.json": 445289,
    "height.png": 11319562,
-   "region.json": 598127,
+   "region.json": 609134,
    "map.json": 85
   }
  },
@@ -28,16 +29,16 @@
   "ok": true,
   "msg": "논 4.6% (경사>10% 비율 0.1%, 실제 고도 99% 532m), 밭 11.2% (경사>30% 0.1%)",
   "landuse_share": {
-   "0": 0.8009,
+   "0": 0.8008,
    "1": 0.0038,
    "2": 0.046,
-   "3": 0.1117,
+   "3": 0.1119,
    "4": 0.0071,
    "5": 0.013,
-   "6": 0.0058,
+   "6": 0.0056,
    "7": 0.0097,
    "8": 0.0015,
-   "9": 0.0006
+   "9": 0.0007
   }
  },
  "Q5": {
@@ -85,7 +86,7 @@
  },
  "Q14": {
   "ok": true,
-  "msg": "마을 단면 19/23 통과 (기준 75%)",
+  "msg": "마을 단면 18/23 통과 (기준 75%)",
   "detail": [
    [
     "namwon_eup",
@@ -104,7 +105,7 @@
    ],
    [
     "unbong_eup",
-    true,
+    false,
     "위반 0.00, 뒤(산쪽) 숲·밭 0.59, 뒤-앞 고도차 -2.0"
    ],
    [
@@ -115,7 +116,7 @@
    [
     "inwol_yeok",
     true,
-    "위반 0.07, 뒤(산쪽) 숲·밭 0.89, 뒤-앞 고도차 +0.2"
+    "위반 0.14, 뒤(산쪽) 숲·밭 0.89, 뒤-앞 고도차 +0.2"
    ],
    [
     "sannae",
@@ -239,5 +240,14 @@
   "ok": true,
   "msg": "읍성 성벽을 넘는 길은 모두 성문 통로",
   "fails": []
+ },
+ "QP": {
+  "ok": true,
+  "msg": "archetypes 9개, settlement 29곳 모두 profile — 유형별 {'eupchi': 3, 'plain': 18, 'pass': 2, 'river': 3, 'temple': 2, 'mountain': 1}",
+  "fails": []
+ },
+ "QC": {
+  "ok": true,
+  "msg": "climate.png 2177×1057 8bit(landuse와 같은 격자 True), 코드 [0, 3] — south 0.984, alpine 0.0155(해발 1,100m↑ 불일치 0.00000)"
  }
 }

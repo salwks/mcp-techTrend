@@ -83,6 +83,53 @@
           "walk": false,
           "pieces": 0,
           "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "plan": "il",
+            "w": 7.2
+          },
+          "tris": 2032,
+          "footprint": [
+            9.4,
+            6.4
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "plan": "giyeok"
+          },
+          "tris": 2810,
+          "footprint": [
+            8.2,
+            6.4
+          ],
+          "colliders": 3,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
         }
       ]
     },
@@ -126,6 +173,54 @@
           ],
           "colliders": 1,
           "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "daecheong",
+            "steps",
+            "maru"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "plan": "il",
+            "plain": true
+          },
+          "tris": 4440,
+          "footprint": [
+            12.6,
+            8.8
+          ],
+          "colliders": 1,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "daecheong",
+            "steps",
+            "maru"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "plan": "giyeok",
+            "plain": true
+          },
+          "tris": 5594,
+          "footprint": [
+            12.6,
+            8.8
+          ],
+          "colliders": 2,
+          "lights": 4,
           "occluder": true,
           "anchors": [
             "daecheong",
@@ -449,6 +544,26 @@
             "lite": true
           },
           "tris": 344,
+          "footprint": [
+            5.1,
+            0.6
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "lite": true,
+            "sparse": true
+          },
+          "tris": 244,
           "footprint": [
             5.1,
             0.6
@@ -1915,6 +2030,219 @@
           "walk": false,
           "pieces": 0,
           "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "small",
+            "roof": "neowa",
+            "wall": "stone_terrace"
+          },
+          "tris": 12562,
+          "footprint": [
+            14.8,
+            14.0
+          ],
+          "colliders": 21,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_maru",
+            "anchae_kitchen",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 11,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 2,
+            "size": "medium",
+            "roof": "gulpi",
+            "wall": "stone"
+          },
+          "tris": 13704,
+          "footprint": [
+            20.0,
+            16.8
+          ],
+          "colliders": 28,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_maru",
+            "anchae_kitchen",
+            "sarang_door",
+            "sarang_maru",
+            "sarang_kitchen",
+            "oeyang_cow",
+            "oeyang_gate",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 13,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 3,
+            "size": "small",
+            "roof": "choga_low",
+            "wall": "stone"
+          },
+          "tris": 9712,
+          "footprint": [
+            14.8,
+            14.0
+          ],
+          "colliders": 21,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_maru",
+            "anchae_kitchen",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 11,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 4,
+            "size": "small",
+            "roof": "guitul",
+            "wall": "fence"
+          },
+          "tris": 9386,
+          "footprint": [
+            14.8,
+            14.0
+          ],
+          "colliders": 21,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_maru",
+            "anchae_kitchen",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 11,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 5,
+            "size": "medium",
+            "roof": "giwa",
+            "plan": "giyeok"
+          },
+          "tris": 13586,
+          "footprint": [
+            20.0,
+            16.8
+          ],
+          "colliders": 27,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_daecheong",
+            "anchae_steps",
+            "anchae_maru",
+            "sarang_daecheong",
+            "sarang_steps",
+            "sarang_maru",
+            "oeyang_cow",
+            "oeyang_gate",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in",
+            "gate_wall_l",
+            "gate_wall_r"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 13,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 6,
+            "size": "medium",
+            "plan": "il",
+            "wall": "fence"
+          },
+          "tris": 12576,
+          "footprint": [
+            20.0,
+            16.8
+          ],
+          "colliders": 28,
+          "lights": 4,
+          "occluder": true,
+          "anchors": [
+            "anchae_door",
+            "anchae_maru",
+            "anchae_kitchen",
+            "sarang_door",
+            "sarang_maru",
+            "sarang_kitchen",
+            "oeyang_cow",
+            "oeyang_gate",
+            "heotgan_front",
+            "dwitgan_door",
+            "gate_gate_out",
+            "gate_gate_in"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 13,
+          "layout": true
+        },
+        {
+          "params": {
+            "seed": 1,
+            "size": "medium",
+            "roof": "neowa",
+            "wall": "stone",
+            "lod": 1
+          },
+          "tris": 908,
+          "footprint": [
+            20.0,
+            16.8
+          ],
+          "colliders": 13,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": true
         }
       ]
     },
@@ -2217,6 +2545,321 @@
           "anchors": [
             "chopper"
           ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "neowa_house",
+      "file": "res://kit/village/neowa_house.gd",
+      "desc": "너와집 — 산촌 민가. 흙벽 3칸 + 회갈색 나무판(너와) 맞배 지붕·누름돌·누름대·박공 까치구멍·통나무 굴뚝. plan il/giyeok, lod=1",
+      "shot": "shots/kit/village/neowa_house.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 4012,
+      "footprint": [
+        8.6,
+        6.8
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "maru",
+        "kitchen"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "plan": "giyeok"
+          },
+          "tris": 5698,
+          "footprint": [
+            8.6,
+            9.6
+          ],
+          "colliders": 3,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "lod": 1
+          },
+          "tris": 1532,
+          "footprint": [
+            8.6,
+            6.8
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "gulpi_house",
+      "file": "res://kit/village/gulpi_house.gd",
+      "desc": "굴피집 — 산촌 민가. 짙은 갈색 굴참나무 껍질 판 지붕 + 밝은 누름목 세 줄 + 용마루 통나무. plan il/giyeok, lod=1",
+      "shot": "shots/kit/village/gulpi_house.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 2752,
+      "footprint": [
+        8.2,
+        6.6
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "maru",
+        "kitchen"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "plan": "il"
+          },
+          "tris": 2800,
+          "footprint": [
+            8.2,
+            6.6
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "guitul_house",
+      "file": "res://kit/village/guitul_house.gd",
+      "desc": "귀틀집 — 통나무 井자 귀틀 벽(네 귀 엇물림) + 억새 맞배(잿빛, 기본) 또는 roof neowa/gulpi. 북부·고산용",
+      "shot": "shots/kit/village/guitul_house.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 3094,
+      "footprint": [
+        8.2,
+        6.8
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "maru",
+        "kitchen"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "roof": "neowa"
+          },
+          "tris": 5446,
+          "footprint": [
+            8.2,
+            6.8
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 1,
+            "lod": 1
+          },
+          "tris": 930,
+          "footprint": [
+            8.2,
+            6.8
+          ],
+          "colliders": 1,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "choga_low",
+      "file": "res://kit/village/choga_low.gd",
+      "desc": "낮은 해안 초가 — 낮은 몸체 + 납작한 잿빛 이엉 + 새끼 그물 격자 + 처마 둘레 매단 돌. 해안·섬용",
+      "shot": "shots/kit/village/choga_low.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 3412,
+      "footprint": [
+        8.0,
+        6.2
+      ],
+      "colliders": 2,
+      "lights": 2,
+      "occluder": true,
+      "anchors": [
+        "door",
+        "maru",
+        "kitchen"
+      ],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "plan": "il",
+            "grid": 5
+          },
+          "tris": 3060,
+          "footprint": [
+            8.0,
+            6.2
+          ],
+          "colliders": 2,
+          "lights": 2,
+          "occluder": true,
+          "anchors": [
+            "door",
+            "maru",
+            "kitchen"
+          ],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        }
+      ]
+    },
+    {
+      "name": "stone_terrace",
+      "file": "res://kit/village/stone_terrace.gd",
+      "desc": "계단식 돌축대 + 돌담 — 비탈 집터 받침. 두 점 사이, 원점 = 위 단 땅(origin bottom이면 맨 아래), tiers 단, drop 전체 높이",
+      "shot": "shots/kit/village/stone_terrace.png",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1858,
+      "footprint": [
+        6.6,
+        2.4
+      ],
+      "colliders": 1,
+      "lights": 0,
+      "occluder": true,
+      "anchors": [],
+      "interior": false,
+      "walk": false,
+      "pieces": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 2,
+            "origin": "bottom"
+          },
+          "tris": 1882,
+          "footprint": [
+            6.6,
+            2.4
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
+          "interior": false,
+          "walk": false,
+          "pieces": 0,
+          "layout": false
+        },
+        {
+          "params": {
+            "seed": 3,
+            "tiers": 1,
+            "drop": 1.2,
+            "wall": false
+          },
+          "tris": 1176,
+          "footprint": [
+            6.6,
+            1.5
+          ],
+          "colliders": 1,
+          "lights": 0,
+          "occluder": true,
+          "anchors": [],
           "interior": false,
           "walk": false,
           "pieces": 0,

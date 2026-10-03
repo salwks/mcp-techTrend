@@ -29,6 +29,12 @@ def write_landuse(lu, path=None):
                          "7": "바위·벼랑", "8": "모래톱·자갈", "9": "대숲"},
                 note="height와 같은 원점, 2배 거친 격자(4m). 픽셀(i,j) 중심 = (x0+i*cell, z0+j*cell)")
 
+def write_climate(cl, codes, meta, path=None):
+    path = path or os.path.join(C.OUT, "climate.png")
+    Image.fromarray(cl.astype(np.uint8), mode="L").save(path, optimize=True)
+    return dict(file="climate.png", x0=C.X0, z0=C.Z0, cell=C.LU_CELL, w=int(cl.shape[1]), h=int(cl.shape[0]), codes=codes,
+                rule=meta, note="landuse와 같은 격자(4m). 8비트 코드: 0 south, 1 central, 2 north, 3 alpine, 4 coast. 위도·해발(28m 평균)·해안 거리로 계산")
+
 def write_region(d, path=None):
     path = path or os.path.join(C.OUT, "region.json")
     tmp = path + ".tmp"

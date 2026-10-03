@@ -1,5 +1,6 @@
 # 돌담(막돌 허튼층쌓기 + 갓돌) — 웹 buildings.js stoneWall() 이식. 두 점 (ax,az)→(bx,bz) 사이.
-# params: seed, ax,az,bx,bz (없으면 len(4.5) 길이로 x축, 원점 중심), h(1.3), lite(false: 막돌 한 줄·먹선 줄임, ~90/m)
+# params: seed, ax,az,bx,bz (없으면 len(4.5) 길이로 x축, 원점 중심), h(1.3), lite(false: 막돌 한 줄·먹선 줄임, ~90/m),
+#         sparse(false: lite에서 막돌·갓돌 간격을 넓힘, ~50/m — 집 묶음 둘레용)
 # 삼각형: 약 230/m (막돌 하나하나가 덩이라서). 긴 담은 여러 토막으로 놓기.
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
@@ -10,17 +11,17 @@ static func build(params: Dictionary) -> Dictionary:
 	var ax: float = params.get("ax", -L / 2); var az: float = params.get("az", 0.0)
 	var bx: float = params.get("bx", L / 2); var bz: float = params.get("bz", 0.0)
 	var h: float = params.get("h", 1.3)
-	draw(m, ax, az, bx, bz, h, bool(params.get("lite", false)))
+	draw(m, ax, az, bx, bz, h, bool(params.get("lite", false)), bool(params.get("sparse", false)))
 	return m.result("돌담", Vector2(absf(bx - ax) + 0.6, absf(bz - az) + 0.6), true)
 
 # 담 토막 하나 그리기 + 충돌체 등록
-static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.3, lite := false) -> float:
+static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.3, lite := false, sparse := false) -> float:
 	var len := Vector2(bx - ax, bz - az).length()
 	var R := m.rng
 	var old := m.xform
 	m.xform = old * C.seg_xform(ax, az, bx, bz)
 	m.add("p", "stone", C.P(Kit.box(len, h, 0.55, 0, h / 2 - 0.05, 0), 0xa39a86, 0x857c6a, 0.05, R), 0.03)
-	var n := maxi(2, roundi(len / (0.8 if lite else 0.5)))
+	var n := maxi(2, roundi(len / ((1.5 if sparse else 0.8) if lite else 0.5)))
 	for row in (1 if lite else 2):
 		for i in n:
 			var x := -len / 2 + (i + 0.5 + (row % 2) * 0.4) * (len / n) - 0.1
@@ -29,9 +30,9 @@ static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.3, l
 			var y := 0.3 + row * 0.5 * (h / 1.3) + (m.r() - 0.5) * 0.06
 			Kit.xf(g, x, y, 0.26, 0, m.r() * 3, 0, 1.15, 1.2, 0.55)
 			m.add("p", "stone", C.P(g, 0xbdb6a6, 0x8f887a, 0.08, R), 0.0 if lite else 0.02)
-	var nt := maxi(2, roundi(len / (0.9 if lite else 0.7)))
+	var nt := maxi(2, roundi(len / ((1.25 if sparse else 0.9) if lite else 0.7)))
 	for i in nt:
-		var g := Kit.lump(0.38, 0, R, 0.3, 0.5)
+		var g := Kit.lump(0.5 if sparse else 0.38, 0, R, 0.3, 0.5 if sparse else 0.5)
 		Kit.xf(g, -len / 2 + (i + 0.5) * (len / nt), h + 0.02, 0, 0, m.r() * 3, 0)
 		m.add("p", "stone", C.P(g, 0xb3ac9c, 0x90897b, 0.08, R), 0.02)
 	m.xform = old

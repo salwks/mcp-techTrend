@@ -4,7 +4,7 @@ import json, math, os, sys, time
 import numpy as np
 from scipy import ndimage
 from PIL import Image, ImageDraw
-import common as C, dem, modern_fix, hydro, roads as R, landuse as LU, export, places as P
+import common as C, dem, modern_fix, hydro, roads as R, landuse as LU, export, places as P, profiles as PF
 
 T0 = time.time()
 def say(*a): print(f"[{time.time() - T0:6.1f}s]", *a, flush=True)
@@ -485,7 +485,15 @@ def main():
     # ── 토지이용 + 자동 마을
     say("토지이용")
     y4 = y2[::2, ::2]
+    for s_ in sets:                                    # 마을 짜임별 마을 터 모양(계획서 A2)
+        shp = PF.SHAPE.get(s_["id"])
+        if shp:
+            s_["_shape"] = dict(shp)
+            if shp.get("toward"): s_["_shape"]["toward"] = (L[shp["toward"]]["x"], L[shp["toward"]]["z"])
     lu, autos, info = LU.classify(y4, rivers, roads, sets)
+    for s_ in sets:
+        shp = s_.pop("_shape", None)
+        if shp: say("shape", s_["id"], shp["layout"], info["shapes"].get(s_["id"], {}).get("area_m2"), shp.get("_step"))
     for n, (x, z) in enumerate(autos):
         sets.append(dict(id=f"auto_village_{n:02d}", name=f"들마을 후보 {n + 1}", type="마을", x=round(x, 1), z=round(z, 1), radius_m=32, size="S",
                          notes="입지 규칙(산기슭·남향·아래 논) 자동 후보", confidence="가설",
@@ -573,6 +581,15 @@ def main():
     say("길 둑 보정", n_fix, "칸(2m) 돋움,", n_lu, "칸(4m) 물→길")
     hm = export.write_height(y2.astype(np.float32))
     lum = export.write_landuse(lu)
+    # 기후대 지도(계획서 B1) + 고을 성격표(계약서 §9)
+    cl4, cl_meta = PF.climate_grid(y2[::2, ::2])
+    clm = export.write_climate(cl4, PF.CLIMATE_CODES, cl_meta)
+    say("climate", {PF.CLIMATE_NAMES[k]: int((cl4 == k).sum()) for k in np.unique(cl4)})
+    gz4_, gx4_ = np.gradient(y2[::2, ::2], C.LU_CELL); sl4_ = np.hypot(gx4_, gz4_)
+    for s_ in sets:
+        i_, j_ = [int(round(float(v))) for v in C.xz_to_ij(s_["x"], s_["z"], C.LU_CELL)]
+        if s_["id"] in PF.PROFILES: s_["profile"] = dict(PF.PROFILES[s_["id"]])
+        elif s_["id"].startswith("auto_village"): s_["profile"] = PF.auto_profile(y2[::2, ::2], sl4_, s_["x"], s_["z"], int(cl4[j_, i_]))
     sx, sz = L["namwon_south_gate"]["x"], L["namwon_south_gate"]["z"] + 25
     for l in lms:
         fi, fj = C.xz_to_ij(l["x"], l["z"]); l["y"] = round(float(C.bilinear(y2, fi, fj)), 2)
@@ -594,6 +611,7 @@ def main():
         projection=dict(lat0=C.LAT0, lon0=C.LON0, K=C.K, y_base_alt=C.Y_BASE_ALT,
                         formula="x=(lon-lon0)*cos(lat0)*111320*K, z=-(lat-lat0)*110574*K, y=(alt-60)*K"),
         axes=axes,
+        archetypes=PF.ARCHETYPES, climate=clm,
         height=hm, landuse=lum, rivers=rivers, roads=roads, passes=passes,
         crossings=crossings, settlements=sets, landmarks=lms,
         spawn=dict(x=sx, z=sz, note=P.SPAWN_NOTE),

@@ -102,6 +102,26 @@ def landuse_map(reg, lu, path):
         d.rectangle([12, 12 + n * 24, 32, 30 + n * 24], fill=c, outline=(0, 0, 0)); d.text((38, 10 + n * 24), names[k], fill=(255, 255, 255), font=f, stroke_width=2, stroke_fill=(0, 0, 0))
     im.save(path)
 
+CL_COL = {0: (235, 170, 80), 1: (120, 190, 110), 2: (120, 160, 230), 3: (245, 245, 255), 4: (60, 190, 200)}
+
+def climate_map(reg, y, cl, path):
+    """기후대(계획서 B1) 위에 음영기복과 고을 유형(archetype)·signature."""
+    hs = hillshade(y)[:cl.shape[0], :cl.shape[1]]
+    a = np.zeros(cl.shape + (3,), float)
+    for k, c in CL_COL.items(): a[cl == k] = np.array(c) / 255
+    im = Image.fromarray((np.clip(a * (0.35 + 0.65 * hs.mean(-1, keepdims=True) / 0.9), 0, 1) * 255).astype(np.uint8)); d = ImageDraw.Draw(im)
+    f = font(18); fs = font(14)
+    names = reg["climate"]["codes"]
+    for n, (k, c) in enumerate(CL_COL.items()):
+        d.rectangle([12, 40 + n * 24, 32, 58 + n * 24], fill=c, outline=(0, 0, 0)); d.text((38, 38 + n * 24), names[str(k)], fill=(255, 255, 255), font=f, stroke_width=2, stroke_fill=(0, 0, 0))
+    for s in reg["settlements"]:
+        pf = s.get("profile") or {}
+        px, pz = to_px(s["x"], s["z"]); d.ellipse([px - 4, pz - 4, px + 4, pz + 4], fill=(200, 30, 30))
+        lab = f"{pf.get('archetype', '?')}/{pf.get('climate', '?')}" + ("" if s["id"].startswith("auto") else f" {s['name']}: {pf.get('signature', '')}")
+        d.text((px + 6, pz - 7), lab, fill=(20, 20, 20), font=fs, stroke_width=2, stroke_fill=(255, 255, 255))
+    d.text((12, 8), "기후대 지도 (climate.png) + 고을 유형/기후대", fill=(0, 0, 0), font=f, stroke_width=2, stroke_fill=(255, 255, 255))
+    im.save(path)
+
 if __name__ == "__main__":
     reg = json.load(open(os.path.join(C.OUT, "region.json")))
     y, _ = export.read_height()
@@ -117,4 +137,7 @@ if __name__ == "__main__":
     lp = os.path.join(C.OUT, "landuse.png")
     if os.path.exists(lp):
         landuse_map(reg, np.asarray(Image.open(lp)), os.path.join(C.SHOTS, "landuse_map.png"))
+    cp = os.path.join(C.OUT, "climate.png")
+    if os.path.exists(cp):
+        climate_map(reg, y, np.asarray(Image.open(cp)), os.path.join(C.SHOTS, "climate_map.png"))
     print("ok")

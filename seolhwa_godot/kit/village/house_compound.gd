@@ -12,7 +12,11 @@
 #                            (lod=1 또는 merged=true면 자기 자신 한 조각 = 한 덩이)
 #   params.lod = 1           먼 읍내용 가벼운 한 덩이(≤ 4,000 삼각형: 몸체 상자 + 창호 띠 + 지붕, 소품 생략)
 # 성능: 한 덩이(lod 0)는 '큰 건물' 예산 ≤ 15,000. 조각 하나하나는 각 모델 예산 안.
-# params: seed, size("small"|"medium"|"large"), lod(0|1), merged(false)
+# params: seed, size("small"|"medium"|"large"), lod(0|1), merged(false),
+#         roof: 안채·사랑채 지붕 재료(고을 성격표 §9) "choga"|"giwa"|"neowa"|"gulpi"|"guitul"|"choga_low" (없으면 size 기본: small·medium 초가, large 기와)
+#         wall: 담 재료 "fence"(싸리울)|"todam"(토담: large면 기와 갓, 아니면 이엉 갓)|"stone"(돌담)|"stone_terrace"(앞 축대 + 돌담)|"none"
+#               (없으면 size 기본: small fence, medium todam, large todam). fence·stone·stone_terrace·none이면 대문 대신 사립문(none은 문도 없음)
+#         plan: 안채 가옥형 ""|"il"(남부 一자, 넓은 툇마루)|"giyeok"(중부 ㄱ자) — choga·giwa·neowa·gulpi만
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
 
@@ -73,25 +77,60 @@ static func entries(params: Dictionary) -> Array:
 			L.append(_e("jangdok", "jangdok", { seed = s0 + 5, w = 3.0, d = 2.0 }, 5.9, -6.6, 0))
 			L.append(_e("dwitgan", "dwitgan", { seed = s0 + 6, s = 1.4 }, -8.3, -6.8, Wf))
 			L.append(_e("firewood", "firewood", { seed = s0 + 7, style = "row", len = 2.4, rows = 4 }, -4.9, -4.5, Wf))
-			_enclose(L, s0 + 20, -X, X, Z0, Z1, 1.25, "todam_thatch")
-			L.append(_e("gate", "daemun", { seed = s0 + 8, style = "thatch", open = true, lantern = false }, 0, Z1, 0))
+			_walls(L, params, s0, X, Z0, Z1, 1.25, "todam", _e("gate", "daemun", { seed = s0 + 8, style = "thatch", open = true, lantern = false }, 0, Z1, 0))
 		"large":
 			L.append(_e("anchae", "giwa", { seed = s0 + 1, w = 9.0, d = 5.4, plain = true, roof_nx = 18, roof_nz = 9 }, 0, -4.9, 0))
 			L.append(_e("sarang", "giwa", { seed = s0 + 2, w = 6.6, d = 4.2, bays = 3, plain = true, roof_nx = 14, roof_nz = 7 }, -7.4, 2.6, Wf))
 			L.append(_e("gotgan", "heotgan", { seed = s0 + 3, w = 4.4, d = 2.8, walls = "three" }, 8.6, 1.8, E))
 			L.append(_e("jangdok", "jangdok", { seed = s0 + 4, w = 3.0, d = 2.2, n = [3, 2, 1] }, 7.4, -7.4, 0))
 			L.append(_e("dwitgan", "dwitgan", { seed = s0 + 5, s = 1.5 }, 10.6, 7.4, E))
-			_enclose(L, s0 + 20, -X, X, Z0, Z1, 3.3, "todam_tile")
-			L.append(_e("gate", "daemun", { seed = s0 + 8, style = "soseul", open = true, lantern = true }, 0, Z1 + 0.6, 0))
+			_walls(L, params, s0, X, Z0, Z1, 3.3, "todam", _e("gate", "daemun", { seed = s0 + 8, style = "soseul", open = true, lantern = true }, 0, Z1 + 0.6, 0))
 		_:
 			L.append(_e("anchae", "choga", { seed = s0 + 1, w = 6.0, d = 4.0, hump = snappedf((r.next() - 0.5) * 0.3, 0.01), gourd = r.next() < 0.5 }, 0, -2.6, 0))
 			L.append(_e("heotgan", "heotgan", { seed = s0 + 2, w = 3.2, d = 2.4, walls = "three" }, 5.2, 1.6, E))
 			L.append(_e("dwitgan", "dwitgan", { seed = s0 + 3, s = 1.4 }, -5.6, 4.9, Wf))
 			L.append(_e("jangdok", "jangdok", { seed = s0 + 4, w = 2.4, d = 1.8, n = [2, 2, 1] }, 4.6, -4.7, 0))
 			L.append(_e("firewood", "firewood", { seed = s0 + 5, style = "row", len = 2.4, rows = 4 }, -4.7, -2.8, Wf))
-			_enclose(L, s0 + 20, -X, X, Z0, Z1, 0.75, "fence")
-			L.append(_e("gate", "saripmun", { seed = s0 + 8, w = 1.4, open = true }, 0, Z1, 0))
+			_walls(L, params, s0, X, Z0, Z1, 0.75, "fence", _e("gate", "saripmun", { seed = s0 + 8, w = 1.4, open = true }, 0, Z1, 0))
+	_roofs(L, params)
 	return L
+
+# 안채·사랑채 지붕 재료·가옥형 바꾸기
+const ROOF_KIT := { choga = "choga", giwa = "giwa", neowa = "neowa_house", gulpi = "gulpi_house", guitul = "guitul_house", choga_low = "choga_low" }
+static func _roofs(L: Array, params: Dictionary) -> void:
+	var roof: String = params.get("roof", "")
+	var plan: String = params.get("plan", "")
+	for e in L:
+		if e.tag != "anchae" and e.tag != "sarang": continue
+		var p: Dictionary = e.params
+		var w: float = p.get("w", 6.0); var d: float = p.get("d", 4.0)
+		if roof != "" and ROOF_KIT.has(roof) and e.kit != "village/" + ROOF_KIT[roof]:
+			var q := { seed = p.seed, w = w, d = d }
+			match roof:
+				"giwa":
+					q.plain = true; q.d = maxf(d, 4.4); q.bays = 5 if w >= 8.0 else 3
+					q.roof_nx = 18 if w >= 8.0 else 14; q.roof_nz = 9 if w >= 8.0 else 7
+				"choga":
+					q.d = minf(d, 4.6); q.hump = 0.0
+			e.kit = "village/" + ROOF_KIT[roof]
+			e.params = q
+		if e.tag == "anchae" and plan != "" and e.kit in ["village/choga", "village/giwa", "village/neowa_house", "village/gulpi_house"]:
+			e.params.plan = plan
+
+# 둘레 담 + 문. wall param이 없으면 size 기본(dflt)
+static func _walls(L: Array, params: Dictionary, s0: int, X: float, Z0: float, Z1: float, gh: float, dflt: String, gate: Dictionary) -> void:
+	var wall: String = params.get("wall", dflt)
+	if not wall in ["none", "todam", "fence", "stone", "stone_terrace"]: wall = "stone"   # stone_net·basalt 등 아직 없는 재료
+	var large: bool = params.get("size", "small") == "large"
+	match wall:
+		"none":
+			return
+		"todam":
+			_enclose(L, s0 + 20, -X, X, Z0, Z1, gh, "todam_tile" if large else "todam_thatch")
+		_:
+			_enclose(L, s0 + 20, -X, X, Z0, Z1, gh if wall == "todam" else 0.75, wall)
+	if wall == "todam" or gate.kit == "village/saripmun": L.append(gate)
+	else: L.append(_e("gate", "saripmun", { seed = s0 + 8, w = 1.4, open = true }, 0, Z1, 0))
 
 static func _e(tag: String, kit: String, p: Dictionary, x: float, z: float, ry: float) -> Dictionary:
 	return { tag = tag, kit = "village/" + kit, params = p, x = x, z = z, ry = ry }
@@ -106,6 +145,13 @@ static func _enclose(L: Array, seed: int, x0: float, x1: float, z0: float, z1: f
 			"fence": p.lite = true; L.append(_e(s[0], "fence", p, 0, 0, 0))
 			"todam_thatch": p.h = 1.5; p.cap = "thatch"; L.append(_e(s[0], "todam", p, 0, 0, 0))
 			"todam_tile": p.h = 1.6; p.cap = "tile"; p.tile_seg = 0.5; L.append(_e(s[0], "todam", p, 0, 0, 0))
+			"stone": p.lite = true; p.sparse = true; p.h = 1.2; L.append(_e(s[0], "stone_wall", p, 0, 0, 0))
+			"stone_terrace":
+				# 비탈 집터: 앞(남) 두 토막은 축대(원점 = 마당 높이) + 돌담, 나머지는 돌담
+				if s[0] == "wall_sw" or s[0] == "wall_se":
+					p.drop = 1.2; p.tiers = 1; p.wall_h = 0.9; L.append(_e(s[0], "stone_terrace", p, 0, 0, 0))
+				else:
+					p.lite = true; p.sparse = true; p.h = 1.1; L.append(_e(s[0], "stone_wall", p, 0, 0, 0))
 		i += 1
 
 # 조각마다 지어 자식 노드로 묶음(충돌체·조명·앵커는 묶음 로컬로 옮김, 앵커 이름 앞에 tag_)
@@ -163,6 +209,24 @@ static func lod_draw(m: C.M, e: Dictionary) -> void:
 			m.add("p", "flat", C.P(Kit.box(r.ridge_half * 2 + 0.4, 0.3, 0.36, 0, r.ridge_y + 0.08, 0), C.ROOF_DARK), 0)
 			m.light(0, 1.9, D / 2 + 0.2, "window")
 			m.box_c(-W / 2 - 0.6, W / 2 + 0.6, -D / 2 - 0.6, D / 2 + 1.45)
+		"village/neowa_house", "village/gulpi_house", "village/guitul_house", "village/choga_low":
+			var W: float = p.get("w", 6.0); var D: float = p.get("d", 4.0)
+			var low: bool = e.kit == "village/choga_low"
+			var wh := 1.6 if low else 1.9
+			m.add("p", "stone", C.PA(Kit.box(W + 0.9, 0.3, D + 0.9, 0, 0.15, 0), C.STONE, 0.05, R), 0.02)
+			m.add("p", "bark" if e.kit == "village/guitul_house" else "mud", C.PA(Kit.box(W, wh, D, 0, 0.3 + wh / 2, 0), [0x7a6450, 0x5e4c3a] if e.kit == "village/guitul_house" else C.MUD, 0.04, R), 0.02)
+			m.add("p", "paper", C.vplane(W * 0.5, 1.0, -W * 0.08, 1.15, D / 2 + 0.01), 0)
+			var top := 0.3 + wh
+			match e.kit:
+				"village/choga_low": preload("res://kit/village/choga_low.gd").low_roof(m, W / 2 + 0.95, D / 2 + 1.0, top + 0.1, 0.85, 0.0, 5, true)
+				"village/guitul_house": C.thatch_gable(m, "p", W + 1.6, D + 2.1, top + 0.12, 1.75, C.EOKSAE, C.EOKSAE_RIDGE)
+				_: C.board_roof(m, "p", W + 1.5, D + 2.0, top + 0.1, 1.75, "neowa" if e.kit == "village/neowa_house" else "gulpi", 0, 0, 0, true)
+			m.light(-W / 3, 1.3, D / 2 + 0.2, "window")
+			m.box_c(-W / 2 - 0.45, W / 2 + 0.45, -D / 2 - 0.45, D / 2 + 0.75)
+		"village/stone_wall":
+			_lod_wall(m, p, "stone")
+		"village/stone_terrace":
+			_lod_wall(m, p, "stone")
 		"village/heotgan", "village/oeyanggan":
 			var W: float = p.get("w", 4.0); var D: float = p.get("d", 2.8)
 			m.add("p", "mud", C.PA(Kit.box(W, 1.9, D, 0, 1.13, -0.1), C.MUD, 0.04, R), 0.02)
@@ -213,6 +277,9 @@ static func _lod_wall(m: C.M, p: Dictionary, kind: String) -> void:
 	m.xform = old * C.seg_xform(ax, az, bx, bz)
 	if kind == "fence":
 		m.add("p", "flat", C.P(Kit.box(len, 1.1, 0.06, 0, 0.55, 0), 0x9c8462, 0x6e5a44, 0.06, m.rng), 0)
+	elif kind == "stone":
+		var h: float = p.get("h", p.get("wall_h", 1.1))
+		m.add("p", "stone", C.P(Kit.box(len, h, 0.55, 0, h / 2, 0), 0xa39a86, 0x857c6a, 0.05, m.rng), 0.02)
 	else:
 		var h: float = p.get("h", 1.5)
 		m.add("p", "mud", C.P(Kit.box(len, h, 0.45, 0, h / 2, 0), 0xc9b08a, 0xa08866, 0.04, m.rng), 0.02)
