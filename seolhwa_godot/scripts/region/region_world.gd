@@ -244,13 +244,22 @@ func paint_yard(c: Vector2, ry: float, half: Vector2) -> void:
 	var R := half.length() + 16.0
 	var i0 := clampi(floori((c.x - R - hx0) / hstep), 0, hnx - 1); var i1 := clampi(ceili((c.x + R - hx0) / hstep), 0, hnx - 1)
 	var j0 := clampi(floori((c.y - R - hz0) / hstep), 0, hnz - 1); var j1 := clampi(ceili((c.y + R - hz0) / hstep), 0, hnz - 1)
+	# 안쪽 고리를 줄였다(결과 같음 — 부동소수 끝자리 차이뿐): 회전을 펼쳐 한 칸씩 더하고, 255(≈16m) 넘는 칸은 제곱근 없이 건너뛴다
+	var hxh := half.x; var hzh := half.y
+	var far2 := (254.5 / 16.0) * (254.5 / 16.0)
+	var sx := hstep * ca; var sz := hstep * sa
 	for j in range(j0, j1 + 1):
+		var dz := hz0 + j * hstep - c.y
+		var dx0 := hx0 + i0 * hstep - c.x
+		var lx := dx0 * ca - dz * sa; var lz := dx0 * sa + dz * ca
+		var k := (j * hnx + i0) * 4 + 2
 		for i in range(i0, i1 + 1):
-			var l := _to_local(Vector2(hx0 + i * hstep, hz0 + j * hstep) - c, ca, sa)
-			var d := Vector2(maxf(absf(l.x) - half.x, 0.0), maxf(absf(l.y) - half.y, 0.0)).length()
-			var k := (j * hnx + i) * 4 + 2
-			var dq := clampi(roundi(d * 16.0), 0, 255)
-			if dq < pbytes[k]: pbytes[k] = dq
+			var ax := maxf(absf(lx) - hxh, 0.0); var az := maxf(absf(lz) - hzh, 0.0)
+			var d2 := ax * ax + az * az
+			if d2 < far2:
+				var dq := clampi(roundi(sqrt(d2) * 16.0), 0, 255)
+				if dq < pbytes[k]: pbytes[k] = dq
+			lx += sx; lz += sz; k += 4
 	_paint_dirty = true
 
 # 카메라 구역(웹 마을과 같은 값): 권역 기본 22m·40°, 고을·장터 22/40, 숲·산길 20/48(플레이어 둘레 숲을 보고 움직이는 구역),

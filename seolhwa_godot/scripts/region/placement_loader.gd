@@ -3,7 +3,7 @@
 # 키트를 build()하고(같은 kit+params는 한 번만, 작업 스레드 여러 개로) RegionWorld.add_static으로 놓는다.
 # 정적 물체는 RegionWorld가 타일 스트리밍에 맞춰 붙였다 뗀다.
 #
-#   항목: { id, kit:"village/house_compound", params:{seed…}, x, z, ry(라디안), y(null=지형), flatten, clear_veg(기본 true),
+#   항목: { id, kit:"village/house_compound", params:{seed…}, x, z, ry(라디안), y(null=지형), flatten, clear_veg(기본 true), yard(기본 true: 마당 흙),
 #           footprint:[w,d](선택 — 없으면 build() 결과), group }
 #   - 배치형(읍성·관아·실상사·향교): 키트에 static layout(params)가 있으면 그걸로, 없으면 build() 결과 pieces로 조각마다 놓는다.
 #     조각 { kit, params, x, z, ry, y?(선택, 부모 높이 기준) }는 부모 기준 로컬 좌표.
@@ -158,7 +158,7 @@ func load_all() -> void:
 			for kk in YARD_COMPOSITES:
 				if r.kit.ends_with(kk):
 					world.paint_yard(c, r.ry, fp * 0.5 - Vector2(1.5, 1.5)); stats.yards += 1; break
-		elif _yard_kit(r):
+		elif r.get("yard", true) and _yard_kit(r):   # 항목 "yard": false면 제 마당 흙을 칠하지 않는다(도성 안 소품 — 둘레 집 마당이 이미 칠함)
 			world.paint_yard(c, r.ry, fp * 0.5)
 			stats.yards += 1
 	# 못 파기: build 결과 water {y, outline}(로컬) — 터 고르기 뒤 높이 기준
@@ -358,7 +358,8 @@ func _rec(it: Dictionary) -> Dictionary:
 	return { id = String(it.get("id", "")), kit = String(it.kit), params = it.get("params", {}) if it.get("params") is Dictionary else {},
 		x = float(it.get("x", 0.0)), z = float(it.get("z", 0.0)), ry = float(it.get("ry", 0.0)),
 		y = (float(it.y) if it.get("y") != null else null), flatten = bool(it.get("flatten", false)),
-		clear_veg = bool(it.get("clear_veg", true)), fp = world.to_v2(it.get("footprint", Vector2.ZERO)), flat_y = NAN }
+		clear_veg = bool(it.get("clear_veg", true)), fp = world.to_v2(it.get("footprint", Vector2.ZERO)), flat_y = NAN,
+		yard = bool(it.get("yard", true)) }
 
 # 배치형 footprint가 없으면 조각 자리로 어림(+8m)
 func _fp_from_pieces(rec: Dictionary, ps: Array) -> void:
@@ -374,7 +375,7 @@ func _piece(parent: Dictionary, p: Dictionary) -> Dictionary:
 	var r := { id = "%s/%s" % [parent.id, String(p.get("tag", p.get("kit", "piece")))], kit = String(p.kit),
 		params = p.get("params", {}) if p.get("params") is Dictionary else {},
 		x = parent.x + w.x, z = parent.z + w.z, ry = parent.ry + float(p.get("ry", 0.0)), y = null,
-		flatten = false, clear_veg = false, fp = Vector2.ZERO, flat_y = NAN, is_piece = true, parent = parent, py = p.get("y"),
+		flatten = false, clear_veg = false, fp = Vector2.ZERO, flat_y = NAN, is_piece = true, parent = parent, py = p.get("y"), yard = parent.get("yard", true),
 		lx = float(p.get("x", 0.0)), lz = float(p.get("z", 0.0)) }
 	return r
 
