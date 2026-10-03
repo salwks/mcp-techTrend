@@ -484,21 +484,48 @@ def lane_grid(pl, T, cells, rect, g, pitch=21.0, ns_every=72.0, w=3.0, min_len=2
     return ew
 
 
-def lane_rows(pl, T, cells, lane_ids, g, gc, mix, seed, st, limit=999, setback=0.5, max_drop=3.2):
-    """골목 북쪽에 집을 바짝(물림 setback m) 붙여 늘어놓는다 — 대문·정면이 골목(남쪽)을 본다."""
+def lane_rows(pl, T, cells, lane_ids, g, gc, mix, seed, st, limit=999, setback=0.5, max_drop=3.2, gap=(0.6, 1.6)):
+    """동서 골목 북쪽에 집을 바짝(물림 setback m, 남향 ry 0) 늘어놓는다 — 대문·정면이 골목을 본다.
+    섞음(mix)에서 집터를 뽑고, 안 맞으면 도시 한옥 → 소품 순. (street_rows는 집이 자주 실패해 줄이 소품뿐이 되었다)"""
     if len(cells) == 0 or not lane_ids:
         return 0
-    cx, cz = float(cells[:, 0].mean()), float(cells[:, 1].mean())
-    R = float(np.sqrt(((cells - [cx, cz]) ** 2).sum(1)).max()) + 20
-    L = Local(T, cx, cz, R + 60)
+    cellset = set((int(round(x / 4.0)), int(round(z / 4.0))) for x, z in cells)
     n = 0
-    for k, rid in enumerate(lane_ids):
+    for li, rid in enumerate(lane_ids):
         rd = T.road(rid)
-        n += EV.street_rows(pl, T, L, cells, rd["points"], rd["width_m"], g, gc, mix, seed + k * 17, st, stats=pl.stats_, sides=(-1,),
-                            setback=(setback, setback), max_drop=max_drop, limit=limit - n, in_frac=0.3)
-        if n >= limit:
-            break
-    pl.log.append(f"[lane rows] {g} → {n}")
+        (xa, zl), (xb, _) = rd["points"][0], rd["points"][-1]
+        xa, xb = min(xa, xb), max(xa, xb)
+        L = Local(T, (xa + xb) / 2, zl - 10, (xb - xa) / 2 + 40)
+        rng = random.Random(seed + li * 31)
+        x = xa + rng.uniform(0.0, 1.2)
+        k = 0
+        while x < xb - 4 and n < limit:
+            k += 1
+            sd = seed * 1000 + li * 97 + k
+            first = EV.pick(EV.MIX[mix], random.Random(sd).random())
+            done = None
+            for kind in [first] + [q for q in ("city", "cprops") if q != first]:
+                pcs = EV.make_slot(kind, sd, st)
+                xmin, w, zmin, zmax = EV.slot_box(pl, pcs)
+                if x + w > xb + 0.5:
+                    continue
+                px = x - xmin
+                pz = zl - rd["width_m"] / 2 - setback - zmax
+                if (int(round((px + xmin + w / 2) / 4.0)), int(round((pz + (zmin + zmax) / 2) / 4.0))) not in cellset:
+                    continue
+                res = pl.check(L, pcs, px, pz, 0.0, {"max_drop": max_drop, "road_min": 0.3})
+                if res[0]:
+                    pl.commit(EV.fit_terrace(T, pcs, px, pz, 0.0), px, pz, 0.0, g, gc)
+                    done = (kind, w)
+                    break
+            if done:
+                if done[0] in HOUSE_KINDS:
+                    n += 1
+                pl.stats_[done[0]] = pl.stats_.get(done[0], 0) + 1
+                x += done[1] + rng.uniform(*gap)
+            else:
+                x += 3.0
+    pl.log.append(f"[lane rows] {g} → 집 {n}")
     return n
 
 
