@@ -15,6 +15,7 @@
 #   --walkroute[=n] [--walkspeed=12]  --portaltest처럼 공간을 넘되, 노정에서는 주 도로를 끝까지 실제로 걷는다(막힘을 WALK stuck으로 남김)
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
+#   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
 # 비교용 끄기: --nofog --nopost --notilt --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
@@ -110,6 +111,8 @@ func _ready() -> void:
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	_setup_input()
 	if args.has("routedir"): Travel.extra_route_dirs = args.routedir.split(";", false)
+	if args.has("kitcache"): PlacementLoader.KitCache.DIR = String(args.kitcache).trim_suffix("/") + "/"
+	if args.has("nokitcache"): PlacementLoader.KitCache.enabled = false
 	_pending = Travel.take_pending()
 	_data_dir = _pick_dir()
 	var scale := float(args.get("scale", DisplayServer.screen_get_scale()))

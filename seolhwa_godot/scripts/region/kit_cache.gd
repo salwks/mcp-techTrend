@@ -4,7 +4,7 @@
 # 재질: Kit 공용 재질(Kit.material)은 파일에 넣지 않고 종류 이름만 적어 두었다가 불러올 때 다시 붙인다(모두 같은 재질 하나를 쓰게).
 extends RefCounted
 
-const DIR := "user://kit_cache/"
+static var DIR := "user://kit_cache/"   # --kitcache=user://다른_폴더/ (찬 시작 시험용)
 const VERSION := "1"
 
 static var enabled := true
