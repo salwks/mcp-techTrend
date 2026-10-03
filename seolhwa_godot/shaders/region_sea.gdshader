@@ -1,0 +1,91 @@
+// 권역 바다·호수 수면 — 평평한 판(바다 = region.json sea.y, 호수 = lakes[].y).
+// 물가는 높이맵으로 정한다: 수심(수면 − 땅) → 물가선 바로 앞 흰 물거품 띠와 먹선, 얕은 곳은 옥빛, 먼 바다는 짙은 쪽빛.
+// 데이터 바다 바닥은 거의 평평(실제 −1.5m × K)하므로 "물가에서 얼마나 먼가"는 물 가림 텍스처(water_mask, 4m)의
+// G(뭍) 밉맵을 여러 단 읽어 흐린 값으로 대신한다. R = 바다 칸(하천·호수·뭍 아닌 물) — 바다 판은 R이 0인 곳(호수 바닥·
+// 낮은 논·지도 밖 뭍 쪽)을 버린다. 호수 판은 윤곽 다각형이라 R을 보지 않는다(is_lake).
+// 툰 규칙: region_water와 같은 붓 바림 램프 빛, 반구광 EMISSION, 같은 안개 식. 물결 텍스처(water.png)를 아주 느리게.
+shader_type spatial;
+render_mode specular_disabled, cull_disabled, blend_mix, depth_draw_opaque;
+
+#include "res://shaders/region_common.gdshaderinc"
+
+global uniform vec3 hemi_sky;
+global uniform vec3 hemi_ground;
+global uniform float hemi_i;
+global uniform vec3 fog_color;
+global uniform float fog_density;
+
+uniform sampler2D water_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D ramp_tex : filter_linear, repeat_disable;
+uniform sampler2D mask_blur : filter_linear_mipmap, repeat_disable;   // R 바다 칸, G 뭍 — 밉맵 = 흐린 '물가 가까움'
+uniform vec4 mask_meta;     // x0, z0, 1/(셀*w), 1/(셀*h) — 칸 중심 기준
+uniform float is_lake = 0.0;
+uniform vec3 deep_col = vec3(0.20, 0.33, 0.37);
+uniform vec3 shallow_col = vec3(0.42, 0.58, 0.55);
+uniform vec3 foam_col = vec3(0.90, 0.91, 0.86);
+uniform vec3 ink_col = vec3(0.17, 0.2, 0.2);
+uniform float mist_base = 0.0;
+
+varying vec3 v_wp;
+
+void vertex() {
+	v_wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
+
+void fragment() {
+	vec2 xz = v_wp.xz;
+	float wy = v_wp.y;
+	vec2 muv = (xz - mask_meta.xy) * mask_meta.zw;
+	// 바다 칸 판정은 한 단 흐린 값으로(4m 칸 계단이 보이지 않게) — 실제 물가선은 아래 수심이 정한다
+	float sea = textureLod(mask_blur, muv, 1.0).r;
+	if (is_lake < 0.5 && sea < 0.15) discard;
+	// 수심(게임 m). 지도 밖은 가장자리 값이 이어진다
+	float depth = wy - r_hdata(xz);
+	if (depth < -0.02) discard;   // 땅 위(모래톱·바위) — 깊이 시험보다 먼저 버려 물가에서 깜박이지 않게
+	// 물가 가까움(0 먼 바다 … 1 물가): 16m·64m·256m 흐림을 섞는다
+	float n1 = textureLod(mask_blur, muv, 2.0).g;
+	float n2 = textureLod(mask_blur, muv, 4.0).g;
+	float n3 = textureLod(mask_blur, muv, 6.0).g;
+	float nearness = clamp(n1 * 1.6 + n2 * 1.0 + n3 * 0.6, 0.0, 1.0);
+	if (is_lake > 0.5) nearness = clamp(n1 * 1.4 + n2 * 0.6, 0.0, 1.0) * 0.8;
+	float shore = 1.0 - smoothstep(0.0, 0.32, depth);   // 수심 0~0.32m: 물가선 바로 앞
+	// 물결: water.png를 아주 크게, 바람 방향으로 느리게(바다) / 거의 멈춤(호수)
+	float spd = mix(0.012, 0.004, is_lake);
+	vec3 t = texture(water_tex, xz / 21.0 + vec2(TIME * spd, TIME * spd * 0.4)).rgb;
+	vec3 t2 = texture(water_tex, xz / 9.0 * mat2(vec2(0.8, -0.6), vec2(0.6, 0.8)) - vec2(TIME * spd * 1.7, 0.0)).rgb;
+	vec3 base = mix(deep_col, shallow_col, smoothstep(0.05, 0.85, nearness));
+	base *= mix(vec3(1.0), t * 1.25, 0.55);
+	// 밀려오는 물결 띠(바다만): 물가 가까움의 등치선을 따라 시간에 따라 물가 쪽으로 — 툰이라 단단한 띠
+	float wave = 0.0;
+	if (is_lake < 0.5) {
+		// 위상은 16m 흐림(n1)만 — 거친 밉의 모난 등치선이 보이지 않게. 붓 텍스처로 띠를 군데군데 끊는다
+		float ph = clamp(n1 * 1.8, 0.0, 1.0) * 4.0 + TIME * 0.12 + (t2.r - 0.5) * 0.6;
+		float band = smoothstep(0.88, 0.94, fract(ph)) * (1.0 - smoothstep(0.94, 1.0, fract(ph)));
+		band *= smoothstep(0.45, 0.7, t.g);
+		wave = band * smoothstep(0.2, 0.6, n1 * 1.8) * (1.0 - shore) * 0.4;
+	}
+	// 물가선: 흰 거품(붓 텍스처로 끊기게) + 땅 쪽 끝에 옅은 먹선
+	float brk = smoothstep(0.35, 0.65, t2.g);
+	float foam = smoothstep(0.35, 0.75, shore) * mix(0.55, 1.0, brk) * mix(1.0, 0.45, is_lake);
+	float ink = smoothstep(0.9, 1.0, shore) * 0.45;
+	base = mix(base, foam_col, max(foam, wave));
+	base = mix(base, ink_col, ink);
+	ALBEDO = base;
+	// 얕은 물가는 바닥이 비치게, 먼 바다는 거의 불투명
+	ALPHA = mix(0.95, 0.72, smoothstep(0.3, 1.0, nearness)) * mix(1.0, 0.85, shore) + foam * 0.15;
+	if (is_lake > 0.5) ALPHA = mix(0.97, 0.75, shore);   // 석호: 바닥(하천 바닥 칠 등)이 비치지 않게 물가만 얕게
+	ALPHA = clamp(ALPHA, 0.0, 1.0) * clamp(sea * 3.0 + is_lake, 0.0, 1.0);
+	vec3 hemi = mix(hemi_ground, hemi_sky, 1.0) * hemi_i;
+	EMISSION = base * hemi / PI;
+	float fog_d = -VERTEX.z;
+	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
+	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, v_wp.y - mist_base)) * smoothstep(14.0, 48.0, fog_d);
+	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
+	FOG = vec4(fog_color, fog_f);
+}
+
+void light() {
+	float ndl = dot(NORMAL, LIGHT);
+	float ramp = texture(ramp_tex, vec2(ndl * 0.5 + 0.5, 0.5)).r;
+	DIFFUSE_LIGHT += ramp * ATTENUATION * LIGHT_COLOR / (PI * PI);
+}

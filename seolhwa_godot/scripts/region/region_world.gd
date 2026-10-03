@@ -362,7 +362,7 @@ static func _noise_texture() -> ImageTexture:
 
 # 지형 재질 전부에 같은 값 넣기(시간대·안개 기준 높이 등 — region_main이 부른다)
 func set_terrain_param(name: String, v: Variant) -> void:
-	for m in [mat_near, mat_mid, mat_water]:
+	for m in [mat_near, mat_mid, mat_water] + _water_mats:
 		if m: m.set_shader_parameter(name, v)
 
 func set_far_param(name: String, v: Variant) -> void:
@@ -537,32 +537,159 @@ func _build_far() -> void:
 # ---------------------------------------------------------------------------
 # 하천 물: region.json.rivers의 수면 높이·폭으로 띠 메시(약 250m씩 잘라 화면 밖은 그리지 않게)
 # ---------------------------------------------------------------------------
-# 바다(region.json sea {y}): 높이맵 범위 + 여유를 덮는 수면 한 장(물결 재질, 고요한 '소' 설정). 땅이 위에 있으면 깊이로 가려진다
+# 바다·호수(region.json sea {y}, lakes [{y, outline}]) — shaders/region_sea.gdshader
+# 물 가림 텍스처(토지이용 격자, RG8): R = 바다 칸(물(5) 칸 중 바다 수면 +0.15m 아래이고 호수 윤곽 밖), G = 뭍(물 아닌 칸).
+# 바다 판은 R로 호수 바닥·낮은 뭍을 버리고, G의 밉맵(흐림)으로 '물가 가까움'을 낸다. 지도(region_map)도 R을 쓴다.
+var sea_y := NAN
+var lakes: Array = []            # [{name, y, poly: PackedVector2Array, bb: Rect2}]
+var water_mask: Image            # lw×lh RG8 (바다가 없으면 null)
+var sea_map: Image               # 같은 격자 LA8 — 지도(region_map)가 바다 색으로 물들여 그린다
+var _water_mats: Array = []      # mist_base 등 공용 값을 같이 받을 물 재질
+
 func _build_sea() -> void:
 	var sea = region.get("sea")
-	if not (sea is Dictionary): return
-	var y := float(sea.get("y", 0.0))
-	var x0 := hx0 - 3000.0; var z0 := hz0 - 3000.0
-	var x1 := hx0 + (hnx - 1) * hstep + 3000.0; var z1 := hz0 + (hnz - 1) * hstep + 3000.0
-	var v := PackedVector3Array(); var uv := PackedVector2Array(); var col := PackedColorArray(); var idx := PackedInt32Array()
-	var n := 16
-	for j in n + 1:
-		for i in n + 1:
-			var x := lerpf(x0, x1, float(i) / n); var z := lerpf(z0, z1, float(j) / n)
-			v.append(Vector3(x, y, z)); uv.append(Vector2(x / 7.0, 0.5 + z / 2000.0)); col.append(Color(0.0, 0.55, 1.0 / 40.0, 1.0))
-	for j in n:
-		for i in n:
-			var a := j * (n + 1) + i
-			idx.append_array(PackedInt32Array([a, a + n + 1, a + 1, a + 1, a + n + 1, a + n + 2]))
+	if sea is Dictionary: sea_y = float(sea.get("y", 0.0))
+	for l in region.get("lakes", []):
+		var poly := PackedVector2Array()
+		for q in l.get("outline", []): poly.append(Vector2(float(q[0]), float(q[1])))
+		if poly.size() < 3: continue
+		var lo := Vector2(INF, INF); var hi := Vector2(-INF, -INF)
+		for q in poly: lo = lo.min(q); hi = hi.max(q)
+		lakes.append({ name = String(l.get("name", l.get("id", "호수"))), y = float(l.get("y", 0.0)), poly = poly, bb = Rect2(lo, hi - lo) })
+	if is_nan(sea_y) and lakes.is_empty(): return
+	var t0 := Time.get_ticks_msec()
+	_make_water_mask()
+	var mimg: Image = water_mask.duplicate(); mimg.generate_mipmaps()
+	var mtex_blur := ImageTexture.create_from_image(mimg)
+	var sh: Shader = load("res://shaders/region_sea.gdshader")
+	var proto := ShaderMaterial.new(); proto.shader = sh
+	_common_params(proto)
+	proto.set_shader_parameter("water_tex", Kit.texture("water"))
+	proto.set_shader_parameter("ramp_tex", Materials.ramp_texture())
+	proto.set_shader_parameter("mask_blur", mtex_blur)
+	proto.set_shader_parameter("mask_meta", Vector4(lx0 - lcell * 0.5, lz0 - lcell * 0.5, 1.0 / (lcell * lw), 1.0 / (lcell * lh)))
+	if not is_nan(sea_y):
+		# 높이맵 범위 + 3km 여유. 지도 밖은 가장자리 칸이 이어지므로 바다 쪽 가장자리에서만 수평선까지 물이 보인다
+		var x0 := hx0 - 3000.0; var z0 := hz0 - 3000.0
+		var x1 := hx0 + (hnx - 1) * hstep + 3000.0; var z1 := hz0 + (hnz - 1) * hstep + 3000.0
+		var v := PackedVector3Array(); var idx := PackedInt32Array()
+		var n := 16
+		for j in n + 1:
+			for i in n + 1:
+				v.append(Vector3(lerpf(x0, x1, float(i) / n), sea_y, lerpf(z0, z1, float(j) / n)))
+		for j in n:
+			for i in n:
+				var a := j * (n + 1) + i
+				idx.append_array(PackedInt32Array([a, a + n + 1, a + 1, a + 1, a + n + 1, a + n + 2]))
+		var mi := _flat_water("sea", v, idx, proto)
+		mi.custom_aabb = AABB(Vector3(x0, sea_y - 1.0, z0), Vector3(x1 - x0, 2.0, z1 - z0))
+	for l in lakes:
+		var tri := Geometry2D.triangulate_polygon(l.poly)
+		if tri.is_empty(): push_warning("호수 윤곽을 삼각형으로 나누지 못했다: " + l.name); continue
+		var v := PackedVector3Array()
+		for q in l.poly: v.append(Vector3(q.x, l.y, q.y))
+		var mat: ShaderMaterial = proto.duplicate()
+		mat.set_shader_parameter("is_lake", 1.0)
+		mat.set_shader_parameter("deep_col", Vector3(0.27, 0.40, 0.42))
+		mat.set_shader_parameter("shallow_col", Vector3(0.45, 0.60, 0.56))
+		_flat_water("lake_" + l.name, v, tri, mat)
+	print("REGION sea y=%s lakes=%d mask_ms=%d" % [sea_y, lakes.size(), Time.get_ticks_msec() - t0])
+
+func _flat_water(nm: String, v: PackedVector3Array, idx: PackedInt32Array, mat: ShaderMaterial) -> MeshInstance3D:
+	var nrm := PackedVector3Array(); nrm.resize(v.size()); nrm.fill(Vector3.UP)
 	var arr := []; arr.resize(Mesh.ARRAY_MAX)
-	arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_TEX_UV] = uv; arr[Mesh.ARRAY_COLOR] = col; arr[Mesh.ARRAY_INDEX] = idx
+	arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_NORMAL] = nrm; arr[Mesh.ARRAY_INDEX] = idx
 	var m := ArrayMesh.new(); m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
-	var mi := MeshInstance3D.new(); mi.name = "sea"; mi.mesh = m
-	var mat: ShaderMaterial = mat_water.duplicate()
-	mat.set_shader_parameter("albedo", Vector4(0.36, 0.5, 0.52, 1.0))
+	var mi := MeshInstance3D.new(); mi.name = nm; mi.mesh = m
 	mi.material_override = mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_water_mats.append(mat)
 	water_root.add_child(mi)
+	return mi
+
+# 물 가림(토지이용 격자 lw×lh, RG8). 처음 데이터(_l_orig 전, 배치 손대기 전) 기준
+func _make_water_mask() -> void:
+	var out := PackedByteArray(); out.resize(lw * lh * 2)
+	var la := PackedByteArray(); la.resize(lw * lh * 2)   # 지도용 LA8(바다 칸만 L·A 255)
+	var ratio := lcell / hstep
+	var lim := INF
+	if not is_nan(sea_y): lim = (sea_y + 0.15 - hy0) / hscale   # 원시 높이 값으로 비교
+	for j in lh:
+		var hj := clampi(roundi((lz0 + j * lcell - hz0) / hstep), 0, hnz - 1)
+		var hrow := hj * hnx
+		var hi0 := (lx0 - hx0) / hstep
+		var row := j * lw
+		for i in lw:
+			var lu := lbytes[row + i] & 127
+			if lu != 5:
+				out[(row + i) * 2 + 1] = 255
+				continue
+			var hk := hrow + clampi(roundi(hi0 + i * ratio), 0, hnx - 1)
+			var hv: float = float(hbytes[hk * 2] * 256 + hbytes[hk * 2 + 1]) if hbpp == 2 else float(hbytes[hk] * 256)
+			if hv <= lim: out[(row + i) * 2] = 255; la[(row + i) * 2] = 255; la[(row + i) * 2 + 1] = 255
+	# 호수 윤곽 안은 바다가 아니다
+	for l in lakes:
+		var bb: Rect2 = l.bb
+		var i0 := clampi(floori((bb.position.x - lx0) / lcell), 0, lw - 1); var i1 := clampi(ceili((bb.end.x - lx0) / lcell), 0, lw - 1)
+		var j0 := clampi(floori((bb.position.y - lz0) / lcell), 0, lh - 1); var j1 := clampi(ceili((bb.end.y - lz0) / lcell), 0, lh - 1)
+		for j in range(j0, j1 + 1):
+			for i in range(i0, i1 + 1):
+				if Geometry2D.is_point_in_polygon(Vector2(lx0 + i * lcell, lz0 + j * lcell), l.poly):
+					out[(j * lw + i) * 2] = 0; la[(j * lw + i) * 2 + 1] = 0
+	# 열림(opening) 비슷하게: 32m 밉(평균)에서 바다 비율이 낮은 칸 = 좁은 물길(하구 쪽 하천 바닥이 해수면 아래)은 바다가 아니다.
+	# 하천 띠(y≈0.01)와 바다 판(0)이 겹쳐 깜박이지 않게, 지도에 하천이 굵은 바다 줄로 그려지지 않게
+	var mi := Image.create_from_data(lw, lh, false, Image.FORMAT_RG8, out)
+	mi.generate_mipmaps()
+	var lv := 3
+	var mo := mi.get_mipmap_offset(lv)
+	var mw := maxi(lw >> lv, 1); var mh := maxi(lh >> lv, 1)
+	var md := mi.get_data()
+	var sc := float(1 << lv)
+	for j in lh:
+		var fz := clampf((j + 0.5) / sc - 0.5, 0.0, mh - 1.001)
+		var j0 := int(fz); var tz := fz - j0
+		var row := j * lw
+		for i in lw:
+			if out[(row + i) * 2] == 0: continue
+			var fx := clampf((i + 0.5) / sc - 0.5, 0.0, mw - 1.001)
+			var i0 := int(fx); var tx := fx - i0
+			var a := mo + (j0 * mw + i0) * 2
+			var v := lerpf(lerpf(md[a], md[a + 2], tx), lerpf(md[a + mw * 2], md[a + mw * 2 + 2], tx), tz)
+			if v < 70.0: out[(row + i) * 2] = 0; la[(row + i) * 2] = 0; la[(row + i) * 2 + 1] = 0
+	water_mask = Image.create_from_data(lw, lh, false, Image.FORMAT_RG8, out)
+	sea_map = Image.create_from_data(lw, lh, false, Image.FORMAT_LA8, la)
+
+# 바다 칸인가(물 가림 R) — 지도·걷기 판정용
+func is_sea(x: float, z: float) -> bool:
+	if water_mask == null: return false
+	var i := clampi(roundi((x - lx0) / lcell), 0, lw - 1); var j := clampi(roundi((z - lz0) / lcell), 0, lh - 1)
+	return water_mask.get_pixel(i, j).r > 0.5
+
+func lake_at(x: float, z: float) -> Variant:
+	var p := Vector2(x, z)
+	for l in lakes:
+		if l.bb.has_point(p) and Geometry2D.is_point_in_polygon(p, l.poly): return l
+	return null
+
+# 하천 폭: widths(점별, 새 권역 — 명세 v0.3 §5 상류 좁고 하류 넓게)가 있으면 그것, 없으면 width_m 하나(남원).
+# 물 메시 폭은 terrain-data 권고대로 max(폭, 5.2) — 단 widths가 있으면 데이터가 그 폭으로 바닥을 깎았으므로 1.6까지 좁힌다.
+func _river_widths(r: Dictionary, n: int) -> PackedFloat32Array:
+	var out := PackedFloat32Array(); out.resize(n)
+	var ws = r.get("widths")
+	if ws is Array and ws.size() == n:
+		for i in n: out[i] = maxf(float(ws[i]), 1.6)
+		# 데이터 폭은 구간별 계단(2.5 → 7 → 15) — 앞뒤 ±8점(약 60m) 상자 평균 두 번으로 조금씩 넓어지게
+		for pass_i in 2:
+			var src := out.duplicate()
+			var acc := 0.0; var R := 8
+			for i in mini(R, n): acc += src[i]
+			for i in n:
+				if i + R < n: acc += src[i + R]
+				if i - R - 1 >= 0: acc -= src[i - R - 1]
+				out[i] = acc / float(mini(i + R, n - 1) - maxi(i - R, 0) + 1)
+	else:
+		out.fill(maxf(float(r.get("width_m", 6.0)), 5.2))
+	return out
 
 func _build_rivers() -> void:
 	_build_sea()
@@ -570,20 +697,36 @@ func _build_rivers() -> void:
 		var pts := []
 		for p in r.points: pts.append(Vector3(float(p[0]), float(p[2]) if p.size() > 2 else data_height(p[0], p[1]), float(p[1])))
 		if pts.size() < 2: continue
-		var w := maxf(float(r.get("width_m", 6.0)), 5.2)  # terrain-data: 물 메시 폭 = max(width_m, 5.2)
+		var ws := _river_widths(r, pts.size())
 		# 걷기 막기용 선분 격자: 중심선에서 폭의 80% 안쪽이고 땅이 수면보다 낮으면 물 속
 		for k in pts.size() - 1:
-			var sg := { a = Vector2(pts[k].x, pts[k].z), b = Vector2(pts[k + 1].x, pts[k + 1].z), r = w * 0.8, ya = pts[k].y, yb = pts[k + 1].y }
+			var rr := maxf(ws[k], ws[k + 1]) * 0.8
+			var sg := { a = Vector2(pts[k].x, pts[k].z), b = Vector2(pts[k + 1].x, pts[k + 1].z), r = rr, ya = pts[k].y, yb = pts[k + 1].y }
 			_grid_insert(_river_grid, { type = "box", minX = minf(sg.a.x, sg.b.x) - sg.r, maxX = maxf(sg.a.x, sg.b.x) + sg.r,
 				minZ = minf(sg.a.y, sg.b.y) - sg.r, maxZ = maxf(sg.a.y, sg.b.y) + sg.r, seg = sg })
-		pts = _resample(pts, 3.0)
-		var hw := w * 0.5 * 1.18 + 0.6
-		var chunk := 84
-		var s := 0
-		while s < pts.size() - 1:
-			var e := mini(s + chunk, pts.size() - 1)
-			water_root.add_child(_river_chunk(pts, s, e, hw, w, String(r.get("id", "river"))))
-			s = e
+		# 호수 안 구간은 물 띠를 그리지 않는다(호수 수면이 덮는다 — 하천 띠가 호수 바닥에 비치지 않게). 한 점씩 겹쳐 잇는다
+		var runs := []
+		var cur := []
+		for k in pts.size():
+			var inl := not lakes.is_empty() and lake_at(pts[k].x, pts[k].z) != null
+			if not inl: cur.append(k)
+			elif not cur.is_empty():
+				cur.append(k); runs.append(cur); cur = []
+			if inl and k + 1 < pts.size() and lake_at(pts[k + 1].x, pts[k + 1].z) == null: cur = [k]
+		if cur.size() >= 2: runs.append(cur)
+		for run in runs:
+			if run.size() < 2: continue
+			var rp := []; var wp := []
+			for k in run:
+				rp.append(pts[k]); wp.append(Vector3(pts[k].x, ws[k], pts[k].z))  # 폭을 y 자리에 실어 같은 간격으로 다시 뽑는다
+			rp = _resample(rp, 3.0)
+			wp = _resample(wp, 3.0)
+			var chunk := 84
+			var s := 0
+			while s < rp.size() - 1:
+				var e := mini(s + chunk, rp.size() - 1)
+				water_root.add_child(_river_chunk(rp, wp, s, e, String(r.get("id", "river"))))
+				s = e
 
 static func _chaikin(p: Array) -> Array:
 	var o := [p[0]]
@@ -606,7 +749,7 @@ static func _resample(p: Array, step: float) -> Array:
 	o.append(p[p.size() - 1])
 	return o
 
-func _river_chunk(pts: Array, s: int, e: int, hw: float, w: float, name: String) -> MeshInstance3D:
+func _river_chunk(pts: Array, wp: Array, s: int, e: int, name: String) -> MeshInstance3D:
 	var v := PackedVector3Array(); var uv := PackedVector2Array(); var col := PackedColorArray(); var nrm := PackedVector3Array()
 	var idx := PackedInt32Array()
 	var dist := 0.0
@@ -622,6 +765,8 @@ func _river_chunk(pts: Array, s: int, e: int, hw: float, w: float, name: String)
 		var slope := (a2.y - b2.y) / run
 		var rapid := smoothstep(0.006, 0.03, slope)
 		var pool := (1.0 - smoothstep(0.0, 0.004, slope)) * clampf(0.4 + _vnoise(dist * 0.01, 3.0), 0.0, 1.0)
+		var w: float = wp[mini(i, wp.size() - 1)].y
+		var hw := w * 0.5 * 1.18 + 0.6
 		var c := Color(rapid, pool, w / 40.0)
 		for k in 2:
 			var sgn := -1.0 if k == 0 else 1.0
@@ -1141,6 +1286,10 @@ func blocked(x: float, z: float, r: float) -> bool:
 func _in_river(x: float, z: float, r: float) -> bool:
 	if not _walk_grid.is_empty() and walk_at(x, z) != null: return false  # 다리·징검다리 위
 	if landuse_at(x, z) == 5: return true
+	if not is_nan(sea_y) and ground_at(x, z) < sea_y - 0.15: return true   # 바다 밑 바위·모래(토지이용이 물이 아닌 칸)
+	if not lakes.is_empty():
+		var lk = lake_at(x, z)
+		if lk != null and ground_at(x, z) < float(lk.y) - 0.05: return true
 	var p := Vector2(x, z)
 	for c in _river_grid.get(Vector2i(floori(x / GRID), floori(z / GRID)), []):
 		var sg: Dictionary = c.seg

@@ -23,6 +23,12 @@ var _items: Array = []   # {kind, c, ry, half, name}
 var _walls: Array = []   # [[a, b] …] 성벽·담(게임 좌표 선분)
 var _towns: Array = []   # [name, center, rect]
 var _rivers_named: Array = []
+var _sea_tex: Texture2D       # 바다 칸(world.sea_map, 토지이용 격자) — 바다색으로 물들여 그린다
+var _sea_rect := Rect2()      # 그 그림의 게임 좌표 범위
+var _lakes: Array = []        # [[이름, 윤곽 PackedVector2Array]]
+var _springs: Array = []      # [[이름, Vector2]] 용천수
+var _oreums: Array = []       # [[이름, Vector2, 반지름]]
+var _wall_kits := {}          # 배치에서 성벽을 얻은 읍성 키트
 var _player := Vector3.ZERO
 var _facing := "down"
 var _center := Vector2.ZERO   # 화면 가운데의 게임 좌표
@@ -62,6 +68,34 @@ func setup(w, data_dir: String, loader = null) -> void:
 			var pts: Array = r.points; var m: Array = pts[pts.size() / 2]
 			_rivers_named.append([String(r.name), Vector2(float(m[0]), float(m[1]))])
 	if loader: _collect_items(loader)
+	_collect_water(w)
+
+# 바다·호수·용천수·오름·읍성 성벽(region.json) — map.png에 없거나 흐린 것을 벡터로 덧그린다
+func _collect_water(w) -> void:
+	if "sea_map" in w and w.sea_map != null:
+		var img: Image = w.sea_map.duplicate()
+		img.generate_mipmaps()
+		_sea_tex = ImageTexture.create_from_image(img)
+		_sea_rect = Rect2(Vector2(w.lx0 - w.lcell * 0.5, w.lz0 - w.lcell * 0.5), Vector2(w.lw, w.lh) * w.lcell)
+	if "lakes" in w:
+		for l in w.lakes:
+			var poly: PackedVector2Array = l.poly
+			_lakes.append([l.name, poly])
+	for s in w.region.get("springs", []):
+		if s.has("x"): _springs.append([String(s.get("name", "용천수")), Vector2(float(s.x), float(s.z))])
+	for o in w.region.get("oreums", []):
+		if o.has("x"): _oreums.append([String(o.get("name", "")), Vector2(float(o.x), float(o.z)), float(o.get("radius_m", 60.0))])
+	# 읍성: 배치가 성벽을 주지 않으면 랜드마크 size_m 사각형으로
+	for l in w.region.get("landmarks", []):
+		var kit := String(l.get("kit", ""))
+		if not kit.ends_with("_eupseong") or _wall_kits.has(kit) or kit == "landmark/namwon_eupseong": continue
+		var sz = l.get("size_m")
+		if not (sz is Array and sz.size() >= 2): continue
+		_add_rect_walls(Vector2(float(l.x), float(l.z)), deg_to_rad(float(l.get("ry", 0.0))), Vector2(float(sz[0]), float(sz[1])) / 2.0)
+
+func _add_rect_walls(c: Vector2, ry: float, h: Vector2) -> void:
+	var cs := [Vector2(-h.x, -h.y), Vector2(h.x, -h.y), Vector2(h.x, h.y), Vector2(-h.x, h.y)]
+	for i in 4: _walls.append([c + (cs[i] as Vector2).rotated(ry), c + (cs[(i + 1) % 4] as Vector2).rotated(ry)])
 
 func _collect_items(loader) -> void:
 	for f in loader.files():
@@ -75,6 +109,14 @@ func _collect_items(loader) -> void:
 				var h := float(params.get("side", 186.0)) / 2.0
 				var cs := [Vector2(-h, -h), Vector2(h, -h), Vector2(h, h), Vector2(-h, h)]
 				for i in 4: _walls.append([c + (cs[i] as Vector2).rotated(ry), c + (cs[(i + 1) % 4] as Vector2).rotated(ry)])
+				continue
+			if kit.ends_with("_eupseong"):   # 다른 고을 읍성(제주·경주 등): side 또는 size[w,d] 또는 footprint
+				var hv := Vector2.ZERO
+				if params.has("side"): hv = Vector2(float(params.side), float(params.side)) / 2.0
+				elif params.get("size") is Array and params.size.size() >= 2: hv = Vector2(float(params.size[0]), float(params.size[1])) / 2.0
+				elif it.get("footprint") is Array and it.footprint.size() >= 2: hv = Vector2(float(it.footprint[0]), float(it.footprint[1])) / 2.0
+				if hv != Vector2.ZERO:
+					_add_rect_walls(c, ry, hv); _wall_kits[kit] = true
 				continue
 			if kit == "village/wall_run":
 				var pts = params.get("points")
@@ -253,6 +295,7 @@ func _draw_map() -> void:
 	if _tex: _canvas.draw_texture_rect(_tex, Rect2(tl, sz), false)
 	else: _draw_vector_base(tl, sz)
 	var view := Rect2(_to_world(Vector2.ZERO), cs / _k).grow(20.0)
+	_draw_water(view)
 	if _k > 0.6 or _tex == null:   # 도시 축척에서만 길·건물을 벡터로(지도 그림이 없으면 늘)
 		for r in world.region.get("roads", []):
 			var line := PackedVector2Array()
@@ -299,6 +342,42 @@ func _text(s: String, at: Vector2, size: int, col: Color) -> void:
 	var pos := at + Vector2(-w / 2.0, size * 0.35)
 	_canvas.draw_string_outline(_font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 5, Color(0.96, 0.93, 0.85, 0.9))
 	_canvas.draw_string(_font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)
+
+# ---- 바다·호수(먹선 물가)·용천수·오름 ----
+const SEA_COL := Color(0.60, 0.71, 0.72, 0.92)
+const INK := Color(0.22, 0.24, 0.24)
+func _draw_water(view: Rect2) -> void:
+	if _sea_tex:
+		var r := Rect2(_to_px(_sea_rect.position), _sea_rect.size * _k)
+		# 물가 먹선: 조금 짙은 판을 1.5px씩 네 방향으로 밀어 깔고 그 위에 바다색
+		for o in [Vector2(1.5, 0), Vector2(-1.5, 0), Vector2(0, 1.5), Vector2(0, -1.5)]:
+			_canvas.draw_texture_rect(_sea_tex, Rect2(r.position + o, r.size), false, Color(0.30, 0.36, 0.37, 0.8))
+		_canvas.draw_texture_rect(_sea_tex, r, false, SEA_COL)
+	for l in _lakes:
+		var px := PackedVector2Array()
+		for q in l[1]: px.append(_to_px(q))
+		if Geometry2D.triangulate_polygon(px).is_empty(): continue
+		_canvas.draw_colored_polygon(px, Color(0.58, 0.70, 0.70))
+		px.append(px[0])
+		_canvas.draw_polyline(px, INK, 1.5, true)
+		if _k < 1.4:
+			var c := Vector2.ZERO
+			for q in l[1]: c += q
+			_text(l[0], _to_px(c / float(l[1].size())), 16, Color(0.2, 0.32, 0.38))
+	if _k > 0.25:
+		for o in _oreums:
+			if not view.has_point(o[1]): continue
+			var p := _to_px(o[1])
+			var rr := maxf(5.0, float(o[2]) * _k * 0.5)
+			_canvas.draw_arc(p, rr, PI * 1.05, PI * 1.95, 12, Color(0.35, 0.3, 0.24, 0.8), 1.5, true)
+			if _k > 0.4: _text(o[0], p + Vector2(0, rr * 0.4 + 6), 12, Color(0.35, 0.28, 0.2))
+	if _k > 0.5:
+		for sp in _springs:
+			if not view.has_point(sp[1]): continue
+			var p := _to_px(sp[1])
+			_canvas.draw_circle(p, 5.0, Color(0.35, 0.55, 0.65))
+			_canvas.draw_arc(p, 5.0, 0, TAU, 16, INK, 1.2, true)
+			if _k > 1.0: _text(sp[0], p + Vector2(0, -14), 13, Color(0.2, 0.32, 0.38))
 
 # ---- 지도 그림이 없는 공간: 물·길·고을·포털을 벡터로 ----
 func _draw_vector_base(tl: Vector2, sz: Vector2) -> void:
