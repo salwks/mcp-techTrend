@@ -3,7 +3,9 @@
   - 큰 강을 건너는 길 밑이 물 위로 돋워지지 않게(나룻배 길) 물면 칸 높이를 강바닥으로 되돌림
   - 성곽 선(walls): 설정 north.walls(위경도 꺾은선) 또는 한양도성 OSM 선 → 게임 좌표, 길×성벽 교차가 문 근처인지 검사(QW-north)
   - overview.png·zoom에 성곽 선을 덧그림
-실행: python3 tools/region/north_post.py <ID>"""
+  - 닫힌 성곽(도성·내성·읍성) 안 낮은 땅의 논·밭·풀밭을 마을 터(6)로(성 안은 시가지 — 논이 비쳐 보이지 않게). 물·길·숲(산)·바위는 그대로
+실행: python3 tools/region/north_post.py <ID>
+      python3 tools/region/north_post.py <ID> --town-only   (성 안 마을 터 칠하기만 — 이미 뒷손질한 데이터에 다시 돌릴 때)"""
 import json, math, os, sys, importlib
 import numpy as np
 from PIL import Image, ImageDraw
@@ -93,8 +95,36 @@ def fix_dirn(px, pz, sea):
 
 FERRY = {r["id"] for r in P.ROADS if r.get("ferry")}
 
+TOWN_FROM = (1, 2, 3)        # 풀밭·논·밭 → 마을 터(6). 숲(0, 백악·남산·인왕 기슭)·길(4)·물(5)·바위(7)·모래(8)·대숲(9)은 그대로
+TOWN_MAX_SLOPE = 0.22        # tan — 성 안이라도 산기슭 비탈 밭은 남긴다
+
+def town_inside_walls(reg):
+    """닫힌 성곽 고리 안 낮은 땅의 논·밭·풀밭을 마을 터(6)로 칠한다. 여러 번 돌려도 같다."""
+    lu_p = os.path.join(C.OUT, "landuse.png"); lu = np.array(Image.open(lu_p))
+    lp = reg["landuse"]; x0, z0, c = float(lp["x0"]), float(lp["z0"]), float(lp["cell"])
+    y, _ = export.read_height()
+    hp = reg["height"]; hc = float(hp["cell"])
+    gz, gx = np.gradient(y, hc)
+    sl = np.hypot(gx, gz)
+    k = max(1, int(round(c / hc)))
+    sl = sl[::k, ::k][:lu.shape[0], :lu.shape[1]]          # 높이 2m 격자 → 토지이용 4m 격자(같은 원점)
+    total = 0
+    for w in reg.get("walls", []):
+        if not w.get("closed"): continue
+        m = Image.new("L", (lu.shape[1], lu.shape[0]), 0)
+        ImageDraw.Draw(m).polygon([((x - x0) / c, (z - z0) / c) for x, z in w["points"]], fill=1)
+        m = ndimage.binary_erosion(np.array(m).astype(bool), iterations=2)   # 성벽 띠(대신 벽·여장)는 건드리지 않음
+        sel = m & np.isin(lu & 127, TOWN_FROM) & (sl < TOWN_MAX_SLOPE)
+        lu[sel] = (lu[sel] & 128) | 6
+        total += int(sel.sum())
+        say("성 안 마을 터", w["id"], int(sel.sum()), "칸")
+    Image.fromarray(lu.astype(np.uint8), mode="L").save(lu_p, optimize=True)
+    return total
+
 def main():
     reg = json.load(open(os.path.join(C.OUT, "region.json")))
+    if "--town-only" in sys.argv:
+        town_inside_walls(reg); return
     y, hm = export.read_height()
     sea = np.load(os.path.join(C.CACHE, "sea.npy")) if os.path.exists(os.path.join(C.CACHE, "sea.npy")) else None
     big = [r for r in P.RIVER_CONTROL.values() if r["grade"] == "S"]
@@ -278,6 +308,7 @@ def main():
         i_ = np.clip(np.round((np.interp(tt, ss, p_[:, 0]) - C.X0) / C.LU_CELL).astype(int), 0, lu.shape[1] - 1); j_ = np.clip(np.round((np.interp(tt, ss, p_[:, 1]) - C.Z0) / C.LU_CELL).astype(int), 0, lu.shape[0] - 1)
         land = lu[j_, i_] != 5; lu[j_[land], i_[land]] = 4
     Image.fromarray(lu.astype(np.uint8), mode="L").save(lu_p, optimize=True)
+    if walls: town_inside_walls(reg)
     export.write_region(reg)
     # ── 그림 덧그리기
     shots = C.SHOTS
