@@ -3,44 +3,90 @@
  "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
  "items": [
   {
-   "id": "rt_songpa_jumak",
-   "kit": "village/jumak",
+   "id": "rt_salgoji_ijeongpyo",
+   "kit": "route/ijeongpyo",
    "params": {
+    "kind": "post",
     "seed": 101
    },
-   "x": -2192.03,
-   "z": 10.34,
-   "ry": 0.1572,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "송파나루와 송파장"
-  },
-  {
-   "id": "rt_songpa_jumak_wood",
-   "kit": "village/firewood",
-   "params": {
-    "seed": 102,
-    "kind": "stack"
-   },
-   "x": -2185.14,
-   "z": 2.01,
-   "ry": 0.1994,
+   "x": -907.96,
+   "z": -4.37,
+   "ry": 0.0643,
    "y": null,
    "flatten": false,
    "clear_veg": true,
-   "group": "송파나루와 송파장"
+   "group": "살곶이 다리 건너 이정표"
+  },
+  {
+   "id": "rt_salgoji_ijeongpyo_s",
+   "kit": "route/ijeongpyo",
+   "params": {
+    "kind": "stone",
+    "seed": 102
+   },
+   "x": -903.35,
+   "z": 5.46,
+   "ry": 0.0587,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "살곶이 다리 건너 이정표"
+  },
+  {
+   "id": "rt_salgoji_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 103
+   },
+   "x": -898.88,
+   "z": -4.4,
+   "ry": 0.052,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "살곶이 다리 건너 이정표"
+  },
+  {
+   "id": "rt_salgoji_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 104
+   },
+   "x": -898.36,
+   "z": 5.59,
+   "ry": 0.052,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "살곶이 다리 건너 이정표"
+  },
+  {
+   "id": "rt_salgoji_tree",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "zelkova",
+    "seed": 105
+   },
+   "x": -917.82,
+   "z": -14.2,
+   "ry": 0.0769,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "살곶이 다리 건너 이정표"
   },
   {
    "id": "rt_songpa_jumak_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 103,
+    "seed": 108,
     "load": "wood"
    },
-   "x": -2198.6,
-   "z": 18.85,
-   "ry": 0.1287,
+   "x": -823.81,
+   "z": -10.3,
+   "ry": -0.0,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -50,11 +96,11 @@
    "id": "rt_songpa_boatman",
    "kit": "culture/giho/choga_giyeok",
    "params": {
-    "seed": 104
+    "seed": 109
    },
-   "x": -2179.07,
-   "z": 37.49,
-   "ry": 0.194,
+   "x": -832.7,
+   "z": 11.22,
+   "ry": 0.007,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -65,11 +111,11 @@
    "id": "rt_songpa_store",
    "kit": "village/heotgan",
    "params": {
-    "seed": 105
+    "seed": 110
    },
-   "x": -2209.04,
-   "z": 13.51,
-   "ry": 0.1038,
+   "x": -850.43,
+   "z": -15.63,
+   "ry": 0.1292,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -80,10 +126,10 @@
    "id": "rt_songpa_ppallae",
    "kit": "village/ppallaeteo",
    "params": {
-    "seed": 106
+    "seed": 111
    },
-   "x": -2160.5,
-   "z": -14.1,
+   "x": -824.5,
+   "z": -29.8,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -94,10 +140,10 @@
    "id": "rt_songpa_narutbae0",
    "kit": "village/narutbae",
    "params": {
-    "seed": 107
+    "seed": 112
    },
-   "x": -2146.42,
-   "z": 22.9,
+   "x": -810.24,
+   "z": 7.2,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -108,10 +154,10 @@
    "id": "rt_songpa_narutbae1",
    "kit": "village/narutbae",
    "params": {
-    "seed": 108
+    "seed": 113
    },
-   "x": -2146.42,
-   "z": 31.9,
+   "x": -810.62,
+   "z": 16.2,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -122,10 +168,10 @@
    "id": "rt_songpa_narutbae_n",
    "kit": "village/narutbae",
    "params": {
-    "seed": 109
+    "seed": 114
    },
-   "x": -2145.93,
-   "z": -2.1,
+   "x": -809.64,
+   "z": -17.8,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -137,11 +183,11 @@
    "kit": "culture/giho/compound",
    "params": {
     "size": "small",
-    "seed": 110
+    "seed": 115
    },
-   "x": -2109.98,
-   "z": -17.02,
-   "ry": 0.2553,
+   "x": -763.75,
+   "z": -18.91,
+   "ry": -0.0039,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -151,11 +197,11 @@
    "id": "rt_songpa_far2",
    "kit": "culture/giho/choga_giyeok",
    "params": {
-    "seed": 111
+    "seed": 116
    },
-   "x": -2082.8,
-   "z": 9.43,
-   "ry": 0.1109,
+   "x": -751.15,
+   "z": 12.25,
+   "ry": -0.0208,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -165,12 +211,12 @@
    "id": "rt_songpa_jangseung_m",
    "kit": "village/jangseung",
    "params": {
-    "seed": 112,
+    "seed": 117,
     "female": false
    },
-   "x": -2056.82,
-   "z": -13.13,
-   "ry": 0.039,
+   "x": -732.58,
+   "z": -8.13,
+   "ry": -0.0486,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -180,12 +226,12 @@
    "id": "rt_songpa_jangseung_f",
    "kit": "village/jangseung",
    "params": {
-    "seed": 113,
+    "seed": 118,
     "female": true
    },
-   "x": -2056.43,
-   "z": -3.14,
-   "ry": 0.039,
+   "x": -733.07,
+   "z": 1.86,
+   "ry": -0.0486,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -195,11 +241,11 @@
    "id": "rt_songpa_shop0",
    "kit": "village/market_shop",
    "params": {
-    "seed": 114
+    "seed": 119
    },
-   "x": -2041.4,
-   "z": -19.92,
-   "ry": 0.0683,
+   "x": -742.46,
+   "z": -14.53,
+   "ry": -0.0325,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -209,11 +255,11 @@
    "id": "rt_songpa_shop1",
    "kit": "village/market_shop",
    "params": {
-    "seed": 115
+    "seed": 120
    },
-   "x": -2024.02,
-   "z": -21.56,
-   "ry": 0.117,
+   "x": -730.26,
+   "z": -14.01,
+   "ry": -0.0519,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -223,11 +269,11 @@
    "id": "rt_songpa_shop2",
    "kit": "village/market_shop",
    "params": {
-    "seed": 116
+    "seed": 121
    },
-   "x": -2006.16,
-   "z": -23.79,
-   "ry": 0.1175,
+   "x": -719.14,
+   "z": -13.36,
+   "ry": -0.0638,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -237,11 +283,11 @@
    "id": "rt_songpa_shop3",
    "kit": "village/market_shop",
    "params": {
-    "seed": 117
+    "seed": 122
    },
-   "x": -1987.54,
-   "z": -25.47,
-   "ry": 0.0535,
+   "x": -708.16,
+   "z": -12.64,
+   "ry": -0.0641,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -251,11 +297,11 @@
    "id": "rt_songpa_jwapan0",
    "kit": "village/jwapan",
    "params": {
-    "seed": 118
+    "seed": 123
    },
-   "x": -2036.1,
-   "z": -2.25,
-   "ry": 0.0799,
+   "x": -740.08,
+   "z": 3.57,
+   "ry": -0.0374,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -265,11 +311,11 @@
    "id": "rt_songpa_jwapan1",
    "kit": "village/jwapan",
    "params": {
-    "seed": 119
+    "seed": 124
    },
-   "x": -2023.93,
-   "z": -3.45,
-   "ry": 0.1133,
+   "x": -728.44,
+   "z": 8.12,
+   "ry": -0.0558,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -279,11 +325,11 @@
    "id": "rt_songpa_jwapan2",
    "kit": "village/jwapan",
    "params": {
-    "seed": 120
+    "seed": 125
    },
-   "x": -2011.93,
-   "z": -4.93,
-   "ry": 0.1259,
+   "x": -725.25,
+   "z": 4.29,
+   "ry": -0.0594,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -293,11 +339,11 @@
    "id": "rt_songpa_jwapan3",
    "kit": "village/jwapan",
    "params": {
-    "seed": 121
+    "seed": 126
    },
-   "x": -2000.14,
-   "z": -6.35,
-   "ry": 0.1087,
+   "x": -718.3,
+   "z": 4.73,
+   "ry": -0.0647,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -307,11 +353,11 @@
    "id": "rt_songpa_jwapan4",
    "kit": "village/jwapan",
    "params": {
-    "seed": 122
+    "seed": 127
    },
-   "x": -1988.51,
-   "z": -7.39,
-   "ry": 0.0627,
+   "x": -710.32,
+   "z": 5.26,
+   "ry": -0.0645,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -321,11 +367,11 @@
    "id": "rt_songpa_square",
    "kit": "village/village_square",
    "params": {
-    "seed": 123
+    "seed": 128
    },
-   "x": -1977.05,
-   "z": -28.78,
-   "ry": 0.007,
+   "x": -696.93,
+   "z": -18.99,
+   "ry": -0.053,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -333,17 +379,403 @@
    "note": "송파 산대놀이 판 자리"
   },
   {
+   "id": "rt_icheon_house0",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 129
+   },
+   "x": -640.89,
+   "z": -17.01,
+   "ry": -0.0007,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_house1",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 130
+   },
+   "x": -621.9,
+   "z": -22.0,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_house2",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 131
+   },
+   "x": -601.81,
+   "z": -17.97,
+   "ry": -0.005,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_house3",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 132
+   },
+   "x": -584.58,
+   "z": -35.27,
+   "ry": -0.0651,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_teotbat",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 133
+   },
+   "x": -612.88,
+   "z": -40.0,
+   "ry": -0.0006,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 134
+   },
+   "x": -626.91,
+   "z": 11.0,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 135
+   },
+   "x": -615.91,
+   "z": 12.0,
+   "ry": -0.0004,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_yard",
+   "kit": "village/yard_props",
+   "params": {
+    "set": "work",
+    "seed": 136
+   },
+   "x": -628.9,
+   "z": -30.0,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 137
+   },
+   "x": -607.92,
+   "z": 8.01,
+   "ry": -0.0017,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 138
+   },
+   "x": -659.85,
+   "z": -10.05,
+   "ry": -0.0055,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 139
+   },
+   "x": -664.86,
+   "z": -5.08,
+   "ry": -0.0084,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_icheon_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 140
+   },
+   "x": -664.95,
+   "z": 4.91,
+   "ry": -0.0084,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이천 들마을"
+  },
+  {
+   "id": "rt_dalcheon_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 141
+   },
+   "x": -563.94,
+   "z": -7.77,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_dalcheon_boatman",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 142
+   },
+   "x": -575.54,
+   "z": -15.82,
+   "ry": -0.023,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 달천 나루",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_dalcheon_narutbae0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 143
+   },
+   "x": -549.21,
+   "z": 12.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_dalcheon_narutbae1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 144
+   },
+   "x": -548.55,
+   "z": 21.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_dalcheon_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 145,
+    "female": false
+   },
+   "x": -529.93,
+   "z": -3.77,
+   "ry": -0.0008,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_dalcheon_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 146,
+    "female": true
+   },
+   "x": -529.94,
+   "z": 6.23,
+   "ry": -0.0008,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_dalcheon_far_house",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 147
+   },
+   "x": -508.4,
+   "z": -10.63,
+   "ry": -0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_dalcheon_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 148,
+    "variant": "willow"
+   },
+   "x": -564.94,
+   "z": 25.23,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 달천 나루"
+  },
+  {
+   "id": "rt_suanbo_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 149
+   },
+   "x": -461.02,
+   "z": -3.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "수안보 소조령 숲길",
+   "note": "숲 들머리 돌무더기(호환 막이로 돌 얹기)"
+  },
+  {
+   "id": "rt_suanbo_deadwood0",
+   "kit": "nature/deadwood",
+   "params": {
+    "kind": "snag",
+    "s": 1.3,
+    "seed": 150
+   },
+   "x": -470.98,
+   "z": -27.71,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "수안보 소조령 숲길"
+  },
+  {
+   "id": "rt_suanbo_deadwood1",
+   "kit": "nature/deadwood",
+   "params": {
+    "kind": "standing",
+    "s": 1.2,
+    "seed": 151
+   },
+   "x": -437.26,
+   "z": -12.49,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "수안보 소조령 숲길"
+  },
+  {
+   "id": "rt_suanbo_boulder0",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "mossy": true,
+    "seed": 152
+   },
+   "x": -447.16,
+   "z": -35.63,
+   "ry": 0.0045,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "수안보 소조령 숲길"
+  },
+  {
+   "id": "rt_suanbo_boulder1",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.8,
+    "mossy": true,
+    "seed": 153
+   },
+   "x": -412.33,
+   "z": -8.49,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "수안보 소조령 숲길"
+  },
+  {
+   "id": "rt_suanbo_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 154
+   },
+   "x": -473.92,
+   "z": 0.47,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "수안보 소조령 숲길",
+   "note": "밤길 횃대(호랑이 막이)"
+  },
+  {
    "id": "rt_saejae_gate3",
    "kit": "landmark/seongmun",
    "params": {
-    "seed": 124,
+    "seed": 155,
     "name": "조령관(제3관문)",
     "open": "none",
     "width": 14.0,
     "lu": 1
    },
-   "x": -946.56,
-   "z": 11.98,
+   "x": -468.65,
+   "z": 7.33,
    "ry": 0.0,
    "y": null,
    "flatten": true,
@@ -354,30 +786,13 @@
    "id": "rt_saejae_gate3_wallw0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 125,
+    "seed": 156,
     "length": 20.0,
-    "rise": -2.4,
+    "rise": 5.96,
     "height": 4.5
    },
-   "x": -964.06,
-   "z": 11.98,
-   "ry": 0.0,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
-  },
-  {
-   "id": "rt_saejae_gate3_wallw1",
-   "kit": "landmark/hy_seong_wall",
-   "params": {
-    "seed": 126,
-    "length": 20.0,
-    "rise": -4.89,
-    "height": 4.5
-   },
-   "x": -984.06,
-   "z": 11.98,
+   "x": -486.15,
+   "z": 7.33,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -388,13 +803,13 @@
    "id": "rt_saejae_gate3_walle0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 128,
+    "seed": 159,
     "length": 20.0,
-    "rise": -6.95,
+    "rise": 1.1,
     "height": 4.5
    },
-   "x": -929.06,
-   "z": 11.98,
+   "x": -451.15,
+   "z": 7.33,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -405,13 +820,13 @@
    "id": "rt_saejae_gate3_walle1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 129,
+    "seed": 160,
     "length": 20.0,
-    "rise": -2.43,
+    "rise": -2.56,
     "height": 4.5
    },
-   "x": -909.06,
-   "z": 11.98,
+   "x": -431.15,
+   "z": 7.33,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -422,14 +837,14 @@
    "id": "rt_saejae_gate2",
    "kit": "landmark/seongmun",
    "params": {
-    "seed": 131,
+    "seed": 162,
     "name": "조곡관(제2관문)",
     "open": "none",
     "width": 14.0,
     "lu": 1
    },
-   "x": -521.93,
-   "z": 57.84,
+   "x": -298.8,
+   "z": 20.21,
    "ry": 0.0,
    "y": null,
    "flatten": true,
@@ -440,13 +855,13 @@
    "id": "rt_saejae_gate2_wallw0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 132,
+    "seed": 163,
     "length": 20.0,
-    "rise": 0.97,
+    "rise": 0.65,
     "height": 4.5
    },
-   "x": -539.43,
-   "z": 57.84,
+   "x": -316.3,
+   "z": 20.21,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -457,13 +872,13 @@
    "id": "rt_saejae_gate2_wallw1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 133,
+    "seed": 164,
     "length": 20.0,
-    "rise": -5.64,
+    "rise": -1.51,
     "height": 4.5
    },
-   "x": -559.43,
-   "z": 57.84,
+   "x": -336.3,
+   "z": 20.21,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -474,13 +889,13 @@
    "id": "rt_saejae_gate2_walle0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 135,
+    "seed": 166,
     "length": 20.0,
-    "rise": -3.72,
+    "rise": -2.07,
     "height": 4.5
    },
-   "x": -504.43,
-   "z": 57.84,
+   "x": -281.3,
+   "z": 20.21,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -491,13 +906,13 @@
    "id": "rt_saejae_gate2_walle1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 136,
+    "seed": 167,
     "length": 20.0,
-    "rise": 1.04,
+    "rise": -3.4,
     "height": 4.5
    },
-   "x": -484.43,
-   "z": 57.84,
+   "x": -261.3,
+   "z": 20.21,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -508,14 +923,14 @@
    "id": "rt_saejae_gate1",
    "kit": "landmark/seongmun",
    "params": {
-    "seed": 138,
+    "seed": 169,
     "name": "주흘관(제1관문)",
     "open": "none",
     "width": 14.0,
     "lu": 1
    },
-   "x": -98.03,
-   "z": -40.96,
+   "x": -129.24,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": true,
@@ -526,13 +941,13 @@
    "id": "rt_saejae_gate1_wallw0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 139,
+    "seed": 170,
     "length": 20.0,
-    "rise": 0.76,
+    "rise": 0.87,
     "height": 4.5
    },
-   "x": -115.53,
-   "z": -40.96,
+   "x": -146.74,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -543,13 +958,13 @@
    "id": "rt_saejae_gate1_wallw1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 140,
+    "seed": 171,
     "length": 20.0,
-    "rise": -0.61,
+    "rise": 1.04,
     "height": 4.5
    },
-   "x": -135.53,
-   "z": -40.96,
+   "x": -166.74,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -560,13 +975,13 @@
    "id": "rt_saejae_gate1_wallw2",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 141,
+    "seed": 172,
     "length": 20.0,
-    "rise": -1.74,
+    "rise": -1.32,
     "height": 4.5
    },
-   "x": -155.53,
-   "z": -40.96,
+   "x": -186.74,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -577,13 +992,13 @@
    "id": "rt_saejae_gate1_walle0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 142,
+    "seed": 173,
     "length": 20.0,
-    "rise": -1.16,
+    "rise": 0.47,
     "height": 4.5
    },
-   "x": -80.53,
-   "z": -40.96,
+   "x": -111.74,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -594,13 +1009,13 @@
    "id": "rt_saejae_gate1_walle1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 143,
+    "seed": 174,
     "length": 20.0,
-    "rise": -0.94,
+    "rise": -1.34,
     "height": 4.5
    },
-   "x": -60.53,
-   "z": -40.96,
+   "x": -91.74,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -611,13 +1026,13 @@
    "id": "rt_saejae_gate1_walle2",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 144,
+    "seed": 175,
     "length": 20.0,
-    "rise": 1.14,
+    "rise": -1.49,
     "height": 4.5
    },
-   "x": -40.53,
-   "z": -40.96,
+   "x": -71.74,
+   "z": -13.1,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -628,11 +1043,11 @@
    "id": "rt_saejae_cairn_top",
    "kit": "village/cairn",
    "params": {
-    "seed": 145
+    "seed": 176
    },
-   "x": -899.92,
-   "z": -16.77,
-   "ry": -0.45,
+   "x": -452.46,
+   "z": -34.16,
+   "ry": 0.1526,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -642,12 +1057,12 @@
    "id": "rt_saejae_seonghwang",
    "kit": "village/seonghwangdang",
    "params": {
-    "seed": 146,
+    "seed": 177,
     "dangjip": true
    },
-   "x": -457.09,
-   "z": 41.88,
-   "ry": -0.45,
+   "x": -278.43,
+   "z": -28.42,
+   "ry": 0.0245,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -657,11 +1072,11 @@
    "id": "rt_saejae_seonghwang_cairn",
    "kit": "village/cairn",
    "params": {
-    "seed": 147
+    "seed": 178
    },
-   "x": -454.92,
-   "z": 50.14,
-   "ry": -0.45,
+   "x": -270.54,
+   "z": -24.84,
+   "ry": -0.195,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -671,41 +1086,12 @@
    "id": "rt_saejae_seonghwang_tree",
    "kit": "nature/big_tree",
    "params": {
-    "seed": 148,
+    "seed": 179,
     "variant": "broadleaf"
    },
-   "x": -457.44,
-   "z": 30.35,
-   "ry": 0.0461,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
-  },
-  {
-   "id": "rt_saejae_jumak_a",
-   "kit": "village/jumak",
-   "params": {
-    "seed": 149
-   },
-   "x": -598.33,
-   "z": 40.1,
-   "ry": -0.005,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
-  },
-  {
-   "id": "rt_saejae_jumak_a_wood",
-   "kit": "village/firewood",
-   "params": {
-    "seed": 150,
-    "kind": "stack"
-   },
-   "x": -589.38,
-   "z": 33.12,
-   "ry": -0.0011,
+   "x": -242.96,
+   "z": -26.56,
+   "ry": -0.45,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -715,12 +1101,12 @@
    "id": "rt_saejae_jumak_a_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 151,
+    "seed": 182,
     "load": "wood"
    },
-   "x": -606.31,
-   "z": 46.53,
-   "ry": -0.014,
+   "x": -345.69,
+   "z": 25.3,
+   "ry": -0.45,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -730,11 +1116,11 @@
    "id": "rt_saejae_jumak_b",
    "kit": "village/jumak",
    "params": {
-    "seed": 152
+    "seed": 183
    },
-   "x": -285.71,
-   "z": 10.44,
-   "ry": 0.45,
+   "x": -237.77,
+   "z": 1.57,
+   "ry": -0.45,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -744,12 +1130,12 @@
    "id": "rt_saejae_jumak_b_wood",
    "kit": "village/firewood",
    "params": {
-    "seed": 153,
+    "seed": 184,
     "kind": "stack"
    },
-   "x": -282.36,
-   "z": 0.31,
-   "ry": 0.45,
+   "x": -229.13,
+   "z": 1.16,
+   "ry": -0.45,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -759,12 +1145,12 @@
    "id": "rt_saejae_jumak_b_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 154,
+    "seed": 185,
     "load": "wood"
    },
-   "x": -289.36,
-   "z": 19.67,
-   "ry": 0.449,
+   "x": -246.06,
+   "z": 1.72,
+   "ry": -0.45,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -774,7 +1160,7 @@
    "id": "rt_saejae_wonteo_wall",
    "kit": "village/wall_run",
    "params": {
-    "seed": 155,
+    "seed": 186,
     "kind": "stone_lite",
     "h": 0.7,
     "closed": true,
@@ -801,9 +1187,9 @@
     ],
     "jitter": 0.4
    },
-   "x": -354.6,
-   "z": 1.82,
-   "ry": 0.3464,
+   "x": -298.21,
+   "z": -47.25,
+   "ry": 0.2761,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -814,11 +1200,11 @@
    "id": "rt_saejae_wonteo_house",
    "kit": "culture/yeongnam/choga",
    "params": {
-    "seed": 156
+    "seed": 187
    },
-   "x": -325.97,
-   "z": 21.39,
-   "ry": 0.3306,
+   "x": -255.22,
+   "z": -33.04,
+   "ry": -0.45,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -826,31 +1212,15 @@
    "note": "원터 곁 길손 집"
   },
   {
-   "id": "rt_saejae_gyogwi",
-   "kit": "village/jeongja",
-   "params": {
-    "seed": 157,
-    "plain": true
-   },
-   "x": -404.23,
-   "z": 39.63,
-   "ry": 0.0594,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "문경새재(조령 — 세 관문·원터·주막·성황당)",
-   "note": "교귀정 자리(새재 안 정자, 가설)"
-  },
-  {
    "id": "rt_saejae_jangseung_m",
    "kit": "village/jangseung",
    "params": {
-    "seed": 158,
+    "seed": 189,
     "female": false
    },
-   "x": -46.27,
-   "z": -60.96,
-   "ry": -0.45,
+   "x": -155.21,
+   "z": 13.11,
+   "ry": -0.1539,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -860,29 +1230,170 @@
    "id": "rt_saejae_jangseung_f",
    "kit": "village/jangseung",
    "params": {
-    "seed": 159,
+    "seed": 190,
     "female": true
    },
-   "x": -53.36,
-   "z": -53.91,
-   "ry": -0.45,
+   "x": -156.74,
+   "z": 22.99,
+   "ry": -0.1539,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "문경새재(조령 — 세 관문·원터·주막·성황당)"
   },
   {
+   "id": "rt_tokkibiri_slab",
+   "kit": "nature/slab_rock",
+   "params": {
+    "w": 4.4,
+    "d": 2.8,
+    "seed": 191
+   },
+   "x": -87.88,
+   "z": -30.57,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "토끼비리 벼랑길·고모산성 바라봄"
+  },
+  {
+   "id": "rt_tokkibiri_boulder",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "mossy": false,
+    "seed": 192
+   },
+   "x": -76.88,
+   "z": -42.57,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "토끼비리 벼랑길·고모산성 바라봄"
+  },
+  {
+   "id": "rt_tokkibiri_pine",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.5,
+    "seed": 193
+   },
+   "x": -82.73,
+   "z": -47.28,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "토끼비리 벼랑길·고모산성 바라봄"
+  },
+  {
+   "id": "rt_tokkibiri_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 194
+   },
+   "x": -82.41,
+   "z": -24.71,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "토끼비리 벼랑길·고모산성 바라봄"
+  },
+  {
+   "id": "rt_hamchang_myo0",
+   "kit": "route/myo",
+   "params": {
+    "r": 3.4,
+    "stone": true,
+    "n": 1,
+    "seed": 195
+   },
+   "x": 43.25,
+   "z": -42.74,
+   "ry": -0.1437,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "함창 고령가야 왕릉(전설)"
+  },
+  {
+   "id": "rt_hamchang_myo1",
+   "kit": "route/myo",
+   "params": {
+    "r": 2.8,
+    "old": true,
+    "seed": 196
+   },
+   "x": 57.78,
+   "z": -48.79,
+   "ry": -0.1296,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "함창 고령가야 왕릉(전설)"
+  },
+  {
+   "id": "rt_hamchang_myo2",
+   "kit": "route/myo",
+   "params": {
+    "r": 1.6,
+    "old": true,
+    "seed": 197
+   },
+   "x": 31.99,
+   "z": -48.42,
+   "ry": -0.1452,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "함창 고령가야 왕릉(전설)"
+  },
+  {
+   "id": "rt_hamchang_pine0",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.3,
+    "seed": 198
+   },
+   "x": 52.05,
+   "z": -55.62,
+   "ry": -0.1403,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "함창 고령가야 왕릉(전설)"
+  },
+  {
+   "id": "rt_hamchang_pine1",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.1,
+    "seed": 199
+   },
+   "x": 41.89,
+   "z": -61.13,
+   "ry": -0.1442,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "함창 고령가야 왕릉(전설)"
+  },
+  {
    "id": "rt_sangju_gate",
    "kit": "landmark/seongmun",
    "params": {
-    "seed": 160,
+    "seed": 200,
     "name": "상주 남문",
     "open": "none",
     "width": 14.0,
     "lu": 1
    },
-   "x": 869.31,
-   "z": -8.0,
+   "x": 120.0,
+   "z": -11.93,
    "ry": 0.0,
    "y": null,
    "flatten": true,
@@ -893,13 +1404,13 @@
    "id": "rt_sangju_gate_wallw0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 161,
+    "seed": 201,
     "length": 20.0,
-    "rise": -0.85,
+    "rise": -0.42,
     "height": 4.5
    },
-   "x": 851.81,
-   "z": -8.0,
+   "x": 102.5,
+   "z": -11.93,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -910,13 +1421,13 @@
    "id": "rt_sangju_gate_wallw1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 162,
+    "seed": 202,
     "length": 20.0,
-    "rise": 0.31,
+    "rise": -0.53,
     "height": 4.5
    },
-   "x": 831.81,
-   "z": -8.0,
+   "x": 82.5,
+   "z": -11.93,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -927,13 +1438,13 @@
    "id": "rt_sangju_gate_walle0",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 164,
+    "seed": 204,
     "length": 20.0,
-    "rise": 0.44,
+    "rise": 0.18,
     "height": 4.5
    },
-   "x": 886.81,
-   "z": -8.0,
+   "x": 137.5,
+   "z": -11.93,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -944,13 +1455,13 @@
    "id": "rt_sangju_gate_walle1",
    "kit": "landmark/hy_seong_wall",
    "params": {
-    "seed": 165,
+    "seed": 205,
     "length": 20.0,
-    "rise": -0.15,
+    "rise": -0.29,
     "height": 4.5
    },
-   "x": 906.81,
-   "z": -8.0,
+   "x": 157.5,
+   "z": -11.93,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -961,11 +1472,11 @@
    "id": "rt_sangju_shop0",
    "kit": "village/market_shop",
    "params": {
-    "seed": 167
+    "seed": 207
    },
-   "x": 939.36,
-   "z": -19.0,
-   "ry": -0.0,
+   "x": 190.22,
+   "z": -20.02,
+   "ry": -0.0536,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -975,11 +1486,11 @@
    "id": "rt_sangju_shop1",
    "kit": "village/market_shop",
    "params": {
-    "seed": 168
+    "seed": 208
    },
-   "x": 957.36,
-   "z": -19.0,
-   "ry": -0.0,
+   "x": 201.99,
+   "z": -19.49,
+   "ry": -0.0346,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -989,11 +1500,11 @@
    "id": "rt_sangju_shop2",
    "kit": "village/market_shop",
    "params": {
-    "seed": 169
+    "seed": 209
    },
-   "x": 975.36,
-   "z": -19.0,
-   "ry": -0.0,
+   "x": 212.82,
+   "z": -19.21,
+   "ry": -0.019,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1003,11 +1514,11 @@
    "id": "rt_sangju_jwapan0",
    "kit": "village/jwapan",
    "params": {
-    "seed": 170
+    "seed": 210
    },
-   "x": 945.36,
-   "z": -1.0,
-   "ry": -0.0,
+   "x": 193.29,
+   "z": -1.83,
+   "ry": -0.0474,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1017,11 +1528,11 @@
    "id": "rt_sangju_jwapan1",
    "kit": "village/jwapan",
    "params": {
-    "seed": 171
+    "seed": 211
    },
-   "x": 963.36,
-   "z": -1.0,
-   "ry": -0.0,
+   "x": 204.41,
+   "z": -1.41,
+   "ry": -0.0297,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1032,11 +1543,11 @@
    "kit": "culture/yeongnam/compound",
    "params": {
     "size": "small",
-    "seed": 172
+    "seed": 212
    },
-   "x": 1001.36,
-   "z": -24.0,
-   "ry": -0.0,
+   "x": 208.32,
+   "z": -36.32,
+   "ry": -0.0254,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1046,11 +1557,11 @@
    "id": "rt_sangju_house2",
    "kit": "culture/yeongnam/choga",
    "params": {
-    "seed": 173
+    "seed": 213
    },
-   "x": 1023.36,
-   "z": -38.0,
-   "ry": -0.0,
+   "x": 226.9,
+   "z": -38.03,
+   "ry": -0.0097,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1060,12 +1571,12 @@
    "id": "rt_sangju_giwa",
    "kit": "village/giwa",
    "params": {
-    "seed": 174,
+    "seed": 214,
     "plain": true
    },
-   "x": 969.36,
-   "z": -40.0,
-   "ry": -0.0,
+   "x": 209.77,
+   "z": -56.29,
+   "ry": -0.0241,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1075,27 +1586,13 @@
    "id": "rt_sangju_well",
    "kit": "village/well",
    "params": {
-    "seed": 175
+    "seed": 215
    },
-   "x": 991.36,
-   "z": 1.0,
-   "ry": -0.0,
+   "x": 222.51,
+   "z": 0.92,
+   "ry": -0.0106,
    "y": null,
    "flatten": false,
-   "clear_veg": true,
-   "group": "상주 읍성 남문 밖"
-  },
-  {
-   "id": "rt_sangju_house3",
-   "kit": "culture/yeongnam/choga",
-   "params": {
-    "seed": 176
-   },
-   "x": 851.64,
-   "z": 9.13,
-   "ry": 0.207,
-   "y": null,
-   "flatten": true,
    "clear_veg": true,
    "group": "상주 읍성 남문 밖"
   },
@@ -1103,11 +1600,11 @@
    "id": "rt_sangju_house4",
    "kit": "culture/yeongnam/choga",
    "params": {
-    "seed": 177
+    "seed": 217
    },
-   "x": 829.24,
-   "z": 35.81,
-   "ry": -0.45,
+   "x": 148.36,
+   "z": 3.22,
+   "ry": 0.0,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1117,12 +1614,12 @@
    "id": "rt_sangju_jangseung_m",
    "kit": "village/jangseung",
    "params": {
-    "seed": 178,
+    "seed": 218,
     "female": false
    },
-   "x": 825.33,
-   "z": 3.41,
-   "ry": -0.45,
+   "x": 114.47,
+   "z": 10.01,
+   "ry": 0.0,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1132,56 +1629,198 @@
    "id": "rt_sangju_jangseung_f",
    "kit": "village/jangseung",
    "params": {
-    "seed": 179,
+    "seed": 219,
     "female": true
    },
-   "x": 817.73,
-   "z": 9.9,
-   "ry": -0.45,
+   "x": 124.03,
+   "z": 12.93,
+   "ry": 0.0,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "상주 읍성 남문 밖"
   },
   {
-   "id": "rt_hahoe_jumak",
-   "kit": "village/jumak",
+   "id": "rt_nagyang_ruin",
+   "kit": "route/ruin_house",
    "params": {
-    "seed": 180
+    "inn": false,
+    "w": 7.4,
+    "seed": 220
    },
-   "x": 1396.62,
-   "z": -14.38,
-   "ry": -0.0569,
+   "x": 271.14,
+   "z": -21.3,
+   "ry": -0.1057,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "하회 마을과 하회 나루(낙동강)"
+   "group": "낙양역 옛 원터"
+  },
+  {
+   "id": "rt_nagyang_wall",
+   "kit": "village/wall_run",
+   "params": {
+    "kind": "stone_lite",
+    "h": 0.6,
+    "closed": true,
+    "gaps": [
+     2,
+     5
+    ],
+    "jitter": 0.5,
+    "points": [
+     [
+      -13,
+      -9
+     ],
+     [
+      0,
+      -10
+     ],
+     [
+      13,
+      -9
+     ],
+     [
+      13,
+      9
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      -13,
+      9
+     ]
+    ],
+    "seed": 221
+   },
+   "x": 278.13,
+   "z": -42.67,
+   "ry": -0.1245,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "낙양역 옛 원터",
+   "note": "옛 원(院) 담장 터(허문 돌담) — 가설"
+  },
+  {
+   "id": "rt_nagyang_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 222
+   },
+   "x": 282.88,
+   "z": -13.7,
+   "ry": -0.1593,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "낙양역 옛 원터"
+  },
+  {
+   "id": "rt_nagyang_deadwood",
+   "kit": "nature/deadwood",
+   "params": {
+    "kind": "snag",
+    "s": 1.2,
+    "seed": 223
+   },
+   "x": 259.89,
+   "z": -29.26,
+   "ry": -0.059,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "낙양역 옛 원터"
+  },
+  {
+   "id": "rt_nagyang_bush_tree",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "broadleaf",
+    "bare": true,
+    "seed": 224
+   },
+   "x": 299.9,
+   "z": -48.23,
+   "ry": -0.1882,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "낙양역 옛 원터"
+  },
+  {
+   "id": "rt_pungsan_sinmok",
+   "kit": "route/sinmok",
+   "params": {
+    "variant": "zelkova",
+    "seed": 225
+   },
+   "x": 349.66,
+   "z": -9.16,
+   "ry": -0.008,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 당산나무"
+  },
+  {
+   "id": "rt_pungsan_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 226
+   },
+   "x": 356.55,
+   "z": -3.15,
+   "ry": -0.0006,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 당산나무"
+  },
+  {
+   "id": "rt_pungsan_stone_jang_m",
+   "kit": "village/stone_jangseung",
+   "params": {
+    "variant": 0,
+    "seed": 227
+   },
+   "x": 336.39,
+   "z": -0.21,
+   "ry": -0.1574,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 당산나무"
+  },
+  {
+   "id": "rt_pungsan_stone_jang_f",
+   "kit": "village/stone_jangseung",
+   "params": {
+    "variant": 2,
+    "seed": 228
+   },
+   "x": 334.83,
+   "z": 9.67,
+   "ry": -0.1574,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 당산나무"
   },
   {
    "id": "rt_hahoe_jumak_wood",
    "kit": "village/firewood",
    "params": {
-    "seed": 181,
+    "seed": 230,
     "kind": "stack"
    },
-   "x": 1405.8,
-   "z": -20.94,
-   "ry": -0.0471,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "하회 마을과 하회 나루(낙동강)"
-  },
-  {
-   "id": "rt_hahoe_jumak_jige",
-   "kit": "village/jige",
-   "params": {
-    "seed": 182,
-    "load": "wood"
-   },
-   "x": 1388.33,
-   "z": -7.4,
-   "ry": -0.0746,
+   "x": 384.54,
+   "z": -15.15,
+   "ry": -0.0,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1191,11 +1830,11 @@
    "id": "rt_hahoe_boatman",
    "kit": "culture/yeongnam/choga",
    "params": {
-    "seed": 183
+    "seed": 232
    },
-   "x": 1403.1,
-   "z": 14.98,
-   "ry": -0.0476,
+   "x": 349.42,
+   "z": 20.84,
+   "ry": -0.008,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1206,11 +1845,11 @@
    "id": "rt_hahoe_store",
    "kit": "village/heotgan",
    "params": {
-    "seed": 184
+    "seed": 233
    },
-   "x": 1379.21,
-   "z": -14.75,
-   "ry": -0.1026,
+   "x": 335.91,
+   "z": -8.42,
+   "ry": -0.1755,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1221,10 +1860,10 @@
    "id": "rt_hahoe_ppallae",
    "kit": "village/ppallaeteo",
    "params": {
-    "seed": 185
+    "seed": 234
    },
-   "x": 1427.5,
-   "z": -24.0,
+   "x": 359.5,
+   "z": -20.15,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -1235,10 +1874,10 @@
    "id": "rt_hahoe_narutbae0",
    "kit": "village/narutbae",
    "params": {
-    "seed": 186
+    "seed": 235
    },
-   "x": 1440.7,
-   "z": 13.0,
+   "x": 372.9,
+   "z": 16.85,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -1249,10 +1888,10 @@
    "id": "rt_hahoe_narutbae1",
    "kit": "village/narutbae",
    "params": {
-    "seed": 187
+    "seed": 236
    },
-   "x": 1441.09,
-   "z": 22.0,
+   "x": 373.27,
+   "z": 25.85,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -1263,10 +1902,10 @@
    "id": "rt_hahoe_narutbae_n",
    "kit": "village/narutbae",
    "params": {
-    "seed": 188
+    "seed": 237
    },
-   "x": 1439.22,
-   "z": -12.0,
+   "x": 371.47,
+   "z": -8.15,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -1278,11 +1917,11 @@
    "kit": "culture/yeongnam/compound",
    "params": {
     "size": "small",
-    "seed": 189
+    "seed": 238
    },
-   "x": 1479.97,
-   "z": -11.2,
-   "ry": -0.017,
+   "x": 430.52,
+   "z": -7.04,
+   "ry": -0.0042,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1292,11 +1931,11 @@
    "id": "rt_hahoe_far2",
    "kit": "culture/yeongnam/choga",
    "params": {
-    "seed": 190
+    "seed": 239
    },
-   "x": 1501.67,
-   "z": 19.98,
-   "ry": -0.0026,
+   "x": 444.44,
+   "z": 23.99,
+   "ry": -0.001,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1306,11 +1945,11 @@
    "id": "rt_hahoe_jangseung_m",
    "kit": "village/jangseung",
    "params": {
-    "seed": 191,
+    "seed": 240,
     "female": false
    },
-   "x": 1529.71,
-   "z": -1.0,
+   "x": 461.45,
+   "z": 3.0,
    "ry": -0.0001,
    "y": null,
    "flatten": false,
@@ -1321,11 +1960,11 @@
    "id": "rt_hahoe_jangseung_f",
    "kit": "village/jangseung",
    "params": {
-    "seed": 192,
+    "seed": 241,
     "female": true
    },
-   "x": 1529.71,
-   "z": 9.0,
+   "x": 461.45,
+   "z": 13.0,
    "ry": -0.0001,
    "y": null,
    "flatten": false,
@@ -1336,11 +1975,11 @@
    "id": "rt_hahoe_jongga",
    "kit": "culture/yeongnam/jongga",
    "params": {
-    "seed": 193
+    "seed": 242
    },
-   "x": 1569.71,
+   "x": 457.46,
    "z": -26.0,
-   "ry": -0.0,
+   "ry": -0.0002,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1348,45 +1987,15 @@
    "note": "하회 종가(양진당·충효당 성격, 가설)"
   },
   {
-   "id": "rt_hahoe_tteul1",
-   "kit": "culture/yeongnam/tteuljip",
-   "params": {
-    "seed": 194,
-    "roof": "giwa"
-   },
-   "x": 1535.71,
-   "z": -30.0,
-   "ry": -0.0,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "하회 마을과 하회 나루(낙동강)"
-  },
-  {
-   "id": "rt_hahoe_tteul2",
-   "kit": "culture/yeongnam/tteuljip",
-   "params": {
-    "seed": 195,
-    "roof": "choga"
-   },
-   "x": 1605.71,
-   "z": -22.0,
-   "ry": -0.0,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "하회 마을과 하회 나루(낙동강)"
-  },
-  {
    "id": "rt_hahoe_bigtree",
    "kit": "nature/big_tree",
    "params": {
-    "seed": 196,
+    "seed": 245,
     "variant": "zelkova"
    },
-   "x": 1577.71,
-   "z": 18.0,
-   "ry": -0.0,
+   "x": 457.45,
+   "z": 22.0,
+   "ry": -0.0002,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1394,16 +2003,269 @@
    "note": "하회 삼신당 느티나무 자리(가설)"
   },
   {
+   "id": "rt_pungsan_myo_myo0",
+   "kit": "route/myo",
+   "params": {
+    "r": 2.1,
+    "stone": true,
+    "n": 1,
+    "seed": 246
+   },
+   "x": 570.63,
+   "z": -17.95,
+   "ry": -0.007,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 길가 산소"
+  },
+  {
+   "id": "rt_pungsan_myo_myo1",
+   "kit": "route/myo",
+   "params": {
+    "r": 1.8,
+    "old": true,
+    "seed": 247
+   },
+   "x": 585.33,
+   "z": -25.73,
+   "ry": -0.0258,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 길가 산소"
+  },
+  {
+   "id": "rt_pungsan_myo_myo2",
+   "kit": "route/myo",
+   "params": {
+    "r": 1.6,
+    "old": true,
+    "seed": 248
+   },
+   "x": 558.5,
+   "z": -21.99,
+   "ry": -0.0017,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 길가 산소"
+  },
+  {
+   "id": "rt_pungsan_myo_pine0",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.3,
+    "seed": 249
+   },
+   "x": 578.01,
+   "z": -31.88,
+   "ry": -0.014,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 길가 산소"
+  },
+  {
+   "id": "rt_pungsan_myo_pine1",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.1,
+    "seed": 250
+   },
+   "x": 566.64,
+   "z": -35.96,
+   "ry": -0.0043,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 길가 산소"
+  },
+  {
+   "id": "rt_pungsan_field_house0",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 251
+   },
+   "x": 607.2,
+   "z": -7.39,
+   "ry": -0.1058,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_house1",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 252
+   },
+   "x": 629.21,
+   "z": -8.74,
+   "ry": -0.2333,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_house2",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "size": "small",
+    "seed": 253
+   },
+   "x": 649.32,
+   "z": 1.55,
+   "ry": -0.3443,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_house3",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 254
+   },
+   "x": 669.64,
+   "z": -10.08,
+   "ry": -0.35,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_teotbat",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 255
+   },
+   "x": 644.34,
+   "z": -23.29,
+   "ry": -0.2925,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 256
+   },
+   "x": 617.07,
+   "z": 22.37,
+   "ry": -0.1986,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 257
+   },
+   "x": 626.66,
+   "z": 25.74,
+   "ry": -0.2758,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_yard",
+   "kit": "village/yard_props",
+   "params": {
+    "set": "work",
+    "seed": 258
+   },
+   "x": 622.77,
+   "z": -18.3,
+   "ry": -0.1841,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 259
+   },
+   "x": 635.03,
+   "z": 24.13,
+   "ry": -0.3226,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 260
+   },
+   "x": 586.75,
+   "z": -1.69,
+   "ry": -0.0304,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 261
+   },
+   "x": 581.55,
+   "z": 3.2,
+   "ry": -0.0193,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
+   "id": "rt_pungsan_field_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 262
+   },
+   "x": 581.35,
+   "z": 13.19,
+   "ry": -0.0193,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "풍산 들 길가 마을"
+  },
+  {
    "id": "rt_jebiwon_maaebul",
    "kit": "landmark/maaebul_rock",
    "params": {
-    "seed": 197,
+    "seed": 263,
     "offering": true,
     "pillars": false
    },
-   "x": 2112.45,
-   "z": 4.81,
-   "ry": 0.3034,
+   "x": 754.33,
+   "z": 5.2,
+   "ry": 0.2475,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1414,12 +2276,12 @@
    "id": "rt_jebiwon_won",
    "kit": "village/giwa",
    "params": {
-    "seed": 198,
+    "seed": 264,
     "plain": true
    },
-   "x": 2074.41,
-   "z": 16.89,
-   "ry": 0.0806,
+   "x": 731.58,
+   "z": 15.12,
+   "ry": 0.0965,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1430,11 +2292,11 @@
    "id": "rt_jebiwon_jumak",
    "kit": "village/jumak",
    "params": {
-    "seed": 199
+    "seed": 265
    },
-   "x": 2153.84,
-   "z": -2.52,
-   "ry": 0.3183,
+   "x": 781.07,
+   "z": 5.22,
+   "ry": 0.3209,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1444,12 +2306,12 @@
    "id": "rt_jebiwon_jumak_wood",
    "kit": "village/firewood",
    "params": {
-    "seed": 200,
+    "seed": 266,
     "kind": "stack"
    },
-   "x": 2161.76,
-   "z": -12.11,
-   "ry": 0.245,
+   "x": 783.76,
+   "z": -3.02,
+   "ry": 0.3136,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1459,12 +2321,12 @@
    "id": "rt_jebiwon_jumak_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 201,
+    "seed": 267,
     "load": "wood"
    },
-   "x": 2148.36,
-   "z": 7.43,
-   "ry": 0.3672,
+   "x": 778.68,
+   "z": 13.95,
+   "ry": 0.3248,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1475,11 +2337,11 @@
    "kit": "culture/yeongnam/compound",
    "params": {
     "size": "small",
-    "seed": 202
+    "seed": 268
    },
-   "x": 2187.41,
-   "z": -25.13,
-   "ry": 0.0717,
+   "x": 796.61,
+   "z": -16.08,
+   "ry": 0.2382,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1489,12 +2351,12 @@
    "id": "rt_jebiwon_seonghwang",
    "kit": "village/seonghwangdang",
    "params": {
-    "seed": 203,
+    "seed": 269,
     "dangjip": false
    },
-   "x": 2031.6,
-   "z": 20.68,
-   "ry": -0.1488,
+   "x": 705.13,
+   "z": 20.49,
+   "ry": 0.0033,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -1504,15 +2366,151 @@
    "id": "rt_jebiwon_seonghwang_cairn",
    "kit": "village/cairn",
    "params": {
-    "seed": 204
+    "seed": 270
    },
-   "x": 2038.61,
-   "z": 24.58,
-   "ry": -0.0955,
+   "x": 714.66,
+   "z": 19.26,
+   "ry": 0.0394,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "제비원(연미사 석불)·원집"
+  },
+  {
+   "id": "rt_uiseong_seonghwang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": false,
+    "seed": 271
+   },
+   "x": 846.91,
+   "z": -2.29,
+   "ry": -0.0436,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "의성 고갯마루 서낭당"
+  },
+  {
+   "id": "rt_uiseong_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "seed": 272
+   },
+   "x": 852.87,
+   "z": 1.0,
+   "ry": -0.0545,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "의성 고갯마루 서낭당"
+  },
+  {
+   "id": "rt_uiseong_cairn_s",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 273
+   },
+   "x": 838.29,
+   "z": 16.46,
+   "ry": -0.0147,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "의성 고갯마루 서낭당"
+  },
+  {
+   "id": "rt_uiseong_pine",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.4,
+    "seed": 274
+   },
+   "x": 861.19,
+   "z": -3.53,
+   "ry": -0.0588,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "의성 고갯마루 서낭당"
+  },
+  {
+   "id": "rt_geumho_jingeom",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 275,
+    "len": 10.0
+   },
+   "x": 966.83,
+   "z": 12.0,
+   "ry": 1.5708,
+   "y": 3.13,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "금호강 옛 여울목(영천)",
+   "note": "옛 여울목 징검다리"
+  },
+  {
+   "id": "rt_geumho_ruin",
+   "kit": "route/ruin_house",
+   "params": {
+    "seed": 276,
+    "inn": false
+   },
+   "x": 953.33,
+   "z": -4.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "금호강 옛 여울목(영천)"
+  },
+  {
+   "id": "rt_geumho_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 277,
+    "variant": "willow"
+   },
+   "x": 976.33,
+   "z": 2.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "금호강 옛 여울목(영천)"
+  },
+  {
+   "id": "rt_geumho_deadwood",
+   "kit": "nature/deadwood",
+   "params": {
+    "seed": 278,
+    "kind": "snag",
+    "s": 1.1
+   },
+   "x": 958.33,
+   "z": 34.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "금호강 옛 여울목(영천)"
+  },
+  {
+   "id": "rt_geumho_reeds",
+   "kit": "nature/reeds",
+   "params": {
+    "seed": 279,
+    "n": 9
+   },
+   "x": 972.33,
+   "z": 20.0,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "금호강 옛 여울목(영천)"
   }
  ]
 }

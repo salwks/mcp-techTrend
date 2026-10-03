@@ -3,14 +3,59 @@
  "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
  "items": [
   {
+   "id": "rt_hwangju_north_sinmok",
+   "kit": "route/sinmok",
+   "params": {
+    "variant": "zelkova",
+    "seed": 101
+   },
+   "x": -194.03,
+   "z": -7.02,
+   "ry": 0.0019,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 북쪽 들 당산나무"
+  },
+  {
+   "id": "rt_hwangju_north_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 102
+   },
+   "x": -187.04,
+   "z": -1.04,
+   "ry": 0.0041,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 북쪽 들 당산나무"
+  },
+  {
+   "id": "rt_hwangju_north_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 103
+   },
+   "x": -207.0,
+   "z": -0.0,
+   "ry": 0.0004,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 북쪽 들 당산나무"
+  },
+  {
    "id": "rt_junghwa_square",
    "kit": "village/village_square",
    "params": {
-    "seed": 101
+    "seed": 104
    },
-   "x": 4.0,
-   "z": 14.8,
-   "ry": -0.3043,
+   "x": 2.53,
+   "z": 16.6,
+   "ry": -0.2502,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -21,11 +66,11 @@
    "kit": "culture/gwanseo/compound",
    "params": {
     "size": "small",
-    "seed": 102
+    "seed": 105
    },
-   "x": -23.12,
-   "z": 1.77,
-   "ry": -0.3182,
+   "x": -12.79,
+   "z": 8.0,
+   "ry": -0.3138,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -35,11 +80,11 @@
    "id": "rt_junghwa_comp1",
    "kit": "culture/gwanseo/choga",
    "params": {
-    "seed": 103
+    "seed": 106
    },
-   "x": 27.96,
-   "z": 15.5,
-   "ry": -0.2532,
+   "x": 17.92,
+   "z": 14.01,
+   "ry": -0.2099,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -50,11 +95,11 @@
    "kit": "culture/gwanseo/compound",
    "params": {
     "size": "small",
-    "seed": 104
+    "seed": 107
    },
-   "x": 4.45,
-   "z": -12.35,
-   "ry": -0.3121,
+   "x": 5.58,
+   "z": -9.48,
+   "ry": -0.2633,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -64,11 +109,11 @@
    "id": "rt_junghwa_comp3",
    "kit": "culture/gwanseo/choga",
    "params": {
-    "seed": 105
+    "seed": 108
    },
-   "x": 47.42,
-   "z": -2.5,
-   "ry": -0.2116,
+   "x": 31.8,
+   "z": -5.59,
+   "ry": -0.1972,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -79,11 +124,11 @@
    "kit": "culture/gwanseo/compound",
    "params": {
     "size": "small",
-    "seed": 106
+    "seed": 109
    },
-   "x": -32.31,
-   "z": -28.6,
-   "ry": -0.3126,
+   "x": -14.18,
+   "z": -19.93,
+   "ry": -0.3389,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -93,11 +138,11 @@
    "id": "rt_junghwa_well",
    "kit": "village/well",
    "params": {
-    "seed": 107
+    "seed": 110
    },
-   "x": 11.6,
-   "z": 37.99,
-   "ry": -0.2787,
+   "x": 6.53,
+   "z": 38.13,
+   "ry": -0.2238,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -107,11 +152,11 @@
    "id": "rt_junghwa_haystack0",
    "kit": "village/haystack",
    "params": {
-    "seed": 108
+    "seed": 111
    },
-   "x": -22.37,
-   "z": 31.5,
-   "ry": -0.317,
+   "x": -15.46,
+   "z": 36.51,
+   "ry": -0.2918,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -121,11 +166,11 @@
    "id": "rt_junghwa_haystack1",
    "kit": "village/haystack",
    "params": {
-    "seed": 109
+    "seed": 112
    },
-   "x": 25.98,
-   "z": 48.0,
-   "ry": -0.2375,
+   "x": 15.24,
+   "z": 46.16,
+   "ry": -0.204,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -135,12 +180,12 @@
    "id": "rt_junghwa_jangseung_m",
    "kit": "village/jangseung",
    "params": {
-    "seed": 110,
+    "seed": 113,
     "female": false
    },
-   "x": -74.79,
-   "z": -2.42,
-   "ry": -0.2349,
+   "x": -45.44,
+   "z": 8.29,
+   "ry": -0.3185,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -150,12 +195,12 @@
    "id": "rt_junghwa_jangseung_f",
    "kit": "village/jangseung",
    "params": {
-    "seed": 111,
+    "seed": 114,
     "female": true
    },
-   "x": -77.11,
-   "z": 7.3,
-   "ry": -0.2349,
+   "x": -48.57,
+   "z": 17.78,
+   "ry": -0.3185,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -165,11 +210,11 @@
    "id": "rt_junghwa_jumak",
    "kit": "village/jumak",
    "params": {
-    "seed": 112
+    "seed": 115
    },
-   "x": 70.15,
-   "z": 28.78,
-   "ry": -0.121,
+   "x": 45.16,
+   "z": 24.57,
+   "ry": -0.1982,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -179,12 +224,12 @@
    "id": "rt_junghwa_jumak_wood",
    "kit": "village/firewood",
    "params": {
-    "seed": 113,
+    "seed": 116,
     "kind": "stack"
    },
-   "x": 79.26,
-   "z": 22.7,
-   "ry": -0.0865,
+   "x": 51.49,
+   "z": 18.71,
+   "ry": -0.2008,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -194,16 +239,93 @@
    "id": "rt_junghwa_jumak_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 114,
+    "seed": 117,
     "load": "wood"
    },
-   "x": 61.62,
-   "z": 34.17,
-   "ry": -0.1497,
+   "x": 38.96,
+   "z": 29.96,
+   "ry": -0.1954,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "중화 고을(평안도 첫 고을)"
+  },
+  {
+   "id": "rt_mujin_jingeom",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 118,
+    "len": 9.0
+   },
+   "x": 195.73,
+   "z": 16.62,
+   "ry": 1.5708,
+   "y": 5.28,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "무진천 옛 여울목",
+   "note": "옛 여울목 징검다리"
+  },
+  {
+   "id": "rt_mujin_ruin",
+   "kit": "route/ruin_house",
+   "params": {
+    "seed": 119,
+    "inn": false
+   },
+   "x": 179.46,
+   "z": 0.62,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "무진천 옛 여울목"
+  },
+  {
+   "id": "rt_mujin_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 120,
+    "variant": "willow"
+   },
+   "x": 202.46,
+   "z": 6.62,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "무진천 옛 여울목"
+  },
+  {
+   "id": "rt_mujin_deadwood",
+   "kit": "nature/deadwood",
+   "params": {
+    "seed": 121,
+    "kind": "snag",
+    "s": 1.1
+   },
+   "x": 189.46,
+   "z": 26.62,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "무진천 옛 여울목"
+  },
+  {
+   "id": "rt_mujin_reeds",
+   "kit": "nature/reeds",
+   "params": {
+    "seed": 122,
+    "n": 9
+   },
+   "x": 203.46,
+   "z": 28.62,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "무진천 옛 여울목"
   }
  ]
 }

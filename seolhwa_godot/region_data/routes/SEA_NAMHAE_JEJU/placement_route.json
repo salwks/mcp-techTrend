@@ -3,16 +3,355 @@
  "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
  "items": [
   {
+   "id": "rt_gokseong_house0",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 101
+   },
+   "x": -611.65,
+   "z": -6.57,
+   "ry": 0.1452,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_house1",
+   "kit": "village/choga",
+   "params": {
+    "seed": 102
+   },
+   "x": -593.47,
+   "z": -14.35,
+   "ry": 0.1402,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_house2",
+   "kit": "village/house_compound",
+   "params": {
+    "size": "small",
+    "seed": 103
+   },
+   "x": -572.02,
+   "z": -12.76,
+   "ry": 0.0831,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_house3",
+   "kit": "village/choga",
+   "params": {
+    "seed": 104
+   },
+   "x": -557.68,
+   "z": -31.76,
+   "ry": 0.0589,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_teotbat",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 105
+   },
+   "x": -586.14,
+   "z": -33.46,
+   "ry": 0.1169,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_haystack0",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 106
+   },
+   "x": -593.73,
+   "z": 19.03,
+   "ry": 0.1475,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_haystack1",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 107
+   },
+   "x": -582.94,
+   "z": 18.55,
+   "ry": 0.1258,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_yard",
+   "kit": "village/yard_props",
+   "params": {
+    "set": "work",
+    "seed": 108
+   },
+   "x": -601.79,
+   "z": -21.21,
+   "ry": 0.1496,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 109
+   },
+   "x": -575.69,
+   "z": 13.69,
+   "ry": 0.1012,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 110
+   },
+   "x": -628.85,
+   "z": 2.55,
+   "ry": 0.0801,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 111
+   },
+   "x": -633.31,
+   "z": 7.83,
+   "ry": 0.0547,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_gokseong_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 112
+   },
+   "x": -632.76,
+   "z": 17.82,
+   "ry": 0.0547,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "곡성 들마을"
+  },
+  {
+   "id": "rt_yeongsan_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 113
+   },
+   "x": -491.87,
+   "z": -36.22,
+   "ry": -0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영산강 나주 나루"
+  },
+  {
+   "id": "rt_yeongsan_boatman",
+   "kit": "village/choga",
+   "params": {
+    "seed": 114
+   },
+   "x": -510.83,
+   "z": -41.34,
+   "ry": 0.3768,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "영산강 나주 나루",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_yeongsan_narutbae0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 115
+   },
+   "x": -476.41,
+   "z": -16.22,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "영산강 나주 나루"
+  },
+  {
+   "id": "rt_yeongsan_narutbae1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 116
+   },
+   "x": -477.3,
+   "z": -7.22,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "영산강 나주 나루"
+  },
+  {
+   "id": "rt_yeongsan_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 117,
+    "female": false
+   },
+   "x": -458.08,
+   "z": -32.32,
+   "ry": 0.0397,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영산강 나주 나루"
+  },
+  {
+   "id": "rt_yeongsan_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 118,
+    "female": true
+   },
+   "x": -457.68,
+   "z": -22.33,
+   "ry": 0.0397,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영산강 나주 나루"
+  },
+  {
+   "id": "rt_yeongsan_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 120,
+    "variant": "willow"
+   },
+   "x": -493.87,
+   "z": -3.22,
+   "ry": -0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "영산강 나주 나루"
+  },
+  {
+   "id": "rt_bannam_myo0",
+   "kit": "route/myo",
+   "params": {
+    "r": 3.4,
+    "stone": true,
+    "n": 1,
+    "seed": 121
+   },
+   "x": -451.08,
+   "z": -85.61,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반남 큰 무덤들(옛 고분)"
+  },
+  {
+   "id": "rt_bannam_myo1",
+   "kit": "route/myo",
+   "params": {
+    "r": 2.8,
+    "old": true,
+    "seed": 122
+   },
+   "x": -437.68,
+   "z": -109.06,
+   "ry": 0.45,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "반남 큰 무덤들(옛 고분)"
+  },
+  {
+   "id": "rt_bannam_pine0",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.3,
+    "seed": 124
+   },
+   "x": -448.65,
+   "z": -108.46,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반남 큰 무덤들(옛 고분)"
+  },
+  {
+   "id": "rt_bannam_pine1",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.1,
+    "seed": 125
+   },
+   "x": -483.11,
+   "z": -88.96,
+   "ry": 0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "반남 큰 무덤들(옛 고분)"
+  },
+  {
    "id": "rt_deokjin_bridge",
    "kit": "village/stone_bridge",
    "params": {
-    "seed": 101,
+    "seed": 126,
     "len": 12.0,
     "hw": 1.6,
     "arch": 0.6
    },
-   "x": 80.0,
-   "z": -0.03,
+   "x": -281.97,
+   "z": -121.18,
    "ry": 1.5708,
    "y": null,
    "flatten": false,
@@ -23,11 +362,11 @@
    "id": "rt_deokjin_jumak",
    "kit": "village/jumak",
    "params": {
-    "seed": 102
+    "seed": 127
    },
-   "x": -44.48,
-   "z": -15.83,
-   "ry": 0.176,
+   "x": -398.19,
+   "z": -104.37,
+   "ry": 0.232,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -37,12 +376,12 @@
    "id": "rt_deokjin_jumak_wood",
    "kit": "village/firewood",
    "params": {
-    "seed": 103,
+    "seed": 128,
     "kind": "stack"
    },
-   "x": -36.17,
-   "z": -24.28,
-   "ry": 0.1432,
+   "x": -393.33,
+   "z": -120.5,
+   "ry": 0.1446,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -52,12 +391,12 @@
    "id": "rt_deokjin_jumak_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 104,
+    "seed": 129,
     "load": "wood"
    },
-   "x": -51.26,
-   "z": -7.97,
-   "ry": 0.1845,
+   "x": -401.98,
+   "z": -96.47,
+   "ry": 0.3126,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -67,11 +406,11 @@
    "id": "rt_deokjin_house1",
    "kit": "village/choga",
    "params": {
-    "seed": 105
+    "seed": 130
    },
-   "x": 23.41,
-   "z": -19.13,
-   "ry": -0.1233,
+   "x": -357.33,
+   "z": -110.6,
+   "ry": 0.1228,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -82,207 +421,434 @@
    "kit": "village/house_compound",
    "params": {
     "size": "small",
-    "seed": 106
+    "seed": 131
    },
-   "x": 40.12,
-   "z": 14.78,
-   "ry": -0.0759,
+   "x": -339.32,
+   "z": -81.67,
+   "ry": 0.2723,
    "y": null,
    "flatten": true,
    "clear_veg": true,
    "group": "영암 덕진다리 주막"
   },
   {
+   "id": "rt_haenam_dang_sinmok",
+   "kit": "route/sinmok",
+   "params": {
+    "variant": "zelkova",
+    "seed": 132
+   },
+   "x": -231.52,
+   "z": -117.65,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 들 당산나무"
+  },
+  {
+   "id": "rt_haenam_dang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 133
+   },
+   "x": -231.63,
+   "z": -109.4,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 들 당산나무"
+  },
+  {
+   "id": "rt_haenam_dang_stone_jang_m",
+   "kit": "village/stone_jangseung",
+   "params": {
+    "variant": 0,
+    "seed": 134
+   },
+   "x": -248.51,
+   "z": -120.86,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 들 당산나무"
+  },
+  {
+   "id": "rt_haenam_dang_stone_jang_f",
+   "kit": "village/stone_jangseung",
+   "params": {
+    "variant": 2,
+    "seed": 135
+   },
+   "x": -254.62,
+   "z": -112.95,
+   "ry": -0.45,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "해남 들 당산나무"
+  },
+  {
+   "id": "rt_gurim_slab",
+   "kit": "nature/slab_rock",
+   "params": {
+    "w": 4.4,
+    "d": 2.8,
+    "seed": 136
+   },
+   "x": -157.85,
+   "z": -104.17,
+   "ry": 0.3705,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구림 비둘기바위·월출산 바라봄"
+  },
+  {
+   "id": "rt_gurim_boulder",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "mossy": false,
+    "seed": 137
+   },
+   "x": -160.76,
+   "z": -120.2,
+   "ry": 0.3599,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구림 비둘기바위·월출산 바라봄"
+  },
+  {
+   "id": "rt_gurim_pine",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.5,
+    "seed": 138
+   },
+   "x": -167.83,
+   "z": -118.53,
+   "ry": 0.3807,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구림 비둘기바위·월출산 바라봄"
+  },
+  {
+   "id": "rt_gurim_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": false,
+    "seed": 139
+   },
+   "x": -149.9,
+   "z": -104.98,
+   "ry": 0.3377,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "구림 비둘기바위·월출산 바라봄"
+  },
+  {
    "id": "rt_gwandu_jumak",
    "kit": "village/jumak",
    "params": {
-    "seed": 107
+    "seed": 140
    },
-   "x": 525.17,
-   "z": -150.99,
-   "ry": 0.45,
+   "x": -171.91,
+   "z": -128.74,
+   "ry": 0.3807,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_jumak_wood",
    "kit": "village/firewood",
    "params": {
-    "seed": 108,
+    "seed": 141,
     "kind": "stack"
    },
-   "x": 528.49,
-   "z": -161.12,
-   "ry": 0.45,
+   "x": -168.5,
+   "z": -137.58,
+   "ry": 0.3644,
    "y": null,
    "flatten": false,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_jumak_jige",
    "kit": "village/jige",
    "params": {
-    "seed": 109,
+    "seed": 142,
     "load": "wood"
    },
-   "x": 521.55,
-   "z": -141.83,
-   "ry": 0.4386,
+   "x": -170.28,
+   "z": -113.73,
+   "ry": 0.3906,
    "y": null,
    "flatten": false,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_coast0",
    "kit": "village/choga_low",
    "params": {
-    "seed": 110
+    "seed": 143
    },
-   "x": 503.45,
-   "z": -148.19,
-   "ry": 0.3193,
+   "x": -186.13,
+   "z": -116.47,
+   "ry": 0.3644,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_coast1",
    "kit": "village/choga_low",
    "params": {
-    "seed": 111
+    "seed": 144
    },
-   "x": 534.71,
-   "z": -179.93,
-   "ry": 0.45,
+   "x": -153.12,
+   "z": -130.33,
+   "ry": 0.3148,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_coast2",
    "kit": "village/choga_low",
    "params": {
-    "seed": 112
+    "seed": 145
    },
-   "x": 487.13,
-   "z": -95.37,
-   "ry": 0.3158,
+   "x": -189.15,
+   "z": -83.88,
+   "ry": 0.2669,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
+  },
+  {
+   "id": "rt_gwandu_coast3",
+   "kit": "village/choga_low",
+   "params": {
+    "seed": 146
+   },
+   "x": -131.92,
+   "z": -104.19,
+   "ry": 0.2526,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_dok",
    "kit": "village/props",
    "params": {
-    "seed": 114,
+    "seed": 147,
     "kind": "dok"
    },
-   "x": 544.33,
-   "z": -137.99,
-   "ry": 0.45,
+   "x": -151.95,
+   "z": -96.8,
+   "ry": 0.3599,
    "y": null,
    "flatten": false,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)"
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)"
   },
   {
    "id": "rt_gwandu_store0",
    "kit": "village/heotgan",
    "params": {
-    "seed": 115
+    "seed": 148
    },
-   "x": 592.22,
-   "z": -183.86,
-   "ry": 0.0241,
+   "x": -124.43,
+   "z": -133.59,
+   "ry": 0.2015,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)",
    "note": "포구 창고(객주 짐)"
   },
   {
    "id": "rt_gwandu_store1",
    "kit": "village/heotgan",
    "params": {
-    "seed": 116
+    "seed": 149
    },
-   "x": 611.93,
-   "z": -180.65,
-   "ry": -0.3193,
+   "x": -114.47,
+   "z": -135.54,
+   "ry": 0.1892,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)",
    "note": "포구 창고(객주 짐)"
   },
   {
    "id": "rt_gwandu_gaekju",
    "kit": "village/giwa",
    "params": {
-    "seed": 117,
+    "seed": 150,
     "plain": true
    },
-   "x": 448.4,
-   "z": -128.07,
-   "ry": 0.45,
+   "x": -210.86,
+   "z": -113.74,
+   "ry": 0.0002,
    "y": null,
    "flatten": true,
    "clear_veg": true,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)",
    "note": "객주 집(가설)"
   },
   {
    "id": "rt_gwandu_boat0",
    "kit": "village/narutbae",
    "params": {
-    "seed": 118
+    "seed": 151
    },
-   "x": 602.0,
-   "z": -122.0,
+   "x": -56.0,
+   "z": -78.0,
    "ry": 0.0,
    "y": 0.0,
    "flatten": false,
    "clear_veg": false,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)",
    "note": "포구 배(바다 수면 y=0)"
   },
   {
    "id": "rt_gwandu_boat1",
    "kit": "village/narutbae",
    "params": {
-    "seed": 119
+    "seed": 152
    },
-   "x": 608.0,
-   "z": -82.0,
+   "x": -4.0,
+   "z": -94.0,
    "ry": 0.0,
    "y": 0.0,
    "flatten": false,
    "clear_veg": false,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)",
    "note": "포구 배(바다 수면 y=0)"
   },
   {
    "id": "rt_gwandu_boat2",
    "kit": "village/narutbae",
    "params": {
-    "seed": 120
+    "seed": 153
    },
-   "x": 596.0,
-   "z": -58.0,
+   "x": -28.0,
+   "z": -30.0,
    "ry": 0.0,
    "y": 0.0,
    "flatten": false,
    "clear_veg": false,
-   "group": "해남 관두포(제주 가는 배 떠나는 포구)",
+   "group": "해남 관두포(제주 가는 배 떠나는 포구 — 배 타는 곳)",
    "note": "포구 배(바다 수면 y=0)"
+  },
+  {
+   "id": "rt_hwabuk_stone_house0",
+   "kit": "culture/tamna/stone_house",
+   "params": {
+    "seed": 154,
+    "kind": "an"
+   },
+   "x": 555.45,
+   "z": -32.52,
+   "ry": -0.0561,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제주 화북포(배 닿는 포구)"
+  },
+  {
+   "id": "rt_hwabuk_stone_house1",
+   "kit": "culture/tamna/stone_house",
+   "params": {
+    "seed": 155,
+    "kind": "bak"
+   },
+   "x": 571.89,
+   "z": -36.03,
+   "ry": -0.0168,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제주 화북포(배 닿는 포구)"
+  },
+  {
+   "id": "rt_hwabuk_compound",
+   "kit": "culture/tamna/compound",
+   "params": {
+    "seed": 156,
+    "size": "small"
+   },
+   "x": 596.66,
+   "z": -41.47,
+   "ry": -0.0431,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제주 화북포(배 닿는 포구)"
+  },
+  {
+   "id": "rt_hwabuk_store",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 157
+   },
+   "x": 535.85,
+   "z": -32.03,
+   "ry": -0.2387,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "제주 화북포(배 닿는 포구)",
+   "note": "화북포 창고(진상품·객주 짐)"
+  },
+  {
+   "id": "rt_hwabuk_dang",
+   "kit": "route/sinmok",
+   "params": {
+    "seed": 158,
+    "variant": "broadleaf",
+    "cloth": true
+   },
+   "x": 541.01,
+   "z": -5.74,
+   "ry": -0.1336,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "제주 화북포(배 닿는 포구)",
+   "note": "포구 당(해신당 성격 — 영등할망 모시는 바닷가 당, 가설)"
+  },
+  {
+   "id": "rt_hwabuk_bangsatap",
+   "kit": "landmark/jj_bangsatap",
+   "params": {
+    "seed": 159
+   },
+   "x": 579.38,
+   "z": -5.92,
+   "ry": -0.0172,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "제주 화북포(배 닿는 포구)"
   }
  ]
 }
