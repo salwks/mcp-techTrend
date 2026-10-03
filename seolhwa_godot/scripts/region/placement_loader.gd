@@ -198,8 +198,10 @@ var _jobs := {}        # 타일 → { id, holders }
 var _inflight := {}    # 짓는 중인 키
 var _place_q := []
 var _used := {}
+var _packed := {}   # 키 → PackedScene(두 번째부터 instantiate)
 const MAX_BUILD_JOBS := 2
 const PLACE_PER_FRAME := 8
+const LOADING_PLACE_US := 90000
 
 func request_tile(t: Vector2i) -> void:
 	if _pending.has(t) and not _requested.has(t) and not _jobs.has(t): _requested.append(t)
@@ -269,8 +271,10 @@ func update() -> void:
 			continue
 		i += 1
 	# 놓기(프레임당 몇 개)
+	# 불러오기 화면 동안은 시간 예산(프레임당 약 90ms)으로 많이 놓는다 — 화면이 가려져 있어 프레임이 느려도 된다
 	var n := 0
-	while not _place_q.is_empty() and n < (PLACE_PER_FRAME * 16 if world.loading else PLACE_PER_FRAME):
+	var t_end := Time.get_ticks_usec() + LOADING_PLACE_US
+	while not _place_q.is_empty() and (n < PLACE_PER_FRAME or (world.loading and Time.get_ticks_usec() < t_end)):
 		_place_one(_place_q.pop_front())
 		n += 1
 
@@ -279,8 +283,17 @@ func _place_one(r: Dictionary) -> void:
 	var info = _cache.get(k)
 	if not (info is Dictionary) or info.get("node") == null: return
 	if not _used.has(k): KitCache.save_if_needed(info)
-	var node: Node3D = info.node.duplicate() if _used.has(k) else info.node
-	_used[k] = true
+	var node: Node3D
+	# 같은 키트를 여러 번 놓을 때: Node.duplicate()는 느리다(한양 5천 개에 2.5s) → 처음 쓸 때 PackedScene으로 싸 두고 instantiate
+	if not _used.has(k):
+		_used[k] = true
+		var ps := PackedScene.new()
+		KitCache._own(info.node, info.node)
+		if ps.pack(info.node) == OK: _packed[k] = ps
+		node = info.node
+	else:
+		var ps: PackedScene = _packed.get(k)
+		node = ps.instantiate() if ps != null else info.node.duplicate()
 	node.name = String(r.id) if r.id != "" else node.name
 	world.add_static(node, r.xf, info, TAG)
 	if not r.walk_done:
@@ -297,7 +310,7 @@ func stop() -> void:
 		var info = _cache[k]
 		if info is Dictionary and info.get("node") != null and not _used.has(k) and is_instance_valid(info.node) and not info.node.is_inside_tree():
 			info.node.free()
-	_cache.clear(); _used.clear()
+	_cache.clear(); _used.clear(); _packed.clear()
 
 # 마당 흙을 칠할 키트: 건물·소품(담장·성벽·다리·나무 제외)
 static func _yard_kit(r: Dictionary) -> bool:

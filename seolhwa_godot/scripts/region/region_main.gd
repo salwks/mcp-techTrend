@@ -704,12 +704,16 @@ func _make_load_ui() -> void:
 func _update_loading() -> void:
 	if not _loading: return
 	var c: Vector2i = world.tile_of(player_pos.x, player_pos.z)
-	var near_busy: bool = world.stats.jobs > 0 or placement.busy_near(c, 2)
+	# 식생은 둘레 1타일(±256m, 안개 220m 안)만, 건물은 2타일까지 기다린다 — 나머지는 걸으면서 스트리밍과 같이 채워진다
+	var near_busy: bool = world.scatter_busy_near(c, 1) or placement.busy_near(c, 2)
 	var left: int = placement.pending_count()
 	_load_label.text = "산천을 그리는 중…  식생 %d타일 · 건물 %d 남음" % [world.stats.jobs, left]
+	# 불러오기 화면이 장면을 가리는 동안은 장면을 그리지 않는다(셰이더 미리 데우기 몇 프레임만) — 한양처럼 큰 권역에서 프레임당 수십 ms
+	scene_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if Engine.get_process_frames() < 8 else SubViewport.UPDATE_DISABLED
 	if not near_busy and Time.get_ticks_msec() - _load_t0 > 300:
 		_loading = false
 		world.loading = false
+		scene_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 		_load_ui.queue_free()
 		player_pos.y = world.height_at(player_pos.x, player_pos.z)
 		if args.has("gointerior") and not world.interiors.is_empty():  # 시험: n번째 실내 가운데로

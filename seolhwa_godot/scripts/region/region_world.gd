@@ -1349,6 +1349,17 @@ func _start_jobs() -> void:
 		running += 1
 	stats.jobs = running + _queue.size() + (1 if not _attach_q.is_empty() else 0)
 
+# 반경 r 타일 안에 아직 식생 짓기·붙이기가 남았나(시작 화면 — 화면에 드는 둘레만 기다린다)
+func scatter_busy_near(c: Vector2i, r: int) -> bool:
+	for t in tiles:
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r and tiles[t].scatter_job >= 0: return true
+	for t in _queue:
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
+	for it in _attach_q:
+		var t: Vector2i = it[0]
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
+	return false
+
 func _poll_jobs() -> void:
 	# 붙이기는 프레임당 ATTACH_PER_FRAME 묶음까지(한 번에 수백 개를 붙이면 프레임이 튄다)
 	var n := 0

@@ -244,6 +244,12 @@ class Job:
 	var K_ROAD := 4
 	var salt := 0
 	var ex_rects: Array[Rect2] = []
+	# 제외 사각형 칸 색인(16m 칸, 사각형을 EX_PAD만큼 넓혀 걸치는 칸마다) — 한양처럼 타일에 사각형이 수백 개면
+	# 점마다 전부 훑는 것이 식생 짓기의 대부분이었다. 검사는 모두 '하나라도 걸리면'이라 후보만 봐도 결과가 같다
+	const EX_CELL := 16.0
+	const EX_PAD := 14.0    # behind_house(북 12m·남 10m + 2m), near_fence 4m, put 여유(mg ≤ 3.7) 중 가장 큰 것
+	var ex_grid := {}
+	static var _none: Array = []
 	var ex_circles := PackedFloat32Array()   # x, z, r 반복
 	var pure := false       # 지금 칸과 네 이웃의 토지이용이 같으면 점마다 다시 묻지 않는다
 	var ks0_: PackedFloat32Array
@@ -255,6 +261,19 @@ class Job:
 	var kmg_: PackedFloat32Array
 	var names_: PackedStringArray
 	var model_fn: Callable
+
+	func add_rect(r: Rect2) -> void:
+		ex_rects.append(r)
+		var i := ex_rects.size() - 1
+		var g := r.grow(EX_PAD)
+		for cz in range(floori(g.position.y / EX_CELL), floori(g.end.y / EX_CELL) + 1):
+			for cx in range(floori(g.position.x / EX_CELL), floori(g.end.x / EX_CELL) + 1):
+				var key := Vector2i(cx, cz)
+				if not ex_grid.has(key): ex_grid[key] = [i]
+				else: ex_grid[key].append(i)
+
+	func near_rects(x: float, z: float) -> Array:
+		return ex_grid.get(Vector2i(floori(x / EX_CELL), floori(z / EX_CELL)), _none)
 
 	# 기대 개수 ex만큼(정수부 + 확률) 칸 안 아무 데나
 	func emit(k: int, ex: float, cx: float, cz: float, slope: float, r_d: int) -> void:
@@ -283,7 +302,8 @@ class Job:
 	func behind_house(x: float, z: float) -> bool:
 		var pt := Vector2(x, z)
 		var hit := false
-		for rr in ex_rects:
+		for ri in near_rects(x, z):
+			var rr: Rect2 = ex_rects[ri]
 			if rr.grow(2.0).has_point(pt): return false
 			if x > rr.position.x - 2.0 and x < rr.end.x + 2.0:
 				if z < rr.position.y and z > rr.position.y - 10.0: hit = true
@@ -292,7 +312,8 @@ class Job:
 
 	# 울타리 가: 사각형 테두리 바깥 0~4m
 	func near_fence(x: float, z: float) -> bool:
-		for rr in ex_rects:
+		for ri in near_rects(x, z):
+			var rr: Rect2 = ex_rects[ri]
 			if rr.grow(4.0).has_point(Vector2(x, z)) and not rr.has_point(Vector2(x, z)): return true
 		return false
 
@@ -335,8 +356,12 @@ class Job:
 			# 제외 구역 안(나무는 수관이 걸치지 않게 2m, 큰 바위·벼랑 1.5m, 나머지 0.3m 여유)이면 놓지 않는다
 			var mg := kmg_[k] if kmg_[k] >= 0.0 else (2.0 if tree else (1.5 if (kcol_[k] >= 1.0 or kcol_[k] < 0.0) else 0.3))
 			var pt := Vector2(px, pz)
-			for rr in ex_rects:
-				if rr.grow(mg).has_point(pt): return false
+			if mg <= EX_PAD:
+				for ri in near_rects(px, pz):
+					if ex_rects[ri].grow(mg).has_point(pt): return false
+			else:
+				for rr in ex_rects:
+					if rr.grow(mg).has_point(pt): return false
 			for q in range(0, ex_circles.size(), 3):
 				var dx := px - ex_circles[q]; var dz := pz - ex_circles[q + 1]; var lim := ex_circles[q + 2] + mg
 				if dx * dx + dz * dz < lim * lim: return false
@@ -456,7 +481,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 	var big := tile_rect.grow(8.0)
 	for e in exclude:
 		if e is Rect2:
-			if (e as Rect2).intersects(big): J.ex_rects.append(e)
+			if (e as Rect2).intersects(big): J.add_rect(e)
 		elif e is Dictionary:
 			var ex: float = e.x; var ez: float = e.z; var er: float = e.r
 			if big.grow(er).has_point(Vector2(ex, ez)): J.ex_circles.append_array([ex, ez, er])
@@ -585,7 +610,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 						if J.put(k_garden, gx, gz, 0.0 if rot else PI / 2, 1.0, slope, r_d, true, yc - ym - 0.02):
 							# 놓인 텃밭 자리는 뒤에 오는 것들이 피하게 제외 구역에 더한다
 							var hw := 3.15 if rot else 2.15; var hd := 2.15 if rot else 3.15
-							J.ex_rects.append(Rect2(gx - hw, gz - hd, hw * 2, hd * 2))
+							J.add_rect(Rect2(gx - hw, gz - hd, hw * 2, hd * 2))
 					if _edge(vil, W, k):
 						J.emit(k_bush, 0.06, cx, cz, slope, r_d)
 						if not zelkova_done and tree_ok and r_d <= 4 and rng.randf() < 0.08:
