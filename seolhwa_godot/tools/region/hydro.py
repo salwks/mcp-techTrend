@@ -15,12 +15,20 @@ A_C = 8.0e6 / REAL_CELL_M2     # C급: 8km²
 A_B = 80e6 / REAL_CELL_M2      # B급: 80km²
 NB = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
 
-KNOWN = {  # 이름 → (등급 하한, 바깥 행선지)
+KNOWN = {  # 이름 → (등급 하한, 바깥 행선지) — 남원 기본값. 다른 권역은 설정 hydro.known {이름: {id, grade, flows_to}}
     "요천": ("B", "섬진강(권역 밖 서남, 남원 금지면에서 합류)"),
     "람천": ("C", "임천→엄천강→경호강→남강→낙동강(권역 밖 동쪽)"),
     "만수천": ("C", "람천"),
     "임천": ("B", "엄천강→경호강→남강→낙동강(권역 밖)"),
 }
+NAME_IDS = {"요천": "yocheon", "람천": "ramcheon", "만수천": "mansucheon", "임천": "imcheon"}
+_HC = C.CFG.get("hydro", {})
+if "known" in _HC:
+    KNOWN = {n: (v["grade"], v["flows_to"]) for n, v in _HC["known"].items()}
+    NAME_IDS = {n: v["id"] for n, v in _HC["known"].items()}
+if "acc_km2" in _HC:
+    A_D = _HC["acc_km2"]["D"] * 1e6 / REAL_CELL_M2; A_C = _HC["acc_km2"]["C"] * 1e6 / REAL_CELL_M2; A_B = _HC["acc_km2"]["B"] * 1e6 / REAL_CELL_M2
+DEPTH_REAL = _HC.get("depth_real", {"B": 2.5, "C": 1.4, "D": 0.6})
 
 def osm_lines():
     d = json.load(open(os.path.join(C.CACHE, "osm_rivers.json")))
@@ -82,12 +90,12 @@ def accumulate(filled, dirn):
         if t >= 0: accf[t] += accf[s]
     return acc
 
-def build_tree(acc, dirn):
+def build_tree(acc, dirn, sea=None):
     """가장자리 출구에서 거슬러 올라가며 본류(최대 누적 부모)를 잇는다 → 하천 목록(하류→상류 셀)."""
     Hh, Ww = acc.shape
     # 부모 목록
     dj = np.array([d[0] for d in NB]); di = np.array([d[1] for d in NB])
-    jj, ii = np.nonzero(acc >= A_D)
+    jj, ii = np.nonzero((acc >= A_D) if sea is None else ((acc >= A_D) & ~sea))
     parents = {}
     for j, i in zip(jj.tolist(), ii.tolist()):
         k = dirn[j, i]
@@ -97,7 +105,7 @@ def build_tree(acc, dirn):
     outlets = []
     for j, i in zip(jj.tolist(), ii.tolist()):
         k = dirn[j, i]; tj, ti = j + dj[k], i + di[k]
-        if not (0 <= tj < Hh and 0 <= ti < Ww):
+        if not (0 <= tj < Hh and 0 <= ti < Ww) or (sea is not None and sea[tj, ti]):
             outlets.append((acc[j, i], (j, i)))
     outlets.sort(reverse=True)
     rivers = []
@@ -150,8 +158,8 @@ def remeander(pts, slope, width, rng):
     off = amp * taper * np.sin(2 * np.pi * s / lam + phase + 0.6 * np.sin(2 * np.pi * s / (3.1 * lam)))
     return pts + nrm * off[:, None], float(seg[straight[:-1]].sum())
 
-def run(alt_fixed):
-    """alt_fixed: 2m 격자 실제 고도(현대 흔적 제거 후). 반환 (rivers 목록, 깎인 alt, 로그)"""
+def run(alt_fixed, sea=None):
+    """alt_fixed: 2m 격자 실제 고도(현대 흔적 제거 후). sea: 2m 바다 마스크(있으면 바다 칸 = 출구). 반환 (rivers 목록, 깎인 alt, 로그)"""
     Hh, Ww = (alt_fixed.shape[0] - 1) // F + 1, (alt_fixed.shape[1] - 1) // F + 1
     coarse = alt_fixed[::F, ::F][:Hh, :Ww].astype(np.float64)
     coarse = ndimage.grey_erosion(coarse, size=3) * 0.5 + coarse * 0.5   # 계곡 바닥 쪽으로
@@ -163,9 +171,13 @@ def run(alt_fixed):
         db.line(list(zip(i.tolist(), j.tolist())), fill=255 if L["kind"] == "river" or L["name"] in KNOWN else 160, width=2)
     bm = np.asarray(burn)
     h = coarse - np.where(bm == 255, 25.0, np.where(bm > 0, 12.0, 0.0))
+    sea_c = None
+    if sea is not None:
+        sea_c = ndimage.binary_erosion(sea[::F, ::F][:Hh, :Ww], iterations=1)
+        h = np.where(sea_c, -1e4, h)                      # 바다 = 출구
     filled = priority_flood(h)
     dirn = d8(filled); acc = accumulate(filled, dirn)
-    tree = build_tree(acc, dirn)
+    tree = build_tree(acc, dirn, sea_c)
     # 이름 붙이기: OSM 선 근처 비율
     name_px = {}
     for L in lines:
@@ -197,12 +209,8 @@ def run(alt_fixed):
             r["grade"] = KNOWN[r["name"]][0]
     ids = {}
     for k, r in enumerate(tree):
-        if r["name"] == "요천": ids[k] = "yocheon"
-        elif r["name"] == "람천": ids[k] = "ramcheon"
-        elif r["name"] == "만수천": ids[k] = "mansucheon"
-        elif r["name"] == "임천": ids[k] = "imcheon"
-        else: ids[k] = f"r{k:03d}"
-    gw = {"B": 15.0, "C": 7.0, "D": 2.5}           # 수면 폭(게임 m)
+        ids[k] = NAME_IDS.get(r["name"], f"r{k:03d}")
+    gw = _HC.get("width_game", {"B": 15.0, "C": 7.0, "D": 2.5})           # 수면 폭(게임 m)
     for k, r in enumerate(tree):
         cj = np.array([c[0] for c in r["cells"]], float); ci = np.array([c[1] for c in r["cells"]], float)
         x, z = C.ij_to_xz(ci, cj, HC)
@@ -260,13 +268,15 @@ def run(alt_fixed):
             s[t] = min(s[t], s[t - 1] - minslope * seg[t])
         if r["parent"] is not None and r["parent"] in surf_of:
             s = np.maximum(s, floor)            # 단조 감소 유지(비증가 수열과 상수의 max)
+        if sea is not None:
+            s = np.maximum(s, _HC.get("sea_level_alt", 0.0) + 0.05)     # 하구 수면은 바다 수면 위(단조 유지)
         surf_of[k] = (pts, s)
         r["surf_alt"] = s
     # 깎기 (2m 격자, 실제 고도로 계산)
     carved = alt_fixed.astype(np.float64).copy()
     Hf, Wf = carved.shape
     cl_surf = np.full(carved.shape, np.nan); cl_hw = np.zeros(carved.shape); cl_dep = np.zeros(carved.shape)
-    depth_real = {"B": 2.5, "C": 1.4, "D": 0.6}
+    depth_real = DEPTH_REAL
     for k in sorted(range(len(tree)), key=lambda k: tree[k]["acc_mouth"]):   # 큰 강이 나중에 덮음
         r = tree[k]
         P0 = r["pts"]; s0 = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P0, axis=0).T))])
@@ -275,7 +285,16 @@ def run(alt_fixed):
         s = np.interp(t1, s0, r["surf_alt"])                          # 호 길이로 보간(점 번호 아님)
         fi, fj = C.xz_to_ij(pts[:, 0], pts[:, 1])
         ii = np.clip(np.round(fi).astype(int), 0, Wf - 1); jj = np.clip(np.round(fj).astype(int), 0, Hf - 1)
-        cl_surf[jj, ii] = s; cl_hw[jj, ii] = max(r["width"] / 2, 2.6) / C.K; cl_dep[jj, ii] = depth_real[r["grade"]]
+        if _HC.get("taper"):     # 명세 v0.3 §5: 상류는 좁게 — 점마다 그 자리 집수면적의 등급 폭(강 폭 이하)
+            ci_, cj_ = C.xz_to_ij(P0[:, 0], P0[:, 1], HC)
+            a_loc = acc[np.clip(np.round(cj_).astype(int), 0, acc.shape[0] - 1), np.clip(np.round(ci_).astype(int), 0, acc.shape[1] - 1)]
+            a_loc = np.maximum.accumulate(ndimage.maximum_filter1d(a_loc, 9))
+            w_loc = np.minimum(np.where(a_loc >= A_B, gw["B"], np.where(a_loc >= A_C, gw["C"], gw["D"])), r["width"])
+            r["w_pts"] = w_loc
+            hw_ = np.maximum(np.interp(t1, s0, w_loc) / 2, 2.6) / C.K
+        else:
+            hw_ = max(r["width"] / 2, 2.6) / C.K
+        cl_surf[jj, ii] = s; cl_hw[jj, ii] = hw_; cl_dep[jj, ii] = depth_real[r["grade"]]
     has = ~np.isnan(cl_surf)
     dist, (nj, ni) = ndimage.distance_transform_edt(~has, return_indices=True)
     d_real = dist * C.CELL / C.K
@@ -289,6 +308,10 @@ def run(alt_fixed):
     near = (~inside) & (d_real <= HW + 6 / C.K)
     newh = np.where(near, np.maximum(newh, S + 0.4), newh)          # 물이 넘치지 않게(낮은 둔덕)
     carved = newh
+    if sea is not None:
+        sea_d = ndimage.distance_transform_edt(~sea) * C.CELL
+        def sea_at(p):
+            i, j = C.xz_to_ij(p[0], p[1]); return C.bilinear(sea_d, i, j) <= 30.0
     out = []
     for k, r in enumerate(tree):
         pts = r["pts"]; s = r["surf_alt"]
@@ -298,7 +321,12 @@ def run(alt_fixed):
         name = r["name"]
         if r["parent"] is None:
             flows_to = KNOWN.get(name, (None, None))[1] or "권역 밖(가장자리 유출)"
-            if name is None:
+            if sea is not None and sea_at(pts[-1]):
+                flows_to = _HC.get("sea_name", "바다")
+            elif name is None and "edge_flows" in _HC:
+                ex, ez = pts[-1]
+                flows_to = next(e["label"] for e in _HC["edge_flows"] if eval(e["cond"], {"x": ex, "z": ez}))
+            elif name is None:
                 # 어느 수계로 나가는지 출구 위치로 판정
                 ex = pts[-1, 0]
                 flows_to = "권역 밖 — 요천/섬진강 수계" if ex < 0 else "권역 밖 — 람천/낙동강 수계"
@@ -309,6 +337,7 @@ def run(alt_fixed):
                         points=[[round(float(pts[t, 0]), 1), round(float(pts[t, 1]), 1), round(float(C.alt_to_y(s[t])), 2)] for t in idx],
                         flows_to=flows_to, parent=None if r["parent"] is None else tree[r["parent"]]["id"],
                         catchment_km2=round(r["acc_mouth"] * REAL_CELL_M2 / 1e6, 1),
+                        **({"widths": [round(float(r["w_pts"][t]), 1) for t in idx]} if "w_pts" in r else {}),
                         source=("OSM 하천선(이름·위치) + DEM 흐름 누적" if name else "DEM 흐름 누적(D8)"),
                         confidence=("추정" if name else "가설")))
     log["counts"] = {g: sum(1 for r in out if r["grade"] == g) for g in "BCD"}

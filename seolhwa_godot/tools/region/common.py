@@ -1,25 +1,39 @@
-"""권역 파이프라인 공용: 계약서 §1 투영·압축·격자 (docs/REGION_CONTRACTS.md)."""
-import math, os
+"""권역 파이프라인 공용: 계약서 §1 투영·압축·격자 (docs/REGION_CONTRACTS.md).
+권역은 명령행 인자(권역 id, 예: `python3 tools/region/build.py GS_GYEONGJU`) 또는 환경 변수 SEOLHWA_REGION으로 고른다.
+기본은 JL_NAMWON_UNBONG. 권역 설정은 tools/region/regions/<id>.json(범위·기준점·K·격자 등).
+SEOLHWA_OUT 환경 변수를 주면 산출물을 그 폴더에 쓴다(재현성 검사용)."""
+import json, math, os, sys
 import numpy as np
 
-REGION_ID = "JL_NAMWON_UNBONG"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))           # seolhwa_godot/
-CACHE = os.path.join(HERE, "cache")
-OUT = os.path.join(ROOT, "region_data", REGION_ID)
-SHOTS = os.path.join(ROOT, "shots", "region_data")
+REGIONS_DIR = os.path.join(HERE, "regions")
 
-LAT0, LON0 = 35.4175, 127.50
-K = 0.30
-Y_BASE_ALT = 60.0                  # y = (alt - 60) * K
+def _pick_region():
+    known = {f[:-5] for f in os.listdir(REGIONS_DIR) if f.endswith(".json")} if os.path.isdir(REGIONS_DIR) else set()
+    for a in sys.argv[1:]:
+        a2 = a.split("=", 1)[1] if a.startswith("--region=") else a
+        if a2 in known: return a2
+    return os.environ.get("SEOLHWA_REGION", "JL_NAMWON_UNBONG")
+
+REGION_ID = _pick_region()
+CFG = json.load(open(os.path.join(REGIONS_DIR, REGION_ID + ".json"), encoding="utf-8"))
+CACHE = os.path.join(HERE, CFG.get("cache", os.path.join("cache", REGION_ID)))
+os.makedirs(CACHE, exist_ok=True)
+OUT = os.environ.get("SEOLHWA_OUT") or os.path.join(ROOT, "region_data", REGION_ID)
+SHOTS = os.environ.get("SEOLHWA_SHOTS") or os.path.join(ROOT, "shots", "region_data", *([] if CFG.get("shots_flat") else [REGION_ID]))
+
+LAT0, LON0 = CFG["lat0"], CFG["lon0"]
+K = CFG["K"]
+Y_BASE_ALT = CFG.get("y_base_alt", 60.0)       # y = (alt - base) * K
 M_PER_DEG_LON = math.cos(math.radians(LAT0)) * 111320.0
 M_PER_DEG_LAT = 110574.0
 
 # 게임 격자(계약서 §5 height): 픽셀 (i,j) 중심 = (X0 + i*CELL, Z0 + j*CELL)
-CELL = 2.0
-X0, Z0 = -4352.0, -2112.0
-W, H = 4353, 2113                  # x −4352…+4352, z −2112…+2112 (256m 타일 경계에 맞춤)
-LU_CELL = 4.0                      # landuse = 2배 거친 격자
+CELL = CFG.get("cell", 2.0)
+X0, Z0 = CFG["x0"], CFG["z0"]                   # 대칭 범위: x X0…−X0, z Z0…−Z0
+W, H = int(round(-2 * X0 / CELL)) + 1, int(round(-2 * Z0 / CELL)) + 1
+LU_CELL = 2 * CELL                               # landuse = 2배 거친 격자
 LU_W, LU_H = (W - 1) // 2 + 1, (H - 1) // 2 + 1
 
 def geo_to_game(lat, lon):

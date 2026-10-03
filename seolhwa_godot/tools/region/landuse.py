@@ -33,12 +33,14 @@ AREA_ID = {"namwon_eup": 33500.0,      # 성 안 정방형은 별도(전부 마�
            "inwol_yeok": 16000.0, "inwol_jang": 18000.0, "unbong_jang": 12000.0, "namwon_jang": 9000.0, "namwon_hyanggyo": 3000.0, "inwol_south_village": 6000.0}
 
 def village_area(s):
+    if s.get("area_target"): return float(s["area_target"])
     if s["id"] in AREA_ID: return AREA_ID[s["id"]]
     if s["type"] == "주막": return 1200.0
     if s.get("auto"): return 4500.0
     return AREA.get(s.get("size", "S"), 5000.0)
 
-def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
+def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14, avoid=None, auto_gap=450.0):
+    """avoid: 4m 마스크(바다·해안 띠 등) — 자동 마을 후보와 마을 터에서 뺀다(없으면 남원과 같음)."""
     Hh, Ww = y4.shape
     gz, gx = np.gradient(y4, G)
     slope = np.hypot(gx, gz)                          # tan, 실제와 같음
@@ -76,8 +78,9 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
     for idx in order[:200000]:
         if score.flat[idx] < 0.9 or len(autos) >= n_auto: break
         x, z = float(xs.flat[idx]), float(zs.flat[idx])
-        if abs(x) > 4250 or abs(z) > 2020: continue
-        if all(math.hypot(x - a, z - b) > 450 for a, b in taken):
+        if abs(x) > -C.X0 - 102 or abs(z) > -C.Z0 - 92: continue
+        if avoid is not None and avoid[idx // Ww, idx % Ww]: continue
+        if all(math.hypot(x - a, z - b) > auto_gap for a, b in taken):
             taken.append((x, z)); autos.append((x, z))
     # ── 마을 터: 원 대신 '길을 따라 늘어서고 산기슭에 기대는' 모양으로 키운다(명세 §24 배산임수)
     rd = Image.new("L", (Ww, Hh), 0); dd = ImageDraw.Draw(rd)
@@ -87,6 +90,7 @@ def classify(y4, rivers, roads, settlements_fixed, seed=3, n_auto=14):
     road_m = np.asarray(rd) > 0
     d_road = ndimage.distance_transform_edt(~road_m) * G
     excl = water | (dr <= rhw + 5)
+    if avoid is not None: excl = excl | avoid
     vm = np.zeros(lu.shape, bool)
     shapes = {}
     for s in list(settlements_fixed) + [dict(id=f"auto_village_{n:02d}", x=x, z=z, type="마을", size="S", auto=True) for n, (x, z) in enumerate(autos)]:

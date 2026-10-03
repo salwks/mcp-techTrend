@@ -1,10 +1,12 @@
-"""AWS Terrain Tiles(terrarium) 다운로드 — 계약서 §1 범위 + 여백. 캐시: tools/region/cache/"""
+"""AWS Terrain Tiles(terrarium) 다운로드 — 권역 설정 fetch_bbox + 여백. 캐시: 권역 설정 tiles(남원 cache/terrarium_z13, 그 밖 cache/<id>/terrarium_z13).
+사용: python3 tools/region/fetch_dem.py <권역 id>"""
 import math, os, sys, urllib.request
 import numpy as np
+import common as _C
 from concurrent.futures import ThreadPoolExecutor
 Z = 13
 HERE = os.path.dirname(os.path.abspath(__file__))
-CACHE = os.path.join(HERE, "cache", f"terrarium_z{Z}")
+CACHE = os.path.join(HERE, _C.CFG.get("tiles", os.path.join(os.path.relpath(_C.CACHE, HERE), f"terrarium_z{Z}")))
 URL = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
 
 def tile_xy(lat, lon, z=Z):
@@ -26,7 +28,8 @@ def fetch(xy):
     urllib.request.urlretrieve(URL.format(z=Z, x=x, y=y), p)
     return p, True
 
-def main(lat0=35.355, lat1=35.480, lon0=127.340, lon1=127.660):
+def main(lat0=None, lat1=None, lon0=None, lon1=None):
+    if lat0 is None: lat0, lat1, lon0, lon1 = _C.CFG["fetch_bbox"]
     os.makedirs(CACHE, exist_ok=True)
     x0, x1, y0, y1 = tile_range(lat0, lat1, lon0, lon1)
     jobs = [(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)]

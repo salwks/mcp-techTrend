@@ -1,0 +1,778 @@
+{
+ "id": "GW_GANGNEUNG",
+ "builder": "build_region.py (설정 기반 일반 빌더)",
+ "y_base_alt": 0.0,
+ "cell": 2.0,
+ "coast": true,
+ "sea_floor_alt": -20.0,
+ "name": "강릉·경포·대관령",
+ "culture": "관동",
+ "climate": "central",
+ "lat0": 37.74,
+ "lon0": 128.85,
+ "K": 0.3,
+ "x0": -3328.0,
+ "z0": -2496.0,
+ "fetch_bbox": [
+  37.66,
+  37.82,
+  128.72,
+  128.98
+ ],
+ "osm_bbox": [
+  37.65,
+  128.71,
+  37.83,
+  128.99
+ ],
+ "sea_cut_alt": 0.5,
+ "main_road": "gwandong_daero",
+ "climate_rule": {
+  "coast_km": 3.0,
+  "alpine_alt": {
+   "1": 650.0
+  }
+ },
+ "climate_codes_expected": [
+  "central",
+  "coast",
+  "alpine"
+ ],
+ "n_auto": 7,
+ "landuse_rules": {
+  "beach_w": 14.0,
+  "shore_gap": 14.0,
+  "coast_profile_m": 250.0,
+  "coast_signature": "모래톱 뒤 솔숲과 낮은 초가, 그물 너는 덕장",
+  "coast_trades": [
+   "고기잡이",
+   "소금",
+   "밭농사"
+  ]
+ },
+ "modern_keep_names": [
+  "경포호",
+  "가시연습지",
+  "연지"
+ ],
+ "modern_primary_names": [
+  "경강로",
+  "대관령로",
+  "율곡로"
+ ],
+ "lakes": [
+  {
+   "id": "gyeongpoho",
+   "name": "경포호",
+   "osm_name": "경포호",
+   "surface_alt": 0.4,
+   "confidence": "추정",
+   "notes": "석호(바다와 모래톱으로 갈린 호수). 1870년 무렵 호수는 지금보다 넓었다(둘레 약 12km로 전함 — 근대 이후 논으로 메움, 가설). 지금 윤곽을 그대로 씀. 가운데 홍장암."
+  }
+ ],
+ "hydro": {
+  "known": {
+   "남대천": {
+    "id": "namdaecheon",
+    "grade": "B",
+    "flows_to": "동해"
+   },
+   "섬석천": {
+    "id": "seomseokcheon",
+    "grade": "C",
+    "flows_to": "동해"
+   },
+   "경포천": {
+    "id": "gyeongpocheon",
+    "grade": "D",
+    "flows_to": "경포호"
+   },
+   "왕산천": {
+    "id": "wangsancheon",
+    "grade": "C",
+    "flows_to": "남대천"
+   }
+  },
+  "sea_name": "동해",
+  "edge_flows": [
+   {
+    "cond": "x < -2500",
+    "label": "권역 밖 — 대관령 서쪽 송천·남한강 수계"
+   },
+   {
+    "cond": "True",
+    "label": "권역 밖 — 동해로"
+   }
+  ],
+  "taper": true
+ },
+ "naru_rivers": [
+  "namdaecheon"
+ ],
+ "landmarks": [
+  {
+   "id": "imyeonggwan",
+   "name": "임영관(강릉 객사)",
+   "kit": "landmark/gaeksa_imyeonggwan",
+   "lat": 37.7533,
+   "lon": 128.8956,
+   "ry": 0,
+   "size_m": [
+    70,
+    45
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 강릉 임영관 삼문(국보)"
+   ],
+   "notes": "고려 이래 객사. 삼문(국보, 고려 건물)·전대청·동대청·서헌. 1870년에 온전(일제 때 학교 자리로 헐림)."
+  },
+  {
+   "id": "gangneung_gwana",
+   "name": "강릉 대도호부 관아(칠사당·동헌)",
+   "kit": "landmark/gwana_daedohobu",
+   "lat": 37.7547,
+   "lon": 128.8975,
+   "ry": 0,
+   "size_m": [
+    55,
+    45
+   ],
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 칠사당(37.7545,128.8970 부근)",
+    "강릉대도호부 관아 복원지(임영관 동쪽)"
+   ],
+   "notes": "칠사당(일곱 가지 정사) + 동헌·의운루. 객사 동쪽."
+  },
+  {
+   "id": "gangneung_hyanggyo",
+   "name": "강릉향교",
+   "kit": "landmark/hyanggyo",
+   "lat": 37.7598,
+   "lon": 128.8888,
+   "ry": 0,
+   "size_m": [
+    60,
+    50
+   ],
+   "confidence": "추정",
+   "source": [
+    "강릉향교(교동, 대성전 — 영동 최대 향교)"
+   ],
+   "notes": "화부산 기슭 아닌 교동 언덕(위치 추정)."
+  },
+  {
+   "id": "ojukheon",
+   "name": "오죽헌",
+   "kit": "landmark/ojukheon",
+   "lat": 37.779,
+   "lon": 128.8786,
+   "ry": 0,
+   "size_m": [
+    40,
+    30
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 오죽헌"
+   ],
+   "notes": "검은 대나무 둘레의 별당(신사임당·율곡). 둘레 대숲."
+  },
+  {
+   "id": "seongyojang",
+   "name": "선교장",
+   "kit": "landmark/seongyojang",
+   "lat": 37.7862,
+   "lon": 128.8838,
+   "ry": 0,
+   "size_m": [
+    70,
+    50
+   ],
+   "confidence": "추정",
+   "source": [
+    "선교장(1703 이래 이내번 가문, 활래정 1816) — 위치 통설"
+   ],
+   "notes": "경포호 서쪽 큰 사대부 집, 앞 연못에 활래정."
+  },
+  {
+   "id": "gyeongpodae",
+   "name": "경포대",
+   "kit": "landmark/gyeongpodae",
+   "lat": 37.7955,
+   "lon": 128.8968,
+   "ry": 0,
+   "size_m": [
+    24,
+    18
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 경포대 누정"
+   ],
+   "notes": "경포호 서북 언덕 위 누각(관동팔경). 홍장 이야기(설화 GD05)."
+  },
+  {
+   "id": "hongjangam",
+   "name": "홍장암",
+   "kit": "landmark/lake_rock",
+   "lat": 37.7952,
+   "lon": 128.9055,
+   "ry": 0,
+   "size_m": [
+    8,
+    6
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "road_ok": true,
+   "confidence": "가설",
+   "source": [
+    "경포호 안 바위(홍장 설화 GD05) — 위치 가설"
+   ],
+   "notes": "호수 안 작은 바위."
+  },
+  {
+   "id": "daegwallyeong_seonghwangsa",
+   "name": "대관령 국사성황사·산신각",
+   "kit": "landmark/seonghwangsa",
+   "lat": 37.6965,
+   "lon": 128.7562,
+   "ry": 0,
+   "size_m": [
+    24,
+    18
+   ],
+   "confidence": "추정",
+   "source": [
+    "대관령 국사성황사(범일국사)·산신당(김유신) — 강릉단오제 신 맞이(설화 GD03)",
+    "위치: 대관령 옛길 정상 북쪽 골(통설)"
+   ],
+   "notes": "단오제 때 신목을 베어 모시고 내려가는 곳."
+  },
+  {
+   "id": "gulsansa_dangganjiju",
+   "name": "굴산사지 당간지주(범일국사)",
+   "kit": "landmark/dangganjiju",
+   "lat": 37.7095,
+   "lon": 128.878,
+   "ry": 0,
+   "size_m": [
+    16,
+    12
+   ],
+   "confidence": "추정",
+   "source": [
+    "굴산사지(학산리) — 범일국사 창건, 당간지주(보물)",
+    "범일국사 탄생: 학산 석천 우물에 뜬 해(설화 GD03)"
+   ],
+   "notes": "절은 고려 말 폐사 — 1870년엔 들 가운데 당간지주와 부도만."
+  },
+  {
+   "id": "heonhwa_cliff",
+   "name": "헌화 벼랑(수로부인)",
+   "kit": "landmark/sea_cliff_flowers",
+   "lat": 37.7665,
+   "lon": 128.95,
+   "ry": 0,
+   "size_m": [
+    20,
+    14
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "confidence": "가설",
+   "source": [
+    "『삼국유사』 수로부인: 강릉 태수 순정공 부임길 바닷가 벼랑(설화 GD04) — 실제 자리는 강릉~삼척 사이 미상"
+   ],
+   "notes": "게임성: 남대천 하구 남쪽 바닷가 바위 벼랑으로 둠. 안목 마을 남쪽 바닷가(길 없이 모래톱으로 걸어 감)."
+  }
+ ],
+ "settlements": [
+  {
+   "id": "gangneung_eup",
+   "name": "강릉 읍내(대도호부)",
+   "type": "마을",
+   "lat": 37.7535,
+   "lon": 128.8965,
+   "size": "L",
+   "area_target": 52000.0,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치)"
+   ],
+   "notes": "강릉대도호부 읍치. 읍성은 1870년 무렵 일부만(석성 흔적) — 성벽 없이 관아·객사 둘레 시가로 둠(가설).",
+   "shape": {
+    "layout": "round_cluster"
+   },
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "central",
+    "roof": {
+     "giwa": 0.4,
+     "choga": 0.6
+    },
+    "wall": "todam",
+    "layout": "linear_street",
+    "entrance": "hongsalmun",
+    "people": [
+     "관속",
+     "양반",
+     "장꾼",
+     "무당"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "임영관 삼문과 단오 굿당 — 신목 맞이 길",
+    "trades": [
+     "관아",
+     "장시",
+     "단오제"
+    ]
+   }
+  },
+  {
+   "id": "gangneung_jang",
+   "name": "강릉 장(남대천가 단오장)",
+   "type": "장시",
+   "lat": 37.7505,
+   "lon": 128.899,
+   "size": "S",
+   "area_target": 8000.0,
+   "confidence": "가설",
+   "source": [
+    "남대천 둔치 단오장(통설) — 위치 가설"
+   ],
+   "notes": "단오 때 큰 난장.",
+   "profile": {
+    "archetype": "river",
+    "climate": "central",
+    "layout": "fan_from_ferry",
+    "signature": "남대천 모래톱 단오 난장 — 그네·씨름판",
+    "trades": [
+     "장시",
+     "단오제"
+    ]
+   }
+  },
+  {
+   "id": "gyeongpo_village",
+   "name": "경포 마을(초당·선교장 쪽)",
+   "type": "마을",
+   "lat": 37.788,
+   "lon": 128.889,
+   "size": "M",
+   "area_target": 12000.0,
+   "snap": 120,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 초당·운정동"
+   ],
+   "notes": "호숫가 사대부 마을.",
+   "profile": {
+    "archetype": "plain",
+    "climate": "coast",
+    "roof": {
+     "giwa": 0.5,
+     "choga": 0.5
+    },
+    "wall": "todam",
+    "signature": "호숫가 정자와 솔숲 — 경포대 달맞이",
+    "trades": [
+     "논농사",
+     "고기잡이(호수)"
+    ]
+   }
+  },
+  {
+   "id": "anmok_village",
+   "name": "안목 바닷가 마을(남대천 하구)",
+   "type": "마을",
+   "lat": 37.7735,
+   "lon": 128.945,
+   "size": "S",
+   "area_target": 6000.0,
+   "snap": 150,
+   "confidence": "가설",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 남대천 하구·안목"
+   ],
+   "notes": "위성: 수로부인 이야기 바닷가(헌화 벼랑).",
+   "profile": {
+    "archetype": "coast",
+    "climate": "coast",
+    "signature": "모래톱 갯마을 — 벼랑 철쭉과 용왕굿",
+    "trades": [
+     "고기잡이",
+     "소금"
+    ],
+    "people": [
+     "어부",
+     "해녀",
+     "무당"
+    ]
+   }
+  },
+  {
+   "id": "haksan",
+   "name": "학산 마을(범일국사 탄생지)",
+   "type": "마을",
+   "lat": 37.711,
+   "lon": 128.876,
+   "size": "S",
+   "area_target": 6000.0,
+   "snap": 150,
+   "confidence": "추정",
+   "source": [
+    "학산리 — 굴산사지·석천(범일국사 설화)"
+   ],
+   "notes": "굴산사 터 들마을, 석천 우물.",
+   "profile": {
+    "archetype": "plain",
+    "climate": "central",
+    "signature": "해 뜬 석천 우물과 들 가운데 당간지주",
+    "trades": [
+     "논농사"
+    ]
+   }
+  },
+  {
+   "id": "gusan_yeok",
+   "name": "구산역(대관령 아래)",
+   "type": "역",
+   "lat": 37.729,
+   "lon": 128.817,
+   "size": "S",
+   "area_target": 6000.0,
+   "snap": 150,
+   "confidence": "추정",
+   "source": [
+    "구산역: 대관령 동쪽 기슭 역참(관동대로) — 위치 통설"
+   ],
+   "notes": "길목 쉼터: 고개 넘기 전 마지막 역·주막.",
+   "profile": {
+    "archetype": "pass",
+    "climate": "central",
+    "layout": "few_roadside",
+    "people": [
+     "역졸",
+     "나그네",
+     "주모",
+     "보부상"
+    ],
+    "animals": [
+     "말"
+    ],
+    "signature": "대관령 넘기 전 역마와 주막 — 호랑이 조심 방",
+    "trades": [
+     "역참",
+     "주막"
+    ]
+   }
+  },
+  {
+   "id": "banjeong_jumak",
+   "name": "반정 주막",
+   "type": "주막",
+   "lat": 37.702,
+   "lon": 128.77,
+   "size": "S",
+   "area_target": 1500.0,
+   "snap": 80,
+   "confidence": "가설",
+   "source": [
+    "대관령 옛길 중턱 반정(半程) — 이름만 근거"
+   ],
+   "notes": "고개 중턱 쉼터.",
+   "profile": {
+    "archetype": "pass",
+    "climate": "alpine",
+    "signature": "안개 낀 중턱 주막과 돌무더기",
+    "trades": [
+     "주막"
+    ]
+   }
+  },
+  {
+   "id": "daegwallyeong_seonghwang",
+   "name": "대관령 성황당 마루",
+   "type": "성황당",
+   "lat": 37.69,
+   "lon": 128.756,
+   "size": "S",
+   "confidence": "추정",
+   "source": [
+    "대관령 고개 마루 서낭(통설)"
+   ],
+   "notes": "고개 마루 돌무더기·당목. 권역 서쪽 끝(한양 노정 포털).",
+   "profile": {
+    "archetype": "pass",
+    "climate": "alpine",
+    "signature": "구름 위 고개 마루 성황당 — 동해가 내려다보임",
+    "trades": []
+   }
+  }
+ ],
+ "passes": [
+  {
+   "id": "daegwallyeong",
+   "name": "대관령",
+   "lat": 37.688,
+   "lon": 128.7555,
+   "confidence": "추정",
+   "source": [
+    "대관령 옛길 정상(해발 약 830m) — 관동대로 영동·영서 분수령"
+   ],
+   "notes": "백두대간: 동쪽 남대천(동해) / 서쪽 송천(남한강). 서쪽은 한양 노정."
+  }
+ ],
+ "crossings": [],
+ "roads": [
+  {
+   "id": "gwandong_daero",
+   "name": "관동대로(강릉 읍내→구산역→반정→대관령→한양)",
+   "class": "대로",
+   "width": 4.5,
+   "via": [
+    "l:imyeonggwan",
+    "s:gusan_yeok",
+    "s:banjeong_jumak",
+    "p:daegwallyeong",
+    [
+     37.684,
+     128.7265
+    ]
+   ],
+   "confidence": "추정",
+   "source": [
+    "관동대로(한양–원주–대관령–강릉) 노선 체계(통설)"
+   ],
+   "notes": "읍내에서 서쪽 구산역 지나 대관령 옛길(아흔아홉 굽이). 서쪽 끝 = 한양 노정 포털."
+  },
+  {
+   "id": "gyeongpo_road",
+   "name": "읍내–오죽헌–선교장–경포대 길",
+   "class": "지선",
+   "width": 3.5,
+   "via": [
+    "s:gangneung_eup",
+    "l:ojukheon",
+    "l:seongyojang",
+    "l:gyeongpodae",
+    [
+     37.7935,
+     128.9165
+    ]
+   ],
+   "branch_of": "gwandong_daero",
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "경포호 서쪽 들을 지나 경포대, 끝은 강문 모래톱."
+  },
+  {
+   "id": "anmok_road",
+   "name": "읍내–남대천–안목 바닷가 길",
+   "class": "지선",
+   "width": 3.0,
+   "via": [
+    "s:gangneung_jang",
+    "s:anmok_village"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "남대천 북안 따라 하구 갯마을로.",
+   "branch_of": "gwandong_daero"
+  },
+  {
+   "id": "haksan_road",
+   "name": "읍내–남대천 건너–학산(굴산사지) 길",
+   "class": "지선",
+   "width": 3.0,
+   "via": [
+    "s:gangneung_jang",
+    "s:haksan",
+    "l:gulsansa_dangganjiju"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "남대천을 건너 남쪽 들 학산으로.",
+   "branch_of": "gwandong_daero"
+  },
+  {
+   "id": "north_coast_road",
+   "name": "읍내–북쪽 해안대로(주문진·양양 방면)",
+   "class": "지선",
+   "width": 3.5,
+   "via": [
+    "s:gangneung_eup",
+    [
+     37.77,
+     128.892
+    ],
+    [
+     37.8165,
+     128.865
+    ]
+   ],
+   "branch_of": "gwandong_daero",
+   "confidence": "가설",
+   "source": [
+    "관동 해안로(강릉–양양) 체계(통설)"
+   ],
+   "notes": "권역 북쪽 끝 = 노정(양양) 포털."
+  },
+  {
+   "id": "seonghwangsa_trail",
+   "name": "대관령 국사성황사 길",
+   "class": "산길",
+   "width": 1.5,
+   "via": [
+    "s:banjeong_jumak",
+    "l:daegwallyeong_seonghwangsa"
+   ],
+   "branch_of": "gwandong_daero",
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "단오 신맞이 길."
+  },
+  {
+   "id": "hyanggyo_lane",
+   "name": "향교 길",
+   "class": "마을길",
+   "width": 2.5,
+   "via": [
+    "l:imyeonggwan",
+    "l:gangneung_hyanggyo"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": ""
+  }
+ ],
+ "axes": [
+  {
+   "town": "강릉대도호부 읍치",
+   "center": "l:imyeonggwan",
+   "jinsan": {
+    "name": "화부산(진산 가설)",
+    "search": [
+     160,
+     300,
+     1200,
+     50
+    ],
+    "confidence": "가설",
+    "source": [
+     "원칙: 읍치 북쪽 뒷산 — DEM 북쪽 최고점(문헌 미확인)"
+    ]
+   },
+   "ansan": {
+    "name": "모산봉(안산)",
+    "lat": 37.7345,
+    "lon": 128.888,
+    "confidence": "추정",
+    "source": [
+     "모산봉: 강릉 안산으로 전함(통설) — 좌표 추정"
+    ]
+   }
+  }
+ ],
+ "spawn": {
+  "ref": "l:imyeonggwan",
+  "dz": 40,
+  "note": "임영관 삼문 앞 남쪽"
+ },
+ "portals": [
+  {
+   "id": "portal_daegwallyeong",
+   "name": "대관령 서쪽(→원주·한양)",
+   "ref": [
+    37.684,
+    128.7265
+   ],
+   "to": "route:GG_HANYANG-GW_GANGNEUNG",
+   "note": "노정: 한양→원주→대관령. 정선 아우라지는 이 노정 쪽 갈래(가설)"
+  },
+  {
+   "id": "portal_north",
+   "name": "북쪽 해안(→양양)",
+   "ref": [
+    37.8165,
+    128.865
+   ],
+   "to": "map_only"
+  }
+ ],
+ "qa_alt": [
+  {
+   "id": "imyeonggwan",
+   "lo": 3,
+   "hi": 40
+  },
+  {
+   "id": "daegwallyeong_seonghwangsa",
+   "lo": 600,
+   "hi": 950
+  }
+ ],
+ "zooms": {
+  "zoom_gangneung_eup": [
+   650,
+   -950,
+   1750,
+   50
+  ],
+  "zoom_gyeongpo": [
+   850,
+   -2350,
+   2450,
+   -1250
+  ],
+  "zoom_daegwallyeong": [
+   -3328,
+   900,
+   -1700,
+   2496
+  ]
+ },
+ "meta": {
+  "parent_province": "강원도",
+  "main_river": "남대천",
+  "connected_river": [
+   "동해"
+  ],
+  "watershed_divide": "백두대간(대관령): 동쪽 남대천·동해 / 서쪽 송천·남한강",
+  "main_mountain": [
+   "백두대간 대관령·선자령",
+   "화부산·모산봉(읍치 둘레)"
+  ],
+  "settlement_type": "대도호부 읍치(성벽 없이) + 석호 사대부 마을 + 갯마을 + 고갯길 역·주막",
+  "economy": [
+   "논농사(남대천·경포 들)",
+   "고기잡이·소금",
+   "산간 화전·감자(대관령)",
+   "단오 난장"
+  ],
+  "forbidden": [
+   "현대 강릉 시가지",
+   "영동고속도로·KTX",
+   "항구 방파제",
+   "오봉댐 호수"
+  ],
+  "sources": [
+   "설화 목록 docs/FOLKTALE_CATALOG.md GD03·GD04·GD05"
+  ]
+ }
+}

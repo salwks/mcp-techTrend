@@ -1,0 +1,1096 @@
+{
+ "id": "GS_GYEONGJU",
+ "builder": "build_region.py (설정 기반 일반 빌더)",
+ "y_base_alt": 0.0,
+ "cell": 2.0,
+ "coast": true,
+ "sea_floor_alt": -20.0,
+ "name": "경주·토함산·감포",
+ "culture": "영남",
+ "climate": "south",
+ "lat0": 35.7625,
+ "lon0": 129.345,
+ "K": 0.25,
+ "x0": -3968.0,
+ "z0": -3264.0,
+ "fetch_bbox": [
+  35.64,
+  35.885,
+  129.165,
+  129.525
+ ],
+ "osm_bbox": [
+  35.63,
+  129.15,
+  35.89,
+  129.53
+ ],
+ "sea_cut_alt": 0.5,
+ "main_road": "gyeongju_ulsan_road",
+ "climate_rule": {
+  "coast_km": 4.0
+ },
+ "climate_codes_expected": [
+  "south",
+  "coast"
+ ],
+ "n_auto": 9,
+ "landuse_rules": {
+  "beach_w": 12.0,
+  "shore_gap": 14.0,
+  "coast_profile_m": 250.0,
+  "coast_signature": "몽돌 바닷가 낮은 초가와 미역 너는 돌담",
+  "coast_trades": [
+   "고기잡이",
+   "미역",
+   "밭농사"
+  ]
+ },
+ "modern_keep_names": [
+  "안압지",
+  "월지",
+  "연지"
+ ],
+ "modern_primary_names": [
+  "산업로",
+  "보문로",
+  "동해안로",
+  "불국로",
+  "원화로"
+ ],
+ "hydro": {
+  "known": {
+   "형산강": {
+    "id": "hyeongsangang",
+    "grade": "B",
+    "flows_to": "권역 밖 북쪽 — 안강·포항 영일만(동해)"
+   },
+   "북천": {
+    "id": "bukcheon",
+    "grade": "C",
+    "flows_to": "형산강"
+   },
+   "남천": {
+    "id": "namcheon",
+    "grade": "C",
+    "flows_to": "형산강"
+   },
+   "대종천": {
+    "id": "daejongcheon",
+    "grade": "C",
+    "flows_to": "동해(감은사 앞 바다)"
+   }
+  },
+  "sea_name": "동해",
+  "edge_flows": [
+   {
+    "cond": "z > 2600",
+    "label": "권역 밖 남쪽 — 울산 태화강·동천 수계"
+   },
+   {
+    "cond": "x < 1500",
+    "label": "권역 밖 — 형산강 수계(영일만)"
+   },
+   {
+    "cond": "True",
+    "label": "권역 밖 — 동해로"
+   }
+  ],
+  "taper": true
+ },
+ "naru_rivers": [
+  "hyeongsangang"
+ ],
+ "eupseong": {
+  "landmark": "gyeongju_eupseong",
+  "settlement": "gyeongju_eup",
+  "half": 75.0,
+  "gates": "SNEW",
+  "core_max": 90.0
+ },
+ "landmarks": [
+  {
+   "id": "gyeongju_eupseong",
+   "name": "경주읍성",
+   "kit": "landmark/gyeongju_eupseong",
+   "lat": 35.8442,
+   "lon": 129.215,
+   "ry": 0,
+   "size_m": [
+    150,
+    150
+   ],
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 경주읍성 발굴지·복원 동벽",
+    "경주읍성: 평지 방형 석성, 둘레 약 2.3km(통설), 4문 동 향일문·서 망미문·남 징례문·북 공진문"
+   ],
+   "notes": "실제 한 변 약 600m → 압축 땅(K=0.25)에서 한 변 150m. 성벽·성문은 실물 크기. 1870년 성벽·4문 있음(헐림은 1912년 이후)."
+  },
+  {
+   "id": "donggyeonggwan",
+   "name": "동경관(경주 객사)",
+   "kit": "landmark/gaeksa_donggyeonggwan",
+   "lat": 35.8455,
+   "lon": 129.215,
+   "ry": 0,
+   "size_m": [
+    60,
+    36
+   ],
+   "confidence": "가설",
+   "source": [
+    "동경관: 경주부 객사(성 안) — 위치는 성 중심축 북쪽으로 가정"
+   ],
+   "notes": "정청+동서 익헌. 성 안 T자 가로 끝."
+  },
+  {
+   "id": "gyeongju_buyun_gwana",
+   "name": "경주부윤 관아(동헌 일승각)",
+   "kit": "landmark/gwana_buyun",
+   "lat": 35.8432,
+   "lon": 129.213,
+   "ry": 0,
+   "size_m": [
+    50,
+    40
+   ],
+   "confidence": "가설",
+   "source": [
+    "경주부 동헌 일승각 → 현 경주문화원 자리로 전함(통설) — 좌표 가설(성 안 서남)"
+   ],
+   "notes": "부윤(종2품) 관아: 동헌·내아·삼문, 근처 집경전 터."
+  },
+  {
+   "id": "bonghwangdae",
+   "name": "봉황대(큰 고분)",
+   "kit": "landmark/royal_tumulus",
+   "lat": 35.8406,
+   "lon": 129.2095,
+   "ry": 0,
+   "size_m": [
+    80,
+    80
+   ],
+   "lu": "grass",
+   "nopad": true,
+   "confidence": "확정",
+   "source": [
+    "봉황대 고분(노동동) — 위치 통설"
+   ],
+   "notes": "높이 22m 신라 고분. 1870년엔 고분 둘레까지 민가·장터. 실물 크기(압축 안 함)."
+  },
+  {
+   "id": "cheomseongdae",
+   "name": "첨성대",
+   "kit": "landmark/cheomseongdae",
+   "lat": 35.8347,
+   "lon": 129.219,
+   "ry": 0,
+   "size_m": [
+    14,
+    14
+   ],
+   "lu": "grass",
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 첨성대(technical_monument)"
+   ],
+   "notes": "높이 9.2m 석조. 1870년엔 들 가운데 홀로."
+  },
+  {
+   "id": "gyerim",
+   "name": "계림",
+   "kit": "landmark/gyerim_grove",
+   "lat": 35.8322,
+   "lon": 129.2177,
+   "ry": 0,
+   "size_m": [
+    70,
+    60
+   ],
+   "lu": "forest",
+   "nopad": true,
+   "road_ok": false,
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 경주 계림(wood)",
+    "김알지 금궤 설화(YN05)"
+   ],
+   "notes": "느티나무·회화나무 숲, 1803 김알지 탄생 비각."
+  },
+  {
+   "id": "banwolseong",
+   "name": "반월성 터",
+   "kit": "landmark/banwolseong_ruin",
+   "lat": 35.8302,
+   "lon": 129.2245,
+   "ry": 0,
+   "size_m": [
+    200,
+    70
+   ],
+   "lu": "grass",
+   "nopad": true,
+   "confidence": "확정",
+   "source": [
+    "월성(반월성) — 위치 통설",
+    "석탈해 집터 설화(YN05)"
+   ],
+   "notes": "흙 성벽 언덕만 남은 신라 궁성 터, 석빙고(1741). 남천이 남쪽을 감음. 압축 땅에서 길이 약 200m."
+  },
+  {
+   "id": "gyeongju_hyanggyo",
+   "name": "경주향교",
+   "kit": "landmark/hyanggyo",
+   "lat": 35.8296,
+   "lon": 129.215,
+   "ry": 0,
+   "size_m": [
+    50,
+    45
+   ],
+   "confidence": "추정",
+   "source": [
+    "경주향교(교동, 계림 남서) — 위치 통설"
+   ],
+   "notes": "교촌 — 최부잣집 이웃."
+  },
+  {
+   "id": "oreung",
+   "name": "오릉(혁거세)",
+   "kit": "landmark/royal_tumulus_group",
+   "lat": 35.8255,
+   "lon": 129.2113,
+   "ry": 0,
+   "size_m": [
+    90,
+    70
+   ],
+   "lu": "grass",
+   "nopad": true,
+   "confidence": "확정",
+   "source": [
+    "오릉(탑동) — 위치 통설",
+    "박혁거세 설화(YN05)"
+   ],
+   "notes": "고분 다섯과 숭덕전."
+  },
+  {
+   "id": "najeong",
+   "name": "나정",
+   "kit": "landmark/sacred_well",
+   "lat": 35.8147,
+   "lon": 129.2236,
+   "ry": 0,
+   "size_m": [
+    16,
+    14
+   ],
+   "lu": "forest",
+   "confidence": "추정",
+   "source": [
+    "나정(탑동) — 박혁거세 탄생 우물(YN05), 위치 통설"
+   ],
+   "notes": "솔숲 속 우물 터와 비."
+  },
+  {
+   "id": "bunhwangsa",
+   "name": "분황사(모전석탑)",
+   "kit": "landmark/bunhwangsa",
+   "lat": 35.8396,
+   "lon": 129.2337,
+   "ry": 0,
+   "size_m": [
+    60,
+    50
+   ],
+   "confidence": "확정",
+   "source": [
+    "분황사 — 위치 통설"
+   ],
+   "notes": "모전석탑과 작은 법당만 남은 절(조선 후기). 동쪽 황룡사 터는 빈 들."
+  },
+  {
+   "id": "bulguksa",
+   "name": "불국사",
+   "kit": "landmark/bulguksa",
+   "lat": 35.789,
+   "lon": 129.332,
+   "ry": 0,
+   "size_m": [
+    120,
+    100
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 불국사(place_of_worship)"
+   ],
+   "notes": "청운교·백운교 석축, 다보탑·석가탑. 1870년엔 대웅전 등 일부 건물만(퇴락, 1920년대 이후 중수) — 석축은 그대로."
+  },
+  {
+   "id": "seokguram",
+   "name": "석굴암",
+   "kit": "landmark/seokguram",
+   "lat": 35.7948,
+   "lon": 129.3492,
+   "ry": 0,
+   "size_m": [
+    20,
+    20
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 석굴암"
+   ],
+   "notes": "토함산 동쪽 마루 아래 석굴. 1870년엔 반쯤 묻힌 굴과 작은 암자."
+  },
+  {
+   "id": "chisullyeong_mangbuseok",
+   "name": "치술령 망부석",
+   "kit": "landmark/mangbuseok_rock",
+   "lat": 35.66,
+   "lon": 129.3035,
+   "ry": 0,
+   "size_m": [
+    10,
+    8
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "confidence": "추정",
+   "source": [
+    "치술령(해발 765m) 마루 망부석 — 박제상 부인 설화(YN02, 『삼국유사』)",
+    "치술령 봉우리 좌표 통설(35.659,129.304)"
+   ],
+   "notes": "바다(왜) 쪽을 바라보는 큰 바위와 치술신모 사당 터."
+  },
+  {
+   "id": "gameunsa_ji",
+   "name": "감은사 터(삼층석탑)",
+   "kit": "landmark/twin_pagodas",
+   "lat": 35.7481,
+   "lon": 129.477,
+   "ry": 0,
+   "size_m": [
+    50,
+    40
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 감은사지 동·서 삼층석탑"
+   ],
+   "notes": "폐사 터에 쌍탑만. 문무왕 용이 드나들던 금당 밑 구멍 설화."
+  },
+  {
+   "id": "igyeondae",
+   "name": "이견대",
+   "kit": "landmark/pavilion_sea",
+   "lat": 35.7442,
+   "lon": 129.4837,
+   "ry": 0,
+   "size_m": [
+    14,
+    10
+   ],
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 이견대",
+    "만파식적 설화"
+   ],
+   "notes": "대왕암을 바라보는 언덕 터(1870년엔 정자 없이 터만 — 가설)."
+  },
+  {
+   "id": "daewangam",
+   "name": "문무대왕릉(대왕암)",
+   "kit": "landmark/sea_rock_tomb",
+   "lat": 35.7381,
+   "lon": 129.4869,
+   "ry": 0,
+   "size_m": [
+    30,
+    24
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "road_ok": true,
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 문무대왕릉"
+   ],
+   "notes": "바닷속 바위섬(해중릉). 바다 위에 놓음."
+  },
+  {
+   "id": "cheoyongam_moved",
+   "name": "처용 바위(이야기 자리)",
+   "kit": "landmark/sea_rock",
+   "lat": 35.77,
+   "lon": 129.495,
+   "ry": 0,
+   "size_m": [
+    12,
+    10
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "road_ok": true,
+   "confidence": "가설",
+   "source": [
+    "처용암은 실제 울산 개운포(권역 밖 남쪽 약 30km) — 설화 YN03",
+    "게임성: 위성 바닷가로 압축해 옮김"
+   ],
+   "notes": "게임성 이전: 동해 용이 나온 갯바위. 실제 자리 아님."
+  },
+  {
+   "id": "yeonorang_rock_moved",
+   "name": "연오랑 바위(이야기 자리)",
+   "kit": "landmark/sea_rock",
+   "lat": 35.818,
+   "lon": 129.503,
+   "ry": 0,
+   "size_m": [
+    12,
+    10
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "road_ok": true,
+   "confidence": "가설",
+   "source": [
+    "연오랑세오녀는 실제 포항 영일만 도구(권역 밖 북쪽 약 20km) — 설화 YN04",
+    "게임성: 감포 북쪽 갯바위로 압축해 옮김"
+   ],
+   "notes": "게임성 이전: 부부를 태워 간 바위."
+  }
+ ],
+ "settlements": [
+  {
+   "id": "gyeongju_eup",
+   "name": "경주 읍내(경주읍성)",
+   "type": "읍성",
+   "lat": 35.8442,
+   "lon": 129.215,
+   "size": "L",
+   "area_target": 30000.0,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치)"
+   ],
+   "notes": "경주부 읍치. 성 안 동헌·객사, 성 밖 서쪽 봉황대 둘레 장, 남쪽 들에 첨성대·계림·반월성.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "south",
+    "roof": {
+     "giwa": 0.55,
+     "choga": 0.45
+    },
+    "wall": "todam",
+    "people": [
+     "관속",
+     "양반",
+     "장꾼",
+     "유생"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "고분(능) 사이 기와 골목 — 성 밖 들판에 첨성대가 보이는 옛 도읍",
+    "trades": [
+     "관아",
+     "장시"
+    ],
+    "notes": "영남 ㅁ자 뜰집 양반가 섞임"
+   }
+  },
+  {
+   "id": "gyeongju_jang",
+   "name": "경주 장(봉황대 앞)",
+   "type": "장시",
+   "lat": 35.8415,
+   "lon": 129.2098,
+   "size": "S",
+   "area_target": 8000.0,
+   "confidence": "가설",
+   "source": [
+    "서문 밖 봉황대 둘레 장(현 성동·중앙시장 쪽) — 가설",
+    "정만서 해학(YN18) 장터"
+   ],
+   "notes": "고분 그늘의 장.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "south",
+    "signature": "봉황대 고분 그늘 아래 장 — 정만서가 장꾼을 놀리는 곳",
+    "trades": [
+     "장시"
+    ]
+   }
+  },
+  {
+   "id": "gyochon",
+   "name": "교촌(향교 마을)",
+   "type": "마을",
+   "lat": 35.83,
+   "lon": 129.214,
+   "size": "S",
+   "area_target": 6000.0,
+   "confidence": "추정",
+   "source": [
+    "교동 — 향교와 최부잣집(1700년대~)"
+   ],
+   "notes": "남천 북안 양반 마을.",
+   "profile": {
+    "archetype": "plain",
+    "climate": "south",
+    "roof": {
+     "giwa": 0.7,
+     "choga": 0.3
+    },
+    "wall": "todam",
+    "signature": "향교 옆 큰 기와집(최부잣집) 곳간과 남천 월정교 터",
+    "trades": [
+     "논농사"
+    ],
+    "people": [
+     "양반",
+     "유생",
+     "농부"
+    ]
+   }
+  },
+  {
+   "id": "bulguksa_village",
+   "name": "불국사 아래 마을(진현)",
+   "type": "마을",
+   "lat": 35.786,
+   "lon": 129.326,
+   "size": "S",
+   "area_target": 6000.0,
+   "snap": 150,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 진현동"
+   ],
+   "notes": "절 아래 길가 마을.",
+   "profile": {
+    "archetype": "temple",
+    "climate": "south",
+    "signature": "석축 절 아래 석장승과 공양 떡집",
+    "trades": [
+     "논농사",
+     "절 시주"
+    ]
+   }
+  },
+  {
+   "id": "bulguksa_temple",
+   "name": "불국사",
+   "type": "사찰",
+   "lat": 35.789,
+   "lon": 129.332,
+   "size": "M",
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치)"
+   ],
+   "notes": "토함산 서쪽 기슭.",
+   "profile": {
+    "archetype": "temple",
+    "climate": "south",
+    "signature": "청운교·백운교 석축 위 다보탑",
+    "trades": [
+     "절"
+    ]
+   }
+  },
+  {
+   "id": "chisul_village",
+   "name": "치술령 아래 마을(외동 녹동)",
+   "type": "마을",
+   "lat": 35.679,
+   "lon": 129.288,
+   "size": "S",
+   "area_target": 5000.0,
+   "snap": 250,
+   "confidence": "가설",
+   "source": [
+    "치술령 북쪽 기슭 외동읍 쪽 마을 — 위치 가설"
+   ],
+   "notes": "위성: 망부석으로 오르는 들머리. 박제상 부인과 세 딸 이야기.",
+   "profile": {
+    "archetype": "mountain",
+    "climate": "south",
+    "signature": "고개 쪽을 바라보는 솟대와 은을암(새바위) 이야기",
+    "trades": [
+     "밭농사",
+     "숯",
+     "약초"
+    ]
+   }
+  },
+  {
+   "id": "daebon",
+   "name": "대본 바닷가 마을(이견대 아래)",
+   "type": "마을",
+   "lat": 35.7455,
+   "lon": 129.481,
+   "size": "S",
+   "area_target": 6000.0,
+   "snap": 150,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 이견대·대본"
+   ],
+   "notes": "위성: 대왕암 앞 갯마을. 처용 바위(옮김).",
+   "profile": {
+    "archetype": "coast",
+    "climate": "coast",
+    "signature": "대왕암을 향한 용왕굿 당집과 몽돌 해변",
+    "trades": [
+     "고기잡이",
+     "미역"
+    ],
+    "people": [
+     "어부",
+     "해녀",
+     "무당"
+    ]
+   }
+  },
+  {
+   "id": "gampo",
+   "name": "감포 갯마을",
+   "type": "마을",
+   "lat": 35.8071,
+   "lon": 129.5005,
+   "size": "M",
+   "area_target": 9000.0,
+   "snap": 150,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass/Nominatim, 2026-10 조회, 현대 지도 위치) — 감포(hamlet)"
+   ],
+   "notes": "위성: 포구 마을. 북쪽 연오랑 바위(옮김).",
+   "profile": {
+    "archetype": "coast",
+    "climate": "coast",
+    "signature": "배 끌어올린 포구와 미역 말리는 돌담",
+    "trades": [
+     "고기잡이",
+     "미역",
+     "객주"
+    ],
+    "people": [
+     "어부",
+     "객주",
+     "해녀"
+    ]
+   }
+  },
+  {
+   "id": "jangang",
+   "name": "장항 마을(추령 아래)",
+   "type": "주막",
+   "lat": 35.7905,
+   "lon": 129.401,
+   "size": "S",
+   "area_target": 2000.0,
+   "snap": 200,
+   "confidence": "가설",
+   "source": [
+    "추령 동쪽 대종천 골 어귀(장항리 쪽) — 가설"
+   ],
+   "notes": "길목: 고개 넘은 나그네 주막.",
+   "profile": {
+    "archetype": "pass",
+    "climate": "south",
+    "signature": "골짜기 주막과 성황 돌무더기",
+    "trades": [
+     "주막"
+    ]
+   }
+  }
+ ],
+ "passes": [
+  {
+   "id": "churyeong",
+   "name": "추령",
+   "lat": 35.796,
+   "lon": 129.377,
+   "confidence": "가설",
+   "source": [
+    "경주–감포 사이 추령(토함산 북쪽 고개) — 좌표 가설, DEM 안장으로 확인"
+   ],
+   "notes": "읍내에서 동해로 넘는 고개."
+  },
+  {
+   "id": "chisullyeong",
+   "name": "치술령",
+   "lat": 35.6625,
+   "lon": 129.2985,
+   "confidence": "추정",
+   "source": [
+    "치술령(경주 외동–울산 두동 사이) — 망부석 설화 YN02"
+   ],
+   "notes": "고개 마루 서쪽 아래. 망부석까지 산길."
+  }
+ ],
+ "crossings": [
+  {
+   "id": "seocheon_naru",
+   "name": "서천(형산강) 나루",
+   "type": "나루",
+   "river_id": "hyeongsangang",
+   "road_id": "gyeongju_west_road",
+   "lat": 35.8455,
+   "lon": 129.201,
+   "confidence": "가설",
+   "notes": "서문 밖 서천 나루 — 여름 큰물 땐 배, 겨울엔 섶다리(가설)."
+  }
+ ],
+ "roads": [
+  {
+   "id": "gyeongju_ulsan_road",
+   "name": "경주–불국사–울산 길(남문→입실→모화)",
+   "class": "대로",
+   "width": 4.5,
+   "via": [
+    "g:S",
+    [
+     35.8345,
+     129.2165
+    ],
+    [
+     35.818,
+     129.228
+    ],
+    "s:bulguksa_village",
+    [
+     35.729,
+     129.318
+    ],
+    [
+     35.688,
+     129.33
+    ],
+    [
+     35.6455,
+     129.338
+    ]
+   ],
+   "confidence": "추정",
+   "source": [
+    "경주–울산 길(영남대로 동로 갈래, 통설)"
+   ],
+   "notes": "남문 징례문에서 첨성대 곁을 지나 남천을 건너 불국사 앞, 남쪽 끝 = 울산 방면."
+  },
+  {
+   "id": "gyeongju_west_road",
+   "name": "서문–서천 나루–영천·한양 방면 길",
+   "class": "대로",
+   "width": 4.5,
+   "via": [
+    "g:W",
+    "s:gyeongju_jang",
+    "c:seocheon_naru",
+    [
+     35.847,
+     129.1705
+    ]
+   ],
+   "confidence": "추정",
+   "source": [
+    "경주–영천–안동–한양(영남대로 갈래, 통설)"
+   ],
+   "notes": "서쪽 끝 = 한양 노정 포털(건천·영천 방면)."
+  },
+  {
+   "id": "gampo_road",
+   "name": "동문–추령–장항–감은사–대본 길",
+   "class": "지선",
+   "width": 3.5,
+   "via": [
+    "g:E",
+    [
+     35.839,
+     129.272
+    ],
+    [
+     35.818,
+     129.325
+    ],
+    "p:churyeong",
+    "s:jangang",
+    "l:gameunsa_ji",
+    "s:daebon"
+   ],
+   "confidence": "가설",
+   "source": [
+    "경주–감포 옛길(추령 넘어 대종천 골) — 통설 기반 가설"
+   ],
+   "notes": "토함산 북쪽 추령을 넘어 동해로."
+  },
+  {
+   "id": "coast_lane",
+   "name": "대본–감포 바닷가 길",
+   "class": "마을길",
+   "width": 3.0,
+   "via": [
+    "s:daebon",
+    "s:gampo",
+    "l:yeonorang_rock_moved"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "몽돌 바닷가를 따라 북쪽 포구로."
+  },
+  {
+   "id": "north_road",
+   "name": "북문–형산강 따라 안강 방면 길",
+   "class": "지선",
+   "width": 3.5,
+   "via": [
+    "g:N",
+    [
+     35.864,
+     129.223
+    ],
+    [
+     35.8805,
+     129.233
+    ]
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "북쪽 끝 = 안강·포항 방면."
+  },
+  {
+   "id": "seokguram_trail",
+   "name": "불국사–석굴암 산길",
+   "class": "산길",
+   "width": 1.5,
+   "via": [
+    "l:bulguksa",
+    "l:seokguram"
+   ],
+   "branch_of": "gyeongju_ulsan_road",
+   "confidence": "추정",
+   "source": [
+    "토함산 옛 오름길"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "chisul_trail",
+   "name": "치술령 길(마을–고개–망부석)",
+   "class": "산길",
+   "width": 1.5,
+   "via": [
+    "s:chisul_village",
+    "p:chisullyeong",
+    "l:chisullyeong_mangbuseok"
+   ],
+   "branch_of": "gyeongju_ulsan_road",
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "망부석 오름길."
+  },
+  {
+   "id": "gyochon_lane",
+   "name": "계림–교촌–오릉 길",
+   "class": "마을길",
+   "width": 3.0,
+   "via": [
+    "l:cheomseongdae",
+    "s:gyochon",
+    "l:oreung"
+   ],
+   "branch_of": "gyeongju_ulsan_road",
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "첨성대에서 계림 곁을 지나 교촌·오릉."
+  },
+  {
+   "id": "gyeongju_eup_street_ns",
+   "name": "경주성 안 남북길(남문–객사 앞)",
+   "class": "마을길",
+   "width": 4.0,
+   "fixed": [
+    "gc:S",
+    "e:0,-10"
+   ],
+   "confidence": "가설",
+   "source": [
+    "읍성 T자형 가로 일반형"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "gyeongju_eup_street_n",
+   "name": "경주성 안 북문길",
+   "class": "마을길",
+   "width": 3.5,
+   "fixed": [
+    "gc:N",
+    "e:0,-34",
+    "e:36,-34",
+    "e:36,0"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "객사 담 뒤로 돌아 동서길에 붙음."
+  },
+  {
+   "id": "gyeongju_eup_street_ew",
+   "name": "경주성 안 동서길(서문–동문)",
+   "class": "마을길",
+   "width": 4.0,
+   "fixed": [
+    "gc:W",
+    "gc:E"
+   ],
+   "confidence": "가설",
+   "source": [
+    "방형 읍성 십자가로 일반형"
+   ],
+   "notes": ""
+  }
+ ],
+ "axes": [
+  {
+   "town": "경주부 읍성",
+   "center": "l:gyeongju_eupseong",
+   "jinsan": {
+    "name": "소금강산(진산 추정)",
+    "lat": 35.8655,
+    "lon": 129.239,
+    "confidence": "가설",
+    "source": [
+     "경주 북쪽 소금강산(백률사) — 진산으로 전함(문헌 미확인)"
+    ]
+   },
+   "ansan": {
+    "name": "남산(금오봉)",
+    "lat": 35.7766,
+    "lon": 129.2236,
+    "confidence": "추정",
+    "source": [
+     "경주 남산 — 읍치 남쪽 앞산(통설)"
+    ]
+   }
+  }
+ ],
+ "spawn": {
+  "ref": "g:S",
+  "dz": 12,
+  "note": "경주읍성 남문(징례문) 앞"
+ },
+ "portals": [
+  {
+   "id": "portal_west",
+   "name": "서쪽 영천 방면(→한양)",
+   "ref": [
+    35.847,
+    129.1705
+   ],
+   "to": "route:GG_HANYANG-GS_GYEONGJU",
+   "note": "노정: 한양→문경새재→상주→안동→경주"
+  },
+  {
+   "id": "portal_south",
+   "name": "남쪽 울산 방면",
+   "ref": [
+    35.6455,
+    129.338
+   ],
+   "to": "map_only"
+  },
+  {
+   "id": "portal_north",
+   "name": "북쪽 안강·포항 방면",
+   "ref": [
+    35.8805,
+    129.233
+   ],
+   "to": "map_only"
+  }
+ ],
+ "qa_alt": [
+  {
+   "id": "cheomseongdae",
+   "lo": 20,
+   "hi": 90
+  },
+  {
+   "id": "bulguksa",
+   "lo": 120,
+   "hi": 300
+  }
+ ],
+ "zooms": {
+  "zoom_gyeongju_eup": [
+   -3500,
+   -2700,
+   -2400,
+   -1500
+  ],
+  "zoom_bulguksa": [
+   -800,
+   -1200,
+   300,
+   -300
+  ],
+  "zoom_gampo_coast": [
+   2700,
+   -1700,
+   3968,
+   600
+  ],
+  "zoom_chisullyeong": [
+   -1900,
+   2100,
+   -300,
+   3264
+  ]
+ },
+ "meta": {
+  "parent_province": "경상도",
+  "main_river": "형산강(서천)",
+  "connected_river": [
+   "형산강→영일만(동해, 권역 밖 북쪽)",
+   "대종천→동해"
+  ],
+  "watershed_divide": "토함산–추령 줄기: 서쪽 형산강 / 동쪽 대종천·동해",
+  "main_mountain": [
+   "토함산",
+   "남산(금오봉)",
+   "소금강산",
+   "치술령"
+  ],
+  "settlement_type": "부(府) 읍성 + 신라 고분·유적 들 + 사찰 아래 마을 + 갯마을 + 고개 마을",
+  "economy": [
+   "논농사(경주 들)",
+   "장시",
+   "고기잡이·미역(감포)",
+   "절 시주"
+  ],
+  "forbidden": [
+   "보문호·덕동호(1970년대 댐 호수)",
+   "경부고속도로·철도",
+   "현대 경주 시가지",
+   "감포항 방파제"
+  ],
+  "sources": [
+   "설화 목록 docs/FOLKTALE_CATALOG.md YN02·YN03·YN04·YN05·YN18"
+  ]
+ }
+}

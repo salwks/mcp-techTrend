@@ -1,0 +1,843 @@
+{
+ "id": "JJ_JEJU",
+ "builder": "build_region.py (설정 기반 일반 빌더)",
+ "y_base_alt": 0.0,
+ "cell": 2.0,
+ "coast": true,
+ "sea_floor_alt": -20.0,
+ "name": "제주목·조천·구좌",
+ "culture": "탐라",
+ "climate": "coast",
+ "lat0": 33.5075,
+ "lon0": 126.64,
+ "K": 0.28,
+ "x0": -4160.0,
+ "z0": -1984.0,
+ "fetch_bbox": [
+  33.44,
+  33.575,
+  126.475,
+  126.805
+ ],
+ "osm_bbox": [
+  33.43,
+  126.46,
+  33.59,
+  126.82
+ ],
+ "sea_cut_alt": 0.5,
+ "main_road": "jeju_east_coast_road",
+ "climate_rule": {
+  "coast_km": 60.0
+ },
+ "climate_codes_expected": [
+  "coast"
+ ],
+ "dry_streams": true,
+ "n_auto": 7,
+ "landuse_rules": {
+  "auto_mode": "spring",
+  "auto_gap": 700.0,
+  "spring_band": 330.0,
+  "no_paddy": true,
+  "field_alt": [
+   0,
+   160
+  ],
+  "grass_alt": [
+   160,
+   650
+  ],
+  "rocky_coast": true,
+  "beach_w": 10.0,
+  "shore_gap": 12.0,
+  "coast_profile_m": 400.0,
+  "coast_signature": "검은 현무암 돌담 올레와 용천수 물통, 해녀 불턱",
+  "coast_trades": [
+   "물질(해녀)",
+   "고기잡이",
+   "밭농사"
+  ],
+  "sand_beaches": [
+   [
+    33.5576,
+    126.7592,
+    110
+   ],
+   [
+    33.5432,
+    126.6699,
+    140
+   ],
+   [
+    33.5265,
+    126.586,
+    90
+   ]
+  ]
+ },
+ "hydro": {
+  "known": {
+   "한천": {
+    "id": "hancheon",
+    "grade": "C",
+    "flows_to": "제주 북쪽 바다"
+   },
+   "병문천": {
+    "id": "byeongmuncheon",
+    "grade": "D",
+    "flows_to": "제주 북쪽 바다"
+   },
+   "산지천": {
+    "id": "sanjicheon",
+    "grade": "D",
+    "flows_to": "제주 북쪽 바다(산지포)"
+   },
+   "화북천": {
+    "id": "hwabukcheon",
+    "grade": "D",
+    "flows_to": "제주 북쪽 바다(화북포)"
+   }
+  },
+  "acc_km2": {
+   "D": 2.5,
+   "C": 12.0,
+   "B": 400.0
+  },
+  "width_game": {
+   "B": 12.0,
+   "C": 4.5,
+   "D": 2.0
+  },
+  "sea_name": "바다(제주 북쪽 바다)",
+  "edge_flows": [
+   {
+    "cond": "True",
+    "label": "권역 밖 — 건천, 바다로"
+   }
+  ],
+  "taper": true
+ },
+ "eupseong": {
+  "landmark": "jeju_eupseong",
+  "settlement": "jeju_mok",
+  "half": 115.0,
+  "half_x": 140.0,
+  "gates": "SEW",
+  "core_max": 90.0
+ },
+ "landmarks": [
+  {
+   "id": "jeju_eupseong",
+   "name": "제주성(제주읍성)",
+   "kit": "landmark/jeju_eupseong",
+   "lat": 33.5122,
+   "lon": 126.5248,
+   "ry": 0,
+   "size_m": [
+    280,
+    230
+   ],
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — '새롭게 발견된 제주성 원형 일부'(33.5102,126.5266)·'제주성지'(33.5100,126.5257)·'무근성'(33.5148,126.5191)",
+    "제주성: 현무암 석성, 산지천을 성 안에 품음(1565 확장) — 통설"
+   ],
+   "notes": "현무암 석성. 실제 동서 약 1km·남북 약 0.8km 불규칙형을 압축 땅에서 280×230m 직사각형으로 근사(가설). 문: 동문(제중루)·서문(진서루)·남문(정원루), 북쪽은 바다라 문 없음. 성문마다 돌하르방(1754 이후) 한 쌍씩. 압축 후 성벽 둘레만 줄이고 성벽·문은 실물 크기."
+  },
+  {
+   "id": "gwandeokjeong",
+   "name": "관덕정",
+   "kit": "landmark/gwandeokjeong",
+   "lat": 33.51335,
+   "lon": 126.52149,
+   "ry": 0,
+   "size_m": [
+    24,
+    18
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 제주목관아 관덕정(historic=heritage_building)"
+   ],
+   "notes": "1448 창건, 활쏘기 훈련 정자(보물). 실물 약 18×11m, 앞마당(광장)은 장터·형장으로 쓰임."
+  },
+  {
+   "id": "jeju_mokgwana",
+   "name": "제주목 관아(홍화각·연희각·망경루)",
+   "kit": "landmark/jeju_mokgwana",
+   "lat": 33.5141,
+   "lon": 126.522,
+   "ry": 0,
+   "size_m": [
+    60,
+    50
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 제주목관아(historic=castle)·홍화각·연희각·망경루·외대문"
+   ],
+   "notes": "목사 집무 홍화각, 연희각, 망경루(2층 누각), 외대문·중대문. 관덕정 북쪽 뒤."
+  },
+  {
+   "id": "samseonghyeol",
+   "name": "삼성혈",
+   "kit": "landmark/samseonghyeol",
+   "lat": 33.50483,
+   "lon": 126.5285,
+   "ry": 0,
+   "size_m": [
+    60,
+    50
+   ],
+   "lu": "forest",
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 삼성혈",
+    "『고려사』 지리지 — 고·양·부 삼신인 용출(설화 TR02)"
+   ],
+   "notes": "땅 구멍 세 개 + 둘레 노송 숲, 1526 담장·홍살문, 1698 숭보당. 성 남문 밖."
+  },
+  {
+   "id": "yeonbukjeong",
+   "name": "연북정(조천포)",
+   "kit": "landmark/yeonbukjeong",
+   "lat": 33.54008,
+   "lon": 126.63607,
+   "ry": 0,
+   "size_m": [
+    16,
+    12
+   ],
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 연북정"
+   ],
+   "notes": "조천진성 위 정자 — 유배인이 북쪽 임금을 그리던 곳(1590 개칭). 조천포 바닷가."
+  },
+  {
+   "id": "songdang_bonhyangdang",
+   "name": "송당 본향당(백주또 당)",
+   "kit": "landmark/sindang_grove",
+   "lat": 33.4656,
+   "lon": 126.7797,
+   "ry": 0,
+   "size_m": [
+    24,
+    20
+   ],
+   "lu": "forest",
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 당오름(33.46663,126.77861) 아래",
+    "송당 본향당: 당오름 기슭, 금백조(백주또) 모심 — 설화 TR09"
+   ],
+   "notes": "신목(팽나무)·돌담 제단·지전·물색 천. 정확한 당 자리는 당오름 남쪽 기슭으로 가정."
+  },
+  {
+   "id": "gimnyeong_sagul",
+   "name": "김녕사굴",
+   "kit": "landmark/lava_cave_mouth",
+   "lat": 33.5365,
+   "lon": 126.7718,
+   "ry": 0,
+   "size_m": [
+    24,
+    16
+   ],
+   "lu": "keep",
+   "nopad": true,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 만장굴(33.5283,126.7701) 북쪽 이어진 용암굴 계(김녕굴)",
+    "김녕사굴: 굴 뱀에게 처녀를 바치던 것을 판관 서련이 끊음(1515 전후) — 설화 TR11"
+   ],
+   "notes": "뱀이 꿈틀댄 듯한 용암굴 입구(S자). 정확한 입구 좌표는 미확인 — 만장굴 북쪽 약 1km로 둠."
+  },
+  {
+   "id": "hwabuk_haesinsa",
+   "name": "화북포 해신사",
+   "kit": "landmark/haesinsa_shrine",
+   "lat": 33.5225,
+   "lon": 126.5672,
+   "ry": 0,
+   "size_m": [
+    14,
+    12
+   ],
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 화북일동(33.5203,126.5655)",
+    "화북포: 조선 시대 제주 관문 포구, 해신사 1820 건립(통설)"
+   ],
+   "notes": "뱃길 무사를 비는 사당. 화북진성 곁. 육지(남해) 뱃길 포털."
+  }
+ ],
+ "settlements": [
+  {
+   "id": "jeju_mok",
+   "name": "제주목 읍내(제주성)",
+   "type": "읍성",
+   "lat": 33.5122,
+   "lon": 126.5248,
+   "size": "L",
+   "area_target": 30000.0,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치)"
+   ],
+   "notes": "제주목 읍치. 성 안 관아·관덕정, 성 밖 남문 쪽 삼성혈, 동문 밖 산지포.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "coast",
+    "roof": {
+     "jeju_stone": 0.65,
+     "giwa": 0.35
+    },
+    "wall": "basalt",
+    "entrance": "dolhareubang",
+    "people": [
+     "관속",
+     "양반",
+     "장꾼",
+     "해녀",
+     "목자"
+    ],
+    "animals": [
+     "말"
+    ],
+    "signature": "현무암 성벽·관덕정 앞 광장·성문 돌하르방",
+    "trades": [
+     "관아",
+     "장시"
+    ],
+    "notes": "탐라 읍치: 기와는 관아·객사만, 민가는 바람 막는 낮은 초가(새로 엮은 지붕)"
+   }
+  },
+  {
+   "id": "jeju_jang",
+   "name": "제주 장(관덕정 앞·동문 밖)",
+   "type": "장시",
+   "lat": 33.5118,
+   "lon": 126.53,
+   "size": "S",
+   "area_target": 6000.0,
+   "confidence": "가설",
+   "source": [
+    "관덕정 앞 광장 장시(통설) + 동문 밖 산지천가(현 동문시장) — 위치 가설"
+   ],
+   "notes": "성 안팎 장. 말총·미역·귤 공물.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "coast",
+    "roof": {
+     "jeju_stone": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "basalt",
+    "entrance": "dolhareubang",
+    "signature": "산지천 물가 장터와 말총·미역 좌판",
+    "trades": [
+     "장시"
+    ]
+   }
+  },
+  {
+   "id": "sanji_po",
+   "name": "산지포(건입포)",
+   "type": "마을",
+   "lat": 33.5172,
+   "lon": 126.5308,
+   "size": "S",
+   "area_target": 5000.0,
+   "snap": 120,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 산지천 하구"
+   ],
+   "notes": "산지천 하구 포구. 용천수 '산지물'.",
+   "profile": {
+    "archetype": "coast",
+    "climate": "coast",
+    "roof": {
+     "jeju_stone": 1.0
+    },
+    "wall": "basalt",
+    "layout": "linear_shore",
+    "entrance": "wharf",
+    "people": [
+     "뱃사공",
+     "객주",
+     "해녀"
+    ],
+    "animals": [
+     "갈매기"
+    ],
+    "signature": "산지천 하구 배 대는 돌 축대와 산지물 빨래터",
+    "trades": [
+     "포구",
+     "고기잡이"
+    ]
+   }
+  },
+  {
+   "id": "hwabuk_po",
+   "name": "화북포(화북진)",
+   "type": "마을",
+   "lat": 33.521,
+   "lon": 126.566,
+   "size": "M",
+   "area_target": 9000.0,
+   "snap": 150,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 화북일동",
+    "화북포: 조천포와 함께 육지 뱃길 관문(통설)"
+   ],
+   "notes": "육지(해남·강진) 뱃길이 닿는 관문 포구, 진성(방어).",
+   "profile": {
+    "archetype": "coast",
+    "climate": "coast",
+    "roof": {
+     "jeju_stone": 1.0
+    },
+    "wall": "basalt",
+    "layout": "linear_shore",
+    "entrance": "wharf",
+    "people": [
+     "뱃사공",
+     "객주",
+     "진졸",
+     "해녀"
+    ],
+    "animals": [
+     "말",
+     "갈매기"
+    ],
+    "signature": "뱃길 관문 — 해신사와 돌 방파 축대, 말 실어 내는 포구",
+    "trades": [
+     "포구",
+     "객주",
+     "말 수출"
+    ]
+   }
+  },
+  {
+   "id": "jocheon",
+   "name": "조천(조천포·용천수 마을)",
+   "type": "마을",
+   "lat": 33.537,
+   "lon": 126.637,
+   "size": "M",
+   "area_target": 10000.0,
+   "snap": 120,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 조천리·연북정",
+    "고종달(호종단) 물혈 설화 — 설화 TR12(제주 용천수 곳곳)"
+   ],
+   "notes": "길목 쉼터: 용천수 물통이 줄지어 솟는 포구 마을. 고종달이 끊으려던 물.",
+   "profile": {
+    "archetype": "island",
+    "climate": "coast",
+    "entrance": "yongcheon_spring",
+    "people": [
+     "해녀",
+     "뱃사공",
+     "나그네"
+    ],
+    "animals": [
+     "말",
+     "갈매기"
+    ],
+    "signature": "연북정과 용천수 물통(남탕·여탕 돌담) — 고종달이 끊지 못한 물",
+    "trades": [
+     "포구",
+     "물질(해녀)",
+     "밭농사"
+    ]
+   }
+  },
+  {
+   "id": "songdang",
+   "name": "송당 마을",
+   "type": "마을",
+   "lat": 33.4663,
+   "lon": 126.7752,
+   "size": "S",
+   "area_target": 6000.0,
+   "snap": 120,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 송당리"
+   ],
+   "notes": "중산간 오름 마을. 본향당(백주또) — 제주 당신앙의 뿌리.",
+   "profile": {
+    "archetype": "island",
+    "climate": "coast",
+    "layout": "olle_alleys",
+    "entrance": "sindang_tree",
+    "people": [
+     "심방",
+     "목자",
+     "농부"
+    ],
+    "animals": [
+     "말",
+     "소"
+    ],
+    "signature": "오름에 둘러싸인 목장 마을 — 당오름 신목과 굿 소리",
+    "trades": [
+     "목축",
+     "밭농사",
+     "굿"
+    ],
+    "notes": "바다에서 멀어 해녀 없음"
+   }
+  },
+  {
+   "id": "gimnyeong",
+   "name": "김녕 마을",
+   "type": "마을",
+   "lat": 33.5555,
+   "lon": 126.757,
+   "size": "M",
+   "area_target": 9000.0,
+   "snap": 120,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 김녕리·김녕해변"
+   ],
+   "notes": "해녀 마을. 남쪽 들 너머 김녕사굴(뱀굴).",
+   "profile": {
+    "archetype": "island",
+    "climate": "coast",
+    "people": [
+     "해녀",
+     "어부"
+    ],
+    "animals": [
+     "말",
+     "갈매기"
+    ],
+    "signature": "흰 모래 해변과 검은 돌담 밭 — 뱀굴 이야기가 도는 해녀 마을",
+    "trades": [
+     "물질(해녀)",
+     "고기잡이",
+     "밭농사"
+    ]
+   }
+  }
+ ],
+ "springs": [
+  {
+   "id": "spring_jocheon_named",
+   "name": "조천 용천수 물통",
+   "lat": 33.5402,
+   "lon": 126.634,
+   "settlement": "jocheon",
+   "confidence": "가설",
+   "notes": "연북정 서쪽 바닷가 물통(위치 가설)"
+  },
+  {
+   "id": "spring_sanjimul",
+   "name": "산지물",
+   "lat": 33.517,
+   "lon": 126.5297,
+   "settlement": "sanji_po",
+   "confidence": "추정",
+   "notes": "산지천 하구 용천수(현대 복원 위치 근처)"
+  }
+ ],
+ "passes": [],
+ "crossings": [],
+ "roads": [
+  {
+   "id": "jeju_east_coast_road",
+   "name": "동쪽 해안 큰길(제주성 동문→화북→조천→함덕→김녕)",
+   "class": "대로",
+   "width": 4.0,
+   "via": [
+    "g:E",
+    "s:hwabuk_po",
+    "s:jocheon",
+    [
+     33.537,
+     126.668
+    ],
+    "s:gimnyeong",
+    [
+     33.5535,
+     126.7985
+    ]
+   ],
+   "confidence": "추정",
+   "source": [
+    "제주 환해 일주로(조선 후기 '일주 도로' 체계 — 대정·정의·제주 세 고을을 잇는 해안길, 통설)"
+   ],
+   "notes": "동문(제중루) 밖에서 시작. 함덕 지나 김녕, 권역 동쪽 끝은 노정(정의현 방면) 포털."
+  },
+  {
+   "id": "jeju_west_coast_road",
+   "name": "서쪽 해안길(제주성 서문→용두암 앞→대정·애월 방면)",
+   "class": "지선",
+   "width": 3.5,
+   "via": [
+    "g:W",
+    [
+     33.511,
+     126.506
+    ],
+    [
+     33.4985,
+     126.4815
+    ]
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설: 서문(진서루)에서 서쪽 해안을 따라"
+   ],
+   "notes": "권역 서쪽 끝 = 노정(애월·대정) 포털."
+  },
+  {
+   "id": "jeju_south_gate_lane",
+   "name": "남문–삼성혈 길",
+   "class": "마을길",
+   "width": 3.0,
+   "via": [
+    "g:S",
+    [
+     33.506,
+     126.528
+    ]
+   ],
+   "confidence": "가설",
+   "source": [
+    "삼성혈이 남문 밖(OSM 위치)"
+   ],
+   "notes": "남문(정원루) 돌하르방 사이로 나가 삼성혈 앞."
+  },
+  {
+   "id": "jungsangan_road",
+   "name": "중산간 길(조천→와흘→선흘→송당)",
+   "class": "지선",
+   "width": 3.0,
+   "via": [
+    "s:jocheon",
+    [
+     33.493,
+     126.6371
+    ],
+    [
+     33.4953,
+     126.7036
+    ],
+    "s:songdang"
+   ],
+   "branch_of": "jeju_east_coast_road",
+   "confidence": "가설",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 와흘리·선흘리·송당리 위치"
+   ],
+   "notes": "해안 마을에서 오름 사이 목장 지대로 오르는 길."
+  },
+  {
+   "id": "gimnyeong_songdang_trail",
+   "name": "김녕–김녕사굴–송당 길",
+   "class": "마을길",
+   "width": 2.5,
+   "via": [
+    "s:gimnyeong",
+    "l:gimnyeong_sagul",
+    "s:songdang"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "김녕에서 남쪽 들로 뱀굴을 지나 송당으로."
+  },
+  {
+   "id": "sanjipo_lane",
+   "name": "동문–산지포 길",
+   "class": "마을길",
+   "width": 3.0,
+   "via": [
+    "s:jeju_jang",
+    "s:sanji_po"
+   ],
+   "branch_of": "jeju_east_coast_road",
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "동문 밖 장터에서 산지천 따라 포구로."
+  },
+  {
+   "id": "jeju_eup_street_ew",
+   "name": "제주성 안 동서길(서문–관덕정 앞–동문)",
+   "class": "마을길",
+   "width": 4.0,
+   "fixed": [
+    "gc:W",
+    "e:-60,10",
+    "e:60,10",
+    "gc:E"
+   ],
+   "confidence": "가설",
+   "source": [
+    "관덕정 앞 큰길(통설)"
+   ],
+   "notes": "관덕정 앞 광장을 지나는 성 안 큰길."
+  },
+  {
+   "id": "jeju_eup_street_ns",
+   "name": "제주성 안 남북길(남문–동서길)",
+   "class": "마을길",
+   "width": 3.5,
+   "fixed": [
+    "gc:S",
+    "e:0,10"
+   ],
+   "confidence": "가설",
+   "source": [
+    "가설"
+   ],
+   "notes": "남문에서 올라와 동서길에 붙음(T자)."
+  }
+ ],
+ "axes": [
+  {
+   "town": "제주목 읍성",
+   "center": "l:jeju_eupseong",
+   "jinsan": {
+    "name": "한라산",
+    "lat": 33.3617,
+    "lon": 126.5292,
+    "confidence": "추정",
+    "source": [
+     "『신증동국여지승람』 제주목: 한라산은 주 남쪽의 진산(통설)"
+    ]
+   },
+   "ansan": {
+    "name": "사라봉(안산 가설)",
+    "lat": 33.51811,
+    "lon": 126.5448,
+    "confidence": "가설",
+    "source": [
+     "OpenStreetMap (Overpass, 2026-10 조회, 현대 지도 위치) — 사라봉 봉우리"
+    ]
+   },
+   "note": "진산 한라산은 권역 밖 남쪽(좌표만). 읍치는 바다(북)를 앞에 둔다."
+  }
+ ],
+ "spawn": {
+  "ref": "g:S",
+  "dz": 12,
+  "note": "제주성 남문(정원루) 앞 돌하르방 사이 남쪽"
+ },
+ "portals": [
+  {
+   "id": "portal_hwabuk_ferry",
+   "name": "화북포 뱃길(→남해·해남)",
+   "ref": "s:hwabuk_po",
+   "to": "route:SEA_NAMHAE_JEJU",
+   "note": "노정: 남해 → 제주 뱃길"
+  },
+  {
+   "id": "portal_east",
+   "name": "동쪽 해안길 끝(정의현 방면)",
+   "ref": [
+    33.5535,
+    126.7985
+   ],
+   "to": "map_only"
+  },
+  {
+   "id": "portal_west",
+   "name": "서쪽 해안길 끝(애월·대정 방면)",
+   "ref": [
+    33.4985,
+    126.4815
+   ],
+   "to": "map_only"
+  }
+ ],
+ "qa_alt": [
+  {
+   "id": "gwandeokjeong",
+   "lo": 5,
+   "hi": 50
+  },
+  {
+   "id": "songdang_bonhyangdang",
+   "lo": 120,
+   "hi": 320
+  }
+ ],
+ "zooms": {
+  "zoom_jeju_mok": [
+   -3550,
+   -650,
+   -2450,
+   250
+  ],
+  "zoom_jocheon": [
+   -500,
+   -1300,
+   300,
+   -500
+  ],
+  "zoom_gimnyeong_songdang": [
+   2500,
+   -1800,
+   4160,
+   1500
+  ]
+ },
+ "modern_keep_names": [],
+ "modern_primary_names": [
+  "일주동로",
+  "일주서로",
+  "번영로",
+  "연북로"
+ ],
+ "meta": {
+  "parent_province": "전라도(제주목)",
+  "main_river": "한천(건천)",
+  "connected_river": [
+   "산지천·병문천·화북천(건천, 북쪽 바다)"
+  ],
+  "watershed_divide": "한라산 북사면 — 하천은 대부분 비 올 때만 흐르는 건천, 물은 해안 용천수로 솟는다",
+  "main_mountain": [
+   "한라산 북사면(권역 밖 남쪽)",
+   "오름 무리(다랑쉬·아부·거문·당오름 등)",
+   "사라봉·별도봉·원당봉"
+  ],
+  "settlement_type": "목 읍성 + 포구 + 해안 용천수 마을 + 중산간 목장 마을",
+  "economy": [
+   "밭농사(조·보리·메밀, 논 거의 없음)",
+   "물질(해녀)",
+   "고기잡이",
+   "목축(말)",
+   "귤 공물"
+  ],
+  "forbidden": [
+   "현대 항만 방파제·매립지(탑동·제주항)",
+   "공항",
+   "일주도로 아스팔트",
+   "현대 시가지",
+   "저수지"
+  ],
+  "sources": [
+   "제주목관아·관덕정·삼성혈·연북정 OSM 위치",
+   "설화 목록 docs/FOLKTALE_CATALOG.md TR02·TR09·TR11·TR12"
+  ]
+ },
+ "oreum": {
+  "names_file": "names_JJ.json",
+  "gain": 1.4,
+  "sigma_real": 160.0,
+  "radius_real": 450.0
+ }
+}

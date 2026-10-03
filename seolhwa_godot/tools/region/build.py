@@ -1,5 +1,6 @@
 """권역 데이터 전체 빌드: DEM → 현대 흔적 제거 → 수계·깎기 → 도로(A*) → 고개·도강점 → 토지이용·마을 → region.json.
-실행: python3 tools/region/build.py   (먼저 fetch_dem.py, osm_fetch.py — 캐시가 있으면 생략)"""
+실행: python3 tools/region/build.py [권역 id]   (먼저 fetch_dem.py, osm_fetch.py — 캐시가 있으면 생략)
+권역 id를 주지 않거나 JL_NAMWON_UNBONG이면 아래 남원 전용 main(), 그 밖 권역은 build_region.main()(설정 tools/region/regions/<id>.json)."""
 import json, math, os, sys, time
 import numpy as np
 from scipy import ndimage
@@ -624,4 +625,8 @@ def main():
     say("done", hm["y_min"], hm["y_max"], "missing", missing)
 
 if __name__ == "__main__":
-    main()
+    if C.REGION_ID == "JL_NAMWON_UNBONG":
+        main()
+    else:                                   # 그 밖 권역: 설정 기반 일반 빌더
+        import build_region
+        build_region.main()

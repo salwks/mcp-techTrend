@@ -72,19 +72,26 @@ CLIMATE_NAMES = {int(k): v for k, v in CLIMATE_CODES.items()}
 ALPINE_ALT = {0: 1100.0, 1: 1000.0, 2: 850.0}     # 위도대별 고산 하한(실제 해발 m)
 COAST_KM = 5.0
 
+def _region_climate_cfg():
+    """권역 설정 climate_rule(있으면): alpine_alt {"0"|"1"|"2": m}, coast_km. 남원은 기본값."""
+    import common as C
+    cr = C.CFG.get("climate_rule", {})
+    return {**ALPINE_ALT, **{int(k): float(v) for k, v in cr.get("alpine_alt", {}).items()}}, float(cr.get("coast_km", COAST_KM))
+
 def climate_grid(y4, coast_dist_km=None):
     """4m landuse 격자 기후대 코드: 위도 → 남·중·북, 해안 5km 안 → coast, 해발이 하한 이상 → alpine(가장 우선)."""
     import common as C
     from scipy import ndimage
+    alpine_alt, coast_km = _region_climate_cfg()
     Hh, Ww = y4.shape
     _, zs = C.ij_to_xz(np.zeros(Hh), np.arange(Hh), C.LU_CELL)
     lat, _ = C.game_to_geo(np.zeros(Hh), zs)
     band = np.where(lat < 36.0, 0, np.where(lat < 38.0, 1, 2)).astype(np.uint8)[:, None] * np.ones((1, Ww), np.uint8)
     code = band.copy()
     if coast_dist_km is not None:
-        code[coast_dist_km < COAST_KM] = 4
+        code[coast_dist_km < coast_km] = 4
     alt = C.y_to_alt(ndimage.uniform_filter(y4.astype(np.float64), 7))       # 28m 평균(얼룩 방지)
-    thr = np.vectorize(ALPINE_ALT.get)(band)
+    thr = np.vectorize(alpine_alt.get)(band)
     code[alt >= thr] = 3
-    return code, dict(alpine_alt_m=ALPINE_ALT, coast_km=COAST_KM, lat_bands="lat<36 south, <38 central, else north",
+    return code, dict(alpine_alt_m=alpine_alt, coast_km=coast_km, lat_bands="lat<36 south, <38 central, else north",
                       coast="권역에 바다 없음 — 해안 거리 무한" if coast_dist_km is None else "해안선 거리")

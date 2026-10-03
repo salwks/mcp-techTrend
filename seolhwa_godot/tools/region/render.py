@@ -50,14 +50,21 @@ def overview(reg, y, path, title=None, lu=None):
         lv = lv[j0:j0 + rgb.shape[0], i0:i0 + rgb.shape[1]] if S == 1 else lv[:rgb.shape[0], :rgb.shape[1]]
         sub = rgb[:lv.shape[0], :lv.shape[1]]
         sub[lv] = sub[lv] * 0.45 + np.array([0.95, 0.55, 0.2]) * 0.55
+        if C.REGION_ID != "JL_NAMWON_UNBONG":       # 바다·호수(물 칸)를 파랗게
+            lw = lu == 5
+            if S == 1: lw = np.repeat(np.repeat(lw, 2, 0), 2, 1)
+            lw = lw[j0:j0 + rgb.shape[0], i0:i0 + rgb.shape[1]] if S == 1 else lw[:rgb.shape[0], :rgb.shape[1]]
+            sub[lw] = sub[lw] * 0.3 + np.array([0.35, 0.55, 0.85]) * 0.7
     im = Image.fromarray((rgb * 255).astype(np.uint8)); d = ImageDraw.Draw(im)
+    ec = C.CFG.get("eupseong") or {}
     for l in reg.get("landmarks", []):
-        if l["id"] == "namwon_eupseong":
-            a0 = to_px(l["x"] - 93, l["z"] - 93); a1 = to_px(l["x"] + 93, l["z"] + 93)
+        if l["id"] == "namwon_eupseong" or l["id"] == ec.get("landmark"):
+            hx_, hz_ = (93, 93) if l["id"] == "namwon_eupseong" else (ec.get("half_x", ec["half"]), ec["half"])
+            a0 = to_px(l["x"] - hx_, l["z"] - hz_); a1 = to_px(l["x"] + hx_, l["z"] + hz_)
             d.rectangle([a0[0], a0[1], a1[0], a1[1]], outline=(90, 80, 70), width=3 if S == 1 else 2)
     for r in sorted(reg["rivers"], key=lambda r: "DCB".index(r["grade"])):
         pts = [to_px(p[0], p[1]) for p in r["points"]]
-        w = {"B": 6, "C": 3, "D": 1}[r["grade"]]
+        w = {"S": 8, "A": 7, "B": 6, "C": 3, "D": 1}[r["grade"]]
         d.line(pts, fill=(40, 90, 210) if r["grade"] != "D" else (80, 130, 220), width=w)
     for rd in reg.get("roads", []):
         pts = [to_px(p[0], p[1]) for p in rd["points"]]
@@ -127,8 +134,10 @@ if __name__ == "__main__":
     y, _ = export.read_height()
     LU = np.asarray(Image.open(os.path.join(C.OUT, "landuse.png")))
     overview(reg, y, os.path.join(C.SHOTS, "overview.png"), lu=LU)
-    for name, (x0, z0, x1, z1) in {"zoom_namwon": (-3700, -150, -2700, 650), "zoom_unbong": (-100, -1200, 1300, -250), "zoom_inwol": (2300, -1800, 3300, -1100),
-                                   "zoom_silsangsa_banseon": (2300, -400, 3900, 1500)}.items():
+    zooms = {"zoom_namwon": (-3700, -150, -2700, 650), "zoom_unbong": (-100, -1200, 1300, -250), "zoom_inwol": (2300, -1800, 3300, -1100),
+             "zoom_silsangsa_banseon": (2300, -400, 3900, 1500)} if C.REGION_ID == "JL_NAMWON_UNBONG" else {k: tuple(v) for k, v in C.CFG.get("zooms", {}).items()}
+    os.makedirs(C.SHOTS, exist_ok=True)
+    for name, (x0, z0, x1, z1) in zooms.items():
         S = 1
         i0, j0 = [int(v) for v in C.xz_to_ij(x0, z0)]; i1, j1 = [int(v) for v in C.xz_to_ij(x1, z1)]
         VIEW[0], VIEW[1] = i0, j0

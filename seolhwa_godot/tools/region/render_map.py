@@ -1,12 +1,13 @@
 """게임 안 지도 그림 — 한지 바탕 + 먹빛 산 음영 + 물길 + 길(고지도 느낌). 이름표는 Godot이 그린다.
-사용: python3 tools/region/render_map.py  → region_data/JL_NAMWON_UNBONG/map.png, map.json(그림↔게임 좌표)
+사용: python3 tools/region/render_map.py <권역 id>  → region_data/<권역 id>/map.png, map.json(그림↔게임 좌표)
 """
 import json, os
 import numpy as np
+import common as C
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-D = os.path.join(ROOT, 'region_data', 'JL_NAMWON_UNBONG')
+D = C.OUT
 SCALE = 4.0  # 그림 1px = 게임 4m
 
 reg = json.load(open(os.path.join(D, 'region.json')))

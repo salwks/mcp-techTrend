@@ -11,8 +11,9 @@ from scipy import ndimage, sparse
 from scipy.sparse.linalg import spsolve
 import common as C
 
-KEEP_NAMES = {"연지"}
-MIN_AREA_REAL_M2 = 15000.0
+KEEP_NAMES = set(C.CFG.get("modern_keep_names", ["연지"]))
+MIN_AREA_REAL_M2 = C.CFG.get("modern_min_reservoir_m2", 15000.0)
+PRIMARY_NAMES = tuple(C.CFG.get("modern_primary_names", ["황산로"]))
 
 def _poly_px(geom):
     lat = np.array([p["lat"] for p in geom]); lon = np.array([p["lon"] for p in geom])
@@ -94,7 +95,9 @@ def apply(alt):
         rec["dem_surface_alt_m"] = round(float(alt[j, i]), 1); rec["restored_alt_m"] = round(float(filled[j, i]), 1)
     alt = filled
     # ── 선형 현대 시설
-    modern = json.load(open(os.path.join(C.CACHE, "osm_modern.json")))
+    mp = os.path.join(C.CACHE, "osm_modern.json")
+    modern = json.load(open(mp)) if os.path.exists(mp) else {"elements": []}
+    if not os.path.exists(mp): log["warning"] = "osm_modern.json 없음 — 선형 현대 시설 제거 생략"
     lin = Image.new("L", (W, H), 0); dl = ImageDraw.Draw(lin)
     counts = {}
     for e in modern["elements"]:
@@ -103,7 +106,7 @@ def apply(alt):
         hw, rw = t.get("highway"), t.get("railway")
         if hw == "motorway": wr = 45
         elif rw in ("rail", "abandoned", "disused"): wr = 30
-        elif hw == "trunk" or (hw == "primary" and t.get("name") in ("황산로",)): wr = 24
+        elif hw == "trunk" or (hw == "primary" and t.get("name") in PRIMARY_NAMES): wr = 24
         else: continue
         pts, _, _ = _poly_px(g)
         dl.line(pts, fill=255, width=max(3, int(round(wr * C.K / C.CELL))))

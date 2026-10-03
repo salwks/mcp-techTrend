@@ -4,9 +4,12 @@ import json, math, os, re, sys
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-import common as C, export, roads as RD
+import common as C, export, roads as RD, landuse as LUq
 
 R = {}
+NAMWON = C.REGION_ID == "JL_NAMWON_UNBONG"
+SEA_NAME = C.CFG.get("hydro", {}).get("sea_name", "바다")
+SEA_D = None; COAST_PTS = None
 def rec(code, ok, msg, **kw):
     R[code] = dict(ok=bool(ok), msg=msg, **kw)
 
@@ -38,8 +41,16 @@ def outlet_labels(dirn):
     return nxt.reshape(Hh, Ww)
 
 def main():
+    global SEA_D, COAST_PTS
     reg = json.load(open(os.path.join(C.OUT, "region.json")))
     y, meta = export.read_height()
+    sp_ = os.path.join(C.CACHE, "sea.npy")
+    if not NAMWON and os.path.exists(sp_):
+        sea_ = np.load(sp_)
+        SEA_D = ndimage.distance_transform_edt(~sea_) * C.CELL
+        edge_ = sea_ & ~ndimage.binary_erosion(sea_)
+        jj_, ii_ = np.nonzero(edge_[::4, ::4]); xx_, zz_ = C.ij_to_xz(ii_ * 4, jj_ * 4)
+        COAST_PTS = np.c_[xx_, zz_]
     hm = reg["height"]
     def hy(x, z):
         fi, fj = C.xz_to_ij(np.asarray(x), np.asarray(z)); return C.bilinear(y, fi, fj)
@@ -51,13 +62,23 @@ def main():
     total = sum(sizes.values())
     clip = float(((raw == 0) | (raw == 65535)).mean())
     lm = {l["id"]: l for l in reg["landmarks"]}
-    y_nw = float(hy(lm["gwanghallu"]["x"], lm["gwanghallu"]["z"])); y_ub = float(hy(lm["unbong_gwana"]["x"], lm["unbong_gwana"]["z"]))
     gz, gx = np.gradient(y, hm["cell"]); sl = np.hypot(gx, gz)
-    okH = (bitdepth == 16 and ctype == 0 and raw.shape == (hm["h"], hm["w"]) and hm["cell"] <= 2 and clip < 1e-4
-           and 3 <= y_nw <= 25 and 100 <= y_ub <= 140 and total < 40e6 and np.isfinite(y).all()
-           and abs(float(y.min()) - hm["y_min"]) < 2 and abs(float(y.max()) - hm["y_max"]) < 2)
+    base_ok = (bitdepth == 16 and ctype == 0 and raw.shape == (hm["h"], hm["w"]) and hm["cell"] <= 2 and clip < 1e-4
+               and total < 40e6 and np.isfinite(y).all() and abs(float(y.min()) - hm["y_min"]) < 2 and abs(float(y.max()) - hm["y_max"]) < 2)
+    if NAMWON:
+        y_nw = float(hy(lm["gwanghallu"]["x"], lm["gwanghallu"]["z"])); y_ub = float(hy(lm["unbong_gwana"]["x"], lm["unbong_gwana"]["z"]))
+        okH = (bitdepth == 16 and ctype == 0 and raw.shape == (hm["h"], hm["w"]) and hm["cell"] <= 2 and clip < 1e-4
+               and 3 <= y_nw <= 25 and 100 <= y_ub <= 140 and total < 40e6 and np.isfinite(y).all()
+               and abs(float(y.min()) - hm["y_min"]) < 2 and abs(float(y.max()) - hm["y_max"]) < 2)
+        alt_msg = f"광한루 y={y_nw:.1f}(실제 {C.y_to_alt(y_nw):.0f}m), 운봉 관아 y={y_ub:.1f}(실제 {C.y_to_alt(y_ub):.0f}m), "
+    else:                       # 설정 qa_alt: [{id, lo, hi}] 랜드마크 실제 해발(m) 범위
+        okH = base_ok; parts = []
+        for qa_ in C.CFG.get("qa_alt", []):
+            a_ = float(C.y_to_alt(hy(lm[qa_["id"]]["x"], lm[qa_["id"]]["z"])))
+            okH = okH and qa_["lo"] <= a_ <= qa_["hi"]; parts.append(f"{lm[qa_['id']]['name']} 실제 {a_:.0f}m(기대 {qa_['lo']}~{qa_['hi']})")
+        alt_msg = (", ".join(parts) + ", ") if parts else ""
     rec("H", okH, f"PNG {bitdepth}bit 회색조(type {ctype}) {raw.shape[1]}×{raw.shape[0]} cell {hm['cell']}m, y {hm['y_min']}…{hm['y_max']} (실제 {C.y_to_alt(hm['y_min']):.0f}…{C.y_to_alt(hm['y_max']):.0f}m), "
-        f"클립 {clip:.1e}, 광한루 y={y_nw:.1f}(실제 {C.y_to_alt(y_nw):.0f}m), 운봉 관아 y={y_ub:.1f}(실제 {C.y_to_alt(y_ub):.0f}m), "
+        f"클립 {clip:.1e}, {alt_msg}"
         f"경사 tan 중앙값 {np.median(sl):.2f}/99% {np.percentile(sl, 99):.2f}, region_data 합계 {total / 1e6:.1f}MB", sizes=sizes)
 
     rivers = reg["rivers"]; rid = {r["id"]: r for r in rivers}
@@ -70,12 +91,15 @@ def main():
             if r["parent"] not in rid or r["flows_to"] != r["parent"]: bad.append((r["id"], "부모 없음")); continue
             d = poly_dist(rid[r["parent"]]["points"], end[0], end[1])
             if d > 15: bad.append((r["id"], f"합류점 {d:.0f}m 떨어짐"))
+        elif SEA_D is not None and r["flows_to"] == SEA_NAME:
+            d_sea = float(C.bilinear(SEA_D, *C.xz_to_ij(end[0], end[1])))
+            if d_sea > 30: bad.append((r["id"], f"바다 {d_sea:.0f}m 전에 끝남"))
         else:
             edge = min(W2 - abs(end[0]), H2 - abs(end[1]))
             if edge > 30: bad.append((r["id"], f"가장자리 {edge:.0f}m 전에 끝남"))
             if "권역 밖" not in r["flows_to"] and r["flows_to"] not in ("섬진강",) and not any(k in r["flows_to"] for k in ("섬진강", "낙동강")):
                 bad.append((r["id"], "출구 행선지 불명"))
-    rec("Q1", not bad, f"하천 {len(rivers)}개 모두 상위 하천 또는 권역 밖(→섬진강/낙동강)에 닿음" if not bad else f"실패 {bad[:6]}", fails=bad)
+    rec("Q1", not bad, (f"하천 {len(rivers)}개 모두 상위 하천 또는 권역 밖(→섬진강/낙동강)에 닿음" if NAMWON else f"하천 {len(rivers)}개 모두 상위 하천·바다(30m 안)·권역 가장자리에 닿음") if not bad else f"실패 {bad[:6]}", fails=bad)
 
     # Q2: 단조 감소 + 수로가 지형 안에 + 능선 넘지 않음(같은 출구 유역)
     mono_bad = []; inch = []; banks = []
@@ -88,7 +112,11 @@ def main():
         tg = np.gradient(p[:, :2], axis=0); tg /= np.linalg.norm(tg, axis=1, keepdims=True) + 1e-9
         off = r["width_m"] / 2 + 3.0
         bk = [hy(p[:, 0] + sgn * -tg[:, 1] * off, p[:, 1] + sgn * tg[:, 0] * off) for sgn in (1, -1)]
-        banks.append(float(((bk[0] >= p[:, 2] + 0.02) & (bk[1] >= p[:, 2] + 0.02)).mean()))
+        okb = (bk[0] >= p[:, 2] + 0.02) & (bk[1] >= p[:, 2] + 0.02)
+        if SEA_D is not None:              # 하구(바다 60m 안)는 둑이 바다와 만나므로 빼고 잰다
+            far = C.bilinear(SEA_D, *C.xz_to_ij(p[:, 0], p[:, 1])) >= 60
+            okb = okb[far] if far.any() else np.ones(1, bool)
+        banks.append(float(okb.mean()))
     dirn = np.load(os.path.join(C.CACHE, "basin_dirn.npy"))
     lab = outlet_labels(dirn)
     HC = C.CELL * 4
@@ -106,22 +134,27 @@ def main():
         mouth = L[-1]
         frac = float((L == mouth).mean())
         if frac < 0.97: cross_bad.append((r["id"], round(frac, 3)))
-    yw = [q for q in reg["passes"] if q["id"] == "yeowonjae"][0]
-    ring = [(yw["x"] + 200 * math.cos(a), yw["z"] + 200 * math.sin(a)) for a in np.linspace(0, 2 * np.pi, 72)]
-    cls = set(lab_class(lab_at([q[0] for q in ring], [q[1] for q in ring])).tolist())
-    unb = str(lab_class(lab_at(lm["unbong_gwana"]["x"], lm["unbong_gwana"]["z"])))
-    nwn = str(lab_class(lab_at(lm["gwanghallu"]["x"], lm["gwanghallu"]["z"])))
-    okQ2 = not mono_bad and not cross_bad and min(inch) > 0.9 and np.mean(banks) > 0.95 and {"섬진", "낙동"} <= cls and unb == "낙동" and nwn == "섬진"
-    rec("Q2", okQ2, f"수면 단조감소 위반 {len(mono_bad)}개, 유역(출구) 넘는 하천 {len(cross_bad)}개, 수로 안 수면(지형≤수면) 최소 {min(inch):.2f}/평균 {np.mean(inch):.3f}, 양안 둑≥수면 평균 {np.mean(banks):.3f}(최소 {min(banks):.2f}); "
-        f"여원재 둘레 유역 {sorted(cls)}, 운봉={unb}·남원={nwn} (운봉고원=낙동강 수계, 남원=섬진강 수계)", mono_bad=mono_bad, cross_bad=cross_bad)
+    if NAMWON:
+        yw = [q for q in reg["passes"] if q["id"] == "yeowonjae"][0]
+        ring = [(yw["x"] + 200 * math.cos(a), yw["z"] + 200 * math.sin(a)) for a in np.linspace(0, 2 * np.pi, 72)]
+        cls = set(lab_class(lab_at([q[0] for q in ring], [q[1] for q in ring])).tolist())
+        unb = str(lab_class(lab_at(lm["unbong_gwana"]["x"], lm["unbong_gwana"]["z"])))
+        nwn = str(lab_class(lab_at(lm["gwanghallu"]["x"], lm["gwanghallu"]["z"])))
+        okQ2 = not mono_bad and not cross_bad and min(inch) > 0.9 and np.mean(banks) > 0.95 and {"섬진", "낙동"} <= cls and unb == "낙동" and nwn == "섬진"
+        rec("Q2", okQ2, f"수면 단조감소 위반 {len(mono_bad)}개, 유역(출구) 넘는 하천 {len(cross_bad)}개, 수로 안 수면(지형≤수면) 최소 {min(inch):.2f}/평균 {np.mean(inch):.3f}, 양안 둑≥수면 평균 {np.mean(banks):.3f}(최소 {min(banks):.2f}); "
+            f"여원재 둘레 유역 {sorted(cls)}, 운봉={unb}·남원={nwn} (운봉고원=낙동강 수계, 남원=섬진강 수계)", mono_bad=mono_bad, cross_bad=cross_bad)
+    else:
+        okQ2 = not mono_bad and not cross_bad and (not inch or min(inch) > 0.9) and (not banks or np.mean(banks) > 0.95)
+        rec("Q2", okQ2, f"수면 단조감소 위반 {len(mono_bad)}개, 유역(출구) 넘는 하천 {len(cross_bad)}개, 수로 안 수면(지형≤수면) 최소 {min(inch) if inch else 1:.2f}, 양안 둑≥수면 평균 {np.mean(banks) if banks else 1:.3f}",
+            mono_bad=mono_bad, cross_bad=cross_bad)
 
     # Q4(덤): 논 경사·고도
     lu = np.asarray(Image.open(os.path.join(C.OUT, "landuse.png"))); lu_shape = lu.shape
     y4 = y[::2, ::2][:lu.shape[0], :lu.shape[1]]
     g4z, g4x = np.gradient(y4, C.LU_CELL); s4 = np.hypot(g4x, g4z)
     pad = lu == 2; fld = lu == 3
-    p_steep = float((s4[pad] > 0.10).mean()); f_steep = float((s4[fld] > 0.30).mean())
-    pad_alt = C.y_to_alt(y4[pad])
+    p_steep = float((s4[pad] > 0.10).mean()) if pad.any() else 0.0; f_steep = float((s4[fld] > 0.30).mean()) if fld.any() else 0.0
+    pad_alt = C.y_to_alt(y4[pad]) if pad.any() else np.zeros(1)
     rec("Q4", p_steep < 0.03 and f_steep < 0.03 and np.percentile(pad_alt, 99) < 700,
         f"논 {pad.mean() * 100:.1f}% (경사>10% 비율 {p_steep * 100:.1f}%, 실제 고도 99% {np.percentile(pad_alt, 99):.0f}m), 밭 {fld.mean() * 100:.1f}% (경사>30% {f_steep * 100:.1f}%)",
         landuse_share={str(k): round(float((lu == k).mean()), 4) for k in range(10)})
@@ -135,7 +168,7 @@ def main():
     q5_bad = []; n_div = 0
     for rd in roads:
         p = resample(rd["points"], 8.0)
-        c = lab_class(lab_at(p[:, 0], p[:, 1]))
+        c = lab_class(lab_at(p[:, 0], p[:, 1])) if NAMWON else []
         for k in range(1, len(c)):
             if {c[k - 1], c[k]} == {"섬진", "낙동"}:
                 n_div += 1
@@ -144,7 +177,7 @@ def main():
         for (px, pz, ph) in RD.profile_peaks(rd["points"], hy, prom_real=40.0, rdist=rdist4):
             d = min(math.hypot(q["x"] - px, q["z"] - pz) for q in passes)
             if d > 260: q5_bad.append((rd["id"], round(px), round(pz), round(d), "능선"))
-    rec("Q5", not q5_bad, f"분수계(섬진↔낙동) 통과 {n_div}회·돌출 40m(실제)↑ 능선 모두 고개(passes {len(passes)}개) 200m 안" if not q5_bad else f"고개 없는 능선 통과 {q5_bad[:6]}", fails=q5_bad)
+    rec("Q5", not q5_bad, (f"분수계(섬진↔낙동) 통과 {n_div}회·" if NAMWON else "") + f"돌출 40m(실제)↑ 능선 모두 고개(passes {len(passes)}개) 200m 안" if not q5_bad else f"고개 없는 능선 통과 {q5_bad[:6]}", fails=q5_bad)
 
     # Q6: 도로×하천 교차 = crossings
     q6_bad = []; n_x = 0
@@ -176,7 +209,7 @@ def main():
     for i in range(n):
         for j in range(i + 1, n):
             if connected(roads[i], roads[j]): adj[i].add(j); adj[j].add(i)
-    main = next(i for i, r in enumerate(roads) if r["id"] == "tongyeong_byeolro")
+    main = next(i for i, r in enumerate(roads) if r["id"] == C.CFG.get("main_road", "tongyeong_byeolro"))
     comp = {main}; st = [main]
     while st:
         k = st.pop()
@@ -189,7 +222,7 @@ def main():
         d, i = min(ds)
         q8.append((s["id"], round(d), i in comp, d <= s["radius_m"] + 40))
     unconnected = [r["id"] for i, r in enumerate(roads) if i not in comp]
-    rec("Q8", all(c and o for _, _, c, o in q8), f"장시 {[(a, f'{b}m') for a, b, _, _ in q8]} — 모두 간선망(통영별로와 연결된 길)에 붙음; 망에서 떨어진 길: {unconnected or '없음'}",
+    rec("Q8", all(c and o for _, _, c, o in q8) and (NAMWON or not unconnected), f"장시 {[(a, f'{b}m') for a, b, _, _ in q8]} — 모두 간선망({'통영별로' if NAMWON else roads[main]['name']}와 연결된 길)에 붙음; 망에서 떨어진 길: {unconnected or '없음'}",
         markets=q8)
 
     # Q10: 현대 흔적
@@ -209,6 +242,7 @@ def main():
         m = lab_r == k
         flat_before.append(float(flat0[m].mean())); flat_after.append(float(flat1[m].mean()))
     lakes_ok = (max(flat_after) if flat_after else 0) < 0.25
+    if not flat_before: flat_before = flat_after = [0.0]
     mf = reg.get("modern_fixes", {})
     rec("Q10", not hits and lakes_ok,
         f"이름·유형 금지어 {len(hits)}건; 지운 저수지 {len(mf.get('reservoirs_removed', []))}곳 평탄면 비율 전 {np.mean(flat_before):.2f}→후 {np.mean(flat_after):.2f} (최대 {max(flat_after):.2f}); "
@@ -227,6 +261,10 @@ def main():
             d = np.hypot(p[:, 0] - s["x"], p[:, 1] - s["z"])
             for k in np.argsort(d)[:40]:
                 if d[k] < 1500: cands.append((float(d[k]), float(p[k, 0]), float(p[k, 1])))
+        if COAST_PTS is not None:
+            d = np.hypot(COAST_PTS[:, 0] - s["x"], COAST_PTS[:, 1] - s["z"])
+            for k in np.argsort(d)[:40]:
+                if d[k] < 1500: cands.append((float(d[k]), float(COAST_PTS[k, 0]), float(COAST_PTS[k, 1])))
         cands.sort()
         best = None
         for d, rx, rz in cands[:400]:
@@ -256,7 +294,6 @@ def main():
     rec("Q14", npass >= 0.75 * len(res), f"마을 단면 {npass}/{len(res)} 통과 (기준 75%)", detail=res)
 
     # QR: 도강점(반경 10m) 밖에서 길이 물 칸(landuse 5)이나 하천 수면 아래를 지나지 않음
-    import landuse as LUq
     drq, rsq, rhwq, _ = LUq.river_fields(rivers, y.shape, G=C.CELL)      # 2m 격자(빌드의 둑 보정과 같은 기준)
     qr_bad = []; n_s = 0
     for rd in roads:
@@ -286,16 +323,53 @@ def main():
     rec("QL", hit / max(tot, 1) >= 0.95 and min(per.values()) >= 0.9, f"길 중심선 표본 {tot}점 중 landuse 4 비율 {hit / max(tot, 1):.3f} (길별 최소 {min(per.values()):.3f})", per_road=per)
 
     # QW(덤): 남원읍성 성벽(한 변 186m, 중심선 ±90.7m)을 넘는 길은 성문 통로(문 중심 9m 안)로만
-    eup = lm["namwon_eupseong"]; cx, cz = eup["x"], eup["z"]; hz = 93.0 - 2.3
-    gates = [(cx, cz + hz), (cx, cz - hz), (cx + hz, cz), (cx - hz, cz)]
+    ecfg = C.CFG.get("eupseong")
+    eup = lm["namwon_eupseong" if NAMWON else (ecfg or {}).get("landmark", "")] if (NAMWON or ecfg) else None
+    if eup is not None:
+        cx, cz = eup["x"], eup["z"]; hz = (93.0 if NAMWON else ecfg["half"]) - 2.3
+        hx_ = hz if NAMWON else ecfg.get("half_x", ecfg["half"]) - 2.3
+    else:
+        cx = cz = 1e9; hz = hx_ = 0.0
+    gates = [(cx, cz + hz), (cx, cz - hz), (cx + hx_, cz), (cx - hx_, cz)]
     wall_bad = []
-    for rd in roads:
+    for rd in (roads if eup is not None else []):
         p = resample(rd["points"], 1.0)
-        ins = (np.abs(p[:, 0] - cx) < hz) & (np.abs(p[:, 1] - cz) < hz)
+        ins = (np.abs(p[:, 0] - cx) < hx_) & (np.abs(p[:, 1] - cz) < hz)
         for k in np.nonzero(ins[1:] != ins[:-1])[0]:
             x, z = p[k + 1, 0], p[k + 1, 1]
             if min(math.hypot(x - gx, z - gz) for gx, gz in gates) > 9: wall_bad.append((rd["id"], round(float(x)), round(float(z))))
-    rec("QW", not wall_bad, "읍성 성벽을 넘는 길은 모두 성문 통로" if not wall_bad else f"성문 아닌 곳에서 성벽 통과 {wall_bad[:6]}", fails=wall_bad)
+    rec("QW", not wall_bad, ("읍성 성벽을 넘는 길은 모두 성문 통로" if eup is not None else "성곽 읍치 없음(검사 생략)") if not wall_bad else f"성문 아닌 곳에서 성벽 통과 {wall_bad[:6]}", fails=wall_bad)
+
+    if not NAMWON:   # 명세 v0.3 §36 Q3·Q7·Q9 (새 권역만 — 남원 qa.json은 그대로)
+        wpts = [resample(r["points"], 8.0)[:, :2] for r in rivers]
+        wpts += [np.array([[sp["x"], sp["z"]]]) for sp in reg.get("springs", [])]
+        wpts += [np.asarray(l["outline"]) for l in reg.get("lakes", [])]
+        if COAST_PTS is not None: wpts.append(COAST_PTS)
+        WP = np.vstack(wpts)
+        q3 = []
+        for s in reg["settlements"]:
+            if s["type"] in ("읍성",) or s.get("size") in ("L", "M"):
+                d = float(np.hypot(WP[:, 0] - s["x"], WP[:, 1] - s["z"]).min()); q3.append((s["id"], round(d)))
+        rec("Q3", all(d <= 400 for _, d in q3), f"고을·큰 마을 물(하천·용천수·호수·바다) 거리(게임 m, 기준 400): {q3}", detail=q3)
+        q7 = []
+        drq7, rsq7, rhwq7, rgr7 = LUq.river_fields(rivers, y.shape, G=C.CELL) if rivers else (None,) * 4
+        for s in reg["settlements"]:
+            if s["type"] in ("성황당",): continue
+            i2, j2 = [int(round(float(v))) for v in C.xz_to_ij(s["x"], s["z"])]
+            wet = lu[min(j2 // 2, lu.shape[0] - 1), min(i2 // 2, lu.shape[1] - 1)] == 5
+            hand = 99.0
+            if drq7 is not None and drq7[j2, i2] < 150 and rgr7[j2, i2] >= 2:      # B·C급 하천 150m 안이면 수면 위 높이(실제 m)
+                hand = (float(hy(s["x"], s["z"])) - rsq7[j2, i2]) / C.K
+            if wet or hand < 2.0: q7.append((s["id"], "물칸" if wet else f"하천 수면 위 {hand:.1f}m"))
+        rec("Q7", not q7, "모든 마을 중심이 물 칸 밖이고 B·C급 하천 수면보다 실제 2m 이상 높음" if not q7 else f"범람 위험 {q7}", fails=q7)
+        q9 = []
+        for s in reg["settlements"]:
+            pf = s.get("profile") or {}
+            if pf.get("archetype") == "coast" or pf.get("entrance") == "wharf":
+                dsea = float(C.bilinear(SEA_D, *C.xz_to_ij(s["x"], s["z"]))) if SEA_D is not None else 1e9
+                dbig = min([poly_dist(r["points"], s["x"], s["z"]) for r in rivers if r["grade"] in "SAB"] or [1e9])
+                q9.append((s["id"], round(min(dsea, dbig))))
+        rec("Q9", all(d <= 250 for _, d in q9), f"포구·갯마을 → 바다/큰 강 거리(게임 m, 기준 250): {q9}", detail=q9)
 
     # QP: 고을 성격표(계약서 §9) — archetypes 있음, 마을 터가 있는 settlement·사찰·성황당 모두 profile(유형·기후대·signature)
     arch = reg.get("archetypes", {}); okc = {"south", "central", "north", "alpine", "coast"}
@@ -320,9 +394,22 @@ def main():
     alt4 = C.y_to_alt(ndimage.uniform_filter(y[::2, ::2], 7))
     same = cl.shape == lu_shape and cm.get("cell") == reg["landuse"]["cell"] and cl.dtype == np.uint8
     codes = sorted(int(v) for v in np.unique(cl))
-    mism = float(((cl == 3) != (alt4 >= 1100.0)).mean())
-    rec("QC", same and set(codes) <= {0, 3} and mism < 0.001 and set(cm.get("codes", {}).values()) == okc,
-        f"climate.png {cl.shape[1]}×{cl.shape[0]} 8bit(landuse와 같은 격자 {same}), 코드 {codes} — south {float((cl == 0).mean()):.3f}, alpine {float((cl == 3).mean()):.4f}(해발 1,100m↑ 불일치 {mism:.5f})")
+    if NAMWON:
+        mism = float(((cl == 3) != (alt4 >= 1100.0)).mean())
+        rec("QC", same and set(codes) <= {0, 3} and mism < 0.001 and set(cm.get("codes", {}).values()) == okc,
+            f"climate.png {cl.shape[1]}×{cl.shape[0]} 8bit(landuse와 같은 격자 {same}), 코드 {codes} — south {float((cl == 0).mean()):.3f}, alpine {float((cl == 3).mean()):.4f}(해발 1,100m↑ 불일치 {mism:.5f})")
+    else:
+        import profiles as PFq
+        thr_, _ = PFq._region_climate_cfg()
+        _, zs_ = C.ij_to_xz(np.zeros(cl.shape[0]), np.arange(cl.shape[0]), C.LU_CELL)
+        lat_, _ = C.game_to_geo(np.zeros(cl.shape[0]), zs_)
+        band_ = np.where(lat_ < 36.0, 0, np.where(lat_ < 38.0, 1, 2))
+        thr_rows = np.array([thr_[int(b)] for b in band_])[:, None]
+        mism = float(((cl == 3) != (alt4 >= thr_rows)).mean())
+        want = set(C.CFG.get("climate_codes_expected", []))
+        share = {okc_n: round(float((cl == int(k)).mean()), 4) for k, okc_n in cm.get("codes", {}).items() if (cl == int(k)).any()}
+        rec("QC", same and set(codes) <= {0, 1, 2, 3, 4} and mism < 0.001 and set(cm.get("codes", {}).values()) == okc and (not want or want <= {cm["codes"][str(c_)] for c_ in codes}),
+            f"climate.png {cl.shape[1]}×{cl.shape[0]} 8bit(landuse와 같은 격자 {same}), 코드 {codes} — 비율 {share} (기대 기후대 {sorted(want)}; 고산 하한 {thr_} 불일치 {mism:.5f})")
 
     os.makedirs(C.OUT, exist_ok=True)
     json.dump(R, open(os.path.join(C.OUT, "qa.json"), "w"), ensure_ascii=False, indent=1, default=str)
