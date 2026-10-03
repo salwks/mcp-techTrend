@@ -1,0 +1,14 @@
+{
+ "kit": "route",
+ "note": "노정(권역 사이 길) 길목 볼거리 키트 — routes 담당(tools/region/make_routes.py · route_sights.py가 놓는다). 계약서 §4. tris는 먹선 포함(kit_preview)",
+ "models": [
+  {"name": "ijeongpyo", "file": "res://kit/route/ijeongpyo.gd", "desc": "이정표 — stone: 돌 받침+둥근 머리 돌기둥(새김 띠) / post: 나무 기둥 글판 + 흙 후(堠)", "params": {"seed": 1, "kind": "stone"}, "footprint": [1.2, 1.0], "tris": 192,
+   "variants": [{"params": {"seed": 1, "kind": "post"}, "footprint": [2.4, 1.6], "tris": 416}]},
+  {"name": "myo", "file": "res://kit/route/myo.gd", "desc": "무덤(봉분) — 풀 덮인 둥근 봉분 + 뒤 사성 둔덕 + (stone) 상석·비석 / (old) 내려앉은 묵은 무덤. n=2 쌍분", "params": {"seed": 1, "r": 2.1}, "footprint": [5.6, 7.3], "tris": 600},
+  {"name": "ruin_house", "file": "res://kit/route/ruin_house.gd", "desc": "폐가·빈 주막터 — 허문 흙벽 조각·기단 돌줄·홀로 선 기둥·내려앉은 이엉·깨진 독·잡풀. inn=true면 쓰러진 평상·용수 장대", "params": {"seed": 1, "inn": false}, "footprint": [7.6, 5.6], "tris": 1816},
+  {"name": "ferry_shed", "file": "res://kit/route/ferry_shed.gd", "desc": "나루 대기막 — 기둥 넷 초가 막 + 걸상 + 사공 부르는 징 + 가마니 짐", "params": {"seed": 1}, "footprint": [5.2, 3.6], "tris": 612},
+  {"name": "waterfall", "file": "res://kit/route/waterfall.gd", "desc": "폭포와 소 — 바위 벼랑 + 물줄기 두 겹 + 물보라 + 둥근 소(water {y, outline} — 엔진이 파고 못으로 막음). 원점 = 소 가운데, 벼랑 −z", "params": {"seed": 1, "h": 5.5, "r": 4.2}, "footprint": [11.4, 11.6], "tris": 1352},
+  {"name": "sinmok", "file": "res://kit/route/sinmok.gd", "desc": "신목 — nature/big_tree + 금줄·흰 종이 술·오색 천 + 돌 제단 + 얹은 돌", "params": {"seed": 1, "variant": "zelkova"}, "footprint": [10.1, 6.4], "tris": 1790},
+  {"name": "dotbae", "file": "res://kit/route/dotbae.gd", "desc": "돛배(제주 뱃길) — 평저 선체·덕판·뜸집·돗자리 돛(살대)·키·노·짐. 원점 = 갑판 가운데 물 면, 이물 +z", "params": {"seed": 1, "len": 9.0}, "footprint": [3.3, 9.8], "tris": 632}
+ ]
+}
