@@ -34617,30 +34617,35 @@
     -756.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "haeseo",
     "climate": "central",
+    "archetype": "eupchi",
     "roof": {
-     "giwa": 0.45,
-     "choga": 0.55
+     "giwa": 0.4,
+     "choga": 0.6
     },
-    "wall": "stone",
-    "signature": "사신 길 객사와 남문 밖 장, 황주천 월파루",
-    "trades": [
-     "관아",
-     "객사(사신 접대)",
-     "장시"
-    ],
+    "wall": "todam",
+    "layout": "walled_grid",
+    "entrance": "gate",
     "people": [
      "관속",
      "역졸",
-     "사신 행렬",
-     "장꾼"
+     "장꾼",
+     "사신 행렬"
     ],
     "animals": [
-     "말"
+     "말",
+     "소"
     ],
-    "notes": "해서 문화권: 一자·ㄱ자 겹집 섞임(가설)"
-   }
+    "signature": "들판 가운데 네모난 돌 읍성 — 의주대로가 남문에서 북문으로 꿰뚫고, 성 안엔 깊은 一자 겹집",
+    "trades": [
+     "관아",
+     "역참",
+     "장시"
+    ],
+    "notes": "황주목 읍치(HH-02). 사신 길(의주대로) 객사 제안관. 평지 방형 읍성 가설"
+   },
+   "title": "황주"
   },
   {
    "id": "hwangju_jang",
@@ -34666,20 +34671,32 @@
     -652.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "haeseo",
     "climate": "central",
-    "signature": "곡식 섬과 소 시장",
-    "trades": [
-     "장시"
-    ],
+    "archetype": "eupchi",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "fence",
+    "layout": "linear_street",
+    "entrance": "market_flag",
     "people": [
      "장꾼",
-     "보부상"
+     "보부상",
+     "주모"
     ],
     "animals": [
-     "소"
+     "소",
+     "말"
+    ],
+    "signature": "남문 밖 의주대로 장거리 — 재령 쌀과 사과 좌판",
+    "trades": [
+     "장시",
+     "주막"
     ]
-   }
+   },
+   "title": "황주"
   },
   {
    "id": "dohwadong",
@@ -34705,12 +34722,15 @@
     -304.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "haeseo",
     "climate": "central",
-    "signature": "개울 외나무다리와 우물, 눈먼 아비 이야기",
-    "trades": [
-     "논농사"
-    ],
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "peach_tree",
     "people": [
      "농부",
      "아낙"
@@ -34718,8 +34738,13 @@
     "animals": [
      "소"
     ],
-    "notes": "심청 이야기 연계 후보(B) — 사건은 '이야기', 장소는 평범한 들마을"
-   }
+    "signature": "복숭아나무 아래 우물이 있는 들마을 — 심청 이야기가 떠도는 곳(고증 B, 확정 아님)",
+    "trades": [
+     "논농사"
+    ],
+    "notes": "심청 계열(FOLKTALE B 태그) — 장소 고정 아님, 소문으로만"
+   },
+   "title": "도화동"
   },
   {
    "id": "namcheon_ferry_village",
@@ -34745,19 +34770,29 @@
     40.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "haeseo",
     "climate": "central",
-    "signature": "대로 섶다리와 주막",
-    "trades": [
-     "주막",
-     "나루"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "fan_from_ferry",
+    "entrance": "ferry",
     "people": [
      "뱃사공",
-     "주모",
      "나그네"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "황주천 섶다리 건넛마을과 주막",
+    "trades": [
+     "나루",
+     "주막"
     ]
-   }
+   },
+   "title": "황주천 나루"
   },
   {
    "id": "cheonju_village",
@@ -34783,19 +34818,27 @@
     -1284.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "haeseo",
     "climate": "central",
-    "signature": "낮은 들의 둥근 초가 무리",
-    "trades": [
-     "논농사"
-    ],
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
     "people": [
      "농부"
     ],
     "animals": [
      "소"
+    ],
+    "signature": "천주천 돌다리 건너 들마을",
+    "trades": [
+     "논농사"
     ]
-   }
+   },
+   "title": "천주"
   },
   {
    "id": "auto_village_00",
@@ -34819,13 +34862,25 @@
     2124.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 12m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -34850,13 +34905,25 @@
     340.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 19m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -34881,13 +34948,25 @@
     2036.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 44m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -34912,13 +34991,25 @@
     -2016.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 20m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -34943,13 +35034,25 @@
     2224.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.05, 둘레 160m 기복 20m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -34974,13 +35077,25 @@
     -832.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 72m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -35005,13 +35120,25 @@
     -1884.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 49m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   },
   {
@@ -35036,13 +35163,25 @@
     1448.0
    ],
    "profile": {
+    "culture": "haeseo",
+    "climate": "central",
     "archetype": "plain",
-    "climate": "north",
-    "signature": "논 가 정자나무 들마을",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "넓은 들의 깊은 一자 겹집 초가 마을",
     "trades": [
      "논농사"
-    ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 24m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    ]
    }
   }
  ],
@@ -35365,5 +35504,6 @@
    "x": -2555.4,
    "z": -1559.1
   }
- ]
+ ],
+ "culture_key": "haeseo"
 }

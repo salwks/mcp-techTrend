@@ -38041,6 +38041,38 @@
     "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
    ],
    "notes": ""
+  },
+  {
+   "id": "cheollyeong_road",
+   "name": "철령길(정평 갈림→안변·철령, 한양 노정)",
+   "class": "대로",
+   "width_m": 5.0,
+   "points": [
+    [
+     -2400.0,
+     1689.0
+    ],
+    [
+     -2436.0,
+     1703.0
+    ],
+    [
+     -2470.0,
+     1716.0
+    ],
+    [
+     -2503.0,
+     1732.0
+    ],
+    [
+     -2530.0,
+     1745.0
+    ]
+   ],
+   "confidence": "가설",
+   "source": [
+    "placement-north: routes 포털(−2530,1745)까지 경흥대로에서 갈래(2026-10-03)"
+   ]
   }
  ],
  "passes": [],
@@ -38151,30 +38183,34 @@
     172.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "gwanbuk",
     "climate": "north",
+    "archetype": "eupchi",
     "roof": {
-     "giwa": 0.4,
-     "choga": 0.6
+     "giwa": 0.35,
+     "choga": 0.65
     },
-    "wall": "stone",
-    "signature": "만세교 긴 다리와 반룡산 성곽, 낙민루",
-    "trades": [
-     "감영",
-     "장시"
-    ],
+    "wall": "todam",
+    "layout": "walled_grid",
+    "entrance": "gate",
     "people": [
      "감영 관속",
-     "포수",
-     "장꾼",
-     "양반"
+     "군관",
+     "장꾼"
     ],
     "animals": [
-     "소",
-     "말"
+     "말",
+     "소"
     ],
-    "notes": "관북 田자 겹집(정주간) — 바람막이 겹집, 지붕 낮고 두꺼움(문화권 키트)"
-   }
+    "signature": "반룡산 기슭 감영 성 — 두툼한 갈색 이엉 田자 집과 장작 井자 더미, 성천강 만세교",
+    "trades": [
+     "감영",
+     "장시",
+     "군영"
+    ],
+    "notes": "함경감영(HG-03). 성천강 충적평야 + 배후 반룡산"
+   },
+   "title": "함흥"
   },
   {
    "id": "hamheung_jang",
@@ -38200,20 +38236,32 @@
     528.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "명태 두름·삼베 필이 쌓인 남문 밖 장",
-    "trades": [
-     "장시"
-    ],
+    "archetype": "eupchi",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "linear_street",
+    "entrance": "market_flag",
     "people": [
      "장꾼",
-     "보부상"
+     "보부상",
+     "명태 장수"
     ],
     "animals": [
-     "소"
+     "소",
+     "말"
+    ],
+    "signature": "남문 밖 성천강 둑 장거리 — 명태·삼베 좌판",
+    "trades": [
+     "장시",
+     "주막"
     ]
-   }
+   },
+   "title": "함흥"
   },
   {
    "id": "manse_west",
@@ -38239,22 +38287,29 @@
     112.0
    ],
    "profile": {
-    "archetype": "pass",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "다리 건너기 전 주막과 마방",
-    "trades": [
-     "주막",
-     "마방"
-    ],
+    "archetype": "pass",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "few_roadside",
+    "entrance": "long_bridge",
     "people": [
      "나그네",
-     "마부",
-     "주모"
+     "주모",
+     "말꾼"
     ],
     "animals": [
      "말"
+    ],
+    "signature": "만세교 서쪽 머리 주막과 마방",
+    "trades": [
+     "주막"
     ]
-   }
+   },
+   "title": "만세교"
   },
   {
    "id": "bongung_village",
@@ -38280,21 +38335,28 @@
     1464.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "본궁 솔숲과 함흥차사 이야기",
-    "trades": [
-     "논농사",
-     "본궁 수호"
-    ],
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "pine_tree",
     "people": [
      "농부",
-     "궁지기"
+     "능지기"
     ],
     "animals": [
      "소"
+    ],
+    "signature": "함흥본궁 반송 아래 들마을 — 함흥차사 이야기",
+    "trades": [
+     "밭농사"
     ]
-   }
+   },
+   "title": "본궁"
   },
   {
    "id": "unheung",
@@ -38320,20 +38382,27 @@
     -328.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "넓은 들의 낮은 겹집 무리",
-    "trades": [
-     "밭농사",
-     "논농사"
-    ],
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
     "people": [
      "농부"
     ],
     "animals": [
      "소"
+    ],
+    "signature": "반룡산 동쪽 기슭 들마을",
+    "trades": [
+     "밭농사"
     ]
-   }
+   },
+   "title": "운흥"
   },
   {
    "id": "auto_village_00",
@@ -38357,13 +38426,25 @@
     -2028.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 12m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "성천강 들의 田자 겹집 마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -38388,13 +38469,25 @@
     -880.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 12m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "성천강 들의 田자 겹집 마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -38419,13 +38512,25 @@
     836.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 14m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "성천강 들의 田자 겹집 마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -38450,13 +38555,25 @@
     628.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 15m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "성천강 들의 田자 겹집 마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -38481,13 +38598,25 @@
     -368.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 15m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "성천강 들의 田자 겹집 마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -38512,13 +38641,25 @@
     2148.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanbuk",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 23m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "성천강 들의 田자 겹집 마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   }
  ],
@@ -38935,12 +39076,12 @@
  },
  "portals": [
   {
-   "id": "to_cheollyeong",
-   "name": "→ 철령(정평·안변 · 한양/평양 노정)",
+   "id": "to_pyeongyang",
+   "name": "→ 평양(양덕 길)",
    "to": "route:PA_PYEONGYANG-HG_HAMHEUNG",
    "to_route": "PA_PYEONGYANG-HG_HAMHEUNG",
    "road": "gyeongheung_daero",
-   "note": "경흥대로 남서쪽: 정평 → 영흥 → 안변 → 철령 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
+   "note": "경흥대로 남서 끝 → 정평 갈림 → 양덕·고원 길 → 평양(노정 PA_PYEONGYANG-HG_HAMHEUNG). routes 보고(1b20f7c)에 따라 이름을 바꿈(옛 id to_cheollyeong)",
    "x": -2510.2,
    "z": 1824.5
   },
@@ -38953,6 +39094,16 @@
    "note": "홍원 → 북청(사자놀음) — 노정 미정 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
    "x": 2558.9,
    "z": -431.2
+  },
+  {
+   "id": "to_hanyang_cheollyeong",
+   "name": "→ 한양(경흥대로·철령)",
+   "to": "route:GG_HANYANG-HG_HAMHEUNG",
+   "to_route": "GG_HANYANG-HG_HAMHEUNG",
+   "road": "cheollyeong_road",
+   "note": "정평 갈림에서 남서 철령 길(노정 GG_HANYANG-HG_HAMHEUNG, routes 담당 좌표)",
+   "x": -2530.0,
+   "z": 1745.0
   }
  ],
  "walls": [
@@ -39015,5 +39166,6 @@
    ],
    "notes": "북쪽은 반룡산 능선(구천각)까지 올라감."
   }
- ]
+ ],
+ "culture_key": "gwanbuk"
 }

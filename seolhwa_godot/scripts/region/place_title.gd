@@ -15,6 +15,37 @@ const TITLES := {
 	unbong_eup = "운봉", unbong_jang = "운봉", bijeon = "황산",
 	inwol_yeok = "인월", inwol_jang = "인월", sannae = "산내",
 	silsangsa_temple = "실상사", banseon = "반선",
+	# 경주(GS_GYEONGJU)
+	gyeongju_eup = "경주", gyeongju_jang = "경주", gyochon = "교촌", bulguksa_village = "진현",
+	bulguksa_temple = "불국사", chisul_village = "치술령", daebon = "대본", gampo = "감포", jangang = "장항",
+	# 강릉(GW_GANGNEUNG)
+	gangneung_eup = "강릉", gangneung_jang = "강릉", gyeongpo_village = "경포", anmok_village = "안목",
+	haksan = "학산", gusan_yeok = "구산역", banjeong_jumak = "반정", daegwallyeong_seonghwang = "대관령",
+	# 제주(JJ_JEJU)
+	jeju_mok = "제주목", jeju_jang = "제주목", sanji_po = "산지포", hwabuk_po = "화북포", jocheon = "조천",
+	songdang = "송당", gimnyeong = "김녕",
+	# 한양(GG_HANYANG) — 구역마다 이름(도성 안 '한양'은 종루 둘레)
+	hanyang_doseong_in = "한양", bukchon = "북촌", ungjongga = "운종가", jungchon = "개천", namchon = "남산골",
+	baeogae_jang = "배오개", chilpae_jang = "칠패", wangsimni = "왕십리", mapo = "마포", yongsan = "용산",
+	noryangjin = "노량진", hangangjin = "한강진", seobinggo_village = "서빙고",
+	# 황주(HH_HWANGJU)
+	hwangju_eup = "황주", hwangju_jang = "황주", dohwadong = "도화동", namcheon_ferry_village = "황주천 나루", cheonju_village = "천주",
+	# 평양(PA_PYEONGYANG)
+	pyeongyang_naeseong = "평양", pyeongyang_jongno = "평양", jungseong = "중성", oeseong = "외성", daedong_naru = "대동강 나루",
+	seongyo = "선교리", neungrado = "능라도", yanggakdo = "양각도", yeongmyeongsa_temple = "영명사", botong_out = "보통문 밖",
+	# 함흥(HG_HAMHEUNG)
+	hamheung_eup = "함흥", hamheung_jang = "함흥", manse_west = "만세교", bongung_village = "본궁", unheung = "운흥",
+	# 노정 길목 쉼터(region_data/routes/*/route.json settlements, routes 담당 — tools/region/make_routes.py)
+	rt_osu = "오수", rt_jeonju = "전주", rt_aenggok = "앵곡", rt_gomnaru = "곰나루", rt_charyeong = "차령", rt_samgeori = "천안삼거리",
+	rt_songpa = "송파", rt_saejae = "문경새재", rt_sangju = "상주", rt_hahoe = "하회", rt_jebiwon = "제비원",
+	rt_wonju = "원주", rt_chiak = "치악산", rt_hoenggye = "횡계",
+	rt_imjin = "임진나루", rt_kaesong = "개성", rt_seonjuk = "선죽교", rt_cheongseok = "청석골", rt_seoheung = "서흥",
+	rt_junghwa = "중화",
+	rt_chukseok = "축석령", rt_cheorwon = "철원", rt_cheollyeong = "철령", rt_wonsan = "원산", rt_yeongheung = "영흥",
+	rt_seongcheon = "성천", rt_yangdeok = "양덕", rt_gowon = "고원",
+	rt_jaeryeong = "재령", rt_guwol = "구월산", rt_jangsan = "장산곶",
+	rt_hongwon = "홍원", rt_bukcheong = "북청",
+	rt_deokjin = "덕진다리", rt_gwandu = "관두포",
 }
 
 var areas := {}   # 이름 → [Rect2…]

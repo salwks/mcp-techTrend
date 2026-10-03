@@ -187,8 +187,8 @@
   "K": 0.3,
   "portals": [
    {
-    "id": "to_cheollyeong",
-    "name": "→ 철령(정평·안변 · 한양/평양 노정)",
+    "id": "to_pyeongyang",
+    "name": "→ 평양(양덕 길)",
     "x": -2510.2,
     "z": 1824.5,
     "to": "route:PA_PYEONGYANG-HG_HAMHEUNG"
@@ -206,7 +206,7 @@
     "x": -2530.0,
     "z": 1745.0,
     "to": "route:GG_HANYANG-HG_HAMHEUNG",
-    "note": "routes 담당 추가(2026-10-03) — 이 권역 region.json에는 없고 엔진은 route.json portals에서 이 포털을 만든다"
+    "note": "HG_HAMHEUNG/region.json에도 있음(cheollyeong_road 끝)"
    }
   ]
  },

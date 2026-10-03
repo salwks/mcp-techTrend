@@ -24834,8 +24834,9 @@
     -860.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "all",
     "roof": {
      "giwa": 0.6,
@@ -24843,28 +24844,27 @@
     },
     "wall": "todam",
     "layout": "walled_grid",
-    "layout_detail": "capital_grid",
     "entrance": "great_gate",
     "people": [
      "관원",
      "양반",
      "중인",
-     "시전상인",
-     "군졸",
-     "백성"
+     "시전 상인",
+     "포교",
+     "가마꾼"
     ],
     "animals": [
-     "말",
-     "개"
+     "말"
     ],
-    "signature": "북악 아래 새로 지은 경복궁과 산 능선 성곽",
+    "signature": "네 산 능선을 잇는 도성 안 — 궁궐 앞 큰길과 종로 시전 행랑, 골목마다 붙어 선 ㄷ·ㅁ자 기와집",
     "trades": [
      "관아",
      "시전",
-     "수공업"
+     "장인"
     ],
-    "notes": "도읍 특수 유형: 압축 덜 함(K=0.5), 구역별 profile"
-   }
+    "notes": "도읍(GG-01). 특정 전래동화는 붙이지 않고 소문·야담·귀신 이야기만 떠돈다(명세 §21)"
+   },
+   "title": "한양"
   },
   {
    "id": "bukchon",
@@ -24890,28 +24890,32 @@
     -1216.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "bukchon",
     "roof": {
      "giwa": 0.85,
      "choga": 0.15
     },
-    "wall": "todam_high",
+    "wall": "todam",
+    "wall_detail": "city_wall",
     "layout": "terraced",
-    "layout_detail": "hill_alleys",
-    "entrance": "sotdae_gate",
+    "entrance": "alley_steps",
     "people": [
      "양반",
      "청지기",
-     "하인"
+     "몸종"
     ],
     "animals": [],
-    "signature": "솟을대문 큰 기와집이 언덕 골목을 따라 층층이",
+    "signature": "경복궁·창덕궁 사이 비탈의 반가 기와 골목 — 담 너머로 처마가 겹친다",
     "trades": [
-     "권문세가"
-    ]
-   }
+     "벼슬",
+     "서화"
+    ],
+    "notes": "북촌: 고관·왕족 반가(가설: 필지 좁힘)"
+   },
+   "title": "북촌"
   },
   {
    "id": "ungjongga",
@@ -24938,33 +24942,36 @@
     -696.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "jongno",
     "roof": {
      "giwa": 0.9,
      "choga": 0.1
     },
-    "wall": "none",
+    "wall": "todam",
+    "wall_detail": "city_wall",
     "layout": "linear_street",
-    "layout_detail": "linear_arcade(시전 행랑)",
-    "entrance": "jongnu_bell",
+    "entrance": "bell_pavilion",
     "people": [
-     "시전상인",
+     "시전 상인",
      "보부상",
-     "장꾼",
-     "나그네"
+     "거간",
+     "포교"
     ],
     "animals": [
      "말",
      "소"
     ],
-    "signature": "종루와 끝없는 시전 행랑, 뒷길 피맛골",
+    "signature": "종루(보신각) 네거리에서 동대문까지 이어진 시전 행랑 — 육의전 차양과 피맛골",
     "trades": [
      "시전",
      "육의전"
-    ]
-   }
+    ],
+    "notes": "운종가(종로). 행랑 뒤 피맛골 골목에 주막·도시 한옥"
+   },
+   "title": "운종가"
   },
   {
    "id": "jungchon",
@@ -24990,8 +24997,9 @@
     -696.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "jungchon",
     "roof": {
      "giwa": 0.5,
@@ -24999,21 +25007,23 @@
     },
     "wall": "todam",
     "layout": "linear_street",
-    "layout_detail": "along_stream(개천 따라)",
     "entrance": "stone_bridge",
     "people": [
+     "중인",
      "역관",
-     "의관",
-     "장인",
+     "의원",
      "빨래하는 아낙"
     ],
     "animals": [],
-    "signature": "개천 돌축대와 다리, 빨래터",
+    "signature": "개천(청계천) 돌 축대와 광통교·수표교 — 다리 밑 빨래터와 중인 기와집 줄",
     "trades": [
-     "중인 기술직",
-     "수공업"
-    ]
-   }
+     "역관",
+     "의원",
+     "장인"
+    ],
+    "notes": "중촌: 개천 가 중인 마을(가설)"
+   },
+   "title": "개천"
   },
   {
    "id": "namchon",
@@ -25039,29 +25049,32 @@
     -152.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "namchon",
     "roof": {
      "giwa": 0.4,
      "choga": 0.6
     },
-    "wall": "fence",
+    "wall": "todam",
     "layout": "terraced",
-    "layout_detail": "hill_alleys",
     "entrance": "pine_slope",
     "people": [
      "가난한 선비",
-     "무관"
+     "남산골 딸깍발이"
     ],
     "animals": [
      "개"
     ],
-    "signature": "남산 솔숲 아래 낡은 기와·초가(남산골 샌님)",
+    "signature": "남산 기슭 비탈의 낡은 초가·작은 기와집 — 남산골 샌님",
     "trades": [
-     "글공부"
-    ]
-   }
+     "글공부",
+     "삯바느질"
+    ],
+    "notes": "남촌: 벼슬 없는 선비 동네(남산골 딸깍발이 이야기 — 전승 표현)"
+   },
+   "title": "남산골"
   },
   {
    "id": "baeogae_jang",
@@ -25087,30 +25100,33 @@
     -816.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "jongno",
     "roof": {
      "choga": 0.7,
      "giwa": 0.3
     },
-    "wall": "none",
+    "wall": "todam",
     "layout": "round_cluster",
-    "layout_detail": "market_square(난전)",
-    "entrance": "awning_stalls",
+    "entrance": "market_flag",
     "people": [
      "난전 상인",
-     "농부",
+     "채소 장수",
      "장꾼"
     ],
     "animals": [
      "소"
     ],
-    "signature": "동대문 안 채소·곡식 난전",
+    "signature": "배오개(이현) 난전 — 왕십리 채소가 들어오는 새벽장",
     "trades": [
-     "난전"
-    ]
-   }
+     "난전",
+     "채소"
+    ],
+    "notes": "시전 밖 사상(私商) 장(가설: 18세기 이후 성행)"
+   },
+   "title": "배오개"
   },
   {
    "id": "chilpae_jang",
@@ -25136,27 +25152,33 @@
     -156.0
    ],
    "profile": {
-    "archetype": "capital",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "capital",
     "district": "outer_south",
     "roof": {
      "choga": 0.8,
      "giwa": 0.2
     },
-    "wall": "none",
+    "wall": "todam",
     "layout": "round_cluster",
-    "layout_detail": "market_square(난전)",
-    "entrance": "awning_stalls",
+    "entrance": "market_flag",
     "people": [
      "어물 장수",
+     "난전 상인",
      "짐꾼"
     ],
-    "animals": [],
-    "signature": "숭례문 밖 생선 비린내 난전",
+    "animals": [
+     "소",
+     "말"
+    ],
+    "signature": "숭례문 밖 칠패 어물전 — 마포에서 올라온 생선 좌판",
     "trades": [
-     "어물 난전"
+     "난전",
+     "어물"
     ]
-   }
+   },
+   "title": "칠패"
   },
   {
    "id": "wangsimni",
@@ -25182,19 +25204,28 @@
     -400.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "giho",
     "climate": "central",
-    "signature": "성 밖 미나리꽝과 채마밭",
-    "trades": [
-     "채소 농사"
-    ],
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
     "people": [
-     "농부"
+     "채소 농부"
     ],
     "animals": [
      "소"
+    ],
+    "signature": "동대문 밖 채마밭 — 배추·무를 지게에 지고 도성으로",
+    "trades": [
+     "채소 농사"
     ]
-   }
+   },
+   "title": "왕십리"
   },
   {
    "id": "mapo",
@@ -25221,28 +25252,37 @@
     988.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "river",
     "roof": {
      "choga": 0.7,
      "giwa": 0.3
     },
-    "signature": "새우젓·소금 객주 창고와 돛배",
+    "wall": "todam",
+    "layout": "fan_from_ferry",
+    "entrance": "wharf",
+    "people": [
+     "객주",
+     "선주",
+     "짐꾼",
+     "소금 장수",
+     "젓갈 장수"
+    ],
+    "animals": [
+     "말",
+     "소"
+    ],
+    "signature": "삼개 포구 — 객주 창고 줄과 소금·젓갈·땔나무 배",
     "trades": [
      "객주",
      "소금",
-     "젓갈"
+     "젓갈",
+     "땔나무"
     ],
-    "people": [
-     "뱃사공",
-     "객주",
-     "짐꾼"
-    ],
-    "animals": [
-     "갈매기"
-    ],
-    "notes": "경강 포구(서해 배)"
-   }
+    "notes": "포구(§26): 나루보다 창고·객주·상인이 많다(GG-02)"
+   },
+   "title": "마포"
   },
   {
    "id": "yongsan",
@@ -25268,23 +25308,32 @@
     1460.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "giho",
     "climate": "central",
+    "archetype": "river",
     "roof": {
      "choga": 0.7,
      "giwa": 0.3
     },
-    "signature": "세곡선과 강창 곳간",
-    "trades": [
-     "강창",
-     "객주"
-    ],
+    "wall": "todam",
+    "layout": "fan_from_ferry",
+    "entrance": "wharf",
     "people": [
-     "뱃사공",
-     "창고지기",
-     "객주"
-    ]
-   }
+     "객주",
+     "선주",
+     "짐꾼"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "용산강 포구 — 세곡 창고와 강상 배",
+    "trades": [
+     "객주",
+     "곡물"
+    ],
+    "notes": "포구(§26). 군자감 강감(창고) 자리 가설"
+   },
+   "title": "용산"
   },
   {
    "id": "noryangjin",
@@ -25311,22 +25360,33 @@
     2308.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "giho",
     "climate": "central",
-    "signature": "큰 나룻배와 강 건너 도성 능선",
+    "archetype": "river",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "fan_from_ferry",
+    "entrance": "ferry",
+    "people": [
+     "뱃사공",
+     "관원",
+     "나그네",
+     "말꾼"
+    ],
+    "animals": [
+     "말"
+    ],
+    "signature": "노들나루 — 삼남대로가 한강을 건너는 큰 나루, 나룻배 대기와 말 대기",
     "trades": [
      "나루",
      "주막"
     ],
-    "people": [
-     "뱃사공",
-     "나그네",
-     "주모"
-    ],
-    "animals": [
-     "말"
-    ]
-   }
+    "notes": "대형 나루(§25, GG-03). 강 건너 노들섬 쪽"
+   },
+   "title": "노량진"
   },
   {
    "id": "hangangjin",
@@ -25352,21 +25412,31 @@
     1464.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "giho",
     "climate": "central",
-    "signature": "버티고개 넘어 닿는 나루와 사평 건너편",
-    "trades": [
-     "나루",
-     "주막"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 0.85,
+     "giwa": 0.15
+    },
+    "wall": "todam",
+    "layout": "fan_from_ferry",
+    "entrance": "ferry",
     "people": [
      "뱃사공",
+     "관원",
      "나그네"
     ],
     "animals": [
      "말"
+    ],
+    "signature": "한강진 나루 — 버티고개 넘어 사평으로 건너는 나룻배",
+    "trades": [
+     "나루",
+     "주막"
     ]
-   }
+   },
+   "title": "한강진"
   },
   {
    "id": "seobinggo_village",
@@ -25392,16 +25462,28 @@
     1824.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "giho",
     "climate": "central",
-    "signature": "겨울 강 얼음 뜨기",
-    "trades": [
-     "채빙"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "ferry",
     "people": [
-     "빙부"
+     "빙고 일꾼",
+     "뱃사공"
+    ],
+    "animals": [],
+    "signature": "서빙고 얼음 창고 아래 강가 마을",
+    "trades": [
+     "얼음 뜨기",
+     "나루"
     ]
-   }
+   },
+   "title": "서빙고"
   },
   {
    "id": "auto_village_00",
@@ -25425,13 +25507,27 @@
     -900.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "giho",
     "climate": "central",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.02, 둘레 160m 기복 14m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "도성 밖 들의 ㄱ자 초가 마을",
+    "trades": [
+     "논농사",
+     "채소"
+    ]
    }
   },
   {
@@ -25456,13 +25552,27 @@
     524.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "giho",
     "climate": "central",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 22m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "도성 밖 들의 ㄱ자 초가 마을",
+    "trades": [
+     "논농사",
+     "채소"
+    ]
    }
   },
   {
@@ -25487,13 +25597,27 @@
     1724.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "giho",
     "climate": "central",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 18m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "도성 밖 들의 ㄱ자 초가 마을",
+    "trades": [
+     "논농사",
+     "채소"
+    ]
    }
   },
   {
@@ -25518,13 +25642,27 @@
     -2364.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "giho",
     "climate": "central",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.02, 둘레 160m 기복 35m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "도성 밖 들의 ㄱ자 초가 마을",
+    "trades": [
+     "논농사",
+     "채소"
+    ]
    }
   }
  ],
@@ -27348,5 +27486,6 @@
    ],
    "notes": "산 능선 성곽: 높이 평지 약 7m·산 4m(실물). 선은 성벽 중심. 길은 문(gates)으로만 드나든다."
   }
- ]
+ ],
+ "culture_key": "giho"
 }

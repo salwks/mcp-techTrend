@@ -27136,32 +27136,35 @@
     -24.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "gwanseo",
     "climate": "north",
+    "archetype": "eupchi",
     "roof": {
-     "giwa": 0.6,
-     "choga": 0.4
+     "giwa": 0.7,
+     "choga": 0.3
     },
-    "wall": "stone",
+    "wall": "todam",
+    "wall_detail": "city_wall",
     "layout": "walled_grid",
     "entrance": "gate",
     "people": [
      "감영 관속",
      "기생",
      "상인",
-     "양반"
+     "군관"
     ],
     "animals": [
      "말"
     ],
-    "signature": "대동문 문루와 강가 연광정, 뒤로 모란봉 능선",
+    "signature": "모란봉을 등지고 대동강을 앞에 둔 감영 도시 — 짙은 기와 넓은 처마와 사괴석 도시 담",
     "trades": [
      "감영",
-     "시전",
-     "무역"
+     "장시",
+     "기방"
     ],
-    "notes": "관서 문화권: 평안도 홑집(一자) + 두꺼운 흙벽, 북부 기후(눈)"
-   }
+    "notes": "평안감영(PA-01). 대동문 앞 나루와 종로가 도시 축(명세 §14)"
+   },
+   "title": "평양"
   },
   {
    "id": "pyeongyang_jongno",
@@ -27187,30 +27190,33 @@
     228.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "gwanseo",
     "climate": "north",
+    "archetype": "eupchi",
     "roof": {
      "giwa": 0.7,
      "choga": 0.3
     },
-    "wall": "none",
+    "wall": "todam",
+    "wall_detail": "city_wall",
     "layout": "linear_street",
-    "entrance": "awning_stalls",
+    "entrance": "bell_pavilion",
     "people": [
      "상인",
-     "보부상",
-     "역관"
+     "객주",
+     "김선달 같은 건달"
     ],
     "animals": [
      "말",
      "소"
     ],
-    "signature": "종각 앞 시전과 의주 무역 짐바리",
+    "signature": "대동문에서 보통문까지 종로 가게채 — 종각과 장꾼 차양",
     "trades": [
-     "시전",
-     "무역"
+     "장시",
+     "객주"
     ]
-   }
+   },
+   "title": "평양"
   },
   {
    "id": "jungseong",
@@ -27236,17 +27242,30 @@
     540.0
    ],
    "profile": {
-    "archetype": "eupchi",
+    "culture": "gwanseo",
     "climate": "north",
+    "archetype": "eupchi",
     "roof": {
      "choga": 0.7,
      "giwa": 0.3
     },
-    "signature": "성안 초가 골목과 우물",
+    "wall": "todam",
+    "layout": "linear_street",
+    "entrance": "gate",
+    "people": [
+     "장인",
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "중성 안 길가 서북 초가 — 납작한 잿빛 이엉 줄",
     "trades": [
-     "수공업"
+     "장인",
+     "채소"
     ]
-   }
+   },
+   "title": "중성"
   },
   {
    "id": "oeseong",
@@ -27273,19 +27292,28 @@
     612.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "반듯한 정전(井田) 밭두렁과 농가",
-    "trades": [
-     "밭농사"
-    ],
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "field_grid",
     "people": [
      "농부"
     ],
     "animals": [
      "소"
-    ]
-   }
+    ],
+    "signature": "외성 들 — 기자 정전(井田) 터라 전하는 네모 반듯한 밭두렁",
+    "trades": [
+     "밭농사"
+    ],
+    "notes": "기자 정전 전승(전승 표현)"
+   },
+   "title": "외성"
   },
   {
    "id": "daedong_naru",
@@ -27311,19 +27339,35 @@
     128.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "나룻배와 놀잇배, 강 건너 문수봉",
-    "trades": [
-     "나루",
-     "뱃놀이"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 0.6,
+     "giwa": 0.4
+    },
+    "wall": "todam",
+    "layout": "fan_from_ferry",
+    "entrance": "ferry",
     "people": [
      "뱃사공",
-     "기생",
-     "나그네"
-    ]
-   }
+     "객주",
+     "짐꾼",
+     "관원"
+    ],
+    "animals": [
+     "말",
+     "소"
+    ],
+    "signature": "대동문 앞 돌계단 선창과 나룻배·짐배 — 강창과 객주 창고",
+    "trades": [
+     "나루",
+     "객주",
+     "강창"
+    ],
+    "notes": "대형 나루(§25): 객주·관원·큰 창고"
+   },
+   "title": "대동강 나루"
   },
   {
    "id": "seongyo",
@@ -27349,18 +27393,29 @@
     620.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "강 건너에서 본 평양성 능선",
-    "trades": [
-     "나루",
-     "주막"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "fan_from_ferry",
+    "entrance": "ferry",
     "people": [
      "뱃사공",
-     "주모"
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "대동강 건너 선교리 나루 마을",
+    "trades": [
+     "나루",
+     "논농사"
     ]
-   }
+   },
+   "title": "선교리"
   },
   {
    "id": "neungrado",
@@ -27386,16 +27441,29 @@
     -292.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "강 가운데 버드나무 섬",
-    "trades": [
-     "뽕밭"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "ferry",
     "people": [
-     "농부"
+     "농부",
+     "뱃사공"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "버드나무 섬 능라도의 작은 마을",
+    "trades": [
+     "밭농사",
+     "고기잡이"
     ]
-   }
+   },
+   "title": "능라도"
   },
   {
    "id": "yanggakdo",
@@ -27422,18 +27490,28 @@
     920.0
    ],
    "profile": {
-    "archetype": "river",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "강 가운데 모래섬과 걸린 이양선 이야기",
-    "trades": [
-     "뽕밭",
-     "고기잡이"
-    ],
+    "archetype": "river",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "ferry",
     "people": [
      "농부",
-     "어부"
+     "뱃사공"
+    ],
+    "animals": [
+     "소"
+    ],
+    "signature": "강 가운데 섬 양각도 모래밭 마을",
+    "trades": [
+     "밭농사"
     ]
-   }
+   },
+   "title": "양각도"
   },
   {
    "id": "yeongmyeongsa_temple",
@@ -27451,13 +27529,25 @@
    "lat": 39.042,
    "lon": 125.7612,
    "profile": {
-    "archetype": "temple",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "벼랑 위 부벽루와 굴",
+    "archetype": "temple",
+    "roof": {
+     "giwa": 1.0
+    },
+    "wall": "todam",
+    "layout": "along_temple_road",
+    "entrance": "stone_jangseung",
+    "people": [
+     "스님"
+    ],
+    "animals": [],
+    "signature": "부벽루 곁 영명사 — 기린굴 이야기(동명왕)",
     "trades": [
      "절"
     ]
-   }
+   },
+   "title": "영명사"
   },
   {
    "id": "botong_out",
@@ -27483,17 +27573,31 @@
     -64.0
    ],
    "profile": {
-    "archetype": "pass",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "보통문 밖 의주길 주막",
-    "trades": [
-     "주막"
-    ],
+    "archetype": "pass",
+    "roof": {
+     "choga": 0.9,
+     "giwa": 0.1
+    },
+    "wall": "fence",
+    "layout": "linear_street",
+    "entrance": "seonghwang_cairn",
     "people": [
      "나그네",
-     "보부상"
+     "역졸",
+     "주모"
+    ],
+    "animals": [
+     "말"
+    ],
+    "signature": "보통문 밖 의주길 — 주막과 마방",
+    "trades": [
+     "주막",
+     "역참"
     ]
-   }
+   },
+   "title": "보통문 밖"
   },
   {
    "id": "auto_village_00",
@@ -27517,13 +27621,25 @@
     732.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 27m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27548,13 +27664,25 @@
     1068.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 15m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27579,13 +27707,25 @@
     -1012.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 14m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27610,13 +27750,25 @@
     -208.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.02, 둘레 160m 기복 23m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27641,13 +27793,25 @@
     1796.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 20m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27672,13 +27836,25 @@
     24.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 22m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27703,13 +27879,25 @@
     564.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.03, 둘레 160m 기복 19m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   },
   {
@@ -27734,13 +27922,25 @@
     796.0
    ],
    "profile": {
-    "archetype": "plain",
+    "culture": "gwanseo",
     "climate": "north",
-    "signature": "논 가 정자나무 들마을",
-    "trades": [
-     "논농사"
+    "archetype": "plain",
+    "roof": {
+     "choga": 1.0
+    },
+    "wall": "fence",
+    "layout": "rows",
+    "entrance": "zelkova_square",
+    "people": [
+     "농부"
     ],
-    "notes": "자동: 둘레 60m 경사 중앙값 0.04, 둘레 160m 기복 19m(실제) → 들마을(기준 경사 0.12 또는 기복 200m 초과면 산촌)"
+    "animals": [
+     "소"
+    ],
+    "signature": "잿빛 이엉 서북 초가 들마을",
+    "trades": [
+     "밭농사"
+    ]
    }
   }
  ],
@@ -28703,5 +28903,6 @@
    ],
    "notes": "내성 남쪽 중성(문 위치 미확인 — 길이 지나는 곳에 문을 두면 됨)"
   }
- ]
+ ],
+ "culture_key": "gwanseo"
 }

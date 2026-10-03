@@ -1,0 +1,10583 @@
+{
+ "area": "north",
+ "note": "북쪽 대표 도시 배치(tools/placement/north.py HH_HWANGJU, 결정적). 문화권 가옥형 kit/culture/. 성벽 선은 엔진. 근거·가설: docs/reports/placement-north.md",
+ "items": [
+  {
+   "id": "hj_br_hwangjucheon_bridge",
+   "kit": "village/seop_bridge",
+   "params": {
+    "seed": 31,
+    "len": 10.6,
+    "spans": 4
+   },
+   "x": 101.62,
+   "z": -125.64,
+   "ry": -1.503,
+   "y": 0.1,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "섶다리"
+  },
+  {
+   "id": "hj_br_cheonju_bridge",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 42,
+    "len": 15.1,
+    "hw": 1.3
+   },
+   "x": 57.72,
+   "z": -1300.66,
+   "ry": 0.4565,
+   "y": 3.04,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "돌다리"
+  },
+  {
+   "id": "hj_br_x_uiju_south_r019_2",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 23,
+    "len": 11.8
+   },
+   "x": 90.2,
+   "z": 86.6,
+   "ry": 0.639,
+   "y": 2.64,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "징검다리"
+  },
+  {
+   "id": "hj_br_x_uiju_south_r040_3",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 44,
+    "len": 9.6,
+    "hw": 1.3
+   },
+   "x": 17.14,
+   "z": -725.81,
+   "ry": 0.4573,
+   "y": 2.35,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "돌다리"
+  },
+  {
+   "id": "hj_br_x_uiju_south_r049_4",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 45,
+    "len": 9.8,
+    "hw": 1.3
+   },
+   "x": 141.51,
+   "z": 200.15,
+   "ry": 0.0246,
+   "y": 2.94,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "돌다리"
+  },
+  {
+   "id": "hj_br_x_uiju_south_r051_5",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 46,
+    "len": 10.6,
+    "hw": 1.3
+   },
+   "x": 365.77,
+   "z": 1181.52,
+   "ry": -0.2617,
+   "y": 6.38,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "돌다리"
+  },
+  {
+   "id": "hj_br_x_uiju_north_r042_6",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 47,
+    "len": 9.3,
+    "hw": 1.3
+   },
+   "x": 83.2,
+   "z": -1358.3,
+   "ry": -1.2101,
+   "y": 3.23,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "돌다리"
+  },
+  {
+   "id": "hj_br_x_gyeomipo_r_cheonjucheon_7",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 28,
+    "len": 15.3
+   },
+   "x": -641.0,
+   "z": -1085.71,
+   "ry": 1.5518,
+   "y": 1.59,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "징검다리"
+  },
+  {
+   "id": "hj_br_x_gyeomipo_r_r040_8",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 29,
+    "len": 8.8
+   },
+   "x": -53.4,
+   "z": -929.5,
+   "ry": 0.9381,
+   "y": 2.06,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "징검다리"
+  },
+  {
+   "id": "hj_br_x_east_lane_r020_9",
+   "kit": "village/jingeom",
+   "params": {
+    "seed": 30,
+    "len": 10.1
+   },
+   "x": 913.21,
+   "z": 73.8,
+   "ry": 1.2438,
+   "y": 4.49,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "title": "징검다리"
+  },
+  {
+   "id": "hj_eupseong_gate_S",
+   "kit": "landmark/hj_eupseong_gate",
+   "params": {
+    "seed": 11,
+    "name": "남문",
+    "open": "front"
+   },
+   "x": 31.0,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성",
+   "title": "남문"
+  },
+  {
+   "id": "hj_seong_corner_01",
+   "kit": "landmark/seong_corner",
+   "params": {
+    "seed": 1100
+   },
+   "x": 101.7,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_01",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1100,
+    "length": 19.8
+   },
+   "x": -27.5,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_02",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1101,
+    "length": 19.8
+   },
+   "x": -7.7,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_03",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1102,
+    "length": 19.8
+   },
+   "x": 12.1,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_04",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1103,
+    "length": 19.8
+   },
+   "x": 49.9,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_05",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1104,
+    "length": 19.8
+   },
+   "x": 69.7,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_06",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1105,
+    "length": 19.8
+   },
+   "x": 89.5,
+   "z": -858.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_01",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": -5.5,
+   "z": -856.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_02",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": 67.5,
+   "z": -856.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_eupseong_gate_E",
+   "kit": "landmark/hj_eupseong_gate",
+   "params": {
+    "seed": 12,
+    "name": "동문",
+    "open": "front"
+   },
+   "x": 101.7,
+   "z": -929.0,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성",
+   "title": "동문"
+  },
+  {
+   "id": "hj_seong_corner_02",
+   "kit": "landmark/seong_corner",
+   "params": {
+    "seed": 1100
+   },
+   "x": 101.7,
+   "z": -999.7,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_07",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1106,
+    "length": 19.8
+   },
+   "x": 101.7,
+   "z": -870.5,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_08",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1107,
+    "length": 19.8
+   },
+   "x": 101.7,
+   "z": -890.3,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_09",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1108,
+    "length": 19.8
+   },
+   "x": 101.7,
+   "z": -910.1,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_10",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1109,
+    "length": 19.8
+   },
+   "x": 101.7,
+   "z": -947.9,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_11",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1110,
+    "length": 19.8
+   },
+   "x": 101.7,
+   "z": -967.7,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_12",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1111,
+    "length": 19.8
+   },
+   "x": 101.7,
+   "z": -987.5,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_03",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": 104.0,
+   "z": -892.5,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_04",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": 104.0,
+   "z": -965.5,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_eupseong_gate_N",
+   "kit": "landmark/hj_eupseong_gate",
+   "params": {
+    "seed": 13,
+    "name": "북문",
+    "open": "front"
+   },
+   "x": 31.0,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성",
+   "title": "북문"
+  },
+  {
+   "id": "hj_seong_corner_03",
+   "kit": "landmark/seong_corner",
+   "params": {
+    "seed": 1100
+   },
+   "x": -39.7,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_13",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1112,
+    "length": 19.8
+   },
+   "x": 89.5,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_14",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1113,
+    "length": 19.8
+   },
+   "x": 69.7,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_15",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1114,
+    "length": 19.8
+   },
+   "x": 49.9,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_16",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1115,
+    "length": 19.8
+   },
+   "x": 12.1,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_17",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1116,
+    "length": 19.8
+   },
+   "x": -7.7,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_18",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1117,
+    "length": 19.8
+   },
+   "x": -27.5,
+   "z": -999.7,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_05",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": 67.5,
+   "z": -1002.0,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_06",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": -5.5,
+   "z": -1002.0,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_eupseong_gate_W",
+   "kit": "landmark/hj_eupseong_gate",
+   "params": {
+    "seed": 14,
+    "name": "서문",
+    "open": "front"
+   },
+   "x": -39.7,
+   "z": -929.0,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성",
+   "title": "서문"
+  },
+  {
+   "id": "hj_seong_corner_04",
+   "kit": "landmark/seong_corner",
+   "params": {
+    "seed": 1100
+   },
+   "x": -39.7,
+   "z": -858.3,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_19",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1118,
+    "length": 3.5
+   },
+   "x": -39.7,
+   "z": -995.65,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_20",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1119,
+    "length": 8.0
+   },
+   "x": -39.7,
+   "z": -977.9,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_21",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1120,
+    "length": 17.9
+   },
+   "x": -39.7,
+   "z": -946.95,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_22",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1121,
+    "length": 19.8
+   },
+   "x": -39.7,
+   "z": -910.1,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_23",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1122,
+    "length": 19.8
+   },
+   "x": -39.7,
+   "z": -890.3,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_seong_wall_24",
+   "kit": "landmark/seong_wall",
+   "params": {
+    "seed": 1123,
+    "length": 19.8
+   },
+   "x": -39.7,
+   "z": -870.5,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_seong_chi_07",
+   "kit": "landmark/seong_chi",
+   "params": {
+    "seed": 1190,
+    "width": 8,
+    "depth": 6
+   },
+   "x": -42.0,
+   "z": -892.5,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주읍성"
+  },
+  {
+   "id": "hj_gaeksa_gaeksa_01",
+   "kit": "landmark/hj_gaeksa",
+   "params": {
+    "seed": 21,
+    "wing_bays": 4
+   },
+   "x": -2.0,
+   "z": -961.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "객사 제안관",
+   "footprint": [
+    52.0,
+    14.0
+   ],
+   "title": "제안관(객사)"
+  },
+  {
+   "id": "hj_gaeksa_samun_01",
+   "kit": "landmark/samun",
+   "params": {
+    "seed": 22,
+    "kind": "outer",
+    "name": "제안관"
+   },
+   "x": -2.0,
+   "z": -941.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "객사 제안관",
+   "title": "제안관 삼문"
+  },
+  {
+   "id": "hj_gaeksa_wall_01",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2200,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -25.2,
+   "z": -995.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_02",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2201,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -13.6,
+   "z": -995.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_03",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2202,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -2.0,
+   "z": -995.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_04",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2203,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": 9.6,
+   "z": -995.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_05",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2204,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": 21.2,
+   "z": -995.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_06",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2205,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": 27.0,
+   "z": -989.6,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_07",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2206,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": 27.0,
+   "z": -978.8,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_08",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2207,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": 27.0,
+   "z": -968.0,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_09",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2208,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": 27.0,
+   "z": -957.2,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_10",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2209,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": 27.0,
+   "z": -946.4,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_11",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2210,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": 21.2,
+   "z": -941.0,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_12",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2211,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": 9.6,
+   "z": -941.0,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_13",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2212,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -13.6,
+   "z": -941.0,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_14",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2213,
+    "length": 11.85,
+    "height": 2.2
+   },
+   "x": -25.2,
+   "z": -941.0,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_15",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2214,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": -31.0,
+   "z": -946.4,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_16",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2215,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": -31.0,
+   "z": -957.2,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_17",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2216,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": -31.0,
+   "z": -968.0,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_18",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2217,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": -31.0,
+   "z": -978.8,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gaeksa_wall_19",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2218,
+    "length": 11.05,
+    "height": 2.2
+   },
+   "x": -31.0,
+   "z": -989.6,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 제안관"
+  },
+  {
+   "id": "hj_gwana_gwana_01",
+   "kit": "landmark/hyeon_gwana",
+   "params": {
+    "seed": 31,
+    "width": 36,
+    "depth": 40,
+    "naesammun": true
+   },
+   "x": 66.5,
+   "z": -957.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주목 관아",
+   "footprint": [
+    38.0,
+    44.0
+   ],
+   "title": "황주목 관아"
+  },
+  {
+   "id": "hj_gwana_torch_01",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 35
+   },
+   "x": 59.0,
+   "z": -934.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주목 관아"
+  },
+  {
+   "id": "hj_gwana_torch_02",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 35
+   },
+   "x": 74.0,
+   "z": -934.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주목 관아"
+  },
+  {
+   "id": "hj_eup_ha_large_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 10.32,
+   "z": -880.97,
+   "ry": 0.5285,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 11.77,
+   "z": -909.66,
+   "ry": 0.5409,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 52.88,
+   "z": -881.89,
+   "ry": 0.554,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_wall_run_01",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 1,
+    "kind": "todam_tile",
+    "points": [
+     [
+      -1.51,
+      5.6
+     ],
+     [
+      -7.0,
+      5.6
+     ],
+     [
+      -7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      5.6
+     ],
+     [
+      1.69,
+      5.6
+     ]
+    ]
+   },
+   "x": 47.92,
+   "z": -906.25,
+   "ry": 0.5292,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_gyeopjip_01",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 3,
+    "plan": "il",
+    "roof": "giwa"
+   },
+   "x": 47.11,
+   "z": -907.63,
+   "ry": 0.5292,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    14.8,
+    12.0
+   ]
+  },
+  {
+   "id": "hj_eup_jangdok_01",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 1,
+    "w": 2.2,
+    "d": 1.8,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 50.11,
+   "z": -912.4,
+   "ry": 0.5292,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_ha_large_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": -19.91,
+   "z": -907.62,
+   "ry": -0.0202,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 68.58,
+   "z": -913.18,
+   "ry": 0.0297,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_wall_run_02",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 4,
+    "kind": "todam_tile",
+    "points": [
+     [
+      0.07,
+      5.6
+     ],
+     [
+      -7.0,
+      5.6
+     ],
+     [
+      -7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      5.6
+     ],
+     [
+      3.27,
+      5.6
+     ]
+    ]
+   },
+   "x": 88.0,
+   "z": -913.01,
+   "ry": 0.0121,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_gyeopjip_02",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 10,
+    "plan": "il",
+    "roof": "giwa"
+   },
+   "x": 87.98,
+   "z": -914.61,
+   "ry": 0.0121,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    14.8,
+    12.0
+   ]
+  },
+  {
+   "id": "hj_eup_jangdok_02",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 4,
+    "w": 2.2,
+    "d": 1.8,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 92.95,
+   "z": -917.27,
+   "ry": 0.0121,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_wall_run_03",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 3,
+    "kind": "todam_tile",
+    "points": [
+     [
+      -1.47,
+      5.6
+     ],
+     [
+      -7.0,
+      5.6
+     ],
+     [
+      -7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      5.6
+     ],
+     [
+      1.73,
+      5.6
+     ]
+    ]
+   },
+   "x": 47.05,
+   "z": -987.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_gyeopjip_03",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 3,
+    "plan": "giyeok",
+    "roof": "giwa"
+   },
+   "x": 47.05,
+   "z": -989.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    14.8,
+    12.0
+   ]
+  },
+  {
+   "id": "hj_eup_jangdok_03",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 3,
+    "w": 2.2,
+    "d": 1.8,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 52.05,
+   "z": -991.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_wall_run_04",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 1,
+    "kind": "fence_lite",
+    "points": [
+     [
+      -1.51,
+      5.6
+     ],
+     [
+      -7.0,
+      5.6
+     ],
+     [
+      -7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      5.6
+     ],
+     [
+      1.69,
+      5.6
+     ]
+    ]
+   },
+   "x": 63.79,
+   "z": -987.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_gyeopjip_04",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 3,
+    "plan": "il",
+    "roof": "thatch"
+   },
+   "x": 63.79,
+   "z": -989.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    14.8,
+    12.0
+   ]
+  },
+  {
+   "id": "hj_eup_jangdok_04",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 1,
+    "w": 2.2,
+    "d": 1.8,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 68.79,
+   "z": -991.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_wall_run_05",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 3,
+    "kind": "fence_lite",
+    "points": [
+     [
+      -1.47,
+      5.6
+     ],
+     [
+      -7.0,
+      5.6
+     ],
+     [
+      -7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      5.6
+     ],
+     [
+      1.73,
+      5.6
+     ]
+    ]
+   },
+   "x": 79.92,
+   "z": -987.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_gyeopjip_05",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 3,
+    "plan": "il",
+    "roof": "thatch"
+   },
+   "x": 79.92,
+   "z": -989.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    14.8,
+    12.0
+   ]
+  },
+  {
+   "id": "hj_eup_jangdok_05",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 3,
+    "w": 2.2,
+    "d": 1.8,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": 84.92,
+   "z": -991.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_01",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 22,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 91.33,
+   "z": -987.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_01",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 22
+   },
+   "x": 89.33,
+   "z": -984.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_02",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 5,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 38.55,
+   "z": -970.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_02",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 5
+   },
+   "x": 37.05,
+   "z": -967.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 5
+   },
+   "x": 42.65,
+   "z": -970.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_03",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 12,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 89.01,
+   "z": -970.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_03",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 12
+   },
+   "x": 87.51,
+   "z": -967.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": 93.11,
+   "z": -970.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_01",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 12,
+    "set": "manure_coop"
+   },
+   "x": 39.66,
+   "z": -953.19,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": 45.46,
+   "z": -953.69,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_04",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 23,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 89.68,
+   "z": -953.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_04",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 23
+   },
+   "x": 87.68,
+   "z": -950.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_05",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 24,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -18.75,
+   "z": -936.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_05",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 24
+   },
+   "x": -20.75,
+   "z": -933.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_06",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 6,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -10.95,
+   "z": -935.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_06",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 6
+   },
+   "x": -13.45,
+   "z": -932.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_07",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 1,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 0.71,
+   "z": -935.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_07",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 1
+   },
+   "x": -1.29,
+   "z": -932.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 1
+   },
+   "x": 5.31,
+   "z": -934.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_08",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 23,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 12.04,
+   "z": -936.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_08",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 23
+   },
+   "x": 10.04,
+   "z": -933.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_09",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 24.54,
+   "z": -936.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_09",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 23.04,
+   "z": -933.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_02",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 22,
+    "set": "jars"
+   },
+   "x": 38.13,
+   "z": -936.08,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_05",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 22
+   },
+   "x": 43.93,
+   "z": -936.58,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_10",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 9,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -4.79,
+   "z": -919.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_10",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 9
+   },
+   "x": -6.29,
+   "z": -916.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_03",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 24,
+    "set": "manure_coop"
+   },
+   "x": 38.09,
+   "z": -919.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_06",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 24
+   },
+   "x": 43.89,
+   "z": -919.73,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_11",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 1,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 49.56,
+   "z": -919.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_11",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 1
+   },
+   "x": 47.56,
+   "z": -916.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_07",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 1
+   },
+   "x": 54.16,
+   "z": -919.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_12",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 23,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -5.01,
+   "z": -902.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_12",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 23
+   },
+   "x": -7.01,
+   "z": -899.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_13",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 60.91,
+   "z": -901.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_13",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 59.41,
+   "z": -898.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_04",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 20,
+    "set": "manure_coop"
+   },
+   "x": 67.59,
+   "z": -902.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_08",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": 73.39,
+   "z": -902.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_05",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 2,
+    "set": "jars"
+   },
+   "x": 76.88,
+   "z": -902.09,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_09",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": 82.68,
+   "z": -902.59,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_wall_run_06",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 2,
+    "kind": "fence_lite",
+    "points": [
+     [
+      -1.06,
+      5.6
+     ],
+     [
+      -7.0,
+      5.6
+     ],
+     [
+      -7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      -5.6
+     ],
+     [
+      7.0,
+      5.6
+     ],
+     [
+      2.14,
+      5.6
+     ]
+    ]
+   },
+   "x": -25.47,
+   "z": -885.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_gyeopjip_06",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 10,
+    "plan": "il",
+    "roof": "thatch"
+   },
+   "x": -25.47,
+   "z": -887.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)",
+   "footprint": [
+    14.8,
+    12.0
+   ]
+  },
+  {
+   "id": "hj_eup_jangdok_06",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 2,
+    "w": 2.2,
+    "d": 1.8,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -20.47,
+   "z": -889.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_14",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 2,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -11.61,
+   "z": -885.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_14",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 2
+   },
+   "x": -13.11,
+   "z": -882.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_10",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": -7.51,
+   "z": -885.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_06",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 18,
+    "set": "jars"
+   },
+   "x": 67.13,
+   "z": -885.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_01",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 18
+   },
+   "x": 72.93,
+   "z": -885.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_15",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 6,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 80.91,
+   "z": -885.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_15",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 6
+   },
+   "x": 78.41,
+   "z": -882.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_16",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 21,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -21.99,
+   "z": -868.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_16",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 21
+   },
+   "x": -24.49,
+   "z": -865.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_07",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 13,
+    "set": "woodpile"
+   },
+   "x": -15.4,
+   "z": -868.53,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_11",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 13
+   },
+   "x": -9.6,
+   "z": -869.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_17",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 12,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -3.97,
+   "z": -868.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_17",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 12
+   },
+   "x": -5.47,
+   "z": -865.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_12",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": 0.13,
+   "z": -868.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_08",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 11,
+    "set": "work"
+   },
+   "x": 57.69,
+   "z": -868.49,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_13",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 11
+   },
+   "x": 63.49,
+   "z": -868.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_garden_18",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 12,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 68.07,
+   "z": -868.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_pumpkin_18",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 12
+   },
+   "x": 66.57,
+   "z": -865.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_14",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": 72.17,
+   "z": -868.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_09",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 9,
+    "set": "woodpile"
+   },
+   "x": 76.63,
+   "z": -868.53,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_15",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 9
+   },
+   "x": 82.43,
+   "z": -869.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_yard_props_10",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 13,
+    "set": "woodpile"
+   },
+   "x": 87.96,
+   "z": -868.53,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_haystack_16",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 13
+   },
+   "x": 93.76,
+   "z": -869.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 안)"
+  },
+  {
+   "id": "hj_eup_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 440,
+    "roof": false
+   },
+   "x": 1.39,
+   "z": -898.89,
+   "ry": -0.1144,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_eup_well_02",
+   "kit": "village/well",
+   "params": {
+    "seed": 441,
+    "roof": false
+   },
+   "x": 51.15,
+   "z": -898.19,
+   "ry": 0.1229,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_jang_shop_01",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 301,
+    "goods": "onggi"
+   },
+   "x": 14.99,
+   "z": -832.39,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_shop_02",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 302,
+    "goods": "cloth",
+    "w": 4.5
+   },
+   "x": 14.78,
+   "z": -823.79,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_shop_03",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 304,
+    "goods": "straw"
+   },
+   "x": 14.38,
+   "z": -815.98,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_shop_04",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 306,
+    "goods": "mixed"
+   },
+   "x": 11.32,
+   "z": -804.8,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_shop_05",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 307,
+    "goods": "onggi"
+   },
+   "x": 10.86,
+   "z": -793.81,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_shop_06",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 308,
+    "goods": "cloth",
+    "w": 4.5
+   },
+   "x": 10.83,
+   "z": -785.21,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_shop_07",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 310,
+    "goods": "straw"
+   },
+   "x": 10.8,
+   "z": -775.11,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_01",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 400,
+    "goods": "fish"
+   },
+   "x": 29.74,
+   "z": -830.04,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_02",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 401,
+    "goods": "mixed"
+   },
+   "x": 29.64,
+   "z": -825.84,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_03",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 402,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": 29.55,
+   "z": -821.64,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_04",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 403,
+    "goods": "cloth"
+   },
+   "x": 29.45,
+   "z": -817.45,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_05",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 404,
+    "goods": "grain"
+   },
+   "x": 28.64,
+   "z": -811.97,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_06",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 405,
+    "goods": "straw",
+    "awning": false
+   },
+   "x": 27.53,
+   "z": -807.92,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_07",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 406,
+    "goods": "fish"
+   },
+   "x": 26.42,
+   "z": -803.87,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_08",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 407,
+    "goods": "mixed"
+   },
+   "x": 25.69,
+   "z": -799.26,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_09",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 408,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": 25.68,
+   "z": -795.06,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_10",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 409,
+    "goods": "cloth"
+   },
+   "x": 25.66,
+   "z": -790.86,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_11",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 410,
+    "goods": "grain"
+   },
+   "x": 25.65,
+   "z": -786.66,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_12",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 411,
+    "goods": "straw",
+    "awning": false
+   },
+   "x": 25.63,
+   "z": -782.46,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_13",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 412,
+    "goods": "fish"
+   },
+   "x": 25.62,
+   "z": -778.26,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_14",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 413,
+    "goods": "mixed"
+   },
+   "x": 25.6,
+   "z": -774.06,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_15",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 414,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": 25.59,
+   "z": -769.86,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jwapan_16",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 415,
+    "goods": "cloth"
+   },
+   "x": 25.57,
+   "z": -765.66,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_ha_medium_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 2.0,
+   "z": -763.17,
+   "ry": 0.5159,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_jang_ha_small_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 1.95,
+   "z": -743.39,
+   "ry": 0.5397,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_jang_ha_medium_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 7.37,
+   "z": -696.21,
+   "ry": -0.5431,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_jang_ha_large_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 48.18,
+   "z": -829.57,
+   "ry": 0.4849,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_jang_ha_small_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 40.2,
+   "z": -802.85,
+   "ry": 0.499,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_jang_ha_small_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 40.35,
+   "z": -784.41,
+   "ry": 0.4931,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_jang_ha_medium_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 38.41,
+   "z": -759.69,
+   "ry": 0.5151,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_jang_yard_props_01",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 4,
+    "set": "manure_coop"
+   },
+   "x": 31.71,
+   "z": -717.94,
+   "ry": -0.557,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 4
+   },
+   "x": 36.9,
+   "z": -715.3,
+   "ry": -0.557,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_yard_props_02",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 5,
+    "set": "woodpile"
+   },
+   "x": 33.56,
+   "z": -703.35,
+   "ry": -0.4887,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_didil_bang_a_01",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 5
+   },
+   "x": 38.92,
+   "z": -701.06,
+   "ry": -0.4887,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_yard_props_03",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 6,
+    "set": "jars"
+   },
+   "x": 33.39,
+   "z": -693.46,
+   "ry": -0.5574,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_didil_bang_a_02",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 6
+   },
+   "x": 38.57,
+   "z": -690.82,
+   "ry": -0.5574,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_ha_small_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 40.52,
+   "z": -675.54,
+   "ry": -0.5582,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_jang_garden_01",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 8,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 36.48,
+   "z": -662.27,
+   "ry": -0.5226,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_pumpkin_01",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 8
+   },
+   "x": 32.87,
+   "z": -661.01,
+   "ry": -0.5226,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 40.7,
+   "z": -659.38,
+   "ry": -0.5226,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 장"
+  },
+  {
+   "id": "hj_jang_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 503
+   },
+   "x": 47.59,
+   "z": -774.05,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "title": "주막"
+  },
+  {
+   "id": "hj_jang_jumak_02",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 504
+   },
+   "x": -10.09,
+   "z": -730.67,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 장",
+   "title": "주막"
+  },
+  {
+   "id": "hj_eup_ha_small_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 16.16,
+   "z": -1022.19,
+   "ry": 0.4995,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 15.52,
+   "z": -1042.81,
+   "ry": 0.5251,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 15.48,
+   "z": -1069.62,
+   "ry": 0.5399,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 12.54,
+   "z": -1098.45,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 51.52,
+   "z": -1024.47,
+   "ry": 0.5424,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_19",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 43.07,
+   "z": -1045.06,
+   "ry": 0.533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_19",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": 42.82,
+   "z": -1041.55,
+   "ry": 0.533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_17",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": 47.24,
+   "z": -1047.05,
+   "ry": 0.533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 48.41,
+   "z": -1061.53,
+   "ry": 0.5339,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_11",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 16,
+    "set": "manure_coop"
+   },
+   "x": 41.86,
+   "z": -1076.13,
+   "ry": 0.5486,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_18",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 16
+   },
+   "x": 46.55,
+   "z": -1079.58,
+   "ry": 0.5486,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_large_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 54.31,
+   "z": -1092.94,
+   "ry": 0.4895,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_07",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": -67.31,
+   "z": -946.79,
+   "ry": -0.0756,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_20",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 6,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -84.89,
+   "z": -940.19,
+   "ry": -0.2041,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_20",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 6
+   },
+   "x": -87.93,
+   "z": -937.86,
+   "ry": -0.2041,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -98.86,
+   "z": -946.46,
+   "ry": 0.0077,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -116.68,
+   "z": -946.62,
+   "ry": 0.0268,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_08",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": -141.5,
+   "z": -950.85,
+   "ry": 0.0311,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -70.16,
+   "z": -917.09,
+   "ry": -0.096,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -91.03,
+   "z": -920.93,
+   "ry": -0.1478,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_12",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 11,
+    "set": "work"
+   },
+   "x": -107.44,
+   "z": -928.0,
+   "ry": 0.0057,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_19",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 11
+   },
+   "x": -101.65,
+   "z": -928.53,
+   "ry": 0.0057,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_large_09",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": -121.67,
+   "z": -918.22,
+   "ry": 0.0219,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_13",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 13,
+    "set": "woodpile"
+   },
+   "x": -142.12,
+   "z": -928.02,
+   "ry": 0.0064,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_20",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 13
+   },
+   "x": -136.33,
+   "z": -928.56,
+   "ry": 0.0064,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 135.14,
+   "z": -897.99,
+   "ry": -0.5218,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 128.39,
+   "z": -862.18,
+   "ry": 0.5634,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_14",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 2,
+    "set": "jars"
+   },
+   "x": 123.05,
+   "z": -823.63,
+   "ry": -0.5121,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_21",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": 128.35,
+   "z": -821.23,
+   "ry": -0.5121,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_15",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 3,
+    "set": "work"
+   },
+   "x": 138.26,
+   "z": -819.35,
+   "ry": -0.5066,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_22",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 3
+   },
+   "x": 143.58,
+   "z": -816.97,
+   "ry": -0.5066,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_16",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 4,
+    "set": "manure_coop"
+   },
+   "x": 144.98,
+   "z": -812.15,
+   "ry": -0.5097,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_23",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 4
+   },
+   "x": 150.29,
+   "z": -809.76,
+   "ry": -0.5097,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_21",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 8,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 130.63,
+   "z": -915.36,
+   "ry": -0.5314,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_21",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 8
+   },
+   "x": 127.01,
+   "z": -914.13,
+   "ry": -0.5314,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_24",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 134.83,
+   "z": -912.43,
+   "ry": -0.5314,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_22",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 2,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 152.45,
+   "z": -862.68,
+   "ry": 0.5448,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_22",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 2
+   },
+   "x": 152.67,
+   "z": -859.42,
+   "ry": 0.5448,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_25",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": 156.17,
+   "z": -864.46,
+   "ry": 0.5448,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_large_10",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 115.74,
+   "z": -802.78,
+   "ry": -0.5529,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_07",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 144.38,
+   "z": -786.46,
+   "ry": -0.5299,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_23",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 17,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 167.71,
+   "z": -780.02,
+   "ry": -0.1732,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_23",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 17
+   },
+   "x": 165.73,
+   "z": -777.42,
+   "ry": -0.1732,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_24",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 30.72,
+   "z": -796.93,
+   "ry": 0.5089,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_24",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 30.83,
+   "z": -793.67,
+   "ry": 0.5089,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_07",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 79.82,
+   "z": -1095.79,
+   "ry": 0.025,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_17",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 23,
+    "set": "work"
+   },
+   "x": -1.86,
+   "z": -1078.16,
+   "ry": -0.0151,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_26",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 23
+   },
+   "x": 3.94,
+   "z": -1078.57,
+   "ry": -0.0151,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_18",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 17,
+    "set": "woodpile"
+   },
+   "x": 61.39,
+   "z": -1078.16,
+   "ry": 0.0522,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_27",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 17
+   },
+   "x": 67.16,
+   "z": -1078.96,
+   "ry": 0.0522,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_25",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 18,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 74.36,
+   "z": -1078.16,
+   "ry": -0.0099,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_25",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 18
+   },
+   "x": 71.83,
+   "z": -1075.28,
+   "ry": -0.0099,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_19",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 13,
+    "set": "woodpile"
+   },
+   "x": -7.95,
+   "z": -1059.29,
+   "ry": -0.0278,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_28",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 13
+   },
+   "x": -2.14,
+   "z": -1059.63,
+   "ry": -0.0278,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_08",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 71.07,
+   "z": -1059.29,
+   "ry": -0.0126,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_08",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -8.65,
+   "z": -1041.48,
+   "ry": -0.0178,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_26",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 17,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 49.19,
+   "z": -1041.48,
+   "ry": -0.0267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_26",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 17
+   },
+   "x": 47.61,
+   "z": -1038.62,
+   "ry": -0.0267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_09",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 66.73,
+   "z": -1041.48,
+   "ry": -0.0482,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_11",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 88.28,
+   "z": -1037.48,
+   "ry": 0.0205,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_10",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -19.37,
+   "z": -1024.45,
+   "ry": -0.0584,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_27",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 19,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 78.88,
+   "z": -1022.45,
+   "ry": 0.0146,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_27",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 19
+   },
+   "x": 77.42,
+   "z": -1019.53,
+   "ry": 0.0146,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_29",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 19
+   },
+   "x": 82.98,
+   "z": -1022.11,
+   "ry": 0.0146,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_20",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 16,
+    "set": "manure_coop"
+   },
+   "x": 117.19,
+   "z": -988.74,
+   "ry": -0.0189,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_30",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 16
+   },
+   "x": 123.0,
+   "z": -989.13,
+   "ry": -0.0189,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_09",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 135.07,
+   "z": -988.74,
+   "ry": 0.0376,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_11",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -123.52,
+   "z": -972.61,
+   "ry": -0.007,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_12",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -106.26,
+   "z": -970.61,
+   "ry": -0.0297,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_10",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -85.79,
+   "z": -968.61,
+   "ry": -0.0107,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_28",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 9,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -70.65,
+   "z": -970.61,
+   "ry": -0.0387,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_28",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 9
+   },
+   "x": -72.26,
+   "z": -967.77,
+   "ry": -0.0387,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_13",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -59.41,
+   "z": -970.61,
+   "ry": 0.0294,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_21",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 20,
+    "set": "manure_coop"
+   },
+   "x": 124.03,
+   "z": -970.61,
+   "ry": -0.0223,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_31",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": 129.84,
+   "z": -970.99,
+   "ry": -0.0223,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_29",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 22,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 139.25,
+   "z": -970.61,
+   "ry": 0.0444,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_29",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 22
+   },
+   "x": 137.38,
+   "z": -967.63,
+   "ry": 0.0444,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_14",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 155.0,
+   "z": -970.61,
+   "ry": -0.0039,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_11",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 130.42,
+   "z": -951.75,
+   "ry": -0.0199,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_22",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 9,
+    "set": "woodpile"
+   },
+   "x": 143.53,
+   "z": -951.75,
+   "ry": -0.0583,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_32",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 9
+   },
+   "x": 149.35,
+   "z": -951.91,
+   "ry": -0.0583,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_30",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 10,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 155.28,
+   "z": -951.75,
+   "ry": 0.0395,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_30",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 10
+   },
+   "x": 153.4,
+   "z": -948.77,
+   "ry": 0.0395,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_31",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 11,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 130.73,
+   "z": -933.16,
+   "ry": 0.0154,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_31",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 11
+   },
+   "x": 128.27,
+   "z": -930.22,
+   "ry": 0.0154,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_33",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 11
+   },
+   "x": 135.83,
+   "z": -932.84,
+   "ry": 0.0154,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_32",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 7,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -102.69,
+   "z": -910.4,
+   "ry": -0.0293,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_32",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 7
+   },
+   "x": -104.27,
+   "z": -907.55,
+   "ry": -0.0293,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_34",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 7
+   },
+   "x": -98.6,
+   "z": -909.88,
+   "ry": -0.0293,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_33",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 11,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 141.67,
+   "z": -914.4,
+   "ry": -0.0564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_33",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 11
+   },
+   "x": 139.01,
+   "z": -911.65,
+   "ry": -0.0564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_35",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 11
+   },
+   "x": 146.74,
+   "z": -913.72,
+   "ry": -0.0564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_12",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -130.39,
+   "z": -896.15,
+   "ry": -0.0344,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_13",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -110.03,
+   "z": -896.15,
+   "ry": -0.0508,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_15",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -91.15,
+   "z": -896.15,
+   "ry": -0.046,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_16",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -71.39,
+   "z": -898.15,
+   "ry": -0.0222,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_34",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 5,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -13.01,
+   "z": -892.15,
+   "ry": 0.0588,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_34",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 5
+   },
+   "x": -14.33,
+   "z": -889.17,
+   "ry": 0.0588,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_36",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 5
+   },
+   "x": -8.89,
+   "z": -892.0,
+   "ry": 0.0588,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_23",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 6,
+    "set": "jars"
+   },
+   "x": -4.44,
+   "z": -894.15,
+   "ry": -0.0492,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_02",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 6
+   },
+   "x": 1.38,
+   "z": -894.37,
+   "ry": -0.0492,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_24",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 1,
+    "set": "woodpile"
+   },
+   "x": 61.98,
+   "z": -896.15,
+   "ry": 0.0453,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_03",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 1
+   },
+   "x": 67.75,
+   "z": -896.92,
+   "ry": 0.0453,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_35",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 4,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 81.04,
+   "z": -896.15,
+   "ry": 0.0152,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_35",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 4
+   },
+   "x": 78.58,
+   "z": -893.22,
+   "ry": 0.0152,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_17",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -113.28,
+   "z": -878.38,
+   "ry": 0.0183,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_25",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 24,
+    "set": "manure_coop"
+   },
+   "x": -97.95,
+   "z": -878.38,
+   "ry": 0.0323,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_37",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 24
+   },
+   "x": -92.17,
+   "z": -879.07,
+   "ry": 0.0323,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_26",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 2,
+    "set": "jars"
+   },
+   "x": -84.36,
+   "z": -878.38,
+   "ry": -0.0576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_38",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": -78.54,
+   "z": -878.55,
+   "ry": -0.0576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_36",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 20,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -21.17,
+   "z": -876.38,
+   "ry": -0.0315,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_36",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 20
+   },
+   "x": -23.26,
+   "z": -873.55,
+   "ry": -0.0315,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_39",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": -16.59,
+   "z": -875.84,
+   "ry": -0.0315,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_37",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 21,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -10.06,
+   "z": -878.38,
+   "ry": -0.0537,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_37",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 21
+   },
+   "x": -12.71,
+   "z": -875.62,
+   "ry": -0.0537,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_27",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 4,
+    "set": "manure_coop"
+   },
+   "x": 88.82,
+   "z": -882.38,
+   "ry": 0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_40",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 4
+   },
+   "x": 94.62,
+   "z": -882.89,
+   "ry": 0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_28",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 10,
+    "set": "jars"
+   },
+   "x": 115.49,
+   "z": -874.38,
+   "ry": -0.0148,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_04",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 10
+   },
+   "x": 121.29,
+   "z": -874.8,
+   "ry": -0.0148,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_38",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 19,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 153.27,
+   "z": -874.38,
+   "ry": 0.0227,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_38",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 19
+   },
+   "x": 151.84,
+   "z": -871.45,
+   "ry": 0.0227,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_41",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 19
+   },
+   "x": 157.38,
+   "z": -874.08,
+   "ry": 0.0227,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_39",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 6,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 151.55,
+   "z": -856.47,
+   "ry": -0.0562,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_39",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 6
+   },
+   "x": 148.89,
+   "z": -853.71,
+   "ry": -0.0562,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_29",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 7,
+    "set": "work"
+   },
+   "x": 160.25,
+   "z": -860.47,
+   "ry": -0.0262,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_42",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 7
+   },
+   "x": 166.06,
+   "z": -860.81,
+   "ry": -0.0262,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_14",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -51.83,
+   "z": -838.58,
+   "ry": 0.0207,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_18",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -29.14,
+   "z": -838.58,
+   "ry": -0.0029,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_19",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -11.5,
+   "z": -838.58,
+   "ry": 0.0446,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_30",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 5,
+    "set": "woodpile"
+   },
+   "x": 2.25,
+   "z": -842.58,
+   "ry": 0.0552,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_05",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 5
+   },
+   "x": 8.01,
+   "z": -843.4,
+   "ry": 0.0552,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_31",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 23,
+    "set": "work"
+   },
+   "x": 64.78,
+   "z": -842.58,
+   "ry": 0.0396,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_43",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 23
+   },
+   "x": 70.55,
+   "z": -843.31,
+   "ry": 0.0396,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_20",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 88.14,
+   "z": -838.58,
+   "ry": 0.0159,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_32",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 3,
+    "set": "work"
+   },
+   "x": 99.22,
+   "z": -842.58,
+   "ry": 0.0482,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_44",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 3
+   },
+   "x": 104.99,
+   "z": -843.36,
+   "ry": 0.0482,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_21",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 116.43,
+   "z": -842.58,
+   "ry": -0.0597,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_33",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 12,
+    "set": "manure_coop"
+   },
+   "x": 149.82,
+   "z": -842.58,
+   "ry": -0.0377,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_45",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": 155.64,
+   "z": -842.87,
+   "ry": -0.0377,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_40",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 165.51,
+   "z": -842.58,
+   "ry": 0.0038,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_40",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": 163.52,
+   "z": -839.68,
+   "ry": 0.0038,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_46",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": 170.11,
+   "z": -842.2,
+   "ry": 0.0038,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_41",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 17,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 182.49,
+   "z": -838.58,
+   "ry": 0.0082,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_41",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 17
+   },
+   "x": 181.01,
+   "z": -835.67,
+   "ry": 0.0082,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_22",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -50.3,
+   "z": -820.4,
+   "ry": 0.0563,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_15",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -31.69,
+   "z": -820.4,
+   "ry": -0.0221,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_23",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -12.83,
+   "z": -822.4,
+   "ry": -0.0489,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_24",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 71.99,
+   "z": -822.4,
+   "ry": -0.0498,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_16",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 90.96,
+   "z": -820.4,
+   "ry": -0.0134,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_42",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 18,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 110.44,
+   "z": -824.4,
+   "ry": 0.0126,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_42",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 18
+   },
+   "x": 107.97,
+   "z": -821.47,
+   "ry": 0.0126,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_43",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 7,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 155.08,
+   "z": -824.4,
+   "ry": -0.0307,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_43",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 7
+   },
+   "x": 153.49,
+   "z": -821.55,
+   "ry": -0.0307,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_47",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 7
+   },
+   "x": 159.16,
+   "z": -823.88,
+   "ry": -0.0307,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_44",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 8,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 166.63,
+   "z": -824.4,
+   "ry": -0.0176,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_44",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 8
+   },
+   "x": 164.08,
+   "z": -821.55,
+   "ry": -0.0176,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_48",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 171.72,
+   "z": -823.91,
+   "ry": -0.0176,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_34",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 10,
+    "set": "jars"
+   },
+   "x": 178.36,
+   "z": -824.4,
+   "ry": -0.0359,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_06",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 10
+   },
+   "x": 184.17,
+   "z": -824.7,
+   "ry": -0.0359,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_17",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -44.18,
+   "z": -801.72,
+   "ry": 0.01,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_25",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -23.24,
+   "z": -801.72,
+   "ry": -0.0034,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_26",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -7.03,
+   "z": -805.72,
+   "ry": 0.0237,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_18",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 62.09,
+   "z": -805.72,
+   "ry": -0.0147,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_27",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 81.44,
+   "z": -801.72,
+   "ry": -0.0168,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_yard_props_35",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 15,
+    "set": "work"
+   },
+   "x": 133.79,
+   "z": -801.72,
+   "ry": 0.0256,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_49",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 15
+   },
+   "x": 139.57,
+   "z": -802.37,
+   "ry": 0.0256,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_28",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -39.7,
+   "z": -783.15,
+   "ry": -0.0516,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_45",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 16,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -26.02,
+   "z": -787.15,
+   "ry": -0.0533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_45",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 16
+   },
+   "x": -28.68,
+   "z": -784.39,
+   "ry": -0.0533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_50",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 16
+   },
+   "x": -20.95,
+   "z": -786.48,
+   "ry": -0.0533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_29",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -10.15,
+   "z": -785.15,
+   "ry": -0.0101,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_19",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 63.09,
+   "z": -787.15,
+   "ry": 0.0052,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_20",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 83.54,
+   "z": -783.15,
+   "ry": 0.012,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_46",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 24,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 127.44,
+   "z": -787.15,
+   "ry": 0.0515,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_46",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 24
+   },
+   "x": 125.59,
+   "z": -784.15,
+   "ry": 0.0515,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_medium_21",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -32.26,
+   "z": -764.29,
+   "ry": -0.0522,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_47",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 8,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 59.2,
+   "z": -768.29,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_47",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 8
+   },
+   "x": 56.7,
+   "z": -765.39,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_51",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 64.3,
+   "z": -767.89,
+   "ry": -0.0002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_30",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 75.59,
+   "z": -766.29,
+   "ry": 0.0033,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_small_31",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 91.75,
+   "z": -766.29,
+   "ry": 0.0102,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_22",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 110.11,
+   "z": -768.29,
+   "ry": -0.0335,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_medium_23",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 130.16,
+   "z": -768.29,
+   "ry": -0.0059,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_eup_ha_large_12",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "large",
+    "roof": "giwa"
+   },
+   "x": 153.25,
+   "z": -764.29,
+   "ry": 0.0492,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_48",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 4.7,
+   "z": -1030.14,
+   "ry": -0.054,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_48",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 3.05,
+   "z": -1027.33,
+   "ry": -0.054,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_49",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 10,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 66.29,
+   "z": -1028.14,
+   "ry": -0.0105,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_49",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 10
+   },
+   "x": 64.26,
+   "z": -1025.27,
+   "ry": -0.0105,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_36",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 9,
+    "set": "woodpile"
+   },
+   "x": 129.45,
+   "z": -974.4,
+   "ry": 0.0323,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_52",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 9
+   },
+   "x": 135.23,
+   "z": -975.08,
+   "ry": 0.0323,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_37",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 12,
+    "set": "manure_coop"
+   },
+   "x": -127.49,
+   "z": -957.55,
+   "ry": -0.0437,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_53",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": -121.68,
+   "z": -957.79,
+   "ry": -0.0437,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_50",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -110.17,
+   "z": -957.55,
+   "ry": 0.01,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_50",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": -111.64,
+   "z": -954.63,
+   "ry": 0.01,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_51",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 42.51,
+   "z": -957.55,
+   "ry": 0.0535,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_51",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 41.17,
+   "z": -954.57,
+   "ry": 0.0535,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_38",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 24,
+    "set": "manure_coop"
+   },
+   "x": 147.84,
+   "z": -955.55,
+   "ry": 0.0042,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_54",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 24
+   },
+   "x": 153.64,
+   "z": -956.07,
+   "ry": 0.0042,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_32",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 149.35,
+   "z": -938.54,
+   "ry": 0.0453,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_52",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 24,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 161.81,
+   "z": -938.54,
+   "ry": -0.0249,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_52",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 24
+   },
+   "x": 159.74,
+   "z": -935.69,
+   "ry": -0.0249,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_53",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 6,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 145.62,
+   "z": -921.36,
+   "ry": -0.052,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_53",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 6
+   },
+   "x": 142.98,
+   "z": -918.6,
+   "ry": -0.052,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_39",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 17,
+    "set": "woodpile"
+   },
+   "x": -88.11,
+   "z": -906.12,
+   "ry": 0.0576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_55",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 17
+   },
+   "x": -82.34,
+   "z": -906.95,
+   "ry": 0.0576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_54",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 24,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 92.01,
+   "z": -904.12,
+   "ry": -0.0005,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_54",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 24
+   },
+   "x": 90.0,
+   "z": -901.22,
+   "ry": -0.0005,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_40",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 14,
+    "set": "jars"
+   },
+   "x": 137.67,
+   "z": -908.12,
+   "ry": 0.0431,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_07",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 14
+   },
+   "x": 143.45,
+   "z": -908.87,
+   "ry": 0.0431,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_55",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -133.53,
+   "z": -883.98,
+   "ry": 0.0277,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_55",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": -135.45,
+   "z": -881.03,
+   "ry": 0.0277,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_56",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": -128.92,
+   "z": -883.71,
+   "ry": 0.0277,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_56",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 22,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -101.91,
+   "z": -883.98,
+   "ry": 0.0595,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_56",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 22
+   },
+   "x": -103.73,
+   "z": -880.97,
+   "ry": 0.0595,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_57",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 24,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -89.69,
+   "z": -885.98,
+   "ry": -0.0353,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_57",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 24
+   },
+   "x": -91.79,
+   "z": -883.16,
+   "ry": -0.0353,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_58",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 2,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -78.77,
+   "z": -885.98,
+   "ry": 0.0564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_58",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 2
+   },
+   "x": -80.11,
+   "z": -883.0,
+   "ry": 0.0564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_57",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": -74.66,
+   "z": -885.81,
+   "ry": 0.0564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_41",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 7,
+    "set": "work"
+   },
+   "x": 87.07,
+   "z": -885.98,
+   "ry": 0.0163,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_58",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 7
+   },
+   "x": 92.86,
+   "z": -886.58,
+   "ry": 0.0163,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_59",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 117.97,
+   "z": -883.98,
+   "ry": 0.0572,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_59",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": 116.13,
+   "z": -880.97,
+   "ry": 0.0572,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_59",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": 122.58,
+   "z": -883.85,
+   "ry": 0.0572,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_42",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 19,
+    "set": "work"
+   },
+   "x": 139.62,
+   "z": -885.98,
+   "ry": -0.0454,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_60",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 19
+   },
+   "x": 145.44,
+   "z": -886.22,
+   "ry": -0.0454,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_60",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 16,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -59.02,
+   "z": -851.77,
+   "ry": 0.0178,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_60",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 16
+   },
+   "x": -61.47,
+   "z": -848.82,
+   "ry": 0.0178,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_61",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 16
+   },
+   "x": -53.92,
+   "z": -851.46,
+   "ry": 0.0178,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_43",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 4,
+    "set": "manure_coop"
+   },
+   "x": 57.46,
+   "z": -845.77,
+   "ry": -0.0546,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_62",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 4
+   },
+   "x": 63.28,
+   "z": -845.95,
+   "ry": -0.0546,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_61",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 8,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 152.86,
+   "z": -849.77,
+   "ry": 0.0048,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_61",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 8
+   },
+   "x": 150.38,
+   "z": -846.86,
+   "ry": 0.0048,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_63",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 157.97,
+   "z": -849.39,
+   "ry": 0.0048,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_44",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 8,
+    "set": "manure_coop"
+   },
+   "x": 101.94,
+   "z": -832.76,
+   "ry": 0.0212,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_64",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 107.73,
+   "z": -833.38,
+   "ry": 0.0212,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_62",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 18,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 141.29,
+   "z": -832.76,
+   "ry": 0.0125,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_62",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 18
+   },
+   "x": 138.82,
+   "z": -829.83,
+   "ry": 0.0125,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_63",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 20,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 152.87,
+   "z": -832.76,
+   "ry": -0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_63",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 20
+   },
+   "x": 150.87,
+   "z": -829.86,
+   "ry": -0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_65",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": 157.47,
+   "z": -832.36,
+   "ry": -0.0003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_64",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 4,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 185.83,
+   "z": -832.76,
+   "ry": 0.0349,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_64",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 4
+   },
+   "x": 183.43,
+   "z": -829.77,
+   "ry": 0.0349,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_65",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 9,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 0.91,
+   "z": -815.95,
+   "ry": -0.019,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_65",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 9
+   },
+   "x": -0.64,
+   "z": -813.08,
+   "ry": -0.019,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_45",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 10,
+    "set": "jars"
+   },
+   "x": 151.8,
+   "z": -817.95,
+   "ry": 0.0367,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_didil_bang_a_08",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 10
+   },
+   "x": 157.58,
+   "z": -818.66,
+   "ry": 0.0367,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_46",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 12,
+    "set": "manure_coop"
+   },
+   "x": 167.41,
+   "z": -813.95,
+   "ry": -0.0428,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_66",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": 173.22,
+   "z": -814.2,
+   "ry": -0.0428,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_47",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 13,
+    "set": "woodpile"
+   },
+   "x": 177.34,
+   "z": -815.95,
+   "ry": -0.0168,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_67",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 13
+   },
+   "x": 183.15,
+   "z": -816.35,
+   "ry": -0.0168,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_66",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 50.29,
+   "z": -791.89,
+   "ry": -0.0573,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_66",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 48.63,
+   "z": -789.08,
+   "ry": -0.0573,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_garden_67",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 2,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -24.82,
+   "z": -778.05,
+   "ry": -0.036,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_67",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 2
+   },
+   "x": -26.43,
+   "z": -775.2,
+   "ry": -0.036,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_68",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 2
+   },
+   "x": -20.74,
+   "z": -777.5,
+   "ry": -0.036,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_ha_small_33",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 181.08,
+   "z": -776.05,
+   "ry": 0.0005,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_eup_garden_68",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 56.69,
+   "z": -759.64,
+   "ry": -0.0076,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_pumpkin_68",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 55.17,
+   "z": -756.75,
+   "ry": -0.0076,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_yard_props_48",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 22,
+    "set": "jars"
+   },
+   "x": 83.15,
+   "z": -755.64,
+   "ry": -0.0567,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_haystack_69",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 22
+   },
+   "x": 88.97,
+   "z": -755.81,
+   "ry": -0.0567,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내(성 밖)"
+  },
+  {
+   "id": "hj_eup_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 15.68,
+   "z": -796.74,
+   "ry": 0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_eup_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 24.48,
+   "z": -796.71,
+   "ry": 0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_eup_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 1,
+    "n": 3
+   },
+   "x": 26.07,
+   "z": -793.11,
+   "ry": 0.12,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_eup_jangseung_03",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": 36.4,
+   "z": -1061.48,
+   "ry": 0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_eup_jangseung_04",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": 27.6,
+   "z": -1061.48,
+   "ry": 0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_eup_sotdae_02",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 6,
+    "n": 3
+   },
+   "x": 26.0,
+   "z": -1063.88,
+   "ry": 0.04,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주 읍내"
+  },
+  {
+   "id": "hj_gyo_hyanggyo_01",
+   "kit": "landmark/hyanggyo",
+   "params": {
+    "seed": 601,
+    "width": 36.0,
+    "depth": 48.0
+   },
+   "x": 132.7,
+   "z": -1042.23,
+   "ry": -0.0005,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주향교",
+   "footprint": [
+    38.0,
+    52.0
+   ],
+   "title": "황주향교"
+  },
+  {
+   "id": "hj_rit_sajikdan_01",
+   "kit": "landmark/sajikdan",
+   "params": {
+    "seed": 1,
+    "dual": false
+   },
+   "x": -146.04,
+   "z": -981.03,
+   "ry": 0.012,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "읍치 제의 시설",
+   "footprint": [
+    25.0,
+    25.0
+   ],
+   "title": "황주 사직단"
+  },
+  {
+   "id": "hj_rit_yeodan_01",
+   "kit": "landmark/yeodan",
+   "params": {
+    "seed": 1
+   },
+   "x": 50.28,
+   "z": -1121.46,
+   "ry": -0.0008,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "읍치 제의 시설",
+   "footprint": [
+    19.0,
+    19.0
+   ],
+   "title": "황주 여단"
+  },
+  {
+   "id": "hj_rit_seonghwangsa_01",
+   "kit": "landmark/seonghwangsa",
+   "params": {
+    "seed": 1,
+    "tree_stub": true
+   },
+   "x": 120.87,
+   "z": -1080.27,
+   "ry": -0.0017,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "읍치 제의 시설",
+   "footprint": [
+    20.0,
+    18.0
+   ],
+   "title": "황주 성황사"
+  },
+  {
+   "id": "hj_rit_sinmok_01",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 804,
+    "variant": "zelkova"
+   },
+   "x": 131.37,
+   "z": -1079.25,
+   "ry": -0.0017,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "읍치 제의 시설"
+  },
+  {
+   "id": "hj_wolpa_nu_01",
+   "kit": "landmark/py_bubyeongnu",
+   "params": {
+    "seed": 701
+   },
+   "x": -156.5,
+   "z": -514.2,
+   "ry": 0.0099,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "월파루",
+   "footprint": [
+    19.6,
+    13.0
+   ],
+   "title": "월파루"
+  },
+  {
+   "id": "hj_dohwa_jangseung_01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 11
+   },
+   "x": -297.26,
+   "z": -354.82,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_jangseung_02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 12,
+    "female": true
+   },
+   "x": -297.44,
+   "z": -348.52,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_sotdae_01",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 5,
+    "n": 3
+   },
+   "x": -299.88,
+   "z": -346.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_village_square_01",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 2
+   },
+   "x": -313.35,
+   "z": -359.42,
+   "ry": -0.0286,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_dohwa_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 801,
+    "roof": false
+   },
+   "x": -356.57,
+   "z": -376.09,
+   "ry": 0.0061,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_ha_medium_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -379.2,
+   "z": -401.38,
+   "ry": -0.1008,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_medium_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -358.58,
+   "z": -399.31,
+   "ry": -0.1441,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_medium_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -339.18,
+   "z": -393.34,
+   "ry": -0.1263,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_medium_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -418.8,
+   "z": -387.23,
+   "ry": -0.1005,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_yard_props_01",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 5,
+    "set": "woodpile"
+   },
+   "x": -405.15,
+   "z": -385.86,
+   "ry": -0.1137,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_didil_bang_a_01",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 5
+   },
+   "x": -399.33,
+   "z": -385.7,
+   "ry": -0.1137,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_ha_small_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -386.86,
+   "z": -384.02,
+   "ry": -0.128,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_small_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -368.61,
+   "z": -382.19,
+   "ry": -0.0405,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_small_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -345.41,
+   "z": -375.84,
+   "ry": -0.1594,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_small_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -326.96,
+   "z": -373.99,
+   "ry": -0.0744,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_small_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -310.4,
+   "z": -376.35,
+   "ry": -0.049,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_medium_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -291.67,
+   "z": -372.46,
+   "ry": -0.08,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_garden_01",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 21,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -421.66,
+   "z": -370.3,
+   "ry": -0.1102,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_pumpkin_01",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 21
+   },
+   "x": -424.46,
+   "z": -367.7,
+   "ry": -0.1102,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_garden_02",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 24,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -407.55,
+   "z": -368.89,
+   "ry": -0.0759,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_pumpkin_02",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 24
+   },
+   "x": -409.77,
+   "z": -366.15,
+   "ry": -0.0759,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_yard_props_02",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 20,
+    "set": "manure_coop"
+   },
+   "x": -339.45,
+   "z": -364.06,
+   "ry": -0.0503,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": -333.64,
+   "z": -364.27,
+   "ry": -0.0503,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_garden_03",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -277.92,
+   "z": -355.87,
+   "ry": -0.1576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_pumpkin_03",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": -280.35,
+   "z": -353.32,
+   "ry": -0.1576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": -273.44,
+   "z": -354.76,
+   "ry": -0.1576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_ha_small_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -261.8,
+   "z": -354.25,
+   "ry": -0.1557,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_small_07",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -444.25,
+   "z": -355.0,
+   "ry": -0.1189,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_ha_medium_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -425.73,
+   "z": -353.14,
+   "ry": -0.1566,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_garden_04",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 7,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -411.45,
+   "z": -351.71,
+   "ry": -0.122,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_pumpkin_04",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 7
+   },
+   "x": -413.29,
+   "z": -349.01,
+   "ry": -0.122,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 7
+   },
+   "x": -407.42,
+   "z": -350.81,
+   "ry": -0.122,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_yard_props_03",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 12,
+    "set": "manure_coop"
+   },
+   "x": -390.29,
+   "z": -349.59,
+   "ry": -0.1435,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": -384.48,
+   "z": -349.25,
+   "ry": -0.1435,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_garden_05",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 13,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -376.32,
+   "z": -348.18,
+   "ry": -0.147,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_pumpkin_05",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 13
+   },
+   "x": -379.22,
+   "z": -345.68,
+   "ry": -0.147,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_haystack_05",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 13
+   },
+   "x": -371.34,
+   "z": -347.04,
+   "ry": -0.147,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동"
+  },
+  {
+   "id": "hj_dohwa_ha_small_08",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -361.6,
+   "z": -346.71,
+   "ry": -0.1415,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_dohwa_well_02",
+   "kit": "village/well",
+   "params": {
+    "seed": 802,
+    "roof": true
+   },
+   "x": -417.75,
+   "z": -338.57,
+   "ry": 0.0141,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "도화동",
+   "title": "도화동 우물"
+  },
+  {
+   "id": "hj_dohwa_dohwa_01",
+   "kit": "landmark/hj_dohwadong",
+   "params": {
+    "seed": 803
+   },
+   "x": -411.81,
+   "z": -342.65,
+   "ry": 0.0141,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "도화동",
+   "title": "도화동 바위"
+  },
+  {
+   "id": "hj_namcheon_village_square_01",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 22
+   },
+   "x": 93.18,
+   "z": -20.66,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_namcheon_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 821,
+    "roof": false
+   },
+   "x": 104.39,
+   "z": -19.18,
+   "ry": -0.0507,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_ha_small_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 95.12,
+   "z": -59.52,
+   "ry": -0.4981,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_yard_props_01",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 23,
+    "set": "work"
+   },
+   "x": 106.85,
+   "z": -55.06,
+   "ry": -0.5513,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 23
+   },
+   "x": 112.05,
+   "z": -52.45,
+   "ry": -0.5513,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_ha_medium_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 122.42,
+   "z": -46.07,
+   "ry": -0.5463,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_ha_small_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 97.48,
+   "z": -40.8,
+   "ry": -0.4764,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_ha_small_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 112.54,
+   "z": -29.79,
+   "ry": -0.5454,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_garden_01",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 20,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 124.81,
+   "z": -25.02,
+   "ry": -0.5824,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_pumpkin_01",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 20
+   },
+   "x": 121.54,
+   "z": -23.7,
+   "ry": -0.5824,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": 128.43,
+   "z": -22.15,
+   "ry": -0.5824,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_garden_02",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 22,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 136.56,
+   "z": -15.92,
+   "ry": -0.5038,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_pumpkin_02",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 22
+   },
+   "x": 133.41,
+   "z": -14.35,
+   "ry": -0.5038,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "황주천 건넛마을"
+  },
+  {
+   "id": "hj_namcheon_ha_small_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 112.59,
+   "z": -10.26,
+   "ry": -0.4781,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_ha_small_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 130.27,
+   "z": -0.05,
+   "ry": -0.5748,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_ha_small_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 94.59,
+   "z": 0.35,
+   "ry": -0.5651,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_namcheon_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 822
+   },
+   "x": 91.5,
+   "z": -78.25,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "황주천 건넛마을",
+   "title": "주막"
+  },
+  {
+   "id": "hj_cheonju_village_square_01",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 32
+   },
+   "x": -100.23,
+   "z": -1326.4,
+   "ry": 0.0483,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_cheonju_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 831,
+    "roof": false
+   },
+   "x": -97.22,
+   "z": -1318.82,
+   "ry": 0.0885,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_yard_props_01",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 14,
+    "set": "jars"
+   },
+   "x": -129.52,
+   "z": -1358.89,
+   "ry": -0.0231,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_didil_bang_a_01",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 14
+   },
+   "x": -123.71,
+   "z": -1359.25,
+   "ry": -0.0231,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_garden_01",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -115.99,
+   "z": -1359.35,
+   "ry": 0.0619,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_pumpkin_01",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": -117.31,
+   "z": -1356.36,
+   "ry": 0.0619,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_ha_small_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -102.36,
+   "z": -1359.81,
+   "ry": 0.0938,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_cheonju_ha_medium_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -83.21,
+   "z": -1356.45,
+   "ry": 0.0664,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_cheonju_ha_medium_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -135.54,
+   "z": -1339.79,
+   "ry": 0.0802,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_cheonju_garden_02",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 4,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -119.7,
+   "z": -1340.32,
+   "ry": 0.0058,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_pumpkin_02",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 4
+   },
+   "x": -122.19,
+   "z": -1337.41,
+   "ry": 0.0058,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_ha_small_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -107.29,
+   "z": -1340.75,
+   "ry": 0.0111,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_cheonju_ha_small_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -86.86,
+   "z": -1337.44,
+   "ry": -0.0179,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_cheonju_garden_03",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 16,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -139.78,
+   "z": -1321.12,
+   "ry": 0.0732,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_pumpkin_03",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 16
+   },
+   "x": -142.06,
+   "z": -1318.05,
+   "ry": 0.0732,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 16
+   },
+   "x": -134.67,
+   "z": -1321.1,
+   "ry": 0.0732,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "천주 들마을"
+  },
+  {
+   "id": "hj_cheonju_ha_medium_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -122.86,
+   "z": -1321.7,
+   "ry": 0.0717,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "천주 들마을",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_village_square_01",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 42
+   },
+   "x": 559.03,
+   "z": 308.31,
+   "ry": -0.0713,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_av_well_01",
+   "kit": "village/well",
+   "params": {
+    "seed": 841,
+    "roof": false
+   },
+   "x": 561.31,
+   "z": 299.84,
+   "ry": 0.0243,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_garden_01",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 6,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": 522.9,
+   "z": 285.21,
+   "ry": 0.4894,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_pumpkin_01",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 6
+   },
+   "x": 522.06,
+   "z": 288.94,
+   "ry": 0.4894,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_ha_small_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 534.99,
+   "z": 278.23,
+   "ry": 0.5784,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_medium_01",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 553.19,
+   "z": 270.03,
+   "ry": 0.5683,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_garden_02",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 9,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 565.91,
+   "z": 262.69,
+   "ry": 0.5731,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_pumpkin_02",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 9
+   },
+   "x": 566.22,
+   "z": 265.94,
+   "ry": 0.5731,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_ha_medium_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 537.26,
+   "z": 296.85,
+   "ry": 0.4727,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_02",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 558.94,
+   "z": 288.96,
+   "ry": 0.5025,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 577.49,
+   "z": 275.93,
+   "ry": 0.5163,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_yard_props_01",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 8,
+    "set": "manure_coop"
+   },
+   "x": 534.49,
+   "z": 318.47,
+   "ry": 0.4738,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_haystack_01",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 8
+   },
+   "x": 539.42,
+   "z": 315.38,
+   "ry": 0.4738,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_01)"
+  },
+  {
+   "id": "hj_av_village_square_02",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 43
+   },
+   "x": 493.8,
+   "z": -2096.39,
+   "ry": -0.0193,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_av_well_02",
+   "kit": "village/well",
+   "params": {
+    "seed": 842,
+    "roof": true
+   },
+   "x": 480.65,
+   "z": -2101.78,
+   "ry": 0.0361,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "hj_av_ha_small_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 483.5,
+   "z": -2114.78,
+   "ry": -0.5424,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_garden_03",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 15,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": 505.62,
+   "z": -2102.01,
+   "ry": -0.5682,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "hj_av_pumpkin_03",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 15
+   },
+   "x": 502.79,
+   "z": -2100.37,
+   "ry": -0.5682,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "hj_av_ha_small_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 516.83,
+   "z": -2095.53,
+   "ry": -0.4865,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 470.83,
+   "z": -2095.93,
+   "ry": -0.4652,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_07",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 500.92,
+   "z": -2080.87,
+   "ry": -0.5757,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_08",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 532.42,
+   "z": -2062.68,
+   "ry": -0.5188,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_garden_04",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 545.16,
+   "z": -2057.64,
+   "ry": -0.5694,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "hj_av_pumpkin_04",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": 541.91,
+   "z": -2056.27,
+   "ry": -0.5694,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "hj_av_haystack_02",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": 548.82,
+   "z": -2054.82,
+   "ry": -0.5694,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)"
+  },
+  {
+   "id": "hj_av_ha_medium_03",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": 560.31,
+   "z": -2048.89,
+   "ry": -0.476,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_03)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_village_square_03",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 44
+   },
+   "x": -1755.86,
+   "z": -869.96,
+   "ry": 0.0343,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_av_well_03",
+   "kit": "village/well",
+   "params": {
+    "seed": 843,
+    "roof": false
+   },
+   "x": -1755.98,
+   "z": -863.54,
+   "ry": 0.0688,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_ha_small_09",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -1776.87,
+   "z": -900.08,
+   "ry": 0.0891,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_10",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": -1759.12,
+   "z": -901.23,
+   "ry": 0.0721,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_medium_04",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": -1740.08,
+   "z": -900.46,
+   "ry": 0.0338,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_medium_05",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 9,
+    "size": "medium"
+   },
+   "x": -1788.74,
+   "z": -880.67,
+   "ry": 0.0566,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_garden_05",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 12,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -1750.81,
+   "z": -883.13,
+   "ry": 0.0267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_pumpkin_05",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 12
+   },
+   "x": -1752.23,
+   "z": -880.2,
+   "ry": 0.0267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_haystack_03",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 12
+   },
+   "x": -1746.7,
+   "z": -882.84,
+   "ry": 0.0267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_garden_06",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -1737.08,
+   "z": -884.02,
+   "ry": 0.0289,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_pumpkin_06",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 14
+   },
+   "x": -1738.99,
+   "z": -881.07,
+   "ry": 0.0289,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_haystack_04",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 14
+   },
+   "x": -1732.47,
+   "z": -883.76,
+   "ry": 0.0289,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_ha_small_11",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": -1784.15,
+   "z": -863.66,
+   "ry": 0.0369,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_garden_07",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 1,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -1745.42,
+   "z": -866.17,
+   "ry": 0.0393,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_pumpkin_07",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 1
+   },
+   "x": -1747.3,
+   "z": -863.2,
+   "ry": 0.0393,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_haystack_05",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 1
+   },
+   "x": -1740.81,
+   "z": -865.95,
+   "ry": 0.0393,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_05)"
+  },
+  {
+   "id": "hj_av_village_square_04",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 45
+   },
+   "x": 72.92,
+   "z": -1903.17,
+   "ry": -0.0112,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "hj_av_well_04",
+   "kit": "village/well",
+   "params": {
+    "seed": 844,
+    "roof": true
+   },
+   "x": 43.97,
+   "z": -1925.3,
+   "ry": 0.083,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "hj_av_ha_small_12",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 39.9,
+   "z": -1962.03,
+   "ry": -0.5569,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_13",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 55.88,
+   "z": -1952.8,
+   "ry": -0.5512,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_medium_06",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 72.0,
+   "z": -1943.49,
+   "ry": -0.5404,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_medium_07",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 2,
+    "size": "medium"
+   },
+   "x": 29.63,
+   "z": -1946.41,
+   "ry": -0.4839,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    19.0,
+    18.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_14",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 46.22,
+   "z": -1936.83,
+   "ry": -0.566,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_15",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 3,
+    "size": "small"
+   },
+   "x": 60.96,
+   "z": -1928.32,
+   "ry": -0.5218,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_ha_small_16",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "seed": 10,
+    "size": "small"
+   },
+   "x": 76.09,
+   "z": -1919.58,
+   "ry": -0.5079,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "hj_av_garden_08",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 20,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": 17.13,
+   "z": -1931.77,
+   "ry": -0.5704,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "hj_av_pumpkin_08",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 20
+   },
+   "x": 13.88,
+   "z": -1930.41,
+   "ry": -0.5704,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "hj_av_haystack_06",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 20
+   },
+   "x": 20.79,
+   "z": -1928.95,
+   "ry": -0.5704,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "들마을(auto_village_06)"
+  },
+  {
+   "id": "hj_rd_jumak_01",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 909
+   },
+   "x": 272.54,
+   "z": -1608.5,
+   "ry": 0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막",
+   "title": "주막(의주대로 중화 쪽)"
+  },
+  {
+   "id": "hj_rd_jumak_02",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 909
+   },
+   "x": 384.43,
+   "z": 1234.38,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막",
+   "title": "주막(의주대로 봉산 쪽)"
+  },
+  {
+   "id": "hj_rd_jumak_03",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 904
+   },
+   "x": -1192.94,
+   "z": -1257.92,
+   "ry": -0.5236,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "길가 주막",
+   "title": "주막(겸이포길)"
+  }
+ ],
+ "alleys": [
+  {
+   "id": "hj_alley_000",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     59.91,
+     -1073.76
+    ],
+    [
+     78.26,
+     -1073.76
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_001",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     46.14,
+     -1023.97
+    ],
+    [
+     98.97,
+     -1023.97
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_002",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     114.92,
+     -977.87
+    ],
+    [
+     144.36,
+     -977.87
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_003",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -131.5,
+     -957.74
+    ],
+    [
+     -51.38,
+     -957.74
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_004",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     121.89,
+     -961.14
+    ],
+    [
+     162.47,
+     -961.14
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_005",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     121.21,
+     -940.88
+    ],
+    [
+     158.0,
+     -940.88
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_006",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -139.99,
+     -885.28
+    ],
+    [
+     -63.65,
+     -885.28
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_007",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -16.25,
+     -887.75
+    ],
+    [
+     3.6,
+     -887.75
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_008",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     60.08,
+     -891.75
+    ],
+    [
+     85.33,
+     -891.75
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_009",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -120.89,
+     -868.91
+    ],
+    [
+     -77.94,
+     -868.91
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_010",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -24.91,
+     -871.98
+    ],
+    [
+     -6.6,
+     -871.98
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_011",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     148.18,
+     -852.07
+    ],
+    [
+     166.63,
+     -852.07
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_012",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -60.43,
+     -827.71
+    ],
+    [
+     10.96,
+     -827.71
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_013",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     63.71,
+     -829.11
+    ],
+    [
+     123.57,
+     -829.11
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_014",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     148.12,
+     -834.18
+    ],
+    [
+     185.48,
+     -834.18
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_015",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -57.61,
+     -809.53
+    ],
+    [
+     -5.48,
+     -809.53
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_016",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     64.71,
+     -809.53
+    ],
+    [
+     114.26,
+     -809.53
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_017",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     152.44,
+     -820.0
+    ],
+    [
+     186.74,
+     -820.0
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_018",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -53.68,
+     -790.85
+    ],
+    [
+     0.97,
+     -790.85
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_019",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     52.9,
+     -792.25
+    ],
+    [
+     88.95,
+     -792.25
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_020",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -47.27,
+     -773.68
+    ],
+    [
+     -2.72,
+     -773.68
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_021",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     53.85,
+     -772.28
+    ],
+    [
+     92.19,
+     -772.28
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_022",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     55.43,
+     -750.78
+    ],
+    [
+     164.01,
+     -750.78
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_023",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -130.32,
+     -953.15
+    ],
+    [
+     -107.73,
+     -953.15
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_024",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     142.01,
+     -929.07
+    ],
+    [
+     164.56,
+     -929.07
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_025",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -104.65,
+     -879.58
+    ],
+    [
+     -73.73,
+     -879.58
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_026",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     138.1,
+     -828.36
+    ],
+    [
+     158.97,
+     -828.36
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_027",
+   "group": "황주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     150.25,
+     -810.39
+    ],
+    [
+     184.81,
+     -810.39
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_028",
+   "group": "도화동",
+   "width_m": 3.0,
+   "points": [
+    [
+     -390.17,
+     -387.53
+    ],
+    [
+     -330.96,
+     -381.59
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_029",
+   "group": "도화동",
+   "width_m": 3.0,
+   "points": [
+    [
+     -429.53,
+     -374.77
+    ],
+    [
+     -283.52,
+     -360.11
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_030",
+   "group": "도화동",
+   "width_m": 3.0,
+   "points": [
+    [
+     -425.93,
+     -366.31
+    ],
+    [
+     -404.52,
+     -364.16
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_031",
+   "group": "도화동",
+   "width_m": 3.0,
+   "points": [
+    [
+     -281.5,
+     -346.71
+    ],
+    [
+     -254.74,
+     -344.03
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_032",
+   "group": "도화동",
+   "width_m": 3.0,
+   "points": [
+    [
+     -452.69,
+     -344.92
+    ],
+    [
+     -407.68,
+     -340.41
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_033",
+   "group": "도화동",
+   "width_m": 3.0,
+   "points": [
+    [
+     -393.49,
+     -340.39
+    ],
+    [
+     -354.9,
+     -336.51
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_034",
+   "group": "황주천 건넛마을",
+   "width_m": 3.0,
+   "points": [
+    [
+     83.93,
+     -55.05
+    ],
+    [
+     124.79,
+     -31.46
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_035",
+   "group": "황주천 건넛마을",
+   "width_m": 3.0,
+   "points": [
+    [
+     85.68,
+     -34.36
+    ],
+    [
+     135.03,
+     -5.87
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_036",
+   "group": "황주천 건넛마을",
+   "width_m": 3.0,
+   "points": [
+    [
+     101.2,
+     -5.9
+    ],
+    [
+     132.18,
+     11.99
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_037",
+   "group": "천주 들마을",
+   "width_m": 3.0,
+   "points": [
+    [
+     -130.86,
+     -1343.96
+    ],
+    [
+     -74.12,
+     -1345.89
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_038",
+   "group": "천주 들마을",
+   "width_m": 3.0,
+   "points": [
+    [
+     -144.55,
+     -1326.0
+    ],
+    [
+     -78.73,
+     -1328.23
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_039",
+   "group": "천주 들마을",
+   "width_m": 3.0,
+   "points": [
+    [
+     -143.53,
+     -1310.12
+    ],
+    [
+     -113.06,
+     -1311.15
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_040",
+   "group": "들마을(auto_village_01)",
+   "width_m": 3.0,
+   "points": [
+    [
+     526.03,
+     298.26
+    ],
+    [
+     573.68,
+     270.75
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_041",
+   "group": "들마을(auto_village_01)",
+   "width_m": 3.0,
+   "points": [
+    [
+     536.3,
+     312.96
+    ],
+    [
+     589.5,
+     282.25
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_042",
+   "group": "들마을(auto_village_03)",
+   "width_m": 3.0,
+   "points": [
+    [
+     498.29,
+     -2095.3
+    ],
+    [
+     518.23,
+     -2083.79
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_043",
+   "group": "들마을(auto_village_03)",
+   "width_m": 3.0,
+   "points": [
+    [
+     520.64,
+     -2058.55
+    ],
+    [
+     562.29,
+     -2034.5
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_044",
+   "group": "들마을(auto_village_05)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -1783.84,
+     -886.73
+    ],
+    [
+     -1730.23,
+     -890.21
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_045",
+   "group": "들마을(auto_village_05)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -1752.83,
+     -878.59
+    ],
+    [
+     -1730.77,
+     -880.02
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_046",
+   "group": "들마을(auto_village_06)",
+   "width_m": 3.0,
+   "points": [
+    [
+     27.87,
+     -1956.42
+    ],
+    [
+     74.36,
+     -1929.57
+    ]
+   ]
+  },
+  {
+   "id": "hj_alley_047",
+   "group": "들마을(auto_village_06)",
+   "width_m": 3.0,
+   "points": [
+    [
+     16.59,
+     -1941.39
+    ],
+    [
+     77.55,
+     -1906.19
+    ]
+   ]
+  }
+ ]
+}
