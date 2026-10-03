@@ -1,0 +1,753 @@
+{
+ "id": "HG_HAMHEUNG",
+ "name": "함흥(성천강·반룡산)",
+ "builder": "build_region.py (data-north 설정: north_prep.py가 north_places_*.py에서 씀)",
+ "province": "함경도",
+ "culture": "관북",
+ "climate": "north",
+ "lat0": 39.915,
+ "lon0": 127.54,
+ "K": 0.3,
+ "y_base_alt": 0.0,
+ "cell": 2.0,
+ "x0": -2560.0,
+ "z0": -2304.0,
+ "fetch_bbox": [
+  39.8455,
+  39.9845,
+  127.4401,
+  127.6399
+ ],
+ "osm_bbox": [
+  39.8355,
+  127.4301,
+  39.9945,
+  127.6499
+ ],
+ "meta": {
+  "parent_province": "함경도",
+  "main_river": "성천강",
+  "connected_river": [
+   "호련천→성천강",
+   "여위천→성천강",
+   "성천강→동해(권역 밖 남동, 서호)"
+  ],
+  "watershed_divide": "반룡산(동흥산) 능선: 서쪽 성천강·동쪽 호련천",
+  "main_mountain": [
+   "반룡산(진산)",
+   "북쪽 함경산맥 앞자락"
+  ],
+  "settlement_type": "감영 도읍(함흥읍성) + 성천강 충적평야 들마을 + 본궁",
+  "economy": [
+   "논·밭농사(함흥평야)",
+   "장시(관북 물산)",
+   "명태·소금(서호 포구, 권역 밖)",
+   "삼베"
+  ],
+  "forbidden": [
+   "현대 함흥·흥남 공업지대",
+   "철도·도로",
+   "제방 직강 하천",
+   "기념비·동상"
+  ],
+  "sources": [
+   "OpenStreetMap 북한 지도",
+   "한국민족문화대백과(통설)",
+   "WORLD_SPEC v0.3 §21 HG-03"
+  ]
+ },
+ "crossings_big": [],
+ "landmarks": [
+  {
+   "id": "seonhwadang",
+   "name": "함경감영 선화당",
+   "kit": "landmark/gamyeong",
+   "lat": 39.914,
+   "lon": 127.5239,
+   "ry": 0,
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 선화당 39.9140,127.5239",
+    "한국민족문화대백과(통설) '함흥 선화당'"
+   ],
+   "notes": "함경도 관찰사 집무처(정면 7칸 팔작). 반룡산 남쪽 기슭 성 안.",
+   "size_m": [
+    80,
+    60
+   ]
+  },
+  {
+   "id": "hamheung_south_gate",
+   "name": "함흥읍성 남문",
+   "kit": "landmark/eupseong_gate",
+   "lat": 39.9066,
+   "lon": 127.524,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "원칙: 감영 정면 남쪽 문(위치 가설)"
+   ],
+   "notes": "",
+   "size_m": [
+    16,
+    10
+   ]
+  },
+  {
+   "id": "nakminnu",
+   "name": "낙민루(서문루)",
+   "kit": "landmark/pavilion_nakmin",
+   "lat": 39.9118,
+   "lon": 127.5188,
+   "ry": -1.57,
+   "confidence": "가설",
+   "source": [
+    "한국민족문화대백과(통설) '낙민루' — 성천강 가 서쪽 성문 누각, 만세교와 마주함"
+   ],
+   "notes": "성천강을 내려다보는 누각. 만세교 동쪽 머리.",
+   "size_m": [
+    16,
+    10
+   ]
+  },
+  {
+   "id": "hamheung_east_gate",
+   "name": "함흥읍성 동문",
+   "kit": "landmark/eupseong_gate",
+   "lat": 39.9132,
+   "lon": 127.532,
+   "ry": 1.57,
+   "confidence": "가설",
+   "source": [
+    "원칙: 북청·홍원 가는 길 쪽 문(위치 가설)"
+   ],
+   "notes": "",
+   "size_m": [
+    14,
+    9
+   ]
+  },
+  {
+   "id": "gucheongak",
+   "name": "구천각(북장대)",
+   "kit": "landmark/pavilion_small",
+   "lat": 39.92,
+   "lon": 127.5235,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "한국민족문화대백과(통설) '구천각' — 반룡산 성곽 위 장대"
+   ],
+   "notes": "반룡산 능선 성곽 위 누각.",
+   "size_m": [
+    12,
+    9
+   ]
+  },
+  {
+   "id": "chimadae",
+   "name": "치마대",
+   "kit": "landmark/stone_platform",
+   "lat": 39.9235,
+   "lon": 127.5262,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "반룡산 꼭대기 말 달리던 대(전설)"
+   ],
+   "notes": "",
+   "size_m": [
+    20,
+    14
+   ]
+  },
+  {
+   "id": "manse_bridge",
+   "name": "만세교",
+   "kit": "landmark/long_wooden_bridge",
+   "lat": 39.9133,
+   "lon": 127.516,
+   "ry": 1.57,
+   "confidence": "추정",
+   "source": [
+    "한국민족문화대백과(통설) '만세교' — 성천강의 긴 나무다리(관북 제일)",
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 성천강 물길"
+   ],
+   "notes": "성천강 넓은 자갈 바닥을 건너는 긴 널다리(실물 수백 m — 물길 폭만큼). 큰물이면 떠내려가 다시 놓음.",
+   "size_m": [
+    30,
+    6
+   ],
+   "nopad": true
+  },
+  {
+   "id": "hamheung_bongung",
+   "name": "함흥본궁",
+   "kit": "landmark/bongung",
+   "lat": 39.8708,
+   "lon": 127.5669,
+   "ry": 0,
+   "confidence": "확정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 함흥본궁 39.8708,127.5669 / 풍패루"
+   ],
+   "notes": "태조 이성계의 옛집 — 함흥차사 이야기의 무대. 정전·이안전·풍패루, 태조 손수 심었다는 소나무.",
+   "size_m": [
+    70,
+    60
+   ]
+  }
+ ],
+ "settlements": [
+  {
+   "id": "hamheung_eup",
+   "name": "함흥 읍내(감영)",
+   "type": "읍성",
+   "lat": 39.9115,
+   "lon": 127.5245,
+   "radius_m": 160,
+   "size": "XL",
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 선화당·서문동·남문동 일대"
+   ],
+   "notes": "함경감영 도읍. 반룡산 남쪽 비탈과 성천강 사이.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "north",
+    "roof": {
+     "giwa": 0.4,
+     "choga": 0.6
+    },
+    "wall": "stone",
+    "signature": "만세교 긴 다리와 반룡산 성곽, 낙민루",
+    "trades": [
+     "감영",
+     "장시"
+    ],
+    "people": [
+     "감영 관속",
+     "포수",
+     "장꾼",
+     "양반"
+    ],
+    "animals": [
+     "소",
+     "말"
+    ],
+    "notes": "관북 田자 겹집(정주간) — 바람막이 겹집, 지붕 낮고 두꺼움(문화권 키트)"
+   }
+  },
+  {
+   "id": "hamheung_jang",
+   "name": "함흥 장(남문 밖)",
+   "type": "장시",
+   "lat": 39.905,
+   "lon": 127.5225,
+   "radius_m": 50,
+   "size": "L",
+   "confidence": "가설",
+   "source": [
+    "원칙: 읍성 남문 밖 장터"
+   ],
+   "notes": "관북 물산(삼베·명태·소).",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "north",
+    "signature": "명태 두름·삼베 필이 쌓인 남문 밖 장",
+    "trades": [
+     "장시"
+    ],
+    "people": [
+     "장꾼",
+     "보부상"
+    ],
+    "animals": [
+     "소"
+    ]
+   }
+  },
+  {
+   "id": "manse_west",
+   "name": "만세교 서쪽 마을",
+   "type": "원",
+   "lat": 39.915,
+   "lon": 127.507,
+   "radius_m": 45,
+   "size": "M",
+   "confidence": "가설",
+   "source": [
+    "원칙: 큰 다리 맞은편 길목 마을"
+   ],
+   "notes": "정평·영흥 가는 경흥대로 길목 — 주막·마방.",
+   "profile": {
+    "archetype": "pass",
+    "climate": "north",
+    "signature": "다리 건너기 전 주막과 마방",
+    "trades": [
+     "주막",
+     "마방"
+    ],
+    "people": [
+     "나그네",
+     "마부",
+     "주모"
+    ],
+    "animals": [
+     "말"
+    ]
+   }
+  },
+  {
+   "id": "bongung_village",
+   "name": "본궁 아래 마을",
+   "type": "마을",
+   "lat": 39.8745,
+   "lon": 127.5615,
+   "radius_m": 50,
+   "size": "M",
+   "confidence": "가설",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 함흥본궁 부근"
+   ],
+   "notes": "호련천·성천강 합류 들마을.",
+   "profile": {
+    "archetype": "plain",
+    "climate": "north",
+    "signature": "본궁 솔숲과 함흥차사 이야기",
+    "trades": [
+     "논농사",
+     "본궁 수호"
+    ],
+    "people": [
+     "농부",
+     "궁지기"
+    ],
+    "animals": [
+     "소"
+    ]
+   }
+  },
+  {
+   "id": "unheung",
+   "name": "운흥 들마을",
+   "type": "마을",
+   "lat": 39.93,
+   "lon": 127.532,
+   "radius_m": 45,
+   "size": "M",
+   "confidence": "가설",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 운흥동 일대(현대 지명)"
+   ],
+   "notes": "반룡산 북쪽 들.",
+   "profile": {
+    "archetype": "plain",
+    "climate": "north",
+    "signature": "넓은 들의 낮은 겹집 무리",
+    "trades": [
+     "밭농사",
+     "논농사"
+    ],
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ]
+   }
+  }
+ ],
+ "passes": [],
+ "crossings": [
+  {
+   "id": "manse_crossing",
+   "name": "만세교",
+   "type": "섶다리",
+   "river_id": "seongcheongang",
+   "road_id": "gyeongheung_daero",
+   "lat": 39.9133,
+   "lon": 127.516,
+   "confidence": "추정",
+   "notes": "실제는 긴 널다리(나무다리) — kit landmark/long_wooden_bridge. 계약 형식상 섶다리로 표기(가설)."
+  }
+ ],
+ "roads": [
+  {
+   "id": "gyeongheung_daero",
+   "name": "경흥대로(정평→만세교→함흥)",
+   "class": "대로",
+   "width": 6.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "남서 끝 포털: 정평·영흥·안변·철령 → 한양(경흥대로), 평양 노정은 영흥에서 갈라짐.",
+   "via": [
+    [
+     39.86,
+     127.442
+    ],
+    [
+     39.89,
+     127.478
+    ],
+    [
+     39.915,
+     127.506
+    ],
+    "c:manse_crossing",
+    [
+     39.9118,
+     127.52
+    ],
+    [
+     39.913,
+     127.5235
+    ]
+   ]
+  },
+  {
+   "id": "hamheung_inner",
+   "name": "함흥 성안길(남문→선화당)",
+   "class": "지선",
+   "width": 6.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "",
+   "fixed": [
+    [
+     39.9066,
+     127.524
+    ],
+    [
+     39.913,
+     127.5238
+    ]
+   ]
+  },
+  {
+   "id": "bukcheong_road",
+   "name": "북청길(선화당→동문→호련천→홍원)",
+   "class": "대로",
+   "width": 5.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "동쪽 끝 포털: 홍원·북청(사자놀음) 노정.",
+   "via": [
+    [
+     39.913,
+     127.5238
+    ],
+    [
+     39.9132,
+     127.532
+    ],
+    [
+     39.92,
+     127.56
+    ],
+    [
+     39.928,
+     127.6399
+    ]
+   ],
+   "branch_of": "hamheung_inner"
+  },
+  {
+   "id": "bongung_road",
+   "name": "본궁길(남문→본궁)",
+   "class": "지선",
+   "width": 5.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "",
+   "via": [
+    [
+     39.9066,
+     127.524
+    ],
+    [
+     39.895,
+     127.54
+    ],
+    [
+     39.876,
+     127.56
+    ],
+    [
+     39.8715,
+     127.5665
+    ]
+   ],
+   "branch_of": "hamheung_inner"
+  },
+  {
+   "id": "seoho_road",
+   "name": "서호길(본궁→서호진 포구)",
+   "class": "지선",
+   "width": 4.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "남쪽 끝(권역 밖 서호진 포구 — 지도에만).",
+   "via": [
+    [
+     39.876,
+     127.56
+    ],
+    [
+     39.86,
+     127.575
+    ],
+    [
+     39.846,
+     127.585
+    ]
+   ],
+   "branch_of": "bongung_road"
+  },
+  {
+   "id": "unheung_lane",
+   "name": "운흥 마을길",
+   "class": "마을길",
+   "width": 3.5,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "",
+   "via": [
+    [
+     39.9132,
+     127.532
+    ],
+    [
+     39.93,
+     127.532
+    ]
+   ],
+   "branch_of": "bukcheong_road"
+  },
+  {
+   "id": "bannyong_trail",
+   "name": "반룡산 산길(구천각·치마대)",
+   "class": "산길",
+   "width": 1.5,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "",
+   "via": [
+    [
+     39.914,
+     127.5239
+    ],
+    [
+     39.92,
+     127.5235
+    ],
+    [
+     39.9235,
+     127.5262
+    ]
+   ],
+   "branch_of": "hamheung_inner"
+  }
+ ],
+ "main_road": "gyeongheung_daero",
+ "naru_rivers": [
+  "seongcheongang"
+ ],
+ "north": {
+  "walls": {
+   "hamheung_wall": {
+    "name": "함흥읍성",
+    "closed": true,
+    "height_m": [
+     4.0,
+     6.0
+    ],
+    "kit": "landmark/town_wall",
+    "gates": [
+     "hamheung_south_gate",
+     "nakminnu",
+     "hamheung_east_gate",
+     "gucheongak"
+    ],
+    "confidence": "가설",
+    "source": [
+     "원칙: 반룡산 남쪽 비탈을 감싼 평산성(모양 가설)"
+    ],
+    "notes": "북쪽은 반룡산 능선(구천각)까지 올라감.",
+    "latlon": [
+     [
+      39.9066,
+      127.524
+     ],
+     [
+      39.907,
+      127.5195
+     ],
+     [
+      39.9118,
+      127.5188
+     ],
+     [
+      39.9175,
+      127.5195
+     ],
+     [
+      39.92,
+      127.5235
+     ],
+     [
+      39.9195,
+      127.529
+     ],
+     [
+      39.9132,
+      127.532
+     ],
+     [
+      39.9085,
+      127.53
+     ],
+     [
+      39.9066,
+      127.524
+     ]
+    ]
+   }
+  },
+  "gates": [],
+  "note": "north_post.py가 region.json에 walls(성곽 선)·portals 보강"
+ },
+ "hydro": {
+  "known": {
+   "성천강": {
+    "id": "seongcheongang",
+    "grade": "B",
+    "flows_to": "권역 밖 — 동해(서호·흥남 앞바다)"
+   },
+   "호련천": {
+    "id": "horyeoncheon",
+    "grade": "C",
+    "flows_to": "성천강(권역 밖 — 본궁 앞 합류 근처)"
+   },
+   "여위천": {
+    "id": "yeowicheon",
+    "grade": "C",
+    "flows_to": "권역 밖 — 성천강"
+   }
+  },
+  "edge_flows": [
+   {
+    "cond": "True",
+    "label": "권역 밖 — 성천강 수계(동해)"
+   }
+  ],
+  "width_game": {
+   "B": 27.0,
+   "C": 7.0,
+   "D": 2.5
+  }
+ },
+ "axes": [
+  {
+   "town": "함흥 읍성",
+   "center": [
+    39.9115,
+    127.5245
+   ],
+   "jinsan": {
+    "name": "반룡산",
+    "lat": 39.9235,
+    "lon": 127.5262,
+    "confidence": "추정",
+    "source": []
+   },
+   "ansan": {
+    "name": "성천강 건너 남쪽 들(안산 미상)",
+    "lat": 39.89,
+    "lon": 127.51,
+    "confidence": "가설",
+    "source": []
+   },
+   "note": "반룡산을 등지고 성천강 평야를 내려다봄."
+  }
+ ],
+ "spawn": {
+  "ref": [
+   39.9122,
+   127.5185
+  ],
+  "note": "만세교 동쪽 머리, 낙민루 앞"
+ },
+ "entry": {
+  "x": -550.7,
+  "z": 92.9,
+  "note": "만세교 동쪽 머리, 낙민루 앞"
+ },
+ "portals": [
+  {
+   "id": "to_cheollyeong",
+   "name": "→ 철령(정평·안변 · 한양/평양 노정)",
+   "to": "route:PA_PYEONGYANG-HG_HAMHEUNG",
+   "to_route": "PA_PYEONGYANG-HG_HAMHEUNG",
+   "road": "gyeongheung_daero",
+   "note": "경흥대로 남서쪽: 정평 → 영흥 → 안변 → 철령 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
+   "ref": [
+    39.86,
+    127.442
+   ]
+  },
+  {
+   "id": "to_bukcheong",
+   "name": "→ 북청(홍원)",
+   "to": "route:HG_HAMHEUNG-BUKCHEONG",
+   "to_route": "HG_HAMHEUNG-BUKCHEONG",
+   "road": "bukcheong_road",
+   "note": "홍원 → 북청(사자놀음) — 노정 미정 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
+   "ref": [
+    39.928,
+    127.6399
+   ]
+  }
+ ],
+ "n_auto": 6,
+ "zooms": {
+  "zoom_hamheung_manse": [
+   -1200,
+   -600,
+   300,
+   400
+  ],
+  "zoom_bongung": [
+   -300,
+   800,
+   1200,
+   1800
+  ]
+ },
+ "qa_alt": [
+  {
+   "id": "seonhwadang",
+   "lo": 10,
+   "hi": 70
+  },
+  {
+   "id": "hamheung_bongung",
+   "lo": 3,
+   "hi": 40
+  }
+ ]
+}

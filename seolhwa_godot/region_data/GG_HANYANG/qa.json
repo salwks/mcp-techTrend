@@ -1,0 +1,264 @@
+{
+ "H": {
+  "ok": true,
+  "msg": "PNG 16bit 회색조(type 0) 2561×2561 cell 2.0m, y -4.0…168.0 (실제 -8…336m), 클립 0.0e+00, 경복궁(1868 중건) 실제 41m(기대 20~60), 목멱산 봉수대 실제 260m(기대 200~280), 경사 tan 중앙값 0.06/99% 0.64, region_data 합계 7.4MB",
+  "sizes": {
+   "climate.png": 3286,
+   "qa.json": 6179,
+   "map.png": 876918,
+   "landuse.png": 95732,
+   "height.png": 6092090,
+   "region.json": 311106,
+   "map.json": 85
+  }
+ },
+ "Q1": {
+  "ok": true,
+  "msg": "하천 28개 모두 상위 하천·바다(30m 안)·권역 가장자리에 닿음",
+  "fails": []
+ },
+ "Q2": {
+  "ok": true,
+  "msg": "수면 단조감소 위반 0개, 유역(출구) 넘는 하천 0개, 수로 안 수면(지형≤수면) 최소 0.91, 양안 둑≥수면 평균 0.986",
+  "mono_bad": [],
+  "cross_bad": []
+ },
+ "Q4": {
+  "ok": true,
+  "msg": "논 28.8% (경사>10% 비율 0.1%, 실제 고도 99% 53m), 밭 27.9% (경사>30% 0.1%)",
+  "landuse_share": {
+   "0": 0.3107,
+   "1": 0.0018,
+   "2": 0.288,
+   "3": 0.2792,
+   "4": 0.0154,
+   "5": 0.0814,
+   "6": 0.0176,
+   "7": 0.0042,
+   "8": 0.0011,
+   "9": 0.0007
+  }
+ },
+ "Q5": {
+  "ok": true,
+  "msg": "돌출 40m(실제)↑ 능선 모두 고개(passes 3개) 200m 안",
+  "fails": []
+ },
+ "Q6": {
+  "ok": true,
+  "msg": "도로×하천 교차 29곳 모두 도강점 있음; 형식 {'돌다리': 10, '수문': 1, '징검다리': 7, '여울': 4, '나루': 5}; B급 도강 5곳: ['나루', '나루', '나루', '나루', '나루']",
+  "fails": []
+ },
+ "Q11": {
+  "ok": true,
+  "msg": "B급 이상 도강점 중 고정 다리 0/5"
+ },
+ "Q8": {
+  "ok": true,
+  "msg": "장시 [('ungjongga', '14m'), ('baeogae_jang', '0m'), ('chilpae_jang', '1m')] — 모두 간선망(운종가(종로)와 연결된 길)에 붙음; 망에서 떨어진 길: 없음",
+  "markets": [
+   [
+    "ungjongga",
+    14,
+    true,
+    true
+   ],
+   [
+    "baeogae_jang",
+    0,
+    true,
+    true
+   ],
+   [
+    "chilpae_jang",
+    1,
+    true,
+    true
+   ]
+  ]
+ },
+ "Q10": {
+  "ok": true,
+  "msg": "이름·유형 금지어 0건; 지운 저수지 0곳 평탄면 비율 전 0.00→후 0.00 (최대 0.00); 선형 현대시설(고속도로·철도·국도 성토/절토) 484 OSM way 덮음; 남긴 소류지 0곳(1.5ha 미만 — 조선 제언 가능, DEM 흔적 없음)",
+  "hits": []
+ },
+ "Q14": {
+  "ok": true,
+  "msg": "마을 단면 9/12 통과 (기준 75%)",
+  "detail": [
+   [
+    "hanyang_doseong_in",
+    true,
+    "위반 0.00, 뒤(산쪽) 숲·밭 0.04, 뒤-앞 고도차 -3.9"
+   ],
+   [
+    "bukchon",
+    true,
+    "위반 0.00, 뒤(산쪽) 숲·밭 1.00, 뒤-앞 고도차 +0.0"
+   ],
+   [
+    "jungchon",
+    false,
+    "위반 0.52, 뒤(산쪽) 숲·밭 0.00, 뒤-앞 고도차 +2.9"
+   ],
+   [
+    "namchon",
+    true,
+    "위반 0.10, 뒤(산쪽) 숲·밭 1.00, 뒤-앞 고도차 +8.7"
+   ],
+   [
+    "wangsimni",
+    true,
+    "위반 0.00, 뒤(산쪽) 숲·밭 1.00, 뒤-앞 고도차 +13.2"
+   ],
+   [
+    "mapo",
+    true,
+    "위반 0.00, 뒤(산쪽) 숲·밭 1.00, 뒤-앞 고도차 +14.1"
+   ],
+   [
+    "yongsan",
+    true,
+    "위반 0.17, 뒤(산쪽) 숲·밭 1.00, 뒤-앞 고도차 -1.6"
+   ],
+   [
+    "seobinggo_village",
+    false,
+    "위반 0.18, 뒤(산쪽) 숲·밭 0.30, 뒤-앞 고도차 +4.6"
+   ],
+   [
+    "auto_village_00",
+    true,
+    "위반 0.00, 뒤(산쪽) 숲·밭 0.00, 뒤-앞 고도차 +2.8"
+   ],
+   [
+    "auto_village_01",
+    true,
+    "위반 0.07, 뒤(산쪽) 숲·밭 0.33, 뒤-앞 고도차 -0.3"
+   ],
+   [
+    "auto_village_02",
+    true,
+    "위반 0.00, 뒤(산쪽) 숲·밭 0.00, 뒤-앞 고도차 +2.6"
+   ],
+   [
+    "auto_village_03",
+    false,
+    "위반 0.00, 뒤(산쪽) 숲·밭 0.00, 뒤-앞 고도차 +3.2"
+   ]
+  ]
+ },
+ "QR": {
+  "ok": true,
+  "msg": "길 표본 15424점(2m 간격, 도강점 반경 '하천 반폭+4.5m' 밖) 모두 물 칸 아님·수면+0.1 이상(목표 +0.3, 격자 차 허용)",
+  "fails": []
+ },
+ "QL": {
+  "ok": true,
+  "msg": "길 중심선 표본 16033점 중 landuse 4 비율 1.000 (길별 최소 1.000)",
+  "per_road": {
+   "yukjo_geori": 1.0,
+   "unjongga": 1.0,
+   "namdaemunro": 1.0,
+   "seomun_ro": 1.0,
+   "samnam_daero": 1.0,
+   "noryang_ferry": 1.0,
+   "samnam_south": 1.0,
+   "mapo_road": 1.0,
+   "yongsan_road": 1.0,
+   "dongdaemun_out": 1.0,
+   "gwanghuimun_lane": 1.0,
+   "hangangjin_road": 1.0,
+   "hangangjin_ferry": 1.0,
+   "sapyeong_road": 1.0,
+   "hyehwamun_out": 1.0,
+   "donhwamun_ro": 1.0,
+   "bukchon_ro": 1.0,
+   "gaecheon_lane": 1.0,
+   "namchon_lane": 1.0,
+   "seonggyungwan_lane": 1.0,
+   "sajik_lane": 1.0,
+   "changuimun_road": 1.0,
+   "namsan_trail": 1.0,
+   "seobinggo_road": 1.0
+  }
+ },
+ "QW": {
+  "ok": true,
+  "msg": "성곽 읍치 없음(검사 생략)",
+  "fails": []
+ },
+ "Q3": {
+  "ok": true,
+  "msg": "고을·큰 마을 물(하천·용천수·호수·바다) 거리(게임 m, 기준 400): [('hanyang_doseong_in', 72), ('bukchon', 242), ('ungjongga', 76), ('jungchon', 87), ('namchon', 31), ('baeogae_jang', 103), ('chilpae_jang', 121), ('wangsimni', 35), ('mapo', 76), ('yongsan', 19), ('noryangjin', 43), ('hangangjin', 14)]",
+  "detail": [
+   [
+    "hanyang_doseong_in",
+    72
+   ],
+   [
+    "bukchon",
+    242
+   ],
+   [
+    "ungjongga",
+    76
+   ],
+   [
+    "jungchon",
+    87
+   ],
+   [
+    "namchon",
+    31
+   ],
+   [
+    "baeogae_jang",
+    103
+   ],
+   [
+    "chilpae_jang",
+    121
+   ],
+   [
+    "wangsimni",
+    35
+   ],
+   [
+    "mapo",
+    76
+   ],
+   [
+    "yongsan",
+    19
+   ],
+   [
+    "noryangjin",
+    43
+   ],
+   [
+    "hangangjin",
+    14
+   ]
+  ]
+ },
+ "Q7": {
+  "ok": true,
+  "msg": "모든 마을 중심이 물 칸 밖이고 B·C급 하천 수면보다 실제 2m 이상 높음",
+  "fails": []
+ },
+ "Q9": {
+  "ok": true,
+  "msg": "포구·갯마을 → 바다/큰 강 거리(게임 m, 기준 250): []",
+  "detail": []
+ },
+ "QP": {
+  "ok": true,
+  "msg": "archetypes 9개, settlement 17곳 모두 profile — 유형별 {'capital': 7, 'plain': 5, 'river': 5}",
+  "fails": []
+ },
+ "QC": {
+  "ok": true,
+  "msg": "climate.png 1281×1281 8bit(landuse와 같은 격자 True), 코드 [1] — 비율 {'central': 1.0} (기대 기후대 []; 고산 하한 {0: 1100.0, 1: 1000.0, 2: 850.0} 불일치 0.00000)"
+ }
+}

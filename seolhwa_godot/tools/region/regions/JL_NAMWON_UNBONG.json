@@ -1,0 +1,10 @@
+{
+ "id": "JL_NAMWON_UNBONG", "name": "남원·운봉·지리산 서부", "builder": "build.py (남원 전용 — 견본 권역, places.py·profiles.py에 고증)",
+ "culture": "호남", "climate": "south",
+ "lat0": 35.4175, "lon0": 127.50, "K": 0.30, "y_base_alt": 60.0,
+ "cell": 2.0, "x0": -4352.0, "z0": -2112.0,
+ "cache": "cache", "tiles": "cache/terrarium_z13", "shots_flat": true,
+ "fetch_bbox": [35.355, 35.480, 127.340, 127.660],
+ "osm_bbox": [35.35, 127.33, 35.49, 127.67],
+ "entry": {"x": -3227.8, "z": 366.7, "note": "남원읍성 남문 앞(spawn)"}
+}

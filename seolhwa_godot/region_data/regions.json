@@ -129,5 +129,165 @@
     "to": "map_only"
    }
   ]
+ },
+ {
+  "id": "GG_HANYANG",
+  "name": "한양(도성·한강 나루)",
+  "culture": "기호",
+  "climate": "central",
+  "entry": {
+   "x": -644.2,
+   "z": -309.6
+  },
+  "lat": 37.5596,
+  "lon": 126.9754,
+  "map_pos": {
+   "x": 0.4251,
+   "y": 0.544
+  },
+  "K": 0.5,
+  "portals": [
+   {
+    "id": "to_pyeongyang",
+    "name": "→ 황주·평양(의주대로)",
+    "x": -2029.8,
+    "z": -1686.3,
+    "to": "route:GG_HANYANG-HH_HWANGJU"
+   },
+   {
+    "id": "to_namwon",
+    "name": "→ 남원(삼남대로)",
+    "x": -1809.2,
+    "z": 2532.1,
+    "to": "route:JL_NAMWON_UNBONG-GG_HANYANG"
+   },
+   {
+    "id": "to_gyeongju",
+    "name": "→ 경주(살곶이·송파)",
+    "x": 2449.0,
+    "z": 27.6,
+    "to": "route:GG_HANYANG-GS_GYEONGJU"
+   },
+   {
+    "id": "to_gyeongju_hangangjin",
+    "name": "→ 경주(한강진·판교)",
+    "x": 1544.4,
+    "z": 2515.6,
+    "to": "route:GG_HANYANG-GS_GYEONGJU"
+   },
+   {
+    "id": "to_hamheung",
+    "name": "→ 함흥(경흥대로)",
+    "x": 1456.2,
+    "z": -2559.8,
+    "to": "route:GG_HANYANG-HG_HAMHEUNG"
+   }
+  ]
+ },
+ {
+  "id": "HH_HWANGJU",
+  "name": "황주(황주천·대동강 하류)",
+  "culture": "해서",
+  "climate": "central",
+  "entry": {
+   "x": 20.9,
+   "z": -746.4
+  },
+  "lat": 38.6875,
+  "lon": 125.7608,
+  "map_pos": {
+   "x": 0.2515,
+   "y": 0.4312
+  },
+  "K": 0.3,
+  "portals": [
+   {
+    "id": "to_kaesong",
+    "name": "→ 개성·한양(의주대로)",
+    "x": 417.2,
+    "z": 2288.9,
+    "to": "route:GG_HANYANG-HH_HWANGJU"
+   },
+   {
+    "id": "to_pyeongyang",
+    "name": "→ 평양(의주대로)",
+    "x": 573.7,
+    "z": -2288.9,
+    "to": "route:HH_HWANGJU-PA_PYEONGYANG"
+   },
+   {
+    "id": "to_jangsangot",
+    "name": "→ 장산곶·인당수(바닷가 띠)",
+    "x": -2555.4,
+    "z": -1559.1,
+    "to": "route:HH_HWANGJU-JANGSANGOT"
+   }
+  ]
+ },
+ {
+  "id": "PA_PYEONGYANG",
+  "name": "평양(대동강·모란봉)",
+  "culture": "관서",
+  "climate": "north",
+  "entry": {
+   "x": 220.5,
+   "z": 92.9
+  },
+  "lat": 39.0222,
+  "lon": 125.7585,
+  "map_pos": {
+   "x": 0.2512,
+   "y": 0.3978
+  },
+  "K": 0.3,
+  "portals": [
+   {
+    "id": "to_hanyang",
+    "name": "→ 황주·한양(중화)",
+    "x": 778.3,
+    "z": 2023.5,
+    "to": "route:HH_HWANGJU-PA_PYEONGYANG"
+   },
+   {
+    "id": "to_hamheung",
+    "name": "→ 함흥(노정)",
+    "x": 259.4,
+    "z": -2046.7,
+    "to": "route:PA_PYEONGYANG-HG_HAMHEUNG"
+   }
+  ]
+ },
+ {
+  "id": "HG_HAMHEUNG",
+  "name": "함흥(성천강·반룡산)",
+  "culture": "관북",
+  "climate": "north",
+  "entry": {
+   "x": -550.7,
+   "z": 92.9
+  },
+  "lat": 39.9122,
+  "lon": 127.5185,
+  "map_pos": {
+   "x": 0.5026,
+   "y": 0.3088
+  },
+  "K": 0.3,
+  "portals": [
+   {
+    "id": "to_cheollyeong",
+    "name": "→ 철령(정평·안변 · 한양/평양 노정)",
+    "x": -2510.2,
+    "z": 1824.5,
+    "to": "route:PA_PYEONGYANG-HG_HAMHEUNG"
+   },
+   {
+    "id": "to_bukcheong",
+    "name": "→ 북청(홍원)",
+    "x": 2558.9,
+    "z": -431.2,
+    "to": "route:HG_HAMHEUNG-BUKCHEONG"
+   }
+  ]
  }
 ]

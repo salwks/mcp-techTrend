@@ -1,0 +1,619 @@
+{
+ "id": "HH_HWANGJU",
+ "name": "황주(황주천·대동강 하류)",
+ "builder": "build_region.py (data-north 설정: north_prep.py가 north_places_*.py에서 씀)",
+ "province": "황해도",
+ "culture": "해서",
+ "climate": "central",
+ "lat0": 38.665,
+ "lon0": 125.76,
+ "K": 0.3,
+ "y_base_alt": 0.0,
+ "cell": 2.0,
+ "x0": -2560.0,
+ "z0": -2304.0,
+ "fetch_bbox": [
+  38.5955,
+  38.7345,
+  125.6618,
+  125.8582
+ ],
+ "osm_bbox": [
+  38.5855,
+  125.6518,
+  38.7445,
+  125.8682
+ ],
+ "meta": {
+  "parent_province": "황해도",
+  "main_river": "황주천",
+  "connected_river": [
+   "천주천·성산천→황주천",
+   "황주천→대동강(권역 밖 서쪽, 겸이포)"
+  ],
+  "watershed_divide": "정방산 줄기(남쪽, 권역 밖) — 북쪽 황주천·남쪽 재령강",
+  "main_mountain": [
+   "읍 북쪽 구릉",
+   "정방산(남쪽 권역 밖, 성불사)"
+  ],
+  "settlement_type": "목(牧) 읍성 + 의주대로 길목 + 황주천 들마을",
+  "economy": [
+   "논농사(황주천 들)",
+   "의주대로 역참·객사(사신 길)",
+   "장시",
+   "대동강 포구(겸이포, 권역 밖)"
+  ],
+  "forbidden": [
+   "현대 공장·철도(평부선)·도로",
+   "직강 하천·저수지",
+   "기념비"
+  ],
+  "sources": [
+   "OpenStreetMap 북한 지도",
+   "한국민족문화대백과(통설)",
+   "WORLD_SPEC v0.3 §21 HH-02"
+  ]
+ },
+ "crossings_big": [],
+ "landmarks": [
+  {
+   "id": "hwangju_eupseong",
+   "name": "황주읍성",
+   "kit": "landmark/eupseong_generic",
+   "lat": 38.693,
+   "lon": 125.7612,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 황주읍 38.6936,125.7615",
+    "원칙: 평지 방형 읍성(실제 모양·둘레 미확인)"
+   ],
+   "notes": "한 변 실제 약 500m → 압축 땅에서 약 150m(게임). 4문. 의주대로가 남문→북문으로 꿰뚫음.",
+   "size_m": [
+    150,
+    150
+   ]
+  },
+  {
+   "id": "hwangju_gaeksa",
+   "name": "황주 객사",
+   "kit": "landmark/gaeksa",
+   "lat": 38.6934,
+   "lon": 125.7612,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "원칙: 읍성 가운데 객사"
+   ],
+   "notes": "사신 길(의주대로) 객사 — 중국 사신이 묵던 큰 객사(가설 규모).",
+   "size_m": [
+    55,
+    35
+   ]
+  },
+  {
+   "id": "hwangju_dongheon",
+   "name": "황주목 동헌",
+   "kit": "landmark/hyeon_gwana",
+   "lat": 38.692499999999995,
+   "lon": 125.7622,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "원칙: 객사 동쪽 동헌"
+   ],
+   "notes": "",
+   "size_m": [
+    40,
+    32
+   ]
+  },
+  {
+   "id": "wolparu",
+   "name": "월파루",
+   "kit": "landmark/pavilion_small",
+   "lat": 38.6805,
+   "lon": 125.754,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "한국민족문화대백과(통설) '월파루' — 황주 읍치 앞 물가 누각(위치 가설)"
+   ],
+   "notes": "황주천 가 누각 — 달 비친 물결. 기생·사신 연회(가설).",
+   "size_m": [
+    16,
+    10
+   ]
+  },
+  {
+   "id": "dohwadong_well",
+   "name": "도화동 우물(심청 이야기 자리)",
+   "kit": "landmark/village_well",
+   "lat": 38.6752,
+   "lon": 125.744,
+   "ry": 0,
+   "confidence": "가설",
+   "source": [
+    "심청전: 황주 도화동(소설 배경, 지역연계 B — 강제 확정 않음)"
+   ],
+   "notes": "심봉사가 빠진 개울·우물 이야기 자리로 쓸 수 있음(가설).",
+   "size_m": [
+    8,
+    8
+   ]
+  }
+ ],
+ "settlements": [
+  {
+   "id": "hwangju_eup",
+   "name": "황주 읍내(읍성)",
+   "type": "읍성",
+   "lat": 38.693,
+   "lon": 125.7612,
+   "radius_m": 110,
+   "size": "L",
+   "confidence": "추정",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 황주읍"
+   ],
+   "notes": "황주목 읍치. 의주대로(사신 길) 객사 고을.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "central",
+    "roof": {
+     "giwa": 0.45,
+     "choga": 0.55
+    },
+    "wall": "stone",
+    "signature": "사신 길 객사와 남문 밖 장, 황주천 월파루",
+    "trades": [
+     "관아",
+     "객사(사신 접대)",
+     "장시"
+    ],
+    "people": [
+     "관속",
+     "역졸",
+     "사신 행렬",
+     "장꾼"
+    ],
+    "animals": [
+     "말"
+    ],
+    "notes": "해서 문화권: 一자·ㄱ자 겹집 섞임(가설)"
+   }
+  },
+  {
+   "id": "hwangju_jang",
+   "name": "황주 장(남문 밖)",
+   "type": "장시",
+   "lat": 38.689,
+   "lon": 125.7608,
+   "radius_m": 40,
+   "size": "M",
+   "confidence": "가설",
+   "source": [
+    "원칙: 남문 밖 장터"
+   ],
+   "notes": "황해 곡물·사과(가설: 사과는 근대 — 쓰지 않음)·소.",
+   "profile": {
+    "archetype": "eupchi",
+    "climate": "central",
+    "signature": "곡식 섬과 소 시장",
+    "trades": [
+     "장시"
+    ],
+    "people": [
+     "장꾼",
+     "보부상"
+    ],
+    "animals": [
+     "소"
+    ]
+   }
+  },
+  {
+   "id": "dohwadong",
+   "name": "도화동",
+   "type": "마을",
+   "lat": 38.6755,
+   "lon": 125.7445,
+   "radius_m": 45,
+   "size": "M",
+   "confidence": "가설",
+   "source": [
+    "심청전 배경 지명(소설) — 위치는 황주천 남서 들마을로 둠(가설)"
+   ],
+   "notes": "심청 이야기 마을(B 태그).",
+   "profile": {
+    "archetype": "plain",
+    "climate": "central",
+    "signature": "개울 외나무다리와 우물, 눈먼 아비 이야기",
+    "trades": [
+     "논농사"
+    ],
+    "people": [
+     "농부",
+     "아낙"
+    ],
+    "animals": [
+     "소"
+    ],
+    "notes": "심청 이야기 연계 후보(B) — 사건은 '이야기', 장소는 평범한 들마을"
+   }
+  },
+  {
+   "id": "namcheon_ferry_village",
+   "name": "황주천 건넛마을",
+   "type": "원",
+   "lat": 38.6655,
+   "lon": 125.765,
+   "radius_m": 35,
+   "size": "S",
+   "confidence": "가설",
+   "source": [
+    "원칙: 대로가 큰 내를 건너는 자리 길목 마을"
+   ],
+   "notes": "의주대로 남쪽 — 주막·섶다리.",
+   "profile": {
+    "archetype": "river",
+    "climate": "central",
+    "signature": "대로 섶다리와 주막",
+    "trades": [
+     "주막",
+     "나루"
+    ],
+    "people": [
+     "뱃사공",
+     "주모",
+     "나그네"
+    ]
+   }
+  },
+  {
+   "id": "cheonju_village",
+   "name": "천주천 들마을",
+   "type": "마을",
+   "lat": 38.705,
+   "lon": 125.756,
+   "radius_m": 40,
+   "size": "S",
+   "confidence": "가설",
+   "source": [
+    "OpenStreetMap (Overpass, 2026-10 조회 — 북한 지도, 위치 정확도 보통) — 천주천"
+   ],
+   "notes": "읍성 북쪽 내 건너 들.",
+   "profile": {
+    "archetype": "plain",
+    "climate": "central",
+    "signature": "낮은 들의 둥근 초가 무리",
+    "trades": [
+     "논농사"
+    ],
+    "people": [
+     "농부"
+    ],
+    "animals": [
+     "소"
+    ]
+   }
+  }
+ ],
+ "passes": [],
+ "crossings": [
+  {
+   "id": "hwangjucheon_bridge",
+   "name": "황주천 섶다리(남천 건널목)",
+   "type": "섶다리",
+   "river_id": "hwangjucheon",
+   "road_id": "uiju_south",
+   "lat": 38.6688,
+   "lon": 125.764,
+   "confidence": "가설",
+   "notes": "겨울~봄 섶다리, 여름 큰물엔 나룻배(가설)."
+  },
+  {
+   "id": "cheonju_bridge",
+   "name": "천주천 돌다리",
+   "type": "돌다리",
+   "river_id": "cheonjucheon",
+   "road_id": "uiju_north",
+   "lat": 38.701,
+   "lon": 125.764,
+   "confidence": "가설",
+   "notes": "사신 길 돌다리(가설)."
+  }
+ ],
+ "roads": [
+  {
+   "id": "uiju_south",
+   "name": "의주대로(황주 남문→정방산·봉산 방면)",
+   "class": "대로",
+   "width": 6.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "남쪽 끝 포털: 한양→평양 노정(봉산·서흥·개성).",
+   "via": [
+    "g:S",
+    [
+     38.689,
+     125.7608
+    ],
+    "c:hwangjucheon_bridge",
+    [
+     38.64,
+     125.77
+    ],
+    [
+     38.596,
+     125.776
+    ]
+   ]
+  },
+  {
+   "id": "uiju_north",
+   "name": "의주대로(황주 북문→중화·평양 방면)",
+   "class": "대로",
+   "width": 6.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "북쪽 끝 포털: 중화 → 평양.",
+   "via": [
+    "g:N",
+    "c:cheonju_bridge",
+    [
+     38.72,
+     125.77
+    ],
+    [
+     38.734,
+     125.782
+    ]
+   ]
+  },
+  {
+   "id": "eup_ns",
+   "name": "황주 성안 남북길",
+   "class": "지선",
+   "width": 6.0,
+   "confidence": "가설",
+   "source": [
+    "성문 통로를 잇는 성안 길(원칙)"
+   ],
+   "notes": "",
+   "fixed": [
+    "gc:S",
+    "gc:N"
+   ]
+  },
+  {
+   "id": "eup_ew",
+   "name": "황주 성안 동서길",
+   "class": "지선",
+   "width": 5.0,
+   "confidence": "가설",
+   "source": [
+    "성문 통로를 잇는 성안 길(원칙)"
+   ],
+   "notes": "",
+   "fixed": [
+    "gc:W",
+    "gc:E"
+   ]
+  },
+  {
+   "id": "gyeomipo_road",
+   "name": "겸이포길(서문→대동강 포구)",
+   "class": "지선",
+   "width": 4.0,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "서쪽 끝(권역 밖 겸이포 — 대동강 포구, 지도에만).",
+   "via": [
+    "g:W",
+    [
+     38.6935,
+     125.748
+    ],
+    [
+     38.699,
+     125.73
+    ],
+    [
+     38.706,
+     125.69
+    ],
+    [
+     38.712,
+     125.662
+    ]
+   ]
+  },
+  {
+   "id": "dohwa_lane",
+   "name": "도화동 길",
+   "class": "마을길",
+   "width": 3.5,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "",
+   "via": [
+    [
+     38.68,
+     125.752
+    ],
+    [
+     38.6755,
+     125.7445
+    ]
+   ],
+   "branch_of": "uiju_south"
+  },
+  {
+   "id": "east_lane",
+   "name": "동문 밖 길(성산천 들)",
+   "class": "마을길",
+   "width": 3.5,
+   "confidence": "가설",
+   "source": [
+    "경유점: 고증 위치(문·나루·장터) + 그 사이 A*(지형)"
+   ],
+   "notes": "",
+   "via": [
+    "g:E",
+    [
+     38.68,
+     125.79
+    ],
+    [
+     38.65,
+     125.805
+    ]
+   ]
+  }
+ ],
+ "main_road": "uiju_south",
+ "naru_rivers": [
+  "hwangjucheon"
+ ],
+ "north": {
+  "walls": {},
+  "gates": [],
+  "note": "north_post.py가 region.json에 walls(성곽 선)·portals 보강"
+ },
+ "hydro": {
+  "known": {
+   "황주천": {
+    "id": "hwangjucheon",
+    "grade": "B",
+    "flows_to": "권역 밖 — 대동강(겸이포 아래)"
+   },
+   "천주천": {
+    "id": "cheonjucheon",
+    "grade": "C",
+    "flows_to": "황주천"
+   },
+   "성산천": {
+    "id": "seongsancheon",
+    "grade": "C",
+    "flows_to": "황주천"
+   }
+  },
+  "edge_flows": [
+   {
+    "cond": "True",
+    "label": "권역 밖 — 황주천·대동강 수계"
+   }
+  ]
+ },
+ "axes": [
+  {
+   "town": "황주 읍성",
+   "center": [
+    38.693,
+    125.7612
+   ],
+   "jinsan": {
+    "name": "읍 북쪽 뒷산(이름 미상)",
+    "lat": 38.72,
+    "lon": 125.765,
+    "confidence": "가설",
+    "source": []
+   },
+   "ansan": {
+    "name": "남쪽 앞산(이름 미상)",
+    "lat": 38.65,
+    "lon": 125.77,
+    "confidence": "가설",
+    "source": []
+   },
+   "note": "평지 읍성 — 진산·안산은 DEM 봉우리 가설."
+  }
+ ],
+ "spawn": {
+  "ref": [
+   38.6875,
+   125.7608
+  ],
+  "note": "황주읍성 남문 밖 장터 길"
+ },
+ "entry": {
+  "x": 20.9,
+  "z": -746.4,
+  "note": "황주읍성 남문 밖 장터 길"
+ },
+ "portals": [
+  {
+   "id": "to_kaesong",
+   "name": "→ 개성·한양(의주대로)",
+   "to": "route:GG_HANYANG-HH_HWANGJU",
+   "to_route": "GG_HANYANG-HH_HWANGJU",
+   "road": "uiju_south",
+   "note": "봉산(사리원·정방산 성불사) → 서흥 → 평산 → 개성 → 한양 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
+   "ref": [
+    38.596,
+    125.776
+   ]
+  },
+  {
+   "id": "to_pyeongyang",
+   "name": "→ 평양(의주대로)",
+   "to": "route:HH_HWANGJU-PA_PYEONGYANG",
+   "to_route": "HH_HWANGJU-PA_PYEONGYANG",
+   "road": "uiju_north",
+   "note": "중화 → 평양 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
+   "ref": [
+    38.734,
+    125.782
+   ]
+  },
+  {
+   "id": "to_jangsangot",
+   "name": "→ 장산곶·인당수(바닷가 띠)",
+   "to": "route:HH_HWANGJU-JANGSANGOT",
+   "to_route": "HH_HWANGJU-JANGSANGOT",
+   "road": "gyeomipo_road",
+   "note": "겸이포·재령평야 → 구월산 기슭(삼성사·임꺽정) → 장산곶 — 노정 미정 (노정 데이터는 아직 없음 — 엔진은 '길이 아직 닦이지 않았다' 알림)",
+   "ref": [
+    38.712,
+    125.662
+   ]
+  }
+ ],
+ "eupseong": {
+  "landmark": "hwangju_eupseong",
+  "settlement": "hwangju_eup",
+  "half": 75.0,
+  "gates": "SNEW"
+ },
+ "n_auto": 8,
+ "zooms": {
+  "zoom_hwangju_eup": [
+   -700,
+   -1300,
+   500,
+   -200
+  ],
+  "zoom_dohwadong": [
+   -900,
+   -600,
+   200,
+   200
+  ]
+ },
+ "qa_alt": [
+  {
+   "id": "hwangju_gaeksa",
+   "lo": 3,
+   "hi": 60
+  }
+ ]
+}
