@@ -152,3 +152,22 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 ```
 - 키: `roof`(지붕 비율: giwa·choga·choga_low·neowa·gulpi·guitul·jeju_stone), `wall`(stone·stone_terrace·todam·fence·none·stone_net·basalt), `layout`(walled_grid·round_cluster·linear_street·fan_from_ferry·terraced·few_roadside·along_temple_road·linear_shore·olle_alleys), `entrance`(어귀 장면 키), `people`·`animals`(NPC 종류), `climate`(south·central·north·alpine·coast — §B 기후대), `signature`(고을 상징 한 줄), `trades`(생업).
 - 통과 기준: 고을 이름을 가린 게임 화면으로 어느 고을인지 맞힐 수 있어야 한다(눈가림 시험).
+
+## 10. 여러 권역과 노정 (전체 맵 — docs/WORLD_SCOPE_PLAN.md)
+
+| 권역 id | 대표 도시 | 문화권 · 기후대 | 데이터 담당 |
+|---|---|---|---|
+| JL_NAMWON_UNBONG | 남원 (완료) | 호남 · 남부(+고산) | — |
+| GS_GYEONGJU | 경주 | 영남 · 남부 | data-east |
+| GW_GANGNEUNG | 강릉 | 관동 · 중부(+고산·해안) | data-east |
+| JJ_JEJU | 제주목 | 탐라 · 해안섬 | data-east |
+| GG_HANYANG | 한양 (도읍 특수 — 압축 덜 함, 구역 나눔) | 기호 · 중부 | data-north |
+| HH_HWANGJU | 황주 | 해서 · 중부 | data-north |
+| PA_PYEONGYANG | 평양 | 관서 · 북부 | data-north |
+| HG_HAMHEUNG | 함흥 | 관북 · 북부 | data-north |
+
+- 폴더: `region_data/<권역 id>/`(§5 형식 그대로, `region.json`·`height.png`·`landuse.png`·`climate.png`·`map.png`·`placement_*.json`). 권역마다 **자기 로컬 좌표**(대표 도시 둘레 원점, 압축 K는 권역마다 `region.json.projection.K`에 — 기본 0.30, 한양은 0.5 안팎).
+- 목록: `region_data/regions.json` = `[{id, name, culture, climate, entry:{x,z}, map_pos:{x,y}(전국 지도 위 자리)}]`.
+- 노정: `region_data/routes/<노정 id>/route.json`(계획서 §2.1 — 길 따라 압축한 띠 공간, 경유 쉼터·성읍 `stops`, 양 끝 `portals:{from:{region,x,z}, to:{region,x,z}}`). 노정도 권역과 같은 형식(높이맵·토지이용·배치)이라 엔진이 같은 방식으로 불러온다.
+- 엔진: 실행 시 `--region=<id>`(기본 JL_NAMWON_UNBONG), 권역 끝 포털·노정 끝에서 짧은 불러오기로 다음 공간으로 넘어감, M 지도의 '전체 지도'는 전국 지도(권역·노정 위치)로 한 단계 더.
+- 키트는 공용(`kit/**`)이고 문화권별 가옥형은 `kit/culture/<문화권>/`(새 칸 — kit-culture 담당), 대표 도시 랜드마크는 `kit/landmark/`.
