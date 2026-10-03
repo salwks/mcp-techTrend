@@ -1173,7 +1173,7 @@
     "seed": 21
    },
    "x": -2936.0,
-   "z": -2281.5,
+   "z": -2295.5,
    "ry": 0.0,
    "y": null,
    "flatten": true,
@@ -1271,11 +1271,11 @@
    "kit": "landmark/gwana_wall",
    "params": {
     "seed": 2204,
-    "length": 10.8,
+    "length": 10.62,
     "height": 2.2
    },
    "x": -2910.0,
-   "z": -2273.78,
+   "z": -2273.69,
    "ry": 1.5708,
    "y": null,
    "flatten": false,
@@ -1287,11 +1287,11 @@
    "kit": "landmark/gwana_wall",
    "params": {
     "seed": 2205,
-    "length": 10.8,
+    "length": 10.62,
     "height": 2.2
    },
    "x": -2910.0,
-   "z": -2284.32,
+   "z": -2284.06,
    "ry": 1.5708,
    "y": null,
    "flatten": false,
@@ -1303,12 +1303,12 @@
    "kit": "landmark/gwana_wall",
    "params": {
     "seed": 2206,
-    "length": 12.05,
+    "length": 10.62,
     "height": 2.2
    },
-   "x": -2915.9,
-   "z": -2289.6,
-   "ry": -3.1416,
+   "x": -2910.0,
+   "z": -2294.44,
+   "ry": 1.5708,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1319,12 +1319,12 @@
    "kit": "landmark/gwana_wall",
    "params": {
     "seed": 2207,
-    "length": 12.05,
+    "length": 10.62,
     "height": 2.2
    },
-   "x": -2927.7,
-   "z": -2289.6,
-   "ry": -3.1416,
+   "x": -2910.0,
+   "z": -2304.81,
+   "ry": 1.5708,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1338,8 +1338,8 @@
     "length": 12.05,
     "height": 2.2
    },
-   "x": -2944.3,
-   "z": -2289.6,
+   "x": -2915.9,
+   "z": -2310.0,
    "ry": -3.1416,
    "y": null,
    "flatten": false,
@@ -1354,8 +1354,8 @@
     "length": 12.05,
     "height": 2.2
    },
-   "x": -2956.1,
-   "z": -2289.6,
+   "x": -2927.7,
+   "z": -2310.0,
    "ry": -3.1416,
    "y": null,
    "flatten": false,
@@ -1367,12 +1367,12 @@
    "kit": "landmark/gwana_wall",
    "params": {
     "seed": 2210,
-    "length": 10.8,
+    "length": 12.05,
     "height": 2.2
    },
-   "x": -2962.0,
-   "z": -2284.32,
-   "ry": -1.5708,
+   "x": -2944.3,
+   "z": -2310.0,
+   "ry": -3.1416,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -1383,11 +1383,75 @@
    "kit": "landmark/gwana_wall",
    "params": {
     "seed": 2211,
-    "length": 10.8,
+    "length": 12.05,
+    "height": 2.2
+   },
+   "x": -2956.1,
+   "z": -2310.0,
+   "ry": -3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 동경관"
+  },
+  {
+   "id": "gs_gaeksa_wall_13",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2212,
+    "length": 10.62,
     "height": 2.2
    },
    "x": -2962.0,
-   "z": -2273.78,
+   "z": -2304.81,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 동경관"
+  },
+  {
+   "id": "gs_gaeksa_wall_14",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2213,
+    "length": 10.62,
+    "height": 2.2
+   },
+   "x": -2962.0,
+   "z": -2294.44,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 동경관"
+  },
+  {
+   "id": "gs_gaeksa_wall_15",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2214,
+    "length": 10.62,
+    "height": 2.2
+   },
+   "x": -2962.0,
+   "z": -2284.06,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "객사 동경관"
+  },
+  {
+   "id": "gs_gaeksa_wall_16",
+   "kit": "landmark/gwana_wall",
+   "params": {
+    "seed": 2215,
+    "length": 10.62,
+    "height": 2.2
+   },
+   "x": -2962.0,
+   "z": -2273.69,
    "ry": -1.5708,
    "y": null,
    "flatten": false,
@@ -2249,29 +2313,70 @@
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_tteuljip_01",
-   "kit": "culture/yeongnam/tteuljip",
+   "id": "gs_eup_wall_run_03",
+   "kit": "village/wall_run",
    "params": {
-    "seed": 42406,
-    "roof": "choga"
+    "seed": 43715,
+    "kind": "todam_thatch",
+    "points": [
+     [
+      -0.55,
+      6.5
+     ],
+     [
+      -7.2,
+      6.5
+     ],
+     [
+      -7.2,
+      -6.0
+     ],
+     [
+      7.2,
+      -6.0
+     ],
+     [
+      7.2,
+      6.5
+     ],
+     [
+      2.65,
+      6.5
+     ]
+    ]
    },
-   "x": -2950.0,
-   "z": -2304.87,
-   "ry": 0.0182,
+   "x": -2886.11,
+   "z": -2316.24,
+   "ry": -0.0283,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_choga_03",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 43715,
+    "plan": "il"
+   },
+   "x": -2886.04,
+   "z": -2318.53,
+   "ry": -0.0283,
    "y": null,
    "flatten": true,
    "clear_veg": true,
    "group": "경주 읍내(성 안)",
    "footprint": [
-    16.4,
-    16.6
+    15.2,
+    13.3
    ]
   },
   {
    "id": "gs_eup_jangdok_03",
    "kit": "village/jangdok",
    "params": {
-    "seed": 42406,
+    "seed": 43715,
     "w": 2.4,
     "d": 2.0,
     "n": [
@@ -2280,9 +2385,9 @@
      1
     ]
    },
-   "x": -2940.49,
-   "z": -2310.04,
-   "ry": 0.0182,
+   "x": -2880.99,
+   "z": -2320.49,
+   "ry": -0.0283,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -2292,26 +2397,26 @@
    "id": "gs_eup_yard_props_03",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42407,
-    "set": "work"
+    "seed": 43715,
+    "set": "jars"
    },
-   "x": -2930.58,
-   "z": -2299.95,
-   "ry": 0.0153,
+   "x": -2890.51,
+   "z": -2312.86,
+   "ry": -0.0283,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_didil_bang_a_01",
-   "kit": "village/didil_bang_a",
+   "id": "gs_eup_haystack_03",
+   "kit": "village/haystack",
    "params": {
-    "seed": 42407
+    "seed": 43715
    },
-   "x": -2924.79,
-   "z": -2300.54,
-   "ry": 0.0153,
+   "x": -2881.4,
+   "z": -2312.8,
+   "ry": -0.0283,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -2321,33 +2426,13 @@
    "id": "gs_eup_ye_medium_07",
    "kit": "culture/yeongnam/compound",
    "params": {
-    "seed": 42411,
+    "seed": 43717,
     "size": "medium",
-    "roof": "giwa"
+    "roof": "choga"
    },
-   "x": -2910.53,
-   "z": -2304.51,
-   "ry": 0.0298,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)",
-   "footprint": [
-    22.0,
-    22.0
-   ]
-  },
-  {
-   "id": "gs_eup_ye_medium_08",
-   "kit": "culture/yeongnam/compound",
-   "params": {
-    "seed": 43722,
-    "size": "medium",
-    "roof": "giwa"
-   },
-   "x": -2883.43,
-   "z": -2292.1,
-   "ry": -0.0108,
+   "x": -2883.66,
+   "z": -2289.67,
+   "ry": -0.0354,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -2373,7 +2458,7 @@
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_03",
+   "id": "gs_eup_haystack_04",
    "kit": "village/haystack",
    "params": {
     "seed": 42017
@@ -2387,120 +2472,7 @@
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_yard_props_05",
-   "kit": "village/yard_props",
-   "params": {
-    "seed": 42038,
-    "set": "jars"
-   },
-   "x": -2884.08,
-   "z": -2321.87,
-   "ry": 0.0458,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_haystack_04",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 42038
-   },
-   "x": -2878.31,
-   "z": -2322.63,
-   "ry": 0.0458,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_tteuljip_02",
-   "kit": "culture/yeongnam/tteuljip",
-   "params": {
-    "seed": 42074,
-    "roof": "choga"
-   },
-   "x": -2890.38,
-   "z": -2310.35,
-   "ry": 0.0028,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)",
-   "footprint": [
-    16.4,
-    16.6
-   ]
-  },
-  {
-   "id": "gs_eup_jangdok_04",
-   "kit": "village/jangdok",
-   "params": {
-    "seed": 42074,
-    "w": 2.4,
-    "d": 2.0,
-    "n": [
-     2,
-     2,
-     1
-    ]
-   },
-   "x": -2880.8,
-   "z": -2315.37,
-   "ry": 0.0028,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_garden_02",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 42092,
-    "w": 5.0,
-    "d": 4.0
-   },
-   "x": -2954.38,
-   "z": -2293.63,
-   "ry": -0.0429,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_pumpkin_02",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 42092
-   },
-   "x": -2956.0,
-   "z": -2290.8,
-   "ry": -0.0429,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_haystack_05",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 42092
-   },
-   "x": -2950.3,
-   "z": -2293.06,
-   "ry": -0.0429,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_wall_run_03",
+   "id": "gs_eup_wall_run_04",
    "kit": "village/wall_run",
    "params": {
     "seed": 42149,
@@ -2532,24 +2504,24 @@
      ]
     ]
    },
-   "x": -2887.9,
-   "z": -2271.83,
-   "ry": -0.0079,
+   "x": -2888.71,
+   "z": -2271.76,
+   "ry": 0.0327,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_choga_03",
+   "id": "gs_eup_choga_04",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 42149,
     "plan": "il"
    },
-   "x": -2887.09,
-   "z": -2274.13,
-   "ry": -0.0079,
+   "x": -2887.99,
+   "z": -2274.08,
+   "ry": 0.0327,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -2560,7 +2532,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_05",
+   "id": "gs_eup_jangdok_04",
    "kit": "village/jangdok",
    "params": {
     "seed": 42149,
@@ -2572,9 +2544,139 @@
      1
     ]
    },
-   "x": -2882.87,
-   "z": -2276.19,
-   "ry": -0.0079,
+   "x": -2883.86,
+   "z": -2276.32,
+   "ry": 0.0327,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_yard_props_05",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 42149,
+    "set": "manure_coop"
+   },
+   "x": -2892.9,
+   "z": -2268.12,
+   "ry": 0.0327,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_haystack_05",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 42149
+   },
+   "x": -2883.81,
+   "z": -2268.62,
+   "ry": 0.0327,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_ye_medium_08",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "seed": 42224,
+    "size": "medium",
+    "roof": "giwa"
+   },
+   "x": -2881.99,
+   "z": -2239.7,
+   "ry": -0.0122,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "gs_eup_wall_run_05",
+   "kit": "village/wall_run",
+   "params": {
+    "seed": 42231,
+    "kind": "todam_thatch",
+    "points": [
+     [
+      -2.52,
+      6.5
+     ],
+     [
+      -7.2,
+      6.5
+     ],
+     [
+      -7.2,
+      -6.6
+     ],
+     [
+      7.2,
+      -6.6
+     ],
+     [
+      7.2,
+      6.5
+     ],
+     [
+      0.68,
+      6.5
+     ]
+    ]
+   },
+   "x": -2976.33,
+   "z": -2223.48,
+   "ry": 0.0424,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_choga_05",
+   "kit": "culture/yeongnam/choga",
+   "params": {
+    "seed": 42231,
+    "plan": "giyeok"
+   },
+   "x": -2976.37,
+   "z": -2224.38,
+   "ry": 0.0424,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    15.2,
+    13.9
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_05",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 42231,
+    "w": 2.4,
+    "d": 2.0,
+    "n": [
+     2,
+     2,
+     1
+    ]
+   },
+   "x": -2971.55,
+   "z": -2228.69,
+   "ry": 0.0424,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -2584,169 +2686,27 @@
    "id": "gs_eup_yard_props_06",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42149,
-    "set": "manure_coop"
-   },
-   "x": -2892.23,
-   "z": -2268.37,
-   "ry": -0.0079,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_haystack_06",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 42149
-   },
-   "x": -2883.13,
-   "z": -2268.49,
-   "ry": -0.0079,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_yard_props_07",
-   "kit": "village/yard_props",
-   "params": {
-    "seed": 42162,
+    "seed": 42231,
     "set": "jars"
    },
-   "x": -2967.27,
-   "z": -2253.69,
-   "ry": 0.0133,
+   "x": -2980.48,
+   "z": -2219.8,
+   "ry": 0.0424,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_07",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 42162
-   },
-   "x": -2961.48,
-   "z": -2254.27,
-   "ry": 0.0133,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_yard_props_08",
-   "kit": "village/yard_props",
-   "params": {
-    "seed": 42165,
-    "set": "woodpile"
-   },
-   "x": -2951.31,
-   "z": -2251.69,
-   "ry": -0.0353,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_didil_bang_a_02",
-   "kit": "village/didil_bang_a",
-   "params": {
-    "seed": 42165
-   },
-   "x": -2945.5,
-   "z": -2251.99,
-   "ry": -0.0353,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_garden_03",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 42183,
-    "w": 7.0,
-    "d": 4.0
-   },
-   "x": -2884.14,
-   "z": -2251.69,
-   "ry": -0.0387,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_pumpkin_03",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 42183
-   },
-   "x": -2886.75,
-   "z": -2248.89,
-   "ry": -0.0387,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_ye_medium_09",
-   "kit": "culture/yeongnam/compound",
-   "params": {
-    "seed": 42224,
-    "size": "medium",
-    "roof": "giwa"
-   },
-   "x": -2883.69,
-   "z": -2233.94,
-   "ry": -0.0347,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)",
-   "footprint": [
-    22.0,
-    22.0
-   ]
-  },
-  {
-   "id": "gs_eup_ye_medium_10",
-   "kit": "culture/yeongnam/compound",
-   "params": {
-    "seed": 42226,
-    "size": "medium",
-    "roof": "giwa"
-   },
-   "x": -2990.59,
-   "z": -2219.15,
-   "ry": -0.0193,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)",
-   "footprint": [
-    22.0,
-    22.0
-   ]
-  },
-  {
-   "id": "gs_eup_tteuljip_03",
+   "id": "gs_eup_tteuljip_01",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 42252,
     "roof": "choga"
    },
-   "x": -2894.1,
-   "z": -2217.15,
-   "ry": 0.0253,
+   "x": -2898.37,
+   "z": -2223.48,
+   "ry": -0.0345,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -2769,130 +2729,127 @@
      1
     ]
    },
-   "x": -2884.63,
-   "z": -2222.39,
-   "ry": 0.0253,
+   "x": -2888.6,
+   "z": -2228.15,
+   "ry": -0.0345,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_tteuljip_04",
-   "kit": "culture/yeongnam/tteuljip",
+   "id": "gs_eup_ye_medium_09",
+   "kit": "culture/yeongnam/compound",
    "params": {
-    "seed": 42264,
+    "seed": 42262,
+    "size": "medium",
+    "roof": "giwa"
+   },
+   "x": -2991.96,
+   "z": -2205.59,
+   "ry": 0.0323,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "gs_eup_ye_medium_10",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "seed": 42263,
+    "size": "medium",
+    "roof": "giwa"
+   },
+   "x": -2970.23,
+   "z": -2203.59,
+   "ry": -0.0411,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "gs_eup_ye_medium_11",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "seed": 42283,
+    "size": "medium",
     "roof": "choga"
    },
-   "x": -2988.85,
-   "z": -2201.99,
-   "ry": 0.0319,
+   "x": -2891.57,
+   "z": -2205.59,
+   "ry": -0.0063,
    "y": null,
    "flatten": true,
    "clear_veg": true,
    "group": "경주 읍내(성 안)",
    "footprint": [
-    16.4,
-    16.6
+    22.0,
+    22.0
    ]
   },
   {
-   "id": "gs_eup_jangdok_07",
-   "kit": "village/jangdok",
+   "id": "gs_eup_yard_props_07",
+   "kit": "village/yard_props",
    "params": {
-    "seed": 42264,
-    "w": 2.4,
-    "d": 2.0,
-    "n": [
-     2,
-     2,
-     1
-    ]
+    "seed": 42284,
+    "set": "manure_coop"
    },
-   "x": -2979.42,
-   "z": -2207.3,
-   "ry": 0.0319,
+   "x": -2876.85,
+   "z": -2207.59,
+   "ry": 0.0441,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_wall_run_04",
-   "kit": "village/wall_run",
+   "id": "gs_eup_haystack_06",
+   "kit": "village/haystack",
    "params": {
-    "seed": 42265,
-    "kind": "todam_thatch",
-    "points": [
-     [
-      -3.69,
-      6.5
-     ],
-     [
-      -7.2,
-      6.5
-     ],
-     [
-      -7.2,
-      -6.0
-     ],
-     [
-      7.2,
-      -6.0
-     ],
-     [
-      7.2,
-      6.5
-     ],
-     [
-      -0.49,
-      6.5
-     ]
-    ]
+    "seed": 42284
    },
-   "x": -2967.97,
-   "z": -2203.99,
-   "ry": 0.0099,
+   "x": -2871.08,
+   "z": -2208.35,
+   "ry": 0.0441,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_choga_04",
-   "kit": "culture/yeongnam/choga",
+   "id": "gs_eup_yard_props_08",
+   "kit": "village/yard_props",
    "params": {
-    "seed": 42265,
-    "plan": "il"
+    "seed": 42301,
+    "set": "woodpile"
    },
-   "x": -2967.99,
-   "z": -2206.29,
-   "ry": 0.0099,
+   "x": -2993.6,
+   "z": -2193.05,
+   "ry": 0.0511,
    "y": null,
-   "flatten": true,
+   "flatten": false,
    "clear_veg": true,
-   "group": "경주 읍내(성 안)",
-   "footprint": [
-    15.2,
-    13.3
-   ]
+   "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_jangdok_08",
-   "kit": "village/jangdok",
+   "id": "gs_eup_didil_bang_a_01",
+   "kit": "village/didil_bang_a",
    "params": {
-    "seed": 42265,
-    "w": 2.4,
-    "d": 2.0,
-    "n": [
-     2,
-     2,
-     1
-    ]
+    "seed": 42301
    },
-   "x": -2963.02,
-   "z": -2208.44,
-   "ry": 0.0099,
+   "x": -2987.83,
+   "z": -2193.85,
+   "ry": 0.0511,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -2902,12 +2859,70 @@
    "id": "gs_eup_yard_props_09",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42265,
-    "set": "manure_coop"
+    "seed": 42330,
+    "set": "jars"
    },
-   "x": -2972.24,
-   "z": -2200.45,
-   "ry": 0.0099,
+   "x": -2894.94,
+   "z": -2193.05,
+   "ry": -0.0334,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_didil_bang_a_02",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 42330
+   },
+   "x": -2889.13,
+   "z": -2193.36,
+   "ry": -0.0334,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_garden_02",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 42118,
+    "w": 7.0,
+    "d": 4.0
+   },
+   "x": -2951.42,
+   "z": -2314.23,
+   "ry": 0.0425,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_pumpkin_02",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 42118
+   },
+   "x": -2953.8,
+   "z": -2311.22,
+   "ry": 0.0425,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_haystack_07",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 42118
+   },
+   "x": -2946.31,
+   "z": -2314.04,
+   "ry": 0.0425,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -2917,12 +2932,12 @@
    "id": "gs_eup_yard_props_10",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42284,
-    "set": "manure_coop"
+    "seed": 42325,
+    "set": "woodpile"
    },
-   "x": -2901.34,
-   "z": -2203.99,
-   "ry": 0.0306,
+   "x": -2883.34,
+   "z": -2226.7,
+   "ry": 0.0359,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -2932,115 +2947,11 @@
    "id": "gs_eup_haystack_08",
    "kit": "village/haystack",
    "params": {
-    "seed": 42284
+    "seed": 42325
    },
-   "x": -2895.56,
-   "z": -2204.67,
-   "ry": 0.0306,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_garden_04",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 42118,
-    "w": 7.0,
-    "d": 4.0
-   },
-   "x": -2951.11,
-   "z": -2316.23,
-   "ry": 0.0483,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_pumpkin_04",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 42118
-   },
-   "x": -2953.47,
-   "z": -2313.21,
-   "ry": 0.0483,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_haystack_09",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 42118
-   },
-   "x": -2946.0,
-   "z": -2316.07,
-   "ry": 0.0483,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_garden_05",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 42156,
-    "w": 5.0,
-    "d": 4.0
-   },
-   "x": -2945.42,
-   "z": -2293.76,
-   "ry": 0.0236,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_pumpkin_05",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 42156
-   },
-   "x": -2946.85,
-   "z": -2290.82,
-   "ry": 0.0236,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_garden_06",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 42319,
-    "w": 5.0,
-    "d": 4.0
-   },
-   "x": -2901.09,
-   "z": -2229.08,
-   "ry": -0.0565,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 안)"
-  },
-  {
-   "id": "gs_eup_pumpkin_06",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 42319
-   },
-   "x": -2902.75,
-   "z": -2226.27,
-   "ry": -0.0565,
+   "x": -2877.56,
+   "z": -2227.4,
+   "ry": 0.0359,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -3050,26 +2961,26 @@
    "id": "gs_eup_yard_props_11",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42396,
-    "set": "manure_coop"
+    "seed": 42401,
+    "set": "woodpile"
    },
-   "x": -2898.11,
-   "z": -2195.47,
-   "ry": 0.0269,
+   "x": -2883.8,
+   "z": -2194.5,
+   "ry": 0.034,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_10",
+   "id": "gs_eup_haystack_09",
    "kit": "village/haystack",
    "params": {
-    "seed": 42396
+    "seed": 42401
    },
-   "x": -2892.32,
-   "z": -2196.13,
-   "ry": 0.0269,
+   "x": -2878.02,
+   "z": -2195.2,
+   "ry": 0.034,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -3079,26 +2990,26 @@
    "id": "gs_eup_yard_props_12",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42398,
+    "seed": 42234,
     "set": "jars"
    },
-   "x": -2885.36,
-   "z": -2195.47,
-   "ry": -0.038,
+   "x": -2907.78,
+   "z": -2322.07,
+   "ry": -0.0301,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_11",
+   "id": "gs_eup_haystack_10",
    "kit": "village/haystack",
    "params": {
-    "seed": 42398
+    "seed": 42234
    },
-   "x": -2879.55,
-   "z": -2195.75,
-   "ry": -0.038,
+   "x": -2901.97,
+   "z": -2322.4,
+   "ry": -0.0301,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -3108,26 +3019,26 @@
    "id": "gs_eup_yard_props_13",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42234,
+    "seed": 42354,
     "set": "jars"
    },
-   "x": -2907.14,
-   "z": -2318.07,
-   "ry": 0.0231,
+   "x": -2878.3,
+   "z": -2276.13,
+   "ry": 0.0331,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_12",
-   "kit": "village/haystack",
+   "id": "gs_eup_didil_bang_a_03",
+   "kit": "village/didil_bang_a",
    "params": {
-    "seed": 42234
+    "seed": 42354
    },
-   "x": -2901.36,
-   "z": -2318.7,
-   "ry": 0.0231,
+   "x": -2872.52,
+   "z": -2276.82,
+   "ry": 0.0331,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -3140,23 +3051,23 @@
     "seed": 42392,
     "set": "manure_coop"
    },
-   "x": -2988.53,
-   "z": -2251.53,
-   "ry": 0.021,
+   "x": -2987.77,
+   "z": -2252.34,
+   "ry": 0.0255,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_13",
+   "id": "gs_eup_haystack_11",
    "kit": "village/haystack",
    "params": {
     "seed": 42392
    },
-   "x": -2982.74,
-   "z": -2252.15,
-   "ry": 0.021,
+   "x": -2981.98,
+   "z": -2252.98,
+   "ry": 0.0255,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -3166,129 +3077,354 @@
    "id": "gs_eup_yard_props_15",
    "kit": "village/yard_props",
    "params": {
-    "seed": 42432,
-    "set": "manure_coop"
+    "seed": 42441,
+    "set": "woodpile"
    },
-   "x": -2978.4,
-   "z": -2230.07,
-   "ry": -0.0142,
+   "x": -2953.08,
+   "z": -2231.57,
+   "ry": -0.0309,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_14",
+   "id": "gs_eup_haystack_12",
    "kit": "village/haystack",
    "params": {
-    "seed": 42432
+    "seed": 42441
    },
-   "x": -2972.6,
-   "z": -2230.48,
-   "ry": -0.0142,
+   "x": -2947.27,
+   "z": -2231.89,
+   "ry": -0.0309,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_garden_07",
-   "kit": "nature/garden_plot",
+   "id": "gs_eup_yn_small_01",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42470,
-    "w": 5.0,
-    "d": 4.0
+    "seed": 42520,
+    "plan": "il",
+    "roof": "choga",
+    "w": 10.5
    },
-   "x": -2974.44,
-   "z": -2219.34,
-   "ry": 0.039,
+   "x": -2944.64,
+   "z": -2252.68,
+   "ry": 0.0096,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    11.9,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_07",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 42520,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2951.91,
+   "z": -2253.81,
+   "ry": 0.0096,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_pumpkin_07",
-   "kit": "nature/pumpkin_vine",
+   "id": "gs_eup_yn_small_02",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42470
+    "seed": 43216,
+    "plan": "il",
+    "roof": "choga",
+    "w": 9.0
    },
-   "x": -2975.83,
-   "z": -2216.39,
-   "ry": 0.039,
+   "x": -2952.44,
+   "z": -2264.05,
+   "ry": 0.0037,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    10.4,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_08",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 43216,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2958.94,
+   "z": -2265.23,
+   "ry": 0.0037,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_garden_08",
-   "kit": "nature/garden_plot",
+   "id": "gs_eup_yn_small_03",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42472,
-    "w": 7.0,
-    "d": 4.0
+    "seed": 43225,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
    },
-   "x": -2964.07,
-   "z": -2223.34,
-   "ry": 0.05,
+   "x": -2913.08,
+   "z": -2264.03,
+   "ry": -0.0003,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_09",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 43225,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2919.28,
+   "z": -2265.23,
+   "ry": -0.0003,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_pumpkin_08",
-   "kit": "nature/pumpkin_vine",
+   "id": "gs_eup_yn_small_04",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42472
+    "seed": 45220,
+    "plan": "il",
+    "roof": "choga",
+    "w": 9.6
    },
-   "x": -2966.42,
-   "z": -2220.32,
-   "ry": 0.05,
+   "x": -2886.7,
+   "z": -2306.01,
+   "ry": -0.0151,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    11.0,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_10",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 45220,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2893.49,
+   "z": -2307.31,
+   "ry": -0.0151,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_15",
-   "kit": "village/haystack",
+   "id": "gs_eup_yn_small_05",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42472
+    "seed": 47836,
+    "plan": "il",
+    "roof": "choga",
+    "w": 10.5
    },
-   "x": -2958.95,
-   "z": -2223.2,
-   "ry": 0.05,
+   "x": -2994.25,
+   "z": -2223.44,
+   "ry": -0.0533,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    11.9,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_11",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 47836,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3001.42,
+   "z": -2225.02,
+   "ry": -0.0533,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_yard_props_16",
-   "kit": "village/yard_props",
+   "id": "gs_eup_yn_small_06",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42578,
-    "set": "jars"
+    "seed": 47845,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
    },
-   "x": -2874.52,
-   "z": -2191.28,
-   "ry": 0.001,
+   "x": -2955.57,
+   "z": -2225.44,
+   "ry": -0.016,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_12",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 47845,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2962.35,
+   "z": -2226.75,
+   "ry": -0.016,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 안)"
   },
   {
-   "id": "gs_eup_haystack_16",
-   "kit": "village/haystack",
+   "id": "gs_eup_yn_small_07",
+   "kit": "culture/yeongnam/jageun",
    "params": {
-    "seed": 42578
+    "seed": 47866,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
    },
-   "x": -2868.72,
-   "z": -2191.79,
-   "ry": 0.001,
+   "x": -2879.85,
+   "z": -2219.44,
+   "ry": 0.013,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_13",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 47866,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2886.66,
+   "z": -2220.55,
+   "ry": 0.013,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)"
+  },
+  {
+   "id": "gs_eup_yn_small_08",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 47924,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
+   },
+   "x": -2952.55,
+   "z": -2198.09,
+   "ry": -0.0175,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 안)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_14",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 47924,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2959.33,
+   "z": -2199.41,
+   "ry": -0.0175,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -3316,9 +3452,9 @@
     "seed": 441,
     "roof": false
    },
-   "x": -2906.63,
-   "z": -2229.32,
-   "ry": -0.1066,
+   "x": -2907.74,
+   "z": -2227.29,
+   "ry": 0.0843,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -4362,7 +4498,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_11",
+   "id": "gs_eup_ye_medium_12",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 45008,
@@ -4382,7 +4518,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_12",
+   "id": "gs_eup_ye_medium_13",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 45009,
@@ -4402,7 +4538,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_13",
+   "id": "gs_eup_ye_medium_14",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 45010,
@@ -4422,7 +4558,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_14",
+   "id": "gs_eup_ye_medium_15",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 45011,
@@ -4442,7 +4578,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_15",
+   "id": "gs_eup_ye_medium_16",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 46308,
@@ -4462,7 +4598,7 @@
    ]
   },
   {
-   "id": "gs_eup_garden_09",
+   "id": "gs_eup_garden_03",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 46309,
@@ -4478,7 +4614,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_09",
+   "id": "gs_eup_pumpkin_03",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 46309
@@ -4492,7 +4628,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_05",
+   "id": "gs_eup_tteuljip_02",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 46310,
@@ -4511,7 +4647,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_09",
+   "id": "gs_eup_jangdok_15",
    "kit": "village/jangdok",
    "params": {
     "seed": 46310,
@@ -4532,7 +4668,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_17",
+   "id": "gs_eup_yard_props_16",
    "kit": "village/yard_props",
    "params": {
     "seed": 46311,
@@ -4547,7 +4683,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_03",
+   "id": "gs_eup_didil_bang_a_04",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 46311
@@ -4561,7 +4697,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_ye_medium_16",
+   "id": "gs_eup_ye_medium_17",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 46313,
@@ -4581,7 +4717,7 @@
    ]
   },
   {
-   "id": "gs_eup_wall_run_05",
+   "id": "gs_eup_wall_run_06",
    "kit": "village/wall_run",
    "params": {
     "seed": 46115,
@@ -4622,7 +4758,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_05",
+   "id": "gs_eup_choga_06",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 46115,
@@ -4641,7 +4777,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_10",
+   "id": "gs_eup_jangdok_16",
    "kit": "village/jangdok",
    "params": {
     "seed": 46115,
@@ -4662,7 +4798,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_18",
+   "id": "gs_eup_yard_props_17",
    "kit": "village/yard_props",
    "params": {
     "seed": 46115,
@@ -4677,7 +4813,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_17",
+   "id": "gs_eup_haystack_13",
    "kit": "village/haystack",
    "params": {
     "seed": 46115
@@ -4691,7 +4827,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_06",
+   "id": "gs_eup_tteuljip_03",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 46116,
@@ -4710,7 +4846,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_11",
+   "id": "gs_eup_jangdok_17",
    "kit": "village/jangdok",
    "params": {
     "seed": 46116,
@@ -4731,7 +4867,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_wall_run_06",
+   "id": "gs_eup_wall_run_07",
    "kit": "village/wall_run",
    "params": {
     "seed": 47409,
@@ -4772,7 +4908,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_06",
+   "id": "gs_eup_choga_07",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 47409,
@@ -4791,7 +4927,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_12",
+   "id": "gs_eup_jangdok_18",
    "kit": "village/jangdok",
    "params": {
     "seed": 47409,
@@ -4812,7 +4948,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_19",
+   "id": "gs_eup_yard_props_18",
    "kit": "village/yard_props",
    "params": {
     "seed": 47409,
@@ -4827,7 +4963,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_18",
+   "id": "gs_eup_haystack_14",
    "kit": "village/haystack",
    "params": {
     "seed": 47409
@@ -4860,7 +4996,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_17",
+   "id": "gs_eup_ye_medium_18",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47411,
@@ -4880,7 +5016,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_18",
+   "id": "gs_eup_ye_medium_19",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47415,
@@ -4919,7 +5055,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_19",
+   "id": "gs_eup_ye_medium_20",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47209,
@@ -4939,7 +5075,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_20",
+   "id": "gs_eup_ye_medium_21",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47210,
@@ -4959,7 +5095,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_21",
+   "id": "gs_eup_ye_medium_22",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 48509,
@@ -5017,7 +5153,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_22",
+   "id": "gs_eup_ye_medium_23",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 48513,
@@ -5056,7 +5192,7 @@
    ]
   },
   {
-   "id": "gs_eup_tteuljip_07",
+   "id": "gs_eup_tteuljip_04",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 49618,
@@ -5075,7 +5211,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_13",
+   "id": "gs_eup_jangdok_19",
    "kit": "village/jangdok",
    "params": {
     "seed": 49618,
@@ -5115,7 +5251,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_23",
+   "id": "gs_eup_ye_medium_24",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 49629,
@@ -5135,7 +5271,7 @@
    ]
   },
   {
-   "id": "gs_eup_garden_10",
+   "id": "gs_eup_garden_04",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 49630,
@@ -5151,7 +5287,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_10",
+   "id": "gs_eup_pumpkin_04",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 49630
@@ -5165,7 +5301,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_20",
+   "id": "gs_eup_yard_props_19",
    "kit": "village/yard_props",
    "params": {
     "seed": 46035,
@@ -5180,7 +5316,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_04",
+   "id": "gs_eup_didil_bang_a_05",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 46035
@@ -5194,7 +5330,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_21",
+   "id": "gs_eup_yard_props_20",
    "kit": "village/yard_props",
    "params": {
     "seed": 47313,
@@ -5209,7 +5345,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_19",
+   "id": "gs_eup_haystack_15",
    "kit": "village/haystack",
    "params": {
     "seed": 47313
@@ -5223,7 +5359,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_wall_run_07",
+   "id": "gs_eup_wall_run_08",
    "kit": "village/wall_run",
    "params": {
     "seed": 47331,
@@ -5264,7 +5400,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_07",
+   "id": "gs_eup_choga_08",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 47331,
@@ -5283,7 +5419,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_14",
+   "id": "gs_eup_jangdok_20",
    "kit": "village/jangdok",
    "params": {
     "seed": 47331,
@@ -5304,7 +5440,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_22",
+   "id": "gs_eup_yard_props_21",
    "kit": "village/yard_props",
    "params": {
     "seed": 47331,
@@ -5319,7 +5455,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_ye_medium_24",
+   "id": "gs_eup_ye_medium_25",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47126,
@@ -5339,7 +5475,7 @@
    ]
   },
   {
-   "id": "gs_eup_wall_run_08",
+   "id": "gs_eup_wall_run_09",
    "kit": "village/wall_run",
    "params": {
     "seed": 47127,
@@ -5380,7 +5516,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_08",
+   "id": "gs_eup_choga_09",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 47127,
@@ -5399,7 +5535,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_15",
+   "id": "gs_eup_jangdok_21",
    "kit": "village/jangdok",
    "params": {
     "seed": 47127,
@@ -5420,7 +5556,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_23",
+   "id": "gs_eup_yard_props_22",
    "kit": "village/yard_props",
    "params": {
     "seed": 47127,
@@ -5435,7 +5571,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_wall_run_09",
+   "id": "gs_eup_wall_run_10",
    "kit": "village/wall_run",
    "params": {
     "seed": 47129,
@@ -5476,7 +5612,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_09",
+   "id": "gs_eup_choga_10",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 47129,
@@ -5495,7 +5631,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_16",
+   "id": "gs_eup_jangdok_22",
    "kit": "village/jangdok",
    "params": {
     "seed": 47129,
@@ -5516,7 +5652,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_24",
+   "id": "gs_eup_yard_props_23",
    "kit": "village/yard_props",
    "params": {
     "seed": 47129,
@@ -5531,7 +5667,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_ye_medium_25",
+   "id": "gs_eup_ye_medium_26",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 48438,
@@ -5551,7 +5687,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_26",
+   "id": "gs_eup_ye_medium_27",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 48228,
@@ -5571,7 +5707,7 @@
    ]
   },
   {
-   "id": "gs_eup_wall_run_10",
+   "id": "gs_eup_wall_run_11",
    "kit": "village/wall_run",
    "params": {
     "seed": 48229,
@@ -5612,7 +5748,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_10",
+   "id": "gs_eup_choga_11",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 48229,
@@ -5631,7 +5767,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_17",
+   "id": "gs_eup_jangdok_23",
    "kit": "village/jangdok",
    "params": {
     "seed": 48229,
@@ -5652,7 +5788,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_25",
+   "id": "gs_eup_yard_props_24",
    "kit": "village/yard_props",
    "params": {
     "seed": 48229,
@@ -5667,7 +5803,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_20",
+   "id": "gs_eup_haystack_16",
    "kit": "village/haystack",
    "params": {
     "seed": 48229
@@ -5681,7 +5817,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_wall_run_11",
+   "id": "gs_eup_wall_run_12",
    "kit": "village/wall_run",
    "params": {
     "seed": 49539,
@@ -5722,7 +5858,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_11",
+   "id": "gs_eup_choga_12",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 49539,
@@ -5741,7 +5877,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_18",
+   "id": "gs_eup_jangdok_24",
    "kit": "village/jangdok",
    "params": {
     "seed": 49539,
@@ -5762,7 +5898,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_26",
+   "id": "gs_eup_yard_props_25",
    "kit": "village/yard_props",
    "params": {
     "seed": 49539,
@@ -5777,7 +5913,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_21",
+   "id": "gs_eup_haystack_17",
    "kit": "village/haystack",
    "params": {
     "seed": 49539
@@ -5791,7 +5927,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_27",
+   "id": "gs_eup_yard_props_26",
    "kit": "village/yard_props",
    "params": {
     "seed": 49326,
@@ -5806,7 +5942,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_22",
+   "id": "gs_eup_haystack_18",
    "kit": "village/haystack",
    "params": {
     "seed": 49326
@@ -5820,7 +5956,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_08",
+   "id": "gs_eup_tteuljip_05",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 49348,
@@ -5839,7 +5975,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_19",
+   "id": "gs_eup_jangdok_25",
    "kit": "village/jangdok",
    "params": {
     "seed": 49348,
@@ -5860,7 +5996,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_28",
+   "id": "gs_eup_yard_props_27",
    "kit": "village/yard_props",
    "params": {
     "seed": 50616,
@@ -5875,7 +6011,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_23",
+   "id": "gs_eup_haystack_19",
    "kit": "village/haystack",
    "params": {
     "seed": 50616
@@ -5889,7 +6025,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_29",
+   "id": "gs_eup_yard_props_28",
    "kit": "village/yard_props",
    "params": {
     "seed": 50653,
@@ -5904,7 +6040,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_05",
+   "id": "gs_eup_didil_bang_a_06",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 50653
@@ -5918,7 +6054,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_11",
+   "id": "gs_eup_garden_05",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47038,
@@ -5934,7 +6070,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_11",
+   "id": "gs_eup_pumpkin_05",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47038
@@ -5948,7 +6084,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_24",
+   "id": "gs_eup_haystack_20",
    "kit": "village/haystack",
    "params": {
     "seed": 47038
@@ -5981,7 +6117,7 @@
    ]
   },
   {
-   "id": "gs_eup_yard_props_30",
+   "id": "gs_eup_yard_props_29",
    "kit": "village/yard_props",
    "params": {
     "seed": 47223,
@@ -5996,7 +6132,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_06",
+   "id": "gs_eup_didil_bang_a_07",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 47223
@@ -6010,7 +6146,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_09",
+   "id": "gs_eup_tteuljip_06",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 47260,
@@ -6029,7 +6165,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_20",
+   "id": "gs_eup_jangdok_26",
    "kit": "village/jangdok",
    "params": {
     "seed": 47260,
@@ -6050,7 +6186,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_ye_medium_27",
+   "id": "gs_eup_ye_medium_28",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47321,
@@ -6070,7 +6206,7 @@
    ]
   },
   {
-   "id": "gs_eup_ye_medium_28",
+   "id": "gs_eup_ye_medium_29",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47322,
@@ -6090,7 +6226,7 @@
    ]
   },
   {
-   "id": "gs_eup_yard_props_31",
+   "id": "gs_eup_yard_props_30",
    "kit": "village/yard_props",
    "params": {
     "seed": 47323,
@@ -6105,7 +6241,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_07",
+   "id": "gs_eup_didil_bang_a_08",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 47323
@@ -6119,16 +6255,238 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_12",
+   "id": "gs_eup_garden_06",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47357,
     "w": 7.0,
     "d": 4.0
    },
-   "x": -2875.76,
-   "z": -2273.01,
-   "ry": 0.0157,
+   "x": -2876.33,
+   "z": -2271.01,
+   "ry": -0.0058,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_06",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47357
+   },
+   "x": -2878.85,
+   "z": -2268.13,
+   "ry": -0.0058,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_07",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47367,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -2840.24,
+   "z": -2275.01,
+   "ry": 0.0006,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_07",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47367
+   },
+   "x": -2841.74,
+   "z": -2272.11,
+   "ry": 0.0006,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_21",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47367
+   },
+   "x": -2836.14,
+   "z": -2274.61,
+   "ry": 0.0006,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_08",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47338,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -3066.18,
+   "z": -2249.38,
+   "ry": -0.0104,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_08",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47338
+   },
+   "x": -3068.21,
+   "z": -2246.5,
+   "ry": -0.0104,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_09",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47379,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -3071.85,
+   "z": -2240.15,
+   "ry": 0.0152,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_09",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47379
+   },
+   "x": -3073.8,
+   "z": -2237.22,
+   "ry": 0.0152,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_22",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47379
+   },
+   "x": -3067.24,
+   "z": -2239.82,
+   "ry": 0.0152,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_10",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47382,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -3053.14,
+   "z": -2236.15,
+   "ry": -0.0252,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_10",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47382
+   },
+   "x": -3055.21,
+   "z": -2233.3,
+   "ry": -0.0252,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_23",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47382
+   },
+   "x": -3048.55,
+   "z": -2235.63,
+   "ry": -0.0252,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_11",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47430,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -2895.32,
+   "z": -2236.15,
+   "ry": -0.013,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_11",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47430
+   },
+   "x": -2896.86,
+   "z": -2233.27,
+   "ry": -0.013,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_12",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47444,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -2847.87,
+   "z": -2236.15,
+   "ry": 0.0229,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6138,11 +6496,25 @@
    "id": "gs_eup_pumpkin_12",
    "kit": "nature/pumpkin_vine",
    "params": {
-    "seed": 47357
+    "seed": 47444
    },
-   "x": -2878.21,
-   "z": -2270.07,
-   "ry": 0.0157,
+   "x": -2849.81,
+   "z": -2233.2,
+   "ry": 0.0229,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_24",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47444
+   },
+   "x": -2843.26,
+   "z": -2235.85,
+   "ry": 0.0229,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6152,13 +6524,13 @@
    "id": "gs_eup_garden_13",
    "kit": "nature/garden_plot",
    "params": {
-    "seed": 47367,
-    "w": 5.0,
+    "seed": 47450,
+    "w": 7.0,
     "d": 4.0
    },
-   "x": -2840.61,
-   "z": -2275.01,
-   "ry": -0.0456,
+   "x": -2821.68,
+   "z": -2234.15,
+   "ry": -0.0324,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6168,11 +6540,11 @@
    "id": "gs_eup_pumpkin_13",
    "kit": "nature/pumpkin_vine",
    "params": {
-    "seed": 47367
+    "seed": 47450
    },
-   "x": -2842.24,
-   "z": -2272.18,
-   "ry": -0.0456,
+   "x": -2824.27,
+   "z": -2231.33,
+   "ry": -0.0324,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6182,11 +6554,11 @@
    "id": "gs_eup_haystack_25",
    "kit": "village/haystack",
    "params": {
-    "seed": 47367
+    "seed": 47450
    },
-   "x": -2836.54,
-   "z": -2274.43,
-   "ry": -0.0456,
+   "x": -2816.59,
+   "z": -2233.58,
+   "ry": -0.0324,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6196,13 +6568,13 @@
    "id": "gs_eup_garden_14",
    "kit": "nature/garden_plot",
    "params": {
-    "seed": 47379,
-    "w": 6.0,
+    "seed": 47454,
+    "w": 5.0,
     "d": 4.0
    },
-   "x": -3073.28,
-   "z": -2240.13,
-   "ry": -0.0329,
+   "x": -2800.95,
+   "z": -2232.15,
+   "ry": -0.0197,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6212,261 +6584,55 @@
    "id": "gs_eup_pumpkin_14",
    "kit": "nature/pumpkin_vine",
    "params": {
-    "seed": 47379
-   },
-   "x": -3075.38,
-   "z": -2237.3,
-   "ry": -0.0329,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_haystack_26",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 47379
-   },
-   "x": -3068.7,
-   "z": -2239.58,
-   "ry": -0.0329,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_garden_15",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 47382,
-    "w": 6.0,
-    "d": 4.0
-   },
-   "x": -3054.75,
-   "z": -2236.13,
-   "ry": 0.0426,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_pumpkin_15",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 47382
-   },
-   "x": -3056.62,
-   "z": -2233.15,
-   "ry": 0.0426,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_haystack_27",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 47382
-   },
-   "x": -3050.14,
-   "z": -2235.93,
-   "ry": 0.0426,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_garden_16",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 47430,
-    "w": 5.0,
-    "d": 4.0
-   },
-   "x": -2897.1,
-   "z": -2236.13,
-   "ry": 0.0262,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_pumpkin_16",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 47430
-   },
-   "x": -2898.52,
-   "z": -2233.19,
-   "ry": 0.0262,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_garden_17",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 47444,
-    "w": 6.0,
-    "d": 4.0
-   },
-   "x": -2848.38,
-   "z": -2236.13,
-   "ry": 0.0256,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_pumpkin_17",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 47444
-   },
-   "x": -2850.3,
-   "z": -2233.18,
-   "ry": 0.0256,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_haystack_28",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 47444
-   },
-   "x": -2843.77,
-   "z": -2235.85,
-   "ry": 0.0256,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_garden_18",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 47450,
-    "w": 7.0,
-    "d": 4.0
-   },
-   "x": -2822.32,
-   "z": -2234.13,
-   "ry": -0.0502,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_pumpkin_18",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 47450
-   },
-   "x": -2824.96,
-   "z": -2231.36,
-   "ry": -0.0502,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_haystack_29",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 47450
-   },
-   "x": -2817.24,
-   "z": -2233.48,
-   "ry": -0.0502,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_garden_19",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 47454,
-    "w": 5.0,
-    "d": 4.0
-   },
-   "x": -2802.27,
-   "z": -2232.13,
-   "ry": -0.0321,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_pumpkin_19",
-   "kit": "nature/pumpkin_vine",
-   "params": {
     "seed": 47454
    },
-   "x": -2803.86,
+   "x": -2802.51,
    "z": -2229.28,
-   "ry": -0.0321,
+   "ry": -0.0197,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_32",
+   "id": "gs_eup_yard_props_31",
    "kit": "village/yard_props",
    "params": {
     "seed": 47422,
     "set": "jars"
    },
-   "x": -3032.4,
-   "z": -2215.73,
-   "ry": 0.0249,
+   "x": -3031.81,
+   "z": -2215.69,
+   "ry": 0.026,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_08",
+   "id": "gs_eup_didil_bang_a_09",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 47422
    },
-   "x": -3026.61,
-   "z": -2216.38,
-   "ry": 0.0249,
+   "x": -3026.02,
+   "z": -2216.34,
+   "ry": 0.026,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_10",
+   "id": "gs_eup_tteuljip_07",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 47478,
     "roof": "choga"
    },
-   "x": -2844.89,
-   "z": -2215.73,
-   "ry": 0.0258,
+   "x": -2844.65,
+   "z": -2219.69,
+   "ry": -0.0027,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6477,7 +6643,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_21",
+   "id": "gs_eup_jangdok_27",
    "kit": "village/jangdok",
    "params": {
     "seed": 47478,
@@ -6489,9 +6655,9 @@
      1
     ]
    },
-   "x": -2835.42,
-   "z": -2220.98,
-   "ry": 0.0258,
+   "x": -2835.04,
+   "z": -2224.66,
+   "ry": -0.0027,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -6504,9 +6670,9 @@
     "seed": 47479,
     "size": "small"
    },
-   "x": -2824.43,
-   "z": -2219.73,
-   "ry": 0.0579,
+   "x": -2823.55,
+   "z": -2219.69,
+   "ry": 0.0241,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6517,7 +6683,7 @@
    ]
   },
   {
-   "id": "gs_eup_wall_run_12",
+   "id": "gs_eup_wall_run_13",
    "kit": "village/wall_run",
    "params": {
     "seed": 47519,
@@ -6549,24 +6715,24 @@
      ]
     ]
    },
-   "x": -2981.05,
-   "z": -2163.71,
-   "ry": 0.034,
+   "x": -2981.3,
+   "z": -2162.7,
+   "ry": -0.0025,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_12",
+   "id": "gs_eup_choga_13",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 47519,
     "plan": "il"
    },
-   "x": -2981.13,
-   "z": -2166.0,
-   "ry": 0.034,
+   "x": -2981.29,
+   "z": -2165.0,
+   "ry": -0.0025,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6577,7 +6743,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_22",
+   "id": "gs_eup_jangdok_28",
    "kit": "village/jangdok",
    "params": {
     "seed": 47519,
@@ -6589,54 +6755,54 @@
      1
     ]
    },
-   "x": -2976.21,
-   "z": -2168.27,
-   "ry": 0.034,
+   "x": -2976.29,
+   "z": -2167.09,
+   "ry": -0.0025,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_33",
+   "id": "gs_eup_yard_props_32",
    "kit": "village/yard_props",
    "params": {
     "seed": 47519,
     "set": "jars"
    },
-   "x": -2985.23,
-   "z": -2160.06,
-   "ry": 0.034,
+   "x": -2985.61,
+   "z": -2159.21,
+   "ry": -0.0025,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_30",
+   "id": "gs_eup_haystack_26",
    "kit": "village/haystack",
    "params": {
     "seed": 47519
    },
-   "x": -2976.15,
-   "z": -2160.57,
-   "ry": 0.034,
+   "x": -2976.51,
+   "z": -2159.39,
+   "ry": -0.0025,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_ye_medium_29",
+   "id": "gs_eup_ye_medium_30",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47543,
     "size": "medium",
     "roof": "giwa"
    },
-   "x": -2892.8,
-   "z": -2161.71,
-   "ry": -0.0214,
+   "x": -2891.67,
+   "z": -2162.7,
+   "ry": -0.0535,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6645,67 +6811,18 @@
     22.0,
     22.0
    ]
-  },
-  {
-   "id": "gs_eup_ye_medium_30",
-   "kit": "culture/yeongnam/compound",
-   "params": {
-    "seed": 47544,
-    "size": "medium",
-    "roof": "giwa"
-   },
-   "x": -2871.06,
-   "z": -2167.71,
-   "ry": -0.0368,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)",
-   "footprint": [
-    22.0,
-    22.0
-   ]
-  },
-  {
-   "id": "gs_eup_yard_props_34",
-   "kit": "village/yard_props",
-   "params": {
-    "seed": 47578,
-    "set": "jars"
-   },
-   "x": -2908.86,
-   "z": -2146.18,
-   "ry": -0.004,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_haystack_31",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 47578
-   },
-   "x": -2903.06,
-   "z": -2146.66,
-   "ry": -0.004,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
   },
   {
    "id": "gs_eup_ye_medium_31",
    "kit": "culture/yeongnam/compound",
    "params": {
-    "seed": 47579,
+    "seed": 47557,
     "size": "medium",
     "roof": "giwa"
    },
-   "x": -2888.86,
-   "z": -2142.18,
-   "ry": -0.0348,
+   "x": -2968.13,
+   "z": -2140.19,
+   "ry": 0.0204,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6716,53 +6833,35 @@
    ]
   },
   {
-   "id": "gs_eup_ye_small_09",
+   "id": "gs_eup_ye_medium_32",
    "kit": "culture/yeongnam/compound",
    "params": {
-    "seed": 47595,
-    "size": "small"
-   },
-   "x": -2971.72,
-   "z": -2129.01,
-   "ry": -0.0139,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)",
-   "footprint": [
-    16.0,
-    15.0
-   ]
-  },
-  {
-   "id": "gs_eup_ye_small_10",
-   "kit": "culture/yeongnam/compound",
-   "params": {
-    "seed": 47613,
-    "size": "small"
-   },
-   "x": -2900.58,
-   "z": -2125.01,
-   "ry": -0.0559,
-   "y": null,
-   "flatten": true,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)",
-   "footprint": [
-    16.0,
-    15.0
-   ]
-  },
-  {
-   "id": "gs_eup_tteuljip_11",
-   "kit": "culture/yeongnam/tteuljip",
-   "params": {
-    "seed": 47614,
+    "seed": 47575,
+    "size": "medium",
     "roof": "choga"
    },
-   "x": -2883.46,
-   "z": -2125.01,
-   "ry": 0.0102,
+   "x": -2894.49,
+   "z": -2142.19,
+   "ry": 0.0087,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    22.0,
+    22.0
+   ]
+  },
+  {
+   "id": "gs_eup_tteuljip_08",
+   "kit": "culture/yeongnam/tteuljip",
+   "params": {
+    "seed": 47596,
+    "roof": "choga"
+   },
+   "x": -2967.95,
+   "z": -2122.77,
+   "ry": -0.0591,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6773,10 +6872,10 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_23",
+   "id": "gs_eup_jangdok_29",
    "kit": "village/jangdok",
    "params": {
-    "seed": 47614,
+    "seed": 47596,
     "w": 2.4,
     "d": 2.0,
     "n": [
@@ -6785,60 +6884,79 @@
      1
     ]
    },
-   "x": -2873.91,
-   "z": -2130.11,
-   "ry": 0.0102,
+   "x": -2958.08,
+   "z": -2127.19,
+   "ry": -0.0591,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_20",
+   "id": "gs_eup_ye_small_09",
+   "kit": "culture/yeongnam/compound",
+   "params": {
+    "seed": 47613,
+    "size": "small"
+   },
+   "x": -2896.37,
+   "z": -2124.77,
+   "ry": -0.0194,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    16.0,
+    15.0
+   ]
+  },
+  {
+   "id": "gs_eup_garden_15",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47631,
     "w": 5.0,
     "d": 4.0
    },
-   "x": -2976.1,
-   "z": -2111.61,
-   "ry": -0.0036,
+   "x": -2976.15,
+   "z": -2110.02,
+   "ry": -0.0118,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_20",
+   "id": "gs_eup_pumpkin_15",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47631
    },
-   "x": -2977.61,
-   "z": -2108.72,
-   "ry": -0.0036,
+   "x": -2977.68,
+   "z": -2107.14,
+   "ry": -0.0118,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_32",
+   "id": "gs_eup_haystack_27",
    "kit": "village/haystack",
    "params": {
     "seed": 47631
    },
-   "x": -2972.0,
-   "z": -2111.2,
-   "ry": -0.0036,
+   "x": -2972.05,
+   "z": -2109.57,
+   "ry": -0.0118,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_wall_run_13",
+   "id": "gs_eup_wall_run_14",
    "kit": "village/wall_run",
    "params": {
     "seed": 47653,
@@ -6870,24 +6988,24 @@
      ]
     ]
    },
-   "x": -2896.55,
-   "z": -2109.61,
-   "ry": 0.0006,
+   "x": -2896.9,
+   "z": -2106.02,
+   "ry": -0.0236,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_choga_13",
+   "id": "gs_eup_choga_14",
    "kit": "culture/yeongnam/choga",
    "params": {
     "seed": 47653,
     "plan": "il"
    },
-   "x": -2896.55,
-   "z": -2111.91,
-   "ry": 0.0006,
+   "x": -2896.85,
+   "z": -2108.32,
+   "ry": -0.0236,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -6898,7 +7016,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_24",
+   "id": "gs_eup_jangdok_30",
    "kit": "village/jangdok",
    "params": {
     "seed": 47653,
@@ -6910,45 +7028,45 @@
      1
     ]
    },
-   "x": -2891.55,
-   "z": -2114.02,
-   "ry": 0.0006,
+   "x": -2891.8,
+   "z": -2110.3,
+   "ry": -0.0236,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_35",
+   "id": "gs_eup_yard_props_33",
    "kit": "village/yard_props",
    "params": {
     "seed": 47653,
     "set": "manure_coop"
    },
-   "x": -2900.84,
-   "z": -2106.11,
-   "ry": 0.0006,
+   "x": -2901.28,
+   "z": -2102.62,
+   "ry": -0.0236,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_33",
+   "id": "gs_eup_haystack_28",
    "kit": "village/haystack",
    "params": {
     "seed": 47653
    },
-   "x": -2891.74,
-   "z": -2106.32,
-   "ry": 0.0006,
+   "x": -2892.18,
+   "z": -2102.61,
+   "ry": -0.0236,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_12",
+   "id": "gs_eup_tteuljip_09",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 47212,
@@ -6967,7 +7085,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_25",
+   "id": "gs_eup_jangdok_31",
    "kit": "village/jangdok",
    "params": {
     "seed": 47212,
@@ -6988,7 +7106,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_21",
+   "id": "gs_eup_garden_16",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47222,
@@ -7004,7 +7122,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_21",
+   "id": "gs_eup_pumpkin_16",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47222
@@ -7018,7 +7136,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_tteuljip_13",
+   "id": "gs_eup_tteuljip_10",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 47360,
@@ -7037,7 +7155,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_26",
+   "id": "gs_eup_jangdok_32",
    "kit": "village/jangdok",
    "params": {
     "seed": 47360,
@@ -7058,7 +7176,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_36",
+   "id": "gs_eup_yard_props_34",
    "kit": "village/yard_props",
    "params": {
     "seed": 47363,
@@ -7073,7 +7191,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_34",
+   "id": "gs_eup_haystack_29",
    "kit": "village/haystack",
    "params": {
     "seed": 47363
@@ -7087,7 +7205,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_37",
+   "id": "gs_eup_yard_props_35",
    "kit": "village/yard_props",
    "params": {
     "seed": 47434,
@@ -7102,7 +7220,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_35",
+   "id": "gs_eup_haystack_30",
    "kit": "village/haystack",
    "params": {
     "seed": 47434
@@ -7116,7 +7234,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_22",
+   "id": "gs_eup_garden_17",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47445,
@@ -7132,7 +7250,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_22",
+   "id": "gs_eup_pumpkin_17",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47445
@@ -7146,119 +7264,75 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_23",
+   "id": "gs_eup_garden_18",
    "kit": "nature/garden_plot",
    "params": {
-    "seed": 47508,
-    "w": 5.0,
-    "d": 4.0
-   },
-   "x": -2967.34,
-   "z": -2216.63,
-   "ry": 0.0159,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_pumpkin_23",
-   "kit": "nature/pumpkin_vine",
-   "params": {
-    "seed": 47508
-   },
-   "x": -2968.79,
-   "z": -2213.7,
-   "ry": 0.0159,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_yard_props_38",
-   "kit": "village/yard_props",
-   "params": {
-    "seed": 47546,
-    "set": "jars"
-   },
-   "x": -2844.93,
-   "z": -2224.63,
-   "ry": 0.0518,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_haystack_36",
-   "kit": "village/haystack",
-   "params": {
-    "seed": 47546
-   },
-   "x": -2839.17,
-   "z": -2225.42,
-   "ry": 0.0518,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "group": "경주 읍내(성 밖)"
-  },
-  {
-   "id": "gs_eup_garden_24",
-   "kit": "nature/garden_plot",
-   "params": {
-    "seed": 47555,
+    "seed": 47509,
     "w": 6.0,
     "d": 4.0
    },
-   "x": -2808.16,
-   "z": -2222.63,
-   "ry": 0.0349,
+   "x": -2963.82,
+   "z": -2218.63,
+   "ry": -0.0195,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_24",
+   "id": "gs_eup_pumpkin_18",
    "kit": "nature/pumpkin_vine",
    "params": {
-    "seed": 47555
+    "seed": 47509
    },
-   "x": -2810.05,
-   "z": -2219.66,
-   "ry": 0.0349,
+   "x": -2965.88,
+   "z": -2215.77,
+   "ry": -0.0195,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_37",
-   "kit": "village/haystack",
+   "id": "gs_eup_yard_props_36",
+   "kit": "village/yard_props",
    "params": {
-    "seed": 47555
+    "seed": 47557,
+    "set": "woodpile"
    },
-   "x": -2803.55,
-   "z": -2222.39,
-   "ry": 0.0349,
+   "x": -2811.53,
+   "z": -2222.63,
+   "ry": -0.0244,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_ye_medium_32",
+   "id": "gs_eup_didil_bang_a_10",
+   "kit": "village/didil_bang_a",
+   "params": {
+    "seed": 47557
+   },
+   "x": -2805.72,
+   "z": -2222.98,
+   "ry": -0.0244,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_ye_medium_33",
    "kit": "culture/yeongnam/compound",
    "params": {
     "seed": 47582,
     "size": "medium",
     "roof": "choga"
    },
-   "x": -3003.15,
-   "z": -2170.14,
-   "ry": 0.0286,
+   "x": -3002.93,
+   "z": -2170.74,
+   "ry": -0.0181,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -7269,15 +7343,15 @@
    ]
   },
   {
-   "id": "gs_eup_tteuljip_14",
+   "id": "gs_eup_tteuljip_11",
    "kit": "culture/yeongnam/tteuljip",
    "params": {
     "seed": 47620,
     "roof": "choga"
    },
-   "x": -2970.12,
-   "z": -2148.36,
-   "ry": -0.007,
+   "x": -2873.32,
+   "z": -2166.74,
+   "ry": -0.0567,
    "y": null,
    "flatten": true,
    "clear_veg": true,
@@ -7288,7 +7362,7 @@
    ]
   },
   {
-   "id": "gs_eup_jangdok_27",
+   "id": "gs_eup_jangdok_33",
    "kit": "village/jangdok",
    "params": {
     "seed": 47620,
@@ -7300,16 +7374,16 @@
      1
     ]
    },
-   "x": -2960.48,
-   "z": -2153.29,
-   "ry": -0.007,
+   "x": -2863.45,
+   "z": -2171.19,
+   "ry": -0.0567,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_39",
+   "id": "gs_eup_yard_props_37",
    "kit": "village/yard_props",
    "params": {
     "seed": 47241,
@@ -7324,7 +7398,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_38",
+   "id": "gs_eup_haystack_31",
    "kit": "village/haystack",
    "params": {
     "seed": 47241
@@ -7338,7 +7412,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_25",
+   "id": "gs_eup_garden_19",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47503,
@@ -7354,7 +7428,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_25",
+   "id": "gs_eup_pumpkin_19",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47503
@@ -7368,7 +7442,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_39",
+   "id": "gs_eup_haystack_32",
    "kit": "village/haystack",
    "params": {
     "seed": 47503
@@ -7382,7 +7456,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_26",
+   "id": "gs_eup_garden_20",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47622,
@@ -7398,7 +7472,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_26",
+   "id": "gs_eup_pumpkin_20",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47622
@@ -7412,7 +7486,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_27",
+   "id": "gs_eup_garden_21",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47642,
@@ -7428,7 +7502,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_27",
+   "id": "gs_eup_pumpkin_21",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47642
@@ -7442,7 +7516,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_40",
+   "id": "gs_eup_yard_props_38",
    "kit": "village/yard_props",
    "params": {
     "seed": 47616,
@@ -7457,7 +7531,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_didil_bang_a_09",
+   "id": "gs_eup_didil_bang_a_11",
    "kit": "village/didil_bang_a",
    "params": {
     "seed": 47616
@@ -7471,7 +7545,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_41",
+   "id": "gs_eup_yard_props_39",
    "kit": "village/yard_props",
    "params": {
     "seed": 47701,
@@ -7486,7 +7560,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_40",
+   "id": "gs_eup_haystack_33",
    "kit": "village/haystack",
    "params": {
     "seed": 47701
@@ -7500,7 +7574,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_42",
+   "id": "gs_eup_yard_props_40",
    "kit": "village/yard_props",
    "params": {
     "seed": 47648,
@@ -7515,7 +7589,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_41",
+   "id": "gs_eup_haystack_34",
    "kit": "village/haystack",
    "params": {
     "seed": 47648
@@ -7529,7 +7603,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_43",
+   "id": "gs_eup_yard_props_41",
    "kit": "village/yard_props",
    "params": {
     "seed": 47650,
@@ -7544,7 +7618,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_42",
+   "id": "gs_eup_haystack_35",
    "kit": "village/haystack",
    "params": {
     "seed": 47650
@@ -7558,7 +7632,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_28",
+   "id": "gs_eup_garden_22",
    "kit": "nature/garden_plot",
    "params": {
     "seed": 47692,
@@ -7574,7 +7648,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_28",
+   "id": "gs_eup_pumpkin_22",
    "kit": "nature/pumpkin_vine",
    "params": {
     "seed": 47692
@@ -7588,7 +7662,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_43",
+   "id": "gs_eup_haystack_36",
    "kit": "village/haystack",
    "params": {
     "seed": 47692
@@ -7602,7 +7676,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_44",
+   "id": "gs_eup_yard_props_42",
    "kit": "village/yard_props",
    "params": {
     "seed": 47762,
@@ -7617,7 +7691,7 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_44",
+   "id": "gs_eup_haystack_37",
    "kit": "village/haystack",
    "params": {
     "seed": 47762
@@ -7631,73 +7705,1026 @@
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_garden_29",
+   "id": "gs_eup_yard_props_43",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 47764,
+    "set": "manure_coop"
+   },
+   "x": -2828.71,
+   "z": -2229.0,
+   "ry": -0.0558,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_38",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47764
+   },
+   "x": -2822.89,
+   "z": -2229.18,
+   "ry": -0.0558,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yard_props_44",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 47729,
+    "set": "woodpile"
+   },
+   "x": -3066.06,
+   "z": -2213.72,
+   "ry": 0.0562,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_39",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47729
+   },
+   "x": -3060.3,
+   "z": -2214.55,
+   "ry": 0.0562,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_23",
    "kit": "nature/garden_plot",
    "params": {
-    "seed": 47889,
+    "seed": 47925,
     "w": 7.0,
     "d": 4.0
    },
-   "x": -2910.1,
-   "z": -2151.46,
-   "ry": -0.0274,
+   "x": -2913.37,
+   "z": -2144.51,
+   "ry": -0.0363,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_pumpkin_29",
+   "id": "gs_eup_pumpkin_23",
    "kit": "nature/pumpkin_vine",
    "params": {
-    "seed": 47889
+    "seed": 47925
    },
-   "x": -2912.68,
-   "z": -2148.63,
-   "ry": -0.0274,
+   "x": -2915.97,
+   "z": -2141.7,
+   "ry": -0.0363,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_45",
+   "id": "gs_eup_haystack_40",
    "kit": "village/haystack",
    "params": {
-    "seed": 47889
+    "seed": 47925
    },
-   "x": -2905.01,
-   "z": -2150.92,
-   "ry": -0.0274,
+   "x": -2908.28,
+   "z": -2143.93,
+   "ry": -0.0363,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_yard_props_45",
-   "kit": "village/yard_props",
+   "id": "gs_eup_garden_24",
+   "kit": "nature/garden_plot",
    "params": {
-    "seed": 47937,
-    "set": "woodpile"
+    "seed": 47934,
+    "w": 5.0,
+    "d": 4.0
    },
-   "x": -2876.9,
-   "z": -2140.82,
-   "ry": -0.0345,
+   "x": -2878.11,
+   "z": -2142.51,
+   "ry": 0.0261,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "group": "경주 읍내(성 밖)"
   },
   {
-   "id": "gs_eup_haystack_46",
+   "id": "gs_eup_pumpkin_24",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47934
+   },
+   "x": -2879.54,
+   "z": -2139.57,
+   "ry": 0.0261,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_haystack_41",
    "kit": "village/haystack",
    "params": {
-    "seed": 47937
+    "seed": 47934
    },
-   "x": -2871.09,
-   "z": -2141.12,
-   "ry": -0.0345,
+   "x": -2874.0,
+   "z": -2142.22,
+   "ry": 0.0261,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_25",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47941,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -2981.32,
+   "z": -2124.25,
+   "ry": 0.0576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_25",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47941
+   },
+   "x": -2982.65,
+   "z": -2121.27,
+   "ry": 0.0576,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_garden_26",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47971,
+    "w": 5.0,
+    "d": 4.0
+   },
+   "x": -2883.56,
+   "z": -2128.25,
+   "ry": 0.0273,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_pumpkin_26",
+   "kit": "nature/pumpkin_vine",
+   "params": {
+    "seed": 47971
+   },
+   "x": -2884.98,
+   "z": -2125.31,
+   "ry": 0.0273,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_09",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 49643,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
+   },
+   "x": -3101.85,
+   "z": -2229.5,
+   "ry": -0.4986,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_34",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 49643,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3107.25,
+   "z": -2233.81,
+   "ry": -0.4986,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_10",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52706,
+    "plan": "il",
+    "roof": "choga",
+    "w": 9.0
+   },
+   "x": -2901.63,
+   "z": -2356.86,
+   "ry": -0.0354,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    10.4,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_35",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52706,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2908.08,
+   "z": -2358.29,
+   "ry": -0.0354,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_11",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52744,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
+   },
+   "x": -2901.02,
+   "z": -2346.09,
+   "ry": 0.0476,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_36",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52744,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2907.87,
+   "z": -2346.96,
+   "ry": 0.0476,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_12",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52874,
+    "plan": "il",
+    "roof": "choga",
+    "w": 9.6
+   },
+   "x": -3025.83,
+   "z": -2301.65,
+   "ry": -0.0006,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.0,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_37",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52874,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3032.63,
+   "z": -2302.85,
+   "ry": -0.0006,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_13",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52934,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
+   },
+   "x": -2832.74,
+   "z": -2301.65,
+   "ry": 0.0087,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_38",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52934,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2839.55,
+   "z": -2302.79,
+   "ry": 0.0087,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_14",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52936,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -2816.1,
+   "z": -2301.65,
+   "ry": 0.0162,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_39",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52936,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2822.31,
+   "z": -2302.75,
+   "ry": 0.0162,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_15",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52913,
+    "plan": "il",
+    "roof": "choga",
+    "w": 9.0
+   },
+   "x": -3029.53,
+   "z": -2287.7,
+   "ry": -0.0184,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    10.4,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_40",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52913,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3036.01,
+   "z": -2289.01,
+   "ry": -0.0184,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_16",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53027,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.6
+   },
+   "x": -2799.79,
+   "z": -2282.13,
+   "ry": -0.001,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.6,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_41",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53027,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2806.89,
+   "z": -2283.34,
+   "ry": -0.001,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_17",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53072,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -3044.94,
+   "z": -2243.45,
+   "ry": -0.0331,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_42",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53072,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3051.09,
+   "z": -2244.85,
+   "ry": -0.0331,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_18",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53239,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -2874.34,
+   "z": -2213.07,
+   "ry": 0.0225,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_43",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53239,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2880.56,
+   "z": -2214.13,
+   "ry": 0.0225,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_19",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53356,
+    "plan": "il",
+    "roof": "choga",
+    "w": 9.6
+   },
+   "x": -2964.36,
+   "z": -2158.97,
+   "ry": 0.039,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.0,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_44",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53356,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2971.2,
+   "z": -2159.9,
+   "ry": 0.039,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_20",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53382,
+    "plan": "giyeok",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -2874.42,
+   "z": -2154.97,
+   "ry": -0.0314,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    9.1
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_45",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53382,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2880.58,
+   "z": -2156.36,
+   "ry": -0.0314,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_21",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53503,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.6
+   },
+   "x": -2962.27,
+   "z": -2111.0,
+   "ry": -0.0277,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.6,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_46",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53503,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2969.33,
+   "z": -2112.4,
+   "ry": -0.0277,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_22",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 52972,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -3042.3,
+   "z": -2299.41,
+   "ry": 0.0381,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_47",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 52972,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3048.54,
+   "z": -2300.37,
+   "ry": 0.0381,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_23",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53047,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -2800.89,
+   "z": -2295.41,
+   "ry": 0.0117,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_48",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53047,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2807.1,
+   "z": -2296.53,
+   "ry": 0.0117,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_24",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53015,
+    "plan": "il",
+    "roof": "choga",
+    "w": 10.5
+   },
+   "x": -3027.67,
+   "z": -2280.27,
+   "ry": 0.0363,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.9,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_49",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53015,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3034.96,
+   "z": -2281.2,
+   "ry": 0.0363,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_25",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53120,
+    "plan": "il",
+    "roof": "choga",
+    "w": 8.4
+   },
+   "x": -3086.84,
+   "z": -2250.14,
+   "ry": 0.0414,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    9.8,
+    5.8
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_50",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53120,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -3093.08,
+   "z": -2251.08,
+   "ry": 0.0414,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_26",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53391,
+    "plan": "giyeok",
+    "roof": "giwa",
+    "w": 8.4
+   },
+   "x": -2967.15,
+   "z": -2171.29,
+   "ry": -0.0073,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    10.4,
+    9.7
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_51",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53391,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2973.64,
+   "z": -2172.54,
+   "ry": -0.0073,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_27",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53420,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.0
+   },
+   "x": -2867.6,
+   "z": -2177.29,
+   "ry": -0.0273,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.0,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_52",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53420,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2874.37,
+   "z": -2178.68,
+   "ry": -0.0273,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)"
+  },
+  {
+   "id": "gs_eup_yn_small_28",
+   "kit": "culture/yeongnam/jageun",
+   "params": {
+    "seed": 53629,
+    "plan": "il",
+    "roof": "giwa",
+    "w": 9.6
+   },
+   "x": -2880.05,
+   "z": -2109.91,
+   "ry": -0.0521,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "경주 읍내(성 밖)",
+   "footprint": [
+    11.6,
+    6.4
+   ]
+  },
+  {
+   "id": "gs_eup_jangdok_53",
+   "kit": "village/jangdok",
+   "params": {
+    "seed": 53629,
+    "w": 1.8,
+    "d": 1.6,
+    "n": [
+     2,
+     1
+    ]
+   },
+   "x": -2887.07,
+   "z": -2111.48,
+   "ry": -0.0521,
    "y": null,
    "flatten": false,
    "clear_veg": true,
@@ -15776,12 +16803,12 @@
    "width_m": 3.0,
    "points": [
     [
-     -2969.38,
-     -2247.33
+     -3001.83,
+     -2192.35
     ],
     [
-     -2942.58,
-     -2247.33
+     -2960.97,
+     -2192.35
     ]
    ]
   },
@@ -15791,47 +16818,17 @@
    "width_m": 3.0,
    "points": [
     [
-     -2996.52,
-     -2192.82
+     -2901.02,
+     -2194.35
     ],
     [
-     -2960.58,
-     -2192.82
+     -2869.92,
+     -2194.35
     ]
    ]
   },
   {
    "id": "gs_alley_002",
-   "group": "경주 읍내(성 안)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2900.79,
-     -2191.9
-    ],
-    [
-     -2878.04,
-     -2191.9
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_003",
-   "group": "경주 읍내(성 안)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2977.58,
-     -2214.94
-    ],
-    [
-     -2957.41,
-     -2214.94
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_004",
    "group": "경주 장",
    "width_m": 3.0,
    "points": [
@@ -15846,7 +16843,7 @@
    ]
   },
   {
-   "id": "gs_alley_005",
+   "id": "gs_alley_003",
    "group": "경주 장",
    "width_m": 3.0,
    "points": [
@@ -15861,7 +16858,7 @@
    ]
   },
   {
-   "id": "gs_alley_006",
+   "id": "gs_alley_004",
    "group": "경주 장",
    "width_m": 3.0,
    "points": [
@@ -15876,7 +16873,7 @@
    ]
   },
   {
-   "id": "gs_alley_007",
+   "id": "gs_alley_005",
    "group": "경주 읍내(성 밖)",
    "width_m": 3.0,
    "points": [
@@ -15891,97 +16888,52 @@
    ]
   },
   {
+   "id": "gs_alley_006",
+   "group": "경주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -3075.29,
+     -2231.75
+    ],
+    [
+     -3047.57,
+     -2231.75
+    ]
+   ]
+  },
+  {
+   "id": "gs_alley_007",
+   "group": "경주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -2824.85,
+     -2227.75
+    ],
+    [
+     -2798.75,
+     -2227.75
+    ]
+   ]
+  },
+  {
    "id": "gs_alley_008",
    "group": "경주 읍내(성 밖)",
    "width_m": 3.0,
    "points": [
     [
-     -3076.42,
-     -2231.73
+     -2851.92,
+     -2209.82
     ],
     [
-     -3049.25,
-     -2231.73
+     -2815.67,
+     -2209.82
     ]
    ]
   },
   {
    "id": "gs_alley_009",
-   "group": "경주 읍내(성 밖)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2825.45,
-     -2227.73
-    ],
-    [
-     -2799.35,
-     -2227.73
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_010",
-   "group": "경주 읍내(성 밖)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2852.51,
-     -2206.56
-    ],
-    [
-     -2816.3,
-     -2206.56
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_011",
-   "group": "경주 읍내(성 밖)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2902.55,
-     -2150.46
-    ],
-    [
-     -2861.27,
-     -2150.46
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_012",
-   "group": "경주 읍내(성 밖)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2910.73,
-     -2130.94
-    ],
-    [
-     -2879.8,
-     -2130.94
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_013",
-   "group": "경주 읍내(성 밖)",
-   "width_m": 3.0,
-   "points": [
-    [
-     -2908.79,
-     -2115.14
-    ],
-    [
-     -2872.35,
-     -2115.14
-    ]
-   ]
-  },
-  {
-   "id": "gs_alley_014",
    "group": "경주 읍내(성 밖)",
    "width_m": 3.0,
    "points": [
@@ -15996,7 +16948,7 @@
    ]
   },
   {
-   "id": "gs_alley_015",
+   "id": "gs_alley_010",
    "group": "경주 읍내(성 밖)",
    "width_m": 3.0,
    "points": [
@@ -16011,7 +16963,22 @@
    ]
   },
   {
-   "id": "gs_alley_016",
+   "id": "gs_alley_011",
+   "group": "경주 읍내(성 밖)",
+   "width_m": 3.0,
+   "points": [
+    [
+     -2844.34,
+     -2225.41
+    ],
+    [
+     -2821.78,
+     -2225.41
+    ]
+   ]
+  },
+  {
+   "id": "gs_alley_012",
    "group": "대본",
    "width_m": 3.0,
    "points": [
@@ -16026,7 +16993,7 @@
    ]
   },
   {
-   "id": "gs_alley_017",
+   "id": "gs_alley_013",
    "group": "대본",
    "width_m": 3.0,
    "points": [
@@ -16041,7 +17008,7 @@
    ]
   },
   {
-   "id": "gs_alley_018",
+   "id": "gs_alley_014",
    "group": "대본",
    "width_m": 3.0,
    "points": [
@@ -16056,7 +17023,7 @@
    ]
   },
   {
-   "id": "gs_alley_019",
+   "id": "gs_alley_015",
    "group": "대본",
    "width_m": 3.0,
    "points": [
@@ -16071,7 +17038,7 @@
    ]
   },
   {
-   "id": "gs_alley_020",
+   "id": "gs_alley_016",
    "group": "감포 포구",
    "width_m": 3.0,
    "points": [
@@ -16086,7 +17053,7 @@
    ]
   },
   {
-   "id": "gs_alley_021",
+   "id": "gs_alley_017",
    "group": "감포 포구",
    "width_m": 3.0,
    "points": [
@@ -16101,7 +17068,7 @@
    ]
   },
   {
-   "id": "gs_alley_022",
+   "id": "gs_alley_018",
    "group": "감포 포구",
    "width_m": 3.0,
    "points": [
@@ -16116,7 +17083,7 @@
    ]
   },
   {
-   "id": "gs_alley_023",
+   "id": "gs_alley_019",
    "group": "감포 포구",
    "width_m": 3.0,
    "points": [
@@ -16131,7 +17098,7 @@
    ]
   },
   {
-   "id": "gs_alley_024",
+   "id": "gs_alley_020",
    "group": "감포 포구",
    "width_m": 3.0,
    "points": [
@@ -16146,7 +17113,7 @@
    ]
   },
   {
-   "id": "gs_alley_025",
+   "id": "gs_alley_021",
    "group": "치술령 아래 마을",
    "width_m": 3.0,
    "points": [
@@ -16161,7 +17128,7 @@
    ]
   },
   {
-   "id": "gs_alley_026",
+   "id": "gs_alley_022",
    "group": "치술령 아래 마을",
    "width_m": 3.0,
    "points": [
@@ -16176,7 +17143,7 @@
    ]
   },
   {
-   "id": "gs_alley_027",
+   "id": "gs_alley_023",
    "group": "들마을(auto_village_01)",
    "width_m": 3.0,
    "points": [
@@ -16191,7 +17158,7 @@
    ]
   },
   {
-   "id": "gs_alley_028",
+   "id": "gs_alley_024",
    "group": "들마을(auto_village_01)",
    "width_m": 3.0,
    "points": [
@@ -16206,7 +17173,7 @@
    ]
   },
   {
-   "id": "gs_alley_029",
+   "id": "gs_alley_025",
    "group": "들마을(auto_village_02)",
    "width_m": 3.0,
    "points": [
@@ -16221,7 +17188,7 @@
    ]
   },
   {
-   "id": "gs_alley_030",
+   "id": "gs_alley_026",
    "group": "들마을(auto_village_02)",
    "width_m": 3.0,
    "points": [
@@ -16236,7 +17203,7 @@
    ]
   },
   {
-   "id": "gs_alley_031",
+   "id": "gs_alley_027",
    "group": "들마을(auto_village_04)",
    "width_m": 3.0,
    "points": [
@@ -16251,7 +17218,7 @@
    ]
   },
   {
-   "id": "gs_alley_032",
+   "id": "gs_alley_028",
    "group": "들마을(auto_village_04)",
    "width_m": 3.0,
    "points": [
@@ -16266,7 +17233,7 @@
    ]
   },
   {
-   "id": "gs_alley_033",
+   "id": "gs_alley_029",
    "group": "들마을(auto_village_04)",
    "width_m": 3.0,
    "points": [
@@ -16281,7 +17248,7 @@
    ]
   },
   {
-   "id": "gs_alley_034",
+   "id": "gs_alley_030",
    "group": "들마을(auto_village_05)",
    "width_m": 3.0,
    "points": [
@@ -16296,7 +17263,7 @@
    ]
   },
   {
-   "id": "gs_alley_035",
+   "id": "gs_alley_031",
    "group": "들마을(auto_village_00)",
    "width_m": 3.0,
    "points": [
@@ -16311,7 +17278,7 @@
    ]
   },
   {
-   "id": "gs_alley_036",
+   "id": "gs_alley_032",
    "group": "들마을(auto_village_00)",
    "width_m": 3.0,
    "points": [
@@ -16326,7 +17293,7 @@
    ]
   },
   {
-   "id": "gs_alley_037",
+   "id": "gs_alley_033",
    "group": "들마을(auto_village_00)",
    "width_m": 3.0,
    "points": [

@@ -11,6 +11,11 @@ const ROOF_TILE := ["village/giwa", "village/jeongja"]
 const ROOF_THATCH := ["village/choga", "village/house_compound", "village/jumak", "village/market_shop", "village/mulbang_a",
 	"village/didil_bang_a", "village/oeyanggan", "village/heotgan", "village/dwitgan", "village/seonghwangdang", "village/daemun"]
 const FIELD := ["nature/garden_plot", "village/teotbat"]
+# 문화권 가옥(kit/culture/**): 담·정낭·성벽은 빼고, 지붕 색은 params.roof 또는 키트 기본값으로
+const CULTURE_SKIP := ["culture/tamna/doldam", "culture/tamna/jeongnang", "culture/gwanseo/city_wall"]
+const CULTURE_TILE := ["culture/gwandong/banga", "culture/yeongnam/jongga", "culture/yeongnam/sadang", "culture/giho/hanok_city",
+	"culture/gwanseo/pyeongyang_giwa"]
+const CULTURE_TILE_DEFAULT := ["culture/chae", "culture/yeongnam/tteuljip", "culture/giho/giyeok"]   # roof 없으면 기와
 const MAX_K := 8.0   # 최대 확대: 1m = 8px
 
 var world
@@ -137,15 +142,26 @@ func _collect_items(loader) -> void:
 			elif kit in ROOF_TILE or (kit.begins_with("landmark/") and not kit.ends_with("_wall")): kind = "tile"
 			elif kit in ROOF_THATCH: kind = "thatch"
 			elif kit in FIELD: kind = "field"
+			elif kit.begins_with("culture/"): kind = _culture_kind(kit, params)
 			elif kit == "village/jwapan": kind = "stall"
 			else: continue
+			if kind == "": continue
 			if kit == "village/house_compound" and String(params.get("size", "")) == "large": kind = "tile"
 			var fp := Vector2.ZERO
 			var f0 = it.get("footprint")
 			if f0 is Array and f0.size() >= 2: fp = Vector2(float(f0[0]), float(f0[1]))
 			if fp == Vector2.ZERO: fp = loader._catalog_fp(kit, params)
 			if fp == Vector2.ZERO: fp = Vector2(8, 6)
-			_items.append({ kind = kind, c = c, ry = ry, half = fp / 2.0, name = BuildingTitles.NAMES.get(kit, "") })
+			_items.append({ kind = kind, c = c, ry = ry, half = fp / 2.0, name = String(it.get("title", BuildingTitles.NAMES.get(kit, ""))) })
+
+# 문화권 키트의 지도 지붕 종류("" = 그리지 않음)
+static func _culture_kind(kit: String, params: Dictionary) -> String:
+	if kit in CULTURE_SKIP or kit.get_file().begins_with("_"): return ""
+	var roof := String(params.get("roof", ""))
+	if roof != "": return "tile" if roof.begins_with("giwa") else "thatch"
+	if kit in CULTURE_TILE or kit in CULTURE_TILE_DEFAULT: return "tile"
+	if kit.ends_with("/compound") and String(params.get("size", "")) == "large" and not kit.begins_with("culture/tamna"): return "tile"
+	return "thatch"
 
 func _ready() -> void:
 	layer = 10

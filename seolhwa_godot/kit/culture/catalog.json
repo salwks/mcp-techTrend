@@ -309,6 +309,48 @@
       ]
     },
     {
+      "name": "yeongnam/jageun",
+      "culture": "영남",
+      "file": "res://kit/culture/yeongnam/jageun.gd",
+      "desc": "영남 작은집 — 울 없는 좁은 一자 3칸 / ㄱ자(plan giyeok), roof giwa(회벽·높은 기단)|choga(붉은 흙벽). 읍내 길가·틈 메우기",
+      "shot": "",
+      "params": {
+        "seed": 1
+      },
+      "tris": 1712,
+      "footprint": [
+        10.4,
+        5.6
+      ],
+      "colliders": 1,
+      "lights": 1,
+      "occluder": true,
+      "anchors": [
+        "anchae_kitchen",
+        "anchae_door",
+        "anchae_daecheong",
+        "anchae_maru"
+      ],
+      "pieces": 0,
+      "max_piece_tris": 0,
+      "layout": false,
+      "variants": [
+        {
+          "params": {
+            "seed": 1,
+            "plan": "giyeok"
+          }
+        },
+        {
+          "params": {
+            "seed": 2,
+            "roof": "giwa",
+            "w": 10.5
+          }
+        }
+      ]
+    },
+    {
       "name": "yeongnam/compound",
       "culture": "영남",
       "file": "res://kit/culture/yeongnam/compound.gd",

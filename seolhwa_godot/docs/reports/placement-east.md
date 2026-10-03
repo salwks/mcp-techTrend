@@ -525,3 +525,41 @@ python3 tools/placement/hubs.py all --profiles   # 고을 성격표(hub_profiles
 7. 남원의 `town_profile.py`·`east_*.py`는 고치지 않았다. 문화권 연결은 `hubs.py` 안에서만 한다. 공용으로 옮길지는 총괄이 정한다.
 8. `region.json`(세 권역)의 settlements[].profile·title·culture_key를 이 에이전트가 덮어썼다. data-east가 region.json을 다시 빌드하면 `python3 tools/placement/hubs.py all --profiles`를 다시 돌려야 한다. 아니면 `tools/region/regions/<id>.json`에 옮겨 달라.
 9. `godot --import` 필요: 새 스크립트 `kit/landmark/jj_eupseong_wall.gd`, 보조 키트 5개, 새 png들.
+
+## 9. 후속 수정 (2026-10-04)
+8절 남은 문제 1·3·4·5와 2(제주 건천)를 고쳤다. 커밋하지 않았다.
+
+- **도시 지도**(`scripts/region/region_map.gd`)
+  - `culture/**` 집 키트를 지붕으로 그린다. 담·정낭·성벽(`tamna/doldam`, `tamna/jeongnang`, `gwanseo/city_wall`)은 뺀다. 색은 `params.roof`(giwa* → 기와, 그 밖 → 초가)로 정한다. roof가 없으면 키트 기본값을 쓴다(banga·jongga·sadang·hanok_city·pyeongyang_giwa·chae·tteuljip·giho/giyeok은 기와, 탐라 말고 compound large도 기와).
+  - 이름표는 항목 `title`을 먼저 쓰고, 없으면 `BuildingTitles.NAMES[kit]`를 쓴다. 제주는 이제 영주관·제주향교로 나온다. 남원 배치에는 culture 키트도 title도 없어서 남원 지도는 그대로다. 북쪽 권역의 culture 집도 지도에 지붕으로 나오게 된다.
+- **강릉 임영관 길**: `hubs.py fix_roads()`가 region.json 길을 고친다(여러 번 돌려도 같은 결과, hubs.py를 돌릴 때마다 적용).
+  - 관동대로: 일곽 안 첫 점을 지워 삼문(z −417)에서 시작.
+  - 경포길: 삼문 앞 길(1174.6, −412)에서 시작.
+  - 북쪽 해안길: 삼문 앞 길 → 일곽 동쪽 담 밖(x 1236~1238) → 원래 길.
+  - 향교길: 삼문 앞 길 → 일곽 서쪽 담 밖(x 1171) → 원래 길(교동).
+  - 이제 마당 안에 흙길이 없다(`fix_map_gw`, `fix_gw_gate`).
+- **경주 동경관 앞마당**: 성 안 북문길이 꺾이는 자리를 z −2292.5에서 −2318.5(북문 안 순성로 바로 안)로 옮겼다(fix_roads). 일곽 깊이는 21m에서 41.5m로 늘렸다. 정당은 일곽 안 z −27에 둬서 삼문 뒤 앞마당이 약 18m다(`fix_map_gs`, `fix_gs_gaeksa`).
+- **밀도**
+  - 새 키트 `kit/culture/yeongnam/jageun.gd`(영남 작은집)를 만들었다. 울 없는 一자 3칸 또는 ㄱ자이고, 폭 8.4~10.5m, roof giwa(회벽) 또는 choga(붉은 흙벽), 약 1.7k 삼각형이다. 카탈로그에도 올렸다.
+  - `hubs.py`
+    - `small` 집터를 더했다. 영남은 작은집 + 장독, 관동은 해안 ㄱ자 또는 기와 一자 채를 울 없이, 탐라는 밖거리·안거리에 바짝 두른 현무암 집담이다.
+    - `small_fill()`은 큰 집터를 다 놓은 뒤에 돈다. 길가 물림 0.9~1.8m 줄과 11m 간격 채우기로 빈 틈을 메운다.
+    - landuse와 region.json의 마을 터는 넓히지 않았다. 평면도를 보니 마을 터 안이 빈 것이 원인이었다. 터가 좁은 것은 아니었다.
+  - 읍내 건물 수(관아 제외, 고친 뒤 / 고치기 전)
+    - 경주: 성 안 25 / 18, 성 밖 70 / 51, 장 11.
+    - 강릉: 98 / 76.
+    - 제주: 성 안 93 / 69, 성 밖 63 / 35.
+    - 세 곳 모두 §18의 40~100(경주는 그보다 많음)에 든다.
+  - 겹침 검사: 경주 1, 강릉 1(둘 다 의도한 바위 짝), 제주 0.
+- **제주 건천**: c494fa5 이후 산지천은 현무암 자갈 마른 바닥으로 그려진다. 검은 골로 보이지 않는다(`fix_jj_sanji`).
+  - 제주에서는 집터를 하천에서 4m 물리게 했다(기본 2.5m).
+  - 건천이 폭 3.5m 이상 큰길을 건너는 데는 징검다리 대신 돌다리를 놓는다. 제주성 안 동서길의 산지천과 무명 내 두 곳이다.
+- 확인
+  - `godot --headless --import` 한 번 돌렸다.
+  - 세 권역 모두 불러오기 ERROR 0이다.
+  - 첫 지도 실행에서 경주·강릉에 `Out of bounds get index '2'` SCRIPT ERROR가 났다. 같은 인자로 다시 돌리면 재현되지 않았다. 그때 다른 에이전트가 place_title.gd·building_titles.gd를 고치고 있었으므로, 그 중간 상태 때문으로 본다.
+  - 스크린샷: `shots/placement/hub/fix_map_{gs,gw,jj}.png`, `fix_gs_gaeksa.png`, `fix_gs_street.png`, `fix_gw_gate.png`, `fix_jj_sanji.png`.
+- 남은 것
+  - 경주 울산길 남문 밖 어귀(장승 자리)는 길 동쪽이 비어 있다. 어귀라서 일부러 비운 것이다.
+  - 제주 산지천 둑은 아직 가파르고 어둡다(지형 깎기). 돌 축대 키트가 생기면 성 안 구간에 두를 만하다.
+  - 고분이 지도에 사각형으로 나오는 것은 그대로다.

@@ -176,6 +176,36 @@ def yard_culture(seed, st):
     return None
 
 
+def small_c(seed, st):
+    """작은 집터(후속 수정 — 읍내 밀도): 울 없는 좁은 一자·ㄱ자 집 하나 + 장독. 큰 집터 사이 빈 틈·길가를 메운다."""
+    cul = st.culture
+    r = random.Random(seed * 131 + 7)
+    if cul == "yeongnam":
+        roof = "giwa" if st.pick_roof(seed) == "giwa" else "choga"
+        plan = "giyeok" if seed % 3 == 0 else "il"
+        w = r.choice([8.4, 9.0, 9.6, 10.5])
+        ov = 1.0 if roof == "giwa" else 0.7
+        fp = [round(w + 2 * ov, 1), round(3.8 + 2 * ov + (3.3 if plan == "giyeok" else 0.0) + 0.6, 1)]
+        return [P("culture/yeongnam/jageun", {"seed": seed, "plan": plan, "roof": roof, "w": w}, cat="house", kind="yn_small",
+                  footprint=fp, margin=0.6),
+                P("village/jangdok", {"seed": seed, "w": 1.8, "d": 1.6, "n": [2, 1]}, -w / 2 - ov - 1.3, -1.2, cat="prop", margin=0.2,
+                  flatten=False)]
+    if cul == "gwandong":
+        if st.pick_roof(seed) == "giwa":
+            return [P("culture/chae", {"seed": seed, "l": 9.0, "d": 4.2, "bays": "kdmd", "roof": "giwa", "F": 0.5, "maru": 0.6},
+                      cat="house", kind="gd_small", footprint=[11.8, 7.6], margin=0.6)]
+        return [P("culture/gwandong/haean", {"seed": seed, "w": r.choice([8.4, 9.0])}, cat="house", kind="gd_small",
+                  footprint=[10.6, 9.0], margin=0.6),
+                P("village/jangdok", {"seed": seed, "w": 1.8, "d": 1.6, "n": [2, 1]}, -7.0, -1.0, cat="prop", margin=0.2, flatten=False)]
+    if cul == "tamna":
+        if seed % 2:
+            return yard_c(seed, ("culture/tamna/stone_house", {"seed": seed, "kind": "bak"}, -0.6), "doldam", hx=5.0, z0=-3.8, z1=3.8,
+                          rich=False, props=False)
+        return yard_c(seed, ("culture/tamna/stone_house", {"seed": seed, "kind": "an"}, -0.4), "doldam", hx=6.6, z0=-4.4, z1=4.4,
+                      rich=False, props=False)
+    return None
+
+
 def garden_tamna(seed):
     """제주 밭(우영) — 현무암 밭담 두른 채마밭."""
     r = random.Random(seed * 31 + 5)
@@ -185,6 +215,20 @@ def garden_tamna(seed):
               flatten=False, aabb=[-w / 2 - 1.0, w / 2 + 1.0, -d / 2 - 1.0, d / 2 + 1.0], margin=0.5),
             P("culture/tamna/doldam", {"seed": seed, "points": pts, "h": 1.1, "lite": True}, cat="wall", kind="batdam", inner=True,
               flatten=False)]
+
+
+def small_fill(pl, T, L, cells, roads, g, gc, seed, st, ry=None):
+    """후속 수정(밀도): 큰 집터를 다 놓은 뒤, 길가(앞 물림 좁게)와 마을 터 빈 틈을 작은 집터로 메운다."""
+    n = 0
+    for k, rid_ in enumerate(roads):
+        rd = T.road(rid_)
+        n += EV.street_rows(pl, T, L, cells, rd["points"], rd["width_m"], g, gc, "small", seed + k * 7, st, stats=pl.stats_,
+                            setback=(0.9, 1.8), max_drop=2.4, in_frac=0.25)
+    for ph, sd in ((0.0, 50), (5.5, 51)):
+        n += EV.fill_rows(pl, T, L, cells, g, gc, "small", seed + sd, pitch=11.0, ry=ry, in_frac=0.5, stats=pl.stats_, style=st,
+                          phase=ph, gap=(0.8, 1.8), alleys=False)
+    pl.log.append(f"[small] {g}: 작은 집터 {n}")
+    return n
 
 
 _orig_make_slot = EV.make_slot
@@ -201,6 +245,8 @@ def make_slot(kind, seed, st=None):
         return yard_culture(seed, st)
     if kind.startswith("hc_"):
         return compound_c(seed, kind[3:], st)
+    if kind == "small":
+        return small_c(seed, st)
     if kind == "garden" and cul == "tamna":
         return garden_tamna(seed)
     if kind == "props" and cul == "tamna":
@@ -236,6 +282,8 @@ EV.MIX.update({
     "tn_village": [("yard", 0.76), ("garden", 0.14), ("props", 0.10)],
     "shore": [("yard", 0.70), ("garden", 0.12), ("props", 0.18)],
     "front": [("yard", 0.88), ("props", 0.12)],
+    # 후속 수정(밀도): 작은 집터로 길가·틈 메우기
+    "small": [("small", 1.0)],
 })
 
 
@@ -438,6 +486,9 @@ def bridges(pl, T, gc_map=None):
     done = []
     for c in T.region["crossings"]:
         kit = E.crossing_kit(T, c)
+        # 후속 수정: 건천이 읍내 큰길(폭 3.5m 이상)을 건너는 데는 징검다리 대신 돌다리(제주성 안 산지천·무명 내)
+        if kit == "village/jingeom" and T.river(c["river_id"]).get("dry") and float(T.road(c["road_id"]).get("width_m", 3.0)) >= 3.5:
+            kit = "village/stone_bridge"
         if any(math.hypot(c["x"] - d[0], c["z"] - d[1]) < 9 for d in done):
             continue
         L = Local(T, c["x"], c["z"], 40)
@@ -650,8 +701,9 @@ def build_gyeongju(pl, T):
              "경주읍성", "seong", 1100, gate_w=18.0)
 
     # ── 2. 객사 동경관: 남북 축(남문→네거리→북) 끝, 남문을 바라봄. 북문길(z −2292) 남쪽 좁은 띠 ──
-    gz1, gz0 = -2268.5, -2289.6
-    pcs = [P("landmark/gj_dongyeonggwan", {"seed": 21}, 0.0, -13.0, cat="civic", kind="gaeksa", label="동경관", footprint=[45.6, 14.0],
+    # 후속 수정: 북문길을 순성로 바로 안(z −2318.5)에서 꺾어(fix_roads) 일곽을 41.5m 깊이로, 앞마당 약 18m
+    gz1, gz0 = -2268.5, -2310.0
+    pcs = [P("landmark/gj_dongyeonggwan", {"seed": 21}, 0.0, -27.0, cat="civic", kind="gaeksa", label="동경관", footprint=[45.6, 14.0],
              nocheck=True),
            P("landmark/samun", {"seed": 22, "kind": "outer", "name": "동경관"}, 0.0, 0.0, cat="civic", kind="samun", label="동경관 삼문",
              nocheck=True)]
@@ -698,6 +750,8 @@ def build_gyeongju(pl, T):
                  phase=8.5, gap=(1.2, 2.4))
     EV.fill_rows(pl, T, Lin, cells_in, G + "(성 안)", GC, "yn_in", 422, pitch=14.0, ry=0.0, in_frac=0.4, stats=pl.stats_, style=YN,
                  phase=4.0, gap=(1.0, 2.0))
+    small_fill(pl, T, Lin, cells_in, ["gyeongju_eup_street_ns", "gyeongju_eup_street_ew", "gyeongju_eup_street_n"], G + "(성 안)", GC,
+               425, YN, ry=0.0)
     # 성 안 우물 둘
     for k, (wx, wz) in enumerate([(CX - 30, CZ + 30), (CX + 30, CZ + 28)]):
         search(pl, [P("village/well", {"seed": 440 + k, "roof": False}, cat="prop", kind="well", margin=1.0)], wx, wz, 25, G, GC, 440 + k,
@@ -748,6 +802,8 @@ def build_gyeongju(pl, T):
     EV.fill_rows(pl, T, Lo, cells_out, G + "(성 밖)", GC, "yn_eup", 471, pitch=18.0, in_frac=0.5, stats=pl.stats_, style=YN, phase=9.0)
     EV.fill_rows(pl, T, Lo, cells_out, G + "(성 밖)", GC, "yn_eup", 472, pitch=14.0, in_frac=0.5, stats=pl.stats_, style=YN, phase=4.0,
                  gap=(1.0, 2.0))
+    small_fill(pl, T, Lo, cells_out, ["gyeongju_ulsan_road", "gampo_road", "north_road", "gyeongju_west_road"], G + "(성 밖)", GC, 475,
+               YN)
     # 어귀: 남문 밖 울산길(장승·솟대), 북문 밖
     for rid_, tw in [("gyeongju_ulsan_road", (-2932, -2060)), ("north_road", (-2925, -2420)), ("gampo_road", (-2760, -2255))]:
         e = E.entrance(T, rid_, CX, CZ, 120, tw)
@@ -978,6 +1034,8 @@ def build_gangneung(pl, T):
     EV.fill_rows(pl, T, Lt, cells, G, GC, "gd_eup", 430, pitch=18.0, in_frac=0.5, stats=pl.stats_, style=GD,
                  zone=(1230, -470, 60.0, "gd_ban"))
     EV.fill_rows(pl, T, Lt, cells, G, GC, "gd_eup", 431, pitch=18.0, in_frac=0.5, stats=pl.stats_, style=GD, phase=9.0)
+    small_fill(pl, T, Lt, cells, ["gwandong_daero", "gyeongpo_road", "north_coast_road", "hyanggyo_lane", "anmok_road", "haksan_road"],
+               G, GC, 435, GD)
     for k, (wx, wz) in enumerate([(1160, -470), (1280, -420), (1150, -390)]):
         search(pl, [P("village/well", {"seed": 440 + k, "roof": k % 2 == 0}, cat="prop", kind="well", margin=1.0)], wx, wz, 30, G, GC,
                440 + k, face="none")
@@ -1159,6 +1217,7 @@ def build_jeju(pl, T):
     EV.fill_rows(pl, T, Lin, cells_in, G + "(성 안)", GC, "tn_eup", 420, pitch=23.0, ry=0.0, in_frac=0.4, stats=pl.stats_, style=TN)
     EV.fill_rows(pl, T, Lin, cells_in, G + "(성 안)", GC, "tn_eup", 421, pitch=23.0, ry=0.0, in_frac=0.4, stats=pl.stats_, style=TN,
                  phase=11.5, gap=(1.2, 2.4))
+    small_fill(pl, T, Lin, cells_in, ["jeju_eup_street_ew", "jeju_eup_street_ns"], G + "(성 안)", GC, 425, TN, ry=0.0)
     # 장: 동문 안 산지천 가(제주 장)
     js = stl(T, "jeju_jang")
     Lm = Local(T, js["x"], js["z"], 120)
@@ -1195,6 +1254,8 @@ def build_jeju(pl, T):
         EV.street_rows(pl, T, Lo, cells_out, rd["points"], rd["width_m"], G + "(성 밖)", GC, "front", 540 + k * 11, TN,
                        stats=pl.stats_, max_drop=2.4, in_frac=0.0)
     EV.fill_rows(pl, T, Lo, cells_out, G + "(성 밖)", GC, "tn_village", 550, pitch=23.0, in_frac=0.5, stats=pl.stats_, style=TN)
+    small_fill(pl, T, Lo, cells_out, ["jeju_south_gate_lane", "jeju_east_coast_road", "jeju_west_coast_road", "sanjipo_lane"],
+               G + "(성 밖)", GC, 555, TN)
     search(pl, jumak_c(560, "tamna"), CX + HX + 26, CZ + 12, 30, G + "(성 밖)", GC, 560, road_pref=(1.0, 6.0))
 
     # ── 6. 산지포(포구: 객주·창고) + 산지물 ──
@@ -1305,9 +1366,47 @@ def load_catalog_fp():
     return fp
 
 
+def fix_roads(rid):
+    """후속 수정: region.json 길 고치기(되풀이해도 같은 결과). data-east가 region.json을 다시 빌드해도 hubs.py를 돌리면 다시 맞춰진다.
+    - 강릉: 관동대로·경포길·북쪽 해안길·향교길이 임영관 한가운데 점에서 출발해 일곽 마당을 지났다 → 삼문 앞 길(z≈−412)에서 시작.
+    - 경주: 북문길(성 안)이 동경관 뒤 22m(z −2292.5)에서 꺾여 객사 앞마당이 4~6m였다 → 북문 안 순성로 바로 안(z −2318.5)에서 꺾는다."""
+    path = os.path.join(ROOT, "region_data", rid, "region.json")
+    r = json.load(open(path, encoding="utf-8"))
+    rd = {x["id"]: x for x in r["roads"]}
+    changed = []
+
+    def setp(rid_, pts):
+        if rid_ in rd and rd[rid_]["points"] != pts:
+            rd[rid_]["points"] = pts
+            changed.append(rid_)
+    if rid == "GW_GANGNEUNG":
+        p = rd["gwandong_daero"]["points"]
+        if p[0] == [1204.0, -439.3]:
+            setp("gwandong_daero", p[1:])
+        p = rd["gyeongpo_road"]["points"]
+        if p[0] == [1204.7, -440.0]:
+            setp("gyeongpo_road", p[8:])                                     # [1174.6, −412] 삼문 앞 길에서
+        p = rd["north_coast_road"]["points"]
+        if p[0] == [1204.7, -440.0]:
+            setp("north_coast_road", [[1236.0, -412.1], [1238.0, -446.0]] + p[3:])   # 일곽 동쪽 담(x 1231) 밖으로 돌아 북쪽
+        p = rd["hyanggyo_lane"]["points"]
+        if p[0] == [1204.0, -440.7]:
+            setp("hyanggyo_lane", [[1171.0, -411.5], [1171.0, -470.0]] + p[4:])     # 일곽 서쪽 담(x 1177) 밖으로 돌아 북서 교동
+    if rid == "GS_GYEONGJU":
+        p = rd["gyeongju_eup_street_n"]["points"]
+        if p[1] == [-2935.7, -2292.5]:
+            setp("gyeongju_eup_street_n", [p[0], [-2935.7, -2318.5], [-2899.7, -2318.5], [-2899.7, -2258.5]])
+    if changed:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(r, f, ensure_ascii=False, indent=1)
+        print("roads fixed:", rid, changed)
+
+
 def run_region(rid, bounds, fp):
     ET.DATA = os.path.join(ROOT, "region_data", rid)
     T = ET.Terrain()
+    # 후속 수정: 제주 건천은 마른 돌 바닥이 보이게 집터를 바닥에서 조금 더 물린다(기본 2.5m → 4m)
+    EP.DEFAULT_RULES["river_min"] = 4.0 if rid == "JJ_JEJU" else 2.5
     for it_ in range(10):
         pl = HubPlacer(T, bounds, fp)
         pl.prefix = PREFIX[rid]
@@ -1383,6 +1482,7 @@ if __name__ == "__main__":
             write_profiles(rid)
             print("profiles →", rid)
             continue
+        fix_roads(rid)
         T, pl = run_region(rid, bounds, fp)
         doc, out = write(rid, T, pl, bounds)
         print(f"== {rid}: items {len(doc['items'])} → {out}")
