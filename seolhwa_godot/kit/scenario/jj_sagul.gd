@@ -4,7 +4,8 @@
 # 1.4m 높이로 잘린 굴 벽 안을 내려다본다(인형집 단면).
 # 안: 입구 안쪽 옛 제단 돌(제물 자리), 옆 굴(아이가 숨는 자리 niche), 도굴 흔적(파헤친 바닥·깨진 독), 안쪽 막다른 큰 벽(deep_wall — 잔영이 지나는 벽).
 # 그룹 shed(PRP_SPEC_007 뱀 허물): NORMAL 있음 / EMPTY 없음. 금줄·제물상·발자국은 따로(scenario/props geumjul·jemul, decals_*.json).
-# params: seed, len(40), stele(true: 서련 판관 사적비)
+# params: seed, len(40), stele(true: 서련 판관 사적비), interior(true: 실내 공간 region_data/interiors/jj_sagul — 지붕·입구 바위·마당·비석 없이
+#   굴 안만, 남쪽 끝은 빛이 드는 출구 자리. 권역 쪽 입구는 landmark/jj_gimnyeongsagul이 그대로 맡는다)
 extends RefCounted
 const SC := preload("res://kit/scenario/_sc.gd")
 const Hub := preload("res://kit/landmark/_hub.gd")
@@ -25,6 +26,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var s := SC.S.new(int(params.get("seed", 1)))
 	var R := s.rng
 	var L: float = float(params.get("len", 40.0))
+	var indoor_space := bool(params.get("interior", false))
 	var z0 := -L / 2; var z1 := L / 2 - 0.8      # 굴 안쪽 끝 / 입구 안쪽
 	var step := 1.25
 	# --- 바닥: 굽이치는 띠(조금 울퉁불퉁), 용암 줄무늬 ---
@@ -62,32 +64,46 @@ static func build(params: Dictionary) -> Dictionary:
 				Kit.xf(v, c + s.between(-hw, hw), 2.5, z + s.between(-0.6, 0.6))
 				vines.append(Kit.paint(v, Kit.hex(0x6f8a4a), Kit.hex(0x3e5a32), 0.08, R))
 	s.add("walls", "rock", Kit.merge(walls), 0.03)
-	s.add("ceiling", "rock", Kit.merge(ceil), 0.04)
-	s.add("ceiling", "leaf", Kit.merge(vines), 0.02)
+	if not indoor_space:
+		s.add("ceiling", "rock", Kit.merge(ceil), 0.04)
+		s.add("ceiling", "leaf", Kit.merge(vines), 0.02)
 	for q in cols: s.circle(q[0], q[1], q[2])
 	# 안쪽 끝 막는 벽
 	var endw := Kit.lump(1.0, 1, R, 0.2, 1.0)
 	Kit.xf(endw, cx_at(z0), 0.7, z0 - 0.8, 0, 0, 0, w_at(z0) * 0.6, 1.2, 1.0)
 	s.add("walls", "rock", SC.pa(endw, BASALT, 0.08, R), 0.03)
 	s.box_c(cx_at(z0) - 3.5, cx_at(z0) + 3.5, z0 - 1.8, z0 - 0.2)
-	# --- 입구(기존 사굴 입구 모양): 바위 얼굴·어두운 아가리·둔덕은 실내에서 숨김(mouth), 바깥 돌·비석은 남김(yard) ---
 	var zm := L / 2 - 0.6
-	var old: Transform3D = s.m.push(0, 0, zm)
-	var fz: float = Hub.cave_mouth(s.p("mouth"), R, 5.0, 3.0, [0x6a665e, 0x3a3733], Vector3(16, 3.6, 10))
-	s.add("yard", "mud", Co.pnt(Kit.box(6.0, 0.05, 3.0, 0, 0.02, fz + 1.4), [0x4a4238, 0x3a332c], 0.05, R), 0.0)
-	for k in 8:
-		var a := R.between(-0.3, PI + 0.3)
-		Hub.rock(s.p("yard"), R, cos(a) * R.between(4.0, 7.5), fz + 0.6 + sin(a) * R.between(0.5, 2.0) - 1.0, R.between(0.5, 1.1), R.between(0.3, 0.7), R.between(0.5, 1.0), Hub.BASALT, 0, 0.35, a)
-	if params.get("stele", true):
-		Hub.stele(s.p("yard"), R, 5.5, fz + 4.0, 1.4, 0.55, false, -0.3)
-		s.circle(5.5, fz + 4.0, 0.6)
-		s.anchor("stele", Vector3(5.5, 0, fz + 5.2))
-	s.box_c(-8.0, -2.6, -5.0, fz)
-	s.box_c(2.6, 8.0, -5.0, fz)
-	s.anchor("mouth", Vector3(0, 0, fz + 1.0))
-	s.anchor("outside", Vector3(0, 0, fz + 5.0))
-	s.anchor("rope", Vector3(0, 0, fz + 0.4))
-	s.m.pop(old)
+	if indoor_space:
+		# 실내 공간: 남쪽 끝은 출구 — 빛이 드는 바닥 한 장과 양옆 바위, 그 너머는 막는다(나가기는 interior.json exits)
+		s.add("floor_in", "flat", SC.pa(Kit.xf(Kit.box(3.6, 0.02, 1.6), 0.0, 0.035, zm - 0.2), [0xb8b09a, 0x9a927e]), 0.0)
+		for sx in [-1, 1]:
+			var g := Kit.lump(1.1, 1, R, 0.25, 1.2)
+			Kit.xf(g, sx * 2.6, 0.7, zm + 0.4)
+			s.add("walls", "rock", Kit.paint(g, Kit.hex(BASALT[0]), Kit.hex(BASALT[1]), 0.08, R), 0.03)
+		s.box_c(-4.0, 4.0, zm + 0.9, zm + 2.5)
+		s.box_c(-4.5, -1.9, zm - 0.6, zm + 1.2)
+		s.box_c(1.9, 4.5, zm - 0.6, zm + 1.2)
+		s.anchor("mouth", Vector3(0, 0, zm - 0.4))
+		s.anchor("exit_light", Vector3(0, 2.2, zm + 0.4))
+	else:
+		# --- 입구(기존 사굴 입구 모양): 바위 얼굴·어두운 아가리·둔덕은 실내에서 숨김(mouth), 바깥 돌·비석은 남김(yard) ---
+		var old: Transform3D = s.m.push(0, 0, zm)
+		var fz: float = Hub.cave_mouth(s.p("mouth"), R, 5.0, 3.0, [0x6a665e, 0x3a3733], Vector3(16, 3.6, 10))
+		s.add("yard", "mud", Co.pnt(Kit.box(6.0, 0.05, 3.0, 0, 0.02, fz + 1.4), [0x4a4238, 0x3a332c], 0.05, R), 0.0)
+		for k in 8:
+			var a := R.between(-0.3, PI + 0.3)
+			Hub.rock(s.p("yard"), R, cos(a) * R.between(4.0, 7.5), fz + 0.6 + sin(a) * R.between(0.5, 2.0) - 1.0, R.between(0.5, 1.1), R.between(0.3, 0.7), R.between(0.5, 1.0), Hub.BASALT, 0, 0.35, a)
+		if params.get("stele", true):
+			Hub.stele(s.p("yard"), R, 5.5, fz + 4.0, 1.4, 0.55, false, -0.3)
+			s.circle(5.5, fz + 4.0, 0.6)
+			s.anchor("stele", Vector3(5.5, 0, fz + 5.2))
+		s.box_c(-8.0, -2.6, -5.0, fz)
+		s.box_c(2.6, 8.0, -5.0, fz)
+		s.anchor("mouth", Vector3(0, 0, fz + 1.0))
+		s.anchor("outside", Vector3(0, 0, fz + 5.0))
+		s.anchor("rope", Vector3(0, 0, fz + 0.4))
+		s.m.pop(old)
 	# --- 굴 안 ---
 	# 옛 제단 돌(입구 안쪽 오른편) — 제물상은 따로
 	var az := zm - 7.0
@@ -127,7 +143,14 @@ static func build(params: Dictionary) -> Dictionary:
 		skin = Kit.merge([skin, Kit.limb(a, b, 0.07, 0.065, 5)])
 	sh.add("organic", SC.pa(skin, [0xd8d0b0, 0xb8ae8c], 0.05), 0.0)
 	s.anchor("shed", Vector3(cx_at(hz) + 1.5, 0, hz + 2.0))
-	# 굴 안 입구 쪽 빛(밤에도 어둡게 — 램프 대신 약한 굴 안 빛 없음)
-	s.interior = { minX = -5.2, maxX = 5.2, minZ = z0 - 0.2, maxZ = zm - 1.5, floor_y = 0.0, camera = { pitch = 60, distance = 12.5 } }
-	s.hide = ["ceiling", "mouth"]
+	# 굴 안은 어둡다(dark — region_main이 해·하늘빛을 줄이고, 이야기가 등불을 켜면 플레이어 곁 불빛). 지붕(ceiling)을 숨겨도
+	# 햇빛이 바닥에 들지 않게 한다. near_fade=false: 카메라 앞 12m 안을 점무늬로 비우는 가림(occ_near)을 굴 안에서는 끈다 —
+	# 실내 카메라(12.5m)가 굴 바닥·벽을 그 거리 안에 두어 바닥에 쐐기 모양 구멍이 뚫리고 겉 지형이 비쳤다
+	s.interior = { minX = -5.2, maxX = 5.2, minZ = z0 - 0.2, maxZ = zm - 1.5, floor_y = 0.0, camera = { pitch = 60, distance = 12.5 }, dark = 0.92, near_fade = false }
+	if indoor_space:
+		s.interior.dark = 0.92
+		s.interior.maxZ = zm + 0.4
+		s.hide = []
+	else:
+		s.hide = ["ceiling", "mouth"]
 	return s.result("김녕사굴", Vector2(17.0, L + 6.0))

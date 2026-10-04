@@ -4,7 +4,7 @@
 #          wall:true(벽·나무에 세운 데칼 — y 필수, ry = 벽 면이 보는 방향), color:"#rrggbb", alpha, group, hidden, dry(초 — 그동안 옅어져 사라짐) }
 #   발자국 줄: { id, kind:"foot"|"paw"|"shoe"|"hoof"|"wet_foot"…, points:[[x,z]…], step(m), size, spread(좌우 벌림 m), group, hidden }
 # 실행 중(사건): world.decals.add(spec) → id, remove(id), trail(id, kind, points, opts) → [id…], set_group_visible(group, on),
-#   clear_group(group), dry(id_or_group, 초)
+#   clear_group(group), dry(id_or_group, 초), traces_near(p, r)(감응 — spec의 trace: human|other|mixed)
 # 그리기: 32m 칸마다 메시 하나(반투명 키트 재질 — 빛·안개·젖음을 키트와 같이 받는다), 땅 모양에 맞게 0.5m 격자로 덮는다.
 extends Node3D
 
@@ -112,6 +112,17 @@ func dry(id_or_group: String, seconds: float) -> void:
 			it.dry_t = maxf(0.01, seconds); it.dry_left = it.dry_t
 			_drying[id] = true
 
+# 흔적의 결(감응 매듭 — scripts/story/sensing.gd): 데칼·발자국 줄 spec의 trace: "human"(사람이 만든) | "other"(사람 아닌 것) | "mixed".
+# p 둘레 r 안의 보이는 데칼 중 trace가 있는 것 [{ id, trace, kind, group, d }] (가까운 순 아님)
+func traces_near(p: Vector2, r: float) -> Array:
+	var out := []
+	for id in _items:
+		var it: Dictionary = _items[id]
+		if it.trace == "" or it.hidden or it.fade <= 0.05: continue
+		var dd := Vector2(it.x, it.z).distance_to(p)
+		if dd <= r: out.append({ id = id, trace = it.trace, kind = it.kind, group = it.group, d = dd })
+	return out
+
 func ids_in(group: String) -> Array:
 	var out := []
 	for id in _items:
@@ -136,6 +147,7 @@ func _add(spec: Dictionary, from_data: bool) -> String:
 		size = float(spec.get("size", k.size)), w = float(spec.get("w", k.w)), wall = bool(spec.get("wall", false)),
 		color = col.srgb_to_linear() if spec.get("color") is String else col, group = group,
 		hidden = bool(spec.get("hidden", false)) or _hidden_groups.has(group), fade = 1.0, dry_t = 0.0, dry_left = 0.0, data = from_data,
+		trace = String(spec.get("trace", "")),
 	}
 	it.color.a = col.a
 	var dr := float(spec.get("dry", k.get("dry", 0.0)))

@@ -30,6 +30,7 @@ const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const RiverLanes := preload("res://scripts/region/river_lanes.gd")
 const BoatRide := preload("res://scripts/region/boat_ride.gd")
+const InteriorSpace := preload("res://scripts/region/interior_space.gd")
 const StoryDirector := preload("res://scripts/story/story_director.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
@@ -106,9 +107,22 @@ var _load_label: Label
 var _load_t0 := 0
 var _fill: OmniLight3D     # 실내 보조광(지붕을 숨긴 실내가 벽 그림자로 거의 검게 나오는 것을 막는다)
 var _fill_k := 0.0
+# 어두운 실내(interior.dark — 김녕사굴 등 굴): 해·하늘빛을 줄인다. lantern(이야기가 켬 — 등불을 지님)이면 플레이어 곁에 등불빛
+var lantern := false
+var _dark_k := 0.0
+var _dark_on := false
+var _lantern: OmniLight3D
 var _reload_t := 0.0
 var weather    # Weather
 var npcs_amb    # NpcAmbient(주변 인물·짐승) — --nonpc로 끔
+# 실내 공간(scripts/region/interior_space.gd, region_data/interiors/<id>/interior.json): 굴·지하 같은 큰 실내를 따로 세운 공간.
+#   enter_interior(id, entrance_id) · exit_interior(exit_id) — 권역을 다시 읽지 않고 지형·식생을 숨긴 채 실내 키트만 세운다(짧은 암전).
+signal indoor_changed(id: String)   # 들어가면 실내 id, 나오면 ""
+var indoor_gate = null              # Callable(id) -> String: ""면 들어감, 아니면 거절 사유(HUD) — 이야기가 건다
+var _sky_quad: MeshInstance3D
+var _indoor_specs: Array = []
+var _indoor_armed := {}
+var _indoor_busy := false
 var _base_state: Dictionary
 var _base_dir := Vector3.UP
 var _pending := {}        # 다른 공간에서 넘어왔으면 그 예약(Travel)
@@ -240,6 +254,7 @@ func _build_scene() -> void:
 	sky_quad.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sky_quad.custom_aabb = AABB(Vector3(-1e5, -1e5, -1e5), Vector3(2e5, 2e5, 2e5))
 	root.add_child(sky_quad)
+	_sky_quad = sky_quad
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_DISABLED
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
 	env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
@@ -302,6 +317,10 @@ func _build_scene() -> void:
 	_fill.light_color = Color("#ffe6c4"); _fill.omni_range = 9.0; _fill.omni_attenuation = 1.2
 	_fill.shadow_enabled = false; _fill.light_energy = 0.0
 	root.add_child(_fill)
+	_lantern = OmniLight3D.new()
+	_lantern.light_color = Color("#ffb468"); _lantern.omni_range = 9.5; _lantern.omni_attenuation = 1.4
+	_lantern.shadow_enabled = false; _lantern.light_energy = 0.0; _lantern.visible = false
+	root.add_child(_lantern)
 
 	SpriteChar.load_bank("player", "frames.json")
 	player = SpriteChar.new("player")
@@ -370,6 +389,11 @@ func _sync_glows() -> void:
 		lamp_glows.append({ mesh = mi, light = l, kind = kd })
 
 func teleport(x: float, z: float) -> void:
+	# 실내 공간 자리면 들어가고(암전 없이), 실내에서 바깥 자리를 가리키면 나온다 — 이야기·시험 teleport가 그대로 통한다
+	if world.indoor != null and not world.indoor.bounds.has_point(Vector2(x, z)): _exit_now()
+	elif world.indoor == null:
+		for sp in _indoor_list():
+			if InteriorSpace.contains(sp, Vector2(x, z)): _enter_now(sp); break
 	world.focus(Vector3(x, 0, z))
 	var p := _nearest_free(x, z, player.radius)
 	player_pos = Vector3(p.x, world.height_at(p.x, p.y), p.y)
@@ -395,6 +419,126 @@ static func facing_from(dx: float, dz: float, prev: String) -> String:
 	if dx == 0.0 and dz == 0.0: return prev
 	if absf(dx) > absf(dz) * 1.15: return "right" if dx > 0.0 else "left"
 	return "down" if dz > 0.0 else "up"
+
+# 어두운 실내: 해·하늘빛을 줄이고(굴 지붕을 숨겨도 햇빛이 들지 않게) 등불을 켠다. 나오면 시간대 값으로 되돌린다
+func _apply_dark() -> void:
+	if _dark_k <= 0.002 and not _dark_on:
+		if _lantern.visible: _lantern.visible = false
+		return
+	_dark_on = _dark_k > 0.002
+	if not _state.is_empty():
+		sun.light_energy = float(_state.sunI) * maxf(0.0, 1.0 - 1.1 * _dark_k)   # 굴 안엔 해가 들지 않는다(숨긴 지붕 그림자 사이 햇빛 띠도 없앤다)
+		RenderingServer.global_shader_parameter_set("hemi_i", float(_state.hemiI) * (1.0 - 0.88 * _dark_k))
+		if world.indoor != null: RenderingServer.global_shader_parameter_set("fog_density", 0.0)
+	var on := lantern and _dark_k > 0.02
+	_lantern.visible = on
+	if on:
+		var fl := 1.0 + 0.06 * sin(clock * 11.0) + 0.04 * sin(clock * 23.0)
+		_lantern.light_energy = 3.4 * _dark_k * fl
+		_lantern.position = player_pos + Vector3(0.35, 1.3, 0.25)
+
+# ---- 실내 공간 ----
+func _indoor_list() -> Array:
+	if _indoor_specs.is_empty(): _indoor_specs = InteriorSpace.for_space(String(world.region.get("region_id", world.region.get("route_id", ""))))
+	return _indoor_specs
+
+func _enter_now(sp: Dictionary) -> void:
+	var t0 := Time.get_ticks_usec()
+	world.enter_indoor(sp)
+	_sky_quad.visible = false
+	if npcs_amb != null: npcs_amb.visible = false
+	_apply_atmo()
+	print("INDOOR enter %s ms=%.1f" % [sp.get("id", ""), (Time.get_ticks_usec() - t0) / 1000.0])
+	indoor_changed.emit(String(sp.get("id", "")))
+
+func _exit_now() -> void:
+	var iid: String = world.indoor.id
+	var t0 := Time.get_ticks_usec()
+	world.exit_indoor()
+	_sky_quad.visible = true
+	if npcs_amb != null: npcs_amb.visible = true
+	_apply_atmo()
+	print("INDOOR exit %s ms=%.1f" % [iid, (Time.get_ticks_usec() - t0) / 1000.0])
+	indoor_changed.emit("")
+
+# 걸어서 입구(권역)·출구(실내) 자리에 들면 짧은 암전으로 넘어간다. 이야기가 플레이어를 쥐고 있으면 기다린다
+func _check_indoor() -> void:
+	if _indoor_busy or (story != null and story.owns_player()): return
+	var pp := Vector2(player_pos.x, player_pos.z)
+	if world.indoor == null:
+		for sp in _indoor_list():
+			for e in sp.get("entrances", []):
+				var key := "%s/%s" % [sp.id, e.id]
+				var d := pp.distance_to(Vector2(float(e.at[0]), float(e.at[1])))
+				if d > float(e.get("radius", 1.5)) + 1.5: _indoor_armed[key] = true
+				if d < float(e.get("radius", 1.5)) and _indoor_armed.get(key, true):
+					_indoor_armed[key] = false
+					enter_interior(String(sp.id), String(e.id))
+					return
+	else:
+		for x in world.indoor.spec.get("exits", []):
+			var key := "%s/x/%s" % [world.indoor.id, x.id]
+			var d: float = pp.distance_to(world.indoor.to_world(Vector2(float(x.at[0]), float(x.at[1]))))
+			if d > float(x.get("radius", 1.3)) + 1.5: _indoor_armed[key] = true
+			if d < float(x.get("radius", 1.3)) and _indoor_armed.get(key, false):
+				exit_interior(String(x.id))
+				return
+
+func _indoor_fade(on: bool) -> void:
+	if story != null and story.get("ui") != null:
+		await story.ui.fade(on, 0.35)
+	else:
+		await _wait_frames(1)
+
+func enter_interior(iid: String, entrance_id := "") -> bool:
+	var sp := InteriorSpace.spec_of(iid)
+	if sp.is_empty() or _indoor_busy: return false
+	if indoor_gate is Callable and (indoor_gate as Callable).is_valid():
+		var why = (indoor_gate as Callable).call(iid)
+		if why is String and why != "":
+			_show_hud(why); return false
+	var e: Dictionary = {}
+	for x in sp.get("entrances", []):
+		if entrance_id == "" or String(x.id) == entrance_id: e = x; break
+	_indoor_busy = true
+	await _indoor_fade(true)
+	_enter_now(sp)
+	var sp_l: Array = e.get("spawn", [0, 0])
+	var w: Vector2 = world.indoor.to_world(Vector2(float(sp_l[0]), float(sp_l[1])))
+	player_pos = Vector3(w.x, world.height_at(w.x, w.y), w.y)
+	player.position = player_pos
+	if e.has("face"): player.facing = String(e.face)
+	rig.update(0, player_pos, player.facing, world.interior_at(w.x, w.y), true)
+	for x in sp.get("exits", []): _indoor_armed["%s/x/%s" % [iid, x.id]] = false
+	await _indoor_fade(false)
+	_indoor_busy = false
+	return true
+
+func exit_interior(exit_id := "") -> void:
+	if world.indoor == null or _indoor_busy: return
+	var x: Dictionary = {}
+	for q in world.indoor.spec.get("exits", []):
+		if exit_id == "" or String(q.id) == exit_id: x = q; break
+	_indoor_busy = true
+	await _indoor_fade(true)
+	var iid: String = world.indoor.id
+	_exit_now()
+	var to: Array = x.get("to", [player_pos.x, player_pos.z])
+	teleport(float(to[0]), float(to[1]))
+	if x.has("face"): player.facing = String(x.face)
+	rig.update(0, player_pos, player.facing, world.interior_at(player_pos.x, player_pos.z), true)
+	for sp in _indoor_list():
+		if String(sp.id) == iid:
+			for e in sp.get("entrances", []): _indoor_armed["%s/%s" % [iid, e.id]] = false
+	await _indoor_fade(false)
+	_indoor_busy = false
+
+# 이어 하기 자리: 실내 공간 안이면 그 첫 출구의 바깥 자리
+func where_outside() -> Vector2:
+	if world.indoor == null: return Vector2(player_pos.x, player_pos.z)
+	var xs: Array = world.indoor.spec.get("exits", [])
+	if xs.is_empty(): return Vector2(player_pos.x, player_pos.z)
+	return Vector2(float(xs[0].to[0]), float(xs[0].to[1]))
 
 # ---- 시간대 ----
 func _apply_time() -> void:
@@ -651,12 +795,17 @@ func _process(delta: float) -> void:
 	RenderingServer.global_shader_parameter_set("occ_b", player_pos + Vector3(0, player.height * 0.8, 0))
 	var occ_r: float = 0.0 if interior != null or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게
 	RenderingServer.global_shader_parameter_set("occ_r", occ_r)
-	RenderingServer.global_shader_parameter_set("occ_near", 0.0 if args.has("nodither") else 1.0)
+	# 실내 near_fade=false(굴 등 좁은 실내): 카메라 앞 가림 점무늬를 끈다 — 바닥·벽이 카메라 12m 안이라 구멍이 뚫린다
+	var near_fade: bool = not args.has("nodither") and not (interior != null and not bool(interior.get("near_fade", true)))
+	RenderingServer.global_shader_parameter_set("occ_near", 1.0 if near_fade else 0.0)
 	# 실내 보조광: 들어가면 서서히 켠다(밤에는 조금 더 — 호롱불 느낌)
 	_fill_k += ((1.0 if interior != null else 0.0) - _fill_k) * minf(1.0, dt * 3.0)
 	_fill.position = player_pos + Vector3(0, 2.4, 0.8)
-	_fill.light_energy = _fill_k * (3.0 + 4.0 * TimeOfDay.night_factor(hour))
-	_fill.visible = _fill_k > 0.01
+	var dark_want: float = float(interior.get("dark", 0.0)) if interior != null else 0.0
+	_dark_k += (dark_want - _dark_k) * minf(1.0, dt * 2.5)
+	if absf(_dark_k - dark_want) < 0.002: _dark_k = dark_want
+	_fill.light_energy = _fill_k * (3.0 + 4.0 * TimeOfDay.night_factor(hour)) * (1.0 - _dark_k)
+	_fill.visible = _fill_k > 0.01 and _dark_k < 0.98
 	_update_occlusion(dt, interior)
 	if interior == null: world.update_cutaway(dt, player_pos, cam.global_position)
 	world.update_scatter_lod(player_pos)
@@ -672,7 +821,9 @@ func _process(delta: float) -> void:
 		weather.update(dt, player_pos, cam.global_position, interior != null)
 		world.wet_level = weather.wet
 		if weather.dirty and Engine.get_process_frames() % 3 == 0: _apply_atmo()
-	if not _loading and not _leaving and not boats.riding(): _check_portals()
+	_apply_dark()
+	if not _loading and not _leaving and not boats.riding() and world.indoor == null: _check_portals()
+	if not _loading and not _leaving and not boats.riding(): _check_indoor()
 	if _hud and _hud_t > 0.0:
 		_hud_t -= delta; _hud.modulate.a = clampf(_hud_t, 0.0, 1.0)
 	var _t3 := Time.get_ticks_usec()
@@ -1105,7 +1256,7 @@ func _leave() -> void:
 
 # ---- 배 타기(boat_ride.gd): 나루·선창 끝에서 E로 오르면 사공이 저어 건넨다. Space(또는 E 누르고 있기) 건너뛰기 ----
 func _update_boats(dt: float) -> void:
-	if _loading or _leaving:
+	if _loading or _leaving or world.indoor != null:
 		_boat_text(""); return
 	var st = story.get("_target") if story != null else null
 	var free: bool = st == null and not (_map and _map.visible)
@@ -1128,7 +1279,7 @@ func _update_boats(dt: float) -> void:
 		world.set_near_r(1 if rig.sailing else RegionWorld.NEAR_R)
 	if rig.sailing:
 		rig.sail_dir = boats.heading(); rig.sail_side = boats.view_side(dt)
-		_boat_text("Space  건너뛰기" if not boats.skipping else "건너뛰는 중…")
+		_boat_text("" if boats.skip_lock else ("Space  건너뛰기" if not boats.skipping else "건너뛰는 중…"))
 	else:
 		_boat_text(("E   " + boats.prompt) if boats.prompt != "" and st == null else "")
 	var bh: String = boats.take_hud()

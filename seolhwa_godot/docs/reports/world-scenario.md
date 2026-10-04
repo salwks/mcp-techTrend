@@ -117,7 +117,8 @@ weather.release_time() / weather.time_forced()
 - S6005 '불빛·한 노인이 종이를 태움' = `lamp:USED`, `hwaro:USED`. 눈길은 `weather.force("blizzard")`, 발자국 `s6004_tracks`.
 
 ### 제주 JJ_JEJU — 김녕사굴 입구 + 굴 안(S7003~S7006)
-- 기존 `placement_hub.json` 항목 `jj_sagul_sagul_01`의 키트를 `scenario/jj_sagul`로 바꿈(입구 얼굴 자리는 그대로, 원점은 굴 가운데로 20m 북쪽 (3432.4, −915.7), 길이 40m, 터 고르기).
+- **2026-10-04 바뀜(story-jeju)**: 굴 안은 이제 실내 공간 `region_data/interiors/jj_sagul/interior.json`(terrain-engine.md "실내 공간")이다. 권역의 `jj_sagul_sagul_01`은 예전 입구 키트 `landmark/jj_gimnyeongsagul`로 되돌렸고, 금줄·입구 밖 발자국만 권역에 남는다. 제물상·짚신·굴 안 발자국은 실내 공간 데이터로 옮겼다. 아래 표는 옮기기 전 기록이다.
+- (옛) 기존 `placement_hub.json` 항목 `jj_sagul_sagul_01`의 키트를 `scenario/jj_sagul`로 바꿈(입구 얼굴 자리는 그대로, 원점은 굴 가운데로 20m 북쪽 (3432.4, −915.7), 길이 40m, 터 고르기).
 | id | 키트 | 상태 그룹 | 앵커 |
 |---|---|---|---|
 | jj_sagul_sagul_01 | scenario/jj_sagul(입구·굽이치는 용암굴, 실내에선 굴 지붕·입구 바위를 숨김) | shed(뱀 허물): NORMAL/EMPTY | mouth, outside, rope, stele, altar(옛 제단 돌), niche(아이가 숨는 옆 굴), dig(도굴 흔적), deep_wall(잔영이 지나는 벽), deep, shed |
@@ -153,5 +154,5 @@ weather.release_time() / weather.time_forced()
 
 ## 7. 남은 것·가설
 - 책쾌 가게·감영 문서고·산중 역참의 실제 평면은 근거 없이 게임용(가설). 서강 위치는 압축.
-- 굴 안은 지붕을 숨기면 햇빛이 그대로 든다(어두운 현무암 색으로만 굴 느낌). 굴 전용 어둠(조명)은 다음에.
+- ~~굴 안은 지붕을 숨기면 햇빛이 그대로 든다~~ → 실내 공간 + 어둠(dark)·등불로 고침(story-jeju).
 - 불꽃 혀는 빛나는 원뿔(정지) + 움직이는 입자. 데칼 발자국은 도성 카메라 거리(30m)에서 작게 보인다 — 단서로 쓸 땐 카메라를 당기거나 크기 0.45 이상 권장.

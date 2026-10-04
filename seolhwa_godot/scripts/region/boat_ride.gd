@@ -39,6 +39,7 @@ var speed_override := 0.0
 var prompt := ""          # 지금 띄울 안내(없으면 "")
 var near = null           # {r, end} — 플레이어가 내릴 자리 곁이면
 var skipping := false
+var skip_lock := false    # 이야기: 이번 뱃길은 건너뛰기(빨리 감기) 없음 — 제주 첫 뱃길(§18)
 var _man_kind := ""
 var _side := 1.0
 var _side_t := 0.0
@@ -202,6 +203,7 @@ func _legacy_onboard(pp: Vector2) -> bool:
 func update(dt: float, want_board: bool, skip_held: bool, paused: bool) -> void:
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	skipping = false
+	if skip_lock: skip_held = false
 	if riding():
 		if ride.seat != Vector3.INF and main.player_pos.distance_to(ride.seat) > 3.0:
 			cancel()   # 이야기가 옮겼다(teleport)

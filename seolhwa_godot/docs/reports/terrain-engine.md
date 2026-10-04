@@ -457,3 +457,58 @@ godot --path . res://scenes/region.tscn -- --weather=clear|cloudy|rain|fog|snow|
 
 ## 시험
 `--ridetest[=id] [--rideend=0|1] [--rideskip]`: 내릴 자리로 가서 타고 건너며 25·55·85%·닿은 뒤를 `--shotdir`(기본 `shots/region/boat/`)에 찍고 평균 fps를 남긴다.
+
+# 실내 공간 (2026-10-04) — 굴·지하·큰 실내를 권역 지형 밖의 작은 공간으로
+
+사용자 결정: 굴·지하·큰 실내는 권역 지형 안에 짓지 않는다. 입구(문·굴 아가리)는 권역에 두고, 안은 따로 세운 **실내 공간**으로 짧은 암전과 함께 넘어간다. 작은 집은 지금처럼 권역 안 단면(cutaway) 실내를 쓴다.
+
+## 왜
+김녕사굴(40m 용암굴)을 권역 지형 속에 지었더니 겹침이 보였다. 원인은 셋이었다.
+1. **카메라 앞 가림 점무늬(occ_near)**: `materials.gd`는 카메라 12m 안의 면을 점무늬로 비운다(잎덩이 속 카메라용, "실내에서도"). 굴 실내 카메라(거리 12.5m, 60°)는 굴 바닥·벽을 통째로 그 거리 안에 두어, 바닥에 쐐기 모양 구멍이 뚫리고 그 밑 지형(한지빛)이 비쳤다. `--nodither`로 확인.
+2. 숨긴 굴 지붕 사이로 햇빛이 바닥에 들었다(어둠이 없었다).
+3. 굴 벽 덩이(1.4m로 자른 현무암)·지형·입구 키트가 한 자리에서 서로 파고들었다.
+→ 굴을 실내 공간으로 옮겨 지형·식생을 아예 숨기고(겹칠 것이 없다), 실내에서는 occ_near를 끄고(`near_fade = false`), 어둠(`dark`)과 등불을 쓴다.
+
+## 데이터 — `region_data/interiors/<id>/interior.json`
+| 키 | 뜻 |
+|---|---|
+| `id`, `name`, `region` | 입구가 있는 권역·노정 id |
+| `origin` [x, y, z], `ry` | 이 공간의 로컬 0을 둘 월드 자리 — 권역 지도 안에서 쓰지 않는 자리(먼 바다 등). 이야기 좌표는 이 월드 좌표를 쓴다 |
+| `bounds` [x0, z0, x1, z1] | 로컬 사각형 — 이 밖은 막힘. 이야기 teleport가 이 안을 가리키면 들어간다 |
+| `kit`, `params` | 실내만 짓는 키트(예: `scenario/jj_sagul` `interior: true` — 지붕·입구 바위 없음, 남쪽 끝 출구) |
+| `light` | `dark`(0~1 — 해·하늘빛·안개를 줄임, 등불 `region_main.lantern`), `exit_light`(로컬 [x,y,z] — 출구에서 드는 빛), `exit_energy`, `exit_range`, `exit_color` |
+| `camera` | `{pitch, distance}` 실내 카메라 |
+| `entrances` | `[{id, at:[x,z](권역 월드), radius, spawn:[x,z](로컬), face}]` — 걸어 들면 들어감 |
+| `exits` | `[{id, at:[x,z](로컬), radius, to:[x,z](권역 월드), face, label}]` — 걸어 들면 나옴 |
+| `props` | `[{id, kit, params, at:[x,z](로컬), ry, dy, state}]` — `world.props`에 등록(`set_prop_state` 그대로) |
+| `decals` | `{items, trails}` 로컬 좌표(그룹 hidden·trace 그대로 — `set_group_visible`이 듣는다) |
+
+## 엔진
+- `scripts/region/interior_space.gd`: 읽기(`list() / for_space(space) / spec_of(id) / contains(spec, p)`), 짓기(`build(world, spec)`), 걷기 면(`height_at` = 바닥 높이, `blocked` = 키트 충돌체 + bounds 밖), `to_world(로컬)`, `teardown`.
+- `RegionWorld.indoor`: 들어가 있는 동안 `height_at · ground_at · blocked · interior_at`을 실내 공간이 답하고, `focus · update_scatter_lod · update_cutaway · update_camera_zone`은 쉰다. 지형·물·정적 물체·식생·원경·필지 노드를 숨긴다 — **권역은 메모리에 그대로**(다시 읽지 않음). `enter_indoor(spec) / exit_indoor()`.
+- `region_main`:
+  - `enter_interior(id, entrance_id) / exit_interior(exit_id)` — 이야기 UI 암전(0.35초) 안에서 넘어간다. 입구·출구 자리에 걸어 들면 저절로(`_check_indoor`, 이야기가 플레이어를 쥐면 기다림, 나온 직후 다시 들지 않게 무장 해제).
+  - `teleport(x, z)`: 목적지가 실내 공간 자리면 들어가고, 실내에서 밖을 가리키면 나온다(암전 없이) — 이야기 `teleport_to`·대본 시험이 그대로 통한다.
+  - `indoor_gate: Callable(id) -> String` — ""면 들어감, 아니면 거절 사유(HUD). 제주 사건: 초롱이 없으면 "굴 안이 칠흑이다…".
+  - `signal indoor_changed(id)` — 들어가면 id, 나오면 "".
+  - 안에서는 하늘 사각형·주변 인물을 숨기고, 배 타기·노정 포털을 쉬고, 안개를 끈다. 날씨 입자는 실내라 그리지 않는다.
+  - `where_outside()` — 이어 하기 저장은 실내 공간 안이면 첫 출구의 바깥 자리(story_director `_save_where`).
+- 어두운 실내(공통 — 권역 단면 실내에도 쓸 수 있다): interior 사전 `dark`(0~1)면 해 빛 `× max(0, 1 − 1.1·dark)`, 하늘빛 `× (1 − 0.88·dark)`, 실내 보조광을 끄고, `lantern`이면 플레이어 곁 등불(OmniLight, 9.5m). `near_fade = false`면 카메라 앞 가림 점무늬를 끈다.
+- 이야기(사건·기록책·싸움·잔영·데칼·소품·감응 매듭)는 같은 장면에서 그대로 돈다. 좌표만 실내 공간의 월드 자리다.
+
+## 측정(M1, 1024×768 창, 수직 동기 끔 — `--storytest=jeju:FPS`)
+| 자리 | fps |
+|---|---|
+| 화북포 물가(권역) | 109~122 |
+| 김녕사굴 안(실내 공간, 등불) | 166~174 |
+| 굴 입구 밖(권역) | 124~134 |
+| 들어가기(키트 짓기 포함) | 85~140ms |
+| 나오기 | 1~2ms(권역 타일은 그대로) |
+
+## 나중에 실내 공간으로 옮기면 좋을 것(지금은 그대로)
+| 곳 | 까닭 |
+|---|---|
+| 한양 칠패 창고 2번(숨은 바닥 hatch·pit) · 서강 옛 창고(숨은 바닥·수량패 홈) | 최종장 지하·불탄 창고 — 땅 밑 구덩이를 지형 안에 두면 같은 겹침이 생긴다. 불(FIRE_1~3)·어둠도 실내에서 다루기 쉽다 |
+| 함관령 옛 역참(북청길) | 눈보라 속 실내 — 방 안 카메라가 위에서 작게 본다(story-hamhung 남은 것) |
+| 평양 감영 기록 창고 | 문서 살피기 장면 — 좁은 실내에서 가림 점무늬가 서가를 비울 수 있다 |
+| 장산곶 바위섬 갯구멍(바위 밑 틈) | 바위 처마를 숨기는 실내 — 굴과 같은 꼴 |

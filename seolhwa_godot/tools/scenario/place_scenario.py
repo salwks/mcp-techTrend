@@ -175,31 +175,53 @@ def bukcheong():
 
 
 # ---------------------------------------------------------------------------
-# 제주: 김녕사굴 입구 + 굴 안(S7003~S7006) — 기존 placement_hub.json 항목 jj_sagul_sagul_01을 이 키트로 바꾼다
+# 제주: 김녕사굴 — 권역에는 입구(landmark/jj_gimnyeongsagul, 금줄·입구 발자국)만 두고, 40m 용암굴은 실내 공간
+#   region_data/interiors/jj_sagul/interior.json(scenario/jj_sagul interior=true)으로 따로 세운다(S7003~S7006).
+#   실내 공간 로컬 좌표 = 예전 굴 가운데 기준 로컬(굴은 −z로 뻗고 입구는 +z). 월드 자리는 김녕 앞바다 1000m 북쪽(쓰지 않는 자리).
 # ---------------------------------------------------------------------------
 def jeju():
     L = 40.0
-    # 입구 얼굴(옛 키트 원점 + 0.6)이 같은 자리에 오게: 새 원점 = 옛 원점 − (L/2 − 0.6)을 ry 방향으로
-    OX, OZ, OR = 3432.62, -896.26, 0.0136
-    ox, oz = w(OX, OZ, OR, 0.0, -(L / 2 - 0.6))
+    OX, OZ, OR = 3432.62, -896.26, 0.0136          # 입구 키트 원점(예전 그대로)
     hub = os.path.join(RD, "JJ_JEJU", "placement_hub.json")
     d = json.load(open(hub))
     for it in d["items"]:
         if it["id"] == "jj_sagul_sagul_01":
-            it.update({"kit": "scenario/jj_sagul", "params": {"seed": 1110, "len": L, "stele": True}, "x": ox, "z": oz, "ry": OR,
-                       "footprint": [17.0, L + 6.0], "flatten": True, "title": "김녕사굴"})
+            it.clear()
+            it.update({"id": "jj_sagul_sagul_01", "kit": "landmark/jj_gimnyeongsagul", "params": {"seed": 1110}, "x": OX, "z": OZ, "ry": OR,
+                       "y": None, "flatten": True, "clear_veg": True, "group": "김녕사굴", "footprint": [17.0, 14.0], "title": "김녕사굴"})
     json.dump(d, open(hub, "w"), ensure_ascii=False, indent=1)
-    print("updated JJ_JEJU/placement_hub.json jj_sagul_sagul_01 →", ox, oz)
+    print("updated JJ_JEJU/placement_hub.json jj_sagul_sagul_01 → 입구 키트")
+    ox, oz = w(OX, OZ, OR, 0.0, -(L / 2 - 0.6))    # 예전 굴 가운데(실내 로컬 원점이 놓였던 자리)
     zm = L / 2 - 0.6
-    items = [prop("jj_sc_sagul_geumjul", "geumjul", ox, oz, OR, 0.0, zm + 1.2, w=4.6, group="김녕사굴"),
-             prop("jj_sc_sagul_jemul", "jemul", ox, oz, OR, 2.0, zm - 5.9, group="김녕사굴", indoor=True),
-             prop("jj_sc_sagul_jipsin", "jipsin", ox, oz, OR, -1.4, 3.0, state="MOVED", group="김녕사굴")]
-    tr_s = [[0.3, zm + 2.0], [0.6, zm - 3.0], [-0.4, zm - 10.0], [0.8, 4.0], [0.2, -6.0], [1.4, -14.0]]
-    tr_h = [[-0.8, zm + 3.0], [-1.0, zm - 4.0], [-1.6, -6.0], [-1.6, -9.0]]
-    trails = [{"id": "jj_s7003_snake", "kind": "snake", "group": "s7003_tracks", "hidden": True, "points": trail_pts([w(ox, oz, OR, *p) for p in tr_s])},
-              {"id": "jj_s7003_shoe", "kind": "shoe", "group": "s7003_tracks", "hidden": True, "points": trail_pts([w(ox, oz, OR, *p) for p in tr_h])}]
-    save("JJ_JEJU", "placement_scenario.json", {"area": "scenario_jeju", "note": "S7003~S7006 김녕사굴 — tools/scenario/place_scenario.py", "items": items})
+    items = [prop("jj_sc_sagul_geumjul", "geumjul", ox, oz, OR, 0.0, zm + 1.2, w=4.6, group="김녕사굴")]
+    # 입구 밖 발자국(굴 안 부분은 실내 공간 decals)
+    trails = [{"id": "jj_s7003_snake", "kind": "snake", "group": "s7003_tracks", "hidden": True, "trace": "other",
+               "points": trail_pts([w(ox, oz, OR, 0.5, zm + 5.0), w(ox, oz, OR, 0.3, zm + 2.0), w(ox, oz, OR, 0.6, zm - 0.6)])},
+              {"id": "jj_s7003_shoe", "kind": "shoe", "group": "s7003_tracks", "hidden": True, "trace": "human",
+               "points": trail_pts([w(ox, oz, OR, -0.8, zm + 6.0), w(ox, oz, OR, -0.8, zm + 3.0), w(ox, oz, OR, -1.0, zm - 0.6)])}]
+    save("JJ_JEJU", "placement_scenario.json", {"area": "scenario_jeju", "note": "S7003 김녕사굴 입구 — tools/scenario/place_scenario.py", "items": items})
     save("JJ_JEJU", "decals_scenario.json", {"items": [], "trails": trails})
+    # 실내 공간
+    mouth_out = w(OX, OZ, OR, 0.0, 3.2)
+    inner = {
+        "id": "jj_sagul", "name": "김녕사굴 안", "region": "JJ_JEJU",
+        "note": "S7003~S7006 굴 안 — tools/scenario/place_scenario.py jeju(). 로컬 좌표(굴 가운데 0, 입구 +z). 월드 자리는 김녕 앞바다(지형·바다는 숨는다)",
+        "origin": [3432.36, 0.0, -1915.66], "ry": 0.0, "bounds": [-5.6, -21.6, 5.6, 20.6],
+        "kit": "scenario/jj_sagul", "params": {"seed": 1110, "len": L, "interior": True},
+        "light": {"dark": 0.82, "exit_light": [0.0, 2.2, zm + 0.6], "exit_energy": 1.6, "exit_range": 8.0, "exit_color": "#cfd6dc"},
+        "camera": {"pitch": 60, "distance": 12.5},
+        "entrances": [{"id": "mouth", "at": list(w(OX, OZ, OR, 0.0, -1.6)), "radius": 1.2, "spawn": [0.0, zm - 1.8], "face": "up"}],
+        "exits": [{"id": "mouth", "at": [0.0, zm + 0.1], "radius": 0.9, "to": list(mouth_out), "face": "down", "label": "굴 밖으로"}],
+        "props": [{"id": "jj_sc_sagul_jemul", "kit": "scenario/props", "params": {"kind": "jemul", "indoor": True, "seed": 5558}, "at": [2.18, 13.47], "ry": 0.0},
+                  {"id": "jj_sc_sagul_jipsin", "kit": "scenario/props", "params": {"kind": "jipsin", "indoor": True, "seed": 4697}, "at": [-1.36, 3.02], "ry": 0.0, "state": "MOVED"}],
+        "decals": {"items": [], "trails": [
+            {"id": "jj_s7003_snake_in", "kind": "snake", "group": "s7003_tracks", "hidden": True, "trace": "other",
+             "points": [[0.6, zm - 0.2], [0.82, 16.39], [-0.27, 9.4], [0.85, 4.0], [0.12, -6.0], [1.21, -14.02]]},
+            {"id": "jj_s7003_shoe_in", "kind": "shoe", "group": "s7003_tracks", "hidden": True, "trace": "human",
+             "points": [[-1.0, zm - 0.2], [-0.79, 15.41], [-1.68, -5.98], [-1.72, -8.98]]}]},
+    }
+    os.makedirs(os.path.join(RD, "interiors", "jj_sagul"), exist_ok=True)
+    save(os.path.join("interiors", "jj_sagul"), "interior.json", inner)
 
 
 # ---------------------------------------------------------------------------

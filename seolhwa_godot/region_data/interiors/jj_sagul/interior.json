@@ -1,0 +1,164 @@
+{
+ "id": "jj_sagul",
+ "name": "김녕사굴 안",
+ "region": "JJ_JEJU",
+ "note": "S7003~S7006 굴 안 — tools/scenario/place_scenario.py jeju(). 로컬 좌표(굴 가운데 0, 입구 +z). 월드 자리는 김녕 앞바다(지형·바다는 숨는다)",
+ "origin": [
+  3432.36,
+  0.0,
+  -1915.66
+ ],
+ "ry": 0.0,
+ "bounds": [
+  -5.6,
+  -21.6,
+  5.6,
+  20.6
+ ],
+ "kit": "scenario/jj_sagul",
+ "params": {
+  "seed": 1110,
+  "len": 40.0,
+  "interior": true
+ },
+ "light": {
+  "dark": 0.82,
+  "exit_light": [
+   0.0,
+   2.2,
+   20.0
+  ],
+  "exit_energy": 1.6,
+  "exit_range": 8.0,
+  "exit_color": "#cfd6dc"
+ },
+ "camera": {
+  "pitch": 60,
+  "distance": 12.5
+ },
+ "entrances": [
+  {
+   "id": "mouth",
+   "at": [
+    3432.6,
+    -897.86
+   ],
+   "radius": 1.2,
+   "spawn": [
+    0.0,
+    17.599999999999998
+   ],
+   "face": "up"
+  }
+ ],
+ "exits": [
+  {
+   "id": "mouth",
+   "at": [
+    0.0,
+    19.5
+   ],
+   "radius": 0.9,
+   "to": [
+    3432.66,
+    -893.06
+   ],
+   "face": "down",
+   "label": "굴 밖으로"
+  }
+ ],
+ "props": [
+  {
+   "id": "jj_sc_sagul_jemul",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jemul",
+    "indoor": true,
+    "seed": 5558
+   },
+   "at": [
+    2.18,
+    13.47
+   ],
+   "ry": 0.0
+  },
+  {
+   "id": "jj_sc_sagul_jipsin",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jipsin",
+    "indoor": true,
+    "seed": 4697
+   },
+   "at": [
+    -1.36,
+    3.02
+   ],
+   "ry": 0.0,
+   "state": "MOVED"
+  }
+ ],
+ "decals": {
+  "items": [],
+  "trails": [
+   {
+    "id": "jj_s7003_snake_in",
+    "kind": "snake",
+    "group": "s7003_tracks",
+    "hidden": true,
+    "trace": "other",
+    "points": [
+     [
+      0.6,
+      19.2
+     ],
+     [
+      0.82,
+      16.39
+     ],
+     [
+      -0.27,
+      9.4
+     ],
+     [
+      0.85,
+      4.0
+     ],
+     [
+      0.12,
+      -6.0
+     ],
+     [
+      1.21,
+      -14.02
+     ]
+    ]
+   },
+   {
+    "id": "jj_s7003_shoe_in",
+    "kind": "shoe",
+    "group": "s7003_tracks",
+    "hidden": true,
+    "trace": "human",
+    "points": [
+     [
+      -1.0,
+      19.2
+     ],
+     [
+      -0.79,
+      15.41
+     ],
+     [
+      -1.68,
+      -5.98
+     ],
+     [
+      -1.72,
+      -8.98
+     ]
+    ]
+   }
+  ]
+ }
+}

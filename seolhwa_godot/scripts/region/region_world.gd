@@ -21,6 +21,7 @@ const Farm := preload("res://scripts/region/farm.gd")
 var farm = null    # 논·밭 필지(parcels.bin) — 없으면 null(예전 칠한 필지 무늬)
 # 사건용 세계 API(docs/reports/world-scenario.md): 프롭 상태(props)·데칼(decals)·장소 덧붙임(world_scenario.json)
 var props          # PropStates — set_prop_state(id, 상태)
+var indoor = null  # 실내 공간(scripts/region/interior_space.gd) — 들어가 있는 동안 높이·막힘·실내를 이것이 답하고 권역 지형·식생은 숨긴다
 var decals         # Decals(Node3D) — 발자국·핏자국·그을림…
 var _dyn_cols := []   # 상태가 더한 충돌체(add_dynamic_collider)
 
@@ -330,6 +331,7 @@ static func _zone(name: String, x0: float, x1: float, z0: float, z1: float, cam:
 
 # 플레이어 둘레(반경 14m 9점) 반 넘게 숲·대숲이고 고을 안이 아니면 숲 구역을 플레이어에 씌운다(10프레임마다)
 func update_camera_zone(pos: Vector3) -> void:
+	if indoor != null: forest_active = false; return
 	_cz_frame += 1
 	if _cz_frame % 10 != 0: return
 	var n := 0
@@ -492,6 +494,7 @@ func height_fast(x: float, z: float) -> float:
 
 # 걸을 수 있는 높이: 지형 + 걷기 면(다리 상판 등, §8 walk)
 func height_at(x: float, z: float) -> float:
+	if indoor != null: return indoor.height_at(x, z)
 	var h := ground_at(x, z)
 	for it in interiors:
 		if it.has("floor_world") and in_box(it, x, z): h = maxf(h, it.floor_world)
@@ -501,6 +504,7 @@ func height_at(x: float, z: float) -> float:
 
 # 보이는 땅: 논·밭 필지 안이면 필지 면(논바닥·물·둑, 밭 이랑), 아니면 지형
 func ground_at(x: float, z: float) -> float:
+	if indoor != null: return indoor.height_at(x, z)
 	if farm != null:
 		var fh: float = farm.height(x, z)
 		if not is_nan(fh): return fh
@@ -1245,6 +1249,7 @@ func set_near_r(n: int) -> void:
 	_center = Vector2i(1 << 20, 1 << 20)   # 다음 focus에서 다시 고른다
 
 func focus(pos: Vector3) -> void:
+	if indoor != null: return   # 실내 공간 안: 권역 타일은 그대로 둔다(다시 읽지 않는다)
 	var c := tile_of(pos.x, pos.z)
 	if c == _center: return
 	_center = c
@@ -1568,6 +1573,7 @@ func _poll_jobs() -> void:
 
 # 식생 묶음 고르기: 플레이어에서 lod0_dist 안은 자세한 벌, scatter_far 안은 거친 벌, 그 너머(안개 속)는 그리지 않는다
 func update_scatter_lod(player: Vector3, force := false) -> void:
+	if indoor != null: return
 	if farm != null: farm.update(player)
 	_lod_frame += 1
 	if not force and not _lod_dirty and _lod_frame % 6 != 0: return
@@ -1758,6 +1764,7 @@ static func _hit(c: Dictionary, x: float, z: float, r: float) -> bool:
 	return dx * dx + dz * dz < r * r
 
 func blocked(x: float, z: float, r: float) -> bool:
+	if indoor != null: return indoor.blocked(x, z, r)
 	if x < hx0 + 2.0 or z < hz0 + 2.0 or x > hx0 + (hnx - 1) * hstep - 2.0 or z > hz0 + (hnz - 1) * hstep - 2.0: return true
 	if block_water and _in_river(x, z, r) and not _near_crossing(x, z): return true
 	if not _ponds.is_empty() and in_pond(x, z) and (_walk_grid.is_empty() or walk_at(x, z) == null): return true
@@ -1808,6 +1815,7 @@ func _near_crossing(x: float, z: float) -> bool:
 	return false
 
 func interior_at(x: float, z: float) -> Variant:
+	if indoor != null: return indoor.interior
 	for it in interiors:
 		if in_box(it, x, z): return it
 	return null
@@ -1860,6 +1868,27 @@ func update(_dt: float, _time: float) -> void:
 	_poll_jobs()
 	_update_dry()
 	if decals != null: decals.update(_dt)
+
+# ---------------------------------------------------------------------------
+# 실내 공간(scripts/region/interior_space.gd) — 권역을 그대로 둔 채 지형·물·정적 물체·식생·원경을 숨기고 실내 키트만 세운다
+# ---------------------------------------------------------------------------
+func enter_indoor(sp: Dictionary) -> void:
+	if indoor != null: exit_indoor()
+	var I = load("res://scripts/region/interior_space.gd").new()
+	I.build(self, sp)
+	indoor = I
+	for n in [terrain_root, water_root, statics_root, scatter_root, far_node]:
+		if n != null: n.visible = false
+	if farm != null and farm.get("root") is Node3D: farm.root.visible = false
+
+func exit_indoor() -> void:
+	if indoor == null: return
+	indoor.teardown(self)
+	indoor = null
+	for n in [terrain_root, water_root, statics_root, scatter_root, far_node]:
+		if n != null: n.visible = true
+	if farm != null and farm.get("root") is Node3D: farm.root.visible = true
+	_center = Vector2i(1 << 20, 1 << 20)
 
 # ---------------------------------------------------------------------------
 # 사건용 세계 API (이야기 쪽이 부른다 — docs/reports/world-scenario.md)
@@ -1922,6 +1951,7 @@ func _merge_overlay(path: String) -> void:
 # 식생은 MultiMesh라 기존 occluders(물체 반투명)로는 못 하므로 인스턴스 단위로 처리한다.
 # ---------------------------------------------------------------------------
 func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
+	if indoor != null: return
 	if not use_cutaway and _cut.is_empty(): return
 	for k in _cut: _cut[k].want = 1.0
 	var lo := Vector2(minf(player.x, cam.x) - 6.0, player.z - 1.0)
