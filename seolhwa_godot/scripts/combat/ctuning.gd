@@ -53,6 +53,21 @@ static func _base() -> Dictionary:
 			guardThreat = 5.0, guardForget = 3.0, treeStop = 2.4,
 			getup = 0.6,
 		},
+		# 사람 적(밀수꾼·도적·경비 — scripts/combat/chuman.gd, HUM_COMBAT_LIGHT ready·swing·thrust·hit·fall·flee).
+		# 플레이어와 같은 몸 크기. 한 번에 하나만 덤빈다(공격 차례 token) — 나머지는 hold 거리에서 맴돈다.
+		human = {
+			hp = 60.0, radius = 0.34, bodyR = 0.42,
+			walk = 2.3, run = 4.1, turnRate = 9.0,
+			holdMin = 3.3, holdMax = 4.6, orbitSpeed = 1.1,
+			engage = 1.75,
+			swingWind = 0.6, swingActive = 0.12, swingRecover = 0.55, swingDmg = 9.0, swingR = 1.95, swingArc = 110.0, swingLunge = 0.45,
+			thrustRange = 2.7, thrustWind = 0.7, thrustActive = 0.14, thrustRecover = 0.7, thrustDmg = 11.0, thrustLen = 2.9, thrustWidth = 0.8, thrustLunge = 0.8,
+			aimLock = 0.6,                      # 예고의 앞 60%만 플레이어를 따라 돈다(그 뒤로 피하면 빗나간다)
+			decideMin = 0.5, decideMax = 1.3, tokenGap = 0.45, approachTime = 4.0,
+			flinch = 0.35, stagger = 0.8, poise = 14.0, poiseRegenDelay = 1.5, knock = 0.35, heavyKnock = 0.9,
+			fleeAt = 0.3, fleeSpeed = 4.3, fleeTime = 7.0, fleeFar = 6.0,
+			strikeFrac = { swing = 0.62, thrust = 0.55 },
+		},
 		feel = {
 			hitStopLight = 60, hitStopCombo3 = 85, hitStopHeavy = 115, hitStopBack = 120,
 			hitStopPounce = 120, hitStopSwipe = 80, hitStopBlock = 70,

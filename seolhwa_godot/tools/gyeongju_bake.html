@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Gyeongju bake</title></head>
+<body style="background:#ddd">
+<p id="st">baking…</p>
+<script type="module">
+// 웹 서버(tools/web_export_server.py 8770)에서 http://localhost:8770/__tools/gyeongju_bake.html 을 열면
+// export_gyeongju_frames.js가 구운 결과를 seolhwa_godot/data/ 에 보낸다(frames_gyeongju.json + frames_gyeongju_<kind>_<n>.png).
+// ?only=smuggler,smuggler_b 처럼 일부만 굽기(그때는 frames_gyeongju_<이름들>.json).
+import('/__tools/export_gyeongju_frames.js').then((m) => m.run((s) => { document.getElementById('st').textContent = s; }))
+  .catch((e) => { document.getElementById('st').textContent = 'ERROR ' + e.stack; console.error(e); });
+</script>
+</body></html>

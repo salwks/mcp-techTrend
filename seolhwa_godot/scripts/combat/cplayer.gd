@@ -98,12 +98,11 @@ func move(d: Vector2) -> bool:
 
 func aim_dir(assist_deg: float, rng: float) -> void:
 	a = f
-	var tg = b.tiger
-	if not b.env.options.aimAssist or tg == null or not tg.targetable: return
+	if not b.env.options.aimAssist: return
+	var tg = b.aim_foe(pos, f, rng, assist_deg)   # 호랑이 또는 사람 적 중 앞쪽 가장 곧은 상대
+	if tg == null: return
 	var v: Vector2 = tg.pos - pos
-	var d := v.length()
-	if d < 1e-3 or d > rng: return
-	if HB.angle_between(f, v / d) <= assist_deg: a = v / d
+	a = v / maxf(v.length(), 1e-6)
 
 func update(dt: float, ctl) -> void:
 	if st_wait > 0.0: st_wait -= dt
@@ -291,11 +290,10 @@ func _upd_guard(dt: float, ctl, mv: Vector2, mlen: float) -> void:
 	if mlen > 0.1: moving = move(mv * P().guardMove * dt / maxf(1.0, mlen))
 
 func face_tiger() -> void:
-	var tg = b.tiger
-	if tg == null or not tg.targetable: return
+	var tg = b.nearest_foe(pos, 8.0)
+	if tg == null: return
 	var v: Vector2 = tg.pos - pos
 	var d := maxf(v.length(), 1e-6)
-	if d > 8.0: return
 	f = v / d
 	face(f)
 
@@ -305,12 +303,10 @@ func _upd_bow(dt: float, ctl, mv: Vector2, mlen: float) -> void:
 	if want_dodge and start_dodge(ctl): return
 	if mlen > 0.1: moving = move(mv * P().bowMove * dt / maxf(1.0, mlen))
 	a = f
-	var tg = b.tiger
-	if tg != null and tg.targetable:
+	var tg = b.aim_foe(pos, f, B.range, B.autoAimDeg if b.env.options.aimAssist else 12.0)
+	if tg != null:
 		var v: Vector2 = tg.pos - pos
-		var d := maxf(v.length(), 1e-6)
-		var lim: float = B.autoAimDeg if b.env.options.aimAssist else 12.0
-		if d < B.range and HB.angle_between(f, v / d) <= lim: a = v / d
+		a = v / maxf(v.length(), 1e-6)
 	face(a)
 	var release: bool = draw >= B.autoDraw if bow_auto else (ctl.released("bow") or not ctl.held("bow"))
 	if release:
@@ -351,8 +347,9 @@ func _knock(dt: float) -> void:
 		k *= 1.0 - kk
 		if absf(k.x) + absf(k.y) < 0.01: k = Vector2.ZERO
 
-# 호랑이 공격을 받음. kind: swipe | pounce. 반환: miss | block | break | hit | down | dead
-func take_hit(dmg: float, from: Vector2, kind: String) -> String:
+# 호랑이·사람 적의 공격을 받음. kind: swipe | pounce. src: 때린 상대(받아밀기로 밀어낼 쪽 — 없으면 호랑이).
+# 반환: miss | block | break | hit | down | dead
+func take_hit(dmg: float, from: Vector2, kind: String, src = null) -> String:
 	var env = b.env
 	var F: Dictionary = TU.T.feel
 	if not alive or invulnerable: return "miss"
@@ -373,9 +370,10 @@ func take_hit(dmg: float, from: Vector2, kind: String) -> String:
 			go("guardbreak"); stun_t = P().guard.breakStun; set_anim("hit", true)
 			env.say("방어가 무너졌다!", 1200)
 			return "break"
-		if kind == "swipe" and skills.get("guard_shove", false) and t <= float(P().guard.get("timed", 0.3)) and b.tiger != null:
+		var foe = src if src != null else b.tiger
+		if kind == "swipe" and skills.get("guard_shove", false) and t <= float(P().guard.get("timed", 0.3)) and foe != null:
 			go("shove"); set_anim("shove", true, SHOVE_DUR)
-			b.tiger.shoved(-v, float(P().guard.get("shove", 2.2)))
+			foe.shoved(-v, float(P().guard.get("shove", 2.2)))
 			env.say("받아밀기!", 800)
 			return "block"
 		return "block"
