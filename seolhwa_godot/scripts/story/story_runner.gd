@@ -5,7 +5,7 @@
 # 명령: say · caption · toast · examine · choice(loop, options[{label, when, disabled_when, hint, do, end}]) · if(then/else) ·
 #   flag · unflag · clue · rule · give · take · var · phase · outcome · wait · teleport · move · face · anim · place · show ·
 #   spawn · despawn · camera · fade · letterbox · cutscene · time · weather · world · journal · combat(store) · call · event ·
-#   shake · save · ending · log
+#   shake · save · ending · log · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd)
 extends RefCounted
 
 var d          # story_director
@@ -63,6 +63,11 @@ func fn(name: String, a = null):
 	if case_fn == null or not case_fn.has_method(name): return null
 	return case_fn.call(name) if a == null else case_fn.call(name, a)
 func r(name: String): return last.get(name)
+# 잔영·호신물(scripts/story/spirits.gd): tal(호신물 id, ''=아무거나) 지녔나 · zone(경계 id) 안인가 · night() · spv(잔영 id) 보이나
+func tal(id := "") -> bool: return d.spirits != null and d.spirits.equipped(id)
+func zone(id: String) -> bool: return d.spirits != null and d.spirits.in_zone(id)
+func night() -> bool: return d.spirits != null and d.spirits.is_night()
+func spv(id: String) -> bool: return d.spirits != null and d.spirits.spirit_visible(id)
 
 # ---- 실행 ----
 func run(steps: Array) -> void:
@@ -166,6 +171,8 @@ func step(st: Dictionary, g: int) -> void:
 		else: push_warning("이야기: 없는 함수 " + String(st.call))
 	elif st.has("event"):
 		await run_event(String(st.event), g)
+	elif st.has("spirit") or st.has("sound") or st.has("talisman") or st.has("dread"):
+		if d.spirits != null: await d.spirits.step(st)
 	elif st.has("endcombat"):
 		d.end_combat()
 	elif st.has("shake"):

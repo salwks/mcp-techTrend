@@ -16,10 +16,11 @@ const Progress := preload("res://scripts/region/progress.gd")
 const Rumors := preload("res://story/rumors_data.gd")
 
 # 권역 → 사건
-const CASES := { JL_NAMWON_UNBONG = "namwon" }
+const CASES := { JL_NAMWON_UNBONG = "namwon", GW_GANGNEUNG = "gangneung" }
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
-	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder" }
-const BANK_FILES := ["frames_story.json", "frames_npc.json", "frames_amb.json"]
+	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
+	wolsim = "shaman", thief = "villager_m", spirit_m = "elder" }
+const BANK_FILES := ["frames_story.json", "frames_gangneung.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -47,6 +48,7 @@ var _rumor_t := 0.0
 var _night_roar_t := 0.0
 var _bank_src := {}
 var passive := false     # --bench·--tour·--shot 등 시험 실행: 여는 장면·순간이동 없이 인물·소품만
+var spirits = null       # 잔영·소리·경계·호신물(scripts/story/spirits.gd) — 사건마다
 
 static func create_for(m) -> Node:
 	var rid := String(m.world.region.get("region_id", ""))
@@ -123,6 +125,9 @@ func _setup() -> void:
 	elif S.load_saved():
 		printerr("STORY loaded case=%s phase=%s flags=%d clues=%d" % [case_id, S.phase, S.flags.size(), S.clues.size()])
 	for a in data.get("actors", []): _make_actor(a)
+	spirits = load("res://scripts/story/spirits.gd").new()
+	add_child(spirits)
+	spirits.setup(self)
 	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute"))
 	if args.has("storytest"):
 		test = load("res://scripts/story/story_test.gd").new(self, String(args.storytest))
@@ -160,6 +165,7 @@ func update(dt: float) -> void:
 	_update_props()
 	_update_rumors(dt)
 	_update_ambient(dt)
+	if spirits != null: spirits.update(dt)
 	if runner.busy or ui.modal or combat_view.active:
 		ui.prompt("")
 		_target = null
@@ -229,7 +235,7 @@ func learn_rule(id: String, quiet := false) -> void:
 	S.rules.append(id)
 	runner.log_line("rule", id)
 	var c: Dictionary = data.get("rules", {}).get(id, {})
-	if not quiet and not c.is_empty(): ui.toast("범의 버릇 — " + String(c.title), "rule")
+	if not quiet and not c.is_empty(): ui.toast("%s — %s" % [String(data.get("case", {}).get("rule_label", "범의 버릇")), String(c.title)], "rule")
 	_dirty = true
 
 func item_label(id: String) -> String:

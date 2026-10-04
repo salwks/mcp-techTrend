@@ -498,7 +498,7 @@ func journal_show(data: Dictionary) -> void:
 		_journal_body.add_child(h)
 		for p in cs.get("summary", []): _para(String(p), 21, INK)
 		_section("단서", cs.get("clues", []), INK)
-		_section("범의 버릇", cs.get("rules", []), SEAL)
+		_section(String(cs.get("rules_title", "범의 버릇")), cs.get("rules", []), SEAL)
 		var sols: Array = cs.get("solutions", [])
 		if not sols.is_empty():
 			_head("해결 방법")

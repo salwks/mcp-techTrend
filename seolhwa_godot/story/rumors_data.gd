@@ -40,6 +40,25 @@ const RUMORS := [
 			"이서 쪽 어느 집안 계집아이가 고생이 많다던데.",
 			"지리산 안쪽에서는 장승을 함부로 옮기면 안 된다더라.",
 		] },
+	# ---- 강릉(§24) · R03 한양 → 강릉(노정) — 「고개에 남은 종소리」 결말에 따라 비틀린 소문 ----
+	{ "id": "GN_JANG", "space": "GW_GANGNEUNG", "near": "gangneung_jang", "radius": 40.0, "speaker": "장꾼", "var": "CASE_GANGNEUNG_OUTCOME",
+		"lines": {
+			"": "대관령에서 제물 건드리면 길이 달라진대.",
+			"A": "대관령 경계석이 하룻밤 새 제자리로 돌아왔다더군. 누가 세웠는지는 아무도 몰라.",
+			"B": "성황사 방울 훔친 놈이 잡혔대. 방울이 저 혼자 울어서 들켰다나.",
+			"C": "대관령 넘는 사람한테 방울이 따라온대. 밤엔 아무도 안 넘어.",
+		} },
+	{ "id": "GN_EUP", "space": "GW_GANGNEUNG", "near": "gangneung_eup", "radius": 50.0, "speaker": "주막 손님",
+		"pool": ["경포호에 없는 배가 뜬다더군.", "헌화 벼랑에서 여인 목소리를 들었다는 사람이 있어."] },
+	{ "id": "R0301", "space": "GG_HANYANG-GW_GANGNEUNG", "near": "rt_hoenggye", "radius": 34.0, "speaker": "횡계 사람", "var": "CASE_GANGNEUNG_OUTCOME",
+		"lines": {
+			"": "단오 앞두고 대관령 성황사가 시끄럽다던데.",
+			"A": "고개 귀신이 방울을 돌려받고 물러갔대. 무당이 칼춤을 췄다나.",
+			"B": "도둑놈 하나 잡으니 고개가 조용해졌다더군.",
+			"C": "웬 나그네가 칼로 귀신을 베고 넘었대. 그 뒤로 밤마다 방울 소리가 난다지.",
+		} },
+	{ "id": "R0302", "space": "GG_HANYANG-GW_GANGNEUNG", "near": "rt_wonju", "radius": 34.0, "speaker": "장꾼", "need": { "ACT2_OPEN": true },
+		"pool": ["치악산 절에서 종이 저절로 울린다던데.", "대관령에서 제물 건드리면 길이 달라진대."] },
 ]
 
 # 이 공간에 걸린 소문(자리 p: Vector2 채워서)
