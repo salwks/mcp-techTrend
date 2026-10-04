@@ -43,8 +43,9 @@ const DITHER := """
 		if (occ_near > 0.0) {
 			float cd = length(owp - occ_a);
 			// 먹선 껍질(먹색 버텍스)은 카메라 16m 안에서 그리지 않는다 — 카메라가 잎덩이 안에 들면 껍질 안쪽이 화면을 검게 덮는다
-			if (cd < 16.0 && distance(COLOR.rgb, vec3(0.0242, 0.0194, 0.0160)) < 0.012) discard;
-			keep = min(keep, smoothstep(6.0, 12.0, cd));
+			// occ_near는 거리 배율(1 = 바깥 6~12m). 단면 실내에서는 작게(region_main) — 실내 카메라(10~13m)가 바닥·가구를 비우지 않게
+			if (cd < 16.0 * occ_near && distance(COLOR.rgb, vec3(0.0242, 0.0194, 0.0160)) < 0.012) discard;
+			keep = min(keep, smoothstep(6.0 * occ_near, 12.0 * occ_near, cd));
 		}
 		ivec2 q = ivec2(FRAGCOORD.xy) % 4;
 		const float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);

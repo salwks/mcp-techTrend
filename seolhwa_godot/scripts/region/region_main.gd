@@ -797,7 +797,8 @@ func _process(delta: float) -> void:
 	RenderingServer.global_shader_parameter_set("occ_r", occ_r)
 	# 실내 near_fade=false(굴 등 좁은 실내): 카메라 앞 가림 점무늬를 끈다 — 바닥·벽이 카메라 12m 안이라 구멍이 뚫린다
 	var near_fade: bool = not args.has("nodither") and not (interior != null and not bool(interior.get("near_fade", true)))
-	RenderingServer.global_shader_parameter_set("occ_near", 1.0 if near_fade else 0.0)
+	# 단면 실내(지붕을 숨긴 집·창고): 카메라가 10~13m 위라 바깥 거리(6~12m)로 비우면 바닥·가구에 점무늬 구멍이 난다 — 카메라 바로 곁(2~4m, 잎덩이)만
+	RenderingServer.global_shader_parameter_set("occ_near", (0.33 if interior != null else 1.0) if near_fade else 0.0)
 	# 실내 보조광: 들어가면 서서히 켠다(밤에는 조금 더 — 호롱불 느낌)
 	_fill_k += ((1.0 if interior != null else 0.0) - _fill_k) * minf(1.0, dt * 3.0)
 	_fill.position = player_pos + Vector3(0, 2.4, 0.8)
