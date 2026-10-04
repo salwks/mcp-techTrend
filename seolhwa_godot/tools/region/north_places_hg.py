@@ -63,9 +63,7 @@ ROADS = [
     dict(id="seoho_road", name="서호길(본궁→서호진 포구)", cls="지선", width_m=4.0, via=[(39.8760, 127.5600), (39.8600, 127.5750), (39.8460, 127.5850)],
          notes="남쪽 끝(권역 밖 서호진 포구 — 지도에만)."),
     dict(id="unheung_lane", name="운흥 마을길", cls="마을길", width_m=3.5, via=[(39.9132, 127.5320), (39.9300, 127.5320)]),
-    dict(id="cheollyeong_road", name="철령길(정평 갈림→안변·철령, 한양 노정)", cls="대로", width_m=5.0, astar=False,
-         via=[(39.86408, 127.4463), (39.86366, 127.4449), (39.86327, 127.44357), (39.86279, 127.44228), (39.8624, 127.44123)],
-         notes="경흥대로 남서쪽에서 갈라져 철령(한양 노정 GG_HANYANG-HG_HAMHEUNG) 포털로. placement-north가 region.json에 넣은 것을 빌드에 옮김(2026-10-04)."),
+    # cheollyeong_road(정평 갈래 → 옛 to_hanyang_cheollyeong 포털) 지움 — routes 3차: 포털이 to_yeongheung으로 합쳐져 막다른 길이 됨
     dict(id="bannyong_trail", name="반룡산 산길(구천각·치마대)", cls="산길", width_m=1.5, via=[(39.9140, 127.5239), (39.9200, 127.5235), (39.9235, 127.5262)]),
 ]
 
