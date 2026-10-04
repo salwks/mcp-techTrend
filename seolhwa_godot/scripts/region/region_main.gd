@@ -926,13 +926,9 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_PREDELETE: _release_refs()
 
 # RefCounted끼리 서로 잡은 고리를 끊는다(배 타기 ↔ 강 뱃길) — 장면을 다시 열거나 끝낼 때 새지 않게
+# 변수는 비우지 않는다(끝내기 뒤에도 _process가 한두 프레임 돈다) — 한쪽 고리만 끊으면 둘 다 풀린다
 func _release_refs() -> void:
-	if boats != null:
-		if boats.has_method("dispose"): boats.dispose()
-		boats = null
-	if lanes != null:
-		lanes.boat_ride = null
-		lanes = null
+	if lanes != null: lanes.boat_ride = null
 
 static func _abs(p: String) -> String:
 	return p if p.is_absolute_path() else ProjectSettings.globalize_path("res://").path_join(p)
