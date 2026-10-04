@@ -356,15 +356,24 @@ func _free_nodes(st: Dictionary) -> void:
 		if is_instance_valid(nd): nd.queue_free()
 	st.nodes = []
 
+var _player := Vector2(INF, INF)
+const LOAD_R := 170.0   # 불러오기 화면은 플레이어에서 이 거리 안에 걸친 타일만 기다린다(고정 시점 화면 + 여유)
+
+func _tile_dist(t: Vector2i) -> float:
+	var r := Rect2(t.x * TILE, t.y * TILE, TILE, TILE)
+	var p := _player
+	return Vector2(maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x), maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)).length()
+
 func busy_near(c: Vector2i, r: int) -> bool:
 	if not ok or not ready: return false
 	for t in tiles:
 		if maxi(absi(t.x - c.x), absi(t.y - c.y)) > r: continue
+		if is_finite(_player.x) and _tile_dist(t) > LOAD_R: continue
 		var st: Dictionary = tiles[t]
 		if st.have != st.want or st.job >= 0: return true
 	for it in _attach:
 		var t: Vector2i = it[0]
-		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
+		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r and (not is_finite(_player.x) or _tile_dist(t) <= LOAD_R): return true
 	return false
 
 func pending() -> int:
@@ -380,6 +389,7 @@ func update(player: Vector3) -> void:
 		if WorkerThreadPool.is_task_completed(_orphans[q]):
 			WorkerThreadPool.wait_for_task_completion(_orphans[q]); _orphans.remove_at(q)
 	if not ready: return
+	_player = Vector2(player.x, player.z)
 	var center: Vector2i = world.tile_of(player.x, player.z)
 	var running := 0
 	for t in tiles:
@@ -397,9 +407,11 @@ func update(player: Vector3) -> void:
 	for t in tiles:
 		var st: Dictionary = tiles[t]
 		if st.job < 0 and (st.have != st.want or st.ver != ver) and not _attach_has(t): cand.append(t)
-	cand.sort_custom(func(a, b): return maxi(absi(a.x - center.x), absi(a.y - center.y)) < maxi(absi(b.x - center.x), absi(b.y - center.y)))
+	cand.sort_custom(func(a, b): return _tile_dist(a) < _tile_dist(b))
 	for t in cand:
 		if running >= (6 if world.loading else max_jobs): break
+		# 불러오기 화면 동안은 화면에 드는 둘레(반경 1타일)만 — 나머지는 걸으면서
+		if world.loading and _tile_dist(t) > LOAD_R: continue
 		var st: Dictionary = tiles[t]
 		var hold := { tile = t, detail = st.want, ver = ver }
 		st.hold = hold
@@ -757,15 +769,16 @@ func _field(k: int, ch: Dictionary) -> void:
 	# 바닥(땅 따라 4m 칸으로 잘라 삼각분할)
 	var lo := Vector2(bb[k * 4], bb[k * 4 + 1]); var hi := Vector2(bb[k * 4 + 2], bb[k * 4 + 3])
 	var col := COL_FALLOW if crop == 5 else COL_SOIL_D
-	var gx := floorf(lo.x / 4.0) * 4.0
+	var cs := 5.0 if ch.detail >= 2 else 10.0   # 먼 타일은 거칠게
+	var gx := floorf(lo.x / cs) * cs
 	while gx < hi.x:
-		var gz := floorf(lo.y / 4.0) * 4.0
+		var gz := floorf(lo.y / cs) * cs
 		while gz < hi.y:
-			var sq := PackedVector2Array([Vector2(gx, gz), Vector2(gx + 4, gz), Vector2(gx + 4, gz + 4), Vector2(gx, gz + 4)])
+			var sq := PackedVector2Array([Vector2(gx, gz), Vector2(gx + cs, gz), Vector2(gx + cs, gz + cs), Vector2(gx, gz + cs)])
 			for piece in Geometry2D.intersect_polygons(sq, poly):
 				G.poly(piece, hf, col)
-			gz += 4.0
-		gx += 4.0
+			gz += cs
+		gx += cs
 	# 밭둑(풀) 또는 돌담
 	var inner := PackedVector2Array(); inner.resize(nv)
 	for i in nv:
@@ -781,19 +794,27 @@ func _field(k: int, ch: Dictionary) -> void:
 		var bound := int(ei.x) == E_BOUND
 		if wall and (bound or k < int(V[(int(P[k * STRIDE + 9]) + e) * 3 + 2])):
 			_wall(G, a, b, N[e], bound, k * 31 + e)
+		var bh := 0.12 if not bound else 0.14
+		# 꼭짓점 높이는 앞 칸 것을 이어 쓴다(작업 스레드 시간 절반)
+		var p0 := a; var i0: Vector2 = inner[e]
+		var h0: float = world.data_height(p0.x, p0.y); var g0: float = world.data_height(i0.x, i0.y)
+		var o0 := p0 + out_n * RIM; var r0: float = _terrain(o0.x, o0.y) - 0.05 if bound else 0.0
+		var walled := wall and (bound or k < int(V[(int(P[k * STRIDE + 9]) + e) * 3 + 2]))
 		for q in m:
-			var s0 := float(q) / m; var s1 := float(q + 1) / m
-			var p0 := a.lerp(b, s0); var p1 := a.lerp(b, s1)
-			var i0 := inner[e].lerp(inner[j], s0); var i1 := inner[e].lerp(inner[j], s1)
-			var h0: float = world.data_height(p0.x, p0.y); var h1: float = world.data_height(p1.x, p1.y)
-			var g0: float = world.data_height(i0.x, i0.y); var g1: float = world.data_height(i1.x, i1.y)
-			var bh := 0.12 if not bound else 0.14
-			G.quad(Vector3(p0.x, h0 + bh, p0.y), Vector3(p1.x, h1 + bh, p1.y), Vector3(i1.x, g1 + bh * 0.8, i1.y), Vector3(i0.x, g0 + bh * 0.8, i0.y), COL_BUND, Vector3.UP)
-			if ch.detail >= 2 and not wall: _tufts(ch, p0 + N[e] * 0.12, p1 + N[e] * 0.12, (h0 + h1) * 0.5 + bh, 0)
-			G.quad(Vector3(i0.x, g0 + bh * 0.8, i0.y), Vector3(i1.x, g1 + bh * 0.8, i1.y), Vector3(i1.x, g1 - 0.05, i1.y), Vector3(i0.x, g0 - 0.05, i0.y), COL_BUND2, Vector3.UP)
+			var s1 := float(q + 1) / m
+			var p1 := a.lerp(b, s1)
+			var i1: Vector2 = inner[e].lerp(inner[j], s1)
+			var h1: float = world.data_height(p1.x, p1.y); var g1: float = world.data_height(i1.x, i1.y)
+			if not walled:   # 밭담이 선 변은 밭둑을 그리지 않는다(담이 덮음)
+				G.quad(Vector3(p0.x, h0 + bh, p0.y), Vector3(p1.x, h1 + bh, p1.y), Vector3(i1.x, g1 + bh * 0.8, i1.y), Vector3(i0.x, g0 + bh * 0.8, i0.y), COL_BUND, Vector3.UP)
+				if ch.detail >= 2 and not wall: _tufts(ch, p0 + N[e] * 0.12, p1 + N[e] * 0.12, (h0 + h1) * 0.5 + bh, 0)
+				G.quad(Vector3(i0.x, g0 + bh * 0.8, i0.y), Vector3(i1.x, g1 + bh * 0.8, i1.y), Vector3(i1.x, g1 - 0.05, i1.y), Vector3(i0.x, g0 - 0.05, i0.y), COL_BUND2, Vector3.UP)
 			if bound:
-				var o0 := p0 + out_n * RIM; var o1 := p1 + out_n * RIM
-				G.quad(Vector3(p0.x, h0 + bh, p0.y), Vector3(p1.x, h1 + bh, p1.y), Vector3(o1.x, _terrain(o1.x, o1.y) - 0.05, o1.y), Vector3(o0.x, _terrain(o0.x, o0.y) - 0.05, o0.y), COL_RIM, Vector3.UP)
+				var o1 := p1 + out_n * RIM
+				var r1: float = _terrain(o1.x, o1.y) - 0.05
+				G.quad(Vector3(p0.x, h0 + bh, p0.y), Vector3(p1.x, h1 + bh, p1.y), Vector3(o1.x, r1, o1.y), Vector3(o0.x, r0, o0.y), COL_RIM, Vector3.UP)
+				o0 = o1; r0 = r1
+			p0 = p1; i0 = i1; h0 = h1; g0 = g1
 	# 테두리 볼록 모서리 메우기
 	for i in nv:
 		var ep: Vector4 = E[(i - 1 + nv) % nv]; var en: Vector4 = E[i]
@@ -812,7 +833,7 @@ func _ridge(ch: Dictionary, a: Vector2, b: Vector2, ang: float, crop: int, flat 
 	if L < 1.0: return
 	var d := (b - a) / L
 	var nrm := Vector2(-d.y, d.x)
-	var m := maxi(1, ceili(L / 3.0))
+	var m := maxi(1, ceili(L / 4.0))
 	var hw := RIDGE_P * 0.5; var tw := RIDGE_P * 0.17
 	var prev := []
 	for q in m + 1:
@@ -842,7 +863,7 @@ func _ridge(ch: Dictionary, a: Vector2, b: Vector2, ang: float, crop: int, flat 
 func _wall(G: Mb, a: Vector2, b: Vector2, nin: Vector2, bound: bool, seed: int) -> void:
 	var c0 := a + nin * (0.35 if bound else 0.0); var c1 := b + nin * (0.35 if bound else 0.0)
 	var L := c0.distance_to(c1)
-	var m := maxi(1, ceili(L / 0.9))
+	var m := maxi(1, ceili(L / 1.3))
 	var hw := 0.3; var tw := 0.22
 	var h := float(seed % 97) / 97.0
 	var pv := []
