@@ -13,6 +13,8 @@ const VAR_DEFAULTS := {
 	SKILL_BEAST_TRACE = false, ITEM_TALISMAN_SLOT = 0, SKILL_RUBBING = false, SKILL_DOCUMENT_CHECK = false, ITEM_SENSING_KNOT = false,
 	FINAL_EVIDENCE_SCORE = 0, FINAL_CIVILIAN_HARM = 0, FINAL_WOOCHI_METHOD = 0, FINAL_SPIRIT_RESOLVED = false,
 	FINAL_CRIME_RESOLVED = false, FINAL_PUBLIC_EXPOSURE = false,
+	# 구현용(시나리오 §10 S1006·§14): 세 갈래(ACT 2) 열림, 평양(ACT 3) 열림, 한양 추격 결과(followed | lost)
+	ACT2_OPEN = false, ACT3_OPEN = false, CASE_HANYANG_OUTCOME = "",
 }
 
 var case_id := ""
@@ -59,12 +61,12 @@ func save() -> void:
 func load_saved() -> bool:
 	return from_dict(Progress.case_state(case_id))
 
-func clear_saved() -> void:
+func clear_saved(keys = null) -> void:
 	Progress.clear_case(case_id)
-	# 이 사건이 정한 공통 변수도 되돌린다(새로 시작)
-	for k in ["CASE_NAMWON_OUTCOME", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE"]:
-		Progress.set_var(k, VAR_DEFAULTS[k])
-		vars[k] = VAR_DEFAULTS[k]
+	# 이 사건이 정한 공통 변수도 되돌린다(새로 시작). keys: 사건 데이터 case.reset_vars(없으면 남원 것)
+	for k in (keys if keys != null else ["CASE_NAMWON_OUTCOME", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE"]):
+		Progress.set_var(k, VAR_DEFAULTS.get(k, ""))
+		vars[k] = VAR_DEFAULTS.get(k, "")
 	Progress.save()
 
 # ---- 읽기 ----

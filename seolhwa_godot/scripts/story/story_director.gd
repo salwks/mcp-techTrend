@@ -16,11 +16,12 @@ const Progress := preload("res://scripts/region/progress.gd")
 const Rumors := preload("res://story/rumors_data.gd")
 
 # 권역 → 사건
-const CASES := { JL_NAMWON_UNBONG = "namwon", GW_GANGNEUNG = "gangneung" }
+const CASES := { JL_NAMWON_UNBONG = "namwon", GG_HANYANG = "hanyang", GW_GANGNEUNG = "gangneung" }
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
 	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
+	woochi = "villager_m", chaekkwae = "merchant", pojol = "official",
 	wolsim = "shaman", thief = "villager_m", spirit_m = "elder" }
-const BANK_FILES := ["frames_story.json", "frames_gangneung.json", "frames_npc.json", "frames_amb.json"]
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -48,6 +49,10 @@ var _rumor_t := 0.0
 var _night_roar_t := 0.0
 var _bank_src := {}
 var passive := false     # --bench·--tour·--shot 등 시험 실행: 여는 장면·순간이동 없이 인물·소품만
+var free_move := false   # 추격(scripts/story/chase.gd) 동안: 이야기가 돌고 있어도 플레이어가 움직인다
+var title = null         # 시작 메뉴(scripts/story/title_menu.gd) — 열려 있는 동안 이야기를 멈춘다
+var _where_t := 0.0
+var _resumed := false
 var spirits = null       # 잔영·소리·경계·호신물(scripts/story/spirits.gd) — 사건마다
 
 static func create_for(m) -> Node:
@@ -62,7 +67,7 @@ static func create_for(m) -> Node:
 
 # ---- region_main이 부르는 것 ----
 func blocks_move() -> bool:
-	return (runner != null and runner.busy) or (ui != null and (ui.modal or ui.journal_open)) or _cut
+	return (runner != null and runner.busy and not free_move) or (ui != null and (ui.modal or ui.journal_open)) or _cut or (title != null and title.active)
 
 func drives_player() -> bool:
 	return combat_view != null and combat_view.active
@@ -107,10 +112,22 @@ func _setup() -> void:
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
 	if case_id == "":
+		_maybe_title()
 		return   # 소문만(노정·다른 권역)
 	var ddir := "res://story/%s/" % case_id
 	data = load(ddir + case_id + "_data.gd").data()
 	events = data.get("events", {})
+	var test_path := ddir + case_id + "_test.gd"
+	if args.has("storytest") and FileAccess.file_exists(test_path): load(test_path).prepare(self)   # 대본 시험이 앞 사건 저장을 꾸민다
+	# 앞 사건이 끝나야 서는 사건(case.requires {변수: 값}) — 아니면 소문만. 쉼표 목록 값(MAIN_MASTER_TRACE "HANYANG,GANGNEUNG")은 들어 있으면 맞음
+	for k in data.get("case", {}).get("requires", {}):
+		var have := str(Progress.get_var(k, ""))
+		var want := str(data.case.requires[k])
+		if have != want and not have.split(",").has(want):
+			printerr("STORY case=%s 아직 아님(%s)" % [case_id, k])
+			case_id = ""; data = {}; events = {}
+			_maybe_title()
+			return
 	S = StoryState.new(case_id)
 	runner = StoryRunner.new(self, S)
 	case_fn = load(ddir + case_id + "_case.gd").new(self)
@@ -119,9 +136,8 @@ func _setup() -> void:
 	combat_view.name = "combat"
 	main.scene_vp.add_child(combat_view)
 	combat_view.setup(self)
-	SpriteChar.merge_bank("frames_story.json")   # 호랑이 이야기 동작(climb_try·slip·sniff·knock, 변장 :d) — 없으면 그냥 지나간다
 	var fresh: bool = args.has("newgame") or args.has("storytest")
-	if fresh: S.clear_saved()
+	if fresh: S.clear_saved(data.get("case", {}).get("reset_vars", null))
 	elif S.load_saved():
 		printerr("STORY loaded case=%s phase=%s flags=%d clues=%d" % [case_id, S.phase, S.flags.size(), S.clues.size()])
 	for a in data.get("actors", []): _make_actor(a)
@@ -130,8 +146,9 @@ func _setup() -> void:
 	spirits.setup(self)
 	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute"))
 	if args.has("storytest"):
-		test = load("res://scripts/story/story_test.gd").new(self, String(args.storytest))
+		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
 		add_child(test)
+	_maybe_title()
 	printerr("STORY ready case=%s phase=%s actors=%d props=%d events=%d" % [case_id, S.phase, actors.size(), data.get("props", []).size(), events.size()])
 
 func _setup_input() -> void:
@@ -147,6 +164,11 @@ func _setup_input() -> void:
 # ---------------------------------------------------------------------------
 func update(dt: float) -> void:
 	if main._loading: return
+	if title != null and title.active: return
+	if not _resumed:
+		_resumed = true
+		if main._pending.has("resume_at"): teleport_to(main._pending.resume_at)   # 이어 하기로 다른 공간에서 넘어옴
+	_save_where(dt)
 	if combat_view != null: combat_view.update(dt)
 	if case_id == "":
 		_update_rumors(dt)
@@ -154,8 +176,10 @@ func update(dt: float) -> void:
 	if not _started:
 		_started = true
 		_apply_world()
-		if S.phase == "start" and main._pending.is_empty() and not passive:
-			if test == null: runner.run([{ "event": "S0001" }])
+		var cs: Dictionary = data.get("case", {})
+		var arrive_ok: bool = main._pending.is_empty() or bool(cs.get("start_on_arrival", false)) or bool(main._pending.get("newgame", false))
+		if S.phase == "start" and arrive_ok and not passive:
+			if test == null: runner.run([{ "event": String(cs.get("start_event", "S0001")) }])
 		elif S.phase == "start":
 			S.phase = "explore"
 		if test != null: test.begin()
@@ -210,6 +234,25 @@ func mark_dirty() -> void: _dirty = true
 func save() -> void:
 	if S == null or (test != null and not main.args.has("storysave")): return
 	S.save()
+	_save_where(INF)
+
+# 이어 하기 자리(progress.gd where): 어느 공간 어디에 있었나 — 10초마다·저장할 때
+func _save_where(dt: float) -> void:
+	_where_t -= dt
+	if _where_t > 0.0 or test != null or passive or main._loading: return
+	_where_t = 10.0
+	var w = main.world
+	Progress.set_where({ space = space_id, kind = "route" if w.is_route else "region", x = snappedf(main.player_pos.x, 0.1),
+		z = snappedf(main.player_pos.z, 0.1), hour = snappedf(main.hour, 0.1) })
+
+# 시작 메뉴(새 게임 / 이어 하기): 그냥 실행했을 때만(시험·넘어온 장면·--newgame·--continue·--notitle 아님)
+func _maybe_title() -> void:
+	var args: Dictionary = main.args
+	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset"]:
+		if args.has(k): return
+	if not main._pending.is_empty(): return
+	title = load("res://scripts/story/title_menu.gd").new(self)
+	add_child(title)
 
 func outcome_var() -> String:
 	return String(data.get("case", {}).get("outcome_var", "CASE_NAMWON_OUTCOME"))

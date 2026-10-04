@@ -4,6 +4,7 @@
 #   "routes_done": { "<노정 id>": "2026-10-04T12:00:00" },   ← 노정을 끝에서 끝까지 지나가면(역마로 건너뛰기, region_main H 키)
 #   "vars":  { MAIN_MASTER_TRACE, CASE_NAMWON_OUTCOME, SKILL_BEAST_TRACE … },   ← 시나리오 §7 공통 상태 변수(사건을 넘어 남는 값)
 #   "cases": { "namwon": { phase, flags, clues, rules, items, world, talked, notes, time, seen } },   ← 사건별 진행(scripts/story)
+#   "where": { space, kind, x, z, hour },   ← 이어 하기 자리(story_director가 10초마다·저장할 때)
 #   "saved_at": "…"
 # }
 # 버전 1(routes_done만) 파일도 그대로 읽는다.
@@ -65,6 +66,22 @@ static func case_state(id: String) -> Dictionary:
 static func save_case(id: String, st: Dictionary, v: Dictionary) -> void:
 	data().cases[id] = st
 	data().vars.merge(v, true)
+	save()
+
+# ---- 이어 하기 자리·새 게임 ----
+static func where() -> Dictionary:
+	var w = data().get("where")
+	return w if w is Dictionary else {}
+
+static func set_where(w: Dictionary) -> void:
+	data()["where"] = w
+	save()
+
+static func has_save() -> bool:
+	return not data().cases.is_empty() or not where().is_empty()
+
+static func reset_all() -> void:
+	_d = { "version": 2, "routes_done": {}, "vars": {}, "cases": {} }
 	save()
 
 static func clear_case(id: String) -> void:

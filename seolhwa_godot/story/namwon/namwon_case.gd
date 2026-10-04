@@ -78,7 +78,13 @@ func on_load() -> void:
 	# 절정 도중 저장은 밤 준비 상태로 되돌린다(웹과 같음)
 	if f("climax_started") and String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "":
 		S.flags.erase("climax_started")
+	if S.phase == "night": load_tiger_story()
 	kids_place()
+
+# 호랑이 이야기 프레임(knock·sniff·climb_try·slip + 변장 :d, 15쪽 약 60MB)은 절정 직전(밤으로 넘어갈 때 암전 속)에 읽는다
+func load_tiger_story() -> void:
+	SpriteChar.load_bank("tiger", "frames.json")
+	SpriteChar.merge_bank("frames_story.json", ["tiger"])
 
 # ---------------------------------------------------------------------------
 # S0001 여는 화면 — 지리산 능선 → 요천 → 남원 성벽 → 플레이어 (15초 이내)
@@ -143,6 +149,7 @@ func after_first_encounter() -> void:
 func rest() -> void:
 	await d.ui.say("주모", ["건넌방 비어 있소. 눈 좀 붙이시오."])
 	await d.ui.fade(true, 0.9)
+	load_tiger_story()
 	S.phase = "night"
 	d.on_phase()
 	d.set_hour(22.0)
@@ -248,6 +255,7 @@ func wait_at_door() -> void:
 # S0007 밤의 문 → S0008 결말 갈래
 # ---------------------------------------------------------------------------
 func climax() -> void:
+	load_tiger_story()   # 이미 읽었으면 그냥 지나간다
 	flag("climax_started")
 	d.cutscene(true)
 	await d.ui.fade(true, 0.6)

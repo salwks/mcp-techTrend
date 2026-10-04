@@ -56,12 +56,17 @@ static func load_bank(kind: String, json_file: String) -> void:
 		_banks[k] = { pages = pages, clips = all[k].clips }
 
 # 이미 읽은 종류에 클립을 더한다(이야기용 추가 프레임 frames_story.json — 페이지 번호를 뒤로 민다). 없는 종류는 새로.
-static func merge_bank(json_file: String) -> void:
+# only: 이 종류만(예: ["tiger"] — 절정 직전에 늦게 읽기). 같은 파일·종류는 한 번만 더한다.
+static var _merged := {}
+static func merge_bank(json_file: String, only: Array = []) -> void:
 	var path := "res://data/" + json_file
 	if not FileAccess.file_exists(path): return
 	var all = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not (all is Dictionary): return
 	for k in all:
+		if not only.is_empty() and not only.has(k): continue
+		if _merged.has(json_file + "|" + k): continue
+		_merged[json_file + "|" + k] = true
 		var pages := []
 		for p in all[k].pages:
 			var img := Image.load_from_file(ProjectSettings.globalize_path("res://data/" + p))
