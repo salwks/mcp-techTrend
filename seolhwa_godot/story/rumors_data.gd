@@ -105,6 +105,43 @@ const RUMORS := [
 			"A": "치술령 숯쟁이가 살아 돌아왔대. 마누라가 밤마다 등불 들고 기다렸다지.",
 			"B": "치술령 숯쟁이는 돌아왔는데, 붙잡아 둔 놈들은 바다로 내뺐대.",
 		} },
+	# ---- 황주(§24) · R04 한양 → 황주 · R05 황주 → 평양 · R08 황주 → 장산곶 — 「빈 배의 값」 결말에 따라 비틀린 소문 ----
+	#   사람 제물이 바다를 달랜다는 믿음은 소문으로만 돈다(§37 A11 — 확인하지 않는다). C(구조 실패)면 그 믿음이 오히려 굳는다(§29 잘못된 정보 유포).
+	{ "id": "HJ_DOHWA", "space": "HH_HWANGJU", "near": "dohwadong", "radius": 44.0, "speaker": "도화동 사람", "var": "CASE_HWANGJU_OUTCOME",
+		"lines": {
+			"": "장산곶에서 바다가 사람 이름을 부른다더군.",
+			"A": "노인 딸이 살아 돌아왔대. 바다 값 받아먹던 중개인은 관아에 끌려갔고.",
+			"B": "노인 딸이 살아 돌아왔대. 중개한 놈은 말 타고 내뺐다지.",
+			"C": "장산곶 바다가 처녀 하나를 받았대. 그 뒤로 바다가 잔잔하다나.",
+		} },
+	{ "id": "HJ_JANG", "space": "HH_HWANGJU", "near": "hwangju_jang", "radius": 46.0, "speaker": "장꾼",
+		"pool": ["구월산에서 누가 단군 제사를 다시 올린다나.", "재령 들판에 밤이면 등불이 줄지어 움직인대.", "장산곶에서 바다가 사람 이름을 부른다더군."] },
+	{ "id": "R0401", "space": "GG_HANYANG-HH_HWANGJU", "near": "rt_seoheung", "radius": 34.0, "speaker": "주막 손님", "var": "CASE_HWANGJU_OUTCOME",
+		"lines": {
+			"": "황주 쪽에 딸 하나가 큰돈 받고 배를 탔다던데.",
+			"A": "황주 처녀가 바다에서 살아 나왔대. 바다 값이니 뭐니, 다 셈속이었다지.",
+			"B": "황주 처녀가 바다에서 살아 나왔대. 용왕이 돌려보냈다는 사람도 있고.",
+			"C": "황주 처녀가 장산곶 바다에 들었대. 그 덕에 뱃길이 순하다나.",
+		} },
+	{ "id": "R0402", "space": "GG_HANYANG-HH_HWANGJU", "near": "rt_kaesong", "radius": 40.0, "speaker": "장꾼", "need": { "ACT2_OPEN": true },
+		"pool": ["장산곶에서 바다가 사람 이름을 부른다더군.", "구월산에서 누가 단군 제사를 다시 올린다나."] },
+	{ "id": "R0501", "space": "HH_HWANGJU-PA_PYEONGYANG", "near": "rt_junghwa", "radius": 40.0, "speaker": "중화 나그네", "var": "CASE_HWANGJU_OUTCOME",
+		"lines": {
+			"": "황해도 바닷가에 처녀를 사 가는 장사꾼이 있다던데.",
+			"A": "황주에서 바다 값 받던 중개인이 잡혔대. 장산곶 어부들이 관아까지 끌고 갔다나.",
+			"B": "황주에서 바다 값 받던 중개인이 평양 쪽으로 숨어들었다는 말이 있어.",
+			"C": "장산곶에서 또 처녀를 산다는 말이 돌아. 바다가 받으니 값이 오른다나.",
+		} },
+	{ "id": "R0801", "space": "HH_HWANGJU-JANGSANGOT", "near": "rt_guwol", "radius": 50.0, "speaker": "나무꾼",
+		"pool": ["구월산에서 누가 단군 제사를 다시 올린다나."] },
+	{ "id": "R0802", "space": "HH_HWANGJU-JANGSANGOT", "near": "rt_jaeryeong", "radius": 46.0, "speaker": "재령 사람",
+		"pool": ["재령 들판에 밤이면 등불이 줄지어 움직인대."] },
+	{ "id": "R0803", "space": "HH_HWANGJU-JANGSANGOT", "near": "rt_jangsan", "radius": 60.0, "speaker": "어부", "var": "CASE_HWANGJU_OUTCOME",
+		"lines": {
+			"A": "옛날처럼 짚배 띄우자는 말이 나와. 사람 대신.",
+			"B": "탁가 놈 안 보인 뒤로 선주들이 바다 값 얘기를 덜 하오.",
+			"C": "그 처녀 일 뒤로 바다가 순하다고들 하는데… 난 모르겠소.",
+		} },
 ]
 
 # 이 공간에 걸린 소문(자리 p: Vector2 채워서)

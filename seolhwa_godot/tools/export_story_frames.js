@@ -32,6 +32,26 @@ const SETS = {
   },
 };
 
+// ?set=hwangju: ACT 2C 황주 「빈 배의 값」 → frames_story_hwangju.json
+//   - blind_elder: 눈먼 노인(노인-남 CHR_HUM_022 변형 — 갓 없이 흰 상투, 바랜 무명, 지팡이) 대기·걷기·대화·앉기(sit)
+//   - broker: 탁 중개인(상인 CHR_HUM_002 변형 — 갓, 짙은 밤색 두루마기, 짐 없음) 대기·걷기·뛰기·대화·묶임(tied)
+//   - daughter: 연이(아낙 CHR_HUM_010 → 젊은 처녀 변형 — 땋은 머리에 붉은 댕기, 흰 저고리·쪽빛 치마, 광주리 없음) 대기·걷기·대화·앉기·웅크림·안기
+//   - fisher: 어부(CHR_HUM_018 — 머리띠, 걷어 올린 바지, 긴 장대) 대기·걷기·대화
+SETS.hwangju = {
+  blind_elder: { base: 'elder', over: { hat: null, hair: 'white', coat: '#d9d3c2', pants: '#ddd6c4', collar: '#b9b09c', goreum: '#c3baa6', pipe: false,
+    stoop: 0.32, staff: 'cane', patch: '#c8bea6', build: 0.86 },
+    anims: ['idle', 'walk', 'talk', 'sit'] },
+  broker: { base: 'villager_m', over: { top: 'durumagi', coat: '#5b4a3c', pants: '#d6ccb4', collar: '#3a2e26', goreum: '#3a2e26', vest: null, daenim: '#3a2e26',
+    back: null, patch: null, hat: 'gat', stubble: true, robeLen: 96, build: 1.06, cheek: 0.14, shoe: '#3a3431' },
+    anims: ['idle', 'walk', 'run', 'talk', 'tied'] },
+  daughter: { base: 'villager_f', over: { coat: '#efe9da', skirt: '#3f5a74', goreum: '#9c3b3b', cuff: '#efe9da', collar: '#d8d0bc', hair: 'braid', ribbon: '#b8322a',
+    carry: null, build: 0.86, height: 1.52, cheek: 0.3 },
+    anims: ['idle', 'walk', 'talk', 'sit', 'cower', 'hug'] },
+  fisher: { base: 'villager_m', over: { coat: '#c2b796', pants: '#d4c9ad', vest: null, collar: '#8c7a5a', daenim: null, back: null, band: '#e7e0cf',
+    legwrap: null, staff: 'staff', patch: '#a8987a', build: 1.1, cheek: 0.18, shoe: '#a88a55' },
+    anims: ['idle', 'walk', 'talk'] },
+};
+
 // ?set=skills: v2.2 전투 숙련 동작(받아밀기 shove·빠른 투척 quick_throw)을 플레이어 은행에 더할 클립으로 → frames_story_skills.json
 SETS.skills = { player: { base: 'player', over: {}, armed: true, anims: ['shove', 'quick_throw'] } };   // 칼 든 클립(':a') — 전투 중 SpriteChar.armed가 먼저 찾는다
 
