@@ -172,6 +172,25 @@ func update(dt: float) -> void:
 		"prowl":
 			if player_down:
 				set_anim("idle")
+			elif first_pounce:
+				# 첫 조우(S0005): 가까이 붙은 플레이어에게도 앞발을 쓰기 전에, 약 5m로 물러났다가
+				# 몸 낮춤(예고) → 멈춤 → 돌진을 한 번 보인다(구르기 안내가 이 예고에 뜬다)
+				if tp.d < FIRST_BACK - 0.4:
+					var away: Vector2 = -tp.v
+					if not move_in(away * G().prowlSpeed * 1.3 * sm * dt, lim):
+						move_in(Vector2(-tp.v.y, tp.v.x) * orbit * G().prowlSpeed * dt, lim)
+					set_heading(tp.v)
+					set_anim("prowl")
+					if t > 3.0:   # 물러설 자리가 없으면 그 자리에서
+						first_pounce = false
+						start_crouch(tp)
+				else:
+					set_heading(tp.v)
+					set_anim("prowl")
+					decide -= dt
+					if decide <= 0.0:
+						first_pounce = false
+						start_crouch(tp)
 			elif _try_bait(): pass
 			elif _wants_tree(tp): go("toTree")
 			else:
@@ -353,6 +372,8 @@ func update(dt: float) -> void:
 			if push == Vector2.ZERO: push = Vector2(0.01, 0)
 			pl.move(push)
 
+const FIRST_BACK := 5.0
+
 func _choose(tp: Dictionary) -> void:
 	var r: float = b.rand()
 	decide = (G().decideMin + b.rand() * (G().decideMax - G().decideMin)) * (G().enrageDecide if enraged else 1.0) * decide_mul
@@ -471,6 +492,8 @@ func _try_bait() -> bool:
 func _after_react(tp: Dictionary) -> void:
 	if b.player_outside:
 		go("home"); return
+	if first_pounce:
+		to_prowl(0.3); return
 	var r: float = b.rand()
 	if tp.d <= G().swipeRange and r < 0.5: start_swipe(tp)
 	elif tp.d <= G().swipeRange + 1.0 and r < 0.8: start_backoff()
@@ -545,7 +568,7 @@ func receive_hit(dmg: float, opts: Dictionary) -> float:
 		go("hit"); set_anim("hit", true, G().flinch); poise = G().poise
 		return dmg
 	if s in INTERRUPTIBLE:
-		if opts.kind == "melee" and tp.d <= G().swipeRange + 0.3 and b.rand() < G().counterChance: start_swipe(tp)
+		if opts.kind == "melee" and tp.d <= G().swipeRange + 0.3 and b.rand() < G().counterChance and not first_pounce: start_swipe(tp)
 		else: decide = minf(decide, 0.5)
 	if s == "toBait" and opts.kind == "melee":
 		if bait != null:
