@@ -76,6 +76,7 @@ static func data() -> Dictionary:
 		"triggers": triggers(),
 		"props": props(),
 		"arenas": arenas(),
+		"documents": documents(),
 		"events": events(),
 	}
 
@@ -102,7 +103,8 @@ static func clues() -> Dictionary:
 		# ---- 역참 ----
 		"station": { "kind": "fact", "title": "함관령 옛 역참", "text": "버려진 역참 서쪽 방. 등잔불, 벽 지도, 화로. 노인 하나가 종이를 한 장씩 불에 넣는다. 화로 곁에 젊은 역졸 하나가 떨며 누워 있다." },
 		"sundol": { "kind": "heard", "by": "순돌", "title": "순돌", "text": "숲에서 쓰러졌는데 노인이 업어 왔다. 노인은 사흘째 제 종이를 태워 불을 지폈다." },
-		"park_ledger": { "kind": "fact", "title": "불탄 장부의 朴", "text": "반쯤 탄 곡물 장부. 가장자리에 붉은 朴 표식. 한양 책방 납품표·운송장·평양 대장에서 본 것과 같다." },
+		"ledger_rows": { "kind": "fact", "title": "맞지 않는 섬 수", "text": "반쯤 탄 서강 창 출납 장부. 들어온 섬과 나간 섬이 줄마다 맞지 않는다 — 나간 것이 더 많다." },
+		"park_ledger": { "kind": "fact", "title": "불탄 장부의 朴", "text": "반쯤 탄 곡물 장부. 그을린 가장자리에 붉은 朴 표식 — 돋보기로 그을음 밑을 훑어 찾았다. 한양 책방 납품표·운송장·평양 대장에서 본 것과 같다." },
 		"gwak_record": { "kind": "fact", "title": "곽칠성이라는 이름", "text": "기록함 속 이겸의 옛 기록. 서강 창고 사건의 증인 명단 — 곽칠성. 이름 위에 줄이 그어져 있다." },
 		"woochi_map": { "kind": "fact", "title": "벽 지도의 다른 먹", "text": "이겸의 벽 지도. 지나온 고을마다 작은 표. 한양 서강에만 다른 사람의 먹으로 동그라미 — 마른 지 오래지 않다." },
 		"past_event": { "kind": "heard", "by": "이겸", "title": "서강 창고 — 열두 해 전", "text": "강복이 장부와 곡식이 안 맞는 것을 찾았다. 창고에 불이 났고 강복이 죽었다. 이겸과 우치는 같은 일을 맡았었다. 우치의 가짜 귀신 소동에 사람이 다쳤고, 관아가 덮었다. 곽칠성이 죄를 썼다." },
@@ -281,6 +283,28 @@ static func props() -> Array:
 		{ "id": "p_cart_drag", "space": RTB, "trail": { "kind": "drag", "points": [[-238.0, -7.0], [-232.0, -14.0], [-222.0, -24.0], [-210.0, -32.0]], "step": 1.2, "size": 0.7 },
 			"when": "f('gapsul_taken')" },
 	]
+
+# 문서(scripts/story/documents.gd): S6007 불탄 장부 — 그을린 가장자리 밑의 朴은 플레이어가 돋보기로 직접 찾는다
+static func documents() -> Dictionary:
+	return {
+		"burnt_ledger": { "title": "불탄 출납 장부", "short": "불탄 장부", "aspect": 1.42, "seed": 6007,
+			"paper": { "base": "#e3d5b4", "fiber": 0.55, "fiber_col": "#7a6648", "lines": 7, "line_col": "#9a5a4a70" },
+			"cols": [
+				{ "x": 0.86, "y": 0.07, "text": "서강 창 곡물 출납", "size": 0.06, "ink": 0.9 },
+				{ "x": 0.75, "y": 0.1, "text": "들어온 쌀 이백 석", "size": 0.05, "ink": 0.88 },
+				{ "x": 0.645, "y": 0.1, "text": "나간 쌀 이백오십 석", "size": 0.05, "ink": 0.88 },
+				{ "x": 0.54, "y": 0.1, "text": "들어온 조 일백 석", "size": 0.05, "ink": 0.86 },
+				{ "x": 0.435, "y": 0.1, "text": "나간 조 일백사십 석", "size": 0.05, "ink": 0.86 },
+				{ "x": 0.33, "y": 0.1, "text": "남은 것 없음", "size": 0.05, "ink": 0.8, "bleed": 0.3 },
+				{ "x": 0.2, "y": 0.1, "text": "받은 이", "size": 0.05, "ink": 0.75 },
+			],
+			"images": [{ "tex": "res://assets/story/park_mark.png", "region": [0, 0, 128, 128], "rect": [0.12, 0.775, 0.13, 0.09], "alpha": 0.8 }],
+			"burns": [{ "side": "bottom", "depth": 0.3, "seed": 61 }, { "side": "left", "depth": 0.16, "seed": 62 }],
+			"hotspots": [
+				{ "id": "rows", "rect": [0.4, 0.08, 0.4, 0.55], "level": "plain", "label": "섬 수", "text": "들어온 쌀 이백 석, 나간 쌀 이백오십 석. 조도 들어온 것보다 나간 것이 많다.", "clue": "ledger_rows" },
+				{ "id": "park_edge", "rect": [0.1, 0.76, 0.17, 0.12], "level": "plain", "label": "그을린 가장자리", "text": "그을음 밑에 붉은 인 — 朴. '받은 이' 줄 끝이다.", "clue": "park_ledger" },
+			] },
+	}
 
 # 싸움터: 고개 넘어 수레 — 도적 둘(몽둥이·장대). 달아나면 고개 북쪽 숲으로
 static func arenas() -> Dictionary:

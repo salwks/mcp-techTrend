@@ -6,6 +6,7 @@ const D := preload("res://story/hamhung/hamhung_data.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const Discovery := preload("res://scripts/region/discovery.gd")
+const Docs := preload("res://scripts/story/documents.gd")
 const CASE_TITLE := "돌아오지 않는 전갈"
 
 var d      # story_director
@@ -423,12 +424,15 @@ func tend_sundol() -> void:
 # S6007 방 조사형 대화 — 물건마다 짧게. 불탄 장부의 朴은 플레이어가 먼저 찾아야 이겸이 말한다
 func room_ledger() -> void:
 	S.seen["S6007"] = true
-	await d.ui.examine("불탄 장부", ["반쯤 탄 곡물 장부. 들어온 섬과 나간 섬이 줄마다 맞지 않는다."], "clue")
-	var i: int = await d.ui.choice("", [{ label = "그을린 가장자리를 살펴본다" }, { label = "그만둔다" }])
-	if i != 0: return
-	await d.ui.examine("장부 가장자리", ["그을린 가장자리에 붉은 인 — 朴.", "한양 책방의 납품표, 황주의 운송장, 평양의 운송 대장에서 본 것과 같다."], "item")
+	if not f("ledger_opened"):
+		flag("ledger_opened")
+		await d.ui.examine("불탄 장부", ["반쯤 탄 곡물 장부. 가장자리가 숯이 되어 부스러진다."], "clue")
+	# 문서 살피기(scripts/story/documents.gd): 그을린 가장자리 밑의 朴은 돋보기로 직접 찾는다 — 정답 표시 없음
+	await Docs.open(d, { "docs": ["burnt_ledger"], "title": "불탄 장부", "note": "그을린 장부 한 장. 줄과 가장자리를 돋보기로 훑는다." })
+	if not S.has_clue("park_ledger"):
+		await d.ui.caption("그을음 밑에 무엇이 더 있는지 아직 모르겠다.", 2.0)
+		return
 	flag("ledger_done")
-	d.learn_clue("park_ledger")
 	S.vars["MAIN_PARK_MARK_COUNT"] = int(S.vars.get("MAIN_PARK_MARK_COUNT", 0)) + 1
 	Progress.set_var("MAIN_PARK_MARK_COUNT", S.vars.MAIN_PARK_MARK_COUNT)
 	d.runner.log_line("var", ["MAIN_PARK_MARK_COUNT", S.vars.MAIN_PARK_MARK_COUNT])

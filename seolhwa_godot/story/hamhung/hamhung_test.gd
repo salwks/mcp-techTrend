@@ -13,6 +13,7 @@ const Rumors := preload("res://story/rumors_data.gd")
 const Discovery := preload("res://scripts/region/discovery.gd")
 const D := preload("res://story/hamhung/hamhung_data.gd")
 const FIXTURE := "res://story/hamhung/test_post_act3.json"
+const Docs := preload("res://scripts/story/documents.gd")
 const META := "hamhung_storytest"
 
 static func prepare(dir) -> void:
@@ -29,6 +30,17 @@ static func prepare(dir) -> void:
 		p.routes_done["GG_HANYANG-HG_HAMHEUNG"] = "2026-10-04T12:30:00"
 	Progress.save()
 	Engine.remove_meta(META)
+
+# 문서 화면(S6007 불탄 장부): 섬 수를 짚고, 그을린 가장자리를 돋보기로 훑어 朴을 짚는다
+func doc_exam(ex) -> void:
+	await _frames(3)
+	await shot("doc_burnt_ledger", 6)
+	ex.mark_spot("burnt_ledger", "rows")
+	ex.mark_at("burnt_ledger", Vector2(0.6, 0.95))   # 아무것도 아닌 데
+	ex.mark_spot("burnt_ledger", "park_edge")
+	await _frames(2)
+	_log("짚은 것 %s" % [ex.found_now])
+	ex.close()
 
 func _log(s: String) -> void:
 	printerr("STORYTEST [%s] %6.1fs %s" % [branch, (Time.get_ticks_msec() - _t0) / 1000.0, s])
@@ -206,7 +218,8 @@ func _stage_route() -> void:
 	await go("yigyeom")   # 물건을 다 보기 전 — "둘러봐라."
 	expect(not d.S.is_flag("asked_why"), "방을 다 보기 전에는 묻지 않는다")
 	await go("ledger")
-	expect(d.S.has_clue("park_ledger") and int(d.S.vars.get("MAIN_PARK_MARK_COUNT", 0)) == 6, "S6007 불탄 장부의 朴 — 표식 5 → 6")
+	expect(d.S.has_clue("park_ledger") and int(d.S.vars.get("MAIN_PARK_MARK_COUNT", 0)) == 6, "S6007 불탄 장부의 朴(문서 돋보기로 직접 찾음) — 표식 5 → 6")
+	expect(d.S.has_clue("ledger_rows") and Docs.found_list(d.S).has("burnt_ledger/park_edge"), "문서 화면 — 섬 수·그을린 가장자리를 짚음")
 	await go("ham")
 	await go("wall_map")
 	expect(d.S.has_clue("gwak_record") and d.S.has_clue("woochi_map"), "S6007 곽칠성 이름 · 우치 흔적")
