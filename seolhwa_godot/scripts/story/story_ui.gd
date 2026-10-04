@@ -3,7 +3,8 @@
 # 비동기 API(await): say(이름, [줄]) · examine(제목, 글, 종류) · choice(물음, [{label, disabled, hint}]) → 번호 ·
 #   caption(글, 초) · fade(검게?, 초) · ending(data) · center_text(글, 초 — 검은 화면 가운데) · title_card(글, 초, 크기) · book_page(줄, 초).
 #   즉시: letterbox(on) · toast(글, 종류) · prompt(글) · items(목록) · journal_toggle(data) · hud_* ·
-#   hint(글)/hint_clear() — 처음 한 번 안내(scripts/story/onboarding.gd) · set_marks([{p, a, r}]) — 조사 대상 먹점.
+#   hint(글)/hint_clear() — 처음 한 번 안내(scripts/story/onboarding.gd) · set_marks([{p, a, r}]) — 조사 대상 먹점 ·
+#   set_talk_marks([{p, a, s}]) — 새로 할 말이 있는 이야기 인물 머리 위 「…」 한지 말풍선.
 # 기록책(R): 쪽(pages) — 여행 기록 · 사건 기록 · 여행 방법(scripts/story/journal_book.gd가 만든다). ←→·A·D·숫자·탭 클릭으로 넘긴다.
 #   항목 꼬리표: ◆ 확인 · ◇ 들음 — 발언자 · △ 추정 (색만으로 가르지 않는다, 보강서 §22).
 # 확인: E·Space·Enter·클릭 / 선택: ↑↓·W·S·숫자 / 기록: R / 닫기: Esc. 시험(auto)에서는 스스로 넘긴다.
@@ -75,6 +76,7 @@ var _hint_l: Label
 var _hint_tw: Tween
 var _marks: Control
 var _mark_list: Array = []
+var _talk_marks: Array = []
 var _center: Label
 var _title_l: Label
 var _book: PanelContainer
@@ -683,7 +685,37 @@ func set_marks(list: Array) -> void:
 	_mark_list = list
 	_marks.queue_redraw()
 
+# [{p: Vector2(화면 — 말풍선 아래 끝), a: 0~1, s: 크기 배율}]
+func set_talk_marks(list: Array) -> void:
+	if list.is_empty() and _talk_marks.is_empty(): return
+	_talk_marks = list
+	_marks.queue_redraw()
+
+# 한지 말풍선 + 붓 「…」: 둥근 종이, 엷은 먹 테, 아래로 짧은 꼬리, 가운데 먹점 셋
+func _draw_talk_mark(p: Vector2, a: float, s: float) -> void:
+	var k := _k * s
+	var w := 30.0 * k; var h := 19.0 * k
+	var c := p + Vector2(0, -h * 0.5 - 6.0 * k)
+	var ink := Color(INK.r, INK.g, INK.b, 0.82 * a)
+	var paper := Color(PAPER.r, PAPER.g, PAPER.b, 0.92 * a)
+	var pts := PackedVector2Array()
+	for i in 24:
+		var t := TAU * i / 24.0
+		pts.append(c + Vector2(cos(t) * w * 0.5, sin(t) * h * 0.5))
+	_marks.draw_colored_polygon(PackedVector2Array([c + Vector2(-4 * k, h * 0.35), c + Vector2(3 * k, h * 0.4), p]), paper)
+	_marks.draw_colored_polygon(pts, paper)
+	pts.append(pts[0])
+	_marks.draw_polyline(pts, ink, 1.6 * k, true)
+	_marks.draw_line(c + Vector2(-4 * k, h * 0.45), p, ink, 1.4 * k, true)
+	# 「 」 붓 꺾쇠와 먹점 셋
+	var bx := w * 0.36; var by := h * 0.26
+	_marks.draw_polyline(PackedVector2Array([c + Vector2(-bx + 3 * k, -by), c + Vector2(-bx, -by), c + Vector2(-bx, by * 0.4)]), ink, 1.4 * k, true)
+	_marks.draw_polyline(PackedVector2Array([c + Vector2(bx - 3 * k, by), c + Vector2(bx, by), c + Vector2(bx, -by * 0.4)]), ink, 1.4 * k, true)
+	for i in 3:
+		_marks.draw_circle(c + Vector2((i - 1) * 5.0 * k, 1.0 * k), 1.7 * k, ink)
+
 func _draw_marks() -> void:
+	for m in _talk_marks: _draw_talk_mark(m.p, float(m.a), float(m.get("s", 1.0)))
 	for m in _mark_list:
 		var p: Vector2 = m.p
 		var a: float = float(m.a)

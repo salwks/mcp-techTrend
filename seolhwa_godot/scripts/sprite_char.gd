@@ -25,6 +25,7 @@ var move_speed := -1.0
 var anim_speed := 1.0      # 동작 재생 배율(전투가 판정 길이에 맞춘다)
 var armed := false         # 칼 든 대기·걷기(<동작>:a 클립이 있으면)
 var variant := ""          # "disguised" → <동작>:d 클립 먼저(변장 호랑이)
+var accent = null          # 테두리 바깥 띠 색(Color) — 고을 사람과 같은 그림을 쓰는 이야기 인물(story_director). null이면 한지빛
 
 var _bank: Dictionary
 var _billboard: Node3D
@@ -189,7 +190,7 @@ func _ready() -> void:
 	_mesh = ArrayMesh.new()
 	_mat = ShaderMaterial.new(); _mat.shader = _shader("sprite", SPRITE_CODE)
 	_halo_mat = ShaderMaterial.new(); _halo_mat.shader = _shader("halo", HALO_CODE)
-	_halo_mat.set_shader_parameter("paper", _lin(PAPER)); _halo_mat.set_shader_parameter("ink", _lin(HALO_INK))
+	_halo_mat.set_shader_parameter("paper", _lin(accent if accent != null else PAPER)); _halo_mat.set_shader_parameter("ink", _lin(HALO_INK))
 	_sil_mat = ShaderMaterial.new(); _sil_mat.shader = _shader("sil", SIL_CODE)
 	_sil_mat.set_shader_parameter("color", Vector3(SIL_COLOR.r, SIL_COLOR.g, SIL_COLOR.b))
 	_sil_mat.render_priority = 10
@@ -250,6 +251,10 @@ var _flash_c := Color.WHITE
 func flash(c: Color, ms: float) -> void:
 	_flash_t = ms / 1000.0; _flash_dur = _flash_t; _flash_c = c
 	if _mat: _mat.set_shader_parameter("flash", Color(c.r, c.g, c.b, 0.85))
+
+func set_accent(c) -> void:
+	accent = c
+	if _halo_mat: _halo_mat.set_shader_parameter("paper", _lin(c if c != null else PAPER))
 
 func set_silhouette(on: bool) -> void:
 	_billboard.get_node("silhouette").visible = on

@@ -9,6 +9,8 @@
 #   3 첫 호랑이 조우(§16): 첫 '몸 낮춤 → 멈춤 → 돌진'에서만 짧은 느린 화면 + 'K 회피', 막기를 한 번도 안 썼으면 첫 앞발 때 'L 막기' 한 번.
 #   4 설정(scripts/story/game_settings.gd): 상호작용 안내 항상/초반만/최소/끔 · 조사 도움 기본/자세히/최소 — 전투 난이도와 따로.
 #   5 Esc: 잠시 멈춤 메뉴(scripts/story/options_menu.gd). 건너뛸 수 있는 장면(skippable) 중이면 Esc·Space·Enter가 건너뛰기.
+#   7 이야기 인물 말 표시: 새로 할 말이 있는 이야기 인물(story_director.talk_pending) 머리 위에 「…」 한지 말풍선(살짝 오르내림).
+#     28m 안·화면 안에서만, 들으면 사라지고 새 말이 생기면 다시. 안내 설정 끔이면 없음, 최소면 작게. 고을 사람(소문)에는 없다. 지도에는 그리지 않는다.
 #   6 정체 감지(§25, P2): 사건 진전(단서·규칙·국면)이 없이 오래 있으면 단계적으로 — 기록책 물음 강조 → 이미 본 단서를 잇는 한 줄.
 extends Node
 
@@ -38,6 +40,11 @@ var _stall_stage := 0
 var stall_line := ""       # 정체 3단계에서 기록책 맨 위에 보일 한 줄(journal_book)
 var menu = null
 var last_marked: Array = []   # 시험 기록: 이번에 먹점을 찍은 대상 id
+var talk_marked: Array = []   # 시험 기록: 이번에 「…」를 띄운 이야기 인물 id
+const TALK_MARK_R := 28.0
+var _tm_t := 0.0
+var _pend_t := 0.0
+var _pending := {}            # 인물 id → 새로 할 말 있음(0.4초마다 다시 본다 — 조건식 평가를 프레임마다 하지 않게)
 
 func _init(director) -> void:
 	d = director
@@ -164,6 +171,7 @@ func _process(delta: float) -> void:
 	_update_prompt_style()
 	_update_hints(dt)
 	_update_marks(dt)
+	_update_talk_marks(dt)
 	_update_combat()
 	_update_stall(dt)
 
@@ -186,7 +194,7 @@ func _update_prompt_style() -> void:
 	var strong := false
 	if t != null and hints_on():
 		if t.kind == "object" and not is_seen("INSPECT"): strong = true
-		elif t.kind == "actor" and not is_seen("TALK"):
+		elif t.kind in ["actor", "ambient"] and not is_seen("TALK"):
 			strong = true
 			once("TALK", "사람에게 다가가 E — 말을 건다", func(): return is_seen("TALK"), 8.0)
 	d.ui.prompt_strong = strong
@@ -214,6 +222,7 @@ func _update_marks(dt: float) -> void:
 	for t in d._targets():
 		var hl := "normal"
 		if t.kind == "object": hl = String(t.spec.get("highlight", "normal"))
+		elif _pending.get(t.id, false) and guide() != "off": continue   # 할 말 있는 인물은 「…」가 대신한다
 		if hl == "none": continue
 		var rng: float = near * (0.6 if hl == "low" else 1.0)
 		var strength: float = lv
@@ -329,3 +338,39 @@ func open_menu() -> void:
 
 func _physics_process(_dt: float) -> void:
 	if not _map_open(): _map_was_open = false
+
+# ---- 이야기 인물 말 표시(「…」) ----
+func _update_talk_marks(dt: float) -> void:
+	_tm_t -= dt
+	_pend_t -= dt
+	if _tm_t > 0.0: return
+	_tm_t = 0.033
+	talk_marked = []
+	var busy: bool = d.case_id == "" or d.S == null or not d._started or d.runner.busy or d.ui.modal or d.ui.journal_open \
+		or (d.combat_view != null and d.combat_view.active) or d._cut or guide() == "off"
+	if busy:
+		d.ui.set_talk_marks([]); return
+	if _pend_t <= 0.0:
+		_pend_t = 0.4
+		_pending.clear()
+		for id in d.actors:
+			if d.talk_pending(id): _pending[id] = true
+	var cam: Camera3D = d.main.cam
+	var sc: Vector2 = d.ui.get_viewport().get_visible_rect().size / Vector2(d.main.scene_vp.size)
+	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var small := guide() == "minimal"
+	var tt := Time.get_ticks_msec() / 1000.0
+	var out := []
+	for id in _pending:
+		var a = d.actors.get(id)
+		if a == null or not a.ch.visible: continue
+		var dd: float = pp.distance_to(Vector2(a.pos.x, a.pos.z))
+		if dd > TALK_MARK_R: continue
+		var wp := Vector3(a.pos.x, (a.y_abs if not is_nan(a.y_abs) else d.world.height_at(a.pos.x, a.pos.z)) + 2.55, a.pos.z)
+		if cam.is_position_behind(wp) or not cam.is_position_in_frustum(wp): continue
+		var sp: Vector2 = cam.unproject_position(wp) * sc
+		sp.y += sin(tt * 2.4 + float(hash(id) % 100)) * 3.0   # 살짝 오르내림
+		var fade: float = 1.0 - smoothstep(TALK_MARK_R * 0.75, TALK_MARK_R, dd)
+		out.append({ p = sp, a = fade, s = 0.72 if small else 1.0 })
+		talk_marked.append(String(id))
+	d.ui.set_talk_marks(out)

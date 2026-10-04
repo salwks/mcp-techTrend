@@ -4,7 +4,10 @@
 #   - 상태(story_state) 저장·불러오기(progress.gd), 명령 실행(story_runner), UI(story_ui), 전투(combat_view)
 #   - 조사 안내: 가장 가까운 이야기 대상(인물·물건)을 E로. R: 사건 기록. 컷신·대화 중에는 플레이어 조작을 막는다.
 #   - 소품: 조건(when)이 참일 때만 보이는 키트·데칼(단서·지역 변화). 인물: 조건·국면(phase)별 자리.
-#   - 소문(story/rumors_data.gd): 결말(§7 CASE_*_OUTCOME)에 따라 달라지는 주변 대화 — 권역·노정 어디서나.
+#   - 소문(story/rumors_data.gd): 결말(§7 CASE_*_OUTCOME)에 따라 달라지는 주변 대화 — 권역·노정 어디서나. 엿들은 소문도 기록책 '들음'.
+#   - 고을 사람 말 걸기(scripts/story/ambient_talk.gd): 이야기 대상이 없을 때 가까운 주변 인물에게 E — 사건 없는 공간에서도.
+#   - 이야기 인물 말 표시: 새로 할 말이 있는 인물(talk 항목 조건이 맞고 그 줄을 아직 안 들음 — talk_pending)은 머리 위 「…」(onboarding).
+#     흔한 바탕 그림(마을 사람 등)을 쓰는 이야기 인물은 테두리에 옅은 붉은 먹빛(accent)을 더해 고을 사람과 섞이지 않게.
 # region_main은 create_for()로 만들고 매 프레임 update(dt), blocks_move(), drives_player(), shake_offset()만 부른다.
 extends Node
 
@@ -67,6 +70,11 @@ var onboard = null             # scripts/story/onboarding.gd
 var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 카드 뒤 한 줄씩)
 var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
 var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
+var ambient = null             # 고을 사람 말 걸기(scripts/story/ambient_talk.gd)
+# 고을 사람(주변 인물)과 같은 바탕 그림 — 이걸 쓰는 이야기 인물에는 테두리 빛을 더한다
+const GENERIC_KINDS := ["villager_m", "villager_f", "elder", "child_boy", "child_girl", "hunter", "innkeeper", "miller", "woodcutter",
+	"scholar", "merchant", "peddler", "official", "monk", "bosal", "boatman", "haenyeo", "farmer", "farmwife", "herder", "raincape", "traveler", "shaman"]
+const ACCENT := Color("#e6b48c")   # 한지빛 테두리 대신 옅은 주홍 한지(아주 약하게)
 
 # 사건 완료(v2.2 레벨 없음): CASE_<키>_COMPLETE를 세우고 숙련 해금표(skills.gd)를 훑는다
 func _case_complete() -> Array:
@@ -133,6 +141,7 @@ func _setup() -> void:
 	ui.log_lines = log_story
 	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
 	add_child(onboard)
+	ambient = load("res://scripts/story/ambient_talk.gd").new(self)
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
 	if case_id == "":
@@ -180,7 +189,7 @@ func _setup() -> void:
 	sensing = load("res://scripts/story/sensing.gd").new()
 	add_child(sensing)
 	sensing.setup(self)
-	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute"))
+	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest"))
 	if args.has("storytest"):
 		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
 		add_child(test)
@@ -221,6 +230,9 @@ func update(dt: float) -> void:
 	if case_id == "":
 		_update_rumors(dt)
 		_rub.update(dt)
+		if ui.modal or ui.journal_open or ambient.busy:
+			ui.prompt(""); _target = null
+		else: _update_target()
 		return
 	if not _started:
 		_started = true
@@ -243,7 +255,7 @@ func update(dt: float) -> void:
 	_update_ambient(dt)
 	if spirits != null: spirits.update(dt)
 	if sensing != null: sensing.update(dt)
-	if runner.busy or ui.modal or combat_view.active:
+	if runner.busy or ui.modal or combat_view.active or ambient.busy:
 		ui.prompt("")
 		_target = null
 		return
@@ -261,6 +273,12 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev.is_action("journal") and not ui.modal and not (combat_view != null and combat_view.active) and (case_id == "" or _started):
 		ui.journal_toggle(journal_data())
 		get_viewport().set_input_as_handled()
+		return
+	# 고을 사람 말 걸기(사건이 없는 공간에서도)
+	if ev.is_action("interact") and _target != null and String(_target.kind) == "ambient" and not ui.busy_input() \
+			and not (runner != null and runner.busy) and not (combat_view != null and combat_view.active):
+		get_viewport().set_input_as_handled()
+		ambient.talk(int(_target.key))
 		return
 	if case_id == "" or not _started: return
 	if ev.is_action("interact") and _target != null and not ui.busy_input() and not runner.busy and not combat_view.active:
@@ -306,7 +324,7 @@ func _save_where(dt: float) -> void:
 # 시작 메뉴(새 게임 / 이어 하기): 그냥 실행했을 때만(시험·넘어온 장면·--newgame·--continue·--notitle 아님)
 func _maybe_title() -> void:
 	var args: Dictionary = main.args
-	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset", "warp"]:
+	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset", "warp", "talktest"]:
 		if args.has(k): return
 	if not main._pending.is_empty(): return
 	title = load("res://scripts/story/title_menu.gd").new(self)
@@ -470,6 +488,7 @@ func _make_actor(spec: Dictionary) -> Dictionary:
 	ch.set_silhouette(false)
 	ch._sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	if spec.has("variant"): ch.variant = String(spec.variant)
+	if GENERIC_KINDS.has(kind) and spec.get("accent", true) != false: ch.set_accent(ACCENT)   # 고을 사람과 같은 그림이면 테두리 빛
 	var a := { id = String(spec.id), spec = spec, ch = ch, pos = Vector3.ZERO, facing = "down", scripted = false,
 		shown = false, path = [], speed = 1.6, end_anim = "idle", y_abs = NAN, name = String(spec.get("name", "")), anim = "idle" }
 	actors[a.id] = a
@@ -708,9 +727,11 @@ func _targets() -> Array:
 func _update_target() -> void:
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	var best = null; var bd := INF
-	for t in _targets():
-		var d: float = pp.distance_to(t.p)
-		if d < t.r and d < bd: bd = d; best = t
+	if case_id != "" and _started:
+		for t in _targets():
+			var d: float = pp.distance_to(t.p)
+			if d < t.r and d < bd: bd = d; best = t
+	if best == null and ambient != null: best = ambient.target(pp)   # 이야기 대상이 먼저, 없으면 고을 사람
 	_target = best
 	ui.prompt(best.label if best != null else "")
 
@@ -719,6 +740,7 @@ func interact(id: String) -> void:
 	var steps := []
 	if actors.has(id):
 		var a: Dictionary = actors[id]
+		_talk_seen_now(a)
 		S.talked[id] = int(S.talked.get(id, 0)) + 1
 		for t in a.spec.get("talk", []):
 			if runner.cond(t.get("when", true)):
@@ -735,6 +757,7 @@ func interact(id: String) -> void:
 	_target = null
 	ui.prompt("")
 	await runner.run(steps)
+	if onboard != null: onboard._pend_t = 0.0   # 「…」 바로 다시 본다
 
 func _check_triggers() -> void:
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
@@ -814,5 +837,67 @@ func _update_rumors(dt: float) -> void:
 		if line == "": continue
 		_rumor_seen[id] = true
 		printerr("RUMOR %s [%s] %s" % [id, r.get("speaker", ""), line])
+		Progress.add_heard({ id = id, space = space_id, by = String(r.get("speaker", "")), text = line, place = "" })   # 엿들은 말도 '들음'(사실 아님)
 		ui.caption("%s  “%s”" % [String(r.get("speaker", "")), line], 4.0)
 		return
+
+# ---------------------------------------------------------------------------
+# 새로 할 말이 있는 이야기 인물(머리 위 「…」 — onboarding._update_talk_marks)
+#   지금 고를 talk 항목(조건이 맞는 첫 항목)의 '서명'을 아직 안 들었으면 참. 서명 = 항목 번호 + 조건부 대사·if 결과 + 고를 수 있는 물음.
+#   이미 말을 나눈 사람의 '늘(true)' 대사만 있는 항목(되풀이 잡담)과, 고를 물음이 다 떨어진 항목은 새 말이 아니다.
+#   들은 서명은 S.seen._talk { 인물: [서명] } — 이 표시는 '할 말이 있다'일 뿐, 거짓말·정답을 뜻하지 않는다.
+# ---------------------------------------------------------------------------
+const SAY_KEYS := ["say", "lines", "when"]
+
+func talk_sig(a: Dictionary) -> String:
+	var talk = a.spec.get("talk")
+	if not (talk is Array) or S == null: return ""
+	var idx := -1
+	for i in talk.size():
+		if runner.cond(talk[i].get("when", true)): idx = i; break
+	if idx < 0: return ""
+	var ent: Dictionary = talk[idx]
+	var steps: Array = ent.get("steps", [])
+	var parts := [str(idx)]
+	var say_only := true
+	var has_choice := false
+	var open_opts := 0
+	for st in steps:
+		if not (st is Dictionary): continue
+		for k in st:
+			if not SAY_KEYS.has(k): say_only = false
+		if st.has("say") and st.has("when"): parts.append("s%d" % int(runner.cond(st.when)))
+		if st.has("if"): parts.append("i%d" % int(runner.cond(st.get("if"))))
+		if st.has("choice"):
+			has_choice = true
+			for o in st.get("options", []):
+				if o.get("end", false): continue
+				if o.has("when") and not runner.cond(o.when): continue
+				open_opts += 1
+				parts.append(String(o.get("label", "")))
+	var w = ent.get("when", true)
+	var always: bool = w is bool or String(w).strip_edges() == "true"
+	if say_only and always and int(S.talked.get(String(a.id), 0)) > 0: return ""   # 되풀이 잡담
+	if has_choice and open_opts == 0:
+		var other := false
+		for st in steps:
+			if st is Dictionary and not st.has("choice") and not st.has("say"): other = true
+		if not other: return ""   # 물을 것을 다 물었다
+	return "|".join(parts)
+
+func talk_pending(id: String) -> bool:
+	var a = actors.get(id)
+	if a == null or not a.shown or a.spec.get("talk") == null: return false
+	var sig := talk_sig(a)
+	if sig == "": return false
+	var seen: Dictionary = S.seen.get("_talk", {})
+	return not (seen.get(id, []) as Array).has(sig)
+
+func _talk_seen_now(a: Dictionary) -> void:
+	var sig := talk_sig(a)
+	if sig == "": return
+	var seen: Dictionary = S.seen.get("_talk", {})
+	var l: Array = seen.get(String(a.id), [])
+	if not l.has(sig): l.append(sig)
+	seen[String(a.id)] = l
+	S.seen["_talk"] = seen
