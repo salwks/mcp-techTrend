@@ -581,7 +581,7 @@ func solutions() -> Array:
 	return [
 		{ "id": "madong", "title": "막동을 찾는다", "available": f("madong_saved"),
 			"text": "길 위의 주머니에서 골짜기로 내려간 발자국을 따라가 막동을 불 곁으로 옮긴다.",
-			"hint": "" if S.has_clue("pouch") or f("madong_saved") else "" },
+			"hint": "발자국이 눈에 덮이기 전에." if S.has_clue("pouch") and not f("madong_saved") and not f("station_entered") else "" },
 		{ "id": "gapsul", "title": "갑술을 구한다", "available": f("gapsul_saved"),
 			"text": "고개 넘어 수레에서 도적을 물리치고 묶인 갑술을 푼다.", "hint": "도적들이 끌고 갔다." if f("gapsul_taken") else "" },
 		{ "id": "station", "title": "숲 위 불빛으로 간다", "available": f("tracks_seen"),

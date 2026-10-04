@@ -1,7 +1,7 @@
 #!/bin/zsh
 # 설화록 대본 시험 한 번에 돌리기(헤드리스) — PASS/FAIL 표와 종료 코드를 찍는다.
 #
-#   tools/run_story_tests.sh                 # 전부(대본 시험 17개 + 노정 걷기 2개), 동시 3개
+#   tools/run_story_tests.sh                 # 전부(대본 시험 + 노정 걷기), 동시 3개
 #   tools/run_story_tests.sh -j 1            # 한 줄로
 #   tools/run_story_tests.sh namwon hwangju:B walk   # 이름(앞부분)이 맞는 것만
 #   tools/run_story_tests.sh -l              # 목록만
@@ -46,6 +46,10 @@ TESTS=(
 	"hwangju:A|300|--region=HH_HWANGJU --storytest=hwangju:A"
 	"hwangju:B|300|--region=HH_HWANGJU --storytest=hwangju:B"
 	"hwangju:C|300|--region=HH_HWANGJU --storytest=hwangju:C"
+	"hamhung:r05|240|--route=PA_PYEONGYANG-HG_HAMHEUNG --storytest=hamhung:R05"
+	"hamhung:A|300|--region=HG_HAMHEUNG --storytest=hamhung:A"
+	"hamhung:B|300|--region=HG_HAMHEUNG --storytest=hamhung:B"
+	"hamhung:C|300|--region=HG_HAMHEUNG --storytest=hamhung:C"
 	"walk:hwangju-pyeongyang|300|--route=HH_HWANGJU-PA_PYEONGYANG --walkroute=01 --walkspeed=12"
 	"walk:hangang-boat|600|--route=RIVER_HANGANG --walkroute=01 --walkspeed=12 --sailspeed=25"
 )
