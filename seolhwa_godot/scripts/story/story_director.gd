@@ -139,7 +139,12 @@ func _setup() -> void:
 	var test_path := ddir + case_id + "_test.gd"
 	# 대본 시험이 앞 사건 저장을 꾸민다 — 시험 도중 다른 공간으로 넘어온 장면(같은 사건의 노정 등)이면 꾸미지 않고 이어 간다
 	var arrived: bool = not main._pending.is_empty() and not bool(main._pending.get("newgame", false))
-	if args.has("storytest") and not arrived and FileAccess.file_exists(test_path): load(test_path).prepare(self)
+	if args.has("storytest") and FileAccess.file_exists(test_path):
+		var ts: Script = load(test_path)
+		if ts == null or not ts.can_instantiate():   # 시험 스크립트 해석 오류 — 시간 초과까지 멈춰 있지 말고 바로 FAIL
+			print("STORYTEST FAIL %s 시험 스크립트를 불러오지 못함(%s)" % [String(args.storytest), test_path])
+			main._quit.call_deferred(); return
+		if not arrived: ts.prepare(self)
 	# 앞 사건이 끝나야 서는 사건(case.requires {변수: 값}) — 아니면 소문만. 쉼표 목록 값(MAIN_MASTER_TRACE "HANYANG,GANGNEUNG")은 들어 있으면 맞음
 	for k in data.get("case", {}).get("requires", {}):
 		var have := str(Progress.get_var(k, ""))
@@ -200,7 +205,8 @@ func update(dt: float) -> void:
 	_save_where(dt)
 	if _vign == null: _vign = load("res://scripts/story/vignettes.gd").new(self)
 	_vign.update(dt)
-	if combat_view != null: combat_view.update(dt)
+	# 대본 시험: 싸움은 프레임마다 고정 걸음(시험 봇도 1/60초 걸음으로 판단한다) — 기계 부하·프레임 흔들림에 결과가 바뀌지 않게
+	if combat_view != null: combat_view.update(Engine.time_scale / 60.0 if test != null and combat_view.active else dt)
 	if _rub == null:
 		_rub = load("res://scripts/story/rubbing.gd").new(); add_child(_rub); _rub.setup(self)
 	if case_id == "":
@@ -749,6 +755,7 @@ func combat(arena_id: String, st: Dictionary) -> String:
 	if a.has("focus"): opts.focus = anchor(a.focus)
 	if a.has("retreat_to"): opts.retreat_to = anchor(a.retreat_to)
 	if st.has("seed"): opts.seed = st.seed
+	elif test != null: opts.seed = int(main.args.get("combatseed", "1870"))   # 대본 시험은 정해진 난수(--combatseed로 바꿈)
 	if test != null: combat_view.bot = test.combat_bot
 	ui.prompt("")
 	combat_view.start(a, opts)

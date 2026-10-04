@@ -223,6 +223,8 @@ func _watch_shots_g() -> void:
 			await shot("ending", 1); return
 
 # ---- 사람 적 봇: A는 덤벼 쓰러뜨림(달아나는 자도 쫓는다), B는 등성이에서 물러난다 ----
+var _bow_hold := 0.0   # 달아나는 자에게 활: 당긴 초
+
 func combat_bot() -> Dictionary:
 	var b = d.combat_view.battle
 	if b.mode != "human": return super.combat_bot()
@@ -246,15 +248,31 @@ func combat_bot() -> Dictionary:
 		out.move = Vector2(-1, -0.4).normalized() if away.x > -0.5 else away.normalized()
 		out.run = true
 		return out
+	# 과녁: 달아나는 자를 먼저(붙잡아야 A) — 단 싸움터 밖으로 나간 자는 쫓지 않는다(쫓으면 내가 싸움터를 벗어나 escaped)
+	var ac := Vector2(b.arena.x, b.arena.z); var lim: float = float(b.arena.radius) - 1.2
 	var tg = null; var bd := INF
 	for fo in b.foes:
 		if not fo.active: continue
-		var dd: float = (fo.pos - pl.pos).length()
+		var fl: bool = fo.state == "flee"
+		if (fo.pos - ac).length() > lim + (14.0 if fl else 1.0): continue   # 달아나는 자는 활이 닿는 데까지
+		var dd: float = (fo.pos - pl.pos).length() - (100.0 if fl else 0.0)
 		if dd < bd: bd = dd; tg = fo
 	if tg == null: return out
 	var v: Vector2 = tg.pos - pl.pos
 	var dist := v.length()
 	var dir := v / maxf(dist, 0.001)
+	# 달아나는 자: 활로 쏜다(사람 걸음이 달아나는 걸음보다 조금만 빨라 따라잡기 어렵다) — 다 당겼다 놓는다
+	if tg.state == "flee" and int(pl.arrows) > 0 and dist > 2.0 and dist < 20.0:
+		if _bow_hold < 0.95:
+			_bow_hold += 1.0 / 60.0
+			out.move = dir * 0.2; out.held = { bow = true }
+			return out
+		_bow_hold = 0.0
+		return out
+	_bow_hold = 0.0
+	if (pl.pos + dir * 0.5 - ac).length() > lim:   # 싸움터 가장자리: 밖으로는 안 나간다(가장자리를 따라)
+		var r: Vector2 = (pl.pos - ac).normalized()
+		dir = (dir - r * maxf(0.0, dir.dot(r))).normalized()
 	for fo in b.foes:
 		if fo.state == "wind" and (fo.pos - pl.pos).length() < 3.4 and fo.t > 0.2:
 			if _bot_dodge_cd <= 0.0 and pl.st >= 25.0:
