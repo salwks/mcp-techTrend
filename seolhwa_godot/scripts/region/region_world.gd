@@ -646,8 +646,21 @@ func _build_sea() -> void:
 			for i in n:
 				var a := j * (n + 1) + i
 				idx.append_array(PackedInt32Array([a, a + n + 1, a + 1, a + 1, a + n + 1, a + n + 2]))
-		var mi := _flat_water("sea", v, idx, proto)
-		mi.custom_aabb = AABB(Vector3(x0, sea_y - 1.0, z0), Vector3(x1 - x0, 2.0, z1 - z0))
+		var aabb := AABB(Vector3(x0, sea_y - 1.0, z0), Vector3(x1 - x0, 2.0, z1 - z0))
+		if sea_is_river and not OS.get_cmdline_user_args().has("--nowatersplit"):
+			# 큰 강: 안쪽(거의 불투명)은 불투명 판, 물가 띠만 반투명 판 — 낮은 배 시점에서 반투명 물이 화면 절반이면 무거웠다
+			# (노량진 나루 78.6 → 아래 보고). 두 판은 같은 식으로 맞물려 고른다(region_sea_body.gdshaderinc SEA_SPLIT).
+			# 32m 칸으로 나눠 한가운데 칸(둘레까지 모두 바다)은 discard 없는 불투명 판 — 물 아래 땅을 GPU가 건너뛴다.
+			var parts := _river_cells()
+			if not parts.inner.is_empty():
+				_flat_water("sea_river_inner", parts.inner, _quad_idx(parts.inner.size() / 4), _mat_like(proto, "res://shaders/region_sea_interior.gdshader"))
+			if not parts.edge.is_empty():
+				var ei := _quad_idx(parts.edge.size() / 4)
+				_flat_water("sea_river_opaque", parts.edge, ei, _mat_like(proto, "res://shaders/region_sea_opaque.gdshader"))
+				_flat_water("sea_river_edge", parts.edge, ei, _mat_like(proto, "res://shaders/region_sea_split.gdshader"))
+			print("REGION river water cells inner=%d edge=%d" % [parts.inner.size() / 4, parts.edge.size() / 4])
+		else:
+			_flat_water("sea", v, idx, proto).custom_aabb = aabb
 	for l in lakes:
 		var tri := Geometry2D.triangulate_polygon(l.poly)
 		if tri.is_empty(): push_warning("호수 윤곽을 삼각형으로 나누지 못했다: " + l.name); continue
@@ -659,6 +672,56 @@ func _build_sea() -> void:
 		mat.set_shader_parameter("shallow_col", Vector3(0.45, 0.60, 0.56))
 		_flat_water("lake_" + l.name, v, tri, mat)
 	print("REGION sea y=%s kind=%s lakes=%d mask_ms=%d" % [sea_y, "river" if sea_is_river else "sea", lakes.size(), Time.get_ticks_msec() - t0])
+
+# 큰 강 물면 칸 나누기: 물 가림 밉맵(상자 평균)에서 칸 크기가 RIVER_CELL에 가장 가까운 단을 읽는다.
+# R = 255(칸 안이 모두 바다)이고 둘레 8칸도 그러면 '한가운데', 둘레에 바다가 조금이라도 있으면 '물가'(셰이더가 고른다), 없으면 판 없음.
+const RIVER_CELL := 32.0
+func _river_cells() -> Dictionary:
+	var k := clampi(roundi(log(RIVER_CELL / lcell) / log(2.0)), 0, 8)
+	# 크기를 2^k의 배수로 채운 그림에 옮겨 밉맵을 만든다 — 그래야 k단까지 정확히 2×2 상자 평균(홀수 크기면 다시 표본을 떠 칸이 어긋난다)
+	var n := 1 << k
+	var w := (lw + n - 1) / n; var h := (lh + n - 1) / n
+	var pad := Image.create(w * n, h * n, false, Image.FORMAT_RG8)
+	pad.blit_rect(water_mask, Rect2i(0, 0, lw, lh), Vector2i.ZERO)
+	pad.generate_mipmaps()
+	var C := lcell * float(n)
+	var data := pad.get_data()
+	var off := pad.get_mipmap_offset(k)
+	var r := func(i: int, j: int) -> int:
+		if i < 0 or j < 0 or i >= w or j >= h: return 0
+		return data[off + (j * w + i) * 2]
+	var inner := PackedVector3Array(); var edge := PackedVector3Array()
+	var x0 := lx0 - lcell * 0.5; var z0 := lz0 - lcell * 0.5
+	for j in h:
+		for i in w:
+			var lo := 255; var hi := 0
+			for dj in range(-1, 2):
+				for di in range(-1, 2):
+					var v: int = r.call(i + di, j + dj)
+					lo = mini(lo, v); hi = maxi(hi, v)
+			if hi == 0: continue
+			var ax := x0 + i * C; var az := z0 + j * C
+			var q := [Vector3(ax, sea_y, az), Vector3(ax + C, sea_y, az), Vector3(ax + C, sea_y, az + C), Vector3(ax, sea_y, az + C)]
+			if lo == 255: inner.append_array(q)
+			else: edge.append_array(q)
+	return { inner = inner, edge = edge }
+
+static func _quad_idx(n: int) -> PackedInt32Array:
+	var idx := PackedInt32Array(); idx.resize(n * 6)
+	for q in n:
+		var a := q * 4
+		# 위에서 볼 때 앞면이 되게(옛 격자와 같은 감김) — 뒷면이면 cull_disabled에서 NORMAL이 뒤집혀 빛이 달라진다
+		idx[q * 6] = a; idx[q * 6 + 1] = a + 3; idx[q * 6 + 2] = a + 1
+		idx[q * 6 + 3] = a + 1; idx[q * 6 + 4] = a + 3; idx[q * 6 + 5] = a + 2
+	return idx
+
+# 같은 값을 가진 다른 셰이더 재질(물 판 나누기)
+static func _mat_like(src: ShaderMaterial, shader_path: String) -> ShaderMaterial:
+	var m := ShaderMaterial.new(); m.shader = load(shader_path)
+	for u in src.shader.get_shader_uniform_list():
+		var v = src.get_shader_parameter(u.name)
+		if v != null: m.set_shader_parameter(u.name, v)
+	return m
 
 func _flat_water(nm: String, v: PackedVector3Array, idx: PackedInt32Array, mat: ShaderMaterial) -> MeshInstance3D:
 	var nrm := PackedVector3Array(); nrm.resize(v.size()); nrm.fill(Vector3.UP)
