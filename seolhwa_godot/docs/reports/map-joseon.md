@@ -92,7 +92,9 @@ python3 tools/region/render_joseon_map.py nation             # 전국(terrarium 
 
 ## 6. 시험
 
-- `tools/run_story_tests.sh` 전체: 결과는 아래 '대본 시험'에.
+- `tools/run_story_tests.sh` 전체 39개(헤드리스): 35 PASS, jeju:A·B·C와 ride:namwon-unbong은 그때 다른 담당이 고치던 중(기록책 '여행 기록'·역참 기승 시험)이라 FAIL —
+  옛 지도 코드로 바꿔 돌려도 같은 자리에서 실패했고, 그 담당 커밋 뒤 다시 돌리니 jeju:A·B·C·ride:namwon-unbong 모두 PASS(종료 0). SCRIPT ERROR 0.
+  (돌릴 때 run_story_tests.sh 184줄 요약 부분에 따옴표 짝 오류가 있어 표 대신 .res 파일로 판정 — 그 파일은 다른 담당이 고치는 중)
 - `tools/story/map_leads_test.gd`: PASS 45/45.
 
 ## 7. 남은 것·주의
