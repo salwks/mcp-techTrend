@@ -1,0 +1,130 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_hwangju",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7005,
+    "style": "haeseo",
+    "hub": true
+   },
+   "x": -3.88,
+   "z": -680.23,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_hwangju_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7105,
+    "hub": true
+   },
+   "x": 15.09,
+   "z": -680.34,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hh_hanyang",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7026,
+    "style": "haeseo",
+    "hub": false
+   },
+   "x": 578.97,
+   "z": 2035.08,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hh_hanyang_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7126,
+    "hub": false
+   },
+   "x": 559.92,
+   "z": 2034.82,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hh_jangsang",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7027,
+    "style": "haeseo",
+    "hub": false
+   },
+   "x": -2492.23,
+   "z": -1577.75,
+   "ry": -0.2465,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hh_jangsang_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7127,
+    "hub": false
+   },
+   "x": -2495.57,
+   "z": -1564.48,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hh_pyeongya",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7028,
+    "style": "haeseo",
+    "hub": false
+   },
+   "x": 510.68,
+   "z": -2265.43,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hh_pyeongya_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7128,
+    "hub": false
+   },
+   "x": 526.28,
+   "z": -2249.97,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

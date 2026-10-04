@@ -1,0 +1,1391 @@
+{
+ "version": 1,
+ "generated_by": "tools/region/make_stations.py",
+ "kit": "res://kit/station/mabang.gd",
+ "note": "역참·마방. pos·ry = 마방 터(kit/station/mabang.gd, 정면 +z ≈ 남쪽), hitch = 길가 문 앞(kit/station/hitch.gd, ry 0), wait = 안장 얹고 기다리는 말, yard = 도착·말 타는 자리(길가), node = region_data/travel/<space>.json 거점 id(역마 거점), discover_key = progress.json travel_nodes/<space>/<node>(가 보면 적힘). lonlat = 전국 지도 자리(경도, 위도).",
+ "stations": [
+  {
+   "id": "namwon",
+   "name": "남원 역참",
+   "sign": "南原驛",
+   "space": "JL_NAMWON_UNBONG",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "honam",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    -3008.23,
+    197.87
+   ],
+   "ry": 0.0,
+   "yard": [
+    -2992.65,
+    219.85
+   ],
+   "road": [
+    -2988.8,
+    220.5
+   ],
+   "hitch": [
+    -2994.2,
+    214.22
+   ],
+   "wait": [
+    -2993.95,
+    215.07
+   ],
+   "node": "station_namwon",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/JL_NAMWON_UNBONG/station_namwon",
+   "lonlat": [
+    127.38947,
+    35.41154
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "동문 밖 통영별로(운봉·인월 가는 큰길) — 삼남대로 쪽은 북쪽 길목 역"
+  },
+  {
+   "id": "cheongpa",
+   "name": "청파역",
+   "sign": "靑坡驛",
+   "space": "GG_HANYANG",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "giho",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    -788.03,
+    -370.45
+   ],
+   "ry": 0.0,
+   "yard": [
+    -808.98,
+    -352.69
+   ],
+   "road": [
+    -809.3,
+    -348.8
+   ],
+   "hitch": [
+    -803.38,
+    -354.83
+   ],
+   "wait": [
+    -803.13,
+    -353.98
+   ],
+   "node": "station_cheongpa",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG/station_cheongpa",
+   "lonlat": [
+    126.97214,
+    37.5607
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "숭례문 밖 청파(용산 가는 길) — 한양 남쪽 큰 역, 삼남대로로 나가는 첫 역"
+  },
+  {
+   "id": "gyeongju",
+   "name": "경주 역참",
+   "sign": "慶州驛",
+   "space": "GS_GYEONGJU",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "yeongnam",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    -3150.29,
+    -2265.19
+   ],
+   "ry": -0.3118,
+   "yard": [
+    -3158.16,
+    -2248.92
+   ],
+   "road": [
+    -3156.7,
+    -2245.3
+   ],
+   "hitch": [
+    -3154.57,
+    -2251.91
+   ],
+   "wait": [
+    -3154.32,
+    -2251.06
+   ],
+   "node": "station_gyeongju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GS_GYEONGJU/station_gyeongju",
+   "lonlat": [
+    129.2055,
+    35.84444
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "gangneung",
+   "name": "강릉 역참",
+   "sign": "江陵驛",
+   "space": "GW_GANGNEUNG",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "gwandong",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    1010.11,
+    -339.33
+   ],
+   "ry": 0.0,
+   "yard": [
+    1025.45,
+    -317.28
+   ],
+   "road": [
+    1029.3,
+    -316.6
+   ],
+   "hitch": [
+    1023.97,
+    -322.91
+   ],
+   "wait": [
+    1024.22,
+    -322.06
+   ],
+   "node": "station_gangneung",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GW_GANGNEUNG/station_gangneung",
+   "lonlat": [
+    128.88825,
+    37.75023
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "hwangju",
+   "name": "황주 역참",
+   "sign": "黃州驛",
+   "space": "HH_HWANGJU",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "haeseo",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    -3.88,
+    -680.23
+   ],
+   "ry": 0.0,
+   "yard": [
+    20.98,
+    -682.88
+   ],
+   "road": [
+    24.0,
+    -680.4
+   ],
+   "hitch": [
+    15.09,
+    -680.34
+   ],
+   "wait": [
+    15.34,
+    -679.49
+   ],
+   "node": "station_hwangju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/HH_HWANGJU/station_hwangju",
+   "lonlat": [
+    125.75985,
+    38.68551
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "daedong",
+   "name": "대동역",
+   "sign": "大同驛",
+   "space": "PA_PYEONGYANG",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "gwanseo",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    425.23,
+    206.7
+   ],
+   "ry": 0.0,
+   "yard": [
+    398.37,
+    209.37
+   ],
+   "road": [
+    395.9,
+    212.4
+   ],
+   "hitch": [
+    404.8,
+    210.67
+   ],
+   "wait": [
+    405.05,
+    211.52
+   ],
+   "node": "station_daedong",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/PA_PYEONGYANG/station_daedong",
+   "lonlat": [
+    125.76639,
+    39.01877
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "평양 대동역(평안도 역도의 으뜸)"
+  },
+  {
+   "id": "hamheung",
+   "name": "함흥 역참",
+   "sign": "咸興驛",
+   "space": "HG_HAMHEUNG",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "gwanbuk",
+   "hub": true,
+   "pony": false,
+   "pos": [
+    -511.3,
+    476.42
+   ],
+   "ry": 0.0,
+   "yard": [
+    -486.88,
+    462.03
+   ],
+   "road": [
+    -483.1,
+    463.0
+   ],
+   "hitch": [
+    -491.24,
+    466.87
+   ],
+   "wait": [
+    -490.99,
+    467.72
+   ],
+   "node": "station_hamheung",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/HG_HAMHEUNG/station_hamheung",
+   "lonlat": [
+    127.52004,
+    39.90064
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "jeju",
+   "name": "제주목 마방",
+   "sign": "濟州馬房",
+   "space": "JJ_JEJU",
+   "space_kind": "region",
+   "kind": "hub",
+   "style": "tamna",
+   "hub": true,
+   "pony": true,
+   "pos": [
+    -2722.51,
+    -159.04
+   ],
+   "ry": -0.1191,
+   "yard": [
+    -2726.93,
+    -143.18
+   ],
+   "road": [
+    -2724.8,
+    -139.9
+   ],
+   "hitch": [
+    -2724.07,
+    -145.99
+   ],
+   "wait": [
+    -2723.82,
+    -145.14
+   ],
+   "node": "station_jeju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/JJ_JEJU/station_jeju",
+   "lonlat": [
+    126.53525,
+    33.51264
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "제주는 역 대신 목마(牧馬) — 조랑말 마방"
+  },
+  {
+   "id": "inwol",
+   "name": "인월역",
+   "sign": "引月驛",
+   "space": "JL_NAMWON_UNBONG",
+   "space_kind": "region",
+   "kind": "satellite",
+   "style": "honam",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    2508.62,
+    -1522.13
+   ],
+   "ry": 0.0885,
+   "yard": [
+    2507.54,
+    -1505.97
+   ],
+   "road": [
+    2510.3,
+    -1503.2
+   ],
+   "hitch": [
+    2509.77,
+    -1509.18
+   ],
+   "wait": [
+    2510.02,
+    -1508.33
+   ],
+   "node": "inwol_yeok",
+   "reuse_node": true,
+   "discover_key": "travel_nodes/JL_NAMWON_UNBONG/inwol_yeok",
+   "lonlat": [
+    127.59217,
+    35.46339
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "gusan",
+   "name": "구산역",
+   "sign": "丘山驛",
+   "space": "GW_GANGNEUNG",
+   "space_kind": "region",
+   "kind": "satellite",
+   "style": "gwandong",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -1277.34,
+    477.23
+   ],
+   "ry": 0.0,
+   "yard": [
+    -1265.15,
+    499.9
+   ],
+   "road": [
+    -1261.4,
+    501.0
+   ],
+   "hitch": [
+    -1265.82,
+    494.4
+   ],
+   "wait": [
+    -1265.57,
+    495.25
+   ],
+   "node": "gusan_yeok",
+   "reuse_node": true,
+   "discover_key": "travel_nodes/GW_GANGNEUNG/gusan_yeok",
+   "lonlat": [
+    128.80163,
+    37.72561
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "songdang",
+   "name": "송당 목마장",
+   "sign": "松堂牧場",
+   "space": "JJ_JEJU",
+   "space_kind": "region",
+   "kind": "satellite",
+   "style": "tamna",
+   "hub": false,
+   "pony": true,
+   "pos": [
+    3532.56,
+    1299.0
+   ],
+   "ry": 0.0,
+   "yard": [
+    3506.83,
+    1299.79
+   ],
+   "road": [
+    3504.0,
+    1297.1
+   ],
+   "hitch": [
+    3512.96,
+    1297.7
+   ],
+   "wait": [
+    3513.21,
+    1298.55
+   ],
+   "node": "station_songdang",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/JJ_JEJU/station_songdang",
+   "lonlat": [
+    126.77592,
+    33.46554
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "중산간 목장 마을 — 조랑말"
+  },
+  {
+   "id": "osu",
+   "name": "오수역",
+   "sign": "獒樹驛",
+   "space": "JL_NAMWON_UNBONG-GG_HANYANG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "honam",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -814.3,
+    -22.2
+   ],
+   "ry": 0.0,
+   "yard": [
+    -816.8,
+    -7.0
+   ],
+   "road": [
+    -814.3,
+    -4.0
+   ],
+   "hitch": [
+    -814.3,
+    -9.6
+   ],
+   "wait": [
+    -814.05,
+    -8.75
+   ],
+   "node": "station_osu",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/JL_NAMWON_UNBONG-GG_HANYANG/station_osu",
+   "lonlat": [
+    127.23744,
+    35.68294
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "jeonju",
+   "name": "전주 역참",
+   "sign": "參禮驛",
+   "space": "JL_NAMWON_UNBONG-GG_HANYANG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "honam",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -518.59,
+    -21.12
+   ],
+   "ry": 0.0,
+   "yard": [
+    -493.32,
+    -17.35
+   ],
+   "road": [
+    -490.2,
+    -19.7
+   ],
+   "hitch": [
+    -499.15,
+    -20.15
+   ],
+   "wait": [
+    -498.9,
+    -19.3
+   ],
+   "node": "station_jeonju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/JL_NAMWON_UNBONG-GG_HANYANG/station_jeonju",
+   "lonlat": [
+    127.07581,
+    35.96814
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "전주 감영 북쪽 삼례역(호남 역도의 으뜸)을 전주 쉼터 곁에"
+  },
+  {
+   "id": "anbo",
+   "name": "안보역 (새재 들머리)",
+   "sign": "安保驛",
+   "space": "GG_HANYANG-GS_GYEONGJU",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "yeongnam",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -647.9,
+    18.2
+   ],
+   "ry": 0.0,
+   "yard": [
+    -650.4,
+    3.0
+   ],
+   "road": [
+    -647.9,
+    0.0
+   ],
+   "hitch": [
+    -647.9,
+    5.6
+   ],
+   "wait": [
+    -647.65,
+    6.45
+   ],
+   "node": "station_anbo",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-GS_GYEONGJU/station_anbo",
+   "lonlat": [
+    127.50633,
+    37.22819
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "문경새재(조령) 북쪽 들머리 — 관문 앞 처음 지날 때 하차와 겹치지 않게 고개 서쪽 길에"
+  },
+  {
+   "id": "sangju",
+   "name": "상주 역참",
+   "sign": "洛陽驛",
+   "space": "GG_HANYANG-GS_GYEONGJU",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "yeongnam",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    91.15,
+    -31.91
+   ],
+   "ry": 0.0,
+   "yard": [
+    116.69,
+    -27.17
+   ],
+   "road": [
+    119.9,
+    -29.4
+   ],
+   "hitch": [
+    110.94,
+    -30.18
+   ],
+   "wait": [
+    111.19,
+    -29.33
+   ],
+   "node": "station_sangju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-GS_GYEONGJU/station_sangju",
+   "lonlat": [
+    128.43884,
+    36.51291
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "wonju",
+   "name": "원주 역참",
+   "sign": "原州驛",
+   "space": "GG_HANYANG-GW_GANGNEUNG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "gwandong",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -418.16,
+    39.71
+   ],
+   "ry": 0.0,
+   "yard": [
+    -436.5,
+    20.5
+   ],
+   "road": [
+    -436.4,
+    16.6
+   ],
+   "hitch": [
+    -431.34,
+    23.01
+   ],
+   "wait": [
+    -431.09,
+    23.86
+   ],
+   "node": "station_wonju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-GW_GANGNEUNG/station_wonju",
+   "lonlat": [
+    127.39369,
+    37.52331
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "hoenggye",
+   "name": "횡계역",
+   "sign": "橫溪驛",
+   "space": "GG_HANYANG-GW_GANGNEUNG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "gwandong",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    456.3,
+    -10.2
+   ],
+   "ry": 0.0,
+   "yard": [
+    453.8,
+    5.0
+   ],
+   "road": [
+    456.3,
+    8.0
+   ],
+   "hitch": [
+    456.3,
+    2.4
+   ],
+   "wait": [
+    456.55,
+    3.25
+   ],
+   "node": "station_hoenggye",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-GW_GANGNEUNG/station_hoenggye",
+   "lonlat": [
+    128.48487,
+    37.53755
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "cheollyeong",
+   "name": "철령 아래 역참",
+   "sign": "驛",
+   "space": "GG_HANYANG-HG_HAMHEUNG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "gwanbuk",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -320.98,
+    -9.38
+   ],
+   "ry": -0.3962,
+   "yard": [
+    -330.45,
+    6.77
+   ],
+   "road": [
+    -329.3,
+    10.5
+   ],
+   "hitch": [
+    -326.49,
+    3.79
+   ],
+   "wait": [
+    -326.24,
+    4.64
+   ],
+   "node": "station_cheollyeong",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-HG_HAMHEUNG/station_cheollyeong",
+   "lonlat": [
+    127.35478,
+    38.26026
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "철령관 남쪽 들머리(관문 앞 처음 지날 때 하차 자리 밖)"
+  },
+  {
+   "id": "yeongheung",
+   "name": "영흥 역참",
+   "sign": "永興驛",
+   "space": "GG_HANYANG-HG_HAMHEUNG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "gwanbuk",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    741.23,
+    -93.77
+   ],
+   "ry": 0.0,
+   "yard": [
+    767.06,
+    -87.37
+   ],
+   "road": [
+    770.4,
+    -89.4
+   ],
+   "hitch": [
+    761.46,
+    -90.74
+   ],
+   "wait": [
+    761.71,
+    -89.89
+   ],
+   "node": "station_yeongheung",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-HG_HAMHEUNG/station_yeongheung",
+   "lonlat": [
+    127.25281,
+    39.54532
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "gowon",
+   "name": "고원 역참",
+   "sign": "高原驛",
+   "space": "PA_PYEONGYANG-HG_HAMHEUNG",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "gwanbuk",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    356.6,
+    -10.2
+   ],
+   "ry": 0.0,
+   "yard": [
+    354.1,
+    5.0
+   ],
+   "road": [
+    356.6,
+    8.0
+   ],
+   "hitch": [
+    356.6,
+    2.4
+   ],
+   "wait": [
+    356.85,
+    3.25
+   ],
+   "node": "station_gowon",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/PA_PYEONGYANG-HG_HAMHEUNG/station_gowon",
+   "lonlat": [
+    127.03706,
+    39.3459
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0
+  },
+  {
+   "id": "cheonggyo",
+   "name": "청교역",
+   "sign": "靑郊驛",
+   "space": "GG_HANYANG-HH_HWANGJU",
+   "space_kind": "route",
+   "kind": "route",
+   "style": "giho",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -367.86,
+    -38.0
+   ],
+   "ry": 0.0,
+   "yard": [
+    -343.05,
+    -24.5
+   ],
+   "road": [
+    -339.3,
+    -25.6
+   ],
+   "hitch": [
+    -347.59,
+    -29.2
+   ],
+   "wait": [
+    -347.34,
+    -28.35
+   ],
+   "node": "station_cheonggyo",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG-HH_HWANGJU/station_cheonggyo",
+   "lonlat": [
+    126.57896,
+    37.96053
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "개성 남쪽 청교역"
+  },
+  {
+   "id": "end_gg_gyeongju",
+   "name": "경주 길목 역참",
+   "sign": "驛",
+   "space": "GG_HANYANG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "giho",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    2422.84,
+    47.09
+   ],
+   "ry": -0.3139,
+   "yard": [
+    2426.0,
+    29.28
+   ],
+   "road": [
+    2429.3,
+    27.2
+   ],
+   "hitch": [
+    2427.15,
+    33.82
+   ],
+   "wait": [
+    2427.4,
+    34.67
+   ],
+   "node": "station_end_gg_gyeongju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG/station_end_gg_gyeongju",
+   "lonlat": [
+    127.04491,
+    37.55315
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(GG_HANYANG-GS_GYEONGJU) 가까이"
+  },
+  {
+   "id": "end_gg_hamheung",
+   "name": "함흥 길목 역참",
+   "sign": "驛",
+   "space": "GG_HANYANG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "giho",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    1368.03,
+    -2473.99
+   ],
+   "ry": 0.0,
+   "yard": [
+    1386.4,
+    -2453.24
+   ],
+   "road": [
+    1390.3,
+    -2453.0
+   ],
+   "hitch": [
+    1384.09,
+    -2458.86
+   ],
+   "wait": [
+    1384.34,
+    -2458.01
+   ],
+   "node": "station_end_gg_hamheung",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GG_HANYANG/station_end_gg_hamheung",
+   "lonlat": [
+    127.021,
+    37.59875
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(GG_HANYANG-HG_HAMHEUNG) 가까이"
+  },
+  {
+   "id": "end_gw_hanyang",
+   "name": "한양 길목 역참",
+   "sign": "驛",
+   "space": "GW_GANGNEUNG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "gwandong",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -3228.11,
+    1852.87
+   ],
+   "ry": -0.0888,
+   "yard": [
+    -3232.02,
+    1868.59
+   ],
+   "road": [
+    -3229.8,
+    1871.8
+   ],
+   "hitch": [
+    -3229.27,
+    1865.82
+   ],
+   "wait": [
+    -3229.02,
+    1866.67
+   ],
+   "node": "station_end_gw_hanyang",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/GW_GANGNEUNG/station_end_gw_hanyang",
+   "lonlat": [
+    128.72777,
+    37.68414
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(GG_HANYANG-GW_GANGNEUNG) 가까이"
+  },
+  {
+   "id": "end_hg_hanyang",
+   "name": "한양 길목 역참",
+   "sign": "驛",
+   "space": "HG_HAMHEUNG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "gwanbuk",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -2490.11,
+    1735.19
+   ],
+   "ry": 0.0,
+   "yard": [
+    -2472.49,
+    1756.35
+   ],
+   "road": [
+    -2468.6,
+    1756.7
+   ],
+   "hitch": [
+    -2474.59,
+    1750.71
+   ],
+   "wait": [
+    -2474.34,
+    1751.56
+   ],
+   "node": "station_end_hg_hanyang",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/HG_HAMHEUNG/station_end_hg_hanyang",
+   "lonlat": [
+    127.44279,
+    39.86269
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(GG_HANYANG-HG_HAMHEUNG) 가까이"
+  },
+  {
+   "id": "end_hh_hanyang",
+   "name": "한양 길목 역참",
+   "sign": "驛",
+   "space": "HH_HWANGJU",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "haeseo",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    578.97,
+    2035.08
+   ],
+   "ry": 0.0,
+   "yard": [
+    553.97,
+    2037.24
+   ],
+   "road": [
+    551.0,
+    2034.7
+   ],
+   "hitch": [
+    559.92,
+    2034.82
+   ],
+   "wait": [
+    560.17,
+    2035.67
+   ],
+   "node": "station_end_hh_hanyang",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/HH_HWANGJU/station_end_hh_hanyang",
+   "lonlat": [
+    125.7822,
+    38.60365
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(GG_HANYANG-HH_HWANGJU) 가까이"
+  },
+  {
+   "id": "end_hh_jangsang",
+   "name": "장산곶 바닷가 띠 길목 역참",
+   "sign": "驛",
+   "space": "HH_HWANGJU",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "haeseo",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -2492.23,
+    -1577.75
+   ],
+   "ry": -0.2465,
+   "yard": [
+    -2498.89,
+    -1561.52
+   ],
+   "road": [
+    -2497.2,
+    -1558.0
+   ],
+   "hitch": [
+    -2495.57,
+    -1564.48
+   ],
+   "wait": [
+    -2495.32,
+    -1563.63
+   ],
+   "node": "station_end_hh_jangsang",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/HH_HWANGJU/station_end_hh_jangsang",
+   "lonlat": [
+    125.66442,
+    38.71256
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(HH_HWANGJU-JANGSANGOT) 가까이"
+  },
+  {
+   "id": "end_hh_pyeongya",
+   "name": "평양 길목 역참",
+   "sign": "驛",
+   "space": "HH_HWANGJU",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "haeseo",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    510.68,
+    -2265.43
+   ],
+   "ry": 0.0,
+   "yard": [
+    528.41,
+    -2244.34
+   ],
+   "road": [
+    532.3,
+    -2244.0
+   ],
+   "hitch": [
+    526.28,
+    -2249.97
+   ],
+   "wait": [
+    526.53,
+    -2249.12
+   ],
+   "node": "station_end_hh_pyeongya",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/HH_HWANGJU/station_end_hh_pyeongya",
+   "lonlat": [
+    125.77958,
+    38.73329
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(HH_HWANGJU-PA_PYEONGYANG) 가까이"
+  },
+  {
+   "id": "end_jl_hanyang",
+   "name": "한양 길목 역참",
+   "sign": "驛",
+   "space": "JL_NAMWON_UNBONG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "honam",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    -3560.56,
+    -2035.32
+   ],
+   "ry": 0.0,
+   "yard": [
+    -3535.08,
+    -2030.84
+   ],
+   "road": [
+    -3531.9,
+    -2033.1
+   ],
+   "hitch": [
+    -3540.86,
+    -2033.79
+   ],
+   "wait": [
+    -3540.61,
+    -2032.94
+   ],
+   "node": "station_end_jl_hanyang",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/JL_NAMWON_UNBONG/station_end_jl_hanyang",
+   "lonlat": [
+    127.36917,
+    35.47886
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(JL_NAMWON_UNBONG-GG_HANYANG) 가까이"
+  },
+  {
+   "id": "end_pa_hwangju",
+   "name": "황주 길목 역참",
+   "sign": "驛",
+   "space": "PA_PYEONGYANG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "gwanseo",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    767.45,
+    1936.02
+   ],
+   "ry": 0.0,
+   "yard": [
+    746.01,
+    1953.42
+   ],
+   "road": [
+    745.6,
+    1957.3
+   ],
+   "hitch": [
+    751.69,
+    1951.37
+   ],
+   "wait": [
+    751.94,
+    1952.22
+   ],
+   "node": "station_end_pa_hwangju",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/PA_PYEONGYANG/station_end_pa_hwangju",
+   "lonlat": [
+    125.77958,
+    38.96664
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(HH_HWANGJU-PA_PYEONGYANG) 가까이"
+  },
+  {
+   "id": "end_pa_hamheung",
+   "name": "함흥 길목 역참",
+   "sign": "驛",
+   "space": "PA_PYEONGYANG",
+   "space_kind": "region",
+   "kind": "end",
+   "style": "gwanseo",
+   "hub": false,
+   "pony": false,
+   "pos": [
+    287.8,
+    -1984.3
+   ],
+   "ry": 0.0,
+   "yard": [
+    263.0,
+    -1986.8
+   ],
+   "road": [
+    260.0,
+    -1984.3
+   ],
+   "hitch": [
+    268.9,
+    -1984.3
+   ],
+   "wait": [
+    269.15,
+    -1983.45
+   ],
+   "node": "station_end_pa_hamheung",
+   "reuse_node": false,
+   "discover_key": "travel_nodes/PA_PYEONGYANG/station_end_pa_hamheung",
+   "lonlat": [
+    125.76109,
+    39.08482
+   ],
+   "footprint": [
+    27.0,
+    21.0
+   ],
+   "radius": 24.0,
+   "note": "노정 끝(PA_PYEONGYANG-HG_HAMHEUNG) 가까이"
+  }
+ ]
+}

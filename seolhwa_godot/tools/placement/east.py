@@ -806,6 +806,8 @@ def write(T, pl, bounds):
         b = bounds.get(it["_bkey"], {})
         it["_tris"] = b.get("tris", 0)
         items.append({k: v for k, v in it.items() if not k.startswith("_")})
+    import station_reserve  # 역참 마방 자리 비워 두기(tools/region/make_stations.py)
+    items = station_reserve.keep_clear("JL_NAMWON_UNBONG", items)
     doc = {"area": "east",
            "note": "placement-east 생성(tools/placement/east.py, 결정적). 남원 읍내를 뺀 x > −2300 — 여원재·운봉·황산·인월·실상사·산내·반선·들마을·길가·도강점. 근거·가설: docs/reports/placement-east.md",
            "items": items,

@@ -1,0 +1,68 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_hamheung",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7007,
+    "style": "gwanbuk",
+    "hub": true
+   },
+   "x": -511.3,
+   "z": 476.42,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_hamheung_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7107,
+    "hub": true
+   },
+   "x": -491.24,
+   "z": 466.87,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hg_hanyang",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7025,
+    "style": "gwanbuk",
+    "hub": false
+   },
+   "x": -2490.11,
+   "z": 1735.19,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_hg_hanyang_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7125,
+    "hub": false
+   },
+   "x": -2474.59,
+   "z": 1750.71,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

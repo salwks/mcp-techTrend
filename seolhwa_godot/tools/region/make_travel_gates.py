@@ -8,6 +8,7 @@
 #     거점마다 구역(원·사각형·성곽 다각형)과 어귀 TRAVEL_GATE(큰길이 구역 경계를 지나는 곳 바깥 — 말에서 내리는 곳·다시 타는 곳).
 #     도시(읍성·도성)는 성 안에 말을 들이지 않는다: 어귀는 성문 앞(성곽·core 사각형 밖 18m).
 #   - 멈춤 정책(stops): PASS / OPTIONAL_STOP(감속, 멈출 수 있음) / FORCED_STOP(멈추고 내림) — 거점 종류·노정 볼거리(encounter 등급)로 정한다.
+#   - 역참(region_data/stations.json — make_stations.py): 역 거점(STATION)·도착 자리(마방 문 앞)·말 타는 곳. 권역에서 말 타는 곳은 역·노정 끝·배 나루뿐.
 #   - 노정 필드(§24): ROUTE_ID·START_NODE·END_NODE·FIRST_VISIT_REQUIRED·AUTO_RIDE_ALLOWED·BASE_RIDE_SPEED·WEATHER_SPEED_MOD·
 #     TRAVEL_GATES·OPTIONAL_STOPS·FORCED_STOPS·FAST_TRAVEL_NODES·SCENIC_BEATS (FAST_TRAVEL_UNLOCKED는 저장 상태라 엔진이 정한다).
 # 이야기 사건 자리(사건 데이터 triggers·objects·소문·길가 장면)는 조건(when)에 따라 바뀌어 엔진(scripts/region/horse_ride.gd)이
@@ -280,6 +281,15 @@ def zone_json(z):
 	return {'kind': 'poly', 'pts': [[round(x, 1), round(zz, 1)] for x, zz in z['pts']]}
 
 
+_STATIONS = None
+def load_stations():
+	global _STATIONS
+	if _STATIONS is None:
+		p = os.path.join(RD, 'stations.json')
+		_STATIONS = json.load(open(p)).get('stations', []) if os.path.exists(p) else []
+	return _STATIONS
+
+
 def placement_items(space_dir):
 	out = []
 	for f in sorted(glob.glob(os.path.join(space_dir, 'placement_*.json'))):
@@ -394,6 +404,14 @@ def build_space(space_id, space_dir, is_route, overrides):
 		nm = ('%s 길 주막' % near[1]) if near[0] < 900.0 else '길가 주막'
 		add_node('inn_%d_%d' % (round(x), round(z)), nm, 'INN', x, z, {'kind': 'circle', 'c': (x, z), 'r': 18.0}, {'fast': False})
 
+	# 역참·마방(region_data/stations.json — tools/region/make_stations.py): 역마 거점 + 말 타는 곳. 이미 있는 역 거점은 그대로 쓰고 표만 단다
+	stations = [st for st in load_stations() if st['space'] == space_id]
+	for st in stations:
+		ex = next((n for n in nodes if n['id'] == st['node']), None)
+		if ex is None:
+			px, pz = st['pos']
+			ex = add_node(st['node'], st['name'], 'STATION', px, pz, {'kind': 'circle', 'c': (px, pz), 'r': float(st.get('radius', 24.0))})
+		ex['station'] = st['id']; ex['fast'] = True; ex['mount'] = True
 	# 도시(읍성·도성) 안 길 점: 말을 들이지 않는다(엔진 길 찾기에서 막음). 도시 안 거점의 어귀는 버린다(걸어서 간다)
 	city_zones = [n['zone'] for n in nodes if n['kind'] == 'CITY']
 	in_city = [i for i, p in enumerate(g.pts) if any(inside(z, *p) for z in city_zones)]
@@ -421,6 +439,18 @@ def build_space(space_id, space_dir, is_route, overrides):
 				'node': n['id'], 'gi': gt['gi']})
 		n['zone'] = zone_json(zone)
 		n['arrive'] = [gl[0]['x'], gl[0]['z']] if gl else [n['x'], n['z']]
+	# 역: 도착(역마)·말 타는 자리 = 마방 문 앞 길가(yard). 새로 만든 역 거점의 어귀는 문 앞 길 점 하나
+	for st in stations:
+		n = next(n for n in nodes if n['id'] == st['node'])
+		n['arrive'] = [round(st['yard'][0], 1), round(st['yard'][1], 1)]
+		n['yard'] = n['arrive']; n['wait'] = st.get('wait'); n['hitch'] = st.get('hitch')
+		if not st.get('reuse_node') and len(g.pts):
+			gi, dd = nearest_gi(g, st['road'][0], st['road'][1], 30.0)
+			if gi >= 0:
+				gates = [x for x in gates if x['node'] != n['id']]
+				n['gates'] = [{'gi': gi, 'x': round(g.pts[gi][0], 1), 'z': round(g.pts[gi][1], 1), 'out': [0, 0]}]
+				gates.append({'GATE_ID': '%s#0' % n['id'], 'ROUTE_ID': space_id, 'GATE_TYPE': n['type'], 'POSITION': [n['gates'][0]['x'], n['gates'][0]['z']],
+					'TRIGGER_RADIUS': 14.0, 'AUTO_SLOW': True, 'AUTO_DISMOUNT': True, 'EVENT_ID': None, 'REENTER_RIDE_ALLOWED': True, 'node': n['id'], 'gi': gi})
 	# 지나갈 때 멈춤 정책(stops) — 거점 구역 + 노정 볼거리
 	stops = []
 	for n in nodes:
@@ -436,15 +466,15 @@ def build_space(space_id, space_dir, is_route, overrides):
 			'TRIGGER_POSITION': [x, z], 'zone': {'kind': 'circle', 'c': [x, z], 'r': 36.0}, 'WEATHER_CONDITION': None, 'TIME_CONDITION': None,
 			'STOP_POLICY': pol, 'EVENT_ID': None, 'ONE_TIME': False, 'SLOW_SPEED': slow, 'MUST': False, 'name': str(s.get('title', '')),
 			'grade': gr})
-	# 말 타는 곳: 거점 어귀(mount) + 큰길 갈림(대로 점, 이웃 3 이상)
+	# 말 타는 곳(권역): 역참 마방 문 앞(마부가 말을 끌어 온다) + 노정 끝(포털 — 넘어온 길을 잇는다) + 배 나루 양 끝(배에서 내려 다시 탄다).
+	#   성문 앞·마을 어귀·길가 주막·큰길 갈림은 말 타는 곳이 아니다(2026-10-05 역참 — 사용자: '말은 역에서 탄다'). 방금 내린 자리(40m)·넘어온 포털 곁(60m)은 엔진이 더한다.
+	#   노정은 엔진이 큰길 어디서나 타게 둔다(노정 자체가 말 길) — 목록은 참고용으로 역·끝·나루만.
 	mounts = []
 	for n in nodes:
-		if not n['mount']: continue
-		for gt in n['gates']: mounts.append({'id': n['id'], 'kind': n['kind'], 'x': gt['x'], 'z': gt['z']})
-	deg = g.degree()
-	for i, dg in enumerate(deg):
-		if dg >= 3 and g.cls[i] >= 4 and i not in city_set and not any(math.dist(g.pts[i], (m['x'], m['z'])) < 60.0 for m in mounts):
-			mounts.append({'id': 'junction_%d' % i, 'kind': 'JUNCTION', 'x': round(g.pts[i][0], 1), 'z': round(g.pts[i][1], 1)})
+		if n.get('station'):
+			mounts.append({'id': n['id'], 'kind': 'STATION', 'x': n['arrive'][0], 'z': n['arrive'][1], 'station': n['station']})
+		elif n['kind'] in ('ROUTE_END', 'BOAT'):
+			for gt in n['gates']: mounts.append({'id': n['id'], 'kind': n['kind'], 'x': gt['x'], 'z': gt['z']})
 
 	out = {
 		'space': space_id, 'kind': 'route' if is_route else 'region', 'version': 1, 'generated_by': 'tools/region/make_travel_gates.py',

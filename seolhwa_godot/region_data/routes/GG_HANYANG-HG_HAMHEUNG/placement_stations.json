@@ -1,0 +1,68 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_cheollyeong",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7018,
+    "style": "gwanbuk",
+    "hub": false
+   },
+   "x": -320.98,
+   "z": -9.38,
+   "ry": -0.3962,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_cheollyeong_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7118,
+    "hub": false
+   },
+   "x": -326.49,
+   "z": 3.79,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_yeongheung",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7019,
+    "style": "gwanbuk",
+    "hub": false
+   },
+   "x": 741.23,
+   "z": -93.77,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_yeongheung_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7119,
+    "hub": false
+   },
+   "x": 761.46,
+   "z": -90.74,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

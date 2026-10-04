@@ -1435,6 +1435,8 @@ def write(rid, T, pl, bounds):
                 and it["_label"] not in ("고분", "돌하르방", "방사탑"):
             o["title"] = it["_label"]
         items.append(o)
+    import station_reserve  # 역참 마방 자리 비워 두기(tools/region/make_stations.py)
+    items = station_reserve.keep_clear(rid, items)
     doc = {"area": "hub",
            "note": f"대표 도시 배치(tools/placement/hubs.py {rid}, 결정적). 문화권 가옥형 kit/culture/. 근거·가설: docs/reports/placement-east.md",
            "items": items,

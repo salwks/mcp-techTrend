@@ -1,0 +1,37 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_gyeongju",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7003,
+    "style": "yeongnam",
+    "hub": true
+   },
+   "x": -3150.29,
+   "z": -2265.19,
+   "ry": -0.3118,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_gyeongju_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7103,
+    "hub": true
+   },
+   "x": -3154.57,
+   "z": -2251.91,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_osu",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7012,
+    "style": "honam",
+    "hub": false
+   },
+   "x": -814.3,
+   "z": -22.2,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_osu_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7112,
+    "hub": false
+   },
+   "x": -814.3,
+   "z": -9.6,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_jeonju",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7013,
+    "style": "honam",
+    "hub": false
+   },
+   "x": -518.59,
+   "z": -21.12,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_jeonju_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7113,
+    "hub": false
+   },
+   "x": -499.15,
+   "z": -20.15,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

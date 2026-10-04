@@ -1,0 +1,99 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_namwon",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7001,
+    "style": "honam",
+    "hub": true
+   },
+   "x": -3008.23,
+   "z": 197.87,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_namwon_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7101,
+    "hub": true
+   },
+   "x": -2994.2,
+   "z": 214.22,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_inwol",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7009,
+    "style": "honam",
+    "hub": false
+   },
+   "x": 2508.62,
+   "z": -1522.13,
+   "ry": 0.0885,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_inwol_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7109,
+    "hub": false
+   },
+   "x": 2509.77,
+   "z": -1509.18,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_jl_hanyang",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7029,
+    "style": "honam",
+    "hub": false
+   },
+   "x": -3560.56,
+   "z": -2035.32,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_jl_hanyang_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7129,
+    "hub": false
+   },
+   "x": -3540.86,
+   "z": -2033.79,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

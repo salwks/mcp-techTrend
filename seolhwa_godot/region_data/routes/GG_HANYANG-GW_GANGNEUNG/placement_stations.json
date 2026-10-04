@@ -1,0 +1,68 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_wonju",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7016,
+    "style": "gwandong",
+    "hub": false
+   },
+   "x": -418.16,
+   "z": 39.71,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_wonju_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7116,
+    "hub": false
+   },
+   "x": -431.34,
+   "z": 23.01,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_hoenggye",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7017,
+    "style": "gwandong",
+    "hub": false
+   },
+   "x": 456.3,
+   "z": -10.2,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_hoenggye_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7117,
+    "hub": false
+   },
+   "x": 456.3,
+   "z": 2.4,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

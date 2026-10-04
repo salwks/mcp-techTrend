@@ -688,6 +688,9 @@ def build_route(R):
     }
     if R.get("sea"): route["sea"] = {"y": 0.0, "name": "바다", "note": "해발 0m 평면. 띠 안 바다 칸(landuse 5, 하천 아님)"}
     json.dump(route, open(os.path.join(out, "route.json"), "w"), ensure_ascii=False, indent=1)
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "placement"))
+    import station_reserve  # 역참 마방 자리 비워 두기(tools/region/make_stations.py)
+    items = station_reserve.keep_clear(rid, items)
     json.dump({"area": "route_" + rid, "note": "routes 담당 — tools/region/make_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)", "items": items},
               open(os.path.join(out, "placement_route.json"), "w"), ensure_ascii=False, indent=1)
     print(f"{rid}: sights={len(ctx.get('sights', []))} " + " ".join(f"{a['key']}:{a['sight']}({a['items']})" for a in ctx.get('sights', [])))

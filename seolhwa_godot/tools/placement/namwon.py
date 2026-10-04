@@ -1122,6 +1122,8 @@ def main():
     for it in P.items:
         k = it["kit"] + ("/" + it["params"]["size"] if "size" in it["params"] else "")
         kinds[k] = kinds.get(k, 0) + 1
+    import station_reserve  # 역참 마방 자리 비워 두기(tools/region/make_stations.py)
+    P.items = station_reserve.keep_clear("JL_NAMWON_UNBONG", P.items)
     doc = {"area": "namwon", "generator": "tools/placement/namwon.py (seed %d, 3단계)" % SEED,
            "note": "남원 읍내(1870 전후 남원도호부 읍치). 게임 좌표, ry 라디안(0=정면 남향). 근거·가설은 docs/reports/placement-namwon.md",
            "items": P.items}

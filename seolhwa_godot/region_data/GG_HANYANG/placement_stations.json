@@ -1,0 +1,99 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_cheongpa",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7002,
+    "style": "giho",
+    "hub": true
+   },
+   "x": -788.03,
+   "z": -370.45,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_cheongpa_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7102,
+    "hub": true
+   },
+   "x": -803.38,
+   "z": -354.83,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_gg_gyeongju",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7022,
+    "style": "giho",
+    "hub": false
+   },
+   "x": 2422.84,
+   "z": 47.09,
+   "ry": -0.3139,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_gg_gyeongju_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7122,
+    "hub": false
+   },
+   "x": 2427.15,
+   "z": 33.82,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_gg_hamheung",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7023,
+    "style": "giho",
+    "hub": false
+   },
+   "x": 1368.03,
+   "z": -2473.99,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_gg_hamheung_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7123,
+    "hub": false
+   },
+   "x": 1384.09,
+   "z": -2458.86,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

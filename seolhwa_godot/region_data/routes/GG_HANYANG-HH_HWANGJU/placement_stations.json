@@ -1,0 +1,37 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_cheonggyo",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7021,
+    "style": "giho",
+    "hub": false
+   },
+   "x": -367.86,
+   "z": -38.0,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_cheonggyo_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7121,
+    "hub": false
+   },
+   "x": -347.59,
+   "z": -29.2,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

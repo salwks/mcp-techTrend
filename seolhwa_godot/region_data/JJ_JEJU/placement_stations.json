@@ -1,0 +1,68 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_jeju",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7008,
+    "style": "tamna",
+    "hub": true
+   },
+   "x": -2722.51,
+   "z": -159.04,
+   "ry": -0.1191,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_jeju_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7108,
+    "hub": true
+   },
+   "x": -2724.07,
+   "z": -145.99,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_songdang",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7011,
+    "style": "tamna",
+    "hub": false
+   },
+   "x": 3532.56,
+   "z": 1299.0,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_songdang_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7111,
+    "hub": false
+   },
+   "x": 3512.96,
+   "z": 1297.7,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}

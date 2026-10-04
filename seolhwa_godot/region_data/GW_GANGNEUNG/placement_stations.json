@@ -1,0 +1,99 @@
+{
+ "generated_by": "tools/region/make_stations.py",
+ "note": "역참 마방(kit/station/mabang.gd) — region_data/stations.json",
+ "items": [
+  {
+   "id": "station_gangneung",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7004,
+    "style": "gwandong",
+    "hub": true
+   },
+   "x": 1010.11,
+   "z": -339.33,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_gangneung_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7104,
+    "hub": true
+   },
+   "x": 1023.97,
+   "z": -322.91,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_gusan",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7010,
+    "style": "gwandong",
+    "hub": false
+   },
+   "x": -1277.34,
+   "z": 477.23,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_gusan_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7110,
+    "hub": false
+   },
+   "x": -1265.82,
+   "z": 494.4,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  },
+  {
+   "id": "station_end_gw_hanyang",
+   "kit": "station/mabang",
+   "params": {
+    "seed": 7024,
+    "style": "gwandong",
+    "hub": false
+   },
+   "x": -3228.11,
+   "z": 1852.87,
+   "ry": -0.0888,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "station"
+  },
+  {
+   "id": "station_end_gw_hanyang_gate",
+   "kit": "station/hitch",
+   "params": {
+    "seed": 7124,
+    "hub": false
+   },
+   "x": -3229.27,
+   "z": 1865.82,
+   "ry": 0.0,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": false,
+   "group": "station"
+  }
+ ]
+}
