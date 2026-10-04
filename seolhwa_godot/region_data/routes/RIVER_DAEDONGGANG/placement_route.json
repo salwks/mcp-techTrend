@@ -1,0 +1,1103 @@
+{
+ "area": "route_RIVER_DAEDONGGANG",
+ "note": "river-routes — tools/region/river_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_daedongmun_pier",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 501
+   },
+   "x": 52.0,
+   "z": 39.65,
+   "ry": 3.1416,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동문 아래 선창(평양 — 배 떠나는 곳)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_daedongmun_chang",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "w": 8.0,
+    "seed": 502
+   },
+   "x": 18.0,
+   "z": 53.03,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "대동문 아래 선창(평양 — 배 떠나는 곳)",
+   "note": "선창 곳간(객주 짐)"
+  },
+  {
+   "id": "rt_daedongmun_dotbae",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 503
+   },
+   "x": 76.0,
+   "z": 34.56,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "대동문 아래 선창(평양 — 배 떠나는 곳)",
+   "note": "매어 둔 돛배"
+  },
+  {
+   "id": "rt_daedongmun_narutbae",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 504
+   },
+   "x": 34.0,
+   "z": 34.82,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "대동문 아래 선창(평양 — 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_daedongmun_firewood",
+   "kit": "village/firewood",
+   "params": {
+    "kind": "stack",
+    "seed": 505
+   },
+   "x": 0.0,
+   "z": 75.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동문 아래 선창(평양 — 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_daedongmun_sacks",
+   "kit": "village/props",
+   "params": {
+    "kind": "dok",
+    "seed": 506
+   },
+   "x": 40.0,
+   "z": 76.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동문 아래 선창(평양 — 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_duro_pier_a",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 507
+   },
+   "x": 752.0,
+   "z": -63.56,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_duro_pier_b",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 508
+   },
+   "x": 872.0,
+   "z": -18.31,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_duro_dotbae0",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 509
+   },
+   "x": 794.0,
+   "z": -40.54,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)",
+   "note": "매어 둔 돛배"
+  },
+  {
+   "id": "rt_duro_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 510
+   },
+   "x": 824.0,
+   "z": -35.28,
+   "ry": 1.7708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "seed": 511
+   },
+   "x": 774.0,
+   "z": -61.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)",
+   "note": "포구 곳간(강창)"
+  },
+  {
+   "id": "rt_duro_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 512
+   },
+   "x": 804.0,
+   "z": -90.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 513
+   },
+   "x": 838.0,
+   "z": -92.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)",
+   "note": "객주 집(포구 — 짐·돈 맡는 집)"
+  },
+  {
+   "id": "rt_duro_house0",
+   "kit": "culture/gwanseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 514
+   },
+   "x": 778.0,
+   "z": -112.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_house1",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 515
+   },
+   "x": 860.0,
+   "z": -112.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_ferry_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 516
+   },
+   "x": 858.0,
+   "z": -67.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 517
+   },
+   "x": 778.0,
+   "z": -90.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 518
+   },
+   "x": 778.0,
+   "z": -80.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 519
+   },
+   "x": 818.0,
+   "z": -85.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_shop0",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 520
+   },
+   "x": 788.0,
+   "z": -93.95,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 521
+   },
+   "x": 816.0,
+   "z": -92.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 522
+   },
+   "x": 824.0,
+   "z": -83.28,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_jwapan0",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 523
+   },
+   "x": 796.0,
+   "z": -74.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_jwapan1",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 524
+   },
+   "x": 814.0,
+   "z": -69.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_duro_jwapan2",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 525
+   },
+   "x": 832.0,
+   "z": -62.49,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두로도 포구(대동강 가운데 섬 앞 — 가설 자리)"
+  },
+  {
+   "id": "rt_gyeomipo_pier_a",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 526
+   },
+   "x": 1572.0,
+   "z": -56.47,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_gyeomipo_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "seed": 527
+   },
+   "x": 1612.0,
+   "z": -69.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)",
+   "note": "포구 곳간(강창)"
+  },
+  {
+   "id": "rt_gyeomipo_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 528
+   },
+   "x": 1646.0,
+   "z": -101.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 529
+   },
+   "x": 1668.0,
+   "z": -100.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)",
+   "note": "객주 집(포구 — 짐·돈 맡는 집)"
+  },
+  {
+   "id": "rt_gyeomipo_house0",
+   "kit": "culture/haeseo/compound",
+   "params": {
+    "size": "small",
+    "seed": 530
+   },
+   "x": 1594.0,
+   "z": -120.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_house1",
+   "kit": "culture/haeseo/gyeopjip",
+   "params": {
+    "seed": 531
+   },
+   "x": 1612.0,
+   "z": -120.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_ferry_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 532
+   },
+   "x": 1586.0,
+   "z": -75.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 533
+   },
+   "x": 1598.0,
+   "z": -99.19,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 534
+   },
+   "x": 1598.0,
+   "z": -89.19,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 535
+   },
+   "x": 1678.0,
+   "z": -93.84,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 537
+   },
+   "x": 1680.0,
+   "z": -99.38,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 538
+   },
+   "x": 1688.0,
+   "z": -91.77,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_chang1",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "w": 11.0,
+    "seed": 539
+   },
+   "x": 1656.0,
+   "z": -74.18,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)",
+   "note": "충주 강창(가흥창 성격 — 세곡 모으는 곳, 가설)"
+  },
+  {
+   "id": "rt_gyeomipo_jounseon0",
+   "kit": "route/jounseon",
+   "params": {
+    "len": 14.0,
+    "seed": 540
+   },
+   "x": 1612.0,
+   "z": -52.1,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_gyeomipo_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 541
+   },
+   "x": 1636.0,
+   "z": -56.51,
+   "ry": 1.7708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "겸이포 포구(황주 서쪽 대동강 나루 — 황주·재령 곡식 싣는 곳)"
+  },
+  {
+   "id": "rt_yanggak_sand_reeds0",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 542
+   },
+   "x": 197.0,
+   "z": -25.01,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)"
+  },
+  {
+   "id": "rt_yanggak_sand_reeds1",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 543
+   },
+   "x": 219.0,
+   "z": -31.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)"
+  },
+  {
+   "id": "rt_yanggak_sand_reeds2",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 544
+   },
+   "x": 243.0,
+   "z": -21.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)"
+  },
+  {
+   "id": "rt_yanggak_sand_reeds3",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 545
+   },
+   "x": 265.0,
+   "z": -28.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)"
+  },
+  {
+   "id": "rt_yanggak_sand_reeds4",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 546
+   },
+   "x": 283.0,
+   "z": -25.01,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)"
+  },
+  {
+   "id": "rt_yanggak_sand_snag",
+   "kit": "nature/deadwood",
+   "params": {
+    "kind": "snag",
+    "s": 1.1,
+    "seed": 547
+   },
+   "x": 233.0,
+   "z": -25.01,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)"
+  },
+  {
+   "id": "rt_yanggak_sand_fishing",
+   "kit": "village/narutbae",
+   "params": {
+    "pole": true,
+    "seed": 548
+   },
+   "x": 307.0,
+   "z": -29.01,
+   "ry": 1.1708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양각도 아래 모래섬(능라도·양각도 아랫물)",
+   "note": "고기잡이 거룻배"
+  },
+  {
+   "id": "rt_yongwangdang_dang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": true,
+    "seed": 549
+   },
+   "x": 577.0,
+   "z": -48.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "강가 용왕당(뱃사람 비는 당)"
+  },
+  {
+   "id": "rt_yongwangdang_sinmok",
+   "kit": "route/sinmok",
+   "params": {
+    "variant": "zelkova",
+    "cloth": true,
+    "seed": 550
+   },
+   "x": 595.0,
+   "z": -40.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "강가 용왕당(뱃사람 비는 당)"
+  },
+  {
+   "id": "rt_yongwangdang_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 551
+   },
+   "x": 563.0,
+   "z": -36.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "강가 용왕당(뱃사람 비는 당)"
+  },
+  {
+   "id": "rt_yongwangdang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": true,
+    "seed": 552
+   },
+   "x": 581.0,
+   "z": -35.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "강가 용왕당(뱃사람 비는 당)"
+  },
+  {
+   "id": "rt_yongwangdang_narut",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 553
+   },
+   "x": 571.0,
+   "z": -21.6,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "강가 용왕당(뱃사람 비는 당)"
+  },
+  {
+   "id": "rt_daedong_so_cliff0",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.0,
+    "h": 11.0,
+    "d": 4.0,
+    "seed": 554
+   },
+   "x": 978.67,
+   "z": -38.83,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동강 깊은 소(물빛 검은 곳)",
+   "note": "소 위 벼랑"
+  },
+  {
+   "id": "rt_daedong_so_cliff1",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.0,
+    "h": 9.0,
+    "d": 3.5,
+    "seed": 555
+   },
+   "x": 1000.67,
+   "z": -37.83,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동강 깊은 소(물빛 검은 곳)"
+  },
+  {
+   "id": "rt_daedong_so_dang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": true,
+    "seed": 556
+   },
+   "x": 972.0,
+   "z": -92.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "대동강 깊은 소(물빛 검은 곳)",
+   "note": "벼랑 위 용왕당(가설)"
+  },
+  {
+   "id": "rt_daedong_so_altar",
+   "kit": "village/cairn",
+   "params": {
+    "altar": true,
+    "seed": 557
+   },
+   "x": 1018.67,
+   "z": -39.83,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동강 깊은 소(물빛 검은 곳)",
+   "note": "물가 비손 제단(용왕)"
+  },
+  {
+   "id": "rt_daedong_so_pine",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.4,
+    "seed": 558
+   },
+   "x": 982.0,
+   "z": -96.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "대동강 깊은 소(물빛 검은 곳)"
+  },
+  {
+   "id": "rt_gangseo_naru_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 559
+   },
+   "x": 1212.0,
+   "z": -64.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_gangseo_naru_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 560
+   },
+   "x": 1224.0,
+   "z": -47.88,
+   "ry": 0.15,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_gangseo_naru_narut1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 561
+   },
+   "x": 1232.0,
+   "z": -47.38,
+   "ry": -0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_gangseo_naru_narut_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 562
+   },
+   "x": 1216.0,
+   "z": 41.74,
+   "ry": 0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "강서 나루(대동강 건너는 나루)",
+   "note": "건너편(이쪽) 나룻배"
+  },
+  {
+   "id": "rt_gangseo_naru_boatman",
+   "kit": "culture/gwanseo/choga",
+   "params": {
+    "seed": 563
+   },
+   "x": 1244.0,
+   "z": -82.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "강서 나루(대동강 건너는 나루)",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_gangseo_naru_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 564
+   },
+   "x": 1218.5,
+   "z": -78.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_gangseo_naru_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 565
+   },
+   "x": 1233.5,
+   "z": -78.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_gangseo_naru_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "willow",
+    "seed": 566
+   },
+   "x": 1198.0,
+   "z": -60.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_gangseo_naru_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 567
+   },
+   "x": 1192.0,
+   "z": -86.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "강서 나루(대동강 건너는 나루)"
+  },
+  {
+   "id": "rt_ebb_sand_reeds0",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 568
+   },
+   "x": 1425.33,
+   "z": -29.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)"
+  },
+  {
+   "id": "rt_ebb_sand_reeds1",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 569
+   },
+   "x": 1447.33,
+   "z": -37.91,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)"
+  },
+  {
+   "id": "rt_ebb_sand_reeds2",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 570
+   },
+   "x": 1471.33,
+   "z": -24.76,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)"
+  },
+  {
+   "id": "rt_ebb_sand_reeds3",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 571
+   },
+   "x": 1493.33,
+   "z": -33.53,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)"
+  },
+  {
+   "id": "rt_ebb_sand_reeds4",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 572
+   },
+   "x": 1511.33,
+   "z": -29.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)"
+  },
+  {
+   "id": "rt_ebb_sand_snag",
+   "kit": "nature/deadwood",
+   "params": {
+    "kind": "snag",
+    "s": 1.1,
+    "seed": 573
+   },
+   "x": 1461.33,
+   "z": -29.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)"
+  },
+  {
+   "id": "rt_ebb_sand_fishing",
+   "kit": "village/narutbae",
+   "params": {
+    "pole": true,
+    "seed": 574
+   },
+   "x": 1535.33,
+   "z": -33.14,
+   "ry": 1.1708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "썰물 모래톱(밀물·썰물이 드나드는 아랫강)",
+   "note": "고기잡이 거룻배"
+  }
+ ]
+}

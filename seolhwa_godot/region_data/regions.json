@@ -93,6 +93,14 @@
     "z": -560.0,
     "to": "route:GG_HANYANG-GW_GANGNEUNG",
     "note": "routes 담당 추가(2026-10-03) — 이 권역 region.json에는 없고 엔진은 route.json portals에서 이 포털을 만든다"
+   },
+   {
+    "id": "to_namhan_river",
+    "name": "→ 남한강 뱃길(두물머리·여주·목계진·충주)",
+    "x": -2023.3,
+    "z": 917.7,
+    "to": "route:RIVER_HANGANG",
+    "note": "river-routes 추가(2026-10-04) — 마포 나루 길 끝. 엔진은 route.json portals에서 이 포털을 만든다"
    }
   ]
  },
@@ -133,6 +141,14 @@
     "x": -2555.4,
     "z": -1559.1,
     "to": "route:HH_HWANGJU-JANGSANGOT"
+   },
+   {
+    "id": "to_daedong_river",
+    "name": "→ 대동강 뱃길(겸이포 나루 — 평양)",
+    "x": -2500.0,
+    "z": -1590.0,
+    "to": "route:RIVER_DAEDONGGANG",
+    "note": "river-routes 추가(2026-10-04) — 겸이포길 서쪽 끝 북쪽 들(장산곶 포털과 30m 떨어짐). 엔진은 route.json portals에서 이 포털을 만든다"
    }
   ]
  },
@@ -166,6 +182,14 @@
     "x": 259.4,
     "z": -2046.7,
     "to": "route:PA_PYEONGYANG-HG_HAMHEUNG"
+   },
+   {
+    "id": "to_daedong_river",
+    "name": "→ 대동강 뱃길(겸이포·황주)",
+    "x": 172.0,
+    "z": 156.0,
+    "to": "route:RIVER_DAEDONGGANG",
+    "note": "river-routes 추가(2026-10-04) — 대동문 앞 나루 아래 강가. 엔진은 route.json portals에서 이 포털을 만든다"
    }
   ]
  },

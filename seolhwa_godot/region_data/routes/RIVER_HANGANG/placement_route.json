@@ -1,0 +1,2602 @@
+{
+ "area": "route_RIVER_HANGANG",
+ "note": "river-routes — tools/region/river_routes.py가 만든다(손으로 고치면 다시 만들 때 덮어씀)",
+ "items": [
+  {
+   "id": "rt_mapo_pier",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 501
+   },
+   "x": 52.0,
+   "z": 5.33,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_mapo_chang",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "w": 8.0,
+    "seed": 502
+   },
+   "x": 18.0,
+   "z": -27.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)",
+   "note": "선창 곳간(객주 짐)"
+  },
+  {
+   "id": "rt_mapo_dotbae",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 503
+   },
+   "x": 76.0,
+   "z": 11.4,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)",
+   "note": "매어 둔 돛배"
+  },
+  {
+   "id": "rt_mapo_narutbae",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 504
+   },
+   "x": 34.0,
+   "z": 1.76,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_mapo_firewood",
+   "kit": "village/firewood",
+   "params": {
+    "kind": "stack",
+    "seed": 505
+   },
+   "x": 0.0,
+   "z": -49.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_mapo_sacks",
+   "kit": "village/props",
+   "params": {
+    "kind": "dok",
+    "seed": 506
+   },
+   "x": 40.0,
+   "z": -50.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_mapo_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 507
+   },
+   "x": 22.0,
+   "z": -56.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "마포 상류 선창(남한강 배 떠나는 곳)"
+  },
+  {
+   "id": "rt_dumulmeori_pier_a",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 508
+   },
+   "x": 692.0,
+   "z": -46.06,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_dumulmeori_pier_b",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 509
+   },
+   "x": 816.0,
+   "z": -68.3,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_dumulmeori_dotbae0",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 510
+   },
+   "x": 736.0,
+   "z": -38.1,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)",
+   "note": "매어 둔 돛배"
+  },
+  {
+   "id": "rt_dumulmeori_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 511
+   },
+   "x": 766.0,
+   "z": -44.58,
+   "ry": 1.7708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "seed": 512
+   },
+   "x": 716.0,
+   "z": -64.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)",
+   "note": "포구 곳간(강창)"
+  },
+  {
+   "id": "rt_dumulmeori_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 513
+   },
+   "x": 746.0,
+   "z": -93.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 514
+   },
+   "x": 780.0,
+   "z": -95.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)",
+   "note": "객주 집(포구 — 짐·돈 맡는 집)"
+  },
+  {
+   "id": "rt_dumulmeori_house0",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 515
+   },
+   "x": 720.0,
+   "z": -115.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 516
+   },
+   "x": 802.0,
+   "z": -115.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_ferry_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 517
+   },
+   "x": 802.0,
+   "z": -70.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 518
+   },
+   "x": 718.0,
+   "z": -85.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 519
+   },
+   "x": 718.0,
+   "z": -75.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 520
+   },
+   "x": 760.0,
+   "z": -88.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_dumulmeori_zelkova",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "zelkova",
+    "seed": 521
+   },
+   "x": 758.0,
+   "z": -58.12,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)",
+   "note": "두물머리 큰 느티나무(합수머리 당산나무 자리)"
+  },
+  {
+   "id": "rt_dumulmeori_dang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": true,
+    "seed": 522
+   },
+   "x": 776.0,
+   "z": -66.53,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "두물머리 나루(북한강·남한강 합수머리 — 양수리)"
+  },
+  {
+   "id": "rt_yeoju_pier_a",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 523
+   },
+   "x": 1496.0,
+   "z": -44.12,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_yeoju_pier_b",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 524
+   },
+   "x": 1620.0,
+   "z": -30.74,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_yeoju_dotbae0",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 525
+   },
+   "x": 1540.0,
+   "z": -27.24,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "매어 둔 돛배"
+  },
+  {
+   "id": "rt_yeoju_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 526
+   },
+   "x": 1570.0,
+   "z": -26.98,
+   "ry": 1.7708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "seed": 527
+   },
+   "x": 1520.0,
+   "z": -50.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "포구 곳간(강창)"
+  },
+  {
+   "id": "rt_yeoju_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 528
+   },
+   "x": 1550.0,
+   "z": -79.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 529
+   },
+   "x": 1584.0,
+   "z": -81.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "객주 집(포구 — 짐·돈 맡는 집)"
+  },
+  {
+   "id": "rt_yeoju_house0",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 530
+   },
+   "x": 1524.0,
+   "z": -101.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 531
+   },
+   "x": 1606.0,
+   "z": -101.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_ferry_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 532
+   },
+   "x": 1606.0,
+   "z": -56.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 533
+   },
+   "x": 1522.0,
+   "z": -76.44,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 534
+   },
+   "x": 1522.0,
+   "z": -66.44,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 535
+   },
+   "x": 1564.0,
+   "z": -74.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_shop0",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 536
+   },
+   "x": 1534.0,
+   "z": -80.23,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 537
+   },
+   "x": 1562.0,
+   "z": -80.38,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 538
+   },
+   "x": 1570.0,
+   "z": -74.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_jwapan0",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 539
+   },
+   "x": 1542.0,
+   "z": -61.41,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_jwapan1",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 540
+   },
+   "x": 1560.0,
+   "z": -58.74,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_jwapan2",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 541
+   },
+   "x": 1578.0,
+   "z": -56.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_yeoju_pavilion",
+   "kit": "village/jeongja",
+   "params": {
+    "plain": false,
+    "seed": 542
+   },
+   "x": 1626.0,
+   "z": -76.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "강월헌(신륵사 강가 정자 — 벼랑 위, 가설 자리)"
+  },
+  {
+   "id": "rt_yeoju_tap",
+   "kit": "landmark/seoktap",
+   "params": {
+    "seed": 543
+   },
+   "x": 1635.0,
+   "z": -79.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)",
+   "note": "동대 삼층석탑(강가 바위 위 탑, 가설)"
+  },
+  {
+   "id": "rt_yeoju_pine",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.3,
+    "seed": 544
+   },
+   "x": 1618.0,
+   "z": -82.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여주 조포나루(신륵사 아래 — 강월헌 벼랑 정자)"
+  },
+  {
+   "id": "rt_mokgye_pier_a",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 545
+   },
+   "x": 2260.0,
+   "z": -3.5,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_mokgye_pier_b",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 546
+   },
+   "x": 2436.0,
+   "z": -10.24,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_mokgye_dotbae0",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 547
+   },
+   "x": 2330.0,
+   "z": -21.15,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "매어 둔 돛배"
+  },
+  {
+   "id": "rt_mokgye_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 548
+   },
+   "x": 2360.0,
+   "z": -20.59,
+   "ry": 1.7708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "seed": 549
+   },
+   "x": 2310.0,
+   "z": -46.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "포구 곳간(강창)"
+  },
+  {
+   "id": "rt_mokgye_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 550
+   },
+   "x": 2340.0,
+   "z": -75.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 551
+   },
+   "x": 2374.0,
+   "z": -77.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "객주 집(포구 — 짐·돈 맡는 집)"
+  },
+  {
+   "id": "rt_mokgye_house0",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 552
+   },
+   "x": 2314.0,
+   "z": -97.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 553
+   },
+   "x": 2396.0,
+   "z": -97.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_ferry_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 554
+   },
+   "x": 2422.0,
+   "z": -52.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 555
+   },
+   "x": 2286.0,
+   "z": -49.18,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 556
+   },
+   "x": 2286.0,
+   "z": -39.18,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 557
+   },
+   "x": 2354.0,
+   "z": -70.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_shop0",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 558
+   },
+   "x": 2288.0,
+   "z": -55.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 559
+   },
+   "x": 2306.0,
+   "z": -64.55,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_shop2",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 560
+   },
+   "x": 2324.0,
+   "z": -71.87,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_shop3",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 561
+   },
+   "x": 2378.0,
+   "z": -60.67,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_shop4",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 562
+   },
+   "x": 2396.0,
+   "z": -53.92,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jwapan0",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 563
+   },
+   "x": 2296.0,
+   "z": -42.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jwapan1",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 564
+   },
+   "x": 2319.0,
+   "z": -50.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jwapan2",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 565
+   },
+   "x": 2332.0,
+   "z": -55.91,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jwapan3",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 566
+   },
+   "x": 2386.0,
+   "z": -39.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jwapan4",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 567
+   },
+   "x": 2404.0,
+   "z": -34.69,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_chang1",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "seed": 568
+   },
+   "x": 2328.0,
+   "z": -46.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_chang2",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "w": 11.0,
+    "seed": 569
+   },
+   "x": 2388.0,
+   "z": -30.54,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_gaekju1",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 570
+   },
+   "x": 2292.0,
+   "z": -76.73,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "객주 집"
+  },
+  {
+   "id": "rt_mokgye_jumak1",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 571
+   },
+   "x": 2409.0,
+   "z": -53.47,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_madang",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 572
+   },
+   "x": 2356.0,
+   "z": -93.08,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "별신굿 마당(목계 별신제, 가설 자리)"
+  },
+  {
+   "id": "rt_mokgye_byeolsindang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": true,
+    "seed": 573
+   },
+   "x": 2378.0,
+   "z": -97.67,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_house2",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 574
+   },
+   "x": 2268.0,
+   "z": -73.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_house3",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 575
+   },
+   "x": 2426.0,
+   "z": -77.85,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_jounseon0",
+   "kit": "route/jounseon",
+   "params": {
+    "len": 15.0,
+    "seed": 576
+   },
+   "x": 2302.0,
+   "z": -8.56,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)",
+   "note": "매어 둔 세곡선"
+  },
+  {
+   "id": "rt_mokgye_jounseon1",
+   "kit": "route/jounseon",
+   "params": {
+    "len": 13.0,
+    "sail": false,
+    "seed": 577
+   },
+   "x": 2382.0,
+   "z": -5.93,
+   "ry": 1.6508,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_dotbae1",
+   "kit": "route/dotbae",
+   "params": {
+    "len": 9.0,
+    "seed": 578
+   },
+   "x": 2406.0,
+   "z": -0.91,
+   "ry": 1.4708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_mokgye_narut1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 579
+   },
+   "x": 2344.0,
+   "z": -25.14,
+   "ry": 1.2708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "목계진(남한강 큰 나루 — 장터·객주·창고·뱃사공)"
+  },
+  {
+   "id": "rt_chungju_pier_a",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 14.0,
+    "seed": 580
+   },
+   "x": 2996.0,
+   "z": -47.23,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)",
+   "note": "선창(잔교) — 걷는 면은 엔진 river_lanes가 깐다"
+  },
+  {
+   "id": "rt_chungju_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "choga",
+    "seed": 581
+   },
+   "x": 3036.0,
+   "z": -58.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)",
+   "note": "포구 곳간(강창)"
+  },
+  {
+   "id": "rt_chungju_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 582
+   },
+   "x": 3075.0,
+   "z": -93.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_gaekju",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 583
+   },
+   "x": 3092.0,
+   "z": -89.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)",
+   "note": "객주 집(포구 — 짐·돈 맡는 집)"
+  },
+  {
+   "id": "rt_chungju_house0",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 584
+   },
+   "x": 3018.0,
+   "z": -109.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 585
+   },
+   "x": 3036.0,
+   "z": -109.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_ferry_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 586
+   },
+   "x": 3010.0,
+   "z": -64.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 587
+   },
+   "x": 3022.0,
+   "z": -92.42,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 588
+   },
+   "x": 3022.0,
+   "z": -82.42,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 589
+   },
+   "x": 3102.0,
+   "z": -82.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_shop1",
+   "kit": "village/market_shop",
+   "params": {
+    "seed": 591
+   },
+   "x": 3104.0,
+   "z": -88.09,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_chang1",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "w": 11.0,
+    "seed": 593
+   },
+   "x": 3080.0,
+   "z": -65.06,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)",
+   "note": "충주 강창(가흥창 성격 — 세곡 모으는 곳, 가설)"
+  },
+  {
+   "id": "rt_chungju_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 595
+   },
+   "x": 3060.0,
+   "z": -49.43,
+   "ry": 1.7708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_gate",
+   "kit": "landmark/seongmun",
+   "params": {
+    "name": "충주 읍성 서문",
+    "open": "none",
+    "width": 14.0,
+    "lu": 1,
+    "seed": 596
+   },
+   "x": 3126.0,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_wallw0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "length": 20.0,
+    "rise": 0.0,
+    "height": 4.5,
+    "seed": 597
+   },
+   "x": 3108.5,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_wallw1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "length": 20.0,
+    "rise": 0.03,
+    "height": 4.5,
+    "seed": 598
+   },
+   "x": 3088.5,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_wallw2",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "length": 20.0,
+    "rise": 0.15,
+    "height": 4.5,
+    "seed": 599
+   },
+   "x": 3068.5,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_walle0",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "length": 20.0,
+    "rise": -0.0,
+    "height": 4.5,
+    "seed": 600
+   },
+   "x": 3143.5,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_walle1",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "length": 20.0,
+    "rise": -0.12,
+    "height": 4.5,
+    "seed": 601
+   },
+   "x": 3163.5,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_chungju_walle2",
+   "kit": "landmark/hy_seong_wall",
+   "params": {
+    "length": 20.0,
+    "rise": -0.15,
+    "height": 4.5,
+    "seed": 602
+   },
+   "x": 3183.5,
+   "z": -119.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "충주 나루와 충주 읍성 서문(달천·남한강 — 읍치·장·창고)"
+  },
+  {
+   "id": "rt_gwangnaru_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 603
+   },
+   "x": 148.67,
+   "z": -53.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_gwangnaru_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 604
+   },
+   "x": 160.67,
+   "z": -36.05,
+   "ry": 0.15,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_gwangnaru_narut1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 605
+   },
+   "x": 168.67,
+   "z": -35.55,
+   "ry": -0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_gwangnaru_narut_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 606
+   },
+   "x": 152.67,
+   "z": 44.62,
+   "ry": 0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)",
+   "note": "건너편(이쪽) 나룻배"
+  },
+  {
+   "id": "rt_gwangnaru_boatman",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 607
+   },
+   "x": 180.67,
+   "z": -71.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_gwangnaru_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 608
+   },
+   "x": 155.17,
+   "z": -67.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_gwangnaru_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 609
+   },
+   "x": 170.17,
+   "z": -67.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_gwangnaru_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "willow",
+    "seed": 610
+   },
+   "x": 134.67,
+   "z": -49.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_gwangnaru_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 611
+   },
+   "x": 128.67,
+   "z": -75.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "광나루(아차산 아래 — 강 건너는 나루)"
+  },
+  {
+   "id": "rt_misa_reeds0",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 612
+   },
+   "x": 342.0,
+   "z": -26.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)"
+  },
+  {
+   "id": "rt_misa_reeds1",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 613
+   },
+   "x": 364.0,
+   "z": -31.97,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)"
+  },
+  {
+   "id": "rt_misa_reeds2",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 614
+   },
+   "x": 388.0,
+   "z": -23.87,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)"
+  },
+  {
+   "id": "rt_misa_reeds3",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 615
+   },
+   "x": 410.0,
+   "z": -29.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)"
+  },
+  {
+   "id": "rt_misa_reeds4",
+   "kit": "nature/reeds",
+   "params": {
+    "n": 11,
+    "seed": 616
+   },
+   "x": 428.0,
+   "z": -26.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)"
+  },
+  {
+   "id": "rt_misa_snag",
+   "kit": "nature/deadwood",
+   "params": {
+    "kind": "snag",
+    "s": 1.1,
+    "seed": 617
+   },
+   "x": 378.0,
+   "z": -26.57,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)"
+  },
+  {
+   "id": "rt_misa_fishing",
+   "kit": "village/narutbae",
+   "params": {
+    "pole": true,
+    "seed": 618
+   },
+   "x": 452.0,
+   "z": -30.57,
+   "ry": 1.1708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "미사리 모래톱(도미나루 앞 — 강 가운데 모래섬)",
+   "note": "고기잡이 거룻배"
+  },
+  {
+   "id": "rt_dumihyeop_rock0",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "mossy": false,
+    "seed": 619
+   },
+   "x": 547.33,
+   "z": -15.47,
+   "ry": 0.0,
+   "y": -0.7,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_rock1",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.8,
+    "mossy": false,
+    "seed": 620
+   },
+   "x": 565.33,
+   "z": 19.38,
+   "ry": 0.0,
+   "y": -0.7,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_rock2",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.2,
+    "mossy": false,
+    "seed": 621
+   },
+   "x": 581.33,
+   "z": -12.12,
+   "ry": 0.0,
+   "y": -0.7,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_rock3",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "mossy": false,
+    "seed": 622
+   },
+   "x": 599.33,
+   "z": 19.64,
+   "ry": 0.0,
+   "y": -0.7,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_rock4",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.8,
+    "mossy": false,
+    "seed": 623
+   },
+   "x": 615.33,
+   "z": -17.51,
+   "ry": 0.0,
+   "y": -0.7,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_rock5",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.2,
+    "mossy": false,
+    "seed": 624
+   },
+   "x": 631.33,
+   "z": 26.94,
+   "ry": 0.0,
+   "y": -0.7,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_cliff0",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.0,
+    "h": 8.0,
+    "d": 3.5,
+    "seed": 625
+   },
+   "x": 567.33,
+   "z": -26.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)",
+   "note": "여울목 벼랑"
+  },
+  {
+   "id": "rt_dumihyeop_cliff1",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.0,
+    "h": 6.5,
+    "d": 3.0,
+    "seed": 626
+   },
+   "x": 600.33,
+   "z": -25.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)"
+  },
+  {
+   "id": "rt_dumihyeop_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": true,
+    "seed": 627
+   },
+   "x": 587.33,
+   "z": -37.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "두미협 여울목(팔당 — 벼랑 사이 물살 센 곳)",
+   "note": "여울 고사 돌무더기(뱃사람이 돌 얹고 비는 곳)"
+  },
+  {
+   "id": "rt_yanggeun_house0",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 628
+   },
+   "x": 895.33,
+   "z": -99.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_house1",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 629
+   },
+   "x": 925.33,
+   "z": -93.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_house2",
+   "kit": "culture/giho/compound",
+   "params": {
+    "size": "small",
+    "seed": 630
+   },
+   "x": 955.33,
+   "z": -101.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_house3",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 631
+   },
+   "x": 979.33,
+   "z": -119.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_teotbat",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 632
+   },
+   "x": 941.33,
+   "z": -127.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_haystack",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 633
+   },
+   "x": 915.33,
+   "z": -79.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 634
+   },
+   "x": 943.33,
+   "z": -81.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 635
+   },
+   "x": 889.33,
+   "z": -73.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_tree",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "zelkova",
+    "seed": 636
+   },
+   "x": 909.33,
+   "z": -69.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_yanggeun_narut",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 637
+   },
+   "x": 925.33,
+   "z": -24.88,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "양근 강가 단구 마을(용문산 바라봄)"
+  },
+  {
+   "id": "rt_ipo_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 638
+   },
+   "x": 1146.0,
+   "z": -42.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_ipo_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 639
+   },
+   "x": 1158.0,
+   "z": -25.4,
+   "ry": 0.15,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_ipo_narut1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 640
+   },
+   "x": 1166.0,
+   "z": -24.9,
+   "ry": -0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_ipo_narut_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 641
+   },
+   "x": 1150.0,
+   "z": 30.71,
+   "ry": 0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "이포나루(강 건너는 큰 나루)",
+   "note": "건너편(이쪽) 나룻배"
+  },
+  {
+   "id": "rt_ipo_boatman",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 642
+   },
+   "x": 1178.0,
+   "z": -60.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이포나루(강 건너는 큰 나루)",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_ipo_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 643
+   },
+   "x": 1152.5,
+   "z": -56.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_ipo_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 644
+   },
+   "x": 1167.5,
+   "z": -56.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_ipo_willow",
+   "kit": "nature/big_tree",
+   "params": {
+    "variant": "willow",
+    "seed": 645
+   },
+   "x": 1132.0,
+   "z": -38.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_ipo_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 646
+   },
+   "x": 1126.0,
+   "z": -64.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이포나루(강 건너는 큰 나루)"
+  },
+  {
+   "id": "rt_pasa_cliff0",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.0,
+    "h": 11.0,
+    "d": 4.0,
+    "seed": 647
+   },
+   "x": 1372.67,
+   "z": -46.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "파사성 벼랑 아래 깊은 소",
+   "note": "소 위 벼랑"
+  },
+  {
+   "id": "rt_pasa_cliff1",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.0,
+    "h": 9.0,
+    "d": 3.5,
+    "seed": 648
+   },
+   "x": 1389.67,
+   "z": -45.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "파사성 벼랑 아래 깊은 소"
+  },
+  {
+   "id": "rt_pasa_dang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": true,
+    "seed": 649
+   },
+   "x": 1354.0,
+   "z": -100.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "파사성 벼랑 아래 깊은 소",
+   "note": "벼랑 위 용왕당(가설)"
+  },
+  {
+   "id": "rt_pasa_pine",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.4,
+    "seed": 651
+   },
+   "x": 1364.0,
+   "z": -104.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "파사성 벼랑 아래 깊은 소"
+  },
+  {
+   "id": "rt_heungwon_chang0",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "w": 10.0,
+    "seed": 652
+   },
+   "x": 1745.5,
+   "z": -43.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)",
+   "note": "조창 곳간(세곡)"
+  },
+  {
+   "id": "rt_heungwon_chang1",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "w": 10.0,
+    "seed": 653
+   },
+   "x": 1770.8,
+   "z": -43.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)",
+   "note": "조창 곳간(세곡)"
+  },
+  {
+   "id": "rt_heungwon_chang2",
+   "kit": "route/gangchang",
+   "params": {
+    "roof": "giwa",
+    "w": 10.0,
+    "seed": 654
+   },
+   "x": 1796.1,
+   "z": -43.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)",
+   "note": "조창 곳간(세곡)"
+  },
+  {
+   "id": "rt_heungwon_jounseon0",
+   "kit": "route/jounseon",
+   "params": {
+    "len": 15.0,
+    "seed": 656
+   },
+   "x": 1754.0,
+   "z": -12.11,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)"
+  },
+  {
+   "id": "rt_heungwon_jounseon1",
+   "kit": "route/jounseon",
+   "params": {
+    "len": 14.0,
+    "sail": false,
+    "seed": 657
+   },
+   "x": 1788.0,
+   "z": -11.61,
+   "ry": 1.5108,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)"
+  },
+  {
+   "id": "rt_heungwon_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 658
+   },
+   "x": 1824.0,
+   "z": -45.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)"
+  },
+  {
+   "id": "rt_heungwon_gaeksa",
+   "kit": "village/giwa",
+   "params": {
+    "plain": true,
+    "seed": 659
+   },
+   "x": 1724.0,
+   "z": -49.11,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "흥원창(섬강 어귀 조창 — 세곡 싣는 곳)",
+   "note": "창 관원 집(해운판관 머무는 곳, 가설)"
+  },
+  {
+   "id": "rt_burondang_dang",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "dangjip": true,
+    "seed": 660
+   },
+   "x": 2100.0,
+   "z": -50.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "부론 강가 당집(뱃사람 비는 서낭)"
+  },
+  {
+   "id": "rt_burondang_sinmok",
+   "kit": "route/sinmok",
+   "params": {
+    "variant": "zelkova",
+    "cloth": true,
+    "seed": 661
+   },
+   "x": 2118.0,
+   "z": -42.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "부론 강가 당집(뱃사람 비는 서낭)"
+  },
+  {
+   "id": "rt_burondang_sotdae",
+   "kit": "village/sotdae",
+   "params": {
+    "n": 3,
+    "seed": 662
+   },
+   "x": 2086.0,
+   "z": -38.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "부론 강가 당집(뱃사람 비는 서낭)"
+  },
+  {
+   "id": "rt_burondang_cairn",
+   "kit": "village/cairn",
+   "params": {
+    "altar": true,
+    "seed": 663
+   },
+   "x": 2104.0,
+   "z": -37.32,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "부론 강가 당집(뱃사람 비는 서낭)"
+  },
+  {
+   "id": "rt_burondang_narut",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 664
+   },
+   "x": 2094.0,
+   "z": -23.32,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "부론 강가 당집(뱃사람 비는 서낭)"
+  },
+  {
+   "id": "rt_tangeumdae_pavilion",
+   "kit": "village/jeongja",
+   "params": {
+    "plain": false,
+    "seed": 665
+   },
+   "x": 2598.0,
+   "z": -78.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "탄금대(달천 어귀 벼랑 — 우륵이 가야금을 탄 대)",
+   "note": "벼랑 위 정자(가설)"
+  },
+  {
+   "id": "rt_tangeumdae_pine0",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.5,
+    "seed": 666
+   },
+   "x": 2589.0,
+   "z": -83.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "탄금대(달천 어귀 벼랑 — 우륵이 가야금을 탄 대)"
+  },
+  {
+   "id": "rt_tangeumdae_pine1",
+   "kit": "nature/pine",
+   "params": {
+    "s": 1.2,
+    "seed": 667
+   },
+   "x": 2608.0,
+   "z": -85.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "탄금대(달천 어귀 벼랑 — 우륵이 가야금을 탄 대)"
+  },
+  {
+   "id": "rt_tangeumdae_cliff",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.0,
+    "h": 9.0,
+    "d": 4.0,
+    "seed": 668
+   },
+   "x": 2576.0,
+   "z": -37.36,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "탄금대(달천 어귀 벼랑 — 우륵이 가야금을 탄 대)"
+  },
+  {
+   "id": "rt_tangeumdae_rock",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "mossy": true,
+    "seed": 669
+   },
+   "x": 2607.0,
+   "z": -72.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "탄금대(달천 어귀 벼랑 — 우륵이 가야금을 탄 대)"
+  },
+  {
+   "id": "rt_dalcheon_shed",
+   "kit": "route/ferry_shed",
+   "params": {
+    "seed": 670
+   },
+   "x": 2846.0,
+   "z": -50.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "달천 나루(달래강 어귀)"
+  },
+  {
+   "id": "rt_dalcheon_narut0",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 671
+   },
+   "x": 2858.0,
+   "z": -33.27,
+   "ry": 0.15,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "달천 나루(달래강 어귀)"
+  },
+  {
+   "id": "rt_dalcheon_narut1",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 672
+   },
+   "x": 2866.0,
+   "z": -32.77,
+   "ry": -0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "달천 나루(달래강 어귀)"
+  },
+  {
+   "id": "rt_dalcheon_narut_n",
+   "kit": "village/narutbae",
+   "params": {
+    "seed": 673
+   },
+   "x": 2850.0,
+   "z": 30.73,
+   "ry": 0.1,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "달천 나루(달래강 어귀)",
+   "note": "건너편(이쪽) 나룻배"
+  },
+  {
+   "id": "rt_dalcheon_boatman",
+   "kit": "culture/giho/choga_giyeok",
+   "params": {
+    "seed": 674
+   },
+   "x": 2878.0,
+   "z": -68.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "달천 나루(달래강 어귀)",
+   "note": "뱃사공 집"
+  },
+  {
+   "id": "rt_dalcheon_jangseung_m",
+   "kit": "village/jangseung",
+   "params": {
+    "female": false,
+    "seed": 675
+   },
+   "x": 2852.5,
+   "z": -64.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "달천 나루(달래강 어귀)"
+  },
+  {
+   "id": "rt_dalcheon_jangseung_f",
+   "kit": "village/jangseung",
+   "params": {
+    "female": true,
+    "seed": 676
+   },
+   "x": 2867.5,
+   "z": -64.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "달천 나루(달래강 어귀)"
+  },
+  {
+   "id": "rt_dalcheon_jumak",
+   "kit": "village/jumak",
+   "params": {
+    "seed": 678
+   },
+   "x": 2826.0,
+   "z": -72.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "달천 나루(달래강 어귀)"
+  }
+ ]
+}
