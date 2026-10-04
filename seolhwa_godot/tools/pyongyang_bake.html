@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Pyongyang bake</title></head>
+<body style="background:#ddd">
+<p id="st">baking…</p>
+<script type="module">
+// 웹 서버(tools/web_export_server.py 8770)에서 http://localhost:8770/__tools/pyongyang_bake.html 을 열면
+// export_pyongyang_frames.js가 구운 결과를 seolhwa_godot/data/ 에 보낸다(frames_pyongyang.json + frames_pyongyang_<kind>_<n>.png).
+// ?only=py_swindler,py_swindler_b 처럼 일부만 굽기(그때는 frames_pyongyang_<이름들>.json).
+import('/__tools/export_pyongyang_frames.js').then((m) => m.run((s) => { document.getElementById('st').textContent = s; }))
+  .catch((e) => { document.getElementById('st').textContent = 'ERROR ' + e.stack; console.error(e); });
+</script>
+</body></html>
