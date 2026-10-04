@@ -516,6 +516,7 @@ func _update_slot_ui() -> void:
 		var cells := []
 		for i in n: cells.append("[%s]" % (tal_name(e[i]) if i < e.size() else "　"))
 		text = "호신물  %s   Q 지니기·풀기" % " ".join(cells)
+	if d.combat_view != null and d.combat_view.active: text = ""   # 싸우는 동안은 전투 HUD(화살·떡)와 겹치지 않게 숨긴다
 	if text == _slot_shown: return
 	_slot_shown = text
 	_slot_box.visible = text != ""

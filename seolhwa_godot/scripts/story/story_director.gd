@@ -17,12 +17,13 @@ const Rumors := preload("res://story/rumors_data.gd")
 const Skills := preload("res://scripts/story/skills.gd")
 
 # 권역 → 사건
-const CASES := { JL_NAMWON_UNBONG = "namwon", GG_HANYANG = "hanyang", GW_GANGNEUNG = "gangneung" }
+const CASES := { JL_NAMWON_UNBONG = "namwon", GG_HANYANG = "hanyang", GW_GANGNEUNG = "gangneung", GS_GYEONGJU = "gyeongju" }
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
 	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
 	woochi = "villager_m", chaekkwae = "merchant", pojol = "official",
-	wolsim = "shaman", thief = "villager_m", spirit_m = "elder" }
-const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_npc.json", "frames_amb.json"]
+	wolsim = "shaman", thief = "villager_m", spirit_m = "elder",
+	smuggler = "villager_m", smuggler_b = "villager_m", lantern_wife = "villager_f", charcoal_man = "villager_m", spirit_f = "spirit_m" }
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_gyeongju.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -56,6 +57,7 @@ var _where_t := 0.0
 var _resumed := false
 var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 카드 뒤 한 줄씩)
 var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
+var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
 
 # 사건 완료(v2.2 레벨 없음): CASE_<키>_COMPLETE를 세우고 숙련 해금표(skills.gd)를 훑는다
 var onboard = null             # scripts/story/onboarding.gd
@@ -186,8 +188,11 @@ func update(dt: float) -> void:
 	if _vign == null: _vign = load("res://scripts/story/vignettes.gd").new(self)
 	_vign.update(dt)
 	if combat_view != null: combat_view.update(dt)
+	if _rub == null:
+		_rub = load("res://scripts/story/rubbing.gd").new(); add_child(_rub); _rub.setup(self)
 	if case_id == "":
 		_update_rumors(dt)
+		_rub.update(dt)
 		return
 	if not _started:
 		_started = true
@@ -215,6 +220,7 @@ func update(dt: float) -> void:
 		_trig_t = 0.2
 		_check_triggers()
 	_update_target()
+	_rub.update(dt)
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if main._loading or (title != null and title.active): return

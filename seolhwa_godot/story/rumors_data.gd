@@ -81,6 +81,30 @@ const RUMORS := [
 		} },
 	{ "id": "R0302", "space": "GG_HANYANG-GW_GANGNEUNG", "near": "rt_wonju", "radius": 34.0, "speaker": "장꾼", "need": { "ACT2_OPEN": true },
 		"pool": ["치악산 절에서 종이 저절로 울린다던데.", "대관령에서 제물 건드리면 길이 달라진대."] },
+	# ---- 경주(§24) · R02 한양 → 경주(노정) — 「세 번째 등불」 결말에 따라 비틀린 소문(A 밀수꾼 붙잡음 · B 달아남) ----
+	#   셋째 불(든 사람 없는 불)은 어느 결말에서도 풀리지 않은 채 소문에 남는다(§1.4).
+	{ "id": "GJ_JANG", "space": "GS_GYEONGJU", "near": "gyeongju_jang", "radius": 44.0, "speaker": "장꾼", "var": "CASE_GYEONGJU_OUTCOME",
+		"lines": {
+			"": "감포 바다에서 밤마다 불이 셋 떠.",
+			"A": "치술령 불 셋 가운데 둘은 사람 짓이었대. 밀수꾼이 잡혔다지. 나머지 하나는… 아무도 몰라.",
+			"B": "치술령 불이 하나로 줄었대. 나머지는 감포 앞바다로 옮겨 갔다나.",
+		} },
+	{ "id": "GJ_EUP", "space": "GS_GYEONGJU", "near": "gyeongju_eup", "radius": 50.0, "speaker": "주막 손님",
+		"pool": ["왕릉 사이에서 누가 말을 탄다는 소문이 있어.", "옛 절터에 없는 종소리가 난다더군."] },
+	{ "id": "R0201", "space": "GG_HANYANG-GS_GYEONGJU", "near": "rt_saejae", "radius": 40.0, "speaker": "새재 주막 손님", "var": "CASE_GYEONGJU_OUTCOME",
+		"lines": {
+			"": "경주 쪽 고개에 밤마다 불이 셋 뜬다던데.",
+			"A": "경주 고개 귀신불이 알고 보니 밀수꾼 등불이었대. 하나만 빼고.",
+			"B": "경주 고개 귀신불을 쫓던 나그네가 밀수꾼한테 혼쭐이 났다나.",
+		} },
+	{ "id": "R0202", "space": "GG_HANYANG-GS_GYEONGJU", "near": "rt_sangju", "radius": 36.0, "speaker": "장꾼", "need": { "ACT2_OPEN": true },
+		"pool": ["감포 바다에서 밤마다 불이 셋 떠.", "왕릉 사이에서 누가 말을 탄다는 소문이 있어."] },
+	{ "id": "R0203", "space": "GG_HANYANG-GS_GYEONGJU", "near": "rt_jebiwon", "radius": 36.0, "speaker": "원집 주인", "var": "CASE_GYEONGJU_OUTCOME",
+		"lines": {
+			"": "치술령 아래 숯쟁이가 불 따라갔다 안 돌아왔대.",
+			"A": "치술령 숯쟁이가 살아 돌아왔대. 마누라가 밤마다 등불 들고 기다렸다지.",
+			"B": "치술령 숯쟁이는 돌아왔는데, 붙잡아 둔 놈들은 바다로 내뺐대.",
+		} },
 ]
 
 # 이 공간에 걸린 소문(자리 p: Vector2 채워서)
