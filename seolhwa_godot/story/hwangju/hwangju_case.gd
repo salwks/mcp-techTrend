@@ -223,9 +223,22 @@ func lane_blocked(end: String) -> void:
 	d.teleport_to("pier_land" if end == "pier" else "islet_cove", "left" if end == "pier" else "down")
 	d.cutscene(false)
 
-# 뱃사공이 노를 저어 간다(장산곶 선창 ↔ 바위섬 갯가). 배 담당의 board(lane_id) API가 생기면 이 자리만 바꾼다.
-#   지금은 암전 한 번(§36.2 이동거리 축소) — 시각이 흐른다(물때 압박). to: "islet" | "back"
+# 뱃사공이 노를 저어 간다(장산곶 선창 ↔ 바위섬 갯가, scripts/region/boat_ride.gd — 배 위 풍경 시점, Space 건너뛰기).
+#   시각이 흐른다(물때 압박). 배 타기가 없으면 예전처럼 암전 한 번(§36.2 이동거리 축소). to: "islet" | "back"
+const LANE := "rt_jangsan_islet_lane"
 func sail(to: String) -> void:
+	var boats = d.main.get("boats")
+	if boats != null and not boats.route(LANE).is_empty() and not boats.riding():
+		d.cutscene(true)
+		flag("on_islet", to == "islet")
+		if boats.board(LANE, 0 if to == "islet" else 1, true):
+			d.ui.caption("뱃사공이 노를 저어 암초 사이로 배를 몰았다." if to == "islet" else "뱃사공이 배를 돌려 선창으로 저어 간다.", 2.4)
+			await boats.arrived
+		d.set_hour(d.main.hour + 0.2)
+		if to != "islet": await d.ui.caption("배가 선창에 닿았다.", 1.6)
+		d.cutscene(false)
+		if to == "islet" and not f("islet_seen"): await islet_arrive()
+		return
 	d.cutscene(true)
 	await d.ui.fade(true, 0.7)
 	d.set_hour(d.main.hour + 0.4)
