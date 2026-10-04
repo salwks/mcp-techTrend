@@ -13,6 +13,7 @@
 #   --routedir=폴더[;폴더]  노정을 더 찾을 폴더(시험: res://shots/region/test_route/)
 #   --weather=clear|cloudy|rain|fog|snow|wind  날씨 고정(U 키: 날씨 돌리기)
 #   --walkroute[=n] [--walkspeed=12]  --portaltest처럼 공간을 넘되, 노정에서는 주 도로를 끝까지 실제로 걷는다(막힘을 WALK stuck으로 남김)
+#   --sailspeed=25    강 뱃길(river_lanes) 배 속도를 바꿔 시험(기본 route.json speed 7.5m/s)
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
@@ -25,6 +26,7 @@ const Travel := preload("res://scripts/region/travel.gd")
 const Weather := preload("res://scripts/region/weather.gd")
 const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
 const Progress := preload("res://scripts/region/progress.gd")
+const RiverLanes := preload("res://scripts/region/river_lanes.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
@@ -117,6 +119,8 @@ var _hud_t := 0.0
 var _ptest := {}          # --portaltest 진행 상태
 var _route_entry := ""    # 노정에 들어온 끝 포털 id — 다른 끝 포털로 나가면 그 노정을 '지나옴'(Progress)
 var _fast_hint := ""      # 역마 안내를 띄운 포털 id
+var lanes = null          # RiverLanes(강 뱃길 route.json river_lanes) — 없으면 null
+var _dead_done := false   # 막다른 노정 끝에 닿아 '지나옴'을 기록했나
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -267,6 +271,9 @@ func _build_scene() -> void:
 	portals = Travel.portals_for(world.region, world.is_route)
 	_place_portals()
 	if world.is_route: _route_entry = _nearest_portal(world.spawn)
+	if world.region.get("river_lanes") is Array:   # 강 뱃길: 꺾은선 뱃길·떠가는 배(--sailspeed=m/s 시험용 배 속도)
+		lanes = RiverLanes.new(); lanes.setup(world)
+		if args.has("sailspeed"): lanes.speed_override = float(args.sailspeed)
 	rig = CameraRig.new(cam, world)
 
 	for i in 6:
@@ -563,6 +570,7 @@ func _process(delta: float) -> void:
 	# 바다 뱃길(auto): 배에 오르면 저절로 건너편 포구로(입력·걷기 시험보다 앞선다)
 	if not _loading and not _leaving:
 		var sail: Dictionary = world.ferry_auto(player_pos)
+		if sail.is_empty() and lanes != null: sail = lanes.auto(player_pos)
 		if not sail.is_empty():
 			mv = sail.dir; speed = float(sail.speed)
 			if sail.start: _show_hud("배에 올랐다 — %s" % String(sail.name))
@@ -634,6 +642,11 @@ func _process(delta: float) -> void:
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)
 	world.update_ferries(player_pos)
+	if lanes != null:
+		lanes.update(dt, player_pos)
+		var lh: String = lanes.take_hud()
+		if lh != "": _show_hud(lh)
+	_check_dead_end()
 	placement.update()
 	if weather != null:
 		weather.update(dt, player_pos, cam.global_position, interior != null)
@@ -919,6 +932,15 @@ func _nearest_portal(p: Vector2) -> String:
 		if d < bd: bd = d; best = String(pt.id)
 	return best
 
+# 막다른 노정(포털이 한 끝뿐): 주 도로 먼 끝(마지막 쉼터)에 닿으면 '지나옴' — 그 뒤 권역 포털에서 H로 끝까지 건너뛴다
+func _check_dead_end() -> void:
+	if _dead_done or not world.is_route or not bool(world.region.get("dead_end", false)): return
+	var road := Travel.main_road(world.region)
+	if road.size() < 2: return
+	if road[road.size() - 1].distance_to(Vector2(player_pos.x, player_pos.z)) < 25.0:
+		_dead_done = true
+		Progress.mark_route_done(String(world.region.get("route_id", world.region.get("region_id", ""))))
+
 func _check_portals() -> void:
 	var pp := Vector2(player_pos.x, player_pos.z)
 	for pt in portals:
@@ -929,10 +951,10 @@ func _check_portals() -> void:
 			if not ft.is_empty():
 				if _fast_hint != String(pt.id):
 					_fast_hint = String(pt.id)
-					_show_hud("H: 역마 타고 %s까지 (지나온 길 건너뛰기)" % String(ft.label))
+					_show_hud("H: %s 타고 %s까지 (지나온 길 건너뛰기)" % [String(ft.get("how", "역마")), String(ft.label)])
 				if Input.is_action_just_pressed("fast_travel") or (args.has("fasttest") and _fast_hint == String(pt.id)):
 					ft.id = "fast_" + String(pt.id); ft.fast = true
-					ft.label = "%s (역마)" % String(ft.label)
+					ft.label = "%s (%s)" % [String(ft.label), String(ft.get("how", "역마"))]
 					_travel(ft); return
 		elif _fast_hint == String(pt.id) and d > 20.0: _fast_hint = ""
 		if not _portal_armed.get(pt.id, true):

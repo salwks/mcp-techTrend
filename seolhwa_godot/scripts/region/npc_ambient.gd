@@ -193,6 +193,9 @@ func _build(input: Dictionary) -> void:
 		var s := STEP * 0.5
 		while s < total:
 			var p := _at(pts, cum, s)
+			if world != null and world.landuse_at(p.x, p.y) == 5:   # 물 위 길(강 뱃길·선창)에는 사람을 세우지 않는다
+				s += STEP
+				continue
 			var st = _settle_at(sts, p)
 			if st != null:
 				var rho: float = RHO[st.cls] if not L.alley or st.cls != "market" else RHO.capital

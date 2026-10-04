@@ -219,6 +219,7 @@ static func fast_target(route_id: String, here_region: String) -> Dictionary:
 	for r in routes():
 		if r.id != route_id: continue
 		var j: Dictionary = r.json
+		var how := "배" if String(j.get("route_type", "")) == "river" else "역마"   # 강 뱃길은 배로 건너뛴다
 		var ps = j.get("portals", {})
 		if not (ps is Dictionary): return {}
 		for end in ["to", "from"] + ps.keys():
@@ -227,14 +228,21 @@ static func fast_target(route_id: String, here_region: String) -> Dictionary:
 			if p.has("region") and p.has("x"):
 				var info := region_info(String(p.region))
 				return { kind = "region", target = String(p.region), tx = float(p.x), tz = float(p.z),
-					label = String(info.get("short", short_name(String(p.region)))) }
+					label = String(info.get("short", short_name(String(p.region)))), how = how }
 			if p.has("route"):
 				for r2 in routes():
 					if r2.id != String(p.route): continue
 					var oe := route_ends(r2.json)
 					for e2 in oe:
 						if String(_portal(r2.json, e2).get("route", "")) == route_id:
-							return { kind = "route", target = r2.id, tx = oe[e2].x, tz = oe[e2].y, label = String(p.get("name", r2.short)) }
+							return { kind = "route", target = r2.id, tx = oe[e2].x, tz = oe[e2].y, label = String(p.get("name", r2.short)), how = how }
+		# 막다른 노정(장산곶·북청·남한강 뱃길): 그 노정의 먼 끝(주 도로 끝 — 마지막 쉼터)으로
+		if bool(j.get("dead_end", false)):
+			var main := main_road(j)
+			var st: Array = j.get("stops", []) if j.get("stops") is Array else []
+			if main.size() >= 2:
+				return { kind = "route", target = route_id, tx = main[main.size() - 1].x, tz = main[main.size() - 1].y,
+					label = String(st[st.size() - 1].get("title", r.short)) if not st.is_empty() else String(r.short), how = how }
 		return {}
 	return {}
 
