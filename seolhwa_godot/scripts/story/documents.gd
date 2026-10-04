@@ -17,6 +17,7 @@
 #     patches: [{ rect, base, fiber, seam }]          — 이어 붙인 종이(결·빛깔이 다르다, 이음매)
 #     seals:   [{ at: [cx, cy], size, text: "平安監營", col, alpha, rot }]  — 같은 자리에 둘이면 도장 겹침
 #     images:  [{ tex: "res://…png", region: [x, y, w, h](px), rect: [x, y, w, h], alpha }]  — 텍스처 칸(朴 표식 등)
+#     burns:   [{ side: "left"|"right"|"top"|"bottom", depth, seed }]  — 탄 가장자리(그을린 띠·숯 끝, 함흥 역참의 불탄 장부)
 #     hotspots: [{ id, rect: [x, y, w, h], level: "plain"|"skill", label(짚은 자리 이름), text(보이는 것), clue(단서 id), pair(비교 단서 id) }]
 #   pair: 같은 pair를 가진 짚을 곳을 문서마다 다 짚으면 그 비교 단서를 얻는다(예: 두 문서의 먹을 다 짚으면 '먹 번짐이 다르다').
 #   좌표는 모두 문서 정규 좌표(0~1, y는 아래로).
@@ -500,6 +501,36 @@ func draw_doc(ci: CanvasItem, sp: Dictionary, id: String, r: Rect2, z: float) ->
 	# 도장
 	for s in sp.get("seals", []):
 		_seal(ci, r, s, z)
+	# 탄 가장자리(그을린 띠 + 숯이 된 끝) — 아래 글·표식이 그을음 밑으로 옅게 비친다
+	for bn in sp.get("burns", []):
+		_burn(ci, r, bn, z)
+
+# burns: [{ side: "left"|"right"|"top"|"bottom", depth(문서 폭·높이 비율), seed }] — 들쭉날쭉한 탄 끝
+func _burn(ci: CanvasItem, r: Rect2, bn: Dictionary, z: float) -> void:
+	var side := String(bn.get("side", "bottom"))
+	var depth := float(bn.get("depth", 0.2))
+	var rng := RandomNumberGenerator.new(); rng.seed = int(bn.get("seed", 11))
+	var n := 28
+	var edge := []   # 탄 경계(정규 좌표): 가장자리를 따라
+	for i in n + 1:
+		var u := float(i) / n
+		var dd := depth * (0.62 + 0.38 * (0.5 + 0.5 * sin(u * 17.0 + rng.randf() * 0.8)) * rng.randf_range(0.75, 1.0))
+		edge.append([u, dd])
+	var to_pt := func(u: float, dd: float) -> Vector2:
+		match side:
+			"left": return r.position + Vector2(dd, u) * r.size
+			"right": return r.position + Vector2(1.0 - dd, u) * r.size
+			"top": return r.position + Vector2(u, dd) * r.size
+		return r.position + Vector2(u, 1.0 - dd) * r.size
+	for band in [[1.0, Color(0.36, 0.22, 0.10, 0.55)], [0.72, Color(0.24, 0.14, 0.07, 0.6)], [0.4, Color(0.07, 0.05, 0.04, 0.97)]]:
+		var poly := PackedVector2Array()
+		poly.append(to_pt.call(0.0, 0.0))
+		for e in edge: poly.append(to_pt.call(float(e[0]), float(e[1]) * float(band[0])))
+		poly.append(to_pt.call(1.0, 0.0))
+		ci.draw_colored_polygon(poly, band[1])
+	var rim := PackedVector2Array()
+	for e in edge: rim.append(to_pt.call(float(e[0]), float(e[1]) * 0.4))
+	ci.draw_polyline(rim, Color(0.55, 0.28, 0.1, 0.8), maxf(1.0, 0.8 * z))
 
 func _vtext(ci: CanvasItem, r: Rect2, at: Vector2, text: String, size: float, col: Color, bleed: float, z: float) -> void:
 	var fs := maxi(4, int(size * r.size.x))

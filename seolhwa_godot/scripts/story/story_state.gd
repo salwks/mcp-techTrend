@@ -21,6 +21,8 @@ const VAR_DEFAULTS := {
 	SKILL_BEAST_SIDESTEP = false, SKILL_TOOL_SLOT_PLUS = false,   # 해금표 scripts/story/skills.gd(CASE_<키>_COMPLETE)
 	CASE_NAMWON_COMPLETE = false, CASE_HANYANG_BOOKSHOP_COMPLETE = false, CASE_GANGNEUNG_COMPLETE = false, CASE_GYEONGJU_COMPLETE = false,
 	CASE_HWANGJU_COMPLETE = false, CASE_PYONGYANG_COMPLETE = false, CASE_HAMHUNG_COMPLETE = false, CASE_JEJU_COMPLETE = false,
+	# 제주(§7 ITEM_KEY_001 — 강복의 곡물 수량패), 플레이어의 첫 문장(S7008), 최종장 문(ACT 2~5 모두 끝 — 한양 귀환)
+	ITEM_KEY_001 = false, PLAYER_FIRST_LINE = "", ACT6_OPEN = false,
 }
 
 var case_id := ""

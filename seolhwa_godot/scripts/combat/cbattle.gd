@@ -9,6 +9,7 @@ const HB := preload("res://scripts/combat/chit.gd")
 const CPlayer := preload("res://scripts/combat/cplayer.gd")
 const CTiger := preload("res://scripts/combat/ctiger.gd")
 const CHuman := preload("res://scripts/combat/chuman.gd")
+const CCreature := preload("res://scripts/combat/ccreature.gd")   # 짐승 상대(humans 항목에 "creature" — 제주 구렁이)
 
 var env
 var player
@@ -102,9 +103,9 @@ func _start_humans(a: Dictionary, opts: Dictionary) -> void:
 	foes = []
 	var hs: Array = opts.humans
 	for i in hs.size():
-		var hu = CHuman.new(self, hs[i], i)
+		var hu = (CCreature if String(hs[i].get("creature", "")) != "" else CHuman).new(self, hs[i], i)
 		var hp0: Vector2 = _v(hs[i].get("pos"), c + Vector2(cos(i * 2.1), sin(i * 2.1)) * 4.0)
-		hu.reset(HB.nearest_free(env, hp0, TU.T.human.radius + 0.05))
+		hu.reset(HB.nearest_free(env, hp0, TU.T.human.radius + 0.05) if String(hs[i].get("creature", "")) == "" else hp0)
 		hu.apply_mods(mods)
 		foes.append(hu)
 	var v: Vector2 = foes[0].pos - player.pos

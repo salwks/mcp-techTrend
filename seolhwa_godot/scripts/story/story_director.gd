@@ -20,7 +20,8 @@ const Skills := preload("res://scripts/story/skills.gd")
 # 한 사건이 여러 공간(권역 + 노정)에 걸치면 같은 사건 id를 준다(진행은 하나). 데이터 항목의 "space"로 공간을 가른다(_filter_space)
 const CASES := { "JL_NAMWON_UNBONG": "namwon", "GG_HANYANG": "hanyang", "GW_GANGNEUNG": "gangneung",
 	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju", "PA_PYEONGYANG": "pyongyang",
-	"PA_PYEONGYANG-HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG-BUKCHEONG": "hamhung" }
+	"PA_PYEONGYANG-HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG-BUKCHEONG": "hamhung",
+	"SEA_NAMHAE_JEJU": "jeju", "JJ_JEJU": "jeju" }
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
 	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
 	woochi = "villager_m", chaekkwae = "merchant", pojol = "official",
@@ -28,8 +29,9 @@ const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ric
 	blind_elder = "elder", broker = "merchant", daughter = "villager_f", fisher = "boatman",
 	smuggler = "villager_m", smuggler_b = "villager_m", lantern_wife = "villager_f", charcoal_man = "villager_m", spirit_f = "spirit_m",
 	py_merchant_a = "merchant", py_merchant_b = "peddler", py_swindler = "smuggler", py_swindler_b = "smuggler_b", py_clerk = "official",
-	yigyeom = "elder", courier = "villager_m", courier_b = "villager_m", courier_c = "villager_m", raider = "smuggler", raider_b = "smuggler_b" }
-const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_npc.json", "frames_amb.json"]
+	yigyeom = "elder", courier = "villager_m", courier_b = "villager_m", courier_c = "villager_m", raider = "smuggler", raider_b = "smuggler_b",
+	gwak = "elder", simbang = "shaman", jj_child = "child_girl", jj_man = "villager_m", jj_woman = "villager_f", jj_snake = "dog", jj_shade = "spirit_m" }
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_jeju.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -73,6 +75,7 @@ func _case_complete() -> Array:
 	if not got.is_empty(): runner.log_line("skills", got)
 	return got
 var spirits = null       # 잔영·소리·경계·호신물(scripts/story/spirits.gd) — 사건마다
+var sensing = null       # 감응 매듭·흔적의 결(scripts/story/sensing.gd) — 사건마다(매듭을 지닐 때만 그린다)
 
 static func create_for(m) -> Node:
 	var rid := String(m.world.region.get("region_id", ""))
@@ -174,6 +177,9 @@ func _setup() -> void:
 	spirits = load("res://scripts/story/spirits.gd").new()
 	add_child(spirits)
 	spirits.setup(self)
+	sensing = load("res://scripts/story/sensing.gd").new()
+	add_child(sensing)
+	sensing.setup(self)
 	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute"))
 	if args.has("storytest"):
 		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
@@ -236,6 +242,7 @@ func update(dt: float) -> void:
 	_update_rumors(dt)
 	_update_ambient(dt)
 	if spirits != null: spirits.update(dt)
+	if sensing != null: sensing.update(dt)
 	if runner.busy or ui.modal or combat_view.active:
 		ui.prompt("")
 		_target = null
@@ -292,8 +299,9 @@ func _save_where(dt: float) -> void:
 	if _where_t > 0.0 or test != null or passive or main._loading: return
 	_where_t = 10.0
 	var w = main.world
-	Progress.set_where({ space = space_id, kind = "route" if w.is_route else "region", x = snappedf(main.player_pos.x, 0.1),
-		z = snappedf(main.player_pos.z, 0.1), hour = snappedf(main.hour, 0.1) })
+	var wp: Vector2 = main.where_outside() if main.has_method("where_outside") else Vector2(main.player_pos.x, main.player_pos.z)   # 실내 공간 안이면 그 입구 밖
+	Progress.set_where({ space = space_id, kind = "route" if w.is_route else "region", x = snappedf(wp.x, 0.1),
+		z = snappedf(wp.y, 0.1), hour = snappedf(main.hour, 0.1) })
 
 # 시작 메뉴(새 게임 / 이어 하기): 그냥 실행했을 때만(시험·넘어온 장면·--newgame·--continue·--notitle 아님)
 func _maybe_title() -> void:
@@ -516,7 +524,7 @@ func place_actor(id: String, at, y = null, facing := "") -> void:
 	if a == null: return
 	a.scripted = true
 	a.spec.erase("_hidden")
-	if at == "home":
+	if at is String and at == "home":
 		a.scripted = false; _place_home(a); _dirty = true; return
 	var p := anchor(at)
 	a.pos = Vector3(p.x, world.height_at(p.x, p.y), p.y)

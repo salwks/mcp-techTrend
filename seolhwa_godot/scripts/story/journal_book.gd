@@ -17,7 +17,7 @@ const Progress := preload("res://scripts/region/progress.gd")
 const GameSettings := preload("res://scripts/story/game_settings.gd")
 
 const PRINCIPLE := ["본 것은 본 대로.", "들은 것은 누가 말했는지.", "모르는 것은 모른다고."]
-const CASE_TITLES := { namwon = "산길의 실종", hanyang = "비어 있는 책방", gangneung = "고개에 남은 종소리", hwangju = "빈 배의 값", pyongyang = "강을 판 사내" }
+const CASE_TITLES := { namwon = "산길의 실종", hanyang = "비어 있는 책방", gangneung = "고개에 남은 종소리", hwangju = "빈 배의 값", pyongyang = "강을 판 사내", jeju = "굴에 남은 숨" }
 const PLACE_KO := { HANYANG = "한양", GANGNEUNG = "강릉", GYEONGJU = "경주", HWANGJU = "황주", PYEONGYANG = "평양", PYONGYANG = "평양",
 	HAMHUNG = "함흥", HAMHEUNG = "함흥", JEJU = "제주" }
 # 흔적 한 줄(어디서 어떻게 알았나) — 없는 토큰은 이름만
@@ -33,6 +33,10 @@ static func build(d, page := -1) -> Dictionary:
 	var pages := [_travel(d), _cases(d), _help(d)]
 	var p := last_page if page < 0 else page
 	return { pages = pages, page = clampi(p, 0, pages.size() - 1) }
+
+static func _gwak_met(d) -> bool:
+	if d != null and d.S != null and String(d.case_id) == "jeju": return bool(d.S.flags.get("gwak_met", false))
+	return bool(Progress.case_state("jeju").get("flags", {}).get("gwak_met", false))
 
 static func _vars(d) -> Dictionary:
 	var v: Dictionary = Progress.vars().duplicate()
@@ -54,7 +58,19 @@ static func _travel(d) -> Dictionary:
 	if bool(v.get("MAIN_MASTER_FOUND", false)) and bool(v.get("MAIN_PAST_EVENT_KNOWN", false)) and not bool(v.get("MAIN_GWAK_FOUND", false)):
 		b.append({ t = "head", text = "다음에 찾을 사람 — 곽칠성" })
 		b.append({ t = "entry", tag = "heard", by = "이겸", title = "제주", text = "열두 해 전 서강 창고 사건의 증인. 죄를 쓰고 제주로 귀양 갔다. “내가 가야 했는데 못 갔다.”" })
-		b.append({ t = "para", text = "제주 가는 배는 해남 관두포에서 뜬다. 남해 뱃길은 남원 남쪽 끝에서 시작한다." })
+		if bool(v.get("MAIN_GWAK_NAME_KNOWN", false)) and _gwak_met(d):
+			b.append({ t = "entry", tag = "heard", by = "곽칠성", title = "제주 화북포", text = "포구에서 짐을 지는 늙은이. 서강 창고 일을 묻자 “그 일은 끝났소.”" })
+		else:
+			b.append({ t = "para", text = "제주 가는 배는 해남 관두포에서 뜬다. 남해 뱃길은 남원 남쪽 끝에서 시작한다." })
+	# 제주(S7008) 뒤: 곽칠성을 찾음 — 강복의 곡물 수량패. 나의 첫 문장(이겸의 메모가 아니라 내 글씨)
+	if bool(v.get("MAIN_GWAK_FOUND", false)):
+		b.append({ t = "head", text = "찾은 사람 — 곽칠성" })
+		b.append({ t = "entry", tag = "fact", title = "제주 김녕", text = "사건 뒤 그가 먼저 찾아와 강복의 곡물 수량패를 내놓았다. “저 숫자 때문에 사람이 죽었소.” 박규상의 이름에 — “아직 살아 있소?”" })
+		if bool(v.get("ACT6_OPEN", false)):
+			b.append({ t = "para", text = "다음 — 한양. 서강 옛 창고와 칠패." })
+	if String(v.get("PLAYER_FIRST_LINE", "")) != "":
+		b.append({ t = "head", text = "나의 기록" })
+		b.append({ t = "quote", text = String(v.PLAYER_FIRST_LINE), size = 20 })
 	b.append({ t = "head", text = "이겸의 흔적" })
 	b.append({ t = "entry", tag = "fact", title = "남원", text = "기록책 마지막 장 — “남원에서 확인할 것이…” 문장은 거기서 끊겼다." })
 	for tk in trace:

@@ -179,6 +179,7 @@ func _start_humans(arena: Dictionary, opts: Dictionary) -> void:
 		var sp: Dictionary = src[i].duplicate()
 		if not sp.has("id"): sp.id = "foe%d" % i
 		if sp.has("at"): sp.pos = host.anchor(sp.at)
+		if sp.get("crevice") is String: sp.crevice = host.anchor(sp.crevice)
 		elif sp.has("offset"): sp.pos = c + Vector2(float(sp.offset[0]), float(sp.offset[1]))
 		specs.append(sp)
 		var kind: String = host._ensure_bank(String(sp.get("kind", "smuggler"))) if host.has_method("_ensure_bank") else String(sp.get("kind", "villager_m"))
@@ -299,7 +300,7 @@ func _sync_actors(dt: float) -> void:
 			var ch: SpriteChar = foe_chs.get(fo.id)
 			if ch == null: continue
 			ch.position = Vector3(fo.pos.x, height_at(fo.pos.x, fo.pos.y), fo.pos.y)
-			ch.visible = fo.state != "gone"
+			ch.visible = fo.state != "gone" and fo.state != "lurk"   # lurk: 짐승이 바위틈에 숨음(ccreature.gd)
 			ch.update_char(dt, host.cam)
 			if fo.active and fo.state != "flee" and (fo.pos - pl.pos).length() < 14.0: acc += ch.position; n += 1
 		# 카메라: 플레이어 쪽에 두되 맞선 적들을 같이 담도록 조금 당긴다
