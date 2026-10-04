@@ -11,6 +11,8 @@ var tilt := true
 var bloom := true
 var paper := true
 var focus_y := 0.45
+var band := 0.07        # 틸트시프트 선명 띠 반폭(화면 높이 비율). 배 위 낮은 시점에서는 넓힌다(region_main)
+var top_bias := 1.0     # 띠 위쪽 흐림 세기(배 위: 먼 기슭·능선이 덜 흐리게)
 var paper_ratio := 2.0
 var state := {}
 var paper_image: Image
@@ -265,8 +267,8 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 	var lift: Vector3 = state.lift; var gam: Vector3 = state.gamma; var gain: Vector3 = state.gain
 	var push := PackedFloat32Array([
 		1.0 / size.x, 1.0 / size.y, ps, ps,
-		float(size.x) / size.y, focus_y, 0.07, lum_mult,
-		1.0, 0.75, 1.0 if tilt else 0.0, bloom_k,
+		float(size.x) / size.y, focus_y, band, lum_mult,
+		top_bias, 0.75, 1.0 if tilt else 0.0, bloom_k,
 		state.sat, pf, pf, state.night,
 		lift.x, lift.y, lift.z, 0, gam.x, gam.y, gam.z, 0, gain.x, gain.y, gain.z, 0])
 	var paper_rid: RID = _paper_tex if _paper_tex.is_valid() else _tex.hb

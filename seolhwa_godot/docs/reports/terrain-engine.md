@@ -414,3 +414,46 @@ godot --path . res://scenes/region.tscn -- --weather=clear|cloudy|rain|fog|snow|
 ## 남은 것
 - **노정 갈림(영흥·정평 합류)은 하지 않았다.** 지금 노정은 두 끝 공간 하나씩이라, 갈림을 하려면 route.json에 세 번째 끝(`portals.branch:{route, route_x, route_z}`)과 노정→노정 넘어가기가 필요하다(Travel.portals_for의 노정 쪽에 end 목록을 일반화, 도착 자리 계산은 2번과 같음). 데이터 쪽이 형식을 정하면 엔진은 반나절 일.
 - 걷기 시험은 빠르게(20m/s) 걸으면 배치 지연 짓기보다 앞서 가 아직 안 놓인 물체(장승·담)를 지나칠 수 있다 — 막힘 검사를 엄격히 하려면 `--walkspeed=4.6`.
+
+# 배 타기 (2026-10-04) — 사공이 젓고 플레이어는 탄다
+
+사용자 의견: "배는 사공이 젓는데 왜 플레이어가 모나. 자동으로 가고, 둘레 풍경이 보이게 카메라를 가로로." → 나루 건너기·강 뱃길·바다 뱃길·장산곶 섬 뱃길을 한 방식(`scripts/region/boat_ride.gd`)으로 바꿨다.
+
+## 타는 법
+- 나루 끝·선창 끝 '내릴 자리' 5m 안에서 **E — 건너간다**(나루) / **E — 배에 오른다 — ○○까지**(뱃길). 안내는 화면 아래 가운데. 이야기 대상(E로 말 걸 사람·물건)이 곁에 있으면 그쪽이 먼저다.
+- 타면 입력이 막힌다(지도 M·기록책 R은 됨). 플레이어는 갑판에 앉고(`sit`), 사공이 고물에 서서 젓는다 — 돛배·바다 배는 노(`row`), 나룻배는 삿대(`pole`). 떠남 0.9초 → 가속 2.5초 → 닿기 전 14m부터 감속 → 0.5초 뒤 건너편 내릴 자리에 내려선다. HUD "건너편에 닿았다"·"○○에 닿았다 — 내려서 포구를 지나 다음 배에 오른다".
+- **Space(또는 E 누르고 있기): 건너뛰기** — 8배(최대 40m/s), 떠남·닿기 대기도 줄인다.
+- 속도: 나루 5.5m/s, 바다 뱃길 9, 강 뱃길은 route.json `speed`(7.5, 장산곶 6)·여울 `slow`. `--sailspeed=` 시험 값은 모든 배에.
+- 물 위 걷기 면은 없다. 강 뱃길은 선창 잔교 위(뭍 쪽 선창 길이 + 2m ~ 선창 끝 + 0.5m)만 걷기 면이 남는다(`river_lanes.gd`). 배는 걷기 충돌을 보지 않고 뱃길 선을 따라간다(물가·암초에 걸리지 않음).
+- 나루 뱃길(crossings `ends`)은 시작할 때 땅 칸을 보고 고친다: 끝점이 둑 안까지 들어가 있으면 물이 시작하는 곳까지 줄이고, 가운데 뭍(노들섬 모래톱 등)을 지나면 물 칸(4m) AStarGrid2D로 돌아가는 물길을 찾는다(물가 3칸 안은 무겁게, 시선이 트이는 점만 남김). 로그 `BOATS noryang_naru 뭍 54곳 → 물길로 돌아감 6점 424m`. 강 뱃길은 데이터 선을 믿고 뭍을 지나면 `BOATS warn`만 남긴다(지금 없음).
+- 묶인 배: 플레이어 둘레 220m 안이면 물결에 흔들리고 사공이 고물에 서 있다. 한쪽 끝 80m 안에 왔는데 배가 반대편 150m 밖이면 그 끝으로 옮겨 둔다(사공이 저어 온 셈).
+- 걷기 시험(`--walkroute`): 길이 뱃길로 이어지면(건너편 내릴 자리가 끝 포털 쪽으로 20m 넘게 가까우면) 저절로 타고, 내리면 가장 가까운 앞쪽 길 점부터 이어 걷는다. 타는 동안 막힘 검사는 쉰다.
+
+## 풍경 시점 (`camera_rig.gd` sailing)
+- pitch 15°, 거리 15m, fov 40°. 겨냥점은 배 앞 4m·눈높이 1.4m. 카메라는 배 뒤에서 **볼 기슭 반대쪽으로 48°** 돌아선 자리 — 볼 기슭은 뱃길 앞 60m에서 좌우 70·140·240m 지형 높이 합이 큰 쪽(2초마다, 6m 넘게 차이 날 때만 바꿈 — `boat_ride.view_side`).
+- yaw가 처음으로 쓰인다: 탈 때 배를 따라 부드럽게 돌고(1.1/s), 내리면 yaw 0(남→북 고정)으로 돌아온다(1.6/s). 기본 시점(yaw 0)은 예전 식 그대로. 낮은 시점에서는 카메라가 지형 + 1.6m 아래로 내려가지 않는다.
+- 카메라가 돌면 그림 방향(앞·옆·등)을 화면 기준으로 고른다(`region_main.facing_cam`) — 배 위 플레이어·사공.
+- 후처리: 틸트시프트 선명 띠 0.07 → 0.2, 띠 위 흐림 1.0 → 0.4(먼 기슭·능선이 덜 흐림, `PostEffect.band`·`top_bias`). 먹선·안개·하늘 사각형·원경은 손대지 않아도 낮은 시점에서 이음매 없이 보였다(그림 `shots/region/boat/`).
+- 성능: 낮은 시점은 기슭이 멀리까지 보인다. 타는 동안 식생 거친 벌 거리 ≤150m, 해 그림자 거리 60 → 28m, 근경 타일 반경 2 → 1(`RegionWorld.set_near_r`).
+
+| 뱃길(2048×1536, 맑음, 다른 에이전트와 같은 맥 — 부하 평균 3) | 타는 동안 평균 fps | 같은 길 기본 시점 |
+|---|---|---|
+| 한양 노량진 나루(424m, 물길로 돌아감) | 78~81 | 108 |
+| 장산곶 바위섬 뱃길(197m) | 103 | — |
+| 제주 바다 뱃길(527m) | 94 | — |
+한강 쪽 원인은 물(큰 강 물면이 낮은 시점에서 화면 절반 — `--nowater`면 100)이다. 물 셰이더 비등방 거르기를 끄는 것은 효과가 없었다. 더 올리려면 큰 강 물면을 근경 밖에서 싼 셰이더로 나누는 일이 남는다.
+
+## API (이야기·다른 담당)
+`region_main.boats`(BoatRide):
+- `board(id, from_end := -1, scripted := false) -> bool` — id는 crossings id(나루) 또는 river_lanes id. from_end 0 = 처음 끝, 1 = 끝 끝, −1 = 플레이어에 가까운 끝. 플레이어를 그 끝 배에 앉히고 떠난다. `scripted`면 이야기 컷신 중에도 멈추지 않고 gate를 보지 않는다.
+- `signal arrived(id, place_name)` · `signal boarded(id, dir)` · `signal left(id)`(닿기 전에 내림 — `cancel()` 또는 이야기 teleport).
+- `riding()` · `ride_id()` · `cancel()` · `route(id)`(`land[2]` 내릴 자리, `pts`, `len` …) · `gate: Callable(id, dir) -> String`(""이면 탐, 아니면 거절 사유 HUD).
+- 이야기가 플레이어를 쥐고 있으면(`story.owns_player()`) 탄 배는 멈춰 기다린다(scripted 제외). 타는 중 이야기가 플레이어를 3m 넘게 옮기면 내린 것으로 친다(배는 떠난 선창으로).
+- 옛 방식 호환: 플레이어가 스크립트로 뱃길 물 위(선창 끝 0.8m 너머)에 놓이면 가까운 끝에서 저절로 탄다. `world.ferry_auto(p)`·`lanes.auto(p)`는 지금 타는 배를 예전 꼴 `{dir, speed, name, start, to, id}`로 돌려준다(읽기 전용). 뱃길 id·from/to_name·stops·river_traffic·역마 건너뛰기(H)는 그대로.
+- 예: 황주 「빈 배의 값」 `hwangju_case.sail(to)` — `if boats.board("rt_jangsan_islet_lane", 0 if to == "islet" else 1, true): await boats.arrived`(배 타기가 없으면 예전 암전 이동).
+
+## 프레임
+`tools/export_boat_frames.js` + `tools/boat_bake.html` → `data/frames_boat.json`(boatman_row: idle·row 1.8초 8장·pole 2.6초 10장, 손에 붙는 긴 노/삿대 'oar' / player: sit). 헤드리스: `"/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" --headless=new --virtual-time-budget=120000 --dump-dom http://localhost:8770/__tools/boat_bake.html`(web_export_server 8770). 파일이 없으면 사공은 ambient `boatman` 대기, 플레이어는 대기 자세.
+
+## 시험
+`--ridetest[=id] [--rideend=0|1] [--rideskip]`: 내릴 자리로 가서 타고 건너며 25·55·85%·닿은 뒤를 `--shotdir`(기본 `shots/region/boat/`)에 찍고 평균 fps를 남긴다.

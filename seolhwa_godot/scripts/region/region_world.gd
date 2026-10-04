@@ -820,8 +820,8 @@ func _update_dry() -> void:
 		_dry_gate = g
 		_mat_dry.set_shader_parameter("gate", g)
 
-# ---- 나루 뱃길(큰 강, 다리 없음 — 명세 §6): crossings type "나루" + ends[2]. 뱃길 위는 배 갑판 높이의 걷기 면,
-# 나룻배(kit/village/narutbae) 한 척이 플레이어가 뱃길 물 위에 있는 동안 발밑을 따라온다(내리면 그 자리에 남는다).
+# ---- 나루 뱃길(큰 강, 다리 없음 — 명세 §6): crossings type "나루" + ends[2]. 물 위 걷기 면은 없다 — 나룻배(kit/village/narutbae)
+# 한 척이 나루에 묶여 있고, 사공이 저어 건넨다(scripts/region/boat_ride.gd: 나루 끝에서 E "건너간다").
 var ferries: Array = []          # [{id, name, a: Vector2, b: Vector2, len, dir: Vector2, boat: Node3D, s}]
 const FERRY_HW := 1.9            # 뱃길 반폭(배 폭 1.7 + 여유)
 const FERRY_DECK := 0.32         # 물 면 위 갑판 높이
@@ -840,13 +840,9 @@ func _build_ferries() -> void:
 		if L < 4.0: continue
 		var d := (b - a) / L
 		drop[String(c.get("id", ""))] = true
-		# 걷기 면: 뱃길 가운데를 원점으로, 로컬 z = 뱃길 방향. 양 끝 4m는 둑 위로 이어진다(height_at은 땅과 큰 값)
-		var mid := (a + b) * 0.5
 		var ry := atan2(d.x, d.y)
-		var xf := Transform3D(Basis(Vector3.UP, ry), Vector3(mid.x, sea_y, mid.y))
-		add_walk(xf, { minX = -FERRY_HW, maxX = FERRY_HW, minZ = -L * 0.5 - 4.0, maxZ = L * 0.5 + 4.0, z = [-L * 0.5 - 4.0, L * 0.5 + 4.0], y = [FERRY_DECK, FERRY_DECK] })
 		var f := { id = String(c.get("id", "")), name = String(c.get("name", "나루")), a = a, b = b, len = L, dir = d, ry = ry, boat = null, s = 6.0,
-			auto = bool(c.get("auto", false)), sail = 0, sea = bool(c.get("sea_lane", false)) }
+			auto = bool(c.get("auto", false)), sail = 0, sea = bool(c.get("sea_lane", false)), kit = bk }
 		if boat_scr != null and boat_scr.can_instantiate():
 			var info = boat_scr.build({ seed = hash(f.id) & 0xffff })
 			if info is Dictionary and info.get("node") is Node3D:
@@ -877,29 +873,12 @@ func _place_boat(f: Dictionary, s: float, lat := 0.0) -> void:
 		bob = sin(t * 1.1) * 0.06
 	f.boat.transform = Transform3D(bs, Vector3(p.x, sea_y + 0.02 + bob, p.y))
 
-# 바다 뱃길 auto: 플레이어가 배(뱃길 물 위)에 오르면 저절로 건너편 포구로 간다 — region_main이 움직임을 이것으로 바꾼다.
-# 돌려주는 값 {dir: Vector2, speed, name, start: bool} 또는 {}
-const SAIL_SPEED := 9.0
-func ferry_auto(player: Vector3) -> Dictionary:
-	for f in ferries:
-		if not f.auto: continue
-		var rel := Vector2(player.x, player.z) - (f.a as Vector2)
-		var s: float = rel.dot(f.dir)
-		var lat: float = rel.dot(Vector2(-f.dir.y, f.dir.x))
-		var on: bool = absf(lat) < FERRY_HW + 0.5 and s > -1.0 and s < f.len + 1.0 and ground_at(player.x, player.z) < sea_y + 0.1
-		if not on:
-			f.sail = 0
-			continue
-		var start := false
-		if f.sail == 0:
-			f.sail = 1 if s < f.len * 0.5 else -1
-			start = true
-		var d: Vector2 = f.dir * float(f.sail)
-		d += Vector2(-f.dir.y, f.dir.x) * clampf(-lat * 0.5, -0.5, 0.5)   # 뱃길 가운데로
-		return { dir = d.normalized(), speed = SAIL_SPEED, name = String(f.name), start = start, to = "b" if f.sail > 0 else "a" }
-	return {}
+# 예전 API(읽기 전용): 지금 나루·바다 뱃길 배를 타고 있으면 {dir, speed, name, start, to, id}, 아니면 {} — 배는 boat_ride.gd가 몬다
+var boat_ride = null
+func ferry_auto(_player: Vector3) -> Dictionary:
+	return boat_ride.legacy("ferry") if boat_ride != null else {}
 
-# 플레이어가 뱃길 물 위(땅이 물 면 아래)에 있으면 배가 발밑으로 온다
+# (예전) 플레이어가 뱃길 물 위에 있으면 배가 발밑으로 온다 — 이제 region_main은 부르지 않는다(boat_ride가 배를 놓는다)
 func update_ferries(player: Vector3) -> void:
 	for f in ferries:
 		var rel := Vector2(player.x, player.z) - (f.a as Vector2)
@@ -1194,6 +1173,13 @@ func tile_of(x: float, z: float) -> Vector2i:
 	return Vector2i(floori(x / TILE), floori(z / TILE))
 
 # 스트리밍 중심 갱신(플레이어 위치). 타일이 바뀔 때만 일한다.
+# 근경 반경(타일)을 바꾼다 — 배 위 낮은 시점은 기슭이 멀리까지 보여 근경 칸이 많이 그려지므로 1로 줄인다(boat_ride/region_main)
+var near_r := NEAR_R
+func set_near_r(n: int) -> void:
+	if n == near_r: return
+	near_r = n
+	_center = Vector2i(1 << 20, 1 << 20)   # 다음 focus에서 다시 고른다
+
 func focus(pos: Vector3) -> void:
 	var c := tile_of(pos.x, pos.z)
 	if c == _center: return
@@ -1205,9 +1191,9 @@ func focus(pos: Vector3) -> void:
 			var t := c + Vector2i(dx, dz)
 			if not _tile_ok(t): continue
 			var ring := maxi(absi(dx), absi(dz))
-			var lod := 0 if ring <= NEAR_R else 1
+			var lod := 0 if ring <= near_r else 1
 			# 이미 근경인 타일은 한 칸 더 멀어질 때까지 근경 유지
-			if lod == 1 and tiles.has(t) and tiles[t].lod == 0 and ring <= NEAR_R + KEEP: lod = 0
+			if lod == 1 and tiles.has(t) and tiles[t].lod == 0 and ring <= near_r + KEEP: lod = 0
 			want[t] = lod
 	for t in tiles.keys():
 		if not want.has(t): _drop_tile(t)

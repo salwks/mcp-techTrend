@@ -13,7 +13,9 @@
 #   --routedir=폴더[;폴더]  노정을 더 찾을 폴더(시험: res://shots/region/test_route/)
 #   --weather=clear|cloudy|rain|fog|snow|wind  날씨 고정(U 키: 날씨 돌리기)
 #   --walkroute[=n] [--walkspeed=12]  --portaltest처럼 공간을 넘되, 노정에서는 주 도로를 끝까지 실제로 걷는다(막힘을 WALK stuck으로 남김)
-#   --sailspeed=25    강 뱃길(river_lanes) 배 속도를 바꿔 시험(기본 route.json speed 7.5m/s)
+#   --sailspeed=25    배 속도를 바꿔 시험(강 뱃길 기본 route.json speed 7.5m/s, 나루 5.5, 바다 9)
+#   --ridetest[=id] [--rideend=0|1] [--rideskip]  불러오기가 끝나면 그 배(없으면 첫 배)의 내릴 자리로 가 배를 타고 건너며
+#                     풍경 시점을 --shotdir(기본 shots/region/boat)에 찍고, 닿으면 끝낸다(배 타기 boat_ride.gd)
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
@@ -27,6 +29,7 @@ const Weather := preload("res://scripts/region/weather.gd")
 const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const RiverLanes := preload("res://scripts/region/river_lanes.gd")
+const BoatRide := preload("res://scripts/region/boat_ride.gd")
 const StoryDirector := preload("res://scripts/story/story_director.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
@@ -121,6 +124,11 @@ var _ptest := {}          # --portaltest 진행 상태
 var _route_entry := ""    # 노정에 들어온 끝 포털 id — 다른 끝 포털로 나가면 그 노정을 '지나옴'(Progress)
 var _fast_hint := ""      # 역마 안내를 띄운 포털 id
 var lanes = null          # RiverLanes(강 뱃길 route.json river_lanes) — 없으면 null
+var boats = null          # BoatRide(나루·강 뱃길·바다 뱃길 배 타기 — 사공이 젓는다)
+var _boat_prompt: Label
+var _scatter_base := 220.0
+const SAIL_SCATTER := 150.0   # 배 위 낮은 시점: 먼 기슭 식생(거친 벌)은 이 거리까지만 — 낮은 시점은 멀리까지 보여 fps가 떨어진다
+var _e_hold := 0.0
 var _dead_done := false   # 막다른 노정 끝에 닿아 '지나옴'을 기록했나
 var story = null          # 이야기(scripts/story/story_director.gd): 사건·소문·전투. --nostory로 끔
 
@@ -194,6 +202,7 @@ func _ready() -> void:
 		var a0: String = args.get("walkroute", args.get("portaltest", "1"))
 		_ptest = _pending.get("ptest", { left = int(a0) if a0 != "1" else 2, n = 0, walk = args.has("walkroute") })
 	elif not _pending.is_empty(): pass   # 넘어온 장면에서는 투어·찍기를 다시 하지 않는다
+	elif args.has("ridetest"): _ride_test.call_deferred(String(args.ridetest))
 	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
 
@@ -209,9 +218,11 @@ func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
 		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5], weather_step = [KEY_F6], fast_travel = [KEY_H],
+		interact = [KEY_E], boat_skip = [KEY_SPACE],
 	}
 	for act in keys:
 		if not InputMap.has_action(act): InputMap.add_action(act)
+		if act == "interact" and not InputMap.action_get_events(act).is_empty(): continue
 		for k in keys[act]:
 			var ev := InputEventKey.new(); ev.physical_keycode = k
 			InputMap.action_add_event(act, ev)
@@ -298,6 +309,9 @@ func _build_scene() -> void:
 	root.add_child(player)
 	if not args.has("nonpc") and not args.has("nochars"):
 		npcs_amb = NpcAmbient.new(); root.add_child(npcs_amb); npcs_amb.setup(world, weather, cam, placement)
+	boats = BoatRide.new(); boats.setup(self)
+	if args.has("sailspeed"): boats.speed_override = float(args.sailspeed)
+	boats.arrived.connect(_on_boat_arrived)
 	teleport(world.spawn.x, world.spawn.y)
 
 const GLOW_CODE := """shader_type spatial;
@@ -429,6 +443,8 @@ func _apply_atmo() -> void:
 	world.scatter_far = clampf(1.9 / maxf(float(s.dens), 0.001), 90.0, 320.0) if fog_on else 600.0
 	if args.has("lod0"): world.lod0_dist = float(args.lod0)
 	if args.has("scatterfar"): world.scatter_far = float(args.scatterfar)
+	_scatter_base = world.scatter_far
+	if rig != null and rig.sailing: world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
 	post.state = s
 
 static func _srgb(v: Vector3) -> Color:
@@ -570,17 +586,11 @@ func _process(delta: float) -> void:
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if _loading or _leaving or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
 	var speed := RUN if Input.is_action_pressed("run") else WALK
-	if not _ptest.is_empty() and not _loading and not _leaving:
+	if not _ptest.is_empty() and not _loading and not _leaving and not boats.riding():
 		mv = _ptest_step(delta); speed = RUN
 		if not _pt_path.is_empty(): speed = float(args.get("walkspeed", "12"))
-	# 바다 뱃길(auto): 배에 오르면 저절로 건너편 포구로(입력·걷기 시험보다 앞선다)
-	if not _loading and not _leaving:
-		var sail: Dictionary = world.ferry_auto(player_pos)
-		if sail.is_empty() and lanes != null: sail = lanes.auto(player_pos)
-		rig.sailing = not sail.is_empty()
-		if not sail.is_empty():
-			mv = sail.dir; speed = float(sail.speed)
-			if sail.start: _show_hud("배에 올랐다 — %s" % String(sail.name))
+	_update_boats(dt)
+	if boats.riding(): mv = Vector2.ZERO   # 배 위: 사공이 젓는다(입력 막음 — 지도·기록책·건너뛰기만)
 	if _bench_left > 0.0 and _bench_loading and _loading:
 		_bench_load_t += delta
 	elif _bench_left > 0.0 and _bench_loading:
@@ -602,6 +612,7 @@ func _process(delta: float) -> void:
 		if _bench_left <= 0.0: _bench_report()
 	if story != null: story.update(dt)   # 이야기·전투(전투 중에는 전투가 플레이어를 옮긴다)
 	if story != null and story.owns_player(): pass
+	elif boats.riding(): pass
 	elif mv.length() > 0.0:
 		var r := player.radius
 		var np = null
@@ -651,7 +662,6 @@ func _process(delta: float) -> void:
 	world.update_scatter_lod(player_pos)
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)
-	world.update_ferries(player_pos)
 	if lanes != null:
 		lanes.update(dt, player_pos)
 		var lh: String = lanes.take_hud()
@@ -662,7 +672,7 @@ func _process(delta: float) -> void:
 		weather.update(dt, player_pos, cam.global_position, interior != null)
 		world.wet_level = weather.wet
 		if weather.dirty and Engine.get_process_frames() % 3 == 0: _apply_atmo()
-	if not _loading and not _leaving: _check_portals()
+	if not _loading and not _leaving and not boats.riding(): _check_portals()
 	if _hud and _hud_t > 0.0:
 		_hud_t -= delta; _hud.modulate.a = clampf(_hud_t, 0.0, 1.0)
 	var _t3 := Time.get_ticks_usec()
@@ -726,6 +736,51 @@ func _run_shot(path: String, frames: int) -> void:
 	await _wait_frames(frames)
 	_save(_abs(path))
 	if args.has("quit"): _quit()
+
+# --ridetest[=id]: 배 내릴 자리로 가서 타고 건너며 풍경 시점을 찍는다(뱃길 25%·55%·85%, 닿은 뒤)
+func _ride_test(id: String) -> void:
+	Engine.max_fps = 0
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	await _wait_frames(10)
+	var n := 0
+	while _loading and n < 3000:
+		await _wait_frames(1); n += 1
+	if boats.routes.is_empty():
+		print("RIDETEST 배 없음"); _quit(); return
+	var r: Dictionary = boats.route(id) if id != "1" else boats.routes[0]
+	if r.is_empty(): r = boats.routes[0]
+	var e := int(args.get("rideend", "0"))
+	var lp: Vector2 = r.land[e]
+	teleport(lp.x, lp.y)
+	rig.update(0, player_pos, player.facing, null, true)
+	await _wait_frames(30)
+	n = 0
+	while (world.stats.jobs > 0 or placement.busy()) and n < 600:
+		await _wait_frames(1); n += 1
+	var dir: String = _abs(args.get("shotdir", "shots/region/boat"))
+	var tag := String(r.id)
+	_save(dir.path_join("%s_0_pier.png" % tag))
+	print("RIDETEST near=%s prompt=%s" % [boats.near != null, boats.prompt])
+	if not boats.board(String(r.id), e):
+		print("RIDETEST 못 탐"); _quit(); return
+	var marks := [0.25, 0.55, 0.85]
+	var mi := 0
+	var t0 := Time.get_ticks_msec()
+	var fr := 0; var ft := 0.0
+	while boats.riding():
+		await _wait_frames(1)
+		fr += 1; ft += get_process_delta_time()
+		if fr % 300 == 0: print("RIDETEST f=%d fps=%.0f tris=%dk draws=%d" % [fr, Engine.get_frames_per_second(), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) / 1000, RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+		var prog: float = absf(float(boats.ride.s) - (r.half if e == 0 else r.len - r.half)) / maxf(1.0, r.len - 2.0 * r.half) if boats.riding() else 1.0
+		if mi < marks.size() and prog >= marks[mi]:
+			await _wait_frames(4)
+			_save(dir.path_join("%s_%d_ride.png" % [tag, mi + 1]))
+			mi += 1
+		if Time.get_ticks_msec() - t0 > 400000: print("RIDETEST 시간 넘음"); break
+	print("RIDETEST done %s ride_s=%.1f avg_fps=%.1f pos=%s" % [tag, (Time.get_ticks_msec() - t0) / 1000.0, fr / maxf(ft, 0.001), player_pos])
+	await _wait_frames(70)
+	_save(dir.path_join("%s_9_arrive.png" % tag))
+	_quit()
 
 func _find_place(key: String) -> Variant:
 	var reg: Dictionary = world.region
@@ -1033,6 +1088,75 @@ func _leave() -> void:
 	world.shutdown()
 	weather.reset_globals()
 	get_tree().reload_current_scene()
+
+# ---- 배 타기(boat_ride.gd): 나루·선창 끝에서 E로 오르면 사공이 저어 건넨다. Space(또는 E 누르고 있기) 건너뛰기 ----
+func _update_boats(dt: float) -> void:
+	if _loading or _leaving:
+		_boat_text(""); return
+	var st = story.get("_target") if story != null else null
+	var free: bool = st == null and not (_map and _map.visible)
+	var want: bool = free and Input.is_action_just_pressed("interact")
+	_e_hold = _e_hold + dt if Input.is_action_pressed("interact") and free else 0.0
+	# 걷기 시험: 앞으로 걸을 길 점 가운데 건너편 내릴 자리 30m 안이 있으면(길이 뱃길로 이어짐) 저절로 탄다
+	if not _pt_path.is_empty() and boats.near != null and not boats.riding():
+		var far: Vector2 = boats.near.r.land[1 - int(boats.near.end)]
+		for i in range(_pt_i, _pt_path.size() - 1):   # 마지막 점(끝 포털)은 빼고
+			if _pt_path[i].distance_to(far) < 30.0: want = true; break
+	var skip: bool = Input.is_action_pressed("boat_skip") or _e_hold > 0.35 or args.has("rideskip")
+	boats.update(dt, want, skip, story != null and story.owns_player())
+	if rig.sailing != boats.riding():
+		rig.sailing = boats.riding()
+		world.scatter_far = minf(_scatter_base, SAIL_SCATTER) if rig.sailing else _scatter_base
+		world.update_scatter_lod(player_pos, true)
+		# 낮은 시점은 그림자 거리 안에 기슭이 넓게 들어와 그림자 그리기가 무겁다(60m → 28m: 배·사람 그림자는 그대로)
+		var sd := float(args.get("shadowdist", "60"))
+		sun.directional_shadow_max_distance = minf(sd, 28.0) if rig.sailing else sd
+		world.set_near_r(1 if rig.sailing else RegionWorld.NEAR_R)
+	if rig.sailing:
+		rig.sail_dir = boats.heading(); rig.sail_side = boats.view_side(dt)
+		_boat_text("Space  건너뛰기" if not boats.skipping else "건너뛰는 중…")
+	else:
+		_boat_text(("E   " + boats.prompt) if boats.prompt != "" and st == null else "")
+	var bh: String = boats.take_hud()
+	if bh != "": _show_hud(bh)
+	# 낮은 배 위 시점: 틸트시프트 선명 띠를 넓히고 위(먼 기슭·능선)는 덜 흐리게
+	var k := minf(1.0, dt * 2.0)
+	post.band += ((0.2 if rig.sailing else 0.07) - post.band) * k
+	post.top_bias += ((0.4 if rig.sailing else 1.0) - post.top_bias) * k
+
+func _boat_text(t: String) -> void:
+	if _boat_prompt == null:
+		if t == "": return
+		_boat_prompt = Label.new()
+		_boat_prompt.add_theme_font_size_override("font_size", 22)
+		_boat_prompt.add_theme_color_override("font_color", Color("#f4ecd8"))
+		_boat_prompt.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.05))
+		_boat_prompt.add_theme_constant_override("outline_size", 6)
+		_boat_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_boat_prompt.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		_boat_prompt.offset_left = -300; _boat_prompt.offset_right = 300; _boat_prompt.offset_top = -86; _boat_prompt.offset_bottom = -52
+		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(_boat_prompt); add_child(cl)
+	if _boat_prompt.text != t: _boat_prompt.text = t
+
+# 화면(카메라 yaw) 기준 방향 이름 — 배 위처럼 카메라가 돌았을 때 그림 방향(up=등, down=앞, left·right=옆)
+func facing_cam(dx: float, dz: float, prev: String) -> String:
+	if dx == 0.0 and dz == 0.0: return prev
+	var r := cam.global_transform.basis.x; var f := -cam.global_transform.basis.z
+	var rx := Vector2(r.x, r.z).normalized(); var fw := Vector2(f.x, f.z).normalized()
+	var v := Vector2(dx, dz)
+	return facing_from(v.dot(rx), -v.dot(fw), prev)
+
+func _on_boat_arrived(_id: String, _place: String) -> void:
+	_pt_stuck = 0.0; _pt_last = player_pos
+	if _pt_path.is_empty(): return
+	# 걷기 시험: 내린 자리에서 가장 가까운 앞쪽 길 점부터 이어 걷는다
+	var pp := Vector2(player_pos.x, player_pos.z)
+	var bi := _pt_i; var bd := INF
+	for i in range(_pt_i, _pt_path.size()):
+		var d := _pt_path[i].distance_to(pp)
+		if d < bd: bd = d; bi = i
+	_pt_i = bi
+	_pt_walk.last = pp
 
 func _show_hud(t: String) -> void:
 	if _hud == null:

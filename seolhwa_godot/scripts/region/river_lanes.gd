@@ -1,11 +1,11 @@
 # 강 뱃길(route.json river_lanes · river_traffic) — 한강·남한강, 대동강 수운 노정(tools/region/river_routes.py).
 # 제주 바다 뱃길(region_world ferry_auto)과 같은 방식을 꺾은선으로 넓힌 것:
-#   - 뱃길(포구 선창 → 다음 포구 선창) 꺾은선 마디마다 갑판 높이 걷기 면(world.add_walk)을 깔고, 양 끝은 선창 길이만큼 뭍 쪽으로 잇는다.
-#   - 플레이어가 뱃길 물 위(선창 끝)에 오르면 배가 저절로 다음 포구 선창까지 간다(auto). 선창에서 내리면 멈추고, 포구를 지나
-#     다음 선창의 배에 오르면 이어 간다. 끝 선창에서 타면 되돌아간다. 여울(slow)에서는 느려진다.
-#   - 돛배 한 척이 뱃길마다 발밑을 따라온다(내리면 그 자리에 남는다).
+#   - 뱃길(포구 선창 → 다음 포구 선창) 꺾은선. 걷기 면은 양 끝 선창 잔교 위(뭍 쪽 선창 길이 + 2m ~ 선창 끝 +0.5m)만 깐다 —
+#     물 위로 걸어 나가지 않는다. 배는 사공이 저어 간다(scripts/region/boat_ride.gd — 선창 끝에서 E로 오르면 다음 포구 선창까지).
+#     포구에서 내려 포구를 지나 다음 선창 배에 오르면 이어 간다. 끝 선창에서 타면 되돌아간다. 여울(slow)에서는 느려진다.
+#   - 돛배 한 척이 뱃길마다 묶여 있다(boat_ride가 옮긴다).
 #   - river_traffic: 뗏목·세곡선·장삿배가 물길을 따라 오르내린다(그림만, 충돌 없음).
-# region_main: setup(world) → 매 프레임 auto(player)(입력보다 앞섬) · update(dt, player) · take_hud().
+# region_main: setup(world) → BoatRide.setup → 매 프레임 update(dt, player)(떠가는 배). auto(player)는 예전 꼴의 읽기 전용(지금 타는 배).
 extends RefCounted
 
 const HW := 1.9            # 뱃길 반폭(region_world FERRY_HW와 같음)
@@ -36,20 +36,21 @@ func setup(w) -> void:
 		if pts.size() < 2: continue
 		var cum := _cum(pts)
 		var pier: Array = L.get("pier", [4.0, 4.0])
-		# 걷기 면: 마디마다 사각형(이음매는 반폭만큼 겹침), 첫·끝 마디는 선창 길이 + 2m만큼 뭍 쪽으로
-		for i in pts.size() - 1:
-			var a := pts[i]; var b := pts[i + 1]; var l := a.distance_to(b)
-			if l < 0.01: continue
-			var d := (b - a) / l
-			var e0 := HW if i > 0 else float(pier[0]) + 2.0
-			var e1 := HW if i < pts.size() - 2 else float(pier[1]) + 2.0
-			var mid := (a + b) * 0.5
+		# 걷기 면: 양 끝 선창 잔교만(뭍 쪽 선창 길이 + 2m ~ 선창 끝 + 0.5m). 물 위 뱃길은 걷지 않는다(배를 탄다)
+		for e in 2:
+			var tip := pts[0] if e == 0 else pts[pts.size() - 1]
+			var nx := pts[1] if e == 0 else pts[pts.size() - 2]
+			var d := (nx - tip).normalized()   # 물 쪽
+			var back := float(pier[e]) + 2.0
+			var mid := tip + d * (0.5 - back) * 0.5
+			var l := back + 0.5
 			var xf := Transform3D(Basis(Vector3.UP, atan2(d.x, d.y)), Vector3(mid.x, w.sea_y, mid.y))
-			w.add_walk(xf, { minX = -HW, maxX = HW, minZ = -l * 0.5 - e0, maxZ = l * 0.5 + e1, z = [-l * 0.5 - e0, l * 0.5 + e1], y = [DECK, DECK] })
+			w.add_walk(xf, { minX = -HW, maxX = HW, minZ = -l * 0.5, maxZ = l * 0.5, z = [-l * 0.5, l * 0.5], y = [DECK, DECK] })
 		var lo := Vector2(INF, INF); var hi := Vector2(-INF, -INF)
 		for p in pts: lo = lo.min(p); hi = hi.max(p)
 		var f := { id = String(L.get("id", "")), name = String(L.get("name", "뱃길")), from_name = String(L.get("from_name", "")), to_name = String(L.get("to_name", "")),
-			pts = pts, cum = cum, len = cum[cum.size() - 1], boat = null, half = 5.0, s = 0.0, sail = 0, last = 1, t0 = 0.0,
+			pts = pts, cum = cum, len = cum[cum.size() - 1], boat = null, half = 5.0, s = 0.0, sail = 0, last = 1, t0 = 0.0, pier = pier,
+			kit = String(L.get("boat_kit", "route/dotbae")),
 			speed = float(L.get("speed", SAIL_SPEED)), slow = L.get("slow", []), bb = Rect2(lo - Vector2(8, 8), hi - lo + Vector2(16, 16)) }
 		var bp: Dictionary = L.get("boat_params", {}) if L.get("boat_params") is Dictionary else {}
 		var node := _kit(String(L.get("boat_kit", "route/dotbae")), bp, hash(f.id) & 0xffff)
@@ -57,7 +58,8 @@ func setup(w) -> void:
 			node.name = "뱃길배_" + f.id
 			w.water_root.add_child(node)
 			f.boat = node
-			f.half = float(bp.get("len", 9.0)) * 0.5 + 0.4
+			f.blen = float(bp.get("len", 6.4 if f.kit.contains("narutbae") else 9.0))
+			f.half = f.blen * 0.5 + 0.4
 		lanes.append(f)
 		_place(f, f.half, 0.0, 1)
 	for T in region.get("river_traffic", []):
@@ -73,51 +75,15 @@ func setup(w) -> void:
 	if not lanes.is_empty():
 		print("RIVER lanes=%s traffic=%d" % [lanes.map(func(f): return "%s(%.0fm)" % [f.id, f.len]), traffic.size()])
 
-# 배에 올라 있으면 {dir, speed, name, start} — region_main이 움직임을 이것으로 바꾼다. 아니면 {}
-func auto(player: Vector3) -> Dictionary:
-	var pp := Vector2(player.x, player.z)
-	for f in lanes:
-		if not f.bb.has_point(pp):
-			_off(f); continue
-		var pr := _project(f, pp)
-		var on: bool = absf(pr.lat) < HW + 0.5 and pr.s > -1.0 and pr.s < f.len + 1.0 and world.ground_at(player.x, player.z) < world.sea_y + 0.1
-		if not on:
-			_off(f, pr.s); continue
-		var start := false
-		if f.sail == 0:
-			f.sail = 1 if pr.s < f.len * 0.5 else -1
-			f.last = f.sail; f.t0 = Time.get_ticks_msec() / 1000.0
-			start = true
-			print("SAIL start %s dir=%d s=%.0f/%.0f" % [f.id, f.sail, pr.s, f.len])
-		var t := _tangent(f, pr.s)
-		var n := Vector2(-t.y, t.x)
-		var d: Vector2 = t * float(f.sail) + n * clampf(-pr.lat * 0.5, -0.5, 0.5)
-		var sp: float = speed_override if speed_override > 0.0 else f.speed
-		for sl in f.slow:
-			if pr.s >= float(sl[0]) and pr.s <= float(sl[1]): sp *= float(sl[2])
-		return { dir = d.normalized(), speed = sp, name = f.name, start = start, to = f.to_name if f.sail > 0 else f.from_name }
-	return {}
-
-func _off(f: Dictionary, s := NAN) -> void:
-	if f.sail == 0: return
-	var arrived: bool = not is_nan(s) and ((f.sail > 0 and s > f.len - 3.0) or (f.sail < 0 and s < 3.0))
-	var dt: float = Time.get_ticks_msec() / 1000.0 - float(f.t0)
-	print("SAIL %s %s t=%.1fs" % ["arrive" if arrived else "leave", f.id, dt])
-	if arrived: _hud = "%s에 닿았다 — 내려서 포구를 지나 다음 배에 오른다" % String(f.to_name if f.sail > 0 else f.from_name)
-	f.sail = 0
+# 예전 API(읽기 전용): 지금 강 뱃길 배를 타고 있으면 {dir, speed, name, start, to, id}, 아니면 {} — 배는 boat_ride.gd가 몬다
+var boat_ride = null
+func auto(_player: Vector3) -> Dictionary:
+	return boat_ride.legacy("lane") if boat_ride != null else {}
 
 func take_hud() -> String:
 	var h := _hud; _hud = ""; return h
 
-func update(dt: float, player: Vector3) -> void:
-	var pp := Vector2(player.x, player.z)
-	for f in lanes:
-		var placed := false
-		if f.bb.has_point(pp) and world.ground_at(player.x, player.z) < world.sea_y + 0.1:
-			var pr := _project(f, pp)
-			if absf(pr.lat) <= HW + 0.5 and pr.s >= -2.0 and pr.s <= f.len + 2.0:
-				_place(f, pr.s, pr.lat, f.sail if f.sail != 0 else f.last); placed = true
-		if not placed: _place(f, f.s, 0.0, f.last)
+func update(dt: float, _player: Vector3) -> void:
 	var t := Time.get_ticks_msec() / 1000.0
 	for tr in traffic:
 		tr.s = fposmod(float(tr.s) + float(tr.speed) * dt, float(tr.len))
