@@ -2,6 +2,8 @@
 #   godot --path seolhwa_godot res://scenes/kit_preview.tscn -- --kit=res://kit/village/choga.gd --params='{"w":6}' \
 #         --shot=shots/kit_choga.png [--time=10] [--pitch=38] [--dist=16] [--yaw=0] [--ground=1] [--fit=1]
 # 키트 스크립트는 static func build(params: Dictionary) -> Dictionary 를 가져야 한다(docs/REGION_CONTRACTS.md §4).
+# --state=FIRE_2 또는 --state=main:FIRE_2,hatch:OPEN : 상태 있는 키트(kit/scenario)의 상태(없으면 기본 상태, 연출 fx 포함)
+# --hide=front,roof : 그 이름의 부분 노드를 숨김(실내 보기)
 # --center=x,y,z: 그 점을 중심으로(큰 성곽의 일부를 게임 거리로). --kit 대신 --scene=res://... 로 Node3D를 돌려주는 static func make() 스크립트도 찍을 수 있다.
 extends Node
 
@@ -89,8 +91,33 @@ func _ready() -> void:
 	elif args.has("scene"):
 		target = load(args.scene).make()
 	if target: vp.add_child(target)
+	if target and info.has("node"): _preview_states(target, info)
 	_frame_camera(target)
 	_shoot.call_deferred(info)
+
+# 상태 노드("S_<그룹>_<상태[-상태…]>") 보이기 + 연출 — 엔진(prop_states.gd)과 같은 규칙
+func _preview_states(target: Node3D, info: Dictionary) -> void:
+	var want := {}
+	for g in info.get("state_default", {}): want[g] = info.state_default[g]
+	if args.has("state"):
+		for kv in String(args.state).split(",", false):
+			var p := kv.split(":")
+			if p.size() == 2: want[p[0]] = p[1]
+			else: want["main"] = p[0]
+	for n in target.find_children("S_*", "", true, false):
+		var rest := String(n.name).substr(2)
+		var i := rest.find("_")
+		var g := rest.substr(0, i)
+		var sts := rest.substr(i + 1).split("-", false)
+		(n as Node3D).visible = sts.has(String(want.get(g, "NORMAL")))
+	for g in info.get("state_fx", {}):
+		for sp in info.state_fx[g].get(String(want.get(g, "NORMAL")), []):
+			if sp.get("type", "") != "light": target.add_child(preload("res://scripts/region/state_fx.gd").make(sp))
+	if args.has("hide"):
+		for nm in String(args.hide).split(",", false):
+			var h := target.find_child(nm, true, false)
+			if h: h.visible = false
+	print("STATES ", info.get("states", {}), " shown=", want)
 
 func _frame_camera(target: Node3D) -> void:
 	var center := Vector3.ZERO; var radius := 5.0

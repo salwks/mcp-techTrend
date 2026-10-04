@@ -9,6 +9,8 @@
 #     조각 { kit, params, x, z, ry, y?(선택, 부모 높이 기준) }는 부모 기준 로컬 좌표.
 #   - flatten: footprint(+2m 여유, 회전 반영) 안을 평평하게, 가장자리 5m에 걸쳐 원래 땅으로(높이맵 텍스처·CPU height_at 둘 다).
 #   - clear_veg: footprint(+1m, flatten이면 고른 터 전체) 안 식생을 비운다(식생 흩뿌리기 결과에서 거름 / scatter가 exclude 인자를 받으면 넘김).
+#   - state: 프롭 상태(prop_states.gd) — 문자열이면 주 상태, 사전이면 그룹별 {"main":"BURNT","hatch":"OPEN"}. 배치형 조각은 조각 state
+#     또는 부모 항목의 "states": {조각 tag: 상태}. dy: 지형(터 고르기 뒤) 위로 더 올림(m) — 건물 마루 위 소품.
 #   - walk(걷기 면): build() 결과의 walk 배열(§8 형식) — 없으면 돌다리·섶다리·징검다리는 params로 만든다.
 #     다리 y가 null이면 둑 높이(다리 양 끝 지형 평균), 징검다리·나루배·빨래터는 가까운 하천 수면.
 extends RefCounted
@@ -76,6 +78,7 @@ static func _key(kit: String, params: Dictionary) -> String:
 # 모두 다시: 이전 배치·터 고르기·식생 비우기·걷기 면을 지우고 처음부터
 func reload() -> void:
 	stop()
+	if world.get("props") != null: world.props.clear_nodes()
 	world.remove_tagged(TAG)
 	world.reset_edits()
 	load_all()
@@ -186,6 +189,7 @@ func load_all() -> void:
 	world.tile_listener = request_tile
 	for t in world.tiles: request_tile(t)
 	stats.ms = Time.get_ticks_msec() - t0
+	if world.get("decals") != null: world.decals.reload_data()   # 데칼은 터 고르기 뒤 높이로
 	print("PLACEMENT files=%d items=%d pieces=%d built_now=%d flatten=%d yards=%d walks=%d missing=%d ms=%d (나머지는 타일이 가까워질 때 백그라운드로 짓는다)" % [stats.files, stats.items, place.size(), stats.builds_now, stats.flatten, stats.yards, stats.walks, stats.missing, stats.ms])
 
 # ---------------------------------------------------------------------------
@@ -296,7 +300,8 @@ func _place_one(r: Dictionary) -> void:
 		var ps: PackedScene = _packed.get(k)
 		node = ps.instantiate() if ps != null else info.node.duplicate()
 	node.name = String(r.id) if r.id != "" else node.name
-	world.add_static(node, r.xf, info, TAG)
+	var entry = world.add_static(node, r.xf, info, TAG)
+	if world.get("props") != null and entry is Dictionary: world.props.register(String(r.id), node, entry, info, r.get("state"))
 	if not r.walk_done:
 		for w in _walks_for(r, info): world.add_walk(r.xf, w); stats.walks += 1
 	if info.get("water") is Dictionary and not _has(_script(r.kit), "outline"):
@@ -340,7 +345,7 @@ static func _yard_kit(r: Dictionary) -> bool:
 var _cat := {}
 func _load_catalogs() -> void:
 	if not _cat.is_empty(): return
-	for d in ["village", "landmark", "nature", "route"]:
+	for d in ["village", "landmark", "nature", "route", "scenario"]:
 		var path := "res://kit/%s/catalog.json" % d
 		if not FileAccess.file_exists(path): continue
 		var c = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -373,7 +378,8 @@ func _rec(it: Dictionary) -> Dictionary:
 		x = float(it.get("x", 0.0)), z = float(it.get("z", 0.0)), ry = float(it.get("ry", 0.0)),
 		y = (float(it.y) if it.get("y") != null else null), flatten = bool(it.get("flatten", false)),
 		clear_veg = bool(it.get("clear_veg", true)), fp = world.to_v2(it.get("footprint", Vector2.ZERO)), flat_y = NAN,
-		yard = bool(it.get("yard", true)) }
+		yard = bool(it.get("yard", true)), state = it.get("state"), states = it.get("states", {}) if it.get("states") is Dictionary else {},
+		dy = float(it.get("dy", 0.0)) }
 
 # 배치형 footprint가 없으면 조각 자리로 어림(+8m)
 func _fp_from_pieces(rec: Dictionary, ps: Array) -> void:
@@ -390,10 +396,14 @@ func _piece(parent: Dictionary, p: Dictionary) -> Dictionary:
 		params = p.get("params", {}) if p.get("params") is Dictionary else {},
 		x = parent.x + w.x, z = parent.z + w.z, ry = parent.ry + float(p.get("ry", 0.0)), y = null,
 		flatten = false, clear_veg = false, fp = Vector2.ZERO, flat_y = NAN, is_piece = true, parent = parent, py = p.get("y"), yard = parent.get("yard", true),
-		lx = float(p.get("x", 0.0)), lz = float(p.get("z", 0.0)) }
+		lx = float(p.get("x", 0.0)), lz = float(p.get("z", 0.0)),
+		state = p.get("state", (parent.get("states", {}) as Dictionary).get(String(p.get("tag", "")))), dy = float(p.get("dy", 0.0)) }
 	return r
 
 func _y_for(r: Dictionary, info: Dictionary) -> float:
+	return _y_base(r, info) + float(r.get("dy", 0.0))
+
+func _y_base(r: Dictionary, info: Dictionary) -> float:
 	# 배(나룻배)는 손으로 적은 y보다 찾은 물 면(하천·호수·바다·큰 강 — RegionWorld.river_surface_at)을 따른다
 	if r.kit in BOAT_KITS and not r.get("is_piece", false):
 		var bs: float = world.river_surface_at(r.x, r.z, 40.0)

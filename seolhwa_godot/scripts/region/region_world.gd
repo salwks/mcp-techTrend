@@ -14,6 +14,12 @@
 extends "res://scripts/world.gd"
 
 const PngRaw := preload("res://scripts/region/png_raw.gd")
+const PropStates := preload("res://scripts/region/prop_states.gd")
+const Decals := preload("res://scripts/region/decals.gd")
+# 사건용 세계 API(docs/reports/world-scenario.md): 프롭 상태(props)·데칼(decals)·장소 덧붙임(world_scenario.json)
+var props          # PropStates — set_prop_state(id, 상태)
+var decals         # Decals(Node3D) — 발자국·핏자국·그을림…
+var _dyn_cols := []   # 상태가 더한 충돌체(add_dynamic_collider)
 
 const TILE := 256
 const NEAR_R := 2        # 근경 반경(타일)
@@ -138,6 +144,7 @@ func load_region(dir := "") -> void:
 	region = JSON.parse_string(FileAccess.get_file_as_string(sf))
 	is_route = sf.ends_with("route.json")
 	if is_route and not region.has("region_id"): region.region_id = String(region.get("route_id", region.get("id", "route")))
+	_merge_overlay(data_dir + "world_scenario.json")
 	var pj = region.get("projection")
 	K = float(pj.get("K", 0.3)) if pj is Dictionary else 0.3
 	var hm: Dictionary = region.height
@@ -177,6 +184,8 @@ func load_region(dir := "") -> void:
 	water_root = Node3D.new(); water_root.name = "water"; add_child(water_root)
 	statics_root = Node3D.new(); statics_root.name = "statics"; add_child(statics_root)
 	scatter_root = Node3D.new(); scatter_root.name = "scatter"; add_child(scatter_root)
+	props = PropStates.new(self)
+	decals = Decals.new(); decals.setup(self); add_child(decals)
 	mesh_near = _grid_mesh(CHUNK, 1)
 	mesh_mid = _grid_mesh(TILE / MID_STEP, MID_STEP)
 	_build_far()
@@ -1488,7 +1497,8 @@ func update_scatter_lod(player: Vector3, force := false) -> void:
 # 정적 물체(키트 build() 결과)
 # ---------------------------------------------------------------------------
 # node: 키트 node(원점 = 바닥 중심), world_xform: 놓을 자리, info: build()가 돌려준 사전(colliders/lights/occluder/interior…)
-func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, tag := "") -> void:
+# 돌려주는 값: 정적 물체 항목 { node, colliders, lights, occ, interior, attached … } (프롭 상태가 불빛을 더할 때 쓴다)
+func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, tag := "") -> Dictionary:
 	node.transform = world_xform
 	var cols := []
 	for c in info.get("colliders", []):
@@ -1515,6 +1525,17 @@ func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, t
 		var it: Dictionary = info.interior.duplicate()
 		var b := _xf_box(it, world_xform)
 		it.merge(b, true)
+		it.id = String(node.name)
+		# 같은 키트를 두 번째부터 instantiate로 놓으면 hide가 첫 노드를 가리킨다 → 이 노드의 같은 경로로
+		var src = info.get("node")
+		if src is Node and src != node and it.get("hide") is Array:
+			var hs := []
+			for h in it.hide:
+				if h is Node and is_instance_valid(h) and (src as Node).is_ancestor_of(h):
+					var nn := node.get_node_or_null((src as Node).get_path_to(h))
+					if nn != null: hs.append(nn)
+				else: hs.append(h)
+			it.hide = hs
 		if it.has("floor_y"): it.floor_world = world_xform.origin.y + float(it.floor_y)  # 마루 높이(§4 보완)
 		interior = it
 	var fp := to_v2(info.get("footprint", Vector2.ZERO))
@@ -1524,6 +1545,7 @@ func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, t
 	_statics[t].append(e)
 	stats.statics += 1
 	if tiles.has(t): _attach_one(e, tiles[t].lod)
+	return e
 
 # n의 변환을 root(포함)까지 곱한다 — 트리 밖에서도 쓰려고(global_transform 대신)
 static func _xf_to(n: Node3D, root: Node3D) -> Transform3D:
@@ -1558,6 +1580,8 @@ func remove_tagged(tag: String) -> void:
 		for e in _statics[t]:
 			for c in e.colliders:
 				_grid_insert(_static_grid, c); colliders.append(c)
+	for c in _dyn_cols:
+		_grid_insert(_static_grid, c); colliders.append(c)
 
 func _attach_statics(t: Vector2i, lod: int) -> void:
 	for e in _statics.get(t, []): _attach_one(e, lod)
@@ -1741,6 +1765,63 @@ var use_cutaway := false   # 키트 재질 점무늬 가림(occ_*)이 생겨 기
 func update(_dt: float, _time: float) -> void:
 	_poll_jobs()
 	_update_dry()
+	if decals != null: decals.update(_dt)
+
+# ---------------------------------------------------------------------------
+# 사건용 세계 API (이야기 쪽이 부른다 — docs/reports/world-scenario.md)
+# ---------------------------------------------------------------------------
+# 프롭 상태: key = 배치 id 또는 "배치 id/그룹", state = NORMAL USED EMPTY BROKEN FALLEN WET BLOODY BURNT MOVED SEALED OPEN (+FIRE_1..3)
+func set_prop_state(key: String, state: String) -> bool:
+	return props.set_state(key, state) if props != null else false
+
+func get_prop_state(key: String) -> String:
+	return props.get_state(key) if props != null else "NORMAL"
+
+# 배치 항목의 키트 앵커(문·책상·숨은 바닥…)를 월드 좌표로(없으면 null)
+func prop_anchor(id: String, anchor_name: String) -> Variant:
+	return props.anchor(id, anchor_name) if props != null else null
+
+# 실내 id(배치 id)로 찾기 — { id, minX…, floor_world, camera }
+func interior_by_id(id: String) -> Variant:
+	for t in _statics:
+		for e in _statics[t]:
+			if e.interior != null and String(e.interior.get("id", "")) == id: return e.interior
+	return null
+
+# 상태가 더하는 충돌체(로컬 c를 xf로) — 돌려준 사전을 remove_dynamic_collider에 넘겨 지운다
+func add_dynamic_collider(c: Dictionary, xf: Transform3D) -> Dictionary:
+	var wc := _xf_collider(c, xf)
+	_grid_insert(_static_grid, wc)
+	colliders.append(wc)
+	_dyn_cols.append(wc)
+	return wc
+
+func remove_dynamic_collider(wc: Dictionary) -> void:
+	_dyn_cols.erase(wc)
+	colliders.erase(wc)
+	for k in _static_grid:
+		(_static_grid[k] as Array).erase(wc)
+
+# world_scenario.json(권역·노정 폴더, 선택): 파이프라인이 만든 region.json/route.json을 건드리지 않고 장소를 덧붙인다.
+# 배열 키(settlements landmarks sights roads crossings river_lanes)는 뒤에 이어 붙이고, 같은 id가 있으면 덮어쓴다.
+func _merge_overlay(path: String) -> void:
+	if not FileAccess.file_exists(path): return
+	var ov = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (ov is Dictionary): push_warning("world_scenario.json 형식 오류: " + path); return
+	var n := 0
+	for k in ["settlements", "landmarks", "sights", "roads", "crossings", "river_lanes"]:
+		if not (ov.get(k) is Array): continue
+		var arr: Array = region.get(k, []) if region.get(k) is Array else []
+		for it in ov[k]:
+			if not (it is Dictionary): continue
+			var dup := -1
+			for i in arr.size():
+				if arr[i] is Dictionary and it.has("id") and String(arr[i].get("id", "")) == String(it.id): dup = i
+			if dup >= 0: arr[dup] = it
+			else: arr.append(it)
+			n += 1
+		region[k] = arr
+	print("REGION world_scenario +%d" % n)
 
 # ---------------------------------------------------------------------------
 # 식생 가림 처리: 카메라와 플레이어 사이의 키 큰 식생(나무·대숲)을 잠시 줄여 숨긴다.

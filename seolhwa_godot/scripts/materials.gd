@@ -54,6 +54,7 @@ const DITHER := """
 
 # 날씨(권역 — scripts/region/weather.gd가 넣는다. 기본값 wet=0, snow=0, snow_line=1e5 이면 아무 일도 하지 않는다):
 # 눈 덮기 = max(snow, 눈선 snow_line 위 높이) × 윗면(법선 y), 젖음 = 어둡게. 마을 장면(--refset)은 기본값 그대로.
+# 버텍스 색 알파 = 날씨 받는 정도(기본 1). 실내 바닥·가구는 0(kit/scenario/_sc.gd S.indoor) — 지붕 밑에 눈이 쌓이거나 젖지 않게.
 const WEATHER_CODE := """
 	if (wet > 0.0 || snow > 0.0 || snow_line < 9e4) {
 		vec3 w_wp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -62,9 +63,9 @@ const WEATHER_CODE := """
 		float w_cov = 0.0;
 		if (w_sc > 0.0) {
 			float w_nz = 0.5 + 0.25 * sin(w_wp.x * 1.3 + sin(w_wp.z * 0.7)) + 0.25 * sin(w_wp.z * 1.1 + sin(w_wp.x * 0.9));
-			w_cov = clamp(w_sc * 1.5 - 0.45 + (w_nz - 0.5) * 0.35, 0.0, 1.0) * smoothstep(0.2, 0.7, w_n.y);
+			w_cov = clamp(w_sc * 1.5 - 0.45 + (w_nz - 0.5) * 0.35, 0.0, 1.0) * smoothstep(0.2, 0.7, w_n.y) * COLOR.a;
 		}
-		base *= 1.0 - 0.3 * wet * (1.0 - w_cov);
+		base *= 1.0 - 0.3 * wet * (1.0 - w_cov) * COLOR.a;
 		base = mix(base, vec3(0.80, 0.83, 0.88), w_cov);
 		ALBEDO = base;
 	}
