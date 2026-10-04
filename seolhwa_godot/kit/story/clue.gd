@@ -5,7 +5,7 @@
 #   tteok 떨어진 떡(+킁킁 파헤친 흙) · skirt 덤불에 걸린 치맛자락 · blood 길가 돌의 마른 핏자국 · tracks 큰 짐승 발자국(+끊기는 짚신 자국)
 #   basket 엎어진 빈 광주리와 수건 · flour 찢긴 밀가루 자루와 흰 발자국 · claw 나무줄기 높은 발톱 긁힘 · oil 밑동에 바른 참기름(번들거림)
 #   white_paw 문틈 아래 흰 앞발 · oil_jars 기름집 참기름 병 · cake_trail 오솔길에 놓은 떡 · feast 잔칫상 · offering 서낭당 떡 공양
-#   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛)
+#   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛) · sandal 길가에 닳은 짚신 한 짝(도입부 첫 조사, 단서 아님)
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
 
@@ -38,6 +38,7 @@ static func build(params: Dictionary) -> Dictionary:
 		"bones": _bones(m)
 		"jeogori": _jeogori(m)
 		"torch_fire": _torch_fire(m)
+		"sandal": _sandal(m)
 	return m.result("단서_" + kind, fp, false)
 
 static func _disc(rx: float, rz: float, h: float, x: float, y: float, z: float, ry := 0.0, seg := 10) -> Kit.Geo:
@@ -183,3 +184,14 @@ static func _jeogori(m: C.M) -> void:
 static func _torch_fire(m: C.M) -> void:
 	m.add("p", "glow", C.P(Kit.cone(0.16, 0.45, 6, 0, 2.3, 0), 0xffd27a, 0xff6a20), 0)
 	m.light(0, 2.3, 0, "torch")
+
+# 길가에 버려진 닳은 짚신 한 짝(S0000 — 사건 단서 아님)
+static func _sandal(m: C.M) -> void:
+	var R := m.rng
+	m.add("p", "flat", C.PA(_disc(0.32, 0.22, 0.012, 0.0, 0.006, 0.0, 0.3, 9), DIRT, 0.08, R), 0)   # 눌린 흙
+	m.add("p", "organic", C.PA(Kit.xf(Kit.box(0.11, 0.025, 0.27), 0.0, 0.02, 0.0, 0.0, 0.5, 0.06), STRAW, 0.1, R), 0.004)   # 바닥
+	for i in 3:   # 앞코·옆 날개 새끼
+		var g := Kit.box(0.02, 0.05, 0.12 - i * 0.02)
+		Kit.xf(g, -0.05 + i * 0.05, 0.05, -0.06 + i * 0.03, 0.2, 0.5 + (i - 1) * 0.5, 0)
+		m.add("p", "organic", C.PA(g, STRAW, 0.12, R), 0.003)
+	m.add("p", "organic", C.PA(Kit.xf(Kit.cyl(0.012, 0.012, 0.24, 5), 0.07, 0.03, 0.06, 1.4, 0.3, 0.0), STRAW, 0.1, R), 0.002)   # 풀린 끈

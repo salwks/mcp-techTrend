@@ -51,6 +51,44 @@ func warn_level() -> int:
 func c_ready() -> bool:
 	return f("hand_test") and bool(S.world.get("cake_bait", false)) and S.knows("K_TERRITORY") and (S.has(TORCH) or bool(S.world.get("torch_lit", false)))
 
+func route_is(r: String) -> bool:
+	return String(S.flags.get("route", "")) == r
+
+# ---------------------------------------------------------------------------
+# 첫 사건 단서 안내 단계(보강서 §14·§28 CASE_NAMWON_GUIDANCE_STAGE): 0 첫 단서 전 · 1 첫 단서 · 2 둘째 · 3 일반 조사
+#   첫째 = 강한 안내(다음 단서 쪽을 한 줄로) · 둘째 = 먹점만(자세히면 약한 한 줄) · 셋째부터 자력 조사. 먹점 거리는 onboarding.gd가 단계를 읽는다
+# ---------------------------------------------------------------------------
+const GUIDE := "CASE_NAMWON_GUIDANCE_STAGE"
+var last_guide_line := ""   # 시험 기록
+func guidance(id: String) -> void:
+	var st := int(S.flags.get(GUIDE, 0))
+	var n := mini(3, path_clues())
+	if n <= st: return
+	S.flags[GUIDE] = n
+	d.runner.log_line("guidance", n)
+	var help := String(load("res://scripts/story/game_settings.gd").help())
+	if help == "minimal" or path_clues() >= 7: return
+	if n == 1:
+		# 첫 단서: 다음 단서 방향을 약하게(떡은 고개 위로 이어진다)
+		var line := "고갯길 위쪽에도 같은 떡이 보인다." if id.begins_with("cake") and cakes_found() < 3 else "고갯길 위쪽에도 무언가 떨어져 있다."
+		last_guide_line = line
+		await d.ui.caption(line, 2.6)
+	elif n == 2 and help == "detailed":
+		last_guide_line = "흔적은 고개 쪽으로 이어지는 것 같다."
+		await d.ui.caption(last_guide_line, 2.2)
+
+# 정체 감지(보강서 §25, onboarding.gd가 단계마다 부른다): 1 기록책 물음 강조 · 2 주변 사람의 한 줄 · 3 이미 본 단서를 다시 잇는 한 줄
+func stall_hint(stage: int) -> String:
+	if S.phase == "night":
+		return ["", "오늘 밤 범이 오기 전에 무엇을 준비할 수 있는가.", "주모  “불이라도 하나 챙겨 가시오. 짐승은 불을 꺼린다던데.”", "범은 떡 냄새를 따라왔고, 빈터 밖까지는 쫓지 않았다."][mini(stage, 3)]
+	if path_clues() == 0:
+		return ["", "떡장수는 마지막으로 어디로 갔는가.", "포수  “고개 쪽 길은 요새 아무도 안 넘으려 하오.”", "떡장수는 고개 너머 장으로 가는 길이었다."][mini(stage, 3)]
+	if not f("first_encounter"):
+		return ["", "고갯마루 너머에는 무엇이 있었는가.", "", "떡이 한 방향으로 이어져 있었다."][mini(stage, 3)]
+	if not f("met_kids"):
+		return ["", "집에 남은 아이들은 어떻게 지내는가.", "주모  “그 집 애들은 누가 들여다보기나 하는지…”", "집에는 아이 둘이 남아 있다고 했다."][mini(stage, 3)]
+	return ["", "범은 무엇에 끌리고, 무엇을 꺼리는가.", "", "범은 떡 냄새를 따라 내려왔다."][mini(stage, 3)]
+
 func check_food() -> void:
 	if S.knows("K_FOOD"): return
 	var n := cakes_found()
@@ -67,6 +105,7 @@ func start_case(route: String) -> void:
 	flag("case_started"); flag("route", route)
 	d.learn_clue("rumor", true)
 	d.ui.toast("새 사건 — 「%s」" % CASE_TITLE, "journal")
+	if d.onboard != null: d.onboard.on_case_started()
 
 # 이전 결과로 범이 다쳤으면 체력 낮춰 시작
 func combat_mods(_arena: String, mods: Dictionary) -> Dictionary:
@@ -80,6 +119,10 @@ func on_load() -> void:
 		S.flags.erase("climax_started")
 	if S.phase == "night": load_tiger_story()
 	kids_place()
+	# 여는 장면 도중 저장에서 이어 하면: 남원 전경·제목은 건너뛴 것으로
+	if f("s0000_started") and not f("INTRO_NAMWON_TITLE_DONE") and S.phase != "start":
+		S.flags["INTRO_MASTER_VOICE_DONE"] = true
+		if Vector2(d.main.player_pos.x, d.main.player_pos.z).distance_to(d.anchor("s0000_vista")) > 400.0: S.flags["INTRO_NAMWON_TITLE_DONE"] = true
 
 # 호랑이 이야기 프레임(knock·sniff·climb_try·slip + 변장 :d, 15쪽 약 60MB)은 절정 직전(밤으로 넘어갈 때 암전 속)에 읽는다
 func load_tiger_story() -> void:
@@ -87,20 +130,96 @@ func load_tiger_story() -> void:
 	SpriteChar.merge_bank("frames_story.json", ["tiger"])
 
 # ---------------------------------------------------------------------------
-# S0001 여는 화면 — 지리산 능선 → 요천 → 남원 성벽 → 플레이어 (15초 이내)
+# 도입부(보강서 v1.0 §3~§9) — S0000 남원으로 가는 길 · S0001 남원 전경과 제목
 # ---------------------------------------------------------------------------
-func opening() -> void:
-	d.cutscene(true)
-	d.camera({ "focus": "jiri_view", "distance": 330.0, "pitch": 11.0 })
+# 건너뛸 수 있는 기다림(Esc·Space·Enter — onboarding.skip)
+func _sw(sec: float) -> bool:
+	var ob = d.onboard
+	if ob == null: await d.wait(sec); return false
+	var t := 0.0
+	if d.ui.auto: sec = minf(sec, 0.05)
+	while t < sec:
+		if ob.skip: return true
+		await d.get_tree().process_frame
+		t += d.get_process_delta_time() / maxf(Engine.time_scale, 0.01)
+	return ob.skip
+
+# S0000-A: 검은 화면, 이겸의 세 문장 → 기록책 마지막 장 → 덮으며 길 위에서 화면이 열린다(긴 회상 없음)
+func prologue_open() -> void:
+	var ob = d.onboard
+	if ob != null: ob.skippable = true; ob.skip = false
+	d.ui._fade.color.a = 1.0
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
-	await d.wait(3.4)
-	d.camera({ "focus": "yocheon_view", "distance": 85.0, "pitch": 22.0 })
-	await d.wait(3.2)
-	d.camera({ "focus": "east_gate", "distance": 48.0, "pitch": 26.0 })
-	await d.wait(3.2)
+	d.main.player.play("idle", true)
+	if not await _sw(0.8):
+		for l in ["“본 것은 본 대로.”", "“들은 것은 누가 말했는지.”", "“모르는 것은 모른다고.”"]:
+			if ob != null and ob.skip: break
+			await d.ui.center_text(l, 2.1)
+			if await _sw(0.35): break
+	flag("INTRO_MASTER_VOICE_DONE")
+	d.ui.title_card_stop()
+	d.ui.book_page(["남원", "이겸", "“남원에서 확인할 것이…”"], 0.0)
+	await d.ui.fade(false, 0.4 if (ob != null and ob.skip) else 1.1)
+	await _sw(1.6)
+	await d.ui.book_close()
+	if ob != null: ob.skippable = false; ob.skip = false
+
+var _roadside_t := -1.0
+func since_roadside() -> float:
+	if not f("roadside_seen"): return 0.0
+	if _roadside_t < 0.0: _roadside_t = Time.get_ticks_msec() / 1000.0
+	return Time.get_ticks_msec() / 1000.0 - _roadside_t
+
+# S0000-C: 남원 쪽에서 나그네 둘이 걸어와 지나간다 — 붙잡지 않는다(조작을 막지 않도록 따로 돈다), 시스템 효과 없음
+func travellers() -> void:
+	if f("INTRO_CONFLICTING_RUMOR_HEARD"): return
+	flag("INTRO_CONFLICTING_RUMOR_HEARD")
+	_travellers_go()
+
+func _travellers_go() -> void:
+	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var from: Vector2 = d.anchor("trav_from")
+	if pp.distance_to(from) < 14.0: from = pp + (from - pp).normalized() * 18.0
+	d.spawn_actor("trav_a", "traveler", [from.x, from.y], "right", "길손", "")
+	d.spawn_actor("trav_b", "peddler", [from.x - 1.2, from.y + 1.1], "right", "동행", "")
+	var path := ["trav_mid", "trav_to"] if pp.x < d.anchor("trav_mid").x + 4.0 else ["trav_to"]
+	d.move_actor("trav_a", path, 1.45, "walk", "walk")
+	d.move_actor("trav_b", path.map(func(q): return d.anchor(q) + Vector2(-1.0, 1.1)), 1.45, "walk", "walk")
+	# 플레이어 곁을 지날 무렵 말이 들린다
+	for i in 400:
+		await d.get_tree().process_frame
+		if not d.actors.has("trav_a"): return
+		if Vector2(d.actors.trav_a.pos.x, d.actors.trav_a.pos.z).distance_to(Vector2(d.main.player_pos.x, d.main.player_pos.z)) < 13.0: break
+	await d.ui.caption("길손  “그 기록하던 양반 말이야. 한양으로 갔다던데.”", 2.8)
+	await d.ui.caption("동행  “한양? 지리산으로 들어갔다던데?”", 2.6)
+	await d.ui.caption("길손  “내가 들은 건 그렇다니까.”", 2.4)
+	for i in 1200:
+		await d.get_tree().process_frame
+		if not d.actors.has("trav_a") or d.actors.trav_a.path.is_empty(): break
+	d.despawn_actor("trav_a"); d.despawn_actor("trav_b")
+
+# S0000-D / S0001: 남원 전경 — 지리산 능선 → 요천 → 남원 읍성 → 플레이어, 「남원」, 「설화록」. 15초 안팎, 건너뛸 수 있다
+func vista() -> void:
+	var ob = d.onboard
+	if ob != null: ob.skippable = true; ob.skip = false
+	d.cutscene(true)
+	var skipped := false
+	for sh in [["jiri_view", 330.0, 11.0, 3.0], ["yocheon_view", 85.0, 22.0, 2.6], ["east_gate", 48.0, 26.0, 2.6]]:
+		d.camera({ "focus": sh[0], "distance": sh[1], "pitch": sh[2] })
+		if sh[0] == "jiri_view": d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+		if await _sw(sh[3]): skipped = true; break
 	d.camera(null)
-	await d.wait(1.6)
+	if not skipped:
+		var tt = d.main.get("_title")
+		if tt != null: tt.show_title("남원")   # 지명 표시(place_title)와 같은 결
+		else: d.ui.title_card("남원", 2.2, 52)
+		skipped = await _sw(2.4)
+	if not skipped:
+		d.ui.title_card("설화록", 2.6, 92)
+		skipped = await _sw(2.6)
+	d.ui.title_card_stop()
 	d.cutscene(false)
+	if ob != null: ob.skippable = false; ob.skip = false
 
 # 떡가루 함지 — 짧은 회상(떡장수 어머니, 흔적·회상 중심)
 func mother_flashback() -> void:
@@ -142,6 +261,8 @@ func after_first_encounter() -> void:
 		await d.ui.caption("범은 땅이 울리도록 포효하고, 숲 너머로 사라졌다.", 2.6)
 	d.set_hour(maxf(18.2, d.main.hour))
 	d.journal_note("범을 보았다")
+	# 보강서 §17 관찰 — 본 대로만(“돌진 패턴 해금” 같은 말은 쓰지 않는다)
+	await R([{ "observe": "몸을 낮춘 뒤 잠시 멈춘다.", "about": "범" }, { "observe": "그다음 곧장 돌진한다.", "about": "범" }])
 
 # ---------------------------------------------------------------------------
 # 주막에서 쉬기 → 밤
@@ -221,9 +342,8 @@ func kids_to_tree(up: bool) -> void:
 		d.world_state("kids_in_tree", false)
 		kids_place()
 
+# 큰 나무 + 참기름(물건 쓰기 — scripts/story/interact_data.gd가 '이곳에 사용할 수 있는 물건이 있다'를 먼저 묻는다)
 func oil_tree() -> void:
-	var i: int = await d.ui.choice("나무 밑동에 참기름을 바를까?", [{ label = "밑동에 참기름을 바른다" }, { label = "그만둔다" }])
-	if i != 0: return
 	d.anim_actor("player", "throw")
 	await d.wait(0.5)
 	d.take(OIL)
@@ -234,8 +354,6 @@ func place_bait() -> void:
 	if not S.knows("K_FOOD"):
 		await d.ui.examine("숲 오솔길 어귀", "빈터 쪽으로 이어지는 오솔길 어귀다. 범이 무엇에 끌리는지 안다면 여기서 쓸 수 있을 텐데.", "clue")
 		return
-	var i: int = await d.ui.choice("떡을 숲 쪽으로 띄엄띄엄 놓아 둘까?", [{ label = "떡을 놓아 냄새 길을 만든다" }, { label = "그만둔다" }])
-	if i != 0: return
 	d.take(TTEOK, 1)
 	d.world_state("cake_bait", true)
 	await d.ui.caption("오솔길 어귀부터 빈터 쪽으로, 떡을 띄엄띄엄 놓았다.", 2.4)
@@ -505,8 +623,8 @@ func solutions() -> Array:
 	for id in ["K_MIMIC", "K_FLOUR", "K_FOOD", "K_TERRITORY"]:
 		if k.call(id): cp += 1
 	var c_ok: bool = k.call("K_MIMIC") and k.call("K_FLOUR") and k.call("K_FOOD") and has_bait and k.call("K_TERRITORY") and has_torch
-	var c_hint := "범의 버릇을 더 알면 싸우지 않아도 될지 모른다." if cp == 0 else "범의 버릇 조각이 맞춰지고 있다 (%d/4)" % cp
-	if cp == 4: c_hint += ("" if has_torch else " — 불이 필요하다.") if has_bait else " — 꾈 것이 필요하다."
+	var c_hint := "범의 버릇을 더 알면 싸우지 않아도 될지 모른다." if cp < 2 else "범의 버릇이 하나씩 맞춰지고 있다. 싸우지 않을 길이 있을지도 모른다."
+	if cp == 4: c_hint += ("" if has_torch else " 불이 있어야 할 것 같다.") if has_bait else " 꾈 것이 있어야 할 것 같다."
 	return [
 		{ "id": "A", "title": "맞서 싸운다", "available": true, "text": "마당에서 정면으로 맞선다. 준비가 없으면 힘겨운 싸움이 된다." },
 		{ "id": "B", "title": "미끄러운 나무" if b[0] else "???", "available": b[0] and b[1],
@@ -522,8 +640,8 @@ func summary() -> Array:
 	if f("met_kids") and String(S.flags.get("route", "")) != "kids": p.append("외딴집의 오누이는 문고리를 걸어 잠그고 어머니를 기다린다.")
 	var cakes := cakes_found()
 	if cakes > 0 or S.has_clue("basket"):
-		p.append(("고갯길 굽이마다 떡이 떨어져 있었다(%d/3). 그 끝, 서낭당 앞엔 빈 광주리와 수건." % cakes) if S.has_clue("basket")
-			else ("고갯길 굽이마다 떡이 떨어져 있다(%d/3). 길은 고갯마루 서낭당으로 이어진다." % cakes))
+		p.append("고갯길 굽이마다 떡이 떨어져 있었다. 그 끝, 서낭당 앞엔 빈 광주리와 수건." if S.has_clue("basket")
+			else ("고갯길에 떡이 떨어져 있다." if cakes <= 1 else "고갯길 굽이마다 떡이 떨어져 있다. 고개 쪽으로 이어진다."))
 	var bits := []
 	if S.has_clue("torn_skirt"): bits.append("찢어진 치맛자락")
 	if S.has_clue("blood"): bits.append("마른 핏자국")
@@ -549,7 +667,6 @@ func journal() -> Dictionary:
 	for id in S.clues:
 		var c: Dictionary = d.data.clues.get(id, { "title": id, "text": "" })
 		var text := String(c.text)
-		if id == "cakes": text += " (%d/3)" % cakes_found()
 		clues.append({ "title": c.title, "text": text })
 	var rules := []
 	for id in S.rules:
@@ -574,5 +691,5 @@ func ending_data() -> Dictionary:
 		"title": { "A": "범을 쓰러뜨렸다" if o.ends_with("win") else "숲으로 달아난 범", "B": "나무 위의 오누이", "C": "숲으로 돌아간 범" }[k],
 		"outcome": k,
 		"paragraphs": [OUTCOME_TEXT.get(o, ""), "어미는 돌아오지 못했다. 마을 사람들이 오누이를 거두었다.", ENDING_EXTRA.get(k, "")],
-		"record": "단서 %d개 · 알아낸 범의 버릇 %d가지. 새 해결 수단 「짐승 흔적 읽기」. 기록책에 새로 적힌 곳 — 한양." % [S.clues.size(), S.rules.size()],
+		"record": "새 해결 수단 「짐승 흔적 읽기」. 기록책에 새로 적힌 곳 — 한양.",
 	}

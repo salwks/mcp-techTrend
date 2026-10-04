@@ -1,4 +1,5 @@
 # 대본 시험(--storytest=namwon:A|B|C) — 사건을 처음부터 끝까지 한 결말로 몰아 본다.
+#   --storytest=namwon:onboard — 처음 하는 사람 안내(S0000 → S0002 → 첫 단서 단계 → 첫 호랑이 조우)만 본다(scripts/story/onboard_test.gd).
 #   자리로 순간이동해 대상과 대화·조사하고(director.interact), 선택은 결말별 우선 목록으로 고르고, 전투는 간단한 봇이 싸운다.
 #   단계마다 플래그·단서·버릇·소지품을 남기고, 끝에 결과를 STORYTEST PASS/FAIL로 찍은 뒤 끝낸다.
 #   저장은 user://storytest_progress.json(사용자 저장 파일을 건드리지 않는다). --storyspeed=2.5 시간 배율(기본 2.5).
@@ -17,6 +18,7 @@ var _log_t := 0.0
 var _bot_last := Vector2.INF
 var _bot_stuck := 0.0
 var _combat_shot := false
+var bot_wait_first := false   # 안내 시험: 범이 처음 몸을 낮출 때까지 봇이 다가가지 않는다
 
 func _init(director, spec: String) -> void:
 	d = director
@@ -135,9 +137,15 @@ func _public_flags() -> Dictionary:
 # ---- 대본 ----
 func _run() -> void:
 	_log("시작 branch=%s" % branch)
-	# S0001: 여는 화면(실제로 돌린다)
-	await d.runner.run([{ "event": "S0001" }])
-	expect(d.S.phase == "explore", "S0001 → explore")
+	if branch == "ONBOARD":
+		await load("res://scripts/story/onboard_test.gd").new().run(self)
+		return
+	# S0000 남원으로 가는 길 → S0001 남원 전경(실제로 돌린다)
+	await d.runner.run([{ "event": "S0000" }])
+	expect(d.S.phase == "explore", "S0000 → explore")
+	await walk_to("s0000_vista")
+	await _frames(20); await _idle()
+	expect(d.S.is_flag("INTRO_NAMWON_TITLE_DONE"), "S0001 남원 전경")
 	await walk_to("east_gate")
 	expect(d.S.is_flag("s0001_done"), "S0001 성문 통과")
 	# S0002 주막
@@ -203,7 +211,7 @@ func _run() -> void:
 			await go("nui")
 			prefer = []
 			expect(d.S.is_flag("kids_in_tree"), "아이들 나무 위")
-			prefer = ["바른다"]
+			prefer = ["참기름"]
 			await go("claw")
 			prefer = []
 			expect(bool(d.S.world.get("oil_on_tree", false)), "밑동에 참기름")
@@ -213,11 +221,13 @@ func _run() -> void:
 			await go("nui")
 			prefer = []; deny = []
 			expect(d.S.is_flag("hand_test"), "손을 보라 일렀다")
-			prefer = ["냄새 길"]
+			prefer = ["떡"]
 			await go("cake_bait")
 			prefer = []
 			expect(bool(d.S.world.get("cake_bait", false)), "오솔길에 떡")
+			prefer = ["횃불"]
 			await go("yard_torch")
+			prefer = []
 			expect(bool(d.S.world.get("torch_lit", false)), "횃대 불")
 	snapshot("night prep")
 	await shot("night_yard")
@@ -272,6 +282,7 @@ func combat_bot() -> Dictionary:
 		_log_t = 0.0
 		_log("전투 t=%.0f 나 hp=%.0f st=%.0f %s (%.1f,%.1f) / 범 hp=%.0f %s (%.1f,%.1f) 거리 %.1f fps=%d" % [b.time, pl.hp, pl.st, pl.state, pl.pos.x, pl.pos.y, tg.hp, tg.state, tg.pos.x, tg.pos.y, dist, Engine.get_frames_per_second()])
 	if not pl.alive or tg.state in ["gone", "dead"]: return out
+	if bot_wait_first and tg.stats.pounces == 0 and b.time < 10.0: return out
 	var open: bool = tg.state in ["land", "stagger", "hit", "stunned", "getup", "eat", "toBait", "retreat", "retreatStagger", "backoff", "roar", "territory", "home"] \
 		or (tg.state == "swipe" and tg.t > 0.14)
 	if tg.state == "crouch" and _bot_dodge_cd <= 0.0 and dist < 11.0 and pl.st >= 25.0:
