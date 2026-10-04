@@ -111,6 +111,13 @@ func say(key: String, text: String, ms := 1600, once := false) -> void:
 	said[key] = int(said.get(key, 0)) + 1
 	if b.env.options.telegraph or once: b.env.say(text, ms)
 
+# 받아밀기(플레이어 숙련): 막힌 앞발 뒤 짧게 밀려나며 움찔(거리 확보). dir = 범 → 플레이어(그 반대로 밀린다)
+var push := Vector2.ZERO
+func shoved(dir: Vector2, dist: float) -> void:
+	if not targetable or state in ["dead", "gone", "stunned", "roar", "territory"]: return
+	push = -dir.normalized() * dist if dir.length() > 0.0 else Vector2.ZERO
+	go("hit"); set_anim("hit", true, G().flinch)
+
 func move_in(d: Vector2, limit: float) -> bool:
 	var a: Dictionary = b.arena
 	var n := pos + d - Vector2(a.x, a.z)
@@ -131,6 +138,11 @@ func update(dt: float) -> void:
 	var env = b.env
 	var pl = b.player
 	var a: Dictionary = b.arena
+	if push != Vector2.ZERO:
+		var kk := minf(1.0, dt * 9.0)
+		move_in(push * kk, float(a.get("radius", 10.0)))
+		push *= 1.0 - kk
+		if push.length() < 0.02: push = Vector2.ZERO
 	t += dt
 	if fury > 0.0: fury -= dt
 	if poise_wait > 0.0: poise_wait -= dt

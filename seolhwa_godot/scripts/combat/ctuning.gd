@@ -23,7 +23,7 @@ static func _base() -> Dictionary:
 			comboQueueFrom = 0.06, comboCancelAfter = 0.05, dodgeCancelFrom = 0.06, chargeStartAfter = 0.18,
 			heavy = { anim = "heavy", chargeMin = 0.5, dur = 0.6, hitAt = 0.3, dmg = 24.0, r = 2.6, arc = 160.0, lunge = 0.7, stop = 115 },
 			dodge = { dur = 0.45, dist = 3.5, iStart = 0.02, iEnd = 0.32, cost = 25.0 },
-			guard = { reduce = 0.7, staminaPerDmg = 1.2, breakStun = 1.0, frontDot = -0.1, pounceKnock = 1.2 },
+			guard = { reduce = 0.7, staminaPerDmg = 1.2, breakStun = 1.0, frontDot = -0.1, pounceKnock = 1.2, timed = 0.3, shove = 2.2 },   # timed·shove: 받아밀기(v2.2)
 			bow = { arrows = 12, minDraw = 0.35, fullDraw = 0.9, dmg = 10.0, fullDmg = 13.0, speed = 24.0, range = 22.0, recover = 0.25, releaseAt = 0.07, autoAimDeg = 70.0, autoDraw = 0.6 },
 			throw = { bait = 3, dur = 0.45, releaseAt = 0.27, dist = 5.0, flight = 0.55 },
 			hitStun = 0.38, down = 1.1, getup = 0.55, knockback = 1.6,

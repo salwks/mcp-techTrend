@@ -41,6 +41,12 @@ var stun_t := 0.0
 var k := Vector2.ZERO
 var anim := ""
 var moving := false
+# 전투 숙련(시나리오 v2.2 §6.3.1, P0): story_director.combat()이 저장 변수에서 채운다
+#   guard_shove(SKILL_GUARD_SHOVE 받아밀기): 막기를 누른 직후(guard.timed초 안) 앞발을 막으면 짧게 밀쳐 거리를 벌린다
+#   quick_throw(SKILL_QUICK_THROW 빠른 투척): 떡을 걸음을 멈추지 않고 던진다(멈춰 서는 throw 대신)
+var skills := {}
+var qt_t := 0.0
+var qt_done := true
 var damage_taken := 0.0
 var ring_h = null
 
@@ -120,7 +126,10 @@ func update(dt: float, ctl) -> void:
 	var mv: Vector2 = ctl.move
 	var mlen := mv.length()
 	if mlen > 0.1 and can_steer(): f = mv / mlen
+	if qt_t > 0.0: _upd_quick_throw(dt)
 	match state:
+		"shove":
+			if t >= SHOVE_DUR: to_free()
 		"free": _upd_free(dt, ctl, mv, mlen)
 		"attack", "heavy": _upd_attack(dt, ctl)
 		"charge": _upd_charge(dt, ctl, mv, mlen)
@@ -158,7 +167,11 @@ func _try_actions(ctl) -> bool:
 	if ctl.pressed("bow") and arrows > 0:
 		go("bow"); draw = 0.0; set_anim("bow_draw", true)
 		bow_auto = not ctl.has_held; return true
-	if ctl.pressed("item") and bait > 0:
+	if ctl.pressed("item") and bait > 0 and qt_t <= 0.0 and skills.get("quick_throw", false) and state == "free":
+		qt_t = 0.0001; qt_done = false
+		set_anim("quick_throw", true, QT_DUR); face(f)
+		return false   # 걸음은 그대로
+	if ctl.pressed("item") and bait > 0 and qt_t <= 0.0:
 		go("throw"); bait_thrown = false; set_anim("throw", true, P().throw.dur); face(f); return true
 	if tap:
 		if hold >= P().heavy.chargeMin: return start_heavy()
@@ -173,8 +186,8 @@ func _upd_free(dt: float, ctl, mv: Vector2, mlen: float) -> void:
 		var sp: float = (P().run if ctl.running() else P().walk) * minf(1.0, mlen)
 		moving = move(mv * sp * dt / maxf(1.0, mlen))
 		face(mv)
-		set_anim(("run" if ctl.running() else "walk") if moving else "idle")
-	else: set_anim("idle")
+		if qt_t <= 0.0: set_anim(("run" if ctl.running() else "walk") if moving else "idle")
+	elif qt_t <= 0.0: set_anim("idle")
 
 func start_attack(n: int) -> bool:
 	if n > 3: n = 1
@@ -317,6 +330,20 @@ func _upd_throw() -> void:
 		b.throw_bait(pos, f, Th.dist, Th.flight)
 	if t >= Th.dur: to_free()
 
+const QT_DUR := 0.28
+const QT_RELEASE := 0.12
+const SHOVE_DUR := 0.3
+func _upd_quick_throw(dt: float) -> void:
+	qt_t += dt
+	if not qt_done and qt_t >= QT_RELEASE:
+		qt_done = true
+		bait -= 1
+		var Th: Dictionary = P().throw
+		b.throw_bait(pos, f, float(Th.dist) * 0.85, float(Th.flight) * 0.85)
+	if qt_t >= QT_DUR:
+		qt_t = 0.0
+		if state == "free": set_anim("idle")
+
 func _knock(dt: float) -> void:
 	if k != Vector2.ZERO:
 		var kk := minf(1.0, dt * 8.0)
@@ -346,6 +373,11 @@ func take_hit(dmg: float, from: Vector2, kind: String) -> String:
 			go("guardbreak"); stun_t = P().guard.breakStun; set_anim("hit", true)
 			env.say("방어가 무너졌다!", 1200)
 			return "break"
+		if kind == "swipe" and skills.get("guard_shove", false) and t <= float(P().guard.get("timed", 0.3)) and b.tiger != null:
+			go("shove"); set_anim("shove", true, SHOVE_DUR)
+			b.tiger.shoved(-v, float(P().guard.get("shove", 2.2)))
+			env.say("받아밀기!", 800)
+			return "block"
 		return "block"
 	hp -= dmg; damage_taken += dmg
 	env.flash("player", Color("#ffd0c0"), 140)

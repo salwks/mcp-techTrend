@@ -14,6 +14,7 @@ const StoryRunner := preload("res://scripts/story/story_runner.gd")
 const CombatView := preload("res://scripts/combat/combat_view.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const Rumors := preload("res://story/rumors_data.gd")
+const Skills := preload("res://scripts/story/skills.gd")
 
 # 권역 → 사건
 const CASES := { JL_NAMWON_UNBONG = "namwon", GG_HANYANG = "hanyang", GW_GANGNEUNG = "gangneung" }
@@ -53,6 +54,15 @@ var free_move := false   # 추격(scripts/story/chase.gd) 동안: 이야기가 �
 var title = null         # 시작 메뉴(scripts/story/title_menu.gd) — 열려 있는 동안 이야기를 멈춘다
 var _where_t := 0.0
 var _resumed := false
+var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 카드 뒤 한 줄씩)
+var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
+
+# 사건 완료(v2.2 레벨 없음): CASE_<키>_COMPLETE를 세우고 숙련 해금표(skills.gd)를 훑는다
+func _case_complete() -> Array:
+	S.vars[Skills.complete_var(data.get("case", {}), case_id)] = true
+	var got := Skills.unlock(S.vars)
+	if not got.is_empty(): runner.log_line("skills", got)
+	return got
 var spirits = null       # 잔영·소리·경계·호신물(scripts/story/spirits.gd) — 사건마다
 
 static func create_for(m) -> Node:
@@ -136,6 +146,7 @@ func _setup() -> void:
 	combat_view.name = "combat"
 	main.scene_vp.add_child(combat_view)
 	combat_view.setup(self)
+	SpriteChar.merge_bank("frames_story_skills.json", ["player"])   # v2.2 숙련 동작(shove·quick_throw, 작다) — 없으면 그냥 지나간다
 	var fresh: bool = args.has("newgame") or args.has("storytest")
 	if fresh: S.clear_saved(data.get("case", {}).get("reset_vars", null))
 	elif S.load_saved():
@@ -169,6 +180,8 @@ func update(dt: float) -> void:
 		_resumed = true
 		if main._pending.has("resume_at"): teleport_to(main._pending.resume_at)   # 이어 하기로 다른 공간에서 넘어옴
 	_save_where(dt)
+	if _vign == null: _vign = load("res://scripts/story/vignettes.gd").new(self)
+	_vign.update(dt)
 	if combat_view != null: combat_view.update(dt)
 	if case_id == "":
 		_update_rumors(dt)
@@ -224,6 +237,7 @@ func on_event(id: String, ev: Dictionary) -> void:
 	if log_story: printerr("EVENT %s 「%s」 %s" % [id, ev.get("RECORD_TITLE", ""), ev.get("TRIGGER", "")])
 
 func on_phase() -> void:
+	if S.phase == "done": _skills_msgs.append_array(_case_complete())
 	for id in actors:
 		var a: Dictionary = actors[id]
 		if not a.scripted: _place_home(a)
@@ -248,7 +262,7 @@ func _save_where(dt: float) -> void:
 # 시작 메뉴(새 게임 / 이어 하기): 그냥 실행했을 때만(시험·넘어온 장면·--newgame·--continue·--notitle 아님)
 func _maybe_title() -> void:
 	var args: Dictionary = main.args
-	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset"]:
+	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset", "warp"]:
 		if args.has(k): return
 	if not main._pending.is_empty(): return
 	title = load("res://scripts/story/title_menu.gd").new(self)
@@ -622,6 +636,7 @@ func _decal_prop(rec: Dictionary, want: bool, at: Vector2) -> void:
 func _apply_world() -> void:
 	set_hour(S.time if S.phase != "start" else float(data.get("case", {}).get("start_hour", 10.0)))
 	if case_fn.has_method("on_load"): case_fn.on_load()
+	if S.phase == "done": _case_complete()   # 이 체계 전에 끝낸 저장도 해금(조용히)
 	_dirty = true
 
 # ---------------------------------------------------------------------------
@@ -713,6 +728,8 @@ func combat(arena_id: String, st: Dictionary) -> String:
 	var tteok_id := String(data.get("combat_bait_item", "ITM_LIFE_001"))
 	var bait0 := mini(3, S.count(tteok_id))
 	combat_view.battle.player.bait = bait0
+	combat_view.battle.player.skills = { guard_shove = bool(S.vars.get("SKILL_GUARD_SHOVE", false)) or main.args.has("allskills"),
+		quick_throw = bool(S.vars.get("SKILL_QUICK_THROW", false)) or main.args.has("allskills") }   # --allskills: 시험용
 	var res: String = await combat_view.finished
 	var used: int = bait0 - int(combat_view.battle.player.bait)
 	if used > 0: take(tteok_id, used)
@@ -728,6 +745,8 @@ func end_combat() -> void:
 func show_ending() -> void:
 	var d: Dictionary = case_fn.ending_data() if case_fn.has_method("ending_data") else {}
 	await ui.ending(d)
+	for n in _skills_msgs: await ui.caption("새 행동을 익혔다 — " + String(n), 2.4)
+	_skills_msgs.clear()
 
 # ---------------------------------------------------------------------------
 # 지역 변화(밤 울음소리 등)와 소문

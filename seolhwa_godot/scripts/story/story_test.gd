@@ -278,6 +278,12 @@ func combat_bot() -> Dictionary:
 		_bot_dodge_cd = 0.7
 		out.move = Vector2(-dir.y, dir.x); out.held = { dodge = true }
 		return out
+	var skl: bool = d.main.args.has("allskills")   # 숙련 시험: 막기를 늦게 눌러 받아밀기, 멀 때 걸으며 빠른 투척
+	if skl and tg.state == "swipeWind" and dist < 4.0:
+		if tg.t < 0.22: out.move = -dir * 0.2; return out
+		out.held = { guard = true }; return out
+	if skl and dist > 5.0 and pl.bait > 0 and fmod(b.time, 9.0) < 0.05:
+		out.move = dir; out.held = { item = true }; return out
 	if tg.state == "swipeWind" and dist < 4.0:
 		if _bot_dodge_cd <= 0.0 and pl.st >= 25.0:
 			_bot_dodge_cd = 0.6

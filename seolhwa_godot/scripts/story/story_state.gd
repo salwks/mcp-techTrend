@@ -15,6 +15,12 @@ const VAR_DEFAULTS := {
 	FINAL_CRIME_RESOLVED = false, FINAL_PUBLIC_EXPOSURE = false,
 	# 구현용(시나리오 §10 S1006·§14): 세 갈래(ACT 2) 열림, 평양(ACT 3) 열림, 한양 추격 결과(followed | lost)
 	ACT2_OPEN = false, ACT3_OPEN = false, CASE_HANYANG_OUTCOME = "",
+	# v2.2: 박규상 표식을 본 횟수·이름을 앎(§7 추가), 전투 숙련 P0(받아밀기 — 남원 뒤, 빠른 투척 — 한양 뒤)
+	MAIN_PARK_MARK_COUNT = 0, MAIN_PARK_NAME_KNOWN = false,
+	SKILL_GUARD_SHOVE = false, SKILL_QUICK_THROW = false, SKILL_EVADE_SLASH = false, SKILL_SNAP_SHOT = false,
+	SKILL_BEAST_SIDESTEP = false, SKILL_TOOL_SLOT_PLUS = false,   # 해금표 scripts/story/skills.gd(CASE_<키>_COMPLETE)
+	CASE_NAMWON_COMPLETE = false, CASE_HANYANG_BOOKSHOP_COMPLETE = false, CASE_GANGNEUNG_COMPLETE = false, CASE_GYEONGJU_COMPLETE = false,
+	CASE_HWANGJU_COMPLETE = false, CASE_PYONGYANG_COMPLETE = false, CASE_HAMHUNG_COMPLETE = false, CASE_JEJU_COMPLETE = false,
 }
 
 var case_id := ""
@@ -64,7 +70,7 @@ func load_saved() -> bool:
 func clear_saved(keys = null) -> void:
 	Progress.clear_case(case_id)
 	# 이 사건이 정한 공통 변수도 되돌린다(새로 시작). keys: 사건 데이터 case.reset_vars(없으면 남원 것)
-	for k in (keys if keys != null else ["CASE_NAMWON_OUTCOME", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE"]):
+	for k in (keys if keys != null else ["CASE_NAMWON_OUTCOME", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE", "SKILL_GUARD_SHOVE", "CASE_NAMWON_COMPLETE"]):
 		Progress.set_var(k, VAR_DEFAULTS.get(k, ""))
 		vars[k] = VAR_DEFAULTS.get(k, "")
 	Progress.save()
