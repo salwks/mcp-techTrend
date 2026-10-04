@@ -22,6 +22,9 @@ var phase := randf()
 var radius := 0.375
 var height := 2.06
 var move_speed := -1.0
+var anim_speed := 1.0      # 동작 재생 배율(전투가 판정 길이에 맞춘다)
+var armed := false         # 칼 든 대기·걷기(<동작>:a 클립이 있으면)
+var variant := ""          # "disguised" → <동작>:d 클립 먼저(변장 호랑이)
 
 var _bank: Dictionary
 var _billboard: Node3D
@@ -52,6 +55,30 @@ static func load_bank(kind: String, json_file: String) -> void:
 			pages.append(ImageTexture.create_from_image(img))
 		_banks[k] = { pages = pages, clips = all[k].clips }
 
+# 이미 읽은 종류에 클립을 더한다(이야기용 추가 프레임 frames_story.json — 페이지 번호를 뒤로 민다). 없는 종류는 새로.
+static func merge_bank(json_file: String) -> void:
+	var path := "res://data/" + json_file
+	if not FileAccess.file_exists(path): return
+	var all = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (all is Dictionary): return
+	for k in all:
+		var pages := []
+		for p in all[k].pages:
+			var img := Image.load_from_file(ProjectSettings.globalize_path("res://data/" + p))
+			if img == null or img.is_empty(): continue
+			img.generate_mipmaps()
+			pages.append(ImageTexture.create_from_image(img))
+		if not _banks.has(k):
+			_banks[k] = { pages = pages, clips = all[k].clips }
+			continue
+		var bank: Dictionary = _banks[k]
+		var off: int = bank.pages.size()
+		bank.pages.append_array(pages)
+		for ck in all[k].clips:
+			var c: Dictionary = all[k].clips[ck]
+			for f in c.frames: f.page = int(f.page) + off
+			bank.clips[ck] = c
+
 static func _shader(name: String, code: String) -> Shader:
 	if not _shaders.has(name):
 		var s := Shader.new(); s.code = code; _shaders[name] = s
@@ -77,10 +104,12 @@ const FOG := """
 # 본 그림: MeshLambertMaterial + alphaTest 0.5, 좌우 반전돼도 법선을 뒤집지 않는다(NORMAL_FIX)
 const SPRITE_CODE := "shader_type spatial;\nrender_mode cull_disabled, specular_disabled, depth_prepass_alpha;\n" + LIT_COMMON + """
 uniform sampler2D page : source_color, filter_linear_mipmap;
+uniform vec4 flash = vec4(1.0, 1.0, 1.0, 0.0);
 void fragment() {
 	vec4 c = texture(page, UV);
 	if (!FRONT_FACING) NORMAL = -NORMAL;
 	c.rgb *= 1.0 - 0.12 * wet; // 비에 젖은 옷(권역 날씨, 기본 0)
+	c.rgb = mix(c.rgb, flash.rgb, flash.a);
 	ALBEDO = c.rgb;
 	ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
@@ -187,7 +216,35 @@ func set_facing(dir: String) -> void: facing = dir
 
 func set_anim(a: String) -> void:
 	if a == anim: return
-	anim = a; anim_time = 0.0
+	anim = a; anim_time = 0.0; anim_speed = 1.0
+
+# 전투·이야기용: 같은 동작이어도 restart면 처음부터, speed는 재생 배율
+func play(a: String, restart := false, speed := 1.0) -> void:
+	if a != anim or restart: anim_time = 0.0
+	anim = a; anim_speed = speed
+
+# 지금 시점에서 이 동작 클립의 길이(초). 없으면 0
+func anim_duration(a: String) -> float:
+	var clip = _clip(_view_of()[0], a)
+	if clip == null: return 0.0
+	var sp: Dictionary = clip.spec
+	if sp.has("dur"): return float(sp.dur)
+	var T: Array = sp.get("times", [])
+	return float(T[T.size() - 1]) if T.size() > 0 else 0.0
+
+func has_anim(a: String) -> bool:
+	var clips: Dictionary = _bank.get("clips", {})
+	for v in ["front", "side", "back"]:
+		if clips.has("%s|%s" % [v, a]): return true
+	return false
+
+# 피격 번쩍임(색, 밀리초)
+var _flash_t := 0.0
+var _flash_dur := 0.0
+var _flash_c := Color.WHITE
+func flash(c: Color, ms: float) -> void:
+	_flash_t = ms / 1000.0; _flash_dur = _flash_t; _flash_c = c
+	if _mat: _mat.set_shader_parameter("flash", Color(c.r, c.g, c.b, 0.85))
 
 func set_silhouette(on: bool) -> void:
 	_billboard.get_node("silhouette").visible = on
@@ -201,7 +258,11 @@ func _view_of() -> Array:
 
 func _clip(view: String, a: String) -> Variant:
 	var clips: Dictionary = _bank.get("clips", {})
-	for key in ["%s|%s" % [view, a], "side|%s" % a, "%s|idle" % view, "front|idle"]:
+	var keys := []
+	if variant == "disguised": keys.append_array(["%s|%s:d" % [view, a], "side|%s:d" % a])
+	if armed: keys.append_array(["%s|%s:a" % [view, a], "side|%s:a" % a])
+	keys.append_array(["%s|%s" % [view, a], "side|%s" % a, "%s|idle" % view, "front|idle"])
+	for key in keys:
 		if clips.has(key): return clips[key]
 	return null
 
@@ -225,7 +286,11 @@ static func frame_index(spec: Dictionary, at: float, ph: float, tt: float) -> in
 
 func update_char(dt: float, cam: Camera3D) -> void:
 	t += dt
-	anim_time += dt
+	anim_time += dt * anim_speed
+	if _flash_t > 0.0:
+		_flash_t -= dt
+		if _mat: _mat.set_shader_parameter("flash", Color(_flash_c.r, _flash_c.g, _flash_c.b, 0.85 * maxf(0.0, _flash_t / maxf(_flash_dur, 0.001))))
+		if _flash_t <= 0.0 and _mat: _mat.set_shader_parameter("flash", Color(1, 1, 1, 0))
 	# 걸음 위상: 실제 이동 속도 기준(웹 _advancePhase)
 	if _last_pos != Vector3.INF and dt > 0.0:
 		var v := Vector2(position.x - _last_pos.x, position.z - _last_pos.z).length() / dt
