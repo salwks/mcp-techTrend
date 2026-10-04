@@ -1,7 +1,7 @@
 # 소문 풀(시나리오 §24 지역 소문 풀, §9 R01 R0101~R0103) — 사건 결말에 따라 달라지는 주변 대화.
 # 소문은 사실을 보장하지 않고, 퀘스트 표지처럼 쓰지 않는다. 지나가며 엿듣는 한 줄(자막)로만 나온다.
 #   space: 권역 region_id 또는 노정 route id.  near: settlement id(그 공간 region.json/route.json) 또는 [x, z].
-#   var: 결말 변수(§7). lines: 값별 줄("" = 아직 해결 안 됨, "*" = 어떤 결말이든). pool: 값과 상관없이 번갈아 나오는 줄들.
+#   need: {변수: 값} 이 맞을 때만. var: 결말 변수(§7). lines: 값별 줄("" = 아직 해결 안 됨, "*" = 어떤 결말이든). pool: 값과 상관없이 번갈아 나오는 줄들.
 extends RefCounted
 
 const ROUTE_R01 := "JL_NAMWON_UNBONG-GG_HANYANG"
@@ -35,6 +35,28 @@ const RUMORS := [
 			"공주 곰나루에 밤이면 곰이 운다더군.",
 			"인월 쪽 어떤 가난한 집에서 제비가 복을 가져왔다나.",
 		] },
+	# ---- 한양(§24 한양 풀) — 결말과 상관없이 종로·장터에서 ----
+	{ "id": "HY_JONGNO", "space": "GG_HANYANG", "near": "ungjongga", "radius": 46.0, "speaker": "장꾼",
+		"pool": [
+			"치악산 절에서 종이 저절로 울린다던데.",
+			"밀양에선 죽은 처녀가 관아에 나타난다더라.",
+			"철산 쪽 자매 귀신 이야기가 심상치 않대.",
+			"대구 약령시에 죽은 사람 이름으로 약을 사는 놈이 있다더군.",
+			"문경새재 주막에 밤마다 한 자리만 비워둔다더라.",
+		] },
+	# ---- 한양 S1006 허브 개방 뒤: 강릉·경주·황주 소문(§24 각 고을 풀에서) — 주막·장터에 ----
+	{ "id": "HY_GN_PIMAT", "space": "GG_HANYANG", "near": [-240.0, -930.0], "radius": 22.0, "speaker": "책 사러 온 선비", "need": { "ACT2_OPEN": true },
+		"pool": ["대관령에서 제물 건드리면 길이 달라진대."] },
+	{ "id": "HY_GJ_JONGNO", "space": "GG_HANYANG", "near": [-291.0, -884.0], "radius": 30.0, "speaker": "시전 상인", "need": { "ACT2_OPEN": true },
+		"pool": ["감포 바다에서 밤마다 불이 셋 떠."] },
+	{ "id": "HY_HJ_GWANGTONG", "space": "GG_HANYANG", "near": [-313.0, -822.0], "radius": 24.0, "speaker": "다리 위 나그네", "need": { "ACT2_OPEN": true },
+		"pool": ["장산곶에서 바다가 사람 이름을 부른다더군."] },
+	{ "id": "HY_ACT2_CHILPAE", "space": "GG_HANYANG", "near": "chilpae_jang", "radius": 40.0, "speaker": "장꾼", "need": { "ACT2_OPEN": true },
+		"pool": ["대관령에서 제물 건드리면 길이 달라진대.", "감포 바다에서 밤마다 불이 셋 떠.", "장산곶에서 바다가 사람 이름을 부른다더군."] },
+	{ "id": "HY_ACT2_BAEOGAE", "space": "GG_HANYANG", "near": "baeogae_jang", "radius": 40.0, "speaker": "장꾼", "need": { "ACT2_OPEN": true },
+		"pool": ["감포 바다에서 밤마다 불이 셋 떠.", "장산곶에서 바다가 사람 이름을 부른다더군.", "대관령에서 제물 건드리면 길이 달라진대."] },
+	{ "id": "HY_ACT2_MAPO", "space": "GG_HANYANG", "near": [-2041.0, 902.0], "radius": 18.0, "speaker": "주막 손님", "need": { "ACT2_OPEN": true },
+		"pool": ["장산곶에서 바다가 사람 이름을 부른다더군.", "대관령에서 제물 건드리면 길이 달라진대.", "감포 바다에서 밤마다 불이 셋 떠."] },
 	{ "id": "NW_TOWN_TAVERN", "space": "JL_NAMWON_UNBONG", "near": [-3006.0, 228.0], "radius": 14.0, "speaker": "주막 손님", "after": true,
 		"pool": [
 			"이서 쪽 어느 집안 계집아이가 고생이 많다던데.",
@@ -80,6 +102,9 @@ static func for_space(space: String, region: Dictionary) -> Array:
 
 # 지금 들을 줄(없으면 "")
 static func pick(r: Dictionary, saved_vars: Dictionary, live_vars: Dictionary) -> String:
+	# need: { 변수: 값 } — 모두 맞을 때만(예: 한양 S1006 뒤 ACT2_OPEN)
+	for k in r.get("need", {}):
+		if str(live_vars.get(k, saved_vars.get(k, ""))) != str(r.need[k]): return ""
 	if r.has("pool"):
 		# 사건이 끝난 뒤에만(after) — 그 전에는 사건 이야기만 돈다
 		if r.get("after", false) and String(live_vars.get("CASE_NAMWON_OUTCOME", saved_vars.get("CASE_NAMWON_OUTCOME", ""))) == "": return ""
