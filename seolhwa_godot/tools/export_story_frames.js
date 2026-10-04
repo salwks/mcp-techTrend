@@ -5,6 +5,10 @@
 // 결과: data/frames_story.json + frames_story_<kind>_<n>.png. Godot SpriteChar.merge_bank("frames_story.json")가 읽는다
 //   (tiger는 frames.json의 호랑이 은행에 클립을 더하고, 나머지는 새 종류).
 // 실행: python3 tools/web_export_server.py 8770 → 브라우저로 http://localhost:8770/__tools/story_bake.html
+//   ?set=hanyang 이면 ACT 1 한양 인물만 data/frames_story_hanyang.json + frames_story_<kind>_<n>.png 로(남원 파일은 그대로):
+//   - woochi: 우치(CHR_MAIN_003, 가벼운 몸 — 짙은 쪽빛 저고리·머리띠, 짐 없음) 대기·걷기·뛰기·대화·오르기(climb)·웅크림(crouch)
+//   - chaekkwae: 책쾌(CHR_MAIN_007, 상인 베이스 변형 — 갓·책 보따리) 대기·걷기·대화·앉기(sit)·묶임(tied)
+//   - pojol: 포졸(CHR_HUM_016, 벙거지·검은 쾌자·붉은 띠·육모 방망이 대신 긴 막대) 대기·걷기·뛰기·대화
 import { SPECS } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 
@@ -14,6 +18,20 @@ const PEOPLE = {
   ricecake_mother: { base: 'villager_f', over: { coat: '#e2d7bb', skirt: '#46627b', goreum: '#8e5a48', cuff: '#7d6a55', collar: '#7d6a55', scarf: '#efe9da', carry: 'basket', build: 0.95 },
     anims: ['idle', 'walk', 'talk'] },
 };
+const SETS = {
+  hanyang: {
+    woochi: { base: 'villager_m', over: { coat: '#3e4655', pants: '#4b505b', vest: null, collar: '#262b33', daenim: '#262b33', back: null, hat: null, band: '#2b2622',
+      stubble: false, legwrap: '#d8d2c2', shoe: '#4a3f33', patch: null, build: 0.9, cheek: 0.12 },
+      anims: ['idle', 'walk', 'run', 'talk', 'climb', 'crouch'] },
+    chaekkwae: { base: 'villager_m', over: { coat: '#d3c6a5', pants: '#d9ceb4', vest: '#4f4a52', collar: '#4f4a52', daenim: '#4f4a52', back: 'bundle', bundle: '#6b4f3a',
+      hat: 'gat', stubble: true, build: 1.0, cheek: 0.16 },
+      anims: ['idle', 'walk', 'talk', 'sit', 'tied'] },
+    pojol: { base: 'villager_m', over: { top: 'durumagi', coat: '#2f3138', pants: '#d9d2c0', collar: '#1f2026', goreum: '#1f2026', sash: '#a8443c', back: null,
+      hat: 'beonggeoji', hatColor: '#2b2622', vest: null, legwrap: '#ece6d6', robeLen: 84, build: 1.08, stubble: true, staff: 'staff' },
+      anims: ['idle', 'walk', 'run', 'talk'] },
+  },
+};
+
 const TIGER_ANIMS = ['knock', 'sniff', 'climb_try', 'slip', ...fc.DISGUISE_ANIMS];
 
 async function toPng(cv) {
@@ -40,6 +58,8 @@ async function bakeBank(b, keys, prefix) {
 }
 
 export async function run(log) {
+  const set = new URLSearchParams(location.search).get('set');
+  if (set && SETS[set]) return runSet(set, log);
   const out = {};
   for (const kind in PEOPLE) {
     const P = PEOPLE[kind];
@@ -59,4 +79,25 @@ export async function run(log) {
   await put('frames_story.json', JSON.stringify(out));
   log('done: ' + Object.keys(out).join(', '));
   console.log('[story bake] done', Object.keys(out));
+}
+
+// 사건별 묶음(?set=hanyang): data/frames_story_<set>.json
+async function runSet(set, log) {
+  const out = {};
+  const people = SETS[set];
+  for (const kind in people) {
+    const P = people[kind];
+    const sp = { ...SPECS[P.base] };
+    for (const k in P.over) { if (P.over[k] === null) delete sp[k]; else sp[k] = P.over[k]; }
+    SPECS[kind] = sp;
+    fc.TIERS.high[kind] = fc.TIERS.high.player;
+    const b = new fc.BakeBank(kind, 'high');
+    const keys = [];
+    for (const vw of ['front', 'side', 'back']) for (const a of P.anims) keys.push(fc.clipKey(fc.resolveView(kind, vw, a), a, false, false));
+    out[kind] = await bakeBank(b, keys, `frames_story_${kind}`);
+    log('baked ' + kind + ' pages=' + out[kind].pages.length);
+  }
+  await put(`frames_story_${set}.json`, JSON.stringify(out));
+  log('done: ' + Object.keys(out).join(', '));
+  console.log('[story bake] done', set, Object.keys(out));
 }

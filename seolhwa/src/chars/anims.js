@@ -17,6 +17,8 @@ export const HUMAN_ANIMS = {
   hit: { dur: 0.35 }, down: { dur: 0.6 }, getup: { dur: 0.7 }, dead: { dur: 0.9 },
   // 3단계(이야기): 오누이 동작
   cower: { dur: 0.8, loop: true }, cry: { dur: 1.0, loop: true }, climb: { dur: 1.2 }, perch: { dur: 2.4, loop: true }, hug: { dur: 2.0, loop: true },
+  // ACT 1 한양(Godot 이야기 굽기): 우치 웅크림(crouch), 책쾌 앉기(sit)·묶임(tied)
+  crouch: { dur: 1.2, loop: true }, sit: { dur: 3.0, loop: true }, tied: { dur: 1.6, loop: true },
 };
 export const TIGER_ANIMS = {
   idle: { dur: 2.6, loop: true }, walk: { dur: 1.15, loop: true }, run: { dur: 0.7, loop: true },
@@ -411,7 +413,7 @@ export function tigerCombatPose(view, anim, t, at, st = {}) {
 // ---------------------------------------------------------------------------
 // 3단계(이야기) 동작 — 오누이
 // ---------------------------------------------------------------------------
-export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'perch', 'hug']);
+export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'perch', 'hug', 'crouch', 'sit', 'tied']);
 export function humanStoryPose(view, anim, t, at, rig) {
   if (!STORY_HUMAN.has(anim)) return null;
   const S = rig.S, k = S.hip / 80;
@@ -438,6 +440,23 @@ export function humanStoryPose(view, anim, t, at, rig) {
     F = side
       ? { root: [0.05, 0, (S.hip - 4 * k)], torso: [0.04], leg2: [1.45], leg2_l: [-1.45 + 0.25 * sw], leg1: [1.4], leg1_l: [-1.4 + 0.25 * sw2], arm2: [-0.25], arm2_l: [0.1], arm1: [-0.2], head: [0.06 * sin(t * 0.5)] }
       : { root: [0, 0, (S.hip - 4 * k)], leg1: [0, 0, -S.thigh * 0.95], leg1_l: [0.12 * sw], leg2: [0, 0, -S.thigh * 0.95], leg2_l: [0.12 * sw2], arm1: [0.45], arm1_l: [-0.2], arm2: [-0.45], arm2_l: [0.2], head: [0.05 * sin(t * 0.5)] };
+  } else if (anim === 'crouch') {
+    // 낮게 웅크려 앞을 살핌(지붕 위·뛰어내린 뒤) — 숨 고르기만 살짝
+    const br = sin(t * 5.2) * 0.6 * k;
+    F = side
+      ? { root: [0.04, 0, 30 * k + br], torso: [-0.42], head: [0.28], leg2: [1.15], leg2_l: [-1.95], leg1: [0.85], leg1_l: [-1.75], arm2: [0.95], arm2_l: [0.55], arm1: [0.55], arm1_l: [0.8] }
+      : { root: [0, 0, 24 * k + br, 1.05, 0.86], head: [0, 0, 3 * k], leg1: [0.45, -2 * k, 0, 1, 0.7], leg1_l: [-0.6, 0, 0, 1, 0.75], leg2: [-0.45, 2 * k, 0, 1, 0.7], leg2_l: [0.6, 0, 0, 1, 0.75],
+        arm1: [0.12], arm1_l: [-0.55], arm2: [-0.12], arm2_l: [0.55] };
+  } else if (anim === 'sit' || anim === 'tied') {
+    // 땅에 앉기(다리 앞으로). tied: 팔을 등 뒤로 묶인 채 이따금 몸을 비튼다
+    const tied = anim === 'tied';
+    const st = tied ? sin(t * 5.5) * max(0, sin(t * 1.4)) : 0, br = sin(t * 2.1);
+    F = side
+      ? { root: [0.02 * st, 0, S.hip - 4 * k], torso: [0.06 + 0.06 * st, 0, 0, 1, 1 + 0.01 * br], head: [0.08 + 0.1 * st + 0.03 * br],
+        leg2: [1.55], leg2_l: [-0.2], leg1: [1.5], leg1_l: [-0.35],
+        ...(tied ? { arm2: [-0.6 + 0.1 * st], arm2_l: [-0.9], arm1: [-0.45 + 0.1 * st], arm1_l: [-0.9] } : { arm2: [0.4], arm2_l: [0.55], arm1: [0.3], arm1_l: [0.6] }) }
+      : { root: [0, 1.5 * k * st, S.hip - 4 * k], head: [0.05 * st + 0.03 * br], leg1: [0.25, 0, -S.thigh * 0.95], leg1_l: [0.1, 0, 0, 1, 0.35], leg2: [-0.25, 0, -S.thigh * 0.95], leg2_l: [-0.1, 0, 0, 1, 0.35],
+        ...(tied ? { arm1: [-0.1, 0, 0, 1, 0.8], arm1_l: [-0.9], arm2: [0.1, 0, 0, 1, 0.8], arm2_l: [0.9] } : { arm1: [0.08], arm1_l: [-0.5], arm2: [-0.08], arm2_l: [0.5] }) };
   } else {
     const sway = sin(t * 1.6);
     F = side
