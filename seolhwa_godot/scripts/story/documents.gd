@@ -32,7 +32,7 @@ signal closed
 const INK := Color("#2b2622")
 const PAPER := Color("#efe6d2")
 const SEAL := Color("#a8443c")
-const DESK := Color(0.12, 0.10, 0.085, 0.94)
+const DESK := Color(0.12, 0.10, 0.085, 1.0)   # 불투명 — 뒤 화면의 소지품·안내 글이 비치지 않게
 const ZOOMS := [2.0, 3.5, 6.0]
 const TOL := 0.012
 
@@ -141,6 +141,7 @@ func _start() -> void:
 	_layout()
 	get_viewport().size_changed.connect(_layout)
 	if not _rects.is_empty(): cursor = (_rects[ids[0]] as Rect2).get_center()
+	_redraw()
 	_refresh_found()
 	_first_hint()
 	if d.log_story: printerr("DOCS open %s skill=%s found=%s" % [ids, skill, all_found()])
@@ -184,9 +185,9 @@ func _layout() -> void:
 	_fb.position = Vector2(gap, top + h_max + 30 * _k); _fb.size = Vector2(left_w - gap, 60 * _k)
 	_keys.position = Vector2(0, vs.y - 36 * _k); _keys.size = Vector2(vs.x, 30 * _k)
 	var hp: Control = _root.get_node("hint_panel")
-	hp.custom_minimum_size = Vector2(vs.x * 0.6, 0); hp.reset_size()
-	hp.position = Vector2(vs.x * 0.2, vs.y - 100 * _k - hp.size.y * 0.5)
-	_hint.custom_minimum_size = Vector2(vs.x * 0.6 - 28, 0)
+	hp.custom_minimum_size = Vector2(vs.x * 0.76, 0); hp.reset_size()
+	hp.position = Vector2(vs.x * 0.12, vs.y - 100 * _k - hp.size.y * 0.5)
+	_hint.custom_minimum_size = Vector2(vs.x * 0.76 - 28, 0)
 	_desk.queue_redraw(); _loupe.queue_redraw()
 
 func _first_hint() -> void:
@@ -458,7 +459,8 @@ func draw_doc(ci: CanvasItem, sp: Dictionary, id: String, r: Rect2, z: float) ->
 		var rng := RandomNumberGenerator.new(); rng.seed = int(sp.get("seed", 7)) + 31
 		for i in 46:
 			var c := Vector2(rng.randf(), rng.randf())
-			ci.draw_circle(P.call(c), r.size.x * rng.randf_range(0.02, 0.07), Color(1, 1, 1, 0.06))
+			var rad := minf(r.size.x * rng.randf_range(0.02, 0.07), minf(minf(c.x, 1.0 - c.x) * r.size.x, minf(c.y, 1.0 - c.y) * r.size.y))   # 종이 밖으로 번지지 않게
+			ci.draw_circle(P.call(c), rad, Color(1, 1, 1, 0.06))
 	# 이어 붙인 종이(빛깔·이음매)
 	for p in sp.get("patches", []):
 		var pr: Array = p.rect

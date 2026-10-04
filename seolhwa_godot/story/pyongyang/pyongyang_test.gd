@@ -90,7 +90,7 @@ func doc_exam(ex) -> void:
 	_doc_n[nk] = int(_doc_n.get(nk, 0)) + 1
 	var n: int = _doc_n[nk]
 	_log("문서 화면 %s #%d skill=%s" % [key, n, ex.skill])
-	await shot("doc_%s_%d" % [key.replace(",", "_"), n], 6)
+	await shot("doc_%s%s_%d" % [key.replace(",", "_"), "_skill" if ex.skill else "", n], 6)
 	match key:
 		"deed_a,deed_b":
 			if not ex.skill:
