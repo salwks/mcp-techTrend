@@ -536,6 +536,7 @@ func _process(delta: float) -> void:
 		if args.has("openmap") and not _loading and not _map.visible and not _map_opened:
 			_map.toggle(); _map_opened = true
 			if args.has("mapmode"): _map.show_mode(args.mapmode)   # --mapmode=all|nation (시험)
+			if args.has("mapfasttest") and _pending.is_empty(): _map_fast_test.call_deferred()   # --mapfasttest: 전국 지도에서 역마 1번 고르고 확인
 		_map.update(player_pos, player.facing)
 	var dt := minf(0.05, delta)
 	clock += dt
@@ -938,6 +939,21 @@ func _check_portals() -> void:
 			continue
 		if d < PORTAL_R:
 			_travel(pt); return
+
+# 전국 지도에서 고른 역마(region_map._fast_go): 포털 곁 H와 같은 건너뛰기
+func _map_fast_test() -> void:
+	await _wait_frames(30)
+	_map.show_mode("nation")
+	var ev := InputEventKey.new(); ev.pressed = true; ev.physical_keycode = KEY_1
+	Input.parse_input_event(ev)
+	await _wait_frames(20)
+	if args.has("shot"): _save(_abs(String(args.shot).get_basename() + "_map.png"))
+	var ev2 := InputEventKey.new(); ev2.pressed = true; ev2.physical_keycode = KEY_ENTER
+	Input.parse_input_event(ev2)
+
+func map_fast_travel(ft: Dictionary) -> void:
+	if _loading or _leaving or world.is_route: return
+	_travel(ft)
 
 func _travel(pt: Dictionary) -> void:
 	if world.is_route and String(pt.id) != _route_entry and not pt.get("fast", false):

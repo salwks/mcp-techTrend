@@ -1,9 +1,11 @@
 # 지도 — M: 지금 고을의 도시 지도(건물·길·성벽·텃밭), Tab: 도시 → 권역(전체) → 전국 지도 차례로 전환, 휠·+/-: 확대·축소,
-# 드래그·방향키: 옮기기, Esc·M: 닫기. 바탕은 고지도풍 그림(map.png), 그 위 길·건물은 벡터로 그려 확대해도 선명하다.
+# 드래그·방향키: 옮기기, Esc·M: 닫기.
+# 전국 지도 역마: 지금 권역에 닿은 지나온 노정(Progress)은 금빛으로 — 숫자 키나 선·도착 고을 클릭으로 고르고 Enter/Y로 건너뛴다. 바탕은 고지도풍 그림(map.png), 그 위 길·건물은 벡터로 그려 확대해도 선명하다.
 extends CanvasLayer
 
 const PlaceTitle := preload("res://scripts/region/place_title.gd")
 const Travel := preload("res://scripts/region/travel.gd")
+const Progress := preload("res://scripts/region/progress.gd")
 const BuildingTitles := preload("res://scripts/region/building_titles.gd")
 
 # 지도에 그릴 건물 키트 → 지붕 색 종류
@@ -44,6 +46,9 @@ var mode := "city"
 var _nk := 1.0                # 전국 지도: 화면 px / 경도 1도
 var _ncenter := Vector2(127.5, 38.0)   # 전국 지도 가운데(경도, 위도)
 var _nation := {}             # 전국 지도 자료(처음 열 때 만든다)
+var _fast_opts: Array = []    # 전국 지도 역마 후보 [{route, name, ft, dest}] — 지금 권역에 닿은 지나온 노정
+var _fast_sel := -1           # 고른 후보(확인 기다림)
+var _press_at := Vector2.ZERO # 클릭/드래그 구분
 
 func setup(w, data_dir: String, loader = null) -> void:
 	world = w
@@ -233,6 +238,9 @@ func _show_all() -> void:
 
 func _update_hint() -> void:
 	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기"
+	if mode == "nation" and not _fast_opts.is_empty():
+		if _fast_sel >= 0: _hint.text = "역마 타고 %s 가겠소?   Enter/Y 간다 · N/Esc 그만" % _fast_label(_fast_opts[_fast_sel])
+		else: _hint.text += "\n역마(지나온 길 건너뛰기): 숫자 키 또는 금빛 길·고을 클릭"
 	_hint.reset_size()
 	var vs := get_viewport().get_visible_rect().size
 	_hint.position = Vector2((vs.x - _hint.size.x) / 2.0, vs.y - _hint.size.y - 14)
@@ -249,9 +257,18 @@ func _unhandled_input(e: InputEvent) -> void:
 	var kc: int = e.physical_keycode
 	if kc == KEY_M: toggle(); get_viewport().set_input_as_handled(); return
 	if not visible: return
+	if mode == "nation" and _fast_sel >= 0:   # 역마 확인
+		match kc:
+			KEY_ENTER, KEY_KP_ENTER, KEY_Y, KEY_SPACE: _fast_go()
+			KEY_N, KEY_ESCAPE, KEY_BACKSPACE: _fast_sel = -1; _update_hint(); _canvas.queue_redraw()
+			_: return
+		get_viewport().set_input_as_handled(); return
+	if mode == "nation" and kc >= KEY_1 and kc <= KEY_9 and kc - KEY_1 < _fast_opts.size():
+		_fast_pick(kc - KEY_1); get_viewport().set_input_as_handled(); return
 	match kc:
 		KEY_ESCAPE: visible = false
 		KEY_TAB:   # 도시 → 권역 전체 → 전국 → 도시
+			_fast_sel = -1
 			if mode == "city": _show_all()
 			elif mode == "all": _show_nation()
 			else:
@@ -272,7 +289,13 @@ func _on_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton:
 		if e.button_index == MOUSE_BUTTON_WHEEL_UP and e.pressed: _zoom(1.15, e.position)
 		elif e.button_index == MOUSE_BUTTON_WHEEL_DOWN and e.pressed: _zoom(1.0 / 1.15, e.position)
-		elif e.button_index == MOUSE_BUTTON_LEFT: _drag = e.pressed
+		elif e.button_index == MOUSE_BUTTON_LEFT:
+			_drag = e.pressed
+			if e.pressed: _press_at = e.position
+			elif mode == "nation" and e.position.distance_to(_press_at) < 6.0 and not _fast_opts.is_empty():
+				var i := _fast_hit(e.position)
+				if i >= 0 and i == _fast_sel: _fast_go()   # 고른 것을 한 번 더 누르면 간다
+				elif i >= 0: _fast_pick(i)
 	elif e is InputEventMouseMotion and _drag:
 		_pan(e.relative)
 	elif e is InputEventMagnifyGesture:
@@ -449,7 +472,67 @@ func _show_nation() -> void:
 		if sj is Dictionary: _nation.strongholds = sj.get("strongholds", [])
 	_nk = _n_fit()
 	_ncenter = Travel.OUTLINE_BOX.get_center()
+	_collect_fast()
 	_update_hint(); _canvas.queue_redraw()
+
+# ---- 역마(지도에서 건너뛰기) ----
+func _collect_fast() -> void:
+	_fast_opts = []; _fast_sel = -1
+	if world.is_route: return
+	var here := String(world.region.get("region_id", ""))
+	for r in _nation.routes:
+		if not Progress.route_done(String(r.id)): continue
+		var touches := false
+		var ps = r.json.get("portals", {})
+		if ps is Dictionary:
+			for e in ps:
+				if ps[e] is Dictionary and String(ps[e].get("region", "")) == here: touches = true
+		if not touches: continue
+		var ft := Travel.fast_target(String(r.id), here)
+		if ft.is_empty(): continue
+		var dest := String(ft.target) if ft.kind == "region" else ""
+		if dest == "":   # 갈림길 너머 노정: 그 노정의 권역 쪽 끝
+			for r2 in _nation.routes:
+				if r2.id == ft.target: dest = String(r2.to if r2.to != "" else r2.from)
+		_fast_opts.append({ route = String(r.id), name = String(r.get("short", r.name)), ft = ft, dest = dest })
+
+func _fast_label(o: Dictionary) -> String:
+	return "%s까지 (%s)" % [String(o.ft.label), String(o.name)]
+
+func _fast_pick(i: int) -> void:
+	if i < 0 or i >= _fast_opts.size(): return
+	_fast_sel = i
+	_update_hint(); _canvas.queue_redraw()
+
+func _fast_go() -> void:
+	if _fast_sel < 0: return
+	var o: Dictionary = _fast_opts[_fast_sel]
+	var ft: Dictionary = o.ft.duplicate()
+	ft.id = "fast_map_" + String(o.route); ft.fast = true
+	ft.label = "%s (역마)" % String(o.ft.label)
+	_fast_sel = -1
+	visible = false
+	print("MAP fast_travel route=%s -> %s %s" % [o.route, ft.kind, ft.target])
+	var main := get_parent()
+	if main.has_method("map_fast_travel"): main.map_fast_travel(ft)
+
+# 전국 지도 클릭: 역마 후보 노정 선(12px) 또는 도착 고을 점(18px) 근처면 그 후보
+func _fast_hit(at: Vector2) -> int:
+	var best := -1; var bd := INF
+	for i in _fast_opts.size():
+		var o: Dictionary = _fast_opts[i]
+		var ll = _region_ll(String(o.dest))
+		if ll != null:
+			var d := at.distance_to(_n_px(ll))
+			if d < 18.0 and d < bd: bd = d; best = i
+		for r in _nation.routes:
+			if r.id != o.route: continue
+			var line := _route_line(r)
+			for k in line.size() - 1:
+				var q := Geometry2D.get_closest_point_to_segment(at, _n_px(line[k]), _n_px(line[k + 1]))
+				var d2 := at.distance_to(q)
+				if d2 < 12.0 and d2 < bd: bd = d2; best = i
+	return best
 
 func _region_ll(id: String) -> Variant:
 	for r in _nation.regions:
@@ -496,6 +579,30 @@ func _here_ll() -> Variant:
 			want -= l
 		return line[line.size() - 1]
 	return null
+
+const FAST_COL := Color(0.80, 0.58, 0.12)
+func _draw_fast() -> void:
+	for i in _fast_opts.size():
+		var o: Dictionary = _fast_opts[i]
+		var sel := i == _fast_sel
+		for r in _nation.routes:
+			if r.id != o.route: continue
+			var px := PackedVector2Array()
+			for g in _route_line(r): px.append(_n_px(g))
+			if px.size() >= 2: _canvas.draw_polyline(px, FAST_COL if not sel else Color(0.95, 0.45, 0.1), 7.0 if sel else 5.0, true)
+		var ll = _region_ll(String(o.dest))
+		if ll == null: continue
+		var c := _n_px(ll) + Vector2(16, 12)
+		_canvas.draw_circle(c, 11.0, Color(0.2, 0.17, 0.15))
+		_canvas.draw_circle(c, 9.0, FAST_COL if not sel else Color(0.95, 0.45, 0.1))
+		_text(str(i + 1), c + Vector2(0, -1), 14, Color(0.1, 0.08, 0.07))
+	if _fast_sel >= 0:
+		var msg := "역마 타고 %s 가겠소?  Enter/Y · N/Esc" % _fast_label(_fast_opts[_fast_sel])
+		var w := _font.get_string_size(msg, HORIZONTAL_ALIGNMENT_LEFT, -1, 22).x + 40.0
+		var box := Rect2(Vector2((_canvas.size.x - w) / 2.0, 24), Vector2(w, 46))
+		_canvas.draw_rect(box, Color(0.96, 0.93, 0.85, 0.95))
+		_canvas.draw_rect(box, Color(0.17, 0.15, 0.13), false, 2.0)
+		_text(msg, box.get_center(), 22, Color(0.1, 0.08, 0.07))
 
 func _draw_nation() -> void:
 	var cs := _canvas.size
@@ -555,6 +662,7 @@ func _draw_nation() -> void:
 		_canvas.draw_circle(c, 9.0 if on else 6.0, Color(0.2, 0.17, 0.15))
 		_canvas.draw_circle(c, 6.0 if on else 4.0, Color(0.85, 0.3, 0.2) if on else Color(0.95, 0.92, 0.85))
 		_text(String(r.get("short", r.get("name", ""))), c + Vector2(0, -20), 20, Color(0.1, 0.08, 0.07))
+	_draw_fast()
 	var here = _here_ll()
 	if here != null:
 		var p := _n_px(here)
