@@ -16,6 +16,8 @@ extends "res://scripts/world.gd"
 const PngRaw := preload("res://scripts/region/png_raw.gd")
 const PropStates := preload("res://scripts/region/prop_states.gd")
 const Decals := preload("res://scripts/region/decals.gd")
+const Farm := preload("res://scripts/region/farm.gd")
+var farm = null    # 논·밭 필지(parcels.bin) — 없으면 null(예전 칠한 필지 무늬)
 # 사건용 세계 API(docs/reports/world-scenario.md): 프롭 상태(props)·데칼(decals)·장소 덧붙임(world_scenario.json)
 var props          # PropStates — set_prop_state(id, 상태)
 var decals         # Decals(Node3D) — 발자국·핏자국·그을림…
@@ -190,6 +192,8 @@ func load_region(dir := "") -> void:
 	mesh_mid = _grid_mesh(TILE / MID_STEP, MID_STEP)
 	_build_far()
 	_build_rivers()
+	farm = Farm.new()
+	if not farm.setup(self, data_dir): farm = null
 	if use_scatter and FileAccess.file_exists(SCATTER_PATH):
 		var scr = load(SCATTER_PATH)
 		# 다른 에이전트가 만드는 중이라 문법 오류일 수 있다 → 쓸 수 있을 때만
@@ -494,8 +498,15 @@ func height_at(x: float, z: float) -> float:
 	var w = walk_at(x, z)
 	return maxf(h, w) if w != null else h
 
-# 렌더 면과 같은 삼각형 보간(대각선 (i+1,j)–(i,j+1), _grid_mesh와 같음)
+# 보이는 땅: 논·밭 필지 안이면 필지 면(논바닥·물·둑, 밭 이랑), 아니면 지형
 func ground_at(x: float, z: float) -> float:
+	if farm != null:
+		var fh: float = farm.height(x, z)
+		if not is_nan(fh): return fh
+	return terrain_at(x, z)
+
+# 렌더 면과 같은 삼각형 보간(대각선 (i+1,j)–(i,j+1), _grid_mesh와 같음) — 필지를 모르는 지형만
+func terrain_at(x: float, z: float) -> float:
 	var fx := floorf(x); var fz := floorf(z)
 	var tx := x - fx; var tz := z - fz
 	var b := lattice_height(fx + 1.0, fz); var c := lattice_height(fx, fz + 1.0)
@@ -1206,6 +1217,7 @@ func focus(pos: Vector3) -> void:
 	mat_far.set_shader_parameter("hole", Vector4(lo.x * TILE, lo.y * TILE, (hi.x + 1) * TILE, (hi.y + 1) * TILE))
 	# 식생 대기열: 가까운 타일부터
 	_queue_scatter()
+	if farm != null: farm.refocus(c)
 	stats.near = 0; stats.mid = 0
 	for t in tiles:
 		if tiles[t].lod == 0: stats.near += 1
@@ -1236,6 +1248,7 @@ func _set_tile(t: Vector2i, lod: int) -> void:
 		st = { lod = -1, node = node, scatter_nodes = [], scatter_job = -1, scatter_hold = null, has0 = false, has1 = false, gen = _gen }
 		tiles[t] = st
 	st.lod = lod
+	if farm != null: farm.tile_lod(t, lod)
 	var kids: Array = st.node.get_children()
 	kids[0].visible = lod != 0
 	for i in range(1, kids.size()): kids[i].visible = lod == 0
@@ -1272,6 +1285,7 @@ func _chunk_y(x0: float, z0: float) -> Vector2:
 
 func _drop_tile(t: Vector2i) -> void:
 	var st: Dictionary = tiles[t]
+	if farm != null: farm.tile_lod(t, -1)
 	_unscatter(t)
 	_attach_statics(t, 2)
 	terrain_root.remove_child(st.node)
@@ -1418,14 +1432,15 @@ func _start_jobs() -> void:
 		var hold := { tile = t }
 		var rect := Rect2(t.x * TILE, t.y * TILE, TILE, TILE)
 		var seed := String(region.get("region_id", "region")).hash() & 0x7fffffff  # 권역 시드(타일 구분은 scatter가 rect로)
-		var ha := Callable(self, "height_fast"); var la := Callable(self, "landuse_at")
+		var ha := Callable(self, "height_fast"); var la := Callable(self, "landuse_scatter" if farm != null else "landuse_at")
 		tiles[t].scatter_job = WorkerThreadPool.add_task(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, _excl_for(rect), hold, _roads_arg), false, "scatter")
 		tiles[t].scatter_hold = hold
 		running += 1
-	stats.jobs = running + _queue.size() + (1 if not _attach_q.is_empty() else 0)
+	stats.jobs = running + _queue.size() + (1 if not _attach_q.is_empty() else 0) + (farm.pending() if farm != null else 0)
 
 # 반경 r 타일 안에 아직 식생 짓기·붙이기가 남았나(시작 화면 — 화면에 드는 둘레만 기다린다)
 func scatter_busy_near(c: Vector2i, r: int) -> bool:
+	if farm != null and farm.busy_near(c, r): return true
 	for t in tiles:
 		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r and tiles[t].scatter_job >= 0: return true
 	for t in _queue:
@@ -1480,6 +1495,7 @@ func _poll_jobs() -> void:
 
 # 식생 묶음 고르기: 플레이어에서 lod0_dist 안은 자세한 벌, scatter_far 안은 거친 벌, 그 너머(안개 속)는 그리지 않는다
 func update_scatter_lod(player: Vector3, force := false) -> void:
+	if farm != null: farm.update(player)
 	_lod_frame += 1
 	if not force and not _lod_dirty and _lod_frame % 6 != 0: return
 	_lod_dirty = false
@@ -1736,6 +1752,7 @@ func jobs_idle() -> bool:
 
 func shutdown() -> void:
 	_queue.clear()
+	if farm != null: farm.shutdown()
 	for t in tiles:
 		if tiles[t].scatter_job >= 0:
 			WorkerThreadPool.wait_for_task_completion(tiles[t].scatter_job)
@@ -1876,6 +1893,7 @@ func reset_edits() -> void:
 	_urban_veg()
 	_crossings = _crossings_all.duplicate()
 	_terrain_dirty = true
+	if farm != null: farm.reset_excl()
 
 # 회전된 사각형(중심 c, y축 회전 ry, 반폭 half) 안을 높이 y로 고른다. 바깥 edge m에 걸쳐 원래 땅으로 부드럽게.
 # 안쪽 토지이용 칸에는 "고른 땅" 비트를 켜 잡음 디테일을 없앤다. y가 NAN이면 사각형 안 데이터 높이의 평균.
@@ -1925,6 +1943,7 @@ static func _to_local(d: Vector2, ca: float, sa: float) -> Vector2:
 
 # 고친 높이·토지이용을 GPU 텍스처에 올리고, 타일(높이 범위·식생)을 다시 만든다
 func commit_terrain() -> void:
+	if farm != null: farm.commit()
 	if _paint_dirty:
 		_paint_dirty = false
 		paint_tex.update(Image.create_from_data(hnx, hnz, false, Image.FORMAT_RGBA8, pbytes))
@@ -1997,6 +2016,15 @@ func in_pond(x: float, z: float) -> bool:
 
 func add_veg_exclusion(c: Vector2, ry: float, half: Vector2) -> void:
 	_veg_excl.append({ c = c, ry = ry, half = half })
+	if farm != null: farm.exclude(c, ry, half)   # 배치 자리에 걸린 필지는 뺀다(그 자리 땅은 원래대로)
+
+# 식생용 토지이용: 필지가 덮은 논·밭 칸은 12(식생 없음 — 벼·작물은 farm.gd), 필지 밖에 남은 논·밭 칸은 풀밭(1)
+func landuse_scatter(x: float, z: float) -> int:
+	var l := landuse_at(x, z)
+	if l == 5: return l
+	if farm.sdf_at(x, z) < 1.0: return 12   # 필지가 덮은 칸(토지이용과 상관없이 — 4m 칸 가장자리의 숲·풀 칸도)
+	if l == 2 or l == 3: return 1
+	return l
 
 func _excl_for(rect: Rect2) -> Array:
 	var out := []

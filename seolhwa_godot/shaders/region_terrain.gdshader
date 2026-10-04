@@ -26,6 +26,12 @@ uniform float far_k = 0.0;         // 먼 능선을 먹빛으로 남기는 정�
 uniform sampler2D dry_tex : filter_nearest, repeat_disable;   // 건천 바닥 칸(토지이용 격자, region_world.dry_mask)
 uniform float has_dry = 0.0;
 uniform float urban_ground = 0.0;  // 도시 땅이 있는 권역(배치 urban): 마당 흙(yd≈0) 위에서는 길섶 풀 띠를 끈다
+// 논·밭 필지(scripts/region/farm.gd): 필지 합집합 부호 거리(2m, 128 + d·16). 근경에서 필지 안 땅은 내리고(필지 메시가 덮는다),
+// 필지 밖에 남은 논·밭 칸은 풀밭으로 칠한다(흐린 필지 무늬 대신 경계는 메시가 만든다)
+uniform sampler2D farm_tex : filter_linear, repeat_disable;
+uniform vec4 farm_meta = vec4(0.0, 0.0, 0.5, 0.0);   // x0, z0, 1/cell
+uniform vec2 farm_size = vec2(1.0);
+uniform float farm_on = 0.0;
 uniform float mist_base = 0.0;     // 낮은 안개 기준 높이(플레이어 발 높이). 기존 Materials는 마을 바닥 y=0 기준         // 먼 능선을 먹빛으로 남기는 정도(0 = 기존 안개 그대로)
 
 varying vec3 v_wp;
@@ -41,6 +47,10 @@ void vertex() {
 	float hd = r_height(wp.xz - vec2(0.0, s)), hu = r_height(wp.xz + vec2(0.0, s));
 	vec3 n = normalize(vec3(hl - hr, 2.0 * s, hd - hu));
 	float drop = VERTEX.y < -0.5 ? skirt : 0.0;
+	if (farm_on > 0.5) {
+		float fd = (textureLod(farm_tex, ((wp.xz - farm_meta.xy) * farm_meta.z + 0.5) / farm_size, 0.0).r * 255.0 - 128.0) / 16.0;
+		if (fd < 0.1) drop += 6.0;
+	}
 	VERTEX.y = h - drop - MODEL_MATRIX[3].y;
 	NORMAL = n;
 	v_wp = vec3(wp.x, h - drop, wp.z);
@@ -153,6 +163,10 @@ void fragment() {
 			if (v != 4 && v != 5) { sub = v; break; }
 		}
 		if (ca == 4) ca = sub; if (cb == 4) cb = sub; if (cc == 4) cc = sub; if (cd == 4) cd = sub;
+	}
+	if (farm_on > 0.5) {
+		if (ca == 2 || ca == 3) ca = 1; if (cb == 2 || cb == 3) cb = 1;
+		if (cc == 2 || cc == 3) cc = 1; if (cd == 2 || cd == 3) cd = 1;
 	}
 	vec3 col;
 	float water = 0.0;
