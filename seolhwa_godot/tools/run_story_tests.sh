@@ -53,6 +53,9 @@ TESTS=(
 	"hamhung:A|300|--region=HG_HAMHEUNG --storytest=hamhung:A"
 	"hamhung:B|300|--region=HG_HAMHEUNG --storytest=hamhung:B"
 	"hamhung:C|300|--region=HG_HAMHEUNG --storytest=hamhung:C"
+	"jeju:A|420|--route=SEA_NAMHAE_JEJU --storytest=jeju:A"
+	"jeju:B|420|--route=SEA_NAMHAE_JEJU --storytest=jeju:B"
+	"jeju:C|420|--route=SEA_NAMHAE_JEJU --storytest=jeju:C"
 	"walk:hwangju-pyeongyang|300|--route=HH_HWANGJU-PA_PYEONGYANG --walkroute=01 --walkspeed=12"
 	"walk:hangang-boat|600|--route=RIVER_HANGANG --walkroute=01 --walkspeed=12 --sailspeed=25"
 )

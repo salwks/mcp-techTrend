@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "note": "대본 시험 --storytest=jeju:A|B|C 의 출발 저장 — 함흥(ACT 4)까지 마친 상태(함흥 결말 A, 이겸을 찾음, 곽칠성 — 제주). jeju_test.gd prepare()가 시험 저장 파일에 덮어쓴다. 남해 뱃길은 아직 지나지 않았다(제주 첫 뱃길).",
+  "routes_done": { "JL_NAMWON_UNBONG-GG_HANYANG": "2026-10-04T09:00:00", "GG_HANYANG-HH_HWANGJU": "2026-10-04T10:00:00",
+    "GG_HANYANG-GW_GANGNEUNG": "2026-10-04T10:10:00", "GG_HANYANG-GS_GYEONGJU": "2026-10-04T10:20:00", "HH_HWANGJU-PA_PYEONGYANG": "2026-10-04T11:00:00",
+    "PA_PYEONGYANG-HG_HAMHEUNG": "2026-10-04T12:00:00", "GG_HANYANG-HG_HAMHEUNG": "2026-10-04T12:30:00", "HG_HAMHEUNG-BUKCHEONG": "2026-10-04T13:00:00" },
+  "vars": {
+    "MAIN_MASTER_TRACE": "HANYANG,GANGNEUNG,GYEONGJU,HWANGJU,HAMHUNG", "SKILL_BEAST_TRACE": true, "CASE_NAMWON_OUTCOME": "C", "CASE_NAMWON_DETAIL": "C",
+    "MAIN_WOOCHI_KNOWN": true, "ACT2_OPEN": true, "ACT3_OPEN": true, "ACT4_OPEN": true, "CASE_HANYANG_OUTCOME": "followed",
+    "ITEM_TALISMAN_SLOT": 1, "TALISMANS_OWNED": ["ITM_RIT_001"], "TALISMAN_EQUIPPED": ["ITM_RIT_001"],
+    "MAIN_PARK_MARK_COUNT": 6, "MAIN_PARK_NAME_KNOWN": true, "MAIN_GWAK_NAME_KNOWN": true, "MAIN_MASTER_FOUND": true, "MAIN_PAST_EVENT_KNOWN": true,
+    "CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": true, "CASE_GANGNEUNG_COMPLETE": true, "CASE_GYEONGJU_COMPLETE": true,
+    "CASE_HWANGJU_COMPLETE": true, "CASE_PYONGYANG_COMPLETE": true, "CASE_HAMHUNG_COMPLETE": true,
+    "CASE_GANGNEUNG_OUTCOME": "A", "CASE_GYEONGJU_OUTCOME": "A", "CASE_HWANGJU_OUTCOME": "A", "CASE_PYONGYANG_OUTCOME": "A", "CASE_HAMHUNG_OUTCOME": "A", "CASE_HAMHUNG_DETAIL": "A",
+    "SKILL_RUBBING": true, "SKILL_DOCUMENT_CHECK": true,
+    "SKILL_GUARD_SHOVE": true, "SKILL_QUICK_THROW": true, "SKILL_EVADE_SLASH": true, "SKILL_SNAP_SHOT": true, "SKILL_BEAST_SIDESTEP": true, "SKILL_TOOL_SLOT_PLUS": true
+  },
+  "cases": {
+    "hamhung": { "v": 2, "phase": "done", "flags": { "case_started": true, "resolved": true }, "clues": [], "rules": [],
+      "items": { "ITM_TOOL_009": 1, "ITM_WPN_001": 1, "ITM_WPN_002": 1, "ITM_AMMO_001": 12, "COIN": 11, "ITM_KEY_HG_RECORD": 1 }, "world": {}, "talked": {}, "notes": [],
+      "seen": { "S6010": true }, "time": 7.0 }
+  }
+}
