@@ -60,18 +60,18 @@ Travel.warp_to_station(id) -> {ok, why} # 역마 창을 그 역을 고른 채 �
 | station:namwon | 남원 역참·인월역 들러 가 봄(칸 말 5·4, 먹는 말, 마당 말 2, 기다리는 말, 마부) → `Travel.stations()` → `warp_to_station("namwon")`(인월→남원, 시각 8.0→11.5시, 문 앞 0.1m, 기다리는 말 4.9m) → 제주 역 가 봄으로 적어도 막힘 → E: 마부가 말을 끌고 14.9m 걸음(3.3초) → 운봉 읍치 어귀(4.4km)에서 내림(어귀 0m) | PASS |
 | station:to-cheongpa | 남원에서 청파역(한양)으로 역마(약 43시간 길) → 새 장면 청파역 문 앞 0.0m, 마방 말, 다시 탈 수 있음 | PASS |
 | ride:namwon-unbong | 출발을 남원 성문 앞 → **남원 역참**으로(성문 앞은 이제 말 타는 곳이 아님) | PASS — 4404m 411초(달리기 957초) |
-| 전체 `tools/run_story_tests.sh`(42개) | 41 PASS, **jeju:A FAIL** — "남해 뱃길 — 이제 지나온 길" | 아래 |
+| 전체 `tools/run_story_tests.sh`(42개) | 모두 PASS(jeju:A는 아래) | PASS |
 
 **fps**(M1, 2048×1536 창, 맑음 10시, 마방 마당에서 0.8m/s로 15초): 남원 역참 평균 **145.0fps**(최악 7.6ms), 청파역 **144.9fps** — 80 넘음.
 
 그림(게임 카메라, `shots/stations/` — git 밖): `namwon_a.png`(기와 마구간, 칸마다 구유에 머리 박은 말, 오른쪽 마당 말), `namwon_b.png`(문 앞: 마부가 안장 말 솔질, 南原驛 현판, 역 깃발), `cheongpa_a/b.png`(한양 청파역), `jeju_a/b.png`(제주목 마방 — 새끼 그물 지붕·조랑말, 비), `hamheung_a/b.png`(관북: 칸 판벽·굵은 울타리), `kit_honam.png`·`kit_giho.png`(키트 위에서).
 
-**jeju:A 실패(역참 작업 밖으로 보임)**: 로그에 `PROGRESS route_done SEA_NAMHAE_JEJU`가 저장된 뒤 `PROGRESS checkpoint travel`·`SAVESTAMP`가 찍히고, 제주로 넘어간 새 장면에서 route_done이 다시 거짓 — 장면을 다시 열 때 진행 저장이 옛 것으로 돌아간다. 다른 에이전트가 고치는 중인(커밋 전) `progress.gd`의 checkpoint·저장 칸 작업과 겹친다. 역참 코드는 route_done을 쓰지 않는다(역 가 봄만 travel_nodes에). 저장 담당(ab3244ab9f54190a9)에 알렸다. 나머지 41개(새 station 2개, 출발을 바꾼 ride:namwon-unbong 포함)는 PASS, 종료 코드 0.
+**jeju:A**: 처음 전체 실행에서 한 번 실패했다("남해 뱃길 — 이제 지나온 길"). 저장 담당 에이전트의 전체 시험과 같은 때 돌아서, 두 실행기가 같은 user://st_jeju_A.json을 쓰며 장면을 다시 열 때 서로의 저장을 읽은 탓이었다. 혼자 다시 돌리면 jeju:A·station 2개 모두 PASS, 저장 담당 쪽 전체 실행도 42/42 PASS. 시험 묶음을 동시에 둘 돌릴 때는 저장 파일 이름이 겹친다는 점에 주의.
 
 ## 7. 남은 것·가설
 - 칸 말은 앞모습(구유 쪽 = 카메라 쪽)이라 옆모습보다 덜 또렷하다. '마방'이라는 신호는 칸 말 줄 + 마당의 옆모습 말 + 문 앞 안장 말·마부·현판이 같이 준다. 칸 안 말은 처마 그늘과 화면 위쪽 틸트시프트 흐림 때문에 조금 흐리게 보인다.
 - 마부의 길은 직선 + 마방 문·마당 가운데 두 점 — 울타리·짚가리를 스칠 때가 있다(그림이라 충돌 없음).
 - 경주·대동·함흥 역은 도시 안을 말이 못 지나가므로(그래프에서 도시 점 막힘) 그 역에서 탈 수 있는 곳은 그쪽 노정 끝·몇 고을뿐이다(성 반대편 고을은 걸어서 성을 지나 거기 역·나루에서 탄다).
 - 현판 한자는 실제 역명이거나(오수역 獒樹驛·청파역 靑坡驛·대동역 大同驛·인월역 引月驛·구산역 丘山驛·횡계역 橫溪驛·청교역 靑郊驛·안보역 安保驛·삼례역 參禮驛·낙양역 洛陽驛) 고을 이름 + 驛(가설). 고증은 참고용.
-- 공용 파일을 통째로 커밋했다: `travel.gd`(다른 에이전트의 `Progress.checkpoint` 호출 포함), `fast_travel.gd`(글꼴 에이전트의 `ui_fonts.gd` preload 포함) — 그 에이전트들이 `progress.gd`·`ui_fonts.gd`를 커밋해야 이 두 파일이 커밋만으로 열린다(작업 트리는 정상).
+- 공용 파일 `travel.gd`·`fast_travel.gd`를 통째로 커밋했다(다른 에이전트의 `Progress.checkpoint`·`ui_fonts.gd` 포함). 그 의존 파일도 이제 커밋되어(2e5812f 등) HEAD에서 열린다.
 - `data/frames_stable*.png`는 git 밖 — 다른 맥에서는 굽기를 한 번 돌린다.
