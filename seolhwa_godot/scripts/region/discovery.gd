@@ -65,6 +65,7 @@ static func told_regions() -> Array:
 		for r in ACT2_REGIONS:
 			if not out.has(r): out.append(r)
 	if bool(v.get("ACT3_OPEN", false)) and not out.has("PA_PYEONGYANG"): out.append("PA_PYEONGYANG")
+	if bool(v.get("ACT4_OPEN", false)) and not out.has("HG_HAMHEUNG"): out.append("HG_HAMHEUNG")   # 평양 S5005 우치가 던진 함흥 문서
 	return out
 
 static func region_known(id: String) -> bool:
