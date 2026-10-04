@@ -19,6 +19,8 @@ export const HUMAN_ANIMS = {
   cower: { dur: 0.8, loop: true }, cry: { dur: 1.0, loop: true }, climb: { dur: 1.2 }, perch: { dur: 2.4, loop: true }, hug: { dur: 2.0, loop: true },
   // ACT 1 한양(Godot 이야기 굽기): 우치 웅크림(crouch), 책쾌 앉기(sit)·묶임(tied)
   crouch: { dur: 1.2, loop: true }, sit: { dur: 3.0, loop: true }, tied: { dur: 1.6, loop: true },
+  // v2.2 전투 숙련(P0): 받아밀기(막은 직후 짧게 밀침)·빠른 투척(걸으며 한 손 던지기) — 4~6장
+  shove: { dur: 0.3 }, quick_throw: { dur: 0.28 },
 };
 export const TIGER_ANIMS = {
   idle: { dur: 2.6, loop: true }, walk: { dur: 1.15, loop: true }, run: { dur: 0.7, loop: true },
@@ -413,10 +415,40 @@ export function tigerCombatPose(view, anim, t, at, st = {}) {
 // ---------------------------------------------------------------------------
 // 3단계(이야기) 동작 — 오누이
 // ---------------------------------------------------------------------------
-export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'perch', 'hug', 'crouch', 'sit', 'tied']);
+export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'perch', 'hug', 'crouch', 'sit', 'tied', 'shove', 'quick_throw']);
 export function humanStoryPose(view, anim, t, at, rig) {
   if (!STORY_HUMAN.has(anim)) return null;
   const S = rig.S, k = S.hip / 80;
+  if (anim === 'shove' || anim === 'quick_throw') {
+    const side0 = view === 'side', u = clamp(at / HUMAN_ANIMS[anim].dur, 0, 1);
+    let P;
+    if (anim === 'shove') {
+      // 막은 자세에서 두 팔·어깨로 앞을 확 밀고 돌아온다
+      P = side0 ? kf(u, [
+        [0, { torso: [-0.1], arm2: [0.9], arm2_l: [1.2], arm1: [0.8], arm1_l: [1.3], ...STANCE }],
+        [0.35, { root: [0, 6 * k, 2 * k], torso: [-0.32], head: [-0.1], arm2: [1.55], arm2_l: [0.15], arm1: [1.4], arm1_l: [0.25], ...LUNGE }, 'snap'],
+        [1, { torso: [-0.08], arm2: [0.6], arm2_l: [0.6], arm1: [0.5], arm1_l: [0.6], ...STANCE }, 'io'],
+      ]) : kf(u, [
+        [0, { arm1: [0.5], arm1_l: [-1.4], arm2: [-0.5], arm2_l: [1.4] }],
+        [0.35, { root: [0, 0, 3 * k, 1.04, 0.98], arm1: [0.25, 0, 0, 1, 0.7], arm1_l: [-0.3, 0, 0, 1, 0.7], arm2: [-0.25, 0, 0, 1, 0.7], arm2_l: [0.3, 0, 0, 1, 0.7], head: [0, 0, 2 * k] }, 'snap'],
+        [1, { arm1: [0.3], arm1_l: [-0.6], arm2: [-0.3], arm2_l: [0.6] }, 'io'],
+      ]);
+    } else {
+      // 걸음을 멈추지 않고 한 손으로 휙 — 뒤로 젖혔다가 앞으로 뿌린다(다리는 건드리지 않음)
+      P = side0 ? kf(u, [
+        [0, {}],
+        [0.3, { torso: [0.12], arm1: [-1.3], arm1_l: [-0.9] }, 'out'],
+        [0.6, { torso: [-0.18], arm1: [1.9], arm1_l: [0.1] }, 'snap'],
+        [1, { torso: [-0.04], arm1: [0.5], arm1_l: [0.3] }, 'io'],
+      ]) : kf(u, [
+        [0, {}],
+        [0.3, { arm1: [2.4], arm1_l: [-1.6], head: [0.06] }, 'out'],
+        [0.6, { arm1: [0.7, 0, 0, 1, 0.8], arm1_l: [-0.2] }, 'snap'],
+        [1, { arm1: [0.3], arm1_l: [-0.3] }, 'io'],
+      ]);
+    }
+    return view === 'back' ? mirror(P) : P;
+  }
   const side = view === 'side';
   const tr = sin(t * 38) * 0.8 * k, sob = sin(t * 14);
   let F;

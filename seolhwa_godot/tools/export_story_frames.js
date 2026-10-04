@@ -32,6 +32,9 @@ const SETS = {
   },
 };
 
+// ?set=skills: v2.2 전투 숙련 동작(받아밀기 shove·빠른 투척 quick_throw)을 플레이어 은행에 더할 클립으로 → frames_story_skills.json
+SETS.skills = { player: { base: 'player', over: {}, armed: true, anims: ['shove', 'quick_throw'] } };   // 칼 든 클립(':a') — 전투 중 SpriteChar.armed가 먼저 찾는다
+
 const TIGER_ANIMS = ['knock', 'sniff', 'climb_try', 'slip', ...fc.DISGUISE_ANIMS];
 
 async function toPng(cv) {
@@ -93,7 +96,7 @@ async function runSet(set, log) {
     fc.TIERS.high[kind] = fc.TIERS.high.player;
     const b = new fc.BakeBank(kind, 'high');
     const keys = [];
-    for (const vw of ['front', 'side', 'back']) for (const a of P.anims) keys.push(fc.clipKey(fc.resolveView(kind, vw, a), a, false, false));
+    for (const vw of ['front', 'side', 'back']) for (const a of P.anims) keys.push(fc.clipKey(fc.resolveView(kind, vw, a), a, !!P.armed, false));
     out[kind] = await bakeBank(b, keys, `frames_story_${kind}`);
     log('baked ' + kind + ' pages=' + out[kind].pages.length);
   }
