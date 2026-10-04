@@ -780,6 +780,7 @@ func _update_loading() -> void:
 
 func _prewarm_shaders() -> void:
 	var mats := []
+	Kit.material("water")   # 물 재질도 메인 스레드에서 미리(키트 짓기 작업 스레드에서 처음 만들지 않게)
 	for k in ["atlas", "cloth"]:
 		var m: ShaderMaterial = Kit.material(k)
 		mats.append(m); mats.append(Materials.faded_copy(m))

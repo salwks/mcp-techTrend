@@ -240,7 +240,8 @@ static func _flip(g: Geo) -> void:
 		var u := g.uv[i + 1]; g.uv[i + 1] = g.uv[i + 2]; g.uv[i + 2] = u
 		var c := g.col[i + 1]; g.col[i + 1] = g.col[i + 2]; g.col[i + 2] = c
 
-static var _paint_rng := Rng.new(20261002) # rng를 안 넘겨도 실행마다 같은 얼룩
+# rng를 안 넘기면 조각마다 그 모양(크기·aabb)에서 시드를 얻는다 — 실행·짓는 순서·스레드와 상관없이 같은 얼룩.
+# (예전 공용 static Rng는 키트 짓기 작업 스레드 여럿이 동시에 상태를 바꿔 결과가 순서에 따라 달라졌다)
 
 # 세로 그라데이션(아래 bottom → 위 top) + 면마다 약간의 얼룩(웹 paint). 색은 Kit.hex()로(선형)
 static func paint(g: Geo, top: Color, bottom = null, jitter := 0.05, rng: Rng = null) -> Geo:
@@ -248,8 +249,9 @@ static func paint(g: Geo, top: Color, bottom = null, jitter := 0.05, rng: Rng = 
 	var b := g.aabb()
 	var y0 := b.position.y
 	var hy := b.size.y if b.size.y > 0.0 else 1.0
+	if rng == null: rng = Rng.new(hash(b) ^ (g.pos.size() * 2654435761) ^ 20261002)
 	for i in range(0, g.pos.size(), 3):
-		var j := ((rng.next() if rng else _paint_rng.next()) - 0.5) * jitter
+		var j := (rng.next() - 0.5) * jitter
 		for k in 3:
 			var t := (g.pos[i + k].y - y0) / hy
 			g.col[i + k] = Color(maxf(0, lerpf(bot.r, top.r, t) + j), maxf(0, lerpf(bot.g, top.g, t) + j), maxf(0, lerpf(bot.b, top.b, t) + j * 0.8))

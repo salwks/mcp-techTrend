@@ -22,7 +22,7 @@ const STRAW := [0xdcc78e, 0x9d8656]
 const ONGGI := [0x6e4a33, 0x3e281c]
 const CLOTH_W := 0xe8e2d2
 
-static var _fr := Kit.Rng.new(4242)
+# rng 없이 부르면 Kit.paint가 조각 모양에서 시드를 얻는다(작업 스레드 여럿이 공용 Rng를 같이 쓰지 않게)
 
 # 웹 paint(g, top, bottom, jitter, rnd) — 색은 0xRRGGBB 정수 또는 [top, bottom] 배열
 static func P(g: Kit.Geo, top, bot = -1, jit := 0.05, rng: Kit.Rng = null) -> Kit.Geo:
@@ -33,11 +33,11 @@ static func P(g: Kit.Geo, top, bot = -1, jit := 0.05, rng: Kit.Rng = null) -> Ki
 		elif bot is Kit.Rng: rng = bot
 	else:
 		t = top; b = top if (bot == null or int(bot) < 0) else int(bot)
-	return Kit.paint(g, Kit.hex(t), Kit.hex(b), jit, rng if rng else _fr)
+	return Kit.paint(g, Kit.hex(t), Kit.hex(b), jit, rng)
 
 # 배열 색 + jitter + rng 순서로 쓰는 짧은 형태
 static func PA(g: Kit.Geo, cols: Array, jit := 0.05, rng: Kit.Rng = null) -> Kit.Geo:
-	return Kit.paint(g, Kit.hex(cols[0]), Kit.hex(cols[1]), jit, rng if rng else _fr)
+	return Kit.paint(g, Kit.hex(cols[0]), Kit.hex(cols[1]), jit, rng)
 
 # ---------------------------------------------------------------------------
 # 모델 조립기: part별 Batch, 변환, 충돌체·조명·앵커 모음

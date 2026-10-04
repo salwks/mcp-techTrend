@@ -253,7 +253,8 @@ static func height(rects: Array, prof: String, lift: float, x: float, z: float) 
 		if lift > 0.0 and not r.gable:
 			# 추녀 들림: 다른 채에 묻히지 않은 바깥 귀에만
 			var qi := (1 if x > cx else 0) + (2 if z > cz else 0)
-			if r.get("free", [true, true, true, true])[qi]:
+			var fr = r.get("free")
+			if fr == null or fr[qi]:
 				var la := clampf(a / ha, 0, 1); var lb := clampf(b / hb, 0, 1)
 				y += lift * maxf(pow(la, 3) * smoothstep(0.5, 1.0, lb), pow(lb, 3) * smoothstep(0.5, 1.0, la))
 		best = maxf(best, y)
