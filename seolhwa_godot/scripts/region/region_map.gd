@@ -1,12 +1,15 @@
 # 지도 — M: 지금 고을의 도시 지도(건물·길·성벽·텃밭), Tab: 도시 → 권역(전체) → 전국 지도 차례로 전환, 휠·+/-: 확대·축소,
 # 드래그·방향키: 옮기기, Esc·M: 닫기.
 # 전국 지도 역마: 지금 권역에 닿은 지나온 노정(Progress)은 금빛으로 — 숫자 키나 선·도착 고을 클릭으로 고르고 Enter/Y로 건너뛴다. 바탕은 고지도풍 그림(map.png), 그 위 길·건물은 벡터로 그려 확대해도 선명하다.
+# 알고 있는 곳만 이름을 쓴다(scripts/region/discovery.gd, 보강서 §20): 고을·이름 있는 건물·사건 장소(map_places)·전국 지도 권역과 거점.
+#   지형·물·길·성벽·이름 없는 집채는 늘 그린다. 단서·범인·해결 자리는 지도에 오르지 않는다(사건 데이터 map_places에 넣지 않는다).
 extends CanvasLayer
 
 const PlaceTitle := preload("res://scripts/region/place_title.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const BuildingTitles := preload("res://scripts/region/building_titles.gd")
+const Discovery := preload("res://scripts/region/discovery.gd")
 
 # 지도에 그릴 건물 키트 → 지붕 색 종류
 const ROOF_TILE := ["village/giwa", "village/jeongja"]
@@ -49,9 +52,14 @@ var _nation := {}             # 전국 지도 자료(처음 열 때 만든다)
 var _fast_opts: Array = []    # 전국 지도 역마 후보 [{route, name, ft, dest}] — 지금 권역에 닿은 지나온 노정
 var _fast_sel := -1           # 고른 후보(확인 기다림)
 var _press_at := Vector2.ZERO # 클릭/드래그 구분
+var _space := ""              # 지금 공간 id(region_id)
+var _story_places: Array = [] # 사건 데이터 map_places(자리를 풀어 둔 것) [{key, name, c, r, spec, bld}]
+var _disc_t := 0.0
+var on_discover: Callable = Callable()   # (이름, how) — 새로 알게 되면(이야기 쪽 '지도' 첫 안내)
 
 func setup(w, data_dir: String, loader = null) -> void:
 	world = w
+	_space = String(w.region.get("region_id", ""))
 	var mp := data_dir.path_join("map.json")
 	if FileAccess.file_exists(mp):
 		_meta = JSON.parse_string(FileAccess.get_file_as_string(mp))
@@ -237,7 +245,7 @@ func _show_all() -> void:
 	_update_hint(); _canvas.queue_redraw()
 
 func _update_hint() -> void:
-	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기"
+	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기\n가 보았거나 들어서 아는 곳만 이름이 적힌다"
 	if mode == "nation" and not _fast_opts.is_empty():
 		if _fast_sel >= 0: _hint.text = _fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?   Enter/Y 간다 · N/Esc 그만" % _fast_label(_fast_opts[_fast_sel])
 		else: _hint.text += "\n역마(지나온 길 건너뛰기): 숫자 키 또는 금빛 길·고을 클릭"
@@ -329,7 +337,64 @@ func _to_world(p: Vector2) -> Vector2:
 
 func update(pos: Vector3, facing: String) -> void:
 	_player = pos; _facing = facing
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _disc_t > 0.4:
+		_disc_t = now
+		_update_discovery()
 	if visible: _canvas.queue_redraw()
+
+# ---- 알게 된 곳(가 봄·들음) ----
+func _story():
+	var m := get_parent()
+	return m.story if m != null and "story" in m else null
+
+# 사건 데이터 map_places — 사건이 바뀌거나 새 게임이면 다시 푼다
+func _collect_story_places() -> void:
+	_story_places = []
+	var st = _story()
+	if st == null or st.data.is_empty(): return
+	for sp in st.data.get("map_places", []):
+		var c: Vector2 = st.anchor(sp.get("at", [0, 0]))
+		var e := { key = "place:" + String(sp.id), name = String(sp.get("name", "")), c = c, r = float(sp.get("radius", 18.0)), spec = sp, bld = "" }
+		if bool(sp.get("building", false)):   # 그 자리 이름 있는 건물(주막 등)의 이름표를 쓴다
+			var bd := 30.0
+			for it in _items:
+				if it.name != "" and (it.c as Vector2).distance_to(c) < bd: bd = (it.c as Vector2).distance_to(c); e.bld = Discovery.bld_key(it.name, it.c); e.name = it.name
+		_story_places.append(e)
+
+func _learn(key: String, told: bool, nm: String) -> void:
+	var fresh: bool = Discovery.tell(_space, key) if told else Discovery.visit(_space, key)
+	if fresh and on_discover.is_valid() and not Discovery.how(_space, key).is_empty(): on_discover.call(nm, "told" if told else "visited")
+
+func _update_discovery() -> void:
+	if _space == "": return
+	var p := Vector2(_player.x, _player.z)
+	if not Discovery.is_known(Discovery.NATION, "region:" + _space) and not world.is_route: Discovery.visit(Discovery.NATION, "region:" + _space)
+	for t in _towns:
+		if (t[2] as Rect2).grow(PlaceTitle.MARGIN).has_point(p):
+			if not Discovery.is_known(_space, "town:" + String(t[0])):
+				Discovery.visit(_space, "town:" + String(t[0]))
+				Discovery.visit(Discovery.NATION, "sh:" + String(t[0]))
+	for it in _items:
+		if it.name == "": continue
+		var q: Vector2 = (p - (it.c as Vector2)).rotated(-float(it.ry))
+		var hf: Vector2 = it.half
+		if absf(q.x) <= hf.x + 14.0 and absf(q.y) <= hf.y + 14.0:
+			var k := Discovery.bld_key(it.name, it.c)
+			if Discovery.how(_space, k) != "visited": _learn(k, false, it.name)
+	var st = _story()
+	if st != null and _story_places.size() != st.data.get("map_places", []).size(): _collect_story_places()
+	for e in _story_places:
+		var sp: Dictionary = e.spec
+		var known := Discovery.is_known(_space, e.key)
+		if p.distance_to(e.c) < e.r:
+			if Discovery.how(_space, e.key) != "visited": _learn(e.key, false, e.name)
+		elif not known:
+			if bool(sp.get("start_known", false)): Discovery.know(_space, e.key)   # 처음부터 아는 곳(안내 없이)
+			elif sp.has("known") and st != null and st.runner != null and st.runner.cond(sp.known): _learn(e.key, true, e.name)
+		if e.bld != "" and Discovery.is_known(_space, e.key) and not Discovery.is_known(_space, e.bld):
+			if Discovery.how(_space, e.key) == "visited": Discovery.visit(_space, e.bld)
+			else: Discovery.tell(_space, e.bld)
 
 # ---- 그리기 ----
 func _draw_map() -> void:
@@ -369,10 +434,12 @@ func _draw_map() -> void:
 			_canvas.draw_line(_to_px(a), _to_px(b), Color(0.25, 0.22, 0.2), maxf(1.5, 1.2 * _k))
 		if _k > 0.9:
 			for it in _items:
-				if it.name != "" and view.has_point(it.c):
+				if it.name != "" and view.has_point(it.c) and Discovery.is_known(_space, Discovery.bld_key(it.name, it.c)):
 					_text(it.name, _to_px(it.c) + Vector2(0, -(it.half as Vector2).y * _k - 10), 14, Color(0.1, 0.08, 0.07))
+	_draw_story_places(view)
 	for t in _towns:
 		var r: Rect2 = t[2]
+		if not Discovery.is_known(_space, "town:" + String(t[0])): continue
 		if _k > 1.4:
 			if r.grow(60).intersects(view): _text(t[0], _to_px(Vector2(r.get_center().x, r.position.y)) + Vector2(0, -18), 26, Color(0.1, 0.08, 0.07))
 		else: _text(t[0], _to_px(t[1]), 20, Color(0.1, 0.08, 0.07))
@@ -386,6 +453,17 @@ func _draw_map() -> void:
 	_canvas.draw_colored_polygon(tri, Color(0.75, 0.15, 0.1))
 	_canvas.draw_polyline(PackedVector2Array([tri[0], tri[1], tri[2], tri[0]]), Color(1, 1, 1), 2.0)
 	_canvas.draw_rect(Rect2(Vector2.ZERO, cs), Color(0.17, 0.15, 0.13), false, 3.0)
+
+# 알게 된 사건 장소: 작은 붉은 먹점 + 이름(건물 이름표를 쓰는 곳은 건물 쪽이 그린다). 들은 곳(told)은 점선 동그라미
+func _draw_story_places(view: Rect2) -> void:
+	if _k < 0.2: return
+	for e in _story_places:
+		if e.bld != "" or not Discovery.is_known(_space, e.key) or not view.grow(40).has_point(e.c): continue
+		var p := _to_px(e.c)
+		var told := Discovery.how(_space, e.key) == "told"
+		if told: _canvas.draw_arc(p, 7.0, 0, TAU, 20, Color(0.55, 0.16, 0.1, 0.9), 1.6, true)
+		else: _canvas.draw_circle(p, 5.0, Color(0.55, 0.16, 0.1, 0.9))
+		_text(String(e.name) + (" (들음)" if told else ""), p + Vector2(0, -16), 15, Color(0.35, 0.1, 0.06))
 
 func _text(s: String, at: Vector2, size: int, col: Color) -> void:
 	var w := _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
@@ -635,6 +713,7 @@ func _draw_nation() -> void:
 		var on: bool = r.id == here_id
 		_canvas.draw_polyline(px, Color(0.62, 0.2, 0.12) if on else Color(0.45, 0.35, 0.25), 4.0 if on else 2.5, true)
 		var nm := String(r.get("short", r.name)) if not on else String(r.name)
+		if not on and not Progress.route_done(String(r.id)) and not (Discovery.region_known(String(r.get("from", ""))) and Discovery.region_known(String(r.get("to", "")))): continue
 		var w := _font.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x + 8.0
 		for f in [0.5, 0.35, 0.65, 0.2, 0.8]:
 			var at := _polyline_at(px, f) + Vector2(0, -14)
@@ -659,6 +738,7 @@ func _draw_nation() -> void:
 			if (t as Rect2).intersects(sb): hit = true; break
 		if hit: continue
 		taken.append(sb)
+		if not Discovery.is_known(Discovery.NATION, "sh:" + String(s.name)): continue
 		_text(String(s.name), sp + Vector2(0, 12), 12, Color(0.3, 0.26, 0.22) if built else Color(0.45, 0.4, 0.36))
 	for r in _nation.regions:
 		if r.lonlat == null: continue
@@ -666,7 +746,8 @@ func _draw_nation() -> void:
 		var on: bool = String(r.get("id", "")) == here_id
 		_canvas.draw_circle(c, 9.0 if on else 6.0, Color(0.2, 0.17, 0.15))
 		_canvas.draw_circle(c, 6.0 if on else 4.0, Color(0.85, 0.3, 0.2) if on else Color(0.95, 0.92, 0.85))
-		_text(String(r.get("short", r.get("name", ""))), c + Vector2(0, -20), 20, Color(0.1, 0.08, 0.07))
+		if on or Discovery.region_known(String(r.get("id", ""))):
+			_text(String(r.get("short", r.get("name", ""))), c + Vector2(0, -20), 20, Color(0.1, 0.08, 0.07))
 	_draw_fast()
 	var here = _here_ll()
 	if here != null:

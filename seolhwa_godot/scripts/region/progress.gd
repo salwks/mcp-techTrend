@@ -5,6 +5,8 @@
 #   "vars":  { MAIN_MASTER_TRACE, CASE_NAMWON_OUTCOME, SKILL_BEAST_TRACE … },   ← 시나리오 §7 공통 상태 변수(사건을 넘어 남는 값)
 #   "cases": { "namwon": { phase, flags, clues, rules, items, world, talked, notes, time, seen } },   ← 사건별 진행(scripts/story)
 #   "where": { space, kind, x, z, hour },   ← 이어 하기 자리(story_director가 10초마다·저장할 때)
+#   "onboard": { ONBOARD_MOVE_SEEN: true, PLAY_TIME: 812.0 … },   ← 처음 한 번 안내(scripts/story/onboarding.gd) — 사건을 넘어 남는다
+#   "known": { "<공간 id>": { "<장소 키>": "visited" | "told" }, "_nation": {…} },   ← 지도에 적힌 곳(scripts/region/discovery.gd)
 #   "saved_at": "…"
 # }
 # 버전 1(routes_done만) 파일도 그대로 읽는다.
@@ -23,6 +25,8 @@ static func data() -> Dictionary:
 		if not (_d.get("routes_done") is Dictionary): _d["routes_done"] = {}
 		if not (_d.get("vars") is Dictionary): _d["vars"] = {}
 		if not (_d.get("cases") is Dictionary): _d["cases"] = {}
+		if not (_d.get("onboard") is Dictionary): _d["onboard"] = {}
+		if not (_d.get("known") is Dictionary): _d["known"] = {}
 		_d["version"] = 2
 	return _d
 
@@ -81,9 +85,23 @@ static func has_save() -> bool:
 	return not data().cases.is_empty() or not where().is_empty()
 
 static func reset_all() -> void:
-	_d = { "version": 2, "routes_done": {}, "vars": {}, "cases": {} }
+	_d = { "version": 2, "routes_done": {}, "vars": {}, "cases": {}, "onboard": {}, "known": {} }
 	save()
 
 static func clear_case(id: String) -> void:
 	data().cases.erase(id)
 	save()
+
+# ---- 처음 한 번 안내(ONBOARD_*)·놀이 시간 — vars와 따로 둔다(story_state가 vars를 통째로 덮어 저장하므로) ----
+static func onboard(k: String, dflt = false):
+	return data().onboard.get(k, dflt)
+
+static func set_onboard(k: String, v, write := true) -> void:
+	data().onboard[k] = v
+	if write: save()
+
+# ---- 지도에 적힌 곳(scripts/region/discovery.gd) ----
+static func known(space: String) -> Dictionary:
+	var k: Dictionary = data().known
+	if not (k.get(space) is Dictionary): k[space] = {}
+	return k[space]
