@@ -95,7 +95,7 @@ func _setup(opts: Dictionary) -> void:
 	title_text = String(opts.get("title", "문서 살피기" if ids.size() < 2 else "문서 비교"))
 	note_text = String(opts.get("note", ""))
 	skill = bool(opts.get("skill", bool(d.S.vars.get("SKILL_DOCUMENT_CHECK", false))))
-	_font = d.ui._font if d.ui.get("_font") != null else SystemFont.new()
+	_font = preload("res://scripts/ui_fonts.gd").main()
 	for id in ids: _fibers[id] = _make_fibers(defs[id], int(defs[id].get("seed", hash(id) % 9973)))
 
 func all_found() -> Array:
@@ -536,16 +536,17 @@ func _vtext(ci: CanvasItem, r: Rect2, at: Vector2, text: String, size: float, co
 	var fs := maxi(4, int(size * r.size.x))
 	var step := size * r.size.x * 1.08
 	var p := r.position + at * r.size
+	const VText := preload("res://scripts/story/vtext.gd")   # 세로쓰기 글자(기록책과 같은 규칙 — 꺾쇠·줄표는 돌리고, 마침표는 칸 오른쪽 위)
 	for i in text.length():
 		var ch := text.substr(i, 1)
 		if ch == " ": p.y += step * 0.6; continue
-		var o := Vector2(-fs * 0.5, fs * 0.86)
+		var c := p + Vector2(0, step * 0.5)
 		if bleed > 0.0:
 			var rad := fs * 0.07 * bleed
 			for k in 8:
 				var a := TAU * k / 8.0
-				ci.draw_string(_font, p + o + Vector2(cos(a), sin(a)) * rad, ch, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(col, col.a * 0.16 * bleed))
-		ci.draw_string(_font, p + o, ch, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+				VText.draw(ci, _font, c + Vector2(cos(a), sin(a)) * rad, ch, fs, Color(col, col.a * 0.16 * bleed))
+		VText.draw(ci, _font, c, ch, fs, col)
 		p.y += step
 
 func _seal(ci: CanvasItem, r: Rect2, s: Dictionary, z: float) -> void:
