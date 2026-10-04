@@ -78,7 +78,7 @@ def hanyang():
     fills = ["grain", "grain", "goods", "grain"]
     for i, x in enumerate(xs):
         p = {"style": "chilpae", "fill": fills[i]}
-        if i == 1: p["hatch"] = True
+        if i == 1: p.update({"hatch": True, "part": "shell"})   # 2번 안은 실내 공간 hy_chilpae_2_in(아래 hanyang_interiors)
         items.append(item("hy_sc_chilpae_changgo_%d" % (i + 1), "scenario/changgo", x, CZ, 0.0, p, flatten=True, footprint=[12.6, 9.0],
                           title="칠패 창고", group="칠패 창고"))
     # 기름통(S8013A 불 붙기 전 치울 수 있는 것)·곡물가마니(밖에 쌓음)
@@ -86,8 +86,7 @@ def hanyang():
     items.append(prop("hy_sc_chilpae_oil_2", "gireumtong", xs[2], CZ, 0, -3.8, 4.1, ry=0.5, group="칠패 창고"))
     items.append(prop("hy_sc_chilpae_gamani_1", "gamani", xs[0], CZ, 0, 3.4, 4.3, group="칠패 창고"))
     items.append(prop("hy_sc_chilpae_gamani_2", "gamani", xs[3], CZ, 0, -3.0, 4.4, ry=0.3, group="칠패 창고"))
-    items.append(prop("hy_sc_chilpae_jangbu", "jangbu", xs[1], CZ, 0, 3.0, 1.5, dy=0.65, n=8, group="칠패 창고"))
-    items.append(prop("hy_sc_chilpae_ham", "munseoham", xs[1], CZ, 0, 3.6, 0.6, dy=0.65, group="칠패 창고"))
+    # (2번 창고 안 장부 더미·문서함 hy_sc_chilpae_jangbu·_ham은 실내 공간 hy_chilpae_2_in으로 옮김 — 같은 id)
     # S8002 벽 그을림 · S8004 젖은 흔적(창고 벽을 따라)
     for i, x in enumerate(xs[:3]):
         decals.append({"id": "hy_s8002_scorch_%d" % i, "kind": "scorch", "x": x - 2.0 + i, "z": CZ + 3.2, "y": 1.5, "ry": 0.0, "wall": True,
@@ -104,7 +103,7 @@ def hanyang():
 
     # 서강 옛 창고(강창): 마포 서쪽, 한강과 무명 내(r011) 사이 강기슭. 옛 불에 탄 창고 터(12년 전) + 다시 쓴 낡은 곡물창고(숨은 바닥·수량패 홈)
     SX, SZ = -2268.0, 758.0
-    items.append(item("hy_sc_seogang_changgo", "scenario/changgo", SX, SZ, 0.0, {"style": "seogang", "hatch": True, "groove": True},
+    items.append(item("hy_sc_seogang_changgo", "scenario/changgo", SX, SZ, 0.0, {"style": "seogang", "hatch": True, "groove": True, "part": "shell"},
                       flatten=True, footprint=[15.6, 10.0], title="서강 옛 창고", group="서강"))
     items.append(item("hy_sc_seogang_teo", "scenario/changgo", SX - 2.0, SZ + 13.5, 0.0, {"style": "chilpae", "fill": "empty", "cold": True, "old": True},
                       flatten=True, footprint=[12.6, 9.0], state="BURNT", title="불탄 창고 터", group="서강"))
@@ -124,6 +123,50 @@ def hanyang():
     save("GG_HANYANG", "placement_scenario.json", {"area": "scenario_hanyang", "note": "마스터 시나리오 v2.1 장소(ACT 1·ACT 6) — tools/scenario/place_scenario.py", "items": items})
     save("GG_HANYANG", "world_scenario.json", world)
     save("GG_HANYANG", "decals_scenario.json", {"items": decals, "trails": trails})
+    hanyang_interiors(items)
+
+
+# 한양 최종장 실내 공간(terrain-engine.md "실내 공간"): 칠패 2번 창고·서강 옛 창고의 안. 권역에는 같은 키트의 겉(part "shell", 문 자리 막힘),
+#   실내 공간에는 안쪽(part "inside")을 같은 로컬 짜임으로 세우고 twin = 겉 건물 배치 id → 상태(불 FIRE_1..3·BURNT, hatch, groove)와
+#   앵커(inside·hatch·pit·groove·rubble·back_wall·center·door_in·ritual)가 그대로 맞는다(world.prop_anchor(배치 id, …)가 실내 자리를 돌려줌).
+#   월드 자리는 권역 지도 남동쪽 끝(2450, 2400~2450 — 쓰지 않는 산자락; 지형은 숨는다).
+def hanyang_interiors(items):
+    styles = {"chilpae": (10.0, 6.0, 0.65, 3), "seogang": (13.0, 7.0, 0.8, 4)}
+    def make(iid, name, bid, origin, extra_props, trails, decal_items):
+        it = next(i for i in items if i["id"] == bid)
+        W, D, F, nb = styles[it["params"]["style"]]
+        zf, zb = D / 2, -D / 2
+        dx = -W / 2 + (W / nb) * 1.5                 # 널문(gate) 칸 가운데(왼쪽에서 두 번째 칸)
+        ox, oz, ory = it["x"], it["z"], it["ry"]
+        params = dict(it["params"]); params["part"] = "inside"
+        inner = {
+            "id": iid, "name": name, "region": "GG_HANYANG", "twin": bid,
+            "note": "최종장 「칠패의 밤」 실내 — tools/scenario/place_scenario.py hanyang_interiors(). 로컬 = 겉 건물(%s) 로컬(정면 +z, 원점 바닥 가운데 땅)" % bid,
+            "origin": list(origin), "ry": 0.0, "bounds": [round(-W / 2 + 0.15, 2), round(zb + 0.15, 2), round(W / 2 - 0.15, 2), round(zf + 0.55, 2)],
+            "kit": "scenario/changgo", "params": params,
+            "light": {"dark": 0.55, "exit_light": [round(dx, 2), 2.0, round(zf + 0.9, 2)], "exit_energy": 1.2, "exit_range": 6.0, "exit_color": "#d8d2c0"},
+            "camera": {"pitch": 56, "distance": 12.5 if W < 12 else 13.5},
+            "entrances": [{"id": "door", "at": list(w(ox, oz, ory, dx, zf + 0.7)), "radius": 0.9, "spawn": [round(dx, 2), round(zf - 1.0, 2)], "face": "up"}],
+            "exits": [{"id": "door", "at": [round(dx, 2), round(zf + 0.2, 2)], "radius": 0.6, "to": list(w(ox, oz, ory, dx, zf + 1.7)), "face": "down", "label": "창고 밖으로"}],
+            "props": extra_props,
+            "decals": {"items": decal_items, "trails": trails},
+        }
+        os.makedirs(os.path.join(RD, "interiors", iid), exist_ok=True)
+        save(os.path.join("interiors", iid), "interior.json", inner)
+    # 칠패 2번: 숨은 바닥(hole x = W·0.28 = 2.8, z −0.2) · 장부 더미·문서함(옛 권역 자리 그대로, 같은 id)
+    make("hy_chilpae_2_in", "칠패 창고 안", "hy_sc_chilpae_changgo_2", (2450.0, 0.0, 2450.0),
+         [{"id": "hy_sc_chilpae_jangbu", "kit": "scenario/props", "params": {"kind": "jangbu", "n": 8, "indoor": True, "seed": 7038}, "at": [3.0, 1.5], "ry": 0.0, "dy": 0.65},
+          {"id": "hy_sc_chilpae_ham", "kit": "scenario/props", "params": {"kind": "munseoham", "indoor": True, "seed": 9430}, "at": [3.6, 0.6], "ry": 0.0, "dy": 0.65}],
+         # S8015 잔영이 남기는 젖은 자국(뒷벽 → 숨은 바닥) — 이야기가 켠다
+         [{"id": "hy_s8015_trace_cp", "kind": "wet_foot", "group": "s8015_trace", "hidden": True, "trace": "other", "step": 0.7,
+           "points": [[-2.6, -2.2], [-0.8, -1.4], [0.9, -0.6], [2.0, -0.3]]}],
+         # S8014 안벽 그을림(불 붙은 뒤 이야기가 켠다)
+         [{"id": "hy_s8014_scorch_in_0", "kind": "scorch", "x": -2.0, "z": -2.85, "y": 1.6, "ry": 0.0, "wall": True, "size": 2.0, "hidden": True, "group": "s8014_scorch_in"},
+          {"id": "hy_s8014_scorch_in_1", "kind": "scorch", "x": 3.2, "z": -2.85, "y": 1.4, "ry": 0.0, "wall": True, "size": 1.6, "hidden": True, "group": "s8014_scorch_in"}])
+    # 서강 옛 창고: 숨은 바닥(hole x = 3.64, z −0.2) · 수량패 홈(groove 기둥 x −2.34, 뒷벽)
+    make("hy_seogang_in", "서강 옛 창고 안", "hy_sc_seogang_changgo", (2450.0, 0.0, 2400.0), [],
+         [{"id": "hy_s8015_trace_sg", "kind": "wet_foot", "group": "s8015_trace", "hidden": True, "trace": "other", "step": 0.7,
+           "points": [[-2.3, -2.4], [-0.4, -1.2], [1.8, -0.6], [2.9, -0.3]]}], [])
 
 
 # ---------------------------------------------------------------------------

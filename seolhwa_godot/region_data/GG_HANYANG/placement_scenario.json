@@ -232,6 +232,7 @@
     "style": "chilpae",
     "fill": "grain",
     "hatch": true,
+    "part": "shell",
     "seed": 805
    },
    "x": -736.0,
@@ -364,55 +365,13 @@
    "group": "칠패 창고"
   },
   {
-   "id": "hy_sc_chilpae_jangbu",
-   "kit": "scenario/props",
-   "params": {
-    "kind": "jangbu",
-    "n": 8,
-    "indoor": true,
-    "seed": 7038
-   },
-   "x": -733.0,
-   "z": -220.5,
-   "ry": 0.0,
-   "dy": 0.65,
-   "flatten": false,
-   "clear_veg": false,
-   "yard": false,
-   "footprint": [
-    1.2,
-    1.0
-   ],
-   "group": "칠패 창고"
-  },
-  {
-   "id": "hy_sc_chilpae_ham",
-   "kit": "scenario/props",
-   "params": {
-    "kind": "munseoham",
-    "indoor": true,
-    "seed": 9430
-   },
-   "x": -732.4,
-   "z": -221.4,
-   "ry": 0.0,
-   "dy": 0.65,
-   "flatten": false,
-   "clear_veg": false,
-   "yard": false,
-   "footprint": [
-    1.2,
-    1.0
-   ],
-   "group": "칠패 창고"
-  },
-  {
    "id": "hy_sc_seogang_changgo",
    "kit": "scenario/changgo",
    "params": {
     "style": "seogang",
     "hatch": true,
     "groove": true,
+    "part": "shell",
     "seed": 1222
    },
    "x": -2268.0,

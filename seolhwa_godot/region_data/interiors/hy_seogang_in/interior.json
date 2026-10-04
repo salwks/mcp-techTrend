@@ -1,0 +1,105 @@
+{
+ "id": "hy_seogang_in",
+ "name": "서강 옛 창고 안",
+ "region": "GG_HANYANG",
+ "twin": "hy_sc_seogang_changgo",
+ "note": "최종장 「칠패의 밤」 실내 — tools/scenario/place_scenario.py hanyang_interiors(). 로컬 = 겉 건물(hy_sc_seogang_changgo) 로컬(정면 +z, 원점 바닥 가운데 땅)",
+ "origin": [
+  2450.0,
+  0.0,
+  2400.0
+ ],
+ "ry": 0.0,
+ "bounds": [
+  -6.35,
+  -3.35,
+  6.35,
+  4.05
+ ],
+ "kit": "scenario/changgo",
+ "params": {
+  "style": "seogang",
+  "hatch": true,
+  "groove": true,
+  "part": "inside",
+  "seed": 1222
+ },
+ "light": {
+  "dark": 0.55,
+  "exit_light": [
+   -1.62,
+   2.0,
+   4.4
+  ],
+  "exit_energy": 1.2,
+  "exit_range": 6.0,
+  "exit_color": "#d8d2c0"
+ },
+ "camera": {
+  "pitch": 56,
+  "distance": 13.5
+ },
+ "entrances": [
+  {
+   "id": "door",
+   "at": [
+    -2269.62,
+    762.2
+   ],
+   "radius": 0.9,
+   "spawn": [
+    -1.62,
+    2.5
+   ],
+   "face": "up"
+  }
+ ],
+ "exits": [
+  {
+   "id": "door",
+   "at": [
+    -1.62,
+    3.7
+   ],
+   "radius": 0.6,
+   "to": [
+    -2269.62,
+    763.2
+   ],
+   "face": "down",
+   "label": "창고 밖으로"
+  }
+ ],
+ "props": [],
+ "decals": {
+  "items": [],
+  "trails": [
+   {
+    "id": "hy_s8015_trace_sg",
+    "kind": "wet_foot",
+    "group": "s8015_trace",
+    "hidden": true,
+    "trace": "other",
+    "step": 0.7,
+    "points": [
+     [
+      -2.3,
+      -2.4
+     ],
+     [
+      -0.4,
+      -1.2
+     ],
+     [
+      1.8,
+      -0.6
+     ],
+     [
+      2.9,
+      -0.3
+     ]
+    ]
+   }
+  ]
+ }
+}
