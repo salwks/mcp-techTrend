@@ -142,6 +142,7 @@ func _setup() -> void:
 	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
 	add_child(onboard)
 	ambient = load("res://scripts/story/ambient_talk.gd").new(self)
+	add_child(load("res://scripts/story/save_keeper.gd").new(self))   # 저장이 보이게: 자동 기록 도장·주막 쉬기·저장 칸(Esc)
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
 	if case_id == "":

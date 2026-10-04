@@ -1,4 +1,5 @@
-# 지명 표시 — 마을에 들어서거나 게임이 켜질 때 화면 중앙 상단에 지명(예: 남원)이 떠올랐다 사라진다.
+# 지명 표시 — 마을에 들어서거나 게임이 켜질 때 화면 중앙 상단에 지명(예: 남원)이 떠올랐다 사라진다(덕온공주체 Classic).
+# 들어서면 progress.place_now에 적고 자동 기록(progress.checkpoint — 붓 도장 '기록을 남겼다').
 # 지명 구역은 region.json settlements를 짧은 이름으로 묶어 만든다(bbox 또는 반지름 + 여유).
 extends CanvasLayer
 
@@ -112,9 +113,7 @@ func _ready() -> void:
 	add_child(box)
 	_label = Label.new()
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["AppleMyungjo", "Nanum Myeongjo", "NanumMyeongjo", "Batang", "Noto Serif CJK KR", "Apple SD Gothic Neo"])
-	_label.add_theme_font_override("font", font)
+	_label.add_theme_font_override("font", preload("res://scripts/ui_fonts.gd").classic())
 	_label.add_theme_font_size_override("font_size", 46)
 	_label.add_theme_color_override("font_color", Color(1, 1, 1))
 	_label.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.035, 1.0))
@@ -185,6 +184,9 @@ func update(dt: float, pos: Vector3) -> void:
 		for title in areas:
 			if _inside(title, p, 0.0):
 				current = title
+				var Progress := preload("res://scripts/region/progress.gd")
+				Progress.place_now = title
+				Progress.checkpoint("place " + title)   # 고을에 들어섬 — 자동 기록
 				if story_recent(title):   # 이야기가 방금 같은 이름을 띄웠다(예: 전경 「남원」 → 성문) — 겹쳐 띄우지 않는다
 					if OS.get_cmdline_user_args().has("--logtitle"): print("PLACE title skip ", title, " (story)")
 				else:
