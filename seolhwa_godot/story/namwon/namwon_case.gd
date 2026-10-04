@@ -211,7 +211,7 @@ func vista() -> void:
 	d.camera(null)
 	if not skipped:
 		var tt = d.main.get("_title")
-		if tt != null: tt.show_title("남원")   # 지명 표시(place_title)와 같은 결
+		if tt != null: tt.show_title("남원", true)   # 지명 표시(place_title)와 같은 결
 		else: d.ui.title_card("남원", 2.2, 52)
 		skipped = await _sw(2.4)
 	if not skipped:

@@ -703,6 +703,7 @@ func center_text(text: String, sec := 2.0) -> void:
 
 func title_card(text: String, sec := 2.4, size := 64) -> void:
 	if log_lines: printerr("TITLE ", text)
+	preload("res://scripts/region/place_title.gd").note_story(text)   # 같은 지명이 곧 지명 표시로 겹쳐 뜨지 않게
 	_title_l.text = text
 	_title_l.add_theme_font_size_override("font_size", int(size * _k))
 	var tw := create_tween()

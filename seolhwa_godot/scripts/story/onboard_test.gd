@@ -75,6 +75,10 @@ func run(t) -> void:
 	# ---- S0002 주막 ----
 	await T.walk_to("tavern")
 	await T._frames(40)
+	var tt = d.main.get("_title")
+	if tt != null:
+		var nn: int = tt.shown.count("남원")
+		T.expect(nn <= 1, "「남원」은 전경에서 한 번만(성문·주막에서 다시 안 뜸) — %d번" % nn)
 	await T.go("jumo")
 	T.expect(d.S.is_flag("case_started"), "S0002 사건 기록 생성")
 	for i in 200:

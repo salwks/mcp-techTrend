@@ -153,7 +153,26 @@ func _inside(title: String, p: Vector2, extra: float) -> bool:
 		if (r as Rect2).grow(MARGIN + extra).has_point(p): return true
 	return false
 
-func show_title(title: String) -> void:
+# 이야기가 띄운 지명(전경 연출 「남원」 등)을 기억한다 — 같은 이름을 STORY_QUIET초 안에 다시 들어서면 지명 표시를 건너뛴다.
+# 공간을 넘어도(장면 다시 열기) 남도록 static. story_ui.title_card도 여기 적는다.
+const STORY_QUIET := 60.0
+static var _story_shown := {}   # 이름 → Time.get_ticks_msec()
+var shown: Array[String] = []   # 띄운 이름 차례(시험용)
+
+static func _norm(t: String) -> String:
+	return t.strip_edges().trim_prefix("「").trim_suffix("」").strip_edges()
+
+static func note_story(title: String) -> void:
+	_story_shown[_norm(title)] = Time.get_ticks_msec()
+
+static func story_recent(title: String) -> bool:
+	var t = _story_shown.get(_norm(title))
+	return t != null and Time.get_ticks_msec() - int(t) < STORY_QUIET * 1000.0
+
+# by_story: 이야기 연출이 직접 띄움(기억해 두고, 곧 다시 들어서도 겹쳐 띄우지 않는다)
+func show_title(title: String, by_story := false) -> void:
+	if by_story: note_story(title)
+	shown.append(title)
 	_label.text = title
 	_rule.custom_minimum_size.x = maxf(120.0, title.length() * 52.0)
 	_t = 0.0
@@ -166,7 +185,11 @@ func update(dt: float, pos: Vector3) -> void:
 		for title in areas:
 			if _inside(title, p, 0.0):
 				current = title
-				show_title(title)
+				if story_recent(title):   # 이야기가 방금 같은 이름을 띄웠다(예: 전경 「남원」 → 성문) — 겹쳐 띄우지 않는다
+					if OS.get_cmdline_user_args().has("--logtitle"): print("PLACE title skip ", title, " (story)")
+				else:
+					show_title(title)
+					if OS.get_cmdline_user_args().has("--logtitle"): print("PLACE title ", title)
 				break
 	if _t < 0.0: return
 	_t += dt
