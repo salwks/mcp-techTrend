@@ -20,6 +20,8 @@
 #                     (예: --region=JL_NAMWON_UNBONG --ridetest=namwon_eup:unbong_eup, --route=… --ridetest=end_from:end_to). 콜론이 없으면 배 시험
 #   --ridefixture=res://…json  시험 출발 저장(vars·cases·routes_done)을 --savefile에 깐다   --ridevars=K=V,K=V  공통 변수 더하기
 #   --ridespeed=16    말 최고 속도 바꾸기   --ridelog  자동 기승 로그   --fasttravel=<공간>/<거점>  역마(거점 빠른 이동) 시험
+#   --talktest=<거점>,<거점>…  고을 사람 말 걸기 시험(scripts/story/talk_test.gd): 거점마다 사람에게 말을 걸고, --talkfixture 저장(결말)을
+#                     얹은 뒤 다시 — 소문·결말 반응·'들음' 기록·이야기 인물 「…」 표시를 본다(--talkvars=K=V,… --talkexpect=var|need --talkmin=8)
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
@@ -231,6 +233,8 @@ func _ready() -> void:
 		_ride_test = RideTest.new(self); _ride_test.run.call_deferred(String(args.ridetest))
 	elif args.has("fasttravel"):
 		_ride_test = RideTest.new(self); _ride_test.run_fast.call_deferred(String(args.fasttravel))
+	elif args.has("talktest"):
+		_ride_test = load("res://scripts/story/talk_test.gd").new(self); _ride_test.run.call_deferred(String(args.talktest))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
 	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))

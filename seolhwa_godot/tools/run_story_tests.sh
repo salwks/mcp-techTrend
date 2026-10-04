@@ -6,7 +6,7 @@
 #   tools/run_story_tests.sh namwon hwangju:B walk   # 이름(앞부분)이 맞는 것만
 #   tools/run_story_tests.sh -l              # 목록만
 #
-# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
+# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST/TALKTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
 # 시험마다 저장 파일을 따로 쓴다(--savefile=user://st_<이름>.json) — 동시에 돌려도 서로 덮어쓰지 않는다.
 # 로그: $LOGDIR(기본 /tmp/seolhwa_tests/<시각>/<이름>.log). 환경 변수 GODOT, LOGDIR, TIMEOUT_SCALE(제한 시간 배율).
 
@@ -68,6 +68,10 @@ TESTS=(
 	"fast:same-space|240|--region=JL_NAMWON_UNBONG --fasttravel=JL_NAMWON_UNBONG/unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:to-hanyang|300|--region=JL_NAMWON_UNBONG --fasttravel=GG_HANYANG/noryangjin --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:jeju-blocked|240|--region=JL_NAMWON_UNBONG --fasttravel=JJ_JEJU/jeju_mok --fastexpect=blocked --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
+	# 고을 사람 말 걸기·이야기 인물 「…」(scripts/story/talk_test.gd) — 앞(새 저장) → 저장 얹고 뒤
+	"talk:namwon|420|--region=JL_NAMWON_UNBONG --talktest=namwon_jang,namwon_eup --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=var"
+	"talk:hanyang|420|--region=GG_HANYANG --talktest=chilpae_jang,ungjongga --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=need"
+	"talk:jeju|420|--region=JJ_JEJU --talktest=gimnyeong,jeju_jang --talkfixture=res://story/jeju/test_post_act4.json --talkvars=CASE_JEJU_OUTCOME=A,CASE_JEJU_COMPLETE=true --talkexpect=var"
 )
 
 selected=()
@@ -102,10 +106,10 @@ run_one() {
 	if [[ $name == walk:* ]]; then
 		grep -q "^WALK done" $log && grep -q "^TRAVEL arrive" $log && verdict=PASS
 	else
-		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST) PASS" $log && verdict=PASS
-		grep -q -E "^(RIDETEST|FASTTEST) FAIL" $log && verdict=FAIL
+		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST) FAIL" $log && verdict=FAIL
 	fi
-	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST) //')
+	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST) //')
 	[[ $name == walk:* ]] && detail=$(grep "^WALK done" $log | tail -1 | sed -E 's/^WALK done //')
 	if (( code == 124 )); then why="시간 초과"; verdict=FAIL
 	elif (( code != 0 )); then why="종료 코드 $code"; verdict=FAIL
