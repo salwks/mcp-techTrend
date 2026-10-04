@@ -54,9 +54,9 @@ func _ready() -> void:
 	_root.add_child(box)
 	var latest := Progress.latest_slot()
 	var info := Progress.slot_info(maxi(latest, 0)) if latest >= 0 else {}
-	for i in 4:
+	for i in 5:
 		var b := Button.new()
-		b.text = ["새 게임", "이어 하기", "불러오기", "설정"][i]
+		b.text = ["새 게임", "이어 하기", "불러오기", "설정", "그만하기"][i]
 		b.disabled = (i == 1 or i == 2) and not _can_continue
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -153,6 +153,9 @@ func _pick(i: int) -> void:
 			_continue(true)
 			return true
 		add_child(_opts)
+	elif i == 4:
+		if d.main.has_method("_quit"): d.main._quit()
+		else: get_tree().quit()
 	else:
 		_opts = load("res://scripts/story/options_menu.gd").new(false)
 		add_child(_opts)

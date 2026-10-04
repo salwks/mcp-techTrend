@@ -60,6 +60,7 @@ func _ready() -> void:
 	_add(box, k, { id = "cam_shake", kind = "opt", key = "cam_shake", values = GameSettings.CAM_SHAKE, names = GameSettings.CAM_SHAKE_LABEL, text = "이동 카메라 흔들림" })
 	if in_game: _add(box, k, { id = "howto", kind = "act", text = "여행 방법 (기록책)" })
 	_add(box, k, { id = "close", kind = "act", text = "돌아가기" if not in_game else "닫기" })
+	if in_game: _add(box, k, { id = "quit", kind = "act", text = "게임 끝내기" })
 	var note := _lab("조사 도움은 전투 난이도와 상관없다.", int(16 * k), INK_SOFT); box.add_child(note)
 	var keys := _lab("↑↓ 고르기 · ←→ 바꾸기 · Enter 실행 · Esc 닫기", int(16 * k), INK_SOFT); box.add_child(keys)
 	_refresh()
@@ -105,6 +106,15 @@ func _change(dir: int) -> void:
 func _act() -> void:
 	match String(_rows[_sel].id):
 		"resume", "close": close()
+		"quit":
+			var rw: Dictionary = _rows[_sel]
+			if not bool(rw.get("armed", false)):   # 한 번 더 눌러 확인
+				rw.armed = true; rw.text = "게임 끝내기 — 한 번 더 누르면 기록을 남기고 끝낸다"; _refresh(); return
+			Progress.checkpoint("quit")
+			get_tree().paused = false
+			var m := get_tree().current_scene
+			if m != null and m.has_method("_quit"): m._quit()
+			else: get_tree().quit()
 		"howto":
 			close()
 			if on_help.is_valid(): on_help.call()
