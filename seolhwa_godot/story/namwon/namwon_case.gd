@@ -198,30 +198,28 @@ func _travellers_go() -> void:
 		if not d.actors.has("trav_a") or d.actors.trav_a.path.is_empty(): break
 	d.despawn_actor("trav_a"); d.despawn_actor("trav_b")
 
-# S0000-D / S0001: 남원 전경 — 지리산 능선 → 요천 → 남원 읍성 → 플레이어, 「남원」, 「설화록」. 15초 안팎, 건너뛸 수 있다
+# S0000-D / S0001: 남원 성벽 — 성벽으로 천천히 옮겨 가 「남원」, 이어 「설화록」을 띄운 뒤 플레이어에게 천천히 돌아온다. 건너뛸 수 있다
 func vista() -> void:
 	var ob = d.onboard
 	if ob != null: ob.skippable = true; ob.skip = false
 	d.cutscene(true)
-	var skipped := false
-	# 천천히 떠나 천천히 닿는 미끄러짐(rig.glide) — [자리, 거리, pitch, 옮기는 초, 머무는 초]
 	var rig = d.main.rig
-	for sh in [["jiri_view", 330.0, 11.0, 3.2, 1.6], ["yocheon_view", 85.0, 22.0, 2.6, 1.2], ["east_gate", 48.0, 26.0, 2.4, 1.2]]:
-		d.camera({ "focus": sh[0], "distance": sh[1], "pitch": sh[2] })
-		var fp: Vector2 = d.anchor(sh[0])
-		rig.glide(sh[3], Vector3(fp.x, d.main.world.height_at(fp.x, fp.y) + 0.9, fp.y))
-		if await _sw(sh[3] + sh[4]): skipped = true; break
-	d.camera(null)
-	rig.glide(1.0 if skipped else 3.0)   # 플레이어에게 천천히 돌아온다
+	d.camera({ "focus": "east_gate", "distance": 48.0, "pitch": 26.0 })
+	var fp: Vector2 = d.anchor("east_gate")
+	rig.glide(3.0, Vector3(fp.x, d.main.world.height_at(fp.x, fp.y) + 0.9, fp.y))   # 천천히 떠나 천천히 닿는다
+	var skipped: bool = await _sw(3.2)
 	if not skipped:
 		var tt = d.main.get("_title")
 		if tt != null: tt.show_title("남원", true)   # 지명 표시(place_title)와 같은 결
 		else: d.ui.title_card("남원", 2.2, 52)
-		skipped = await _sw(2.4)
+		skipped = await _sw(2.6)
 	if not skipped:
 		d.ui.title_card("설화록", 2.6, 92)
-		skipped = await _sw(2.6)
+		skipped = await _sw(2.8)
 	d.ui.title_card_stop()
+	d.camera(null)
+	rig.glide(1.0 if skipped else 3.0)   # 플레이어에게 천천히 돌아온다
+	await _sw(1.0 if skipped else 3.0)
 	d.cutscene(false)
 	if ob != null: ob.skippable = false; ob.skip = false
 
