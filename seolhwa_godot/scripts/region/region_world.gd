@@ -14,6 +14,7 @@
 extends "res://scripts/world.gd"
 
 const PngRaw := preload("res://scripts/region/png_raw.gd")
+const Jobs := preload("res://scripts/region/jobs.gd")
 const PropStates := preload("res://scripts/region/prop_states.gd")
 const Decals := preload("res://scripts/region/decals.gd")
 const Farm := preload("res://scripts/region/farm.gd")
@@ -1419,7 +1420,7 @@ func _start_jobs() -> void:
 		var rect := Rect2(t.x * TILE, t.y * TILE, TILE, TILE)
 		var seed := String(region.get("region_id", "region")).hash() & 0x7fffffff  # 권역 시드(타일 구분은 scatter가 rect로)
 		var ha := Callable(self, "height_fast"); var la := Callable(self, "landuse_scatter" if farm != null else "landuse_at")
-		tiles[t].scatter_job = WorkerThreadPool.add_task(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, _excl_for(rect), hold, _roads_arg), false, "scatter")
+		tiles[t].scatter_job = Jobs.add(_scatter_job.bind(_scatter_script, rect, ha, la, seed, need, split_scatter, _excl_for(rect), hold, _roads_arg), "scatter")
 		tiles[t].scatter_hold = hold
 		running += 1
 	stats.jobs = running + _queue.size() + (1 if not _attach_q.is_empty() else 0) + (farm.pending() if farm != null else 0)
@@ -1454,8 +1455,8 @@ func _poll_jobs() -> void:
 		_lod_dirty = true
 	for t in tiles:
 		var st: Dictionary = tiles[t]
-		if st.scatter_job < 0 or not WorkerThreadPool.is_task_completed(st.scatter_job): continue
-		WorkerThreadPool.wait_for_task_completion(st.scatter_job)
+		if st.scatter_job < 0 or not Jobs.done(st.scatter_job): continue
+		Jobs.wait(st.scatter_job)
 		st.scatter_job = -1
 		var hold: Dictionary = st.scatter_hold
 		st.scatter_hold = null
@@ -1732,8 +1733,9 @@ func interior_at(x: float, z: float) -> Variant:
 static var cancel_all := false
 
 func jobs_idle() -> bool:
+	if farm != null and not farm.jobs_idle(): return false
 	for t in tiles:
-		if tiles[t].scatter_job >= 0 and not WorkerThreadPool.is_task_completed(tiles[t].scatter_job): return false
+		if tiles[t].scatter_job >= 0 and not Jobs.done(tiles[t].scatter_job): return false
 	return true
 
 func shutdown() -> void:
@@ -1741,7 +1743,7 @@ func shutdown() -> void:
 	if farm != null: farm.shutdown()
 	for t in tiles:
 		if tiles[t].scatter_job >= 0:
-			WorkerThreadPool.wait_for_task_completion(tiles[t].scatter_job)
+			Jobs.wait(tiles[t].scatter_job)
 			tiles[t].scatter_job = -1
 			var hold = tiles[t].scatter_hold
 			tiles[t].scatter_hold = null
@@ -1871,6 +1873,10 @@ func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
 # ---------------------------------------------------------------------------
 # 손댄 높이·토지이용·걷기 면·식생 제외를 처음 상태로
 func reset_edits() -> void:
+	# 작업 스레드(필지 짓기·식생)가 hbytes·lbytes를 읽는 중에 배열을 갈아 끼우면 해제된 메모리를 읽는다 — 먼저 기다린다
+	if farm != null: farm.wait_jobs()
+	for t in tiles:
+		if tiles[t].scatter_job >= 0: Jobs.wait(tiles[t].scatter_job)
 	_walk_grid.clear()
 	_ponds.clear()
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
@@ -1943,7 +1949,7 @@ func commit_terrain() -> void:
 func reset_tiles() -> void:
 	for t in tiles.keys():
 		if tiles[t].scatter_job >= 0:
-			WorkerThreadPool.wait_for_task_completion(tiles[t].scatter_job)
+			Jobs.wait(tiles[t].scatter_job)
 			tiles[t].scatter_job = -1
 			var hold = tiles[t].scatter_hold
 			tiles[t].scatter_hold = null

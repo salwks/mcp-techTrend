@@ -16,6 +16,7 @@
 extends RefCounted
 
 const KitCache := preload("res://scripts/region/kit_cache.gd")
+const Jobs := preload("res://scripts/region/jobs.gd")
 
 const FLAT_MARGIN := 2.0
 const FLAT_EDGE := 5.0
@@ -233,8 +234,8 @@ func update() -> void:
 	# 끝난 짓기 → 캐시
 	for t in _jobs.keys():
 		var j: Dictionary = _jobs[t]
-		if not WorkerThreadPool.is_group_task_completed(j.id): continue
-		WorkerThreadPool.wait_for_group_task_completion(j.id)
+		if not Jobs.group_done(j.id): continue
+		Jobs.group_wait(j.id)
 		for h in j.holders:
 			_cache[h.key] = h.info if h.info is Dictionary else {}
 			_inflight.erase(h.key)
@@ -270,7 +271,7 @@ func update() -> void:
 				if _cancel: return   # 끝내기·넘어가기: 아직 시작 안 한 짓기는 건너뛴다
 				var h: Dictionary = holders[n]
 				h.info = KitCache.build(h.kit, h.s, h.params)
-			var id := WorkerThreadPool.add_group_task(job, holders.size(), mini(holders.size(), 4), true, "kit build")
+			var id := Jobs.add_group(job, holders.size(), mini(holders.size(), 4), "kit build")
 			_jobs[t] = { id = id, holders = holders }
 			_requested.remove_at(i)
 			continue
@@ -315,14 +316,14 @@ func cancel_jobs() -> void:
 
 func jobs_idle() -> bool:
 	for t in _jobs:
-		if not WorkerThreadPool.is_group_task_completed(_jobs[t].id): return false
+		if not Jobs.group_done(_jobs[t].id): return false
 	return true
 
 # 진행 중 짓기를 기다리고 대기열을 비운다(다시 읽기·끝내기 전)
 # 주의: 키트 짓기는 작업 스레드에서 렌더 서버와 동기화하는 호출을 할 수 있어, 진행 중인 짓기를 메인 스레드에서 막고 기다리면
 # 서로 기다리다 멈춘다(끝내기 exit=124). 끝내기·넘어가기는 region_main._drain_jobs()로 jobs_idle()이 될 때까지 프레임을 돌린 뒤 부른다.
 func stop() -> void:
-	for t in _jobs: WorkerThreadPool.wait_for_group_task_completion(_jobs[t].id)
+	for t in _jobs: Jobs.group_wait(_jobs[t].id)
 	_jobs.clear(); _inflight.clear(); _requested.clear(); _pending.clear(); _place_q.clear()
 	for k in _cache:
 		var info = _cache[k]
@@ -463,8 +464,8 @@ func _build_all(todo: Dictionary, cache: Dictionary) -> void:
 		var h: Dictionary = holders[i]
 		h.info = KitCache.build(h.kit, h.s, h.params)
 	if parallel and keys.size() > 1:
-		var gid := WorkerThreadPool.add_group_task(job, keys.size(), -1, true, "kit build")
-		WorkerThreadPool.wait_for_group_task_completion(gid)
+		var gid := Jobs.add_group(job, keys.size(), -1, "kit build")
+		Jobs.group_wait(gid)
 	else:
 		for i in keys.size(): job.call(i)
 	for i in keys.size():

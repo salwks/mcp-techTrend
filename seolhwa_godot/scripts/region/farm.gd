@@ -423,6 +423,8 @@ func update(player: Vector3) -> void:
 		var it: Array = _attach[0]
 		var t: Vector2i = it[0]; var hold: Dictionary = it[1]
 		if not tiles.has(t) or hold.ver != ver:
+			for nd in hold.get("new_nodes", []):   # 반쯤 만든 노드(트리 밖)는 버리면서 지운다 — 안 그러면 고아 노드·RID가 샌다
+				if is_instance_valid(nd) and not nd.is_inside_tree(): nd.free()
 			_attach.pop_front(); continue
 		var st: Dictionary = tiles[t]
 		var chs: Array = hold.chunks
@@ -444,11 +446,33 @@ func _attach_has(t: Vector2i) -> bool:
 		if it[0] == t: return true
 	return false
 
-func shutdown() -> void:
+# 진행 중 짓기가 다 끝났나(끝내기·넘어가기 전 프레임을 돌리며 기다릴 때)
+func jobs_idle() -> bool:
 	for t in tiles:
-		if tiles[t].job >= 0: WorkerThreadPool.wait_for_task_completion(tiles[t].job); tiles[t].job = -1
+		if tiles[t].job >= 0 and not WorkerThreadPool.is_task_completed(tiles[t].job): return false
+	for j in _orphans:
+		if not WorkerThreadPool.is_task_completed(j): return false
+	return true
+
+# 진행 중 짓기를 기다린다. 작업 스레드는 world 높이(hbytes)·removed를 읽으므로, 그것을 바꾸기 전(reset_edits)에 부른다.
+# 작업은 렌더 서버를 부르지 않아(배열만 짓는다) 메인 스레드에서 막고 기다려도 서로 기다리지 않는다.
+func wait_jobs() -> void:
+	for t in tiles:
+		var st: Dictionary = tiles[t]
+		if st.job >= 0:
+			WorkerThreadPool.wait_for_task_completion(st.job); st.job = -1
+			st.hold = null   # 결과는 버린다(have가 그대로라 다시 짓는다)
 	for j in _orphans: WorkerThreadPool.wait_for_task_completion(j)
 	_orphans.clear()
+
+func shutdown() -> void:
+	wait_jobs()
+	# 반쯤 만든 타일(트리에 아직 안 붙은 노드)은 직접 지운다 — 남기면 끝낼 때 메시·MultiMesh RID가 샌다
+	for it in _attach:
+		var hold: Dictionary = it[1]
+		for nd in hold.get("new_nodes", []):
+			if is_instance_valid(nd) and not nd.is_inside_tree(): nd.free()
+	_attach.clear()
 
 # ---------------------------------------------------------------------------
 # 메시 짓기(작업 스레드) — 결과는 배열만, 노드는 메인 스레드에서
