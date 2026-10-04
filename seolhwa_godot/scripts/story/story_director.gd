@@ -17,13 +17,16 @@ const Rumors := preload("res://story/rumors_data.gd")
 const Skills := preload("res://scripts/story/skills.gd")
 
 # 권역 → 사건
-const CASES := { JL_NAMWON_UNBONG = "namwon", GG_HANYANG = "hanyang", GW_GANGNEUNG = "gangneung", GS_GYEONGJU = "gyeongju" }
+# 한 사건이 여러 공간(권역 + 노정)에 걸치면 같은 사건 id를 준다(진행은 하나). 데이터 항목의 "space"로 공간을 가른다(_filter_space)
+const CASES := { "JL_NAMWON_UNBONG": "namwon", "GG_HANYANG": "hanyang", "GW_GANGNEUNG": "gangneung",
+	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju" }
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
 	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
 	woochi = "villager_m", chaekkwae = "merchant", pojol = "official",
 	wolsim = "shaman", thief = "villager_m", spirit_m = "elder",
+	blind_elder = "elder", broker = "merchant", daughter = "villager_f", fisher = "boatman",
 	smuggler = "villager_m", smuggler_b = "villager_m", lantern_wife = "villager_f", charcoal_man = "villager_m", spirit_f = "spirit_m" }
-const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_gyeongju.json", "frames_npc.json", "frames_amb.json"]
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -131,9 +134,12 @@ func _setup() -> void:
 	add_child(onboard)
 	var ddir := "res://story/%s/" % case_id
 	data = load(ddir + case_id + "_data.gd").data()
+	_filter_space()
 	events = data.get("events", {})
 	var test_path := ddir + case_id + "_test.gd"
-	if args.has("storytest") and FileAccess.file_exists(test_path): load(test_path).prepare(self)   # 대본 시험이 앞 사건 저장을 꾸민다
+	# 대본 시험이 앞 사건 저장을 꾸민다 — 시험 도중 다른 공간으로 넘어온 장면(같은 사건의 노정 등)이면 꾸미지 않고 이어 간다
+	var arrived: bool = not main._pending.is_empty() and not bool(main._pending.get("newgame", false))
+	if args.has("storytest") and not arrived and FileAccess.file_exists(test_path): load(test_path).prepare(self)
 	# 앞 사건이 끝나야 서는 사건(case.requires {변수: 값}) — 아니면 소문만. 쉼표 목록 값(MAIN_MASTER_TRACE "HANYANG,GANGNEUNG")은 들어 있으면 맞음
 	for k in data.get("case", {}).get("requires", {}):
 		var have := str(Progress.get_var(k, ""))
@@ -152,7 +158,7 @@ func _setup() -> void:
 	main.scene_vp.add_child(combat_view)
 	combat_view.setup(self)
 	SpriteChar.merge_bank("frames_story_skills.json", ["player"])   # v2.2 숙련 동작(shove·quick_throw, 작다) — 없으면 그냥 지나간다
-	var fresh: bool = args.has("newgame") or args.has("storytest")
+	var fresh: bool = (args.has("newgame") or args.has("storytest")) and not arrived
 	if fresh: S.clear_saved(data.get("case", {}).get("reset_vars", null))
 	elif S.load_saved():
 		printerr("STORY loaded case=%s phase=%s flags=%d clues=%d" % [case_id, S.phase, S.flags.size(), S.clues.size()])
@@ -166,6 +172,13 @@ func _setup() -> void:
 		add_child(test)
 	_maybe_title()
 	printerr("STORY ready case=%s phase=%s actors=%d props=%d events=%d" % [case_id, S.phase, actors.size(), data.get("props", []).size(), events.size()])
+
+# 여러 공간에 걸친 사건: 항목에 "space"(공간 id 하나 또는 배열)가 있으면 그 공간에서만 쓴다
+func _filter_space() -> void:
+	for key in ["actors", "objects", "triggers", "props", "spirits", "rubbings", "map_places"]:
+		if not (data.get(key) is Array): continue
+		data[key] = data[key].filter(func(e): return not (e is Dictionary and e.has("space")) or \
+			(e.space is Array and e.space.has(space_id)) or String(e.space) == space_id)
 
 func _setup_input() -> void:
 	for act in { interact = KEY_E, journal = KEY_R }:
@@ -200,7 +213,10 @@ func update(dt: float) -> void:
 		var cs: Dictionary = data.get("case", {})
 		var arrive_ok: bool = main._pending.is_empty() or bool(cs.get("start_on_arrival", false)) or bool(main._pending.get("newgame", false))
 		if S.phase == "start" and arrive_ok and not passive:
-			if test == null: runner.run([{ "event": String(cs.get("start_event", "S0001")) }])
+			var se = cs.get("start_event", "S0001")
+			if se is Dictionary: se = se.get(space_id, "")   # 공간마다 다른 첫 장면("" = 그 공간에서는 시작하지 않음)
+			if String(se) == "": S.phase = "start"
+			elif test == null: runner.run([{ "event": String(se) }])
 		elif S.phase == "start":
 			S.phase = "explore"
 		if test != null: test.begin()

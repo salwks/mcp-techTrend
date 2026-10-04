@@ -5,7 +5,7 @@
 # 명령: say · caption · toast · examine · choice(loop, options[{label, when, disabled_when, hint, do, end}]) · if(then/else) ·
 #   flag · unflag · clue · rule · give · take · var · phase · outcome · wait · teleport · move · face · anim · place · show ·
 #   spawn · despawn · camera · fade · letterbox · cutscene · time · weather · world · journal · combat(store) · call · event ·
-#   shake · save · ending · log · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost")
+#   shake · save · ending · log · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost") · drift(물살 표식 — scripts/story/drift.gd)
 extends RefCounted
 
 var d          # story_director
@@ -174,6 +174,9 @@ func step(st: Dictionary, g: int) -> void:
 	elif st.has("chase"):
 		var cres: String = await load("res://scripts/story/chase.gd").run(d, String(st.chase), int(st.get("from", -1)))
 		last[String(st.get("store", "chase"))] = cres
+	elif st.has("drift"):   # 떠내려가는 표식(scripts/story/drift.gd) — 결과(닿은 갯가 id 배열) store
+		var dres: Array = await load("res://scripts/story/drift.gd").run(d, st)
+		last[String(st.get("store", "drift"))] = dres
 	elif st.has("spirit") or st.has("sound") or st.has("talisman") or st.has("dread"):
 		if d.spirits != null: await d.spirits.step(st)
 	elif st.has("endcombat"):
