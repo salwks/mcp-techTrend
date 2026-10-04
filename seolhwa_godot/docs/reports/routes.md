@@ -177,3 +177,19 @@ ijeongpyo(192/416 tris) · myo(~600) · ruin_house(1816) · ferry_shed(612) · w
 - 남원 노정 끝 구간(삼거리 → 한양)은 볼거리 셋이 200m 안에 몰려 있다(END_GAP을 늘리면 벌어짐).
 - 막다른 노정 걷기 시험은 끝까지 갔다가 마지막에 순간이동한다(되돌아오기 아님).
 - 넘어간 뒤 PTEST 끝내기 멈춤(exit=124)은 엔진 쪽.
+
+# 3차 정리 (2026-10-04)
+
+1. **함흥 막다른 철령길 지움** — 포털을 `to_yeongheung` 하나로 합친 뒤 남은 `cheollyeong_road`(정평 갈래, 포털 없음)를 `region_data/HG_HAMHEUNG/region.json` roads, `tools/region/regions/HG_HAMHEUNG.json`, `tools/region/north_places_hg.py` ROADS에서 지웠다. 다시 빌드해도 생기지 않는다. 토지이용 `landuse.png`에서는 그 길 칸 69개만 이웃 칸 값으로 메웠다(대부분 논). 다른 길에서 12m 안의 칸은 그대로 두었고, 높이·배치는 손대지 않았다. `map.png`(그림 지도)는 다시 그리지 않았다.
+2. **끝내기 멈춤(exit 124) 원인과 수정** — 식생 작업은 작업 스레드에서 `MultiMesh.buffer`를 읽는데, 이 호출은 렌더 서버와 동기화해야 한다. 키트 짓기도 마찬가지다. 그런데 `_quit`/`_leave`가 메인 스레드를 막은 채 `wait_for_task_completion`을 불러, 두 쪽이 서로를 기다리며 멈췄다(`sample`로 확인: 메인은 작업 대기, 작업 스레드 둘은 동기화 대기). 이제 `region_main._drain_jobs()`가 순서대로 처리한다.
+   - `_process`를 쉬게 한다.
+   - 남은 작업에 취소 표시를 한다: 키트 짓기는 아직 시작하지 않은 것을 건너뛰고(`placement.cancel_jobs`), 식생은 단계 사이에서 끊는다(`RegionWorld.cancel_all`).
+   - placement·world·npc가 모두 `jobs_idle()`이 될 때까지 프레임을 돌린다.
+   - 그다음 stop/shutdown/quit을 부른다. 넘어가기(`_leave`)와 창 닫기(auto_accept_quit 끔)도 같은 길을 쓴다.
+   - 확인: 경주 `--shot … --quit`가 전에는 멈췄고, 이제 0으로 끝난다. 끝낼 때 기다리는 시간은 0.4s, 전체 실행은 약 7s다. `--route=HH_HWANGJU-PA_PYEONGYANG --walkroute=01` → 평양 도착 → 0으로 끝난다(29s).
+3. **전국 지도 역마** — 권역에 있을 때 전국 지도(Tab)에 지나온 노정이 금빛 선과 번호 원으로 보인다. 지금 권역에 끝이 닿은 노정만 해당한다. 숫자 키(1~9)나 선·도착 고을 클릭으로 고르면 "역마 타고 ○○까지 (노정) 가겠소?"가 뜬다. Enter/Y로 가거나(같은 것을 한 번 더 클릭해도 된다) N/Esc로 그만둔다. 실제 이동은 포털 곁 H와 같은 `Travel.fast_target` → `_travel`이다. 노정 안에서는 나오지 않는다. 시험: `--region=HH_HWANGJU --openmap --mapfasttest` → `MAP fast_travel` → `TRAVEL arrive space=PA_PYEONGYANG`.
+4. **키트 짓기 스레드 안전** — 다시 일으키지는 못했다(경주 찬 캐시 `--kitcache=user://kc_tmp_N/` 7회 모두 정상, 불러오기 약 12s). 다만 공용으로 바뀌는 상태를 없앴다.
+   - `Kit._paint_rng`와 `_common._fr`는 static Rng여서 짓기 스레드 여럿이 동시에 상태를 바꿨다. 이제 rng를 넘기지 않으면 조각의 aabb·크기로 시드를 만든다. 짓는 순서와 상관없이 결과가 같고, 얼룩 무늬만 조금 달라진다.
+   - `Kit.material("water")`를 작업 스레드에서 처음 만들 수 있던 것을 시작할 때 메인 스레드에서 만들게 했다.
+   - `_cc.height`의 상수 배열 기본값을 없앴다.
+   - `kit.gd`가 바뀌어 키트 디스크 캐시 해시가 모두 바뀐다. 처음 한 번은 캐시 없이 다시 짓는다.
