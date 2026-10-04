@@ -247,7 +247,7 @@ func _build_panel() -> void:
 	_pbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_pbox.add_theme_constant_override("separation", 6)
 	sc.add_child(_pbox)
-	_ptitle = _plabel("", 30, INK, _font_t)
+	_ptitle = _plabel("", 27, INK, _font_t)
 	_ptitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pbox.add_child(_ptitle)
 	_psub = _plabel("", 13, INK_SOFT)
@@ -324,7 +324,7 @@ func _refresh_panel() -> void:
 		"all": _ptitle.text = rn + " 지도"; _psub.text = "%s · 권역 지도" % String(world.region.get("parent_province", ""))
 		_:
 			var known: bool = town != null and Discovery.is_known(_space, "town:" + String(town[0]))
-			_ptitle.text = (String(town[0]) if known else rn) + " 고을 그림"; _psub.text = "도시 지도 · 군현지도 방식"
+			_ptitle.text = (String(town[0]) if known else rn) + " 고을"; _psub.text = "도시 지도 · 군현지도 방식"
 	for c in _cases_box.get_children(): c.queue_free()
 	var by_case := {}
 	for l in _leads:
@@ -350,7 +350,8 @@ func _refresh_panel() -> void:
 			var s: Dictionary = _stations[i]
 			var lab := "%d. %s" % [i + 1, String(s.name)]
 			if s.space != _space: lab += " (" + _space_short(String(s.space)) + ")"
-			if not bool(s.get("ok", true)): lab += " — 아직 못 감"
+			if not bool(s.get("ok", true)) and String(s.get("why", "")) != "": lab += " — " + String(s.why)
+			elif not bool(s.get("ok", true)): lab += " — 아직 못 감"
 			if i == _st_sel: lab = "▶ " + lab + " — 한 번 더 누르면 간다"
 			_st_box.add_child(_pbutton(lab, SEAL if i == _st_sel else (INK if bool(s.get("ok", true)) else INK_SOFT), _station_click.bind(i)))
 	else:
@@ -620,7 +621,8 @@ func _collect_stations() -> Array:
 		var id := String(s.get("id", ""))
 		var sp := String(s.get("space", s.get("region", "")))
 		var c = null
-		if s.get("pos") is Array and s.pos.size() >= 2: c = Vector2(float(s.pos[0]), float(s.pos[1]))
+		if s.get("yard") is Array and s.yard.size() >= 2: c = Vector2(float(s.yard[0]), float(s.yard[1]))   # 길가 도착 자리
+		elif s.get("pos") is Array and s.pos.size() >= 2: c = Vector2(float(s.pos[0]), float(s.pos[1]))
 		elif s.has("x") and s.has("z"): c = Vector2(float(s.x), float(s.z))
 		var known := false
 		if has_known:
