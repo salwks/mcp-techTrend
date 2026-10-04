@@ -4,6 +4,11 @@
 #   - 기후대별 하늘·빛 보정(남부 따뜻·습함, 북부 차갑고 해 낮음, 고산 차갑고 맑음, 해안 해무)을 시간대 상태(TimeOfDay.sample)에 덧씌운다.
 #   - 비·눈·바람 티끌 입자: 카메라 둘레 상자 하나(shaders/region_precip.gdshader, 그리기 1번).
 # 시험: U 키로 날씨 돌리기(맑음→흐림→비→안개→눈→강풍→자동), 명령줄 --weather=clear|cloudy|rain|fog|snow|wind (쌓임도 바로 채움).
+# 사건 연출(이야기 쪽 API — docs/reports/world-scenario.md):
+#   force(kind, duration=-1, fade=10, values={})  날씨를 강제로(폭풍 storm·눈보라 blizzard 포함). duration 초 뒤 저절로 풀림(<0이면 release까지)
+#                                                 values로 목표값 일부 덮어쓰기 {cloud, rain, snowfall, fogm, wind} — 점점 나빠지는 날씨는 force를 여러 번
+#   release(fade=10)                               강제를 풀고 기후대 확률로 돌아감
+#   force_time(hour, duration=-1, fade=0)          시간대 강제(fade 초에 걸쳐 그 시각으로), release_time() — region_main이 time_step으로 hour를 받는다
 extends Node3D
 
 const PngRaw := preload("res://scripts/region/png_raw.gd")
@@ -11,7 +16,7 @@ const PngRaw := preload("res://scripts/region/png_raw.gd")
 const ZONES := ["south", "central", "north", "alpine", "coast"]
 const ZONE_KO := { south = "남부", central = "중부", north = "북부", alpine = "고산", coast = "해안섬" }
 const KINDS := ["clear", "cloudy", "rain", "fog", "snow", "wind"]
-const KIND_KO := { clear = "맑음", cloudy = "흐림", rain = "비", fog = "안개", snow = "눈", wind = "강풍" }
+const KIND_KO := { clear = "맑음", cloudy = "흐림", rain = "비", fog = "안개", snow = "눈", wind = "강풍", storm = "폭풍우", blizzard = "눈보라" }
 # 기후대별 날씨 출현 확률(합 1)
 const PROB := {
 	south = { clear = 0.42, cloudy = 0.22, rain = 0.24, fog = 0.12 },
@@ -28,6 +33,9 @@ const TARGET := {
 	fog = { cloud = 0.5, rain = 0.0, snowfall = 0.0, fogm = 2.8, wind = 0.0 },
 	snow = { cloud = 0.75, rain = 0.0, snowfall = 1.0, fogm = 1.9, wind = 0.2 },
 	wind = { cloud = 0.35, rain = 0.0, snowfall = 0.0, fogm = 1.1, wind = 1.0 },
+	# 사건 연출 전용(확률표에는 없음 — force로만)
+	storm = { cloud = 1.0, rain = 1.0, snowfall = 0.0, fogm = 1.9, wind = 1.0 },
+	blizzard = { cloud = 0.95, rain = 0.0, snowfall = 1.0, fogm = 2.7, wind = 1.0 },
 }
 # 기후대 빛 보정(B3): sun 색 곱, sunI 곱, 해 높이 곱, 안개 곱, 안개색 곱, 반구광 하늘색 곱, 후처리 gain 곱·채도 곱, 바탕 눈(snow base)
 const LOOK := {
@@ -66,6 +74,18 @@ var _dust_mi: MeshInstance3D
 var _mats := []
 var _wind_dir := Vector2(1, 0.3).normalized()
 var _indoor := false
+# 사건 강제(force) — U 키·--weather(forced)보다 앞선다
+var script_kind := ""
+var script_values := {}
+var script_left := -1.0
+var script_fade := 10.0
+var _release_fade := -1.0      # release 직후 이 초에 걸쳐 돌아감
+# 시간 강제(force_time)
+var time_target := -1.0
+var time_left := -1.0
+var time_fade := 0.0
+var _time_from := -1.0
+var _time_t := 0.0
 
 func setup(w, data_dir: String, forced_kind := "") -> void:
 	world = w
@@ -192,28 +212,86 @@ func cycle() -> String:
 	else: _roll()
 	return label()
 
+# ---- 사건 강제 ----
+func force(k: String, duration := -1.0, fade := 10.0, values := {}) -> bool:
+	if not TARGET.has(k):
+		push_warning("weather.force: 모르는 날씨 " + k); return false
+	script_kind = k; script_values = values.duplicate(); script_left = duration; script_fade = maxf(fade, 0.0)
+	kind = k
+	if script_fade <= 0.0: _snap_to(_target())
+	dirty = true
+	return true
+
+func release(fade := 10.0) -> void:
+	if script_kind == "": return
+	script_kind = ""; script_values = {}; script_left = -1.0
+	_release_fade = maxf(fade, 0.01)
+	if forced != "": kind = forced
+	else: _roll()
+
+func is_forced() -> bool:
+	return script_kind != ""
+
+func force_time(hour: float, duration := -1.0, fade := 0.0) -> void:
+	time_target = fposmod(hour, 24.0); time_left = duration; time_fade = maxf(fade, 0.0); _time_from = -1.0; _time_t = 0.0
+
+func release_time() -> void:
+	time_target = -1.0; time_left = -1.0
+
+func time_forced() -> bool:
+	return time_target >= 0.0
+
+# region_main이 매 프레임 지금 시각을 넘기고 새 시각을 받는다(강제가 없으면 그대로)
+func time_step(hour: float, dt: float) -> float:
+	if time_target < 0.0: return hour
+	if time_left >= 0.0:
+		time_left -= dt
+		if time_left <= 0.0: release_time(); return hour
+	if _time_from < 0.0: _time_from = hour; _time_t = 0.0
+	_time_t += dt
+	var k := 1.0 if time_fade <= 0.0 else clampf(_time_t / time_fade, 0.0, 1.0)
+	var d := fposmod(time_target - _time_from + 12.0, 24.0) - 12.0   # 가까운 쪽으로 돌아감
+	return fposmod(_time_from + d * smoothstep(0.0, 1.0, k), 24.0)
+
+func _target() -> Dictionary:
+	var tg: Dictionary = TARGET[script_kind if script_kind != "" else kind].duplicate()
+	if script_kind != "": tg.merge(script_values, true)
+	return tg
+
+func _snap_to(tg: Dictionary) -> void:
+	for k in cur: cur[k] = float(tg[k])
+	if float(tg.rain) > 0.5: wet = 1.0
+	if float(tg.snowfall) > 0.5: snow = 1.0
+	_push_globals()
+
 func label() -> String:
-	return "%s · %s%s" % [ZONE_KO.get(zone, zone), KIND_KO.get(kind, kind), "" if forced == "" else " (고정)"]
+	return "%s · %s%s" % [ZONE_KO.get(zone, zone), KIND_KO.get(kind, kind), " (사건)" if script_kind != "" else ("" if forced == "" else " (고정)")]
 
 # ---- 매 프레임 ----
 func update(dt: float, player: Vector3, cam: Vector3, indoor: bool) -> void:
 	_t += dt
+	if script_kind != "" and script_left >= 0.0:
+		script_left -= dt
+		if script_left <= 0.0: release(script_fade if script_fade > 0.0 else 10.0)
 	_zone_t -= dt
 	if _zone_t <= 0.0:
 		_zone_t = 0.5
 		var z := zone_at(player.x, player.z)
 		if z != zone:
 			zone = z
-			if forced == "": _roll()   # 기후대가 바뀌면 그 기후대 확률로 다시 고른다
-	if _t >= _next_roll: _roll()
+			if forced == "" and script_kind == "": _roll()   # 기후대가 바뀌면 그 기후대 확률로 다시 고른다
+	if _t >= _next_roll and script_kind == "": _roll()
 	# 기후대 가중: 4초에 걸쳐
 	var kz := minf(1.0, dt / 4.0)
 	for z in zone_mix:
 		var tgt := 1.0 if z == zone else 0.0
 		if absf(zone_mix[z] - tgt) > 0.0005: zone_mix[z] += (tgt - zone_mix[z]) * kz; dirty = true
 	# 날씨 값: 약 10초 전환
-	var tg: Dictionary = TARGET[kind]
-	var kt := minf(1.0, dt / 10.0)
+	var tg: Dictionary = _target()
+	var tr := 10.0
+	if script_kind != "": tr = maxf(script_fade, 0.01)
+	elif _release_fade > 0.0: tr = _release_fade
+	var kt := minf(1.0, dt / tr)
 	for k in cur:
 		var v: float = cur[k]
 		if absf(v - float(tg[k])) > 0.0005:
@@ -233,6 +311,11 @@ func update(dt: float, player: Vector3, cam: Vector3, indoor: bool) -> void:
 	var snow_k: float = 0.0 if indoor else maxf(float(cur.snowfall), float(cur.wind) * 0.35 * clampf(snow, 0.0, 1.0) * (1.0 if zone == "alpine" or zone == "north" else 0.0))
 	var dust_k: float = 0.0 if indoor else clampf((float(cur.wind) - 0.5) * 2.0, 0.0, 1.0) * (1.0 - snow_k)
 	_set_p(_rain_mi, rain_k, c, Vector3(wind.x * 0.6, -11.0, wind.y * 0.6))
+	if _release_fade > 0.0 and script_kind == "":
+		var settled := true
+		for k in cur:
+			if absf(float(cur[k]) - float(tg[k])) > 0.01: settled = false
+		if settled: _release_fade = -1.0
 	_set_p(_snow_mi, snow_k, c, Vector3(wind.x * 0.5, -1.3, wind.y * 0.5))
 	_set_p(_dust_mi, dust_k, c, Vector3(wind.x * 1.6, -0.4, wind.y * 1.6))
 

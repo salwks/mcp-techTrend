@@ -560,6 +560,9 @@ func _process(delta: float) -> void:
 		post.tilt = not post.tilt; post.paper = post.tilt
 	if time_flow:
 		hour = fmod(hour + dt * 0.1, 24.0); _apply_time()
+	if weather != null and weather.time_forced():   # 사건 시간 강제(weather.force_time)
+		var nh: float = weather.time_step(hour, dt)
+		if absf(nh - hour) > 0.002: hour = nh; _apply_time()
 	_update_loading()
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if _loading or _leaving or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
