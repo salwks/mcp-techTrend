@@ -28,6 +28,9 @@ var ride_side := 1.0
 var ride_k := 1.0              # 1 = 말 시점, 0 = 걷기 시점(멈춤에 다가가며 줄어든다)
 var shake_y := 0.0
 const RIDE := { pitch = 20.0, distance = 21.0, fov = 38.0, lookAhead = 0.0, aimZ = 0.0 }
+# 연출 미끄러짐(glide): 겨냥점·pitch·거리·fov를 시작값에서 목표값으로 smoothstep으로 천천히 옮긴다(천천히 떠나 천천히 닿는다).
+# 목표 겨냥점이 null이면 매 프레임 계산한 평소 자리(플레이어)로 돌아온다. 이야기 컷(전경 등)이 '쉭' 하고 튀지 않게.
+var _gl = null
 const RIDE_SIDE_DEG := 28.0
 
 func _init(cam: Camera3D, w: World) -> void:
@@ -80,7 +83,16 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 	yaw = wrapf(yaw + wrapf(want_yaw - yaw, -PI, PI) * ky, -PI, PI)
 	if absf(yaw) < 1e-4 and want_yaw == 0.0: yaw = 0.0
 	var kf := 1.0 if snap else 1.0 - exp(-dt * 4.0)
-	target += (Vector3(tx, ty, tz) - target) * kf
+	if _gl != null:
+		_gl.t += dt
+		var w := smoothstep(0.0, 1.0, clampf(_gl.t / maxf(_gl.dur, 0.01), 0.0, 1.0))
+		var gt: Vector3 = _gl.to if _gl.to != null else Vector3(tx, ty, tz)
+		target = (_gl.from as Vector3).lerp(gt, w)
+		for key in ["pitch", "distance", "fov", "lookAhead", "aimZ"]:
+			cur[key] = lerpf(float(_gl.cur0[key]), float(p.get(key, 0.0)), w)
+		if _gl.t >= _gl.dur: _gl = null
+	else:
+		target += (Vector3(tx, ty, tz) - target) * kf
 	var pr := deg_to_rad(cur.pitch)
 	var d: float = cur.distance
 	var off := Vector3(sin(yaw) * cos(pr) * d, sin(pr) * d, cos(yaw) * cos(pr) * d)
@@ -92,3 +104,11 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 	camera.position = cp
 	camera.look_at(target, Vector3.UP)
 	camera.fov = cur.fov
+
+# 연출 미끄러짐 시작: 지금 화면에서 출발해 sec초 동안 새 focus/override(또는 평소 시점)로 천천히 옮긴다.
+# 부르기 전에 focus·override를 목표로 바꿔 둔다. to_point = null이면 평소 겨냥점(플레이어)으로.
+func glide(sec: float, to_point = null) -> void:
+	_gl = { t = 0.0, dur = sec, from = target, to = to_point, cur0 = cur.duplicate() }
+
+func gliding() -> bool:
+	return _gl != null

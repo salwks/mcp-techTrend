@@ -204,11 +204,15 @@ func vista() -> void:
 	if ob != null: ob.skippable = true; ob.skip = false
 	d.cutscene(true)
 	var skipped := false
-	for sh in [["jiri_view", 330.0, 11.0, 3.0], ["yocheon_view", 85.0, 22.0, 2.6], ["east_gate", 48.0, 26.0, 2.6]]:
+	# 천천히 떠나 천천히 닿는 미끄러짐(rig.glide) — [자리, 거리, pitch, 옮기는 초, 머무는 초]
+	var rig = d.main.rig
+	for sh in [["jiri_view", 330.0, 11.0, 3.2, 1.6], ["yocheon_view", 85.0, 22.0, 2.6, 1.2], ["east_gate", 48.0, 26.0, 2.4, 1.2]]:
 		d.camera({ "focus": sh[0], "distance": sh[1], "pitch": sh[2] })
-		if sh[0] == "jiri_view": d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
-		if await _sw(sh[3]): skipped = true; break
+		var fp: Vector2 = d.anchor(sh[0])
+		rig.glide(sh[3], Vector3(fp.x, d.main.world.height_at(fp.x, fp.y) + 0.9, fp.y))
+		if await _sw(sh[3] + sh[4]): skipped = true; break
 	d.camera(null)
+	rig.glide(1.0 if skipped else 3.0)   # 플레이어에게 천천히 돌아온다
 	if not skipped:
 		var tt = d.main.get("_title")
 		if tt != null: tt.show_title("남원", true)   # 지명 표시(place_title)와 같은 결
