@@ -28,6 +28,9 @@ signal changed(key: String, state: String)
 var world
 var _want := {}      # 키 → 상태(사건이 정한 값, 다시 읽기·스트리밍에도 남는다)
 var _props := {}     # id → rec { id, node, entry, info, xf, base, groups:{g:{STATE:[Node]}}, cur:{g:STATE}, fx:{g:[Node]}, cols:{g:[c]}, lights:{g:[l]}, decal:{g:id} }
+# 쌍(twin): 실내 공간(interior_space.gd, interior.json "twin")이 권역의 겉 건물과 같은 id로 세운 안쪽 키트. 같은 상태를 같이 받는다
+#   (밖에서 불을 놓으면 안에도, 안에서 숨은 바닥을 열면 밖 껍데기에도). 들어가 있는 동안 앵커는 안쪽 것을 돌려준다.
+var _twins := {}     # id → rec(_props와 같은 꼴)
 
 func _init(w) -> void:
 	world = w
@@ -43,12 +46,16 @@ func set_state(key: String, state: String) -> bool:
 	_want[key] = state
 	var p := _resolve(key)
 	if not p.is_empty(): _apply(_props[p[0]], p[1], state)
+	var tp := _resolve_in(_twins, key)
+	if not tp.is_empty(): _apply(_twins[tp[0]], tp[1], state)
 	changed.emit(key, state)
 	return true
 
 func get_state(key: String) -> String:
 	var p := _resolve(key)
 	if not p.is_empty(): return String(_props[p[0]].cur.get(p[1], "NORMAL"))
+	var tp := _resolve_in(_twins, key)
+	if not tp.is_empty(): return String(_twins[tp[0]].cur.get(tp[1], "NORMAL"))
 	return String(_want.get(key, "NORMAL"))
 
 # 그 키가 그리는 상태 목록(키트가 직접 그리는 것 + 일반 처리되는 것)
@@ -81,18 +88,67 @@ func has(id: String) -> bool:
 func node_of(id: String) -> Node3D:
 	return _props[id].node if _props.has(id) else null
 
-# 키트 앵커(로컬)를 월드 좌표로. 없으면 null
+# 키트 앵커(로컬)를 월드 좌표로. 없으면 null. 쌍(실내 공간 안쪽 키트)이 있으면 그 앵커(안쪽 월드 자리).
+# 쌍이 지금 없어도(밖에 있을 때) 실내 공간 데이터가 이 id를 twin으로 가지면, 실내 bounds 안에 드는 앵커(inside·hatch·pit…)는
+# 실내 공간의 월드 자리로, 밖에 남는 앵커(door 등)는 겉 건물 자리로 돌려준다 — teleport가 그대로 들어가고 나온다.
 func anchor(id: String, name: String) -> Variant:
-	if not _props.has(id): return null
-	var a = (_props[id].info.get("anchors", {}) as Dictionary).get(name)
+	var src = _props.get(id, _twins.get(id))
+	if src == null: return null
+	var a = (src.info.get("anchors", {}) as Dictionary).get(name)
 	if a == null: return null
+	var tw = _twin_space(id)
+	if tw != null:
+		var p = tw.call(a as Vector3)
+		if p != null: return p
+	if not _props.has(id): return null
 	return (_props[id].xf as Transform3D) * (a as Vector3)
 
 func anchors_of(id: String) -> Dictionary:
-	if not _props.has(id): return {}
+	if not _props.has(id) and not _twins.has(id): return {}
 	var out := {}
-	for k in _props[id].info.get("anchors", {}): out[k] = (_props[id].xf as Transform3D) * (_props[id].info.anchors[k] as Vector3)
+	var names: Dictionary = (_twins[id] if _twins.has(id) else _props[id]).info.get("anchors", {})
+	for k in names: out[k] = anchor(id, k)
 	return out
+
+# 이 id를 쌍으로 갖는 실내 공간(지금 권역) — 로컬 앵커 → 실내 월드 자리(bounds 안일 때만, 아니면 null)를 돌려주는 Callable
+func _twin_space(id: String) -> Variant:
+	if world == null or world.get("region") == null: return null
+	var IS = load("res://scripts/region/interior_space.gd")
+	var sid := String(world.region.get("region_id", world.region.get("route_id", "")))
+	for sp in IS.for_space(sid):
+		if String(sp.get("twin", "")) != id: continue
+		return func(l: Vector3) -> Variant:
+			var w2: Vector2 = IS.world_of(sp, Vector2(l.x, l.z))
+			if not IS.contains(sp, w2): return null
+			var o: Array = sp.get("origin", [0, 0, 0])
+			return Vector3(w2.x, float(o[1]) + l.y, w2.y)
+	return null
+
+# 실내 공간이 안쪽 키트를 겉 건물 id의 쌍으로 세운다 — 지금 상태(사건이 정한 값, 없으면 겉 건물의 지금 상태, 없으면 기본)를 그대로
+func register_twin(id: String, node: Node3D, entry: Dictionary, info: Dictionary) -> void:
+	var groups := {}
+	_scan(node, groups)
+	var rec := { id = id, node = node, entry = entry, info = info, xf = node.transform, base = node.transform, groups = groups,
+		cur = {}, fx = {}, cols = {}, lights = {}, decal = {} }
+	_twins[id] = rec
+	var gs: Array = ["main"]
+	for g in (info.get("states", {}) as Dictionary).keys() + groups.keys():
+		if not gs.has(g): gs.append(g)
+	for g in gs:
+		var key: String = id if g == "main" else id + "/" + g
+		var st: String
+		if _want.has(key): st = _want[key]
+		elif _props.has(id) and (_props[id].cur as Dictionary).has(g): st = _props[id].cur[g]
+		else: st = _default(rec, g, null)
+		_apply(rec, g, st)
+
+func drop_twin(id: String) -> void:
+	if not _twins.has(id): return
+	var rec: Dictionary = _twins[id]
+	for g in rec.cols.keys(): _drop_cols(rec, g)
+	for g in rec.lights.keys(): _drop_lights(rec, g)
+	for g in rec.decal.keys(): _drop_decal(rec, g)
+	_twins.erase(id)
 
 # 놓인 id 목록(prefix로 거름) — 시험·디버그용
 func ids(prefix := "") -> Array:
@@ -104,9 +160,10 @@ func ids(prefix := "") -> Array:
 # 기억해 둔 상태를 모두 지운다(새 게임). 놓인 물건은 기본 상태로
 func reset_all() -> void:
 	_want.clear()
-	for id in _props:
-		var rec: Dictionary = _props[id]
-		for g in rec.cur.keys(): _apply(rec, g, _default(rec, g, null))
+	for d in [_props, _twins]:
+		for id in d:
+			var rec: Dictionary = d[id]
+			for g in rec.cur.keys(): _apply(rec, g, _default(rec, g, null))
 
 # ---------------------------------------------------------------------------
 # 배치 로더가 부른다
@@ -152,9 +209,12 @@ func _custom_ok(key: String, state: String) -> bool:
 	return ((rec.info.get("states", {}) as Dictionary).get(p[1], []) as Array).has(state)
 
 func _resolve(key: String) -> Array:
-	if _props.has(key): return [key, "main"]
+	return _resolve_in(_props, key)
+
+static func _resolve_in(d: Dictionary, key: String) -> Array:
+	if d.has(key): return [key, "main"]
 	var i := key.rfind("/")
-	if i > 0 and _props.has(key.substr(0, i)): return [key.substr(0, i), key.substr(i + 1)]
+	if i > 0 and d.has(key.substr(0, i)): return [key.substr(0, i), key.substr(i + 1)]
 	return []
 
 func _default(rec: Dictionary, g: String, init) -> String:

@@ -5,7 +5,10 @@
 #       entrances: [{ id, at: [x, z](권역 월드), radius, spawn: [x, z](로컬), face }],
 #       exits: [{ id, at: [x, z](로컬), radius, to: [x, z](권역 월드), face, label }],
 #       props: [{ id, kit, params, at: [x, z](로컬), ry, dy, state }],      ← 상태 있는 소품(world.props에 등록 — set_prop_state가 그대로 듣는다)
-#       decals: { items: [...], trails: [{ …, points: [[x, z] 로컬…] }] } }    ← 데칼(그룹 hidden·trace 그대로)
+#       decals: { items: [...], trails: [{ …, points: [[x, z] 로컬…] }] },   ← 데칼(그룹 hidden·trace 그대로)
+#       twin: "배치 id" }   ← 선택: 이 공간의 키트가 권역 겉 건물(같은 키트, params.part "shell"/"inside")의 안쪽이다.
+#                          안쪽 키트를 그 id의 쌍으로 등록해 상태(불·숨은 바닥…)를 같이 받고(prop_states.register_twin),
+#                          키트 실내의 hide(앞벽·지붕)를 그대로 숨긴다. 앵커는 prop_anchor(그 id, …)가 실내 자리로 돌려준다.
 #   들어가 있는 동안(RegionWorld.indoor = 이 객체):
 #     - 지형·물·정적 물체·식생·원경 노드를 숨기고 타일 갈기(focus)를 멈춘다(권역은 메모리에 그대로 — 다시 읽지 않는다).
 #     - height_at·ground_at·blocked·interior_at은 이 공간이 답한다(바닥 높이 = origin.y + floor_y, 충돌체 = 키트 + 상자 밖).
@@ -29,6 +32,8 @@ var bounds := Rect2()        # 월드 xz(이 안이면 이 공간 자리)
 var props_ids: Array = []
 var decal_ids: Array = []
 var light: OmniLight3D
+var twin := ""
+var _world
 
 static var _index := {}      # id → spec(한 번 읽기)
 
@@ -74,7 +79,9 @@ static func contains(sp: Dictionary, p: Vector2) -> bool:
 
 func build(world, sp: Dictionary) -> void:
 	spec = sp
+	_world = world
 	id = String(sp.get("id", ""))
+	twin = String(sp.get("twin", ""))
 	var o: Array = sp.get("origin", [0, 0, 0])
 	origin = Vector3(float(o[0]), float(o[1]), float(o[2]))
 	xf = Transform3D(Basis(Vector3.UP, float(sp.get("ry", 0.0))), origin)
@@ -89,6 +96,10 @@ func build(world, sp: Dictionary) -> void:
 	if it.has("minX"): it.merge(world._xf_box(it, xf), true)
 	it.id = id
 	it.floor_world = floor_y
+	# 쌍 키트(창고 안쪽 등): 키트 실내의 앞벽·지붕은 이 공간에서 늘 숨긴다(region_main 가림 목록에 넣지 않는다 — 나올 때 노드가 지워진다)
+	if twin != "":
+		for h in it.get("hide", []):
+			if h is Node3D: h.visible = false
 	it.hide = []
 	it.space = true
 	if sp.get("camera") is Dictionary: it.camera = sp.camera
@@ -100,8 +111,10 @@ func build(world, sp: Dictionary) -> void:
 	var a := to_world(Vector2(float(b[0]), float(b[1]))); var c := to_world(Vector2(float(b[2]), float(b[3])))
 	bounds = Rect2(Vector2(minf(a.x, c.x), minf(a.y, c.y)), (a - c).abs())
 	if world.get("props") != null:
-		world.props.register(id, node, {}, info, null)
-		props_ids.append(id)
+		if twin != "": world.props.register_twin(twin, node, { lights = [], attached = true }, info)
+		else:
+			world.props.register(id, node, { lights = [], attached = true }, info, null)
+			props_ids.append(id)
 		for pr in sp.get("props", []):
 			var pi: Dictionary = load("res://kit/%s.gd" % String(pr.kit)).build(pr.get("params", {}))
 			var pn: Node3D = pi.node
@@ -111,7 +124,7 @@ func build(world, sp: Dictionary) -> void:
 			pn.transform = pxf
 			node.get_parent().add_child(pn)
 			for cc in pi.get("colliders", []): cols.append(world._xf_collider(cc, pxf))
-			world.props.register(String(pr.id), pn, {}, pi, pr.get("state"))
+			world.props.register(String(pr.id), pn, { lights = [], attached = true }, pi, pr.get("state"))
 			props_ids.append(String(pr.id))
 			pn.set_meta("indoor_prop", true)
 	# 출구 쪽 빛(굴 밖에서 드는 빛)
@@ -152,6 +165,7 @@ func teardown(world) -> void:
 				if rec.node != node and is_instance_valid(rec.node): rec.node.queue_free()
 			world.props._props.erase(pid)
 	props_ids.clear()
+	if twin != "" and world.get("props") != null: world.props.drop_twin(twin)
 	if light != null: light.queue_free(); light = null
 	if node != null: node.queue_free(); node = null
 	cols.clear()
@@ -163,6 +177,10 @@ func blocked(x: float, z: float, r: float) -> bool:
 	if not bounds.grow(-r).has_point(Vector2(x, z)): return true
 	for c in cols:
 		if _world_script._hit(c, x, z, r): return true
+	# 상태 충돌체(열린 숨은 바닥·무너진 더미 — prop_states가 world.add_dynamic_collider로 더한 것)
+	if _world != null:
+		for c in _world._dyn_cols:
+			if _world_script._hit(c, x, z, r): return true
 	return false
 
 static var _world_script: Script = load("res://scripts/region/region_world.gd")

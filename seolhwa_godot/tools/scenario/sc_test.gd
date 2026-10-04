@@ -3,6 +3,7 @@
 #     --scsteps="wait:30;state:hy_sc_chilpae_changgo_2:FIRE_2;wait:60;shot:shots/scenario/t1.png;quit"
 # 단계: wait:프레임 · warp:x,z · decal:종류:x,z[,크기,ry] · state:키:상태 · decals:그룹:on|off · trail:종류:x,z,x,z… · weather:종류[:초[:페이드]] · release
 #       time:시각[:초[:페이드]] · shot:경로 · anchor:id:이름(출력) · print · quit
+#       enter:실내id[:입구] · exit[:출구] (실내 공간, 암전 포함) · walk:x,z(막힘을 지키며 걸어감 — 입구·출구 자리에 들면 저절로 넘어감)
 extends Node
 
 var rm   # region_main
@@ -26,7 +27,25 @@ func _run() -> void:
 			"wait": await _frames(int(p[1]))
 			"warp":
 				var c := p[1].split(",")
-				rm.teleport(float(c[0]), float(c[1])); await _frames(20)
+				rm.teleport(float(c[0]), float(c[1]))
+				rm.rig.update(0, rm.player_pos, rm.player.facing, rm.world.interior_at(rm.player_pos.x, rm.player_pos.z), true)
+				await _frames(20)
+			"enter": print("SCT enter %s ok=%s" % [p[1], await rm.enter_interior(p[1], p[2] if p.size() > 2 else "")]); await _frames(10)
+			"exit": await rm.exit_interior(p[1] if p.size() > 1 else ""); print("SCT exit pos=", rm.player_pos); await _frames(10)
+			"walk":
+				var c := p[1].split(",")
+				var tgt := Vector2(float(c[0]), float(c[1]))
+				var in0 = rm.world.indoor
+				for i in 400:
+					if rm.world.indoor != in0 or rm._indoor_busy: break
+					var pp := Vector2(rm.player_pos.x, rm.player_pos.z)
+					if pp.distance_to(tgt) < 0.3: break
+					var d := (tgt - pp).normalized() * 0.05
+					if not rm.world.blocked(pp.x + d.x, pp.y + d.y, rm.player.radius):
+						rm.player_pos = Vector3(pp.x + d.x, rm.world.height_at(pp.x + d.x, pp.y + d.y), pp.y + d.y)
+					await _frames(1)
+				while rm._indoor_busy: await _frames(2)
+				print("SCT walk pos=", rm.player_pos, " indoor=", rm.world.indoor.id if rm.world.indoor != null else "")
 			"state": print("SCT state %s=%s ok=%s" % [p[1], p[2], rm.world.set_prop_state(p[1], p[2])])
 			"decals": rm.world.decals.set_group_visible(p[1], p[2] == "on"); print("SCT decals %s %s n=%d" % [p[1], p[2], rm.world.decals.ids_in(p[1]).size()])
 			"trail":

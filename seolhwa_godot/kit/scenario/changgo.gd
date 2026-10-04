@@ -8,6 +8,9 @@
 # 그룹 hatch(params.hatch, PRP_COM_005·PRP_FIN_004 숨은 바닥 공간): SEALED 마루널 덮임 / OPEN 널을 걷어 낸 구멍 — 유해 일부·수량 기록 조각·박규상 표식
 # 그룹 groove(params.groove, PRP_FIN_001 곡물 수량패 홈): NORMAL 빈 홈 / USED 나무패를 끼운 모습
 # params: seed, style, hatch, groove, fill("grain"|"goods"|"empty"), old, cold(true: BURNT에 연기 없음 — 오래전에 탄 터)
+#   part: ""(기본 — 권역 안에서 단면 실내로 들어감) | "shell"(권역 겉 건물: 실내 없음, 문 자리 막힘 — 안은 실내 공간) |
+#         "inside"(실내 공간 region_data/interiors/<id> 안쪽: 앞벽·지붕 숨김, 둘레 어두운 흙바닥, 실내 연기·불티·벽을 타는 불).
+#   shell과 inside는 같은 로컬 짜임·앵커라 상태(불·hatch·groove)와 앵커가 그대로 맞는다(prop_states 쌍 twin).
 extends RefCounted
 const SC := preload("res://kit/scenario/_sc.gd")
 const C := preload("res://kit/village/_common.gd")
@@ -41,6 +44,16 @@ static func build(params: Dictionary) -> Dictionary:
 		wall = SC.MUD_OLD if old else SC.MUD, floor_hole = hole, no_light = true, camera = { pitch = 56, distance = 13 if W > 8 else 10 } })
 	var zb: float = info.zb; var zf: float = info.zf; var top: float = info.top
 	var R := s.rng
+	var kpart: String = params.get("part", "")
+	if kpart == "shell":
+		# 겉 건물: 들어가는 단면 실내 없음 — 문 자리를 막고(입구 자리에 서면 실내 공간으로) 실내 카메라도 쓰지 않는다
+		s.interior = null
+		s.hide = []
+		for x in info.doors: s.box_c(float(x) - 1.15, float(x) + 1.15, zf - 0.2, zf + 0.3)
+	elif kpart == "inside":
+		# 실내 공간: 둘레는 어두운 흙(빈 곳이 하늘색으로 비치지 않게), 실내는 어둡다(dark — interior.json light가 덮어씀)
+		s.add("base", "flat", SC.pa(Kit.box(W + 30.0, 0.04, D + 30.0, 0, -0.05, 0), [0x2a241c, 0x221d16], 0.02, R), 0.0)
+		s.interior.near_fade = false
 	# 높은 창(환기 살창) 뒷벽 둘
 	if style != "empty":
 		for x in [-W / 4, W / 4]:
@@ -63,11 +76,17 @@ static func build(params: Dictionary) -> Dictionary:
 	s.state_default["main"] = "NORMAL"
 	for x in RUIN:
 		if not (s.states.main as Array).has(x): s.states.main.append(x)
-	_fire(s, W, D, F, top, info, bool(params.get("cold", false)))
+	# 무너진 모습을 먼저(난수 차례가 겉·안쪽에서 같게 — 불 연출은 part마다 다르다)
 	_ruin(s, W, D, F, H, old, hole, style)
+	_fire(s, W, D, F, top, info, bool(params.get("cold", false)), kpart == "inside")
 	# 앵커
 	s.anchor("rubble", Vector3(-W * 0.25, F, 0.2))
 	s.anchor("back_wall", Vector3(0, F, zb + 0.8))
+	# 최종장(S8014~S8018): 싸움 가운데·문 안쪽 — 실내 공간에서도 같은 로컬
+	s.anchor("center", Vector3(0, F, 0.4))
+	for x in info.doors:
+		s.anchor("door_in", Vector3(float(x), F, zf - 1.0)); break
+	if hatch: s.anchor("ritual", Vector3(float(hole.x) - float(hole.w) / 2 - 0.7, F, float(hole.z)))
 	if style == "empty":
 		s.anchor("bound", Vector3(0.9, F, -0.4))
 	return s.result({ chilpae = "칠패 창고", seogang = "서강 옛 창고", empty = "빈 창고" }.get(style, "창고"), Vector2(W + 2.6, D + 3.0))
@@ -161,7 +180,7 @@ static func _hatch(s: SC.S, hole: Dictionary, F: float) -> void:
 	s.anchor("pit", Vector3(hx, 0.05, hz))
 
 # 불 연출: 불꽃(빛나는 혀) 모양은 상태 부분, 움직이는 불·연기·불티는 state_fx
-static func _fire(s: SC.S, W: float, D: float, F: float, top: float, info: Dictionary, cold := false) -> void:
+static func _fire(s: SC.S, W: float, D: float, F: float, top: float, info: Dictionary, cold := false, inside := false) -> void:
 	var R := s.rng
 	var tongues := func(p, cx: float, cz: float, y0: float, n: int, h: float, spread: float) -> void:
 		var gs := []
@@ -172,20 +191,21 @@ static func _fire(s: SC.S, W: float, D: float, F: float, top: float, info: Dicti
 		p.add("glow", Kit.merge(gs), 0.0)
 	var zf: float = info.zf
 	# FIRE_1: 오른쪽 아래 벽에 붙은 불 + 지붕에서 피어오르는 연기
-	tongues.call(s.st("main", "FIRE_1"), W / 2 - 0.6, zf + 0.25, 0.0, 4, 1.4, 1.2)
-	s.fx("main", "FIRE_1", { type = "fire", x = W / 2 - 0.6, y = 0.2, z = zf + 0.3, size = 0.6, k = 0.8 })
-	s.fx("main", "FIRE_1", { type = "smoke", x = W / 4, y = top + 1.2, z = 0.0, size = 1.0, k = 0.8, dark = 0.4 })
-	# FIRE_2: 지붕 앞면 따라 불 + 그을린 지붕 + 짙은 연기 둘 + 불티
 	var f2 := s.st("main", "FIRE_2")
-	tongues.call(f2, W / 2 - 0.6, zf + 0.25, 0.0, 5, 2.2, 1.6)
-	tongues.call(f2, 0.0, zf + 0.6, top + 0.4, 7, 2.0, W * 0.8)
-	tongues.call(f2, -W * 0.3, -0.2, top + 1.6, 4, 1.6, W * 0.4)
-	f2.add("organic", SC.pa(Kit.box(W * 0.5, 0.05, 1.6, W * 0.2, top + 0.95, D / 2 + 0.2), SC.CHAR, 0.08), 0.0)
-	s.fx("main", "FIRE_2", { type = "fire", x = 0.0, y = top + 0.6, z = zf + 0.6, size = W * 0.3, k = 1.6 })
-	s.fx("main", "FIRE_2", { type = "fire", x = W / 2 - 0.6, y = 0.3, z = zf + 0.3, size = 0.8, k = 1.0 })
-	s.fx("main", "FIRE_2", { type = "smoke", x = -W / 4, y = top + 2.0, z = -0.3, size = 1.6, k = 1.3, dark = 0.85 })
-	s.fx("main", "FIRE_2", { type = "smoke", x = W / 4, y = top + 2.0, z = 0.3, size = 1.6, k = 1.3, dark = 0.85 })
-	s.fx("main", "FIRE_2", { type = "embers", x = 0.0, y = top + 1.5, z = 0.0, size = W * 0.3, k = 1.2 })
+	if not inside:
+		tongues.call(s.st("main", "FIRE_1"), W / 2 - 0.6, zf + 0.25, 0.0, 4, 1.4, 1.2)
+		s.fx("main", "FIRE_1", { type = "fire", x = W / 2 - 0.6, y = 0.2, z = zf + 0.3, size = 0.6, k = 0.8 })
+		s.fx("main", "FIRE_1", { type = "smoke", x = W / 4, y = top + 1.2, z = 0.0, size = 1.0, k = 0.8, dark = 0.4 })
+		# FIRE_2: 지붕 앞면 따라 불 + 그을린 지붕 + 짙은 연기 둘 + 불티
+		tongues.call(f2, W / 2 - 0.6, zf + 0.25, 0.0, 5, 2.2, 1.6)
+		tongues.call(f2, 0.0, zf + 0.6, top + 0.4, 7, 2.0, W * 0.8)
+		tongues.call(f2, -W * 0.3, -0.2, top + 1.6, 4, 1.6, W * 0.4)
+		f2.add("organic", SC.pa(Kit.box(W * 0.5, 0.05, 1.6, W * 0.2, top + 0.95, D / 2 + 0.2), SC.CHAR, 0.08), 0.0)
+		s.fx("main", "FIRE_2", { type = "fire", x = 0.0, y = top + 0.6, z = zf + 0.6, size = W * 0.3, k = 1.6 })
+		s.fx("main", "FIRE_2", { type = "fire", x = W / 2 - 0.6, y = 0.3, z = zf + 0.3, size = 0.8, k = 1.0 })
+		s.fx("main", "FIRE_2", { type = "smoke", x = -W / 4, y = top + 2.0, z = -0.3, size = 1.6, k = 1.3, dark = 0.85 })
+		s.fx("main", "FIRE_2", { type = "smoke", x = W / 4, y = top + 2.0, z = 0.3, size = 1.6, k = 1.3, dark = 0.85 })
+		s.fx("main", "FIRE_2", { type = "embers", x = 0.0, y = top + 1.5, z = 0.0, size = W * 0.3, k = 1.2 })
 	# FIRE_3: 잔해 속 남은 불 + 연기
 	var f3 := s.st("main", "FIRE_3")
 	tongues.call(f3, -W * 0.25, 0.0, F, 5, 1.2, W * 0.35)
@@ -195,6 +215,22 @@ static func _fire(s: SC.S, W: float, D: float, F: float, top: float, info: Dicti
 	s.fx("main", "FIRE_3", { type = "embers", x = -W * 0.2, y = F + 0.8, z = 0.0, size = 1.5, k = 0.6 })
 	# BURNT: 식은 잔해 위 옅은 연기 한 줄기
 	if not cold: s.fx("main", "BURNT", { type = "smoke", x = -W * 0.25, y = F + 0.6, z = 0.0, size = 0.5, k = 0.35, dark = 0.1 })
+	if inside:
+		# 실내에서 본 불: 지붕은 숨기므로 벽 윗머리·서까래를 타고 오르는 불, 방 안에 낮게 깔린 연기, 떨어지는 불티
+		var zb: float = info.zb
+		# FIRE_1: 오른쪽 벽 안쪽 아래에서 붙은 불(밖에서 보던 오른쪽 앞 불의 안쪽 면)
+		var f1 := s.st("main", "FIRE_1")
+		tongues.call(f1, W / 2 - 0.35, zf - 1.4, F, 4, 1.3, 0.3)
+		s.fx("main", "FIRE_1", { type = "fire", x = W / 2 - 0.4, y = F + 0.2, z = zf - 1.4, size = 0.5, k = 0.8 })
+		tongues.call(f2, W / 2 - 0.35, zf - 1.4, F, 5, 2.0, 0.4)
+		s.fx("main", "FIRE_2", { type = "fire", x = W / 2 - 0.4, y = F + 0.3, z = zf - 1.4, size = 0.7, k = 1.0 })
+		s.fx("main", "FIRE_1", { type = "smoke", x = 0.0, y = F + 2.3, z = -0.5, size = W * 0.3, k = 0.7, dark = 0.45 })
+		tongues.call(f2, 0.0, zb + 0.3, top - 0.9, 8, 1.3, W * 0.8)
+		tongues.call(f2, -W / 2 + 0.3, -D * 0.2, top - 0.9, 3, 1.1, 0.3)
+		s.fx("main", "FIRE_2", { type = "fire", x = 0.0, y = top - 0.6, z = zb + 0.4, size = W * 0.3, k = 1.2 })
+		s.fx("main", "FIRE_2", { type = "smoke", x = 0.0, y = F + 2.2, z = 0.0, size = W * 0.4, k = 1.2, dark = 0.8 })
+		s.fx("main", "FIRE_2", { type = "embers", x = 0.0, y = top, z = 0.0, size = W * 0.35, k = 1.0 })
+		s.fx("main", "FIRE_3", { type = "smoke", x = -W * 0.1, y = F + 2.0, z = -0.4, size = W * 0.25, k = 0.5, dark = 0.6 })
 
 # 무너진 모습(FIRE_3·BURNT): 숯이 된 마루(구멍 자리 비움)·기둥 그루터기·낮게 남은 벽·내려앉은 지붕 더미(왼쪽 반)·흩어진 기와
 static func _ruin(s: SC.S, W: float, D: float, F: float, H: float, old: bool, hole, style: String) -> void:
