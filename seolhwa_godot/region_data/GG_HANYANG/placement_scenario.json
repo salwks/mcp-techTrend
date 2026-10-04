@@ -1,0 +1,505 @@
+{
+ "area": "scenario_hanyang",
+ "note": "마스터 시나리오 v2.1 장소(ACT 1·ACT 6) — tools/scenario/place_scenario.py",
+ "items": [
+  {
+   "id": "hy_sc_chaekbang",
+   "kit": "scenario/chaekbang",
+   "params": {
+    "seed": 7525
+   },
+   "x": -252.0,
+   "z": -938.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    9.0,
+    6.6
+   ],
+   "title": "책쾌의 책방",
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_desk",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "chaeksang",
+    "indoor": true,
+    "seed": 1318
+   },
+   "x": -252.4,
+   "z": -938.2,
+   "ry": 0.0,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_meoktong",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "meoktong",
+    "indoor": true,
+    "seed": 2777
+   },
+   "x": -251.9,
+   "z": -938.25,
+   "ry": 0.0,
+   "dy": 0.79,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_tea",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "chatjan",
+    "indoor": true,
+    "seed": 5893
+   },
+   "x": -251.25,
+   "z": -937.65,
+   "ry": 0.0,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_kkeun",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "kkeun",
+    "indoor": true,
+    "seed": 7945
+   },
+   "x": -249.5,
+   "z": -937.1,
+   "ry": -0.6,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_papers",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jangbu",
+    "n": 7,
+    "indoor": true,
+    "seed": 5973
+   },
+   "x": -250.9,
+   "z": -937.1,
+   "ry": 0.0,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_books",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "chaekdeomi",
+    "indoor": true,
+    "seed": 4001
+   },
+   "x": -254.0,
+   "z": -937.5,
+   "ry": 0.0,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chaekbang_lamp",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "deungjan",
+    "indoor": true,
+    "seed": 1705
+   },
+   "x": -253.4,
+   "z": -939.6,
+   "ry": 0.0,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_bin_changgo",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "empty",
+    "seed": 5221
+   },
+   "x": -241.6,
+   "z": -938.6,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    8.6,
+    7.0
+   ],
+   "title": "빈 창고",
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_bin_changgo_kkeun",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "kkeun",
+    "indoor": true,
+    "seed": 5167
+   },
+   "x": -240.7,
+   "z": -939.1,
+   "ry": 0.4,
+   "dy": 0.15,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "피맛골 책방"
+  },
+  {
+   "id": "hy_sc_chilpae_changgo_1",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "chilpae",
+    "fill": "grain",
+    "seed": 9886
+   },
+   "x": -749.0,
+   "z": -222.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    12.6,
+    9.0
+   ],
+   "title": "칠패 창고",
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_changgo_2",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "chilpae",
+    "fill": "grain",
+    "hatch": true,
+    "seed": 805
+   },
+   "x": -736.0,
+   "z": -222.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    12.6,
+    9.0
+   ],
+   "title": "칠패 창고",
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_changgo_3",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "chilpae",
+    "fill": "goods",
+    "seed": 4327
+   },
+   "x": -723.0,
+   "z": -222.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    12.6,
+    9.0
+   ],
+   "title": "칠패 창고",
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_changgo_4",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "chilpae",
+    "fill": "grain",
+    "seed": 7717
+   },
+   "x": -710.0,
+   "z": -222.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    12.6,
+    9.0
+   ],
+   "title": "칠패 창고",
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_oil_1",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gireumtong",
+    "seed": 2399
+   },
+   "x": -732.4,
+   "z": -218.0,
+   "ry": 0.0,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_oil_2",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gireumtong",
+    "seed": 3278
+   },
+   "x": -726.8,
+   "z": -217.9,
+   "ry": 0.5,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_gamani_1",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gamani",
+    "seed": 7809
+   },
+   "x": -745.6,
+   "z": -217.7,
+   "ry": 0.0,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_gamani_2",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gamani",
+    "seed": 3324
+   },
+   "x": -713.0,
+   "z": -217.6,
+   "ry": 0.3,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_jangbu",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jangbu",
+    "n": 8,
+    "indoor": true,
+    "seed": 7038
+   },
+   "x": -733.0,
+   "z": -220.5,
+   "ry": 0.0,
+   "dy": 0.65,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_chilpae_ham",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "munseoham",
+    "indoor": true,
+    "seed": 9430
+   },
+   "x": -732.4,
+   "z": -221.4,
+   "ry": 0.0,
+   "dy": 0.65,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "칠패 창고"
+  },
+  {
+   "id": "hy_sc_seogang_changgo",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "seogang",
+    "hatch": true,
+    "groove": true,
+    "seed": 1222
+   },
+   "x": -2268.0,
+   "z": 758.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    15.6,
+    10.0
+   ],
+   "title": "서강 옛 창고",
+   "group": "서강"
+  },
+  {
+   "id": "hy_sc_seogang_teo",
+   "kit": "scenario/changgo",
+   "params": {
+    "style": "chilpae",
+    "fill": "empty",
+    "cold": true,
+    "old": true,
+    "seed": 6102
+   },
+   "x": -2270.0,
+   "z": 771.5,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    12.6,
+    9.0
+   ],
+   "state": "BURNT",
+   "title": "불탄 창고 터",
+   "group": "서강"
+  },
+  {
+   "id": "hy_sc_seogang_seonchang",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 12.0,
+    "sacks": true,
+    "seed": 5547
+   },
+   "x": -2306.0,
+   "z": 773.0,
+   "ry": -1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "group": "서강"
+  },
+  {
+   "id": "hy_sc_seogang_bridge",
+   "kit": "village/seop_bridge",
+   "params": {
+    "len": 8.0,
+    "hw": 0.8,
+    "seed": 8902
+   },
+   "x": -2252.5,
+   "z": 781.5,
+   "ry": -2.25,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "서강"
+  },
+  {
+   "id": "hy_sc_seogang_gamani",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gamani",
+    "seed": 9906
+   },
+   "x": -2262.8,
+   "z": 763.0,
+   "ry": 0.0,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "state": "NORMAL",
+   "group": "서강"
+  }
+ ]
+}

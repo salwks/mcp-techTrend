@@ -1,0 +1,190 @@
+{
+ "area": "scenario_jangsangot",
+ "note": "S4006 바위섬 — tools/scenario/place_scenario.py",
+ "items": [
+  {
+   "id": "rt_sc_jangsan_islet",
+   "kit": "scenario/hj_islet",
+   "params": {
+    "seed": 4006
+   },
+   "x": 505.0,
+   "z": -205.0,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    34.0,
+    30.0
+   ],
+   "title": "장산곶 앞 바위섬",
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_0",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 400,
+    "n": 3,
+    "r": 3.0
+   },
+   "x": 445,
+   "z": -128,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_1",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 401,
+    "n": 4,
+    "r": 3.0
+   },
+   "x": 470,
+   "z": -150,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_2",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 402,
+    "n": 3,
+    "r": 3.0
+   },
+   "x": 528,
+   "z": -165,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_3",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 403,
+    "n": 3,
+    "r": 3.0
+   },
+   "x": 463,
+   "z": -207,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_4",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 404,
+    "n": 4,
+    "r": 3.0
+   },
+   "x": 540,
+   "z": -226,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_5",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 405,
+    "n": 2,
+    "r": 3.0
+   },
+   "x": 418,
+   "z": -160,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_reef_6",
+   "kit": "scenario/hj_reef",
+   "params": {
+    "seed": 406,
+    "n": 2,
+    "r": 3.0
+   },
+   "x": 487,
+   "z": -232,
+   "ry": 0.0,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    8.0,
+    8.0
+   ],
+   "group": "장산곶 바위섬"
+  },
+  {
+   "id": "rt_sc_jangsan_seonchang",
+   "kit": "route/seonchang",
+   "params": {
+    "len": 10.0,
+    "sacks": false,
+    "seed": 8589
+   },
+   "x": 360.0,
+   "z": -74.0,
+   "ry": 1.5708,
+   "y": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "group": "장산곶 바위섬"
+  }
+ ]
+}

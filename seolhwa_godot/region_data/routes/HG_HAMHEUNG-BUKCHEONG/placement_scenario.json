@@ -1,0 +1,151 @@
+{
+ "area": "scenario_bukcheong",
+ "note": "S6004~S6010 빈 역참 — tools/scenario/place_scenario.py",
+ "items": [
+  {
+   "id": "rt_sc_yeokcham",
+   "kit": "scenario/yeokcham",
+   "params": {
+    "seed": 61
+   },
+   "x": -202.0,
+   "z": -62.0,
+   "ry": 0.1,
+   "flatten": true,
+   "footprint": [
+    19.5,
+    15.0
+   ],
+   "title": "함관령 옛 역참",
+   "group": "빈 역참"
+  },
+  {
+   "id": "rt_sc_yeokcham_lamp",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "deungjan",
+    "indoor": true,
+    "seed": 2719
+   },
+   "x": -205.5,
+   "z": -60.84,
+   "ry": 0.1,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "빈 역참"
+  },
+  {
+   "id": "rt_sc_yeokcham_map",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "byeokjido",
+    "indoor": true,
+    "seed": 4434
+   },
+   "x": -204.86,
+   "z": -64.0,
+   "ry": 0.1,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "빈 역참"
+  },
+  {
+   "id": "rt_sc_yeokcham_hwaro",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "hwaro",
+    "indoor": true,
+    "seed": 516
+   },
+   "x": -203.97,
+   "z": -61.6,
+   "ry": 0.1,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "빈 역참"
+  },
+  {
+   "id": "rt_sc_yeokcham_burnt",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jangbu",
+    "indoor": true,
+    "seed": 449
+   },
+   "x": -203.33,
+   "z": -61.26,
+   "ry": 0.1,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "state": "BURNT",
+   "group": "빈 역참"
+  },
+  {
+   "id": "rt_sc_yeokcham_ham",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "munseoham",
+    "indoor": true,
+    "seed": 9077
+   },
+   "x": -206.44,
+   "z": -63.16,
+   "ry": 0.1,
+   "dy": 0.45,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "state": "OPEN",
+   "group": "빈 역참"
+  },
+  {
+   "id": "rt_sc_yeokcham_jipsin",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jipsin",
+    "seed": 8478
+   },
+   "x": -203.79,
+   "z": -58.81,
+   "ry": 0.1,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "state": "USED",
+   "group": "빈 역참"
+  }
+ ]
+}

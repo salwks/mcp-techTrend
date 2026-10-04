@@ -1,0 +1,130 @@
+{
+ "area": "scenario_pyeongyang",
+ "note": "S5004 감영 기록창고 — tools/scenario/place_scenario.py",
+ "items": [
+  {
+   "id": "py_sc_girokgo",
+   "kit": "scenario/girokgo",
+   "params": {
+    "seed": 1566
+   },
+   "x": 14.0,
+   "z": -147.0,
+   "ry": 0.0,
+   "flatten": true,
+   "footprint": [
+    10.8,
+    8.0
+   ],
+   "title": "감영 기록 창고",
+   "group": "감영 기록창고"
+  },
+  {
+   "id": "py_sc_girokgo_ham_1",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "munseoham",
+    "indoor": true,
+    "seed": 6151
+   },
+   "x": 13.4,
+   "z": -147.0,
+   "ry": 0.0,
+   "dy": 0.75,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "감영 기록창고"
+  },
+  {
+   "id": "py_sc_girokgo_ham_2",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "munseoham",
+    "indoor": true,
+    "seed": 9687
+   },
+   "x": 12.0,
+   "z": -146.4,
+   "ry": 0.3,
+   "dy": 0.75,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "감영 기록창고"
+  },
+  {
+   "id": "py_sc_girokgo_jangbu",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jangbu",
+    "n": 5,
+    "indoor": true,
+    "seed": 8299
+   },
+   "x": 16.4,
+   "z": -145.7,
+   "ry": 0.0,
+   "dy": 1.09,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "감영 기록창고"
+  },
+  {
+   "id": "py_sc_girokgo_meoktong",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "meoktong",
+    "indoor": true,
+    "seed": 9124
+   },
+   "x": 16.0,
+   "z": -145.75,
+   "ry": 0.0,
+   "dy": 1.09,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "감영 기록창고"
+  },
+  {
+   "id": "py_sc_girokgo_shelf",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "chaekjang",
+    "w": 1.4,
+    "indoor": true,
+    "seed": 4693
+   },
+   "x": 10.7,
+   "z": -145.4,
+   "ry": 1.5708,
+   "dy": 0.75,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "감영 기록창고"
+  }
+ ]
+}

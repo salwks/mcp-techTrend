@@ -30,6 +30,9 @@ const NAMES := {
 	"landmark/py_giringgul": "기린굴", "landmark/py_daedong_naru": "나루",
 	"landmark/hh_bongung": "함흥본궁", "landmark/hh_mansegyo": "만세교", "landmark/hh_eupseong_gate": "함흥읍성",
 	"landmark/hh_bansong": "본궁 반송",
+	# 시나리오 장소(kit/scenario) — 배치 항목 title이 먼저
+	"scenario/chaekbang": "책쾌의 책방", "scenario/changgo": "창고", "scenario/girokgo": "기록 창고", "scenario/yeokcham": "옛 역참",
+	"scenario/jj_sagul": "김녕사굴", "scenario/hj_islet": "장산곶 앞 바위섬",
 }
 const EXIT_EXTRA := 3.0
 

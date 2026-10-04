@@ -1,0 +1,69 @@
+{
+ "area": "scenario_jeju",
+ "note": "S7003~S7006 김녕사굴 — tools/scenario/place_scenario.py",
+ "items": [
+  {
+   "id": "jj_sc_sagul_geumjul",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "geumjul",
+    "w": 4.6,
+    "seed": 5612
+   },
+   "x": 3432.64,
+   "z": -895.06,
+   "ry": 0.0136,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "김녕사굴"
+  },
+  {
+   "id": "jj_sc_sagul_jemul",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jemul",
+    "indoor": true,
+    "seed": 5558
+   },
+   "x": 3434.54,
+   "z": -902.19,
+   "ry": 0.0136,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "group": "김녕사굴"
+  },
+  {
+   "id": "jj_sc_sagul_jipsin",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jipsin",
+    "seed": 4697
+   },
+   "x": 3431.0,
+   "z": -912.64,
+   "ry": 0.0136,
+   "dy": 0.0,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "footprint": [
+    1.2,
+    1.0
+   ],
+   "state": "MOVED",
+   "group": "김녕사굴"
+  }
+ ]
+}

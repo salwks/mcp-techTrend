@@ -50,6 +50,8 @@ const TITLES := {
 	rt_mapo = "마포 선창", rt_dumulmeori = "두물머리", rt_yeoju = "여주 조포나루", rt_mokgye = "목계진", rt_chungju = "충주",
 	rt_gwangnaru = "광나루", rt_yanggeun = "양근", rt_ipo = "이포나루", rt_heungwon = "흥원창", rt_dalcheon = "달천 나루",
 	rt_daedongmun = "대동문 선창", rt_duro = "두로도 포구", rt_gyeomipo = "겸이포", rt_gangseo_naru = "강서 나루",
+	# 시나리오 장소(world_scenario.json 덧붙임 — tools/scenario/place_scenario.py)
+	seogang = "서강", rt_hamgwal_yeokcham = "함관령 옛 역참", rt_jangsan_islet = "장산곶 앞 바위섬",
 }
 
 var areas := {}   # 이름 → [Rect2…]

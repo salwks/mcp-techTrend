@@ -1,0 +1,161 @@
+{
+ "items": [
+  {
+   "id": "hy_s8002_scorch_0",
+   "kind": "scorch",
+   "x": -751.0,
+   "z": -218.8,
+   "y": 1.5,
+   "ry": 0.0,
+   "wall": true,
+   "size": 2.2,
+   "hidden": true,
+   "group": "s8002_scorch"
+  },
+  {
+   "id": "hy_s8002_scorch_1",
+   "kind": "scorch",
+   "x": -737.0,
+   "z": -218.8,
+   "y": 1.5,
+   "ry": 0.0,
+   "wall": true,
+   "size": 2.2,
+   "hidden": true,
+   "group": "s8002_scorch"
+  },
+  {
+   "id": "hy_s8002_scorch_2",
+   "kind": "scorch",
+   "x": -723.0,
+   "z": -218.8,
+   "y": 1.5,
+   "ry": 0.0,
+   "wall": true,
+   "size": 2.2,
+   "hidden": true,
+   "group": "s8002_scorch"
+  }
+ ],
+ "trails": [
+  {
+   "id": "hy_s1003_tracks",
+   "kind": "foot",
+   "group": "s1003_tracks",
+   "hidden": true,
+   "points": [
+    [
+     -250.4,
+     -941.4
+    ],
+    [
+     -249.4,
+     -942.8
+    ],
+    [
+     -235.0,
+     -943.2
+    ],
+    [
+     -223.5,
+     -943.0
+    ],
+    [
+     -221.6,
+     -936.0
+    ],
+    [
+     -221.6,
+     -928.0
+    ]
+   ]
+  },
+  {
+   "id": "hy_s8004_wet",
+   "kind": "wet_foot",
+   "group": "s8004_wet",
+   "hidden": true,
+   "step": 0.8,
+   "points": [
+    [
+     -754.5,
+     -217.0
+    ],
+    [
+     -736.0,
+     -217.4
+    ],
+    [
+     -719.0,
+     -217.2
+    ],
+    [
+     -703.5,
+     -219.0
+    ]
+   ]
+  },
+  {
+   "id": "hy_s8009_rut_l",
+   "kind": "rut",
+   "group": "s8009_carts",
+   "hidden": true,
+   "points": [
+    [
+     -795.0,
+     -236.0
+    ],
+    [
+     -770.0,
+     -230.0
+    ],
+    [
+     -736.6,
+     -216.5
+    ]
+   ]
+  },
+  {
+   "id": "hy_s8009_rut_r",
+   "kind": "rut",
+   "group": "s8009_carts",
+   "hidden": true,
+   "points": [
+    [
+     -795.0,
+     -234.4
+    ],
+    [
+     -770.0,
+     -228.4
+    ],
+    [
+     -735.4,
+     -216.6
+    ]
+   ]
+  },
+  {
+   "id": "hy_s8009_hoof",
+   "kind": "hoof",
+   "group": "s8009_carts",
+   "hidden": true,
+   "step": 0.5,
+   "spread": 0.2,
+   "points": [
+    [
+     -795.0,
+     -235.2
+    ],
+    [
+     -770.0,
+     -229.2
+    ],
+    [
+     -736.0,
+     -215.5
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,52 @@
+{
+ "note": "시나리오 장소 덧붙임 — 함관령 옛 역참(S6004~S6010)",
+ "settlements": [
+  {
+   "id": "rt_hamgwal_yeokcham",
+   "name": "함관령 옛 역참(버려진 역)",
+   "title": "함관령 옛 역참",
+   "type": "역",
+   "x": -202.0,
+   "z": -62.0,
+   "radius_m": 18.0,
+   "bbox": [
+    -214.0,
+    -74.0,
+    -190.0,
+    -50.0
+   ],
+   "confidence": "가설",
+   "profile": {
+    "archetype": "pass",
+    "climate": "north",
+    "signature": "버려진 산중 역참"
+   }
+  }
+ ],
+ "roads": [
+  {
+   "id": "sc_yeokcham_path",
+   "name": "역참 오르는 옛길",
+   "class": "산길",
+   "width_m": 1.6,
+   "points": [
+    [
+     -203.1,
+     -17.8
+    ],
+    [
+     -205.0,
+     -32.0
+    ],
+    [
+     -203.5,
+     -46.0
+    ],
+    [
+     -202.6,
+     -55.5
+    ]
+   ]
+  }
+ ]
+}

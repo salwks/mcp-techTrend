@@ -24925,12 +24925,14 @@
   },
   {
    "id": "jj_sagul_sagul_01",
-   "kit": "landmark/jj_gimnyeongsagul",
+   "kit": "scenario/jj_sagul",
    "params": {
-    "seed": 1110
+    "seed": 1110,
+    "len": 40.0,
+    "stele": true
    },
-   "x": 3432.62,
-   "z": -896.26,
+   "x": 3432.36,
+   "z": -915.66,
    "ry": 0.0136,
    "y": null,
    "flatten": true,
@@ -24938,7 +24940,7 @@
    "group": "김녕사굴",
    "footprint": [
     17.0,
-    14.0
+    46.0
    ],
    "title": "김녕사굴"
   },

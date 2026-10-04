@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://tools/scenario/sc_test.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/region.tscn" id="2"]
+
+[node name="ScTest" type="Node"]
+script = ExtResource("1")
+
+[node name="Region" parent="." instance=ExtResource("2")]
