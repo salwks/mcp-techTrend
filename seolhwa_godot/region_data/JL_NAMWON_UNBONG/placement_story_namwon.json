@@ -1,0 +1,168 @@
+{
+ "area": "namwon_story",
+ "generator": "손으로 — story-systems(「산길의 실종」 S0001~S0010)",
+ "note": "사건 「산길의 실종」 무대. 북쪽 전주길 고개(서낭당) 너머 숲가 외딴집·헛간·큰 나무(마당 싸움터), 개울가 물레방앗간, 서쪽 숲속 빈터(범의 영역), 고갯마루 아래 숲(첫 조우). 단서 소품은 이야기(story/namwon/namwon_data.gd props)가 조건에 따라 세운다. 근거·좌표는 docs/reports/story-namwon.md",
+ "items": [
+  {
+   "id": "sw_house",
+   "kit": "village/choga",
+   "params": {
+    "seed": 1871,
+    "interior": true,
+    "chimney": "log",
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -3214.0,
+   "z": -357.0,
+   "ry": 0.0,
+   "y": 21.2,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산길의 실종",
+   "note": "오누이의 외딴집(초가삼간, 실내). 앞(남)이 마당"
+  },
+  {
+   "id": "sw_yard",
+   "kit": "story/clearing",
+   "params": {
+    "w": 17.0,
+    "d": 13.0
+   },
+   "x": -3212.5,
+   "z": -346.5,
+   "ry": 0.0,
+   "y": 21.2,
+   "flatten": true,
+   "clear_veg": true,
+   "yard": true,
+   "group": "산길의 실종",
+   "note": "외딴집 마당 — 싸움터 house_yard(반지름 7.5)"
+  },
+  {
+   "id": "sw_tree",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 1872,
+    "variant": "chestnut"
+   },
+   "x": -3205.5,
+   "z": -342.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산길의 실종",
+   "note": "마당 큰 나무(아이들이 오르는 나무, 발톱 긁힘·참기름)"
+  },
+  {
+   "id": "sw_barn",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 1873
+   },
+   "x": -3223.5,
+   "z": -356.0,
+   "ry": 0.0,
+   "y": 21.2,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산길의 실종",
+   "note": "헛간 — 장에 팔고 남은 떡·곡식"
+  },
+  {
+   "id": "sw_jars",
+   "kit": "village/yard_props",
+   "params": {
+    "seed": 1876,
+    "set": "jars"
+   },
+   "x": -3214.0,
+   "z": -362.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산길의 실종"
+  },
+  {
+   "id": "sw_torch",
+   "kit": "village/torch_post",
+   "params": {
+    "seed": 1877
+   },
+   "x": -3221.0,
+   "z": -339.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산길의 실종",
+   "note": "마당 횃대(불은 이야기가 붙인다)"
+  },
+  {
+   "id": "sw_mill",
+   "kit": "village/mulbang_a",
+   "params": {
+    "seed": 1874
+   },
+   "x": -3176.5,
+   "z": -318.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "산길의 실종",
+   "note": "광치천 물레방앗간 — 밀가루 속 큰 발자국"
+  },
+  {
+   "id": "sw_shrine",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 1875
+   },
+   "x": -3147.5,
+   "z": -212.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "산길의 실종",
+   "note": "북쪽 고갯마루 서낭당(누석단·신목) — 빈 광주리 / C 결말 뒤 떡 공양"
+  },
+  {
+   "id": "sw_territory",
+   "kit": "story/clearing",
+   "params": {
+    "w": 22.0,
+    "d": 22.0
+   },
+   "x": -3275.0,
+   "z": -395.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "group": "산길의 실종",
+   "note": "범의 영역 — 서쪽 숲속 빈터(싸움터 territory)"
+  },
+  {
+   "id": "sw_passwood",
+   "kit": "story/clearing",
+   "params": {
+    "w": 20.0,
+    "d": 18.0
+   },
+   "x": -3168.0,
+   "z": -247.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "group": "산길의 실종",
+   "note": "고갯마루 아래 숲 — 첫 조우 싸움터 pass_wood"
+  }
+ ]
+}
