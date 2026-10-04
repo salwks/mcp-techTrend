@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "note": "대본 시험 --storytest=gangneung:A|B|C 의 출발 저장 — 남원(C) 끝, 한양 S1006(세 방향 열림)까지 마친 상태. gangneung_test.gd prepare()가 user://storytest_progress.json에 덮어쓴다.",
+  "routes_done": { "JL_NAMWON_UNBONG-GG_HANYANG": "2026-10-04T09:00:00", "GG_HANYANG-GW_GANGNEUNG": "2026-10-04T10:00:00" },
+  "vars": {
+    "MAIN_MASTER_TRACE": "HANYANG", "SKILL_BEAST_TRACE": true, "CASE_NAMWON_OUTCOME": "C", "CASE_NAMWON_DETAIL": "C",
+    "MAIN_WOOCHI_KNOWN": true, "ACT2_OPEN": true, "CASE_HANYANG_OUTCOME": "followed", "ITEM_TALISMAN_SLOT": 0
+  },
+  "cases": {
+    "namwon": { "v": 2, "phase": "done", "flags": { "case_started": true, "resolved": true }, "clues": [], "rules": [],
+      "items": { "ITM_TOOL_009": 1, "ITM_WPN_001": 1, "ITM_WPN_002": 1, "ITM_AMMO_001": 12, "COIN": 7 }, "world": {}, "talked": {}, "notes": [],
+      "seen": { "S0010": true }, "time": 8.0 },
+    "hanyang": { "v": 2, "phase": "done", "flags": { "case_started": true }, "clues": [], "rules": [], "items": {}, "world": {}, "talked": {}, "notes": [],
+      "seen": { "S1001": true, "S1005": true, "S1006": true }, "time": 12.0 }
+  }
+}

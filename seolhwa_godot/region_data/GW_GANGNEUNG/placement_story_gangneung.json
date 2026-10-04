@@ -1,0 +1,11 @@
+{
+  "area": "gangneung_story",
+  "generator": "손으로 — story agent(「고개에 남은 종소리」 S2001~S2008)",
+  "note": "사건 「고개에 남은 종소리」 무대 비우기. 국사성황사 길 중턱 옛 경계석 자리와 반정 주막 뒤 꾸러미 자리의 식생만 비운다(땅은 그대로). 단서 소품은 이야기(story/gangneung/gangneung_data.gd props)가 조건에 따라 세운다. 근거·좌표는 docs/reports/story-gangneung.md",
+  "items": [
+    { "id": "gn_story_boundary", "kit": "story/clearing", "params": { "w": 15.0, "d": 13.0 }, "x": -2394.0, "z": 1385.0, "ry": 0.0, "y": null,
+      "flatten": false, "clear_veg": true, "group": "고개에 남은 종소리", "note": "옛 경계석 자리 — 빈 돌자리·누운 선돌·끊긴 금줄·긁힌 바위, 밤의 경계(반지름 8.5)" },
+    { "id": "gn_story_stash", "kit": "story/clearing", "params": { "w": 6.0, "d": 6.0 }, "x": -2114.0, "z": 1303.5, "ry": 0.0, "y": null,
+      "flatten": false, "clear_veg": true, "group": "고개에 남은 종소리", "note": "반정 주막 뒤 바위 밑 꾸러미" }
+  ]
+}
