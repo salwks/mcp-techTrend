@@ -23,7 +23,7 @@ const RIDE_SLOW := ["on", "off"]
 const RIDE_SLOW_LABEL := { on = "켬", off = "끔" }
 const CAM_SHAKE := ["normal", "weak", "off"]
 const CAM_SHAKE_LABEL := { normal = "보통", weak = "약함", off = "끔" }
-const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "normal" }
+const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "off" }
 
 static var _d = null
 static var test_override := {}   # 대본 시험: 사용자 설정과 상관없이 기본값으로(--storytest·--onboardtest)

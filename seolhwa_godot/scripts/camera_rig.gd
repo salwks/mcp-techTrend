@@ -79,7 +79,7 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 		tx = pos.x + ride_dir.x * 5.0 * ride_k; tz = pos.z + ride_dir.y * 5.0 * ride_k; ty = pos.y + 1.0 + 0.8 * ride_k
 		var back2 := (-ride_dir).rotated(deg_to_rad(RIDE_SIDE_DEG) * ride_side)
 		want_yaw = atan2(back2.x, back2.y)
-	var ky := 1.0 if snap else 1.0 - exp(-dt * (1.1 if (sailing or riding) else 1.6))
+	var ky := 1.0 if snap else 1.0 - exp(-dt * (0.45 if riding else (1.1 if sailing else 1.6)))   # 말: 천천히 돈다
 	yaw = wrapf(yaw + wrapf(want_yaw - yaw, -PI, PI) * ky, -PI, PI)
 	if absf(yaw) < 1e-4 and want_yaw == 0.0: yaw = 0.0
 	var kf := 1.0 if snap else 1.0 - exp(-dt * 4.0)

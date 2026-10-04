@@ -136,7 +136,12 @@ func cam_k() -> float:
 		"DISMOUNTING": return lerpf(0.35, 0.0, clampf(_t / T_DISMOUNT, 0.0, 1.0))
 	return 0.0
 
-func heading() -> Vector2: return _heading(s) if path.size() > 1 else Vector2.ZERO
+# 카메라용 방향: 길의 잔굽이를 따라 흔들리지 않게 뒤 30m → 앞 90m 긴 현(chord) 방향을 쓴다
+func heading() -> Vector2:
+	if path.size() < 2: return Vector2.ZERO
+	var a := _at(maxf(s - 30.0, 0.0)); var b := _at(minf(s + 90.0, L))
+	var h := b - a
+	return h.normalized() if h.length() > 1.0 else _heading(s)
 
 # 카메라가 볼 쪽(가는 길 왼쪽 +1 / 오른쪽 −1): 더 높은 쪽(산·능선) — 배 타기 view_side와 같은 방식. 2초마다, 차이가 클 때만 바꾼다
 var _side := 1.0
@@ -144,7 +149,7 @@ var _side_t := 0.0
 func view_side(dt: float) -> float:
 	_side_t -= dt
 	if _side_t > 0.0 or path.size() < 2: return _side
-	_side_t = 2.0
+	_side_t = 25.0   # 볼 쪽은 자주 바꾸지 않는다(카메라가 좌우로 오가며 어지럽지 않게)
 	var h := _heading(s)
 	var n := Vector2(-h.y, h.x)
 	var c := _at(minf(s + 50.0, L))
@@ -156,7 +161,7 @@ func view_side(dt: float) -> float:
 			var q: Vector2 = c + n * sg * d
 			sc[i] += maxf(world.height_at(q.x, q.y) - y0, 0.0)
 	var want := 1.0 if sc[0] >= sc[1] else -1.0
-	if want != _side and absf(sc[0] - sc[1]) > 8.0: _side = want
+	if want != _side and absf(sc[0] - sc[1]) > 40.0: _side = want
 	return _side
 
 # ---- 매 프레임 ----
@@ -616,7 +621,7 @@ func _update_ride(dt: float, free: bool) -> void:
 	if _gait_t <= 0.0:
 		_gait_t = 0.5; audio_cue.emit("gait", v)
 	# 카메라 흔들림
-	var amp: float = { normal = 0.07, weak = 0.03, off = 0.0 }.get(GameSettings.get_v("cam_shake"), 0.07)
+	var amp: float = { normal = 0.0, weak = 0.0, off = 0.0 }.get(GameSettings.get_v("cam_shake"), 0.0)   # 흔들림 없음(눈 피로) — 설정은 남겨 둠
 	_bob_ph += dt * (2.0 + v * 0.12) * TAU
 	bob = amp * clampf(v / 10.0, 0.0, 1.0) * sin(_bob_ph)
 	# 안내
