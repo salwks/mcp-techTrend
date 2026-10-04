@@ -19,15 +19,17 @@ const Skills := preload("res://scripts/story/skills.gd")
 # 권역 → 사건
 # 한 사건이 여러 공간(권역 + 노정)에 걸치면 같은 사건 id를 준다(진행은 하나). 데이터 항목의 "space"로 공간을 가른다(_filter_space)
 const CASES := { "JL_NAMWON_UNBONG": "namwon", "GG_HANYANG": "hanyang", "GW_GANGNEUNG": "gangneung",
-	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju", "PA_PYEONGYANG": "pyongyang" }
+	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju", "PA_PYEONGYANG": "pyongyang",
+	"PA_PYEONGYANG-HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG-BUKCHEONG": "hamhung" }
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
 	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
 	woochi = "villager_m", chaekkwae = "merchant", pojol = "official",
 	wolsim = "shaman", thief = "villager_m", spirit_m = "elder",
 	blind_elder = "elder", broker = "merchant", daughter = "villager_f", fisher = "boatman",
 	smuggler = "villager_m", smuggler_b = "villager_m", lantern_wife = "villager_f", charcoal_man = "villager_m", spirit_f = "spirit_m",
-	py_merchant_a = "merchant", py_merchant_b = "peddler", py_swindler = "smuggler", py_swindler_b = "smuggler_b", py_clerk = "official" }
-const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_npc.json", "frames_amb.json"]
+	py_merchant_a = "merchant", py_merchant_b = "peddler", py_swindler = "smuggler", py_swindler_b = "smuggler_b", py_clerk = "official",
+	yigyeom = "elder", courier = "villager_m", courier_b = "villager_m", courier_c = "villager_m", raider = "smuggler", raider_b = "smuggler_b" }
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
