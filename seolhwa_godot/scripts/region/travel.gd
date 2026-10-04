@@ -292,6 +292,8 @@ static func route_progress(j: Dictionary, x: float, z: float) -> float:
 # ---- 넘어가기 예약 ----
 static func set_pending(d: Dictionary) -> void:
 	Engine.set_meta(META, d)
+	# 길 떠나기 전 자동 기록(시작 메뉴·불러오기로 넘어가는 것은 빼고) — story_ui 붓 도장
+	if not (String(d.get("via", "")) in ["title", "load"]): preload("res://scripts/region/progress.gd").checkpoint("travel")
 
 static func take_pending() -> Dictionary:
 	if not Engine.has_meta(META): return {}
@@ -319,3 +321,21 @@ static func jeju() -> PackedVector2Array:
 		var a := TAU * i / 24.0
 		out.append(Vector2(126.55 + cos(a) * 0.36, 33.38 + sin(a) * 0.15))
 	return out
+
+# ---- 역참·마방(scripts/region/stations.gd, region_data/stations.json) — 지도(region_map)·시험이 부르는 API ----
+# stations(): [{id, name, sign, space, space_kind, kind("hub"|"satellite"|"route"|"end"), style, hub, pony, pos:[x,z], ry, yard:[x,z], road, hitch, wait,
+#   node, reuse_node, discover_key, lonlat:[경도,위도]|null, footprint, radius, note?, discovered(=known), ok, why}]
+#   discovered: 가 본 역(progress.json travel_nodes). ok/why: 지금 자리에서 역마로 갈 수 있나(처음 가는 길은 막힘 — 제주 첫 뱃길 포함)
+static func stations() -> Array:
+	return load("res://scripts/region/stations.gd").listing()
+
+static func station_known(id: String) -> bool:
+	return load("res://scripts/region/stations.gd").known(id)
+
+# {ok, why}
+static func station_state(id: String) -> Dictionary:
+	return load("res://scripts/region/stations.gd").state(id)
+
+# 가 본 역으로 역마 이동: 지도 위 길이 그려지고 시각이 흐른 뒤 암전, 그 역 마방 문 앞(기다리는 말 곁)에 선다. 반환 {ok, why}
+static func warp_to_station(id: String) -> Dictionary:
+	return load("res://scripts/region/stations.gd").warp(id)

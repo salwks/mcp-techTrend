@@ -12,6 +12,7 @@ const HorseRide := preload("res://scripts/region/horse_ride.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const Discovery := preload("res://scripts/region/discovery.gd")
+const Stations := preload("res://scripts/region/stations.gd")
 const PAPER := Color("#efe6d2")
 const INK := Color("#2b2622")
 const INK_SOFT := Color("#5a5048")
@@ -26,13 +27,15 @@ var sel := 0
 var here := ""
 var here_ll = null
 var _canvas: Control
-var _font: SystemFont
+var _font: Font
 var _anim := -1.0
 var _go: Dictionary = {}
 var _was_paused := false
 var _k := 1.0
 var _list_top := 0
-var test_pick := ""             # 시험: 이 거점 id를 골라 바로 간다
+var test_pick := ""             # 시험·역마 API: 이 거점 id(또는 "공간/거점")를 고른다
+var auto_go := false            # 고른 거점으로 바로 간다(Travel.warp_to_station — 지도에서 역을 골랐을 때)
+var at_station := {}            # 연 자리가 역 마방 앞이면 그 역(역끼리 먼저 보인다)
 
 func _init(m, prefer_portal := "") -> void:
 	main = m
@@ -42,8 +45,7 @@ func _init(m, prefer_portal := "") -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _ready() -> void:
-	_font = SystemFont.new()
-	_font.font_names = PackedStringArray(["AppleMyungjo", "Nanum Myeongjo", "NanumMyeongjo", "Batang", "Noto Serif CJK KR", "Apple SD Gothic Neo"])
+	_font = preload("res://scripts/ui_fonts.gd").main()
 	_k = clampf(get_viewport().get_visible_rect().size.y / 768.0, 0.8, 2.4)
 	_was_paused = get_tree().paused
 	get_tree().paused = true
@@ -58,6 +60,12 @@ func _ready() -> void:
 	_gather()
 	print("FAST open here=%s items=%d ok=%d" % [here, items.size(), items.filter(func(i): return i.ok).size()])
 	_canvas.queue_redraw()
+	if auto_go:
+		var it: Dictionary = items[sel] if sel < items.size() else {}
+		if it.is_empty() or not ("%s/%s" % [it.space, it.id] == test_pick or String(it.id) == test_pick) or not bool(it.ok):
+			print("FAST auto 못 감 %s" % test_pick)
+			close.call_deferred()
+		else: _confirm.call_deferred()
 
 func _exit_tree() -> void:
 	if get_tree() != null and _anim < 0.0: get_tree().paused = _was_paused
@@ -68,6 +76,8 @@ func _gather() -> void:
 	here_ll = _ll(here, Vector2(main.player_pos.x, main.player_pos.z))
 	var reach := _reachable()
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
+	for st in Stations.in_space(here):
+		if pp.distance_to(Vector2(float(st.yard[0]), float(st.yard[1]))) < 45.0: at_station = st
 	var out := []
 	for sp in RideNet.all_spaces():
 		var d: Dictionary = RideNet.read(sp)
@@ -77,8 +87,9 @@ func _gather() -> void:
 			if not known: continue
 			var a: Array = n.get("arrive", [n.x, n.z])
 			var at := Vector2(float(a[0]), float(a[1]))
+			var stn := Stations.for_node(sp, String(n.id))
 			var it := { space = sp, node = n, id = String(n.id), name = String(n.name), at = at, same = sp == here, ok = true, why = "",
-				space_name = _space_name(sp), kind = String(n.kind) }
+				space_name = _space_name(sp), kind = String(n.kind), station = not stn.is_empty() }
 			if sp == here:
 				if at.distance_to(pp) < 80.0: continue
 				it.dist = at.distance_to(pp)
@@ -89,8 +100,10 @@ func _gather() -> void:
 				it.dist = 1e7 + float(reach[sp].size()) * 1e5
 				it.via = reach[sp]
 			out.append(it)
+	var st_first := not at_station.is_empty()
 	out.sort_custom(func(a, b):
 		if a.ok != b.ok: return a.ok
+		if st_first and a.station != b.station: return a.station
 		if a.same != b.same: return a.same
 		if a.space != b.space: return String(a.space_name) < String(b.space_name)
 		return float(a.get("dist", 0.0)) < float(b.get("dist", 0.0)))
@@ -118,6 +131,11 @@ func _done_end(sp: String, n: Dictionary) -> bool:
 
 # 공간 그래프 너비 우선: {공간: [지나는 공간들]} — 지나는 노정은 '지나옴'이어야 하고, 안 지난 노정 안이면 들어온 쪽으로만 나간다
 func _reachable() -> Dictionary:
+	return reachable_from(main)
+
+# 공간 그래프 너비 우선(역마 API Stations.state도 쓴다)
+static func reachable_from(m) -> Dictionary:
+	var hs := String(m.world.region.get("route_id", m.world.region.get("region_id", "")))
 	var adj := {}
 	for r in Travel.routes():
 		var ps = r.json.get("portals", {})
@@ -133,17 +151,17 @@ func _reachable() -> Dictionary:
 			if not adj[o].has(r.id): adj[o].append(r.id)
 	var is_route := {}
 	for r in Travel.routes(): is_route[r.id] = true
-	var out := { here: [] }
-	var q := [here]
+	var out := { hs: [] }
+	var q := [hs]
 	var first := true
 	while not q.is_empty():
 		var u: String = q.pop_front()
 		var nbrs: Array = adj.get(u, [])
 		if first and is_route.has(u) and not Progress.route_done(u):
 			# 들어온 끝 쪽만(포털 id <노정>_<끝>)
-			var entry := String(main.get("_route_entry"))
+			var entry := String(m.get("_route_entry"))
 			var end := entry.trim_prefix(u + "_")
-			var p = main.world.region.get("portals", {}).get(end) if main.world.region.get("portals") is Dictionary else null
+			var p = m.world.region.get("portals", {}).get(end) if m.world.region.get("portals") is Dictionary else null
 			nbrs = [String(p.get("region", p.get("route", "")))] if p is Dictionary else []
 		first = false
 		for w in nbrs:
@@ -247,10 +265,11 @@ func _arrive() -> void:
 		main.rig.update(0, main.player_pos, main.player.facing, null, true)
 		HorseRide.discover(String(it.space), String(it.id))
 		if main.horse_ride != null: main.horse_ride.on_arrived(it.at)
-		main._show_hud("역마 — %s에 닿았다" % String(it.name))
+		main._show_hud(("역마 — %s에 닿았다. 마부가 말을 매어 두었다" if bool(it.get("station", false)) else "역마 — %s에 닿았다") % String(it.name))
 		if st != null and st.get("ui") != null: st.ui.fade(false, 0.5)
 		queue_free()
 		return
+	if bool(it.get("station", false)): Stations.set_arrival(String(it.space), String(it.id))   # 새 장면에서 마방 문 앞에
 	var kind := "route" if Travel.find_route_dir(String(it.space)) != "" else "region"
 	var pt := { id = "fast_node_%s" % it.id, kind = kind, target = String(it.space), tx = it.at.x, tz = it.at.y,
 		label = "%s %s (역마)" % [String(it.space_name), String(it.name)], fast = true }
@@ -315,7 +334,7 @@ func _draw() -> void:
 	var p := _panel()
 	_canvas.draw_rect(p, Color(PAPER.r, PAPER.g, PAPER.b, 0.98))
 	_canvas.draw_rect(p, INK, false, 3.0)
-	_text("역마 — 가 본 곳으로", p.position + Vector2(24, 44) * _k, 30, INK)
+	_text("역마 — 역에서 역으로" if not at_station.is_empty() else "역마 — 가 본 곳으로", p.position + Vector2(24, 44) * _k, 30, INK)
 	_text("삯 없음 · 처음 가는 길은 건너뛸 수 없다", p.position + Vector2(p.size.x - 360 * _k, 44 * _k), 15, INK_SOFT)
 	# 목록
 	var lr := _list_rect()
@@ -332,7 +351,7 @@ func _draw() -> void:
 		var col := SEAL if on else (INK if it.ok else Color(INK_SOFT.r, INK_SOFT.g, INK_SOFT.b, 0.6))
 		var sp := "" if String(it.space) == last_space else String(it.space_name) + " · "
 		last_space = String(it.space)
-		_text(("▸ " if on else "   ") + sp + String(it.name), Vector2(lr.position.x, y), 19, col)
+		_text(("▸ " if on else "   ") + sp + ("驛 " if bool(it.get("station", false)) else "") + String(it.name), Vector2(lr.position.x, y), 19, col)
 	# 지도
 	var mr := _map_rect()
 	_canvas.draw_rect(mr, Color(0.93, 0.90, 0.83))

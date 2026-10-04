@@ -19,6 +19,8 @@ const RideNet := preload("res://scripts/region/ride_net.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const GameSettings := preload("res://scripts/story/game_settings.gd")
 const Rumors := preload("res://story/rumors_data.gd")
+const Stations := preload("res://scripts/region/stations.gd")
+const StationLife := preload("res://scripts/region/station_life.gd")
 
 signal state_changed(old: String, new: String)
 signal audio_cue(cue: String, value: float)
@@ -83,6 +85,9 @@ var _story_cache: Array = []
 var _story_t := -1.0
 var _arrived_mount := Vector2.INF   # 넘어온 자리(노정 끝 포털 곁) — 말 타는 곳
 var test_log := false
+var life = null            # 역참 마방의 말·마부(station_life.gd)
+var _lead_st := {}         # 마부가 말을 끌어 오는 역(역에서 탈 때)
+var _t_bring := T_BRING    # 말이 다가와 서는 시간(역에서는 마부가 가로대에서 끌고 오는 거리만큼)
 var stats := {}            # 시험: {t0, dist, slow:{id:true}, stops:[], max_v}
 
 func setup(m) -> void:
@@ -103,6 +108,15 @@ func setup(m) -> void:
 		saddle = SADDLE_SMALL
 		if FileAccess.file_exists("res://data/frames_amb.json"): SpriteChar.load_bank("horse", "frames_amb.json")
 		if SpriteChar._banks.has("horse"): horse_kind = "horse"
+	# 역참: 데이터·API(Travel.stations/warp_to_station)가 이 장면의 main을 쓰게 하고, 마방의 말·마부를 만든다
+	Stations.register(m)
+	life = StationLife.new(); life.setup(m)
+	var arr := Stations.take_arrival()
+	if not arr.is_empty() and String(arr.space) == sid: _station_arrive.call_deferred(arr)
+	if m.args.has("stationtest"):
+		var tst = load("res://scripts/region/station_test.gd").new(m)
+		tst.run.call_deferred(String(m.args.stationtest))
+		m.set_meta("station_test", tst)
 	if m.player.has_anim("ride"): rider_anim = "ride"
 	elif m.player.has_anim("sit"): rider_anim = "sit"
 	if enabled:
@@ -131,7 +145,7 @@ func space_id() -> String: return net.space if net != null else ""
 # 카메라 섞기(1 = 말 시점): 오르며 커지고, 멈춤에 다가가며(40m) 줄고, 내리면 0
 func cam_k() -> float:
 	match state:
-		"MOUNTING": return clampf((_t - T_BRING) / T_MOUNT, 0.0, 1.0)
+		"MOUNTING": return clampf((_t - _t_bring) / T_MOUNT, 0.0, 1.0)
 		"AUTO_RIDE", "RIDE_SLOW": return lerpf(0.35, 1.0, clampf((stop_s - s) / 40.0, 0.0, 1.0))
 		"DISMOUNTING": return lerpf(0.35, 0.0, clampf(_t / T_DISMOUNT, 0.0, 1.0))
 	return 0.0
@@ -167,6 +181,7 @@ func view_side(dt: float) -> float:
 # ---- 매 프레임 ----
 # free: 이야기·지도·배가 플레이어를 쥐고 있지 않음. want_e: 이번 프레임 E(이야기 대상·배가 없을 때만)
 func update(dt: float, free: bool, want_e: bool) -> void:
+	if life != null: life.update(dt)
 	if not enabled:
 		prompt = ""; hint = ""; return
 	_discover(dt)
@@ -216,7 +231,8 @@ func _update_foot(dt: float, free: bool, want_e: bool) -> void:
 	if Input.is_action_just_pressed("ride_next"): ci = (ci + 1) % choices.size()
 	var c: Dictionary = choices[ci]
 	var mins := maxf(1.0, round(float(c.d) / (_top_speed() * 0.75) / 60.0))
-	prompt = "E   말에 오른다 — %s 쪽으로 (약 %d분)%s" % [String(c.name), int(mins), ("   ·   Q 다른 곳 %d/%d" % [ci + 1, choices.size()]) if choices.size() > 1 else ""]
+	var at_st: bool = life != null and life.enabled() and not life.near(Vector2(main.player_pos.x, main.player_pos.z)).is_empty()
+	prompt = "E   %s — %s 쪽으로 (약 %d분)%s" % ["역마를 낸다" if at_st else "말에 오른다", String(c.name), int(mins), ("   ·   Q 다른 곳 %d/%d" % [ci + 1, choices.size()]) if choices.size() > 1 else ""]
 	if want_e: begin_ride(c)
 
 # 말 탈 수 있나: {ok, gi, why, show}
@@ -312,9 +328,19 @@ func begin_ride(c: Dictionary) -> bool:
 	_plan_marks()
 	_find_forks(ids)
 	_ensure_horse()
-	# 말이 뒤에서 다가온다
+	# 말이 뒤에서 다가온다 — 역참 문 앞이면 마부가 가로대에 매어 둔 말을 끌고 나온다
 	var h := _heading(0.0)
 	var from := pp - h * 12.0
+	_lead_st = {}
+	_t_bring = T_BRING
+	if life != null and life.enabled():
+		var st: Dictionary = life.near(pp)
+		if not st.is_empty():
+			var wp: Vector3 = life.lend(st)
+			if wp != Vector3.INF:
+				_lead_st = st
+				from = Vector2(wp.x, wp.z)
+				_t_bring = clampf(from.distance_to(pp) / 1.5, 1.6, 5.0)
 	_mount_from = Vector3(from.x, world.height_at(from.x, from.y), from.y)
 	horse.position = _mount_from
 	horse.visible = true
@@ -520,16 +546,19 @@ func _update_mounting(dt: float) -> void:
 	var h := _heading(0.0)
 	var side := Vector2(-h.y, h.x)
 	var stand := Vector2(pp.x, pp.z) + side * 0.9
-	if _t < T_BRING:
-		var k := smoothstep(0.0, 1.0, _t / T_BRING)
+	if _t < _t_bring:
+		var k := smoothstep(0.0, 1.0, _t / _t_bring)
 		var q := Vector2(_mount_from.x, _mount_from.z).lerp(stand, k)
 		horse.position = Vector3(q.x, world.height_at(q.x, q.y), q.y)
-		horse.facing = main.facing_cam(h.x, h.y, horse.facing)
+		var mv := stand - Vector2(_mount_from.x, _mount_from.z) if not _lead_st.is_empty() else h
+		horse.facing = main.facing_cam(mv.x, mv.y, horse.facing)
 		horse.set_anim("walk")
+		if not _lead_st.is_empty(): life.lead(_lead_st, horse.position, mv, true)
 		return
 	horse.set_anim("idle")
+	if not _lead_st.is_empty(): life.lead(_lead_st, horse.position, Vector2(horse.position.x - pp.x, horse.position.z - pp.z), false)
 	horse.position = Vector3(stand.x, world.height_at(stand.x, stand.y), stand.y)
-	var k2 := clampf((_t - T_BRING) / T_MOUNT, 0.0, 1.0)
+	var k2 := clampf((_t - _t_bring) / T_MOUNT, 0.0, 1.0)
 	main.player.set_anim("mount" if main.player.has_anim("mount") else rider_anim)
 	main.player.facing = horse.facing
 	if k2 >= 1.0:
@@ -542,6 +571,7 @@ func _update_mounting(dt: float) -> void:
 		main.player_pos = Vector3(a.x, world.height_at(a.x, a.y), a.y)
 		_seat = main.player_pos
 		main.player.set_anim(rider_anim)
+		if not _lead_st.is_empty(): life.release(_lead_st); _lead_st = {}
 		_set_state("AUTO_RIDE")
 		audio_cue.emit("hooves_start", 0.0)
 		if p0 == Vector2.ZERO: pass
@@ -817,7 +847,7 @@ func place_rider(dt: float) -> void:
 	to_cam = to_cam.normalized() if to_cam.length() > 0.01 else Vector3.BACK
 	var front := horse.facing == "down"   # 말이 카메라 쪽을 볼 때는 말 머리·목이 탄 사람 앞
 	if state == "MOUNTING":
-		var k := clampf((_t - T_BRING) / T_MOUNT, 0.0, 1.0)
+		var k := clampf((_t - _t_bring) / T_MOUNT, 0.0, 1.0)
 		var base: Vector3 = main.player_pos
 		var top_p := hp + Vector3(0, saddle, 0) + to_cam * (-0.12 if front else 0.12)
 		main.player.position = base.lerp(top_p, smoothstep(0.0, 1.0, k)) if k > 0.0 else base
@@ -841,6 +871,17 @@ func _ensure_horse() -> void:
 	horse.name = "말"
 	main.scene_vp.add_child(horse)
 	horse.visible = false
+
+# ---- 역마로 다른 공간 역에 닿음(fast_travel → Stations.set_arrival → 새 장면): 마방 문 앞, 기다리는 말 곁에 선다 ----
+func _station_arrive(arr: Dictionary) -> void:
+	var y: Array = arr.yard
+	main.teleport(float(y[0]), float(y[1]))
+	main.rig.update(0, main.player_pos, main.player.facing, null, true)
+	on_arrived(Vector2(main.player_pos.x, main.player_pos.z))
+	discover(String(arr.space), String(arr.node))
+	var s := Stations.by_id(String(arr.id))
+	main._show_hud("역마 — %s에 닿았다. 마부가 말을 매어 두었다" % String(s.get("name", "")))
+	print("STATION arrive %s yard=(%.1f,%.1f) at=%s" % [arr.id, float(y[0]), float(y[1]), main.player_pos])
 
 # ---- 노정 끝으로 넘어온 자리(포털 곁)는 말 타는 곳 ----
 func on_arrived(p: Vector2) -> void:
