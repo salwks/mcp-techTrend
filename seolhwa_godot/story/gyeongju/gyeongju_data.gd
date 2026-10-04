@@ -76,6 +76,19 @@ static func data() -> Dictionary:
 			{ "id": "chisul_pass", "name": "치술령 성황당", "at": "pass", "radius": 16.0, "known": "c('missing_man')" },
 			{ "id": "mangbuseok", "name": "망부석", "at": "stone", "radius": 14.0 },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 주모·노인·안내 한 줄이 일러 준 곳만. 불 셋·숯가마·밀수꾼 자리·바위 밑 틈은 넣지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "gj_jumak", "name": "경주 장 주막", "at": "jumo_spot", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "S3001 경주 장 주막(start_known) — 사건의 들머리" },
+			{ "id": "gj_village", "name": "치술령 아래 마을", "at": "village_square", "when": "f('case_started')", "until": "c('missing_man')",
+				"note": "S3001 주모 — 치술령 불, 숯쟁이 · 선택지 “치술령 아래 마을로 간다”. 노인에게 들으면(missing_man) 사라진다" },
+			{ "id": "gj_pass", "name": "치술령 고개", "at": "pass", "when": "c('missing_man')", "until": "seen('S3002')",
+				"note": "마을 노인 “숯쟁이가 고개로 올라가더니 안 돌아왔소” · 선택지 “고개로 올라간다”. 낮 조사(S3002) 하나면 사라진다" },
+			{ "id": "gj_lookout", "name": "망부석 위 너럭바위", "at": "lookout", "when": "f('hint_wait')", "until": "seen('S3003')",
+				"note": "on_day_clue 안내 “망부석 위 너럭바위에서 밤을 기다려 볼까.” — S3003 밤이 되면 사라진다" },
+			{ "id": "gj_sinmok", "name": "성황당 신목", "at": "sinmok", "when": "f('woochi_done')", "until": "has('ITM_TOOL_007')",
+				"note": "S3008 뒤 안내 “성황당 신목 밑동에 무언가 걸려 있다.” — 탁본 도구를 챙기면 사라진다" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "숯쟁이는 어느 불을 따라갔는가.", "when": "c('missing_man')", "until": "f('man_rescued')" },

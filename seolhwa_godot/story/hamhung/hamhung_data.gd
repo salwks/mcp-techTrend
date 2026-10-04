@@ -56,6 +56,20 @@ static func data() -> Dictionary:
 			{ "id": "yeokcham", "space": RTB, "name": "함관령 옛 역참", "at": "station_door", "radius": 14.0 },
 			{ "id": "gowon_jumak", "space": RT5, "name": "고원 길가 주막", "at": "gowon_inn", "radius": 30.0 },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 아전·봇짐 쪽지·눈길 발자국이 일러 준 곳만. 막동·갑술 자리, 역참 안 이겸은 미리 알리지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "hg_gowon_inn", "space": RT5, "name": "고원 주막(봇짐 주인)", "at": "gowon_inn", "when": "c('r05_luggage')", "until": "f('r05_returned')",
+				"note": "R0701 눈에 묻힌 봇짐의 쪽지 “고원 주막 — 김 서방”" },
+			{ "id": "hg_east_gate", "space": HG, "name": "함흥 동문 밖 역참 마당", "at": "clerk_spot", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "S6001 평양 사건 뒤 함흥 도착 — 역참 아전(사건의 들머리)" },
+			{ "id": "hg_hamgwal", "space": RTB, "name": "함관령(북청길)", "at": "shrine_rest", "when": "f('case_started')",
+				"until": "f('cart_seen') or c('turned_post') or f('station_entered')",
+				"note": "S6001 아전 “구휼미 수레를 따라 함관령을 넘었소.” · 선택지 “북청길로 간다 (함관령)”" },
+			{ "id": "hg_forest_light", "space": RTB, "name": "숲 위 불빛", "at": "station_door", "when": "c('tracks')", "until": "f('station_entered')",
+				"note": "S6004 clue tracks “길에서 북쪽 숲으로 발자국 둘 … 숲 위에 불빛.” · 갑술 “순돌이는 북쪽 숲으로 뛰었소” — 이름(역참·이겸)은 쓰지 않는다" },
+			{ "id": "hg_to_jeju", "name": "제주", "region": "JJ_JEJU", "when": "seen('S6010')", "until": "v('CASE_JEJU_COMPLETE') == true",
+				"note": "S6010 이겸 “곽칠성은 제주로 갔다.” · Discovery.tell region:JJ_JEJU · “제주 가는 배는 해남 관두포에서 뜬다”" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "세 전갈꾼은 어디 있는가.", "when": "f('case_started')", "until": "f('station_entered')" },

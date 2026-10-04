@@ -51,6 +51,25 @@ static func data() -> Dictionary:
 			{ "id": "py_bubyeongnu", "name": "부벽루", "at": "bu_woochi", "radius": 22.0, "known": "f('bu_known')" },
 			{ "id": "py_hamhung_road", "name": "칠성문 밖 — 함흥 길", "at": "hamhung_road", "radius": 30.0, "known": "ph('done')" },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 사공·주모·포졸·쪽지·서리가 일러 준 곳만. 창고 뒤 발자국·궤짝은 넣지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "py_naru", "name": "대동강 나루", "at": "boatman_spot", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "S5001 대동문 앞 나루(start_known) — 사건의 들머리" },
+			{ "id": "py_jumak", "name": "나루 주막", "at": "jumo_spot", "when": "c('together')", "until": "f('hideout_known')",
+				"note": "사공 “흉 있는 사내랑 작은 사내? 주막에서 둘이 한 상에 앉던데.”(clue together) — 주모에게 들으면 사라진다" },
+			{ "id": "py_paper_yard", "name": "강창 뒤 종이 마당", "at": "paper_line", "when": "f('hideout_known')", "until": "f('swindlers_met')",
+				"note": "주모 “그 둘, 강창 뒤에서 종이를 말리더이다.”(jumo_tell, S5003)" },
+			{ "id": "py_girokgo", "name": "감영 기록 창고", "at": "store_door", "when": "f('alarm')", "until": "f('store_seen')",
+				"note": "S5004 포졸 “감영 뒤뜰 창고로 가 보시오.”" },
+			{ "id": "py_bubyeongnu", "name": "부벽루(달 뜨면)", "at": "bu_woochi", "when": "f('bu_known')", "until": "f('woochi_met')",
+				"note": "S5004 빈 칸의 쪽지 “달 뜨면 부벽루.”" },
+			{ "id": "py_clerk", "name": "감영 서리", "at": "clerk_desk", "when": "f('woochi_met')", "until": "f('skill_learned')",
+				"note": "서리 “그 쪽지의 일을 보고 오시거든 다시 들르시오.” · S5005 뒤 “날이 밝으면 감영 서리에게 간다”" },
+			{ "id": "py_hamhung_road", "name": "칠성문 밖 — 함흥 길", "at": "hamhung_road", "when": "ph('done')", "until": "v('CASE_HAMHUNG_COMPLETE') == true",
+				"note": "S5006 뒤 서리 “함흥 쪽 길은 칠성문 밖이오.” · 기록 “함흥으로 — 칠성문 밖 북쪽 길”" },
+			{ "id": "py_to_hamhung", "name": "함흥", "region": "HG_HAMHEUNG", "when": "ph('done')", "until": "v('CASE_HAMHUNG_COMPLETE') == true",
+				"note": "S5005 우치 “살아 있다면 동쪽이오.”·함흥 전갈 문서 → S5006 ACT4_OPEN, 결말 카드 “기록책에 새로 적힌 곳 — 함흥”" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "두 물길 문서 가운데 어느 것이 감영이 낸 것인가.", "when": "f('case_started')", "until": "f('proven')" },

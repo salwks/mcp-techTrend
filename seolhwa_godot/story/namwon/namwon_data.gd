@@ -75,6 +75,7 @@ static func data() -> Dictionary:
 		"actors": actors(),
 		"objects": InteractData.expand(objects(), { TTEOK: "떡", OIL: "참기름", TORCH: "횃불" }),
 		"map_places": map_places(),
+		"map_leads": map_leads(),
 		"journal": journal(),
 		"triggers": triggers(),
 		"props": props(),
@@ -345,6 +346,22 @@ static func map_places() -> Array:
 		{ "id": "house", "name": "고개 너머 외딴집", "at": "house", "radius": 16.0 },
 		{ "id": "oil_shop", "name": "기름집", "at": "oil_shop", "radius": 8.0 },
 		{ "id": "clearing", "name": "숲속 빈터", "at": "territory_edge", "radius": 9.0 },
+	]
+
+# 지도 붉은 표(갈 곳) — 들은 곳·가라는 곳만(보강서 §20 "알고 있는 지리는 표시한다. 알아내야 하는 사실은 표시하지 않는다").
+# 범의 영역(빈터)·단서 자리는 넣지 않는다. 조건은 f·c·k·ph·v·seen·talked·w·out·has·n만(fn 금지 — 지도가 저장에서 따로 읽는다)
+static func map_leads() -> Array:
+	return [
+		{ "id": "nw_tavern", "name": "주막", "at": "tavern", "hub": true, "when": "true", "until": "ph('done')",
+			"note": "사건의 들머리 — 동문 밖 주막(start_known). S0002 주모" },
+		{ "id": "nw_pass", "name": "고개 너머", "at": "pass_road", "when": "f('case_started')", "until": "seen('S0004')",
+			"note": "S0002 주모 “고개 너머 사는 떡장수요” — 고갯길 단서를 하나라도 보면(S0004) 사라진다" },
+		{ "id": "nw_kids_house", "name": "고개 너머 외딴집", "at": "house", "when": "f('case_started')", "until": "f('met_kids')",
+			"note": "주모 “그 집 애들은 좀 보고 오셨소?” · 소문 rumor(고개 너머 사는 떡장수). S0003에서 만나면 사라진다" },
+		{ "id": "nw_night_house", "name": "외딴집(오늘 밤)", "at": "house", "when": "ph('night')", "until": "seen('S0007')",
+			"note": "주막에서 쉰 뒤(rest) 기록 “밤이 되었다. 외딴집으로” — S0007 숨어 기다리면 사라진다" },
+		{ "id": "nw_to_hanyang", "name": "한양", "region": "GG_HANYANG", "when": "seen('S0010')", "until": "v('CASE_HANYANG_BOOKSHOP_COMPLETE') == true",
+			"note": "S0010 노인 “한양 간다고 했지.” → MAIN_MASTER_TRACE = HANYANG" },
 	]
 
 # 사건 기록 칸(scripts/story/journal_book.gd): 아직 모르는 것 · 확인한 장소 · 사용 가능한 관련 물건(뜻을 가진 뒤에만)

@@ -56,6 +56,19 @@ static func data() -> Dictionary:
 			{ "id": "hw_port", "space": JJ, "name": "화북포 물가", "at": "hw_spring", "radius": 30.0 },
 			{ "id": "gw_cave", "space": JJ, "name": "김녕 굴(김녕사굴)", "at": "gw_gather", "radius": 24.0, "known": "f('case_started')" },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 함흥 끝·아낙·김녕 사람이 일러 준 곳만. 굴 안 옆 굴(덕이)·도굴 자리·벽 너머는 넣지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "jj_gwandu", "space": RS, "name": "관두포 — 제주 가는 배", "at": "rs_pier", "when": "true", "until": "f('crossed') or f('jj_arrived') or f('case_started')",
+				"note": "함흥 S6010 뒤 “제주 가는 배는 해남 관두포에서 뜬다. 남해 뱃길은 남원 남쪽 끝에서 시작한다.” · 관두포 사공" },
+			{ "id": "jj_hwabuk", "space": JJ, "name": "화북포", "at": "hw_spring", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "제주 첫 뱃길이 닿는 곳 — 기록 “제주 화북포에 닿았다 — 곽칠성을 찾는다”" },
+			{ "id": "jj_gwak", "space": JJ, "name": "물가의 곽 서방", "at": "gwak_pier", "when": "c('gwak_porter')", "until": "f('gwak_met')",
+				"note": "화북 아낙 “곽 서방이오. 열 몇 해째 저 물가에서 짐을 지오.”(clue gwak_porter)" },
+			{ "id": "jj_gimnyeong", "space": JJ, "name": "김녕 굴", "at": "gw_gather", "when": "f('case_started')", "until": "f('to_gimnyeong') or f('s7003')",
+				"note": "S7002 김녕 사람 “덕이가… 굴 쪽으로 가는 걸 봤다는 사람이 있소!” · 곽칠성 “굴 길은 내가 아오.”" },
+			{ "id": "jj_to_hanyang", "name": "한양(서강 옛 창고)", "region": "GG_HANYANG", "when": "seen('S7008') and v('ACT6_OPEN') == true",
+				"note": "S7008 뒤 finale_gate “한양으로 돌아갈 때다.” · 곽칠성 “한양에 가거든 서강 옛 창고 벽의 홈을 보시오.” — 다음 사건이 아직 없어 until 없음" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "덕이는 굴 어디에 있는가.", "when": "f('case_started')", "until": "f('child_found')" },

@@ -72,6 +72,24 @@ static func data() -> Dictionary:
 			{ "id": "bay_beach", "space": RT, "name": "만 안쪽 모래톱", "at": "bay_beach", "radius": 14.0 },
 			{ "id": "islet_cove", "space": RT, "name": "바위섬 갯구멍", "at": "islet_cove", "radius": 10.0, "known": "k('R_CURRENT_ISLET')" },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 노인·중개인·어부가 일러 준 곳, 도착 장면이 보여 준 곳만.
+		#   바위섬 갯구멍은 찌가 그리 흘러드는 것을 본 뒤에만(R_CURRENT_ISLET). 궤짝·셈 쪽지 자리는 넣지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "hj_old_house", "space": RJ, "name": "눈먼 노인의 집", "at": "old_yard", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "S4001 도화동 노인 집 — 사건의 들머리" },
+			{ "id": "hj_jangsan", "space": RT, "name": "장산곶", "at": "j_arrive", "when": "c('broker_words')", "until": "f('jangsan_arrived')",
+				"note": "S4002 중개인 “장산곶에 볼일이 남아서” · 노인 “장산곶까지 가 주시는 거요?” — S4003 닿으면 사라진다" },
+			{ "id": "hj_wreck", "space": RT, "name": "만 안쪽 모래톱(부서진 배)", "at": "wreck", "when": "f('jangsan_arrived')", "until": "c('wreck')",
+				"note": "S4003 도착 장면 “만 안쪽 모래톱에 부서진 배 조각이 밀려와 있다.” · 어부 “저 모래톱에 조각나 올라왔소”" },
+			{ "id": "hj_cliff", "space": RT, "name": "곶 앞 벼랑", "at": "rite_rock", "when": "f('jangsan_arrived')", "until": "c('foam_lines') or c('rite_worn') or f('thrown')",
+				"note": "S4003 도착 장면 “곶 끝 벼랑에 바람이 부딪친다.” · 어부 “제물 바치고도…”" },
+			{ "id": "hj_broker_house", "space": RT, "name": "탁 서방 묵는 집", "at": "broker_spot", "when": "f('fisher_met')",
+				"until": "talked('broker_jt') > 0 or f('broker_gone') or f('broker_caught')",
+				"note": "어부 “탁 서방은 선창 위 집에 묵소.”(fisher_talk)" },
+			{ "id": "hj_islet", "space": RT, "name": "바위섬 뒤 갯구멍", "at": "islet_cove", "when": "k('R_CURRENT_ISLET')",
+				"until": "f('islet_seen') or f('rescued') or f('rescue_failed')",
+				"note": "S4004 찌 하나가 바위섬 뒤로 — 기록 “물에 든 것은 바위섬 뒤 갯구멍으로 흘러든다” · 뱃사공(boat_ok)이 배를 대 준다" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "연이는 어디에 있는가.", "until": "f('rescued') or f('rescue_failed')" },

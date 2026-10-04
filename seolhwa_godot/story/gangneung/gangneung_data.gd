@@ -62,6 +62,23 @@ static func data() -> Dictionary:
 			{ "id": "guksa", "name": "국사성황사", "at": "altar_spot", "building": true, "radius": 20.0, "known": "f('case_started')" },
 			{ "id": "stone", "name": "옛 경계석 자리", "at": "stone_socket", "radius": 12.0 },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 무녀·제관·흔적 가르기가 일러 준 곳만. 도둑·잔영·꾸러미 자리는 넣지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "gn_danoh", "name": "단오장 굿당", "at": "gutdang", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "S2001 도착 — 단오장 굿당(start_known)" },
+			{ "id": "gn_banjeong", "name": "대관령 반정(제관)", "at": "bj_jumo", "when": "f('case_started')",
+				"until": "talked('jegwan') > 0 or talked('jumo_bj') > 0 or f('thief_caught')",
+				"note": "S2001 무녀 “제관 어른은 반정에 올라가 계시오.”" },
+			{ "id": "gn_trail", "name": "국사성황사 길", "at": "altar_spot", "when": "f('case_started') and talked('jegwan') > 0",
+				"until": "c('missing_offering') or f('tracks_split')",
+				"note": "제관 “성황사 길을 살펴봐 주시오. 새벽까지 시간이 없소.”(jegwan_talk) — 성황사 제물상을 보거나 흔적을 가르면 사라진다" },
+			{ "id": "gn_thief_way", "name": "반정 주막 쪽", "at": "bj_jumo", "when": "f('tracks_split')",
+				"until": "c('sandals') or c('stash') or f('thief_caught')",
+				"note": "S2003 흔적 가르기 토스트 “짚신 자국은 반정 주막 쪽으로 내려간다”" },
+			{ "id": "gn_night_sound", "name": "소리 나는 데(옛 경계석 쪽)", "at": "stone_socket", "when": "ph('night') and c('night_bell')",
+				"until": "f('bell_home') or f('resolved')",
+				"note": "S2004 월심 “해 지면 오르시오. 소리 나는 데로.” · S2005 night_bell “소리는 옛 경계석 쪽으로 이끈다”" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "방울은 누가 가져갔는가.", "until": "c('confession') or c('stash')" },

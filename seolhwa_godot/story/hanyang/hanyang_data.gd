@@ -50,6 +50,21 @@ static func data() -> Dictionary:
 			{ "id": "shop", "name": "책쾌의 책방", "at": "shop", "building": true, "radius": 10.0, "known": "c('note')" },
 			{ "id": "bridge", "name": "광통교", "at": "bridge", "building": true, "radius": 14.0 },
 		],
+		# 지도 붉은 표(갈 곳, 보강서 §20) — 쪽지·책쾌가 일러 준 곳만. 추격 길·광통교 종이·빈 창고는 넣지 않는다(fn 금지)
+		"map_leads": [
+			{ "id": "hy_shop", "name": "책쾌의 책방", "at": "shop", "hub": true, "when": "true", "until": "ph('done')",
+				"note": "S1001 이겸의 쪽지 “종루 뒤 피맛골, 책쾌” — 사건의 들머리·허브" },
+			{ "id": "hy_jongno", "name": "종루 뒤 피맛골", "at": "bosingak", "when": "c('note')", "until": "f('s1001_done')",
+				"note": "S1001 쪽지(clue note). 종루에 닿으면(s1001_jongno) 사라진다 — 책방 표는 남는다" },
+			{ "id": "hy_to_gangneung", "name": "강릉", "region": "GW_GANGNEUNG", "when": "ph('done')", "until": "v('CASE_GANGNEUNG_COMPLETE') == true",
+				"note": "S1004 종이 세 장 “강릉 · 경주 · 황주” → S1006 open_hub “새 길 — 강릉 · 경주 · 황주”" },
+			{ "id": "hy_to_gyeongju", "name": "경주", "region": "GS_GYEONGJU", "when": "ph('done')", "until": "v('CASE_GYEONGJU_COMPLETE') == true",
+				"note": "S1006 open_hub — 세 갈래 중 하나" },
+			{ "id": "hy_to_hwangju", "name": "황주", "region": "HH_HWANGJU", "when": "ph('done')", "until": "v('CASE_HWANGJU_COMPLETE') == true",
+				"note": "S1006 open_hub — 세 갈래 중 하나" },
+			{ "id": "hy_to_pyongyang", "name": "평양", "region": "PA_PYEONGYANG", "when": "seen('S1401')", "until": "v('CASE_PYONGYANG_COMPLETE') == true",
+				"note": "S1401 책쾌 “우치가 평양으로 올라갔소.” → ACT3_OPEN" },
+		],
 		"journal": {
 			"unknowns": [
 				{ "text": "책쾌는 어디로 갔는가.", "when": "c('open_door')", "until": "c('thump') or c('chaekkwae')" },
