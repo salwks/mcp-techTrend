@@ -12,9 +12,13 @@ const SCRIPTS := {
 	"res://scripts/region/prop_states.gd": ["_tint_mats"],
 	"res://kit/nature/scatter.gd": ["_cache", "_mix_cache"],
 	"res://kit/story/park_mark.gd": ["_mat"],
+	"res://scripts/ui_fonts.gd": ["_raw", "_main", "_classic", "_sys"],
+	"res://scripts/story/journal_view.gd": ["_hanji"],
 }
 
 static func run() -> void:
+	if ResourceLoader.has_cached("res://scripts/ui_fonts.gd"):
+		ThemeDB.fallback_font = null   # 테마 기본 글꼴로 꽂아 둔 덕온공주체도 놓아 준다
 	for path in SCRIPTS:
 		if not ResourceLoader.has_cached(path): continue   # 이번 실행에서 안 쓴 스크립트는 건드리지 않는다
 		var s: Script = load(path)

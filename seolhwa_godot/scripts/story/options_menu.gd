@@ -8,6 +8,7 @@ extends CanvasLayer
 
 const GameSettings := preload("res://scripts/story/game_settings.gd")
 const UiFonts := preload("res://scripts/ui_fonts.gd")
+const Progress := preload("res://scripts/region/progress.gd")
 const PAPER := Color("#efe6d2")
 const INK := Color("#2b2622")
 const INK_SOFT := Color("#5a5048")
