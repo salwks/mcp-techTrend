@@ -405,8 +405,10 @@ func _update_npcs(dt: float) -> void:
 		c.set_anim("walk")
 
 # ---- 자동 스크린샷 ----
+# 헤드리스(더미 렌더러)는 frame_post_draw를 보내지 않는다 — 그때는 process_frame으로 센다(공간 넘기·정리 대기가 멈추지 않게)
 func _wait_frames(n: int) -> void:
-	for i in n: await RenderingServer.frame_post_draw
+	var sig: Signal = get_tree().process_frame if DisplayServer.get_name() == "headless" else RenderingServer.frame_post_draw
+	for i in n: await sig
 
 func _save(path: String) -> void:
 	# --winshot: 창에 실제로 보이는 화면을 찍는다(크기 변경 시험용)

@@ -700,8 +700,10 @@ func _bench_report() -> void:
 	_quit()
 
 # ---- 자동 스크린샷 ----
+# 헤드리스(더미 렌더러)는 frame_post_draw를 보내지 않는다 — 그때는 process_frame으로 센다(공간 넘기·정리 대기가 멈추지 않게)
 func _wait_frames(n: int) -> void:
-	for i in n: await RenderingServer.frame_post_draw
+	var sig: Signal = get_tree().process_frame if DisplayServer.get_name() == "headless" else RenderingServer.frame_post_draw
+	for i in n: await sig
 
 func _save(path: String) -> void:
 	# --winshot: 창에 실제로 보이는 화면(지명 표시 등 2D 포함)
