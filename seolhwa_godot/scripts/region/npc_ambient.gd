@@ -1,4 +1,6 @@
-# 권역 주변 인물·짐승(대화·전투·이야기 없음) — 고을이 살아 보이게, 고을 차이(사람·짐승)가 드러나게.
+# 권역 주변 인물·짐승(전투·사건 없음) — 고을이 살아 보이게, 고을 차이(사람·짐승)가 드러나게.
+# 말 걸기(scripts/story/ambient_talk.gd): 사람은 E로 말을 건다 — 훑을 때마다 플레이어 12m 안 사람만 _near에 모아 두고
+#   nearest_talkable()이 그 몇 명만 잰다. 말하는 동안 hold()로 멈춰 플레이어를 보고(놓이지도 않는다), unhold()로 하던 일로.
 #
 # 자리(site) 만들기 — 시작 때 작업 스레드에서 한 번
 #   - 길(region.json roads)과 고샅(placement_*.json alleys)을 8m마다 잘라 '길 자리'를 만든다. 고을(settlements) 안이면
@@ -97,6 +99,10 @@ var _amb := false                # frames_amb.json 있음
 var _frame := 0
 var _debug := OS.get_cmdline_user_args().has("--npcstats")
 var _fail := {}               # 칸 키 → 다시 해 볼 시각(자리를 못 찾음)
+var _sts: Array = []          # 고을 정보(_settle_info) — 말 걸기에서 어느 고을 사람인지
+var _near: Array = []         # 말 걸 수 있는 사람 후보(플레이어 12m 안, 훑을 때마다)
+const NEAR_TALK := 12.0
+const NO_TALK := ["gull"]     # 이 자리 사람은 말 걸지 않는다(짐승은 늘 아님)
 
 func setup(w, wthr, camera: Camera3D, loader = null) -> void:
 	world = w; weather = wthr; cam = camera; placement = loader
@@ -148,6 +154,7 @@ func _settle_info(s: Dictionary, arch: Dictionary) -> Dictionary:
 		if ANIMAL_KIND.has(String(x)): an.append(ANIMAL_KIND[String(x)])
 	return { id = String(s.get("id", "")), c = Vector2(float(s.x), float(s.z)), r = clampf(float(s.get("radius_m", 60.0)) * 1.25, 45.0, 260.0),
 		cls = cls, arch = a, pool = mix if not mix.is_empty() else gen, own = pool, animals = an,
+		name = String(s.get("name", "")).split("(")[0].strip_edges(), typ = typ,
 		chickens = a in ["plain", "river", "island", "mountain", "coast", "temple"] and cls != "market" }
 
 func _build(input: Dictionary) -> void:
@@ -277,7 +284,7 @@ func _build(input: Dictionary) -> void:
 			for k in 2:
 				out_sites.append({ p = c + Vector2(cos(k * 2.4 + 0.7), sin(k * 2.4 + 0.7)) * (st.r * 0.6), mode = "gull", n = 3, pres = 0.8, pool = ["gull"],
 					kind_cls = "animal", out = false, r = 18.0 })
-	_built = { sites = out_sites, paths = out_paths, ms = Time.get_ticks_msec() - t0 }
+	_built = { sites = out_sites, paths = out_paths, ms = Time.get_ticks_msec() - t0, sts = sts }
 
 func _pick_pool(own: Array, prefer: Array, dflt: Array) -> Array:
 	var p: Array = []
@@ -313,7 +320,7 @@ static func _dir_at(pts: PackedVector2Array, cum: PackedFloat32Array, s: float) 
 # 프레임 뱅크(작업 스레드에서 PNG 읽기 → 메인에서 텍스처, 프레임당 2장)
 # ---------------------------------------------------------------------------
 func _finish_build() -> void:
-	sites = _built.sites; paths = _built.paths
+	sites = _built.sites; paths = _built.paths; _sts = _built.get("sts", [])
 	stats.sites = sites.size(); stats.ms_build = _built.ms
 	for i in sites.size():
 		var c := Vector2i(floori(sites[i].p.x / CELL), floori(sites[i].p.y / CELL))
@@ -463,7 +470,7 @@ func _scan() -> void:
 	# 놓기 — 화면 안 가까운 곳은 처음 채울 때만
 	for key in agents.keys():
 		var ag: Dictionary = agents[key]
-		var keep: bool = want.get(key, "") == ag.kind
+		var keep: bool = want.get(key, "") == ag.kind or ag.get("hold", false)
 		if keep: continue
 		var site: Dictionary = sites[key / SLOTS]
 		var far: bool = p2.distance_to(site.p) > R_DROP or p2.distance_to(Vector2(ag.pos.x, ag.pos.z)) > R_DROP
@@ -477,6 +484,11 @@ func _scan() -> void:
 		if budget <= 0: break
 	stats.agents = agents.size()
 	stats.want = want.size()
+	_near.clear()
+	for key in agents:
+		var ag: Dictionary = agents[key]
+		if ag.animal or NO_TALK.has(ag.mode): continue
+		if Vector2(ag.pos.x - _player.x, ag.pos.z - _player.z).length() < NEAR_TALK: _near.append(key)
 	if _debug and int(_clock / 2.0) != int((_clock - SCAN) / 2.0):
 		var hist := [0, 0, 0, 0, 0]
 		for kk in agents:
@@ -622,6 +634,15 @@ func _step_agents(dt: float) -> void:
 		var old := Vector2(ag.pos.x, ag.pos.z)
 		var p := old
 		ag.t -= dt
+		if ag.get("hold", false):   # 말하는 중: 멈춰 플레이어를 본다
+			var lk: Vector2 = ag.look - old
+			ch.facing = _facing(lk.x, lk.y, ch.facing)
+			ch.set_anim("talk" if ch.has_anim("talk") else "idle")
+			if vis:
+				on += 1
+				ch.update_char(dt, cam)
+			np += 1
+			continue
 		match ag.mode:
 			"walk":
 				if ag.state == "walk":
@@ -694,3 +715,39 @@ func _step_agents(dt: float) -> void:
 	stats.on_screen = on
 	stats.people = np
 	stats.animals = agents.size() - np
+
+# ---------------------------------------------------------------------------
+# 말 걸기(scripts/story/ambient_talk.gd)
+# ---------------------------------------------------------------------------
+# p에서 r 안의 가장 가까운 사람(없으면 -1) — 훑을 때 모아 둔 _near 몇 명만 본다
+func nearest_talkable(p: Vector2, r: float) -> int:
+	var best := -1; var bd := r
+	for key in _near:
+		var ag = agents.get(key)
+		if ag == null or ag.animal or not ag.ch.visible: continue
+		var dd := Vector2(ag.pos.x - p.x, ag.pos.z - p.y).length()
+		if dd < bd: bd = dd; best = key
+	return best
+
+# 이 사람 정보: 종류·자리·고을
+func info(key: int) -> Dictionary:
+	var ag: Dictionary = agents[key]
+	var site: Dictionary = sites[key / SLOTS]
+	var p := Vector2(ag.pos.x, ag.pos.z)
+	var st = _settle_at(_sts, p)
+	return { key = key, kind = String(ag.kind), mode = String(site.mode), p = p,
+		settle = String(st.id) if st != null else "", arch = String(st.arch) if st != null else "", cls = String(st.cls) if st != null else "",
+		place = String(st.name) if st != null else "" }
+
+func hold(key: int, toward: Vector3) -> void:
+	var ag = agents.get(key)
+	if ag == null: return
+	ag.hold = true
+	ag.look = Vector2(toward.x, toward.z)
+	if ag.mode == "walk": ag.state = "idle"
+
+func unhold(key: int) -> void:
+	var ag = agents.get(key)
+	if ag == null: return
+	ag.erase("hold")
+	ag.t = 0.8 + _h(key, int(_clock)) * 1.5

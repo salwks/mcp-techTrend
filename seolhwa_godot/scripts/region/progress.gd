@@ -7,6 +7,7 @@
 #   "where": { space, kind, x, z, hour },   ← 이어 하기 자리(story_director가 10초마다·저장할 때)
 #   "onboard": { ONBOARD_MOVE_SEEN: true, PLAY_TIME: 812.0 … },   ← 처음 한 번 안내(scripts/story/onboarding.gd) — 사건을 넘어 남는다
 #   "known": { "<공간 id>": { "<장소 키>": "visited" | "told" }, "_nation": {…} },   ← 지도에 적힌 곳(scripts/region/discovery.gd)
+#   "heard": [{ id, space, by, text, place }],   ← 사람에게 들은 소문(기록책 '사람의 말' — ◇ 들음 — 말한 사람, 사실로 올리지 않는다)
 #   "saved_at": "…"
 # }
 # 버전 1(routes_done만) 파일도 그대로 읽는다.
@@ -27,6 +28,7 @@ static func data() -> Dictionary:
 		if not (_d.get("cases") is Dictionary): _d["cases"] = {}
 		if not (_d.get("onboard") is Dictionary): _d["onboard"] = {}
 		if not (_d.get("known") is Dictionary): _d["known"] = {}
+		if not (_d.get("heard") is Array): _d["heard"] = []
 		_d["version"] = 2
 	return _d
 
@@ -85,7 +87,7 @@ static func has_save() -> bool:
 	return not data().cases.is_empty() or not where().is_empty()
 
 static func reset_all() -> void:
-	_d = { "version": 2, "routes_done": {}, "vars": {}, "cases": {}, "onboard": {}, "known": {} }
+	_d = { "version": 2, "routes_done": {}, "vars": {}, "cases": {}, "onboard": {}, "known": {}, "heard": [] }
 	save()
 
 static func clear_case(id: String) -> void:
@@ -105,3 +107,23 @@ static func known(space: String) -> Dictionary:
 	var k: Dictionary = data().known
 	if not (k.get(space) is Dictionary): k[space] = {}
 	return k[space]
+
+# ---- 들은 소문(scripts/story/ambient_talk.gd · story_director 엿듣기) — 같은 글은 한 번, 최근 40개 ----
+const HEARD_MAX := 40
+
+static func heard() -> Array:
+	return data().heard
+
+static func heard_has(text: String) -> bool:
+	for h in data().heard:
+		if h is Dictionary and String(h.get("text", "")) == text: return true
+	return false
+
+# 새로 적었으면 true
+static func add_heard(e: Dictionary) -> bool:
+	if heard_has(String(e.get("text", ""))): return false
+	var l: Array = data().heard
+	l.append(e)
+	while l.size() > HEARD_MAX: l.pop_front()
+	save()
+	return true
