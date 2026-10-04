@@ -164,6 +164,34 @@ const RUMORS := [
 		"pool": ["북청에선 사자탈이 혼자 움직인다던데.", "함관령 옛 역참에 요새 불이 켜진대. 버린 지 오래된 곳인데."] },
 	{ "id": "R0601", "space": "GG_HANYANG-HG_HAMHEUNG", "near": "rt_cheollyeong", "radius": 40.0, "speaker": "고갯길 나그네",
 		"pool": ["철령 넘다가 자기 목소리를 들으면 뒤돌아보지 말래."] },
+	# ---- ACT 3 평양 「강을 판 사내」(§24 평양 풀 · R05 황주→평양 · R07 평양→함흥) ----
+	{ "id": "PY_NARU", "space": "PA_PYEONGYANG", "near": "daedong_naru", "radius": 40.0, "speaker": "나루 사람", "var": "CASE_PYONGYANG_OUTCOME",
+		"lines": {
+			"": "대동강을 판 사내가 있대.",
+			"A": "강을 판 게 우치가 아니었대. 강창 뒤에서 종이 고치던 놈들이었다나.",
+			"B": "우치가 대동강을 두 번 팔고 날랐대. 감영도 손을 못 쓴다나.",
+		} },
+	{ "id": "PY_JONGNO", "space": "PA_PYEONGYANG", "near": "pyeongyang_jongno", "radius": 44.0, "speaker": "장꾼", "need": { "ACT3_OPEN": true },
+		"pool": ["대동강을 판 사내가 있대.", "기린굴에서 아이가 사라졌다더군.", "묘향산에 들어간 장사꾼이 사흘 뒤 빈손으로 돌아왔대."] },
+	{ "id": "PY_NAESEONG", "space": "PA_PYEONGYANG", "near": "pyeongyang_naeseong", "radius": 40.0, "speaker": "감영 아전", "var": "CASE_PYONGYANG_OUTCOME",
+		"lines": {
+			"A": "기록 창고에 든 도둑은 따로라더군. 북관 문서만 가져갔대.",
+			"B": "기록 창고 털린 것도 강 판 놈들 짓이라던데. 다들 우치라 하고.",
+		} },
+	{ "id": "R0551", "space": "HH_HWANGJU-PA_PYEONGYANG", "near": [240.0, 12.0], "radius": 40.0, "speaker": "평양 쪽 장꾼", "need": { "ACT3_OPEN": true },
+		"var": "CASE_PYONGYANG_OUTCOME",
+		"lines": {
+			"": "평양 나루에서 강물을 사고판다던데. 도장 찍힌 문서까지 있대.",
+			"A": "평양에서 강 팔던 놈들이 잡혔대. 우치 이름을 빌린 가짜였다나.",
+			"B": "평양에서 우치가 강을 팔고 날랐대. 문서는 감영이 거뒀다지만.",
+		} },
+	{ "id": "R0751", "space": "PA_PYEONGYANG-HG_HAMHEUNG", "near": "rt_gangdong", "radius": 40.0, "speaker": "강동 나그네", "var": "CASE_PYONGYANG_OUTCOME",
+		"lines": {
+			"A": "평양 나루 사기꾼들, 감영 앞에 묶여 앉았다더군.",
+			"B": "평양에선 아직도 우치가 강을 팔았다고들 하오.",
+		} },
+	{ "id": "R0752", "space": "PA_PYEONGYANG-HG_HAMHEUNG", "near": "rt_seongcheon", "radius": 40.0, "speaker": "성천 주막 손님", "need": { "CASE_PYONGYANG_COMPLETE": true },
+		"pool": ["평양 감영 문서고가 털렸대. 북관 쪽 문서만 없어졌다나.", "함흥에서 북청 간 전갈이 셋이나 안 돌아왔대."] },
 ]
 
 # 이 공간에 걸린 소문(자리 p: Vector2 채워서)
