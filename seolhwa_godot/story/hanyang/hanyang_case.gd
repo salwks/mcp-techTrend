@@ -4,6 +4,7 @@ extends RefCounted
 
 const D := preload("res://story/hanyang/hanyang_data.gd")
 const Chase := preload("res://scripts/story/chase.gd")
+const Progress := preload("res://scripts/region/progress.gd")
 const CASE_TITLE := "비어 있는 책방"
 const SHOP_CLUES := ["ink", "string", "window", "torn", "tea"]
 const MAX_RETRY := 2
@@ -34,10 +35,20 @@ func shop_clues() -> int:
 	return n
 
 # ACT 2 세 사건이 모두 끝났나(§14·ACT 3 잠금)
+# v2.3.1: 완료 판정은 CASE_*_COMPLETE(강릉·경주·황주). 그 체계 전 저장은 결말 변수로도 본다. 순서는 상관없다
 func act2_all_done() -> bool:
-	for k in ["CASE_GANGNEUNG_OUTCOME", "CASE_GYEONGJU_OUTCOME", "CASE_HWANGJU_OUTCOME"]:
-		if String(S.vars.get(k, "")) == "": return false
+	for k in ["GANGNEUNG", "GYEONGJU", "HWANGJU"]:
+		var v = S.vars.get("CASE_%s_COMPLETE" % k, Progress.get_var("CASE_%s_COMPLETE" % k, false))
+		var o := String(S.vars.get("CASE_%s_OUTCOME" % k, Progress.get_var("CASE_%s_OUTCOME" % k, "")))
+		if not bool(v) and o == "": return false
 	return true
+
+# §14: 종이 뭉치 포장지의 박규상 객주 납품 표식 — 표식이 있다고 범죄 증거는 아니다(본 횟수만 +1)
+func park_wrap() -> void:
+	if f("park_wrap"): return
+	flag("park_wrap")
+	S.vars["MAIN_PARK_MARK_COUNT"] = int(S.vars.get("MAIN_PARK_MARK_COUNT", 0)) + 1
+	d.runner.log_line("var", ["MAIN_PARK_MARK_COUNT", S.vars.MAIN_PARK_MARK_COUNT])
 
 # v2.2: 납품표를 처음 봤을 때 — 박규상 표식 +1, 이름을 앎
 func park_slip() -> void:

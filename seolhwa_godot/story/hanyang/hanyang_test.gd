@@ -160,6 +160,7 @@ func _shot_now(nm: String) -> void:
 
 # ---- 대본 ----
 func _run() -> void:
+	if branch == "ACT3": await _run_act3(); return
 	_log("시작 branch=%s vars=%s" % [branch, JSON.stringify({ t = d.S.vars.MAIN_MASTER_TRACE, o = d.S.vars.CASE_NAMWON_OUTCOME })])
 	expect(d.case_id == "hanyang", "남원 뒤 한양 사건이 섰다")
 	# 도착 자리: 역마(숭례문 앞) 또는 R01 노정 끝(노들 남쪽 포털)
@@ -260,4 +261,40 @@ func _run() -> void:
 	Engine.time_scale = 1.0
 	if _fails.is_empty(): printerr("STORYTEST PASS hanyang:%s outcome=%s time=%.0fs" % [branch, d.S.vars.CASE_HANYANG_OUTCOME, (Time.get_ticks_msec() - _t0) / 1000.0])
 	else: printerr("STORYTEST FAIL hanyang:%s fails=%s" % [branch, JSON.stringify(_fails)])
+	d.main._quit()
+
+
+# --storytest=hanyang:act3 — ACT 3 잠금 시험 상태: 한양 S1006(허브)까지 끝내고, ACT 2 세 사건(강릉·경주·황주) 중 둘만 → 셋 다.
+#   책쾌가 둘일 때는 평소 말, 셋 다 끝나면(CASE_*_COMPLETE, 순서 상관없음) §14 S1401(우치가 평양으로 · 통행문서 · 朴 포장지)·ACT3_OPEN.
+func _run_act3() -> void:
+	_log("시작 ACT 3 잠금 시험")
+	var S = d.S
+	S.phase = "done"
+	for k in ["case_started", "heard_thump", "freed", "chase_done"]: S.flags[k] = true
+	S.vars.ACT2_OPEN = true
+	S.vars.MAIN_PARK_MARK_COUNT = 3
+	# 황주를 먼저, 경주를 다음에 끝냈다고 친다 — 강릉은 아직
+	S.vars.CASE_HWANGJU_COMPLETE = true; S.vars.CASE_HWANGJU_OUTCOME = "C"
+	S.vars.CASE_GYEONGJU_COMPLETE = true; S.vars.CASE_GYEONGJU_OUTCOME = "A"
+	S.vars.CASE_GANGNEUNG_COMPLETE = false; S.vars.CASE_GANGNEUNG_OUTCOME = ""
+	d.on_phase(); d._refresh()
+	expect(not d.case_fn.act2_all_done(), "두 사건(황주·경주)만 — ACT 3 잠김")
+	prefer = ["그만"]
+	await go("chaekkwae")
+	expect(not S.is_flag("act3_hook") and not bool(S.vars.get("ACT3_OPEN", false)), "책쾌 평소 말 — §14 갈고리 아직")
+	S.vars.CASE_GANGNEUNG_COMPLETE = true; S.vars.CASE_GANGNEUNG_OUTCOME = "B"
+	d._refresh()
+	expect(d.case_fn.act2_all_done(), "세 사건 모두 — ACT 3 열 수 있음")
+	prefer = []
+	await go("chaekkwae")
+	expect(S.is_flag("act3_hook") and S.seen.has("S1401"), "S1401 책쾌 — 우치가 평양으로")
+	expect(bool(S.vars.get("ACT3_OPEN", false)), "ACT3_OPEN")
+	expect(S.has("ITM_KEY_003"), "위조 통행문서")
+	expect(int(S.vars.get("MAIN_PARK_MARK_COUNT", 0)) == 4, "§14 朴 포장지 — 표식 +1")
+	# 결말 변수만 있는 옛 저장(완료 플래그 없음)도 같은 판정
+	S.vars.CASE_GANGNEUNG_COMPLETE = false
+	expect(d.case_fn.act2_all_done(), "완료 플래그 없이 결말 변수만 있는 옛 저장도 셋 다로 봄")
+	Engine.time_scale = 1.0
+	if _fails.is_empty(): printerr("STORYTEST PASS hanyang:ACT3 time=%.0fs" % ((Time.get_ticks_msec() - _t0) / 1000.0))
+	else: printerr("STORYTEST FAIL hanyang:ACT3 fails=%s" % JSON.stringify(_fails))
 	d.main._quit()
