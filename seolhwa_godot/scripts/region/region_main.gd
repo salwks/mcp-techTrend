@@ -27,6 +27,7 @@ const Weather := preload("res://scripts/region/weather.gd")
 const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const RiverLanes := preload("res://scripts/region/river_lanes.gd")
+const StoryDirector := preload("res://scripts/story/story_director.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
@@ -121,6 +122,7 @@ var _route_entry := ""    # 노정에 들어온 끝 포털 id — 다른 끝 포
 var _fast_hint := ""      # 역마 안내를 띄운 포털 id
 var lanes = null          # RiverLanes(강 뱃길 route.json river_lanes) — 없으면 null
 var _dead_done := false   # 막다른 노정 끝에 닿아 '지나옴'을 기록했나
+var story = null          # 이야기(scripts/story/story_director.gd): 사건·소문·전투. --nostory로 끔
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -156,6 +158,7 @@ func _ready() -> void:
 	_build_scene()
 	_prewarm_shaders()
 	_make_load_ui()
+	if not args.has("nostory"): story = StoryDirector.create_for(self)
 	if args.has("nomsaa"): scene_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if args.has("noshadow"): sun.shadow_enabled = false
 	if args.has("nolamps"):
@@ -549,7 +552,7 @@ func _process(delta: float) -> void:
 	clock += dt
 	if Input.is_action_just_pressed("time_step"):
 		hour = fmod(floor(hour / 6.0) * 6.0 + 6.0, 24.0); _apply_time()
-	if Input.is_action_just_pressed("weather_step") and weather != null:
+	if Input.is_action_just_pressed("weather_step") and weather != null and not (story != null and story.owns_player()):
 		_show_hud("날씨: " + weather.cycle())
 	# 배치 다시 읽기: F5, 또는 --reload면 파일이 바뀔 때마다(1초마다 확인)
 	_reload_t += delta
@@ -597,7 +600,9 @@ func _process(delta: float) -> void:
 			_bench_worst = maxf(_bench_worst, delta)
 			_bench_dts.append(delta)
 		if _bench_left <= 0.0: _bench_report()
-	if mv.length() > 0.0:
+	if story != null: story.update(dt)   # 이야기·전투(전투 중에는 전투가 플레이어를 옮긴다)
+	if story != null and story.owns_player(): pass
+	elif mv.length() > 0.0:
 		var r := player.radius
 		var np = null
 		# 빠른 자동 걷기는 한 번에 크게 움직이지 않도록 나눠서
@@ -629,6 +634,7 @@ func _process(delta: float) -> void:
 	var interior = world.interior_at(player_pos.x, player_pos.z)
 	world.update_camera_zone(player_pos)
 	rig.update(dt, player_pos, player.facing, interior)
+	if story != null: cam.position += story.shake_offset()
 	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
 	RenderingServer.global_shader_parameter_set("occ_b", player_pos + Vector3(0, player.height * 0.8, 0))
