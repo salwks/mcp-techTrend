@@ -29,6 +29,8 @@ static func prepare(_dir) -> void:
 	Progress.set_var("SKILL_BEAST_TRACE", true)
 	Progress.set_var("CASE_NAMWON_OUTCOME", "C")
 	Progress.set_var("CASE_NAMWON_DETAIL", "C")
+	Progress.set_var("MAIN_PARK_MARK_COUNT", 1)   # R0104 천안삼거리를 지나왔다고 치고
+	Progress.set_var("SKILL_GUARD_SHOVE", true)
 	Progress.data().cases["namwon"] = { "v": 2, "phase": "done", "flags": { "case_started": true, "resolved": true }, "clues": [], "rules": [],
 		"items": { "ITM_TOOL_009": 1, "ITM_WPN_001": 1, "ITM_WPN_002": 1, "ITM_AMMO_001": 12, "COIN": 7 }, "world": {}, "talked": {}, "notes": [],
 		"seen": { "S0010": true }, "time": 8.0 }
@@ -44,6 +46,9 @@ func begin() -> void:
 	d.ui.auto = true
 	d.ui.auto_choice = choose
 	Engine.time_scale = float(d.main.args.get("storyspeed", "2.5"))
+	if d.main.args.has("novsync"):   # 추격 중 fps를 수직 동기 없이 잰다(chase 기록 "fps" 평균·최저)
+		Engine.max_fps = 0
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	_t0 = Time.get_ticks_msec()
 	_run.call_deferred()
 
@@ -98,6 +103,7 @@ func walk_to(at) -> void:
 	await _idle()
 	d.teleport_to(at, "up")
 	await _frames(12)
+	await get_tree().create_timer(0.45).timeout   # 자리 트리거는 0.2초마다 본다(시간 배율·fps와 상관없이)
 	await _idle()
 
 func shot(nm: String, frames := 10) -> void:
@@ -181,6 +187,8 @@ func _run() -> void:
 		d.world.get_prop_state("hy_sc_chaekbang_tea")])
 	for id in ["ink", "tea", "string", "torn", "window"]: await go(id, 0.6)
 	expect(d.case_fn.shop_clues() == 5, "책방 단서 다섯")
+	await go("slip", 0.6)
+	expect(int(d.S.vars.get("MAIN_PARK_MARK_COUNT", 0)) == 2 and bool(d.S.vars.get("MAIN_PARK_NAME_KNOWN", false)), "v2.2 납품표 — 박규상 표식 +1·이름")
 	await shot("shop")
 	# S1003 추격
 	bot_mode = "stand"   # 처음엔 멈춰 서서 일부러 놓친다(§29 놓침 → 다시 쫓기/발자국)
@@ -225,6 +233,7 @@ func _run() -> void:
 		await get_tree().process_frame; n += 1
 	expect(d.S.phase == "done", "S1006 허브")
 	expect(bool(d.S.vars.get("ACT2_OPEN", false)), "S1006 세 갈래 열림")
+	expect(bool(d.S.vars.get("SKILL_QUICK_THROW", false)), "v2.2 빠른 투척 열림")
 	expect(not d.case_fn.act2_all_done(), "ACT 3 잠김(세 사건 전)")
 	expect(d.world.get_prop_state("hy_sc_chaekbang/window") == "SEALED", "책방 다시 엶(뒤창 닫힘)")
 	await shot("hub")
@@ -235,7 +244,9 @@ func _run() -> void:
 			if x.id == rid: r = x
 		expect(not r.is_empty() and Rumors.pick(r, Progress.vars(), d.S.vars) != "", "소문 " + rid)
 	await walk_to([-291.0, -884.0])
-	await _frames(40)
+	var rw := 0
+	while not d._rumor_seen.has("HY_GJ_JONGNO") and rw < 240:   # 소문은 0.5초마다 본다(시간 배율 1에서도)
+		await get_tree().process_frame; rw += 1
 	expect(d._rumor_seen.has("HY_GJ_JONGNO"), "종루에서 경주 소문을 들음")
 	# 허브 대화와 §14 갈고리(아직 안 열림)
 	prefer = ["강릉", "경주", "황주"]
