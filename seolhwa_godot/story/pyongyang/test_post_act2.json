@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "note": "대본 시험 --storytest=pyongyang:A|B|C|LOCK 의 출발 저장 — ACT 2(강릉·경주·황주)를 다 끝내고 한양 §14 S1401(ACT3_OPEN · 통행문서 · 朴 포장지)까지 마친 상태. pyongyang_test.gd prepare()가 결말별로 조금 바꿔(B: 짐승 흔적 읽기 없음 · 통행문서 없음, LOCK: ACT3_OPEN 없음) 시험 저장 파일에 덮어쓴다.",
+  "routes_done": { "JL_NAMWON_UNBONG-GG_HANYANG": "2026-10-04T09:00:00", "GG_HANYANG-HH_HWANGJU": "2026-10-04T10:00:00",
+    "GG_HANYANG-GW_GANGNEUNG": "2026-10-04T11:00:00", "GG_HANYANG-GS_GYEONGJU": "2026-10-04T12:00:00", "HH_HWANGJU-PA_PYEONGYANG": "2026-10-04T14:00:00" },
+  "vars": {
+    "MAIN_MASTER_TRACE": "HANYANG,GANGNEUNG,GYEONGJU,HWANGJU", "SKILL_BEAST_TRACE": true, "CASE_NAMWON_OUTCOME": "C", "CASE_NAMWON_DETAIL": "C",
+    "MAIN_WOOCHI_KNOWN": true, "ACT2_OPEN": true, "ACT3_OPEN": true, "CASE_HANYANG_OUTCOME": "followed", "ITEM_TALISMAN_SLOT": 1,
+    "MAIN_PARK_MARK_COUNT": 4, "MAIN_PARK_NAME_KNOWN": true, "MAIN_GWAK_NAME_KNOWN": true, "SKILL_RUBBING": true,
+    "CASE_GANGNEUNG_OUTCOME": "A", "CASE_GYEONGJU_OUTCOME": "A", "CASE_HWANGJU_OUTCOME": "A", "CASE_HWANGJU_DETAIL": "A_rubbing",
+    "CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": true, "CASE_GANGNEUNG_COMPLETE": true, "CASE_GYEONGJU_COMPLETE": true, "CASE_HWANGJU_COMPLETE": true,
+    "SKILL_GUARD_SHOVE": true, "SKILL_QUICK_THROW": true, "SKILL_EVADE_SLASH": true, "SKILL_SNAP_SHOT": true
+  },
+  "cases": {
+    "namwon": { "v": 2, "phase": "done", "flags": { "case_started": true, "resolved": true }, "clues": [], "rules": [],
+      "items": { "ITM_TOOL_009": 1, "ITM_WPN_001": 1, "ITM_WPN_002": 1, "ITM_AMMO_001": 12, "COIN": 7 }, "world": {}, "talked": {}, "notes": [],
+      "seen": { "S0010": true }, "time": 8.0 },
+    "hanyang": { "v": 2, "phase": "done", "flags": { "case_started": true, "act3_hook": true }, "clues": [], "rules": [], "items": { "ITM_KEY_003": 1 },
+      "world": {}, "talked": {}, "notes": [], "seen": { "S1001": true, "S1005": true, "S1006": true, "S1401": true }, "time": 12.0 },
+    "gangneung": { "v": 2, "phase": "done", "flags": { "case_started": true }, "clues": [], "rules": [], "items": {}, "world": {}, "talked": {}, "notes": [], "seen": {}, "time": 9.0 },
+    "gyeongju": { "v": 2, "phase": "done", "flags": { "case_started": true }, "clues": [], "rules": [], "items": {}, "world": {}, "talked": {}, "notes": [], "seen": {}, "time": 9.0 },
+    "hwangju": { "v": 2, "phase": "done", "flags": { "case_started": true }, "clues": [], "rules": [], "items": {}, "world": {}, "talked": {}, "notes": [], "seen": {}, "time": 9.0 }
+  }
+}
