@@ -6,7 +6,7 @@
 #   tools/run_story_tests.sh namwon hwangju:B walk   # 이름(앞부분)이 맞는 것만
 #   tools/run_story_tests.sh -l              # 목록만
 #
-# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST/TALKTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
+# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST/TALKTEST/STATIONTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
 # 시험마다 저장 파일을 따로 쓴다(--savefile=user://st_<이름>.json) — 동시에 돌려도 서로 덮어쓰지 않는다.
 # 로그: $LOGDIR(기본 /tmp/seolhwa_tests/<시각>/<이름>.log). 환경 변수 GODOT, LOGDIR, TIMEOUT_SCALE(제한 시간 배율).
 
@@ -59,7 +59,7 @@ TESTS=(
 	"walk:hwangju-pyeongyang|300|--route=HH_HWANGJU-PA_PYEONGYANG --walkroute=01 --walkspeed=12"
 	"walk:hangang-boat|600|--route=RIVER_HANGANG --walkroute=01 --walkspeed=12 --sailspeed=25"
 	# 자동 기승·역마(scripts/region/ride_test.gd) — 시험만 4배 빠르게(--ridetime=4)
-	"ride:namwon-unbong|420|--region=JL_NAMWON_UNBONG --ridetest=namwon_eup:unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --ridetime=4 --notitle"
+	"ride:namwon-unbong|420|--region=JL_NAMWON_UNBONG --ridetest=station_namwon:unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --ridetime=4 --notitle"
 	"ride:r01-park|420|--route=JL_NAMWON_UNBONG-GG_HANYANG --ridetest=end_from:end_to --ridefixture=res://story/hwangju/test_post_hanyang.json --ridevars=MAIN_MASTER_TRACE=HANYANG --rideneed=R0101,R0102,R0103,R0104 --ridepark=1 --rideratio=0.5 --ridetime=4 --notitle"
 	"ride:r05-event|300|--route=PA_PYEONGYANG-HG_HAMHEUNG --ridetest=end_from:end_to --ridefixture=res://story/hamhung/test_post_act3.json --rideexpect=event --ridetime=4 --notitle"
 	"ride:hanyang-gate|420|--region=GG_HANYANG --ridetest=noryang_naru_0:hanyang_doseong_in --ridefresh --nostory --ridetime=4 --notitle"
@@ -68,6 +68,9 @@ TESTS=(
 	"fast:same-space|240|--region=JL_NAMWON_UNBONG --fasttravel=JL_NAMWON_UNBONG/unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:to-hanyang|300|--region=JL_NAMWON_UNBONG --fasttravel=GG_HANYANG/noryangjin --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:jeju-blocked|240|--region=JL_NAMWON_UNBONG --fasttravel=JJ_JEJU/jeju_mok --fastexpect=blocked --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
+	# 역참(scripts/region/station_test.gd): 두 역 들러 '가 봄' → Travel.warp_to_station → 마부가 끌어 온 말로 다음 고을 어귀까지 / 다른 공간 역으로 역마
+	"station:namwon|480|--region=JL_NAMWON_UNBONG --stationtest=namwon,inwol,unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --ridetime=4 --notitle"
+	"station:to-cheongpa|300|--region=JL_NAMWON_UNBONG --stationtest=cross:cheongpa --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	# 고을 사람 말 걸기·이야기 인물 「…」(scripts/story/talk_test.gd) — 앞(새 저장) → 저장 얹고 뒤
 	"talk:namwon|420|--region=JL_NAMWON_UNBONG --talktest=namwon_jang,namwon_eup --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=var"
 	"talk:hanyang|420|--region=GG_HANYANG --talktest=chilpae_jang,ungjongga --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=need"
@@ -106,10 +109,10 @@ run_one() {
 	if [[ $name == walk:* ]]; then
 		grep -q "^WALK done" $log && grep -q "^TRAVEL arrive" $log && verdict=PASS
 	else
-		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST) PASS" $log && verdict=PASS
-		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST) FAIL" $log && verdict=FAIL
+		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST) FAIL" $log && verdict=FAIL
 	fi
-	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST) //')
+	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST) //')
 	[[ $name == walk:* ]] && detail=$(grep "^WALK done" $log | tail -1 | sed -E 's/^WALK done //')
 	if (( code == 124 )); then why="시간 초과"; verdict=FAIL
 	elif (( code != 0 )); then why="종료 코드 $code"; verdict=FAIL
