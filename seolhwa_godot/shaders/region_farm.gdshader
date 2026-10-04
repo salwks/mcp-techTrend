@@ -58,7 +58,9 @@ void fragment() {
 		if (v_wn.y > 0.7) hz = p;   // 윗면
 		float id;
 		float sc = pat > 0.75 ? 2.4 : 3.2;
-		float s = stones(hz * sc, id);
+		// 돌 모양을 둥글게 흔들어(현무암 막돌) 벽돌처럼 반듯하지 않게
+		vec2 wob = vec2(tn(hz * 0.9), tn(hz * 0.9 + vec2(3.7, 1.3))) * 0.12;
+		float s = stones(hz * sc + wob * sc, id);
 		vec3 sc0 = pat > 0.75 ? vec3(0.17, 0.165, 0.16) : vec3(0.60, 0.57, 0.51);
 		vec3 sc1 = pat > 0.75 ? vec3(0.26, 0.25, 0.235) : vec3(0.72, 0.68, 0.60);
 		vec3 st = mix(sc0, sc1, id) * (0.9 + 0.2 * n1);

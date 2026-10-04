@@ -11,14 +11,14 @@
 6) 상태: 기후대(climate.png)별 논(물 댄 모·자라는 벼·누렇게 익은 벼·그루터기)·밭 작물. 엔진이 --farmseason으로 덮어쓸 수 있다.
 
 출력(region_data/<id>/ 또는 노정 폴더):
-  parcels.bin  — 'PRCL' v1: P float32[n,12] (cx, cz, floor, kind 0논/1밭, level, state, crop, ang(t축 각), style 비트(1 석축·2 현무암 돌담), vstart, vcount, slope)
+  parcels.bin  — 'PRCL' v2(머리 24바이트 뒤 본문 gzip): P float32[n,12] (cx, cz, floor, kind 0논/1밭, level, state, crop, ang(t축 각), style 비트(1 석축·2 현무암 돌담), vstart, vcount, slope)
                  V float32[nv,3] (x, z, 이 꼭짓점→다음 꼭짓점 변의 이웃 필지 번호 또는 -1), I float32[ni,4] 물꼬 (x, z, 위 바닥, 아래 바닥),
                  C int32[nc,4] 64m 칸 색인 (ci, cj, 시작, 개수) — 필지는 중심 칸 순서로 정렬
   farm.png     — 필지 합집합 부호 거리(높이맵과 같은 2m 격자, 8비트: 128 + d·16, 안쪽 음수) — 지형 셰이더가 필지 아래 땅을 내린다
   parcels.json — 요약·메타
 실행: python3 tools/region/parcels.py [권역 id | 데이터 폴더 …] [--all] [--routes] [--png]
 """
-import json, math, os, struct, sys, time
+import gzip, json, math, os, struct, sys, time
 import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage
@@ -488,8 +488,9 @@ def write(d, rj, G, parcels, inlets, png=False):
     Pa = np.array(Prow, np.float32).reshape(-1, 12); Va = np.array(V, np.float32).reshape(-1, 3)
     Ia = np.array(inlets, np.float32).reshape(-1, 4); Ca = np.array(Cidx, np.int32).reshape(-1, 4)
     with open(os.path.join(d, "parcels.bin"), "wb") as f:
-        f.write(b"PRCL"); f.write(struct.pack("<5I", 1, len(Pa), len(Va), len(Ia), len(Ca)))
-        f.write(Pa.tobytes()); f.write(Va.tobytes()); f.write(Ia.tobytes()); f.write(Ca.tobytes())
+        # v2: 머리(24바이트) 뒤 본문 전체를 gzip으로(크기 절반)
+        f.write(b"PRCL"); f.write(struct.pack("<5I", 2, len(Pa), len(Va), len(Ia), len(Ca)))
+        f.write(gzip.compress(Pa.tobytes() + Va.tobytes() + Ia.tobytes() + Ca.tobytes(), 6, mtime=0))
     # 합집합 부호 거리(2m 격자)
     sd = np.full((G.h, G.w), 8.0, np.float32)
     REACH = 8.0
@@ -551,7 +552,8 @@ def preview(d, G, parcels, box=None):
 def read_bin(d):
     """parcels.bin → 미리보기용 dict 목록"""
     b = open(os.path.join(d, "parcels.bin"), "rb").read()
-    _, n, nv, ni, nc = struct.unpack("<5I", b[4:24]); o = 24
+    ver, n, nv, ni, nc = struct.unpack("<5I", b[4:24]); o = 24
+    if ver >= 2: b = b[:24] + gzip.decompress(b[24:])
     P = np.frombuffer(b, np.float32, n * 12, o).reshape(n, 12); o += n * 48
     V = np.frombuffer(b, np.float32, nv * 3, o).reshape(nv, 3)
     out = []

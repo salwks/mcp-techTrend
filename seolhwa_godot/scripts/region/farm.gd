@@ -49,6 +49,7 @@ var mat_water: ShaderMaterial
 var mat_spout: ShaderMaterial
 var rice_mesh := []           # [상태] → [4포기 메시, 2포기 메시]
 var crop_mesh := []           # [작물] → 메시(null = 묵정)
+var tuft_mesh := []           # 둑 위 풀 포기 [푸른, 마른]
 var tiles := {}               # Vector2i → { want, have, job, hold, nodes, ver }
 var _orphans := []            # 버린 타일의 진행 중 작업
 var _attach := []             # [타일, 결과] 메인 스레드에서 노드로
@@ -66,11 +67,14 @@ func setup(w, dir: String) -> bool:
 	var t0 := Time.get_ticks_msec()
 	var f := FileAccess.open(bin, FileAccess.READ)
 	if f.get_buffer(4).get_string_from_ascii() != "PRCL": return false
-	var _v := f.get_32(); n = f.get_32(); var nv := f.get_32(); var ni := f.get_32(); var nc := f.get_32()
-	P = f.get_buffer(n * STRIDE * 4).to_float32_array()
-	V = f.get_buffer(nv * 12).to_float32_array()
-	I = f.get_buffer(ni * 16).to_float32_array()
-	var C := f.get_buffer(nc * 16).to_int32_array()
+	var fver := f.get_32(); n = f.get_32(); var nv := f.get_32(); var ni := f.get_32(); var nc := f.get_32()
+	var body := f.get_buffer(f.get_length() - 24)
+	if fver >= 2: body = body.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)   # v2: 본문 gzip
+	var o := 0
+	P = body.slice(o, o + n * STRIDE * 4).to_float32_array(); o += n * STRIDE * 4
+	V = body.slice(o, o + nv * 12).to_float32_array(); o += nv * 12
+	I = body.slice(o, o + ni * 16).to_float32_array(); o += ni * 16
+	var C := body.slice(o, o + nc * 16).to_int32_array()
 	for k in nc: chunks[Vector2i(C[k * 4], C[k * 4 + 1])] = Vector2i(C[k * 4 + 2], C[k * 4 + 3])
 	bb.resize(n * 4)
 	for k in n:
@@ -157,6 +161,17 @@ func _make_models() -> void:
 						b.add("flat", Kit.paint(e, C_.c("#f0d57c"), C_.c("#c9a94e"), 0.04, r), 0.0)
 			pair.append(b.mesh())
 		rice_mesh.append(pair)
+	# 둑 위 풀 포기(잎 3장)
+	for cols in [["#a3b860", "#62773a"], ["#cdbb7c", "#8d7a50"]]:
+		var r := Kit.Rng.new(77)
+		var b := Kit.Batch.new()
+		for q in 4:
+			var hh := 0.16 + r.next() * 0.14
+			var g := C_.cone(0.03, hh, 3, true)
+			Kit.xf(g, 0, hh * 0.5, 0)
+			Kit.xf(g, (r.next() - 0.5) * 0.1, 0.0, (r.next() - 0.5) * 0.1, 0.35 + r.next() * 0.3, TAU * q / 4.0, 0.0)
+			b.add("flat", Kit.paint(g, C_.c(cols[0]), C_.c(cols[1]), 0.06, r), 0.0)
+		tuft_mesh.append(b.mesh())
 	var Crop = load("res://kit/nature/crop.gd")
 	for kind in ["bean", "millet", "barley", "cabbage", "pepper"]:
 		var info: Dictionary = Crop.build({ kind = kind, len = 2.4, n = 4, ridge = false, seed = kind.hash() % 1000 })
@@ -375,6 +390,7 @@ func update(player: Vector3) -> void:
 				st.job = -1
 				var hold: Dictionary = st.hold; st.hold = null
 				if hold.ver == ver: _attach.append([t, hold])
+				if world.loading and OS.get_cmdline_user_args().has("--farmtrace"): print("FARM tile %s detail=%d ms=%.0f chunks=%d" % [t, hold.detail, hold.us / 1000.0, hold.chunks.size()])
 			else: running += 1
 	# 짓기 시작(가까운 타일부터)
 	var cand := []
@@ -600,6 +616,7 @@ func _paddy(k: int, ch: Dictionary, dry := false) -> void:
 			# 물꼬 쪽 끝 막기(둑 단면)
 			if s0 > 0.0: G.quad(Vector3(oa.x, T, oa.y), Vector3(ta.x, T, ta.y), Vector3(fa.x, fl, fa.y), Vector3(oa.x, fl, oa.y), COL_BANK)
 			if s1 < 1.0: G.quad(Vector3(ob.x, T, ob.y), Vector3(tb.x, T, tb.y), Vector3(fb_.x, fl, fb_.y), Vector3(ob.x, fl, ob.y), COL_BANK)
+		if ch.detail >= 2: _tufts(ch, a + N[e] * (ei.z * 0.5), b + N[e] * (ei.z * 0.5), T, 0 if (st <= 1 or dry) else 1)
 		if cls == E_UPPER:
 			# 둑 비탈·석축: 둑 윗면 바깥 끝에서 아래 논 물 밑까지, 흙은 조금 눕히고 돌은 거의 곧게
 			var nbk := int(V[(int(P[k * STRIDE + 9]) + e) * 3 + 2])
@@ -670,6 +687,17 @@ func _ditch(ch: Dictionary, a: Vector2, b: Vector2, on: Vector2, T: float, fl: f
 			var dirv := (b - a).normalized() * (-1.0 if q == 0 else 1.0)
 			G.quad(cur[0], cur[3], Vector3(cur[3].x, bot, cur[3].z), Vector3(cur[0].x, bot, cur[0].z), COL_BANK, Vector3(-dirv.x, 0.0, -dirv.y))
 		prev = cur
+
+func _tufts(ch: Dictionary, a: Vector2, b: Vector2, y: float, kind: int) -> void:
+	var L := a.distance_to(b)
+	var h := fmod(absf(a.x * 0.173 + a.y * 0.311), 1.0)
+	var s := 0.3 + h * 0.4
+	if not ch.crops.has(100 + kind): ch.crops[100 + kind] = PackedFloat32Array()
+	while s < L - 0.2:
+		var p := a.lerp(b, s / L)
+		h = fmod(h * 7.31 + 0.27, 1.0)
+		_xf_buf(ch.crops[100 + kind], Vector3(p.x, y - 0.02, p.y), h * TAU, 0.8 + h * 0.5)
+		s += 0.45 + h * 0.5
 
 # 필지 축(P.ang) 방향 줄: inset만큼 안쪽 다각형 안에서 간격 sp로 → fn(시작, 끝, 각)
 func _rows(k: int, poly: PackedVector2Array, inset: float, sp: float, fn: Callable) -> void:
@@ -761,6 +789,7 @@ func _field(k: int, ch: Dictionary) -> void:
 			var g0: float = world.data_height(i0.x, i0.y); var g1: float = world.data_height(i1.x, i1.y)
 			var bh := 0.12 if not bound else 0.14
 			G.quad(Vector3(p0.x, h0 + bh, p0.y), Vector3(p1.x, h1 + bh, p1.y), Vector3(i1.x, g1 + bh * 0.8, i1.y), Vector3(i0.x, g0 + bh * 0.8, i0.y), COL_BUND, Vector3.UP)
+			if ch.detail >= 2 and not wall: _tufts(ch, p0 + N[e] * 0.12, p1 + N[e] * 0.12, (h0 + h1) * 0.5 + bh, 0)
 			G.quad(Vector3(i0.x, g0 + bh * 0.8, i0.y), Vector3(i1.x, g1 + bh * 0.8, i1.y), Vector3(i1.x, g1 - 0.05, i1.y), Vector3(i0.x, g0 - 0.05, i0.y), COL_BUND2, Vector3.UP)
 			if bound:
 				var o0 := p0 + out_n * RIM; var o1 := p1 + out_n * RIM
@@ -818,9 +847,10 @@ func _wall(G: Mb, a: Vector2, b: Vector2, nin: Vector2, bound: bool, seed: int) 
 	var h := float(seed % 97) / 97.0
 	var pv := []
 	for q in m + 1:
-		var p := c0.lerp(c1, float(q) / m)
-		var g: float = world.data_height(p.x, p.y)
 		h = fmod(h * 9.17 + 0.37, 1.0)
+		# 막돌 담은 곧지 않다: 가운데 점들을 옆으로 조금씩 흔든다(끝점은 모서리에서 만나게 그대로)
+		var p := c0.lerp(c1, float(q) / m) + (nin * (h - 0.5) * 0.16 if q > 0 and q < m else Vector2.ZERO)
+		var g: float = world.data_height(p.x, p.y)
 		var top := g + 0.8 + h * 0.3
 		var cur := [Vector3(p.x - nin.x * hw, g - 0.1, p.y - nin.y * hw), Vector3(p.x - nin.x * tw, top, p.y - nin.y * tw),
 			Vector3(p.x + nin.x * tw, top, p.y + nin.y * tw), Vector3(p.x + nin.x * hw, g - 0.1, p.y + nin.y * hw)]
@@ -873,7 +903,8 @@ func _make_nodes0(ch: Dictionary) -> Array:
 	for key in ch.rice:
 		out.append(_mm_node(rice_mesh[key.x][key.y], ch.rice[key], "farm_rice"))
 	for c in ch.crops:
-		if crop_mesh[c] != null: out.append(_mm_node(crop_mesh[c], ch.crops[c], "farm_crop"))
+		var m: Mesh = tuft_mesh[c - 100] if c >= 100 else crop_mesh[c]
+		if m != null: out.append(_mm_node(m, ch.crops[c], "farm_crop"))
 	if not ch.spout.is_empty():
 		var sp := Mb.new()
 		var uv := PackedVector2Array()

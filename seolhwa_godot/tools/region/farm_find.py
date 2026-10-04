@@ -2,7 +2,10 @@
 import numpy as np, struct, sys
 d=sys.argv[1]
 b=open(d+'/parcels.bin','rb').read()
-_,n,nv,ni,nc=struct.unpack('<5I',b[4:24]); P=np.frombuffer(b,np.float32,n*12,24).reshape(n,12)
+ver,n,nv,ni,nc=struct.unpack('<5I',b[4:24])
+if ver>=2:
+    import gzip; b=b[:24]+gzip.decompress(b[24:])
+P=np.frombuffer(b,np.float32,n*12,24).reshape(n,12)
 def show(name, m):
     q=P[m]
     if len(q)==0: print(name, 0); return

@@ -1,0 +1,26 @@
+{
+ "version": 1,
+ "parcels": 72549,
+ "vertices": 471108,
+ "inlets": 49517,
+ "chunks": 4312,
+ "chunk_m": 64.0,
+ "paddy": 56081,
+ "field": 16468,
+ "farm_png": {
+  "file": "farm.png",
+  "x0": -2560.0,
+  "z0": -2304.0,
+  "cell": 2.0,
+  "w": 2561,
+  "h": 2305,
+  "encode": "v = 128 + 부호 거리(m)·16, 필지 안 음수"
+ },
+ "params": {
+  "gap": 0.6,
+  "road_margin": 1.6,
+  "river_margin": 2.2
+ },
+ "states": "논 state: 0 물 댄 모, 1 자라는 벼, 2 익은 벼, 3 그루터기 / 밭 crop: 0 콩, 1 조, 2 보리, 3 배추, 4 고추, 5 묵정",
+ "note": "tools/region/parcels.py가 만든다. 형식은 이 파일 맨 위 설명과 docs/reports/parcels.md"
+}
