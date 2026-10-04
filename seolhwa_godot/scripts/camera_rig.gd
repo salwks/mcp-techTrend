@@ -12,6 +12,7 @@ var mode := "zones"
 var zone_name := ""
 var override = null
 var focus = null
+var sailing := false   # 배를 타고 갈 때: 멀리·높이 물러나 강기슭이 보이게(부드럽게 바뀐다)
 
 func _init(cam: Camera3D, w: World) -> void:
 	camera = cam
@@ -22,6 +23,8 @@ func params(pos: Vector3, interior) -> Dictionary:
 	if override != null:
 		p.merge(override, true); return p
 	if mode == "fixed": return p
+	if sailing:
+		p.distance = 34.0; p.pitch = 46.0; p.lookAhead = 4.0; return p
 	if interior != null and interior.has("camera"):
 		p.merge(interior.camera, true); p.lookAhead = 0.3; return p
 	var zone = null

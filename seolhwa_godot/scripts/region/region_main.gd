@@ -571,6 +571,7 @@ func _process(delta: float) -> void:
 	if not _loading and not _leaving:
 		var sail: Dictionary = world.ferry_auto(player_pos)
 		if sail.is_empty() and lanes != null: sail = lanes.auto(player_pos)
+		rig.sailing = not sail.is_empty()
 		if not sail.is_empty():
 			mv = sail.dir; speed = float(sail.speed)
 			if sail.start: _show_hud("배에 올랐다 — %s" % String(sail.name))

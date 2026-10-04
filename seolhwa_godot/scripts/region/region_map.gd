@@ -239,7 +239,7 @@ func _show_all() -> void:
 func _update_hint() -> void:
 	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기"
 	if mode == "nation" and not _fast_opts.is_empty():
-		if _fast_sel >= 0: _hint.text = "역마 타고 %s 가겠소?   Enter/Y 간다 · N/Esc 그만" % _fast_label(_fast_opts[_fast_sel])
+		if _fast_sel >= 0: _hint.text = _fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?   Enter/Y 간다 · N/Esc 그만" % _fast_label(_fast_opts[_fast_sel])
 		else: _hint.text += "\n역마(지나온 길 건너뛰기): 숫자 키 또는 금빛 길·고을 클릭"
 	_hint.reset_size()
 	var vs := get_viewport().get_visible_rect().size
@@ -496,6 +496,11 @@ func _collect_fast() -> void:
 				if r2.id == ft.target: dest = String(r2.to if r2.to != "" else r2.from)
 		_fast_opts.append({ route = String(r.id), name = String(r.get("short", r.name)), ft = ft, dest = dest })
 
+# 강·바다 뱃길은 배, 뭍길은 역마
+static func _fast_ride(o: Dictionary) -> String:
+	var r := String(o.get("route", ""))
+	return "배" if r.begins_with("RIVER_") or r.begins_with("SEA_") else "역마"
+
 func _fast_label(o: Dictionary) -> String:
 	return "%s까지 (%s)" % [String(o.ft.label), String(o.name)]
 
@@ -509,7 +514,7 @@ func _fast_go() -> void:
 	var o: Dictionary = _fast_opts[_fast_sel]
 	var ft: Dictionary = o.ft.duplicate()
 	ft.id = "fast_map_" + String(o.route); ft.fast = true
-	ft.label = "%s (역마)" % String(o.ft.label)
+	ft.label = "%s (%s)" % [String(o.ft.label), _fast_ride(o)]
 	_fast_sel = -1
 	visible = false
 	print("MAP fast_travel route=%s -> %s %s" % [o.route, ft.kind, ft.target])
@@ -597,7 +602,7 @@ func _draw_fast() -> void:
 		_canvas.draw_circle(c, 9.0, FAST_COL if not sel else Color(0.95, 0.45, 0.1))
 		_text(str(i + 1), c + Vector2(0, -1), 14, Color(0.1, 0.08, 0.07))
 	if _fast_sel >= 0:
-		var msg := "역마 타고 %s 가겠소?  Enter/Y · N/Esc" % _fast_label(_fast_opts[_fast_sel])
+		var msg := _fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?  Enter/Y · N/Esc" % _fast_label(_fast_opts[_fast_sel])
 		var w := _font.get_string_size(msg, HORIZONTAL_ALIGNMENT_LEFT, -1, 22).x + 40.0
 		var box := Rect2(Vector2((_canvas.size.x - w) / 2.0, 24), Vector2(w, 46))
 		_canvas.draw_rect(box, Color(0.96, 0.93, 0.85, 0.95))
