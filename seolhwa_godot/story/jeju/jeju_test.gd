@@ -279,7 +279,8 @@ func _stage_jeju() -> void:
 	var jd: Dictionary = d.journal_data()
 	var travel := JSON.stringify(jd.pages[0])
 	var cases := JSON.stringify(jd.pages[1])
-	expect(travel.contains("곽칠성") and travel.contains(D.PLAYER_LINE), "여행 기록 — 곽칠성을 찾음 · 나의 첫 문장")
+	var teach := JSON.stringify(load("res://scripts/story/journal_book.gd").section(jd, "teach"))   # 나의 첫 문장은 '스승의 가르침' 갈피 따로 한 쪽
+	expect(travel.contains("곽칠성") and teach.contains(D.PLAYER_LINE), "여행 기록 — 곽칠성을 찾음 · 스승의 가르침 — 나의 첫 문장")
 	expect(not travel.contains("이겸의 메모") and cases.contains(D.PLAYER_LINE), "사건 기록 — 나의 기록(이겸 메모 없음)")
 	expect(cases.contains("◆") or cases.contains("fact") or true, "")
 	d.ui.journal_show(jd)

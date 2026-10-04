@@ -5,13 +5,20 @@
 #   즉시: letterbox(on) · toast(글, 종류) · prompt(글) · items(목록) · journal_toggle(data) · hud_* ·
 #   hint(글)/hint_clear() — 처음 한 번 안내(scripts/story/onboarding.gd) · set_marks([{p, a, r}]) — 조사 대상 먹점 ·
 #   set_talk_marks([{p, a, s}]) — 새로 할 말이 있는 이야기 인물 머리 위 「…」 한지 말풍선.
-# 기록책(R): 쪽(pages) — 여행 기록 · 사건 기록 · 여행 방법(scripts/story/journal_book.gd가 만든다). ←→·A·D·숫자·탭 클릭으로 넘긴다.
-#   항목 꼬리표: ◆ 확인 · ◇ 들음 — 발언자 · △ 추정 (색만으로 가르지 않는다, 보강서 §22).
+# 기록책(R): 갈피(pages — scripts/story/journal_book.gd가 만든다)를 세로쓰기 선장본 펼침면(scripts/story/journal_view.gd)으로 그린다.
+#   ← A 다음 쪽 · → D 앞 쪽 · 숫자·갈피 클릭 · 쪽 가장자리 클릭. 꼬리표: ◆ 확인 · ◇ 들음 — 발언자 · △ 추정 (테 위 작은 글씨 — 색만으로 가르지 않는다, 보강서 §22).
+# 글꼴: scripts/ui_fonts.gd(덕온공주체 — 본문 main, 이름·제목 classic). 키는 작은 먹 칸(E · R · Esc)으로 보인다.
+# 저장 표시: save_stamp() — 오른쪽 아래 붉은 붓 도장 '기록을 남겼다'(progress.checkpoint). key_hint(키, 글) — 오른쪽 아래 작은 안내(주막 F 등).
 # 확인: E·Space·Enter·클릭 / 선택: ↑↓·W·S·숫자 / 기록: R / 닫기: Esc. 시험(auto)에서는 스스로 넘긴다.
 extends CanvasLayer
 
 signal _confirm
 signal _picked(i: int)
+
+const UiFonts := preload("res://scripts/ui_fonts.gd")
+const JournalView := preload("res://scripts/story/journal_view.gd")
+const JournalBook := preload("res://scripts/story/journal_book.gd")
+const VText := preload("res://scripts/story/vtext.gd")
 
 const PAPER := Color("#efe6d2")
 const PAPER_D := Color("#e2d6bb")
@@ -29,7 +36,8 @@ var log_lines := true              # 대사·선택을 표준 출력에 남긴�
 var modal := false
 var journal_open := false
 var _k := 1.0
-var _font: SystemFont
+var _font: Font
+var _font_c: Font
 var _root: Control
 var _dialog: PanelContainer
 var _dlg_name: Label
@@ -49,12 +57,18 @@ var _choice_prompt: Label
 var _choice_list: VBoxContainer
 var _choice_btns := []
 var _choice_sel := 0
-var _journal: PanelContainer
-var _journal_body: VBoxContainer
+var _jv: Control
+var _stamp: Control
+var _stamp_t := -1.0
+var _khint: HBoxContainer
+var _khint_key: Label
+var _khint_l: Label
 var _ending: ColorRect
 var _end_box: VBoxContainer
 var _items: Label
-var _prompt: Label
+var _prompt: HBoxContainer
+var _prompt_l: Label
+var _prompt_key: Label
 var _hud: Control
 var _hp_bar: ProgressBar
 var _st_bar: ProgressBar
@@ -89,8 +103,8 @@ var on_journal_page: Callable = Callable()   # (쪽 id) — 기록책을 열거�
 
 func _ready() -> void:
 	layer = 8
-	_font = SystemFont.new()
-	_font.font_names = PackedStringArray(["AppleMyungjo", "Nanum Myeongjo", "NanumMyeongjo", "Batang", "Noto Serif CJK KR", "Apple SD Gothic Neo"])
+	_font = UiFonts.main()
+	_font_c = UiFonts.classic()
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -102,9 +116,9 @@ func _ready() -> void:
 # ---------------------------------------------------------------------------
 # 만들기
 # ---------------------------------------------------------------------------
-func _label(size: int, col := INK, outline := false) -> Label:
+func _label(size: int, col := INK, outline := false, classic := false) -> Label:
 	var l := Label.new()
-	l.add_theme_font_override("font", _font)
+	l.add_theme_font_override("font", _font_c if classic else _font)
 	l.set_meta("base", size)
 	l.add_theme_font_size_override("font_size", int(size * _k))
 	l.add_theme_color_override("font_color", col)
@@ -120,14 +134,43 @@ func _paper(alpha := 0.96, border := 2, pad := 18) -> PanelContainer:
 	var p := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(PAPER.r, PAPER.g, PAPER.b, alpha)
-	sb.border_color = INK
-	sb.set_border_width_all(border)
-	sb.set_corner_radius_all(3)
-	sb.shadow_color = Color(0, 0, 0, 0.25); sb.shadow_size = 6; sb.shadow_offset = Vector2(2, 3)
-	sb.content_margin_left = pad; sb.content_margin_right = pad; sb.content_margin_top = pad * 0.7; sb.content_margin_bottom = pad * 0.7
+	sb.border_color = Color(INK, 0.78)
+	sb.set_border_width_all(mini(border, 2))
+	sb.set_corner_radius_all(2)
+	sb.shadow_color = Color(0, 0, 0, 0.28); sb.shadow_size = 8; sb.shadow_offset = Vector2(2, 4)
+	sb.content_margin_left = pad * 1.1; sb.content_margin_right = pad * 1.1; sb.content_margin_top = pad * 0.75; sb.content_margin_bottom = pad * 0.7
 	p.add_theme_stylebox_override("panel", sb)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return p
+
+# 키 칸: 먹 바탕에 한지 빛 글자(E · R · Esc …) — 글 옆에 붙는 작은 칸. 돌려준 Label의 글을 바꿔 쓴다
+func _chip(key: String, size := 15, light := false) -> PanelContainer:
+	var p := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(PAPER, 0.95) if light else Color(INK, 0.88)
+	sb.border_color = Color(INK, 0.9); sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 7; sb.content_margin_right = 7; sb.content_margin_top = 0; sb.content_margin_bottom = 1
+	p.add_theme_stylebox_override("panel", sb)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var l := _label(size, INK if light else PAPER)
+	l.text = key
+	l.name = "key"
+	p.add_child(l)
+	return p
+
+# 오른쪽 맞춘 '키 칸 + 설명' 한 줄(대화 넘기기 · 카드 확인 · 선택)
+func _keyrow(pairs: Array, size := 15) -> HBoxContainer:
+	var h := HBoxContainer.new(); h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.alignment = BoxContainer.ALIGNMENT_END
+	h.add_theme_constant_override("separation", 6)
+	for i in pairs.size():
+		if i > 0:
+			var g := Control.new(); g.custom_minimum_size = Vector2(10, 0); g.mouse_filter = Control.MOUSE_FILTER_IGNORE; h.add_child(g)
+		h.add_child(_chip(String(pairs[i][0]), size - 1))
+		var l := _label(size, INK_SOFT); l.text = String(pairs[i][1]); h.add_child(l)
+	return h
 
 func _bar(col: Color, h: float) -> ProgressBar:
 	var b := ProgressBar.new()
@@ -163,10 +206,26 @@ func _build() -> void:
 	_hint.add_child(_hint_l)
 	_hint.modulate.a = 0.0
 	_root.add_child(_hint)
-	# 조사 안내
-	_prompt = _label(22, Color(1, 1, 1), true)
-	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# 조사 안내: [E] 살펴보기 — 키 칸 + 흰 글(먹 테)
+	_prompt = HBoxContainer.new(); _prompt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_prompt.alignment = BoxContainer.ALIGNMENT_CENTER
+	_prompt.add_theme_constant_override("separation", 10)
+	var pc := _chip("E", 18, true)
+	_prompt_key = pc.get_node("key")
+	_prompt_l = _label(22, Color(1, 1, 1), true)
+	_prompt.add_child(pc); _prompt.add_child(_prompt_l)
+	_prompt.visible = false
 	_root.add_child(_prompt)
+	# 오른쪽 아래 작은 안내(주막 F 등)
+	_khint = HBoxContainer.new(); _khint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_khint.alignment = BoxContainer.ALIGNMENT_END
+	_khint.add_theme_constant_override("separation", 8)
+	var kc := _chip("F", 16, true)
+	_khint_key = kc.get_node("key")
+	_khint_l = _label(19, Color(1, 1, 1), true)
+	_khint.add_child(kc); _khint.add_child(_khint_l)
+	_khint.visible = false
+	_root.add_child(_khint)
 	# 소지품
 	_items = _label(18, Color(1, 1, 1), true)
 	_items.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -178,12 +237,13 @@ func _build() -> void:
 	# 대화 상자
 	_dialog = _paper(0.95)
 	var dv := VBoxContainer.new(); dv.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_dlg_name = _label(22, SEAL)
+	dv.add_theme_constant_override("separation", 6)
+	_dlg_name = _label(23, SEAL, false, true)
 	_dlg_text = _label(26, INK)
 	_dlg_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_dlg_hint = _label(16, INK_SOFT); _dlg_hint.text = "▸ E"
-	_dlg_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	dv.add_child(_dlg_name); dv.add_child(_dlg_text); dv.add_child(_dlg_hint)
+	_dlg_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_dlg_hint = _label(1, INK_SOFT); _dlg_hint.visible = false   # 예전 이름(다른 곳이 읽을 수 있게)
+	dv.add_child(_dlg_name); dv.add_child(_dlg_text); dv.add_child(_keyrow([["E", "다음"]]))
 	_dialog.add_child(dv)
 	_dialog.visible = false
 	_root.add_child(_dialog)
@@ -196,6 +256,7 @@ func _build() -> void:
 	_choice_list = VBoxContainer.new(); _choice_list.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_choice_list.add_theme_constant_override("separation", 4)
 	cv.add_child(_choice_prompt); cv.add_child(_choice_list)
+	cv.add_child(_keyrow([["↑↓", "고르기"], ["E", "정하기"]]))
 	_choice.add_child(cv)
 	_choice.visible = false
 	_root.add_child(_choice)
@@ -204,26 +265,27 @@ func _build() -> void:
 	var kv := VBoxContainer.new(); kv.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	kv.add_theme_constant_override("separation", 10)
 	var head := HBoxContainer.new(); head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_card_title = _label(32, INK); _card_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_card_tag = _label(18, SEAL)
+	_card_title = _label(31, INK, false, true); _card_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_card_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_card_tag = _label(18, SEAL, false, true)
 	head.add_child(_card_title); head.add_child(_card_tag)
-	var rule := ColorRect.new(); rule.color = INK; rule.custom_minimum_size = Vector2(0, 2); rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var rule := ColorRect.new(); rule.color = Color(INK, 0.7); rule.custom_minimum_size = Vector2(0, 1.5); rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_card_text = _label(23, INK); _card_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var ok := _label(17, INK_SOFT); ok.text = "확인  E"; ok.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	kv.add_child(head); kv.add_child(rule); kv.add_child(_card_text); kv.add_child(ok)
+	kv.add_child(head); kv.add_child(rule); kv.add_child(_card_text); kv.add_child(_keyrow([["E", "확인"]]))
 	_card.add_child(kv)
 	_card.visible = false
 	_root.add_child(_card)
-	# 사건 기록
-	_journal = _paper(0.98, 3, 30)
-	var sc := ScrollContainer.new(); sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	sc.mouse_filter = Control.MOUSE_FILTER_PASS
-	_journal_body = VBoxContainer.new(); _journal_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_journal_body.add_theme_constant_override("separation", 8)
-	sc.add_child(_journal_body)
-	_journal.add_child(sc)
-	_journal.visible = false
-	_root.add_child(_journal)
+	# 기록책(세로쓰기 선장본 펼침면)
+	_jv = JournalView.new()
+	_jv.visible = false
+	_jv.section_shown.connect(_on_section)
+	_jv.close_requested.connect(journal_close)
+	_root.add_child(_jv)
+	# 자동 기록 도장(오른쪽 아래)
+	_stamp = Control.new(); _stamp.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stamp.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_stamp.draw.connect(_draw_stamp)
+	_root.add_child(_stamp)
 	# 전투 HUD
 	_hud = Control.new(); _hud.set_anchors_preset(Control.PRESET_FULL_RECT); _hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud.visible = false
@@ -261,7 +323,7 @@ func _build() -> void:
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_fade)
 	# 검은 화면 위 가운데 글(이겸의 세 문장) — 페이드보다 위
-	_center = _label(30, Color(0.93, 0.9, 0.84)); _center.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_center = _label(30, Color(0.93, 0.9, 0.84), false, true); _center.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_center.vertical_alignment = VERTICAL_ALIGNMENT_CENTER; _center.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_center.modulate.a = 0.0
 	_root.add_child(_center)
@@ -272,7 +334,7 @@ func _build() -> void:
 	_book.add_child(_book_box)
 	_book.visible = false
 	_root.add_child(_book)
-	_title_l = _label(64, Color(1, 1, 1), true); _title_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title_l = _label(64, Color(1, 1, 1), true, true); _title_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_title_l.modulate.a = 0.0
 	_root.add_child(_title_l)
@@ -290,7 +352,8 @@ func _resize() -> void:
 	var w := minf(vs.x * 0.82, 980.0 * k)
 	_dialog.position = Vector2((vs.x - w) / 2, vs.y - 220 * k); _dialog.size = Vector2(w, 170 * k); _dialog.custom_minimum_size = Vector2(w, 150 * k)
 	_caption.position = Vector2(vs.x * 0.1, vs.y * 0.74); _caption.size = Vector2(vs.x * 0.8, 120 * k)
-	_prompt.position = Vector2(0, vs.y - 60 * k); _prompt.size = Vector2(vs.x, 40 * k)
+	_prompt.position = Vector2(0, vs.y - 64 * k); _prompt.size = Vector2(vs.x, 40 * k)
+	_khint.position = Vector2(vs.x * 0.4, vs.y - 92 * k); _khint.size = Vector2(vs.x * 0.6 - 26 * k, 34 * k)
 	_place_hint()
 	_center.position = Vector2(vs.x * 0.15, vs.y * 0.3); _center.size = Vector2(vs.x * 0.7, vs.y * 0.4)
 	_title_l.position = Vector2(0, vs.y * 0.3); _title_l.size = Vector2(vs.x, vs.y * 0.3)
@@ -304,8 +367,7 @@ func _resize() -> void:
 	var kw := minf(vs.x * 0.8, 620 * k)
 	_card.custom_minimum_size = Vector2(kw, 0); _card.size = Vector2(kw, 0)
 	_card.position = Vector2((vs.x - kw) / 2, vs.y * 0.22)
-	_journal.position = Vector2(vs.x * 0.1, vs.y * 0.07); _journal.size = Vector2(vs.x * 0.8, vs.y * 0.86)
-	(_journal.get_child(0) as Control).custom_minimum_size = Vector2(vs.x * 0.8 - 70 * k, vs.y * 0.86 - 50 * k)
+	_jv.position = Vector2.ZERO; _jv.size = vs
 	_end_box.position = Vector2(vs.x * 0.2, vs.y * 0.16); _end_box.size = Vector2(vs.x * 0.6, vs.y * 0.7)
 	var pv: Control = _hud.get_node("pv")
 	pv.position = Vector2(24 * k, 20 * k); pv.size = Vector2(300 * k, 60 * k)
@@ -320,18 +382,17 @@ func _resize() -> void:
 # 입력
 # ---------------------------------------------------------------------------
 func _input(ev: InputEvent) -> void:
+	if journal_open:
+		var jk: bool = ev is InputEventKey and ev.pressed and not ev.echo
+		if jk and ev.physical_keycode in [KEY_R, KEY_ESCAPE, KEY_E]:
+			journal_close(); get_viewport().set_input_as_handled()
+		elif (jk or ev is InputEventMouse) and _jv.handle(ev): get_viewport().set_input_as_handled()
+		elif jk or (ev is InputEventMouseButton): get_viewport().set_input_as_handled()
+		return
 	var key: bool = ev is InputEventKey and ev.pressed and not ev.echo
 	var click: bool = ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT
 	if not (key or click): return
 	var kc: int = ev.physical_keycode if key else 0
-	if journal_open:
-		if kc in [KEY_R, KEY_ESCAPE, KEY_E]:
-			journal_close(); get_viewport().set_input_as_handled()
-		elif kc in [KEY_LEFT, KEY_A]: journal_page(_jpage - 1); get_viewport().set_input_as_handled()
-		elif kc in [KEY_RIGHT, KEY_D]: journal_page(_jpage + 1); get_viewport().set_input_as_handled()
-		elif kc >= KEY_1 and kc <= KEY_9 and kc - KEY_1 < _jdata.get("pages", []).size():
-			journal_page(kc - KEY_1); get_viewport().set_input_as_handled()
-		return
 	if _waiting == "": return
 	if _waiting == "choice":
 		if kc in [KEY_UP, KEY_W]: _move_sel(-1)
@@ -358,6 +419,10 @@ func _process(dt: float) -> void:
 	if _hud_say_t > 0.0:
 		_hud_say_t -= dt
 		_hud_say.modulate.a = clampf(_hud_say_t / 0.4, 0.0, 1.0)
+	if _stamp_t >= 0.0:
+		_stamp_t += dt
+		if _stamp_t > STAMP_SEC: _stamp_t = -1.0
+		_stamp.queue_redraw()
 	for t in _toasts.get_children():
 		var left: float = float(t.get_meta("t", 0.0)) - dt
 		t.set_meta("t", left)
@@ -522,10 +587,64 @@ func toast(text: String, kind := "info") -> void:
 	var live := _toasts.get_children().filter(func(c): return not c.is_queued_for_deletion())
 	for i in maxi(0, live.size() - 5): live[i].queue_free()
 
+# 조사·대화 안내: "살펴보기" → [E] 살펴보기. 글이 다른 키로 시작하면("Space 멈춤" 등) 그 키를 칸에 넣는다
 func prompt(text: String) -> void:
-	_prompt.text = ("E   " + text) if text != "" else ""
-	var big := prompt_strong and text != ""
-	_prompt.add_theme_font_size_override("font_size", int((27 if big else 22) * _k))
+	_prompt.visible = text != ""
+	if text == "": return
+	var key := "E"
+	var body := text
+	var sp := text.find(" ")
+	if sp > 0 and RegEx.create_from_string("^(?:[A-Z]|Space|Esc|Tab|Shift)$").search(text.substr(0, sp)) != null:
+		key = text.substr(0, sp); body = text.substr(sp).strip_edges()
+	_prompt_key.text = key
+	_prompt_l.text = body
+	var big := prompt_strong
+	_prompt_l.add_theme_font_size_override("font_size", int((27 if big else 22) * _k))
+	_prompt_key.add_theme_font_size_override("font_size", int((22 if big else 18) * _k))
+
+# 오른쪽 아래 작은 키 안내(주막 F 쉬기 등) — 빈 글이면 숨긴다
+func key_hint(key: String, text: String) -> void:
+	_khint.visible = text != ""
+	_khint_key.text = key
+	_khint_l.text = text
+
+# ---- 자동 기록 도장 ----
+const STAMP_SEC := 2.6
+func save_stamp() -> void:
+	if log_lines: printerr("SAVESTAMP")
+	_stamp_t = 0.0
+	_stamp.queue_redraw()
+
+func _draw_stamp() -> void:
+	if _stamp_t < 0.0: return
+	var t := _stamp_t
+	var a := clampf(t / 0.25, 0.0, 1.0) * clampf((STAMP_SEC - t) / 0.6, 0.0, 1.0)
+	var k := _k
+	var vs := get_viewport().get_visible_rect().size
+	var s := 46.0 * k * (1.0 + 0.25 * maxf(0.0, 1.0 - t / 0.18))   # 찍을 때 살짝 크게
+	var c := Vector2(vs.x - 40.0 * k - s * 0.5, vs.y - 128.0 * k)
+	var col := Color(SEAL, 0.9 * a)
+	var rng := RandomNumberGenerator.new(); rng.seed = 18
+	var pts := PackedVector2Array()
+	for i in 20:   # 붓으로 찍은 듯 조금 일그러진 네모
+		var u := float(i) / 20.0
+		var q: Vector2
+		if u < 0.25: q = Vector2(-0.5 + u * 4.0, -0.5)
+		elif u < 0.5: q = Vector2(0.5, -0.5 + (u - 0.25) * 4.0)
+		elif u < 0.75: q = Vector2(0.5 - (u - 0.5) * 4.0, 0.5)
+		else: q = Vector2(-0.5, 0.5 - (u - 0.75) * 4.0)
+		pts.append(c + q * s + Vector2(rng.randf_range(-1.5, 1.5), rng.randf_range(-1.5, 1.5)) * k)
+	_stamp.draw_colored_polygon(pts, col)
+	for i in 14:   # 인주가 덜 묻은 자리
+		_stamp.draw_circle(c + Vector2(rng.randf_range(-0.45, 0.45), rng.randf_range(-0.45, 0.45)) * s, rng.randf_range(0.6, 1.8) * k, Color(PAPER, 0.45 * a))
+	var fs := s * 0.36
+	VText.column(_stamp, _font_c, c + Vector2(0, -fs * 1.05), "기록", fs, Color(PAPER, 0.95 * a))
+	var msg := "기록을 남겼다"
+	var mfs := int(17 * k)
+	var w := _font.get_string_size(msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs).x
+	var mp := Vector2(c.x - s * 0.5 - 12.0 * k - w, c.y + mfs * 0.35)
+	_stamp.draw_string_outline(_font, mp, msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs, int(5 * k), Color(0.05, 0.04, 0.035, 0.8 * a))
+	_stamp.draw_string(_font, mp, msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs, Color(1, 1, 1, a))
 
 func items(list: Array) -> void:
 	var parts := []
@@ -543,30 +662,29 @@ func journal_show(data: Dictionary) -> void:
 	# 예전 꼴({cases, empty})도 받는다 — 사건 기록 한 쪽으로
 	if not data.has("pages"): data = { pages = [{ id = "case", tab = "사건 기록", blocks = _legacy_blocks(data) }] }
 	_jdata = data
-	_journal.visible = true
 	journal_open = true
-	journal_page(int(data.get("page", 0)))
+	prompt("")
+	_jv.size = get_viewport().get_visible_rect().size
+	_root.move_child(_jv, -1)   # 소지품·호신물 칸 등 위로(펼쳐 있는 동안 책만)
+	_root.move_child(_stamp, -1)
+	_items.set_meta("was", _items.visible); _items.visible = false
+	_jv.visible = true
+	_jv.modulate.a = 0.0
+	create_tween().tween_property(_jv, "modulate:a", 1.0, 0.05 if auto else 0.2)
+	_jpage = -1
+	_jv.open(data, int(data.get("page", 0)))
 
+# 갈피 i(pages 번호)의 첫 펼침으로
 func journal_page(i: int) -> void:
 	var pages: Array = _jdata.get("pages", [])
 	if pages.is_empty(): return
-	_jpage = clampi(i, 0, pages.size() - 1)
-	for c in _journal_body.get_children(): c.queue_free()
-	# 쪽 머리(탭): 클릭으로도 넘긴다
-	var tabs := HBoxContainer.new(); tabs.add_theme_constant_override("separation", int(28 * _k))
-	_jtabs = []
-	for j in pages.size():
-		var t := _label(24 if j == _jpage else 21, SEAL if j == _jpage else INK_SOFT)
-		t.text = ("%d  %s" % [j + 1, String(pages[j].get("tab", ""))]) + ("  ▾" if j == _jpage else "")
-		t.mouse_filter = Control.MOUSE_FILTER_STOP
-		t.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT: journal_page(j))
-		tabs.add_child(t); _jtabs.append(t)
-	_journal_body.add_child(tabs)
-	var r := ColorRect.new(); r.color = INK; r.custom_minimum_size = Vector2(0, 2)
-	_journal_body.add_child(r)
-	for bl in pages[_jpage].get("blocks", []): _block(bl)
-	var foot := _label(16, INK_SOFT); foot.text = "← → 쪽 넘기기 · R · Esc 닫기"; foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_journal_body.add_child(foot)
+	_jv.goto_section(clampi(i, 0, pages.size() - 1))
+
+func _on_section(i: int) -> void:
+	var pages: Array = _jdata.get("pages", [])
+	if i < 0 or i >= pages.size() or i == _jpage: return
+	_jpage = i
+	if not bool(pages[i].get("front", false)): JournalBook.last_page = i
 	if log_lines: printerr("JOURNAL page=%s %s" % [pages[_jpage].get("id", ""), _page_text(pages[_jpage])])
 	if on_journal_page.is_valid(): on_journal_page.call(String(pages[_jpage].get("id", "")))
 
@@ -579,51 +697,6 @@ func _page_text(pg: Dictionary) -> String:
 		if t != "": parts.append(t)
 	return " / ".join(parts)
 
-# 블록: title · head · para(soft, size) · quote · entry(tag fact|heard|guess, by, title, text, strong) · case(title, status) · gap
-func _block(bl: Dictionary) -> void:
-	match String(bl.get("t", "para")):
-		"title":
-			var l := _label(36, INK); l.text = String(bl.text); _journal_body.add_child(l)
-		"head":
-			_head(String(bl.text))
-		"case":
-			var h := HBoxContainer.new()
-			var ct := _label(28, INK); ct.text = "「%s」" % bl.title; ct.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			var st := _label(19, SEAL); st.text = String(bl.get("status", ""))
-			h.add_child(ct); h.add_child(st)
-			_journal_body.add_child(h)
-		"quote":
-			_para("    " + String(bl.text), int(bl.get("size", 22)), SEAL)
-		"gap":
-			var g := Control.new(); g.custom_minimum_size = Vector2(0, 6 * _k); _journal_body.add_child(g)
-		"entry":
-			var row := HBoxContainer.new(); row.add_theme_constant_override("separation", int(10 * _k))
-			var tag := String(bl.get("tag", "fact"))
-			var tg := PanelContainer.new()
-			var sb := StyleBoxFlat.new(); sb.bg_color = Color(0, 0, 0, 0); sb.border_color = INK if tag == "fact" else INK_SOFT
-			sb.set_border_width_all(2 if tag == "fact" else 1)
-			sb.content_margin_left = 6; sb.content_margin_right = 6; sb.content_margin_top = 1; sb.content_margin_bottom = 1
-			tg.add_theme_stylebox_override("panel", sb)
-			tg.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-			var tl := _label(16, INK if tag == "fact" else INK_SOFT)
-			tl.text = String(FACT_TAG.get(tag, "◆ 확인")) + ((" — " + String(bl.by)) if tag == "heard" and String(bl.get("by", "")) != "" else "")
-			tg.add_child(tl)
-			tg.custom_minimum_size = Vector2(150 * _k, 0)
-			var col := VBoxContainer.new(); col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			col.add_theme_constant_override("separation", 2)
-			if String(bl.get("title", "")) != "":
-				var t1 := _label(21, SEAL if bl.get("strong", false) else INK); t1.text = String(bl.title)
-				t1.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; t1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				col.add_child(t1)
-			if String(bl.get("text", "")) != "":
-				var t2 := _label(18 if String(bl.get("title", "")) != "" else 21, INK_SOFT if String(bl.get("title", "")) != "" else INK)
-				t2.text = String(bl.text); t2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; t2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				col.add_child(t2)
-			row.add_child(tg); row.add_child(col)
-			_journal_body.add_child(row)
-		_:
-			_para(String(bl.get("text", "")), int(bl.get("size", 21)), INK_SOFT if bl.get("soft", false) else INK)
-
 func _legacy_blocks(data: Dictionary) -> Array:
 	var out := []
 	var cases: Array = data.get("cases", [])
@@ -634,20 +707,9 @@ func _legacy_blocks(data: Dictionary) -> Array:
 		for c in cs.get("clues", []): out.append({ t = "entry", tag = "fact", title = c.title, text = c.get("text", "") })
 	return out
 
-func _head(t: String) -> void:
-	var r := ColorRect.new(); r.color = Color(INK.r, INK.g, INK.b, 0.5); r.custom_minimum_size = Vector2(0, 1)
-	_journal_body.add_child(r)
-	var l := _label(23, SEAL); l.text = t
-	_journal_body.add_child(l)
-
-func _para(t: String, size: int, col: Color) -> void:
-	var l := _label(size, col); l.text = t
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_journal_body.add_child(l)
-
 func journal_close() -> void:
-	_journal.visible = false
+	if _jv.visible: _items.visible = bool(_items.get_meta("was", true))
+	_jv.visible = false
 	journal_open = false
 	_cooldown = 0.15
 
@@ -753,7 +815,7 @@ func book_page(lines: Array, sec := 2.6) -> void:
 	if log_lines: printerr("BOOK ", " / ".join(lines))
 	for c in _book_box.get_children(): c.queue_free()
 	for i in lines.size():
-		var l := _label(34 if i == 0 else 26, INK if i < lines.size() - 1 else INK_SOFT)
+		var l := _label(34 if i == 0 else 26, INK if i < lines.size() - 1 else INK_SOFT, false, i == 0)
 		l.text = String(lines[i]); l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_book_box.add_child(l)
@@ -777,8 +839,8 @@ func ending(d: Dictionary) -> void:
 	if log_lines: printerr("ENDING %s — %s" % [d.get("title", ""), d.get("record", "")])
 	modal = true
 	for c in _end_box.get_children(): c.queue_free()
-	var case_l := _label(22, SEAL); case_l.text = "「%s」 — 사건 종결" % d.get("case_title", "")
-	var t := _label(44, INK); t.text = d.get("title", "")
+	var case_l := _label(22, SEAL, false, true); case_l.text = "「%s」 — 사건 종결" % d.get("case_title", "")
+	var t := _label(46, INK, false, true); t.text = d.get("title", "")
 	_end_box.add_child(case_l); _end_box.add_child(t)
 	var r := ColorRect.new(); r.color = INK; r.custom_minimum_size = Vector2(0, 2)
 	_end_box.add_child(r)
@@ -787,8 +849,7 @@ func ending(d: Dictionary) -> void:
 		_end_box.add_child(l)
 	var rec := _label(19, INK_SOFT); rec.text = d.get("record", ""); rec.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_end_box.add_child(rec)
-	var ok := _label(18, SEAL); ok.text = "계속  E"; ok.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_end_box.add_child(ok)
+	_end_box.add_child(_keyrow([["E", "계속"]], 17))
 	_ending.visible = true
 	_ending.modulate.a = 0.0
 	create_tween().tween_property(_ending, "modulate:a", 1.0, 0.6)
