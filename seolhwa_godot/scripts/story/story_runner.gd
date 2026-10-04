@@ -189,14 +189,14 @@ func step(st: Dictionary, g: int) -> void:
 		await d.show_ending()
 	elif st.has("log"):
 		log_line("log", st.log)
-
-func run_event(id: String, g: int) -> void:
-	var ev: Dictionary = d.events.get(id, {})
 	# 안내·지도·관찰(scripts/story/onboarding.gd): { "discover": map_places id } 지도에 적기(들음) · { "observe": 글, "about": 대상 } 기록책 관찰 ·
 	#   { "onboard": "ITEM_USE" } 처음 한 번 안내 표시를 본 것으로
 	elif st.has("discover") or st.has("observe") or st.has("onboard"):
 		var ob = d.get("onboard")
 		if ob != null: ob.step(st)
+
+func run_event(id: String, g: int) -> void:
+	var ev: Dictionary = d.events.get(id, {})
 	if ev.is_empty():
 		push_warning("이야기: 없는 사건 장면 " + id); return
 	if not bool(ev.get("SOURCE_VERIFIED", true)): return   # §44: 확인 안 된 사건은 빌드에서 뺀다

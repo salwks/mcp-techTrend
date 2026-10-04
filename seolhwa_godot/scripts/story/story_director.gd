@@ -58,12 +58,12 @@ var free_move := false   # 추격(scripts/story/chase.gd) 동안: 이야기가 �
 var title = null         # 시작 메뉴(scripts/story/title_menu.gd) — 열려 있는 동안 이야기를 멈춘다
 var _where_t := 0.0
 var _resumed := false
+var onboard = null             # scripts/story/onboarding.gd
 var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 카드 뒤 한 줄씩)
 var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
 var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
 
 # 사건 완료(v2.2 레벨 없음): CASE_<키>_COMPLETE를 세우고 숙련 해금표(skills.gd)를 훑는다
-var onboard = null             # scripts/story/onboarding.gd
 func _case_complete() -> Array:
 	S.vars[Skills.complete_var(data.get("case", {}), case_id)] = true
 	var got := Skills.unlock(S.vars)
@@ -125,13 +125,13 @@ func _setup() -> void:
 	ui = StoryUI.new()
 	add_child(ui)
 	ui.log_lines = log_story
+	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
+	add_child(onboard)
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
 	if case_id == "":
 		_maybe_title()
 		return   # 소문만(노정·다른 권역)
-	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
-	add_child(onboard)
 	var ddir := "res://story/%s/" % case_id
 	data = load(ddir + case_id + "_data.gd").data()
 	_filter_space()
@@ -714,6 +714,7 @@ func interact(id: String) -> void:
 				if not runner.cond(o.get("when", true)): return
 				steps = o.get("steps", []); break
 	runner.log_line("interact", id)
+	if onboard != null: onboard.on_interact("actor" if actors.has(id) else "object")
 	_target = null
 	ui.prompt("")
 	await runner.run(steps)
@@ -736,7 +737,6 @@ func _check_triggers() -> void:
 		return
 
 # ---------------------------------------------------------------------------
-	if onboard != null: onboard.on_interact("actor" if actors.has(id) else "object")
 # 전투·결말
 # ---------------------------------------------------------------------------
 func combat(arena_id: String, st: Dictionary) -> String:
