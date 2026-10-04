@@ -18,7 +18,7 @@
 | ACT 3 잠금 시험 | `-- --region=GG_HANYANG --storytest=hanyang:act3` (`--headless`도 된다) |
 | 직접 하기 | `-- --region=HH_HWANGJU`. 저장에 `ACT2_OPEN=true`(한양 S1006)가 있어야 사건이 선다. 강릉·경주와 순서는 상관없다 |
 
-**대본 시험은 창을 띄워야 한다(헤드리스 안 됨).** 공간을 넘을 때 region_main `_leave`가 `RenderingServer.frame_post_draw`를 기다리는데, 헤드리스에서는 이 신호가 오지 않아 멈춘다. 시험은 다음 순서로 진행 단계를 이어 간다.
+~~대본 시험은 창을 띄워야 한다~~ — 고쳤다(stability.md): 이제 `--headless`도 된다. 시험은 다음 순서로 진행 단계를 이어 간다.
 
 - 황주(S4001·S4002)
 - 장면 다시 열기
@@ -287,7 +287,7 @@ python3 seolhwa_godot/tools/web_export_server.py 8770
 ## 8. 남은 것·알려진 문제
 
 - **배 타기 API**: 배 담당이 `board(lane_id)`·`on_arrive`를 만들고 있다(terrain-engine.md "배 타기"). 그것이 들어오면 `hwangju_case.sail()` 한 곳만 바꾸면 된다(지금은 암전 한 번). 뱃길에 걸어 오르는 것을 막는 판정(`_on_lane`)은 river_lanes의 `_project`를 빌려 쓴다. 배 담당 변경 뒤 다시 확인해야 한다.
-- **대본 시험은 창을 띄워야 한다**(헤드리스 공간 넘기 멈춤 — region_main `_leave`의 `frame_post_draw`). 엔진 쪽 고칠 거리다.
+- ~~대본 시험은 창을 띄워야 한다~~ — 고쳤다(stability.md, 헤드리스는 `process_frame`으로 센다).
 - 소리가 없다(바람·물보라는 자막과 날씨 입자로만).
 - 큰 바람 때 바위섬에서 쫓겨 오는 것은 암전 한 번이다. 실제로 배가 흔들리는 연출은 배 체계를 붙인 뒤에 할 일이다.
 - 시계는 2분 30초에 한 시간이다. 장산곶에 11~12시에 닿으면 18시까지 실제 약 15분이고, 행동마다 시간이 더 든다. 플레이 시험으로 조정해야 한다.
