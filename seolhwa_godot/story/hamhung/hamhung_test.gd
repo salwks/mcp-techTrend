@@ -91,22 +91,29 @@ func _wk() -> String:
 	var w = d.main.weather
 	return String(w.script_kind) if w != null else ""
 
+# 날씨 단계는 case.ambient가 0.4초마다 본다 — 바뀔 때까지 잠깐 기다린다(부하에 따라 프레임이 늦다)
+func _weather(k: String, what: String) -> void:
+	var t0 := Time.get_ticks_msec()
+	while _wk() != k and Time.get_ticks_msec() - t0 < 6000:
+		await get_tree().process_frame
+	expect(_wk() == k, "%s (%s)" % [what, _wk()])
+
 func _stage_r05() -> void:
 	expect(d.case_id == "hamhung" and d.space_id == D.RT5, "R05 — 함흥 사건 공간(평양 사건 뒤)")
 	await _until(func(): return not d.main._loading, 60.0, "불러오기")
 	await _frames(10)
 	expect(d.S.is_flag("r05_started") and _wk() == "cloudy", "평양 쪽 들머리 — 흐림 (%s)" % _wk())
 	await _at(Vector2(-320.0, -4.0)); await _frames(30)
-	expect(_wk() == "wind", "성천 지나 — 바람 (%s)" % _wk())
+	await _weather("wind", "성천 지나 — 바람")
 	await _at(Vector2(-215.0, -1.0)); await _frames(30)
-	expect(_wk() == "snow", "양덕 서쪽 숲길 — 눈 (%s)" % _wk())
+	await _weather("snow", "양덕 서쪽 숲길 — 눈")
 	await go("r05_horse")
 	expect(d.S.has_clue("r05_horse") and d.S.is_flag("r05_horse_read"), "쓰러진 말 — 짐승 흔적 읽기: 범이 아니라 추위")
 	prefer = ["바로 돌려"]
 	await go("r05_sign")
 	prefer = []
 	expect(d.S.is_flag("r05_sign_fixed") and d.S.has_clue("r05_sign"), "돌아간 이정표 — 바로 세움")
-	expect(_wk() == "blizzard", "신창 갈림길 — 눈보라 (%s)" % _wk())
+	await _weather("blizzard", "신창 갈림길 — 눈보라")
 	await _at(Vector2(D.PASS_X, 12.0)); await _frames(30)
 	expect(d.S.is_flag("r05_pass") and _wk() == "blizzard", "양덕 고갯마루 — 눈보라")
 	prefer = ["파 본다"]
@@ -115,7 +122,7 @@ func _stage_r05() -> void:
 	expect(d.S.has(D.LUGGAGE), "눈에 묻힌 봇짐")
 	await go("r05_tracks")
 	expect(d.S.has_clue("r05_tracks") and d.S.is_flag("r05_tracks_read"), "세 갈래 발자국 — 되돌아온 두 줄")
-	expect(_wk() == "snow", "고원 쪽 내리막 — 눈 (%s)" % _wk())
+	await _weather("snow", "고원 쪽 내리막 — 눈")
 	await go("gowon_kim")
 	expect(d.S.is_flag("r05_returned") and not d.S.has(D.LUGGAGE), "고원 주막 — 봇짐을 주인에게")
 	expect(d.S.phase == "start" and not d.S.is_flag("case_started"), "퀘스트·사건 기록 없이(노정 사건)")
