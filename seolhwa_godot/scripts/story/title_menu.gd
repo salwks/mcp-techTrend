@@ -1,6 +1,7 @@
 # 시작 메뉴 — 새 게임 / 이어 하기(--newgame 없이 시험할 수 있게). story_director가 그냥 실행했을 때만 띄운다.
 #   새 게임: 저장(user://progress.json)을 비우고 남원 S0001부터. 남원에 있으면 그 자리에서, 아니면 남원으로 넘어간다.
 #   이어 하기: 저장된 자리(progress.where)로. 다른 공간이면 그 공간으로 넘어간다(Travel 예약 + resume_at).
+#   설정: 상호작용 안내·조사 도움(scripts/story/options_menu.gd — 놀이 중 Esc와 같은 창).
 # 열려 있는 동안 story_director.blocks_move()가 참이라 플레이어·이야기가 멈춘다. ↑↓·W·S·1·2·Enter·E·클릭.
 extends CanvasLayer
 
@@ -18,6 +19,7 @@ var _sel := 0
 var _btns: Array = []
 var _can_continue := false
 var _root: Control
+var _opts = null   # 열린 설정 창
 
 func _init(director) -> void:
 	d = director
@@ -50,9 +52,9 @@ func _ready() -> void:
 	sub.add_theme_color_override("font_color", Color(INK.r, INK.g, INK.b, 0.7)); sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(sub)
 	var gap := Control.new(); gap.custom_minimum_size = Vector2(0, 30 * k); box.add_child(gap)
-	for i in 2:
+	for i in 3:
 		var b := Button.new()
-		b.text = ["새 게임", "이어 하기"][i]
+		b.text = ["새 게임", "이어 하기", "설정"][i]
 		b.disabled = i == 1 and not _can_continue
 		b.flat = true
 		b.add_theme_font_override("font", font); b.add_theme_font_size_override("font_size", int(32 * k))
@@ -80,20 +82,26 @@ func _hilite() -> void:
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if not active or not (ev is InputEventKey and ev.pressed and not ev.echo): return
+	if _opts != null and is_instance_valid(_opts): return
 	match ev.physical_keycode:
 		KEY_UP, KEY_W, KEY_DOWN, KEY_S:
-			_sel = 1 - _sel
-			if _btns[_sel].disabled: _sel = 1 - _sel
+			var step := -1 if ev.physical_keycode in [KEY_UP, KEY_W] else 1
+			_sel = posmod(_sel + step, _btns.size())
+			if _btns[_sel].disabled: _sel = posmod(_sel + step, _btns.size())
 			_hilite()
 		KEY_1: _pick(0)
 		KEY_2: _pick(1)
+		KEY_3: _pick(2)
 		KEY_ENTER, KEY_KP_ENTER, KEY_SPACE, KEY_E: _pick(_sel)
 	get_viewport().set_input_as_handled()
 
 func _pick(i: int) -> void:
 	if not active or _btns[i].disabled: return
 	if i == 0: _new_game()
-	else: _continue()
+	elif i == 1: _continue()
+	else:
+		_opts = load("res://scripts/story/options_menu.gd").new(false)
+		add_child(_opts)
 
 func _close() -> void:
 	active = false

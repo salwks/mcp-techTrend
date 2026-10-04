@@ -58,6 +58,7 @@ var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 �
 var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
 
 # 사건 완료(v2.2 레벨 없음): CASE_<키>_COMPLETE를 세우고 숙련 해금표(skills.gd)를 훑는다
+var onboard = null             # scripts/story/onboarding.gd
 func _case_complete() -> Array:
 	S.vars[Skills.complete_var(data.get("case", {}), case_id)] = true
 	var got := Skills.unlock(S.vars)
@@ -124,6 +125,8 @@ func _setup() -> void:
 	if case_id == "":
 		_maybe_title()
 		return   # 소문만(노정·다른 권역)
+	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
+	add_child(onboard)
 	var ddir := "res://story/%s/" % case_id
 	data = load(ddir + case_id + "_data.gd").data()
 	events = data.get("events", {})
@@ -214,18 +217,20 @@ func update(dt: float) -> void:
 	_update_target()
 
 func _unhandled_input(ev: InputEvent) -> void:
-	if case_id == "" or not _started or main._loading: return
+	if main._loading or (title != null and title.active): return
 	if not (ev is InputEventKey and ev.pressed and not ev.echo): return
-	if ev.is_action("journal") and not ui.modal and not combat_view.active:
+	# 기록책(여행 기록·사건 기록·여행 방법)은 사건이 없는 노정에서도 연다
+	if ev.is_action("journal") and not ui.modal and not (combat_view != null and combat_view.active) and (case_id == "" or _started):
 		ui.journal_toggle(journal_data())
 		get_viewport().set_input_as_handled()
-	elif ev.is_action("interact") and _target != null and not ui.busy_input() and not runner.busy and not combat_view.active:
+		return
+	if case_id == "" or not _started: return
+	if ev.is_action("interact") and _target != null and not ui.busy_input() and not runner.busy and not combat_view.active:
 		get_viewport().set_input_as_handled()
 		interact(_target.id)
 
 func journal_data() -> Dictionary:
-	if case_fn != null and case_fn.has_method("journal"): return case_fn.journal()
-	return {}
+	return load("res://scripts/story/journal_book.gd").build(self)
 
 func on_story_idle() -> void:
 	_dirty = true
@@ -709,6 +714,7 @@ func _check_triggers() -> void:
 		return
 
 # ---------------------------------------------------------------------------
+	if onboard != null: onboard.on_interact("actor" if actors.has(id) else "object")
 # 전투·결말
 # ---------------------------------------------------------------------------
 func combat(arena_id: String, st: Dictionary) -> String:

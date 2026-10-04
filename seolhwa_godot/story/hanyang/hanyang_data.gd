@@ -26,24 +26,41 @@ static func data() -> Dictionary:
 		},
 		"hidden_items": ["ITM_TOOL_009", "ITM_WPN_001", "ITM_WPN_002", "ITM_AMMO_001"],
 		"clues": {
-			"note": { "title": "이겸의 쪽지", "text": "종루 뒤 피맛골, 책쾌. 옛 장부 일을 물어볼 것." },
-			"open_door": { "title": "열린 문", "text": "책방 문이 열려 있다. 사람은 없다." },
-			"ink": { "title": "넘어간 먹통", "text": "먹물이 서안 끝까지 흘렀다. 아직 마르지 않았다." },
-			"string": { "title": "끊어진 끈", "text": "책 묶음을 매던 끈. 끝이 칼로 자른 듯 반듯하다." },
-			"window": { "title": "열린 뒤창", "text": "뒤창 살이 밖으로 열렸다. 창턱 흙에 짚신 앞꿈치 자국." },
-			"torn": { "title": "찢긴 종이", "text": "장부에서 몇 장이 뜯겨 나갔다. 남은 장 끝에 이겸 선생의 글씨가 걸려 있다." },
-			"tea": { "title": "아직 따뜻한 차", "text": "찻잔에서 김이 오른다. 방금 전까지 누가 있었다." },
+			"note": { "title": "이겸의 쪽지", "text": "종루 뒤 피맛골, 책쾌. 옛 장부 일을 물어볼 것.", "kind": "fact" },
+			"open_door": { "title": "열린 문", "text": "책방 문이 열려 있다. 사람은 없다.", "kind": "fact" },
+			"ink": { "title": "넘어간 먹통", "text": "먹물이 서안 끝까지 흘렀다. 아직 마르지 않았다.", "kind": "fact" },
+			"string": { "title": "끊어진 끈", "text": "책 묶음을 매던 끈. 끝이 칼로 자른 듯 반듯하다.", "kind": "fact" },
+			"window": { "title": "열린 뒤창", "text": "뒤창 살이 밖으로 열렸다. 창턱 흙에 짚신 앞꿈치 자국.", "kind": "fact" },
+			"torn": { "title": "찢긴 종이", "text": "장부에서 몇 장이 뜯겨 나갔다. 남은 장 끝에 이겸 선생의 글씨가 걸려 있다.", "kind": "fact" },
+			"tea": { "title": "아직 따뜻한 차", "text": "찻잔에서 김이 오른다. 방금 전까지 누가 있었다.", "kind": "fact" },
 			# v2.2 박규상 복선 — 범죄 단서로 강조하지 않는다(평소 거래 기록)
-			"slip": { "title": "반쯤 찢긴 납품표", "text": "책 묶음 아래 깔린 종이·먹 납품표. 끝에 ‘박규상 객주’ 인장(朴)." },
-			"figure": { "title": "골목의 사내", "text": "피맛골 어귀에서 이쪽을 보던 사내. 가볍고, 빠르다. 골목을 제 집처럼 안다." },
-			"rooftop": { "title": "지붕 위의 실루엣", "text": "기와 지붕 위를 달렸다. 담도 지붕도 길로 쓴다." },
-			"papers": { "title": "세 장의 종이", "text": "강릉 · 경주 · 황주. 이겸 선생의 필체. 뒷면에 다른 글씨 — “쫓아올 테면 제대로 보고 오시오.”" },
-			"name": { "title": "‘우치’", "text": "포졸이 그렇게 불렀다. 지붕을 제 마당처럼 다닌다고." },
-			"thump": { "title": "빈 창고의 소리", "text": "책방 옆 빈 창고에서 무언가 부딪는 소리. 빗장은 바깥에서 질려 있었다." },
-			"chaekkwae": { "title": "책쾌의 말", "text": "“그 사람도 옛 기록을 찾았소.” 더는 말하지 않는다." },
+			"slip": { "title": "반쯤 찢긴 납품표", "text": "책 묶음 아래 깔린 종이·먹 납품표. 끝에 ‘박규상 객주’ 인장(朴).", "kind": "fact" },
+			"figure": { "title": "골목의 사내", "text": "피맛골 어귀에서 이쪽을 보던 사내. 가볍고, 빠르다. 골목을 제 집처럼 안다.", "kind": "fact" },
+			"rooftop": { "title": "지붕 위의 실루엣", "text": "기와 지붕 위를 달렸다. 담도 지붕도 길로 쓴다.", "kind": "fact" },
+			"papers": { "title": "세 장의 종이", "text": "강릉 · 경주 · 황주. 이겸 선생의 필체. 뒷면에 다른 글씨 — “쫓아올 테면 제대로 보고 오시오.”", "kind": "fact" },
+			"name": { "title": "‘우치’", "text": "포졸이 그렇게 불렀다. 지붕을 제 마당처럼 다닌다고.", "kind": "heard", "by": "포졸" },
+			"thump": { "title": "빈 창고의 소리", "text": "책방 옆 빈 창고에서 무언가 부딪는 소리. 빗장은 바깥에서 질려 있었다.", "kind": "fact" },
+			"chaekkwae": { "title": "책쾌의 말", "text": "“그 사람도 옛 기록을 찾았소.” 더는 말하지 않는다.", "kind": "heard", "by": "책쾌" },
 		},
 		"rules": {},
 		"anchors": anchors(),
+		# 지도에 적힐 곳(scripts/region/discovery.gd): 이겸의 쪽지가 '종루 뒤 피맛골, 책쾌'를 일러 준다(들음) — 추격 길·빈 창고는 가 봐야
+		"map_places": [
+			{ "id": "jongno", "name": "종루", "at": "bosingak", "building": true, "radius": 24.0, "known": "c('note')" },
+			{ "id": "shop", "name": "책쾌의 책방", "at": "shop", "building": true, "radius": 10.0, "known": "c('note')" },
+			{ "id": "bridge", "name": "광통교", "at": "bridge", "building": true, "radius": 14.0 },
+		],
+		"journal": {
+			"unknowns": [
+				{ "text": "책쾌는 어디로 갔는가.", "when": "c('open_door')", "until": "c('thump') or c('chaekkwae')" },
+				{ "text": "지붕을 타고 달아난 사내는 누구인가.", "when": "c('figure') or c('rooftop')", "until": "c('name')" },
+				{ "text": "이겸 선생은 무엇을 찾고 있었는가.", "when": "c('torn')", "until": "c('chaekkwae')" },
+			],
+			"places": [
+				{ "name": "숭례문", "when": "true" }, { "name": "종루", "when": "c('note')" },
+				{ "name": "책쾌의 책방", "when": "c('open_door')" }, { "name": "광통교", "when": "c('papers')" },
+			],
+		},
 		"chases": chases(),
 		"actors": actors(),
 		"objects": objects(),
@@ -161,11 +178,11 @@ static func objects() -> Array:
 		steps.append_array([{ "examine": title, "text": text }, { "clue": id }, { "call": "check_shop" }])
 		return { "id": id, "at": id, "label": label, "radius": 1.7, "when": "f('in_shop') and not c('%s')" % id, "steps": steps }
 	return [
-		shop.call("ink", "먹통 · 조사", "넘어간 먹통", ["먹통이 엎어져 먹물이 서안 끝까지 흘렀다.", "손끝에 묻어난다. 아직 마르지 않았다."], []),
-		shop.call("string", "끈 · 조사", "끊어진 끈", ["책 묶음을 매던 끈이 기둥 곁에 떨어져 있다.", "끝이 칼로 자른 듯 반듯하다."], []),
-		shop.call("torn", "장부 · 조사", "찢긴 종이", ["장부에서 몇 장이 뜯겨 나갔다.", "남은 장 끝에 낯익은 필체 — 이겸 선생의 글씨다."], []),
-		shop.call("tea", "찻잔 · 조사", "아직 따뜻한 차", ["찻잔에서 김이 오른다.", "잔은 하나. 마신 사람은 방금 전까지 여기 있었다."], []),
-		{ "id": "window", "at": "window", "label": "뒤창 · 조사", "radius": 1.8, "when": "f('in_shop') and not c('window')",
+		shop.call("ink", "먹통 · 살펴보기", "넘어간 먹통", ["먹통이 엎어져 먹물이 서안 끝까지 흘렀다.", "손끝에 묻어난다. 아직 마르지 않았다."], []),
+		shop.call("string", "끈 · 살펴보기", "끊어진 끈", ["책 묶음을 매던 끈이 기둥 곁에 떨어져 있다.", "끝이 칼로 자른 듯 반듯하다."], []),
+		shop.call("torn", "장부 · 살펴보기", "찢긴 종이", ["장부에서 몇 장이 뜯겨 나갔다.", "남은 장 끝에 낯익은 필체 — 이겸 선생의 글씨다."], []),
+		shop.call("tea", "찻잔 · 살펴보기", "아직 따뜻한 차", ["찻잔에서 김이 오른다.", "잔은 하나. 마신 사람은 방금 전까지 여기 있었다."], []),
+		{ "id": "window", "at": "window", "label": "뒤창 · 살펴보기", "radius": 1.8, "when": "f('in_shop') and not c('window')",
 			"steps": [
 				{ "examine": "열린 뒤창", "text": ["뒤창 살이 밖으로 열려 있다.", "창턱 흙에 짚신 앞꿈치 자국. 창 밖 뒷골목으로 이어진다."] },
 				{ "clue": "window" }, { "call": "show_tracks" }, { "call": "check_shop" }] },
@@ -175,7 +192,7 @@ static func objects() -> Array:
 				{ "examine": "반쯤 찢긴 납품표", "text": ["책 묶음 아래 납품표가 깔려 있다. 종이 스무 묶음, 먹 열 정.", "찢긴 끝에 붉은 인장 하나 — ‘박규상 객주’."], "kind": "item" },
 				{ "clue": "slip" }, { "call": "park_slip" }] },
 		# S1004: 놓친 자리의 종이 세 장
-		{ "id": "papers", "at": "papers", "label": "다리 난간의 종이 · 조사", "radius": 2.6, "when": "f('chase_done') and not c('papers')",
+		{ "id": "papers", "at": "papers", "label": "다리 난간의 종이 · 살펴보기", "radius": 2.6, "when": "f('chase_done') and not c('papers')",
 			"steps": [{ "event": "S1004" }] },
 		# S1005 앞: 빈 창고 빗장
 		{ "id": "warehouse_gate", "at": "warehouse_gate", "label": "빈 창고 · 살펴보기", "label_if": ["f('heard_thump')", "빈 창고 · 빗장 벗기기"], "radius": 2.4,

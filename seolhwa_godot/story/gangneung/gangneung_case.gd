@@ -25,6 +25,7 @@ func flag(k: String, v = true) -> void:
 	S.flags[k] = v; d.runner.log_line("flag", [k, v]); d.mark_dirty()
 
 func f(k: String) -> bool: return S.is_flag(k)
+func route_is(r: String) -> bool: return String(S.flags.get("route", "")) == r   # 기록책 발언자(by_if)
 func beast_trace() -> bool: return bool(S.vars.get("SKILL_BEAST_TRACE", false))
 func senses() -> bool: return d.spirits != null and d.spirits.senses()
 

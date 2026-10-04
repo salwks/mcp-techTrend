@@ -1,8 +1,11 @@
 # 이야기 UI — 한지·먹 결(웹 src/ui 대응). 대화 상자, 조사 카드, 선택지, 자막, 위아래 먹 띠(레터박스), 알림 띠,
 # 사건 기록 책자(R), 사건 종결 카드, 소지품 표시, 조사 안내, 전투 HUD(체력·기력 붓 게이지, 호랑이 체력, 화살·떡, 상황 문구).
 # 비동기 API(await): say(이름, [줄]) · examine(제목, 글, 종류) · choice(물음, [{label, disabled, hint}]) → 번호 ·
-#   caption(글, 초) · fade(검게?, 초) · ending(data). 즉시: letterbox(on) · toast(글, 종류) · prompt(글) · items(목록) ·
-#   journal_toggle(data) · hud_*.
+#   caption(글, 초) · fade(검게?, 초) · ending(data) · center_text(글, 초 — 검은 화면 가운데) · title_card(글, 초, 크기) · book_page(줄, 초).
+#   즉시: letterbox(on) · toast(글, 종류) · prompt(글) · items(목록) · journal_toggle(data) · hud_* ·
+#   hint(글)/hint_clear() — 처음 한 번 안내(scripts/story/onboarding.gd) · set_marks([{p, a, r}]) — 조사 대상 먹점.
+# 기록책(R): 쪽(pages) — 여행 기록 · 사건 기록 · 여행 방법(scripts/story/journal_book.gd가 만든다). ←→·A·D·숫자·탭 클릭으로 넘긴다.
+#   항목 꼬리표: ◆ 확인 · ◇ 들음 — 발언자 · △ 추정 (색만으로 가르지 않는다, 보강서 §22).
 # 확인: E·Space·Enter·클릭 / 선택: ↑↓·W·S·숫자 / 기록: R / 닫기: Esc. 시험(auto)에서는 스스로 넘긴다.
 extends CanvasLayer
 
@@ -16,6 +19,8 @@ const INK_SOFT := Color("#5a5048")
 const SEAL := Color("#a8443c")
 const KIND_COL := { info = Color("#7a6e60"), clue = Color("#2b2622"), rule = Color("#a8443c"), journal = Color("#a8443c"), item = Color("#6b5a3a") }
 const KIND_TAG := { clue = "단서", rule = "버릇", journal = "기록", item = "소지품" }
+# 기록책 꼬리표(보강서 §22): 모양 + 낱말
+const FACT_TAG := { fact = "◆ 확인", heard = "◇ 들음", guess = "△ 추정" }
 
 var auto := false                  # 시험: 대화·카드를 스스로 넘기고 선택은 auto_choice로
 var auto_choice: Callable = Callable()   # (물음, [label]) → 번호
@@ -65,6 +70,20 @@ var _typing := false
 var _type_t := 0.0
 var _type_full := ""
 var _cooldown := 0.0
+var _hint: PanelContainer
+var _hint_l: Label
+var _hint_tw: Tween
+var _marks: Control
+var _mark_list: Array = []
+var _center: Label
+var _title_l: Label
+var _book: PanelContainer
+var _book_box: VBoxContainer
+var _jdata := {}
+var _jpage := 0
+var _jtabs: Array = []
+var prompt_strong := false        # 처음 조사·대화 전: 안내 글을 조금 크게(onboarding)
+var on_journal_page: Callable = Callable()   # (쪽 id) — 기록책을 열거나 넘길 때(onboarding)
 
 func _ready() -> void:
 	layer = 8
@@ -132,6 +151,16 @@ func _build() -> void:
 	_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_caption.modulate.a = 0.0
 	_root.add_child(_caption)
+	# 조사 대상 먹점(가까울 때만 — 멀면 아무 표시 없음)
+	_marks = Control.new(); _marks.set_anchors_preset(Control.PRESET_FULL_RECT); _marks.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_marks.draw.connect(_draw_marks)
+	_root.add_child(_marks)
+	# 처음 한 번 안내(WASD 이동 등) — 한지 띠, 확인 버튼 없음
+	_hint = _paper(0.9, 1, 14)
+	_hint_l = _label(21, INK); _hint_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hint.add_child(_hint_l)
+	_hint.modulate.a = 0.0
+	_root.add_child(_hint)
 	# 조사 안내
 	_prompt = _label(22, Color(1, 1, 1), true)
 	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -229,6 +258,22 @@ func _build() -> void:
 	_fade = ColorRect.new(); _fade.color = Color(0, 0, 0, 0); _fade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_fade)
+	# 검은 화면 위 가운데 글(이겸의 세 문장) — 페이드보다 위
+	_center = _label(30, Color(0.93, 0.9, 0.84)); _center.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_center.vertical_alignment = VERTICAL_ALIGNMENT_CENTER; _center.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_center.modulate.a = 0.0
+	_root.add_child(_center)
+	# 기록책 한 장(여는 장면) · 가운데 큰 글(지명·제목)
+	_book = _paper(0.98, 3, 40)
+	_book_box = VBoxContainer.new(); _book_box.alignment = BoxContainer.ALIGNMENT_CENTER; _book_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_book_box.add_theme_constant_override("separation", 18)
+	_book.add_child(_book_box)
+	_book.visible = false
+	_root.add_child(_book)
+	_title_l = _label(64, Color(1, 1, 1), true); _title_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_title_l.modulate.a = 0.0
+	_root.add_child(_title_l)
 
 func _resize() -> void:
 	var vs := get_viewport().get_visible_rect().size
@@ -244,6 +289,12 @@ func _resize() -> void:
 	_dialog.position = Vector2((vs.x - w) / 2, vs.y - 220 * k); _dialog.size = Vector2(w, 170 * k); _dialog.custom_minimum_size = Vector2(w, 150 * k)
 	_caption.position = Vector2(vs.x * 0.1, vs.y * 0.74); _caption.size = Vector2(vs.x * 0.8, 120 * k)
 	_prompt.position = Vector2(0, vs.y - 60 * k); _prompt.size = Vector2(vs.x, 40 * k)
+	_place_hint()
+	_center.position = Vector2(vs.x * 0.15, vs.y * 0.3); _center.size = Vector2(vs.x * 0.7, vs.y * 0.4)
+	_title_l.position = Vector2(0, vs.y * 0.3); _title_l.size = Vector2(vs.x, vs.y * 0.3)
+	var bw := minf(vs.x * 0.5, 520 * k)
+	_book.custom_minimum_size = Vector2(bw, vs.y * 0.5); _book.size = Vector2(bw, vs.y * 0.5)
+	_book.position = Vector2((vs.x - bw) / 2, vs.y * 0.22); _book.pivot_offset = Vector2(bw / 2, vs.y * 0.25)
 	_items.position = Vector2(vs.x - 520 * k, vs.y - 44 * k); _items.size = Vector2(500 * k, 36 * k)
 	_toasts.position = Vector2(24 * k, 70 * k); _toasts.size = Vector2(560 * k, 300 * k)
 	var cw := minf(vs.x * 0.7, 640 * k)
@@ -274,6 +325,10 @@ func _input(ev: InputEvent) -> void:
 	if journal_open:
 		if kc in [KEY_R, KEY_ESCAPE, KEY_E]:
 			journal_close(); get_viewport().set_input_as_handled()
+		elif kc in [KEY_LEFT, KEY_A]: journal_page(_jpage - 1); get_viewport().set_input_as_handled()
+		elif kc in [KEY_RIGHT, KEY_D]: journal_page(_jpage + 1); get_viewport().set_input_as_handled()
+		elif kc >= KEY_1 and kc <= KEY_9 and kc - KEY_1 < _jdata.get("pages", []).size():
+			journal_page(kc - KEY_1); get_viewport().set_input_as_handled()
 		return
 	if _waiting == "": return
 	if _waiting == "choice":
@@ -466,7 +521,9 @@ func toast(text: String, kind := "info") -> void:
 	for i in maxi(0, live.size() - 5): live[i].queue_free()
 
 func prompt(text: String) -> void:
-	_prompt.text = ("[E]  " + text) if text != "" else ""
+	_prompt.text = ("E   " + text) if text != "" else ""
+	var big := prompt_strong and text != ""
+	_prompt.add_theme_font_size_override("font_size", int((27 if big else 22) * _k))
 
 func items(list: Array) -> void:
 	var parts := []
@@ -481,42 +538,104 @@ func journal_toggle(data: Dictionary) -> void:
 	else: journal_show(data)
 
 func journal_show(data: Dictionary) -> void:
-	for c in _journal_body.get_children(): c.queue_free()
-	var title := _label(38, INK); title.text = "사건 기록"
-	_journal_body.add_child(title)
-	var cases: Array = data.get("cases", [])
-	if cases.is_empty():
-		var e := _label(22, INK_SOFT)
-		e.text = String(data.get("empty", "마지막으로 적힌 곳: 남원. 아직 적힌 사건이 없다."))
-		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_journal_body.add_child(e)
-	for cs in cases:
-		var h := HBoxContainer.new()
-		var ct := _label(30, INK); ct.text = "「%s」" % cs.title; ct.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var st := _label(20, SEAL); st.text = "해결" if cs.status == "solved" else "진행 중"
-		h.add_child(ct); h.add_child(st)
-		_journal_body.add_child(h)
-		for p in cs.get("summary", []): _para(String(p), 21, INK)
-		_section("단서", cs.get("clues", []), INK)
-		_section(String(cs.get("rules_title", "범의 버릇")), cs.get("rules", []), SEAL)
-		var sols: Array = cs.get("solutions", [])
-		if not sols.is_empty():
-			_head("해결 방법")
-			for s in sols:
-				var line := "%s  %s" % ["●" if s.available else "○", s.title]
-				_para(line, 21, INK if s.available else INK_SOFT)
-				var txt: String = s.text if s.available else String(s.get("hint", ""))
-				if txt != "": _para("    " + txt, 18, INK_SOFT)
-		for n in cs.get("notes", []): _para("— " + String(n), 18, INK_SOFT)
-	var foot := _label(16, INK_SOFT); foot.text = "R · Esc 닫기"; foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_journal_body.add_child(foot)
+	# 예전 꼴({cases, empty})도 받는다 — 사건 기록 한 쪽으로
+	if not data.has("pages"): data = { pages = [{ id = "case", tab = "사건 기록", blocks = _legacy_blocks(data) }] }
+	_jdata = data
 	_journal.visible = true
 	journal_open = true
+	journal_page(int(data.get("page", 0)))
+
+func journal_page(i: int) -> void:
+	var pages: Array = _jdata.get("pages", [])
+	if pages.is_empty(): return
+	_jpage = clampi(i, 0, pages.size() - 1)
+	for c in _journal_body.get_children(): c.queue_free()
+	# 쪽 머리(탭): 클릭으로도 넘긴다
+	var tabs := HBoxContainer.new(); tabs.add_theme_constant_override("separation", int(28 * _k))
+	_jtabs = []
+	for j in pages.size():
+		var t := _label(24 if j == _jpage else 21, SEAL if j == _jpage else INK_SOFT)
+		t.text = ("%d  %s" % [j + 1, String(pages[j].get("tab", ""))]) + ("  ▾" if j == _jpage else "")
+		t.mouse_filter = Control.MOUSE_FILTER_STOP
+		t.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT: journal_page(j))
+		tabs.add_child(t); _jtabs.append(t)
+	_journal_body.add_child(tabs)
+	var r := ColorRect.new(); r.color = INK; r.custom_minimum_size = Vector2(0, 2)
+	_journal_body.add_child(r)
+	for bl in pages[_jpage].get("blocks", []): _block(bl)
+	var foot := _label(16, INK_SOFT); foot.text = "← → 쪽 넘기기 · R · Esc 닫기"; foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_journal_body.add_child(foot)
+	if log_lines: printerr("JOURNAL page=%s %s" % [pages[_jpage].get("id", ""), _page_text(pages[_jpage])])
+	if on_journal_page.is_valid(): on_journal_page.call(String(pages[_jpage].get("id", "")))
+
+# 시험 기록용: 한 쪽을 한 줄 글로
+func _page_text(pg: Dictionary) -> String:
+	var parts := []
+	for bl in pg.get("blocks", []):
+		var t := String(bl.get("text", bl.get("title", "")))
+		if bl.get("t") == "entry": t = "[%s%s] %s %s" % [FACT_TAG.get(String(bl.get("tag", "fact")), ""), (" — " + String(bl.by)) if String(bl.get("by", "")) != "" else "", String(bl.get("title", "")), String(bl.get("text", ""))]
+		if t != "": parts.append(t)
+	return " / ".join(parts)
+
+# 블록: title · head · para(soft, size) · quote · entry(tag fact|heard|guess, by, title, text, strong) · case(title, status) · gap
+func _block(bl: Dictionary) -> void:
+	match String(bl.get("t", "para")):
+		"title":
+			var l := _label(36, INK); l.text = String(bl.text); _journal_body.add_child(l)
+		"head":
+			_head(String(bl.text))
+		"case":
+			var h := HBoxContainer.new()
+			var ct := _label(28, INK); ct.text = "「%s」" % bl.title; ct.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			var st := _label(19, SEAL); st.text = String(bl.get("status", ""))
+			h.add_child(ct); h.add_child(st)
+			_journal_body.add_child(h)
+		"quote":
+			_para("    " + String(bl.text), int(bl.get("size", 22)), SEAL)
+		"gap":
+			var g := Control.new(); g.custom_minimum_size = Vector2(0, 6 * _k); _journal_body.add_child(g)
+		"entry":
+			var row := HBoxContainer.new(); row.add_theme_constant_override("separation", int(10 * _k))
+			var tag := String(bl.get("tag", "fact"))
+			var tg := PanelContainer.new()
+			var sb := StyleBoxFlat.new(); sb.bg_color = Color(0, 0, 0, 0); sb.border_color = INK if tag == "fact" else INK_SOFT
+			sb.set_border_width_all(2 if tag == "fact" else 1)
+			sb.content_margin_left = 6; sb.content_margin_right = 6; sb.content_margin_top = 1; sb.content_margin_bottom = 1
+			tg.add_theme_stylebox_override("panel", sb)
+			tg.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+			var tl := _label(16, INK if tag == "fact" else INK_SOFT)
+			tl.text = String(FACT_TAG.get(tag, "◆ 확인")) + ((" — " + String(bl.by)) if tag == "heard" and String(bl.get("by", "")) != "" else "")
+			tg.add_child(tl)
+			tg.custom_minimum_size = Vector2(150 * _k, 0)
+			var col := VBoxContainer.new(); col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			col.add_theme_constant_override("separation", 2)
+			if String(bl.get("title", "")) != "":
+				var t1 := _label(21, SEAL if bl.get("strong", false) else INK); t1.text = String(bl.title)
+				t1.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; t1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				col.add_child(t1)
+			if String(bl.get("text", "")) != "":
+				var t2 := _label(18 if String(bl.get("title", "")) != "" else 21, INK_SOFT if String(bl.get("title", "")) != "" else INK)
+				t2.text = String(bl.text); t2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; t2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				col.add_child(t2)
+			row.add_child(tg); row.add_child(col)
+			_journal_body.add_child(row)
+		_:
+			_para(String(bl.get("text", "")), int(bl.get("size", 21)), INK_SOFT if bl.get("soft", false) else INK)
+
+func _legacy_blocks(data: Dictionary) -> Array:
+	var out := []
+	var cases: Array = data.get("cases", [])
+	if cases.is_empty(): out.append({ t = "para", text = String(data.get("empty", "아직 기록된 사건 없음")), soft = true })
+	for cs in cases:
+		out.append({ t = "case", title = cs.title, status = "해결" if cs.status == "solved" else "진행 중" })
+		for p in cs.get("summary", []): out.append({ t = "para", text = String(p) })
+		for c in cs.get("clues", []): out.append({ t = "entry", tag = "fact", title = c.title, text = c.get("text", "") })
+	return out
 
 func _head(t: String) -> void:
 	var r := ColorRect.new(); r.color = Color(INK.r, INK.g, INK.b, 0.5); r.custom_minimum_size = Vector2(0, 1)
 	_journal_body.add_child(r)
-	var l := _label(24, SEAL); l.text = t
+	var l := _label(23, SEAL); l.text = t
 	_journal_body.add_child(l)
 
 func _para(t: String, size: int, col: Color) -> void:
@@ -525,17 +644,98 @@ func _para(t: String, size: int, col: Color) -> void:
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_journal_body.add_child(l)
 
-func _section(t: String, list: Array, col: Color) -> void:
-	if list.is_empty(): return
-	_head(t)
-	for c in list:
-		_para("· " + String(c.title), 21, col)
-		if String(c.get("text", "")) != "": _para("    " + String(c.text), 18, INK_SOFT)
-
 func journal_close() -> void:
 	_journal.visible = false
 	journal_open = false
 	_cooldown = 0.15
+
+# ---------------------------------------------------------------------------
+# 처음 한 번 안내 · 조사 먹점 · 여는 장면(검은 화면 글, 기록책 한 장, 큰 제목)
+# ---------------------------------------------------------------------------
+func hint(text: String) -> void:
+	if log_lines: printerr("HINT ", text)
+	_hint_l.text = text
+	_hint.reset_size()
+	_place_hint()
+	if _hint_tw: _hint_tw.kill()
+	_hint_tw = create_tween()
+	_hint_tw.tween_property(_hint, "modulate:a", 1.0, 0.3)
+
+func hint_clear() -> void:
+	if _hint.modulate.a <= 0.01: return
+	if _hint_tw: _hint_tw.kill()
+	_hint_tw = create_tween()
+	_hint_tw.tween_property(_hint, "modulate:a", 0.0, 0.4)
+
+func hint_text() -> String:
+	return _hint_l.text if _hint.modulate.a > 0.05 else ""
+
+func _place_hint() -> void:
+	if _hint == null: return
+	var vs := get_viewport().get_visible_rect().size
+	var sz := _hint.get_combined_minimum_size()
+	_hint.size = sz
+	_hint.position = Vector2((vs.x - sz.x) / 2, vs.y - 118 * _k - sz.y)
+
+# [{p: Vector2(화면), a: 0~1, r: 반지름 배율}]
+func set_marks(list: Array) -> void:
+	if list.is_empty() and _mark_list.is_empty(): return
+	_mark_list = list
+	_marks.queue_redraw()
+
+func _draw_marks() -> void:
+	for m in _mark_list:
+		var p: Vector2 = m.p
+		var a: float = float(m.a)
+		var r: float = 5.0 * _k * float(m.get("r", 1.0))
+		_marks.draw_circle(p, r * 2.2, Color(PAPER.r, PAPER.g, PAPER.b, 0.35 * a))   # 한지 번짐
+		_marks.draw_circle(p, r, Color(INK.r, INK.g, INK.b, 0.85 * a))                 # 먹점
+		_marks.draw_arc(p, r * 1.9, 0, TAU, 20, Color(INK.r, INK.g, INK.b, 0.45 * a), 1.2 * _k, true)   # 엷은 먹선 테
+
+func center_text(text: String, sec := 2.0) -> void:
+	if log_lines: printerr("CENTER ", text)
+	_center.text = text
+	var tw := create_tween()
+	tw.tween_property(_center, "modulate:a", 1.0, 0.05 if auto else 0.5)
+	tw.tween_interval(0.05 if auto else maxf(0.3, sec - 1.0))
+	tw.tween_property(_center, "modulate:a", 0.0, 0.05 if auto else 0.5)
+	await tw.finished
+
+func title_card(text: String, sec := 2.4, size := 64) -> void:
+	if log_lines: printerr("TITLE ", text)
+	_title_l.text = text
+	_title_l.add_theme_font_size_override("font_size", int(size * _k))
+	var tw := create_tween()
+	tw.tween_property(_title_l, "modulate:a", 1.0, 0.05 if auto else 0.6)
+	tw.tween_interval(0.05 if auto else maxf(0.3, sec - 1.2))
+	tw.tween_property(_title_l, "modulate:a", 0.0, 0.05 if auto else 0.6)
+	await tw.finished
+
+func title_card_stop() -> void:
+	_title_l.modulate.a = 0.0
+	_center.modulate.a = 0.0
+
+# 기록책 마지막 장: 펼쳐 보이다가 덮는다(세로로 접히며 사라짐)
+func book_page(lines: Array, sec := 2.6) -> void:
+	if log_lines: printerr("BOOK ", " / ".join(lines))
+	for c in _book_box.get_children(): c.queue_free()
+	for i in lines.size():
+		var l := _label(34 if i == 0 else 26, INK if i < lines.size() - 1 else INK_SOFT)
+		l.text = String(lines[i]); l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_book_box.add_child(l)
+	_book.visible = true
+	_book.scale = Vector2.ONE
+	_book.modulate.a = 1.0
+	await _wait(0.05 if auto else sec)
+
+func book_close() -> void:
+	if not _book.visible: return
+	var tw := create_tween().set_parallel()
+	tw.tween_property(_book, "scale:x", 0.02, 0.05 if auto else 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.tween_property(_book, "modulate:a", 0.0, 0.05 if auto else 0.5)
+	await tw.finished
+	_book.visible = false
 
 # ---------------------------------------------------------------------------
 # 사건 종결 카드
