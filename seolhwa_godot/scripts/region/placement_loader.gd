@@ -263,6 +263,7 @@ func update() -> void:
 				holders.append({ key = k, kit = todo[k].kit, s = _script(todo[k].kit), params = todo[k].params, info = null })
 				_inflight[k] = true
 			var job := func(n: int) -> void:
+				if _cancel: return   # 끝내기·넘어가기: 아직 시작 안 한 짓기는 건너뛴다
 				var h: Dictionary = holders[n]
 				h.info = KitCache.build(h.kit, h.s, h.params)
 			var id := WorkerThreadPool.add_group_task(job, holders.size(), mini(holders.size(), 4), true, "kit build")
@@ -302,7 +303,19 @@ func _place_one(r: Dictionary) -> void:
 		push_warning("배치: %s는 water가 있지만 늦게 지어져 땅을 파지 못했다(키트에 static outline()을 두거나 footprint 없이 두면 시작 때 짓는다)" % r.kit)
 	stats.placed += 1
 
+# 진행 중 짓기가 모두 끝났나(끝내기 전 기다리기용 — 메인 스레드를 막지 않고 프레임을 돌리며 확인)
+var _cancel := false
+func cancel_jobs() -> void:
+	_cancel = true
+
+func jobs_idle() -> bool:
+	for t in _jobs:
+		if not WorkerThreadPool.is_group_task_completed(_jobs[t].id): return false
+	return true
+
 # 진행 중 짓기를 기다리고 대기열을 비운다(다시 읽기·끝내기 전)
+# 주의: 키트 짓기는 작업 스레드에서 렌더 서버와 동기화하는 호출을 할 수 있어, 진행 중인 짓기를 메인 스레드에서 막고 기다리면
+# 서로 기다리다 멈춘다(끝내기 exit=124). 끝내기·넘어가기는 region_main._drain_jobs()로 jobs_idle()이 될 때까지 프레임을 돌린 뒤 부른다.
 func stop() -> void:
 	for t in _jobs: WorkerThreadPool.wait_for_group_task_completion(_jobs[t].id)
 	_jobs.clear(); _inflight.clear(); _requested.clear(); _pending.clear(); _place_q.clear()
@@ -311,6 +324,7 @@ func stop() -> void:
 		if info is Dictionary and info.get("node") != null and not _used.has(k) and is_instance_valid(info.node) and not info.node.is_inside_tree():
 			info.node.free()
 	_cache.clear(); _used.clear(); _packed.clear()
+	_cancel = false
 
 # 마당 흙을 칠할 키트: 건물·소품(담장·성벽·다리·나무 제외)
 static func _yard_kit(r: Dictionary) -> bool:

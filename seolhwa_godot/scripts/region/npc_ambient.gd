@@ -107,6 +107,9 @@ func setup(w, wthr, camera: Camera3D, loader = null) -> void:
 	var input := { region = world.region, files = files, seed = hash(String(world.region.get("region_id", "r"))) }
 	_task = WorkerThreadPool.add_task(_build.bind(input), false, "npc_ambient sites")
 
+func jobs_idle() -> bool:
+	return _task < 0 or WorkerThreadPool.is_task_completed(_task)
+
 func _exit_tree() -> void:
 	if _task >= 0: WorkerThreadPool.wait_for_task_completion(_task); _task = -1
 

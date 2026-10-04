@@ -110,6 +110,8 @@ var _data_dir := ""
 var portals := []         # Travel.portals_for
 var _portal_armed := {}
 var _leaving := false
+var _draining := false   # 끝내기·넘어가기 전: 작업 스레드가 끝나길 프레임을 돌리며 기다리는 중(_process는 쉰다)
+var _quitting := false
 var _hud: Label
 var _hud_t := 0.0
 var _ptest := {}          # --portaltest 진행 상태
@@ -121,6 +123,7 @@ func _ready() -> void:
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	_setup_input()
+	get_tree().set_auto_accept_quit(false)   # 창 닫기 → _quit()(작업 스레드를 기다린 뒤 끝낸다)
 	if args.has("routedir"): Travel.extra_route_dirs = args.routedir.split(";", false)
 	if args.has("kitcache"): PlacementLoader.KitCache.DIR = String(args.kitcache).trim_suffix("/") + "/"
 	if args.has("nokitcache"): PlacementLoader.KitCache.enabled = false
@@ -513,6 +516,7 @@ var _btitles = null
 var _map_opened := false
 
 func _process(delta: float) -> void:
+	if _draining: return
 	if _title == null and world and not world.region.is_empty():
 		_title = preload("res://scripts/region/place_title.gd").new()
 		add_child(_title)
@@ -805,16 +809,33 @@ func _reload_place() -> void:
 	if not args.has("nowallproxy"): world.build_wall_proxies(placement)
 	player_pos.y = world.height_at(player_pos.x, player_pos.z)
 
+# 끝내기: 진행 중인 작업 스레드(키트 짓기·식생·인물 자리)가 끝날 때까지 프레임을 돌리며 기다린 뒤 정리한다.
+# 짓기 작업이 렌더 서버와 동기화하는 호출(메시 등)을 하면 메인 스레드가 막고 기다리는 동안 서로 기다려 멈췄다(--quit exit=124).
 func _quit() -> void:
-	placement.stop()
-	world.shutdown()
+	if _quitting: return
+	_quitting = true
+	await _drain_jobs()
+	if placement: placement.stop()
+	if world: world.shutdown()
 	if weather: weather.reset_globals()
 	get_tree().quit()
 
+func _drain_jobs() -> void:
+	_draining = true
+	if placement: placement.cancel_jobs()
+	RegionWorld.cancel_all = true
+	var t0 := Time.get_ticks_msec()
+	var n := 0
+	while Time.get_ticks_msec() - t0 < 30000:
+		if (placement == null or placement.jobs_idle()) and (world == null or world.jobs_idle()) \
+				and (npcs_amb == null or npcs_amb.jobs_idle()):
+			break
+		await get_tree().process_frame
+		n += 1
+	if n > 0: print("DRAIN jobs waited frames=%d ms=%d" % [n, Time.get_ticks_msec() - t0])
+
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST and world != null:
-		if placement != null: placement.stop()
-		world.shutdown()
+	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()   # 창 닫기도 같은 길로(auto_accept_quit 끔)
 
 static func _abs(p: String) -> String:
 	return p if p.is_absolute_path() else ProjectSettings.globalize_path("res://").path_join(p)
@@ -958,6 +979,7 @@ func _travel(pt: Dictionary) -> void:
 
 func _leave() -> void:
 	await _wait_frames(2)
+	await _drain_jobs()
 	placement.stop()
 	world.shutdown()
 	weather.reset_globals()

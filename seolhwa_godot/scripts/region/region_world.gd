@@ -1307,6 +1307,7 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 		if m.name == "scatter" and m.args.size() >= 6: takes_ex = true
 		if m.name == "scatter" and m.args.size() >= 7: takes_roads = true
 	for lod in lods:
+		if cancel_all: break   # 끝내기·넘어가기 — 남은 건 버린다(hold는 아래에서 채워 정리되게)
 		# 길은 이 공간의 roads를 넘긴다(scatter가 남원 region.json을 직접 읽지 않게 — 여러 권역·노정)
 		var res: Dictionary = scr.scatter(rect, ha, la, seed, lod, ex_arg, roads) if takes_roads else (scr.scatter(rect, ha, la, seed, lod, ex_arg) if takes_ex else scr.scatter(rect, ha, la, seed, lod))
 		if lod == 0 or cols == null:
@@ -1314,6 +1315,8 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 			for c in res.get("colliders", []):
 				if not _excluded(excl, Vector2(float(c.get("x", 0.0)), float(c.get("z", 0.0))), 0.0): cols.append(c)
 		for n0 in res.get("nodes", []):
+			if cancel_all:
+				temps.append(n0); continue   # 노드만 모아 shutdown이 지우게
 			if not (n0 is MultiMeshInstance3D) or n0.multimesh == null or n0.multimesh.transform_format != MultiMesh.TRANSFORM_3D:
 				out.append({ node = n0, lod = lod, rect = Rect2(n0.position.x, n0.position.z, 0, 0) if n0 is Node3D else Rect2() })
 				continue
@@ -1699,6 +1702,14 @@ func interior_at(x: float, z: float) -> Variant:
 # 트리에 붙어 있지 않은 것(풀에 넣은 타일, 떼어 둔 정적 물체)은 직접 지운다
 # 끝내기 전에(작업 스레드 풀이 살아 있을 때) 부른다: 대기열 비우고 진행 중 식생 작업을 기다린다.
 # (트리가 지워지는 도중에 기다리면 macOS 종료 경로에서 풀이 이미 멈춰 영원히 기다릴 수 있다)
+# 끝내기·넘어가기 때 진행 중 식생 작업을 일찍 끝내게(작업 스레드가 읽는다; shutdown()이 되돌린다)
+static var cancel_all := false
+
+func jobs_idle() -> bool:
+	for t in tiles:
+		if tiles[t].scatter_job >= 0 and not WorkerThreadPool.is_task_completed(tiles[t].scatter_job): return false
+	return true
+
 func shutdown() -> void:
 	_queue.clear()
 	for t in tiles:
@@ -1714,6 +1725,7 @@ func shutdown() -> void:
 	for it in _attach_q:
 		if it[1].node != null and not it[1].node.is_inside_tree(): it[1].node.free()
 	_attach_q.clear()
+	cancel_all = false
 
 # 트리에 붙어 있지 않은 것(풀에 넣은 타일, 떼어 둔 정적 물체)은 직접 지운다
 func _notification(what: int) -> void:
