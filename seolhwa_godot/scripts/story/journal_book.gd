@@ -17,13 +17,14 @@ const Progress := preload("res://scripts/region/progress.gd")
 const GameSettings := preload("res://scripts/story/game_settings.gd")
 
 const PRINCIPLE := ["본 것은 본 대로.", "들은 것은 누가 말했는지.", "모르는 것은 모른다고."]
-const CASE_TITLES := { namwon = "산길의 실종", hanyang = "비어 있는 책방", gangneung = "고개에 남은 종소리", hwangju = "빈 배의 값" }
+const CASE_TITLES := { namwon = "산길의 실종", hanyang = "비어 있는 책방", gangneung = "고개에 남은 종소리", hwangju = "빈 배의 값", pyongyang = "강을 판 사내" }
 const PLACE_KO := { HANYANG = "한양", GANGNEUNG = "강릉", GYEONGJU = "경주", HWANGJU = "황주", PYEONGYANG = "평양", PYONGYANG = "평양",
 	HAMHUNG = "함흥", HAMHEUNG = "함흥", JEJU = "제주" }
 # 흔적 한 줄(어디서 어떻게 알았나) — 없는 토큰은 이름만
 const TRACE_LINE := {
 	HANYANG = { tag = "heard", by = "남원 노인", text = "“전에도 그런 책 들고 다니던 양반이 있었소. 한양 간다고 했지.”" },
 	GANGNEUNG = { tag = "fact", text = "국사성황사 옛 제의 기록 뒷장에 선생의 필체 — “사람이 훔친 것과 사람이 아닌 것이 남긴 흔적을 섞지 말 것.”" },
+	PYONGYANG = { tag = "fact", text = "평양 감영 서리가 간직한 종이 한 장, 선생의 필체 — “글보다 고쳐 쓴 자리를 먼저 보라. 거짓말은 새 문장을 만들지만, 손은 옛 흔적을 다 지우지 못한다.”" },
 	HAMHUNG = { tag = "fact", text = "북청길 함관령 옛 역참. 제 기록을 한 장씩 태워 언 역졸을 살리고 계셨다. “그 책 아직 갖고 있었구나.”" },
 }
 static var last_page := 0
