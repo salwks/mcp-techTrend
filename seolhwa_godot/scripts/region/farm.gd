@@ -127,8 +127,8 @@ func _make_models() -> void:
 	var specs := [
 		{ h = 0.32, r = 0.035, n = 3, top = "#a6c95c", bot = "#5b7a30" },   # 물 댄 모(어린 모)
 		{ h = 0.66, r = 0.05, n = 5, top = "#9fc257", bot = "#4f6d2c" },    # 자라는 벼
-		{ h = 0.78, r = 0.055, n = 5, top = "#e3c766", bot = "#8f8a3c" },   # 익은 벼(누런 이삭)
-		{ h = 0.16, r = 0.04, n = 4, top = "#d0b882", bot = "#8a7650" },    # 그루터기
+		{ h = 0.78, r = 0.06, n = 7, top = "#e3c766", bot = "#8f8a3c" },    # 익은 벼(누런 이삭)
+		{ h = 0.22, r = 0.05, n = 6, top = "#e2cc92", bot = "#9a8458" },    # 그루터기
 	]
 	for s in specs.size():
 		var sp: Dictionary = specs[s]
@@ -314,6 +314,7 @@ func commit() -> void:
 		tex.update(Image.create_from_data(fw, fh, false, Image.FORMAT_R8, fb))
 	if not _changed: return
 	_changed = false
+	print("FARM commit removed=%d (배치 자리에 걸린 필지)" % stats.removed)
 	ver += 1
 	for t in tiles.keys(): tiles[t].have = -1
 
@@ -472,6 +473,8 @@ class Mb:
 const COL_BUND := Color(0.64, 0.67, 0.43, 0.0)
 const COL_BUND2 := Color(0.55, 0.60, 0.37, 0.0)
 const COL_RIM := Color(0.60, 0.645, 0.41, 0.0)
+const COL_BUND_DRY := Color(0.70, 0.66, 0.42, 0.0)      # 가을: 마른 풀 둑
+const COL_BUND_WINTER := Color(0.66, 0.58, 0.42, 0.0)   # 겨울: 누렇게 마른 둑
 const COL_BANK := Color(0.60, 0.52, 0.36, 0.0)
 const COL_STONE := Color(0.6, 0.57, 0.5, 0.5)
 const COL_BASALT := Color(0.2, 0.2, 0.2, 1.0)
@@ -572,6 +575,8 @@ func _paddy(k: int, ch: Dictionary, dry := false) -> void:
 		if cls == E_LOWER: continue
 		var T := ei.y
 		var out_n: Vector2 = -N[e]
+		var cb1: Color = COL_BUND if st <= 1 or dry else (COL_BUND_DRY if st == 2 else COL_BUND_WINTER)
+		var cb2: Color = COL_BUND2 if st <= 1 or dry else cb1.darkened(0.12)
 		# 물꼬(같은 높이 둑 끊김 / 계단이면 위 필지 둑을 끊고 물이 떨어짐)
 		var cuts := [[0.0, 1.0]]
 		if cls == E_SAME or cls == E_UPPER:
@@ -579,7 +584,7 @@ func _paddy(k: int, ch: Dictionary, dry := false) -> void:
 			for it in _inlets_on(a, b):
 				var s: float = it[0]; var hw := 0.28 / L
 				cuts = [[0.0, s - hw], [s + hw, 1.0]]
-				if cls == E_UPPER:
+				if cls == E_UPPER and st <= 1:
 					var m := a.lerp(b, s); var q: int = it[1]
 					ch.spout.append([m, out_n, T - 0.12, I[q * 4 + 3] + WATER_D])
 				break
@@ -590,8 +595,8 @@ func _paddy(k: int, ch: Dictionary, dry := false) -> void:
 			var tb: Vector2 = top[j] if s1 >= 1.0 else ob + N[e] * ei.z
 			var fa: Vector2 = foot[e] if s0 <= 0.0 else oa + N[e] * ei.w
 			var fb_: Vector2 = foot[j] if s1 >= 1.0 else ob + N[e] * ei.w
-			G.quad(Vector3(oa.x, T, oa.y), Vector3(ob.x, T, ob.y), Vector3(tb.x, T, tb.y), Vector3(ta.x, T, ta.y), COL_BUND, Vector3.UP)
-			G.quad(Vector3(ta.x, T, ta.y), Vector3(tb.x, T, tb.y), Vector3(fb_.x, fl, fb_.y), Vector3(fa.x, fl, fa.y), COL_BUND2, Vector3.UP)
+			G.quad(Vector3(oa.x, T, oa.y), Vector3(ob.x, T, ob.y), Vector3(tb.x, T, tb.y), Vector3(ta.x, T, ta.y), cb1, Vector3.UP)
+			G.quad(Vector3(ta.x, T, ta.y), Vector3(tb.x, T, tb.y), Vector3(fb_.x, fl, fb_.y), Vector3(fa.x, fl, fa.y), cb2, Vector3.UP)
 			# 물꼬 쪽 끝 막기(둑 단면)
 			if s0 > 0.0: G.quad(Vector3(oa.x, T, oa.y), Vector3(ta.x, T, ta.y), Vector3(fa.x, fl, fa.y), Vector3(oa.x, fl, oa.y), COL_BANK)
 			if s1 < 1.0: G.quad(Vector3(ob.x, T, ob.y), Vector3(tb.x, T, tb.y), Vector3(fb_.x, fl, fb_.y), Vector3(ob.x, fl, ob.y), COL_BANK)
@@ -606,6 +611,10 @@ func _paddy(k: int, ch: Dictionary, dry := false) -> void:
 			var ba := a + out_n * bat - dd; var bbv := b + out_n * bat + dd
 			G.quad(Vector3(a.x, T, a.y), Vector3(b.x, T, b.y), Vector3(bbv.x, low, bbv.y), Vector3(ba.x, low, ba.y), COL_STONE if stone else COL_BANK, Vector3(out_n.x, 0.0, out_n.y))
 			outs[e][1] = Vector3(ba.x, low, ba.y); outs[j][0] = Vector3(bbv.x, low, bbv.y)
+		elif cls == E_BOUND and int(V[(int(P[k * STRIDE + 9]) + e) * 3 + 2]) == -2:
+			_ditch(ch, a, b, out_n, T, fl)
+			var o0 := a + out_n * (DITCH_W + RIM); var o1 := b + out_n * (DITCH_W + RIM)
+			outs[e][1] = Vector3(o0.x, _terrain(o0.x, o0.y) - 0.05, o0.y); outs[j][0] = Vector3(o1.x, _terrain(o1.x, o1.y) - 0.05, o1.y)
 		elif cls == E_BOUND:
 			# 테두리: 둑 윗면 바깥 끝 → 바깥 RIM m 땅(−5cm)으로, 2m 간격
 			var L := a.distance_to(b)
@@ -633,6 +642,34 @@ func _paddy(k: int, ch: Dictionary, dry := false) -> void:
 		_rows(k, poly, 0.95, ROW_SP, func(a: Vector2, b: Vector2, ang: float): _rice_row(ch, a, b, ang, fl, st))
 	elif ch.detail >= 2 and crop != 5:
 		_rows(k, poly, 0.6, RIDGE_P, func(a: Vector2, b: Vector2, ang: float): _ridge(ch, a, b, ang, crop, fl + 0.04))
+
+# 길 따라 도랑(논 구획 바깥 변, parcels.py 이웃 -2): 둑 바깥 → 도랑 바닥(논바닥 −0.3m)·물 → 바깥 둑 → 테두리
+const DITCH_W := 0.8
+func _ditch(ch: Dictionary, a: Vector2, b: Vector2, on: Vector2, T: float, fl: float) -> void:
+	var G: Mb = ch.ground; var W: Mb = ch.water
+	var L := a.distance_to(b)
+	var m := maxi(1, ceili(L / 2.0))
+	var bot := fl - 0.32; var wy := fl - 0.16
+	var prev := []
+	for q in m + 1:
+		var p := a.lerp(b, float(q) / m)
+		var ob := p + on * DITCH_W; var orr := p + on * (DITCH_W + RIM)
+		var top_o := maxf(_terrain(ob.x, ob.y), wy + 0.12)
+		var cur := [Vector3(p.x, T, p.y), (p + on * 0.14), (p + on * (DITCH_W - 0.14)), Vector3(ob.x, top_o, ob.y), Vector3(orr.x, _terrain(orr.x, orr.y) - 0.05, orr.y)]
+		cur[1] = Vector3(cur[1].x, bot, cur[1].y); cur[2] = Vector3(cur[2].x, bot, cur[2].y)
+		if q > 0:
+			G.quad(prev[0], cur[0], cur[1], prev[1], COL_BANK, Vector3(on.x, 1.0, on.y))
+			G.quad(prev[1], cur[1], cur[2], prev[2], COL_MUD[0], Vector3.UP)
+			G.quad(prev[2], cur[2], cur[3], prev[3], COL_BANK, Vector3(-on.x, 1.0, -on.y))
+			G.quad(prev[3], cur[3], cur[4], prev[4], COL_RIM, Vector3.UP)
+			var w0: Vector2 = a.lerp(b, float(q - 1) / m); var w1: Vector2 = p
+			var wa := w0 + on * 0.06; var wb := w1 + on * 0.06; var wc := w1 + on * (DITCH_W - 0.06); var wd := w0 + on * (DITCH_W - 0.06)
+			W.quad(Vector3(wa.x, wy, wa.y), Vector3(wb.x, wy, wb.y), Vector3(wc.x, wy, wc.y), Vector3(wd.x, wy, wd.y), Color(0.3, 0.35, 0.5), Vector3.UP)
+		if q == 0 or q == m:
+			# 끝 막기(도랑 단면)
+			var dirv := (b - a).normalized() * (-1.0 if q == 0 else 1.0)
+			G.quad(cur[0], cur[3], Vector3(cur[3].x, bot, cur[3].z), Vector3(cur[0].x, bot, cur[0].z), COL_BANK, Vector3(-dirv.x, 0.0, -dirv.y))
+		prev = cur
 
 # 필지 축(P.ang) 방향 줄: inset만큼 안쪽 다각형 안에서 간격 sp로 → fn(시작, 끝, 각)
 func _rows(k: int, poly: PackedVector2Array, inset: float, sp: float, fn: Callable) -> void:

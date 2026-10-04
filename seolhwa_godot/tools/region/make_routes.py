@@ -1321,6 +1321,9 @@ def main():
     for R in ROUTES:
         if want and R["id"] not in want: continue
         build_route(R)
+        if os.environ.get("SEOLHWA_NO_PARCELS") != "1":
+            import parcels   # 논·밭 필지(노정도 같은 형식)
+            parcels.run(os.path.join(OUT_ROOT, R["id"]))
 
 if __name__ == "__main__":
     main()

@@ -333,5 +333,13 @@ def main():
         im.save(os.path.join(shots, fn))
     say("완료")
 
+
+def _parcels(d):
+    # 논·밭 필지(parcels.bin·farm.png) — landuse가 바뀌면 같이 다시 만든다(SEOLHWA_NO_PARCELS=1이면 건너뜀)
+    if os.environ.get("SEOLHWA_NO_PARCELS") == "1": return
+    import parcels
+    parcels.run(d)
+
 if __name__ == "__main__":
     main()
+    _parcels(C.OUT)

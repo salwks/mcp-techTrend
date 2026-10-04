@@ -34,7 +34,8 @@ PADDY, FIELD = 2, 3
 GAP = 0.6           # 구획 경계에서 필지까지(m) — 논·밭 사이, 구역 사이 1.2m 두렁길
 ROAD_MARGIN = 1.6   # 길 반폭 + 이만큼은 길섶
 RIVER_MARGIN = 2.2
-ROAD_DIR_R = 110.0  # 이 안의 길 방향에 평지 필지를 맞춘다
+ROAD_DIR_R = 110.0
+DITCH_W = 0.8       # 길 따라 논 가장자리 도랑 폭  # 이 안의 길 방향에 평지 필지를 맞춘다
 CHUNK = 64.0
 ZONES = ["south", "central", "north", "alpine", "coast"]
 # 논 상태: 0 물 댄 모, 1 자라는 벼, 2 익은 벼, 3 그루터기 / 기후대별 비율(늦여름 기준 — 남쪽은 푸르고 북쪽은 벌써 익거나 거둠)
@@ -193,14 +194,18 @@ def make_parcels(d, png=False, seed=1870):
     roads = [r for r in rj.get("roads", []) if len(r.get("points", [])) >= 2]
     rl = [(r["points"], float(r.get("width_m", 3.0)) * 0.5 + (0.4 if r.get("class") == "대로" else 0.0) + ROAD_MARGIN) for r in roads]
     rv = [(r["points"], 0.59 * max(float(r.get("width_m", 5.0)), 5.2) + RIVER_MARGIN) for r in rj.get("rivers", []) if len(r.get("points", [])) >= 2 and r.get("render", True) is not False]
-    clear = line_clear(G, rl + rv)
+    road_clear = line_clear(G, rl); river_clear = line_clear(G, rv)
+    clear = np.maximum(road_clear, river_clear)
     say("길", len(rl), "하천", len(rv), "비우기 완료")
     # 길 방향 찾기(평지 필지 축)
     segs = []
-    for pts, _ in rl + rv:
+    seg_r = []; n_road_segs = 0
+    for li, (pts, R) in enumerate(rl + rv):
         p = np.asarray(pts, float)[:, :2]
         for q in range(len(p) - 1):
-            if np.hypot(*(p[q + 1] - p[q])) > 0.5: segs.append((p[q], p[q + 1]))
+            if np.hypot(*(p[q + 1] - p[q])) > 0.5:
+                segs.append((p[q], p[q + 1])); seg_r.append(R)
+                if li < len(rl): n_road_segs += 1
     seg_mid = np.array([(a + b) * 0.5 for a, b in segs]) if segs else np.zeros((0, 2))
     seg_tree = cKDTree(seg_mid) if len(seg_mid) else None
 
@@ -214,7 +219,8 @@ def make_parcels(d, png=False, seed=1870):
     for kind in (PADDY, FIELD):
         sdf = kind_sdf(lu, lx0, lz0, lcell, kind, G)
         if sdf is None: continue
-        C = np.maximum(sdf + GAP, clear)
+        # 논은 길에서 1m 더 띄운다(그 자리에 길 따라 도랑)
+        C = np.maximum(sdf + GAP, np.maximum(road_clear + (DITCH_W + 0.2 if kind == PADDY else 0.0), river_clear))
         Cg = Grid(C, G.x0, G.z0, G.cell)
         jj, ii = np.nonzero(C <= 0)
         if len(ii) < 20: continue
@@ -443,6 +449,24 @@ def make_parcels(d, png=False, seed=1870):
         seen.add((k, q))
         a = P[e]; b = P[(e + 1) % n]; m = (a + b) * 0.5 + (b - a) * rng.uniform(-0.25, 0.25)
         inlets.append([float(m[0]), float(m[1]), parcels[q]["floor"], p["floor"]])
+    # 도랑: 길과 나란한(25° 안) 논의 구획 바깥 변 — 이웃 번호 -2(엔진이 둑 바깥에 도랑을 판다)
+    nd = 0
+    if seg_tree is not None:
+        for p in parcels:
+            if p["kind"] != 0: continue
+            P = p["poly"]; n = len(P)
+            for e in range(n):
+                if p["nb"][e] != -1: continue
+                a = P[e]; b = P[(e + 1) % n]; d = b - a; L = math.hypot(*d)
+                if L < 3.0: continue
+                m = (a + b) * 0.5
+                for k in np.atleast_1d(seg_tree.query(m, k=4)[1]):
+                    if k >= len(segs) or k >= n_road_segs: continue
+                    sa, sb = segs[k]; sd_ = sb - sa; sl = math.hypot(*sd_)
+                    t = np.clip(((m - sa) @ sd_) / (sl * sl), 0, 1); dist = math.hypot(*(m - sa - sd_ * t))
+                    if dist < seg_r[k] + DITCH_W + 2.5 and abs((d @ sd_) / (L * sl)) > 0.9:
+                        p["nb"][e] = -2; nd += 1; break
+    say("도랑 변", nd)
     say("필지", len(parcels), "논", sum(1 for p in parcels if p["kind"] == 0), "밭", sum(1 for p in parcels if p["kind"] == 1), "물꼬", len(inlets))
     return rj, G, parcels, inlets
 
@@ -460,7 +484,7 @@ def write(d, rj, G, parcels, inlets, png=False):
         P = p["poly"]; c = P.mean(axis=0)
         Prow.append([c[0], c[1], p["floor"], p["kind"], p["row"], p["state"], p["crop"], p["ang"], p["style"], len(V), len(P), p["slope"]])
         for v, nb in zip(P, p["nb"]):
-            V.append([v[0], v[1], remap[nb] if nb >= 0 else -1])
+            V.append([v[0], v[1], remap[nb] if nb >= 0 else nb])
     Pa = np.array(Prow, np.float32).reshape(-1, 12); Va = np.array(V, np.float32).reshape(-1, 3)
     Ia = np.array(inlets, np.float32).reshape(-1, 4); Ca = np.array(Cidx, np.int32).reshape(-1, 4)
     with open(os.path.join(d, "parcels.bin"), "wb") as f:
@@ -469,8 +493,14 @@ def write(d, rj, G, parcels, inlets, png=False):
     # 합집합 부호 거리(2m 격자)
     sd = np.full((G.h, G.w), 8.0, np.float32)
     REACH = 8.0
+    polys = [p["poly"] for p in parcels]
     for p in parcels:
-        P = p["poly"]
+        P = p["poly"]; n = len(P)
+        for e in range(n):
+            if p["nb"][e] == -2:
+                a = P[e]; b = P[(e + 1) % n]; dv = (b - a) / max(np.hypot(*(b - a)), 1e-9); out = np.array([dv[1], -dv[0]])
+                polys.append(np.array([a, b, b + out * DITCH_W, a + out * DITCH_W]))
+    for P in polys:
         i0 = max(int((P[:, 0].min() - REACH - G.x0) / G.cell), 0); i1 = min(int((P[:, 0].max() + REACH - G.x0) / G.cell) + 2, G.w)
         j0 = max(int((P[:, 1].min() - REACH - G.z0) / G.cell), 0); j1 = min(int((P[:, 1].max() + REACH - G.z0) / G.cell) + 2, G.h)
         X, Z = np.meshgrid(G.x0 + np.arange(i0, i1) * G.cell, G.z0 + np.arange(j0, j1) * G.cell)

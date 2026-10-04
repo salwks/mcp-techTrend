@@ -624,6 +624,13 @@ def main():
     np.save(os.path.join(C.CACHE, "alt_fixed.npy"), alt1); np.save(os.path.join(C.CACHE, "res_mask.npy"), res_mask)
     say("done", hm["y_min"], hm["y_max"], "missing", missing)
 
+
+def _parcels(d):
+    # 논·밭 필지(parcels.bin·farm.png) — landuse가 바뀌면 같이 다시 만든다(SEOLHWA_NO_PARCELS=1이면 건너뜀)
+    if os.environ.get("SEOLHWA_NO_PARCELS") == "1": return
+    import parcels
+    parcels.run(d)
+
 if __name__ == "__main__":
     if C.REGION_ID == "JL_NAMWON_UNBONG":
         main()
@@ -631,3 +638,4 @@ if __name__ == "__main__":
     else:                                   # 그 밖 권역: 설정 기반 일반 빌더
         import build_region
         build_region.main()
+    _parcels(C.OUT)
