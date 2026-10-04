@@ -24,6 +24,7 @@ const PLACE_KO := { HANYANG = "한양", GANGNEUNG = "강릉", GYEONGJU = "경주
 const TRACE_LINE := {
 	HANYANG = { tag = "heard", by = "남원 노인", text = "“전에도 그런 책 들고 다니던 양반이 있었소. 한양 간다고 했지.”" },
 	GANGNEUNG = { tag = "fact", text = "국사성황사 옛 제의 기록 뒷장에 선생의 필체 — “사람이 훔친 것과 사람이 아닌 것이 남긴 흔적을 섞지 말 것.”" },
+	HAMHUNG = { tag = "fact", text = "북청길 함관령 옛 역참. 제 기록을 한 장씩 태워 언 역졸을 살리고 계셨다. “그 책 아직 갖고 있었구나.”" },
 }
 static var last_page := 0
 
@@ -47,7 +48,12 @@ static func _travel(d) -> Dictionary:
 	var last := "남원"
 	if not trace.is_empty(): last = String(PLACE_KO.get(trace[-1], trace[-1]))
 	b.append({ t = "para", text = "마지막 확인 장소: " + last })
-	b.append({ t = "para", text = "현재 행방: " + ("찾았다" if bool(v.get("MAIN_MASTER_FOUND", false)) else "모름") })
+	b.append({ t = "para", text = "현재 행방: " + ("찾았다 — 함흥 북청길 함관령 옛 역참" if bool(v.get("MAIN_MASTER_FOUND", false)) else "모름") })
+	# 함흥(S6010) 뒤: 다음에 찾을 사람 — 곽칠성(제주)
+	if bool(v.get("MAIN_MASTER_FOUND", false)) and bool(v.get("MAIN_PAST_EVENT_KNOWN", false)) and not bool(v.get("MAIN_GWAK_FOUND", false)):
+		b.append({ t = "head", text = "다음에 찾을 사람 — 곽칠성" })
+		b.append({ t = "entry", tag = "heard", by = "이겸", title = "제주", text = "열두 해 전 서강 창고 사건의 증인. 죄를 쓰고 제주로 귀양 갔다. “내가 가야 했는데 못 갔다.”" })
+		b.append({ t = "para", text = "제주 가는 배는 해남 관두포에서 뜬다. 남해 뱃길은 남원 남쪽 끝에서 시작한다." })
 	b.append({ t = "head", text = "이겸의 흔적" })
 	b.append({ t = "entry", tag = "fact", title = "남원", text = "기록책 마지막 장 — “남원에서 확인할 것이…” 문장은 거기서 끊겼다." })
 	for tk in trace:
