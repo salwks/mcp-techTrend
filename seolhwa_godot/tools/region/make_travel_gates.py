@@ -390,7 +390,9 @@ def build_space(space_id, space_dir, is_route, overrides):
 		if any(math.dist((x, z), (n['x'], n['z'])) < 60.0 for n in nodes): continue
 		gi, d = nearest_gi(g, x, z, 40.0)
 		if gi < 0: continue
-		add_node('inn_%d_%d' % (round(x), round(z)), '주막', 'INN', x, z, {'kind': 'circle', 'c': (x, z), 'r': 18.0}, {'fast': False})
+		near = min(((math.dist((x, z), (n['x'], n['z'])), n['name']) for n in nodes if n['kind'] not in ('HAMLET', 'ROUTE_END', 'BOAT', 'CAVE')), default=(1e9, ''))
+		nm = ('%s 길 주막' % near[1]) if near[0] < 900.0 else '길가 주막'
+		add_node('inn_%d_%d' % (round(x), round(z)), nm, 'INN', x, z, {'kind': 'circle', 'c': (x, z), 'r': 18.0}, {'fast': False})
 
 	# 도시(읍성·도성) 안 길 점: 말을 들이지 않는다(엔진 길 찾기에서 막음). 도시 안 거점의 어귀는 버린다(걸어서 간다)
 	city_zones = [n['zone'] for n in nodes if n['kind'] == 'CITY']

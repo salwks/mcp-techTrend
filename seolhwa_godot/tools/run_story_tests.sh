@@ -6,7 +6,7 @@
 #   tools/run_story_tests.sh namwon hwangju:B walk   # 이름(앞부분)이 맞는 것만
 #   tools/run_story_tests.sh -l              # 목록만
 #
-# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
+# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
 # 시험마다 저장 파일을 따로 쓴다(--savefile=user://st_<이름>.json) — 동시에 돌려도 서로 덮어쓰지 않는다.
 # 로그: $LOGDIR(기본 /tmp/seolhwa_tests/<시각>/<이름>.log). 환경 변수 GODOT, LOGDIR, TIMEOUT_SCALE(제한 시간 배율).
 
@@ -58,6 +58,16 @@ TESTS=(
 	"jeju:C|420|--route=SEA_NAMHAE_JEJU --storytest=jeju:C"
 	"walk:hwangju-pyeongyang|300|--route=HH_HWANGJU-PA_PYEONGYANG --walkroute=01 --walkspeed=12"
 	"walk:hangang-boat|600|--route=RIVER_HANGANG --walkroute=01 --walkspeed=12 --sailspeed=25"
+	# 자동 기승·역마(scripts/region/ride_test.gd) — 시험만 4배 빠르게(--ridetime=4)
+	"ride:namwon-unbong|420|--region=JL_NAMWON_UNBONG --ridetest=namwon_eup:unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --ridetime=4 --notitle"
+	"ride:r01-park|420|--route=JL_NAMWON_UNBONG-GG_HANYANG --ridetest=end_from:end_to --ridefixture=res://story/hwangju/test_post_hanyang.json --ridevars=MAIN_MASTER_TRACE=HANYANG --rideneed=R0101,R0102,R0103,R0104 --ridepark=1 --rideratio=0.5 --ridetime=4 --notitle"
+	"ride:r05-event|300|--route=PA_PYEONGYANG-HG_HAMHEUNG --ridetest=end_from:end_to --ridefixture=res://story/hamhung/test_post_act3.json --rideexpect=event --ridetime=4 --notitle"
+	"ride:hanyang-gate|420|--region=GG_HANYANG --ridetest=noryang_naru_0:hanyang_doseong_in --ridefresh --nostory --ridetime=4 --notitle"
+	"ride:fork-yeongheung|420|--route=GG_HANYANG-HG_HAMHEUNG --ridetest=end_from:end_to --ridefork=갈림 --rideexpect=fork --ridedone=GG_HANYANG-HG_HAMHEUNG --nostory --ridetime=4 --notitle"
+	"ride:blizzard|300|--region=HG_HAMHEUNG --ridetest=end_GG_HANYANG-HG_HAMHEUNG_to:hamheung_eup --rideweather=blizzard@300 --rideexpect=blizzard --ridefresh --nostory --ridetime=4 --notitle"
+	"fast:same-space|240|--region=JL_NAMWON_UNBONG --fasttravel=JL_NAMWON_UNBONG/unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
+	"fast:to-hanyang|300|--region=JL_NAMWON_UNBONG --fasttravel=GG_HANYANG/noryangjin --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
+	"fast:jeju-blocked|240|--region=JL_NAMWON_UNBONG --fasttravel=JJ_JEJU/jeju_mok --fastexpect=blocked --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 )
 
 selected=()
@@ -92,9 +102,10 @@ run_one() {
 	if [[ $name == walk:* ]]; then
 		grep -q "^WALK done" $log && grep -q "^TRAVEL arrive" $log && verdict=PASS
 	else
-		grep -q -E "^(STORYTEST|ONBOARDTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(RIDETEST|FASTTEST) FAIL" $log && verdict=FAIL
 	fi
-	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST) //')
+	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST) //')
 	[[ $name == walk:* ]] && detail=$(grep "^WALK done" $log | tail -1 | sed -E 's/^WALK done //')
 	if (( code == 124 )); then why="시간 초과"; verdict=FAIL
 	elif (( code != 0 )); then why="종료 코드 $code"; verdict=FAIL

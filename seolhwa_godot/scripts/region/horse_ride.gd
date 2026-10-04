@@ -460,6 +460,11 @@ func _find_forks(ids: PackedInt32Array) -> void:
 			opts.append({ dir = "right" if side > 0.0 else "left", label = String(hit.name), node = hit.node, gi = int(hit.gi) })
 		if opts.is_empty(): continue
 		var pr := _proj(net.pts[gi])
+		# 30m 안 갈림(한 네거리의 두 점)은 하나로
+		if not forks.is_empty() and absf(float(forks[-1].s) - float(pr[0])) < 30.0:
+			for o in opts:
+				if not forks[-1].opts.any(func(x): return String(x.label) == String(o.label)): forks[-1].opts.append(o)
+			continue
 		forks.append({ s = float(pr[0]), gi = gi, opts = opts, done = false, cur = String(dest.get("name", "")) })
 
 func _walk_branch(from: int, b: int, n: int) -> int:
