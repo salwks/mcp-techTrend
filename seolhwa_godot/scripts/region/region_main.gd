@@ -708,6 +708,9 @@ func _wait_frames(n: int) -> void:
 func _save(path: String) -> void:
 	# --winshot: 창에 실제로 보이는 화면(지명 표시 등 2D 포함)
 	var img := (get_viewport() if args.has("winshot") else scene_vp).get_texture().get_image()
+	if img == null:   # 헤드리스(더미 렌더러)는 그림이 없다 — 찍기만 건너뛴다
+		print("SHOT skip (no image) ", path)
+		return
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	img.save_png(path)
 	print("SHOT ", path, " ", img.get_size(), " cam=%.1f/%.0f %s" % [rig.cur.distance, rig.cur.pitch, rig.zone_name], " pos=", player_pos, " lu=", world.landuse_at(player_pos.x, player_pos.z), " fps=", Engine.get_frames_per_second())
@@ -900,6 +903,8 @@ func _quit() -> void:
 	if placement: placement.stop()
 	if world: world.shutdown()
 	if weather: weather.reset_globals()
+	_release_refs()
+	preload("res://scripts/region/quit_cleanup.gd").run()   # static 캐시(재질·텍스처·그림 묶음)를 서버가 내려가기 전에 비운다
 	get_tree().quit()
 
 func _drain_jobs() -> void:
@@ -918,6 +923,16 @@ func _drain_jobs() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()   # 창 닫기도 같은 길로(auto_accept_quit 끔)
+	elif what == NOTIFICATION_PREDELETE: _release_refs()
+
+# RefCounted끼리 서로 잡은 고리를 끊는다(배 타기 ↔ 강 뱃길) — 장면을 다시 열거나 끝낼 때 새지 않게
+func _release_refs() -> void:
+	if boats != null:
+		if boats.has_method("dispose"): boats.dispose()
+		boats = null
+	if lanes != null:
+		lanes.boat_ride = null
+		lanes = null
 
 static func _abs(p: String) -> String:
 	return p if p.is_absolute_path() else ProjectSettings.globalize_path("res://").path_join(p)
@@ -1089,6 +1104,7 @@ func _leave() -> void:
 	placement.stop()
 	world.shutdown()
 	weather.reset_globals()
+	_release_refs()
 	get_tree().reload_current_scene()
 
 # ---- 배 타기(boat_ride.gd): 나루·선창 끝에서 E로 오르면 사공이 저어 건넨다. Space(또는 E 누르고 있기) 건너뛰기 ----

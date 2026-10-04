@@ -1272,6 +1272,10 @@ func _chunk_y(x0: float, z0: float) -> Vector2:
 
 func _drop_tile(t: Vector2i) -> void:
 	var st: Dictionary = tiles[t]
+	if st.scatter_job >= 0:
+		# 진행 중 식생 작업: 타일을 지워도 결과(트리 밖 MultiMeshInstance3D)는 끝난 뒤 지워야 한다 — 안 그러면 노드·RID가 샌다
+		_scatter_orphans.append([st.scatter_job, st.scatter_hold])
+		st.scatter_job = -1; st.scatter_hold = null
 	if farm != null: farm.tile_lod(t, -1)
 	_unscatter(t)
 	_attach_statics(t, 2)
@@ -1437,7 +1441,26 @@ func scatter_busy_near(c: Vector2i, r: int) -> bool:
 		if maxi(absi(t.x - c.x), absi(t.y - c.y)) <= r: return true
 	return false
 
+var _scatter_orphans := []   # [작업 번호, hold] — 버린 타일의 진행 중 식생 작업
+
+static func _free_scatter_hold(hold) -> void:
+	if hold == null: return
+	for tn in hold.get("temps", []):
+		if is_instance_valid(tn) and not tn.is_inside_tree(): tn.free()
+	for e in hold.get("entries", []):
+		if e.node != null and is_instance_valid(e.node) and not e.node.is_inside_tree(): e.node.free()
+	hold.clear()
+
+func _poll_orphans(wait: bool) -> void:
+	for q in range(_scatter_orphans.size() - 1, -1, -1):
+		var o: Array = _scatter_orphans[q]
+		if not wait and not Jobs.done(o[0]): continue
+		Jobs.wait(o[0])
+		_free_scatter_hold(o[1])
+		_scatter_orphans.remove_at(q)
+
 func _poll_jobs() -> void:
+	_poll_orphans(false)
 	# 붙이기는 프레임당 ATTACH_PER_FRAME 묶음까지(한 번에 수백 개를 붙이면 프레임이 튄다)
 	var n := 0
 	while not _attach_q.is_empty() and n < (ATTACH_PER_FRAME * 8 if loading else ATTACH_PER_FRAME):
@@ -1734,6 +1757,8 @@ static var cancel_all := false
 
 func jobs_idle() -> bool:
 	if farm != null and not farm.jobs_idle(): return false
+	for o in _scatter_orphans:
+		if not Jobs.done(o[0]): return false
 	for t in tiles:
 		if tiles[t].scatter_job >= 0 and not Jobs.done(tiles[t].scatter_job): return false
 	return true
@@ -1741,6 +1766,7 @@ func jobs_idle() -> bool:
 func shutdown() -> void:
 	_queue.clear()
 	if farm != null: farm.shutdown()
+	_poll_orphans(true)
 	for t in tiles:
 		if tiles[t].scatter_job >= 0:
 			Jobs.wait(tiles[t].scatter_job)
@@ -1876,7 +1902,10 @@ func reset_edits() -> void:
 	# 작업 스레드(필지 짓기·식생)가 hbytes·lbytes를 읽는 중에 배열을 갈아 끼우면 해제된 메모리를 읽는다 — 먼저 기다린다
 	if farm != null: farm.wait_jobs()
 	for t in tiles:
-		if tiles[t].scatter_job >= 0: Jobs.wait(tiles[t].scatter_job)
+		if tiles[t].scatter_job >= 0:
+			Jobs.wait(tiles[t].scatter_job); tiles[t].scatter_job = -1
+			_free_scatter_hold(tiles[t].scatter_hold); tiles[t].scatter_hold = null
+	_poll_orphans(true)
 	_walk_grid.clear()
 	_ponds.clear()
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()

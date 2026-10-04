@@ -64,6 +64,11 @@ func setup(h) -> void:
 	add_child(fxn)
 	battle = CBattle.new(self)
 
+# 지워질 때 판의 고리(판 ↔ 플레이어·범)를 끊는다 — 안 끊으면 RefCounted 셋과 RNG가 끝날 때까지 샌다
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE and battle != null:
+		battle.dispose(); battle = null
+
 # ---- env (cbattle·cplayer·ctiger가 부른다) ----
 func height_at(x: float, z: float) -> float: return host.world.height_at(x, z)
 func blocked(x: float, z: float, r: float) -> bool: return host.world.blocked(x, z, r)

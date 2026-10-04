@@ -43,6 +43,14 @@ func _init(e) -> void:
 
 func rand() -> float: return _rng.randf()
 
+# 끝낼 때(combat_view가 트리에서 빠질 때): 판 ↔ 플레이어·범·사람 적이 서로 잡고 있는 고리를 끊는다(RefCounted 누수)
+func dispose() -> void:
+	for o in [player, tiger] + foes:
+		if o != null: o.b = null
+	player = null; tiger = null; foes = []
+	arrows.clear(); baits.clear()
+	env = null
+
 # opts: { mods, retreat_at, allow_flee, player_pos(Vector2), focus(Vector2), retreat_to(Vector2), seed,
 #         humans: [{ id, kind, name, weapon, hp, flee_at, pos: Vector2 }] (있으면 사람 적 판), flee_to: Vector2 }
 func start(a: Dictionary, opts := {}) -> void:
