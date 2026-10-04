@@ -537,7 +537,9 @@ func summary() -> Array:
 		p.append(OUTCOME_TEXT.get(o, ""))
 		p.append("어미는 돌아오지 못했다. 마을 사람들이 오누이를 거두었다.")
 		p.append(ENDING_EXTRA.get(String(S.vars.get("CASE_NAMWON_OUTCOME", "A")), ""))
-		if String(S.vars.get("MAIN_MASTER_TRACE", "")) == "HANYANG": p.append("기록책을 본 노인이 말했다. 전에도 그런 책을 든 양반이 한양으로 갔다고.")
+		if String(S.vars.get("MAIN_MASTER_TRACE", "")).split(",").has("HANYANG"):
+			p.append("기록책을 본 노인이 말했다. 전에도 그런 책을 든 양반이 한양으로 갔다고.")
+			p.append("기록책 가장자리, 이겸 선생의 오래된 한 줄 — “발자국은 한 번 남지만, 사람 말은 걸을수록 달라진다.”")   # v2.2 S0010
 	return p
 
 func journal() -> Dictionary:

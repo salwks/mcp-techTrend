@@ -17,7 +17,8 @@ static func data() -> Dictionary:
 			"start_hour": 11.0,
 			"requires": { "MAIN_MASTER_TRACE": "HANYANG" },     # 남원(S0010) 뒤에만
 			"start_event": "S1001", "start_on_arrival": true,     # 노정·역마로 넘어와도 시작
-			"reset_vars": ["CASE_HANYANG_OUTCOME", "MAIN_WOOCHI_KNOWN", "ACT2_OPEN", "ACT3_OPEN"],
+			"complete_key": "HANYANG_BOOKSHOP",                   # 끝나면 CASE_HANYANG_BOOKSHOP_COMPLETE → 빠른 투척(scripts/story/skills.gd)
+			"reset_vars": ["CASE_HANYANG_OUTCOME", "MAIN_WOOCHI_KNOWN", "ACT2_OPEN", "ACT3_OPEN", "MAIN_PARK_NAME_KNOWN", "SKILL_QUICK_THROW", "CASE_HANYANG_BOOKSHOP_COMPLETE"],
 		},
 		"items": {
 			PAPERS: "이겸의 기록 조각", PASS_DOC: "위조 통행문서", COIN: "엽전",
@@ -32,6 +33,8 @@ static func data() -> Dictionary:
 			"window": { "title": "열린 뒤창", "text": "뒤창 살이 밖으로 열렸다. 창턱 흙에 짚신 앞꿈치 자국." },
 			"torn": { "title": "찢긴 종이", "text": "장부에서 몇 장이 뜯겨 나갔다. 남은 장 끝에 이겸 선생의 글씨가 걸려 있다." },
 			"tea": { "title": "아직 따뜻한 차", "text": "찻잔에서 김이 오른다. 방금 전까지 누가 있었다." },
+			# v2.2 박규상 복선 — 범죄 단서로 강조하지 않는다(평소 거래 기록)
+			"slip": { "title": "반쯤 찢긴 납품표", "text": "책 묶음 아래 깔린 종이·먹 납품표. 끝에 ‘박규상 객주’ 인장(朴)." },
 			"figure": { "title": "골목의 사내", "text": "피맛골 어귀에서 이쪽을 보던 사내. 가볍고, 빠르다. 골목을 제 집처럼 안다." },
 			"rooftop": { "title": "지붕 위의 실루엣", "text": "기와 지붕 위를 달렸다. 담도 지붕도 길로 쓴다." },
 			"papers": { "title": "세 장의 종이", "text": "강릉 · 경주 · 황주. 이겸 선생의 필체. 뒷면에 다른 글씨 — “쫓아올 테면 제대로 보고 오시오.”" },
@@ -57,7 +60,7 @@ static func anchors() -> Dictionary:
 		# 책방(hy_sc_chaekbang: 가운데 (−252, −938), 앞 = 남쪽 피맛골, 뒤창 = 북쪽 뒷골목 z −942.8)
 		"shop": [-252.0, -938.0], "shop_door": [-252.0, -933.6], "shop_front": [-252.0, -930.2], "shop_in": [-252.0, -936.2],
 		"ink": [-251.9, -938.25], "string": [-249.5, -937.1], "torn": [-250.9, -937.1], "tea": [-251.25, -937.65],
-		"window": [-250.4, -940.4], "window_out": [-250.4, -942.8], "counter": [-252.0, -936.6], "shelf": [-253.9, -937.4],
+		"window": [-250.4, -940.4], "window_out": [-250.4, -942.8], "slip": [-253.5, -937.0], "counter": [-252.0, -936.6], "shelf": [-253.9, -937.4],
 		# 빈 창고(hy_sc_bin_changgo: (−241.6, −938.6), 대문 칸은 서쪽 반, 묶인 자리 bound (−240.7, −939.0))
 		"warehouse": [-241.6, -938.6], "warehouse_gate": [-243.2, -934.2], "warehouse_in": [-242.6, -937.6], "bound": [-240.7, -939.0],
 		# 추격 길
@@ -166,6 +169,11 @@ static func objects() -> Array:
 			"steps": [
 				{ "examine": "열린 뒤창", "text": ["뒤창 살이 밖으로 열려 있다.", "창턱 흙에 짚신 앞꿈치 자국. 창 밖 뒷골목으로 이어진다."] },
 				{ "clue": "window" }, { "call": "show_tracks" }, { "call": "check_shop" }] },
+		# v2.2: 책 묶음 아래 납품표(책방 단서 수에는 넣지 않는다 — 추격 조건과 무관)
+		{ "id": "slip", "at": "slip", "label": "책 묶음 · 들춰 보기", "radius": 1.5, "when": "f('in_shop') and not c('slip')",
+			"steps": [
+				{ "examine": "반쯤 찢긴 납품표", "text": ["책 묶음 아래 납품표가 깔려 있다. 종이 스무 묶음, 먹 열 정.", "찢긴 끝에 붉은 인장 하나 — ‘박규상 객주’."], "kind": "item" },
+				{ "clue": "slip" }, { "call": "park_slip" }] },
 		# S1004: 놓친 자리의 종이 세 장
 		{ "id": "papers", "at": "papers", "label": "다리 난간의 종이 · 조사", "radius": 2.6, "when": "f('chase_done') and not c('papers')",
 			"steps": [{ "event": "S1004" }] },
@@ -211,6 +219,9 @@ static func props() -> Array:
 		{ "id": "d_tracks_bank", "trail": { "kind": "wet_foot", "points": [[-242.2, -831.0], [-250.0, -822.5], [-256.0, -816.5], [-272.0, -815.5], [-289.0, -815.5], [-298.0, -821.0], [-305.0, -826.5], "bridge_north"],
 			"step": 0.95, "size": 0.5 }, "when": "f('woochi_seen')" },
 		{ "id": "d_tile", "decal": { "kind": "drag", "size": 1.2, "ry": 0.4 }, "at": [-242.6, -830.6], "when": "f('woochi_seen')" },
+		# v2.2 납품표(朴 인장) — 책 묶음 아래로 반쯤 삐져나옴. 허브에서는 책쾌가 치웠다
+		{ "id": "p_slip", "kit": "story/park_mark", "params": { "kind": "slip", "size": 0.26 }, "at": "slip", "dy": 0.46, "ry": 0.5,
+			"when": "not ph('done')" },
 		# 다리 위 종이 세 장(조사 전까지)
 		{ "id": "p_papers", "kit": "scenario/props", "params": { "kind": "jangbu", "n": 3, "seed": 31 }, "at": "papers", "dy": 0.05, "ry": 0.3,
 			"when": "f('chase_done') and not c('papers')" },
@@ -262,6 +273,7 @@ static func events() -> Dictionary:
 			{ "say": "책쾌", "lines": ["…죽일 생각은 없던 모양이오."] },
 			{ "say": "나그네", "lines": ["이겸 선생은?"] },
 			{ "say": "책쾌", "lines": ["그 사람도 옛 기록을 찾았소."] },
+			{ "say": "책쾌", "lines": ["박 객주? 종이값은 꼬박 치르는 큰손이오."], "when": "c('slip')" },
 			{ "clue": "chaekkwae" },
 			{ "event": "S1006" },
 		]),

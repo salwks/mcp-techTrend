@@ -39,6 +39,14 @@ func act2_all_done() -> bool:
 		if String(S.vars.get(k, "")) == "": return false
 	return true
 
+# v2.2: 납품표를 처음 봤을 때 — 박규상 표식 +1, 이름을 앎
+func park_slip() -> void:
+	if f("park_slip"): return
+	flag("park_slip")
+	S.vars["MAIN_PARK_MARK_COUNT"] = int(S.vars.get("MAIN_PARK_MARK_COUNT", 0)) + 1
+	S.vars["MAIN_PARK_NAME_KNOWN"] = true
+	d.runner.log_line("var", ["MAIN_PARK_MARK_COUNT", S.vars.MAIN_PARK_MARK_COUNT])
+
 func check_shop() -> void:
 	if shop_clues() >= 3 and S.has_clue("window") and not f("shop_read"):
 		flag("shop_read")
