@@ -16,6 +16,10 @@
 #   --sailspeed=25    배 속도를 바꿔 시험(강 뱃길 기본 route.json speed 7.5m/s, 나루 5.5, 바다 9)
 #   --ridetest[=id] [--rideend=0|1] [--rideskip]  불러오기가 끝나면 그 배(없으면 첫 배)의 내릴 자리로 가 배를 타고 건너며
 #                     풍경 시점을 --shotdir(기본 shots/region/boat)에 찍고, 닿으면 끝낸다(배 타기 boat_ride.gd)
+#   --ridetest=<거점>:<거점>  자동 기승 시험(scripts/region/ride_test.gd): 앞 거점 어귀에서 말에 올라 뒤 거점까지 가며 멈춤·감속·하차 자리를 본다
+#                     (예: --region=JL_NAMWON_UNBONG --ridetest=namwon_eup:unbong_eup, --route=… --ridetest=end_from:end_to). 콜론이 없으면 배 시험
+#   --ridefixture=res://…json  시험 출발 저장(vars·cases·routes_done)을 --savefile에 깐다   --ridevars=K=V,K=V  공통 변수 더하기
+#   --ridespeed=16    말 최고 속도 바꾸기   --ridelog  자동 기승 로그   --fasttravel=<공간>/<거점>  역마(거점 빠른 이동) 시험
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
@@ -32,6 +36,9 @@ const RiverLanes := preload("res://scripts/region/river_lanes.gd")
 const BoatRide := preload("res://scripts/region/boat_ride.gd")
 const InteriorSpace := preload("res://scripts/region/interior_space.gd")
 const StoryDirector := preload("res://scripts/story/story_director.gd")
+const HorseRide := preload("res://scripts/region/horse_ride.gd")
+const FastTravel := preload("res://scripts/region/fast_travel.gd")
+const RideTest := preload("res://scripts/region/ride_test.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
@@ -145,6 +152,9 @@ const SAIL_SCATTER := 150.0   # 배 위 낮은 시점: 먼 기슭 식생(거친 
 var _e_hold := 0.0
 var _dead_done := false   # 막다른 노정 끝에 닿아 '지나옴'을 기록했나
 var story = null          # 이야기(scripts/story/story_director.gd): 사건·소문·전투. --nostory로 끔
+var horse_ride = null     # 자동 기승(scripts/region/horse_ride.gd) — 큰길을 말이 저절로 간다
+var fast_ui = null        # 역마 — 알게 된 거점 빠른 이동(scripts/region/fast_travel.gd, H)
+var _ride_test = null
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -180,6 +190,7 @@ func _ready() -> void:
 	_build_scene()
 	_prewarm_shaders()
 	_make_load_ui()
+	if args.has("ridefixture") or args.has("ridevars") or args.has("ridedone") or args.has("ridefresh"): RideTest.apply_fixture(args)   # 시험 출발 저장(이야기보다 먼저)
 	if not args.has("nostory"): story = StoryDirector.create_for(self)
 	if args.has("nomsaa"): scene_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if args.has("noshadow"): sun.shadow_enabled = false
@@ -216,7 +227,11 @@ func _ready() -> void:
 		var a0: String = args.get("walkroute", args.get("portaltest", "1"))
 		_ptest = _pending.get("ptest", { left = int(a0) if a0 != "1" else 2, n = 0, walk = args.has("walkroute") })
 	elif not _pending.is_empty(): pass   # 넘어온 장면에서는 투어·찍기를 다시 하지 않는다
-	elif args.has("ridetest"): _ride_test.call_deferred(String(args.ridetest))
+	elif args.has("ridetest") and String(args.ridetest).contains(":"):
+		_ride_test = RideTest.new(self); _ride_test.run.call_deferred(String(args.ridetest))
+	elif args.has("fasttravel"):
+		_ride_test = RideTest.new(self); _ride_test.run_fast.call_deferred(String(args.fasttravel))
+	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
 	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
 
@@ -331,6 +346,7 @@ func _build_scene() -> void:
 	boats = BoatRide.new(); boats.setup(self)
 	if args.has("sailspeed"): boats.speed_override = float(args.sailspeed)
 	boats.arrived.connect(_on_boat_arrived)
+	horse_ride = HorseRide.new(); horse_ride.setup(self)
 	teleport(world.spawn.x, world.spawn.y)
 
 const GLOW_CODE := """shader_type spatial;
@@ -588,7 +604,7 @@ func _apply_atmo() -> void:
 	if args.has("lod0"): world.lod0_dist = float(args.lod0)
 	if args.has("scatterfar"): world.scatter_far = float(args.scatterfar)
 	_scatter_base = world.scatter_far
-	if rig != null and rig.sailing: world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
+	if rig != null and (rig.sailing or rig.riding): world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
 	post.state = s
 
 static func _srgb(v: Vector3) -> Color:
@@ -730,11 +746,12 @@ func _process(delta: float) -> void:
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if _loading or _leaving or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
 	var speed := RUN if Input.is_action_pressed("run") else WALK
-	if not _ptest.is_empty() and not _loading and not _leaving and not boats.riding():
+	if not _ptest.is_empty() and not _loading and not _leaving and not boats.riding() and not horse_ride.busy():
 		mv = _ptest_step(delta); speed = RUN
 		if not _pt_path.is_empty(): speed = float(args.get("walkspeed", "12"))
 	_update_boats(dt)
-	if boats.riding(): mv = Vector2.ZERO   # 배 위: 사공이 젓는다(입력 막음 — 지도·기록책·건너뛰기만)
+	_update_horse(dt)
+	if boats.riding() or horse_ride.busy(): mv = Vector2.ZERO   # 배 위·말 위: 사공이 젓고 말이 간다(입력 막음 — 지도·기록책·멈춤·내리기만)
 	if _bench_left > 0.0 and _bench_loading and _loading:
 		_bench_load_t += delta
 	elif _bench_left > 0.0 and _bench_loading:
@@ -756,7 +773,7 @@ func _process(delta: float) -> void:
 		if _bench_left <= 0.0: _bench_report()
 	if story != null: story.update(dt)   # 이야기·전투(전투 중에는 전투가 플레이어를 옮긴다)
 	if story != null and story.owns_player(): pass
-	elif boats.riding(): pass
+	elif boats.riding() or horse_ride.busy(): pass
 	elif mv.length() > 0.0:
 		var r := player.radius
 		var np = null
@@ -780,6 +797,7 @@ func _process(delta: float) -> void:
 		player.set_anim("idle")
 	if _bench_left > 0.0: _bench_dir += sin(clock * 0.21) * 0.004
 	player.position = player_pos
+	horse_ride.place_rider(dt)   # 말 위면 안장 높이로
 	var _t0 := Time.get_ticks_usec()
 	var _ev: String = world.stats.get("event", "")
 	world.focus(player_pos)
@@ -823,8 +841,8 @@ func _process(delta: float) -> void:
 		world.wet_level = weather.wet
 		if weather.dirty and Engine.get_process_frames() % 3 == 0: _apply_atmo()
 	_apply_dark()
-	if not _loading and not _leaving and not boats.riding() and world.indoor == null: _check_portals()
-	if not _loading and not _leaving and not boats.riding(): _check_indoor()
+	if not _loading and not _leaving and not boats.riding() and not horse_ride.busy() and world.indoor == null: _check_portals()
+	if not _loading and not _leaving and not boats.riding() and not horse_ride.busy(): _check_indoor()
 	if _hud and _hud_t > 0.0:
 		_hud_t -= delta; _hud.modulate.a = clampf(_hud_t, 0.0, 1.0)
 	var _t3 := Time.get_ticks_usec()
@@ -895,7 +913,7 @@ func _run_shot(path: String, frames: int) -> void:
 	if args.has("quit"): _quit()
 
 # --ridetest[=id]: 배 내릴 자리로 가서 타고 건너며 풍경 시점을 찍는다(뱃길 25%·55%·85%, 닿은 뒤)
-func _ride_test(id: String) -> void:
+func _ride_test_boat(id: String) -> void:
 	Engine.max_fps = 0
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	await _wait_frames(10)
@@ -1012,6 +1030,7 @@ func _update_loading() -> void:
 			rig.update(0, player_pos, player.facing, it, true)
 			print("INTERIOR ", it.get("name", ""), " ", player_pos, " of ", world.interiors.size())
 		print("LOAD ready_s=%.2f kit_cache hits=%d misses=%d" % [(Time.get_ticks_msec() - _load_t0) / 1000.0, PlacementLoader.KitCache.hits, PlacementLoader.KitCache.misses])
+		if Engine.has_meta(RideTest.META): _verify_fast.call_deferred()   # 역마 시험: 넘어간 자리 확인
 
 func _prewarm_shaders() -> void:
 	var mats := []
@@ -1126,6 +1145,7 @@ func _arrive(at) -> void:
 	teleport(p.x, p.y)
 	for pt in portals: _portal_armed[pt.id] = Vector2(pt.x, pt.z).distance_to(Vector2(player_pos.x, player_pos.z)) > PORTAL_ARM
 	if world.is_route: _route_entry = _nearest_portal(Vector2(player_pos.x, player_pos.z))
+	if horse_ride != null: horse_ride.on_arrived(Vector2(player_pos.x, player_pos.z))
 	print("TRAVEL arrive space=%s at=%s from=%s" % [world.region.get("region_id", "?"), player_pos, _pending.get("via", "")])
 
 # 포털 자리: 장승 한 쌍 + 이정표 글씨(어디로 가는 길인지)
@@ -1182,7 +1202,8 @@ func _check_portals() -> void:
 				if _fast_hint != String(pt.id):
 					_fast_hint = String(pt.id)
 					_show_hud("H: %s 타고 %s까지 (지나온 길 건너뛰기)" % [String(ft.get("how", "역마")), String(ft.label)])
-				if Input.is_action_just_pressed("fast_travel") or (args.has("fasttest") and _fast_hint == String(pt.id)):
+				# H는 역마 창(fast_travel.gd)이 이 노정 끝을 먼저 골라 연다 — 시험(--fasttest)만 바로 넘어간다
+				if args.has("fasttest") and _fast_hint == String(pt.id):
 					ft.id = "fast_" + String(pt.id); ft.fast = true
 					ft.label = "%s (%s)" % [String(ft.label), String(ft.get("how", "역마"))]
 					_travel(ft); return
@@ -1272,12 +1293,7 @@ func _update_boats(dt: float) -> void:
 	boats.update(dt, want, skip, story != null and story.owns_player())
 	if rig.sailing != boats.riding():
 		rig.sailing = boats.riding()
-		world.scatter_far = minf(_scatter_base, SAIL_SCATTER) if rig.sailing else _scatter_base
-		world.update_scatter_lod(player_pos, true)
-		# 낮은 시점은 그림자 거리 안에 기슭이 넓게 들어와 그림자 그리기가 무겁다(60m → 28m: 배·사람 그림자는 그대로)
-		var sd := float(args.get("shadowdist", "60"))
-		sun.directional_shadow_max_distance = minf(sd, 28.0) if rig.sailing else sd
-		world.set_near_r(1 if rig.sailing else RegionWorld.NEAR_R)
+		_apply_low_view()
 	if rig.sailing:
 		rig.sail_dir = boats.heading(); rig.sail_side = boats.view_side(dt)
 		_boat_text("" if boats.skip_lock else ("Space  건너뛰기" if not boats.skipping else "건너뛰는 중…"))
@@ -1287,8 +1303,59 @@ func _update_boats(dt: float) -> void:
 	if bh != "": _show_hud(bh)
 	# 낮은 배 위 시점: 틸트시프트 선명 띠를 넓히고 위(먼 기슭·능선)는 덜 흐리게
 	var k := minf(1.0, dt * 2.0)
-	post.band += ((0.2 if rig.sailing else 0.07) - post.band) * k
-	post.top_bias += ((0.4 if rig.sailing else 1.0) - post.top_bias) * k
+	var low: bool = rig.sailing or rig.riding
+	post.band += ((0.2 if low else 0.07) - post.band) * k
+	post.top_bias += ((0.4 if low else 1.0) - post.top_bias) * k
+
+# 낮은 풍경 시점(배·말): 먼 식생 벌 거리·해 그림자 거리·근경 타일 반경을 줄인다(낮은 시점은 멀리까지 보여 무겁다)
+func _apply_low_view() -> void:
+	var low: bool = rig.sailing or rig.riding
+	world.scatter_far = minf(_scatter_base, SAIL_SCATTER) if low else _scatter_base
+	world.update_scatter_lod(player_pos, true)
+	# 낮은 시점은 그림자 거리 안에 기슭이 넓게 들어와 그림자 그리기가 무겁다(60m → 28m: 배·사람 그림자는 그대로)
+	var sd := float(args.get("shadowdist", "60"))
+	sun.directional_shadow_max_distance = minf(sd, 28.0) if low else sd
+	world.set_near_r(1 if low else RegionWorld.NEAR_R)
+
+# ---- 자동 기승(horse_ride.gd)·역마(fast_travel.gd) ----
+func _update_horse(dt: float) -> void:
+	if _loading or _leaving:
+		return
+	var st = story.get("_target") if story != null else null
+	var map_open: bool = _map != null and _map.visible
+	var fast_open: bool = fast_ui != null and is_instance_valid(fast_ui) and fast_ui.visible
+	var owned: bool = story != null and story.owns_player()
+	var free: bool = not map_open and not fast_open and not owned and not boats.riding() and world.indoor == null
+	var want_e: bool = free and st == null and boats.prompt == "" and Input.is_action_just_pressed("interact")
+	horse_ride.update(dt, free, want_e)
+	var m: bool = horse_ride.mounted()
+	if rig.riding != m:
+		rig.riding = m
+		_apply_low_view()
+	rig.ride_k = horse_ride.cam_k()
+	if m:
+		rig.ride_dir = horse_ride.heading()
+		rig.ride_side = horse_ride.view_side(dt)
+	rig.shake_y = horse_ride.bob if m else 0.0
+	# 아래 가운데 안내: 배 안내가 먼저
+	if not boats.riding() and boats.prompt == "":
+		if m: _boat_text(horse_ride.hint)
+		elif st == null: _boat_text(horse_ride.prompt)
+	var hh: String = horse_ride.take_hud()
+	if hh != "": _show_hud(hh)
+	# H: 역마(알게 된 거점으로 빠른 이동). 지나온 노정 포털 곁이면 그 끝을 먼저 고른다
+	if free and not horse_ride.busy() and Input.is_action_just_pressed("fast_travel") and not args.has("fasttest"):
+		open_fast_travel(_fast_hint)
+
+func _verify_fast() -> void:
+	await _wait_frames(30)
+	RideTest.verify_arrival(self)
+
+func open_fast_travel(prefer := "") -> void:
+	if fast_ui != null and is_instance_valid(fast_ui): return
+	if horse_ride == null or horse_ride.busy() or _loading or _leaving: return
+	fast_ui = FastTravel.new(self, prefer)
+	add_child(fast_ui)
 
 func _boat_text(t: String) -> void:
 	if _boat_prompt == null:

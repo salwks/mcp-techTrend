@@ -1,5 +1,6 @@
 # 설정 · 잠시 멈춤 — 시작 메뉴의 '설정'과 놀이 중 Esc(scripts/story/onboarding.gd)가 연다.
 #   상호작용 안내(항상/초반만/최소/끔) · 조사 도움(기본/자세히/최소) — 전투 난이도와 상관없다(보강서 §26). user://settings.json.
+#   자동 기승 속도(보통/빠름) · 자동 감속(켬/끔) · 이동 카메라 흔들림(보통/약함/끔) — 이동수단 개선안 §31.
 #   놀이 중(in_game)이면 화면을 멈추고(get_tree().paused) '계속하기'·'여행 방법'(기록책 3쪽)도 보인다.
 # 조작: ↑↓·W·S 고르기 · ←→·A·D 바꾸기 · Enter·E·Space 실행 · Esc 닫기 · 클릭.
 extends CanvasLayer
@@ -47,6 +48,9 @@ func _ready() -> void:
 	if in_game: _add(box, k, { id = "resume", kind = "act", text = "계속하기" })
 	_add(box, k, { id = "guide", kind = "opt", key = "guide", values = GameSettings.GUIDE, names = GameSettings.GUIDE_LABEL, text = "상호작용 안내" })
 	_add(box, k, { id = "help", kind = "opt", key = "help", values = GameSettings.HELP, names = GameSettings.HELP_LABEL, text = "조사 도움" })
+	_add(box, k, { id = "ride_speed", kind = "opt", key = "ride_speed", values = GameSettings.RIDE_SPEED, names = GameSettings.RIDE_SPEED_LABEL, text = "자동 기승 속도" })
+	_add(box, k, { id = "ride_slow", kind = "opt", key = "ride_slow", values = GameSettings.RIDE_SLOW, names = GameSettings.RIDE_SLOW_LABEL, text = "자동 감속" })
+	_add(box, k, { id = "cam_shake", kind = "opt", key = "cam_shake", values = GameSettings.CAM_SHAKE, names = GameSettings.CAM_SHAKE_LABEL, text = "이동 카메라 흔들림" })
 	if in_game: _add(box, k, { id = "howto", kind = "act", text = "여행 방법 (기록책)" })
 	_add(box, k, { id = "close", kind = "act", text = "돌아가기" if not in_game else "닫기" })
 	var note := _lab("조사 도움은 전투 난이도와 상관없다.", int(16 * k), INK_SOFT); box.add_child(note)

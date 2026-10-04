@@ -31,27 +31,27 @@ GATE_OUT = 10.0       # 마을 어귀: 구역 경계 바깥으로
 CITY_OUT = 18.0       # 성문 앞: 성 밖으로
 OFFROAD_MAX = 150.0   # 길에서 이만큼 안이면 가장 가까운 길 점을 어귀로
 
-BASE_RIDE_SPEED = 12.0
+BASE_RIDE_SPEED = 18.0
 WEATHER_SPEED_MOD = {'clear': 1.0, 'cloudy': 1.0, 'fog': 0.9, 'wind': 0.92, 'rain': 0.85, 'snow': 0.75, 'storm': 0.7, 'blizzard': 0.0}
 
 # 거점 종류별: (GATE_TYPE, 멈춤 정책(지나갈 때), 감속 m/s, 빠른 이동 거점?, 말 타는 곳?)
-#   감속 0 = 감속 없음. FORCED_STOP = 그 구역 앞(어귀)에서 내린다.
+#   감속 0 = 감속 없음. FORCED_STOP = 그 구역 앞(어귀)에서 내린다. OPTIONAL_STOP은 '약간 감속'(§8.2) — 말 최고 18m/s에서 9~11m/s.
 KIND = {
 	'CITY':    ('CITY', 'FORCED_STOP', 0.0, True, True),
-	'MARKET':  ('MARKET', 'OPTIONAL_STOP', 3.5, True, False),
-	'VILLAGE': ('VILLAGE', 'OPTIONAL_STOP', 5.5, True, True),
-	'HAMLET':  ('VILLAGE', 'OPTIONAL_STOP', 6.0, False, False),
-	'INN':     ('VILLAGE', 'OPTIONAL_STOP', 5.0, True, True),
-	'STATION': ('VILLAGE', 'OPTIONAL_STOP', 5.0, True, True),
-	'FERRY':   ('FERRY', 'OPTIONAL_STOP', 4.5, True, True),      # 여울·나루터(물을 걸어 건넘). 배로 건너는 곳은 BOAT
+	'MARKET':  ('MARKET', 'OPTIONAL_STOP', 6.0, True, False),
+	'VILLAGE': ('VILLAGE', 'OPTIONAL_STOP', 10.0, True, True),
+	'HAMLET':  ('VILLAGE', 'OPTIONAL_STOP', 11.0, False, False),
+	'INN':     ('VILLAGE', 'OPTIONAL_STOP', 10.0, True, True),
+	'STATION': ('VILLAGE', 'OPTIONAL_STOP', 10.0, True, True),
+	'FERRY':   ('FERRY', 'OPTIONAL_STOP', 7.0, True, True),      # 여울·나루터(물을 걸어 건넘). 배로 건너는 곳은 BOAT
 	'BOAT':    ('FERRY', 'FORCED_STOP', 0.0, True, True),
 	'TEMPLE':  ('TEMPLE', 'FORCED_STOP', 0.0, True, False),
-	'SHRINE':  ('PASS', 'OPTIONAL_STOP', 6.0, False, False),
-	'PASS':    ('PASS', 'OPTIONAL_STOP', 6.0, True, False),
-	'COAST':   ('COAST', 'OPTIONAL_STOP', 5.0, True, False),
+	'SHRINE':  ('PASS', 'OPTIONAL_STOP', 11.0, False, False),
+	'PASS':    ('PASS', 'OPTIONAL_STOP', 11.0, True, False),
+	'COAST':   ('COAST', 'OPTIONAL_STOP', 10.0, True, False),
 	'CAVE':    ('CAVE', 'FORCED_STOP', 0.0, False, False),
 	'ROUTE_END': ('EVENT', 'FORCED_STOP', 0.0, True, True),   # 노정 끝(공간 넘어가기) — 포털 앞에서 멈춘다
-	'HUB':     ('VILLAGE', 'OPTIONAL_STOP', 5.0, True, True),
+	'HUB':     ('VILLAGE', 'OPTIONAL_STOP', 9.0, True, True),
 }
 SETTLE_KIND = {'읍성': 'CITY', '장시': 'MARKET', '마을': 'VILLAGE', '길가 마을': 'HAMLET', '쉼터': 'INN', '주막': 'INN', '역': 'STATION',
 	'나루': 'FERRY', '포구': 'FERRY', '사찰': 'TEMPLE', '성황당': 'SHRINE', '원': 'INN'}
@@ -61,7 +61,7 @@ STOP_KIND = {'jumak': 'INN', 'town': 'HUB', 'village': 'VILLAGE', 'naru': 'FERRY
 # 노정 볼거리(sights) 분류 → (GATE_TYPE, 등급별 정책). encounter.event_grade A·B는 감속(멈출 수 있음), C·D는 그냥 지나감
 SIGHT_TYPE = {'pass': 'PASS', 'forest': 'FOREST', 'crossing': 'FERRY', 'ruin': 'EVENT', 'inn_site': 'EVENT', 'tomb': 'FOREST', 'pool': 'FOREST',
 	'roadside': 'VILLAGE', 'hamlet': 'VILLAGE', 'sea': 'COAST', 'shoal': 'COAST', 'rapids': 'FERRY', 'shrine': 'TEMPLE', 'jochang': 'VILLAGE', 'pavilion': 'VILLAGE'}
-GRADE_POLICY = {'A': ('OPTIONAL_STOP', 5.0), 'B': ('OPTIONAL_STOP', 6.5), 'C': ('PASS', 0.0), 'D': ('PASS', 0.0)}
+GRADE_POLICY = {'A': ('OPTIONAL_STOP', 8.0), 'B': ('OPTIONAL_STOP', 10.0), 'C': ('PASS', 0.0), 'D': ('PASS', 0.0)}
 
 
 def short(n):

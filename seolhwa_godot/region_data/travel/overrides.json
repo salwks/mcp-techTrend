@@ -2,10 +2,10 @@
 	"_note": "자동 기승 손 고침(tools/region/make_travel_gates.py가 생성 결과에 덮는다). 공간 id → { ride{}, stops_set{id: 필드}, stops_add[], nodes_set{id: 필드}, nodes_add[], gates_add[] }. MUST=true는 '자동 감속 끔' 설정에서도 감속한다(이야기에 꼭 필요한 길가 장면). FIRST_VISIT_ONLY=true는 그 노정을 처음 지날 때(routes_done 아님)만. WHEN은 이야기 조건식(그 공간 사건이 서 있을 때만 — story runner.cond).",
 	"JL_NAMWON_UNBONG-GG_HANYANG": {
 		"stops_add": [
-			{ "TRAVEL_EVENT_ID": "R0101", "EVENT_TYPE": "VILLAGE", "TRIGGER_POSITION": [-750.3, -4.0], "RADIUS": 58.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 3.5, "MUST": true, "name": "오수 주막 — 남원 소문(R0101)", "note": "story/rumors_data.gd R0101 반경 30 — 지나가며 소문 한 줄이 끝까지 보이게" },
-			{ "TRAVEL_EVENT_ID": "R0102", "EVENT_TYPE": "MARKET", "TRIGGER_POSITION": [-449.7, -27.0], "RADIUS": 62.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 3.5, "MUST": true, "name": "전주 장꾼 — 남원 소문(R0102)" },
-			{ "TRAVEL_EVENT_ID": "R0103", "EVENT_TYPE": "FERRY", "TRIGGER_POSITION": [150.0, -8.1], "RADIUS": 58.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 3.5, "MUST": true, "name": "곰나루 뱃사공 — 남원 소문(R0103)" },
-			{ "TRAVEL_EVENT_ID": "R0104", "EVENT_TYPE": "EVENT", "TRIGGER_POSITION": [745.0, 6.8], "RADIUS": 40.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 3.0, "MUST": true, "name": "천안삼거리 박규상 객주 수레(R0104 — 朴 표식)", "note": "story/vignettes_data.gd R0104 반경 13 — 천천히 지나야 표식을 보고 MAIN_PARK_MARK_COUNT +1" }
+			{ "TRAVEL_EVENT_ID": "R0101", "EVENT_TYPE": "VILLAGE", "TRIGGER_POSITION": [-750.3, -4.0], "RADIUS": 26.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 5.5, "MUST": true, "name": "오수 주막 — 남원 소문(R0101)", "note": "story/rumors_data.gd R0101 반경 30 — 소문이 들리는 자리를 빠른 걸음(5.5m/s)으로 지나 자막 한 줄(4초)이 끝까지 보이게" },
+			{ "TRAVEL_EVENT_ID": "R0102", "EVENT_TYPE": "MARKET", "TRIGGER_POSITION": [-449.7, -27.0], "RADIUS": 30.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 5.5, "MUST": true, "name": "전주 장꾼 — 남원 소문(R0102)" },
+			{ "TRAVEL_EVENT_ID": "R0103", "EVENT_TYPE": "FERRY", "TRIGGER_POSITION": [150.0, -8.1], "RADIUS": 26.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 5.5, "MUST": true, "name": "곰나루 뱃사공 — 남원 소문(R0103)" },
+			{ "TRAVEL_EVENT_ID": "R0104", "EVENT_TYPE": "EVENT", "TRIGGER_POSITION": [745.0, 6.8], "RADIUS": 22.0, "STOP_POLICY": "OPTIONAL_STOP", "SLOW_SPEED": 3.5, "MUST": true, "name": "천안삼거리 박규상 객주 수레(R0104 — 朴 표식)", "note": "story/vignettes_data.gd R0104 반경 13 — 천천히 지나야 표식을 보고 MAIN_PARK_MARK_COUNT +1" }
 		]
 	},
 	"GG_HANYANG-GS_GYEONGJU": {

@@ -1,5 +1,6 @@
 # 지도 — M: 지금 고을의 도시 지도(건물·길·성벽·텃밭), Tab: 도시 → 권역(전체) → 전국 지도 차례로 전환, 휠·+/-: 확대·축소,
 # 드래그·방향키: 옮기기, Esc·M: 닫기.
+# H: 역마 창(scripts/region/fast_travel.gd — 가 본 거점으로 빠른 이동)을 연다.
 # 전국 지도 역마: 지금 권역에 닿은 지나온 노정(Progress)은 금빛으로 — 숫자 키나 선·도착 고을 클릭으로 고르고 Enter/Y로 건너뛴다. 바탕은 고지도풍 그림(map.png), 그 위 길·건물은 벡터로 그려 확대해도 선명하다.
 # 알고 있는 곳만 이름을 쓴다(scripts/region/discovery.gd, 보강서 §20): 고을·이름 있는 건물·사건 장소(map_places)·전국 지도 권역과 거점.
 #   지형·물·길·성벽·이름 없는 집채는 늘 그린다. 단서·범인·해결 자리는 지도에 오르지 않는다(사건 데이터 map_places에 넣지 않는다).
@@ -245,7 +246,7 @@ func _show_all() -> void:
 	_update_hint(); _canvas.queue_redraw()
 
 func _update_hint() -> void:
-	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · M/Esc 닫기\n가 보았거나 들어서 아는 곳만 이름이 적힌다"
+	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · H 역마(가 본 곳으로) · M/Esc 닫기\n가 보았거나 들어서 아는 곳만 이름이 적힌다"
 	if mode == "nation" and not _fast_opts.is_empty():
 		if _fast_sel >= 0: _hint.text = _fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?   Enter/Y 간다 · N/Esc 그만" % _fast_label(_fast_opts[_fast_sel])
 		else: _hint.text += "\n역마(지나온 길 건너뛰기): 숫자 키 또는 금빛 길·고을 클릭"
@@ -265,6 +266,12 @@ func _unhandled_input(e: InputEvent) -> void:
 	var kc: int = e.physical_keycode
 	if kc == KEY_M: toggle(); get_viewport().set_input_as_handled(); return
 	if not visible: return
+	if kc == KEY_H and _fast_sel < 0:   # 역마 창(scripts/region/fast_travel.gd — 가 본 거점으로 빠른 이동)
+		var m := get_parent()
+		if m != null and m.has_method("open_fast_travel"):
+			visible = false
+			m.open_fast_travel()
+			get_viewport().set_input_as_handled(); return
 	if mode == "nation" and _fast_sel >= 0:   # 역마 확인
 		match kc:
 			KEY_ENTER, KEY_KP_ENTER, KEY_Y, KEY_SPACE: _fast_go()

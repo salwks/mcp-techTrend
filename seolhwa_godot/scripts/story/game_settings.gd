@@ -7,6 +7,9 @@
 #   help(조사 도움): normal 기본 · detailed 자세히 · minimal 최소
 #     detailed — 조사물 강조 거리↑, 기록책의 '아직 모르는 것' 강조, 단서 방향 줄을 둘째 단서에도
 #     minimal  — 첫 필수 조작만 안내, 단서 강조 거의 없음(방향 줄 없음)
+#   자동 기승(이동수단 개선안 §31 — scripts/region/horse_ride.gd):
+#     ride_speed(자동 기승 속도) normal 보통 · fast 빠름 / ride_slow(자동 감속) on 켬 · off 끔(이야기에 꼭 필요한 감속은 그대로) /
+#     cam_shake(이동 카메라 흔들림) normal 보통 · weak 약함 · off 끔
 extends RefCounted
 
 const PATH := "user://settings.json"
@@ -14,7 +17,13 @@ const GUIDE := ["always", "early", "minimal", "off"]
 const GUIDE_LABEL := { always = "항상", early = "초반만", minimal = "최소", off = "끔" }
 const HELP := ["normal", "detailed", "minimal"]
 const HELP_LABEL := { normal = "기본", detailed = "자세히", minimal = "최소" }
-const DEFAULTS := { guide = "early", help = "normal" }
+const RIDE_SPEED := ["normal", "fast"]
+const RIDE_SPEED_LABEL := { normal = "보통", fast = "빠름" }
+const RIDE_SLOW := ["on", "off"]
+const RIDE_SLOW_LABEL := { on = "켬", off = "끔" }
+const CAM_SHAKE := ["normal", "weak", "off"]
+const CAM_SHAKE_LABEL := { normal = "보통", weak = "약함", off = "끔" }
+const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "normal" }
 
 static var _d = null
 static var test_override := {}   # 대본 시험: 사용자 설정과 상관없이 기본값으로(--storytest·--onboardtest)
