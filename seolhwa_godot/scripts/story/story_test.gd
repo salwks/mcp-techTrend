@@ -32,6 +32,7 @@ func begin() -> void:
 	d.ui.auto = true
 	d.ui.auto_choice = choose
 	Engine.time_scale = float(d.main.args.get("storyspeed", "2.5"))
+	if d.main.args.has("camshake"): load("res://scripts/story/game_settings.gd").test_override["cam_shake"] = String(d.main.args.camshake)
 	_t0 = Time.get_ticks_msec()
 	_run.call_deferred()
 
@@ -116,6 +117,34 @@ func tale_shot(nm: String) -> void:
 	_log("SHOT " + nm)
 	Engine.time_scale = ts
 
+# 동아줄 절정 화면 검토(--storyshots, 화면이 있을 때만 — namwon_case.rope_night이 부른다): 여기서부터 결말 카드까지
+# 대사·자막·암전·연출을 실제 길이로 돌리고(ui.auto_real, 시간 배율 1), 1초마다 seq_NNN을 찍는다. --camshake=normal|off로 흔들림 설정을 정한다.
+var _review := false
+func review_begin() -> void:
+	if _review or not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless": return
+	_review = true
+	d.ui.auto_real = true
+	Engine.time_scale = 1.0
+	# 창이 다른 창에 가려지면 macOS가 창(루트 화면)을 다시 그리지 않아 찍힌 그림이 멈춘다 — 검토 동안 맨 위에
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
+	_log("REVIEW begin")
+	var dir: String = d.main._abs(String(d.main.args.storyshots))
+	DirAccess.make_dir_recursive_absolute(dir)
+	var n := 0
+	var t0 := Time.get_ticks_msec()
+	while _review and n < 240:
+		await get_tree().create_timer(1.0, true, false, true).timeout
+		if not _review: break
+		get_viewport().get_texture().get_image().save_png(dir.path_join("seq_%03d.png" % n))
+		n += 1
+	_log("REVIEW %d shots %.1fs" % [n, (Time.get_ticks_msec() - t0) / 1000.0])
+
+func review_end() -> void:
+	if not _review: return
+	_review = false
+	d.ui.auto_real = false
+	Engine.time_scale = float(d.main.args.get("storyspeed", "2.5"))
+
 # 절정·결말 장면을 찍는 감시(대본과 따로 돈다)
 func _watch_shots() -> void:
 	var door := false
@@ -127,7 +156,7 @@ func _watch_shots() -> void:
 		if not morning and d.S.phase == "morning" and d.ui.modal:
 			morning = true; await shot("morning", 2)
 		if d.ui._ending.visible and d.ui._ending.modulate.a > 0.95:
-			await shot("ending", 1); return
+			await shot("ending", 1); review_end(); return
 
 func _fail(s: String) -> void:
 	_fails.append(s)
