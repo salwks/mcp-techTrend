@@ -19,7 +19,7 @@ const RESOLVED := "out('A') or out('B') or out('C')"
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "gangneung", "record_title": "고개에 남은 종소리", "region": "GW_GANGNEUNG", "outcome_var": "CASE_GANGNEUNG_OUTCOME",
+			"id": "gangneung", "record_title": "고개에 남은 종소리", "EVENT_CLASS": "MAIN_FRAME", "SOURCE_ID": "MAIN_FRAME_GANGNEUNG_BELL", "FOLKLORE_ANCHOR_IDS": ["A09"], "FOLKLORE_ANCHOR_MODE": "SETTING", "region": "GW_GANGNEUNG", "outcome_var": "CASE_GANGNEUNG_OUTCOME",
 			"start_hour": 10.0, "start_event": "S2001",
 			# 한양 S1006(세 방향 열림) 뒤에만 선다 — 아니면 이 권역은 소문만(story_director case.requires)
 			"requires": { "ACT2_OPEN": true },
@@ -331,15 +331,17 @@ static func zones() -> Dictionary:
 	}
 
 # ---------------------------------------------------------------------------
-# 사건 장면(§44 필드 + steps) — 소스 A09(지역 고정 전승). SOURCE_VERIFIED=false면 실행하지 않는다.
+# 사건 장면(§44 필드 + steps) — EVENT_CLASS MAIN_FRAME(§1.11). A09는 출처가 아니라 무대 앵커(FOLKLORE_ANCHOR_MODE SETTING).
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "고개에 남은 종소리", "SOURCE_ID": "A09",
-		"SOURCE_TITLE_INTERNAL": "대관령 국사성황·산신 전승", "SOURCE_TYPE": "legend", "SOURCE_REGION_GRADE": "A",
-		"SOURCE_REGION_NOTE": "강릉·대관령 지역신앙(단오·국사성황 모시기). 금줄·방울·제물·경계석은 제의 공간의 물건으로만 쓰고 새 금기·새 괴이 능력을 만들지 않는다(§36.2). 잔영의 정체는 확정하지 않는다(§1.4).",
-		"ADAPTATION_MODE": "VARIANT", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
-		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc, "SOURCE_VERIFIED": true,
+		"EVENT_ID": id, "EVENT_CLASS": "MAIN_FRAME", "RECORD_TITLE": "고개에 남은 종소리", "SOURCE_ID": "MAIN_FRAME_GANGNEUNG_BELL",
+		"MAIN_FRAME_ORIGIN_NOTE": "창작 메인 프레임 — 대관령 고개의 종소리와 잔영을 이겸의 흔적·조사 원칙으로 잇는다. 사건의 인과와 해결은 전승이 아니라 사람과 길에서 나온다.",
+		"FOLKLORE_ECHO_IDS": [], "FOLKLORE_ANCHOR_IDS": ["A09"], "FOLKLORE_ANCHOR_MODE": "SETTING",
+		"FOLKLORE_ANCHOR_TITLE_INTERNAL": "대관령 국사성황·산신 전승",
+		"FOLKLORE_ANCHOR_NOTE": "강릉·대관령 지역신앙(단오·국사성황 모시기). 금줄·방울·제물·경계석은 제의 공간의 물건으로만 쓰고 새 금기·새 괴이 능력을 만들지 않는다(§36.2). 잔영의 정체는 확정하지 않는다(§1.4).",
+		"TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
+		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc,
 		"steps": steps,
 	}
 

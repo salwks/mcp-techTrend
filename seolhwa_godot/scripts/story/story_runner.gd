@@ -8,6 +8,8 @@
 #   shake · save · ending · log · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost") · drift(물살 표식 — scripts/story/drift.gd)
 extends RefCounted
 
+const EventClass := preload("res://scripts/story/event_class.gd")
+
 var d          # story_director
 var S          # story_state
 var case_fn    # 사건 GDScript(story/<사건>/<사건>_case.gd) 인스턴스 — call·fn이 부른다
@@ -199,7 +201,9 @@ func run_event(id: String, g: int) -> void:
 	var ev: Dictionary = d.events.get(id, {})
 	if ev.is_empty():
 		push_warning("이야기: 없는 사건 장면 " + id); return
-	if not bool(ev.get("SOURCE_VERIFIED", true)): return   # §44: 확인 안 된 사건은 빌드에서 뺀다
+	# §44: 분류(EVENT_CLASS)가 없거나 틀린 사건, SOURCE_VERIFIED=false인 FOLKLORE_EVENT, 설화 출처를 단 MAIN_FRAME은 빌드에서 뺀다
+	if not EventClass.in_build(ev):
+		push_warning("이야기: 빌드에서 뺀 사건 장면 %s (EVENT_CLASS %s)" % [id, ev.get("EVENT_CLASS", "")]); return
 	S.seen[id] = true
 	log_line("event", id)
 	d.on_event(id, ev)

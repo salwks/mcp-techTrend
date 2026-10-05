@@ -32,7 +32,7 @@ const PLAYER_LINE := "섞여 있는 흔적을 나누되, 먼저 살아 있는 �
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "jeju", "record_title": "굴에 남은 숨", "region": JJ, "outcome_var": "CASE_JEJU_OUTCOME",
+			"id": "jeju", "record_title": "굴에 남은 숨", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F48", "region": JJ, "outcome_var": "CASE_JEJU_OUTCOME",
 			"start_hour": 10.0, "start_event": { JJ: "", RS: "" }, "start_on_arrival": true,
 			# 함흥(ACT 4)이 끝나야 선다 — 그 전에는 남해 뱃길·제주 모두 소문만
 			"requires": { "CASE_HAMHUNG_COMPLETE": true },
@@ -309,7 +309,7 @@ static func arenas() -> Dictionary:
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array, mode := "VARIANT") -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "굴에 남은 숨", "SOURCE_ID": "F48",
+		"EVENT_ID": id, "EVENT_CLASS": "FOLKLORE_EVENT", "RECORD_TITLE": "굴에 남은 숨", "SOURCE_ID": "F48",
 		"SOURCE_TITLE_INTERNAL": "김녕굴 큰 구렁이(김녕사굴 전설)", "SOURCE_TYPE": "legend", "SOURCE_REGION_GRADE": "A",
 		"SOURCE_REGION_NOTE": "김녕 고정 전승(F48, §39 제주 — 김녕). 옛 판관 퇴치담은 비석·노인의 말로만 남기고 사건의 답으로 쓰지 않는다. 심방·감응 매듭은 제주 안에서만 건넨다(§36.3).",
 		"ADAPTATION_MODE": mode, "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,

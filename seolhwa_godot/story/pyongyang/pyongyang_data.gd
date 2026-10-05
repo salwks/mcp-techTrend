@@ -20,7 +20,7 @@ const SKILL_SPOTS := ["deed_a/a_over", "deed_a/a_date", "deed_b/b_patch", "deed_
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "pyongyang", "record_title": "강을 판 사내", "region": RG, "outcome_var": "CASE_PYONGYANG_OUTCOME", "complete_key": "PYONGYANG",
+			"id": "pyongyang", "record_title": "강을 판 사내", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F24", "region": RG, "outcome_var": "CASE_PYONGYANG_OUTCOME", "complete_key": "PYONGYANG",
 			"start_hour": 10.0, "start_event": "S5001", "start_on_arrival": true,
 			# 한양 §14 S1401(강릉·경주·황주를 다 끝낸 뒤 책쾌) 뒤에만 선다
 			"requires": { "ACT3_OPEN": true },
@@ -389,7 +389,7 @@ static func arenas() -> Dictionary:
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "강을 판 사내", "SOURCE_ID": "F24",
+		"EVENT_ID": id, "EVENT_CLASS": "FOLKLORE_EVENT", "RECORD_TITLE": "강을 판 사내", "SOURCE_ID": "F24",
 		"SOURCE_TITLE_INTERNAL": "강을 산 상인(대동강 물 팔기 — 인물전설)", "SOURCE_TYPE": "tale", "SOURCE_REGION_GRADE": "A",
 		"SOURCE_REGION_NOTE": "평양·대동강에 고정된 인물전설(§39 PA-01). 사전 연출과 사람 심리로 강을 가진 것처럼 속여 판 일화를, 우치의 이름을 빌린 사기꾼들의 물길 문서 사기로 옮겼다. 원작 제목과 인물 이름은 게임 안에 쓰지 않는다(§1.3). 강을 판 '우치'가 실제 우치가 아니라는 것은 플레이어가 문서와 사람으로 확인한다.",
 		"ADAPTATION_MODE": "VARIANT", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,

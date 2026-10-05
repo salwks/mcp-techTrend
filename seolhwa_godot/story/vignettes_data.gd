@@ -3,10 +3,13 @@
 #   props: 키트 소품(at은 장면 기준 [dx, dz]), people: 서 있는 인물(SpriteChar 종류). line: [말하는 이, 대사]. add: { 변수: 더할 값 }
 extends RefCounted
 
+# 시나리오 v2.4.1 §1.11 — 생활·풍경·소문은 AMBIENT: 사건 수에 넣지 않고 설화 출처(SOURCE_ID)를 달지 않는다
+const EVENT_CLASS := "AMBIENT"
+
 const VIGNETTES := [
 	# R0104 천안삼거리 — 바퀴를 고치는 박규상 객주 상단(시나리오 v2.2 §9 R0104). 퀘스트 없음.
 	#   권역 키트에 수레 모델이 없어(새 모델 금지) 수레에서 내려 길 북쪽 가에 쌓아 둔 곡물 가마니 + 포장 표식(朴)으로 보인다.
-	{ "id": "R0104", "space": "JL_NAMWON_UNBONG-GG_HANYANG", "at": [745.0, 6.8], "radius": 13.0, "requires": { "MAIN_MASTER_TRACE": "HANYANG" },
+	{ "id": "R0104", "EVENT_CLASS": "AMBIENT", "space": "JL_NAMWON_UNBONG-GG_HANYANG", "at": [745.0, 6.8], "radius": 13.0, "requires": { "MAIN_MASTER_TRACE": "HANYANG" },
 		"props": [
 			{ "kit": "scenario/props", "params": { "kind": "gamani", "seed": 3 }, "at": [-1.2, 0.2], "ry": 0.3 },
 			{ "kit": "scenario/props", "params": { "kind": "gamani", "seed": 5 }, "at": [0.1, 0.5], "ry": -0.2 },

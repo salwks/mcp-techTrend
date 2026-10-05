@@ -12,6 +12,9 @@
 # 쓰지 않는 것: 원작 설화 제목·줄거리, 사건을 푸는 방법·괴이의 규칙, 초자연을 사실로 못 박는 말, 요즘 말.
 extends RefCounted
 
+# 시나리오 v2.4.1 §1.11 — 생활·풍경·소문은 AMBIENT: 사건 수에 넣지 않고 설화 출처(SOURCE_ID)를 달지 않는다
+const EVENT_CLASS := "AMBIENT"
+
 # 프레임 종류 → 말투
 const REGISTER := {
 	scholar = "hage", elder = "hage", official = "official", monk = "monk", child_boy = "child", child_girl = "child",

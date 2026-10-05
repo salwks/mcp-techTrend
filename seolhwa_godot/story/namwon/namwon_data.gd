@@ -17,7 +17,7 @@ const COIN := "COIN"
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "namwon", "record_title": "산길의 실종", "region": "JL_NAMWON_UNBONG", "outcome_var": "CASE_NAMWON_OUTCOME",
+			"id": "namwon", "record_title": "산길의 실종", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "JG01", "region": "JL_NAMWON_UNBONG", "outcome_var": "CASE_NAMWON_OUTCOME",
 			"start_hour": 9.5,
 			# 도입부(보강서 v1.0 §3~§9): S0000 남원으로 가는 길 → S0001 남원 전경·첫 자유 이동
 			"start_event": "S0000",
@@ -426,11 +426,11 @@ static func props() -> Array:
 	]
 
 # ---------------------------------------------------------------------------
-# 사건 장면(§44 필드 + steps). SOURCE_VERIFIED=false인 장면은 실행하지 않는다.
+# 사건 장면(§44 필드 + steps) — EVENT_CLASS FOLKLORE_EVENT(§1.11). SOURCE_VERIFIED=false인 장면은 실행하지 않는다.
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "산길의 실종", "SOURCE_ID": "JG01",   # docs/FOLKTALE_CATALOG.md JG01 (전국형 D)
+		"EVENT_ID": id, "EVENT_CLASS": "FOLKLORE_EVENT", "RECORD_TITLE": "산길의 실종", "SOURCE_ID": "JG01",   # docs/FOLKTALE_CATALOG.md JG01 (전국형 D)
 		"SOURCE_TITLE_INTERNAL": "해와 달이 된 오누이", "SOURCE_TYPE": "tale", "SOURCE_REGION_GRADE": "D",
 		"SOURCE_REGION_NOTE": "전국형 민담. 남원 고유 전승이라고 주장하지 않는다(§36.2 각색: VARIANT).",
 		"ADAPTATION_MODE": "VARIANT", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,

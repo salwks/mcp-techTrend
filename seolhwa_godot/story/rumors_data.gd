@@ -4,6 +4,9 @@
 #   need: {변수: 값} 이 맞을 때만. var: 결말 변수(§7). lines: 값별 줄("" = 아직 해결 안 됨, "*" = 어떤 결말이든). pool: 값과 상관없이 번갈아 나오는 줄들.
 extends RefCounted
 
+# 시나리오 v2.4.1 §1.11 — 생활·풍경·소문은 AMBIENT: 사건 수에 넣지 않고 설화 출처(SOURCE_ID)를 달지 않는다
+const EVENT_CLASS := "AMBIENT"
+
 const ROUTE_R01 := "JL_NAMWON_UNBONG-GG_HANYANG"
 
 const RUMORS := [

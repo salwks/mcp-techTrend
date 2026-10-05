@@ -13,7 +13,7 @@ const COIN := "COIN"
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "hanyang", "record_title": "비어 있는 책방", "region": "GG_HANYANG", "outcome_var": "CASE_HANYANG_OUTCOME",
+			"id": "hanyang", "record_title": "비어 있는 책방", "EVENT_CLASS": "MAIN_FRAME", "SOURCE_ID": "MAIN_FRAME_HANYANG_BOOKSHOP", "region": "GG_HANYANG", "outcome_var": "CASE_HANYANG_OUTCOME",
 			"start_hour": 11.0,
 			"requires": { "MAIN_MASTER_TRACE": "HANYANG" },     # 남원(S0010) 뒤에만
 			"start_event": "S1001", "start_on_arrival": true,     # 노정·역마로 넘어와도 시작
@@ -260,15 +260,16 @@ static func props() -> Array:
 	]
 
 # ---------------------------------------------------------------------------
-# 사건 장면(§44 필드 + steps)
+# 사건 장면(§44 필드 + steps) — EVENT_CLASS MAIN_FRAME(§1.11), 전승 앵커 없음.
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "비어 있는 책방", "SOURCE_ID": "MAIN-ACT1",
-		"SOURCE_TITLE_INTERNAL": "메인 — 우치(전우치 이름을 빌린 라이벌)의 첫 등장", "SOURCE_TYPE": "classic", "SOURCE_REGION_GRADE": "D",
-		"SOURCE_REGION_NOTE": "메인 시나리오 §10. 전우치 전승 자체(F21 빈 관 등)는 쓰지 않고 이름만 빌린 인물의 행동(지붕·골목·종이)만 보인다(§36.2 ECHO).",
-		"ADAPTATION_MODE": "ECHO", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
-		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc, "SOURCE_VERIFIED": true,
+		"EVENT_ID": id, "EVENT_CLASS": "MAIN_FRAME", "RECORD_TITLE": "비어 있는 책방", "SOURCE_ID": "MAIN_FRAME_HANYANG_BOOKSHOP",
+		"MAIN_FRAME_ORIGIN_NOTE": "메인 시나리오 ACT 1(§10) — 이겸의 쪽지·책쾌·우치(전우치 이름을 빌린 라이벌)의 첫 등장을 묶은 창작 메인 프레임. 실제 전승 사건이 아니다.",
+		"FOLKLORE_ECHO_IDS": [], "FOLKLORE_ANCHOR_IDS": [], "FOLKLORE_ANCHOR_MODE": "",
+		"FOLKLORE_ECHO_NOTE": "전우치 전승 자체(F21 빈 관 등)는 쓰지 않고 이름만 빌린 인물의 행동(지붕·골목·종이)만 보인다.",
+		"TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
+		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc,
 		"steps": steps,
 	}
 

@@ -20,7 +20,7 @@ const NIGHT := "ph('night')"
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "gyeongju", "record_title": "세 번째 등불", "region": "GS_GYEONGJU", "outcome_var": "CASE_GYEONGJU_OUTCOME",
+			"id": "gyeongju", "record_title": "세 번째 등불", "EVENT_CLASS": "MAIN_FRAME", "SOURCE_ID": "MAIN_FRAME_GYEONGJU_LANTERN", "FOLKLORE_ANCHOR_IDS": ["A08"], "FOLKLORE_ANCHOR_MODE": "SETTING", "region": "GS_GYEONGJU", "outcome_var": "CASE_GYEONGJU_OUTCOME",
 			"start_hour": 11.0, "start_event": "S3001", "start_on_arrival": true,
 			# 한양 S1006(세 방향 열림) 뒤에만 선다 — 강릉·황주와 순서 상관없음
 			"requires": { "ACT2_OPEN": true },
@@ -322,15 +322,17 @@ static func zones() -> Dictionary:
 	}
 
 # ---------------------------------------------------------------------------
-# 사건 장면(§44 필드 + steps) — 소스 A08(지역 고정 전승: 망부석·치술령). SOURCE_VERIFIED=false면 실행하지 않는다.
+# 사건 장면(§44 필드 + steps) — EVENT_CLASS MAIN_FRAME(§1.11). A08(망부석·치술령)은 출처가 아니라 무대 앵커(SETTING).
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "세 번째 등불", "SOURCE_ID": "A08",
-		"SOURCE_TITLE_INTERNAL": "망부석·치술령 전승", "SOURCE_TYPE": "legend", "SOURCE_REGION_GRADE": "A",
-		"SOURCE_REGION_NOTE": "치술령 망부석(기다림·화석 모티프) 지역 전승을 배경으로만 쓴다. F09와 섞지 않는다(§37). 기다리는 아낙·바다를 보는 바위·바위 앞에서 꺼지는 불은 전승의 '기다림'을 현재 사건으로 비추는 장치이며, 원작 줄거리를 설명하지 않는다(§1.3). 셋째 불의 정체는 확정하지 않는다(§1.4). A07(왕경 신화)은 탁본 대상 비각의 배경으로만.",
-		"ADAPTATION_MODE": "ECHO", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
-		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc, "SOURCE_VERIFIED": true,
+		"EVENT_ID": id, "EVENT_CLASS": "MAIN_FRAME", "RECORD_TITLE": "세 번째 등불", "SOURCE_ID": "MAIN_FRAME_GYEONGJU_LANTERN",
+		"MAIN_FRAME_ORIGIN_NOTE": "창작 메인 프레임 — 치술령 아래 세 번째 등불을 기다림의 장소에서 일어난 현재 사건으로 쓴다. 전승은 무대일 뿐 사건의 답이 아니다.",
+		"FOLKLORE_ECHO_IDS": [], "FOLKLORE_ANCHOR_IDS": ["A08"], "FOLKLORE_ANCHOR_MODE": "SETTING",
+		"FOLKLORE_ANCHOR_TITLE_INTERNAL": "망부석·치술령 전승",
+		"FOLKLORE_ANCHOR_NOTE": "치술령 망부석(기다림·화석 모티프) 지역 전승을 배경으로만 쓴다. F09와 섞지 않는다(§37). 기다리는 아낙·바다를 보는 바위·바위 앞에서 꺼지는 불은 전승의 '기다림'을 현재 사건으로 비추는 장치이며, 원작 줄거리를 설명하지 않는다(§1.3). 셋째 불의 정체는 확정하지 않는다(§1.4). A07(왕경 신화)은 탁본 대상 비각의 배경으로만.",
+		"TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
+		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc,
 		"steps": steps,
 	}
 

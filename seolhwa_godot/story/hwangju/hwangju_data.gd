@@ -25,7 +25,7 @@ const STORY_HOURS := { "wind": 15.0, "storm": 18.0 }
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "hwangju", "record_title": "빈 배의 값", "region": RJ, "outcome_var": "CASE_HWANGJU_OUTCOME",
+			"id": "hwangju", "record_title": "빈 배의 값", "EVENT_CLASS": "MAIN_FRAME", "SOURCE_ID": "MAIN_FRAME_HWANGJU_EMPTY_BOAT", "FOLKLORE_ANCHOR_IDS": ["A11"], "FOLKLORE_ANCHOR_MODE": "RUMOR", "region": RJ, "outcome_var": "CASE_HWANGJU_OUTCOME",
 			"start_hour": 9.0, "start_event": { RJ: "S4001", RT: "" }, "start_on_arrival": true,
 			# 한양 S1006(세 갈래 열림) 뒤에만 선다 — 강릉·경주와 순서 상관없음
 			"requires": { "ACT2_OPEN": true },
@@ -325,15 +325,17 @@ static func currents() -> Dictionary:
 	}
 
 # ---------------------------------------------------------------------------
-# 사건 장면(§44 필드 + steps) — 소스 A11(지역 고정 전승, 등급 B). SOURCE_VERIFIED=false면 실행하지 않는다.
+# 사건 장면(§44 필드 + steps) — EVENT_CLASS MAIN_FRAME(§1.11). A11은 출처가 아니라 소문 앵커(RUMOR).
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "빈 배의 값", "SOURCE_ID": "A11",
-		"SOURCE_TITLE_INTERNAL": "심청 계열(황주 도화동·장산곶 전승 연계)", "SOURCE_TYPE": "classic", "SOURCE_REGION_GRADE": "B",
-		"SOURCE_REGION_NOTE": "황주·장산곶은 전승 연계로만 쓰고 유일한 실재 장소라 단정하지 않는다(§37 A11). 게임 안에서는 원작 제목·인물 이름·'인당수'를 쓰지 않는다(§1.3). 사람 제물이 바다를 달랜다는 믿음은 소문으로만 두고 확인하지 않는다 — 플레이어가 확인하는 것은 물살·잔해·셈이다.",
-		"ADAPTATION_MODE": "VARIANT", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
-		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc, "SOURCE_VERIFIED": true,
+		"EVENT_ID": id, "EVENT_CLASS": "MAIN_FRAME", "RECORD_TITLE": "빈 배의 값", "SOURCE_ID": "MAIN_FRAME_HWANGJU_EMPTY_BOAT",
+		"MAIN_FRAME_ORIGIN_NOTE": "창작 메인 프레임 — 빈 배와 제물 소문 뒤의 셈·물살·잔해를 확인하는 사건. 전승은 주민의 말·지역 인식으로만 있다.",
+		"FOLKLORE_ECHO_IDS": [], "FOLKLORE_ANCHOR_IDS": ["A11"], "FOLKLORE_ANCHOR_MODE": "RUMOR",
+		"FOLKLORE_ANCHOR_TITLE_INTERNAL": "심청 계열(황주 도화동·장산곶 전승 연계)",
+		"FOLKLORE_ANCHOR_NOTE": "황주·장산곶은 전승 연계로만 쓰고 유일한 실재 장소라 단정하지 않는다(§37 A11). 게임 안에서는 원작 제목·인물 이름·'인당수'를 쓰지 않는다(§1.3). 사람 제물이 바다를 달랜다는 믿음은 소문으로만 두고 확인하지 않는다 — 플레이어가 확인하는 것은 물살·잔해·셈이다.",
+		"TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
+		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc,
 		"steps": steps,
 	}
 

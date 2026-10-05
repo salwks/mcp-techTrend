@@ -1,5 +1,5 @@
 # 사건 「돌아오지 않는 전갈」(ACT 4 함흥, S6001~S6010)과 R05 노정 사건(평양→함흥) — 이야기 데이터.
-# 시나리오: seolhwa/docs/scenario/seolhwarok_master_scenario_storyboard_v2.3.1_consistency_lock.md §16(R05)·§17(S6001~S6010)·§18(제주 접근)
+# 시나리오: seolhwa/docs/scenario/seolhwarok_master_scenario_storyboard_v2.4_integrated_improvement.md §16(R05)·§17(S6001~S6011 — S6009 조사 카드 「서강의 두 필체」)·§18(제주 접근)
 #   (규칙 §1.3~§1.8, 이겸 §3.2, 서강 화재 §4, 성장 §6, 변수 §7, 소문 §24, 대사 §27, 컷신 §28, 실패 §29, 지역 변화 §30, 소스 잠금 §36,
 #    전승 앵커 §37 A15 함흥차사 — 사람들의 농담으로만, 사건의 정체가 아니다)
 # 체감 장르(§1.7·§23): 생존·이동 — "기록만으로 사람을 구할 수 없을 때가 있다". 함흥에서 가져갈 원칙: 기록보다 구조가 먼저 필요한 순간이 있다.
@@ -29,7 +29,7 @@ const SOUTH_ROUTE := "SEA_NAMHAE_JEJU"
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "hamhung", "record_title": "돌아오지 않는 전갈", "region": HG, "outcome_var": "CASE_HAMHUNG_OUTCOME",
+			"id": "hamhung", "record_title": "돌아오지 않는 전갈", "EVENT_CLASS": "MAIN_FRAME", "SOURCE_ID": "MAIN_FRAME_HAMHUNG_COURIERS", "region": HG, "outcome_var": "CASE_HAMHUNG_OUTCOME",
 			"start_hour": 11.0, "start_event": { HG: "S6001", RT5: "", RTB: "" }, "start_on_arrival": true,
 			# 평양(ACT 3) 사건이 끝나야 선다 — 그 전에는 R05·함흥·북청길 모두 소문만
 			"requires": { "CASE_PYONGYANG_COMPLETE": true },
@@ -332,16 +332,18 @@ static func arenas() -> Dictionary:
 	}
 
 # ---------------------------------------------------------------------------
-# 사건 장면(§44 필드 + steps) — 소스 A15(함흥차사, 지역 고정 — 사람들의 농담으로만). SOURCE_VERIFIED=false면 실행하지 않는다.
-# R05 노정 사건은 §16 고정 이동 사건(메인) — 함흥 사건의 들머리로 같은 소스를 ECHO로 단다(새 괴이·금기 없음).
+# 사건 장면(§44 필드 + steps) — EVENT_CLASS MAIN_FRAME(§1.11). 함흥차사(A15)는 사람들의 농담·연상(FOLKLORE_ECHO_IDS)일 뿐 출처가 아니다.
+# R05 노정 사건은 §16 고정 이동 사건(메인) — 함흥 사건의 들머리(새 괴이·금기 없음).
 # ---------------------------------------------------------------------------
-static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array, mode := "ECHO") -> Dictionary:
+static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "RECORD_TITLE": "돌아오지 않는 전갈", "SOURCE_ID": "A15",
-		"SOURCE_TITLE_INTERNAL": "함흥차사(돌아오지 않는 차사 모티프)", "SOURCE_TYPE": "legend", "SOURCE_REGION_GRADE": "A",
-		"SOURCE_REGION_NOTE": "함흥 지역 고정 전승(§37 A15). 사건의 정체가 아니라 사람들이 실종을 두고 하는 농담으로만 쓴다. 차사·태조 고사는 설명하지 않는다(§1.3). 실제 실종은 눈보라·도적·길이라는 사람의 일이다.",
-		"ADAPTATION_MODE": mode, "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
-		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc, "SOURCE_VERIFIED": true,
+		"EVENT_ID": id, "EVENT_CLASS": "MAIN_FRAME", "RECORD_TITLE": "돌아오지 않는 전갈", "SOURCE_ID": "MAIN_FRAME_HAMHUNG_COURIERS",
+		"MAIN_FRAME_ORIGIN_NOTE": "창작 메인 프레임 ACT 4 — 눈보라·도적·돌린 표목이라는 사람의 일과 이겸 재회, 서강 창고의 두 필체(S6009). 함흥차사는 사람들의 농담·연상일 뿐 출처가 아니다.",
+		"FOLKLORE_ECHO_IDS": ["A15"], "FOLKLORE_ANCHOR_IDS": [], "FOLKLORE_ANCHOR_MODE": "",
+		"FOLKLORE_ECHO_TITLE_INTERNAL": "함흥차사(돌아오지 않는 차사 모티프)",
+		"FOLKLORE_ECHO_NOTE": "함흥 지역 고정 전승(§37 A15). 사건의 정체가 아니라 사람들이 실종을 두고 하는 농담으로만 쓴다. 차사·태조 고사는 설명하지 않는다(§1.3). 실제 실종은 눈보라·도적·길이라는 사람의 일이다.",
+		"TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
+		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc,
 		"steps": steps,
 	}
 
@@ -372,11 +374,11 @@ static func events() -> Dictionary:
 		"S6005": _ev("S6005", "역참 문 앞", "함관령 옛 역참 서쪽 방", "저녁 · 눈보라 · 실내 등잔",
 			"방을 돌아본다(등잔·벽 지도·불탄 기록·종이를 태우는 노인)", "-", "-", [
 			{ "call": "enter_station" },
-		], "VARIANT"),
-		"S6006": _ev("S6006", "S6005 바로 뒤", "역참 방", "-", "-", "-", "MAIN_MASTER_TRACE += HAMHUNG", [], "VARIANT"),
-		"S6007": _ev("S6007", "방의 물건을 살펴볼 때마다", "역참 방", "-", "불탄 장부(朴 — 플레이어가 먼저 찾음)·기록함(곽칠성)·벽 지도(우치)", "-", "MAIN_PARK_MARK_COUNT += 1", [], "VARIANT"),
-		"S6008": _ev("S6008", "물건을 다 본 뒤 이겸에게", "역참 방", "-", "“왜 돌아오지 않았습니까?”", "-", "-", [], "VARIANT"),
-		"S6009": _ev("S6009", "S6008 뒤", "역참 방", "-", "-", "-", "MAIN_PAST_EVENT_KNOWN", [], "VARIANT"),
+		]),
+		"S6006": _ev("S6006", "S6005 바로 뒤", "역참 방", "-", "-", "-", "MAIN_MASTER_TRACE += HAMHUNG", []),
+		"S6007": _ev("S6007", "방의 물건을 살펴볼 때마다", "역참 방", "-", "불탄 장부(朴 — 플레이어가 먼저 찾음)·기록함(곽칠성)·벽 지도(우치)", "-", "MAIN_PARK_MARK_COUNT += 1", []),
+		"S6008": _ev("S6008", "물건을 다 본 뒤 이겸에게", "역참 방", "-", "“왜 돌아오지 않았습니까?”", "-", "-", []),
+		"S6009": _ev("S6009", "S6008 뒤", "역참 방", "-", "-", "-", "MAIN_PAST_EVENT_KNOWN", []),
 		"S6010": _ev("S6010", "S6009 뒤", "역참 방", "-", "기록을 챙긴다",
-			"A 셋 다 돌아옴 · B 둘(막동 또는 갑술을 놓침) · C 하나(순돌만)", "MAIN_MASTER_FOUND · 곽칠성 — 제주 · 남해 뱃길 안내", [], "VARIANT"),
+			"A 셋 다 돌아옴 · B 둘(막동 또는 갑술을 놓침) · C 하나(순돌만)", "MAIN_MASTER_FOUND · 곽칠성 — 제주 · 남해 뱃길 안내", []),
 	}
