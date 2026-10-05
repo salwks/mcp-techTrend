@@ -23,6 +23,8 @@ const VAR_DEFAULTS := {
 	CASE_HWANGJU_COMPLETE = false, CASE_PYONGYANG_COMPLETE = false, CASE_HAMHUNG_COMPLETE = false, CASE_JEJU_COMPLETE = false,
 	# 제주(§7 ITEM_KEY_001 — 강복의 곡물 수량패), 플레이어의 첫 문장(S7008), 최종장 문(ACT 2~5 모두 끝 — 한양 귀환)
 	ITEM_KEY_001 = false, PLAYER_FIRST_LINE = "", ACT6_OPEN = false,
+	# v2.4 §17 함흥: S6011 돌아온 전갈꾼 수(3/2/1 — 0은 아직), S6009 조사 카드 「서강의 두 필체」를 봄(최종장 S8003·S8004 복선)
+	HAMHUNG_MESSENGERS_RETURNED = 0, HAMHUNG_SEOGANG_CARD_SEEN = false,
 }
 
 var case_id := ""

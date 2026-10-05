@@ -1,5 +1,5 @@
 # 사건 「돌아오지 않는 전갈」 — 데이터로 쓰기 번거로운 장면(R05 날씨 단계·노정 사건 넷, 함흥 도착·공간 넘기, 북청길 눈보라·구조·수레 싸움,
-# 역참 재회와 방 조사형 대화, 결말·남쪽 뱃길)과 기록책·결말 카드. 데이터(hamhung_data.gd)의 { "call": "이름" }과 조건식 fn('이름')이 부른다.
+# 역참 재회와 방 조사형 대화, S6009 조사 카드 「서강의 두 필체」, 결말·남쪽 뱃길)과 기록책·결말 카드. 데이터(hamhung_data.gd)의 { "call": "이름" }과 조건식 fn('이름')이 부른다.
 extends RefCounted
 
 const D := preload("res://story/hamhung/hamhung_data.gd")
@@ -464,10 +464,12 @@ func _room_check() -> void:
 		flag("room_hint")
 		d.ui.toast("스승에게 물을 것이 있다", "info")
 
-# S6008 질문 → S6009 반전 → S6010 제주 단서
+# S6008 질문 → (이겸이 불탄 기록 묶음을 내려놓는다) → S6009 조사 카드 「서강의 두 필체」 → S6010 제주 단서 → S6011 결말
 func master_talk() -> void:
 	if not room_done():
 		await d.ui.say("이겸", ["둘러봐라. 본 것은 본 대로."]); return
+	if f("asked_why"):
+		await d.ui.caption("이겸은 대답 대신 기록 묶음 쪽을 턱으로 가리킨다.", 2.0); return
 	var i: int = await d.ui.choice("", [{ label = "왜 돌아오지 않았습니까?" }, { label = "나중에 여쭙겠습니다." }])
 	if i != 0: return
 	d.cutscene(true)
@@ -479,17 +481,40 @@ func master_talk() -> void:
 	flag("asked_why")
 	S.seen["S6008"] = true
 	d.learn_rule("R_RESCUE_FIRST")
-	# S6009 — 이겸과 우치는 추적자와 범인이 아니었다
-	await d.ui.say("나그네", ["우치는 선생님을 압니다."])
-	await d.ui.say("이겸", ["열두 해 전, 그놈과 나는 같은 일을 맡았다. 쫓고 쫓기는 사이가 아니었다."])
-	await d.ui.examine("서강 창고 — 열두 해 전", ["강복이라는 짐꾼이 장부와 곡식이 맞지 않는 것을 찾았다. 창고에 불이 났고 강복이 죽었다.",
-		"이겸은 사람의 짓을 의심했고, 우치는 범인을 끌어내려 가짜 귀신 소동을 벌였다. 사람이 몰려 다쳤다.",
-		"관아는 서둘러 덮었다. 곽칠성이 죄를 쓰고, 이겸의 기록 일부는 빼앗겼다. 둘은 크게 다퉜다.",
-		"그러나 강복이 죽은 뒤 설명되지 않는 일도 있었다고 한다."], "clue")
-	d.learn_clue("past_event")
-	S.vars["MAIN_PAST_EVENT_KNOWN"] = true
+	# S6009 들머리 — 설명하지 않는다. 묶음을 내려놓을 뿐
+	await d.ui.caption("이겸이 불을 면한 기록 묶음 하나를 장부 곁에 내려놓는다.", 2.4)
+	d.cutscene(false)
+	d._refresh()
+
+# S6009 조사 카드 「서강의 두 필체」(v2.4 §17) — 같은 서강 창고 일을 두 사람이 적은 두 장을 나란히(문서 살피기),
+#   이어 묶음 뒷장(옛 증언·메모·이겸의 결론). 이겸과 우치가 함께 일했다는 것은 플레이어가 먼저 알아챈다 — 설명 대사 없음.
+#   뒷장은 최종장 강복 잔영(S8003 벽 세 번·S8004 젖은 흔적)의 복선이되 정답으로 확정하지 않는다: 들음·적힌 것·결론 그대로 기록책에.
+func seogang_card() -> void:
+	if f("seogang_card_seen"): return
+	d.cutscene(true)
+	await Docs.open(d, { "docs": ["seogang_yigyeom", "seogang_woochi"], "title": "서강의 두 필체",
+		"note": "불탄 기록 묶음 속 두 장. 같은 서강 창고 일이다. 필체가 다르다." })
+	d.learn_clue("seogang_hands")
+	await d.ui.examine("서강의 두 필체 — 뒷장", [
+		"오래된 증언 — “불이 난 뒤 며칠, 창고 벽을 세 번 치는 소리를 들었다.”",
+		"다른 메모 — “비가 그친 뒤 젖은 쌀겨 위로 자국이 이어졌으나 발자국은 없었다.”",
+		"스승의 필체로 — “확인할 수 없음.”"], "clue")
+	for c in ["seogang_testimony", "seogang_memo", "seogang_conclusion"]: d.learn_clue(c, true)
+	d.ui.toast("기록책 — 서강 기록 뒷장을 옮겨 적었다", "clue")
+	flag("seogang_card_seen")
 	S.seen["S6009"] = true
-	# S6010 — 곽칠성은 제주로
+	await d.ui.say("이겸", ["그때 우치도 거기 있었지."])
+	S.vars["MAIN_PAST_EVENT_KNOWN"] = true
+	S.vars["HAMHUNG_SEOGANG_CARD_SEEN"] = true   # 최종장 S8003: “서강 기록에 같은 말이 있었다.” 한 줄
+	for k in ["MAIN_PAST_EVENT_KNOWN", "HAMHUNG_SEOGANG_CARD_SEEN"]:
+		Progress.set_var(k, true)
+		d.runner.log_line("var", [k, true])
+	d.journal_note("서강 창고 기록 — 두 필체. 뒷장: 벽을 세 번 친 소리(들음), 젖은 쌀겨 위 자국(적힌 것), 스승의 결론 “확인할 수 없음.”")
+	await s6010()
+
+# S6010 — 곽칠성은 제주로
+func s6010() -> void:
+	d.cutscene(true)
 	await d.ui.say("이겸", ["곽칠성은 제주로 갔다. 귀양이었다."])
 	await d.ui.caption("노인이 오래 화로를 본다.", 1.6)
 	await d.ui.say("이겸", ["내가 가야 했는데 못 갔다."])
@@ -497,9 +522,8 @@ func master_talk() -> void:
 	d.give(D.RECORD)
 	d.learn_clue("gwak_jeju")
 	S.vars["MAIN_MASTER_FOUND"] = true
-	for k in ["MAIN_MASTER_FOUND", "MAIN_PAST_EVENT_KNOWN"]:
-		Progress.set_var(k, true)
-		d.runner.log_line("var", [k, true])
+	Progress.set_var("MAIN_MASTER_FOUND", true)
+	d.runner.log_line("var", ["MAIN_MASTER_FOUND", true])
 	Discovery.tell(Discovery.NATION, "region:JJ_JEJU")   # 전국 지도에 제주(들음)
 	S.seen["S6010"] = true
 	d.journal_note("곽칠성 — 제주로 귀양. 다음은 제주다")
@@ -516,9 +540,14 @@ func resolve() -> void:
 	var o: String = ["C", "B", "A"][n - 1]
 	var detail := o
 	if o == "B": detail = "B_madong" if not f("madong_saved") else "B_gapsul"
+	# S6011(v2.4 §17): 돌아온 전갈꾼 수(3/2/1)와 결말(A/B/C)을 함께 — 지역 결말·후속 대사용, 최종장 FINAL_*에는 직접 쓰지 않는다
+	S.vars["HAMHUNG_MESSENGERS_RETURNED"] = n
 	S.vars["CASE_HAMHUNG_OUTCOME"] = o
 	S.vars["CASE_HAMHUNG_DETAIL"] = detail
+	Progress.set_var("HAMHUNG_MESSENGERS_RETURNED", n)
+	d.runner.log_line("var", ["HAMHUNG_MESSENGERS_RETURNED", n])
 	d.runner.log_line("outcome", detail)
+	S.seen["S6011"] = true
 	flag("resolved")
 	await d.ui.fade(true, 0.8)
 	S.phase = "done"
@@ -602,7 +631,8 @@ func summary() -> Array:
 	elif f("gapsul_taken"): p.append("도적들이 갑술을 끌고 고개 북쪽 숲으로 사라졌다.")
 	if S.has_clue("tracks"): p.append("숲으로 간 발자국 둘. 숲 위에 불빛.")
 	if f("master_met"): p.append("함관령 옛 역참에서 스승 이겸을 찾았다. 제 기록을 태워 순돌을 살리고 있었다.")
-	if bool(S.vars.get("MAIN_PAST_EVENT_KNOWN", false)): p.append("열두 해 전 서강 창고 — 이겸과 우치는 같은 일을 맡았었다. 곽칠성은 제주로 귀양 갔다.")
+	if f("seogang_card_seen"): p.append("불탄 기록 묶음 — 열두 해 전 서강 창고 일을 두 필체가 적었다. 스승의 것, 그리고 벽 지도의 그 먹. 스승의 결론은 “확인할 수 없음.”")
+	if S.has_clue("gwak_jeju"): p.append("곽칠성은 제주로 귀양 갔다.")
 	var o := String(S.vars.get("CASE_HAMHUNG_DETAIL", ""))
 	if o != "":
 		p.append(OUTCOME_TEXT.get(o, ""))

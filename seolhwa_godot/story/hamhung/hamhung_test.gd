@@ -31,9 +31,19 @@ static func prepare(dir) -> void:
 	Progress.save()
 	Engine.remove_meta(META)
 
-# 문서 화면(S6007 불탄 장부): 섬 수를 짚고, 그을린 가장자리를 돋보기로 훑어 朴을 짚는다
+# 문서 화면 — S6007 불탄 장부: 섬 수를 짚고, 그을린 가장자리를 돋보기로 훑어 朴을 짚는다
+#   S6009 「서강의 두 필체」: 두 장을 나란히 — 스승의 줄머리(확인·들음·모름)와 다른 필체의 부풀린 줄을 짚는다
 func doc_exam(ex) -> void:
 	await _frames(3)
+	if ex.ids.has("seogang_yigyeom"):
+		expect(ex.ids == ["seogang_yigyeom", "seogang_woochi"], "S6009 두 필체 — 두 장을 나란히 (%s)" % [ex.ids])
+		await shot("doc_seogang_hands", 6)
+		ex.mark_spot("seogang_yigyeom", "split")
+		ex.mark_spot("seogang_woochi", "swell")
+		await _frames(2)
+		_log("짚은 것 %s" % [ex.found_now])
+		ex.close()
+		return
 	await shot("doc_burnt_ledger", 6)
 	ex.mark_spot("burnt_ledger", "rows")
 	ex.mark_at("burnt_ledger", Vector2(0.6, 0.95))   # 아무것도 아닌 데
@@ -226,13 +236,31 @@ func _stage_route() -> void:
 	prefer = ["왜 돌아오지"]
 	await go("yigyeom")
 	prefer = []
-	await _until(func(): return d.S.phase == "done" and not d.runner.busy and not d.ui.modal, 120.0, "S6008~S6010·결말 카드")
+	await _until(func(): return d.S.is_flag("asked_why") and not d.runner.busy and not d.ui.modal, 30.0, "S6008 물음")
+	# S6009 — 이겸은 설명하지 않는다. 내려놓은 불탄 기록 묶음을 플레이어가 살펴봐야 카드가 열린다
+	expect(not d.S.seen.has("S6009") and not bool(d.S.vars.get("MAIN_PAST_EVENT_KNOWN", false)) and d.S.phase != "done",
+		"S6008 뒤 — 카드를 보기 전에는 과거를 말로 알려 주지 않는다")
+	await go("seogang_bundle")
+	await _until(func(): return d.S.phase == "done" and not d.runner.busy and not d.ui.modal, 120.0, "S6009 카드·S6010·S6011 결말 카드")
+	expect(d.S.is_flag("seogang_card_seen") and d.S.has_clue("seogang_hands"), "S6009 조사 카드 「서강의 두 필체」 — 이겸·우치 두 필체")
+	expect(Docs.found_list(d.S).has("seogang_yigyeom/split") and Docs.found_list(d.S).has("seogang_woochi/swell"), "두 필체 — 줄머리·부풀린 줄을 짚음")
+	var cl: Dictionary = d.data.clues
+	expect(d.S.has_clue("seogang_testimony") and cl.seogang_testimony.kind == "heard" and cl.seogang_testimony.by == "옛 증언"
+		and String(cl.seogang_testimony.text).contains("창고 벽을 세 번 치는 소리를 들었다"), "뒷장 옛 증언 — 들음(옛 증언)")
+	expect(d.S.has_clue("seogang_memo") and cl.seogang_memo.kind == "fact"
+		and String(cl.seogang_memo.text).contains("젖은 쌀겨 위로 자국이 이어졌으나 발자국은 없었다"), "뒷장 메모 — 적힌 것(확인)")
+	expect(d.S.has_clue("seogang_conclusion") and String(cl.seogang_conclusion.text).contains("확인할 수 없음."), "이겸의 당시 결론 그대로")
+	expect(not cl.has("past_event") and not d.S.has_clue("past_event"), "직접 들려주던 '서강 창고' 단서는 없다")
+	expect(bool(d.S.vars.get("HAMHUNG_SEOGANG_CARD_SEEN", false)) and bool(Progress.vars().get("HAMHUNG_SEOGANG_CARD_SEEN", false)), "HAMHUNG_SEOGANG_CARD_SEEN(최종장 복선)")
 	snapshot("end")
 	await shot("after", 40)
 	var want: String = { "A": "A", "B": "B", "C": "C" }[branch]
 	var o := String(d.S.vars.get("CASE_HAMHUNG_OUTCOME", ""))
 	expect(o == want, "결말 %s (얻은 값 %s / %s)" % [want, o, d.S.vars.get("CASE_HAMHUNG_DETAIL", "")])
-	for e in ["S6001", "S6003", "S6004", "S6005", "S6006", "S6007", "S6008", "S6009", "S6010"]: expect(d.S.seen.has(e), "장면 " + e)
+	for e in ["S6001", "S6003", "S6004", "S6005", "S6006", "S6007", "S6008", "S6009", "S6010", "S6011"]: expect(d.S.seen.has(e), "장면 " + e)
+	var ret: int = { "A": 3, "B": 2, "C": 1 }[branch]
+	expect(int(d.S.vars.get("HAMHUNG_MESSENGERS_RETURNED", 0)) == ret and int(Progress.vars().get("HAMHUNG_MESSENGERS_RETURNED", 0)) == ret,
+		"S6011 HAMHUNG_MESSENGERS_RETURNED = %d (%s)" % [ret, d.S.vars.get("HAMHUNG_MESSENGERS_RETURNED")])
 	if branch == "A": expect(d.S.seen.has("S6002"), "장면 S6002")
 	expect(d.S.knows("R_RESCUE_FIRST"), "기록보다 구조가 먼저인 때가 있다")
 	expect(bool(d.S.vars.get("CASE_HAMHUNG_COMPLETE", false)), "CASE_HAMHUNG_COMPLETE")
@@ -249,7 +277,8 @@ func _stage_route() -> void:
 	await shot("journal_travel", 10)
 	d.ui.journal_close()
 	_log("vars=%s" % JSON.stringify({ o = o, detail = d.S.vars.get("CASE_HAMHUNG_DETAIL"), park = d.S.vars.get("MAIN_PARK_MARK_COUNT"),
-		trace = d.S.vars.get("MAIN_MASTER_TRACE"), tool = d.S.vars.get("SKILL_TOOL_SLOT_PLUS") }))
+		trace = d.S.vars.get("MAIN_MASTER_TRACE"), tool = d.S.vars.get("SKILL_TOOL_SLOT_PLUS"), returned = d.S.vars.get("HAMHUNG_MESSENGERS_RETURNED"),
+		seogang = d.S.vars.get("HAMHUNG_SEOGANG_CARD_SEEN") }))
 	_log("seen=%s" % JSON.stringify(d.S.seen.keys()))
 	# 남쪽 뱃길(§18): 역마로 남원 남쪽 끝까지는 가도 되고, 제주 뱃길은 아직 건넌 적이 없어 건너뛰지 못한다
 	expect(d.case_fn.fast_south_ok(), "남쪽으로 역마(지나온 노정)")

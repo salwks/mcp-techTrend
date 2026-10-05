@@ -1,4 +1,4 @@
-# 사건 「돌아오지 않는 전갈」(ACT 4 함흥, S6001~S6010)과 R05 노정 사건(평양→함흥) — 이야기 데이터.
+# 사건 「돌아오지 않는 전갈」(ACT 4 함흥, S6001~S6011)과 R05 노정 사건(평양→함흥) — 이야기 데이터.
 # 시나리오: seolhwa/docs/scenario/seolhwarok_master_scenario_storyboard_v2.4_integrated_improvement.md §16(R05)·§17(S6001~S6011 — S6009 조사 카드 「서강의 두 필체」)·§18(제주 접근)
 #   (규칙 §1.3~§1.8, 이겸 §3.2, 서강 화재 §4, 성장 §6, 변수 §7, 소문 §24, 대사 §27, 컷신 §28, 실패 §29, 지역 변화 §30, 소스 잠금 §36,
 #    전승 앵커 §37 A15 함흥차사 — 사람들의 농담으로만, 사건의 정체가 아니다)
@@ -10,7 +10,7 @@
 #     네 가지 고정 사건(쓰러진 말·돌아간 이정표·눈에 묻힌 짐·세 갈래 발자국)이 길 위에 있다. 퀘스트 표시 없음. 한 번 지나면 보통 날씨.
 #   HG_HAMHEUNG(권역): 동문 밖 — 세 전갈꾼(S6001). 끝난 뒤 돌아온 전갈꾼·소문(지역 변화).
 #   HG_HAMHEUNG-BUKCHEONG(노정, 북청길): 함관령 눈보라(S6002 길 잃은 막동) → 고개 넘어 수레 약탈(S6003 갑술, 도적 둘) → 숲 발자국(S6004)
-#     → 함관령 옛 역참(world-scenario rt_sc_yeokcham: 등잔·벽 지도·화로·불탄 장부·기록함) S6005~S6010 — 이겸 재회.
+#     → 함관령 옛 역참(world-scenario rt_sc_yeokcham: 등잔·벽 지도·화로·불탄 장부·기록함) S6005~S6011 — 이겸 재회, 「서강의 두 필체」 카드(S6009).
 # 조건식: story_runner(f·k·c·has·n·ph·v·out·w·fn·seen).
 extends RefCounted
 
@@ -34,7 +34,8 @@ static func data() -> Dictionary:
 			# 평양(ACT 3) 사건이 끝나야 선다 — 그 전에는 R05·함흥·북청길 모두 소문만
 			"requires": { "CASE_PYONGYANG_COMPLETE": true },
 			"rule_label": "눈길에서 본 것", "rules_title": "눈길에서 본 것",
-			"reset_vars": ["CASE_HAMHUNG_OUTCOME", "CASE_HAMHUNG_DETAIL", "CASE_HAMHUNG_COMPLETE", "MAIN_MASTER_FOUND", "MAIN_PAST_EVENT_KNOWN", "SKILL_TOOL_SLOT_PLUS"],
+			"reset_vars": ["CASE_HAMHUNG_OUTCOME", "CASE_HAMHUNG_DETAIL", "CASE_HAMHUNG_COMPLETE", "MAIN_MASTER_FOUND", "MAIN_PAST_EVENT_KNOWN", "SKILL_TOOL_SLOT_PLUS",
+				"HAMHUNG_MESSENGERS_RETURNED", "HAMHUNG_SEOGANG_CARD_SEEN"],
 		},
 		"items": {
 			COIN: "엽전", POUCH: "전갈 주머니(함흥 감영 인)", LUGGAGE: "눈에 묻혀 있던 봇짐", RECORD: "이겸의 기록 한 묶음",
@@ -121,7 +122,11 @@ static func clues() -> Dictionary:
 		"park_ledger": { "kind": "fact", "title": "불탄 장부의 朴", "text": "반쯤 탄 곡물 장부. 그을린 가장자리에 붉은 朴 표식 — 돋보기로 그을음 밑을 훑어 찾았다. 한양 책방 납품표·운송장·평양 대장에서 본 것과 같다." },
 		"gwak_record": { "kind": "fact", "title": "곽칠성이라는 이름", "text": "기록함 속 이겸의 옛 기록. 서강 창고 사건의 증인 명단 — 곽칠성. 이름 위에 줄이 그어져 있다." },
 		"woochi_map": { "kind": "fact", "title": "벽 지도의 다른 먹", "text": "이겸의 벽 지도. 지나온 고을마다 작은 표. 한양 서강에만 다른 사람의 먹으로 동그라미 — 마른 지 오래지 않다." },
-		"past_event": { "kind": "heard", "by": "이겸", "title": "서강 창고 — 열두 해 전", "text": "강복이 장부와 곡식이 안 맞는 것을 찾았다. 창고에 불이 났고 강복이 죽었다. 이겸과 우치는 같은 일을 맡았었다. 우치의 가짜 귀신 소동에 사람이 다쳤고, 관아가 덮었다. 곽칠성이 죄를 썼다." },
+		# S6009 조사 카드 「서강의 두 필체」 — 설명 없이 카드로. 뒷장은 최종장(S8003·S8004) 복선: 들음·적힌 것·결론 그대로(정답 확정 금지)
+		"seogang_hands": { "kind": "fact", "title": "서강의 두 필체", "text": "불탄 기록 묶음. 같은 서강 창고 일을 두 손이 적었다 — 본 것과 들은 것을 갈라 적은 스승의 필체, 사람을 모으려 부풀린 다른 필체. 그 먹빛은 벽 지도 서강 동그라미의 먹이다." },
+		"seogang_testimony": { "kind": "heard", "by": "옛 증언", "title": "창고 벽을 세 번", "text": "“불이 난 뒤 며칠, 창고 벽을 세 번 치는 소리를 들었다.”" },
+		"seogang_memo": { "kind": "fact", "title": "젖은 쌀겨 위의 자국", "text": "기록 묶음 뒷장에 이렇게 적혀 있다 — “비가 그친 뒤 젖은 쌀겨 위로 자국이 이어졌으나 발자국은 없었다.” 누가 본 것인지는 적혀 있지 않다." },
+		"seogang_conclusion": { "kind": "fact", "title": "스승의 당시 결론", "text": "“확인할 수 없음.”" },
 		"gwak_jeju": { "kind": "heard", "by": "이겸", "title": "곽칠성 — 제주", "text": "곽칠성은 제주로 귀양 갔다. “내가 가야 했는데 못 갔다.”" },
 	}
 
@@ -245,6 +250,9 @@ static func objects() -> Array:
 			"steps": [{ "call": "room_ham" }] },
 		{ "id": "wall_map", "space": RTB, "at": "wall_map", "label": "벽 지도 · 살펴보기", "radius": 1.4, "when": ACTIVE + " and f('master_met') and not f('map_done')",
 			"steps": [{ "call": "room_map" }] },
+		# S6009 — 물음(S6008) 뒤 이겸이 불탄 장부 자리에 내려놓은 기록 묶음. 살펴보면 「서강의 두 필체」 카드
+		{ "id": "seogang_bundle", "space": RTB, "at": "ledger", "label": "불탄 기록 묶음 · 살펴보기", "radius": 1.3,
+			"when": ACTIVE + " and f('asked_why') and not f('seogang_card_seen')", "steps": [{ "event": "S6009" }] },
 	]
 
 static func triggers() -> Array:
@@ -318,6 +326,38 @@ static func documents() -> Dictionary:
 				{ "id": "rows", "rect": [0.4, 0.08, 0.4, 0.55], "level": "plain", "label": "섬 수", "text": "들어온 쌀 이백 석, 나간 쌀 이백오십 석. 조도 들어온 것보다 나간 것이 많다.", "clue": "ledger_rows" },
 				{ "id": "park_edge", "rect": [0.1, 0.76, 0.17, 0.12], "level": "plain", "label": "그을린 가장자리", "text": "그을음 밑에 붉은 인 — 朴. '받은 이' 줄 끝이다.", "clue": "park_ledger" },
 			] },
+		# S6009 「서강의 두 필체」 — 같은 서강 창고 일을 두 사람이 적은 두 장. 왼쪽(스승)은 줄머리마다 확인·들음·모름, 오른쪽(다른 먹)은 부풀린 글
+		"seogang_yigyeom": { "title": "기록 한 장 — 스승의 필체", "short": "스승의 필체", "aspect": 1.42, "seed": 6091,
+			"paper": { "base": "#e6dcc2", "fiber": 0.5, "fiber_col": "#7a6648", "lines": 7, "line_col": "#9a5a4a60" },
+			"cols": [
+				{ "x": 0.86, "y": 0.07, "text": "서강 창 화재", "size": 0.06, "ink": 0.92 },
+				{ "x": 0.74, "y": 0.1, "text": "확인 · 창 서쪽 벽이 먼저 탔다", "size": 0.05, "ink": 0.9 },
+				{ "x": 0.63, "y": 0.1, "text": "확인 · 짐꾼 강복 죽음", "size": 0.05, "ink": 0.9 },
+				{ "x": 0.52, "y": 0.1, "text": "확인 · 장부 섬 수 맞지 않음", "size": 0.05, "ink": 0.9 },
+				{ "x": 0.41, "y": 0.1, "text": "들음 · 불 전날 밤 수레 소리", "size": 0.05, "ink": 0.86 },
+				{ "x": 0.30, "y": 0.1, "text": "들음 · 원혼이 운다는 말", "size": 0.05, "ink": 0.86 },
+				{ "x": 0.19, "y": 0.1, "text": "모름 · 누가 불을 냈는가", "size": 0.05, "ink": 0.86 },
+			],
+			"burns": [{ "side": "left", "depth": 0.1, "seed": 63 }],
+			"hotspots": [
+				{ "id": "split", "rect": [0.14, 0.08, 0.66, 0.11], "level": "plain", "label": "줄머리",
+					"text": "줄마다 머리에 '확인'·'들음'·'모름'. 본 것과 들은 것을 갈라 적었다. 스승의 필체다.", "pair": "seogang_hands" },
+			] },
+		"seogang_woochi": { "title": "기록 한 장 — 다른 필체", "short": "다른 필체", "aspect": 1.42, "seed": 6092,
+			"paper": { "base": "#ddd2b8", "fiber": 0.7, "fiber_col": "#6e5f4a", "lines": 0 },
+			"cols": [
+				{ "x": 0.85, "y": 0.06, "text": "서강 창 원혼기", "size": 0.066, "ink": 0.9, "bleed": 0.35, "col": "#3b3346" },
+				{ "x": 0.72, "y": 0.12, "text": "불 속에서 짐꾼이 사흘 밤 울었다", "size": 0.054, "ink": 0.88, "bleed": 0.35, "col": "#3b3346" },
+				{ "x": 0.60, "y": 0.09, "text": "벽 치는 소리를 온 마포가 들었다", "size": 0.054, "ink": 0.88, "bleed": 0.35, "col": "#3b3346" },
+				{ "x": 0.48, "y": 0.13, "text": "창 주인이 죄를 묻으려 불을 놓았다", "size": 0.054, "ink": 0.86, "bleed": 0.35, "col": "#3b3346" },
+				{ "x": 0.36, "y": 0.1, "text": "원혼이 이름을 부르기 전에", "size": 0.054, "ink": 0.86, "bleed": 0.35, "col": "#3b3346" },
+				{ "x": 0.24, "y": 0.12, "text": "모두 창 앞에 모이라", "size": 0.06, "ink": 0.9, "bleed": 0.35, "col": "#3b3346" },
+			],
+			"burns": [{ "side": "bottom", "depth": 0.12, "seed": 64 }],
+			"hotspots": [
+				{ "id": "swell", "rect": [0.55, 0.08, 0.22, 0.62], "level": "plain", "label": "부풀린 줄",
+					"text": "본 사람 없는 울음을 '사흘 밤', 몇이 들은 소리를 '온 마포'라 적었다. 사람을 모으려는 글. 먹빛이 벽 지도의 서강 동그라미와 같다.", "pair": "seogang_hands" },
+			] },
 	}
 
 # 싸움터: 고개 넘어 수레 — 도적 둘(몽둥이·장대). 달아나면 고개 북쪽 숲으로
@@ -378,7 +418,15 @@ static func events() -> Dictionary:
 		"S6006": _ev("S6006", "S6005 바로 뒤", "역참 방", "-", "-", "-", "MAIN_MASTER_TRACE += HAMHUNG", []),
 		"S6007": _ev("S6007", "방의 물건을 살펴볼 때마다", "역참 방", "-", "불탄 장부(朴 — 플레이어가 먼저 찾음)·기록함(곽칠성)·벽 지도(우치)", "-", "MAIN_PARK_MARK_COUNT += 1", []),
 		"S6008": _ev("S6008", "물건을 다 본 뒤 이겸에게", "역참 방", "-", "“왜 돌아오지 않았습니까?”", "-", "-", []),
-		"S6009": _ev("S6009", "S6008 뒤", "역참 방", "-", "-", "-", "MAIN_PAST_EVENT_KNOWN", []),
-		"S6010": _ev("S6010", "S6009 뒤", "역참 방", "-", "기록을 챙긴다",
-			"A 셋 다 돌아옴 · B 둘(막동 또는 갑술을 놓침) · C 하나(순돌만)", "MAIN_MASTER_FOUND · 곽칠성 — 제주 · 남해 뱃길 안내", []),
+		# S6009 조사 카드 「서강의 두 필체」(v2.4 §17) — 장문 대사 없이 카드로. 닫은 뒤 이겸 한 줄: “그때 우치도 거기 있었지.”
+		"S6009": _ev("S6009", "S6008 뒤 — 이겸이 내려놓은 불탄 기록 묶음을 살펴봄", "역참 방", "-",
+			"두 필체 카드(이겸: 확인·들음을 가름 / 우치: 사람을 움직이려 부풀림) · 뒷장의 옛 증언·메모·이겸의 결론", "-",
+			"MAIN_PAST_EVENT_KNOWN · HAMHUNG_SEOGANG_CARD_SEEN(최종장 S8003·S8004 복선)", [
+			{ "call": "seogang_card" },
+		]),
+		"S6010": _ev("S6010", "S6009 카드를 닫은 뒤", "역참 방", "-", "기록을 챙긴다", "-", "MAIN_MASTER_FOUND · 곽칠성 — 제주 · 남해 뱃길 안내", []),
+		# S6011 결말 판정(v2.4 §17) — 돌아온 전갈꾼 수. 지역 결말·후속 대사에만 쓰고 최종장 FINAL_*에는 직접 쓰지 않는다
+		"S6011": _ev("S6011", "S6010 뒤", "함관령 옛 역참 → 함흥", "새벽 · 눈 그침", "-",
+			"A 셋 다 돌아옴(3) · B 둘 — 막동 또는 갑술을 놓침(2) · C 하나 — 순돌만(1)",
+			"HAMHUNG_MESSENGERS_RETURNED 3/2/1 · CASE_HAMHUNG_OUTCOME A/B/C · CASE_HAMHUNG_COMPLETE", []),
 	}
