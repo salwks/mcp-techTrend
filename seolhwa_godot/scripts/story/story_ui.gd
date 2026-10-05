@@ -32,6 +32,7 @@ const KIND_TAG := { clue = "단서", rule = "버릇", journal = "기록", item =
 const FACT_TAG := { fact = "◆ 확인", heard = "◇ 들음", guess = "△ 추정" }
 
 var auto := false                  # 시험: 대화·카드를 스스로 넘기고 선택은 auto_choice로
+var auto_real := false             # 시험 화면 검토(--storyshots): auto여도 대사·자막·암전을 실제 길이로(대사는 읽는 시간만큼 두고 넘긴다)
 var auto_choice: Callable = Callable()   # (물음, [label]) → 번호
 var log_lines := true              # 대사·선택을 표준 출력에 남긴다(시험 기록)
 var modal := false
@@ -457,7 +458,7 @@ func say(who: String, lines) -> void:
 		_dlg_text.visible_characters = 0
 		_typing = true; _type_t = 0.0
 		_waiting = "say"
-		if auto: await _wait(0.03)
+		if auto: await _wait(0.03 if not auto_real else 1.0 + line.length() * 0.06)
 		else: await _confirm
 		_typing = false
 	_waiting = ""
@@ -559,10 +560,10 @@ func caption(text: String, sec := 2.4) -> void:
 	_cap_tween = create_tween()
 	_cap_tween.tween_property(_caption, "modulate:a", 1.0, 0.35)
 	var hold := maxf(0.4, sec - 0.7)
-	if auto: hold = 0.05
+	if auto and not auto_real: hold = 0.05
 	_cap_tween.tween_interval(hold)
 	_cap_tween.tween_property(_caption, "modulate:a", 0.0, 0.35)
-	await _wait((0.1 if auto else sec))
+	await _wait((0.1 if auto and not auto_real else sec))
 
 func letterbox(on: bool) -> void:
 	var vs := get_viewport().get_visible_rect().size
@@ -574,7 +575,7 @@ func letterbox(on: bool) -> void:
 
 func fade(to_black: bool, sec := 0.7) -> void:
 	var tw := create_tween()
-	tw.tween_property(_fade, "color:a", 1.0 if to_black else 0.0, 0.05 if auto else sec)
+	tw.tween_property(_fade, "color:a", 1.0 if to_black else 0.0, 0.05 if auto and not auto_real else sec)
 	await tw.finished
 
 func toast(text: String, kind := "info") -> void:

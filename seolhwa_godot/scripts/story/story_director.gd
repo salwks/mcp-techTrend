@@ -335,7 +335,7 @@ func outcome_var() -> String:
 	return String(data.get("case", {}).get("outcome_var", "CASE_NAMWON_OUTCOME"))
 
 func wait(sec: float) -> void:
-	if ui.auto: sec = minf(sec, 0.05)
+	if ui.auto and not ui.auto_real: sec = minf(sec, 0.05)
 	await get_tree().create_timer(sec, true, false, true).timeout
 
 # ---------------------------------------------------------------------------
@@ -407,6 +407,16 @@ func set_weather(k: String) -> void:
 func cutscene(on: bool) -> void:
 	_cut = on
 	ui.letterbox(on)
+
+# 소리 자리(소리 체계는 아직 없다): 연출이 소리 낼 순간마다 부른다. 지금은 신호만 낸다 — 소리 작업이 sfx_cue에 붙어 채운다.
+#   남원 동아줄: rope_creak(줄 삐걱) · rope_snap(줄 끊김) · fall_impact(수수밭에 떨어짐) · wind(바람)
+signal sfx_cue(id: String)
+func sfx(id: String) -> void:
+	sfx_cue.emit(id)
+
+# 화면 흔들림 설정(놀이 설정 cam_shake)이 꺼져 있나 — 꺼져 있으면 큰 충격은 암전으로 대신한다
+func shake_enabled() -> bool:
+	return load("res://scripts/story/game_settings.gd").get_v("cam_shake") != "off"
 
 func shake(p: float, sec: float) -> void:
 	if combat_view != null: combat_view.shake(p, sec * 1000.0)

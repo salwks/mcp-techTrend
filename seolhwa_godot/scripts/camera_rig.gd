@@ -32,6 +32,9 @@ const RIDE := { pitch = 20.0, distance = 21.0, fov = 38.0, lookAhead = 0.0, aimZ
 # 목표 겨냥점이 null이면 매 프레임 계산한 평소 자리(플레이어)로 돌아온다. 이야기 컷(전경 등)이 '쉭' 하고 튀지 않게.
 var _gl = null
 const RIDE_SIDE_DEG := 28.0
+# 각본 시점(shot): 컷신 한 장면에서만 — 카메라 자리(pos)와 바라볼 점(look), fov를 그대로 쓴다(하늘을 올려다보는 동아줄 장면 등).
+# 평소 시점 계산(pitch·distance·yaw)은 건너뛴다. null로 되돌리면 다음 프레임부터 평소 시점(되돌릴 때는 암전 속에서).
+var shot = null   # { pos: Vector3, look: Vector3, fov: float }
 
 func _init(cam: Camera3D, w: World) -> void:
 	camera = cam
@@ -59,6 +62,14 @@ func params(pos: Vector3, interior) -> Dictionary:
 	return p
 
 func update(dt: float, pos: Vector3, facing: String, interior, snap := false) -> void:
+	if shot != null:
+		var sp: Vector3 = shot.pos
+		var lk: Vector3 = shot.look
+		if Vector2(lk.x - sp.x, lk.z - sp.z).length() < 0.05: lk.z -= 0.05   # 바로 위를 보면 look_at이 깨진다
+		camera.position = sp + Vector3(0, shake_y, 0)
+		camera.look_at(lk, Vector3.UP)
+		camera.fov = float(shot.get("fov", cur.fov))
+		return
 	var p := params(pos, interior)
 	var k := 1.0 if snap else 1.0 - exp(-dt * 2.2)
 	for key in ["pitch", "distance", "fov", "lookAhead", "aimZ"]:

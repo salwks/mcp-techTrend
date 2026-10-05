@@ -650,6 +650,16 @@ func _update_lamps(t: float) -> void:
 		o.light_energy = kd.intensity * f * fl
 
 # ---- 가림 처리(main.gd와 같음) ----
+# 각본 가림(이야기 컷신 한 장면 — 남원 동아줄): 가림 점무늬·식생 걷어 내기의 기준점을 플레이어 대신 focus(줄을 타는 오누이·범)로,
+# 반지름을 r로. 그동안 물체 반투명(occluders)은 쓰지 않는다 — 반투명 잎은 깊이를 써서 뒤의 인물 그림을 가린다. 점무늬는 픽셀을 버려 가리지 않는다.
+var occ_script = null   # { focus: Vector3, r: float } | null
+func set_occ_script(spec) -> void:
+	occ_script = spec
+
+func _occ_focus() -> Vector3:
+	if occ_script != null: return occ_script.focus
+	return player_pos + Vector3(0, player.height * 0.8, 0)
+
 func _update_occlusion(dt: float, interior) -> void:
 	var want: Array = interior.hide if interior != null else []
 	for o in _hidden_interior:
@@ -675,7 +685,7 @@ func _update_occlusion(dt: float, interior) -> void:
 		if interior == null:
 			var c := cam.global_position
 			for occ in _occ_near:
-				if not occ.node.visible or not occ.node.is_inside_tree(): continue
+				if occ_script != null or not occ.node.visible or not occ.node.is_inside_tree(): continue
 				var box: AABB = occ.aabb
 				for h in [0.35, player.height * 0.6, player.height]:
 					var p := player_pos + Vector3(0, h, 0)
@@ -814,8 +824,9 @@ func _process(delta: float) -> void:
 	if story != null: cam.position += story.shake_offset()
 	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
-	RenderingServer.global_shader_parameter_set("occ_b", player_pos + Vector3(0, player.height * 0.8, 0))
+	RenderingServer.global_shader_parameter_set("occ_b", _occ_focus())
 	var occ_r: float = 0.0 if interior != null or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게
+	if occ_script != null and interior == null: occ_r = float(occ_script.get("r", occ_r))
 	RenderingServer.global_shader_parameter_set("occ_r", occ_r)
 	# 실내 near_fade=false(굴 등 좁은 실내): 카메라 앞 가림 점무늬를 끈다 — 바닥·벽이 카메라 12m 안이라 구멍이 뚫린다
 	var near_fade: bool = not args.has("nodither") and not (interior != null and not bool(interior.get("near_fade", true)))
@@ -830,7 +841,7 @@ func _process(delta: float) -> void:
 	_fill.light_energy = _fill_k * (3.0 + 4.0 * TimeOfDay.night_factor(hour)) * (1.0 - _dark_k)
 	_fill.visible = _fill_k > 0.01 and _dark_k < 0.98
 	_update_occlusion(dt, interior)
-	if interior == null: world.update_cutaway(dt, player_pos, cam.global_position)
+	if interior == null: world.update_cutaway(dt, player_pos if occ_script == null else occ_script.focus, cam.global_position)
 	world.update_scatter_lod(player_pos)
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)

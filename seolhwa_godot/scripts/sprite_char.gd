@@ -25,6 +25,8 @@ var move_speed := -1.0
 var anim_speed := 1.0      # 동작 재생 배율(전투가 판정 길이에 맞춘다)
 var armed := false         # 칼 든 대기·걷기(<동작>:a 클립이 있으면)
 var variant := ""          # "disguised" → <동작>:d 클립 먼저(변장 호랑이)
+var roll := 0.0            # 연출: 화면 안에서 그림을 돌린다(라디안, 그림 가운데 기준 — 남원 범이 뒤집혀 떨어질 때). 0이면 평소
+var fx_scale := 1.0        # 연출: 그림 크기 배율(가운데 기준)
 var accent = null          # 테두리 바깥 띠 색(Color) — 고을 사람과 같은 그림을 쓰는 이야기 인물(story_director). null이면 한지빛
 
 var _bank: Dictionary
@@ -318,6 +320,11 @@ func update_char(dt: float, cam: Camera3D) -> void:
 		_billboard.rotation = Vector3(-LEAN, yaw, 0)
 		_billboard.rotation_order = EULER_ORDER_YXZ
 	_show_frame()
+	if roll != 0.0 or fx_scale != 1.0 or _billboard.position != Vector3.ZERO:
+		var b := Basis.from_euler(Vector3(-LEAN, _billboard.rotation.y, roll), EULER_ORDER_YXZ).scaled_local(Vector3.ONE * fx_scale)
+		var pv := Vector3(0, (float(_frame.get("y0", 0.0)) + float(_frame.get("y1", 0.0))) * 0.5, 0)
+		var b0 := Basis.from_euler(Vector3(-LEAN, _billboard.rotation.y, 0), EULER_ORDER_YXZ)
+		_billboard.transform = Transform3D(b, b0 * pv - b * pv)   # 그림 가운데가 제자리에 남게
 
 func _show_frame() -> void:
 	var vm := _view_of()
