@@ -57,7 +57,13 @@ SETS.skills = { player: { base: 'player', over: {}, armed: true, anims: ['shove'
 
 // ?set=namwon_rope: 남원 동아줄 절정 — 범이 썩은 줄에 매달려 오르는 모습(rope_climb 3장 반복)·끊어져 뒤집히는 자세(fall_flip 2장).
 //   옆모습만 굽는다(frameCore VIEW_FALLBACK). → frames_story_namwon_rope.json(호랑이 은행에 더할 클립 — namwon_case.load_tiger_story)
-SETS.namwon_rope = { tiger: { tiger: true, anims: ['rope_climb', 'fall_flip'] } };
+//   누이·아우(story_girl·story_boy): 하늘 줄을 붙잡고 손을 번갈아 끌어올림(rope_up 3장 반복, 앞·옆·뒤) — 남원 굽기와 같은 몸(PEOPLE).
+//   그림 이름은 frames_story_namwon_rope_<kind>_<n>.png(남원 본 굽기의 frames_story_story_girl_*.png를 덮어쓰지 않게)
+SETS.namwon_rope = {
+  tiger: { tiger: true, anims: ['rope_climb', 'fall_flip'] },
+  story_girl: { base: 'child_girl', over: {}, anims: ['rope_up'] },
+  story_boy: { base: 'child_boy', over: {}, anims: ['rope_up'] },
+};
 
 const TIGER_ANIMS = ['knock', 'sniff', 'climb_try', 'slip', ...fc.DISGUISE_ANIMS];
 
@@ -126,7 +132,7 @@ async function runSet(set, log) {
     const b = new fc.BakeBank(kind, 'high');
     const keys = [];
     for (const vw of ['front', 'side', 'back']) for (const a of P.anims) keys.push(fc.clipKey(fc.resolveView(kind, vw, a), a, !!P.armed, false));
-    out[kind] = await bakeBank(b, keys, `frames_story_${kind}`);
+    out[kind] = await bakeBank(b, keys, PEOPLE[kind] ? `frames_story_${set}_${kind}` : `frames_story_${kind}`);   // 남원 본 굽기와 같은 종류면 이름을 나눈다
     log('baked ' + kind + ' pages=' + out[kind].pages.length);
   }
   await put(`frames_story_${set}.json`, JSON.stringify(out));

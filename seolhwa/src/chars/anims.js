@@ -17,6 +17,8 @@ export const HUMAN_ANIMS = {
   hit: { dur: 0.35 }, down: { dur: 0.6 }, getup: { dur: 0.7 }, dead: { dur: 0.9 },
   // 3단계(이야기): 오누이 동작
   cower: { dur: 0.8, loop: true }, cry: { dur: 1.0, loop: true }, climb: { dur: 1.2 }, perch: { dur: 2.4, loop: true }, hug: { dur: 2.0, loop: true },
+  // 남원 동아줄(Godot 이야기 굽기): 하늘 줄을 붙잡고 손을 번갈아 끌어올림(3장 반복 — 오르는 높이는 Godot이)
+  rope_up: { dur: 0.9, loop: true },
   // ACT 1 한양(Godot 이야기 굽기): 우치 웅크림(crouch), 책쾌 앉기(sit)·묶임(tied)
   crouch: { dur: 1.2, loop: true }, sit: { dur: 3.0, loop: true }, tied: { dur: 1.6, loop: true },
   // v2.2 전투 숙련(P0): 받아밀기(막은 직후 짧게 밀침)·빠른 투척(걸으며 한 손 던지기) — 4~6장
@@ -417,7 +419,7 @@ export function tigerCombatPose(view, anim, t, at, st = {}) {
 // ---------------------------------------------------------------------------
 // 3단계(이야기) 동작 — 오누이
 // ---------------------------------------------------------------------------
-export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'perch', 'hug', 'crouch', 'sit', 'tied', 'shove', 'quick_throw']);
+export const STORY_HUMAN = new Set(['cower', 'cry', 'climb', 'rope_up', 'perch', 'hug', 'crouch', 'sit', 'tied', 'shove', 'quick_throw']);
 export function humanStoryPose(view, anim, t, at, rig) {
   if (!STORY_HUMAN.has(anim)) return null;
   const S = rig.S, k = S.hip / 80;
@@ -469,6 +471,19 @@ export function humanStoryPose(view, anim, t, at, rig) {
     F = side
       ? { root: [0, -6 * k, up], torso: [-0.25], head: [-0.2], arm2: [2.75 + 0.35 * c], arm2_l: [0.3 - 0.3 * c], arm1: [2.75 - 0.35 * c], arm1_l: [0.3 + 0.3 * c], leg2: [1.1 + 0.5 * c], leg2_l: [-1.7 - 0.2 * c], leg1: [1.1 - 0.5 * c], leg1_l: [-1.7 + 0.2 * c] }
       : { root: [0, 0, up], arm1: [2.8 + 0.3 * c], arm1_l: [0.3], arm2: [-2.8 + 0.3 * c], arm2_l: [-0.3], leg1: [0.1, 0, -10 * k * max(0, c)], leg2: [-0.1, 0, -10 * k * max(0, -c)], head: [0, 0, -2 * k] };
+  } else if (anim === 'rope_up') {
+    // 하늘 줄에 매달려 손을 번갈아 뻗어 끌어올린다(줄 = 몸 가운데, 손은 머리 위에서 줄로 모인다). 한 손이 위로 뻗을 때
+    // 다른 손은 팔꿈치를 굽혀 당기고, 무릎은 번갈아 끌어올려 줄을 감는다(실제 오르는 높이는 Godot이 움직인다)
+    const ph = (t / 0.9) * PI * 2, s = sin(ph), c = cos(ph);
+    const bob = -3 * k * abs(s);
+    F = side
+      ? { root: [0, -4 * k, bob], torso: [-0.18 + 0.04 * c], head: [-0.3],
+        arm2: [2.55 + 0.3 * s], arm2_l: [0.2 + 0.4 * max(0, -s)], arm1: [2.55 - 0.3 * s], arm1_l: [0.2 + 0.4 * max(0, s)],
+        leg2: [0.85 + 0.45 * max(0, c)], leg2_l: [-1.2 - 0.3 * max(0, c)], leg1: [0.45 + 0.45 * max(0, -c)], leg1_l: [-0.9 - 0.3 * max(0, -c)] }
+      : { root: [0.03 * s, 0, bob], torso: [0.03 * s], head: [0.04 * s, 0, -2 * k],
+        arm1: [2.6 + 0.2 * max(0, s) - 1.85 * max(0, -s)], arm1_l: [0.5 - 0.4 * max(0, s) - 3.1 * max(0, -s)],
+        arm2: [-2.6 - 0.2 * max(0, -s) + 1.85 * max(0, s)], arm2_l: [-0.5 + 0.4 * max(0, -s) + 3.1 * max(0, s)],
+        leg1: [0.16 * c, 0, -14 * k * max(0, c)], leg1_l: [-0.6 * max(0, c)], leg2: [-0.1 - 0.12 * s, 0, -14 * k * max(0, -c)], leg2_l: [0.6 * max(0, -c)] };
   } else if (anim === 'perch') {
     const sw = sin(t * 2.6), sw2 = sin(t * 2.6 + 1.5);
     F = side
