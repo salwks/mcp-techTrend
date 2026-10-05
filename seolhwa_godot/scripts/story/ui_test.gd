@@ -111,6 +111,14 @@ func uishots(dir: String) -> void:
 			await _shot(dir, "journal_%s_2" % id, 30)
 	d.ui.journal_close()
 	await _frames(10)
+	# 지도(권역): 지명·호신물 칸 같은 HUD가 감춰지는지(scripts/hud_gate.gd) — 지명을 다시 띄운 채로 연다
+	var mp = d.main._map
+	if mp != null:
+		d.main._title.show_title("시험 고을")
+		mp.toggle(); mp.show_mode("all")
+		await _shot(dir, "map_all", 20)
+		mp.toggle()
+		await _frames(10)
 	# 조사 카드 · 대화 · 선택
 	d.ui.examine("짚신 한 짝", "길가 풀숲에 젖은 짚신 한 짝. 끈이 끊어졌다. 신은 지 오래되지 않았다.", "clue")
 	await _shot(dir, "card", 20)

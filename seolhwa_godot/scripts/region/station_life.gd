@@ -121,7 +121,7 @@ func _spawn(s: Dictionary) -> void:
 		var p: Vector3 = Stations.to_world(s, P.stalls[i])
 		ch.position = _y(p, FLOOR)
 		_face(ch, front)
-		# 3/4 앞모습(tools/export_stable_frames.js drawQ3): 머리 왼쪽(eat·idle)·오른쪽(eatR·idleR)을 칸마다 번갈아 — 줄지은 말이 한 도장처럼 보이지 않게
+		# 앞모습(tools/horse_art.js — 몸이 조금 돈 꼴): 머리 왼쪽(eat·idle)·오른쪽(eatR·idleR)을 칸마다 번갈아 — 줄지은 말이 한 도장처럼 보이지 않게
 		var right: bool = (i % 2 == 1) != (rng.randf() < 0.2)
 		var suf := "R" if right and ch.has_anim("eatR") else ""
 		var a := "eat" if rng.randf() < 0.7 else "idle"

@@ -82,3 +82,9 @@
 - 한자(朴·驛·監營·장 수 一二…)는 시스템 명조로 그린다. 덕온공주체에는 한자가 없다.
 - 주막 쉬기의 시각 건너뛰기는 사건 진행 중에도 막지 않는다(runner가 바쁘거나 모달일 때만 숨긴다). 밤 국면에 묶인 사건에서 문제가 되면 사건 쪽 조건으로 막는다.
 - 넘기는 장(flap)은 빈 한지로 그린다. 앞 쪽과 뒤 쪽 글씨는 넘김이 끝나야 보인다(0.42초).
+
+## 8. 다듬기 (2026-10-05, 검토 뒤)
+- **큰 창이 열리면 HUD 감춤** — `scripts/hud_gate.gd`. 창(기록책 · 권역/전국 지도 · Esc 멈춤 · 저장 창 · 역마 창 · 문서 · 시작 메뉴)은 `HudGate.OVERLAY`, 감출 것(지명·건물 이름 place_title, 호신물 칸, 아래 안내(배·말), 왼쪽 위 HUD 알림, story_ui의 조사 안내·F 안내·소지품·알림 띠·먹점·처음 안내)은 `HudGate.HIDE` 무리. place_title(PROCESS_MODE_ALWAYS)이 매 프레임 `apply()` — 멈춤 중에도 감추고, 닫으면 되돌린다. CanvasLayer는 visible, Control은 modulate.a(조사 안내 판은 self_modulate)를 끄므로 각자 visible을 쓰는 코드와 부딪치지 않는다.
+- **"모르는 것은 모른다고."의 '고'가 'ㄹ'처럼 보이던 것** — 세로쓰기·줄바꿈·문장부호 돌림 문제가 아니었다. 머리 글꼴 DeogonPrincessClassic은 궁체 흘림이라 받침 없는 ㅗ·ㅛ 글자(고·노·도·소·오·조·초·교·료…)의 기본 글리프가 한 획으로 이어져 'ㄹ'·'ㄴ'처럼 읽힌다(PIL로 두 글꼴을 견주어 확인). `UiFonts.raw("classic")`이 읽은 바이트의 cmap(형식 4, 배열 구간)에서 그 글자들(33자)의 글리프 번호를 0으로 지워, 대체 글꼴(같은 덕온공주체 main)이 그리게 했다. 파일은 그대로다. 받침 있는 ㅗ(곡·공…)는 흘려도 읽히므로 두었다. 갈피 여덟 개를 모두 다시 찍어 보았다 — 다른 깨짐은 없었다(로마자·숫자는 세로쓰기에서 바로 세운다).
+- **끝낼 때 누수** — `--verbose`로 보니 남은 것이 Label 1개(나무에 달지 않은 story_ui `_dlg_hint`) → 그 글꼴 덮어쓰기 → FontFile 3 · SystemFont → 글꼴 문자열 캐시 TextLine 64(ShapedTextData 64) · 글리프 아틀라스 Image/ImageTexture 30(Texture RID 30)이었다. 그 Label을 대화 판에 달아(숨김) 함께 풀리게 하니 "RID allocations leaked"·"ObjectDB instances leaked"가 모두 사라졌다(기록책·저장 창·Esc 메뉴·지도·역참을 거친 끝내기 모두).
+- 화면: 전 `shots/ui/before/`, 후 `shots/ui/after/`(`journal_master.png` — 「함흥」·호신물 칸 사라짐, `journal_teach.png` — '모른다고.', `map_all.png` — 지도를 연 채 지명 감춤).
