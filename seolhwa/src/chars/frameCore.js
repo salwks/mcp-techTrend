@@ -46,7 +46,7 @@ const SLOW = new Set(['down', 'getup', 'dead', 'stagger', 'roar', 'eat']);
 // 드물게 보이는 시점×동작은 옆모습으로 대신(메모리 절약)
 export const VIEW_FALLBACK = {
   player: { back: new Set(['bow_draw', 'bow_shoot', 'throw', 'talk', 'down', 'getup', 'dead', 'hit']) },
-  tiger: { back: new Set(['roar', 'eat', 'stagger', 'dead', 'hit', 'land', 'sniff', 'swipe']), front: new Set(['knock', 'climb_try', 'slip']) },
+  tiger: { back: new Set(['roar', 'eat', 'stagger', 'dead', 'hit', 'land', 'sniff', 'swipe', 'rope_climb', 'fall_flip']), front: new Set(['knock', 'climb_try', 'slip', 'rope_climb', 'fall_flip']) },
 };
 export function resolveView(kind, view, anim) {
   const f = VIEW_FALLBACK[kind];
@@ -56,7 +56,7 @@ const CONTACT = {
   attack1: [0.3, 0.66], attack2: [0.3, 0.68], attack3: [0.36, 0.72], heavy: [0.33, 0.72], dodge: [0.0, 0.25],
   pounce: [0.04, 0.2], swipe: [0.55, 0.82], bow_shoot: [0, 0.3], slip: [0.5, 0.7],
 };
-const LOOP_N = { idle: 4, talk: 4, charge: 4, guard: 3, bow_draw: 3, crouch: 4, eat: 4, knock: 10, sniff: 8 };
+const LOOP_N = { idle: 4, talk: 4, charge: 4, guard: 3, bow_draw: 3, crouch: 4, eat: 4, knock: 10, sniff: 8, rope_climb: 3, fall_flip: 2 };
 export function clipSpec(rig, anim) {
   const info = rig.anims[anim];
   if (!info) return null;

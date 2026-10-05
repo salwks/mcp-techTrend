@@ -55,6 +55,10 @@ SETS.hwangju = {
 // ?set=skills: v2.2 전투 숙련 동작(받아밀기 shove·빠른 투척 quick_throw)을 플레이어 은행에 더할 클립으로 → frames_story_skills.json
 SETS.skills = { player: { base: 'player', over: {}, armed: true, anims: ['shove', 'quick_throw'] } };   // 칼 든 클립(':a') — 전투 중 SpriteChar.armed가 먼저 찾는다
 
+// ?set=namwon_rope: 남원 동아줄 절정 — 범이 썩은 줄에 매달려 오르는 모습(rope_climb 3장 반복)·끊어져 뒤집히는 자세(fall_flip 2장).
+//   옆모습만 굽는다(frameCore VIEW_FALLBACK). → frames_story_namwon_rope.json(호랑이 은행에 더할 클립 — namwon_case.load_tiger_story)
+SETS.namwon_rope = { tiger: { tiger: true, anims: ['rope_climb', 'fall_flip'] } };
+
 const TIGER_ANIMS = ['knock', 'sniff', 'climb_try', 'slip', ...fc.DISGUISE_ANIMS];
 
 async function toPng(cv) {
@@ -110,6 +114,11 @@ async function runSet(set, log) {
   const people = SETS[set];
   for (const kind in people) {
     const P = people[kind];
+    if (P.tiger) {
+      out[kind] = await bakeBank(new fc.BakeBank('tiger', 'high'), fc.expandKeys('tiger', P.anims), `frames_story_${set}_${kind}`);
+      log('baked ' + kind + ' pages=' + out[kind].pages.length);
+      continue;
+    }
     const sp = { ...SPECS[P.base] };
     for (const k in P.over) { if (P.over[k] === null) delete sp[k]; else sp[k] = P.over[k]; }
     SPECS[kind] = sp;

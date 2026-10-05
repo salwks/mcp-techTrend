@@ -28,6 +28,8 @@ export const TIGER_ANIMS = {
   swipe: { dur: 0.75 }, roar: { dur: 1.4 }, hit: { dur: 0.3 }, stagger: { dur: 0.8 }, eat: { dur: 1.0, loop: true }, dead: { dur: 1.0 },
   // 3단계(이야기)
   knock: { dur: 1.2, loop: true }, climb_try: { dur: 1.4 }, slip: { dur: 1.8 }, sniff: { dur: 1.6, loop: true }, retreat: { dur: 0.8, loop: true },
+  // 남원 동아줄(Godot 이야기 굽기, 옆모습만): 썩은 줄에 매달려 끌어올림(3장 반복) · 줄이 끊어져 뒤집히며 떨어지는 자세(2장 — 회전·낙하는 Godot이)
+  rope_climb: { dur: 0.9, loop: true }, fall_flip: { dur: 0.5, loop: true },
 };
 /** climb 한 번에 몸이 올라가는 높이(m, 배율 적용 후). 끝나면 이야기 쪽에서 캐릭터를 그만큼 올리고 perch로. */
 export const CLIMB_RISE_M = 1.4;
@@ -518,6 +520,26 @@ export function tigerStoryPose(view, anim, t, at) {
     const tw = sin(t * 9);
     if (side) return kf(0, [[0, { root: [-0.05, 0, 10], front1: [-0.15], front1_l: [0.3], front2: [-0.1], front2_l: [0.25], ...H(-0.2 + 0.06 * sin(t * 2.2), -12 + 8 * sin(t * 1.3), 52 + 3 * tw), ...TAIL(0.4 + 0.1 * sin(t * 1.5), 0.2, -0.3, -0.3) }]]);
     return kf(0, [[0, { root: [0, 0, 8, 1, 0.95], ...H(0.1 * sin(t * 1.3), 10 * sin(t * 1.3), (back ? 20 : 46) + 2 * tw) }]]);
+  }
+  if (anim === 'rope_climb') {
+    // 줄에 매달려 몸을 곧추세우고 앞발을 번갈아 뻗어 끌어올린다. 뒷발은 줄을 감았다가 허공을 찬다(줄 = 그림 원점 x 0 근처)
+    const ph = (t / 0.9) * PI * 2, s = sin(ph), c = cos(ph);
+    return kf(0, [[0, {
+      root: [1.48 + 0.05 * s, 18, -150 - 8 * c],
+      front1: [1.4 + 0.35 * s], front1_l: [0.05 - 0.5 * max(0, -s)], front2: [1.4 - 0.35 * s], front2_l: [0.05 - 0.5 * max(0, s)],
+      hind1: [-1.05 + 0.4 * c], hind1_l: [0.75 - 0.35 * c], hind2: [-1.35 - 0.4 * c], hind2_l: [0.8 + 0.35 * c],
+      ...H(-1.05 + 0.05 * s, 42, 14, s > 0.5 ? 'roar' : 'n'), ...TAIL(1.5 + 0.25 * s, 0.35, -0.25 * c, -0.3),
+    }]]);
+  }
+  if (anim === 'fall_flip') {
+    // 줄이 끊어져 허공에서 뒤집힘: 배를 하늘로, 네 다리를 허우적, 입을 벌린다(돌기·낙하·크기는 Godot이 움직인다)
+    const s = cos((t / 0.5) * PI * 2);
+    return kf(0, [[0, {
+      root: [2.85, 0, -40, 1.04, 0.96],
+      front1: [0.6 + 0.45 * s], front1_l: [-0.7], front2: [0.1 - 0.45 * s], front2_l: [-0.5],
+      hind1: [-0.5 - 0.45 * s], hind1_l: [0.7], hind2: [0.0 + 0.45 * s], hind2_l: [0.6],
+      ...H(-0.6, 0, 0, 'roar'), ...TAIL(-0.4 + 0.45 * s, 0.7, 0.6, 0.5),
+    }]]);
   }
   const u = (d) => clamp(at / d, 0, 1);
   if (anim === 'climb_try') {
