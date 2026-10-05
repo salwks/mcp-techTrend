@@ -229,3 +229,60 @@
 
 - `godot --headless --path . -s res://tools/story/validate_event_class.gd` → `EVENTCLASS PASS checked=126 fails=0`, 종료 코드 0.
 - `tools/run_story_tests.sh`(41개) → **모두 PASS, 종료 코드 0**, SCRIPT ERROR 0(namwon:A 45초 · B 43초 · C 40초 · onboard 22초).
+
+## 12. 동아줄 오름 장면 다시 다듬기(rope polish 2)
+
+§11.8의 "아이들이 수관 위에서 작게 보인다·오르는 동작이 없다·후처리 흐림·수숫대가 막대 같다"를 푼 작업이다. 사건 짜임·갈래·결말 변수·숙련 해금·한양 연결은 그대로다.
+
+### 12.1 오누이 줄 오르기 프레임(웹 굽기)
+
+- `seolhwa/src/chars/anims.js` `humanStoryPose`에 `rope_up`(0.9초 3장 반복)을 더했다. 첫 장은 두 손을 머리 위 줄에 모으고, 둘째·셋째 장은 한 손을 위로 뻗고 다른 손은 가슴 앞에서 줄을 당긴다. 무릎은 번갈아 끌어올린다. 오르는 높이는 Godot이 움직인다. `frameCore.js` LOOP_N `rope_up: 3`.
+- `tools/export_story_frames.js` `?set=namwon_rope`에 `story_girl`·`story_boy`(남원 본 굽기와 같은 몸, 앞·옆·뒤)를 더했다. 그림 이름은 `frames_story_namwon_rope_<kind>_0.png`이다. 본 굽기의 `frames_story_story_girl_*.png`를 덮어쓰지 않게 이름을 나눴다. 굽기 방법은 §11.3과 같다(`http://localhost:8770/__tools/story_bake.html?set=namwon_rope`).
+- `namwon_case.load_tiger_story`: 오누이 본 은행을 먼저 읽고(`d._ensure_bank`) 줄 오르기 클립을 더한다. 그림이 없으면 예전처럼 `climb` 끝 자세로 오른다.
+- 아이들은 줄보다 0.5m 앞(카메라 쪽)에 둔다. 뒤로 젖힌 그림의 위쪽이 줄 뒤로 들어가 빛나는 줄이 몸을 가로지르는 문제를 이렇게 막았다. 아우가 위, 누이가 아래이고 손이 엇갈리게 반 주기 어긋난다.
+
+### 12.2 이 장면의 시점
+
+1. 붙잡음: 밑동에서 6.6m 떨어진 자리에서 줄을 붙잡은 아이들로 고개를 든다(fov 38).
+2. 함께 오름: 3.2초 동안 카메라가 아이들 곁에서 같이 9m 올라간다. 바라보는 점은 두 아이의 가운데다. 아이 하나가 그림 높이의 1/4을 넘고, 둘이 함께 절반 남짓을 차지한다. 수관을 지나 하늘로 나간다.
+3. 빛 속으로: 카메라는 멈추고 고개만 든다(fov 38 → 44). 아이들은 3.4초 동안 26m를 더 올라 빛기둥 속에서 작아진다. 중간에 빛으로 번쩍여(`SpriteChar.flash`) 빛에 묻힌다.
+- 점무늬 가림 처리: 카메라가 가까워지자 카메라 앞 비우기(occ_near, 6~12m)와 아이들 둘레 비우기(occ_r)가 줄까지 지웠다. 그래서 `_no_occ`로 줄 재질만 점무늬를 뺀 셰이더 사본으로 바꾼다. 수수밭(소품·붉은 줄)도 8m 앞이라 반투명해 보여 같은 처리를 했다. 장면이 끝나면 `_rope_cam_end`에서 되돌린다.
+
+### 12.3 흐림 끄기
+
+- 이 권역의 흐림 후처리는 틸트시프트(PostEffect.tilt) 하나뿐이다(피사계 심도 없음). `region_main.set_cine_sharp(true)`이면 매 프레임 흐림 띠를 화면 전체(`band = 1`, `top_bias = 0`)로 둔다. 오누이가 줄을 붙잡는 순간부터 붉은 수수밭 뒤의 고요까지 켜 두고, 두 빛 암전 전에 끈다. 끄면 평소 식대로 약 2초에 걸쳐 돌아온다. 이 장면 동안 범·수숫대·아이들 모두 먹선까지 또렷하다.
+
+### 12.4 수숫대
+
+- `kit/story/tale.gd` `_sorghum`: 줄기를 굵게(0.034 → 0.022) 했다. 잎은 2~3장이며 네 토막(`_blade`)이 비스듬히 솟았다가 끝이 처지고 가늘어진다. 잎을 굴려 옆에서도 넓은 면이 보인다. 줄기 끝은 한쪽으로 휘어 넘어가고, 그 끝에서 낟알 덩이 7개가 아래로 늘어진다(고개 숙인 이삭). 같은 함수라 푸른 밭·붉은 줄·붉은 밭이 모두 바뀐다. 붉게 번지는 박자(§11.5)는 그대로다.
+
+### 12.5 화면 검토(창 모드, 시험 저장)
+
+`godot --path . res://scenes/region.tscn -- --storytest=namwon:<갈래> --storyshots=shots/namwon_v3_rope2/<갈래> --savefile=user://st_shots_rope2_<갈래>.json --camshake=off|normal`(A·B off, C normal). 세 갈래 모두 PASS(A 140초, B 133초, C 126초). 새로 찍은 장면은 `rise_mid`(함께 오르는 도중)와 `light`(빛 속으로 작아짐)이다.
+
+| 장면 | 그림 |
+|---|---|
+| 붙잡음 | `shots/namwon_v3_rope2/A/namwon_A_rope_grab.png` |
+| 오름 | `A/namwon_A_rise_mid.png`, `A/namwon_A_rise.png`, `C/namwon_C_rise.png` |
+| 빛 속으로 | `A/namwon_A_light.png`, `A/namwon_A_sky.png` |
+| 범 | `B/namwon_B_tiger_climb.png` |
+| 떨어짐 | `B/namwon_B_fall.png`, `C/namwon_C_fall.png`(흔들림) |
+| 수숫대·붉게 | `B/namwon_B_stalks.png`, `B/namwon_B_red.png`, `C/namwon_C_red.png` |
+
+보고 고친 것:
+- 줄이 점무늬로 지워짐 → 줄 재질만 점무늬를 뺐다.
+- 너무 가까워 누이 발이 잘림 → 5.4m에서 6.6m로 물렸다.
+- 빛나는 줄이 아이 몸 앞을 가로지름 → 아이들을 줄 앞 0.5m에 두었다.
+- 붉은 수수밭 아래쪽이 반투명 → 다음 갱신에서 지어지는 소품을 기다렸다가 점무늬를 뺐다.
+
+### 12.6 남은 것
+
+- 밤빛이라 아이 그림이 조금 어둡고 탁하다(빛기둥 안에서도). 붙잡는 순간의 수관은 점무늬로 비워져 유령처럼 보인다.
+- `rope_up` 옆모습은 팔이 머리 뒤로 넘어가 어색하다. 이 장면은 뒷모습만 쓴다.
+- 붉은 줄이 번지는 동안 푸른 밭과 붉은 줄이 같은 모양으로 겹친다(§11과 같음).
+- `data/`는 git 밖이라 다른 맥에서는 `?set=namwon_rope`를 다시 구워야 한다.
+
+### 12.7 실행 결과
+
+- `validate_event_class.gd` → `EVENTCLASS PASS checked=126 fails=0`, 종료 코드 0.
+- `tools/run_story_tests.sh` → 모두 PASS, 종료 코드 0(namwon:A 45초 · B 43초 · C 41초 · onboard 22초).
