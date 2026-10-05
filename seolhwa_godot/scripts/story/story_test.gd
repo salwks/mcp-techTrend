@@ -1,4 +1,6 @@
-# 대본 시험(--storytest=namwon:A|B|C) — 사건을 처음부터 끝까지 한 결말로 몰아 본다.
+# 대본 시험(--storytest=namwon:A|B|C) — 사건을 처음부터 끝까지 한 갈래로 몰아 본다.
+#   v3: 원작 장면(namwon_data FIXED_BEATS)이 모두, 그 순서로 일어났는지 · 범을 죽이지 않았는지 · 마을이 아이들을 거두지 않았는지 ·
+#   CASE_NAMWON_OUTCOME이 A/B/C로 남는지(진행·숙련 해금·뒤 사건 소문이 그대로 읽는다)를 본다.
 #   --storytest=namwon:onboard — 처음 하는 사람 안내(S0000 → S0002 → 첫 단서 단계 → 첫 호랑이 조우)만 본다(scripts/story/onboard_test.gd).
 #   자리로 순간이동해 대상과 대화·조사하고(director.interact), 선택은 결말별 우선 목록으로 고르고, 전투는 간단한 봇이 싸운다.
 #   단계마다 플래그·단서·버릇·소지품을 남기고, 끝에 결과를 STORYTEST PASS/FAIL로 찍은 뒤 끝낸다.
@@ -99,6 +101,18 @@ func shot(nm: String, frames := 20) -> void:
 	DirAccess.make_dir_recursive_absolute(dir)
 	var img := get_viewport().get_texture().get_image()
 	img.save_png(dir.path_join("story_%s_%s.png" % [branch, nm]))
+	_log("SHOT " + nm)
+	Engine.time_scale = ts
+
+# 원작 장면 찍기(namwon_case._shot이 부른다) — --storyshots=폴더, 화면이 있을 때만. 파일: namwon_<갈래>_<장면>.png
+func tale_shot(nm: String) -> void:
+	if not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless": return
+	var ts := Engine.time_scale
+	Engine.time_scale = 1.0
+	await _frames(3)
+	var dir: String = d.main._abs(String(d.main.args.storyshots))
+	DirAccess.make_dir_recursive_absolute(dir)
+	get_viewport().get_texture().get_image().save_png(dir.path_join("namwon_%s_%s.png" % [branch, nm]))
 	_log("SHOT " + nm)
 	Engine.time_scale = ts
 
@@ -207,20 +221,14 @@ func _run() -> void:
 		"A":
 			pass
 		"B":
-			prefer = ["큰 나무 위로"]
-			await go("nui")
-			prefer = []
-			expect(d.S.is_flag("kids_in_tree"), "아이들 나무 위")
 			prefer = ["참기름"]
-			await go("claw")
+			await go("back_step")
 			prefer = []
-			expect(bool(d.S.world.get("oil_on_tree", false)), "밑동에 참기름")
+			expect(bool(d.S.world.get("oil_on_step", false)), "쪽문 디딤돌에 참기름")
 		"C":
-			prefer = ["속지 말라"]
-			deny = ["큰 나무 위로"]
 			await go("nui")
-			prefer = []; deny = []
-			expect(d.S.is_flag("hand_test"), "손을 보라 일렀다")
+			expect(d.S.is_flag("kids_warned"), "아이들에게 일렀다(문을 열지 말지는 아이들이 정한다)")
+			expect(not d.S.is_flag("kids_in_tree"), "플레이어가 아이들을 나무로 올려 보내지 않는다")
 			prefer = ["떡"]
 			await go("cake_bait")
 			prefer = []
@@ -232,7 +240,7 @@ func _run() -> void:
 	snapshot("night prep")
 	await shot("night_yard")
 	# S0007 → S0008
-	prefer = ["숨어서 기다린다", "숨죽여", "횃불을 치켜든다", "뒤에서 덮친다", "다시 일어선다", "말없이"]
+	prefer = ["숨어서 기다린다", "떡 냄새 쪽으로" if branch == "C" else "막아선다", "횃불을 치켜든다", "다시 일어선다", "하늘을 올려다본다"]
 	_combat_shot = false
 	_watch_shots()
 	await go("house_door")
@@ -247,11 +255,11 @@ func _run() -> void:
 	expect(o == branch, "결말 %s (얻은 값 %s, %s)" % [branch, o, d.S.vars.get("CASE_NAMWON_DETAIL", "")])
 	expect(String(d.S.vars.get("MAIN_MASTER_TRACE", "")) == "HANYANG", "S0010 MAIN_MASTER_TRACE = HANYANG")
 	expect(bool(d.S.vars.get("SKILL_BEAST_TRACE", false)), "S0010 SKILL_BEAST_TRACE")
-	expect(d.S.seen.has("S0009") and d.S.seen.has("S0010"), "S0009·S0010 장면")
-	# 지역 변화 소품이 섰는가
-	var want_props: Array = { "A": ["p_feast"], "B": ["p_feast"], "C": ["p_offering", "p_jeogori_c"] }[branch]
-	for pid in want_props:
-		expect(d.props.has(pid) and d.props[pid].get("want", false), "지역 변화 소품 " + pid)
+	expect(d.S.seen.has("S0009") and d.S.seen.has("S0010") and d.S.seen.has("S0011"), "S0009 동아줄·S0010 아침·S0011 밤하늘 장면")
+	check_v3()
+	# 지역 변화: 수수밭이 붉다(모든 갈래). 잔칫상·떡 공양은 없다(범을 잡은 사람이 없다)
+	expect(d.props.has("p_sorghum_red") and d.props.p_sorghum_red.get("want", false), "지역 변화 — 붉은 수수밭")
+	for pid in ["p_feast", "p_offering", "p_jeogori_c"]: expect(not d.props.has(pid), "옛 결말 소품 없음 " + pid)
 	expect(d.actors.has("merchant_a") and d.actors.merchant_a.shown, "장꾼이 다시 다닌다")
 	_log("vars=%s" % JSON.stringify(_case_vars()))
 	_log("seen=%s" % JSON.stringify(d.S.seen.keys()))
@@ -259,6 +267,47 @@ func _run() -> void:
 	if _fails.is_empty(): printerr("STORYTEST PASS namwon:%s outcome=%s detail=%s time=%.0fs" % [branch, o, d.S.vars.get("CASE_NAMWON_DETAIL", ""), (Time.get_ticks_msec() - _t0) / 1000.0])
 	else: printerr("STORYTEST FAIL namwon:%s fails=%s" % [branch, JSON.stringify(_fails)])
 	d.main._quit()
+
+# v3 판정: 원작 장면 순서 · 범을 죽이지 않음 · 입양 결말 없음 · 기록 · 결말 변수
+func check_v3() -> void:
+	var want: Array = []
+	for b in load("res://story/namwon/namwon_data.gd").FIXED_BEATS: want.append(String(b.id))
+	var got: Array = d.case_fn.beats_seen()
+	_log("beats=%s" % ",".join(got))
+	expect(got == want, "FIXED_BEATS 순서대로 모두 (%d/%d)" % [got.size(), want.size()])
+	var det := String(d.S.vars.get("CASE_NAMWON_DETAIL", ""))
+	expect(det in ["A_hold", "A_down", "B_hold", "B_down", "C"] and det.begins_with(branch), "갈래 세부 %s — 범을 죽이는 결말 없음" % det)
+	for e in d.runner.trace:
+		if e[0] == "combat_result" or (e[0] == "outcome" and String(e[1]).ends_with("win")): _fail("범을 쓰러뜨린 기록 " + str(e))
+	expect(d.S.is_flag("kids_gone") and not d.S.is_flag("kids_taken"), "아이들은 하늘로 — 마을이 거두지 않는다")
+	expect(not (d.actors.nui.shown or d.actors.au.shown), "끝난 뒤 오누이가 마을에 없다")
+	expect(d.S.has_clue("sky_rise") and String(d.data.clues.sky_rise.text) == "아이 둘이 하늘로 올라가는 것을 보았다." and String(d.data.clues.sky_rise.get("kind", "fact")) == "fact",
+		"설화록: “아이 둘이 하늘로 올라가는 것을 보았다.” 확인")
+	for id in ["disguise_seen", "door_tricks", "kids_tree", "reflection", "kids_lie", "axe_slip", "prayer", "rotten_rope", "two_lights", "pass_memory"]:
+		expect(d.S.has_clue(id), "본 장면 기록 " + id)
+	expect(d.S.is_flag("kids_asked"), "S0010 마을 사람들이 아이들 일을 모른다")
+	expect(bool(d.S.vars.get("CASE_NAMWON_COMPLETE", false)), "CASE_NAMWON_COMPLETE(숙련 해금)")
+	expect(bool(d.S.vars.get("SKILL_GUARD_SHOVE", false)), "숙련 해금 받아밀기(UNLOCK CASE_NAMWON_COMPLETE)")
+	# 글: 범을 잡았다·아이들을 거뒀다는 말이 남아 있지 않다(기록책·결말 카드·고을 사람 반응·소문)
+	var bad := ["쓰러뜨렸", "때려잡", "거뒀", "거두었", "거둔다", "칼에 맞았", "목이 부러졌", "잔칫날", "숟가락 둘"]
+	var texts: Array = []
+	texts.append_array(d.case_fn.summary())
+	texts.append_array(d.case_fn.ending_data().paragraphs)
+	texts.append(String(d.case_fn.ending_data().title))
+	for r in load("res://story/rumors_data.gd").RUMORS:
+		if String(r.get("var", "")) == "CASE_NAMWON_OUTCOME":
+			for k in r.lines: texts.append(String(r.lines[k]))
+	for o in load("res://story/ambient_talk_data.gd").OUTCOME:
+		if String(o.get("var", "")) == "CASE_NAMWON_OUTCOME":
+			for k in o.get("lines", {}): texts.append(str(o.lines[k]))
+			for k in o.get("lines_hage", {}): texts.append(str(o.lines_hage[k]))
+	for a in d.data.actors:
+		for t in a.get("talk", []): texts.append(JSON.stringify(t))
+	var hit := []
+	for t in texts:
+		for w in bad:
+			if String(t).contains(w): hit.append("%s ← %s" % [w, String(t).left(40)])
+	expect(hit.is_empty(), "범 처치·입양 글 없음 %s" % JSON.stringify(hit))
 
 func _case_vars() -> Dictionary:
 	var o := {}
