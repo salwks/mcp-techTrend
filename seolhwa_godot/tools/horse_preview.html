@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Horse preview</title></head>
+<body style="background:#b9c49a;margin:0">
+<canvas id="cv" width="1800" height="1500"></canvas>
+<script type="module">
+// 말 그림(tools/horse_art.js) 미리 보기 — python3 tools/web_export_server.py 8771 → http://localhost:8771/__tools/horse_preview.html?v=side
+// 장마다 한 칸: 줄 = 동작(idle · walk · trot · eat · graze), 칸 = 장
+import * as H from '/__tools/horse_art.js';
+const q = new URLSearchParams(location.search);
+const view = q.get('v') || 'side';
+const coat = { coat: q.get('c') || '#7a5236', mane: '#2a221c', pony: q.has('pony'), dapple: q.has('dapple'), blaze: true };
+const g = document.getElementById('cv').getContext('2d');
+const S = +(q.get('s') || 95), CW = view === 'side' ? 290 : 180, RH = 280;
+const rows = [['idle', 4], ['walk', 8], ['trot', 6], ['eat', 4], ['graze', 4]];
+rows.forEach(([a, n], r) => {
+  for (let f = 0; f < n; f++) {
+    const ox = 20 + f * CW + CW * 0.55, oy = 20 + r * RH + RH - 30;
+    const pen = { g, X: (x) => ox + x * S, Y: (y) => oy - y * S };
+    g.strokeStyle = '#8a9a6a'; g.beginPath(); g.moveTo(ox - CW / 2, oy); g.lineTo(ox + CW / 2, oy); g.stroke();
+    H.drawHorse(pen, view, coat, H.horsePose(a, f, n, { turn: +(q.get('turn') || 0) }), {});
+  }
+});
+// 그림을 data/preview/horse_<view>.png 로도 보낸다(data/는 git 밖)
+document.getElementById('cv').toBlob(async (b) => { await fetch('/export/preview/horse_' + view + (q.get('tag') || '') + '.png', { method: 'PUT', body: b }); document.title = 'ok'; });
+</script>
+</body></html>

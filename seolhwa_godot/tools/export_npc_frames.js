@@ -7,6 +7,7 @@
 import { SPECS } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 import { PAL } from '/src/chars/painter.js';
+import * as HA from '/__tools/horse_art.js';
 
 const PEOPLE = {
   scholar: { base: 'elder', top: 'durumagi', coat: '#e6ebe6', pants: '#ece9e0', collar: '#cfd6cf', goreum: '#d6d2c6', hat: 'gat', hair: 'sangtu',
@@ -164,28 +165,9 @@ function drawOx(pen, anim, f, n) {
   pen.dot(hx - 0.1, hy + 0.05, 2.8);
 }
 
+// 주변 말(들에 매인 말): tools/horse_art.js — 장마다 한 윤곽으로 그린 말(예전 막대 다리 꼭두각시를 걷어냄). eat = 땅 풀 뜯기
 function drawHorse(pen, anim, f, n) {
-  const col = '#7a5236', far = shadeHex(col, -0.25), dark = '#2a221c';
-  const ph = anim === 'walk' ? (f / n) * 2 * PI : 0;
-  const A = anim === 'walk' ? 0.36 : 0, br = anim === 'walk' ? 0 : sin((f / n) * 2 * PI) * 0.01;
-  const sw = (o) => A * sin(ph + o), lf = (o) => anim === 'walk' ? 0.06 * Math.max(0, cos(ph + o)) : 0;
-  leg(pen, -0.45, 0.85, 0.88, sw(PI), 0.09, far, dark, 1, lf(PI));
-  leg(pen, 0.75, 0.9, 0.9, sw(0), 0.1, far, dark, -1, lf(0));
-  const tw = anim === 'walk' ? 0.05 * sin(ph) : 0.1 * sin((f / n) * 2 * PI);
-  pen.blob([[0.86, 1.32], [1.02 + tw * 0.5, 1.1], [1.06 + tw, 0.62], [0.95 + tw, 0.66], [0.84, 1.1]], dark, 1.6);
-  pen.blob([[-0.6, 1.36 + br], [-0.2, 1.42 + br], [0.5, 1.36 + br], [0.92, 1.3], [0.98, 1.05], [0.8, 0.84], [0.2, 0.78], [-0.35, 0.8], [-0.66, 0.98], [-0.7, 1.2]], col);
-  leg(pen, -0.55, 0.88, 0.9, sw(0), 0.1, col, dark, 1, lf(0));
-  leg(pen, 0.66, 0.92, 0.92, sw(PI), 0.11, shadeHex(col, -0.05), dark, -1, lf(PI));
-  const eat = anim === 'eat';
-  const hx = eat ? -1.05 : -1.02, hy = eat ? 0.38 + 0.015 * sin((f / n) * 4 * PI) : 1.72 + 0.015 * sin(ph * 2);
-  // 목(앞으로 솟음)과 갈기
-  pen.blob([[-0.38, 1.42], [-0.7, (hy + 1.4) / 2 + 0.12], [hx + 0.14, hy + 0.06], [hx + 0.02, hy - 0.12], [-0.85, (hy + 1.0) / 2 - 0.05], [-0.68, 1.02]], col);
-  if (!eat) pen.line([[-0.36, 1.44], [-0.62, (hy + 1.4) / 2 + 0.14], [hx + 0.14, hy + 0.1]], dark, 0.05, 1.2);
-  // 머리(길쭉)
-  const dx = eat ? -0.08 : -0.3, dy = eat ? -0.28 : -0.12;
-  pen.blob([[hx + 0.12, hy + 0.08], [hx - 0.02, hy + 0.1], [hx + dx - 0.02, hy + dy + 0.02], [hx + dx + 0.02, hy + dy - 0.08], [hx + 0.08, hy - 0.1]], shadeHex(col, 0.04));
-  pen.blob([[hx + 0.08, hy + 0.08], [hx + 0.14, hy + 0.24], [hx + 0.18, hy + 0.08]], col, 1.5);
-  pen.dot(hx + 0.0, hy + 0.0, 2.4);
+  HA.drawHorse(pen, 'side', { coat: '#7a5236', mane: '#2a221c', blaze: true }, HA.horsePose(anim === 'eat' ? 'graze' : anim, f, n), {});
 }
 
 function drawDog(pen, anim, f, n) {
@@ -242,7 +224,7 @@ function drawGull(pen, anim, f, n) {
 
 const ANIMALS = {
   ox: { draw: drawOx, anims: { idle: 4, walk: 6, eat: 4 } },
-  horse: { draw: drawHorse, anims: { idle: 4, walk: 6, eat: 4 } },
+  horse: { draw: drawHorse, anims: { idle: 4, walk: 8, eat: 4 } },
   dog: { draw: drawDog, anims: { idle: 4, walk: 6, eat: 4 } },
   hen: { draw: (p, a, f, n) => drawChicken(p, a, f, n, true), anims: { idle: 2, walk: 4, eat: 4 } },
   rooster: { draw: (p, a, f, n) => drawChicken(p, a, f, n, false), anims: { idle: 2, walk: 4, eat: 4 } },

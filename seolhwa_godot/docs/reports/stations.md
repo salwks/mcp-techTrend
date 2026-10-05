@@ -75,3 +75,14 @@ Travel.warp_to_station(id) -> {ok, why} # 역마 창을 그 역을 고른 채 �
 - 현판 한자는 실제 역명이거나(오수역 獒樹驛·청파역 靑坡驛·대동역 大同驛·인월역 引月驛·구산역 丘山驛·횡계역 橫溪驛·청교역 靑郊驛·안보역 安保驛·삼례역 參禮驛·낙양역 洛陽驛) 고을 이름 + 驛(가설). 고증은 참고용.
 - 공용 파일 `travel.gd`·`fast_travel.gd`를 통째로 커밋했다(다른 에이전트의 `Progress.checkpoint`·`ui_fonts.gd` 포함). 그 의존 파일도 이제 커밋되어(2e5812f 등) HEAD에서 열린다.
 - `data/frames_stable*.png`는 git 밖 — 다른 맥에서는 굽기를 한 번 돌린다.
+
+## 8. 칸 말 다듬기 (2026-10-05, 검토 뒤)
+- **반투명처럼 보이던 까닭**: 가림 점무늬가 아니었다(`--nodither`로 찍어도 같음). 칸 말이 화면 위쪽 틸트시프트 흐림 띠에 걸려 뒷벽 이엉·볕 줄과 섞여 비쳐 보였다(`--notilt`면 또렷). 처마 그늘은 문제 아님(먹선·담채는 그대로 읽힘).
+  → `station_life.stable_view(pos)`: 칸 말 22m 안이면 region_main이 위쪽 흐림을 줄인다(top_bias 1.0 → 0.25, 선명 띠 0.07 → 0.16, 배·말 위 낮은 시점과 같은 식으로 천천히).
+- **그림 — 꼭두각시를 걷어내고 말을 '그린다'** (`tools/horse_art.js`, 탈 말·마방 말·주변 말이 같이 씀): 예전 말은 몸통 타원 + 막대 다리 + 머리 조각을 돌리는 꼭두각시였다. 이제는 장마다 말 한 마리를 한 윤곽으로 그린다.
+  - 옆: 등선(기갑 → 등 → 허리 → 엉덩이 → 꼬리뿌리 → 궁둥이 → 넓적다리 뒤)·배선(사타구니 → 배 → 앞가슴 → 어깨끝)·목(갈기 선 + 목 밑선)을 한 붓으로 잇는다. 머리는 머리뼈 꼴(이마·콧등·둥근 주둥이·큰 볼·턱 밑) 한 덩이에 귀·눈·콧구멍·입술·굴레를 얹는다. 갈기는 아래 가장자리가 들쭉날쭉한 숱이고, 근육 결(어깨·넓적다리·엉덩이뼈·팔꿈치)을 붓으로 넣는다. 다리는 관절 사슬(앞: 팔꿈치·앞팔·무릎·정강이·구절·발목·굽 / 뒤: 넓적다리·뒤로 뾰족한 비절·정강이·구절·발목·굽)에 굵기 윤곽을 입힌다. 디딘 굽이 땅에 닿도록 몸 높이를 맞추고, 든 다리는 무릎·비절이 꺾여 굽이 뒤집힌다.
+  - 앞·뒤: 정면 꼴로 따로 그린다(가슴·어깨·앞팔·긴 얼굴·앞머리 털 / 두 볼기·꼬리·비절). `turn`으로 몸이 조금 돌아 한쪽 옆구리와 먼 뒷다리가 보인다. 칸 말은 `front|eat·idle`(turn −0.45)과 `eatR·idleR`(+0.45)를 칸마다 번갈아 쓴다. 칸 말 idle은 고개를 처마 아래로 낮춘다(`stall`).
+  - 걸음새(실제 걸음): walk 8장 = 네 박(왼뒤 → 왼앞 → 오른뒤 → 오른앞, 디딤 62%, 앞발 디딜 때마다 머리 끄덕임). 탈 말 run 6장 = 속보(대각 두 박, 디딤 46%, 뜸·위아래 출렁). eat(구유)·graze(땅 풀) 4장은 씹을 때 눈을 감았다 뜨고, 귀를 돌리고, 꼬리를 휘두른다. 마지막 장에서 앞발을 옮긴다. idle 4장은 꼬리 휘두름 → 귀 돌림 → 머리 들어 둘러봄 → 뒷발 쉬기(굽 끝만 땅에) 차례다.
+  - 굽는 곳: `export_stable_frames.js`(마방 말 넷 — side idle·eat·graze·walk, front 넷, back 둘), `export_ride_frames.js`(탈 말 side·front·back × idle·walk·run, 안장·언치·등자·뱃대끈·고삐는 덧그림), `export_npc_frames.js`(주변 말 side idle·walk 8·eat=graze). 옛 그림 코드(leg/legV/drawSide/drawFront/drawBack/drawQ3)는 지웠다. 미리 보기는 `tools/horse_preview.html?v=side|front|back[&pony&turn=0.45]`(data/preview/에도 저장)로 한다.
+- 굽기: `python3 tools/web_export_server.py 8771` → 앱 브라우저 창(또는 일반 브라우저)으로 `http://localhost:8771/__tools/stable_bake.html` — 헤드리스 Brave `--dump-dom`은 이번에 모듈이 끝나기 전에 나와서 굽기가 안 됐다(PUT 0). `data/frames_stable*`는 git 밖이라 다른 맥에서는 다시 굽는다.
+- 화면(게임 카메라, 1280×720 창 → 2560×1440, 맑음): 마방 전 `shots/horses/before_stable_{namwon,jeju}.png` · 후 `shots/horses/after_stable_{namwon,jeju}.png`. 말 타기 전 `shots/horses/before_ride/` · 후 `shots/horses/after_ride/`(남원 역참 → 운봉 자동 기승 20·50·80%와 내리기).
