@@ -206,6 +206,7 @@ static func _culture_kind(kit: String, params: Dictionary) -> String:
 func _ready() -> void:
 	layer = 10
 	visible = false
+	add_to_group(preload("res://scripts/hud_gate.gd").OVERLAY)   # 열린 동안 지명·안내 HUD를 감춘다
 	_font = UiFonts.main()
 	_font_t = UiFonts.classic()
 	var dim := ColorRect.new()

@@ -43,6 +43,7 @@ func _init(m, prefer_portal := "") -> void:
 	layer = 32
 	name = "fast_travel"
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group(preload("res://scripts/hud_gate.gd").OVERLAY)
 
 func _ready() -> void:
 	_font = preload("res://scripts/ui_fonts.gd").main()

@@ -32,6 +32,7 @@ func _init(m := "save", k = null) -> void:
 	layer = 45
 	name = "save_menu"
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group(preload("res://scripts/hud_gate.gd").OVERLAY)
 
 func _ready() -> void:
 	_was_paused = get_tree().paused

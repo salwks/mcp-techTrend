@@ -489,6 +489,7 @@ func _build_ui() -> void:
 	fx_layer.add_child(_fx)
 	var ui_layer := CanvasLayer.new(); ui_layer.layer = 7; ui_layer.name = "talisman_ui"
 	add_child(ui_layer)
+	ui_layer.add_to_group(preload("res://scripts/hud_gate.gd").HIDE)   # 기록책·지도·메뉴가 열리면 감춤
 	_slot_box = d.ui._paper(0.9, 2, 12)
 	_slot_label = d.ui._label(19, d.ui.INK)
 	_slot_box.add_child(_slot_label)

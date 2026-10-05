@@ -90,6 +90,7 @@ static func found_list(S) -> Array:
 func _setup(opts: Dictionary) -> void:
 	name = "documents"
 	layer = 9
+	add_to_group(preload("res://scripts/hud_gate.gd").OVERLAY)
 	defs = opts.get("defs", d.data.get("documents", {}))
 	ids = Array(opts.get("docs", [])).filter(func(i): return defs.has(String(i)))
 	title_text = String(opts.get("title", "문서 살피기" if ids.size() < 2 else "문서 비교"))

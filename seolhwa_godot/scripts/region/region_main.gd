@@ -1373,6 +1373,7 @@ func _boat_text(t: String) -> void:
 		_boat_prompt.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 		_boat_prompt.offset_left = -300; _boat_prompt.offset_right = 300; _boat_prompt.offset_top = -86; _boat_prompt.offset_bottom = -52
 		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(_boat_prompt); add_child(cl)
+		cl.add_to_group(preload("res://scripts/hud_gate.gd").HIDE)   # 기록책·지도·메뉴가 열리면 감춤
 	if _boat_prompt.text != t: _boat_prompt.text = t
 
 # 화면(카메라 yaw) 기준 방향 이름 — 배 위처럼 카메라가 돌았을 때 그림 방향(up=등, down=앞, left·right=옆)
@@ -1404,6 +1405,7 @@ func _show_hud(t: String) -> void:
 		_hud.add_theme_constant_override("outline_size", 5)
 		_hud.position = Vector2(24, 20)
 		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(_hud); add_child(cl)
+		cl.add_to_group(preload("res://scripts/hud_gate.gd").HIDE)
 	_hud.text = t; _hud_t = 3.0; _hud.modulate.a = 1.0
 	print("HUD ", t)
 

@@ -55,6 +55,8 @@ const TITLES := {
 	seogang = "서강", rt_hamgwal_yeokcham = "함관령 옛 역참", rt_jangsan_islet = "장산곶 앞 바위섬",
 }
 
+const HudGate := preload("res://scripts/hud_gate.gd")
+
 var areas := {}   # 이름 → [Rect2…]
 var current := ""
 var _label: Label
@@ -105,6 +107,9 @@ func setup(region: Dictionary) -> void:
 
 func _ready() -> void:
 	layer = 5
+	# 기록책·지도·Esc 멈춤·저장 창이 열리면 지명(건물 이름 포함)과 다른 HUD를 감춘다 — 멈춤 중에도 돌도록 ALWAYS
+	add_to_group(HudGate.HIDE)
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	var box := VBoxContainer.new()
 	box.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	box.position.y = 0
@@ -135,6 +140,9 @@ func _ready() -> void:
 	_resize()
 	get_viewport().size_changed.connect(_resize)
 	_set_alpha(0.0)
+
+func _process(_dt: float) -> void:
+	HudGate.apply(get_tree())
 
 func _resize() -> void:
 	var vs := get_viewport().get_visible_rect().size

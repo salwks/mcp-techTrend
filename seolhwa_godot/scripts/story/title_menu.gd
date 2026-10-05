@@ -32,6 +32,7 @@ func _init(director) -> void:
 	d = director
 	layer = 30
 	name = "title_menu"
+	add_to_group(preload("res://scripts/hud_gate.gd").OVERLAY)
 
 func _ready() -> void:
 	_can_continue = Progress.has_save() or Progress.latest_slot() > 0

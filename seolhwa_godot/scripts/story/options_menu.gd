@@ -27,6 +27,7 @@ func _init(game := false) -> void:
 	layer = 40
 	name = "options_menu"
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group(preload("res://scripts/hud_gate.gd").OVERLAY)   # 열린 동안 지명·안내 HUD를 감춘다
 
 func _ready() -> void:
 	_font = UiFonts.main()
