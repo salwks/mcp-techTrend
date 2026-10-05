@@ -656,6 +656,11 @@ var occ_script = null   # { focus: Vector3, r: float } | null
 func set_occ_script(spec) -> void:
 	occ_script = spec
 
+# 각본 장면 동안 틸트시프트 흐림(후처리 tilt — 이 권역의 흐림 효과는 이것 하나)을 끈다. false면 평소 띠로 천천히 돌아온다
+var cine_sharp := false
+func set_cine_sharp(on: bool) -> void:
+	cine_sharp = on
+
 func _occ_focus() -> Vector3:
 	if occ_script != null: return occ_script.focus
 	return player_pos + Vector3(0, player.height * 0.8, 0)
@@ -869,6 +874,8 @@ func _process(delta: float) -> void:
 	var y := clampf(1.0 - sp.y / float(scene_vp.size.y), 0.15, 0.85)
 	focus_y += (y - focus_y) * minf(1.0, dt * 6.0)
 	post.focus_y = focus_y
+	if cine_sharp:   # 각본 장면(남원 동아줄): 흐림 띠를 화면 전체로 넓혀 흐림을 끈다. 끄면 _update_boats의 식대로 천천히 돌아온다
+		post.band = 1.0; post.top_bias = 0.0
 	if args.has("bench") and _bench_time > 2.0 and delta > 0.03 and not _bench_loading:
 		print("  SLOW f=%d %.1fms focus=%.1f update=%.1f near=%d jobs=%d done=%d" % [Engine.get_process_frames(), delta * 1000.0, (_t1 - _t0) / 1000.0, (_t3 - _t2) / 1000.0, world.stats.near, world.stats.jobs, world.stats.scatter_done])
 
