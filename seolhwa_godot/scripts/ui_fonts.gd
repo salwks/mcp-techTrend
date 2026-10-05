@@ -31,12 +31,53 @@ static func raw(which: String) -> FontFile:
 		var p := CLASSIC_PATH if which == "classic" else MAIN_PATH
 		var bytes := FileAccess.get_file_as_bytes(p)
 		if bytes.is_empty(): push_warning("UiFonts: %s 를 읽지 못함 — 시스템 명조로" % p)
-		else: ff.data = bytes
+		else:
+			if which == "classic": _drop_cursive(bytes)
+			ff.data = bytes
 		ff.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
 		ff.hinting = TextServer.HINTING_LIGHT
 		ff.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_AUTO
 		_raw[which] = ff
 	return _raw[which]
+
+# Classic(흘림 궁체)은 받침 없는 ㅗ·ㅛ 글자(고·노·도·소·오·교…)를 한 획으로 이어 써서 'ㄹ'·'ㄴ'처럼 보인다
+# (「스승의 가르침」 "모른다고."의 '고'가 'ㄹ'로 읽힘). 실행 중에 읽은 바이트의 cmap(형식 4)에서 그 글자들의 글리프 번호를 0으로
+# 지운다 — 글꼴에 '없는 글자'가 되어 대체 글꼴(main, 같은 덕온공주체의 바른 꼴)이 그린다. 파일 자체는 고치지 않는다.
+const CURSIVE_VOWELS := [8, 12]   # 중성 번호: ㅗ, ㅛ
+static func cursive_chars() -> PackedInt32Array:
+	var out := PackedInt32Array()
+	for l in 19:
+		for v in CURSIVE_VOWELS: out.append(0xAC00 + (l * 21 + v) * 28)
+	return out
+
+static func _be16(b: PackedByteArray, o: int) -> int: return (b[o] << 8) | b[o + 1]
+static func _be32(b: PackedByteArray, o: int) -> int: return (_be16(b, o) << 16) | _be16(b, o + 2)
+
+static func _drop_cursive(b: PackedByteArray) -> int:
+	var cmap := -1
+	for i in _be16(b, 4):
+		var r: int = 12 + 16 * i
+		if b.slice(r, r + 4).get_string_from_ascii() == "cmap": cmap = _be32(b, r + 8)
+	if cmap < 0: return 0
+	var done := {}
+	var n := 0
+	for i in _be16(b, cmap + 2):
+		var st: int = cmap + _be32(b, cmap + 8 + 8 * i)
+		if done.has(st) or _be16(b, st) != 4: continue
+		done[st] = true
+		var seg2: int = _be16(b, st + 6)
+		var ends := st + 14; var starts := ends + seg2 + 2; var deltas := starts + seg2; var ros := deltas + seg2
+		for c in cursive_chars():
+			for k in seg2 / 2:
+				if _be16(b, ends + 2 * k) < c: continue
+				if _be16(b, starts + 2 * k) > c: break
+				var ro: int = _be16(b, ros + 2 * k)
+				if ro == 0: break   # 델타 구간은 낱자만 지울 수 없다(이 글꼴의 한글은 모두 배열 구간)
+				var at: int = ros + 2 * k + ro + 2 * (c - _be16(b, starts + 2 * k))
+				b[at] = 0; b[at + 1] = 0
+				n += 1
+				break
+	return n
 
 static func main() -> Font:
 	if _main == null:
