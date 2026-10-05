@@ -411,8 +411,17 @@ func _show_city(t) -> void:
 func _show_all() -> void:
 	mode = "all"
 	_k = _k_min
-	_center = Vector2(float(_meta.x0) + float(_meta.w) * float(_meta.scale) / 2.0, float(_meta.z0) + float(_meta.h) * float(_meta.scale) / 2.0)
+	_center = Vector2(_player.x, _player.z)   # 채움 배율이라 한쪽이 넘친다 — 지금 자리를 가운데로(그림 끝에서는 _clamp_center가 당긴다)
 	_after_view()
+
+# 권역·고을 지도: 그림(권역 바탕) 밖이 테 안에 보이지 않게 가운데를 당긴다. 그림이 테보다 작은 쪽은 가운데 맞춤
+func _clamp_center() -> void:
+	if _meta.is_empty() or _k <= 0.0: return
+	var half := _canvas.size / 2.0 / _k
+	var x0 := float(_meta.x0); var z0 := float(_meta.z0)
+	var x1 := x0 + float(_meta.w) * float(_meta.scale); var z1 := z0 + float(_meta.h) * float(_meta.scale)
+	_center.x = (x0 + x1) / 2.0 if x1 - x0 <= half.x * 2.0 else clampf(_center.x, x0 + half.x, x1 - half.x)
+	_center.y = (z0 + z1) / 2.0 if z1 - z0 <= half.y * 2.0 else clampf(_center.y, z0 + half.y, z1 - half.y)
 
 # 도시 지도(L3)로 넘어가는 확대: 권역 그림이 제 해상도를 넘길 때(그 전에는 권역 지도)
 func _city_k() -> float:
@@ -442,7 +451,9 @@ func _layout() -> void:
 	_panel.size = Vector2(pw, _canvas.size.y)
 	_panel.custom_minimum_size = _panel.size
 	var world_w := float(_meta.w) * float(_meta.scale); var world_h := float(_meta.h) * float(_meta.scale)
-	_k_min = minf(_canvas.size.x / world_w, _canvas.size.y / world_h)
+	# 가장 작은 배율은 '채움'(cover): 권역 그림이 테 안을 다 덮는다 — 맞춤(contain)이면 가로로 긴 권역 위아래에 빈 한지 띠가 컸다.
+	# 덮는 쪽으로 넘친 만큼은 끌어서 본다(_clamp_center가 그림 밖 빈 곳이 테 안에 들어오지 않게 막는다).
+	_k_min = maxf(_canvas.size.x / world_w, _canvas.size.y / world_h)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if not (e is InputEventKey and e.pressed and not e.echo): return
@@ -759,6 +770,7 @@ func _draw_map() -> void:
 	if mode == "nation":
 		_draw_nation()
 	else:
+		_clamp_center()
 		_draw_region()
 	_draw_tip()
 	_draw_frame()

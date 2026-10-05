@@ -120,51 +120,88 @@ def resample(pts, step):
     return out
 
 
-def peak_poly(x, y, hgt, wid, kind, rng):
-    """산봉우리 하나(밑변 열림): kind 'rock' 뾰족(석산) · 'earth' 둥근(토산)."""
-    sk = rng.uniform(-0.12, 0.12) * wid
-    top = (x + sk, y - hgt)
-    L, R = (x - wid / 2, y), (x + wid / 2, y)
-    pts = []
-    for i in range(9):
-        t = i / 8
-        if kind == "rock":   # 오목한 옆선
-            px = L[0] + (top[0] - L[0]) * t; py = L[1] + (top[1] - L[1]) * (t ** 0.75)
-        else:                # 볼록한 옆선
-            px = L[0] + (top[0] - L[0]) * t; py = L[1] + (top[1] - L[1]) * math.sin(t * math.pi / 2) ** 0.8
-        pts.append((px, py))
-    left = pts
-    pts = []
-    for i in range(9):
-        t = i / 8
-        if kind == "rock":
-            px = top[0] + (R[0] - top[0]) * t; py = top[1] + (R[1] - top[1]) * (t ** 1.33)
+PEAK_KINDS = ("rock", "earth", "twin", "lean", "flat")
+
+
+def peak_poly(x, y, hgt, wid, kind, rng, asym=0.0):
+    """산봉우리 하나(밑변 열림, 왼쪽 밑 → 꼭대기 → 오른쪽 밑).
+    kind: 'rock' 뾰족(석산, 오목한 옆선) · 'earth' 둥근(토산) · 'twin' 쌍봉 · 'lean' 한쪽 어깨가 긴 비탈 · 'flat' 둥근 등(평평한 마루).
+    asym: −1~1 꼭대기를 옆으로 민다(어깨 길이가 다르게)."""
+    sk = (rng.uniform(-0.12, 0.12) + asym * 0.22) * wid
+    lw = wid / 2 * (1 + asym * 0.35); rw = wid / 2 * (1 - asym * 0.35)
+    tx, ty = x + sk, y - hgt
+    L, R = (tx - lw - sk * 0.3, y), (tx + rw - sk * 0.3, y)
+    def side(a, b, up, n=9, concave=True, pw=0.8):
+        """a → b 비탈. up: 오르막(밑→꼭대기), 아니면 내리막. 높이는 두 끝 y 사이를 오목/볼록하게 잇는다"""
+        out = []
+        for i in range(n):
+            t = i / (n - 1)
+            px = a[0] + (b[0] - a[0]) * t
+            if up: f = t ** 0.75 if concave else math.sin(t * math.pi / 2) ** pw
+            else: f = (t ** 1.33) if concave else (1 - math.cos(t * math.pi / 2)) ** 1.25
+            out.append((px, a[1] + (b[1] - a[1]) * f))
+        return out
+    if kind == "rock":
+        return side(L, (tx, ty), True) + side((tx, ty), R, False)[1:]
+    if kind == "twin":   # 큰 봉우리 옆에 낮은 봉우리 하나(안장으로 이음)
+        s2 = 1 if rng.random() < 0.5 else -1
+        h2 = hgt * rng.uniform(0.55, 0.78)
+        mx = tx + s2 * wid * 0.28; my = y - hgt * rng.uniform(0.38, 0.5)
+        x2 = tx + s2 * wid * 0.48
+        if s2 > 0:
+            pts = side(L, (tx, ty), True, concave=False) + [(mx, my), (x2, y - h2)] + side((x2, y - h2), (R[0] + wid * 0.18, y), False, concave=False)[1:]
         else:
-            px = top[0] + (R[0] - top[0]) * t; py = top[1] + (R[1] - top[1]) * (1 - math.cos(t * math.pi / 2)) ** 1.25
-        pts.append((px, py))
-    return left + pts[1:]
+            pts = side((L[0] - wid * 0.18, y), (x2, y - h2), True, concave=False) + [(mx, my), (tx, ty)] + side((tx, ty), R, False, concave=False)[1:]
+        return pts
+    if kind == "lean":   # 한쪽은 가파르고 한쪽은 길게 흘러내림
+        long_r = asym <= 0
+        A = (L[0] - (0 if long_r else wid * 0.35), y); B = (R[0] + (wid * 0.35 if long_r else 0), y)
+        return side(A, (tx, ty), True, concave=not long_r) + side((tx, ty), B, False, concave=long_r)[1:]
+    if kind == "flat":   # 둥근 등: 꼭대기가 넓게 이어짐
+        a = (tx - wid * 0.16, ty + hgt * 0.04); b = (tx + wid * 0.16, ty + hgt * 0.02)
+        return side(L, a, True, concave=False, pw=0.6) + [(tx, ty)] + side(b, R, False, concave=False)
+    return side(L, (tx, ty), True, concave=False) + side((tx, ty), R, False, concave=False)[1:]
 
 
-def draw_peak(d, x, y, hgt, wid, rng, ss, kind=None, fill=None):
+def draw_peak(d, x, y, hgt, wid, rng, ss, kind=None, fill=None, ink=1.0, wash=None):
+    """봉우리 하나: 청록 바탕 + 꼭대기 쪽 짙은 바림 + 준법 먹선 + 붓 윤곽. ink: 먹 굵기 배율(진하고 옅은 붓), wash: 꼭대기 바림 세기(0.7~0.92 — 작을수록 짙다)."""
     kind = kind or ("rock" if hgt > wid * 0.75 else "earth")
-    poly = peak_poly(x, y, hgt, wid, kind, rng)
+    asym = rng.uniform(-1, 1) * (0.25 if kind == "rock" else 0.7)
+    poly = peak_poly(x, y, hgt, wid, kind, rng, asym)
     col = fill or MTN_FILL[int(rng.integers(len(MTN_FILL)))]
-    jit = int(rng.integers(-8, 8))
-    col = tuple(max(0, min(255, c + jit)) for c in col)
-    d.polygon(poly + [(x + wid / 2, y + 1 * ss), (x - wid / 2, y + 1 * ss)], fill=col)
-    # 봉우리 위쪽 짙은 바림(먹 번짐)
-    top = poly[8]
-    inner = [(top[0] + (p[0] - top[0]) * 0.45, top[1] + (p[1] - top[1]) * 0.45) for p in poly]
-    d.polygon(inner, fill=tuple(int(c * 0.82) for c in col))
-    # 준법(皴法) 짧은 먹선 한두 줄
-    for _ in range(1 if hgt < 14 * ss else 2):
-        t = rng.uniform(0.35, 0.7)
-        sx = top[0] + rng.uniform(-0.15, 0.15) * wid
-        sy = top[1] + hgt * t * 0.6
-        brush(d, [(sx, sy), (sx + rng.uniform(-0.12, 0.12) * wid, sy + hgt * 0.28)], 1.0 * ss, (*MTN_DARK, 255))
-    # 윤곽(밑변 없이)
-    w = max(1.2, min(2.4, hgt / (10 * ss) + 0.9)) * ss
-    brush(d, poly, w, (*INK, 255))
+    jit = int(rng.integers(-10, 10))
+    col = tuple(max(0, min(255, c + jit + int(rng.integers(-4, 5)))) for c in col)
+    x0 = min(p[0] for p in poly); x1 = max(p[0] for p in poly)
+    d.polygon(poly + [(x1, y + 1 * ss), (x0, y + 1 * ss)], fill=col)
+    # 꼭대기 쪽 짙은 바림(먹 번짐) — 세기·넓이를 봉우리마다 달리
+    ti = min(range(len(poly)), key=lambda i: poly[i][1]); top = poly[ti]
+    k = wash if wash is not None else rng.uniform(0.72, 0.9)
+    sc = rng.uniform(0.32, 0.55)
+    inner = [(top[0] + (p[0] - top[0]) * sc, top[1] + (p[1] - top[1]) * sc) for p in poly]
+    d.polygon(inner, fill=tuple(int(c * k) for c in col))
+    if kind == "twin":   # 낮은 봉우리에도 옅은 바림
+        lo = sorted(range(len(poly)), key=lambda i: poly[i][1])
+        for i in lo[1:]:
+            if abs(poly[i][0] - top[0]) > (x1 - x0) * 0.25:
+                t2 = poly[i]
+                d.polygon([(t2[0] + (p[0] - t2[0]) * sc * 0.6, t2[1] + (p[1] - t2[1]) * sc * 0.6) for p in poly], fill=tuple(int(c * (k + 0.05)) for c in col))
+                break
+    # 준법(皴法): 큰 봉우리일수록 여러 줄, 비스듬히(꼭대기에서 비탈 따라)
+    nst = 0 if hgt < 7 * ss else int(rng.integers(1, 2 + min(4, int(hgt / (9 * ss)))))
+    for _ in range(nst):
+        t = rng.uniform(0.25, 0.75)
+        side_ = 1 if rng.random() < 0.5 else -1
+        sx = top[0] + side_ * rng.uniform(0.05, 0.3) * (x1 - x0)
+        sy = top[1] + hgt * t * 0.55
+        ln = hgt * rng.uniform(0.18, 0.38)
+        brush(d, [(sx, sy), (sx + side_ * ln * rng.uniform(0.15, 0.5), sy + ln)], rng.uniform(0.7, 1.3) * ss * ink, (*MTN_DARK, 255))
+    # 윤곽(밑변 없이): 굵기 배율 · 가끔 마른 붓(어깨 끝을 끊음)
+    w = max(1.0, min(2.6, hgt / (10 * ss) + 0.8)) * ss * ink * rng.uniform(0.8, 1.2)
+    if rng.random() < 0.3 and len(poly) > 8:
+        a = int(rng.integers(0, 3)); b = len(poly) - int(rng.integers(0, 3))
+        brush(d, poly[a:b], w, (*INK, 255))
+    else:
+        brush(d, poly, w, (*INK, 255))
 
 
 # ---------------------------------------------------------------- 등성이(뒤집은 DEM 흐름 누적)
@@ -249,24 +286,41 @@ def paint_mountains(img, lines, relief, to_px, size_of, rng, ss, wash_alpha=0.55
         P = chaikin([to_px(i, j) for i, j in pts], 2)
         hg = size_of(s_)
         if hg <= 0: continue
-        brush(wd, P, hg * 1.8 * wash_w, (*WASH_GREEN, 130), taper=True)
+        brush(wd, P, hg * rng.uniform(1.4, 2.3) * wash_w, (*WASH_GREEN, int(rng.uniform(85, 165))), taper=True)   # 줄기마다 바림 넓이·농담
         if spine and hg > 14 * ss: spines.append((P, hg))
-        for q in resample(P, hg * 0.85)[1:]:
+        # 한 줄기 = 무리: 높낮이가 물결치게(주봉 몇 + 낮은 자락), 간격·너비·모양·먹 굵기를 봉우리마다 달리. 가끔 앞쪽에 작은 앞산
+        fine = resample(P, max(2.0, hg * 0.25))[1:]
+        ph = rng.uniform(0, 2 * math.pi); fr = rng.uniform(0.18, 0.4)
+        line_ink = rng.uniform(0.75, 1.3)        # 줄기마다 먹 농담
+        k = int(rng.integers(0, 3))
+        while k < len(fine):
+            q = fine[k]
+            wave = 0.62 + 0.55 * abs(math.sin(k * fr + ph))
+            h = hg * wave * rng.uniform(0.85, 1.12)
+            wd_ = h * rng.uniform(1.15, 2.0)
             x = q[0] + rng.uniform(-0.15, 0.15) * hg; y = q[1] + rng.uniform(-0.1, 0.1) * hg
+            r = rng.random()
+            kind = ("rock" if r < 0.55 else "lean" if r < 0.8 else "twin") if wave > 1.0 else \
+                   ("earth" if r < 0.4 else "flat" if r < 0.6 else "lean" if r < 0.8 else "twin" if r < 0.9 else "rock")
+            if kind == "rock": wd_ = h * rng.uniform(1.0, 1.4)
             put(x, y)
-            glyphs.append((x, y, hg * rng.uniform(0.85, 1.15), hg * rng.uniform(1.25, 1.6), None))
+            glyphs.append((x, y, h, wd_, kind, line_ink * rng.uniform(0.85, 1.15)))
+            if rng.random() < 0.3 and h > 8 * ss:   # 앞산(아래쪽, 작게)
+                fx = x + rng.uniform(-0.6, 0.6) * wd_; fy = y + h * rng.uniform(0.3, 0.55)
+                glyphs.append((fx, fy, h * rng.uniform(0.38, 0.6), h * rng.uniform(0.9, 1.4), "earth" if rng.random() < 0.7 else "flat", line_ink * 0.8))
+            k += max(1, int(round(wd_ * rng.uniform(0.42, 0.72) / max(2.0, hg * 0.25))))
     for (x, y, hg, kind) in sorted(extra_peaks, key=lambda e: -e[2]):
         if not free(x, y, hg * 1.1): continue
         put(x, y)
         wd.ellipse([x - hg * 1.2, y - hg * 1.1, x + hg * 1.2, y + hg * 0.3], fill=(*WASH_GREEN, 130))
-        glyphs.append((x, y, hg * rng.uniform(0.9, 1.1), hg * rng.uniform(1.3, 1.6), kind))
+        glyphs.append((x, y, hg * rng.uniform(0.85, 1.15), hg * rng.uniform(1.2, 1.7), kind, rng.uniform(0.9, 1.2)))
     wash = wash.filter(ImageFilter.GaussianBlur(4 * ss))
     img = overlay(img, wash, wash_alpha)
     d = ImageDraw.Draw(img)
     for P, hg in spines: brush(d, P, max(1.5 * ss, hg * 0.12), (*MTN_DARK, 170))
     glyphs.sort(key=lambda g: g[1])
-    for (x, y, hg, wd_, kind) in glyphs:
-        draw_peak(d, x, y, hg, wd_, rng, ss, kind=kind)
+    for (x, y, hg, wd_, kind, ink) in glyphs:
+        draw_peak(d, x, y, hg, wd_, rng, ss, kind=kind, ink=ink)
     return img
 
 
@@ -961,10 +1015,52 @@ def nation_dem(ppd):
     return ndi.map_coordinates(mos, [FY - 0.5, FX - 0.5], order=1), W, H
 
 
+# 전국 그림을 옆으로 넓혀 굽는 경도 범위 — 지도 테(가로 ≈ 세로)에 맞춰 OUTLINE_BOX(124~131) 양옆이 빈 바다 띠로 남지 않게.
+# DEM(terrarium 캐시)은 124~131만 쓰고, 그 밖은 바다 + 이웃 땅(요동·연해주·일본 서쪽) 대강의 윤곽(옅은 이웃 땅 — 고증은 참고용)
+NATION_BAKE_LON = (120.6, 134.4)
+
+
+def _pad_foreign(lon, lat):
+    """OUTLINE_BOX 밖 경도의 대강 뭍(이웃 나라). lon·lat: 2D 배열"""
+    w = lon < 124.0; e = lon > 131.0
+    liao = w & (lon >= 121.1) & (lat > 40.05 - np.maximum(0, 124.0 - lon) * 0.42)      # 요동 반도(끝 ≈ 121.2, 38.8)
+    manchu = w & (lat > 40.9)
+    bohai_w = w & (lon < 121.6) & (lat > 40.7)                                          # 요동만 서쪽 기슭
+    maritime = e & (lat > 42.75 - (lon - 131.0) * 0.32)                                # 연해주
+    honshu = e & (lat < 35.45 + (lon - 131.0) * 0.12) & (lat > 33.95 - (lon - 131.0) * 0.05)
+    kyushu = e & (lon < 132.0) & (lat < 33.95) & (lat > 31.0)
+    shikoku = e & (lon > 132.4) & (lat < 34.25) & (lat > 32.9)
+    # 일본 쪽(honshu·kyushu·shikoku)은 자로 끊긴 이음매가 생겨 빼고, DEM 가장자리 이어 붙이기에 맡긴다
+    return liao | manchu | bohai_w | maritime
+
+
 def render_nation():
     ppd = 170
     dem, W, H = nation_dem(ppd)
     lon0, lat0, lon1, lat1 = NATION_BOX
+    # 옆으로 넓히기: 붙인 열은 바다(-50), 이웃 땅 윤곽은 낮은 뭍(얕은 결)
+    padL = int(round((lon0 - NATION_BAKE_LON[0]) * COS38 * ppd)); padR = int(round((NATION_BAKE_LON[1] - lon1) * COS38 * ppd))
+    nl0 = lon0 - padL / (COS38 * ppd); nl1 = lon1 + padR / (COS38 * ppd)
+    big = np.full((H, W + padL + padR), -50.0, np.float32)
+    big[:, padL:padL + W] = dem
+    W2 = W + padL + padR
+    LON = nl0 + (np.arange(W2) + 0.5) / W2 * (nl1 - nl0)
+    LAT = lat1 - (np.arange(H) + 0.5) / H * (lat1 - lat0)
+    LO, LA = np.meshgrid(LON, LAT)
+    pad = (LO < lon0) | (LO > lon1)
+    # 윤곽이 자로 그은 듯하지 않게: 큰 굽이 + 잔 굽이(해안선처럼) — 경위도를 흔든 뒤 윤곽 식에 넣는다
+    g = np.random.default_rng(7)
+    def noise(sig, amp):
+        n = ndi.gaussian_filter(g.normal(0, 1, LO.shape).astype(np.float32), sig); return n / (n.std() + 1e-6) * amp
+    wx = noise(60, 0.35) + noise(14, 0.08); wy = noise(60, 0.3) + noise(14, 0.07)
+    fl = _pad_foreign(LO + wx, LA + wy)
+    # DEM 가장자리 열(경도 124·131)의 뭍/바다를 옆으로 이어 붙인다 — 이음매에서 땅이 자로 끊기지 않게(멀어질수록 대강의 윤곽으로)
+    eW = ndi.binary_opening(dem[:, :3].max(1) > 0.5, iterations=3)[:, None]; eE = ndi.binary_opening(dem[:, -3:].max(1) > 0.5, iterations=3)[:, None]
+    reach = 1.1 + noise(40, 0.45)
+    fl |= ((LO < lon0) & eW & ((lon0 - LO) < reach)) | ((LO > lon1) & eE & ((LO - lon1) < reach))
+    fl = ndi.binary_opening(fl, iterations=2)
+    big[pad & fl] = 60.0
+    dem, W, lon0, lon1 = big, W2, nl0, nl1
     def gpx(lon, lat): return ((lon - lon0) / (lon1 - lon0) * W * SS, (lat1 - lat) / (lat1 - lat0) * H * SS)
     rng = rng_for("nation")
     land = dem > 0.5
@@ -980,7 +1076,8 @@ def render_nation():
     north[lat_of_row > 39.6, :] = True
     lon_of_col = lon0 + (np.arange(W) + 0.5) / W * (lon1 - lon0)
     japan = (lon_of_col[None, :] > 129.1) & (lat_of_row[:, None] < 34.8)
-    joseon = land & (pen | ~north) & ~japan          # 북위 39.6° 남쪽은 섬까지 모두(제주·울릉), 북쪽은 윤곽 안만
+    outside = ((lon_of_col < NATION_BOX[0]) | (lon_of_col > NATION_BOX[2]))[None, :]   # 옆으로 넓힌 열은 모두 이웃 땅
+    joseon = land & (pen | ~north) & ~japan & ~outside   # 북위 39.6° 남쪽은 섬까지 모두(제주·울릉), 북쪽은 윤곽 안만
     foreign = land & ~joseon
     img = Image.new("RGBA", (W * SS, H * SS), (*SEA, 255))
     # 바다 물결
