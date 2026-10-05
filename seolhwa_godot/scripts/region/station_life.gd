@@ -69,6 +69,15 @@ func near(pp: Vector2, r := 25.0) -> Dictionary:
 		if pp.distance_to(Vector2(float(s.yard[0]), float(s.yard[1]))) < r: return s
 	return {}
 
+# 플레이어가 칸 말을 볼 만큼 마방 앞에 있나 — region_main이 화면 위쪽 틸트시프트 흐림을 줄인다
+# (칸 말은 화면 위쪽 흐림 띠에 걸려 뒷벽과 섞이며 반투명처럼 보였다 — 가림 점무늬(--nodither)와는 무관, --notilt로 확인)
+func stable_view(pp: Vector3, r := 22.0) -> bool:
+	for id in live:
+		var L: Dictionary = live[id]
+		for h in L.stalls:
+			if Vector2(h.p.x - pp.x, h.p.z - pp.z).length() < r: return true
+	return false
+
 # ---------------------------------------------------------------- 매 프레임
 func update(dt: float) -> void:
 	if not enabled(): return
@@ -112,9 +121,12 @@ func _spawn(s: Dictionary) -> void:
 		var p: Vector3 = Stations.to_world(s, P.stalls[i])
 		ch.position = _y(p, FLOOR)
 		_face(ch, front)
+		# 3/4 앞모습(tools/export_stable_frames.js drawQ3): 머리 왼쪽(eat·idle)·오른쪽(eatR·idleR)을 칸마다 번갈아 — 줄지은 말이 한 도장처럼 보이지 않게
+		var right: bool = (i % 2 == 1) != (rng.randf() < 0.2)
+		var suf := "R" if right and ch.has_anim("eatR") else ""
 		var a := "eat" if rng.randf() < 0.7 else "idle"
-		ch.set_anim(a); ch.anim_time = rng.randf() * 3.0; ch.t = rng.randf() * 5.0
-		L.stalls.append({ ch = ch, p = p, t = rng.randf_range(3.0, 9.0) })
+		ch.set_anim(a + suf); ch.anim_time = rng.randf() * 3.0; ch.t = rng.randf() * 5.0
+		L.stalls.append({ ch = ch, p = p, t = rng.randf_range(3.0, 9.0), suf = suf })
 	# 마당 말(조랑말은 셋)
 	var np := 3 if pony else 2
 	for i in np:
@@ -203,7 +215,7 @@ func _tick(L: Dictionary, dt: float) -> void:
 		h.t -= dt
 		if h.t <= 0.0:
 			h.t = rng.randf_range(3.0, 10.0)
-			h.ch.set_anim("eat" if rng.randf() < 0.65 else "idle")
+			h.ch.set_anim(("eat" if rng.randf() < 0.65 else "idle") + String(h.suf))
 		h.ch.position = _y(h.p, FLOOR)
 		h.ch.update_char(dt, cam)
 	var s: Dictionary = L.st
@@ -361,7 +373,7 @@ func _arrive_done(L: Dictionary) -> void:
 			# 그 칸 말이 먹기 시작
 			for h in L.stalls:
 				if Vector2(h.p.x, h.p.z).distance_to(Vector2(G.ch.position.x, G.ch.position.z)) < 2.2:
-					h.ch.set_anim("eat"); h.t = 8.0
+					h.ch.set_anim("eat" + String(h.suf)); h.t = 8.0
 	_next_task(L)
 
 func _carry(G: Dictionary, cam: Camera3D) -> void:

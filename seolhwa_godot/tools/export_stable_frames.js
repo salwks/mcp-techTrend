@@ -37,8 +37,8 @@ function shadeHex(hex, k) {
 class Pen {
   constructor(sc) {
     this.sc = sc;
-    this.TW = Math.ceil(4.4 * sc * RES); this.TH = Math.ceil(3.3 * sc * RES);
-    this.TOX = this.TW / 2; this.TOY = this.TH - 8;
+    this.TW = Math.ceil(4.4 * sc * RES); this.TH = Math.ceil(3.75 * sc * RES);
+    this.TOX = this.TW / 2; this.TOY = this.TH - 8 - Math.ceil(0.45 * sc * RES);   // 발 아래 여유: 3/4 앞모습의 앞발은 그림 면보다 카메라 쪽이라 발 높이 아래로 내려온다
     this.cv = document.createElement('canvas'); this.cv.width = this.TW; this.cv.height = this.TH;
     this.g = this.cv.getContext('2d', { willReadFrequently: true });
   }
@@ -219,10 +219,114 @@ function drawBack(pen, C, anim, f, n) {
   pen.blob([[-0.06, 1.36 + by], [0.06, 1.36 + by], [0.07 + tw, 0.95 + by], [0.02 + tw * 1.4, 0.68 + by + abs(tw) * 0.3], [-0.06 + tw * 1.2, 0.7 + by + abs(tw) * 0.3], [-0.06 + tw * 0.5, 1.0 + by]], mane, 1.4);
 }
 
+
+// ---------------------------------------------------------------------------
+// 칸 말(구유 앞) — 3/4 앞모습. 게임 카메라(38° 내려봄)에서 칸 안의 말이 '말'로 읽히게: 가슴·앞다리는 앞(아래)에, 몸통이 비스듬히
+// 뒤로(화면 위·옆으로) 물러나 엉덩이·뒷다리가 보이고, 목을 내려 구유(카메라 쪽, 3D 구유가 주둥이를 가림)에 머리를 박는다.
+// 3D 점(x 옆, y 위, z 말 앞)을 yaw로 돌려 그림 면에 놓는다: 그림 x = 옆, 그림 y = 높이 + 깊이(그림 면 뒤) × DEPTH_RISE.
+// mirror: 머리가 오른쪽(칸마다 번갈아 — 줄지은 말이 같은 도장처럼 보이지 않게).
+// ---------------------------------------------------------------------------
+const Q3_YAW = 0.62, DEPTH_RISE = 0.4;   // 깊이 올림을 크게 하면 엉덩이가 처마 띠에 가린다
+function q3proj(mirror) {
+  const ca = cos(Q3_YAW), sa = sin(Q3_YAW), m = mirror ? -1 : 1;
+  // 말 앞(+z)이 카메라 쪽(+c)에서 왼쪽(−x)으로 Q3_YAW만큼 돈다
+  return ([x, y, z]) => {
+    const sx = x * ca - z * sa, c = x * sa + z * ca;
+    return [m * sx, y - c * DEPTH_RISE, c];
+  };
+}
+// 둥근 덩이 여럿을 한 몸으로: 먹 테를 먼저 굵게 다 긋고 그 위에 다 칠한다 → 겉 테두리만 남는다
+function lump(pen, circles, col, shade = 0.28, w = 2.2) {
+  const g = pen.g;
+  g.lineJoin = 'round';
+  for (const [x, y, r] of circles) { g.beginPath(); g.arc(pen.X(x), pen.Y(y), r * RES * pen.sc + w, 0, 2 * PI); g.fillStyle = INKC; g.fill(); }
+  let y0 = 1e9, y1 = -1e9; for (const [, y, r] of circles) { y0 = Math.min(y0, pen.Y(y + r)); y1 = Math.max(y1, pen.Y(y - r)); }
+  const gr = g.createLinearGradient(0, y0, 0, y1 + 0.01); gr.addColorStop(0, shadeHex(col, 0.14)); gr.addColorStop(0.55, col); gr.addColorStop(1, shadeHex(col, -shade));
+  for (const [x, y, r] of circles) { g.beginPath(); g.arc(pen.X(x), pen.Y(y), r * RES * pen.sc, 0, 2 * PI); g.fillStyle = gr; g.fill(); }
+}
+// 3D 선을 따라 굵기가 바뀌는 덩이 줄(다리·목)
+function tube(P, a, b, r0, r1, n = 7) {
+  n = Math.max(n * 3, 8);   // 촘촘히 — 덩이 이음이 물결지지 않게
+  const out = [];
+  for (let i = 0; i <= n; i++) { const t = i / n; const p = P([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]); out.push([p[0], p[1], r0 + (r1 - r0) * t]); }
+  return out;
+}
+function q3leg(pen, P, top, foot, w, col, lift = 0) {
+  const knee = [top[0] + (foot[0] - top[0]) * 0.5, (top[1] + foot[1]) * 0.5 + 0.02, top[2] + (foot[2] - top[2]) * 0.5 + 0.04];
+  const f = [foot[0], foot[1] + lift, foot[2] - lift * 0.4];
+  lump(pen, [...tube(P, top, knee, w * 1.25, w * 0.75, 5), ...tube(P, knee, f, w * 0.7, w * 0.55, 6)], col, 0.3, 1.8);
+  const h = P(f);
+  pen.blob([[h[0] - 0.065, h[1] + 0.05], [h[0] + 0.065, h[1] + 0.05], [h[0] + 0.07, h[1] - 0.03], [h[0] - 0.07, h[1] - 0.03]], HOOF, 1.2, 0);
+}
+function drawQ3(pen, C, anim, f, n, mirror) {
+  const G = pose(anim, f, n);
+  const P = q3proj(mirror), s = mirror ? -1 : 1;
+  const col = C.coat, far = shadeHex(col, -0.3), mane = C.mane, pony = !!C.pony;
+  const lg = pony ? 0.82 : 1.0, lw = pony ? 1.25 : 1.0;
+  const by = G.bob - (pony ? 0.16 : 0);
+  const BY = 1.18 * (pony ? 0.9 : 1) + by;          // 몸통 가운데 높이
+  const LT = BY - 0.18;                              // 다리 붙는 높이
+  // 다리 자리(옆 x, 앞 z): 앞다리 z 0.55, 뒷다리 −0.62 / 왼쪽(+x)이 카메라에서 먼 쪽(yaw 탓)
+  const FL = [0.16, 0.55], FR = [-0.16, 0.55], HL = [0.17, -0.62], HR = [-0.17, -0.62];
+  const foot = (p, dz = 0) => [p[0], 0.03, p[1] + dz];
+  const top = (p) => [p[0], LT, p[1]];
+  const ww = 0.075 * lw;
+  // 먼 쪽(+x) 다리 둘: 어둡게
+  q3leg(pen, P, top(HL), foot(HL, -0.05), ww, far);
+  q3leg(pen, P, top(FL), foot(FL, 0.04), ww, far);
+  // 꼬리(엉덩이 뒤에서 늘어져 휘두름)
+  const tw = G.tail;
+  const t0 = P([0, BY + 0.2, -0.98]), t1 = P([0.25 * tw * s, BY - 0.25, -1.08]), t2 = P([0.5 * tw * s, BY - 0.62 + abs(tw) * 0.2, -1.04]);
+  pen.blob([[t0[0] - 0.05, t0[1]], [t0[0] + 0.06, t0[1]], [t1[0] + 0.09, t1[1]], [t2[0] + 0.07, t2[1]], [t2[0] - 0.06, t2[1] + 0.02], [t1[0] - 0.08, t1[1]]], mane, 1.4);
+  // 몸통: 엉덩이 → 배 → 가슴 (덩이 줄)
+  const spine = [];
+  const prof = [[-0.86, 0.06, 0.27], [-0.68, 0.08, 0.33], [-0.42, 0.04, 0.35], [-0.12, 0.0, 0.36], [0.18, 0.02, 0.35], [0.45, 0.06, 0.33], [0.66, 0.08, 0.29]];
+  for (const [z, dy, r] of prof) { const p = P([0, BY + dy, z]); spine.push([p[0], p[1], r * (pony ? 1.04 : 1)]); }
+  lump(pen, spine, col, 0.32);
+  pen.g.save();
+  // 배 그늘·갈비 결
+  const b0 = P([0.0, BY - 0.22, -0.3]), b1 = P([0.0, BY - 0.22, 0.3]);
+  pen.stroke([[b0[0], b0[1]], [(b0[0] + b1[0]) / 2, (b0[1] + b1[1]) / 2 - 0.03], [b1[0], b1[1]]], 1.0, shadeHex(col, -0.38));
+  const hp = P([-0.2, BY + 0.12, -0.62]); pen.stroke([[hp[0] - 0.12 * s, hp[1] + 0.12], [hp[0], hp[1]], [hp[0] + 0.02 * s, hp[1] - 0.16]], 1.0, shadeHex(col, -0.35));
+  if (C.dapple) for (const [x, y, z] of [[-0.25, 0.1, -0.5], [-0.3, 0.0, -0.2], [-0.28, 0.12, 0.1], [-0.2, -0.05, 0.35], [-0.1, 0.2, -0.75]]) { const d = P([x, BY + y, z]); pen.dot(d[0], d[1], 3.0, shadeHex(col, -0.16)); }
+  pen.g.restore();
+  // 가까운 쪽(−x) 뒷다리
+  q3leg(pen, P, top(HR), foot(HR, G.shift ? 0.08 : 0), ww * 1.05, shadeHex(col, -0.04), G.shift ? 0.05 : 0);
+  // 목·머리: 먹을 때 목을 앞아래로 내려 구유(높이 ~0.75)에 머리
+  const eat = G.head === 'eat';
+  const wi = [0, BY + 0.28, 0.62];                                     // 기갑(목 뿌리)
+  const poll = eat ? [-0.02, (pony ? 0.98 : 1.12) + 0.03 * G.chew + by, 1.1] : [0, (pony ? 1.62 : 1.86) + 0.012 * sin(G.ph) + by, 1.0];
+  const muz = eat ? [-0.02, (pony ? 0.66 : 0.76) + 0.03 * G.chew + by, 1.34] : [0, (pony ? 1.36 : 1.58) + by, 1.3];
+  const nm = eat ? [0, (wi[1] + poll[1]) / 2 + 0.12, (wi[2] + poll[2]) / 2 + 0.06] : [0, (wi[1] + poll[1]) / 2 + 0.06, (wi[2] + poll[2]) / 2 + 0.06];
+  lump(pen, [...tube(P, [0, BY + 0.02, 0.6], wi, 0.3, 0.24, 3), ...tube(P, wi, nm, 0.22, 0.19, 4), ...tube(P, nm, poll, 0.18, 0.15, 4)], shadeHex(col, 0.02), 0.25);
+  // 갈기: 목 윗선
+  const mp = [wi, nm, poll].map((q) => P([q[0] + 0.06, q[1] + 0.13, q[2] - 0.02]));
+  pen.line(mp, mane, pony ? 0.09 : 0.06, 1.0);
+  // 머리(정수리 → 주둥이), 귀
+  const ea = G.ear ? 0.06 : 0;
+  for (const sx of [0.07, -0.07]) {
+    const e0 = P([poll[0] + sx, poll[1] + 0.06, poll[2] - 0.04]), e1 = P([poll[0] + sx * 1.6, poll[1] + 0.2 - (sx < 0 ? ea : 0), poll[2] - 0.1 - (sx < 0 ? ea : 0)]);
+    pen.blob([[e0[0] - 0.04, e0[1]], [e1[0], e1[1]], [e0[0] + 0.04, e0[1]]], sx > 0 ? far : col, 1.2);
+  }
+  lump(pen, tube(P, poll, muz, 0.13, 0.085, 6), shadeHex(col, 0.06), 0.22, 2.0);
+  if (pony) { const fm = P([poll[0], poll[1] + 0.04, poll[2] + 0.06]); pen.blob([[fm[0] - 0.08, fm[1] + 0.03], [fm[0] + 0.08, fm[1] + 0.03], [fm[0] + 0.02, fm[1] - 0.12]], mane, 1.0, 0); }
+  // 흰 이마줄·눈·굴레
+  if (C.blaze || !pony) { const a = P([poll[0] - 0.08, poll[1] - 0.02, poll[2] + 0.06]), b = P([muz[0] - 0.07, muz[1] + 0.03, muz[2] - 0.04]); pen.stroke([[a[0], a[1]], [b[0], b[1]]], 2.6, '#ece4d2'); }
+  const eye = P([poll[0] - 0.1, poll[1] - 0.06 + (eat ? 0.03 : 0), poll[2] + 0.07]);
+  if (!eat || G.chew < 0.6) pen.dot(eye[0], eye[1], 2.1);
+  const hb = (k, wdt) => { const c = [poll[0] + (muz[0] - poll[0]) * k, poll[1] + (muz[1] - poll[1]) * k, poll[2] + (muz[2] - poll[2]) * k]; const a = P([c[0] - wdt, c[1], c[2]]), b = P([c[0] + wdt, c[1] + 0.02, c[2]]); pen.stroke([[a[0], a[1]], [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 0.03], [b[0], b[1]]], 1.5, HALTER); };
+  hb(0.18, 0.13); hb(0.72, 0.1);
+  // 가까운 쪽(−x) 앞다리(가장 앞)
+  q3leg(pen, P, top(FR), foot(FR, 0.06), ww * 1.08, shadeHex(col, 0.02));
+  // 가슴 앞 근육 결
+  const ch = P([-0.12, BY - 0.02, 0.78]); pen.stroke([[ch[0] - 0.02 * s, ch[1] + 0.14], [ch[0] + 0.02 * s, ch[1] - 0.12]], 1.0, shadeHex(col, -0.35));
+}
+
 const VIEWS = { side: drawSide, front: drawFront, back: drawBack };
 // 시점별 동작 · 장 수
-const HORSE_CLIPS = { side: { idle: 4, eat: 4, graze: 4, walk: 6 }, front: { idle: 3, eat: 4 }, back: { idle: 3, eat: 3 } };
-const IDLE_STEP = { idle: 0.9, eat: 0.45, graze: 0.55 };
+// front: 칸 말 3/4 앞모습(drawQ3) — idle·eat는 머리 왼쪽, idleR·eatR는 머리 오른쪽(엔진 station_life가 칸마다 번갈아 고름)
+const HORSE_CLIPS = { side: { idle: 4, eat: 4, graze: 4, walk: 6 }, front: { idle: 3, eat: 4, idleR: 3, eatR: 4 }, back: { idle: 3, eat: 3 } };
+const IDLE_STEP = { idle: 0.9, eat: 0.45, graze: 0.55, idleR: 0.9, eatR: 0.45 };
 
 function bakeHorse(C) {
   const pen = new Pen(C.sc);
@@ -236,7 +340,8 @@ function bakeHorse(C) {
       const n = HORSE_CLIPS[view][anim], frames = [];
       for (let f = 0; f < n; f++) {
         pen.clear();
-        VIEWS[view](pen, C, anim, f, n);
+        if (view === 'front') drawQ3(pen, C, anim.replace(/R$/, ''), f, n, anim.endsWith('R'));
+        else VIEWS[view](pen, C, anim, f, n);
         const d = pen.g.getImageData(0, 0, pen.TW, pen.TH).data;
         let x0 = pen.TW, y0 = pen.TH, x1 = 0, y1 = 0;
         for (let y = 0; y < pen.TH; y++) for (let x = 0; x < pen.TW; x++) if (d[(y * pen.TW + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }

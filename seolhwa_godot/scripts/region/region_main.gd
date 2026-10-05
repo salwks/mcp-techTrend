@@ -1308,8 +1308,10 @@ func _update_boats(dt: float) -> void:
 	# 낮은 배 위 시점: 틸트시프트 선명 띠를 넓히고 위(먼 기슭·능선)는 덜 흐리게
 	var k := minf(1.0, dt * 2.0)
 	var low: bool = rig.sailing or rig.riding
-	post.band += ((0.2 if low else 0.07) - post.band) * k
-	post.top_bias += ((0.4 if low else 1.0) - post.top_bias) * k
+	# 마방 앞: 칸 안 말이 화면 위쪽 흐림 띠에 걸려 뒷벽과 섞여 반투명처럼 보이지 않게 위 흐림을 줄인다
+	var stable: bool = not low and horse_ride != null and horse_ride.life != null and horse_ride.life.stable_view(player_pos)
+	post.band += ((0.2 if low else (0.16 if stable else 0.07)) - post.band) * k
+	post.top_bias += ((0.4 if low else (0.25 if stable else 1.0)) - post.top_bias) * k
 
 # 낮은 풍경 시점(배·말): 먼 식생 벌 거리·해 그림자 거리·근경 타일 반경을 줄인다(낮은 시점은 멀리까지 보여 무겁다)
 func _apply_low_view() -> void:
