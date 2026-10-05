@@ -130,6 +130,9 @@ func load_tiger_story() -> void:
 	SpriteChar.load_bank("tiger", "frames.json")
 	SpriteChar.merge_bank("frames_story.json", ["tiger"])
 	SpriteChar.merge_bank("frames_story_namwon_rope.json", ["tiger"])   # 동아줄: 줄에 매달려 오르기(rope_climb)·뒤집혀 떨어지기(fall_flip), 옆모습 한 쪽
+	# 오누이: 하늘 줄을 손을 번갈아 끌어올림(rope_up). 본 은행(frames_story.json)을 먼저 읽어야 클립이 더해진다(없으면 climb 끝 자세로)
+	for k in ["story_girl", "story_boy"]:
+		if d._ensure_bank(k) == k: SpriteChar.merge_bank("frames_story_namwon_rope.json", [k])
 
 # ---------------------------------------------------------------------------
 # 도입부(보강서 v1.0 §3~§9) — S0000 남원으로 가는 길 · S0001 남원 전경과 제목
@@ -761,6 +764,8 @@ func _cam_move(sec: float, pos: Vector3, look: Vector3, fov := -1.0, step := Cal
 
 func _rope_cam_end() -> void:
 	d.main.rig.shot = null
+	_sharp(false)
+	_no_occ_clear()
 	if d.main.has_method("set_occ_script"): d.main.set_occ_script(null)
 	if is_instance_valid(_sky_beam): _sky_beam.queue_free()
 	if is_instance_valid(_sky_spot): _sky_spot.queue_free()
@@ -824,48 +829,74 @@ func _sky_light_k(k: float) -> void:
 	if is_instance_valid(_sky_beam): (_sky_beam.material_override as ShaderMaterial).set_shader_parameter("strength", 0.14 * k)
 	if is_instance_valid(_sky_spot): _sky_spot.light_energy = 3.0 * k
 
-# 새 동아줄 — 오누이가 붙잡자마자 각본 시점: 나무 밑동 → 오르는 아이들을 따라 위로 → 수관 위에서 줄과 하늘을 가운데 → 범에게로 내려온다
+# 새 동아줄 — 오누이가 붙잡자마자 각본 시점: 나무 밑동 → 줄을 붙잡은 아이들 → 아이들 곁에서 함께 올라(화면 높이의 1/4 넘게)
+# → 수관 위에서 카메라는 멈추고 아이들만 빛기둥 속으로 작아지며 올라간다 → 범에게로 내려온다
 func rope_rise(rope: Node3D) -> void:
 	await d.ui.caption("누이가 아우를 앞세워 줄을 붙잡는다.", 1.8)
+	_sharp(true)   # 줄을 붙잡는 순간부터 붉은 수수밭까지 흐림(틸트시프트)을 끈다
 	var rk: Vector2 = d.anchor("rope_kids") + Vector2(0, 0.9)   # 줄을 줄기 앞(카메라 쪽)으로 조금 — 붙잡는 순간 시점이 바뀌어 티 나지 않는다
 	var g := _ground("rope_kids")
 	rope.position.z = rk.y
-	d.place_actor("nui", rk + Vector2(-0.15, 0), 3.0, "up"); d.place_actor("au", rk + Vector2(0.2, 0), 3.9, "up")   # 둘이 겹치지 않게
+	_no_occ(rope)
+	var an = d.actors.get("nui"); var aa = d.actors.get("au")
+	# rope_up(손을 번갈아 끌어올림, 구운 그림은 발이 y_abs) — 줄을 몸 가운데·몸 뒤(카메라 반대쪽)로 두고 아우가 위, 누이가 아래
+	var climb_frames: bool = an.ch.has_anim("rope_up") and aa.ch.has_anim("rope_up")
+	var kid_c := 1.45   # 바라볼 점: 누이 발(y_abs)에서 두 아이 가운데까지
+	if climb_frames:
+		d.place_actor("nui", rk + Vector2(0, 0.5), 3.9, "up"); d.place_actor("au", rk + Vector2(0, 0.45), 5.35, "up")   # 줄보다 0.5m 앞 — 뒤로 젖힌 그림 위쪽이 줄 뒤로 들어가지 않게
+		d.anim_actor("nui", "rope_up"); d.anim_actor("au", "rope_up")
+		aa.ch.anim_time = 0.45   # 두 아이 손이 엇갈리게(반 주기 어긋남)
+	else:   # 그림이 없으면 예전처럼 climb 끝 자세(그림이 y_abs보다 1.3~2.8m 위)
+		d.place_actor("nui", rk + Vector2(-0.15, 0), 3.0, "up"); d.place_actor("au", rk + Vector2(0.2, 0), 3.9, "up")
+		d.anim_actor("nui", "climb"); d.anim_actor("au", "climb")
+		kid_c = 2.1
 	d.place_actor("tiger_night", "tiger_tree", 0.0, "up")   # 범은 밑동에서 올려다본다(카메라가 들리면 화면 밖으로)
 	d.anim_actor("tiger_night", "idle")
-	d.anim_actor("nui", "climb"); d.anim_actor("au", "climb")
-	var an = d.actors.get("nui"); var aa = d.actors.get("au")
 	var yn: float = an.y_abs; var ya: float = aa.y_abs; var yr: float = rope.position.y
-	# 나무 밑동에서 시작(남쪽 낮은 자리, 조금 비켜서). 아이 그림은 줄 아래 끝(y_abs)보다 1.3~2.8m 위에 그려진다(climb 끝 자세)
-	var kid_c := 2.1
-	var cam0 := Vector3(rk.x + 0.9, g + 1.5, rk.y + 8.0)
+	# 나무 밑동에서 시작(남쪽 낮은 자리, 조금 비켜서)
+	var cam0 := Vector3(rk.x + 0.8, g + 1.4, rk.y + 6.2)
 	_cam_cut(cam0, Vector3(rk.x, g + 0.8, rk.y), 40.0)
 	_occ(Vector3(rk.x, yn + kid_c, rk.y), 2.6)
 	if not is_instance_valid(_sky_beam): _sky_light(rk, g)
 	d.sfx("rope_creak")
-	# 밑동에서 줄을 붙잡은 아이들까지 천천히 고개를 든다
-	await _cam_move(1.8, cam0, Vector3(rk.x, yn + kid_c, rk.y), 38.0, func(k: float) -> void: _sky_light_k(0.35 * k))
+	# 밑동에서 줄을 붙잡은 아이들까지 고개를 들며 다가선다(아이 둘이 화면 높이의 절반쯤)
+	var near := func(lift: float) -> Vector3: return Vector3(rk.x + 0.8, yn + lift + kid_c - 1.6, rk.y + 6.6)
+	await _cam_move(1.8, near.call(0.0), Vector3(rk.x, yn + kid_c - 0.1, rk.y), 38.0, func(k: float) -> void: _sky_light_k(0.35 * k))
 	await _shot("rope_grab")
-	var lift_of := func(k: float) -> float: return 36.0 * k * k
 	var rise := func(lift: float) -> void:
 		an.y_abs = yn + lift; aa.y_abs = ya + lift
 		rope.position.y = yr + lift
 		_occ(Vector3(rk.x, yn + lift + kid_c, rk.y), 2.6)
-		if is_instance_valid(_sky_spot): _sky_spot.position.y = yn + lift + 4.0
-	# 오른다 — 카메라는 아이들을 따라 위로(2.8초, 수관 위 약 12m까지)
-	var cam1 := Vector3(rk.x + 0.7, g + 2.4, rk.y + 8.5)
-	await _cam_move(2.8, cam1, Vector3(rk.x, g + 12.0, rk.y), 32.0, func(k: float) -> void:
-		var lift: float = lift_of.call(0.6 * k)
+		if is_instance_valid(_sky_spot): _sky_spot.position.y = yn + lift + 3.2
+	# 오른다 — 카메라가 아이들 곁에서 같이 올라간다(아이 크기 그대로, 수관을 지나 하늘로). 3.2초에 약 9m
+	var lift_a := 9.0
+	var once := {}   # 람다 안에서 한 번만(지역 변수는 값으로 잡힌다)
+	await _animate(3.2, func(k: float) -> void:
+		var lift: float = lift_a * (0.35 * k * k + 0.65 * k)   # 천천히 떠나 고르게
 		rise.call(lift)
-		_cam_look = Vector3(rk.x, yn + lift + kid_c, rk.y)
-		d.main.rig.shot.look = _cam_look
-		_sky_light_k(0.35 + 0.65 * k))
+		_cam_gen += 1
+		_cam(near.call(lift), Vector3(rk.x, yn + lift + kid_c - 0.1, rk.y), 38.0)
+		_sky_light_k(0.35 + 0.45 * k)
+		if k > 0.45 and not once.has("rise_mid"): once["rise_mid"] = true; _mark_shot("rise_mid"))
 	await _shot("rise")
 	d.sfx("wind")
-	# 수관 위: 줄과 하늘을 가운데 두고, 아이들은 빛 속으로 올라 화면 위로 사라진다
-	var sky_look := Vector3(rk.x, g + 19.0, rk.y)
-	await _cam_move(2.6, cam1 + Vector3(0, 0, 3.0), sky_look, 46.0, func(k: float) -> void:
-		rise.call(lift_of.call(0.6 + 0.4 * k)))
+	# 수관 위: 카메라는 멈추고 고개만 든다. 아이들은 빛기둥 속으로 작아지며 올라가 빛에 묻힌다
+	var cam_stop: Vector3 = near.call(lift_a) + Vector3(0, 0, 1.6)
+	var sky_look := Vector3(rk.x, g + 24.0, rk.y)
+	var p_stop := _cam_pos
+	await _animate(3.4, func(k: float) -> void:
+		var lift: float = lift_a + 26.0 * (k * k * 0.7 + 0.3 * k)
+		rise.call(lift)
+		var w := smoothstep(0.0, 1.0, k)
+		var follow := Vector3(rk.x, yn + lift + kid_c, rk.y)
+		_cam_gen += 1
+		_cam_fov = lerpf(38.0, 44.0, w)
+		_cam(p_stop.lerp(cam_stop, w), follow.lerp(sky_look, smoothstep(0.35, 1.0, k)))
+		_sky_light_k(0.8 + 0.2 * k)
+		if k > 0.55 and not once.has("flash"):   # 빛에 묻힌다
+			once["flash"] = true
+			an.ch.flash(Color(1.0, 0.93, 0.74), 1400.0); aa.ch.flash(Color(1.0, 0.93, 0.74), 1400.0)
+		if k > 0.3 and not once.has("light"): once["light"] = true; _mark_shot("light"))
 	await _shot("sky")
 	flag("kids_gone")
 	flag("kids_in_tree", false)
@@ -885,6 +916,41 @@ func rope_rise(rope: Node3D) -> void:
 	if is_instance_valid(_sky_beam): _sky_beam.queue_free()
 	if is_instance_valid(_sky_spot): _sky_spot.queue_free()
 	await _shot("tiger_below")
+
+# 가림 점무늬를 받지 않게(새 동아줄): 카메라가 아이들 곁 5~7m로 다가서면 카메라 앞 비우기(occ_near)와 아이들 둘레 비우기(occ_r)가
+# 아이들이 붙잡은 줄까지 지운다. 줄 재질만 점무늬를 뺀 셰이더 사본으로 바꾼다(잎·가지는 그대로 비워진다)
+var _nodither := {}
+var _nodither_mi := []   # 바꾼 MeshInstance3D(장면이 끝나면 되돌린다 — 소품 수수밭)
+func _no_occ_clear() -> void:
+	for mi in _nodither_mi:
+		if is_instance_valid(mi):
+			for i in mi.get_surface_override_material_count(): mi.set_surface_override_material(i, null)
+	_nodither_mi.clear()
+
+func _no_occ(n: Node) -> void:
+	if n == null: return
+	for c in n.find_children("*", "MeshInstance3D", true, false):
+		var mi := c as MeshInstance3D
+		if mi.mesh == null: continue
+		for i in mi.mesh.get_surface_count():
+			var m := mi.mesh.surface_get_material(i) as ShaderMaterial
+			if m == null or m.shader == null: continue
+			if not _nodither.has(m.shader):
+				var sh := Shader.new()
+				sh.code = m.shader.code.replace("if (occ_r > 0.0 || occ_near > 0.0) {", "if (false) {")
+				_nodither[m.shader] = sh
+			var m2 := m.duplicate() as ShaderMaterial
+			m2.shader = _nodither[m.shader]
+			mi.set_surface_override_material(i, m2)
+		_nodither_mi.append(mi)
+
+# 흐림(틸트시프트) 끄기/되돌리기 — 동아줄 장면에서만
+func _sharp(on: bool) -> void:
+	if d.main.has_method("set_cine_sharp"): d.main.set_cine_sharp(on)
+
+# 움직이는 도중의 한 장면(화면 검토 때만): 기다리지 않고 찍는다
+func _mark_shot(nm: String) -> void:
+	if d.test != null and d.test.has_method("tale_shot"): d.test.tale_shot(nm)
 
 # 썩은 동아줄 — 범이 매달려 오르고(rope_climb), 끊어져 뒤집히며(fall_flip) 수수밭에 떨어진다.
 # 그다음은 읽을 만큼씩: 떨어짐 → 흔들림(설정이 꺼져 있으면 짧은 암전) → 수숫대 → 붉게 번짐 → 고요
@@ -945,6 +1011,7 @@ func rotten_rope_fall() -> void:
 		piece.queue_free()
 		_cam_cut(cpos, Vector3(sc.x, gs + 1.2, sc.y), 40.0)
 		_occ(cpos + Vector3(0, 0, -1.0), 0.5)   # 수숫대는 점무늬로 비우지 않는다
+		_no_occ(d.props.get("p_sorghum", {}).get("node"))   # 카메라 앞 비우기(occ_near, 6~12m)도 받지 않게 — 수숫대가 반투명해 보였다
 		_field_lamp.light_energy = 4.0
 	if d.shake_enabled():
 		d.shake(0.8, 0.7)
@@ -973,6 +1040,7 @@ func rotten_rope_fall() -> void:
 	d.sfx("wind")
 	await d.wait(2.2)
 	await _shot("still")
+	_sharp(false)   # 붉은 수수밭 뒤 고요까지 — 두 빛(암전) 전에 흐림을 되돌린다
 	d.learn_clue("rotten_rope", true)
 	beat("tiger_rotten_rope")
 
@@ -983,10 +1051,16 @@ func sorghum_red() -> void:
 	var rows := []
 	for ri in [2, 1, 3, 0, 4]:
 		rows.append(_tale_node({ "kind": "sorghum", "w": 5.0, "d": 4.5, "row": ri, "red": true }, c, y + 0.01))
+		_no_occ(rows[-1])
 		await d.wait(0.6)
 	d.world_state("sorghum_red", true)
 	await d.get_tree().process_frame
 	d._update_props()
+	var red_rec: Dictionary = d.props.get("p_sorghum_red", {})
+	for i in 60:   # 소품은 다음 갱신에서 지어진다 — 지어지면 점무늬를 빼고 나서 줄들을 치운다
+		if red_rec.get("node") != null: break
+		await d.get_tree().process_frame
+	_no_occ(red_rec.get("node"))
 	for n in rows: n.queue_free()
 	_tale_nodes = _tale_nodes.filter(func(n): return is_instance_valid(n) and not rows.has(n))
 
