@@ -291,7 +291,7 @@ FOLKLORE_ANCHOR_MODE   # SETTING / RUMOR / ECHO
 
 | 사건 | EVENT_CLASS | 전승 연결 | ANCHOR_MODE |
 |---|---|---|---|
-| 남원 「산길의 실종」 | FOLKLORE_EVENT | 해와 달이 된 오누이 | — |
+| 남원 「산길의 실종」 | FOLKLORE_EVENT | F49 (해와 달이 된 오누이, CATALOG_ID JG01) | — |
 | 한양 「비어 있는 책방」 | MAIN_FRAME | 없음 | — |
 | 강릉 「고개에 남은 종소리」 | MAIN_FRAME | A09 | SETTING |
 | 경주 「세 번째 등불」 | MAIN_FRAME | A08 | SETTING |
@@ -300,6 +300,27 @@ FOLKLORE_ANCHOR_MODE   # SETTING / RUMOR / ECHO
 | 함흥 「돌아오지 않는 전갈」 | MAIN_FRAME | 없음(함흥차사는 농담·연상) | — |
 | 제주 「굴에 남은 숨」 | FOLKLORE_EVENT | F48 | — |
 | 한양 최종 「세 번 두드리는 밤」 | MAIN_FRAME | 선택 ECHO만 | ECHO |
+
+
+### 설화 소스 레지스트리와 F49 [v2.4.1 확정]
+
+- 설화 소스 레지스트리: F01~F49 = 49개. 단기 설화 이벤트 템플릿은 기존 48개(F01~F48)를 유지한다.
+- F49는 새 단기 이벤트가 아니라 이미 존재하는 남원 주 사건의 원전 등록이다. 기존 번호는 재번호하지 않는다.
+- 주 사건 중 FOLKLORE_EVENT: 남원 F49 · 평양 F24 · 제주 F48.
+
+```
+EVENT_ID = CASE_NAMWON_MISSING_MOUNTAIN
+EVENT_CLASS = FOLKLORE_EVENT
+SOURCE_ID = F49
+SOURCE_TITLE_INTERNAL = 해와 달이 된 오누이
+CATALOG_ID = JG01
+ADAPTATION_MODE = DIRECT
+SOURCE_VERIFIED = true
+```
+
+- `F49` = 게임 내부 설화 소스 ID, `JG01` = 기존 163편 설화 카탈로그의 원래 번호(추적용).
+- DIRECT 근거: 제목·연출은 바뀌었어도 떡장수 어머니 → 호랑이 → 오누이 → 목소리·외형 모방 → 나무를 통한 위기를 실제 플레이 구조로 쓴다.
+- 검사 규칙: FOLKLORE_EVENT는 SOURCE_ID가 Fxx, SOURCE_VERIFIED가 true여야 한다. CATALOG_ID는 선택(권장) — 원전 카탈로그 추적용.
 
 
 # 2. 메인 시나리오의 주제
@@ -3455,6 +3476,15 @@ HUD 체크박스 금지.
 - **결말 운용:** 현재의 뱀·사람 문제를 해결 / 옛 거대 구렁이 전승은 그대로 남김
 - **검증 근거:** 한국민족문화대백과사전 「김녕굴」
 
+
+
+## F49 — 산길의 실종 (남원 주 사건 원전 등록)
+
+- **원형:** 해와 달이 된 오누이 (카탈로그 JG01)
+- **종류:** 전국형 민담
+- **지역성:** D 전국형 — 남원 고유 전승이라고 주장하지 않는다
+- **각색 핵심:** 떡장수 어머니 → 호랑이 → 오누이 → 목소리·외형 모방 → 나무를 통한 위기를 남원 주 사건의 플레이 구조로 그대로 쓴다(DIRECT).
+- **비고:** 단기 설화 이벤트 템플릿(48개)에 포함하지 않는다. 남원 1차 주 사건 전용 소스 등록.
 
 # 26. 길 위 생활 앰비언트 18종 — 서브이벤트로 집계하지 않음
 

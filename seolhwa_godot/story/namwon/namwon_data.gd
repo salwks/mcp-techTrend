@@ -17,7 +17,7 @@ const COIN := "COIN"
 static func data() -> Dictionary:
 	return {
 		"case": {
-			"id": "namwon", "record_title": "산길의 실종", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "JG01", "region": "JL_NAMWON_UNBONG", "outcome_var": "CASE_NAMWON_OUTCOME",
+			"id": "namwon", "record_title": "산길의 실종", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F49", "CATALOG_ID": "JG01", "region": "JL_NAMWON_UNBONG", "outcome_var": "CASE_NAMWON_OUTCOME",
 			"start_hour": 9.5,
 			# 도입부(보강서 v1.0 §3~§9): S0000 남원으로 가는 길 → S0001 남원 전경·첫 자유 이동
 			"start_event": "S0000",
@@ -430,10 +430,10 @@ static func props() -> Array:
 # ---------------------------------------------------------------------------
 static func _ev(id: String, trigger: String, loc: String, tw: String, actions: String, branches: String, wsc: String, steps: Array) -> Dictionary:
 	return {
-		"EVENT_ID": id, "EVENT_CLASS": "FOLKLORE_EVENT", "RECORD_TITLE": "산길의 실종", "SOURCE_ID": "JG01",   # docs/FOLKTALE_CATALOG.md JG01 (전국형 D)
+		"EVENT_ID": id, "EVENT_CLASS": "FOLKLORE_EVENT", "RECORD_TITLE": "산길의 실종", "SOURCE_ID": "F49", "CATALOG_ID": "JG01",   # F49 = 게임 설화 소스 id · JG01 = 163편 카탈로그 원번호(추적용)
 		"SOURCE_TITLE_INTERNAL": "해와 달이 된 오누이", "SOURCE_TYPE": "tale", "SOURCE_REGION_GRADE": "D",
-		"SOURCE_REGION_NOTE": "전국형 민담. 남원 고유 전승이라고 주장하지 않는다(§36.2 각색: VARIANT).",
-		"ADAPTATION_MODE": "VARIANT", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
+		"SOURCE_REGION_NOTE": "전국형 민담. 남원 고유 전승이라고 주장하지 않는다. 떡장수 어머니→호랑이→오누이→목소리·외형 흉내→나무 위 위기를 그대로 플레이 구조로 쓴다(DIRECT).",
+		"ADAPTATION_MODE": "DIRECT", "TRIGGER": trigger, "LOCATION_TYPE": loc, "TIME_WEATHER": tw,
 		"PLAYER_ACTIONS": actions, "RESOLUTION_BRANCHES": branches, "WORLD_STATE_CHANGE": wsc, "SOURCE_VERIFIED": true,
 		"steps": steps,
 	}

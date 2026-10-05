@@ -1,7 +1,7 @@
 # 사건 분류(EVENT_CLASS) — 시나리오 v2.4.1 §1.11·§42·§44.
 #   EVENT_CLASS는 세 값뿐: MAIN_FRAME(이겸·우치·강복·박규상 창작 메인 프레임) / FOLKLORE_EVENT(이름 있는 설화 기반 사건) / AMBIENT(생활·풍경·비서사).
 #   실제 전승을 배경·소문·연상으로만 쓰면 제4의 클래스가 아니라 메타데이터로: FOLKLORE_ANCHOR_IDS[] + FOLKLORE_ANCHOR_MODE(SETTING/RUMOR/ECHO).
-#   FOLKLORE_EVENT: SOURCE_ID(Fxx/Axx — 남원은 옛 목록 id JG01) · SOURCE_VERIFIED. SOURCE_VERIFIED=false면 빌드에서 뺀다(§44).
+#   FOLKLORE_EVENT: SOURCE_ID(Fxx) · SOURCE_VERIFIED=true. CATALOG_ID(JGxx 등)는 선택 — 원전 카탈로그 추적용. SOURCE_VERIFIED=false면 빌드에서 뺀다(§44).
 #   MAIN_FRAME: SOURCE_ID MAIN_FRAME_* · MAIN_FRAME_ORIGIN_NOTE. Fxx/Axx를 출처로 달지 않는다(앵커·ECHO 목록은 출처 주장이 아니다).
 #   AMBIENT: 출처를 달지 않는다.
 # 쓰는 곳: story_runner.run_event(빌드 판정), tools/story/validate_event_class.gd(검사).
@@ -44,9 +44,9 @@ static func check(ev: Dictionary, warn: Array = []) -> Array:
 			if ev.has("SOURCE_VERIFIED"): errs.append("MAIN_FRAME에 SOURCE_VERIFIED — 설화 출처처럼 보인다")
 		"FOLKLORE_EVENT":
 			if sid == "": errs.append("FOLKLORE_EVENT SOURCE_ID 없음")
-			elif not is_folk_id(sid): warn.append("FOLKLORE_EVENT SOURCE_ID '%s' — Fxx/Axx가 아닌 옛 목록 id" % sid)
+			elif not sid.begins_with("F") or not is_folk_id(sid): errs.append("FOLKLORE_EVENT SOURCE_ID '%s' — Fxx여야 함(옛 목록 id는 CATALOG_ID로)" % sid)
 			if not ev.has("SOURCE_VERIFIED"): errs.append("FOLKLORE_EVENT SOURCE_VERIFIED 없음")
-			elif not bool(ev.SOURCE_VERIFIED): warn.append("SOURCE_VERIFIED=false — 빌드에서 빠진다")
+			elif not bool(ev.SOURCE_VERIFIED): errs.append("FOLKLORE_EVENT SOURCE_VERIFIED=false — 빌드에서 빠진다")
 		"AMBIENT":
 			if sid != "": errs.append("AMBIENT에 SOURCE_ID '%s' — 가짜 출처 금지" % sid)
 	return errs
