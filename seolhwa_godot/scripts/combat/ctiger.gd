@@ -46,6 +46,8 @@ var bx := Vector2.ZERO
 var stats := {}
 var said := {}
 var first_pounce := false
+var undying := false        # 이야기 모드(남원 v3): 쓰러지지 않는다 — 체력이 바닥 근처에서 멈추고 물러난다(시간을 버는 싸움)
+const UNDYING_FLOOR := 0.12
 
 func _init(battle) -> void:
 	b = battle
@@ -69,7 +71,7 @@ func reset(p: Vector2) -> void:
 	retreat_dir = Vector2(0, -1)
 	speed_mul = 1.0; decide_mul = 1.0; since_hit = 99.0; retreat_kind = "repelled"
 	stats = { pounces = 0, pounce_hits = 0, swipes = 0, swipe_hits = 0, baits = 0, back_hits = 0, blocks = 0, roar = false, dmg = {} }
-	said = {}; first_pounce = false
+	said = {}; first_pounce = false; undying = false
 
 var alive: bool:
 	get: return state != "dead"
@@ -402,6 +404,7 @@ func apply_mods(m: Dictionary) -> void:
 	if m.has("hpRatio") and m.hpRatio != null: hp = maxf(1.0, G().hp * float(m.hpRatio))
 	if m.get("enraged", false):
 		enraged = true; roared = true
+	if m.get("undying", false): undying = true
 	if m.get("firstEncounter", false):
 		speed_mul = G().firstSpeed; decide_mul = G().firstDecide; roared = true
 		first_pounce = true   # 첫 조우(S0005): 먼저 몸을 낮추고 한 차례 돌진한다
@@ -513,6 +516,7 @@ func receive_hit(dmg: float, opts: Dictionary) -> float:
 	if state == "eat" and opts.kind == "melee" and is_behind(opts.from):
 		back = true; dmg *= G().backAttackMul; stats.back_hits += 1
 	hp -= dmg
+	if undying: hp = maxf(hp, G().hp * UNDYING_FLOOR)
 	var src: String = "back" if back else ("arrow" if opts.kind == "arrow" else ("heavy" if opts.get("heavy", false) else "light"))
 	stats.dmg[src] = float(stats.dmg.get(src, 0.0)) + dmg
 	env.flash("tiger", Color("#ffe0a0") if back else Color(1, 1, 1), 120)
@@ -596,6 +600,6 @@ func start_retreat(kind := "repelled") -> void:
 		state = "retreatRoar"; t = 0.0; roar_blast = false
 		set_heading(to_player().v)
 		set_anim("roar", true, G().retreatRoar)
-		b.env.say("호랑이가 \"내 영역에서 나가라\"는 듯 크게 포효하고 돌아선다…", 2600)
+		b.env.say("호랑이가 크게 포효하고 한 걸음 물러선다… 상처는 깊지 않다." if undying else "호랑이가 \"내 영역에서 나가라\"는 듯 크게 포효하고 돌아선다…", 2600)
 		return
-	b.env.say("호랑이가 비틀거리며 물러난다… 몰아붙이면 쓰러뜨릴 수도 있다.", 2600)
+	b.env.say("호랑이가 비틀거리며 물러난다… 그래도 쓰러지지는 않는다." if undying else "호랑이가 비틀거리며 물러난다… 몰아붙이면 쓰러뜨릴 수도 있다.", 2600)
