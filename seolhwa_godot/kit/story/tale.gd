@@ -14,7 +14,7 @@ const STALK := [0x8aa04e, 0x5e7a34]
 const STALK_RED := [0xb0302a, 0x6a1612]
 const LEAF := [0x7f9848, 0x55702e]
 const LEAF_RED := [0x9a3a2a, 0x5e1c14]
-const HEAD := [0x8a3a22, 0x5a2414]
+const HEAD := [0x9a4426, 0x5a2414]
 
 static func build(params: Dictionary) -> Dictionary:
 	var m := C.M.new(int(params.get("seed", 49)))
@@ -72,15 +72,39 @@ static func _sorghum(m: C.M, w: float, d: float, rows: int, only_row: int, red: 
 			var h := 1.9 + R.next() * 0.6
 			var lean := (R.next() - 0.5) * 0.12
 			var top := Vector3(x + lean * h, h, zz + lean * 0.5 * h)
-			m.add("p", "organic", C.PA(Kit.limb(Vector3(x, 0, zz), top, 0.028, 0.02, 5), STALK_RED if red else STALK, 0.08, R), 0.0)
-			for l in 3:   # 잎
-				var ly := 0.5 + l * 0.45 + R.next() * 0.15
-				var a := R.next() * TAU
+			m.add("p", "organic", C.PA(Kit.limb(Vector3(x, 0, zz), top, 0.034, 0.022, 5), STALK_RED if red else STALK, 0.08, R), 0.0)
+			var nl := 2 + (1 if R.next() > 0.55 else 0)   # 잎 2~3장 — 줄기에서 비스듬히 솟았다가 끝이 처지는 넓은 잎
+			for l in nl:
+				var ly := 0.45 + l * (1.1 / nl) + R.next() * 0.15
 				var base := Vector3(x + lean * ly, ly, zz + lean * 0.5 * ly)
-				var lg := Kit.box(0.6, 0.012, 0.075, 0.3, 0, 0)   # 길쭉한 잎 — 밑동에서 바깥으로, 끝이 처진다
-				Kit.xf(lg, base.x, base.y, base.z, 0, a, -0.35 - R.next() * 0.25)
+				var lg := _blade(0.72 + R.next() * 0.2, 0.11, R)
+				Kit.xf(lg, base.x, base.y, base.z, 0.5 + R.next() * 0.4, float(l) * PI + (R.next() - 0.5) * 1.4, 0)
 				m.add("p", "leaf", C.PA(lg, LEAF_RED if red else LEAF, 0.08, R), 0.0)
-			# 이삭(고개 숙인 붉은 갈색)
-			var hd := Kit.xf(Kit.lump(0.09, 0, R, 0.35, 1.8), top.x + 0.05, top.y + 0.08, top.z, 0, 0, 0.5)
-			m.add("p", "organic", C.PA(hd, HEAD, 0.1, R), 0.0)
+			# 고개 숙인 이삭 — 줄기 끝이 한쪽으로 휘어 넘어가고, 그 끝에 낟알 덩이가 아래로 늘어진다
+			var ha := R.next() * TAU
+			var hd := Vector3(cos(ha), 0, sin(ha))
+			var n1 := top + hd * 0.07 + Vector3(0, 0.13, 0)
+			var n2 := top + hd * 0.19 + Vector3(0, 0.1, 0)
+			m.add("p", "organic", C.PA(Kit.limb(top, n1, 0.022, 0.018, 5), STALK_RED if red else STALK, 0.08, R), 0.0)
+			m.add("p", "organic", C.PA(Kit.limb(n1, n2, 0.018, 0.015, 5), STALK_RED if red else STALK, 0.08, R), 0.0)
+			for j in 7:   # 낟알 덩이: 위가 굵고 아래로 가늘게, 조금씩 바깥으로
+				var r := 0.09 - j * 0.009
+				var c := n2 + hd * (0.03 + 0.025 * j) + Vector3((R.next() - 0.5) * 0.05, -0.02 - 0.075 * j, (R.next() - 0.5) * 0.05)
+				m.add("p", "organic", C.PA(Kit.xf(Kit.lump(r, 0, R, 0.4, 1.25), c.x, c.y, c.z, 0, R.next() * TAU, 0), HEAD, 0.12, R), 0.0)
 	return Vector2(w, d)
+
+# 수수 잎 한 장(밑동 = 원점, +x로 뻗음): 네 토막이 비스듬히 솟았다가 끝으로 갈수록 처지고 가늘어진다. 두께 있는 판이라 먹선이 둘러진다
+static func _blade(length: float, width: float, R: Kit.Rng) -> Kit.Geo:
+	var segs := []
+	var p := Vector2.ZERO
+	var n := 4
+	var droop := 0.5 + R.next() * 0.2
+	for i in n:
+		var th := 0.75 - i * droop
+		var L := length / n
+		var dir := Vector2(cos(th), sin(th))
+		var c := p + dir * L * 0.5
+		var seg := Kit.box(L * 1.08, 0.014, width * (1.0 - i * 0.2), 0, 0, 0)
+		segs.append(Kit.xf(seg, c.x, c.y, 0, 0, 0, th))
+		p += dir * L
+	return Kit.merge(segs)
