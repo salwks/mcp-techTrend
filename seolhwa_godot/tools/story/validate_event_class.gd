@@ -1,6 +1,7 @@
 # 사건 분류(EVENT_CLASS) 검사 — 시나리오 v2.4.1 §1.11·§44(헤드리스).
 #   godot --headless --path . -s res://tools/story/validate_event_class.gd
 #   story/<사건>/<사건>_data.gd의 사건 머리(case)와 모든 사건 장면(events), 생활·소문·길가 장면 데이터(AMBIENT)를 본다.
+#   v3 §3.2: 사건 머리에 FIXED_BEATS가 있으면 { id, text } 목록인지, id가 겹치지 않는지도 본다.
 #   실패: 분류가 없거나 세 값(MAIN_FRAME/FOLKLORE_EVENT/AMBIENT) 밖 · MAIN_FRAME이 Fxx/Axx를 SOURCE_ID로 · MAIN_FRAME_ORIGIN_NOTE 없음 ·
 #         FOLKLORE_EVENT의 SOURCE_ID/SOURCE_VERIFIED 없음 · AMBIENT에 출처 · 앵커 id/모드가 틀림 · 사건 장면 분류가 사건 머리와 다름.
 #   끝 줄: EVENTCLASS PASS n / EVENTCLASS FAIL n
@@ -39,6 +40,17 @@ func _init() -> void:
 		elif cls == "AMBIENT": _fail(c + " case", "주 사건이 AMBIENT")
 		if cls == "MAIN_FRAME" and (EventClass.is_folk_id(sid) or not sid.begins_with("MAIN_FRAME_")): _fail(c + " case", "MAIN_FRAME SOURCE_ID '%s'" % sid)
 		if cls == "FOLKLORE_EVENT" and sid == "": _fail(c + " case", "FOLKLORE_EVENT SOURCE_ID 없음")
+		# v3 §3.2 판본 기준(있으면): FIXED_BEATS는 { id, text } 목록, id는 겹치지 않는다
+		if head.has("FIXED_BEATS"):
+			var fb = head.FIXED_BEATS
+			var ids := {}
+			if not (fb is Array) or fb.is_empty(): _fail(c + " case", "FIXED_BEATS가 비었거나 목록이 아님")
+			else:
+				for b in fb:
+					if not (b is Dictionary) or String(b.get("id", "")) == "" or String(b.get("text", "")) == "": _fail(c + " case", "FIXED_BEATS 항목 %s" % str(b)); continue
+					if ids.has(b.id): _fail(c + " case", "FIXED_BEATS id 겹침 " + String(b.id))
+					ids[b.id] = true
+				print("CASE %s FIXED_BEATS %d" % [c, fb.size()])
 		var evs: Dictionary = data.get("events", {})
 		var warned := {}
 		if evs.is_empty(): _fail(c, "사건 장면 없음")
