@@ -153,3 +153,79 @@
 - 화면은 B 한 갈래만 창 모드로 찍었다. A·C는 헤드리스 시험으로만 돌렸다(장면 1~3·5~10은 갈래와 상관없이 같다).
 - 범위 밖이라 그대로 둔 것: `scripts/story/journal_book.gd`의 이겸 흔적 목록(S0010)에 “발자국은 한 번 남지만, 사람 말은 걸을수록 달라진다.”가 남아 있다(대사 요청서 §4.1 명언 정리 대상). 옛 시나리오 문서(v2.x)는 옛 결말을 그대로 적고 있다.
 - 결말 세부 값 이름이 바뀌었다(A_win·A_repel·B_win·B_repel → A_hold·A_down·B_hold·B_down). 이 값을 읽는 다른 코드는 없지만, 이 작업 전에 남원을 A·B로 끝낸 저장은 옛 세부 값을 가진다. 그 경우 기록책 갈래 한 줄이 비고, 나머지는 그대로 돈다.
+
+## 11. 동아줄 절정 다듬기(rope polish)
+
+사건 짜임·갈래·결말 변수(CASE_NAMWON_OUTCOME/DETAIL)·숙련 해금·한양 연결은 그대로 두고, S0009의 동아줄 장면(새 줄 → 오누이가 오름 → 썩은 줄 → 범이 떨어짐 → 붉은 수수밭)만 다시 찍었다. §10의 "오누이가 화면 위로 나간다·잎이 덮는다·범 프레임 없음"을 푼 작업이다.
+
+### 11.1 각본 시점(이 장면에서만)
+
+- `scripts/camera_rig.gd`에 `shot = { pos, look, fov }`를 더했다. 값이 있으면 평소 시점 계산(pitch·distance·yaw)을 건너뛰고 그 자리에서 그 점을 바라본다(위를 올려다볼 수 있다). `null`이면 다음 프레임부터 평소 시점이다. 되돌리는 것은 두 빛 장면의 암전 속에서 한다(`_rope_cam_end`).
+- `namwon_case.gd`의 `_cam_cut` / `_cam_move`(smoothstep, 새 움직임이 앞의 것을 멈춤)로 짠 순서:
+  1. 오누이가 줄을 붙잡는 순간 남쪽 낮은 자리(8m)에서 나무 밑동을 보다가 1.8초에 걸쳐 줄을 붙잡은 아이들까지 고개를 든다.
+  2. 2.8초 동안 오르는 아이들을 따라 위로(fov 38 → 32). 아이 그림은 줄 아래 끝보다 1.3~2.8m 위에 그려지므로(climb 끝 자세) 그 가운데를 따라간다.
+  3. 수관 위: 줄과 하늘을 가운데 두고(바라보는 점 지면 +19m, fov 46) 아이들은 빛기둥 속으로 올라 화면 위로 사라진다. 자막 "아이 둘이 줄을 타고 하늘로 올라갔다."
+  4. 빛이 걷히며 2.6초에 걸쳐 나무 밑의 범에게로 내려온다.
+- 하늘의 빛: 줄을 따라 내려오는 빛기둥(가산 혼합 원뿔, 가운데가 짙고 아래 끝은 사라짐)과 아이들 바로 위에서 따라 오르는 OmniLight. 스포트라이트는 Mobile에서 처음 켤 때 셰이더를 다시 짜느라 화면이 몇 초 멈춰서 쓰지 않았다. 빛기둥·수수밭 달빛은 밤 장면 암전 속에서 세기 0으로 미리 만들어 둔다.
+
+### 11.2 잎 가림
+
+- `region_main.set_occ_script({ focus, r })`: 컷신 동안 가림 점무늬(occ_a→occ_b)와 식생 걷어 내기의 기준점을 플레이어 대신 focus(오르는 아이들·줄을 타는 범)로, 반지름을 r(2.6~3.2)로 바꾼다. 그동안 물체 반투명(occluders 알파)은 쓰지 않는다. 반투명 잎은 깊이를 써서 뒤의 인물 그림을 통째로 가렸다(첫 시도에서 오누이가 사라진 원인). 점무늬는 픽셀을 버리므로 인물이 보인다. 나무는 다시 짓지 않았다. 수수밭을 볼 때는 focus를 카메라 바로 앞으로 두고 r 0.5로 해서 수숫대를 비우지 않는다.
+
+### 11.3 범 새 프레임(웹 굽기)
+
+- `seolhwa/src/chars/anims.js` `tigerStoryPose`: `rope_climb`(0.9초 3장 반복: 몸을 곧추세워 매달리고, 앞발은 머리 위로 번갈아 뻗고, 뒷발은 줄을 감았다가 허공을 찬다. 두 번째 장은 입을 벌린다)와 `fall_flip`(0.5초 2장: 배를 하늘로 뒤집고 네 다리를 허우적, 입을 벌림). `frameCore.js`: 두 동작은 옆모습만 굽는다(VIEW_FALLBACK), LOOP_N 3·2.
+- `tools/export_story_frames.js` `?set=namwon_rope` → `data/frames_story_namwon_rope.json` + `frames_story_namwon_rope_tiger_0.png`(1쪽, 약 0.4MB). `namwon_case.load_tiger_story`가 호랑이 은행에 더한다. 굽기: `python3 tools/web_export_server.py 8770` → `http://localhost:8770/__tools/story_bake.html?set=namwon_rope`. `data/`는 git 밖이라 다른 맥에서는 다시 구워야 한다. 프레임이 없으면 범은 대기 자세로 줄을 오른다(시험은 그대로 돈다).
+- 줄을 탈 때 범은 왼쪽을 보고(옆모습) 줄과 함께 4.6m 오른다. 그동안 rope_creak 세 번, 작은 흔들림 두 번.
+
+### 11.4 줄이 끊어지고 떨어진다
+
+- `SpriteChar.roll`(그림 가운데 기준 화면 안 회전)·`fx_scale`을 더했다. 0·1이면 예전과 똑같이 그린다.
+- "뚝—"과 함께 끊어진 줄 토막이 범과 함께 떨어지고, 0.25초 뒤 `fall_flip`. 1.15초 동안 수수밭 쪽으로 포물선을 그리며 떨어지는 사이에 roll −0.9π → +0.25(놓친 순간 선 몸 → 뒤집혀 등부터 떨어짐), 크기 1 → 1.16 → 0.9. 수숫대 끝(지면 +1.4m)에 닿는 순간 끊고 범을 치운다. 누운 몸은 그리지 않는다.
+
+### 11.5 붉은 수수밭 박자
+
+순서와 길이(놀이 기준):
+1. 범이 떨어짐(1.15초)
+2. 충격(fall_impact): 놀이 설정 `cam_shake`가 켜져 있으면 흔들림(0.8, 0.7초), 꺼져 있으면(기본) **0.8초 암전**한 뒤 0.5초 밝아진다. 그 사이에 수수밭 시점으로 넘어간다(`d.shake_enabled()`).
+3. 수숫대(아직 푸르다): 수수밭 전체가 1.8초 출렁이다 잦아든다. 자막 "수숫대가 크게 흔들리다가 멎는다." 0.5초 더 둔다.
+4. 붉게 번짐: 떨어진 줄부터 0.6초 간격으로 다섯 줄. 자막 "범이 떨어진 자리부터 수숫대가 붉게 물든다." 밤에도 붉은빛이 읽히도록 수수밭 위에 달빛(OmniLight, 따뜻한 흰빛 4.0)을 둔다.
+5. 고요: wind 소리 자리, 자막 없이 2.2초.
+그다음 두 빛(암전 → 하늘 판).
+
+### 11.6 소리 자리
+
+소리 체계는 없다. `story_director.sfx(id)`는 `sfx_cue(id)` 신호만 낸다. 소리 작업이 이 신호에 붙어 채운다.
+
+| id | 때 |
+|---|---|
+| rope_creak | 오누이가 줄을 붙잡을 때, 범이 줄을 붙잡을 때, 범이 오르는 동안 두 번 |
+| rope_snap | 썩은 줄이 끊어질 때 |
+| fall_impact | 범이 수수밭에 닿을 때 |
+| wind | 아이들이 수관 위로 올라설 때, 붉은 수수밭 뒤 고요 |
+
+### 11.7 화면 검토(창 모드, 시험 저장)
+
+- `story_test.review_begin()`: `--storyshots`가 있고 화면이 있을 때 동아줄이 내려오는 순간부터 결말 카드까지 대사·자막·암전·연출을 실제 길이로 돌리고(`ui.auto_real`, 시간 배율 1), 1초마다 `seq_NNN.png`을 찍는다. 창이 다른 창에 가려지면 macOS가 루트 화면을 다시 그리지 않아 찍힌 그림이 멈췄다. 그래서 검토 동안 창을 맨 위에 둔다. `--camshake=normal|off`는 시험에서 흔들림 설정을 정한다.
+- 실행: `godot --path . res://scenes/region.tscn -- --storytest=namwon:<갈래> --storyshots=shots/namwon_v3_rope/<갈래> --savefile=user://st_shots_rope_<갈래>.json`. 사용자 저장은 건드리지 않는다. A·B는 흔들림 끔(암전), C는 `--camshake=normal`(흔들림).
+- 장면마다 남긴 그림 `namwon_<갈래>_<장면>.png`: rope(새 줄) · rope_grab(밑동→붙잡은 아이들) · rise(따라 오름) · sky(줄과 하늘) · tiger_below · tiger_climb · fall · stalks · red · still, 그리고 결말 카드 `story_<갈래>_ending.png`. 세 갈래 모두 PASS(A 126초, B 114초, C 112초, 검토 약 87초·85장).
+
+| 갈래 | 주요 그림 |
+|---|---|
+| A | `shots/namwon_v3_rope/A/namwon_A_rope_grab.png`, `namwon_A_rise.png`, `namwon_A_tiger_climb.png`, `namwon_A_fall.png`, `namwon_A_red.png`, `seq_000~084.png` |
+| B | `shots/namwon_v3_rope/B/namwon_B_rope_grab.png`, `namwon_B_sky.png`, `namwon_B_tiger_climb.png`, `namwon_B_stalks.png`, `namwon_B_red.png`, `story_B_ending.png` |
+| C(흔들림) | `shots/namwon_v3_rope/C/namwon_C_rise.png`, `namwon_C_fall.png`, `namwon_C_stalks.png`, `namwon_C_still.png` |
+
+보고 고친 것: 오누이가 반투명 잎 뒤에서 사라짐 → 점무늬 가림으로 바꿈. 아이 그림이 바라보는 점보다 위라 화면 밖 → 그림 가운데를 따라감. 줄이 줄기 속 → 줄을 0.9m 앞으로. 두 아이가 겹침 → 좌우로 조금 벌림. 범이 화면 위로 잘림 → 범을 따라 올려다봄. 낙하 카메라가 수수밭 컷을 덮어씀 → 새 움직임이 앞의 것을 멈추게 함. 수숫대가 점무늬로 비고 붉은빛이 어두움 → 수수밭은 비우지 않고 달빛을 더함. 범이 수수밭에 바로 선 모양으로 닿음 → 뒤집힘 방향을 바꾸고 수숫대 끝에서 끊음.
+
+### 11.8 남은 것
+
+- 아이들은 줄 위에서 `climb` 끝 장면 하나로 매달려 있다(오르는 동작이 반복되지 않는다). 수관 위에서는 작게 보인다.
+- 장면 전체에 깔린 피사계 흐림(후처리) 때문에 범과 수숫대가 조금 흐리다. 이 장면만 따로 끄지는 않았다.
+- 화면 검토 때만 아이 대사가 "읽는 시간"으로 자동으로 넘어간다. 실제 놀이에서는 확인 키로 넘긴다.
+- 소리는 자리만 있다(`sfx_cue`).
+
+### 11.9 실행 결과
+
+- `godot --headless --path . -s res://tools/story/validate_event_class.gd` → `EVENTCLASS PASS checked=126 fails=0`, 종료 코드 0.
+- `tools/run_story_tests.sh`(41개) → **모두 PASS, 종료 코드 0**, SCRIPT ERROR 0(namwon:A 45초 · B 43초 · C 40초 · onboard 22초).
