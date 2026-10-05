@@ -18,6 +18,7 @@ signal _picked(i: int)
 const UiFonts := preload("res://scripts/ui_fonts.gd")
 const JournalView := preload("res://scripts/story/journal_view.gd")
 const JournalBook := preload("res://scripts/story/journal_book.gd")
+const HudGate := preload("res://scripts/hud_gate.gd")
 const VText := preload("res://scripts/story/vtext.gd")
 
 const PAPER := Color("#efe6d2")
@@ -242,8 +243,8 @@ func _build() -> void:
 	_dlg_text = _label(26, INK)
 	_dlg_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_dlg_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_dlg_hint = _label(1, INK_SOFT); _dlg_hint.visible = false   # 예전 이름(다른 곳이 읽을 수 있게)
-	dv.add_child(_dlg_name); dv.add_child(_dlg_text); dv.add_child(_keyrow([["E", "다음"]]))
+	_dlg_hint = _label(1, INK_SOFT); _dlg_hint.visible = false   # 예전 이름(다른 곳이 읽을 수 있게) — 나무에 달아 두어야 끝낼 때 함께 풀린다(글꼴 누수)
+	dv.add_child(_dlg_name); dv.add_child(_dlg_text); dv.add_child(_keyrow([["E", "다음"]])); dv.add_child(_dlg_hint)
 	_dialog.add_child(dv)
 	_dialog.visible = false
 	_root.add_child(_dialog)
@@ -281,6 +282,10 @@ func _build() -> void:
 	_jv.section_shown.connect(_on_section)
 	_jv.close_requested.connect(journal_close)
 	_root.add_child(_jv)
+	# 큰 창이 열리면 감출 HUD(scripts/hud_gate.gd) — 기록책도 그 창 가운데 하나
+	_jv.add_to_group(HudGate.OVERLAY)
+	for c in [_marks, _hint_l, _prompt, _khint, _items, _toasts]: c.add_to_group(HudGate.HIDE)
+	_hint.set_meta("hud_gate_self", true); _hint.add_to_group(HudGate.HIDE)
 	# 자동 기록 도장(오른쪽 아래)
 	_stamp = Control.new(); _stamp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stamp.set_anchors_preset(Control.PRESET_FULL_RECT)
