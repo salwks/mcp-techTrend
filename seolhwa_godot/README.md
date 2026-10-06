@@ -6,8 +6,10 @@ Godot 4.7.1(macOS, Apple M1)에서 검증했다.
 ## 실행
 
 ```bash
-godot --path seolhwa_godot            # 창 1024×768, 장면은 화면 배율(레티나 2)만큼 크게 그림
+godot --path seolhwa_godot res://scenes/region.tscn   # 게임(시작 메뉴·이야기·말 걸기)
+godot --path seolhwa_godot            # 첫 장면(project.godot)은 아직 G0 1차 마을 데모(main.tscn) — 걷기만 된다
 ```
+창 1024×768, 장면은 화면 배율(레티나 2)만큼 크게 그림.
 
 | 키 | 동작 |
 |---|---|
