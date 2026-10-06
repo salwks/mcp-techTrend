@@ -510,6 +510,10 @@ func _make_actor(spec: Dictionary) -> Dictionary:
 func _place_home(a: Dictionary) -> void:
 	var at = a.spec.get("at")
 	if at == null: return
+	# 제자리는 이름 붙은 자리(anchors)를 먼저 본다 — 자리 이름이 인물 id와 같으면(주모 "jumo" 등) anchor()가 인물 자신의
+	# 아직 안 정한 자리(0,0)를 돌려줘 세상 한가운데에 서 버렸다
+	if at is Dictionary and not at.has("x"): at = at.get(S.phase, at.get("default", [0, 0]))
+	if at is String and data.get("anchors", {}).has(at): at = data.anchors[at]
 	var p := anchor(at)
 	a.pos = Vector3(p.x, world.height_at(p.x, p.y), p.y)
 	a.y_abs = NAN
