@@ -1,0 +1,126 @@
+{
+ "cases": {
+  "namwon": {
+   "clues": [],
+   "flags": {
+    "INTRO_CONFLICTING_RUMOR_HEARD": true,
+    "INTRO_MASTER_VOICE_DONE": true,
+    "INTRO_NAMWON_TITLE_DONE": true,
+    "_trig_s0000_travellers_late": true,
+    "_trig_s0001_vista": true,
+    "_trig_s0002_overhear": true,
+    "roadside_seen": true,
+    "s0000_started": true
+   },
+   "items": {
+    "COIN": 12,
+    "ITM_AMMO_001": 12,
+    "ITM_TOOL_009": 1,
+    "ITM_WPN_001": 1,
+    "ITM_WPN_002": 1
+   },
+   "notes": [],
+   "phase": "explore",
+   "rules": [],
+   "seen": {
+    "S0000": true,
+    "S0001": true
+   },
+   "talked": {},
+   "time": 8.0,
+   "v": 2,
+   "world": {}
+  }
+ },
+ "heard": [],
+ "known": {
+  "JL_NAMWON_UNBONG": {
+   "bld:주막@-3006,221": "visited",
+   "place:east_gate": "known",
+   "place:main_road": "visited",
+   "place:tavern": "visited",
+   "town:남원": "visited"
+  },
+  "_nation": {
+   "region:JL_NAMWON_UNBONG": "visited",
+   "sh:남원": "visited"
+  }
+ },
+ "meta": {
+  "case": "산길의 실종",
+  "hour": 8.0,
+  "place": "남원",
+  "play": 4831.0,
+  "space": "JL_NAMWON_UNBONG"
+ },
+ "onboard": {
+  "ONBOARD_INSPECT_SEEN": true,
+  "ONBOARD_JOURNAL_SEEN": true,
+  "ONBOARD_MOVE_SEEN": true,
+  "ONBOARD_TALK_SEEN": true,
+  "PLAY_TIME": 4831.0
+ },
+ "routes_done": {},
+ "saved_at": "2026-10-05T08:28:46",
+ "travel_nodes": {
+  "JL_NAMWON_UNBONG": {
+   "station_namwon": "2026-10-05T08:04:37"
+  }
+ },
+ "vars": {
+  "ACT2_OPEN": false,
+  "ACT3_OPEN": false,
+  "ACT6_OPEN": false,
+  "CASE_GANGNEUNG_COMPLETE": false,
+  "CASE_GANGNEUNG_OUTCOME": "",
+  "CASE_GYEONGJU_COMPLETE": false,
+  "CASE_GYEONGJU_OUTCOME": "",
+  "CASE_HAMHUNG_COMPLETE": false,
+  "CASE_HAMHUNG_OUTCOME": "",
+  "CASE_HANYANG_BOOKSHOP_COMPLETE": false,
+  "CASE_HANYANG_OUTCOME": "",
+  "CASE_HWANGJU_COMPLETE": false,
+  "CASE_HWANGJU_OUTCOME": "",
+  "CASE_JEJU_COMPLETE": false,
+  "CASE_JEJU_OUTCOME": "",
+  "CASE_NAMWON_COMPLETE": false,
+  "CASE_NAMWON_OUTCOME": "",
+  "CASE_PYONGYANG_COMPLETE": false,
+  "CASE_PYONGYANG_OUTCOME": "",
+  "FINAL_CIVILIAN_HARM": 0,
+  "FINAL_CRIME_RESOLVED": false,
+  "FINAL_EVIDENCE_SCORE": 0,
+  "FINAL_PUBLIC_EXPOSURE": false,
+  "FINAL_SPIRIT_RESOLVED": false,
+  "FINAL_WOOCHI_METHOD": 0,
+  "ITEM_KEY_001": false,
+  "ITEM_SENSING_KNOT": false,
+  "ITEM_TALISMAN_SLOT": 0,
+  "MAIN_GWAK_FOUND": false,
+  "MAIN_GWAK_NAME_KNOWN": false,
+  "MAIN_MASTER_FOUND": false,
+  "MAIN_MASTER_TRACE": "",
+  "MAIN_PARK_MARK_COUNT": 0,
+  "MAIN_PARK_NAME_KNOWN": false,
+  "MAIN_PAST_EVENT_KNOWN": false,
+  "MAIN_WOOCHI_KNOWN": false,
+  "PLAYER_FIRST_LINE": "",
+  "SKILL_BEAST_SIDESTEP": false,
+  "SKILL_BEAST_TRACE": false,
+  "SKILL_DOCUMENT_CHECK": false,
+  "SKILL_EVADE_SLASH": false,
+  "SKILL_GUARD_SHOVE": false,
+  "SKILL_QUICK_THROW": false,
+  "SKILL_RUBBING": false,
+  "SKILL_SNAP_SHOT": false,
+  "SKILL_TOOL_SLOT_PLUS": false
+ },
+ "version": 2,
+ "where": {
+  "hour": 8.0,
+  "kind": "region",
+  "space": "JL_NAMWON_UNBONG",
+  "x": -3074.2,
+  "z": 274.7
+ }
+}

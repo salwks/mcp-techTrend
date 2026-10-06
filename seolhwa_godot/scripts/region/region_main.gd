@@ -193,6 +193,7 @@ func _ready() -> void:
 	_prewarm_shaders()
 	_make_load_ui()
 	if args.has("ridefixture") or args.has("ridevars") or args.has("ridedone") or args.has("ridefresh"): RideTest.apply_fixture(args)   # 시험 출발 저장(이야기보다 먼저)
+	if args.has("continuefixture"): load("res://scripts/story/continue_test.gd").apply_fixture(args)   # 이어 하기 시험 저장(이야기보다 먼저)
 	if not args.has("nostory"): story = StoryDirector.create_for(self)
 	if args.has("nomsaa"): scene_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if args.has("noshadow"): sun.shadow_enabled = false
@@ -235,6 +236,8 @@ func _ready() -> void:
 		_ride_test = RideTest.new(self); _ride_test.run_fast.call_deferred(String(args.fasttravel))
 	elif args.has("talktest"):
 		_ride_test = load("res://scripts/story/talk_test.gd").new(self); _ride_test.run.call_deferred(String(args.talktest))
+	elif args.has("continuetest"):
+		_ride_test = load("res://scripts/story/continue_test.gd").new(self); _ride_test.run.call_deferred(String(args.continuetest))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
 	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
