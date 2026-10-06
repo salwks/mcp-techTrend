@@ -4,7 +4,7 @@ config_version=5
 [application]
 
 config/name="설화록"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/region.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 
 [display]
