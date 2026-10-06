@@ -172,7 +172,10 @@
     "4001015510883818826",
     "4001060778606054564",
     "4001105199196212055",
-    "4001151509747752882"
+    "4001151509747752882",
+    "4001607032897475318",
+    "4001649423402754382",
+    "4001694813581828358"
   ],
   "emitted_permalinks": [],
   "notes": [
@@ -190,8 +193,9 @@
     "2026-09-28 16:04 KST manual recovery of missed 14:01 KST delivery: emitted 2 pending posts from the 08:01-14:01 KST window; 15:00 KST Mira-Scene remains pending for the next report.",
     "2026-09-29 23:09 KST state repair: acknowledged only the 19 posts delivered in the 20:03 KST report; four newer posts (Fo, AMD/World Labs, Google AI Mode, Kling 4.0) remain pending.",
     "2026-09-30 07:00 KST repair: acknowledged the 8 posts delivered in the 02:05 KST report whose state write had failed.",
-    "2026-09-30 state repair: acknowledged the 6 posts delivered in the latest 6-hour report after the prior write was blocked."
+    "2026-09-30 state repair: acknowledged the 6 posts delivered in the latest 6-hour report after the prior write was blocked.",
+    "2026-10-06 14:03 KST 6h report: emitted 3 posts; Supabase durable emitted backup written first."
   ],
-  "last_reported_at": "2026-10-05T10:58:11Z",
+  "last_reported_at": "2026-10-06T05:03:57Z",
   "retention_limit": 300
 }
