@@ -376,6 +376,7 @@ func toggle() -> void:
 	visible = true
 	_layout()
 	_refresh_dynamic()
+	if world.is_route and _tex == null: _show_nation(); return   # 노정에는 구운 권역 그림이 없다 — 전국 지도(노정 선·지금 자리)로 연다
 	var town = _town_at(Vector2(_player.x, _player.z))
 	if town != null: _show_city(town)
 	else: _show_all()
