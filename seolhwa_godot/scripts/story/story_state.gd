@@ -73,8 +73,10 @@ func load_saved() -> bool:
 
 func clear_saved(keys = null) -> void:
 	Progress.clear_case(case_id)
-	# 이 사건이 정한 공통 변수도 되돌린다(새로 시작). keys: 사건 데이터 case.reset_vars(없으면 남원 것)
-	for k in (keys if keys != null else ["CASE_NAMWON_OUTCOME", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE", "SKILL_GUARD_SHOVE", "CASE_NAMWON_COMPLETE"]):
+	# 이 사건이 정한 공통 변수도 되돌린다(새로 시작). keys: 사건 데이터 case.reset_vars(없으면 남원은 남원 것, 다른 사건은 없음 —
+	# 한 공간의 다른 사건이 남원 완료·흔적 변수를 지우지 않게)
+	if keys == null: keys = ["CASE_NAMWON_OUTCOME", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE", "SKILL_GUARD_SHOVE", "CASE_NAMWON_COMPLETE"] if case_id == "namwon" else []
+	for k in keys:
 		Progress.set_var(k, VAR_DEFAULTS.get(k, ""))
 		vars[k] = VAR_DEFAULTS.get(k, "")
 	Progress.save()

@@ -18,13 +18,9 @@ const CombatView := preload("res://scripts/combat/combat_view.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const Rumors := preload("res://story/rumors_data.gd")
 const Skills := preload("res://scripts/story/skills.gd")
-
-# 권역 → 사건
+# 공간 → 사건(여럿일 수 있음): scripts/story/case_registry.gd(예전 CASES). 여기서는 그중 지금 돌릴 사건 하나(case_id)를 StoryRunner에 잇는다.
 # 한 사건이 여러 공간(권역 + 노정)에 걸치면 같은 사건 id를 준다(진행은 하나). 데이터 항목의 "space"로 공간을 가른다(_filter_space)
-const CASES := { "JL_NAMWON_UNBONG": "namwon", "GG_HANYANG": "hanyang", "GW_GANGNEUNG": "gangneung",
-	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju", "PA_PYEONGYANG": "pyongyang",
-	"PA_PYEONGYANG-HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG-BUKCHEONG": "hamhung",
-	"SEA_NAMHAE_JEJU": "jeju", "JJ_JEJU": "jeju" }
+const CaseRegistry := preload("res://scripts/story/case_registry.gd")
 const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ricecake_mother = "villager_f", farmwife = "villager_f",
 	peddler = "villager_m", merchant = "villager_m", traveler = "villager_m", scholar = "elder",
 	woochi = "villager_m", chaekkwae = "merchant", pojol = "official",
@@ -90,7 +86,6 @@ static func create_for(m) -> Node:
 	var d = load("res://scripts/story/story_director.gd").new()
 	d.main = m
 	d.space_id = rid
-	d.case_id = CASES.get(rid, "")
 	m.add_child(d)
 	d._setup()
 	return d
@@ -145,14 +140,15 @@ func _setup() -> void:
 	add_child(load("res://scripts/story/save_keeper.gd").new(self))   # 저장이 보이게: 자동 기록 도장·주막 쉬기·저장 칸(Esc)
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
-	if case_id == "":
+	# 이 공간에 올린 사건들(파일이 있는 것만). 대본 시험은 이름 앞부분(namwon:A → namwon)이 이 공간 사건이면 그것만 본다
+	var cands: Array = CaseRegistry.cases_for(space_id)
+	var prefer := String(args.get("storytest", "")).get_slice(":", 0)
+	if cands.has(prefer): cands = [prefer]
+	if cands.is_empty():
 		_maybe_title()
 		return   # 소문만(노정·다른 권역)
-	var ddir := "res://story/%s/" % case_id
-	data = load(ddir + case_id + "_data.gd").data()
-	_filter_space()
-	events = data.get("events", {})
-	var test_path := ddir + case_id + "_test.gd"
+	case_id = String(cands[0])
+	var test_path := CaseRegistry.test_path(case_id)
 	# 대본 시험이 앞 사건 저장을 꾸민다 — 시험 도중 다른 공간으로 넘어온 장면(같은 사건의 노정 등)이면 꾸미지 않고 이어 간다
 	var arrived: bool = not main._pending.is_empty() and not bool(main._pending.get("newgame", false))
 	if args.has("storytest") and FileAccess.file_exists(test_path):
@@ -162,17 +158,27 @@ func _setup() -> void:
 			main._quit.call_deferred(); return
 		if not arrived: ts.prepare(self)
 	# 앞 사건이 끝나야 서는 사건(case.requires {변수: 값}) — 아니면 소문만. 쉼표 목록 값(MAIN_MASTER_TRACE "HANYANG,GANGNEUNG")은 들어 있으면 맞음
-	for k in data.get("case", {}).get("requires", {}):
-		var have := str(Progress.get_var(k, ""))
-		var want := str(data.case.requires[k])
-		if have != want and not have.split(",").has(want):
-			printerr("STORY case=%s 아직 아님(%s)" % [case_id, k])
-			case_id = ""; data = {}; events = {}
-			_maybe_title()
-			return
+	# 후보가 여럿이면 요구가 맞고 아직 안 끝난 첫 사건(case_registry.choose). 하나뿐이면 예전과 같다
+	var pick: Dictionary = CaseRegistry.choose(cands)
+	case_id = String(pick.id)
+	if case_id == "":
+		if String(pick.why_id) != "": printerr("STORY case=%s 아직 아님(%s)" % [pick.why_id, pick.why_key])
+		else: printerr("STORY 사건 데이터를 읽지 못함 — 소문만(%s)" % ", ".join(cands))
+		data = {}; events = {}
+		_maybe_title()
+		return
+	var cscript = load(CaseRegistry.case_path(case_id))
+	if cscript == null or not cscript.can_instantiate():   # 사건 스크립트 해석 오류 — 게임은 소문만으로 이어 간다
+		printerr("STORY case=%s 사건 스크립트를 불러오지 못함 — 소문만" % case_id)
+		case_id = ""; data = {}; events = {}
+		_maybe_title()
+		return
+	data = pick.data
+	_filter_space()
+	events = data.get("events", {})
 	S = StoryState.new(case_id)
 	runner = StoryRunner.new(self, S)
-	case_fn = load(ddir + case_id + "_case.gd").new(self)
+	case_fn = cscript.new(self)
 	runner.case_fn = case_fn
 	combat_view = CombatView.new()
 	combat_view.name = "combat"
@@ -332,7 +338,7 @@ func _maybe_title() -> void:
 	add_child(title)
 
 func outcome_var() -> String:
-	return String(data.get("case", {}).get("outcome_var", "CASE_NAMWON_OUTCOME"))
+	return String(data.get("case", {}).get("outcome_var", "CASE_%s_OUTCOME" % case_id.to_upper()))   # 남원은 데이터에 CASE_NAMWON_OUTCOME
 
 func wait(sec: float) -> void:
 	if ui.auto and not ui.auto_real: sec = minf(sec, 0.05)

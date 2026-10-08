@@ -6,7 +6,7 @@
 extends RefCounted
 
 const Progress := preload("res://scripts/region/progress.gd")
-const CASE_IDS := ["namwon", "hanyang", "gangneung", "gyeongju", "hwangju", "pyongyang", "hamhung", "jeju"]
+const CaseRegistry := preload("res://scripts/story/case_registry.gd")   # 사건 목록(한 공간에 여럿이어도 사건마다 따로 센다 — 표지는 case id로 갈린다)
 
 static var _cases = null
 
@@ -14,13 +14,9 @@ static var _cases = null
 static func cases() -> Array:
 	if _cases != null: return _cases
 	var out: Array = []
-	for id in CASE_IDS:
-		var p := "res://story/%s/%s_data.gd" % [id, id]
-		if not ResourceLoader.exists(p): continue
-		var s = load(p)
-		if s == null or not s.can_instantiate(): continue
-		var d = s.data()
-		if not (d is Dictionary): continue
+	for id in CaseRegistry.all_ids():
+		var d := CaseRegistry.load_data(String(id))
+		if d.is_empty(): continue
 		var cs: Dictionary = d.get("case", {})
 		var leads = d.get("map_leads", [])
 		out.append({ id = id, title = String(cs.get("record_title", id)), region = String(cs.get("region", "")),

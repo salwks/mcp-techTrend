@@ -8,7 +8,8 @@
 extends SceneTree
 
 const EventClass := preload("res://scripts/story/event_class.gd")
-const CASES := ["namwon", "hanyang", "gangneung", "gyeongju", "hwangju", "pyongyang", "hamhung", "jeju"]
+const CaseRegistry := preload("res://scripts/story/case_registry.gd")
+var CASES: Array = CaseRegistry.all_ids()   # 등록부(scripts/story/case_registry.gd)에 오른 사건 — 예전 고정 목록과 같은 여덟
 const AMBIENT_FILES := {
 	"res://story/ambient_talk_data.gd": "",
 	"res://story/rumors_data.gd": "RUMORS",
@@ -28,7 +29,7 @@ func _init() -> void:
 	if EventClass.check({ "EVENT_CLASS": "LOCAL" }).is_empty(): _fail("self", "제4의 분류가 통과함")
 	if EventClass.in_build({ "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F24", "SOURCE_VERIFIED": false }): _fail("self", "SOURCE_VERIFIED=false가 빌드에 듦")
 	for c in CASES:
-		var path := "res://story/%s/%s_data.gd" % [c, c]
+		var path := CaseRegistry.data_path(c)
 		var scr = load(path)
 		if scr == null: _fail(c, "데이터 못 읽음 " + path); continue
 		var data: Dictionary = scr.data()

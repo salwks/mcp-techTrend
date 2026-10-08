@@ -24,6 +24,7 @@ extends RefCounted
 
 const Progress := preload("res://scripts/region/progress.gd")
 const GameSettings := preload("res://scripts/story/game_settings.gd")
+const CaseRegistry := preload("res://scripts/story/case_registry.gd")
 
 const PRINCIPLE := ["본 것은 본 대로.", "들은 것은 누가 말했는지.", "모르는 것은 모른다고."]
 const CASE_TITLES := { namwon = "산길의 실종", hanyang = "비어 있는 책방", gangneung = "고개에 남은 종소리", hwangju = "빈 배의 값", pyongyang = "강을 판 사내", jeju = "굴에 남은 숨" }
@@ -143,9 +144,8 @@ static func _case_title(id: String) -> String:
 	return id
 
 static func _case_data(id: String):
-	var p := "res://story/%s/%s_data.gd" % [id, id]
-	if FileAccess.file_exists(p): return load(p).data()
-	return null
+	var dd := CaseRegistry.load_data(id)   # 파일이 없거나 못 읽으면 null(제목은 id 그대로)
+	return dd if not dd.is_empty() else null
 
 static func _case_detail(d) -> Array:
 	var S = d.S
