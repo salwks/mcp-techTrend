@@ -13,7 +13,7 @@
 #                  lift(땅에서 뜬 높이) } ]
 #   "sounds":  [ { id, from(자리 또는 잔영 id), when, night, sense, every:[최소, 최대](초), range(들리는 거리),
 #                  caption(먼 소리), near(가까운 소리, near_r 안), near_r, dir(true면 '왼쪽 앞에서' 같은 방향), fx("ring"|"shake"|""),
-#                  audio(소리 파일 이름 — res://assets/audio/<이름>.ogg|wav가 있으면 3D로 튼다: 지금은 없음) } ]
+#                  audio(소리 파일 이름 — assets/audio/sfx/<이름> 또는 assets/audio/<이름>.ogg|wav가 있으면 3D로 튼다 — scripts/audio/sound.gd) } ]
 #   "zones":   { id: { at, radius, when, enter:[단계…], exit:[단계…] } }   ← 들어설 때·나설 때(조건이 맞을 때마다) 단계 실행
 #   "dread":   { zone, when, rate(초당 차오름), decay, on_full:[단계…] }    ← 공포·착란. 지닌 호신물의 protect만큼 덜 찬다
 #   "talismans": { ITM_ID: { name, sense, protect, text } }                   ← 아래 TALISMANS에 없는 것만 더하면 된다
@@ -22,7 +22,7 @@
 #   { "sound": id }  { "talisman": "give|equip|unequip|slots", "id": …, "n": … }  { "dread": 0~1 }
 # 조건식(story_runner): tal('ITM_RIT_001')·tal('') 지녔나 · zone('id') 안인가 · night() · spv('id') 그 잔영이 지금 보이나
 # 공통 변수(§7 + 확장, 사건을 넘어 남는다): ITEM_TALISMAN_SLOT(칸 수: 0 → 1, 뒤에 2) · TALISMANS_OWNED · TALISMAN_EQUIPPED
-# 소리: 아직 음원이 없어 자막(방향 포함)과 화면 효과(먹 고리·흔들림)로 낸다. audio_hook을 바꾸거나 파일을 넣으면 소리가 난다.
+# 소리: 자막(방향 포함)과 화면 효과(먹 고리·흔들림)에 더해, 음원이 있으면 공용 소리(Sound.play_at)로 낸다. audio_hook으로 가로챌 수 있다.
 extends Node
 
 const SpiritChar := preload("res://scripts/story/spirit_char.gd")
@@ -39,6 +39,7 @@ const NIGHT_TO := 5.0
 const FADE_IN := 0.9
 const FADE_OUT := 0.7
 
+const Sound := preload("res://scripts/audio/sound.gd")
 static var audio_hook: Callable = Callable()   # (이름, Vector3 자리) — 음원 체계가 생기면 여기로
 
 var d                 # story_director
@@ -323,6 +324,8 @@ func _audio(nm: String, at: Vector3) -> void:
 	if nm == "": return
 	if audio_hook.is_valid():
 		audio_hook.call(nm, at); return
+	if Sound.has(nm):   # 공용 소리(assets/audio/sfx/<이름>)
+		Sound.play_at(nm, at, d.main.scene_vp); return
 	for ext in ["ogg", "wav"]:
 		var path := "res://assets/audio/%s.%s" % [nm, ext]
 		if not ResourceLoader.exists(path): continue

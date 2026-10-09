@@ -618,6 +618,7 @@ func key_hint(key: String, text: String) -> void:
 const STAMP_SEC := 2.6
 func save_stamp() -> void:
 	if log_lines: printerr("SAVESTAMP")
+	preload("res://scripts/audio/sound.gd").play("journal_stamp")
 	_stamp_t = 0.0
 	_stamp.queue_redraw()
 
@@ -690,6 +691,7 @@ func _on_section(i: int) -> void:
 	var pages: Array = _jdata.get("pages", [])
 	if i < 0 or i >= pages.size() or i == _jpage: return
 	_jpage = i
+	preload("res://scripts/audio/sound.gd").play("page_turn")
 	if not bool(pages[i].get("front", false)): JournalBook.last_page = i
 	if log_lines: printerr("JOURNAL page=%s %s" % [pages[_jpage].get("id", ""), _page_text(pages[_jpage])])
 	if on_journal_page.is_valid(): on_journal_page.call(String(pages[_jpage].get("id", "")))

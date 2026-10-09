@@ -18,6 +18,7 @@ const CombatView := preload("res://scripts/combat/combat_view.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const Rumors := preload("res://story/rumors_data.gd")
 const Skills := preload("res://scripts/story/skills.gd")
+const Sound := preload("res://scripts/audio/sound.gd")   # 공용 소리(scripts/audio/sound.gd)
 # 공간 → 사건(여럿일 수 있음): scripts/story/case_registry.gd(예전 CASES). 여기서는 그중 지금 돌릴 사건 하나(case_id)를 StoryRunner에 잇는다.
 # 한 사건이 여러 공간(권역 + 노정)에 걸치면 같은 사건 id를 준다(진행은 하나). 데이터 항목의 "space"로 공간을 가른다(_filter_space)
 const CaseRegistry := preload("res://scripts/story/case_registry.gd")
@@ -128,6 +129,7 @@ func _setup() -> void:
 	var args: Dictionary = main.args
 	log_story = args.has("storylog") or args.has("storytest")
 	log_combat = log_story
+	Sound.verbose = log_story   # 시험 로그에 SOUND 줄
 	if args.has("savefile"): Progress.use_path(String(args.savefile))
 	elif args.has("storytest"): Progress.use_path("user://storytest_progress.json")
 	_setup_input()
@@ -414,11 +416,30 @@ func cutscene(on: bool) -> void:
 	_cut = on
 	ui.letterbox(on)
 
-# 소리 자리(소리 체계는 아직 없다): 연출이 소리 낼 순간마다 부른다. 지금은 신호만 낸다 — 소리 작업이 sfx_cue에 붙어 채운다.
-#   남원 동아줄: rope_creak(줄 삐걱) · rope_snap(줄 끊김) · fall_impact(수수밭에 떨어짐) · wind(바람)
+# 소리(scripts/audio/sound.gd): 연출이 소리 낼 순간마다 부른다. sfx_cue 신호도 그대로 낸다(다른 것이 붙어 들을 수 있게).
+#   sfx(id) — 자리 없이 · sfx(id, at) — at: 자리 이름(anchors·인물 id·"player") · Vector2(x,z) · Vector3 → 그 자리에서 3D로
+#   남원: knock · footstep_heavy · flour_rustle · basket_roll · tiger_growl · axe_hit · rope_creak · rope_snap · fall_impact · wind · breath_gasp
+#   bgm(id, 페이드) — ""이면 멈춤 · duck(db, 초) 잠시 음악 낮춤 · hush(초) 갑자기 고요(음악·환경음)
+#   명령으로도: { "sfx": id, "at": 자리 } · { "bgm": id, "fade": 초 } · { "duck": db, "sec": 초 } · { "hush": 초 }(story_runner)
 signal sfx_cue(id: String)
-func sfx(id: String) -> void:
+func sfx(id: String, at = null) -> void:
 	sfx_cue.emit(id)
+	if at == null: Sound.play(id)
+	else: Sound.play_at(id, audio_pos(at), main.scene_vp)
+
+func audio_pos(at) -> Vector3:
+	if at is Vector3: return at
+	var p := anchor(at)
+	return Vector3(p.x, world.height_at(p.x, p.y) + 1.0, p.y)
+
+func bgm(id: String, fade := 1.5) -> void:
+	Sound.music(id, fade)
+
+func duck(db := -10.0, sec := 1.5) -> void:
+	Sound.duck(db, sec)
+
+func hush(sec := 1.5, sfx_too := false) -> void:
+	Sound.hush(sec, 0.12, 1.2, sfx_too)
 
 # 화면 흔들림 설정(놀이 설정 cam_shake)이 꺼져 있나 — 꺼져 있으면 큰 충격은 암전으로 대신한다
 func shake_enabled() -> bool:

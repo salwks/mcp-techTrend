@@ -5,7 +5,7 @@
 # 명령: say · caption · toast · examine · choice(loop, options[{label, when, disabled_when, hint, do, end}]) · if(then/else) ·
 #   flag · unflag · clue · rule · give · take · var · phase · outcome · wait · teleport · move · face · anim · place · show ·
 #   spawn · despawn · camera · fade · letterbox · cutscene · time · weather · world · journal · combat(store) · call · event ·
-#   shake · save · ending · log · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost") · drift(물살 표식 — scripts/story/drift.gd)
+#   shake · save · ending · log · sfx(at)·bgm(fade)·duck(sec)·hush(소리 — scripts/audio/sound.gd) · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost") · drift(물살 표식 — scripts/story/drift.gd)
 extends RefCounted
 
 const EventClass := preload("res://scripts/story/event_class.gd")
@@ -181,6 +181,14 @@ func step(st: Dictionary, g: int) -> void:
 		last[String(st.get("store", "drift"))] = dres
 	elif st.has("spirit") or st.has("sound") or st.has("talisman") or st.has("dread"):
 		if d.spirits != null: await d.spirits.step(st)
+	elif st.has("sfx"):
+		d.sfx(String(st.sfx), st.get("at", null))
+	elif st.has("bgm"):
+		d.bgm(String(st.bgm), float(st.get("fade", 1.5)))
+	elif st.has("duck"):
+		d.duck(float(st.duck), float(st.get("sec", 1.5)))
+	elif st.has("hush"):
+		d.hush(float(st.hush), bool(st.get("sfx_too", false)))
 	elif st.has("endcombat"):
 		d.end_combat()
 	elif st.has("shake"):
