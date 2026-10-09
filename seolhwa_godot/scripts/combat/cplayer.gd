@@ -27,6 +27,10 @@ var spec: Dictionary = {}
 var hit_done := false
 var dd := Vector2.ZERO
 var dodge_buf := 0.0
+# 전투 배우기(남원 v3.2 §26 — onboarding.gd가 읽는다): 실제로 피한 횟수(구르는 동안 공격이 빗나감) · 실제로 막은 횟수(막기로 받음)
+var dodges_ok := 0
+var blocks_ok := 0
+var last_dodge_t := -99.0   # 마지막으로 구르기 시작한 판 시각(b.time)
 var want_dodge := false
 var bd := Vector2.ZERO
 var draw := 0.0
@@ -68,6 +72,7 @@ func reset(p: Vector2) -> void:
 	draw = 0.0; arrows = int(P().bow.arrows); bait = int(P().throw.bait)
 	stun_t = 0.0; k = Vector2.ZERO
 	anim = ""; moving = false; damage_taken = 0.0; ring_h = null
+	dodges_ok = 0; blocks_ok = 0; last_dodge_t = -99.0
 
 var alive: bool:
 	get: return state != "dead"
@@ -268,6 +273,7 @@ func start_dodge(ctl) -> bool:
 	dodge_buf = 0.0; want_dodge = false; bd = Vector2.ZERO
 	queued = false; queued_heavy = false
 	go("dodge")
+	last_dodge_t = b.time
 	face(dd)
 	set_anim("dodge", true, P().dodge.dur)
 	b.env.fx("dust", pos.x, pos.y, { scale = 0.6 })
@@ -352,7 +358,9 @@ func _knock(dt: float) -> void:
 func take_hit(dmg: float, from: Vector2, kind: String, src = null) -> String:
 	var env = b.env
 	var F: Dictionary = TU.T.feel
-	if not alive or invulnerable: return "miss"
+	if not alive or invulnerable:
+		if state == "dodge" and alive: dodges_ok += 1   # 구르는 동안 맞을 공격이 빗나갔다 — 실제 회피
+		return "miss"
 	var v := from - pos
 	v = v / maxf(v.length(), 1e-6)
 	queued = false; queued_heavy = false; holding = false
@@ -375,7 +383,9 @@ func take_hit(dmg: float, from: Vector2, kind: String, src = null) -> String:
 			go("shove"); set_anim("shove", true, SHOVE_DUR)
 			foe.shoved(-v, float(P().guard.get("shove", 2.2)))
 			env.say("받아밀기!", 800)
+			blocks_ok += 1
 			return "block"
+		blocks_ok += 1   # 실제로 막았다(막기 안내가 이것을 본다)
 		return "block"
 	hp -= dmg; damage_taken += dmg
 	env.flash("player", Color("#ffd0c0"), 140)

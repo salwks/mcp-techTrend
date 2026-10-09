@@ -7,6 +7,8 @@
 #   E 저장 → 다시 불러오기(이어 하기) 뒤에도 기다리던 핵심 안내가 다시 뜨고, 행동하면 SEEN이 저장된다
 #   F hold()는 CORE 밖 key도 행동까지 남긴다 · 안내 끔이면 아무것도 안 뜬다
 #   G 남원 v3.2 §4: 이동은 실제로 5m 넘게 걸어야(순간이동 제외), 달리기는 실제로 2초 넘게 달려야 끝 · 이동이 끝나면 달리기 안내
+#   H 남원 v3.2 §26 전투 배우기: K 회피는 실제로 피해야(dodges_ok), L 막기는 실제로 막아야(blocks_ok) 끝 · 시간·구르기 누름만으로는 안 끝남 ·
+#     회피 뒤에 막기 · 전투 밖에서는 뜨지 않고 다음 판에 다시 · ONBOARD_PENDING에 남기지 않는다 · 첫 몸 낮춤 느린 화면은 한 판에 한 번
 #   저장은 따로(user://st_onboard_rule.json, 끝나면 지운다). 끝 줄: ONBOARDRULE PASS n / ONBOARDRULE FAIL n
 extends SceneTree
 
@@ -22,6 +24,25 @@ class FakeUI extends RefCounted:
 	var text := ""
 	func hint(t: String) -> void: text = t
 	func hint_clear() -> void: text = ""
+
+class FakePlayer extends RefCounted:
+	var state := "free"
+	var dodges_ok := 0
+	var blocks_ok := 0
+
+class FakeTiger extends RefCounted:
+	var state := "prowl"
+	var t := 0.0
+
+class FakeBattle extends RefCounted:
+	var mode := "tiger"
+	var player = FakePlayer.new()
+	var tiger = FakeTiger.new()
+
+class FakeCV extends RefCounted:
+	var active := true
+	var battle = FakeBattle.new()
+	var _opts := { "mods": { "firstEncounter": true } }
 
 class FakeDirector extends RefCounted:
 	var ui := FakeUI.new()
@@ -80,6 +101,8 @@ func _initialize() -> void:
 	_test_f()
 	_fresh()
 	_test_g()
+	_fresh()
+	_test_h()
 	GameSettings.test_override = {}
 	for o in _made: o.free()
 	_made.clear()
@@ -232,3 +255,82 @@ func _test_g() -> void:
 	ok(not ob.is_seen("RUN"), "1.5초 달려서는 아직")
 	ob.track_move(2.0, true, 0.5)
 	ok(ob.is_seen("RUN") and ob.hint_key() == "", "2초 달리면 달리기 안내가 끝난다")
+
+# H 전투 배우기(onboarding._update_combat) — 가짜 전투 판
+func _combat_for(ob, sec: float, step := 0.1) -> void:
+	var t := 0.0
+	while t < sec - 0.0001:
+		ob._update_combat()
+		ob._update_hints(step)
+		t += step
+
+func _test_h() -> void:
+	var ob = _make()
+	var cv := FakeCV.new()
+	ob.d.combat_view = cv
+	var pl = cv.battle.player
+	var tg = cv.battle.tiger
+	ok(Onboarding.is_core("COMBAT_DODGE") and Onboarding.is_core("COMBAT_GUARD"), "K 회피·L 막기는 핵심 안내")
+	var ts0 := Engine.time_scale
+	_combat_for(ob, 0.5)
+	ok(ob.hint_key() == "", "범이 몸을 낮추기 전엔 전투 안내 없음")
+	tg.state = "crouch"
+	_combat_for(ob, 0.1)
+	ok(ob.hint_key() == "COMBAT_DODGE" and ob.d.ui.text.contains("K") and ob.d.ui.text.contains("회피"), "첫 몸 낮춤 — K 회피 (%s)" % ob.d.ui.text)
+	ok(Engine.time_scale < ts0 * 0.5, "첫 몸 낮춤 — 느린 화면 (%.2f)" % Engine.time_scale)
+	tg.state = "pounce"; tg.t = 0.3
+	_combat_for(ob, 0.1)
+	ok(is_equal_approx(Engine.time_scale, ts0), "돌진이 시작되면 느린 화면이 풀린다")
+	ok(ob.hint_key() == "COMBAT_DODGE", "느린 화면이 풀려도 K 안내는 남는다")
+	tg.state = "land"
+	_combat_for(ob, 30.0)
+	ok(not ob.is_seen("COMBAT_DODGE") and ob.hint_key() == "COMBAT_DODGE", "30초가 지나도 회피 안내는 안 끝난다")
+	pl.state = "dodge"
+	_combat_for(ob, 1.0)
+	ok(not ob.is_seen("COMBAT_DODGE"), "구르기만 해서는(공격이 빗나가지 않으면) 안 끝난다")
+	tg.state = "crouch"
+	_combat_for(ob, 0.2)
+	ok(is_equal_approx(Engine.time_scale, ts0), "느린 화면은 한 판에 한 번")
+	pl.dodges_ok = 1; pl.state = "free"; tg.state = "prowl"
+	_combat_for(ob, 0.1)
+	ok(ob.is_seen("COMBAT_DODGE"), "실제로 피하면(dodges_ok) 회피 안내가 끝난다")
+	_combat_for(ob, 0.1)
+	ok(ob.hint_key() == "COMBAT_GUARD" and ob.d.ui.text.contains("L") and ob.d.ui.text.contains("막기"), "이어서 L 막기 (%s)" % ob.d.ui.text)
+	_combat_for(ob, 30.0)
+	ok(not ob.is_seen("COMBAT_GUARD") and ob.hint_key() == "COMBAT_GUARD", "30초가 지나도 막기 안내는 안 끝난다")
+	pl.state = "guard"
+	_combat_for(ob, 1.0)
+	ok(not ob.is_seen("COMBAT_GUARD"), "막기를 누르고만 있어서는(받아 막지 않으면) 안 끝난다")
+	pl.blocks_ok = 1
+	_combat_for(ob, 0.1)
+	ok(ob.is_seen("COMBAT_GUARD") and ob.hint_key() == "", "실제로 막으면(blocks_ok) 막기 안내가 끝난다")
+	ok(not _pending().has("COMBAT_DODGE") and not _pending().has("COMBAT_GUARD"), "전투 안내는 ONBOARD_PENDING에 남지 않는다")
+	# 판이 끝나면 내렸다가 다음 범 싸움에서 다시
+	_fresh()
+	var ob2 = _make()
+	var cv2 := FakeCV.new()
+	ob2.d.combat_view = cv2
+	cv2.battle.tiger.state = "crouch"
+	_combat_for(ob2, 0.2)
+	ok(ob2.hint_key() == "COMBAT_DODGE", "새 판: K 회피")
+	cv2.active = false
+	_combat_for(ob2, 5.0)
+	ok(ob2.hint_key() == "" and ob2.d.ui.text == "" and not ob2.is_seen("COMBAT_DODGE"), "전투가 끝나면 SEEN 없이 내린다(들판에 뜨지 않는다)")
+	ok(is_equal_approx(Engine.time_scale, ts0), "전투가 끝나면 느린 화면도 풀린다")
+	cv2.active = true
+	cv2.battle.tiger.state = "crouch"
+	_combat_for(ob2, 0.2)
+	ok(ob2.hint_key() == "COMBAT_DODGE", "다음 판에 다시 선다")
+	# 회피를 이미 익혔으면 L은 앞발 예고에서
+	_fresh()
+	Progress.set_onboard("ONBOARD_COMBAT_DODGE_SEEN", true)
+	var ob3 = _make()
+	var cv3 := FakeCV.new()
+	cv3._opts = { "mods": {} }
+	ob3.d.combat_view = cv3
+	_combat_for(ob3, 1.0)
+	ok(ob3.hint_key() == "", "회피를 익혔으면 앞발 예고 전엔 막기 안내 없음")
+	cv3.battle.tiger.state = "swipeWind"
+	_combat_for(ob3, 0.2)
+	ok(ob3.hint_key() == "COMBAT_GUARD", "앞발 예고 — L 막기")
+	Engine.time_scale = ts0

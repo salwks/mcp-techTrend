@@ -48,6 +48,14 @@ var said := {}
 var first_pounce := false
 var undying := false        # 이야기 모드(남원 v3): 쓰러지지 않는다 — 체력이 바닥 근처에서 멈추고 물러난다(시간을 버는 싸움)
 const UNDYING_FLOOR := 0.12
+# 전투 배우기(남원 v3.2 §26 첫 조우, mods.tutorial): 첫 돌진은 예고를 길게 · 실제로 피할 때까지 돌진을 몇 번 더(최대 3) →
+#   이어서 실제로 막을 때까지 다가와 앞발(최대 4, 첫 앞발 예고도 길게) → 그 뒤는 보통. 플레이어의 dodges_ok·blocks_ok를 본다(cplayer.gd)
+var tutorial := false
+var tut_swipe := false
+var tele_k := 1.0           # 이번 몸 낮춤 예고 배율
+var swipe_k := 1.0          # 이번 앞발 예고 배율
+var crouch_t0 := -99.0      # 이번 몸 낮춤을 시작한 판 시각 — 그 뒤 구르고 돌진이 빗나가면 '실제 회피'
+var swipe_t0 := -99.0
 
 func _init(battle) -> void:
 	b = battle
@@ -70,6 +78,7 @@ func reset(p: Vector2) -> void:
 	tele_h = null; anim = ""
 	retreat_dir = Vector2(0, -1)
 	speed_mul = 1.0; decide_mul = 1.0; since_hit = 99.0; retreat_kind = "repelled"
+	tutorial = false; tut_swipe = false; tele_k = 1.0; swipe_k = 1.0; crouch_t0 = -99.0; swipe_t0 = -99.0
 	stats = { pounces = 0, pounce_hits = 0, swipes = 0, swipe_hits = 0, baits = 0, back_hits = 0, blocks = 0, roar = false, dmg = {} }
 	said = {}; first_pounce = false; undying = false
 
@@ -163,7 +172,8 @@ func update(dt: float) -> void:
 	since_hit += dt
 	var ra = b.retreat_at
 	if ra != null and alive and not retreating and not (state == "pounce" and airborne) and state != "stunned":
-		if (ra.has("hpRatio") and hp <= G().hp * float(ra.hpRatio)) or (ra.has("seconds") and b.time >= float(ra.seconds)):
+		if (ra.has("hpRatio") and hp <= G().hp * float(ra.hpRatio)) or (ra.has("seconds") and b.time >= float(ra.seconds)) \
+				or (ra.has("playerHp") and pl.alive and pl.hp <= TU.T.player.hp * float(ra.playerHp)):
 			start_retreat("retreated")
 
 	if pending_roar and (state in INTERRUPTIBLE or state in ["hit", "eat", "toBait"]) and not b.player_outside:
@@ -220,11 +230,12 @@ func update(dt: float) -> void:
 				turn_to(tp.v, dt)
 				set_anim("walk")
 				if tp.d <= G().swipeRange - 0.3: start_swipe(tp)
+				elif tut_swipe: pass   # 배우기: 막기를 익힐 때까지 다가와 앞발만
 				elif t > 0.6 and tp.d >= 5.0 and tp.d <= G().pounceMax - 1.0 and b.rand() < dt * G().stalkPounceRate: start_crouch(tp)
 				elif t > G().stalkTime: to_prowl()
 		"crouch":
 			set_anim("crouch")
-			if t >= G().crouch * tm: start_pounce()
+			if t >= G().crouch * tm * tele_k: start_pounce()
 		"pounce":
 			var air: float = G().pounceTime / sm
 			var lead: float = air / (G().pounceAirTo - G().pounceAirFrom) * G().pounceAirFrom
@@ -243,14 +254,17 @@ func update(dt: float) -> void:
 							if r != "block" and r != "break": stats.pounce_hits += 1
 				if u >= 1.0:
 					y = 0.0; airborne = false
+					if not pounce_hit and pl.alive and pl.last_dodge_t >= crouch_t0: pl.dodges_ok += 1   # 굴러서 돌진을 비켜났다
 					go("land")
 					set_anim("land", true, G().land * tm)
 					env.fx("dust", pos.x, pos.y, { scale = 1.4 })
 					env.shake(F().shakePounce[0], F().shakePounce[1])
 		"land":
-			if t >= G().land * tm: to_prowl(0.6)
+			if t >= G().land * tm:
+				if tutorial: _tut_next()
+				else: to_prowl(0.6)
 		"swipeWind":
-			if t >= G().swipeWind * tm * (0.75 if swipe_chain else 1.0):
+			if t >= G().swipeWind * tm * (0.75 if swipe_chain else 1.0) * swipe_k:
 				go("swipe"); swipe_hit = false
 				stats.swipes += 1
 				env.fx("slash", pos.x, pos.y, { dir = h, radius = G().swipeR * 0.9, arc = G().swipeArc, height = 0.6, tiger = true })
@@ -263,7 +277,10 @@ func update(dt: float) -> void:
 						if r != "block" and r != "break": stats.swipe_hits += 1
 						else: stats.blocks += 1
 			if t >= G().swipeActive + G().swipeRecover * tm:
-				if enraged and swipe_chain == 0 and tp.d < G().swipeR + 0.5 and b.rand() < G().doubleSwipe:
+				if not swipe_hit and pl.alive and pl.last_dodge_t >= swipe_t0: pl.dodges_ok += 1
+				if tutorial and (tut_swipe or pl.dodges_ok == 0):
+					swipe_chain = 0; _tut_next()
+				elif enraged and swipe_chain == 0 and tp.d < G().swipeR + 0.5 and b.rand() < G().doubleSwipe:
 					swipe_chain = 1; start_swipe(tp, true)
 				else:
 					swipe_chain = 0
@@ -408,6 +425,7 @@ func apply_mods(m: Dictionary) -> void:
 	if m.get("firstEncounter", false):
 		speed_mul = G().firstSpeed; decide_mul = G().firstDecide; roared = true
 		first_pounce = true   # 첫 조우(S0005): 먼저 몸을 낮추고 한 차례 돌진한다
+	if m.get("tutorial", false): tutorial = true
 	if float(m.get("stunned", 0.0)) > 0.0:
 		go("stunned"); stun_for = float(m.stunned); y = 0.0
 		set_anim("slip", true)
@@ -415,6 +433,19 @@ func apply_mods(m: Dictionary) -> void:
 
 func _wants_tree(tp: Dictionary) -> bool:
 	return b.focus != null and tp.d > G().guardThreat and since_hit > G().guardForget and not b.player_outside
+
+# 배우기 다음 수: 아직 못 피했으면 돌진을 다시(최대 3번) → 아직 못 막았으면 다가와 앞발(최대 4번) → 보통
+func _tut_next() -> void:
+	var pl = b.player
+	if pl.dodges_ok == 0 and stats.pounces < 3:
+		first_pounce = true; tut_swipe = false
+		to_prowl(0.8)
+	elif pl.blocks_ok == 0 and stats.swipes < 4:
+		tut_swipe = true
+		go("stalk"); set_anim("walk")
+	else:
+		tut_swipe = false
+		to_prowl(0.6)
 
 func start_backoff() -> void:
 	var tp := to_player()
@@ -430,9 +461,12 @@ func start_crouch(tp: Dictionary) -> void:
 	go("crouch")
 	set_heading(tp.v)
 	set_anim("crouch", true)
+	# 배우기: 첫 돌진은 예고를 두 배로, 아직 못 피했으면 1.5배
+	tele_k = (2.0 if stats.pounces == 0 else (1.5 if b.player.dodges_ok == 0 else 1.0)) if tutorial else 1.0
+	crouch_t0 = b.time
 	stats.pounces += 1
 	if env.options.telegraph:
-		tele_h = env.fx("lane", pos.x, pos.y, { dir = h, length = G().pounceLen + G().bodyHalf, width = G().pounceWidth, duration = G().crouch * tm })
+		tele_h = env.fx("lane", pos.x, pos.y, { dir = h, length = G().pounceLen + G().bodyHalf, width = G().pounceWidth, duration = G().crouch * tm * tele_k })
 		say("crouch", "호랑이가 몸을 낮춘다…", 1100)
 
 func start_pounce() -> void:
@@ -456,7 +490,9 @@ func start_swipe(tp: Dictionary, chain := false) -> void:
 	var env = b.env
 	go("swipeWind")
 	set_heading(tp.v)
-	var wind: float = G().swipeWind * tm * (0.75 if chain else 1.0)
+	swipe_k = (2.2 if stats.swipes == 0 else (1.6 if b.player.blocks_ok == 0 else 1.0)) if tutorial and not chain else 1.0   # 배우기: 첫 앞발 예고를 길게
+	swipe_t0 = b.time
+	var wind: float = G().swipeWind * tm * (0.75 if chain else 1.0) * swipe_k
 	set_anim("swipe", true, wind / G().swipeStrikeFrac)
 	if env.options.telegraph:
 		tele_h = env.fx("fan", pos.x, pos.y, { dir = h, radius = G().swipeR, arc = G().swipeArc, duration = wind })

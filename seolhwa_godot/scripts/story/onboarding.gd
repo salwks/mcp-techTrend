@@ -12,7 +12,9 @@
 #     새 핵심 안내 붙이기: CORE에 key를 넣고 once(key, 글[, until]) — 또는 hold(key, 글[, until]). 행동하는 곳에서 seen_now(key).
 #   2 조사 대상 먹점(§13): 멀면 아무것도 없다 → 가까우면 엷은 먹점 → 손 닿는 거리면 'E 살펴보기'. 첫 20~30분(첫 사건 끝 전)엔 조금 강하게.
 #     물건 데이터 highlight: "tutorial_high"(첫 사건 단서 — 단계 CASE_*_GUIDANCE_STAGE가 3 미만이면 다음 단서를 멀리서도) · "low" · "none".
-#   3 첫 호랑이 조우(§16): 첫 '몸 낮춤 → 멈춤 → 돌진'에서만 짧은 느린 화면 + 'K 회피', 막기를 한 번도 안 썼으면 첫 앞발 때 'L 막기' 한 번.
+#   3 첫 호랑이 조우(§16, 남원 v3.2 §26): 첫 '몸 낮춤 → 멈춤 → 돌진'에서 짧은 느린 화면 + 'K   회피'. 회피 뒤(또는 회피를 이미 익혔으면 앞발 예고 때)
+#     'L   막기 — 누르고 있기'. 둘 다 전투 핵심 안내(COMBAT_CORE)라 시간으로 끝나지 않고, 실제로 피했을 때(cplayer.dodges_ok — 구르는 사이 공격이 빗나감)·
+#     실제로 막았을 때(cplayer.blocks_ok)만 SEEN. 전투 밖에서는 띄우지 않는다(판이 끝나면 내렸다가 다음 범 싸움에서 다시).
 #   4 설정(scripts/story/game_settings.gd): 상호작용 안내 항상/초반만/최소/끔 · 조사 도움 기본/자세히/최소 — 전투 난이도와 따로.
 #   5 Esc: 잠시 멈춤 메뉴(scripts/story/options_menu.gd). 건너뛸 수 있는 장면(skippable) 중이면 Esc·Space·Enter가 건너뛰기.
 #   7 이야기 인물 말 표시: 새로 할 말이 있는 이야기 인물(story_director.talk_pending) 머리 위에 「…」 한지 말풍선(살짝 오르내림).
@@ -37,7 +39,9 @@ var _hint_until: Callable = Callable()
 var _queue: Array = []     # [[key, text, until, sec, core]]
 # 핵심 안내 — 시간으로 끝나지 않고 행동해야 끝난다(§4·§26). MOVE 5m 걷기 → RUN 2초 달리기(track_move) · INSPECT·TALK(on_interact) ·
 #   JOURNAL(사건 기록이 선 뒤 — on_case_started, 기록책을 열면) · MAP(들은 곳이 지도에 적힐 때 — on_discover, 지도를 열면).
-const CORE := ["MOVE", "RUN", "INSPECT", "TALK", "JOURNAL", "MAP"]
+const CORE := ["MOVE", "RUN", "INSPECT", "TALK", "JOURNAL", "MAP", "COMBAT_DODGE", "COMBAT_GUARD"]
+# 전투 핵심 안내 — 전투 중에만 뜬다(ONBOARD_PENDING에 남기지 않는다 — 이어 하기 뒤 들판에 뜨지 않게, 다음 범 싸움에서 다시 선다)
+const COMBAT_CORE := ["COMBAT_DODGE", "COMBAT_GUARD"]
 const MIN_SHOWN := 2.5     # 정보 안내가 끊겼을 때 이만큼 보였으면 본 것으로
 const PENDING := "ONBOARD_PENDING"
 # v3.2 §4: 이동은 실제로 MOVE_M 넘게 걸어야, 달리기는 실제로 RUN_SEC 넘게 달려야 끝난다(순간이동·여는 장면은 세지 않는다)
@@ -53,7 +57,8 @@ var _play := 0.0
 var _slow := false
 var _slow_prev := 1.0
 var _slow_t0 := 0
-var _guard_used := false
+var _slow_done := false      # 이번 판에 느린 화면을 이미 썼다
+var _guard_armed := false    # 이번 판에 막기 안내를 세울 때가 왔다(회피를 익혔거나 앞발 예고)
 var _map_was_open := false
 var _stall_t := 0.0
 var _stall_sig := ""
@@ -140,7 +145,7 @@ func seen_now(k: String) -> void:
 func once(key: String, text: String, until: Callable = Callable(), sec := 6.0, core = null) -> void:
 	if is_seen(key) or not hints_on(): return
 	var c: bool = is_core(key) if core == null else bool(core)
-	if c: _set_pending(key, text)
+	if c and not COMBAT_CORE.has(key): _set_pending(key, text)
 	if _hint_key == key: return
 	for q in _queue:
 		if q[0] == key: return
@@ -374,44 +379,53 @@ func _next_guided(pp: Vector2) -> String:
 		if dd < bd: bd = dd; best = String(o.id)
 	return best
 
-# ---- 첫 호랑이 조우(§16) ----
+# ---- 첫 호랑이 조우(§16 · v3.2 §26) — K 회피 · L 막기는 실제로 해야 끝난다 ----
 func _update_combat() -> void:
 	var cv = d.combat_view
 	if cv == null or not cv.active or cv.battle == null:
 		if _slow: _end_slow()
+		if COMBAT_CORE.has(_hint_key): _end_hint()   # 판이 끝났다 — SEEN 없이 내린다(다음 범 싸움에서 다시)
+		_slow_done = false; _guard_armed = false
 		return
 	var b = cv.battle
 	if String(b.get("mode")) == "human" or b.tiger == null: return
 	var pl = b.player; var tg = b.tiger
-	if pl.state == "guard":
-		_guard_used = true
-		Progress.set_onboard("ONBOARD_GUARD_USED", true, false)
+	if int(pl.get("dodges_ok")) > 0 and not is_seen("COMBAT_DODGE"):
+		seen_now("COMBAT_DODGE"); _guard_armed = true
+		if _slow: _end_slow()
+	if int(pl.get("blocks_ok")) > 0 and not is_seen("COMBAT_GUARD"): seen_now("COMBAT_GUARD")
+	if not hints_on(): return
 	var first: bool = bool(cv._opts.get("mods", {}).get("firstEncounter", false))
-	if first and not _slow and tg.state == "crouch" and not is_seen("COMBAT_DODGE") and hints_on():
-		Progress.set_onboard("ONBOARD_COMBAT_DODGE_SEEN", true)
-		_slow = true
-		_slow_prev = Engine.time_scale
-		_slow_t0 = Time.get_ticks_msec()
-		Engine.time_scale = _slow_prev * 0.3
-		d.ui.hint("K   회피")
-		if d.log_story: printerr("ONBOARD combat dodge slow-motion")
+	# K 회피: 범이 몸을 낮추면 — 첫 조우 첫 몸 낮춤에서만 짧은 느린 화면
+	if not is_seen("COMBAT_DODGE") and tg.state == "crouch" and _hint_key != "COMBAT_DODGE":
+		_combat_hold("COMBAT_DODGE", "K   회피", func(): return int(pl.dodges_ok) > 0)
+		if first and not _slow and not _slow_done:
+			_slow = true; _slow_done = true
+			_slow_prev = Engine.time_scale
+			_slow_t0 = Time.get_ticks_msec()
+			Engine.time_scale = _slow_prev * 0.3
+			if d.log_story: printerr("ONBOARD combat dodge slow-motion")
 	if _slow:
 		var real := (Time.get_ticks_msec() - _slow_t0) / 1000.0
 		if pl.state == "dodge" or (tg.state != "crouch" and tg.state != "pounce") or real > 3.2 or (tg.state == "pounce" and tg.t > 0.12):
 			_end_slow()
-	var dist: float = (tg.pos - pl.pos).length()
-	if tg.state == "swipeWind" and dist < 4.5 and not _guard_used and not bool(Progress.onboard("ONBOARD_GUARD_USED", false)) \
-			and not is_seen("COMBAT_GUARD") and hints_on():
-		Progress.set_onboard("ONBOARD_COMBAT_GUARD_SEEN", true)
-		_park_hint()   # 떠 있던 안내는 SEEN 없이 줄 뒤로
-		_hint_key = "COMBAT_GUARD"; _hint_text = "L   막기 — 누르고 있기"; _hint_sec = 2.6; _hint_shown = 0.0
-		_hint_core = false; _hint_hidden = false; _hint_until = Callable()
-		d.ui.hint(_hint_text)
+	# L 막기: 회피를 익힌 뒤, 또는 앞발을 드는 예고에서(회피를 이미 익혔을 때)
+	if tg.state == "swipeWind": _guard_armed = _guard_armed or is_seen("COMBAT_DODGE")
+	if is_seen("COMBAT_DODGE") and not is_seen("COMBAT_GUARD") and _guard_armed and _hint_key != "COMBAT_GUARD" and not _slow:
+		_combat_hold("COMBAT_GUARD", "L   막기 — 누르고 있기", func(): return int(pl.blocks_ok) > 0)
+
+# 전투 핵심 안내를 바로 세운다(전투 중엔 이야기가 돌고 있어 줄(_queue)이 막힌다 — 떠 있던 안내는 SEEN 없이 줄 뒤로)
+func _combat_hold(key: String, text: String, until: Callable) -> void:
+	if _hint_key != "" and _hint_key != key: _park_hint()
+	_queue = _queue.filter(func(q): return String(q[0]) != key)
+	_hint_key = key; _hint_text = text; _hint_sec = 9999.0; _hint_shown = 0.0
+	_hint_core = true; _hint_hidden = false; _hint_until = until
+	d.ui.hint(_hint_text)
+	if d.log_story: printerr("ONBOARD combat hint %s" % key)
 
 func _end_slow() -> void:
 	_slow = false
 	Engine.time_scale = _slow_prev
-	d.ui.hint_clear()
 
 # ---- 정체 감지(§25, P2) — 강제 지도 표시·정답 없음 ----
 func _update_stall(dt: float) -> void:

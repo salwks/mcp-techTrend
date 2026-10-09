@@ -3,11 +3,14 @@
 #   unlock: 갈래 목록 — 갈래 하나라도 맞으면(또는). 갈래가 이름 하나면 그 변수가 참, 이름 배열이면 모두 참(그리고).
 #   예: 큰 짐승 흘리기 = 평양 완료 그리고 짐승 흔적 읽기(v2.3).
 #   사건 키: 사건 데이터 case.complete_key(없으면 사건 id 대문자). 남원 NAMWON · 한양 책방 HANYANG_BOOKSHOP · 강릉 GANGNEUNG …
-# 동작이 있는 것은 P0 둘(받아밀기·빠른 투척 — scripts/combat/cplayer.gd skills). 나머지 넷은 해금 변수만.
+# 동작이 있는 것은 P0 둘(받아밀기·빠른 투척 — scripts/combat/cplayer.gd skills). 나머지 넷은 해금 변수만. unlock이 빈 목록이면 아직 어느 사건도 열지 않는다.
 extends RefCounted
 
 const TABLE := [
-	{ "var": "SKILL_GUARD_SHOVE", "name": "받아밀기", "unlock": ["CASE_NAMWON_COMPLETE"] },
+	# 남원 v3.2 결정 2: 남원 완료 보상은 '짐승 흔적 읽기'(SKILL_BEAST_TRACE — namwon_data S0010) 하나뿐. 받아밀기는 남원에서 빼고 지금은 아무 사건도 열지 않는다.
+	# TODO(전투 진행 정리): 받아밀기를 열 사건을 정한다 — 후보는 막기로 받는 싸움을 처음 본격적으로 쓰는 뒤 사건(강릉·경주 등).
+	#   이미 받아밀기를 연 옛 저장은 그대로 둔다(끄지 않는다). 막기·회피 자체는 기본 능력이다(남원 첫 조우에서 K·L로 배운다).
+	{ "var": "SKILL_GUARD_SHOVE", "name": "받아밀기", "unlock": [] },
 	{ "var": "SKILL_QUICK_THROW", "name": "빠른 투척", "unlock": ["CASE_HANYANG_BOOKSHOP_COMPLETE"] },
 	{ "var": "SKILL_EVADE_SLASH", "name": "회피베기", "unlock": ["CASE_GANGNEUNG_COMPLETE"] },
 	{ "var": "SKILL_SNAP_SHOT", "name": "빠른 사격", "unlock": ["CASE_GYEONGJU_COMPLETE"] },
