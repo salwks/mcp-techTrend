@@ -1,9 +1,15 @@
 # 처음 하는 사람 안내(seolhwa/docs/scenario/seolhwarok_ONBOARDING_UX_DESIGN_SUPPLEMENT_v1.0.md)
 #   "플레이어가 무엇을 할 수 있는지는 숨기지 않는다. 무엇이 진실인지는 숨긴다." — 퀘스트 표시·숫자 체크리스트·긴 창 없음.
 # 하는 일(story_director가 만들어 붙인다 — 사건이 없는 노정에서도):
-#   1 처음 한 번 안내(§4·§6·§23): 이동(WASD — 움직이거나 4.5초면 사라짐) · 살펴보기·대화(손 닿는 거리 안내를 처음엔 크게) ·
+#   1 처음 한 번 안내(§4·§6·§23): 이동(WASD) · 살펴보기·대화(손 닿는 거리 안내를 처음엔 크게) ·
 #     기록책(R — 첫 조사 뒤) · 지도(M — 처음 들은 곳이 지도에 적힐 때) · 전투 회피(K)·막기(L) · 물건 쓰기.
 #     progress.gd onboard에 ONBOARD_*_SEEN으로 남긴다(사건을 넘어 남는다, 새 게임이면 지워진다).
+#     핵심 안내(CORE — 남원 v3.2 §4 "핵심 튜토리얼은 시간으로 완료 처리하지 않는다"): 실제로 그 행동을 해야 SEEN.
+#       시간이 다 돼도 사라지지 않는다. 다른 안내가 기다리면 제 시간(sec)만큼 보인 뒤 줄 뒤로 물러났다가 다시 뜬다.
+#       기다리는 핵심 안내는 onboard.ONBOARD_PENDING {key: 글}에 남아 저장·이어 하기 뒤에도 다시 뜬다.
+#     그 밖의 안내(정보 안내 — RIDE·KNOT 등): sec초 보이면 끝나고 SEEN. 대화·컷신·기록책 동안은 감췄다가 이어 보이며(그 시간은 세지 않는다),
+#       다 보이기 전에 끊기면(장면이 바뀜 등) MIN_SHOWN초 넘게 보였을 때만 SEEN — 아니면 다음에 다시 뜬다.
+#     새 핵심 안내 붙이기: CORE에 key를 넣고 once(key, 글[, until]) — 또는 hold(key, 글[, until]). 행동하는 곳에서 seen_now(key).
 #   2 조사 대상 먹점(§13): 멀면 아무것도 없다 → 가까우면 엷은 먹점 → 손 닿는 거리면 'E 살펴보기'. 첫 20~30분(첫 사건 끝 전)엔 조금 강하게.
 #     물건 데이터 highlight: "tutorial_high"(첫 사건 단서 — 단계 CASE_*_GUIDANCE_STAGE가 3 미만이면 다음 단서를 멀리서도) · "low" · "none".
 #   3 첫 호랑이 조우(§16): 첫 '몸 낮춤 → 멈춤 → 돌진'에서만 짧은 느린 화면 + 'K 회피', 막기를 한 번도 안 썼으면 첫 앞발 때 'L 막기' 한 번.
@@ -22,9 +28,17 @@ var d                      # story_director
 var skippable := false     # 건너뛸 수 있는 연출 중(여는 장면·남원 전경)
 var skip := false
 var _hint_key := ""
-var _hint_t := 0.0
+var _hint_text := ""
+var _hint_sec := 0.0       # 이만큼 보이면: 정보 안내는 끝, 핵심 안내는 기다리는 안내에 자리를 내줌
+var _hint_shown := 0.0     # 실제로 보인 시간(감춘 동안은 세지 않는다)
+var _hint_core := false
+var _hint_hidden := false  # 대화·컷신·기록책 동안 잠시 감춤
 var _hint_until: Callable = Callable()
-var _queue: Array = []     # [[key, text, until, sec]]
+var _queue: Array = []     # [[key, text, until, sec, core]]
+# 핵심 안내 — 시간으로 끝나지 않고 행동해야 끝난다(§4·§26). RUN(Shift)·INSPECT 등은 v3.2 ACT 0 작업에서 once/hold로 붙인다.
+const CORE := ["MOVE", "RUN", "INSPECT", "TALK", "JOURNAL", "MAP"]
+const MIN_SHOWN := 2.5     # 정보 안내가 끊겼을 때 이만큼 보였으면 본 것으로
+const PENDING := "ONBOARD_PENDING"
 var _move_from := Vector3.INF
 var _mark_t := 0.0
 var _save_t := 0.0
@@ -54,6 +68,37 @@ func _ready() -> void:
 	_play = float(Progress.onboard("PLAY_TIME", 0.0))
 	d.ui.on_journal_page = func(_id): seen_now("JOURNAL")
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_restore_pending()
+
+# 저장에 남은 기다리는 핵심 안내를 다시 줄에 세운다(이어 하기)
+func _restore_pending() -> void:
+	var pend = Progress.onboard(PENDING, {})
+	if not (pend is Dictionary): return
+	for k in pend.keys():
+		if is_seen(String(k)): continue
+		once(String(k), String(pend[k]), _until_for(String(k)))
+
+# 다시 불러온 핵심 안내의 끝 조건(대개는 행동하는 곳에서 seen_now가 부른다 — 여기는 그 밖의 것만)
+func _until_for(k: String) -> Callable:
+	match k:
+		"JOURNAL": return func(): return d.ui.journal_open
+		"MAP": return func(): return _map_open()
+	return Callable()
+
+static func is_core(k: String) -> bool:
+	return CORE.has(k)
+
+# 기다리는 핵심 안내 기록(저장 때 함께 쓴다 — 바로 쓰지는 않는다)
+func _set_pending(k: String, text: String) -> void:
+	var pend = Progress.onboard(PENDING, {})
+	if not (pend is Dictionary): pend = {}
+	if text == "":
+		if not pend.has(k): return
+		pend.erase(k)
+	else:
+		if String(pend.get(k, "")) == text: return
+		pend[k] = text
+	Progress.set_onboard(PENDING, pend, false)
 
 # ---- 설정·초반 ----
 func guide() -> String: return GameSettings.guide()
@@ -75,39 +120,86 @@ func hints_on() -> bool:
 func is_seen(k: String) -> bool:
 	return bool(Progress.onboard("ONBOARD_%s_SEEN" % k, false))
 
+# 행동을 마쳤다(또는 안내를 다 보았다) — SEEN을 바로 저장하고, 떠 있거나 기다리던 안내를 거둔다
 func seen_now(k: String) -> void:
+	if _hint_key == k: _end_hint()
+	_queue = _queue.filter(func(q): return String(q[0]) != k)
 	if is_seen(k): return
+	_set_pending(k, "")
 	Progress.set_onboard("ONBOARD_%s_SEEN" % k, true)
 	if d.log_story: printerr("ONBOARD seen %s" % k)
-	if _hint_key == k: _end_hint()
 
-# 처음 한 번 안내. until: 참이 되면 사라짐(없으면 sec초)
-func once(key: String, text: String, until: Callable = Callable(), sec := 6.0) -> void:
+# 처음 한 번 안내. until: 참이 되면 끝(SEEN). core(기본 CORE에 있으면 참): 시간으로 끝나지 않는다 — 위 머리말
+func once(key: String, text: String, until: Callable = Callable(), sec := 6.0, core = null) -> void:
 	if is_seen(key) or not hints_on(): return
+	var c: bool = is_core(key) if core == null else bool(core)
+	if c: _set_pending(key, text)
 	if _hint_key == key: return
 	for q in _queue:
 		if q[0] == key: return
-	_queue.append([key, text, until, sec])
+	_queue.append([key, text, until, sec, c])
+
+# 행동할 때까지 남는 안내(CORE에 없는 key도) — once(..., core = true)
+func hold(key: String, text: String, until: Callable = Callable(), sec := 6.0) -> void:
+	once(key, text, until, sec, true)
+
+func hint_key() -> String: return _hint_key   # 시험용: 지금 떠 있는 안내
 
 func _end_hint() -> void:
 	_hint_key = ""
+	_hint_text = ""
 	_hint_until = Callable()
+	_hint_hidden = false
 	d.ui.hint_clear()
+
+# 떠 있는 안내를 SEEN 없이 내리고 줄 뒤로(핵심 안내가 자리를 내줄 때 · 전투 안내가 끼어들 때)
+func _park_hint() -> void:
+	if _hint_key == "": return
+	var q := [_hint_key, _hint_text, _hint_until, _hint_sec, _hint_core]
+	var shown := _hint_shown
+	var k := _hint_key
+	_end_hint()
+	if not q[4] and shown >= MIN_SHOWN:   # 정보 안내는 넉넉히 보였으면 본 것으로
+		seen_now(k); return
+	_queue.append(q)
+
+# 새 안내를 띄우지 않을 때(예전과 같다): 대화·기록책·이야기 진행 중(추격처럼 플레이어가 움직이는 때는 빼고)
+func _hint_blocked() -> bool:
+	return d.ui.modal or d.ui.journal_open or (d.runner != null and d.runner.busy and not d.free_move)
+
+func _in_combat() -> bool:
+	return d.combat_view != null and d.combat_view.active
+
+# 떠 있는 안내를 잠시 감출 때: 대화창·기록책·컷신. 전투 중에는 건드리지 않는다(전투 안내 K·L이 같은 자리를 쓴다)
+func _hint_hide() -> bool:
+	return not _in_combat() and (d.ui.modal or d.ui.journal_open or d._cut)
 
 func _update_hints(dt: float) -> void:
 	if _hint_key != "":
-		_hint_t -= dt
-		if _hint_t <= 0.0 or (_hint_until.is_valid() and _hint_until.call()):
-			var k := _hint_key
-			_end_hint()
-			Progress.set_onboard("ONBOARD_%s_SEEN" % k, true)
+		if _hint_until.is_valid() and _hint_until.call():
+			seen_now(_hint_key); return
+		if _hint_hide():
+			if not _hint_hidden: _hint_hidden = true; d.ui.hint_clear()
+			return
+		if _hint_hidden:
+			if _in_combat(): return   # 감춘 채로 전투가 시작됐다 — 끝난 뒤 다시
+			_hint_hidden = false; d.ui.hint(_hint_text)
+		_hint_shown += dt
+		if _hint_shown < _hint_sec: return
+		if not _hint_core: seen_now(_hint_key)                                # 정보 안내: 제 시간 다 보였다
+		elif not _queue.is_empty() and not _hint_blocked(): _park_hint()     # 핵심 안내: 기다리는 안내에 잠시 자리를 내주고 다시 뜬다
 		return
-	if _queue.is_empty() or d.ui.modal or d.ui.journal_open or (d.runner != null and d.runner.busy and not d.free_move): return
+	if _queue.is_empty() or _hint_blocked(): return
 	var q: Array = _queue.pop_front()
 	if is_seen(String(q[0])): return
-	_hint_key = String(q[0]); _hint_until = q[2]; _hint_t = float(q[3])
-	d.ui.hint(String(q[1]))
-	Progress.set_onboard("ONBOARD_%s_SEEN" % _hint_key, true, false)   # 보여 준 것으로(다시 불러와도 다시 안 뜬다) — 다음 저장 때 쓴다
+	_hint_key = String(q[0]); _hint_text = String(q[1]); _hint_until = q[2]; _hint_sec = float(q[3]); _hint_core = bool(q[4])
+	_hint_shown = 0.0; _hint_hidden = false
+	d.ui.hint(_hint_text)
+
+# 장면이 닫힐 때: 넉넉히 보인 정보 안내는 본 것으로(아니면 다음에 다시). 핵심 안내는 ONBOARD_PENDING으로 남아 있다
+func _exit_tree() -> void:
+	if _hint_key != "" and not _hint_core and _hint_shown >= MIN_SHOWN and not is_seen(_hint_key):
+		Progress.set_onboard("ONBOARD_%s_SEEN" % _hint_key, true, false)
 
 # ---- 이야기 쪽에서 부르는 것 ----
 const Discovery := preload("res://scripts/region/discovery.gd")
@@ -177,7 +269,7 @@ func _process(delta: float) -> void:
 
 var _ctl_t := 0.0
 func _update_move(dt: float) -> void:
-	if is_seen("MOVE") or _hint_key == "MOVE": return
+	if is_seen("MOVE"): return
 	# 조작이 돌아오고 잠시 뒤(여는 장면 순간이동이 끝난 다음)부터 잰다
 	if d.blocks_move() or d.drives_player() or not (d.case_id == "" or d._started) or (d.runner != null and d.runner.busy):
 		_ctl_t = 0.0; _move_from = Vector3.INF; return
@@ -186,7 +278,9 @@ func _update_move(dt: float) -> void:
 	var p: Vector3 = d.main.player_pos
 	if _move_from == Vector3.INF:
 		_move_from = p
-		once("MOVE", "W A S D   이동", func(): return Vector2(d.main.player_pos.x - _move_from.x, d.main.player_pos.z - _move_from.z).length() > 0.6, 4.5)
+		once("MOVE", "W A S D   이동", Callable(), 4.5)
+	elif Vector2(p.x - _move_from.x, p.z - _move_from.z).length() > 0.6:   # 실제로 걸었다(순간이동은 위에서 _move_from을 비운다)
+		seen_now("MOVE")
 
 # 처음 조사·대화 전에는 손 닿는 거리 안내를 조금 크게(+ 대화는 한 줄 안내)
 func _update_prompt_style() -> void:
@@ -285,8 +379,10 @@ func _update_combat() -> void:
 	if tg.state == "swipeWind" and dist < 4.5 and not _guard_used and not bool(Progress.onboard("ONBOARD_GUARD_USED", false)) \
 			and not is_seen("COMBAT_GUARD") and hints_on():
 		Progress.set_onboard("ONBOARD_COMBAT_GUARD_SEEN", true)
-		_hint_key = "COMBAT_GUARD"; _hint_t = 2.6; _hint_until = Callable()
-		d.ui.hint("L   막기 — 누르고 있기")
+		_park_hint()   # 떠 있던 안내는 SEEN 없이 줄 뒤로
+		_hint_key = "COMBAT_GUARD"; _hint_text = "L   막기 — 누르고 있기"; _hint_sec = 2.6; _hint_shown = 0.0
+		_hint_core = false; _hint_hidden = false; _hint_until = Callable()
+		d.ui.hint(_hint_text)
 
 func _end_slow() -> void:
 	_slow = false
