@@ -34,6 +34,7 @@ const FACT_TAG := { fact = "◆ 확인", heard = "◇ 들음", guess = "△ 추�
 var auto := false                  # 시험: 대화·카드를 스스로 넘기고 선택은 auto_choice로
 var auto_real := false             # 시험 화면 검토(--storyshots): auto여도 대사·자막·암전을 실제 길이로(대사는 읽는 시간만큼 두고 넘긴다)
 var auto_choice: Callable = Callable()   # (물음, [label]) → 번호
+var auto_hold := 0.03               # 시험(auto): 대사·카드·선택을 띄워 두는 시간(초) — 화면을 찍는 시험만 늘린다
 var log_lines := true              # 대사·선택을 표준 출력에 남긴다(시험 기록)
 var modal := false
 var journal_open := false
@@ -458,7 +459,7 @@ func say(who: String, lines) -> void:
 		_dlg_text.visible_characters = 0
 		_typing = true; _type_t = 0.0
 		_waiting = "say"
-		if auto: await _wait(0.03 if not auto_real else 1.0 + line.length() * 0.06)
+		if auto: await _wait(auto_hold if not auto_real else 1.0 + line.length() * 0.06)
 		else: await _confirm
 		_typing = false
 	_waiting = ""
@@ -476,7 +477,7 @@ func examine(title: String, text, kind := "clue") -> void:
 	_card.visible = true
 	_card.size = Vector2(_card.custom_minimum_size.x, 0)
 	_waiting = "card"
-	if auto: await _wait(0.03)
+	if auto: await _wait(auto_hold)
 	else: await _confirm
 	_waiting = ""
 	_card.visible = false
@@ -521,7 +522,7 @@ func choice(prompt: String, options: Array) -> int:
 	_waiting = "choice"
 	var idx := -1
 	if auto:
-		await _wait(0.03)
+		await _wait(auto_hold)
 		var labels := options.map(func(o): return String(o.label) if not o.get("disabled", false) else "")
 		idx = auto_choice.call(prompt, labels) if auto_choice.is_valid() else first
 		if idx < 0 or idx >= options.size() or options[idx].get("disabled", false): idx = first

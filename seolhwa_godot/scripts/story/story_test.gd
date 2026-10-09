@@ -196,6 +196,8 @@ func _run() -> void:
 	await _frames(30)
 	await go("jumo")
 	expect(d.S.is_flag("case_started"), "S0002 사건 기록 생성")
+	expect(d.S.is_flag("igyeom_link") and d.S.is_flag("heard_pass_road") and d.case_fn.jumo_asked() >= 2, "v3.2 주모 물음 → 이겸 연결 · 고갯길")
+	expect(d.case_fn.summary().slice(0, 4) == Array(d.case_fn.FIRST_RECORD), "v3.2 첫 기록 네 줄")
 	# S0004 고갯길(단서 셋 이상이면 고갯마루 아래에서 S0005 첫 조우)
 	for id in ["cake_1", "cake_2", "cake_3", "torn_skirt"]: await go(id)
 	await go("blood")
@@ -208,14 +210,14 @@ func _run() -> void:
 	expect(d.S.is_flag("first_encounter"), "S0005 첫 조우")
 	expect(d.S.knows("K_FOOD"), "K_FOOD(떡·광주리)")
 	snapshot("after S0005")
-	# S0003 오누이
+	# S0003 오누이(v3.2 §12: 세 물음 — 지난밤 목소리는 들은 대로, K_MIMIC은 아직)
 	await go("nui")
 	expect(d.S.is_flag("met_kids"), "S0003 오누이")
 	await shot("s0003_house")
-	await go("nui")
-	expect(d.S.knows("K_MIMIC"), "K_MIMIC(문밖의 목소리)")
+	expect(d.S.has_clue("voice_at_night") and d.S.is_flag("voice_at_night") and not d.S.knows("K_MIMIC"), "어젯밤의 목소리(들음) — K_MIMIC 아님")
 	await go("hearth")
 	await go("kneading")
+	expect(d.S.has_clue("mother_route") and not d.actors.has("mother") and not d.case_fn.has_method("mother_flashback"), "함지: 기록만(어머니 회상 없음)")
 	# S0006 추가 조사
 	await go("miller")
 	await go("flour_prints")
@@ -239,11 +241,12 @@ func _run() -> void:
 		prefer = []
 		expect(d.S.has("ITM_TOOL_002"), "횃불 얻음")
 	snapshot("before night")
-	# 쉬기 → 밤
-	prefer = ["하룻밤"]
-	await go("jumo")
+	# 밤(v3.2 §3.2: 주막 잠이 아니라 외딴집에서 해 지기를 기다린다)
+	expect(not d.case_fn.has_method("rest"), "주막 잠(rest) 필수 흐름 없음")
+	prefer = ["여기서 기다린다"]
+	await go("dusk_wait")
 	prefer = []
-	expect(d.S.phase == "night", "주막에서 쉬고 밤")
+	expect(d.S.phase == "night", "외딴집에서 기다리고 밤")
 	await walk_to("yard")
 	await _frames(20); await _idle()
 	match branch:
