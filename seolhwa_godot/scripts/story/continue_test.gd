@@ -107,9 +107,19 @@ func _story_actor() -> void:
 	var near := func(): return d._target != null and String(d._target.get("id", "")) == id
 	_ok(await _wait_until(near, 3.0), "E 대상 = 이야기 인물 %s (안내 '%s')" % [id, String(tgt.label)])
 	var n0 := int(d.S.talked.get(id, 0))
-	await _press_e()
 	var opened := func(): return int(d.S.talked.get(id, 0)) > n0
-	_ok(await _wait_until(opened, 3.0), "E로 %s와 말이 열림" % id)
+	# E를 누르는 순간 지나가던 고을 사람이 더 가까우면 E가 그쪽으로 간다(새 게임 직후 장터 — 예전부터 가끔 실패하던 까닭).
+	# 그러면 그 말을 닫고 다시 이야기 인물 곁에 서서 누른다(최대 3번). 무엇이 E를 받았는지 남긴다
+	var got := false
+	for attempt in 3:
+		await _wait_until(near, 3.0)
+		await _press_e()
+		if await _wait_until(opened, 3.0): got = true; break
+		var tg = d._target
+		print("CONTTEST retry %d E 대상=%s busy=%s modal=%s" % [attempt + 1, "없음" if tg == null else "%s:%s" % [tg.kind, tg.get("id", tg.get("key", ""))], d.runner.busy, d.ui.modal])
+		await _wait_until(func(): return not d.runner.busy and not d.ui.modal, 30.0)
+		main.teleport(p.x, p.y)
+	_ok(got, "E로 %s와 말이 열림" % id)
 	await _wait_until(func(): return not d.runner.busy and not d.ui.modal, 60.0)
 
 # 2 고을 사람: 이야기 인물에서 떨어진 고을 사람 곁으로 가서 E
