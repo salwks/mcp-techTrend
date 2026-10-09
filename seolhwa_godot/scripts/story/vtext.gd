@@ -21,6 +21,7 @@ static func advance(ch: String, fs: float, font: Font) -> float:
 	if CORNER.contains(ch): return fs * 0.5
 	if ch == "·": return fs * 0.7
 	if ROTATE.contains(ch):
+		if int(fs) <= 0: return fs * 0.5   # 크기 0(헤드리스 등에서 창 크기가 0일 때) — 글꼴에 0을 물으면 엔진 오류(p_size <= 0)
 		return maxf(fs * 0.5, font.get_string_size(ch, HORIZONTAL_ALIGNMENT_LEFT, -1, int(fs)).x)
 	var c := ch.unicode_at(0)
 	if c < 0x1100: return fs * 0.8   # 숫자·로마자는 조금 좁게
@@ -30,6 +31,7 @@ static func draw(ci: CanvasItem, font: Font, center: Vector2, ch: String, fs: fl
 	ch = vchar(ch)
 	if ch == " ": return
 	var ifs := int(fs)
+	if ifs <= 0: return   # 0 크기로는 보일 것이 없다(엔진 오류 p_size <= 0을 내지 않게)
 	var w := font.get_string_size(ch, HORIZONTAL_ALIGNMENT_LEFT, -1, ifs).x
 	var asc := font.get_ascent(ifs); var desc := font.get_descent(ifs)
 	var base := (asc - desc) * 0.5
