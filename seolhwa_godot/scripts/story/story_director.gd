@@ -68,6 +68,9 @@ var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 �
 var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
 var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
 var ambient = null             # 고을 사람 말 걸기(scripts/story/ambient_talk.gd)
+var talk_cam := {}             # 지금 이야기 인물 대화 카메라(사건 머리 case.talk_camera — 남원 v3.2 CAMERA 1A). 대화가 끝나면 비운다
+var _music_t := 0.0
+var _music_cur := "?"          # 지금 튼 음악 id(사건 case_fn.music_wanted — 없으면 "")
 # 고을 사람(주변 인물)과 같은 바탕 그림 — 이걸 쓰는 이야기 인물에는 테두리 빛을 더한다
 const GENERIC_KINDS := ["villager_m", "villager_f", "elder", "child_boy", "child_girl", "hunter", "innkeeper", "miller", "woodcutter",
 	"scholar", "merchant", "peddler", "official", "monk", "bosal", "boatman", "haenyeo", "farmer", "farmwife", "herder", "raincape", "traveler", "shaman"]
@@ -236,6 +239,7 @@ func update(dt: float) -> void:
 	if combat_view != null: combat_view.update(Engine.time_scale / 60.0 if test != null and combat_view.active else dt)
 	if _rub == null:
 		_rub = load("res://scripts/story/rubbing.gd").new(); add_child(_rub); _rub.setup(self)
+	_update_music(dt)
 	if case_id == "":
 		_update_rumors(dt)
 		_rub.update(dt)
@@ -268,11 +272,24 @@ func update(dt: float) -> void:
 		ui.prompt("")
 		_target = null
 		return
+	# 첫 E가 가끔 버려지던 까닭(새 게임 직후 주모): E 대상이 먼저 잡히고 같은 자리의 트리거(전경 늦은 트리거 s0001_vista_late)는
+	# 0.2초 간격 검사에서 한두 프레임 늦게 이야기를 시작했다 — 그 사이 누른 E는 runner.busy에 막혀 버려졌다.
+	# 그래서 (1) 트리거가 이야기를 시작한 프레임에는 대상을 내놓지 않고 (2) 대상이 새로 잡히는 프레임에는 그 자리 트리거를 먼저 본다.
 	_trig_t -= dt
 	if _trig_t <= 0.0:
 		_trig_t = 0.2
 		_check_triggers()
+		if runner.busy:
+			ui.prompt(""); _target = null
+			return
+	var had: bool = _target != null
 	_update_target()
+	if _target != null and not had and _trig_t < 0.2:
+		_trig_t = 0.2
+		_check_triggers()
+		if runner.busy:
+			ui.prompt(""); _target = null
+			return
 	_rub.update(dt)
 
 func _unhandled_input(ev: InputEvent) -> void:
@@ -798,8 +815,27 @@ func interact(id: String) -> void:
 	if onboard != null: onboard.on_interact("actor" if actors.has(id) else "object")
 	_target = null
 	ui.prompt("")
+	var tc = data.get("case", {}).get("talk_camera")
+	var cam_on: bool = actors.has(id) and tc is Dictionary and not steps.is_empty()
+	if cam_on: _talk_camera(id, tc)
 	await runner.run(steps)
+	if cam_on and not talk_cam.is_empty(): _talk_camera_end()
 	if onboard != null: onboard._pend_t = 0.0   # 「…」 바로 다시 본다
+
+# 이야기 인물 대화 카메라(남원 v3.2 §8 CAMERA 1A — 이 뒤 일반 NPC 대화의 기준): 플레이어와 인물 사이를 겨냥, pitch·거리·fov는 사건 머리 값.
+# 대화 동안 음악을 조금 낮춘다. 대화 안에서 연출이 카메라를 바꾸면(컷신) 그쪽이 이긴다 — 끝날 때 평소 시점으로
+func _talk_camera(id: String, tc: Dictionary) -> void:
+	var a: Dictionary = actors[id]
+	var mid := (Vector2(main.player_pos.x, main.player_pos.z) + Vector2(a.pos.x, a.pos.z)) * 0.5
+	talk_cam = tc.duplicate()
+	talk_cam.focus = [mid.x, mid.y]
+	camera(talk_cam)
+	Sound.music_level(0.5, 0.6)
+
+func _talk_camera_end() -> void:
+	talk_cam = {}
+	camera(null)
+	Sound.music_level(1.0, 1.0)
 
 func _check_triggers() -> void:
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
@@ -862,6 +898,20 @@ func show_ending() -> void:
 # ---------------------------------------------------------------------------
 # 지역 변화(밤 울음소리 등)와 소문
 # ---------------------------------------------------------------------------
+# 음악(scripts/audio/sound.gd): 사건이 원하는 곡(case_fn.music_wanted — 없거나 사건이 없는 공간이면 "")을 1초마다 보고 바뀔 때만 튼다·멈춘다
+func _update_music(dt: float) -> void:
+	_music_t -= dt
+	if _music_t > 0.0: return
+	_music_t = 1.0
+	var want := ""
+	if case_fn != null and S != null and _started and case_fn.has_method("music_wanted"): want = String(case_fn.music_wanted())
+	if want == _music_cur: return
+	if _music_cur == "?" and want == "":
+		_music_cur = ""; Sound.music_stop(1.5); return
+	_music_cur = want
+	if want == "": Sound.music_stop(2.5)
+	else: Sound.music(want, 4.0)   # 천천히 들어온다(조용히)
+
 func _update_ambient(dt: float) -> void:
 	if case_fn != null and case_fn.has_method("ambient"): case_fn.ambient(dt)
 
