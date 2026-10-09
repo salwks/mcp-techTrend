@@ -157,6 +157,19 @@ def tiger_growl(rng):
     return norm(fade(x, 0.02, 0.2), -10)
 
 
+def brush_rustle(rng):
+    # 덤불·나뭇가지 스침(무언가 큰 것이 숲 사이를 지나감): 중간 띠 잡음 두 번 쓸림 + 잔가지 똑
+    sec = 1.4
+    t = t_axis(sec)
+    x = band(noise(sec, rng), 500, 3800)
+    sweep = np.exp(-((t - 0.32) / 0.16) ** 2) + 0.7 * np.exp(-((t - 0.78) / 0.2) ** 2)
+    out = x * sweep
+    for at in (0.27, 0.41, 0.83):
+        c = band(noise(0.03, rng), 1800, 6000) * env_exp(0.03, 0.006)
+        place(out, c * 0.9, at)
+    return norm(fade(out, 0.02, 0.25), -13)
+
+
 def axe_hit(rng):
     # 도끼가 나무에 박힘: 날카로운 시작 + 나무 울림(320·760Hz)
     sec = 0.7
@@ -305,7 +318,10 @@ SFX = {
     "journal_stamp": (journal_stamp, "기록책 도장(UI)"),
     "page_turn": (page_turn, "종이 넘김(UI)"),
     "ui_select": (ui_select, "고르기 똑(UI)"),
+    "brush_rustle": (brush_rustle, "덤불·가지 스침(큰 것이 숲 사이로 지나감)"),
 }
+# 처음 판(14개) 뒤에 더한 소리 — 씨앗 순서를 뒤에 붙여 예전 파일이 다시 돌려도 바뀌지 않게
+LATE = ["brush_rustle"]
 BGM = {
     "bgm_day_calm": (bgm_day_calm, "낮 잔잔한 고리(지속음 + 뜯는 5음, 24.5초)"),
     "bgm_night_drone": (bgm_night_drone, "밤 긴장 지속음(맥놀이, 24초)"),
@@ -317,7 +333,9 @@ def main():
         for k, (_, d) in {**SFX, **BGM}.items():
             print(f"{k:16s} {d}")
         return
-    for i, (k, (fn, _)) in enumerate(sorted(SFX.items())):
+    order = sorted(k for k in SFX if k not in LATE) + LATE
+    for i, k in enumerate(order):
+        fn = SFX[k][0]
         x = fn(np.random.default_rng(1000 + i))
         write(os.path.join(OUT, "sfx", k + ".wav"), x)
         print(f"sfx/{k}.wav  {len(x) / SR:.2f}s")

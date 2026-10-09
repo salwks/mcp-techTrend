@@ -6,7 +6,7 @@ extends SceneTree
 const Sound := preload("res://scripts/audio/sound.gd")
 const GameSettings := preload("res://scripts/story/game_settings.gd")
 const IDS := ["knock", "footstep_heavy", "flour_rustle", "basket_roll", "tiger_growl", "axe_hit", "rope_creak", "rope_snap",
-	"fall_impact", "wind", "breath_gasp", "journal_stamp", "page_turn", "ui_select"]
+	"fall_impact", "wind", "breath_gasp", "journal_stamp", "page_turn", "ui_select", "brush_rustle"]
 
 var n := 0
 var fails := 0

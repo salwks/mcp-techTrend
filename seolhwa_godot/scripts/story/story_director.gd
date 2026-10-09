@@ -435,7 +435,7 @@ func cutscene(on: bool) -> void:
 
 # 소리(scripts/audio/sound.gd): 연출이 소리 낼 순간마다 부른다. sfx_cue 신호도 그대로 낸다(다른 것이 붙어 들을 수 있게).
 #   sfx(id) — 자리 없이 · sfx(id, at) — at: 자리 이름(anchors·인물 id·"player") · Vector2(x,z) · Vector3 → 그 자리에서 3D로
-#   남원: knock · footstep_heavy · flour_rustle · basket_roll · tiger_growl · axe_hit · rope_creak · rope_snap · fall_impact · wind · breath_gasp
+#   남원: knock · footstep_heavy · flour_rustle · basket_roll · tiger_growl · axe_hit · rope_creak · rope_snap · fall_impact · wind · breath_gasp · brush_rustle
 #   bgm(id, 페이드) — ""이면 멈춤 · duck(db, 초) 잠시 음악 낮춤 · hush(초) 갑자기 고요(음악·환경음)
 #   명령으로도: { "sfx": id, "at": 자리 } · { "bgm": id, "fade": 초 } · { "duck": db, "sec": 초 } · { "hush": 초 }(story_runner)
 signal sfx_cue(id: String)

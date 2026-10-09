@@ -33,6 +33,7 @@ const TUNE := {
 	"rope_creak": { pitch = 0.08 },
 	"axe_hit": { pitch = 0.05 },
 	"basket_roll": { pitch = 0.05 },
+	"brush_rustle": { pitch = 0.08 },
 	"page_turn": { pitch = 0.08 },
 	"ui_select": { pitch = 0.05 },
 }

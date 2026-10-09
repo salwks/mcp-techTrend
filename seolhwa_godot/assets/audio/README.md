@@ -30,6 +30,7 @@
 | journal_stamp | sfx/journal_stamp.wav | 기록책 도장(UI) | placeholder, replace later |
 | page_turn | sfx/page_turn.wav | 종이 넘김(UI) | placeholder, replace later |
 | ui_select | sfx/ui_select.wav | 고르기 똑(UI, 설정 메뉴 소리 크기 바꿀 때) | placeholder, replace later |
+| brush_rustle | sfx/brush_rustle.wav | 덤불·가지 스침 — 큰 것이 숲 사이로 지나감(남원 첫 조우 §25) | placeholder, replace later |
 
 ## 음악 (bgm/)
 
