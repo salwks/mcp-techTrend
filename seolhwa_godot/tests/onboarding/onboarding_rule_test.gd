@@ -6,6 +6,7 @@
 #   D 핵심 안내는 기다리는 안내에 자리를 내줬다가(SEEN 아님) 다시 뜬다
 #   E 저장 → 다시 불러오기(이어 하기) 뒤에도 기다리던 핵심 안내가 다시 뜨고, 행동하면 SEEN이 저장된다
 #   F hold()는 CORE 밖 key도 행동까지 남긴다 · 안내 끔이면 아무것도 안 뜬다
+#   G 남원 v3.2 §4: 이동은 실제로 5m 넘게 걸어야(순간이동 제외), 달리기는 실제로 2초 넘게 달려야 끝 · 이동이 끝나면 달리기 안내
 #   저장은 따로(user://st_onboard_rule.json, 끝나면 지운다). 끝 줄: ONBOARDRULE PASS n / ONBOARDRULE FAIL n
 extends SceneTree
 
@@ -77,6 +78,8 @@ func _initialize() -> void:
 	_test_e()
 	_fresh()
 	_test_f()
+	_fresh()
+	_test_g()
 	GameSettings.test_override = {}
 	for o in _made: o.free()
 	_made.clear()
@@ -209,3 +212,23 @@ func _test_f() -> void:
 	_run_for(ob2, 1.0)
 	ok(ob2.hint_key() == "" and not _pending().has("MAP"), "안내 끔이면 뜨지 않는다")
 	GameSettings.test_override = { guide = "early", help = "normal" }
+
+# G 이동·달리기(track_move — onboarding._update_move가 프레임마다 부른다)
+func _test_g() -> void:
+	var ob = _make()
+	for i in 4: ob.track_move(1.0, false, 0.1)
+	ok(not ob.is_seen("MOVE"), "4m 걸어서는 이동 안내가 안 끝난다")
+	ob.track_move(6.0, false, 0.1)
+	ok(not ob.is_seen("MOVE") and is_equal_approx(ob.moved_m, 4.0), "순간이동(한 번에 6m)은 세지 않는다")
+	ob.track_move(1.2, false, 0.1)
+	ok(ob.is_seen("MOVE"), "5m 넘게 걸으면 이동 안내가 끝난다")
+	_run_for(ob, 0.2)
+	ok(ob.hint_key() == "RUN" and Onboarding.is_core("RUN"), "이어서 달리기 안내(핵심)")
+	for i in 8: ob.track_move(1.0, false, 0.5)
+	ok(not ob.is_seen("RUN"), "걷기만 4초 — 달리기 안내는 남는다")
+	_run_for(ob, 20.0)
+	ok(not ob.is_seen("RUN") and ob.hint_key() == "RUN", "시간이 지나도 달리기 안내는 남는다")
+	for i in 3: ob.track_move(2.0, true, 0.5)
+	ok(not ob.is_seen("RUN"), "1.5초 달려서는 아직")
+	ob.track_move(2.0, true, 0.5)
+	ok(ob.is_seen("RUN") and ob.hint_key() == "", "2초 달리면 달리기 안내가 끝난다")

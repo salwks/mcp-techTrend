@@ -35,11 +35,18 @@ var _hint_core := false
 var _hint_hidden := false  # 대화·컷신·기록책 동안 잠시 감춤
 var _hint_until: Callable = Callable()
 var _queue: Array = []     # [[key, text, until, sec, core]]
-# 핵심 안내 — 시간으로 끝나지 않고 행동해야 끝난다(§4·§26). RUN(Shift)·INSPECT 등은 v3.2 ACT 0 작업에서 once/hold로 붙인다.
+# 핵심 안내 — 시간으로 끝나지 않고 행동해야 끝난다(§4·§26). MOVE 5m 걷기 → RUN 2초 달리기(track_move) · INSPECT·TALK(on_interact) ·
+#   JOURNAL(사건 기록이 선 뒤 — on_case_started, 기록책을 열면) · MAP(들은 곳이 지도에 적힐 때 — on_discover, 지도를 열면).
 const CORE := ["MOVE", "RUN", "INSPECT", "TALK", "JOURNAL", "MAP"]
 const MIN_SHOWN := 2.5     # 정보 안내가 끊겼을 때 이만큼 보였으면 본 것으로
 const PENDING := "ONBOARD_PENDING"
-var _move_from := Vector3.INF
+# v3.2 §4: 이동은 실제로 MOVE_M 넘게 걸어야, 달리기는 실제로 RUN_SEC 넘게 달려야 끝난다(순간이동·여는 장면은 세지 않는다)
+const MOVE_M := 5.0
+const RUN_SEC := 2.0
+const JUMP_M := 3.0          # 한 프레임에 이보다 멀리 옮겨졌으면 순간이동(세지 않는다)
+var _last_p := Vector3.INF
+var moved_m := 0.0           # 시험 기록
+var ran_sec := 0.0
 var _mark_t := 0.0
 var _save_t := 0.0
 var _play := 0.0
@@ -226,19 +233,17 @@ func observe(about: String, text: String) -> void:
 	d.S.flags["_obs"] = obs
 	d.runner.log_line("observe", text)
 	d.ui.toast("기록 — " + text, "journal")
+# 기록책 안내(R)는 첫 조사 뒤가 아니라 사건 기록이 선 뒤(v3.2 §9 — on_case_started)
 func on_interact(kind: String) -> void:
-	if kind == "object":
-		var first := not is_seen("INSPECT")
-		seen_now("INSPECT")
-		if first: once("JOURNAL", "R   기록책", func(): return d.ui.journal_open, 10.0)
-	else:
-		seen_now("TALK")
+	if kind == "object": seen_now("INSPECT")
+	else: seen_now("TALK")
 
 func on_discover(nm: String, how: String) -> void:
 	if how == "told": once("MAP", "M   지도 — 들은 곳이 적혔다", func(): return _map_open(), 9.0)
 
+# 사건 기록이 섰다 → R 기록책(핵심 — 실제로 열어야 끝난다). 지도(M)는 들은 곳이 지도에 적힐 때(on_discover)
 func on_case_started() -> void:
-	once("MAP", "M   지도", func(): return _map_open(), 8.0)
+	once("JOURNAL", "R   기록책 — 새 사건이 적혔다", func(): return d.ui.journal_open, 8.0)
 
 func _map_open() -> bool:
 	var m = d.main.get("_map")
@@ -269,18 +274,35 @@ func _process(delta: float) -> void:
 
 var _ctl_t := 0.0
 func _update_move(dt: float) -> void:
-	if is_seen("MOVE"): return
+	if is_seen("MOVE") and is_seen("RUN"): return
 	# 조작이 돌아오고 잠시 뒤(여는 장면 순간이동이 끝난 다음)부터 잰다
 	if d.blocks_move() or d.drives_player() or not (d.case_id == "" or d._started) or (d.runner != null and d.runner.busy):
-		_ctl_t = 0.0; _move_from = Vector3.INF; return
+		_ctl_t = 0.0; _last_p = Vector3.INF; return
 	_ctl_t += dt
 	if _ctl_t < 0.5: return
 	var p: Vector3 = d.main.player_pos
-	if _move_from == Vector3.INF:
-		_move_from = p
-		once("MOVE", "W A S D   이동", Callable(), 4.5)
-	elif Vector2(p.x - _move_from.x, p.z - _move_from.z).length() > 0.6:   # 실제로 걸었다(순간이동은 위에서 _move_from을 비운다)
-		seen_now("MOVE")
+	if _last_p == Vector3.INF:
+		_last_p = p
+		if not is_seen("MOVE"): once("MOVE", "W A S D   이동", Callable(), 4.5)
+		return
+	var step := Vector2(p.x - _last_p.x, p.z - _last_p.z).length()
+	_last_p = p
+	track_move(step, String(d.main.player.anim) == "run", dt)
+
+# 한 프레임 이동을 센다(시험이 직접 부를 수 있다): step 이번 프레임 걸은 거리(m) · running 달리는 그림 · dt 게임 시간
+#   MOVE: 걸은 거리를 더해 MOVE_M을 넘으면 끝 → 이어서 RUN 안내(이번 판에서 MOVE를 막 끝냈을 때만 — 오래된 저장에 갑자기 뜨지 않게)
+#   RUN: 실제로 달린 시간을 더해 RUN_SEC를 넘으면 끝(안내가 없어도 달리면 끝)
+func track_move(step: float, running: bool, dt: float) -> void:
+	if step > JUMP_M or step <= 0.0001: return
+	if not is_seen("MOVE"):
+		moved_m += step
+		if moved_m >= MOVE_M:
+			seen_now("MOVE")
+			if not is_seen("RUN"): once("RUN", "Shift   달리기", Callable(), 5.0)
+		return
+	if not is_seen("RUN") and running:
+		ran_sec += dt
+		if ran_sec >= RUN_SEC: seen_now("RUN")
 
 # 처음 조사·대화 전에는 손 닿는 거리 안내를 조금 크게(+ 대화는 한 줄 안내)
 func _update_prompt_style() -> void:
@@ -320,6 +342,8 @@ func _update_marks(dt: float) -> void:
 		if hl == "none": continue
 		var rng: float = near * (0.6 if hl == "low" else 1.0)
 		var strength: float = lv
+		if t.kind == "object" and t.spec.has("mark_r"):   # 대상이 정한 먹빛 거리·세기(길가 짚신: 4m, 아주 약하게 — v3.2 §5)
+			rng = float(t.spec.mark_r); strength = lv * float(t.spec.get("mark_a", 1.0))
 		if t.id == next_id:
 			rng = maxf(rng, 30.0 if stage <= 1 else 20.0)   # 첫 단서 뒤 다음 단서: 강하게 → 약하게(§14)
 			strength = maxf(lv, 0.9 if stage <= 1 else 0.7)
