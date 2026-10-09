@@ -640,7 +640,7 @@ func move_actor(id: String, to, speed: float, anim_nm: String, end_anim: String)
 	else: pts = [to]
 	a.scripted = true
 	a.path = pts.map(func(q): return anchor(q))
-	a.speed = speed if not ui.auto else speed * 8.0
+	a.speed = speed if (not ui.auto or ui.auto_real) else speed * 8.0   # 시험은 빨리 — 화면 검토(auto_real)는 실제 걸음
 	a.end_anim = end_anim
 	a.anim = anim_nm
 	a.ch.play(anim_nm)

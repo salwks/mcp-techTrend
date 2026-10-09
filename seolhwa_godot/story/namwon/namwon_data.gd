@@ -9,7 +9,10 @@
 #   함지 회상(mother_flashback)은 없앴고, 밤은 주막 잠이 아니라 외딴집에서 해 지기를 기다려 넘어간다.
 # v3.2 착수 순서 4 — ACT 3~5(§15~§30): 고갯길 단서(6~8m 먹빛·발견 때 카메라 잠깐 기울임·떡 셋의 말·치맛자락 인서트·피·발자국 따라가기·
 #   서낭당 광주리 CAMERA 3A) → 어머니의 과거 장면(CAMERA 3B, 기록하지 않음) → 첫 조우(트리거·공포·CAMERA 4A·전투 배우기 K·L) →
-#   포수 물음 → 방앗간 물음·밀가루 바닥 → 연결 추론(§29) → 외딴집 쪽 흰 발자국(§30, 목적이 '보호'로). ACT 6+는 아직 옛 흐름(dusk_wait 다리).
+#   포수 물음 → 방앗간 물음·밀가루 바닥 → 연결 추론(§29) → 외딴집 쪽 흰 발자국(§30, 목적이 '보호'로).
+# v3.2 착수 순서 5 — ACT 6~9(§31~§50): 해 질 무렵 귀환(dusk_return)·경고·포수와 역할 나누기 → 준비(디딤돌 기름·떡·횃불) → hide_spot “기다린다” →
+#   S0007 밤의 문(첫 노크 7A·7B·7C → 조작 → 둘째 노크 → 누이가 정한 탈출 → 문이 열린 뒤 처음 전신) → 시간 벌기(A/B/C, 밀쳐냄) → 우물·참기름·도끼 →
+#   마지막 개입 → S0009(기존 동아줄 ACT 10~). 옛 dusk_wait·night_fall 다리와 옛 밤 들머리는 없앴다.
 # ID: CHARACTER/ITEM/PROP_MASTER v1.0.
 #
 # 자리(게임 좌표 x,z — JL_NAMWON_UNBONG): 남원 동문 밖 주막 → 읍성 → 북문 → 북쪽 어귀(장승·쉼터, 포수) → 고개(서낭당) →
@@ -95,12 +98,12 @@ static func data() -> Dictionary:
 			# v3 — 원작 장면(FIXED_BEATS)을 보고 들은 대로.
 			# pass_memory는 옛 저장 표시용으로만 남긴다 — v3.2 §23 어머니의 과거 장면은 기록책이 '확인한 사실'로 적지 않는다(이제 얻지 않는다)
 			"pass_memory": { "title": "사흘 전 고갯길", "text": "고개마다 범이 “떡 하나 주면 안 잡아먹지” 하고 떡을 받아 갔다. 떡이 떨어진 서낭당 앞에서 떡장수는 돌아오지 못했다. 광주리와 수건만 남고 저고리는 없었다.", "kind": "guess" },
-			"disguise_seen": { "title": "어머니 옷을 걸친 범", "text": "자정 무렵, 떡장수의 저고리를 걸치고 머리에 수건을 쓴 범이 외딴집 문을 두드렸다.", "kind": "fact" },
-			"door_tricks": { "title": "문 앞의 손", "text": "“엄마 왔다. 문 열어라.” 목소리가 굵었다. 문틈으로 내민 손엔 털이 숭숭했다. 범은 물러갔다가 손에 밀가루를 발라 다시 내밀었고, 아이들은 문을 열었다.", "kind": "fact" },
-			"kids_tree": { "title": "우물가 나무", "text": "오누이는 뒷간에 간다며 쪽문으로 빠져나가 우물가 나무에 올랐다.", "kind": "fact" },
-			"reflection": { "title": "우물에 비친 얼굴", "text": "범은 우물에 비친 오누이를 보고 우물 속을 들여다보았다. 아우가 웃는 바람에 범이 고개를 들었다.", "kind": "fact" },
+			"disguise_seen": { "title": "어머니 옷을 걸친 범", "text": "문이 밀려 열린 뒤에야 보았다. 떡장수의 저고리를 걸치고 머리에 수건을 쓴 범이었다.", "kind": "fact" },
+			"door_tricks": { "title": "문 앞의 손", "text": "“엄마 왔다.” 목소리가 쉬었다. 문틈으로 내민 손엔 털이 숭숭했다. 범은 물러갔다가 가루 묻은 흰 손을 다시 내밀었다. 누이는 문을 열지 않았다.", "kind": "fact" },
+			"kids_tree": { "title": "우물가 나무", "text": "누이가 먼저 “뒷문으로 가.” 하고 정했다. 오누이는 뒷간에 간다며 뒷문으로 빠져나가 우물가 나무에 올랐다.", "kind": "fact" },
+			"reflection": { "title": "우물에 비친 얼굴", "text": "범은 우물에 비친 오누이를 보고 “거기 숨어 있었구나.” 했다. 아우가 킥 웃는 바람에 범이 고개를 들었다.", "kind": "fact" },
 			"kids_lie": { "title": "참기름", "text": "“참기름을 바르고 올라왔지.” 범은 줄기에 기름을 바르고 오르다 미끄러지기만 했다.", "kind": "heard", "by": "누이" },
-			"axe_slip": { "title": "도끼", "text": "“도끼로 찍고 올라오면 되지.” 범은 도끼로 줄기를 찍어 발 디딜 데를 내며 올라왔다.", "kind": "heard", "by": "아우" },
+			"axe_slip": { "title": "도끼", "text": "“도끼로 찍고 올라오면 되는데.” 범은 도끼로 줄기를 찍어 발 디딜 데를 내며 올라왔다.", "kind": "heard", "by": "아우" },
 			"prayer": { "title": "하늘에 빈 말", "text": "“하늘님, 저희를 살리시려거든 새 동아줄을 내려 주시고, 죽이시려거든 썩은 동아줄을 내려 주세요.”", "kind": "heard", "by": "누이" },
 			"sky_rise": { "title": "새 동아줄", "text": "아이 둘이 하늘로 올라가는 것을 보았다.", "kind": "fact" },
 			"rotten_rope": { "title": "썩은 동아줄", "text": "범도 같은 말로 줄을 빌었다. 내려온 것은 썩은 동아줄이었다. 범은 수수밭에 떨어졌고, 수숫대가 붉게 물들었다.", "kind": "fact" },
@@ -188,6 +191,10 @@ static func _anchors() -> Dictionary:
 		"well": [-3207.8, -343.8], "tiger_well": [-3208.4, -346.0], "tiger_tree": [-3203.6, -342.2],
 		"rope_kids": [-3205.4, -342.5], "rope_tiger": [-3203.4, -342.4], "sorghum": [-3199.4, -347.6], "tiger_fall": [-3199.6, -347.2],
 		"sky_watch": [-3210.4, -349.4],
+		# v3.2 §43 C — 떡(cake_bait)과 나무 사이, 횃불을 들고 막아서는 자리
+		"torch_block": [-3214.5, -343.2],
+		# v3.2 §38·§40 문틈(툇마루 위 문지방) — 앞발이 들어오는 자리
+		"door_sill": [-3214.0, -354.6],
 		# 다음 날 아침 — 북쪽 어귀(마을 사람들이 빈 집 이야기를 한다)
 		"neighbor_morning": [-3193.4, -128.6], "elder_morning": [-3199.6, -131.2], "morning_player": [-3196.4, -129.0],
 		"night_start": [-3196.0, -130.0], "wake_spot": [-3195.0, -129.0],
@@ -280,11 +287,7 @@ static func hunter_questions() -> Array:
 			{ "say": "포수", "lines": ["사람 사는 데 가까이 내려온 지 며칠 됐소.", "고개 아래 방앗간에서도 밤마다 뭔가 뒤진다더군."] }]),
 		_q("hm_where", "그놈은 어디 사오?", after, [
 			{ "say": "포수", "lines": ["고개 너머 서쪽 숲 어딘가. 거기까진 나도 안 들어가오."] }]),
-		# 결정 4 — 밤에는 포수와 역할을 나눈다(hunter_watch: 크게 밀리면 먼 데서 화살 한 번)
-		_q("hq_role", "그놈이 그 집으로 올지도 모르오.", "f('tiger_house_suspected')", [
-			{ "say": "포수", "lines": ["놈이 집으로 온다는 말이 맞다면 당신은 애들 곁에 있으시오."] },
-			{ "say": "포수", "lines": ["나는 고개 쪽 길을 막겠소. 놀라서 달아나면 그쪽으로 빠질 테니."] },
-			{ "flag": "hunter_watch" }]),
+		# 결정 4 역할 나누기(hunter_watch)는 낮의 물음이 아니라 해 질 무렵 외딴집에서(namwon_case.dusk_return · _hunter_role)
 	]
 
 # v3.2 §28 방앗간 주인 — 본 것만(왜 가루를 뒤집어쓰는지는 모른다)
@@ -314,7 +317,7 @@ static func actors() -> Array:
 					{ "choice": "", "options": [
 						{ "label": "그 집 아이들은 어디 갔소?", "do": [{ "say": "주모", "lines": ["그러게 말이오. 이웃 아낙이 가 봤더니 집이 비었더래요.", "누가 데려갔다는 사람도 없고…"] }] },
 						{ "label": "그만 가 보겠소.", "end": true }] }] },
-				{ "when": "ph('night')", "steps": [
+				{ "when": "f('dusk_prep') or ph('night')", "steps": [
 					{ "say": "주모", "lines": ["그 집 애들 생각에 나도 잠이 안 오오."] },
 					{ "if": "k('K_TERRITORY') and not has('%s') and not w('torch_lit')" % TORCH, "then": [
 						{ "choice": "", "options": [
@@ -327,7 +330,7 @@ static func actors() -> Array:
 					{ "say": "주모", "lines": ["그 집 애들은 좀 보고 오셨소?"], "when": "not f('first_encounter') and not f('met_kids')" },
 					{ "say": "주모", "lines": ["애들은 좀 어떻습디까?"], "when": "not f('first_encounter') and f('met_kids')" },
 					# 예전 저장(주막에서 자고 밤을 넘기던 흐름)에서 이어 온 사람에게도 밤을 어디서 맞을지 알린다
-					{ "say": "주모", "lines": ["그 애들만 두고 밤을 넘기게 할 순 없지. 해 지기 전에 그 집에 가 보시오."], "when": "fn('night_ready') and ph('explore')" },
+					{ "say": "주모", "lines": ["그 애들만 두고 밤을 넘기게 할 순 없지. 해 지기 전에 그 집에 가 보시오."], "when": "fn('night_ready') and ph('explore') and not f('dusk_return_seen')" },
 					{ "choice": "", "loop": true, "options": jumo_questions() + [
 						{ "label": "떡을 좀 얻을 수 있겠소?", "when": "k('K_FOOD') and not f('jumo_tteok')", "do": [
 							{ "say": "주모", "lines": ["어제 찐 거요. 냄새는 고소하지."] }, { "give": TTEOK, "n": 2 }, { "flag": "jumo_tteok" }] },
@@ -347,8 +350,8 @@ static func actors() -> Array:
 					{ "choice": "", "options": [
 						{ "label": "그 집 아이들은 어디 갔소?", "do": [{ "say": "포수", "lines": ["모르겠소. 아이들 발자국이 우물가 나무 밑에서 끊겼어.", "나무 위에도 없었고."] }] },
 						{ "label": "그만 가 보겠소.", "end": true }] }] },
-				{ "when": "ph('night')", "steps": [
-					{ "say": "포수", "lines": ["오늘 밤이오? 나도 멀리서 지켜보리다."] }, { "flag": "hunter_watch" },
+				{ "when": "f('dusk_prep') or ph('night')", "steps": [
+					{ "say": "포수", "lines": ["고개 쪽 길은 내가 지키고 있소. 어서 애들 곁으로 가시오."] }, { "flag": "hunter_watch" },
 					{ "if": "k('K_TERRITORY') and not has('%s') and not w('torch_lit')" % TORCH, "then": [
 						{ "say": "포수", "lines": ["이거 가져가시오. 관솔 횃불이오."] }, { "give": TORCH }] }] },
 				{ "when": "f('woke_by_hunter') and not f('hunter_after_wake')", "steps": [
@@ -364,7 +367,7 @@ static func actors() -> Array:
 					{ "say": "포수", "lines": ["그놈이었군."] },
 					{ "choice": "", "loop": true, "options": hunter_questions() + [{ "label": "그만 가 보겠소.", "end": true }] }] },
 				{ "when": "true", "steps": [
-					{ "say": "포수", "lines": ["해 지면 고개 쪽엔 얼씬도 마시오."], "when": "f('hq_role')" },
+					{ "say": "포수", "lines": ["해 지면 고개 쪽엔 얼씬도 마시오."], "when": "f('tiger_house_suspected')" },
 					{ "choice": "", "loop": true, "options": hunter_questions() + [
 						{ "label": "횃불을 얻을 수 있겠소?", "when": "k('K_TERRITORY') and not has('%s') and not w('torch_lit')" % TORCH, "do": [
 							{ "say": "포수", "lines": ["아껴 쓰시오."] }, { "give": TORCH }] },
@@ -412,7 +415,7 @@ static func actors() -> Array:
 			"at": "kid_in_a",
 			"facing": "down", "when": "not f('kids_hidden') and not f('kids_gone')",
 			"talk": [
-				{ "when": "ph('night')", "steps": [{ "call": "kids_night" }] },
+				{ "when": "f('dusk_prep') or ph('night')", "steps": [{ "say": "누이", "lines": ["문 걸어 둘게요. 목소리만 듣고는 안 열어요."] }] },
 				{ "when": "not f('met_kids')", "steps": [{ "event": "S0003" }] },
 				{ "when": "true", "steps": [
 					{ "choice": "", "loop": true, "options": kids_questions() + [{ "label": "문 꼭 걸고 있거라.", "end": true }] }] },
@@ -421,7 +424,7 @@ static func actors() -> Array:
 			"at": "kid_in_b",
 			"facing": "down", "when": "not f('kids_hidden') and not f('kids_gone')",
 			"talk": [
-				{ "when": "ph('night')", "steps": [{ "call": "kids_night" }] },
+				{ "when": "f('dusk_prep') or ph('night')", "steps": [{ "say": "아우", "lines": ["엄마 오면 누나가 먼저 볼 거래요."] }] },
 				{ "when": "not f('met_kids')", "steps": [{ "event": "S0003" }] },
 				{ "when": "true", "steps": [{ "say": "아우", "lines": ["오늘은 와요?"] }] },
 			] },
@@ -490,12 +493,6 @@ static func objects() -> Array:
 					{ "say": "나그네", "lines": ["그날도?"] },
 					{ "say": "누이", "lines": ["네."] }] },
 				{ "clue": "mother_route" }] },
-		# 밤으로(v3.2 §3.2): 주막에서 자고 넘기지 않는다 — 외딴집에서 해 지기를 기다린다.
-		#   ACT 6(밤 준비·hide_spot "기다린다")을 새로 짜기 전까지 옛 밤 흐름(S0007~)으로 잇는 다리
-		{ "id": "dusk_wait", "at": "hide_spot", "label": "해 지기를 기다린다", "radius": 2.6, "when": "ph('explore') and fn('night_ready')",
-			"steps": [{ "choice": "아이들 곁에서 해 질 때까지 기다릴까.", "options": [
-				{ "label": "여기서 기다린다", "do": [{ "call": "night_fall" }] },
-				{ "label": "아직이다", "end": true }] }] },
 		# S0006 추가 조사 — §28 방앗간 바닥(주인에게 묻지 않고 바로 살펴도 된다 · 주인과 말하면 mill_floor가 같은 것을 보인다)
 		{ "id": "flour_prints", "at": "flour", "label": "밀가루 바닥 · 살펴보기", "radius": 2.4, "when": "not c('flour_prints') and f('case_started')",
 			"steps": [{ "examine": "밀가루 바닥", "text": ["쏟아진 밀가루 위로 손바닥보다 큰 발자국이 찍혀 있다.", "뒷발보다 앞발 자국이 유난히 하얗다."] },
@@ -511,23 +508,24 @@ static func objects() -> Array:
 		{ "id": "territory_edge", "at": "territory_edge", "label": "숲속 빈터 어귀 · 살펴보기", "radius": 3.0, "when": "not c('territory')",
 			"steps": [{ "examine": "숲속 빈터", "text": ["빈터 어귀에 짐승 뼈가 구른다. 둘레 나무마다 발톱 자국.", "타다 만 횃불 하나. 누군가 불을 들고 여기까지 몰아낸 적이 있다."] },
 				{ "clue": "territory" }, { "rule": "K_TERRITORY" }] },
-		# 밤의 준비(S0007 전)
+		# v3.2 §33 준비 시간(해 질 무렵 귀환 뒤 ~ hide_spot에서 기다리기 전) — 기존 물건 쓰기만(새 미니게임 없음)
 		{ "id": "cake_bait", "at": "cake_bait", "label": "숲 오솔길 어귀 · 살펴보기", "radius": 2.4,
-			"when": "ph('night') and not w('cake_bait') and has('%s') and not f('climax_started')" % TTEOK,
+			"when": "f('dusk_prep') and not f('night_wait_started') and not w('cake_bait') and has('%s')" % TTEOK,
 			"steps": [{ "if": "not k('K_FOOD')", "then": [{ "call": "place_bait" }] }],
 			"use": [{ "item": TTEOK, "when": "k('K_FOOD')", "line": "떡을 오솔길에 띄엄띄엄 놓을 수 있다.", "do": [{ "call": "place_bait" }] }] },
 		{ "id": "yard_torch", "at": "yard_torch", "label": "마당 횃대 · 살펴보기", "radius": 2.0,
-			"when": "ph('night') and not w('torch_lit') and has('%s') and not f('climax_started')" % TORCH,
+			"when": "f('dusk_prep') and not f('night_wait_started') and not w('torch_lit') and has('%s')" % TORCH,
 			"steps": [{ "caption": "마당 귀퉁이의 빈 횃대.", "sec": 1.4 }],
 			"use": [{ "item": TORCH, "line": "횃대에 불을 옮겨 붙일 수 있다.", "do": [
 				{ "take": TORCH }, { "world": "torch_lit" }, { "caption": "마당이 붉게 일렁인다.", "sec": 2.0 }] }] },
 		# B: 쪽문 디딤돌에 참기름 — 아이들이 빠져나간 뒤 쫓아 나오는 범이 여기서 미끄러진다(나무에는 바르지 않는다: 나무 기름은 누이의 거짓말 몫)
 		{ "id": "back_step", "at": "back_step", "label": "쪽문 디딤돌 · 살펴보기", "radius": 2.4,
-			"when": "ph('night') and has('%s') and not w('oil_on_step') and not f('climax_started')" % OIL,
+			"when": "f('dusk_prep') and not f('night_wait_started') and has('%s') and not w('oil_on_step')" % OIL,
 			"steps": [{ "caption": "부엌 쪽문 앞 디딤돌. 쪽문은 우물가 나무 쪽으로 나 있다.", "sec": 2.0 }],
 			"use": [{ "item": OIL, "line": "디딤돌에 참기름을 부을 수 있다.", "do": [{ "call": "oil_step" }] }] },
-		{ "id": "house_door", "at": "hide_spot", "label": "숨어서 기다린다", "radius": 2.6, "when": "ph('night') and not f('climax_started')",
-			"steps": [{ "call": "wait_at_door" }] },
+		# §34 밤 기다리기 — 기다린다(23:30) / 아직 준비할 것이 있다
+		{ "id": "night_wait", "at": "hide_spot", "label": "숨어서 기다린다", "radius": 2.6, "when": "f('dusk_prep') and not f('night_wait_started') and ph('explore')",
+			"steps": [{ "call": "wait_at_hide" }] },
 	]
 
 static func triggers() -> Array:
@@ -565,10 +563,9 @@ static func triggers() -> Array:
 			"when": "ph('explore') and f('case_started') and (c('flour_prints') or f('first_encounter')) and not f('tiger_house_suspected')",
 			"steps": [{ "call": "white_trail" }] },
 		{ "id": "s0005_territory", "at": "territory", "radius": 10.0, "when": "ph('explore') and f('case_started') and not f('first_encounter')", "event": "S0005" },
-		# 밤: 외딴집 가까이
-		{ "id": "night_arrive", "at": "yard", "radius": 16.0, "when": "ph('night') and not f('climax_started')", "steps": [
-			{ "caption": "창호지 너머로 등잔불이 가물거린다. 아직은 조용하다.", "sec": 2.6 },
-			{ "toast": "준비를 마치면 마당 구석에 숨어 기다리자.", "kind": "info" }] },
+		# v3.2 §31 해 질 무렵 외딴집 귀환 — 범을 보았고 집 쪽으로 올 것을 짐작한 뒤(night_ready) 마당에 다가가면: 누이 “찾았어요?” → 경고 → 포수와 역할 나누기 → 준비
+		{ "id": "dusk_return", "at": "yard", "radius": 15.0, "when": "ph('explore') and fn('night_ready') and not f('dusk_return_seen')",
+			"steps": [{ "call": "dusk_return" }] },
 	]
 
 # ---------------------------------------------------------------------------
@@ -602,8 +599,8 @@ static func map_leads() -> Array:
 		# v3.2 §27 포수 “방앗간에서도 밤마다 뭔가 뒤진다더군.” → 방앗간(가 보면·주인과 말하면 사라진다)
 		{ "id": "nw_mill", "name": "물레방앗간", "at": "mill", "when": "f('hq_where') and not ph('night')", "until": "f('mill_talked') or c('flour_prints')",
 			"note": "포수 hq_where — mill_talked·flour_prints면 사라진다" },
-		{ "id": "nw_night_house", "name": "외딴집(오늘 밤)", "at": "house", "when": "ph('night')", "until": "seen('S0007')",
-			"note": "외딴집에서 해 지기를 기다린 뒤(night_fall) — S0007 숨어 기다리면 사라진다" },
+		{ "id": "nw_night_house", "name": "외딴집(오늘 밤)", "at": "house", "when": "f('dusk_prep') or ph('night')", "until": "seen('S0007') or f('night_wait_started')",
+			"note": "해 질 무렵 귀환·경고 뒤(dusk_prep) — 준비하러 마을에 다녀올 때 돌아올 곳. hide_spot에서 기다리면(S0007) 사라진다" },
 		{ "id": "nw_to_hanyang", "name": "한양", "region": "GG_HANYANG", "when": "seen('S0010')", "until": "v('CASE_HANYANG_BOOKSHOP_COMPLETE') == true",
 			"note": "S0010 노인 “한양 간다고 했지.” → MAIN_MASTER_TRACE = HANYANG" },
 	]
@@ -666,7 +663,9 @@ static func props() -> Array:
 		{ "id": "p_bait", "kit": "story/clue", "params": { "kind": "cake_trail", "n": 6, "length": 10.0 }, "at": [-3227.0, -341.5], "ry": 0.15,
 			"when": "w('cake_bait')" },
 		{ "id": "p_torch_fire", "kit": "story/clue", "params": { "kind": "torch_fire" }, "at": "yard_torch", "when": "w('torch_lit')" },
-		{ "id": "p_white_paw", "kit": "story/clue", "params": { "kind": "white_paw" }, "at": "house_door", "dy": 0.42, "when": "w('white_paw')" },
+		{ "id": "p_white_paw", "kit": "story/clue", "params": { "kind": "white_paw" }, "at": "door_sill", "dy": 0.58, "ry": 3.14159, "when": "w('white_paw')" },
+		# v3.2 §38 CAMERA 7C — 문틈의 털 난 앞발(일부만)
+		{ "id": "p_hairy_paw", "kit": "story/clue", "params": { "kind": "hairy_paw" }, "at": "door_sill", "dy": 0.58, "ry": 3.14159, "when": "w('hairy_paw')" },
 		# v3: 우물(오누이가 비친 곳) · 쪽문 디딤돌(B 참기름) · 수수밭(범이 떨어져 붉게 물든다 — 사건 뒤에도 남는다)
 		{ "id": "p_well", "kit": "village/well", "params": { "seed": 49 }, "at": "well", "ry": 0.4 },
 		{ "id": "p_step", "kit": "story/tale", "params": { "kind": "step_stone" }, "at": "back_step", "ry": 0.0 },
@@ -744,8 +743,8 @@ static func events() -> Dictionary:
 			"-", "-", []),
 		"S0006": _ev("S0006", "첫 조우 뒤(선택)", "방앗간·포수·기름집·헛간·큰 나무·숲속 빈터", "낮~해질녘", "포수·방앗간 주인에게 묻는다 · 연결 추론(§29) · 외딴집 쪽 흰 발자국(§30) · 준비(참기름·떡·횃불)",
 			"-", "-", []),
-		"S0008": _ev("S0008", "S0007 — 오누이가 쪽문으로 빠져나가고 범이 뒤쫓을 때", "외딴집 마당 / 숲속 빈터 어귀", "밤", "범 앞을 막아선다 / 디딤돌의 참기름 / 떡과 횃불로 잠시 꾄다",
-			"A 막아섬(죽지 않는 범과 싸워 시간을 번다) · B 디딤돌 함정(미끄러진 범 + 짧은 싸움) · C 떡과 횃불(잠시 꾀었다가 범이 돌아온다) — 어느 쪽이든 오누이는 나무에 오른다",
+		"S0008": _ev("S0008", "S0007 — 오누이가 뒷문으로 빠져나가고 범이 뒤쫓을 때", "외딴집 마당", "밤", "범 앞을 막아선다 / 디딤돌의 참기름 / 떡 냄새와 횃불로 길을 막는다(준비한 것에 따라)",
+			"A 막아섬(약 25초, 죽지 않는 범) · B 디딤돌에서 미끄러진 범과 짧은 싸움(12~18초) · C 떡 냄새로 방향을 돌리고 횃불로 길을 막음(범은 곧 돌아온다) — 끝에 범이 밀쳐내고 아이들은 나무 위",
 			"CASE_NAMWON_OUTCOME = A | B | C (범을 죽이지 않는다)", []),
 		# v3.2 §24~§26: 음악·새소리가 끊기고(발걸음과 바람만) 무언가 오른쪽·왼쪽 나무 사이로 지나간다 → CAMERA 4A 얼굴 1초 → 그르렁 → 뒤에서 덮친다 →
 		#   전투 배우기(K 회피·L 막기는 실제로 해야 끝) — 목표는 범을 죽이는 게 아니라 버티기(약 22초) 또는 한쪽 체력이 꽤 깎임 → 범이 물러나 숲으로 사라진다
@@ -754,10 +753,10 @@ static func events() -> Dictionary:
 			{ "call": "first_encounter" },
 		]),
 		# S0007 밤의 문(FIXED tiger_disguise · door_tricks · kids_escape_tree 시작) → S0008 시간을 번다 → S0009 동아줄과 두 빛 → S0010 아침(빈 집) → S0011 밤하늘
-		"S0007": _ev("S0007", "밤, 외딴집에서 숨어 기다린다", "외딴집 마당", "밤", "숨어서 지켜본다(문 앞 속임수에 맞서는 것은 오누이)", "-", "-", [
-			{ "call": "climax" },
+		"S0007": _ev("S0007", "해 질 무렵 귀환·준비 뒤 hide_spot에서 “기다린다”", "외딴집 마당", "밤(23:30)", "숨어서 지켜본다(문 앞 속임수에 맞서고 탈출을 정하는 것은 누이) · 노크 사이 조작 · 시간 벌기 · 마지막 개입", "-", "-", [
+			{ "call": "night_door" },
 		]),
-		"S0009": _ev("S0009", "S0008 뒤 — 오누이가 우물가 나무 위", "외딴집 우물가 나무 · 수수밭", "밤", "곁에서 본다(거짓말·동아줄을 비는 것은 오누이)", "-",
+		"S0009": _ev("S0009", "S0007의 우물·참기름·도끼·마지막 개입 뒤(ACT 10~)", "외딴집 우물가 나무 · 수수밭", "밤", "곁에서 본다(동아줄을 비는 것은 오누이)", "-",
 			"오누이가 하늘로 올라감 · 범이 썩은 동아줄과 수수밭에 떨어짐(수숫대가 붉어짐) · 하늘에 두 빛", [
 			{ "call": "rope_night" },
 		]),

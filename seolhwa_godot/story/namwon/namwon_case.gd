@@ -6,6 +6,9 @@
 #   함지 회상(mother_flashback)은 없앴다. 밤은 주막 잠(rest)이 아니라 외딴집에서 해 지기를 기다려(night_fall) 넘어간다.
 # v3.2 ACT 3~5: 고갯길 단서 연출(떡 셋·치맛자락 인서트·피·발자국 따라가기·광주리 CAMERA 3A) · 어머니의 과거 장면(past_scene — 기록하지 않음) ·
 #   첫 조우(first_encounter — 공포·CAMERA 4A·전투 배우기) · 포수·방앗간 · 연결 추론(check_link) · 외딴집 쪽 흰 발자국(white_trail).
+# v3.2 ACT 6~9: 해 질 무렵 귀환·경고·포수와 역할 나누기(dusk_return) · 준비 · hide_spot 기다리기 → 밤의 문(night_door: night_arrival ·
+#   first_knock(7A·7B·7C) · between_knocks(조작) · second_knock · kids_escape · reveal_tiger) → 시간 벌기(buy_time A/B/C, 끝에 밀쳐냄) →
+#   tree_scene(우물·참기름·아우의 실수) · axe_climb · last_stand(조작) → 기존 ACT 10 동아줄(rope_night). 옛 climax()·night_fall()은 없앴다.
 # 데이터(namwon_data.gd)의 { "call": "이름" }과 조건식 fn('이름')이 이 함수들을 부른다.
 extends RefCounted
 
@@ -48,9 +51,12 @@ func path_clues() -> int:
 		if S.has_clue(c): n += 1
 	return n
 
-# 외딴집에서 해 지기를 기다릴 수 있나(옛 주막 쉬기 조건과 같다 — ACT 6 밤 준비를 새로 짜기 전까지)
+# 해 질 무렵 외딴집으로 돌아갈 때가 되었나(v3.2 §31 dusk_return) — 범을 보았고(§73 범의 정체는 첫 조우가 필수),
+#   오누이를 만났고(“찾았어요?”), 범이 집 쪽으로 올 것을 짐작했을 때(흰 발자국·연결 추론 — 둘 다 놓쳤으면 단서 12개로 안전장치).
+#   옛 밤 저장을 되돌린 경우(night_ready_legacy)도. 시각은 보지 않는다(게임 시계는 저절로 흐르지 않는다)
 func night_ready() -> bool:
-	return f("case_started") and (f("first_encounter") or S.clues.size() >= 5)
+	if f("night_ready_legacy"): return true
+	return f("case_started") and f("first_encounter") and f("met_kids") and (f("tiger_house_suspected") or f("link_inferred") or S.clues.size() >= 12)
 
 # 주모에게 물은 것(이겸 연결 §9: 둘 이상) — "보지 못했소."는 물음이 아니다
 const JUMO_QS := ["jq_who", "jq_what", "jq_when", "jq_route", "jq_kids", "jq_search"]
@@ -60,9 +66,9 @@ func jumo_asked() -> int:
 		if f(k): n += 1
 	return n
 
-# C(떡과 횃불로 잠시 꾄다)를 고를 수 있는가 — 오솔길에 떡 + 빈터를 안다 + 불
+# C(떡과 횃불)가 되는가 — 오솔길 어귀에 떡(먹이 버릇을 알아야 놓을 수 있다) + 불(횃불을 지녔거나 마당 횃대에 붙였다). v3.2 §33
 func c_ready() -> bool:
-	return bool(S.world.get("cake_bait", false)) and S.knows("K_TERRITORY") and (S.has(TORCH) or bool(S.world.get("torch_lit", false)))
+	return bool(S.world.get("cake_bait", false)) and S.knows("K_FOOD") and (S.has(TORCH) or bool(S.world.get("torch_lit", false)))
 
 func route_is(r: String) -> bool:
 	return String(S.flags.get("route", "")) == r
@@ -92,7 +98,7 @@ func guidance(id: String) -> void:
 
 # 정체 감지(보강서 §25, onboarding.gd가 단계마다 부른다): 1 기록책 물음 강조 · 2 주변 사람의 한 줄 · 3 이미 본 단서를 다시 잇는 한 줄
 func stall_hint(stage: int) -> String:
-	if S.phase == "night":
+	if f("dusk_prep") or S.phase == "night":
 		return ["", "오늘 밤 범이 오기 전에 무엇을 준비할 수 있는가.", "주모  “불이라도 하나 챙겨 가시오. 짐승은 불을 꺼린다던데.”", "범은 떡 냄새를 따라왔고, 빈터 밖까지는 쫓지 않았다."][mini(stage, 3)]
 	if path_clues() == 0:
 		return ["", "떡장수는 마지막으로 어디로 갔는가.", "포수  “고개 쪽 길은 요새 아무도 안 넘으려 하오.”", "떡장수는 고개 너머 장으로 가는 길이었다."][mini(stage, 3)]
@@ -237,6 +243,7 @@ func _neighbor_leave() -> void:
 # 낮 음악(v3.2 소리 원칙 — 최소): 남원 낮 탐색 동안만 bgm_day_calm을 조용히. 여는 검은 화면·첫 조우 뒤·밤에는 없다.
 #   story_director가 1초마다 묻고 바뀔 때만 Sound.music을 부른다(다른 공간으로 가면 그쪽이 ""를 돌려 멈춘다)
 func music_wanted() -> String:
+	if S.phase == "night" and f("night_wait_started") and not f("night_music_off") and not f("act10_started"): return "bgm_night_drone"   # 밤 — 낮게(노크 때 끊는다)
 	if S.phase != "explore" or f("first_encounter"): return ""
 	if f("s0000_started") and not f("INTRO_MASTER_VOICE_DONE"): return ""
 	var h: float = d.main.hour
@@ -249,22 +256,49 @@ func combat_mods(_arena: String, mods: Dictionary) -> Dictionary:
 	return m
 
 func on_load() -> void:
-	# 절정 도중 저장은 밤 준비 상태로 되돌린다(웹과 같음). 결말 변수는 S0009 끝에야 쓰므로 그 앞이면 모두 되돌린다
-	if f("climax_started") and String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "":
-		for k in ["climax_started", "pending_outcome", "pending_detail", "kids_in_tree", "kids_gone", "yard_losses", "hunter_helped"]: S.flags.erase(k)
-		for k in ["kids_in_tree", "oil_on_tree", "sorghum_red", "white_paw"]: S.world.erase(k)
+	# 결정 6 — 밤 도중 저장(옛 절정 climax_started·옛 밤 준비, 새 밤 장면)은 저녁 준비 바로 앞으로 되돌린다. 결말 변수는 S0009 끝에야 쓰므로 그 앞이면 모두
+	if S.phase == "night" and String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "": _rollback_night()
 	if f("beat_mother_harmed_running"): S.flags.erase("beat_mother_harmed_running")
 	# v3.2 첫 조우 도중 저장: 조우를 처음부터 다시(트리거가 다시 선다)
 	if f("first_encounter_running"):
 		for k in ["first_encounter_running", "first_encounter", "_trig_s0005_pass", "_trig_s0005_territory"]: S.flags.erase(k)
 	# v3.2: 없앤 함지 회상 도중 저장(show_mother) · 이웃 아낙이 걸어가던 도중 저장
 	for k in ["show_mother", "neighbor_visit_on"]: S.flags.erase(k)
-	if S.phase == "night": load_tiger_story()
 	kids_place()
 	# 여는 장면 도중 저장에서 이어 하면: 남원 전경·제목은 건너뛴 것으로
 	if f("s0000_started") and not f("INTRO_NAMWON_TITLE_DONE") and S.phase != "start":
 		S.flags["INTRO_MASTER_VOICE_DONE"] = true
 		if Vector2(d.main.player_pos.x, d.main.player_pos.z).distance_to(d.anchor("s0000_vista")) > 400.0: S.flags["INTRO_NAMWON_TITLE_DONE"] = true
+
+# 결정 6 · §76 안전지점 롤백 — 밤 도중 저장을 새 장면 중간에 1:1로 맞추지 않는다. 단서·아이템·일반 진행은 그대로 두고, 밤의 임시 플래그·결과·
+#   원작 밤 장면 기록(beat)만 지운다. 준비해 둔 것(디딤돌 기름·오솔길 떡·횃대 불)은 물건을 이미 쓴 것이라 그대로 둔다.
+#   옛 밤(주막 잠·night_fall·옛 절정 — dusk_prep 없음): 해 질 무렵(18.6시) 외딴집 마당 → 곧 귀환·경고·포수·준비(dusk_return)가 다시 돈다.
+#   새 밤(dusk_prep 있음): 준비 중(21시) 숨은 자리 — 다시 준비하고 “기다린다”를 고른다.
+const NIGHT_TEMP_FLAGS := ["climax_started", "pending_outcome", "pending_detail", "kids_in_tree", "kids_gone", "yard_losses", "hunter_helped",
+	"night_wait_started", "first_knock_seen", "hairy_paw_seen", "tiger_withdrawn", "white_paw_seen", "kids_escape_started", "kids_up_running",
+	"tiger_revealed", "between_knocks_on", "night_music_off", "torch_block_on", "torch_carried", "tiger_shoved", "hunter_arrow", "time_line",
+	"last_stand_done", "act10_started", "kids_asked", "resolved"]
+const NIGHT_BEATS := ["tiger_disguise", "door_tricks", "kids_escape_tree", "well_reflection", "kids_lies", "kids_prayer", "new_rope_rise", "tiger_rotten_rope", "sun_moon"]
+const NIGHT_WORLD := ["kids_in_tree", "oil_on_tree", "sorghum_red", "white_paw", "hairy_paw"]
+var rollback := ""   # 시험 기록: "" | old_night | night
+func _rollback_night() -> void:
+	rollback = "night" if f("dusk_prep") else "old_night"
+	for k in NIGHT_TEMP_FLAGS: S.flags.erase(k)
+	for b in NIGHT_BEATS: S.flags.erase("beat_" + b)
+	S.flags["beats"] = ",".join(beats_seen().filter(func(x): return not NIGHT_BEATS.has(x)))
+	for k in NIGHT_WORLD: S.world.erase(k)
+	for k in ["S0007", "S0008", "S0009"]: S.seen.erase(k)
+	S.phase = "explore"
+	if rollback == "old_night":
+		for k in ["dusk_return_seen", "dusk_prep", "kids_warned", "_trig_dusk_return"]: S.flags.erase(k)
+		S.flags["night_ready_legacy"] = true   # 옛 조건으로 밤까지 온 저장 — 귀환은 곧바로 열린다
+		S.time = 18.6
+	else:
+		S.time = 21.0
+	d.set_hour(S.time)
+	d.teleport_to("hide_spot", "left")
+	d.runner.log_line("rollback", rollback)
+	printerr("STORY rollback namwon %s → 저녁 준비 앞(phase=%s clues=%d)" % [rollback, S.phase, S.clues.size()])
 
 # 호랑이 이야기 프레임(knock·sniff·climb_try·slip + 변장 :d, 15쪽 약 60MB)은 절정 직전(밤으로 넘어갈 때 암전 속)에 읽는다
 func load_tiger_story() -> void:
@@ -386,6 +420,10 @@ const NUDGE_R := 7.0
 var _nudge_t := 0.0
 var nudged: Array = []   # 시험 기록(기울인 단서 id 차례)
 func ambient(dt: float) -> void:
+	_night_clock(dt)
+	_leash_step()
+	if f("dusk_prep") and not f("night_wait_started") and S.phase == "explore" and d.main.hour > PREP_MAX_HOUR and not d.runner.busy:
+		d.set_hour(PREP_MAX_HOUR)   # 준비하는 동안 밤이 깊어지기만 한다(자정은 숨어 기다려야 온다)
 	_nudge_t -= dt
 	if _nudge_t > 0.0: return
 	_nudge_t = 0.12
@@ -877,25 +915,6 @@ func white_trail() -> void:
 	d.ui.toast("기록 — " + PURPOSE_LINE, "journal")
 
 # ---------------------------------------------------------------------------
-# 외딴집에서 해 지기를 기다린다 → 밤(v3.2 §3.2: 주막 잠으로 밤을 넘기는 필수 흐름은 없앴다 — 주막 쉬기(F)는 일반 기능으로 남는다)
-#   ACT 6(해 질 무렵 귀환·경고·준비)을 새로 짜기 전까지 옛 밤 흐름(밤 준비 → 숨어 기다리기 S0007)으로 잇는 다리
-# ---------------------------------------------------------------------------
-func night_fall() -> void:
-	if not f("beat_mother_harmed"): await pass_memory()   # 원작 순서 — 밤 전에 반드시
-	await d.ui.fade(true, 0.9)
-	load_tiger_story()
-	S.phase = "night"
-	d.on_phase()
-	d.set_hour(22.0)
-	d.set_weather("clear")
-	d.teleport_to("hide_spot", "left")
-	kids_place()
-	await d.wait(0.4)
-	await d.ui.fade(false, 0.9)
-	await d.ui.caption("해가 지고, 달이 떴다…", 2.2)
-	d.journal_note("밤이 되었다. 외딴집에서")
-
-# ---------------------------------------------------------------------------
 # FIXED_BEATS(v3 §3.2) — 원작 장면이 화면에서 일어난 순서를 남긴다(flags beat_<id>, flags beats = "id,id,…")
 # ---------------------------------------------------------------------------
 func beat(id: String) -> void:
@@ -914,47 +933,114 @@ func _shot(nm: String) -> void:
 	if d.test != null and d.test.has_method("tale_shot"): await d.test.tale_shot(nm)
 
 # ---------------------------------------------------------------------------
-# 밤의 준비
+# ACT 6 해 질 무렵 외딴집(v3.2 §31~§34)
+#   돌아오면 누이 “찾았어요?” — 어느 대답도 어머니의 죽음을 확정하지 않는다 → 경고(§32) → 포수와 역할 나누기(결정 4, hunter_watch) →
+#   준비(§33: 기존 물건 쓰기만 — 디딤돌 참기름 B · 오솔길 떡 + 횃불 C · 아무것도 없으면 A) → hide_spot “기다린다”(§34, 23:30).
+#   옛 다리(dusk_wait → night_fall)와 옛 밤 들머리(“해가 지고, 달이 떴다…” · 정답을 먼저 말하던 문장 §3.3)는 없앴다.
 # ---------------------------------------------------------------------------
-func kids_place() -> void:
-	if f("kids_gone"):
-		d.show_actor("nui", false); d.show_actor("au", false)
-		return
-	if S.phase == "night" and f("kids_in_tree"):
-		d.place_actor("nui", "perch_a", 2.7, "down")
-		d.place_actor("au", "perch_b", 3.1, "down")
-		d.anim_actor("nui", "perch"); d.anim_actor("au", "perch")
-	elif S.phase == "night" and f("climax_started"):
-		d.show_actor("nui", false); d.show_actor("au", false)
-	else:
-		d.place_actor("nui", "home"); d.place_actor("au", "home")
+const DUSK_HOUR := 18.9
+const PREP_MAX_HOUR := 22.5
+const DUSK_LINE := "해가 진다. 오늘 밤은 아이들 곁에 있어야 한다. 숨기 전에 할 수 있는 일을 해 두자."
+var dusk_choice := ""   # 시험 기록: not_yet | trace | silent
 
-# 오누이가 나무에 오른다(FIXED kids_escape_tree) — 범 앞을 막는 동안 따로 돈다
-func kids_up() -> void:
-	if f("kids_in_tree"): return
-	flag("kids_in_tree")
-	d.world_state("kids_in_tree", true)
-	d.place_actor("nui", "perch_a", 1.3, "up")
-	d.place_actor("au", "perch_b", 1.7, "up")
-	d.anim_actor("nui", "climb"); d.anim_actor("au", "climb")
-	d.learn_clue("kids_tree", true)
-	beat("kids_escape_tree")
-	await d.wait(1.2)
-	kids_place()
-
-func kids_night() -> void:
-	await d.ui.say("누이", ["오늘 밤에도 올까요… 그 목소리."])
-	await R([{ "choice": "", "loop": true, "options": [
-		{ "label": "누가 와도 문 열지 마라", "when": "not f('kids_warned')", "do": [{ "call": "warn_kids" }] },
-		{ "label": "문 걸고 기다려라.", "end": true }] }])
-
-# 일러 둘 수는 있다. 문을 열지 말지는 아이들이 정한다(v3 규칙 3)
-func warn_kids() -> void:
+func dusk_return() -> void:
+	if f("dusk_return_seen"): return
+	flag("dusk_return_seen")
+	if not f("beat_mother_harmed"): await past_scene()   # 원작 순서 — 밤 전에 반드시(서낭당 광주리를 안 보고 온 드문 길)
+	d.cutscene(true)
+	Sound.music_level(0.5, 0.6)
+	var door: Vector2 = d.anchor("house_door")
+	await d.ui.fade(true, 0.5)
+	if d.main.hour >= 5.0 and d.main.hour < DUSK_HOUR - 0.3: d.set_hour(DUSK_HOUR)   # 19시 전후 — 이미 저녁이면 그대로
+	d.teleport_to(door + Vector2(0.4, 4.4), "up")
+	# 누이와 아우가 문 앞으로 나와 있다
+	d.place_actor("nui", door + Vector2(-0.55, 1.3), null, "down")
+	d.place_actor("au", door + Vector2(0.45, 1.5), null, "down")
+	d.anim_actor("nui", "idle"); d.anim_actor("au", "idle")
+	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var cam := tc.duplicate()
+	var fo := door + Vector2(0.2, 2.9)
+	cam.focus = [fo.x, fo.y]
+	d.camera(cam)
+	await d.wait(0.3)
+	await d.ui.fade(false, 0.8)
+	await d.ui.caption("해가 고개 너머로 기운다.", 1.8)
+	# §31 — 어느 대답도 어머니 일을 아이들에게 확정해서 말하지 않는다
+	await d.ui.say("누이", ["찾았어요?"])
+	var i: int = await d.ui.choice("", [{ label = "아직 못 찾았다." }, { label = "고갯길에서 흔적을 찾았다." }, { label = "(대답하지 않는다)" }])
+	match i:
+		0:
+			dusk_choice = "not_yet"
+			await d.ui.say("누이", ["…그래요."])
+			await d.ui.say("아우", ["내일은 찾아요?"])
+			await d.ui.say("나그네", ["찾아보마."])
+		1:
+			dusk_choice = "trace"
+			await d.ui.say("누이", ["무슨 흔적요?"])
+			await d.ui.say("나그네", ["엄마가 그 길로 간 건 맞다. 그다음은 아직 모른다."])
+			d.face_actor("nui", null, "au")   # 누이가 아우를 한 번 본다
+			await d.wait(0.6)
+			d.face_actor("nui", null, "player")
+			await d.ui.say("누이", ["…알겠어요. 아우 앞에선 거기까지만 해 주세요."])
+		_:
+			dusk_choice = "silent"
+			await d.wait(1.2)
+			d.face_actor("nui", null, "au")
+			await d.wait(0.5)
+			d.face_actor("nui", null, "player")
+			await d.ui.say("누이", ["말하기 어려운 거면, 나중에 해 주세요."])
+	# §32 경고 — 아이들을 무능하게 만들지 않는다(문을 열지 말지는 아이들이 정한다)
+	_shot_soon("dusk_warning", 1.2)
+	await d.ui.say("나그네", ["오늘 밤 누가 와도 문부터 열지 마라."])
+	await d.ui.say("누이", ["엄마여도요?"])
+	await d.ui.say("나그네", ["…목소리만 듣고 열지 마."])
+	await d.ui.say("아우", ["엄마 얼굴 보면 되잖아요."])
+	d.face_actor("nui", null, "au")
+	await d.ui.say("누이", ["알았어."])
 	flag("kids_warned")
-	await d.ui.say("나그네", ["어머니 목소리로 불러도 문 열지 마라."])
-	await d.ui.say("누이", ["…어머니 목소리면요?"])
-	await d.ui.say("아우", ["엄마면 열어 줘야지."])
-	d.journal_note("아이들에게 문을 열지 말라 일렀다")
+	await _hunter_role()
+	d.place_actor("nui", "home"); d.place_actor("au", "home")   # 집 안으로
+	Sound.music_level(1.0, 1.0)
+	d.camera(null)
+	d.cutscene(false)
+	flag("dusk_prep")
+	d.ui.toast("기록 — " + DUSK_LINE, "journal")
+	d.ui.toast("준비를 마치면 마당 구석에 숨어 기다린다.", "info")
+
+# 결정 4 — 포수와 역할을 나눈다(낮의 물음에서 이리로 옮겼다). 크게 밀리면 먼 데서 화살 한 번(fail-forward)
+func _hunter_role() -> void:
+	var pp := _pp()
+	var from: Vector2 = d.anchor("white_trail_b")
+	d.spawn_actor("hunter_dusk", "hunter", [from.x, from.y], "left", "포수", "")
+	var stop := pp + (from - pp).normalized() * 2.4
+	await d.move_actor("hunter_dusk", [[stop.x, stop.y]], 2.2, "walk", "idle")
+	d.face_actor("hunter_dusk", null, "player"); d.face_actor("player", null, "hunter_dusk")
+	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var cam := tc.duplicate(); var fo := (pp + stop) * 0.5
+	cam.focus = [fo.x, fo.y]
+	d.camera(cam)
+	await d.ui.say("포수", ["여기 있었구려."])
+	_shot_soon("hunter_role", 1.6)
+	await d.ui.say("포수", ["놈이 집으로 온다는 말이 맞다면 당신은 애들 곁에 있으시오.", "나는 고개 쪽 길을 막겠소."])
+	await d.ui.say("나그네", ["…그러지."])
+	await d.ui.say("포수", ["크게 밀리거든 소리를 지르시오. 멀리서라도 한 대는 쏘겠소."])
+	flag("hunter_watch"); flag("hunter_role_dusk")
+	_hunter_leave()
+
+func _hunter_leave() -> void:
+	await d.move_actor("hunter_dusk", ["white_trail_b", "white_trail_a", "mill"], 2.4, "walk", "idle")
+	d.despawn_actor("hunter_dusk")
+
+# §34 hide_spot — 기다린다(23:30) / 아직 준비할 것이 있다
+func wait_at_hide() -> void:
+	var prep := []
+	if S.world.get("oil_on_step", false): prep.append("디딤돌에 참기름")
+	if S.world.get("cake_bait", false): prep.append("오솔길 어귀에 떡")
+	if S.world.get("torch_lit", false) or S.has(TORCH): prep.append("횃불")
+	var head := ("준비: " + " · ".join(prep)) if not prep.is_empty() else "아무 준비도 하지 않았다."
+	_mark_shot("hide_wait")
+	var i: int = await d.ui.choice(head, [{ label = "기다린다." }, { label = "아직 준비할 것이 있다." }])
+	if i == 0: await R([{ "event": "S0007" }])
 
 # B: 쪽문 디딤돌 + 참기름(물건 쓰기)
 func oil_step() -> void:
@@ -970,192 +1056,945 @@ func place_bait() -> void:
 		return
 	d.take(TTEOK, 1)
 	d.world_state("cake_bait", true)
-	await d.ui.caption("오솔길 어귀부터 빈터 쪽으로, 떡을 띄엄띄엄 놓았다.", 2.4)
-
-func wait_at_door() -> void:
-	var prep := []
-	if f("kids_warned"): prep.append("아이들에게 일렀다")
-	if S.world.get("oil_on_step", false): prep.append("디딤돌에 참기름")
-	if S.world.get("cake_bait", false): prep.append("오솔길에 떡")
-	if S.world.get("torch_lit", false) or S.has(TORCH): prep.append("횃불")
-	var i: int = await d.ui.choice(("준비: " + " · ".join(prep)) if not prep.is_empty() else "아직 아무 준비도 하지 않았다.",
-		[{ label = "숨어서 기다린다" }, { label = "아직이다" }])
-	if i == 0: await R([{ "event": "S0007" }])
+	await d.ui.caption("오솔길 어귀에 떡을 띄엄띄엄 놓았다. 냄새가 마당까지 온다.", 2.4)
 
 # ---------------------------------------------------------------------------
-# S0007 밤의 문 — 어머니 행세(FIXED tiger_disguise) · 손과 목소리(door_tricks) · 오누이의 탈출. 플레이어는 숨어서 본다.
+# 오누이 자리(밤에는 집 안 → 쪽문으로 빠져나감 → 나무 위)
 # ---------------------------------------------------------------------------
-func climax() -> void:
-	load_tiger_story()   # 이미 읽었으면 그냥 지나간다
-	flag("climax_started")
+func kids_place() -> void:
+	if f("kids_gone"):
+		d.show_actor("nui", false); d.show_actor("au", false)
+		return
+	if S.phase == "night" and f("kids_in_tree"):
+		d.place_actor("nui", "perch_a", 2.7, "down")
+		d.place_actor("au", "perch_b", 3.1, "down")
+		d.anim_actor("nui", "perch"); d.anim_actor("au", "perch")
+	elif S.phase == "night" and not f("kids_escape_started"):
+		d.show_actor("nui", false); d.show_actor("au", false)   # 집 안 — 문은 닫혀 있다
+	elif S.phase == "night":
+		pass   # 달아나는 중(연출이 쥔다)
+	else:
+		d.place_actor("nui", "home"); d.place_actor("au", "home")
+
+# 오누이가 나무 밑까지 달려와 오른다(FIXED kids_escape_tree) — 범 앞을 막는 동안 따로 돈다
+func kids_up() -> void:
+	if f("kids_in_tree") or f("kids_up_running"): return
+	flag("kids_up_running")
+	var tf: Vector2 = d.anchor("tree_foot")
+	for id in ["nui", "au"]:
+		var a = d.actors.get(id)
+		if a != null and a.shown and Vector2(a.pos.x, a.pos.z).distance_to(tf) > 0.6:
+			d.move_actor(id, ["tree_foot"], 3.2, "walk", "climb")
+	for i in 600:
+		var done := true
+		for id in ["nui", "au"]:
+			var a = d.actors.get(id)
+			if a != null and not a.path.is_empty(): done = false
+		if done: break
+		await d.get_tree().process_frame
+	flag("kids_in_tree")
+	S.flags.erase("kids_up_running")
+	d.world_state("kids_in_tree", true)
+	d.place_actor("nui", "perch_a", 1.3, "up")
+	d.place_actor("au", "perch_b", 1.7, "up")
+	d.anim_actor("nui", "climb"); d.anim_actor("au", "climb")
+	d.learn_clue("kids_tree", true)
+	beat("kids_escape_tree")
+	await d.wait(1.2)
+	kids_place()
+
+# ---------------------------------------------------------------------------
+# 시험 기록·조작 비율
+#   night_log: [종류, 누구, 글] — 누가 무엇을 언제 했나(탈출을 누이가 먼저 정하는지 시험이 본다)
+#   ctl_time: 해 질 무렵 귀환부터 기도(ACT 10) 직전까지 조작을 쥔 시간 / 연출 시간(게임 초) — ambient가 매 프레임 센다
+# ---------------------------------------------------------------------------
+var night_log: Array = []
+var ctl_time := { "free": 0.0, "cut": 0.0 }
+var between_t := 0.0           # 노크 사이 조작을 돌려준 시간(게임 초)
+var between_free := false      # 노크 사이 실제로 움직일 수 있었나(blocks_move가 거짓)
+var mill_shadow_seen := false
+var door_warned := false
+var shoves: Array = []         # [갈래·장면, 밀려난 거리]
+var tiger_full_seen_early := false
+
+func _nlog(kind: String, who: String, text: String) -> void:
+	night_log.append([kind, who, text])
+
+func _say(who: String, lines: Array) -> void:
+	for l in lines: _nlog("say", who, String(l))
+	await d.ui.say(who, lines)
+
+# 대사가 다 찍힌 뒤 한 장(화면 검토 때만 — 기다리지 않는다)
+func _shot_soon(nm: String, sec: float) -> void:
+	if d.test == null or not d.test.has_method("tale_shot"): return
+	await d.wait(sec)
+	d.test.tale_shot(nm)
+
+# 숨어 듣는 목소리(조작을 쥔 채) — 자막으로
+func _voice(who: String, line: String, sec := 2.2) -> void:
+	_nlog("voice", who, line)
+	await d.ui.caption("%s  “%s”" % [who, line], sec)
+
+func _night_clock(dt: float) -> void:
+	if not f("dusk_return_seen") or f("act10_started") or S.phase == "done": return
+	if d.title != null and d.title.active: return
+	if d.blocks_move() and not d.drives_player(): ctl_time.cut += dt
+	else: ctl_time.free += dt
+
+func control_share() -> float:
+	var t: float = ctl_time.free + ctl_time.cut
+	return 1.0 if t <= 0.0 else ctl_time.free / t
+
+# 숨은 자리 둘레(반지름 r)에서만 움직이게 — 지금 나서면 아이들이 문을 열지도 모른다
+var _leash_c := Vector2.INF
+var _leash_r := 0.0
+var _leash_said := false
+func _leash(c: Vector2, r: float) -> void:
+	_leash_c = c; _leash_r = r; _leash_said = false
+
+func _leash_off() -> void:
+	_leash_c = Vector2.INF
+
+func _leash_step() -> void:
+	if _leash_c == Vector2.INF: return
+	var v := _pp() - _leash_c
+	if v.length() <= _leash_r: return
+	var q := _leash_c + v.normalized() * _leash_r
+	d.set_player_pos(Vector3(q.x, d.world.height_at(q.x, q.y), q.y))
+	if not _leash_said:
+		_leash_said = true
+		d.ui.caption("…지금 나서면 안 된다.", 1.6)
+
+# 밤 음악(bgm_night_drone, 낮게) — 노크 때 끊는다
+func _music_cut(on: bool) -> void:
+	flag("night_music_off", on)
+	if on: Sound.music_stop(0.12)
+	else: Sound.music_level(NIGHT_BGM_LEVEL, 0.5)
+
+const NIGHT_BGM_LEVEL := 0.35
+
+# ---------------------------------------------------------------------------
+# ACT 7 “엄마 왔다”(v3.2 §35~§41) — 한 장면으로 몰지 않는다. 첫 손 뒤 조작을 돌려준다(§39·§71).
+#   범은 문이 열릴 때까지 화면 밖(발소리·목소리)·창호 그림자·문틈 앞발 일부로만 보인다. 전신은 reveal_tiger()에서 처음.
+# ---------------------------------------------------------------------------
+func night_door() -> void:
+	await night_arrival()
+	await first_knock()
+	await between_knocks()
+	await second_knock()
+	await kids_escape()
+	await reveal_tiger()
+	await buy_time()
+	await tree_scene()
+	await axe_climb()
+	await last_stand()
+	flag("act10_started")
+	await R([{ "event": "S0009" }, { "event": "S0010" }, { "event": "S0011" }])
+	await finish()
+
+# §35 배치 — 플레이어 hide_spot · 오누이 집 안 · 범 tiger_from(아직 보이지 않는다). 23:30
+func night_arrival() -> void:
+	flag("night_wait_started")
 	d.cutscene(true)
-	await d.ui.fade(true, 0.6)
+	await d.ui.fade(true, 0.9)
+	load_tiger_story()
+	S.phase = "night"
+	d.on_phase()
+	d.set_hour(23.5)
+	d.set_weather("clear")
 	d.teleport_to("hide_spot", "left")
 	kids_place()
-	d.camera({ "focus": [-3211.0, -352.0], "pitch": 40.0, "distance": 18.0 })
-	d.set_hour(23.5)
-	d.spawn_actor("tiger_night", "tiger", "tiger_from", "right", "???", "disguised")
-	await d.wait(0.3)
-	await d.ui.fade(false, 0.7)
-	await d.ui.caption("자정 무렵. 숲에서 무언가가 내려온다.", 2.2)
-	await d.move_actor("tiger_night", [[-3219.5, -351.0], [-3214.6, -352.6]], 3.2, "walk", "knock")
-	await d.ui.caption("떡장수의 저고리를 걸치고 머리에 수건을 썼다. 그런데 네 발로 걷는다.", 2.6)
-	d.learn_clue("disguise_seen", true)
-	beat("tiger_disguise")
-	d.face_actor("tiger_night", "up", null)
-	d.anim_actor("tiger_night", "knock")
-	await _shot("disguise")
-	await d.ui.say("문밖의 목소리", ["얘들아, 엄마 왔다. 문 열어라."])
-	await d.ui.say("누이", ["우리 엄마 목소리는 그렇게 굵지 않아요."])
-	await d.ui.say("문밖의 목소리", ["찬바람 맞으며 고개를 넘었더니 목이 쉬었구나."])
-	await d.ui.say("아우", ["그럼 손 좀 보여 줘요."])
-	await d.ui.caption("문틈으로 손이 들어온다. 누렇고 털이 숭숭 났다.", 2.4)
-	await d.ui.say("누이", ["우리 엄마 손엔 이렇게 털이 없어요!"])
-	await d.ui.say("문밖의 목소리", ["종일 일을 해서 그렇단다. …잠깐 기다려라."])
-	await d.move_actor("tiger_night", [[-3220.0, -350.0]], 2.4, "walk", "sniff")
-	await d.ui.caption("범이 어둠 속으로 물러난다. 한참 뒤, 다시 문 앞으로 온다.", 2.4)
-	await d.move_actor("tiger_night", [[-3214.6, -352.6]], 2.4, "walk", "knock")
-	d.face_actor("tiger_night", "up", null)
-	d.world_state("white_paw", true)
-	await d.ui.caption("문틈으로 다시 손이 들어온다. 이번엔 허옇고 매끈하다. 밀가루가 푸슬푸슬 떨어진다.", 2.6)
-	await _shot("door_hand")
-	await d.ui.say("아우", ["엄마 손이다!"])
-	if f("kids_warned"):
-		await d.ui.say("누이", ["…아저씨가 아무한테도 열지 말랬는데."])
-		await d.ui.say("아우", ["엄마 손이잖아, 누나."])
-	await d.ui.caption("문고리가 벗겨진다.", 1.6)
-	d.world_state("white_paw", false)
+	# 동아줄 빛은 암전 속에서 미리 짓는다(세기 0 — 처음 켤 때 셰이더를 짜느라 멈추지 않게)
+	if not is_instance_valid(_sky_beam): _sky_light(d.anchor("rope_kids") + Vector2(0, 0.9), _ground("rope_kids"))
+	if not is_instance_valid(_field_lamp): _field_light(d.anchor("sorghum"), _ground("sorghum"))
+	_music_cut(false)
+	await d.wait(0.5)
+	await d.ui.fade(false, 1.0)
+
+# CAMERA 7A — 고요: 문을 겨누고 숨은 플레이어 일부를 화면 한쪽에. 이 동안은 숨은 자리 둘레에서 움직일 수 있다(조작).
+#   등잔불 · 바람 · 5~8초 정적 · 무거운 발소리 · 멈춤 · 노크 · 화면 밖 “얘들아.” … “엄마 왔다.” · 누이 “…엄마?”
+# CAMERA 7B — 창호 그림자(사람 같지만 비정상적으로 큰) · 문 앞 대화 · 2초 정적
+# §38 CAMERA 7C — 문틈 인서트: 털 난 앞발 일부만 · 누이 “…엄마 손 아니야.” · 그림자가 물러나고 발소리가 멀어진다
+func cam_7a() -> Dictionary:
+	var door: Vector2 = d.anchor("house_door")
+	var fo := door.lerp(d.anchor("hide_spot"), 0.34)
+	return { "focus": [fo.x, fo.y], "pitch": 34.0, "distance": 17.0, "fov": 36.0 }
+
+func first_knock() -> void:
+	var door: Vector2 = d.anchor("house_door")
+	var hp: Vector2 = d.anchor("hide_spot")
+	d.camera(cam_7a())
+	d.main.rig.glide(0.01)
+	d.cutscene(false)
+	d.ui.letterbox(true)
+	d.free_move = true
+	_leash(hp, 3.2)
+	d.hush(-1.0)   # 음악·환경음이 가라앉는다 — 바람만(SFX 버스)
+	_snd("wind", "hide_spot", { "bus": "SFX", "db": -4.0 })
+	await _shot("7a_still")
+	await d.wait(6.0)   # 5~8초 정적
+	# 무거운 발소리 — tiger_from에서 문 쪽으로(보이지 않는다)
+	var tf: Vector2 = d.anchor("tiger_from")
+	for k in 4:
+		_snd("footstep_heavy", tf.lerp(door + Vector2(-1.5, 1.0), (k + 1) / 4.0), { "db": -8.0 + k * 1.5 })
+		await d.wait(0.6)
+	await d.wait(1.1)   # 발소리 멈춤
+	_snd("knock", "house_door")
+	_music_cut(true)
+	flag("first_knock_seen")
+	beat("tiger_disguise")   # 어머니 행세로 문 앞에 왔다(모습은 아직)
+	await _voice("문밖", "얘들아.")
+	await d.wait(1.0)
+	await _voice("문밖", "엄마 왔다.")
+	await _voice("누이", "…엄마?", 1.8)
+	d.free_move = false
+	_leash_off()
+	# CAMERA 7B
+	d.cutscene(true)
+	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
+	_shadow_on(true)
+	_room_view(true)
+	await d.wait(0.5)
+	await _shot("7b_shadow")
+	await _say("누이", ["왜 이렇게 늦었어?"])
+	await _say("문밖", ["고개에서 좀 늦었다.", "문 열어라."])
+	await _say("누이", ["목소리가 왜 그래?"])
+	await _say("문밖", ["바람을 오래 맞았더니 목이 쉬었구나."])
+	await d.wait(2.0)
+	# §38 첫 손
+	await _say("아우", ["엄마, 손 보여 줘."])
+	await _paw_insert("hairy_paw")
+	flag("hairy_paw_seen")
+	await _shot("7c_paw")
+	await _say("누이", ["…엄마 손 아니야."])
+	await d.wait(1.2)   # 침묵
+	await _say("문밖", ["종일 일을 했더니 그렇지."])
+	await _say("누이", ["아니야."])
+	await d.wait(2.0)
+	await _paw_insert_end("hairy_paw")
+	# 그림자가 물러난다 · 발소리가 멀어진다
+	_shadow_away()
+	for k in 3:
+		_snd("footstep_heavy", door + Vector2(-2.0 - k * 2.5, 1.5 + k), { "db": -6.0 - k * 4.0 })
+		await d.wait(0.55)
+	await d.wait(0.6)
+	flag("tiger_withdrawn")
+
+# 문틈 인서트(CAMERA 7C · 둘째 손): 플레이어를 감추고, 앞발 소품의 먹점 흐림·틸트 흐림을 끄고, 문지방 높이를 겨눈다
+func _paw_insert(kind: String) -> void:
+	d.world_state(kind, true)
+	_tilt(false)
+	var sill: Vector2 = d.anchor("door_sill")
+	var gy: float = d.world.height_at(sill.x, sill.y)
+	var look := Vector3(sill.x, gy + PAW_DY + 0.1, sill.y)
+	d.main.rig.shot = { pos = look + Vector3(-0.3, 0.75, -2.1), look = look, fov = 50.0 }   # 7C — 낮은 시선, 문지방 앞발만
+	await d.get_tree().process_frame
+	d._update_props()
+	var rec: Dictionary = d.props.get("p_" + kind, {})
+	for i in 30:
+		if rec.get("node") != null: break
+		await d.get_tree().process_frame
+	_no_occ(rec.get("node"))
+	await d.wait(0.35)
+
+func _paw_insert_end(kind: String) -> void:
+	d.world_state(kind, false)
+	_no_occ_clear()
+	_room_view(true)
+
+# 방 안(아이들 쪽)에서 닫힌 창호를 본다 — 아이들은 양옆에서 문을 향해 서 있다. 문밖의 것은 창호에 비친 그림자·문틈의 앞발로만
+#   (밖에서 문을 보면 문 앞에 선 몸이 보여야 하므로, 7B·7C와 둘째 손은 아이들 쪽 시점으로 찍는다)
+const PAW_DY := 0.58
+var _glow_off: Array = []
+func _room_view(on: bool) -> void:
+	# 방 안 등잔의 발광 판(region_main.lamp_glows)이 카메라 바로 앞에서 문간을 하얗게 덮는다 — 이 시점 동안만 끈다
+	for g in _glow_off:
+		if is_instance_valid(g): g.visible = true
+	_glow_off.clear()
+	if on:
+		var sl: Vector2 = d.anchor("door_sill")
+		for g in d.main.get("lamp_glows") if d.main.get("lamp_glows") != null else []:
+			if g.mesh.visible and Vector2(g.light.x, g.light.z).distance_to(sl) < 6.0:
+				g.mesh.visible = false; _glow_off.append(g.mesh)
+	if not on:
+		d.main.rig.shot = null
+		d.main.player.visible = true
+		_tilt(true)
+		return
+	var sill: Vector2 = d.anchor("door_sill")
+	var gy: float = d.world.height_at(sill.x, sill.y)
+	var look := Vector3(sill.x, gy + PAW_DY + 0.95, sill.y)
+	d.main.rig.shot = { pos = look + Vector3(-0.35, 0.35, -3.2), look = look, fov = 46.0 }
+	d.main.player.visible = false
+	_tilt(false)
+	_door_occ(true)
+	d.place_actor("nui", sill + Vector2(-0.95, -0.6), null, "up")
+	d.place_actor("au", sill + Vector2(0.9, -0.75), null, "up")
+	d.anim_actor("nui", "idle"); d.anim_actor("au", "idle")
+
+# 문 앞 장면 동안: 숨은 플레이어와 카메라 사이의 집을 반투명으로 비우지 않는다(가림 기준을 문지방으로)
+func _door_occ(on: bool) -> void:
+	if not d.main.has_method("set_occ_script"): return
+	if not on: d.main.set_occ_script(null); return
+	var sill: Vector2 = d.anchor("door_sill")
+	d.main.set_occ_script({ "focus": Vector3(sill.x, d.world.height_at(sill.x, sill.y) + 0.6, sill.y + 0.3), "r": 0.3, "near": 0.0 })   # 문 가까운 시점 — 카메라 앞 비우기도 끈다
+
+# 쪽문 디딤돌 시점: 집을 점무늬로 비우지 않는다(범만 보면 된다)
+func _step_occ(bs: Vector2, g: float) -> void:
+	if d.main.has_method("set_occ_script"): d.main.set_occ_script({ "focus": Vector3(bs.x + 0.8, g + 0.7, bs.y + 0.6), "r": 0.3, "near": 0.0 })
+
+# 창호(앞벽)에 비친 그림자 — 사람 같은 머리와 어깨지만 너무 크고 넓다. 그림자를 던지는 몸은 화면 밖에 있다
+var _shadow: MeshInstance3D
+const SHADOW_W := 0.82   # 창호지 한 짝(0.7 × 1.6)을 넘친다 — 머리가 문짝 위 끝을 넘는다(사람보다 크고 넓다)
+const SHADOW_H := 1.9
+func _shadow_on(on: bool) -> void:
+	if not on:
+		if is_instance_valid(_shadow): _shadow.queue_free()
+		return
+	if is_instance_valid(_shadow): return
+	_shadow = MeshInstance3D.new()
+	var qm := QuadMesh.new(); qm.size = Vector2(SHADOW_W, SHADOW_H)
+	_shadow.mesh = qm
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.albedo_color = Color(0.015, 0.012, 0.02, 0.86)
+	mat.albedo_texture = ImageTexture.create_from_image(_shadow_image())
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_shadow.material_override = mat
+	_shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	d._props_root.add_child(_shadow)
+	# 열린 창호 한 짝(kit/village/choga.gd open: 경첩 x −0.7, 1.2rad 바깥으로)의 안쪽 면에 붙인다 — 방 안 등잔빛을 받은 창호지에 비친 그림자
+	var h: Vector2 = d.anchor("house")
+	var g: float = d.world.height_at(h.x, h.y)
+	var dir := Vector2(cos(-1.2), -sin(-1.2))                  # 경첩에서 문짝 끝 쪽(x, z)
+	var hinge := h + Vector2(-0.7, 2.0 + 0.06)                 # 집 앞면 zf = d/2 = 2
+	var mid := hinge + dir * 0.35
+	var n := Vector2(dir.y, -dir.x)                            # 방 안 쪽 법선
+	_shadow.position = Vector3(mid.x + n.x * 0.035, g + 0.4 + 0.95, mid.y + n.y * 0.035)
+	_shadow.rotation.y = atan2(n.x, n.y)
+	_shadow_dir = Vector3(dir.x, 0, dir.y)
+
+var _shadow_dir := Vector3.RIGHT
+
+func _shadow_away() -> void:
+	if not is_instance_valid(_shadow): return
+	var tw: Tween = d.create_tween().set_parallel()
+	tw.tween_property(_shadow, "position", _shadow.position + _shadow_dir * 0.5, _dur(1.6))
+	tw.tween_property(_shadow.material_override, "albedo_color:a", 0.0, _dur(1.6))
+	await tw.finished
+	_shadow_on(false)
+
+# 그림자 그림(알파만 — 위는 수건 두른 둥근 머리, 아래로 사람보다 훨씬 넓은 어깨와 등). 가장자리는 부드럽게
+static func _shadow_image() -> Image:
+	var W := 64; var H := 128
+	var img := Image.create(W, H, false, Image.FORMAT_RGBA8)
+	for y in H:
+		for x in W:
+			var u := (x + 0.5) / W - 0.5
+			var v := 1.0 - (y + 0.5) / H
+			var dist := minf(_sd_ellipse(Vector2(u, v - 0.83), Vector2(0.16, 0.085)),          # 머리
+				minf(_sd_ellipse(Vector2(u - 0.14, v - 0.77), Vector2(0.09, 0.05)),              # 한쪽으로 처진 수건 끝
+				minf(_sd_ellipse(Vector2(u * 0.92, v - 0.55), Vector2(0.46, 0.2)),                # 둥글고 넓은 어깨·등(사람보다 넓다)
+					_sd_box(Vector2(u, v - 0.22), Vector2(0.36, 0.26)))))                         # 아래로 이어지는 몸
+			var a := clampf(0.5 - dist * 60.0, 0.0, 1.0)
+			a *= clampf(v * 3.0, 0.0, 1.0)   # 바닥 쪽으로 옅어진다
+			img.set_pixel(x, y, Color(1, 1, 1, a))
+	return img
+
+static func _sd_ellipse(p: Vector2, r: Vector2) -> float:
+	return (Vector2(p.x / r.x, p.y / r.y).length() - 1.0) * minf(r.x, r.y)
+
+static func _sd_box(p: Vector2, b: Vector2) -> float:
+	var q := Vector2(absf(p.x), absf(p.y)) - b
+	return Vector2(maxf(q.x, 0.0), maxf(q.y, 0.0)).length() + minf(maxf(q.x, q.y), 0.0)
+
+# §39 첫 노크와 두 번째 노크 사이 — 컷신을 끝내고 15~30초 자유 이동(카메라는 평소대로 고정 시점).
+#   방앗간 쪽으로 다가가면: 멀리 가루 자루 소리와 흐트러지는 가루, 무언가 어두운 것이 움직인다(가루를 바르는 장면은 보여 주지 않는다).
+#   집 가까이 오면: 나그네 “문 열지 마.” 누이 “네.”
+const BETWEEN_MIN := 15.0
+const BETWEEN_MAX := 30.0
+const MILL_NEAR := 33.0
+func between_knocks() -> void:
+	_room_view(false)
+	kids_place()
+	_door_occ(false)
+	_shadow_on(false)
+	d.camera(null)
+	d.main.rig.glide(0.6)
+	_tilt(true)
+	d.cutscene(false)
+	Sound.hush_end(1.5)
+	_music_cut(false)
+	d.free_move = true
+	flag("between_knocks_on")
+	var hp: Vector2 = d.anchor("hide_spot")
+	var door: Vector2 = d.anchor("house_door")
+	var mill: Vector2 = d.anchor("mill")
+	await d.get_tree().process_frame
+	between_free = not d.blocks_move()
+	_shot_soon("between_free", 0.8)
+	_nlog("control", "player", "between_knocks")
+	var t := 0.0
+	var left_home := false
+	while true:
+		await d.get_tree().process_frame
+		if not (d.ui.journal_open or d.get_tree().paused): t += d.get_process_delta_time()
+		var pp := _pp()
+		if pp.distance_to(hp) > 4.5: left_home = true
+		if not mill_shadow_seen and pp.distance_to(mill) < MILL_NEAR:
+			mill_shadow_seen = true
+			_mill_glimpse()
+		if not door_warned and pp.distance_to(door) < 6.5:
+			door_warned = true
+			_door_warn()
+		if t >= BETWEEN_MAX: break
+		if t >= BETWEEN_MIN and (pp.distance_to(hp) < 4.0 or not left_home) and not d.ui.journal_open: break
+	between_t = t
+	d.free_move = false
+	flag("between_knocks_on", false)
+	if d.ui.journal_open: d.ui.journal_close()
+	if _pp().distance_to(hp) > 9.0:   # 멀리 가 있으면 문소리에 숨은 자리로 돌아온다
+		await d.ui.fade(true, 0.4)
+		d.teleport_to("hide_spot", "left")
+		await d.ui.fade(false, 0.4)
+
+func _door_warn() -> void:
+	await _voice("나그네", "문 열지 마.", 1.8)
+	await _voice("누이", "네.", 1.4)
+
+# 방앗간 쪽 — 가루 자루 소리, 흐트러지는 가루, 멀리 어두운 무언가가 방앗간 뒤로 사라진다(몸 모양은 읽히지 않는 흐린 덩어리)
+func _mill_glimpse() -> void:
+	# 방앗간 쪽으로 몇 걸음 앞(흰 발자국이 난 길목) — 고정 시점 화면 안에 들도록. 소리는 방앗간에서도
+	var pp := _pp()
+	var fl: Vector2 = d.anchor("flour")
+	var ahead: Vector2 = pp + (fl - pp).normalized() * 4.5   # 방앗간은 화면 아래(카메라 쪽) — 멀리 두면 화면 밖
+	_snd("flour_rustle", "flour", { "db": -1.0 })
+	_snd("flour_rustle", ahead, { "db": -6.0 })
+	_flour_puff(ahead, 1.4)
+	_snd("footstep_heavy", ahead, { "db": -10.0 })
+	var side := Vector2(-(fl - pp).normalized().y, (fl - pp).normalized().x)
+	var a := ahead - side * 2.5
+	var b := ahead + side * 3.0 + (fl - pp).normalized() * 4.0
+	var blob := _blob(a)
+	var tw: Tween = d.create_tween()
+	tw.tween_method(func(k: float) -> void:
+		if not is_instance_valid(blob): return
+		var q := a.lerp(b, k)
+		blob.position = Vector3(q.x, d.world.height_at(q.x, q.y) + 0.55, q.y)
+		(blob.material_override as StandardMaterial3D).albedo_color.a = 0.85 * sin(PI * k), 0.0, 1.0, _dur(2.4))
+	_shot_soon("between_mill", 1.0)
+	await tw.finished
+	if is_instance_valid(blob): blob.queue_free()
+
+func _blob(at: Vector2) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var qm := QuadMesh.new(); qm.size = Vector2(3.0, 1.5)
+	mi.mesh = qm
+	var img := Image.create(32, 16, false, Image.FORMAT_RGBA8)
+	for y in 16:
+		for x in 32:
+			var p := Vector2((x + 0.5) / 32.0 - 0.5, (y + 0.5) / 16.0 - 0.5)
+			var a := clampf(1.0 - Vector2(p.x / 0.5, p.y / 0.5).length(), 0.0, 1.0)
+			img.set_pixel(x, y, Color(1, 1, 1, a * a))
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mat.albedo_color = Color(0.0, 0.0, 0.005, 0.0)
+	mat.albedo_texture = ImageTexture.create_from_image(img)
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	d._props_root.add_child(mi)
+	mi.position = Vector3(at.x, d.world.height_at(at.x, at.y) + 0.55, at.y)
+	return mi
+
+# 흩날리는 가루(흰 덩어리 몇 개가 부풀며 옅어진다)
+func _flour_puff(at: Vector2, size := 1.0) -> void:
+	var g: float = d.world.height_at(at.x, at.y)
+	var bits: Array = []
+	var rng := RandomNumberGenerator.new(); rng.seed = 41
+	for i in 10:
+		var mi := MeshInstance3D.new()
+		var sm := SphereMesh.new(); sm.radius = rng.randf_range(0.05, 0.11) * size; sm.height = sm.radius * 1.6; sm.radial_segments = 8; sm.rings = 4
+		mi.mesh = sm
+		var mat := StandardMaterial3D.new()
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.albedo_color = Color(0.93, 0.91, 0.86, 0.4)
+		mi.material_override = mat
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		d._props_root.add_child(mi)
+		var ang := i * TAU / 10.0 + rng.randf() * 0.5
+		mi.position = Vector3(at.x + cos(ang) * 0.25 * size, g + 0.25 * size, at.y + sin(ang) * 0.25 * size)
+		bits.append([mi, ang])
+	await _animate(1.8, func(k: float) -> void:
+		for b in bits:
+			var mi: MeshInstance3D = b[0]
+			if not is_instance_valid(mi): continue
+			mi.scale = Vector3.ONE * (1.0 + 2.2 * k)
+			mi.position.y = g + (0.25 + 0.9 * k) * size
+			mi.position.x = at.x + cos(b[1]) * (0.25 + 0.9 * k) * size
+			mi.position.z = at.y + sin(b[1]) * (0.25 + 0.9 * k) * size
+			(mi.material_override as StandardMaterial3D).albedo_color.a = 0.4 * (1.0 - k))
+	for b in bits:
+		if is_instance_valid(b[0]): b[0].queue_free()
+
+# §40 두 번째 방문 — 노크 · “얘들아.” “엄마다.” · 하얀 손(가루가 떨어진다) · 누이는 곧바로 열지 않는다 · 작게 “뒷문으로 가.”
+func second_knock() -> void:
+	var door: Vector2 = d.anchor("house_door")
+	d.cutscene(true)
+	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
+	d.face_actor("player", null, "house_door")
+	_music_cut(true)
+	_door_occ(true)
+	d.camera(cam_7a())
+	d.main.rig.glide(0.4)
+	_snd("knock", "house_door")
+	await d.wait(0.6)
+	await _say("문밖", ["얘들아.", "엄마다."])
+	_room_view(true)
+	await _say("아우", ["손 보여 줘."])
+	await _paw_insert("white_paw")
+	_flour_puff(d.anchor("door_sill") + Vector2(0, 0.25), 0.4)   # 밀가루가 조금 떨어진다
+	flag("white_paw_seen")
+	await _shot("white_paw")
+	await _say("아우", ["봐, 엄마 손이잖아."])
+	await d.wait(1.4)   # 누이는 곧바로 열지 않는다 — 가루를 본다
+	await _say("누이", ["…엄마."])
+	await _say("문밖", ["왜 그러니."])
+	await _say("누이", ["잠깐만 기다려."])
+	await _paw_insert_end("white_paw")
+	await d.wait(0.5)
+	# 누이가 아우를 본다. 작게 — 탈출은 누이가 정한다
+	await _say("누이", ["(작게) 뒷문으로 가."])
 	d.learn_clue("door_tricks", true)
 	beat("door_tricks")
-	await d.move_actor("tiger_night", [[-3214.0, -354.4]], 2.0, "walk", "idle")
-	d.show_actor("tiger_night", false)   # 집 안으로
-	await d.ui.caption("방 안이 조용하다. 등잔불만 흔들린다.", 2.0)
-	await d.ui.say("아우", ["(소곤소곤) 누나, 엄마 치마 밑에 꼬리가…"])
-	await d.ui.say("누이", ["어머니, 저희 뒷간에 다녀올게요."])
-	await d.ui.say("방 안의 목소리", ["얼른 다녀오너라."])
-	# 쪽문으로 빠져나온 오누이가 우물가 나무로 뛴다
+
+# §41 오누이 탈출 — 누이 “엄마, 우리 뒷간 좀 다녀올게.” → kid_in → back_step → kids_run_1 → kids_run_2
+func kids_escape() -> void:
+	await _say("누이", ["엄마, 우리 뒷간 좀 다녀올게."])
+	await _say("문밖", ["어서 다녀오너라."])
+	flag("kids_escape_started")
+	_nlog("flag", "", "kids_escape_started")
+	_room_view(false)
+	_door_occ(false)
+	var bs: Vector2 = d.anchor("back_step")
+	d.camera({ "focus": [bs.x + 1.6, bs.y + 4.6], "pitch": 36.0, "distance": 15.0, "fov": 38.0 })
+	d.main.rig.glide(0.5)
 	d.place_actor("nui", "back_step", null, "right")
-	d.place_actor("au", [-3210.6, -356.0], null, "right")
-	d.move_actor("nui", ["kids_run_1", "kids_run_2", "tree_foot"], 2.6, "walk", "climb")
-	d.move_actor("au", [[-3209.4, -353.4], "kids_run_2", "tree_foot"], 2.4, "walk", "climb")
-	await d.ui.caption("쪽문이 열리고, 오누이가 맨발로 빠져나와 우물가 나무 쪽으로 달린다.", 2.2)
-	await d.ui.say("방 안의 목소리", ["…얘들아? 왜 이리 오래 걸리느냐."])
+	d.place_actor("au", bs + Vector2(-0.5, 0.2), null, "right")
+	d.move_actor("au", ["kids_run_1", "kids_run_2"], 2.6, "walk", "idle")
+	await d.wait(0.1)
+	var an = d.actors.nui
+	d.runner.log_line("kids_escape", [an.shown, an.ch.visible, an.spec.get("_hidden", false), snappedf(an.pos.x, 0.1), snappedf(an.pos.z, 0.1)])
+	_shot_soon("escape", 1.2)
+	await d.move_actor("nui", ["kids_run_1", "kids_run_2"], 2.4, "walk", "idle")
+
+# 앞문이 조금 열리고 범이 밀고 들어온다 — 이때 처음 전신(어머니 저고리와 수건을 걸친 범). 빈 방 → 열린 쪽문 → 저고리를 뜯어 던지고 돌진
+func reveal_tiger() -> void:
+	var door: Vector2 = d.anchor("house_door")
+	var bs: Vector2 = d.anchor("back_step")
+	d.camera({ "focus": [door.x, door.y + 0.4], "pitch": 28.0, "distance": 10.5, "fov": 38.0 })
+	d.main.rig.glide(0.35)
+	flag("tiger_revealed")   # 문이 열린다 — 여기서부터 전신이 보여도 된다
+	_nlog("reveal", "tiger", "")
+	# 등을 보이고 문 앞에 선 범 — 어머니 저고리가 등에, 수건이 머리에(앞에서 보면 얼굴이 먼저 읽혀 저고리가 묻힌다)
+	d.spawn_actor("tiger_night", "tiger", [door.x - 0.4, door.y + 2.4], "up", "", "disguised")
+	d.anim_actor("tiger_night", "idle")
+	await d.wait(0.6)
+	d.learn_clue("disguise_seen", true)
+	await _shot("reveal")
+	await d.ui.caption("어머니의 저고리와 수건을 걸친 범.", 2.4)
+	await d.move_actor("tiger_night", [[door.x, door.y + 0.4]], 1.4, "walk", "knock")   # 문을 밀고 들어간다
+	await d.wait(0.5)
+	d.show_actor("tiger_night", false)   # 집 안으로
+	await d.ui.caption("빈 방.", 1.4)
+	# 열린 쪽문으로
+	var g1: float = d.world.height_at(bs.x, bs.y)
+	_tilt(false)
+	d.main.rig.shot = { pos = Vector3(bs.x + 8.5, g1 + 3.4, bs.y + 5.5), look = Vector3(bs.x + 0.8, g1 + 0.7, bs.y + 0.6), fov = 38.0 }
+	_step_occ(bs, g1)
+	d.place_actor("tiger_night", bs + Vector2(0.3, 0.1), null, "right")   # 열린 쪽문 앞 디딤돌 곁
 	d.show_actor("tiger_night", true)
-	d.place_actor("tiger_night", "house_door", null, "down")
-	d.anim_actor("tiger_night", "idle")
-	await d.ui.caption("범이 저고리를 벗어 던지고 방에서 뛰쳐나온다!", 2.0)
-	d.cutscene(false)
-	await buy_time()
-
-# ---------------------------------------------------------------------------
-# S0008 시간을 번다 — A 막아섬 / B 디딤돌 함정 / C 떡과 횃불. 범은 죽지 않는다(undying). 어느 쪽이든 오누이는 나무에 오른다.
-# ---------------------------------------------------------------------------
-func buy_time() -> void:
-	d.camera(null)
-	if S.world.get("oil_on_step", false):
-		await d.move_actor("tiger_night", ["back_step"], 3.0, "walk", "slip")
-		d.anim_actor("tiger_night", "slip")
-		d.shake(0.5, 0.45)
-		await d.ui.caption("쪽문 디딤돌을 딛는 순간, 범의 앞발이 주르륵 미끄러진다!", 2.0)
-		kids_up()
-		await d.ui.caption("범이 등을 땅에 찧고 버둥거린다. 그사이 오누이가 나무를 타고 오른다.", 2.2)
-		await resolve("B", await yard_fight({ "stunned": 3.0, "hpRatio": 0.75 }, 18.0))
-		return
-	var opts := [{ label = "칼을 뽑고 범 앞을 막아선다" }]
-	var can_c := c_ready()
-	if can_c: opts.append({ label = "떡 냄새 쪽으로 범을 꾄다" })
-	var i: int = await d.ui.choice("범이 아이들 쪽으로 몸을 돌린다.", opts)
-	if i == 1 and can_c:
-		await lure()
-		return
-	await d.ui.caption("칼을 뽑아 들고 범과 나무 사이로 뛰어들었다!", 1.8)
-	kids_up()
-	await resolve("A", await yard_fight({}, 30.0))
-
-# C: 떡으로 빈터 어귀까지 꾀어내고 횃불로 잠시 물러나게 한다 — 범은 곧 돌아온다
-func lure() -> void:
 	d.anim_actor("tiger_night", "sniff")
-	await d.ui.caption("바람결에 떡 냄새가 실려 온다. 범의 코가 오솔길 쪽으로 돌아간다.", 2.2)
-	kids_up()
-	await d.move_actor("tiger_night", [[-3222.6, -342.4]], 2.4, "walk", "eat")
-	d.anim_actor("tiger_night", "eat")
-	await d.ui.caption("떡 하나를 삼키고, 범은 다음 떡 냄새를 좇는다. 횃불을 쥐고 뒤를 밟았다.", 2.6)
-	await d.ui.fade(true, 0.7)
-	d.world_state("cake_bait", false)
-	d.place_actor("tiger_night", "lure_end", null, "left")
-	d.anim_actor("tiger_night", "eat")
-	d.teleport_to("lure_player", "left")
-	d.camera({ "focus": [-3260.0, -387.0] })
-	if not S.world.get("torch_lit", false): flag("torch_carried")
-	await d.wait(0.3)
-	await d.ui.fade(false, 0.7)
-	await d.ui.caption("숲속 빈터 어귀. 마지막 떡 앞에서 범이 고개를 든다.", 2.2)
-	d.face_actor("tiger_night", "right", null)
-	d.anim_actor("tiger_night", "idle")
-	var c: int = await d.ui.choice("", [{ label = "횃불을 치켜든다" }, { label = "칼을 뽑는다" }])
-	if c == 1:
-		d.despawn_actor("tiger_night")
-		d.camera(null)
-		await resolve("A", await fight_loop("territory", {}, 24.0))
-		return
-	await d.ui.caption("횃불이 타닥 튄다. 범이 귀를 젖히고 한 걸음, 또 한 걸음 물러선다.", 2.4)
-	await d.move_actor("tiger_night", [[-3275.0, -396.0], [-3290.0, -404.0]], 2.6, "retreat", "idle")
-	d.despawn_actor("tiger_night")
-	await d.ui.caption("범이 빈터 깊숙이 사라졌다. …오래가지 않았다. 나뭇가지 꺾이는 소리가 외딴집 쪽으로 돌아간다.", 3.0)
-	await resolve("C", "lured")
+	await d.wait(0.6)
+	_throw_jeogori(bs)
+	d.actors.tiger_night.ch.variant = ""   # 저고리를 뜯어 던진다
+	_snd("tiger_growl", bs, { "db": 1.0 })
+	await d.wait(0.5)
+	await _shot("tear")
+	d.main.rig.shot = null
+	_tilt(true)
+	_door_occ(false)
+	# 아이들은 kids_run_2 → tree_foot(따로 돈다)
+	d.move_actor("nui", ["tree_foot"], 3.2, "walk", "climb")
+	d.move_actor("au", ["tree_foot"], 3.0, "walk", "climb")
+	# CUTSCENE 끝 — 조작은 곧바로(시간 벌기에서)
 
-func yard_fight(mods: Dictionary, secs: float) -> String:
+func _throw_jeogori(at: Vector2) -> void:
+	var info: Dictionary = load("res://kit/story/clue.gd").build({ "kind": "jeogori", "seed": 41 })
+	var n: Node3D = info.node
+	d._props_root.add_child(n)
+	_tale_nodes.append(n)
+	var p0 := Vector3(at.x, d.world.height_at(at.x, at.y) + 1.2, at.y)
+	var land := at + Vector2(-1.8, 1.6)
+	var p1 := Vector3(land.x, d.world.height_at(land.x, land.y) + 0.03, land.y)
+	var tw: Tween = d.create_tween()
+	tw.tween_method(func(u: float) -> void:
+		if is_instance_valid(n):
+			n.position = p0.lerp(p1, u) + Vector3(0, sin(PI * u) * 0.9, 0)
+			n.rotation.y = 2.2 * u, 0.0, 1.0, _dur(0.7))
+
+# ---------------------------------------------------------------------------
+# ACT 8 시간을 벌어라(v3.2 §42~§44) — 목표 한 줄. 준비에 따라: B 디딤돌에서 미끄러진 범과 짧은 싸움 · C 떡 냄새로 방향을 돌리고 횃불로 길을 막음 ·
+#   A 약 25초 버티기. 범은 죽지 않는다(undying). 어느 갈래든 끝에 범이 플레이어를 3~4m 밀쳐내고(쓰러뜨리지 않는다) 아이들 쪽을 본다(§45).
+#   크게 밀리면(hunter_watch) 먼 데서 포수의 화살이 한 번 날아온다(결정 4 fail-forward).
+# ---------------------------------------------------------------------------
+const TIME_LINE := "아이들이 나무까지 갈 시간을 벌어야 한다."
+const FIGHT_A := 25.0
+const FIGHT_B := 15.0
+const LAST_STAND := 17.0
+const LOW_HP := 0.3
+const SHOVE_DIST := 3.6
+var branch_now := ""     # 시험 기록
+var fight_lens := {}     # 시험 기록: { "A": 초 … }
+var torch_blocked := false
+
+func buy_time() -> void:
+	flag("time_line")
+	d.ui.toast("기록 — " + TIME_LINE, "journal")
+	var branch := "B" if S.world.get("oil_on_step", false) else ("C" if c_ready() else "A")
+	branch_now = branch
+	_nlog("branch", "", branch)
+	var res := ""
+	match branch:
+		"B":
+			res = await _slip_then_fight()
+		"C":
+			res = await _torch_block()
+		_:
+			d.cutscene(false)
+			kids_up()
+			res = await _time_fight({}, FIGHT_A, "A")
+	await _shove(branch)
+	await _record_branch(branch, res)
+
+# §42 B — 쫓아 나오던 범이 디딤돌을 밟고 미끄러진다(짧은 카메라) → 12~18초 싸움
+func _slip_then_fight() -> String:
+	var bs: Vector2 = d.anchor("back_step")
+	# 집 옆 디딤돌 — 동쪽 낮은 자리에서 본다(앞·위에서 보면 집 모서리와 지붕에 가린다)
+	var g0: float = d.world.height_at(bs.x, bs.y)
+	_tilt(false)
+	d.main.rig.shot = { pos = Vector3(bs.x + 8.5, g0 + 3.4, bs.y + 5.5), look = Vector3(bs.x + 0.8, g0 + 0.7, bs.y + 0.6), fov = 38.0 }
+	_step_occ(bs, g0)
+	await d.move_actor("tiger_night", [bs + Vector2(1.0, 0.7)], 3.0, "walk", "slip")   # 디딤돌을 딛고 내려서다
+	d.anim_actor("tiger_night", "slip")
+	_snd("fall_impact", bs, { "db": -8.0 })
+	if d.shake_enabled(): d.shake(0.3, 0.35)
+	await d.wait(0.55)   # 나뒹군 모습에서 한 장
+	await _shot("b_slip")
+	await d.ui.caption("디딤돌을 딛는 순간, 범의 발이 주르륵 미끄러진다.", 1.8)
+	d.main.rig.shot = null
+	_tilt(true)
+	_door_occ(false)
+	kids_up()
+	d.cutscene(false)
+	return await _time_fight({ "stunned": 2.5, "hpRatio": 0.85 }, FIGHT_B, "B")
+
+# §43 C — 떡 냄새에 범이 방향을 돌린다 → (조작) 횃불을 들고 범과 나무 사이를 막는다 → 범이 잠시 물러나고 아이들이 나무에 닿는다 → 범은 곧 돌아온다
+func _torch_block() -> String:
+	var bait: Vector2 = d.anchor("cake_bait")
+	d.anim_actor("tiger_night", "sniff")
+	d.face_actor("tiger_night", null, "cake_bait")
+	await d.ui.caption("떡 냄새가 바람을 타고 온다. 범의 코가 오솔길 어귀 쪽으로 돌아간다.", 2.2)
+	kids_up()
+	d.move_actor("tiger_night", [bait + Vector2(1.0, 0.6)], 2.6, "walk", "eat")
+	# 조작 — 횃불을 들고 길을 막는다
+	var torch := _torch_follow()
+	d.camera(null)
+	d.cutscene(false)
+	d.free_move = true
+	flag("torch_block_on")
+	d.ui.toast("횃불을 들고 범과 나무 사이를 막아선다.", "info")
+	var blk: Vector2 = d.anchor("torch_block")
+	var t := 0.0
+	while t < 14.0 and _pp().distance_to(blk) > 2.6:
+		await d.get_tree().process_frame
+		t += d.get_process_delta_time()
+	torch_blocked = _pp().distance_to(blk) <= 2.6
+	fight_lens["C"] = t
+	d.free_move = false
+	flag("torch_block_on", false)
+	d.cutscene(true)
+	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
+	d.world_state("cake_bait", false)
+	d.face_actor("tiger_night", null, "player")
+	d.anim_actor("tiger_night", "idle")
+	var mid: Vector2 = _pp().lerp(d.anchor("tiger_night"), 0.4)
+	_tilt(false)
+	d.camera({ "focus": [mid.x, mid.y], "pitch": 42.0, "distance": 18.0, "fov": 36.0 })
+	d.main.rig.glide(0.4)
+	await d.wait(0.45)
+	await _shot("c_torch")
+	await d.ui.caption("범이 불빛 앞에서 귀를 젖히고 한 걸음, 또 한 걸음 물러난다.", 2.2)
+	var tp: Vector2 = d.anchor("tiger_night")
+	await d.move_actor("tiger_night", [tp + Vector2(-4.0, -1.5)], 2.2, "retreat", "idle")
+	await d.wait(0.8)
+	await d.ui.caption("…오래가지 않았다.", 1.6)
+	_snd("tiger_growl", "tiger_night", { "db": 2.0 })
+	var pp := _pp()
+	var near: Vector2 = pp + (d.anchor("tiger_night") - pp).normalized() * 1.8
+	await d.move_actor("tiger_night", [near], 6.0, "walk", "idle")
+	torch.set_meta("drop", true)
+	_tilt(true)
+	return "lured"
+
+# 횃불(불빛)이 플레이어 손 곁을 따라다닌다 — 밀려나면 떨어진다
+func _torch_follow() -> Node3D:
+	var n := Node3D.new()
+	var stick := MeshInstance3D.new()
+	var cm := CylinderMesh.new(); cm.top_radius = 0.025; cm.bottom_radius = 0.03; cm.height = 0.7
+	stick.mesh = cm
+	var sm := StandardMaterial3D.new(); sm.albedo_color = Color(0.25, 0.17, 0.1)
+	stick.material_override = sm
+	n.add_child(stick)
+	var fire := MeshInstance3D.new()
+	var fm := SphereMesh.new(); fm.radius = 0.11; fm.height = 0.3; fm.radial_segments = 8; fm.rings = 4
+	fire.mesh = fm
+	var mm := StandardMaterial3D.new(); mm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED; mm.albedo_color = Color(1.0, 0.62, 0.22)
+	fire.material_override = mm
+	fire.position.y = 0.42
+	n.add_child(fire)
+	var l := OmniLight3D.new(); l.light_color = Color(1.0, 0.6, 0.28); l.light_energy = 2.4; l.omni_range = 6.0; l.shadow_enabled = false
+	l.position.y = 0.5
+	n.add_child(l)
+	d._props_root.add_child(n)
+	_tale_nodes.append(n)
+	_torch_loop(n)
+	return n
+
+func _torch_loop(n: Node3D) -> void:
+	while is_instance_valid(n) and not n.has_meta("drop"):
+		var p: Vector3 = d.main.player_pos
+		n.position = p + Vector3(0.38, 1.0, 0.12)   # 손 높이
+		await d.get_tree().process_frame
+	if not is_instance_valid(n): return
+	var p0 := n.position
+	await _animate(0.5, func(k: float) -> void:
+		if is_instance_valid(n): n.position = p0 + Vector3(0.6 * k, -2.0 * k * k, 0.0))
+	if is_instance_valid(n): n.queue_free()
+
+# 시간을 버는 싸움(마당) — 범은 쓰러지지 않는다. secs초를 버티거나 크게 다치게 하면 물러난다. 크게 밀리면 포수의 화살(한 번)
+func _time_fight(mods: Dictionary, secs: float, tag: String) -> String:
+	var m := mods.duplicate()
+	m.undying = true
+	var ar: Dictionary = d.data.arenas.house_yard
+	var tn = d.actors.get("tiger_night")
+	if tn != null and tn.shown: ar["tiger_start"] = [tn.pos.x, tn.pos.z]
 	d.despawn_actor("tiger_night")
 	d.world_state("white_paw", false)
 	d.camera(null)
-	return await fight_loop("house_yard", mods, secs)
+	_arrow_watch()
+	var res: String = await d.combat("house_yard", { "mods": m, "allow_flee": false, "store": "yard", "retreat_at": { "seconds": secs, "hpRatio": 0.4 } })
+	var b = d.combat_view.battle
+	fight_lens[tag] = float(b.time)
+	_last_tiger = b.tiger.pos
+	d.end_combat()
+	d.runner.log_line("fight", [tag, res, snappedf(float(b.time), 0.1)])
+	if res == "lose" and f("hunter_watch") and not f("hunter_arrow"):   # 화살보다 먼저 쓰러졌으면 — 쓰러진 뒤 화살
+		flag("hunter_arrow")
+		_nlog("arrow", "포수", "after_lose")
+		await d.ui.say("포수", ["이놈아, 이쪽이다!"])
+		await d.ui.caption("어둠 속에서 날아온 화살에 범이 몸을 돌린다.", 2.0)
+	return res
 
-# 시간을 버는 싸움: 범은 쓰러지지 않는다(undying) — secs초를 버티거나 크게 다치게 하면 물러난다.
-# 지면: 범이 나를 넘어 나무 쪽으로 간다. 포수가 지켜보거나 두 번째면 포수의 화살이 범을 돌려세운다
-func fight_loop(arena_id: String, mods: Dictionary, secs := 30.0) -> String:
-	var m := mods.duplicate()
-	m.undying = true
-	var losses := 0
-	for i in 3:
-		var res: String = await d.combat(arena_id, { "mods": m, "allow_flee": false, "store": "yard", "retreat_at": { "seconds": secs, "hpRatio": 0.45 } })
-		if res != "lose" and res != "escaped": return res
-		d.end_combat()
-		if res == "escaped":
-			await d.ui.caption("아이들을 두고 물러설 수는 없다.", 1.8)
-			m.stunned = 0.0
-			continue
-		losses += 1
-		flag("yard_losses", losses)
-		await d.ui.caption("눈앞이 캄캄해진다… 범이 나를 넘어 나무 쪽으로 간다.", 2.2)
-		if f("hunter_watch") or losses >= 2:
-			await d.ui.say("포수", ["이놈아, 이쪽이다!"])
-			await d.ui.caption("어둠 속에서 날아온 화살에 범이 몸을 돌린다.", 2.2)
-			flag("hunter_helped")
-			return "lose"
-		await d.ui.choice("", [{ label = "다시 일어선다" }])
-		m = { "undying": true, "hpRatio": float(m.get("hpRatio", 1.0)) }
-	return "lose"
+var _last_tiger := Vector2.INF
+# 싸움 곁에서: 크게 밀리면 포수의 화살(한 번) · 범이 물러나기 시작하면 걸어 나가기를 기다리지 않고 곧 판을 닫는다(끝은 밀쳐냄 §45)
+func _arrow_watch() -> void:
+	await d.get_tree().process_frame
+	var hp_max := float(load("res://scripts/combat/ctuning.gd").T.player.hp)
+	var ret_t := -1.0
+	while d.combat_view != null and d.combat_view.active:
+		var b = d.combat_view.battle
+		if not f("hunter_arrow") and f("hunter_watch") and b.player.alive and b.player.hp <= hp_max * LOW_HP and b.tiger.alive and not b.tiger.retreating:
+			_hunter_arrow(b, hp_max)
+		if b.tiger.retreating:
+			if ret_t < 0.0: ret_t = float(b.time)
+			elif float(b.time) - ret_t >= 1.4: b.finish("retreated", 0.0)
+		await d.get_tree().process_frame
 
-# ---------------------------------------------------------------------------
-# 갈래 확정(결과는 S0009 끝에 CASE_NAMWON_OUTCOME으로) → S0009 동아줄 → S0010 아침 → S0011 밤하늘 → 결말 카드
-# ---------------------------------------------------------------------------
-func resolve(branch: String, res: String) -> void:
+var arrow_info := {}   # 시험 기록
+func _hunter_arrow(b, hp_max: float) -> void:
+	flag("hunter_arrow")
+	var tg = b.tiger
+	var from: Vector2 = tg.pos + Vector2(8.5, 6.5)   # 먼 데(마당 밖, 고개 쪽 어둠)
+	var dir: Vector2 = (tg.pos - from).normalized()
+	b.spawn_arrow(from, dir, 6.0, true)
+	tg.go("stagger"); tg.stun_for = 1.4; tg.set_anim("stagger", true, 1.4)
+	b.player.hp = maxf(b.player.hp, hp_max * 0.3)
+	b.retreat_at = { "seconds": b.time + 1.8 }   # 흐름을 잇는다 — 곧 물러난다
+	arrow_info = { "t": float(b.time), "player_hp": float(b.player.hp) }
+	_nlog("arrow", "포수", "fight")
+	d.runner.log_line("hunter_arrow", snappedf(float(b.time), 0.1))
+	b.env.say("어둠 속에서 화살 하나가 날아와 범의 어깨에 박힌다.", 2400)
+	d.ui.caption("포수  “이놈아, 이쪽이다!”", 1.8)
+
+# §45 범이 플레이어를 크게 밀쳐낸다 — 쓰러지지만 죽거나 오래 기절하지 않는다. 범은 아이들을 찾는다(나무 쪽을 본다)
+func _shove(tag: String) -> void:
+	d.cutscene(true)
+	var pp := _pp()
+	var tree: Vector2 = d.anchor("big_tree")
+	var tpos: Vector2 = _last_tiger
+	var tn = d.actors.get("tiger_night")
+	if tn != null and tn.shown: tpos = Vector2(tn.pos.x, tn.pos.z)
+	if tpos == Vector2.INF or tpos.distance_to(pp) < 0.3: tpos = pp + (tree - pp).normalized() * 2.0
+	var dir := (pp - tpos).normalized()
+	var start := pp - dir * 1.7
+	d.spawn_actor("tiger_night", "tiger", [start.x, start.y], _face_of(dir), "", "")
+	d.anim_actor("tiger_night", "swipe")
+	_snd("tiger_growl", start, { "db": 2.0 })
+	await d.wait(0.25)
+	# 3~4m 뒤로 밀려난다 — 곧장 뒤가 막혔으면(집·나무) 조금 비껴 가장 멀리 밀리는 쪽으로
+	var to := pp
+	for ang in [0.0, 0.5, -0.5, 1.0, -1.0, 1.5, -1.5]:
+		var dv := dir.rotated(ang)
+		var q0 := pp
+		var l := 0.0
+		while l + 0.2 <= SHOVE_DIST:
+			var q := pp + dv * (l + 0.2)
+			if d.world.blocked(q.x, q.y, 0.375): break
+			l += 0.2; q0 = q
+		if q0.distance_to(pp) > to.distance_to(pp) + 0.05: to = q0
+		if to.distance_to(pp) >= SHOVE_DIST - 0.25: break
+	d.anim_actor("player", "hit")
+	if d.shake_enabled(): d.shake(0.25, 0.3)
+	var p0 := pp
+	await _animate(0.38, func(k: float) -> void:
+		var q := p0.lerp(to, 1.0 - (1.0 - k) * (1.0 - k))
+		d.set_player_pos(Vector3(q.x, d.world.height_at(q.x, q.y), q.y)))
+	d.anim_actor("player", "down")
+	shoves.append([tag, snappedf(p0.distance_to(to), 0.01)])
+	d.runner.log_line("shove", [tag, snappedf(p0.distance_to(to), 0.01)])
+	flag("tiger_shoved")
+	await _shot("shove")
+	# 범은 아이들을 찾는다
+	d.face_actor("tiger_night", null, "big_tree")
+	d.anim_actor("tiger_night", "sniff")
+	await d.wait(0.8)
+	d.anim_actor("player", "getup")
+	await d.wait(0.5)
+	d.anim_actor("player", "idle")
+
+static func _face_of(v: Vector2) -> String:
+	return "right" if absf(v.x) > absf(v.y) * 1.05 and v.x > 0 else ("left" if absf(v.x) > absf(v.y) * 1.05 else ("down" if v.y > 0 else "up"))
+
+# 갈래 기록(결과는 S0009 끝에 CASE_NAMWON_OUTCOME으로)
+func _record_branch(branch: String, res: String) -> void:
 	var detail := "C" if branch == "C" else "%s_%s" % [branch, "down" if res == "lose" else "hold"]
 	flag("pending_outcome", branch)
 	flag("pending_detail", detail)
 	S.seen["S0008"] = true
 	d.runner.log_line("outcome", detail)
-	d.camera(null)
-	d.end_combat()
-	d.despawn_actor("tiger_night")
-	if branch == "A":
-		await d.ui.caption("범이 한 걸음 물러나 으르렁거린다. 그사이 오누이는 나무 높이 올랐다." if res != "lose"
-			else "몸을 일으켰을 때, 오누이는 이미 나무 높이 올라 있었다.", 2.6)
-	elif branch == "B":
-		await d.ui.caption("범이 겨우 몸을 일으킨다. 앞발이 아직 번들거린다. 오누이는 나무 높이 올랐다.", 2.6)
-	kids_up()
-	await R([{ "event": "S0009" }, { "event": "S0010" }, { "event": "S0011" }])
-	await finish()
+	if not f("kids_in_tree"): await kids_up()
+
+# ---------------------------------------------------------------------------
+# ACT 9 나무와 우물(v3.2 §46~§50)
+# ---------------------------------------------------------------------------
+# §46 우물 — 우물 표면에 오누이 얼굴 · 범 “거기 숨어 있었구나.” · 아우 “킥.” · 범이 위를 본다
+# §47 참기름 거짓말 — 범 “어떻게 거기까지 올라갔느냐?” 누이 “참기름을 바르고 올라왔지.” → 기름을 바르고 오르다 미끄러짐, 한 번 더
+# §48 아우의 실수 — “바보.” “쉿.” “도끼로 찍고 올라오면 되는데.” “아우야!” → 범이 헛간 쪽을 본다
+func tree_scene() -> void:
+	d.cutscene(true)
+	if d.ui._fade.color.a > 0.01: await d.ui.fade(false, 0.3)
+	kids_place()
+	var well: Vector2 = d.anchor("well")
+	var tree: Vector2 = d.anchor("big_tree")
+	var mid := well.lerp(tree, 0.5)
+	d.camera({ "focus": [mid.x, mid.y + 0.6], "pitch": 30.0, "distance": 13.0, "fov": 40.0 })
+	d.main.rig.glide(0.5)
+	await d.move_actor("tiger_night", ["tiger_well"], 2.4, "walk", "sniff")
+	d.face_actor("tiger_night", null, "well")
+	# 우물을 내려다보는 짧은 시점
+	_tilt(false)
+	var twp: Vector2 = d.anchor("tiger_well")
+	var wl := well.lerp(twp, 0.4)
+	d.camera({ "focus": [wl.x, wl.y], "pitch": 40.0, "distance": 9.5, "fov": 40.0 })
+	d.main.rig.glide(0.35)
+	await d.wait(0.4)
+	await d.ui.caption("우물 물 위에 오누이 얼굴이 비친다.", 2.0)
+	await _shot("well")
+	await _say("범", ["거기 숨어 있었구나."])
+	await _say("아우", ["킥."])
+	d.face_actor("tiger_night", null, "big_tree")
+	d.anim_actor("tiger_night", "idle")
+	d.camera({ "focus": [mid.x, mid.y + 0.6], "pitch": 26.0, "distance": 13.0, "fov": 42.0 })
+	d.main.rig.glide(0.4)
+	_tilt(true)
+	d.learn_clue("reflection", true)
+	beat("well_reflection")
+	await d.move_actor("tiger_night", ["tiger_tree"], 2.0, "walk", "idle")
+	d.face_actor("tiger_night", "up", null)
+	await _say("범", ["어떻게 거기까지 올라갔느냐?"])
+	await _say("누이", ["참기름을 바르고 올라왔지."])
+	# 부엌에서 기름 단지를 들고 와 줄기에 바른다
+	await d.move_actor("tiger_night", [d.anchor("house_door") + Vector2(1.0, 1.2)], 5.0, "walk", "idle")
+	await d.move_actor("tiger_night", ["tiger_tree"], 5.0, "walk", "idle")
+	d.face_actor("tiger_night", "up", null)
+	d.world_state("oil_on_tree", true)
+	for k in 2:   # 오르다 미끄러짐 — 한 번 더
+		d.anim_actor("tiger_night", "climb_try")
+		d.place_actor("tiger_night", "tiger_tree", 0.7, "up")
+		await d.wait(0.8)
+		d.anim_actor("tiger_night", "slip")
+		d.place_actor("tiger_night", "tiger_tree", 0.0, "up")
+		_snd("footstep_heavy", "tiger_tree", { "db": -4.0 })
+		if k == 0: await _shot("oil_slip")
+		await d.wait(0.7)
+	await d.ui.caption("또 미끄러진다.", 1.4)
+	d.learn_clue("kids_lie", true)
+	await _say("아우", ["바보."])
+	await _say("누이", ["쉿."])
+	await _say("아우", ["도끼로 찍고 올라오면 되는데."])
+	await _say("누이", ["아우야!"])
+	d.learn_clue("axe_slip", true)
+	beat("kids_lies")
+	d.face_actor("tiger_night", null, "barn")   # 범이 헛간 쪽을 본다
+	d.anim_actor("tiger_night", "idle")
+	await d.wait(0.8)
+
+# §49 도끼 — 쿵, 쿵. 한 칸씩 올라오는 범. 흔들림은 아주 약하게(설정 cam_shake가 꺼져 있으면 흔들지 않는다)
+var axe_hits := 0   # 시험 기록
+func axe_climb() -> void:
+	await d.move_actor("tiger_night", ["barn_front"], 6.0, "walk", "idle")
+	await d.wait(0.4)
+	await d.move_actor("tiger_night", ["tiger_tree"], 6.0, "walk", "idle")
+	d.face_actor("tiger_night", "up", null)
+	d.anim_actor("tiger_night", "climb_try")
+	for k in 3:
+		_snd("axe_hit", "tiger_tree")
+		axe_hits += 1
+		if d.shake_enabled(): d.shake(0.05, 0.12)
+		d.place_actor("tiger_night", "tiger_tree", 0.5 * (k + 1), "up")
+		if k == 1: await _shot("axe_climb")
+		await d.ui.caption("쿵.", 0.8)
+		await d.wait(0.4)
+
+# §50 플레이어 마지막 개입 — 다시 조작. 활·환도·떡·몸으로 막아 약 15~20초 더 번다. 범은 죽지 않는다.
+#   범이 줄기에서 뛰어내려 이쪽을 치고, 시간이 지나면 다시 나무로 돌아가 오른다 → ACT 10 기도(기존 동아줄 장면)로
+func last_stand() -> void:
+	await d.ui.caption("범이 줄기에서 뛰어내려 이쪽을 노려본다.", 1.6)
+	d.cutscene(false)
+	var res := await _time_fight({}, LAST_STAND, "last")
+	d.runner.log_line("last_stand", res)
+	d.cutscene(true)
+	var tp: Vector2 = _last_tiger if _last_tiger != Vector2.INF else d.anchor("tiger_tree")
+	d.spawn_actor("tiger_night", "tiger", [tp.x, tp.y], "up", "", "")
+	await d.move_actor("tiger_night", ["tiger_tree"], 5.0, "walk", "climb_try")
+	d.place_actor("tiger_night", "tiger_tree", 1.4, "up")
+	d.anim_actor("tiger_night", "climb_try")
+	_snd("axe_hit", "tiger_tree")
+	flag("last_stand_done")
 
 func commit_outcome() -> void:
 	if String(S.vars.get("CASE_NAMWON_OUTCOME", "")) != "": return
@@ -1165,7 +2004,8 @@ func commit_outcome() -> void:
 	d.mark_dirty()
 
 # ---------------------------------------------------------------------------
-# S0009 우물가 나무 — 우물에 비친 얼굴 · 참기름과 도끼(오누이의 말) · 동아줄을 비는 것(오누이) · 새 줄 · 썩은 줄 · 수수밭 · 두 빛
+# S0009 ACT 10~ — 동아줄을 비는 것(오누이) · 새 줄 · 썩은 줄 · 수수밭 · 두 빛(기존 장면 그대로 — 착수 순서 6에서 다시 짠다).
+#   우물·참기름·도끼·마지막 개입(ACT 9)은 night_door가 먼저 한다
 # ---------------------------------------------------------------------------
 var _tale_nodes: Array = []
 func _tale_node(params: Dictionary, at: Vector2, y: float) -> Node3D:
@@ -1211,53 +2051,17 @@ func _animate(sec: float, fnc: Callable) -> void:
 func rope_night() -> void:
 	d.cutscene(true)
 	d.end_combat()
-	await d.ui.fade(true, 0.5)
+	await d.ui.fade(true, 0.4)
 	d.teleport_to("sky_watch", "right")
 	kids_place()
-	d.spawn_actor("tiger_night", "tiger", [-3214.0, -349.6], "right", "범", "")
-	d.camera({ "focus": [-3205.0, -344.6], "pitch": 24.0, "distance": 18.0 })   # 낮게 — 나무 위·줄이 화면에 들게
-	_sky_light(d.anchor("rope_kids") + Vector2(0, 0.9), _ground("rope_kids"))   # 빛기둥 셰이더를 암전 속에서 미리 짓는다(세기 0)
-	_field_light(d.anchor("sorghum"), _ground("sorghum"))
+	if not d.actors.has("tiger_night"): d.spawn_actor("tiger_night", "tiger", "tiger_tree", "up", "", "")
+	d.place_actor("tiger_night", "tiger_tree", 1.4, "up")
+	d.anim_actor("tiger_night", "climb_try")
+	if not is_instance_valid(_sky_beam): _sky_light(d.anchor("rope_kids") + Vector2(0, 0.9), _ground("rope_kids"))   # (옛 길·시험) 미리 짓지 못했으면
+	if not is_instance_valid(_field_lamp): _field_light(d.anchor("sorghum"), _ground("sorghum"))
+	d.camera({ "focus": [-3205.0, -344.6], "pitch": 24.0, "distance": 18.0 })
 	await d.wait(0.3)
-	await d.ui.fade(false, 0.6)
-	# 우물에 비친 얼굴
-	await d.ui.caption("범이 다시 마당으로 와 코를 킁킁댄다. 아이들이 보이지 않는다.", 2.2)
-	await d.move_actor("tiger_night", ["tiger_well"], 2.2, "walk", "sniff")
-	d.face_actor("tiger_night", null, "well")
-	await d.ui.caption("범이 우물을 들여다본다. 물 위에 오누이 얼굴이 비친다.", 2.4)
-	await _shot("well")
-	await d.ui.say("범", ["얘들아, 우물 속에 들어가 있었구나. 바가지로 건져 주마."])
-	await d.ui.caption("나무 위에서 아우가 그만 킥 웃음을 터뜨린다.", 2.0)
-	d.face_actor("tiger_night", null, "big_tree")
-	d.learn_clue("reflection", true)
-	beat("well_reflection")
-	await d.move_actor("tiger_night", ["tiger_tree"], 2.0, "walk", "idle")
-	d.face_actor("tiger_night", "up", null)
-	# 오누이의 거짓말 — 참기름, 그리고 아우의 실수
-	await d.ui.say("범", ["거기 있었구나. 얘들아, 너희는 어떻게 그리 높이 올라갔느냐?"])
-	await d.ui.say("누이", ["참기름을 바르고 올라왔지."])
-	d.world_state("oil_on_tree", true)
-	await d.ui.caption("범이 부엌에서 기름 단지를 들고 나와 줄기에 처덕처덕 바른다.", 2.2)
-	d.anim_actor("tiger_night", "climb_try")
-	await d.wait(1.0)
-	d.anim_actor("tiger_night", "slip")
-	d.shake(0.3, 0.4)
-	await d.ui.caption("오르려다 주르륵 미끄러진다. 다시 올라도 또 미끄러진다.", 2.2)
-	d.learn_clue("kids_lie", true)
-	await d.ui.say("아우", ["바보, 도끼로 찍고 올라오면 되지."])
-	await d.ui.say("누이", ["아우야!"])
-	d.learn_clue("axe_slip", true)
-	beat("kids_lies")
-	await d.ui.caption("범이 헛간에서 도끼를 물고 나와 줄기를 찍는다. 쿵, 쿵. 한 칸씩 올라온다.", 2.4)
-	d.anim_actor("tiger_night", "climb_try")
-	for y in [0.7, 1.4]:
-		d.place_actor("tiger_night", "tiger_tree", y, "up")
-		d.shake(0.18, 0.25)
-		await d.wait(0.6)
-	var i: int = await d.ui.choice("", [{ label = "활을 쏘아 범을 늦춘다" }, { label = "숨죽여 지켜본다" }])
-	if i == 0:
-		d.anim_actor("player", "throw")
-		await d.ui.caption("화살이 범의 어깨에 박힌다. 범이 한 번 으르렁거리고, 다시 도끼를 든다.", 2.4)
+	await d.ui.fade(false, 0.5)
 	# 동아줄을 비는 것은 오누이
 	d.anim_actor("nui", "perch"); d.anim_actor("au", "cower")
 	await d.ui.say("누이", ["하늘님, 저희를 살리시려거든 새 동아줄을 내려 주시고, 죽이시려거든 썩은 동아줄을 내려 주세요."])
@@ -1701,13 +2505,13 @@ const ROUTE_TEXT := {
 	"jumo": "주막에서 들었다. 고개 너머 사는 떡장수가 사흘째 돌아오지 않는다고.",
 	"kids": "고개 너머 외딴집에서 오누이를 만났다. 어머니가 장에 간 지 사흘째라 한다.",
 }
-const NIGHT_TEXT := "밤, 떡장수의 저고리를 걸친 범이 외딴집 문을 두드렸다. 털 난 손을 내밀었다가, 밀가루를 바른 손으로 다시 왔다. 아이들은 문을 열었고, 뒷간 핑계로 쪽문을 빠져나갔다."
+const NIGHT_TEXT := "밤, 문밖에서 “엄마 왔다.” 하는 목소리가 났다. 문틈으로 털 난 손을 내밀었다가 물러갔고, 다시 와서는 가루 묻은 흰 손을 내밀었다. 누이는 문을 열지 않고 아우를 데리고 뒷문으로 빠져나갔다. 문을 밀고 들어온 것은 떡장수의 저고리와 수건을 걸친 범이었다."
 const OUTCOME_TEXT := {
 	"A_hold": "범이 아이들을 쫓을 때, 칼을 뽑고 범 앞을 막아섰다. 범은 쓰러지지 않았지만, 그사이 아이들은 우물가 나무에 올랐다.",
 	"A_down": "범이 아이들을 쫓을 때, 칼을 뽑고 범 앞을 막아섰다. 나는 쓰러졌지만, 그사이 아이들은 우물가 나무에 올랐다.",
 	"B_hold": "범이 아이들을 쫓아 쪽문으로 나오다 디딤돌에 부어 둔 참기름에 미끄러졌다. 그사이 아이들은 우물가 나무에 올랐다.",
 	"B_down": "범이 아이들을 쫓아 쪽문으로 나오다 디딤돌에 부어 둔 참기름에 미끄러졌다. 그사이 아이들은 우물가 나무에 올랐다.",
-	"C": "범이 아이들을 쫓을 때, 오솔길의 떡 냄새로 숲속 빈터 어귀까지 꾀어내고 횃불로 물러나게 했다. 범은 곧 돌아왔지만, 그사이 아이들은 우물가 나무에 올랐다.",
+	"C": "범이 아이들을 쫓을 때, 오솔길 어귀의 떡 냄새로 범의 코를 돌려 놓고 횃불로 길을 막았다. 범은 곧 돌아왔지만, 그사이 아이들은 우물가 나무에 올랐다.",
 }
 const TALE_END := [
 	"아이 둘이 하늘로 올라가는 것을 보았다. 범도 줄을 빌었지만, 썩은 동아줄이 끊어져 수수밭에 떨어졌다.",
@@ -1722,7 +2526,7 @@ func solutions() -> Array:
 	var cp := 0
 	for id in ["K_MIMIC", "K_FLOUR", "K_FOOD", "K_TERRITORY"]:
 		if k.call(id): cp += 1
-	var c_ok: bool = k.call("K_FOOD") and has_bait and k.call("K_TERRITORY") and has_torch
+	var c_ok: bool = k.call("K_FOOD") and has_bait and has_torch
 	var c_hint := "범의 버릇을 더 알면 범을 잠시 집에서 떼어 놓을 수 있을지 모른다." if cp < 2 else "범이 무엇에 끌리고 무엇을 꺼리는지 하나씩 맞춰지고 있다."
 	if cp == 4: c_hint += ("" if has_torch else " 불이 있어야 할 것 같다.") if has_bait else " 꾈 것이 있어야 할 것 같다."
 	return [
@@ -1731,7 +2535,7 @@ func solutions() -> Array:
 			"text": "아이들이 드나드는 쪽문 디딤돌에 참기름을 부어 둔다. 쫓아 나오는 범이 미끄러진다.",
 			"hint": "범은 미끄러운 곳을 오르지 못했다. 미끄럽게 할 무언가가 있다면…" if k.call("K_CLIMB") else ("기름병이 손에 있다. 쓸 데가 있을까…" if has_oil else "범이 무엇에 미끄러지는지 아직 모른다.") },
 		{ "id": "C", "title": "떡과 횃불로 잠시 꾄다" if cp >= 2 else "???", "available": c_ok,
-			"text": "오솔길에 떡을 놓아 범을 빈터 어귀까지 꾀어내고, 횃불로 잠시 물러나게 한다. 범은 곧 돌아온다.", "hint": c_hint },
+			"text": "오솔길 어귀에 떡을 놓아 범의 코를 돌려 놓고, 횃불로 나무 쪽 길을 막는다. 범은 곧 돌아온다.", "hint": c_hint },
 	]
 
 func summary() -> Array:
@@ -1758,7 +2562,8 @@ func summary() -> Array:
 	if f("link_inferred"): p.append(LINK_LINE)
 	if f("tiger_house_suspected"): p.append("흰 발자국이 외딴집 쪽으로 이어진다. " + PURPOSE_LINE)
 	var o := String(S.flags.get("pending_detail", S.vars.get("CASE_NAMWON_DETAIL", "")))
-	if S.phase == "night" and o == "" and not f("climax_started"): p.append("밤이 되었다. 범은 오늘 밤 외딴집에 올 것이다. 숨기 전에 할 수 있는 일을 하자.")
+	if f("dusk_prep") and o == "" and not f("night_wait_started"): p.append(DUSK_LINE)
+	if f("time_line") and o == "": p.append(TIME_LINE)
 	if S.has_clue("door_tricks"): p.append(NIGHT_TEXT)
 	if o != "": p.append(OUTCOME_TEXT.get(o, ""))
 	if S.has_clue("sky_rise"): p.append_array(TALE_END)

@@ -4,7 +4,7 @@
 # params: kind, seed, length(자국 길이), n(개수), r(나무 줄기 반지름), h(높이)
 #   tteok 떨어진 떡(+킁킁 파헤친 흙) · skirt 덤불에 걸린 치맛자락 · blood 길가 돌의 마른 핏자국 · tracks 큰 짐승 발자국(+끊기는 짚신 자국)
 #   basket 엎어진 빈 광주리와 수건 · flour 찢긴 밀가루 자루와 흰 발자국 · claw 나무줄기 높은 발톱 긁힘 · oil 밑동에 바른 참기름(번들거림)
-#   white_paw 문틈 아래 흰 앞발 · oil_jars 기름집 참기름 병 · cake_trail 오솔길에 놓은 떡 · feast 잔칫상 · offering 서낭당 떡 공양
+#   white_paw 문틈 아래 흰 앞발 · hairy_paw 문틈으로 들어온 털 난 앞발(발톱 끝만 밝다) · oil_jars 기름집 참기름 병 · cake_trail 오솔길에 놓은 떡 · feast 잔칫상 · offering 서낭당 떡 공양
 #   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛) · sandal 길가에 닳은 짚신 한 짝(도입부 첫 조사, 단서 아님)
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
@@ -31,6 +31,7 @@ static func build(params: Dictionary) -> Dictionary:
 		"claw": _claw(m, float(params.get("r", 0.45)), float(params.get("h", 3.2)))
 		"oil": _oil(m, float(params.get("r", 0.45)))
 		"white_paw": _white_paw(m)
+		"hairy_paw": _hairy_paw(m)
 		"oil_jars": _oil_jars(m)
 		"cake_trail": fp = _cake_trail(m, int(params.get("n", 5)), float(params.get("length", 8.0)))
 		"feast": fp = _feast(m)
@@ -126,6 +127,22 @@ static func _white_paw(m: C.M) -> void:
 	for k in 4:
 		m.add("p", "smooth", C.PA(Kit.xf(Kit.lump(0.04, 0, m.rng, 0.2, 0.8), -0.09 + k * 0.06, 0.04, 0.24), WHITE), 0.004)
 	m.add("p", "flat", C.PA(_disc(0.3, 0.2, 0.01, 0, 0.005, 0.15, 0.0, 9), WHITE, 0.05), 0)   # 문간에 떨어진 가루
+
+# 남원 v3.2 §38 CAMERA 7C — 문틈으로 들어온 앞발 일부(털·발톱). 얼굴·몸은 없다
+const FUR := [0x6a4a2a, 0x3a2614]
+static func _hairy_paw(m: C.M) -> void:
+	var R := m.rng
+	m.add("p", "smooth", C.PA(Kit.xf(Kit.lump(0.15, 1, R, 0.3, 0.42), 0, 0.06, 0.06), FUR, 0.12, R), 0.01)
+	m.add("p", "smooth", C.PA(Kit.xf(Kit.cyl(0.12, 0.14, 0.34, 8), 0, 0.09, -0.16, PI * 0.5, 0, 0), FUR, 0.12, R), 0.01)   # 문틈 쪽 팔목
+	for k in 4:
+		var x := -0.105 + k * 0.07
+		m.add("p", "smooth", C.PA(Kit.xf(Kit.lump(0.045, 0, R, 0.25, 0.8), x, 0.045, 0.2), FUR, 0.1, R), 0.005)
+		m.add("p", "smooth", C.P(Kit.xf(Kit.cone(0.014, 0.07, 5), x, 0.04, 0.26, PI * 0.5, 0, 0), 0xe0d8c6, 0xa8a090), 0)   # 발톱
+	for i in 18:   # 거친 털 뭉치
+		var a := R.next() * TAU
+		var g := Kit.cone(0.02, 0.07 + R.next() * 0.05, 4)
+		Kit.xf(g, cos(a) * 0.12, 0.1 + R.next() * 0.05, -0.2 + R.next() * 0.38, 0.9 * sin(a), 0, -0.9 * cos(a))
+		m.add("p", "smooth", C.PA(g, FUR, 0.15, R), 0)
 
 static func _oil_jars(m: C.M) -> void:
 	m.add("p", "wood", C.PA(Kit.box(0.9, 0.5, 0.45, 0, 0.25, 0), C.WOOD_L), 0.012)
