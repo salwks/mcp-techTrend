@@ -21,6 +21,7 @@ var _bot_last := Vector2.INF
 var _bot_stuck := 0.0
 var _combat_shot := false
 var bot_wait_first := false   # 안내 시험: 범이 처음 몸을 낮출 때까지 봇이 다가가지 않는다
+var bot_passive := false      # 안내 시험: 베지 않고 피하기·막기만(목표가 죽이기가 아님을 본다)
 
 func _init(director, spec: String) -> void:
 	d = director
@@ -200,6 +201,7 @@ func _run() -> void:
 	expect(d.case_fn.summary().slice(0, 4) == Array(d.case_fn.FIRST_RECORD), "v3.2 첫 기록 네 줄")
 	# S0004 고갯길(단서 셋 이상이면 고갯마루 아래에서 S0005 첫 조우)
 	for id in ["cake_1", "cake_2", "cake_3", "torn_skirt"]: await go(id)
+	expect(d.case_fn.cake_order.map(func(x): return x[1]) == [1, 2, 3], "v3.2 떡 셋 — 찾은 차례대로 첫째·둘째·셋째 말")
 	await go("blood")
 	await _frames(20)
 	await _idle()
@@ -208,7 +210,12 @@ func _run() -> void:
 	if not d.S.is_flag("first_encounter"):
 		await walk_to("first_seen"); await _frames(30); await _idle()
 	expect(d.S.is_flag("first_encounter"), "S0005 첫 조우")
+	expect(d.case_fn.first_result in ["retreated", "repelled", "escaped", "lose"] and d.case_fn.first_result != "win", "첫 조우 — 범을 죽이지 않고 끝 (%s)" % d.case_fn.first_result)
+	expect(d.S.has_clue("first_sight") and String(d.data.clues.first_sight.title) == "고갯마루의 범", "기록: 고갯마루의 범")
 	expect(d.S.knows("K_FOOD"), "K_FOOD(떡·광주리)")
+	# §23 어머니의 과거 장면 — 원작 장면(beat)으로는 남고, 기록책은 사실로 적지 않는다
+	expect(d.S.is_flag("beat_mother_harmed") and d.S.is_flag("past_scene_seen") and not d.S.has_clue("pass_memory"), "과거 장면을 보았고 기록 단서로 남기지 않는다")
+	expect(d.S.notes.has(d.case_fn.PAST_KEEP), "기록에는 빈 광주리와 피, 큰 짐승 흔적만")
 	snapshot("after S0005")
 	# S0003 오누이(v3.2 §12: 세 물음 — 지난밤 목소리는 들은 대로, K_MIMIC은 아직)
 	await go("nui")
@@ -218,11 +225,19 @@ func _run() -> void:
 	await go("hearth")
 	await go("kneading")
 	expect(d.S.has_clue("mother_route") and not d.actors.has("mother") and not d.case_fn.has_method("mother_flashback"), "함지: 기록만(어머니 회상 없음)")
-	# S0006 추가 조사
+	# S0006 — §28 방앗간(주인과 말하며 밀가루 바닥을 본다) → §29 연결 추론 → §30 흰 발자국 → §27 포수(역할 나누기)
 	await go("miller")
-	await go("flour_prints")
-	expect(d.S.knows("K_FLOUR"), "K_FLOUR(흰 발자국)")
+	expect(d.S.is_flag("mill_talked") and d.S.has_clue("flour_sack") and d.S.has_clue("flour_prints") and d.S.is_flag("flour_prints"), "방앗간: 주인 말 · 밀가루 바닥(flour_prints)")
+	expect(d.S.knows("K_FLOUR"), "K_FLOUR(흰 앞발)")
+	expect(d.S.is_flag("link_inferred") and d.S.knows("K_MIMIC") and d.case_fn.summary().has(d.case_fn.LINK_LINE), "§29 연결 추론(목소리·밀가루·첫 조우)")
+	await walk_to("white_trail_a")
+	for i in 240:
+		if d.runner.busy or d.S.is_flag("tiger_house_suspected"): break
+		await _frames(1)
+	await _idle()
+	expect(d.S.is_flag("tiger_house_suspected") and d.S.has_clue("white_trail"), "§30 흰 발자국 — 집 쪽이다(tiger_house_suspected)")
 	await go("hunter")
+	expect(d.S.is_flag("hunter_met") and d.S.has_clue("hunter_word") and d.S.is_flag("hunter_watch"), "§27 포수 — 물음·역할 나누기(hunter_watch)")
 	await go("hunter")
 	await go("claw")
 	expect(d.S.knows("K_CLIMB"), "K_CLIMB(긁힌 껍질)")
@@ -315,11 +330,13 @@ func check_v3() -> void:
 	expect(not (d.actors.nui.shown or d.actors.au.shown), "끝난 뒤 오누이가 마을에 없다")
 	expect(d.S.has_clue("sky_rise") and String(d.data.clues.sky_rise.text) == "아이 둘이 하늘로 올라가는 것을 보았다." and String(d.data.clues.sky_rise.get("kind", "fact")) == "fact",
 		"설화록: “아이 둘이 하늘로 올라가는 것을 보았다.” 확인")
-	for id in ["disguise_seen", "door_tricks", "kids_tree", "reflection", "kids_lie", "axe_slip", "prayer", "rotten_rope", "two_lights", "pass_memory"]:
+	for id in ["disguise_seen", "door_tricks", "kids_tree", "reflection", "kids_lie", "axe_slip", "prayer", "rotten_rope", "two_lights"]:
 		expect(d.S.has_clue(id), "본 장면 기록 " + id)
+	expect(not d.S.has_clue("pass_memory"), "어머니의 과거 장면은 기록 단서가 아니다(v3.2 §23)")
 	expect(d.S.is_flag("kids_asked"), "S0010 마을 사람들이 아이들 일을 모른다")
 	expect(bool(d.S.vars.get("CASE_NAMWON_COMPLETE", false)), "CASE_NAMWON_COMPLETE(숙련 해금)")
-	expect(bool(d.S.vars.get("SKILL_GUARD_SHOVE", false)), "숙련 해금 받아밀기(UNLOCK CASE_NAMWON_COMPLETE)")
+	# v3.2 결정 2 · §67: 남원 완료 보상은 짐승 흔적 읽기 하나 — 받아밀기는 남원으로 열리지 않는다
+	expect(bool(d.S.vars.get("SKILL_BEAST_TRACE", false)) and not bool(d.S.vars.get("SKILL_GUARD_SHOVE", false)), "남원 완료: 짐승 흔적 읽기만 · 받아밀기 아님")
 	# 글: 범을 잡았다·아이들을 거뒀다는 말이 남아 있지 않다(기록책·결말 카드·고을 사람 반응·소문)
 	var bad := ["쓰러뜨렸", "때려잡", "거뒀", "거두었", "거둔다", "칼에 맞았", "목이 부러졌", "잔칫날", "숟가락 둘"]
 	var texts: Array = []
@@ -370,6 +387,10 @@ func combat_bot() -> Dictionary:
 		_bot_dodge_cd = 0.7
 		out.move = Vector2(-dir.y, dir.x); out.held = { dodge = true }
 		return out
+	# 막기 안내(L)가 떠 있으면 안내대로 앞발을 막는다(실제로 막아야 안내가 끝난다)
+	var lhint: bool = d.onboard != null and d.onboard.hint_key() == "COMBAT_GUARD"
+	if lhint and tg.state in ["swipeWind", "swipe"] and dist < 4.5:
+		out.held = { guard = true }; return out
 	var skl: bool = d.main.args.has("allskills")   # 숙련 시험: 막기를 늦게 눌러 받아밀기, 멀 때 걸으며 빠른 투척
 	if skl and tg.state == "swipeWind" and dist < 4.0:
 		if tg.t < 0.22: out.move = -dir * 0.2; return out
@@ -394,6 +415,9 @@ func combat_bot() -> Dictionary:
 		if _bot_stuck > 0.4 and int(_bot_stuck * 60.0) % 120 == 0:
 			_log("봇 막힘 (%.1f,%.1f) blocked=%s h=%.2f" % [pl.pos.x, pl.pos.y, d.world.blocked(pl.pos.x, pl.pos.y, 0.375), d.world.height_at(pl.pos.x, pl.pos.y)])
 		out.run = dist > 3.5
+		return out
+	if bot_passive:
+		out.move = -dir * 0.3   # 베지 않는다 — 곁에서 버틴다
 		return out
 	if open or pl.st > 40.0:
 		_bot_tap += 1
