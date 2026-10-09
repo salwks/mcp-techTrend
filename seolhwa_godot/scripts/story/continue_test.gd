@@ -4,6 +4,8 @@
 #   메뉴를 닫고 이야기가 한가해지면(새 게임은 여는 장면 S0001을 자동으로 넘긴 뒤):
 #     1 이야기 인물 곁 — E 대상이 그 인물이고, E 키(입력 이벤트)로 말이 열린다(S.talked가 는다).
 #     2 고을 사람 곁 — E 대상이 고을 사람이고, E 키로 말 걸기가 된다(ambient.last가 바뀐다).
+#   --continueexpect=rollback  (남원 결정 6) 옛 밤 절정 도중 저장 — 저녁 준비 바로 앞으로 되돌렸나(단서·아이템 그대로, 밤 임시 플래그 없음)
+#     → 해 질 무렵 귀환(경고·포수·준비)이 다시 돌고 준비 상태(dusk_prep)가 되는지 본 뒤 1·2를 한다.
 #   통과하면 "CONTTEST PASS", 아니면 "CONTTEST FAIL <까닭>".
 extends RefCounted
 
@@ -79,6 +81,7 @@ func run(spec: String) -> void:
 	_ok(await _wait_until(idle, 120.0), "이야기 한가함 started=%s busy=%s modal=%s cut=%s" % [d._started, d.runner.busy, d.ui.modal, d._cut])
 	_ok(d.S.phase != "start", "phase=" + String(d.S.phase))
 	print("CONTTEST state phase=%s seen=%s talked=%s" % [d.S.phase, d.S.seen.keys(), d.S.talked])
+	if String(main.args.get("continueexpect", "")) == "rollback": await _rollback()
 	await _story_actor()
 	await _ambient()
 	_finish("")
@@ -121,6 +124,33 @@ func _story_actor() -> void:
 		main.teleport(p.x, p.y)
 	_ok(got, "E로 %s와 말이 열림" % id)
 	await _wait_until(func(): return not d.runner.busy and not d.ui.modal, 60.0)
+
+# 남원 결정 6 — 옛 밤 절정 도중 저장(fixture story/namwon/test_climax_save.json)을 저녁 준비 바로 앞으로 되돌린다
+func _rollback() -> void:
+	var fx = JSON.parse_string(FileAccess.get_file_as_string(String(main.args.get("continuefixture", ""))))
+	var old: Dictionary = fx.cases.namwon if fx is Dictionary else {}
+	var S = d.S
+	_ok(String(d.case_fn.get("rollback")) == "old_night", "옛 밤 저장을 알아봄(rollback=%s)" % d.case_fn.get("rollback"))
+	_ok(S.phase != "night" and S.phase != "done", "밤에서 빠져나옴(phase=%s)" % S.phase)
+	for k in ["climax_started", "kids_in_tree", "pending_outcome", "pending_detail", "yard_losses", "beat_tiger_disguise", "beat_door_tricks", "beat_kids_escape_tree"]:
+		_ok(not S.flags.has(k), "밤 임시 플래그 지움 " + k)
+	for k in ["white_paw", "kids_in_tree"]: _ok(not S.world.has(k), "밤 지역 상태 지움 " + k)
+	_ok(String(S.flags.get("beats", "")) == "mother_harmed", "원작 장면 기록은 밤 앞까지만(%s)" % S.flags.get("beats", ""))
+	var miss: Array = old.get("clues", []).filter(func(c): return not S.clues.has(c))
+	_ok(miss.is_empty(), "단서 그대로(%d개, 빠진 것 %s)" % [S.clues.size(), miss])
+	var items_ok := true
+	for k in old.get("items", {}): if int(S.items.get(k, 0)) != int(old.items[k]): items_ok = false
+	_ok(items_ok, "아이템 그대로 %s" % JSON.stringify(S.items))
+	_ok(bool(S.world.get("oil_on_step", false)), "준비해 둔 디딤돌 기름은 그대로")
+	_ok(not S.seen.has("S0007"), "S0007(밤의 문)을 다시 본다")
+	# 저녁 준비 바로 앞 — 마당에서 해 질 무렵 귀환이 다시 돈다(경고·포수·준비)
+	var ready := func(): return S.is_flag("dusk_prep") and not d.runner.busy
+	_ok(await _wait_until(ready, 90.0), "해 질 무렵 귀환이 다시 돌고 준비 시간(dusk_prep)")
+	_ok(S.is_flag("kids_warned") and S.is_flag("hunter_watch") and S.phase == "explore", "경고·포수 역할(hunter_watch) · 준비 중(explore)")
+	_ok(main.hour >= 18.4 and main.hour <= 22.6, "해 질 무렵 %.2f시" % main.hour)
+	_ok(d.actors.nui.shown and d.actors.au.shown, "오누이가 집에 있다")
+	_ok(d._targets().any(func(t): return String(t.id) == "night_wait") or Vector2(main.player_pos.x, main.player_pos.z).distance_to(d.anchor("hide_spot")) > 2.6, "숨은 자리 “기다린다”가 열려 있다")
+	print("CONTTEST rollback flags=%d clues=%d hour=%.2f" % [S.flags.size(), S.clues.size(), main.hour])
 
 # 2 고을 사람: 이야기 인물에서 떨어진 고을 사람 곁으로 가서 E
 func _ambient() -> void:

@@ -78,6 +78,8 @@ TESTS=(
 	# 시작 메뉴 → 이어 하기(남원 이른 옛 저장) / 새 게임 → 이야기 인물·고을 사람에게 E로 말 걸기(scripts/story/continue_test.gd)
 	"continue:namwon-early|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_early_save.json"
 	"continue:new|300|--region=JL_NAMWON_UNBONG --continuetest=new"
+	# 남원 결정 6: 옛 밤 절정 도중 저장(꾸민 저장) → 저녁 준비 바로 앞으로 되돌림 → 귀환·경고·준비가 다시 돈다
+	"continue:namwon-climax|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_climax_save.json --continueexpect=rollback"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 )

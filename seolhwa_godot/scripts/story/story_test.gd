@@ -22,6 +22,7 @@ var _bot_stuck := 0.0
 var _combat_shot := false
 var bot_wait_first := false   # 안내 시험: 범이 처음 몸을 낮출 때까지 봇이 다가가지 않는다
 var bot_passive := false      # 안내 시험: 베지 않고 피하기·막기만(목표가 죽이기가 아님을 본다)
+var _night_choices: Array = []  # 밤의 문 ~ 탈출 사이에 플레이어에게 물은 것(없어야 한다 — 탈출은 누이가 정한다)
 
 func _init(director, spec: String) -> void:
 	d = director
@@ -42,6 +43,7 @@ func _log(s: String) -> void:
 
 # ---- 선택 정책 ----
 func choose(prompt: String, labels: Array) -> int:
+	if d.S.is_flag("night_wait_started") and not d.S.is_flag("kids_escape_started"): _night_choices.append(labels.duplicate())
 	for want in prefer:
 		for i in labels.size():
 			if labels[i] != "" and String(labels[i]).contains(want): return i
@@ -49,7 +51,7 @@ func choose(prompt: String, labels: Array) -> int:
 		var l := String(labels[i])
 		if l == "": continue
 		var bad := false
-		for x in deny + ["그만", "다음에", "문 꼭", "문 걸고", "아직이다", "칼을 뽑는다", "지금 뛰어나간다", "그만둔다"]:
+		for x in deny + ["그만", "다음에", "문 꼭", "문 걸고", "아직이다", "아직 준비", "칼을 뽑는다", "지금 뛰어나간다", "그만둔다"]:
 			if l.contains(x): bad = true
 		if not bad: return i
 	for i in range(labels.size() - 1, -1, -1):
@@ -122,7 +124,7 @@ func tale_shot(nm: String) -> void:
 # 대사·자막·암전·연출을 실제 길이로 돌리고(ui.auto_real, 시간 배율 1), 1초마다 seq_NNN을 찍는다. --camshake=normal|off로 흔들림 설정을 정한다.
 var _review := false
 func review_begin() -> void:
-	if _review or not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless": return
+	if _review or not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless" or d.main.args.has("noreview"): return
 	_review = true
 	d.ui.auto_real = true
 	Engine.time_scale = 1.0
@@ -139,6 +141,16 @@ func review_begin() -> void:
 		get_viewport().get_texture().get_image().save_png(dir.path_join("seq_%03d.png" % n))
 		n += 1
 	_log("REVIEW %d shots %.1fs" % [n, (Time.get_ticks_msec() - t0) / 1000.0])
+
+# 화면 검토(--storyshots, 화면이 있을 때): 해 질 무렵 귀환부터(ACT 6~9) 대사·자막·암전·움직임을 실제 길이로(시간 배율 1)
+func _real_night() -> void:
+	if not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless": return
+	d.ui.auto_real = true
+	Engine.time_scale = 1.0
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
+	if d.onboard != null:   # 순간이동으로 온 시험이라 이동·달리기 안내가 남아 있다 — 화면 검토에선 내린다(실제 놀이에선 이미 끝난 안내)
+		for k in ["MOVE", "RUN", "TALK", "INSPECT", "JOURNAL", "MAP"]: d.onboard.seen_now(k)
+	_log("REAL night begin")
 
 func review_end() -> void:
 	if not _review: return
@@ -183,6 +195,9 @@ func _run() -> void:
 	_log("시작 branch=%s" % branch)
 	if branch == "ONBOARD":
 		await load("res://scripts/story/onboard_test.gd").new().run(self)
+		return
+	if branch in ["NA", "NB", "NC"]:   # 화면 다듬기용: 밤(ACT 7~9)만 — 준비를 마친 상태에서 S0007부터(--nightstop=플래그에서 멈춤)
+		await _night_only(branch.substr(1))
 		return
 	# S0000 남원으로 가는 길 → S0001 남원 전경(실제로 돌린다)
 	await d.runner.run([{ "event": "S0000" }])
@@ -237,11 +252,8 @@ func _run() -> void:
 	await _idle()
 	expect(d.S.is_flag("tiger_house_suspected") and d.S.has_clue("white_trail"), "§30 흰 발자국 — 집 쪽이다(tiger_house_suspected)")
 	await go("hunter")
-	expect(d.S.is_flag("hunter_met") and d.S.has_clue("hunter_word") and d.S.is_flag("hunter_watch"), "§27 포수 — 물음·역할 나누기(hunter_watch)")
+	expect(d.S.is_flag("hunter_met") and d.S.has_clue("hunter_word") and not d.S.is_flag("hunter_watch"), "§27 포수 — 물음(역할 나누기는 아직)")
 	await go("hunter")
-	await go("claw")
-	expect(d.S.knows("K_CLIMB"), "K_CLIMB(긁힌 껍질)")
-	await go("barn")
 	await go("territory_edge")
 	expect(d.S.knows("K_TERRITORY"), "K_TERRITORY(숲속 빈터)")
 	d.ui.journal_show(d.journal_data())
@@ -256,14 +268,32 @@ func _run() -> void:
 		prefer = []
 		expect(d.S.has("ITM_TOOL_002"), "횃불 얻음")
 	snapshot("before night")
-	# 밤(v3.2 §3.2: 주막 잠이 아니라 외딴집에서 해 지기를 기다린다)
-	expect(not d.case_fn.has_method("rest"), "주막 잠(rest) 필수 흐름 없음")
-	prefer = ["여기서 기다린다"]
-	await go("dusk_wait")
-	prefer = []
-	expect(d.S.phase == "night", "외딴집에서 기다리고 밤")
+	# ---- v3.2 ACT 6 해 질 무렵 귀환(§31·§32) · 포수와 역할 나누기(결정 4) ----
+	expect(not d.case_fn.has_method("rest") and not d.case_fn.has_method("night_fall") and not d.case_fn.has_method("climax"), "옛 다리 없음(rest·night_fall·climax)")
+	expect(not d.data.objects.any(func(o): return String(o.id) == "dusk_wait") and not d.data.triggers.any(func(t): return String(t.id) == "night_arrive"), "dusk_wait·옛 밤 들머리(night_arrive) 없음")
+	expect(not d.S.is_flag("hunter_watch"), "포수 역할 나누기는 낮의 물음이 아니다")
+	expect(d.case_fn.night_ready(), "해 질 무렵 귀환이 열린다(night_ready)")
+	prefer = { "A": [], "B": ["흔적을"], "C": ["대답하지"] }[branch]
+	_real_night()
 	await walk_to("yard")
-	await _frames(20); await _idle()
+	for i in 600:
+		if d.S.is_flag("dusk_prep"): break
+		await _frames(1)
+	await _idle()
+	prefer = []
+	expect(d.S.is_flag("dusk_return_seen") and d.S.is_flag("kids_warned") and d.S.is_flag("dusk_prep"), "§31~§32 귀환·경고 → 준비(kids_warned·dusk_prep)")
+	expect(d.case_fn.dusk_choice == { "A": "not_yet", "B": "trace", "C": "silent" }[branch], "§31 대답 %s" % d.case_fn.dusk_choice)
+	expect(d.S.is_flag("hunter_watch") and d.S.is_flag("hunter_role_dusk"), "결정 4 포수 역할 나누기(해 질 무렵) — hunter_watch")
+	expect(d.main.hour >= 18.4 and d.main.hour <= 22.6, "해 질 무렵 %.2f시" % d.main.hour)
+	var dsrc := FileAccess.get_file_as_string("res://story/namwon/namwon_case.gd")
+	var dusk_txt := dsrc.substr(dsrc.find("func dusk_return"), dsrc.find("func _hunter_role") - dsrc.find("func dusk_return"))
+	var death := ["죽었", "죽은", "돌아가셨", "잡아먹", "살아 있지"]
+	expect(not death.any(func(w): return dusk_txt.contains(w)), "§31 어느 대답도 어머니의 죽음을 확정하지 않는다")
+	expect(dusk_txt.contains("엄마여도요?") and dusk_txt.contains("…목소리만 듣고 열지 마.") and dusk_txt.contains("엄마 얼굴 보면 되잖아요."), "§32 경고 원문")
+	# 준비 시간 — 큰 나무·헛간(낮에 못 봤으면 이때)
+	await go("claw")
+	expect(d.S.knows("K_CLIMB"), "K_CLIMB(긁힌 껍질)")
+	await go("barn")
 	match branch:
 		"A":
 			pass
@@ -273,9 +303,6 @@ func _run() -> void:
 			prefer = []
 			expect(bool(d.S.world.get("oil_on_step", false)), "쪽문 디딤돌에 참기름")
 		"C":
-			await go("nui")
-			expect(d.S.is_flag("kids_warned"), "아이들에게 일렀다(문을 열지 말지는 아이들이 정한다)")
-			expect(not d.S.is_flag("kids_in_tree"), "플레이어가 아이들을 나무로 올려 보내지 않는다")
 			prefer = ["떡"]
 			await go("cake_bait")
 			prefer = []
@@ -284,13 +311,17 @@ func _run() -> void:
 			await go("yard_torch")
 			prefer = []
 			expect(bool(d.S.world.get("torch_lit", false)), "횃대 불")
+			expect(d.case_fn.c_ready(), "C 준비(떡 + 먹이 버릇 + 불)")
+	expect(not d.S.is_flag("kids_in_tree"), "플레이어가 아이들을 나무로 올려 보내지 않는다")
 	snapshot("night prep")
 	await shot("night_yard")
-	# S0007 → S0008
-	prefer = ["숨어서 기다린다", "떡 냄새 쪽으로" if branch == "C" else "막아선다", "횃불을 치켜든다", "다시 일어선다", "하늘을 올려다본다"]
+	# ---- §34 hide_spot 기다리기 → S0007 밤의 문 → 시간 벌기 → 나무 → 동아줄 ----
+	prefer = ["기다린다."]
 	_combat_shot = false
 	_watch_shots()
-	await go("house_door")
+	_watch_night()
+	await go("night_wait")
+	prefer = ["하늘을 올려다본다"]
 	await _idle()
 	var waited := 0
 	while (d.S.phase != "done" or d.ui.modal) and waited < 20000:
@@ -304,6 +335,7 @@ func _run() -> void:
 	expect(bool(d.S.vars.get("SKILL_BEAST_TRACE", false)), "S0010 SKILL_BEAST_TRACE")
 	expect(d.S.seen.has("S0009") and d.S.seen.has("S0010") and d.S.seen.has("S0011"), "S0009 동아줄·S0010 아침·S0011 밤하늘 장면")
 	check_v3()
+	check_v32_night()
 	# 지역 변화: 수수밭이 붉다(모든 갈래). 잔칫상·떡 공양은 없다(범을 잡은 사람이 없다)
 	expect(d.props.has("p_sorghum_red") and d.props.p_sorghum_red.get("want", false), "지역 변화 — 붉은 수수밭")
 	for pid in ["p_feast", "p_offering", "p_jeogori_c"]: expect(not d.props.has(pid), "옛 결말 소품 없음 " + pid)
@@ -314,6 +346,133 @@ func _run() -> void:
 	if _fails.is_empty(): printerr("STORYTEST PASS namwon:%s outcome=%s detail=%s time=%.0fs" % [branch, o, d.S.vars.get("CASE_NAMWON_DETAIL", ""), (Time.get_ticks_msec() - _t0) / 1000.0])
 	else: printerr("STORYTEST FAIL namwon:%s fails=%s" % [branch, JSON.stringify(_fails)])
 	d.main._quit()
+
+func _night_only(b: String) -> void:
+	branch = b
+	var S = d.S
+	S.phase = "explore"
+	for k in ["s0000_started", "INTRO_MASTER_VOICE_DONE", "INTRO_NAMWON_TITLE_DONE", "case_started", "met_kids", "first_encounter", "beat_mother_harmed",
+			"past_scene_seen", "tiger_house_suspected", "dusk_return_seen", "kids_warned", "dusk_prep", "hunter_watch", "hunter_role_dusk"]: S.flags[k] = true
+	S.flags["beats"] = "mother_harmed"
+	S.rules = ["K_FOOD", "K_TERRITORY", "K_CLIMB"]
+	S.items = { "ITM_TOOL_009": 1, "ITM_WPN_001": 1, "ITM_WPN_002": 1, "ITM_AMMO_001": 12, "ITM_LIFE_001": 3 }
+	if b == "B": S.world["oil_on_step"] = true
+	if b == "C": S.world["cake_bait"] = true; S.world["torch_lit"] = true
+	d.set_hour(21.0)
+	d.teleport_to("hide_spot", "left")
+	d.case_fn.kids_place()
+	d.mark_dirty()
+	await _frames(20)
+	_real_night()
+	_watch_night()
+	var stop := String(d.main.args.get("nightstop", "act10_started"))
+	d.runner.run([{ "event": "S0007" }])
+	for i in 200000:
+		await get_tree().process_frame
+		if S.is_flag(stop): break
+	await _frames(30)
+	printerr("STORYTEST PASS night-only %s stop=%s" % [b, stop])
+	d.main._quit()
+
+# ---- v3.2 ACT 6~9 밤 감시(대본과 따로 돈다) ----
+var nw := { "early_tiger": [], "kids_in_tree": false, "between_seen": false, "between_free": false, "mill": false, "door": false,
+	"arrow_set": false, "torch": false, "cues": [], "reveal_t": -1, "max_tiger_y": 0.0 }
+func _watch_night() -> void:
+	d.sfx_cue.connect(func(id): nw.cues.append(String(id)))
+	var hp: Vector2 = d.anchor("hide_spot")
+	var mill: Vector2 = d.anchor("mill")
+	var step := 0
+	for i in 400000:
+		await get_tree().process_frame
+		var S = d.S
+		if S.phase == "done": return
+		if S.is_flag("kids_in_tree"): nw.kids_in_tree = true
+		# 문이 열리기 전(reveal_tiger) 범의 전신이 화면에 있으면 안 된다 — 범 그림(이야기 인물·전투)이 하나라도 보이면 기록
+		if S.is_flag("night_wait_started") and not S.is_flag("tiger_revealed"):
+			for id in d.actors:
+				var a: Dictionary = d.actors[id]
+				if String(a.spec.get("kind", "")) == "tiger" and a.shown and a.ch.visible: nw.early_tiger.append(String(id))
+			if d.combat_view.active: nw.early_tiger.append("combat")
+		# §39 노크 사이: 조작이 돌아왔나 → 방앗간 쪽으로(가루 소리·그림자) → 집 가까이(“문 열지 마.”) → 숨은 자리
+		if S.is_flag("between_knocks_on"):
+			if not nw.between_seen:
+				nw.between_seen = true
+				nw.between_free = not d.blocks_move() and d.free_move
+				_log("노크 사이 조작 blocks_move=%s free_move=%s" % [d.blocks_move(), d.free_move])
+			if step == 0:
+				await _frames(90)   # 숨은 자리에서 조작이 돌아온 모습을 잠깐(화면 검토)
+				var q: Vector2 = mill + (hp - mill).normalized() * 30.0
+				d.teleport_to(q, "up"); step = 1
+			elif step == 1 and d.case_fn.mill_shadow_seen:
+				await _frames(150)
+				nw.mill = nw.cues.has("flour_rustle")
+				d.teleport_to(d.anchor("house_door") + Vector2(1.2, 4.0), "up"); step = 2
+			elif step == 2 and d.case_fn.door_warned:
+				await _frames(30)
+				nw.door = true
+				d.teleport_to(hp, "left"); step = 3
+		# B: 시간 벌기 싸움 6초쯤 크게 밀린다(체력 20) → 먼 데서 포수의 화살(fail-forward). A는 25초를 끝까지 본다
+		if branch == "B" and not nw.arrow_set and S.is_flag("time_line") and d.combat_view.active and not S.is_flag("hunter_arrow") \
+				and not S.is_flag("tiger_shoved") and d.combat_view.battle.time > 6.0:
+			nw.arrow_set = true
+			d.combat_view.battle.player.hp = 20.0
+			_log("시험: 플레이어 체력 20 → 포수 화살을 기다린다")
+		# C: 횃불을 들고 길을 막는다(조작)
+		if S.is_flag("torch_block_on") and not nw.torch:
+			nw.torch = true
+			await _frames(10)
+			d.teleport_to("torch_block", "left")
+		if d.actors.has("tiger_night") and S.is_flag("last_stand_done"): nw.max_tiger_y = maxf(nw.max_tiger_y, float(d.actors.tiger_night.y_abs) if not is_nan(d.actors.tiger_night.y_abs) else 0.0)
+
+func check_v32_night() -> void:
+	var c = d.case_fn
+	var S = d.S
+	for k in ["kids_warned", "night_wait_started", "first_knock_seen", "hairy_paw_seen", "tiger_withdrawn", "white_paw_seen", "kids_escape_started", "hunter_watch"]:
+		expect(S.is_flag(k), "§74 플래그 " + k)
+	expect(nw.kids_in_tree, "§74 kids_in_tree(아이들이 나무에 올랐다)")
+	# 문 앞 장면을 한 컷신으로 몰지 않는다 — 첫 손 뒤 조작이 실제로 돌아온다(§39·§71)
+	expect(nw.between_seen and nw.between_free and c.between_free, "§39 노크 사이 조작이 돌아온다(blocks_move 거짓)")
+	expect(c.between_t >= 15.0 - 0.01 and c.between_t <= 30.5, "§39 자유 이동 15~30초 (%.1f초)" % c.between_t)
+	expect(nw.mill and c.mill_shadow_seen, "§39 방앗간 쪽으로 다가가면 가루 소리·흐린 그림자")
+	expect(nw.door and c.door_warned and c.night_log.any(func(e): return e[1] == "나그네" and e[2] == "문 열지 마.") and c.night_log.any(func(e): return e[1] == "누이" and e[2] == "네."), "§39 집 가까이 — “문 열지 마.” “네.”")
+	# 범은 문이 열릴 때까지 화면 밖·그림자·앞발 일부로만
+	expect(nw.early_tiger.is_empty(), "문이 열리기 전 범의 전신이 보이지 않는다 %s" % JSON.stringify(nw.early_tiger.slice(0, 3)))
+	# 탈출은 누이가 정한다 — “뒷문으로 가.”가 탈출보다 먼저, 그 사이 플레이어에게 묻지 않는다
+	var li := -1; var le := -1; var lb := -1
+	for i in c.night_log.size():
+		var e: Array = c.night_log[i]
+		if e[0] == "say" and e[1] == "누이" and String(e[2]).contains("뒷문으로 가.") and li < 0: li = i
+		if e[0] == "say" and e[1] == "누이" and String(e[2]) == "엄마, 우리 뒷간 좀 다녀올게." and lb < 0: lb = i
+		if e[0] == "flag" and e[2] == "kids_escape_started" and le < 0: le = i
+	expect(li >= 0 and lb > li and le > lb, "§40~§41 누이가 탈출을 정한다(뒷문으로 가 → 뒷간 핑계 → 탈출) %d·%d·%d" % [li, lb, le])
+	expect(_night_choices.is_empty(), "밤의 문 ~ 탈출 사이 플레이어 선택 없음 %s" % JSON.stringify(_night_choices))
+	# ACT 8 — 갈래가 준비대로 · 죽일 수 없다 · 밀쳐냄으로 끝
+	expect(c.branch_now == branch, "§42~§44 준비대로 갈래 %s" % c.branch_now)
+	var sh: Array = c.shoves.filter(func(x): return x[0] == branch)
+	expect(sh.size() == 1 and float(sh[0][1]) >= 2.9 and float(sh[0][1]) <= 4.0, "§45 범이 3~4m 밀쳐낸다(쓰러뜨리지 않음) %s" % JSON.stringify(c.shoves))
+	for e in d.runner.trace:
+		if e[0] == "fight" and String(e[1][1]) == "win": _fail("범을 죽인 싸움 " + str(e))
+	match branch:
+		"A": expect(float(c.fight_lens.get("A", 0.0)) >= 20.0 and float(c.fight_lens.get("A", 0.0)) <= 28.0, "§44 A 약 25초 버티기(%.1f초)" % float(c.fight_lens.get("A", 0.0)))
+		"B": expect(c.fight_lens.has("B") and float(c.fight_lens.B) >= 6.0 and float(c.fight_lens.B) <= 18.5, "§42 B 미끄러짐 뒤 짧은 싸움(%.1f초)" % float(c.fight_lens.get("B", 0.0)))
+		"C": expect(c.torch_blocked and not c.fight_lens.has("C_fight"), "§43 C 떡 냄새·횃불로 길을 막음(싸움 없이)")
+	if branch == "B":
+		expect(S.is_flag("hunter_arrow") and not c.arrow_info.is_empty() and c.night_log.filter(func(e): return e[0] == "arrow").size() == 1,
+			"결정 4 fail-forward — 크게 밀리자 포수의 화살 한 번 %s" % JSON.stringify(c.arrow_info))
+	else:
+		expect(not S.is_flag("hunter_arrow"), "잘 버티면 포수의 화살은 없다")
+	expect(S.is_flag("time_line") and not S.notes.has(c.TIME_LINE), "ACT 8 목표 한 줄(시간을 벌어야 한다)")
+	# ACT 9
+	expect(c.axe_hits >= 3 and nw.cues.has("axe_hit"), "§49 도끼 axe_hit %d" % c.axe_hits)
+	expect(c.fight_lens.has("last") and float(c.fight_lens.last) >= 4.0, "§50 마지막 개입 — 다시 조작(%.1f초)" % float(c.fight_lens.get("last", 0.0)))
+	expect(S.is_flag("last_stand_done") and S.is_flag("act10_started"), "ACT 9 끝 → 기존 ACT 10 동아줄로")
+	for id in ["knock", "footstep_heavy", "wind", "flour_rustle"]: expect(nw.cues.has(id), "소리 " + id)
+	for l in [["범", "거기 숨어 있었구나."], ["아우", "킥."], ["범", "어떻게 거기까지 올라갔느냐?"], ["누이", "참기름을 바르고 올라왔지."], ["아우", "도끼로 찍고 올라오면 되는데."], ["누이", "아우야!"]]:
+		expect(c.night_log.any(func(e): return e[0] == "say" and e[1] == l[0] and e[2] == l[1]), "원문 %s “%s”" % l)
+	# §3.3 정답 선공개 문장은 없다
+	var src := FileAccess.get_file_as_string("res://story/namwon/namwon_case.gd") + FileAccess.get_file_as_string("res://story/namwon/namwon_data.gd")
+	expect(not src.contains("네 발로 걷는다") and not src.contains("머리에 수건을 썼다. 그런데"), "§3.3 “…네 발로 걷는다.” 문장이 없다")
+	_log("밤 조작 비율(귀환~기도 앞, 시험 시간) %.0f%% free=%.1f cut=%.1f · 노크 사이 %.1f초 · 싸움 %s" % [c.control_share() * 100.0, c.ctl_time.free, c.ctl_time.cut, c.between_t, JSON.stringify(c.fight_lens)])
 
 # v3 판정: 원작 장면 순서 · 범을 죽이지 않음 · 입양 결말 없음 · 기록 · 결말 변수
 func check_v3() -> void:

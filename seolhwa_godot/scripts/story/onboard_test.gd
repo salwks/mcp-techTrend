@@ -398,11 +398,14 @@ func run(t) -> void:
 	T.expect(d.S.is_flag("tiger_house_suspected") and d.S.has_clue("white_trail"), "§30 흰 발자국 — …집 쪽이다(tiger_house_suspected)")
 	T.expect(cam_seen.size() >= 1 and d.main.rig.override == null, "흰 발자국을 짧게 따라간 뒤 평소 시점")
 	T.expect(d.case_fn.summary().any(func(x): return String(x).contains(d.case_fn.PURPOSE_LINE)), "목적: 오늘 밤은 아이들 곁에")
-	want = ["그놈이 그 집으로 올지도 모르오.", "그만 가 보겠소."]
+	want = ["그만 가 보겠소."]
+	ch0 = choice_log.size()
 	await T.go("hunter")
-	T.expect(d.S.is_flag("hunter_watch"), "포수: 당신은 애들 곁에, 나는 고개 쪽 길을(hunter_watch)")
-	# 다음 단계(ACT 6)로 넘기는 다리는 그대로 — 외딴집에서 해 지기를 기다릴 수 있다
-	T.expect(d.case_fn.night_ready(), "dusk_wait 다리가 열린다(night_ready)")
+	hl = choice_log[ch0][1] if choice_log.size() > ch0 else []
+	T.expect(not hl.has("그놈이 그 집으로 올지도 모르오.") and not d.S.is_flag("hunter_watch"), "포수 역할 나누기는 낮의 물음이 아니다(해 질 무렵 외딴집에서) %s" % JSON.stringify(hl))
+	# 다음(ACT 6): 외딴집 마당에 다가가면 해 질 무렵 귀환이 열린다 — 옛 다리(dusk_wait·night_fall)는 없다
+	T.expect(d.case_fn.night_ready() and not d.case_fn.has_method("night_fall"), "해 질 무렵 귀환이 열린다(night_ready) · night_fall 없음")
+	T.expect(not d.data.objects.any(func(o): return String(o.id) == "dusk_wait"), "dusk_wait 다리 없음")
 	if shots:
 		d.ui.auto_real = false; Engine.time_scale = float(d.main.args.get("storyspeed", "2.5"))
 	# ---- 설정: 상호작용 안내 끔 ----
