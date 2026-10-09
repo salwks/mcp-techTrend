@@ -4,6 +4,9 @@
 # v3 재작업(seolhwa/docs/scenario/seolhwarok_DIRECTION_v3.0_tale_intervention.md §3·§5·§8): 조사 도입부는 그대로 두고, 밤부터는 원작 장면을
 #   화면에서 겪는다(FIXED_BEATS). 원작 인물의 핵심 행동(문 앞 속임수에 맞서기·탈출·거짓말·동아줄 빌기)은 오누이가 하고,
 #   플레이어는 범을 죽이지 않는다. 세 갈래 A/B/C는 오누이가 다음 장면으로 갈 시간을 버는 방법이다(CASE_NAMWON_OUTCOME은 그대로 A/B/C).
+# v3.2(seolhwa/docs/scenario/seolhwarok_NAMWON_v3.2_scenario.md, 착수 순서 3 — ACT 0~2): 여는 장면·이동/달리기/살펴보기 안내 ·
+#   주막 주모 묻기(choice·loop·when·flag — 새 엔진 없음) · 이겸 연결 · 역참 마부 · 외딴집 낮(이웃 아낙·오누이 세 물음·기도 복선·아궁이·함지).
+#   함지 회상(mother_flashback)은 없앴고, 밤은 주막 잠이 아니라 외딴집에서 해 지기를 기다려 넘어간다(ACT 3+는 아직 옛 흐름).
 # ID: CHARACTER/ITEM/PROP_MASTER v1.0.
 #
 # 자리(게임 좌표 x,z — JL_NAMWON_UNBONG): 남원 동문 밖 주막 → 읍성 → 북문 → 북쪽 어귀(장승·쉼터, 포수) → 고개(서낭당) →
@@ -36,6 +39,8 @@ static func data() -> Dictionary:
 		"case": {
 			"id": "namwon", "record_title": "산길의 실종", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F49", "CATALOG_ID": "JG01", "region": "JL_NAMWON_UNBONG", "outcome_var": "CASE_NAMWON_OUTCOME",
 			"start_hour": 9.5,
+			# v3.2 §8 CAMERA 1A — 이 사건 이야기 인물과 말할 때의 기준 카메라(플레이어와 인물 사이, 허리 위 클로즈업까지 가지 않는다)
+			"talk_camera": { "pitch": 38.0, "distance": 13.5, "fov": 38.0 },
 			# 도입부(보강서 v1.0 §3~§9): S0000 남원으로 가는 길 → S0001 남원 전경·첫 자유 이동
 			"start_event": "S0000",
 			# 첫 사건 단서 안내 단계(§14·§28): 0 첫 단서 전 · 1 첫 단서 · 2 둘째 · 3 일반 조사 — scripts/story/onboarding.gd 먹점
@@ -60,9 +65,10 @@ static func data() -> Dictionary:
 			"rumor": { "title": "떡장수 어미의 실종", "text": "고개 너머 사는 떡장수가 장에 갔다가 사흘째 돌아오지 않는다.", "kind": "heard", "by": "주모",
 				"by_if": [["fn('route_is', 'kids')", "누이"]] },
 			"kids_story": { "title": "오누이의 말", "text": "어머니는 장에 갔다. 해 지기 전엔 온다고 했다. 집에는 아이 둘만 남아 있다.", "kind": "heard", "by": "누이" },
-			"cold_hearth": { "title": "식은 아궁이", "text": "재가 차갑다. 사흘은 불을 때지 않았다.", "kind": "fact" },
-			"mother_route": { "title": "떡가루 묻은 함지", "text": "새벽에 떡을 쪄 광주리에 담아 나간 것 같다. 고개 너머 장으로 가는 길이다.", "kind": "guess" },
-			"voice_at_night": { "title": "문밖의 목소리", "text": "어젯밤 문밖에서 어머니 목소리가 불렀다. 아이들은 문을 열지 않았다.", "kind": "heard", "by": "누이" },
+			"cold_hearth": { "title": "식은 아궁이", "text": "재가 완전히 식었다. 이웃이 가져다주는 음식 말고는 며칠째 불을 쓰지 않은 것 같다.", "kind": "fact" },
+			"mother_route": { "title": "떡가루 묻은 함지", "text": "실종 당일 새벽에도 떡을 만들어 장으로 갔다.", "kind": "heard", "by": "누이" },
+			# v3.2 §12 — 들은 대로만. 흉내(K_MIMIC)라고 아직 정하지 않는다
+			"voice_at_night": { "title": "어젯밤의 목소리", "text": "문밖에서 어머니를 닮은 목소리가 들렸다.", "kind": "heard", "by": "누이" },
 			# 수량이 아니라 뜻이 자란다(§15): 하나 → 같은 간격으로 이어짐 → 서낭당 빈 광주리에서 끝남
 			"cakes": { "title": "고갯길의 떡", "text": "떡이 산길에 떨어져 있다. 둘레 흙을 큰 코가 파헤쳤다.", "kind": "fact",
 				"text_if": [["fn('cakes_found') >= 2", "같은 떡이 일정한 간격으로 이어져 있다. 고개 쪽으로 간다. 둘레 흙마다 큰 코가 파헤친 자국."],
@@ -120,6 +126,24 @@ static func data() -> Dictionary:
 	}
 
 static func anchors() -> Dictionary:
+	var a := _anchors()
+	a.merge(_station_anchors())
+	return a
+
+# 남원 역참(region_data/stations.json "namwon" — 역참 작업이 정한 자리를 그대로 읽는다, 새 좌표를 만들지 않는다)
+#   station_yard: 문 앞 길 점(말 타는 자리) · station_wait: 기다리는 말 자리(마부가 솔질하는 곳)
+static func _station_anchors() -> Dictionary:
+	var path := "res://region_data/stations.json"
+	if not FileAccess.file_exists(path): return {}
+	var j = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var list = j.get("stations", []) if j is Dictionary else j
+	if not (list is Array): return {}
+	for s in list:
+		if s is Dictionary and String(s.get("id", "")) == "namwon" and s.has("yard"):
+			return { "station_yard": s.yard, "station_wait": s.get("wait", s.yard) }
+	return {}
+
+static func _anchors() -> Dictionary:
 	return {
 		# S0000 남원으로 가는 길(동쪽 통영별로, 남원 동문에서 약 250m 밖) — 길가 짚신, 나그네 둘이 지나가는 곳, 전경이 열리는 곳
 		"s0000_start": [-2898.5, 150.6], "s0000_sandal": [-2905.6, 153.6], "roadside": [-2905.6, 153.6], "s0000_rumor": [-2916.0, 159.5], "s0000_vista": [-2952.0, 184.0],
@@ -155,6 +179,76 @@ static func anchors() -> Dictionary:
 	}
 
 # ---------------------------------------------------------------------------
+# v3.2 §8·§12 대화 물음 — story_runner의 choice(loop)·when·flag만으로(새 대화 엔진 없음).
+#   물은 것은 flag가 남아 다시 나오지 않고(when), 앞 물음이 뒤 물음을 연다. 주모에게 둘 이상 물으면 이겸 연결(§9, jumo_after_question).
+# ---------------------------------------------------------------------------
+static func _q(fl: String, label: String, open: String, steps: Array, after := []) -> Dictionary:
+	return { "label": label, "when": ("not f('%s')" % fl) + ((" and " + open) if open != "" else ""),
+		"do": [{ "flag": fl }] + steps + after }
+
+# 주모 — 처음 셋(어떤 사람이오? / 무슨 일이오? / 보지 못했소.) → 넷(언제·어느 길·아이들·마을)이 열린다
+static func jumo_questions() -> Array:
+	var open := "(f('jq_intro') or f('case_started'))"
+	var first := "not f('jq_intro') and not f('case_started')"
+	var after := [{ "call": "jumo_after_question" }]
+	return [
+		_q("jq_who", "어떤 사람이오?", "", [{ "flag": "jq_intro" },
+			{ "say": "주모", "lines": ["고개 너머 사는 떡장수요.", "장날이면 여기에도 떡을 내려놓고 가는 사람이오. 아이 둘 데리고 혼자 살지."] }], after),
+		_q("jq_what", "무슨 일이오?", first, [{ "flag": "jq_intro" },
+			{ "say": "주모", "lines": ["떡장수 아낙 하나가 사흘째 집에 안 들어갔다오.", "장 보고 돌아간 뒤로 소식이 없소."] }], after),
+		_q("jq_none", "보지 못했소.", first, [{ "flag": "jq_intro" },
+			{ "say": "주모", "lines": ["…그렇겠지. 사흘이나 됐으니."] }]),
+		_q("jq_when", "언제 사라졌소?", open, [
+			{ "say": "주모", "lines": ["사흘 전 아침이오.", "장을 보고 해가 아직 높을 때 돌아갔는데, 집에는 못 들어갔다더군."] },
+			{ "say": "나그네", "lines": ["누가 확인했소?"] },
+			{ "say": "주모", "lines": ["이웃 아낙이 애들 끼니 챙기러 아침저녁으로 들른다오."] }], after),
+		_q("jq_route", "어느 길로 갔소?", open, [
+			{ "face": "jumo", "to": "pass_road" },
+			{ "say": "주모", "lines": ["북문으로 나가 고개만 넘으면 되오.", "서낭당 지나 조금 내려가면 집 한 채가 있소."] },
+			{ "face": "jumo", "to": "player" },
+			{ "flag": "heard_pass_road" }, { "discover": "north_pass" }], after),
+		_q("jq_kids", "아이들은?", open, [
+			{ "say": "주모", "lines": ["누이는 제법 야무진데 아우가 아직 어리오.", "어미가 돌아올 거라고 집을 떠나질 않는다더군."] },
+			{ "wait": 0.8 },
+			{ "say": "주모", "lines": ["사흘이나 됐는데."] }], after),
+		# 결정 4 — 마을이 손 놓고 있던 게 아니다(장정 셋·포수)
+		_q("jq_search", "마을에서는 찾아보지 않았소?", open, [
+			{ "say": "주모", "lines": ["첫날엔 장정 셋이 고개를 올라갔소.", "서낭당 못 가서 범 우는 소리를 듣고 돌아왔지."] },
+			{ "say": "나그네", "lines": ["포수는?"] },
+			{ "say": "주모", "lines": ["그 양반도 찾아봤다는데, 피 묻은 자리부터는 범 영역이라더군."] }], after),
+	]
+
+# 오누이 — 언제 · 어디로 · 지난밤(목소리는 들은 대로만 적는다, K_MIMIC은 아직) + 기도 복선(§13, 짧게)
+static func kids_questions() -> Array:
+	return [
+		_q("kq_when", "어머니는 언제 나갔니?", "", [
+			{ "say": "누이", "lines": ["사흘 전 새벽에요.", "떡을 많이 쪄서 장에 가지고 갔어요."] },
+			{ "say": "아우", "lines": ["해 지기 전에 온댔어요."] }]),
+		_q("kq_where", "어디로 가셨니?", "", [
+			{ "face": "nui", "to": "pass_road" },
+			{ "caption": "누이가 고개 쪽을 가리킨다.", "sec": 1.6 },
+			{ "say": "누이", "lines": ["늘 같은 길로 가요."] },
+			{ "face": "nui", "to": "player" },
+			{ "flag": "heard_pass_road" }, { "discover": "north_pass" }]),
+		_q("kq_night", "지난밤엔 괜찮았니?", "", [
+			{ "caption": "누이가 잠시 말이 없다.", "sec": 1.4 },
+			{ "say": "나그네", "lines": ["무슨 일이 있었니?"] },
+			{ "say": "누이", "lines": ["…어젯밤에 엄마 목소리가 들렸어요."] },
+			{ "say": "나그네", "lines": ["문밖에서?"] },
+			{ "caption": "누이가 고개를 끄덕인다.", "sec": 1.2 },
+			{ "say": "누이", "lines": ["그런데 이상해서 문을 안 열었어요."] },
+			{ "say": "아우", "lines": ["누나가 못 열게 했어요."] },
+			{ "say": "나그네", "lines": ["뭐가 이상했니?"] },
+			{ "say": "누이", "lines": ["목소리가 좀… 달랐어요."] },
+			{ "flag": "voice_at_night" }, { "clue": "voice_at_night" },
+			# §13 기도 복선 — 설명하지 않고 짧게
+			{ "say": "아우", "lines": ["누나는 어젯밤에도 하늘님한테 엄마 빨리 오게 해 달라고 빌었어요."] },
+			{ "say": "누이", "lines": ["그런 걸 왜 말해."] },
+			{ "say": "아우", "lines": ["엄마도 무서우면 그렇게 하랬잖아."] },
+			{ "flag": "prayer_foreshadow" }]),
+	]
+
+# ---------------------------------------------------------------------------
 # 인물(CHARACTER_MASTER) — at: 자리(국면별 사전 가능), when: 보일 조건, talk: 위에서부터 조건이 맞는 첫 묶음
 # ---------------------------------------------------------------------------
 static func actors() -> Array:
@@ -174,16 +268,18 @@ static func actors() -> Array:
 							{ "label": "횃불 하나 빌릴 수 있겠소?", "do": [{ "say": "주모", "lines": ["관솔 넉넉히 감았소."] }, { "give": TORCH }] },
 							{ "label": "그만 가 보겠소.", "end": true }] }] }] },
 				{ "when": "not f('case_started')", "steps": [{ "event": "S0002" }] },
+				# 사건이 선 뒤: 아직 안 물은 것만(물은 것은 다시 나오지 않는다) + 떡·횃불
 				{ "when": "true", "steps": [
 					{ "say": "주모", "lines": ["산에서 뭘 보셨소? 얼굴이 하얗구려."], "when": "f('first_encounter')" },
-					{ "say": "주모", "lines": ["그 집 애들은 좀 보고 오셨소?"], "when": "not f('first_encounter')" },
-					{ "choice": "", "loop": true, "options": [
+					{ "say": "주모", "lines": ["그 집 애들은 좀 보고 오셨소?"], "when": "not f('first_encounter') and not f('met_kids')" },
+					{ "say": "주모", "lines": ["애들은 좀 어떻습디까?"], "when": "not f('first_encounter') and f('met_kids')" },
+					# 예전 저장(주막에서 자고 밤을 넘기던 흐름)에서 이어 온 사람에게도 밤을 어디서 맞을지 알린다
+					{ "say": "주모", "lines": ["그 애들만 두고 밤을 넘기게 할 순 없지. 해 지기 전에 그 집에 가 보시오."], "when": "fn('night_ready') and ph('explore')" },
+					{ "choice": "", "loop": true, "options": jumo_questions() + [
 						{ "label": "떡을 좀 얻을 수 있겠소?", "when": "k('K_FOOD') and not f('jumo_tteok')", "do": [
 							{ "say": "주모", "lines": ["어제 찐 거요. 냄새는 고소하지."] }, { "give": TTEOK, "n": 2 }, { "flag": "jumo_tteok" }] },
 						{ "label": "횃불 하나 빌릴 수 있겠소?", "when": "k('K_TERRITORY') and not has('%s') and not w('torch_lit')" % TORCH, "do": [
 							{ "say": "주모", "lines": ["관솔 넉넉히 감았소. 불은 짐승이 꺼리지."] }, { "give": TORCH }] },
-						{ "label": "하룻밤 묵어 가겠소.", "disabled_when": "not fn('can_rest')", "hint": "아직 알아볼 것이 남은 것 같다.", "end": true,
-							"do": [{ "call": "rest" }] },
 						{ "label": "그만 가 보겠소.", "end": true }] }] },
 			] },
 		{ "id": "guest", "chr": "CHR_HUM_013", "kind": "traveler", "name": "손님", "at": "guest", "facing": "right",
@@ -246,13 +342,7 @@ static func actors() -> Array:
 				{ "when": "ph('night')", "steps": [{ "call": "kids_night" }] },
 				{ "when": "not f('met_kids')", "steps": [{ "event": "S0003" }] },
 				{ "when": "true", "steps": [
-					{ "choice": "", "loop": true, "options": [
-						{ "label": "어머니는 언제 떠나셨니?", "when": "not f('nui_when')", "do": [{ "flag": "nui_when" },
-							{ "say": "누이", "lines": ["사흘 전 새벽에요. 해 지기 전엔 온다고 했어요."] }] },
-						{ "label": "밤에 별일은 없었니?", "when": "not f('nui_night')", "do": [{ "flag": "nui_night" },
-							{ "say": "누이", "lines": ["어젯밤에 문밖에서 어머니 목소리가 났어요. 문은 안 열었어요."] },
-							{ "clue": "voice_at_night" }, { "rule": "K_MIMIC" }] },
-						{ "label": "문 꼭 걸고 있거라.", "end": true }] }] },
+					{ "choice": "", "loop": true, "options": kids_questions() + [{ "label": "문 꼭 걸고 있거라.", "end": true }] }] },
 			] },
 		{ "id": "au", "chr": "CHR_MAIN_010", "kind": "story_boy", "name": "아우",
 			"at": "kid_in_b",
@@ -265,7 +355,9 @@ static func actors() -> Array:
 		{ "id": "neighbor", "chr": "CHR_HUM_010", "kind": "villager_f", "name": "이웃 아낙",
 			"at": { "morning": "neighbor_morning", "default": "neighbor_after" }, "facing": "down", "when": "ph('morning') or ph('done')",
 			"talk": [{ "when": "true", "steps": [{ "say": "이웃 아낙", "lines": ["그 집 애들 끼니라도 챙기려고 갔더니 집이 비었어요.", "아이들은 어디 갔을까요. 산에 들어갔으면 큰일인데."] }] }] },
-		{ "id": "mother", "chr": "CHR_MAIN_011", "kind": "ricecake_mother", "name": "떡장수 어머니", "at": "kneading", "when": "f('show_mother')" },
+		# v3.2 §11 첫 방문 — 이웃 아낙이 빈 그릇을 들고 집에서 나온다(장면 전용, 아침의 이웃 아낙과 같은 그림 CHR_HUM_010). 말 걸기 없음
+		{ "id": "neighbor_visit", "chr": "CHR_HUM_010", "kind": "villager_f", "name": "이웃 아낙", "at": "house_door", "facing": "down",
+			"when": "f('neighbor_visit_on')" },
 		# 지역 변화(§30): 고갯길에 장꾼이 다시 다닌다
 		{ "id": "merchant_a", "chr": "CHR_HUM_003", "kind": "peddler", "name": "장꾼", "at": "merchant_a", "facing": "down",
 			"when": "v('CASE_NAMWON_OUTCOME') != ''",
@@ -293,10 +385,12 @@ static func objects() -> Array:
 		o.steps = o.steps + [{ "call": "guidance", "args": [o.id] }]
 		return o
 	return [
-		# S0000 길가의 첫 조사(사건 단서 아님 — '가까이 가서 직접 살펴볼 수 있다'만 가르친다)
-		{ "id": "roadside", "at": "s0000_sandal", "label": "길가의 짚신 · 살펴보기", "radius": 2.4, "when": "f('s0000_started') and not f('roadside_seen')",
+		# S0000 길가의 첫 조사(v3.2 §5 — 사건 단서 아님, '세상에는 직접 살펴볼 수 있는 대상이 있다'만 가르친다)
+		#   4m 안에서 아주 약한 먹빛 표시(mark_r·mark_a — onboarding._update_marks) · 손 닿는 거리(2m)에서 'E 살펴보기' · 속말 한 줄
+		{ "id": "roadside", "at": "s0000_sandal", "label": "살펴보기", "radius": 2.0, "mark_r": 4.0, "mark_a": 0.4,
+			"when": "f('s0000_started') and not f('roadside_seen')",
 			"event_id": "S0000", "prompt_type": "INSPECT", "highlight": "normal", "first_hint": true,
-			"steps": [{ "flag": "roadside_seen" }, { "caption": "닳은 짚신 한 짝. 오래된 흔적이다.", "sec": 2.4 }] },
+			"steps": [{ "flag": "roadside_seen" }, { "caption": "오래 버려진 짚신이다.", "sec": 2.4 }] },
 		cake.call("cake_1", "길섶에 떡 하나가 반쯤 묻혀 있다. 둘레 흙을 큰 코가 킁킁댄 듯 파헤쳤다."),
 		cake.call("cake_2", "굽이를 돌자 또 떡 하나. 짐승 이빨 자국이 났는데, 먹다 말고 버렸다."),
 		cake.call("cake_3", "세 번째 떡. 고개마다 하나씩 던져 주며 걸음을 재촉한 것 같다."),
@@ -311,10 +405,23 @@ static func objects() -> Array:
 			"steps": [{ "examine": "빈 광주리", "text": ["서낭당 돌무더기 앞에 광주리가 엎어져 있다. 떡은 한 조각도 없다.", "곁에 무명 수건 하나. 광주리를 일 때 머리에 받치던 것이다."] },
 				{ "clue": "basket" }, { "call": "check_food" }, { "call": "pass_memory" }] }),
 		# S0003 집 안
+		# v3.2 §14 집 조사 — 흔적으로만. 함지에서 어머니가 나타나는 회상(mother_flashback)은 없앴다(§3.1)
 		{ "id": "hearth", "at": "hearth", "label": "아궁이 · 살펴보기", "radius": 1.6, "when": "not c('cold_hearth') and f('case_started')",
-			"steps": [{ "examine": "식은 아궁이", "text": "재를 헤집어도 불씨 하나 없다. 사흘은 불을 때지 않았다." }, { "clue": "cold_hearth" }] },
-		{ "id": "kneading", "at": "kneading", "label": "떡가루 묻은 함지 · 살펴보기", "radius": 1.6, "when": "not c('mother_route') and f('case_started')",
-			"steps": [{ "call": "mother_flashback" }, { "clue": "mother_route" }] },
+			"steps": [{ "examine": "식은 아궁이", "text": ["재가 완전히 식었다.", "이웃이 가져다주는 음식 말고는 며칠째 불을 쓰지 않은 것 같다."] }, { "clue": "cold_hearth" }] },
+		{ "id": "kneading", "at": "kneading", "label": "함지 · 살펴보기", "radius": 1.6, "when": "not c('mother_route') and f('case_started')",
+			"steps": [{ "examine": "떡가루 묻은 함지", "text": "함지 바닥에 떡가루가 말라붙어 있다." },
+				{ "if": "not f('kids_hidden') and not f('kids_gone')", "then": [
+					{ "face": "nui", "to": "kneading" },
+					{ "say": "누이", "lines": ["엄마가 장에 갈 때마다 저기서 떡을 만들어요."] },
+					{ "say": "나그네", "lines": ["그날도?"] },
+					{ "say": "누이", "lines": ["네."] }] },
+				{ "clue": "mother_route" }] },
+		# 밤으로(v3.2 §3.2): 주막에서 자고 넘기지 않는다 — 외딴집에서 해 지기를 기다린다.
+		#   ACT 6(밤 준비·hide_spot "기다린다")을 새로 짜기 전까지 옛 밤 흐름(S0007~)으로 잇는 다리
+		{ "id": "dusk_wait", "at": "hide_spot", "label": "해 지기를 기다린다", "radius": 2.6, "when": "ph('explore') and fn('night_ready')",
+			"steps": [{ "choice": "아이들 곁에서 해 질 때까지 기다릴까.", "options": [
+				{ "label": "여기서 기다린다", "do": [{ "call": "night_fall" }] },
+				{ "label": "아직이다", "end": true }] }] },
 		# S0006 추가 조사
 		{ "id": "flour_prints", "at": "flour", "label": "흰 발자국 · 살펴보기", "radius": 2.4, "when": "not c('flour_prints') and f('case_started')",
 			"steps": [{ "examine": "밀가루 속 큰 발자국", "text": ["쏟아진 밀가루를 밟은 큰 발자국이 숲가 외딴집 쪽으로 이어진다.", "뒷발보다 앞발 자국이 유난히 하얗다."] },
@@ -362,8 +469,17 @@ static func triggers() -> Array:
 		# S0001 끝: 성문 통과
 		{ "id": "s0001_gate", "at": "east_gate", "radius": 12.0, "when": "ph('explore') and not f('s0001_done')", "steps": [{ "flag": "s0001_done" }] },
 		# S0002 주막 주변대화(지나가며 엿듣는다 — 조작을 막지 않는다)
+		# v3.2 §7 — 조작권을 쥔 채 들린다. 주모 머리 위 「…」(onboarding talk marks)
 		{ "id": "s0002_overhear", "at": "tavern", "radius": 15.0, "when": "ph('explore') and not f('case_started') and not (f('s0000_started') and not f('INTRO_NAMWON_TITLE_DONE'))", "ambient": [
-			["주모", "아직도 안 돌아왔다지?"], ["손님", "사흘이면…"]] },
+			["주모", "아직도 안 왔다고?"], ["손님", "사흘이면 돌아올 사람이면 벌써 왔지."]] },
+		# v3.2 §10 역참·마방 — 남원 역참(stations.json) 문 앞 기다리는 말·마부 곁에 처음 다가갈 때 한 번.
+		#   사건이 선 뒤에만, 반경은 좁게(역참 문 앞이 주모 자리에서 14m — 주모 대화가 끝나자마자 뜨지 않게)
+		{ "id": "station_intro", "at": "station_wait", "radius": 7.0, "when": "ph('explore') and f('case_started') and not f('station_tut_seen')",
+			"steps": [{ "call": "station_intro" }] },
+		# v3.2 §11 첫 방문 — 외딴집 18m 안: 이웃 아낙이 나온다(낮, 오누이를 만나기 전)
+		{ "id": "neighbor_visit", "at": "house", "radius": 18.0,
+			"when": "ph('explore') and f('case_started') and not f('met_kids') and not f('first_encounter') and not f('neighbor_visit_seen')",
+			"steps": [{ "call": "neighbor_visit" }] },
 		# S0005 첫 조우: 고갯길 단서 셋 이상 + 고갯마루 아래, 또는 빈터에 먼저 들어섬
 		{ "id": "s0005_pass", "at": "first_seen", "radius": 16.0, "when": "ph('explore') and f('case_started') and not f('first_encounter') and fn('path_clues') >= 3",
 			"event": "S0005" },
@@ -383,7 +499,7 @@ static func map_places() -> Array:
 		{ "id": "main_road", "name": "큰길(통영별로)", "at": "main_road", "radius": 20.0, "start_known": true },
 		{ "id": "tavern", "name": "주막", "at": "tavern", "building": true, "start_known": true },
 		# 주모가 "고개 너머"라 일러 줌 → 북쪽 고갯길이 지도에(들음)
-		{ "id": "north_pass", "name": "북쪽 고갯길", "at": "pass_road", "radius": 22.0, "known": "f('case_started')" },
+		{ "id": "north_pass", "name": "북쪽 고갯길", "at": "pass_road", "radius": 22.0, "known": "f('heard_pass_road')" },
 		{ "id": "north_square", "name": "북쪽 어귀", "at": "north_square", "radius": 16.0 },
 		{ "id": "shrine", "name": "고갯마루 서낭당", "at": "shrine", "radius": 10.0 },
 		{ "id": "house", "name": "고개 너머 외딴집", "at": "house", "radius": 16.0 },
@@ -402,7 +518,7 @@ static func map_leads() -> Array:
 		{ "id": "nw_kids_house", "name": "고개 너머 외딴집", "at": "house", "when": "f('case_started')", "until": "f('met_kids')",
 			"note": "주모 “그 집 애들은 좀 보고 오셨소?” · 소문 rumor(고개 너머 사는 떡장수). S0003에서 만나면 사라진다" },
 		{ "id": "nw_night_house", "name": "외딴집(오늘 밤)", "at": "house", "when": "ph('night')", "until": "seen('S0007')",
-			"note": "주막에서 쉰 뒤(rest) 기록 “밤이 되었다. 외딴집으로” — S0007 숨어 기다리면 사라진다" },
+			"note": "외딴집에서 해 지기를 기다린 뒤(night_fall) — S0007 숨어 기다리면 사라진다" },
 		{ "id": "nw_to_hanyang", "name": "한양", "region": "GG_HANYANG", "when": "seen('S0010')", "until": "v('CASE_HANYANG_BOOKSHOP_COMPLETE') == true",
 			"note": "S0010 노인 “한양 간다고 했지.” → MAIN_MASTER_TRACE = HANYANG" },
 	]
@@ -507,21 +623,35 @@ static func events() -> Dictionary:
 			{ "call": "vista" },
 			{ "flag": "INTRO_NAMWON_TITLE_DONE" },
 		]),
-		"S0002": _ev("S0002", "주모에게 다가감(지나가면 주변대화)", "남원 동문 밖 주막", "오전", "누구 말인지 묻는다", "-", "사건 기록 생성", [
-			{ "say": "나그네", "lines": ["누구 말입니까?"] },
-			{ "say": "주모", "lines": ["고개 너머 사는 떡장수요."] },
-			# 보강서 §11 — 이겸 복선 한 번(더 설명하지 않는다)
-			{ "say": "주모", "lines": ["…그 책…"] },
-			{ "caption": "주모의 눈길이 기록책에 머문다.", "sec": 1.6 },
-			{ "say": "주모", "lines": ["아니오. 전에 비슷한 걸 본 것 같아서."] },
-			{ "call": "start_case", "args": ["jumo"] },
+		# v3.2 §8 주모 첫 대화(CAMERA 1A — case.talk_camera) → 물음이 물음을 연다 → 둘 이상 물으면 §9 이겸 연결 → 사건 기록(도장) → R 기록책
+		"S0002": _ev("S0002", "주모에게 말을 건다(지나가면 주변대화)", "남원 동문 밖 주막", "오전", "묻는다(어떤 사람·언제·어느 길·아이들·마을)", "-", "사건 기록 생성 · 북쪽 고갯길이 지도에", [
+			{ "if": "not f('jq_intro')", "then": [
+				{ "say": "주모", "lines": ["길손이시오?"] },
+				{ "say": "나그네", "lines": ["그렇소."] },
+				{ "face": "jumo", "to": "pass_road" },
+				{ "caption": "주모가 북쪽 고갯길 쪽을 한번 본다.", "sec": 1.6 },
+				{ "face": "jumo", "to": "player" },
+				{ "say": "주모", "lines": ["혹시 오면서 아낙 하나 못 보셨소?"] }],
+			  "else": [{ "say": "주모", "lines": ["또 물을 게 있소?"] }] },
+			{ "choice": "", "loop": true, "options": jumo_questions() + [{ "label": "그만 가 보겠소.", "when": "f('jq_intro')", "end": true }] },
 		]),
-		"S0003": _ev("S0003", "오누이에게 말을 건다", "고개 너머 외딴집", "낮", "집 안을 살핀다(아궁이·떡가루)", "-", "-", [
+		# v3.2 §12 오누이 첫 대화(주막에서 듣고 왔으면 원문 그대로, 먼저 왔으면 여기서 사건이 선다) → 세 물음
+		"S0003": _ev("S0003", "오누이에게 말을 건다", "고개 너머 외딴집", "낮", "묻는다(언제·어디로·지난밤) · 집 안을 살핀다(아궁이·함지)", "-", "-", [
 			{ "flag": "met_kids" },
-			{ "say": "누이", "lines": ["어머니가 장에 갔어요."] },
-			{ "say": "아우", "lines": ["오늘은 와요?"] },
-			{ "call": "start_case", "args": ["kids"] },
+			{ "if": "f('case_started')", "then": [
+				{ "say": "누이", "lines": ["누구세요?"] },
+				{ "say": "나그네", "lines": ["장에 갔던 어머니를 찾고 있다."] },
+				{ "say": "아우", "lines": ["엄마 봤어요?"] },
+				{ "say": "나그네", "lines": ["…아직은."] },
+				{ "say": "누이", "lines": ["오늘은 오겠죠?"] }],
+			  "else": [
+				{ "say": "누이", "lines": ["누구세요?"] },
+				{ "say": "나그네", "lines": ["지나가던 길손이다. 어른은 안 계시니?"] },
+				{ "say": "아우", "lines": ["엄마는 장에 갔어요."] },
+				{ "say": "누이", "lines": ["사흘 전에요. …오늘은 오겠죠?"] },
+				{ "call": "start_case", "args": ["kids"] }] },
 			{ "clue": "kids_story" },
+			{ "choice": "", "loop": true, "options": kids_questions() + [{ "label": "문 꼭 걸고 있거라.", "end": true }] },
 		]),
 		# S0004·S0006·S0008은 장면 하나가 아니라 조사 대상·선택이 모인 구간 — 기록용(단서·결말을 고르면 seen에 남는다)
 		"S0004": _ev("S0004", "사건 기록 생성 뒤 고갯길", "고갯길(떡 셋·치맛자락·핏자국·발자국·서낭당 광주리)", "낮", "순서 없이 조사(3개 이상이면 첫 조우 가능). 광주리(또는 첫 조우 뒤)에서 사흘 전 고갯길 회상 — FIXED mother_harmed",

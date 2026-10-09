@@ -2,10 +2,13 @@
 # 웹 seolhwa/src/story/case_sanggil.js·common.js·journal.js 이식(대사는 시나리오 §8에 맞춰 줄임).
 # v3(방향 전환안 §3·§8): 밤부터 원작 「해와 달이 된 오누이」 장면(FIXED_BEATS)을 화면에서 겪는다. 원작 인물의 핵심 행동은 오누이가 한다.
 #   플레이어는 범을 죽이지 않는다 — A/B/C는 오누이가 나무에 오를 시간을 버는 방법. 마을이 오누이를 거두는 결말은 없다.
+# v3.2(seolhwarok_NAMWON_v3.2_scenario.md) ACT 0~2: 여는 장면 · 주모 물음과 이겸 연결(사건 기록 도장) · 역참 마부 · 이웃 아낙 · 오누이.
+#   함지 회상(mother_flashback)은 없앴다. 밤은 주막 잠(rest)이 아니라 외딴집에서 해 지기를 기다려(night_fall) 넘어간다.
 # 데이터(namwon_data.gd)의 { "call": "이름" }과 조건식 fn('이름')이 이 함수들을 부른다.
 extends RefCounted
 
 const D := preload("res://story/namwon/namwon_data.gd")
+const Sound := preload("res://scripts/audio/sound.gd")
 const TTEOK := D.TTEOK
 const OIL := D.OIL
 const TORCH := D.TORCH
@@ -43,8 +46,17 @@ func path_clues() -> int:
 		if S.has_clue(c): n += 1
 	return n
 
-func can_rest() -> bool:
+# 외딴집에서 해 지기를 기다릴 수 있나(옛 주막 쉬기 조건과 같다 — ACT 6 밤 준비를 새로 짜기 전까지)
+func night_ready() -> bool:
 	return f("case_started") and (f("first_encounter") or S.clues.size() >= 5)
+
+# 주모에게 물은 것(이겸 연결 §9: 둘 이상) — "보지 못했소."는 물음이 아니다
+const JUMO_QS := ["jq_who", "jq_what", "jq_when", "jq_route", "jq_kids", "jq_search"]
+func jumo_asked() -> int:
+	var n := 0
+	for k in JUMO_QS:
+		if f(k): n += 1
+	return n
 
 # C(떡과 횃불로 잠시 꾄다)를 고를 수 있는가 — 오솔길에 떡 + 빈터를 안다 + 불
 func c_ready() -> bool:
@@ -99,12 +111,129 @@ func on_clue(id: String) -> void:
 	if id in ["cakes", "torn_skirt", "blood", "tracks", "basket"]: S.seen["S0004"] = true
 	if id in ["flour_prints", "claw_marks", "territory", "hunter_word", "flour_sack"]: S.seen["S0006"] = true
 
+# 사건 기록이 선다(v3.2 §9): 도장 소리 + 「새 사건」 → R 기록책 안내(실제로 열어야 끝난다)
 func start_case(route: String) -> void:
 	if f("case_started"): return
 	flag("case_started"); flag("route", route)
 	d.learn_clue("rumor", true)
+	d.sfx("journal_stamp")
 	d.ui.toast("새 사건 — 「%s」" % CASE_TITLE, "journal")
 	if d.onboard != null: d.onboard.on_case_started()
+
+# 주모 물음 하나가 끝날 때마다(namwon_data.jumo_questions) — 둘 이상이면 이겸 연결 한 번
+func jumo_after_question() -> void:
+	if jumo_asked() >= 2 and not f("igyeom_link"): await igyeom_link()
+
+# §9 이겸 연결 — CAMERA 1B: 대화 구도에서 10% 다가선다. 그 뒤 사건 기록
+func igyeom_link() -> void:
+	flag("igyeom_link")
+	var tc: Dictionary = d.talk_cam
+	if not tc.is_empty():
+		var c2 := tc.duplicate()
+		c2.distance = float(tc.get("distance", 13.5)) * 0.9
+		d.camera(c2)
+	await d.ui.caption("주모의 눈길이 기록책에 머문다.", 1.4)
+	await d.ui.say("주모", ["…그 책."])
+	await d.ui.say("나그네", ["이 책이 왜 그러오?"])
+	await d.ui.say("주모", ["며칠 전에 비슷한 책 들고 다니는 선비도 있었소."])
+	await d.ui.say("나그네", ["그 사람이 뭘 물었소?"])
+	await d.ui.say("주모", ["그 아낙 이야기를 묻더군.", "그리고 똑같이 고갯길을 물었소."])
+	if not tc.is_empty(): d.camera(tc)
+	start_case("jumo")
+
+# §10 역참·마방 — 남원 역참 문 앞에 처음 다가갈 때(마부는 역참 그림 station_life의 마부, 대화 카메라는 기다리는 말 자리 쪽)
+func station_intro() -> void:
+	if f("station_tut_seen"): return
+	flag("station_tut_seen")
+	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var w: Vector2 = _mabu_pos()
+	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var cam := tc.duplicate(); cam.focus = [(pp.x + w.x) * 0.5, (pp.y + w.y) * 0.5]
+	d.camera(cam)
+	d.face_actor("player", null, w)
+	Sound.music_level(0.5, 0.6)
+	await d.ui.say("마부", ["먼 길 가시오?"])
+	await R([{ "choice": "", "loop": true, "options": [
+		{ "label": "말을 빌릴 수 있소?", "when": "not f('st_q_rent')", "do": [{ "flag": "st_q_rent" },
+			{ "say": "마부", "lines": ["문 앞에 매 둔 말이면 내드리리다. 큰길로만 다니오.", "고개 너머 산길은 말이 못 들어가오. 거긴 걸어서 넘으시오."] }] },
+		{ "label": "역마는 어떻게 쓰오?", "when": "not f('st_q_how')", "do": [{ "flag": "st_q_how" },
+			{ "say": "마부", "lines": ["한 번 가 본 큰 고을이나 역이면 말을 갈아타며 빨리 갈 수 있소.", "처음 가는 길은 직접 넘어야 하고."] },
+			{ "call": "fast_hint" }] },
+		{ "label": "그냥 가겠소.", "end": true }] }])
+	Sound.music_level(1.0, 1.0)
+	d.camera(null)
+
+# 마부 자리: 역참 그림(station_life)이 살아 있으면 그 마부, 아니면 기다리는 말 자리
+func _mabu_pos() -> Vector2:
+	var hr = d.main.get("horse_ride")
+	var life = hr.life if hr != null else null
+	if life != null and life.live.has("namwon") and life.live.namwon.has("groom"):
+		var p: Vector3 = life.live.namwon.groom.ch.position
+		var g := Vector2(p.x, p.z)
+		if g.distance_to(Vector2(d.main.player_pos.x, d.main.player_pos.z)) < 12.0: return g   # 마방 안쪽 멀리 있으면 문 앞 쪽으로
+	return d.anchor("station_wait")
+
+# "H — 역마 이동"은 실제로 역마로 갈 곳이 있을 때만(가 본 다른 고을·역 — 같은 공간은 300m 밖) 보인다
+func fast_ready() -> bool:
+	var FT = load("res://scripts/region/fast_travel.gd")
+	if d.main.get("horse_ride") == null: return false
+	var ft = FT.new(d.main)
+	ft._gather()
+	var ok := false
+	for it in ft.items:
+		if bool(it.ok) and (not bool(it.same) or float(it.get("dist", 0.0)) > 300.0): ok = true; break
+	ft.free()
+	return ok
+
+var fast_hint_shown := false   # 시험 기록
+func fast_hint() -> void:
+	if not fast_ready(): return
+	fast_hint_shown = true
+	if d.onboard != null: d.onboard.once("FAST", "H   역마 이동", Callable(), 6.0)
+
+# §11 첫 방문 — 이웃 아낙이 빈 그릇을 들고 집에서 나온다(CAMERA 2A: 집을 위, 플레이어를 아래로). 말을 마치면 방앗간 쪽으로 간다
+func neighbor_visit() -> void:
+	if f("neighbor_visit_seen"): return
+	flag("neighbor_visit_seen")
+	d.cutscene(true)
+	flag("neighbor_visit_on")
+	d.place_actor("neighbor_visit", "house_door", null, "down")
+	d.anim_actor("neighbor_visit", "idle")
+	# 집(위)과 플레이어(아래)가 함께 들게 — 겨냥점은 집에서 플레이어 쪽으로 조금(대화창이 화면 아래 1/4을 덮는다)
+	var hp: Vector2 = d.anchor("house")
+	var pl := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var fo := hp + (pl - hp).limit_length(14.0) * 0.55
+	d.camera({ "focus": [fo.x, fo.y], "pitch": 42.0, "distance": 24.0, "fov": 34.0 })
+	Sound.music_level(0.5, 0.6)
+	var door: Vector2 = d.anchor("house_door")
+	await d.move_actor("neighbor_visit", [[door.x + 0.6, door.y + 2.0]], 1.2, "walk", "idle")
+	d.face_actor("neighbor_visit", null, "player")
+	d.face_actor("player", null, "neighbor_visit")
+	await d.ui.say("이웃 아낙", ["길손이 웬일이시오?"])
+	await d.ui.say("나그네", ["여기 사는 떡장수를 찾고 있소."])
+	await d.ui.say("이웃 아낙", ["그 양반이면 아직도 안 왔어요."])
+	d.face_actor("neighbor_visit", "up", null)   # 집 쪽을 돌아본다
+	await d.wait(0.5)
+	d.face_actor("neighbor_visit", null, "player")
+	await d.ui.say("이웃 아낙", ["아이들 때문에 아침저녁으로 밥만 챙겨다 주고 있지.", "어미 돌아온다고 집을 안 떠나요."])
+	Sound.music_level(1.0, 1.0)
+	d.camera(null)
+	d.cutscene(false)
+	_neighbor_leave()
+
+# house_door → yard → 방앗간 쪽으로 걸어가 사라진다(조작권은 이미 돌려줌)
+func _neighbor_leave() -> void:
+	await d.move_actor("neighbor_visit", ["yard", "mill"], 1.3, "walk", "idle")
+	flag("neighbor_visit_on", false)
+	d.show_actor("neighbor_visit", false)
+
+# 낮 음악(v3.2 소리 원칙 — 최소): 남원 낮 탐색 동안만 bgm_day_calm을 조용히. 여는 검은 화면·첫 조우 뒤·밤에는 없다.
+#   story_director가 1초마다 묻고 바뀔 때만 Sound.music을 부른다(다른 공간으로 가면 그쪽이 ""를 돌려 멈춘다)
+func music_wanted() -> String:
+	if S.phase != "explore" or f("first_encounter"): return ""
+	if f("s0000_started") and not f("INTRO_MASTER_VOICE_DONE"): return ""
+	var h: float = d.main.hour
+	return "bgm_day_calm" if h >= 5.5 and h < 18.0 else ""
 
 # 이전 결과로 범이 다쳤으면 체력 낮춰 시작
 func combat_mods(_arena: String, mods: Dictionary) -> Dictionary:
@@ -118,6 +247,8 @@ func on_load() -> void:
 		for k in ["climax_started", "pending_outcome", "pending_detail", "kids_in_tree", "kids_gone", "yard_losses", "hunter_helped"]: S.flags.erase(k)
 		for k in ["kids_in_tree", "oil_on_tree", "sorghum_red", "white_paw"]: S.world.erase(k)
 	if f("beat_mother_harmed_running"): S.flags.erase("beat_mother_harmed_running")
+	# v3.2: 없앤 함지 회상 도중 저장(show_mother) · 이웃 아낙이 걸어가던 도중 저장
+	for k in ["show_mother", "neighbor_visit_on"]: S.flags.erase(k)
 	if S.phase == "night": load_tiger_story()
 	kids_place()
 	# 여는 장면 도중 저장에서 이어 하면: 남원 전경·제목은 건너뛴 것으로
@@ -160,10 +291,10 @@ func prologue_open() -> void:
 		for l in ["“본 것은 본 대로.”", "“들은 것은 누가 말했는지.”", "“모르는 것은 모른다고.”"]:
 			if ob != null and ob.skip: break
 			await d.ui.center_text(l, 2.1)
-			if await _sw(0.35): break
+			if await _sw(0.4): break
 	flag("INTRO_MASTER_VOICE_DONE")
 	d.ui.title_card_stop()
-	d.ui.book_page(["남원", "이겸", "“남원에서 확인할 것이…”"], 0.0)
+	d.ui.book_page(["남원"], 0.0)   # v3.2 §S0000 — 기록책 한 장: 남원
 	await d.ui.fade(false, 0.4 if (ob != null and ob.skip) else 1.1)
 	await _sw(1.6)
 	await d.ui.book_close()
@@ -228,20 +359,6 @@ func vista() -> void:
 	d.cutscene(false)
 	if ob != null: ob.skippable = false; ob.skip = false
 
-# 떡가루 함지 — 짧은 회상(떡장수 어머니, 흔적·회상 중심)
-func mother_flashback() -> void:
-	await d.ui.examine("떡가루 묻은 함지", ["함지 바닥에 떡가루가 말라붙었다.", "새벽에 떡을 쪄 광주리에 담고 나간 자국이다."], "clue")
-	d.cutscene(true)
-	d.place_actor("mother", "kneading", null, "down")
-	flag("show_mother")
-	d.anim_actor("mother", "idle")
-	await d.wait(0.8)
-	await d.move_actor("mother", ["house_door", [-3210.0, -343.0], [-3196.0, -340.0]], 1.4, "walk", "walk")
-	flag("show_mother", false)
-	d.place_actor("mother", "home")
-	await d.ui.caption("…해 지기 전엔 온다고 했다.", 2.0)
-	d.cutscene(false)
-
 # ---------------------------------------------------------------------------
 # S0005 첫 조우 뒤
 # ---------------------------------------------------------------------------
@@ -274,10 +391,10 @@ func after_first_encounter() -> void:
 	if not f("beat_mother_harmed"): await pass_memory()
 
 # ---------------------------------------------------------------------------
-# 주막에서 쉬기 → 밤
+# 외딴집에서 해 지기를 기다린다 → 밤(v3.2 §3.2: 주막 잠으로 밤을 넘기는 필수 흐름은 없앴다 — 주막 쉬기(F)는 일반 기능으로 남는다)
+#   ACT 6(해 질 무렵 귀환·경고·준비)을 새로 짜기 전까지 옛 밤 흐름(밤 준비 → 숨어 기다리기 S0007)으로 잇는 다리
 # ---------------------------------------------------------------------------
-func rest() -> void:
-	await d.ui.say("주모", ["건넌방 비어 있소. 눈 좀 붙이시오."])
+func night_fall() -> void:
 	if not f("beat_mother_harmed"): await pass_memory()   # 원작 순서 — 밤 전에 반드시
 	await d.ui.fade(true, 0.9)
 	load_tiger_story()
@@ -285,12 +402,12 @@ func rest() -> void:
 	d.on_phase()
 	d.set_hour(22.0)
 	d.set_weather("clear")
-	d.teleport_to("night_start", "up")
+	d.teleport_to("hide_spot", "left")
 	kids_place()
 	await d.wait(0.4)
 	await d.ui.fade(false, 0.9)
-	await d.ui.caption("달이 떴다…", 2.2)
-	d.journal_note("밤이 되었다. 외딴집으로")
+	await d.ui.caption("해가 지고, 달이 떴다…", 2.2)
+	d.journal_note("밤이 되었다. 외딴집에서")
 
 # ---------------------------------------------------------------------------
 # FIXED_BEATS(v3 §3.2) — 원작 장면이 화면에서 일어난 순서를 남긴다(flags beat_<id>, flags beats = "id,id,…")
@@ -1143,6 +1260,13 @@ func finish() -> void:
 # ---------------------------------------------------------------------------
 # 사건 기록(R) — 웹 journal.js
 # ---------------------------------------------------------------------------
+# v3.2 §9 첫 기록(주막에서 사건이 섰을 때) — 원문 그대로 네 줄
+const FIRST_RECORD := [
+	"떡장수 아낙이 사흘째 돌아오지 않는다.",
+	"마지막으로 북쪽 고갯길로 갔다.",
+	"집에는 아이 둘이 남아 있다.",
+	"이겸으로 보이는 선비도 이 일을 물었다.",
+]
 const ROUTE_TEXT := {
 	"jumo": "주막에서 들었다. 고개 너머 사는 떡장수가 사흘째 돌아오지 않는다고.",
 	"kids": "고개 너머 외딴집에서 오누이를 만났다. 어머니가 장에 간 지 사흘째라 한다.",
@@ -1182,7 +1306,10 @@ func solutions() -> Array:
 
 func summary() -> Array:
 	var p := []
-	p.append(ROUTE_TEXT.get(String(S.flags.get("route", "jumo")), ROUTE_TEXT.jumo))
+	if String(S.flags.get("route", "jumo")) == "kids":
+		p.append(ROUTE_TEXT.kids)
+		if f("igyeom_link"): p.append(FIRST_RECORD[3])
+	else: p.append_array(FIRST_RECORD)
 	if f("met_kids") and String(S.flags.get("route", "")) != "kids": p.append("외딴집의 오누이는 문고리를 걸어 잠그고 어머니를 기다린다.")
 	var cakes := cakes_found()
 	if cakes > 0 or S.has_clue("basket"):
