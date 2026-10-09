@@ -47,7 +47,7 @@ func _ready() -> void:
 	sb.content_margin_left = 40 * k; sb.content_margin_right = 40 * k; sb.content_margin_top = 26 * k; sb.content_margin_bottom = 26 * k
 	p.add_theme_stylebox_override("panel", sb)
 	cc.add_child(p)
-	var box := VBoxContainer.new(); box.add_theme_constant_override("separation", int(10 * k))
+	var box := VBoxContainer.new(); box.add_theme_constant_override("separation", int(6 * k))   # 소리 줄 셋이 늘어 768 높이에 들게
 	p.add_child(box)
 	var t := _lab("잠시 멈춤" if in_game else "설정", int(36 * k), INK); t.add_theme_font_override("font", UiFonts.classic()); box.add_child(t)
 	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2(440 * k, 1.5); box.add_child(r)
@@ -60,6 +60,9 @@ func _ready() -> void:
 	_add(box, k, { id = "ride_speed", kind = "opt", key = "ride_speed", values = GameSettings.RIDE_SPEED, names = GameSettings.RIDE_SPEED_LABEL, text = "자동 기승 속도" })
 	_add(box, k, { id = "ride_slow", kind = "opt", key = "ride_slow", values = GameSettings.RIDE_SLOW, names = GameSettings.RIDE_SLOW_LABEL, text = "자동 감속" })
 	_add(box, k, { id = "cam_shake", kind = "opt", key = "cam_shake", values = GameSettings.CAM_SHAKE, names = GameSettings.CAM_SHAKE_LABEL, text = "이동 카메라 흔들림" })
+	_add(box, k, { id = "vol_master", kind = "opt", key = "vol_master", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 전체" })
+	_add(box, k, { id = "vol_bgm", kind = "opt", key = "vol_bgm", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 음악" })
+	_add(box, k, { id = "vol_sfx", kind = "opt", key = "vol_sfx", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 효과음" })
 	if in_game: _add(box, k, { id = "howto", kind = "act", text = "여행 방법 (기록책)" })
 	_add(box, k, { id = "close", kind = "act", text = "돌아가기" if not in_game else "닫기" })
 	if in_game: _add(box, k, { id = "quit", kind = "act", text = "게임 끝내기" })
@@ -74,7 +77,7 @@ func _lab(text: String, size: int, col: Color) -> Label:
 	return l
 
 func _add(box: VBoxContainer, k: float, spec: Dictionary) -> void:
-	var l := _lab("", int(26 * k), INK)
+	var l := _lab("", int(24 * k), INK)
 	l.mouse_filter = Control.MOUSE_FILTER_STOP
 	var i := _rows.size()
 	l.gui_input.connect(func(e):
@@ -103,6 +106,9 @@ func _change(dir: int) -> void:
 	var vals: Array = rw.values
 	var cur := vals.find(GameSettings.get_v(String(rw.key)))
 	GameSettings.set_v(String(rw.key), String(vals[posmod(cur + dir, vals.size())]))
+	if String(rw.key).begins_with("vol_"):
+		preload("res://scripts/audio/sound.gd").apply_settings()
+		preload("res://scripts/audio/sound.gd").play("ui_select")
 	_refresh()
 
 func _act() -> void:

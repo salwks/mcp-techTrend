@@ -10,6 +10,8 @@
 #   자동 기승(이동수단 개선안 §31 — scripts/region/horse_ride.gd):
 #     ride_speed(자동 기승 속도) normal 보통 · fast 빠름 / ride_slow(자동 감속) on 켬 · off 끔(이야기에 꼭 필요한 감속은 그대로) /
 #     cam_shake(이동 카메라 흔들림) normal 보통 · weak 약함 · off 끔
+#   소리 크기(scripts/audio/sound.gd 버스): vol_master 전체 · vol_bgm 음악 · vol_sfx 효과음 · vol_ambient 환경음 — "0"~"10"
+#     바꾼 뒤 Sound.apply_settings()(options_menu가 부른다)
 extends RefCounted
 
 const PATH := "user://settings.json"
@@ -23,7 +25,10 @@ const RIDE_SLOW := ["on", "off"]
 const RIDE_SLOW_LABEL := { on = "켬", off = "끔" }
 const CAM_SHAKE := ["normal", "weak", "off"]
 const CAM_SHAKE_LABEL := { normal = "보통", weak = "약함", off = "끔" }
-const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "off" }
+const VOLUME := ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+const VOLUME_LABEL := {}
+const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "off",
+	vol_master = "10", vol_bgm = "7", vol_sfx = "9", vol_ambient = "8" }
 
 static var _d = null
 static var test_override := {}   # 대본 시험: 사용자 설정과 상관없이 기본값으로(--storytest·--onboardtest)
