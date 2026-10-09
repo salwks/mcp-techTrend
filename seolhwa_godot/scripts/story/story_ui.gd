@@ -566,9 +566,12 @@ func caption(text: String, sec := 2.4) -> void:
 	_cap_tween.tween_property(_caption, "modulate:a", 0.0, 0.35)
 	await _wait((0.1 if auto and not auto_real else sec))
 
-func letterbox(on: bool) -> void:
+# ratio: 띠 높이(화면 높이 비율). 보통 0.09 — 지난 일 장면은 조금 더 두껍게(남원 v3.2 §23)
+func letterbox(on: bool, ratio := 0.09) -> void:
 	var vs := get_viewport().get_visible_rect().size
-	var lbh := vs.y * 0.09
+	var lbh := vs.y * ratio
+	if on: _lb_top.size.y = lbh; _lb_bot.size.y = lbh
+	else: lbh = maxf(_lb_top.size.y, lbh)   # 두꺼운 띠도 끝까지 걷는다
 	_lb_top.set_meta("on", on); _lb_bot.set_meta("on", on)
 	var tw := create_tween().set_parallel()
 	tw.tween_property(_lb_top, "position:y", 0.0 if on else -lbh, 0.45)

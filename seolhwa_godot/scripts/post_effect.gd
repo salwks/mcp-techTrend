@@ -18,6 +18,8 @@ var state := {}
 var paper_image: Image
 # Mobile 렌더러는 장면 버퍼에 밝기를 1/2로 저장한다(0~2 범위를 10비트에 담기 위해). 읽을 때 곱하고 쓸 때 나눈다.
 var lum_mult := 1.0
+# 지난 일 장면(남원 v3.2 §23 어머니의 과거 장면): 0 보통 ~ 1 — 채도를 크게 빼고 먹빛 가장자리를 두른다(push lift.w로 넘긴다)
+var past := 0.0
 
 var rd: RenderingDevice
 var _fmt := -1
@@ -141,6 +143,17 @@ void main() {
 	float v = smoothstep(0.35 + 0.5 * p.aspect, 0.25, length(q) * 0.9);
 	vec3 vc = mix(vec3(0.16, 0.12, 0.09), vec3(0.05, 0.06, 0.1), p.night);
 	c = mix(c, c * vc * 2.2, (1.0 - v) * p.paper * 0.55);
+	float past = p.lift.w;
+	if (past > 0.0) {
+		// 지난 일: 채도를 크게 빼고 한지빛으로 · 붓 자국처럼 들쭉날쭉한 먹빛 가장자리
+		float Lp = luma(c);
+		c = mix(c, vec3(Lp) * vec3(1.03, 1.0, 0.93), past * 0.86);
+		vec2 qe = (vec2(uv.x, vy) - 0.5) * 2.0;
+		float r = length(qe * vec2(0.82, 1.0));
+		float brush = (pp.r - 0.5) * 0.34 + (pp.g - 0.5) * 0.22;
+		float inkv = smoothstep(0.70, 1.04, r + brush);
+		c = mix(c, vec3(0.055, 0.05, 0.048), inkv * past * 0.94);
+	}
 	c += (pp.b - 0.5) * (1.5 / 255.0);
 	imageStore(dst, g, vec4(to_linear(clamp(c, 0.0, 1.0)) / p.lum, 1.0));
 }
@@ -270,7 +283,7 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 		float(size.x) / size.y, focus_y, band, lum_mult,
 		top_bias, 0.75, 1.0 if tilt else 0.0, bloom_k,
 		state.sat, pf, pf, state.night,
-		lift.x, lift.y, lift.z, 0, gam.x, gam.y, gam.z, 0, gain.x, gain.y, gain.z, 0])
+		lift.x, lift.y, lift.z, past, gam.x, gam.y, gam.z, 0, gain.x, gain.y, gain.z, 0])
 	var paper_rid: RID = _paper_tex if _paper_tex.is_valid() else _tex.hb
 	_dispatch("final", [_samp(0, color), _samp(1, _tex.hb), _samp(2, _tex.qa), _samp(3, paper_rid, _rep), _img(4, _tex.out)], push, size)
 	rd.texture_copy(_tex.out, color, Vector3.ZERO, Vector3.ZERO, Vector3(size.x, size.y, 1), 0, 0, 0, 0)

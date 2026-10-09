@@ -153,5 +153,17 @@
   { "case": "jeju", "note": "S7008 뒤 ACT6 — 한양으로",
     "state": { "phase": "done", "flags": { "case_started": true, "child_saved": true, "resolved": true, "gwak_tally": true, "s7003": true, "to_gimnyeong": true }, "clues": ["tally"], "rules": [], "seen": { "S7007": true, "S7008": true }, "talked": {}, "world": {}, "items": {} },
     "vars": { "CASE_HAMHUNG_COMPLETE": true, "CASE_JEJU_OUTCOME": "A", "ACT6_OPEN": true },
-    "visible": ["jj_to_hanyang"], "hidden": ["jj_gwandu", "jj_hwabuk", "jj_gwak", "jj_gimnyeong"] }
+    "visible": ["jj_to_hanyang"], "hidden": ["jj_gwandu", "jj_hwabuk", "jj_gwak", "jj_gimnyeong"] },
+  { "case": "namwon", "note": "v3.2 §27 첫 조우 뒤 포수에게 아직 안 물음 — 방앗간 표지 없음",
+    "state": { "phase": "explore", "flags": { "s0000_started": true, "INTRO_NAMWON_TITLE_DONE": true, "case_started": true, "met_kids": true, "first_encounter": true }, "clues": ["rumor", "cakes"], "rules": [], "seen": { "S0000": true, "S0001": true, "S0002": true, "S0004": true }, "talked": { "jumo": 1, "hunter": 1 }, "world": {}, "items": {} },
+    "vars": {},
+    "visible": [], "hidden": ["nw_mill"] },
+  { "case": "namwon", "note": "v3.2 §27 포수 “방앗간에서도 밤마다…”(hq_where) → 방앗간",
+    "state": { "phase": "explore", "flags": { "s0000_started": true, "INTRO_NAMWON_TITLE_DONE": true, "case_started": true, "met_kids": true, "first_encounter": true, "hq_where": true }, "clues": ["rumor", "cakes"], "rules": [], "seen": { "S0000": true, "S0001": true, "S0002": true, "S0004": true }, "talked": { "jumo": 1, "hunter": 1 }, "world": {}, "items": {} },
+    "vars": {},
+    "visible": ["nw_mill"], "hidden": ["nw_night_house"] },
+  { "case": "namwon", "note": "v3.2 §28 방앗간 주인과 말함 → 방앗간 표지 사라짐",
+    "state": { "phase": "explore", "flags": { "s0000_started": true, "INTRO_NAMWON_TITLE_DONE": true, "case_started": true, "met_kids": true, "first_encounter": true, "hq_where": true, "mill_talked": true }, "clues": ["rumor", "cakes", "flour_sack"], "rules": [], "seen": { "S0000": true, "S0001": true, "S0002": true, "S0004": true }, "talked": { "jumo": 1, "hunter": 1 }, "world": {}, "items": {} },
+    "vars": {},
+    "visible": [], "hidden": ["nw_mill"] }
 ]

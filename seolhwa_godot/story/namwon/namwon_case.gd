@@ -4,6 +4,8 @@
 #   플레이어는 범을 죽이지 않는다 — A/B/C는 오누이가 나무에 오를 시간을 버는 방법. 마을이 오누이를 거두는 결말은 없다.
 # v3.2(seolhwarok_NAMWON_v3.2_scenario.md) ACT 0~2: 여는 장면 · 주모 물음과 이겸 연결(사건 기록 도장) · 역참 마부 · 이웃 아낙 · 오누이.
 #   함지 회상(mother_flashback)은 없앴다. 밤은 주막 잠(rest)이 아니라 외딴집에서 해 지기를 기다려(night_fall) 넘어간다.
+# v3.2 ACT 3~5: 고갯길 단서 연출(떡 셋·치맛자락 인서트·피·발자국 따라가기·광주리 CAMERA 3A) · 어머니의 과거 장면(past_scene — 기록하지 않음) ·
+#   첫 조우(first_encounter — 공포·CAMERA 4A·전투 배우기) · 포수·방앗간 · 연결 추론(check_link) · 외딴집 쪽 흰 발자국(white_trail).
 # 데이터(namwon_data.gd)의 { "call": "이름" }과 조건식 fn('이름')이 이 함수들을 부른다.
 extends RefCounted
 
@@ -96,6 +98,8 @@ func stall_hint(stage: int) -> String:
 		return ["", "떡장수는 마지막으로 어디로 갔는가.", "포수  “고개 쪽 길은 요새 아무도 안 넘으려 하오.”", "떡장수는 고개 너머 장으로 가는 길이었다."][mini(stage, 3)]
 	if not f("first_encounter"):
 		return ["", "고갯마루 너머에는 무엇이 있었는가.", "", "떡이 한 방향으로 이어져 있었다."][mini(stage, 3)]
+	if not S.has_clue("flour_prints"):
+		return ["", "범은 사람 사는 데까지 내려와 무엇을 하는가.", "포수  “고개 아래 방앗간에서도 밤마다 뭔가 뒤진다더군.”", "범은 사람 냄새를 피하지 않았다."][mini(stage, 3)]
 	if not f("met_kids"):
 		return ["", "집에 남은 아이들은 어떻게 지내는가.", "주모  “그 집 애들은 누가 들여다보기나 하는지…”", "집에는 아이 둘이 남아 있다고 했다."][mini(stage, 3)]
 	return ["", "범은 무엇에 끌리고, 무엇을 꺼리는가.", "", "범은 떡 냄새를 따라 내려왔다."][mini(stage, 3)]
@@ -109,7 +113,10 @@ func check_food() -> void:
 
 func on_clue(id: String) -> void:
 	if id in ["cakes", "torn_skirt", "blood", "tracks", "basket"]: S.seen["S0004"] = true
-	if id in ["flour_prints", "claw_marks", "territory", "hunter_word", "flour_sack"]: S.seen["S0006"] = true
+	if id in ["flour_prints", "claw_marks", "territory", "hunter_word", "flour_sack", "white_trail"]: S.seen["S0006"] = true
+	if id in ["voice_at_night", "flour_prints"]: check_link()
+	# 흉내 의심의 다른 길(§73): 밤에 문 앞에서 직접 본 것
+	if id == "door_tricks" and not S.knows("K_MIMIC"): d.learn_rule("K_MIMIC", true)
 
 # 사건 기록이 선다(v3.2 §9): 도장 소리 + 「새 사건」 → R 기록책 안내(실제로 열어야 끝난다)
 func start_case(route: String) -> void:
@@ -247,6 +254,9 @@ func on_load() -> void:
 		for k in ["climax_started", "pending_outcome", "pending_detail", "kids_in_tree", "kids_gone", "yard_losses", "hunter_helped"]: S.flags.erase(k)
 		for k in ["kids_in_tree", "oil_on_tree", "sorghum_red", "white_paw"]: S.world.erase(k)
 	if f("beat_mother_harmed_running"): S.flags.erase("beat_mother_harmed_running")
+	# v3.2 첫 조우 도중 저장: 조우를 처음부터 다시(트리거가 다시 선다)
+	if f("first_encounter_running"):
+		for k in ["first_encounter_running", "first_encounter", "_trig_s0005_pass", "_trig_s0005_territory"]: S.flags.erase(k)
 	# v3.2: 없앤 함지 회상 도중 저장(show_mother) · 이웃 아낙이 걸어가던 도중 저장
 	for k in ["show_mother", "neighbor_visit_on"]: S.flags.erase(k)
 	if S.phase == "night": load_tiger_story()
@@ -360,12 +370,428 @@ func vista() -> void:
 	if ob != null: ob.skippable = false; ob.skip = false
 
 # ---------------------------------------------------------------------------
-# S0005 첫 조우 뒤
+# ACT 3 고갯길(v3.2 §15~§22) — 단서마다 카메라 개입은 짧게(0.3~2초). 보는 것으로 시작하지 않고 다가가면(반경) 시작한다
 # ---------------------------------------------------------------------------
+func _pp() -> Vector2:
+	return Vector2(d.main.player_pos.x, d.main.player_pos.z)
+
+# 소리 하나(sfx_cue도 낸다 — 시험이 듣는다). opts: Sound.play·play_at의 {db, bus, …}
+func _snd(id: String, at = null, opts := {}) -> void:
+	d.sfx_cue.emit(id)
+	if at == null: Sound.play(id, opts)
+	else: Sound.play_at(id, d.audio_pos(at), d.main.scene_vp, opts)
+
+# §15 단서 발견: 처음 그 단서 6~8m(NUDGE_R) 안에 들면 카메라가 단서 쪽으로 0.2초 기울었다가 곧장 돌아온다(조작은 그대로)
+const NUDGE_R := 7.0
+var _nudge_t := 0.0
+var nudged: Array = []   # 시험 기록(기울인 단서 id 차례)
+func ambient(dt: float) -> void:
+	_nudge_t -= dt
+	if _nudge_t > 0.0: return
+	_nudge_t = 0.12
+	if S.phase != "explore" or not f("case_started"): return
+	if d.runner.busy or d.ui.modal or d.ui.journal_open or d.combat_view.active or d._cut: return
+	var rig = d.main.rig
+	if rig.override != null or rig.focus != null or rig.gliding(): return
+	var pp := _pp()
+	for o in d.data.get("objects", []):
+		if String(o.get("event_id", "")) != "S0004": continue
+		var id := String(o.id)
+		if f("nudge_" + id) or not d.runner.cond(o.get("when", true)): continue
+		var at: Vector2 = d.anchor(o.at)
+		if pp.distance_to(at) > NUDGE_R: continue
+		S.flags["nudge_" + id] = true
+		nudged.append(id)
+		d.runner.log_line("nudge", id)
+		_nudge(at)
+		return
+
+func _nudge(at: Vector2) -> void:
+	var rig = d.main.rig
+	var q := _pp().lerp(at, 0.45)
+	var mine := { x = q.x, z = q.y }
+	rig.focus = mine
+	rig.glide(0.2)
+	await d.get_tree().create_timer(0.22).timeout
+	if is_same(rig.focus, mine):
+		rig.focus = null
+		rig.glide(0.2)
+
+# 카메라를 sec초 동안 옮긴다(spec: d.camera와 같음) — 끝까지 기다린다
+func _cam_to(spec: Dictionary, sec: float) -> void:
+	d.camera(spec)
+	d.main.rig.glide(sec)
+	await d.wait(sec)
+
+func _cam_back(sec := 0.5) -> void:
+	d.camera(null)
+	d.main.rig.glide(sec)
+	_tilt(true)
+
+# 틸트시프트 흐림 — 바닥 흔적을 내려다보는 짧은 연출 동안만 끈다(_cam_back이 원래대로 — 사용자가 P로 꺼 둔 것은 그대로)
+var _tilt_saved = null
+func _tilt(on: bool) -> void:
+	var post = d.main.get("post")
+	if post == null: return
+	if not on:
+		if _tilt_saved == null: _tilt_saved = post.tilt
+		post.tilt = false
+	elif _tilt_saved != null:
+		post.tilt = _tilt_saved
+		_tilt_saved = null
+
+# §16~§18 떡 — 찾은 차례대로(어느 떡을 먼저 줍든 첫째·둘째·셋째의 말)
+const CAKE_LINES := [
+	["떡 하나가 흙에 반쯤 묻혀 있다.", "누군가 급히 떨어뜨린 것 같지는 않다.", "둘레 흙에 짐승 코 자국."],
+	["같은 떡.", "첫 번째와 일정한 거리를 두고 떨어져 있다."],
+	["또 하나."],
+]
+const CAKE_RECORD := "떡이 고갯길을 따라 이어진다."
+var cake_order: Array = []   # 시험 기록: [떡 id, 몇 번째]
+func cake_found(id: String) -> void:
+	var n := cakes_found()   # 이 떡 플래그는 이미 섰다
+	cake_order.append([id, n])
+	await d.ui.examine("떨어진 떡", CAKE_LINES[clampi(n - 1, 0, 2)])
+	if n == 2: d.ui.toast("기록 — " + CAKE_RECORD, "journal")   # 기록 갱신(§17) — 단서 글이 자란다(cakes text_if)
+	if n == 3: await d.ui.say("나그네", ["…떨어진 게 아니라 하나씩 내놓은 건가."])
+
+# §19 치맛자락 — 짧은 인서트(낮은 각도·FOV 48)
+func skirt_insert() -> void:
+	d.main.player.visible = false   # 인서트 — 천만 보이게(틸트 흐림도 잠깐 끈다)
+	_tilt(false)
+	await _cam_to({ "focus": "torn_skirt", "pitch": 18.0, "distance": 3.6, "fov": 48.0 }, 0.05)
+	var sp: Vector2 = d.anchor("torn_skirt")
+	d.main.rig.focus = { x = sp.x, z = sp.y, y = d.world.height_at(sp.x, sp.y) - 0.5 }   # 겨냥을 덤불 높이로 낮춘다
+	d.main.rig.glide(0.3)
+	var rec = d.props.get("p_skirt")
+	if rec != null and rec.node != null: _no_occ(rec.node)   # 카메라 가까이 오는 물건은 먹점 무늬로 흐려진다 — 인서트 동안은 끈다
+	await d.wait(0.35)
+	await d.ui.caption("덤불에 쪽빛 천.", 1.8)
+	await d.ui.caption("네 줄로 길게 찢어져 있다.", 2.0)
+	d.main.player.visible = true
+	_no_occ_clear()
+	_cam_back(0.4)
+	await d.ui.say("나그네", ["칼자국은 아니다."])
+	d.learn_clue("torn_skirt")
+
+# §20 피 — 음악·환경음이 끊긴다
+func blood_scene() -> void:
+	d.hush(4.0)
+	await d.wait(0.6)
+	await d.ui.examine("마른 피", ["마른 피.", "주변 풀이 한쪽으로 짓눌렸다."])
+	d.learn_clue("blood")
+
+# §21 발자국 — 카메라가 자국을 따라 약 2초: 짚신 자국이 끊기고 큰 발자국만 이어진다
+const TRACK_PAN := [[-3160.0, -213.0], "tracks", "tracks_end", [-3178.0, -257.0]]
+var pan_points := 0   # 시험 기록
+func tracks_pan() -> void:
+	await d.ui.caption("짚신 자국과 큰 짐승 발자국이 겹쳐 있다.", 2.2)
+	_tilt(false)
+	await _cam_to({ "focus": TRACK_PAN[0], "pitch": 54.0, "distance": 13.0, "fov": 34.0 }, 0.4)
+	var rig = d.main.rig
+	pan_points = 1
+	for i in range(1, TRACK_PAN.size()):
+		var p: Vector2 = d.anchor(TRACK_PAN[i])
+		rig.focus = { x = p.x, z = p.y }
+		rig.glide(0.6)
+		await d.wait(0.6)
+		pan_points += 1
+		if i == 1: await _shot("tracks_pan")
+	await d.ui.caption("짚신 자국은 끊기고, 큰 발자국만 이어진다.", 2.2)
+	d.learn_clue("tracks")
+	_cam_back(0.6)
+
+# §22 서낭당 광주리 — CAMERA 3A(pitch 34 · 거리 10 · FOV 42) → 1.5초 정적 → §23 어머니의 과거 장면
+func basket_scene() -> void:
+	await _cam_to({ "focus": "basket", "pitch": 34.0, "distance": 10.0, "fov": 42.0 }, 0.6)
+	await d.ui.caption("빈 광주리와 머리에 받치는 수건.", 2.2)
+	await d.ui.caption("떡은 없다.", 1.8)
+	d.learn_clue("basket")
+	check_food()
+	await _shot("basket")
+	d.hush(2.6)
+	await d.wait(1.5)   # 1.5초 정적
+	await past_scene()
+	_cam_back(0.6)
+
+# ---------------------------------------------------------------------------
+# §23 어머니의 과거 장면(CAMERA 3B) — 엄마를 처음이자 이곳에서만 직접 보여 준다. 플레이어가 과거를 보는 능력이 아니라 관객에게 보이는 서사 장면.
+#   채도를 크게 뺀 화면 · 먹빛 가장자리(post_effect.past) · 조금 두꺼운 띠 · 플레이어 없음 · 얼굴은 보이지 않게(뒤에서, 어둡게).
+#   숲 밖 목소리 “떡 하나 주면 안 잡아먹지.” 세 번 · 떡을 던짐 · 빈 광주리 · 돌아봄 → CUT TO BLACK · 숨 들이켬 · 광주리 구르는 소리.
+#   기록책은 이 장면을 '확인한 사실'로 적지 않는다 — 남는 것은 빈 광주리와 피, 큰 짐승 흔적(본 흔적)뿐.
+# ---------------------------------------------------------------------------
+const PAST_SHADE := Color(0.10, 0.09, 0.085, 0.62)
+const PAST_VOICE := "“떡 하나 주면 안 잡아먹지.”"
+const PAST_KEEP := "빈 광주리와 피, 큰 짐승 흔적."
+const PAST_HIDE_PROPS := ["p_cake_1", "p_cake_2", "p_cake_3", "p_skirt", "p_blood", "p_tracks", "p_basket"]
+var past_voices := 0     # 시험 기록: 목소리 횟수
+var past_cakes := 0      # 던진 떡
+var past_look := {}      # 시험 기록: 장면 동안 본 것(플레이어 보임·채도·띠)
+var _past_nodes: Array = []
+var _follow_on := false
+
+# 지난 일 인물은 먹빛으로 눌러 그린다(얼굴이 읽히지 않게)
+func _tint(id: String, c: Color) -> void:
+	var a = d.actors.get(id)
+	if a != null and a.ch._mat != null: a.ch._mat.set_shader_parameter("flash", c)
+
+# 지난 일 장면 동안 지금의 세상(다른 인물·고을 사람·지명·알림)을 감춘다
+var _quiet_ids: Array = []
+var _quiet_layer: CanvasLayer = null
+func _world_quiet(on: bool) -> void:
+	var amb = d.main.get("npcs_amb")
+	if amb != null: amb.visible = not on
+	if d.ui.get("_toasts") != null: d.ui._toasts.visible = not on
+	if d.ui.get("_stamp") != null: d.ui._stamp.visible = not on   # 지명에 들어서며 찍히는 저장 도장
+	# 지명·저장 도장·소지품 줄 같은 HUD는 큰 창이 열린 것처럼 감춘다(scripts/hud_gate.gd — 빈 층 하나를 '열린 창'으로)
+	if on and _quiet_layer == null:
+		_quiet_layer = CanvasLayer.new()
+		_quiet_layer.add_to_group(load("res://scripts/hud_gate.gd").OVERLAY)
+		d.add_child(_quiet_layer)
+	elif not on and _quiet_layer != null:
+		_quiet_layer.queue_free(); _quiet_layer = null
+	if on:
+		_quiet_ids = []
+		for id in d.actors:
+			var a: Dictionary = d.actors[id]
+			if a.shown and id != "mother_past":
+				_quiet_ids.append(id); a.shown = false; a.ch.visible = false
+	else:
+		for id in _quiet_ids:
+			if d.actors.has(id): d.actors[id].shown = true
+		_quiet_ids = []
+		d.mark_dirty()
+
+func _post_past(k: float) -> void:
+	var post = d.main.get("post")
+	if post != null: post.past = k
+
+# 카메라가 인물 뒤를 따라간다(조금 앞을 겨냥 — 숲이 화면 대부분)
+func _follow(id: String, ahead: Vector2) -> void:
+	_follow_on = true
+	while _follow_on and d.actors.has(id):
+		var a: Dictionary = d.actors[id]
+		d.main.rig.focus = { x = a.pos.x + ahead.x, z = a.pos.z + ahead.y }
+		await d.get_tree().process_frame
+
+# 떡 하나를 숲 쪽으로 던진다(포물선 0.7초) — 장면이 끝나면 지운다
+func _throw_cake(from_id: String, side: float) -> void:
+	var a = d.actors.get(from_id)
+	if a == null: return
+	past_cakes += 1
+	var info: Dictionary = load("res://kit/story/clue.gd").build({ "kind": "tteok", "seed": 10 + past_cakes })
+	var n: Node3D = info.node
+	d._props_root.add_child(n)
+	_past_nodes.append(n)
+	var p0: Vector3 = a.pos + Vector3(0, 1.3, 0)
+	var land := Vector2(a.pos.x + side * 4.5, a.pos.z - 1.5)
+	var p1 := Vector3(land.x, d.world.height_at(land.x, land.y) + 0.05, land.y)
+	var tw: Tween = d.create_tween()
+	tw.tween_method(_cake_arc.bind(n, p0, p1), 0.0, 1.0, _dur(0.7))
+
+func _cake_arc(u: float, n: Node3D, p0: Vector3, p1: Vector3) -> void:
+	if is_instance_valid(n): n.position = p0.lerp(p1, u) + Vector3(0, sin(PI * u) * 1.4, 0)
+
+func past_scene() -> void:
+	if f("beat_mother_harmed"): return
+	flag("beat_mother_harmed_running")
+	var back := _pp()
+	var face: String = d.main.player.facing
+	var hour: float = d.main.hour
+	d.cutscene(true)
+	await d.ui.fade(true, 0.6)
+	# 지금의 흔적(떡·광주리·핏자국 소품)은 감춘다 — 사흘 전이다
+	for pid in PAST_HIDE_PROPS:
+		var rec = d.props.get(pid)
+		if rec != null and rec.node != null: rec.node.visible = false
+	d.main.player.visible = false   # 플레이어 캐릭터 없음
+	_world_quiet(true)
+	d.teleport_to("cake_1", "up")
+	d.set_hour(15.4)                # 장을 보고 해가 아직 높을 때 돌아갔다(주모)
+	d.ui.letterbox(true, 0.125)     # 평소보다 조금 두꺼운 띠
+	_post_past(1.0)
+	var c1: Vector2 = d.anchor("cake_1")
+	d.spawn_actor("mother_past", "ricecake_mother", [c1.x - 1.2, c1.y + 5.0], "up", "", "")
+	await d.get_tree().process_frame
+	_tint("mother_past", PAST_SHADE)
+	d.camera({ "pitch": 22.0, "distance": 9.5, "fov": 40.0 })
+	_follow("mother_past", Vector2(0.0, -1.8))
+	await d.wait(0.3)
+	past_look = { "player_visible": d.main.player.visible, "past": float(d.main.post.past) if d.main.get("post") != null else -1.0,
+		"letterbox": d.ui._lb_top.size.y / maxf(1.0, d.ui.get_viewport().get_visible_rect().size.y) }
+	await d.ui.fade(false, 0.9)
+	# 첫 굽이 — 걷다가 목소리, 멈추고, 떡 하나를 숲 쪽으로
+	await d.move_actor("mother_past", [[c1.x - 0.4, c1.y + 1.5]], 1.4, "walk", "idle")
+	await _shot("past_walk")
+	await _past_voice()
+	await d.wait(0.5)
+	_throw_cake("mother_past", 1.0)
+	await d.wait(0.9)
+	await d.move_actor("mother_past", ["cake_2"], 2.0, "walk", "idle")
+	# 다음 굽이 — 또 목소리, 또 떡. 걸음이 빨라진다
+	await _past_voice()
+	await d.wait(0.35)
+	_throw_cake("mother_past", -1.0)
+	await _shot("past_throw")
+	await d.wait(0.6)
+	await d.move_actor("mother_past", ["cake_3", "torn_skirt"], 2.7, "walk", "idle")
+	# 마지막 — 광주리 안이 빈다. 바닥을 한 번 더 더듬는다(멈칫)
+	await d.ui.caption("광주리가 비었다.", 1.6)
+	await d.wait(0.7)
+	await _past_voice()
+	await d.wait(0.5)
+	# 뒤를 돌아보는 순간 CUT TO BLACK(얼굴은 보이지 않는다) — 과한 포효 없이 짧은 숨, 광주리 구르는 소리
+	d.anim_actor("mother_past", "idle")
+	await d.wait(0.25)
+	await _shot("past_turn")
+	d.ui._fade.color.a = 1.0
+	d.face_actor("mother_past", "down", null)
+	_follow_on = false
+	_snd("breath_gasp")
+	await d.wait(0.7)
+	_snd("basket_roll")
+	await d.wait(1.4)
+	d.despawn_actor("mother_past")
+	for n in _past_nodes:
+		if is_instance_valid(n): n.queue_free()
+	_past_nodes.clear()
+	beat("mother_harmed")
+	S.flags.erase("beat_mother_harmed_running")
+	flag("past_scene_seen")
+	# 현재로
+	_post_past(0.0)
+	d.main.player.visible = true
+	_world_quiet(false)
+	for pid in PAST_HIDE_PROPS:
+		var rec = d.props.get(pid)
+		if rec != null and rec.node != null: rec.node.visible = rec.shown
+	d.set_hour(hour)
+	d.teleport_to(back, face)
+	d.camera(null)
+	d.ui.letterbox(false)
+	await d.wait(0.3)
+	await d.ui.fade(false, 0.8)
+	d.cutscene(false)
+	d.journal_note(PAST_KEEP)   # 기록에는 본 흔적만(§23 — 과거 장면을 사실로 적지 않는다)
+
+func _past_voice() -> void:
+	past_voices += 1
+	await d.ui.caption(PAST_VOICE, 2.4)
+
+# 옛 이름(밤으로 넘어갈 때 아직 못 봤으면 — night_fall)
+func pass_memory() -> void:
+	await past_scene()
+
+# ---------------------------------------------------------------------------
+# ACT 4 첫 조우(v3.2 §24~§26)
+#   §24 단서 셋 이상 + first_seen에 다가감(트리거 s0005_pass). 해질녘 보정은 지금 시각에서 저녁 쪽으로 몇 초에 걸쳐(되돌리지 않는다, 17시로 못 박지 않는다)
+#   §25 음악·새소리가 끊긴다(Sound.hush) — 발걸음과 바람만. 조작은 쥔 채(free_move). 무언가 오른쪽, 이어 왼쪽 나무 사이를 지나간다(카메라는 돌리지 않는다).
+#       first_seen 가까이 오면 CAMERA 4A(pitch 32 · 거리 18 · FOV 30) — 숲 안쪽에 범의 얼굴 1초 → 플레이어에게 돌아옴 → 그르렁 → 뒤에서 덮친다
+#   §26 전투 = 전투 배우기(onboarding K 회피·L 막기 — 실제로 해야 끝). 목표는 죽이기가 아니다: 범은 쓰러지지 않고(undying)
+#       약 22초 버티거나, 범 체력이 20% 깎이거나, 내 체력이 35% 아래로 내려가면 물러난다 → 따라갈 수는 있지만 숲에서 사라진다
+# ---------------------------------------------------------------------------
+const FIRST_DUSK := 17.3
+const FIRST_RETREAT := { "seconds": 22.0, "hpRatio": 0.8, "playerHp": 0.35 }
+var first_passes: Array = []   # 시험 기록: ["right", "left"]
+var glimpse_t := 0.0           # 시험 기록: 얼굴을 보인 시간(초)
+var dusk_from := -1.0          # 시험 기록: 보정 전 시각
+
+# 지금 시각에서 저녁(FIRST_DUSK) 쪽으로 sec초에 걸쳐 흐른다 — 이미 저녁이거나 밤이면 그대로(되돌리지 않는다)
+func _dusk_toward(to_h: float, sec: float) -> void:
+	var h0: float = d.main.hour
+	dusk_from = h0
+	if h0 >= to_h - 0.05 or h0 < 5.0: return
+	var t := 0.0
+	var dur := _dur(sec)
+	while t < dur:
+		await d.get_tree().process_frame
+		t += d.get_process_delta_time()
+		d.set_hour(lerpf(h0, to_h, smoothstep(0.0, 1.0, minf(1.0, t / dur))))
+
+# 무언가 나무 사이를 지나간다(side +1 오른쪽 · -1 왼쪽, 지금 고정 화면 안 — 카메라는 돌리지 않는다)
+func _pass_by(side: float) -> void:
+	var pp := _pp()
+	var a := pp + Vector2(6.6 * side, -6.0)
+	var b := pp + Vector2(5.4 * side, -11.5)
+	if side < 0.0:   # 왼쪽은 안에서 밖으로
+		var tmp := a
+		a = b
+		b = tmp
+	var id := "first_shadow_%s" % ("r" if side > 0.0 else "l")
+	d.spawn_actor(id, "tiger", [a.x, a.y], "up" if side > 0.0 else "down", "", "")
+	await d.get_tree().process_frame
+	_tint(id, Color(0.05, 0.045, 0.04, 0.55))
+	first_passes.append("right" if side > 0.0 else "left")
+	_snd("brush_rustle", a, { "db": -2.0 })
+	_snd("footstep_heavy", a, { "db": -6.0 })
+	await d.move_actor(id, [[b.x, b.y]], 6.5, "walk", "walk")
+	d.despawn_actor(id)
+
+func first_encounter() -> void:
+	flag("first_encounter")          # 낮 음악은 이 플래그로 멈춘다(music_wanted)
+	flag("first_encounter_running")
+	d.hush(-1.0)                      # 음악·새소리(환경음) — 다시 열 때까지
+	_dusk_toward(FIRST_DUSK, 7.0)
+	d.free_move = true                # 발걸음과 바람만 — 조작은 그대로
+	_snd("wind", "player", { "bus": "SFX", "db": -3.0 })
+	await d.wait(1.4)
+	await _pass_by(1.0)
+	await d.wait(1.5)
+	await _pass_by(-1.0)
+	# first_seen 가까이 오거나(8m) 조금 지나면
+	var t := 0.0
+	while t < 6.0 and _pp().distance_to(d.anchor("first_seen")) > 8.0:
+		await d.get_tree().process_frame
+		t += d.get_process_delta_time() / maxf(Engine.time_scale, 0.01)
+	d.free_move = false
+	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
+	await _glimpse()
+	# 그르렁 — 뒤에서
+	var fv := _face_vec(d.main.player.facing)
+	var behind := _pp() - fv * 6.0
+	_snd("tiger_growl", behind, { "db": 2.0 })
+	await d.wait(0.7)
+	var res: String = await _first_fight(fv)
+	d.runner.last["first"] = res
+	S.flags.erase("first_encounter_running")
+	await after_first_encounter()
+	Sound.hush_end(2.5)
+
+static func _face_vec(face: String) -> Vector2:
+	return { "up": Vector2(0, -1), "down": Vector2(0, 1), "left": Vector2(-1, 0), "right": Vector2(1, 0) }.get(face, Vector2(0, -1))
+
+# CAMERA 4A — 숲 안쪽을 잠깐 강조: 나무 사이 범의 얼굴(상체 일부) 1초, 사라짐, 플레이어에게 돌아옴
+func _glimpse() -> void:
+	var g: Vector2 = d.anchor("glimpse")
+	d.spawn_actor("tiger_glimpse", "tiger", [g.x, g.y], "down", "", "")   # 정면 — 나무 뒤라 얼굴과 앞가슴만
+	d.anim_actor("tiger_glimpse", "idle")
+	await d.get_tree().process_frame
+	_tint("tiger_glimpse", Color(0.06, 0.05, 0.04, 0.5))
+	await _cam_to({ "focus": "glimpse", "pitch": 32.0, "distance": 18.0, "fov": 30.0 }, 0.35)
+	var t0 := Time.get_ticks_msec()
+	await _shot("first_glimpse")
+	await d.wait(1.0)
+	glimpse_t = (Time.get_ticks_msec() - t0) / 1000.0
+	d.despawn_actor("tiger_glimpse")
+	_cam_back(0.35)
+	await d.wait(0.4)
+
+# 뒤에서 덮친다 — 싸움터는 플레이어 자리, 범은 바라보는 쪽 반대편 6m
+func _first_fight(fv: Vector2) -> String:
+	var off := -fv * 6.0 + Vector2(-fv.y, fv.x) * 1.2
+	d.data.arenas.pass_wood.tiger_offset = [off.x, off.y]
+	return await d.combat("pass_wood", { "mods": { "firstEncounter": true, "undying": true, "tutorial": true },
+		"allow_flee": true, "retreat_at": FIRST_RETREAT.duplicate(), "store": "first" })
+
+# ---------------------------------------------------------------------------
+# S0005 첫 조우 뒤 — 범이 물러나 숲으로(따라갈 수 있지만 사라진다) · 나그네 “범…” · 기록 고갯마루의 범
+# ---------------------------------------------------------------------------
+var first_result := ""   # 시험 기록
 func after_first_encounter() -> void:
 	var res := String(d.runner.last.get("first", "retreated"))
-	d.learn_clue("first_sight")
+	first_result = res
 	var tg = d.combat_view.battle.tiger
+	var tpos: Vector2 = tg.pos
 	if tg.hp < float(tg.G().hp) * 0.95: flag("tiger_wounded")
 	if res == "lose":
 		await d.ui.fade(true, 0.6)
@@ -382,13 +808,73 @@ func after_first_encounter() -> void:
 		await d.ui.caption("정신없이 산길로 빠져나왔다. 등 뒤에서 낮은 울음이 따라온다.", 2.6)
 	else:
 		d.end_combat()
-		await d.ui.caption("범은 땅이 울리도록 포효하고, 숲 너머로 사라졌다.", 2.6)
-	d.set_hour(maxf(18.2, d.main.hour))
-	d.journal_note("범을 보았다")
+		_tiger_into_forest(tpos)
+		await d.ui.say("나그네", ["범…"])
+	d.learn_clue("first_sight")
 	# 보강서 §17 관찰 — 본 대로만(“돌진 패턴 해금” 같은 말은 쓰지 않는다)
 	await R([{ "observe": "몸을 낮춘 뒤 잠시 멈춘다.", "about": "범" }, { "observe": "그다음 곧장 돌진한다.", "about": "범" }])
-	# 사흘 전 고갯길(FIXED mother_harmed) — 광주리를 아직 안 봤어도 첫 조우 뒤에는 보인다
-	if not f("beat_mother_harmed"): await pass_memory()
+	check_link()
+
+# 물러난 범이 숲 쪽으로 걸어 들어가 사라진다(조작은 돌려준 채 — 따라가 볼 수 있다)
+func _tiger_into_forest(from: Vector2) -> void:
+	var to_t: Vector2 = d.anchor("territory")
+	var dir := (to_t - from).normalized()
+	var end := from + dir * 20.0
+	d.spawn_actor("tiger_flee", "tiger", [from.x, from.y], "left", "", "")
+	await d.move_actor("tiger_flee", [[from.x + dir.x * 8.0, from.y + dir.y * 8.0], [end.x, end.y]], 4.2, "walk", "walk")
+	_snd("brush_rustle", end, { "db": -4.0 })
+	d.despawn_actor("tiger_flee")
+
+# ---------------------------------------------------------------------------
+# ACT 5 범과 사건을 잇는다(v3.2 §27~§30)
+# ---------------------------------------------------------------------------
+# §28 방앗간 바닥: 주인과 말하다 바닥을 본다(카메라 잠깐) — 밀가루 위 큰 발자국, 앞발만 유난히 하얗다
+func mill_floor() -> void:
+	_snd("flour_rustle", "flour", { "db": -4.0 })
+	_tilt(false)
+	await _cam_to({ "focus": "flour", "pitch": 56.0, "distance": 8.0, "fov": 36.0 }, 0.4)
+	await d.ui.caption("밀가루 바닥에 큰 발자국. 앞발 자국만 유난히 하얗다.", 2.4)
+	await _shot("mill_flour")
+	see_flour()
+	var tc: Dictionary = d.talk_cam
+	if not tc.is_empty():
+		d.camera(tc); d.main.rig.glide(0.4); _tilt(true)
+	else: _cam_back(0.4)
+
+# 밀가루 발자국을 제 눈으로 보았다(주인과 말하며 · 또는 바닥을 바로 살펴) — §73 flour_prints
+func see_flour() -> void:
+	flag("flour_prints")
+	d.learn_clue("flour_prints")
+	d.learn_rule("K_FLOUR")
+
+# §29 연결 추론 — 어젯밤의 목소리 + 밀가루 발자국 + 첫 조우를 모두 쥐면 기록책에 한 줄만. 흉내라고 정하지 않는다
+const LINK_LINE := "어젯밤 아이들이 들었다는 목소리와 이 범은 관계가 있을 수 있다."
+func check_link() -> void:
+	if f("link_inferred"): return
+	if not (S.has_clue("voice_at_night") and S.has_clue("flour_prints") and f("first_encounter")): return
+	flag("link_inferred")
+	d.ui.toast("기록 — " + LINK_LINE, "journal")
+	d.learn_rule("K_MIMIC", true)   # 버릇 칸에도 '모른다'로만(글: 관계가 있을 수 있다 · 아직 확인하지 못했다)
+
+# §30 흰 발자국 — 외딴집 쪽으로 짧게 따라간다 → “…집 쪽이다.” 여기서 목적이 조사에서 보호로
+const PURPOSE_LINE := "오늘 밤은 아이들 곁에 있어야 한다."
+func white_trail() -> void:
+	if f("tiger_house_suspected"): return
+	_tilt(false)
+	await _cam_to({ "focus": "white_trail_a", "pitch": 50.0, "distance": 13.0, "fov": 34.0 }, 0.35)
+	var rig = d.main.rig
+	for pt in ["white_trail_b", "white_trail_c", "house_door"]:
+		var p: Vector2 = d.anchor(pt)
+		rig.focus = { x = p.x, z = p.y }
+		rig.glide(0.55)
+		await d.wait(0.55)
+		if pt == "white_trail_b": await _shot("white_trail")
+	await d.ui.say("나그네", ["…집 쪽이다."])
+	flag("tiger_house_suspected")
+	d.learn_clue("white_trail")
+	await R([{ "discover": "house" }])
+	_cam_back(0.6)
+	d.ui.toast("기록 — " + PURPOSE_LINE, "journal")
 
 # ---------------------------------------------------------------------------
 # 외딴집에서 해 지기를 기다린다 → 밤(v3.2 §3.2: 주막 잠으로 밤을 넘기는 필수 흐름은 없앴다 — 주막 쉬기(F)는 일반 기능으로 남는다)
@@ -426,62 +912,6 @@ func beats_seen() -> Array:
 # 대본 시험이 원작 장면마다 화면을 찍는다(--storyshots, 화면이 있을 때만)
 func _shot(nm: String) -> void:
 	if d.test != null and d.test.has_method("tale_shot"): await d.test.tale_shot(nm)
-
-# 지난 일(회상) 인물은 먹빛으로 눌러 그린다
-const PAST_TINT := Color(0.12, 0.16, 0.28, 0.62)
-func _tint(id: String, c: Color) -> void:
-	var a = d.actors.get(id)
-	if a != null and a.ch._mat != null: a.ch._mat.set_shader_parameter("flash", c)
-
-# ---------------------------------------------------------------------------
-# 사흘 전 고갯길(FIXED mother_harmed) — 광주리를 보거나 첫 조우 뒤, 늦어도 밤이 되기 전에 한 번.
-# 해치는 순간은 보이지 않는다: 떡을 하나씩 내주며 걷는 뒷모습 → 서낭당 앞 → 암전 → 광주리 굴러떨어지는 소리.
-# ---------------------------------------------------------------------------
-func pass_memory() -> void:
-	if f("beat_mother_harmed"): return
-	flag("beat_mother_harmed_running")
-	var back := Vector2(d.main.player_pos.x, d.main.player_pos.z)
-	var face: String = d.main.player.facing
-	var hour: float = d.main.hour
-	d.cutscene(true)
-	await d.ui.fade(true, 0.6)
-	d.teleport_to("cake_3", "up")   # 인물은 플레이어 140m 안에서만 그린다
-	d.set_hour(18.4)
-	d.spawn_actor("mother_past", "ricecake_mother", "cake_1", "up", "떡장수", "")
-	d.spawn_actor("tiger_past", "tiger", [-3168.5, -168.0], "left", "", "")
-	await d.get_tree().process_frame
-	_tint("mother_past", PAST_TINT); _tint("tiger_past", PAST_TINT)
-	d.camera({ "focus": "cake_2", "pitch": 38.0, "distance": 24.0 })
-	await d.wait(0.3)
-	await d.ui.fade(false, 0.8)
-	await d.ui.caption("사흘 전 해질녘, 이 고갯길.", 2.2)
-	await d.move_actor("mother_past", ["cake_2"], 1.5, "walk", "idle")
-	d.face_actor("tiger_past", null, "mother_past")
-	await d.ui.caption("숲에서  “떡 하나 주면 안 잡아먹지.”", 2.6)
-	await _shot("mother_pass")
-	await d.ui.caption("떡장수는 광주리에서 떡 하나를 던져 주고 걸음을 재촉한다.", 2.4)
-	d.move_actor("tiger_past", ["cake_2"], 1.4, "walk", "idle")
-	await d.move_actor("mother_past", ["cake_3"], 1.7, "walk", "idle")
-	await d.ui.caption("다음 굽이에서도  “떡 하나 주면 안 잡아먹지.”", 2.4)
-	d.camera({ "focus": "basket", "pitch": 38.0, "distance": 22.0 })
-	d.move_actor("tiger_past", ["cake_3", "torn_skirt"], 1.8, "walk", "idle")
-	await d.move_actor("mother_past", ["torn_skirt", "basket"], 1.8, "walk", "idle")
-	await d.ui.caption("서낭당 앞. 광주리에 떡이 하나도 남지 않았다.", 2.2)
-	await d.move_actor("tiger_past", ["blood"], 2.6, "walk", "idle")
-	await d.ui.fade(true, 0.5)
-	d.despawn_actor("mother_past"); d.despawn_actor("tiger_past")
-	d.shake(0.25, 0.5)
-	await d.ui.caption("광주리가 굴러떨어지는 소리. 그 뒤로 고갯길은 조용해졌다.", 2.8)
-	beat("mother_harmed")
-	S.flags.erase("beat_mother_harmed_running")
-	d.learn_clue("pass_memory", true)
-	d.set_hour(hour)
-	d.teleport_to(back, face)
-	d.camera(null)
-	await d.wait(0.3)
-	await d.ui.fade(false, 0.8)
-	d.cutscene(false)
-	d.journal_note("사흘 전 고갯길")
 
 # ---------------------------------------------------------------------------
 # 밤의 준비
@@ -1321,8 +1751,12 @@ func summary() -> Array:
 	var t := (", ".join(bits) + ".") if not bits.is_empty() else ""
 	if S.has_clue("tracks"): t += (" " if t != "" else "") + "사람 발자국은 고갯마루에서 끊기고, 큰 짐승의 발자국만 이어진다."
 	if t != "": p.append(t)
-	if f("first_encounter"): p.append("해질녘 고갯마루 아래 숲에서 그것을 보았다. 범이다.")
-	if S.has_clue("pass_memory"): p.append("사흘 전 고갯길 — 떡장수는 고개마다 떡을 내주며 걸었고, 서낭당 앞에서 돌아오지 못했다.")
+	if f("first_encounter"): p.append("해질녘 고갯마루에서 범을 보았다. 뒤에서 덮쳤다가 물러나 숲으로 사라졌다.")
+	# §23 어머니의 과거 장면은 적지 않는다(옛 저장의 회상 기록만 그대로 보인다)
+	if S.has_clue("pass_memory") and not f("past_scene_seen"): p.append("사흘 전 고갯길 — 떡장수는 고개마다 떡을 내주며 걸었고, 서낭당 앞에서 돌아오지 못했다.")
+	if S.has_clue("flour_prints"): p.append("방앗간 밀가루 바닥에 큰 발자국. 앞발 자국만 유난히 하얗다.")
+	if f("link_inferred"): p.append(LINK_LINE)
+	if f("tiger_house_suspected"): p.append("흰 발자국이 외딴집 쪽으로 이어진다. " + PURPOSE_LINE)
 	var o := String(S.flags.get("pending_detail", S.vars.get("CASE_NAMWON_DETAIL", "")))
 	if S.phase == "night" and o == "" and not f("climax_started"): p.append("밤이 되었다. 범은 오늘 밤 외딴집에 올 것이다. 숨기 전에 할 수 있는 일을 하자.")
 	if S.has_clue("door_tricks"): p.append(NIGHT_TEXT)

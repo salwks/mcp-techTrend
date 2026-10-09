@@ -6,7 +6,10 @@
 #   플레이어는 범을 죽이지 않는다. 세 갈래 A/B/C는 오누이가 다음 장면으로 갈 시간을 버는 방법이다(CASE_NAMWON_OUTCOME은 그대로 A/B/C).
 # v3.2(seolhwa/docs/scenario/seolhwarok_NAMWON_v3.2_scenario.md, 착수 순서 3 — ACT 0~2): 여는 장면·이동/달리기/살펴보기 안내 ·
 #   주막 주모 묻기(choice·loop·when·flag — 새 엔진 없음) · 이겸 연결 · 역참 마부 · 외딴집 낮(이웃 아낙·오누이 세 물음·기도 복선·아궁이·함지).
-#   함지 회상(mother_flashback)은 없앴고, 밤은 주막 잠이 아니라 외딴집에서 해 지기를 기다려 넘어간다(ACT 3+는 아직 옛 흐름).
+#   함지 회상(mother_flashback)은 없앴고, 밤은 주막 잠이 아니라 외딴집에서 해 지기를 기다려 넘어간다.
+# v3.2 착수 순서 4 — ACT 3~5(§15~§30): 고갯길 단서(6~8m 먹빛·발견 때 카메라 잠깐 기울임·떡 셋의 말·치맛자락 인서트·피·발자국 따라가기·
+#   서낭당 광주리 CAMERA 3A) → 어머니의 과거 장면(CAMERA 3B, 기록하지 않음) → 첫 조우(트리거·공포·CAMERA 4A·전투 배우기 K·L) →
+#   포수 물음 → 방앗간 물음·밀가루 바닥 → 연결 추론(§29) → 외딴집 쪽 흰 발자국(§30, 목적이 '보호'로). ACT 6+는 아직 옛 흐름(dusk_wait 다리).
 # ID: CHARACTER/ITEM/PROP_MASTER v1.0.
 #
 # 자리(게임 좌표 x,z — JL_NAMWON_UNBONG): 남원 동문 밖 주막 → 읍성 → 북문 → 북쪽 어귀(장승·쉼터, 포수) → 고개(서낭당) →
@@ -70,20 +73,27 @@ static func data() -> Dictionary:
 			# v3.2 §12 — 들은 대로만. 흉내(K_MIMIC)라고 아직 정하지 않는다
 			"voice_at_night": { "title": "어젯밤의 목소리", "text": "문밖에서 어머니를 닮은 목소리가 들렸다.", "kind": "heard", "by": "누이" },
 			# 수량이 아니라 뜻이 자란다(§15): 하나 → 같은 간격으로 이어짐 → 서낭당 빈 광주리에서 끝남
-			"cakes": { "title": "고갯길의 떡", "text": "떡이 산길에 떨어져 있다. 둘레 흙을 큰 코가 파헤쳤다.", "kind": "fact",
-				"text_if": [["fn('cakes_found') >= 2", "같은 떡이 일정한 간격으로 이어져 있다. 고개 쪽으로 간다. 둘레 흙마다 큰 코가 파헤친 자국."],
-					["fn('cakes_found') >= 2 and c('basket')", "같은 떡이 굽이마다 이어지다가, 고갯마루 서낭당 앞 빈 광주리에서 끝난다."]] },
-			"torn_skirt": { "title": "찢어진 치맛자락", "text": "덤불에 걸린 쪽빛 치맛자락. 네 줄로 길게 찢겼다.", "kind": "fact" },
-			"blood": { "title": "마른 핏자국", "text": "길가 돌에 검붉은 자국. 사흘은 지난 빛이다.", "kind": "fact" },
-			"tracks": { "title": "끊긴 짚신 자국", "text": "사람의 발자국 외에 큰 짐승 흔적이 섞여 있다. 짚신 자국만 고갯마루에서 끊긴다.", "kind": "fact" },
-			"basket": { "title": "서낭당 앞 빈 광주리", "text": "엎어진 광주리. 떡은 한 조각도 없다. 머리에 받치던 수건이 곁에 떨어져 있었다.", "kind": "fact" },
-			"flour_sack": { "title": "찢긴 밀가루 자루", "text": "방앗간 자루가 갈라졌다. 가루는 먹지 않고 흩뜨리기만 했다고 한다.", "kind": "heard", "by": "방앗간 주인" },
-			"flour_prints": { "title": "밀가루 속 큰 발자국", "text": "흰 가루를 밟은 발자국이 숲가 외딴집 쪽으로 간다. 앞발 자국만 유난히 하얗다.", "kind": "fact" },
-			"hunter_word": { "title": "포수의 말", "text": "“사람 가까이까지 내려오는 놈은 버릇이 든 거요.”", "kind": "heard", "by": "포수" },
+			# v3.2 §16~§18 — 하나 → 고갯길을 따라 이어짐(기록 갱신) → 하나씩 내놓은 것 같다 → 서낭당 빈 광주리에서 끝남(text_if는 맞는 마지막)
+			"cakes": { "title": "고갯길의 떡", "text": "떡 하나가 흙에 반쯤 묻혀 있었다. 둘레 흙에 짐승 코 자국.", "kind": "fact",
+				"text_if": [["fn('cakes_found') >= 2", "떡이 고갯길을 따라 이어진다."],
+					["fn('cakes_found') >= 3", "떡이 고갯길을 따라 이어진다. 떨어뜨린 게 아니라 하나씩 내놓은 것 같다."],
+					["fn('cakes_found') >= 2 and c('basket')", "떡이 고갯길을 따라 이어지다가, 서낭당 앞 빈 광주리에서 끝난다."]] },
+			"torn_skirt": { "title": "찢어진 치맛자락", "text": "덤불에 쪽빛 천. 네 줄로 길게 찢어져 있다. 칼자국은 아니다.", "kind": "fact" },
+			"blood": { "title": "마른 피", "text": "마른 피. 주변 풀이 한쪽으로 짓눌렸다.", "kind": "fact" },
+			"tracks": { "title": "겹친 발자국", "text": "짚신 자국과 큰 짐승 발자국이 겹쳐 있다. 짚신 자국은 끊기고 큰 발자국만 이어진다.", "kind": "fact" },
+			"basket": { "title": "서낭당 앞 빈 광주리", "text": "빈 광주리와 머리에 받치는 수건. 떡은 없다.", "kind": "fact" },
+			# v3.2 §28 — 주인은 본 것만 말한다(왜 그런지는 말하지 않는다)
+			"flour_sack": { "title": "찢긴 밀가루 자루", "text": "밤마다 방앗간 자루가 찢긴다. 먹지는 않는다.", "kind": "heard", "by": "방앗간 주인" },
+			"flour_prints": { "title": "밀가루 바닥의 큰 발자국", "text": "방앗간 바닥에 쏟아진 밀가루 위로 큰 발자국. 앞발 자국만 유난히 하얗다.", "kind": "fact" },
+			# v3.2 §30 — 흰 발자국이 외딴집 쪽으로(여기서 목적이 '보호'로 바뀐다)
+			"white_trail": { "title": "집 쪽으로 난 흰 발자국", "text": "흰 가루 묻은 큰 발자국이 숲가 외딴집 쪽으로 이어진다.", "kind": "fact" },
+			"hunter_word": { "title": "포수의 말", "text": "“산짐승이면 사람 냄새 나면 피하는 게 보통이오. 저건 안 그래.”", "kind": "heard", "by": "포수" },
 			"claw_marks": { "title": "큰 나무의 긁힌 껍질", "text": "사람 키를 넘는 곳까지 깊이 긁혔다. 매끈한 옹이 자리에선 미끄러진 자국뿐이다.", "kind": "fact" },
 			"territory": { "title": "숲속 빈터", "text": "뼈가 구르고 나무마다 발톱 자국. 어귀엔 타다 만 횃불 — 누군가 불로 몰아낸 적이 있는 것 같다.", "kind": "fact" },
-			"first_sight": { "title": "고갯마루 아래 숲의 그것", "text": "몸을 낮추고, 멈추고, 덮쳤다. 집채만 한 범이다.", "kind": "fact" },
-			# v3 — 원작 장면(FIXED_BEATS)을 보고 들은 대로. 회상만 추정(사흘 전 일이라 직접 보지 못했다)
+			# v3.2 §26 — 기록: 고갯마루의 범
+			"first_sight": { "title": "고갯마루의 범", "text": "나무 사이로 얼굴을 보았다. 뒤에서 덮쳐 왔고, 버티자 물러나 숲으로 사라졌다. 집채만 한 범이다.", "kind": "fact" },
+			# v3 — 원작 장면(FIXED_BEATS)을 보고 들은 대로.
+			# pass_memory는 옛 저장 표시용으로만 남긴다 — v3.2 §23 어머니의 과거 장면은 기록책이 '확인한 사실'로 적지 않는다(이제 얻지 않는다)
 			"pass_memory": { "title": "사흘 전 고갯길", "text": "고개마다 범이 “떡 하나 주면 안 잡아먹지” 하고 떡을 받아 갔다. 떡이 떨어진 서낭당 앞에서 떡장수는 돌아오지 못했다. 광주리와 수건만 남고 저고리는 없었다.", "kind": "guess" },
 			"disguise_seen": { "title": "어머니 옷을 걸친 범", "text": "자정 무렵, 떡장수의 저고리를 걸치고 머리에 수건을 쓴 범이 외딴집 문을 두드렸다.", "kind": "fact" },
 			"door_tricks": { "title": "문 앞의 손", "text": "“엄마 왔다. 문 열어라.” 목소리가 굵었다. 문틈으로 내민 손엔 털이 숭숭했다. 범은 물러갔다가 손에 밀가루를 발라 다시 내밀었고, 아이들은 문을 열었다.", "kind": "fact" },
@@ -97,9 +107,12 @@ static func data() -> Dictionary:
 			"two_lights": { "title": "하늘의 두 빛", "text": "그날 밤, 하늘에 빛 둘이 자리를 잡았다.", "kind": "fact" },
 		},
 		"rules": {
-			"K_FOOD": { "title": "먹이에 집착한다", "text": "떡 냄새를 따라 내려왔다. 먹을 것이 보이면 그쪽으로 간다.", "kind": "guess" },
-			"K_MIMIC": { "title": "사람 목소리를 흉내 낸다", "text": "아는 사람 목소리로 부른다. 목소리만으로는 믿을 수 없다.", "kind": "guess" },
-			"K_FLOUR": { "title": "앞발을 희게 칠한다", "text": "밀가루를 묻혀 사람 손인 척한다. 손을 보면 안다.", "kind": "guess" },
+			"K_FOOD": { "title": "먹이에 끌린다", "text": "떡을 하나씩 받아 간 것 같다. 먹을 것이 보이면 그쪽으로 갈지 모른다.", "kind": "guess" },
+			# v3.2 §29 — 정답으로 정하지 않는다: 목소리·밀가루·첫 조우를 다 쥐었을 때 '그럴 수도 있다'로만(밤에 직접 보면 글이 자란다)
+			"K_MIMIC": { "title": "아는 사람 목소리로 부르는지도 모른다", "text": "어젯밤 아이들이 들었다는 목소리와 이 범은 관계가 있을 수 있다. 아직 확인하지 못했다.", "kind": "guess",
+				"text_if": [["c('door_tricks')", "문밖에서 어머니 목소리로 아이들을 불렀다. 목소리만으로는 믿을 수 없다."]] },
+			"K_FLOUR": { "title": "앞발이 희다", "text": "밀가루를 밟은 앞발 자국만 유난히 하얗다. 왜 가루를 묻히는지는 모른다.", "kind": "guess",
+				"text_if": [["c('door_tricks')", "밀가루를 바른 앞발을 문틈으로 내밀었다. 손을 보면 안다."]] },
 			"K_CLIMB": { "title": "나무를 탄다", "text": "높이 오른다. 다만 미끄러운 줄기는 오르지 못한다.", "kind": "guess" },
 			"K_TERRITORY": { "title": "숲속 빈터가 제 영역", "text": "숲속 빈터가 제 자리다. 불을 들이대면 잠시 그쪽으로 물러난다.", "kind": "guess" },
 		},
@@ -161,6 +174,10 @@ static func _anchors() -> Dictionary:
 		"merchant_a": [-3160.4, -190.0], "merchant_b": [-3166.5, -239.5],
 		# 고개 너머
 		"mill": [-3176.0, -318.0], "miller": [-3179.6, -313.4], "flour": [-3178.6, -314.6],
+		# §30 방앗간 → 외딴집 흰 발자국(d_flour_trail 데칼과 같은 점)
+		"white_trail_a": [-3190.0, -327.0], "white_trail_b": [-3200.0, -338.0], "white_trail_c": [-3207.0, -346.5],
+		# §25 CAMERA 4A — 고갯마루 아래 숲 안쪽(범의 얼굴이 나무 사이로 잠깐)
+		"glimpse": [-3166.0, -227.4],
 		"house": [-3214.0, -357.0], "house_door": [-3214.0, -353.4], "hearth": [-3212.2, -356.4], "kneading": [-3216.0, -356.6],
 		"kid_in_a": [-3215.6, -356.4], "kid_in_b": [-3213.6, -356.2], "yard": [-3212.5, -346.0],
 		"big_tree": [-3205.5, -342.0], "claw": [-3205.5, -342.0], "perch_a": [-3205.0, -342.9], "perch_b": [-3206.2, -341.8],
@@ -248,6 +265,42 @@ static func kids_questions() -> Array:
 			{ "flag": "prayer_foreshadow" }]),
 	]
 
+# v3.2 §27 포수 — 첫 조우 뒤. 정답(흉내)은 말하지 않는다. 역할 나누기는 범이 집 쪽으로 간다고 짐작한 뒤(§30 tiger_house_suspected)
+static func hunter_questions() -> Array:
+	var after := "f('first_encounter')"
+	return [
+		_q("hq_before", "전부터 있었소?", after, [
+			{ "say": "포수", "lines": ["고개 너머 숲엔 전부터 범이 하나 있었소.", "그래도 사람 다니는 길까지 나온 적은 없었지."] }]),
+		_q("hq_people", "사람을 노리오?", after, [
+			{ "say": "포수", "lines": ["산짐승이면 사람 냄새 나면 피하는 게 보통이오."] },
+			{ "wait": 0.5 },
+			{ "say": "포수", "lines": ["저건 안 그래."] },
+			{ "clue": "hunter_word" }]),
+		_q("hq_where", "어디로 가는 것 같소?", after, [
+			{ "say": "포수", "lines": ["사람 사는 데 가까이 내려온 지 며칠 됐소.", "고개 아래 방앗간에서도 밤마다 뭔가 뒤진다더군."] }]),
+		_q("hm_where", "그놈은 어디 사오?", after, [
+			{ "say": "포수", "lines": ["고개 너머 서쪽 숲 어딘가. 거기까진 나도 안 들어가오."] }]),
+		# 결정 4 — 밤에는 포수와 역할을 나눈다(hunter_watch: 크게 밀리면 먼 데서 화살 한 번)
+		_q("hq_role", "그놈이 그 집으로 올지도 모르오.", "f('tiger_house_suspected')", [
+			{ "say": "포수", "lines": ["놈이 집으로 온다는 말이 맞다면 당신은 애들 곁에 있으시오."] },
+			{ "say": "포수", "lines": ["나는 고개 쪽 길을 막겠소. 놀라서 달아나면 그쪽으로 빠질 테니."] },
+			{ "flag": "hunter_watch" }]),
+	]
+
+# v3.2 §28 방앗간 주인 — 본 것만(왜 가루를 뒤집어쓰는지는 모른다)
+static func miller_questions() -> Array:
+	return [
+		_q("mq_since", "언제부터 그랬소?", "", [
+			{ "say": "방앗간 주인", "lines": ["사나흘 됐소. 처음엔 쥐인 줄 알았지."] }]),
+		_q("mq_what", "무슨 짐승 같소?", "", [
+			{ "say": "방앗간 주인", "lines": ["쥐새끼 발이 저렇게 크겠소?"] },
+			{ "face": "miller", "to": "flour" },
+			{ "say": "방앗간 주인", "lines": ["나도 밤엔 문 걸고 잔다오."] },
+			{ "face": "miller", "to": "player" }]),
+		_q("mq_eat", "곡식은 먹었소?", "", [
+			{ "say": "방앗간 주인", "lines": ["한 톨도 안 먹었소. 자루만 찢고 가루만 흩어 놓지."] }]),
+	]
+
 # ---------------------------------------------------------------------------
 # 인물(CHARACTER_MASTER) — at: 자리(국면별 사전 가능), when: 보일 조건, talk: 위에서부터 조건이 맞는 첫 묶음
 # ---------------------------------------------------------------------------
@@ -300,12 +353,19 @@ static func actors() -> Array:
 						{ "say": "포수", "lines": ["이거 가져가시오. 관솔 횃불이오."] }, { "give": TORCH }] }] },
 				{ "when": "f('woke_by_hunter') and not f('hunter_after_wake')", "steps": [
 					{ "flag": "hunter_after_wake" }, { "say": "포수", "lines": ["고갯길에 쓰러져 있길래 업어 왔소. 그놈을 봤구려."] }] },
-				{ "when": "not c('hunter_word')", "steps": [
-					{ "say": "포수", "lines": ["사람 가까이까지 내려오는 놈은 버릇이 든 거요."] }, { "clue": "hunter_word" }] },
+				# v3.2 §27 — 첫 조우 전: 고개 쪽 길 이야기만
+				{ "when": "not f('first_encounter')", "steps": [
+					{ "say": "포수", "lines": ["고개 쪽 길은 요새 아무도 안 넘으려 하오.", "넘을 거면 해 있을 때 넘으시오."] }] },
+				# 첫 조우 뒤 처음: 봤소? → 물음
+				{ "when": "not f('hunter_met')", "steps": [
+					{ "flag": "hunter_met" },
+					{ "say": "포수", "lines": ["봤소?"] },
+					{ "say": "나그네", "lines": ["큰 범이오."] },
+					{ "say": "포수", "lines": ["그놈이었군."] },
+					{ "choice": "", "loop": true, "options": hunter_questions() + [{ "label": "그만 가 보겠소.", "end": true }] }] },
 				{ "when": "true", "steps": [
-					{ "choice": "", "loop": true, "options": [
-						{ "label": "그놈은 어디 사오?", "when": "not f('hm_where')", "do": [{ "flag": "hm_where" },
-							{ "say": "포수", "lines": ["고개 너머 서쪽 숲 어딘가. 거기까진 나도 안 들어가오."] }] },
+					{ "say": "포수", "lines": ["해 지면 고개 쪽엔 얼씬도 마시오."], "when": "f('hq_role')" },
+					{ "choice": "", "loop": true, "options": hunter_questions() + [
 						{ "label": "횃불을 얻을 수 있겠소?", "when": "k('K_TERRITORY') and not has('%s') and not w('torch_lit')" % TORCH, "do": [
 							{ "say": "포수", "lines": ["아껴 쓰시오."] }, { "give": TORCH }] },
 						{ "label": "그만 가 보겠소.", "end": true }] }] },
@@ -313,9 +373,22 @@ static func actors() -> Array:
 		{ "id": "miller", "chr": "CHR_HUM_009", "kind": "miller", "name": "방앗간 주인", "at": "miller", "facing": "down",
 			"talk": [
 				{ "when": "v('CASE_NAMWON_OUTCOME') != ''", "steps": [{ "say": "방앗간 주인", "lines": ["범이 수수밭에 죽어 있었다지. 이제 자루 찢을 놈은 없겠구먼."] }] },
-				{ "when": "not c('flour_sack')", "steps": [
-					{ "say": "방앗간 주인", "lines": ["자루를 또 찢어 놨소. 먹지도 않고 흩뜨리기만 했어."] }, { "clue": "flour_sack" }] },
-				{ "when": "true", "steps": [{ "say": "방앗간 주인", "lines": ["쥐새끼 짓은 아니오."] }] },
+				# v3.2 §28 — 또 왔구먼 → 밀가루 바닥과 큰 발자국(mill_floor) → 물음. 왜 가루를 뒤집어쓰는지는 아무도 말하지 않는다
+				{ "when": "not f('mill_talked')", "steps": [
+					{ "flag": "mill_talked" },
+					{ "face": "miller", "to": "flour" },
+					{ "say": "방앗간 주인", "lines": ["또 왔구먼."] },
+					{ "face": "miller", "to": "player" },
+					{ "say": "나그네", "lines": ["뭐가 말이오?"] },
+					{ "say": "방앗간 주인", "lines": ["밤마다 자루가 찢어져."] },
+					{ "clue": "flour_sack" },
+					{ "call": "mill_floor" },
+					{ "say": "나그네", "lines": ["먹으려고 온 건 아닌데…"] },
+					{ "say": "방앗간 주인", "lines": ["그럼 대체 왜 가루를 뒤집어쓰는 건지."] },
+					{ "choice": "", "loop": true, "options": miller_questions() + [{ "label": "그만 가 보겠소.", "end": true }] }] },
+				{ "when": "true", "steps": [
+					{ "say": "방앗간 주인", "lines": ["오늘 밤엔 또 어쩌려나."] },
+					{ "choice": "", "loop": true, "options": miller_questions() + [{ "label": "그만 가 보겠소.", "end": true }] }] },
 			] },
 		{ "id": "oil_wife", "chr": "CHR_HUM_010", "kind": "farmwife", "name": "기름집 아낙", "at": "oil_shop", "facing": "down",
 			"talk": [
@@ -373,15 +446,17 @@ static func actors() -> Array:
 # ---------------------------------------------------------------------------
 static func objects() -> Array:
 	# §29 필드: interact_id(=id) · event_id · when · radius · prompt_type · highlight · first_hint · journal_entry · map_discovery · state_change
-	var cake := func(id: String, text: String) -> Dictionary:
+	# v3.2 §15 — 첫 사건이라 단서가 6~8m 안에 들면 먹빛이 비교적 강하게(mark_r 7) · 처음 그 반경에 들 때 카메라가 0.4초 기울었다 돌아온다(namwon_case.ambient)
+	#   떡 셋은 찾은 차례대로 §16·§17·§18의 말(namwon_case.cake_found — 어느 떡을 먼저 줍든 첫째·둘째·셋째)
+	var cake := func(id: String) -> Dictionary:
 		return { "id": id, "at": id, "label": "떨어진 떡 · 살펴보기", "radius": 2.0, "when": "not f('%s') and f('case_started')" % id,
 			"event_id": "S0004", "prompt_type": "INSPECT", "highlight": "tutorial_high", "first_hint": true, "journal_entry": "cakes",
-			"state_change": "CASE_NAMWON_GUIDANCE_STAGE",
-			"steps": [{ "flag": id }, { "examine": "떨어진 떡", "text": text }, { "clue": "cakes" }, { "give": TTEOK, "quiet": true },
+			"state_change": "CASE_NAMWON_GUIDANCE_STAGE", "mark_r": 7.0, "mark_a": 1.0,
+			"steps": [{ "flag": id }, { "call": "cake_found", "args": [id] }, { "clue": "cakes" }, { "give": TTEOK, "quiet": true },
 				{ "call": "check_food" }, { "call": "guidance", "args": [id] }] }
 	var path := func(o: Dictionary) -> Dictionary:   # 고갯길 단서(S0004) — 첫 사건 안내 단계
 		o.merge({ "event_id": "S0004", "prompt_type": "INSPECT", "highlight": "tutorial_high", "state_change": "CASE_NAMWON_GUIDANCE_STAGE",
-			"journal_entry": o.id })
+			"journal_entry": o.id, "mark_r": 7.0, "mark_a": 1.0 })
 		o.steps = o.steps + [{ "call": "guidance", "args": [o.id] }]
 		return o
 	return [
@@ -391,19 +466,18 @@ static func objects() -> Array:
 			"when": "f('s0000_started') and not f('roadside_seen')",
 			"event_id": "S0000", "prompt_type": "INSPECT", "highlight": "normal", "first_hint": true,
 			"steps": [{ "flag": "roadside_seen" }, { "caption": "오래 버려진 짚신이다.", "sec": 2.4 }] },
-		cake.call("cake_1", "길섶에 떡 하나가 반쯤 묻혀 있다. 둘레 흙을 큰 코가 킁킁댄 듯 파헤쳤다."),
-		cake.call("cake_2", "굽이를 돌자 또 떡 하나. 짐승 이빨 자국이 났는데, 먹다 말고 버렸다."),
-		cake.call("cake_3", "세 번째 떡. 고개마다 하나씩 던져 주며 걸음을 재촉한 것 같다."),
+		cake.call("cake_1"),
+		cake.call("cake_2"),
+		cake.call("cake_3"),
+		# §19 짧은 인서트(낮은 각도·FOV 48) · §20 피(음악이 끊긴다) · §21 발자국(카메라가 자국을 따라 2초) · §22 광주리(CAMERA 3A, 1.5초 정적 → §23 과거 장면)
 		path.call({ "id": "torn_skirt", "at": "torn_skirt", "label": "덤불에 걸린 천 · 살펴보기", "when": "not c('torn_skirt') and f('case_started')",
-			"steps": [{ "examine": "찢어진 치맛자락", "text": "덤불에 쪽빛 무명 치맛자락이 걸려 있다. 날카로운 것에 네 줄로 길게 찢겼다." }, { "clue": "torn_skirt" }] }),
+			"steps": [{ "call": "skirt_insert" }] }),
 		path.call({ "id": "blood", "at": "blood", "label": "길가의 얼룩 · 살펴보기", "when": "not c('blood') and f('case_started')",
-			"steps": [{ "examine": "마른 얼룩", "text": "길가 돌에 검붉은 얼룩이 번져 있다. 둘레 풀이 한쪽으로 쓸려 누웠다." }, { "clue": "blood" }] }),
+			"steps": [{ "call": "blood_scene" }] }),
 		path.call({ "id": "tracks", "at": "tracks", "label": "발자국 · 살펴보기", "when": "not c('tracks') and f('case_started')",
-			"steps": [{ "examine": "뒤섞인 발자국", "text": ["짚신 자국 곁에 손바닥보다 큰 둥근 발자국.", "짚신 자국은 고갯마루에서 끊기고, 큰 발자국만 숲으로 간다."] },
-				{ "clue": "tracks" }] }),
+			"steps": [{ "call": "tracks_pan" }] }),
 		path.call({ "id": "basket", "at": "basket", "label": "서낭당 앞 광주리 · 살펴보기", "when": "not c('basket') and f('case_started')",
-			"steps": [{ "examine": "빈 광주리", "text": ["서낭당 돌무더기 앞에 광주리가 엎어져 있다. 떡은 한 조각도 없다.", "곁에 무명 수건 하나. 광주리를 일 때 머리에 받치던 것이다."] },
-				{ "clue": "basket" }, { "call": "check_food" }, { "call": "pass_memory" }] }),
+			"steps": [{ "call": "basket_scene" }] }),
 		# S0003 집 안
 		# v3.2 §14 집 조사 — 흔적으로만. 함지에서 어머니가 나타나는 회상(mother_flashback)은 없앴다(§3.1)
 		{ "id": "hearth", "at": "hearth", "label": "아궁이 · 살펴보기", "radius": 1.6, "when": "not c('cold_hearth') and f('case_started')",
@@ -422,10 +496,10 @@ static func objects() -> Array:
 			"steps": [{ "choice": "아이들 곁에서 해 질 때까지 기다릴까.", "options": [
 				{ "label": "여기서 기다린다", "do": [{ "call": "night_fall" }] },
 				{ "label": "아직이다", "end": true }] }] },
-		# S0006 추가 조사
-		{ "id": "flour_prints", "at": "flour", "label": "흰 발자국 · 살펴보기", "radius": 2.4, "when": "not c('flour_prints') and f('case_started')",
-			"steps": [{ "examine": "밀가루 속 큰 발자국", "text": ["쏟아진 밀가루를 밟은 큰 발자국이 숲가 외딴집 쪽으로 이어진다.", "뒷발보다 앞발 자국이 유난히 하얗다."] },
-				{ "clue": "flour_prints" }, { "rule": "K_FLOUR" }] },
+		# S0006 추가 조사 — §28 방앗간 바닥(주인에게 묻지 않고 바로 살펴도 된다 · 주인과 말하면 mill_floor가 같은 것을 보인다)
+		{ "id": "flour_prints", "at": "flour", "label": "밀가루 바닥 · 살펴보기", "radius": 2.4, "when": "not c('flour_prints') and f('case_started')",
+			"steps": [{ "examine": "밀가루 바닥", "text": ["쏟아진 밀가루 위로 손바닥보다 큰 발자국이 찍혀 있다.", "뒷발보다 앞발 자국이 유난히 하얗다."] },
+				{ "call": "see_flour" }] },
 		{ "id": "claw", "at": "claw", "radius": 2.6, "label": "우물가 큰 나무 · 살펴보기",
 			"when": "f('case_started') and not c('claw_marks')",
 			"steps": [
@@ -480,9 +554,16 @@ static func triggers() -> Array:
 		{ "id": "neighbor_visit", "at": "house", "radius": 18.0,
 			"when": "ph('explore') and f('case_started') and not f('met_kids') and not f('first_encounter') and not f('neighbor_visit_seen')",
 			"steps": [{ "call": "neighbor_visit" }] },
-		# S0005 첫 조우: 고갯길 단서 셋 이상 + 고갯마루 아래, 또는 빈터에 먼저 들어섬
+		# S0005 첫 조우(v3.2 §24): 고갯길 단서 셋 이상 + first_seen에 다가감(보는 것이 아니라 반경) · 또는 빈터에 먼저 들어섬(범의 정체는 첫 조우가 필수)
 		{ "id": "s0005_pass", "at": "first_seen", "radius": 16.0, "when": "ph('explore') and f('case_started') and not f('first_encounter') and fn('path_clues') >= 3",
 			"event": "S0005" },
+		# v3.2 §28 — 방앗간에 가까이 오면 멀리서 가루 자루 바스락(한 번)
+		{ "id": "mill_rustle", "at": "mill", "radius": 26.0, "when": "ph('explore') and f('case_started') and not f('mill_talked')",
+			"steps": [{ "sfx": "flour_rustle", "at": "flour" }] },
+		# v3.2 §30 — 흰 발자국이 외딴집 쪽으로: 방앗간 바닥을 보았거나(밀가루 발자국) 범을 본 뒤, 자국이 시작되는 곳에 다가가면 짧게 따라간다
+		{ "id": "white_trail", "at": "white_trail_a", "radius": 7.0,
+			"when": "ph('explore') and f('case_started') and (c('flour_prints') or f('first_encounter')) and not f('tiger_house_suspected')",
+			"steps": [{ "call": "white_trail" }] },
 		{ "id": "s0005_territory", "at": "territory", "radius": 10.0, "when": "ph('explore') and f('case_started') and not f('first_encounter')", "event": "S0005" },
 		# 밤: 외딴집 가까이
 		{ "id": "night_arrive", "at": "yard", "radius": 16.0, "when": "ph('night') and not f('climax_started')", "steps": [
@@ -503,6 +584,7 @@ static func map_places() -> Array:
 		{ "id": "north_square", "name": "북쪽 어귀", "at": "north_square", "radius": 16.0 },
 		{ "id": "shrine", "name": "고갯마루 서낭당", "at": "shrine", "radius": 10.0 },
 		{ "id": "house", "name": "고개 너머 외딴집", "at": "house", "radius": 16.0 },
+		{ "id": "mill", "name": "물레방앗간", "at": "mill", "radius": 12.0 },
 		{ "id": "oil_shop", "name": "기름집", "at": "oil_shop", "radius": 8.0 },
 		{ "id": "clearing", "name": "숲속 빈터", "at": "territory_edge", "radius": 9.0 },
 	]
@@ -517,6 +599,9 @@ static func map_leads() -> Array:
 			"note": "S0002 주모 “고개 너머 사는 떡장수요” — 고갯길 단서를 하나라도 보면(S0004) 사라진다" },
 		{ "id": "nw_kids_house", "name": "고개 너머 외딴집", "at": "house", "when": "f('case_started')", "until": "f('met_kids')",
 			"note": "주모 “그 집 애들은 좀 보고 오셨소?” · 소문 rumor(고개 너머 사는 떡장수). S0003에서 만나면 사라진다" },
+		# v3.2 §27 포수 “방앗간에서도 밤마다 뭔가 뒤진다더군.” → 방앗간(가 보면·주인과 말하면 사라진다)
+		{ "id": "nw_mill", "name": "물레방앗간", "at": "mill", "when": "f('hq_where') and not ph('night')", "until": "f('mill_talked') or c('flour_prints')",
+			"note": "포수 hq_where — mill_talked·flour_prints면 사라진다" },
 		{ "id": "nw_night_house", "name": "외딴집(오늘 밤)", "at": "house", "when": "ph('night')", "until": "seen('S0007')",
 			"note": "외딴집에서 해 지기를 기다린 뒤(night_fall) — S0007 숨어 기다리면 사라진다" },
 		{ "id": "nw_to_hanyang", "name": "한양", "region": "GG_HANYANG", "when": "seen('S0010')", "until": "v('CASE_HANYANG_BOOKSHOP_COMPLETE') == true",
@@ -529,7 +614,8 @@ static func journal() -> Dictionary:
 		"unknowns": [
 			{ "text": "떡장수는 어디에서 사라졌는가.", "until": "c('tracks') or c('basket')" },
 			{ "text": "누구 또는 무엇을 만났는가.", "until": "f('first_encounter')" },
-			{ "text": "문밖에서 어머니 목소리로 부른 것은 누구인가.", "when": "c('voice_at_night')", "until": "k('K_FLOUR')" },
+			{ "text": "문밖에서 어머니 목소리로 부른 것은 누구인가.", "when": "c('voice_at_night')", "until": "c('door_tricks')" },
+			{ "text": "범은 왜 사람 사는 데까지 내려오는가.", "when": "f('first_encounter')", "until": "f('tiger_house_suspected')" },
 			{ "text": "범은 무엇에 끌려 사람 가까이까지 내려오는가.", "when": "f('first_encounter')", "until": "k('K_FOOD')" },
 			{ "text": "범을 잠시라도 집에서 떼어 놓을 수 있는가.", "when": "f('first_encounter')", "until": "k('K_TERRITORY')" },
 		],
@@ -572,7 +658,7 @@ static func props() -> Array:
 		{ "id": "d_claw", "decal": { "kind": "claw", "size": 0.9, "wall": true, "dy": 3.0, "ry": 0.0 }, "at": [-3205.5, -341.45] },
 		{ "id": "d_claw_low", "decal": { "kind": "claw", "size": 0.6, "wall": true, "dy": 1.2, "ry": 0.3 }, "at": [-3205.4, -341.45] },
 		{ "id": "d_flour", "decal": { "kind": "flour", "size": 1.8 }, "at": "flour" },
-		{ "id": "d_flour_trail", "trail": { "kind": "flour_paw", "points": ["flour", [-3190.0, -327.0], [-3200.0, -338.0]], "step": 0.9, "size": 0.48 } },
+		{ "id": "d_flour_trail", "trail": { "kind": "flour_paw", "points": ["flour", "white_trail_a", "white_trail_b", "white_trail_c"], "step": 0.9, "size": 0.48 } },
 		{ "id": "p_claw", "kit": "story/clue", "params": { "kind": "claw", "r": 0.42, "h": 3.4 }, "at": "big_tree" },
 		{ "id": "p_oil", "kit": "story/clue", "params": { "kind": "oil", "r": 0.42 }, "at": "big_tree", "when": "w('oil_on_tree') and not ph('done')" },
 		{ "id": "p_oil_jars", "kit": "story/clue", "params": { "kind": "oil_jars" }, "at": "oil_jars" },
@@ -654,21 +740,18 @@ static func events() -> Dictionary:
 			{ "choice": "", "loop": true, "options": kids_questions() + [{ "label": "문 꼭 걸고 있거라.", "end": true }] },
 		]),
 		# S0004·S0006·S0008은 장면 하나가 아니라 조사 대상·선택이 모인 구간 — 기록용(단서·결말을 고르면 seen에 남는다)
-		"S0004": _ev("S0004", "사건 기록 생성 뒤 고갯길", "고갯길(떡 셋·치맛자락·핏자국·발자국·서낭당 광주리)", "낮", "순서 없이 조사(3개 이상이면 첫 조우 가능). 광주리(또는 첫 조우 뒤)에서 사흘 전 고갯길 회상 — FIXED mother_harmed",
+		"S0004": _ev("S0004", "사건 기록 생성 뒤 고갯길", "고갯길(떡 셋·치맛자락·핏자국·발자국·서낭당 광주리)", "낮", "순서 없이 조사(3개 이상이면 첫 조우 가능). 서낭당 광주리에서 어머니의 과거 장면(§23, 기록하지 않음) — FIXED mother_harmed",
 			"-", "-", []),
-		"S0006": _ev("S0006", "첫 조우 뒤(선택)", "방앗간·포수·기름집·헛간·큰 나무·숲속 빈터", "낮~해질녘", "추가 조사·준비(참기름·떡·횃불)",
+		"S0006": _ev("S0006", "첫 조우 뒤(선택)", "방앗간·포수·기름집·헛간·큰 나무·숲속 빈터", "낮~해질녘", "포수·방앗간 주인에게 묻는다 · 연결 추론(§29) · 외딴집 쪽 흰 발자국(§30) · 준비(참기름·떡·횃불)",
 			"-", "-", []),
 		"S0008": _ev("S0008", "S0007 — 오누이가 쪽문으로 빠져나가고 범이 뒤쫓을 때", "외딴집 마당 / 숲속 빈터 어귀", "밤", "범 앞을 막아선다 / 디딤돌의 참기름 / 떡과 횃불로 잠시 꾄다",
 			"A 막아섬(죽지 않는 범과 싸워 시간을 번다) · B 디딤돌 함정(미끄러진 범 + 짧은 싸움) · C 떡과 횃불(잠시 꾀었다가 범이 돌아온다) — 어느 쪽이든 오누이는 나무에 오른다",
 			"CASE_NAMWON_OUTCOME = A | B | C (범을 죽이지 않는다)", []),
-		"S0005": _ev("S0005", "고갯길 단서 3개 이상 + 고갯마루 아래 숲", "고갯마루 아래 숲", "해질녘", "싸우거나 물러난다(보스전 아님)",
+		# v3.2 §24~§26: 음악·새소리가 끊기고(발걸음과 바람만) 무언가 오른쪽·왼쪽 나무 사이로 지나간다 → CAMERA 4A 얼굴 1초 → 그르렁 → 뒤에서 덮친다 →
+		#   전투 배우기(K 회피·L 막기는 실제로 해야 끝) — 목표는 범을 죽이는 게 아니라 버티기(약 22초) 또는 한쪽 체력이 꽤 깎임 → 범이 물러나 숲으로 사라진다
+		"S0005": _ev("S0005", "고갯길 단서 3개 이상 + first_seen에 다가감", "고갯마루 아래 숲", "해질녘(지금 시각에서 저녁 쪽으로)", "버틴다 · 피한다(K) · 막는다(L) · 물러난다(보스전 아님)",
 			"범이 물러남 / 플레이어가 물러남 / 쓰러져 포수에게 업혀 옴", "-", [
-			{ "flag": "first_encounter" }, { "cutscene": true },
-			{ "time": 17.4 },
-			{ "caption": "바람이 멎는다. 새소리도 그쳤다.", "sec": 2.2 },
-			{ "cutscene": false },
-			{ "combat": "pass_wood", "mods": { "firstEncounter": true }, "allow_flee": true, "retreat_at": { "hpRatio": 0.9, "seconds": 25.0 }, "store": "first" },
-			{ "call": "after_first_encounter" },
+			{ "call": "first_encounter" },
 		]),
 		# S0007 밤의 문(FIXED tiger_disguise · door_tricks · kids_escape_tree 시작) → S0008 시간을 번다 → S0009 동아줄과 두 빛 → S0010 아침(빈 집) → S0011 밤하늘
 		"S0007": _ev("S0007", "밤, 외딴집에서 숨어 기다린다", "외딴집 마당", "밤", "숨어서 지켜본다(문 앞 속임수에 맞서는 것은 오누이)", "-", "-", [
