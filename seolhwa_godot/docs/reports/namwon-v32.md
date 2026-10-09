@@ -261,3 +261,150 @@ ONBOARDRULE H가 보는 것: K·L은 핵심 안내 · 몸 낮춤 전엔 안내 �
 4. **K_FLOUR 글.** 예전 “밀가루를 묻혀 사람 손인 척한다”는 정답을 말하는 글이라 “앞발이 희다 — 왜 가루를 묻히는지는 모른다”로 낮췄고, 밤에 직접 보면 글이 자란다. 해결법 C의 '???' 조건(버릇 둘 이상)은 그대로다.
 5. **포수의 역할 나누기 시점.** 결정 4의 대사를 흰 발자국 뒤 낮의 물음으로 넣었다. 그래서 `hunter_watch`가 낮에 설 수 있다(밤의 화살 fail-forward가 더 자주 켜진다). ACT 6의 경고 장면으로 옮길지 정해야 한다.
 6. **받아밀기를 열 사건.** 지금은 어느 사건도 열지 않는다(TODO).
+
+---
+
+## 착수 순서 5 — ACT 6~9 (2026-10-09)
+
+해 질 무렵 귀환 → 경고 → 준비 → 밤 기다리기 → “엄마 왔다”(첫 노크·노크 사이·둘째 노크) → 탈출 → 전신 공개 → 시간 벌기 A/B/C → 나무 → 우물 → 참기름·도끼 → 마지막 개입까지다. ACT 10 기도부터(동아줄·범의 기도·추락·두 빛·아침·결말)는 예전 코드 그대로이고, 새 ACT 9 끝에서 거기로 넘긴다(`rope_night`는 이제 기도부터 시작한다).
+옛 다리(`dusk_wait` → `night_fall`)·옛 밤 들머리(“해가 지고, 달이 떴다…”·`night_arrive` 트리거)·옛 `climax()`·§3.3 정답 문장(“…네 발로 걷는다.”)은 없앴다.
+
+### 1. 함수 나누기 (§75)
+
+`night_door()`(S0007)가 차례로 부른다: `night_arrival` → `first_knock`(7A·7B·7C) → `between_knocks` → `second_knock` → `kids_escape` → `reveal_tiger` → `buy_time`(A/B/C + `_shove`) → `tree_scene` → `axe_climb` → `last_stand` → S0009 `rope_night`(기도부터, 기존) → S0010 → S0011 → 결말.
+해 질 무렵은 `dusk_return`(트리거 `dusk_return`, 마당 15m) · `_hunter_role` · `wait_at_hide`(hide_spot 물건 `night_wait`).
+
+### 2. 바뀐 흐름
+
+| 장면 | 지금 |
+|---|---|
+| §31 귀환 | 조건 `night_ready`: 사건 · 첫 조우 · 오누이를 만남 · (흰 발자국 또는 연결 추론, 둘 다 놓쳤으면 단서 12개). 마당 15m에 들면 짧은 암전 뒤 18.9시(이미 저녁이면 그대로) 문 앞. 과거 장면을 못 봤으면 먼저 본다(원작 순서). 누이 “찾았어요?” → 아직 못 찾았다 / 고갯길에서 흔적을 찾았다 / (대답하지 않는다). 어느 대답도 어머니 일을 확정하지 않는다. 흔적 대답에는 누이가 아우를 한 번 보고 “…알겠어요. 아우 앞에선 거기까지만 해 주세요.”, 침묵에는 “말하기 어려운 거면, 나중에 해 주세요.”(누이가 영리하게 읽는다) |
+| §32 경고 | 원문 그대로(“오늘 밤 누가 와도 문부터 열지 마라.” ~ 누이 “알았어.”) → `kids_warned` |
+| 결정 4 포수 | 낮의 물음 `hq_role`을 없애고 여기로 옮겼다. 포수가 흰 발자국 길로 걸어와 “놈이 집으로 온다는 말이 맞다면 당신은 애들 곁에 있으시오.” “나는 고개 쪽 길을 막겠소.” → “크게 밀리거든 소리를 지르시오. 멀리서라도 한 대는 쏘겠소.”(화살 복선) → `hunter_watch` · `hunter_role_dusk`, 방앗간 쪽으로 사라진다 |
+| §33 준비 | `dusk_prep` 동안 기존 물건 쓰기만: 디딤돌 참기름(B) · 오솔길 어귀 떡(먹이 버릇 필요) · 마당 횃대 불/횃불(C). 준비 중 시계는 22.5시를 넘지 않는다. 기록 한 줄 “해가 진다. 오늘 밤은 아이들 곁에 있어야 한다…” |
+| §34 기다리기 | hide_spot “숨어서 기다린다” → “기다린다. / 아직 준비할 것이 있다.” → 23:30 |
+| 갈래 정하기 | 준비대로 자동: 디딤돌 기름 → B, (떡 + 먹이 버릇 + 불) → C, 아무것도 없으면 A. C 조건에서 K_TERRITORY는 뺐다(요청 그대로). 해결 방법 칸 C 글도 “코를 돌려 놓고 횃불로 나무 쪽 길을 막는다”로 |
+| 7A | 문과 숨은 플레이어 일부(문 쪽 34%) · pitch 34 · 거리 17 · FOV 36. **조작을 쥔 채**(숨은 자리 3.2m 둘레 — 넘으면 “…지금 나서면 안 된다.”). 음악·환경음 hush, 바람(SFX 버스), 6초 정적 → `footstep_heavy` 넷(보이지 않음) → 멈춤 → `knock`(밤 음악 끊김) → 자막으로 “얘들아.” “엄마 왔다.” 누이 “…엄마?” |
+| 7B | 방 안(아이들 쪽)에서 닫힌 창호를 본다(아래 6). 창호에 사람 같지만 너무 크고 넓은 그림자. 대사 원문 · 2초 정적 |
+| 7C | 문지방 인서트(FOV 50, 낮은 시선) — 털 난 앞발 일부만(새 소품 `hairy_paw`: 털 뭉치·발톱). 누이 “…엄마 손 아니야.” ~ “아니야.” → 그림자가 옆으로 빠지며 옅어지고 발소리가 멀어진다 |
+| §39 노크 사이 | 컷신을 끝내고 평소 고정 시점·조작. 15~30초(15초 뒤 숨은 자리 4m 안이거나 자리를 안 떴으면 둘째 노크, 30초면 무조건). 방앗간 33m 안: 방앗간과 앞길에서 `flour_rustle`, 흩날리는 가루, 몸 모양이 읽히지 않는 어두운 덩어리가 지나간다(가루를 바르는 장면 없음). 문 6.5m 안: 자막 “문 열지 마.” “네.” 멀리 가 있으면 문소리에 짧은 암전 뒤 숨은 자리로. 밤 음악은 낮게 다시 |
+| §40 둘째 손 | `knock` · “얘들아.” “엄마다.” → 방 안 시점 → 흰 앞발 인서트 + 가루가 조금 떨어진다 → 아우 “봐, 엄마 손이잖아.” → 1.4초(누이가 가루를 본다) → “…엄마.” “왜 그러니.” “잠깐만 기다려.” → 누이 “(작게) 뒷문으로 가.” — 플레이어에게는 아무것도 묻지 않는다 |
+| §41 탈출 | 누이 “엄마, 우리 뒷간 좀 다녀올게.” “어서 다녀오너라.” → `kids_escape_started` → 쪽문 디딤돌 → kids_run_1 → kids_run_2 |
+| 전신 공개 | `reveal_tiger`에서 처음: 문 앞에 등을 보이고 선 범(어머니 저고리·수건, 변장 그림) · 자막 “어머니의 저고리와 수건을 걸친 범.” → 문을 밀고 들어감 → “빈 방.” → 열린 쪽문 곁 → 저고리를 뜯어 던지고(소품 jeogori 포물선, 그림 변장 해제) 그르렁 → 아이들은 나무 밑으로 |
+| §42 B | 디딤돌을 딛고 내려서다 미끄러짐(동쪽 낮은 자리 짧은 시점, 흔들림은 설정대로) → 약 15초 싸움(첫 2.5초 기절) |
+| §43 C | 떡 냄새에 코가 돌아간다 → **조작**: 손에 든 횃불(불빛)로 범과 나무 사이(`torch_block`)를 막는다(14초) → 범이 귀를 젖히고 물러남 → “…오래가지 않았다.” 돌아온다. 싸움 없음 |
+| §44 A | 약 25초 버티기 |
+| 싸움 공통 | `undying` · retreat_at {초, 범 체력 40%}. 범이 물러나기 시작하면 걸어 나가기를 기다리지 않고 1.4초 뒤 판을 닫는다. **포수의 화살(fail-forward)**: `hunter_watch`이고 내 체력이 30% 아래로 떨어지면 판 밖(고개 쪽 어둠)에서 화살 한 번 → 범 비틀거림, 내 체력 30%까지, 1.8초 뒤 물러남. 화살보다 먼저 쓰러졌으면 쓰러진 뒤 포수 “이놈아, 이쪽이다!” |
+| §45 밀쳐냄 | 어느 갈래든 끝에: 범이 앞발로 쳐 플레이어가 3~4m 뒤로(곧장 뒤가 막혔으면 비껴서 가장 멀리) → 쓰러졌다 곧 일어남(기절 없음) → 범은 나무 쪽을 킁킁 |
+| ACT 8 목표 | 기록 한 줄 “아이들이 나무까지 갈 시간을 벌어야 한다.”(알림 한 번 + 줄거리) |
+| §46 우물 | 범이 tiger_well로 · 우물 시점 · “우물 물 위에 오누이 얼굴이 비친다.” · 범 “거기 숨어 있었구나.” · 아우 “킥.” · 범이 위를 본다 |
+| §47~§48 | 범 “어떻게 거기까지 올라갔느냐?” 누이 “참기름을 바르고 올라왔지.” → 부엌 쪽에 다녀와 줄기에 바름 → 오르다 미끄러짐 두 번 · “또 미끄러진다.” → “바보.” “쉿.” “도끼로 찍고 올라오면 되는데.” “아우야!” → 범이 헛간 쪽을 본다 |
+| §49 도끼 | 헛간에 다녀와 `axe_hit` 세 번, 한 칸씩(0.5m) 오른다. 흔들림 0.05(설정이 끄면 없음) |
+| §50 마지막 개입 | 범이 줄기에서 뛰어내려 → **조작**(마당 싸움 약 17초 — 활·환도·떡·몸). 죽지 않는다 → 다시 나무로 올라 기도(ACT 10)로 |
+
+### 3. 화면 원칙 지킨 것
+
+- 카메라 고정. “보면” 대신 모두 반경: 방앗간 33m · 문 6.5m · 마당 15m.
+- 문이 열리기 전 범의 전신 없음: 발소리·목소리(자막)·창호 그림자(평면 그림)·문틈 앞발 소품·흐린 덩어리만. 범 그림(`tiger`)은 `reveal_tiger`에서 처음 만든다.
+- 소리: knock · footstep_heavy · flour_rustle · wind · tiger_growl · fall_impact · axe_hit · `Sound.hush`(7A 정적) · bgm_night_drone(0.35, 노크 때 끊고 노크 사이에 다시).
+- K·L 안내: 첫 조우에서 못 끝냈으면 마당 싸움에서 다시 뜬다(기존 동작 그대로). 첫 조우 물러남 조건은 그대로.
+
+### 4. 조작 비율
+
+`namwon_case.ctl_time`이 귀환부터 기도 직전까지 조작/연출 시간을 센다(싸움은 조작으로).
+- 헤드리스 시험(대사가 짧게 넘어감): A 71% · B 63% · C 58%.
+- 창 모드 실제 길이(B, 대사를 읽는 시간만큼): 조작 47초 / 연출 150초. 시험은 준비 시간을 순간이동으로 몇 초에 끝낸다. 시나리오의 준비 5~10분을 넣으면 (47+300)/(197+300) ≈ 70%, 10분이면 약 80%다.
+- 문 앞 장면은 한 컷신이 아니다: 7A 정적·목소리 동안 조작 → 7B·7C 연출 → 노크 사이 15~30초 조작 → 둘째 노크 연출.
+- 밤만 떼어 보면(준비 제외) 연출이 더 많다. 대사가 많은 7B·둘째 손·나무 장면을 자막(조작 유지)으로 더 돌릴지는 정할 것 1.
+
+### 5. 저장(결정 6)
+
+`on_load`: `phase == night`이고 결말 변수가 비었으면 `_rollback_night()`.
+- 지운다: 밤 임시 플래그(climax_started·kids_in_tree·kids_gone·pending_*·yard_losses·hunter_helped·새 밤 플래그 전부), 밤 원작 장면 기록(beat_tiger_disguise~sun_moon, `beats` 문자열도), 지역 상태(kids_in_tree·oil_on_tree·sorghum_red·white_paw·hairy_paw), seen S0007~S0009.
+- 그대로: 단서·아이템·버릇·일반 진행·준비해 둔 것(디딤돌 기름·오솔길 떡·횃대 불 — 이미 물건을 썼다).
+- 옛 밤(dusk_prep 없음): `night_ready_legacy`를 세우고 18.6시 숨은 자리 → 곧 귀환·경고·포수·준비가 다시 돈다. 새 밤 도중: 21시 숨은 자리, 준비 상태 그대로.
+- 이른 저장·밤 전 저장은 손대지 않는다(continue:namwon-early 그대로 통과).
+
+### 6. 보고 고친 것(창 모드 화면)
+
+- 7B를 밖에서 문 가까이 찍으면, 문 앞에 서 있어야 할 몸이 화면에 없어서 그림자가 이상했다. 그래서 7B·7C·둘째 손은 **방 안(아이들 쪽)**에서 닫힌 창호를 보는 시점(`_room_view`, `CameraRig.shot`)으로 바꿨다. 아이들 뒷모습이 양옆, 그림자는 창호 한 짝에 비친다.
+- 방 안 등잔 발광 판이 카메라 바로 앞에서 문간을 하얗게 덮었다 → 이 시점 동안만 근처 발광 판을 끈다.
+- 카메라 12m 안 물체를 먹점으로 비우는 처리(occ_near)가 문 가까운 시점에서 집을 반투명으로 만들었다 → `set_occ_script`에 `near`(0이면 끔)를 더했다(`region_main.gd`, 다른 장면은 그대로).
+- 그림자가 처음엔 창호 뒤에 묻혀 안 보였다 → 열린 창호 한 짝의 안쪽 면에 붙이고(경첩 각 1.2rad), 크기는 한 짝(0.7×1.6)을 넘게(0.82×1.9).
+- 방앗간 쪽 그림자: 고정 시점에서는 방앗간이 화면 아래(카메라 쪽)라 방앗간 자리에 둔 가루·덩어리가 화면 밖이었다 → 플레이어 앞 4.5m 길목에 띄운다. 가루는 작은 알갱이 열 개로(처음엔 큰 공 여섯 개라 눈사람 같았다).
+- 디딤돌(B)·저고리 뜯기: 앞·위에서는 집 모서리와 지붕에 가렸다 → 동쪽 낮은 자리 각본 시점, 집 점무늬 끔.
+- C 횃불: 횃대 불 소품(높이 2.3m)이 땅속에 박혀 보였다 → 손에 든 짧은 횃불(막대·불·빛)로 바꿨다. 범과 플레이어가 한 화면에 들게 카메라를 물렸다.
+- 전신 공개: 옆모습은 범 얼굴이 먼저 읽혀 저고리가 묻혔다 → 문 앞에 등을 보이고 선 모습(등의 저고리·머리의 수건)으로 찍는다.
+- 화면 검토 때 남아 있던 이동 안내(순간이동으로 와서 안 끝난 것)는 검토 동안만 내렸다.
+
+남은 것: 미끄러짐(slip) 그림은 정면에서 일어선 꼴이라 “나뒹굴었다”보다 “일어섰다”로 읽힌다(새 프레임 없이 그대로). 우물 물 위 얼굴은 그림 없이 자막뿐이다. 오누이가 나무 위에 있을 때 우물 시점에서는 땅에 선 것처럼 보인다.
+
+### 7. 시험(차례로, 한 번에 하나)
+
+| 시험 | 결과 |
+|---|---|
+| `tools/story/validate_event_class.gd` | EVENTCLASS PASS checked=126 (exit 0) |
+| `tests/registry/case_registry_test.gd` | REGTEST PASS 47 (exit 0) |
+| `tests/audio/sound_test.gd` | SOUNDTEST PASS 38 (exit 0) |
+| `tests/onboarding/onboarding_rule_test.gd` | ONBOARDRULE PASS 64 (exit 0) |
+| `tools/story/map_leads_test.gd` | MAPLEADS PASS fixtures=50 (exit 0) — 준비 중·기다린 뒤 둘 더함 |
+| `tools/run_story_tests.sh` 전체(마지막 한 번) | **45/45 PASS**, SCRIPT ERROR 0, exit 0 — 새 `continue:namwon-climax` 포함 |
+
+`namwon:A/B/C`(`story_test.gd` `check_v32_night`)가 새로 보는 것:
+- §74 플래그 kids_warned · night_wait_started · first_knock_seen · hairy_paw_seen · tiger_withdrawn · white_paw_seen · kids_escape_started · kids_in_tree · hunter_watch(해 질 무렵에만, 낮엔 없음).
+- 노크 사이 조작이 실제로 돌아옴(`blocks_move` 거짓, free_move) · 15~30초 · 방앗간 쪽 가루 소리·덩어리 · 집 가까이 “문 열지 마.” “네.”
+- 문이 열리기 전 범 그림(이야기 인물·전투)이 한 프레임도 안 보임.
+- 누이가 탈출을 정함: “뒷문으로 가.” → “뒷간…” → 탈출 차례, 그 사이 플레이어 선택 없음.
+- 준비대로 갈래 · 범을 죽인 싸움 없음 · 각 갈래 밀쳐냄 2.9~4.0m(A·B·C 모두 3.4m) · A 약 25초(26.5) · B 6~18초 · C 싸움 없이 횃불.
+- fail-forward: B에서 싸움 6초쯤 체력 20으로 만들면 화살이 정확히 한 번(A·C에는 화살 없음).
+- §31 대답 갈래(A 아직 못 찾았다 · B 흔적 · C 침묵), 귀환 대사에 죽음 확정 말 없음, §32 원문.
+- 우물·참기름·아우의 실수 원문, axe_hit 셋, 마지막 개입 싸움, ACT 10으로 넘김, 소리(knock·footstep_heavy·wind·flour_rustle).
+- 두 소스(case·data)에 “네 발로 걷는다”가 없음 · 옛 다리(rest·night_fall·climax·dusk_wait·night_arrive) 없음.
+- FIXED_BEATS 열 개 순서(tiger_disguise=첫 노크, door_tricks=둘째 손, kids_escape_tree=아이들이 나무에)와 결말 A/B/C는 예전 판정 그대로 통과.
+
+`namwon:onboard`: 포수 물음에 역할 나누기가 없고 낮에는 `hunter_watch`가 서지 않음 · 귀환이 열림 · dusk_wait·night_fall 없음.
+
+`continue:namwon-climax`(새, `story/namwon/test_climax_save.json` — 꾸민 옛 v3 밤 절정 도중 저장: climax_started·kids_in_tree·white_paw·pending_outcome·beat 넷): 시작 메뉴 → 이어 하기 → `rollback=old_night` · phase explore · 임시 플래그·지역 상태 지움 · beats는 mother_harmed만 · 단서 16개·아이템 그대로 · 디딤돌 기름 그대로 · S0007 다시 · 귀환·경고·포수가 다시 돌고 dusk_prep · 18.6시 · 오누이가 집에 · 이어서 E 말 걸기·고을 사람.
+
+**vtext.gd p_size 엔진 오류**: 원인은 `vtext.draw/advance`가 글꼴 크기 `int(fs)`가 0일 때 `get_string_size`를 부른 것(헤드리스 창 크기). 크기 0이면 그리지 않고(보일 것이 없다) 넓이는 비율로 돌려주게 했다. `namwon:onboard` 로그의 154줄이 0줄이 됐다.
+
+### 8. 화면 (창 모드, 시험 저장 `user://st_shots_act69_*.json` — 찍은 뒤 지움)
+
+`seolhwa_godot/shots/namwon_v32_act69/`(git 밖). `B/`는 처음부터 끝까지 B 갈래 한 판(실제 길이, `--noreview`), `NA/ NB/ NC/`는 고친 뒤 밤만 다시 찍은 것(`--storytest=namwon:NA|NB|NC --nightstop=<플래그>` — 준비를 마친 상태에서 S0007부터, 화면 다듬기 전용).
+
+| 장면 | 파일 |
+|---|---|
+| 귀환 경고 | `B/namwon_B_dusk_warning.png` |
+| 포수 역할 나누기 | `B/namwon_B_hunter_role.png` |
+| hide_spot 기다리기 | `B/namwon_B_hide_wait.png` |
+| 7A 정적 | `NB/namwon_B_7a_still.png` |
+| 7B 그림자 | `NB/namwon_B_7b_shadow.png` |
+| 7C 앞발 | `NB/namwon_B_7c_paw.png` |
+| 노크 사이 조작 | `NB/namwon_B_between_free.png`, 방앗간 쪽 `NA/namwon_A_between_mill.png` |
+| 둘째 손(흰 앞발) | `NB/namwon_B_white_paw.png` |
+| 탈출 | `NB/namwon_B_escape.png` |
+| 전신 공개 | `NB/namwon_B_reveal.png`, 저고리 뜯기 `NB/namwon_B_tear.png` |
+| B 미끄러짐 | `NB/namwon_B_b_slip.png` |
+| C 횃불 | `NC/namwon_C_c_torch.png` |
+| A 싸움 | `NA/story_A_combat_house_yard.png` |
+| 밀쳐냄 | `NB/namwon_B_shove.png`, `NA/namwon_A_shove.png`, `NC/namwon_C_shove.png` |
+| 우물 | `B/namwon_B_well.png` |
+| 참기름 미끄러짐 | `B/namwon_B_oil_slip.png` |
+| 도끼 | `B/namwon_B_axe_climb.png` |
+
+### 9. 새·바뀐 플래그·자리·파일
+
+플래그(§74): `kids_warned` · `night_wait_started` · `first_knock_seen` · `hairy_paw_seen` · `tiger_withdrawn` · `white_paw_seen` · `kids_escape_started` · `kids_in_tree`(그대로). 그 밖에 `dusk_return_seen` · `dusk_prep` · `hunter_role_dusk` · `between_knocks_on`(잠깐) · `night_music_off` · `tiger_revealed` · `time_line` · `torch_block_on`(잠깐) · `hunter_arrow` · `tiger_shoved` · `last_stand_done` · `act10_started` · `kids_up_running`(잠깐) · `night_ready_legacy`(옛 밤 되돌림). 지역 상태 `hairy_paw`.
+지운 것: `climax_started`(새 흐름은 세우지 않는다 — 옛 저장 표시로만 읽는다), 물음 `hq_role`, 물건 `dusk_wait`·`house_door`(→ `night_wait`), 트리거 `night_arrive`, 함수 `climax`·`night_fall`·`resolve`·`yard_fight`·`fight_loop`·`lure`·`kids_night`·`warn_kids`·`wait_at_door`.
+자리: `torch_block` · `door_sill`. 소품 `p_hairy_paw`(새 clue kind `hairy_paw`), 흰 앞발은 문지방으로 옮겼다.
+고친 공용 파일: `story_director.move_actor`(화면 검토 `auto_real`에서는 걸음을 8배로 빨리 하지 않는다), `region_main.set_occ_script`(`near` 키), `vtext.gd`.
+
+### 10. 정할 것
+
+1. **조작 70%의 범위.** 귀환~기도 앞을 준비 시간까지 넣어 세면 준비 5분일 때 약 70%다. 밤만(준비 제외) 70%를 원하면 7B·둘째 손·나무 장면 대사를 자막(조작 유지, 카메라 고정)으로 돌려야 한다. 지금은 문 앞 대사는 연출(확인 키로 넘김)이고, 7A·노크 사이·싸움·C 횃불·마지막 개입만 조작이다.
+2. **7B·7C 시점.** 시나리오는 “문 가까이”라고만 한다. 밖에서 찍으면 그림자를 던지는 몸이 화면에 있어야 해서, 방 안(아이들 쪽) 시점으로 했다. 플레이어는 밖에 숨어 있는데 시점만 방 안이다. 괜찮은지.
+3. **갈래 고르기.** 준비한 것으로 자동으로 정한다(B가 C보다 먼저). 예전처럼 “막아선다 / 꾄다”를 고르게 할지.
+4. **C 조건의 K_TERRITORY.** 요청대로 떡 + 먹이 버릇 + 불로 했다(빈터를 몰라도 C). 옛 조건으로 돌릴지.
+5. **노크 사이 끝.** 15초 뒤 숨은 자리에 돌아오면 바로, 아니면 30초. 멀리 가 있으면 짧은 암전으로 숨은 자리에 데려온다.
+6. **귀환 조건의 안전장치.** 흰 발자국·연결 추론을 둘 다 놓치면 단서 12개로 열린다. 게임 시계가 저절로 흐르지 않아 “해 질 때”를 조건으로 쓸 수 없었다.
+7. **미끄러짐 그림**(정면에서 일어선 꼴)과 우물에 비친 얼굴 그림은 새 프레임이 있어야 나아진다.
