@@ -47,6 +47,7 @@ static func data() -> Dictionary:
 	return {
 		"case": {
 			"id": "namwon", "record_title": "산길의 실종", "EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F49", "CATALOG_ID": "JG01", "region": "JL_NAMWON_UNBONG", "outcome_var": "CASE_NAMWON_OUTCOME",
+			"requires": {},   # 첫 사건 — 요구 없음(C46 필수 키: 비어 있어도 키는 둔다. case_registry.unmet_key는 없을 때도 {}로 읽었다)
 			"start_hour": 9.5,
 			# v3.2 §8 CAMERA 1A — 이 사건 이야기 인물과 말할 때의 기준 카메라(플레이어와 인물 사이, 허리 위 클로즈업까지 가지 않는다)
 			"talk_camera": { "pitch": 38.0, "distance": 13.5, "fov": 38.0 },
