@@ -91,7 +91,7 @@ func _gather() -> void:
 			var at := Vector2(float(a[0]), float(a[1]))
 			var stn := Stations.for_node(sp, String(n.id))
 			var it := { space = sp, node = n, id = String(n.id), name = String(n.name), at = at, same = sp == here, ok = true, why = "",
-				space_name = _space_name(sp), kind = String(n.kind), station = not stn.is_empty(), flag = Waymarks.is_flag(n), station_id = String(stn.get("id", "")) }
+				space_name = _space_name(sp), kind = String(n.kind), station = not stn.is_empty(), flag = Waymarks.is_flag(n, sp), station_id = String(stn.get("id", "")) }
 			if sp == here:
 				if at.distance_to(pp) < 80.0: continue
 				it.dist = at.distance_to(pp)

@@ -3,6 +3,8 @@
 #   --traveltest=boat       나루(배 안내)가 떠 있어도 곁의 고을 사람이 먼저 E 대상 — 배 E는 오르지 않고 그 사람과 말한다 · 사람이 없으면 배 안내
 #   --traveltest=mount      권역: 말 타는 곳 25m 안은 탈 수 있고 25~45m는 못 탄다(옛 45m) · 막 내린 자리 40m 안은 다시 탄다
 #                            노정(--route): 말 타는 곳과 멀어도 큰길이면 탄다(그대로)
+#   --traveltest=waymark    강·바닷길 노정(--route=SEA_NAMHAE_JEJU 등, 결정 5): 깃발(깃대·깃발 E)이 없다 · 거점에 가면 '가 봄'은 그대로 적히고
+#                            깃발 알림은 없다 · 그 거점은 역마 창 목록에 그대로(깃발 아님) · 마부·깃발 목록에는 '깃발 — ○○'이 없다 · 뱃길(배)은 그대로
 #   --traveltest=nightlock  남원 밤(해 질 무렵 준비 dusk_prep ~ 아침): 역마(역·깃발·마부)·역마 창·지도 역마·말·배·노정 포털·지나온 길 건너뛰기가
 #                            모두 「아이들을 두고 멀리 떠날 수 없다」로 막히고, 걷기는 된다 · 아침이 되면 풀린다
 # 판정: "TRAVELTEST PASS …" / "TRAVELTEST FAIL …"
@@ -64,6 +66,7 @@ func run(spec: String) -> void:
 		"boat": await _boat()
 		"mount": await _mount()
 		"nightlock": await _nightlock()
+		"waymark": await _waymark()
 		_: _ok(false, "모르는 시험 " + spec)
 	_end()
 
@@ -259,3 +262,48 @@ func _nightlock() -> void:
 	if main.fast_ui != null and is_instance_valid(main.fast_ui): main.fast_ui.close()
 	S.phase = "done"
 	_ok(String(d.travel_lock()) == "", "사건이 끝나면 막음 없음")
+
+# ---- 4 강·바닷길 노정 깃발 없음(결정 5) ----
+func _waymark() -> void:
+	const Waymarks := preload("res://scripts/region/waymarks.gd")
+	var sp := String(main.world.region.get("route_id", main.world.region.get("region_id", "")))
+	var kind := Waymarks.route_kind(sp)
+	_ok(kind in ["river", "sea"], "%s: 물 노정(%s)" % [sp, kind])
+	var hr = main.horse_ride
+	_ok(hr.flags != null and hr.flags.list.is_empty() and not hr.flags.enabled() and main.scene_vp.get_node_or_null("waymarks") == null,
+		"깃발 없음(목록 %d · 깃대 노드 없음)" % (hr.flags.list.size() if hr.flags != null else -1))
+	_ok(main.boats != null and not main.boats.routes.is_empty(), "뱃길 그대로(%d)" % (main.boats.routes.size() if main.boats != null else 0))
+	# 물 노정의 마을 거점(예전 깃발 자리)
+	var node := {}
+	for n in hr.net.nodes if hr.net != null else []:
+		if bool(n.get("fast", false)) and Waymarks.is_flag(n): node = n; break
+	if node.is_empty():
+		var j: Dictionary = load("res://scripts/region/ride_net.gd").read(sp)
+		for n in j.get("nodes", []):
+			if bool(n.get("fast", false)) and Waymarks.is_flag(n): node = n; break
+	if node.is_empty(): _ok(false, "예전 깃발 거점이 없음"); return
+	var id := String(node.id)
+	var a: Array = node.get("arrive", [node.x, node.z])
+	var at := Vector2(float(a[0]), float(a[1]))
+	var kn: Dictionary = HorseRide.known_nodes()
+	if kn.get(sp) is Dictionary: kn[sp].erase(id)
+	await _put(at)
+	await main._wait_frames(60)
+	_ok(HorseRide.is_discovered(sp, id), "%s 도착: '가 봄' 그대로 적힘" % id)
+	var d = main.story
+	if d != null and d.keeper != null:
+		var t = d.keeper.target(_pp())
+		_ok(t == null or String(t.get("kind", "")) != "flag", "%s 곁: 깃발 E 없음" % id)
+	await _put(at + Vector2(0.0, 220.0))
+	var ft = FT.new(main)
+	ft._gather()
+	var it := {}
+	for x in ft.items:
+		if String(x.space) == sp and String(x.id) == id: it = x
+	ft.free()
+	_ok(not it.is_empty() and bool(it.ok) and not bool(it.flag), "역마 창 목록에 %s 그대로(갈 수 있음 · 깃발 아님)" % id)
+	if d != null and d.keeper != null:
+		var dl: Array = d.keeper.destinations()
+		var labs: Array = dl[0].map(func(o): return String(o.label))
+		_ok(labs.filter(func(l): return l.begins_with("깃발 — " + String(node.name))).is_empty() and int(dl[1]) > 0,
+			"마부·깃발 목록에 '깃발 — %s' 없음 · 역마 창(가 본 다른 곳)으로 간다 %s rest=%d" % [node.name, labs, int(dl[1])])

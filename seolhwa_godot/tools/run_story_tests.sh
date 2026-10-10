@@ -76,6 +76,8 @@ TESTS=(
 	"travel:mount-region|300|--region=JL_NAMWON_UNBONG --traveltest=mount --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"travel:mount-route|300|--route=HH_HWANGJU-PA_PYEONGYANG --traveltest=mount --nostory --notitle"
 	"travel:namwon-night|300|--region=JL_NAMWON_UNBONG --traveltest=nightlock --notitle"
+	# 강·바닷길 노정 깃발 없음(제작 규칙 결정 5): 남해~제주 뱃길 덕진다리 — 깃대·깃발 E 없음, '가 봄'·역마 창 목록·뱃길 그대로
+	"travel:sea-waymark|300|--route=SEA_NAMHAE_JEJU --traveltest=waymark --notitle"
 	# 고을 사람 말 걸기·이야기 인물 「…」(scripts/story/talk_test.gd) — 앞(새 저장) → 저장 얹고 뒤
 	"talk:namwon|420|--region=JL_NAMWON_UNBONG --talktest=namwon_jang,namwon_eup --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=var"
 	"talk:hanyang|420|--region=GG_HANYANG --talktest=chilpae_jang,ungjongga --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=need"

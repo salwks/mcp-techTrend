@@ -932,7 +932,7 @@ func _discover(dt: float) -> void:
 		if not bool(n.get("fast", false)): continue
 		var a: Array = n.get("arrive", [n.x, n.z])
 		if RideNet.in_zone(n.zone, pp, 10.0) or pp.distance_to(Vector2(float(a[0]), float(a[1]))) < 30.0:
-			if discover(net.space, String(n.id)) and Waymarks.is_flag(n): _flag_found(n)
+			if discover(net.space, String(n.id)) and Waymarks.is_flag(n, net.space): _flag_found(n)
 
 # 깃발을 처음 알았다: 알림 띠 + 지도 표지(지도는 열 때 travel_nodes를 다시 읽는다)
 func _flag_found(n: Dictionary) -> void:

@@ -5,7 +5,8 @@
 #   알기: 깃발 거점은 역마 거점과 같은 '가 봄'(progress.json travel_nodes — horse_ride._discover가 거점 구역·도착 자리 30m 안에서 적는다).
 #     처음 알면 알림 띠 '깃발 — ○○'과 지도 표지(region_map). 저장·이어 하기는 travel_nodes 그대로.
 #   E: 깃발 곁(REACH m) — story_director가 이야기 인물·고을 사람·역참 마부와 같은 '가장 가까운 대상' 규칙으로 고른다(scripts/region/station_keeper.gd 대화).
-#   그림: 플레이어 NEAR m 안 깃발만 만들고 FAR m 밖이면 지운다. 모르는 깃발은 바랜 무명빛, 알면 쪽빛.
+#   그림: 플레이어 NEAR m 안 깃발만 만들고 FAR m 밖이면 지운다. 모르는 깃발은 바랜 무명빛, 알면 쪽빛. 충돌체는 없다(결정 6 — 지나갈 수 있다).
+#   강·바닷길 노정(route_kind river·sea)에는 깃발을 세우지 않는다(결정 5) — 그 거점은 역마 창·지도·배로 그대로 간다.
 # horse_ride가 만든다: setup(main, net) · update(dt) · near(pp, r) · stats
 extends RefCounted
 
@@ -28,15 +29,43 @@ var root: Node3D
 var _chk := 0.0
 var stats := { spawned = 0 }
 
-# 깃발 거점인가(지도·대화·시험도 쓴다)
-static func is_flag(n: Dictionary) -> bool:
+# 노정 종류(ROUTE_PROFILE.kind — 제작 규칙 v1.0 C-4): "land" · "river" · "sea". 권역(노정 아님)은 "".
+#   ROUTE_PROFILE 파일이 아직 없어 기존 데이터에서 끌어낸다(출처 순서):
+#   1 region_data/travel/<공간>.json의 kind가 "route"가 아니면 권역 → ""
+#   2 노정 route.json의 route_type(한강·대동강 "river") — 있으면 그 값
+#   3 공간 id 접두사 RIVER_ → river, SEA_ → sea (SEA_NAMHAE_JEJU는 route_type이 없다)
+#   4 그 밖의 노정 → land
+static var _kinds := {}
+static func route_kind(sp: String) -> String:
+	if _kinds.has(sp): return _kinds[sp]
+	var k := ""
+	if String(RideNet.read(sp).get("kind", "")) == "route" or sp.begins_with("RIVER_") or sp.begins_with("SEA_"):
+		k = "land"
+		for r in load("res://scripts/region/travel.gd").routes():
+			if String(r.id) == sp:
+				var rt := String(r.json.get("route_type", ""))
+				if rt in ["river", "sea"]: k = rt
+				break
+		if k == "land":
+			if sp.begins_with("RIVER_"): k = "river"
+			elif sp.begins_with("SEA_"): k = "sea"
+	_kinds[sp] = k
+	return k
+
+# 이 공간에 길목 깃발을 세우나(결정 5): 권역과 land 노정만. river·sea 노정은 깃발(물리 깃대와 깃발 E)이 없다 — 거점의 fast·가 봄은 그대로
+static func space_has_flags(sp: String) -> bool:
+	return not (route_kind(sp) in ["river", "sea"])
+
+# 깃발 거점인가(지도·대화·시험도 쓴다). sp: 그 거점이 있는 공간 — river·sea 노정이면 false
+static func is_flag(n: Dictionary, sp := "") -> bool:
+	if sp != "" and not space_has_flags(sp): return false
 	return bool(n.get("fast", false)) and String(n.get("kind", "")) in FLAG_KINDS and String(n.get("station", "")) == ""
 
 # 공간의 깃발 거점(데이터만 — 자리는 도착 자리 그대로). 지도·대화용
 static func flags_in(sp: String) -> Array:
 	var out := []
 	for n in RideNet.read(sp).get("nodes", []):
-		if is_flag(n):
+		if is_flag(n, sp):
 			out.append({ id = String(n.id), name = String(n.name), kind = String(n.kind), space = sp, p = anchor_of(n) })
 	return out
 
@@ -50,7 +79,7 @@ func setup(m, rn) -> void:
 	space = String(world.region.get("route_id", world.region.get("region_id", "")))
 	if net == null: return
 	for n in net.nodes:
-		if not is_flag(n): continue
+		if not is_flag(n, space): continue
 		var av := anchor_of(n)
 		list.append({ id = String(n.id), name = String(n.name), kind = String(n.kind), space = space, p = _sides(av)[0], arrive = av })
 	if list.is_empty(): return
