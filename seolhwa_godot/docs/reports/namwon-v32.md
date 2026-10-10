@@ -564,3 +564,59 @@ ONBOARDRULE H가 보는 것: K·L은 핵심 안내 · 몸 낮춤 전엔 안내 �
 3. **수수밭 포수 장면을 건너뛸 때.** 수수밭에 안 가고 북쪽 어귀로 가면 포수 장면은 없고, 어귀의 포수가 결말 뒤 대사로 같은 말을 한다. 수수밭을 반드시 지나가게 할지.
 4. **아침 대답의 무게.** 지금은 주막 소문·고을 사람 한 줄·기록책 한 줄만 바뀐다. 이웃 아낙의 결말 뒤 대사도 갈릴지.
 5. **방어 중 범의 시작 자리.** 줄기에서 뛰어내려 싸움이 시작된다(마지막 개입과 같은 꼴). 두 번 더 되풀이되어 반복으로 느껴지는지.
+
+## 착수 순서 7 다듬기 — 확정 결정 다섯 + 이동 규칙 셋 (2026-10-10~11)
+
+### 1. 남원 다섯
+
+| 결정 | 한 것 |
+|---|---|
+| 1 마지막 밤의 달 | 하늘 셰이더 `sky_backdrop`에 `u_moon`(기본 1)을 두고 `region_main.set_moon/moon_k`. `_final_lights_on()`에서 0, `finish()` 바로 앞에서 1. 재질은 장면마다 새로 만들어 기본 1이라 장면을 나가거나 저장·불러오기 뒤에도 감춘 채 남지 않는다. 안전장치: `on_load`에서 1, `ambient`가 두 빛이 없는데 감춰져 있으면 1, `_quit`에서 1. ACT 12 `tale_sky`는 그대로 |
+| 2 줄기 위 시간 | `TRUNK_K = 0.5`(옛 1/4). 줄 진행은 `held/mn`에 끝나기 전 2.5초(`CATCH_UP`) 동안 남은 만큼을 smoothstep으로 따라가 섞는다 — 늦어도 8초에 끝날 때 줄이 멈췄다가 뚝 떨어지지 않는다. 싸움이 먼저 끝나면(쓰러짐) 남은 줄을 한 틱 0.03 이하로 이어 내린 뒤에야 `rope_descend`가 다음으로 간다. 시험값: 한 틱 최대 변화 0.008 |
+| 3 수수밭은 선택 | 들르면 흔적 + 포수 현장 대사(그대로), 곧장 내려가면 어귀 포수의 결말 뒤 대사(그대로). 끌림만 더했다: 이웃 아낙 뒤 조작을 돌려받은 자리에서 4m 걸으면 약 3초 동안 카메라 겨냥점을 수수밭 쪽으로 42% 당겼다 돌린다(조작 유지, 다른 장면이 카메라를 잡으면 곧바로 손을 뗀다). 지도 표·트리거는 바꾸지 않았다 |
+| 4 이웃 아낙 | 사건 뒤 북쪽 어귀의 이웃 아낙 talk에 `CASE_NAMWON_MORNING` 세 갈래(sky·unknown·silent 원문 그대로). 대답이 없는 옛 저장은 옛 두 줄. 주막 소문 세 갈래 그대로 |
+| 5 둘째 방어 시작 | `_tree_defence(..., start_mode)`. `pray`는 그대로(줄기 밑 [-0.6,+1.2]에서 뛰어내려 “마당으로 뛰어들었다!”). `rope`는 뛰어내림 없이: 줄기 위(2m)의 범이 플레이어 쪽으로 몸을 돌려 웅크린다(0.7초, `crouch` 그림을 roll 0.38로 기울여 매달린 자세 — 따로 그린 그림 없음) → 같은 CombatView에서 줄기 플레이어 쪽 1.1m·높이 2m에서 시작해 몸 낮춤 예고 → 덮침(ctiger `lunge_y0`로 2m에서 땅으로 내려오며 돌진). 카메라 pitch 34·거리 15·FOV 34(첫 방어 46/19/30). 첫 문구 “호랑이가 줄기에서 몸을 돌려 덮쳐 온다!”(싸움터 `tiger_intro`) |
+
+### 2. 이동 규칙 셋(원칙: 이동은 편하게, 곁의 말 걸기·이야기 장면을 가로채지 않는다)
+
+| 결정 | 한 것 |
+|---|---|
+| 나루 E 차례 | 고을 사람 대상이 배 안내 때문에 비던 것(ambient_talk)을 없앴다 — 이야기 인물 → 고을 사람·마부·깃발 → 배. 곁 대상이 E를 가져간 프레임에는 배·말이 같은 E로 오르지 않는다(director `e_frame`, region_main `_story_talking`). 나루 E 타기는 그대로, 사공 대화는 만들지 않았다 |
+| 말 타는 곳 | `horse_ride.MOUNT_R` 45 → 25m(권역만 — 노정은 원래 이 둘레를 보지 않는다). 막 내린 자리 40m, 역참 문 앞 45m(`STATION_QUIET`) 그대로 |
+| 남원 밤 | `namwon_case.travel_lock()`: `dusk_prep`이고 phase가 explore·night이면 “아이들을 두고 멀리 떠날 수 없다”. `fast_travel.lock_why/refuse` 한 곳을 역마(`Stations.warp_node`)·마부·길목 깃발·역마 창·지도 역마·말(`begin_ride`)·배(`board`, 이야기 배 제외)·노정 포털·지나온 길 건너뛰기(`_travel`)가 거친다. 막힌 동안 큰길 말 안내는 띄우지 않고 E에만 알림, 포털은 알림 뒤 물러나면 다시 선다. 걷기는 막지 않는다(보이지 않는 벽 없음). 아침(phase morning)이면 저절로 풀린다 |
+
+### 3. 시험(차례로, 하나씩)
+
+| 시험 | 결과 |
+|---|---|
+| `tools/story/validate_event_class.gd` | EVENTCLASS PASS checked=127 (exit 0) |
+| `tests/registry/case_registry_test.gd` | REGTEST PASS 47 (exit 0) |
+| `tests/audio/sound_test.gd` | SOUNDTEST PASS 38 (exit 0) |
+| `tests/onboarding/onboarding_rule_test.gd` | ONBOARDRULE PASS 64 (exit 0) |
+| `tools/story/map_leads_test.gd` | MAPLEADS PASS fixtures=53 (exit 0) |
+| `tools/run_story_tests.sh` 전체(마지막 한 번) | **51/51 PASS**, SCRIPT ERROR 0, exit 0 — 새 `travel:boat-priority` · `travel:mount-region` · `travel:mount-route` · `travel:namwon-night` |
+
+새로 보는 것:
+- `namwon:A/B/C`(`check_v32_rope`): 두 빛 동안 기본 달 0·뒤에 1 · `TRUNK_K` 0.5 · 줄 진행 한 틱 최대 변화 ≤ 0.05 · pray/rope 시작 자리(높이 0 대 2m)·카메라·덮침·문구 · 내려가는 길에서 수수밭이 화면에 든다 · A·B는 수수밭에 들르고 **C는 지나쳐 곧장 어귀**(hunter_morning_skipped, 어귀 포수 결말 뒤 말에 “뼈가 다 상했더군”) · 이웃 아낙 세 대답(데이터) + 이번 판 대답은 실제로 말을 걸어 들음 · 밤 준비 때 먼 길 막음, 끝난 뒤 풀림.
+  시험은 이웃 아낙과 말하는 동안 플레이어를 마당 길목에 세운다 — 밤을 지새운 자리가 수수밭 7.5m 안이면 대답하자마자 수수밭 장면이 서기 때문(실제 놀이에서는 그 자리면 들른 것과 같다).
+- `scripts/region/travel_rules_test.gd`(`--traveltest=`): boat(한양 노량진 나루 — 곁 사람이 E 대상, 배 안내 숨김, E는 말 걸기·배 안 탐, 사람이 없으면 배 안내) · mount(권역 20m 탐·33m 못 탐·막 내린 자리 40m 탐·역참 45m 그대로 / 노정 45m 밖 큰길 6/6 탐) · nightlock(explore·night 둘 다 아홉 갈래 막힘·알림·장면 그대로·걷기 2.6m / 아침에 풀림·역마 창 열림).
+
+### 4. 화면 (창 모드, 시험 저장 `user://st_shots_polish5.json` — 찍은 뒤 지움)
+
+`seolhwa_godot/shots/namwon_v32_polish5/`(git 밖), `--storytest=namwon:NB --nightstop=done --noreview`.
+
+| 장면 | 파일 | 본 것 |
+|---|---|---|
+| 마지막 밤 하늘 | `namwon_B_final_lights.png` | 따뜻한 빛·흰 빛 둘만, 기본 달 없음 |
+| 첫 방어 시작 | `namwon_B_defence_pray_start.png` | 범이 줄기 밑 땅에서 · “마당으로 뛰어들었다!” · 46/19 시점 |
+| 마지막 방어 앞 | `namwon_B_defence_rope_turn.png` | 줄기 위 범이 플레이어 쪽으로 몸을 돌림(기울인 웅크림) |
+| 마지막 방어 시작 | `namwon_B_defence_rope_start.png` | 줄기 높이에서 몸 낮춤 예고 띠 · 낮고 가까운 시점 |
+| 내려가는 길 | `namwon_B_morning_path_sorghum.png` | 붉은 수수밭이 화면 위쪽에 |
+| 이웃 아낙 다시 만남 | `namwon_B_neighbor_reunion.png` | “혹시 어디서라도 아이들 소식 들으면 알려 주시오.”(B = unknown) |
+
+### 5. 남은 것·정할 것
+
+1. 마지막 방어 앞 몸 돌림: 플레이어가 나무 뒤(북쪽)에 서 있으면 범이 등을 보이며 돌아서 '돌아본다'가 덜 읽힌다. 시점은 yaw를 바꾸지 않았다. 돌아보는 그림(줄기 위 옆·앞 자세)이 있으면 더 낫다.
+2. 수수밭 끌림은 화면 한쪽이라기보다 위쪽에 든다(아침 안개로 붉은빛이 옅다). 당김 몫 0.42를 더 줄이거나 옆으로 비킬지 사람이 해 봐야 한다.
+3. 이웃 아낙 화면은 이번 판 대답(unknown) 하나만 찍었다 — sky·silent는 데이터 시험으로만.
+4. 남원 밤 막음은 노정 포털을 걸어 나가는 것도 막는다(“장면을 떠나는 모든 길”로 읽음). 걷기 자체는 막지 않으며 포털 자리에서 알림 뒤 물러나면 다시 선다.
