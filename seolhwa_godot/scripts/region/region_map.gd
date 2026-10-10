@@ -20,6 +20,8 @@ const BuildingTitles := preload("res://scripts/region/building_titles.gd")
 const Discovery := preload("res://scripts/region/discovery.gd")
 const MapLeads := preload("res://scripts/region/map_leads.gd")
 const UiFonts := preload("res://scripts/ui_fonts.gd")
+const Waymarks := preload("res://scripts/region/waymarks.gd")
+const RideNetRef := preload("res://scripts/region/ride_net.gd")
 
 # 지도 이름표에 쓸 건물 키트(이름이 있는 것) — 그림은 오프라인에 구웠다
 const ROOF_TILE := ["village/giwa", "village/jeongja"]
@@ -98,6 +100,7 @@ var _talks: Array = []         # [{p: Vector2, name}]
 var _dyn_t := 0.0
 var _st_api := false
 var _st_warp := false
+var _flags: Array = []         # 알게 된 길목 깃발 [{id, name, space, c(Vector2 — 이 공간일 때), ll}] (scripts/region/waymarks.gd)
 var _stations: Array = []      # 알게 된 역참 [{id, name, space, c(Vector2 또는 null), ll(Vector2 또는 null)}]
 var _st_sel := -1
 # 오른쪽 판
@@ -304,7 +307,7 @@ func _pbutton(t: String, col: Color, cb: Callable) -> Button:
 	b.pressed.connect(cb)
 	return b
 
-const LEGEND := [["eup", "읍치(성곽 고을)"], ["market", "장터 고을"], ["village", "마을"], ["station", "역참·마방"], ["ferry", "나루(진)"],
+const LEGEND := [["eup", "읍치(성곽 고을)"], ["market", "장터 고을"], ["village", "마을"], ["station", "역참·마방"], ["flag", "길목 깃발(역마)"], ["ferry", "나루(진)"],
 	["pass", "고개"], ["temple", "절"], ["bongsu", "봉수"], ["case", "사건 — 들은 행선지"], ["talk", "할 말이 있는 사람"], ["road", "큰길(눈금 10리)"]]
 func _draw_legend() -> void:
 	var y := 10.0
@@ -599,6 +602,7 @@ func _refresh_dynamic() -> void:
 	var ns := _collect_stations()
 	if ns.size() != _stations.size(): changed = true
 	_stations = ns
+	_flags = _collect_flags()
 	if changed and visible: _refresh_panel()
 
 # 역참(역참 담당: Travel.stations() — 없으면 region_data/stations.json을 바로 읽는다) → 알게 된 것만.
@@ -656,6 +660,21 @@ func _collect_stations() -> Array:
 		elif c != null and sp == _space and not world.is_route: ll = Travel.local_to_lonlat(world.region, c.x, c.y)
 		out.append({ id = id, name = String(s.get("name", id)), space = sp, c = c, ll = ll, ok = bool(s.get("ok", true)), why = String(s.get("why", "")) })
 	return out
+
+# 길목 깃발: 가 본 것만(progress.json travel_nodes — 역마 거점과 같은 '가 봄')
+func _collect_flags() -> Array:
+	var out := []
+	var FT: Script = load("res://scripts/region/fast_travel.gd")
+	for sp in RideNetRef.all_spaces():
+		for f in Waymarks.flags_in(sp):
+			if not Waymarks.known(sp, String(f.id)): continue
+			out.append({ id = f.id, name = f.name, space = sp, c = f.p if sp == _space else null, ll = FT._ll(sp, f.p) })
+	return out
+
+# 깃발을 새로 알았을 때(horse_ride._flag_found)
+func refresh_flags() -> void:
+	_flags = _collect_flags()
+	if _canvas != null: _canvas.queue_redraw()
 
 func _station_pick(i: int) -> void:
 	if i < 0 or i >= _stations.size(): return
@@ -859,6 +878,11 @@ func _draw_region() -> void:
 		if e.bld != "" or not Discovery.is_known(_space, e.key) or not view.grow(40).has_point(e.c): continue
 		var told := Discovery.how(_space, e.key) == "told"
 		cands.append({ p = _to_px(e.c), kind = "place_told" if told else "place", text = String(e.name) + (" (들음)" if told else ""), prio = P_TOWN, size = 14, col = Color(0.42, 0.12, 0.07) })
+	# 길목 깃발(가 본 것 — 이름은 고을 이름과 겹치므로 그림만, 손을 대면 이름)
+	for f in _flags:
+		if f.c == null or not view.grow(40).has_point(f.c): continue
+		# 고을 표지 바로 곁(오른쪽 위)에 늘 그린다 — 넓은 축척에서는 고을 기호와 같은 자리라 솎으면 사라진다
+		cands.append({ p = _to_px(f.c) + Vector2(9, -9), kind = "flag", text = "", prio = P_STATION, size = 12, col = INK, force = true, tip = "깃발 %s — 곁에서 E로 역마" % String(f.name) })
 	# 역참
 	for i in _stations.size():
 		var s: Dictionary = _stations[i]
@@ -1025,6 +1049,12 @@ func _icon(ci: CanvasItem, kind: String, p: Vector2, s: float) -> void:
 			ci.draw_colored_polygon(PackedVector2Array([p + Vector2(-6, 2) * s, p + Vector2(0, -5) * s, p + Vector2(6, 2) * s]), Color(0.78, 0.64, 0.40))
 			ci.draw_polyline(PackedVector2Array([p + Vector2(-6, 2) * s, p + Vector2(0, -5) * s, p + Vector2(6, 2) * s]), INK, 1.3 * s)
 			ci.draw_rect(Rect2(p + Vector2(-4, 2) * s, Vector2(8, 4) * s), INK, false, 1.2 * s)
+		"flag":   # 길목 깃발: 장대 + 쪽빛 깃발(붉은 테)
+			ci.draw_line(p + Vector2(-3, 7) * s, p + Vector2(-3, -8) * s, Color(0.36, 0.26, 0.17), 1.8 * s)
+			var fl := PackedVector2Array([p + Vector2(-3, -8) * s, p + Vector2(6, -7) * s, p + Vector2(5, -1) * s, p + Vector2(-3, -2) * s])
+			ci.draw_colored_polygon(fl, Color(0.20, 0.28, 0.43))
+			ci.draw_polyline(PackedVector2Array([fl[0], fl[1], fl[2], fl[3]]), SEAL, 1.2 * s)
+			ci.draw_line(p + Vector2(-6, 7) * s, p + Vector2(0, 7) * s, INK, 1.6 * s)
 		"station":   # 역참·마방: 붉은 테 둥근 패에 '역'
 			ci.draw_circle(p, 8.0 * s, PAPER)
 			ci.draw_arc(p, 8.0 * s, 0, TAU, 24, SEAL, 2.0 * s, true)
@@ -1138,6 +1168,7 @@ func _show_nation() -> void:
 			_nmeta = JSON.parse_string(FileAccess.get_file_as_string("res://region_data/nation_map.json"))
 			_ntex = _load_tex("res://region_data/" + String(_nmeta.file))
 		_stations = _collect_stations()
+		_flags = _collect_flags()
 	_nk = _n_fit()
 	_ncenter = Travel.OUTLINE_BOX.get_center()
 	_collect_fast()
@@ -1352,6 +1383,10 @@ func _draw_nation() -> void:
 		var nm := String(s.name)
 		cands.append({ p = _n_px(Vector2(float(s.lon), float(s.lat))), kind = "stronghold", text = nm if Discovery.is_known(Discovery.NATION, "sh:" + nm) else "",
 			prio = P_VILLAGE, size = 12, col = INK_SOFT })
+	# 길목 깃발(가 본 것)
+	for f in _flags:
+		if f.ll == null: continue
+		cands.append({ p = _n_px(f.ll), kind = "flag", text = "", prio = P_STATION, size = 11, col = INK, tip = "깃발 %s" % String(f.name) })
 	# 역참
 	for i in _stations.size():
 		var s: Dictionary = _stations[i]

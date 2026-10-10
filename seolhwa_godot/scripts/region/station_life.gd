@@ -5,6 +5,8 @@
 #   그림: data/frames_stable.json(tools/export_stable_frames.js — stable_bay·chestnut·grey·pony, mabu) + 탈 말 ride_horse(기다리는 말).
 #   그림 파일이 없으면(다른 맥에서 아직 안 구움) 탈 말·주변 말·마을 사람 그림으로 대신한다.
 # horse_ride가 부른다: setup(main) · update(dt) · near(pp) · lend(st)(마부가 기다리는 말을 끌고 나옴) · lead(st, 말 자리, 걷나) · release(st)
+# 역참 마부 대화(scripts/region/station_keeper.gd)가 부른다: keeper_near(pp, r) — E 닿는 마부 · hold(st, 볼 곳)/unhold(st) — 말하는 동안 일손을 멈추고 손님을 봄
+#   · bring(st, 손님 자리) → 초 / bring_end(st) — 역마를 고른 뒤 마부가 기다리는 말을 끌고 손님 곁으로(역마 창이 뜨기 전)
 extends RefCounted
 
 const Stations := preload("res://scripts/region/stations.gd")
@@ -147,7 +149,7 @@ func _spawn(s: Dictionary) -> void:
 	var g := _char(groom_kind, L.node)
 	g.position = _y(Stations.hitch_world(s, HP.brush))
 	_face(g, Vector2(1, 0))
-	L.groom = { ch = g, path = [], task = "", t = 0.0, queue = [], hay = _hay_node(L.node), led = false }
+	L.groom = { ch = g, path = [], task = "", t = 0.0, queue = [], hay = _hay_node(L.node), led = false, talk = false }
 	L.groom.hay.visible = false
 	_next_task(L)
 	# 현판·깃발 글씨
@@ -243,7 +245,9 @@ func _tick(L: Dictionary, dt: float) -> void:
 					_face(h.ch, d)
 		h.ch.position = _y(h.ch.position)
 		h.ch.update_char(dt, cam)
-	if L.has("wait"):
+	if L.has("bring"):
+		_tick_bring(L, dt)
+	elif L.has("wait"):
 		var w: SpriteChar = L.wait
 		if bool(L.lent):
 			# 손님이 탄 뒤: 플레이어가 멀어지면(40m) 마부가 새 말을 매어 둔다
@@ -307,7 +311,7 @@ func _tick_groom(L: Dictionary, dt: float) -> void:
 	var cam: Camera3D = main.cam
 	var rng: RandomNumberGenerator = L.rng
 	var s: Dictionary = L.st
-	if bool(G.led):
+	if bool(G.led) or bool(G.get("talk", false)):   # 말을 끄는 중 · 손님과 말하는 중(일손을 멈추고 선다)
 		ch.position = _y(ch.position)
 		ch.update_char(dt, cam)
 		_carry(G, cam)
@@ -417,3 +421,77 @@ func release(s: Dictionary) -> void:
 	G.led = false
 	G.queue = ["rest", "feed", "brush"]
 	_next_task(L)
+
+# ---------------------------------------------------------------- 역참 마부 대화(station_keeper.gd)
+# E 닿는 마부: {st, p: Vector2}(없으면 {}) — 말을 끄는 중이면 안 됨
+func keeper_near(pp: Vector2, r: float) -> Dictionary:
+	var best := {}; var bd := r
+	for id in live:
+		var L: Dictionary = live[id]
+		var G: Dictionary = L.groom
+		if bool(G.led) or L.has("bring"): continue
+		var p: Vector3 = G.ch.position
+		var d := pp.distance_to(Vector2(p.x, p.z))
+		if d < bd: bd = d; best = { st = L.st, p = Vector2(p.x, p.z) }
+	return best
+
+func groom_pos(st: Dictionary) -> Vector3:
+	var L = live.get(String(st.get("id", "")))
+	return L.groom.ch.position if L != null else Vector3.INF
+
+func hold(st: Dictionary, look: Vector3) -> void:
+	var L = live.get(String(st.get("id", "")))
+	if L == null: return
+	var G: Dictionary = L.groom
+	G.talk = true
+	G.hay.visible = false
+	var p: Vector3 = G.ch.position
+	_face(G.ch, Vector2(look.x - p.x, look.z - p.z))
+	G.ch.set_anim("idle")
+
+func unhold(st: Dictionary) -> void:
+	var L = live.get(String(st.get("id", "")))
+	if L == null: return
+	var G: Dictionary = L.groom
+	if not bool(G.get("talk", false)): return
+	G.talk = false
+	if bool(G.led): return
+	if not (G.path as Array).is_empty(): G.ch.set_anim("walk")   # 가던 길을 잇는다
+	else: _next_task(L)
+
+# 역마를 고른 뒤: 마부가 기다리는 말을 끌고 손님 곁(1.6m)으로. 반환 걸리는 초(말이 없으면 0)
+func bring(st: Dictionary, to: Vector3) -> float:
+	if not live.has(String(st.id)): _spawn(st)
+	var L = live.get(String(st.id))
+	if L == null or not L.has("wait"): return 0.0
+	var from: Vector3 = Stations.hitch_world(st, L.HP.wait)
+	var dv := Vector2(to.x - from.x, to.z - from.z)
+	var stop := Vector2(to.x, to.z) - dv.normalized() * 1.6 if dv.length() > 1.7 else Vector2(from.x, from.z)
+	var dur := clampf(Vector2(from.x, from.z).distance_to(stop) / 1.5, 0.8, 4.0)
+	L.groom.talk = false
+	L.groom.led = true; L.groom.path = []; L.groom.hay.visible = false
+	L.bring = { from = from, to = Vector3(stop.x, 0, stop.y), t = 0.0, dur = dur }
+	return dur
+
+func _tick_bring(L: Dictionary, dt: float) -> void:
+	var B: Dictionary = L.bring
+	var w: SpriteChar = L.wait
+	B.t = float(B.t) + dt
+	var k := smoothstep(0.0, 1.0, clampf(float(B.t) / float(B.dur), 0.0, 1.0))
+	var p: Vector3 = (B.from as Vector3).lerp(B.to, k)
+	var mv := Vector2(B.to.x - B.from.x, B.to.z - B.from.z)
+	w.visible = true
+	w.position = _y(p)
+	_face(w, mv)
+	w.set_anim("walk" if k < 1.0 else "idle")
+	w.update_char(dt, main.cam)
+	lead(L.st, w.position, mv, k < 1.0)
+
+func bring_end(st: Dictionary) -> void:
+	var L = live.get(String(st.get("id", "")))
+	if L == null: return
+	L.erase("bring")
+	if L.has("wait"):
+		L.wait.position = _y(Stations.hitch_world(st, L.HP.wait))
+		_face(L.wait, Vector2(-1, 0)); L.wait.set_anim("idle")
+	release(st)

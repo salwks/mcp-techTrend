@@ -13,6 +13,7 @@ const Progress := preload("res://scripts/region/progress.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const Discovery := preload("res://scripts/region/discovery.gd")
 const Stations := preload("res://scripts/region/stations.gd")
+const Waymarks := preload("res://scripts/region/waymarks.gd")
 const PAPER := Color("#efe6d2")
 const INK := Color("#2b2622")
 const INK_SOFT := Color("#5a5048")
@@ -90,13 +91,14 @@ func _gather() -> void:
 			var at := Vector2(float(a[0]), float(a[1]))
 			var stn := Stations.for_node(sp, String(n.id))
 			var it := { space = sp, node = n, id = String(n.id), name = String(n.name), at = at, same = sp == here, ok = true, why = "",
-				space_name = _space_name(sp), kind = String(n.kind), station = not stn.is_empty() }
+				space_name = _space_name(sp), kind = String(n.kind), station = not stn.is_empty(), flag = Waymarks.is_flag(n), station_id = String(stn.get("id", "")) }
 			if sp == here:
 				if at.distance_to(pp) < 80.0: continue
 				it.dist = at.distance_to(pp)
 			elif not reach.has(sp):
 				it.ok = false
-				it.why = "처음 가는 길은 걸어서(말 타고) 가 봐야 한다"
+				var gw := gate_why(main)
+				it.why = gw if gw != "" else "처음 가는 길은 걸어서(말 타고) 가 봐야 한다"
 			else:
 				it.dist = 1e7 + float(reach[sp].size()) * 1e5
 				it.via = reach[sp]
@@ -134,9 +136,20 @@ func _done_end(sp: String, n: Dictionary) -> bool:
 func _reachable() -> Dictionary:
 	return reachable_from(main)
 
+# 첫 사건 막음: 남원 일(첫 사건)을 마치기 전에는 남원 권역 밖으로 역마·깃발로 건너뛸 수 없다(걸어 나가는 길은 이야기가 막는다). 막으면 까닭, 아니면 ""
+const FIRST_SPACE := "JL_NAMWON_UNBONG"
+static func gate_why(m) -> String:
+	var hs := String(m.world.region.get("route_id", m.world.region.get("region_id", "")))
+	if hs != FIRST_SPACE: return ""
+	if bool(Progress.get_var("CASE_NAMWON_COMPLETE", false)) or String(Progress.case_state("namwon").get("phase", "")) == "done": return ""
+	var st = m.get("story")
+	if st != null and st.get("S") != null and String(st.case_id) == "namwon" and String(st.S.phase) == "done": return ""
+	return "남원 일이 아직 끝나지 않았다 — 고을을 떠날 수 없다"
+
 # 공간 그래프 너비 우선(역마 API Stations.state도 쓴다)
 static func reachable_from(m) -> Dictionary:
 	var hs := String(m.world.region.get("route_id", m.world.region.get("region_id", "")))
+	if gate_why(m) != "": return { hs: [] }
 	var adj := {}
 	for r in Travel.routes():
 		var ps = r.json.get("portals", {})
@@ -179,7 +192,7 @@ func _space_name(sp: String) -> String:
 	return String(info.get("short", info.get("name", sp)))
 
 # 공간 좌표 → 경위도(전국 지도)
-func _ll(sp: String, p: Vector2):
+static func _ll(sp: String, p: Vector2):
 	var d: Dictionary = RideNet.read(sp)
 	if d.get("projection") is Dictionary: return Travel.local_to_lonlat({ projection = d.projection }, p.x, p.y)
 	var gl: Array = d.get("geo_line", [])

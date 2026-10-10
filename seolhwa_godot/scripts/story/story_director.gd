@@ -68,6 +68,7 @@ var _skills_msgs: Array = []   # 사건이 끝나 새로 익힌 행동(결말 �
 var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2.2 R0104 등, 사건 기록 없음)
 var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
 var ambient = null             # 고을 사람 말 걸기(scripts/story/ambient_talk.gd)
+var keeper = null              # 역참 마부·길목 깃발 대화 — 역마 입구(scripts/region/station_keeper.gd)
 var talk_cam := {}             # 지금 이야기 인물 대화 카메라(사건 머리 case.talk_camera — 남원 v3.2 CAMERA 1A). 대화가 끝나면 비운다
 var _music_t := 0.0
 var _music_cur := "?"          # 지금 튼 음악 id(사건 case_fn.music_wanted — 없으면 "")
@@ -142,6 +143,7 @@ func _setup() -> void:
 	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
 	add_child(onboard)
 	ambient = load("res://scripts/story/ambient_talk.gd").new(self)
+	keeper = load("res://scripts/region/station_keeper.gd").new(self)
 	add_child(load("res://scripts/story/save_keeper.gd").new(self))   # 저장이 보이게: 자동 기록 도장·주막 쉬기·저장 칸(Esc)
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
@@ -243,7 +245,7 @@ func update(dt: float) -> void:
 	if case_id == "":
 		_update_rumors(dt)
 		_rub.update(dt)
-		if ui.modal or ui.journal_open or ambient.busy:
+		if ui.modal or ui.journal_open or ambient.busy or keeper.busy:
 			ui.prompt(""); _target = null
 		else: _update_target()
 		return
@@ -268,7 +270,7 @@ func update(dt: float) -> void:
 	_update_ambient(dt)
 	if spirits != null: spirits.update(dt)
 	if sensing != null: sensing.update(dt)
-	if runner.busy or ui.modal or combat_view.active or ambient.busy:
+	if runner.busy or ui.modal or combat_view.active or ambient.busy or keeper.busy:
 		ui.prompt("")
 		_target = null
 		return
@@ -305,6 +307,12 @@ func _unhandled_input(ev: InputEvent) -> void:
 			and not (runner != null and runner.busy) and not (combat_view != null and combat_view.active):
 		get_viewport().set_input_as_handled()
 		ambient.talk(int(_target.key))
+		return
+	# 역참 마부·길목 깃발(사건이 없는 공간에서도) — 역마는 여기서만 고른다
+	if ev.is_action("interact") and _target != null and String(_target.kind) in ["keeper", "flag"] and not ui.busy_input() \
+			and not (runner != null and runner.busy) and not (combat_view != null and combat_view.active):
+		get_viewport().set_input_as_handled()
+		keeper.talk(_target)
 		return
 	if case_id == "" or not _started: return
 	if ev.is_action("interact") and _target != null and not ui.busy_input() and not runner.busy and not combat_view.active:
@@ -790,7 +798,15 @@ func _update_target() -> void:
 		for t in _targets():
 			var d: float = pp.distance_to(t.p)
 			if d < t.r and d < bd: bd = d; best = t
-	if best == null and ambient != null: best = ambient.target(pp)   # 이야기 대상이 먼저, 없으면 고을 사람
+	# 이야기 대상이 먼저. 없으면 고을 사람·역참 마부·길목 깃발 가운데 가장 가까운 것(넓은 구역이 곁 사람 E를 가로채지 않게)
+	if best == null:
+		var cands := []
+		if ambient != null: cands.append(ambient.target(pp))
+		if keeper != null: cands.append(keeper.target(pp))
+		for c in cands:
+			if c == null: continue
+			var dc: float = pp.distance_to(c.p)
+			if dc < bd: bd = dc; best = c
 	_target = best
 	ui.prompt(best.label if best != null else "")
 

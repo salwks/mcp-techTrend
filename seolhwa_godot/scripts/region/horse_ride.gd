@@ -21,6 +21,8 @@ const GameSettings := preload("res://scripts/story/game_settings.gd")
 const Rumors := preload("res://story/rumors_data.gd")
 const Stations := preload("res://scripts/region/stations.gd")
 const StationLife := preload("res://scripts/region/station_life.gd")
+const Waymarks := preload("res://scripts/region/waymarks.gd")
+const STATION_QUIET := 45.0   # 역참 문 앞 이 둘레에서는 큰길 말 타기 안내·E를 띄우지 않는다 — 역참 말은 마부에게 말을 걸어서만(station_keeper.gd)
 
 signal state_changed(old: String, new: String)
 signal audio_cue(cue: String, value: float)
@@ -86,6 +88,7 @@ var _story_t := -1.0
 var _arrived_mount := Vector2.INF   # 넘어온 자리(노정 끝 포털 곁) — 말 타는 곳
 var test_log := false
 var life = null            # 역참 마방의 말·마부(station_life.gd)
+var flags = null           # 길목 깃발(waymarks.gd)
 var _lead_st := {}         # 마부가 말을 끌어 오는 역(역에서 탈 때)
 var _t_bring := T_BRING    # 말이 다가와 서는 시간(역에서는 마부가 가로대에서 끌고 오는 거리만큼)
 var stats := {}            # 시험: {t0, dist, slow:{id:true}, stops:[], max_v}
@@ -111,6 +114,8 @@ func setup(m) -> void:
 	# 역참: 데이터·API(Travel.stations/warp_to_station)가 이 장면의 main을 쓰게 하고, 마방의 말·마부를 만든다
 	Stations.register(m)
 	life = StationLife.new(); life.setup(m)
+	flags = Waymarks.new()
+	if enabled: flags.setup(m, net)
 	var arr := Stations.take_arrival()
 	if not arr.is_empty() and String(arr.space) == sid: _station_arrive.call_deferred(arr)
 	if m.args.has("stationtest"):
@@ -182,6 +187,7 @@ func view_side(dt: float) -> float:
 # free: 이야기·지도·배가 플레이어를 쥐고 있지 않음. want_e: 이번 프레임 E(이야기 대상·배가 없을 때만)
 func update(dt: float, free: bool, want_e: bool) -> void:
 	if life != null: life.update(dt)
+	if flags != null: flags.update(dt)
 	if not enabled:
 		prompt = ""; hint = ""; return
 	_discover(dt)
@@ -211,6 +217,10 @@ func _update_foot(dt: float, free: bool, want_e: bool) -> void:
 			_approach = {}
 			_set_state("ON_FOOT")
 	if not free: return
+	# 역참 문 앞: 넓은 구역 E(예전 '역마를 낸다')를 없앴다 — 마부에게 말을 걸어 고른다
+	if life != null and life.enabled() and not life.near(Vector2(main.player_pos.x, main.player_pos.z), STATION_QUIET).is_empty():
+		_choice_from = -1
+		return
 	var chk := mount_check()
 	if not bool(chk.ok):
 		if String(chk.get("show", "")) != "": prompt = String(chk.show)
@@ -231,8 +241,7 @@ func _update_foot(dt: float, free: bool, want_e: bool) -> void:
 	if Input.is_action_just_pressed("ride_next"): ci = (ci + 1) % choices.size()
 	var c: Dictionary = choices[ci]
 	var mins := maxf(1.0, round(float(c.d) / (_top_speed() * 0.75) / 60.0))
-	var at_st: bool = life != null and life.enabled() and not life.near(Vector2(main.player_pos.x, main.player_pos.z)).is_empty()
-	prompt = "E   %s — %s 쪽으로 (약 %d분)%s" % ["역마를 낸다" if at_st else "말에 오른다", String(c.name), int(mins), ("   ·   Q 다른 곳 %d/%d" % [ci + 1, choices.size()]) if choices.size() > 1 else ""]
+	prompt = "E   말에 오른다 — %s 쪽으로 (약 %d분)%s" % [String(c.name), int(mins), ("   ·   Q 다른 곳 %d/%d" % [ci + 1, choices.size()]) if choices.size() > 1 else ""]
 	if want_e: begin_ride(c)
 
 # 말 탈 수 있나: {ok, gi, why, show}
@@ -315,8 +324,24 @@ func _node_name(n: Dictionary) -> String:
 		"CAVE": return nm
 	return nm
 
+# 역참 마부의 '말을 빌린다'(station_keeper.gd): 문 앞 길에서 갈 수 있는 곳(_build_choices와 같은 규칙) — [{node, gi, d, name, mins}]
+func station_ride_choices(st: Dictionary) -> Array:
+	if not enabled or mounted() or _blizzard() or world.indoor != null: return []
+	var y: Array = st.yard
+	var gi: int = net.nearest(Vector2(float(y[0]), float(y[1])), ROAD_R + 6.0)
+	if gi < 0: return []
+	_build_choices(gi)
+	var out := []
+	for c in choices:
+		var cc: Dictionary = c.duplicate()
+		cc.mins = int(maxf(1.0, round(float(c.d) / (_top_speed() * 0.75) / 60.0)))
+		out.append(cc)
+	_choice_from = -1
+	return out
+
 # ---- 타기 시작 ----
-func begin_ride(c: Dictionary) -> bool:
+# st: 역참 마부가 말을 끌어 오는 역(마부 대화에서 고른 것) — 비우면 예전처럼 문 앞 25m 안 역
+func begin_ride(c: Dictionary, st_force := {}) -> bool:
 	if mounted(): return false
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	var dj: Dictionary = net.dijkstra(_choice_from if _choice_from >= 0 else net.nearest(pp, ROAD_R + 1.5))
@@ -334,7 +359,7 @@ func begin_ride(c: Dictionary) -> bool:
 	_lead_st = {}
 	_t_bring = T_BRING
 	if life != null and life.enabled():
-		var st: Dictionary = life.near(pp)
+		var st: Dictionary = st_force if not st_force.is_empty() else life.near(pp)
 		if not st.is_empty():
 			var wp: Vector3 = life.lend(st)
 			if wp != Vector3.INF:
@@ -898,7 +923,18 @@ func _discover(dt: float) -> void:
 		if not bool(n.get("fast", false)): continue
 		var a: Array = n.get("arrive", [n.x, n.z])
 		if RideNet.in_zone(n.zone, pp, 10.0) or pp.distance_to(Vector2(float(a[0]), float(a[1]))) < 30.0:
-			discover(net.space, String(n.id))
+			if discover(net.space, String(n.id)) and Waymarks.is_flag(n): _flag_found(n)
+
+# 깃발을 처음 알았다: 알림 띠 + 지도 표지(지도는 열 때 travel_nodes를 다시 읽는다)
+func _flag_found(n: Dictionary) -> void:
+	var st = main.story
+	var msg := "깃발 — %s. 역마 길목으로 적었다" % String(n.name)
+	if st != null and st.get("ui") != null: st.ui.toast(msg, "info")
+	else: main._show_hud(msg)
+	if flags != null: flags._chk = 0.0   # 바랜 깃발을 쪽빛으로 바로
+	var mp = main.get("_map")
+	if mp != null and mp.has_method("refresh_flags"): mp.refresh_flags()
+	print("WAYMARK found %s/%s" % [net.space, n.id])
 
 static func known_nodes() -> Dictionary:
 	var d := Progress.data()

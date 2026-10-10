@@ -14,6 +14,7 @@ extends RefCounted
 
 const D := preload("res://story/namwon/namwon_data.gd")
 const Sound := preload("res://scripts/audio/sound.gd")
+const Stations := preload("res://scripts/region/stations.gd")
 const TTEOK := D.TTEOK
 const OIL := D.OIL
 const TORCH := D.TORCH
@@ -172,9 +173,18 @@ func station_intro() -> void:
 		{ "label": "역마는 어떻게 쓰오?", "when": "not f('st_q_how')", "do": [{ "flag": "st_q_how" },
 			{ "say": "마부", "lines": ["한 번 가 본 큰 고을이나 역이면 말을 갈아타며 빨리 갈 수 있소.", "처음 가는 길은 직접 넘어야 하고."] },
 			{ "call": "fast_hint" }] },
-		{ "label": "그냥 가겠소.", "end": true }] }])
+		{ "label": "어디로 갈 수 있소?", "end": true }] }])
+	# 안내가 끝나면 역참 마부 대화(scripts/region/station_keeper.gd)와 같은 목록으로 — 거기서 '그만두겠소'로 물러난다
+	var a := {}
+	var st := Stations.by_id("namwon")
+	var hr = d.main.get("horse_ride")
+	if d.keeper != null and not st.is_empty() and hr != null:
+		if hr.life != null: hr.life.hold(st, d.main.player_pos)
+		a = await d.keeper.menu({ kind = "keeper", st = st })
+		if hr.life != null: hr.life.unhold(st)
 	Sound.music_level(1.0, 1.0)
 	d.camera(null)
+	if not a.is_empty(): d.keeper.act(a)   # 고른 뒤에야 말이 온다(이야기 줄은 여기서 끝 — 기다리지 않는다)
 
 # 마부 자리: 역참 그림(station_life)이 살아 있으면 그 마부, 아니면 기다리는 말 자리
 func _mabu_pos() -> Vector2:
@@ -186,7 +196,7 @@ func _mabu_pos() -> Vector2:
 		if g.distance_to(Vector2(d.main.player_pos.x, d.main.player_pos.z)) < 12.0: return g   # 마방 안쪽 멀리 있으면 문 앞 쪽으로
 	return d.anchor("station_wait")
 
-# "H — 역마 이동"은 실제로 역마로 갈 곳이 있을 때만(가 본 다른 고을·역 — 같은 공간은 300m 밖) 보인다
+# 역마 안내("역참 마부나 길목 깃발에게 E" — 예전 "H — 역마 이동")는 실제로 역마로 갈 곳이 있을 때만(가 본 다른 고을·역 — 같은 공간은 300m 밖) 보인다
 func fast_ready() -> bool:
 	var FT = load("res://scripts/region/fast_travel.gd")
 	if d.main.get("horse_ride") == null: return false
@@ -202,7 +212,7 @@ var fast_hint_shown := false   # 시험 기록
 func fast_hint() -> void:
 	if not fast_ready(): return
 	fast_hint_shown = true
-	if d.onboard != null: d.onboard.once("FAST", "H   역마 이동", Callable(), 6.0)
+	if d.onboard != null: d.onboard.once("FAST", "역마 — 역참 마부나 길목 깃발에게 E로 말을 건다", Callable(), 6.0)
 
 # §11 첫 방문 — 이웃 아낙이 빈 그릇을 들고 집에서 나온다(CAMERA 2A: 집을 위, 플레이어를 아래로). 말을 마치면 방앗간 쪽으로 간다
 func neighbor_visit() -> void:

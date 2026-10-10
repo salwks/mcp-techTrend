@@ -1,6 +1,6 @@
 # 고을 사람 말 걸기 — 주변 인물(scripts/region/npc_ambient.gd)에게도 E로 말을 건다(이야기 인물이 먼저).
 #   story_director가 만들어 쥔다(사건이 없는 공간에서도). 대상 찾기는 npc_ambient가 0.4초마다 고른 '가까운 사람' 몇 명만 본다
-#   (가만히 있을 때 프레임당 비용 없음 — 그 몇 명 거리만 잰다). 배·말 안내가 떠 있으면 비켜 준다.
+#   (가만히 있을 때 프레임당 비용 없음 — 그 몇 명 거리만 잰다). 배 안내가 떠 있으면 비켜 준다(말 안내는 비키지 않는다 — 곁 사람이 먼저).
 #   말 걸면: 그 사람이 멈추고 플레이어 쪽을 보고, 1~3줄(짧은 한 줄은 자막) 말한 뒤 하던 일로 돌아간다. 고르는 줄은 없다.
 #   줄 고르기(story/ambient_talk_data.gd): a 소문(rumors_data — 공간·결말·need) → 기록책 '들음 — <말한 사람>' ·
 #     b 자리·일·고을·날씨·시간 잡담 + c 사건 결말 반응 · d 손사래. 같은 사람에게 25초 안에 다시 걸면 '아까 말했잖소' 또는 다른 줄.
@@ -44,7 +44,8 @@ func target(pp: Vector2) -> Variant:
 	if npc == null: return null
 	var m = d.main
 	if m.boats != null and String(m.boats.prompt) != "": return null
-	if m.horse_ride != null and (String(m.horse_ride.prompt) != "" or m.horse_ride.busy()): return null
+	# 큰길 말 타기 안내(넓은 구역)는 곁 사람 말 걸기를 막지 않는다 — 가까운 사람이 먼저(region_main은 대상이 있으면 말 E를 주지 않는다)
+	if m.horse_ride != null and m.horse_ride.busy(): return null
 	if m.world.indoor != null: return null
 	var key: int = npc.nearest_talkable(pp, REACH)
 	if key < 0: return null

@@ -73,7 +73,9 @@ static func state(id: String, _reach = null) -> Dictionary:
 		return { ok = true, why = "" }
 	var FT: Script = load("res://scripts/region/fast_travel.gd")
 	var reach: Dictionary = FT.reachable_from(main)
-	if not reach.has(String(s.space)): return { ok = false, why = "처음 가는 길은 걸어서(말 타고) 가 봐야 한다" }
+	if not reach.has(String(s.space)):
+		var gw: String = FT.gate_why(main)
+		return { ok = false, why = gw if gw != "" else "처음 가는 길은 걸어서(말 타고) 가 봐야 한다" }
 	return { ok = true, why = "" }
 
 # 역마로 그 역에 간다(지도 선택·시험). 반환 {ok, why}. ok면 역마 창이 길을 그리고 시각을 흘린 뒤 도착한다.
@@ -83,17 +85,25 @@ static func warp(id: String) -> Dictionary:
 		if main != null and is_instance_valid(main) and main.has_method("_show_hud"): main._show_hud("역마 — " + String(stt.why))
 		print("STATION warp %s 막힘: %s" % [id, stt.why])
 		return stt
+	var s := by_id(id)
+	var r := warp_node(String(s.space), String(s.node))
+	if bool(r.ok): print("STATION warp %s → %s/%s" % [id, s.space, s.node])
+	return r
+
+# 역마 거점(역·깃발)으로: 역마 창을 그 거점을 고른 채 열어 바로 간다(지도 위 길·시각 흐름·도착 — 역·깃발 모두 같은 연출, 따로 만든 이동 없음).
+#   막힘(처음 가는 길·남원 첫 사건)은 역마 창의 목록 규칙(fast_travel._gather)이 그대로 정한다 — 못 가면 창이 닫히고 {ok:false}.
+static func warp_node(space: String, node: String) -> Dictionary:
+	if main == null or not is_instance_valid(main): return { ok = false, why = "지금은 갈 수 없다" }
 	if main._loading or main._leaving or (main.horse_ride != null and main.horse_ride.busy()) or main.boats.riding():
 		return { ok = false, why = "지금은 갈 수 없다" }
 	if main.fast_ui != null and is_instance_valid(main.fast_ui): main.fast_ui.close()
-	var s := by_id(id)
 	var FT: Script = load("res://scripts/region/fast_travel.gd")
 	var ui = FT.new(main, "")
-	ui.test_pick = "%s/%s" % [s.space, s.node]
+	ui.test_pick = "%s/%s" % [space, node]
 	ui.auto_go = true
 	main.fast_ui = ui
 	main.add_child(ui)
-	print("STATION warp %s → %s/%s" % [id, s.space, s.node])
+	print("WARP node → %s/%s" % [space, node])
 	return { ok = true, why = "" }
 
 # 다른 공간 역으로 넘어가기 직전(fast_travel._arrive): 새 장면이 마방 문 앞에 세우도록 적어 둔다
