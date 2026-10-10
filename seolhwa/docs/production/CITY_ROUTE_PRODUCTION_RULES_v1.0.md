@@ -1,6 +1,7 @@
 # 설화록 — 도시·노정 제작 규칙 v1.0 (공통 · 지역 · 설화 3층)
 
 > 작성: 2026-10-11 · 근거: 브랜치 `claude/youthful-gauss-d0fxzv`의 실제 코드·데이터. 문서만 다루며 코드는 바꾸지 않았다.
+> 갱신: 2026-10-11 공통 승격 1차(`seolhwa_godot/docs/reports/commonize-1.md`) — C17·C27·C46 구현(G), 길목 깃발 land 노정만(결정 5·6), F-1·F-6 완료.
 > 경로는 따로 적지 않으면 `seolhwa_godot/` 기준이다. 상태 표기는 다음과 같다.
 > - **G**: 공통 코드에 이미 있어 모든 공간에 적용된다.
 > - **N**: 남원 코드·데이터에만 있다. 공통으로 승격해야 한다.
@@ -44,17 +45,17 @@
 | C14 | 역마 시간 | `HORSE_KMH` 7, 지리 km×1.25, 0.3~60시간. 연출 2.8초. 2시간 넘으면 60% 확률로 날씨를 다시 뽑는다 | `fast_travel.gd:21–22, 289` | G |
 | C15 | H 키 | 아무 데서나 여는 역마 창은 없다. 지나온 노정 포털 16m 안에서만 "H: 역마 타고 ○○까지 (지나온 길 건너뛰기)". 지도(M) 역참 목록은 그대로 | `region_main._check_portals`(1233), `region_map._station_go` | G |
 | C16 | 사건 중 이동 잠금 | 사건이 `travel_lock()`으로 이유 글을 돌려주면 장면을 떠나는 9경로(역·역마 창·지도·포털·건너뛰기·말·배·마부·깃발)를 막는다. **걷기는 막지 않는다**(보이지 않는 벽 없음). 큰길 말 안내는 숨기고, E를 누르면 알림만 띄운다. 알림은 `_show_hud(이유)` 한 줄이다(예: "아이들을 두고 멀리 떠날 수 없다"). 장치는 공통이고 내용은 사건이 정한다 | `story_director.travel_lock`(106) → `fast_travel.lock_why/refuse`(144–157) | G |
-| C17 | 첫 사건 고을 막음 | 남원 사건이 끝나기 전에는 다른 공간으로 가는 역마·깃발을 막는다("남원 일이 아직 끝나지 않았다 — 고을을 떠날 수 없다") | `fast_travel.gate_why`(159), `FIRST_SPACE` 하드코딩 | N |
+| C17 | 사건 선언 고을 막음 | 사건 머리 `case.travel_gate { leave_space_until, notice, spaces? }`가 있으면 그 사건을 올린 공간에서 다른 공간으로 가는 역마·깃발을 막는다. 풀림: 풀림 변수 참 · 그 사건 phase done. 남원: `{ leave_space_until: "CASE_NAMWON_COMPLETE", notice: "남원 일이 아직 끝나지 않았다 — 고을을 떠날 수 없다" }`. `FIRST_SPACE` 하드코딩 없음 (구현 commonize-1) | `fast_travel.gate_for/gate_why` ← `case_registry.ids_for` + `namwon_data` `case.travel_gate` | G |
 | C18 | 배·나루 | `BOARD_R` 5 · 나룻배 5.5 m/s(바다 9) · 건너뛰기 ×8(최대 40) · 강 뱃길 7.5 m/s(`river_lanes`). 이야기 배(`scripted`)는 잠금을 비켜 간다. 사공 대화는 없다 | `boat_ride.gd`, `river_lanes.gd` | G |
 | C19 | 역참 키트 | 마방 27×21m(칸 2.6m×5, 대표 도시는 6칸) + 문 앞 9×2.6m. 정면은 남향 ±30°, 높이차 4.5m 안. 지역 차림은 `STYLES`(honam·yeongnam·giho·gwanseo·haeseo·gwandong·gwanbuk·tamna) | `kit/station/mabang.gd`, `hitch.gd`, `tools/region/make_stations.py` | G |
 | C20 | 역참 생활 | 150m 안에서 만들고 200m 밖에서 지운다. 칸 말 하나는 비우고 마당 말 2(조랑말 3). 마부 일 고리(솔질→여물→쉼) | `station_life.gd:17–20, 268` | G |
 | C21 | 역참 자리 예약 | 배치 생성기는 쓰기 직전에 마방 터(+2m)·문 앞(+1m)을 비운다 | `tools/placement/station_reserve.py` | G |
-| C22 | 길목 깃발 | 자리 출처는 `travel/<공간>.json`의 fast 노드 중 kind ∈ {CITY, MARKET, VILLAGE, HUB, COAST, INN, PASS}의 도착점이다. 큰길에서 4m 비켜 세우고 새 좌표는 없다. 160m에서 만들고 220m에서 지운다. 색은 아래와 같다. 가 봄은 도착 30m 또는 구역+10m | `waymarks.gd:15–19`, `kit/station/waymark.gd` | G |
+| C22 | 길목 깃발 | 자리 출처는 `travel/<공간>.json`의 fast 노드 중 kind ∈ {CITY, MARKET, VILLAGE, HUB, COAST, INN, PASS}의 도착점이다. **권역과 `ROUTE_PROFILE.kind == land` 노정만** 세운다 — river·sea 노정은 깃대·깃발 E가 없고 그 거점의 fast·가 봄은 그대로(역마 창·지도·배로 간다). kind 출처: ROUTE_PROFILE이 아직 없어 `route.json route_type` → 공간 id 접두사 `RIVER_`/`SEA_` → 그 밖 land. 충돌체 없음(지나갈 수 있다). 큰길에서 4m 비켜 세우고 새 좌표는 없다. 160m에서 만들고 220m에서 지운다. 가 봄은 도착 30m 또는 구역+10m. 깃발 102 → 96 (구현 commonize-1) | `waymarks.route_kind/space_has_flags/is_flag(n, sp)`, `kit/station/waymark.gd` | G |
 | C23 | 지도 3단계 | L3 고을 · L2 권역 · L0 전국 그림은 오프라인 렌더다. 이름표 우선순위는 HERE > CASE > HUB > TOWN > STATION > VILLAGE > LANDMARK > MINOR. 화면 px 고정 | `tools/region/render_joseon_map.py`, `region_map.gd:38–55` | G |
 | C24 | 지도 표지 | 기호: 읍치(네모 성+붉은 점) · 장 · 마을 · 역(붉은 테 '역') · 깃발(쪽빛) · 나루 · 고개 · 절 · 성황당 · 봉수. 사건 표지는 기운 붉은 인 '사', 할 말 있는 사람은 붉은 「…」. 발견 반경: 이름난 곳 45m, 고개 70m, 장소 18m | `region_map._icon`(1017), `discovery.gd` | G |
 | C25 | map_leads | 들은 행선지만 적는다(단서·범인·해결 자리는 금지). 다른 사건은 progress로 평가하며 `fn`은 쓰지 않는다 | `map_leads.gd`, 사건 `map_leads[]` | G |
 | C26 | 기본 카메라 | 고정 yaw(남→북). 기본 pitch 38 · 거리 16 · fov 30. 말 20/21/38, 배 15/15/40. 권역 `camera_zones`로 덮어쓴다(예: 도성 안 45/28) | `camera_rig.gd:9, 22, 30, 56` | G |
-| C27 | 대화 카메라 | 사건 머리 `case.talk_camera`가 있을 때만 쓴다. 남원 값은 pitch 38 · 거리 13.5 · fov 38이고, 대화 동안 음악을 0.5로 낮춘다. 다른 일곱 사건에는 없다. 공통 기본값 승격이 필요하다(D-4 결정) | `story_director._talk_camera`(850), `namwon_data.gd:52` | N |
+| C27 | 대화 카메라 | 공통 `CameraRig.TALK` pitch 38 · 거리 13.5 · fov 38. 이야기 인물(사건 actor)에게 직접 말을 걸 때만(고을 사람·마부·깃발 제외). 우선순위 공통 → `case.talk_camera` → `actor.talk_camera` → 대화 중 명시적 camera/cutscene. `talk_camera = false`면 평소 카메라(`true`는 다시 켬). 플레이어와 인물 사이를 겨냥하고 대화 동안 음악 0.5. 사건 연출이 대화 구도를 다시 쓸 때는 `d.talk_camera_base()` (구현 commonize-1) | `camera_rig.TALK/talk_spec`, `story_director.interact/_talk_camera/talk_camera_base` | G |
 | C28 | '보면' 트리거 금지 | 고정 카메라라서 트리거는 모두 '접근하면 / 반경에 들면'으로 쓴다. 공포 장면은 고정 구도 안에 미리 짠다 | v3.2 결정 3. 검사기 없음 | P |
 | C29 | 하루 빛 | 전국 공통 키프레임 표 하나(0 · 4.4 · 5.6 · 7 · 9 · 15.6 · 17.2 · 18.3 · 19.4 · 20.6시). 등불은 18.5→19.5시에 켜지고 5→6시에 꺼진다. 시간은 기본적으로 흐르지 않는다(`time_flow=false`, 시작 10시) | `time_of_day.gd`, `region_main:81` | G |
 | C30 | 기후·날씨 | 권역 `climate.png`(4m, 남부·중부·북부·고산·해안). 다시 뽑는 주기 120~260초. 눈선은 `climate.rule.alpine_alt_m` | `weather.gd` | G |
@@ -73,7 +74,7 @@
 | C43 | 아래쪽 글 크기 (1024×768 기준, ×`_k`) | 자막 40 · 안내 띠 30 · 조사·대화 E 32(처음 38, 키 칸 26/30) · 키 안내 F 27 · 소지품 25 · 말·배 안내 32 · 왼쪽 위 HUD 28. 위치는 `BOTTOM_ITEMS` 46 · `KEYHINT` 94 · `PROMPT` 152(높이 52) · `HINT` 160. 줄바꿈은 `wrap_words`(띄어쓰기에서만 끊음) | `story_ui.gd:35–44, 376`, `region_main._boat_text/_show_hud` | G |
 | C44 | 사건 등록 | `case_registry.SPACE_CASES`, 공간 → id 배열. **한 공간에 한 번에 한 사건만 활성**이다. `choose()` 순서는 요구 조건 만족 + 미완료 → 요구 조건 만족 → 소문만. 사건은 장면을 열 때만 바뀐다 | `case_registry.gd:14, 106`, `story_director._setup` | G |
 | C45 | 사건 변수 | 저장은 `cases.<id>` namespace. 완료 변수는 `CASE_<ID>_COMPLETE`, 결말 기본값은 `CASE_<ID>_OUTCOME`. 그런데 `COMPLETE_VARS`와 StoryState 기본 vars, 남원 reset 목록은 하드코딩이다 | `skills.complete_var`, `skills.gd:23`, `story_state.gd:11, 22, 78` | N |
-| C46 | 새 사건 필수 메타 | `case.id · record_title · region · outcome_var · reset_vars · requires · EVENT_CLASS · SOURCE_ID`. 지금 검사기는 EVENT_CLASS만 본다 | `tools/story/validate_event_class.gd`, 춘향 v1.1 착수 순서 | P |
+| C46 | 새 사건 필수 메타 | `case.id · record_title · region · outcome_var · reset_vars · requires · EVENT_CLASS · SOURCE_ID` — 등록부 모든 사건에 키가 있어야 한다(requires는 비어도 키는 있어야, reset_vars는 목록 또는 사전). 경고(실패 아님): 남원 아닌 사건에 `rule_label` 없음("범의 버릇"이 뜸) · 싸움터가 있는데 `combat_bait_item` 없음(떡을 던짐) (구현 commonize-1) | `tools/story/validate_case_meta.gd`(CASEMETA) — `validate_event_class.gd`와 나란히 | G |
 | C47 | 대화 구조 | 새 엔진을 만들지 않는다. story_runner의 `choice · loop · when · disabled_when · do · flag`로 쓴다 | v3.2 결정 7, `story_runner.gd` | G |
 | C48 | 지형 만들기 | DEM + 압축 K, 투영식 `x=(lon−lon0)·cos(lat0)·111320·K`, `y=(alt−base)·K`. `forbidden` 목록(현대 제방·댐·도로 등)으로 고친다 | `tools/region/build.py`, `build_region.py`, `modern_fix.py` | G |
 | C49 | 고을 성격표 → 모양새 | `region.json archetypes`(eupchi · plain · river · mountain · pass · temple · coast · island · capital) + `settlements[].profile`(culture · climate · roof · wall · layout · entrance · people · animals · signature · trades) → `Style` | `tools/placement/town_profile.resolve` | G |
@@ -89,9 +90,9 @@
 | C59 | 권역 지형 빌드 경로 | 일곱 권역은 설정 파일(`tools/region/regions/<id>.json`)로 `build_region.main()`을 돈다. 남원만 전용 `main()` + `places.py · profiles.PROFILES · landuse.AREA_ID · hydro.KNOWN · namwon_widths` 경로를 쓰고, `qa.py`·`render.py`에도 남원 분기가 있다 | `tools/region/build.py:635`, `qa.py:10` | N |
 | C60 | 이벤트 군중 | **공통 규칙 확정 / 최소 구현 필요.** 설화용 일시 군중은 `EventCrowd` 프리셋으로 배치: generic character bank 재사용 → 지정 구역 안 배치 → 단순 행동(idle/talk/watch/walk, 잔치는 sit/stand/serve) → density(low 6~10 / medium 10~18 / high 18~30, 1024×768 실행 기준 시작값 — 성능 시험 뒤 확정) → seed로 같은 배치 재현 → 사건 flag로 생성/제거 → 카메라 밖·먼 거리는 줄이거나 멈춤. 핵심 이야기 인물은 넣지 않는다(story actor). **만들지 않는 것**: 개별 군중 AI·생활 스케줄·길찾기·충돌 회피·감정 전파·관중 반응·대규모 navigation. 목적은 "군중 시뮬레이션"이 아니라 "사건 장면 채우기" | (계획) 춘향 자산·좌표 배치 때 구현 | P |
 
-**공통 층 집계: 59개 = G 43 · N 11 · P 5** (표의 상태 칸을 세어 확인).
-- **N(남원에만 있어 공통 승격 필요)**: C17 · C27 · C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
-- **P(문서만)**: C28 · C31 · C42 · C46 · C52
+**공통 층 집계: 59개 = G 46 · N 9 · P 4** (표의 상태 칸을 세어 확인. commonize-1에서 C17·C27 N→G, C46 P→G).
+- **N(남원에만 있어 공통 승격 필요)**: C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
+- **P(문서만)**: C28 · C31 · C42 · C52
 - 덧붙임: G 가운데 C16 이동 잠금·C41 음악 훅처럼 **장치는 공통이지만 지금 쓰는 사건이 남원 하나뿐**인 것이 있다. 다른 사건이 쓰기 시작할 때 E절 계약대로 쓰면 된다.
 
 ### B-2. 지역 층 (권역·노정 profile — 값은 C절)
@@ -116,10 +117,10 @@
 |---|---|---|
 | 사건 인물·물체·트리거·소품 | `<id>_data.gd` `actors/objects/triggers/props`(`when`, phase별 `at`) | 남원 오누이·포수·이웃 아낙 |
 | 사건 무대 건물 | `placement_story_<case>.json`. 사건과 관계없이 늘 읽힌다(`placement_loader.gd:49`) | 남원 외딴집·방앗간 10개 · 강릉 식생 비우기 2개 |
-| 카메라 | `case.talk_camera`, 단계 `{camera:{…}}`, `cutscene` | 남원 7A pitch 34·거리 17·fov 36 |
+| 카메라 | 공통 TALK 위에 `case.talk_camera` · `actors[].talk_camera`(false = 끔), 단계 `{camera:{…}}`, `cutscene` | 남원 7A pitch 34·거리 17·fov 36 |
 | 임시 군중 | 지금은 `when`으로 감싼 사건 actor(평양 `crowd_a/b` · 강릉 `town_crowd_*`). 앞으로는 `EventCrowd` 프리셋(C60) | 평양 `crowd_a/b` · 강릉 `town_crowd_*` |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | 남원 `u_moon` 0, 강릉 `snow_line` |
-| 이동 잠금 | `case_fn.travel_lock()` | 남원 밤 |
+| 이동 잠금 | `case_fn.travel_lock()`(장면 안 조건) · `case.travel_gate`(공간 떠나기 — 데이터 선언) | 남원 밤 · 남원 첫 사건 |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | 남원만 |
 | 계절 차림 | 사건 소품·배치(계획) | 춘향 PART I 단오·PART II 추수(아직 코드 없음) |
 
@@ -227,9 +228,9 @@
 | PA_PYEONGYANG–HG_HAMHEUNG | land · 산골 | 성천 · 양덕 · 고원 주막 / 고원 역참 | 3 | 평양 사건 뒤 FORCED 넷(`WHEN r05_on`) |
 | HG_HAMHEUNG–BUKCHEONG | land · 해안 | 홍원 · 북청 | 2 | **NO_STATION**(함관령 옛 역 — 설화 층) |
 | HH_HWANGJU–JANGSANGOT | land · 곶 | 재령 · 구월산 · 장산곶 | 3 | 막다른 길 |
-| RIVER_HANGANG | river | 마포 · 두물머리 · 조포 · 목계진 · 충주 | 3 | AUTO_RIDE false |
-| RIVER_DAEDONGGANG | river | 대동문 선창 · 두로도 · 겸이포 | 2 | AUTO_RIDE false |
-| SEA_NAMHAE_JEJU | sea | 덕진다리 주막 · 관두포 · 화북포 | 1 | 첫 뱃길 `skip_lock` · 첫 통과가 제주 역마의 조건 |
+| RIVER_HANGANG | river | 마포 · 두물머리 · 조포 · 목계진 · 충주 | 0 (예전 3 — 결정 5로 뺌) | AUTO_RIDE false |
+| RIVER_DAEDONGGANG | river | 대동문 선창 · 두로도 · 겸이포 | 0 (예전 2) | AUTO_RIDE false |
+| SEA_NAMHAE_JEJU | sea | 덕진다리 주막 · 관두포 · 화북포 | 0 (예전 1) | 첫 뱃길 `skip_lock` · 첫 통과가 제주 역마의 조건 |
 
 ---
 
@@ -256,8 +257,8 @@
 | 할 수 있는 것 | 어떻게 (키 · hook) | 지금 상태 | 지킬 것 |
 |---|---|---|---|
 | 이동 잠금 | `case_fn.travel_lock() -> String` | G(남원만 씀) | 걷기는 막지 않는다. 이유 한 줄. 아침·phase로 저절로 풀린다 |
-| 첫 사건 고을 막음 | (제안) `case.gate {space, until_var}` | N(`gate_why` 하드코딩) | F-1 |
-| 대화 카메라 | `case.talk_camera {pitch, distance, fov}`. 인물별 덮어쓰기는 (제안) `actors[].talk_camera` | 사건 단위만 | 공통 기본값을 먼저 정한다(F-6) |
+| 고을 막음 | `case.travel_gate { leave_space_until, notice, spaces? }` | G(남원 첫 사건이 씀 — F-1 완료) | 풀림 변수는 자기 사건 것. 이유 한 줄. 사건이 끝나면(phase done) 저절로 풀린다 |
+| 대화 카메라 | 공통 TALK(38/13.5/38) 위에 `case.talk_camera {pitch, distance, fov 일부}` · `actors[].talk_camera` · `false`로 끄기 | G(F-6 완료) | 구도가 틀어지는 인물만 덮어쓴다 |
 | 카메라 샷 | 단계 `{camera:{pitch, distance, fov, focus}}`, `cutscene`, `rig.shot` | G | 끝나면 `camera(null)`. 사용자 틸트 설정 복원 |
 | 임시 군중 | **축제·잔치·관아 행사처럼 일시적으로 사람이 늘어나는 장면은 공용 이벤트 군중 프리셋(`EventCrowd`, C60)을 쓴다. 도시의 상시 인구 시스템을 새로 만들지 않는다.** 사건 데이터에 `crowds: [{ preset, area, density, roles, seed, when }]`로 선언 | P(최소 구현 필요) | 핵심 인물은 story actor. 인원은 성능 시험 뒤. 기존 `crowd_` actor 관례는 옮길 때까지 유지 |
 | set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` | 부분적(placement는 when 없이 늘 읽힘) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
@@ -283,14 +284,14 @@
 
 | 순위 | 일 | 크기 | 근거 규칙 |
 |---|---|---|---|
-| F-1 | `fast_travel.gate_why` → 사건 선언 규칙(`case.gate {space, until}` 또는 `travel_lock` 확장)을 공통으로 읽기. `FIRST_SPACE` 제거 | **S** | C17 |
+| F-1 | ~~`fast_travel.gate_why` → 사건 선언 규칙~~ **완료(commonize-1)**: `case.travel_gate` + `fast_travel.gate_for`, `FIRST_SPACE` 제거 | **S** | C17 |
 | F-2 | CITY_PROFILE 스키마 + 로더(Python `tools/placement/city_profile.py`, `hub_profiles/north_profiles`를 원본으로) | **M** | C-2 |
 | F-3 | builder profile hook: `hubs.py`·`north.py`·`namwon.py`가 `road_width · density_by_ring · vegetation · landmarks · market_density · government_complex`를 profile에서 읽기 | **L** | C49 · C52 |
 | F-3a | scatter 식생이 권역 `projection.K · y_base_alt · climate`를 읽고 profile `vegetation`(수종 고도대)을 따르게 하기. 지금은 남원 값이 전국에 깔린다 | **M** | C57 |
 | F-3b | 남원 지형 빌드를 설정 파일 경로(`build_region` + `regions/JL_NAMWON_UNBONG.json`)로 옮기기. `places.py·AREA_ID·hydro.KNOWN·qa/render` 분기 제거(결과 비교 필수) | L | C59 |
 | F-4 | 남원 region.json 형식 맞추기(`culture_key=honam · walls polygon · camera_zones · portals`) + `namwon.py` 성벽을 walls polygon으로. 다른 권역 camera_zones 채우기 | **M** | C26 · C50 · C51 |
-| F-5 | 검사기: 새 도시(profile 필수 키 · 역참 · 깃발 · 말 타는 곳 · camera_zones · forbidden)와 새 사건(필수 메타 · 공통 코드 id 분기 금지 · heard `by` · map_leads 금지어) | **M** | C46 · C28 |
-| F-6 | 대화 카메라 공통 기본값(`camera_rig.TALK`)과 사건·인물 덮어쓰기 | S | C27 |
+| F-5 | 검사기: 새 도시(profile 필수 키 · 역참 · 깃발 · 말 타는 곳 · camera_zones · forbidden)와 새 사건(~~필수 메타~~ — C46 최소판 `validate_case_meta.gd` 완료 · 공통 코드 id 분기 금지 · heard `by` · map_leads 금지어) | **M** | C46 · C28 |
+| F-6 | ~~대화 카메라 공통 기본값(`camera_rig.TALK`)과 사건·인물 덮어쓰기~~ **완료(commonize-1)** | S | C27 |
 | F-7 | onboarding `early()`·JOURNAL 안내를 등록부의 '첫 사건'·`on_case_started` 공통 호출로 | S | C37 · C38 |
 | F-8 | `COMPLETE_VARS`·StoryState 기본 vars·reset 목록을 등록부·사건 데이터에서 만들기 | M | C45 |
 | F-9 | 지명 TITLES 하나로(`place_title` ← settlement `title`) | S | C53 |
@@ -303,7 +304,7 @@
 | F-16 | (장기 백로그) 범용 placer | XL | 부록 결정 1 |
 | F-17 | `EventCrowd` 최소 구현(C60) — generic bank 선택·구역 배치·단순 행동·density·seed·flag 표시/숨김·먼 거리 줄이기. **춘향 자산·좌표 배치 때** 만든다(남원 오누이용으로 미리 만들지 않음) | M | C60, E절 |
 
-**상위 다섯**: F-1(S) · F-2(M) · F-3(L) · F-4(M) · F-5(M). F-3a(M)는 눈에 보이는 문제라 F-3과 함께 하기를 권한다.
+**상위 다섯**: ~~F-1(S)~~ 완료 · F-2(M) · F-3(L) · F-4(M) · F-5(M). F-3a(M)는 눈에 보이는 문제라 F-3과 함께 하기를 권한다.
 
 ---
 
@@ -314,7 +315,7 @@
 | 오누이 밤 전체(노크·흰 앞발·나무·동아줄·두 빛·아침), 범 배우기 mods | `story/namwon/*`, `ctiger._tut_next` | 사건 내용. 흐름(추적→조사→밤→위기)을 복제하지 않는다(v3.2 위상) |
 | 외딴집·방앗간·수수밭·큰 나무 무대 | `placement_story_namwon.json` | 사건 무대 |
 | 밤 이동 잠금 문구 "아이들을 두고 멀리 떠날 수 없다" | `namwon_case.travel_lock` | 내용만 남원. 장치는 공통(C16) |
-| 첫 사건 막음 **문구**와 대상 변수 | (F-1 뒤) 남원 사건 데이터 | 장치는 공통으로 옮기고 값은 남원 데이터에 남긴다 |
+| 첫 사건 막음 **문구**와 대상 변수 | `namwon_data` `case.travel_gate`(F-1 완료) | 장치는 공통(`fast_travel.gate_for`), 값은 남원 데이터 |
 | 첫 방문 마부 안내(`station_intro`, 기다리는 말 7m, 사건 뒤만) | `namwon_case.gd:159–187` | 튜토리얼 연출 |
 | 대화 카메라 값 38/13.5/38, 7A 34/17/36, 방어 46/19/30 · 34/15/34 | `namwon_data`, `namwon_case` | 사건 연출값. 공통 기본값은 따로 정한다 |
 | 마지막 밤 달 감추기(`u_moon`) | `namwon_case`, `region_main.set_moon` | 장치는 공통, 사용은 남원 |
@@ -334,9 +335,9 @@
 | 1 | profile hook | 범용 placer는 만들지 않는다. 기존 builder에 `CITY_PROFILE`을 연결(F-2 → F-3/F-3a → F-4). F-16은 장기 백로그 |
 | 2 | 남원 형식 | 전국 형식으로 통일 — `culture_key`·`walls`·`camera_zones`·빌드 경로만. 남원 모습은 다시 만들지 않고 전후 비교 스크린숏으로 보존 |
 | 3 | 권역 승마 | 25m. 노정 자유 재탑승, 막 내린 자리 40m, 포털 도착 60m 예외 유지 |
-| 4 | 대화 카메라 | 공통 TALK 기본값 pitch 38 / distance 13.5 / fov 38 — story actor와 직접 대화할 때만(ambient_talk·마부·깃발 제외). 우선순위: 공통 기본 → `case.talk_camera` → `actor.talk_camera` → 대화 중 명시적 camera/cutscene. `talk_camera = false`로 인물별 끄기 |
-| 5 | 수상 노정 깃발 | 6개 제거(한강 마포·목계진·충주, 대동강 대동문 선창·겸이포, 남해~제주 덕진다리). 규칙: `ROUTE_PROFILE.kind == land`만 waymark, `river/sea`는 생성 안 함. 노드의 `fast`·발견 정보는 유지(물리 깃발과 깃발 E만 제거) |
-| 6 | 깃발 충돌체 | 없음 |
+| 4 | 대화 카메라 | **구현(commonize-1)** 공통 TALK 기본값 pitch 38 / distance 13.5 / fov 38 — story actor와 직접 대화할 때만(ambient_talk·마부·깃발 제외). 우선순위: 공통 기본 → `case.talk_camera` → `actor.talk_camera` → 대화 중 명시적 camera/cutscene. `talk_camera = false`로 인물별 끄기 |
+| 5 | 수상 노정 깃발 | **구현(commonize-1)** 6개 제거(한강 마포·목계진·충주, 대동강 대동문 선창·겸이포, 남해~제주 덕진다리). 규칙: `ROUTE_PROFILE.kind == land`만 waymark, `river/sea`는 생성 안 함. 노드의 `fast`·발견 정보는 유지(물리 깃발과 깃발 E만 제거) |
+| 6 | 깃발 충돌체 | 없음 (확인: 깃발 키트에 충돌체 없음 — commonize 시험) |
 | 7 | 권역 빛 tint | `공통 time_of_day × CITY_PROFILE.light_tint` 하나뿐. 권역별 하루 조명표 금지, 사건이 tint를 영구 변경하지 않음, saturation/contrast 지역화 금지, 극단 그레이딩 금지, 기본 neutral, 중립 대비 ±5~8% 이내에서 시작, 1024×768 같은 시각 8권역 비교 스크린숏 후 확정. 방향: 남원 약간 따뜻 · 한양 중립 · 경주 따뜻·건조 · 강릉 맑고 차가움 · 황주 중립~차가움 · 평양 약간 차가움 · 함흥 가장 차가움 · 제주 밝고 따뜻 |
 | 8 | EventCrowd | 이미 확정(C60, F-17) |
 | 9 | 남원 밤 장거리 이동 잠금 | 이미 확정·구현 |
