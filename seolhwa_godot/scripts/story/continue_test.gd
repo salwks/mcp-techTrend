@@ -6,6 +6,8 @@
 #     2 고을 사람 곁 — E 대상이 고을 사람이고, E 키로 말 걸기가 된다(ambient.last가 바뀐다).
 #   --continueexpect=rollback  (남원 결정 6) 옛 밤 절정 도중 저장 — 저녁 준비 바로 앞으로 되돌렸나(단서·아이템 그대로, 밤 임시 플래그 없음)
 #     → 해 질 무렵 귀환(경고·포수·준비)이 다시 돌고 준비 상태(dusk_prep)가 되는지 본 뒤 1·2를 한다.
+#   --continueexpect=rollback_rope  (남원 v3.2) 새 흐름의 동아줄 도중 저장(test_rope_save.json) — 결말 변수 전이라 같은 안전지점(21시 숨은 자리)으로
+#   --continueexpect=morning  (남원 v3.2) 옛 v3 아침(북쪽 어귀 한 장면) 도중 저장(test_morning_save.json) — 새 아침(외딴집 마당·이웃 아낙)부터 다시
 #   통과하면 "CONTTEST PASS", 아니면 "CONTTEST FAIL <까닭>".
 extends RefCounted
 
@@ -81,9 +83,13 @@ func run(spec: String) -> void:
 	_ok(await _wait_until(idle, 120.0), "이야기 한가함 started=%s busy=%s modal=%s cut=%s" % [d._started, d.runner.busy, d.ui.modal, d._cut])
 	_ok(d.S.phase != "start", "phase=" + String(d.S.phase))
 	print("CONTTEST state phase=%s seen=%s talked=%s" % [d.S.phase, d.S.seen.keys(), d.S.talked])
-	if String(main.args.get("continueexpect", "")) == "rollback": await _rollback()
+	match String(main.args.get("continueexpect", "")):
+		"rollback": await _rollback()
+		"rollback_rope": await _rollback_rope()
+		"morning": await _morning()
 	await _story_actor()
-	await _ambient()
+	# 21시 외딴집(새 밤 안전지점)에는 바깥에 다니는 고을 사람이 없다 — 그 경우만 고을 사람 말 걸기를 건너뛴다
+	if String(main.args.get("continueexpect", "")) != "rollback_rope": await _ambient()
 	_finish("")
 
 # 1 이야기 인물: 말할 거리가 있는 인물(가까운 순) 곁으로 가서 E — 140m 밖 인물은 안 그리므로 보임은 따지지 않는다
@@ -151,6 +157,34 @@ func _rollback() -> void:
 	_ok(d.actors.nui.shown and d.actors.au.shown, "오누이가 집에 있다")
 	_ok(d._targets().any(func(t): return String(t.id) == "night_wait") or Vector2(main.player_pos.x, main.player_pos.z).distance_to(d.anchor("hide_spot")) > 2.6, "숨은 자리 “기다린다”가 열려 있다")
 	print("CONTTEST rollback flags=%d clues=%d hour=%.2f" % [S.flags.size(), S.clues.size(), main.hour])
+
+# 남원 v3.2 — 새 흐름의 동아줄 도중 저장(결말 변수 전): 같은 안전지점(준비 중 21시 · 숨은 자리)으로. 동아줄·기도 플래그는 지운다
+func _rollback_rope() -> void:
+	var S = d.S
+	_ok(String(d.case_fn.get("rollback")) == "night", "새 밤 저장을 알아봄(rollback=%s)" % d.case_fn.get("rollback"))
+	_ok(S.phase == "explore", "밤에서 빠져나옴(phase=%s)" % S.phase)
+	for k in ["act10_started", "prayer_1", "prayer_2", "rope_hint", "rope_reached", "kids_on_rope", "rope_rise_done", "pending_outcome", "night_wait_started", "last_stand_done", "beat_kids_prayer", "beat_new_rope_rise"]:
+		_ok(not S.flags.has(k), "동아줄·밤 플래그 지움 " + k)
+	_ok(String(S.flags.get("beats", "")) == "mother_harmed", "원작 장면 기록은 밤 앞까지만(%s)" % S.flags.get("beats", ""))
+	_ok(S.is_flag("dusk_prep") and S.is_flag("kids_warned") and bool(S.world.get("oil_on_step", false)), "준비 상태(dusk_prep·경고·디딤돌 기름)는 그대로")
+	_ok(not S.seen.has("S0007") and not S.seen.has("S0009"), "S0007·S0009를 다시 본다")
+	_ok(String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "" and not S.world.has("sorghum_red"), "결말 변수·붉은 수수밭 없음")
+	_ok(main.hour >= 20.5 and main.hour <= 22.6, "준비 중 %.2f시" % main.hour)
+	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(d.anchor("hide_spot")) < 3.0 and d._targets().any(func(t): return String(t.id) == "night_wait"), "숨은 자리 “기다린다”가 열려 있다")
+	print("CONTTEST rollback_rope flags=%d clues=%d hour=%.2f" % [S.flags.size(), S.clues.size(), main.hour])
+
+# 남원 v3.2 — 옛 v3 아침 저장: 새 아침(외딴집 마당 · 이웃 아낙 세 갈래)부터. 결말 변수(B)는 그대로
+func _morning() -> void:
+	var S = d.S
+	var ok := func(): return S.is_flag("morning_truth_choice") and not d.runner.busy and not d.ui.modal
+	_ok(await _wait_until(ok, 90.0), "새 아침 — 이웃 아낙 물음까지 돈다")
+	_ok(String(d.case_fn.get("rollback")) == "old_morning", "옛 아침 저장을 알아봄(rollback=%s)" % d.case_fn.get("rollback"))
+	_ok(S.phase == "morning" and S.seen.has("S0010") and S.is_flag("morning_yard_seen"), "S0010 외딴집 마당 아침(phase=%s)" % S.phase)
+	_ok(String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "B" and String(S.vars.get("CASE_NAMWON_MORNING", "")) != "", "결말 B 그대로 · 아침 대답 %s" % S.vars.get("CASE_NAMWON_MORNING", ""))
+	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(d.anchor("yard")) < 12.0, "외딴집 마당에서 아침(순간이동으로 어귀에 가 있지 않다)")
+	_ok(S.is_flag("kids_gone") and not d.actors.nui.shown and bool(S.world.get("sorghum_red", false)) and bool(S.world.get("fall_traces", false)), "아이들 없음 · 붉은 수수밭 · 흔적")
+	_ok(not S.is_flag("elder_book") and not S.seen.has("S0011"), "노인·마지막 밤은 아직(걸어 내려가야)")
+	print("CONTTEST morning choice=%s hour=%.2f" % [S.vars.get("CASE_NAMWON_MORNING", ""), main.hour])
 
 # 2 고을 사람: 이야기 인물에서 떨어진 고을 사람 곁으로 가서 E
 func _ambient() -> void:

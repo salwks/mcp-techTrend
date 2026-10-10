@@ -80,6 +80,9 @@ TESTS=(
 	"continue:new|300|--region=JL_NAMWON_UNBONG --continuetest=new"
 	# 남원 결정 6: 옛 밤 절정 도중 저장(꾸민 저장) → 저녁 준비 바로 앞으로 되돌림 → 귀환·경고·준비가 다시 돈다
 	"continue:namwon-climax|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_climax_save.json --continueexpect=rollback"
+	# 남원 v3.2: 새 흐름의 동아줄 도중 저장(꾸민 저장) → 같은 안전지점 · 옛 v3 아침 저장(꾸민 저장) → 새 아침(외딴집 마당)부터
+	"continue:namwon-rope|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_rope_save.json --continueexpect=rollback_rope"
+	"continue:namwon-morning|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_morning_save.json --continueexpect=morning"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 )
