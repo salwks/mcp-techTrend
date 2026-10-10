@@ -494,7 +494,7 @@ func _build_ui() -> void:
 	add_child(ui_layer)
 	ui_layer.add_to_group(preload("res://scripts/hud_gate.gd").HIDE)   # 기록책·지도·메뉴가 열리면 감춤
 	_slot_box = d.ui._paper(0.9, 2, 12)
-	_slot_label = d.ui._label(19, d.ui.INK)
+	_slot_label = d.ui._label(26, d.ui.INK)
 	_slot_box.add_child(_slot_label)
 	_slot_box.visible = false
 	ui_layer.add_child(_slot_box)
@@ -527,6 +527,6 @@ func _update_slot_ui() -> void:
 	_slot_label.text = text
 	var vs := get_viewport().get_visible_rect().size
 	var k := clampf(vs.y / 768.0, 0.8, 2.4)
-	_slot_label.add_theme_font_size_override("font_size", int(19 * k))
+	_slot_label.add_theme_font_size_override("font_size", int(26 * k))   # 아래쪽 글 1.4배(소지품 25와 맞춤)
 	_slot_box.reset_size()
 	_slot_box.position = Vector2(18 * k, vs.y - _slot_box.get_combined_minimum_size().y - 18 * k)

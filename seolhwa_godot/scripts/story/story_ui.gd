@@ -8,6 +8,8 @@
 # 기록책(R): 갈피(pages — scripts/story/journal_book.gd가 만든다)를 세로쓰기 선장본 펼침면(scripts/story/journal_view.gd)으로 그린다.
 #   ← A 다음 쪽 · → D 앞 쪽 · 숫자·갈피 클릭 · 쪽 가장자리 클릭. 꼬리표: ◆ 확인 · ◇ 들음 — 발언자 · △ 추정 (테 위 작은 글씨 — 색만으로 가르지 않는다, 보강서 §22).
 # 글꼴: scripts/ui_fonts.gd(덕온공주체 — 본문 main, 이름·제목 classic). 키는 작은 먹 칸(E · R · Esc)으로 보인다.
+# 아래쪽 글(2026-10 크기 1.4~1.45배, 1024×768 기준): 위에서 아래로 자막(먹빛 반투명 띠, 40) → 처음 한 번 안내 한지 띠(30) → 조사·대화 안내 E(32, 처음엔 38)
+#   → 오른쪽 아래 키 안내 F(27) → 소지품(25). 줄이 서로 겹치지 않게 칸을 쌓고(BOTTOM_*), 긴 한국어 줄은 띄어쓰기에서만 고르게 끊는다(wrap_words).
 # 저장 표시: save_stamp() — 오른쪽 아래 붉은 붓 도장 '기록을 남겼다'(progress.checkpoint). key_hint(키, 글) — 오른쪽 아래 작은 안내(주막 F 등).
 # 확인: E·Space·Enter·클릭 / 선택: ↑↓·W·S·숫자 / 기록: R / 닫기: Esc. 시험(auto)에서는 스스로 넘긴다.
 extends CanvasLayer
@@ -29,6 +31,18 @@ const SEAL := Color("#a8443c")
 const KIND_COL := { info = Color("#7a6e60"), clue = Color("#2b2622"), rule = Color("#a8443c"), journal = Color("#a8443c"), item = Color("#6b5a3a") }
 const KIND_TAG := { clue = "단서", rule = "버릇", journal = "기록", item = "소지품" }
 # 기록책 꼬리표(보강서 §22): 모양 + 낱말
+# 아래쪽 글 크기(1024×768에서 픽셀, _k로 늘어남)와 줄 자리(화면 아래에서 위로, _k 곱)
+const FS_CAPTION := 40
+const FS_HINT := 30
+const FS_PROMPT := 32
+const FS_PROMPT_BIG := 38
+const FS_KEYHINT := 27
+const FS_ITEMS := 25
+const BOTTOM_ITEMS := 46.0      # 소지품 줄 윗변(아래에서)
+const BOTTOM_KEYHINT := 94.0    # 오른쪽 아래 키 안내 윗변
+const BOTTOM_PROMPT := 152.0    # 조사·대화·말·배 안내 줄 윗변(높이 52)
+const BOTTOM_HINT := 160.0      # 안내 띠 아랫변
+const KEYS_COMBAT := "J 베기(길게: 모아 베기) · K 구르기 · L 막기 · I 활 · U 떡 · Shift 달리기"
 const FACT_TAG := { fact = "◆ 확인", heard = "◇ 들음", guess = "△ 추정" }
 
 var auto := false                  # 시험: 대화·카드를 스스로 넘기고 선택은 auto_choice로
@@ -47,6 +61,7 @@ var _dlg_name: Label
 var _dlg_text: Label
 var _dlg_hint: Label
 var _caption: Label
+var _cap_box: PanelContainer
 var _lb_top: ColorRect
 var _lb_bot: ColorRect
 var _fade: ColorRect
@@ -83,6 +98,7 @@ var _hud_say: Label
 var _hud_say_t := 0.0
 var _keys_hint: Label
 var _cap_tween: Tween
+var _cap_text := ""
 var _waiting := ""                 # 지금 기다리는 것: say | card | choice | ending
 var _typing := false
 var _type_t := 0.0
@@ -91,6 +107,8 @@ var _cooldown := 0.0
 var _hint: PanelContainer
 var _hint_l: Label
 var _hint_tw: Tween
+var _hint_raw := ""
+var _bottom_extra := 0.0          # 말·배 안내(region_main)가 두 줄이라 안내 줄 위로 더 차지한 높이(px) — 안내 띠·자막을 그만큼 올린다
 var _marks: Control
 var _mark_list: Array = []
 var _talk_marks: Array = []
@@ -193,19 +211,26 @@ func _build() -> void:
 	_lb_top = ColorRect.new(); _lb_top.color = Color(0.06, 0.05, 0.045); _lb_top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_lb_bot = ColorRect.new(); _lb_bot.color = Color(0.06, 0.05, 0.045); _lb_bot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_lb_top); _root.add_child(_lb_bot)
-	# 자막
-	_caption = _label(28, Color(1, 1, 1), true)
+	# 자막 — 먹빛 반투명 띠 위 흰 글(조작 유지 자막도 같은 자리). 줄은 wrap_words로 띄어쓰기에서만 끊는다
+	_cap_box = PanelContainer.new(); _cap_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var csb := StyleBoxFlat.new()
+	csb.bg_color = Color(0.06, 0.05, 0.045, 0.52)
+	csb.set_corner_radius_all(4)
+	csb.border_color = Color(0.94, 0.9, 0.82, 0.18); csb.border_width_top = 1; csb.border_width_bottom = 1
+	_cap_box.add_theme_stylebox_override("panel", csb)
+	_caption = _label(FS_CAPTION, Color(1, 0.99, 0.95), true)
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_caption.modulate.a = 0.0
-	_root.add_child(_caption)
+	_caption.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_cap_box.add_child(_caption)
+	_cap_box.modulate.a = 0.0
+	_root.add_child(_cap_box)
 	# 조사 대상 먹점(가까울 때만 — 멀면 아무 표시 없음)
 	_marks = Control.new(); _marks.set_anchors_preset(Control.PRESET_FULL_RECT); _marks.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_marks.draw.connect(_draw_marks)
 	_root.add_child(_marks)
 	# 처음 한 번 안내(WASD 이동 등) — 한지 띠, 확인 버튼 없음
-	_hint = _paper(0.9, 1, 14)
-	_hint_l = _label(21, INK); _hint_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hint = _paper(0.92, 1, 18)
+	_hint_l = _label(FS_HINT, INK); _hint_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint.add_child(_hint_l)
 	_hint.modulate.a = 0.0
 	_root.add_child(_hint)
@@ -213,9 +238,9 @@ func _build() -> void:
 	_prompt = HBoxContainer.new(); _prompt.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_prompt.alignment = BoxContainer.ALIGNMENT_CENTER
 	_prompt.add_theme_constant_override("separation", 10)
-	var pc := _chip("E", 18, true)
+	var pc := _chip("E", 26, true)
 	_prompt_key = pc.get_node("key")
-	_prompt_l = _label(22, Color(1, 1, 1), true)
+	_prompt_l = _label(FS_PROMPT, Color(1, 1, 1), true)
 	_prompt.add_child(pc); _prompt.add_child(_prompt_l)
 	_prompt.visible = false
 	_root.add_child(_prompt)
@@ -223,14 +248,14 @@ func _build() -> void:
 	_khint = HBoxContainer.new(); _khint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_khint.alignment = BoxContainer.ALIGNMENT_END
 	_khint.add_theme_constant_override("separation", 8)
-	var kc := _chip("F", 16, true)
+	var kc := _chip("F", 22, true)
 	_khint_key = kc.get_node("key")
-	_khint_l = _label(19, Color(1, 1, 1), true)
+	_khint_l = _label(FS_KEYHINT, Color(1, 1, 1), true)
 	_khint.add_child(kc); _khint.add_child(_khint_l)
 	_khint.visible = false
 	_root.add_child(_khint)
 	# 소지품
-	_items = _label(18, Color(1, 1, 1), true)
+	_items = _label(FS_ITEMS, Color(1, 1, 1), true)
 	_items.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_root.add_child(_items)
 	# 알림 띠
@@ -309,13 +334,13 @@ func _build() -> void:
 	_foe_bar = _bar(Color("#2b2622"), 12)
 	_foe_box.add_child(_foe_name); _foe_box.add_child(_foe_bar)
 	_hud.add_child(_foe_box)
-	_ammo = _label(20, Color(1, 1, 1), true)
+	_ammo = _label(28, Color(1, 1, 1), true)
 	_hud.add_child(_ammo)
-	_hud_say = _label(26, Color(1, 1, 1), true); _hud_say.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hud_say = _label(36, Color(1, 1, 1), true); _hud_say.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hud_say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_hud.add_child(_hud_say)
-	_keys_hint = _label(16, Color(1, 1, 1, 0.85), true)
-	_keys_hint.text = "J 베기(길게: 모아 베기) · K 구르기 · L 막기 · I 활 · U 떡 · Shift 달리기"
+	_keys_hint = _label(21, Color(1, 1, 1, 0.88), true)
+	_keys_hint.text = KEYS_COMBAT
 	_hud.add_child(_keys_hint)
 	# 종결 카드
 	_ending = ColorRect.new(); _ending.color = Color(PAPER.r, PAPER.g, PAPER.b, 0.97)
@@ -358,16 +383,20 @@ func _resize() -> void:
 	_lb_bot.position = Vector2(0, vs.y if _lb_bot.get_meta("on", false) == false else vs.y - lbh); _lb_bot.size = Vector2(vs.x, lbh)
 	var w := minf(vs.x * 0.82, 980.0 * k)
 	_dialog.position = Vector2((vs.x - w) / 2, vs.y - 220 * k); _dialog.size = Vector2(w, 170 * k); _dialog.custom_minimum_size = Vector2(w, 150 * k)
-	_caption.position = Vector2(vs.x * 0.1, vs.y * 0.74); _caption.size = Vector2(vs.x * 0.8, 120 * k)
-	_prompt.position = Vector2(0, vs.y - 64 * k); _prompt.size = Vector2(vs.x, 40 * k)
-	_khint.position = Vector2(vs.x * 0.4, vs.y - 92 * k); _khint.size = Vector2(vs.x * 0.6 - 26 * k, 34 * k)
+	var csb: StyleBoxFlat = _cap_box.get_theme_stylebox("panel")
+	csb.content_margin_left = 26 * k; csb.content_margin_right = 26 * k; csb.content_margin_top = 9 * k; csb.content_margin_bottom = 11 * k
+	_caption.add_theme_constant_override("line_spacing", int(5 * k))
+	_hint_l.add_theme_constant_override("line_spacing", int(4 * k))
+	_prompt.position = Vector2(0, vs.y - BOTTOM_PROMPT * k); _prompt.size = Vector2(vs.x, 52 * k)
+	_khint.position = Vector2(vs.x * 0.3, vs.y - BOTTOM_KEYHINT * k); _khint.size = Vector2(vs.x * 0.7 - 22 * k, 40 * k)
 	_place_hint()
+	_place_caption()
 	_center.position = Vector2(vs.x * 0.15, vs.y * 0.3); _center.size = Vector2(vs.x * 0.7, vs.y * 0.4)
 	_title_l.position = Vector2(0, vs.y * 0.3); _title_l.size = Vector2(vs.x, vs.y * 0.3)
 	var bw := minf(vs.x * 0.5, 520 * k)
 	_book.custom_minimum_size = Vector2(bw, vs.y * 0.5); _book.size = Vector2(bw, vs.y * 0.5)
 	_book.position = Vector2((vs.x - bw) / 2, vs.y * 0.22); _book.pivot_offset = Vector2(bw / 2, vs.y * 0.25)
-	_items.position = Vector2(vs.x - 520 * k, vs.y - 44 * k); _items.size = Vector2(500 * k, 36 * k)
+	_items.position = Vector2(vs.x * 0.3, vs.y - BOTTOM_ITEMS * k); _items.size = Vector2(vs.x * 0.7 - 22 * k, 38 * k)
 	_toasts.position = Vector2(24 * k, 70 * k); _toasts.size = Vector2(560 * k, 300 * k)
 	var cw := minf(vs.x * 0.7, 640 * k)
 	_choice.position = Vector2((vs.x - cw) / 2, vs.y * 0.5); _choice.custom_minimum_size = Vector2(cw, 0); _choice.size = Vector2(cw, 0)
@@ -380,10 +409,14 @@ func _resize() -> void:
 	pv.position = Vector2(24 * k, 20 * k); pv.size = Vector2(300 * k, 60 * k)
 	_hp_bar.custom_minimum_size = Vector2(280 * k, 16 * k); _st_bar.custom_minimum_size = Vector2(280 * k, 9 * k)
 	_foe_box.position = Vector2(vs.x * 0.3, 18 * k); _foe_box.size = Vector2(vs.x * 0.4, 50 * k)
-	_ammo.position = Vector2(24 * k, vs.y - 50 * k); _ammo.size = Vector2(400 * k, 36 * k)
-	_hud_say.position = Vector2(vs.x * 0.15, vs.y * 0.62); _hud_say.size = Vector2(vs.x * 0.7, 80 * k)
-	_keys_hint.position = Vector2(vs.x * 0.3, vs.y - 32 * k); _keys_hint.size = Vector2(vs.x * 0.68, 28 * k)
+	_ammo.position = Vector2(24 * k, vs.y - 54 * k); _ammo.size = Vector2(320 * k, 40 * k)
+	_hud_say.position = Vector2(vs.x * 0.12, vs.y * 0.6); _hud_say.size = Vector2(vs.x * 0.76, 100 * k)
+	# 전투 키 안내: 화살·떡(왼쪽 아래)을 비켜 오른쪽 아래 두 줄까지
 	_keys_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_keys_hint.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	_keys_hint.add_theme_constant_override("line_spacing", int(2 * k))
+	_keys_hint.position = Vector2(340 * k, vs.y - 80 * k); _keys_hint.size = Vector2(vs.x - 362 * k, 66 * k)
+	_keys_hint.text = wrap_words(_font, int(21 * k), KEYS_COMBAT, _keys_hint.size.x)
 
 # ---------------------------------------------------------------------------
 # 입력
@@ -556,14 +589,15 @@ func _pick(i: int) -> void:
 # ---------------------------------------------------------------------------
 func caption(text: String, sec := 2.4) -> void:
 	if log_lines: printerr("CAPTION ", text)
-	_caption.text = text
+	_cap_text = text
+	_place_caption()
 	if _cap_tween: _cap_tween.kill()
 	_cap_tween = create_tween()
-	_cap_tween.tween_property(_caption, "modulate:a", 1.0, 0.35)
+	_cap_tween.tween_property(_cap_box, "modulate:a", 1.0, 0.35)
 	var hold := maxf(0.4, sec - 0.7)
 	if auto and not auto_real: hold = 0.05
 	_cap_tween.tween_interval(hold)
-	_cap_tween.tween_property(_caption, "modulate:a", 0.0, 0.35)
+	_cap_tween.tween_property(_cap_box, "modulate:a", 0.0, 0.35)
 	await _wait((0.1 if auto and not auto_real else sec))
 
 # ratio: 띠 높이(화면 높이 비율). 보통 0.09 — 지난 일 장면은 조금 더 두껍게(남원 v3.2 §23)
@@ -607,10 +641,11 @@ func prompt(text: String) -> void:
 	if sp > 0 and RegEx.create_from_string("^(?:[A-Z]|Space|Esc|Tab|Shift)$").search(text.substr(0, sp)) != null:
 		key = text.substr(0, sp); body = text.substr(sp).strip_edges()
 	_prompt_key.text = key
-	_prompt_l.text = body
 	var big := prompt_strong
-	_prompt_l.add_theme_font_size_override("font_size", int((27 if big else 22) * _k))
-	_prompt_key.add_theme_font_size_override("font_size", int((22 if big else 18) * _k))
+	var fs := int((FS_PROMPT_BIG if big else FS_PROMPT) * _k)
+	_prompt_l.add_theme_font_size_override("font_size", fs)
+	_prompt_key.add_theme_font_size_override("font_size", int((30 if big else 26) * _k))
+	_prompt_l.text = wrap_words(_font, fs, body, get_viewport().get_visible_rect().size.x * 0.86 - 60 * _k)
 
 # 오른쪽 아래 작은 키 안내(주막 F 쉬기 등) — 빈 글이면 숨긴다
 func key_hint(key: String, text: String) -> void:
@@ -633,7 +668,7 @@ func _draw_stamp() -> void:
 	var k := _k
 	var vs := get_viewport().get_visible_rect().size
 	var s := 46.0 * k * (1.0 + 0.25 * maxf(0.0, 1.0 - t / 0.18))   # 찍을 때 살짝 크게
-	var c := Vector2(vs.x - 40.0 * k - s * 0.5, vs.y - 128.0 * k)
+	var c := Vector2(vs.x - 40.0 * k - s * 0.5, vs.y - 262.0 * k)   # 안내 줄(BOTTOM_PROMPT)·한 줄 안내 띠 위
 	var col := Color(SEAL, 0.9 * a)
 	var rng := RandomNumberGenerator.new(); rng.seed = 18
 	var pts := PackedVector2Array()
@@ -651,7 +686,7 @@ func _draw_stamp() -> void:
 	var fs := s * 0.36
 	VText.column(_stamp, _font_c, c + Vector2(0, -fs * 1.05), "기록", fs, Color(PAPER, 0.95 * a))
 	var msg := "기록을 남겼다"
-	var mfs := int(17 * k)
+	var mfs := int(22 * k)
 	var w := _font.get_string_size(msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs).x
 	var mp := Vector2(c.x - s * 0.5 - 12.0 * k - w, c.y + mfs * 0.35)
 	_stamp.draw_string_outline(_font, mp, msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs, int(5 * k), Color(0.05, 0.04, 0.035, 0.8 * a))
@@ -730,12 +765,21 @@ func journal_close() -> void:
 # ---------------------------------------------------------------------------
 func hint(text: String) -> void:
 	if log_lines: printerr("HINT ", text)
-	_hint_l.text = text
+	_hint_raw = text
+	_hint_l.text = wrap_words(_font, int(FS_HINT * _k), text, get_viewport().get_visible_rect().size.x * 0.84)
 	_hint.reset_size()
 	_place_hint()
+	_hint.modulate.a = maxf(_hint.modulate.a, 0.06)   # 자막 자리를 바로 띠 위로
+	_place_caption()
 	if _hint_tw: _hint_tw.kill()
 	_hint_tw = create_tween()
 	_hint_tw.tween_property(_hint, "modulate:a", 1.0, 0.3)
+
+# region_main 말·배 안내가 안내 줄보다 높을 때(두 줄) 그 넘친 높이 — 안내 띠·자막이 겹치지 않게 올린다
+func set_bottom_extra(px: float) -> void:
+	if is_equal_approx(px, _bottom_extra): return
+	_bottom_extra = px
+	_place_hint(); _place_caption()
 
 func hint_clear() -> void:
 	if _hint.modulate.a <= 0.01: return
@@ -744,14 +788,65 @@ func hint_clear() -> void:
 	_hint_tw.tween_property(_hint, "modulate:a", 0.0, 0.4)
 
 func hint_text() -> String:
-	return _hint_l.text if _hint.modulate.a > 0.05 else ""
+	return _hint_raw if _hint.modulate.a > 0.05 else ""
 
 func _place_hint() -> void:
 	if _hint == null: return
 	var vs := get_viewport().get_visible_rect().size
+	if _hint_raw != "": _hint_l.text = wrap_words(_font, int(FS_HINT * _k), _hint_raw, vs.x * 0.84)
+	_hint.reset_size()
 	var sz := _hint.get_combined_minimum_size()
 	_hint.size = sz
-	_hint.position = Vector2((vs.x - sz.x) / 2, vs.y - 118 * _k - sz.y)
+	_hint.position = Vector2((vs.x - sz.x) / 2, vs.y - BOTTOM_HINT * _k - _bottom_extra - sz.y)
+
+# 자막 자리: 가운데, 아랫변은 안내 줄 위(안내 띠가 떠 있으면 그 위) — 띠 높이는 글 줄 수만큼
+func _place_caption() -> void:
+	if _cap_box == null: return
+	var vs := get_viewport().get_visible_rect().size
+	var fs := int(FS_CAPTION * _k)
+	var max_w := minf(vs.x * 0.86, 940.0 * _k) - 52.0 * _k
+	_caption.text = wrap_words(_font, fs, _cap_text, max_w)
+	_cap_box.reset_size()
+	var sz := _cap_box.get_combined_minimum_size()
+	_cap_box.size = sz
+	var bottom := vs.y - BOTTOM_PROMPT * _k - _bottom_extra - 10.0 * _k
+	if _hint != null and _hint.modulate.a > 0.05 and _hint_raw != "": bottom = minf(bottom, _hint.position.y - 10.0 * _k)
+	_cap_box.position = Vector2((vs.x - sz.x) / 2, bottom - sz.y)
+
+# 한국어 줄바꿈 — 띄어쓰기에서만 끊고(낱말 가운데 '털|이'처럼 끊지 않는다), 줄 길이를 고르게 해 마지막 줄에 한 낱말만 남지 않게.
+#   "\n"은 그대로 줄바꿈. 띄어쓰기 없는 아주 긴 덩이는 그대로 둔다(넘침).
+static func wrap_words(font: Font, size: int, text: String, max_w: float) -> String:
+	if font == null or size <= 0 or max_w <= 0.0: return text
+	var out := PackedStringArray()
+	for para in text.split("\n"):
+		var full := font.get_string_size(para, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+		if full <= max_w:
+			out.append(para); continue
+		var n := ceili(full / max_w)
+		var target := minf(max_w, full / n * 1.06)
+		var start := 0
+		var guard := 0
+		while start < para.length() and guard < 40:
+			guard += 1
+			var rest := para.substr(start)
+			var rw := font.get_string_size(rest, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+			if rw <= max_w and rw <= target * 1.25:
+				out.append(rest.strip_edges()); start = para.length(); break
+			# target 안에서 가장 뒤 띄어쓰기
+			var cut := -1
+			var i := rest.find(" ")
+			while i >= 0:
+				if font.get_string_size(rest.substr(0, i), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > target: break
+				cut = i
+				i = rest.find(" ", i + 1)
+			if cut <= 0:
+				cut = rest.find(" ")   # target 안에 띄어쓰기가 없으면 첫 띄어쓰기(넘침을 줄인다)
+				if cut <= 0:
+					out.append(rest.strip_edges()); start = para.length(); break
+			out.append(rest.substr(0, cut).strip_edges())
+			start += cut
+			while start < para.length() and para[start] == " ": start += 1
+	return "\n".join(out)
 
 # [{p: Vector2(화면), a: 0~1, r: 반지름 배율}]
 func set_marks(list: Array) -> void:

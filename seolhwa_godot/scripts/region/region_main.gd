@@ -40,6 +40,7 @@ const InteriorSpace := preload("res://scripts/region/interior_space.gd")
 const StoryDirector := preload("res://scripts/story/story_director.gd")
 const HorseRide := preload("res://scripts/region/horse_ride.gd")
 const FastTravel := preload("res://scripts/region/fast_travel.gd")
+const StoryUI := preload("res://scripts/story/story_ui.gd")
 const RideTest := preload("res://scripts/region/ride_test.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
@@ -155,7 +156,7 @@ var _e_hold := 0.0
 var _dead_done := false   # 막다른 노정 끝에 닿아 '지나옴'을 기록했나
 var story = null          # 이야기(scripts/story/story_director.gd): 사건·소문·전투. --nostory로 끔
 var horse_ride = null     # 자동 기승(scripts/region/horse_ride.gd) — 큰길을 말이 저절로 간다
-var fast_ui = null        # 역마 — 알게 된 거점 빠른 이동(scripts/region/fast_travel.gd, H)
+var fast_ui = null        # 역마 창 — 알게 된 거점 빠른 이동(scripts/region/fast_travel.gd: 역참 마부·깃발 대화, 지나온 노정 포털 곁 H)
 var _ride_test = null
 
 func _ready() -> void:
@@ -1372,9 +1373,11 @@ func _update_horse(dt: float) -> void:
 		elif st == null: _boat_text(horse_ride.prompt)
 	var hh: String = horse_ride.take_hud()
 	if hh != "": _show_hud(hh)
-	# H: 역마(알게 된 거점으로 빠른 이동). 지나온 노정 포털 곁이면 그 끝을 먼저 고른다
+	# H: 아무 데서나 여는 역마 창은 없앴다(2026-10 — 역마는 역참 마부·길목 깃발에게 E로, 또는 지도 M의 역참 목록에서).
+	#   남은 H는 지나온 노정 포털 곁의 '지나온 길 건너뛰기'(_check_portals가 안내를 띄운 자리)뿐 — 그 밖에서 누르면 안내만.
 	if free and not horse_ride.busy() and Input.is_action_just_pressed("fast_travel") and not args.has("fasttest"):
-		open_fast_travel(_fast_hint)
+		if _fast_hint != "": open_fast_travel(_fast_hint)
+		else: _show_hud("역마 — 역참 마부나 길목 깃발에게 E로 말을 건다 (지도 M에서도 역을 고른다)")
 
 func _verify_fast() -> void:
 	await _wait_frames(30)
@@ -1386,20 +1389,68 @@ func open_fast_travel(prefer := "") -> void:
 	fast_ui = FastTravel.new(self, prefer)
 	add_child(fast_ui)
 
+# 아래 가운데 말·배 안내 — 이야기 UI의 조사·대화 안내(story_ui.prompt)와 같은 꼴·같은 줄(키 칸 + 흰 글, 32 · 1024×768 기준).
+#   글이 키로 시작하면("E   말에 오른다 …", "Space  건너뛰기") 그 키를 칸에 넣는다. 긴 줄은 띄어쓰기에서만 고르게 끊는다(StoryUI.wrap_words).
+const _PROMPT_KEY := "^(?:[A-Z]|Space|Esc|Tab|Shift)$"
+var _boat_key: Label
+var _boat_shown := ""
 func _boat_text(t: String) -> void:
 	if _boat_prompt == null:
 		if t == "": return
+		var UiFonts := preload("res://scripts/ui_fonts.gd")
+		var row := HBoxContainer.new(); row.name = "ride_prompt"
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		var chip := PanelContainer.new(); chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color("#efe6d2", 0.95); sb.border_color = Color("#2b2622", 0.9); sb.set_border_width_all(1); sb.set_corner_radius_all(3)
+		sb.content_margin_left = 7; sb.content_margin_right = 7; sb.content_margin_top = 0; sb.content_margin_bottom = 1
+		chip.add_theme_stylebox_override("panel", sb)
+		chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		_boat_key = Label.new(); _boat_key.add_theme_font_override("font", UiFonts.main())
+		_boat_key.add_theme_color_override("font_color", Color("#2b2622"))
+		chip.add_child(_boat_key)
 		_boat_prompt = Label.new()
-		_boat_prompt.add_theme_font_size_override("font_size", 22)
+		_boat_prompt.add_theme_font_override("font", UiFonts.main())
 		_boat_prompt.add_theme_color_override("font_color", Color("#f4ecd8"))
-		_boat_prompt.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.05))
+		_boat_prompt.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.035))
 		_boat_prompt.add_theme_constant_override("outline_size", 6)
+		_boat_prompt.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.35))
+		_boat_prompt.add_theme_constant_override("shadow_offset_y", 2)
 		_boat_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		_boat_prompt.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		_boat_prompt.offset_left = -300; _boat_prompt.offset_right = 300; _boat_prompt.offset_top = -86; _boat_prompt.offset_bottom = -52
-		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(_boat_prompt); add_child(cl)
+		row.add_child(chip); row.add_child(_boat_prompt)
+		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(row); add_child(cl)
 		cl.add_to_group(preload("res://scripts/hud_gate.gd").HIDE)   # 기록책·지도·메뉴가 열리면 감춤
-	if _boat_prompt.text != t: _boat_prompt.text = t
+		get_viewport().size_changed.connect(func(): _boat_shown = "~"; _boat_text(String(_boat_prompt.get_meta("raw", ""))))
+	if t == _boat_shown: return
+	_boat_shown = t
+	_boat_prompt.set_meta("raw", t)
+	var row: HBoxContainer = _boat_prompt.get_parent()
+	row.visible = t != ""
+	if t == "":
+		if story != null and story.get("ui") != null: story.ui.set_bottom_extra(0.0)
+		return
+	var vs := get_viewport().get_visible_rect().size
+	var k := clampf(vs.y / 768.0, 0.8, 2.4)
+	var key := ""
+	var body := t.strip_edges()
+	var sp := body.find(" ")
+	if sp > 0 and RegEx.create_from_string(_PROMPT_KEY).search(body.substr(0, sp)) != null:
+		key = body.substr(0, sp); body = body.substr(sp).strip_edges()
+	var fs := int(StoryUI.FS_PROMPT * k)
+	_boat_key.get_parent().visible = key != ""
+	_boat_key.text = key
+	_boat_key.add_theme_font_size_override("font_size", int(26 * k))
+	_boat_prompt.add_theme_font_size_override("font_size", fs)
+	_boat_prompt.text = StoryUI.wrap_words(_boat_prompt.get_theme_font("font"), fs, body, vs.x * 0.86 - 60 * k)
+	row.add_theme_constant_override("separation", int(10 * k))
+	# story_ui 안내 줄(BOTTOM_PROMPT)과 같은 자리 — 두 줄이면 위로 자란다
+	row.reset_size()
+	var h := row.get_combined_minimum_size().y
+	var top := vs.y - StoryUI.BOTTOM_PROMPT * k
+	row.position = Vector2(0, top + 52 * k - maxf(h, 52 * k))
+	row.size = Vector2(vs.x, maxf(h, 52 * k))
+	if story != null and story.get("ui") != null: story.ui.set_bottom_extra(maxf(0.0, h - 52 * k))   # 두 줄이면 안내 띠·자막을 그만큼 올린다
 
 # 화면(카메라 yaw) 기준 방향 이름 — 배 위처럼 카메라가 돌았을 때 그림 방향(up=등, down=앞, left·right=옆)
 func facing_cam(dx: float, dz: float, prev: String) -> String:
@@ -1424,7 +1475,8 @@ func _on_boat_arrived(_id: String, _place: String) -> void:
 func _show_hud(t: String) -> void:
 	if _hud == null:
 		_hud = Label.new()
-		_hud.add_theme_font_size_override("font_size", 22)
+		_hud.add_theme_font_override("font", preload("res://scripts/ui_fonts.gd").main())
+		_hud.add_theme_font_size_override("font_size", int(28 * clampf(get_viewport().get_visible_rect().size.y / 768.0, 0.8, 2.4)))
 		_hud.add_theme_color_override("font_color", Color(1, 1, 1))
 		_hud.add_theme_color_override("font_outline_color", Color(0, 0, 0))
 		_hud.add_theme_constant_override("outline_size", 5)
