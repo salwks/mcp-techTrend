@@ -1,0 +1,1973 @@
+{
+ "area": "namwon_chunhyang_story",
+ "generator": "손으로 — 춘향 「남원의 약속」 자산·좌표 1단계(seolhwa/docs/production/CHUNHYANG_ASSETS_PLACEMENT_v1.0.md)",
+ "case": "namwon_chunhyang",
+ "status": "draft-inactive",
+ "note": "사건 차림 초안. items는 일부러 비워 둔다 — placement_loader.gd는 when을 모르고 placement_*.json의 items를 늘 읽기 때문(제작 규칙 E·F-11). 실제 항목은 tale_items에 when·phase와 함께 둔다. 사건 코드가 생기면 (a) F-11 조건부 로더가 tale_items를 읽거나 (b) namwon_chunhyang_data.props()로 옮긴다. status NEW 항목의 kit(story/chunhyang)은 아직 없다 — placeholder는 미리보기용. 좌표 근거·충돌 검사는 문서 §3.",
+ "items": [],
+ "phases": [
+  "dano",
+  "courtship",
+  "farewell",
+  "(left — 남원 밖)",
+  "arrival",
+  "office",
+  "jail",
+  "feast",
+  "reveal",
+  "release",
+  "epilogue",
+  "done"
+ ],
+ "anchors": {
+  "ch_gwanghallu": {
+   "at": [
+    -3271.4,
+    450.1
+   ],
+   "src": "기존 nw_gwanghallu(OSM 확정)",
+   "scene": "ACT1 1A 겨냥점 · ACT22 끝"
+  },
+  "ch_gwanghallu_front": {
+   "at": [
+    -3271.4,
+    437.0
+   ],
+   "src": "새 — 누각 footprint 북쪽 끝(442.9)에서 5.9m",
+   "scene": "§5 몽룡·방자 · §9 돌아옴 · §49 끝"
+  },
+  "ch_mong_view": {
+   "at": [
+    -3291.0,
+    447.5
+   ],
+   "src": "새 — 누각 서쪽 끝(-3286.4) 4.6m, 못 footprint(z≥454) 밖",
+   "scene": "§6 CAMERA 1B 몽룡 자리"
+  },
+  "ch_bangja_bump": {
+   "at": [
+    -3264.0,
+    432.0
+   ],
+   "src": "새 — 광한루 앞 잔디(풀밭) 동쪽",
+   "scene": "§5 방자와 부딪힘(부채)"
+  },
+  "ch_swing": {
+   "at": [
+    -3330.0,
+    444.0
+   ],
+   "src": "새 — 광한루원 북서 잔디(풀밭, y≈11.1), 누각에서 서쪽 44m",
+   "scene": "§6 그네 · §8 · §49 빈 그네"
+  },
+  "ch_swing_land": {
+   "at": [
+    -3325.0,
+    438.5
+   ],
+   "src": "새 — 그네 앞(북동)",
+   "scene": "§8 CAMERA 2A 춘향·향단·방자"
+  },
+  "ch_hyangdan": {
+   "at": [
+    -3327.6,
+    439.2
+   ],
+   "src": "새",
+   "scene": "§8 향단"
+  },
+  "ch_ssireum": {
+   "at": [
+    -3292.0,
+    431.0
+   ],
+   "src": "새 — 단오 마당 가운데",
+   "scene": "ACT0 씨름판"
+  },
+  "ch_market": {
+   "at": [
+    -3290.0,
+    392.5
+   ],
+   "src": "기존 settlement namwon_jang 장터길(가게채 줄 앞)",
+   "scene": "ACT0 장터 · 군중"
+  },
+  "ch_ojakgyo": {
+   "at": [
+    -3283.4,
+    459.4
+   ],
+   "src": "기존 region.json landmarks ojakgyo(OSM 확정)",
+   "scene": "§13 장면 B 두 사람이 걷는다"
+  },
+  "ch_wolmae_house": {
+   "at": [
+    -3212.99,
+    449.82
+   ],
+   "src": "기존 nw_house_158(작은 집 묶음·기와 지붕·토담) — 재사용",
+   "scene": "ACT3·4·9·15 월매 집"
+  },
+  "ch_wolmae_yard": {
+   "at": [
+    -3213.0,
+    451.0
+   ],
+   "src": "nw_house_158 마당(키트 원점 = 마당 가운데)",
+   "scene": "§14 백년가약(밤)"
+  },
+  "ch_wolmae_gate": {
+   "at": [
+    -3213.0,
+    457.2
+   ],
+   "src": "nw_house_158 대문(gate_gate_out, +z 남)",
+   "scene": "§11 · §24 · §37 문을 연다"
+  },
+  "ch_wolmae_front": {
+   "at": [
+    -3216.0,
+    459.8
+   ],
+   "src": "새 — 대문 앞 서남, 구례길(-3227,462) 사이",
+   "scene": "§10 방자와 함께 도착 · §13 C 웃음소리"
+  },
+  "ch_jumak_naru": {
+   "at": [
+    -3206.9,
+    484.2
+   ],
+   "src": "기존 nw_jumak_naru",
+   "scene": "§10 '주막 가는 길'"
+  },
+  "ch_farewell_follow": {
+   "at": [
+    -3211.6,
+    4.0
+   ],
+   "src": "새 — 남원 북문–전주 길 곧은 구간(x≈-3212, z 51→-39)",
+   "scene": "§16 방자·플레이어(뒤)"
+  },
+  "ch_farewell_stand": {
+   "at": [
+    -3212.3,
+    -6.0
+   ],
+   "src": "새 — 같은 길",
+   "scene": "§16·§17 춘향이 서 있는 자리"
+  },
+  "ch_farewell_mong": {
+   "at": [
+    -3212.7,
+    -14.0
+   ],
+   "src": "새 — 같은 길",
+   "scene": "§16 몽룡"
+  },
+  "ch_farewell_vanish": {
+   "at": [
+    -3223.5,
+    -60.0
+   ],
+   "src": "새 — 광치천 징검다리(-3218.1,-50.7) 건너",
+   "scene": "§17 몽룡이 시야에서 사라짐"
+  },
+  "ch_proc_start": {
+   "at": [
+    -3228.0,
+    372.0
+   ],
+   "src": "기존 장터길(namwon_market_lane) 남문 밖",
+   "scene": "§19 행렬 시작"
+  },
+  "ch_south_gate_in": {
+   "at": [
+    -3228.0,
+    334.0
+   ],
+   "src": "남문(완월루, -3227.8,341.7) 안",
+   "scene": "§19 행렬 · ACT14"
+  },
+  "ch_crossroads": {
+   "at": [
+    -3228.0,
+    251.0
+   ],
+   "src": "읍내 남북길 × 동서길 네거리",
+   "scene": "§19 행렬 꺾임"
+  },
+  "ch_gwana_front": {
+   "at": [
+    -3166.0,
+    246.5
+   ],
+   "src": "새 — 외삼문(-3162.1,239.5) 앞 길(외삼문 앞 남쪽 기와집 north edge 257.5)",
+   "scene": "§20 아전 · §19 행렬 끝"
+  },
+  "ch_elder_petition": {
+   "at": [
+    -3173.5,
+    241.6
+   ],
+   "src": "새 — 외삼문 서쪽 담(wall_13) 밑",
+   "scene": "§34 상소 노인(앉음)"
+  },
+  "ch_wine_cart": {
+   "at": [
+    -3146.5,
+    249.0
+   ],
+   "src": "새 — 외삼문 동쪽 길가(장작 -3150.5,245.1에서 5.9m)",
+   "scene": "§32 술 상인 항의"
+  },
+  "ch_gate_guard": {
+   "at": [
+    -3159.2,
+    243.0
+   ],
+   "src": "외삼문 앞 동쪽",
+   "scene": "§30 포졸 · §38"
+  },
+  "ch_prison_food": {
+   "at": [
+    -3164.6,
+    244.6
+   ],
+   "src": "외삼문 앞",
+   "scene": "§30 월매 음식 실랑이"
+  },
+  "ch_feast_store": {
+   "at": [
+    -3150.5,
+    229.5
+   ],
+   "src": "새 — 바깥마당(내삼문~외삼문) 동쪽 반(17×20m 빈터)",
+   "scene": "§32·§33 물자 쌓는 곳 · §40 '눈앞 잔치상' 연결"
+  },
+  "ch_naesammun": {
+   "at": [
+    -3162.1,
+    219.5
+   ],
+   "src": "기존 nw_gwana_naesammun",
+   "scene": "§41 몽룡 가장자리 · §44 문"
+  },
+  "ch_oesammun": {
+   "at": [
+    -3162.1,
+    239.5
+   ],
+   "src": "기존 nw_gwana_oesammun",
+   "scene": "§44 정문이 열린다"
+  },
+  "ch_court": {
+   "at": [
+    -3162.1,
+    214.5
+   ],
+   "src": "새 — 동헌 기단 앞(≈208)과 내삼문 담(219.5) 사이 안마당 가운데(관아 축 x=-3162.1)",
+   "scene": "ACT8 CAMERA 8A 겨냥점 · ACT10 · ACT17 · ACT18"
+  },
+  "ch_dais": {
+   "at": [
+    -3162.1,
+    209.0
+   ],
+   "src": "새(NEW 보계·단) — 동헌(nw_dongheon -3162.1,203.5) 기단 앞 2m",
+   "scene": "변학도 높은 단"
+  },
+  "ch_byeon_seat": {
+   "at": [
+    -3162.1,
+    206.6
+   ],
+   "src": "동헌 대청 앞 마루(F 1.05) 위 교의",
+   "scene": "변학도 자리",
+   "dy": 1.05
+  },
+  "ch_gisaeng_0": {
+   "at": [
+    -3169.8,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_1": {
+   "at": [
+    -3167.6,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_2": {
+   "at": [
+    -3165.4,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_3": {
+   "at": [
+    -3163.2,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_4": {
+   "at": [
+    -3161.0,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_5": {
+   "at": [
+    -3158.8,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_6": {
+   "at": [
+    -3156.6,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_gisaeng_7": {
+   "at": [
+    -3154.4,
+    213.6
+   ],
+   "src": "새 — 안마당 한 줄(2.2m 간격)",
+   "scene": "§21 기생 일렬"
+  },
+  "ch_saryeong_w0": {
+   "at": [
+    -3177.6,
+    210.0
+   ],
+   "src": "새 — 안마당 서쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_e0": {
+   "at": [
+    -3146.6,
+    210.0
+   ],
+   "src": "새 — 안마당 동쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_w1": {
+   "at": [
+    -3177.6,
+    212.5
+   ],
+   "src": "새 — 안마당 서쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_e1": {
+   "at": [
+    -3146.6,
+    212.5
+   ],
+   "src": "새 — 안마당 동쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_w2": {
+   "at": [
+    -3177.6,
+    215.0
+   ],
+   "src": "새 — 안마당 서쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_e2": {
+   "at": [
+    -3146.6,
+    215.0
+   ],
+   "src": "새 — 안마당 동쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_w3": {
+   "at": [
+    -3177.6,
+    217.5
+   ],
+   "src": "새 — 안마당 서쪽 줄",
+   "scene": "사령"
+  },
+  "ch_saryeong_e3": {
+   "at": [
+    -3146.6,
+    217.5
+   ],
+   "src": "새 — 안마당 동쪽 줄",
+   "scene": "사령"
+  },
+  "ch_player_saryeong": {
+   "at": [
+    -3175.2,
+    216.6
+   ],
+   "src": "새 — 서쪽 사령 줄 끝(플레이어)",
+   "scene": "§25 다른 사령들 사이 · §27 줄 잡아"
+  },
+  "ch_ibang": {
+   "at": [
+    -3168.6,
+    210.4
+   ],
+   "src": "새 — 단 서쪽 계단 곁",
+   "scene": "§22 이방"
+  },
+  "ch_chunhyang_center": {
+   "at": [
+    -3162.1,
+    214.2
+   ],
+   "src": "= 안마당 가운데",
+   "scene": "§25 춘향 중앙"
+  },
+  "ch_hyeongteul": {
+   "at": [
+    -3162.1,
+    215.4
+   ],
+   "src": "새(NEW 형틀)",
+   "scene": "§28 곤장"
+  },
+  "ch_wolmae_watch": {
+   "at": [
+    -3160.6,
+    222.4
+   ],
+   "src": "내삼문 바깥(바깥마당)에서 안을 봄",
+   "scene": "§28 셋째 컷 월매"
+  },
+  "ch_jail": {
+   "at": [
+    -3175.0,
+    229.5
+   ],
+   "src": "새(NEW 옥) — 바깥마당 서쪽 반(서담 -3182.6 · 내삼문담 219.5 · 외삼문담 239.5 안쪽 빈터)",
+   "scene": "ACT12·16·20 옥"
+  },
+  "ch_jail_cell": {
+   "at": [
+    -3176.4,
+    229.4
+   ],
+   "src": "옥 안 칸",
+   "scene": "§31 춘향(안)"
+  },
+  "ch_jail_bars_out": {
+   "at": [
+    -3172.4,
+    229.6
+   ],
+   "src": "옥 칸 살 바깥",
+   "scene": "§31 플레이어(밖) · §39"
+  },
+  "ch_jail_gate": {
+   "at": [
+    -3169.8,
+    229.5
+   ],
+   "src": "둥근 옥담 동쪽 문(지름 10m)",
+   "scene": "§47 옥문"
+  },
+  "ch_reunion": {
+   "at": [
+    -3166.0,
+    231.0
+   ],
+   "src": "바깥마당 가운데",
+   "scene": "§47·§48 춘향·몽룡·월매 · ACT21"
+  },
+  "ch_farmer_house": {
+   "at": [
+    -3109.36,
+    263.28
+   ],
+   "src": "기존 nw_house_001(중간 집 묶음, 동문 밖 통영별로 곁) — 재사용",
+   "scene": "§33 쌀"
+  },
+  "ch_rice_sacks": {
+   "at": [
+    -3103.0,
+    273.2
+   ],
+   "src": "새 — nw_house_001 대문 앞(통영별로 z≈276 북쪽)",
+   "scene": "§33 쌀가마"
+  },
+  "ch_farmer": {
+   "at": [
+    -3108.0,
+    273.0
+   ],
+   "src": "새",
+   "scene": "§33 농민"
+  },
+  "ch_beggar_meet": {
+   "at": [
+    -3228.0,
+    352.5
+   ],
+   "src": "남문 밖 장터길(좌판 nw_jwapan_45 -3233.7,359.7 사이)",
+   "scene": "ACT14 CAMERA 14A 몽룡"
+  },
+  "ch_player_sgate": {
+   "at": [
+    -3226.2,
+    347.2
+   ],
+   "src": "남문 밖",
+   "scene": "ACT14 플레이어"
+  },
+  "ch_mong_edge": {
+   "at": [
+    -3170.5,
+    217.8
+   ],
+   "src": "내삼문(footprint x -3167.5~-3156.7) 안 서쪽",
+   "scene": "§41 몽룡 잔치 가장자리"
+  },
+  "ch_poem_table": {
+   "at": [
+    -3168.0,
+    213.0
+   ],
+   "src": "새 — 안마당 서쪽(단 앞)",
+   "scene": "§42 CAMERA 17A 종이"
+  },
+  "ch_musicians": {
+   "at": [
+    -3177.6,
+    203.5
+   ],
+   "src": "동헌 서쪽 곁(서담과 동헌 사이 8.6m)",
+   "scene": "§40 잔치 음악"
+  },
+  "ch_end_kids": {
+   "at": [
+    -3323.5,
+    441.0
+   ],
+   "src": "그네 곁",
+   "scene": "§49 아이 둘"
+  }
+ },
+ "tale_items": [
+  {
+   "id": "ti_swing",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "swing",
+    "h": 8.5,
+    "span": 6.0,
+    "arc": 3.2,
+    "cloth": true
+   },
+   "x": -3330.0,
+   "z": 444.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship') or ph('epilogue')",
+   "phase": "P1 단오 · 끝(빈 그네 state EMPTY)",
+   "status": "NEW",
+   "cost": "M",
+   "note": "그넷대(장대 둘 + 들보) + 동아줄 둘 + 발판 + 오색 천. 발판이 z 방향으로 흔들림(누각·1B에서 옆으로 오르내림이 읽힘). 춘향 actor가 발판에 실림(dy). state SWING/EMPTY",
+   "placeholder": {
+    "kit": "village/sotdae",
+    "params": {
+     "n": 2,
+     "h": 8.5,
+     "seed": 31
+    }
+   }
+  },
+  {
+   "id": "ti_swing_tree_w",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 3101,
+    "variant": "willow"
+   },
+   "x": -3338.5,
+   "z": 446.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship') or ph('farewell') or ph('epilogue')",
+   "phase": "P1 · 끝",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "'나무 사이 그네' — 버드나무(기존 variant)"
+  },
+  {
+   "id": "ti_swing_tree_e",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 3102,
+    "variant": "willow"
+   },
+   "x": -3321.5,
+   "z": 446.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship') or ph('farewell') or ph('epilogue')",
+   "phase": "P1 · 끝",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_dano_ground",
+   "kit": "story/clearing",
+   "params": {
+    "w": 66.0,
+    "d": 17.0
+   },
+   "x": -3297.0,
+   "z": 432.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "단오 마당 식생 비우기(풀밭 그대로, yard 없음). 군중 dano_market B구역"
+  },
+  {
+   "id": "ti_ssireum",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "ssireum_ring",
+    "r": 3.5
+   },
+   "x": -3292.0,
+   "z": 431.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "NEW",
+   "cost": "S",
+   "note": "모래판(지름 7m) + 짚 둘레. 구경꾼은 군중 watch 역할",
+   "placeholder": {
+    "kit": "story/clearing",
+    "params": {
+     "w": 7.0,
+     "d": 7.0
+    },
+    "yard": true
+   }
+  },
+  {
+   "id": "ti_streamers_market",
+   "kit": "story/ritual",
+   "params": {
+    "kind": "streamers",
+    "w": 5.2,
+    "seed": 11
+   },
+   "x": -3268.2,
+   "z": 392.6,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "장터길을 가로지르는 오색 천(강릉 단오 키트 재사용)"
+  },
+  {
+   "id": "ti_streamers_ground",
+   "kit": "story/ritual",
+   "params": {
+    "kind": "streamers",
+    "w": 9.0,
+    "seed": 12
+   },
+   "x": -3297.0,
+   "z": 423.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_streamers_road",
+   "kit": "story/ritual",
+   "params": {
+    "kind": "streamers",
+    "w": 6.0,
+    "seed": 13
+   },
+   "x": -3249.5,
+   "z": 446.0,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "1A 앞쪽(구례길 쪽에서 광한루로 드는 길목)"
+  },
+  {
+   "id": "ti_yeot_stall",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 3111,
+    "goods": "mixed",
+    "awning": true
+   },
+   "x": -3272.5,
+   "z": 425.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "REUSE",
+   "cost": "S",
+   "note": "엿장수 판 — goods 'yeot'(엿판·가위) variant가 있으면 바꾼다(S)"
+  },
+  {
+   "id": "ti_dano_jwapan_w",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 3112,
+    "goods": "cloth",
+    "awning": true
+   },
+   "x": -3320.5,
+   "z": 426.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship')",
+   "phase": "P1 단오",
+   "status": "REUSE",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_elders_bench",
+   "kit": "village/props",
+   "params": {
+    "seed": 3113,
+    "kind": "pyeongsang",
+    "w": 2.4,
+    "d": 1.6
+   },
+   "x": -3317.0,
+   "z": 437.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship') or ph('farewell')",
+   "phase": "P1",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "그네 곁 나무 그늘 평상 — 노인들(군중 sit)"
+  },
+  {
+   "id": "ti_wolmae_lantern",
+   "kit": "story/river",
+   "params": {
+    "kind": "lantern",
+    "seed": 21
+   },
+   "x": -3209.6,
+   "z": 458.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('courtship') and fn('is_night') or ph('jail') and fn('is_night')",
+   "phase": "P1 밤(백년가약) · P2 밤",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "월매 집 대문 등롱"
+  },
+  {
+   "id": "ti_wolmae_bench",
+   "kit": "village/props",
+   "params": {
+    "seed": 3121,
+    "kind": "pyeongsang",
+    "w": 2.0,
+    "d": 1.4
+   },
+   "x": -3213.0,
+   "z": 451.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('dano') or ph('courtship') or ph('farewell')",
+   "phase": "P1",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "마당 평상(백년가약 자리) — 집 묶음 마당 소품과 겹치는지 3D 확인 필요",
+   "dy": 0.0
+  },
+  {
+   "id": "ti_wolmae_flowers",
+   "kit": "nature/flowers",
+   "params": {
+    "seed": 3122
+   },
+   "x": -3219.0,
+   "z": 459.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "true",
+   "phase": "사건 내내",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "대문 곁 꽃 — 퇴기 집 표시(작은 기와집을 '월매 집'으로 읽히게)"
+  },
+  {
+   "id": "ti_orijeong",
+   "kit": "village/jeongja",
+   "params": {
+    "seed": 3131,
+    "s": 3.0,
+    "plain": true
+   },
+   "x": -3203.5,
+   "z": -10.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "true",
+   "phase": "선택(사용자 결정) — 오리정",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "오리정(五里亭) 이별 정자 — 원작 지명. 결정 문서에 없음 → 선택",
+   "optional": true
+  },
+  {
+   "id": "ti_gamani_store_a",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gamani",
+    "seed": 3201
+   },
+   "x": -3150.5,
+   "z": 228.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_gamani_store_b",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gamani",
+    "seed": 3202
+   },
+   "x": -3147.6,
+   "z": 230.6,
+   "ry": 0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_dok_store",
+   "kit": "village/props",
+   "params": {
+    "kind": "dok",
+    "n": 4,
+    "seed": 3203
+   },
+   "x": -3154.8,
+   "z": 225.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "잔치 술독(§32에서 옮긴 것과 같은 것 — 잔치 때 상 위로 연결)"
+  },
+  {
+   "id": "ti_meongseok_grain",
+   "kit": "village/props",
+   "params": {
+    "kind": "meongseok",
+    "seed": 3204
+   },
+   "x": -3146.2,
+   "z": 223.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "거둔 곡식 널기(관아 바깥마당)"
+  },
+  {
+   "id": "ti_persimmon_gwana",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 3205,
+    "s": 0.8
+   },
+   "x": -3145.6,
+   "z": 235.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release') or ph('epilogue')",
+   "phase": "P2 · 끝",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "감나무(열매 — big_tree persimmon fruit)"
+  },
+  {
+   "id": "ti_byeotdan_east",
+   "kit": "village/props",
+   "params": {
+    "kind": "byeotdan",
+    "seed": 3206
+   },
+   "x": -3140.5,
+   "z": 252.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_byeotdan_south",
+   "kit": "village/props",
+   "params": {
+    "kind": "byeotdan",
+    "seed": 3207
+   },
+   "x": -3219.5,
+   "z": 347.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_wine_cart",
+   "kit": "story/snow_road",
+   "params": {
+    "kind": "cart",
+    "upright": true
+   },
+   "x": -3146.5,
+   "z": 249.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('office') or ph('jail')",
+   "phase": "P2 §32",
+   "status": "VARIANT",
+   "cost": "S",
+   "note": "짐수레 — 지금 키트는 엎어진 수레뿐 → upright variant(S). 그 위·곁에 술독",
+   "placeholder": {
+    "kit": "village/props",
+    "params": {
+     "kind": "dok",
+     "n": 3,
+     "seed": 3208
+    }
+   }
+  },
+  {
+   "id": "ti_rice_sacks",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "gamani",
+    "seed": 3209
+   },
+   "x": -3103.0,
+   "z": 273.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('office') or ph('jail')",
+   "phase": "P2 §33",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "state BROKEN(쌀 쏟음)·MOVED는 기존 프롭 상태로"
+  },
+  {
+   "id": "ti_persimmon_farm",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 3210,
+    "s": 0.8
+   },
+   "x": -3123.5,
+   "z": 258.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_haystack_farm",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 3211
+   },
+   "x": -3122.5,
+   "z": 252.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_persimmon_wolmae",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 3212,
+    "s": 0.7
+   },
+   "x": -3225.0,
+   "z": 443.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_dais",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "dais",
+    "w": 7.0,
+    "d": 2.0,
+    "h": 1.05
+   },
+   "x": -3162.1,
+   "z": 209.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('office') or ph('jail') or ph('feast') or ph('reveal')",
+   "phase": "P2 점고·곤장·잔치·출두",
+   "status": "NEW",
+   "cost": "S",
+   "note": "보계(補階) — 동헌 대청 높이(F 1.05)로 앞에 덧댄 나무 단 + 앞 계단. 변학도 높은 단",
+   "placeholder": {
+    "kit": "story/clearing",
+    "params": {
+     "w": 7.0,
+     "d": 2.0
+    },
+    "yard": true
+   }
+  },
+  {
+   "id": "ti_seat_screen",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "seat_screen"
+   },
+   "x": -3162.1,
+   "z": 206.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('office') or ph('jail') or ph('feast') or ph('reveal')",
+   "phase": "P2",
+   "status": "NEW",
+   "cost": "S",
+   "note": "교의(의자) + 뒤 병풍 — 대청 위(dy 1.05)",
+   "placeholder": {
+    "kit": "scenario/props",
+    "params": {
+     "kind": "chaeksang"
+    },
+    "dy": 1.05
+   },
+   "dy": 1.05
+  },
+  {
+   "id": "ti_hyeongteul",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "hyeongteul"
+   },
+   "x": -3162.1,
+   "z": 215.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('office')",
+   "phase": "P2 §27~§29",
+   "status": "NEW",
+   "cost": "S",
+   "note": "곤장 형틀(긴 나무 틀) + 곤장 둘. 폭력은 소리·표정으로(§52) — 형틀은 놓여 있기만",
+   "placeholder": {
+    "kit": "scenario/props",
+    "params": {
+     "kind": "pyeongsang",
+     "w": 2.2,
+     "d": 0.7
+    }
+   }
+  },
+  {
+   "id": "ti_jail",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "ok",
+    "r": 5.0,
+    "cell_w": 5.4,
+    "door": "E"
+   },
+   "x": -3175.0,
+   "z": 229.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('office') and f('jailed') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "phase": "P2 투옥~석방 (뒤에 남길지 사용자 결정)",
+   "status": "NEW",
+   "cost": "M",
+   "note": "둥근 옥담(원옥, 지름 10m·높이 2.6m) + 3칸 옥사(앞 나무살) + 동쪽 문. 살 state SEALED/OPEN",
+   "placeholder": {
+    "kit": "story/clearing",
+    "params": {
+     "w": 10.0,
+     "d": 10.0
+    },
+    "yard": true
+   }
+  },
+  {
+   "id": "ti_jail_lamp",
+   "kit": "story/river",
+   "params": {
+    "kind": "lantern",
+    "seed": 22
+   },
+   "x": -3169.4,
+   "z": 231.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('jail') and fn('is_night')",
+   "phase": "P2 옥 밤",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_chail",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "chail",
+    "w": 18.0,
+    "d": 8.0,
+    "h": 4.6
+   },
+   "x": -3162.1,
+   "z": 213.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치·출두",
+   "status": "NEW",
+   "cost": "S",
+   "note": "잔치 차일(흰 천 지붕, 장대 여섯) — 8A 위에서 천 너머가 비치지 않게 반투명 금지·높이 4.6",
+   "placeholder": {
+    "kit": "village/sotdae",
+    "params": {
+     "n": 1,
+     "h": 4.6,
+     "seed": 41
+    }
+   }
+  },
+  {
+   "id": "ti_feast_w0",
+   "kit": "story/clue",
+   "params": {
+    "kind": "feast",
+    "seed": 3220
+   },
+   "x": -3176.4,
+   "z": 210.6,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_feast_e0",
+   "kit": "story/clue",
+   "params": {
+    "kind": "feast",
+    "seed": 3230
+   },
+   "x": -3147.8,
+   "z": 210.6,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_feast_w1",
+   "kit": "story/clue",
+   "params": {
+    "kind": "feast",
+    "seed": 3221
+   },
+   "x": -3176.4,
+   "z": 213.2,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_feast_e1",
+   "kit": "story/clue",
+   "params": {
+    "kind": "feast",
+    "seed": 3231
+   },
+   "x": -3147.8,
+   "z": 213.2,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_feast_w2",
+   "kit": "story/clue",
+   "params": {
+    "kind": "feast",
+    "seed": 3222
+   },
+   "x": -3176.4,
+   "z": 215.8,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_feast_e2",
+   "kit": "story/clue",
+   "params": {
+    "kind": "feast",
+    "seed": 3232
+   },
+   "x": -3147.8,
+   "z": 215.8,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  },
+  {
+   "id": "ti_jusang_dais_w",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jusang",
+    "seed": 3241
+   },
+   "x": -3165.0,
+   "z": 208.9,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "",
+   "dy": 1.05
+  },
+  {
+   "id": "ti_jusang_dais_e",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jusang",
+    "seed": 3242
+   },
+   "x": -3159.2,
+   "z": 208.9,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "",
+   "dy": 1.05
+  },
+  {
+   "id": "ti_feast_jars",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "jangdok",
+    "seed": 3243
+   },
+   "x": -3179.6,
+   "z": 206.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "잔치 술독(§32 술과 같은 줄)"
+  },
+  {
+   "id": "ti_poem_desk",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "chaeksang",
+    "seed": 3244
+   },
+   "x": -3168.0,
+   "z": 213.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') and f('poem_called')",
+   "phase": "P2 §42",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "붓·종이는 meoktong(FALLEN 아님)으로 곁에"
+  },
+  {
+   "id": "ti_poem_ink",
+   "kit": "scenario/props",
+   "params": {
+    "kind": "meoktong",
+    "seed": 3245
+   },
+   "x": -3167.2,
+   "z": 213.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') and f('poem_called')",
+   "phase": "P2 §42",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": ""
+  }
+ ],
+ "crowds": [
+  {
+   "id": "dano_market",
+   "preset": "EventCrowd",
+   "when": "ph('dano') or ph('courtship')",
+   "seed": 50501,
+   "density": "high",
+   "density_start": {
+    "A_market": 10,
+    "B_ground": 14,
+    "C_road": 4
+   },
+   "density_note": "합 28 = high 상한 근처 시작값. 1024×768 성능 시험 뒤 확정",
+   "area": {
+    "rects": {
+     "A_market": [
+      -3336.0,
+      389.6,
+      -3230.0,
+      396.4
+     ],
+     "B_ground": [
+      -3330.0,
+      424.0,
+      -3262.0,
+      441.5
+     ],
+     "C_road": [
+      -3256.0,
+      441.0,
+      -3243.5,
+      453.5
+     ]
+    },
+    "exclude": [
+     {
+      "id": "shop_14",
+      "rect": [
+       -3314.0,
+       417.4,
+       -3307.0,
+       423.8
+      ]
+     },
+     {
+      "id": "ssireum_ring",
+      "circle": [
+       -3292.0,
+       431.0,
+       3.8
+      ]
+     },
+     {
+      "id": "swing_arc",
+      "circle": [
+       -3330.0,
+       444.0,
+       6.0
+      ]
+     },
+     {
+      "id": "gwanghallu",
+      "rect": [
+       -3286.4,
+       442.9,
+       -3256.4,
+       457.3
+      ]
+     },
+     {
+      "id": "yeot_stall",
+      "rect": [
+       -3274.0,
+       424.0,
+       -3271.0,
+       426.0
+      ]
+     },
+     {
+      "id": "talk_lane_1A",
+      "rect": [
+       -3275.0,
+       430.0,
+       -3258.0,
+       440.5
+      ],
+      "why": "§5 방자 부딪힘 · 몽룡 대화 자리 — 사람 비움"
+     }
+    ]
+   },
+   "roles": {
+    "idle": 0.3,
+    "talk": 0.25,
+    "walk": 0.2,
+    "watch": 0.25
+   },
+   "watch_targets": {
+    "B_ground": "ch_ssireum",
+    "C_road": "ch_gwanghallu"
+   },
+   "bank": [
+    [
+     "CHR_HUM_028",
+     "villager_m"
+    ],
+    [
+     "CHR_HUM_029",
+     "villager_f"
+    ],
+    [
+     "CHR_HUM_020",
+     "child_boy"
+    ],
+    [
+     "CHR_HUM_021",
+     "child_girl"
+    ],
+    [
+     "CHR_HUM_022",
+     "elder"
+    ],
+    [
+     "CHR_HUM_023",
+     "villager_f"
+    ],
+    [
+     "CHR_HUM_009",
+     "farmer"
+    ],
+    [
+     "CHR_HUM_010",
+     "farmwife"
+    ],
+    [
+     "CHR_HUM_003",
+     "peddler"
+    ],
+    [
+     "CHR_HUM_002",
+     "merchant"
+    ],
+    [
+     "CHR_HUM_001",
+     "scholar"
+    ]
+   ],
+   "cameras": [
+    "1A",
+    "1B",
+    "2A",
+    "walk"
+   ],
+   "far_freeze_m": 60
+  },
+  {
+   "id": "byeon_banquet",
+   "preset": "EventCrowd",
+   "when": "ph('feast') or ph('reveal')",
+   "seed": 50502,
+   "density": "medium",
+   "density_start": {
+    "A_court_w": 4,
+    "B_court_e": 4,
+    "C_daecheong": 4,
+    "D_side": 2
+   },
+   "density_note": "합 14 시작값. 출두(reveal) 때 같은 사람이 자세만 바뀐다(bow·kneel)",
+   "area": {
+    "rects": {
+     "A_court_w": [
+      -3181.0,
+      209.5,
+      -3167.8,
+      218.6
+     ],
+     "B_court_e": [
+      -3156.4,
+      209.5,
+      -3143.2,
+      218.6
+     ],
+     "C_daecheong": [
+      -3172.0,
+      204.0,
+      -3152.2,
+      207.6
+     ],
+     "D_side": [
+      -3181.0,
+      199.0,
+      -3175.0,
+      208.5
+     ]
+    },
+    "dy": {
+     "C_daecheong": 1.05
+    },
+    "exclude": [
+     {
+      "id": "aisle",
+      "rect": [
+       -3164.6,
+       209.5,
+       -3159.6,
+       219.5
+      ],
+      "why": "몽룡 입장·수행원 길(가운데 통로 5m)"
+     },
+     {
+      "id": "dais",
+      "rect": [
+       -3165.6,
+       208.0,
+       -3158.6,
+       210.0
+      ]
+     },
+     {
+      "id": "byeon_seat",
+      "rect": [
+       -3164.0,
+       205.0,
+       -3160.2,
+       207.6
+      ]
+     },
+     {
+      "id": "poem_table",
+      "rect": [
+       -3169.2,
+       212.2,
+       -3166.8,
+       213.8
+      ]
+     }
+    ]
+   },
+   "roles": {
+    "sit": 0.45,
+    "stand": 0.25,
+    "serve": 0.15,
+    "watch": 0.15
+   },
+   "serve_path": [
+    "ch_feast_store",
+    "ch_naesammun",
+    "ch_court"
+   ],
+   "on_flag": {
+    "royal_inspector_reveal": {
+     "sit": "kneel",
+     "stand": "bow",
+     "serve": "bow",
+     "watch": "bow"
+    }
+   },
+   "bank": [
+    [
+     "CHR_HUM_024",
+     "scholar"
+    ],
+    [
+     "CHR_HUM_004",
+     "official"
+    ],
+    [
+     "CHR_HUM_016",
+     "pojol"
+    ],
+    [
+     "CHR_HUM_026",
+     "villager_m"
+    ],
+    [
+     "CHR_HUM_029",
+     "villager_f"
+    ]
+   ],
+   "cameras": [
+    "8A",
+    "17A",
+    "18A"
+   ],
+   "far_freeze_m": 40
+  }
+ ],
+ "cameras": {
+  "1A": {
+   "kind": "shot",
+   "pos": [
+    -3241.0,
+    23.1,
+    453.15
+   ],
+   "look": [
+    -3271.4,
+    4.0,
+    450.1
+   ],
+   "fov": 36,
+   "spec": "pitch 32 · distance 36 · FOV 36",
+   "why": "평소 카메라는 yaw 0(남→북)이라 '앞 장터 사람 → 누각 → 그네'가 안 된다. 누각 동쪽 31m·높이 23m에서 서쪽으로: 앞 C_road 군중, 가운데 누각, 그 뒤 59m 그네(지붕 위로 보임 — 계산)"
+  },
+  "1B": {
+   "kind": "shot",
+   "pos": [
+    -3286.5,
+    2.6,
+    448.6
+   ],
+   "look": [
+    -3330.0,
+    4.0,
+    444.0
+   ],
+   "fov": 34,
+   "why": "몽룡(ch_mong_view) 뒤 4.6m, 프레임 한쪽 몽룡 · 44m 밖 버드나무 사이 그네"
+  },
+  "2A": {
+   "kind": "camera",
+   "focus": "ch_swing_land",
+   "pitch": 34,
+   "distance": 16,
+   "fov": 40,
+   "why": "3인 + 플레이어 옆, 일반 대화(38/13.5/38)보다 넓게"
+  },
+  "5A": {
+   "kind": "camera",
+   "focus": "ch_farewell_stand",
+   "pitch": 24,
+   "distance": 22,
+   "fov": 36,
+   "why": "yaw 0(남→북)이 그대로 북쪽 전주길을 길게 본다 — 뒤(남)에 방자·플레이어, 앞(북)으로 몽룡이 멀어짐"
+  },
+  "6A": {
+   "kind": "shot",
+   "pos": [
+    -3228.0,
+    1.7,
+    258.0
+   ],
+   "look": [
+    -3228.0,
+    1.6,
+    330.0
+   ],
+   "fov": 34,
+   "why": "네거리 남쪽에서 남문 쪽으로 낮고 길게 — 행렬이 카메라 쪽으로(앞 포졸·가운데 가마·뒤 짐), 군중 양옆"
+  },
+  "8A": {
+   "kind": "camera",
+   "focus": "ch_court",
+   "pitch": 52,
+   "distance": 23,
+   "fov": 32,
+   "why": "yaw 0이면 카메라가 내삼문 위(z≈228.7·높이 18) — 동헌이 화면 위 가운데, 관아 축 x=-3162.1 대칭. 점고·곤장·잔치·출두 모두 이 틀"
+  },
+  "8A_tuned": {
+   "kind": "camera",
+   "focus": [
+    -3162.1,
+    212.0
+   ],
+   "pitch": 58,
+   "distance": 21,
+   "fov": 32,
+   "why": "시험 촬영(05·06): 명세값 52/23은 내삼문 지붕이 화면 아래 1/3을 덮는다(가림 페이드로 반투명). 겨냥점을 2.5m 북쪽·pitch 58·거리 21로 하면 동헌 위 가운데·안마당 전체·내삼문 지붕은 아래 끝 띠만. 최종값은 사건 코드 때 결정"
+  },
+  "10A": {
+   "kind": "camera",
+   "focus": "ch_chunhyang_center",
+   "from": "8A",
+   "pitch": 22,
+   "distance": 9,
+   "fov": 34,
+   "why": "두 번째 요구에서 처음으로 춘향 높이로"
+  },
+  "12A": {
+   "kind": "shot",
+   "pos": [
+    -3171.6,
+    1.45,
+    229.9
+   ],
+   "look": [
+    -3176.4,
+    1.0,
+    229.4
+   ],
+   "fov": 42,
+   "why": "옥 칸 앞 나무살(x≈-3174)이 전경을 가린다"
+  },
+  "14A": {
+   "kind": "shot",
+   "pos": [
+    -3225.4,
+    1.75,
+    345.6
+   ],
+   "look": [
+    -3228.0,
+    1.5,
+    352.5
+   ],
+   "fov": 38,
+   "why": "플레이어 어깨 너머, 남문 밖 해 질 녘(정면 클로즈업 금지)"
+  },
+  "17A": {
+   "kind": "shot",
+   "pos": [
+    -3168.0,
+    2.3,
+    213.05
+   ],
+   "look": [
+    -3168.0,
+    0.4,
+    213.0
+   ],
+   "fov": 30,
+   "why": "종이를 위에서(서안 위 0.4m)"
+  },
+  "18A": {
+   "kind": "shot",
+   "pos": [
+    -3162.1,
+    2.75,
+    203.6
+   ],
+   "look": [
+    -3162.1,
+    1.8,
+    239.5
+   ],
+   "fov": 40,
+   "why": "변학도(대청 z 206.6) 뒤에서 남쪽 — 열린 내삼문 틀 안에 외삼문. 같은 관아 축에서 자세만 뒤집힌다"
+  }
+ }
+}
