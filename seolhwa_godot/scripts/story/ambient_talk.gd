@@ -37,13 +37,13 @@ func _now() -> float:
 	return Time.get_ticks_msec() / 1000.0
 
 # ---- 대상 ----
-# 가장 가까운 말 걸 수 있는 고을 사람(없으면 null). 배·말 안내가 있으면 그쪽이 먼저
+# 가장 가까운 말 걸 수 있는 고을 사람(없으면 null). 나루 배 안내·큰길 말 안내보다 곁 사람이 먼저(배를 탄 동안·말 위에서는 없음)
 func target(pp: Vector2) -> Variant:
 	if busy: return null
 	var npc = _npc()
 	if npc == null: return null
 	var m = d.main
-	if m.boats != null and String(m.boats.prompt) != "": return null
+	if m.boats != null and m.boats.riding(): return null   # 배 안내(나루 E)는 곁 사람 말 걸기를 막지 않는다 — 가까운 사람이 먼저(region_main은 대상이 있으면 배 E를 주지 않는다)
 	# 큰길 말 타기 안내(넓은 구역)는 곁 사람 말 걸기를 막지 않는다 — 가까운 사람이 먼저(region_main은 대상이 있으면 말 E를 주지 않는다)
 	if m.horse_ride != null and m.horse_ride.busy(): return null
 	if m.world.indoor != null: return null

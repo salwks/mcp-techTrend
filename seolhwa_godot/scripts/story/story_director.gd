@@ -102,6 +102,11 @@ func blocks_move() -> bool:
 func drives_player() -> bool:
 	return combat_view != null and combat_view.active
 
+# 먼 길 막음(fast_travel.lock_why가 묻는다): 사건이 정한 알림 글, 없으면 "" — 걷기는 막지 않는다
+func travel_lock() -> String:
+	if case_fn != null and S != null and case_fn.has_method("travel_lock"): return String(case_fn.travel_lock())
+	return ""
+
 # 이 프레임 플레이어 이동을 이야기가 쥐고 있나(전투 중이거나 대화·컷신으로 막힘)
 func owns_player() -> bool:
 	return drives_player() or blocks_move()
@@ -294,9 +299,11 @@ func update(dt: float) -> void:
 			return
 	_rub.update(dt)
 
+var e_frame := -1   # 곁 대상(이야기 인물·고을 사람·마부·깃발)이 E를 가져간 프레임
 func _unhandled_input(ev: InputEvent) -> void:
 	if main._loading or (title != null and title.active): return
 	if not (ev is InputEventKey and ev.pressed and not ev.echo): return
+	if ev.is_action("interact") and _target != null: e_frame = Engine.get_process_frames()   # 이 E는 곁 대상의 것 — 배·말이 같은 프레임 E를 쓰지 않게(region_main)
 	# 기록책(여행 기록·사건 기록·여행 방법)은 사건이 없는 노정에서도 연다
 	if ev.is_action("journal") and not ui.modal and not (combat_view != null and combat_view.active) and (case_id == "" or _started):
 		ui.journal_toggle(journal_data())

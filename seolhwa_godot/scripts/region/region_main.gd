@@ -1266,9 +1266,13 @@ func _map_fast_test() -> void:
 
 func map_fast_travel(ft: Dictionary) -> void:
 	if _loading or _leaving or world.is_route: return
+	if FastTravel.refuse(self, "map"): return
 	_travel(ft)
 
 func _travel(pt: Dictionary) -> void:
+	if FastTravel.refuse(self, "portal" if not pt.get("fast", false) else "skip"):   # 이야기가 먼 길을 막았다(남원 밤) — 포털은 물러나면 다시 선다
+		_portal_armed[String(pt.get("id", ""))] = false
+		return
 	if world.is_route and String(pt.id) != _route_entry and not pt.get("fast", false):
 		Progress.mark_route_done(String(world.region.get("route_id", world.region.get("region_id", ""))))
 	var dir := Travel.find_route_dir(pt.target) if pt.kind == "route" else Travel.region_dir(pt.target)
@@ -1320,7 +1324,8 @@ func _update_boats(dt: float) -> void:
 	if _loading or _leaving or world.indoor != null:
 		_boat_text(""); return
 	var st = story.get("_target") if story != null else null
-	var free: bool = st == null and not (_map and _map.visible)
+	# E 차례: 이야기 인물 → 고을 사람·마부·깃발 → 배. 같은 프레임 E로 곁 사람과 말을 막 시작했으면(_target이 이미 비었어도) 배는 쉰다
+	var free: bool = st == null and not (_map and _map.visible) and not _story_talking()
 	var want: bool = free and Input.is_action_just_pressed("interact")
 	_e_hold = _e_hold + dt if Input.is_action_pressed("interact") and free else 0.0
 	# 걷기 시험: 앞으로 걸을 길 점 가운데 건너편 내릴 자리 30m 안이 있으면(길이 뱃길로 이어짐) 저절로 탄다
@@ -1348,6 +1353,11 @@ func _update_boats(dt: float) -> void:
 	post.band += ((0.2 if low else (0.16 if stable else 0.07)) - post.band) * k
 	post.top_bias += ((0.4 if low else (0.25 if stable else 1.0)) - post.top_bias) * k
 
+# 이야기 쪽 말 걸기(고을 사람·역참 마부·깃발 대화)가 돌고 있나 — E가 배·말로 새지 않게
+func _story_talking() -> bool:
+	if story == null: return false
+	return int(story.e_frame) >= Engine.get_process_frames() - 1 or (story.ambient != null and story.ambient.busy) or (story.keeper != null and story.keeper.busy) or (story.ui != null and story.ui.modal)
+
 # 낮은 풍경 시점(배·말): 먼 식생 벌 거리·해 그림자 거리·근경 타일 반경을 줄인다(낮은 시점은 멀리까지 보여 무겁다)
 func _apply_low_view() -> void:
 	var low: bool = rig.sailing or rig.riding
@@ -1367,7 +1377,7 @@ func _update_horse(dt: float) -> void:
 	var fast_open: bool = fast_ui != null and is_instance_valid(fast_ui) and fast_ui.visible
 	var owned: bool = story != null and story.owns_player()
 	var free: bool = not map_open and not fast_open and not owned and not boats.riding() and world.indoor == null
-	var want_e: bool = free and st == null and boats.prompt == "" and Input.is_action_just_pressed("interact")
+	var want_e: bool = free and st == null and boats.prompt == "" and not _story_talking() and Input.is_action_just_pressed("interact")
 	horse_ride.update(dt, free, want_e)
 	var m: bool = horse_ride.mounted()
 	if rig.riding != m:
@@ -1397,6 +1407,7 @@ func _verify_fast() -> void:
 func open_fast_travel(prefer := "") -> void:
 	if fast_ui != null and is_instance_valid(fast_ui): return
 	if horse_ride == null or horse_ride.busy() or _loading or _leaving: return
+	if FastTravel.refuse(self, "fast_ui"): return
 	fast_ui = FastTravel.new(self, prefer)
 	add_child(fast_ui)
 
