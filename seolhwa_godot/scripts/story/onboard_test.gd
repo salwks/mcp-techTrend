@@ -406,6 +406,12 @@ func run(t) -> void:
 	# 다음(ACT 6): 외딴집 마당에 다가가면 해 질 무렵 귀환이 열린다 — 옛 다리(dusk_wait·night_fall)는 없다
 	T.expect(d.case_fn.night_ready() and not d.case_fn.has_method("night_fall"), "해 질 무렵 귀환이 열린다(night_ready) · night_fall 없음")
 	T.expect(not d.data.objects.any(func(o): return String(o.id) == "dusk_wait"), "dusk_wait 다리 없음")
+	# v3.2 착수 순서 6·7: 옛 절정·옛 아침(북쪽 어귀 한 장면)·옛 밤하늘 판은 남아 있지 않다. 아침은 걸어서 — 안내는 지도 붉은 표(nw_morning_north)
+	for m in ["climax", "morning_village", "night_sky", "rest", "mother_flashback", "night_fall"]: T.expect(not d.case_fn.has_method(m), "옛 길 없음 " + m)
+	T.expect(d.data.triggers.any(func(t): return String(t.id) == "s0010_elder") and d.data.triggers.any(func(t): return String(t.id) == "s0010_hunter") and d.data.map_leads.any(func(l): return String(l.id) == "nw_morning_north"),
+		"아침: 수수밭·북쪽 어귀는 다가가면(트리거) · 지도에 북쪽 어귀 표")
+	var src_ob := FileAccess.get_file_as_string("res://story/namwon/namwon_case.gd")
+	T.expect(not src_ob.contains("sky.mode = \"look\""), "옛 S0011 밤하늘 판(나그네 실루엣) 안 씀")
 	if shots:
 		d.ui.auto_real = false; Engine.time_scale = float(d.main.args.get("storyspeed", "2.5"))
 	# ---- 설정: 상호작용 안내 끔 ----

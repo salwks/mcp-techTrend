@@ -22,7 +22,7 @@ var _bot_stuck := 0.0
 var _combat_shot := false
 var bot_wait_first := false   # 안내 시험: 범이 처음 몸을 낮출 때까지 봇이 다가가지 않는다
 var bot_passive := false      # 안내 시험: 베지 않고 피하기·막기만(목표가 죽이기가 아님을 본다)
-var _night_choices: Array = []  # 밤의 문 ~ 탈출 사이에 플레이어에게 물은 것(없어야 한다 — 탈출은 누이가 정한다)
+var _night_choices: Array = []  # 밤의 문 ~ 탈출 사이 · 기도 ~ 줄을 잡을 때까지 플레이어에게 물은 것(없어야 한다 — 탈출은 누이가, 줄은 오누이가 정한다)
 
 func _init(director, spec: String) -> void:
 	d = director
@@ -44,6 +44,7 @@ func _log(s: String) -> void:
 # ---- 선택 정책 ----
 func choose(prompt: String, labels: Array) -> int:
 	if d.S.is_flag("night_wait_started") and not d.S.is_flag("kids_escape_started"): _night_choices.append(labels.duplicate())
+	if d.S.is_flag("act10_started") and not d.S.is_flag("rope_rise_done"): _night_choices.append(labels.duplicate())
 	for want in prefer:
 		for i in labels.size():
 			if labels[i] != "" and String(labels[i]).contains(want): return i
@@ -146,6 +147,7 @@ func review_begin() -> void:
 func _real_night() -> void:
 	if not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless": return
 	d.ui.auto_real = true
+	d.ui.auto_hold = 1.0   # 고르기 창을 읽을 만큼 띄운다(화면 검토)
 	Engine.time_scale = 1.0
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
 	if d.onboard != null:   # 순간이동으로 온 시험이라 이동·달리기 안내가 남아 있다 — 화면 검토에선 내린다(실제 놀이에선 이미 끝난 안내)
@@ -316,17 +318,12 @@ func _run() -> void:
 	snapshot("night prep")
 	await shot("night_yard")
 	# ---- §34 hide_spot 기다리기 → S0007 밤의 문 → 시간 벌기 → 나무 → 동아줄 ----
-	prefer = ["기다린다."]
+	prefer = ["기다린다.", MORNING_PICK.get(branch, "나도 모르겠소")]   # 밤 전체가 이 한 번의 go 안에서 돈다(아침의 대답까지)
 	_combat_shot = false
 	_watch_shots()
 	_watch_night()
 	await go("night_wait")
-	prefer = ["하늘을 올려다본다"]
-	await _idle()
-	var waited := 0
-	while (d.S.phase != "done" or d.ui.modal) and waited < 20000:
-		await get_tree().process_frame; waited += 1
-		if waited % 600 == 0: _log("기다리는 중 phase=%s busy=%s combat=%s" % [d.S.phase, d.runner.busy, d.combat_view.active])
+	await _drive_morning()
 	snapshot("end")
 	await shot("after", 40)
 	var o := String(d.S.vars.get("CASE_NAMWON_OUTCOME", ""))
@@ -336,6 +333,7 @@ func _run() -> void:
 	expect(d.S.seen.has("S0009") and d.S.seen.has("S0010") and d.S.seen.has("S0011"), "S0009 동아줄·S0010 아침·S0011 밤하늘 장면")
 	check_v3()
 	check_v32_night()
+	check_v32_rope()
 	# 지역 변화: 수수밭이 붉다(모든 갈래). 잔칫상·떡 공양은 없다(범을 잡은 사람이 없다)
 	expect(d.props.has("p_sorghum_red") and d.props.p_sorghum_red.get("want", false), "지역 변화 — 붉은 수수밭")
 	for pid in ["p_feast", "p_offering", "p_jeogori_c"]: expect(not d.props.has(pid), "옛 결말 소품 없음 " + pid)
@@ -367,16 +365,20 @@ func _night_only(b: String) -> void:
 	_watch_night()
 	var stop := String(d.main.args.get("nightstop", "act10_started"))
 	d.runner.run([{ "event": "S0007" }])
-	for i in 200000:
-		await get_tree().process_frame
-		if S.is_flag(stop): break
+	if stop == "done":   # 끝까지(아침·포수·노인·마지막 밤) — 화면 다듬기
+		await _drive_morning()
+	else:
+		for i in 200000:
+			await get_tree().process_frame
+			if S.is_flag(stop): break
 	await _frames(30)
 	printerr("STORYTEST PASS night-only %s stop=%s" % [b, stop])
 	d.main._quit()
 
 # ---- v3.2 ACT 6~9 밤 감시(대본과 따로 돈다) ----
 var nw := { "early_tiger": [], "kids_in_tree": false, "between_seen": false, "between_free": false, "mill": false, "door": false,
-	"arrow_set": false, "torch": false, "cues": [], "reveal_t": -1, "max_tiger_y": 0.0 }
+	"arrow_set": false, "torch": false, "cues": [], "reveal_t": -1, "max_tiger_y": 0.0,
+	"morning_tiger": [], "hunter_shot_free": true, "fall_traces": false, "morning_seen": false, "merchants": false }
 func _watch_night() -> void:
 	d.sfx_cue.connect(func(id): nw.cues.append(String(id)))
 	var hp: Vector2 = d.anchor("hide_spot")
@@ -387,6 +389,13 @@ func _watch_night() -> void:
 		var S = d.S
 		if S.phase == "done": return
 		if S.is_flag("kids_in_tree"): nw.kids_in_tree = true
+		# §65 아침 — 범의 몸(이야기 인물·전투)이 보이면 안 된다 · 포수 장면에서 카메라가 각본 시점으로 내려가지 않는다
+		if S.phase == "morning":
+			for id in d.actors:
+				var a: Dictionary = d.actors[id]
+				if String(a.spec.get("kind", "")) == "tiger" and a.shown and a.ch.visible: nw.morning_tiger.append(String(id))
+			if d.props.has("p_fall_traces") and d.props.p_fall_traces.get("want", false): nw.fall_traces = true
+			if d.runner.busy and not S.is_flag("hunter_morning_seen") and S.is_flag("morning_truth_choice") and d.main.rig.shot != null: nw.hunter_shot_free = false
 		# 문이 열리기 전(reveal_tiger) 범의 전신이 화면에 있으면 안 된다 — 범 그림(이야기 인물·전투)이 하나라도 보이면 기록
 		if S.is_flag("night_wait_started") and not S.is_flag("tiger_revealed"):
 			for id in d.actors:
@@ -441,8 +450,8 @@ func check_v32_night() -> void:
 	var li := -1; var le := -1; var lb := -1
 	for i in c.night_log.size():
 		var e: Array = c.night_log[i]
-		if e[0] == "say" and e[1] == "누이" and String(e[2]).contains("뒷문으로 가.") and li < 0: li = i
-		if e[0] == "say" and e[1] == "누이" and String(e[2]) == "엄마, 우리 뒷간 좀 다녀올게." and lb < 0: lb = i
+		if e[0] in ["say", "voice"] and e[1] == "누이" and String(e[2]).contains("뒷문으로 가.") and li < 0: li = i
+		if e[0] in ["say", "voice"] and e[1] == "누이" and String(e[2]) == "엄마, 우리 뒷간 좀 다녀올게." and lb < 0: lb = i
 		if e[0] == "flag" and e[2] == "kids_escape_started" and le < 0: le = i
 	expect(li >= 0 and lb > li and le > lb, "§40~§41 누이가 탈출을 정한다(뒷문으로 가 → 뒷간 핑계 → 탈출) %d·%d·%d" % [li, lb, le])
 	expect(_night_choices.is_empty(), "밤의 문 ~ 탈출 사이 플레이어 선택 없음 %s" % JSON.stringify(_night_choices))
@@ -468,11 +477,129 @@ func check_v32_night() -> void:
 	expect(S.is_flag("last_stand_done") and S.is_flag("act10_started"), "ACT 9 끝 → 기존 ACT 10 동아줄로")
 	for id in ["knock", "footstep_heavy", "wind", "flour_rustle"]: expect(nw.cues.has(id), "소리 " + id)
 	for l in [["범", "거기 숨어 있었구나."], ["아우", "킥."], ["범", "어떻게 거기까지 올라갔느냐?"], ["누이", "참기름을 바르고 올라왔지."], ["아우", "도끼로 찍고 올라오면 되는데."], ["누이", "아우야!"]]:
-		expect(c.night_log.any(func(e): return e[0] == "say" and e[1] == l[0] and e[2] == l[1]), "원문 %s “%s”" % l)
+		expect(c.night_log.any(func(e): return e[0] in ["say", "voice"] and e[1] == l[0] and e[2] == l[1]), "원문 %s “%s”" % l)
+	# 결정(조작 70%): 7B·둘째 손·나무 장면 대사는 조작을 쥔 채 자막으로 — 고정 시점은 짧은 그림(7C 앞발·전신 공개·우물)만
+	for l in [["누이", "왜 이렇게 늦었어?"], ["문밖", "바람을 오래 맞았더니 목이 쉬었구나."], ["아우", "봐, 엄마 손이잖아."], ["누이", "(작게) 뒷문으로 가."], ["범", "어떻게 거기까지 올라갔느냐?"]]:
+		expect(c.night_log.any(func(e): return e[0] == "voice" and e[1] == l[0] and e[2] == l[1]) and not c.night_log.any(func(e): return e[0] == "say" and e[2] == l[1]),
+			"자막(조작 유지) %s “%s”" % l)
 	# §3.3 정답 선공개 문장은 없다
 	var src := FileAccess.get_file_as_string("res://story/namwon/namwon_case.gd") + FileAccess.get_file_as_string("res://story/namwon/namwon_data.gd")
 	expect(not src.contains("네 발로 걷는다") and not src.contains("머리에 수건을 썼다. 그런데"), "§3.3 “…네 발로 걷는다.” 문장이 없다")
-	_log("밤 조작 비율(귀환~기도 앞, 시험 시간) %.0f%% free=%.1f cut=%.1f · 노크 사이 %.1f초 · 싸움 %s" % [c.control_share() * 100.0, c.ctl_time.free, c.ctl_time.cut, c.between_t, JSON.stringify(c.fight_lens)])
+	printerr("CTLMEASURE whole free=%.1f cut=%.1f (%.0f%%) night free=%.1f cut=%.1f (%.0f%%)" % [c.ctl_time.free, c.ctl_time.cut, c.control_share() * 100.0,
+		c.ctl_night.free, c.ctl_night.cut, c.control_share(true) * 100.0])
+	_log("밤 조작 비율(귀환~동아줄 오름 끝, 시험 시간) %.0f%% · 밤만 %.0f%% · 노크 사이 %.1f초 · 싸움 %s · 방어 %s" % [c.control_share() * 100.0, c.control_share(true) * 100.0,
+		c.between_t, JSON.stringify(c.fight_lens), JSON.stringify(c.defence)])
+	expect(c.control_share(true) >= 0.7, "밤 자체의 조작 비율 70%% 이상(%.0f%%)" % (c.control_share(true) * 100.0))
+
+# ---- v3.2 ACT 13~15 몰기: 아침(이웃 아낙 — 고르기는 prefer) → 수수밭 포수 → 북쪽 어귀 노인 → 마지막 밤(걷기) → 끝 ----
+const MORNING_PICK := { "A": "하늘로 올라갔소", "B": "나도 모르겠소", "C": "대답하지 않는다", "NA": "하늘로 올라갔소", "NB": "나도 모르겠소", "NC": "대답하지 않는다" }
+func _drive_morning() -> void:
+	prefer = [MORNING_PICK.get(branch, "나도 모르겠소")]
+	var waited := 0
+	while not (d.S.phase == "morning" and d.S.is_flag("morning_truth_choice") and not d.runner.busy and not d.ui.modal) and waited < 60000:
+		await get_tree().process_frame; waited += 1
+		if waited % 600 == 0: _log("아침 기다리는 중 phase=%s busy=%s combat=%s" % [d.S.phase, d.runner.busy, d.combat_view.active])
+	prefer = []
+	nw.morning_seen = d.S.phase == "morning"
+	nw.morning_pos = Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	await _frames(20)
+	# §65 수수밭 가장자리로 걸어간다(시험은 순간이동)
+	var hs: Vector2 = d.anchor("hunter_sorghum")
+	d.teleport_to(hs + Vector2(-2.2, 0.4), "right")
+	for i in 3000:
+		await get_tree().process_frame
+		if d.S.is_flag("hunter_morning_seen") and not d.runner.busy: break
+	await _idle()
+	nw.merchants = d.actors.has("merchant_a") and d.actors.merchant_a.shown
+	# §66 걸어 내려간다 — 북쪽 어귀
+	await walk_to("north_square")
+	for i in 3000:
+		await get_tree().process_frame
+		if d.S.is_flag("final_night_started"): break
+	# §68 S0011 — 그날 밤 북쪽 길을 걷는다(몇 걸음)
+	for i in 600:
+		await get_tree().process_frame
+		if not d.blocks_move() and d.S.is_flag("final_night_started"): break
+	await _frames(10)
+	var p := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	d.teleport_to(p + Vector2(0.0, -8.0), "up")
+	var w2 := 0
+	while (d.S.phase != "done" or d.ui.modal) and w2 < 40000:
+		await get_tree().process_frame; w2 += 1
+		if w2 % 600 == 0: _log("마지막 밤 기다리는 중 phase=%s busy=%s" % [d.S.phase, d.runner.busy])
+
+# v3.2 ACT 10~15 판정(§75 자동 확인할 수 있는 것)
+func check_v32_rope() -> void:
+	var c = d.case_fn
+	var S = d.S
+	var names: Array = c.act10_log.map(func(e): return String(e[0]))
+	var at := func(nm: String) -> float:
+		for e in c.act10_log:
+			if String(e[0]) == nm: return float(e[1])
+		return -1.0
+	var order := ["prayer_1", "no_answer", "defend_pray", "defended_pray", "prayer_2", "still", "rope_hint", "defend_rope", "defended_rope", "rope_reached",
+		"grab_au", "grab_nui", "risen", "tiger_prayer", "cut_kids", "cut_player", "cut_rope", "snap", "fallen", "vanished"]
+	var idx: Array = order.map(func(x): return names.find(x))
+	var sorted_idx := idx.duplicate(); sorted_idx.sort()
+	expect(not idx.has(-1) and idx == sorted_idx, "ACT 10~12 차례 %s" % JSON.stringify(names))
+	# §51 첫 기도는 줄을 곧바로 부르지 않는다
+	var dp: Dictionary = c.defence.get("pray", {}); var dr: Dictionary = c.defence.get("rope", {})
+	expect(not c.rope_seen_at_prayer and names.find("prayer_1") < names.find("defended_pray") and names.find("defended_pray") < names.find("rope_hint") and float(dp.get("t", 0.0)) >= c.DEF_PRAY[0] - 0.05,
+		"첫 기도 직후 줄이 오지 않는다(기도 → %.1f초 방어 → 둘째 기도 → 줄 끝)" % float(dp.get("t", 0.0)))
+	expect(float(dp.get("t", 0.0)) >= c.DEF_PRAY[0] - 0.05 and float(dp.get("t", 0.0)) <= c.DEF_PRAY[1] + 0.3, "§52 다시 플레이 8~12초(%.1f초, 벌린 %.1f)" % [float(dp.get("t", 0.0)), float(dp.get("held", 0.0))])
+	expect(float(dr.get("t", 0.0)) >= c.DEF_ROPE[0] - 0.05 and float(dr.get("t", 0.0)) <= c.DEF_ROPE[1] + 0.3, "§55 마지막 방어 5~8초(%.1f초, 벌린 %.1f)" % [float(dr.get("t", 0.0)), float(dr.get("held", 0.0))])
+	# §55 마지막 시간을 플레이어가 번다 — 방어가 끝나기 전엔 줄이 손에 닿지 않는다
+	expect(c.rope_hint_y >= c.HINT_Y - 0.05 and c.rope_reach_k >= 0.9 and S.is_flag("rope_reached") and names.find("rope_reached") > names.find("defended_rope"),
+		"마지막 시간은 플레이어가 번다 — 처음 줄 끝 %.1fm(닿지 않음), 손이 닿는 것은 벌린 시간 %.0f%%에서 · 방어 뒤에야 rope_reached" % [c.rope_hint_y, c.rope_reach_k * 100.0])
+	# 아이들이 스스로 줄을 부른다 — 기도는 누이·아우, 플레이어 선택 없음
+	var v := func(who: String, line: String) -> bool: return c.night_log.any(func(e): return e[0] == "voice" and e[1] == who and e[2] == line)
+	expect(c.PRAYER_1.all(func(l): return v.call("누이", l)) and v.call("아우", c.PRAYER_2[0]) and v.call("누이·아우", c.PRAYER_2[1]), "기도는 오누이가 한다(누이 셋 · 아우 따라 · 둘이 함께)")
+	expect(not c.night_log.any(func(e): return e[1] == "나그네" and String(e[2]).contains("동아줄")), "나그네는 줄을 빌지 않는다")
+	expect(_night_choices.is_empty(), "기도 ~ 줄을 잡을 때까지 플레이어 선택 없음")
+	expect(v.call("누이", "잡아!") and at.call("grab_au") < at.call("grab_nui"), "§56 “잡아!” — 아우 먼저, 누이 뒤")
+	# §57 범이 아이들의 기도를 흉내 낸다(같은 말·같은 끊음)
+	expect(c.TIGER_PRAYER.all(func(l): return v.call("범", l)), "§57 범의 기도 %s" % JSON.stringify(c.TIGER_PRAYER))
+	expect(String(c.TIGER_PRAYER[1]).replace("나를", "저희를").begins_with(String(c.PRAYER_1[1]).trim_suffix("…")) and String(c.TIGER_PRAYER[2]).ends_with(c.PRAYER_2[1]) and S.is_flag("tiger_prayer"),
+		"범의 기도는 아이들 기도의 억양 그대로(새 능력 아님)")
+	# §58 썩은 줄은 멀리서 색으로 정답을 말하지 않는다
+	var T = load("res://kit/story/tale.gd")
+	var cn := Color.hex(int(T.STRAW_NEW[0]) << 8 | 0xff); var cr := Color.hex(int(T.STRAW_ROT[0]) << 8 | 0xff)
+	expect(Vector3(cn.r - cr.r, cn.g - cr.g, cn.b - cr.b).length() < 0.12, "§58 썩은 줄 몸빛 ≈ 새 줄 짚빛(차 %.3f)" % Vector3(cn.r - cr.r, cn.g - cr.g, cn.b - cr.b).length())
+	var src := FileAccess.get_file_as_string("res://story/namwon/namwon_case.gd")
+	expect(not src.contains("검누렇") and not src.contains("빛이 검"), "썩은 줄을 색으로 말하는 자막 없음")
+	expect(c.creaks_heard >= 2 and nw.cues.has("rope_creak") and nw.cues.has("rope_snap") and nw.cues.has("fall_impact"), "§59~§60 삐걱 %d · 끊어짐 · 떨어짐 소리" % c.creaks_heard)
+	expect(S.is_flag("tiger_fallen") and c.red_rise_k >= 0.999 and bool(S.world.get("sorghum_red", false)), "§60 수수밭 — 아래부터 붉게")
+	# §61~§62
+	expect(v.call("아우", "누나…") and v.call("누이", "손 놓지 마."), "§61 마지막 대사 “누나…” “손 놓지 마.”")
+	expect(c.sky_mode == "two" and c.auto_lines.has("아이 둘이 하늘로 올라가는 것을 보았다."), "§62 두 빛(인물 없음) · 기록 “아이 둘이 하늘로 올라가는 것을 보았다.”")
+	# §63~§64 아침 — 순간이동 없이 마당 · 이웃 아낙 세 갈래(소문만 바뀐다)
+	expect(nw.get("morning_seen", false) and c.morning_wake.distance_to(d.anchor("yard")) <= 11.5, "§63 아침은 외딴집 마당(눈뜬 자리 %.1fm)" % c.morning_wake.distance_to(d.anchor("yard")))
+	var want: String = { "A": "sky", "B": "unknown", "C": "silent" }.get(branch, "")
+	var mv := String(S.vars.get("CASE_NAMWON_MORNING", ""))
+	expect(mv == want and S.is_flag("morning_truth_choice"), "§64 아침 대답 기록 %s" % mv)
+	var Rm = load("res://story/rumors_data.gd")
+	var rr: Array = Rm.RUMORS.filter(func(r): return String(r.id) == "NW_TAVERN_MORNING")
+	var line := String(Rm.pick(rr[0], {}, S.vars)) if not rr.is_empty() else ""
+	var others: Array = ["sky", "unknown", "silent"].filter(func(k): return k != mv).map(func(k): return String(rr[0].lines[k]) if not rr.is_empty() else "")
+	expect(line != "" and line == String(rr[0].lines[mv]) and not others.has(line), "§64 아침 대답에 따라 주막 소문이 다르다 “%s”" % line)
+	# §65 시신 없음
+	expect(nw.morning_tiger.is_empty(), "아침에 범의 몸이 보이지 않는다 %s" % JSON.stringify(nw.morning_tiger.slice(0, 3)))
+	expect(S.has_clue("tiger_death") and S.is_flag("hunter_morning_seen") and float(c.hunter_cam.get("pitch", 99.0)) <= 40.0 and nw.hunter_shot_free,
+		"§65 포수 “죽었소.” — 흔적만, 카메라는 내려가지 않는다(pitch %s)" % c.hunter_cam.get("pitch", "-"))
+	expect(nw.fall_traces, "§65 꺾인 수숫대·붉은 흔적·뜯긴 털·눌린 자국(소품)")
+	# §66~§67
+	expect(S.is_flag("elder_book") and S.notes.has("이겸의 흔적 — 한양") and String(S.vars.get("MAIN_MASTER_TRACE", "")).split(",").has("HANYANG"), "§66 이겸의 흔적 — 한양 · MAIN_MASTER_TRACE=HANYANG")
+	expect(nw.get("merchants", false), "§66 장꾼이 다시 고개를 넘는다")
+	var skl: Array = d.runner.trace.filter(func(e): return e[0] == "skills")
+	expect(bool(S.vars.get("SKILL_BEAST_TRACE", false)) and not bool(S.vars.get("SKILL_GUARD_SHOVE", false)) and skl.is_empty(), "§67 보상은 짐승 흔적 읽기 하나(다른 숙련 해금 없음 %s)" % JSON.stringify(skl))
+	# §68
+	expect(c.final_lights_seen and c.final_cut_t < 1.0, "§68 마지막 밤 — 걷는 중 두 빛(긴 강제 컷신 없음, 거둔 시간 %.1f초)" % c.final_cut_t)
+	expect(String(c.summary()[-1]) == c.FINAL_LINE and String(S.notes[-1]) == c.FINAL_LINE, "§68 기록책 마지막 줄 “%s”" % c.FINAL_LINE)
+	expect(S.phase == "done" and bool(S.vars.get("CASE_NAMWON_COMPLETE", false)), "CASE_NAMWON_COMPLETE")
+	# 옛 길이 남아 있지 않다
+	for m in ["climax", "rest", "night_fall", "mother_flashback", "morning_village", "night_sky", "resolve", "yard_fight", "fight_loop", "lure", "kids_night"]:
+		expect(not c.has_method(m), "옛 함수 없음 " + m)
+	expect(not d.data.objects.any(func(o): return String(o.id) == "dusk_wait"), "옛 dusk_wait 없음")
 
 # v3 판정: 원작 장면 순서 · 범을 죽이지 않음 · 입양 결말 없음 · 기록 · 결말 변수
 func check_v3() -> void:

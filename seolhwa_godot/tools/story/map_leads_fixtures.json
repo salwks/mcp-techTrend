@@ -171,5 +171,14 @@
   { "case": "namwon", "note": "v3.2 §28 방앗간 주인과 말함 → 방앗간 표지 사라짐",
     "state": { "phase": "explore", "flags": { "s0000_started": true, "INTRO_NAMWON_TITLE_DONE": true, "case_started": true, "met_kids": true, "first_encounter": true, "hq_where": true, "mill_talked": true }, "clues": ["rumor", "cakes", "flour_sack"], "rules": [], "seen": { "S0000": true, "S0001": true, "S0002": true, "S0004": true }, "talked": { "jumo": 1, "hunter": 1 }, "world": {}, "items": {} },
     "vars": {},
-    "visible": [], "hidden": ["nw_mill"] }
+    "visible": [], "hidden": ["nw_mill"] },
+  { "case": "namwon", "note": "v3.2 §63 아침 — 이웃 아낙을 만나기 전에는 북쪽 어귀 표 없음",
+    "state": {"phase": "morning", "flags": {"case_started": true, "met_kids": true, "first_encounter": true, "dusk_prep": true, "night_wait_started": true, "kids_gone": true, "morning_yard_seen": true}, "clues": ["rumor"], "rules": [], "seen": {"S0009": true, "S0010": true}, "talked": {}, "world": {"sorghum_red": true}, "items": {}},
+    "vars": {"CASE_NAMWON_OUTCOME": "B"}, "visible": [], "hidden": ["nw_morning_north", "nw_to_hanyang"] },
+  { "case": "namwon", "note": "v3.2 §64 아침 이웃 아낙 물음 뒤 — 걸어서 북쪽 어귀로(한양은 아직)",
+    "state": {"phase": "morning", "flags": {"case_started": true, "met_kids": true, "first_encounter": true, "dusk_prep": true, "night_wait_started": true, "kids_gone": true, "morning_yard_seen": true, "morning_truth_choice": true}, "clues": ["rumor"], "rules": [], "seen": {"S0009": true, "S0010": true}, "talked": {}, "world": {"sorghum_red": true}, "items": {}},
+    "vars": {"CASE_NAMWON_OUTCOME": "B", "CASE_NAMWON_MORNING": "unknown"}, "visible": ["nw_morning_north"], "hidden": ["nw_to_hanyang", "nw_night_house"] },
+  { "case": "namwon", "note": "v3.2 §66 노인 뒤(마지막 밤 전) — 한양 표, 북쪽 어귀 표는 사라짐",
+    "state": {"phase": "morning", "flags": {"case_started": true, "met_kids": true, "first_encounter": true, "dusk_prep": true, "night_wait_started": true, "kids_gone": true, "morning_yard_seen": true, "morning_truth_choice": true, "elder_book": true}, "clues": ["rumor"], "rules": [], "seen": {"S0009": true, "S0010": true}, "talked": {}, "world": {"sorghum_red": true}, "items": {}},
+    "vars": {"CASE_NAMWON_OUTCOME": "B", "MAIN_MASTER_TRACE": "HANYANG", "CASE_HANYANG_BOOKSHOP_COMPLETE": false}, "visible": ["nw_to_hanyang"], "hidden": ["nw_morning_north"] }
 ]
