@@ -69,7 +69,7 @@ var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2
 var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
 var ambient = null             # 고을 사람 말 걸기(scripts/story/ambient_talk.gd)
 var keeper = null              # 역참 마부·길목 깃발 대화 — 역마 입구(scripts/region/station_keeper.gd)
-var talk_cam := {}             # 지금 이야기 인물 대화 카메라(사건 머리 case.talk_camera — 남원 v3.2 CAMERA 1A). 대화가 끝나면 비운다
+var talk_cam := {}             # 지금 이야기 인물 대화 카메라(CameraRig.talk_spec — 공통 TALK·사건·인물 덮어쓰기). 대화가 끝나면 비운다
 var _music_t := 0.0
 var _music_cur := "?"          # 지금 튼 음악 id(사건 case_fn.music_wanted — 없으면 "")
 # 고을 사람(주변 인물)과 같은 바탕 그림 — 이걸 쓰는 이야기 인물에는 테두리 빛을 더한다
@@ -838,15 +838,17 @@ func interact(id: String) -> void:
 	if onboard != null: onboard.on_interact("actor" if actors.has(id) else "object")
 	_target = null
 	ui.prompt("")
-	var tc = data.get("case", {}).get("talk_camera")
-	var cam_on: bool = actors.has(id) and tc is Dictionary and not steps.is_empty()
+	var tc = CameraRig.talk_spec(data.get("case", {}), actors[id].spec) if actors.has(id) else null
+	var cam_on: bool = tc is Dictionary and not steps.is_empty()
 	if cam_on: _talk_camera(id, tc)
 	await runner.run(steps)
 	if cam_on and not talk_cam.is_empty(): _talk_camera_end()
 	if onboard != null: onboard._pend_t = 0.0   # 「…」 바로 다시 본다
 
-# 이야기 인물 대화 카메라(남원 v3.2 §8 CAMERA 1A — 이 뒤 일반 NPC 대화의 기준): 플레이어와 인물 사이를 겨냥, pitch·거리·fov는 사건 머리 값.
-# 대화 동안 음악을 조금 낮춘다. 대화 안에서 연출이 카메라를 바꾸면(컷신) 그쪽이 이긴다 — 끝날 때 평소 시점으로
+# 이야기 인물 대화 카메라(공통 — 제작 규칙 v1.0 결정 4, 남원 v3.2 §8 CAMERA 1A에서 승격): 이야기 인물에게 직접 말을 걸 때만
+#   (고을 사람·마부·깃발은 이 길을 지나지 않는다). 값은 CameraRig.talk_spec: 공통 TALK 38/13.5/38 → case.talk_camera → actor.talk_camera,
+#   false면 평소 카메라. 플레이어와 인물 사이를 겨냥하고 대화 동안 음악을 조금 낮춘다.
+#   대화 안에서 연출이 카메라를 바꾸면(컷신) 그쪽이 이긴다 — 끝날 때 평소 시점으로
 func _talk_camera(id: String, tc: Dictionary) -> void:
 	var a: Dictionary = actors[id]
 	var mid := (Vector2(main.player_pos.x, main.player_pos.z) + Vector2(a.pos.x, a.pos.z)) * 0.5
@@ -854,6 +856,11 @@ func _talk_camera(id: String, tc: Dictionary) -> void:
 	talk_cam.focus = [mid.x, mid.y]
 	camera(talk_cam)
 	Sound.music_level(0.5, 0.6)
+
+# 사건 단위 대화 카메라 값(인물 덮어쓰기 없이) — 사건 연출이 대화 구도를 다시 쓸 때(남원 마부·아이들·포수·이웃 아낙·노인). 꺼졌으면 {}
+func talk_camera_base() -> Dictionary:
+	var tc = CameraRig.talk_spec(data.get("case", {}))
+	return tc if tc is Dictionary else {}
 
 func _talk_camera_end() -> void:
 	talk_cam = {}

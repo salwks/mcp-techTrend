@@ -28,6 +28,25 @@ var ride_side := 1.0
 var ride_k := 1.0              # 1 = 말 시점, 0 = 걷기 시점(멈춤에 다가가며 줄어든다)
 var shake_y := 0.0
 const RIDE := { pitch = 20.0, distance = 21.0, fov = 38.0, lookAhead = 0.0, aimZ = 0.0 }
+# 이야기 인물 대화 카메라(공통 TALK — 제작 규칙 v1.0 결정 4·C27): 플레이어가 이야기 인물(사건 actor)에게 직접 말을 걸 때만.
+#   고을 사람(ambient_talk)·역참 마부·길목 깃발은 쓰지 않는다. 겨냥은 플레이어와 인물 사이(story_director._talk_camera).
+const TALK := { "pitch": 38.0, "distance": 13.5, "fov": 38.0 }
+
+# 대화 카메라 값 고르기: 공통 TALK → case.talk_camera → actor.talk_camera (뒤가 앞을 덮는다). 대화 중 명시적 camera/cutscene은 그 위에서 이긴다.
+#   각 층: 없음(null) = 그대로 · false = 끄기(평소 카메라) · true = 켜기(공통 값) · {pitch, distance, fov 일부} = 덮어쓰기.
+#   반환: 쓸 값 Dictionary(pitch·distance·fov) 또는 null(끔)
+static func talk_spec(case_head: Dictionary, actor_spec := {}):
+	var out = TALK.duplicate()
+	for layer in [case_head.get("talk_camera"), actor_spec.get("talk_camera")]:
+		if layer == null: continue
+		if layer is bool:
+			if not layer: out = null
+			elif out == null: out = TALK.duplicate()
+		elif layer is Dictionary:
+			if out == null: out = TALK.duplicate()
+			for k in ["pitch", "distance", "fov"]:
+				if layer.has(k): out[k] = float(layer[k])
+	return out
 # 연출 미끄러짐(glide): 겨냥점·pitch·거리·fov를 시작값에서 목표값으로 smoothstep으로 천천히 옮긴다(천천히 떠나 천천히 닿는다).
 # 목표 겨냥점이 null이면 매 프레임 계산한 평소 자리(플레이어)로 돌아온다. 이야기 컷(전경 등)이 '쉭' 하고 튀지 않게.
 var _gl = null

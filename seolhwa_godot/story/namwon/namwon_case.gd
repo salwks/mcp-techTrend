@@ -161,7 +161,7 @@ func station_intro() -> void:
 	flag("station_tut_seen")
 	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
 	var w: Vector2 = _mabu_pos()
-	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var tc: Dictionary = d.talk_camera_base()
 	var cam := tc.duplicate(); cam.focus = [(pp.x + w.x) * 0.5, (pp.y + w.y) * 0.5]
 	d.camera(cam)
 	d.face_actor("player", null, w)
@@ -1008,7 +1008,7 @@ func dusk_return() -> void:
 	d.place_actor("nui", door + Vector2(-0.55, 1.3), null, "down")
 	d.place_actor("au", door + Vector2(0.45, 1.5), null, "down")
 	d.anim_actor("nui", "idle"); d.anim_actor("au", "idle")
-	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var tc: Dictionary = d.talk_camera_base()
 	var cam := tc.duplicate()
 	var fo := door + Vector2(0.2, 2.9)
 	cam.focus = [fo.x, fo.y]
@@ -1072,7 +1072,7 @@ func _hunter_role() -> void:
 	var stop := pp + (from - pp).normalized() * 2.4
 	await d.move_actor("hunter_dusk", [[stop.x, stop.y]], 2.2, "walk", "idle")
 	d.face_actor("hunter_dusk", null, "player")
-	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var tc: Dictionary = d.talk_camera_base()
 	var cam := tc.duplicate(); var fo := (pp + stop) * 0.5
 	cam.focus = [fo.x, fo.y]
 	d.camera(cam)
@@ -3113,7 +3113,7 @@ func morning_yard() -> void:
 	d.cutscene(true)
 	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
 	var np: Vector2 = d.anchor("neighbor_visit")
-	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var tc: Dictionary = d.talk_camera_base()
 	var cam := tc.duplicate(); var cf := (np + _pp()) * 0.5
 	cam.focus = [cf.x, cf.y]
 	d.camera(cam)
@@ -3249,7 +3249,7 @@ func elder_book() -> void:
 	d.cutscene(true)
 	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
 	var ep: Vector2 = d.anchor("elder")
-	var tc: Dictionary = d.data.get("case", {}).get("talk_camera", {})
+	var tc: Dictionary = d.talk_camera_base()
 	var cam := tc.duplicate(); var cf := (ep + _pp()) * 0.5
 	cam.focus = [cf.x, cf.y]
 	d.camera(cam)

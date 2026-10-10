@@ -239,6 +239,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/story/talk_test.gd").new(self); _ride_test.run.call_deferred(String(args.talktest))
 	elif args.has("continuetest"):
 		_ride_test = load("res://scripts/story/continue_test.gd").new(self); _ride_test.run.call_deferred(String(args.continuetest))
+	elif args.has("talkshot"):
+		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
 	elif args.has("tour"): _run_tour.call_deferred(args.tour)
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
