@@ -166,6 +166,7 @@ func start(arena: Dictionary, opts := {}) -> void:
 	var mods: Dictionary = opts.get("mods", {})
 	if float(mods.get("stunned", 0.0)) <= 0.0:
 		say("숲 그늘에서 거대한 호랑이가 모습을 드러냈다!" if mods.get("firstEncounter", false)
+			else String(arena.tiger_intro) if arena.has("tiger_intro")   # 이야기가 정한 첫 문구(남원 마지막 방어)
 			else ("호랑이가 마당으로 뛰어들었다! 아이들이 있는 나무를 노린다." if arena.get("id", "") == "house_yard"
 			else "숲이 조용해졌다… 호랑이가 낮게 원을 그리며 다가온다."), 2600)
 	printerr("COMBAT start arena=%s mods=%s" % [arena.get("id", "?"), JSON.stringify(mods)])

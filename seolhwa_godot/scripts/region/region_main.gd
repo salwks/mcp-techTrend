@@ -660,6 +660,16 @@ var occ_script = null   # { focus: Vector3, r: float, near?: float(카메라 앞
 func set_occ_script(spec) -> void:
 	occ_script = spec
 
+# 하늘 그림판의 기본 달(sky_backdrop u_moon) — 1 보임 · 0 감춤. 이야기 한 장면만(남원 마지막 밤의 두 빛) 잠깐 감추고 되돌린다.
+#   재질은 장면마다 새로 만들어 기본값 1로 시작한다 — 저장에는 남지 않는다(장면을 나가거나 끝내도 감춘 채 남지 않는다)
+func set_moon(k: float) -> void:
+	if sky_mat != null: sky_mat.set_shader_parameter("u_moon", clampf(k, 0.0, 1.0))
+
+func moon_k() -> float:
+	if sky_mat == null: return 1.0
+	var v = sky_mat.get_shader_parameter("u_moon")
+	return 1.0 if v == null else float(v)
+
 # 각본 장면 동안 틸트시프트 흐림(후처리 tilt — 이 권역의 흐림 효과는 이것 하나)을 끈다. false면 평소 띠로 천천히 돌아온다
 var cine_sharp := false
 func set_cine_sharp(on: bool) -> void:
@@ -1098,6 +1108,7 @@ func _reload_place() -> void:
 func _quit() -> void:
 	if _quitting: return
 	_quitting = true
+	set_moon(1.0)
 	await _drain_jobs()
 	if placement: placement.stop()
 	if world: world.shutdown()

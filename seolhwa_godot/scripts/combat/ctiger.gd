@@ -28,6 +28,7 @@ var pounce_hit := false
 var ps := Vector2.ZERO
 var pe := Vector2.ZERO
 var airborne := false
+var lunge_y0 := 0.0   # 연출: 높은 데서 덮칠 때(남원 마지막 방어 — 줄기 위) 시작 높이. 돌진하며 0으로 내려온다
 var bait = null
 var disturbed := false
 var eat_left := 0.0
@@ -65,7 +66,7 @@ static func G() -> Dictionary: return TU.T.tiger
 static func F() -> Dictionary: return TU.T.feel
 
 func reset(p: Vector2) -> void:
-	pos = p; y = 0.0
+	pos = p; y = 0.0; lunge_y0 = 0.0
 	hp = G().hp
 	state = "prowl"; t = 0.0
 	h = Vector2(0, 1); dir = "down"
@@ -110,6 +111,8 @@ func turn_to(v: Vector2, dt: float) -> void:
 	set_heading(HB.turn_toward(h, v, G().turnRate * dt))
 
 func go(s: String) -> void:
+	if lunge_y0 > 0.0 and not s in ["crouch", "pounce"]:   # 높은 데서 덮치다 끊기면(맞음 등) 땅으로
+		lunge_y0 = 0.0; y = 0.0
 	if tele_h != null:
 		b.env.fx_remove(tele_h); tele_h = null
 	if (state == "toBait" or state == "eat") and s != "eat" and bait != null:
@@ -244,7 +247,7 @@ func update(dt: float) -> void:
 				var u := minf(1.0, (t - lead) / air)
 				var prev := pos
 				pos = ps.lerp(pe, u)
-				y = sin(PI * u) * G().pounceHeight
+				y = sin(PI * u) * G().pounceHeight + lunge_y0 * (1.0 - u)
 				if not pounce_hit and pl.alive and u > 0.08:
 					var hd: Vector2 = pos + h * G().bodyHalf
 					if HB.segment_hit(prev - h * G().bodyHalf, hd, G().pounceWidth * 0.5, pl.pos, TU.T.player.radius):

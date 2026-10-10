@@ -15,6 +15,7 @@ uniform float u_night;
 uniform float u_time;
 uniform vec3 u_sun_dir = vec3(0.0, 0.3, 1.0);
 uniform vec3 u_moon_dir = vec3(0.4072, 0.1267, -0.9049);
+uniform float u_moon = 1.0;   // 기본 달 보이기(0이면 감춘다 — 남원 마지막 밤의 두 빛 동안만)
 
 float hash11(float p) { p = fract(p * 0.1031); p *= p + 33.33; p *= p + p; return fract(p); }
 float hash21(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
@@ -64,8 +65,8 @@ void fragment() {
 	float disc = smoothstep(0.99955, 0.99975, md);
 	float halo = pow(max(md, 0.0), 300.0) * 0.5 + pow(max(md, 0.0), 30.0) * 0.12;
 	vec3 moon_col = vec3(1.0, 0.95, 0.82);
-	sk = mix(sk, moon_col * 1.6, disc * u_night);
-	sk += moon_col * halo * u_night * 0.6;
+	sk = mix(sk, moon_col * 1.6, disc * u_night * u_moon);
+	sk += moon_col * halo * u_night * 0.6 * u_moon;
 
 	vec2 pp = d.xz / max(-e, 0.02);
 	float c1 = fbm2(pp * 0.9 + vec2(u_time * 0.01, 0.0));
