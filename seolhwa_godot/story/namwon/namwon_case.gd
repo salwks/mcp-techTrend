@@ -470,7 +470,7 @@ const NUDGE_R := 7.0
 var _nudge_t := 0.0
 var nudged: Array = []   # 시험 기록(기울인 단서 id 차례)
 func ambient(dt: float) -> void:
-	if _moon_hidden and not (f("final_night_started") and S.phase != "done" and not _final_lights.is_empty()): _moon(true)   # 감춘 달이 남지 않게
+	if _moon_hidden and not ((sky_mode == "two" and S.phase == "night" and d.runner.busy) or (f("final_night_started") and S.phase != "done" and not _final_lights.is_empty())): _moon(true)   # 감춘 달이 남지 않게
 	_night_clock(dt)
 	_leash_step()
 	if f("dusk_prep") and not f("night_wait_started") and S.phase == "explore" and d.main.hour > PREP_MAX_HOUR and not d.runner.busy:
@@ -2280,6 +2280,8 @@ func _tree_defence(mn: float, mx: float, tag: String, during := Callable(), star
 	var cam0 = ar.get("camera")
 	var tt: Vector2 = d.anchor("tiger_tree")
 	if start_mode == "rope":
+		# 줄기 뒤에 남았으면 마당 앞쪽으로 — 범의 얼굴과 덮침을 같은 쪽에서 본다.
+		if _pp().y < tt.y + 2.0: d.teleport_to(tt + Vector2(-4.0, 4.0), "up")
 		await _trunk_turn()
 		var tv := (_pp() - tt)
 		tv = tv / maxf(tv.length(), 1e-3)
@@ -2289,6 +2291,12 @@ func _tree_defence(mn: float, mx: float, tag: String, during := Callable(), star
 		ar["tiger_intro"] = "호랑이가 줄기에서 몸을 돌려 덮쳐 온다!"
 	else:
 		ar["tiger_start"] = [tt.x - 0.6, tt.y + 1.2]   # 줄기에서 뛰어내린다
+		_sharp(true)
+		_occ(Vector3(tt.x, _ground("tiger_tree") + 4.0, tt.y), 4.0)
+		d.face_actor("tiger_night", null, "player")
+		d.anim_actor("tiger_night", "pounce")
+		await _animate(0.4, func(k: float) -> void:
+			d.place_actor("tiger_night", tt.lerp(tt + Vector2(-0.6, 1.2), k), 1.6 * (1.0 - k), ""))
 	d.despawn_actor("tiger_night")
 	d.camera(null)
 	if d.main.has_method("set_occ_script"): d.main.set_occ_script(null)
@@ -2312,11 +2320,18 @@ func _tree_defence(mn: float, mx: float, tag: String, during := Callable(), star
 		flag("hunter_arrow")
 		_nlog("arrow", "포수", "after_lose")
 		d.ui.caption("포수  “이놈아, 이쪽이다!”", 1.8)
+	d.main.rig.shot = null
+	_sharp(false)
+	_no_occ_clear()
+	if d.main.has_method("set_occ_script"): d.main.set_occ_script(null)
 	_a10("defended_" + tag)
 	return res
 
 # §55 마지막 방어 앞 — 줄기 위의 범이 플레이어 쪽으로 몸을 돌려 웅크린다(짧게, 조작은 그대로). 웅크림 그림을 기울여 매달린 자세로
 func _trunk_turn() -> void:
+	var tt: Vector2 = d.anchor("tiger_tree")
+	_sharp(true)
+	_occ(Vector3(tt.x, _ground("tiger_tree") + 4.0, tt.y), 4.0)
 	var tn = d.actors.get("tiger_night")
 	if tn == null or not tn.shown: d.spawn_actor("tiger_night", "tiger", "tiger_tree", "up", "", "")
 	d.place_actor("tiger_night", "tiger_tree", LUNGE_Y, "")
@@ -2343,8 +2358,18 @@ func _defence_begin(tag: String, mode: String) -> void:
 	var rec := { "mode": mode, "pos": tg.pos, "y": 0.0, "intro": String(ar.get("tiger_intro", "")), "cam": d.main.rig.override, "lunge": false }
 	defence_start[tag] = rec
 	if mode != "rope":
+		var tt: Vector2 = d.anchor("tiger_tree")
+		_sharp(true)
+		_occ(Vector3(tt.x, _ground("tiger_tree") + 4.0, tt.y), 4.0)
 		_shot_soon("defence_pray_start", 0.25)
 		return
+	# 마지막 방어는 손에 닿지 않는 줄부터 마당까지 함께 보인다.
+	var tt: Vector2 = d.anchor("tiger_tree")
+	var g := _ground("tiger_tree")
+	_sharp(true)
+	_cam_cut(Vector3(tt.x - 4.0, g + 10.0, tt.y + 17.0), Vector3(tt.x - 2.0, g + 4.5, tt.y), 46.0)
+	_occ(Vector3(tt.x - 1.0, g + 6.0, tt.y), 3.4)
+	if is_instance_valid(_rope_node): _no_occ(_rope_node)
 	var tch = d.combat_view.tiger_ch
 	var tp: Dictionary = tg.to_player()
 	tg.y = LUNGE_Y; tg.lunge_y0 = LUNGE_Y
@@ -2967,13 +2992,14 @@ func two_lights() -> void:
 	var yn: float = an.y_abs; var ya: float = aa.y_abs
 	var rope := _rope_node
 	var yr: float = rope.position.y if is_instance_valid(rope) else 0.0
-	# 플레이어 뒤 낮은 자리에서 하늘의 아이들을 올려다본다
-	_cam_cut(pp + Vector3(1.0, 0.7, 3.8), (pp + Vector3(0, 1.6, 0)).lerp(Vector3(rk.x, yn + 1.0, rk.y), 0.35), 58.0)
+	# 아이들이 읽히는 거리에서 올려다보고 상승에 맞춰 천천히 멀어진다
+	_cam_cut(Vector3(rk.x + 1.0, yn - 2.0, rk.y + 10.0), Vector3(rk.x, yn + 1.0, rk.y), 46.0)
 	_occ(pp + Vector3(0, 1.0, 0), 0.4)
 	var go_up := func(lift: float) -> void:
 		an.y_abs = yn + lift; aa.y_abs = ya + lift
 		if is_instance_valid(rope): rope.position.y = yr + lift
 		if is_instance_valid(_sky_spot): _sky_spot.position.y = yn + lift + 3.2
+		_cam(Vector3(rk.x + 1.0, yn + lift - 2.0, rk.y + 10.0 + lift * 0.3), Vector3(rk.x, yn + lift + 1.0, rk.y), 46.0)
 	var t := { "k": 0.0 }
 	_drift_up(t, go_up)   # 대사 동안에도 천천히 멀어진다
 	_shot_soon("kids_far", 0.8)
@@ -2994,6 +3020,7 @@ func two_lights() -> void:
 	d.main.rig.shot = null
 	var sky = load("res://scripts/story/tale_sky.gd").new()
 	sky.mode = "two"
+	_moon(false)
 	sky_mode = sky.mode
 	d.add_child(sky)
 	sky.alpha = 1.0
@@ -3015,10 +3042,12 @@ func two_lights() -> void:
 	await d.wait(1.6)
 	await d.ui.fade(true, 0.8)
 	sky.queue_free()
+	_moon(true)
 
 func _drift_up(t: Dictionary, go_up: Callable) -> void:
 	while t.k < 1.0:
 		await d.get_tree().process_frame
+		if t.k >= 1.0: return   # 대사 뒤 줄을 지웠으면 캡처한 노드에 다시 접근하지 않는다
 		t.k = minf(1.0, t.k + d.get_process_delta_time() / (6.0 if not (d.ui.auto and not d.ui.auto_real) else 0.3))
 		go_up.call(10.0 * t.k)
 		_sky_light_k(lerpf(0.12, 0.55, t.k))
@@ -3052,6 +3081,7 @@ func morning_yard() -> void:
 	kids_place()
 	d.set_hour(MORNING_HOUR)
 	d.set_weather("clear")
+	if d.main.weather != null: d.main.weather.force("clear", -1.0, 0.0, { "fogm": 0.3 })
 	# 마당에서 그대로 아침을 맞는다(밤을 지새운 자리 — 마당 밖이면 마당 안으로만)
 	var pp := _pp()
 	var yard: Vector2 = d.anchor("yard")
@@ -3151,6 +3181,7 @@ func _sorghum_lure() -> void:
 	on.on = false
 	if is_same(rig.focus, _lure_focus): rig.focus = null   # 다른 장면이 카메라를 잡았으면 건드리지 않는다
 	sorghum_lure.done = true
+	d.set_weather("clear")   # 길목에서 수수밭을 보여 준 뒤 기존 안개로
 
 var _lure_focus = null
 func _lure_follow(hold: Dictionary, on: Dictionary, sg: Vector2, gs: float) -> void:
@@ -3181,6 +3212,7 @@ func _lure_follow(hold: Dictionary, on: Dictionary, sg: Vector2, gs: float) -> v
 # §65 범의 죽음 — 포수가 흔적 아래쪽을 확인한 뒤. 시신은 보이지 않는다(카메라는 선 사람 눈높이 위에서 흔적 가장자리만)
 var hunter_cam := {}   # 시험 기록: 이 장면의 카메라
 func hunter_sorghum() -> void:
+	d.set_weather("clear")
 	d.cutscene(true)
 	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
 	var tf: Vector2 = d.anchor("tiger_fall")
@@ -3212,6 +3244,7 @@ func _hunter_morning_leave() -> void:
 
 # §66 북쪽 어귀 — 직접 걸어 내려온다(장꾼이 다시 고개를 넘는다). 노인이 기록책을 본다 → 이겸의 흔적 — 한양 · §67 보상 하나
 func elder_book() -> void:
+	d.set_weather("clear")
 	if not f("hunter_morning_seen"): flag("hunter_morning_skipped")   # 수수밭을 지나쳐 왔으면 포수 이야기는 어귀에서(ph done 대사)
 	d.cutscene(true)
 	if d.main.player.anim in ["walk", "run"]: d.main.player.set_anim("idle")
