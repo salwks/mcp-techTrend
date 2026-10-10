@@ -52,6 +52,8 @@ static func data() -> Dictionary:
 			"talk_camera": { "pitch": 38.0, "distance": 13.5, "fov": 38.0 },
 			# 도입부(보강서 v1.0 §3~§9): S0000 남원으로 가는 길 → S0001 남원 전경·첫 자유 이동
 			"start_event": "S0000",
+			# 첫 사건 고을 막음(제작 규칙 F-1 — fast_travel.gate_for가 읽는다): 남원 일을 마치기 전에는 다른 공간으로 역마·깃발로 건너뛰지 못한다
+			"travel_gate": { "leave_space_until": "CASE_NAMWON_COMPLETE", "notice": "남원 일이 아직 끝나지 않았다 — 고을을 떠날 수 없다" },
 			# 첫 사건 단서 안내 단계(§14·§28): 0 첫 단서 전 · 1 첫 단서 · 2 둘째 · 3 일반 조사 — scripts/story/onboarding.gd 먹점
 			"guidance_flag": "CASE_NAMWON_GUIDANCE_STAGE",
 			# 새로 시작할 때 되돌릴 공통 변수(story_state 기본 목록 + 결말 세부 — 지난 판 결말 글이 기록책에 남지 않게)

@@ -136,8 +136,36 @@ func _done_end(sp: String, n: Dictionary) -> bool:
 func _reachable() -> Dictionary:
 	return reachable_from(main)
 
-# 첫 사건 막음: 남원 일(첫 사건)을 마치기 전에는 남원 권역 밖으로 역마·깃발로 건너뛸 수 없다(걸어 나가는 길은 이야기가 막는다). 막으면 까닭, 아니면 ""
-const FIRST_SPACE := "JL_NAMWON_UNBONG"
+# 고을 막음(사건 선언 — 제작 규칙 v1.0 F-1·C17): 사건 머리 case.travel_gate가 있으면, 그 사건을 올린 공간(case_registry)에서
+#   다른 공간으로 가는 역마·깃발을 막는다(걸어 나가는 길은 이야기가 막는다). 공통 장치이고 문구·풀림 변수는 사건 데이터에 있다.
+#   travel_gate = { leave_space_until: 풀림 변수(참이면 풀림), notice: 알림 한 줄, spaces: [공간…](선택 — 없으면 그 사건을 올린 모든 공간) }
+#   그 사건이 끝났어도(progress cases.<id>.phase == done, 또는 지금 도는 사건의 phase done) 풀린다. 예: 남원 첫 사건(namwon_data.gd)
+const CaseRegistry := preload("res://scripts/story/case_registry.gd")
+static var _gates := {}   # 사건 데이터 경로 → travel_gate(없으면 {}) — data()는 크므로 한 번만 읽는다
+static func clear_gate_cache() -> void: _gates = {}
+static func _gate_of(id: String) -> Dictionary:
+	var key := CaseRegistry.data_path(id)
+	if not _gates.has(key):
+		var g = CaseRegistry.load_data(id).get("case", {}).get("travel_gate")
+		_gates[key] = g if g is Dictionary else {}
+	return _gates[key]
+
+# 공간 sp를 떠나지 못하게 하는 사건 선언이 있으면 그 알림, 없으면 "". active_id/active_phase: 지금 도는 사건(없으면 "")
+static func gate_for(sp: String, active_id := "", active_phase := "") -> String:
+	var ids: Array = CaseRegistry.ids_for(sp)
+	if active_id != "" and not ids.has(active_id): ids.append(active_id)
+	for id in ids:
+		var g := _gate_of(String(id))
+		if g.is_empty(): continue
+		var only = g.get("spaces")
+		if only is Array and not only.is_empty() and not only.has(sp): continue
+		var until := String(g.get("leave_space_until", ""))
+		if until != "" and bool(Progress.get_var(until, false)): continue
+		if String(Progress.case_state(String(id)).get("phase", "")) == "done": continue
+		if String(id) == active_id and active_phase == "done": continue
+		return String(g.get("notice", "아직 이 고을을 떠날 수 없다"))
+	return ""
+
 # 먼 길 막음(이야기가 정한다 — 남원 밤: 해 질 무렵 준비부터 아침까지). 걷기는 막지 않고, 장면을 떠나는 길만 막는다:
 #   역마(역참 마부·길목 깃발·역마 창·지도) · 말 타기 · 배 · 노정 포털·지나온 길 건너뛰기. 막혔으면 짧은 알림을 띄우고 true
 static var refused: Array = []   # 시험 기록: [무엇, 알림]
@@ -158,11 +186,10 @@ static func refuse(m, what: String) -> bool:
 
 static func gate_why(m) -> String:
 	var hs := String(m.world.region.get("route_id", m.world.region.get("region_id", "")))
-	if hs != FIRST_SPACE: return ""
-	if bool(Progress.get_var("CASE_NAMWON_COMPLETE", false)) or String(Progress.case_state("namwon").get("phase", "")) == "done": return ""
 	var st = m.get("story")
-	if st != null and st.get("S") != null and String(st.case_id) == "namwon" and String(st.S.phase) == "done": return ""
-	return "남원 일이 아직 끝나지 않았다 — 고을을 떠날 수 없다"
+	var aid := ""; var aph := ""
+	if st != null and st.get("S") != null: aid = String(st.case_id); aph = String(st.S.phase)
+	return gate_for(hs, aid, aph)
 
 # 공간 그래프 너비 우선(역마 API Stations.state도 쓴다)
 static func reachable_from(m) -> Dictionary:
