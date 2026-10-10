@@ -94,6 +94,7 @@ static func warp(id: String) -> Dictionary:
 #   막힘(처음 가는 길·남원 첫 사건)은 역마 창의 목록 규칙(fast_travel._gather)이 그대로 정한다 — 못 가면 창이 닫히고 {ok:false}.
 static func warp_node(space: String, node: String) -> Dictionary:
 	if main == null or not is_instance_valid(main): return { ok = false, why = "지금은 갈 수 없다" }
+	if load("res://scripts/region/fast_travel.gd").refuse(main, "station"): return { ok = false, why = String(load("res://scripts/region/fast_travel.gd").lock_why(main)) }
 	if main._loading or main._leaving or (main.horse_ride != null and main.horse_ride.busy()) or main.boats.riding():
 		return { ok = false, why = "지금은 갈 수 없다" }
 	if main.fast_ui != null and is_instance_valid(main.fast_ui): main.fast_ui.close()

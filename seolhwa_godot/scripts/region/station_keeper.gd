@@ -51,6 +51,7 @@ func talk(t: Dictionary) -> void:
 	else: await talk_keeper(t.st)
 
 func talk_keeper(st: Dictionary) -> void:
+	if load("res://scripts/region/fast_travel.gd").refuse(d.main, "keeper"): return   # 이야기가 먼 길을 막았다(남원 밤)
 	busy = true
 	var hr = _hr()
 	var life = hr.life
@@ -67,6 +68,7 @@ func talk_keeper(st: Dictionary) -> void:
 	await act(a)
 
 func talk_flag(f: Dictionary) -> void:
+	if load("res://scripts/region/fast_travel.gd").refuse(d.main, "flag"): return
 	busy = true
 	d.ui.prompt(""); d._target = null
 	d.face_actor("player", null, f.p)

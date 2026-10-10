@@ -250,6 +250,13 @@ func _neighbor_leave() -> void:
 	flag("neighbor_visit_on", false)
 	d.show_actor("neighbor_visit", false)
 
+# 남원 밤 — 걷기는 자유, 먼 길은 막는다: 해 질 무렵 준비(dusk_prep)부터 밤 사건이 끝나 아침이 될 때까지
+#   역마·길목 깃발·역마 창·지도 역마·말 타기·배·노정 포털·지나온 길 건너뛰기(fast_travel.refuse). 아침(phase morning)이면 저절로 풀린다
+const NIGHT_LOCK_LINE := "아이들을 두고 멀리 떠날 수 없다"
+func travel_lock() -> String:
+	if f("dusk_prep") and S.phase in ["explore", "night"]: return NIGHT_LOCK_LINE
+	return ""
+
 # 낮 음악(v3.2 소리 원칙 — 최소): 남원 낮 탐색 동안만 bgm_day_calm을 조용히. 여는 검은 화면·첫 조우 뒤·밤에는 없다.
 #   story_director가 1초마다 묻고 바뀔 때만 Sound.music을 부른다(다른 공간으로 가면 그쪽이 ""를 돌려 멈춘다)
 func music_wanted() -> String:

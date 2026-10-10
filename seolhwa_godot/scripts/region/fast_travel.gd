@@ -138,6 +138,24 @@ func _reachable() -> Dictionary:
 
 # 첫 사건 막음: 남원 일(첫 사건)을 마치기 전에는 남원 권역 밖으로 역마·깃발로 건너뛸 수 없다(걸어 나가는 길은 이야기가 막는다). 막으면 까닭, 아니면 ""
 const FIRST_SPACE := "JL_NAMWON_UNBONG"
+# 먼 길 막음(이야기가 정한다 — 남원 밤: 해 질 무렵 준비부터 아침까지). 걷기는 막지 않고, 장면을 떠나는 길만 막는다:
+#   역마(역참 마부·길목 깃발·역마 창·지도) · 말 타기 · 배 · 노정 포털·지나온 길 건너뛰기. 막혔으면 짧은 알림을 띄우고 true
+static var refused: Array = []   # 시험 기록: [무엇, 알림]
+static func lock_why(m) -> String:
+	if m == null or not is_instance_valid(m): return ""
+	var st = m.get("story")
+	if st != null and st.has_method("travel_lock"): return String(st.travel_lock())
+	return ""
+
+static func refuse(m, what: String) -> bool:
+	var why := lock_why(m)
+	if why == "": return false
+	refused.append([what, why])
+	if refused.size() > 64: refused = refused.slice(32)
+	if m.has_method("_show_hud"): m._show_hud(why)
+	print("TRAVEL locked %s: %s" % [what, why])
+	return true
+
 static func gate_why(m) -> String:
 	var hs := String(m.world.region.get("route_id", m.world.region.get("region_id", "")))
 	if hs != FIRST_SPACE: return ""

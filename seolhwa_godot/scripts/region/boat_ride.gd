@@ -154,6 +154,7 @@ func take_hud() -> String:
 # ---- 타기 ----
 func board(id: String, from_end := -1, scripted := false) -> bool:
 	if riding(): return false
+	if not scripted and load("res://scripts/region/fast_travel.gd").refuse(main, "boat"): return false   # 이야기가 먼 길을 막았다(남원 밤)
 	var r := route(id)
 	if r.is_empty(): return false
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)

@@ -33,7 +33,7 @@ const ACCEL := 3.2
 const DECEL := 4.2
 const SADDLE_Y := 1.85       # 안장 높이(탈 말 ride_horse 그림 — 등 1.87m). 주변 말 옆모습으로 대신할 때는 SADDLE_SMALL
 const SADDLE_SMALL := 1.32
-const MOUNT_R := 45.0        # 말 타는 곳 둘레
+const MOUNT_R := 25.0        # 권역의 말 타는 곳 둘레(노정 큰길은 어디서나 · 막 내린 자리 40m 안은 다시 탈 수 있다)
 const ROAD_R := 7.5          # 큰길 중심선에서 이만큼 안이면 큰길 위
 const T_BRING := 1.1         # 말이 다가와 서는 시간
 const T_MOUNT := 0.75
@@ -118,6 +118,10 @@ func setup(m) -> void:
 	if enabled: flags.setup(m, net)
 	var arr := Stations.take_arrival()
 	if not arr.is_empty() and String(arr.space) == sid: _station_arrive.call_deferred(arr)
+	if m.args.has("traveltest"):   # 이동 규칙 시험(scripts/region/travel_rules_test.gd)
+		var tt = load("res://scripts/region/travel_rules_test.gd").new(m)
+		tt.run.call_deferred(String(m.args.traveltest))
+		m.set_meta("travel_test", tt)
 	if m.args.has("stationtest"):
 		var tst = load("res://scripts/region/station_test.gd").new(m)
 		tst.run.call_deferred(String(m.args.stationtest))
@@ -225,6 +229,10 @@ func _update_foot(dt: float, free: bool, want_e: bool) -> void:
 	if not bool(chk.ok):
 		if String(chk.get("show", "")) != "": prompt = String(chk.show)
 		_choice_from = -1
+		return
+	if load("res://scripts/region/fast_travel.gd").lock_why(main) != "":   # 먼 길 막음: 말 안내는 띄우지 않고, E를 누르면 알림만
+		_choice_from = -1
+		if want_e: begin_ride({})
 		return
 	var gi: int = int(chk.gi)
 	_choice_t -= dt
@@ -343,6 +351,7 @@ func station_ride_choices(st: Dictionary) -> Array:
 # st: 역참 마부가 말을 끌어 오는 역(마부 대화에서 고른 것) — 비우면 예전처럼 문 앞 25m 안 역
 func begin_ride(c: Dictionary, st_force := {}) -> bool:
 	if mounted(): return false
+	if load("res://scripts/region/fast_travel.gd").refuse(main, "horse"): return false   # 이야기가 먼 길을 막았다(남원 밤)
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	var dj: Dictionary = net.dijkstra(_choice_from if _choice_from >= 0 else net.nearest(pp, ROAD_R + 1.5))
 	var ids: PackedInt32Array = net.path_ids(dj, int(c.gi))
