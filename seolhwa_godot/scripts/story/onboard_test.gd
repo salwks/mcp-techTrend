@@ -3,7 +3,7 @@
 #   새 게임 → S0000(이겸의 세 문장·기록책 한 장 「남원」) → 이동 안내(실제로 5m 넘게 걸어야 끝) → 달리기 안내(실제로 2초 넘게 달려야 끝) →
 #   길가 짚신(4m 먹빛·2m 'E 살펴보기'·단서 아님) → 나그네 둘 → S0001 남원 전경 → 주막 주변대화·주모 「…」 → E 키로 주모(첫 E가 먹는지) →
 #   물음이 물음을 연다·물은 것은 사라진다·둘 이상이면 이겸 연결(CAMERA 1B)·사건 기록(도장 소리)·“어느 길로” → 지도에 북쪽 고갯길 →
-#   M·R 안내는 시간으로 끝나지 않고 실제로 열어야 끝 · 첫 기록 원문 네 줄 → 역참 마부(처음 한 번, H 안내는 역마가 열렸을 때만) →
+#   M·R 안내는 시간으로 끝나지 않고 실제로 열어야 끝 · 첫 기록 원문 네 줄 → 역참 마부(처음 한 번 → 마부 목록, 역마 안내는 역마가 열렸을 때만) →
 #   외딴집 이웃 아낙 → 오누이 세 물음(지난밤 = 목소리는 들은 대로, K_MIMIC 아님) · 기도 복선 → 아궁이·함지(어머니 회상 없음) →
 #   첫 단서 안내 단계 0→1→2→3 → 첫 호랑이 조우(느린 화면·회피 안내·관찰 기록) → 설정(안내 끔이면 먹점 없음) → Esc 메뉴.
 #   끝에 ONBOARDTEST PASS/FAIL.
@@ -203,10 +203,20 @@ func run(t) -> void:
 	# ---- 역참·마방(§10): 문 앞에 처음 다가갈 때 한 번 ----
 	T.expect(d.data.anchors.has("station_wait") and d.data.anchors.has("station_yard"), "역참 자리는 stations.json에서")
 	if shots: _watch_dialog()
-	want = ["역마는 어떻게 쓰오?", "말을 빌릴 수 있소?", "그냥 가겠소."]
+	want = ["역마는 어떻게 쓰오?", "말을 빌릴 수 있소?", "어디로 갈 수 있소?", "그만두겠소."]
+	var n_before := choice_log.size()
 	await T.walk_to("station_wait")
 	await T._frames(20); await T._idle()
+	for i in 600:   # 안내 뒤 마부 목록(station_keeper.menu)까지 끝나기를
+		if not d.ui.modal and not d.runner.busy: break
+		await T._frames(1)
 	T.expect(d.S.is_flag("station_tut_seen") and d.S.is_flag("st_q_how") and d.S.is_flag("st_q_rent"), "마부: 먼 길 가시오? · 물음 둘")
+	var keeper_menu := false
+	for c in choice_log.slice(n_before):
+		if (c[1] as Array).has("그만두겠소."): keeper_menu = true
+	T.expect(keeper_menu, "마부 안내가 마부 목록(가 본 역·깃발 · 말을 빌린다 · 그만두겠소)으로 이어진다")
+	var hr = d.main.horse_ride
+	T.expect(hr != null and hr.state == "ON_FOOT" and (d.main.fast_ui == null or not is_instance_valid(d.main.fast_ui)), "그만두겠소 — 말도 역마도 오지 않는다")
 	var fr: bool = d.case_fn.fast_ready()
 	T.expect(not fr and not d.case_fn.fast_hint_shown and not _queued("FAST"), "역마로 갈 곳이 없으면 H 안내 없음")
 	var n_talk := choice_log.size()

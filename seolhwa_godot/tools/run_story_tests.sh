@@ -68,7 +68,7 @@ TESTS=(
 	"fast:same-space|240|--region=JL_NAMWON_UNBONG --fasttravel=JL_NAMWON_UNBONG/unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:to-hanyang|300|--region=JL_NAMWON_UNBONG --fasttravel=GG_HANYANG/noryangjin --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:jeju-blocked|240|--region=JL_NAMWON_UNBONG --fasttravel=JJ_JEJU/jeju_mok --fastexpect=blocked --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
-	# 역참(scripts/region/station_test.gd): 두 역 들러 '가 봄' → Travel.warp_to_station → 마부가 끌어 온 말로 다음 고을 어귀까지 / 다른 공간 역으로 역마
+	# 역참(scripts/region/station_test.gd): 두 역 들러 '가 봄' → Travel.warp_to_station → 문 앞 넓은 E 없음 · 곁 사람이 마부보다 먼저 · 마부 목록 뒤에야 말 → 길목 깃발(가 봄·깃발↔역) → 마부 '말을 빌린다'로 다음 고을 어귀까지 / 다른 공간 역으로 역마
 	"station:namwon|480|--region=JL_NAMWON_UNBONG --stationtest=namwon,inwol,unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --ridetime=4 --notitle"
 	"station:to-cheongpa|300|--region=JL_NAMWON_UNBONG --stationtest=cross:cheongpa --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	# 고을 사람 말 걸기·이야기 인물 「…」(scripts/story/talk_test.gd) — 앞(새 저장) → 저장 얹고 뒤

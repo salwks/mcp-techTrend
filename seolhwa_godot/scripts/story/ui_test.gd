@@ -2,6 +2,7 @@
 #   --savetest       칸 1에 저장 → 진행을 바꿈 → 칸 1 불러오기(장면 다시 열기) → 바꾼 값이 되돌아왔나 · 예전 꼴 저장(버전 1) 불러오기
 #                    → SAVETEST PASS / FAIL (헤드리스 가능)
 #   --uishots=폴더   기록책 갈피마다 펼침면 · 다음 장, Esc 메뉴, 저장 · 불러오기 창, 조사 카드 · 대화 · 선택 · 안내 · 도장을 찍는다(창 필요)
+#   --bottomshots=폴더  아래쪽 글(조사·대화 안내 E, 처음 한 번 안내 띠, 자막·조작 유지 자막, 말·배 안내, 소지품, 오른쪽 아래 키 안내)을 찍는다(창 필요)
 #   --uifixture=res://….json  시작 저장(vars · cases · routes_done)을 깐다   --uifull  나의 첫 문장 · 들은 말 몇 개를 더한다(화면용)
 # 예) godot --path seolhwa_godot res://scenes/region.tscn --resolution 1600x900 -- --region=JL_NAMWON_UNBONG --notitle \
 #       --savefile=user://ui_shots.json --uifixture=res://story/jeju/test_post_act4.json --uifull --uishots=shots/ui
@@ -51,6 +52,9 @@ func savetest() -> void:
 	if phase == "":
 		Progress.set_var("SAVETEST_MARK", "A")
 		Progress.place_now = "시험 고을"
+		# 길목 깃발 가 봄(travel_nodes)도 저장 칸에 실려 이어진다
+		var HR: Script = load("res://scripts/region/horse_ride.gd")
+		HR.discover(String(d.space_id), _test_flag())
 		var ok: bool = k.save_to(1)
 		var info := Progress.slot_info(1)
 		if not ok or info.is_empty(): fails.append("칸 1 저장 실패")
@@ -69,6 +73,10 @@ func savetest() -> void:
 	Engine.remove_meta(META)
 	var mark := str(Progress.get_var("SAVETEST_MARK", ""))
 	if mark != "A": fails.append("불러온 값 %s (A여야)" % mark)
+	var fid := _test_flag()
+	var flag_ok: bool = load("res://scripts/region/horse_ride.gd").is_discovered(String(d.space_id), fid)
+	print("SAVETEST flag %s/%s kept=%s" % [d.space_id, fid, flag_ok])
+	if fid == "" or not flag_ok: fails.append("길목 깃발 가 봄이 저장 칸에서 이어지지 않음(%s)" % fid)
 	var wh := Progress.where()
 	print("SAVETEST after load mark=%s space=%s where=%s" % [mark, d.space_id, JSON.stringify(wh)])
 	# 예전 꼴(버전 1 — routes_done만) 칸도 읽힌다
@@ -78,7 +86,7 @@ func savetest() -> void:
 	if not Progress.load_slot(3): fails.append("버전 1 칸 불러오기 실패")
 	elif not Progress.route_done("OLD_ROUTE") or not (Progress.data().get("vars") is Dictionary) or not (Progress.data().get("heard") is Array):
 		fails.append("버전 1 칸 꼴 채우기 실패")
-	if fails.is_empty(): print("SAVETEST PASS slot1 → load → mark A, v1 slot ok")
+	if fails.is_empty(): print("SAVETEST PASS slot1 → load → mark A, flag kept, v1 slot ok")
 	else: print("SAVETEST FAIL ", "; ".join(fails))
 	d.main._quit()
 
@@ -159,3 +167,78 @@ func uishots(dir: String) -> void:
 	menu.close()
 	print("UITEST done")
 	d.main._quit()
+
+# ---- 아래쪽 글(안내·자막·말 안내·소지품) — 크기·겹침 확인용 ----
+func bottomshots(dir: String) -> void:
+	await _wait_load()
+	d.ui.auto = false
+	await _frames(60)
+	var vs: Vector2 = d.get_viewport().get_visible_rect().size
+	print("UITEST bottom viewport=%s k=%.2f" % [vs, d.ui._k])
+	d.ui.items([{ label = "떡", count = 3 }, { label = "부싯돌", count = 1 }, { label = "쪽빛 천 조각", count = 1 }, { label = "짚신 한 짝", count = 1 }])
+	# 1) 조사·대화 안내 + 처음 한 번 안내 띠 + 오른쪽 아래 키 안내
+	d.ui.hint("WASD 걷기   ·   Shift 달리기   ·   마우스 오른쪽 끌기 — 둘러보기")
+	d.ui.key_hint("F", "쉬며 기록을 정리한다")
+	await _shot_prompt(dir, "1_prompt_hint", "주모 · 말 걸기")
+	# 2) 처음 조사 전(크게) + 두 줄 안내
+	d.ui.prompt_strong = true
+	d.ui.hint("말이 큰길을 따라 저절로 간다\nSpace 멈춤·다시 감   ·   E 내리기\n갈림길 앞에서는 A·D로 길을 고른다")
+	d.ui.key_hint("F", "")
+	await _shot_prompt(dir, "2_prompt_strong_hint3", "살펴보기")
+	d.ui.prompt_strong = false
+	d.ui.prompt(""); d.ui.hint_clear()
+	await _frames(30)
+	# 3) 자막(조작 유지 자막 — 긴 줄 줄바꿈)
+	d.ui.caption("길손  “그 기록하던 양반 말이야. 한양으로 갔다던데.”", 6.0)
+	await _shot(dir, "3_caption", 30)
+	d.ui.caption("누이  “오라버니, 문고리 잡지 마. 어머니 목소리여도 열면 안 돼. 아까 그 손 봤잖아, 털이 숭숭 났어.”", 6.0)
+	await _shot(dir, "4_caption_long", 30)
+	# 4) 자막 + 안내가 함께
+	await _shot_prompt(dir, "5_caption_prompt", "문고리 · 살펴보기", 10)
+	d.ui.prompt("")
+	if d.ui._cap_tween: d.ui._cap_tween.kill()
+	var cb = d.ui.get("_cap_box")
+	if cb == null: cb = d.ui._caption   # 예전 꼴(띠 없음)
+	cb.modulate.a = 0.0
+	await _frames(10)
+	# 5) 말·배 안내(region_main 아래 가운데 — 말 안내가 매 프레임 덮어쓰므로 그리기 바로 앞에 다시 넣는다)
+	if d.main.has_method("_boat_text"):
+		var t := "E   말에 오른다 — 운봉 고을 어귀 쪽으로 (약 3분)   ·   Q 다른 곳 1/4"
+		for i in 30:
+			await RenderingServer.frame_pre_draw
+			d.main._boat_text(t)
+		d.ui.hint("WASD 걷기   ·   Shift 달리기")
+		for i in 30:
+			await RenderingServer.frame_pre_draw
+			d.main._boat_text(t)
+		await RenderingServer.frame_post_draw
+		var img: Image = d.get_viewport().get_texture().get_image()
+		var pth: String = d.main._abs(dir.path_join("6_ride_prompt.png"))
+		img.save_png(pth)
+		print("UITEST shot ", pth)
+		d.ui.hint_clear()
+	# 6) 전투 HUD 아래쪽(화살·떡, 키 안내)
+	d.ui.combat_mode(true)
+	d.ui.hud_ammo(5, 2)
+	await _shot(dir, "7_combat_bottom", 10)
+	d.ui.combat_mode(false)
+	print("UITEST bottom done")
+	d.main._quit()
+
+# 조사 안내(E)는 이야기 쪽이 매 프레임 대상에 맞춰 다시 쓴다 — 그리기 바로 앞에 넣어 찍는다
+func _shot_prompt(dir: String, nm: String, text: String, frames := 30) -> void:
+	for i in frames:
+		await RenderingServer.frame_pre_draw
+		d.ui.prompt(text)
+	await RenderingServer.frame_post_draw
+	var img: Image = d.get_viewport().get_texture().get_image()
+	var p: String = d.main._abs(dir.path_join(nm + ".png"))
+	DirAccess.make_dir_recursive_absolute(p.get_base_dir())
+	img.save_png(p)
+	print("UITEST shot ", p)
+
+# 이 공간의 마지막 길목 깃발(시작 자리에서 먼 것 — 걸어서 저절로 알게 되지 않게)
+func _test_flag() -> String:
+	var W: Script = load("res://scripts/region/waymarks.gd")
+	var l: Array = W.flags_in(String(d.space_id))
+	return String(l[l.size() - 1].id) if not l.is_empty() else ""

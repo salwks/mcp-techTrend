@@ -32,6 +32,8 @@ func _ready() -> void:
 		_test = load("res://scripts/story/ui_test.gd").new(self); _test.savetest.call_deferred()
 	elif args.has("uishots"):
 		_test = load("res://scripts/story/ui_test.gd").new(self); _test.uishots.call_deferred(String(args.uishots))
+	elif args.has("bottomshots"):
+		_test = load("res://scripts/story/ui_test.gd").new(self); _test.bottomshots.call_deferred(String(args.bottomshots))
 
 static func sijin(h: float) -> String:
 	return SIJIN[int(floor(fposmod(h + 1.0, 24.0) / 2.0)) % 12]
