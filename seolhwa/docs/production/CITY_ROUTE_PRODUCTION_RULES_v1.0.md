@@ -129,7 +129,7 @@
 
 ### C-1. 결정
 
-> **잠정 결정 — 사용자 확인 대기**
+> **확정 (2026-10-11) — 부록 결정표 참조**
 > 1. **범용 placer는 지금 만들지 않는다.** 도시별 builder 함수(`hubs.py`·`north.py`·`namwon.py`)를 그대로 두고 CITY_PROFILE hook을 붙인다. builder는 밀도·길 폭·식생·랜드마크를 하드코딩 대신 profile에서 읽는다. 범용 placer는 F절 맨 끝의 나중 선택지로만 남긴다.
 > 2. **남원 region.json 형식을 맞춘다**(`culture_key · walls · camera_zones · portals`). 승격 백로그 F-4에 넣는다.
 > 3. **말 타기 거리**: 권역 `MOUNT_R` 25m · 노정 큰길 어디서나 · 막 내린 자리 40m · 역 문 앞 `STATION_QUIET` 45m. stations 보고서의 '45m 말 타는 곳'은 낡은 값이다.
@@ -300,7 +300,7 @@
 | F-13 | 탁본 대상도 배·말 E 막음에 넣기(`region_main._story_talking`이 탁본을 모름) | S | C01 |
 | F-14 | 노정 `no_station` 같은 설화 예외를 ROUTE_PROFILE로(`make_stations.NO_STATION_SPACES`) | S | C-4 |
 | F-15 | 권역 색(하루 빛 tint) — 결정 뒤에만 | M | B-2 palette |
-| F-16 | (나중 선택지) 범용 placer | XL | C-1 잠정 결정 |
+| F-16 | (장기 백로그) 범용 placer | XL | 부록 결정 1 |
 | F-17 | `EventCrowd` 최소 구현(C60) — generic bank 선택·구역 배치·단순 행동·density·seed·flag 표시/숨김·먼 거리 줄이기. **춘향 자산·좌표 배치 때** 만든다(남원 오누이용으로 미리 만들지 않음) | M | C60, E절 |
 
 **상위 다섯**: F-1(S) · F-2(M) · F-3(L) · F-4(M) · F-5(M). F-3a(M)는 눈에 보이는 문제라 F-3과 함께 하기를 권한다.
@@ -327,11 +327,18 @@
 
 ---
 
-## 부록. 사용자 결정 대기
+## 부록. 결정 (2026-10-11 모두 확정)
 
-1. **C-1 잠정 결정 셋**: profile hook 방향, 남원 형식 맞추기, 말 타기 거리.
-2. **대화 카메라를 모든 사건의 기본으로 할지**(F-6), 기본값을 남원 38/13.5/38로 할지.
-3. ~~남원 밤 역마~~ → **이미 결정·구현**: dusk_prep~아침 동안 역마·깃발·말·배·포털 등 9경로 잠금, 걷기는 허용(`namwon_case.travel_lock`, `fast_travel.lock_why`).
-4. **강·바닷길 노정 마을의 깃발(한강 3·대동강 2·남해 1)을 뺄지**, 깃발 충돌체를 둘지.
-5. **권역 색 tint를 둘지**(F-15). 지금은 하루 빛이 전국 하나다.
-6. ~~임시 군중 체계~~ → **확정(2026-10-11)**: 군중 "시스템"은 만들지 않고 공용 `EventCrowd` 프리셋만(C60, F-17).
+| # | 항목 | 결정 |
+|---|---|---|
+| 1 | profile hook | 범용 placer는 만들지 않는다. 기존 builder에 `CITY_PROFILE`을 연결(F-2 → F-3/F-3a → F-4). F-16은 장기 백로그 |
+| 2 | 남원 형식 | 전국 형식으로 통일 — `culture_key`·`walls`·`camera_zones`·빌드 경로만. 남원 모습은 다시 만들지 않고 전후 비교 스크린숏으로 보존 |
+| 3 | 권역 승마 | 25m. 노정 자유 재탑승, 막 내린 자리 40m, 포털 도착 60m 예외 유지 |
+| 4 | 대화 카메라 | 공통 TALK 기본값 pitch 38 / distance 13.5 / fov 38 — story actor와 직접 대화할 때만(ambient_talk·마부·깃발 제외). 우선순위: 공통 기본 → `case.talk_camera` → `actor.talk_camera` → 대화 중 명시적 camera/cutscene. `talk_camera = false`로 인물별 끄기 |
+| 5 | 수상 노정 깃발 | 6개 제거(한강 마포·목계진·충주, 대동강 대동문 선창·겸이포, 남해~제주 덕진다리). 규칙: `ROUTE_PROFILE.kind == land`만 waymark, `river/sea`는 생성 안 함. 노드의 `fast`·발견 정보는 유지(물리 깃발과 깃발 E만 제거) |
+| 6 | 깃발 충돌체 | 없음 |
+| 7 | 권역 빛 tint | `공통 time_of_day × CITY_PROFILE.light_tint` 하나뿐. 권역별 하루 조명표 금지, 사건이 tint를 영구 변경하지 않음, saturation/contrast 지역화 금지, 극단 그레이딩 금지, 기본 neutral, 중립 대비 ±5~8% 이내에서 시작, 1024×768 같은 시각 8권역 비교 스크린숏 후 확정. 방향: 남원 약간 따뜻 · 한양 중립 · 경주 따뜻·건조 · 강릉 맑고 차가움 · 황주 중립~차가움 · 평양 약간 차가움 · 함흥 가장 차가움 · 제주 밝고 따뜻 |
+| 8 | EventCrowd | 이미 확정(C60, F-17) |
+| 9 | 남원 밤 장거리 이동 잠금 | 이미 확정·구현 |
+
+남원에서 얻은 시각·이동·대화 규칙은 이것으로 닫는다. 다음 권역은 `CITY_PROFILE` 지역값과 랜드마크·설화 공간만 정한다.
