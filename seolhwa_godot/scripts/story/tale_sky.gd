@@ -1,6 +1,8 @@
 # 밤하늘 한 장(남원 「해와 달이 된 오누이」 v3) — 민화(일월오봉도) 결로 그린 하늘 판. 해와 달을 인물로 그리지 않고, 빛 둘이 자리 잡는 변화만.
 #   mode "lights": 땅 쪽(오누이가 오른 자리)에서 빛 둘이 떠올라 왼쪽(붉은 해)·오른쪽(흰 달)에 자리 잡는다(progress 0→1, settle 0→1).
-#   mode "look":   다음 날 밤 — 나그네의 뒷모습 실루엣이 밤하늘의 달을 올려다본다(별 몇, 붉은 해의 자리는 비어 있다).
+#   mode "look":   (옛 v3 S0011 — 지금은 쓰지 않는다) 나그네의 뒷모습 실루엣이 밤하늘의 달을 올려다본다.
+#   mode "two":    남원 v3.2 §62 — 인물 없이 밤하늘. 구름이 천천히 지나가고(progress 전 3초), 서로 다른 두 방향에서 빛이 들어와 자리 잡는다:
+#                  왼쪽 아래 지평에서 떠오르는 밝은 빛(따뜻한 빛) · 오른쪽 위 구름 뒤에서 내려앉는 부드러운 빛(흰 빛, 옅다).
 # 이야기 UI(layer 8)보다 한 칸 아래(layer 7)라 자막·대화는 이 판 위에 뜬다. 쓰는 곳: story/namwon/namwon_case.gd
 extends CanvasLayer
 
@@ -51,6 +53,12 @@ func _draw_sky() -> void:
 		var p := Vector2(R.randf() * s.x, R.randf() * s.y * 0.6)
 		var tw := 0.55 + 0.45 * sin(_t * (0.8 + R.randf()) + i)
 		_c.draw_circle(p, 1.0 + R.randf() * 1.3, Color(1, 0.97, 0.9, a * 0.55 * tw))
+	if mode == "two":
+		_clouds(s, a, 0)
+		_two(s, a)
+		_clouds(s, a, 1)
+		_peaks(s, a)
+		return
 	if mode == "lights": _lights(s, a)
 	else: _look(s, a)
 	_peaks(s, a)
@@ -59,7 +67,7 @@ func _draw_sky() -> void:
 
 # 다섯 봉우리(가운데가 높다) — 봉우리마다 둥근 어깨의 산 모양을 겹쳐 위쪽 테두리만 잇는다. 먹빛 면 + 옅은 선
 func _peaks(s: Vector2, a: float) -> void:
-	var base := s.y * (0.86 if mode == "lights" else 0.9)
+	var base := s.y * (0.86 if mode == "lights" else (0.95 if mode == "two" else 0.9))
 	var lift := s.y * 0.06 if mode == "look" else 0.0
 	var peaks := [[0.06, 0.60], [0.25, 0.50], [0.5, 0.36], [0.75, 0.50], [0.94, 0.60]]
 	var top := PackedVector2Array()
@@ -116,6 +124,47 @@ func _lights(s: Vector2, a: float) -> void:
 	if settle > 0.0:   # 자리 잡으며 하늘로 번지는 고리
 		for p in [sun_p, moon_p]:
 			_c.draw_arc(p, r * (1.4 + settle * 3.0), 0, TAU, 48, Color(1, 0.95, 0.85, a * (1.0 - settle) * 0.5), 2.0, true)
+
+# 구름(겹친 타원 덩이) — 층마다 다른 빠르기로 오른쪽으로 흐른다. layer 1은 빛 앞을 지나간다
+const CLOUD := Color("#2a3552")
+const CLOUD_LIT := Color("#46557a")
+func _clouds(s: Vector2, a: float, layer: int) -> void:
+	var R := RandomNumberGenerator.new(); R.seed = 61 + layer * 7
+	var n := 5 if layer == 0 else 3
+	for i in n:
+		var w := s.x * (0.22 + R.randf() * 0.18)
+		var y := s.y * (0.12 + R.randf() * 0.42)
+		var speed := s.x * (0.012 + R.randf() * 0.01) * (1.6 if layer == 1 else 1.0)
+		var x := fposmod(R.randf() * s.x * 1.4 + _t * speed, s.x * 1.4) - s.x * 0.2
+		var col := CLOUD_LIT if layer == 1 else CLOUD
+		var ca := a * (0.55 if layer == 0 else 0.42)
+		for k in 5:
+			var cx := x + (k - 2) * w * 0.2
+			var cr := Vector2(w * (0.18 + 0.06 * (2 - absi(k - 2))), s.y * (0.035 + 0.012 * (2 - absi(k - 2))))
+			_ellipse(Vector2(cx, y - cr.y * 0.3), cr, Color(col, ca))
+
+func _ellipse(c: Vector2, r: Vector2, col: Color) -> void:
+	var pts := PackedVector2Array()
+	for i in 24:
+		var t := TAU * i / 24.0
+		pts.append(c + Vector2(cos(t) * r.x, sin(t) * r.y))
+	_c.draw_colored_polygon(pts, col)
+
+# 서로 다른 두 방향의 빛 — 하나는 밝고 하나는 부드럽다(누가 해·달이 되었는지 말하지 않는다)
+func _two(s: Vector2, a: float) -> void:
+	var e := _ease(progress)
+	var pulse := sin(_t * 1.4) * 0.5 + 0.5
+	var bright_from := Vector2(s.x * 0.08, s.y * 0.9)
+	var bright_to := Vector2(s.x * 0.26, s.y * 0.24)
+	var soft_from := Vector2(s.x * 0.98, s.y * -0.05)
+	var soft_to := Vector2(s.x * 0.76, s.y * 0.18)
+	var bp := bright_from.lerp(bright_to, e) + Vector2(0, -sin(e * PI) * s.y * 0.05)
+	var sp := soft_from.lerp(soft_to, e)
+	var la := a * clampf(progress * 2.5, 0.0, 1.0)
+	_glow(bp, s.y * 0.06 * (0.4 + 0.6 * e), Color("#f0b060"), la, pulse * settle)
+	_glow(sp, s.y * 0.045 * (0.5 + 0.5 * e), MOON, la * 0.62, pulse * settle * 0.5)
+	if settle > 0.0:
+		_c.draw_arc(bp, s.y * 0.06 * (1.4 + settle * 3.0), 0, TAU, 48, Color(1, 0.9, 0.75, a * (1.0 - settle) * 0.45), 2.0, true)
 
 func _look(s: Vector2, a: float) -> void:
 	_glow(Vector2(s.x * 0.68, s.y * 0.22), s.y * 0.05, MOON, a, sin(_t * 1.2) * 0.5 + 0.5)

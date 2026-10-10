@@ -6,6 +6,7 @@
 #   basket 엎어진 빈 광주리와 수건 · flour 찢긴 밀가루 자루와 흰 발자국 · claw 나무줄기 높은 발톱 긁힘 · oil 밑동에 바른 참기름(번들거림)
 #   white_paw 문틈 아래 흰 앞발 · hairy_paw 문틈으로 들어온 털 난 앞발(발톱 끝만 밝다) · oil_jars 기름집 참기름 병 · cake_trail 오솔길에 놓은 떡 · feast 잔칫상 · offering 서낭당 떡 공양
 #   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛) · sandal 길가에 닳은 짚신 한 짝(도입부 첫 조사, 단서 아님)
+#   fall_traces 남원 §65 아침 수수밭 — 꺾인 수숫대 · 붉은 흔적 · 뜯긴 털 · 깊게 눌린 발자국(시신은 없다)
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
 
@@ -40,6 +41,7 @@ static func build(params: Dictionary) -> Dictionary:
 		"jeogori": _jeogori(m)
 		"torch_fire": _torch_fire(m)
 		"sandal": _sandal(m)
+		"fall_traces": fp = _fall_traces(m)
 	return m.result("단서_" + kind, fp, false)
 
 static func _disc(rx: float, rz: float, h: float, x: float, y: float, z: float, ry := 0.0, seg := 10) -> Kit.Geo:
@@ -212,3 +214,30 @@ static func _sandal(m: C.M) -> void:
 		Kit.xf(g, -0.05 + i * 0.05, 0.05, -0.06 + i * 0.03, 0.2, 0.5 + (i - 1) * 0.5, 0)
 		m.add("p", "organic", C.PA(g, STRAW, 0.12, R), 0.003)
 	m.add("p", "organic", C.PA(Kit.xf(Kit.cyl(0.012, 0.012, 0.24, 5), 0.07, 0.03, 0.06, 1.4, 0.3, 0.0), STRAW, 0.1, R), 0.002)   # 풀린 끈
+
+# 남원 v3.2 §65 — 범이 떨어진 자리(아침): 한쪽으로 꺾여 누운 붉은 수숫대 · 붉게 번진 흙 · 뜯긴 털 뭉치 · 깊게 눌린 큰 발자국. 몸은 없다
+const STALK_RED := [0xa83228, 0x641810]
+static func _fall_traces(m: C.M) -> Vector2:
+	var R := m.rng
+	for i in 9:   # 꺾인 수숫대 — 밑동에서 꺾여 바깥으로 눕는다
+		var a := -0.9 + i * 0.22 + (R.next() - 0.5) * 0.2
+		var bx := cos(a) * 0.5 + (R.next() - 0.5) * 0.3
+		var bz := sin(a) * 0.4 + (R.next() - 0.5) * 0.3
+		var base := Vector3(bx, 0.0, bz)
+		var knee := base + Vector3(0, 0.25 + R.next() * 0.2, 0)
+		var tip := knee + Vector3(cos(a) * 1.4, 0.08, sin(a) * 1.4)
+		m.add("p", "organic", C.PA(Kit.limb(base, knee, 0.03, 0.026, 5), STALK_RED, 0.08, R), 0.0)
+		m.add("p", "organic", C.PA(Kit.limb(knee, tip, 0.026, 0.018, 5), STALK_RED, 0.08, R), 0.0)
+	m.add("p", "flat", C.PA(_disc(0.9, 0.7, 0.012, 0.1, 0.01, 0.0, 0.4, 12), BLOOD, 0.1, R), 0)   # 붉게 번진 흙
+	m.add("p", "flat", C.PA(_disc(0.35, 0.22, 0.012, 1.0, 0.012, 0.4, 1.1, 9), BLOOD, 0.1, R), 0)
+	for k in 3:   # 뜯긴 털 뭉치
+		var c := Vector3(-0.6 + k * 0.7, 0.04, -0.5 + R.next() * 0.9)
+		m.add("p", "smooth", C.PA(Kit.xf(Kit.lump(0.07, 0, R, 0.4, 0.5), c.x, c.y, c.z), FUR, 0.15, R), 0.0)
+		for i in 7:
+			var a2 := R.next() * TAU
+			var g := Kit.cone(0.018, 0.08 + R.next() * 0.05, 4)
+			Kit.xf(g, c.x + cos(a2) * 0.05, c.y + 0.02, c.z + sin(a2) * 0.05, 1.2 * sin(a2), 0, -1.2 * cos(a2))
+			m.add("p", "smooth", C.PA(g, FUR, 0.15, R), 0)
+	for i in 4:   # 깊게 눌린 큰 발자국(어둡고 크다)
+		_paw(m, -1.3 + i * 0.35, 0.9 - i * 0.18, 1.9, [0x2a2016, 0x1a140c], 0.6)
+	return Vector2(3.4, 2.6)

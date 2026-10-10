@@ -1,7 +1,9 @@
 # 설화 장면 소품(남원 「해와 달이 된 오누이」 v3) — 하늘에서 내려오는 동아줄, 수수밭. 원점 = 바닥 중심(줄은 아래 끝).
 # 이야기 총괄(story_director)의 소품(props)으로 세우거나, 사건 스크립트(namwon_case.gd)가 직접 build해 움직인다.
 # params:
-#   kind "rope"     동아줄. length(기본 60m), rotten(false: 새 줄 — 짚빛 꼰 줄, 밤에도 보이게 스스로 빛난다 / true: 썩은 줄 — 검누런 빛, 해진 올, 군데군데 가늘다)
+#   kind "rope"     동아줄. length(기본 60m), rotten(false: 새 줄 — 짚빛 꼰 줄, 밤에도 보이게 스스로 빛난다 /
+#                   true: 썩은 줄 — v3.2 §58 멀리서는 새 줄과 같은 짚빛(색으로 정답을 말하지 않는다). 가까이서야: 끊어진 섬유가 사방으로 일어서고,
+#                   군데군데 꼬임이 풀려 두 가닥이 벌어지고 가늘어진다)
 #   kind "rope_end" 끊어진 썩은 줄 토막(범과 함께 떨어진다). length(기본 3m)
 #   kind "step_stone" 쪽문 앞 디딤돌 · "oil_step" 디딤돌에 부은 참기름(번들거림 — B)
 #   kind "sorghum"  수수밭. w·d(크기 m), rows(줄 수, 기본 5), row(-1이면 전부, 0..rows-1이면 그 줄만), red(true면 줄기가 붉게 물든 수수)
@@ -9,7 +11,8 @@ extends RefCounted
 const C := preload("res://kit/village/_common.gd")
 
 const STRAW_NEW := [0xe2c98a, 0xb8964e]
-const STRAW_ROT := [0x6e5a3a, 0x4a3c26]
+const STRAW_ROT := [0xd4bd84, 0xa88c4e]     # 몸 가닥 — 새 줄(STRAW_NEW)과 거의 같은 짚빛
+const FIBRE_ROT := [0x5e4c30, 0x3a2e1c]     # 끊어진 섬유(가까이서만 읽힌다)
 const STALK := [0x8aa04e, 0x5e7a34]
 const STALK_RED := [0xb0302a, 0x6a1612]
 const LEAF := [0x7f9848, 0x55702e]
@@ -32,24 +35,32 @@ static func build(params: Dictionary) -> Dictionary:
 static func _rope(m: C.M, length: float, rotten: bool, frayed_end := false) -> void:
 	var seg := 0.5
 	var n := int(length / seg)
-	var r := 0.075 if not rotten else 0.06
+	var r := 0.075 if not rotten else 0.07
 	var cols: Array = STRAW_ROT if rotten else STRAW_NEW
 	for i in n:
 		var y0 := i * seg
-		var thin := rotten and (i % 7 == 3 or i % 11 == 5)
+		var loose := rotten and (i % 9 in [2, 3, 4] or i % 13 == 7)   # 꼬임이 풀린 마디 — 두 가닥이 벌어지고 가늘다
+		var thin := rotten and (loose or i % 7 == 3)
+		var spread := 1.3 if loose else 0.6
+		var tw := 0.35 if loose else 1.1   # 풀린 마디는 덜 꼬였다
 		for s in 2:
 			var a := float(i) * 1.1 + PI * s
-			var g := Kit.limb(Vector3(cos(a) * r * 0.6, y0, sin(a) * r * 0.6), Vector3(cos(a + 1.1) * r * 0.6, y0 + seg, sin(a + 1.1) * r * 0.6),
-				r * (0.45 if thin else 0.85), r * (0.45 if thin else 0.85), 5)
-			m.add("p", "organic" if rotten else "glow", C.PA(g, cols, 0.12, m.rng), 0.0)   # 새 줄은 스스로 빛난다(밤하늘에서 보이게)
-		if rotten and i % 3 == 1:   # 해진 올
-			var t := Kit.limb(Vector3(0, y0 + 0.2, 0), Vector3((m.r() - 0.5) * 0.3, y0 + 0.05, (m.r() - 0.5) * 0.3), 0.008, 0.004, 3)
-			m.add("p", "organic", C.PA(t, cols, 0.1, m.rng), 0.0)
+			var g := Kit.limb(Vector3(cos(a) * r * spread, y0, sin(a) * r * spread), Vector3(cos(a + tw) * r * spread, y0 + seg, sin(a + tw) * r * spread),
+				r * (0.5 if thin else 0.85), r * (0.5 if thin else 0.85), 5)
+			m.add("p", "glow", C.PA(g, cols, 0.12, m.rng), 0.0)   # 스스로 빛난다(밤하늘에서 보이게) — 썩은 줄도 멀리서는 같은 빛
+		if rotten:   # 끊어진 섬유 — 마디마다 몇 올씩 사방으로 일어선다(멀리서는 가늘어 보이지 않는다)
+			for k in (5 if loose else 3):
+				var a2 := m.r() * TAU
+				var y1 := y0 + m.r() * seg
+				var p0 := Vector3(cos(a2) * r * 0.8, y1, sin(a2) * r * 0.8)
+				var fl := 0.1 + m.r() * 0.16
+				var p1 := p0 + Vector3(cos(a2) * fl, (m.r() - 0.6) * 0.16, sin(a2) * fl)
+				m.add("p", "organic", C.PA(Kit.limb(p0, p1, 0.011, 0.003, 3), FIBRE_ROT, 0.1, m.rng), 0.0)
 	if frayed_end:   # 끊어진 끝 — 올이 풀려 벌어진다
 		for k in 6:
 			var a := k * TAU / 6.0
 			var t := Kit.limb(Vector3(0, length, 0), Vector3(cos(a) * 0.12, length + 0.18 + m.r() * 0.1, sin(a) * 0.12), 0.012, 0.004, 3)
-			m.add("p", "organic", C.PA(t, cols, 0.1, m.rng), 0.0)
+			m.add("p", "organic", C.PA(t, FIBRE_ROT if rotten else cols, 0.1, m.rng), 0.0)
 
 static func _step(m: C.M, oil: bool) -> void:
 	if not oil:
