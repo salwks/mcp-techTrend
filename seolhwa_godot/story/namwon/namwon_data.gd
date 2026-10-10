@@ -442,7 +442,12 @@ static func actors() -> Array:
 			] },
 		{ "id": "neighbor", "chr": "CHR_HUM_010", "kind": "villager_f", "name": "이웃 아낙",
 			"at": { "morning": "neighbor_morning", "default": "neighbor_after" }, "facing": "down", "when": "ph('done')",
-			"talk": [{ "when": "true", "steps": [{ "say": "이웃 아낙", "lines": ["그 집 애들 끼니라도 챙기려고 갔더니 집이 비었어요.", "아이들은 어디 갔을까요. 산에 들어갔으면 큰일인데."] }] }] },
+			# §64 아침의 대답을 기억한다(CASE_NAMWON_MORNING — 결말 갈래 없음, 한두 마디만). 옛 저장(대답 없음)은 전과 같다
+			"talk": [
+				{ "when": "v('CASE_NAMWON_MORNING') == 'sky'", "steps": [{ "say": "이웃 아낙", "lines": ["그날 하늘로 올라갔다고 하셨지요… 아직도 무슨 뜻인지 모르겠소."] }] },
+				{ "when": "v('CASE_NAMWON_MORNING') == 'unknown'", "steps": [{ "say": "이웃 아낙", "lines": ["혹시 어디서라도 아이들 소식 들으면 알려 주시오."] }] },
+				{ "when": "v('CASE_NAMWON_MORNING') == 'silent'", "steps": [{ "say": "이웃 아낙", "lines": ["그날은 아무 말씀도 안 하셨지요."] }] },
+				{ "when": "true", "steps": [{ "say": "이웃 아낙", "lines": ["그 집 애들 끼니라도 챙기려고 갔더니 집이 비었어요.", "아이들은 어디 갔을까요. 산에 들어갔으면 큰일인데."] }] }] },
 		# v3.2 §11 첫 방문 — 이웃 아낙이 빈 그릇을 들고 집에서 나온다(장면 전용, 아침의 이웃 아낙과 같은 그림 CHR_HUM_010). 말 걸기 없음
 		#   §64 아침에도 같은 사람이 같은 그릇을 들고 온다
 		{ "id": "neighbor_visit", "chr": "CHR_HUM_010", "kind": "villager_f", "name": "이웃 아낙", "at": "house_door", "facing": "down",

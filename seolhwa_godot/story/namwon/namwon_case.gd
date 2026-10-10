@@ -269,6 +269,7 @@ func on_load() -> void:
 	# 결정 6 — 밤 도중 저장(옛 절정 climax_started·옛 밤 준비, 새 밤 장면·동아줄 도중)은 저녁 준비 바로 앞으로 되돌린다. 결말 변수는 S0009 끝에야 쓰므로 그 앞이면 모두
 	if S.phase == "night" and String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "": _rollback_night()
 	_migrate_morning()
+	_moon(true)   # 마지막 밤 도중 저장이어도 달은 보이는 채로 시작한다(마지막 밤이 다시 돌면 두 빛 때 다시 감춘다)
 	if f("beat_mother_harmed_running"): S.flags.erase("beat_mother_harmed_running")
 	# v3.2 첫 조우 도중 저장: 조우를 처음부터 다시(트리거가 다시 선다)
 	if f("first_encounter_running"):
@@ -462,6 +463,7 @@ const NUDGE_R := 7.0
 var _nudge_t := 0.0
 var nudged: Array = []   # 시험 기록(기울인 단서 id 차례)
 func ambient(dt: float) -> void:
+	if _moon_hidden and not (f("final_night_started") and S.phase != "done" and not _final_lights.is_empty()): _moon(true)   # 감춘 달이 남지 않게
 	_night_clock(dt)
 	_leash_step()
 	if f("dusk_prep") and not f("night_wait_started") and S.phase == "explore" and d.main.hour > PREP_MAX_HOUR and not d.runner.busy:
@@ -2236,7 +2238,7 @@ func kids_prayer() -> void:
 	await d.wait(1.3)
 	_a10("no_answer")
 	# §52 — 다시 플레이: 범은 계속 오르려 한다(활·환도·떡·몸 — 죽일 수 없다)
-	await _tree_defence(DEF_PRAY[0], DEF_PRAY[1], "pray")
+	await _tree_defence(DEF_PRAY[0], DEF_PRAY[1], "pray", Callable(), "pray")
 	_yard_control(fo)
 	_tiger_on_trunk(2.0)
 	kids_place()
@@ -2250,29 +2252,54 @@ func kids_prayer() -> void:
 	beat("kids_prayer")
 
 # 나무 밑 방어(§52·§55) — 마당 싸움. 범은 죽지 않고(undying), 플레이어가 멀어지면 줄기로 가서 오르려 한다(ctiger toTree).
-#   벌린 시간(held): 범을 붙들어 둔 시간은 그대로, 범이 줄기에 붙어 있는 동안은 1/4만 센다 — 붙들어 둔 만큼만 시간이 벌린다.
+#   벌린 시간(held): 범을 붙들어 둔 시간은 그대로, 범이 줄기에 붙어 있는 동안은 절반(TRUNK_K)만 센다 — 붙들어 둔 만큼만 시간이 벌린다.
 #   held가 mn에 닿고 범이 줄기에 붙어 있지 않으면 끝 · 늦어도 mx초. during(k 0→1): 벌린 만큼(마지막 방어의 줄이 내려온다)
-func _tree_defence(mn: float, mx: float, tag: String, during := Callable()) -> String:
+#   start_mode: "pray"(§52 — 범이 줄기에서 뛰어내려 마당으로) | "rope"(§55 — 뛰어내림을 되풀이하지 않는다: 줄기 위에서 몸을 돌려
+#   플레이어 쪽으로 덮쳐 온다. 시작 자리·카메라가 다르고 같은 CombatView다)
+const TRUNK_K := 0.5          # 범이 줄기에 붙어 있는 동안 벌린 시간에 세는 몫
+const CATCH_UP := 2.5         # 늦어도 mx초 — 끝나기 전 이만큼(초) 동안 줄을 남은 만큼 천천히 따라 내려 끝에서 뚝 떨어지지 않게
+const ROPE_START_CAM := { "pitch": 34.0, "distance": 15.0, "fov": 34.0 }   # 마지막 방어 시작 카메라(첫 방어 46/19/30보다 낮고 가깝다)
+const LUNGE_Y := 2.0          # 마지막 방어: 범이 줄기에서 덮쳐 오는 높이(땅 기준)
+const LUNGE_ROLL := 0.38      # 줄기에 매달린 채 몸을 돌린 자세(웅크림 그림을 기울여 — 따로 그린 그림 없음)
+var defence_start := {}       # 시험 기록: { 갈래: { mode, pos, y, intro, cam, lunge } }
+var rope_dk_max := 0.0        # 시험 기록: 마지막 방어 동안 줄 진행(0→1)의 한 틱 최대 변화
+var _watch_done := true
+func _tree_defence(mn: float, mx: float, tag: String, during := Callable(), start_mode := "pray") -> String:
 	_leash_off()
 	d.free_move = false
 	d.cutscene(false)
 	var ar: Dictionary = d.data.arenas.house_yard
 	var t0 = ar.get("tiger_start")
+	var cam0 = ar.get("camera")
 	var tt: Vector2 = d.anchor("tiger_tree")
-	ar["tiger_start"] = [tt.x - 0.6, tt.y + 1.2]   # 줄기에서 뛰어내린다
+	if start_mode == "rope":
+		await _trunk_turn()
+		var tv := (_pp() - tt)
+		tv = tv / maxf(tv.length(), 1e-3)
+		var ts := tt + tv * 1.1   # 줄기 플레이어 쪽(첫 방어의 뛰어내린 자리와 다르다)
+		ar["tiger_start"] = [ts.x, ts.y]
+		ar["camera"] = ROPE_START_CAM
+		ar["tiger_intro"] = "호랑이가 줄기에서 몸을 돌려 덮쳐 온다!"
+	else:
+		ar["tiger_start"] = [tt.x - 0.6, tt.y + 1.2]   # 줄기에서 뛰어내린다
 	d.despawn_actor("tiger_night")
 	d.camera(null)
 	if d.main.has_method("set_occ_script"): d.main.set_occ_script(null)
 	_a10("defend_" + tag)
+	_watch_done = false
 	_defend_watch(mn, mx, tag, during)
+	_defence_begin(tag, start_mode)
 	var res: String = await d.combat("house_yard", { "mods": { "undying": true }, "allow_flee": false, "store": "yard" })
 	ar["tiger_start"] = t0
+	ar["camera"] = cam0
+	ar.erase("tiger_intro")
 	var b = d.combat_view.battle
 	_last_tiger = b.tiger.pos
 	var rec: Dictionary = defence.get(tag, {})
 	rec.res = res; rec.t = float(b.time)
 	defence[tag] = rec
 	d.end_combat()
+	while not _watch_done: await d.get_tree().process_frame   # 줄이 남은 만큼 다 내려올 때까지(끊기지 않게)
 	d.runner.log_line("defence", [tag, res, snappedf(float(b.time), 0.1), snappedf(float(rec.get("held", 0.0)), 0.1)])
 	if res == "lose" and f("hunter_watch") and not f("hunter_arrow"):   # 쓰러졌으면 — 먼 데서 화살 한 번
 		flag("hunter_arrow")
@@ -2281,11 +2308,57 @@ func _tree_defence(mn: float, mx: float, tag: String, during := Callable()) -> S
 	_a10("defended_" + tag)
 	return res
 
+# §55 마지막 방어 앞 — 줄기 위의 범이 플레이어 쪽으로 몸을 돌려 웅크린다(짧게, 조작은 그대로). 웅크림 그림을 기울여 매달린 자세로
+func _trunk_turn() -> void:
+	var tn = d.actors.get("tiger_night")
+	if tn == null or not tn.shown: d.spawn_actor("tiger_night", "tiger", "tiger_tree", "up", "", "")
+	d.place_actor("tiger_night", "tiger_tree", LUNGE_Y, "")
+	d.face_actor("tiger_night", null, "player")
+	tn = d.actors.get("tiger_night")
+	var side := 1.0 if _pp().x >= d.anchor("tiger_tree").x else -1.0
+	if tn != null:
+		tn.ch.roll = -LUNGE_ROLL * side
+		d.anim_actor("tiger_night", "crouch" if tn.ch.has_anim("crouch") else "climb_try")
+	_snd("tiger_growl", "tiger_tree", { "db": -4.0 })
+	await d.wait(0.7)
+	await _shot("defence_rope_turn")
+	if tn != null and is_instance_valid(tn.ch): tn.ch.roll = 0.0
+
+# 싸움이 서고 첫 프레임 — 시작 자리를 적고, 마지막 방어면 범을 줄기 높이에서 플레이어 쪽으로 몸 낮춤 → 덮침(같은 ctiger 돌진)
+func _defence_begin(tag: String, mode: String) -> void:
+	for i in 30:
+		await d.get_tree().process_frame
+		if d.combat_view != null and d.combat_view.active: break
+	if d.combat_view == null or not d.combat_view.active: return
+	var b = d.combat_view.battle
+	var tg = b.tiger
+	var ar: Dictionary = d.data.arenas.house_yard
+	var rec := { "mode": mode, "pos": tg.pos, "y": 0.0, "intro": String(ar.get("tiger_intro", "")), "cam": d.main.rig.override, "lunge": false }
+	defence_start[tag] = rec
+	if mode != "rope":
+		_shot_soon("defence_pray_start", 0.25)
+		return
+	var tch = d.combat_view.tiger_ch
+	var tp: Dictionary = tg.to_player()
+	tg.y = LUNGE_Y; tg.lunge_y0 = LUNGE_Y
+	tg.set_heading(tp.v)
+	tg.start_crouch(tp)
+	rec.y = LUNGE_Y
+	var side := 1.0 if b.player.pos.x >= tg.pos.x else -1.0
+	if tch != null: tch.roll = -LUNGE_ROLL * side
+	_shot_soon("defence_rope_start", 0.25)
+	while d.combat_view.active and tg.state == "crouch": await d.get_tree().process_frame
+	if tch != null and is_instance_valid(tch): tch.roll = 0.0
+	rec.lunge = tg.state == "pounce"
+	d.runner.log_line("defence_start", [tag, mode, rec.lunge])
+
 func _defend_watch(mn: float, mx: float, tag: String, during: Callable) -> void:
 	await d.get_tree().process_frame
 	var hp_max := float(load("res://scripts/combat/ctuning.gd").T.player.hp)
 	var held := 0.0; var press := 0.0; var last := 0.0
+	var k := 0.0
 	defence[tag] = { "held": 0.0, "press": 0.0, "t": 0.0 }
+	if during.is_valid(): rope_dk_max = 0.0
 	while d.combat_view != null and d.combat_view.active:
 		var b = d.combat_view.battle
 		if b.outcome != "" or b.pending != "": break
@@ -2293,18 +2366,34 @@ func _defend_watch(mn: float, mx: float, tag: String, during: Callable) -> void:
 		var dt := maxf(0.0, t - last); last = t
 		var pressing: bool = b.tiger.state == "toTree"
 		if pressing:
-			press += dt; held += dt * 0.25
+			press += dt; held += dt * TRUNK_K
 		else: held += dt
 		if not f("hunter_arrow") and f("hunter_watch") and b.player.alive and b.player.hp <= hp_max * LOW_HP and b.tiger.alive and not b.tiger.retreating:
 			_hunter_arrow(b, hp_max)
 		defence[tag] = { "held": held, "press": press, "t": t }
 		if t > 3.0 and not defence.has("shot_" + tag): defence["shot_" + tag] = true; _mark_shot("defence_" + tag)
-		if during.is_valid(): during.call(clampf(held / mn, 0.0, 1.0))
+		# 줄 진행: 벌린 만큼 — 늦어도 mx초에 끝나므로 마지막 CATCH_UP초 동안 남은 만큼을 천천히 따라간다(끝에서 뚝 떨어지지 않게)
+		var nk: float = lerpf(clampf(held / mn, 0.0, 1.0), 1.0, smoothstep(mx - CATCH_UP, mx, t))
+		nk = maxf(k, nk)
+		if during.is_valid():
+			rope_dk_max = maxf(rope_dk_max, nk - k)
+			during.call(nk)
+		k = nk
 		if (held >= mn and not pressing) or t >= mx:
 			b.finish("held", 0.0)
 			break
 		await d.get_tree().process_frame
+	# 싸움이 다른 까닭으로 먼저 끝났으면(쓰러짐) 남은 줄을 짧게 이어 내린다 — 한 번에 건너뛰지 않는다
+	if during.is_valid() and k < 1.0:
+		var k0 := k
+		var steps := maxi(8, int(ceil((1.0 - k0) / 0.03)))
+		for i in steps:
+			await d.get_tree().process_frame
+			var nk := lerpf(k0, 1.0, float(i + 1) / steps)
+			rope_dk_max = maxf(rope_dk_max, nk - k)
+			during.call(nk); k = nk
 	if during.is_valid(): during.call(1.0)
+	_watch_done = true
 
 # 잎 몇 장이 떨어진다(나뭇잎 한쪽이 움직인다)
 func _leaf_fall(at: Vector2) -> void:
@@ -2417,7 +2506,7 @@ func rope_descend() -> Node3D:
 		if not is_instance_valid(rope): return
 		rope.position.y = lerpf(y0, y1, smoothstep(0.0, 1.0, k))
 		if rope_reach_k < 0.0 and rope.position.y - g <= REACH_Y + 0.1: rope_reach_k = k
-	await _tree_defence(DEF_ROPE[0], DEF_ROPE[1], "rope", lower)
+	await _tree_defence(DEF_ROPE[0], DEF_ROPE[1], "rope", lower, "rope")
 	rope.position.y = y1
 	flag("rope_reached")
 	_a10("rope_reached")
@@ -3022,6 +3111,65 @@ func morning_yard() -> void:
 	d.cutscene(false)
 	d.mark_dirty()
 	_neighbor_leave()
+	_sorghum_lure()
+
+# §65 수수밭은 가도 되고 안 가도 된다(필수 아님) — 마을로 내려가는 자연스러운 길에서 붉은 수수밭이 화면 한쪽에 들게 하는 부드러운 끌림만.
+#   마당을 벗어나 몇 걸음 걸으면 약 3초 동안 겨냥점을 수수밭 쪽으로 조금 당겼다 돌린다(조작은 그대로, 길을 막거나 돌리지 않는다)
+const LURE_FROM := 4.0    # 조작을 돌려받은 자리에서 이만큼 걸으면
+const LURE_PULL := 0.42   # 겨냥점을 플레이어 → 수수밭으로 당기는 몫(가운데가 아니라 한쪽에 들게)
+var sorghum_lure := {}    # 시험 기록: { done, frame_x(가장 당겼을 때 수수밭의 화면 가로 자리 0~1), in_frame }
+func _sorghum_lure() -> void:
+	var sg: Vector2 = d.anchor("sorghum")
+	var gs: float = _ground("sorghum")
+	var p0 := _pp()
+	for i in 60000:
+		await d.get_tree().process_frame
+		if S.phase != "morning" or f("hunter_morning_seen") or f("elder_book"): return
+
+		if d.runner.busy or d.ui.modal or d._cut: p0 = _pp(); continue
+		var rg = d.main.rig
+		if rg.override != null or rg.focus != null or rg.shot != null: continue   # 다른 장면이 카메라를 쥐고 있으면 기다린다
+		if _pp().distance_to(p0) >= LURE_FROM: break
+	if S.phase != "morning" or f("hunter_morning_seen") or f("elder_book"): return
+	var rig = d.main.rig
+	d.runner.log_line("sorghum_lure", "begin")
+	sorghum_lure = { "done": false, "frame_x": 0.5, "in_frame": false }
+	var hold := { "k": 0.0 }
+	var on := { "on": true }
+	_lure_follow(hold, on, sg, gs)
+	await _animate(0.8, func(k: float) -> void: hold.k = smoothstep(0.0, 1.0, k))
+	await _shot("morning_path_sorghum")
+	await d.wait(1.4)
+	await _animate(1.0, func(k: float) -> void: hold.k = 1.0 - smoothstep(0.0, 1.0, k))
+	on.on = false
+	if is_same(rig.focus, _lure_focus): rig.focus = null   # 다른 장면이 카메라를 잡았으면 건드리지 않는다
+	sorghum_lure.done = true
+
+var _lure_focus = null
+func _lure_follow(hold: Dictionary, on: Dictionary, sg: Vector2, gs: float) -> void:
+	var rig = d.main.rig
+	var vp_w: float = maxf(1.0, d.main.get_viewport().get_visible_rect().size.x)
+	while on.on:
+		if d.runner.busy or d._cut or S.phase != "morning":   # 수수밭 장면 등이 서면 곧바로 손을 뗀다
+			sorghum_lure["why"] = "busy" if d.runner.busy else ("cut" if d._cut else S.phase)
+			on.on = false
+			if is_same(rig.focus, _lure_focus): rig.focus = null
+			return
+		var pp: Vector3 = d.main.player_pos
+		var m := Vector2(pp.x, pp.z).lerp(sg, LURE_PULL * float(hold.k))
+		if rig.focus != null and not is_same(rig.focus, _lure_focus): sorghum_lure["why"] = "focus"; on.on = false; return   # 다른 장면이 카메라를 잡았다
+		_lure_focus = { x = m.x, z = m.y, y = pp.y }
+		rig.focus = _lure_focus
+		var cam: Camera3D = d.main.cam
+		var w := Vector3(sg.x, gs + 1.0, sg.y)
+		if cam != null and not cam.is_position_behind(w):
+			var sp: Vector2 = cam.unproject_position(w)
+			var fx: float = sp.x / vp_w
+			var vis: bool = fx > 0.0 and fx < 1.0 and sp.y > 0.0 and sp.y < d.main.get_viewport().get_visible_rect().size.y
+			if vis and float(hold.k) > 0.99:
+				sorghum_lure.in_frame = true
+				sorghum_lure.frame_x = snappedf(fx, 0.01)
+		await d.get_tree().process_frame
 
 # §65 범의 죽음 — 포수가 흔적 아래쪽을 확인한 뒤. 시신은 보이지 않는다(카메라는 선 사람 눈높이 위에서 흔적 가장자리만)
 var hunter_cam := {}   # 시험 기록: 이 장면의 카메라
@@ -3093,6 +3241,15 @@ const FINAL_LINE := "내가 본 것은 여기까지다."
 var final_cut_t := 0.0     # 시험 기록: 마지막 밤 동안 조작을 거둔 시간(초)
 var final_lights_seen := false
 var _final_lights: Array = []
+var moon_log := {}   # 시험 기록: { during: 두 빛 동안 기본 달 값(0), after: 되돌린 값(1) }
+var _moon_hidden := false
+func _moon(on: bool) -> void:
+	if d.main.has_method("set_moon"): d.main.set_moon(1.0 if on else 0.0)
+	_moon_hidden = not on
+
+func moon_k() -> float:
+	return float(d.main.moon_k()) if d.main.has_method("moon_k") else 1.0
+
 func final_night() -> void:
 	flag("final_night_started")
 	d.cutscene(true)
@@ -3129,6 +3286,8 @@ func final_night() -> void:
 	cam_on.on = false
 	d.main.rig.shot = null
 	d.free_move = false
+	_moon(true)   # 사건이 끝나기 바로 앞 — 기본 달을 되돌린다
+	moon_log["after"] = moon_k()
 	await finish()
 	for n in _final_lights:
 		if is_instance_valid(n): n.queue_free()
@@ -3147,11 +3306,13 @@ func _final_cam(lift: Dictionary, on: Dictionary) -> void:
 		var pos: Vector3 = pp + base_pos.lerp(Vector3(0.0, 4.2, 9.5), k)
 		var look: Vector3 = pp + base_look.lerp(Vector3(0, 10.0, -40.0), k * 0.85)
 		d.main.rig.shot = { pos = pos, look = look, fov = lerpf(f0, 44.0, k) }
+		if final_lights_seen and not moon_log.has("during"): moon_log["during"] = moon_k()
 		if d.blocks_move() and not d.drives_player(): final_cut_t += d.get_process_delta_time()
 		await d.get_tree().process_frame
 
 # 밤하늘 북쪽, 서로 다른 두 방향의 빛 — 하나는 밝고(따뜻한 빛) 하나는 부드럽다(흰 빛)
 func _final_lights_on() -> void:
+	_moon(false)   # 하늘 그림판의 기본 달을 감춘다 — 하늘에는 두 빛만(사건이 끝나기 바로 앞에 되돌린다)
 	var pp: Vector3 = d.main.player_pos
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	for y in 64:
