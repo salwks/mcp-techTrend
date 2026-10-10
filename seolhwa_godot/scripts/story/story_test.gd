@@ -322,6 +322,7 @@ func _run() -> void:
 	_combat_shot = false
 	_watch_shots()
 	_watch_night()
+	_morning_path_watch()
 	await go("night_wait")
 	await _drive_morning()
 	snapshot("end")
@@ -363,6 +364,7 @@ func _night_only(b: String) -> void:
 	await _frames(20)
 	_real_night()
 	_watch_night()
+	_morning_path_watch()
 	var stop := String(d.main.args.get("nightstop", "act10_started"))
 	d.runner.run([{ "event": "S0007" }])
 	if stop == "done":   # 끝까지(아침·포수·노인·마지막 밤) — 화면 다듬기
@@ -503,13 +505,23 @@ func _drive_morning() -> void:
 	nw.morning_seen = d.S.phase == "morning"
 	nw.morning_pos = Vector2(d.main.player_pos.x, d.main.player_pos.z)
 	await _frames(20)
-	# §65 수수밭 가장자리로 걸어간다(시험은 순간이동)
-	var hs: Vector2 = d.anchor("hunter_sorghum")
-	d.teleport_to(hs + Vector2(-2.2, 0.4), "right")
+	# 결정 3 — 마을 쪽 길(흰 발자국 길)로 몇 걸음: 붉은 수수밭이 화면 한쪽에 든다(끌림만, 수수밭 트리거 밖)
+	d.teleport_to(d.anchor("white_trail_b"), "up")
 	for i in 3000:
 		await get_tree().process_frame
-		if d.S.is_flag("hunter_morning_seen") and not d.runner.busy: break
-	await _idle()
+		if d.case_fn.sorghum_lure.get("done", false): break
+	await _frames(5)
+	if branch in ["C", "NC"]:
+		# 수수밭은 필수가 아니다 — 곧장 북쪽 어귀로(포수 이야기는 어귀에서, 결말 뒤 대사)
+		nw.sorghum_skipped = true
+	else:
+		# §65 수수밭 가장자리로 걸어간다(시험은 순간이동)
+		var hs: Vector2 = d.anchor("hunter_sorghum")
+		d.teleport_to(hs + Vector2(-2.2, 0.4), "right")
+		for i in 3000:
+			await get_tree().process_frame
+			if d.S.is_flag("hunter_morning_seen") and not d.runner.busy: break
+		await _idle()
 	nw.merchants = d.actors.has("merchant_a") and d.actors.merchant_a.shown
 	# §66 걸어 내려간다 — 북쪽 어귀
 	await walk_to("north_square")
@@ -527,6 +539,39 @@ func _drive_morning() -> void:
 	while (d.S.phase != "done" or d.ui.modal) and w2 < 40000:
 		await get_tree().process_frame; w2 += 1
 		if w2 % 600 == 0: _log("마지막 밤 기다리는 중 phase=%s busy=%s" % [d.S.phase, d.runner.busy])
+	# 결정 4 — 사건 뒤 이웃 아낙을 다시 만난다(아침의 대답을 기억한다)
+	await _idle()
+	nw.neighbor_said = []
+	_collect_lines("이웃 아낙", nw.neighbor_said)
+	await go("neighbor")
+	nw.neighbor_said_done = true
+
+# 대화창에 뜬 줄을 모은다(who가 말하는 동안) — 이웃 아낙 결말 뒤 말 확인 · 화면(--storyshots)
+func _collect_lines(who: String, out: Array) -> void:
+	for i in 6000:
+		await get_tree().process_frame
+		if nw.get("neighbor_said_done", false): return
+		if d.ui._dialog.visible and d.ui._dlg_name.text == who:
+			var l := String(d.ui._type_full)
+			if l != "" and not out.has(l):
+				out.append(l)
+				_log("SAID %s: %s" % [who, l])
+				for j in 240:   # 글자가 다 찍힌 뒤에 찍는다
+					if not d.ui._typing: break
+					await get_tree().process_frame
+				await tale_shot("neighbor_reunion")
+
+# 아침 이웃 아낙과 말하는 동안 플레이어를 마당 길목(마을 쪽 길, 수수밭 트리거 밖)에 세운다 — 밤을 지새운 자리가 수수밭 곁이면
+#   대답하자마자 수수밭 장면이 서서 '지나쳐 가는 길'을 볼 수 없다. 두 길(들름 A·B / 지나침 C)을 다 보려고. 밤 몰기 전에 띄운다
+func _morning_path_watch() -> void:
+	var path_pt: Vector2 = d.anchor("yard").lerp(d.anchor("white_trail_b"), 0.4)
+	for i in 400000:
+		await get_tree().process_frame
+		if d.S.phase == "morning" and d.S.is_flag("neighbor_visit_on") and d.ui.modal and not d.S.is_flag("morning_truth_choice"):
+			d.teleport_to(path_pt, "right")
+			_log("아침 — 마당 길목에 선다 %s" % str(path_pt))
+			return
+		if d.S.phase == "done": return
 
 # v3.2 ACT 10~15 판정(§75 자동 확인할 수 있는 것)
 func check_v32_rope() -> void:
@@ -584,14 +629,56 @@ func check_v32_rope() -> void:
 	expect(line != "" and line == String(rr[0].lines[mv]) and not others.has(line), "§64 아침 대답에 따라 주막 소문이 다르다 “%s”" % line)
 	# §65 시신 없음
 	expect(nw.morning_tiger.is_empty(), "아침에 범의 몸이 보이지 않는다 %s" % JSON.stringify(nw.morning_tiger.slice(0, 3)))
-	expect(S.has_clue("tiger_death") and S.is_flag("hunter_morning_seen") and float(c.hunter_cam.get("pitch", 99.0)) <= 40.0 and nw.hunter_shot_free,
-		"§65 포수 “죽었소.” — 흔적만, 카메라는 내려가지 않는다(pitch %s)" % c.hunter_cam.get("pitch", "-"))
+	if nw.get("sorghum_skipped", false):
+		# 결정 3 — 수수밭을 지나쳐 곧장 내려와도 끝까지 간다 · 포수 이야기는 북쪽 어귀(결말 뒤 대사)
+		var ht: Array = d.data.actors.filter(func(a): return String(a.id) == "hunter")
+		var hline := ""
+		if not ht.is_empty():
+			for t in ht[0].get("talk", []):
+				if d.runner.cond(t.get("when", "true")):
+					hline = JSON.stringify(t.get("steps", [])); break
+		expect(S.is_flag("hunter_morning_skipped") and not S.is_flag("hunter_morning_seen") and S.is_flag("elder_book") and S.phase == "done" and hline.contains("뼈가 다 상했더군"),
+			"결정 3 수수밭은 선택 — 지나쳐 와도 끝까지(skipped) · 어귀 포수의 결말 뒤 말")
+	else:
+		expect(S.has_clue("tiger_death") and S.is_flag("hunter_morning_seen") and not S.is_flag("hunter_morning_skipped") and float(c.hunter_cam.get("pitch", 99.0)) <= 40.0 and nw.hunter_shot_free,
+			"§65 포수 “죽었소.” — 흔적만, 카메라는 내려가지 않는다(pitch %s)" % c.hunter_cam.get("pitch", "-"))
 	expect(nw.fall_traces, "§65 꺾인 수숫대·붉은 흔적·뜯긴 털·눌린 자국(소품)")
+	expect(c.sorghum_lure.get("done", false) and c.sorghum_lure.get("in_frame", false), "결정 3 내려가는 길에서 붉은 수수밭이 화면에 든다(끌림만) %s" % JSON.stringify(c.sorghum_lure))
+	expect(not load("res://story/namwon/namwon_data.gd").map_leads().any(func(m): return String(m.get("at", "")) in ["sorghum", "hunter_sorghum"]),
+		"결정 3 수수밭은 지도 표(갈 곳)가 아니다")
 	# §66~§67
 	expect(S.is_flag("elder_book") and S.notes.has("이겸의 흔적 — 한양") and String(S.vars.get("MAIN_MASTER_TRACE", "")).split(",").has("HANYANG"), "§66 이겸의 흔적 — 한양 · MAIN_MASTER_TRACE=HANYANG")
 	expect(nw.get("merchants", false), "§66 장꾼이 다시 고개를 넘는다")
 	var skl: Array = d.runner.trace.filter(func(e): return e[0] == "skills")
 	expect(bool(S.vars.get("SKILL_BEAST_TRACE", false)) and not bool(S.vars.get("SKILL_GUARD_SHOVE", false)) and skl.is_empty(), "§67 보상은 짐승 흔적 읽기 하나(다른 숙련 해금 없음 %s)" % JSON.stringify(skl))
+	# 결정 4 — 이웃 아낙은 아침의 대답을 기억한다(한두 마디, 결말 갈래 없음) · 세 대답 모두 데이터로 · 이번 판은 실제로 말을 걸어
+	var memo := { "sky": "그날 하늘로 올라갔다고 하셨지요… 아직도 무슨 뜻인지 모르겠소.", "unknown": "혹시 어디서라도 아이들 소식 들으면 알려 주시오.", "silent": "그날은 아무 말씀도 안 하셨지요." }
+	var na: Array = d.data.actors.filter(func(a): return String(a.id) == "neighbor")
+	var mv0 = S.vars.get("CASE_NAMWON_MORNING", "")
+	for key in memo:
+		S.vars["CASE_NAMWON_MORNING"] = key
+		var got := ""
+		if not na.is_empty():
+			for t in na[0].get("talk", []):
+				if d.runner.cond(t.get("when", "true")):
+					got = String(t.steps[0].lines[0]) if t.steps[0].has("lines") else ""; break
+		expect(got == memo[key], "결정 4 이웃 아낙 결말 뒤 — %s “%s”" % [key, got])
+	S.vars["CASE_NAMWON_MORNING"] = mv0
+	expect(nw.get("neighbor_said", []).has(memo.get(mv, "?")), "결정 4 이번 판(%s) 이웃 아낙을 다시 만나 들은 말 %s" % [mv, JSON.stringify(nw.get("neighbor_said", []))])
+	expect(Rm.RUMORS.any(func(r): return String(r.id) == "NW_TAVERN_MORNING" and r.lines.size() == 3), "결정 4 주막 소문 세 갈래 그대로")
+	# 결정 1 — 마지막 밤 두 빛 동안 기본 달을 감추고, 끝나기 전에 되돌린다(ACT 12 tale_sky는 그대로)
+	expect(float(c.moon_log.get("during", 1.0)) == 0.0 and float(c.moon_log.get("after", 0.0)) == 1.0 and is_equal_approx(float(d.main.moon_k()), 1.0) and not c._moon_hidden,
+		"결정 1 두 빛 동안 기본 달 0 · 뒤에 1로 되돌림 %s" % JSON.stringify(c.moon_log))
+	# 결정 2 — 줄기에 붙은 시간은 절반 · 줄은 이어서 내려온다(끝에서 뚝 떨어지지 않는다)
+	expect(is_equal_approx(c.TRUNK_K, 0.5) and src.contains("held += dt * TRUNK_K"), "결정 2 줄기 위 시간 1/2")
+	expect(c.rope_dk_max > 0.0 and c.rope_dk_max <= 0.05, "결정 2 줄 진행 한 틱 최대 변화 %.3f(≤ 0.05 — 끝의 큰 뜀 없음)" % c.rope_dk_max)
+	# 결정 5 — 두 방어의 시작이 다르다: 첫째는 뛰어내림, 둘째는 줄기 위에서 몸을 돌려 덮침(다른 자리·카메라, 같은 CombatView)
+	var s_p: Dictionary = c.defence_start.get("pray", {}); var s_r: Dictionary = c.defence_start.get("rope", {})
+	expect(s_p.get("mode", "") == "pray" and s_r.get("mode", "") == "rope", "결정 5 start_mode pray · rope")
+	expect(not s_p.is_empty() and not s_r.is_empty() and (Vector2(s_p.pos).distance_to(Vector2(s_r.pos)) > 0.25 or absf(float(s_p.y) - float(s_r.y)) > 1.0) and float(s_p.y) == 0.0 and float(s_r.y) >= 1.5,
+		"결정 5 시작 자리가 다르다(pray %s y%.1f · rope %s y%.1f)" % [str(s_p.get("pos")), float(s_p.get("y", 0.0)), str(s_r.get("pos")), float(s_r.get("y", 0.0))])
+	expect(s_r.get("lunge", false) and not String(s_r.get("intro", "")).contains("뛰어들었다") and str(s_r.get("cam")) != str(s_p.get("cam")),
+		"결정 5 마지막 방어는 뛰어내림 없이 줄기 위에서 덮친다(덮침 %s · 문구 “%s” · 카메라 %s)" % [s_r.get("lunge", false), s_r.get("intro", ""), str(s_r.get("cam"))])
 	# §68
 	expect(c.final_lights_seen and c.final_cut_t < 1.0, "§68 마지막 밤 — 걷는 중 두 빛(긴 강제 컷신 없음, 거둔 시간 %.1f초)" % c.final_cut_t)
 	expect(String(c.summary()[-1]) == c.FINAL_LINE and String(S.notes[-1]) == c.FINAL_LINE, "§68 기록책 마지막 줄 “%s”" % c.FINAL_LINE)
