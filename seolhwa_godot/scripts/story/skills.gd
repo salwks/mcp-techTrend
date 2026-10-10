@@ -7,13 +7,14 @@
 extends RefCounted
 
 const TABLE := [
-	# 남원 v3.2 결정 2: 남원 완료 보상은 '짐승 흔적 읽기'(SKILL_BEAST_TRACE — namwon_data S0010) 하나뿐. 받아밀기는 남원에서 빼고 지금은 아무 사건도 열지 않는다.
-	# TODO(전투 진행 정리): 받아밀기를 열 사건을 정한다 — 후보는 막기로 받는 싸움을 처음 본격적으로 쓰는 뒤 사건(강릉·경주 등).
+	# 남원 v3.2 결정 2: 남원 완료 보상은 '짐승 흔적 읽기'(SKILL_BEAST_TRACE — namwon_data S0010) 하나뿐.
+	# 받아밀기는 경주 완료 보상(2026-10-10 확정) — 경주는 밀수꾼과 실제 인간형 전투(combat "spur")를 처음 본격적으로 겪는 사건이고,
+	#   사람 적의 swing/thrust도 swipe 판정이라 받아밀기가 그대로 먹힌다.
 	#   이미 받아밀기를 연 옛 저장은 그대로 둔다(끄지 않는다). 막기·회피 자체는 기본 능력이다(남원 첫 조우에서 K·L로 배운다).
-	{ "var": "SKILL_GUARD_SHOVE", "name": "받아밀기", "unlock": [] },
+	{ "var": "SKILL_GUARD_SHOVE", "name": "받아밀기", "unlock": ["CASE_GYEONGJU_COMPLETE"] },
 	{ "var": "SKILL_QUICK_THROW", "name": "빠른 투척", "unlock": ["CASE_HANYANG_BOOKSHOP_COMPLETE"] },
 	{ "var": "SKILL_EVADE_SLASH", "name": "회피베기", "unlock": ["CASE_GANGNEUNG_COMPLETE"] },
-	{ "var": "SKILL_SNAP_SHOT", "name": "빠른 사격", "unlock": ["CASE_GYEONGJU_COMPLETE"] },
+	{ "var": "SKILL_SNAP_SHOT", "name": "빠른 사격", "unlock": [] },   # 미배정 — 실제 동작 없는 자리표. 활이 이야기 중심인 설화가 생기면 그때 배치
 	{ "var": "SKILL_BEAST_SIDESTEP", "name": "큰 짐승 흘리기", "unlock": [["CASE_PYONGYANG_COMPLETE", "SKILL_BEAST_TRACE"]] },
 	{ "var": "SKILL_TOOL_SLOT_PLUS", "name": "보조도구 전환", "unlock": ["CASE_HAMHUNG_COMPLETE"] },
 ]

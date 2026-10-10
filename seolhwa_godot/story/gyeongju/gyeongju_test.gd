@@ -20,7 +20,7 @@ static func prepare(_dir) -> void:
 	var p := Progress.data()
 	p.vars = { "MAIN_MASTER_TRACE": "HANYANG", "SKILL_BEAST_TRACE": true, "CASE_NAMWON_OUTCOME": "C", "CASE_NAMWON_DETAIL": "C",
 		"MAIN_WOOCHI_KNOWN": true, "ACT2_OPEN": true, "CASE_HANYANG_OUTCOME": "followed", "ITEM_TALISMAN_SLOT": 0,
-		"CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": true, "SKILL_GUARD_SHOVE": true, "SKILL_QUICK_THROW": true }
+		"CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": true, "SKILL_GUARD_SHOVE": false, "SKILL_QUICK_THROW": true }
 	p.cases = {
 		"namwon": { "v": 2, "phase": "done", "flags": { "case_started": true, "resolved": true }, "clues": [], "rules": [],
 			"items": { "ITM_TOOL_009": 1, "ITM_WPN_001": 1, "ITM_WPN_002": 1, "ITM_AMMO_001": 12, "COIN": 7 }, "world": {}, "talked": {}, "notes": [],
@@ -170,7 +170,8 @@ func _run() -> void:
 	expect(o == branch, "결말 %s (얻은 값 %s, %s)" % [branch, o, d.S.vars.get("CASE_GYEONGJU_DETAIL", "")])
 	expect(bool(d.S.vars.get("SKILL_RUBBING", false)) and d.S.has("ITM_TOOL_007"), "보상: 탁본 도구 · SKILL_RUBBING")
 	expect(bool(d.S.vars.get("CASE_GYEONGJU_COMPLETE", false)), "CASE_GYEONGJU_COMPLETE")
-	expect(bool(d.S.vars.get("SKILL_SNAP_SHOT", false)), "숙련 해금: 빠른 사격(SKILL_SNAP_SHOT)")
+	expect(bool(d.S.vars.get("SKILL_GUARD_SHOVE", false)), "숙련 해금: 받아밀기(SKILL_GUARD_SHOVE) — 경주 완료 보상")
+	expect(not bool(d.S.vars.get("SKILL_SNAP_SHOT", false)), "빠른 사격(SKILL_SNAP_SHOT)은 미배정 — 경주에서 열리지 않는다")
 	for e in ["S3001", "S3002", "S3003", "S3004", "S3005", "S3006", "S3007", "S3008"]: expect(d.S.seen.has(e), "장면 " + e)
 	# 지역 변화(§30)
 	expect(d.props.has("p_offering") and d.props.p_offering.get("want", false), "망부석 앞 공양상")
@@ -184,7 +185,7 @@ func _run() -> void:
 	await _rub_check("gj_mangbuseok", "stone_front")
 	await _rub_check("gs_chisul_jangseung_01", Vector2(-1093.1, 2576.0))
 	_log("vars=%s" % JSON.stringify({ o = o, detail = d.S.vars.get("CASE_GYEONGJU_DETAIL"), trace = d.S.vars.get("MAIN_MASTER_TRACE"),
-		rub = d.S.vars.get("SKILL_RUBBING"), snap = d.S.vars.get("SKILL_SNAP_SHOT"), woochi = d.S.vars.get("MAIN_WOOCHI_KNOWN") }))
+		rub = d.S.vars.get("SKILL_RUBBING"), shove = d.S.vars.get("SKILL_GUARD_SHOVE"), snap = d.S.vars.get("SKILL_SNAP_SHOT"), woochi = d.S.vars.get("MAIN_WOOCHI_KNOWN") }))
 	_log("seen=%s" % JSON.stringify(d.S.seen.keys()))
 	_log("fps min=%.0f avg=%.0f (n=%d)" % [_fps_min, _fps_sum / maxf(1.0, _fps_n), _fps_n])
 	for pair in [["밤 고개", _night_fps], ["싸움", _fight_fps]]:
