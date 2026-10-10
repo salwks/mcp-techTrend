@@ -12,7 +12,10 @@
 #   포수 물음 → 방앗간 물음·밀가루 바닥 → 연결 추론(§29) → 외딴집 쪽 흰 발자국(§30, 목적이 '보호'로).
 # v3.2 착수 순서 5 — ACT 6~9(§31~§50): 해 질 무렵 귀환(dusk_return)·경고·포수와 역할 나누기 → 준비(디딤돌 기름·떡·횃불) → hide_spot “기다린다” →
 #   S0007 밤의 문(첫 노크 7A·7B·7C → 조작 → 둘째 노크 → 누이가 정한 탈출 → 문이 열린 뒤 처음 전신) → 시간 벌기(A/B/C, 밀쳐냄) → 우물·참기름·도끼 →
-#   마지막 개입 → S0009(기존 동아줄 ACT 10~). 옛 dusk_wait·night_fall 다리와 옛 밤 들머리는 없앴다.
+#   마지막 개입 → S0009. 옛 dusk_wait·night_fall 다리와 옛 밤 들머리는 없앴다.
+# v3.2 착수 순서 6 — ACT 10~15(§51~§68): S0009 기도(첫 기도엔 아무 일도 없다 · 방어 · 둘이 함께) → 닿지 않는 줄 끝(10A) → 마지막 방어 동안 줄이 내려온다 →
+#   새 동아줄 → 범의 기도(아이들 말투) → 썩은 줄 · 수수밭 → 두 빛 → S0010 외딴집 마당 아침(이웃 아낙 세 갈래 CASE_NAMWON_MORNING) →
+#   수수밭의 포수(트리거, 시신 없음) → 걸어서 북쪽 어귀 노인(트리거, 이겸의 흔적 — 한양 · 짐승 흔적 읽기) → S0011 마지막 밤(두 빛 · 기록 마지막 줄).
 # ID: CHARACTER/ITEM/PROP_MASTER v1.0.
 #
 # 자리(게임 좌표 x,z — JL_NAMWON_UNBONG): 남원 동문 밖 주막 → 읍성 → 북문 → 북쪽 어귀(장승·쉼터, 포수) → 고개(서낭당) →
@@ -52,7 +55,7 @@ static func data() -> Dictionary:
 			# 첫 사건 단서 안내 단계(§14·§28): 0 첫 단서 전 · 1 첫 단서 · 2 둘째 · 3 일반 조사 — scripts/story/onboarding.gd 먹점
 			"guidance_flag": "CASE_NAMWON_GUIDANCE_STAGE",
 			# 새로 시작할 때 되돌릴 공통 변수(story_state 기본 목록 + 결말 세부 — 지난 판 결말 글이 기록책에 남지 않게)
-			"reset_vars": ["CASE_NAMWON_OUTCOME", "CASE_NAMWON_DETAIL", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE", "SKILL_GUARD_SHOVE", "CASE_NAMWON_COMPLETE"],
+			"reset_vars": ["CASE_NAMWON_OUTCOME", "CASE_NAMWON_DETAIL", "CASE_NAMWON_MORNING", "MAIN_MASTER_TRACE", "SKILL_BEAST_TRACE", "SKILL_GUARD_SHOVE", "CASE_NAMWON_COMPLETE"],
 			# 제작자용 판본 기준(v3 §3.1·§3.2 — 플레이어에게 보이지 않음)
 			"ENTRY": "고갯길에서 떡장수 어머니의 실종에 휘말린다.",
 			"CONTINUITY": "어머니를 찾는 길이 곧 오누이 집으로 이어진다. 하룻밤 안에 끝난다.",
@@ -104,9 +107,12 @@ static func data() -> Dictionary:
 			"reflection": { "title": "우물에 비친 얼굴", "text": "범은 우물에 비친 오누이를 보고 “거기 숨어 있었구나.” 했다. 아우가 킥 웃는 바람에 범이 고개를 들었다.", "kind": "fact" },
 			"kids_lie": { "title": "참기름", "text": "“참기름을 바르고 올라왔지.” 범은 줄기에 기름을 바르고 오르다 미끄러지기만 했다.", "kind": "heard", "by": "누이" },
 			"axe_slip": { "title": "도끼", "text": "“도끼로 찍고 올라오면 되는데.” 범은 도끼로 줄기를 찍어 발 디딜 데를 내며 올라왔다.", "kind": "heard", "by": "아우" },
-			"prayer": { "title": "하늘에 빈 말", "text": "“하늘님, 저희를 살리시려거든 새 동아줄을 내려 주시고, 죽이시려거든 썩은 동아줄을 내려 주세요.”", "kind": "heard", "by": "누이" },
+			# v3.2 §51~§52 — 첫 기도에는 아무 일도 없었다. 시간을 더 번 뒤 둘이 함께 마저 빌었다
+			"prayer": { "title": "하늘에 빈 말", "text": "“하늘님… 저희를 살리시려거든… 새 동아줄을 내려 주시고…” 아무 일도 없었다. 한참 뒤 둘이 함께 “…죽이시려거든 썩은 동아줄을 내려 주세요.”", "kind": "heard", "by": "누이·아우" },
 			"sky_rise": { "title": "새 동아줄", "text": "아이 둘이 하늘로 올라가는 것을 보았다.", "kind": "fact" },
-			"rotten_rope": { "title": "썩은 동아줄", "text": "범도 같은 말로 줄을 빌었다. 내려온 것은 썩은 동아줄이었다. 범은 수수밭에 떨어졌고, 수숫대가 붉게 물들었다.", "kind": "fact" },
+			"rotten_rope": { "title": "썩은 동아줄", "text": "범도 아이들 말투 그대로 줄을 빌었다. 내려온 줄은 가까이서 보니 올이 끊기고 꼬임이 풀려 있었다. 줄이 끊어져 범은 수수밭에 떨어졌고, 수숫대가 아래부터 붉게 물들었다.", "kind": "fact" },
+			# v3.2 §65 — 아침 수수밭. 시신은 보지 않았다(포수의 말로만)
+			"tiger_death": { "title": "수수밭의 흔적", "text": "꺾인 수숫대, 붉은 흔적, 뜯긴 털, 깊게 눌린 자국. “죽었소. 높은 데서 떨어진 것처럼 뼈가 다 상했어.”", "kind": "heard", "by": "포수" },
 			"two_lights": { "title": "하늘의 두 빛", "text": "그날 밤, 하늘에 빛 둘이 자리를 잡았다.", "kind": "fact" },
 		},
 		"rules": {
@@ -191,6 +197,8 @@ static func _anchors() -> Dictionary:
 		"well": [-3207.8, -343.8], "tiger_well": [-3208.4, -346.0], "tiger_tree": [-3203.6, -342.2],
 		"rope_kids": [-3205.4, -342.5], "rope_tiger": [-3203.4, -342.4], "sorghum": [-3199.4, -347.6], "tiger_fall": [-3199.6, -347.2],
 		"sky_watch": [-3210.4, -349.4],
+		# v3.2 §65 아침 — 포수가 수수밭 가장자리(마당 쪽)에 선다
+		"hunter_sorghum": [-3203.0, -347.4],
 		# v3.2 §43 C — 떡(cake_bait)과 나무 사이, 횃불을 들고 막아서는 자리
 		"torch_block": [-3214.5, -343.2],
 		# v3.2 §38·§40 문틈(툇마루 위 문지방) — 앞발이 들어오는 자리
@@ -344,9 +352,11 @@ static func actors() -> Array:
 				{ "when": "true", "steps": [{ "say": "손님", "lines": ["사흘이면… 돌아올 사람이면 벌써 왔지."] }] },
 			] },
 		{ "id": "hunter", "chr": "CHR_HUM_017", "kind": "hunter", "name": "포수", "at": "hunter", "facing": "down",
+			# v3.2 §65 아침에는 먼저 수수밭(hunter_morning)에 있다 — 그 장면을 보았거나 지나쳐 왔으면 어귀에
+			"when": "not ph('morning') or f('hunter_morning_gone') or f('hunter_morning_skipped')",
 			"talk": [
-				{ "when": "ph('done')", "steps": [
-					{ "say": "포수", "lines": ["그놈을 수수밭에서 찾았소. 높은 데서 떨어진 것처럼 뼈가 다 부러졌더군.", "화살 자국은 없었소. 누가 잡은 게 아니오."] },
+				{ "when": "ph('done') or ph('morning')", "steps": [
+					{ "say": "포수", "lines": ["그놈을 수수밭에서 찾았소. 높은 데서 떨어진 것처럼 뼈가 다 상했더군.", "화살 자국은 없었소. 누가 잡은 게 아니오."] },
 					{ "choice": "", "options": [
 						{ "label": "그 집 아이들은 어디 갔소?", "do": [{ "say": "포수", "lines": ["모르겠소. 아이들 발자국이 우물가 나무 밑에서 끊겼어.", "나무 위에도 없었고."] }] },
 						{ "label": "그만 가 보겠소.", "end": true }] }] },
@@ -408,6 +418,8 @@ static func actors() -> Array:
 		{ "id": "elder", "chr": "CHR_HUM_022", "kind": "elder", "name": "노인",
 			"at": { "morning": "elder_morning", "default": "elder_town" }, "facing": { "morning": "right", "default": "down" },
 			"talk": [
+				# v3.2 §66 — 아침 북쪽 어귀(트리거로도 선다)
+				{ "when": "ph('morning') and f('morning_truth_choice') and not f('elder_book')", "steps": [{ "call": "elder_book" }] },
 				{ "when": "ph('done')", "steps": [{ "say": "노인", "lines": ["한양 가는 길이면 오수 지나 전주로 가게."] }] },
 				{ "when": "true", "steps": [{ "say": "노인", "lines": ["고개 서낭당에 돌 하나 얹고 가게. 요즘은 그냥 지나가면 탈이 난다네."] }] },
 			] },
@@ -429,11 +441,15 @@ static func actors() -> Array:
 				{ "when": "true", "steps": [{ "say": "아우", "lines": ["오늘은 와요?"] }] },
 			] },
 		{ "id": "neighbor", "chr": "CHR_HUM_010", "kind": "villager_f", "name": "이웃 아낙",
-			"at": { "morning": "neighbor_morning", "default": "neighbor_after" }, "facing": "down", "when": "ph('morning') or ph('done')",
+			"at": { "morning": "neighbor_morning", "default": "neighbor_after" }, "facing": "down", "when": "ph('done')",
 			"talk": [{ "when": "true", "steps": [{ "say": "이웃 아낙", "lines": ["그 집 애들 끼니라도 챙기려고 갔더니 집이 비었어요.", "아이들은 어디 갔을까요. 산에 들어갔으면 큰일인데."] }] }] },
 		# v3.2 §11 첫 방문 — 이웃 아낙이 빈 그릇을 들고 집에서 나온다(장면 전용, 아침의 이웃 아낙과 같은 그림 CHR_HUM_010). 말 걸기 없음
+		#   §64 아침에도 같은 사람이 같은 그릇을 들고 온다
 		{ "id": "neighbor_visit", "chr": "CHR_HUM_010", "kind": "villager_f", "name": "이웃 아낙", "at": "house_door", "facing": "down",
 			"when": "f('neighbor_visit_on')" },
+		# v3.2 §65 아침 수수밭의 포수(장면 전용 — 다가가면 hunter_sorghum, 말 걸기 없음)
+		{ "id": "hunter_morning", "chr": "CHR_HUM_017", "kind": "hunter", "name": "포수", "at": "hunter_sorghum", "facing": "right",
+			"when": "ph('morning') and not f('hunter_morning_gone') and not f('hunter_morning_skipped')" },
 		# 지역 변화(§30): 고갯길에 장꾼이 다시 다닌다
 		{ "id": "merchant_a", "chr": "CHR_HUM_003", "kind": "peddler", "name": "장꾼", "at": "merchant_a", "facing": "down",
 			"when": "v('CASE_NAMWON_OUTCOME') != ''",
@@ -566,6 +582,16 @@ static func triggers() -> Array:
 		# v3.2 §31 해 질 무렵 외딴집 귀환 — 범을 보았고 집 쪽으로 올 것을 짐작한 뒤(night_ready) 마당에 다가가면: 누이 “찾았어요?” → 경고 → 포수와 역할 나누기 → 준비
 		{ "id": "dusk_return", "at": "yard", "radius": 15.0, "when": "ph('explore') and fn('night_ready') and not f('dusk_return_seen')",
 			"steps": [{ "call": "dusk_return" }] },
+		# v3.2 ACT 13~15 — 아침은 흐름이 이어 부르고(S0009 → S0010), 저장에서 이어 하면 이 트리거들이 장면을 다시 세운다(once 아님 — 플래그로 막는다)
+		{ "id": "s0010_morning", "at": "yard", "radius": 5000.0, "once": false, "when": "ph('morning') and not f('morning_yard_seen')", "event": "S0010" },
+		# §65 수수밭 가장자리에 다가가면 — 포수
+		{ "id": "s0010_hunter", "at": "sorghum", "radius": 7.5, "once": false,
+			"when": "ph('morning') and f('morning_truth_choice') and not f('hunter_morning_seen') and not f('hunter_morning_skipped')", "steps": [{ "call": "hunter_sorghum" }] },
+		# §66 걸어 내려와 북쪽 어귀에 들면 — 노인과 기록책
+		{ "id": "s0010_elder", "at": "north_square", "radius": 14.0, "once": false, "when": "ph('morning') and f('morning_truth_choice') and not f('elder_book')",
+			"steps": [{ "call": "elder_book" }] },
+		# §68 노인 뒤 — 그날 밤(S0011)
+		{ "id": "s0011_night", "at": "north_square", "radius": 5000.0, "once": false, "when": "ph('morning') and f('elder_book') and not f('final_night_started')", "event": "S0011" },
 	]
 
 # ---------------------------------------------------------------------------
@@ -601,8 +627,11 @@ static func map_leads() -> Array:
 			"note": "포수 hq_where — mill_talked·flour_prints면 사라진다" },
 		{ "id": "nw_night_house", "name": "외딴집(오늘 밤)", "at": "house", "when": "f('dusk_prep') or ph('night')", "until": "seen('S0007') or f('night_wait_started')",
 			"note": "해 질 무렵 귀환·경고 뒤(dusk_prep) — 준비하러 마을에 다녀올 때 돌아올 곳. hide_spot에서 기다리면(S0007) 사라진다" },
-		{ "id": "nw_to_hanyang", "name": "한양", "region": "GG_HANYANG", "when": "seen('S0010')", "until": "v('CASE_HANYANG_BOOKSHOP_COMPLETE') == true",
-			"note": "S0010 노인 “한양 간다고 했지.” → MAIN_MASTER_TRACE = HANYANG" },
+		# v3.2 §66 아침 — 이웃 아낙 뒤 북쪽 어귀로 걸어 내려간다(노인을 만나면 사라진다)
+		{ "id": "nw_morning_north", "name": "북쪽 어귀", "at": "north_square", "when": "ph('morning') and f('morning_truth_choice')", "until": "f('elder_book')",
+			"note": "S0010 아침 이웃 아낙 물음 뒤 — 북쪽 어귀 노인(elder_book)" },
+		{ "id": "nw_to_hanyang", "name": "한양", "region": "GG_HANYANG", "when": "f('elder_book') or (ph('done') and seen('S0010'))", "until": "v('CASE_HANYANG_BOOKSHOP_COMPLETE') == true",
+			"note": "S0010 북쪽 어귀 노인 “한양 간다고 했지.” → MAIN_MASTER_TRACE = HANYANG" },
 	]
 
 # 사건 기록 칸(scripts/story/journal_book.gd): 아직 모르는 것 · 확인한 장소 · 사용 가능한 관련 물건(뜻을 가진 뒤에만)
@@ -672,6 +701,9 @@ static func props() -> Array:
 		{ "id": "p_oil_step", "kit": "story/tale", "params": { "kind": "oil_step" }, "at": "back_step", "ry": 0.0, "when": "w('oil_on_step') and not ph('done')" },
 		{ "id": "p_sorghum", "kit": "story/tale", "params": { "kind": "sorghum", "w": 5.0, "d": 4.5 }, "at": "sorghum", "when": "not w('sorghum_red')" },
 		{ "id": "p_sorghum_red", "kit": "story/tale", "params": { "kind": "sorghum", "w": 5.0, "d": 4.5, "red": true }, "at": "sorghum", "when": "w('sorghum_red')" },
+		# v3.2 §65 아침 수수밭 — 꺾인 수숫대 · 붉은 흔적 · 뜯긴 털 · 깊게 눌린 자국(시신은 없다)
+		{ "id": "p_fall_traces", "kit": "story/clue", "params": { "kind": "fall_traces", "seed": 65 }, "at": "tiger_fall", "ry": 0.3, "when": "w('fall_traces')" },
+		{ "id": "d_fall_red", "decal": { "kind": "blood", "size": 1.6, "ry": 0.9 }, "at": "tiger_fall", "when": "w('fall_traces')" },
 	]
 
 # ---------------------------------------------------------------------------
@@ -756,22 +788,20 @@ static func events() -> Dictionary:
 		"S0007": _ev("S0007", "해 질 무렵 귀환·준비 뒤 hide_spot에서 “기다린다”", "외딴집 마당", "밤(23:30)", "숨어서 지켜본다(문 앞 속임수에 맞서고 탈출을 정하는 것은 누이) · 노크 사이 조작 · 시간 벌기 · 마지막 개입", "-", "-", [
 			{ "call": "night_door" },
 		]),
-		"S0009": _ev("S0009", "S0007의 우물·참기름·도끼·마지막 개입 뒤(ACT 10~)", "외딴집 우물가 나무 · 수수밭", "밤", "곁에서 본다(동아줄을 비는 것은 오누이)", "-",
-			"오누이가 하늘로 올라감 · 범이 썩은 동아줄과 수수밭에 떨어짐(수숫대가 붉어짐) · 하늘에 두 빛", [
+		"S0009": _ev("S0009", "S0007의 우물·참기름·도끼·마지막 개입 뒤(ACT 10~12)", "외딴집 우물가 나무 · 수수밭", "밤",
+			"첫 기도 뒤 8~12초 · 줄 끝이 보인 뒤 5~8초 범을 막는다(동아줄을 비는 것은 오누이 — 플레이어는 시간을 번다)",
+			"-", "오누이가 하늘로 올라감 · 범이 썩은 동아줄과 수수밭에 떨어짐(수숫대가 아래부터 붉어짐) · 하늘에 두 빛", [
 			{ "call": "rope_night" },
 		]),
-		"S0010": _ev("S0010", "다음 날 아침", "북쪽 어귀", "아침", "아이들 일을 묻는 마을 사람들 곁에 선다 · 기록책을 보인다", "-",
-			"아이들이 어디 갔는지 아무도 모른다 · MAIN_MASTER_TRACE = HANYANG, SKILL_BEAST_TRACE", [
-			{ "call": "morning_village" },
-			{ "say": "노인", "lines": ["그 책… 전에도 그런 책 들고 다니던 양반이 있었소."] },
-			{ "say": "나그네", "lines": ["어디로 갔습니까?"] },
-			{ "say": "노인", "lines": ["한양 간다고 했지."] },
-			{ "var": "MAIN_MASTER_TRACE", "value": "HANYANG" },
-			{ "var": "SKILL_BEAST_TRACE", "value": true },
-			{ "toast": "새 해결 수단 — 짐승 흔적 읽기", "kind": "rule" },
-			{ "journal": "이겸의 흔적 — 한양" },
+		# v3.2 §63~§67 — 순간이동 없이: 외딴집 마당 아침 → (걸어서) 수수밭의 포수 → 북쪽 어귀 노인. 앞의 하나만 이 장면이고 뒤 둘은 트리거
+		"S0010": _ev("S0010", "S0009 다음 날 동틀 무렵(또는 저장에서 이어 하면 s0010_morning)", "외딴집 마당 → 수수밭 → 북쪽 어귀", "아침",
+			"이웃 아낙의 “…애들은요?”에 답한다(하늘로 올라갔소 / 나도 모르겠소 / 대답하지 않는다) · 수수밭 흔적 · 직접 걸어 내려가 노인에게 기록책을 보인다",
+			"아침의 대답(CASE_NAMWON_MORNING sky | unknown | silent) — 메인 진행은 같고 뒤 소문 문구만 달라진다",
+			"MAIN_MASTER_TRACE = HANYANG(노인) · SKILL_BEAST_TRACE(보상은 이것 하나) · 장꾼이 다시 고개를 넘는다", [
+			{ "call": "morning_yard" },
 		]),
-		"S0011": _ev("S0011", "S0010 뒤, 그날 밤", "북쪽 어귀", "밤", "밤하늘을 올려다본다", "-", "-", [
-			{ "call": "night_sky" },
+		"S0011": _ev("S0011", "노인 뒤, 그날 밤", "남원 북쪽 길", "밤", "걷는다(긴 강제 컷신 없음) — 카메라가 조금 들리고 두 빛", "-",
+			"기록책 마지막 줄 “내가 본 것은 여기까지다.” → CASE_NAMWON_COMPLETE", [
+			{ "call": "final_night" },
 		]),
 	}
