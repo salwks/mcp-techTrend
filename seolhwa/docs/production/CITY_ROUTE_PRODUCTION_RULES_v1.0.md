@@ -87,6 +87,7 @@
 | C57 | 식생 scatter | 고도를 `hg/K + 60`으로 되돌린다(**남원 K 0.30·기준 고도 60 고정**). 수종 고도대는 지리산 서부 기준이고 기후·권역 입력이 없다. 그래서 다른 일곱 권역(K 0.25~0.5, 기준 0m)에도 남원 식생이 깔린다 | `kit/nature/scatter.gd:519` | N |
 | C58 | 지형 색 | 풀·숲·논 색이 shader 상수로 전국 같다(C_GRASS #9da66b 등) | `shaders/region_terrain.gdshader` | G |
 | C59 | 권역 지형 빌드 경로 | 일곱 권역은 설정 파일(`tools/region/regions/<id>.json`)로 `build_region.main()`을 돈다. 남원만 전용 `main()` + `places.py · profiles.PROFILES · landuse.AREA_ID · hydro.KNOWN · namwon_widths` 경로를 쓰고, `qa.py`·`render.py`에도 남원 분기가 있다 | `tools/region/build.py:635`, `qa.py:10` | N |
+| C60 | 이벤트 군중 | **공통 규칙 확정 / 최소 구현 필요.** 설화용 일시 군중은 `EventCrowd` 프리셋으로 배치: generic character bank 재사용 → 지정 구역 안 배치 → 단순 행동(idle/talk/watch/walk, 잔치는 sit/stand/serve) → density(low 6~10 / medium 10~18 / high 18~30, 1024×768 실행 기준 시작값 — 성능 시험 뒤 확정) → seed로 같은 배치 재현 → 사건 flag로 생성/제거 → 카메라 밖·먼 거리는 줄이거나 멈춤. 핵심 이야기 인물은 넣지 않는다(story actor). **만들지 않는 것**: 개별 군중 AI·생활 스케줄·길찾기·충돌 회피·감정 전파·관중 반응·대규모 navigation. 목적은 "군중 시뮬레이션"이 아니라 "사건 장면 채우기" | (계획) 춘향 자산·좌표 배치 때 구현 | P |
 
 **공통 층 집계: 59개 = G 43 · N 11 · P 5** (표의 상태 칸을 세어 확인).
 - **N(남원에만 있어 공통 승격 필요)**: C17 · C27 · C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
@@ -116,7 +117,7 @@
 | 사건 인물·물체·트리거·소품 | `<id>_data.gd` `actors/objects/triggers/props`(`when`, phase별 `at`) | 남원 오누이·포수·이웃 아낙 |
 | 사건 무대 건물 | `placement_story_<case>.json`. 사건과 관계없이 늘 읽힌다(`placement_loader.gd:49`) | 남원 외딴집·방앗간 10개 · 강릉 식생 비우기 2개 |
 | 카메라 | `case.talk_camera`, 단계 `{camera:{…}}`, `cutscene` | 남원 7A pitch 34·거리 17·fov 36 |
-| 임시 군중 | 전용 체계가 없다. `when`으로 감싼 사건 actor로 만든다 | 평양 `crowd_a/b` · 강릉 `town_crowd_*` |
+| 임시 군중 | 지금은 `when`으로 감싼 사건 actor(평양 `crowd_a/b` · 강릉 `town_crowd_*`). 앞으로는 `EventCrowd` 프리셋(C60) | 평양 `crowd_a/b` · 강릉 `town_crowd_*` |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | 남원 `u_moon` 0, 강릉 `snow_line` |
 | 이동 잠금 | `case_fn.travel_lock()` | 남원 밤 |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | 남원만 |
@@ -258,7 +259,7 @@
 | 첫 사건 고을 막음 | (제안) `case.gate {space, until_var}` | N(`gate_why` 하드코딩) | F-1 |
 | 대화 카메라 | `case.talk_camera {pitch, distance, fov}`. 인물별 덮어쓰기는 (제안) `actors[].talk_camera` | 사건 단위만 | 공통 기본값을 먼저 정한다(F-6) |
 | 카메라 샷 | 단계 `{camera:{pitch, distance, fov, focus}}`, `cutscene`, `rig.shot` | G | 끝나면 `camera(null)`. 사용자 틸트 설정 복원 |
-| 임시 군중 | `when`으로 감싼 actors(장면 전용 id 접두사 `crowd_`) | G(관례) | 성능 확인 뒤 인원 결정. 사건 id 접두사 규칙(F-10) |
+| 임시 군중 | **축제·잔치·관아 행사처럼 일시적으로 사람이 늘어나는 장면은 공용 이벤트 군중 프리셋(`EventCrowd`, C60)을 쓴다. 도시의 상시 인구 시스템을 새로 만들지 않는다.** 사건 데이터에 `crowds: [{ preset, area, density, roles, seed, when }]`로 선언 | P(최소 구현 필요) | 핵심 인물은 story actor. 인원은 성능 시험 뒤. 기존 `crowd_` actor 관례는 옮길 때까지 유지 |
 | set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` | 부분적(placement는 when 없이 늘 읽힘) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | G | `on_load`·`_quit`에서 되돌린다(남원 달 안전장치처럼) |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | G(남원만 씀) | 같은 id 체계(`assets/audio`) |
@@ -300,6 +301,7 @@
 | F-14 | 노정 `no_station` 같은 설화 예외를 ROUTE_PROFILE로(`make_stations.NO_STATION_SPACES`) | S | C-4 |
 | F-15 | 권역 색(하루 빛 tint) — 결정 뒤에만 | M | B-2 palette |
 | F-16 | (나중 선택지) 범용 placer | XL | C-1 잠정 결정 |
+| F-17 | `EventCrowd` 최소 구현(C60) — generic bank 선택·구역 배치·단순 행동·density·seed·flag 표시/숨김·먼 거리 줄이기. **춘향 자산·좌표 배치 때** 만든다(남원 오누이용으로 미리 만들지 않음) | M | C60, E절 |
 
 **상위 다섯**: F-1(S) · F-2(M) · F-3(L) · F-4(M) · F-5(M). F-3a(M)는 눈에 보이는 문제라 F-3과 함께 하기를 권한다.
 
@@ -318,7 +320,8 @@
 | 마지막 밤 달 감추기(`u_moon`) | `namwon_case`, `region_main.set_moon` | 장치는 공통, 사용은 남원 |
 | `FIRST_RECORD` 네 줄, `tale_sky`, 결말 A/B/C | `namwon_case.gd`, `tale_sky.gd` | 사건 내용 |
 | 새 게임 시작 자리 `NAMWON_START`·9.5시, `START_REGION` | `title_menu.gd:20–21`, `discovery.gd:24` | 게임 시작은 남원 하나다(설계) |
-| 춘향 단오(그네·색천·씨름판·군중)·추수(곡식가마·볏짚·감) 차림 | (계획) `story/namwon_chunhyang/` | 계절 시스템 대신 사건 차림(C31). **아직 코드 없음** |
+| 춘향 단오(그네·색천·씨름판)·추수(곡식가마·볏짚·감) 차림 | (계획) `story/namwon_chunhyang/` | 계절 시스템 대신 사건 차림(C31). **아직 코드 없음** |
+| 춘향 군중 | PART I 단오 → `EventCrowd: dano_market`(density high, idle/talk/walk/watch, 광한루·장터 둘레) · PART II 생일잔치 → `EventCrowd: byeon_banquet`(density medium, sit/stand/serve/watch, 관아 마당·잔치상 둘레) | 프리셋은 공통(C60), 구역·밀도·seed는 춘향 데이터. 춘향·몽룡·변학도 등은 story actor |
 | 광한루·오작교 키트, 지도 광한루 못 | `kit/landmark/gwanghallu*`, `region_map.gd:185` | 지역 층 랜드마크(설화 층 아님). 남원 profile에 둔다 |
 | 범·떡 기본값(`rule_label` "범의 버릇", `combat_bait_item` 떡, 전투 HUD 떡) | `story_director.gd:398, 898`, `story_ui.gd:45` | **주의**: 남원 값이 공통 기본값으로 새어 있다. 다른 사건은 자기 값을 넣어야 한다(F-5 검사기 항목) |
 
@@ -328,7 +331,7 @@
 
 1. **C-1 잠정 결정 셋**: profile hook 방향, 남원 형식 맞추기, 말 타기 거리.
 2. **대화 카메라를 모든 사건의 기본으로 할지**(F-6), 기본값을 남원 38/13.5/38로 할지.
-3. **남원 밤 동안 남원 안 가 본 곳끼리 역마를 막을지**(ux 보고서 정할 것 1).
+3. ~~남원 밤 역마~~ → **이미 결정·구현**: dusk_prep~아침 동안 역마·깃발·말·배·포털 등 9경로 잠금, 걷기는 허용(`namwon_case.travel_lock`, `fast_travel.lock_why`).
 4. **강·바닷길 노정 마을의 깃발(한강 3·대동강 2·남해 1)을 뺄지**, 깃발 충돌체를 둘지.
 5. **권역 색 tint를 둘지**(F-15). 지금은 하루 빛이 전국 하나다.
-6. **임시 군중을 사건 actor 관례로 둘지, 전용 `crowds[]` 체계를 만들지.**
+6. ~~임시 군중 체계~~ → **확정(2026-10-11)**: 군중 "시스템"은 만들지 않고 공용 `EventCrowd` 프리셋만(C60, F-17).
