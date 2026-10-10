@@ -316,6 +316,9 @@ func _run() -> void:
 			expect(d.case_fn.c_ready(), "C 준비(떡 + 먹이 버릇 + 불)")
 	expect(not d.S.is_flag("kids_in_tree"), "플레이어가 아이들을 나무로 올려 보내지 않는다")
 	snapshot("night prep")
+	# 결정(이동) — 남원 밤: 준비부터 먼 길은 막히고 걷기는 그대로(방법별 확인은 travel:namwon-night)
+	expect(String(d.travel_lock()) == "아이들을 두고 멀리 떠날 수 없다" and load("res://scripts/region/fast_travel.gd").lock_why(d.main) != "" and not d.blocks_move(),
+		"남원 밤 준비 — 먼 길 막음 「%s」 · 걷기는 자유" % d.travel_lock())
 	await shot("night_yard")
 	# ---- §34 hide_spot 기다리기 → S0007 밤의 문 → 시간 벌기 → 나무 → 동아줄 ----
 	prefer = ["기다린다.", MORNING_PICK.get(branch, "나도 모르겠소")]   # 밤 전체가 이 한 번의 go 안에서 돈다(아침의 대답까지)
@@ -683,6 +686,7 @@ func check_v32_rope() -> void:
 	expect(c.final_lights_seen and c.final_cut_t < 1.0, "§68 마지막 밤 — 걷는 중 두 빛(긴 강제 컷신 없음, 거둔 시간 %.1f초)" % c.final_cut_t)
 	expect(String(c.summary()[-1]) == c.FINAL_LINE and String(S.notes[-1]) == c.FINAL_LINE, "§68 기록책 마지막 줄 “%s”" % c.FINAL_LINE)
 	expect(S.phase == "done" and bool(S.vars.get("CASE_NAMWON_COMPLETE", false)), "CASE_NAMWON_COMPLETE")
+	expect(String(d.travel_lock()) == "", "아침 뒤 먼 길 막음이 풀렸다")
 	# 옛 길이 남아 있지 않다
 	for m in ["climax", "rest", "night_fall", "mother_flashback", "morning_village", "night_sky", "resolve", "yard_fight", "fight_loop", "lure", "kids_night"]:
 		expect(not c.has_method(m), "옛 함수 없음 " + m)
