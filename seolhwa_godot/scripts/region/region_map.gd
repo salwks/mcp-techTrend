@@ -177,6 +177,7 @@ func _collect_items(loader) -> void:
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
 		if not (d is Dictionary): continue
 		for it in d.get("items", []):
+			if it.has("when"): continue   # 조건부 차림(F-11)은 지도에 그리지 않는다
 			var kit := String(it.get("kit", ""))
 			var params: Dictionary = it.get("params", {}) if it.get("params") is Dictionary else {}
 			var c := Vector2(float(it.x), float(it.z)); var ry := float(it.get("ry", 0.0))

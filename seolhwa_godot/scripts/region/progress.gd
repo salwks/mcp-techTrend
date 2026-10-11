@@ -20,6 +20,8 @@ extends RefCounted
 const DEFAULT_PATH := "user://progress.json"
 static var path := DEFAULT_PATH
 static var _d = null
+# 바뀜 번호: 변수·사건 진행·파일이 바뀔 때마다 1씩 — 배치 조건(placement_gate.gd)이 매 프레임 이 수만 비교한다
+static var version := 0
 
 static func data() -> Dictionary:
 	if _d == null:
@@ -40,6 +42,7 @@ static func data() -> Dictionary:
 static func use_path(p: String) -> void:
 	path = p if p != "" else DEFAULT_PATH
 	_d = null
+	version += 1
 
 static func save() -> void:
 	var d := data()
@@ -67,6 +70,7 @@ static func get_var(k: String, dflt = null):
 
 static func set_var(k: String, v) -> void:
 	data().vars[k] = v
+	version += 1
 
 static func vars() -> Dictionary:
 	return data().vars
@@ -79,6 +83,7 @@ static func case_state(id: String) -> Dictionary:
 static func save_case(id: String, st: Dictionary, v: Dictionary) -> void:
 	data().cases[id] = st
 	data().vars.merge(v, true)
+	version += 1
 	save()
 	# 사건이 나아갔다(국면·단서·버릇 수가 바뀜) — 자동 기록 표시
 	var sig := "%s|%d|%d|%s" % [st.get("phase", ""), (st.get("clues", []) as Array).size(), (st.get("rules", []) as Array).size(),
@@ -100,10 +105,12 @@ static func has_save() -> bool:
 
 static func reset_all() -> void:
 	_d = { "version": 2, "routes_done": {}, "vars": {}, "cases": {}, "onboard": {}, "known": {}, "heard": [] }
+	version += 1
 	save()
 
 static func clear_case(id: String) -> void:
 	data().cases.erase(id)
+	version += 1
 	save()
 
 # ---- 처음 한 번 안내(ONBOARD_*)·놀이 시간 — vars와 따로 둔다(story_state가 vars를 통째로 덮어 저장하므로) ----
@@ -195,6 +202,7 @@ static func load_slot(n: int) -> bool:
 		f.close()
 		_d = null
 		data()
+		version += 1
 		_case_sig.clear()
 		if FileAccess.file_exists(thumb_path(n)): DirAccess.copy_absolute(ProjectSettings.globalize_path(thumb_path(n)), ProjectSettings.globalize_path(thumb_path(0)))
 	print("PROGRESS load_slot ", n)

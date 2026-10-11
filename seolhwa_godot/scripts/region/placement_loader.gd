@@ -13,10 +13,17 @@
 #     또는 부모 항목의 "states": {조각 tag: 상태}. dy: 지형(터 고르기 뒤) 위로 더 올림(m) — 건물 마루 위 소품.
 #   - walk(걷기 면): build() 결과의 walk 배열(§8 형식) — 없으면 돌다리·섶다리·징검다리는 params로 만든다.
 #     다리 y가 null이면 둑 높이(다리 양 끝 지형 평균), 징검다리·나루배·빨래터는 가까운 하천 수면.
+#   - when(F-11, 조건부 배치): 이야기 조건식(ph·f·w·v·active·fn) — 파일 머리 "case"(또는 항목 "case")의 사건 상태로 본다(placement_gate.gd).
+#     조건이 거짓이면 장면에서 떼고 충돌체를 뺀다(지은 노드는 남겨 두었다가 참이 되면 다시 붙인다). 조건은 사건·변수가 바뀔 때만 다시 본다.
+#     when 항목은 땅을 바꾸지 않는다 — 터 고르기·마당 흙 없음. 식생 비우기(clear_veg)만 늘 한다(나타날 때 덤불을 뚫지 않게).
+#     늘 있는 시설(옥 등)에는 when을 달지 않는다 — 사건 때만 바뀌는 차림(단오 색천·씨름판·추수 물자·잔치 차일)에만.
+#   - placeholder {kit, params}: 키트가 그 kind를 아직 못 지으면(키트 static has_kind(kind)가 false거나 키트가 없으면) 대신 지을 기존 키트.
+#   파일의 "crowds"(EventCrowd, C60)는 읽어 crowds에 모아 두기만 한다 — 세우는 것은 scripts/story/event_crowd.gd.
 extends RefCounted
 
 const KitCache := preload("res://scripts/region/kit_cache.gd")
 const Jobs := preload("res://scripts/region/jobs.gd")
+const PlacementGate := preload("res://scripts/region/placement_gate.gd")
 
 const FLAT_MARGIN := 2.0
 const FLAT_EDGE := 5.0
@@ -31,6 +38,9 @@ var world   # RegionWorld
 var dirs: Array = []
 var parallel := true
 var stats := {}
+var gate = PlacementGate.new()   # when 조건(F-11) — region_main이 gate.main을 건다
+var crowds: Array = []           # 파일들의 crowds 선언(+ case · _file)
+var gated := {}                  # 놓인 조건부 항목 id → 정적 물체 항목(시험·촬영이 본다)
 var _scripts := {}
 var _mtimes := {}
 
@@ -82,20 +92,38 @@ func reload() -> void:
 	if world.get("props") != null: world.props.clear_nodes()
 	world.remove_tagged(TAG)
 	world.reset_edits()
+	gate.clear()
+	gated.clear()
 	load_all()
 
 func load_all() -> void:
 	var t0 := Time.get_ticks_msec()
 	_mtimes = {}
 	var raw := []
+	crowds = []
 	for f in files():
 		_mtimes[f] = FileAccess.get_modified_time(f)
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
 		if not (d is Dictionary) or not d.has("items"):
 			push_warning("배치 파일 형식 오류: " + f); continue
+		var fcase := String(d.get("case", ""))
 		for it in d.items:
-			if it is Dictionary and it.has("kit"): raw.append(it)
-	stats = { files = _mtimes.size(), items = raw.size(), placed = 0, builds = 0, builds_now = 0, flatten = 0, walks = 0, missing = 0, yards = 0 }
+			if not (it is Dictionary and it.has("kit")): continue
+			var item: Dictionary = it
+			if item.has("when") and not item.has("case"):
+				item = item.duplicate(); item["case"] = fcase
+			raw.append(_resolve_placeholder(item))
+		for c in d.get("crowds", []):
+			if not (c is Dictionary) or not c.has("id"): continue
+			var cc: Dictionary = c.duplicate(true)
+			if not cc.has("case"): cc["case"] = fcase
+			if not cc.has("_anchors"): cc["_anchors"] = d.get("anchors", {})   # 구경(watch) 앵커 이름 → 자리
+			cc["_file"] = f
+			crowds.append(cc)
+	var gated := 0
+	for it in raw:
+		if _when_of(it) != "": gated += 1
+	stats = { files = _mtimes.size(), items = raw.size(), placed = 0, builds = 0, builds_now = 0, flatten = 0, walks = 0, missing = 0, yards = 0, gated = gated }
 	if raw.is_empty():
 		world.commit_terrain()
 		return
@@ -157,6 +185,7 @@ func load_all() -> void:
 		if r.clear_veg:
 			var m: float = (FLAT_MARGIN + world.lcell) if r.flatten and not r.get("is_piece", false) else VEG_MARGIN
 			world.add_veg_exclusion(c, r.ry, fp * 0.5 + Vector2(m, m))
+		if r.when != "": continue   # 조건부 항목: 마당 흙을 칠하지 않는다(늘 남는 땅 변화가 되므로)
 		if composite.has(r):
 			# 집 묶음·관아·향교·절은 담 안 마당 전체가 흙
 			for kk in YARD_COMPOSITES:
@@ -191,7 +220,7 @@ func load_all() -> void:
 	for t in world.tiles: request_tile(t)
 	stats.ms = Time.get_ticks_msec() - t0
 	if world.get("decals") != null: world.decals.reload_data()   # 데칼은 터 고르기 뒤 높이로
-	print("PLACEMENT files=%d items=%d pieces=%d built_now=%d flatten=%d yards=%d walks=%d missing=%d ms=%d (나머지는 타일이 가까워질 때 백그라운드로 짓는다)" % [stats.files, stats.items, place.size(), stats.builds_now, stats.flatten, stats.yards, stats.walks, stats.missing, stats.ms])
+	print("PLACEMENT files=%d items=%d pieces=%d built_now=%d flatten=%d yards=%d walks=%d missing=%d gated=%d crowds=%d ms=%d (나머지는 타일이 가까워질 때 백그라운드로 짓는다)" % [stats.files, stats.items, place.size(), stats.builds_now, stats.flatten, stats.yards, stats.walks, stats.missing, stats.gated, crowds.size(), stats.ms])
 
 # ---------------------------------------------------------------------------
 # 지연 짓기: 타일이 생기면(중경 포함) 그 타일 항목의 키트를 작업 스레드에서 짓고, 메인 스레드는 프레임당 조금씩 놓는다
@@ -303,6 +332,12 @@ func _place_one(r: Dictionary) -> void:
 	node.name = String(r.id) if r.id != "" else node.name
 	var entry = world.add_static(node, r.xf, info, TAG)
 	if world.get("props") != null and entry is Dictionary: world.props.register(String(r.id), node, entry, info, r.get("state"))
+	if r.when != "" and entry is Dictionary:
+		# 조건부(F-11): 지금 값으로 곧바로 켜고 끈다(같은 프레임 — 꺼진 항목이 한 프레임도 그려지지 않는다)
+		var e: Dictionary = entry
+		gated[String(r.id)] = e
+		var wd = world
+		gate.add(String(r.id), r.when, r.case, func(on: bool) -> void: wd.set_static_enabled(e, on))
 	if not r.walk_done:
 		for w in _walks_for(r, info): world.add_walk(r.xf, w); stats.walks += 1
 	if info.get("water") is Dictionary and not _has(_script(r.kit), "outline"):
@@ -377,10 +412,31 @@ func _catalog_fp(kit: String, params: Dictionary) -> Vector2:
 func _rec(it: Dictionary) -> Dictionary:
 	return { id = String(it.get("id", "")), kit = String(it.kit), params = it.get("params", {}) if it.get("params") is Dictionary else {},
 		x = float(it.get("x", 0.0)), z = float(it.get("z", 0.0)), ry = float(it.get("ry", 0.0)),
-		y = (float(it.y) if it.get("y") != null else null), flatten = bool(it.get("flatten", false)),
+		y = (float(it.y) if it.get("y") != null else null), flatten = bool(it.get("flatten", false)) and _when_of(it) == "",
 		clear_veg = bool(it.get("clear_veg", true)), fp = world.to_v2(it.get("footprint", Vector2.ZERO)), flat_y = NAN,
 		yard = bool(it.get("yard", true)), state = it.get("state"), states = it.get("states", {}) if it.get("states") is Dictionary else {},
-		dy = float(it.get("dy", 0.0)) }
+		dy = float(it.get("dy", 0.0)), when = _when_of(it), case = String(it.get("case", "")) }
+
+static func _when_of(it: Dictionary) -> String:
+	var w := PlacementGate._norm(it.get("when"))
+	return "" if w == "true" else w
+
+# placeholder: 키트가 그 kind를 아직 못 지으면 대신 지을 기존 키트(초안 차림 — 키트 static has_kind(kind))
+func _resolve_placeholder(it: Dictionary) -> Dictionary:
+	if not (it.get("placeholder") is Dictionary): return it
+	var path := "res://kit/%s.gd" % String(it.kit)
+	var ok := FileAccess.file_exists(path)
+	if ok:
+		var s := _script(String(it.kit))
+		if s == null: ok = false
+		elif _has(s, "has_kind"):
+			var P: Dictionary = it.get("params", {}) if it.get("params") is Dictionary else {}
+			ok = bool(s.has_kind(String(P.get("kind", ""))))
+	if ok: return it
+	var o := it.duplicate()
+	o.kit = String(it.placeholder.get("kit", it.kit))
+	o.params = it.placeholder.get("params", {})
+	return o
 
 # 배치형 footprint가 없으면 조각 자리로 어림(+8m)
 func _fp_from_pieces(rec: Dictionary, ps: Array) -> void:
@@ -398,7 +454,8 @@ func _piece(parent: Dictionary, p: Dictionary) -> Dictionary:
 		x = parent.x + w.x, z = parent.z + w.z, ry = parent.ry + float(p.get("ry", 0.0)), y = null,
 		flatten = false, clear_veg = false, fp = Vector2.ZERO, flat_y = NAN, is_piece = true, parent = parent, py = p.get("y"), yard = parent.get("yard", true),
 		lx = float(p.get("x", 0.0)), lz = float(p.get("z", 0.0)),
-		state = p.get("state", (parent.get("states", {}) as Dictionary).get(String(p.get("tag", "")))), dy = float(p.get("dy", 0.0)) }
+		state = p.get("state", (parent.get("states", {}) as Dictionary).get(String(p.get("tag", "")))), dy = float(p.get("dy", 0.0)),
+		when = String(parent.get("when", "")), case = String(parent.get("case", "")) }
 	return r
 
 func _y_for(r: Dictionary, info: Dictionary) -> float:

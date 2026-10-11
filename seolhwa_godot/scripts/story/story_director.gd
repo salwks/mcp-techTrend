@@ -208,7 +208,7 @@ func _setup() -> void:
 	sensing = load("res://scripts/story/sensing.gd").new()
 	add_child(sensing)
 	sensing.setup(self)
-	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest"))
+	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest") or args.has("preptest") or args.has("prepshot"))
 	if args.has("storytest"):
 		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
 		add_child(test)
@@ -700,6 +700,7 @@ func _update_actors(dt: float) -> void:
 # ---------------------------------------------------------------------------
 func _refresh() -> void:
 	_dirty = false
+	if main.get("placement") != null: main.placement.gate.mark()   # 배치·군중 when(F-11)도 다시 본다
 	for id in actors:
 		var a: Dictionary = actors[id]
 		var on: bool = not a.spec.get("_hidden", false) and runner.cond(a.spec.get("when", true))

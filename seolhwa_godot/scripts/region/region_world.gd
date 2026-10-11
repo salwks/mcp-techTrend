@@ -1673,17 +1673,45 @@ func remove_tagged(tag: String) -> void:
 	_static_grid.clear(); colliders.clear()
 	for t in _statics:
 		for e in _statics[t]:
+			if e.get("off", false): continue   # 조건(when)으로 꺼진 항목은 충돌체도 없다
 			for c in e.colliders:
 				_grid_insert(_static_grid, c); colliders.append(c)
 	for c in _dyn_cols:
 		_grid_insert(_static_grid, c); colliders.append(c)
+
+# 조건부 배치(F-11 — placement_gate.gd): 정적 물체 하나를 켜고 끈다. 끄면 장면에서 떼고 충돌체를 빼며, 켜면 타일 상태(lod)대로 다시 붙인다.
+# 노드·짓기 결과는 그대로 두므로 다시 켤 때 새로 짓지 않는다
+func set_static_enabled(e: Dictionary, on: bool) -> void:
+	var off := not on
+	if bool(e.get("off", false)) == off: return
+	e.off = off
+	if off:
+		_attach_one(e, 2)
+		for c in e.colliders:
+			_grid_remove(_static_grid, c); colliders.erase(c)
+	else:
+		for c in e.colliders:
+			_grid_insert(_static_grid, c); colliders.append(c)
+		var t: Vector2i = e.get("tile", tile_of(e.node.transform.origin.x, e.node.transform.origin.z))
+		if tiles.has(t): _attach_one(e, tiles[t].lod)
+
+static func _grid_remove(g: Dictionary, c: Dictionary) -> void:
+	var lo: Vector2; var hi: Vector2
+	if c.get("type", "circle") == "circle":
+		lo = Vector2(c.x - c.r, c.z - c.r); hi = Vector2(c.x + c.r, c.z + c.r)
+	else:
+		lo = Vector2(c.minX, c.minZ); hi = Vector2(c.maxX, c.maxZ)
+	for j in range(floori(lo.y / GRID), floori(hi.y / GRID) + 1):
+		for i in range(floori(lo.x / GRID), floori(hi.x / GRID) + 1):
+			var k := Vector2i(i, j)
+			if g.has(k): (g[k] as Array).erase(c)
 
 func _attach_statics(t: Vector2i, lod: int) -> void:
 	for e in _statics.get(t, []): _attach_one(e, lod)
 
 # lod 0: 근경(전부), 1: 중경(큰 것만), 2: 없음
 func _attach_one(e: Dictionary, lod: int) -> void:
-	var on: bool = lod == 0 or (lod == 1 and e.big)
+	var on: bool = (lod == 0 or (lod == 1 and e.big)) and not e.get("off", false)
 	if on == e.attached: return
 	e.attached = on
 	if on:

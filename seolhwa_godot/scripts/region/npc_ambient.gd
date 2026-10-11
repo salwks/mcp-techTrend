@@ -178,6 +178,7 @@ func _build(input: Dictionary) -> void:
 			if al is Dictionary: lines.append({ pts = al.get("points", []), w = float(al.get("width_m", 3.0)), cls = "마을길", alley = true })
 		for it in d.get("items", []):
 			if not (it is Dictionary) or not it.has("kit"): continue
+			if it.has("when"): continue   # 조건부 차림(F-11)은 늘 있지 않다 — 고을 사람 자리로 쓰지 않는다
 			var kit := String(it.kit)
 			var mode: String = ANCHOR.get(kit, "")
 			if mode == "":

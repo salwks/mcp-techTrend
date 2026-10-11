@@ -44,6 +44,7 @@ func setup(loader) -> void:
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
 		if not (d is Dictionary): continue
 		for it in d.get("items", []):
+			if it.has("when"): continue   # 조건부 차림(F-11)
 			var kit := String(it.get("kit", ""))
 			# 항목에 title이 있으면 그것(대표 도시 배치: 같은 키트라도 고을마다 이름이 다름), 없으면 키트 이름표
 			var nm := String(it.get("title", "")) if it.get("title") is String else ""
