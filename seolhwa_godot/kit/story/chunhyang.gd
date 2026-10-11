@@ -9,12 +9,18 @@
 #       닫힌 문·살문은 충돌체가 있고 열면 빠진다. 예: world.set_prop_state("ti_jail/gate", "OPEN")
 #     앵커: cell(가운데 칸 안) · bars_out(살 앞 마당) · gate_in · gate_out · lamp(문 안 등롱 자리)
 #     params: r(담 반지름, 기본 5.0) · cell_w(옥사 너비, 기본 5.0) · cell_d(옥사 깊이, 기본 3.4) · seed
+#
+#   kind "swing" — 단오 그네(광한루원 북서). 기둥 둘(x ±span/2) · 가로대(높이 h, x 방향) · 색천. 줄 둘과 발판은 부분 "seat" —
+#     사건 스크립트가 가로대(앵커 pivot)를 축으로 x축 둘레로 돌려 흔든다(남북으로 오간다 — 동쪽에서 보는 1A·1B에 옆으로 보인다).
+#     앵커: pivot(가로대 가운데) · seat(발판 위). params: h(기본 8.5) · span(기본 6.0) · cloth(색천, 기본 true)
+#   kind "fan" — 땅에 떨어진 접부채(방자, §5). 반쯤 펼친 부챗살 + 한지. params: r(기본 0.32)
+#   kind "ssireum_ring" — 씨름판: 모래 원판 + 짚 새끼 테. params: r(기본 3.5)
 extends RefCounted
 
 const C := preload("res://kit/village/_common.gd")
 const SC := preload("res://kit/scenario/_sc.gd")
 
-const KINDS := ["ok"]
+const KINDS := ["ok", "swing", "ssireum_ring", "fan"]
 const BAR := [0x5a4330, 0x3c2c1e]        # 옥 나무살 — 짙은 통나무
 const BAR_RAIL := [0x6b5038, 0x4a3726]
 const STRAW_MAT := [0xc9b27a, 0x9c8656]
@@ -28,6 +34,9 @@ static func build(params: Dictionary) -> Dictionary:
 	var kind := String(params.get("kind", ""))
 	match kind:
 		"ok": return _ok(params)
+		"swing": return _swing(params)
+		"ssireum_ring": return _ssireum(params)
+		"fan": return _fan(params)
 	push_warning("story/chunhyang: 아직 없는 kind " + kind)
 	var m := C.M.new(1)
 	m.add("p", "flat", C.P(Kit.box(0.3, 0.3, 0.3, 0, 0.15, 0), 0x777777), 0.02)
@@ -173,3 +182,71 @@ static func _ok(P: Dictionary) -> Dictionary:
 	s.anchor("lamp", Vector3(r - 1.0, 0, 2.1))
 	s.circle(-hx + 0.6, z_front + 0.9, 0.3)
 	return s.result("옥", Vector2(r * 2 + 1.0, r * 2 + 0.2))
+
+# ---------------------------------------------------------------------------
+# 단오 그네
+# ---------------------------------------------------------------------------
+static func _swing(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3401)))
+	var R := s.rng
+	var h := float(P.get("h", 8.5))
+	var span := float(P.get("span", 6.0))
+	var hx := span / 2
+	for sx in [-1, 1]:
+		var x: float = sx * hx
+		s.add("frame", "wood", SC.pa(Kit.cyl(0.13, 0.17, h + 0.25, 7, x, (h + 0.25) / 2, 0), SC.WOOD, 0.04, R), 0.025)
+		# 버팀 다리(남북으로 벌림)
+		for sz in [-1, 1]:
+			var g := Kit.cyl(0.06, 0.08, h * 0.42, 6, 0, 0, 0)
+			s.add("frame", "wood", SC.pa(Kit.xf(g, x, h * 0.19, sz * 0.55, sz * -0.3, 0, 0), SC.WOOD, 0.04, R), 0.02)
+		s.circle(x, 0, 0.25)
+	s.add("frame", "wood", SC.pa(Kit.cyl(0.11, 0.11, span + 0.7, 7, 0, h, 0, 0, 0, PI / 2), SC.WOOD, 0.03, R), 0.025)
+	if bool(P.get("cloth", true)):
+		var cols := [[0xc0392b, 0x8e2a20], [0xe8c547, 0xb8962e], [0x2f6fa8, 0x22507a], [0x3f8a4f, 0x2c6238], [0xefe9da, 0xc9c0a8]]
+		for i in 9:
+			var x := -hx + 0.5 + (span - 1.0) * i / 8.0
+			if absf(x) < 0.7: continue
+			s.add("cloth", "flat", SC.pa(Kit.box(0.22, 0.9, 0.02, x, h - 0.5, 0.0), cols[i % cols.size()], 0.05, R), 0.01)
+	# 줄 둘 + 발판(부분 seat — 흔들기)
+	var seat_y := 0.9
+	var rope_l := h - seat_y
+	for sx in [-1, 1]:
+		s.add("seat", "flat", SC.pa(Kit.cyl(0.045, 0.045, rope_l, 5, sx * 0.32, seat_y + rope_l / 2, 0), [0x8c6a3e, 0x6a4e2c], 0.05, R), 0.02)
+	s.add("seat", "wood", SC.pa(Kit.box(0.8, 0.06, 0.26, 0, seat_y, 0), SC.WOOD_L, 0.04, R), 0.015)
+	s.anchor("pivot", Vector3(0, h, 0))
+	s.anchor("seat", Vector3(0, seat_y + 0.03, 0))
+	return s.result("그네", Vector2(span + 1.0, 2.4), false)
+
+# ---------------------------------------------------------------------------
+# 씨름판(모래 원판 + 새끼 테)
+# ---------------------------------------------------------------------------
+static func _ssireum(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3402)))
+	var R := s.rng
+	var r := float(P.get("r", 3.5))
+	s.add("ring", "flat", SC.pa(Kit.cyl(r, r + 0.15, 0.06, 28, 0, 0.03, 0), [0xd9c79c, 0xc2ad80], 0.04, R), 0.0)
+	var segs := []
+	var n := 30
+	for i in n:
+		var a := TAU * (i + 0.5) / n
+		segs.append(Kit.box(TAU * r / n * 1.05, 0.1, 0.12, cos(a) * r, 0.09, sin(a) * r, -a + PI / 2))
+	s.add("ring", "flat", SC.pa(Kit.merge(segs), C.STRAW, 0.06, R), 0.012)
+	return s.result("씨름판", Vector2(r * 2 + 0.4, r * 2 + 0.4), false)
+
+# ---------------------------------------------------------------------------
+# 접부채(땅에 펼쳐진 채)
+# ---------------------------------------------------------------------------
+static func _fan(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3403)))
+	var R := s.rng
+	var r := float(P.get("r", 0.32))
+	var paper := []; var ribs := []
+	var n := 9
+	for i in n:
+		var a := -0.95 + 1.9 * i / (n - 1)
+		var cx := sin(a) * r * 0.62; var cz := -cos(a) * r * 0.62
+		paper.append(Kit.box(r * 0.2, 0.008, r * 0.62, cx, 0.012, cz, -a))
+		ribs.append(Kit.box(0.012, 0.014, r, sin(a) * r * 0.5, 0.02, -cos(a) * r * 0.5, -a))
+	s.add("fan", "flat", SC.pa(Kit.merge(paper), [0xf0e8d2, 0xd8cdb0], 0.03, R), 0.006)
+	s.add("fan", "flat", SC.pa(Kit.merge(ribs), [0x6b4a2e, 0x4d3420], 0.03, R), 0.004)
+	return s.result("부채", Vector2(r * 2, r), false)
