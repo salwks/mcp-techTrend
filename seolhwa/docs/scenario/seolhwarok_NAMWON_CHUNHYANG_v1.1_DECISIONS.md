@@ -78,3 +78,10 @@
 - 예전 고유 인물의 앉은 자세는 그대로 — generic·새 인물만 공용 sit. 앉는 장면이 중요한 곳에 다시 나오면 그때 굽는다.
 - 변학도 어사출두: 제자리 `cower`. 달아나기·숨기 동작 없음(II-B).
 - 범위: PART II-A(재방문 → 행차 → 잡역 → 점고 → 명령서 → 수청 → 곤장 → 투옥 → 옥의 첫 밤 §30·§31)까지. 술·쌀·상소, 몽룡의 귀환 이후는 II-B.
+
+## 10. "증거 조합 퍼즐 없음"의 뜻 (2026-10-11, 사용자 — 게임플레이 구조 1차 §11)
+- 시나리오 v1.1 "증거 조합 퍼즐 — 없음"은 지우거나 뒤집지 않는다.
+- 없는 것: 변학도를 무너뜨리거나 어사출두를 일으키려고 증거를 모아 조합하는 퍼즐 · 범인을 밝히는 추리 · 플레이어 기록이 결정적 증거가 되는 구조.
+- 있는 것: ACT 13 관아 일(술·쌀·상소)을 하며 장부·물자·주민의 말을 보고·이해하고·처리하는 문제해결 — `seolhwa_godot/scripts/story/problems.gd`의 Activity/Problem. 플레이어는 처음부터 무엇이 부당한지 안다. 문제는 그 안에서 무엇을 보았고 어떻게 행동했는가다.
+- 결과는 구체적 행동 깃발(사건 namespace — wine_discrepancy_seen · wine_recorded · wine_left · rice_order_seen · rice_left · rice_reasked · old_man_heard · petition_processed 등)로 남아 ACT 19 피해 복구와 마지막 춘향 반응에만 쓰인다. 어사출두·변학도 처벌·춘향 석방(FIXED_BEAT)은 Activity 결과와 무관하다.
+- 근거: `seolhwa/docs/production/SEOLHWAROK_GAMEPLAY_ARCHITECTURE_FINAL_v1.0.md` §8.
