@@ -65,6 +65,31 @@ SETS.namwon_rope = {
   story_boy: { base: 'child_boy', over: {}, anims: ['rope_up'] },
 };
 
+// ?set=namwon_chunhyang: 남원 「남원의 약속」 PART I 고유 인물(자산 문서 §1-1) → frames_story_namwon_chunhyang.json
+//   멀리서도 실루엣·색으로 읽히게(얼굴 클로즈업 없음). 변학도·몽룡 거지 차림은 PART II 준비 때.
+//   - chunhyang: 성춘향 — 노랑 저고리 · 다홍 치마 · 붉은 댕기(땋은 머리), 키 1.55
+//   - hyangdan: 향단 — 무명 저고리 · 쪽빛 치마 · 붉지 않은 댕기, 키 1.48
+//   - wolmae: 월매 — 퇴기, 쪽머리 · 옥색 비단 저고리 · 남치마
+//   - mongryong: 이몽룡(평복) — 옥색 도포 · 갓 · 수염 없음
+//   - bangja: 방자 — 짧은 저고리·잠방이 · 벙거지 · 장난스러운 볼
+SETS.namwon_chunhyang = {
+  chunhyang: { base: 'villager_f', over: { coat: '#ecc95a', skirt: '#c0392b', goreum: '#b8322a', cuff: '#7a4a8c', collar: '#7a4a8c', hair: 'braid', ribbon: '#b8322a',
+    carry: null, build: 0.88, height: 1.55, cheek: 0.3, lip: '#b0403a' },
+    anims: ['idle', 'walk', 'talk', 'sit'] },
+  hyangdan: { base: 'villager_f', over: { coat: '#efe9da', skirt: '#3f5a74', goreum: '#6d7a52', cuff: '#efe9da', collar: '#c9c0a8', hair: 'braid', ribbon: '#6d7a52',
+    carry: null, build: 0.86, height: 1.48, cheek: 0.32 },
+    anims: ['idle', 'walk', 'talk'] },
+  wolmae: { base: 'villager_f', over: { coat: '#bcd9cf', skirt: '#2f4876', goreum: '#9a3a5a', cuff: '#9a3a5a', collar: '#9a3a5a', hair: 'jjok', carry: null,
+    build: 1.0, height: 1.56, cheek: 0.2, lip: '#a03e44', wrinkles: true },
+    anims: ['idle', 'walk', 'talk'] },
+  mongryong: { base: 'villager_m', over: { top: 'durumagi', coat: '#c6ded6', pants: '#efe9dc', collar: '#8fb3a8', goreum: '#4f7484', vest: null, daenim: '#8fb3a8',
+    back: null, patch: null, hat: 'gat', stubble: false, robeLen: 100, build: 0.95, height: 1.68, cheek: 0.18, shoe: '#3a3431' },
+    anims: ['idle', 'walk', 'run', 'talk'] },
+  bangja: { base: 'villager_m', over: { coat: '#d8c38c', pants: '#e2d8bf', vest: null, collar: '#8a6e48', daenim: '#8a6e48', back: null, patch: '#bfa878',
+    hat: 'beonggeoji', hatColor: '#3a3028', stubble: false, cheek: 0.36, build: 1.0, height: 1.6, legwrap: '#ece6d6' },
+    anims: ['idle', 'walk', 'run', 'talk'] },
+};
+
 const TIGER_ANIMS = ['knock', 'sniff', 'climb_try', 'slip', ...fc.DISGUISE_ANIMS];
 
 async function toPng(cv) {
