@@ -12,6 +12,7 @@ extends Node
 const Progress := preload("res://scripts/region/progress.gd")
 const CaseRegistry := preload("res://scripts/story/case_registry.gd")
 const JournalBook := preload("res://scripts/story/journal_book.gd")
+const Rumors := preload("res://story/rumors_data.gd")
 
 var d
 var branch := "A"
@@ -255,6 +256,12 @@ func _entry_gate() -> void:
 	expect(String(CaseRegistry.choose(cands, only_nw).id) == "namwon", "오누이만 끝 → 오누이(끝난 사건, 춘향 아님)")
 	expect(String(CaseRegistry.choose(cands, only_hy).id) != "namwon_chunhyang", "한양만 → 춘향 아님")
 	expect(String(CaseRegistry.choose(cands, both).id) == "namwon_chunhyang", "둘 다 → 춘향")
+	# 귀환 이유 — 다른 고을 소문(강제 없음): 한양 책방 뒤에만, PART I 뒤에는 그치는 말
+	for r in Rumors.RUMORS:
+		if String(r.id).begins_with("CH_DANO_"):
+			expect(Rumors.pick(r, Progress.vars(), { "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE": false }).contains("남원 단오장"), "소문 %s “남원 단오장이 크게 선다더라”" % r.id)
+			expect(Rumors.pick(r, { "CASE_HANYANG_BOOKSHOP_COMPLETE": false }, { "CASE_HANYANG_BOOKSHOP_COMPLETE": false }) == "", "소문 %s 한양 전에는 없음" % r.id)
+			expect(Rumors.pick(r, Progress.vars(), { "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE": true }) == "", "소문 %s PART I 뒤에는 그침" % r.id)
 	var head: Dictionary = d.data.case
 	expect(head.requires.size() == 2 and head.requires.has("CASE_NAMWON_COMPLETE") and head.requires.has("CASE_HANYANG_BOOKSHOP_COMPLETE"), "requires 둘(결정 §4)")
 	var gl := []

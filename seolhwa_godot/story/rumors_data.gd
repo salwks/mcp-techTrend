@@ -269,7 +269,7 @@ static func pick(r: Dictionary, saved_vars: Dictionary, live_vars: Dictionary) -
 		var i := int(Time.get_unix_time_from_system() / 600.0) % pool.size()   # 10분마다 다른 소문
 		return String(pool[i])
 	var key := String(r.get("var", ""))
-	var val := String(live_vars.get(key, saved_vars.get(key, "")))
+	var val := str(live_vars.get(key, saved_vars.get(key, "")))   # 결말 문자열 · 참거짓 변수(춘향 PART1) 모두
 	var lines: Dictionary = r.get("lines", {})
 	if lines.has(val): return String(lines[val])
 	return String(lines.get("*", ""))
