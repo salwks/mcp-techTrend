@@ -244,6 +244,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/story/talk_test.gd").new(self); _ride_test.run.call_deferred(String(args.talktest))
 	elif args.has("continuetest"):
 		_ride_test = load("res://scripts/story/continue_test.gd").new(self); _ride_test.run.call_deferred(String(args.continuetest))
+	elif args.has("p2preptest") or args.has("p2prepshot"):   # 춘향 PART II 준비(공용 자세·차림·잔치 짜임·set_pose·PART II 소품) — scripts/story/part2_prep_test.gd
+		_ride_test = load("res://scripts/story/part2_prep_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("preptest") or args.has("prepshot"):   # 춘향 준비(F-11·옥·수수밭·EventCrowd) 시험·촬영 — scripts/story/prep_test.gd
 		_ride_test = load("res://scripts/story/prep_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("talkshot"):

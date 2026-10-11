@@ -393,3 +393,14 @@ NEW 키트는 하나의 묶음 키트 `kit/story/chunhyang.gd`(kind로 고름 �
 
 - 배치 초안 로드: 위 §6.
 - 시험(마지막에 한 번): `validate_event_class` · `validate_case_meta` · `tests/registry/case_registry_test.gd` · `map_leads_test` · `tools/run_story_tests.sh` 전부 — 결과는 이 문서를 넣은 커밋 메시지와 보고에 적는다.
+
+---
+
+## 11. PART II 준비 반영 (2026-10-11 — `seolhwa_godot/docs/reports/chunhyang-part2-prep.md`)
+
+- 공용 자세 sit·bow·kneel: 모든 사람 그림(고을 사람·이야기 인물 62종)에 굽기 세트 `?set=poses` → `data/frames_pose.json`. 춘향 kneel·몽룡 거지 sit 등은 이것으로.
+- 인물 굽기 세트 `?set=chunhyang_part2` → `chunhyang_prison`(흰 무명·풀어 헤친 머리·칼) · `mongryong_beggar`(파립·누더기·마패 `mapae` 동작) · `byeon`(홍단령·사모·흉배·각대, sit = 교의) · 기생 `gisaeng`·`gisaeng_b`·`gisaeng_c`(얹은머리·회장저고리, `serve`).
+- §5-2 `byeon_banquet`: 손님 8(scholar·py_clerk·elder) · 기생 4 · 시중 2 — **포졸·관속은 군중에서 뺐다**. 사령·포졸은 이야기 인물 고정 자리(`namwon_chunhyang_data.guard_posts`, 공식 8A 양옆 줄).
+- 잔칫상: `story/clue feast`(큰 멍석 차림) 대신 손님 한 사람 독상 `story/chunhyang jansang` — 서쪽 x -3166.9 · 동쪽 x -3157.3(사령 줄 안쪽), z 210.8·213.2·215.6 + 대청 위 둘(-3165.0 / -3159.2, z 207.5). 대청 손님은 동헌 가운데 열린 칸에만(분합문 칸은 벽 뒤).
+- §42 서안 `ti_poem_desk`·`ch_poem_table`·17A를 (-3165.7, 212.0)으로(손님 자리와 겹침). `ch_byeon_seat` z 206.9(교의 앞 0.3m).
+- 보계·교의+병풍·형틀·차일·바로 선 수레는 실제 키트(placeholder 안 씀). 차일 장대는 짧은 변에 셋씩(가운데 축 비움), 천 상태 SPREAD/FURLED — 8A는 FURLED 필요(§ 보고서 판단 1).

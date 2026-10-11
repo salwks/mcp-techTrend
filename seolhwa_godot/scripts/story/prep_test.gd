@@ -3,13 +3,13 @@
 #   촬영·성능(창):   --region=JL_NAMWON_UNBONG --prepshot[=이름,…] --nostory --notitle --shotdir=shots/chunhyang_prep --savefile=user://chp_prep.json
 #     이름: jail · bars12a · sorghum · well · dano1a · banquet8a · orijeong · fps (없으면 전부). fps는 1A·8A 프레임에서 군중 끔/켬/최대를 잰다.
 #   상태는 placement_gate.fake(가짜 사건 단계·변수)로 바꾼다 — 실제 저장(progress)은 쓰지 않는다(시험 저장 파일만).
-#   촬영에서는 아직 kind가 없어 placeholder로 지어진 차림(그네·씨름판·보계·교의·형틀·차일 자리)을 숨긴다 — 실제 모양이 아니므로.
 extends RefCounted
 
 const EventCrowd := preload("res://scripts/story/event_crowd.gd")
 const STORY_UNIQUE := ["chunhyang", "mongryong", "mongryong_beggar", "bangja", "wolmae", "byeon", "hyangdan",
 	"woochi", "chaekkwae", "yigyeom", "gwak", "story_girl", "story_boy", "ricecake_mother", "tiger", "wolsim", "thief", "courier", "courier_b", "courier_c"]
-const PLACEHOLDER_IDS := ["ti_swing", "ti_ssireum", "ti_dais", "ti_seat_screen", "ti_hyeongteul", "ti_chail", "ti_wine_cart"]
+# 예전에 placeholder로 지어지던 차림(그네·씨름판은 PART I, 보계·교의·형틀·차일·바로 선 수레는 PART II 준비에서 실제 키트가 됐다) — 지금은 숨길 것 없음
+const PLACEHOLDER_IDS := []
 
 var main
 var gate
