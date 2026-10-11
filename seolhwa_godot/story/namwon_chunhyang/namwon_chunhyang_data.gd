@@ -120,6 +120,7 @@ static func data() -> Dictionary:
 	out.triggers += P2.triggers()
 	out.props += P2.props()
 	out.events.merge(P2.events())
+	out["ambient_exclude"] = P2.ambient_excludes()   # 비우기 구역(C63) — 6A 행차 길
 	return out
 
 static func anchors() -> Dictionary:

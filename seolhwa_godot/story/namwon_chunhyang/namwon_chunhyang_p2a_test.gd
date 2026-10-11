@@ -115,6 +115,10 @@ func run() -> void:
 	expect(gate_off("ti_dais") and gate_off("ti_chail") and gate_off("ti_hyeongteul"), "arrival엔 관아 단·차일·형틀 없음")
 	expect(not d.actors.bangja.shown and not d.actors.mongryong.shown and not d.actors.chunhyang.shown, "방자·몽룡·춘향은 보이지 않는다")
 	if br == "P2A": _hair_checks()
+	# 비우기 구역(C63) — 재방문(arrival)부터 행차 길 한가운데에 고을 사람이 없다
+	var amb = d.main.get("npcs_amb")
+	var zone := { "path": P2.PROC_PATH, "width": P2.PROC_CLEAR_W }
+	expect(d.ambient_zones().has("ch_proc_road") and amb != null and amb.zone_ids().has("ch_proc_road"), "arrival — 행차 길 비우기 구역 켜짐")
 	# §19 6A 행차
 	await walk([[-3228.0, 352.0], [-3228.0, 330.0], [-3228.0, 316.0]])
 	await _idle()
@@ -126,9 +130,21 @@ func run() -> void:
 		expect(float(p6.pojol_z) < float(p6.gama_z) and float(p6.gama_z) < float(p6.porter_z), "앞 포졸(%.1f) · 가운데 가마(%.1f) · 뒤 짐(%.1f)" % [float(p6.pojol_z), float(p6.gama_z), float(p6.porter_z)])
 		expect(int(p6.west) >= 3 and int(p6.east) >= 3, "군중 양옆(서 %d · 동 %d)" % [int(p6.west), int(p6.east)])
 		expect(bool(p6.gama_node), "가마 소품이 행렬과 함께")
+	if probe.has("6a_amb"):
+		var pa: Dictionary = probe["6a_amb"]
+		expect(bool(pa.zone_on) and int(pa.inzone) == 0, "6A 컷 — 행차 길 가운데 고을 사람 0(둘레 고을 사람 %d)" % int(pa.agents))
 	expect(String(d.data.clues.new_magistrate.kind) == "heard", "새 사또 — 들은 것")
-	var ok_in := await until(func(): return S.is_flag("proc_in"), 140.0)
+	var in_max := [0]
+	var cond_in := func() -> bool:
+		if amb != null: in_max[0] = maxi(in_max[0], amb.count_in(zone))
+		return S.is_flag("proc_in")
+	var ok_in := await until(cond_in, 140.0)
 	expect(ok_in, "행차가 관아로 들어감")
+	expect(amb != null and in_max[0] == 0, "행차 내내 길 가운데 고을 사람 없음(최대 %d)" % in_max[0])
+	await _frames(3)
+	expect(not d.ambient_zones().has("ch_proc_road") and amb != null and not amb.zone_ids().has("ch_proc_road"), "관아에 들자 비우기 풀림")
+	var refilled := await until(func(): return amb != null and amb.count_in(zone) > 0, 40.0)
+	expect(refilled, "풀린 뒤 보통 스트리밍이 길을 다시 채움(%d)" % (amb.count_in(zone) if amb != null else -1))
 	# §20 아전
 	var labour_pref: Array = { "P2A": ["맞소", "맡는다"], "P2B": ["아니오.", "싫다고"], "P2C": ["무슨 일이오", "맡는다"], "CTL": ["맞소", "맡는다"] }[br]
 	t.prefer = labour_pref

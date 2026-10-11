@@ -25,11 +25,17 @@ const PROC_PATH := [[-3228.0, 334.0], [-3228.0, 251.5], [-3170.0, 247.6], [-3162
 const PROC_START_S := 46.0   # 6A 첫 프레임에 앞 포졸이 z≈288(카메라 앞 30m) — 촬영: 44m는 작고 길 위 사람에 가렸고, 24m는 앞 포졸이 화면을 덮었다
 const PROC_MEMBERS := [
 	{ "id": "proc_pojol_a", "back": 0.0, "side": -0.9 }, { "id": "proc_pojol_b", "back": 0.0, "side": 0.9 },
-	{ "id": "proc_bearer_1", "back": 2.8, "side": -0.58 }, { "id": "proc_bearer_2", "back": 2.8, "side": 0.58 },
+	{ "id": "proc_bearer_1", "back": 2.8, "side": -1.0 }, { "id": "proc_bearer_2", "back": 2.8, "side": 1.0 },   # 촬영: ±0.58은 앞 가마꾼이 6A에서 가마를 가렸다 → ±1.0
 	{ "id": "p_gama", "back": 4.6, "side": 0.0 },
-	{ "id": "proc_bearer_3", "back": 6.4, "side": -0.58 }, { "id": "proc_bearer_4", "back": 6.4, "side": 0.58 },
+	{ "id": "proc_bearer_3", "back": 6.4, "side": -1.0 }, { "id": "proc_bearer_4", "back": 6.4, "side": 1.0 },
 	{ "id": "proc_porter_1", "back": 8.8, "side": -0.4 }, { "id": "proc_porter_2", "back": 10.4, "side": 0.45 },
 ]
+# 비우기 구역(제작 규칙 C63): 재방문(arrival)부터 행렬이 관아에 들 때까지 행차 길 한가운데에서 고을 사람을 비운다(길 폭 4m + 양옆 1m).
+#   길가 사람 여덟(이야기 인물)은 그대로 — 고을 사람(npc_ambient)만. 풀리면 보통 스트리밍이 다시 채운다
+const PROC_CLEAR_W := 6.0
+static func ambient_excludes() -> Array:
+	return [{ "id": "ch_proc_road", "path": PROC_PATH, "width": PROC_CLEAR_W, "when": "ph('arrival') and not f('proc_in')" }]
+
 const ONLOOKERS := ["on_1", "on_2", "on_3", "on_4", "on_5", "on_6", "on_7", "on_8"]
 const GISAENG := ["gisaeng_1", "gisaeng_2", "gisaeng_3", "gisaeng_4", "gisaeng_5", "gisaeng_6"]
 

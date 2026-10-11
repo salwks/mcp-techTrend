@@ -14,6 +14,7 @@ const Progress := preload("res://scripts/region/progress.gd")
 const CaseRegistry := preload("res://scripts/story/case_registry.gd")
 const JournalBook := preload("res://scripts/story/journal_book.gd")
 const Rumors := preload("res://story/rumors_data.gd")
+const P2T := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2a_data.gd")
 
 var d
 var branch := "A"
@@ -132,6 +133,9 @@ func _probe_p2(nm: String) -> void:
 			if a == null or not a.shown: continue
 			if a.pos.x < -3228.0: west += 1
 			else: east += 1
+		var amb = d.main.get("npcs_amb")
+		pr["6a_amb"] = { amb = amb != null, agents = amb.agents.size() if amb != null else 0, zone_on = d.ambient_zones().has("ch_proc_road"),
+			inzone = amb.count_in({ "path": P2T.PROC_PATH, "width": P2T.PROC_CLEAR_W }) if amb != null else -1 }
 		pr["6a"] = { shot = shot != null, cam_h = (shot.pos.y - d.world.height_at(shot.pos.x, shot.pos.z)) if shot != null else 99.0,
 			pojol_z = d.actors.proc_pojol_a.pos.z, gama_z = gz, porter_z = d.actors.proc_porter_2.pos.z, west = west, east = east,
 			gama_node = gz != INF }
@@ -155,6 +159,7 @@ func _probe_p2(nm: String) -> void:
 		await _frames(2)
 	elif nm.begins_with("10") and nm.contains("gonjang"):
 		pr["gonjang_cuts"] = int(pr.get("gonjang_cuts", 0)) + 1
+
 
 # 1A 컷 한가운데(자막 하나 뒤 — 군중 LOD가 여러 프레임 돈 뒤): 플레이어 자리 · 안개 · 1A 틀 안 군중
 var probe_1a := {}
