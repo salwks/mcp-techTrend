@@ -1,0 +1,112 @@
+{
+ "area": "namwon_local",
+ "generator": "손으로 — 남원 고을 시설·사건 흔적(정적). 사용자 결정 2·5·6(2026-10-11), seolhwa/docs/production/CHUNHYANG_ASSETS_PLACEMENT_v1.0.md §8",
+ "note": "허브 배치(placement_namwon.json, tools/placement/namwon.py 생성)는 고치지 않고 손으로 더하는 남원 정적 배치. 옥·오리정은 늘 있다(when 없음). 오누이 흔적(우물·수수밭)은 F-10(비활성 사건 소품 층) 전까지의 임시 조치: 남원 오누이 사건이 이 공간에서 돌고 있으면 그 사건 소품(p_well·p_sorghum·p_sorghum_red)이 그대로 그리고, 다른 사건이 돌거나 사건이 없을 때만 이 정적 항목이 선다 (not active('namwon')). 수수밭 색은 CASE_NAMWON_COMPLETE로 — 끝나기 전 푸름, 끝난 뒤 붉음. 발톱 자국 같은 잠깐의 흔적은 남기지 않는다.",
+ "items": [
+  {
+   "id": "ti_orijeong",
+   "kit": "village/jeongja",
+   "params": {
+    "seed": 3131,
+    "s": 3.0,
+    "plain": true
+   },
+   "x": -3205.8,
+   "z": -10.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "phase": "늘(ACT 5 이별 배경 — 사용자 결정 5)",
+   "status": "EXISTS",
+   "cost": "-",
+   "note": "오리정(五里亭) — ACT 5 이별 장면의 배경 랜드마크. 퀘스트·말 걸기·이동 목표·컷신 없음 — 길 동쪽 가(5A 틀 안, 촬영 chunhyang_prep 08)",
+   "title": "오리정",
+   "group": "남원 고을 시설"
+  },
+  {
+   "id": "ti_jail",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "ok",
+    "r": 5.0,
+    "cell_w": 5.0,
+    "cell_d": 3.4,
+    "seed": 3301
+   },
+   "x": -3175.0,
+   "z": 229.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "phase": "늘(남원 고을 시설 — 사용자 결정 2)",
+   "status": "NEW(완료 — kit/story/chunhyang.gd kind ok)",
+   "cost": "M",
+   "note": "원옥: 둥근 담(지름 10m·높이 2.45m, 돌 아랫단+흙담+기와 덮개) · 동쪽 기와 문 · 북쪽 반 초가 옥사 3칸(앞=남쪽 나무살). 상태 ti_jail/gate·ti_jail/cell = SEALED|OPEN(기본 SEALED). 사건은 문 상태·인물·등롱만 바꾼다",
+   "title": "옥",
+   "group": "남원 고을 시설"
+  },
+  {
+   "id": "nw_trace_well",
+   "kit": "village/well",
+   "params": {
+    "seed": 49
+   },
+   "x": -3207.8,
+   "z": -343.8,
+   "ry": 0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "case": "namwon",
+   "when": "not active('namwon')",
+   "group": "오누이 흔적(F-10 전 임시)",
+   "note": "외딴집 우물 — 오누이 사건 p_well과 같은 자리·모양. 오누이 사건이 돌 때는 사건 소품이 그린다"
+  },
+  {
+   "id": "nw_trace_sorghum",
+   "kit": "story/tale",
+   "params": {
+    "kind": "sorghum",
+    "w": 5.0,
+    "d": 4.5
+   },
+   "x": -3199.4,
+   "z": -347.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "case": "namwon",
+   "when": "not active('namwon') and not v('CASE_NAMWON_COMPLETE')",
+   "group": "오누이 흔적(F-10 전 임시)",
+   "note": "푸른 수수밭(사건이 끝나기 전) — p_sorghum과 같은 모양"
+  },
+  {
+   "id": "nw_trace_sorghum_red",
+   "kit": "story/tale",
+   "params": {
+    "kind": "sorghum",
+    "w": 5.0,
+    "d": 4.5,
+    "red": true
+   },
+   "x": -3199.4,
+   "z": -347.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "yard": false,
+   "case": "namwon",
+   "when": "not active('namwon') and v('CASE_NAMWON_COMPLETE')",
+   "group": "오누이 흔적(F-10 전 임시)",
+   "note": "붉은 수수밭(CASE_NAMWON_COMPLETE 뒤) — 범이 떨어진 자리, 사건 뒤에도 남는다(v3.2 §65)"
+  }
+ ]
+}
