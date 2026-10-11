@@ -8,6 +8,8 @@
 #   iibctl        : 창 모드 실제 시간 — 시험 봇이 실제 걸음(--ctlspeed, 기본 4.6 달리기)으로. ACT 13 · II-B 전체 조작 비율(CTL2 줄)
 # 셋 다: 순서 자유 · 한 번만 · 소극/틀린 판단도 진행 · 몽룡 귀환 · 월매 집 · 옥중 상봉 · 잔치 · 시 · 어사출두 · 파면(문제 결과와 무관) · 복구만 갈래마다 ·
 #   석방 · COMPLETE · RELEASED · 포승 기억 · 잔치(EventCrowd 14 · 포졸/사령 없음 · 같은 노드 자세 · 사령↔상 실제 틈 · 차일 C62 · cower) · FIXED_BEAT 순서·중복 없음.
+# 끝난 뒤 관아 곁일 「창고 장부 대조」(namwon_chunhyang_side_data.gd — 같은 문제 계약, 데이터만): iib1 바로 덮음(창고지기 말 안 들음) ·
+#   iib2 창고지기 말 → 뒤 곳간(fail_forward) → 추가 흔적 · iib3 센 대로 적음. 끝나기 전엔 안 섬 · 결말·FIXED_BEAT·변수 그대로.
 extends RefCounted
 
 const P2 := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2a_data.gd")
@@ -258,6 +260,7 @@ func run() -> void:
 	for b in ["mongryong_return", "jail_reunion", "birthday_feast", "poem", "royal_inspector", "byeon_dismissed", "release"]:
 		expect(fb.has(b) and S.is_flag("beat_" + b), "FIXED_BEAT %s(사건 메타·일어남)" % b)
 	_journal()
+	if not real: await _side_job()
 	var cf = d.case_fn
 	printerr("CTL2 %s speed=%.1f act13=%.3f (%.1f/%.1fs) p2b=%.3f (%.1f/%.1fs)" % [br, speed, cf.ctl2_ratio("act13"), cf.ctl2.act13.ctl, cf.ctl2.act13.all,
 		cf.ctl2_ratio("p2b"), cf.ctl2.p2b.ctl, cf.ctl2.p2b.all])
@@ -369,6 +372,7 @@ func _rice(mode: String) -> void:
 		return
 	await obj("p2b_rice_lift")
 	expect(S.has(P2B.SACK), "가마니를 졌다")
+	await t.cut("13b_rice_work")   # 화면 순회 — 대문 앞 가마니 곁에서 한 가마를 진 채(카드가 가마니를 가리지 않게 카드 뒤에서 찍음)
 	await _frames(4)
 	if mode == "all": expect(_gate_off("ti_rice_sacks"), "넷 다 실어 감 — 대문 앞 가마니 없음")
 	else: expect(_gated_on("ti_rice_sacks"), "한 가마만 — 대문 앞 가마니는 남음")
@@ -392,7 +396,9 @@ func _petition(mode: String) -> void:
 		expect(not String(c2.text).contains("이겸") and not String(c2.title).contains("이겸"), "선비가 이겸이라고 쓰지 않음")
 	await obj("pb_petition_route")
 	t.prefer = [{ "dismiss": "노인을 돌려보낸다", "process": "소지를 맨 위에", "note": "노인의 말을 내 기록책에" }[mode]]
+	if shooting(): _watch_card("열리지 않은 소지", "13c_petition_work")
 	await obj("pb_petition_status")
+	await _wait_watch()
 	await until(func(): return pdone("petition") and not d.runner.busy, 30.0)
 	expect(S.is_flag("petition_gap_seen") and String(d.data.clues.pb_petition_gap.kind) == "guess", "'내일 와'와 실제 — 추정 △")
 	expect(pd("petition") == mode, "상소 처리 %s" % pd("petition"))
@@ -603,8 +609,66 @@ func probe_cut(nm: String) -> void:
 			probe["gap"] = measure_gap()
 		"17A_poem":
 			probe["17A"] = { shot = d.main.rig.shot != null, chail = d.main.world.props.get_state("ti_chail/cloth") }
+			if shooting():   # 화면 검토는 자막을 짧게 지운다(auto) — 실제 놀이처럼 둘째 줄을 종이 위에 다시 띄워 찍는다
+				d.ui.auto_real = true
+				d.ui.caption("옥쟁반의 좋은 안주는 백성의 기름이라.", 2.6)
+				d.ui.auto_real = false
 		"22_gwanghallu_end":
 			var sw: bool = _gated_on("ti_swing")
 			probe["end"] = { ok = sw and d.actors.end_kid_a.shown and d.actors.end_kid_b.shown and not d.case_fn.rider_on(), swing = sw }
 		"19_restoration":
 			probe["resto"] = { merchant = d.actors.wine_merchant.shown, elder = d.actors.petition_elder.shown, farmer = d.actors.rice_farmer.shown, clerk = d.actors.resto_clerk.shown }
+
+# ---------------------------------------------------------------------------
+# 화면(창 --storyshots): 카드가 떠 있는 동안 찍는다(오누이 observe 시험과 같은 방식) — 헤드리스면 아무것도 안 한다
+# ---------------------------------------------------------------------------
+var _watching := false
+func shooting() -> bool: return d.main.args.has("storyshots") and DisplayServer.get_name() != "headless"
+
+func _watch_card(title: String, nm: String) -> void:
+	_watching = true
+	d.ui.auto_hold = 2.5
+	for i in 6000:
+		await t.get_tree().process_frame
+		if d.ui._card.visible and String(d.ui._card_title.text) == title:
+			await t.cut(nm); break
+	d.ui.auto_hold = 0.03
+	_watching = false
+
+func _wait_watch() -> void:
+	for i in 6000:
+		if not _watching: break
+		await t.get_tree().process_frame
+
+# ---------------------------------------------------------------------------
+# 끝난 뒤 관아 곁일 「창고 장부 대조」 — 같은 Activity/Problem 계약을 데이터만으로(브리프 §21 재사용 시연)
+# ---------------------------------------------------------------------------
+func _side_job() -> void:
+	var p: Dictionary = d.data.problems.get("ledger", {})
+	expect(not p.is_empty() and String(p.get("when", "")) == "ph('done')", "곁일 「창고 장부 대조」 — 사건이 끝난 뒤에만(ph done)")
+	expect(not JSON.stringify(p).contains("\"call\"") and not JSON.stringify(d.actors.ledger_keeper.spec.get("talk", [])).contains("\"call\""), "곁일은 데이터만 — 사건 코드 호출(call) 없음")
+	var vars0 := JSON.stringify([S.vars.get("CASE_NAMWON_CHUNHYANG_OUTCOME"), S.vars.get("CASE_NAMWON_CHUNHYANG_COMPLETE"), S.world.get("beat_order", []), S.world.get("end_lines", [])])
+	await _frames(6)
+	expect(d.actors.ledger_keeper.shown and in_targets("pb_ledger_book") and _gated_on("ti_gamani_store_a"), "끝난 뒤 — 창고지기·장부·가마니가 선다")
+	var mode: String = { "IIB1": "shut", "IIB2": "shed", "IIB3": "note" }.get(br, "note")
+	if mode != "shut":
+		await talk("ledger_keeper")
+		expect(pa("ledger", "keeper") and String(d.data.clues.pb_ledger_keeper.kind) == "heard" and String(d.data.clues.pb_ledger_keeper.by) == "창고지기", "곁일 — 창고지기의 말(들은 것 ◇)")
+	await obj("pb_ledger_book")
+	expect(pa("ledger", "book") and String(d.data.clues.pb_ledger_book.kind) == "fact" and pd("ledger") == "", "곁일 — 장부(본 것 ◆) · 하나로는 안 물음")
+	t.prefer = [{ "shut": "장부를 덮는다", "shed": "뒤 곳간부터", "note": "센 대로" }[mode]]
+	if shooting(): _watch_card("세 가마의 차이", "23_ledger_side")
+	await obj("pb_ledger_stock")
+	await _wait_watch()
+	await until(func(): return pd("ledger") != "" and not d.runner.busy, 30.0)
+	expect(S.is_flag("ledger_gap_seen") and pd("ledger") == mode, "곁일 — 장부 열둘·창고 아홉 → 고름 %s" % pd("ledger"))
+	if mode == "shed":
+		expect(not pdone("ledger") and in_targets("pb_ledger_ff_back_shed"), "뒤 곳간 — 아직 안 풀림, 헛걸음 자리가 열림(막히지 않음)")
+		await obj("pb_ledger_ff_back_shed")
+		expect(S.has_clue("pb_ledger_ff_back_shed") and S.is_flag("ledger_noted"), "헛걸음 → 추가 흔적(흘린 낟알)")
+	await until(func(): return pdone("ledger") and not d.runner.busy, 30.0)
+	expect(pdone("ledger") and S.is_flag("ledger_check_done"), "곁일 풀림 — 결과 깃발 한 번")
+	expect(S.is_flag("ledger_noted") == (mode != "shut") and S.is_flag("ledger_shut") == (mode == "shut"), "곁일 행동 깃발(%s)" % mode)
+	_once_check("ledger")
+	expect(JSON.stringify([S.vars.get("CASE_NAMWON_CHUNHYANG_OUTCOME"), S.vars.get("CASE_NAMWON_CHUNHYANG_COMPLETE"), S.world.get("beat_order", []), S.world.get("end_lines", [])]) == vars0
+		and S.phase == "done", "곁일은 결말·FIXED_BEAT·기록책 끝 줄을 바꾸지 않는다")

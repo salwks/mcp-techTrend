@@ -569,6 +569,7 @@ func chuldu() -> void:
 	stage_feast()
 	cut_to("8A_chuldu")   # 18A도 출두(권력) 틀 — 차일 FURLED 그대로(낮은 18A에서 편 천 밑면이 화면 위 1/3을 덮었다 — 촬영)
 	_shot(P2B.CAM_18A)
+	d.face_actor("byeon_feast", "up", null)   # 18A는 변학도 등 뒤 — 그림을 등 쪽으로(아래를 보면 카메라를 마주 본다. 화면 순회). 컷 뒤 되돌림
 	probe_reveal["chail_18a"] = chail_set
 	flag("yeokjol_in")
 	flag("mong_b_on")
@@ -595,6 +596,7 @@ func chuldu() -> void:
 	probe_reveal["n_saryeong"] = sar.size()
 	await d.ui.caption("아까까지 허리를 세우던 사람들이 고개를 숙인다.", 2.4)
 	await _cut("18A_after")
+	d.face_actor("byeon_feast", "down", null)
 	await say("변학도", "…누구냐.")
 	await say("몽룡", "전라도를 살피라는 명을 받고 내려온 암행어사 이몽룡이오.")
 	await say("변학도", "이…")

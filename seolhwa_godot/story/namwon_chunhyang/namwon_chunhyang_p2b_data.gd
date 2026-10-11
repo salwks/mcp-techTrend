@@ -15,11 +15,11 @@ const SACK := "ITM_CH_RICESACK"   # 지고 가는 쌀가마니 하나
 # 카메라(배치 파일 cameras와 같은 값)
 const CAM_14A := { pos = [-3225.4, 1.75, 345.6], look = [-3228.0, 1.5, 352.5], fov = 38.0 }   # 플레이어 어깨 너머, 남문 밖(정면 클로즈업 금지)
 const CAM_17A := { pos = [-3165.7, 2.3, 212.05], look = [-3165.7, 0.4, 212.0], fov = 30.0 }    # 종이를 위에서
-const CAM_18A := { pos = [-3162.1, 2.75, 203.6], look = [-3162.1, 1.8, 239.5], fov = 40.0 }    # 변학도 뒤에서 정문 쪽 — 같은 축, 자세만 뒤집힌다
+const CAM_18A := { pos = [-3162.1, 2.75, 203.6], look = [-3162.1, -0.6, 239.5], fov = 40.0 }   # 변학도 뒤에서 정문 쪽 — 같은 축, 자세만 뒤집힌다(화면 순회: 조금 숙여 웅크린 변학도를 틀 안에 · 위 분합문 띠를 위로)
 const CAM_FEAST := { "focus": [-3162.1, 213.6], "pitch": 24.0, "distance": 10.0, "fov": 40.0 }   # 잔치 놀이 — 낮고 가까운 틀(차일 SPREAD)
 const CAM_EDGE := { "focus": [-3168.6, 216.4], "pitch": 22.0, "distance": 7.5, "fov": 40.0 }      # §41 서쪽 가장자리(낮은 틀)
 const CAM_RESTO := { "focus": [-3152.4, 233.4], "pitch": 30.0, "distance": 11.0, "fov": 38.0 }    # ACT 19 바깥마당 물자 곳
-const CAM_END := { "focus": [-3318.0, 442.0], "pitch": 22.0, "distance": 20.0, "fov": 38.0 }      # ACT 22 빈 그네
+const CAM_END := { "focus": [-3326.0, 442.5], "pitch": 22.0, "distance": 20.0, "fov": 38.0 }      # ACT 22 빈 그네(화면 순회: 그네 ti_swing -3330이 틀 밖이라 초점을 그네·아이 사이로)
 
 const DUTY := "ph('jail') and f('duty_on') and not f('duty_over')"
 const YEOKJOL := ["yeokjol_1", "yeokjol_2", "yeokjol_3", "yeokjol_4", "yeokjol_5", "yeokjol_6"]

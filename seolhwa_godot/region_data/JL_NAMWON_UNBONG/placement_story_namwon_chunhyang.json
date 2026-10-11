@@ -326,7 +326,7 @@
    "flatten": false,
    "clear_veg": true,
    "yard": false,
-   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release') or ph('done')",
    "phase": "P2",
    "status": "EXISTS",
    "cost": "-",
@@ -346,7 +346,7 @@
    "flatten": false,
    "clear_veg": true,
    "yard": false,
-   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release')",
+   "when": "ph('arrival') or ph('office') or ph('jail') or ph('feast') or ph('reveal') or ph('release') or ph('done')",
    "phase": "P2",
    "status": "EXISTS",
    "cost": "-",
@@ -2134,11 +2134,11 @@
    ],
    "look": [
     -3162.1,
-    1.8,
+    -0.6,
     239.5
    ],
    "fov": 40,
-   "why": "변학도(대청 z 206.6) 뒤에서 남쪽 — 열린 내삼문 틀 안에 외삼문. 같은 관아 축에서 자세만 뒤집힌다"
+   "why": "변학도(대청 z 206.6) 뒤에서 남쪽 — 열린 내삼문 틀 안에 외삼문. 같은 관아 축에서 자세만 뒤집힌다. 2026-10-12 화면 순회: look y 1.8 → -0.6(웅크린 변학도가 틀 밖으로 빠졌다 — 조금 숙여 틀 안에, 위 분합문 띠는 위로)"
   }
  }
 }
