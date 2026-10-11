@@ -1,5 +1,5 @@
 # 춘향 「남원의 약속」 차림 키트(seolhwa/docs/production/CHUNHYANG_ASSETS_PLACEMENT_v1.0.md §2) — kind로 고른다. 원점 = 바닥 중심.
-#   지금 지을 수 있는 kind: has_kind() 목록. 아직 없는 kind(가마)는 배치 항목의 placeholder로 대신한다
+#   지금 지을 수 있는 kind: has_kind() 목록. 아직 없는 kind는 배치 항목의 placeholder로 대신한다
 #   (placement_loader._resolve_placeholder).
 #
 #   kind "ok" — 옥(獄, 원옥). 남원 관아 바깥마당 서쪽의 늘 있는 고을 시설(사용자 결정 2, 2026-10-11).
@@ -29,12 +29,15 @@
 #     params: w(기본 18) · d(기본 8) · h(기본 4.6)
 #   kind "jansang" — 손님 한 사람의 잔칫상 차림: 낮은 독상(술병·잔·떡·나물 그릇) + 뒤(+z) 방석. 손님은 방석에 앉아 −z(상)를 본다.
 #     params: cushion(기본 true) · rich(그릇 더, 기본 false — 대청 위 수령 상). 앵커: seat(방석 위)
+#   kind "gama" — 사또 행차 가마(PART II-A §19 CAMERA 6A): 붉은 옻칠 몸채 · 검은 지붕 · 옆 창 · 앞(+z) 발 + 긴 채 둘(z 방향).
+#     가마꾼 넷(이야기 인물) 사이에 매달려 움직이는 이야기 소품 — 사건 코드가 매 프레임 자리·방향을 옮긴다(충돌체 없음).
+#     원점 = 몸채 아래 가운데 땅. params: lift(몸채 바닥 높이, 기본 0.5) · pole(채 길이, 기본 3.6)
 extends RefCounted
 
 const C := preload("res://kit/village/_common.gd")
 const SC := preload("res://kit/scenario/_sc.gd")
 
-const KINDS := ["ok", "swing", "ssireum_ring", "fan", "dais", "seat_screen", "hyeongteul", "chail", "jansang"]
+const KINDS := ["ok", "swing", "ssireum_ring", "fan", "dais", "seat_screen", "hyeongteul", "chail", "jansang", "gama"]
 const BAR := [0x5a4330, 0x3c2c1e]        # 옥 나무살 — 짙은 통나무
 const BAR_RAIL := [0x6b5038, 0x4a3726]
 const STRAW_MAT := [0xc9b27a, 0x9c8656]
@@ -56,6 +59,7 @@ static func build(params: Dictionary) -> Dictionary:
 		"hyeongteul": return _hyeongteul(params)
 		"chail": return _chail(params)
 		"jansang": return _jansang(params)
+		"gama": return _gama(params)
 	push_warning("story/chunhyang: 아직 없는 kind " + kind)
 	var m := C.M.new(1)
 	m.add("p", "flat", C.P(Kit.box(0.3, 0.3, 0.3, 0, 0.15, 0), 0x777777), 0.02)
@@ -458,3 +462,34 @@ static func _jansang(P: Dictionary) -> Dictionary:
 	s.box_c(-tw / 2, tw / 2, -td / 2, td / 2)
 	s.anchor("seat", Vector3(0, 0.07, 0.62))
 	return s.result("잔칫상", Vector2(0.9, 1.3), false)
+
+# ---------------------------------------------------------------------------
+# PART II-A — 사또 행차 가마(앞 = +z)
+# ---------------------------------------------------------------------------
+static func _gama(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3506)))
+	var R := s.rng
+	var lift := float(P.get("lift", 0.5)); var pole := float(P.get("pole", 3.6))
+	var bw := 0.92; var bd := 1.2; var bh := 1.05
+	var lac := [0x7a2e26, 0x58201a]
+	var y0 := lift
+	s.add("body", "wood", SC.pa(Kit.box(bw, bh, bd, 0, y0 + bh / 2, 0), lac, 0.04, R), 0.02)
+	s.add("body", "wood", SC.pa(Kit.box(bw + 0.08, 0.08, bd + 0.08, 0, y0 + 0.04, 0), [0x4a2a1e, 0x34201a], 0.03, R), 0.012)   # 바닥 귀틀
+	# 옆 창(살창) · 앞 발(대나무 발 — 걷어 올리지 않음)
+	for sx in [-1, 1]:
+		s.add("window", "flat", SC.pa(Kit.box(0.02, 0.36, 0.5, sx * (bw / 2 + 0.005), y0 + bh * 0.62, 0), [0x2e2420, 0x1e1814], 0.03, R), 0.006)
+		for k in 4:
+			s.add("window", "wood", SC.pa(Kit.box(0.025, 0.36, 0.025, sx * (bw / 2 + 0.012), y0 + bh * 0.62, -0.19 + k * 0.127), [0xb08a4a, 0x8a6a36], 0.02, R), 0.0)
+	s.add("blind", "cloth", SC.pa(Kit.box(bw * 0.72, bh * 0.68, 0.025, 0, y0 + bh * 0.58, bd / 2 + 0.01), [0xd8c48a, 0xb8a46a], 0.05, R), 0.006)
+	for k in 6:
+		s.add("blind", "flat", SC.pa(Kit.box(bw * 0.72, 0.012, 0.03, 0, y0 + bh * 0.28 + k * bh * 0.12, bd / 2 + 0.02), [0x8a7444, 0x6a5634], 0.02, R), 0.0)
+	# 지붕: 검은 판 + 가운데 볼록 + 네 귀 붉은 술
+	s.add("roof", "flat", SC.pa(Kit.box(bw + 0.26, 0.1, bd + 0.3, 0, y0 + bh + 0.05, 0), [0x2a2624, 0x1c1a18], 0.03, R), 0.02)
+	s.add("roof", "flat", SC.pa(Kit.box(bw * 0.7, 0.12, bd * 0.75, 0, y0 + bh + 0.16, 0), [0x34302c, 0x22201e], 0.03, R), 0.012)
+	for sx in [-1, 1]:
+		for sz in [-1, 1]:
+			s.add("tassel", "cloth", SC.pa(Kit.box(0.05, 0.22, 0.05, sx * (bw / 2 + 0.11), y0 + bh - 0.1, sz * (bd / 2 + 0.13)), [0xb83a30, 0x8a2a22], 0.04, R), 0.0)
+	# 채 둘(z 방향 긴 장대) — 가마꾼이 앞뒤에서 잡는 높이(허리께)
+	for sx in [-1, 1]:
+		s.add("poles", "wood", SC.pa(Kit.cyl(0.04, 0.04, pole, 6, sx * (bw / 2 + 0.06), y0 + 0.32, 0, PI / 2, 0, 0), SC.WOOD, 0.03, R), 0.012)
+	return s.result("가마", Vector2(bw + 0.3, pole), false)

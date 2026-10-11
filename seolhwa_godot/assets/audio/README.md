@@ -34,6 +34,9 @@
 | crowd_dano | sfx/crowd_dano.wav | 단오 장터 웅성임 6초(Ambient 버스, 춘향 PART I §3) | placeholder, replace later |
 | drum_far | sfx/drum_far.wav | 먼 북 — 둥 · 둥 · 둥둥(춘향 단오 마당) | placeholder, replace later |
 | laugh_far | sfx/laugh_far.wav | 담 너머 웃음, 작게(춘향 §13 장면 C) | placeholder, replace later |
+| gonjang_hit | sfx/gonjang_hit.wav | 곤장 — 넓적한 매의 둔한 퍽(춘향 §28, 타격은 소리로만) | placeholder, replace later |
+| gate_shut | sfx/gate_shut.wav | 옥문 닫힘 — 쿵 + 빗장(춘향 §29) | placeholder, replace later |
+| breath_pain | sfx/breath_pain.wav | 참는 숨, 작게(춘향 §28 — BGM 없이 곤장 소리와 숨소리만) | placeholder, replace later |
 
 ## 음악 (bgm/)
 

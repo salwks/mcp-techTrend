@@ -7,7 +7,8 @@ const Sound := preload("res://scripts/audio/sound.gd")
 const GameSettings := preload("res://scripts/story/game_settings.gd")
 const IDS := ["knock", "footstep_heavy", "flour_rustle", "basket_roll", "tiger_growl", "axe_hit", "rope_creak", "rope_snap",
 	"fall_impact", "wind", "breath_gasp", "journal_stamp", "page_turn", "ui_select", "brush_rustle",
-	"crowd_dano", "drum_far", "laugh_far"]   # 춘향 PART I
+	"crowd_dano", "drum_far", "laugh_far",   # 춘향 PART I
+	"gonjang_hit", "gate_shut", "breath_pain"]   # 춘향 PART II-A
 
 var n := 0
 var fails := 0

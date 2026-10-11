@@ -368,6 +368,42 @@ def bgm_dano_bright(rng):
     return norm(_loop_safe(x, 1.2), -16)
 
 
+# ---- 춘향 PART II-A(관아) — 곤장 · 옥문 닫힘 · 숨(아픔) ----
+def gonjang_hit(rng):
+    # 곤장: 넓적한 나무 매가 천 위로 떨어지는 둔한 '퍽'(높은 깨짐 없음) + 짧은 나무 울림
+    sec = 0.6
+    t = t_axis(sec)
+    slap = band(noise(sec, rng), 250, 2200) * env_exp(sec, 0.018, 0.001)
+    body = np.sin(2 * np.pi * (120 + 60 * np.exp(-t / 0.02)) * t) * env_exp(sec, 0.07, 0.001)
+    wood = np.sin(2 * np.pi * 410 * t + 0.5) * env_exp(sec, 0.035, 0.001) * 0.25
+    return norm(fade(slap * 0.7 + body * 0.8 + wood), -7)
+
+
+def gate_shut(rng):
+    # 옥문 닫힘: 무거운 널문이 닫히는 쿵 + 빗장 끼는 딸깍
+    sec = 1.1
+    out = np.zeros(int(SR * sec))
+    d = 0.5
+    t = t_axis(d)
+    thud = np.sin(2 * np.pi * 70 * t) * env_exp(d, 0.12, 0.004) + band(noise(d, rng), 80, 600) * env_exp(d, 0.05) * 0.5
+    place(out, thud, 0.02)
+    d2 = 0.2
+    t2 = t_axis(d2)
+    latch = (np.sin(2 * np.pi * 900 * t2) * 0.4 + band(noise(d2, rng), 1500, 6000)) * env_exp(d2, 0.02, 0.001)
+    place(out, latch * 0.5, 0.62)
+    return norm(fade(out), -8)
+
+
+def breath_pain(rng):
+    # 참는 숨: 이를 문 채 짧게 들이쉬고 떨며 내쉼(작게)
+    sec = 1.3
+    t = t_axis(sec)
+    inh = band(noise(sec, rng), 900, 3000) * (np.clip(t / 0.18, 0, 1) * np.clip((0.3 - t) / 0.06, 0, 1))
+    ex_env = np.clip((t - 0.45) / 0.1, 0, 1) * np.exp(-np.clip(t - 0.55, 0, None) / 0.35) * (1 + 0.35 * np.sin(2 * np.pi * 9 * t))
+    exh = band(noise(sec, rng), 300, 1400) * ex_env * 0.7
+    return norm(fade(inh + exh, 0.01, 0.1), -16)
+
+
 SFX = {
     "knock": (knock, "문 두드림 두 번(나무 문)"),
     "footstep_heavy": (footstep_heavy, "무거운 발 디딤(범·큰 짐승)"),
@@ -387,9 +423,12 @@ SFX = {
     "crowd_dano": (crowd_dano, "단오 장터 웅성임(6초, Ambient)"),
     "drum_far": (drum_far, "먼 북(둥 — 둥 — 둥둥)"),
     "laugh_far": (laugh_far, "담 너머 웃음(작게)"),
+    "gonjang_hit": (gonjang_hit, "곤장(넓적한 매의 둔한 퍽)"),
+    "gate_shut": (gate_shut, "옥문 닫힘(쿵 + 빗장)"),
+    "breath_pain": (breath_pain, "참는 숨(작게)"),
 }
 # 처음 판(14개) 뒤에 더한 소리 — 씨앗 순서를 뒤에 붙여 예전 파일이 다시 돌려도 바뀌지 않게
-LATE = ["brush_rustle", "crowd_dano", "drum_far", "laugh_far"]
+LATE = ["brush_rustle", "crowd_dano", "drum_far", "laugh_far", "gonjang_hit", "gate_shut", "breath_pain"]
 BGM = {
     "bgm_day_calm": (bgm_day_calm, "낮 잔잔한 고리(지속음 + 뜯는 5음, 24.5초)"),
     "bgm_night_drone": (bgm_night_drone, "밤 긴장 지속음(맥놀이, 24초)"),

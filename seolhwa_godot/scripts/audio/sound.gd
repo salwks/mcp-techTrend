@@ -38,6 +38,8 @@ const TUNE := {
 	"brush_rustle": { pitch = 0.08 },
 	"page_turn": { pitch = 0.08 },
 	"ui_select": { pitch = 0.05 },
+	"gonjang_hit": { pitch = 0.04 },
+	"breath_pain": { pitch = 0.04, db = -2.0 },
 }
 
 static var _inst = null
