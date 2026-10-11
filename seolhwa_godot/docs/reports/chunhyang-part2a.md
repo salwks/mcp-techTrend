@@ -144,3 +144,43 @@
 5. **옥 춘향 옷 바뀜**: 옥문을 지나 암전 뒤 흰 무명·칼로 바뀐다(컷 사이). 문간에서는 아직 노랑·다홍.
 6. **변학도 출두 `cower`·잔칫상 간격**은 II-B에서(기록만).
 7. 시험 저장 이름: 첫 측정 때 예전 시험 저장 `user://st_ctl.json`(이름이 겹친 다른 시험의 것)을 지우고 다시 썼다 — 사용자 저장은 아니다. 뒤 측정은 `st_p2a_ctlrun.json`.
+
+## 10. 고침 (2026-10-11) — 6A 길 비우기 · 곤장 포승
+
+딱 두 가지만 고쳤다(§9의 1·4). 점고·첫 수청 자막, 옥문 뒤 옷 바뀜, 춘향 뒤따르기는 그대로다(기록만).
+
+**1. 고을 사람 비우기 구역(공통 — 제작 규칙 C63).** `scripts/region/npc_ambient.gd`에 `exclude(id, 구역)` / `release(id)` / `excluded(p)` / `count_in(구역)`을 더했다. 구역은 `{ rect: [x0, z0, x1, z1] }`이나 `{ path: [자리…], width }`로 준다. 켜면 ① 구역 안에는 새로 나오지 않고, ② 이미 있던 사람·짐승은 바로 풀(pool)로 돌린다(말 거는 중인 사람만 예외). ③ 걷는 사람은 구역 앞에서 돌아선다. 풀면 아무것도 되돌리지 않는다. 다시 해 볼 시각만 지워서 보통 스트리밍이 화면 밖에서 다시 채운다.
+- 사건 쪽: 데이터 `ambient_exclude: [{ id, path|rect, width, when }]`는 `when`이 참인 동안만 켜진다(`story_director._refresh`). 코드에서는 `d.ambient_exclude(id, 구역, 폭)` / `d.ambient_release(id)`를 쓴다(자리는 앵커 이름도 된다). 어사출두 행렬·관아 행사·상여 길에서 그대로 다시 쓴다. 행렬 AI·군중 길찾기·비켜서기는 만들지 않았다.
+- 6A 적용: `namwon_chunhyang_p2a_data.gd ambient_excludes()`. id `ch_proc_road`, 길은 `PROC_PATH`(남문 안 → 네거리 → 관아 앞), 폭 6m(길 4m + 양옆 1m), `when: ph('arrival') and not f('proc_in')`. 길가 사람 여덟(이야기 인물)은 그대로 선다.
+- 다시 찍어 보니 고을 사람은 사라졌다. 그래도 앞 가마꾼(±0.58)이 가마 반쯤을 가려서 **가마꾼 간격만 ±1.0으로** 넓혔다. 카메라는 바꾸지 않았다.
+
+**2. 곤장 포승 소품.** `namwon_chunhyang_p2a.gd _rope_sync()`: 줄을 쥔 사람의 손 높이(0.95m)에서 꿇은 춘향 등 뒤 손목(0.55m)까지 이어지는 붉은 오랏줄이다(홍사 `#c0392b`, 평면 색이라 그늘에서도 붉게 보인다). 관 하나로 처짐만 주고 손 동작·줄 물리는 없다. 굵기는 카메라 거리에 비례해서(0.016~0.06m) 손 컷과 먼 8A 틀 모두에서 읽힌다. 상태는 `restraint_*` 플래그에서 읽는다(`P2.ROPE_FLAG` → `P2.ROPE`). 기록도 그 플래그 그대로라 결말에서 다시 불러 쓸 수 있다.
+- 잡는다(`taut`): 플레이어 손에서 짧고 팽팽하게(처짐 0.04). 느슨하게(`slack`): 플레이어 손에서 처진다(처짐 0.34). 거드는 사령은 곁에 선다. 놓는다(`other`): 플레이어 쪽에는 줄이 없고 넘겨받은 사령 w3가 쥔다(처짐 0.05).
+- 줄은 줄 잡기를 고른 뒤 `rope_on`으로 나타나고, 춘향이 일어선 뒤(팔 고르기 다음) 거둔다. 그래서 넓은 8A 틀과 팔 고르기 틀(8m)에도 보인다. 불러오기 때는 지운다.
+- 손 컷(10b): 놓았을 때는 같은 틀로 줄을 쥔 자리(넘겨받은 사령의 손)를 찍는다. 플레이어 자리에서 찍으면 줄이 틀 밖으로 나간다. 넓은 틀 촬영점 `10e_wide_rope`를 더했다(곤장 컷 수 4는 그대로).
+
+**시험**(`p2a_test`·`namwon_chunhyang_test` 조사점): arrival에 구역이 켜진다 · 6A 컷에서 구역 안 고을 사람 0(둘레 138) · 행차 내내 최대 0 · 관아에 들면 풀린다 · 다시 채워진다(11). 갈래마다 10b·8A(10e)·팔 틀에서 줄이 보이고, 줄 위 다섯 점 가운데 둘 이상이 틀 안에 들며, 상태·쥔 사람·처짐(팽팽 ≤0.06·길이 <2.4 / 처짐 ≥0.25 / w3)이 맞는다 · 일어선 뒤 사라진다. 시험 수: p2a 105 → 123, p2b 72 → 90, p2c 70 → 85.
+
+| 시험(차례로 한 번씩) | 결과 |
+|---|---|
+| `validate_event_class` | EVENTCLASS PASS checked=159 (exit 0) |
+| `validate_case_meta` | CASEMETA PASS 9 warn=5 (exit 0) |
+| `case_registry_test` | REGTEST PASS 47 (exit 0) |
+| `map_leads_test` | MAPLEADS PASS fixtures=69 (exit 0) |
+| `sound_test` | SOUNDTEST PASS 45 (exit 0) |
+| `onboarding_rule_test` | ONBOARDRULE PASS 64 (exit 0) |
+| `commonize_test` | COMMONTEST PASS 49 (exit 0) |
+| `chunhyang:prep` · `chunhyang:part2prep` | PASS 65 · 61 |
+| `tools/run_story_tests.sh` 전체(마지막 한 번) | **60/60 PASS**, SCRIPT ERROR 0, exit 0 |
+
+**화면** (`seolhwa_godot/shots/chunhyang_part2a_fix/`, git 밖): 창 1024×768, 시험 저장 `user://st_p2afix_shots.json`(찍은 뒤 지움). 실행은 `--storytest=namwon_chunhyang:p2a|p2b|p2c --storyshots=…`.
+
+| 파일 | 내용 |
+|---|---|
+| `01_6A_before.png` | 고치기 전(§7의 `03_6A_procession.png` — 같은 HEAD): 길 가운데 바구니 인 고을 사람이 있고, 가마는 가마꾼에 가린다 |
+| `02_6A_after.png` | 고친 뒤: 길 가운데가 비었고 앞 포졸 사이로 가마가 보인다(카메라 그대로) |
+| `03_10b_rope_taut.png` · `04_10b_rope_slack.png` · `05_10b_rope_other.png` | 손 컷: 흰 옷 손에서 팽팽하게 / 처져서 / 검은 사령 옷 손(플레이어 쪽 줄 없음) |
+| `06_gonjang_wide_rope_taut.png` | 넓은 8A 곤장 틀: 아래 형틀 곁에 붉은 줄 |
+| `07_arm_choice_rope_slack.png` · `08_arm_choice_rope_other.png` | 팔 고르기 틀(8m): 처진 줄 / 사령이 쥔 줄 |
+
+남은 것: 8A 곤장 틀에서는 형틀이 화면 아래 끝이라 줄이 작게 보인다(8A 카메라는 공식 틀이라 그대로 두었다). 줄이 가장 또렷한 넓은 틀은 팔 고르기 틀이다.
