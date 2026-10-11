@@ -469,9 +469,9 @@
    "yard": false,
    "when": "ph('office') or ph('jail')",
    "phase": "P2 §32",
-   "status": "VARIANT",
+   "status": "BUILT",
    "cost": "S",
-   "note": "짐수레 — 지금 키트는 엎어진 수레뿐 → upright variant(S). 그 위·곁에 술독",
+   "note": "짐수레 upright variant(story/snow_road cart upright — 바로 선 수레 + 술독 셋, PART II 준비 2026-10-11)",
    "placeholder": {
     "kit": "village/props",
     "params": {
@@ -578,9 +578,9 @@
    "yard": false,
    "when": "ph('office') or ph('jail') or ph('feast') or ph('reveal')",
    "phase": "P2 점고·곤장·잔치·출두",
-   "status": "NEW",
+   "status": "BUILT",
    "cost": "S",
-   "note": "보계(補階) — 동헌 대청 높이(F 1.05)로 앞에 덧댄 나무 단 + 앞 계단. 변학도 높은 단",
+   "note": "보계(補階) — 동헌 대청 높이(F 1.05)로 앞에 덧댄 나무 단 + 앞 계단. 변학도 높은 단 · 2026-10-11 PART II 준비: 키트 kind 지음(placeholder 안 씀)",
    "placeholder": {
     "kit": "story/clearing",
     "params": {
@@ -605,9 +605,9 @@
    "yard": false,
    "when": "ph('office') or ph('jail') or ph('feast') or ph('reveal')",
    "phase": "P2",
-   "status": "NEW",
+   "status": "BUILT",
    "cost": "S",
-   "note": "교의(의자) + 뒤 병풍 — 대청 위(dy 1.05)",
+   "note": "교의(의자) + 뒤 병풍 — 대청 위(dy 1.05) · 2026-10-11 PART II 준비: 키트 kind 지음(placeholder 안 씀)",
    "placeholder": {
     "kit": "scenario/props",
     "params": {
@@ -632,9 +632,9 @@
    "yard": false,
    "when": "ph('office')",
    "phase": "P2 §27~§29",
-   "status": "NEW",
+   "status": "BUILT",
    "cost": "S",
-   "note": "곤장 형틀(긴 나무 틀) + 곤장 둘. 폭력은 소리·표정으로(§52) — 형틀은 놓여 있기만",
+   "note": "곤장 형틀(긴 나무 틀) + 곤장 둘. 폭력은 소리·표정으로(§52) — 형틀은 놓여 있기만 · 2026-10-11 PART II 준비: 키트 kind 지음(placeholder 안 씀)",
    "placeholder": {
     "kit": "scenario/props",
     "params": {
@@ -682,9 +682,9 @@
    "yard": false,
    "when": "ph('feast') or ph('reveal')",
    "phase": "P2 잔치·출두",
-   "status": "NEW",
+   "status": "BUILT",
    "cost": "S",
-   "note": "잔치 차일(흰 천 지붕, 장대 여섯) — 8A 위에서 천 너머가 비치지 않게 반투명 금지·높이 4.6",
+   "note": "잔치 차일(흰 천 지붕, 장대 여섯) — 8A 위에서 천 너머가 비치지 않게 반투명 금지·높이 4.6 · 2026-10-11 PART II 준비: 키트 kind 지음(placeholder 안 씀) · 상태 cloth SPREAD(기본)/FURLED — 8A처럼 높이서 내려다보는 컷은 FURLED(사건 코드에서 world.set_prop_state(\"ti_chail/cloth\", \"FURLED\"))",
    "placeholder": {
     "kit": "village/sotdae",
     "params": {
@@ -696,93 +696,73 @@
   },
   {
    "id": "ti_feast_w0",
-   "kit": "story/clue",
+   "kit": "story/chunhyang",
    "params": {
-    "kind": "feast",
+    "kind": "jansang",
     "seed": 3220
    },
-   "x": -3168.8,
-   "z": 210.6,
-   "ry": 1.5708,
+   "x": -3166.9,
+   "z": 210.8,
+   "ry": -1.5708,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "yard": false,
    "when": "ph('feast') or ph('reveal')",
    "phase": "P2 잔치",
-   "status": "EXISTS",
+   "status": "BUILT",
    "cost": "-",
-   "note": ""
+   "note": "손님 한 사람 잔칫상(독상 + 방석). 방석에 앉은 손님(byeon_banquet seats)이 상을 보고 가운데 통로 쪽을 향한다. 사령 줄(x ±6.6) 안쪽"
   },
   {
    "id": "ti_feast_e0",
-   "kit": "story/clue",
+   "kit": "story/chunhyang",
    "params": {
-    "kind": "feast",
+    "kind": "jansang",
     "seed": 3230
    },
-   "x": -3155.4,
-   "z": 210.6,
-   "ry": -1.5708,
+   "x": -3157.3,
+   "z": 210.8,
+   "ry": 1.5708,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "yard": false,
    "when": "ph('feast') or ph('reveal')",
    "phase": "P2 잔치",
-   "status": "EXISTS",
+   "status": "BUILT",
    "cost": "-",
-   "note": ""
+   "note": "손님 한 사람 잔칫상(독상 + 방석). 방석에 앉은 손님(byeon_banquet seats)이 상을 보고 가운데 통로 쪽을 향한다. 사령 줄(x ±6.6) 안쪽"
   },
   {
    "id": "ti_feast_w1",
-   "kit": "story/clue",
+   "kit": "story/chunhyang",
    "params": {
-    "kind": "feast",
+    "kind": "jansang",
     "seed": 3221
    },
-   "x": -3168.8,
+   "x": -3166.9,
    "z": 213.2,
-   "ry": 1.5708,
+   "ry": -1.5708,
    "y": null,
    "flatten": false,
    "clear_veg": true,
    "yard": false,
    "when": "ph('feast') or ph('reveal')",
    "phase": "P2 잔치",
-   "status": "EXISTS",
+   "status": "BUILT",
    "cost": "-",
-   "note": ""
+   "note": "손님 한 사람 잔칫상(독상 + 방석). 방석에 앉은 손님(byeon_banquet seats)이 상을 보고 가운데 통로 쪽을 향한다. 사령 줄(x ±6.6) 안쪽"
   },
   {
    "id": "ti_feast_e1",
-   "kit": "story/clue",
+   "kit": "story/chunhyang",
    "params": {
-    "kind": "feast",
+    "kind": "jansang",
     "seed": 3231
    },
-   "x": -3155.4,
+   "x": -3157.3,
    "z": 213.2,
-   "ry": -1.5708,
-   "y": null,
-   "flatten": false,
-   "clear_veg": true,
-   "yard": false,
-   "when": "ph('feast') or ph('reveal')",
-   "phase": "P2 잔치",
-   "status": "EXISTS",
-   "cost": "-",
-   "note": ""
-  },
-  {
-   "id": "ti_feast_w2",
-   "kit": "story/clue",
-   "params": {
-    "kind": "feast",
-    "seed": 3222
-   },
-   "x": -3168.8,
-   "z": 215.8,
    "ry": 1.5708,
    "y": null,
    "flatten": false,
@@ -790,19 +770,19 @@
    "yard": false,
    "when": "ph('feast') or ph('reveal')",
    "phase": "P2 잔치",
-   "status": "EXISTS",
+   "status": "BUILT",
    "cost": "-",
-   "note": ""
+   "note": "손님 한 사람 잔칫상(독상 + 방석). 방석에 앉은 손님(byeon_banquet seats)이 상을 보고 가운데 통로 쪽을 향한다. 사령 줄(x ±6.6) 안쪽"
   },
   {
-   "id": "ti_feast_e2",
-   "kit": "story/clue",
+   "id": "ti_feast_w2",
+   "kit": "story/chunhyang",
    "params": {
-    "kind": "feast",
-    "seed": 3232
+    "kind": "jansang",
+    "seed": 3222
    },
-   "x": -3155.4,
-   "z": 215.8,
+   "x": -3166.9,
+   "z": 215.6,
    "ry": -1.5708,
    "y": null,
    "flatten": false,
@@ -810,9 +790,73 @@
    "yard": false,
    "when": "ph('feast') or ph('reveal')",
    "phase": "P2 잔치",
-   "status": "EXISTS",
+   "status": "BUILT",
    "cost": "-",
-   "note": ""
+   "note": "손님 한 사람 잔칫상(독상 + 방석). 방석에 앉은 손님(byeon_banquet seats)이 상을 보고 가운데 통로 쪽을 향한다. 사령 줄(x ±6.6) 안쪽"
+  },
+  {
+   "id": "ti_feast_e2",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "jansang",
+    "seed": 3232
+   },
+   "x": -3157.3,
+   "z": 215.6,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "BUILT",
+   "cost": "-",
+   "note": "손님 한 사람 잔칫상(독상 + 방석). 방석에 앉은 손님(byeon_banquet seats)이 상을 보고 가운데 통로 쪽을 향한다. 사령 줄(x ±6.6) 안쪽"
+  },
+  {
+   "id": "ti_jansang_hall_e",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "jansang",
+    "rich": true,
+    "seed": 3251
+   },
+   "x": -3159.2,
+   "z": 207.5,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "BUILT",
+   "cost": "-",
+   "note": "대청 위 수령 손님 상(rich, 붉은 방석) — byeon_banquet C 구역 자리",
+   "dy": 1.05
+  },
+  {
+   "id": "ti_jansang_hall_w",
+   "kit": "story/chunhyang",
+   "params": {
+    "kind": "jansang",
+    "rich": true,
+    "seed": 3250
+   },
+   "x": -3165.0,
+   "z": 207.5,
+   "ry": 3.1416,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "yard": false,
+   "when": "ph('feast') or ph('reveal')",
+   "phase": "P2 잔치",
+   "status": "BUILT",
+   "cost": "-",
+   "note": "대청 위 수령 손님 상(rich, 붉은 방석) — byeon_banquet C 구역 자리",
+   "dy": 1.05
   },
   {
    "id": "ti_jusang_dais_w",
@@ -832,7 +876,7 @@
    "phase": "P2 잔치",
    "status": "EXISTS",
    "cost": "-",
-   "note": "",
+   "note": "보계(dais) 위 술상(dy 1.05)",
    "dy": 1.05
   },
   {
@@ -853,7 +897,7 @@
    "phase": "P2 잔치",
    "status": "EXISTS",
    "cost": "-",
-   "note": "",
+   "note": "보계(dais) 위 술상(dy 1.05)",
    "dy": 1.05
   },
   {
@@ -883,8 +927,8 @@
     "kind": "chaeksang",
     "seed": 3244
    },
-   "x": -3168.0,
-   "z": 213.0,
+   "x": -3165.7,
+   "z": 212.0,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -894,7 +938,7 @@
    "phase": "P2 §42",
    "status": "EXISTS",
    "cost": "-",
-   "note": "붓·종이는 meoktong(FALLEN 아님)으로 곁에"
+   "note": "§42 서안 — 잔칫상 줄(손님 자리 x -3167.5)과 겹치지 않게 서쪽 첫째·둘째 상 사이 통로 쪽으로 옮김(PART II 준비 2026-10-11)"
   },
   {
    "id": "ti_poem_ink",
@@ -903,8 +947,8 @@
     "kind": "meoktong",
     "seed": 3245
    },
-   "x": -3167.2,
-   "z": 213.4,
+   "x": -3164.9,
+   "z": 212.4,
    "ry": 0.0,
    "y": null,
    "flatten": false,
@@ -1191,9 +1235,9 @@
   "ch_byeon_seat": {
    "at": [
     -3162.1,
-    206.6
+    206.9
    ],
-   "src": "동헌 대청 앞 마루(F 1.05) 위 교의",
+   "src": "동헌 대청 위 교의(ti_seat_screen -3162.1, 206.6) 앞 0.3m — 앉은 그림이 교의 앞에 서게(PART II 준비 촬영으로 고침)",
    "scene": "변학도 자리",
    "dy": 1.05
   },
@@ -1463,10 +1507,10 @@
   },
   "ch_poem_table": {
    "at": [
-    -3168.0,
-    213.0
+    -3165.7,
+    212.0
    ],
-   "src": "새 — 안마당 서쪽(단 앞)",
+   "src": "새 — 안마당 서쪽(단 앞) · PART II 준비: 손님 자리와 겹쳐 (-3165.7, 212.0)으로",
    "scene": "§42 CAMERA 17A 종이"
   },
   "ch_musicians": {
@@ -1663,7 +1707,7 @@
     "C_daecheong": 4,
     "D_side": 2
    },
-   "density_note": "합 14 확정(사용자, 2026-10-11 — 첫 값). 출두(reveal) 때 같은 사람이 자세만 바뀐다(bow·kneel — PART II 준비 때)",
+   "density_note": "합 14 확정(사용자, 2026-10-11 — 첫 값). 짜임(PART II 준비 2026-10-11): 손님(선비·수령) 8 · 기생 4 · 시중 2 — 포졸·관속은 군중에 없다(사령·포졸은 이야기 인물 고정 자리, namwon_chunhyang_data.guard_posts). 출두 때 같은 사람이 제자리에서 자세만 바뀐다(EventCrowd.apply_on_flag)",
    "area": {
     "rects": {
      "A_court_w": [
@@ -1679,9 +1723,9 @@
       218.6
      ],
      "C_daecheong": [
-      -3170.0,
+      -3166.4,
       206.3,
-      -3154.2,
+      -3157.8,
       207.6
      ],
      "D_side": [
@@ -1726,18 +1770,19 @@
      {
       "id": "poem_table",
       "rect": [
-       -3169.2,
-       212.2,
-       -3166.8,
-       213.8
-      ]
+       -3166.9,
+       211.4,
+       -3164.6,
+       212.7
+      ],
+      "why": "§42 서안(그때만)"
      },
      {
       "id": "table_w",
       "rect": [
-       -3169.3500000000004,
+       -3167.35,
        209.9,
-       -3168.25,
+       -3166.4500000000003,
        216.5
       ],
       "why": "잔칫상 줄"
@@ -1745,9 +1790,9 @@
      {
       "id": "table_e",
       "rect": [
-       -3155.9500000000003,
+       -3157.75,
        209.9,
-       -3154.85,
+       -3156.8500000000004,
        216.5
       ],
       "why": "잔칫상 줄"
@@ -1779,12 +1824,24 @@
      "scholar"
     ],
     [
-     "CHR_HUM_004",
-     "official"
+     "CHR_HUM_024",
+     "py_clerk"
     ],
     [
-     "CHR_HUM_016",
-     "pojol"
+     "CHR_HUM_022",
+     "elder"
+    ],
+    [
+     "-",
+     "gisaeng"
+    ],
+    [
+     "-",
+     "gisaeng_b"
+    ],
+    [
+     "-",
+     "gisaeng_c"
     ],
     [
      "CHR_HUM_026",
@@ -1801,14 +1858,137 @@
     "18A"
    ],
    "far_freeze_m": 40,
-   "status": "확정 14 — PART II(feast·reveal) 전까지 꺼져 있음",
+   "status": "확정 14 · 짜임(손님 8 · 기생 4 · 시중 2) — PART II(feast·reveal) 전까지 꺼져 있음",
    "watch_targets": {
     "A_court_w": "ch_court",
     "B_court_e": "ch_court",
     "C_daecheong": "ch_court",
     "D_side": "ch_court"
    },
-   "area_note": "시험 촬영(chunhyang_prep 07): 초안 구역(x -3181~-3143)은 확정 8A 틀(가로 약 16m, x -3170~-3154) 밖이 많아 사람이 화면에 거의 없었다 → 안마당 구역을 축 쪽으로 당기고(가운데 통로 5m는 그대로) 잔칫상 줄도 x -3168.8 / -3155.4로 옮김. 대청 구역은 처마에 가리지 않는 앞쪽 띠(z 206.3~207.6)만. D(동헌 서쪽 곁, 악공·시중)는 틀 밖 그대로"
+   "area_note": "시험 촬영(chunhyang_prep 07): 초안 구역(x -3181~-3143)은 확정 8A 틀(가로 약 16m, x -3170~-3154) 밖이 많아 사람이 화면에 거의 없었다 → 안마당 구역을 축 쪽으로 당기고(가운데 통로 5m는 그대로) 잔칫상 줄도 x -3168.8 / -3155.4로 옮김. 대청 구역은 처마에 가리지 않는 앞쪽 띠(z 206.3~207.6)만. D(동헌 서쪽 곁, 악공·시중)는 틀 밖 그대로",
+   "rect_roles": {
+    "A_court_w": [
+     "sit:guest",
+     "sit:guest",
+     "sit:guest",
+     "serve:gisaeng"
+    ],
+    "B_court_e": [
+     "sit:guest",
+     "sit:guest",
+     "sit:guest",
+     "serve:gisaeng"
+    ],
+    "C_daecheong": [
+     "sit:guest",
+     "sit:gisaeng",
+     "sit:guest",
+     "sit:gisaeng"
+    ],
+    "D_side": [
+     "serve:servant",
+     "serve:servant"
+    ]
+   },
+   "banks": {
+    "guest": [
+     [
+      "CHR_HUM_024",
+      "scholar"
+     ],
+     [
+      "CHR_HUM_024",
+      "py_clerk"
+     ],
+     [
+      "CHR_HUM_022",
+      "elder"
+     ]
+    ],
+    "gisaeng": [
+     [
+      "-",
+      "gisaeng"
+     ],
+     [
+      "-",
+      "gisaeng_b"
+     ],
+     [
+      "-",
+      "gisaeng_c"
+     ]
+    ],
+    "servant": [
+     [
+      "CHR_HUM_026",
+      "villager_m"
+     ],
+     [
+      "CHR_HUM_029",
+      "villager_f"
+     ]
+    ]
+   },
+   "seats": {
+    "A_court_w": [
+     [
+      -3167.5,
+      210.8,
+      "right"
+     ],
+     [
+      -3167.5,
+      213.2,
+      "right"
+     ],
+     [
+      -3167.5,
+      215.6,
+      "right"
+     ]
+    ],
+    "B_court_e": [
+     [
+      -3156.7000000000003,
+      210.8,
+      "left"
+     ],
+     [
+      -3156.7000000000003,
+      213.2,
+      "left"
+     ],
+     [
+      -3156.7000000000003,
+      215.6,
+      "left"
+     ]
+    ],
+    "C_daecheong": [
+     [
+      -3165.0,
+      206.9,
+      "down"
+     ],
+     [
+      -3165.9,
+      206.6,
+      "down"
+     ],
+     [
+      -3159.2,
+      206.9,
+      "down"
+     ],
+     [
+      -3158.3,
+      206.6,
+      "down"
+     ]
+    ]
+   },
+   "seats_note": "손님은 잔칫상(ti_feast_*·ti_jansang_hall_*)의 방석 자리. 대청 손님·기생은 동헌 가운데 열린 칸(분합문 칸은 벽 뒤라 안 보인다 — 촬영으로 확인)에 앉는다. A·B의 기생은 serve(술병 들고 오감)"
   }
  ],
  "cameras": {
@@ -1933,14 +2113,14 @@
   "17A": {
    "kind": "shot",
    "pos": [
-    -3168.0,
+    -3165.7,
     2.3,
-    213.05
+    212.05
    ],
    "look": [
-    -3168.0,
+    -3165.7,
     0.4,
-    213.0
+    212.0
    ],
    "fov": 30,
    "why": "종이를 위에서(서안 위 0.4m)"

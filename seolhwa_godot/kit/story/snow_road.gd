@@ -3,6 +3,8 @@
 # params.kind:
 #   horse    눈 속에 쓰러진 짐말(옆으로 누움, 길마만 남고 짐은 벗겨 감) + 반쯤 덮은 눈 둔덕
 #   cart     엎어진 짐수레(바퀴 하나 빠짐) + 터진 가마니 둘·흩어진 곡식 + 끊긴 끌채 끈
+#            upright=true: 바로 선 짐수레(두 바퀴 · 바닥판 · 옆널 · 끌채를 앞(+z) 땅에 내려놓음) + 술독 셋을 새끼로 묶어 실음(춘향 §32 술 상인).
+#            jars=0이면 빈 수레
 #   luggage  눈에 반쯤 묻힌 봇짐(끈 한 가닥이 눈 위로) — dug=true면 파낸 뒤(봇짐이 위에, 눈 무더기 곁에)
 #   pouch    길 위의 전갈 주머니(가죽 통 + 붉은 끈 — 감영 인이 찍힌 덮개)
 #   fire     눈 위 작은 모닥불(돌 둘레·장작·불빛) — 서낭당 돌담 밑 쉼 자리
@@ -28,7 +30,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var fp := Vector2(1.5, 1.5)
 	match kind:
 		"horse": fp = _horse(m)
-		"cart": fp = _cart(m)
+		"cart": fp = _cart_upright(m, int(params.get("jars", 3))) if bool(params.get("upright", false)) else _cart(m)
 		"luggage": _luggage(m, bool(params.get("dug", false)))
 		"pouch": _pouch(m)
 		"fire": _fire(m)
@@ -94,6 +96,40 @@ static func _cart(m: C.M) -> Vector2:
 		m.add("p", "flat", C.PA(g2, RICE, 0.03, R), 0.0)
 	m.box_c(-1.0, 1.2, -1.3, 1.3)
 	return Vector2(4.0, 5.0)
+
+# 바로 선 짐수레: 축 높이 0.55(바퀴 반지름) · 바닥판 1.3×2.4는 끌채 쪽(+z)으로 기울어 끌채 끝이 땅에 닿는다
+static func _cart_upright(m: C.M, jars: int) -> Vector2:
+	var R := m.rng
+	var tilt := 0.13   # 앞(+z)으로 숙임(끌채를 내려놓은 채)
+	var old := m.push(0, 0.62, -0.2, 0.0)
+	# 바닥판·옆널·뒤널(앞으로 기운 판 — x축 회전)
+	m.add("p", "wood", C.PA(Kit.xf(Kit.box(1.3, 0.08, 2.4), 0, 0, 0, tilt, 0, 0), C.WOOD_L, 0.05, R), 0.012)
+	for sx in [-1, 1]:
+		m.add("p", "wood", C.PA(Kit.xf(Kit.box(0.06, 0.32, 2.4), sx * 0.64, 0.18, 0, tilt, 0, 0), C.WOOD, 0.05, R), 0.01)
+	m.add("p", "wood", C.PA(Kit.xf(Kit.box(1.3, 0.32, 0.06), 0, 0.18 - sin(tilt) * 1.2, -1.18, tilt, 0, 0), C.WOOD, 0.05, R), 0.01)
+	m.pop(old)
+	# 바퀴 둘(살 여덟) + 축
+	for sx in [-1, 1]:
+		var x: float = sx * 0.78
+		m.add("p", "wood", C.PA(Kit.xf(C.torus(0.55, 0.06, 5, 16), x, 0.55, -0.35, 0.0, PI / 2, 0.0), C.WOOD), 0.008)
+		for k in 4:
+			m.add("p", "wood", C.PA(Kit.xf(Kit.box(0.04, 1.06, 0.05), x, 0.55, -0.35, k * PI / 4, 0, 0), C.WOOD), 0.004)
+		m.add("p", "wood", C.PA(Kit.xf(Kit.cyl(0.09, 0.09, 0.14, 8), x, 0.55, -0.35, 0, 0, PI / 2), C.WOOD), 0.004)
+	m.add("p", "wood", C.PA(Kit.xf(Kit.cyl(0.05, 0.05, 1.7, 6), 0, 0.55, -0.35, 0, 0, PI / 2), C.WOOD), 0.004)
+	# 끌채 둘: 바닥판 앞에서 앞으로 땅까지
+	for sx in [-1, 1]:
+		m.add("p", "wood", C.PA(Kit.limb(Vector3(sx * 0.5, 0.5, 0.9), Vector3(sx * 0.42, 0.05, 2.6), 0.05, 0.04, 5), C.WOOD), 0.004)
+	m.add("p", "wood", C.PA(Kit.limb(Vector3(-0.44, 0.14, 2.3), Vector3(0.44, 0.14, 2.3), 0.035, 0.035, 4), C.WOOD), 0.003)
+	# 술독(옹기) + 묶은 새끼
+	for i in jars:
+		var zz := -1.0 + i * 0.72
+		var y := 0.62 + 0.04 - sin(tilt) * zz
+		m.add("p", "onggi", C.PA(Kit.xf(C.onggi(0.28, 0.58), (R.next() - 0.5) * 0.12, y, zz), C.ONGGI, 0.05, R), 0.012)
+		m.add("p", "flat", C.PA(Kit.xf(Kit.cyl(0.29, 0.29, 0.05, 10), 0, y + 0.36, zz), [0xb39a68, 0x7d6a48]), 0.004)
+	if jars > 0:
+		m.add("p", "flat", C.PA(Kit.limb(Vector3(-0.6, 0.95, -1.0), Vector3(0.6, 0.95, 0.5), 0.02, 0.02, 4), [0xb39a68, 0x7d6a48]), 0.0)
+	m.box_c(-0.9, 0.9, -1.5, 1.2)
+	return Vector2(2.0, 4.2)
 
 static func _luggage(m: C.M, dug: bool) -> void:
 	var R := m.rng

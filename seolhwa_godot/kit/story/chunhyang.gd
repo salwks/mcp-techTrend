@@ -1,5 +1,5 @@
 # 춘향 「남원의 약속」 차림 키트(seolhwa/docs/production/CHUNHYANG_ASSETS_PLACEMENT_v1.0.md §2) — kind로 고른다. 원점 = 바닥 중심.
-#   지금 지을 수 있는 kind: has_kind() 목록. 아직 없는 kind(그네·씨름판·보계·교의·형틀·차일·가마)는 배치 항목의 placeholder로 대신한다
+#   지금 지을 수 있는 kind: has_kind() 목록. 아직 없는 kind(가마)는 배치 항목의 placeholder로 대신한다
 #   (placement_loader._resolve_placeholder).
 #
 #   kind "ok" — 옥(獄, 원옥). 남원 관아 바깥마당 서쪽의 늘 있는 고을 시설(사용자 결정 2, 2026-10-11).
@@ -15,12 +15,26 @@
 #     앵커: pivot(가로대 가운데) · seat(발판 위). params: h(기본 8.5) · span(기본 6.0) · cloth(색천, 기본 true)
 #   kind "fan" — 땅에 떨어진 접부채(방자, §5). 반쯤 펼친 부챗살 + 한지. params: r(기본 0.32)
 #   kind "ssireum_ring" — 씨름판: 모래 원판 + 짚 새끼 테. params: r(기본 3.5)
+#
+#   PART II(관아 잔치 · 곤장 · 출두 — 2026-10-11 PART II 준비). 모두 앞 = +z(남쪽, 안마당 쪽).
+#   kind "dais" — 보계(補階): 동헌 대청 높이로 앞에 덧댄 임시 나무 단. 기둥 줄 + 귀틀 + 마루널 + 옆 판 + 앞 가운데 계단(셋).
+#     params: w(기본 7) · d(기본 2) · h(기본 1.05 — 대청 마루 높이) · steps(기본 3). 앵커: top(단 위 가운데) · stair(계단 앞 땅)
+#   kind "seat_screen" — 교의(등받이·팔걸이 의자, 붉은 방석) + 뒤 병풍(여덟 폭, 지그재그). 대청 위(배치 dy 1.05).
+#     params: screen(병풍, 기본 true) · panels(폭 수, 기본 8). 앵커: seat(교의 앉는 자리)
+#   kind "hyeongteul" — 곤장 형틀: 긴 나무 틀(다리 넷 · 가로 받침 · 묶는 새끼) + 곤장 둘(납작한 긴 매, 틀 곁에 기대어 둠). 놓여 있기만(§52).
+#     params: len(기본 2.1, x 방향) · paddles(기본 2)
+#   kind "chail" — 잔치 차일: 흰 천 지붕(가장자리 술) + 장대 여섯 + 당김줄·말뚝. 천은 반투명이 아니다.
+#     장대는 짧은 변(동·서)에 셋씩 — 가운데 축(보계·가운데 통로)에는 서지 않는다.
+#     상태 "cloth": SPREAD(편 천, 기본) / FURLED(천을 반씩 양쪽 짧은 변 가로대에 말아 올림 — 8A처럼 높이서 내려다보는 컷에서 안마당이 보이게).
+#     params: w(기본 18) · d(기본 8) · h(기본 4.6)
+#   kind "jansang" — 손님 한 사람의 잔칫상 차림: 낮은 독상(술병·잔·떡·나물 그릇) + 뒤(+z) 방석. 손님은 방석에 앉아 −z(상)를 본다.
+#     params: cushion(기본 true) · rich(그릇 더, 기본 false — 대청 위 수령 상). 앵커: seat(방석 위)
 extends RefCounted
 
 const C := preload("res://kit/village/_common.gd")
 const SC := preload("res://kit/scenario/_sc.gd")
 
-const KINDS := ["ok", "swing", "ssireum_ring", "fan"]
+const KINDS := ["ok", "swing", "ssireum_ring", "fan", "dais", "seat_screen", "hyeongteul", "chail", "jansang"]
 const BAR := [0x5a4330, 0x3c2c1e]        # 옥 나무살 — 짙은 통나무
 const BAR_RAIL := [0x6b5038, 0x4a3726]
 const STRAW_MAT := [0xc9b27a, 0x9c8656]
@@ -37,6 +51,11 @@ static func build(params: Dictionary) -> Dictionary:
 		"swing": return _swing(params)
 		"ssireum_ring": return _ssireum(params)
 		"fan": return _fan(params)
+		"dais": return _dais(params)
+		"seat_screen": return _seat_screen(params)
+		"hyeongteul": return _hyeongteul(params)
+		"chail": return _chail(params)
+		"jansang": return _jansang(params)
 	push_warning("story/chunhyang: 아직 없는 kind " + kind)
 	var m := C.M.new(1)
 	m.add("p", "flat", C.P(Kit.box(0.3, 0.3, 0.3, 0, 0.15, 0), 0x777777), 0.02)
@@ -250,3 +269,192 @@ static func _fan(P: Dictionary) -> Dictionary:
 	s.add("fan", "flat", SC.pa(Kit.merge(paper), [0xf0e8d2, 0xd8cdb0], 0.03, R), 0.006)
 	s.add("fan", "flat", SC.pa(Kit.merge(ribs), [0x6b4a2e, 0x4d3420], 0.03, R), 0.004)
 	return s.result("부채", Vector2(r * 2, r), false)
+
+# ---------------------------------------------------------------------------
+# PART II — 보계(관아 단)
+# ---------------------------------------------------------------------------
+const PLANK := [0xa8875c, 0x86683f]      # 새로 깐 마루널(대청보다 밝다 — 임시로 덧댄 단)
+const RED_CLOTH := [0xa83a32, 0x7a2a24]
+const WHITE_CLOTH := [0xf2eee4, 0xd6cfbf]
+
+static func _dais(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3501)))
+	var R := s.rng
+	var w := float(P.get("w", 7.0)); var d := float(P.get("d", 2.0)); var h := float(P.get("h", 1.05))
+	var hw := w / 2; var hd := d / 2
+	# 기둥(주초 돌 위) — 가로 1.75m 간격
+	var nx := int(round(w / 1.75)) + 1
+	for i in nx:
+		var x := -hw + 0.12 + (w - 0.24) * i / (nx - 1)
+		for z in [-hd + 0.12, hd - 0.12]:
+			s.add("frame", "wood", SC.pa(Kit.box(0.18, h - 0.1, 0.18, x, (h - 0.1) / 2, z), SC.WOOD, 0.03, R), 0.02)
+			s.add("frame", "stone", SC.pa(Kit.box(0.32, 0.12, 0.32, x, 0.06, z), C.STONE, 0.05, R), 0.015)
+	# 귀틀(테두리) + 마루널(세로 널 — 대청처럼 우물마루는 아니다)
+	s.add("deck", "wood", SC.pa(Kit.box(w, 0.16, 0.18, 0, h - 0.08, hd - 0.09), SC.WOOD, 0.03, R), 0.02)
+	s.add("deck", "wood", SC.pa(Kit.box(w, 0.16, 0.18, 0, h - 0.08, -hd + 0.09), SC.WOOD, 0.03, R), 0.02)
+	var planks := []
+	var np := int(w / 0.32)
+	for i in np:
+		var x := -hw + w * (i + 0.5) / np
+		planks.append(Kit.box(w / np - 0.015, 0.06, d - 0.04, x, h - 0.03, 0))
+	s.add("deck", "wood", SC.pa(Kit.merge(planks), PLANK, 0.06, R), 0.012)
+	# 앞·옆 가림 판(아래가 비어 보이지 않게)
+	s.add("frame", "wood", SC.pa(Kit.box(w - 0.1, h - 0.25, 0.04, 0, (h - 0.25) / 2 + 0.06, hd - 0.05), [0x7a5c3e, 0x5a4330], 0.04, R), 0.015)
+	for sx in [-1, 1]:
+		s.add("frame", "wood", SC.pa(Kit.box(0.04, h - 0.25, d - 0.1, sx * (hw - 0.05), (h - 0.25) / 2 + 0.06, 0), [0x7a5c3e, 0x5a4330], 0.04, R), 0.015)
+	# 앞 가운데 계단(+z로 내려옴)
+	var steps := int(P.get("steps", 3))
+	var sw := 1.6; var run := 0.32
+	for k in steps:
+		var y := h * (steps - k) / (steps + 1.0)
+		var z := hd + run * (k + 0.5)
+		s.add("stair", "wood", SC.pa(Kit.box(sw, 0.08, run + 0.02, 0, y, z), PLANK, 0.05, R), 0.015)
+		s.add("stair", "wood", SC.pa(Kit.box(sw, y - 0.04, 0.05, 0, (y - 0.04) / 2, z + run / 2), [0x7a5c3e, 0x5a4330], 0.04, R), 0.012)
+	for sx in [-1, 1]:
+		s.add("stair", "wood", SC.pa(Kit.xf(Kit.box(0.08, 0.18, run * steps + 0.4, sx * (sw / 2 + 0.04), h * 0.5, hd + run * steps / 2), 0, 0, 0, 0.0, 0, 0), SC.WOOD, 0.03, R), 0.015)
+	s.box_c(-hw, hw, -hd, hd)
+	s.anchor("top", Vector3(0, h, 0))
+	s.anchor("stair", Vector3(0, 0, hd + run * steps + 0.4))
+	return s.result("보계", Vector2(w, d + run * steps))
+
+# ---------------------------------------------------------------------------
+# PART II — 교의 + 병풍
+# ---------------------------------------------------------------------------
+static func _seat_screen(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3502)))
+	var R := s.rng
+	var lac := [0x5a2a22, 0x3a1a16]       # 붉은 옻칠
+	var sy := 0.5
+	# 교의: 다리 넷 · 앉음판 · 등받이(세 살) · 팔걸이 · 발받침
+	for sx in [-1, 1]:
+		for sz in [-1, 1]:
+			s.add("chair", "wood", SC.pa(Kit.box(0.07, sy, 0.07, sx * 0.3, sy / 2, sz * 0.25), lac, 0.03, R), 0.012)
+		s.add("chair", "wood", SC.pa(Kit.box(0.06, 0.62, 0.06, sx * 0.3, sy + 0.31, -0.25), lac, 0.03, R), 0.012)   # 등받이 기둥
+		s.add("chair", "wood", SC.pa(Kit.box(0.06, 0.06, 0.56, sx * 0.31, sy + 0.24, 0.0), lac, 0.03, R), 0.01)     # 팔걸이
+		s.add("chair", "wood", SC.pa(Kit.box(0.05, 0.24, 0.05, sx * 0.31, sy + 0.12, 0.24), lac, 0.03, R), 0.01)
+	s.add("chair", "wood", SC.pa(Kit.box(0.68, 0.06, 0.58, 0, sy, 0), lac, 0.03, R), 0.015)
+	s.add("chair", "wood", SC.pa(Kit.box(0.7, 0.08, 0.07, 0, sy + 0.62, -0.25), lac, 0.03, R), 0.012)
+	s.add("chair", "wood", SC.pa(Kit.box(0.34, 0.5, 0.04, 0, sy + 0.32, -0.26), [0x8a4a30, 0x6a3420], 0.03, R), 0.01)
+	s.add("chair", "cloth", SC.pa(Kit.box(0.6, 0.06, 0.52, 0, sy + 0.06, 0.01), RED_CLOTH, 0.04, R), 0.008)   # 방석
+	s.add("chair", "wood", SC.pa(Kit.box(0.62, 0.12, 0.3, 0, 0.06, 0.46), lac, 0.03, R), 0.012)               # 발받침(족대)
+	s.box_c(-0.36, 0.36, -0.3, 0.3)
+	# 병풍: 폭마다 테 + 그림(산수 — 엷은 먹빛 띠), 지그재그로 세움
+	if bool(P.get("screen", true)):
+		var n := int(P.get("panels", 8))
+		var pw := 0.42; var ph := 1.75
+		var z0 := -0.75
+		for i in n:
+			var x := -pw * n / 2.0 + pw * (i + 0.5)
+			var a := 0.22 if i % 2 == 0 else -0.22
+			var zz := z0 + (0.04 if i % 2 == 0 else -0.04)
+			s.add("screen", "wood", SC.pa(Kit.box(pw, ph, 0.03, x, ph / 2 + 0.06, zz, a), [0x3a2a20, 0x2a1e16], 0.02, R), 0.012)
+			s.add("screen", "flat", SC.pa(Kit.box(pw - 0.07, ph - 0.22, 0.012, x, ph / 2 + 0.08, zz + 0.02 * cos(a), a), [0xe8dfc6, 0xd6caa8], 0.03, R), 0.0)
+			# 먹 산수 띠(산 둘 · 물 한 줄)
+			s.add("screen", "flat", SC.pa(Kit.box(pw - 0.12, 0.28, 0.006, x, 0.75 + (i % 3) * 0.12, zz + 0.032 * cos(a), a), [0x8a9488, 0x6a7468], 0.05, R), 0.0)
+			s.add("screen", "flat", SC.pa(Kit.box(pw - 0.12, 0.05, 0.006, x, 0.45, zz + 0.032 * cos(a), a), [0x6e8aa0, 0x5a7488], 0.03, R), 0.0)
+		s.box_c(-pw * n / 2.0, pw * n / 2.0, z0 - 0.15, z0 + 0.15)
+	s.anchor("seat", Vector3(0, sy + 0.06, 0))
+	return s.result("교의와 병풍", Vector2(3.6, 1.6), false)
+
+# ---------------------------------------------------------------------------
+# PART II — 곤장 형틀
+# ---------------------------------------------------------------------------
+static func _hyeongteul(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3503)))
+	var R := s.rng
+	var L := float(P.get("len", 2.1))
+	var hl := L / 2; var top := 0.55
+	var old_wood := [0x7a6248, 0x58442f]
+	for sx in [-1, 1]:
+		for sz in [-1, 1]:
+			s.add("frame", "wood", SC.pa(Kit.box(0.09, top, 0.09, sx * (hl - 0.15), top / 2, sz * 0.2), old_wood, 0.04, R), 0.015)
+		s.add("frame", "wood", SC.pa(Kit.box(0.08, 0.08, 0.46, sx * (hl - 0.15), 0.18, 0), old_wood, 0.04, R), 0.01)   # 다리 받침
+	s.add("frame", "wood", SC.pa(Kit.box(L, 0.1, 0.5, 0, top, 0), old_wood, 0.05, R), 0.018)
+	for sx in [-1, 1]: s.add("frame", "wood", SC.pa(Kit.box(L, 0.06, 0.06, 0, top - 0.09, sx * 0.24), SC.WOOD, 0.03, R), 0.01)
+	# 머리 쪽 턱(−x) · 묶는 새끼 두 곳
+	s.add("frame", "wood", SC.pa(Kit.box(0.1, 0.16, 0.5, -hl + 0.05, top + 0.12, 0), old_wood, 0.04, R), 0.012)
+	for x in [-0.25, 0.55]:
+		s.add("rope", "flat", SC.pa(Kit.box(0.06, 0.13, 0.54, x, top + 0.01, 0), [0xb39a68, 0x8a7348], 0.05, R), 0.006)
+	# 곤장 둘: 납작한 긴 매(손잡이 둥글게) — 틀 남쪽(+z)에 비스듬히 눕힘
+	var n := int(P.get("paddles", 2))
+	for i in n:
+		var g := Kit.merge([Kit.box(1.25, 0.04, 0.16, 0.2, 0, 0), Kit.cyl(0.035, 0.035, 0.45, 6, -0.62, 0, 0, 0, 0, PI / 2)])
+		Kit.xf(g, -0.2 + i * 0.35, 0.03 + i * 0.045, 0.62 + i * 0.12, 0.0, 0.18 - i * 0.3, 0.0)
+		s.add("paddle", "wood", SC.pa(g, [0x8a6440, 0x6a4a2e], 0.04, R), 0.01)
+	s.box_c(-hl, hl, -0.27, 0.27)
+	return s.result("형틀", Vector2(L + 0.2, 1.4), false)
+
+# ---------------------------------------------------------------------------
+# PART II — 잔치 차일
+# ---------------------------------------------------------------------------
+static func _chail(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3504)))
+	var R := s.rng
+	var w := float(P.get("w", 18.0)); var d := float(P.get("d", 8.0)); var h := float(P.get("h", 4.6))
+	var hw := w / 2; var hd := d / 2
+	# 장대 여섯: 짧은 변(x = ±w/2)에 셋씩 — 가운데 축(보계·통로)에는 장대를 세우지 않는다. 당김줄 · 말뚝은 바깥으로
+	for sx in [-1, 1]:
+		for k in 3:
+			var z := -hd + d * k / 2.0
+			var x: float = sx * hw
+			s.add("poles", "wood", SC.pa(Kit.cyl(0.06, 0.08, h + 0.35, 7, x, (h + 0.35) / 2, z), SC.WOOD, 0.04, R), 0.02)
+			s.circle(x, z, 0.12)
+			var gx: float = x + sx * 1.4; var gz: float = z + (0.0 if k == 1 else (-1.2 if k == 0 else 1.2))
+			s.add("poles", "flat", SC.pa(Kit.limb(Vector3(x, h + 0.25, z), Vector3(gx, 0.15, gz), 0.012, 0.012, 3), [0xb39a68, 0x8a7348]), 0.0)
+			s.add("poles", "wood", SC.pa(Kit.box(0.07, 0.3, 0.07, gx, 0.12, gz), SC.WOOD, 0.03, R), 0.008)
+		# 짧은 변 위 가로대(천을 매는 장대)
+		s.add("poles", "wood", SC.pa(Kit.cyl(0.05, 0.05, d + 0.3, 6, sx * hw, h + 0.05, 0, PI / 2, 0, 0), SC.WOOD, 0.03, R), 0.015)
+	# 편 천: 가운데가 살짝 처진 흰 천(가로 띠 여러 장 — 이음 솔기) + 가장자리 붉은·푸른 술
+	var spread := s.st("cloth", "SPREAD", "SPREAD")
+	var nz := 8
+	for i in nz:
+		var z0 := -hd + d * i / nz; var z1 := -hd + d * (i + 1) / nz
+		var zm := (z0 + z1) / 2
+		var sag := 0.35 * (1.0 - pow(zm / hd, 2))
+		spread.add("cloth", SC.pa(Kit.box(w + 0.3, 0.03, d / nz + 0.02, 0, h - sag, zm), WHITE_CLOTH, 0.02, R), 0.01)
+	for sz in [-1, 1]:
+		var tas := []
+		for k in int(w / 0.6):
+			tas.append(Kit.box(0.28, 0.22, 0.015, -hw + 0.3 + k * 0.6, h - 0.12, sz * (hd + 0.02)))
+		spread.add("flat", SC.pa(Kit.merge(tas), [0xb8423a, 0x8e2a24] if sz < 0 else [0x3a5a8a, 0x2a4266], 0.04, R), 0.004)
+	# 만 천: 천을 반씩 양쪽 짧은 변 가로대에 말아 올림(가운데가 열려 8A에서 안마당이 보인다)
+	var furled := s.st("cloth", "FURLED")
+	for sx in [-1, 1]:
+		furled.add("cloth", SC.pa(Kit.cyl(0.22, 0.22, d + 0.2, 10, sx * (hw - 0.2), h + 0.08, 0, PI / 2, 0, 0), WHITE_CLOTH, 0.03, R), 0.012)
+		for k in 3:
+			furled.add("flat", SC.pa(Kit.cyl(0.24, 0.24, 0.08, 10, sx * (hw - 0.2), h + 0.08, -hd + d * (k + 0.5) / 3.0, PI / 2, 0, 0), [0xb39a68, 0x8a7348]), 0.004)
+	return s.result("차일", Vector2(w + 2.4, d + 3.0), false)
+
+# ---------------------------------------------------------------------------
+# PART II — 잔칫상(손님 한 사람)
+# ---------------------------------------------------------------------------
+static func _jansang(P: Dictionary) -> Dictionary:
+	var s := SC.S.new(int(P.get("seed", 3505)))
+	var R := s.rng
+	var rich := bool(P.get("rich", false))
+	var tw := 0.78; var td := 0.48; var th := 0.3
+	var lac := [0x6a3a26, 0x4a2618]
+	s.add("table", "wood", SC.pa(Kit.box(tw, 0.05, td, 0, th, 0), lac, 0.04, R), 0.012)
+	s.add("table", "wood", SC.pa(Kit.box(tw + 0.04, 0.025, td + 0.04, 0, th + 0.03, 0), [0x7a4a30, 0x5a3420], 0.03, R), 0.008)
+	for sx in [-1, 1]:
+		for sz in [-1, 1]:
+			s.add("table", "wood", SC.pa(Kit.cyl(0.025, 0.035, th, 6, sx * (tw / 2 - 0.07), th / 2, sz * (td / 2 - 0.07)), lac, 0.03, R), 0.006)
+	# 그릇: 흰 사발·접시 + 떡 괸 것 + 술병 · 잔
+	var dishes := [[-0.24, -0.1, 0.075, 0.05], [0.0, -0.12, 0.07, 0.04], [0.24, -0.1, 0.075, 0.05], [-0.14, 0.1, 0.06, 0.04], [0.12, 0.1, 0.06, 0.04]]
+	if rich: dishes.append_array([[-0.3, 0.12, 0.055, 0.035], [0.3, 0.12, 0.055, 0.035]])
+	var foods := [[0xc8a858, 0xa88a40], [0x6a8a48, 0x4a6a30], [0xb8504a, 0x8e3a34], [0xe8dcc0, 0xc8bca0], [0x8a6a48, 0x6a4a30]]
+	for i in dishes.size():
+		var dd: Array = dishes[i]
+		s.add("dish", "onggi", C.P(Kit.cyl(dd[2], dd[2] * 0.7, dd[3], 10, dd[0], th + 0.05 + dd[3] / 2, dd[1]), 0xf0ebe0, 0xc8c0b0), 0.004)
+		s.add("dish", "smooth", SC.pa(Kit.cyl(dd[2] * 0.82, dd[2] * 0.82, 0.02, 10, dd[0], th + 0.05 + dd[3], dd[1]), foods[i % foods.size()], 0.05, R), 0.0)
+	# 떡 괸 것(가운데 뒤)
+	for k in 4:
+		s.add("dish", "smooth", SC.pa(Kit.cyl(0.07 - k * 0.012, 0.07 - k * 0.012, 0.035, 8, 0.0, th + 0.1 + k * 0.035, 0.08), [0xf0e6d0, 0xd8ccb0] if k % 2 == 0 else [0xd88a8a, 0xb86a6a], 0.04, R), 0.0)
+	s.add("dish", "onggi", C.P(Kit.xf(C.onggi(0.06, 0.16, 8), 0.33, th + 0.05, -0.02), 0xece6d8, 0xc8c0b0), 0.004)   # 술병
+	s.add("dish", "onggi", C.P(Kit.cyl(0.03, 0.022, 0.03, 8, 0.24, th + 0.07, 0.12), 0xf0ebe0, 0xc8c0b0), 0.003)        # 잔
+	if bool(P.get("cushion", true)):
+		s.add("cushion", "cloth", SC.pa(Kit.box(0.6, 0.07, 0.58, 0, 0.035, 0.62), [0x3a5a8a, 0x2a4266] if not rich else RED_CLOTH, 0.04, R), 0.008)
+		s.add("cushion", "cloth", SC.pa(Kit.box(0.5, 0.02, 0.48, 0, 0.075, 0.62), [0xd8c890, 0xb8a870], 0.03, R), 0.0)
+	s.box_c(-tw / 2, tw / 2, -td / 2, td / 2)
+	s.anchor("seat", Vector3(0, 0.07, 0.62))
+	return s.result("잔칫상", Vector2(0.9, 1.3), false)
