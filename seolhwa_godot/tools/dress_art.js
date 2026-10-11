@@ -1,5 +1,5 @@
 // 춘향 PART II 차림 부속(먹선·한지·평면 채색 — 웹 rigs.js 그림 방식 그대로, 웹 코드는 고치지 않는다).
-//   칼(枷) · 풀어 헤친 머리 · 파립(찢어진 갓) · 누더기 덧댐 · 마패(손에 든 소품) · 사모 · 단령 둥근 깃 · 흉배 · 각대 · 검은 수염 · 얹은머리 · 술병(시중)
+//   칼(枷) · 낮게 묶은 흐트러진 머리 · 파립(찢어진 갓) · 누더기 덧댐 · 마패(손에 든 소품) · 사모 · 단령 둥근 깃 · 흉배 · 각대 · 검은 수염 · 얹은머리 · 술병(시중)
 // 부속은 리그의 부위로 붙는다(머리·몸통·손을 따라 움직임 — hum_combat_light.attachHand와 같은 방식).
 // PART2: 굽기 세트 ?set=chunhyang_part2 의 종류(바탕 rig + 색 + 부속). export_story_frames.js가 ensurePart2 → installPoses → installDress 순서로 부른다.
 import { SPECS, getRig } from '/src/chars/rigs.js';
@@ -7,9 +7,9 @@ import { Painter, shade, ellipsePts } from '/src/chars/painter.js';
 
 const { sin, cos, PI } = Math;
 export const PART2 = {
-  // 성춘향(옥): 흰 무명 저고리·치마, 풀어 헤친 머리, 목에 칼
+  // 성춘향(옥): 흰 무명 저고리·치마, 뒤로 낮게 묶었지만 흐트러진 머리(앞·옆 몇 가닥, 등에 긴 꼬리), 목에 칼
   chunhyang_prison: { base: 'villager_f', over: { coat: '#ebe6da', skirt: '#e2dccd', goreum: '#d6cfbe', cuff: '#ddd6c6', collar: '#d6cfbe', hair: null, ribbon: null,
-    carry: null, scarf: null, build: 0.86, height: 1.55, cheek: 0.12, lip: '#9a5048', skin: '#ecd3b8' }, dress: ['loose_hair', 'cangue'],
+    carry: null, scarf: null, build: 0.86, height: 1.55, cheek: 0.12, lip: '#9a5048', skin: '#ecd3b8' }, dress: ['tied_low_hair', 'cangue'],
     anims: ['idle', 'walk', 'talk', 'sit', 'kneel', 'bow'] },
   // 이몽룡(거지 차림): 바랜 도포에 덧댄 누더기, 파립, 흙빛 행전. 출두 때 마패를 든다(mapae)
   mongryong_beggar: { base: 'villager_m', over: { top: 'durumagi', coat: '#a69c86', pants: '#b3a78f', collar: '#6c6253', goreum: '#6c6253', vest: null, daenim: '#6c6253',
@@ -56,33 +56,59 @@ const zOf = (rig, view, name) => (rig.views[view].find((p) => p.name === name) |
 // ---------------------------------------------------------------------------
 // 머리 부속(head 부위 좌표 — drawHead와 같은 hy·cx)
 // ---------------------------------------------------------------------------
-function looseHair(p, view, S, sp) {
+// 옥 춘향 머리(사용자 결정 2026-10-11): 다 풀지도, PART I 댕기처럼 단정하지도 않다 — 뒤 낮게(목덜미) 무명 끈으로 묶었지만 흐트러졌고,
+// 앞·옆에 몇 가닥이 빠져 나왔고, 묶은 아래로 긴 머리가 등에 보인다. 원귀처럼 얼굴·가슴을 덮는 머리 장막은 없다.
+function tiedLowHair(p, view, S, sp) {
   const ws = S.ws, rx = S.headRX, ry = S.headRY, hy = headY(S), hc = sp.hairColor || '#2a2420';
   const side = view === 'side', back = view === 'back';
   const cx = side ? 2 * ws : 0;
-  const streak = (pts) => p.stroke(pts, { w: 1.1, color: shade(hc, 0.3), rough: 0.4 });
+  const streak = (pts, w = 1.1) => p.stroke(pts, { w, color: shade(hc, 0.3), rough: 0.4 });
+  const wisp = (pts, w = 1.5) => p.stroke(pts, { w, color: hc, rough: 0.9 });
+  const tie = '#d8d0bf';   // 흰 무명 끈(옷과 같은 빛, 조금 바램)
+  const nape = hy + ry * 0.78;
   if (side) {
-    // 정수리 뒤에서 등 가운데까지 흘러내린 머리(끝이 들쭉날쭉)
-    const path = p.poly([[cx - rx * 0.3, hy - ry - 2], [cx + rx * 0.6, hy - ry * 0.9], [cx + rx + 5, hy - ry * 0.2], [cx + rx + 9, hy + ry * 0.9],
-      [cx + rx + 12, 40 * ws], [cx + rx + 10, 78 * ws, 'c'], [cx + rx + 2, 70 * ws], [cx + rx - 4, 84 * ws, 'c'], [cx + rx - 9, 66 * ws],
-      [cx + rx * 0.45, 30 * ws], [cx + rx * 0.5, hy + ry * 0.5], [cx + rx * 0.15, hy - ry * 0.2]], hc, { w: 2.0, rough: 0.6 });
-    p.clip(path, () => { streak([[cx + rx * 0.4, hy - ry * 0.6], [cx + rx + 4, hy + ry * 0.8], [cx + rx + 5, 60 * ws]]); streak([[cx + rx * 0.9, hy], [cx + rx + 1, 70 * ws]]); });
+    // 뒤통수를 따라 목덜미로 모인 머리(살짝 부푼 흐트러짐) → 끈 → 등으로 내려간 꼬리(끝이 들쭉날쭉, 허리 위까지)
+    const bx = cx + rx * 0.62;
+    const mass = p.poly([[cx + rx * 0.2, hy - ry - 1], [cx + rx * 0.75, hy - ry * 0.75], [cx + rx + 3, hy - ry * 0.1], [cx + rx + 2, hy + ry * 0.45],
+      [bx + 4, nape - 2], [bx - 2, nape + 2], [cx + rx * 0.35, hy + ry * 0.3], [cx + rx * 0.3, hy - ry * 0.5]], hc, { w: 1.9, rough: 0.7 });
+    p.clip(mass, () => { streak([[cx + rx * 0.5, hy - ry * 0.8], [cx + rx + 1, hy + ry * 0.2], [bx + 1, nape]]); });
+    const tail = p.poly([[bx - 3, nape + 1], [bx + 5, nape + 1], [bx + 8, 16 * ws], [bx + 9, 44 * ws, 'c'], [bx + 4, 38 * ws], [bx + 1, 52 * ws, 'c'],
+      [bx - 3, 36 * ws], [bx - 2, 14 * ws]], hc, { w: 1.9, rough: 0.7 });
+    p.clip(tail, () => { streak([[bx + 1, nape + 4], [bx + 4, 40 * ws]]); });
+    p.poly([[bx - 4, nape - 1], [bx + 6, nape - 1], [bx + 6, nape + 4], [bx - 4, nape + 4]], tie, { w: 1.3 });
+    // 빠져 나온 가닥: 귀 앞으로 하나, 이마 위로 짧은 것 하나, 목덜미 옆으로 하나
+    wisp([[cx - rx * 0.15, hy - ry * 0.55], [cx - rx * 0.45, hy + ry * 0.05], [cx - rx * 0.3, hy + ry * 0.6]]);
+    wisp([[cx + rx * 0.1, hy - ry * 0.9], [cx - rx * 0.35, hy - ry * 0.65]], 1.2);
+    wisp([[bx + 5, nape + 3], [bx + 11, 6 * ws], [bx + 9, 14 * ws]], 1.2);
     return;
   }
   if (back) {
-    const path = p.poly([[cx - rx - 3, hy - ry * 0.3], [cx - rx * 0.6, hy - ry - 3], [cx + rx * 0.6, hy - ry - 3], [cx + rx + 3, hy - ry * 0.3],
-      [cx + rx + 6, 30 * ws], [cx + rx + 4, 82 * ws, 'c'], [cx + rx * 0.4, 74 * ws], [cx, 90 * ws, 'c'], [cx - rx * 0.45, 72 * ws], [cx - rx - 4, 84 * ws, 'c'],
-      [cx - rx - 6, 30 * ws]], hc, { w: 2.1, rough: 0.6 });
-    p.clip(path, () => { for (const s of [-0.6, -0.2, 0.25, 0.6]) streak([[cx + s * rx, hy - ry * 0.7], [cx + s * rx * 1.15, 75 * ws]]); });
+    // 정수리에서 목덜미로 빗어 모은 머리(가운데로 좁아짐) → 끈 → 등 가운데로 내려간 꼬리(폭 좁게, 허리 위)
+    const mass = p.poly([[cx - rx - 2, hy - ry * 0.2], [cx - rx * 0.6, hy - ry - 2], [cx + rx * 0.6, hy - ry - 2], [cx + rx + 2, hy - ry * 0.2],
+      [cx + rx * 0.7, hy + ry * 0.55], [cx + 5, nape], [cx - 5, nape], [cx - rx * 0.7, hy + ry * 0.55]], hc, { w: 2.0, rough: 0.7 });
+    p.clip(mass, () => { for (const s of [-0.55, -0.15, 0.2, 0.55]) streak([[cx + s * rx, hy - ry * 0.8], [cx + s * 3, nape]]); });
+    const tail = p.poly([[cx - 6, nape + 1], [cx + 6, nape + 1], [cx + 9, 18 * ws], [cx + 8, 50 * ws, 'c'], [cx + 3, 42 * ws], [cx - 1, 56 * ws, 'c'],
+      [cx - 5, 43 * ws], [cx - 9, 49 * ws, 'c'], [cx - 9, 18 * ws]], hc, { w: 2.0, rough: 0.7 });
+    p.clip(tail, () => { for (const s of [-4, 0, 4]) streak([[cx + s * 0.6, nape + 4], [cx + s, 46 * ws]]); });
+    p.poly([[cx - 7, nape - 2], [cx + 7, nape - 2], [cx + 7, nape + 4], [cx - 7, nape + 4]], tie, { w: 1.3 });
+    // 묶음에서 빠져 나온 가닥(양옆 귀 뒤·목덜미)
+    for (const s of [-1, 1]) {
+      wisp([[cx + s * rx * 0.7, hy + ry * 0.2], [cx + s * (rx * 0.85), hy + ry * 0.8], [cx + s * (rx * 0.7), 4 * ws]]);
+    }
+    wisp([[cx + 4, nape + 2], [cx + 13, 10 * ws], [cx + 12, 20 * ws]], 1.2);
+    // 정수리 흐트러짐(빗질이 풀린 짧은 가닥)
+    wisp([[cx - rx * 0.3, hy - ry - 1], [cx - rx * 0.5, hy - ry - 5], [cx - rx * 0.7, hy - ry - 3]], 1.1);
+    wisp([[cx + rx * 0.2, hy - ry - 1], [cx + rx * 0.45, hy - ry - 4]], 1.0);
     return;
   }
-  // 앞: 얼굴 양옆으로 흘러내린 가는 머리 두 가닥(어깨 앞 가슴께까지, 끝이 갈라짐) — 얼굴·어깨는 가리지 않는다
+  // 앞: 머리는 뒤로 빗어 넘겼다(바탕 머리 그대로). 이마·관자놀이에서 빠져 나온 몇 가닥만 — 짧게(턱 아래까지), 얼굴·가슴을 덮지 않는다
   for (const s of [-1, 1]) {
-    const x0 = cx + s * (rx - 1);
-    const path = p.poly([[x0 - s * 2, hy - ry * 0.5], [x0 + s * 5, hy - ry * 0.1], [x0 + s * 6, hy + ry * 0.8], [x0 + s * 7, 20 * ws], [x0 + s * 5, 40 * ws, 'c'],
-      [x0 + s * 1, 32 * ws], [x0 - s * 2, 44 * ws, 'c'], [x0 - s * 2, 22 * ws], [x0 - s * 1, hy + ry * 0.8], [x0 - s * 3, hy + ry * 0.1]], hc, { w: 1.7, rough: 0.6 });
-    p.clip(path, () => streak([[x0 + s * 1, hy], [x0 + s * 2, 34 * ws]]));
+    const x0 = cx + s * (rx - 2);
+    wisp([[x0 - s * 3, hy - ry * 0.6], [x0 + s * 2, hy - ry * 0.05], [x0 + s * 1, hy + ry * 0.55], [x0 + s * 3, hy + ry * 0.95]], 1.6);
+    wisp([[x0 - s * 1, hy - ry * 0.35], [x0 + s * 4, hy + ry * 0.3], [x0 + s * 5, hy + ry * 0.75]], 1.1);
   }
+  // 이마 위 흐트러진 짧은 가닥 하나(한쪽만)
+  wisp([[cx - rx * 0.15, hy - ry * 0.95], [cx + rx * 0.2, hy - ry * 0.6], [cx + rx * 0.3, hy - ry * 0.35]], 1.2);
 }
 
 function parip(p, view, S) {
@@ -308,7 +334,7 @@ export function installDress(kind) {
     // 머리 부속은 머리 부위 자체를 부모로(고개 숙임을 따라감)
     const onHead = (name, z, fn) => { const im = paint(name.length * 31 + v.length, fn); addPart(rig, v, { name, parent: 'head', at: [0, 0], z, img: im.img, ox: im.ox, oy: im.oy }); };
     const onTorso = (name, z, fn) => { const im = paint(name.length * 17 + v.length, fn); addPart(rig, v, { name, parent: 'torso', at: [0, 0], z, img: im.img, ox: im.ox, oy: im.oy }); };
-    if (d.has('loose_hair')) onHead('loose_hair', side ? tz + 0.6 : back ? hz + 0.05 : hz + 0.02, (p) => looseHair(p, v, S, sp));
+    if (d.has('tied_low_hair')) onHead('tied_low_hair', side ? tz + 0.6 : back ? hz + 0.05 : hz + 0.02, (p) => tiedLowHair(p, v, S, sp));
     if (d.has('cangue')) onTorso('cangue', side ? tz + 0.5 : back ? tz - 0.1 : 6.3, (p) => cangue(p, v, S));
     if (d.has('parip')) onHead('parip', hz + 0.03, (p) => parip(p, v, S));
     if (d.has('samo')) onHead('samo', hz + 0.03, (p) => samo(p, v, S));
