@@ -106,6 +106,7 @@ var _story_places: Array = []
 var _rk_keys: Array = []       # 이 공간의 권역 상식 키(scripts/region/region_known.gd) — 들어서면 KNOWN
 var rk_missing: Array = []     # 데이터에는 있는데 이 지도에 없는 상식 항목(시험이 본다)
 var _twins: Array = []        # [[lm 키, bld 키]] 같은 곳의 두 이름
+var _lp := {}                 # 이름표 충돌 우선순위(C66 · region_known.json label_priority): 이름 → 값
 var _rk_rank := {}             # 상식 키 → 목록 차례(같은 우선순위끼리 솎을 때 앞 차례가 먼저 — 광한루가 오작교보다)
 var _disc_t := 0.0
 var on_discover: Callable = Callable()
@@ -174,6 +175,7 @@ func setup(w, data_dir: String, loader = null) -> void:
 	var rk := RegionKnown.resolve(_space, tnames, _items, w.region)
 	_rk_keys = rk.keys; rk_missing = rk.missing
 	for i in _rk_keys.size(): _rk_rank[String(_rk_keys[i])] = i
+	_lp = RegionKnown.label_priority(_space)
 	# 같은 곳의 두 이름(이름난 곳 lm: · 건물 bld: — 경복궁·광한루): 한쪽을 가 보면 다른 쪽도 가 봄(지도에 같은 이름 하나만 남으므로)
 	for l in w.region.get("landmarks", []):
 		if not l.has("x"): continue
@@ -1222,7 +1224,11 @@ func _place_all(cands: Array) -> void:
 	# 우선순위 → (같으면) 권역 상식 목록 차례(rk) → 들어온 차례. sort_custom은 안정 정렬이 아니라 차례를 함께 센다
 	for i in cands.size(): cands[i].ord = i
 	cands.sort_custom(func(a, b):
-		if int(a.prio) != int(b.prio): return int(a.prio) < int(b.prio)
+		if int(a.prio) != int(b.prio): return int(a.prio) < int(b.prio)   # HERE·CASE → 종류(C23)
+		var la := int(_lp.get(String(a.get("text", "")), 0)); var lb := int(_lp.get(String(b.get("text", "")), 0))
+		if la != lb: return la > lb   # 같은 종류끼리는 label_priority(C66, 기본 0)
+		var fa := bool(a.get("faint", false)); var fb := bool(b.get("faint", false))
+		if fa != fb: return fb   # 같으면 가 본 곳(VISITED)이 아는 곳(KNOWN)보다
 		if int(a.get("rk", 9999)) != int(b.get("rk", 9999)): return int(a.get("rk", 9999)) < int(b.get("rk", 9999))
 		return int(a.ord) < int(b.ord))
 	var cs := Rect2(Vector2.ZERO, _canvas.size)

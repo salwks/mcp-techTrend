@@ -27,6 +27,11 @@ static func spec(space: String) -> Dictionary:
 	var s = data().get(space)
 	return s if s is Dictionary else {}
 
+# 이름표 충돌 우선순위(C66): { 이름: 값 } — 기본 0. 같은 종류(prio)끼리 겹칠 때만 쓴다
+static func label_priority(space: String) -> Dictionary:
+	var lp = spec(space).get("label_priority", {})
+	return lp if lp is Dictionary else {}
+
 static func spaces() -> Array:
 	return data().keys().filter(func(k): return not String(k).begins_with("_"))
 

@@ -1,12 +1,13 @@
 {
-  "_doc": "권역 상식(C65 · scripts/region/region_known.gd): 권역에 들어서면 KNOWN(이름·자리 앎, 아직 안 가 봄)이 되는 대표 명소·공공시설. towns=고을 짧은 이름, landmarks=region.json landmarks id, buildings=배치 이름(같은 이름 모두), passes=region.json passes id, ferries=crossings 나루 이름. 주막·방앗간·외딴집·사람 집·사건 장소(place:)·단서 자리·숨은 굴은 넣지 않는다. 노정(route)은 뚜렷한 길목이 없으면 비운다.",
+  "_doc": "label_priority = { 이름: 값 } — 같은 종류 우선순위끼리 이름표가 겹칠 때 값이 큰 쪽이 남는다(기본 0, 권역 대표 명소만 높임 · C66). 권역 상식(C65 · scripts/region/region_known.gd): 권역에 들어서면 KNOWN(이름·자리 앎, 아직 안 가 봄)이 되는 대표 명소·공공시설. towns=고을 짧은 이름, landmarks=region.json landmarks id, buildings=배치 이름(같은 이름 모두), passes=region.json passes id, ferries=crossings 나루 이름. 주막·방앗간·외딴집·사람 집·사건 장소(place:)·단서 자리·숨은 굴은 넣지 않는다. 노정(route)은 뚜렷한 길목이 없으면 비운다.",
   "JL_NAMWON_UNBONG": {
     "note": "남원도 예외 없음. 월매 집·주막·방앗간·외딴집·옥 자리·사건 장소는 넣지 않는다",
     "towns": ["남원", "운봉", "인월", "실상사"],
     "landmarks": ["gwanghallu", "namwon_dongheon", "yongseonggwan", "namwon_south_gate", "namwon_east_gate", "namwon_west_gate", "namwon_north_gate", "ojakgyo", "unbong_gwana", "hwangsan_daecheopbi", "silsangsa", "yeowonchi_maaebul"],
     "buildings": ["광한루", "동헌", "용성관", "남원향교", "광한루원", "운봉현 관아", "실상사", "황산대첩비", "여원치 마애불"],
     "passes": ["yeowonjae"],
-    "ferries": ["요천 광한루 앞 나루"]
+    "ferries": ["요천 광한루 앞 나루"],
+    "label_priority": { "광한루": 10 }
   },
   "GG_HANYANG": {
     "note": "책쾌의 책방·칠패 창고·서강 창고(사건)·주막은 넣지 않는다",
