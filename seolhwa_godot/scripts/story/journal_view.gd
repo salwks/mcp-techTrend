@@ -93,9 +93,9 @@ func _geometry() -> void:
 	var vs := size
 	_k = clampf(vs.y / 768.0, 0.75, 2.4)
 	var k := _k
-	var bw := minf(vs.x * 0.94, vs.y * 1.62)
-	var bh := minf(vs.y * 0.78, bw * 0.62)
-	_book = Rect2((vs.x - bw) * 0.5, vs.y * 0.16, bw, bh)
+	var bw := minf(vs.x * 0.92, vs.y * 1.62)
+	var bh := minf(vs.y * 0.725, bw * 0.62)
+	_book = Rect2((vs.x - bw) * 0.5, vs.y * 0.19, bw, bh)   # 위 갈피(꼬리표) 글이 커져 책을 조금 내렸다
 	var cm := 11.0 * k
 	_paper = _book.grow(-cm)
 	var pw := 46.0 * k
@@ -112,7 +112,7 @@ func _geometry() -> void:
 		var x1 := pr.end.x - (outer if i == 0 else inner)
 		_frame_r[i] = Rect2(x0, pr.position.y + head, x1 - x0, pr.size.y - head - foot)
 		_inner_r[i] = (_frame_r[i] as Rect2).grow(-5.0 * k)
-	_fs = 20.5 * k
+	_fs = 25.0 * k   # 세로 본문(1024×768에서 25px — 예전 20.5)
 	_cell = _fs * 1.06
 	var iw: float = (_inner_r[0] as Rect2).size.x
 	_ncols = maxi(6, int(iw / (_fs * 1.72)))
@@ -382,11 +382,11 @@ func _draw_page(side: int, idx: int) -> void:
 func _draw_note(x: float, frame_top: float, note: Dictionary) -> void:
 	var lines: Array = note.lines
 	var col: Color = note.col
-	var ns := _fs * 0.6
-	var room := (frame_top - _paper.position.y) - 14.0 * _k
+	var ns := maxf(_fs * 0.6, UiFonts.MIN * _k)   # 두주: 18px 아래로는 줄이지 않는다
+	var room := (frame_top - _paper.position.y) - 10.0 * _k
 	var longest := 0.0
 	for l in lines: longest = maxf(longest, VText.length(_body, String(l), ns))
-	if longest > room: ns *= room / longest
+	if longest > room: ns = maxf(UiFonts.MIN * _k * 0.9, ns * room / longest)
 	var n := lines.size()
 	for i in n:
 		var t := String(lines[i])
@@ -428,20 +428,20 @@ func _eomi(cx: float, y: float, w: float, dir: int) -> void:
 func _draw_slips() -> void:
 	_slips = []
 	var k := _k
-	var sw := 30.0 * k
+	var sw := 36.0 * k
 	var gap := 7.0 * k
 	var x := _paper.end.x - 26.0 * k - sw
-	var ns := 14.5 * k
+	var ns := 19.0 * k
 	for oi in order.size():
 		var si: int = order[oi]
 		var on := si == cur_section
 		var label := String(sections[si].get("tab", ""))
 		var lns := ns
 		var len := VText.length(_body, label, lns)
-		var room := _book.position.y - 34.0 * k
+		var room := _book.position.y - 30.0 * k
 		if len > room:
 			lns *= room / len; len = room
-		var vis := len + 24.0 * k + (8.0 * k if on else 0.0)
+		var vis := len + 28.0 * k + (8.0 * k if on else 0.0)
 		var r := Rect2(x, _book.position.y - vis, sw, vis + 14.0 * k)
 		var col: Color = SLIP_COLS[oi % SLIP_COLS.size()]
 		if not on: col = col.darkened(0.12)
@@ -450,8 +450,8 @@ func _draw_slips() -> void:
 		if _hover == "slip:%d" % si and not on: draw_rect(r, Color(1, 1, 1, 0.12))
 		draw_rect(r, Color(INK, 0.5), false, 1.0 * k)
 		var digit := str(oi + 1)
-		draw_string(_body, Vector2(x + sw * 0.5 - ns * 0.28, r.position.y + ns * 0.95), digit, HORIZONTAL_ALIGNMENT_LEFT, -1, int(ns * 0.8), Color(INK, 0.55))
-		VText.column(self, _body, Vector2(x + sw * 0.5, r.position.y + ns * 1.3), label, lns, SEAL if on else INK)
+		draw_string(_body, Vector2(x + sw * 0.5 - ns * 0.28, r.position.y + ns * 0.95), digit, HORIZONTAL_ALIGNMENT_LEFT, -1, int(UiFonts.MIN * k), Color(INK, 0.55))
+		VText.column(self, _body, Vector2(x + sw * 0.5, r.position.y + UiFonts.MIN * k * 1.25), label, lns, SEAL if on else INK)
 		_slips.append({ sec = si, rect = Rect2(r.position, Vector2(sw, vis)) })
 		x -= sw + gap
 
@@ -490,7 +490,7 @@ func _shade_poly(poly: PackedVector2Array, a: float) -> void:
 
 func _draw_edges() -> void:
 	var k := _k
-	var ns := 14.0 * k
+	var ns := float(UiFonts.MIN) * k
 	var cy := _book.get_center().y
 	var can_next := spread < spread_count() - 1
 	var can_prev := spread > 0
@@ -509,7 +509,7 @@ func _draw_edges() -> void:
 
 func _draw_foot() -> void:
 	var k := _k
-	var fs := int(15.0 * k)
+	var fs := int(UiFonts.NOTE * k)
 	var t := "← A  다음 쪽      → D  앞 쪽      1–%d  갈피      R · Esc  덮기" % order.size()
 	var w := _body.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	draw_string(_body, Vector2((size.x - w) * 0.5, _book.end.y + 30.0 * k), t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(PAPER, 0.82))

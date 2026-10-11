@@ -20,6 +20,8 @@ const INK_SOFT := Color("#5a5048")
 const SEAL := Color("#a8443c")
 const HORSE_KMH := 7.0          # 역마 하루 길(쉬는 때 포함 평균)
 const ANIM := 2.8
+const UiFonts := preload("res://scripts/ui_fonts.gd")
+const FS_LIST := 26             # 목록 줄(UiFonts 표 BODY 쪽 — 좁은 칸이라 26, 넘치면 말줄임)
 
 var main
 var prefer := ""
@@ -368,13 +370,13 @@ func _panel() -> Rect2:
 
 func _list_rect() -> Rect2:
 	var p := _panel()
-	return Rect2(p.position + Vector2(24, 76) * _k, Vector2(p.size.x * 0.38, p.size.y - 120 * _k))
+	return Rect2(p.position + Vector2(24, 84) * _k, Vector2(p.size.x * 0.4, p.size.y - 132 * _k))
 
 func _map_rect() -> Rect2:
 	var p := _panel(); var l := _list_rect()
 	return Rect2(Vector2(l.end.x + 20 * _k, l.position.y), Vector2(p.end.x - l.end.x - 44 * _k, l.size.y))
 
-func _row_h() -> float: return 30.0 * _k
+func _row_h() -> float: return 38.0 * _k
 
 func _rows_visible() -> int: return maxi(1, int(_list_rect().size.y / _row_h()))
 
@@ -393,24 +395,26 @@ func _draw() -> void:
 	var p := _panel()
 	_canvas.draw_rect(p, Color(PAPER.r, PAPER.g, PAPER.b, 0.98))
 	_canvas.draw_rect(p, INK, false, 3.0)
-	_text("역마 — 역에서 역으로" if not at_station.is_empty() else "역마 — 가 본 곳으로", p.position + Vector2(24, 44) * _k, 30, INK)
-	_text("삯 없음 · 처음 가는 길은 건너뛸 수 없다", p.position + Vector2(p.size.x - 360 * _k, 44 * _k), 15, INK_SOFT)
+	_text("역마 — 역에서 역으로" if not at_station.is_empty() else "역마 — 가 본 곳으로", p.position + Vector2(24, 52) * _k, UiFonts.HEAD, INK)
+	var sub := "삯 없음 · 처음 가는 길은 건너뛸 수 없다"
+	_text(sub, p.position + Vector2(p.size.x - 24 * _k - _font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, int(UiFonts.NOTE * _k)).x, 50 * _k), UiFonts.NOTE, INK_SOFT)
 	# 목록
 	var lr := _list_rect()
 	var nv := _rows_visible()
 	if sel < _list_top: _list_top = sel
 	if sel >= _list_top + nv: _list_top = sel - nv + 1
 	if items.is_empty():
-		_text("아직 가 본 거점이 없다 — 고을·주막·나루에 들르면 적힌다", lr.position + Vector2(0, 24 * _k), 17, INK_SOFT)
+		_text(UiFonts.fit(_font, "아직 가 본 거점이 없다 — 고을·주막·나루에 들르면 적힌다", int(UiFonts.DETAIL * _k), lr.size.x), lr.position + Vector2(0, 28 * _k), UiFonts.DETAIL, INK_SOFT)
 	var last_space := ""
 	for r in range(_list_top, mini(items.size(), _list_top + nv)):
 		var it: Dictionary = items[r]
-		var y := lr.position.y + (r - _list_top) * _row_h() + 22 * _k
+		var y := lr.position.y + (r - _list_top) * _row_h() + 28 * _k
 		var on := r == sel
 		var col := SEAL if on else (INK if it.ok else Color(INK_SOFT.r, INK_SOFT.g, INK_SOFT.b, 0.6))
 		var sp := "" if String(it.space) == last_space else String(it.space_name) + " · "
 		last_space = String(it.space)
-		_text(("▸ " if on else "   ") + sp + ("驛 " if bool(it.get("station", false)) else "") + String(it.name), Vector2(lr.position.x, y), 19, col)
+		var row := ("▸ " if on else "   ") + sp + ("驛 " if bool(it.get("station", false)) else "") + String(it.name)
+		_text(UiFonts.fit(_font, row, int(FS_LIST * _k), lr.size.x), Vector2(lr.position.x, y), FS_LIST, col)
 	# 지도
 	var mr := _map_rect()
 	_canvas.draw_rect(mr, Color(0.93, 0.90, 0.83))
@@ -422,7 +426,7 @@ func _draw() -> void:
 		var foot := String(it.why) if not it.ok else ("Enter 간다 · ↑↓ 고르기 · Esc 닫기")
 		if _anim >= 0.0:
 			foot = "길에서 약 %s — %s → %s" % [_dur_text(float(_go.hours)), _clock(float(_go.h0)), _clock(lerpf(float(_go.h0), float(_go.h0) + float(_go.hours), clampf(_anim, 0.0, 1.0)))]
-		_text(foot, Vector2(mr.position.x, mr.end.y + 30 * _k), 17, INK if it.ok else SEAL)
+		_text(UiFonts.fit(_font, foot, int(UiFonts.KEYS * _k), mr.size.x), Vector2(mr.position.x, mr.end.y + 32 * _k), UiFonts.KEYS, INK if it.ok else SEAL)
 
 static func _clock(h: float) -> String:
 	var hh := fposmod(h, 24.0)
@@ -465,10 +469,10 @@ func _draw_local(mr: Rect2, it: Dictionary) -> void:
 	for o in items:
 		if o.same and bb.has_point(o.at):
 			_canvas.draw_circle(X.call(o.at), 4.0 * _k, INK_SOFT)
-			_text(String(o.name), X.call(o.at) + Vector2(6, -6) * _k, 13, INK_SOFT)
+			_text(String(o.name), X.call(o.at) + Vector2(7, -7) * _k, UiFonts.MAP_MINOR, INK_SOFT)
 	_draw_route_line(line, X)
 	_canvas.draw_circle(X.call(pp), 7.0 * _k, Color(0.75, 0.15, 0.1))
-	_text("여기", X.call(pp) + Vector2(8, 16) * _k, 14, SEAL)
+	_text("여기", X.call(pp) + Vector2(10, 22) * _k, UiFonts.MAP_LABEL, SEAL)
 
 func _draw_route_line(line: PackedVector2Array, X: Callable) -> void:
 	var px := PackedVector2Array()
@@ -523,5 +527,5 @@ func _draw_nation(mr: Rect2, it: Dictionary) -> void:
 		var c: Vector2 = X.call(r.lonlat)
 		if not mr.has_point(c): continue
 		_canvas.draw_circle(c, 5.0 * _k, INK)
-		_text(String(r.get("short", r.id)), c + Vector2(7, -5) * _k, 14, INK)
+		_text(String(r.get("short", r.id)), c + Vector2(8, -6) * _k, UiFonts.MAP_LABEL, INK)
 	if line.size() >= 2: _draw_route_line(line, X)

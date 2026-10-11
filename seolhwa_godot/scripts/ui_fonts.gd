@@ -3,10 +3,43 @@
 #   UiFonts.classic() 제목·기록책 머리·지명(DeogonPrincessClassic — 더 옛 책 같은 획)
 #   UiFonts.install() 테마 기본 글꼴(ThemeDB.fallback_font)을 main()으로 — 글꼴을 따로 주지 않은 Label·Button도 같은 글꼴
 #   UiFonts.label(글, 크기, 색, classic?) 간단한 Label 하나
+#   UiFonts.TITLE · HEAD · NAME · BODY · DETAIL · KEYS · NOTE · MIN · MAP_* — 화면 글 크기 한 표(HUD·메뉴·지도가 같이 쓴다)
+#   UiFonts.fit(글꼴, 글, 크기, 너비) — 한 줄에 넘치면 끝을 '…'로
 # 덕온공주체에 없는 글자(한자 朴·驛 등, 일부 기호)는 시스템 명조 줄(AppleMyungjo → 나눔명조 → 바탕 → Noto Serif CJK)이 그린다.
 # 글자 확인: godot --headless --path seolhwa_godot --script res://tools/font_coverage.gd
 # 글꼴 파일은 임포트 없이 실행 중에 읽는다(.otf 바이트 → FontFile) — 내보내기 설정에 *.otf를 넣을 것.
 extends RefCounted
+
+# ---- 화면 글 크기 한 표(공통 UI 규칙 — seolhwa/docs/production/CITY_ROUTE_PRODUCTION_RULES_v1.0.md '화면 글 크기') ----
+# 1024×768 뷰포트에서의 픽셀. 뷰포트가 더 크면 각 화면이 _k(= 높이/768)를 곱한다. 지도 글은 확대·축소와 상관없이 이 크기 그대로.
+# 글이 넘치면 줄이지 말고 나누기·두 단·쪽 넘김·줄바꿈(StoryUI.wrap_words)·말줄임(fit)으로 맞춘다.
+const TITLE := 44       # 창 제목(잠시 멈춤 · 저장 · 역마)
+const HEAD := 34        # 머리(조사 카드 제목 · 시작 메뉴 항목 · 갈래 제목)
+const NAME := 30        # 이름(대화 화자 · 저장 칸 이름 · 지도 판 제목)
+const BODY := 28        # 본문 · 메뉴 줄 · 대화 · 선택지
+const DETAIL := 24      # 덧붙임(저장 칸 시각 · 물음 · 목록 부가)
+const KEYS := 22        # 조작 안내 줄(↑↓ 고르기 …) · 키 칸 옆 글
+const NOTE := 20        # 작은 덧글(두주 · 쪽 수 · 지도 판 부제)
+const MIN := 18         # 이보다 작은 글은 쓰지 않는다
+# 지도(권역·고을·전국 — 확대·축소와 상관없이 화면에서 늘 이 크기)
+const MAP_HUB := 26     # 읍치·권역 거점·지금 고을
+const MAP_TOWN := 24    # 장터·역·원·절 고을 · 사건 장소 · 사건 이름(전국)
+const MAP_LABEL := 22   # 마을·이름난 곳·건물·물 이름·역참·고을 지도 건물
+const MAP_MINOR := 20   # 고개·나루·오름·용천수·노정 이름·전국 거점
+const MAP_GLYPH := 18   # 기호 속 글자('역' · '사' · 방위 · 번호)
+const MAP_PANEL := 22   # 오른쪽 판 줄(범례 · 사건 · 역참)
+const MAP_KEYS := 20    # 지도 아래 조작 안내 · 10리 자 · 표지 설명
+
+# 한 줄에 넣기: 넘치면 끝을 '…'로(긴 지명·목록 줄)
+static func fit(font: Font, text: String, size: int, max_w: float) -> String:
+	if font == null or max_w <= 0.0 or font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= max_w: return text
+	var lo := 0
+	var hi := text.length()
+	while lo < hi:
+		var mid := (lo + hi + 1) / 2
+		if font.get_string_size(text.substr(0, mid) + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= max_w: lo = mid
+		else: hi = mid - 1
+	return text.substr(0, lo).strip_edges() + "…"
 
 const MAIN_PATH := "res://assets/fonts/DeogonPrincess.otf"
 const CLASSIC_PATH := "res://assets/fonts/DeogonPrincessClassic.otf"

@@ -48,7 +48,7 @@ func _ready() -> void:
 	sb.content_margin_left = 34 * _k; sb.content_margin_right = 34 * _k; sb.content_margin_top = 22 * _k; sb.content_margin_bottom = 20 * _k
 	p.add_theme_stylebox_override("panel", sb)
 	cc.add_child(p)
-	_box = VBoxContainer.new(); _box.add_theme_constant_override("separation", int(10 * _k))
+	_box = VBoxContainer.new(); _box.add_theme_constant_override("separation", int(8 * _k))
 	p.add_child(_box)
 	_build()
 
@@ -62,18 +62,18 @@ func _build() -> void:
 	var head := HBoxContainer.new(); head.add_theme_constant_override("separation", int(26 * _k))
 	for m in ["save", "load"]:
 		var on: bool = m == mode
-		var t := _lab("저장" if m == "save" else "불러오기", 34 if on else 24, SEAL if on else INK_SOFT, true)
+		var t := _lab("저장" if m == "save" else "불러오기", UiFonts.TITLE if on else UiFonts.NAME, SEAL if on else INK_SOFT, true)
 		t.size_flags_vertical = Control.SIZE_SHRINK_END
 		t.mouse_filter = Control.MOUSE_FILTER_STOP
 		var mm: String = m
 		t.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT: _switch(mm))
 		head.add_child(t)
 	_box.add_child(head)
-	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2(620 * _k, 1.5); _box.add_child(r)
+	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2(760 * _k, 1.5); _box.add_child(r)
 	for n in range(0, Progress.SLOTS + 1):
 		_add_row(n)
-	_msg = _lab("", 17, SEAL); _box.add_child(_msg)
-	var keys := _lab("↑↓ 고르기 · Enter 정하기 · Tab 저장/불러오기 · Esc 닫기", 15, INK_SOFT); _box.add_child(keys)
+	_msg = _lab("", UiFonts.KEYS, SEAL); _box.add_child(_msg)
+	var keys := _lab("↑↓ 고르기 · Enter 정하기 · Tab 저장/불러오기 · Esc 닫기", UiFonts.KEYS, INK_SOFT); _box.add_child(keys)
 	if _sel >= _rows.size() or not _rows[_sel].ok: _sel = _first_ok()
 	_refresh()
 
@@ -92,7 +92,7 @@ func _add_row(n: int) -> void:
 	row.mouse_filter = Control.MOUSE_FILTER_STOP
 	var h := HBoxContainer.new(); h.add_theme_constant_override("separation", int(14 * _k)); h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(h)
-	var tr := TextureRect.new(); tr.custom_minimum_size = Vector2(128, 72) * _k
+	var tr := TextureRect.new(); tr.custom_minimum_size = Vector2(160, 90) * _k
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE; tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if String(info.get("thumb", "")) != "":
@@ -105,25 +105,32 @@ func _add_row(n: int) -> void:
 	h.add_child(frame)
 	var v := VBoxContainer.new(); v.add_theme_constant_override("separation", int(2 * _k)); v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var name_l := _lab("자동 기록" if n == 0 else "칸 %d" % n, 21, SEAL, true)
-	v.add_child(name_l)
+	# 칸 이름(NAME) · 고을·사건(BODY) · 시각·놀이 시간·남긴 때(DETAIL). 자동 기록 설명은 이름 줄 오른쪽에 짧게(DETAIL)
+	var name_l := _lab("자동 기록" if n == 0 else "칸 %d" % n, UiFonts.NAME, SEAL, true)
+	if n == 0 and mode == "save":
+		var nh := HBoxContainer.new(); nh.add_theme_constant_override("separation", int(14 * _k)); nh.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		nh.add_child(name_l)
+		var al := _lab("고을·사건·길 떠날 때 저절로", UiFonts.DETAIL, INK_SOFT); al.size_flags_vertical = Control.SIZE_SHRINK_END
+		nh.add_child(al)
+		v.add_child(nh)
+	else: v.add_child(name_l)
 	if info.is_empty():
-		v.add_child(_lab("비어 있음" if n > 0 else "아직 없음", 18, INK_SOFT))
+		v.add_child(_lab("비어 있음" if n > 0 else "아직 없음", UiFonts.BODY, INK_SOFT))
 	else:
 		var m: Dictionary = info.meta
 		var place := String(m.get("place", ""))
 		if place == "": place = String(info.where.get("space", ""))
 		var cs := String(m.get("case", ""))
-		v.add_child(_lab(place + (("  ·  「%s」" % cs) if cs != "" else ""), 19, INK))
+		var pl := _lab(place + (("  ·  「%s」" % cs) if cs != "" else ""), UiFonts.BODY, INK)
+		pl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS; pl.clip_text = true   # 긴 사건 이름은 말줄임
+		v.add_child(pl)
 		var parts := []
 		if m.has("hour"): parts.append(SaveKeeper.hour_text(float(m.hour)))
 		elif info.where.has("hour"): parts.append(SaveKeeper.hour_text(float(info.where.hour)))
 		var play := int(float(m.get("play", 0.0)))
 		if play > 0: parts.append("놀이 %s" % _dur(play))
 		parts.append(_when(String(info.saved_at)))
-		v.add_child(_lab("  ·  ".join(parts), 16, INK_SOFT))
-	if n == 0 and mode == "save":
-		v.add_child(_lab("고을에 들어설 때 · 사건이 나아갈 때 · 길 떠나기 전에 저절로 적힌다", 14, INK_SOFT))
+		v.add_child(_lab("  ·  ".join(parts), UiFonts.DETAIL, INK_SOFT))
 	h.add_child(v)
 	var i := _rows.size()
 	row.gui_input.connect(func(e):

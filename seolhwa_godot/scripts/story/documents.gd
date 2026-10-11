@@ -30,6 +30,7 @@ extends CanvasLayer
 
 signal closed
 
+const UiFonts := preload("res://scripts/ui_fonts.gd")
 const INK := Color("#2b2622")
 const PAPER := Color("#efe6d2")
 const SEAL := Color("#a8443c")
@@ -121,18 +122,18 @@ func _start() -> void:
 	_loupe = Control.new(); _loupe.mouse_filter = Control.MOUSE_FILTER_IGNORE; _loupe.clip_contents = true
 	_loupe.draw.connect(_draw_loupe)
 	_root.add_child(_loupe)
-	_title = _label(28, PAPER); _root.add_child(_title)
-	_note = _label(18, Color(PAPER, 0.75)); _note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; _root.add_child(_note)
-	_zoom_l = _label(17, Color(PAPER, 0.8)); _root.add_child(_zoom_l)
+	_title = _label(UiFonts.NAME, PAPER); _root.add_child(_title)
+	_note = _label(UiFonts.KEYS, Color(PAPER, 0.75)); _note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; _root.add_child(_note)
+	_zoom_l = _label(UiFonts.NOTE, Color(PAPER, 0.8)); _root.add_child(_zoom_l)
 	_side = VBoxContainer.new(); _side.mouse_filter = Control.MOUSE_FILTER_IGNORE; _root.add_child(_side)
-	var sh := _label(19, PAPER); sh.text = "짚은 것"; _side.add_child(sh)
+	var sh := _label(UiFonts.DETAIL, PAPER); sh.text = "짚은 것"; _side.add_child(sh)
 	_found_box = VBoxContainer.new(); _found_box.mouse_filter = Control.MOUSE_FILTER_IGNORE; _side.add_child(_found_box)
-	_fb = _label(20, PAPER); _fb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; _fb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_fb = _label(UiFonts.DETAIL, PAPER); _fb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; _fb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_root.add_child(_fb)
-	_keys = _label(17, Color(PAPER, 0.85)); _keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_keys = _label(UiFonts.KEYS, Color(PAPER, 0.85)); _keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_keys.text = "마우스·W A S D  돋보기 옮기기    휠·Z X  배율    클릭·E·Space  짚기    Tab  다른 문서    Esc  덮기"
 	_root.add_child(_keys)
-	_hint = _label(19, INK); _hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER; _hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_hint = _label(UiFonts.DETAIL, INK); _hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER; _hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var hp := PanelContainer.new(); hp.name = "hint_panel"; hp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sb := StyleBoxFlat.new(); sb.bg_color = Color(PAPER, 0.95); sb.border_color = SEAL; sb.set_border_width_all(2); sb.set_corner_radius_all(3)
 	sb.content_margin_left = 14; sb.content_margin_right = 14; sb.content_margin_top = 8; sb.content_margin_bottom = 8
@@ -376,10 +377,10 @@ func _refresh_found() -> void:
 		if parts.size() < 2 or not ids.has(parts[0]): continue
 		for h in defs[parts[0]].get("hotspots", []):
 			if String(h.id) != parts[1]: continue
-			var l := _label(16, PAPER)
+			var l := _label(UiFonts.NOTE, PAPER)
 			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			l.custom_minimum_size = Vector2(_side.size.x, 0)
-			l.add_theme_font_size_override("font_size", int(16 * _k))
+			l.add_theme_font_size_override("font_size", int(UiFonts.NOTE * _k))
 			l.text = "확인 · %s — %s" % [String(defs[parts[0]].get("short", defs[parts[0]].get("title", ""))), String(h.get("label", ""))]
 			_found_box.add_child(l)
 
@@ -392,7 +393,7 @@ func _draw_desk() -> void:
 		_desk.draw_rect(Rect2(r.position + Vector2(6, 8) * _k, r.size), Color(0, 0, 0, 0.35))
 		draw_doc(_desk, defs[id], id, r, 1.0)
 		var tl := String(defs[id].get("title", id))
-		_desk.draw_string(_font, Vector2(r.position.x, r.end.y + 24 * _k), tl, HORIZONTAL_ALIGNMENT_LEFT, r.size.x, int(17 * _k), Color(PAPER, 0.85))
+		_desk.draw_string(_font, Vector2(r.position.x, r.end.y + 24 * _k), tl, HORIZONTAL_ALIGNMENT_LEFT, r.size.x, int(UiFonts.NOTE * _k), Color(PAPER, 0.85))
 		# 짚은 자리 — 붉은 먹점
 		var f = d.S.flags.get("_doc_found", {})
 		if f is Dictionary:
@@ -419,7 +420,7 @@ func _draw_loupe() -> void:
 		var big := Rect2(sz * 0.5 - q * r.size * z, r.size * z)
 		draw_doc(_loupe, defs[id], id, big, z)
 	else:
-		_loupe.draw_string(_font, Vector2(12, sz.y * 0.5), "문서 위에 돋보기를 댄다", HORIZONTAL_ALIGNMENT_LEFT, sz.x - 24, int(17 * _k), Color(PAPER, 0.6))
+		_loupe.draw_string(_font, Vector2(12, sz.y * 0.5), "문서 위에 돋보기를 댄다", HORIZONTAL_ALIGNMENT_LEFT, sz.x - 24, int(UiFonts.NOTE * _k), Color(PAPER, 0.6))
 	_loupe.draw_rect(Rect2(Vector2.ZERO, sz), Color(PAPER, 0.85), false, 2.0 * _k)
 	_loupe.draw_line(Vector2(sz.x * 0.5 - 8, sz.y * 0.5), Vector2(sz.x * 0.5 + 8, sz.y * 0.5), Color(SEAL, 0.7), 1.0)
 	_loupe.draw_line(Vector2(sz.x * 0.5, sz.y * 0.5 - 8), Vector2(sz.x * 0.5, sz.y * 0.5 + 8), Color(SEAL, 0.7), 1.0)

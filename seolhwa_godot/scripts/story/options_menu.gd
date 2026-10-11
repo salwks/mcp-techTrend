@@ -3,6 +3,7 @@
 #   자동 기승 속도(보통/빠름) · 자동 감속(켬/끔) · 이동 카메라 흔들림(보통/약함/끔) — 이동수단 개선안 §31.
 #   놀이 중(in_game)이면 화면을 멈추고(get_tree().paused) '계속하기'·'저장'·'불러오기'(scripts/story/save_menu.gd — 칸 셋 + 자동 기록)·'여행 방법'(기록책)도 보인다.
 #   Esc를 누른 순간 화면을 작은 그림으로 잡아 둔다(저장 칸 그림).
+# 모양: 글 크기는 UiFonts 표(제목 TITLE · 줄 BODY · 덧글 KEYS). 놀이 중에는 두 단 — 왼쪽 할 일(계속·저장·불러오기·여행 방법·닫기·끝내기), 오른쪽 설정.
 # 조작: ↑↓·W·S 고르기 · ←→·A·D 바꾸기 · Enter·E·Space 실행 · Esc 닫기 · 클릭.
 extends CanvasLayer
 
@@ -47,14 +48,24 @@ func _ready() -> void:
 	sb.content_margin_left = 40 * k; sb.content_margin_right = 40 * k; sb.content_margin_top = 26 * k; sb.content_margin_bottom = 26 * k
 	p.add_theme_stylebox_override("panel", sb)
 	cc.add_child(p)
-	var box := VBoxContainer.new(); box.add_theme_constant_override("separation", int(6 * k))   # 소리 줄 셋이 늘어 768 높이에 들게
-	p.add_child(box)
-	var t := _lab("잠시 멈춤" if in_game else "설정", int(36 * k), INK); t.add_theme_font_override("font", UiFonts.classic()); box.add_child(t)
-	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2(440 * k, 1.5); box.add_child(r)
-	if in_game: _add(box, k, { id = "resume", kind = "act", text = "계속하기" })
+	# 글 크기는 UiFonts 표(제목 TITLE · 줄 BODY · 덧글 KEYS). 놀이 중에는 줄이 열다섯이라 두 단으로 — 왼쪽 할 일, 오른쪽 설정
+	var outer := VBoxContainer.new(); outer.add_theme_constant_override("separation", int(10 * k))
+	p.add_child(outer)
+	var t := _lab("잠시 멈춤" if in_game else "설정", int(UiFonts.TITLE * k), INK); t.add_theme_font_override("font", UiFonts.classic()); outer.add_child(t)
+	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2((820 if in_game else 520) * k, 1.5); outer.add_child(r)
+	var cols := HBoxContainer.new(); cols.add_theme_constant_override("separation", int(36 * k))
+	outer.add_child(cols)
+	var acts := VBoxContainer.new(); acts.add_theme_constant_override("separation", int(10 * k))
+	var box := VBoxContainer.new(); box.add_theme_constant_override("separation", int(10 * k))
+	if in_game:
+		cols.add_child(acts)
+		var vr := ColorRect.new(); vr.color = Color(INK, 0.25); vr.custom_minimum_size = Vector2(1.5, 0); cols.add_child(vr)
+	cols.add_child(box)
+	if in_game: _add(acts, k, { id = "resume", kind = "act", text = "계속하기" })
 	if in_game and keeper != null:
-		_add(box, k, { id = "save", kind = "act", text = "저장" })
-		_add(box, k, { id = "load", kind = "act", text = "불러오기" })
+		_add(acts, k, { id = "save", kind = "act", text = "저장" })
+		_add(acts, k, { id = "load", kind = "act", text = "불러오기" })
+	if in_game: _add(acts, k, { id = "howto", kind = "act", text = "여행 방법" })
 	_add(box, k, { id = "guide", kind = "opt", key = "guide", values = GameSettings.GUIDE, names = GameSettings.GUIDE_LABEL, text = "상호작용 안내" })
 	_add(box, k, { id = "help", kind = "opt", key = "help", values = GameSettings.HELP, names = GameSettings.HELP_LABEL, text = "조사 도움" })
 	_add(box, k, { id = "ride_speed", kind = "opt", key = "ride_speed", values = GameSettings.RIDE_SPEED, names = GameSettings.RIDE_SPEED_LABEL, text = "자동 기승 속도" })
@@ -63,11 +74,11 @@ func _ready() -> void:
 	_add(box, k, { id = "vol_master", kind = "opt", key = "vol_master", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 전체" })
 	_add(box, k, { id = "vol_bgm", kind = "opt", key = "vol_bgm", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 음악" })
 	_add(box, k, { id = "vol_sfx", kind = "opt", key = "vol_sfx", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 효과음" })
-	if in_game: _add(box, k, { id = "howto", kind = "act", text = "여행 방법 (기록책)" })
-	_add(box, k, { id = "close", kind = "act", text = "돌아가기" if not in_game else "닫기" })
-	if in_game: _add(box, k, { id = "quit", kind = "act", text = "게임 끝내기" })
-	var note := _lab("조사 도움은 전투 난이도와 상관없다.", int(16 * k), INK_SOFT); box.add_child(note)
-	var keys := _lab("↑↓ 고르기 · ←→ 바꾸기 · Enter 실행 · Esc 닫기", int(16 * k), INK_SOFT); box.add_child(keys)
+	_add(acts if in_game else box, k, { id = "close", kind = "act", text = "돌아가기" if not in_game else "닫기" })
+	if in_game: _add(acts, k, { id = "quit", kind = "act", text = "게임 끝내기" })
+	var note := _lab("조사 도움은 전투 난이도와 상관없다.", int(UiFonts.KEYS * k), INK_SOFT); outer.add_child(note)
+	var keys := _lab("↑↓ 고르기 · ←→ 바꾸기 · Enter 실행 · Esc 닫기", int(UiFonts.KEYS * k), INK_SOFT); outer.add_child(keys)
+	if not in_game: acts.free()   # 시작 메뉴 설정: 왼쪽 단을 쓰지 않는다(나무에 달지 않은 채 남기면 끝낼 때 샌다)
 	_refresh()
 
 func _lab(text: String, size: int, col: Color) -> Label:
@@ -77,7 +88,7 @@ func _lab(text: String, size: int, col: Color) -> Label:
 	return l
 
 func _add(box: VBoxContainer, k: float, spec: Dictionary) -> void:
-	var l := _lab("", int(24 * k), INK)
+	var l := _lab("", int(UiFonts.BODY * k), INK)
 	l.mouse_filter = Control.MOUSE_FILTER_STOP
 	var i := _rows.size()
 	l.gui_input.connect(func(e):
@@ -96,7 +107,7 @@ func _refresh() -> void:
 		var txt := String(rw.text)
 		if rw.kind == "opt":
 			var v := GameSettings.get_v(String(rw.key))
-			txt = "%s     ◀ %s ▶" % [txt, String(rw.names.get(v, v))]
+			txt = "%s   ◀ %s ▶" % [txt, String(rw.names.get(v, v))]
 		(rw.label as Label).text = ("▸ " if on else "   ") + txt
 		(rw.label as Label).add_theme_color_override("font_color", SEAL if on else INK)
 
@@ -117,7 +128,7 @@ func _act() -> void:
 		"quit":
 			var rw: Dictionary = _rows[_sel]
 			if not bool(rw.get("armed", false)):   # 한 번 더 눌러 확인
-				rw.armed = true; rw.text = "게임 끝내기 — 한 번 더 누르면 기록을 남기고 끝낸다"; _refresh(); return
+				rw.armed = true; rw.text = "한 번 더 — 기록하고 끝낸다"; _refresh(); return
 			Progress.checkpoint("quit")
 			get_tree().paused = false
 			var m := get_tree().current_scene

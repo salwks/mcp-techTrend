@@ -48,8 +48,8 @@ func _ready() -> void:
 	var k: float = maxf(1.0, get_viewport().get_visible_rect().size.y / 768.0)
 	var box := VBoxContainer.new()
 	box.set_anchors_preset(Control.PRESET_CENTER_LEFT)
-	box.anchor_left = 0.16; box.anchor_right = 0.5; box.anchor_top = 0.5; box.anchor_bottom = 0.5
-	box.offset_top = -170 * k; box.offset_bottom = 190 * k
+	box.anchor_left = 0.13; box.anchor_right = 0.56; box.anchor_top = 0.5; box.anchor_bottom = 0.5
+	box.offset_top = -210 * k; box.offset_bottom = 230 * k
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
 	box.add_theme_constant_override("separation", int(10 * k))
 	_root.add_child(box)
@@ -61,7 +61,7 @@ func _ready() -> void:
 		b.disabled = (i == 1 or i == 2) and not _can_continue
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_override("font", UiFonts.classic()); b.add_theme_font_size_override("font_size", int(34 * k))
+		b.add_theme_font_override("font", UiFonts.classic()); b.add_theme_font_size_override("font_size", int((UiFonts.HEAD + 4) * k))
 		b.add_theme_color_override("font_color", INK); b.add_theme_color_override("font_hover_color", SEAL)
 		b.add_theme_color_override("font_focus_color", SEAL)
 		b.add_theme_color_override("font_disabled_color", Color(INK.r, INK.g, INK.b, 0.3))
@@ -75,12 +75,13 @@ func _ready() -> void:
 			if place != "": parts.append(place)
 			if String(m.get("case", "")) != "": parts.append("「%s」" % String(m.case))
 			if m.has("hour"): parts.append(SaveKeeper.hour_text(float(m.hour)))
-			var sub := Label.new(); sub.text = "      " + "  ·  ".join(parts)
-			sub.add_theme_font_override("font", font); sub.add_theme_font_size_override("font_size", int(17 * k))
+			var sub := Label.new(); sub.text = "    " + "  ·  ".join(parts)
+			sub.add_theme_font_override("font", font); sub.add_theme_font_size_override("font_size", int(UiFonts.DETAIL * k))
+			sub.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS; sub.clip_text = true
 			sub.add_theme_color_override("font_color", Color(INK.r, INK.g, INK.b, 0.62))
 			box.add_child(sub)
 	var keys := Label.new(); keys.text = "↑↓ 고르기 · Enter 정하기"
-	keys.add_theme_font_override("font", font); keys.add_theme_font_size_override("font_size", int(15 * k))
+	keys.add_theme_font_override("font", font); keys.add_theme_font_size_override("font_size", int(UiFonts.KEYS * k))
 	keys.add_theme_color_override("font_color", Color(INK.r, INK.g, INK.b, 0.5))
 	var g := Control.new(); g.custom_minimum_size = Vector2(0, 18 * k); box.add_child(g)
 	box.add_child(keys)
@@ -99,7 +100,7 @@ func _draw_deco(c: Control) -> void:
 	var fs := 96.0 * k
 	var top := vs.y * 0.2
 	var len := VText.column(c, UiFonts.classic(), Vector2(x, top), "설화록", fs, INK)
-	VText.column(c, UiFonts.main(), Vector2(x - fs * 0.95, top + fs * 0.4), "이름 없는 나그네의 사건 기록", 22.0 * k, Color(INK, 0.7))
+	VText.column(c, UiFonts.main(), Vector2(x - fs * 0.95, top + fs * 0.4), "이름 없는 나그네의 사건 기록", float(UiFonts.DETAIL) * k, Color(INK, 0.7))
 	# 붉은 도장(제목 아래)
 	var s := 50.0 * k
 	var sc := Vector2(x, top + len + s * 0.9)
