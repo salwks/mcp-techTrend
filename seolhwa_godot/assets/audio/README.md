@@ -37,6 +37,10 @@
 | gonjang_hit | sfx/gonjang_hit.wav | 곤장 — 넓적한 매의 둔한 퍽(춘향 §28, 타격은 소리로만) | placeholder, replace later |
 | gate_shut | sfx/gate_shut.wav | 옥문 닫힘 — 쿵 + 빗장(춘향 §29) | placeholder, replace later |
 | breath_pain | sfx/breath_pain.wav | 참는 숨, 작게(춘향 §28 — BGM 없이 곤장 소리와 숨소리만) | placeholder, replace later |
+| hoofbeats | sfx/hoofbeats.wav | 말발굽 — 여러 필이 다가옴 3.2초(춘향 §43 잔치 음악이 끊긴 뒤) | placeholder, replace later |
+| chuldu_cry | sfx/chuldu_cry.wav | "암행어사 출두야" 외침 자리 — 지금은 사람 목소리 비슷한 모음 띠(자막이 말을 맡는다). 실제 녹음으로 꼭 바꿀 것(춘향 §43) | placeholder, replace later |
+| cup_clink | sfx/cup_clink.wav | 사기 술잔 맞닿음 두 번(춘향 §40·§42) | placeholder, replace later |
+| brush_stroke | sfx/brush_stroke.wav | 붓이 한지를 지나감, 작게(춘향 §42 시) | placeholder, replace later |
 
 ## 음악 (bgm/)
 
@@ -45,3 +49,4 @@
 | bgm_day_calm | bgm/bgm_day_calm.wav | 낮 잔잔한 고리 — 낮은 지속음 + 뜯는 5음, 24.5초 | placeholder, replace later |
 | bgm_night_drone | bgm/bgm_night_drone.wav | 밤 긴장 지속음 — 55Hz와 어긋난 5도 맥놀이, 24초 | placeholder, replace later |
 | bgm_dano_bright | bgm/bgm_dano_bright.wav | 단오 낮 밝은 고리 — 장구 장단 + 높은 5음, 22.8초(춘향 PART I) | placeholder, replace later |
+| bgm_feast | bgm/bgm_feast.wav | 관아 잔치 고리 — 느린 장구 굿거리 + 피리 비슷한 선율, 22.8초(춘향 §40 — 시 동안 작아지고 출두 직전 끊김) | placeholder, replace later |

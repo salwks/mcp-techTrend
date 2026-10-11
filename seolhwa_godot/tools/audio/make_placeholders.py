@@ -404,6 +404,86 @@ def breath_pain(rng):
     return norm(fade(inh + exh, 0.01, 0.1), -16)
 
 
+# ---- 춘향 PART II-B(잔치·출두) — 말발굽 · 출두 외침 · 술잔 · 붓 · 잔치 음악 ----
+def hoofbeats(rng):
+    # 말발굽: 흙길 위 여러 필이 다가오는 다그닥(점점 커짐) — 낮은 쿵 + 짧은 흙 튐
+    sec = 3.2
+    out = np.zeros(int(SR * sec))
+    at = 0.05
+    while at < sec - 0.25:
+        d = 0.16
+        t = t_axis(d)
+        thud = np.sin(2 * np.pi * (85 + rng.uniform(-10, 10)) * t) * env_exp(d, 0.035, 0.002)
+        grit = band(noise(d, rng), 400, 2500) * env_exp(d, 0.012, 0.001) * 0.45
+        gain = 0.25 + 0.75 * (at / sec)
+        place(out, (thud + grit) * gain, at)
+        at += float(rng.choice([0.09, 0.11, 0.21, 0.13]))
+    return norm(fade(out, 0.05, 0.2), -8)
+
+
+def chuldu_cry(rng):
+    # 출두 외침(임시 — 실제 녹음으로 바꿀 것): 여럿이 길게 외치는 사람 목소리 비슷한 모음 띠(포먼트 둘) + 떨림, 1.8초
+    sec = 1.8
+    t = t_axis(sec)
+    f0 = 165 + 25 * np.clip(t / 0.25, 0, 1) - 30 * np.clip((t - 1.1) / 0.6, 0, 1)
+    ph = 2 * np.pi * np.cumsum(f0) / SR
+    src = sum(np.sin(k * ph) / k for k in range(1, 14))
+    voice = band(src, 500, 1200) * 0.8 + band(src, 1900, 2800) * 0.35
+    crowd = band(noise(sec, rng), 300, 2500) * 0.12
+    env = np.clip(t / 0.08, 0, 1) * np.clip((sec - t) / 0.35, 0, 1) * (1 + 0.08 * np.sin(2 * np.pi * 5.5 * t))
+    return norm(fade((voice + crowd) * env, 0.01, 0.1), -7)
+
+
+def cup_clink(rng):
+    # 술잔: 사기 잔 두 번 맞닿는 짧은 '팅'
+    sec = 0.7
+    out = np.zeros(int(SR * sec))
+    for at, f in [(0.0, 2350.0), (0.14, 2620.0)]:
+        d = 0.5
+        t = t_axis(d)
+        x = (np.sin(2 * np.pi * f * t) + 0.4 * np.sin(2 * np.pi * f * 2.7 * t)) * env_exp(d, 0.09, 0.001)
+        place(out, x * (1.0 if at == 0.0 else 0.7), at)
+    return norm(fade(out), -14)
+
+
+def brush_stroke(rng):
+    # 붓: 한지 위로 붓이 지나가는 사각임(작게)
+    sec = 1.1
+    t = t_axis(sec)
+    env = np.clip(t / 0.15, 0, 1) * np.clip((0.95 - t) / 0.2, 0, 1)
+    x = band(noise(sec, rng), 1500, 6000) * env * (1 + 0.3 * np.sin(2 * np.pi * 3 * t))
+    return norm(fade(x, 0.01, 0.1), -20)
+
+
+def bgm_feast(rng):
+    # 잔치 고리: 느린 장구 굿거리 + 피리 비슷한 높은 지속음 선율(관아 잔치, 고리 22.8초)
+    sec = 24.0
+    t = t_axis(sec)
+    beat = np.zeros(len(t))
+    bt = 0.0
+    pat = [(0.0, 1.0), (0.75, 0.5), (1.125, 0.6), (1.5, 0.8), (2.25, 0.5)]
+    while bt < sec - 3.0:
+        for off, g in pat:
+            d = 0.25
+            tt = t_axis(d)
+            hit = np.sin(2 * np.pi * (110 if g > 0.7 else 220) * tt) * env_exp(d, 0.05, 0.002) * g
+            place(beat, hit + band(noise(d, rng), 800, 3000) * env_exp(d, 0.01) * 0.3 * g, bt + off)
+        bt += 3.0
+    scale = [293.7, 329.6, 392.0, 440.0, 493.9, 587.3]
+    mel = np.zeros(len(t))
+    at = 0.4
+    while at < sec - 3.0:
+        f = scale[int(rng.integers(0, len(scale)))]
+        d = float(rng.choice([0.75, 1.5, 1.5, 2.25]))
+        tt = t_axis(d)
+        vib = 1 + 0.006 * np.sin(2 * np.pi * 5 * tt)
+        tone = np.sin(2 * np.pi * f * vib * tt) + 0.3 * np.sin(2 * np.pi * 2 * f * vib * tt)
+        place(mel, tone * np.clip(tt / 0.08, 0, 1) * np.clip((d - tt) / 0.2, 0, 1) * 0.5, at)
+        at += d
+    x = band(beat, 60, 4000) * 0.5 + band(mel, 250, 3000) * 0.55
+    return norm(_loop_safe(x, 1.2), -17)
+
+
 SFX = {
     "knock": (knock, "문 두드림 두 번(나무 문)"),
     "footstep_heavy": (footstep_heavy, "무거운 발 디딤(범·큰 짐승)"),
@@ -426,9 +506,14 @@ SFX = {
     "gonjang_hit": (gonjang_hit, "곤장(넓적한 매의 둔한 퍽)"),
     "gate_shut": (gate_shut, "옥문 닫힘(쿵 + 빗장)"),
     "breath_pain": (breath_pain, "참는 숨(작게)"),
+    "hoofbeats": (hoofbeats, "말발굽(여러 필이 다가옴, 3.2초)"),
+    "chuldu_cry": (chuldu_cry, "출두 외침(여럿이 길게 — 임시 모음 띠)"),
+    "cup_clink": (cup_clink, "술잔 맞닿음(팅 두 번)"),
+    "brush_stroke": (brush_stroke, "붓이 한지를 지나감(작게)"),
 }
 # 처음 판(14개) 뒤에 더한 소리 — 씨앗 순서를 뒤에 붙여 예전 파일이 다시 돌려도 바뀌지 않게
-LATE = ["brush_rustle", "crowd_dano", "drum_far", "laugh_far", "gonjang_hit", "gate_shut", "breath_pain"]
+LATE = ["brush_rustle", "crowd_dano", "drum_far", "laugh_far", "gonjang_hit", "gate_shut", "breath_pain",
+        "hoofbeats", "chuldu_cry", "cup_clink", "brush_stroke"]
 BGM = {
     "bgm_day_calm": (bgm_day_calm, "낮 잔잔한 고리(지속음 + 뜯는 5음, 24.5초)"),
     "bgm_night_drone": (bgm_night_drone, "밤 긴장 지속음(맥놀이, 24초)"),
@@ -436,6 +521,7 @@ BGM = {
 # 뒤에 더한 음악(예전 두 곡의 씨앗을 바꾸지 않게 따로 센다)
 BGM_LATE = {
     "bgm_dano_bright": (bgm_dano_bright, "단오 낮 밝은 고리(장구 장단 + 높은 5음, 22.8초)"),
+    "bgm_feast": (bgm_feast, "관아 잔치 고리(장구 굿거리 + 피리 비슷한 선율, 22.8초)"),
 }
 
 

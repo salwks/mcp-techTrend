@@ -40,6 +40,10 @@ const TUNE := {
 	"ui_select": { pitch = 0.05 },
 	"gonjang_hit": { pitch = 0.04 },
 	"breath_pain": { pitch = 0.04, db = -2.0 },
+	"hoofbeats": { pitch = 0.03 },
+	"chuldu_cry": { pitch = 0.0 },
+	"cup_clink": { pitch = 0.06 },
+	"brush_stroke": { pitch = 0.08 },
 }
 
 static var _inst = null

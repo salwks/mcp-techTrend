@@ -8,7 +8,8 @@ const GameSettings := preload("res://scripts/story/game_settings.gd")
 const IDS := ["knock", "footstep_heavy", "flour_rustle", "basket_roll", "tiger_growl", "axe_hit", "rope_creak", "rope_snap",
 	"fall_impact", "wind", "breath_gasp", "journal_stamp", "page_turn", "ui_select", "brush_rustle",
 	"crowd_dano", "drum_far", "laugh_far",   # 춘향 PART I
-	"gonjang_hit", "gate_shut", "breath_pain"]   # 춘향 PART II-A
+	"gonjang_hit", "gate_shut", "breath_pain",   # 춘향 PART II-A
+	"hoofbeats", "chuldu_cry", "cup_clink", "brush_stroke"]   # 춘향 PART II-B
 
 var n := 0
 var fails := 0
@@ -34,6 +35,7 @@ func _run() -> void:
 	for id in IDS: ok(Sound.has(id), "sfx 있음 %s" % id)
 	ok(Sound.has("bgm_day_calm", "bgm") and Sound.has("bgm_night_drone", "bgm"), "bgm 둘 있음")
 	ok(Sound.has("bgm_dano_bright", "bgm"), "bgm 단오(춘향 PART I) 있음")
+	ok(Sound.has("bgm_feast", "bgm"), "bgm 잔치(춘향 PART II-B) 있음")
 	var st: AudioStream = Sound.stream("bgm_day_calm", "bgm")
 	ok(st is AudioStreamWAV and st.loop_mode == AudioStreamWAV.LOOP_FORWARD and st.loop_end > 0, "bgm은 고리(loop)")
 	ok(not Sound.has("no_such_sound"), "없는 id는 없음")
