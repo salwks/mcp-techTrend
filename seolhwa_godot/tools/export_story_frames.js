@@ -9,16 +9,17 @@
 //   - woochi: 우치(CHR_MAIN_003, 가벼운 몸 — 짙은 쪽빛 저고리·머리띠, 짐 없음) 대기·걷기·뛰기·대화·오르기(climb)·웅크림(crouch)
 //   - chaekkwae: 책쾌(CHR_MAIN_007, 상인 베이스 변형 — 갓·책 보따리) 대기·걷기·대화·앉기(sit)·묶임(tied)
 //   - pojol: 포졸(CHR_HUM_016, 벙거지·검은 쾌자·붉은 띠·육모 방망이 대신 긴 막대) 대기·걷기·뛰기·대화
+//   ?set=poses → data/frames_pose.json(공용 자세 sit·bow·kneel, 모든 사람 종류) · ?set=chunhyang_part2 → 춘향 PART II 차림(아래 runPoses·runPart2)
 import { SPECS } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   story_girl: { base: 'child_girl', over: {}, anims: ['idle', 'walk', 'talk', 'cry', 'climb', 'perch', 'cower', 'hug'] },
   story_boy: { base: 'child_boy', over: {}, anims: ['idle', 'walk', 'talk', 'cry', 'climb', 'perch', 'cower', 'hug'] },
   ricecake_mother: { base: 'villager_f', over: { coat: '#e2d7bb', skirt: '#46627b', goreum: '#8e5a48', cuff: '#7d6a55', collar: '#7d6a55', scarf: '#efe9da', carry: 'basket', build: 0.95 },
     anims: ['idle', 'walk', 'talk'] },
 };
-const SETS = {
+export const SETS = {
   hanyang: {
     woochi: { base: 'villager_m', over: { coat: '#3e4655', pants: '#4b505b', vest: null, collar: '#262b33', daenim: '#262b33', back: null, hat: null, band: '#2b2622',
       stubble: false, legwrap: '#d8d2c2', shoe: '#4a3f33', patch: null, build: 0.9, cheek: 0.12 },
@@ -117,6 +118,8 @@ async function bakeBank(b, keys, prefix) {
 
 export async function run(log) {
   const set = new URLSearchParams(location.search).get('set');
+  if (set === 'poses') return runPoses(log);
+  if (set === 'chunhyang_part2') return runPart2(log);
   if (set && SETS[set]) return runSet(set, log);
   const out = {};
   for (const kind in PEOPLE) {
@@ -163,4 +166,66 @@ async function runSet(set, log) {
   await put(`frames_story_${set}.json`, JSON.stringify(out));
   log('done: ' + Object.keys(out).join(', '));
   console.log('[story bake] done', set, Object.keys(out));
+}
+
+// ?set=poses: 공용 자세(sit·bow·kneel — tools/pose_common.js)를 모든 사람 종류(tools/kind_specs.js HUMAN_BANKS)에 → data/frames_pose.json
+//   + frames_pose_<kind>_<n>.png. Godot SpriteChar.ensure_poses가 그 종류에 클립이 없을 때만 더한다(이미 있는 sit 등은 그대로 — 예전 장면 그림 불변).
+async function runPoses(log) {
+  const ks = await import('/__tools/kind_specs.js');
+  const pc = await import('/__tools/pose_common.js');
+  const out = {};
+  for (const kind of ks.ALL_HUMANS) {
+    if (!ks.ensureSpec(kind)) { log('skip ' + kind); continue; }
+    fc.TIERS.high[kind] = fc.TIERS.high.player;
+    pc.installPoses(kind);
+    const b = new fc.BakeBank(kind, 'high');
+    const clips = {};
+    for (const vw of ['front', 'side', 'back']) for (const a of pc.POSE_NAMES) {
+      const key = fc.clipKey(vw, a, false, false);
+      const c = b.clip(key); if (!c) continue;
+      c.spec = pc.poseSpec(a, c.spec);
+      let g = 0; while (!b.step(c) && g++ < 600);
+      clips[key] = { spec: c.spec, frames: c.frames.map(meta) };
+    }
+    const pages = [];
+    for (let i = 0; i < b.pages.length; i++) { const name = `frames_pose_${kind}_${i}.png`; await put(name, await toPng(b.pages[i].cv)); pages.push(name); }
+    out[kind] = { pages, clips };
+    log('baked poses ' + kind + ' pages=' + pages.length);
+  }
+  await put('frames_pose.json', JSON.stringify(out));
+  log('done poses: ' + Object.keys(out).length + ' kinds');
+  console.log('[story bake] done poses', Object.keys(out).length);
+}
+
+// ?set=chunhyang_part2: 춘향 PART II 차림(tools/dress_art.js PART2 — 춘향 옥·몽룡 거지·변학도·기생 셋)
+//   → data/frames_story_chunhyang_part2.json + frames_story_chunhyang_part2_<kind>_<n>.png. 공용 자세(sit·bow·kneel)도 차림 그대로 같은 묶음에 굽는다.
+async function runPart2(log) {
+  const pc = await import('/__tools/pose_common.js');
+  const da = await import('/__tools/dress_art.js');
+  const out = {};
+  for (const kind in da.PART2) {
+    const P = da.PART2[kind];
+    da.ensurePart2(kind);
+    fc.TIERS.high[kind] = fc.TIERS.high.player;
+    pc.installPoses(kind);
+    da.installDress(kind);
+    const b = new fc.BakeBank(kind, 'high');
+    const clips = {};
+    for (const vw of ['front', 'side', 'back']) for (const a of P.anims) {
+      const key = fc.clipKey(fc.resolveView(kind, vw, a), a, false, false);
+      if (clips[key]) continue;
+      const c = b.clip(key); if (!c) continue;
+      if (pc.POSE_ANIMS[a] || da.DRESS_ANIMS[a]) c.spec = pc.poseSpec(pc.POSE_ANIMS[a] ? a : 'sit', c.spec);
+      if (da.DRESS_ANIMS[a]) { const n = 2, step = da.DRESS_ANIMS[a].dur / n; c.spec = { kind: 'loop', times: [0, step], loopStart: 0, intro: 0, step, n, dur: da.DRESS_ANIMS[a].dur, tBased: false }; }
+      let g = 0; while (!b.step(c) && g++ < 600);
+      clips[key] = { spec: c.spec, frames: c.frames.map(meta) };
+    }
+    const pages = [];
+    for (let i = 0; i < b.pages.length; i++) { const name = `frames_story_chunhyang_part2_${kind}_${i}.png`; await put(name, await toPng(b.pages[i].cv)); pages.push(name); }
+    out[kind] = { pages, clips };
+    log('baked ' + kind + ' pages=' + pages.length);
+  }
+  await put('frames_story_chunhyang_part2.json', JSON.stringify(out));
+  log('done: ' + Object.keys(out).join(', '));
+  console.log('[story bake] done chunhyang_part2', Object.keys(out));
 }
