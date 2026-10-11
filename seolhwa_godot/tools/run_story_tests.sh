@@ -101,6 +101,11 @@ TESTS=(
 	"namwon_chunhyang:a|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:a --notitle"
 	"namwon_chunhyang:b|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:b --notitle"
 	"namwon_chunhyang:after|300|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:after --notitle"
+	# 춘향 PART II-A(story/namwon_chunhyang/namwon_chunhyang_p2a_test.gd): p2a 열림 판정·6A 행차·아전(맡는다)·잡역·8A 점고(조작·줄 묶임)·월매 집(경고)·수청 8A→10A·
+	#   곤장(잡는다 — 맞음)·팔·옥문 SEALED·첫 밤(가져다줌)·옥 대화·차일 규칙·조작 비율 고리·II-B 없음·머리 다시 굽기 / p2b 싫다(끌려감)·느슨하게·기다림·설득 / p2c 놓는다·지나간다
+	"namwon_chunhyang:p2a|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:p2a --notitle"
+	"namwon_chunhyang:p2b|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:p2b --notitle"
+	"namwon_chunhyang:p2c|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:p2c --notitle"
 )
 
 selected=()
