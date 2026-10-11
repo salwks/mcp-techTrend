@@ -13,7 +13,10 @@
 #     sit 그림이 없는 bank는 idle 그림을 SIT_SINK만큼 낮춰 앉은 키로 보이게 한다(잔칫상·대청 마루가 다리를 가린다 — 임시, sit 프레임 굽기 전).
 #   보이기: when(placement_gate.gd — 같은 조건 언어, 사건·변수가 바뀔 때만)이 참일 때. force(id, on, density)는 when을 덮는다(시험·촬영).
 #     디버그: --crowdshow=dano_market:high,byeon_banquet:medium
-#   비용: 플레이어에서 far_freeze_m 밖은 숨김(그림·갱신 없음), 화면 밖은 멈춤(갱신 없음), far_freeze_m의 절반 밖은 세 프레임에 한 번 갱신.
+#   비용: LOD 거리 = min(플레이어까지, 지금 카메라의 땅 위 자리까지) — 카메라의 땅 위 자리는 카메라 자리(x,z)와 카메라가 겨냥한 점(x,z) 둘
+#     (망원 각본 시점은 카메라 앞 70~85m까지 담는다 — 1A). 평소에는 겨냥점이 플레이어(+앞보기 1.2m)라 예전과 같고,
+#     카메라만 멀리 가는 컷(각본 시점)에서는 카메라가 보는 군중이 살아 있다(플레이어를 옮기지 않는다).
+#     그 거리가 far_freeze_m 밖이면 숨김(그림·갱신 없음), 화면 밖은 멈춤(갱신 없음), far_freeze_m의 절반 밖은 세 프레임에 한 번 갱신.
 #   만들지 않는 것: AI·생활 스케줄·길찾기·충돌 회피·반응(제작 규칙 C60).
 extends Node3D
 
@@ -305,13 +308,14 @@ func update(dt: float) -> void:
 	var shown := 0; var act := 0; var frz := 0; var hid := 0; var red := 0
 	var cam: Camera3D = main.cam
 	var pp: Vector3 = main.player_pos
+	var cg := cam_ground()   # 카메라의 땅 위 자리 둘(카메라 x,z · 겨냥점 x,z)
 	for id in crowds:
 		var c: Dictionary = crowds[id]
 		if not c.on: continue
 		var far := float(c.spec.get("far_freeze_m", PRESETS.get(String(c.spec.get("preset", "festival")), PRESETS.festival).far_freeze_m))
 		for m in c.members:
 			var p2: Vector2 = m.pos2
-			var d := Vector2(p2.x - pp.x, p2.y - pp.z).length()
+			var d := lod_dist(p2, Vector2(pp.x, pp.z), cg)
 			if d > far:
 				if m.ch != null and m.ch.visible: m.ch.visible = false
 				m.lod = "hidden"; hid += 1
@@ -336,6 +340,25 @@ func update(dt: float) -> void:
 			_step(m, a)
 			m.ch.update_char(a, cam)
 	stats = { shown = shown, active = act, frozen = frz, hidden = hid, reduced = red }
+
+# LOD 거리(C60): min(플레이어까지, 카메라의 땅 위 자리까지)
+static func lod_dist(p2: Vector2, player: Vector2, cam_pts: Array) -> float:
+	var d := p2.distance_to(player)
+	for c in cam_pts: d = minf(d, p2.distance_to(c))
+	return d
+
+# 지금 카메라의 땅 위 자리: 카메라 자리(x,z)와 겨냥점(x,z — 각본 시점이면 look, 아니면 rig.target)
+func cam_ground() -> Array:
+	var out := []
+	var cam: Camera3D = main.cam
+	if cam == null: return out
+	var cpos := cam.global_position
+	out.append(Vector2(cpos.x, cpos.z))
+	var rig = main.rig
+	if rig != null:
+		var lk = rig.shot.look if rig.shot != null else rig.target
+		if lk is Vector3: out.append(Vector2(lk.x, lk.z))
+	return out
 
 # 화면 안인가: 카메라 앞 원뿔(세로 fov의 절반 × 가로 비율 + 여유) — 렌더러(헤드리스 포함)와 무관하게 같은 답
 static func _in_view(cam: Camera3D, p: Vector3) -> bool:
