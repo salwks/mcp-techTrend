@@ -2,7 +2,7 @@
 
 > 작성: 2026-10-11 · 근거: 브랜치 `claude/youthful-gauss-d0fxzv`의 실제 코드·데이터. 문서만 다루며 코드는 바꾸지 않았다.
 > 갱신: 2026-10-11 공통 승격 1차(`seolhwa_godot/docs/reports/commonize-1.md`) — C17·C27·C46 구현(G), 길목 깃발 land 노정만(결정 5·6), F-1·F-6 완료.
-> 갱신: 2026-10-11 춘향 2a(`seolhwa_godot/docs/reports/chunhyang-prep.md`) — F-11(조건부 배치)·F-17(EventCrowd 최소판) 완료, C60 구현(G).
+> 갱신: 2026-10-11 춘향 PART II-A — C61 앉은 자세 승격 규칙 · C62 차일 상태 규칙. 그 앞: 2026-10-11 춘향 2a(`seolhwa_godot/docs/reports/chunhyang-prep.md`) — F-11(조건부 배치)·F-17(EventCrowd 최소판) 완료, C60 구현(G).
 > 경로는 따로 적지 않으면 `seolhwa_godot/` 기준이다. 상태 표기는 다음과 같다.
 > - **G**: 공통 코드에 이미 있어 모든 공간에 적용된다.
 > - **N**: 남원 코드·데이터에만 있다. 공통으로 승격해야 한다.
@@ -95,6 +95,12 @@
 - **N(남원에만 있어 공통 승격 필요)**: C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
 - **P(문서만)**: C28 · C31 · C42 · C52
 - C60(EventCrowd)은 위 59개 뒤에 더한 규칙이다 — 춘향 2a에서 구현(G). 인원 확정값은 `seolhwa_godot/docs/reports/chunhyang-prep.md`.
+- C61·C62(춘향 PART II-A, 2026-10-11 사용자 결정)도 뒤에 더한 규칙이다(아래 표).
+
+| # | 규칙 | 내용 | 근거 | 상태 |
+|---|---|---|---|---|
+| C61 | 앉은 자세 승격 | generic·새 인물은 공용 sit(양반다리 — `data/frames_pose.json`)를 쓴다. **예전 고유 인물(춘향 PART I·책쾌·연이·장님 노인·숯쟁이·이겸·곽·전령 등)은 이미 가진 sit를 그대로 둔다** — 앉는 모습이 중요한 장면에 다시 나올 때만 그 인물의 sit를 새로 굽는다(그림 불변 원칙). `SpriteChar.ensure_poses`가 이미 있는 클립을 덮지 않는 것이 이 규칙의 구현이다 | `sprite_char.gd ensure_poses` · `chunhyang-part2-prep.md` 판단 5 | G |
+| C62 | 차일(잔치 천막) 상태 | 공식 권력 8A 틀(점고·수청·출두)에서는 **FURLED**가 기본, 평소 잔치 놀이·낮은·가까운 틀에서는 **SPREAD**. **컷이 바뀔 때만** 바꾼다 — 플레이어 눈앞에서 천을 말아 올리는 움직임은 만들지 않는다. 사건 코드는 틀을 바꿀 때 `cut_to(틀 이름)`로 상태와 카메라를 함께 정한다 | `story/namwon_chunhyang/namwon_chunhyang_p2a.gd` `chail_state_for`·`cut_to` | G(규칙·시험 — 차일은 II-B 잔치에서 처음 선다) |
 - 덧붙임: G 가운데 C16 이동 잠금·C41 음악 훅처럼 **장치는 공통이지만 지금 쓰는 사건이 남원 하나뿐**인 것이 있다. 다른 사건이 쓰기 시작할 때 E절 계약대로 쓰면 된다.
 
 ### B-2. 지역 층 (권역·노정 profile — 값은 C절)
