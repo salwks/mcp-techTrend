@@ -2,6 +2,7 @@
 
 > 작성: 2026-10-11 · 근거: 브랜치 `claude/youthful-gauss-d0fxzv`의 실제 코드·데이터. 문서만 다루며 코드는 바꾸지 않았다.
 > 갱신: 2026-10-11 공통 승격 1차(`seolhwa_godot/docs/reports/commonize-1.md`) — C17·C27·C46 구현(G), 길목 깃발 land 노정만(결정 5·6), F-1·F-6 완료.
+> 갱신: 2026-10-11 지도 세 단계 — C65 UNKNOWN·KNOWN·VISITED(권역 상식 `region_data/region_known.json`, `seolhwa_godot/docs/reports/map-known-states.md`).
 > 갱신: 2026-10-11 춘향 PART II-A 고침 — C63 고을 사람 비우기 구역(행렬 길). 그 앞: 춘향 PART II-A — C61 앉은 자세 승격 규칙 · C62 차일 상태 규칙. 그 앞: 2026-10-11 춘향 2a(`seolhwa_godot/docs/reports/chunhyang-prep.md`) — F-11(조건부 배치)·F-17(EventCrowd 최소판) 완료, C60 구현(G).
 > 경로는 따로 적지 않으면 `seolhwa_godot/` 기준이다. 상태 표기는 다음과 같다.
 > - **G**: 공통 코드에 이미 있어 모든 공간에 적용된다.
@@ -95,7 +96,7 @@
 - **N(남원에만 있어 공통 승격 필요)**: C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
 - **P(문서만)**: C28 · C31 · C42 · C52
 - C60(EventCrowd)은 위 59개 뒤에 더한 규칙이다 — 춘향 2a에서 구현(G). 인원 확정값은 `seolhwa_godot/docs/reports/chunhyang-prep.md`.
-- C61·C62(춘향 PART II-A, 2026-10-11 사용자 결정)도 뒤에 더한 규칙이다(아래 표). C63(비우기 구역)은 PART II-A 고침에서 더했다.
+- C61·C62(춘향 PART II-A, 2026-10-11 사용자 결정)도 뒤에 더한 규칙이다(아래 표). C63(비우기 구역)은 PART II-A 고침에서 더했다. C65(지도 세 단계)는 2026-10-11 사용자 결정으로 더했다 — 권역별 상식 목록은 아래 C65 목록.
 
 | # | 규칙 | 내용 | 근거 | 상태 |
 |---|---|---|---|---|
@@ -103,6 +104,22 @@
 | C62 | 차일(잔치 천막) 상태 | 공식 권력 8A 틀(점고·수청·출두)에서는 **FURLED**가 기본, 평소 잔치 놀이·낮은·가까운 틀에서는 **SPREAD**. **컷이 바뀔 때만** 바꾼다 — 플레이어 눈앞에서 천을 말아 올리는 움직임은 만들지 않는다. 사건 코드는 틀을 바꿀 때 `cut_to(틀 이름)`로 상태와 카메라를 함께 정한다 | `story/namwon_chunhyang/namwon_chunhyang_p2a.gd` `chail_state_for`·`cut_to` | G(규칙·시험 — 차일은 II-B 잔치에서 처음 선다) |
 | C63 | 고을 사람 비우기 구역 | 각본 행렬·행사(행차·어사출두 행렬·관아 행사·상여 길)가 지나는 길 한가운데에서 **상시 고을 사람(npc_ambient)만** 잠시 비운다. 켜면 ① 구역 안에는 새로 나오지 않고 ② 이미 있던 사람·짐승은 바로 풀로 돌리며(말 거는 중인 사람만 예외) ③ 걷는 사람은 구역 앞에서 돌아선다. 풀면 아무것도 되돌리지 않는다 — **보통 스트리밍이 화면 밖에서 다시 채운다.** 구역은 사각형 `{ rect: [x0, z0, x1, z1] }` 또는 꺾인 길 `{ path: [자리…], width }`(자리는 앵커 이름·[x, z]). 사건 데이터 `ambient_exclude: [{ id, path\|rect, width, when }]`로 선언하면 `when`이 서는 동안 켜지고, 코드에서는 `d.ambient_exclude(id, 구역, 폭)` / `d.ambient_release(id)`. 이야기 인물·EventCrowd는 건드리지 않는다. **만들지 않는 것**: 행렬 AI · 군중 길찾기 · 비켜서기 동작. 목적은 각본 행렬의 길을 비우는 것뿐 | `scripts/region/npc_ambient.gd` `exclude`·`release`·`excluded` · `scripts/story/story_director.gd` `ambient_exclude`·`ambient_release`·데이터 `ambient_exclude` · 첫 사용: 춘향 6A(`namwon_chunhyang_p2a_data.gd ambient_excludes` — arrival부터 행렬이 관아에 들 때까지, 폭 6m) | G |
 | C64 | 화면 글 크기(공통 UI) | 모든 화면 글은 `scripts/ui_fonts.gd`의 크기 표 한 곳에서 가져온다(1024×768 뷰포트 픽셀, 큰 창이면 각 화면이 높이/768 배): **TITLE 44 · HEAD 34 · NAME 30 · BODY 28 · DETAIL 24 · KEYS 22 · NOTE 20 · MIN 18**(이보다 작은 글 금지). 지도는 **고을(도시) 이름만 MAP_HUB 26 · MAP_TOWN 24 그대로**, 그 밖의 지도 글은 모두 **고을 이름 크기 MAP_MIN 26 이상** — MAP_LABEL · MAP_MINOR(마을·건물·이름난 곳·고개·물·노정·전국 거점·사건 장소) · MAP_GLYPH(기호 속 '역'·'사'·방위·번호 — 기호 그림이 글자에 맞춰 커진다) · MAP_PANEL(판·범례 글, 범례 기호도 함께 키움) · MAP_KEYS(아래 안내·10리 자·표지 설명·확인 상자) · 역마 창 작은 지도 이름 모두 26. 고을 이름은 크기 대신 Classic 글꼴·먹색·한지 판으로 가른다. 지도 글은 **확대·축소와 상관없이 화면 크기 고정**(기호 그림도 ICON_S 고정 — `* 배율`로 글을 키우지 않는다), 바탕 그림(webp)에 글자를 굽지 않는다. 1024×768에 넣기: 오른쪽 판은 **쪽 넘김(L — 닫힘 · 범례 · 사건·역참)**, 아래 안내 한 줄, 지도 이름은 지도 오른쪽 위 판. 지도 이름은 **확대 단계**로 고른다 — 1 늘(고을·권역 이름·사건 표지) · 2 중간(고을 지도 쪽으로 치우친 문턱 — 이름난 곳·관아·객사·나루·역참·고개·사건 장소·물 이름) · 3 가까이(1.6 px/m 또는 고을 문턱 × 2 이상 — 낱낱 건물, 배치 title·building_titles 이름, 가 봄/들음만). 겹치면 우선순위로 솎고(낮은 이름일수록 둘레를 더 비워야 들어간다 · 낱낱 건물이 가장 먼저 · 가까운 사건 인은 하나로 묶어 '외 n'), 같은 이름은 곁에 한 번만, 이름표는 두꺼운 한지 테두리로 먹 지도 위에서 읽히게. 모르는 곳은 숨김. 글이 넘치면 **줄이지 말고** 두 단·나누기·쪽 넘김·`StoryUI.wrap_words`(띄어쓰기에서만 줄바꿈)·`UiFonts.fit`(말줄임)으로 맞춘다 | `scripts/ui_fonts.gd` · `scripts/region/region_map.gd`(`_tier`·`_place_all`·`set_page`·`--maptexttest`) · `scripts/region/fast_travel.gd`(`_map_label`) · `docs/reports/ui-text-scale.md` | G(시험 `map:text-zoom`·`map:text-zoom-hanyang`) |
+| C65 | 지도 세 단계(UNKNOWN · KNOWN · VISITED) | **지도는 '위치를 아는가'와 '직접 가 보았는가'를 구분한다. · 권역 진입 시 대표 명소·공공시설은 KNOWN이 된다. · 개별 생활시설·사적 공간·사건 장소·단서 위치는 자동 공개하지 않는다. · NPC에게 정확한 위치를 들으면 UNKNOWN→KNOWN, 직접 방문하면 →VISITED.** 여덟 권역 공통(남원도 예외 없음). UNKNOWN = 이름·기호 없음 · KNOWN = 이름·자리 보임, 옅은 먹 글 + 바랜 기호·점선 테(읍치 판은 점선 테) · VISITED = 보통 먹. 저장 값: `visited` → VISITED, `told`(들음)·`known`(권역 상식·start_known) → KNOWN — 옛 저장도 그대로 읽는다. 권역 상식 목록은 데이터(`region_data/region_known.json` — towns·landmarks·buildings·passes·ferries, 권역마다)이고 코드에 박지 않는다. 그 공간에 서 있으면(새로 들어서거나 불러와 그 권역에 서면) 곧 채운다 — 이미 아는 키(들음·가 봄)는 바꾸지 않는다. 사건 장소(`place:`)는 절대 자동 KNOWN이 아니다. 사건이 쓰는 공공 건물(광한루·광통교)은 건물 이름만 상식이고 `place:` 키는 사건이 정한다. **역참·역마·길목 깃발은 travel_nodes '가 봄'만 센다 — KNOWN은 그 조건을 채우지 않는다.** 사건 표지(map_leads, 붉은 인)는 뜻이 그대로다(사건으로 알게 된 행선지 — 권역 상식과 따로). 노정은 뚜렷한 길목이 없으면 목록을 비운다(지금 모두 비움). 확대 단계·글 크기(C64)·솎기는 그대로 | `scripts/region/discovery.gd`(`state`·`is_visited`·`grant`) · `scripts/region/region_known.gd` · `region_data/region_known.json` · `scripts/region/region_map.gd`(`grant_region_known`·`_icon_faint`·범례 '가 본 곳'·'아는 곳') · 시험 `tools/region/region_known_test.gd`(여덟 권역 목록) · `map:known-namwon`·`map:known-hanyang`(`scripts/region/map_known_test.gd`) · `seolhwa_godot/docs/reports/map-known-states.md` | G |
+
+#### C65 권역 상식 목록 (`region_data/region_known.json` 초안 — 데이터가 원본, 여기는 요약)
+
+| 권역 | 고을·마을 | 이름난 곳(lm)·건물(bld)·고개·나루 | 일부러 뺀 것 |
+|---|---|---|---|
+| 남원 JL_NAMWON_UNBONG (27키) | 남원·운봉·인월·실상사 | 읍성 4문 · 용성관(객사) · 동헌(관아) · 광한루 · 광한루원 · 오작교 · 남원향교 · 운봉현 관아 · 황산대첩비 · 실상사 · 여원치 마애불 · 여원재 · 요천 나루 | 월매 집 · 주막 · 물레방앗간 · 외딴집 · 옥 자리 · 사건 장소 · 범 흔적 |
+| 한양 GG_HANYANG (42키) | 한양·운종가·배오개·칠패·노량진·한강진 | 경복궁·광화문 · 창덕궁 · 종묘 · 사직단 · 종루 · 광통교 · 수표교 · 육조거리 · 한성부 · 성균관 · 도성 4대문 · 모화관 · 좌·우포도청 · 목멱산 봉수 · 무악재 · 노량진·한강진 나루 | 책쾌의 책방 · 칠패·서강 창고 · 주막 |
+| 경주 GS_GYEONGJU (36키) | 경주·불국사 | 동경관 · 경주부 관아 · 첨성대 · 계림 · 반월성 터 · 경주향교 · 오릉 · 분황사(모전석탑) · 불국사 · 석굴암 · 봉황대 · 감은사 터 · 대왕암 · 추령 · 서천 나루 | 치술령·망부석 · 처용·연오랑 바위 · 주막 |
+| 강릉 GW_GANGNEUNG (16키) | 강릉·구산역·경포 | 임영관 · 강릉대도호부 관아 · 강릉향교 · 오죽헌 · 경포대 · 굴산사 터 당간지주 · 대관령 | 대관령 국사성황사 · 반정 주막 |
+| 황주 HH_HWANGJU (13키) | 황주·황주천 나루 | 제안관(객사) · 황주목 관아 · 월파루 · 황주향교 · 읍성 4문 | 도화동 우물 · 눈먼 노인의 집 |
+| 평양 PA_PYEONGYANG (31키) | 평양·대동강 나루·영명사 | 대동문·보통문·칠성문·현무문·전금문 · 연광정 · 을밀대 · 최승대 · 평안감영 · 대동관 · 평양향교 · 평양 종각 · 숭령전 · 기자릉 · 영명사 · 대동강 나루 | 부벽루(사건) · 기린굴 · 나루 주막 · 종이 마당 · 기록 창고 |
+| 함흥 HG_HAMHEUNG (20키) | 함흥·만세교·본궁 | 함경감영(선화당) · 풍패관 · 낙민루 · 구천각 · 만세교 · 함흥본궁(반송) · 함흥향교 · 읍성 남문·동문 | 동문 밖 역참 마당 · 함관령 |
+| 제주 JJ_JEJU (16키) | 제주목·산지포·화북포·조천 | 관덕정 · 제주목 관아 · 영주관 · 삼성혈 · 연북정 · 제주향교 · 화북포 해신사 | 김녕사굴 · 송당 본향당 |
+| 노정·뱃길 | — | (비움 — 뚜렷한 길목이 생기면 그 노정 id로 더한다) | |
+
 - 덧붙임: G 가운데 C16 이동 잠금·C41 음악 훅처럼 **장치는 공통이지만 지금 쓰는 사건이 남원 하나뿐**인 것이 있다. 다른 사건이 쓰기 시작할 때 E절 계약대로 쓰면 된다.
 
 ### B-2. 지역 층 (권역·노정 profile — 값은 C절)
