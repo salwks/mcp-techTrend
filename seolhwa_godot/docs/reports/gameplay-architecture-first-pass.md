@@ -2,7 +2,8 @@
 
 > 지시: `seolhwa/docs/production/BRIEF_gameplay_architecture_first_pass.md`(사용자 원문 요지)
 > 상위 문서: `seolhwa/docs/production/SEOLHWAROK_GAMEPLAY_ARCHITECTURE_FINAL_v1.0.md`
-> 나눠 맡음: 에이전트 1 = §26의 1~3(방향 문서 · Activity/Problem 계약 · 오누이 보강) — 이 보고서 §1~§4. 에이전트 2·3 = 춘향 II-B · demo · 최종 화면·보고(§5 이후를 이어 쓴다).
+> 나눠 맡음: 에이전트 1 = §26의 1~3(방향 문서 · Activity/Problem 계약 · 오누이 보강) — §1~§6. 에이전트 2 = §26의 4~6(춘향 II-B) — §7~§18. 에이전트 3 = §26의 7~10(재사용 demo · 전체 시험 · 실제 화면 순회 · 최종 보고) — §19~§33.
+> **최종 요약은 §19(종합)부터 읽으면 된다.**
 > 시작 HEAD: `6ede0a9`(브랜치 `claude/youthful-gauss-d0fxzv`).
 
 ## 1. 바꾼 파일(에이전트 1)
@@ -326,3 +327,186 @@ static func problems() -> Dictionary:
 - 화면 순회: `godot --path seolhwa_godot res://scenes/region.tscn --resolution 1024x768 -- --region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:iib2 --notitle --storyshots=<폴더> --savefile=user://st_iib_shots.json` — `_cut` 이름: `13_wine_work` · `14A_beggar_return` · `15_wolmae_beggar` · `16_12A_reunion` · `17_feast_general` · `17b_walk_feast` · `17_mong_edge` · `17A_poem` · `18A_before` · `18A_after` · `19_restoration` · `20_release` · `21_last_choice` · `22_gwanghallu_end`. 쌀(박가네)·상소(형방 소지함) 장면은 `_cut`이 없다 — 필요하면 `obj()` 뒤에 `t.cut()` 한 줄.
 - 갈래: iib1(순응·확답 없음) · iib2(저항·복구 넷) · iib3(섞임·본 것/들은 것 일부).
 - 재사용 demo: 문제 데이터 꼴은 §8 표 그대로(본 것 둘 + 들은 것 + 비교 + 결정 + 결과 call). 일하는 손(지고 가기)은 사건 objects + call — 계약 밖.
+
+---
+
+# 에이전트 3 — 재사용 demo · 전체 시험 · 실제 화면 · 최종 보고(브리프 §26의 7~10)
+
+> 시작 HEAD `29ddc13`. 범위: §21 재사용 demo 하나 · 전체 시험 · §24 화면 14장 · §29 평가 · §27 최종 보고.
+
+## 19. 종합(먼저 읽을 것)
+
+- **한 일(셋 합쳐서)**: 공통 모듈 하나(`problems.gd` — 활동 type 넷 · 문제 · fail_forward · 결과)를 데이터 계약으로 두고, 오누이(관찰 셋+선택 하나 · 초급 판단 한 번), 춘향 II-B 술·쌀·상소(문제 셋), 춘향 끝난 뒤 관아 곁일 「창고 장부 대조」(문제 하나 — 재사용 demo)에 썼다. 새 화면·모드·저장 칸·직업 UI 없음.
+- **시험**: 대본 시험 **64 → 68**(새 넷: `namwon:observe` · `namwon_chunhyang:iib1·iib2·iib3`) 전부 PASS, SCRIPT ERROR 0. 새 검사·단위 시험 둘(`validate_problems` · `activity_test`). 숫자는 §23.
+- **원전 등뼈 그대로**: FIXED_BEAT 순서·결말은 문제 결과와 무관(세 갈래가 같은 순서·같은 출두·같은 석방, 시험이 `beat_order`로 본다). 바뀌는 것은 주변 피해 복구 · 기록책 끝 줄 · 춘향의 마지막 말뿐.
+- **남은 약점**: §28(새 기술 부채)·§30(§29 평가) — 요약하면 ① 조사 대상은 여전히 E 표시가 있는 자리라 "표시를 따라간다"는 느낌이 완전히 사라지지는 않았다 ② 비교 카드 글이 차이를 꽤 직접 말해 준다 ③ 18A 위쪽 분합문 띠 · 잔치 SPREAD 차일의 반투명 막 · 거꾸로 선 컷 카메라에서 인물 그림 방향 ④ 곁일은 결말 직후 같은 놀이에서만 열린다.
+
+## 20. 재사용 demo — 관아 창고 장부 대조(브리프 §21)
+
+`story/namwon_chunhyang/namwon_chunhyang_side_data.gd`(새, **데이터만**) — `namwon_chunhyang_data.gd`가 `problems`·`actors`·`anchors`를 잇는다(3줄 + preload 1줄).
+
+| 활동 | type | 자리 | 글 |
+|---|---|---|---|
+| `book` 창고 장부 | inspect · seen(◆) | `ch_ledger_book` 바깥마당 동쪽 물자 곳 | 창고 장부. '벼 — 열두 가마 들임.' / 들인 날은 잔치 사흘 전. 내간 줄은 비어 있다. |
+| `stock` 실제 가마니 | inspect · seen(◆) | `ch_ledger_stock`(ti_gamani_store_a/b 곁) | 쌓인 가마니를 하나씩 센다. 아홉. / 맨 위 줄에 셋 놓일 자리가 비었다. |
+| `keeper` 창고지기 | inspect · heard(◇ 창고지기, 선택) | 인물 `ledger_keeper` talk 안 `{ activity: "ledger.keeper" }` | 잔치 끝나고 이방이 셋을 내갔다 · 어디로 갔는지는 모른다 |
+| `gap` | compare(needs book·stock, fact) → `ledger_gap_seen` | 같은 흐름 | 장부는 열두. 창고는 아홉. / 내간 줄에는 아무것도 적히지 않았다. |
+| `handle` | decide(after 2) "장부를 어떻게 할까?" | `ch_ledger_yard` r12 | 센 대로 적는다 `ledger_noted`(◆ 기록) / 뒤 곳간부터 확인한다 → **fail_forward** `back_shed` / 내 일이 아니다. 장부를 덮는다 `ledger_shut` |
+| fail_forward `back_shed` | 자리 `ch_ledger_shed` | 뒤 곳간 | 곳간 안은 비었다 → 문턱에 낟알 · 수레바퀴 자국이 관아 뒷문 쪽으로(◆) → `ledger_noted` · 같은 결과 |
+| result | `ledger_check_done` · 자막 한 줄 | | |
+
+- **열림**: 문제 `when = ph('done')` — 사건이 끝난 뒤(= `CASE_NAMWON_CHUNHYANG_COMPLETE`). jail·feast·epilogue에는 대상·인물이 서지 않는다(시험). 물자 곳 가마니 소품 둘(`ti_gamani_store_a/b`)의 배치 when에 `or ph('done')`만 더했다.
+- **데이터만 · 공통 코드에 사건 경로 없음**: 곁일 데이터·창고지기 talk에 `call` 없음(사건 스크립트를 부르지 않음) · `namwon_chunhyang_case/p2a/p2b.gd`와 `problems.gd`·`story_runner.gd`·`story_director.gd`에 `ledger` 글자 없음(activity_test F가 글을 훑는다) · `problems.gd`는 손대지 않았다.
+- **검사기가 센다**: `PROBLEMS PASS 9 problems=5`(오누이 1 + 술·쌀·상소 3 + 곁일 1).
+- **직업 UI·숙련도·보상 없음.** 결과는 행동 깃발 둘(`ledger_noted`/`ledger_shut`)과 기록뿐. 결말 변수·FIXED_BEAT·기록책 끝 줄은 그대로(시험).
+- **한계(정직하게)**: 등록부 `choose()`는 "안 끝난 첫 사건 → 없으면 **첫** 사건"을 고른다. 남원은 `[namwon, namwon_chunhyang]`이라 둘 다 끝난 저장을 다시 불러오면 도는 사건은 오누이(끝남)다. 그래서 이 곁일은 **광한루 결말 직후, 남원을 떠나거나 다시 불러오기 전까지** 같은 놀이에서만 열린다. 공통 코드(`choose`)를 바꾸면 고칠 수 있지만 이번 범위(§28)를 넘어서 후속 후보로 둔다(§32).
+- 시험: `activity_test` F(+19 — 계약 · 꼴 · call 없음 · 글자 없음 · 끝나기 전 안 섬 · 곧장 · fail_forward · 저장/불러오기 · 한 번만) · 대본 시험 iib1(바로 덮음) · iib2(창고지기 → 뒤 곳간 → 추가 흔적) · iib3(센 대로 적음) 끝에 실제 관아에서 걸어가 E로(자리 걸을 수 있음 · 두 번 불러도 한 번 · 결말 그대로).
+
+## 21. 바꾼 파일 — 세 에이전트 전체(시작 `6ede0a9` → 끝)
+
+| 파일 | 누가 | 무엇 |
+|---|---|---|
+| `seolhwa/docs/production/BRIEF_gameplay_architecture_first_pass.md` | 1 | 새 — 사용자 지시 원문 요지 |
+| `seolhwa/docs/production/SEOLHWAROK_GAMEPLAY_ARCHITECTURE_FINAL_v1.0.md` | 1 · 3 | 새 상위 문서 · (3) §10에 세 번째 적용(곁일 demo) 한 줄 |
+| `seolhwa/docs/scenario/…_v1.1_scenario.md` · `…_v1.1_DECISIONS.md` | 1 | '증거 조합 퍼즐 없음'의 뜻 |
+| `seolhwa/docs/production/CHUNHYANG_ASSETS_PLACEMENT_v1.0.md` · `CITY_ROUTE_PRODUCTION_RULES_v1.0.md` | 2 | 잔칫상 측정·고침 · C62 평소 시점 FURLED |
+| `scripts/story/problems.gd` | 1 | **새 공통 모듈** |
+| `scripts/story/story_runner.gd` · `case_registry.gd` | 1 | 명령 `activity` · 조건 `pa·pd·pn·pdone` · load_data에서 expand |
+| `tools/story/validate_problems.gd` · `tests/activity/activity_test.gd` | 1 · 3 | 새 검사기 · 새 공통 시험((3) F 재사용 시연 +19) |
+| `story/namwon/namwon_data.gd` · `namwon_case.gd` | 1 | 오누이 문제 `beast_way` · night_ready가 문제 기록을 세지 않게 |
+| `scripts/story/oneonui_observe_test.gd` · `story_test.gd` | 1 | 대본 시험 `namwon:observe` · 하네스 |
+| `story/namwon_chunhyang/namwon_chunhyang_p2b_data.gd` · `_p2b.gd` · `_p2b_test.gd` | 2 · 3 | II-B 데이터·연출·시험. (3) CAM_18A look · CAM_END focus · 18A 동안 변학도 등 쪽 · 시험에 곁일·쌀/상소 컷·17A 자막 다시 띄움 |
+| `story/namwon_chunhyang/namwon_chunhyang_side_data.gd` | 3 | **새** — 곁일 「창고 장부 대조」(데이터만) |
+| `story/namwon_chunhyang/namwon_chunhyang_data.gd` · `_case.gd` · `_p2a_test.gd` · `_test.gd` | 2 · 3 | II-B 잇기 · (3) 곁일 잇기 4줄 |
+| `region_data/JL_NAMWON_UNBONG/placement_story_namwon_chunhyang.json` | 2 · 3 | 잔칫상 0.5m · 수레/가마니 when · (3) 물자 곳 가마니 when `or ph('done')` · 18A look y 1.8 → −0.6 |
+| `scripts/story/continue_test.gd` | 2 | `--continueexpect=chunhyang_p2b` |
+| `scripts/audio/sound.gd` · `tests/audio/sound_test.gd` · `tools/audio/make_placeholders.py` · `assets/audio/{sfx,bgm}/*` · `README.md` | 2 | 임시 소리 다섯 |
+| `tools/run_story_tests.sh` | 1 · 2 | 64 → 65 → 68 |
+| `docs/reports/gameplay-architecture-first-pass.md` | 1 · 2 · 3 | 이 보고서 |
+
+## 22. 새 공통 모듈 · 다시 쓴 기존 시스템
+
+- **새 공통 모듈은 `scripts/story/problems.gd` 하나**(+ 검사기 `validate_problems.gd`). II-B와 곁일은 공통 코드를 하나도 더하지 않았다.
+- **다시 쓴 것**(§2 표 그대로 — 새 실행기 없음): `story_runner` 명령(flag·clue·examine·choice·if·caption·give/take·discover) · `story_director` 조사 대상 `objects`(E·먹점) · 자리 트리거 `triggers` · 기록 `clues`(fact/heard+by/guess)와 기록책 `journal_book` · 사건 깃발 `cases.<id>.flags` · 인물 talk · `case_registry.load_data` · 배치 파일 when 게이트(F-11) · EventCrowd `apply_on_flag` · `set_pose`/`anim_actor` · 기존 카메라 컷(`_shot`/`camera`) · 기존 고르기 창.
+- 오누이 관찰 목록: §4 표(진흙 · 눌린 풀 · 덤불 털 · 판단 · 숲가 fail_forward · 외딴집 울 밑 흙).
+- Activity/Problem 계약: §3 · 상위 문서 §9.
+- 술·쌀·상소 흐름: §8. FIXED_BEAT 보존: §9. 저장/불러오기: §11(+ 곁일은 activity_test F · 검사기 saveload).
+
+## 23. 시험 숫자(최종 — 차례로 한 번씩, 동시에 둘 돌리지 않음)
+
+| 시험 | 에이전트 1 시작 전 | 최종 |
+|---|---|---|
+| `validate_event_class` | checked=159 | **EVENTCLASS PASS checked=170** |
+| `validate_case_meta` | PASS 9 warn=5 | **CASEMETA PASS 9 warn=5** |
+| `validate_problems`(새) | — | **PROBLEMS PASS 9 problems=5** |
+| `case_registry_test` | 47 | **REGTEST PASS 47** |
+| `map_leads_test` | fixtures=69 | **MAPLEADS PASS fixtures=69** |
+| `sound_test` | 45 | **SOUNDTEST PASS 50** |
+| `onboarding_rule_test` | 64 | **ONBOARDRULE PASS 64** |
+| `commonize_test` | 49 | **COMMONTEST PASS 49** |
+| `activity_test`(새) | — | **ACTIVITYTEST PASS 71**(에이전트 1 52 + 곁일 F 19) |
+| `tools/run_story_tests.sh` 전체(마지막 한 번) | 64 | **68/68 PASS · SCRIPT ERROR 0 · exit 0** |
+
+- 더한 대본 시험 **4개**(`namwon:observe` · `namwon_chunhyang:iib1` · `iib2` · `iib3`) — 64 → 68. 더한 검사·단위 시험 스크립트 **2개**(`validate_problems` · `activity_test`). 목록 밖 실제 시간 측정 `iibctl` 1개.
+- 대본 시험 안 확인 수: iib1 147 → **159** · iib2 145 → **161** · iib3 145 → **158**(곁일 +12~16). 오누이 observe 32 · A/B/C 결말 A/B/C 그대로. 춘향 a 89 · b 80 · after 17 · p2a 123 · p2b 90 · p2c 85 · prep 65 · part2prep 61 그대로.
+- 기존 경고(헤드리스 종료 때 ObjectDB 누수 경고 · "2 resources still in use")는 시작 전 activity_test에도 같이 있었다(오류 아님).
+
+## 24. 실제 화면 순회(브리프 §24 — 창 1024×768, 시험 저장만)
+
+`seolhwa_godot/shots/arch_pass/tour/`(git 밖). 원본은 `tour_raw/`. 시험 저장 `user://st_tour_oneonui.json` · `user://st_iib_tour.json`(찍은 뒤 지움). `progress.json`·칸·`play_*`는 건드리지 않음.
+
+| # | 파일 | 보이는 것 | 판정 |
+|---|---|---|---|
+| 1 | `01_oneonui_observe.png` | 고갯마루 아래 흙길, 카드 "진흙의 큰 자국" | 읽힘. 시험이 바로 들어가서 「남원」 지명·깃발 알림이 같이 보인다(실제 놀이에선 지난 알림) |
+| 2 | `02_oneonui_decide.png` | "어느 쪽 흔적을 먼저 확인할까?" 두 갈래 · 왼쪽 위 기록 둘 | 읽힘 |
+| 3 | `03_wine_work.png` | 술독을 진 플레이어 · 빈 수레 · 상인 · 기록 알림(물목 · 다른 수 · 적어 둔 것) | 읽힘 |
+| 4 | `04_rice_work.png` | 박가네 대문 앞, 가마니 하나를 진 플레이어 · 포졸 · 수레 · 기록(징발 표 · 대문 앞 가마니 · 표보다 많은 가마니) | 읽힘(처음엔 카드가 가마니를 덮어서 → 진 뒤에 찍음) |
+| 5 | `05_petition_work.png` | 카드 "열리지 않은 소지" · 형방 소지함 · 노인 사연 기록 | 읽힘. 담·지붕 가림 처리로 화면이 조금 어지럽다 |
+| 6 | `06_beggar_return.png` | 14A 남문 밖 어깨 너머, 노을 길 끝에 거지 몽룡 | 읽힘. 몽룡이 작다(어깨 너머 원칙 — 손대지 않음) |
+| 7 | `07_jail_reunion.png` | 12A 옥 — 창살 안 춘향, 거지 몽룡 | 읽힘(어두움은 밤) |
+| 8 | `08_feast_general.png` | 잔치 낮은 틀(SPREAD) — 변학도 교의 · 기생 · 손님 · 시중 | 읽히지만 **편 차일이 반투명 막으로 화면 전체를 덮어 흐리다**(§25-1) |
+| 9 | `09_17A_poem.png` | 서안 위 종이 · 시 둘째 줄 자막 | 읽힘(시험 화면 검토가 자막을 짧게 지워서 시험이 둘째 줄을 다시 띄워 찍음 — 실제 놀이는 3.2초씩 뜬다) |
+| 10 | `10_18A_before.png` | 변학도 등 뒤 → 내삼문·외삼문 축, 역졸 · 거지 몽룡 · 기생 | 읽힘(고침 — 아래 참고) · 위쪽 분합문 띠 남음 |
+| 11 | `11_18A_after.png` | 같은 구도 — 몽룡 마패, 기생 절, 변학도 웅크림(아래 가운데) | 읽힘(고침) |
+| 12 | `12_restoration.png` | 바깥마당 물자 곳 — 어사 측 서리 · 술값 받는 김가 · 고개 숙인 박가 · 노인 | 잘 읽힘 |
+| 13 | `13_release.png` | 옥문 앞 — 옥을 나온 춘향과 몽룡("왔으니 됐습니다." 직후) | 읽힘. 두 사람이 화면 오른쪽 아래로 크게 걸려 옥문이 왼쪽에 남는다 |
+| + | `17_extra_last_choice.png` | 마지막 선택 — 플레이어 어깨 너머 춘향·몽룡·월매 | 읽힘(얕은 초점 흐림) |
+| 14 | `14_gwanghallu_end.png` | 광한루 — 빈 그네 · 버드나무 밑 아이 둘 | 읽힘(고침) |
+| + | `15_extra_ledger_side.png` | 곁일 — 카드 "세 가마의 차이" · 가마니 · 창고지기 | 읽힘 |
+| + | `16_extra_walk_feast_furled.png` | 잔치 평소 시점(조작) — 차일 FURLED, 마당·플레이어 보임 | 읽힘 |
+
+**고친 것(실제 문제만)**:
+- 11 출두 뒤: 웅크린 변학도가 **틀 밖으로 빠졌다**(모자 끝 몇 픽셀). → `CAM_18A`·배치 파일 `18A` look y 1.8 → −0.6(조금 숙임, pos·fov 그대로 — 출두 전/후 같은 구도 유지). 위 분합문 띠도 화면 위로 약 70px 올라갔다.
+- 10 출두 전: 숙이자 변학도 그림이 **카메라를 마주 보는 얼굴**로 보였다(그림 방향은 세상 기준 — 아래를 보면 남쪽 카메라 쪽 얼굴). → 18A 컷 동안만 `face_actor("byeon_feast","up")`, 컷 뒤 "down"으로 되돌림.
+- 14 광한루: 그네(ti_swing −3330)가 **틀 밖**(초점 −3318, 반폭 약 11m). → `CAM_END` focus (−3318, 442) → (−3326, 442.5).
+- 4 쌀: 카드가 가마니를 덮어 → 시험 컷을 '진 뒤'로. 9 시: 시험 자막만 다시 띄움(연출 코드 그대로).
+- 공식 카메라는 이 둘(18A·END) 말고 손대지 않았다.
+
+## 25. 에이전트 2의 §17 열린 항목 — 판정
+
+1. **차일 FURLED(조작 시점 경계)**: 그대로 둔다. `16_extra_walk_feast_furled`는 마당·플레이어·사령 줄이 다 보인다. 반대로 SPREAD인 `08_feast_general`은 천이 반투명 막으로 화면 전체를 덮어 흐리다 — 조작 시점에서 SPREAD였다면 더 나빴을 것. C62의 '평소 잔치 놀이 SPREAD'와 다르지만, 컷 경계에서만 바뀌고 천 애니메이션이 없으니 규칙의 뜻(갑자기 바뀌지 않음)은 지킨다. 낮은 잔치 틀의 반투명 막은 차일 가림 처리(아랫면 occluder) 쪽 후속(§32).
+2. **18A 분합문 검은 띠**: 반만 고침 — 숙여서 위로 올렸다(§24). 여전히 외삼문 지붕 높이에 띠가 걸린다. 들어 올린 분합문은 동헌 건물 모형의 일부라 이 컷에서만 숨기려면 건물 키트를 손대야 하고, 더 숙이면 변학도가 화면 가운데를 가린다. 대청 안 상인방처럼 읽히는 정도라 여기서 멈춤.
+3. **`chuldu_cry` 임시 소리**: 화면으로는 판단할 수 없다(합성 모음 띠). 말은 자막 "암행어사 출두야!"가 맡으므로 읽기에는 문제없음. 실제 녹음으로 바꿔야 한다(§28). `hoofbeats`·`bgm_feast`도 임시.
+
+## 26. FIXED_BEAT · 저장/불러오기(최종 확인)
+
+- FIXED_BEAT 순서 `mongryong_return → wolmae_reunion → jail_reunion → birthday_feast → poem → royal_inspector → byeon_dismissed → restoration → release → last_choice`가 iib1·2·3 모두 같고 중복 없음. 곁일을 마친 뒤에도 `beat_order`·OUTCOME RELEASED·COMPLETE·기록책 끝 줄이 그대로(시험).
+- 저장/불러오기: 문제 계약이 맡는다(§11). 곁일은 activity_test F에서 장부 본 뒤 · 결정(뒤 곳간) 뒤 저장 → 다시 읽기: 본 것 다시 안 섬 · 결정 유지 · 다시 안 물음 · fail_forward 자리 그대로.
+
+## 27. 조작(§25)
+
+ACT 13 조작 비율 76.4% · II-B 전체 66.4%(§13, 에이전트 2 측정). 곁일은 걸어가 E 셋 + 카드 넷 + 고르기 한 번(조작을 빼앗는 컷 없음).
+
+## 28. 새 기술 부채(셋 합쳐서 — §17에 더해)
+
+1. **곁일이 결말 직후에만 열림**: `case_registry.choose()`가 둘 다 끝난 남원에서 첫 사건(오누이)을 고른다(§20).
+2. **카드가 북쪽 대상을 덮음**: 조사 카드(화면 위 가운데 1/3)가 E로 마주 본 대상(플레이어 바로 위)을 가린다 — 쌀 가마니 컷. 공통 UI(C64)라 손대지 않음.
+3. **거꾸로 선 컷 카메라의 그림 방향**: 인물 그림은 세상 기준 facing이라, 남쪽을 보는 18A에서는 카메라를 마주 선 역졸·사령이 뒷모습(어두운 머리)으로 보인다. 변학도만 컷 동안 돌렸다. 카메라 기준 facing은 공통 렌더 쪽 일.
+4. **SPREAD 차일 반투명 막**(§25-1) · **18A 분합문 띠**(§25-2).
+5. **임시 소리**: `chuldu_cry` · `hoofbeats` · `bgm_feast` · `cup_clink` · `brush_stroke`.
+6. **시험 화면 검토 모드는 자막을 짧게 지운다**(`auto_real=false`) — 17A처럼 자막이 핵심인 컷은 시험이 다시 띄워 찍었다. 다른 컷도 같은 현상이 있을 수 있다(그림 확인용으로는 문제없음).
+7. 시험 봇은 순간이동 — 실제 걸음은 `iibctl`(충돌 무시 직선)만. 박가네·뒤 곳간까지 실제 길은 플레이로 확인 필요.
+
+## 29. 다음 설화에서 그대로 쓸 수 있는 것
+
+- `problems.gd` 계약 전체(활동 넷 · decide `after/needs` · fail_forward · result) — 곁일이 **데이터 파일 하나 + 잇기 4줄**로 된다는 것을 보였다.
+- 검사기 `validate_problems`(계약 · 사건 id 하드코딩 · 한 번만 · 저장/불러오기)와 activity_test의 F 꼴(실제 사건 데이터를 가짜 연출로 돌리기).
+- 본 것/들은 것/추정 구분(◆/◇ by/△)과 대사 말씨("보았습니다"/"들었습니다").
+- "일하는 손"(지고 가기·내려놓기)은 사건 objects + `has(item)` 조건으로 — 계약 밖이지만 같은 꼴로 복사 가능.
+- 행동 깃발 → 복구/기억 갈래(합산 없음) 패턴.
+
+## 30. 아직 만들지 않은 것 — Role · Reputation · Authority(상위 문서 §5)
+
+- **ROLE**: 직업·역할 상태 없음. 씨앗은 사건 안 자리(II-A 잡역 목패, 곁일의 '글 아는 사람' 부탁)뿐.
+- **REPUTATION**: 숫자·고을별 평판 없음. 씨앗은 행동 깃발(`wine_recorded` · `rice_reasked` · `petition_processed` · `ledger_noted` · `restraint_*`).
+- **AUTHORITY**: 문서 열람·명령 권한 없음. 곁일도 "어사 쪽 부탁"이라는 말로만 열린다(권한 체크 없음).
+- **RELATION**: 수치 없음 — 춘향의 포승 기억처럼 인물별 깃발만.
+- 관직·과거·경제·보상·숙련도 UI 없음(§3 그대로).
+
+## 31. §29 성공 기준 — 화면과 흐름으로 본 정직한 평가
+
+1. **오누이 "표시를 따라간 것이 아니라 주변을 보고 위험을 알아냈다"** — **반쯤**. 카드 글은 정답(범·방향)을 말하지 않고 본 것만 쓴다(진흙 자국 · 눌린 풀 · 높은 털 · 겹친 자국) — 이 부분은 기준에 맞다. 다만 관찰 자리가 E 표시·먹점이 있는 조사 대상이고 길에서 2~3m 안이라, 플레이어는 "표시를 찾아 누른다". 판단도 두 갈래 중 하나(틀려도 같은 결과)라 쉽다. 튜토리얼로서는 적당하지만 "내가 알아냈다"는 감각은 약하다 → 후속: 먹점 반경을 줄이거나 하나는 표시 없이(§32).
+2. **춘향 "내가 그 관아에서 일하면서 어떻게 빼앗는지 직접 봤다"** — **대체로 그렇다**. 세 일 모두 문서(물목·징발 표·방)와 실물(독 셋·가마니 넷·열흘째 소지)을 직접 보고, 플레이어가 **자기 손으로** 독·가마니를 지고 관아로 나른다(03·04 화면). 잔치에서 내가 나른 술독이 상 곁에 다시 보인다. 약점: 비교 카드 글이 "값을 치른다는 말은 아무도 하지 않는다" · "'내일 와'는 일을 미루는 말이었다"처럼 결론을 꽤 말해 준다 — 설명을 듣는 쪽에 조금 기운다.
+3. **"작은 행동은 결말을 바꾸지 않았지만, 누군가의 피해와 나에 대한 기억은 바꿨다"** — **그렇다**(흐름으로 확인). 세 갈래 모두 출두·파면·석방·결말이 같고(시험), 복구 장면(12 화면)에 서는 사람이 갈래마다 다르며(iib1 확답 없음 / iib2 술값·쌀 반환·재조사 / iib3 한 독만·두 가마 남음), 춘향의 마지막 말과 기록책 끝 줄이 포승·기록 행동을 그대로 되짚는다. 약점: 복구가 한 장면의 자막·서 있는 사람으로만 보여서 무게가 가볍다.
+
+## 32. 후속 후보(이번에 하지 않음 — §28 범위 통제)
+
+1. 끝난 사건의 곁일을 다시 여는 방법(`choose()`가 '곁일이 남은 끝난 사건'을 고르게 — 공통 코드, 사용자 결정 필요).
+2. 오누이 관찰 하나를 표시 없이(먹점 없음, 가까이 가야 E) — "표시를 따라간다" 줄이기.
+3. 비교 카드 글을 한 걸음 덜 말하게(결론 문장을 빼고 숫자만).
+4. 차일 아랫면 가림(occluder) 처리 → C62 원래대로 평소 잔치 놀이 SPREAD.
+5. 18A 분합문 — 동헌 키트에 '들어 올린 분합문' 숨김 파라미터.
+6. 카메라 기준 인물 그림 방향(거꾸로 선 컷).
+7. 조사 카드 위치를 대상과 겹치지 않게(공통 UI, C64 범위 안에서).
+8. `chuldu_cry` 등 실제 녹음.
+9. 복구 장면에 직접 걸어가 한 사람씩 말 걸기(지금은 서 있기만).
+10. 곁일을 남원 밖 관아(다른 고을)에 하나 더 — 같은 계약 두 번째 재사용.
+
+## 33. 사람이 직접 해 볼 것
+
+`godot --path seolhwa_godot -- --savefile=user://play_chunhyang3.json` → 이어 하기(II-A 끝, 관아 앞 30m — 에이전트 2 §16).
+- 관아 앞으로 걸어가 아전 → 술·쌀·상소를 아무 순서로. 카드·고르기가 길게 느껴지는지, 박가네까지 실제 길로 갈 만한지.
+- 가마니를 진 채 저장 → 불러오기 → 진 것이 그대로인지.
+- 잔치: 평소 시점 FURLED가 어색한지, 낮은 틀 SPREAD의 반투명 막이 거슬리는지.
+- 출두: 18A 위 분합문 띠 · 역졸이 뒷모습으로 보이는 것 · `chuldu_cry` 소리.
+- 광한루 결말 직후(떠나기 전) 관아 바깥마당 동쪽 → 창고지기 · 장부 · 가마니 → "장부를 어떻게 할까?"(곁일). 다시 불러오면 사라진다는 것도 확인(§20 한계).
