@@ -92,6 +92,8 @@ TESTS=(
 	"continue:namwon-morning|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_morning_save.json --continueexpect=morning"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
+	# 춘향 준비(scripts/story/prep_test.gd): 조건부 배치(F-11) 없음→있음→없음 · 옥(늘 있음·문 상태) · 오누이 흔적(우물·수수밭 푸름/붉음) · EventCrowd(인원·seed·when·이야기 인물 없음·먼 거리 숨김)
+	"chunhyang:prep|300|--region=JL_NAMWON_UNBONG --preptest --notitle"
 )
 
 selected=()
@@ -126,10 +128,10 @@ run_one() {
 	if [[ $name == walk:* ]]; then
 		grep -q "^WALK done" $log && grep -q "^TRAVEL arrive" $log && verdict=PASS
 	else
-		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST) PASS" $log && verdict=PASS
-		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST) FAIL" $log && verdict=FAIL
+		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST) FAIL" $log && verdict=FAIL
 	fi
-	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST) //')
+	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST) //')
 	[[ $name == walk:* ]] && detail=$(grep "^WALK done" $log | tail -1 | sed -E 's/^WALK done //')
 	if (( code == 124 )); then why="시간 초과"; verdict=FAIL
 	elif (( code != 0 )); then why="종료 코드 $code"; verdict=FAIL
