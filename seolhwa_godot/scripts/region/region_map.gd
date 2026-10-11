@@ -14,6 +14,8 @@
 #
 # 알고 있는 곳만 이름을 쓴다(scripts/region/discovery.gd, 보강서 §20): 고을·이름 있는 건물·사건 장소(map_places)·이름난 곳(lm:)·
 #   고개(pass:)·전국 지도 권역과 거점. 산·물·길·성벽·집채(그림)는 늘 그린다. 단서·범인·해결 자리는 지도에 오르지 않는다.
+#   세 단계(C65): UNKNOWN 없음 · KNOWN(앎 — 권역 상식·들음, 아직 안 가 봄) 옅은 먹 글 + 바랜 기호·점선 테 · VISITED(가 봄) 보통 먹.
+#   권역에 들어서면(이 공간의 지도가 서고 첫 발견 셈 때) region_data/region_known.json의 대표 명소·공공시설을 KNOWN으로 적는다(_rk_keys).
 # 사건 표지(scripts/region/map_leads.gd): 사건 데이터 map_leads 중 플레이어가 들은·아는 행선지만. 표지에 마우스를 올리거나 누르면 사건 이름.
 # 이야기 인물 할 말 표시: story_director.talk_pending(id)가 참인 인물(NPC 대화 담당 데이터 — 이 파일은 읽기만 한다).
 extends CanvasLayer
@@ -27,6 +29,7 @@ const MapLeads := preload("res://scripts/region/map_leads.gd")
 const UiFonts := preload("res://scripts/ui_fonts.gd")
 const Waymarks := preload("res://scripts/region/waymarks.gd")
 const RideNetRef := preload("res://scripts/region/ride_net.gd")
+const RegionKnown := preload("res://scripts/region/region_known.gd")
 
 # 지도 이름표에 쓸 건물 키트(이름이 있는 것) — 그림은 오프라인에 구웠다
 const ROOF_TILE := ["village/giwa", "village/jeongja"]
@@ -100,6 +103,10 @@ var _fast_sel := -1
 var _press_at := Vector2.ZERO
 var _space := ""
 var _story_places: Array = []
+var _rk_keys: Array = []       # 이 공간의 권역 상식 키(scripts/region/region_known.gd) — 들어서면 KNOWN
+var rk_missing: Array = []     # 데이터에는 있는데 이 지도에 없는 상식 항목(시험이 본다)
+var _twins: Array = []        # [[lm 키, bld 키]] 같은 곳의 두 이름
+var _rk_rank := {}             # 상식 키 → 목록 차례(같은 우선순위끼리 솎을 때 앞 차례가 먼저 — 광한루가 오작교보다)
 var _disc_t := 0.0
 var on_discover: Callable = Callable()
 # 이번 그림의 자리 차지(겹침 솎기) · 표지 맞춤
@@ -162,6 +169,19 @@ func setup(w, data_dir: String, loader = null) -> void:
 			_rivers_named.append([String(r.name), Vector2(float(m[0]), float(m[1]))])
 	if loader: _collect_items(loader)
 	_collect_water(w)
+	var tnames: Array = []
+	for t in _towns: tnames.append(String(t[0]))
+	var rk := RegionKnown.resolve(_space, tnames, _items, w.region)
+	_rk_keys = rk.keys; rk_missing = rk.missing
+	for i in _rk_keys.size(): _rk_rank[String(_rk_keys[i])] = i
+	# 같은 곳의 두 이름(이름난 곳 lm: · 건물 bld: — 경복궁·광한루): 한쪽을 가 보면 다른 쪽도 가 봄(지도에 같은 이름 하나만 남으므로)
+	for l in w.region.get("landmarks", []):
+		if not l.has("x"): continue
+		var lc := Vector2(float(l.x), float(l.z))
+		var sn := Travel.short_name(String(l.get("name", "")))
+		for it in _items:
+			if String(it.name) == sn and (it.c as Vector2).distance_to(lc) < 300.0:
+				_twins.append(["lm:" + String(l.get("id", l.get("name", ""))), Discovery.bld_key(it.name, it.c)])
 	for m in (Travel as Script).get_script_method_list():
 		if m.name == "stations": _st_api = true
 		elif m.name == "warp_to_station": _st_warp = true
@@ -169,6 +189,8 @@ func setup(w, data_dir: String, loader = null) -> void:
 	var mn := get_parent()
 	if mn != null and "args" in mn and mn.args.has("mapshots"): _mapshots.call_deferred(String(mn.args.mapshots))
 	if mn != null and "args" in mn and mn.args.has("maptexttest"): _maptexttest.call_deferred()
+	if mn != null and "args" in mn and mn.args.has("knowntest"): load("res://scripts/region/map_known_test.gd").run.call_deferred(self)   # --knowntest(C65 세 단계)
+	if mn != null and "args" in mn and mn.args.has("knownshots"): load("res://scripts/region/map_known_test.gd").shots.call_deferred(self, String(mn.args.knownshots))
 
 static func _type_rank(t: String) -> int:
 	return { "읍성": 0, "장시": 1, "역": 2, "원": 3, "주막": 3, "사찰": 4, "성황당": 5 }.get(t, 6)
@@ -198,16 +220,9 @@ func _collect_items(loader) -> void:
 			var kit := String(it.get("kit", ""))
 			var params: Dictionary = it.get("params", {}) if it.get("params") is Dictionary else {}
 			var c := Vector2(float(it.x), float(it.z)); var ry := float(it.get("ry", 0.0))
-			if kit.ends_with("_eupseong") or kit == "village/wall_run": continue
-			var kind := ""
-			if kit == "landmark/gwanghallu_pond": kind = "water"
-			elif kit in ROOF_TILE or (kit.begins_with("landmark/") and not kit.ends_with("_wall")): kind = "tile"
-			elif kit in ROOF_THATCH: kind = "thatch"
-			elif kit in FIELD: kind = "field"
-			elif kit.begins_with("culture/"): kind = _culture_kind(kit, params)
-			else: continue
+			var kind := map_kind(kit, params)
 			if kind == "": continue
-			var nm := String(it.get("title", BuildingTitles.NAMES.get(kit, "")))
+			var nm := item_name(it)
 			if nm == "": continue   # 이름 없는 집채는 그림에만(오프라인)
 			var fp := Vector2.ZERO
 			var f0 = it.get("footprint")
@@ -216,6 +231,19 @@ func _collect_items(loader) -> void:
 			if fp == Vector2.ZERO: fp = Vector2(8, 6)
 			# 이름난 곳(landmark 키트 — 관아·객사·광한루 …)은 2단계, 낱낱 건물(주막·성황당·방앗간·옥 …)은 3단계
 			_items.append({ kind = kind, c = c, ry = ry, half = fp / 2.0, name = nm, tier = 2 if kit.begins_with("landmark/") else 3 })
+
+# 지도에 이름을 얹을 배치 항목의 종류("" = 지도 이름 없음) — 권역 상식 시험(tools/region/region_known_test.gd)도 같은 셈을 쓴다
+static func map_kind(kit: String, params: Dictionary) -> String:
+	if kit.ends_with("_eupseong") or kit == "village/wall_run": return ""
+	if kit == "landmark/gwanghallu_pond": return "water"
+	if kit in ROOF_TILE or (kit.begins_with("landmark/") and not kit.ends_with("_wall")): return "tile"
+	if kit in ROOF_THATCH: return "thatch"
+	if kit in FIELD: return "field"
+	if kit.begins_with("culture/"): return _culture_kind(kit, params)
+	return ""
+
+static func item_name(it: Dictionary) -> String:
+	return String(it.get("title", BuildingTitles.NAMES.get(String(it.get("kit", "")), "")))
 
 static func _culture_kind(kit: String, params: Dictionary) -> String:
 	if kit in CULTURE_SKIP or kit.get_file().begins_with("_"): return ""
@@ -291,7 +319,7 @@ func _build_panel() -> void:
 	_legend.draw.connect(_draw_legend)
 	lg.add_child(_legend)
 	lg.add_child(_rule())
-	_pnote = _plabel("아는 곳만 이름이 적힌다", UiFonts.MAP_PANEL, INK_SOFT)
+	_pnote = _plabel("아는 곳만 이름이 적힌다 · 옅은 먹은 알지만 아직 안 가 본 곳", UiFonts.MAP_PANEL, INK_SOFT)
 	lg.add_child(_pnote)
 	_pbox.add_child(lg)
 	_page_boxes.append(lg)
@@ -349,7 +377,8 @@ func set_page(p: int) -> void:
 
 # 범례: 기호(ICON_S) + 짧은 이름(MAP_PANEL). 판 너비에 두 단이 들어가면 두 단, 아니면 한 단(판 안에서 내린다). 긴 뜻은 표지에 마우스를 올리면
 const LEGEND := [["eup", "읍치"], ["market", "장터"], ["village", "마을"], ["station", "역참"], ["flag", "깃발"], ["ferry", "나루"],
-	["pass", "고개"], ["temple", "절"], ["bongsu", "봉수"], ["case", "사건"], ["talk", "할 말"], ["road", "큰길"]]
+	["pass", "고개"], ["temple", "절"], ["bongsu", "봉수"], ["case", "사건"], ["talk", "할 말"], ["road", "큰길"],
+	["visited", "가 본 곳"], ["known", "아는 곳"]]
 const LEGEND_S := 2.0          # 범례 기호 크기(지도 위 ICON_S보다 크게 — 26px 글 곁에서 모양이 읽히게)
 const LEGEND_ICON_W := 56.0   # 기호 칸(가장 큰 기호 — '사' 인·'역' 패 지름에 맞춤)
 func legend_cols() -> int:
@@ -372,8 +401,10 @@ func _draw_legend() -> void:
 		if e[0] == "road":
 			_legend.draw_line(Vector2(x + 6, y), Vector2(x + LEGEND_ICON_W - 6, y), ROAD_RED, 2.8 * LEGEND_S)
 			for tx in [0.3, 0.7]: _legend.draw_line(Vector2(x + LEGEND_ICON_W * tx, y - 4 * LEGEND_S), Vector2(x + LEGEND_ICON_W * tx, y + 4 * LEGEND_S), Color(0.45, 0.12, 0.08), 1.4 * LEGEND_S)
+		elif e[0] == "visited": _icon(_legend, "landmark", ic, LEGEND_S)
+		elif e[0] == "known": _icon_faint(_legend, "landmark", ic, LEGEND_S)   # 아는 곳(아직 안 가 봄): 바랜 기호·점선 테·옅은 글
 		else: _icon(_legend, String(e[0]), ic, LEGEND_S)
-		_legend.draw_string(_font, Vector2(x + LEGEND_ICON_W + 6, y + UiFonts.MAP_PANEL * 0.36), String(e[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.MAP_PANEL, INK)
+		_legend.draw_string(_font, Vector2(x + LEGEND_ICON_W + 6, y + UiFonts.MAP_PANEL * 0.36), String(e[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.MAP_PANEL, _faint_col(INK) if e[0] == "known" else INK)
 	var hgt := rows * rh + 4.0
 	if absf(_legend.custom_minimum_size.y - hgt) > 0.5: _legend.custom_minimum_size = Vector2(0, hgt)
 
@@ -826,24 +857,37 @@ func _learn(key: String, told: bool, nm: String) -> void:
 	var fresh: bool = Discovery.tell(_space, key) if told else Discovery.visit(_space, key)
 	if fresh and on_discover.is_valid() and not Discovery.how(_space, key).is_empty(): on_discover.call(nm, "told" if told else "visited")
 
+# 권역 상식(KNOWN): 이 공간에 서 있으면 곧 적는다 — 이미 아는 키는 그대로(Discovery.grant). 옛 저장도 이 공간에 다시 들어서면 채워진다
+func grant_region_known() -> int:
+	if _space == "" or _rk_keys.is_empty(): return 0
+	return Discovery.grant(_space, _rk_keys)
+
 func _update_discovery() -> void:
 	if _space == "": return
+	grant_region_known()
 	var p := Vector2(_player.x, _player.z)
 	if not Discovery.is_known(Discovery.NATION, "region:" + _space) and not world.is_route: Discovery.visit(Discovery.NATION, "region:" + _space)
+	# 가 봄(VISITED)은 KNOWN이어도 적는다 — 알던 곳에 실제로 들어서면 옅은 먹이 보통 먹이 된다
 	for t in _towns:
 		if (t[2] as Rect2).grow(PlaceTitle.MARGIN).has_point(p):
-			if not Discovery.is_known(_space, "town:" + String(t[0])):
+			if not Discovery.is_visited(_space, "town:" + String(t[0])):
 				Discovery.visit(_space, "town:" + String(t[0]))
 				Discovery.visit(Discovery.NATION, "sh:" + String(t[0]))
-	# 이름난 곳(랜드마크)·고개: 가까이 가 보면 이름이 적힌다
+	# 이름난 곳(랜드마크)·고개·나루: 가까이 가 보면 이름이 적힌다
 	for l in world.region.get("landmarks", []):
 		if l.has("x") and p.distance_to(Vector2(float(l.x), float(l.z))) < 45.0:
 			var k := "lm:" + String(l.get("id", l.get("name", "")))
-			if not Discovery.is_known(_space, k): Discovery.visit(_space, k)
+			if not Discovery.is_visited(_space, k): Discovery.visit(_space, k)
 	for ps in world.region.get("passes", []):
 		if ps.has("x") and p.distance_to(Vector2(float(ps.x), float(ps.z))) < 70.0:
 			var k := "pass:" + String(ps.get("id", ps.get("name", "")))
-			if not Discovery.is_known(_space, k): Discovery.visit(_space, k)
+			if not Discovery.is_visited(_space, k): Discovery.visit(_space, k)
+	for cr in world.region.get("crossings", []):
+		var cn := String(cr.get("name", ""))
+		if String(cr.get("type", "")) != "나루" or not cr.has("x") or cn.begins_with("무명"): continue
+		if p.distance_to(Vector2(float(cr.x), float(cr.z))) < 40.0:
+			var k := "town:" + Travel.short_name(cn)
+			if not Discovery.is_visited(_space, k): Discovery.visit(_space, k)
 	for it in _items:
 		if it.name == "": continue
 		var q: Vector2 = (p - (it.c as Vector2)).rotated(-float(it.ry))
@@ -851,6 +895,9 @@ func _update_discovery() -> void:
 		if absf(q.x) <= hf.x + 14.0 and absf(q.y) <= hf.y + 14.0:
 			var k := Discovery.bld_key(it.name, it.c)
 			if Discovery.how(_space, k) != "visited": _learn(k, false, it.name)
+	for tw in _twins:
+		var a := Discovery.is_visited(_space, String(tw[0])); var b := Discovery.is_visited(_space, String(tw[1]))
+		if a != b: Discovery.visit(_space, String(tw[1] if a else tw[0]))
 	var st = _story()
 	if st != null and _story_places.size() != st.data.get("map_places", []).size(): _collect_story_places()
 	for e in _story_places:
@@ -948,6 +995,7 @@ func _draw_region() -> void:
 		var r: Rect2 = t[2]
 		if not r.grow(200).intersects(view): continue
 		var known := Discovery.is_known(_space, "town:" + String(t[0]))
+		var faint := known and not Discovery.is_visited(_space, "town:" + String(t[0]))
 		var ty := String(t[3])
 		var kind: String = { "읍성": "eup", "장시": "market", "역": "station", "원": "inn", "주막": "inn", "사찰": "temple", "성황당": "shrine" }.get(ty, "village")
 		var is_here: bool = here != null and here[0] == t[0]
@@ -957,9 +1005,9 @@ func _draw_region() -> void:
 		var is_city := fsz != UiFonts.MAP_LABEL   # 고을 이름(26·24 — 크기 그대로). 마을은 고을 이름이 아닌 글(MAP_LABEL)
 		if city:   # 도시 축척: 고을 그림 위 이름만(기호 없이), 고을 위쪽 가장자리
 			at = Vector2(r.get_center().x, r.position.y)
-			cands.append({ p = _to_px(at) + Vector2(0, -8), kind = "", text = String(t[0]) if known else "", prio = pr, size = UiFonts.MAP_HUB if ty == "읍성" else UiFonts.MAP_TOWN, col = INK, title = true, plate = true, city = true })
+			cands.append({ p = _to_px(at) + Vector2(0, -8), kind = "", text = String(t[0]) if known else "", prio = pr, size = UiFonts.MAP_HUB if ty == "읍성" else UiFonts.MAP_TOWN, col = INK, title = true, plate = true, city = true, faint = faint })
 		else:
-			cands.append({ p = _to_px(at), kind = kind, text = String(t[0]) if known else "", prio = pr, size = fsz, col = INK, title = true, plate = ty == "읍성", city = is_city })
+			cands.append({ p = _to_px(at), kind = kind, text = String(t[0]) if known else "", prio = pr, size = fsz, col = INK, title = true, plate = ty == "읍성", city = is_city, faint = faint })
 	# 이름난 곳·나루·고개·봉수·절(권역 축척) / 이름 있는 건물(도시 축척)
 	for l in world.region.get("landmarks", []):
 		if not l.has("x"): continue
@@ -970,33 +1018,40 @@ func _draw_region() -> void:
 		if kit.contains("bongsu"): kind = "bongsu"
 		elif kit.contains("temple") or kit.contains("sa") and (kit.contains("silsangsa") or kit.contains("bulguksa") or kit.contains("bunhwangsa") or kit.contains("seokguram")): kind = "temple"
 		elif kit.contains("gate") or kit.contains("_wall") or kit.ends_with("eupseong"): continue
-		var known := Discovery.is_known(_space, "lm:" + String(l.get("id", l.get("name", ""))))
+		var lk := "lm:" + String(l.get("id", l.get("name", "")))
+		var known := Discovery.is_known(_space, lk)
 		if city: kind = ""
 		if not known and kind in ["landmark", ""]: continue
-		cands.append({ p = _to_px(c), kind = kind, text = Travel.short_name(String(l.get("name", ""))) if known else "", prio = P_LANDMARK, size = UiFonts.MAP_LABEL, col = INK_SOFT, tier = 2 })
+		cands.append({ p = _to_px(c), kind = kind, text = Travel.short_name(String(l.get("name", ""))) if known else "", prio = P_LANDMARK, size = UiFonts.MAP_LABEL, col = INK_SOFT, tier = 2,
+			faint = known and not Discovery.is_visited(_space, lk), rk = _rk_rank.get(lk, 9999) })
 	# 이름 있는 건물(배치 title · building_titles): 가 봄/들음만, 확대 단계가 닿을 때만(모르는 건물은 이름도 점도 없다 — 예전 규칙)
 	for it in _items:
-		if int(it.tier) > tier or not view.has_point(it.c) or not Discovery.is_known(_space, Discovery.bld_key(it.name, it.c)): continue
+		if int(it.tier) > tier or not view.has_point(it.c): continue
+		var bst := Discovery.state(_space, Discovery.bld_key(it.name, it.c))
+		if bst == Discovery.UNKNOWN: continue
 		cands.append({ p = _to_px(it.c) + Vector2(0, -(it.half as Vector2).y * _k), kind = "dot", text = String(it.name),
-			prio = P_LANDMARK if int(it.tier) == 2 else P_BUILDING, size = UiFonts.MAP_LABEL, col = INK, tier = int(it.tier) })
+			prio = P_LANDMARK if int(it.tier) == 2 else P_BUILDING, size = UiFonts.MAP_LABEL, col = INK, tier = int(it.tier), faint = bst == Discovery.KNOWN,
+			rk = _rk_rank.get(Discovery.bld_key(it.name, it.c), 9999) })
 	for cr in world.region.get("crossings", []):
 		if String(cr.get("type", "")) != "나루" or not cr.has("x"): continue
 		var c := Vector2(float(cr.x), float(cr.z))
 		if not view.has_point(c): continue
 		var nm := String(cr.get("name", ""))
-		cands.append({ p = _to_px(c), kind = "ferry", text = Travel.short_name(nm) if not nm.begins_with("무명") and Discovery.is_known(_space, "town:" + Travel.short_name(nm)) else "", prio = P_VILLAGE, size = UiFonts.MAP_MINOR, col = WATER_INK, tier = 2 })
+		var fst := Discovery.UNKNOWN if nm.begins_with("무명") else Discovery.state(_space, "town:" + Travel.short_name(nm))
+		cands.append({ p = _to_px(c), kind = "ferry", text = Travel.short_name(nm) if fst != Discovery.UNKNOWN else "", prio = P_VILLAGE, size = UiFonts.MAP_MINOR, col = WATER_INK, tier = 2, faint = fst == Discovery.KNOWN })
 	for ps in world.region.get("passes", []):
 		if not ps.has("x"): continue
 		var c := Vector2(float(ps.x), float(ps.z))
 		if not view.has_point(c): continue
 		var nm := String(ps.get("name", ""))
-		var known := not nm.begins_with("무명") and Discovery.is_known(_space, "pass:" + String(ps.get("id", nm)))
-		cands.append({ p = _to_px(c), kind = "pass", text = Travel.short_name(nm) if known else "", prio = P_MINOR, size = UiFonts.MAP_MINOR, col = INK_SOFT, tier = 2 })
+		var pst := Discovery.UNKNOWN if nm.begins_with("무명") else Discovery.state(_space, "pass:" + String(ps.get("id", nm)))
+		cands.append({ p = _to_px(c), kind = "pass", text = Travel.short_name(nm) if pst != Discovery.UNKNOWN else "", prio = P_MINOR, size = UiFonts.MAP_MINOR, col = INK_SOFT, tier = 2, faint = pst == Discovery.KNOWN })
 	# 사건 장소(map_places, 알게 된 것): 붉은 먹점
 	for e in _story_places:
 		if e.bld != "" or not Discovery.is_known(_space, e.key) or not view.grow(40).has_point(e.c): continue
 		var told := Discovery.how(_space, e.key) == "told"
-		cands.append({ p = _to_px(e.c), kind = "place_told" if told else "place", text = String(e.name) + (" (들음)" if told else ""), prio = P_TOWN, size = UiFonts.MAP_LABEL, col = Color(0.42, 0.12, 0.07), tier = 2 })
+		var pk := not Discovery.is_visited(_space, e.key)   # KNOWN(들음·처음부터 앎) — 빈 동그라미 + 옅은 글
+		cands.append({ p = _to_px(e.c), kind = "place_told" if pk else "place", text = String(e.name) + (" (들음)" if told else ""), prio = P_TOWN, size = UiFonts.MAP_LABEL, col = Color(0.42, 0.12, 0.07), tier = 2, faint = pk })
 	# 길목 깃발(가 본 것 — 이름은 고을 이름과 겹치므로 그림만, 손을 대면 이름)
 	for f in _flags:
 		if f.c == null or not view.grow(40).has_point(f.c): continue
@@ -1164,7 +1219,12 @@ static func _pad(prio: int) -> float:
 	return LABEL_PAD + 10.0
 
 func _place_all(cands: Array) -> void:
-	cands.sort_custom(func(a, b): return int(a.prio) < int(b.prio))
+	# 우선순위 → (같으면) 권역 상식 목록 차례(rk) → 들어온 차례. sort_custom은 안정 정렬이 아니라 차례를 함께 센다
+	for i in cands.size(): cands[i].ord = i
+	cands.sort_custom(func(a, b):
+		if int(a.prio) != int(b.prio): return int(a.prio) < int(b.prio)
+		if int(a.get("rk", 9999)) != int(b.get("rk", 9999)): return int(a.get("rk", 9999)) < int(b.get("rk", 9999))
+		return int(a.ord) < int(b.ord))
 	var cs := Rect2(Vector2.ZERO, _canvas.size)
 	# 늘 그리는 기호(사건 인·할 말·깃발)의 자리를 먼저 잡는다 — 뒤에 놓일 이름표가 그 위에 얹히지 않게
 	#   깃발은 '무른' 자리: 이름표는 피하지만 고을 기호(P_TOWN까지)는 깃발에 막히지 않는다(깃발은 고을 곁에 서므로 막으면 고을이 통째로 빠졌다)
@@ -1182,6 +1242,7 @@ func _place_all(cands: Array) -> void:
 		var ir := _icon_r(kind)
 		var irect := Rect2(p - Vector2(ir, ir), Vector2(ir, ir) * 2)
 		var force := bool(c.get("force", false))
+		var faint := bool(c.get("faint", false))   # KNOWN(앎 · 안 가 봄): 옅은 먹 글 + 바랜 기호
 		# 기호 자리가 막히면 빠진다 — 다만 지금 고을·거점(P_HUB까지)은 기호를 빼고 이름만이라도 둘레 빈 자리에(사건 인·지금 자리 표시에 가려 이름이 없어지지 않게)
 		var icon_ok := kind == "" or force or not (_collides(irect) if int(c.prio) <= P_TOWN else _collides(irect) or _hits_any(irect, soft))
 		if not icon_ok and int(c.prio) > P_HUB: continue
@@ -1215,11 +1276,12 @@ func _place_all(cands: Array) -> void:
 			if not has_label and not force and int(c.prio) >= P_LANDMARK and kind in ["dot", "landmark", "spring"]: continue
 			if has_label:
 				_taken.append(lrect)
-				_draw_label(text, lrect, f, sz, c.col, bool(c.get("plate", false)))
-				placed.append({ text = text, size = sz, rect = lrect, tier = int(c.get("tier", 1)), city = bool(c.get("city", false)) })
+				_draw_label(text, lrect, f, sz, _faint_col(c.col) if faint else c.col, bool(c.get("plate", false)), faint)
+				placed.append({ text = text, size = sz, rect = lrect, tier = int(c.get("tier", 1)), city = bool(c.get("city", false)), faint = faint })
 		if kind != "" and icon_ok:
 			if not force: _taken.append(irect)
-			_icon(_canvas, kind, p, ICON_S)
+			if faint: _icon_faint(_canvas, kind, p, ICON_S)
+			else: _icon(_canvas, kind, p, ICON_S)
 		if c.has("tip") or c.has("lead"):
 			var hit := { p = p, r = maxf(14.0 * ICON_S, ir), tip = String(c.get("tip", text)) }
 			if c.has("lead"): hit.lead = c.lead
@@ -1257,15 +1319,44 @@ static func _hits_any(r: Rect2, rects: Array) -> bool:
 	return false
 
 # 이름표: 먹 글씨 + 두꺼운 한지빛 테두리(HALO — 먹 산줄기·물길 위에서도 읽힌다) · 고을(읍치)은 한지 판에 먹 테
-func _draw_label(s: String, r: Rect2, f: Font, sz: int, col: Color, plate: bool) -> void:
+func _draw_label(s: String, r: Rect2, f: Font, sz: int, col: Color, plate: bool, faint := false) -> void:
 	var base := r.position + Vector2(6, sz * 0.98)
 	if plate:
 		_canvas.draw_rect(r.grow(1), Color(PAPER, 0.94))
-		_canvas.draw_rect(r.grow(1), Color(INK, 0.85), false, 2.0)
+		if faint: _dashed_rect(_canvas, r.grow(1), Color(INK, 0.5), 2.0)
+		else: _canvas.draw_rect(r.grow(1), Color(INK, 0.85), false, 2.0)
 	else:
 		_canvas.draw_rect(r.grow(-2), Color(PAPER, 0.5))   # 옅은 한지 바탕 — 집채·산줄기가 글자 사이로 비치지 않게
 		_canvas.draw_string_outline(f, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, HALO, Color(PAPER, 0.97))
 	_canvas.draw_string(f, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, col)
+
+# KNOWN(앎 · 안 가 봄)의 먹: 한지 쪽으로 바랜 먹(글은 그대로 읽힌다 — 크기·글꼴은 같다)
+const FAINT_MIX := 0.45
+static func _faint_col(c: Color) -> Color:
+	return c.lerp(PAPER, FAINT_MIX)
+
+# KNOWN 기호: 같은 기호를 한지빛으로 바래게 덮고 점선 테를 두른다(빈·옅은 기호)
+func _icon_faint(ci: CanvasItem, kind: String, p: Vector2, s: float) -> void:
+	_icon(ci, kind, p, s)
+	var r := maxf(_icon_r(kind), 5.0 * s)
+	ci.draw_circle(p, r * 0.95, Color(PAPER, 0.58))
+	_dashed_arc(ci, p, r + 1.5, Color(INK_SOFT, 0.85), 1.4 * s)
+
+static func _dashed_arc(ci: CanvasItem, p: Vector2, r: float, col: Color, w: float) -> void:
+	var n := 12
+	for i in n:
+		var a0 := TAU * float(i) / n
+		ci.draw_arc(p, r, a0, a0 + TAU / n * 0.55, 6, col, w, true)
+
+static func _dashed_rect(ci: CanvasItem, r: Rect2, col: Color, w: float) -> void:
+	var pts := [r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y), r.position]
+	for i in 4:
+		var a: Vector2 = pts[i]; var b: Vector2 = pts[i + 1]
+		var L := a.distance_to(b); var d := (b - a) / maxf(L, 0.001)
+		var t := 0.0
+		while t < L:
+			ci.draw_line(a + d * t, a + d * minf(t + 8.0, L), col, w)
+			t += 13.0
 
 # 기호 반지름(화면 픽셀) — 겹침 솎기·이름표 자리. 글자가 든 기호('역' 패·'사' 인)는 MAP_GLYPH 글자가 들어가는 크기
 func _icon_r(kind: String) -> float:

@@ -6,7 +6,7 @@
 #   "cases": { "namwon": { phase, flags, clues, rules, items, world, talked, notes, time, seen } },   ← 사건별 진행(scripts/story)
 #   "where": { space, kind, x, z, hour },   ← 이어 하기 자리(story_director가 10초마다·저장할 때)
 #   "onboard": { ONBOARD_MOVE_SEEN: true, PLAY_TIME: 812.0 … },   ← 처음 한 번 안내(scripts/story/onboarding.gd) — 사건을 넘어 남는다
-#   "known": { "<공간 id>": { "<장소 키>": "visited" | "told" }, "_nation": {…} },   ← 지도에 적힌 곳(scripts/region/discovery.gd)
+#   "known": { "<공간 id>": { "<장소 키>": "visited" | "told" | "known" }, "_nation": {…} },   ← 지도에 적힌 곳(scripts/region/discovery.gd — VISITED / KNOWN, C65)
 #   "heard": [{ id, space, by, text, place }],   ← 사람에게 들은 소문(기록책 '사람의 말' — ◇ 들음 — 말한 사람, 사실로 올리지 않는다)
 #   "meta": { place, case, hour, play, reason },   ← 저장 칸 목록에 보일 것(지금 고을·사건·게임 안 시각·놀이 시간·까닭)
 #   "saved_at": "…"

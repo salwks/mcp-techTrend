@@ -1,0 +1,67 @@
+{
+  "_doc": "권역 상식(C65 · scripts/region/region_known.gd): 권역에 들어서면 KNOWN(이름·자리 앎, 아직 안 가 봄)이 되는 대표 명소·공공시설. towns=고을 짧은 이름, landmarks=region.json landmarks id, buildings=배치 이름(같은 이름 모두), passes=region.json passes id, ferries=crossings 나루 이름. 주막·방앗간·외딴집·사람 집·사건 장소(place:)·단서 자리·숨은 굴은 넣지 않는다. 노정(route)은 뚜렷한 길목이 없으면 비운다.",
+  "JL_NAMWON_UNBONG": {
+    "note": "남원도 예외 없음. 월매 집·주막·방앗간·외딴집·옥 자리·사건 장소는 넣지 않는다",
+    "towns": ["남원", "운봉", "인월", "실상사"],
+    "landmarks": ["gwanghallu", "namwon_dongheon", "yongseonggwan", "namwon_south_gate", "namwon_east_gate", "namwon_west_gate", "namwon_north_gate", "ojakgyo", "unbong_gwana", "hwangsan_daecheopbi", "silsangsa", "yeowonchi_maaebul"],
+    "buildings": ["광한루", "동헌", "용성관", "남원향교", "광한루원", "운봉현 관아", "실상사", "황산대첩비", "여원치 마애불"],
+    "passes": ["yeowonjae"],
+    "ferries": ["요천 광한루 앞 나루"]
+  },
+  "GG_HANYANG": {
+    "note": "책쾌의 책방·칠패 창고·서강 창고(사건)·주막은 넣지 않는다",
+    "towns": ["한양", "운종가", "배오개", "칠패", "노량진", "한강진"],
+    "landmarks": ["gyeongbokgung", "gwanghwamun", "changdeokgung", "jongmyo", "sajikdan", "bosingak", "gwangtonggyo", "supyogyo", "yukjo", "seonggyungwan", "sungnyemun", "heunginjimun", "donuimun", "sukjeongmun", "mohwagwan", "mokmyeok_bongsu", "podocheong_left", "podocheong_right"],
+    "buildings": ["경복궁", "창덕궁", "종묘", "사직단", "육조거리", "운종가", "광통교", "수표교", "숭례문", "흥인지문", "돈의문", "숙정문", "성균관(문묘)", "한성부", "좌포도청", "우포도청", "모화관"],
+    "passes": ["muakjae"],
+    "ferries": ["노량진 나루(노들 나루)", "한강진 나루"]
+  },
+  "GS_GYEONGJU": {
+    "note": "치술령·망부석(사건)·처용 바위·연오랑 바위(이야기 자리)는 넣지 않는다",
+    "towns": ["경주", "불국사"],
+    "landmarks": ["donggyeonggwan", "gyeongju_buyun_gwana", "cheomseongdae", "gyerim", "banwolseong", "gyeongju_hyanggyo", "oreung", "bunhwangsa", "bulguksa", "seokguram", "bonghwangdae", "gameunsa_ji", "daewangam"],
+    "buildings": ["동경관", "경주부 관아", "첨성대", "계림", "반월성 터", "경주향교", "오릉", "분황사", "분황사 모전석탑", "불국사", "석굴암", "봉황대", "감은사 터 삼층석탑", "대왕암"],
+    "passes": ["churyeong"],
+    "ferries": ["서천(형산강) 나루"]
+  },
+  "GW_GANGNEUNG": {
+    "note": "대관령 국사성황사·반정 주막(사건 장소)은 넣지 않는다",
+    "towns": ["강릉", "구산역", "경포"],
+    "landmarks": ["imyeonggwan", "gangneung_gwana", "gangneung_hyanggyo", "ojukheon", "gyeongpodae", "gulsansa_dangganjiju"],
+    "buildings": ["임영관", "강릉대도호부 관아", "강릉향교", "오죽헌", "경포대", "굴산사 터 당간지주"],
+    "passes": ["daegwallyeong"],
+    "ferries": []
+  },
+  "HH_HWANGJU": {
+    "note": "도화동 우물·눈먼 노인의 집(이야기·사건 자리)은 넣지 않는다",
+    "towns": ["황주", "황주천 나루"],
+    "landmarks": ["hwangju_gaeksa", "hwangju_dongheon", "wolparu"],
+    "buildings": ["제안관(객사)", "황주목 관아", "월파루", "황주향교", "남문", "동문", "서문", "북문"],
+    "passes": [],
+    "ferries": []
+  },
+  "PA_PYEONGYANG": {
+    "note": "부벽루(사건 장소)·기린굴(숨은 굴)·나루 주막·종이 마당·기록 창고는 넣지 않는다",
+    "towns": ["평양", "대동강 나루", "영명사"],
+    "landmarks": ["daedongmun", "ryeongwangjeong", "pyongyang_jonggak", "botongmun", "chilseongmun", "hyeonmumun", "jeongeummun", "eulmildae", "choeseungdae", "pyeongan_gamyeong", "sungnyeongjeon", "gijareung", "yeongmyeongsa"],
+    "buildings": ["대동문", "보통문", "칠성문", "현무문", "전금문", "연광정", "을밀대", "평안감영(선화당)", "대동관(객사)", "평양향교", "평양 종각", "숭령전", "기자릉", "영명사"],
+    "passes": [],
+    "ferries": ["대동강 나루(대동문 앞)"]
+  },
+  "HG_HAMHEUNG": {
+    "note": "동문 밖 역참 마당·함관령(사건 장소)은 넣지 않는다",
+    "towns": ["함흥", "만세교", "본궁"],
+    "landmarks": ["seonhwadang", "hamheung_south_gate", "hamheung_east_gate", "nakminnu", "gucheongak", "manse_bridge", "hamheung_bongung"],
+    "buildings": ["함경감영(선화당)", "풍패관(객사)", "낙민루", "구천각", "만세교", "함흥본궁", "본궁 반송", "함흥향교", "함흥읍성 남문", "함흥읍성 동문"],
+    "passes": [],
+    "ferries": []
+  },
+  "JJ_JEJU": {
+    "note": "김녕사굴(사건·굴)·송당 본향당(신당)은 넣지 않는다",
+    "towns": ["제주목", "산지포", "화북포", "조천"],
+    "landmarks": ["gwandeokjeong", "jeju_mokgwana", "samseonghyeol", "yeonbukjeong", "hwabuk_haesinsa"],
+    "buildings": ["관덕정", "제주목 관아", "삼성혈", "연북정", "영주관", "제주향교", "화북포 해신사"],
+    "passes": [],
+    "ferries": []
+  }
+}
