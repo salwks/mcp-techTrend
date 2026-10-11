@@ -5,7 +5,10 @@
 # 바탕 그림은 오프라인(tools/region/render_joseon_map.py): region_data/<id>/map/l2.webp(권역), map/city_*.webp(고을),
 #   region_data/nation_map.webp(전국). 그 위에 런타임이 그리는 것: 이름·기호(화면 크기 고정 + 겹침 솎기), 사건 표지(붉은 인),
 #   할 말 있는 이야기 인물, 역참, 플레이어, 테두리·방위·10리 자, 오른쪽 판(제목·범례·현재 사건·역참).
-# 글자 크기는 확대와 상관없이 늘 같다. 겹치면 우선순위(지금 고을·권역 > 사건 > 거점 > 고을 > 역참 > 마을 > 이름난 곳 > 고개·물)로 솎는다.
+# 글자 크기는 확대와 상관없이 늘 같다(UiFonts.MAP_* — 화면 픽셀, 기호 속 글자 '역'·'사'도 MAP_GLYPH 고정). 기호 그림도 화면 크기 고정(ICON_S).
+#   바탕 그림(webp)에는 글자를 굽지 않는다 — 이름·범례·방위·10리 자는 모두 여기서 그린다.
+#   겹치면 우선순위(지금 고을·권역 > 사건 > 거점 > 고을 > 역참 > 마을 > 이름난 곳 > 고개·물)로 솎는다(이름표 둘레 LABEL_PAD 띄움).
+#   시험: --maptexttest — 권역·고을·전국 지도를 최소·중간·최대 배율로 놓고 이름표 글 크기·높이가 같은지, 겹침이 없는지(MAPTEXTTEST PASS).
 #
 # 알고 있는 곳만 이름을 쓴다(scripts/region/discovery.gd, 보강서 §20): 고을·이름 있는 건물·사건 장소(map_places)·이름난 곳(lm:)·
 #   고개(pass:)·전국 지도 권역과 거점. 산·물·길·성벽·집채(그림)는 늘 그린다. 단서·범인·해결 자리는 지도에 오르지 않는다.
@@ -33,6 +36,8 @@ const CULTURE_TILE := ["culture/gwandong/banga", "culture/yeongnam/jongga", "cul
 	"culture/gwanseo/pyeongyang_giwa"]
 const CULTURE_TILE_DEFAULT := ["culture/chae", "culture/yeongnam/tteuljip", "culture/giho/giyeok"]
 const MAX_K := 6.0   # 최대 확대: 1m = 6px
+const ICON_S := 1.25     # 지도 위 기호 크기(화면 고정 — 확대와 상관없음)
+const LABEL_PAD := 2.0   # 이름표끼리 띄움(겹침 솎기)
 
 # 먹·한지 색
 const INK := Color(0.13, 0.11, 0.09)
@@ -53,6 +58,12 @@ const P_STATION := 4
 const P_VILLAGE := 5
 const P_LANDMARK := 6
 const P_MINOR := 7
+const P_BUILDING := 8     # 낱낱 건물 이름(가까이 확대했을 때만 — 가장 먼저 솎인다)
+# 확대 단계(권역·고을 지도): 글 크기는 그대로, 보이는 이름의 단계만 바뀐다(_tier())
+#   1 늘: 고을·권역 이름(+ 사건 표지·할 말·깃발·지금 자리)
+#   2 중간(TIER2_K 이상): 이름난 곳·관아·객사·광한루·나루·역참·고개·사건 장소·물 이름
+#   3 가까이(TIER3_K 이상): 낱낱 건물(주막·성황당·물레방앗간·옥·정자·쉼터 …) — 배치 title·building_titles 이름, 가 봄/들음만
+const TIER3_K := 1.1      # px/m — 10m 집채가 11px 넘게 보일 때
 
 var world
 var _meta := {}
@@ -90,6 +101,8 @@ var _disc_t := 0.0
 var on_discover: Callable = Callable()
 # 이번 그림의 자리 차지(겹침 솎기) · 표지 맞춤
 var _taken: Array = []
+var placed: Array = []         # 이번 그림에 그린 이름표 [{text, size, rect}] · 기호 속 글자 크기(시험이 읽는다)
+var glyph_sizes: Array = []
 var _hits: Array = []          # [{p, r, tip, lead}]
 var _hover = null              # 마우스가 올라간 표지
 var _pinned = null             # 누른 표지(설명 고정)
@@ -152,6 +165,7 @@ func setup(w, data_dir: String, loader = null) -> void:
 	MapLeads.cases.call_deferred()   # 사건 데이터를 미리 읽어 둔다(처음 지도 열기를 빠르게)
 	var mn := get_parent()
 	if mn != null and "args" in mn and mn.args.has("mapshots"): _mapshots.call_deferred(String(mn.args.mapshots))
+	if mn != null and "args" in mn and mn.args.has("maptexttest"): _maptexttest.call_deferred()
 
 static func _type_rank(t: String) -> int:
 	return { "읍성": 0, "장시": 1, "역": 2, "원": 3, "주막": 3, "사찰": 4, "성황당": 5 }.get(t, 6)
@@ -197,7 +211,8 @@ func _collect_items(loader) -> void:
 			if f0 is Array and f0.size() >= 2: fp = Vector2(float(f0[0]), float(f0[1]))
 			if fp == Vector2.ZERO: fp = loader._catalog_fp(kit, params)
 			if fp == Vector2.ZERO: fp = Vector2(8, 6)
-			_items.append({ kind = kind, c = c, ry = ry, half = fp / 2.0, name = nm })
+			# 이름난 곳(landmark 키트 — 관아·객사·광한루 …)은 2단계, 낱낱 건물(주막·성황당·방앗간·옥 …)은 3단계
+			_items.append({ kind = kind, c = c, ry = ry, half = fp / 2.0, name = nm, tier = 2 if kit.begins_with("landmark/") else 3 })
 
 static func _culture_kind(kit: String, params: Dictionary) -> String:
 	if kit in CULTURE_SKIP or kit.get_file().begins_with("_"): return ""
@@ -227,10 +242,10 @@ func _ready() -> void:
 	_build_panel()
 	_hint = Label.new()
 	_hint.add_theme_font_override("font", _font)
-	_hint.add_theme_font_size_override("font_size", 14)
+	_hint.add_theme_font_size_override("font_size", UiFonts.MAP_KEYS)
 	_hint.add_theme_color_override("font_color", Color(1, 0.97, 0.9, 0.95))
 	_hint.add_theme_color_override("font_outline_color", Color(0, 0, 0))
-	_hint.add_theme_constant_override("outline_size", 4)
+	_hint.add_theme_constant_override("outline_size", 5)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_hint)
@@ -252,25 +267,25 @@ func _build_panel() -> void:
 	_pbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_pbox.add_theme_constant_override("separation", 6)
 	sc.add_child(_pbox)
-	_ptitle = _plabel("", 27, INK, _font_t)
+	_ptitle = _plabel("", UiFonts.NAME, INK, _font_t)
 	_ptitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pbox.add_child(_ptitle)
-	_psub = _plabel("", 13, INK_SOFT)
+	_psub = _plabel("", UiFonts.NOTE, INK_SOFT)
 	_psub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pbox.add_child(_psub)
 	_pbox.add_child(_rule())
-	_pbox.add_child(_plabel("범례", 16, INK, _font_t))
+	_pbox.add_child(_plabel("범례", UiFonts.DETAIL, INK, _font_t))
 	_legend = Control.new()
 	_legend.custom_minimum_size = Vector2(0, 0)
 	_legend.draw.connect(_draw_legend)
 	_pbox.add_child(_legend)
 	_pbox.add_child(_rule())
-	_pbox.add_child(_plabel("현재 사건", 18, SEAL, _font_t))
+	_pbox.add_child(_plabel("현재 사건", UiFonts.DETAIL, SEAL, _font_t))
 	_cases_box = VBoxContainer.new()
 	_cases_box.add_theme_constant_override("separation", 2)
 	_pbox.add_child(_cases_box)
 	_pbox.add_child(_rule())
-	_st_head = _plabel("역참 (H · 숫자 키)", 18, INK, _font_t)
+	_st_head = _plabel("역참 (H · 숫자 키)", UiFonts.DETAIL, INK, _font_t)
 	_pbox.add_child(_st_head)
 	_st_box = VBoxContainer.new()
 	_st_box.add_theme_constant_override("separation", 2)
@@ -301,25 +316,30 @@ func _pbutton(t: String, col: Color, cb: Callable) -> Button:
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.add_theme_font_override("font", _font)
-	b.add_theme_font_size_override("font_size", 14)
+	b.add_theme_font_size_override("font_size", UiFonts.MAP_PANEL)
 	b.add_theme_color_override("font_color", col)
 	b.add_theme_color_override("font_hover_color", SEAL)
 	b.add_theme_color_override("font_pressed_color", SEAL)
 	b.pressed.connect(cb)
 	return b
 
-const LEGEND := [["eup", "읍치(성곽 고을)"], ["market", "장터 고을"], ["village", "마을"], ["station", "역참·마방"], ["flag", "길목 깃발(역마)"], ["ferry", "나루(진)"],
-	["pass", "고개"], ["temple", "절"], ["bongsu", "봉수"], ["case", "사건 — 들은 행선지"], ["talk", "할 말이 있는 사람"], ["road", "큰길(눈금 10리)"]]
+# 범례: 두 단(기호 + 짧은 이름, MAP_PANEL) — 글을 키운 만큼 줄 수를 반으로. 긴 뜻은 표지에 마우스를 올리면 나온다
+const LEGEND := [["eup", "읍치"], ["market", "장터"], ["village", "마을"], ["station", "역참"], ["flag", "길목 깃발"], ["ferry", "나루"],
+	["pass", "고개"], ["temple", "절"], ["bongsu", "봉수"], ["case", "사건"], ["talk", "할 말"], ["road", "큰길"]]
+const LEGEND_ROW := 34.0
 func _draw_legend() -> void:
-	var y := 10.0
-	for e in LEGEND:
+	var colw := maxf(120.0, _legend.size.x / 2.0)
+	var rows := ceili(LEGEND.size() / 2.0)
+	for i in LEGEND.size():
+		var e: Array = LEGEND[i]
+		var x := 0.0 if i < rows else colw
+		var y := LEGEND_ROW * 0.5 + 2.0 + float(i % rows) * LEGEND_ROW
 		if e[0] == "road":
-			_legend.draw_line(Vector2(4, y), Vector2(26, y), ROAD_RED, 3.0)
-			for x in [9.0, 20.0]: _legend.draw_line(Vector2(x, y - 4), Vector2(x, y + 4), Color(0.45, 0.12, 0.08), 1.5)
-		else: _icon(_legend, String(e[0]), Vector2(15, y), 0.85)
-		_legend.draw_string(_font, Vector2(34, y + 5), String(e[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, INK)
-		y += 21.0
-	_legend.custom_minimum_size = Vector2(0, y - 6)
+			_legend.draw_line(Vector2(x + 4, y), Vector2(x + 30, y), ROAD_RED, 3.5)
+			for tx in [10.0, 23.0]: _legend.draw_line(Vector2(x + tx, y - 5), Vector2(x + tx, y + 5), Color(0.45, 0.12, 0.08), 1.8)
+		else: _icon(_legend, String(e[0]), Vector2(x + 17, y + (6.0 if e[0] == "talk" else 0.0)), ICON_S)
+		_legend.draw_string(_font, Vector2(x + 40, y + UiFonts.MAP_PANEL * 0.36), String(e[1]), HORIZONTAL_ALIGNMENT_LEFT, colw - 42.0, UiFonts.MAP_PANEL, INK)
+	_legend.custom_minimum_size = Vector2(0, rows * LEGEND_ROW + 4.0)
 
 func _refresh_panel() -> void:
 	var town = _town_at(_center) if mode == "city" else null
@@ -335,10 +355,10 @@ func _refresh_panel() -> void:
 	for l in _leads:
 		if not by_case.has(l.case): by_case[l.case] = []
 		by_case[l.case].append(l)
-	if by_case.is_empty(): _cases_box.add_child(_plabel("아직 쫓는 사건이 없다.", 13, INK_SOFT))
+	if by_case.is_empty(): _cases_box.add_child(_plabel("아직 쫓는 사건이 없다.", UiFonts.NOTE, INK_SOFT))
 	for cid in by_case:
 		var ls: Array = by_case[cid]
-		_cases_box.add_child(_plabel("「%s」" % String(ls[0].title), 15, SEAL, _font_t))
+		_cases_box.add_child(_plabel("「%s」" % String(ls[0].title), UiFonts.MAP_PANEL, SEAL, _font_t))
 		for l in ls:
 			var lead: Dictionary = l
 			var where := ""
@@ -350,7 +370,7 @@ func _refresh_panel() -> void:
 	_st_head.visible = st_on
 	_st_box.visible = st_on
 	if st_on:
-		if _stations.is_empty(): _st_box.add_child(_plabel("가 본 역참이 아직 없다.", 13, INK_SOFT))
+		if _stations.is_empty(): _st_box.add_child(_plabel("가 본 역참이 아직 없다.", UiFonts.NOTE, INK_SOFT))
 		for i in _stations.size():
 			var s: Dictionary = _stations[i]
 			var lab := "%d. %s" % [i + 1, String(s.name)]
@@ -433,25 +453,38 @@ func _city_k() -> float:
 	if _tex == null: return _k_min * 1.6
 	return maxf(_k_min * 1.6, 1.15 / float(_meta.scale))
 
+# 2단계 문턱: 권역 최소 배율과 고을 지도 문턱 사이(기하 평균 조금 아래)
+func tier2_k() -> float:
+	return sqrt(_k_min * _city_k()) * 0.95
+
+func tier3_k() -> float:
+	return maxf(TIER3_K, _city_k() * 1.5)
+
+func _tier() -> int:
+	if mode == "nation": return 1
+	if _k >= tier3_k(): return 3
+	return 2 if _k >= tier2_k() else 1
+
 func _after_view() -> void:
 	_update_hint(); _refresh_panel(); _canvas.queue_redraw()
 
 func _update_hint() -> void:
-	_hint.text = { city = "도시 지도(L3)", all = "권역 지도(L2)", nation = "전국 지도(L0)" }.get(mode, "") + "   Tab 전환 · 휠/+- 확대·축소 · 드래그/방향키 이동 · H 역참 · M/Esc 닫기\n가 보았거나 들어서 아는 곳만 이름이 적힌다 · 붉은 인은 들은 행선지(사건)"
-	if _st_sel >= 0 and _st_sel < _stations.size():
-		_hint.text = "역마 타고 %s(으)로 가겠소?   Enter/Y 간다 · N/Esc 그만" % String(_stations[_st_sel].name)
-	elif mode == "nation" and not _fast_opts.is_empty():
-		if _fast_sel >= 0: _hint.text = _fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?   Enter/Y 간다 · N/Esc 그만" % _fast_label(_fast_opts[_fast_sel])
-		else: _hint.text += "\n지나온 길 건너뛰기: 금빛 길·고을 클릭" + ("" if _st_on() else " 또는 숫자 키")
-	_hint.reset_size()
+	# 지도 이름(도시·권역·전국)은 오른쪽 판 부제에 있다 — 아래 줄은 조작과 읽는 법만(MAP_KEYS, 두 줄 안)
+	var lines := ["Tab 지도 바꾸기 · 휠·+- 확대 · 끌기·방향키 옮기기 · H 역참 · M 닫기", "아는 곳만 이름이 적힌다 · 붉은 인은 들은 행선지"]
+	# 역마 확인(역참·노정 건너뛰기)은 지도 위 가운데 확인 상자(_draw_confirm)가 보인다
+	if mode == "nation" and not _fast_opts.is_empty() and _fast_sel < 0:
+		lines[1] = "지나온 길 건너뛰기: 금빛 길·고을 클릭" + ("" if _st_on() else " 또는 숫자 키") + " · 붉은 인은 들은 행선지"
 	var vs := get_viewport().get_visible_rect().size
-	_hint.position = Vector2((vs.x - _hint.size.x) / 2.0, vs.y - _hint.size.y - 10)
+	for i in lines.size(): lines[i] = UiFonts.fit(_font, String(lines[i]), UiFonts.MAP_KEYS, vs.x - 32.0)
+	_hint.text = "\n".join(lines)
+	_hint.reset_size()
+	_hint.position = Vector2((vs.x - _hint.size.x) / 2.0, vs.y - _hint.size.y - 6)
 
 func _layout() -> void:
 	var vs := get_viewport().get_visible_rect().size
-	var pw := clampf(vs.x * 0.22, 210.0, 300.0)
-	_canvas.position = Vector2(vs.x * 0.025, vs.y * 0.035)
-	_canvas.size = Vector2(vs.x * 0.95 - pw - 10.0, vs.y * 0.86)
+	var pw := clampf(vs.x * 0.29, 290.0, 380.0)   # 오른쪽 판: MAP_PANEL 글 · 범례 두 단이 들어가게
+	_canvas.position = Vector2(vs.x * 0.02, vs.y * 0.025)
+	_canvas.size = Vector2(vs.x * 0.96 - pw - 10.0, vs.y * 0.875)
 	_panel.position = Vector2(_canvas.position.x + _canvas.size.x + 10.0, _canvas.position.y)
 	_panel.size = Vector2(pw, _canvas.size.y)
 	_panel.custom_minimum_size = _panel.size
@@ -702,7 +735,7 @@ func _station_go() -> void:
 		if r is Dictionary and not bool(r.get("ok", true)):   # 못 가는 역(처음 가는 길 등): 지도를 다시 열고 까닭을 적는다
 			visible = true
 			_after_view()
-			_hint.text = "%s(으)로는 아직 역마로 갈 수 없다 — %s" % [String(s.name), String(r.get("why", ""))]
+			_hint.text = UiFonts.fit(_font, "%s(으)로는 아직 역마로 갈 수 없다 — %s" % [String(s.name), String(r.get("why", ""))], UiFonts.MAP_KEYS, get_viewport().get_visible_rect().size.x - 32.0)
 	elif m != null and m.has_method("open_fast_travel"): m.open_fast_travel()   # 역참 이동 API 전: 역마 창
 
 # 사건 하나를 고르면 그 표지로 지도를 옮긴다(다른 공간이면 전국 지도의 그 권역으로)
@@ -784,15 +817,17 @@ func _update_discovery() -> void:
 # ====================================================================================
 func _draw_map() -> void:
 	var cs := _canvas.size
-	_taken = []; _hits = []
+	_taken = []; _hits = []; placed = []; glyph_sizes = []
 	_canvas.draw_rect(Rect2(Vector2.ZERO, cs), PAPER_DARK)
-	_taken.append(Rect2(Vector2(6, 6), Vector2(72, 72)))   # 방위
-	_taken.append(Rect2(Vector2(6, cs.y - 40), Vector2(170, 36)))   # 10리 자
+	_taken.append(Rect2(Vector2(6, 6), Vector2(84, 84)))   # 방위
+	_taken.append(Rect2(Vector2(6, cs.y - 50), Vector2(230, 46)))   # 10리 자
+	if _st_sel >= 0 or (mode == "nation" and _fast_sel >= 0): _taken.append(_confirm_rect())   # 역마 확인 상자
 	if mode == "nation":
 		_draw_nation()
 	else:
 		_clamp_center()
 		_draw_region()
+	_draw_confirm()
 	_draw_tip()
 	_draw_frame()
 
@@ -820,13 +855,14 @@ func _draw_region() -> void:
 	_taken.append(Rect2(_to_px(ppos) - Vector2(16, 16), Vector2(32, 32)))
 	var here = _town_at(ppos)
 	var city := mode == "city"
+	var tier := _tier()
 	# 사건 표지(붉은 인) — 이 공간에 있는 것
 	for l in _leads:
 		if l.region != "" or l.space != _space or l.pos == null: continue
-		cands.append({ p = _to_px(l.pos), kind = "case", text = String(l.name), prio = P_CASE, size = 15, col = SEAL, force = true,
+		cands.append({ p = _to_px(l.pos), kind = "case", text = String(l.name), prio = P_CASE, size = UiFonts.MAP_LABEL, col = SEAL, force = true,
 			tip = "「%s」 %s" % [String(l.title), String(l.name)], lead = l })
 	for t in _talks:
-		cands.append({ p = _to_px(t.p), kind = "talk", text = "", prio = P_CASE, size = 13, col = SEAL, force = true, tip = "%s — 할 말이 있다" % String(t.name) })
+		cands.append({ p = _to_px(t.p), kind = "talk", text = "", prio = P_CASE, size = UiFonts.MAP_LABEL, col = SEAL, force = true, tip = "%s — 할 말이 있다" % String(t.name) })
 	# 고을·마을
 	for t in _towns:
 		var r: Rect2 = t[2]
@@ -837,10 +873,10 @@ func _draw_region() -> void:
 		var is_here: bool = here != null and here[0] == t[0]
 		var pr := P_HERE if is_here else (P_HUB if ty == "읍성" else (P_TOWN if kind in ["market", "station", "inn", "temple"] else P_VILLAGE))
 		var at: Vector2 = t[1]
-		var fsz := 22 if ty == "읍성" else (18 if pr <= P_TOWN else 15)
+		var fsz: int = UiFonts.MAP_HUB if ty == "읍성" else (UiFonts.MAP_TOWN if pr <= P_TOWN else UiFonts.MAP_LABEL)
 		if city:   # 도시 축척: 고을 그림 위 이름만(기호 없이), 고을 위쪽 가장자리
 			at = Vector2(r.get_center().x, r.position.y)
-			cands.append({ p = _to_px(at) + Vector2(0, -6), kind = "", text = String(t[0]) if known else "", prio = pr, size = fsz + 4, col = INK, title = true, plate = true })
+			cands.append({ p = _to_px(at) + Vector2(0, -8), kind = "", text = String(t[0]) if known else "", prio = pr, size = UiFonts.MAP_HUB if ty == "읍성" else UiFonts.MAP_TOWN, col = INK, title = true, plate = true })
 		else:
 			cands.append({ p = _to_px(at), kind = kind, text = String(t[0]) if known else "", prio = pr, size = fsz, col = INK, title = true, plate = ty == "읍성" })
 	# 이름난 곳·나루·고개·봉수·절(권역 축척) / 이름 있는 건물(도시 축척)
@@ -856,53 +892,57 @@ func _draw_region() -> void:
 		var known := Discovery.is_known(_space, "lm:" + String(l.get("id", l.get("name", ""))))
 		if city: kind = ""
 		if not known and kind in ["landmark", ""]: continue
-		cands.append({ p = _to_px(c), kind = kind, text = Travel.short_name(String(l.get("name", ""))) if known else "", prio = P_LANDMARK, size = 13, col = INK_SOFT })
-	if city:
-		for it in _items:
-			if not view.has_point(it.c) or not Discovery.is_known(_space, Discovery.bld_key(it.name, it.c)): continue
-			cands.append({ p = _to_px(it.c) + Vector2(0, -(it.half as Vector2).y * _k), kind = "dot", text = String(it.name), prio = P_LANDMARK, size = 13, col = INK })
+		cands.append({ p = _to_px(c), kind = kind, text = Travel.short_name(String(l.get("name", ""))) if known else "", prio = P_LANDMARK, size = UiFonts.MAP_LABEL, col = INK_SOFT, tier = 2 })
+	# 이름 있는 건물(배치 title · building_titles): 가 봄/들음만, 확대 단계가 닿을 때만(모르는 건물은 이름도 점도 없다 — 예전 규칙)
+	for it in _items:
+		if int(it.tier) > tier or not view.has_point(it.c) or not Discovery.is_known(_space, Discovery.bld_key(it.name, it.c)): continue
+		cands.append({ p = _to_px(it.c) + Vector2(0, -(it.half as Vector2).y * _k), kind = "dot", text = String(it.name),
+			prio = P_LANDMARK if int(it.tier) == 2 else P_BUILDING, size = UiFonts.MAP_LABEL, col = INK, tier = int(it.tier) })
 	for cr in world.region.get("crossings", []):
 		if String(cr.get("type", "")) != "나루" or not cr.has("x"): continue
 		var c := Vector2(float(cr.x), float(cr.z))
 		if not view.has_point(c): continue
 		var nm := String(cr.get("name", ""))
-		cands.append({ p = _to_px(c), kind = "ferry", text = Travel.short_name(nm) if not nm.begins_with("무명") and Discovery.is_known(_space, "town:" + Travel.short_name(nm)) else "", prio = P_VILLAGE, size = 13, col = WATER_INK })
+		cands.append({ p = _to_px(c), kind = "ferry", text = Travel.short_name(nm) if not nm.begins_with("무명") and Discovery.is_known(_space, "town:" + Travel.short_name(nm)) else "", prio = P_VILLAGE, size = UiFonts.MAP_MINOR, col = WATER_INK, tier = 2 })
 	for ps in world.region.get("passes", []):
 		if not ps.has("x"): continue
 		var c := Vector2(float(ps.x), float(ps.z))
 		if not view.has_point(c): continue
 		var nm := String(ps.get("name", ""))
 		var known := not nm.begins_with("무명") and Discovery.is_known(_space, "pass:" + String(ps.get("id", nm)))
-		cands.append({ p = _to_px(c), kind = "pass", text = Travel.short_name(nm) if known else "", prio = P_MINOR, size = 13, col = INK_SOFT })
+		cands.append({ p = _to_px(c), kind = "pass", text = Travel.short_name(nm) if known else "", prio = P_MINOR, size = UiFonts.MAP_MINOR, col = INK_SOFT, tier = 2 })
 	# 사건 장소(map_places, 알게 된 것): 붉은 먹점
 	for e in _story_places:
 		if e.bld != "" or not Discovery.is_known(_space, e.key) or not view.grow(40).has_point(e.c): continue
 		var told := Discovery.how(_space, e.key) == "told"
-		cands.append({ p = _to_px(e.c), kind = "place_told" if told else "place", text = String(e.name) + (" (들음)" if told else ""), prio = P_TOWN, size = 14, col = Color(0.42, 0.12, 0.07) })
+		cands.append({ p = _to_px(e.c), kind = "place_told" if told else "place", text = String(e.name) + (" (들음)" if told else ""), prio = P_TOWN, size = UiFonts.MAP_TOWN, col = Color(0.42, 0.12, 0.07), tier = 2 })
 	# 길목 깃발(가 본 것 — 이름은 고을 이름과 겹치므로 그림만, 손을 대면 이름)
 	for f in _flags:
 		if f.c == null or not view.grow(40).has_point(f.c): continue
 		# 고을 표지 바로 곁(오른쪽 위)에 늘 그린다 — 넓은 축척에서는 고을 기호와 같은 자리라 솎으면 사라진다
-		cands.append({ p = _to_px(f.c) + Vector2(9, -9), kind = "flag", text = "", prio = P_STATION, size = 12, col = INK, force = true, tip = "깃발 %s — 곁에서 E로 역마" % String(f.name) })
+		cands.append({ p = _to_px(f.c) + Vector2(9, -9) * ICON_S, kind = "flag", text = "", prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, force = true, tip = "깃발 %s — 곁에서 E로 역마" % String(f.name) })
 	# 역참
 	for i in _stations.size():
 		var s: Dictionary = _stations[i]
 		if s.space != _space or s.c == null or not view.grow(40).has_point(s.c): continue
-		cands.append({ p = _to_px(s.c), kind = "station", text = String(s.name), prio = P_STATION, size = 14, col = INK, station = i, tip = "역참 %s — 눌러 고르고, 한 번 더 누르면 간다" % String(s.name) })
+		cands.append({ p = _to_px(s.c), kind = "station", text = String(s.name), prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, station = i, tip = "역참 %s — 눌러 고르고, 한 번 더 누르면 간다" % String(s.name), tier = 2 })
 	# 오름·용천수·호수·큰 물 이름
 	if not city:
 		for o in _oreums:
-			if view.has_point(o[1]): cands.append({ p = _to_px(o[1]), kind = "", text = String(o[0]), prio = P_MINOR, size = 12, col = INK_SOFT })
+			if view.has_point(o[1]): cands.append({ p = _to_px(o[1]), kind = "", text = String(o[0]), prio = P_MINOR, size = UiFonts.MAP_MINOR, col = INK_SOFT, tier = 2 })
 		for rn in _rivers_named:
-			if view.has_point(rn[1]): cands.append({ p = _to_px(rn[1]), kind = "", text = String(rn[0]), prio = P_MINOR, size = 13, col = WATER_INK })
+			if view.has_point(rn[1]): cands.append({ p = _to_px(rn[1]), kind = "", text = String(rn[0]), prio = P_MINOR, size = UiFonts.MAP_MINOR, col = WATER_INK, tier = 2 })
 		for l in _lakes:
 			var c := Vector2.ZERO
 			for q in l[1]: c += q
 			c /= float(maxi(1, (l[1] as PackedVector2Array).size()))
-			cands.append({ p = _to_px(c), kind = "", text = String(l[0]), prio = P_MINOR, size = 14, col = WATER_INK })
+			cands.append({ p = _to_px(c), kind = "", text = String(l[0]), prio = P_MINOR, size = UiFonts.MAP_MINOR, col = WATER_INK, tier = 2 })
 	else:
 		for sp in _springs:
-			if view.has_point(sp[1]): cands.append({ p = _to_px(sp[1]), kind = "spring", text = String(sp[0]), prio = P_MINOR, size = 12, col = WATER_INK })
+			if view.has_point(sp[1]): cands.append({ p = _to_px(sp[1]), kind = "spring", text = String(sp[0]), prio = P_MINOR, size = UiFonts.MAP_MINOR, col = WATER_INK, tier = 2 })
+	# 이 확대 단계보다 높은 단계의 이름은 글을 지운다(기호는 그대로 — 기호 없는 이름은 통째로 빠진다)
+	for c in cands:
+		if int(c.get("tier", 1)) > tier: c.text = ""
 	_place_all(cands)
 	_draw_player()
 	_draw_scale_bar(float(_meta.get("li_m", 1260.0)) * _k)
@@ -925,50 +965,85 @@ func _draw_scale_bar(px_len: float) -> void:
 
 func _draw_li_bar(L: float, lab: String) -> void:
 	if L < 20.0 or L > 170.0: return
-	var y := _canvas.size.y - 22.0
-	var x0 := 18.0
-	_canvas.draw_rect(Rect2(Vector2(x0 - 6, y - 16), Vector2(L + 60, 30)), Color(PAPER, 0.85))
-	_canvas.draw_line(Vector2(x0, y), Vector2(x0 + L, y), ROAD_RED, 3.0)
-	for t in [0.0, 0.5, 1.0]: _canvas.draw_line(Vector2(x0 + L * t, y - 5), Vector2(x0 + L * t, y + 5), Color(0.45, 0.12, 0.08), 1.5)
-	_canvas.draw_string(_font, Vector2(x0 + L + 8, y + 5), lab, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, INK)
+	var fs := UiFonts.MAP_KEYS
+	var y := _canvas.size.y - 26.0
+	var x0 := 20.0
+	var tw := _font.get_string_size(lab, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	_canvas.draw_rect(Rect2(Vector2(x0 - 8, y - 20), Vector2(L + tw + 30, 38)), Color(PAPER, 0.88))
+	_canvas.draw_line(Vector2(x0, y), Vector2(x0 + L, y), ROAD_RED, 3.5)
+	for t in [0.0, 0.5, 1.0]: _canvas.draw_line(Vector2(x0 + L * t, y - 6), Vector2(x0 + L * t, y + 6), Color(0.45, 0.12, 0.08), 1.8)
+	_canvas.draw_string(_font, Vector2(x0 + L + 10, y + fs * 0.36), lab, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+	placed.append({ text = lab, size = fs, rect = Rect2(x0 + L + 10, y - fs * 0.6, tw, fs * 1.25), scale_bar = true })
 
 # 테두리(겹선) + 방위(왼쪽 위)
 func _draw_frame() -> void:
 	var cs := _canvas.size
 	_canvas.draw_rect(Rect2(Vector2(2, 2), cs - Vector2(4, 4)), INK, false, 4.0)
 	_canvas.draw_rect(Rect2(Vector2(9, 9), cs - Vector2(18, 18)), Color(INK, 0.7), false, 1.2)
-	var c := Vector2(42, 42); var r := 26.0
+	var c := Vector2(48, 48); var r := 34.0
+	var gs := UiFonts.MAP_GLYPH
 	_canvas.draw_circle(c, r, Color(PAPER, 0.92))
-	_canvas.draw_arc(c, r, 0, TAU, 40, INK, 1.6, true)
+	_canvas.draw_arc(c, r, 0, TAU, 40, INK, 1.8, true)
 	_canvas.draw_arc(c, r - 4, 0, TAU, 40, Color(INK, 0.5), 1.0, true)
 	_canvas.draw_circle(c, 4.5, SEAL)
 	for e in [["북", Vector2(0, -1), SEAL], ["남", Vector2(0, 1), INK], ["동", Vector2(1, 0), INK], ["서", Vector2(-1, 0), INK]]:
-		var w := _font.get_string_size(String(e[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
-		_canvas.draw_string(_font, c + (e[1] as Vector2) * (r - 11) + Vector2(-w / 2, 5), String(e[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, e[2])
+		var w := _font.get_string_size(String(e[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, gs).x
+		_canvas.draw_string(_font, c + (e[1] as Vector2) * (r - 14) + Vector2(-w / 2, gs * 0.36), String(e[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, gs, e[2])
+
+# 역마 확인 상자(위 가운데): 노정 건너뛰기(전국) · 역참 고르기 — 물음(DETAIL) + 키(MAP_KEYS) 두 줄
+func _confirm_msg() -> PackedStringArray:
+	if _st_sel >= 0 and _st_sel < _stations.size():
+		return PackedStringArray(["역마 타고 %s(으)로 가겠소?" % String(_stations[_st_sel].name), "Enter·Y 간다 · N·Esc 그만"])
+	if mode == "nation" and _fast_sel >= 0 and _fast_sel < _fast_opts.size():
+		return PackedStringArray([_fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?" % _fast_label(_fast_opts[_fast_sel]), "Enter·Y 간다 · N·Esc 그만"])
+	return PackedStringArray()
+
+func _confirm_rect() -> Rect2:
+	var m := _confirm_msg()
+	if m.is_empty(): return Rect2()
+	var maxw := _canvas.size.x - 140.0
+	var w := minf(maxw, maxf(_font.get_string_size(m[0], HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.DETAIL).x, _font.get_string_size(m[1], HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.MAP_KEYS).x)) + 40.0
+	return Rect2(Vector2((_canvas.size.x - w) / 2.0, 20), Vector2(w, UiFonts.DETAIL + UiFonts.MAP_KEYS + 36))
+
+func _draw_confirm() -> void:
+	var m := _confirm_msg()
+	if m.is_empty(): return
+	var box := _confirm_rect()
+	_canvas.draw_rect(box, Color(PAPER, 0.97))
+	_canvas.draw_rect(box, INK, false, 2.0)
+	var q := UiFonts.fit(_font, m[0], UiFonts.DETAIL, box.size.x - 40.0)
+	_canvas.draw_string(_font, box.position + Vector2(20, 12 + UiFonts.DETAIL * 0.86), q, HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.DETAIL, INK)
+	_canvas.draw_string(_font, box.position + Vector2(20, 22 + UiFonts.DETAIL + UiFonts.MAP_KEYS * 0.86), m[1], HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.MAP_KEYS, INK_SOFT)
 
 # 표지 설명(마우스 올림·누름)
 func _draw_tip() -> void:
 	var h = _hover if _hover != null else _pinned
 	if h == null or not h.has("tip"): return
-	var s := String(h.tip)
-	var w := _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x + 22
+	var fs := UiFonts.MAP_LABEL
+	var s := UiFonts.fit(_font, String(h.tip), fs, _canvas.size.x - 48)
+	var w := _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 24
 	var at: Vector2 = h.p if h.p != Vector2.ZERO else Vector2(_canvas.size.x / 2, 60)
-	var box := Rect2(at + Vector2(-w / 2, -50), Vector2(w, 30))
+	var box := Rect2(at + Vector2(-w / 2, -60), Vector2(w, fs + 18))
 	box.position.x = clampf(box.position.x, 12, _canvas.size.x - w - 12)
-	box.position.y = clampf(box.position.y, 12, _canvas.size.y - 42)
+	box.position.y = clampf(box.position.y, 12, _canvas.size.y - box.size.y - 12)
 	_canvas.draw_rect(box, Color(PAPER, 0.97))
 	_canvas.draw_rect(box, SEAL, false, 2.0)
-	_canvas.draw_string(_font, box.position + Vector2(11, 21), s, HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.35, 0.08, 0.05))
+	_canvas.draw_string(_font, box.position + Vector2(12, 9 + fs * 0.86), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(0.35, 0.08, 0.05))
 
 # ---- 겹침 솎기: 우선순위대로 기호 + 이름(오른쪽·위·아래·왼쪽 중 빈 자리). force는 기호를 늘 그리고 이름은 빈 자리에만 ----
 func _place_all(cands: Array) -> void:
 	cands.sort_custom(func(a, b): return int(a.prio) < int(b.prio))
 	var cs := Rect2(Vector2.ZERO, _canvas.size)
+	# 늘 그리는 기호(사건 인·할 말·깃발)의 자리를 먼저 잡는다 — 뒤에 놓일 이름표가 그 위에 얹히지 않게
+	for c in cands:
+		if bool(c.get("force", false)) and String(c.kind) != "" and cs.grow(-4).has_point(c.p):
+			var fr := (11.0 if String(c.kind) in ["case", "eup"] else 8.0) * ICON_S
+			_taken.append(Rect2((c.p as Vector2) - Vector2(fr, fr), Vector2(fr, fr) * 2))
 	for c in cands:
 		var p: Vector2 = c.p
 		if not cs.grow(-4).has_point(p): continue
 		var kind := String(c.kind)
-		var ir := 0.0 if kind == "" else (11.0 if kind in ["case", "eup"] else 8.0)
+		var ir := 0.0 if kind == "" else (11.0 if kind in ["case", "eup"] else 8.0) * ICON_S
 		var irect := Rect2(p - Vector2(ir, ir), Vector2(ir, ir) * 2)
 		var force := bool(c.get("force", false))
 		if kind != "" and not force and _collides(irect): continue
@@ -985,16 +1060,19 @@ func _place_all(cands: Array) -> void:
 			else: spots = [p + Vector2(ir + 3, -lh / 2), p + Vector2(-lw / 2, -ir - lh - 1), p + Vector2(-lw / 2, ir + 1), p + Vector2(-ir - 3 - lw, -lh / 2)]
 			for sp in spots:
 				var rr := Rect2(sp, Vector2(lw, lh))
-				if cs.encloses(rr) and not _collides(rr): lrect = rr; has_label = true; break
+				if cs.encloses(rr) and not _collides(rr.grow(LABEL_PAD)): lrect = rr; has_label = true; break
+			for q in placed:   # 같은 이름이 곁에 이미 있으면(권역 이름난 곳 = 건물 이름) 한 번만
+				if has_label and String(q.text) == text and (q.rect as Rect2).get_center().distance_to(lrect.get_center()) < 160.0: has_label = false
 			if not has_label and kind == "": continue
 			if has_label:
 				_taken.append(lrect)
 				_draw_label(text, lrect, f, sz, c.col, bool(c.get("plate", false)))
+				placed.append({ text = text, size = sz, rect = lrect, tier = int(c.get("tier", 1)) })
 		if kind != "":
-			_taken.append(irect)
-			_icon(_canvas, kind, p, 1.0)
+			if not force: _taken.append(irect)
+			_icon(_canvas, kind, p, ICON_S)
 		if c.has("tip") or c.has("lead"):
-			var hit := { p = p, r = 14.0, tip = String(c.get("tip", text)) }
+			var hit := { p = p, r = 14.0 * ICON_S, tip = String(c.get("tip", text)) }
 			if c.has("lead"): hit.lead = c.lead
 			if c.has("station"): hit.station = c.station
 			_hits.append(hit)
@@ -1057,10 +1135,10 @@ func _icon(ci: CanvasItem, kind: String, p: Vector2, s: float) -> void:
 			ci.draw_polyline(PackedVector2Array([fl[0], fl[1], fl[2], fl[3]]), SEAL, 1.2 * s)
 			ci.draw_line(p + Vector2(-6, 7) * s, p + Vector2(0, 7) * s, INK, 1.6 * s)
 		"station":   # 역참·마방: 붉은 테 둥근 패에 '역'
-			ci.draw_circle(p, 8.0 * s, PAPER)
-			ci.draw_arc(p, 8.0 * s, 0, TAU, 24, SEAL, 2.0 * s, true)
-			var w := _font.get_string_size("역", HORIZONTAL_ALIGNMENT_LEFT, -1, int(11 * s)).x
-			ci.draw_string(_font, p + Vector2(-w / 2, 4 * s), "역", HORIZONTAL_ALIGNMENT_LEFT, -1, int(11 * s), SEAL)
+			var rs := maxf(8.0 * s, UiFonts.MAP_GLYPH * 0.66)   # 글자(MAP_GLYPH 고정)가 들어가는 둥근 패
+			ci.draw_circle(p, rs, PAPER)
+			ci.draw_arc(p, rs, 0, TAU, 24, SEAL, 2.0 * s, true)
+			_glyph(ci, "역", p, SEAL)
 		"ferry":   # 나루: 배
 			var hull := PackedVector2Array([p + Vector2(-7, 0) * s, p + Vector2(7, 0) * s, p + Vector2(4, 4) * s, p + Vector2(-4, 4) * s])
 			ci.draw_colored_polygon(hull, Color(0.55, 0.40, 0.26))
@@ -1094,7 +1172,7 @@ func _icon(ci: CanvasItem, kind: String, p: Vector2, s: float) -> void:
 		"dot":
 			ci.draw_circle(p, 2.0 * s, INK)
 		"case":   # 사건: 붓으로 찍은 붉은 인(조금 기운 네모, 흰 테, '사')
-			var r := 10.0 * s
+			var r := maxf(10.0 * s, UiFonts.MAP_GLYPH * 0.72)
 			var rot := -0.12
 			var pts := PackedVector2Array()
 			for i in 12:
@@ -1105,12 +1183,18 @@ func _icon(ci: CanvasItem, kind: String, p: Vector2, s: float) -> void:
 			var inner := PackedVector2Array()
 			for q in [Vector2(-1, -1), Vector2(1, -1), Vector2(1, 1), Vector2(-1, 1), Vector2(-1, -1)]: inner.append(p + (q * r * 0.7).rotated(rot))
 			ci.draw_polyline(inner, Color(1, 0.94, 0.86, 0.9), 1.2 * s)
-			var w := _font.get_string_size("사", HORIZONTAL_ALIGNMENT_LEFT, -1, int(12 * s)).x
-			ci.draw_string(_font, p + Vector2(-w / 2, 4.5 * s), "사", HORIZONTAL_ALIGNMENT_LEFT, -1, int(12 * s), Color(1, 0.95, 0.88))
+			_glyph(ci, "사", p, Color(1, 0.95, 0.88))
 		"talk":   # 할 말 있는 사람: 작은 붉은 둥근 인에 「…」
 			ci.draw_circle(p + Vector2(0, -12) * s, 7.0 * s, Color(SEAL, 0.92))
 			ci.draw_colored_polygon(PackedVector2Array([p + Vector2(-2, -6) * s, p + Vector2(2, -6) * s, p + Vector2(0, -1) * s]), Color(SEAL, 0.92))
 			for i in 3: ci.draw_circle(p + Vector2(-3.5 + i * 3.5, -12) * s, 1.1 * s, Color(1, 0.95, 0.88))
+
+# 기호 속 글자 — 기호 크기(s)와 상관없이 MAP_GLYPH(화면 픽셀) 그대로, 가운데 맞춤
+func _glyph(ci: CanvasItem, ch: String, p: Vector2, col: Color) -> void:
+	var gs := UiFonts.MAP_GLYPH
+	var w := _font.get_string_size(ch, HORIZONTAL_ALIGNMENT_LEFT, -1, gs).x
+	ci.draw_string(_font, p + Vector2(-w / 2, gs * 0.36), ch, HORIZONTAL_ALIGNMENT_LEFT, -1, gs, col)
+	if ci == _canvas: glyph_sizes.append(gs)
 
 # ---- 지도 그림이 없는 공간(노정): 물·길·고을·포털을 벡터로 ----
 func _draw_vector_base(tl: Vector2, sz: Vector2) -> void:
@@ -1128,13 +1212,16 @@ func _draw_vector_base(tl: Vector2, sz: Vector2) -> void:
 	var main := get_parent()
 	for pt in main.portals if "portals" in main else []:
 		var c := _to_px(Vector2(pt.x, pt.z))
-		_canvas.draw_circle(c, 7.0, SEAL)
-		_taken.append(Rect2(c - Vector2(8, 8), Vector2(16, 16)))
+		_canvas.draw_circle(c, 8.0, SEAL)
+		_taken.append(Rect2(c - Vector2(9, 9), Vector2(18, 18)))
 		var s := "→ " + String(pt.label)
 		var f := _font
-		var w := f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x + 8
-		var r := Rect2(c + Vector2(-w / 2, 10), Vector2(w, 19))
-		if not _collides(r): _taken.append(r); _draw_label(s, r, f, 15, Color(0.45, 0.1, 0.06), false)
+		var fs := UiFonts.MAP_LABEL
+		var w := f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 8
+		var r := Rect2(c + Vector2(-w / 2, 12), Vector2(w, fs * 1.25))
+		if not _collides(r.grow(LABEL_PAD)):
+			_taken.append(r); _draw_label(s, r, f, fs, Color(0.45, 0.1, 0.06), false)
+			placed.append({ text = s, size = fs, rect = r })
 
 func _draw_water(view: Rect2) -> void:
 	for l in _lakes:
@@ -1317,13 +1404,12 @@ func _draw_fast() -> void:
 			if px.size() >= 2: _canvas.draw_polyline(px, FAST_COL if not sel else Color(0.95, 0.45, 0.1), 7.0 if sel else 5.0, true)
 		var ll = _region_ll(String(o.dest))
 		if ll == null: continue
-		var c := _n_px(ll) + Vector2(16, 12)
-		_canvas.draw_circle(c, 11.0, INK)
-		_canvas.draw_circle(c, 9.0, FAST_COL if not sel else Color(0.95, 0.45, 0.1))
-		if not _st_on():
-			var w := _font.get_string_size(str(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x
-			_canvas.draw_string(_font, c + Vector2(-w / 2, 5), str(i + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, INK)
-		_taken.append(Rect2(c - Vector2(11, 11), Vector2(22, 22)))
+		var c := _n_px(ll) + Vector2(16, 12) * ICON_S
+		var rr := 14.0
+		_canvas.draw_circle(c, rr, INK)
+		_canvas.draw_circle(c, rr - 2.0, FAST_COL if not sel else Color(0.95, 0.45, 0.1))
+		if not _st_on(): _glyph(_canvas, str(i + 1), c, INK)
+		_taken.append(Rect2(c - Vector2(rr, rr), Vector2(rr, rr) * 2))
 
 func _draw_nation() -> void:
 	var cs := _canvas.size
@@ -1358,7 +1444,7 @@ func _draw_nation() -> void:
 			for i in px.size() - 1: _canvas.draw_dashed_line(px[i], px[i + 1], WATER_INK if sea else Color(ROAD_RED, 0.5), 1.6, 6.0)
 		if known:
 			var nm := String(r.get("short", r.name)) if not on else String(r.name)
-			cands.append({ p = _polyline_at(px, 0.5), kind = "", text = nm, prio = P_MINOR + (0 if on else 1), size = 12, col = Color(0.42, 0.18, 0.12) })
+			cands.append({ p = _polyline_at(px, 0.5), kind = "", text = nm, prio = P_MINOR + (0 if on else 1), size = UiFonts.MAP_MINOR, col = Color(0.42, 0.18, 0.12) })
 	_draw_fast()
 	# 사건 표지(권역별로 하나 — 사건 이름)
 	var seen_pos := {}
@@ -1368,8 +1454,8 @@ func _draw_nation() -> void:
 		var key := "%s@%s" % [l.case, str((ll as Vector2).snapped(Vector2(0.05, 0.05)))]
 		if seen_pos.has(key): continue
 		seen_pos[key] = true
-		var p := _n_px(ll) + Vector2(18, -18)
-		cands.append({ p = p, kind = "case", text = String(l.title), prio = P_CASE, size = 14, col = SEAL, force = true,
+		var p := _n_px(ll) + Vector2(18, -18) * ICON_S
+		cands.append({ p = p, kind = "case", text = String(l.title), prio = P_CASE, size = UiFonts.MAP_TOWN, col = SEAL, force = true,
 			tip = "「%s」 %s" % [String(l.title), String(l.name)], lead = l })
 	# 권역 거점
 	for r in _nation.regions:
@@ -1377,22 +1463,22 @@ func _draw_nation() -> void:
 		var on: bool = String(r.get("id", "")) == here_id
 		var known: bool = on or Discovery.region_known(String(r.get("id", "")))
 		cands.append({ p = _n_px(r.lonlat), kind = "hub_here" if on else "hub", text = String(r.get("short", r.get("name", ""))) if known else "",
-			prio = P_HERE if on else P_HUB, size = 20, col = INK, title = true, plate = true, force = true })
+			prio = P_HERE if on else P_HUB, size = UiFonts.MAP_HUB, col = INK, title = true, plate = true, force = true })
 	# 거점 88곳(지도에만 있는 곳 포함): 작은 네모, 가 본 이름만
 	for s in _nation.get("strongholds", []):
 		if String(s.get("status", "")) == "region": continue
 		var nm := String(s.name)
 		cands.append({ p = _n_px(Vector2(float(s.lon), float(s.lat))), kind = "stronghold", text = nm if Discovery.is_known(Discovery.NATION, "sh:" + nm) else "",
-			prio = P_VILLAGE, size = 12, col = INK_SOFT })
+			prio = P_VILLAGE, size = UiFonts.MAP_MINOR, col = INK_SOFT })
 	# 길목 깃발(가 본 것)
 	for f in _flags:
 		if f.ll == null: continue
-		cands.append({ p = _n_px(f.ll), kind = "flag", text = "", prio = P_STATION, size = 11, col = INK, tip = "깃발 %s" % String(f.name) })
+		cands.append({ p = _n_px(f.ll), kind = "flag", text = "", prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, tip = "깃발 %s" % String(f.name) })
 	# 역참
 	for i in _stations.size():
 		var s: Dictionary = _stations[i]
 		if s.ll == null: continue
-		cands.append({ p = _n_px(s.ll), kind = "station", text = String(s.name), prio = P_STATION, size = 12, col = INK, station = i,
+		cands.append({ p = _n_px(s.ll), kind = "station", text = String(s.name), prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, station = i,
 			tip = "역참 %s — 눌러 고르고, 한 번 더 누르면 간다" % String(s.name) })
 	var here = _here_ll()
 	_place_all(cands)
@@ -1401,17 +1487,108 @@ func _draw_nation() -> void:
 		_canvas.draw_circle(p, 14.0, Color(0.75, 0.15, 0.1, 0.25))
 		_canvas.draw_circle(p, 6.0, SEAL)
 		_canvas.draw_arc(p, 9.0, 0, TAU, 24, Color(1, 0.97, 0.9), 2.0)
-	if _fast_sel >= 0:
-		var msg := _fast_ride(_fast_opts[_fast_sel]) + " 타고 %s 가겠소?  Enter/Y · N/Esc" % _fast_label(_fast_opts[_fast_sel])
-		var w := _font.get_string_size(msg, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 40.0
-		var box := Rect2(Vector2((_canvas.size.x - w) / 2.0, 24), Vector2(w, 42))
-		_canvas.draw_rect(box, Color(PAPER, 0.96))
-		_canvas.draw_rect(box, INK, false, 2.0)
-		_canvas.draw_string(_font, box.position + Vector2(20, 28), msg, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, INK)
 	# 10리 자(전국: 1° 위도 ≈ 110km ≈ 262리)
 	_draw_scale_bar(_nk * (4.2 / 110.574))
 
-# ---- 시험: --mapshots=폴더 [--mapzooms] — 불러오기가 끝나면 도시·권역·전국 지도를 찍고(창 그림) 여는 시간을 적는다 ----
+# ---- 시험: --mapshots=폴더 [--mapzooms] [--mapknow] — 불러오기가 끝나면 도시·권역·전국 지도를 찍고(창 그림) 여는 시간을 적는다 ----
+#   --mapzooms: 권역 최소·중간·최대(고을 지도 바로 앞) · 고을 · 고을 최대 · 전국 · 전국 최대 · 역참/노정 확인 상자
+#   --mapknow:  시험 저장에 이 공간의 고을·이름난 곳·고개·건물과 전국 권역·거점을 모두 '가 봄'으로 적는다(이름표 겹침 확인)
+func know_all() -> void:
+	for t in _towns: Discovery.visit(_space, "town:" + String(t[0])); Discovery.visit(Discovery.NATION, "sh:" + String(t[0]))
+	for l in world.region.get("landmarks", []): Discovery.visit(_space, "lm:" + String(l.get("id", l.get("name", ""))))
+	for ps in world.region.get("passes", []): Discovery.visit(_space, "pass:" + String(ps.get("id", ps.get("name", ""))))
+	for it in _items: Discovery.visit(_space, Discovery.bld_key(it.name, it.c))
+	for r in Travel.regions(): Discovery.visit(Discovery.NATION, "region:" + String(r.get("id", "")))
+	var sj = JSON.parse_string(FileAccess.get_file_as_string("res://region_data/strongholds.json"))
+	if sj is Dictionary:
+		for s in sj.get("strongholds", []): Discovery.visit(Discovery.NATION, "sh:" + String(s.name))
+
+# ---- 시험: --maptexttest — 이름표 글 크기가 확대와 상관없는지 · 확대 단계(건물 이름) · 겹침 없음 → MAPTEXTTEST PASS/FAIL ----
+func _redraw_wait() -> void:
+	_canvas.queue_redraw()
+	for i in 3: await get_tree().process_frame
+
+func _set_view(mname: String, kk: float, at = null) -> void:
+	if mname == "nation":
+		if mode != "nation": _show_nation()
+		_nk = kk
+	else:
+		mode = "all"; _k = kk
+		mode = "all" if _k < _city_k() else "city"
+		if at != null: _center = at
+	_after_view()
+
+func _maptexttest() -> void:
+	var m := get_parent()
+	while m._loading: await get_tree().process_frame
+	for i in 20: await get_tree().process_frame
+	know_all()
+	var fails := []
+	if get_viewport().get_visible_rect().size.y < 700: get_tree().root.size = Vector2i(1024, 768)   # 헤드리스: 창 1024×768로 놓고 잰다
+	await get_tree().process_frame
+	print("MAPTEXT viewport ", get_viewport().get_visible_rect().size)
+	toggle()
+	var home = _town_at(Vector2(_player.x, _player.z))
+	if home == null: home = _nearest_town(Vector2(_player.x, _player.z))
+	var hc: Vector2 = home[1] if home != null else Vector2(_player.x, _player.z)
+	var zooms := { all = [_k_min, sqrt(_k_min * _city_k()), _city_k() * 0.97], city = [_city_k(), tier3_k() * 1.05, MAX_K],
+		nation = [_n_fit(), _n_fit() * 3.5, _n_fit() * 12.0] }
+	var allowed := [UiFonts.MAP_HUB, UiFonts.MAP_TOWN, UiFonts.MAP_LABEL, UiFonts.MAP_MINOR, UiFonts.MAP_KEYS]
+	var report := []
+	for mname in ["all", "city", "nation"]:
+		var seen := {}
+		for zi in 3:
+			var kk: float = zooms[mname][zi]
+			_set_view(mname, kk, hc)
+			await _redraw_wait()
+			var tag := "%s[%d] k=%.3f tier=%d" % [mname, zi, kk, _tier()]
+			var n := 0
+			for q in placed:
+				var sz := int(q.size); var h := float((q.rect as Rect2).size.y)
+				if sz < UiFonts.MIN or not sz in allowed: fails.append("%s 글 크기 %d '%s'" % [tag, sz, q.text])
+				var key := String(q.text)
+				if seen.has(key) and (int(seen[key][0]) != sz or absf(float(seen[key][1]) - h) > 0.01):
+					fails.append("%s '%s' 크기 %d/%.1f ≠ %s" % [tag, key, sz, h, seen[key]])
+				seen[key] = [sz, h]
+				if not bool(q.get("scale_bar", false)): n += 1
+			for gsz in glyph_sizes:
+				if int(gsz) != UiFonts.MAP_GLYPH: fails.append("%s 기호 글자 %d" % [tag, gsz])
+			for a in placed.size():
+				for b in range(a + 1, placed.size()):
+					if (placed[a].rect as Rect2).grow(-1.0).intersects((placed[b].rect as Rect2).grow(-1.0)):
+						fails.append("%s 겹침 '%s'·'%s'" % [tag, placed[a].text, placed[b].text])
+			var t3 := placed.filter(func(q): return int(q.get("tier", 1)) == 3).size()
+			if n == 0 and zi < 2: fails.append("%s 이름표 없음" % tag)   # 최대 배율은 빈 땅일 수 있다
+			if _tier() < 3 and t3 > 0: fails.append("%s 먼 배율인데 건물 이름 %d" % [tag, t3])
+			report.append("%s labels=%d glyphs=%d buildings=%d" % [tag, n, glyph_sizes.size(), t3])
+	# 건물 이름: 가까이(최대 배율, 그 건물 가운데)에서 보이고 멀리(권역 최소)에서는 없다 — 글 크기는 같다
+	var bld := ""
+	var bsize := -1
+	for it in _items:
+		if int(it.tier) != 3: continue
+		_set_view("city", MAX_K, it.c)
+		await _redraw_wait()
+		for q in placed:
+			if String(q.text) == String(it.name) and int(q.get("tier", 1)) == 3: bld = String(it.name); bsize = int(q.size)
+		if bld != "":
+			_set_view("all", _k_min, it.c)
+			await _redraw_wait()
+			for q in placed:
+				if String(q.text) == bld: fails.append("멀리서도 건물 이름 '%s'" % bld)
+			_set_view("city", tier3_k() * 1.05, it.c)
+			await _redraw_wait()
+			for q in placed:
+				if String(q.text) == bld and int(q.size) != bsize: fails.append("건물 이름 크기 %d ≠ %d" % [q.size, bsize])
+			break
+	if bld == "": fails.append("가까이 확대해도 건물 이름이 하나도 없다")
+	for r in report: print("MAPTEXT ", r)
+	print("MAPTEXT building '%s' size=%d tier2_k=%.3f tier3_k=%.3f city_k=%.3f k_min=%.3f" % [bld, bsize, tier2_k(), tier3_k(), _city_k(), _k_min])
+	if fails.is_empty(): print("MAPTEXTTEST PASS zoom-invariant sizes, tiers, no overlap (%d views)" % report.size())
+	else:
+		for f in fails.slice(0, 30): print("MAPTEXT fail ", f)
+		print("MAPTEXTTEST FAIL %d" % fails.size())
+	m._quit()
+
 func _mapshots(dir: String) -> void:
 	var m := get_parent()
 	while m._loading: await get_tree().process_frame
@@ -1419,29 +1596,50 @@ func _mapshots(dir: String) -> void:
 	var out: String = m._abs(dir)
 	DirAccess.make_dir_recursive_absolute(out)
 	var tag := _space + String(m.args.get("maptag", ""))
+	if m.args.has("mapknow"): know_all()
 	var shots := []
 	var t0 := Time.get_ticks_usec()
 	toggle()
 	print("MAPSHOT open_ms=%.1f mode=%s" % [(Time.get_ticks_usec() - t0) / 1000.0, mode])
 	var home = _town_at(Vector2(_player.x, _player.z))
 	if home == null: home = _nearest_town(Vector2(_player.x, _player.z))
+	for t in _towns:   # --mapcenter=고을 이름: 그 고을을 가운데로(빽빽한 도성 안 솎기 확인)
+		if m.args.has("mapcenter") and String(t[0]) == String(m.args.mapcenter): home = t
 	shots.append(["city", 1.0])
-	if m.args.has("mapzooms"): shots += [["city_min", 0.0], ["city_mid", 0.5], ["city_max", 99.0]]
+	if m.args.has("mapzooms"): shots += [["all_min", 10.0], ["all_mid", 11.0], ["all_max", 12.0], ["city_t3", 13.0], ["city_close", 14.0], ["city_max", 99.0]]
 	shots.append(["all", -1.0]); shots.append(["nation", -2.0])
-	if m.args.has("mapzooms"): shots.append(["nation_max", 98.0])
+	if m.args.has("mapzooms"): shots += [["nation_max", 98.0], ["nation_confirm", 97.0], ["station_confirm", 96.0]]
 	for s in shots:
 		if s[1] == -1.0: show_mode("all")
 		elif s[1] == -2.0:
 			var t1 := Time.get_ticks_usec(); show_mode("nation")
 			print("MAPSHOT nation_ms=%.1f" % ((Time.get_ticks_usec() - t1) / 1000.0))
 		elif s[1] == 1.0 and mode != "city" and home != null: _show_city(home)
-		elif s[1] == 0.0: _show_city(home); _zoom(0.0001, _canvas.size / 2.0)
-		elif s[1] == 0.5: _show_city(home); _k = sqrt(_city_k() * MAX_K); _zoom(1.0, _canvas.size / 2.0)
+		elif s[1] in [10.0, 11.0, 12.0]:
+			_show_all()
+			var kk: float = { 10.0: _k_min, 11.0: sqrt(_k_min * _city_k() * 0.97), 12.0: _city_k() * 0.97 }[s[1]]
+			_zoom(kk / _k, _canvas.size / 2.0)
+		elif s[1] == 13.0 or s[1] == 14.0:   # 3단계(건물 이름) 문턱 조금 위 · 더 가까이 — 고을 가운데
+			_show_city(home)
+			_k = tier3_k() * (1.15 if s[1] == 13.0 else 2.2)
+			_center = (home[2] as Rect2).get_center() if home != null else _center
+			_zoom(1.0, _canvas.size / 2.0)
 		elif s[1] == 99.0: _show_city(home); _zoom(10000.0, _canvas.size / 2.0)
 		elif s[1] == 98.0: _zoom(10000.0, _canvas.size / 2.0)
+		elif s[1] == 97.0:
+			_show_nation()
+			if not _fast_opts.is_empty(): _fast_pick(0)
+		elif s[1] == 96.0:
+			_fast_sel = -1; _show_all()
+			_refresh_dynamic()
+			if not _stations.is_empty(): _station_pick(0)
 		for i in 4: await RenderingServer.frame_post_draw
 		var img := get_viewport().get_texture().get_image()
 		if img != null:
 			var f: String = out.path_join("%s_%s.png" % [tag, s[0]])
-			img.save_png(f); print("MAPSHOT ", f, " k=", _k, " labels=", _taken.size(), " cases=", _leads.size())
+			img.save_png(f); print("MAPSHOT ", f, " mode=", mode, " k=", _k if mode != "nation" else _nk, " labels=", _taken.size(), " cases=", _leads.size())
+			for q in placed:   # 이름표 자리(화면 픽셀) — 찍은 그림에서 글 높이를 잴 때
+				var rr: Rect2 = q.rect
+				print("MAPLABEL %s|%s|%d|%d|%d|%d|%d" % [s[0], q.text, q.size, roundi(rr.position.x + _canvas.position.x), roundi(rr.position.y + _canvas.position.y), roundi(rr.size.x), roundi(rr.size.y)])
+	_st_sel = -1; _fast_sel = -1
 	if m.args.has("quit"): m._quit()
