@@ -16,6 +16,7 @@ extends RefCounted
 
 const P2 := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2a_data.gd")   # PART II-A(새 사또 — 행차~옥의 첫 밤)
 const P2B := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2b_data.gd")  # PART II-B(관아 일 셋 ~ 광한루 — 출두)
+const SIDE := preload("res://story/namwon_chunhyang/namwon_chunhyang_side_data.gd")  # 끝난 뒤 관아 곁일 「창고 장부 대조」(Activity 재사용 시연 — 데이터만)
 const JAR := "ITM_CH_JAR"        # 장면 소품(§10 작은 술병과 찬합) — 월매 집에 닿으면 내려놓는다
 const LETTER := "ITM_CH_LETTER"  # 장면 소품(§13 A 봉한 편지 — 열 수 없다)
 
@@ -137,6 +138,9 @@ static func data() -> Dictionary:
 	out.props += P2B.props()
 	out.events.merge(P2B.events())
 	out["problems"] = P2B.problems()
+	# 끝난 뒤(단계 done) 관아 곁일 하나 — 같은 문제 계약을 데이터만으로(사건 코드 호출 없음)
+	out.actors += SIDE.actors()
+	out.problems.merge(SIDE.problems())
 	return out
 
 static func anchors() -> Dictionary:
@@ -166,7 +170,7 @@ static func anchors() -> Dictionary:
 		"jumo": [-3001.0, 227.6], "miller": [-3179.6, -313.4], "hunter": [-3192.5, -133.5], "neighbor_after": [-3203.0, -127.5],
 	}
 	# 배치 파일의 PART II 앵커(관아·사령 줄·기생 줄·옥 — 같은 값을 두 번 적지 않음) · II-A 연출 자리. 이미 있는 이름은 PART I 값이 이긴다
-	for src in [P2.placement_anchors(), P2.anchors(), P2B.anchors()]:
+	for src in [P2.placement_anchors(), P2.anchors(), P2B.anchors(), SIDE.anchors()]:
 		for k in src:
 			if not a.has(k): a[k] = src[k]
 	return a

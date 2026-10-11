@@ -166,3 +166,4 @@
 
 - **오누이(Stage 1, 서사형 튜토리얼)** — 문제 `beast_way`: 길가 관찰 셋 중 둘 → "어느 쪽 흔적을 먼저 확인할까?" → 서쪽 숲은 헛걸음·추가 흔적 뒤 같은 결과. 보고서 `seolhwa_godot/docs/reports/gameplay-architecture-first-pass.md` §3.
 - **춘향 II-B ACT 13(Stage 2의 첫 문제)** — 술·쌀·상소를 같은 계약으로(순서 자유). 보고서 §5(선언 방법).
+- **재사용 시연 — 관아 창고 장부 대조(§21)** — 춘향이 끝난 뒤 남원 관아 곁일 하나를 데이터 파일 하나(`story/namwon_chunhyang/namwon_chunhyang_side_data.gd`)로: 본 것 둘 + 들은 것 + 비교 + 결정 + fail_forward. 공통 코드·사건 스크립트 변경 없음. 보고서 §20.

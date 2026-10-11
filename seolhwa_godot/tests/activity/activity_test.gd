@@ -7,6 +7,9 @@
 #   D 저장/불러오기: 관찰 하나 뒤 JSON 저장 → 새 상태로 읽기 → 마친 관찰은 다시 서지 않고 결정은 아직 · 이어서 둘째 관찰 → 결정 한 번 ·
 #     결정 뒤 저장 → 결정 유지 · 다시 묻지 않음 · 물건을 되돌리지 않음
 #   E 문제 단계는 FIXED_BEAT(event)·phase·outcome을 건드리지 않는다
+#   F 재사용 시연(브리프 §21): 춘향이 끝난 뒤 관아 곁일 「창고 장부 대조」(story/namwon_chunhyang/namwon_chunhyang_side_data.gd)가
+#     같은 계약을 데이터만으로 쓴다 — 계약 통과 · 꼴(본 것 둘 + 들은 것 + 비교 + 결정 + fail_forward) · call 없음 · 사건 스크립트·공통 코드가 이 일을 모름 ·
+#     끝나기 전엔 안 섬 · 실제 실행(곧장 · fail_forward) · 저장/불러오기 · 한 번만
 #   가짜 문제는 이 파일 안 사전 — 등록부에도 놀이 콘텐츠에도 없다.
 #   끝 줄: ACTIVITYTEST PASS n / ACTIVITYTEST FAIL n
 extends SceneTree
@@ -135,6 +138,7 @@ func _init() -> void:
 	await _runtime()
 	await _saveload()
 	_beats()
+	await _reuse()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
 	print("ACTIVITYTEST %s %d" % ["PASS" if fails == 0 else "FAIL", n if fails == 0 else fails])
 	quit(0 if fails == 0 else 1)
@@ -270,3 +274,77 @@ func _beats() -> void:
 	ok(not keys.has("event") and not keys.has("phase") and not keys.has("outcome") and not keys.has("ending"), "만든 단계에 event·phase·outcome·ending 없음")
 	var nw := CaseRegistry.load_data("namwon")
 	ok(Problems.validate(nw).is_empty() and nw.has("activity_steps"), "실제 사건 데이터(오누이) 계약 통과")
+
+# ---- F 재사용 시연 — 관아 창고 장부 대조(실제 사건 데이터) ----
+const SIDE_PATH := "res://story/namwon_chunhyang/namwon_chunhyang_side_data.gd"
+
+func _side_mk(data: Dictionary, phase: String) -> Array:
+	var d := FakeDirector.new()
+	d.data = data
+	d.S = StoryState.new("")
+	d.S.phase = phase
+	d.runner = StoryRunner.new(d, d.S)
+	return [d, d.S, d.runner]
+
+func _reuse() -> void:
+	print("F 재사용 시연 — 관아 창고 장부 대조")
+	var data := CaseRegistry.load_data("namwon_chunhyang")
+	var p: Dictionary = data.get("problems", {}).get("ledger", {})
+	ok(not p.is_empty() and Problems.validate(data).is_empty(), "춘향 사건 데이터에 곁일 ledger · 계약 통과 %s" % str(Problems.validate(data).slice(0, 2)))
+	var kinds := []
+	for a in p.get("activities", []): kinds.append("%s/%s" % [a.type, a.get("kind", "")])
+	ok(kinds == ["inspect/seen", "inspect/seen", "inspect/heard", "compare/", "decide/"] and (p.get("fail_forward", {}) as Dictionary).size() == 1,
+		"꼴: 본 것 둘 + 들은 것 + 비교 + 결정 + fail_forward (%s)" % [kinds])
+	var side_src := FileAccess.get_file_as_string(SIDE_PATH)
+	var keys := {}
+	Problems._find_keys(p, keys)
+	ok(not keys.has("call") and not side_src.contains("\"call\""), "곁일 데이터에 사건 코드 호출(call) 없음 — 데이터만")
+	var leaks := []
+	for f in ["namwon_chunhyang_case.gd", "namwon_chunhyang_p2a.gd", "namwon_chunhyang_p2b.gd"]:
+		var src := FileAccess.get_file_as_string("res://story/namwon_chunhyang/" + f)
+		if src.contains("ledger"): leaks.append(f)
+	for f in ["res://scripts/story/problems.gd", "res://scripts/story/story_runner.gd", "res://scripts/story/story_director.gd"]:
+		if FileAccess.get_file_as_string(f).contains("ledger"): leaks.append(f.get_file())
+	ok(leaks.is_empty(), "사건 스크립트·공통 코드가 곁일을 모른다(글자 'ledger' 없음 %s)" % [leaks])
+	ok(Validator.guard_errors(data).is_empty() and Validator.saveload_errors("namwon_chunhyang", data).is_empty(), "검사기 — 중복 완료 막음 · 저장/불러오기")
+	var objs := {}
+	for o in data.objects:
+		if String(o.get("problem", "")) == "ledger": objs[String(o.id)] = o
+	var trig := {}
+	for tr in data.triggers:
+		if String(tr.get("problem", "")) == "ledger": trig = tr
+	ok(objs.has("pb_ledger_book") and objs.has("pb_ledger_stock") and objs.has("pb_ledger_ff_back_shed") and not trig.is_empty(), "조사 대상 셋(장부·가마니·뒤 곳간) · 결정 자리 하나")
+	# 끝나기 전(단계 jail · epilogue)엔 안 선다
+	for ph in ["jail", "feast", "epilogue"]:
+		var r0 = _side_mk(data, ph)[2]
+		ok(not r0.cond(objs.pb_ledger_book.when) and not r0.cond(objs.pb_ledger_stock.when), "단계 %s — 곁일 안 섬(본 흐름 방해 없음)" % ph)
+	# 곧장: 장부 → 창고지기 → 가마니 → 비교 → 결정(적는다)
+	var m := _side_mk(data, "done"); var d = m[0]; var S = m[1]; var r = m[2]
+	ok(r.cond(objs.pb_ledger_book.when), "끝난 뒤(done) — 장부가 선다")
+	await _run(r, objs.pb_ledger_book.steps)
+	ok(r.pa("ledger", "book") and S.has_clue("pb_ledger_book") and d.ui.choices.is_empty(), "장부(본 것) · 하나로는 안 물음")
+	var keeper: Dictionary = {}
+	for ac in data.actors:
+		if String(ac.id) == "ledger_keeper": keeper = ac
+	await _run(r, keeper.talk[0].steps)
+	ok(S.has_clue("pb_ledger_keeper") and String(data.clues.pb_ledger_keeper.kind) == "heard" and String(data.clues.pb_ledger_keeper.by) == "창고지기", "창고지기의 말(들은 것 + 말한 사람)")
+	d.ui.pick = { "장부를 어떻게 할까?": "센 대로" }
+	await _run(r, objs.pb_ledger_stock.steps)
+	ok(S.is_flag("ledger_gap_seen") and r.pd("ledger") == "note" and S.is_flag("ledger_noted") and r.pdone("ledger") and S.is_flag("ledger_check_done"), "비교 → 결정 한 번 → 풀림(ledger_noted)")
+	var nc: int = S.clues.size()
+	await _run(r, objs.pb_ledger_stock.steps + [{ "activity": "ledger.handle" }, { "activity": "ledger.gap" }])
+	ok(S.clues.size() == nc and d.ui.choices.size() == 1, "두 번 불러도 한 번")
+	ok(not S.vars.has("CASE_NAMWON_CHUNHYANG_OUTCOME") or String(S.vars.CASE_NAMWON_CHUNHYANG_OUTCOME) == "", "곁일은 결말 변수를 건드리지 않는다")
+	# fail_forward 갈래 + 저장/불러오기
+	var m2 := _side_mk(data, "done"); var d2 = m2[0]; var S2 = m2[1]; var r2 = m2[2]
+	d2.ui.pick = { "장부를 어떻게 할까?": "뒤 곳간" }
+	await _run(r2, objs.pb_ledger_book.steps)
+	var l := _reload(d2, S2); var d3 = l[0]; var S3 = l[1]; var r3 = l[2]
+	d3.ui.pick = d2.ui.pick
+	ok(r3.pa("ledger", "book") and not r3.cond(objs.pb_ledger_book.when), "장부 본 뒤 저장 → 불러와도 다시 안 섬")
+	await _run(r3, objs.pb_ledger_stock.steps)
+	ok(r3.pd("ledger") == "shed" and not r3.pdone("ledger") and r3.cond(objs.pb_ledger_ff_back_shed.when), "뒤 곳간 갈래 — 안 막힘, 헛걸음 자리 열림")
+	var l4 := _reload(d3, S3); var S4 = l4[1]; var r4 = l4[2]
+	ok(r4.pd("ledger") == "shed" and not r4.cond(trig.when) and r4.cond(objs.pb_ledger_ff_back_shed.when), "결정 뒤 저장 → 결정 유지 · 다시 안 물음 · 자리 그대로")
+	await _run(r4, objs.pb_ledger_ff_back_shed.steps)
+	ok(S4.has_clue("pb_ledger_ff_back_shed") and r4.pdone("ledger") and S4.is_flag("ledger_check_done") and S4.is_flag("ledger_noted"), "헛걸음 → 추가 흔적 → 같은 결과")
