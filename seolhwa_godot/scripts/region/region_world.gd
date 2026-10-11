@@ -103,6 +103,11 @@ var _h_orig: PackedByteArray     # 손대기 전 높이·토지이용(다시 읽
 var _l_orig: PackedByteArray
 var _terrain_dirty := false
 var _veg_excl := []             # [{c: Vector2, ry, half: Vector2}] 월드
+# 조건부 식생 비우기(F-11 규칙 잠금 — when 항목이 거짓이면 기본 세계에 흔적이 없다): 키 → { c, ry, half, on }.
+#   식생은 그대로 흩뿌리고(_veg_excl에 넣지 않는다), on인 동안만 그 안의 식생 인스턴스를 숨기고(크기 0) 충돌체를 끈다. off면 되살린다(지우거나 다시 짓지 않는다)
+var _veg_cond := {}
+var veg_cond_hidden := 0         # 지금 숨긴 식생 인스턴스 수(시험)
+var _cond_hid := {}              # [MultiMesh id, 번호] → true — 가림 처리(_cut)가 되살리지 않게
 var _walk_grid := {}            # 칸 → [walk]
 var _walks := []
 var tile_listener := Callable()
@@ -1537,7 +1542,10 @@ func _poll_jobs() -> void:
 		if not tiles.has(t) or tiles[t].lod != 0 or tiles[t].gen != it[2]:
 			if e.node != null and not e.node.is_inside_tree(): e.node.free()
 			continue
+		var b0: PackedFloat32Array = e.get("buf", PackedFloat32Array())
 		_make_node(e)
+		if not b0.is_empty() and _veg_cond_touches(e.rect): e.src = b0   # 조건부 식생 비우기 영역에 걸친 묶음은 원래 자료를 지닌다(숨김·되살림·셈)
+		if not _veg_cond.is_empty(): _veg_cond_entry(e)
 		e.node.visible = false
 		e.shown = false
 		scatter_root.add_child(e.node)
@@ -1564,7 +1572,9 @@ func _poll_jobs() -> void:
 		if lods.has(1): st.has1 = true
 		if lods.has(0) or not _scatter_grid.has(t):
 			var g := {}
-			for c in hold.get("colliders", []): _grid_insert(g, c)
+			for c in hold.get("colliders", []):
+				_grid_insert(g, c)
+				if not _veg_cond.is_empty(): c.off = _in_veg_cond(Vector2(float(c.get("x", 0.0)), float(c.get("z", 0.0))))
 			_scatter_grid[t] = g
 		for e in entries: _attach_q.append([t, e, st.gen])
 		stats.scatter_done += 1
@@ -1806,7 +1816,7 @@ func blocked(x: float, z: float, r: float) -> bool:
 				if _hit(c, x, z, r): return true
 			if sg != null:
 				for c in sg.get(k, []):
-					if _hit(c, x, z, r): return true
+					if not c.get("off", false) and _hit(c, x, z, r): return true
 	# 타일 경계 근처면 옆 타일 식생도
 	var lx := x - t.x * TILE; var lz := z - t.y * TILE
 	if lx < GRID or lz < GRID or lx > TILE - GRID or lz > TILE - GRID:
@@ -1816,7 +1826,7 @@ func blocked(x: float, z: float, r: float) -> bool:
 			for j in range(cj - 1, cj + 2):
 				for i in range(ci - 1, ci + 2):
 					for c in g2.get(Vector2i(i, j), []):
-						if _hit(c, x, z, r): return true
+						if not c.get("off", false) and _hit(c, x, z, r): return true
 	return false
 
 func _in_river(x: float, z: float, r: float) -> bool:
@@ -2000,12 +2010,15 @@ func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
 				if p.y < player.z - 0.6: continue
 				var ent: Dictionary = e[0]
 				if ent.mm == null: continue  # 아직 안 붙음
+				if ent.has("hid") and (ent.hid as Dictionary).has(e[1]): continue   # 조건부 식생 비우기로 숨긴 것
 				var key := [t, ent.mm.get_instance_id(), e[1]]
 				if not _cut.has(key): _cut[key] = { mm = ent.mm, i = e[1], xf = e[2], k = 1.0, want = 0.0 }
 				else: _cut[key].want = 0.0
 	var a := 1.0 - exp(-dt * 10.0)
 	for key in _cut.keys():
 		var c: Dictionary = _cut[key]
+		if not _cond_hid.is_empty() and _cond_hid.has([c.mm.get_instance_id(), c.i]):
+			_cut.erase(key); continue
 		var nk: float = c.k + (c.want - c.k) * a
 		if absf(nk - c.want) < 0.02: nk = c.want
 		if nk != c.k:
@@ -2032,6 +2045,9 @@ func reset_edits() -> void:
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
 	pbytes = _p_roads.duplicate(); _paint_dirty = true
 	_veg_excl.clear(); _walk_grid.clear(); _walks.clear()
+	for k in _veg_cond: _veg_cond[k].on = false
+	_veg_cond_apply_all()
+	_veg_cond.clear()
 	_urban_veg()
 	_crossings = _crossings_all.duplicate()
 	_terrain_dirty = true
@@ -2155,6 +2171,96 @@ func in_pond(x: float, z: float) -> bool:
 	for pd in _ponds:
 		if pd.bb.has_point(p) and Geometry2D.is_point_in_polygon(p, pd.poly): return true
 	return false
+
+# ---- 조건부 식생 비우기(F-11): 배치 when 항목의 clear_veg. 켜면 숨기고 끄면 되살린다 ----
+func add_veg_cond(key: String, c: Vector2, ry: float, half: Vector2) -> void:
+	_veg_cond[key] = { c = c, ry = ry, half = half, on = false, R = half.length() }
+
+func set_veg_cond(key: String, on: bool) -> void:
+	var vc = _veg_cond.get(key)
+	if vc == null or bool(vc.on) == on: return
+	vc.on = on
+	_veg_cond_apply_all(Rect2(vc.c - Vector2(vc.R, vc.R), Vector2(vc.R, vc.R) * 2.0))
+
+func _in_veg_cond(p: Vector2, pad := 0.0) -> bool:
+	for k in _veg_cond:
+		var e: Dictionary = _veg_cond[k]
+		if not e.on: continue
+		if absf(p.x - e.c.x) > e.R + pad or absf(p.y - e.c.y) > e.R + pad: continue
+		var l := _to_local(p - e.c, cos(e.ry), sin(e.ry))
+		if absf(l.x) <= e.half.x + pad and absf(l.y) <= e.half.y + pad: return true
+	return false
+
+# 영역(없으면 전부)에 걸친 식생 묶음·충돌체를 지금 켜진 조건부 영역에 맞춘다
+func _veg_cond_apply_all(area := Rect2()) -> void:
+	var all := area.size == Vector2.ZERO
+	for t in tiles:
+		for e in tiles[t].scatter_nodes:
+			if all or (e.rect as Rect2).grow(1.0).intersects(area) or e.has("hid"): _veg_cond_entry(e)
+		var g = _scatter_grid.get(t)
+		if g == null: continue
+		for cell in g:
+			for c in g[cell]:
+				var p := Vector2(float(c.get("x", 0.0)), float(c.get("z", 0.0)))
+				if c.get("type", "circle") != "circle": p = Vector2((float(c.minX) + float(c.maxX)) * 0.5, (float(c.minZ) + float(c.maxZ)) * 0.5)
+				if all or area.grow(1.0).has_point(p) or c.get("off", false): c.off = _in_veg_cond(p)
+	veg_cond_hidden = 0
+	for t in tiles:
+		for e in tiles[t].scatter_nodes:
+			if e.has("hid"): veg_cond_hidden += (e.hid as Dictionary).size()
+
+func _veg_cond_touches(r: Rect2) -> bool:
+	for k in _veg_cond:
+		var e: Dictionary = _veg_cond[k]
+		if Rect2(e.c - Vector2(e.R, e.R), Vector2(e.R, e.R) * 2.0).grow(1.0).intersects(r.grow(1.0)): return true
+	return false
+
+# 묶음의 i번째 인스턴스 원래 변환(src 자료가 있으면 거기서 — 헤드리스에서도 같다)
+static func _src_xf(e: Dictionary, i: int) -> Transform3D:
+	var src: PackedFloat32Array = e.get("src", PackedFloat32Array())
+	if src.is_empty():
+		var mm: MultiMesh = e.mm
+		return mm.get_instance_transform(i)
+	var o: int = i * (12 + (4 if e.colors else 0) + (4 if e.custom else 0))
+	return Transform3D(Basis(Vector3(src[o], src[o + 4], src[o + 8]), Vector3(src[o + 1], src[o + 5], src[o + 9]), Vector3(src[o + 2], src[o + 6], src[o + 10])),
+		Vector3(src[o + 3], src[o + 7], src[o + 11]))
+
+# 묶음 하나: 숨길 인스턴스는 크기 0(원래 변환은 src 자료 또는 e.hid), 되살릴 것은 원래 변환으로
+func _veg_cond_entry(e: Dictionary) -> void:
+	var mm: MultiMesh = e.get("mm")
+	if mm == null: return
+	if not e.has("src") and not e.has("hid") and not _veg_cond_touches(e.rect): return
+	var hid: Dictionary = e.get("hid", {})
+	var base: Transform3D = e.xf
+	for i in mm.instance_count:
+		var xf: Transform3D = hid[i] if hid.has(i) else _src_xf(e, i)
+		var w := base * xf.origin
+		var want := _in_veg_cond(Vector2(w.x, w.z), 0.5)
+		if want and not hid.has(i):
+			hid[i] = xf
+			_cond_hid[[mm.get_instance_id(), i]] = true
+			mm.set_instance_transform(i, Transform3D(xf.basis.scaled_local(Vector3(0.001, 0.001, 0.001)), xf.origin))
+		elif not want and hid.has(i):
+			mm.set_instance_transform(i, xf)
+			hid.erase(i)
+			_cond_hid.erase([mm.get_instance_id(), i])
+	if hid.is_empty(): e.erase("hid")
+	else: e.hid = hid
+
+# 영역 안 식생 인스턴스 수 { total, hidden } — 시험(가까운 묶음 lod 0만, 원래 자료 src를 지닌 묶음)
+func veg_count(rect: Rect2) -> Dictionary:
+	var tot := 0; var hidn := 0
+	for t in tiles:
+		for e in tiles[t].scatter_nodes:
+			if e.lod != 0 or e.get("mm") == null or not e.has("src") or not (e.rect as Rect2).grow(1.0).intersects(rect): continue
+			var mm: MultiMesh = e.mm
+			var hid: Dictionary = e.get("hid", {})
+			for i in mm.instance_count:
+				var w: Vector3 = e.xf * _src_xf(e, i).origin
+				if rect.has_point(Vector2(w.x, w.z)):
+					tot += 1
+					if hid.has(i): hidn += 1
+	return { total = tot, hidden = hidn }
 
 func add_veg_exclusion(c: Vector2, ry: float, half: Vector2) -> void:
 	_veg_excl.append({ c = c, ry = ry, half = half })

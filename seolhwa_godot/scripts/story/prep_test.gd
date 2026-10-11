@@ -179,9 +179,91 @@ func run() -> void:
 	crowd.force("dano_market", null)
 	await main._wait_frames(2)
 	_check(not crowd.is_shown("dano_market"), "강제 풀면 when대로(꺼짐)")
+	# ---- E. F-11 규칙 잠금 — 조건부 식생 비우기(거짓이면 흔적 없음: 식생이 그대로, 참이면 숨김, 다시 거짓이면 되살림) ----
+	await _veg_cond_checks()
+	# ---- F. 확정 8A 양옆 — 사령 줄이 틀 양쪽 끝에 대칭으로 보이고 가운데 축은 비었다(4:3 창 기준) ----
+	_sides_8a_checks()
 	if fails.is_empty(): print("PREPTEST PASS %d" % ok)
 	else: print("PREPTEST FAIL %d/%d — %s" % [fails.size(), ok + fails.size(), "; ".join(fails)])
 	main._quit()
+
+const LAWN := Rect2(-3328.0, 425.0, 62.0, 15.5)       # 광한루 앞 잔디(단오 마당 ti_dano_ground 안쪽)
+const GWANA_YARD := Rect2(-3156.0, 221.0, 13.0, 12.5)  # 관아 바깥마당 동쪽(추수 물자 자리)
+
+func _veg_cond_checks() -> void:
+	var w = main.world
+	_check(int(main.placement.stats.get("veg_cond", 0)) >= 30, "조건부 식생 비우기 영역 등록(%d)" % int(main.placement.stats.get("veg_cond", 0)))
+	await _go(-3297.0, 433.0)
+	var a0: Dictionary = w.veg_count(LAWN)
+	print("PREPTEST veg lawn before=", a0)
+	_check(int(a0.total) > 0 and int(a0.hidden) == 0, "사건 전 광한루 앞 잔디에 식생이 있다(%s)" % a0)
+	await _fake({ case_id = "namwon_chunhyang", cases = { namwon_chunhyang = { phase = "dano" } }, vars = {} })
+	var a1: Dictionary = w.veg_count(LAWN)
+	_check(int(a1.total) == int(a0.total) and int(a1.hidden) > 0, "단오 차림 켜짐 → 그 자리 식생 숨김(지우지 않음 %s)" % a1)
+	_check(not _veg_blocked_in(LAWN), "켜진 차림 자리 식생 충돌체 꺼짐")
+	await _fake({ case_id = "namwon_chunhyang", cases = { namwon_chunhyang = { phase = "farewell" } }, vars = {} })
+	var a2: Dictionary = w.veg_count(LAWN)
+	print("PREPTEST veg lawn dano=", a1, " after=", a2)
+	_check(int(a2.total) == int(a0.total) and int(a2.hidden) < int(a1.hidden), "단계가 끝나면 단오 마당 식생 되살림(%s)" % a2)
+	await _fake(null)
+	var a3: Dictionary = w.veg_count(LAWN)
+	_check(int(a3.hidden) == 0 and int(a3.total) == int(a0.total), "실제 상태(차림 없음) → 숨긴 식생 0(%s)" % a3)
+	await _go(-3150.0, 236.0)
+	var g0: Dictionary = w.veg_count(GWANA_YARD)
+	await _fake({ case_id = "namwon_chunhyang", cases = { namwon_chunhyang = { phase = "feast" } }, vars = {} })
+	var g1: Dictionary = w.veg_count(GWANA_YARD)
+	await _fake(null)
+	var g2: Dictionary = w.veg_count(GWANA_YARD)
+	print("PREPTEST veg gwana before=", g0, " feast=", g1, " after=", g2)
+	_check(int(g0.hidden) == 0 and int(g2.hidden) == 0 and int(g2.total) == int(g0.total), "관아 바깥마당: 사건 전·뒤 식생 그대로(%s → %s)" % [g0, g2])
+	_check(int(g0.total) == 0 or int(g1.hidden) > 0, "관아 바깥마당: 추수·잔치 차림이 서면 그 자리만 숨김(%s)" % g1)
+
+func _veg_blocked_in(r: Rect2) -> bool:
+	var sg: Dictionary = main.world._scatter_grid
+	for t in sg:
+		for cell in sg[t]:
+			for c in sg[t][cell]:
+				var p := Vector2(float(c.get("x", 0.0)), float(c.get("z", 0.0)))
+				if not c.get("off", false) and r.grow(-2.0).has_point(p) and main.world._in_veg_cond(p): return true
+	return false
+
+const CAM_8A := { focus = Vector2(-3162.1, 212.0), pitch = 58.0, distance = 21.0, fov = 32.0 }
+
+# 확정 8A 틀(4:3)에서 자리의 가로 위치 -1..1(밖이면 절댓값 > 1)
+func _ndc_x_8a(at: Vector2, h := 0.9) -> float:
+	var cam: Camera3D = main.cam
+	main.rig.shot = null
+	main.rig.focus = { x = CAM_8A.focus.x, z = CAM_8A.focus.y }
+	main.rig.override = { pitch = CAM_8A.pitch, distance = CAM_8A.distance, fov = CAM_8A.fov, lookAhead = 0.0, aimZ = 0.0 }
+	main.rig.update(0, main.player_pos, main.player.facing, null, true)
+	var P := Vector3(at.x, main.world.height_at(at.x, at.y) + h, at.y)
+	var q: Vector3 = cam.global_transform.affine_inverse() * P
+	return (q.x / -q.z) / (tan(deg_to_rad(cam.fov) * 0.5) * 4.0 / 3.0)
+
+func _sides_8a_checks() -> void:
+	var an: Dictionary = {}
+	var d = JSON.parse_string(FileAccess.get_file_as_string("res://region_data/JL_NAMWON_UNBONG/placement_story_namwon_chunhyang.json"))
+	for k in d.anchors: an[k] = Vector2(float(d.anchors[k].at[0]), float(d.anchors[k].at[1]))
+	var w_x: Array = []; var e_x: Array = []
+	for i in 4:
+		w_x.append(_ndc_x_8a(an["ch_saryeong_w%d" % i])); e_x.append(_ndc_x_8a(an["ch_saryeong_e%d" % i]))
+	w_x.append(_ndc_x_8a(an.ch_player_saryeong)); e_x.append(_ndc_x_8a(an.ch_saryeong_e4))
+	print("PREPTEST 8A sides west=", w_x.map(func(v): return snappedf(v, 0.01)), " east=", e_x.map(func(v): return snappedf(v, 0.01)))
+	_check(w_x.all(func(v): return v < -0.55 and v > -1.08) and e_x.all(func(v): return v > 0.55 and v < 1.08), "8A 사령 줄 양쪽 끝에 보임(가장자리 살짝 잘림 허용)")
+	var sym := true
+	for i in w_x.size(): sym = sym and absf(w_x[i] + e_x[i]) < 0.08
+	_check(sym, "8A 사령 줄 좌우 대칭")
+	var axis_clear := true
+	for k in an:
+		if String(k).begins_with("ch_saryeong") or String(k).begins_with("ch_gisaeng") or k == "ch_player_saryeong":
+			var p: Vector2 = an[k]
+			if absf(p.x - -3162.1) < 0.8 and p.y > 212.2: axis_clear = false
+	_check(axis_clear, "8A 가운데 축(춘향 → 통로)에 사령·기생 자리 없음")
+	var gx: Array = []
+	for i in 8: gx.append(_ndc_x_8a(an["ch_gisaeng_%d" % i]))
+	_check(gx.all(func(v): return absf(v) < 0.95), "8A 기생 줄 틀 안")
+	_check(absf(_ndc_x_8a(an.ch_chunhyang_center)) < 0.1, "8A 춘향 자리 가운데")
+	_cam_reset()
 
 func _find_item(id: String) -> Dictionary:
 	for f in main.placement.files():
@@ -261,6 +343,11 @@ func _shots() -> void:
 	var want: Array = String(main.args.get("prepshot", "1")).split(",", false)
 	if want.has("1") or want.is_empty(): want = ["jail", "bars12a", "sorghum", "well", "dano1a", "banquet8a", "orijeong", "fps"]
 	main.hour = 11.0; main._apply_time()
+	if "sides8a" in want or "veg" in want:
+		await _wait_load()
+		if "sides8a" in want: await _shot_sides_8a()
+		if "veg" in want: await _shot_veg()
+		main._quit(); return
 	await _wait_load()
 	_hide_placeholders()
 	if "jail" in want:
@@ -329,6 +416,44 @@ func _shots() -> void:
 		_cam_reset()
 	if "fps" in want: await _fps()
 	main._quit()
+
+# 확정 8A 양옆 고침 — 대신 선 그림(사령=pojol, 기생=villager_f, 이방=official, 춘향 자리=child 아닌 villager_f 붉은 테)
+func _shot_sides_8a() -> void:
+	var d = JSON.parse_string(FileAccess.get_file_as_string("res://region_data/JL_NAMWON_UNBONG/placement_story_namwon_chunhyang.json"))
+	var an: Dictionary = {}
+	for k in d.anchors: an[k] = Vector2(float(d.anchors[k].at[0]), float(d.anchors[k].at[1]))
+	await _go(-3162.1, 213.5)
+	main.player.visible = false
+	var tmp := []
+	for i in 4:
+		tmp.append(_stand_in("pojol", an["ch_saryeong_w%d" % i], "right"))
+		tmp.append(_stand_in("pojol", an["ch_saryeong_e%d" % i], "left"))
+	tmp.append(_stand_in("traveler", an.ch_player_saryeong, "right"))
+	tmp.append(_stand_in("pojol", an.ch_saryeong_e4, "left"))
+	for i in 8: tmp.append(_stand_in("villager_f", an["ch_gisaeng_%d" % i], "down"))
+	tmp.append(_stand_in("official", an.ch_ibang, "down"))
+	var ch_kind := "chunhyang" if crowd._ensure_bank("chunhyang") == "chunhyang" else "villager_f"
+	tmp.append(_stand_in(ch_kind, an.ch_chunhyang_center, "up"))
+	_cam(Vector2(-3162.1, 212.0), 58.0, 21.0, 32.0)
+	await main._wait_frames(20)
+	for c in tmp: c.update_char(0.016, main.cam)
+	await _snap("09_8A_sides_fixed")
+	for c in tmp: c.queue_free()
+	_cam_reset()
+
+# 광한루 앞 잔디 식생: 사건 전 / 단오 차림(숨김) / 끝난 뒤(되살림)
+func _shot_veg() -> void:
+	await _go(-3297.0, 446.0)
+	main.player.visible = false
+	_cam(Vector2(-3297.0, 433.0), 42.0, 34.0, 38.0)
+	await _fake({ case_id = "", cases = {}, vars = {} })
+	await _snap("10_lawn_veg_before")
+	await _fake({ case_id = "", cases = { namwon_chunhyang = { phase = "dano" } }, vars = {} })
+	await _snap("11_lawn_veg_dano")
+	await _fake({ case_id = "", cases = { namwon_chunhyang = { phase = "farewell" } }, vars = {} })
+	await _snap("12_lawn_veg_after")
+	await _fake(null)
+	_cam_reset()
 
 func _fps() -> void:
 	Engine.max_fps = 0

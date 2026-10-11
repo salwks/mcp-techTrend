@@ -263,7 +263,7 @@
 | 대화 카메라 | 공통 TALK(38/13.5/38) 위에 `case.talk_camera {pitch, distance, fov 일부}` · `actors[].talk_camera` · `false`로 끄기 | G(F-6 완료) | 구도가 틀어지는 인물만 덮어쓴다 |
 | 카메라 샷 | 단계 `{camera:{pitch, distance, fov, focus}}`, `cutscene`, `rig.shot` | G | 끝나면 `camera(null)`. 사용자 틸트 설정 복원 |
 | 임시 군중 | **축제·잔치·관아 행사처럼 일시적으로 사람이 늘어나는 장면은 공용 이벤트 군중 프리셋(`EventCrowd`, C60)을 쓴다. 도시의 상시 인구 시스템을 새로 만들지 않는다.** 사건 데이터(또는 `placement_story_<case>.json`)에 `crowds: [{ id, preset, area, density, roles, seed, when }]`로 선언 | G(C60 · F-17 완료 — `scripts/story/event_crowd.gd`) | 핵심 인물은 story actor. 인원은 성능 시험 뒤. 기존 `crowd_` actor 관례는 옮길 때까지 유지 |
-| set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` 항목의 `when`(파일 머리 `case`의 단계·플래그·공통 변수, `active()`) | G(F-11 완료 — `scripts/region/placement_gate.gd`, 사건·변수가 바뀔 때만 다시 봄. 늘 있는 시설에는 when을 달지 않는다) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
+| set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` 항목의 `when`(파일 머리 `case`의 단계·플래그·공통 변수, `active()`) | G(F-11 완료 — `scripts/region/placement_gate.gd`, 사건·변수가 바뀔 때만 다시 봄. 늘 있는 시설에는 when을 달지 않는다. **규칙 잠금(2026-10-11): when이 거짓인 조건부 배치는 기본 세계에 흔적을 남기지 않는다** — 터 고르기·마당 흙 없음, `clear_veg`도 조건부(참일 때만 그 자리 식생을 숨기고 충돌체를 끔, 거짓이면 되살림 — 지우거나 다시 짓지 않음, `region_world.add_veg_cond`·`set_veg_cond`)) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | G | `on_load`·`_quit`에서 되돌린다(남원 달 안전장치처럼) |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | G(남원만 씀) | 같은 id 체계(`assets/audio`) |
 | 지도 표지 | `map_leads[]` | G | 들은 행선지만 |
@@ -298,7 +298,7 @@
 | F-8 | `COMPLETE_VARS`·StoryState 기본 vars·reset 목록을 등록부·사건 데이터에서 만들기 | M | C45 |
 | F-9 | 지명 TITLES 하나로(`place_title` ← settlement `title`) | S | C53 |
 | F-10 | 다중 사건: 비활성 사건 인물 층 · 같은 장면 사건 전환 · id 접두사 규칙 · 바뀐 키만 저장. (임시: 남원 오누이 우물·수수밭은 `placement_namwon_local.json` 정적 + `not active('namwon')` — 춘향 2a) | L | C44 |
-| F-11 | ~~set dressing 계약: `placement_story_<case>_<part>.json`에 `when` 붙이기(로더가 조건부로)~~ **완료(춘향 2a)**: `placement_loader` + `placement_gate.gd` | M | C31 · E |
+| F-11 | ~~set dressing 계약: `placement_story_<case>_<part>.json`에 `when` 붙이기(로더가 조건부로)~~ **완료(춘향 2a)**: `placement_loader` + `placement_gate.gd`. 규칙 잠금(춘향 PART I 앞): "when이 거짓인 조건부 배치는 기본 세계에 흔적이 없다" — 식생 비우기도 숨김/되살림 | M | C31 · E |
 | F-12 | 공간 음악·환경음 정책(시간대 낮·밤 고리, 권역 환경음) + 말발굽 `audio_cue` | M | C41 · C42 |
 | F-13 | 탁본 대상도 배·말 E 막음에 넣기(`region_main._story_talking`이 탁본을 모름) | S | C01 |
 | F-14 | 노정 `no_station` 같은 설화 예외를 ROUTE_PROFILE로(`make_stations.NO_STATION_SPACES`) | S | C-4 |

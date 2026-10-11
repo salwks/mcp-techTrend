@@ -15,7 +15,8 @@
 #     다리 y가 null이면 둑 높이(다리 양 끝 지형 평균), 징검다리·나루배·빨래터는 가까운 하천 수면.
 #   - when(F-11, 조건부 배치): 이야기 조건식(ph·f·w·v·active·fn) — 파일 머리 "case"(또는 항목 "case")의 사건 상태로 본다(placement_gate.gd).
 #     조건이 거짓이면 장면에서 떼고 충돌체를 뺀다(지은 노드는 남겨 두었다가 참이 되면 다시 붙인다). 조건은 사건·변수가 바뀔 때만 다시 본다.
-#     when 항목은 땅을 바꾸지 않는다 — 터 고르기·마당 흙 없음. 식생 비우기(clear_veg)만 늘 한다(나타날 때 덤불을 뚫지 않게).
+#     when 항목은 땅을 바꾸지 않는다 — 터 고르기·마당 흙 없음. 거짓이면 기본 세계에 흔적이 없다(규칙 잠금): 식생 비우기(clear_veg)도 조건부 —
+#     참인 동안만 그 자리 식생 인스턴스를 숨기고 충돌체를 끈다(world.add_veg_cond·set_veg_cond — 지우거나 다시 짓지 않고 숨김/되살림).
 #     늘 있는 시설(옥 등)에는 when을 달지 않는다 — 사건 때만 바뀌는 차림(단오 색천·씨름판·추수 물자·잔치 차일)에만.
 #   - placeholder {kit, params}: 키트가 그 kind를 아직 못 지으면(키트 static has_kind(kind)가 false거나 키트가 없으면) 대신 지을 기존 키트.
 #   파일의 "crowds"(EventCrowd, C60)는 읽어 crowds에 모아 두기만 한다 — 세우는 것은 scripts/story/event_crowd.gd.
@@ -184,7 +185,14 @@ func load_all() -> void:
 			stats.flatten += 1
 		if r.clear_veg:
 			var m: float = (FLAT_MARGIN + world.lcell) if r.flatten and not r.get("is_piece", false) else VEG_MARGIN
-			world.add_veg_exclusion(c, r.ry, fp * 0.5 + Vector2(m, m))
+			if r.when != "" and world.has_method("add_veg_cond"):
+				# 조건부(F-11 규칙 잠금): 거짓이면 기본 세계에 흔적이 없다 — 식생은 그대로 두고, 참인 동안만 그 자리 식생을 숨긴다(지우지 않음)
+				var vk := "veg:%s:%d" % [String(r.id), stats.get("veg_cond", 0)]
+				stats.veg_cond = int(stats.get("veg_cond", 0)) + 1
+				world.add_veg_cond(vk, c, r.ry, fp * 0.5 + Vector2(m, m))
+				var wv = world
+				gate.add(vk, r.when, r.case, func(on: bool) -> void: wv.set_veg_cond(vk, on))
+			else: world.add_veg_exclusion(c, r.ry, fp * 0.5 + Vector2(m, m))
 		if r.when != "": continue   # 조건부 항목: 마당 흙을 칠하지 않는다(늘 남는 땅 변화가 되므로)
 		if composite.has(r):
 			# 집 묶음·관아·향교·절은 담 안 마당 전체가 흙
