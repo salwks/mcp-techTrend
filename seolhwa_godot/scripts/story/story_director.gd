@@ -31,8 +31,9 @@ const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ric
 	py_merchant_a = "merchant", py_merchant_b = "peddler", py_swindler = "smuggler", py_swindler_b = "smuggler_b", py_clerk = "official",
 	yigyeom = "elder", courier = "villager_m", courier_b = "villager_m", courier_c = "villager_m", raider = "smuggler", raider_b = "smuggler_b",
 	gwak = "elder", simbang = "shaman", jj_child = "child_girl", jj_man = "villager_m", jj_woman = "villager_f", jj_snake = "dog", jj_shade = "spirit_m",
-	chunhyang = "villager_f", hyangdan = "villager_f", wolmae = "innkeeper", mongryong = "scholar", bangja = "villager_m" }
-const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_jeju.json", "frames_story_namwon_chunhyang.json", "frames_npc.json", "frames_amb.json"]
+	chunhyang = "villager_f", hyangdan = "villager_f", wolmae = "innkeeper", mongryong = "scholar", bangja = "villager_m",
+	chunhyang_prison = "chunhyang", mongryong_beggar = "mongryong", byeon = "official", gisaeng = "villager_f", gisaeng_b = "gisaeng", gisaeng_c = "gisaeng" }
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_jeju.json", "frames_story_namwon_chunhyang.json", "frames_story_chunhyang_part2.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -216,7 +217,7 @@ func _setup() -> void:
 	sensing = load("res://scripts/story/sensing.gd").new()
 	add_child(sensing)
 	sensing.setup(self)
-	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest") or args.has("preptest") or args.has("prepshot"))
+	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest") or args.has("preptest") or args.has("prepshot") or args.has("p2preptest") or args.has("p2prepshot"))
 	if args.has("storytest"):
 		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
 		add_child(test)
@@ -681,6 +682,28 @@ func anim_actor(id: String, nm: String, restart := true) -> void:
 	if a == null: return
 	a.anim = nm
 	a.ch.play(nm, restart)
+
+# 자세 바꾸기(제자리, 같은 사람): 출두 반전처럼 서 있던·앉아 있던 이야기 인물을 bow·kneel 등으로.
+#   filter: 인물 id 배열 · "ch_saryeong_*" 같은 glob 문자열 · 인물 데이터의 "tags"에 든 이름. 노드(SpriteChar)는 그대로 두고 동작만 바꾼다.
+#   돌려주는 값: 바뀐 인물 id 목록(시험이 같은 노드인지 본다). EventCrowd.set_pose와 짝.
+func set_pose(filter, pose: String) -> Array:
+	var out := []
+	for id in actors:
+		if not _actor_match(id, actors[id], filter): continue
+		var a: Dictionary = actors[id]
+		a.anim = pose
+		a.end_anim = pose
+		a.scripted = true   # 단계가 바뀌어도 제자리 자세(spec.anim)로 되돌리지 않는다
+		if a.ch != null: a.ch.play(pose, true)
+		out.append(id)
+	return out
+
+static func _actor_match(id: String, a: Dictionary, filter) -> bool:
+	if filter is Array: return filter.has(id)
+	var f := String(filter)
+	if f == "" or f == "*": return true
+	if id.matchn(f): return true
+	return (a.get("spec", {}) as Dictionary).get("tags", []).has(f)
 
 # 경로를 따라 걷게 하고 다 걸으면 돌아온다
 func move_actor(id: String, to, speed: float, anim_nm: String, end_anim: String) -> void:

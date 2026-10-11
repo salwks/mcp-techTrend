@@ -10,7 +10,14 @@
 #     (스트리밍 상태에 따라 달라지지 않게) — 가게·좌판·통로는 데이터의 exclude로 뺀다.
 #   사람: generic bank만(GENERIC). 이야기 인물(사건 actor) 그림은 넣지 않는다 — 허용 목록 밖 kind는 버리고 알린다.
 #   동작: idle · talk(마주 봄) · watch(구역의 앵커 쪽을 봄) · walk(제자리에서 2~5m 오가기) · sit · stand · serve(구역 안 두 점 오가기).
-#     sit 그림이 없는 bank는 idle 그림을 SIT_SINK만큼 낮춰 앉은 키로 보이게 한다(잔칫상·대청 마루가 다리를 가린다 — 임시, sit 프레임 굽기 전).
+#     sit은 공용 자세 sit(data/frames_pose.json — 모든 사람 종류, SpriteChar.ensure_poses)를 그대로 쓴다. serve는 끝에서 잠깐 설 때
+#     그 그림에 serve 동작(기생 — 술병 들고 따름)이 있으면 그것을.
+#   짜임(선택, 잔치·제사처럼 누가 어디 앉는지 정해진 장면): rect_roles:{구역: ["sit:guest", "serve:gisaeng", …]}(구역 몫 순서대로
+#     역할:묶음) + banks:{묶음: [[CHR, kind]…]}(묶음 안에서 돌아가며 — 같은 색 기생이 몰리지 않게) + seats:{구역: [[x, z, facing]…]}
+#     (sit은 자리 순서대로 앉는다). 묶음 이름이 사람의 tag가 된다. 없으면 예전대로 roles 비율 + bank에서 고름.
+#   자세 바꾸기(제자리, 같은 사람): set_pose(id, filter, pose) — filter는 역할·tag·kind(또는 그 배열, "" = 모두). 출두 반전처럼
+#     서 있던·앉아 있던 사람이 그 자리에서 bow·kneel로. 노드·자리·사람은 그대로 두고(다시 짜지 않음) 오가기만 멈춘다.
+#     apply_on_flag(id, flag): 선언의 on_flag:{flag: {역할: 자세}}를 한 번에. clear_pose(id)로 원래 동작.
 #   보이기: when(placement_gate.gd — 같은 조건 언어, 사건·변수가 바뀔 때만)이 참일 때. force(id, on, density)는 when을 덮는다(시험·촬영).
 #     디버그: --crowdshow=dano_market:high,byeon_banquet:medium
 #   비용: LOD 거리 = min(플레이어까지, 지금 카메라의 땅 위 자리까지) — 카메라의 땅 위 자리는 카메라 자리(x,z)와 카메라가 겨냥한 점(x,z) 둘
@@ -31,11 +38,10 @@ const ACTIONS := ["idle", "talk", "watch", "walk", "sit", "stand", "serve"]
 # 군중에 쓸 수 있는 바탕 그림(고을 사람과 같은 generic bank + 관속·포졸·서리·기생 generic). 이야기 인물 고유 그림은 여기 없다
 const GENERIC := ["villager_m", "villager_f", "elder", "child_boy", "child_girl", "hunter", "innkeeper", "miller", "woodcutter",
 	"scholar", "merchant", "peddler", "official", "monk", "bosal", "boatman", "haenyeo", "farmer", "farmwife", "herder", "traveler",
-	"pojol", "py_clerk", "gisaeng"]
-const BANK_FALLBACK := { gisaeng = "villager_f", py_clerk = "official", pojol = "official", farmer = "villager_m", farmwife = "villager_f",
+	"pojol", "py_clerk", "gisaeng", "gisaeng_b", "gisaeng_c"]
+const BANK_FALLBACK := { gisaeng = "villager_f", gisaeng_b = "gisaeng", gisaeng_c = "gisaeng", py_clerk = "official", pojol = "official", farmer = "villager_m", farmwife = "villager_f",
 	scholar = "elder", merchant = "villager_m", peddler = "woodcutter", official = "hunter", traveler = "villager_m" }
 const MIN_GAP := 0.9
-const SIT_SINK := 0.42
 const SHADOW_M := 30.0
 
 var main = null
@@ -67,7 +73,9 @@ func rebuild() -> void:
 				specs.append(cc)
 	for spec in specs:
 		var id := String(spec.id)
-		for b in spec.get("bank", []):
+		var all_bank: Array = (spec.get("bank", []) as Array).duplicate()
+		for g in (spec.get("banks", {}) as Dictionary): all_bank.append_array(spec.banks[g])
+		for b in all_bank:
 			var kind := String(b[1]) if b is Array and b.size() > 1 else String(b)
 			if not (kind in GENERIC): push_warning("EventCrowd %s: 이야기 인물·모르는 그림은 군중에 넣지 않는다 — 뺌: %s" % [id, kind])
 		crowds[id] = { spec = spec, members = [], on = false, gated_on = false, forced = null, density = "", built = false }
@@ -159,7 +167,10 @@ static func plan(spec: Dictionary, density := "") -> Array:
 	var dys: Dictionary = area.get("dy", {})
 	var out := []
 	var pts: Array = []
+	if spec.get("rect_roles") is Dictionary:
+		_plan_cast(spec, rng, names, alloc, rects, dys, out, pts)
 	for nm in names:
+		if spec.get("rect_roles") is Dictionary: break
 		var r: Array = rects[nm]
 		for k in int(alloc[nm]):
 			var p = null
@@ -189,6 +200,7 @@ static func plan(spec: Dictionary, density := "") -> Array:
 					b2 = q; break
 				m.b = b2 if b2 != null else p
 			out.append(m)
+	_walk_ends(spec, rng, rects, out)
 	# 마주 보기(talk: 가장 가까운 사람 쪽) · 구경(watch: 구역 앵커 쪽)
 	var anchors: Dictionary = spec.get("_anchors", {})
 	var targets: Dictionary = spec.get("watch_targets", {})
@@ -200,11 +212,83 @@ static func plan(spec: Dictionary, density := "") -> Array:
 				var dd: float = (o.home as Vector2).distance_to(m.home)
 				if dd < bd: bd = dd; best = o
 			if best != null and bd < 4.0: m.facing = _face((best.home as Vector2) - (m.home as Vector2), m.facing)
+		elif m.has("seat"): continue                 # 정해진 자리는 그 자리의 방향
 		elif m.role in ["watch", "sit", "stand"]:   # 구경·앉음·섬: 구역 앵커(씨름판·안마당 가운데) 쪽을 본다
 			var tg = targets.get(m.rect)
 			var at = anchors.get(tg, {}).get("at") if tg != null and anchors.get(tg) is Dictionary else null
 			if at is Array: m.facing = _face(Vector2(float(at[0]), float(at[1])) - (m.home as Vector2), m.facing)
 	return out
+
+# 짜임 있는 군중(rect_roles): 구역 몫 순서대로 "역할:묶음", 묶음 안에서 돌아가며 kind, sit은 seats 순서대로
+static func _plan_cast(spec: Dictionary, rng: RandomNumberGenerator, names: Array, alloc: Dictionary, rects: Dictionary, dys: Dictionary, out: Array, pts: Array) -> void:
+	var rr: Dictionary = spec.rect_roles
+	var banks: Dictionary = spec.get("banks", {})
+	var seats: Dictionary = spec.get("seats", {})
+	var turn := {}   # 묶음 → 다음 차례(seed로 시작점)
+	var area: Dictionary = spec.get("area", {})
+	for nm in names:
+		var r: Array = rects[nm]
+		var lst: Array = rr.get(nm, [])
+		var seat_i := 0
+		var todo := []
+		for k in int(alloc[nm]):
+			var ent := String(lst[k % lst.size()]) if not lst.is_empty() else "idle"
+			var pr := ent.split(":")
+			todo.append([pr[0], pr[1] if pr.size() > 1 else ""])
+		# 앉는 사람(자리 있는 것) 먼저 — 나머지가 자리를 피해 선다
+		todo.sort_custom(func(a, b): return int(a[0] == "sit") > int(b[0] == "sit"))
+		for td in todo:
+			var role: String = td[0]
+			var grp: String = td[1]
+			var lstb: Array = []
+			for b in banks.get(grp, spec.get("bank", [])):
+				var kind := String(b[1]) if b is Array and b.size() > 1 else String(b)
+				if kind in GENERIC: lstb.append(kind)
+			if lstb.is_empty(): lstb = ["villager_m", "villager_f"]
+			if not turn.has(grp): turn[grp] = rng.randi() % lstb.size()
+			var kind: String = lstb[int(turn[grp]) % lstb.size()]
+			turn[grp] = int(turn[grp]) + 1
+			var p = null
+			var facing: String = ["down", "left", "right", "up"][rng.randi() % 4]
+			var seat = null
+			var sl: Array = seats.get(nm, [])
+			if role == "sit" and seat_i < sl.size():
+				seat = sl[seat_i]; seat_i += 1
+				p = Vector2(float(seat[0]), float(seat[1]))
+				if seat.size() > 2: facing = String(seat[2])
+			else:
+				for tries in 80:
+					var q := Vector2(lerpf(float(r[0]), float(r[2]), rng.randf()), lerpf(float(r[1]), float(r[3]), rng.randf()))
+					if _excluded(area, q): continue
+					var ok := true
+					for o in pts:
+						if (o as Vector2).distance_to(q) < MIN_GAP: ok = false; break
+					if ok: p = q; break
+			if p == null: continue
+			pts.append(p)
+			var m := { rect = nm, home = p, role = role, kind = kind, tag = grp if grp != "" else role, dy = float(dys.get(nm, 0.0)),
+				facing = facing, t0 = rng.randf() * 3.0 }
+			if seat != null: m.seat = true
+			out.append(m)
+
+# 오가기(walk·serve)의 다른 끝(짜임 있는 군중 — 예전 길은 배치 때 바로 정한다)
+static func _walk_ends(spec: Dictionary, rng: RandomNumberGenerator, rects: Dictionary, out: Array) -> void:
+	var area: Dictionary = spec.get("area", {})
+	for m in out:
+		if m.has("b") or not (m.role in ["walk", "serve"]): continue
+		var r: Array = rects[m.rect]
+		var p: Vector2 = m.home
+		var b2 = null
+		for tries in 30:
+			var q: Vector2
+			if m.role == "walk":
+				var a := rng.randf() * TAU
+				q = p + Vector2(cos(a), sin(a)) * lerpf(2.0, 5.0, rng.randf())
+			else:
+				q = Vector2(lerpf(float(r[0]), float(r[2]), rng.randf()), lerpf(float(r[1]), float(r[3]), rng.randf()))
+			if q.x < float(r[0]) or q.x > float(r[2]) or q.y < float(r[1]) or q.y > float(r[3]) or _excluded(area, q): continue
+			b2 = q; break
+		m.b = b2 if b2 != null else p
 
 static func _pick(rng: RandomNumberGenerator, roles: Dictionary, keys: Array) -> String:
 	var tot := 0.0
@@ -255,12 +339,8 @@ func _make_char(m: Dictionary) -> void:
 	add_child(ch)
 	ch.set_silhouette(false)
 	ch.facing = String(m.facing)
-	var anim := "idle"
-	match String(m.role):
-		"talk": anim = "talk"
-		"sit": anim = "sit"
-		"walk", "serve": anim = "idle"
-	m.sink = SIT_SINK if m.role == "sit" and not ch.has_anim("sit") else 0.0
+	var anim := _role_anim(String(m.role))
+	if m.get("pose", "") != "": anim = String(m.pose)
 	ch.play(anim if ch.has_anim(anim) else "idle", true)
 	ch.anim_time = float(m.t0)
 	ch.t = float(m.t0) * 1.7
@@ -271,7 +351,55 @@ func _make_char(m: Dictionary) -> void:
 func _place(m: Dictionary) -> void:
 	var w = main.world
 	var p: Vector2 = m.pos2
-	m.ch.position = Vector3(p.x, (w.ground_at(p.x, p.y) if float(m.dy) > 0.0 else w.height_at(p.x, p.y)) + float(m.dy) - float(m.get("sink", 0.0)), p.y)
+	m.ch.position = Vector3(p.x, (w.ground_at(p.x, p.y) if float(m.dy) > 0.0 else w.height_at(p.x, p.y)) + float(m.dy), p.y)
+
+static func _role_anim(role: String) -> String:
+	match role:
+		"talk": return "talk"
+		"sit": return "sit"
+	return "idle"
+
+# ---------------------------------------------------------------------------
+# 자세 바꾸기(제자리, 같은 사람) — 출두 반전: stand/sit → bow/kneel. 노드를 새로 만들지 않는다
+# ---------------------------------------------------------------------------
+static func member_match(m: Dictionary, filter) -> bool:
+	if filter is Array:
+		for f in filter:
+			if member_match(m, f): return true
+		return false
+	var f := String(filter)
+	return f == "" or f == "*" or f == String(m.role) or f == String(m.get("tag", "")) or f == String(m.kind)
+
+# filter에 맞는 사람의 자세를 pose로. 돌려주는 값: 바뀐 사람 수
+func set_pose(id: String, filter, pose: String) -> int:
+	if not crowds.has(id): return 0
+	var n := 0
+	for m in crowds[id].members:
+		if not member_match(m, filter): continue
+		m.pose = pose
+		n += 1
+		if m.get("ch") != null and is_instance_valid(m.ch):
+			m.ch.play(pose if m.ch.has_anim(pose) else "idle", true)
+	return n
+
+func clear_pose(id: String, filter = "") -> int:
+	if not crowds.has(id): return 0
+	var n := 0
+	for m in crowds[id].members:
+		if not member_match(m, filter) or not m.has("pose"): continue
+		m.erase("pose")
+		n += 1
+		if m.get("ch") != null and is_instance_valid(m.ch): m.ch.play(_role_anim(String(m.role)), true)
+	return n
+
+# 선언의 on_flag:{flag: {역할: 자세}} — 예: byeon_banquet royal_inspector_reveal {sit: kneel, stand: bow, serve: bow, watch: bow}
+func apply_on_flag(id: String, flag: String) -> int:
+	if not crowds.has(id): return 0
+	var mp = crowds[id].spec.get("on_flag", {}).get(flag)
+	if not (mp is Dictionary): return 0
+	var n := 0
+	for role in mp: n += set_pose(id, String(role), String(mp[role]))
+	return n
 
 func _free_members(c: Dictionary) -> void:
 	for m in c.get("members", []):
@@ -372,7 +500,7 @@ static func _in_view(cam: Camera3D, p: Vector3) -> bool:
 
 # 오가기(walk·serve): 두 점 사이를 걷고 끝에서 잠깐 선다. 길찾기·피하기 없음
 func _step(m: Dictionary, dt: float) -> void:
-	if not (m.role in ["walk", "serve"]) or not m.has("b"): return
+	if not (m.role in ["walk", "serve"]) or not m.has("b") or m.has("pose"): return
 	if m.wait > 0.0:
 		m.wait -= dt
 		if m.wait <= 0.0: m.ch.play("walk")
@@ -385,7 +513,7 @@ func _step(m: Dictionary, dt: float) -> void:
 		m.pos2 = to
 		m.dir = -m.dir
 		m.wait = 1.5 + fmod(float(m.t0) * 7.0, 2.5)
-		m.ch.play("idle")
+		m.ch.play("serve" if m.role == "serve" and m.ch.has_anim("serve") else "idle")
 	else:
 		m.pos2 = p + v.normalized() * step
 		m.ch.facing = _face(v, m.ch.facing)

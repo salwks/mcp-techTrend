@@ -201,7 +201,27 @@ static func actors() -> Array:
 				{ "when": "v('CASE_NAMWON_MORNING') == 'unknown'", "steps": [{ "say": "이웃 아낙", "lines": ["혹시 어디서라도 아이들 소식 들으면 알려 주시오."] }] },
 				{ "when": "v('CASE_NAMWON_MORNING') == 'silent'", "steps": [{ "say": "이웃 아낙", "lines": ["그날은 아무 말씀도 안 하셨지요."] }] },
 				{ "when": "true", "steps": [{ "say": "이웃 아낙", "lines": ["그 집은 아직 비어 있어요. 가끔 들여다보고 와요."] }] }] },
-	]
+	] + guard_posts()
+
+# ---------------------------------------------------------------------------
+# PART II 고정 자리 — 사령·포졸(CHR_HUM_016, 그림 pojol). 공식 8A 양옆 줄(placement_story_namwon_chunhyang.json의 ch_saryeong_*)에
+# 선다. PART II 단계(office 점고·곤장 · feast 잔치 · reveal 출두)에서만 — 지금은 PART II가 닫혀 있어 서지 않는다.
+# 이야기 흐름(PART II 사건 코드)은 아직 없다: 출두 때 자세 바꾸기는 story_director.set_pose("saryeong", "kneel")(같은 인물, 제자리).
+# 서쪽 줄은 축(동쪽)을, 동쪽 줄은 서쪽을 본다. 플레이어 자리(ch_player_saryeong)는 인물이 아니다. 외삼문 포졸 하나(§30·§38).
+# ---------------------------------------------------------------------------
+const GUARD_WHEN := "ph('office') or ph('feast') or ph('reveal')"
+static func guard_posts() -> Array:
+	var out := []
+	for side in ["w", "e"]:
+		for i in 4:
+			out.append({ "id": "saryeong_%s%d" % [side, i], "chr": "CHR_HUM_016", "kind": "pojol", "name": "사령",
+				"at": "ch_saryeong_%s%d" % [side, i], "facing": "right" if side == "w" else "left", "when": GUARD_WHEN,
+				"tags": ["saryeong", "row_" + side], "accent": false })
+	out.append({ "id": "saryeong_senior", "chr": "CHR_HUM_016", "kind": "pojol", "name": "선임 사령", "at": "ch_saryeong_e4", "facing": "left",
+		"when": GUARD_WHEN, "tags": ["saryeong", "row_e", "senior"], "accent": false })
+	out.append({ "id": "pojol_gate", "chr": "CHR_HUM_016", "kind": "pojol", "name": "포졸", "at": "ch_gate_guard", "facing": "down",
+		"when": "ph('office') or ph('jail') or ph('feast')", "tags": ["pojol"], "accent": false })
+	return out
 
 static func objects() -> Array:
 	return []
