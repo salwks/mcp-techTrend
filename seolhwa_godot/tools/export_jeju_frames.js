@@ -18,7 +18,7 @@ import { SPECS, getRig } from '/src/chars/rigs.js';
 import { Painter, makeCanvas, shade } from '/src/chars/painter.js';
 import * as fc from '/src/chars/frameCore.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   gwak: { base: 'elder', over: { top: 'jeogori', coat: '#9c6c46', pants: '#a9875e', vest: null, collar: '#6a4a30', daenim: '#6a4a30', goreum: '#6a4a30',
     hat: null, band: '#e2d9c4', hair: 'white', beard: true, wrinkles: true, stoop: 0.24, staff: null, pipe: false, back: 'jige', patch: '#7a5636',
     legwrap: '#d9cfb8', shoe: '#8a6a44', browColor: '#8e897f', cheek: 0.1, build: 1.0, height: 1.6 },

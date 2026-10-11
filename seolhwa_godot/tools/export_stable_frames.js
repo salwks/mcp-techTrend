@@ -86,7 +86,7 @@ function bakeHorse(C) {
 // ---------------------------------------------------------------------------
 // 마부 — 웹 rigs의 villager_m 차림을 바꾸고 동작 둘(brush·feed)을 더한다
 // ---------------------------------------------------------------------------
-const MABU = { base: 'villager_m', coat: '#cdbb94', pants: '#d6c9a8', vest: '#6a5038', collar: '#8a7148', daenim: '#6a5038', back: null, band: '#efe9da',
+export const MABU = { base: 'villager_m', coat: '#cdbb94', pants: '#d6c9a8', vest: '#6a5038', collar: '#8a7148', daenim: '#6a5038', back: null, band: '#efe9da',
   legwrap: '#ebe4d1', hat: null, build: 1.1, stubble: true };
 const MABU_ANIMS = { brush: { dur: 1.2, loop: true }, feed: { dur: 1.6, loop: true } };
 const toP = (F) => { const P = {}; for (const n in F) { const a = F[n]; P[n] = { r: a[0] || 0, x: a[1] || 0, y: a[2] || 0, sx: a[3] ?? 1, sy: a[4] ?? 1, a: a[5] ?? 1 }; } return P; };

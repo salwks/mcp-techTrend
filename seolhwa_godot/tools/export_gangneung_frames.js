@@ -12,7 +12,7 @@ import { SPECS, getRig } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 import { Painter } from '/src/chars/painter.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   wolsim: { base: 'villager_f', over: { coat: '#eee8da', skirt: '#3d5a8a', goreum: '#a8443c', cuff: '#a8443c', collar: '#a8443c', scarf: '#f3efe6',
     carry: null, lip: '#9a3a32', cheek: 0.22, build: 0.96 }, bell: true,
     anims: ['idle', 'walk', 'talk', 'ritual', 'give'] },

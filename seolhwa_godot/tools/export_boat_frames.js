@@ -9,7 +9,7 @@ import { SPECS, getRig } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 import { weaponPart, attachHand, stripCombatParts } from '/__tools/hum_combat_light.js';
 
-const BOATMAN = { base: 'villager_m', over: { coat: '#d8ccaa', pants: '#cdbf9b', vest: null, collar: '#a8956d', daenim: '#8a7a5a', back: null, hat: 'satgat', hatColor: '#9c8457',
+export const BOATMAN = { base: 'villager_m', over: { coat: '#d8ccaa', pants: '#cdbf9b', vest: null, collar: '#a8956d', daenim: '#8a7a5a', back: null, hat: 'satgat', hatColor: '#9c8457',
   legwrap: '#e8e0cb', staff: null, build: 1.1 } };
 const BOAT_ANIMS = { row: { dur: 1.8, loop: true }, pole: { dur: 2.6, loop: true } };
 const LOOP_N = { row: 8, pole: 10 };

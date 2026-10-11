@@ -17,7 +17,7 @@ import { Painter } from '/src/chars/painter.js';
 import * as fc from '/src/chars/frameCore.js';
 import { installHCL, hclSpec, attachHand } from '/__tools/hum_combat_light.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   yigyeom: { base: 'elder', over: { top: 'durumagi', coat: '#77808a', pants: '#cfc8b6', collar: '#353a40', goreum: '#353a40', sash: null,
     hat: 'gat', hatColor: '#26221f', hair: 'white', beard: true, wrinkles: true, stoop: 0.14, staff: 'cane', pipe: false,
     back: 'bundle', bundle: '#6e5a42', patch: '#9a9384', shoe: '#3a3431', robeLen: 100, browColor: '#8e897f', browW: 2.8, cheek: 0.1, build: 0.92, height: 1.62 },

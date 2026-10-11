@@ -87,6 +87,45 @@ static func merge_bank(json_file: String, only: Array = []) -> void:
 			for f in c.frames: f.page = int(f.page) + off
 			bank.clips[ck] = c
 
+# 공용 자세(앉기 sit · 절 bow · 꿇어앉기 kneel — tools/pose_common.js, 굽기 세트 ?set=poses → data/frames_pose.json).
+# 모든 사람 종류가 쓴다: 그 동작을 처음 부를 때(play·set_anim·has_anim) 그 종류의 자세 클립을 은행에 더한다(페이지도 그때 읽음).
+# 이미 그 이름의 클립이 있는 종류(예: 이야기 인물의 예전 sit)는 그대로 둔다 — 예전 장면 그림이 바뀌지 않게.
+# 별칭: stand = idle(군중·이야기의 '서 있음').
+const POSE_ANIMS := ["sit", "bow", "kneel"]
+const ANIM_ALIAS := { stand = "idle" }
+const POSE_FILE := "frames_pose.json"
+static var _pose_src = null     # frames_pose.json(한 번 읽음) — 없으면 {}
+static var _posed := {}         # kind → true(더함)
+
+static func ensure_poses(k: String) -> bool:
+	if _posed.has(k): return bool(_posed[k])
+	if not _banks.has(k): return false
+	if _pose_src == null:
+		_pose_src = {}
+		var path := "res://data/" + POSE_FILE
+		if FileAccess.file_exists(path):
+			var all = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if all is Dictionary: _pose_src = all
+	var src = _pose_src.get(k)
+	_posed[k] = src != null
+	if src == null: return false
+	var bank: Dictionary = _banks[k]
+	var want := []
+	for ck in src.clips:
+		if not bank.clips.has(ck): want.append(ck)
+	if want.is_empty(): return true
+	var off: int = bank.pages.size()
+	for p in src.pages:
+		var img := Image.load_from_file(ProjectSettings.globalize_path("res://data/" + p))
+		if img == null or img.is_empty(): continue
+		img.generate_mipmaps()
+		bank.pages.append(ImageTexture.create_from_image(img))
+	for ck in want:
+		var c: Dictionary = (src.clips[ck] as Dictionary).duplicate(true)
+		for f in c.frames: f.page = int(f.page) + off
+		bank.clips[ck] = c
+	return true
+
 static func _shader(name: String, code: String) -> Shader:
 	if not _shaders.has(name):
 		var s := Shader.new(); s.code = code; _shaders[name] = s
@@ -222,17 +261,27 @@ static func _lin(c: Color) -> Vector3:
 
 func set_facing(dir: String) -> void: facing = dir
 
+func _prep_anim(a: String) -> String:
+	a = ANIM_ALIAS.get(a, a)
+	if a in POSE_ANIMS and not _posed.has(kind):
+		ensure_poses(kind)
+		_bank = _banks.get(kind, {})
+	return a
+
 func set_anim(a: String) -> void:
+	a = _prep_anim(a)
 	if a == anim: return
 	anim = a; anim_time = 0.0; anim_speed = 1.0
 
 # 전투·이야기용: 같은 동작이어도 restart면 처음부터, speed는 재생 배율
 func play(a: String, restart := false, speed := 1.0) -> void:
+	a = _prep_anim(a)
 	if a != anim or restart: anim_time = 0.0
 	anim = a; anim_speed = speed
 
 # 지금 시점에서 이 동작 클립의 길이(초). 없으면 0
 func anim_duration(a: String) -> float:
+	a = _prep_anim(a)
 	var clip = _clip(_view_of()[0], a)
 	if clip == null: return 0.0
 	var sp: Dictionary = clip.spec
@@ -241,6 +290,7 @@ func anim_duration(a: String) -> float:
 	return float(T[T.size() - 1]) if T.size() > 0 else 0.0
 
 func has_anim(a: String) -> bool:
+	a = _prep_anim(a)
 	var clips: Dictionary = _bank.get("clips", {})
 	for v in ["front", "side", "back"]:
 		if clips.has("%s|%s" % [v, a]): return true

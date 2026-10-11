@@ -15,7 +15,7 @@ import { SPECS, getRig } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 import { installHCL, hclSpec, lanternPart, attachHand } from '/__tools/hum_combat_light.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   smuggler: { base: 'villager_m', over: { coat: '#3f3c38', pants: '#5c574d', vest: '#262422', collar: '#262422', daenim: '#262422', band: '#8a3a30',
     back: null, patch: null, legwrap: '#d6cfbd', stubble: true, cheek: 0.12, build: 1.14, shoe: '#5a4a38' }, hcl: 'club',
     anims: ['idle', 'walk', 'run', 'ready', 'swing', 'hit', 'fall', 'flee', 'tied'] },

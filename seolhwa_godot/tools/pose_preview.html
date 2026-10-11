@@ -1,0 +1,62 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Pose preview</title></head>
+<body style="background:#ddd">
+<p id="st">baking…</p>
+<script type="module">
+// 굽기 확인용 견본 한 장: http://localhost:8770/__tools/pose_preview.html?kinds=villager_m,scholar&anims=idle,sit,bow,kneel&out=preview/poses.png
+// 종류마다 앞·옆·뒤 × 동작의 첫 그림을 같은 축척(1m = 110px)으로 땅선 위에 늘어놓아 data/<out>에 보낸다(git 밖).
+// part2=1 이면 춘향 PART II 차림(dress_art.js)도 올린다.
+import { SPECS } from '/src/chars/rigs.js';
+import * as fc from '/src/chars/frameCore.js';
+import { ensureSpec } from '/__tools/kind_specs.js';
+import { installPoses, poseSpec, POSE_ANIMS } from '/__tools/pose_common.js';
+const q = new URLSearchParams(location.search);
+const kinds = (q.get('kinds') || 'villager_m,villager_f').split(',');
+const anims = (q.get('anims') || 'idle,sit,bow,kneel').split(',');
+const views = (q.get('views') || 'front,side,back').split(',');
+const out = q.get('out') || 'preview/poses.png';
+const st = (s) => { document.getElementById('st').textContent = s; };
+try {
+  let dress = null;
+  if (q.get('part2')) dress = await import('/__tools/dress_art.js');
+  const PX = 110, CW = 150, RH = 250;
+  const cols = kinds.length * views.length;
+  const cv = document.createElement('canvas');
+  cv.width = CW * cols + 20; cv.height = RH * anims.length + 40;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#e9e2cf'; g.fillRect(0, 0, cv.width, cv.height);
+  g.font = '12px sans-serif'; g.fillStyle = '#333';
+  let ci = 0;
+  for (const kind of kinds) {
+    if (dress && dress.PART2[kind]) dress.ensurePart2(kind);
+    else if (!ensureSpec(kind)) { st('unknown ' + kind); continue; }
+    fc.TIERS.high[kind] = fc.TIERS.high.player;
+    const rig = installPoses(kind);
+    if (dress && dress.PART2[kind]) dress.installDress(kind);
+    const b = new fc.BakeBank(kind, 'high');
+    for (const vw of views) {
+      const x = 10 + ci * CW + CW / 2;
+      g.fillStyle = '#333'; g.fillText(kind + ' ' + vw, x - CW / 2 + 4, 14);
+      anims.forEach((a, ri) => {
+        const gy = 30 + ri * RH + RH - 20;
+        g.strokeStyle = '#8a7a5a'; g.beginPath(); g.moveTo(x - CW / 2 + 6, gy); g.lineTo(x + CW / 2 - 6, gy); g.stroke();
+        const key = fc.clipKey(fc.resolveView(kind, vw, a), a, false, false);
+        const c = b.clip(key); if (!c) { g.fillText('—' + a, x - 20, gy - 40); return; }
+        if (POSE_ANIMS[a]) c.spec = poseSpec(a, c.spec);
+        let guard = 0; while (!b.step(c) && guard++ < 600);
+        const f = c.frames[0];
+        const pg = b.pages[typeof f.page === 'number' ? f.page : f.page.index].cv;
+        const sx = f.u0 * 1024, sy = f.v0 * 1024, sw = (f.u1 - f.u0) * 1024, sh = (f.v1 - f.v0) * 1024;
+        g.drawImage(pg, sx, sy, sw, sh, x + f.x0 * PX, gy - f.y1 * PX, (f.x1 - f.x0) * PX, (f.y1 - f.y0) * PX);
+        g.fillStyle = '#555'; g.fillText(a, x - CW / 2 + 4, gy + 14);
+      });
+      ci++;
+    }
+  }
+  const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));
+  const r = await fetch('/export/' + out, { method: 'PUT', body: blob });
+  st('done ' + out + ' ' + r.status);
+  console.log('[pose preview] done', out);
+} catch (e) { st('ERROR ' + e.stack); console.error(e); }
+</script>
+</body></html>

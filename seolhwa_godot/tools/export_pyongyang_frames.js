@@ -12,7 +12,7 @@ import { SPECS, getRig } from '/src/chars/rigs.js';
 import * as fc from '/src/chars/frameCore.js';
 import { installHCL, hclSpec } from '/__tools/hum_combat_light.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   py_merchant_a: { base: 'villager_m', over: { top: 'durumagi', coat: '#8a6a44', pants: '#d8cdb2', collar: '#4e3a26', goreum: '#4e3a26', vest: null, daenim: '#4e3a26',
     back: null, patch: null, hat: 'gat', stubble: true, robeLen: 96, build: 1.12, cheek: 0.2, shoe: '#3a3431' },
     anims: ['idle', 'walk', 'talk'] },

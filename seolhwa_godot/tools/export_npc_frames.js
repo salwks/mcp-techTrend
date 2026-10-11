@@ -9,7 +9,7 @@ import * as fc from '/src/chars/frameCore.js';
 import { PAL } from '/src/chars/painter.js';
 import * as HA from '/__tools/horse_art.js';
 
-const PEOPLE = {
+export const PEOPLE = {
   scholar: { base: 'elder', top: 'durumagi', coat: '#e6ebe6', pants: '#ece9e0', collar: '#cfd6cf', goreum: '#d6d2c6', hat: 'gat', hair: 'sangtu',
     beard: false, wrinkles: false, stoop: 0, staff: null, pipe: false, robeLen: 104, browColor: undefined, build: 0.96, cheek: 0.14, shoe: '#3a3431', talk: true },
   merchant: { base: 'villager_m', coat: '#d3c6a5', pants: '#d9ceb4', vest: '#4f4a52', collar: '#4f4a52', daenim: '#4f4a52', back: null, hat: 'gat', build: 1.08, talk: true },
