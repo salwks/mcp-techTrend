@@ -106,6 +106,20 @@ func rider_on() -> bool:
 func swing_boost(sec := 6.0) -> void:
 	_sw_boost = sec
 
+# CAMERA 1A 전용 박자: 컷 첫 프레임에 그네를 남쪽 끝(+z — 카메라 쪽 버드나무에 가리지 않는 쪽)에 둔다.
+# sin 위상 0.25/0.75 중 앉은자리가 더 남쪽인 쪽을 고른다(그네 키트의 회전 방향에 기대지 않게). 전역 그네 규칙은 바꾸지 않는다
+func swing_phase_south() -> void:
+	var n := _swing_node()
+	if n == null: return
+	var piv := Vector3(0, SWING_H, 0)
+	var best := 0.75; var bz := -INF
+	for ph in [0.25, 0.75]:
+		var a := maxf(_sw_amp, SWING_AMP) * sin(TAU * ph)
+		var st := Transform3D(Basis(Vector3.RIGHT, a), piv) * Transform3D(Basis(), -piv)
+		var wz: float = (n.transform * (st * Vector3(0, 0.93, 0))).z
+		if wz > bz: bz = wz; best = ph
+	_sw_t = SWING_PERIOD * best
+
 func _update_swing(dt: float) -> void:
 	_sw_t += dt
 	_sw_boost = maxf(0.0, _sw_boost - dt)
@@ -191,6 +205,7 @@ func vista_1a() -> void:
 	# 플레이어는 제자리(군중 LOD가 카메라 자리도 보므로 옮기지 않는다 — event_crowd.gd). 컷 동안만 안개를 옅게(85m 그네 위 춘향이 사람으로 보이게)
 	vista_pp = d.main.player_pos
 	d.cut_fog(FOG_1A)
+	swing_phase_south()   # 첫 프레임부터 춘향이 나무에 가리지 않게
 	_shot(CAM_1A)
 	swing_boost(SWING_PERIOD * 1.2)
 	d.sfx("drum_far", "ch_ssireum")
