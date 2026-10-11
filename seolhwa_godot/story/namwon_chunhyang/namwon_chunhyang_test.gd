@@ -6,6 +6,7 @@
 #   b     : 다른 선택 — 지나감 · 혼자 가시오(나중에 그네 곁) · 고개 끄덕임 · 아무 말 없음
 #   after : PART I 끝 + 떠남(다른 고을은 아직 — PART II 열림 조건 거짓)으로 다시 남원 — PART II는 아무것도 서지 않는다. 남원 사람 말 · 춘향 집
 #   p2a · p2b · p2c · ctl : PART II-A(namwon_chunhyang_p2a_test.gd)
+#   iib1 · iib2 · iib3 · iibctl : PART II-B(namwon_chunhyang_p2b_test.gd — 술·쌀·상소 ~ 광한루)
 # 저장은 --savefile(run_story_tests.sh) — prepare가 남원·한양 끝 상태로 꾸민다. 결과는 STORYTEST PASS/FAIL.
 # 화면 검토: --storyshots=shots/chunhyang_part1(창 모드) — 사건 함수의 _cut(이름)에서 찍는다.
 extends Node
@@ -21,6 +22,7 @@ var branch := "A"
 var _t0 := 0
 var _fails: Array = []
 var prefer: Array = []
+var choice_log: Array = []   # [물음, [갈래 글…]] — 시험이 갈래 말씨를 본다(II-B 본 것/들은 것)
 var _n := 0
 
 static func prepare(_dir) -> void:
@@ -53,6 +55,7 @@ func _log(s: String) -> void:
 	printerr("STORYTEST [%s] %6.1fs %s" % [branch, (Time.get_ticks_msec() - _t0) / 1000.0, s])
 
 func choose(_prompt: String, labels: Array) -> int:
+	choice_log.append([_prompt, labels.duplicate()])
 	for want in prefer:
 		for i in labels.size():
 			if labels[i] != "" and String(labels[i]).contains(want): return i
@@ -105,6 +108,7 @@ func walk_to(at) -> void:
 # 사건 함수의 _cut(이름) — 화면 검토일 때만 찍는다
 func cut(nm: String) -> void:
 	if p2t != null: await _probe_p2(nm)
+	if p2bt != null: await p2bt.probe_cut(nm)
 	if nm == "02_1A_crowd_swing": _probe_1a()
 	if nm == "_1a_end":
 		var w = d.main.weather
@@ -238,9 +242,13 @@ func _done() -> void:
 
 # ---------------------------------------------------------------------------
 var p2t = null   # PART II-A 시험(namwon_chunhyang_p2a_test.gd)
+var p2bt = null  # PART II-B 시험(namwon_chunhyang_p2b_test.gd)
 func _run() -> void:
 	expect(d.case_id == "namwon_chunhyang", "오누이·한양 뒤 남원 — 춘향이 도는 사건")
 	if branch == "AFTER": await _run_after(); return
+	if branch.begins_with("IIB"):
+		p2bt = load("res://story/namwon_chunhyang/namwon_chunhyang_p2b_test.gd").new(self, branch)
+		await p2bt.run(); return
 	if branch.begins_with("P2") or branch == "CTL":
 		p2t = load("res://story/namwon_chunhyang/namwon_chunhyang_p2a_test.gd").new(self, branch)
 		await p2t.run(); return
@@ -409,9 +417,9 @@ func _no_part2(when: String) -> void:
 	expect(not d.main.crowd.is_shown("byeon_banquet"), "%s: 잔치 군중 없음" % when)
 	expect(not d.S.is_flag("p2_started") and d.S.phase in ["dano", "courtship", "farewell"], "%s: PART II 장면이 돌지 않음(단계 %s)" % [when, d.S.phase])
 	var late := false
-	for e in d.events:
+	for e in d.S.seen:
 		if int(String(e).substr(1, 2)) >= 13: late = true
-	expect(not late, "%s: II-B 장면 없음" % when)
+	expect(not late and not d.S.is_flag("p2b_started"), "%s: II-B 장면이 돌지 않음" % when)
 
 # PART I 끝 + 떠남 + 강릉 완료 → 다시 남원: PART II 열림 조건은 참이어도 아무것도 서지 않는다
 func _run_after() -> void:

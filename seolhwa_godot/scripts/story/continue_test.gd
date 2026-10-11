@@ -8,6 +8,7 @@
 #     → 해 질 무렵 귀환(경고·포수·준비)이 다시 돌고 준비 상태(dusk_prep)가 되는지 본 뒤 1·2를 한다.
 #   --continueexpect=rollback_rope  (남원 v3.2) 새 흐름의 동아줄 도중 저장(test_rope_save.json) — 결말 변수 전이라 같은 안전지점(21시 숨은 자리)으로
 #   --continueexpect=morning  (남원 v3.2) 옛 v3 아침(북쪽 어귀 한 장면) 도중 저장(test_morning_save.json) — 새 아침(외딴집 마당·이웃 아낙)부터 다시
+#   --continueexpect=chunhyang_p2b  (춘향 II-B 플레이 시험 저장 play_chunhyang3) II-A 끝(옥의 첫 밤 뒤) — 관아 앞으로 걸어가면 이튿날 아침 아전이 일 셋을 맡긴다
 #   통과하면 "CONTTEST PASS", 아니면 "CONTTEST FAIL <까닭>".
 extends RefCounted
 
@@ -87,6 +88,7 @@ func run(spec: String) -> void:
 		"rollback": await _rollback()
 		"rollback_rope": await _rollback_rope()
 		"morning": await _morning()
+		"chunhyang_p2b": await _chunhyang_p2b()
 	await _story_actor()
 	# 21시 외딴집(새 밤 안전지점)에는 바깥에 다니는 고을 사람이 없다 — 그 경우만 고을 사람 말 걸기를 건너뛴다
 	if String(main.args.get("continueexpect", "")) != "rollback_rope": await _ambient()
@@ -185,6 +187,22 @@ func _morning() -> void:
 	_ok(S.is_flag("kids_gone") and not d.actors.nui.shown and bool(S.world.get("sorghum_red", false)) and bool(S.world.get("fall_traces", false)), "아이들 없음 · 붉은 수수밭 · 흔적")
 	_ok(not S.is_flag("elder_book") and not S.seen.has("S0011"), "노인·마지막 밤은 아직(걸어 내려가야)")
 	print("CONTTEST morning choice=%s hour=%.2f" % [S.vars.get("CASE_NAMWON_MORNING", ""), main.hour])
+
+# 춘향 II-B 플레이 시험 저장: II-A 끝(jail · p2a_done) — 관아 앞으로 가면 C1300(이튿날 아침 · 일 셋), 술 수레·박가네·노인이 선다
+func _chunhyang_p2b() -> void:
+	var S = d.S
+	_ok(d.case_id == "namwon_chunhyang" and S.phase == "jail" and S.is_flag("p2a_done") and not S.is_flag("p2b_started"), "II-A 끝 · II-B 아직(phase=%s)" % S.phase)
+	_ok(S.has("ITM_CH_TALLY") and S.is_flag("restraint_loose") and S.is_flag("labour_accepted"), "목패 · II-A 선택 그대로")
+	var gp: Vector2 = d.anchor("ch_gwana_front")
+	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(gp) > 20.0, "관아 앞에서 떨어진 자리에서 시작")
+	await main._wait_frames(10)
+	main.teleport(gp.x - 0.8, gp.y + 0.6)
+	var go := func(): return S.is_flag("duty_on") and not d.runner.busy and not d.ui.modal
+	_ok(await _wait_until(go, 90.0), "관아 앞 — 이튿날 아침 아전이 일 셋(C1300)")
+	await main._wait_frames(10)
+	_ok(d.actors.wine_merchant.shown and d.actors.rice_farmer.shown and d.actors.petition_elder.shown and d.actors.ajeon_b.shown, "술 상인·농민·노인·아전이 선다")
+	_ok(d._targets().any(func(t): return String(t.id) == "pb_wine_cart") and d._targets().any(func(t): return String(t.id) == "pb_petition_route"), "조사 대상(술 수레·외삼문 곁 방)이 열려 있다")
+	print("CONTTEST chunhyang_p2b hour=%.2f duty_on=%s" % [main.hour, S.is_flag("duty_on")])
 
 # 2 고을 사람: 이야기 인물에서 떨어진 고을 사람 곁으로 가서 E
 func _ambient() -> void:

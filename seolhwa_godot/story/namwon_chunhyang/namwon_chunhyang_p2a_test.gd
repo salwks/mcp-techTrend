@@ -356,25 +356,26 @@ func _hair_checks() -> void:
 	var mt_src := FileAccess.get_modified_time("res://tools/dress_art.js")
 	expect(mt_json + 600 >= mt_src, "굽기 결과가 머리 고침보다 새것(json %d · 원본 %d)" % [mt_json, mt_src])
 
-# II-B 없음: 장면 번호 C13 이상 · 잔치·출두 단계 장면 · 거지 몽룡 · 잔치 군중
+# II-B가 돌지 않음(II-A 끝에서 멈춤): 장면 C13 이상을 보지 않음 · 거지 몽룡·II-B 단계 인물이 서지 않음 · II-B 플래그 없음 · 잔치 군중 없음
+#   (II-B 데이터는 namwon_chunhyang_p2b_data.gd에 있다 — 여기서는 '있지 않음'이 아니라 '돌지 않음'을 본다. II-B 시험은 namwon_chunhyang_p2b_test.gd)
 func _no_p2b() -> void:
 	var late := []
-	for e in d.events:
+	for e in d.S.seen:
 		if int(String(e).substr(1, 2)) >= 13: late.append(e)
-	expect(late.is_empty(), "II-B 장면 없음(%s)" % [late])
+	expect(late.is_empty() and not d.S.is_flag("p2b_started"), "II-B 장면이 돌지 않음(%s)" % [late])
 	var beggar := []
 	for id in d.actors:
-		if String(d.actors[id].spec.get("kind", "")) in ["mongryong_beggar"]: beggar.append(id)
+		if String(d.actors[id].spec.get("kind", "")) in ["mongryong_beggar"] and d.actors[id].shown: beggar.append(id)
 	expect(beggar.is_empty(), "거지 몽룡 없음(%s)" % [beggar])
-	var flags_b := ["wine_recorded", "rice_left", "old_man_heard", "poem_called", "royal_inspector_reveal"]
+	var flags_b := ["wine_recorded", "rice_left", "old_man_heard", "poem_called", "royal_inspector_reveal", "duty_on"]
 	expect(flags_b.all(func(k): return not d.S.is_flag(k)), "II-B 플래그 없음")
 	expect(not d.main.crowd.is_shown("byeon_banquet") and gate_off("ti_chail") and gate_off("ti_feast_w0"), "잔치 군중·차일·잔칫상 없음")
 	var ph_used := {}
 	for a in d.data.actors:
 		var w := String(a.get("when", ""))
 		for p in ["feast", "reveal", "release", "epilogue"]:
-			if w.contains("ph('%s')" % p) and not String(a.id).begins_with("saryeong") and a.id != "pojol_gate": ph_used[p] = a.id
-	expect(ph_used.is_empty(), "II-B 단계 인물 없음(%s)" % [ph_used])
+			if w.contains("ph('%s')" % p) and not String(a.id).begins_with("saryeong") and a.id != "pojol_gate" and d.actors[String(a.id)].shown: ph_used[p] = a.id
+	expect(ph_used.is_empty(), "II-B 단계 인물이 서지 않음(%s)" % [ph_used])
 
 # 차일 규칙(사용자 결정 1): 공식 8A(점고·수청·출두) FURLED · 잔치 놀이·낮은 틀 SPREAD · 컷에서만 바뀐다
 func _chail_rule() -> void:

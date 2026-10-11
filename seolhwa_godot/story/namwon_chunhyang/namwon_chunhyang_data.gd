@@ -7,13 +7,15 @@
 # 단계(phase): dano(단오 낮 — ACT 0~2) → courtship(그날 저녁 ~ 백년가약 — ACT 3·4) → farewell(소식 · 오리정 곁 북쪽 길 이별 — ACT 5, PART I 끝 뒤에도 머문다).
 #   PART I 끝: CASE_NAMWON_CHUNHYANG_PART1_COMPLETE. 그 뒤 남원을 실제로 떠나면(region_main._travel → story.on_leave_space) LEFT_AFTER_PART1.
 #   PART II-A(namwon_chunhyang_p2a_data.gd): 열림(결정 §4) PART1_COMPLETE && LEFT_AFTER_PART1 && (강릉 || 경주 || 황주 완료) — 남원에 다시 들면 단계 arrival → office → jail.
-#   II-B(술·쌀·상소, 몽룡 귀환 이후)는 아직 없다.
+#   PART II-B(namwon_chunhyang_p2b_data.gd): 첫 밤 뒤 이튿날 관아 일 셋(술·쌀·상소 — Activity/Problem) → 몽룡 귀환 → 월매 집 → 옥중 상봉 →
+#   잔치·시(feast) → 출두·피해 복구(reveal) → 석방·마지막 선택(release) → 광한루(epilogue) → done(OUTCOME "RELEASED" · COMPLETE).
 # 전역 변수는 넷뿐(결정 §1): CASE_NAMWON_CHUNHYANG_OUTCOME · _COMPLETE · _PART1_COMPLETE · _LEFT_AFTER_PART1. 사건 안 플래그는 접두사 없이.
 # 플레이어는 춘향·몽룡의 핵심 행동을 대신하지 않는다. 호감도·점수 없음 — 선택은 플래그마다 따로 기억한다(vow_heard · vow_own · vow_nod 등).
 # 오누이 뒤 남원 사람(주모·방앗간 주인·포수·이웃 아낙)은 여기서 같은 CHR·그림으로 다시 세운다 — F-10(비활성 사건 인물 층) 전 임시 조치. 오누이 흐름은 옮기지 않는다.
 extends RefCounted
 
 const P2 := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2a_data.gd")   # PART II-A(새 사또 — 행차~옥의 첫 밤)
+const P2B := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2b_data.gd")  # PART II-B(관아 일 셋 ~ 광한루 — 출두)
 const JAR := "ITM_CH_JAR"        # 장면 소품(§10 작은 술병과 찬합) — 월매 집에 닿으면 내려놓는다
 const LETTER := "ITM_CH_LETTER"  # 장면 소품(§13 A 봉한 편지 — 열 수 없다)
 
@@ -95,9 +97,9 @@ static func data() -> Dictionary:
 			"unknowns": [
 				{ "text": "그네를 탄 처녀는 누구인가.", "when": "c('swing')", "until": "c('name')" },
 				{ "text": "몽룡은 춘향을 다시 만날까.", "when": "c('refusal')", "until": "f('first_meeting_done')" },
-				{ "text": "한양으로 간 몽룡은 돌아올까.", "when": "f('part1_done')", "until": "false" },
+				{ "text": "한양으로 간 몽룡은 돌아올까.", "when": "f('part1_done')", "until": "f('mongryong_return_seen')" },
 				{ "text": "새 사또는 춘향을 어떻게 할 셈인가.", "when": "c('bring_her')", "until": "f('jailed')" },
-				{ "text": "춘향은 옥에서 얼마나 버틸까.", "when": "f('jailed')", "until": "false" },
+				{ "text": "춘향은 옥에서 얼마나 버틸까.", "when": "f('jailed')", "until": "f('chunhyang_released')" },
 			],
 			"places": [
 				{ "name": "광한루", "when": "f('case_started')" }, { "name": "그네(광한루원 북서)", "when": "c('swing')" },
@@ -121,6 +123,20 @@ static func data() -> Dictionary:
 	out.props += P2.props()
 	out.events.merge(P2.events())
 	out["ambient_exclude"] = P2.ambient_excludes()   # 비우기 구역(C63) — 6A 행차 길
+	# PART II-B를 잇는다(같은 사건 — 단계 jail 뒤 feast · reveal · release · epilogue). ACT 13 술·쌀·상소는 문제(problems — case_registry가 expand)
+	out.case.FIXED_BEATS += P2B.fixed_beats()
+	out.items.merge(P2B.items())
+	out.clues.merge(P2B.clues())
+	out.map_places = P2B.map_places() + out.map_places
+	out.map_leads = P2B.map_leads() + out.map_leads
+	out.journal.unknowns += P2B.unknowns()
+	out.journal.places += P2B.places()
+	out.actors += P2B.actors()
+	out.objects += P2B.objects()
+	out.triggers += P2B.triggers()
+	out.props += P2B.props()
+	out.events.merge(P2B.events())
+	out["problems"] = P2B.problems()
 	return out
 
 static func anchors() -> Dictionary:
@@ -150,7 +166,7 @@ static func anchors() -> Dictionary:
 		"jumo": [-3001.0, 227.6], "miller": [-3179.6, -313.4], "hunter": [-3192.5, -133.5], "neighbor_after": [-3203.0, -127.5],
 	}
 	# 배치 파일의 PART II 앵커(관아·사령 줄·기생 줄·옥 — 같은 값을 두 번 적지 않음) · II-A 연출 자리. 이미 있는 이름은 PART I 값이 이긴다
-	for src in [P2.placement_anchors(), P2.anchors()]:
+	for src in [P2.placement_anchors(), P2.anchors(), P2B.anchors()]:
 		for k in src:
 			if not a.has(k): a[k] = src[k]
 	return a

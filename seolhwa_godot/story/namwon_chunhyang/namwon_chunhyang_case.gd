@@ -1,8 +1,9 @@
 # 사건 「남원의 약속」 PART I — 데이터로 쓰기 번거로운 연출(1A·1B 각본 시점, 그네 흔들기, 방자와 부딪힘, 2A, 월매 집, 며칠의 압축, 백년가약, 5A 이별)과
 # 기록책·소리·떠남(LEFT_AFTER_PART1). 데이터(namwon_chunhyang_data.gd)의 { "call": 이름 }과 조건식 fn('이름')이 이 함수들을 부른다.
 # 원칙(시나리오 §1·§2): 플레이어는 곁에서 보고 거든다 — 춘향·몽룡의 핵심 행동(부르기·거절·약속·이별)을 대신하지 않는다. 점수·호감도 없음.
-# PART II-A(새 사또 — 행차~옥의 첫 밤)와 공통 도움(say·flag·카메라)은 이어받는 namwon_chunhyang_p2a.gd에 있다.
-extends "res://story/namwon_chunhyang/namwon_chunhyang_p2a.gd"
+# PART II-A(새 사또 — 행차~옥의 첫 밤)와 공통 도움(say·flag·카메라)은 namwon_chunhyang_p2a.gd, PART II-B(관아 일 셋 ~ 광한루)는
+# namwon_chunhyang_p2b.gd에 있다(이 파일 → p2b → p2a 차례로 잇는다).
+extends "res://story/namwon_chunhyang/namwon_chunhyang_p2b.gd"
 
 const D := preload("res://story/namwon_chunhyang/namwon_chunhyang_data.gd")
 const CASE_TITLE := "남원의 약속"
@@ -37,7 +38,7 @@ func music_wanted() -> String:
 	if S.phase == "dano" or S.phase == "courtship":
 		var h: float = d.main.hour
 		if h >= 6.0 and h < 18.0 and not f("in_night_scene"): return "bgm_dano_bright"   # §3 BGM도 밝다
-	return ""   # 저녁·밤·이별(§17 과한 음악을 쓰지 않는다)
+	return p2b_music()   # 저녁·밤·이별(§17 과한 음악을 쓰지 않는다) · PART II-B 잔치 음악(출두 때 끊김)
 
 func ambient(dt: float) -> void:
 	_update_swing(dt)

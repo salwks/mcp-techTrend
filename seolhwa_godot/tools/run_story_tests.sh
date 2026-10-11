@@ -116,6 +116,12 @@ TESTS=(
 	"namwon_chunhyang:p2a|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:p2a --notitle"
 	"namwon_chunhyang:p2b|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:p2b --notitle"
 	"namwon_chunhyang:p2c|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:p2c --notitle"
+	# 춘향 PART II-B(story/namwon_chunhyang/namwon_chunhyang_p2b_test.gd — 게임플레이 구조 1차 §7~§23): 술·쌀·상소(Activity/Problem, 순서 자유·한 번만) →
+	#   몽룡 귀환 14A · 월매 집 · 옥중 상봉 · 잔치(EventCrowd 14 · 사령↔상 실제 틈 ≥1.6 · 차일 C62) · 시 17A · 출두(같은 노드 자세 · cower) · 피해 복구(본 것/들은 것) · 석방 · 포승 기억 · RELEASED
+	#   iib1 순응·소극(관찰 도중·진 채 저장/불러오기) / iib2 저항(잔치 도중 저장/불러오기) / iib3 섞임(다시 묻기 전·잔치 날 아침 저장/불러오기)
+	"namwon_chunhyang:iib1|300|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:iib1 --notitle"
+	"namwon_chunhyang:iib2|300|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:iib2 --notitle"
+	"namwon_chunhyang:iib3|300|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:iib3 --notitle"
 )
 
 selected=()
