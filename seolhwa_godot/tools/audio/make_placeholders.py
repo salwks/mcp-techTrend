@@ -303,6 +303,71 @@ def bgm_night_drone(rng):
     return norm(_loop_safe(x, 2.0), -17)
 
 
+# ---- 춘향 PART I(단오) — 장터 웅성임 · 먼 북 · 담 너머 웃음 · 밝은 단오 음악 ----
+def crowd_dano(rng):
+    # 장터 웅성임(6초, Ambient): 말소리 띠 잡음이 여러 겹 오르내림 + 드문 손뼉
+    sec = 6.0
+    t = t_axis(sec)
+    x = np.zeros(len(t))
+    for k in range(7):
+        f0 = rng.uniform(250, 900)
+        v = band(noise(sec, rng), f0 * 0.7, f0 * 1.6) * (0.5 + 0.5 * np.sin(2 * np.pi * t * rng.uniform(1.5, 4.0) + rng.uniform(0, 6)))
+        x += v * rng.uniform(0.3, 0.8)
+    for _ in range(5):
+        place(x, band(noise(0.05, rng), 1200, 5000) * env_exp(0.05, 0.01) * 2.0, rng.uniform(0.2, sec - 0.3))
+    return norm(fade(x, 0.4, 0.6), -18)
+
+
+def drum_far(rng):
+    # 먼 북 세 번(둥 — 둥 — 둥둥)
+    sec = 2.6
+    x = np.zeros(int(SR * sec))
+    for at in (0.0, 0.9, 1.6, 1.85):
+        d = 0.7
+        tt = t_axis(d)
+        hit = np.sin(2 * np.pi * (70 + 30 * np.exp(-tt / 0.05)) * tt) * env_exp(d, 0.22) + band(noise(d, rng), 80, 400) * env_exp(d, 0.03) * 0.3
+        place(x, hit, at)
+    return norm(band(fade(x), 40, 1500), -14)
+
+
+def laugh_far(rng):
+    # 담 너머 웃음(작게, 두 사람): 숨 섞인 짧은 '하하' 마디
+    sec = 2.2
+    x = np.zeros(int(SR * sec))
+    for base, start, n in ((330.0, 0.05, 4), (440.0, 0.75, 3)):
+        for i in range(n):
+            d = 0.16
+            tt = t_axis(d)
+            v = (np.sin(2 * np.pi * base * tt) + 0.4 * np.sin(2 * np.pi * base * 2 * tt)) * env_exp(d, 0.06, 0.01)
+            v += band(noise(d, rng), 600, 3000) * env_exp(d, 0.05) * 0.5
+            place(x, v, start + i * 0.2)
+    return norm(band(fade(x), 200, 3500), -20)
+
+
+def bgm_dano_bright(rng):
+    # 단오 낮 — 밝은 고리: 장구 장단(덩-기덕) 위에 높은 5음 뜯는 소리가 촘촘히
+    sec = 24.0
+    t = t_axis(sec)
+    beat = np.zeros(len(t))
+    at = 0.0
+    while at < sec - 0.6:
+        for off, amp in ((0.0, 1.0), (0.45, 0.5), (0.6, 0.6)):
+            d = 0.25
+            tt = t_axis(d)
+            hit = np.sin(2 * np.pi * (110 + 40 * np.exp(-tt / 0.03)) * tt) * env_exp(d, 0.08) * amp
+            place(beat, hit, at + off)
+        at += 1.2
+    scale = [293.7, 329.6, 392.0, 440.0, 523.3, 587.3]
+    mel = np.zeros(len(t))
+    at = 0.3
+    while at < sec - 2.5:
+        f = scale[int(rng.integers(0, len(scale)))]
+        place(mel, pluck(f, 1.6, rng, 0.55) * rng.uniform(0.5, 0.9), at)
+        at += float(rng.choice([0.3, 0.6, 0.6, 0.9]))
+    x = band(beat, 50, 900) * 0.45 + mel * 0.7
+    return norm(_loop_safe(x, 1.2), -16)
+
+
 SFX = {
     "knock": (knock, "문 두드림 두 번(나무 문)"),
     "footstep_heavy": (footstep_heavy, "무거운 발 디딤(범·큰 짐승)"),
@@ -319,18 +384,25 @@ SFX = {
     "page_turn": (page_turn, "종이 넘김(UI)"),
     "ui_select": (ui_select, "고르기 똑(UI)"),
     "brush_rustle": (brush_rustle, "덤불·가지 스침(큰 것이 숲 사이로 지나감)"),
+    "crowd_dano": (crowd_dano, "단오 장터 웅성임(6초, Ambient)"),
+    "drum_far": (drum_far, "먼 북(둥 — 둥 — 둥둥)"),
+    "laugh_far": (laugh_far, "담 너머 웃음(작게)"),
 }
 # 처음 판(14개) 뒤에 더한 소리 — 씨앗 순서를 뒤에 붙여 예전 파일이 다시 돌려도 바뀌지 않게
-LATE = ["brush_rustle"]
+LATE = ["brush_rustle", "crowd_dano", "drum_far", "laugh_far"]
 BGM = {
     "bgm_day_calm": (bgm_day_calm, "낮 잔잔한 고리(지속음 + 뜯는 5음, 24.5초)"),
     "bgm_night_drone": (bgm_night_drone, "밤 긴장 지속음(맥놀이, 24초)"),
+}
+# 뒤에 더한 음악(예전 두 곡의 씨앗을 바꾸지 않게 따로 센다)
+BGM_LATE = {
+    "bgm_dano_bright": (bgm_dano_bright, "단오 낮 밝은 고리(장구 장단 + 높은 5음, 22.8초)"),
 }
 
 
 def main():
     if "--list" in sys.argv:
-        for k, (_, d) in {**SFX, **BGM}.items():
+        for k, (_, d) in {**SFX, **BGM, **BGM_LATE}.items():
             print(f"{k:16s} {d}")
         return
     order = sorted(k for k in SFX if k not in LATE) + LATE
@@ -341,6 +413,10 @@ def main():
         print(f"sfx/{k}.wav  {len(x) / SR:.2f}s")
     for i, (k, (fn, _)) in enumerate(sorted(BGM.items())):
         x = fn(np.random.default_rng(2000 + i))
+        write(os.path.join(OUT, "bgm", k + ".wav"), x)
+        print(f"bgm/{k}.wav  {len(x) / SR:.2f}s")
+    for i, (k, (fn, _)) in enumerate(BGM_LATE.items()):
+        x = fn(np.random.default_rng(2100 + i))
         write(os.path.join(OUT, "bgm", k + ".wav"), x)
         print(f"bgm/{k}.wav  {len(x) / SR:.2f}s")
 

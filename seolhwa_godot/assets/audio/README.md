@@ -31,6 +31,9 @@
 | page_turn | sfx/page_turn.wav | 종이 넘김(UI) | placeholder, replace later |
 | ui_select | sfx/ui_select.wav | 고르기 똑(UI, 설정 메뉴 소리 크기 바꿀 때) | placeholder, replace later |
 | brush_rustle | sfx/brush_rustle.wav | 덤불·가지 스침 — 큰 것이 숲 사이로 지나감(남원 첫 조우 §25) | placeholder, replace later |
+| crowd_dano | sfx/crowd_dano.wav | 단오 장터 웅성임 6초(Ambient 버스, 춘향 PART I §3) | placeholder, replace later |
+| drum_far | sfx/drum_far.wav | 먼 북 — 둥 · 둥 · 둥둥(춘향 단오 마당) | placeholder, replace later |
+| laugh_far | sfx/laugh_far.wav | 담 너머 웃음, 작게(춘향 §13 장면 C) | placeholder, replace later |
 
 ## 음악 (bgm/)
 
@@ -38,3 +41,4 @@
 |---|---|---|---|
 | bgm_day_calm | bgm/bgm_day_calm.wav | 낮 잔잔한 고리 — 낮은 지속음 + 뜯는 5음, 24.5초 | placeholder, replace later |
 | bgm_night_drone | bgm/bgm_night_drone.wav | 밤 긴장 지속음 — 55Hz와 어긋난 5도 맥놀이, 24초 | placeholder, replace later |
+| bgm_dano_bright | bgm/bgm_dano_bright.wav | 단오 낮 밝은 고리 — 장구 장단 + 높은 5음, 22.8초(춘향 PART I) | placeholder, replace later |
