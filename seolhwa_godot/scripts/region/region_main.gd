@@ -125,6 +125,7 @@ var _lantern: OmniLight3D
 var _reload_t := 0.0
 var weather    # Weather
 var npcs_amb    # NpcAmbient(주변 인물·짐승) — --nonpc로 끔
+var crowd = null  # EventCrowd(scripts/story/event_crowd.gd — 사건 때만 늘어나는 군중, C60). --nochars면 없음
 # 실내 공간(scripts/region/interior_space.gd, region_data/interiors/<id>/interior.json): 굴·지하 같은 큰 실내를 따로 세운 공간.
 #   enter_interior(id, entrance_id) · exit_interior(exit_id) — 권역을 다시 읽지 않고 지형·식생을 숨긴 채 실내 키트만 세운다(짧은 암전).
 signal indoor_changed(id: String)   # 들어가면 실내 id, 나오면 ""
@@ -196,6 +197,10 @@ func _ready() -> void:
 	if args.has("ridefixture") or args.has("ridevars") or args.has("ridedone") or args.has("ridefresh"): RideTest.apply_fixture(args)   # 시험 출발 저장(이야기보다 먼저)
 	if args.has("continuefixture"): load("res://scripts/story/continue_test.gd").apply_fixture(args)   # 이어 하기 시험 저장(이야기보다 먼저)
 	if not args.has("nostory"): story = StoryDirector.create_for(self)
+	if not args.has("nochars"):
+		crowd = load("res://scripts/story/event_crowd.gd").new()
+		scene_vp.add_child(crowd)
+		crowd.setup(self)
 	if args.has("nomsaa"): scene_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if args.has("noshadow"): sun.shadow_enabled = false
 	if args.has("nolamps"):
@@ -239,6 +244,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/story/talk_test.gd").new(self); _ride_test.run.call_deferred(String(args.talktest))
 	elif args.has("continuetest"):
 		_ride_test = load("res://scripts/story/continue_test.gd").new(self); _ride_test.run.call_deferred(String(args.continuetest))
+	elif args.has("preptest") or args.has("prepshot"):   # 춘향 준비(F-11·옥·수수밭·EventCrowd) 시험·촬영 — scripts/story/prep_test.gd
+		_ride_test = load("res://scripts/story/prep_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("talkshot"):
 		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
@@ -319,6 +326,7 @@ func _build_scene() -> void:
 	# 배치(§8): placement_*.json → 키트 → add_static (+ --placedir=폴더1;폴더2 추가 폴더)
 	placement = PlacementLoader.new(world, args.get("placedir", "").split(";", false) if args.has("placedir") else [])
 	placement.parallel = not args.has("serialbuild")
+	placement.gate.main = self   # when 조건(F-11)이 이야기·시간을 본다
 	if not args.has("noplace"): placement.load_all()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
 	if not args.has("nowallproxy"): world.build_wall_proxies(placement)   # region.json walls 중 키트가 안 덮은 구간만
@@ -807,6 +815,7 @@ func _process(delta: float) -> void:
 			_bench_dts.append(delta)
 		if _bench_left <= 0.0: _bench_report()
 	if story != null: story.update(dt)   # 이야기·전투(전투 중에는 전투가 플레이어를 옮긴다)
+	placement.gate.poll()   # 배치·군중 when — 사건·변수·밤낮이 바뀐 프레임에만 다시 본다
 	if story != null and story.owns_player(): pass
 	elif boats.riding() or horse_ride.busy(): pass
 	elif mv.length() > 0.0:
@@ -888,6 +897,7 @@ func _process(delta: float) -> void:
 	sky_mat.set_shader_parameter("u_time", clock)
 	player.update_char(dt, cam)
 	if npcs_amb: npcs_amb.update(dt, player_pos, hour, _loading or _leaving)
+	if crowd != null and not _loading: crowd.update(dt)
 	var sp := cam.unproject_position(player_pos + Vector3(0, 0.8, 0))
 	var y := clampf(1.0 - sp.y / float(scene_vp.size.y), 0.15, 0.85)
 	focus_y += (y - focus_y) * minf(1.0, dt * 6.0)
@@ -1101,6 +1111,7 @@ func _free_later(nodes: Array, frames: int) -> void:
 func _reload_place() -> void:
 	_reload_t = 0.0
 	placement.reload()
+	if crowd != null: crowd.rebuild()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
 	if not args.has("nowallproxy"): world.build_wall_proxies(placement)
 	player_pos.y = world.height_at(player_pos.x, player_pos.z)
