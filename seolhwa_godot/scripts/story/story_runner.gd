@@ -5,10 +5,11 @@
 # 명령: say · caption · toast · examine · choice(loop, options[{label, when, disabled_when, hint, do, end}]) · if(then/else) ·
 #   flag · unflag · clue · rule · give · take · var · phase · outcome · wait · teleport · move · face · anim · place · show ·
 #   spawn · despawn · camera · fade · letterbox · cutscene · time · weather · world · journal · combat(store) · call · event ·
-#   shake · save · ending · log · sfx(at)·bgm(fade)·duck(sec)·hush(소리 — scripts/audio/sound.gd) · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost") · drift(물살 표식 — scripts/story/drift.gd)
+#   shake · save · ending · log · activity(문제 활동 — scripts/story/problems.gd) · sfx(at)·bgm(fade)·duck(sec)·hush(소리 — scripts/audio/sound.gd) · spirit·sound·talisman·dread(잔영 체계 — scripts/story/spirits.gd) · chase(추격 — scripts/story/chase.gd, 결과 store: "end" | "lost") · drift(물살 표식 — scripts/story/drift.gd)
 extends RefCounted
 
 const EventClass := preload("res://scripts/story/event_class.gd")
+const Problems := preload("res://scripts/story/problems.gd")   # Activity/Problem 최소 계약 — { "activity": "문제.활동" } · pa·pd·pn·pdone
 
 var d          # story_director
 var S          # story_state
@@ -65,6 +66,11 @@ func fn(name: String, a = null):
 	if case_fn == null or not case_fn.has_method(name): return null
 	return case_fn.call(name) if a == null else case_fn.call(name, a)
 func r(name: String): return last.get(name)
+# Activity/Problem(scripts/story/problems.gd): pa 활동을 마쳤나 · pd 고른 갈래("" = 아직) · pn 목록(쉼표) 중 마친 수 · pdone 문제가 풀렸나
+func pa(pid: String, aid: String) -> bool: return Problems.done(S.flags, pid, aid)
+func pd(pid: String) -> String: return Problems.decision(S.flags, pid)
+func pn(pid: String, ids: String) -> int: return Problems.count(S.flags, pid, ids)
+func pdone(pid: String) -> bool: return Problems.solved(S.flags, pid)
 # 잔영·호신물(scripts/story/spirits.gd): tal(호신물 id, ''=아무거나) 지녔나 · zone(경계 id) 안인가 · night() · spv(잔영 id) 보이나
 func tal(id := "") -> bool: return d.spirits != null and d.spirits.equipped(id)
 func zone(id: String) -> bool: return d.spirits != null and d.spirits.in_zone(id)
@@ -173,6 +179,12 @@ func step(st: Dictionary, g: int) -> void:
 		else: push_warning("이야기: 없는 함수 " + String(st.call))
 	elif st.has("event"):
 		await run_event(String(st.event), g)
+	elif st.has("activity"):   # 문제 활동 하나(problems.gd가 만든 단계 — 이미 마쳤으면 아무것도 하지 않는다)
+		var acts: Dictionary = d.data.get("activity_steps", {})
+		if not acts.has(String(st.activity)): push_warning("이야기: 없는 활동 " + String(st.activity))
+		else:
+			log_line("activity", st.activity)
+			await exec(acts[String(st.activity)], g)
 	elif st.has("chase"):
 		var cres: String = await load("res://scripts/story/chase.gd").run(d, String(st.chase), int(st.get("from", -1)))
 		last[String(st.get("store", "chase"))] = cres

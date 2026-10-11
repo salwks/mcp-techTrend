@@ -10,6 +10,7 @@
 extends RefCounted
 
 const Progress := preload("res://scripts/region/progress.gd")
+const Problems := preload("res://scripts/story/problems.gd")   # 사건 데이터의 problems → 조사 대상·트리거·기록(불러올 때 한 번)
 
 const SPACE_CASES := {
 	"JL_NAMWON_UNBONG": ["namwon", "namwon_chunhyang"],   # 춘향(PART I 진입: 오누이 완료 && 한양 책방 완료 — 사건 데이터 requires)
@@ -84,7 +85,7 @@ static func load_data(id: String) -> Dictionary:
 	var s = load(data_path(id))
 	if s == null or not (s is Script) or not s.can_instantiate(): return {}
 	var d = s.data()
-	return d if d is Dictionary else {}
+	return Problems.expand(d) if d is Dictionary else {}
 
 # ---- 고르기 ----
 # case.requires {변수: 값} — 쉼표 목록 값(MAIN_MASTER_TRACE "HANYANG,GANGNEUNG")은 들어 있으면 맞음. 안 맞는 첫 변수 이름(맞으면 "")
