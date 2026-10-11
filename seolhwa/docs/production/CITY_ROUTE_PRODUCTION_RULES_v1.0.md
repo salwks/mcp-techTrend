@@ -2,6 +2,7 @@
 
 > 작성: 2026-10-11 · 근거: 브랜치 `claude/youthful-gauss-d0fxzv`의 실제 코드·데이터. 문서만 다루며 코드는 바꾸지 않았다.
 > 갱신: 2026-10-11 공통 승격 1차(`seolhwa_godot/docs/reports/commonize-1.md`) — C17·C27·C46 구현(G), 길목 깃발 land 노정만(결정 5·6), F-1·F-6 완료.
+> 갱신: 2026-10-11 춘향 2a(`seolhwa_godot/docs/reports/chunhyang-prep.md`) — F-11(조건부 배치)·F-17(EventCrowd 최소판) 완료, C60 구현(G).
 > 경로는 따로 적지 않으면 `seolhwa_godot/` 기준이다. 상태 표기는 다음과 같다.
 > - **G**: 공통 코드에 이미 있어 모든 공간에 적용된다.
 > - **N**: 남원 코드·데이터에만 있다. 공통으로 승격해야 한다.
@@ -88,11 +89,12 @@
 | C57 | 식생 scatter | 고도를 `hg/K + 60`으로 되돌린다(**남원 K 0.30·기준 고도 60 고정**). 수종 고도대는 지리산 서부 기준이고 기후·권역 입력이 없다. 그래서 다른 일곱 권역(K 0.25~0.5, 기준 0m)에도 남원 식생이 깔린다 | `kit/nature/scatter.gd:519` | N |
 | C58 | 지형 색 | 풀·숲·논 색이 shader 상수로 전국 같다(C_GRASS #9da66b 등) | `shaders/region_terrain.gdshader` | G |
 | C59 | 권역 지형 빌드 경로 | 일곱 권역은 설정 파일(`tools/region/regions/<id>.json`)로 `build_region.main()`을 돈다. 남원만 전용 `main()` + `places.py · profiles.PROFILES · landuse.AREA_ID · hydro.KNOWN · namwon_widths` 경로를 쓰고, `qa.py`·`render.py`에도 남원 분기가 있다 | `tools/region/build.py:635`, `qa.py:10` | N |
-| C60 | 이벤트 군중 | **공통 규칙 확정 / 최소 구현 필요.** 설화용 일시 군중은 `EventCrowd` 프리셋으로 배치: generic character bank 재사용 → 지정 구역 안 배치 → 단순 행동(idle/talk/watch/walk, 잔치는 sit/stand/serve) → density(low 6~10 / medium 10~18 / high 18~30, 1024×768 실행 기준 시작값 — 성능 시험 뒤 확정) → seed로 같은 배치 재현 → 사건 flag로 생성/제거 → 카메라 밖·먼 거리는 줄이거나 멈춤. 핵심 이야기 인물은 넣지 않는다(story actor). **만들지 않는 것**: 개별 군중 AI·생활 스케줄·길찾기·충돌 회피·감정 전파·관중 반응·대규모 navigation. 목적은 "군중 시뮬레이션"이 아니라 "사건 장면 채우기" | (계획) 춘향 자산·좌표 배치 때 구현 | P |
+| C60 | 이벤트 군중 | **공통 규칙 확정 · 최소판 구현(춘향 2a).** 설화용 일시 군중은 `EventCrowd` 프리셋으로 배치: generic character bank 재사용 → 지정 구역 안 배치 → 단순 행동(idle/talk/watch/walk, 잔치는 sit/stand/serve) → density(low 6~10 / medium 10~18 / high 18~30, 1024×768 실행 기준 시작값 — 성능 시험 뒤 확정) → seed로 같은 배치 재현 → 사건 flag로 생성/제거 → 카메라 밖·먼 거리는 줄이거나 멈춤. 핵심 이야기 인물은 넣지 않는다(story actor). **만들지 않는 것**: 개별 군중 AI·생활 스케줄·길찾기·충돌 회피·감정 전파·관중 반응·대규모 navigation. 목적은 "군중 시뮬레이션"이 아니라 "사건 장면 채우기" | **구현(춘향 2a)** `scripts/story/event_crowd.gd`(preset festival·banquet, 배치 파일·사건 데이터의 `crowds`, `--crowdshow`) | G |
 
 **공통 층 집계: 59개 = G 46 · N 9 · P 4** (표의 상태 칸을 세어 확인. commonize-1에서 C17·C27 N→G, C46 P→G).
 - **N(남원에만 있어 공통 승격 필요)**: C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
 - **P(문서만)**: C28 · C31 · C42 · C52
+- C60(EventCrowd)은 위 59개 뒤에 더한 규칙이다 — 춘향 2a에서 구현(G). 인원 확정값은 `seolhwa_godot/docs/reports/chunhyang-prep.md`.
 - 덧붙임: G 가운데 C16 이동 잠금·C41 음악 훅처럼 **장치는 공통이지만 지금 쓰는 사건이 남원 하나뿐**인 것이 있다. 다른 사건이 쓰기 시작할 때 E절 계약대로 쓰면 된다.
 
 ### B-2. 지역 층 (권역·노정 profile — 값은 C절)
@@ -118,7 +120,7 @@
 | 사건 인물·물체·트리거·소품 | `<id>_data.gd` `actors/objects/triggers/props`(`when`, phase별 `at`) | 남원 오누이·포수·이웃 아낙 |
 | 사건 무대 건물 | `placement_story_<case>.json`. 사건과 관계없이 늘 읽힌다(`placement_loader.gd:49`) | 남원 외딴집·방앗간 10개 · 강릉 식생 비우기 2개 |
 | 카메라 | 공통 TALK 위에 `case.talk_camera` · `actors[].talk_camera`(false = 끔), 단계 `{camera:{…}}`, `cutscene` | 남원 7A pitch 34·거리 17·fov 36 |
-| 임시 군중 | 지금은 `when`으로 감싼 사건 actor(평양 `crowd_a/b` · 강릉 `town_crowd_*`). 앞으로는 `EventCrowd` 프리셋(C60) | 평양 `crowd_a/b` · 강릉 `town_crowd_*` |
+| 임시 군중 | 지금은 `when`으로 감싼 사건 actor(평양 `crowd_a/b` · 강릉 `town_crowd_*`). 새 사건은 `EventCrowd` 프리셋(C60, 구현됨) | 평양 `crowd_a/b` · 강릉 `town_crowd_*` |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | 남원 `u_moon` 0, 강릉 `snow_line` |
 | 이동 잠금 | `case_fn.travel_lock()`(장면 안 조건) · `case.travel_gate`(공간 떠나기 — 데이터 선언) | 남원 밤 · 남원 첫 사건 |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | 남원만 |
@@ -260,8 +262,8 @@
 | 고을 막음 | `case.travel_gate { leave_space_until, notice, spaces? }` | G(남원 첫 사건이 씀 — F-1 완료) | 풀림 변수는 자기 사건 것. 이유 한 줄. 사건이 끝나면(phase done) 저절로 풀린다 |
 | 대화 카메라 | 공통 TALK(38/13.5/38) 위에 `case.talk_camera {pitch, distance, fov 일부}` · `actors[].talk_camera` · `false`로 끄기 | G(F-6 완료) | 구도가 틀어지는 인물만 덮어쓴다 |
 | 카메라 샷 | 단계 `{camera:{pitch, distance, fov, focus}}`, `cutscene`, `rig.shot` | G | 끝나면 `camera(null)`. 사용자 틸트 설정 복원 |
-| 임시 군중 | **축제·잔치·관아 행사처럼 일시적으로 사람이 늘어나는 장면은 공용 이벤트 군중 프리셋(`EventCrowd`, C60)을 쓴다. 도시의 상시 인구 시스템을 새로 만들지 않는다.** 사건 데이터에 `crowds: [{ preset, area, density, roles, seed, when }]`로 선언 | P(최소 구현 필요) | 핵심 인물은 story actor. 인원은 성능 시험 뒤. 기존 `crowd_` actor 관례는 옮길 때까지 유지 |
-| set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` | 부분적(placement는 when 없이 늘 읽힘) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
+| 임시 군중 | **축제·잔치·관아 행사처럼 일시적으로 사람이 늘어나는 장면은 공용 이벤트 군중 프리셋(`EventCrowd`, C60)을 쓴다. 도시의 상시 인구 시스템을 새로 만들지 않는다.** 사건 데이터(또는 `placement_story_<case>.json`)에 `crowds: [{ id, preset, area, density, roles, seed, when }]`로 선언 | G(C60 · F-17 완료 — `scripts/story/event_crowd.gd`) | 핵심 인물은 story actor. 인원은 성능 시험 뒤. 기존 `crowd_` actor 관례는 옮길 때까지 유지 |
+| set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` 항목의 `when`(파일 머리 `case`의 단계·플래그·공통 변수, `active()`) | G(F-11 완료 — `scripts/region/placement_gate.gd`, 사건·변수가 바뀔 때만 다시 봄. 늘 있는 시설에는 when을 달지 않는다) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | G | `on_load`·`_quit`에서 되돌린다(남원 달 안전장치처럼) |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | G(남원만 씀) | 같은 id 체계(`assets/audio`) |
 | 지도 표지 | `map_leads[]` | G | 들은 행선지만 |
@@ -295,14 +297,14 @@
 | F-7 | onboarding `early()`·JOURNAL 안내를 등록부의 '첫 사건'·`on_case_started` 공통 호출로 | S | C37 · C38 |
 | F-8 | `COMPLETE_VARS`·StoryState 기본 vars·reset 목록을 등록부·사건 데이터에서 만들기 | M | C45 |
 | F-9 | 지명 TITLES 하나로(`place_title` ← settlement `title`) | S | C53 |
-| F-10 | 다중 사건: 비활성 사건 인물 층 · 같은 장면 사건 전환 · id 접두사 규칙 · 바뀐 키만 저장 | L | C44 |
-| F-11 | set dressing 계약: `placement_story_<case>_<part>.json`에 `when` 붙이기(로더가 조건부로) | M | C31 · E |
+| F-10 | 다중 사건: 비활성 사건 인물 층 · 같은 장면 사건 전환 · id 접두사 규칙 · 바뀐 키만 저장. (임시: 남원 오누이 우물·수수밭은 `placement_namwon_local.json` 정적 + `not active('namwon')` — 춘향 2a) | L | C44 |
+| F-11 | ~~set dressing 계약: `placement_story_<case>_<part>.json`에 `when` 붙이기(로더가 조건부로)~~ **완료(춘향 2a)**: `placement_loader` + `placement_gate.gd` | M | C31 · E |
 | F-12 | 공간 음악·환경음 정책(시간대 낮·밤 고리, 권역 환경음) + 말발굽 `audio_cue` | M | C41 · C42 |
 | F-13 | 탁본 대상도 배·말 E 막음에 넣기(`region_main._story_talking`이 탁본을 모름) | S | C01 |
 | F-14 | 노정 `no_station` 같은 설화 예외를 ROUTE_PROFILE로(`make_stations.NO_STATION_SPACES`) | S | C-4 |
 | F-15 | 권역 색(하루 빛 tint) — 결정 뒤에만 | M | B-2 palette |
 | F-16 | (장기 백로그) 범용 placer | XL | 부록 결정 1 |
-| F-17 | `EventCrowd` 최소 구현(C60) — generic bank 선택·구역 배치·단순 행동·density·seed·flag 표시/숨김·먼 거리 줄이기. **춘향 자산·좌표 배치 때** 만든다(남원 오누이용으로 미리 만들지 않음) | M | C60, E절 |
+| F-17 | ~~`EventCrowd` 최소 구현(C60) — generic bank 선택·구역 배치·단순 행동·density·seed·flag 표시/숨김·먼 거리 줄이기~~ **완료(춘향 2a)**: `scripts/story/event_crowd.gd` | M | C60, E절 |
 
 **상위 다섯**: ~~F-1(S)~~ 완료 · F-2(M) · F-3(L) · F-4(M) · F-5(M). F-3a(M)는 눈에 보이는 문제라 F-3과 함께 하기를 권한다.
 
@@ -321,7 +323,7 @@
 | 마지막 밤 달 감추기(`u_moon`) | `namwon_case`, `region_main.set_moon` | 장치는 공통, 사용은 남원 |
 | `FIRST_RECORD` 네 줄, `tale_sky`, 결말 A/B/C | `namwon_case.gd`, `tale_sky.gd` | 사건 내용 |
 | 새 게임 시작 자리 `NAMWON_START`·9.5시, `START_REGION` | `title_menu.gd:20–21`, `discovery.gd:24` | 게임 시작은 남원 하나다(설계) |
-| 춘향 단오(그네·색천·씨름판)·추수(곡식가마·볏짚·감) 차림 | (계획) `story/namwon_chunhyang/` | 계절 시스템 대신 사건 차림(C31). **아직 코드 없음** |
+| 춘향 단오(그네·색천·씨름판)·추수(곡식가마·볏짚·감) 차림 | `placement_story_namwon_chunhyang.json`(when 차림 — F-11) · 사건 코드는 (계획) `story/namwon_chunhyang/` | 계절 시스템 대신 사건 차림(C31). 옥·오리정은 남원 정적 시설(`placement_namwon_local.json`) |
 | 춘향 군중 | PART I 단오 → `EventCrowd: dano_market`(density high, idle/talk/walk/watch, 광한루·장터 둘레) · PART II 생일잔치 → `EventCrowd: byeon_banquet`(density medium, sit/stand/serve/watch, 관아 마당·잔치상 둘레) | 프리셋은 공통(C60), 구역·밀도·seed는 춘향 데이터. 춘향·몽룡·변학도 등은 story actor |
 | 광한루·오작교 키트, 지도 광한루 못 | `kit/landmark/gwanghallu*`, `region_map.gd:185` | 지역 층 랜드마크(설화 층 아님). 남원 profile에 둔다 |
 | 범·떡 기본값(`rule_label` "범의 버릇", `combat_bait_item` 떡, 전투 HUD 떡) | `story_director.gd:398, 898`, `story_ui.gd:45` | **주의**: 남원 값이 공통 기본값으로 새어 있다. 다른 사건은 자기 값을 넣어야 한다(F-5 검사기 항목) |
