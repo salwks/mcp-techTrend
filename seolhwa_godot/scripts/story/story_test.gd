@@ -71,9 +71,15 @@ func _frames(n: int) -> void:
 	for i in n: await get_tree().process_frame
 
 # 대상 곁으로 가서 말 걸기·조사(조건이 안 맞으면 실패로 남긴다)
+# 조사 대상의 자리(대상 id와 앵커 이름이 다른 것 — 문제 관찰 pb_* 등은 대상의 at)
+func _obj_at(id: String):
+	for o in d.data.get("objects", []):
+		if String(o.get("id", "")) == id: return o.get("at", id)
+	return id
+
 func go(id: String) -> void:
 	await _idle()
-	var p: Vector2 = d.anchor(id) if not d.actors.has(id) else Vector2(d.actors[id].pos.x, d.actors[id].pos.z)
+	var p: Vector2 = d.anchor(_obj_at(id)) if not d.actors.has(id) else Vector2(d.actors[id].pos.x, d.actors[id].pos.z)
 	d.teleport_to(Vector2(p.x, p.y + 1.6), "up")
 	await _frames(8)
 	await _idle()   # 자리 트리거(첫 조우 등)가 먼저 돌았으면 끝나길 기다린다
@@ -198,6 +204,9 @@ func _run() -> void:
 	if branch == "ONBOARD":
 		await load("res://scripts/story/onboard_test.gd").new().run(self)
 		return
+	if branch == "OBSERVE":   # 구조 1차 §4 오누이 관찰·초급 판단·Fail Forward·저장/불러오기(scripts/story/oneonui_observe_test.gd)
+		await load("res://scripts/story/oneonui_observe_test.gd").new().run(self)
+		return
 	if branch in ["NA", "NB", "NC"]:   # 화면 다듬기용: 밤(ACT 7~9)만 — 준비를 마친 상태에서 S0007부터(--nightstop=플래그에서 멈춤)
 		await _night_only(branch.substr(1))
 		return
@@ -234,6 +243,8 @@ func _run() -> void:
 	expect(d.S.is_flag("beat_mother_harmed") and d.S.is_flag("past_scene_seen") and not d.S.has_clue("pass_memory"), "과거 장면을 보았고 기록 단서로 남기지 않는다")
 	expect(d.S.notes.has(d.case_fn.PAST_KEEP), "기록에는 빈 광주리와 피, 큰 짐승 흔적만")
 	snapshot("after S0005")
+	# 구조 1차 §4 — 첫 조우 뒤 길가 관찰 둘 → "어느 쪽 흔적을 먼저 확인할까?" (A 길 아래 · B 서쪽 숲 → Fail Forward · C 건너뜀) — 밤·결말은 그대로여야 한다
+	if branch in ["A", "B"]: await load("res://scripts/story/oneonui_observe_test.gd").new().beast_way(self, branch == "B")
 	# S0003 오누이(v3.2 §12: 세 물음 — 지난밤 목소리는 들은 대로, K_MIMIC은 아직)
 	await go("nui")
 	expect(d.S.is_flag("met_kids"), "S0003 오누이")

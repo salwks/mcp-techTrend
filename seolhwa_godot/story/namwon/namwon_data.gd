@@ -117,6 +117,8 @@ static func data() -> Dictionary:
 			# v3.2 §65 — 아침 수수밭. 시신은 보지 않았다(포수의 말로만)
 			"tiger_death": { "title": "수수밭의 흔적", "text": "꺾인 수숫대, 붉은 흔적, 뜯긴 털, 깊게 눌린 자국. “죽었소. 높은 데서 떨어진 것처럼 뼈가 다 상했어.”", "kind": "heard", "by": "포수" },
 			"two_lights": { "title": "하늘의 두 빛", "text": "그날 밤, 하늘에 빛 둘이 자리를 잡았다.", "kind": "fact" },
+			# 구조 1차 §4 — 관찰을 이어 얻은 추정(문제 beast_way가 풀릴 때). 정답으로 쓰지 않는다
+			"trace_downhill": { "title": "흔적이 가는 쪽", "text": "큰 자국은 고개 아래, 사람 사는 쪽으로 이어지는 것 같다.", "kind": "guess" },
 		},
 		"rules": {
 			"K_FOOD": { "title": "먹이에 끌린다", "text": "떡을 하나씩 받아 간 것 같다. 먹을 것이 보이면 그쪽으로 갈지 모른다.", "kind": "guess" },
@@ -142,6 +144,8 @@ static func data() -> Dictionary:
 		},
 		"actors": actors(),
 		"objects": InteractData.expand(objects(), { TTEOK: "떡", OIL: "참기름", TORCH: "횃불" }),
+		# 게임플레이 구조 1차 §4 — 서사형 튜토리얼 관찰·초급 판단(scripts/story/problems.gd가 조사 대상·트리거·기록으로 바꾼다)
+		"problems": problems(),
 		"map_places": map_places(),
 		"map_leads": map_leads(),
 		"journal": journal(),
@@ -211,6 +215,10 @@ static func _anchors() -> Dictionary:
 		"night_start": [-3196.0, -130.0], "wake_spot": [-3195.0, -129.0],
 		"territory": [-3275.0, -395.0], "territory_edge": [-3261.5, -386.5], "lure_end": [-3266.0, -390.0], "lure_player": [-3255.0, -383.0],
 		"jeogori_c": [-3270.0, -392.0], "jeogori_yard": [-3215.0, -344.0],
+		# 구조 1차 §4 관찰(문제 beast_way) — 고갯마루 아래 북쪽 길(region.json namwon_north_road (-3187.3,-265.4)→(-3188.4,-345.4)) 길가 2~3m ·
+		#   첫 조우 숲(tracks_end)에서 방앗간으로 내려가는 사이. 잘못 짚은 자리는 길 서쪽 숲가 8m. 울 밑 흙은 외딴집 마당(sw_yard) 서쪽 끝
+		"obs_mud_print": [-3185.6, -272.0], "obs_bent_grass": [-3190.4, -284.0], "obs_fur": [-3185.2, -296.5],
+		"obs_decide": [-3188.0, -284.0], "obs_wrong_spot": [-3196.0, -288.5], "obs_house_mixed": [-3219.5, -348.5],
 	}
 
 # ---------------------------------------------------------------------------
@@ -551,6 +559,48 @@ static func objects() -> Array:
 		{ "id": "night_wait", "at": "hide_spot", "label": "숨어서 기다린다", "radius": 2.6, "when": "f('dusk_prep') and not f('night_wait_started') and ph('explore')",
 			"steps": [{ "call": "wait_at_hide" }] },
 	]
+
+# ---------------------------------------------------------------------------
+# 게임플레이 구조 1차 §4 — 서사형 튜토리얼: 본다 → 기록된다 → 몇 가지를 잇는다 → 행동한다.
+#   관찰 셋(길가 진흙·눌린 풀·가시의 털) 가운데 둘을 보면 같은 자리에서 "어느 쪽 흔적을 먼저 확인할까?" 한 번.
+#   길 아래(방앗간 쪽)를 고르면 그대로 · 서쪽 숲을 고르면 숲가 노루 길(짧게) → 아래를 향한 발톱 자국 하나 더 → 같은 결과로 본 흐름.
+#   글은 본 것과 한 걸음 해석까지만("호랑이가 …로 갔다" 같은 정답은 쓰지 않는다). 밤·준비·FIXED_BEATS·결말과는 무관(새 모드·새 화면 없음).
+# ---------------------------------------------------------------------------
+static func problems() -> Dictionary:
+	return {
+		"beast_way": {
+			"title": "큰 자국이 가는 쪽",
+			"when": "f('case_started') and ph('explore') and not f('dusk_prep')",
+			"activities": [
+				{ "id": "mud_print", "type": "inspect", "kind": "seen", "at": "obs_mud_print", "label": "길가 진흙 · 살펴보기",
+					"text": ["진흙에 사람 발보다 훨씬 큰 자국이 남아 있다.", "발가락 넷 앞에 발톱이 찍혔다."],
+					"record": { "title": "진흙의 큰 자국", "text": "길가 진흙에 사람 발보다 훨씬 큰 자국. 발가락 넷 앞에 발톱 자국." } },
+				{ "id": "bent_grass", "type": "inspect", "kind": "seen", "at": "obs_bent_grass", "label": "길섶 풀 · 살펴보기",
+					"text": ["길섶 풀이 한쪽으로 납작하게 눌려 있다.", "무거운 것이 비비고 지나간 자리다."],
+					"record": { "title": "눌린 풀", "text": "길섶 풀이 한쪽으로 눌려 있다. 무거운 것이 지나간 자리." } },
+				{ "id": "fur", "type": "inspect", "kind": "seen", "at": "obs_fur", "label": "덤불 가시 · 살펴보기",
+					"text": ["덤불 가시에 누런 털 몇 가닥이 걸려 있다.", "사람 허리보다 높은 데다."],
+					"record": { "title": "가시에 걸린 털", "text": "누런 털 몇 가닥. 사람 허리보다 높은 데 걸렸다." } },
+				{ "id": "which_way", "type": "decide", "after": 2, "at": "obs_decide", "radius": 30.0,
+					"prompt": "어느 쪽 흔적을 먼저 확인할까?",
+					"options": [
+						{ "id": "down", "label": "물레방아 소리가 나는 길 아래쪽", "do": [{ "caption": "길 아래로 — 물레방앗간 지붕이 보인다.", "sec": 2.0 }] },
+						{ "id": "forest", "label": "길을 벗어난 서쪽 숲가", "fail_forward": "deer_path",
+							"do": [{ "caption": "서쪽 숲가부터 보자.", "sec": 1.6 }] }] },
+				{ "id": "house_mixed", "type": "inspect", "kind": "seen", "at": "obs_house_mixed", "label": "울 밑 흙 · 살펴보기", "required": false,
+					"text": ["작은 짚신 자국 위로 큰 자국이 겹쳐 찍혀 있다.", "큰 자국이 나중에 생겼다."],
+					"record": { "title": "울 밑의 두 자국", "text": "외딴집 울 밑 흙에 작은 짚신 자국과 큰 자국이 겹쳤다. 큰 자국이 나중 것." } },
+			],
+			# 서쪽 숲을 골랐을 때만 — 짧은 헛걸음 → 추가 흔적 → 같은 결과
+			"fail_forward": {
+				"deer_path": { "at": "obs_wrong_spot", "label": "숲가 · 살펴보기", "title": "숲가",
+					"text": ["작은 굽 자국뿐이다. 노루가 다니는 길이다."],
+					"extra": { "text": ["돌아서는데, 길가 흙에 큰 자국이 하나 더 있다.", "발톱 끝이 고개 아래를 향한다."],
+						"record": { "title": "아래를 향한 발톱", "text": "길가 흙의 큰 자국 하나. 발톱 끝이 고개 아래를 향한다." } } },
+			},
+			"result": { "flags": ["beast_way_read"], "do": [{ "clue": "trace_downhill" }, { "discover": "mill" }] },
+		},
+	}
 
 static func triggers() -> Array:
 	return [

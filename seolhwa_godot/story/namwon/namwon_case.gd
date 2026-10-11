@@ -57,7 +57,11 @@ func path_clues() -> int:
 #   옛 밤 저장을 되돌린 경우(night_ready_legacy)도. 시각은 보지 않는다(게임 시계는 저절로 흐르지 않는다)
 func night_ready() -> bool:
 	if f("night_ready_legacy"): return true
-	return f("case_started") and f("first_encounter") and f("met_kids") and (f("tiger_house_suspected") or f("link_inferred") or S.clues.size() >= 12)
+	return f("case_started") and f("first_encounter") and f("met_kids") and (f("tiger_house_suspected") or f("link_inferred") or _core_clues() >= 12)
+
+# 안전장치(단서 12개)는 원래 사건 단서만 센다 — 구조 1차 §4 관찰(문제 beast_way의 pb_* · 그 결과 추정)은 밤을 앞당기지 않는다
+func _core_clues() -> int:
+	return S.clues.filter(func(c): return not String(c).begins_with("pb_") and String(c) != "trace_downhill").size()
 
 # 주모에게 물은 것(이겸 연결 §9: 둘 이상) — "보지 못했소."는 물음이 아니다
 const JUMO_QS := ["jq_who", "jq_what", "jq_when", "jq_route", "jq_kids", "jq_search"]

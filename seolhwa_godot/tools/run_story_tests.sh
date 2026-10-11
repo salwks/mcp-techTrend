@@ -35,6 +35,8 @@ TESTS=(
 	"namwon:B|600|--storytest=namwon:B"
 	"namwon:C|240|--storytest=namwon:C"
 	"namwon:onboard|240|--storytest=namwon:onboard"
+	# 게임플레이 구조 1차 §4(scripts/story/oneonui_observe_test.gd): 관찰 기록 · 둘 뒤 초급 판단 · 서쪽 숲 Fail Forward · 관찰/판단 도중 저장·불러오기 · 한 번만 · FIXED_BEATS 그대로
+	"namwon:observe|240|--storytest=namwon:observe"
 	"hanyang|300|--region=GG_HANYANG --storytest=hanyang"
 	"hanyang:r01|240|--region=GG_HANYANG --storytest=hanyang:r01"
 	"hanyang:act3|240|--region=GG_HANYANG --storytest=hanyang:act3"
