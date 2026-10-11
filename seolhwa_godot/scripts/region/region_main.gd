@@ -1294,6 +1294,7 @@ func _travel(pt: Dictionary) -> void:
 		_portal_armed[pt.id] = false
 		return
 	_leaving = true
+	if story != null and story.has_method("on_leave_space"): story.on_leave_space(String(pt.target))   # 사건이 떠남을 안다(춘향 LEFT_AFTER_PART1 등)
 	var at = Vector2(float(pt.tx), float(pt.tz))
 	if is_nan(float(pt.tx)):
 		var info := Travel.region_info(pt.target)

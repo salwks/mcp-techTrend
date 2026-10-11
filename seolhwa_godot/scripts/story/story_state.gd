@@ -25,6 +25,9 @@ const VAR_DEFAULTS := {
 	ITEM_KEY_001 = false, PLAYER_FIRST_LINE = "", ACT6_OPEN = false,
 	# v2.4 §17 함흥: S6011 돌아온 전갈꾼 수(3/2/1 — 0은 아직), S6009 조사 카드 「서강의 두 필체」를 봄(최종장 S8003·S8004 복선)
 	HAMHUNG_MESSENGERS_RETURNED = 0, HAMHUNG_SEOGANG_CARD_SEEN = false,
+	# 남원 재방문 「남원의 약속」(춘향) — 전역 변수는 이 넷뿐(결정 §1). 결말 값은 "RELEASED" 하나(PART II 끝)
+	CASE_NAMWON_CHUNHYANG_OUTCOME = "", CASE_NAMWON_CHUNHYANG_COMPLETE = false,
+	CASE_NAMWON_CHUNHYANG_PART1_COMPLETE = false, CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1 = false,
 }
 
 var case_id := ""

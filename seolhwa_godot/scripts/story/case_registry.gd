@@ -12,7 +12,7 @@ extends RefCounted
 const Progress := preload("res://scripts/region/progress.gd")
 
 const SPACE_CASES := {
-	"JL_NAMWON_UNBONG": ["namwon"],
+	"JL_NAMWON_UNBONG": ["namwon", "namwon_chunhyang"],   # 춘향(PART I 진입: 오누이 완료 && 한양 책방 완료 — 사건 데이터 requires)
 	"GG_HANYANG": ["hanyang"],
 	"GW_GANGNEUNG": ["gangneung"],
 	"GS_GYEONGJU": ["gyeongju"],

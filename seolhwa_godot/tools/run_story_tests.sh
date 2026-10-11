@@ -94,6 +94,11 @@ TESTS=(
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 	# 춘향 준비(scripts/story/prep_test.gd): 조건부 배치(F-11) 없음→있음→없음 · 옥(늘 있음·문 상태) · 오누이 흔적(우물·수수밭 푸름/붉음) · EventCrowd(인원·seed·when·이야기 인물 없음·먼 거리 숨김)
 	"chunhyang:prep|300|--region=JL_NAMWON_UNBONG --preptest --notitle"
+	# 춘향 PART I(story/namwon_chunhyang/namwon_chunhyang_test.gd): a 진입 판정·단오 군중 28·남원 사람·1A~5A 끝까지(같이 감·들었습니다·기다리실 겁니까) ·
+	#   b 다른 선택(지나감·혼자 가시오·끄덕임·말 없음) · after PART I 끝+떠남+강릉 → PART II는 아무것도 서지 않는다
+	"namwon_chunhyang:a|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:a --notitle"
+	"namwon_chunhyang:b|420|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:b --notitle"
+	"namwon_chunhyang:after|300|--region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:after --notitle"
 )
 
 selected=()

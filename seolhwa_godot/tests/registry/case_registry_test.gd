@@ -24,7 +24,9 @@ const OLD_CASES := { "JL_NAMWON_UNBONG": "namwon", "GG_HANYANG": "hanyang", "GW_
 	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju", "PA_PYEONGYANG": "pyongyang",
 	"PA_PYEONGYANG-HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG-BUKCHEONG": "hamhung",
 	"SEA_NAMHAE_JEJU": "jeju", "JJ_JEJU": "jeju" }
-const OLD_MAP_IDS := ["namwon", "hanyang", "gangneung", "gyeongju", "hwangju", "pyongyang", "hamhung", "jeju"]
+const OLD_MAP_IDS := ["namwon", "namwon_chunhyang", "hanyang", "gangneung", "gyeongju", "hwangju", "pyongyang", "hamhung", "jeju"]
+# 그 뒤 같은 공간에 더한 사건(춘향 PART I — 2026-10-11): 예전 사건 다음 차례
+const ADDED := { "JL_NAMWON_UNBONG": ["namwon_chunhyang"] }
 
 var n := 0
 var fails := 0
@@ -65,8 +67,8 @@ func _test_e_registry() -> void:
 	print("E 기존 공간 → 사건(등록부 = 예전 CASES)")
 	var same := true
 	for sp in OLD_CASES:
-		if CaseRegistry.cases_for(sp) != [OLD_CASES[sp]]: same = false; print("    다름 ", sp, " ", CaseRegistry.cases_for(sp))
-	ok(same, "공간마다 기존 사건 하나(%d 공간)" % OLD_CASES.size())
+		if CaseRegistry.cases_for(sp) != [OLD_CASES[sp]] + ADDED.get(sp, []): same = false; print("    다름 ", sp, " ", CaseRegistry.cases_for(sp))
+	ok(same, "공간마다 기존 사건 하나 + 더한 사건(남원 춘향)(%d 공간)" % OLD_CASES.size())
 	ok(CaseRegistry.SPACE_CASES.size() == OLD_CASES.size(), "등록부에 다른 공간이 더 없다")
 	ok(CaseRegistry.all_ids() == OLD_MAP_IDS, "사건 목록·차례가 예전 지도 표지 목록과 같다 %s" % [CaseRegistry.all_ids()])
 	ok(CaseRegistry.cases_for("GG_HANYANG-JL_NAMWON_UNBONG").is_empty(), "사건 없는 공간(노정)은 빈 목록")
@@ -75,11 +77,11 @@ func _test_e_registry() -> void:
 func _test_a() -> void:
 	print("A 한 공간에 사건 여러 개")
 	CaseRegistry.register(NW, DUMMY, DUMMY_DIR)
-	ok(CaseRegistry.ids_for(NW) == ["namwon", DUMMY], "JL_NAMWON_UNBONG 등록 = [namwon, reg_dummy]")
-	ok(CaseRegistry.cases_for(NW) == ["namwon", DUMMY], "둘 다 파일이 있어 돌릴 수 있다")
+	ok(CaseRegistry.ids_for(NW) == ["namwon", "namwon_chunhyang", DUMMY], "JL_NAMWON_UNBONG 등록 = [namwon, namwon_chunhyang, reg_dummy]")
+	ok(CaseRegistry.cases_for(NW) == ["namwon", "namwon_chunhyang", DUMMY], "셋 다 파일이 있어 돌릴 수 있다")
 	CaseRegistry.register(NW, DUMMY, DUMMY_DIR)
-	ok(CaseRegistry.ids_for(NW).size() == 2, "같은 id를 두 번 올려도 하나")
-	ok(CaseRegistry.SPACE_CASES[NW] == ["namwon"], "놀이 등록(SPACE_CASES)에는 가짜 사건이 없다")
+	ok(CaseRegistry.ids_for(NW).size() == 3, "같은 id를 두 번 올려도 하나")
+	ok(CaseRegistry.SPACE_CASES[NW] == ["namwon", "namwon_chunhyang"], "놀이 등록(SPACE_CASES)에는 가짜 사건이 없다")
 	ok(CaseRegistry.load_data(DUMMY).get("case", {}).get("id", "") == DUMMY, "시험 폴더의 사건 데이터를 읽는다")
 	ok(CaseRegistry.all_ids().has(DUMMY) and CaseRegistry.all_ids()[0] == "namwon", "전체 목록에 더해지고 남원이 먼저")
 
@@ -155,13 +157,13 @@ func _test_b_c() -> void:
 # D: 없는 사건 id
 func _test_d() -> void:
 	print("D 없는 사건 id")
-	CaseRegistry.register(NW, "namwon_chunhyang")
+	CaseRegistry.register(NW, "namwon_nofile")
 	CaseRegistry.register("NO_SUCH_SPACE", "no_such_case")
-	ok(CaseRegistry.ids_for(NW).has("namwon_chunhyang"), "등록은 된다(아직 파일 없음)")
-	ok(not CaseRegistry.cases_for(NW).has("namwon_chunhyang"), "파일이 없으면 돌릴 목록에서 빠진다")
+	ok(CaseRegistry.ids_for(NW).has("namwon_nofile"), "등록은 된다(아직 파일 없음)")
+	ok(not CaseRegistry.cases_for(NW).has("namwon_nofile"), "파일이 없으면 돌릴 목록에서 빠진다")
 	ok(CaseRegistry.cases_for("NO_SUCH_SPACE").is_empty(), "없는 공간·없는 사건 → 빈 목록")
 	ok(CaseRegistry.load_data("no_such_case").is_empty(), "없는 사건 데이터 → {}")
-	ok(not CaseRegistry.all_ids().has("no_such_case") and not CaseRegistry.all_ids().has("namwon_chunhyang"), "전체 목록에도 없다")
+	ok(not CaseRegistry.all_ids().has("no_such_case") and not CaseRegistry.all_ids().has("namwon_nofile"), "전체 목록에도 없다")
 	var r := CaseRegistry.choose(["no_such_case"])
 	ok(String(r.id) == "", "없는 사건만 후보 → 고르지 않음(소문만)")
 	ok(JournalBook._case_title("no_such_case") == "no_such_case", "기록책 제목은 id 그대로")

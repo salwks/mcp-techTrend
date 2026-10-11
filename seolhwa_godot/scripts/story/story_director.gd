@@ -30,8 +30,9 @@ const KIND_FALLBACK := { story_girl = "child_girl", story_boy = "child_boy", ric
 	smuggler = "villager_m", smuggler_b = "villager_m", lantern_wife = "villager_f", charcoal_man = "villager_m", spirit_f = "spirit_m",
 	py_merchant_a = "merchant", py_merchant_b = "peddler", py_swindler = "smuggler", py_swindler_b = "smuggler_b", py_clerk = "official",
 	yigyeom = "elder", courier = "villager_m", courier_b = "villager_m", courier_c = "villager_m", raider = "smuggler", raider_b = "smuggler_b",
-	gwak = "elder", simbang = "shaman", jj_child = "child_girl", jj_man = "villager_m", jj_woman = "villager_f", jj_snake = "dog", jj_shade = "spirit_m" }
-const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_jeju.json", "frames_npc.json", "frames_amb.json"]
+	gwak = "elder", simbang = "shaman", jj_child = "child_girl", jj_man = "villager_m", jj_woman = "villager_f", jj_snake = "dog", jj_shade = "spirit_m",
+	chunhyang = "villager_f", hyangdan = "villager_f", wolmae = "innkeeper", mongryong = "scholar", bangja = "villager_m" }
+const BANK_FILES := ["frames_story.json", "frames_story_hanyang.json", "frames_gangneung.json", "frames_story_hwangju.json", "frames_gyeongju.json", "frames_pyongyang.json", "frames_story_hamhung.json", "frames_jeju.json", "frames_story_namwon_chunhyang.json", "frames_npc.json", "frames_amb.json"]
 
 var main                # region_main
 var ui
@@ -106,6 +107,12 @@ func drives_player() -> bool:
 func travel_lock() -> String:
 	if case_fn != null and S != null and case_fn.has_method("travel_lock"): return String(case_fn.travel_lock())
 	return ""
+
+# 이 공간을 떠난다(region_main._travel — 걷기 포털·역마·지도 모두): 사건이 알고 싶으면 case_fn.on_leave(갈 곳 id). 사건 상태는 저장한다
+func on_leave_space(target: String) -> void:
+	if case_fn == null or S == null or not _started: return
+	if case_fn.has_method("on_leave"): case_fn.on_leave(target)
+	save()
 
 # 이 프레임 플레이어 이동을 이야기가 쥐고 있나(전투 중이거나 대화·컷신으로 막힘)
 func owns_player() -> bool:

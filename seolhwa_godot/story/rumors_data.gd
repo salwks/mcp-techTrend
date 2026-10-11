@@ -32,6 +32,15 @@ const RUMORS := [
 			"B": "하늘에서 줄이 내려왔다는 말도 있던데? 아이들이 그 줄 타고 올라갔다나.",
 			"C": "하늘에서 줄이 내려왔다는 말도 있던데? 수수밭이 그래서 붉다나.",
 		} },
+	# ---- 춘향 PART I 귀환 이유(결정 §4) — 한양 책방 뒤 다른 고을 장터에서. 지도 붉은 표(namwon_chunhyang map_leads ch_dano_return)와 짝. 강제하지 않는다 ----
+	{ "id": "CH_DANO_HY", "space": "GG_HANYANG", "near": "chilpae_jang", "radius": 44.0, "speaker": "남쪽 장꾼", "need": { "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "lines": { "": "남원 단오장이 크게 선다더라. 광한루 앞에 그네를 맨다지.", "false": "남원 단오장이 크게 선다더라. 광한루 앞에 그네를 맨다지." } },
+	{ "id": "CH_DANO_GN", "space": "GW_GANGNEUNG", "near": "gangneung_jang", "radius": 44.0, "speaker": "보부상", "need": { "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "lines": { "": "여기 단오도 크지만, 남원 단오장도 크게 선다더라.", "false": "여기 단오도 크지만, 남원 단오장도 크게 선다더라." } },
+	{ "id": "CH_DANO_GJ", "space": "GS_GYEONGJU", "near": "gyeongju_jang", "radius": 44.0, "speaker": "장꾼", "need": { "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "lines": { "": "남원 단오장이 크게 선다더라. 씨름판도 선다던데.", "false": "남원 단오장이 크게 선다더라. 씨름판도 선다던데." } },
+	{ "id": "CH_DANO_HJ", "space": "HH_HWANGJU", "near": "hwangju_jang", "radius": 46.0, "speaker": "남쪽에서 온 상인", "need": { "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "lines": { "": "남원 단오장이 크게 선다더라. 남쪽 사람들은 다 그리 간대.", "false": "남원 단오장이 크게 선다더라. 남쪽 사람들은 다 그리 간대." } },
 	# ---- 남원 고을 소문(§24) — 결말과 상관없이 장터·주막에서 ----
 	{ "id": "NW_TOWN_MARKET", "space": "JL_NAMWON_UNBONG", "near": "namwon_jang", "radius": 40.0, "speaker": "장꾼",
 		"pool": [
