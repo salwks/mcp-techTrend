@@ -456,7 +456,7 @@ func _draw_local(mr: Rect2, it: Dictionary) -> void:
 				line.append(it.at)
 	var bb := Rect2(pp, Vector2.ZERO)
 	for q in line: bb = bb.expand(q)
-	bb = bb.grow(maxf(bb.size.x, bb.size.y) * 0.15 + 60.0)
+	bb = bb.grow(maxf(bb.size.x, bb.size.y) * 0.3 + 60.0)   # 끝 이름(52px)이 칸 안에 들어가게 넉넉히
 	var sc := minf(mr.size.x / bb.size.x, mr.size.y / bb.size.y)
 	var off := mr.get_center() - bb.get_center() * sc
 	var X := func(g: Vector2) -> Vector2: return g * sc + off
@@ -466,13 +466,43 @@ func _draw_local(mr: Rect2, it: Dictionary) -> void:
 			if not bb.has_point(pi): continue
 			for k in hr.net.nb[i]:
 				if k > i: _canvas.draw_line(X.call(pi), X.call(hr.net.pts[k]), Color(0.72, 0.62, 0.46), 2.0)
+	var others: Array = []
 	for o in items:
 		if o.same and bb.has_point(o.at):
 			_canvas.draw_circle(X.call(o.at), 4.0 * _k, INK_SOFT)
-			_text(String(o.name), X.call(o.at) + Vector2(7, -7) * _k, UiFonts.MAP_MINOR, INK_SOFT)
+			if o != it: others.append(o)
 	_draw_route_line(line, X)
 	_canvas.draw_circle(X.call(pp), 7.0 * _k, Color(0.75, 0.15, 0.1))
-	_text("여기", X.call(pp) + Vector2(10, 22) * _k, UiFonts.MAP_LABEL, SEAL)
+	# 이름(MAP_* — 지도 글 바닥 52): 여기 → 고른 곳 → 나머지(고른 곳에 가까운 것부터). 자리가 없으면 쓰지 않는다(겹침 없음)
+	_mtaken = [Rect2(X.call(pp) - Vector2(8, 8) * _k, Vector2(16, 16) * _k), Rect2(X.call(it.at) - Vector2(7, 7) * _k, Vector2(14, 14) * _k)]
+	map_labels = []
+	_map_label("여기", X.call(pp), UiFonts.MAP_LABEL, SEAL, mr)
+	_map_label(String(it.name), X.call(it.at), UiFonts.MAP_LABEL, INK, mr)
+	others.sort_custom(func(a, b): return (a.at as Vector2).distance_to(it.at) < (b.at as Vector2).distance_to(it.at))
+	for o in others: _map_label(String(o.name), X.call(o.at), UiFonts.MAP_MINOR, INK_SOFT, mr)
+
+# 작은 지도 이름표 — 점 둘레 네 자리(오른쪽·왼쪽·위·아래) 중 지도 칸 안의 빈 자리에, 한지빛 테두리. 시험이 map_labels를 읽는다
+var _mtaken: Array = []
+var map_labels: Array = []
+func _map_label(s: String, at: Vector2, size: int, col: Color, mr: Rect2) -> bool:
+	var sz := int(size * _k)
+	var w := _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x + 8.0
+	var h := sz * 1.2
+	var g := 14.0 * _k   # 점 표시(±8) + 띄움(4)보다 멀리
+	for sp in [at + Vector2(g, -h / 2), at + Vector2(-g - w, -h / 2), at + Vector2(-w / 2, -g - h), at + Vector2(-w / 2, g)]:
+		var r := Rect2(sp, Vector2(w, h))
+		if not mr.grow(-4).encloses(r): continue
+		var hit := false
+		for t in _mtaken:
+			if (t as Rect2).intersects(r.grow(4.0)): hit = true; break
+		if hit: continue
+		_mtaken.append(r)
+		var base := r.position + Vector2(4, sz * 0.95)
+		_canvas.draw_string_outline(_font, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, 10, Color(0.96, 0.93, 0.85, 0.95))
+		_canvas.draw_string(_font, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, col)
+		map_labels.append({ text = s, size = sz, rect = r })
+		return true
+	return false
 
 func _draw_route_line(line: PackedVector2Array, X: Callable) -> void:
 	var px := PackedVector2Array()
@@ -514,18 +544,27 @@ func _draw_nation(mr: Rect2, it: Dictionary) -> void:
 		bb = lb.grow(maxf(1.2, maxf(lb.size.x, lb.size.y) * 0.25))
 	var sc := minf(mr.size.x / bb.size.x, mr.size.y / bb.size.y)
 	var X := func(g: Vector2) -> Vector2: return Vector2((g.x - bb.get_center().x) * sc, -(g.y - bb.get_center().y) * sc) + mr.get_center()
-	var land := PackedVector2Array()
-	for q in Travel.PENINSULA: land.append(X.call(Vector2(q[0], q[1])))
-	_canvas.draw_colored_polygon(land, Color(0.96, 0.93, 0.85))
-	land.append(land[0])
-	_canvas.draw_polyline(land, INK_SOFT, 1.5, true)
-	var jj := PackedVector2Array()
-	for q in Travel.jeju(): jj.append(X.call(q))
-	_canvas.draw_colored_polygon(jj, Color(0.96, 0.93, 0.85))
+	# 윤곽은 지도 칸(mr)으로 잘라 그린다 — 가까이 확대하면 반도 윤곽이 칸 밖(창 위)까지 그려졌다
+	var box := PackedVector2Array([mr.position, Vector2(mr.end.x, mr.position.y), mr.end, Vector2(mr.position.x, mr.end.y)])
+	for src in [Travel.PENINSULA, Travel.jeju()]:
+		var poly := PackedVector2Array()
+		for q in src: poly.append(X.call(Vector2(q[0], q[1])))
+		for part in Geometry2D.intersect_polygons(poly, box):
+			_canvas.draw_colored_polygon(part, Color(0.96, 0.93, 0.85))
+		var edge := poly.duplicate(); edge.append(poly[0])
+		for part in Geometry2D.intersect_polyline_with_polygon(edge, box): _canvas.draw_polyline(part, INK_SOFT, 1.5, true)
+	var regs: Array = []
 	for r in Travel.regions():
 		if r.get("lonlat") == null or not Discovery.region_known(String(r.id)): continue
 		var c: Vector2 = X.call(r.lonlat)
 		if not mr.has_point(c): continue
 		_canvas.draw_circle(c, 5.0 * _k, INK)
-		_text(String(r.get("short", r.id)), c + Vector2(8, -6) * _k, UiFonts.MAP_LABEL, INK)
+		regs.append([String(r.get("short", r.id)), c, String(r.id) == String(it.space) or String(r.id) == here])
 	if line.size() >= 2: _draw_route_line(line, X)
+	# 권역 이름: 가는 곳·지금 공간 먼저, 나머지는 자리가 있을 때만(겹침 없음)
+	_mtaken = []
+	for q in line.slice(0, 1) + line.slice(line.size() - 1): _mtaken.append(Rect2(X.call(q) - Vector2(7, 7) * _k, Vector2(14, 14) * _k))
+	map_labels = []
+	if b != null: _map_label(String(it.name), X.call(b), UiFonts.MAP_LABEL, INK, mr)   # 가는 곳 이름 먼저
+	regs.sort_custom(func(x, y): return x[2] and not y[2])
+	for r in regs: _map_label(String(r[0]), r[1], UiFonts.MAP_LABEL, INK if r[2] else INK_SOFT, mr)
