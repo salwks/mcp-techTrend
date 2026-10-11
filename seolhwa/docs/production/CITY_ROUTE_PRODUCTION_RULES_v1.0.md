@@ -2,7 +2,7 @@
 
 > 작성: 2026-10-11 · 근거: 브랜치 `claude/youthful-gauss-d0fxzv`의 실제 코드·데이터. 문서만 다루며 코드는 바꾸지 않았다.
 > 갱신: 2026-10-11 공통 승격 1차(`seolhwa_godot/docs/reports/commonize-1.md`) — C17·C27·C46 구현(G), 길목 깃발 land 노정만(결정 5·6), F-1·F-6 완료.
-> 갱신: 2026-10-11 춘향 PART II-A — C61 앉은 자세 승격 규칙 · C62 차일 상태 규칙. 그 앞: 2026-10-11 춘향 2a(`seolhwa_godot/docs/reports/chunhyang-prep.md`) — F-11(조건부 배치)·F-17(EventCrowd 최소판) 완료, C60 구현(G).
+> 갱신: 2026-10-11 춘향 PART II-A 고침 — C63 고을 사람 비우기 구역(행렬 길). 그 앞: 춘향 PART II-A — C61 앉은 자세 승격 규칙 · C62 차일 상태 규칙. 그 앞: 2026-10-11 춘향 2a(`seolhwa_godot/docs/reports/chunhyang-prep.md`) — F-11(조건부 배치)·F-17(EventCrowd 최소판) 완료, C60 구현(G).
 > 경로는 따로 적지 않으면 `seolhwa_godot/` 기준이다. 상태 표기는 다음과 같다.
 > - **G**: 공통 코드에 이미 있어 모든 공간에 적용된다.
 > - **N**: 남원 코드·데이터에만 있다. 공통으로 승격해야 한다.
@@ -95,12 +95,13 @@
 - **N(남원에만 있어 공통 승격 필요)**: C37 · C38 · C41 · C45 · C50 · C51 · C53 · C57 · C59
 - **P(문서만)**: C28 · C31 · C42 · C52
 - C60(EventCrowd)은 위 59개 뒤에 더한 규칙이다 — 춘향 2a에서 구현(G). 인원 확정값은 `seolhwa_godot/docs/reports/chunhyang-prep.md`.
-- C61·C62(춘향 PART II-A, 2026-10-11 사용자 결정)도 뒤에 더한 규칙이다(아래 표).
+- C61·C62(춘향 PART II-A, 2026-10-11 사용자 결정)도 뒤에 더한 규칙이다(아래 표). C63(비우기 구역)은 PART II-A 고침에서 더했다.
 
 | # | 규칙 | 내용 | 근거 | 상태 |
 |---|---|---|---|---|
 | C61 | 앉은 자세 승격 | generic·새 인물은 공용 sit(양반다리 — `data/frames_pose.json`)를 쓴다. **예전 고유 인물(춘향 PART I·책쾌·연이·장님 노인·숯쟁이·이겸·곽·전령 등)은 이미 가진 sit를 그대로 둔다** — 앉는 모습이 중요한 장면에 다시 나올 때만 그 인물의 sit를 새로 굽는다(그림 불변 원칙). `SpriteChar.ensure_poses`가 이미 있는 클립을 덮지 않는 것이 이 규칙의 구현이다 | `sprite_char.gd ensure_poses` · `chunhyang-part2-prep.md` 판단 5 | G |
 | C62 | 차일(잔치 천막) 상태 | 공식 권력 8A 틀(점고·수청·출두)에서는 **FURLED**가 기본, 평소 잔치 놀이·낮은·가까운 틀에서는 **SPREAD**. **컷이 바뀔 때만** 바꾼다 — 플레이어 눈앞에서 천을 말아 올리는 움직임은 만들지 않는다. 사건 코드는 틀을 바꿀 때 `cut_to(틀 이름)`로 상태와 카메라를 함께 정한다 | `story/namwon_chunhyang/namwon_chunhyang_p2a.gd` `chail_state_for`·`cut_to` | G(규칙·시험 — 차일은 II-B 잔치에서 처음 선다) |
+| C63 | 고을 사람 비우기 구역 | 각본 행렬·행사(행차·어사출두 행렬·관아 행사·상여 길)가 지나는 길 한가운데에서 **상시 고을 사람(npc_ambient)만** 잠시 비운다. 켜면 ① 구역 안에는 새로 나오지 않고 ② 이미 있던 사람·짐승은 바로 풀로 돌리며(말 거는 중인 사람만 예외) ③ 걷는 사람은 구역 앞에서 돌아선다. 풀면 아무것도 되돌리지 않는다 — **보통 스트리밍이 화면 밖에서 다시 채운다.** 구역은 사각형 `{ rect: [x0, z0, x1, z1] }` 또는 꺾인 길 `{ path: [자리…], width }`(자리는 앵커 이름·[x, z]). 사건 데이터 `ambient_exclude: [{ id, path\|rect, width, when }]`로 선언하면 `when`이 서는 동안 켜지고, 코드에서는 `d.ambient_exclude(id, 구역, 폭)` / `d.ambient_release(id)`. 이야기 인물·EventCrowd는 건드리지 않는다. **만들지 않는 것**: 행렬 AI · 군중 길찾기 · 비켜서기 동작. 목적은 각본 행렬의 길을 비우는 것뿐 | `scripts/region/npc_ambient.gd` `exclude`·`release`·`excluded` · `scripts/story/story_director.gd` `ambient_exclude`·`ambient_release`·데이터 `ambient_exclude` · 첫 사용: 춘향 6A(`namwon_chunhyang_p2a_data.gd ambient_excludes` — arrival부터 행렬이 관아에 들 때까지, 폭 6m) | G |
 - 덧붙임: G 가운데 C16 이동 잠금·C41 음악 훅처럼 **장치는 공통이지만 지금 쓰는 사건이 남원 하나뿐**인 것이 있다. 다른 사건이 쓰기 시작할 때 E절 계약대로 쓰면 된다.
 
 ### B-2. 지역 층 (권역·노정 profile — 값은 C절)
@@ -269,6 +270,7 @@
 | 대화 카메라 | 공통 TALK(38/13.5/38) 위에 `case.talk_camera {pitch, distance, fov 일부}` · `actors[].talk_camera` · `false`로 끄기 | G(F-6 완료) | 구도가 틀어지는 인물만 덮어쓴다 |
 | 카메라 샷 | 단계 `{camera:{pitch, distance, fov, focus}}`, `cutscene`, `rig.shot` | G | 끝나면 `camera(null)`. 사용자 틸트 설정 복원 |
 | 임시 군중 | **축제·잔치·관아 행사처럼 일시적으로 사람이 늘어나는 장면은 공용 이벤트 군중 프리셋(`EventCrowd`, C60)을 쓴다. 도시의 상시 인구 시스템을 새로 만들지 않는다.** 사건 데이터(또는 `placement_story_<case>.json`)에 `crowds: [{ id, preset, area, density, roles, seed, when }]`로 선언 | G(C60 · F-17 완료 — `scripts/story/event_crowd.gd`) | 핵심 인물은 story actor. 인원은 성능 시험 뒤. 기존 `crowd_` actor 관례는 옮길 때까지 유지 |
+| 길 비우기(행렬·행사) | 사건 데이터 `ambient_exclude: [{ id, path\|rect, width, when }]` 또는 `d.ambient_exclude(id, 구역, 폭)` / `d.ambient_release(id)`(C63) | G(춘향 6A가 처음 씀) | 고을 사람만 비운다. 행렬은 각본으로 움직인다(AI·길찾기·비켜서기 없음). 풀면 스트리밍이 채운다 — 되돌리는 코드를 쓰지 않는다 |
 | set dressing (계절·잔치) | `props[]`(`when`/phase) + `placement_story_<case>[_part].json` 항목의 `when`(파일 머리 `case`의 단계·플래그·공통 변수, `active()`) | G(F-11 완료 — `scripts/region/placement_gate.gd`, 사건·변수가 바뀔 때만 다시 봄. 늘 있는 시설에는 when을 달지 않는다. **규칙 잠금(2026-10-11): when이 거짓인 조건부 배치는 기본 세계에 흔적을 남기지 않는다** — 터 고르기·마당 흙 없음, `clear_veg`도 조건부(참일 때만 그 자리 식생을 숨기고 충돌체를 끔, 거짓이면 되살림 — 지우거나 다시 짓지 않음, `region_world.add_veg_cond`·`set_veg_cond`)) | 숲 전체 색 변경 금지. 관아·읍성 둘레만(춘향 v1.1 §3) |
 | 환경 변화 | `set_hour · set_weather · world_state · set_moon · prop_states` | G | `on_load`·`_quit`에서 되돌린다(남원 달 안전장치처럼) |
 | 음악·소리 | `case_fn.music_wanted()`, 단계 `sfx/bgm/duck/hush` | G(남원만 씀) | 같은 id 체계(`assets/audio`) |

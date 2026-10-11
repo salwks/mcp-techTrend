@@ -8,6 +8,8 @@
 #   - 고을 사람 말 걸기(scripts/story/ambient_talk.gd): 이야기 대상이 없을 때 가까운 주변 인물에게 E — 사건 없는 공간에서도.
 #   - 이야기 인물 말 표시: 새로 할 말이 있는 인물(talk 항목 조건이 맞고 그 줄을 아직 안 들음 — talk_pending)은 머리 위 「…」(onboarding).
 #     흔한 바탕 그림(마을 사람 등)을 쓰는 이야기 인물은 테두리에 옅은 붉은 먹빛(accent)을 더해 고을 사람과 섞이지 않게.
+#   - 비우기 구역(제작 규칙 C63): 행차·출두·관아 행사·상여 길 한가운데에서 고을 사람(npc_ambient)을 잠시 비운다 —
+#     데이터 "ambient_exclude": [{ id, path|rect, width, when }](when이 서면 비우고 지면 풂) · 코드 ambient_exclude(id, 구역, 폭) / ambient_release(id).
 # region_main은 create_for()로 만들고 매 프레임 update(dt), blocks_move(), drives_player(), shake_offset()만 부른다.
 extends Node
 
@@ -74,6 +76,7 @@ var keeper = null              # 역참 마부·길목 깃발 대화 — 역마 
 var talk_cam := {}             # 지금 이야기 인물 대화 카메라(CameraRig.talk_spec — 공통 TALK·사건·인물 덮어쓰기). 대화가 끝나면 비운다
 var _music_t := 0.0
 var _music_cur := "?"          # 지금 튼 음악 id(사건 case_fn.music_wanted — 없으면 "")
+var _excl_on := {}             # 비우기 구역 id → 구역(지금 켜진 것 — 데이터 when·코드 둘 다)
 # 고을 사람(주변 인물)과 같은 바탕 그림 — 이걸 쓰는 이야기 인물에는 테두리 빛을 더한다
 const GENERIC_KINDS := ["villager_m", "villager_f", "elder", "child_boy", "child_girl", "hunter", "innkeeper", "miller", "woodcutter",
 	"scholar", "merchant", "peddler", "official", "monk", "bosal", "boatman", "haenyeo", "farmer", "farmwife", "herder", "raincape", "traveler", "shaman"]
@@ -484,6 +487,7 @@ func cut_fog_on() -> bool:
 
 func _exit_tree() -> void:
 	cut_fog_end()
+	for id in _excl_on.keys(): ambient_release(id)
 
 # 소리(scripts/audio/sound.gd): 연출이 소리 낼 순간마다 부른다. sfx_cue 신호도 그대로 낸다(다른 것이 붙어 들을 수 있게).
 #   sfx(id) — 자리 없이 · sfx(id, at) — at: 자리 이름(anchors·인물 id·"player") · Vector2(x,z) · Vector3 → 그 자리에서 3D로
@@ -772,7 +776,53 @@ func _refresh() -> void:
 		if not props.has(id): props[id] = { spec = p, node = null, shown = false, decals = [] }
 		var rec: Dictionary = props[id]
 		rec.want = runner.cond(p.get("when", true))
+	for z in data.get("ambient_exclude", []):
+		var zid := String(z.id)
+		var on: bool = runner.cond(z.get("when", true))
+		if on and not _excl_on.has(zid): ambient_exclude(zid, z)
+		elif not on and _excl_on.has(zid) and not bool(_excl_on[zid].get("_manual", false)): ambient_release(zid)
 	_sync_items()
+
+# ---------------------------------------------------------------------------
+# 비우기 구역(제작 규칙 C63) — 사건 행렬·행사가 지나는 길 한가운데에서 고을 사람(npc_ambient)을 잠시 비운다.
+#   zone: { path: [자리…], width } · { rect: [x0, z0, x1, z1] } · 자리 배열(꺾인 길 — 폭은 width) · Rect2 · [x0, z0, x1, z1]
+#   자리는 앵커 이름·인물 id·[x, z] 모두 된다. 행렬 AI·길찾기·비켜서기는 없다 — 풀면 보통 스트리밍이 다시 채운다.
+# ---------------------------------------------------------------------------
+func ambient_exclude(id: String, zone, width := 4.0) -> void:
+	var z := ambient_zone(zone, width)
+	if z.is_empty(): return
+	if not (zone is Dictionary and zone.has("id")): z["_manual"] = true   # 코드로 켠 것 — 데이터 when이 끄지 않는다
+	_excl_on[id] = z
+	var amb = main.get("npcs_amb")
+	if amb != null: amb.exclude(id, z)
+	if runner != null: runner.log_line("ambient_exclude", [id])
+
+func ambient_release(id: String) -> void:
+	if not _excl_on.has(id): return
+	_excl_on.erase(id)
+	var amb = main.get("npcs_amb")
+	if amb != null: amb.release(id)
+	if runner != null: runner.log_line("ambient_release", [id])
+
+func ambient_zone(zone, width := 4.0) -> Dictionary:
+	if zone is Rect2: return { "rect": [zone.position.x, zone.position.y, zone.end.x, zone.end.y] }
+	if zone is Dictionary:
+		if zone.has("rect"): return { "rect": zone.rect }
+		if zone.has("path"): return { "path": _zone_pts(zone.path), "width": float(zone.get("width", width)) }
+		return {}
+	if zone is Array:
+		if zone.size() == 4 and zone.all(func(q): return q is float or q is int): return { "rect": zone }
+		return { "path": _zone_pts(zone), "width": width }
+	return {}
+
+func _zone_pts(pts: Array) -> Array:
+	var out := []
+	for q in pts:
+		var v := anchor(q)
+		out.append([v.x, v.y])
+	return out
+
+func ambient_zones() -> Dictionary: return _excl_on
 
 func _update_props() -> void:
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)

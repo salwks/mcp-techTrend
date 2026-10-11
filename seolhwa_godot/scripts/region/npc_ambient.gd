@@ -16,6 +16,9 @@
 # 비용 — 화면 밖 인물은 그림·높이 갱신을 건너뛰고, 35m 밖은 그림자를 끄고, 먹색 실루엣은 쓰지 않는다.
 # 프레임: data/frames_npc.json(웹 마을 사람 9종) + data/frames_amb.json(tools/export_npc_frames.js가 구운 고을 사람·짐승).
 #   frames_amb.json이 없으면 고을 사람은 가까운 기본 종류로 대신하고 짐승은 나오지 않는다.
+# 비우기 구역(제작 규칙 C63) — 사건이 길 한가운데를 잠시 비운다(행차·어사출두·관아 행사·상여 길): exclude(id, 구역) / release(id).
+#   구역 안에는 새로 나오지 않고, 이미 있던 사람·짐승은 바로 풀(pool)로 돌린다(말 거는 중인 사람만 예외). 걷는 사람은 구역 앞에서 돌아선다.
+#   풀면 아무것도 되돌리지 않는다 — 보통 스트리밍이 화면 밖에서 다시 채운다. 행렬 AI·길찾기·비켜서기는 만들지 않는다.
 extends Node3D
 
 const R_ACTIVE := 150.0
@@ -101,6 +104,7 @@ var _debug := OS.get_cmdline_user_args().has("--npcstats")
 var _fail := {}               # 칸 키 → 다시 해 볼 시각(자리를 못 찾음)
 var _sts: Array = []          # 고을 정보(_settle_info) — 말 걸기에서 어느 고을 사람인지
 var _near: Array = []         # 말 걸 수 있는 사람 후보(플레이어 12m 안, 훑을 때마다)
+var _excl := {}               # 비우기 구역 id → [[a: Vector2, b: Vector2, hw: float]] (선분 + 반폭, 사각형은 가운데 선분으로)
 const NEAR_TALK := 12.0
 const NO_TALK := ["gull"]     # 이 자리 사람은 말 걸지 않는다(짐승은 늘 아님)
 
@@ -471,6 +475,8 @@ func _scan() -> void:
 	# 놓기 — 화면 안 가까운 곳은 처음 채울 때만
 	for key in agents.keys():
 		var ag: Dictionary = agents[key]
+		if not ag.get("hold", false) and ag.mode != "gull" and excluded(Vector2(ag.pos.x, ag.pos.z)):
+			_release(key); continue   # 비우기 구역 안 — 화면 안이어도 바로 놓는다
 		var keep: bool = want.get(key, "") == ag.kind or ag.get("hold", false)
 		if keep: continue
 		var site: Dictionary = sites[key / SLOTS]
@@ -559,6 +565,7 @@ func _spawn(key: int, kind: String, filling: bool) -> bool:
 			ag.speed = 0.7 + _h(key, 8) * 0.3
 			if site.mode in ["stall", "wash", "inn", "square", "office", "gate"]: ag.anim = "talk" if _h(key, 12) < 0.5 else "idle"
 	if p.distance_to(Vector2(_player.x, _player.z)) < 1.2: return false   # 플레이어 자리에 겹쳐 나타나지 않게
+	if site.mode != "gull" and excluded(p, 0.4): return false              # 비우기 구역(사건이 잠시 비운 길)
 	var pos := Vector3(p.x, 0.0, p.y)
 	if not filling and site.mode != "gull" and _visible_near(Vector3(p.x, world.height_at(p.x, p.y), p.y)): return false
 	var ch := _take(kind)
@@ -652,7 +659,7 @@ func _step_agents(dt: float) -> void:
 					var turn: bool = ns <= 0.0 or ns >= P.len or absf(ns - ag.s0) > ag.roam
 					var nxt := _at(P.pts, P.cum, ns)
 					if Vector2(_player.x, _player.z).distance_to(nxt) < 0.9: ag.state = "idle"; ag.t = 0.6   # 플레이어 앞에서 멈칫
-					elif turn:
+					elif turn or _walk_blocked(P, ns, float(ag.lat)):   # 길 끝·거닐 범위 끝·비우기 구역 앞에서 돌아선다
 						ag.dir = -ag.dir; ag.state = "idle"; ag.t = 1.0 + _h(key, int(_clock)) * 3.0
 					else:
 						ag.s = ns
@@ -682,7 +689,7 @@ func _step_agents(dt: float) -> void:
 					var a := _h(key, int(_clock * 5.0) + 1) * TAU
 					var tgt: Vector2 = ag.home + Vector2(cos(a), sin(a)) * r * sqrt(_h(key, int(_clock * 5.0) + 2))
 					var rad := 0.6 if ag.kind in ["ox", "horse"] else 0.3
-					if r > 0.5 and not world.blocked(tgt.x, tgt.y, rad) and world.interior_at(tgt.x, tgt.y) == null:
+					if r > 0.5 and not world.blocked(tgt.x, tgt.y, rad) and world.interior_at(tgt.x, tgt.y) == null and not excluded(tgt, rad):
 						ag.target = tgt; ag.state = "walk"; ag.t = tgt.distance_to(p) / maxf(0.1, ag.speed) + 1.0
 					else:
 						ag.t = 2.0 + _h(key, 41) * 4.0
@@ -752,3 +759,74 @@ func unhold(key: int) -> void:
 	if ag == null: return
 	ag.erase("hold")
 	ag.t = 0.8 + _h(key, int(_clock)) * 1.5
+
+# ---------------------------------------------------------------------------
+# 비우기 구역(제작 규칙 C63) — 사건의 행렬·행사가 지나는 길 한가운데를 잠시 비운다
+# ---------------------------------------------------------------------------
+# zone: { "rect": [x0, z0, x1, z1] } — 땅 위 사각형(축 정렬)
+#       { "path": [[x, z], ...], "width": w } — 꺾인 길(선분들), 폭 w(m)의 띠
+# 같은 id로 다시 부르면 바꾼다. 구역 안 사람·짐승(말 거는 중 제외)은 바로 놓고, 구역 안에는 새로 나오지 않는다.
+func exclude(id: String, zone: Dictionary) -> void:
+	var segs := zone_segs(zone)
+	if segs.is_empty(): return
+	_excl[id] = segs
+	for key in agents.keys():
+		var ag: Dictionary = agents[key]
+		if ag.get("hold", false) or ag.mode == "gull": continue
+		if excluded(Vector2(ag.pos.x, ag.pos.z)): _release(key)
+
+# 풀기 — 아무것도 되돌리지 않는다. 다시 해 볼 시각만 지워 보통 스트리밍이 곧(화면 밖에서) 채우게
+func release(id: String) -> void:
+	if not _excl.has(id): return
+	_excl.erase(id)
+	_fail.clear()
+
+func zone_ids() -> Array: return _excl.keys()
+
+func excluded(p: Vector2, pad := 0.0) -> bool:
+	if _excl.is_empty(): return false
+	for id in _excl:
+		for sg in _excl[id]:
+			if _seg_dist(p, sg[0], sg[1]) <= float(sg[2]) + pad: return true
+	return false
+
+# 구역 안 주변 인물 수(시험·디버그) — id가 풀린 뒤에도 같은 모양으로 셀 수 있게 zone을 직접 받는다
+func count_in(zone: Dictionary) -> int:
+	var segs := zone_segs(zone)
+	var n := 0
+	for key in agents:
+		var ag: Dictionary = agents[key]
+		if ag.mode == "gull": continue
+		var q := Vector2(ag.pos.x, ag.pos.z)
+		for sg in segs:
+			if _seg_dist(q, sg[0], sg[1]) <= float(sg[2]): n += 1; break
+	return n
+
+func _walk_blocked(P: Dictionary, s: float, lat: float) -> bool:
+	if _excl.is_empty(): return false
+	var d := _dir_at(P.pts, P.cum, s)
+	return excluded(_at(P.pts, P.cum, s) + Vector2(-d.y, d.x) * lat, 0.3)
+
+static func zone_segs(zone: Dictionary) -> Array:
+	var out := []
+	if zone.has("rect"):
+		var r: Array = zone.rect
+		var x0 := minf(float(r[0]), float(r[2])); var x1 := maxf(float(r[0]), float(r[2]))
+		var z0 := minf(float(r[1]), float(r[3])); var z1 := maxf(float(r[1]), float(r[3]))
+		var c := Vector2((x0 + x1) * 0.5, (z0 + z1) * 0.5)
+		# 사각형 = 긴 쪽 가운데 선분 + 짧은 쪽 반폭(모서리는 둥글게 — 길 비우기에는 충분)
+		if x1 - x0 >= z1 - z0: out.append([Vector2(x0 + (z1 - z0) * 0.5, c.y), Vector2(x1 - (z1 - z0) * 0.5, c.y), (z1 - z0) * 0.5])
+		else: out.append([Vector2(c.x, z0 + (x1 - x0) * 0.5), Vector2(c.x, z1 - (x1 - x0) * 0.5), (x1 - x0) * 0.5])
+	elif zone.has("path"):
+		var pts: Array = zone.path
+		var hw := float(zone.get("width", 4.0)) * 0.5
+		for i in pts.size() - 1:
+			out.append([Vector2(float(pts[i][0]), float(pts[i][1])), Vector2(float(pts[i + 1][0]), float(pts[i + 1][1])), hw])
+		if pts.size() == 1: out.append([Vector2(float(pts[0][0]), float(pts[0][1])), Vector2(float(pts[0][0]), float(pts[0][1])), hw])
+	return out
+
+static func _seg_dist(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab := b - a
+	var l2 := ab.length_squared()
+	if l2 < 1e-6: return p.distance_to(a)
+	return p.distance_to(a + ab * clampf((p - a).dot(ab) / l2, 0.0, 1.0))
