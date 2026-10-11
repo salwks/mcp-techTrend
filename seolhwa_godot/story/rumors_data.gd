@@ -41,6 +41,17 @@ const RUMORS := [
 		"var": "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "lines": { "": "남원 단오장이 크게 선다더라. 씨름판도 선다던데.", "false": "남원 단오장이 크게 선다더라. 씨름판도 선다던데." } },
 	{ "id": "CH_DANO_HJ", "space": "HH_HWANGJU", "near": "hwangju_jang", "radius": 46.0, "speaker": "남쪽에서 온 상인", "need": { "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
 		"var": "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "lines": { "": "남원 단오장이 크게 선다더라. 남쪽 사람들은 다 그리 간대.", "false": "남원 단오장이 크게 선다더라. 남쪽 사람들은 다 그리 간대." } },
+	# ---- 춘향 PART II 귀환 이유(결정 §4) — PART I 뒤 남원을 떠나 강릉·경주·황주를 끝낸 고을 장터에서. 지도 붉은 표(ch_p2_return)와 짝. 강제하지 않는다 ----
+	#   말한 사람이 들은 곳(남원 다녀온 패·쌀값·술 수레)을 섞어 같은 말투가 되풀이되지 않게(대사 요청서 6.1)
+	{ "id": "CH_P2_GN", "space": "GW_GANGNEUNG", "near": "gangneung_jang", "radius": 44.0, "speaker": "보부상",
+		"need": { "CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1": true, "CASE_GANGNEUNG_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_COMPLETE", "lines": { "false": "남원 다녀온 패가 그러는데, 남원 새 사또가 잔치를 크게 벌인다더군. 생일잔치라나." } },
+	{ "id": "CH_P2_GJ", "space": "GS_GYEONGJU", "near": "gyeongju_jang", "radius": 44.0, "speaker": "쌀장수",
+		"need": { "CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1": true, "CASE_GYEONGJU_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_COMPLETE", "lines": { "false": "곡식이고 술이고 관아로 들어간다던데. 남원 쌀값이 다 올랐대." } },
+	{ "id": "CH_P2_HJ", "space": "HH_HWANGJU", "near": "hwangju_jang", "radius": 46.0, "speaker": "남쪽에서 온 상인",
+		"need": { "CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1": true, "CASE_HWANGJU_COMPLETE": true },
+		"var": "CASE_NAMWON_CHUNHYANG_COMPLETE", "lines": { "false": "남원 새 사또가 잔치를 크게 벌인다더군. 곡식이고 술이고 관아로 들어간다던데." } },
 	# ---- 남원 고을 소문(§24) — 결말과 상관없이 장터·주막에서 ----
 	{ "id": "NW_TOWN_MARKET", "space": "JL_NAMWON_UNBONG", "near": "namwon_jang", "radius": 40.0, "speaker": "장꾼",
 		"pool": [

@@ -4,7 +4,8 @@
 #           몽룡 → 저녁 월매 집 → 편지(열 수 없음) · 웃음 · 함께 걷기 → 밤 백년가약(들었습니다 → vow_witness · vow_heard) → 소식 · 5A 이별 → PART1_COMPLETE →
 #           춘향에게 “기다리실 겁니까?” → PART II 없음 · 떠나면 LEFT_AFTER_PART1 · 기록책
 #   b     : 다른 선택 — 지나감 · 혼자 가시오(나중에 그네 곁) · 고개 끄덕임 · 아무 말 없음
-#   after : PART I 끝 + 떠남 + 강릉 완료(PART II 열림 조건 참)으로 다시 남원 — PART II는 아무것도 서지 않는다. 남원 사람 말 · 춘향 집
+#   after : PART I 끝 + 떠남(다른 고을은 아직 — PART II 열림 조건 거짓)으로 다시 남원 — PART II는 아무것도 서지 않는다. 남원 사람 말 · 춘향 집
+#   p2a · p2b · p2c · ctl : PART II-A(namwon_chunhyang_p2a_test.gd)
 # 저장은 --savefile(run_story_tests.sh) — prepare가 남원·한양 끝 상태로 꾸민다. 결과는 STORYTEST PASS/FAIL.
 # 화면 검토: --storyshots=shots/chunhyang_part1(창 모드) — 사건 함수의 _cut(이름)에서 찍는다.
 extends Node
@@ -102,6 +103,7 @@ func walk_to(at) -> void:
 
 # 사건 함수의 _cut(이름) — 화면 검토일 때만 찍는다
 func cut(nm: String) -> void:
+	if p2t != null: await _probe_p2(nm)
 	if nm == "02_1A_crowd_swing": _probe_1a()
 	if nm == "_1a_end":
 		var w = d.main.weather
@@ -116,6 +118,43 @@ func cut(nm: String) -> void:
 	get_viewport().get_texture().get_image().save_png(dir.path_join("%s.png" % nm))
 	_log("SHOT " + nm)
 	Engine.time_scale = ts
+
+# PART II-A 컷의 그 순간(6A 행렬 짜임 · 점고 8A·조작·줄 묶임 · 곤장 컷 수)
+func _probe_p2(nm: String) -> void:
+	var pr: Dictionary = p2t.probe
+	if nm == "03_6A_procession":
+		var shot = d.main.rig.shot
+		var gz := INF
+		if d.props.has("p_gama") and d.props.p_gama.node != null: gz = d.props.p_gama.node.global_position.z
+		var west := 0; var east := 0
+		for id in ["on_1", "on_2", "on_3", "on_4", "on_5", "on_6", "on_7", "on_8"]:
+			var a = d.actors.get(id)
+			if a == null or not a.shown: continue
+			if a.pos.x < -3228.0: west += 1
+			else: east += 1
+		pr["6a"] = { shot = shot != null, cam_h = (shot.pos.y - d.world.height_at(shot.pos.x, shot.pos.z)) if shot != null else 99.0,
+			pojol_z = d.actors.proc_pojol_a.pos.z, gama_z = gz, porter_z = d.actors.proc_porter_2.pos.z, west = west, east = east,
+			gama_node = gz != INF }
+	elif nm == "06_8A_jeomgo":
+		var o = d.main.rig.override if d.main.rig.override != null else {}
+		var ctl: bool = d.case_fn.controllable()
+		var nline := 0
+		for i in 6:
+			var a = d.actors.get("gisaeng_%d" % (i + 1))
+			if a != null and Vector2(a.pos.x, a.pos.z).distance_to(d.anchor("ch_gisaeng_%d" % (i + 1))) < 0.6: nline += 1
+		# 줄을 벗어나 본다 → 끌려온다
+		var p0 := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+		var pulls0: int = d.case_fn.leash_pulls
+		d.set_player_pos(Vector3(p0.x + 5.0, d.main.player_pos.y, p0.y + 3.0))
+		await _frames(4)
+		var back: float = Vector2(d.main.player_pos.x, d.main.player_pos.z).distance_to(d.anchor("ch_player_saryeong"))
+		pr["jeomgo"] = { pitch = float(o.get("pitch", -1)), dist = float(o.get("distance", -1)), ctl = ctl, pulled = back <= 1.7 and d.case_fn.leash_pulls > pulls0, gisaeng_line = nline }
+		var post: Vector2 = d.anchor("ch_player_saryeong")
+		d.set_player_pos(Vector3(post.x, d.world.height_at(post.x, post.y), post.y))
+		d.main.player.facing = "right"
+		await _frames(2)
+	elif nm.begins_with("10") and nm.contains("gonjang"):
+		pr["gonjang_cuts"] = int(pr.get("gonjang_cuts", 0)) + 1
 
 # 1A 컷 한가운데(자막 하나 뒤 — 군중 LOD가 여러 프레임 돈 뒤): 플레이어 자리 · 안개 · 1A 틀 안 군중
 var probe_1a := {}
@@ -172,9 +211,13 @@ func _done() -> void:
 	d.main._quit()
 
 # ---------------------------------------------------------------------------
+var p2t = null   # PART II-A 시험(namwon_chunhyang_p2a_test.gd)
 func _run() -> void:
 	expect(d.case_id == "namwon_chunhyang", "오누이·한양 뒤 남원 — 춘향이 도는 사건")
 	if branch == "AFTER": await _run_after(); return
+	if branch.begins_with("P2") or branch == "CTL":
+		p2t = load("res://story/namwon_chunhyang/namwon_chunhyang_p2a_test.gd").new(self, branch)
+		await p2t.run(); return
 	_entry_gate()
 	await d.runner.run([{ "event": "C0001" }])
 	await _frames(6); await _idle()
@@ -338,10 +381,11 @@ func _no_part2(when: String) -> void:
 	for id in ["ti_gamani_store_a", "ti_dais", "ti_hyeongteul", "ti_chail", "ti_feast_w0", "ti_wine_cart"]:
 		expect(_gate_off(id), "%s: PART II 차림 없음 %s" % [when, id])
 	expect(not d.main.crowd.is_shown("byeon_banquet"), "%s: 잔치 군중 없음" % when)
-	var p2 := false
+	expect(not d.S.is_flag("p2_started") and d.S.phase in ["dano", "courtship", "farewell"], "%s: PART II 장면이 돌지 않음(단계 %s)" % [when, d.S.phase])
+	var late := false
 	for e in d.events:
-		if int(String(e).substr(1, 2)) >= 6: p2 = true
-	expect(not p2, "%s: PART II 장면 없음" % when)
+		if int(String(e).substr(1, 2)) >= 13: late = true
+	expect(not late, "%s: II-B 장면 없음" % when)
 
 # PART I 끝 + 떠남 + 강릉 완료 → 다시 남원: PART II 열림 조건은 참이어도 아무것도 서지 않는다
 func _run_after() -> void:
@@ -353,11 +397,11 @@ func _run_after() -> void:
 		S.flags[k] = true
 	S.vars.CASE_NAMWON_CHUNHYANG_PART1_COMPLETE = true
 	S.vars.CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1 = true
-	S.vars.CASE_GANGNEUNG_COMPLETE = true
+	for k in ["CASE_GANGNEUNG_COMPLETE", "CASE_GYEONGJU_COMPLETE", "CASE_HWANGJU_COMPLETE"]: S.vars[k] = false
 	d.case_fn.on_load()
 	d.on_phase(); d._refresh()
 	await _frames(10)
-	expect(d.case_fn.part2_open(), "PART II 열림 조건 참(PART1 · LEFT · 강릉)")
+	expect(not d.case_fn.part2_open(), "PART II 열림 조건 거짓(PART1 · LEFT뿐 — 강릉·경주·황주 아직)")
 	await walk_to("ch_wolmae_front")
 	await _frames(20)
 	_no_part2("다시 남원")

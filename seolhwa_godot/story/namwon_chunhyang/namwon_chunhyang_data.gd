@@ -6,17 +6,19 @@
 #   귀환 이유는 다른 고을의 소문(rumors_data CH_DANO_*)과 전국 지도 붉은 표(map_leads ch_dano_return) — 강제하지 않는다.
 # 단계(phase): dano(단오 낮 — ACT 0~2) → courtship(그날 저녁 ~ 백년가약 — ACT 3·4) → farewell(소식 · 오리정 곁 북쪽 길 이별 — ACT 5, PART I 끝 뒤에도 머문다).
 #   PART I 끝: CASE_NAMWON_CHUNHYANG_PART1_COMPLETE. 그 뒤 남원을 실제로 떠나면(region_main._travel → story.on_leave_space) LEFT_AFTER_PART1.
-#   PART II(arrival~)는 아직 없다 — 열림 조건(결정 §4)은 사건 함수 part2_open()에만 있고, 단계·장면·인물·차림 어느 것도 서지 않는다.
+#   PART II-A(namwon_chunhyang_p2a_data.gd): 열림(결정 §4) PART1_COMPLETE && LEFT_AFTER_PART1 && (강릉 || 경주 || 황주 완료) — 남원에 다시 들면 단계 arrival → office → jail.
+#   II-B(술·쌀·상소, 몽룡 귀환 이후)는 아직 없다.
 # 전역 변수는 넷뿐(결정 §1): CASE_NAMWON_CHUNHYANG_OUTCOME · _COMPLETE · _PART1_COMPLETE · _LEFT_AFTER_PART1. 사건 안 플래그는 접두사 없이.
 # 플레이어는 춘향·몽룡의 핵심 행동을 대신하지 않는다. 호감도·점수 없음 — 선택은 플래그마다 따로 기억한다(vow_heard · vow_own · vow_nod 등).
 # 오누이 뒤 남원 사람(주모·방앗간 주인·포수·이웃 아낙)은 여기서 같은 CHR·그림으로 다시 세운다 — F-10(비활성 사건 인물 층) 전 임시 조치. 오누이 흐름은 옮기지 않는다.
 extends RefCounted
 
+const P2 := preload("res://story/namwon_chunhyang/namwon_chunhyang_p2a_data.gd")   # PART II-A(새 사또 — 행차~옥의 첫 밤)
 const JAR := "ITM_CH_JAR"        # 장면 소품(§10 작은 술병과 찬합) — 월매 집에 닿으면 내려놓는다
 const LETTER := "ITM_CH_LETTER"  # 장면 소품(§13 A 봉한 편지 — 열 수 없다)
 
 static func data() -> Dictionary:
-	return {
+	var out := {
 		"case": {
 			"id": "namwon_chunhyang", "record_title": "남원의 약속", "region": "JL_NAMWON_UNBONG",
 			"EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F50", "CATALOG_ID": "HN01", "ANCHOR_NOTE": "A01 춘향 계열(지역 고정 앵커)을 남원 재방문 주 사건으로 올린 원전 등록",
@@ -37,6 +39,11 @@ static func data() -> Dictionary:
 				{ "id": "first_meeting", "text": "몽룡과 춘향의 만남" },
 				{ "id": "vow", "text": "백년가약" },
 				{ "id": "farewell", "text": "몽룡의 한양행과 이별" },
+				{ "id": "byeon_arrives", "text": "변학도 부임" },
+				{ "id": "roll_call", "text": "기생 점고" },
+				{ "id": "sucheong_demand", "text": "춘향에 대한 수청 요구" },
+				{ "id": "refusal", "text": "춘향의 거절" },
+				{ "id": "gonjang", "text": "곤장과 투옥" },
 			],
 			"GAME_ADAPTATION": "원전의 긴 시간을 며칠로 압축하고 '몇 달 후' 자막을 쓰지 않는다. 플레이어는 방자 곁의 외지인 — 심부름을 거들 뿐 춘향·몽룡의 선택을 대신하지 않는다. 연애 호감도·점수 없음.",
 		},
@@ -89,10 +96,13 @@ static func data() -> Dictionary:
 				{ "text": "그네를 탄 처녀는 누구인가.", "when": "c('swing')", "until": "c('name')" },
 				{ "text": "몽룡은 춘향을 다시 만날까.", "when": "c('refusal')", "until": "f('first_meeting_done')" },
 				{ "text": "한양으로 간 몽룡은 돌아올까.", "when": "f('part1_done')", "until": "false" },
+				{ "text": "새 사또는 춘향을 어떻게 할 셈인가.", "when": "c('bring_her')", "until": "f('jailed')" },
+				{ "text": "춘향은 옥에서 얼마나 버틸까.", "when": "f('jailed')", "until": "false" },
 			],
 			"places": [
 				{ "name": "광한루", "when": "f('case_started')" }, { "name": "그네(광한루원 북서)", "when": "c('swing')" },
 				{ "name": "월매 집", "when": "f('evening_call')" }, { "name": "오작교", "when": "c('walk')" }, { "name": "오리정 곁 북쪽 길", "when": "c('farewell')" },
+				{ "name": "남원 관아", "when": "f('labour_started')" }, { "name": "옥(관아 바깥마당 서쪽)", "when": "f('jailed')" },
 			],
 		},
 		"actors": actors(),
@@ -101,9 +111,19 @@ static func data() -> Dictionary:
 		"props": props(),
 		"events": events(),
 	}
+	# PART II-A를 잇는다(같은 사건 — 단계 arrival · office · jail)
+	out.items.merge(P2.items())
+	out.clues.merge(P2.clues())
+	out.map_places = P2.map_places() + out.map_places
+	out.map_leads = P2.map_leads() + out.map_leads
+	out.actors += P2.actors()
+	out.triggers += P2.triggers()
+	out.props += P2.props()
+	out.events.merge(P2.events())
+	return out
 
 static func anchors() -> Dictionary:
-	return {
+	var a := {
 		# 광한루·단오 마당(placement_story_namwon_chunhyang.json anchors와 같은 값)
 		"ch_gwanghallu": [-3271.4, 450.1], "ch_gwanghallu_front": [-3271.4, 437.0], "ch_mong_view": [-3291.0, 447.5],
 		"ch_bangja_bump": [-3264.0, 432.0], "ch_fan_drop": [-3264.6, 432.4], "ch_swing": [-3330.0, 444.0], "ch_swing_land": [-3325.0, 438.5], "ch_hyangdan": [-3327.6, 439.2],
@@ -128,6 +148,11 @@ static func anchors() -> Dictionary:
 		# 오누이 뒤 남원 사람(namwon_data와 같은 자리 — F-10 전 임시)
 		"jumo": [-3001.0, 227.6], "miller": [-3179.6, -313.4], "hunter": [-3192.5, -133.5], "neighbor_after": [-3203.0, -127.5],
 	}
+	# 배치 파일의 PART II 앵커(관아·사령 줄·기생 줄·옥 — 같은 값을 두 번 적지 않음) · II-A 연출 자리. 이미 있는 이름은 PART I 값이 이긴다
+	for src in [P2.placement_anchors(), P2.anchors()]:
+		for k in src:
+			if not a.has(k): a[k] = src[k]
+	return a
 
 # ---------------------------------------------------------------------------
 # 인물 — 고유 그림(frames_story_namwon_chunhyang.json): chunhyang · hyangdan · wolmae · mongryong · bangja
@@ -157,8 +182,10 @@ static func actors() -> Array:
 			] },
 		{ "id": "chunhyang", "chr": "CHR_CH_CHUNHYANG", "kind": "chunhyang", "name": "춘향",
 			"at": { "dano": "ch_chun_land", "courtship": "ch_chun_yard", "farewell": "ch_chun_yard", "default": "ch_chun_yard" }, "facing": "down",
-			"when": "(ph('dano') and not f('chun_left_swing')) or (ph('courtship') and (f('first_meeting_done') or f('chun_on'))) or ph('farewell')",
+			"when": "(ph('dano') and not f('chun_left_swing')) or (ph('courtship') and (f('first_meeting_done') or f('chun_on'))) or ph('farewell') or ((ph('arrival') or ph('office')) and f('chun_on'))",
 			"talk": [
+				{ "when": "f('escorting')", "steps": [{ "say": "춘향", "lines": ["…가요."] }] },
+				{ "when": "f('escort_jail')", "steps": [{ "say": "춘향", "lines": ["…"] }] },
 				{ "when": "f('farewell_scene_done') and not f('farewell_talked')", "steps": [{ "event": "C0503" }] },
 				{ "when": "ph('farewell') and f('farewell_talked')", "steps": [{ "say": "춘향", "lines": ["…"] }] },
 				{ "when": "f('letter_asked') and not f('letter_delivered') and has('%s')" % LETTER, "steps": [{ "event": "C0403" }] },
@@ -167,16 +194,23 @@ static func actors() -> Array:
 			] },
 		{ "id": "hyangdan", "chr": "CHR_CH_HYANGDAN", "kind": "hyangdan", "name": "향단",
 			"at": { "dano": "ch_hyangdan", "default": "ch_hyang_yard" }, "facing": "right",
-			"when": "(ph('dano') and not f('chun_left_swing')) or (ph('courtship') and f('first_meeting_done')) or ph('farewell')",
+			"when": "(ph('dano') and not f('chun_left_swing')) or (ph('courtship') and f('first_meeting_done')) or ph('farewell') or ph('arrival') or ph('office') or ph('jail')",
 			"talk": [
+				{ "when": "ph('jail')", "steps": [{ "say": "향단", "lines": ["마님이 밥을 지으셨어요. 들여보내 주기나 할는지."] }] },
+				{ "when": "ph('office') and f('wolmae_summoned')", "steps": [{ "say": "향단", "lines": ["아가씨가 스스로 가셨어요. 마님은 말도 안 하세요."] }] },
+				{ "when": "ph('arrival') or ph('office')", "steps": [{ "say": "향단", "lines": ["관아에서 사람이 자꾸 와요. 쌀이며 술이며 내놓으라고."] }] },
 				{ "when": "ph('farewell') and f('part1_done')", "steps": [{ "say": "향단", "lines": ["아가씨는 요즘 말수가 적어요."] }] },
 				{ "when": "ph('dano')", "steps": [{ "say": "향단", "lines": ["아가씨 그네 타시는 거 보러 왔어요? 다들 그래요."] }] },
 				{ "when": "true", "steps": [{ "say": "향단", "lines": ["마님 찾으세요?"] }] },
 			] },
 		{ "id": "wolmae", "chr": "CHR_CH_WOLMAE", "kind": "wolmae", "name": "월매",
 			"at": { "default": "ch_wolmae_in" }, "facing": "down",
-			"when": "(ph('courtship') and (f('first_meeting_done') or f('wolmae_on'))) or ph('farewell')",
+			"when": "(ph('courtship') and (f('first_meeting_done') or f('wolmae_on'))) or ph('farewell') or ph('arrival') or ph('office') or (ph('jail') and not f('p2a_done'))",
 			"talk": [
+				{ "when": "ph('jail') and f('dismissed') and not f('food_scene')", "steps": [{ "say": "월매", "lines": ["밥도 못 먹게 할 셈이오?"] }] },
+				{ "when": "ph('jail')", "steps": [{ "say": "월매", "lines": ["…"] }] },
+				{ "when": "ph('office') and f('wolmae_summoned')", "steps": [{ "say": "월매", "lines": ["…가 보시오. 그 아이 따라."] }] },
+				{ "when": "ph('arrival') or ph('office')", "steps": [{ "say": "월매", "lines": ["새 사또가 왔다지요. 잔치 준비한다고 동네가 다 시끄럽소."] }] },
 				{ "when": "ph('farewell') and f('part1_done')", "steps": [
 					{ "say": "월매", "lines": ["그 도련님 말, 길손도 들었지요."] },
 					{ "say": "월매", "lines": ["들은 사람이 있으니 됐소."], "when": "f('vow_heard') or f('vow_nod')" },
@@ -205,8 +239,8 @@ static func actors() -> Array:
 
 # ---------------------------------------------------------------------------
 # PART II 고정 자리 — 사령·포졸(CHR_HUM_016, 그림 pojol). 공식 8A 양옆 줄(placement_story_namwon_chunhyang.json의 ch_saryeong_*)에
-# 선다. PART II 단계(office 점고·곤장 · feast 잔치 · reveal 출두)에서만 — 지금은 PART II가 닫혀 있어 서지 않는다.
-# 이야기 흐름(PART II 사건 코드)은 아직 없다: 출두 때 자세 바꾸기는 story_director.set_pose("saryeong", "kneel")(같은 인물, 제자리).
+# 선다. PART II 단계(office 점고·수청·곤장 · feast 잔치 · reveal 출두)에서만. II-A(namwon_chunhyang_p2a.gd)는 곤장 때 몇을 옮겼다가 제자리로 돌린다.
+# 출두(II-B) 때 자세 바꾸기는 story_director.set_pose("saryeong", "kneel")(같은 인물, 제자리).
 # 서쪽 줄은 축(동쪽)을, 동쪽 줄은 서쪽을 본다. 플레이어 자리(ch_player_saryeong)는 인물이 아니다. 외삼문 포졸 하나(§30·§38).
 # ---------------------------------------------------------------------------
 const GUARD_WHEN := "ph('office') or ph('feast') or ph('reveal')"

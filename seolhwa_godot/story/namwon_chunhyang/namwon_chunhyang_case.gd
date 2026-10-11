@@ -1,14 +1,12 @@
 # 사건 「남원의 약속」 PART I — 데이터로 쓰기 번거로운 연출(1A·1B 각본 시점, 그네 흔들기, 방자와 부딪힘, 2A, 월매 집, 며칠의 압축, 백년가약, 5A 이별)과
 # 기록책·소리·떠남(LEFT_AFTER_PART1). 데이터(namwon_chunhyang_data.gd)의 { "call": 이름 }과 조건식 fn('이름')이 이 함수들을 부른다.
 # 원칙(시나리오 §1·§2): 플레이어는 곁에서 보고 거든다 — 춘향·몽룡의 핵심 행동(부르기·거절·약속·이별)을 대신하지 않는다. 점수·호감도 없음.
-extends RefCounted
+# PART II-A(새 사또 — 행차~옥의 첫 밤)와 공통 도움(say·flag·카메라)은 이어받는 namwon_chunhyang_p2a.gd에 있다.
+extends "res://story/namwon_chunhyang/namwon_chunhyang_p2a.gd"
 
 const D := preload("res://story/namwon_chunhyang/namwon_chunhyang_data.gd")
-const Progress := preload("res://scripts/region/progress.gd")
 const CASE_TITLE := "남원의 약속"
 const REGION := "JL_NAMWON_UNBONG"
-const V_PART1 := "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE"
-const V_LEFT := "CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1"
 # 그네(kit story/chunhyang swing — 배치 ti_swing): 가로대 높이·흔들림 주기(줄 7.6m 진자 ≈ 5.5초)
 const SWING_ID := "ti_swing"
 const SWING_H := 8.5
@@ -21,9 +19,6 @@ const CAM_1B := { pos = [-3286.2, 2.5, 450.8], look = [-3330.0, 4.2, 443.0], fov
 const CAM_2A := { "focus": [-3323.6, 439.0], "pitch": 34.0, "distance": 16.0, "fov": 40.0 }
 const CAM_5A := { "focus": [-3212.0, -3.0], "pitch": 24.0, "distance": 24.0, "fov": 36.0 }
 
-var d      # story_director
-var S:
-	get: return d.S
 var _sw_t := 0.0
 var _sw_amp := 0.0
 var _sw_boost := 0.0
@@ -31,41 +26,9 @@ var _amb_t := 3.0
 var _drum_t := 9.0
 var _creak_t := 0.0
 
-func _init(director) -> void:
-	d = director
-
-func R(steps: Array) -> void:
-	await d.runner.exec(steps, d.runner.gen)
-
-func flag(k: String, v = true) -> void:
-	S.flags[k] = v; d.runner.log_line("flag", [k, v]); d.mark_dirty()
-
-func unflag(k: String) -> void:
-	S.flags.erase(k); d.mark_dirty()
-
-func f(k: String) -> bool: return S.is_flag(k)
-
-func say(who: String, lines) -> void:
-	await d.ui.say(who, lines if lines is Array else [lines])
-
-func beat(id: String) -> void:
-	flag("beat_" + id)
-
-# 대본 시험 화면 검토(--storyshots): 컷의 그 순간을 찍는다(시험이 아니면 아무것도 안 함)
-func _cut(nm: String) -> void:
-	if d.test != null and d.test.has_method("cut"): await d.test.cut(nm)
-
-# ---------------------------------------------------------------------------
-# 판정(조건식 fn)
-# ---------------------------------------------------------------------------
 func is_night() -> bool:
 	var h: float = d.main.hour
 	return h >= 19.0 or h < 5.0
-
-# PART II 열림(결정 §4) — 지금은 판정만 있고 이 조건이 참이어도 PART II 장면·단계·차림은 하나도 서지 않는다
-func part2_open() -> bool:
-	var v := func(k: String) -> bool: return bool(S.vars.get(k, Progress.get_var(k, false)))
-	return v.call(V_PART1) and v.call(V_LEFT) and (v.call("CASE_GANGNEUNG_COMPLETE") or v.call("CASE_GYEONGJU_COMPLETE") or v.call("CASE_HWANGJU_COMPLETE"))
 
 # ---------------------------------------------------------------------------
 # 음악·소리·그네(매 프레임 — story_director._update_ambient)
@@ -78,6 +41,7 @@ func music_wanted() -> String:
 
 func ambient(dt: float) -> void:
 	_update_swing(dt)
+	p2_ambient(dt)
 	if S.phase != "dano" and S.phase != "courtship": return
 	if is_night() or d.main.hour >= 18.0: return
 	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
@@ -149,37 +113,6 @@ func _update_swing(dt: float) -> void:
 	if S.phase == "farewell" and f("farewell_scene_done") and not f("chun_home"):
 		var pp2 := Vector2(d.main.player_pos.x, d.main.player_pos.z)
 		if pp2.distance_to(d.anchor("ch_farewell_stand")) > 60.0: chun_goes_home()
-
-# ---------------------------------------------------------------------------
-# 카메라 도움
-# ---------------------------------------------------------------------------
-func _shot(c: Dictionary) -> void:
-	var w = d.world
-	var p := Vector3(float(c.pos[0]), w.height_at(float(c.pos[0]), float(c.pos[2])) + float(c.pos[1]), float(c.pos[2]))
-	var l := Vector3(float(c.look[0]), w.height_at(float(c.look[0]), float(c.look[2])) + float(c.look[1]), float(c.look[2]))
-	d.main.rig.focus = null; d.main.rig.override = null
-	d.main.rig.shot = { pos = p, look = l, fov = float(c.fov) }
-	if d.main.has_method("set_occ_script"): d.main.set_occ_script({ "focus": l, "r": 0.0, "near": 0.0 })
-	if d.main.has_method("set_cine_sharp"): d.main.set_cine_sharp(true)
-
-func _cam_end() -> void:
-	d.main.rig.shot = null
-	d.camera(null)
-	if d.main.has_method("set_occ_script"): d.main.set_occ_script(null)
-	if d.main.has_method("set_cine_sharp"): d.main.set_cine_sharp(false)
-
-func _talk_cam(a, b) -> void:
-	var tc: Dictionary = d.talk_camera_base()
-	if tc.is_empty(): return
-	var p: Vector2 = (d.anchor(a) + d.anchor(b)) * 0.5
-	tc = tc.duplicate(); tc.focus = [p.x, p.y]
-	d.camera(tc)
-
-func _place(id: String, at, facing := "") -> void:
-	d.place_actor(id, at, null, facing)
-
-func _pp() -> Vector2:
-	return Vector2(d.main.player_pos.x, d.main.player_pos.z)
 
 # ---------------------------------------------------------------------------
 # C0001 — 사건이 선다(조용히)
@@ -625,6 +558,10 @@ func on_leave(target: String) -> void:
 # ---------------------------------------------------------------------------
 func on_load() -> void:
 	for k in ["in_night_scene", "mong_on", "wolmae_on"]: S.flags.erase(k)
+	p2_enter()   # PART II-A 열림(결정 §4) — 남원에 다시 들었을 때
+	if f("p2_started"):
+		p2_on_load()
+		return
 	if S.phase == "courtship" and not f("first_meeting_done"): S.flags.erase("chun_on")
 	if S.phase == "farewell":
 		if f("farewell_scene_done") and not f("chun_home"):
@@ -659,4 +596,9 @@ func summary() -> Array:
 		if f("farewell_ask_wait"): p.append("기다리겠느냐고 묻자 춘향은 “약속했으니까요.” 했다.")
 		elif f("farewell_ask_far"): p.append("한양은 멀다고 하자 춘향은 “먼 길인 건 압니다.” 했다.")
 		elif f("farewell_silent"): p.append("아무 말도 하지 않았다. 춘향이 “…가세요.” 했다.")
+	p.append_array(p2_summary())
 	return p
+
+# 먼 길 막음(fast_travel.lock_why) — PART II-A 관아 일 도중
+func travel_lock() -> String:
+	return p2_travel_lock()
