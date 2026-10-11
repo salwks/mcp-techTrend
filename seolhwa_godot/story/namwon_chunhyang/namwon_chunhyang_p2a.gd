@@ -179,6 +179,7 @@ func p2_ambient(dt: float) -> void:
 	if f("proc_on") and not f("proc_in"): _proc_step(dt)
 	_leash(dt)
 	_follow(dt)
+	_rope_sync()
 	# 싫다고 한 뒤 — 몇 걸음 떠나거나 조금 지나면 포졸이 장정들과 함께 막아선다(결국 들어간다)
 	if f("labour_refused") and not f("rounded_up") and not d.runner.busy:
 		_refuse_t += dt
@@ -640,6 +641,7 @@ func gonjang() -> void:
 		{ "label": "(포승 한쪽을 잡는다)", "id": "obey", "do": [{ "flag": "restraint_obeyed" }] },
 		{ "label": "(느슨하게 잡는다)", "id": "loose", "do": [{ "flag": "restraint_loose" }] },
 		{ "label": "(줄을 놓는다)", "id": "refuse", "do": [{ "flag": "restraint_refused" }] }] }])
+	if not f("restraint_refused"): flag("rope_on")   # 포승 소품(놓으면 사령이 넘겨받은 뒤에)
 	if f("restraint_obeyed"):
 		await d.ui.caption("포승 한쪽을 잡았다.", 1.8)
 		d.face_actor("chunhyang", null, "player")
@@ -653,6 +655,7 @@ func gonjang() -> void:
 		await say("선임 사령", "비켜!")
 		d.teleport_to("ch_player_aside", "right")
 		_place("saryeong_w3", "ch_player_rope", "right")
+		flag("rope_on")
 		await d.ui.caption("다른 사령이 줄을 넘겨받는다.", 2.0)
 	# 네 컷 — 첫째 춘향 얼굴, 둘째 플레이어 손, 셋째 월매, 넷째 관아 기둥(소리만)
 	d.cutscene(true)
@@ -666,7 +669,12 @@ func gonjang() -> void:
 	var pp := _pp()
 	d.face_actor("chunhyang", "up", null)
 	d.face_actor("player", "right", null)
-	_shot({ pos = [pp.x - 1.7, 1.2, pp.y - 2.1], look = [pp.x + 0.1, 0.9, pp.y], fov = 30.0 })   # 플레이어 손(안마당 북서에서 가슴 높이 — 내삼문 담 밖으로 나가지 않게)
+	# 손 컷은 줄을 쥔 손을 찍는다 — 놓았으면 그 자리(ch_player_rope)에서 넘겨받은 사령의 손(같은 틀 · 내 흰 옷 대신 검은 사령 옷)
+	if f("restraint_refused") and d.actors.has("saryeong_w3"):
+		var hp: Vector2 = _apos("saryeong_w3")
+		_shot({ pos = [hp.x - 1.7, 1.2, hp.y - 2.1], look = [hp.x + 0.1, 0.9, hp.y], fov = 30.0 })
+	else:
+		_shot({ pos = [pp.x - 1.7, 1.2, pp.y - 2.1], look = [pp.x + 0.1, 0.9, pp.y], fov = 30.0 })   # 플레이어 손(안마당 북서에서 가슴 높이 — 내삼문 담 밖으로 나가지 않게)
 	await d.wait(0.5)
 	await _hit()
 	await _cut("10b_gonjang_hand")
@@ -686,6 +694,7 @@ func gonjang() -> void:
 	_cam_end()
 	cut_to("8A_gonjang")
 	await say("변학도", "하겠느냐?")
+	await _cut("10e_wide_rope")
 	await say("춘향", "못 합니다.")
 	await _hit()
 	await d.wait(0.6)
@@ -695,6 +704,72 @@ func gonjang() -> void:
 	await _hit()
 	d.learn_clue("gonjang")
 	await imprison()
+
+# 포승 소품(§27) — 선택(restraint_*)을 줄 모양으로: 잡는다 짧고 팽팽 · 느슨하게 조금 처짐 · 놓는다 넘겨받은 사령이 쥠(플레이어 쪽 없음).
+#   손 동작·줄 물리 없음: 쥔 사람 손 높이 → 꿇은 춘향 등 뒤 손목을 잇는 처진 곡선(관 하나). 굵기는 카메라 거리에 비례(가까운 손 컷·먼 8A 둘 다 읽히게)
+var rope_mesh: MeshInstance3D = null
+var rope_info := {}   # 지금 그린 줄 { state, holder, sag, len } — 시험이 본다
+
+func rope_state() -> String:
+	for k in P2.ROPE_FLAG:
+		if f(k): return String(P2.ROPE_FLAG[k])
+	return ""
+
+func _rope_sync() -> void:
+	var st := rope_state() if f("rope_on") else ""
+	if st == "" or not d.actors.has("chunhyang"):
+		if rope_mesh != null: rope_mesh.visible = false
+		rope_info = {}
+		return
+	var spec: Dictionary = P2.ROPE[st]
+	var hid := String(spec.holder)
+	var hp: Vector3 = d.main.player_pos if hid == "player" else (d.actors[hid].pos if d.actors.has(hid) else Vector3.INF)
+	if hp == Vector3.INF: return
+	var cp: Vector3 = d.actors.chunhyang.pos
+	var flat := Vector3(cp.x - hp.x, 0.0, cp.z - hp.z)
+	if flat.length() < 0.3: return
+	var dir := flat.normalized()
+	var a := hp + Vector3(0, P2.ROPE_HAND_H, 0) + dir * 0.22      # 쥔 손(몸 앞)
+	var b := cp + Vector3(0, P2.ROPE_TIE_H, 0) - dir * 0.08       # 춘향 등 뒤 손목
+	var cam: Camera3D = d.main.cam
+	var r := 0.012
+	if cam != null: r = clampf(cam.global_position.distance_to((a + b) * 0.5) * 0.0019, 0.016, 0.06)
+	if rope_mesh == null:
+		rope_mesh = MeshInstance3D.new(); rope_mesh.name = "chunhyang_rope"
+		var m := StandardMaterial3D.new()
+		m.albedo_color = Color(P2.ROPE_COLOR); m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED   # 인물 그림처럼 평면 색 — 그늘에서도 붉게 읽힌다
+		rope_mesh.material_override = m
+		rope_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		d._props_root.add_child(rope_mesh)
+	rope_mesh.visible = true
+	rope_mesh.mesh = _rope_tube(a, b, float(spec.sag), r)
+	rope_info = { "state": st, "holder": hid, "sag": float(spec.sag), "len": a.distance_to(b), "r": r, "a": a, "b": b }
+
+static func _rope_tube(a: Vector3, b: Vector3, sag: float, r: float) -> ArrayMesh:
+	const N := 14; const SIDES := 6
+	var pts := []
+	for i in N + 1:
+		var t := float(i) / N
+		pts.append(a.lerp(b, t) - Vector3(0, sag * 4.0 * t * (1.0 - t), 0))
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var rings := []
+	for i in pts.size():
+		var tng: Vector3 = (pts[mini(i + 1, N)] - pts[maxi(i - 1, 0)]).normalized()
+		var side := tng.cross(Vector3.UP).normalized()
+		var up := side.cross(tng).normalized()
+		var ring := []
+		for k in SIDES:
+			var ang := TAU * k / SIDES
+			ring.append([pts[i] + (side * cos(ang) + up * sin(ang)) * r, side * cos(ang) + up * sin(ang)])
+		rings.append(ring)
+	for i in N:
+		for k in SIDES:
+			var k2 := (k + 1) % SIDES
+			for q in [rings[i][k], rings[i + 1][k], rings[i + 1][k2], rings[i][k], rings[i + 1][k2], rings[i][k2]]:
+				st.set_normal(q[1]); st.add_vertex(q[0])
+	return st.commit()
 
 # ACT 11 §29 — 옥에 가둬라. 춘향은 혼자 일어나려 한다 — 팔을 내민다 / 기다린다(팔을 잡으면 말이 없다). 플레이어가 옥까지 데려간다(조작)
 func imprison() -> void:
@@ -720,6 +795,7 @@ func imprison() -> void:
 		await d.wait(1.2)
 		d.anim_actor("chunhyang", "idle")
 		await d.ui.caption("춘향이 형틀을 짚고 겨우 일어선다.", 2.2)
+	unflag("rope_on")   # 일어선 뒤 포승을 거둔다(줄 소품은 팔 고르기 틀까지)
 	for id in ["saryeong_w2", "saryeong_e2", "saryeong_w3", "saryeong_senior"]:
 		if d.actors.has(id): d.place_actor(id, "home")
 	d.place_actor("wolmae", "home")
@@ -877,7 +953,7 @@ func p2_travel_lock() -> String:
 # 불러오기 — 장면 도중 저장이면 가까운 안전지점으로
 func p2_on_load() -> void:
 	d.free_move = false
-	for k in ["leash_on", "roundup_on", "wolmae_on"]: S.flags.erase(k)
+	for k in ["leash_on", "roundup_on", "wolmae_on", "rope_on"]: S.flags.erase(k)
 	if S.phase == "arrival" and f("proc_seen") and not f("proc_in"): S.flags["proc_in"] = true
 	if S.phase == "arrival" and f("proc_on") and not f("proc_seen"): S.flags.erase("proc_on")
 	if S.phase == "office":

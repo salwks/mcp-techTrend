@@ -159,7 +159,28 @@ func _probe_p2(nm: String) -> void:
 		await _frames(2)
 	elif nm.begins_with("10") and nm.contains("gonjang"):
 		pr["gonjang_cuts"] = int(pr.get("gonjang_cuts", 0)) + 1
+		if nm == "10b_gonjang_hand": pr["rope_10b"] = await _rope_probe()
+	elif nm == "10e_wide_rope":
+		pr["rope_wide"] = await _rope_probe()
+	elif nm == "11_arm_choice":
+		pr["rope_arm"] = await _rope_probe()
 
+# 포승 소품 그 순간: 상태·쥔 사람·보임·화면 안(줄 가운데가 카메라 틀 안)
+func _rope_probe() -> Dictionary:
+	await _frames(2)
+	var cf = d.case_fn
+	var m: MeshInstance3D = cf.rope_mesh
+	var vis: bool = m != null and m.visible and m.mesh != null
+	var r: Dictionary = cf.rope_info.duplicate()
+	var inframe := 0   # 줄 위 다섯 점 중 카메라 틀 안(손 쪽 끝부터)
+	if vis and r.has("a"):
+		for i in 5:
+			var t := (i + 0.5) / 5.0
+			var q: Vector3 = (r.a as Vector3).lerp(r.b, t) - Vector3(0, float(r.sag) * 4.0 * t * (1.0 - t), 0)
+			if d.main.cam.is_position_in_frustum(q): inframe += 1
+	r.erase("a"); r.erase("b")
+	r["visible"] = vis; r["inframe"] = inframe
+	return r
 
 # 1A 컷 한가운데(자막 하나 뒤 — 군중 LOD가 여러 프레임 돈 뒤): 플레이어 자리 · 안개 · 1A 틀 안 군중
 var probe_1a := {}

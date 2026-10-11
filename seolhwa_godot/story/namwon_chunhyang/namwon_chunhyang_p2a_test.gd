@@ -221,6 +221,19 @@ func run() -> void:
 	expect(rs.size() == 1 and rs[0] == { "P2A": "restraint_obeyed", "P2B": "restraint_loose", "P2C": "restraint_refused", "CTL": "restraint_obeyed" }[br], "줄 잡아 — %s 기록" % [rs])
 	expect(S.is_flag("struck") and int(S.world.get("strikes", 0)) >= 6, "어느 경우든 춘향은 맞는다(%d)" % int(S.world.get("strikes", 0)))
 	if probe.has("gonjang_cuts"): expect(int(probe.gonjang_cuts) == 4, "곤장 네 컷(얼굴·손·월매·기둥)")
+	# 포승 소품 — 선택마다 줄 모양(잡는다 짧고 팽팽 · 느슨하게 처짐 · 놓는다 다른 사령이 쥠)
+	var want_rope: String = { "P2A": "taut", "P2B": "slack", "P2C": "other", "CTL": "taut" }[br]
+	for pk in ["rope_10b", "rope_wide", "rope_arm"]:
+		var rp: Dictionary = probe.get(pk, {})
+		expect(bool(rp.get("visible", false)) and int(rp.get("inframe", 0)) >= 2, "%s — 포승이 보이고 틀 안에(다섯 점 중 %d) %s" % [pk, int(rp.get("inframe", 0)), rp])
+		expect(String(rp.get("state", "")) == want_rope, "%s — 줄 상태 %s" % [pk, rp.get("state", "")])
+		if want_rope == "other":
+			expect(String(rp.get("holder", "")) == "saryeong_w3", "%s — 놓음: 넘겨받은 사령이 쥔다(플레이어 쪽 줄 없음)" % pk)
+		else:
+			expect(String(rp.get("holder", "")) == "player", "%s — 플레이어 손에서" % pk)
+		if want_rope == "taut": expect(float(rp.get("sag", 1.0)) <= 0.06 and float(rp.get("len", 9.0)) < 2.4, "%s — 짧고 팽팽(처짐 %.2f · 길이 %.2f)" % [pk, float(rp.get("sag", 1.0)), float(rp.get("len", 9.0))])
+		if want_rope == "slack": expect(float(rp.get("sag", 0.0)) >= 0.25, "%s — 조금 처짐(%.2f)" % [pk, float(rp.get("sag", 0.0))])
+	expect(d.case_fn.rope_mesh == null or not d.case_fn.rope_mesh.visible, "일어나 — 포승을 풂(소품 사라짐)")
 	expect(d.case_fn.music_wanted() == "", "곤장 — BGM 없음")
 	var arm := ["arm_offered", "arm_waited"].filter(func(k): return S.is_flag(k))
 	expect(arm.size() == 1 and arm[0] == ("arm_waited" if br == "P2B" else "arm_offered"), "팔 — %s" % [arm])

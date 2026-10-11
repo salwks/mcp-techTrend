@@ -36,6 +36,20 @@ const PROC_CLEAR_W := 6.0
 static func ambient_excludes() -> Array:
 	return [{ "id": "ch_proc_road", "path": PROC_PATH, "width": PROC_CLEAR_W, "when": "ph('arrival') and not f('proc_in')" }]
 
+# §27 포승(장면 소품 — 손 동작·줄 물리 없음): 줄 잡기 선택이 줄 모양으로 남는다(기록은 restraint_* 플래그 — 결말이 다시 부른다)
+#   taut  잡는다   — 플레이어 손에서 춘향까지 짧고 팽팽하게
+#   slack 느슨하게 — 플레이어 손에서 조금 처져서
+#   other 놓는다   — 플레이어 쪽에는 줄이 없다. 넘겨받은 사령(w3)이 쥔다
+const ROPE := {
+	"taut": { "holder": "player", "sag": 0.04 },
+	"slack": { "holder": "player", "sag": 0.34 },
+	"other": { "holder": "saryeong_w3", "sag": 0.05 },
+}
+const ROPE_FLAG := { "restraint_obeyed": "taut", "restraint_loose": "slack", "restraint_refused": "other" }
+const ROPE_COLOR := "#c0392b"   # 홍사(붉은 오랏줄) — 그림자 진 손 컷·먼 8A 틀에서도 흙마당 위로 읽히게(그림처럼 빛을 받지 않는 색)
+const ROPE_HAND_H := 0.95       # 쥔 사람 손 높이(선 그림)
+const ROPE_TIE_H := 0.55        # 꿇은 춘향 등 뒤 묶은 손목 높이
+
 const ONLOOKERS := ["on_1", "on_2", "on_3", "on_4", "on_5", "on_6", "on_7", "on_8"]
 const GISAENG := ["gisaeng_1", "gisaeng_2", "gisaeng_3", "gisaeng_4", "gisaeng_5", "gisaeng_6"]
 
