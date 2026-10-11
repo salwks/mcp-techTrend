@@ -117,7 +117,7 @@ static func anchors() -> Dictionary:
 		# 월매 집(nw_house_158 — 결정 §7-3)
 		"ch_wolmae_house": [-3212.99, 449.82], "ch_wolmae_yard": [-3213.0, 451.0], "ch_wolmae_gate": [-3213.0, 457.2], "ch_wolmae_front": [-3216.0, 459.8],
 		"ch_wolmae_at_gate": [-3212.4, 458.2], "ch_bangja_gate": [-3216.2, 460.0], "ch_player_gate": [-3215.0, 461.8], "ch_mong_road": [-3229.0, 462.0], "ch_mong_gate": [-3214.0, 459.6],
-		"ch_chun_gate": [-3210.9, 458.5], "ch_wolmae_aside": [-3213.4, 457.7], "ch_1a_hold": [-3286.0, 431.0], "ch_chun_yard": [-3212.2, 451.6], "ch_hyang_yard": [-3210.6, 452.4], "ch_wolmae_in": [-3214.2, 452.0],
+		"ch_chun_gate": [-3210.9, 458.5], "ch_wolmae_aside": [-3213.4, 457.7], "ch_chun_yard": [-3212.2, 451.6], "ch_hyang_yard": [-3210.6, 452.4], "ch_wolmae_in": [-3214.2, 452.0],
 		# §14 마당(밤)
 		"ch_vow_mong": [-3214.3, 451.2], "ch_vow_chun": [-3212.1, 451.2], "ch_vow_wolmae": [-3213.2, 449.6], "ch_vow_bangja": [-3215.8, 453.6], "ch_vow_player": [-3211.2, 454.0],
 		# §13 장면 B 오작교 곁 길

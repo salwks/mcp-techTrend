@@ -111,6 +111,7 @@ func travel_lock() -> String:
 # 이 공간을 떠난다(region_main._travel — 걷기 포털·역마·지도 모두): 사건이 알고 싶으면 case_fn.on_leave(갈 곳 id). 사건 상태는 저장한다
 func on_leave_space(target: String) -> void:
 	if case_fn == null or S == null or not _started: return
+	cut_fog_end()
 	if case_fn.has_method("on_leave"): case_fn.on_leave(target)
 	save()
 
@@ -355,6 +356,7 @@ func on_phase() -> void:
 func mark_dirty() -> void: _dirty = true
 
 func save() -> void:
+	if not _cut: cut_fog_end()   # 컷 밖 저장: 컷 안개를 남기지 않는다(날씨는 저장 파일에 없다 — 컷 도중 저장해도 불러오면 원래 안개. 끝내기는 _exit_tree)
 	if S == null or (test != null and not main.args.has("storysave")): return
 	S.save()
 	_save_where(INF)
@@ -454,6 +456,33 @@ func set_weather(k: String) -> void:
 func cutscene(on: bool) -> void:
 	_cut = on
 	ui.letterbox(on)
+	if not on: cut_fog_end()   # 컷이 어떻게 끝나든(건너뛰기 포함) 컷 안개는 원래대로
+
+# 컷 동안만 안개를 옅게(남원 아침과 같은 weather.force + fogm). 지금 날씨 종류는 그대로 두고 안개 배율만 덮는다.
+# 원래 날씨·안개는 cut_fog_end()에서 그대로(전환 없이) 돌아온다 — cutscene(false) · 공간을 떠날 때 · 저장 · 장면을 내릴 때(끝내기·불러오기)
+var _cut_wx := {}
+var cut_fog_from := {}   # 시험: 마지막 컷 안개가 담아 둔 원래 날씨
+func cut_fog(fogm: float) -> void:
+	var w = main.weather
+	if w == null or not w.has_method("snapshot"): return
+	if _cut_wx.is_empty(): _cut_wx = w.snapshot(); cut_fog_from = _cut_wx
+	var k: String = w.script_kind if w.script_kind != "" else w.kind
+	w.force(k, -1.0, 0.0, { "fogm": fogm })
+	if main.has_method("_apply_atmo"): main._apply_atmo()
+
+func cut_fog_end() -> void:
+	if _cut_wx.is_empty(): return
+	var w = main.weather
+	if w != null and is_instance_valid(w):
+		w.restore(_cut_wx)
+		if main.has_method("_apply_atmo") and w.is_inside_tree(): main._apply_atmo()
+	_cut_wx = {}
+
+func cut_fog_on() -> bool:
+	return not _cut_wx.is_empty()
+
+func _exit_tree() -> void:
+	cut_fog_end()
 
 # 소리(scripts/audio/sound.gd): 연출이 소리 낼 순간마다 부른다. sfx_cue 신호도 그대로 낸다(다른 것이 붙어 들을 수 있게).
 #   sfx(id) — 자리 없이 · sfx(id, at) — at: 자리 이름(anchors·인물 id·"player") · Vector2(x,z) · Vector3 → 그 자리에서 3D로

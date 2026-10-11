@@ -179,15 +179,18 @@ func start_case() -> void:
 	d.journal_note("남원에 다시 왔다. 단오장이 섰다고 한다")
 	if d.onboard != null: d.onboard.on_case_started()
 
+# 1A 컷 동안만의 안개 배율(남원 아침 0.3과 같은 방식 — weather.force fogm). 컷이 끝나면 원래 날씨·안개
+const FOG_1A := 0.35
+var vista_pp := Vector3.INF   # 시험 기록: 1A 컷이 시작될 때 플레이어 자리(컷 동안·뒤 그대로여야 한다)
+
 # §4 CAMERA 1A — 앞 장터 사람, 뒤 누각, 그보다 뒤 그네. 그네가 한 번 높이 올랐다 내려온다. 얼굴은 보이지 않는다
 func vista_1a() -> void:
 	flag("vista_seen")
 	beat("dano_swing")
 	d.cutscene(true)
-	# 플레이어는 잠시 단오 마당 가운데로(그림은 숨김) — 군중 LOD가 이 컷을 채우게. 컷이 끝나면 제자리
-	var back := _pp()
-	d.main.player.visible = false
-	d.teleport_to("ch_1a_hold")
+	# 플레이어는 제자리(군중 LOD가 카메라 자리도 보므로 옮기지 않는다 — event_crowd.gd). 컷 동안만 안개를 옅게(85m 그네 위 춘향이 사람으로 보이게)
+	vista_pp = d.main.player_pos
+	d.cut_fog(FOG_1A)
 	_shot(CAM_1A)
 	swing_boost(SWING_PERIOD * 1.2)
 	d.sfx("drum_far", "ch_ssireum")
@@ -197,10 +200,9 @@ func vista_1a() -> void:
 	await d.ui.caption("누각 너머 버드나무 사이로 그네가 높이 오른다.", 2.6)
 	d.learn_clue("dano")
 	await d.wait(0.6)
-	d.teleport_to(back)
-	d.main.player.visible = true
 	_cam_end()
-	d.cutscene(false)
+	d.cutscene(false)   # 원래 날씨·안개로(cut_fog_end)
+	await _cut("_1a_end")   # 시험: 컷이 끝난 바로 그 프레임(자리·날씨 되돌림 확인 — 찍지 않음)
 
 # §5 방자와 부딪힘 · 부채 · 알아봄
 func bump() -> void:

@@ -102,6 +102,11 @@ func walk_to(at) -> void:
 
 # 사건 함수의 _cut(이름) — 화면 검토일 때만 찍는다
 func cut(nm: String) -> void:
+	if nm == "02_1A_crowd_swing": _probe_1a()
+	if nm == "_1a_end":
+		var w = d.main.weather
+		probe_1a_end = { pos = d.main.player_pos, wx = w.snapshot() if w != null else {}, fog_on = d.cut_fog_on() }
+		return
 	if not d.main.args.has("storyshots") or DisplayServer.get_name() == "headless": return
 	var ts := Engine.time_scale
 	Engine.time_scale = 1.0
@@ -111,6 +116,36 @@ func cut(nm: String) -> void:
 	get_viewport().get_texture().get_image().save_png(dir.path_join("%s.png" % nm))
 	_log("SHOT " + nm)
 	Engine.time_scale = ts
+
+# 1A 컷 한가운데(자막 하나 뒤 — 군중 LOD가 여러 프레임 돈 뒤): 플레이어 자리 · 안개 · 1A 틀 안 군중
+var probe_1a := {}
+var probe_1a_end := {}
+func _probe_1a() -> void:
+	var cam: Camera3D = d.main.cam
+	var cr = d.main.crowd
+	var inframe := 0; var alive := 0; var dead := []; var by_cam := 0
+	if cr != null and cam != null:
+		var far := 60.0
+		var pp: Vector3 = d.main.player_pos
+		for m in cr.members("dano_market"):
+			var p2: Vector2 = m.pos2
+			var p3 := Vector3(p2.x, d.world.height_at(p2.x, p2.y) + 1.0, p2.y)
+			if not cam.is_position_in_frustum(p3): continue
+			inframe += 1
+			if String(m.lod) in ["active", "reduced"] and m.ch != null and m.ch.visible:
+				alive += 1
+				if Vector2(p2.x - pp.x, p2.y - pp.z).length() > far: by_cam += 1   # 플레이어 거리로만 쟀으면 숨었을 사람
+			else: dead.append("%s@%.0f(%s)" % [String(m.lod), Vector2(p2.x - pp.x, p2.y - pp.z).length(), String(m.get("role", ""))])
+	var chs := {}
+	if d.actors.has("chunhyang") and cam != null:
+		var ch = d.actors.chunhyang.ch
+		var cp3: Vector3 = ch.position + Vector3(0, 0.8, 0)
+		chs = { vis = ch.visible, shown = d.actors.chunhyang.shown, pos = [snappedf(cp3.x, 0.1), snappedf(cp3.y, 0.1), snappedf(cp3.z, 0.1)],
+			in_frame = cam.is_position_in_frustum(cp3), screen = cam.unproject_position(cp3), dist = snappedf(cam.global_position.distance_to(cp3), 0.1) }
+	var w = d.main.weather
+	probe_1a = { pos = d.main.player_pos, visible = d.main.player.visible, inframe = inframe, alive = alive, dead = dead,
+		fogm = float(w.cur.fogm) if w != null else -1.0, fog_on = d.cut_fog_on(), stats = cr.stats.duplicate() if cr != null else {} }
+	_log("1A probe " + JSON.stringify({ chunhyang = str(chs), inframe = inframe, alive = alive, by_cam = by_cam, dead = dead, fogm = probe_1a.fogm, stats = probe_1a.stats }))
 
 # 지금 고를 talk 항목의 첫 대사(인물의 말이 맞는지)
 func first_line(id: String) -> String:
@@ -163,6 +198,20 @@ func _run() -> void:
 	# §4 1A
 	await walk_to("ch_vista_in")
 	expect(d.S.is_flag("vista_seen") and d.S.has_clue("dano"), "C0101 1A — 단오장")
+	var vp: Vector3 = d.case_fn.vista_pp
+	expect(not probe_1a.is_empty(), "1A 컷 한가운데를 들여다봄")
+	expect(not probe_1a.is_empty() and not probe_1a_end.is_empty() and probe_1a.pos == vp and probe_1a_end.pos == vp,
+		"1A 컷 앞·가운데·뒤 플레이어 자리가 똑같다(옮기지 않음) %s / %s / %s" % [vp, probe_1a.get("pos"), probe_1a_end.get("pos")])
+	expect(not probe_1a.is_empty() and bool(probe_1a.visible) and d.main.player.visible, "1A 동안 플레이어를 숨기지 않는다")
+	expect(not probe_1a.is_empty() and int(probe_1a.inframe) >= 10 and int(probe_1a.alive) == int(probe_1a.inframe),
+		"1A 틀 안 단오 군중이 컷 동안 살아 있다(카메라 기준 LOD) %d/%d %s" % [int(probe_1a.get("alive", 0)), int(probe_1a.get("inframe", 0)), str(probe_1a.get("dead", []))])
+	expect(not probe_1a.is_empty() and bool(probe_1a.fog_on) and absf(float(probe_1a.fogm) - d.case_fn.FOG_1A) < 0.01,
+		"1A 컷 동안만 안개 옅게 fogm=%.2f" % float(probe_1a.get("fogm", -1.0)))
+	var wx0: Dictionary = d.cut_fog_from
+	var wx1: Dictionary = probe_1a_end.get("wx", {})
+	expect(not wx0.is_empty() and not probe_1a_end.is_empty() and not bool(probe_1a_end.fog_on) and probe_1a_end.pos == vp
+			and JSON.stringify(wx0) == JSON.stringify(wx1),
+		"1A 컷이 끝나면 바로 원래 날씨·안개(강제 여부·값까지) %s → %s" % [JSON.stringify(wx0), JSON.stringify(wx1)])
 	# §5~§8
 	prefer = ["주워 준다", "맞소", "같이 가 주지"] if branch == "A" else ["그냥 지나간다", "혼자 가시오"]
 	await walk_to([-3263.0, 433.0])

@@ -8,6 +8,7 @@
 #   force(kind, duration=-1, fade=10, values={})  날씨를 강제로(폭풍 storm·눈보라 blizzard 포함). duration 초 뒤 저절로 풀림(<0이면 release까지)
 #                                                 values로 목표값 일부 덮어쓰기 {cloud, rain, snowfall, fogm, wind} — 점점 나빠지는 날씨는 force를 여러 번
 #   release(fade=10)                               강제를 풀고 기후대 확률로 돌아감
+#   snapshot() / restore(snap)                    지금 날씨 상태(강제·값 포함)를 담았다가 그대로 되돌린다 — 컷 동안만 바꾸는 안개(story_director.cut_fog)
 #   force_time(hour, duration=-1, fade=0)          시간대 강제(fade 초에 걸쳐 그 시각으로), release_time() — region_main이 time_step으로 hour를 받는다
 extends Node3D
 
@@ -228,6 +229,19 @@ func release(fade := 10.0) -> void:
 	_release_fade = maxf(fade, 0.01)
 	if forced != "": kind = forced
 	else: _roll()
+
+# 컷 동안만 바꾼 날씨를 원래대로(강제 여부·남은 시간·지금 값까지) — 바로(전환 없이)
+func snapshot() -> Dictionary:
+	return { kind = kind, script_kind = script_kind, script_values = script_values.duplicate(), script_left = script_left,
+		script_fade = script_fade, release_fade = _release_fade, cur = cur.duplicate() }
+
+func restore(s: Dictionary) -> void:
+	if s.is_empty(): return
+	kind = String(s.kind); script_kind = String(s.script_kind); script_values = (s.script_values as Dictionary).duplicate()
+	script_left = float(s.script_left); script_fade = float(s.script_fade); _release_fade = float(s.release_fade)
+	cur = (s.cur as Dictionary).duplicate()
+	dirty = true
+	_push_globals()
 
 func is_forced() -> bool:
 	return script_kind != ""
