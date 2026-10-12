@@ -1356,19 +1356,20 @@ def run_region(rid, bounds, fp):
 
 TITLE_CATS = ("civic", "landmark", "jumak", "shrine", "bridge")
 
-# 카메라 구역(§8, region.json camera_zones — 엔진이 맨 뒤에 붙여 이긴다): 도읍 큰길에서는 카메라를 조금 높이고 가파르게 해
-# 길 북쪽 시전 간판 줄이 화면에 들고 남쪽(카메라 쪽) 줄이 플레이어를 덜 가린다. 도성 안 골목도 집이 더 들게 조금 높게.
+# 카메라 구역(§8, region.json camera_zones — 엔진이 맨 뒤에 붙여 이긴다): 도읍 큰길에서는 카메라를 조금 멀리 두어
+# 길 북쪽 시전 간판 줄이 화면에 든다. 각은 2026-10부터 공통 기본과 같은 40°(제작 규칙 C26 — 이전 45·47은 너무 수직이었다,
+# 남쪽 줄의 가림은 가림 점무늬가 맡는다). 거리: 도성 안 26 · 큰길 30(이전 28·32 — 각이 낮아진 만큼 조금 당겼다).
 CAM_ZONES = {
     "GG_HANYANG": [
-        {"name": "도성 안", "minX": -900.0, "maxX": 860.0, "minZ": -1600.0, "maxZ": -140.0, "pitch": 45.0, "distance": 28.0, "aimZ": -2.5},
-        {"name": "운종가 큰길", "minX": -600.0, "maxX": 800.0, "minZ": -965.0, "maxZ": -868.0, "pitch": 47.0, "distance": 32.0, "aimZ": -5.0},
-        {"name": "육조거리", "minX": -640.0, "maxX": -520.0, "minZ": -1205.0, "maxZ": -935.0, "pitch": 47.0, "distance": 32.0, "aimZ": -3.0},
+        {"name": "도성 안", "minX": -900.0, "maxX": 860.0, "minZ": -1600.0, "maxZ": -140.0, "pitch": 40.0, "distance": 26.0, "aimZ": -2.5},
+        {"name": "운종가 큰길", "minX": -600.0, "maxX": 800.0, "minZ": -965.0, "maxZ": -868.0, "pitch": 40.0, "distance": 30.0, "aimZ": -5.0},
+        {"name": "육조거리", "minX": -640.0, "maxX": -520.0, "minZ": -1205.0, "maxZ": -935.0, "pitch": 40.0, "distance": 30.0, "aimZ": -3.0},
     ],
     "PA_PYEONGYANG": [
-        {"name": "평양 내성", "minX": -210.0, "maxX": 332.0, "minZ": -300.0, "maxZ": 215.0, "pitch": 45.0, "distance": 28.0, "aimZ": -2.5},
+        {"name": "평양 내성", "minX": -210.0, "maxX": 332.0, "minZ": -300.0, "maxZ": 215.0, "pitch": 40.0, "distance": 26.0, "aimZ": -2.5},
     ],
     "HG_HAMHEUNG": [
-        {"name": "함흥 성 안", "minX": -543.0, "maxX": -205.0, "minZ": -166.0, "maxZ": 279.0, "pitch": 45.0, "distance": 28.0, "aimZ": -2.5},
+        {"name": "함흥 성 안", "minX": -543.0, "maxX": -205.0, "minZ": -166.0, "maxZ": 279.0, "pitch": 40.0, "distance": 26.0, "aimZ": -2.5},
     ],
 }
 

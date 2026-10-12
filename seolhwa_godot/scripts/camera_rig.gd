@@ -1,4 +1,4 @@
-# 고정 시점 카메라 — 웹 core/camera.js 이식. yaw 고정(남→북), 구역·실내에 따라 pitch/거리/fov만 부드럽게 바뀐다.
+# 고정 시점 카메라 — 웹 core/camera.js 이식. 기본 내려다보는 각 40°(2026-10 — 38에서, 권역 기본 구역 CAM_DEFAULT 40과 같게; 도시 구역도 40~42). yaw 고정(남→북), 구역·실내에 따라 pitch/거리/fov만 부드럽게 바뀐다.
 # 배를 탈 때(sailing)만 풍경 시점: 낮은 pitch(약 13°)·조금 넓은 fov로 배 뒤·옆에서 뱃길 방향(+ 높은 기슭 쪽)을 보며 yaw가 배를
 # 따라 부드럽게 돈다. 내리면 yaw 0(남→북 고정)으로 천천히 돌아온다.
 # 말을 탈 때(riding — scripts/region/horse_ride.gd)도 같은 풍경 시점: 배보다 조금 높고(20°) 걷기보다 멀리(21m), 말 뒤에서 볼 쪽으로
@@ -6,7 +6,7 @@
 class_name CameraRig
 extends RefCounted
 
-const DEFAULT := { pitch = 38.0, distance = 16.0, fov = 30.0, lookAhead = 1.2, aimZ = 0.0 }   # aimZ: 겨냥점을 z로 옮김(−=북쪽, 구역 값)
+const DEFAULT := { pitch = 40.0, distance = 16.0, fov = 30.0, lookAhead = 1.2, aimZ = 0.0 }   # aimZ: 겨냥점을 z로 옮김(−=북쪽, 구역 값)
 
 var camera: Camera3D
 var world: World
