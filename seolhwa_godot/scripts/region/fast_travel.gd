@@ -14,6 +14,7 @@ const Travel := preload("res://scripts/region/travel.gd")
 const Discovery := preload("res://scripts/region/discovery.gd")
 const Stations := preload("res://scripts/region/stations.gd")
 const Waymarks := preload("res://scripts/region/waymarks.gd")
+const DevTravel := preload("res://scripts/region/dev_travel.gd")
 const PAPER := Color("#efe6d2")
 const INK := Color("#2b2622")
 const INK_SOFT := Color("#5a5048")
@@ -87,7 +88,7 @@ func _gather() -> void:
 		var d: Dictionary = RideNet.read(sp)
 		for n in d.get("nodes", []):
 			if not bool(n.get("fast", false)): continue
-			var known := HorseRide.is_discovered(sp, String(n.id)) or _done_end(sp, n)
+			var known := HorseRide.is_discovered(sp, String(n.id)) or _done_end(sp, n) or DevTravel.on   # 개발: 모두 앎
 			if not known: continue
 			var a: Array = n.get("arrive", [n.x, n.z])
 			var at := Vector2(float(a[0]), float(a[1]))
@@ -172,7 +173,7 @@ static func gate_for(sp: String, active_id := "", active_phase := "") -> String:
 #   역마(역참 마부·길목 깃발·역마 창·지도) · 말 타기 · 배 · 노정 포털·지나온 길 건너뛰기. 막혔으면 짧은 알림을 띄우고 true
 static var refused: Array = []   # 시험 기록: [무엇, 알림]
 static func lock_why(m) -> String:
-	if m == null or not is_instance_valid(m): return ""
+	if m == null or not is_instance_valid(m) or DevTravel.on: return ""   # 개발 '전국 이동 열림'은 이야기 막음도 푼다
 	var st = m.get("story")
 	if st != null and st.has_method("travel_lock"): return String(st.travel_lock())
 	return ""
@@ -187,6 +188,7 @@ static func refuse(m, what: String) -> bool:
 	return true
 
 static func gate_why(m) -> String:
+	if DevTravel.on: return ""
 	var hs := String(m.world.region.get("route_id", m.world.region.get("region_id", "")))
 	var st = m.get("story")
 	var aid := ""; var aph := ""
@@ -218,7 +220,7 @@ static func reachable_from(m) -> Dictionary:
 	while not q.is_empty():
 		var u: String = q.pop_front()
 		var nbrs: Array = adj.get(u, [])
-		if first and is_route.has(u) and not Progress.route_done(u):
+		if first and is_route.has(u) and not Progress.route_done(u) and not DevTravel.on:
 			# 들어온 끝 쪽만(포털 id <노정>_<끝>)
 			var entry := String(m.get("_route_entry"))
 			var end := entry.trim_prefix(u + "_")
@@ -228,7 +230,7 @@ static func reachable_from(m) -> Dictionary:
 		for w in nbrs:
 			if out.has(w): continue
 			out[w] = (out[u] as Array) + [w]
-			if is_route.has(w) and not Progress.route_done(w): continue   # 안 지난 노정: 그 안 아는 거점까지만, 넘어가지 않는다
+			if is_route.has(w) and not Progress.route_done(w) and not DevTravel.on: continue   # 안 지난 노정: 그 안 아는 거점까지만, 넘어가지 않는다
 			q.append(w)
 	return out
 
@@ -304,6 +306,7 @@ static func _geo_km(a: Vector2, b: Vector2) -> float:
 
 func _process(delta: float) -> void:
 	if _anim < 0.0: return
+	if Input.is_action_just_pressed("boat_skip") and _anim < 0.98: skip(); return
 	_anim += delta / ANIM
 	_canvas.queue_redraw()
 	if _anim >= 1.0: _arrive()
@@ -355,7 +358,22 @@ func _unhandled_input(ev: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 	_canvas.queue_redraw()
 
+# 건너뛰기(Space · 단추): 지도 위 길 연출을 끝까지 넘겨 바로 도착(_arrive — 시각·날씨·도착 자리·가 봄 그대로)
+func skip() -> void:
+	if _anim < 0.0: return
+	print("FAST skip at %.2f" % _anim)
+	_anim = 1.0
+	_arrive()
+
+func _skip_rect() -> Rect2:
+	var p := _panel()
+	var fs := int(UiFonts.BODY * _k)
+	var w := _font.get_string_size("Space  건너뛰기", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 36.0
+	return Rect2(Vector2(p.end.x - w - 24.0 * _k, p.end.y - fs * 1.6 - 14.0 * _k), Vector2(w, fs * 1.6))
+
 func _on_input(e: InputEvent) -> void:
+	if _anim >= 0.0 and e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and _skip_rect().has_point(e.position):
+		skip(); return
 	if not (e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT) or _anim >= 0.0: return
 	var i := _row_at(e.position)
 	if i < 0: return
@@ -427,6 +445,12 @@ func _draw() -> void:
 		if _anim >= 0.0:
 			foot = "길에서 약 %s — %s → %s" % [_dur_text(float(_go.hours)), _clock(float(_go.h0)), _clock(lerpf(float(_go.h0), float(_go.h0) + float(_go.hours), clampf(_anim, 0.0, 1.0)))]
 		_text(UiFonts.fit(_font, foot, int(UiFonts.KEYS * _k), mr.size.x), Vector2(mr.position.x, mr.end.y + 32 * _k), UiFonts.KEYS, INK if it.ok else SEAL)
+	if _anim >= 0.0:   # 건너뛰기 단추(오른쪽 아래)
+		var br := _skip_rect()
+		_canvas.draw_rect(br, Color(1.0, 0.95, 0.82))
+		_canvas.draw_rect(br, SEAL, false, 3.0)
+		var fs := int(UiFonts.BODY * _k)
+		_canvas.draw_string(_font, br.position + Vector2(18.0, fs * 1.12), "Space  건너뛰기", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 
 static func _clock(h: float) -> String:
 	var hh := fposmod(h, 24.0)

@@ -126,6 +126,7 @@ func run(spec: String) -> void:
 	var wx_done := wx == ""
 	var fork_node := ""
 	var forks_seen := 0
+	var skips := 0
 	while hr.mounted():
 		await main._wait_frames(1)
 		var dt: float = main.get_process_delta_time()
@@ -148,6 +149,12 @@ func run(spec: String) -> void:
 					if String(o.label).contains(fork_pick) or String(o.node.id).contains(fork_pick):
 						hr._replan_from(int(fk.gi), o); fk.done = true; fork_node = String(o.node.id)
 						print("RIDETEST fork pick %s → %s" % [o.dir, o.label]); break
+		# --rideskipall: 건너뛸 수 있으면 곧장 건너뛴다(공용 단추 travel_overlay.skip과 같은 길) — 길가 이야기·사건 앞에서 멈춰야 한다
+		if args.has("rideskipall") and hr.can_skip():
+			var ov = main.get_node_or_null("travel_overlay")
+			skips += 1
+			if ov != null: ov.what = "horse"; ov.skip()
+			else: hr.skip()
 		if fr % 600 == 0: print("RIDETEST f=%d s=%.0f/%.0f v=%.1f state=%s fps=%.0f" % [fr, hr.s, hr.L, hr.v, hr.state, Engine.get_frames_per_second()])
 		if shots and mi < marks.size() and hr.L > 0.0 and hr.s / hr.L >= marks[mi]:
 			main._save(dir.path_join("%s_%s_%d.png" % [a.id, b.id, mi + 1])); mi += 1
@@ -163,6 +170,10 @@ func run(spec: String) -> void:
 		(hr.stats.get("slow", {}) as Dictionary).keys(), zone_v])
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	var expect := String(args.get("rideexpect", "dest"))
+	if args.has("rideskipall"):
+		print("RIDETEST skips=%d" % skips)
+		if skips < 1: _fail("건너뛰기를 한 번도 못 함")
+		if hr.state != "ON_FOOT" and hr.state != "EVENT_APPROACH": _fail("건너뛴 뒤 내린 상태가 아님 %s" % hr.state)
 	if stops.is_empty(): _fail("멈춘 적 없음")
 	elif expect == "fork":
 		if fork_node == "": _fail("갈림길에서 고르지 못함(갈림 %d)" % forks_seen)

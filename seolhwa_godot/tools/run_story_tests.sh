@@ -67,14 +67,20 @@ TESTS=(
 	"ride:hanyang-gate|420|--region=GG_HANYANG --ridetest=noryang_naru_0:hanyang_doseong_in --ridefresh --nostory --ridetime=4 --notitle"
 	"ride:fork-yeongheung|420|--route=GG_HANYANG-HG_HAMHEUNG --ridetest=end_from:end_to --ridefork=갈림 --rideexpect=fork --ridedone=GG_HANYANG-HG_HAMHEUNG --nostory --ridetime=4 --notitle"
 	"ride:blizzard|300|--region=HG_HAMHEUNG --ridetest=end_GG_HANYANG-HG_HAMHEUNG_to:hamheung_eup --rideweather=blizzard@300 --rideexpect=blizzard --ridefresh --nostory --ridetime=4 --notitle"
+	# 건너뛰기(travel_overlay — Space · 단추): 길가 이야기(R0101~R0104 소문·장면·朴 표식)를 잃지 않는다 · 사건 앞에서 멈춘다
+	"ride:r01-skip|420|--route=JL_NAMWON_UNBONG-GG_HANYANG --ridetest=end_from:end_to --ridefixture=res://story/hwangju/test_post_hanyang.json --ridevars=MAIN_MASTER_TRACE=HANYANG --rideneed=R0101,R0102,R0103,R0104 --ridepark=1 --rideskipall --ridetime=4 --notitle"
+	"ride:r05-event-skip|300|--route=PA_PYEONGYANG-HG_HAMHEUNG --ridetest=end_from:end_to --ridefixture=res://story/hamhung/test_post_act3.json --rideexpect=event --rideskipall --ridetime=4 --notitle"
 	"fast:same-space|240|--region=JL_NAMWON_UNBONG --fasttravel=JL_NAMWON_UNBONG/unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:to-hanyang|300|--region=JL_NAMWON_UNBONG --fasttravel=GG_HANYANG/noryangjin --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"fast:jeju-blocked|240|--region=JL_NAMWON_UNBONG --fasttravel=JJ_JEJU/jeju_mok --fastexpect=blocked --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
-	# 역참(scripts/region/station_test.gd): 두 역 들러 '가 봄' → Travel.warp_to_station → 문 앞 넓은 E 없음 · 곁 사람이 마부보다 먼저 · 마부 목록 뒤에야 말 → 길목 깃발(가 봄·깃발↔역) → 마부 '말을 빌린다'로 다음 고을 어귀까지 / 다른 공간 역으로 역마
+	# 역참(scripts/region/station_test.gd): 두 역 들러 '가 봄' → Travel.warp_to_station → 문 앞 넓은 E 없음 · 곁 사람이 마부보다 먼저 · 마부 E → 지도 고르기(금빛·흐림 까닭·확인 상자·1인칭 커서) 뒤에야 말 · Esc 그만 → 길목 깃발(가 봄·깃발↔역, 역마 건너뛰기) → 지도 R '말만 빌리기'로 다음 고을 어귀까지(보통 · 건너뛰기 같은 도착) / 다른 공간 역으로 역마
 	"station:namwon|480|--region=JL_NAMWON_UNBONG --stationtest=namwon,inwol,unbong_eup --ridefixture=res://story/hwangju/test_post_hanyang.json --ridetime=4 --notitle"
+	# 개발 '전국 이동 열림'(scripts/region/dev_travel.gd): 첫 사건 막음 흐림 → 켜면 모두 열림 · 저장 그대로 · 끄면 다시 막힘
+	"station:dev|300|--region=JL_NAMWON_UNBONG --stationtest=dev --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"station:to-cheongpa|300|--region=JL_NAMWON_UNBONG --stationtest=cross:cheongpa --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	# 이동 규칙(scripts/region/travel_rules_test.gd): 나루 배 E보다 곁 사람 · 권역 말 타는 곳 25m(노정 그대로·막 내린 자리 40m) · 남원 밤 먼 길 막음
 	"travel:boat-priority|300|--region=GG_HANYANG --traveltest=boat --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
+	"travel:boat-skip|300|--region=GG_HANYANG --traveltest=boatskip --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"travel:mount-region|300|--region=JL_NAMWON_UNBONG --traveltest=mount --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"travel:mount-route|300|--route=HH_HWANGJU-PA_PYEONGYANG --traveltest=mount --nostory --notitle"
 	"travel:namwon-night|300|--region=JL_NAMWON_UNBONG --traveltest=nightlock --notitle"

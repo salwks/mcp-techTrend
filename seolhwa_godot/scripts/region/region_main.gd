@@ -34,6 +34,7 @@ const Travel := preload("res://scripts/region/travel.gd")
 const Weather := preload("res://scripts/region/weather.gd")
 const NpcAmbient := preload("res://scripts/region/npc_ambient.gd")
 const Progress := preload("res://scripts/region/progress.gd")
+const DevTravel := preload("res://scripts/region/dev_travel.gd")
 const RiverLanes := preload("res://scripts/region/river_lanes.gd")
 const BoatRide := preload("res://scripts/region/boat_ride.gd")
 const InteriorSpace := preload("res://scripts/region/interior_space.gd")
@@ -229,6 +230,8 @@ func _ready() -> void:
 		rig.override = { distance = float(c[0]), pitch = float(c[1]) if c.size() > 1 else 38.0, fov = float(c[2]) if c.size() > 2 else 30.0 }
 	rig.update(0, player_pos, player.facing, null, true)
 	_fp_mouse = load("res://scripts/region/fp_mouse.gd").new(self); add_child(_fp_mouse)   # 1인칭 마우스 잡기·놓기
+	add_child(load("res://scripts/region/travel_overlay.gd").new(self))   # 이동 건너뛰기 단추 · 개발 '전국 이동 열림' 표시
+	if args.has("devtravel"): DevTravel.set_on(true)
 	if args.has("bench"):
 		_bench_left = float(args.bench)
 		_bench_speed = float(args.get("benchspeed", str(RUN)))
@@ -982,6 +985,13 @@ func _input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _unhandled_input(ev: InputEvent) -> void:
+	# F9(디버그 실행만 — 에디터·godot --path .): 개발 '전국 이동 열림' 켜고 끄기(scripts/region/dev_travel.gd)
+	if ev is InputEventKey and ev.pressed and not ev.echo and ev.physical_keycode == KEY_F9 and OS.is_debug_build():
+		DevTravel.set_on(not DevTravel.on)
+		_show_hud("개발: 전국 이동 열림" if DevTravel.on else "개발: 전국 이동 닫힘")
+		if _map != null: _map._refresh_dynamic()
+		get_viewport().set_input_as_handled()
+		return
 	# 커서가 보일 때(시험·촬영 · 창이 포커스를 잃음): 단추를 누른 채 끌어 둘러보기
 	if fp_view() and ev is InputEventMouseMotion and (ev.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT)) != 0:
 		_fp_mouse_look(ev.relative, FP_MOUSE)
@@ -1607,7 +1617,7 @@ func _update_boats(dt: float) -> void:
 		_apply_low_view()
 	if rig.sailing:
 		rig.sail_dir = boats.heading(); rig.sail_side = boats.view_side(dt)
-		_boat_text("" if boats.skip_lock else ("Space  건너뛰기" if not boats.skipping else "건너뛰는 중…"))
+		_boat_text("")   # 건너뛰기 단추·Space는 travel_overlay가 띄운다(건너뛸 수 없는 뱃길이면 없음)
 	else:
 		_boat_text(("E   " + boats.prompt) if boats.prompt != "" and st == null else "")
 	var bh: String = boats.take_hud()

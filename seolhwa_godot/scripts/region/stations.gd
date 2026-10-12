@@ -64,7 +64,7 @@ static func listing() -> Array:
 static func state(id: String, _reach = null) -> Dictionary:
 	var s := by_id(id)
 	if s.is_empty(): return { ok = false, why = "없는 역" }
-	if not known(id): return { ok = false, why = "아직 가 보지 않은 역이다" }
+	if not known(id) and not load("res://scripts/region/dev_travel.gd").on: return { ok = false, why = "아직 가 보지 않은 역이다" }
 	if main == null or not is_instance_valid(main) or main.world == null: return { ok = false, why = "지금은 갈 수 없다" }
 	var here := String(main.world.region.get("route_id", main.world.region.get("region_id", "")))
 	if String(s.space) == here:

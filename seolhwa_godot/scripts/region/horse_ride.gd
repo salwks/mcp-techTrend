@@ -6,7 +6,7 @@
 # 상태(TRAVEL_STATE §23): ON_FOOT → MOUNTING → AUTO_RIDE ⇄ RIDE_SLOW → DISMOUNTING → (EVENT_APPROACH) → ON_FOOT, FAST_TRAVEL(역마 연출 중)
 # 타기(§13): 주막·역·마을 어귀·성문 앞·큰길 갈림·노정 끝(포털)·노정 큰길 위, 그리고 방금 내린 자리에서만. 골목·장 안·산길·숲·절·굴·실내·싸움 중엔 안 된다.
 #   안내 "E 말에 오른다 — ○○ 쪽으로 (약 N분)  ·  Q 다른 곳". 기본 목적지는 이야기 쪽(사건이 있는 어귀) → 노정이면 먼 끝 → 가까운 고을.
-# 타는 중: Space 멈춤·다시 감 · E 내리기 · 갈림길 앞에서 A/D(W)로 길 고르기(입력 없으면 정한 목적지대로).
+# 타는 중: Space(또는 단추) 건너뛰기(skip — 다음 멈춤까지 암전으로) · S 멈춤·다시 감 · E 내리기 · 갈림길 앞에서 A/D(W)로 길 고르기(입력 없으면 정한 목적지대로).
 #   저절로 멈춤(§32): 싸움(바로 내림), 길 막힘, FORCED_STOP·사건 앞, 성문 앞, 목적지, 노정 끝(공간 넘어가기 전), 눈보라(강제 하차).
 #   OPTIONAL_STOP 구역은 감속(설정 '자동 감속 끔'이면 감속 안 함 — 이야기에 꼭 필요한 MUST 구역은 그대로).
 # 카메라(§15): 배 타기와 같은 풍경 시점(낮은 pitch, yaw가 가는 방향을 부드럽게 따라감, 내리면 천천히 돌아옴), 걷기보다 조금 멀리.
@@ -390,7 +390,7 @@ func begin_ride(c: Dictionary, st_force := {}) -> bool:
 		for mk in marks: print("RIDE mark %s %s s=%.0f~%.0f v=%.1f %s%s" % [mk.kind, mk.id, mk.s0, mk.s1, mk.speed, mk.name, " MUST" if mk.must else ""])
 	var st = main.story
 	if st != null and st.get("onboard") != null:
-		st.onboard.once("RIDE", "말이 큰길을 따라 저절로 간다\nSpace 멈춤·다시 감   ·   E 내리기\n갈림길 앞에서는 A·D로 길을 고른다", func(): return not mounted(), 9.0)
+		st.onboard.once("RIDE", "말이 큰길을 따라 저절로 간다\nSpace 건너뛰기 · S 멈춤   ·   E 내리기\n갈림길 앞에서는 A·D로 길을 고른다", func(): return not mounted(), 9.0)
 	return true
 
 func _make_path(start: Vector2, ids: PackedInt32Array) -> void:
@@ -621,9 +621,9 @@ func _update_ride(dt: float, free: bool) -> void:
 	if _blizzard():
 		if stop_mark.get("why", "") != "blizzard":
 			stop_s = minf(stop_s, s + maxf(4.0, v * v / (2.0 * DECEL) + 2.0)); stop_mark = { kind = "stop", s0 = stop_s, id = "blizzard", name = "눈보라", why = "blizzard" }
-	# 입력: Space 멈춤·다시 감, E 내리기, 갈림길 A/D/W
-	if free and not paused:
-		if Input.is_action_just_pressed("boat_skip"):
+	# 입력: S 멈춤·다시 감(Space는 건너뛰기 — travel_overlay), E 내리기, 갈림길 A/D/W
+	if free and not paused and not skipping_now:
+		if Input.is_action_just_pressed("move_down"):
 			halted = not halted
 			audio_cue.emit("halt" if halted else "hooves_start", v)
 		if Input.is_action_just_pressed("interact"):
@@ -691,9 +691,9 @@ func _update_ride(dt: float, free: bool) -> void:
 	# 안내
 	var mins := maxf(0.0, (L - s) / maxf(top * 0.8, 1.0) / 60.0)
 	if fk != null: hint = _fork_text(fk)
-	elif halted: hint = "멈춤 — Space 다시 간다 · E 내린다"
+	elif halted: hint = "멈춤 — S 다시 간다 · E 내린다"
 	elif zone_now != "": hint = "%s — 천천히 지난다   ·   E 내려서 둘러본다" % zone_now
-	else: hint = "%s 쪽으로 · 약 %s   ·   Space 멈춤 · E 내리기" % [String(dest.get("name", "")), ("%d분" % ceili(mins)) if mins >= 1.0 else "곧"]
+	else: hint = "%s 쪽으로 · 약 %s   ·   S 멈춤 · E 내리기" % [String(dest.get("name", "")), ("%d분" % ceili(mins)) if mins >= 1.0 else "곧"]
 	# 멈춤에 닿음
 	if s >= stop_s - 0.4 and v < 0.7:
 		_arrive_stop()
@@ -917,6 +917,81 @@ func _station_arrive(arr: Dictionary) -> void:
 	main._show_hud("역마 — %s에 닿았다. 마부가 말을 매어 두었다" % String(s.get("name", "")))
 	print("STATION arrive %s yard=(%.1f,%.1f) at=%s" % [arr.id, float(y[0]), float(y[1]), main.player_pos])
 
+# ---- 건너뛰기(Space · 단추 — scripts/region/travel_overlay.gd) ----
+#   다음 멈춤(목적지·성문·노정 끝·사건 앞 — stop_s)까지 암전으로 건너 그 자리에서 보통처럼 내린다(_arrive_stop → 내림 → ride_done).
+#   가는 길에 들렀을 거점 '가 봄'(_discover와 같은 규칙)은 지나온 길을 따라 적는다. 길가 이야기(엿듣는 대사·소문 — 감속 구역 why=story)가
+#   멈춤보다 앞에 있으면 그 앞에서 건너뛰기를 멈추고 말이 그대로 지나가게 한다(이야기를 잃지 않는다). 사건 앞은 원래 멈춤(stop)이다.
+var skipping_now := false
+
+func can_skip() -> bool:
+	if not riding() or skipping_now or _blizzard(): return false
+	var st = main.story
+	if st != null and st.owns_player(): return false
+	for mk in marks:   # 길가 이야기 구역 안에서는 건너뛰지 않는다(엿듣는 대사·장면이 끝까지 돌게)
+		if String(mk.kind) == "slow" and String(mk.get("why", "")) == "story" and s >= float(mk.s0) - 2.0 and s <= float(mk.s1): return false
+	return _skip_target() > s + 30.0
+
+func _skip_target() -> float:
+	var t := stop_s
+	for mk in marks:
+		if String(mk.kind) == "slow" and String(mk.get("why", "")) == "story" and float(mk.s0) > s + 2.0 and float(mk.s0) < t: t = float(mk.s0)
+	return t
+
+func skip() -> void:
+	if not can_skip(): return
+	skipping_now = true
+	var st = main.story
+	var ui = st.get("ui") if st != null else null
+	var was_halted := halted
+	halted = true
+	if ui != null: await ui.fade(true, 0.3)
+	if not riding():   # 암전 사이에 내렸다(싸움 등)
+		halted = was_halted; skipping_now = false
+		if ui != null: ui.fade(false, 0.3)
+		return
+	var s0 := s
+	var t := _skip_target()
+	var to_stop := t >= stop_s - 0.5
+	var ss := s
+	while ss < t:
+		_discover_at(_at(ss)); ss += 6.0
+	_discover_at(_at(t))
+	s = stop_s if to_stop else maxf(s, t - 1.0)
+	for f in forks:
+		if float(f.s) < s: f.done = true
+	var p := _at(s)
+	main.player_pos = Vector3(p.x, world.height_at(p.x, p.y), p.y)
+	main.player.position = main.player_pos
+	_seat = main.player_pos
+	horse.position = main.player_pos
+	var h := _heading(s)
+	horse.facing = main.facing_cam(h.x, h.y, horse.facing)
+	main.player.facing = horse.facing
+	halted = was_halted
+	print("RIDE skip s=%.0f → %.0f/%.0f stop=%s why=%s" % [s0, s, L, to_stop, stop_mark.get("why", "")])
+	if to_stop:
+		v = 0.0
+		_arrive_stop()
+	else:
+		halted = false
+		var spd := top
+		for mk in marks:
+			if String(mk.kind) == "slow" and absf(float(mk.s0) - t) < 0.5: spd = float(mk.speed)
+		v = spd
+	main.rig.update(0, main.player_pos, main.player.facing, null, true)
+	await main._wait_frames(2)
+	skipping_now = false
+	if ui != null: ui.fade(false, 0.4)
+
+# 한 자리에서 거점 '가 봄'(_discover와 같은 규칙: 구역+10m 또는 도착 30m)
+func _discover_at(pp: Vector2) -> void:
+	if net == null: return
+	for n in net.nodes:
+		if not bool(n.get("fast", false)): continue
+		var a: Array = n.get("arrive", [n.x, n.z])
+		if RideNet.in_zone(n.zone, pp, 10.0) or pp.distance_to(Vector2(float(a[0]), float(a[1]))) < 30.0:
+			if discover(net.space, String(n.id)) and Waymarks.is_flag(n, net.space): _flag_found(n)
+
 # ---- 노정 끝으로 넘어온 자리(포털 곁)는 말 타는 곳 ----
 func on_arrived(p: Vector2) -> void:
 	_arrived_mount = p
@@ -955,6 +1030,7 @@ static func is_discovered(space: String, id: String) -> bool:
 	return k is Dictionary and k.has(id)
 
 static func discover(space: String, id: String) -> bool:
+	if load("res://scripts/region/dev_travel.gd").on: return false   # 개발 '전국 이동 열림' 동안은 저장에 적지 않는다
 	var kn := known_nodes()
 	if not (kn.get(space) is Dictionary): kn[space] = {}
 	if kn[space].has(id): return false

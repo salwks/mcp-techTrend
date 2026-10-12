@@ -7,6 +7,7 @@
 #                            깃발 알림은 없다 · 그 거점은 역마 창 목록에 그대로(깃발 아님) · 마부·깃발 목록에는 '깃발 — ○○'이 없다 · 뱃길(배)은 그대로
 #   --traveltest=nightlock  남원 밤(해 질 무렵 준비 dusk_prep ~ 아침): 역마(역·깃발·마부)·역마 창·지도 역마·말·배·노정 포털·지나온 길 건너뛰기가
 #                            모두 「아이들을 두고 멀리 떠날 수 없다」로 막히고, 걷기는 된다 · 아침이 되면 풀린다
+#   --traveltest=boatskip   배 건너뛰기: 나루를 보통으로 건너 닿은 자리·상태 → 같은 나루를 Space(건너뛰기 단추와 같은 길)로 → 같은 자리·같은 상태·arrived 신호
 # 판정: "TRAVELTEST PASS …" / "TRAVELTEST FAIL …"
 extends RefCounted
 
@@ -67,6 +68,7 @@ func run(spec: String) -> void:
 		"mount": await _mount()
 		"nightlock": await _nightlock()
 		"waymark": await _waymark()
+		"boatskip": await _boatskip()
 		_: _ok(false, "모르는 시험 " + spec)
 	_end()
 
@@ -307,3 +309,40 @@ func _waymark() -> void:
 		var labs: Array = dl[0].map(func(o): return String(o.label))
 		_ok(labs.filter(func(l): return l.begins_with("깃발 — " + String(node.name))).is_empty() and int(dl[1]) > 0,
 			"마부·깃발 목록에 '깃발 — %s' 없음 · 역마 창(가 본 다른 곳)으로 간다 %s rest=%d" % [node.name, labs, int(dl[1])])
+
+# ---- 5 배 건너뛰기 ----
+func _boatskip() -> void:
+	var boats = main.boats
+	if boats == null or boats.routes.is_empty(): _ok(false, "배 없음"); return
+	var r: Dictionary = {}
+	for q in boats.routes:
+		if String(q.kind) == "ferry": r = q; break
+	if r.is_empty(): r = boats.routes[0]
+	var rid := String(r.id)
+	var got := { n = 0, place = "" }
+	boats.arrived.connect(func(_id, place): got.n += 1; got.place = place)
+	var res := []
+	for skip in [false, true]:
+		await _put(r.land[0])
+		var t0 := Time.get_ticks_msec()
+		if not boats.board(rid, 0): _ok(false, "배에 못 오름 %s" % rid); return
+		var skipped := false
+		while boats.riding() and Time.get_ticks_msec() - t0 < 180000:
+			await main._wait_frames(1)
+			if skip and not skipped and boats.can_skip() and String(boats.ride.get("phase", "")) == "sail":
+				var ov = main.get_node_or_null("travel_overlay")
+				await main._wait_frames(2)
+				_ok(ov != null and String(ov.what) == "boat" and ov._btn.visible, "배: 건너뛰기 단추가 보인다")
+				for down in [true, false]:
+					var ev := InputEventKey.new(); ev.physical_keycode = KEY_SPACE; ev.keycode = KEY_SPACE; ev.pressed = down
+					Input.parse_input_event(ev); await main._wait_frames(2)
+				skipped = true
+		await main._wait_frames(30)
+		res.append({ at = _pp(), anim = String(main.player.anim), riding = boats.riding(), n = got.n, place = got.place, t = (Time.get_ticks_msec() - t0) / 1000.0, skipped = skipped })
+		print("TRAVELTEST boat %s skip=%s %s" % [rid, skip, res[res.size() - 1]])
+	_ok(bool(res[1].skipped), "배: Space로 건너뜀")
+	_ok((res[0].at as Vector2).distance_to(res[1].at) < 1.0, "배: 건너뛰어도 같은 자리에 내림 (%.2fm)" % (res[0].at as Vector2).distance_to(res[1].at))
+	_ok(not bool(res[1].riding) and String(res[1].anim) == String(res[0].anim), "배: 같은 상태(내림 · %s)" % res[1].anim)
+	_ok(int(res[1].n) == 2 and String(res[1].place) == String(res[0].place), "배: 닿음 신호 그대로(%s)" % res[1].place)
+	_ok(float(res[1].t) < float(res[0].t), "배: 더 빨리 닿음 %.1fs < %.1fs" % [res[1].t, res[0].t])
+

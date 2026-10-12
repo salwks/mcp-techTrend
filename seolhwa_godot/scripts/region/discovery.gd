@@ -53,6 +53,7 @@ static func how(space: String, key: String) -> String:
 
 # 새로 알게 되면 true(지도 열기 안내 등에 쓴다)
 static func visit(space: String, key: String) -> bool:
+	if load("res://scripts/region/dev_travel.gd").on: return false   # 개발 '전국 이동 열림' 동안 '가 봄'은 저장에 적지 않는다(돌아다닌 흔적이 남지 않게)
 	var k := Progress.known(space)
 	if String(k.get(key, "")) == "visited": return false
 	k[key] = "visited"

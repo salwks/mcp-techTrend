@@ -179,6 +179,32 @@ func board(id: String, from_end := -1, scripted := false) -> bool:
 	boarded.emit(id, dir)
 	return true
 
+# ---- 건너뛰기(Space · 단추 — scripts/region/travel_overlay.gd): 암전 → 건너편에 닿음(_arrive — arrived 신호·내릴 자리·알림 그대로) → 밝힘 ----
+#   skip_lock(제주 첫 뱃길 §18)이거나 이야기가 플레이어를 쥐고 있으면(컷 속 배) 건너뛰지 않는다. 배 위에서 따로 도는 사건은 없다(배 위는 풍경).
+var _skipping_now := false
+
+func can_skip() -> bool:
+	if not riding() or skip_lock or _skipping_now or String(ride.get("phase", "")) == "dock": return false
+	var st = main.story
+	return not (st != null and st.owns_player())
+
+func skip() -> void:
+	if not can_skip(): return
+	_skipping_now = true
+	var st = main.story
+	var ui = st.get("ui") if st != null else null
+	if ui != null: await ui.fade(true, 0.3)
+	if riding():
+		var r: Dictionary = ride.r
+		print("SAIL skip %s s=%.0f → %.0f" % [r.id, float(ride.s), float(ride.s1)])
+		ride.s = ride.s1; r.s = ride.s1; ride.v = 0.0; ride.phase = "dock"
+		_place(r, 0.0)
+		_arrive()
+		main.rig.update(0, main.player_pos, main.player.facing, null, true)
+	await main._wait_frames(2)
+	_skipping_now = false
+	if ui != null: ui.fade(false, 0.4)
+
 func cancel() -> void:
 	if not riding(): return
 	var r: Dictionary = ride.r

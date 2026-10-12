@@ -7,6 +7,9 @@
 #                                 → 길목 깃발: 가까이 가면 '가 봄'·알림 → 깃발 E → 역으로 · 역 마부 E → 깃발로 · 저장 파일에 남음
 #                                 → 마부 '말을 빌린다' → ride_to 거점 어귀까지 말로 가서 내림(마부가 가로대의 말을 끌고 나옴)
 #                                 + 처음 가는 길 막힘: 제주 역은 가 본 것으로 적어도 남해 뱃길을 안 건넜으면 못 간다 · 남원 첫 사건 전엔 남원 밖으로 못 감
+#   --stationtest=dev             개발 '전국 이동 열림': 꺼짐 — 남원 첫 사건 막음이 지도 고르기에서 흐림·까닭 / 켬 — 안 가 본 역·깃발·다른 공간(처음 가는 길·첫 사건 포함)
+#                                 모두 갈 곳 · 저장(travel_nodes·known) 그대로 · 안 가 본 깃발로 역마해도 '가 봄' 안 적힘 · 표시 / 끔 — 다시 막힘
+#   --stationtest=pickshots       화면(창): 마부 한 줄 · 권역 지도 고르기 · 흐린 곳 까닭 · 확인 상자 · 전국 지도 · 깃발 고르기 · 말 건너뛰기 단추 · 개발 전국 지도(--shotdir)
 #   --stationtest=cross:<역>      그 역을 가 본 것으로 적고 다른 공간으로 역마 → 새 장면에서 그 역 마방 문 앞에 섰나(Engine 메타로 이어 봄)
 # 판정: "STATIONTEST PASS …" / "STATIONTEST FAIL …"
 extends RefCounted
@@ -17,6 +20,8 @@ const HorseRide := preload("res://scripts/region/horse_ride.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const RideNet := preload("res://scripts/region/ride_net.gd")
 const CONT := "seolhwa_stationtest_cont"
+const DevTravel := preload("res://scripts/region/dev_travel.gd")
+const Discovery := preload("res://scripts/region/discovery.gd")
 
 var main
 var _fails: Array = []
@@ -57,6 +62,10 @@ func run(spec: String) -> void:
 	await _wait_load()
 	if spec.begins_with("cross:"):
 		await _cross(spec.get_slice(":", 1)); return
+	if spec == "dev":
+		await _dev(); return
+	if spec == "pickshots":
+		await _pickshots(); return
 	if spec.begins_with("flagshots"):
 		await _flagshots(spec.get_slice(":", 1) if spec.contains(":") else ""); return
 	var parts := spec.split(",")
@@ -124,6 +133,7 @@ func run(spec: String) -> void:
 	await _no_area_e(hr, a)
 	await _npc_wins(hr, a)
 	await _keeper_menu_warp(hr, a, b)
+	await _keeper_cancel(hr, a)
 	await _flags(hr, a)
 	# 5) 마부 '말을 빌린다' — 마부가 끌어 옴 → ride_to까지
 	if ride_to != "":
@@ -253,54 +263,131 @@ func _npc_wins(hr, s: Dictionary) -> void:
 	await main._wait_frames(30)
 	hr.life.unhold(s)
 
-# 4c) 마부 대화: 목록이 뜨는 동안 말·역마 창 없음 → 역 b를 고르면 그제야 마부가 말을 끌고 와 역마
+# ---- 지도 고르기(역참 마부·깃발 E → region_map.open_pick) ----
+func _key(kc: int) -> void:
+	for down in [true, false]:
+		var ev := InputEventKey.new()
+		ev.physical_keycode = kc; ev.keycode = kc; ev.pressed = down
+		Input.parse_input_event(ev)
+		await main._wait_frames(2)
+
+func _wait_pick(ms := 15000):
+	var mp = main._map
+	var t0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - t0 < ms:
+		await main._wait_frames(1)
+		if mp != null and mp.picking() and mp.visible: return mp
+	return null
+
+func _pick_index(mp, want: String) -> int:
+	var labels: Array = mp.pick_labels()
+	for i in labels.size():
+		if String(labels[i]).begins_with(want): return i
+	return -1
+
+func _hold_pick() -> void:
+	var d = _d()
+	d.ui.auto = true
+	d.keeper.auto_pick = func(_m): pass   # 시험이 지도를 몬다(없으면 자동 진행이 바로 그만둔다)
+
+# 4c) 마부 E → 지도 고르기(권역 지도 · 금빛 테 · 못 가는 곳 까닭 · 1인칭 커서) → 역 b 두 번 눌러 → 그제야 마부가 말을 끌고 와 역마
 func _keeper_menu_warp(hr, a: Dictionary, b: Dictionary) -> void:
 	var d = _d()
 	await _go_station(a)
 	await _stand_by_groom(hr, a, 1.5)
 	hr.life.unhold(a)
-	await main._wait_frames(4)
+	main.set_first_person(true, false)   # 1인칭: 지도 동안 커서를 놓고, 닫히면 다시 잡는다(C68)
+	await main._wait_frames(6)
+	var fp0: bool = main.fp_mouse_wanted()
 	var tgt = d._target
 	if tgt == null or String(tgt.kind) != "keeper":
-		_fail("마부 곁에서 마부가 E 대상이 아님(%s)" % (tgt.kind if tgt != null else "-")); return
-	var seen := { labels = [], during_ok = true, groom_still = true }
-	var want := "역마 — %s" % String(b.name)
-	d.ui.auto = true
-	d.ui.auto_choice = func(prompt: String, labels: Array) -> int:
-		seen.labels = labels.duplicate()
-		var L = hr.life.live.get(String(a.id))
-		if hr.state != "ON_FOOT" or (main.fast_ui != null and is_instance_valid(main.fast_ui)) or (L != null and L.has("bring")): seen.during_ok = false
-		if L != null and not bool(L.groom.get("talk", false)): seen.groom_still = false
-		for i in labels.size():
-			if String(labels[i]).begins_with(want): return i
-		return labels.size() - 1
+		_fail("마부 곁에서 마부가 E 대상이 아님(%s)" % (tgt.kind if tgt != null else "-")); main.set_first_person(false, false); return
+	_hold_pick()
 	var h0: float = main.hour
 	await _key_e()
+	var mp = await _wait_pick()
+	if mp == null: _fail("마부 E → 지도 고르기가 안 열림"); main.set_first_person(false, false); return
+	await main._wait_frames(4)
+	var L = hr.life.live.get(String(a.id))
+	var items: Array = mp.pick_items()
+	var ib := _pick_index(mp, "역마 — %s" % String(b.name))
+	var hits_ok: int = mp._hits.filter(func(h): return h.has("pick") and bool(items[int(h.pick)].ok)).size()
+	print("STATIONTEST keeper map mode=%s labels=%s rides=%s hits_ok=%d btn=%s fp_before=%s fp_now=%s" % [mp.mode, mp.pick_labels(), d.keeper.last.get("rides", []),
+		hits_ok, mp._pick_btn.visible, fp0, main.fp_mouse_wanted()])
+	if not bool(d.keeper.last.get("map", false)): _fail("마부 대화가 지도 고르기가 아님(글 목록)")
+	if ib < 0: _fail("지도 갈 곳에 %s 없음" % b.name)
+	if mp.mode == "nation": _fail("같은 공간 갈 곳이 있는데 전국 지도로 열림")
+	if hits_ok < 1: _fail("갈 수 있는 곳이 지도에 금빛 표지로 없음")
+	if (d.keeper.last.get("rides", []) as Array).is_empty() or not mp._pick_btn.visible: _fail("마부 지도에 '말만 빌리기'가 없음")
+	if hr.state != "ON_FOOT" or (main.fast_ui != null and is_instance_valid(main.fast_ui)) or (L != null and L.has("bring")): _fail("고르기 전에 말·역마가 시작됨")
+	if L != null and not bool(L.groom.get("talk", false)): _fail("고르는 동안 마부가 일손을 멈추지 않음")
+	if not fp0 or main.fp_mouse_wanted(): _fail("1인칭: 지도 동안 커서를 놓지 않음(전 %s · 지금 %s)" % [fp0, main.fp_mouse_wanted()])
+	# 못 가는 곳: 까닭이 보이고 확인되지 않는다
+	var ix := -1
+	for i in items.size():
+		if not bool(items[i].ok): ix = i; break
+	if ix < 0: _fail("못 가는 곳(흐린 표지)이 지도에 없음")
+	else:
+		mp.pick_select(ix)
+		await main._wait_frames(2)
+		var msg: PackedStringArray = mp._confirm_msg()
+		await _key(KEY_ENTER)
+		var why := String(items[ix].why)
+		print("STATIONTEST blocked %s why=%s box=%s flash=%s still=%s" % [items[ix].label, why, msg, mp.pick.get("flash", ""), mp.picking()])
+		if not mp.picking() or not String(mp.pick.get("flash", "")).contains(why) or not " ".join(msg).contains(why): _fail("못 가는 곳의 까닭이 안 보이거나 확인됨")
+	# 역 b: 한 번 눌러 고르고(확인 상자 — 이름·길) 한 번 더 눌러 간다
+	if ib >= 0:
+		mp.pick_click(ib)
+		await main._wait_frames(2)
+		var box: PackedStringArray = mp._confirm_msg()
+		print("STATIONTEST confirm box %s" % [box])
+		if box.size() < 3 or not box[0].contains(String(b.name)) or not box[1].contains("리"): _fail("확인 상자에 이름·거리가 없음 %s" % [box])
+		mp.pick_click(ib)
+	else: mp.pick_cancel()
 	var t0 := Time.get_ticks_msec()
 	var brought := false
 	while Time.get_ticks_msec() - t0 < 30000:
 		await main._wait_frames(1)
-		var L = hr.life.live.get(String(a.id))
-		if L != null and L.has("bring"): brought = true
+		var L2 = hr.life.live.get(String(a.id))
+		if L2 != null and L2.has("bring"): brought = true
 		if main.fast_ui != null and is_instance_valid(main.fast_ui): break
-	print("STATIONTEST keeper menu labels=%s during_ok=%s groom_still=%s brought=%s" % [seen.labels, seen.during_ok, seen.groom_still, brought])
-	var has_b := false; var has_ride := false; var has_end := false
-	for l in seen.labels:
-		if String(l).begins_with(want): has_b = true
-		if String(l).begins_with("말을 빌린다"): has_ride = true
-		if String(l) == "그만두겠소.": has_end = true
-	if not (has_b and has_ride and has_end): _fail("마부 목록이 모자람(역 %s·말 빌리기 %s·그만 %s)" % [has_b, has_ride, has_end])
-	if not seen.during_ok: _fail("고르기 전에 말·역마가 시작됨")
-	if not seen.groom_still: _fail("말하는 동안 마부가 일손을 멈추지 않음")
+	print("STATIONTEST keeper picked=%s brought=%s map_open=%s" % [d.keeper.last.get("picked", ""), brought, mp.visible])
+	if mp.visible or mp.picking(): _fail("고른 뒤 지도가 닫히지 않음")
 	if not brought: _fail("고른 뒤 마부가 말을 끌고 오지 않음")
 	while main.fast_ui != null and is_instance_valid(main.fast_ui) and Time.get_ticks_msec() - t0 < 40000:
 		await main._wait_frames(1)
 	await _wait_load(); await main._wait_frames(30)
 	var dd := _pp().distance_to(_yard(b))
-	print("STATIONTEST keeper warp %s → %s d=%.1fm hour %.1f → %.1f" % [a.id, b.id, dd, h0, main.hour])
+	print("STATIONTEST keeper warp %s → %s d=%.1fm hour %.1f → %.1f fp_after=%s" % [a.id, b.id, dd, h0, main.hour, main.fp_mouse_wanted()])
 	if dd > 4.0: _fail("마부 역마 도착이 %s 문 앞이 아님 %.1fm" % [b.id, dd])
-	d.ui.auto_choice = Callable()
 	await _idle_dialogue()
+	if not main.fp_mouse_wanted(): _fail("1인칭: 역마 뒤 커서를 다시 잡지 않음")
+	main.set_first_person(false, false)
+	d.keeper.auto_pick = Callable()
+
+# 4c') 마부 E → 지도 → Esc: 지도가 닫히고 말·역마·시각·자리 그대로
+func _keeper_cancel(hr, a: Dictionary) -> void:
+	var d = _d()
+	await _go_station(a)
+	await _stand_by_groom(hr, a, 1.5)
+	hr.life.unhold(a)
+	await main._wait_frames(4)
+	_hold_pick()
+	var h0: float = main.hour
+	var p0 := _pp()
+	await _key_e()
+	var mp = await _wait_pick()
+	if mp == null: _fail("취소 시험: 지도가 안 열림"); return
+	await _key(KEY_ESCAPE)
+	await main._wait_frames(20)
+	await _idle_dialogue()
+	var L = hr.life.live.get(String(a.id))
+	print("STATIONTEST cancel map=%s picking=%s busy=%s ride=%s fast=%s hour %.2f→%.2f moved=%.2f" % [mp.visible, mp.picking(), d.keeper.busy, hr.state,
+		main.fast_ui != null and is_instance_valid(main.fast_ui), h0, main.hour, _pp().distance_to(p0)])
+	if mp.visible or mp.picking() or d.keeper.busy: _fail("Esc로 지도가 닫히지 않음")
+	if hr.state != "ON_FOOT" or (main.fast_ui != null and is_instance_valid(main.fast_ui)) or (L != null and L.has("bring")): _fail("그만뒀는데 말·역마가 움직임")
+	if absf(main.hour - h0) > 0.05 or _pp().distance_to(p0) > 0.5: _fail("그만뒀는데 시각·자리가 바뀜")
+	d.keeper.auto_pick = Callable()
 
 # 4d) 길목 깃발: 알기 → 깃발에서 역으로 → 역 마부에게서 깃발로 → 저장 파일
 func _flags(hr, a: Dictionary) -> void:
@@ -333,9 +420,11 @@ func _flags(hr, a: Dictionary) -> void:
 	await main._wait_frames(8)
 	var tgt = d._target
 	if tgt == null or String(tgt.kind) != "flag": _fail("깃발 곁에서 깃발이 E 대상이 아님(%s)" % (tgt.kind if tgt != null else "-")); return
-	await _menu_go(d, "역마 — %s" % String(a.name))
+	var h1: float = main.hour
+	await _menu_go(d, "역마 — %s" % String(a.name), true, true)   # 역마 연출을 Space로 건너뛴다 — 도착은 같아야 한다
 	var da := _pp().distance_to(_yard(a))
-	print("STATIONTEST flag→station %s d=%.1fm" % [a.id, da])
+	print("STATIONTEST flag→station(skip) %s d=%.1fm hour %.1f → %.1f" % [a.id, da, h1, main.hour])
+	if is_equal_approx(h1, main.hour): _fail("건너뛴 역마에 시각이 흐르지 않음")
 	if da > 4.0: _fail("깃발에서 역으로 간 자리가 문 앞이 아님 %.1fm" % da)
 	# 역 마부 → 깃발로
 	await _stand_by_groom(hr, a, 1.5)
@@ -348,80 +437,299 @@ func _flags(hr, a: Dictionary) -> void:
 	print("STATIONTEST station→flag %s d=%.1fm" % [f.id, df])
 	if df > 6.0: _fail("역에서 깃발로 간 자리가 깃발 곁이 아님 %.1fm" % df)
 
-func _menu_go(d, want: String) -> void:
-	var seen := { labels = [] }
-	d.ui.auto = true
-	d.ui.auto_choice = func(_p: String, labels: Array) -> int:
-		seen.labels = labels.duplicate()
-		for i in labels.size():
-			if String(labels[i]).begins_with(want): return i
-		return labels.size() - 1
+# 깃발·마부 E → 지도에서 want를 골라 Enter → 역마 창(skip이면 연출 도중 Space로 건너뛴다)
+func _menu_go(d, want: String, flag := false, skip := false) -> void:
+	_hold_pick()
 	await _key_e()
+	var mp = await _wait_pick()
+	if mp == null: _fail("%s: 지도 고르기가 안 열림" % want); return
+	var labels: Array = mp.pick_labels()
+	var i := _pick_index(mp, want)
+	if flag and mp._pick_btn.visible: _fail("깃발 지도에 말 빌리기가 있음")
+	if i < 0: _fail("지도 갈 곳에 %s 없음 %s" % [want, labels]); mp.pick_cancel(); await _idle_dialogue(); return
+	mp.pick_select(i)
+	await main._wait_frames(2)
+	await _key(KEY_ENTER)
 	var t0 := Time.get_ticks_msec()
 	while Time.get_ticks_msec() - t0 < 20000:
 		await main._wait_frames(1)
 		if main.fast_ui != null and is_instance_valid(main.fast_ui): break
 	var opened: bool = main.fast_ui != null and is_instance_valid(main.fast_ui)
+	var skipped := false
+	if skip and opened:
+		var t1 := Time.get_ticks_msec()
+		while is_instance_valid(main.fast_ui) and main.fast_ui._anim < 0.0 and Time.get_ticks_msec() - t1 < 5000: await main._wait_frames(1)
+		if is_instance_valid(main.fast_ui) and main.fast_ui._anim < 0.5:
+			await _key(KEY_SPACE)
+			skipped = true
 	while main.fast_ui != null and is_instance_valid(main.fast_ui) and Time.get_ticks_msec() - t0 < 40000:
 		await main._wait_frames(1)
 	await _wait_load(); await main._wait_frames(30)
-	d.ui.auto_choice = Callable()
+	d.keeper.auto_pick = Callable()
 	await _idle_dialogue()
-	print("STATIONTEST menu want=%s labels=%s opened=%s" % [want, seen.labels, opened])
-	if not seen.labels.any(func(l): return String(l).begins_with(want)): _fail("목록에 %s 없음" % want)
+	print("STATIONTEST map want=%s labels=%s opened=%s skipped=%s dt=%.1fs" % [want, labels, opened, skipped, (Time.get_ticks_msec() - t0) / 1000.0])
 	if not opened: _fail("%s 골랐는데 역마 창이 안 열림" % want)
 
 func _ride(hr, a: Dictionary, ride_to: String) -> void:
 	Engine.time_scale = float(main.args.get("ridetime", "4"))
 	hr.test_log = true
-	# 마부 대화: '말을 빌린다' → ride_to 쪽
+	var r1: Dictionary = await _ride_once(hr, a, ride_to, false)
+	if r1.is_empty(): return
+	# 같은 길을 건너뛰기로: 같은 어귀에 내리고 같은 거점이 '가 봄'으로 적혀야 한다
+	var kn: Dictionary = HorseRide.known_nodes().get(hr.net.space, {})
+	for id in r1.found: kn.erase(id)
+	await _go_station(a)
+	var r2: Dictionary = await _ride_once(hr, a, ride_to, true)
+	if r2.is_empty(): return
+	var dp: float = (r1.at as Vector2).distance_to(r2.at)
+	var missing: Array = (r1.found as Array).filter(func(id): return not HorseRide.is_discovered(hr.net.space, String(id)))
+	print("STATIONTEST ride skip same=%.1fm state=%s/%s found=%s missing=%s" % [dp, r1.state, r2.state, r1.found, missing])
+	if dp > 5.0: _fail("건너뛴 말 타기 도착이 다름 %.1fm" % dp)
+	if String(r2.state) != String(r1.state): _fail("건너뛴 뒤 상태가 다름 %s / %s" % [r1.state, r2.state])
+	if not missing.is_empty(): _fail("건너뛰니 지나온 거점 '가 봄'이 빠짐 %s" % [missing])
+
+# 마부 지도 → R(말만 빌리기) → 'ride_to 쪽' 말 패 → Enter. skip이면 타자마자 Space(건너뛰기 단추와 같은 길)
+func _ride_once(hr, a: Dictionary, ride_to: String, skip: bool) -> Dictionary:
 	var d = _d()
 	var rc: Array = hr.station_ride_choices(a)
-	print("STATIONTEST ride choices=%s" % [rc.map(func(x): return String(x.node.id))])
 	var c = null
 	for x in rc:
 		if String(x.node.id) == ride_to: c = x
-	if c == null: _fail("말 빌리기 목록에 %s 없음" % ride_to); return
+	if c == null: _fail("말 빌리기 목록에 %s 없음" % ride_to); return {}
 	await _stand_by_groom(hr, a, 1.5)
 	hr.life.unhold(a)
 	await main._wait_frames(4)
-	d.ui.auto = true
-	var step := { n = 0 }
-	d.ui.auto_choice = func(_p: String, labels: Array) -> int:
-		step.n += 1
-		for i in labels.size():
-			var l := String(labels[i])
-			if step.n == 1 and l.begins_with("말을 빌린다"): return i
-			if step.n == 2 and l.begins_with(String(c.name) + " 쪽으로"): return i
-		return labels.size() - 1
+	var known0: Dictionary = (HorseRide.known_nodes().get(hr.net.space, {}) as Dictionary).duplicate()
+	_hold_pick()
 	await _key_e()
+	var mp = await _wait_pick()
+	if mp == null: _fail("말 빌리기: 지도가 안 열림"); return {}
+	await _key(KEY_R)
+	var i := _pick_index(mp, "말 — %s 쪽으로" % String(c.name))
+	print("STATIONTEST ride map sub=%s labels=%s" % [mp.pick.get("sub", ""), mp.pick_labels()])
+	if String(mp.pick.get("sub", "")) != "ride" or i < 0: _fail("지도에서 말 타고 갈 쪽(%s)을 못 고름" % c.name); mp.pick_cancel(); return {}
+	mp.pick_select(i)
+	await main._wait_frames(2)
+	await _key(KEY_ENTER)
 	var tw := Time.get_ticks_msec()
 	while not hr.mounted() and Time.get_ticks_msec() - tw < 20000: await main._wait_frames(1)
-	d.ui.auto_choice = Callable()
-	if not hr.mounted(): _fail("말을 빌린다 → 말에 못 탐"); return
+	d.keeper.auto_pick = Callable()
+	if not hr.mounted(): _fail("말 빌리기 → 말에 못 탐"); return {}
 	var led: bool = not hr._lead_st.is_empty()
 	var L = hr.life.live.get(String(a.id))
 	var gp0: Vector3 = L.groom.ch.position if L != null else Vector3.ZERO
-	print("STATIONTEST mount led=%s bring=%.1fs from=(%.1f,%.1f)" % [led, hr._t_bring, hr._mount_from.x, hr._mount_from.z])
+	print("STATIONTEST mount led=%s bring=%.1fs skip=%s" % [led, hr._t_bring, skip])
 	if not led: _fail("마부가 말을 끌어 오지 않음")
 	var groom_moved := 0.0
 	var t0 := Time.get_ticks_msec()
 	var saw_ride := false
+	var skipped := 0
+	var ov = main.get_node_or_null("travel_overlay")
 	while hr.mounted() and Time.get_ticks_msec() - t0 < 600000:
 		await main._wait_frames(1)
 		if L != null and hr.state == "MOUNTING": groom_moved = maxf(groom_moved, L.groom.ch.position.distance_to(gp0))
 		if hr.riding(): saw_ride = true
+		if skip and hr.can_skip():
+			await main._wait_frames(2)
+			if ov != null and String(ov.what) == "horse" and ov._btn.visible:
+				await _key(KEY_SPACE); skipped += 1
+			elif hr.can_skip(): hr.skip(); skipped += 1
 	await main._wait_frames(20)
 	var n: Dictionary = hr.net.node_by.get(ride_to, {})
 	var gd := INF
 	for g in n.get("gates", []): gd = minf(gd, _pp().distance_to(Vector2(float(g.x), float(g.z))))
 	var stops: Array = hr.stats.get("stops", [])
-	print("STATIONTEST ride %s → %s len=%.0fm groom_moved=%.1fm dismount gate_d=%.1f stops=%s" % [a.id, ride_to, hr.L, groom_moved, gd,
-		stops.map(func(x): return "%s:%s" % [x.why, x.id])])
+	var found: Array = (HorseRide.known_nodes().get(hr.net.space, {}) as Dictionary).keys().filter(func(k): return not known0.has(k))
+	var dt := (Time.get_ticks_msec() - t0) / 1000.0
+	print("STATIONTEST ride %s → %s len=%.0fm groom_moved=%.1fm gate_d=%.1f stops=%s skipped=%d t=%.1fs found=%s" % [a.id, ride_to, hr.L, groom_moved, gd,
+		stops.map(func(x): return "%s:%s" % [x.why, x.id]), skipped, dt, found])
 	if not saw_ride: _fail("말이 가지 않음")
 	if groom_moved < 1.0: _fail("마부가 말을 끌고 걷지 않음")
 	if stops.is_empty() or String(stops[stops.size() - 1].why) != "dest": _fail("목적지에서 안 내림")
 	if gd > 25.0: _fail("내린 자리가 어귀에서 멂 %.1fm" % gd)
+	if skip and skipped < 1: _fail("말 타기 건너뛰기를 못 함")
+	return { at = _pp(), state = hr.state, found = found }
+
+# ---- 개발 '전국 이동 열림'(scripts/region/dev_travel.gd) ----
+func _save_text() -> String:
+	var sf := ProjectSettings.globalize_path(String(main.args.get("savefile", "user://progress.json")))
+	var j = JSON.parse_string(FileAccess.get_file_as_string(sf)) if FileAccess.file_exists(sf) else null
+	if not (j is Dictionary): return ""
+	return JSON.stringify([j.get("travel_nodes", {}), j.get("known", {}), j.get("routes_done", {})])
+
+func _dev() -> void:
+	var d = _d()
+	var mp = main._map
+	Progress.save()
+	var st := Stations.by_id("namwon")
+	# 1) 꺼짐 + 남원 첫 사건 전: 지도 고르기에서 다른 공간은 흐리고 까닭이 첫 사건 알림
+	HorseRide.discover(String(st.space), String(st.node))
+	var jj := Stations.by_id("jeju")
+	HorseRide.discover(String(jj.space), String(jj.node))
+	Progress.save()
+	var v0 = Progress.get_var("CASE_NAMWON_COMPLETE", false)
+	Progress.data().vars["CASE_NAMWON_COMPLETE"] = false
+	var cs: Dictionary = Progress.case_state("namwon")
+	var ph0 = cs.get("phase", null)
+	if not cs.is_empty(): cs.phase = "explore"
+	var FT: Script = load("res://scripts/region/fast_travel.gd")
+	var gate: String = FT.gate_why(main)
+	var dl: Array = d.keeper.destinations()
+	var cross: Array = (dl[0] as Array).filter(func(o): return not bool(o.same))
+	print("STATIONTEST dev off gate=%s cross=%s" % [gate, cross.map(func(o): return "%s:%s:%s" % [o.label, o.ok, o.why])])
+	if gate == "" or cross.is_empty() or cross.any(func(o): return bool(o.ok) or String(o.why) != gate): _fail("첫 사건 막음이 지도 갈 곳에서 흐림·까닭으로 안 보임")
+	# 2) 켬: 첫 사건 중이어도 모두 열림
+	var save0 := _save_text()
+	DevTravel.set_on(true)
+	await main._wait_frames(3)
+	var ov = main.get_node_or_null("travel_overlay")
+	var shown: bool = ov != null and ov._dev.visible
+	dl = d.keeper.destinations()
+	var all: Array = dl[0]
+	var nok: int = all.filter(func(o): return bool(o.ok)).size()
+	var spaces := {}
+	for o in all: spaces[String(o.space)] = true
+	var js := Stations.state("jeju")
+	print("STATIONTEST dev on dests=%d ok=%d spaces=%d jeju=%s gate='%s' lock='%s' shown=%s" % [all.size(), nok, spaces.size(), js, FT.gate_why(main), FT.lock_why(main), shown])
+	if nok != all.size() or all.size() < 60 or spaces.size() < 8: _fail("개발: 모든 역·깃발이 열리지 않음 %d/%d 공간 %d" % [nok, all.size(), spaces.size()])
+	if not bool(js.ok): _fail("개발: 제주(처음 가는 길)가 막힘")
+	if not shown: _fail("개발 표시 '전국 이동 열림'이 없음")
+	# 지도 고르기: 전국 지도에 다른 공간 갈 곳이 모두 금빛
+	_hold_pick()
+	var hr = main.horse_ride
+	mp.open_pick({ from = "flag", dests = all, rides = [] })
+	await main._wait_frames(3)
+	await _key(KEY_TAB)
+	await main._wait_frames(3)
+	var items: Array = mp.pick_items()
+	var hits_ok: int = mp._hits.filter(func(h): return h.has("pick") and bool(items[int(h.pick)].ok)).size()
+	print("STATIONTEST dev map mode=%s hits_ok=%d" % [mp.mode, hits_ok])
+	if mp.mode != "nation" or hits_ok < 20: _fail("개발: 전국 지도에 열린 갈 곳이 적음 %d" % hits_ok)
+	mp.pick_cancel()
+	await main._wait_frames(3)
+	# 안 가 본 깃발로 역마 — 도착해도 '가 봄'이 저장에 안 남는다
+	var fl := {}
+	for o in all:
+		if bool(o.same) and String(o.kind) == "flag" and not HorseRide.is_discovered(String(o.space), String(o.node)): fl = o; break
+	if not fl.is_empty():
+		var r: Dictionary = Stations.warp_node(String(fl.space), String(fl.node))
+		var t0 := Time.get_ticks_msec()
+		await main._wait_frames(5)
+		while main.fast_ui != null and is_instance_valid(main.fast_ui) and Time.get_ticks_msec() - t0 < 20000: await main._wait_frames(1)
+		await _wait_load(); await main._wait_frames(60)
+		var at: Vector2 = fl.c
+		print("STATIONTEST dev warp %s ok=%s d=%.1fm discovered=%s" % [fl.label, r.ok, _pp().distance_to(at), HorseRide.is_discovered(String(fl.space), String(fl.node))])
+		if not bool(r.ok) or _pp().distance_to(at) > 8.0: _fail("개발: 안 가 본 깃발로 역마가 안 됨")
+		if HorseRide.is_discovered(String(fl.space), String(fl.node)): _fail("개발: 역마 도착이 '가 봄'으로 적힘")
+	Progress.save()
+	var save1 := _save_text()
+	if save0 != save1: _fail("개발: 저장 파일의 가 봄·앎·지나온 길이 바뀜")
+	# 3) 끔: 다시 막힘
+	DevTravel.set_on(false)
+	js = Stations.state("jeju")
+	var gate2: String = FT.gate_why(main)
+	print("STATIONTEST dev off again jeju=%s gate=%s" % [js, gate2])
+	if bool(js.ok) or gate2 == "": _fail("개발을 껐는데 막힘이 안 돌아옴")
+	Progress.data().vars["CASE_NAMWON_COMPLETE"] = v0
+	if not cs.is_empty(): cs.phase = ph0
+	d.keeper.auto_pick = Callable()
+	_end()
+
+# ---- 화면(창): --stationtest=pickshots --shotdir=… --winshot ----
+func _pickshots() -> void:
+	var dir: String = main._abs(String(main.args.get("shotdir", "shots/station_map_pick")))
+	DirAccess.make_dir_recursive_absolute(dir)
+	var d = _d()
+	var hr = main.horse_ride
+	var a := Stations.by_id("namwon")
+	var b := Stations.by_id("inwol")
+	for s in [a, b, Stations.by_id("jeju")]: HorseRide.discover(String(s.space), String(s.node))
+	for n in ["namwon_jang", "unbong_eup"]: HorseRide.discover("JL_NAMWON_UNBONG", n)
+	for n in RideNet.read("GG_HANYANG").get("nodes", []).slice(0, 40):
+		if bool(n.get("fast", false)): HorseRide.discover("GG_HANYANG", String(n.id))
+	Progress.save()
+	await _go_station(a)
+	await main._wait_frames(60)
+	await _stand_by_groom(hr, a, 1.6)
+	hr.life.unhold(a)
+	await main._wait_frames(10)
+	d.ui.auto = true
+	d.ui.auto_hold = 2.5
+	d.keeper.auto_pick = func(_m): pass
+	await _key_e()
+	await main._wait_frames(40)
+	main._save(dir.path_join("1_keeper_line.png"))
+	var mp = await _wait_pick()
+	if mp == null: print("STATIONTEST FAIL 지도 안 열림"); main._quit(); return
+	await main._wait_frames(20)
+	main._save(dir.path_join("2_region_picker.png"))
+	var items: Array = mp.pick_items()
+	for i in items.size():
+		if not bool(items[i].ok) and bool(items[i].same):
+			mp.pick_select(i); break
+	await main._wait_frames(10)
+	main._save(dir.path_join("3_blocked_reason.png"))
+	mp.pick_select(_pick_index(mp, "역마 — %s" % String(b.name)))
+	await main._wait_frames(10)
+	main._save(dir.path_join("4_confirm.png"))
+	await _key(KEY_TAB)
+	await main._wait_frames(10)
+	mp.pick_cycle(1)
+	await main._wait_frames(10)
+	main._save(dir.path_join("5_nation_picker.png"))
+	await _key(KEY_ESCAPE)
+	await main._wait_frames(20)
+	await _idle_dialogue()
+	# 깃발
+	var W = hr.flags
+	var f = W.by_id("namwon_jang")
+	if not f.is_empty():
+		main.teleport(f.p.x + 1.0, f.p.y)
+		main.rig.update(0, main.player_pos, main.player.facing, null, true)
+		await _wait_load(); await main._wait_frames(60)
+		main.player_pos = Vector3(f.p.x + 1.0, main.world.height_at(f.p.x + 1.0, f.p.y), f.p.y); main.player.position = main.player_pos
+		await main._wait_frames(10)
+		await _key_e()
+		mp = await _wait_pick()
+		await main._wait_frames(20)
+		main._save(dir.path_join("6_flag_picker.png"))
+		if mp != null: await _key(KEY_ESCAPE)
+		await main._wait_frames(10)
+		await _idle_dialogue()
+	# 말 건너뛰기 단추
+	await _go_station(a)
+	await _stand_by_groom(hr, a, 1.5)
+	hr.life.unhold(a)
+	await main._wait_frames(6)
+	await _key_e()
+	mp = await _wait_pick()
+	if mp != null:
+		await _key(KEY_R)
+		await main._wait_frames(10)
+		main._save(dir.path_join("7_ride_picker.png"))
+		mp.pick_select(_pick_index(mp, "말 — 운봉 읍치"))
+		await _key(KEY_ENTER)
+		var t0 := Time.get_ticks_msec()
+		while not hr.riding() and Time.get_ticks_msec() - t0 < 20000: await main._wait_frames(1)
+		var t1 := Time.get_ticks_msec()
+		while Time.get_ticks_msec() - t1 < 4000: await main._wait_frames(1)
+		main._save(dir.path_join("8_ride_skip_button.png"))
+		await _key(KEY_SPACE)
+		while hr.mounted() and Time.get_ticks_msec() - t1 < 30000: await main._wait_frames(1)
+		await main._wait_frames(30)
+	# 개발: 전국 지도 모두 열림
+	DevTravel.set_on(true)
+	d.keeper.auto_pick = func(_m): pass
+	mp = main._map
+	mp.open_pick({ from = "flag", dests = d.keeper.destinations()[0], rides = [] })
+	await main._wait_frames(5)
+	await _key(KEY_TAB)
+	await main._wait_frames(20)
+	main._save(dir.path_join("9_dev_nation_all_open.png"))
+	mp.pick_cancel()
+	DevTravel.set_on(false)
+	print("STATIONTEST PASS pickshots")
+	main._quit()
 
 # ---- 다른 공간 역으로 ----
 func _cross(id: String) -> void:
