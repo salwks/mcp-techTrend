@@ -25,9 +25,15 @@ const RIDE_SLOW := ["on", "off"]
 const RIDE_SLOW_LABEL := { on = "켬", off = "끔" }
 const CAM_SHAKE := ["normal", "weak", "off"]
 const CAM_SHAKE_LABEL := { normal = "보통", weak = "약함", off = "끔" }
+# 시점(region_main 1인칭 — 0 키와 같은 값): third 3인칭(기본) · first 1인칭. 깊이 흐림(post_effect dof): normal 보통 · weak 약함 · off 끔
+const VIEW := ["third", "first"]
+const VIEW_LABEL := { third = "3인칭", first = "1인칭" }
+const DOF := ["normal", "weak", "off"]
+const DOF_LABEL := { normal = "보통", weak = "약함", off = "끔" }
 const VOLUME := ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 const VOLUME_LABEL := {}
 const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "off",
+	view = "third", dof = "normal",
 	vol_master = "10", vol_bgm = "7", vol_sfx = "9", vol_ambient = "8" }
 
 static var _d = null

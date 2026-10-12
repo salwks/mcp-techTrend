@@ -6,7 +6,7 @@
 #   tools/run_story_tests.sh namwon hwangju:B walk   # 이름(앞부분)이 맞는 것만
 #   tools/run_story_tests.sh -l              # 목록만
 #
-# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST/TALKTEST/STATIONTEST/SAVETEST/CONTTEST/TRAVELTEST/MAPTEXTTEST/MAPKNOWNTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
+# 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST/TALKTEST/STATIONTEST/SAVETEST/CONTTEST/TRAVELTEST/MAPTEXTTEST/MAPKNOWNTEST/VIEWTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
 # 시험마다 저장 파일을 따로 쓴다(--savefile=user://st_<이름>.json) — 동시에 돌려도 서로 덮어쓰지 않는다.
 # 로그: $LOGDIR(기본 /tmp/seolhwa_tests/<시각>/<이름>.log). 환경 변수 GODOT, LOGDIR, TIMEOUT_SCALE(제한 시간 배율).
 
@@ -102,6 +102,9 @@ TESTS=(
 	#   KNOWN은 역참·역마·깃발 조건을 채우지 않음 · 옛 저장에 상식 채움 · KNOWN 이름표 옅음/VISITED 보통(글 크기 같음) · 범례
 	"map:known-namwon|300|--region=JL_NAMWON_UNBONG --notitle --knowntest"
 	"map:known-hanyang|300|--region=GG_HANYANG --notitle --knowntest"
+	# 1인칭 시점(scripts/region/view_test.gd): 0 키 → 1인칭(눈높이·플레이어 층 숨김·점무늬 끔) · 카메라 기준 걷기·돌기 · 바라보는 고을 사람 E ·
+	#   말 걸기·컷신·연출 카메라·지도 동안 3인칭 → 끝나면 1인칭 · 0 키로 되돌림
+	"view:namwon|300|--region=JL_NAMWON_UNBONG --viewtest --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	# 춘향 준비(scripts/story/prep_test.gd): 조건부 배치(F-11) 없음→있음→없음 · 옥(늘 있음·문 상태) · 오누이 흔적(우물·수수밭 푸름/붉음) · EventCrowd(인원·seed·when·이야기 인물 없음·먼 거리 숨김)
 	"chunhyang:prep|300|--region=JL_NAMWON_UNBONG --preptest --notitle"
 	# 춘향 PART II 준비(scripts/story/part2_prep_test.gd): 공용 자세(generic·이야기 인물) · PART II 차림 · SIT_SINK 없음 · 잔치 짜임 · set_pose 같은 사람 · PART II 소품 닫힘/강제
@@ -156,10 +159,10 @@ run_one() {
 	if [[ $name == walk:* ]]; then
 		grep -q "^WALK done" $log && grep -q "^TRAVEL arrive" $log && verdict=PASS
 	else
-		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST) PASS" $log && verdict=PASS
-		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST) FAIL" $log && verdict=FAIL
+		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) FAIL" $log && verdict=FAIL
 	fi
-	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST) //')
+	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) //')
 	[[ $name == walk:* ]] && detail=$(grep "^WALK done" $log | tail -1 | sed -E 's/^WALK done //')
 	if (( code == 124 )); then why="시간 초과"; verdict=FAIL
 	elif (( code != 0 )); then why="종료 코드 $code"; verdict=FAIL

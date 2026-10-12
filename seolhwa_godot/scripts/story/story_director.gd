@@ -908,13 +908,22 @@ func _targets() -> Array:
 		out.append({ id = String(o.id), kind = "object", p = anchor(o.at), r = float(o.get("radius", 2.0)), label = String(lab), spec = o })
 	return out
 
+# 1인칭(region_main.fp_active)이면 닿는 거리(r) 안에서 바라보는 쪽에 있는 것을 먼저: 거리 × (1.6 − 0.6·cos(시선과 이루는 각))
+#   — 바로 앞은 거리 그대로, 옆은 1.6배, 뒤는 2.2배로 친다. 닿는 거리·우선순위(C01: 이야기 대상 → 곁 사람)는 그대로.
+func _look_score(pp: Vector2, p: Vector2) -> float:
+	var d := pp.distance_to(p)
+	if not bool(main.get("fp_active")) or d < 0.05: return d
+	var c: float = (main.fp_look_dir() as Vector2).dot((p - pp) / d)
+	return d * (1.6 - 0.6 * c)
+
 func _update_target() -> void:
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	var best = null; var bd := INF
 	if case_id != "" and _started:
 		for t in _targets():
 			var d: float = pp.distance_to(t.p)
-			if d < t.r and d < bd: bd = d; best = t
+			var sc := _look_score(pp, t.p)
+			if d < t.r and sc < bd: bd = sc; best = t
 	# 이야기 대상이 먼저. 없으면 고을 사람·역참 마부·길목 깃발 가운데 가장 가까운 것(넓은 구역이 곁 사람 E를 가로채지 않게)
 	if best == null:
 		var cands := []
@@ -922,7 +931,7 @@ func _update_target() -> void:
 		if keeper != null: cands.append(keeper.target(pp))
 		for c in cands:
 			if c == null: continue
-			var dc: float = pp.distance_to(c.p)
+			var dc: float = _look_score(pp, c.p)
 			if dc < bd: bd = dc; best = c
 	_target = best
 	ui.prompt(best.label if best != null else "")

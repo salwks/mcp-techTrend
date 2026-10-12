@@ -25,7 +25,7 @@
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
-# 비교용 끄기: --nofog --nopost --notilt --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
+# 비교용 끄기: --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
 const RegionWorld := preload("res://scripts/region/region_world.gd")
@@ -42,6 +42,7 @@ const HorseRide := preload("res://scripts/region/horse_ride.gd")
 const FastTravel := preload("res://scripts/region/fast_travel.gd")
 const StoryUI := preload("res://scripts/story/story_ui.gd")
 const RideTest := preload("res://scripts/region/ride_test.gd")
+const GameSettings := preload("res://scripts/story/game_settings.gd")
 const PORTAL_R := 5.0      # 이 안에 들어서면 다음 공간으로
 const PORTAL_ARM := 12.0   # 도착한 뒤 이만큼 떨어져야 포털이 다시 켜진다
 
@@ -210,10 +211,11 @@ func _ready() -> void:
 	if args.has("nofar"): world.far_node.visible = false
 	if args.has("nowater"): world.water_root.visible = false
 	if args.has("noocc"): world.occluders.clear()
-	if args.has("notilt"): post.tilt = false
+	if args.has("notilt") or args.has("nodof"): post.dof = false   # --nodof(새 이름) · --notilt(옛 이름) 깊이 흐림 끄기
 	if args.has("nobloom"): post.bloom = false
 	if args.has("nopost"): post.enabled = false
 	if args.has("time"): hour = float(args.time)
+	if args.has("view"): first_person = String(args.view) == "first"; _view_set = String(args.view)   # --view=first 1인칭으로 시작(촬영·시험)
 	if args.has("nofog"): fog_on = false
 	if not _pending.is_empty():
 		hour = float(_pending.get("hour", hour))
@@ -248,6 +250,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/story/part2_prep_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("preptest") or args.has("prepshot"):   # 춘향 준비(F-11·옥·수수밭·EventCrowd) 시험·촬영 — scripts/story/prep_test.gd
 		_ride_test = load("res://scripts/story/prep_test.gd").new(self); _ride_test.run.call_deferred()
+	elif args.has("viewtest"):   # 1인칭 시점(0 키) 시험 — scripts/region/view_test.gd
+		_ride_test = load("res://scripts/region/view_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("talkshot"):
 		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
@@ -266,7 +270,7 @@ func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
 		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5], weather_step = [KEY_F6], fast_travel = [KEY_H],
-		interact = [KEY_E], boat_skip = [KEY_SPACE],
+		interact = [KEY_E], boat_skip = [KEY_SPACE], view_toggle = [KEY_0, KEY_KP_0],
 	}
 	for act in keys:
 		if not InputMap.has_action(act): InputMap.add_action(act)
@@ -361,6 +365,7 @@ func _build_scene() -> void:
 	player = SpriteChar.new("player")
 	player.facing = "up"
 	root.add_child(player)
+	player.set_layers(PLAYER_LAYER)   # 1인칭에서 카메라가 이 층만 빼고 그린다(그림자는 해가 그대로 드리운다)
 	if not args.has("nonpc") and not args.has("nochars"):
 		npcs_amb = NpcAmbient.new(); root.add_child(npcs_amb); npcs_amb.setup(world, weather, cam, placement)
 	boats = BoatRide.new(); boats.setup(self)
@@ -668,6 +673,7 @@ func _update_lamps(t: float) -> void:
 # ---- 가림 처리(main.gd와 같음) ----
 # 각본 가림(이야기 컷신 한 장면 — 남원 동아줄): 가림 점무늬·식생 걷어 내기의 기준점을 플레이어 대신 focus(줄을 타는 오누이·범)로,
 # 반지름을 r로. 그동안 물체 반투명(occluders)은 쓰지 않는다 — 반투명 잎은 깊이를 써서 뒤의 인물 그림을 가린다. 점무늬는 픽셀을 버려 가리지 않는다.
+var occ_now := Vector2.ZERO   # 이 프레임 가림 점무늬 반지름 · 카메라 앞 비우기(시험이 본다)
 var occ_script = null   # { focus: Vector3, r: float, near?: float(카메라 앞 비우기 배율, 0 = 끔) } | null
 func set_occ_script(spec) -> void:
 	occ_script = spec
@@ -682,17 +688,48 @@ func moon_k() -> float:
 	var v = sky_mat.get_shader_parameter("u_moon")
 	return 1.0 if v == null else float(v)
 
-# 각본 장면 동안 틸트시프트 흐림(후처리 tilt — 이 권역의 흐림 효과는 이것 하나)을 끈다. false면 평소 띠로 천천히 돌아온다
+# 각본 장면 동안 깊이 흐림(후처리 dof — 이 권역의 흐림 효과는 이것 하나)을 끈다. false면 평소 값으로 천천히(약 2초) 돌아온다
 var cine_sharp := false
 func set_cine_sharp(on: bool) -> void:
 	cine_sharp = on
+
+# 깊이 흐림 값(PostEffect.dof_*): 초점 = 카메라에서 겨냥점(플레이어 가슴·연출 겨냥점·각본 시점의 look)까지 거리.
+#   걷기: 먼 흐림 0.55(멀수록 천천히 다가감) · 앞가림 0.3 · 초점 둘레 4m 또렷.
+#   배·말(낮은 풍경 시점): 먼 기슭·능선이 보이게 먼 흐림 0.3 · 더 천천히. 마방 앞: 칸 안 말이 섞이지 않게 0.25.
+#   1인칭: 초점 7m, 먼 흐림 0.35를 아주 천천히(거리 배율 3) — 눈앞 사람·물건은 또렷하다.
+#   각본 장면(set_cine_sharp)·끔(--nodof·--notilt·P)이면 0.
+const DOF_WALK := { far = 0.55, near = 0.3, scale = 1.2, margin = 4.0 }
+const DOF_LOW := { far = 0.3, near = 0.15, scale = 2.5, margin = 8.0 }
+const DOF_STABLE := { far = 0.25, near = 0.2, scale = 2.0, margin = 6.0 }
+var _dof_fp := false
+const DOF_FP := { far = 0.35, near = 0.0, scale = 3.0, margin = 3.0 }
+func _update_dof(dt: float) -> void:
+	var look: Vector3 = rig.target
+	if fp_active: look = cam.global_position - cam.global_transform.basis.z * 7.0
+	elif rig.shot != null: look = rig.shot.look
+	var want_f := clampf(cam.global_position.distance_to(look), 2.0, 400.0)
+	var low: bool = rig.sailing or rig.riding
+	var stable: bool = not low and not fp_active and horse_ride != null and horse_ride.life != null and horse_ride.life.stable_view(player_pos)
+	var sp: Dictionary = DOF_FP if fp_active else (DOF_LOW if low else (DOF_STABLE if stable else DOF_WALK))
+	var k := minf(1.0, dt * 2.0)
+	if _dof_fp != fp_active: _dof_fp = fp_active; k = 1.0   # 1인칭 ↔ 3인칭: 바로
+	var off := cine_sharp
+	var gs := GameSettings.get_v("dof") if not _view_automation() else "normal"   # 설정 '깊이 흐림' — 시험·촬영은 보통
+	if gs == "off": off = true
+	var mul := 0.5 if gs == "weak" else 1.0
+	post.dof_far += ((0.0 if off else float(sp.far) * mul) - post.dof_far) * (1.0 if off else k)
+	post.dof_near += ((0.0 if off else float(sp.near) * mul) - post.dof_near) * (1.0 if off else k)
+	post.dof_far_scale += (float(sp.scale) - post.dof_far_scale) * k
+	post.dof_margin += (float(sp.margin) - post.dof_margin) * k
+	post.dof_focus += (want_f - post.dof_focus) * (1.0 if k >= 1.0 else minf(1.0, dt * 6.0))
+	if absf(want_f - post.dof_focus) > 30.0: post.dof_focus = want_f   # 컷 바뀜·순간이동: 바로
 
 func _occ_focus() -> Vector3:
 	if occ_script != null: return occ_script.focus
 	return player_pos + Vector3(0, player.height * 0.8, 0)
 
 func _update_occlusion(dt: float, interior) -> void:
-	var want: Array = interior.hide if interior != null else []
+	var want: Array = interior.hide if interior != null and not fp_active else []   # 1인칭: 지붕을 숨기지 않는다(안에서 올려다보면 지붕이 있어야)
 	for o in _hidden_interior:
 		if not want.has(o): o.visible = true
 	for o in want: o.visible = false
@@ -713,7 +750,7 @@ func _update_occlusion(dt: float, interior) -> void:
 		_occ_near = keep
 	if _occ_frame == 0:
 		for occ in _occ_near: occ.target = 1.0
-		if interior == null:
+		if interior == null and not fp_active:
 			var c := cam.global_position
 			for occ in _occ_near:
 				if occ_script != null or not occ.node.visible or not occ.node.is_inside_tree(): continue
@@ -739,6 +776,108 @@ static func _seg_hits_mesh(occ: Dictionary, a: Vector3, b: Vector3) -> bool:
 		var bb: AABB = mi.global_transform * mi.get_aabb()
 		if bb.intersects_segment(a, b) != null: return true
 	return false
+
+# ---- 1인칭 시점(0 키) ----
+# first_person = 플레이어가 바란 시점(0 키 · 설정 '시점' · user://settings.json view), fp_active = 지금 실제 1인칭.
+# 이야기가 플레이어를 쥐었을 때(대화·컷신·전투·선택지·기록책·시작 메뉴) · 연출 카메라(override·focus·shot·glide) · 배·말 · 지도·역마 창·문서 등 큰 창 ·
+# 실내 넘나드는 암전 · 불러오기 · 떠나기 동안은 3인칭으로 돌아가고, 끝나면 다시 1인칭(바란 값은 그대로).
+# 눈높이 FP_EYE(1.55m), 바라보는 쪽 fp_yaw(0 = 북쪽, +는 동쪽으로 돈다). 움직임은 카메라 기준: W·S(↑↓) 앞뒤 · A·D 옆걸음 · ←→ 돌기 ·
+# 마우스 끌기(왼·오른 단추) 둘러보기. 플레이어 그림은 PLAYER_LAYER(20번 층)만 카메라에서 뺀다 — 그림자는 남는다.
+const PLAYER_LAYER := 1 << 19
+const FP_EYE := 1.55
+const FP_FOV := 62.0
+const FP_TURN := 1.9          # ←→ 돌기(라디안/초)
+const FP_MOUSE := 0.0045      # 마우스 끌기(라디안/픽셀)
+const FP_FAR := 260.0         # 1인칭 카메라 먼 끝(m) — 3인칭 6000. 한양 1인칭(2048×1536): 6000 → 45fps · 420 → 62 · 250 → 82 — 안개 너머라 화면은 같다
+var first_person := false
+var fp_active := false
+var fp_yaw := 0.0
+var fp_pitch := -0.06
+var fp_block := ""            # 지금 1인칭을 막은 까닭(시험·안내)
+var _view_set := ""           # 마지막으로 본 설정 값(설정 창에서 바꾸면 따라간다)
+var view_persist := true      # 시험은 끈다(사용자 settings.json에 쓰지 않게)
+
+var _auto = null
+func _view_automation() -> bool:
+	if _auto != null: return _auto
+	_auto = false
+	for k in args:
+		if String(k).ends_with("test") or String(k) in ["bench", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots"]: _auto = true
+	return _auto
+
+static func _yaw_of(facing: String) -> float:
+	return { up = 0.0, right = PI * 0.5, down = PI, left = -PI * 0.5 }.get(facing, 0.0)
+
+func set_first_person(on: bool, save := true) -> void:
+	if on == first_person: return
+	first_person = on
+	if save and view_persist: GameSettings.set_v("view", "first" if on else "third")
+	_view_set = "first" if on else "third"
+	_update_fp_state()
+	if on and not fp_active: _show_hud("지금은 3인칭 — 끝나면 1인칭으로 돌아간다 (0 되돌리기)")
+	elif on: _show_hud("1인칭 — W·S 앞뒤 · A·D 옆 · ←→·마우스 끌기 둘러보기 · 0 3인칭")
+	else: _show_hud("3인칭 시점 (0 1인칭)")
+
+func toggle_view() -> void:
+	set_first_person(not first_person)
+
+func fp_blocker() -> String:
+	if _loading or _leaving: return "loading"
+	if story != null and story.owns_player(): return "story"
+	if _story_talking(): return "talk"
+	if rig.override != null or rig.focus != null or rig.shot != null or rig.gliding(): return "camera"
+	if boats.riding() or horse_ride.busy(): return "ride"
+	if _map != null and _map.visible: return "map"
+	if fast_ui != null and is_instance_valid(fast_ui) and fast_ui.visible: return "fast"
+	if _indoor_busy: return "door"
+	if preload("res://scripts/hud_gate.gd").overlay_open(get_tree()): return "overlay"
+	return ""
+
+func _update_fp_state() -> void:
+	if not _view_automation():
+		var v := GameSettings.get_v("view")
+		if v != _view_set:
+			_view_set = v
+			first_person = v == "first"
+	fp_block = fp_blocker() if first_person else ""
+	var want := first_person and fp_block == ""
+	if want == fp_active: return
+	fp_active = want
+	if want:
+		fp_yaw = _yaw_of(player.facing); fp_pitch = -0.06
+		cam.cull_mask &= ~PLAYER_LAYER
+		cam.near = 0.1   # 벽 곁에서 벽이 잘리지 않게
+		cam.far = float(args.get("fpfar", str(FP_FAR)))   # 눈높이는 지평선 너머 도시 전체가 든다 — 멀리는 하늘 그림판의 먼 산·안개가 맡는다
+	else:
+		cam.cull_mask |= PLAYER_LAYER
+		cam.near = 0.5
+		cam.far = 6000.0
+		rig.update(0, player_pos, player.facing, world.interior_at(player_pos.x, player_pos.z), true)   # 3인칭 자리로 바로
+	print("VIEW %s%s" % ["first" if want else "third", "" if want or not first_person else " (막힘: %s)" % fp_block])
+
+func fp_look_dir() -> Vector2:
+	return Vector2(sin(fp_yaw), -cos(fp_yaw))
+
+func _fp_move(dt: float) -> Vector2:
+	var turn := (1.0 if Input.is_physical_key_pressed(KEY_RIGHT) else 0.0) - (1.0 if Input.is_physical_key_pressed(KEY_LEFT) else 0.0)
+	fp_yaw = wrapf(fp_yaw + turn * FP_TURN * dt, -PI, PI)
+	var fwd := (1.0 if Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP) else 0.0) \
+		- (1.0 if Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN) else 0.0)
+	var side := (1.0 if Input.is_physical_key_pressed(KEY_D) else 0.0) - (1.0 if Input.is_physical_key_pressed(KEY_A) else 0.0)
+	var f := fp_look_dir()
+	var r := Vector2(-f.y, f.x)   # 오른쪽
+	var v := f * fwd + r * side
+	return v.normalized() if v.length() > 1.0 else v
+
+func _fp_camera() -> void:
+	cam.transform = Transform3D(Basis.from_euler(Vector3(fp_pitch, -fp_yaw, 0.0), EULER_ORDER_YXZ), player_pos + Vector3(0, FP_EYE, 0))
+	cam.fov = FP_FOV
+
+func _unhandled_input(ev: InputEvent) -> void:
+	if fp_active and ev is InputEventMouseMotion and (ev.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT)) != 0:
+		fp_yaw = wrapf(fp_yaw + ev.relative.x * FP_MOUSE, -PI, PI)
+		fp_pitch = clampf(fp_pitch - ev.relative.y * FP_MOUSE, -1.1, 0.8)
+		get_viewport().set_input_as_handled()
 
 # ---- 루프 ----
 var _title: CanvasLayer = null
@@ -782,6 +921,7 @@ func _process(delta: float) -> void:
 	if args.has("reload") and _reload_t > 1.0: _reload_t = 0.0
 	if Input.is_action_just_pressed("toggle_post"):
 		post.tilt = not post.tilt; post.paper = post.tilt
+	if Input.is_action_just_pressed("view_toggle") and not _loading: toggle_view()
 	if time_flow:
 		hour = fmod(hour + dt * 0.1, 24.0); _apply_time()
 	if weather != null and weather.time_forced():   # 사건 시간 강제(weather.force_time)
@@ -789,6 +929,8 @@ func _process(delta: float) -> void:
 		if absf(nh - hour) > 0.002: hour = nh; _apply_time()
 	_update_loading()
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	_update_fp_state()
+	if fp_active: mv = _fp_move(dt)
 	if _loading or _leaving or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
 	var speed := RUN if Input.is_action_pressed("run") else WALK
 	if not _ptest.is_empty() and not _loading and not _leaving and not boats.riding() and not horse_ride.busy():
@@ -853,19 +995,22 @@ func _process(delta: float) -> void:
 	var interior = world.interior_at(player_pos.x, player_pos.z)
 	world.update_camera_zone(player_pos)
 	rig.update(dt, player_pos, player.facing, interior)
+	if fp_active: _fp_camera()
 	if story != null: cam.position += story.shake_offset()
 	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
 	RenderingServer.global_shader_parameter_set("occ_b", _occ_focus())
-	var occ_r: float = 0.0 if interior != null or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게
+	var occ_r: float = 0.0 if interior != null or fp_active or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게 · 1인칭은 끔(눈이 플레이어 자리)
 	if occ_script != null and interior == null: occ_r = float(occ_script.get("r", occ_r))
 	RenderingServer.global_shader_parameter_set("occ_r", occ_r)
+	occ_now = Vector2(occ_r, 0.0)
 	# 실내 near_fade=false(굴 등 좁은 실내): 카메라 앞 가림 점무늬를 끈다 — 바닥·벽이 카메라 12m 안이라 구멍이 뚫린다
-	var near_fade: bool = not args.has("nodither") and not (interior != null and not bool(interior.get("near_fade", true)))
+	var near_fade: bool = not args.has("nodither") and not fp_active and not (interior != null and not bool(interior.get("near_fade", true)))
 	# 단면 실내(지붕을 숨긴 집·창고): 카메라가 10~13m 위라 바깥 거리(6~12m)로 비우면 바닥·가구에 점무늬 구멍이 난다 — 카메라 바로 곁(2~4m, 잎덩이)만
 	var occ_near_k: float = (0.33 if interior != null else 1.0) if near_fade else 0.0
 	if occ_script != null and occ_script.has("near"): occ_near_k = float(occ_script.near)   # 각본 장면이 카메라 앞 비우기를 정한다(0 = 끔 — 문 앞 가까운 시점)
 	RenderingServer.global_shader_parameter_set("occ_near", occ_near_k)
+	occ_now.y = occ_near_k
 	# 실내 보조광: 들어가면 서서히 켠다(밤에는 조금 더 — 호롱불 느낌)
 	_fill_k += ((1.0 if interior != null else 0.0) - _fill_k) * minf(1.0, dt * 3.0)
 	_fill.position = player_pos + Vector3(0, 2.4, 0.8)
@@ -875,7 +1020,7 @@ func _process(delta: float) -> void:
 	_fill.light_energy = _fill_k * (3.0 + 4.0 * TimeOfDay.night_factor(hour)) * (1.0 - _dark_k)
 	_fill.visible = _fill_k > 0.01 and _dark_k < 0.98
 	_update_occlusion(dt, interior)
-	if interior == null: world.update_cutaway(dt, player_pos if occ_script == null else occ_script.focus, cam.global_position)
+	if interior == null and not fp_active: world.update_cutaway(dt, player_pos if occ_script == null else occ_script.focus, cam.global_position)
 	world.update_scatter_lod(player_pos)
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)
@@ -900,12 +1045,7 @@ func _process(delta: float) -> void:
 	player.update_char(dt, cam)
 	if npcs_amb: npcs_amb.update(dt, player_pos, hour, _loading or _leaving)
 	if crowd != null and not _loading: crowd.update(dt)
-	var sp := cam.unproject_position(player_pos + Vector3(0, 0.8, 0))
-	var y := clampf(1.0 - sp.y / float(scene_vp.size.y), 0.15, 0.85)
-	focus_y += (y - focus_y) * minf(1.0, dt * 6.0)
-	post.focus_y = focus_y
-	if cine_sharp:   # 각본 장면(남원 동아줄): 흐림 띠를 화면 전체로 넓혀 흐림을 끈다. 끄면 _update_boats의 식대로 천천히 돌아온다
-		post.band = 1.0; post.top_bias = 0.0
+	_update_dof(dt)
 	if args.has("bench") and _bench_time > 2.0 and delta > 0.03 and not _bench_loading:
 		print("  SLOW f=%d %.1fms focus=%.1f update=%.1f near=%d jobs=%d done=%d" % [Engine.get_process_frames(), delta * 1000.0, (_t1 - _t0) / 1000.0, (_t3 - _t2) / 1000.0, world.stats.near, world.stats.jobs, world.stats.scatter_done])
 
@@ -1361,13 +1501,6 @@ func _update_boats(dt: float) -> void:
 		_boat_text(("E   " + boats.prompt) if boats.prompt != "" and st == null else "")
 	var bh: String = boats.take_hud()
 	if bh != "": _show_hud(bh)
-	# 낮은 배 위 시점: 틸트시프트 선명 띠를 넓히고 위(먼 기슭·능선)는 덜 흐리게
-	var k := minf(1.0, dt * 2.0)
-	var low: bool = rig.sailing or rig.riding
-	# 마방 앞: 칸 안 말이 화면 위쪽 흐림 띠에 걸려 뒷벽과 섞여 반투명처럼 보이지 않게 위 흐림을 줄인다
-	var stable: bool = not low and horse_ride != null and horse_ride.life != null and horse_ride.life.stable_view(player_pos)
-	post.band += ((0.2 if low else (0.16 if stable else 0.07)) - post.band) * k
-	post.top_bias += ((0.4 if low else (0.25 if stable else 1.0)) - post.top_bias) * k
 
 # 이야기 쪽 말 걸기(고을 사람·역참 마부·깃발 대화)가 돌고 있나 — E가 배·말로 새지 않게
 func _story_talking() -> bool:

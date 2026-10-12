@@ -1,6 +1,7 @@
 # 설정 · 잠시 멈춤 — 시작 메뉴의 '설정'과 놀이 중 Esc(scripts/story/onboarding.gd)가 연다.
 #   상호작용 안내(항상/초반만/최소/끔) · 조사 도움(기본/자세히/최소) — 전투 난이도와 상관없다(보강서 §26). user://settings.json.
 #   자동 기승 속도(보통/빠름) · 자동 감속(켬/끔) · 이동 카메라 흔들림(보통/약함/끔) — 이동수단 개선안 §31.
+#   시점(3인칭/1인칭 — 놀이 중 0 키와 같은 값) · 깊이 흐림(보통/약함/끔 — 먼 곳만 조금 흐리게, 2026-10).
 #   놀이 중(in_game)이면 화면을 멈추고(get_tree().paused) '계속하기'·'저장'·'불러오기'(scripts/story/save_menu.gd — 칸 셋 + 자동 기록)·'여행 방법'(기록책)도 보인다.
 #   Esc를 누른 순간 화면을 작은 그림으로 잡아 둔다(저장 칸 그림).
 # 모양: 글 크기는 UiFonts 표(제목 TITLE · 줄 BODY · 덧글 KEYS). 놀이 중에는 두 단 — 왼쪽 할 일(계속·저장·불러오기·여행 방법·닫기·끝내기), 오른쪽 설정.
@@ -71,12 +72,14 @@ func _ready() -> void:
 	_add(box, k, { id = "ride_speed", kind = "opt", key = "ride_speed", values = GameSettings.RIDE_SPEED, names = GameSettings.RIDE_SPEED_LABEL, text = "자동 기승 속도" })
 	_add(box, k, { id = "ride_slow", kind = "opt", key = "ride_slow", values = GameSettings.RIDE_SLOW, names = GameSettings.RIDE_SLOW_LABEL, text = "자동 감속" })
 	_add(box, k, { id = "cam_shake", kind = "opt", key = "cam_shake", values = GameSettings.CAM_SHAKE, names = GameSettings.CAM_SHAKE_LABEL, text = "이동 카메라 흔들림" })
+	_add(box, k, { id = "view", kind = "opt", key = "view", values = GameSettings.VIEW, names = GameSettings.VIEW_LABEL, text = "시점 (0 키)" })
+	_add(box, k, { id = "dof", kind = "opt", key = "dof", values = GameSettings.DOF, names = GameSettings.DOF_LABEL, text = "깊이 흐림" })
 	_add(box, k, { id = "vol_master", kind = "opt", key = "vol_master", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 전체" })
 	_add(box, k, { id = "vol_bgm", kind = "opt", key = "vol_bgm", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 음악" })
 	_add(box, k, { id = "vol_sfx", kind = "opt", key = "vol_sfx", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 효과음" })
 	_add(acts if in_game else box, k, { id = "close", kind = "act", text = "돌아가기" if not in_game else "닫기" })
 	if in_game: _add(acts, k, { id = "quit", kind = "act", text = "게임 끝내기" })
-	var note := _lab("조사 도움은 전투 난이도와 상관없다.", int(UiFonts.KEYS * k), INK_SOFT); outer.add_child(note)
+	var note := _lab("조사 도움은 전투 난이도와 상관없다." + ("  ·  0 — 1인칭/3인칭 바꾸기" if in_game else ""), int(UiFonts.KEYS * k), INK_SOFT); outer.add_child(note)
 	var keys := _lab("↑↓ 고르기 · ←→ 바꾸기 · Enter 실행 · Esc 닫기", int(UiFonts.KEYS * k), INK_SOFT); outer.add_child(keys)
 	if not in_game: acts.free()   # 시작 메뉴 설정: 왼쪽 단을 쓰지 않는다(나무에 달지 않은 채 남기면 끝낼 때 샌다)
 	_refresh()

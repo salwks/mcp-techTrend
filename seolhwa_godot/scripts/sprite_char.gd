@@ -308,6 +308,14 @@ func set_accent(c) -> void:
 	accent = c
 	if _halo_mat: _halo_mat.set_shader_parameter("paper", _lin(c if c != null else PAPER))
 
+# 그릴 층(VisualInstance3D.layers) — 플레이어는 1인칭에서 카메라가 빼는 층에 둔다(region_main.PLAYER_LAYER)
+func set_layers(mask: int) -> void:
+	var st := [self]
+	while not st.is_empty():
+		var n: Node = st.pop_back()
+		if n is VisualInstance3D: (n as VisualInstance3D).layers = mask
+		st.append_array(n.get_children())
+
 func set_silhouette(on: bool) -> void:
 	_billboard.get_node("silhouette").visible = on
 
