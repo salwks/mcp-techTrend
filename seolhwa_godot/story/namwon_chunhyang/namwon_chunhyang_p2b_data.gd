@@ -77,8 +77,8 @@ static func problems() -> Dictionary:
 				{ "id": "merchant", "type": "inspect", "kind": "heard", "actor": "wine_merchant", "by": "술 상인 김가", "required": false,
 					"record": { "title": "상인의 말", "text": "지난번 들인 술값도 아직 못 받았다고 한다. 이번엔 두 독이라 해서 왔는데 셋 다 내리라 한다고." } },
 				{ "id": "gap", "type": "compare", "needs": ["order", "cart"],
-					"text": ["물목은 두 독. 아전은 셋 다 내리라 한다.", "값을 치른다는 말은 아무도 하지 않는다."],
-					"record": { "title": "물목과 다른 수", "text": "물목은 두 독인데 수레의 세 독을 다 내리라 한다. 값을 치른 자국은 없다.", "kind": "fact" },
+					"text": ["물목: 두 독.", "수레: 세 독. 아전은 셋 다 내리라 한다."],
+					"record": { "title": "물목과 다른 수", "text": "물목은 두 독. 수레에는 세 독. 아전은 셋 다 내리라 했다.", "kind": "fact" },
 					"flags": ["wine_discrepancy_seen"] },
 				{ "id": "handle", "type": "decide", "needs": ["gap"], "at": "ch_wine_cart", "radius": 14.0, "prompt": "술독을 어떻게 내릴까?",
 					"options": [
@@ -102,8 +102,8 @@ static func problems() -> Dictionary:
 				{ "id": "farmer", "type": "inspect", "kind": "heard", "actor": "rice_farmer", "by": "농민 박가", "required": false,
 					"record": { "title": "겨울 양식", "text": "두 가마라 해서 내놨는데 포졸이 넷을 내놓으라 했다고 한다. 겨울에 먹을 쌀이라고." } },
 				{ "id": "gap", "type": "compare", "needs": ["order", "sacks"],
-					"text": ["표에는 두 가마. 대문 앞에는 넷.", "포졸은 넷을 다 실을 생각이다."],
-					"record": { "title": "표보다 많은 가마니", "text": "징발 표는 두 가마인데 포졸은 넷을 싣는다.", "kind": "fact" },
+					"text": ["징발 표: 두 가마.", "대문 앞: 가마니 넷."],
+					"record": { "title": "표보다 많은 가마니", "text": "징발 표는 두 가마. 대문 앞에 나온 가마니는 넷.", "kind": "fact" },
 					"flags": ["rice_discrepancy_seen"] },
 				{ "id": "handle", "type": "decide", "needs": ["gap"], "at": "ch_rice_sacks", "radius": 16.0, "prompt": "가마니를 어떻게 할까?",
 					"options": [
@@ -129,8 +129,8 @@ static func problems() -> Dictionary:
 					"text": ["소지함 위에 잔치 물목이 덮여 있다.", "그 밑에 같은 이름의 소지 셋. 제사 칸이 비었다. 날짜는 열흘 전부터."],
 					"record": { "title": "열리지 않은 소지", "text": "형방 소지함, 잔치 물목 밑에 같은 이름의 소지 셋. 제사 칸이 비었다. 가장 이른 것은 열흘 전." } },
 				{ "id": "gap", "type": "compare", "needs": ["route", "status"],
-					"text": ["사흘 안에 제사. 노인의 소지는 열흘째 그대로다.", "'내일 와'는 일을 미루는 말이었다."],
-					"record": { "title": "'내일 와'", "text": "소지는 사흘 안에 제사를 받아야 하는데 열흘째 열리지도 않았다. '내일 와'는 처리하겠다는 말이 아니었던 것 같다.", "kind": "guess" },
+					"text": ["방: 사흘 안에 제사.", "소지함: 같은 이름의 소지 셋. 제사 칸은 열흘째 비었다."],
+					"record": { "title": "'내일 와'", "text": "방에는 사흘 안에 제사를 내린다고 적혀 있다. 노인의 소지는 열흘째 제사 칸이 비었다.", "kind": "guess" },
 					"flags": ["petition_gap_seen"] },
 				{ "id": "handle", "type": "decide", "needs": ["gap"], "at": "ch_petition_box", "radius": 12.0, "prompt": "노인의 소지를 어떻게 할까?",
 					"options": [

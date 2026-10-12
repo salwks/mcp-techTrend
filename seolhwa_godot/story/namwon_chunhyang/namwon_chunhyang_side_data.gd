@@ -45,8 +45,8 @@ static func problems() -> Dictionary:
 				{ "id": "keeper", "type": "inspect", "kind": "heard", "actor": "ledger_keeper", "by": "창고지기", "required": false,
 					"record": { "title": "창고지기의 말", "text": "잔치가 끝난 뒤 이방이 셋을 내갔다고 한다. 어디로 갔는지는 모른다고." } },
 				{ "id": "gap", "type": "compare", "needs": ["book", "stock"],
-					"text": ["장부는 열두. 창고는 아홉.", "내간 줄에는 아무것도 적히지 않았다."],
-					"record": { "title": "세 가마의 차이", "text": "장부 열두 가마, 창고에 아홉. 내간 기록이 없다.", "kind": "fact" },
+					"text": ["장부: 열두 가마.", "창고: 아홉 가마."],
+					"record": { "title": "세 가마의 차이", "text": "장부에는 열두 가마. 창고에는 아홉 가마.", "kind": "fact" },
 					"flags": ["ledger_gap_seen"] },
 				{ "id": "handle", "type": "decide", "after": 2, "from": ["book", "stock"], "at": "ch_ledger_yard", "radius": 12.0, "prompt": "장부를 어떻게 할까?",
 					"options": [
