@@ -21,6 +21,13 @@ var dof_margin := 4.0      # m — 초점 둘레 또렷한 폭
 var dof_far := 0.55        # 먼 흐림 최대 섞기(0~1)
 var dof_far_scale := 1.2   # 클수록 천천히 흐려진다
 var dof_near := 0.3        # 가까운 앞가림 흐림 최대
+# 먼 산 대기 원근(산수화 — C67 2026-10 v2): 카메라에서 aerial_start(m)부터 aerial_start + aerial_range까지 흐림을 aerial_blur만큼 더 얹고
+#   옅은 한지빛 안개(aerial_haze, 밤에는 줄인다)를 조금. aerial_start 안쪽(150m)은 전과 똑같다.
+#   1인칭은 카메라 먼 끝이 260m라 그 너머 먼 산은 하늘 그림판 — region_main이 폭을 (260 − 150)으로 줄여 그림판까지 같은 세기로.
+var aerial_start := 150.0
+var aerial_range := 450.0
+var aerial_blur := 0.2
+var aerial_haze := 0.12
 var bloom := true
 var paper := true
 var focus_y := 0.45        # 옛 값(틸트시프트) — main.gd·kit_preview가 아직 넣는다. 쓰지 않는다
@@ -102,6 +109,7 @@ layout(push_constant, std430) uniform P {
 	float pb; float far_k; float near_k; float bloom;
 	float sat; float paper; float ink; float night;
 	vec4 lift; vec4 gamma; vec4 gain;
+	vec4 aerial;   // 먼 산 대기 원근: 시작(m) · 폭(m) · 더할 흐림 · 안개
 } p;
 const vec3 TINT = vec3(1.0, 0.985, 0.955);
 float luma(vec3 c) { return dot(c, vec3(0.299, 0.587, 0.114)); }
@@ -134,7 +142,8 @@ void main() {
 	float vy = 1.0 - uv.y;
 	vec3 c = textureLod(t_scene, uv, 0.0).rgb * p.lum;
 	float amt = 0.0;
-	if (p.far_k + p.near_k > 0.001) {
+	float haze = 0.0;
+	if (p.far_k + p.near_k + p.aerial.z + p.aerial.w > 0.001) {
 		// 깊이 → 카메라 거리(m). Godot 4.3+ 깊이는 거꾸로(가까이 1, 멀리 0)
 #ifdef DEPTH_MS
 		float d = texelFetch(t_depth, ivec2(uv * vec2(textureSize(t_depth))), 0).r;   // MSAA 깊이: 첫 표본(Mobile은 깊이 해결을 못 한다)
@@ -144,6 +153,9 @@ void main() {
 		float D = p.pb / max(d + p.pa, 1e-7);
 		float x = max(D - p.focus - p.gamma.w, 0.0) / max(p.focus * p.gain.w, 0.1);
 		float a_far = p.far_k * x / (1.0 + x);
+		float aer = smoothstep(p.aerial.x, p.aerial.x + p.aerial.y, D);   // 먼 산(150m 밖)만
+		a_far += p.aerial.z * aer;
+		haze = p.aerial.w * aer;
 		bool vis = p.near_k > 5.0;   // 시험 보기(DOFVIS): 흐림 비율을 회색으로
 		float a_near = (vis ? p.near_k - 10.0 : p.near_k) * smoothstep(0.0, 1.0, (p.focus * 0.55 - D) / max(p.focus * 0.45, 0.1));
 		amt = clamp(max(a_far, a_near), 0.0, 1.0);
@@ -160,6 +172,7 @@ void main() {
 	}
 	if (p.bloom > 0.0) c += textureLod(t_bloom, uv, 0.0).rgb * p.lum * p.bloom;
 	c = to_srgb(neutral_tm(c));
+	c = mix(c, vec3(0.85, 0.855, 0.835), haze * (1.0 - 0.8 * p.night));   // 먼 산 옅은 안개(대기 원근)
 	c = p.gain.rgb * (c + p.lift.rgb * (1.0 - c));
 	c = pow(max(c, vec3(0.0)), 1.0 / p.gamma.rgb);
 	float L = luma(c);
@@ -309,7 +322,7 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 	var near_k := dof_near if depth_ok else 0.0
 	if _vis and depth_ok: near_k += 10.0
 	var proj := render_data.get_render_scene_data().get_cam_projection()
-	if far_k + near_k > 0.001:
+	if far_k + near_k > 0.001 or (depth_ok and aerial_blur + aerial_haze > 0.001):
 		var sigma := size.y * 0.0042
 		var st := (sigma / 2.0) * 0.75
 		_dispatch("blur", [_samp(0, color), _img(1, _tex.ha)], PackedFloat32Array([st / half.x, 0, 1.0 / half.x, 1.0 / half.y]), half)
@@ -327,7 +340,8 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 		float(size.x) / size.y, dof_focus, proj.z.z, lum_mult,
 		proj.w.z, far_k, near_k, bloom_k,
 		state.sat, pf, pf, state.night,
-		lift.x, lift.y, lift.z, past, gam.x, gam.y, gam.z, dof_margin, gain.x, gain.y, gain.z, dof_far_scale])
+		lift.x, lift.y, lift.z, past, gam.x, gam.y, gam.z, dof_margin, gain.x, gain.y, gain.z, dof_far_scale,
+		aerial_start, aerial_range, aerial_blur if depth_ok else 0.0, aerial_haze if depth_ok else 0.0])
 	var paper_rid: RID = _paper_tex if _paper_tex.is_valid() else _tex.hb
 	var depth_rid: RID = depth if depth_ok else _tex.hb   # 깊이가 없으면 아무 판(far_k·near_k = 0이라 읽지 않는다)
 	_dispatch("final_ms" if ms and depth_ok else "final", [_samp(0, color), _samp(1, _tex.hb), _samp(2, _tex.qa), _samp(3, paper_rid, _rep), _img(4, _tex.out), _samp(5, depth_rid, _near)], push, size)
