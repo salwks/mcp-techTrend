@@ -211,10 +211,10 @@ func run(t) -> void:
 		if not d.ui.modal and not d.runner.busy: break
 		await T._frames(1)
 	T.expect(d.S.is_flag("station_tut_seen") and d.S.is_flag("st_q_how") and d.S.is_flag("st_q_rent"), "마부: 먼 길 가시오? · 물음 둘")
-	var keeper_menu := false
-	for c in choice_log.slice(n_before):
-		if (c[1] as Array).has("그만두겠소."): keeper_menu = true
-	T.expect(keeper_menu, "마부 안내가 마부 목록(가 본 역·깃발 · 말을 빌린다 · 그만두겠소)으로 이어진다")
+	var kl: Dictionary = d.keeper.last if d.keeper != null else {}
+	var kmp = d.main.get("_map")
+	T.expect(bool(kl.get("map", false)) and String((kl.get("action", {}) as Dictionary).get("act", "")) == "end" and kmp != null and not kmp.picking() and not kmp.visible,
+		"마부 안내가 지도 고르기(역마 갈 곳 · 말만 빌리기)로 이어지고 Esc로 그만둔다 %s" % [kl.get("labels", [])])
 	var hr = d.main.horse_ride
 	T.expect(hr != null and hr.state == "ON_FOOT" and (d.main.fast_ui == null or not is_instance_valid(d.main.fast_ui)), "그만두겠소 — 말도 역마도 오지 않는다")
 	var fr: bool = d.case_fn.fast_ready()

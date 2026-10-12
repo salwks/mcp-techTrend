@@ -18,7 +18,14 @@
 #   권역에 들어서면(이 공간의 지도가 서고 첫 발견 셈 때) region_data/region_known.json의 대표 명소·공공시설을 KNOWN으로 적는다(_rk_keys).
 # 사건 표지(scripts/region/map_leads.gd): 사건 데이터 map_leads 중 플레이어가 들은·아는 행선지만. 표지에 마우스를 올리거나 누르면 사건 이름.
 # 이야기 인물 할 말 표시: story_director.talk_pending(id)가 참인 인물(NPC 대화 담당 데이터 — 이 파일은 읽기만 한다).
+# 역마 갈 곳 고르기(open_pick — 역참 마부·길목 깃발 E, scripts/region/station_keeper.gd): 지도를 '고르기'로 연다.
+#   같은 공간에 갈 곳이 있으면 권역 지도, 없으면(또는 Tab) 전국 지도. 갈 수 있는 역·깃발은 금빛 테, 못 가는 곳(아는 곳이지만 안 가 봄 ·
+#   처음 가는 길 · 남원 첫 사건 막음)은 바랜 기호 — 손을 대거나 고르면 까닭. 고르면 위 확인 상자(이름 · 길·거리 · 걸리는 때),
+#   Enter·Y·한 번 더 누름 → pick_done({act: warp|ride, dest}) · Esc·M → pick_done({act: end}). ←→↑↓ 갈 수 있는 곳 차례로 · Tab 권역 ↔ 전국 ·
+#   R(또는 아래 단추) 마부만: '말만 빌리겠소 — 큰길 따라'(말 타고 갈 쪽을 같은 지도에서 고른다).
 extends CanvasLayer
+
+signal pick_done(res: Dictionary)
 
 const PlaceTitle := preload("res://scripts/region/place_title.gd")
 const Travel := preload("res://scripts/region/travel.gd")
@@ -28,6 +35,7 @@ const Discovery := preload("res://scripts/region/discovery.gd")
 const MapLeads := preload("res://scripts/region/map_leads.gd")
 const UiFonts := preload("res://scripts/ui_fonts.gd")
 const Waymarks := preload("res://scripts/region/waymarks.gd")
+const Stations := preload("res://scripts/region/stations.gd")
 const RideNetRef := preload("res://scripts/region/ride_net.gd")
 const RegionKnown := preload("res://scripts/region/region_known.gd")
 
@@ -136,6 +144,11 @@ var _legend: Control
 var _cases_box: VBoxContainer
 var _st_box: VBoxContainer
 var _st_head: Label
+# 역마 갈 곳 고르기(open_pick): { from: keeper|flag, dests: [갈 곳], rides: [말 빌려 갈 쪽], sub: warp|ride, sel, flash }
+#   갈 곳 = { label, name, kind: station|flag|ride, ok, why, same, c: Vector2|null(이 공간 좌표), ll: Vector2|null(경위도), route, … }
+var pick := {}
+var _pick_page0 := 1
+var _pick_btn: Button
 
 func setup(w, data_dir: String, loader = null) -> void:
 	world = w
@@ -282,6 +295,24 @@ func _ready() -> void:
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_hint)
+	# 역마 고르기 — 마부: 말만 빌리기 단추(R)
+	_pick_btn = Button.new()
+	_pick_btn.focus_mode = Control.FOCUS_NONE
+	_pick_btn.add_theme_font_override("font", _font)
+	_pick_btn.add_theme_font_size_override("font_size", UiFonts.MAP_KEYS)
+	for st in ["normal", "hover", "pressed"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = PAPER if st == "normal" else Color(1.0, 0.95, 0.82)
+		sb.border_color = INK if st == "normal" else SEAL
+		sb.set_border_width_all(3)
+		sb.content_margin_left = 16; sb.content_margin_right = 16; sb.content_margin_top = 6; sb.content_margin_bottom = 6
+		_pick_btn.add_theme_stylebox_override(st, sb)
+	_pick_btn.add_theme_color_override("font_color", INK)
+	_pick_btn.add_theme_color_override("font_hover_color", SEAL)
+	_pick_btn.add_theme_color_override("font_pressed_color", SEAL)
+	_pick_btn.pressed.connect(func(): pick_ride_toggle())
+	_pick_btn.visible = false
+	add_child(_pick_btn)
 
 # ---- 오른쪽 판: 쪽 넘김(L) — 0 닫힘(지도 넓게) · 1 범례 · 2 사건·역참. 글은 모두 MAP_PANEL(26) 이상 ----
 #   글이 커져(26 이상) 범례·사건·역참이 한 판에 다 들어가지 않는다 — 줄이지 않고 쪽으로 나눈다. 넘치면 판 안에서 휠로 내린다.
@@ -469,7 +500,9 @@ func _space_short(id: String) -> String:
 # ---- 열기·전환 ----
 func toggle() -> void:
 	if _meta.is_empty(): return
-	if visible: visible = false; return
+	if visible:
+		if picking(): _pick_finish({ act = "end" }); return
+		visible = false; return
 	visible = true
 	_layout()
 	_refresh_dynamic()
@@ -547,7 +580,15 @@ func _update_hint() -> void:
 	# 아래 안내는 한 줄(MAP_KEYS 26) — 조작만. 읽는 법(아는 곳만 이름 · 붉은 인)은 범례 쪽에 있다. 넓이가 모자라면 짧은 줄로
 	var vs := get_viewport().get_visible_rect().size
 	var tries: Array
-	if mode == "nation" and not _fast_opts.is_empty() and _fast_sel < 0:
+	if picking():
+		var tab := "Tab 권역 지도" if mode == "nation" else "Tab 전국 지도"
+		if not _pick_region_ok() or String(pick.sub) == "ride": tab = ""
+		var ride := ""
+		if String(pick.from) == "keeper" and not (pick.rides as Array).is_empty(): ride = "R 역마로" if String(pick.sub) == "ride" else "R 말만 빌리기"
+		var parts := ["←→ 갈 곳", "Enter 간다", tab, ride, "Esc·M 그만"].filter(func(x): return x != "")
+		tries = [" · ".join(parts), " · ".join(["←→ 갈 곳", "Enter 간다", tab, "Esc 그만"].filter(func(x): return x != "")), "←→ 갈 곳 · Enter 간다 · Esc 그만"]
+		if String(pick.get("flash", "")) != "": tries = [String(pick.flash)]
+	elif mode == "nation" and not _fast_opts.is_empty() and _fast_sel < 0:
 		tries = ["금빛 길 눌러 건너뛰기 · L 범례 · M 닫기", "금빛 길 눌러 건너뛰기 · M 닫기"]
 	else:
 		tries = ["Tab 지도 · 휠 확대 · L 범례 · H 역참 · M 닫기", "Tab 지도 · L 범례 · H 역참 · M 닫기", "Tab 지도 · L 범례 · M 닫기"]
@@ -571,6 +612,9 @@ func _layout() -> void:
 	_panel.size = Vector2(pw, _canvas.size.y)
 	_panel.custom_minimum_size = _panel.size
 	_panel.visible = page > 0
+	if _pick_btn != null and _pick_btn.visible:
+		_pick_btn.reset_size()
+		_pick_btn.position = _canvas.position + Vector2(_canvas.size.x - _pick_btn.size.x - 14.0, _canvas.size.y - _pick_btn.size.y - 14.0)
 	var world_w := float(_meta.w) * float(_meta.scale); var world_h := float(_meta.h) * float(_meta.scale)
 	# 가장 작은 배율은 '채움'(cover): 권역 그림이 테 안을 다 덮는다 — 맞춤(contain)이면 가로로 긴 권역 위아래에 빈 한지 띠가 컸다.
 	# 덮는 쪽으로 넘친 만큼은 끌어서 본다(_clamp_center가 그림 밖 빈 곳이 테 안에 들어오지 않게 막는다).
@@ -580,6 +624,8 @@ func _layout() -> void:
 func _unhandled_input(e: InputEvent) -> void:
 	if not (e is InputEventKey and e.pressed and not e.echo): return
 	var kc: int = e.physical_keycode
+	if picking() and visible:
+		_pick_key(kc); get_viewport().set_input_as_handled(); return
 	if kc == KEY_M: toggle(); get_viewport().set_input_as_handled(); return
 	if not visible: return
 	if _st_sel >= 0:   # 역참 확인
@@ -639,6 +685,9 @@ func _on_input(e: InputEvent) -> void:
 			if e.pressed: _press_at = e.position
 			elif e.position.distance_to(_press_at) < 6.0:
 				var h = _hit(e.position)
+				if picking():
+					if h != null and h.has("pick"): pick_click(int(h.pick))
+					return
 				if h != null:
 					if h.has("station") and _st_on():
 						if int(h.station) == _st_sel: _station_go()
@@ -772,7 +821,7 @@ func _collect_stations() -> Array:
 				var parts := dk.split("/")
 				if parts.size() >= 3: sp = parts[1] if sp == "" else sp; node = parts[2]
 			known = tn is Dictionary and tn.get(sp) is Dictionary and (tn[sp] as Dictionary).has(node)
-		if not known: continue
+		if not known and not load("res://scripts/region/dev_travel.gd").on: continue   # 개발 '전국 이동 열림': 모든 역
 		var ll = null
 		if s.get("lonlat") is Array and s.lonlat.size() >= 2: ll = Vector2(float(s.lonlat[0]), float(s.lonlat[1]))
 		elif s.has("lon") and s.has("lat"): ll = Vector2(float(s.lon), float(s.lat))
@@ -786,7 +835,7 @@ func _collect_flags() -> Array:
 	var FT: Script = load("res://scripts/region/fast_travel.gd")
 	for sp in RideNetRef.all_spaces():
 		for f in Waymarks.flags_in(sp):
-			if not Waymarks.known(sp, String(f.id)): continue
+			if not Waymarks.known(sp, String(f.id)) and not load("res://scripts/region/dev_travel.gd").on: continue
 			out.append({ id = f.id, name = f.name, space = sp, c = f.p if sp == _space else null, ll = FT._ll(sp, f.p) })
 	return out
 
@@ -823,6 +872,244 @@ func _station_go() -> void:
 			_after_view()
 			_hint.text = UiFonts.fit(_font, "%s(으)로는 아직 역마로 갈 수 없다 — %s" % [String(s.name), String(r.get("why", ""))], UiFonts.MAP_KEYS, get_viewport().get_visible_rect().size.x - 32.0)
 	elif m != null and m.has_method("open_fast_travel"): m.open_fast_travel()   # 역참 이동 API 전: 역마 창
+
+# ---- 역마 갈 곳 고르기(역참 마부·길목 깃발 E — scripts/region/station_keeper.gd) ----
+#   글 목록 대신 지도에서 고른다(2026-10-13 사용자: "텍스트로 정하는 건 유저가 알 턱이 있나"). 같은 공간이면 권역 지도, Tab 전국 지도.
+const PICK_KNOWN_WHY := "아는 곳이지만 아직 가 보지 않았다 — 한 번 걸어서 가 봐야 역마로 간다"
+
+func picking() -> bool: return not pick.is_empty()
+
+func _pick_region_ok() -> bool:
+	return not (world.is_route and _tex == null)
+
+func pick_items() -> Array:
+	if pick.is_empty(): return []
+	return pick.rides if String(pick.sub) == "ride" else pick.dests
+
+func pick_labels() -> Array:
+	return pick_items().map(func(o): return String(o.get("label", o.get("name", ""))))
+
+func pick_sel() -> Dictionary:
+	var items := pick_items()
+	var i := int(pick.get("sel", -1))
+	return items[i] if i >= 0 and i < items.size() else {}
+
+# o = { from: keeper|flag, dests: [갈 곳], rides: [말 빌려 갈 쪽] } — 끝나면 pick_done
+func open_pick(o: Dictionary) -> void:
+	pick = { from = String(o.get("from", "keeper")), dests = (o.get("dests", []) as Array).duplicate(), rides = o.get("rides", []), sub = "warp", sel = -1, flash = "" }
+	_pick_add_known_only()
+	_pinned = null; _hover = null; _st_sel = -1; _fast_sel = -1
+	_pick_page0 = page
+	page = 0   # 오른쪽 판(글 목록)은 닫는다 — 지도에서 고른다
+	visible = true
+	_layout()
+	_refresh_dynamic()
+	_pick_btn.visible = String(pick.from) == "keeper" and not (pick.rides as Array).is_empty()
+	_pick_btn_text()
+	_pick_show(_pick_wants_region())
+	var ds: Array = pick.dests
+	print("MAP pick open from=%s dests=%d ok=%d rides=%d mode=%s" % [pick.from, ds.size(), ds.filter(func(x): return bool(x.ok)).size(), (pick.rides as Array).size(), mode])
+
+func _pick_wants_region() -> bool:
+	if not _pick_region_ok(): return false
+	if String(pick.sub) == "ride": return true
+	return pick_items().any(func(x): return bool(x.same) and bool(x.ok))
+
+func _pick_show(region: bool) -> void:
+	if region:
+		_show_all()
+		# 갈 수 있는 곳들과 지금 자리가 한눈에 들도록 그 가운데로(가장 작은 배율은 '채움'이라 다 안 들면 ←→로 고르면 옮겨 간다)
+		var bb := Rect2(Vector2(_player.x, _player.z), Vector2.ZERO)
+		for it in pick_items():
+			if bool(it.ok) and _pick_visible(it, false): bb = bb.expand(it.c)
+		if bb.size.x * _k < _canvas.size.x - 160.0 and bb.size.y * _k < _canvas.size.y - 200.0: _center = bb.get_center()   # 안 들면 지금 자리 가운데 그대로
+		_clamp_center()
+	else: _show_nation()
+	_layout()
+	_after_view()
+
+func _pick_btn_text() -> void:
+	_pick_btn.text = "역마로 갈 곳 고르기 (R)" if String(pick.get("sub", "")) == "ride" else "말만 빌리겠소 — 큰길 따라 (R)"
+	_layout()
+
+func pick_ride_toggle() -> void:
+	if not picking() or String(pick.from) != "keeper" or (pick.rides as Array).is_empty(): return
+	pick.sub = "warp" if String(pick.sub) == "ride" else "ride"
+	pick.sel = -1; pick.flash = ""
+	_pick_btn_text()
+	_pick_show(_pick_wants_region())
+	print("MAP pick sub=%s" % pick.sub)
+
+# 같은 공간의 아는 곳(KNOWN 고을 — C65)인데 안 가 본 역·깃발: 흐리게, 까닭과 함께(KNOWN은 역마 조건을 채우지 않는다)
+func _pick_add_known_only() -> void:
+	if not _pick_region_ok() or world.is_route: return
+	var HR: Script = load("res://scripts/region/horse_ride.gd")
+	var have := {}
+	for d in pick.dests: have["%s/%s" % [d.get("space", ""), d.get("node", "")]] = true
+	for n in RideNetRef.read(_space).get("nodes", []):
+		if not bool(n.get("fast", false)): continue
+		var id := String(n.id)
+		if have.has("%s/%s" % [_space, id]) or HR.is_discovered(_space, id): continue
+		var stn := Stations.for_node(_space, id)
+		var is_flag := Waymarks.is_flag(n, _space)
+		if stn.is_empty() and not is_flag: continue
+		var nm := String(n.get("name", id))
+		var town := ""
+		for t in _towns:
+			var tn := String(t[0])
+			if tn.length() > town.length() and Discovery.is_known(_space, "town:" + tn) and Travel.short_name(nm).begins_with(tn): town = tn
+		if town == "": continue
+		var a: Array = n.get("arrive", [n.x, n.z])
+		pick.dests.append({ label = "%s — %s" % ["역마" if not stn.is_empty() else "깃발", nm], name = nm, kind = "station" if not stn.is_empty() else "flag",
+			ok = false, why = PICK_KNOWN_WHY, same = true, c = Vector2(float(a[0]), float(a[1])), ll = null, space = _space, node = id,
+			station_id = String(stn.get("id", "")), route = "", known_only = true })
+
+func _pick_visible(it: Dictionary, nation: bool) -> bool:
+	if nation: return it.get("ll") != null and (not bool(it.same) or not _pick_region_ok())
+	return bool(it.same) and it.get("c") != null
+
+func _pick_pos(it: Dictionary, nation: bool) -> Vector2:
+	return _n_px(it.ll) if nation else _to_px(it.c)
+
+func _pick_key(kc: int) -> void:
+	match kc:
+		KEY_M, KEY_ESCAPE: pick_cancel()
+		KEY_ENTER, KEY_KP_ENTER, KEY_Y, KEY_SPACE: pick_confirm()
+		KEY_LEFT, KEY_UP: pick_cycle(-1)
+		KEY_RIGHT, KEY_DOWN: pick_cycle(1)
+		KEY_TAB:
+			if _pick_region_ok() and String(pick.sub) == "warp":
+				_pick_show(mode == "nation")
+				var it := pick_sel()
+				if not it.is_empty() and not _pick_visible(it, mode == "nation"): pick.sel = -1
+				pick.flash = ""
+				_after_view()
+		KEY_R: pick_ride_toggle()
+		KEY_N, KEY_BACKSPACE: pick.sel = -1; pick.flash = ""; _after_view()
+		KEY_EQUAL, KEY_KP_ADD: _zoom(1.25, _canvas.size / 2.0)
+		KEY_MINUS, KEY_KP_SUBTRACT: _zoom(0.8, _canvas.size / 2.0)
+
+# ←→: 이 지도에 보이는 갈 수 있는 곳을 차례로
+func pick_cycle(dir: int) -> void:
+	var items := pick_items()
+	var nation := mode == "nation"
+	var vis: Array = []
+	for i in items.size():
+		if bool(items[i].ok) and _pick_visible(items[i], nation): vis.append(i)
+	if vis.is_empty():
+		pick.flash = "이 지도에는 갈 수 있는 곳이 없다 — Tab으로 지도를 바꾼다" if _pick_region_ok() and String(pick.sub) == "warp" else "갈 수 있는 곳이 없다 — Esc 그만"
+		_after_view(); return
+	var at := vis.find(int(pick.sel))
+	var nx: int = vis[0] if at < 0 and dir > 0 else (vis[vis.size() - 1] if at < 0 else vis[posmod(at + dir, vis.size())])
+	pick_select(nx)
+
+func pick_select(i: int) -> void:
+	var items := pick_items()
+	if i < 0 or i >= items.size(): return
+	pick.sel = i; pick.flash = ""
+	var it: Dictionary = items[i]
+	var nation := mode == "nation"
+	if not _pick_visible(it, nation): _pick_show(not nation)   # 다른 지도에 있는 곳이면 그 지도로
+	nation = mode == "nation"
+	if _pick_visible(it, nation):
+		var p := _pick_pos(it, nation)
+		if not Rect2(Vector2.ZERO, _canvas.size).grow(-90.0).has_point(p) or _confirm_rect().grow(20.0).has_point(p):
+			if nation: _ncenter = it.ll
+			else: _center = it.c; _clamp_center()
+	print("MAP pick sel %s ok=%s why=%s" % [it.get("label", ""), it.ok, it.get("why", "")])
+	_after_view()
+
+func pick_click(i: int) -> void:
+	if i == int(pick.sel) and bool(pick_items()[i].ok): pick_confirm()
+	else: pick_select(i)
+
+func pick_confirm() -> void:
+	var it := pick_sel()
+	if it.is_empty():
+		pick.flash = "갈 곳을 먼저 고르시오 — 금빛 테 두른 곳(←→ 또는 누르기)"
+		_after_view(); return
+	if not bool(it.ok):
+		pick.flash = "%s — %s" % [String(it.name), String(it.why)]
+		print("MAP pick blocked %s: %s" % [it.get("label", ""), it.why])
+		_after_view(); return
+	_pick_finish({ act = "ride" if String(pick.sub) == "ride" else "warp", dest = it })
+
+func pick_cancel() -> void:
+	_pick_finish({ act = "end" })
+
+func _pick_finish(res: Dictionary) -> void:
+	if not picking(): return
+	print("MAP pick done %s %s" % [res.act, (res.get("dest", {}) as Dictionary).get("label", "")])
+	pick = {}
+	page = _pick_page0
+	_pick_btn.visible = false
+	visible = false
+	pick_done.emit(res)
+
+# 지도 위 갈 곳 후보(겹침 솎기에 함께) — 갈 수 있는 곳은 높은 차례·한지 판 이름, 못 가는 곳은 바랜 기호·옅은 이름
+func _pick_cands(nation: bool) -> Array:
+	var out: Array = []
+	var items := pick_items()
+	for i in items.size():
+		var it: Dictionary = items[i]
+		if not _pick_visible(it, nation): continue
+		var ok := bool(it.ok)
+		var tip := "%s — 눌러 고르고, 한 번 더 누르면 간다" % String(it.name) if ok else "%s — %s" % [String(it.name), String(it.why)]
+		out.append({ p = _pick_pos(it, nation), kind = String(it.kind), text = String(it.name), prio = P_HUB if ok else P_TOWN, size = UiFonts.MAP_LABEL,
+			col = INK, force = true, plate = ok, faint = not ok, tip = tip, pick = i })
+	return out
+
+# 금빛 테(갈 수 있음) · 고른 곳 붉은 테 + 붉은 테 이름 판 — 기호는 고을 기호 위에 다시 그린다
+func _draw_pick_marks(nation: bool) -> void:
+	var items := pick_items()
+	var sel := int(pick.sel)
+	for i in items.size():
+		var it: Dictionary = items[i]
+		if not _pick_visible(it, nation): continue
+		var p := _pick_pos(it, nation)
+		if not Rect2(Vector2.ZERO, _canvas.size).grow(20.0).has_point(p): continue
+		var kind := String(it.kind)
+		var r := _icon_r(kind)
+		if bool(it.ok):
+			_canvas.draw_arc(p, r + 7.0, 0, TAU, 36, Color(INK, 0.85), 7.0, true)
+			_canvas.draw_arc(p, r + 7.0, 0, TAU, 36, FAST_COL, 4.0, true)
+			_icon(_canvas, kind, p, ICON_S)
+		else: _icon_faint(_canvas, kind, p, ICON_S)
+		if i != sel: continue
+		_canvas.draw_arc(p, r + 14.0, 0, TAU, 40, Color(PAPER, 0.95), 8.0, true)
+		_canvas.draw_arc(p, r + 14.0, 0, TAU, 40, SEAL if bool(it.ok) else INK_SOFT, 4.5, true)
+		var nm := String(it.name)
+		var lr := Rect2()
+		for q in placed:
+			if String(q.text) == nm and (q.rect as Rect2).get_center().distance_to(p) < 260.0: lr = q.rect; break
+		var fs := UiFonts.MAP_LABEL
+		if lr.size == Vector2.ZERO:   # 솎여 이름이 없으면 기호 오른쪽에 판을 얹는다
+			var w := _font.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 12.0
+			lr = Rect2(p + Vector2(r + 18.0, -fs * 0.62), Vector2(w, fs * 1.25))
+			if lr.end.x > _canvas.size.x - 8.0: lr.position.x = p.x - r - 18.0 - w
+		_canvas.draw_rect(lr.grow(3), Color(PAPER, 0.98))
+		_canvas.draw_rect(lr.grow(3), SEAL if bool(it.ok) else INK_SOFT, false, 3.0)
+		_canvas.draw_string(_font, lr.position + Vector2(6, fs * 0.98), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, SEAL if bool(it.ok) else INK_SOFT)
+
+# 위 상자: 고르기 전 — 물음·조작 / 고른 곳 — 이름 · 길·거리·걸리는 때 / 못 가는 곳 — 까닭
+func _pick_msg() -> PackedStringArray:
+	var items := pick_items()
+	var it := pick_sel()
+	var keys := "Enter·Y 또는 한 번 더 눌러 간다 · Esc·M 그만"
+	if it.is_empty():
+		var l1 := ""
+		if String(pick.sub) == "ride": l1 = "말 타고 갈 쪽을 지도에서 짚으시오 (금빛 테)"
+		elif String(pick.from) == "keeper": l1 = "어디로 가시오? — 금빛 테 두른 역·깃발을 짚으시오"
+		else: l1 = "깃발 — 어디로 갈까? 금빛 테 두른 곳을 짚는다"
+		if not items.any(func(x): return bool(x.ok)): l1 = "아직 역마로 갈 만한 곳을 모른다 — 가 본 역·깃발이 생기면 여기서 간다"
+		return PackedStringArray([l1, "←→ 고르기 · Enter 간다 · Esc·M 그만"])
+	var nm := String(it.name)
+	if not bool(it.ok):
+		return PackedStringArray(["%s — 지금은 갈 수 없다" % nm, String(it.why), "다른 곳을 고르시오 · Esc·M 그만"])
+	if String(pick.sub) == "ride":
+		return PackedStringArray(["말 타고 %s 쪽으로 가겠소?" % nm, "큰길 따라 약 %d분 (말이 길을 따라 간다)" % int(it.get("mins", 0)), keys])
+	var where := nm if bool(it.same) else "%s (%s)" % [nm, String(it.get("space_name", ""))]
+	return PackedStringArray(["역마 타고 %s(으)로 가겠소?" % where, String(it.get("route", "")), keys])
 
 # 사건 하나를 고르면 그 표지로 지도를 옮긴다(다른 공간이면 전국 지도의 그 권역으로)
 func _focus_lead(l: Dictionary) -> void:
@@ -924,7 +1211,7 @@ func _draw_map() -> void:
 	_taken.append(_compass_rect())   # 방위
 	_taken.append(_title_rect())     # 지도 이름 판(오른쪽 위)
 	_taken.append(Rect2(Vector2(6, cs.y - scale_bar_h() - 8), Vector2(300, scale_bar_h() + 4)))   # 10리 자
-	if _st_sel >= 0 or (mode == "nation" and _fast_sel >= 0): _taken.append(_confirm_rect())   # 역마 확인 상자
+	if picking() or _st_sel >= 0 or (mode == "nation" and _fast_sel >= 0): _taken.append(_confirm_rect())   # 역마 확인 상자
 	if mode == "nation":
 		_draw_nation()
 	else:
@@ -1056,11 +1343,13 @@ func _draw_region() -> void:
 		cands.append({ p = _to_px(e.c), kind = "place_told" if pk else "place", text = String(e.name) + (" (들음)" if told else ""), prio = P_TOWN, size = UiFonts.MAP_LABEL, col = Color(0.42, 0.12, 0.07), tier = 2, faint = pk })
 	# 길목 깃발(가 본 것 — 이름은 고을 이름과 겹치므로 그림만, 손을 대면 이름)
 	for f in _flags:
+		if picking(): break
 		if f.c == null or not view.grow(40).has_point(f.c): continue
 		# 고을 표지 바로 곁(오른쪽 위)에 늘 그린다 — 넓은 축척에서는 고을 기호와 같은 자리라 솎으면 사라진다
 		cands.append({ p = _to_px(f.c) + Vector2(9, -9) * ICON_S, kind = "flag", text = "", prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, force = true, tip = "깃발 %s — 곁에서 E로 역마" % String(f.name) })
 	# 역참
 	for i in _stations.size():
+		if picking(): break
 		var s: Dictionary = _stations[i]
 		if s.space != _space or s.c == null or not view.grow(40).has_point(s.c): continue
 		cands.append({ p = _to_px(s.c), kind = "station", text = String(s.name), prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, station = i, tip = "역참 %s — 눌러 고르고, 한 번 더 누르면 간다" % String(s.name), tier = 2 })
@@ -1081,7 +1370,9 @@ func _draw_region() -> void:
 	# 이 확대 단계보다 높은 단계의 이름은 글을 지운다(기호는 그대로 — 기호 없는 이름은 통째로 빠진다)
 	for c in cands:
 		if int(c.get("tier", 1)) > tier: c.text = ""
+	if picking(): cands.append_array(_pick_cands(false))
 	_place_all(cands)
+	if picking(): _draw_pick_marks(false)
 	_draw_player()
 	_draw_scale_bar(float(_meta.get("li_m", 1260.0)) * _k)
 
@@ -1151,6 +1442,7 @@ func _draw_title() -> void:
 
 # 역마 확인 상자(위 가운데): 노정 건너뛰기(전국) · 역참 고르기 — 물음 + 키(모두 MAP_KEYS 26). 물음이 넓으면 띄어쓰기에서 두 줄로
 func _confirm_msg() -> PackedStringArray:
+	if picking(): return _pick_msg()
 	if _st_sel >= 0 and _st_sel < _stations.size():
 		return PackedStringArray(["역마 타고 %s(으)로 가겠소?" % String(_stations[_st_sel].name), "Enter·Y 간다 · N·Esc 그만"])
 	if mode == "nation" and _fast_sel >= 0 and _fast_sel < _fast_opts.size():
@@ -1171,8 +1463,9 @@ func _wrap(t: String, fs: int, maxw: float) -> PackedStringArray:
 func _confirm_lines() -> PackedStringArray:
 	var m := _confirm_msg()
 	if m.is_empty(): return m
-	var lines := _wrap(m[0], UiFonts.MAP_KEYS, _canvas.size.x - 120.0)
-	lines.append(m[1])
+	var lines := PackedStringArray()
+	for i in m.size() - 1: lines.append_array(_wrap(m[i], UiFonts.MAP_KEYS, _canvas.size.x - 120.0))
+	lines.append(UiFonts.fit(_font, m[m.size() - 1], UiFonts.MAP_KEYS, _canvas.size.x - 120.0))
 	return lines
 
 func _confirm_rect() -> Rect2:
@@ -1184,6 +1477,12 @@ func _confirm_rect() -> Rect2:
 	var r := Rect2(Vector2((_canvas.size.x - w) / 2.0, 16.0), Vector2(w, ls.size() * UiFonts.MAP_KEYS * 1.3 + 24.0))
 	var cr := _compass_rect(); var tr := _title_rect()
 	if r.intersects(cr) or r.intersects(tr): r.position.y = maxf(cr.end.y, tr.end.y) + 8.0   # 방위·지도 이름 판 아래로
+	# 역마 고르기: 고른 곳이 상자 밑에 깔리면 상자를 아래로(10리 자 위)
+	if picking():
+		var it := pick_sel()
+		var nation := mode == "nation"
+		if not it.is_empty() and _pick_visible(it, nation) and r.grow(34.0).has_point(_pick_pos(it, nation)):
+			r.position.y = _canvas.size.y - r.size.y - scale_bar_h() - 22.0
 	return r
 
 func _draw_confirm() -> void:
@@ -1292,6 +1591,7 @@ func _place_all(cands: Array) -> void:
 			var hit := { p = p, r = maxf(14.0 * ICON_S, ir), tip = String(c.get("tip", text)) }
 			if c.has("lead"): hit.lead = c.lead
 			if c.has("station"): hit.station = c.station
+			if c.has("pick"): hit.pick = c.pick
 			_hits.append(hit)
 
 # 전국 지도: 화면에서 인 하나 너비 안에 겹친 사건 인(다른 사건)은 하나로 — 이름은 첫 것 + '외 n', 설명에 모두
@@ -1368,7 +1668,7 @@ static func _dashed_rect(ci: CanvasItem, r: Rect2, col: Color, w: float) -> void
 func _icon_r(kind: String) -> float:
 	match kind:
 		"": return 0.0
-		"station": return UiFonts.MAP_GLYPH * 0.74 + 2.0
+		"station", "ride": return UiFonts.MAP_GLYPH * 0.74 + 2.0
 		"case": return UiFonts.MAP_GLYPH * 0.72 * 1.15
 		"eup", "hub", "hub_here": return 11.0 * ICON_S
 		"dot": return 4.0 * ICON_S
@@ -1422,6 +1722,11 @@ func _icon(ci: CanvasItem, kind: String, p: Vector2, s: float) -> void:
 			ci.draw_circle(p, rs, PAPER)
 			ci.draw_arc(p, rs, 0, TAU, 24, SEAL, 2.0 * s, true)
 			_glyph(ci, "역", p, SEAL)
+		"ride":   # 말 빌려 갈 쪽(역마 고르기 — 마부 '말만 빌리겠소'): 금빛 둥근 패에 '말'
+			var rs := maxf(8.0 * s, UiFonts.MAP_GLYPH * 0.74)
+			ci.draw_circle(p, rs, Color(1.0, 0.93, 0.74))
+			ci.draw_arc(p, rs, 0, TAU, 24, INK, 2.0 * s, true)
+			_glyph(ci, "말", p, INK)
 		"ferry":   # 나루: 배
 			var hull := PackedVector2Array([p + Vector2(-7, 0) * s, p + Vector2(7, 0) * s, p + Vector2(4, 4) * s, p + Vector2(-4, 4) * s])
 			ci.draw_colored_polygon(hull, Color(0.55, 0.40, 0.26))
@@ -1728,7 +2033,7 @@ func _draw_nation() -> void:
 		if known:
 			var nm := String(r.get("short", r.name)) if not on else String(r.name)
 			cands.append({ p = _polyline_at(px, 0.5), kind = "", text = nm, prio = P_MINOR + (0 if on else 1), size = UiFonts.MAP_MINOR, col = Color(0.42, 0.18, 0.12) })
-	_draw_fast()
+	if not picking(): _draw_fast()
 	# 사건 표지(권역별로 하나 — 사건 이름)
 	var seen_pos := {}
 	for l in _leads:
@@ -1755,16 +2060,20 @@ func _draw_nation() -> void:
 			prio = P_VILLAGE, size = UiFonts.MAP_MINOR, col = INK_SOFT })
 	# 길목 깃발(가 본 것)
 	for f in _flags:
+		if picking(): break
 		if f.ll == null: continue
 		cands.append({ p = _n_px(f.ll), kind = "flag", text = "", prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, tip = "깃발 %s" % String(f.name) })
 	# 역참
 	for i in _stations.size():
+		if picking(): break
 		var s: Dictionary = _stations[i]
 		if s.ll == null: continue
 		cands.append({ p = _n_px(s.ll), kind = "station", text = String(s.name), prio = P_STATION, size = UiFonts.MAP_LABEL, col = INK, station = i,
 			tip = "역참 %s — 눌러 고르고, 한 번 더 누르면 간다" % String(s.name) })
 	var here = _here_ll()
+	if picking(): cands.append_array(_pick_cands(true))
 	_place_all(_merge_cases(cands))
+	if picking(): _draw_pick_marks(true)
 	if here != null:
 		var p := _n_px(here)
 		_canvas.draw_circle(p, 14.0, Color(0.75, 0.15, 0.1, 0.25))

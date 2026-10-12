@@ -183,15 +183,11 @@ func uishots(dir: String) -> void:
 	for sp in ["JL_NAMWON_UNBONG", "GG_HANYANG"]:
 		for n in RN.read(sp).get("nodes", []):
 			if bool(n.get("fast", false)): HR.discover(sp, String(n.id))
-	if d.get("keeper") != null:
-		var dl: Array = d.keeper.destinations()
-		var opts: Array = dl[0].duplicate()
-		opts.append({ label = "말을 빌린다 — 큰길 따라" })
-		if int(dl[1]) > 0: opts.append({ label = "가 본 다른 곳 — 역마 창" })
-		opts.append({ label = "그만두겠소." })
-		d.ui.choice("어디로 가겠소?", opts)
-		await _shot(dir, "station_list", 20)
-		d.ui._picked.emit(opts.size() - 1)
+	var kmp = d.main.get("_map")
+	if d.get("keeper") != null and kmp != null and not kmp._meta.is_empty():   # 역참 마부·깃발: 지도에서 고른다(region_map.open_pick)
+		kmp.open_pick({ from = "flag", dests = d.keeper.destinations()[0], rides = [] })
+		await _shot(dir, "station_map_pick", 20)
+		kmp.pick_cancel()
 		await _frames(10)
 	var ft = load("res://scripts/region/fast_travel.gd").new(d.main)
 	d.main.add_child(ft)
