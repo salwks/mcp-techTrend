@@ -1,18 +1,33 @@
 # 후처리 — 웹 fx/post.js 이식(컴포지터 효과 + compute 셰이더).
-#   장면(HDR, 투명 물체까지 그린 뒤) → 틸트시프트 흐림(1/2, 가로→세로) → 블룸(1/4, 밝은 부분→가로→세로)
-#   → 최종 1패스: 선명/흐림 섞기 + 먹선 + 블룸 + 톤매핑(Neutral) + sRGB + 색보정 + 한지 + 비네트 + 디더
+#   장면(HDR, 투명 물체까지 그린 뒤) → 흐림 판(1/2, 가로→세로) → 블룸(1/4, 밝은 부분→가로→세로)
+#   → 최종 1패스: 깊이 흐림(장면 깊이로 선명/흐림 섞기 — 피사계 심도) + 먹선 + 블룸 + 톤매핑(Neutral) + sRGB + 색보정 + 한지 + 비네트 + 디더
 # 최종 결과(sRGB)는 선형으로 되돌려 장면 버퍼에 쓴다. 이어지는 Godot 출력 단계(톤매퍼 Linear → sRGB)가 그대로 되돌린다.
 # SubViewport를 패스마다 이어 붙이는 방식은 이 맥(Metal/Vulkan 모두)에서 패스당 수 ms가 들어 이 방식을 쓴다.
 @tool
 class_name PostEffect
 extends CompositorEffect
 
-var tilt := true
+# 깊이 흐림(피사계 심도, 2026-10 — 화면 위·아래 띠로 흐리던 틸트시프트를 바꿈): 장면 깊이(해결된 깊이 버퍼)를 카메라에서 잰 거리로 풀어
+#   초점 거리(dof_focus — 보통 카메라→플레이어) 둘레 ±dof_margin은 또렷하고, 그 너머는 거리에 따라 천천히(포화) 흐려진다.
+#   amt_far = dof_far · x/(1+x), x = (D − F − margin) / (F · dof_far_scale) — 멀리 갈수록 dof_far에 다가갈 뿐 넘지 않는다(약하게).
+#   아주 가까운 앞가림(D < 0.55F)만 dof_near만큼 조금. 흐림 판은 하나(1/2 해상도 가우스)라 섞는 비율만 바뀐다.
+#   Godot 카메라 속성 DOF 대신 이것을 쓰는 까닭: 이 후처리가 톤매핑·한지·먹선까지 직접 하므로 Godot DOF(톤매핑 단계)가 먹선·한지 결까지 흐린다.
+var dof := true
+var tilt: bool:   # 옛 이름(--notilt · P 키 · 남원 _tilt) — dof와 같다
+	get: return dof
+	set(v): dof = v
+var dof_focus := 22.0      # m
+var dof_margin := 4.0      # m — 초점 둘레 또렷한 폭
+var dof_far := 0.55        # 먼 흐림 최대 섞기(0~1)
+var dof_far_scale := 1.2   # 클수록 천천히 흐려진다
+var dof_near := 0.3        # 가까운 앞가림 흐림 최대
 var bloom := true
 var paper := true
-var focus_y := 0.45
-var band := 0.07        # 틸트시프트 선명 띠 반폭(화면 높이 비율). 배 위 낮은 시점에서는 넓힌다(region_main)
-var top_bias := 1.0     # 띠 위쪽 흐림 세기(배 위: 먼 기슭·능선이 덜 흐리게)
+var focus_y := 0.45        # 옛 값(틸트시프트) — main.gd·kit_preview가 아직 넣는다. 쓰지 않는다
+var band := 0.07
+var top_bias := 1.0
+var depth_ok := false      # 깊이 버퍼를 받았나(없으면 흐림 없음)
+var _vis := OS.has_environment("DOFVIS")   # 시험 보기: 환경 변수 DOFVIS=1이면 흐림 비율을 회색 화면으로
 var paper_ratio := 2.0
 var state := {}
 var paper_image: Image
@@ -28,6 +43,7 @@ var _pipes := {}
 var _size := Vector2i.ZERO
 var _tex := {}
 var _lin: RID
+var _near: RID
 var _rep: RID
 var _paper_tex: RID
 
@@ -75,10 +91,15 @@ layout(set = 0, binding = 1) uniform sampler2D t_blur;
 layout(set = 0, binding = 2) uniform sampler2D t_bloom;
 layout(set = 0, binding = 3) uniform sampler2D t_paper;
 layout(%FMT%, set = 0, binding = 4) uniform restrict writeonly image2D dst;
+#ifdef DEPTH_MS
+layout(set = 0, binding = 5) uniform sampler2DMS t_depth;
+#else
+layout(set = 0, binding = 5) uniform sampler2D t_depth;
+#endif
 layout(push_constant, std430) uniform P {
 	vec2 texel; vec2 paper_scale;
-	float aspect; float focus_y; float band; float lum;
-	float top_bias; float bottom_bias; float tilt; float bloom;
+	float aspect; float focus; float pa; float lum;
+	float pb; float far_k; float near_k; float bloom;
 	float sat; float paper; float ink; float night;
 	vec4 lift; vec4 gamma; vec4 gain;
 } p;
@@ -113,9 +134,20 @@ void main() {
 	float vy = 1.0 - uv.y;
 	vec3 c = textureLod(t_scene, uv, 0.0).rgb * p.lum;
 	float amt = 0.0;
-	if (p.tilt > 0.5) {
-		float dy = vy - p.focus_y;
-		amt = smoothstep(0.0, 0.32, abs(dy) - p.band) * (dy > 0.0 ? p.top_bias : p.bottom_bias);
+	if (p.far_k + p.near_k > 0.001) {
+		// 깊이 → 카메라 거리(m). Godot 4.3+ 깊이는 거꾸로(가까이 1, 멀리 0)
+#ifdef DEPTH_MS
+		float d = texelFetch(t_depth, ivec2(uv * vec2(textureSize(t_depth))), 0).r;   // MSAA 깊이: 첫 표본(Mobile은 깊이 해결을 못 한다)
+#else
+		float d = textureLod(t_depth, uv, 0.0).r;
+#endif
+		float D = p.pb / max(d + p.pa, 1e-7);
+		float x = max(D - p.focus - p.gamma.w, 0.0) / max(p.focus * p.gain.w, 0.1);
+		float a_far = p.far_k * x / (1.0 + x);
+		bool vis = p.near_k > 5.0;   // 시험 보기(DOFVIS): 흐림 비율을 회색으로
+		float a_near = (vis ? p.near_k - 10.0 : p.near_k) * smoothstep(0.0, 1.0, (p.focus * 0.55 - D) / max(p.focus * 0.45, 0.1));
+		amt = clamp(max(a_far, a_near), 0.0, 1.0);
+		if (vis) { imageStore(dst, g, vec4(to_linear(vec3(amt)), 1.0) / p.lum); return; }
 		c = mix(c, textureLod(t_blur, uv, 0.0).rgb * p.lum, amt);
 	}
 	if (p.ink > 0.0 && amt < 0.6) {
@@ -166,7 +198,7 @@ func _init() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE and rd:
-		for r in _tex.values() + _shaders.values() + [_lin, _rep, _paper_tex]:
+		for r in _tex.values() + _shaders.values() + [_lin, _near, _rep, _paper_tex]:
 			if r.is_valid(): rd.free_rid(r)
 
 static func _fmt_name(f: int) -> String:
@@ -181,7 +213,7 @@ func _build(fmt: int) -> void:
 	_fmt = fmt
 	print("POST color format ", fmt, " ", _fmt_name(fmt), " lum_mult=", lum_mult)
 	var fname := _fmt_name(fmt)
-	var srcs := { blur = BLUR, bright = BRIGHT, final = FINAL }
+	var srcs := { blur = BLUR, bright = BRIGHT, final = FINAL, final_ms = "#define DEPTH_MS\n" + FINAL }
 	for k in srcs:
 		var src := RDShaderSource.new()
 		src.language = RenderingDevice.SHADER_LANGUAGE_GLSL
@@ -195,6 +227,9 @@ func _build(fmt: int) -> void:
 	ss.min_filter = RenderingDevice.SAMPLER_FILTER_LINEAR; ss.mag_filter = RenderingDevice.SAMPLER_FILTER_LINEAR
 	ss.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE; ss.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
 	_lin = rd.sampler_create(ss)
+	var sn := RDSamplerState.new()   # 깊이: 가까운 점(깊이 형식은 선형 거르기를 못 할 수 있다)
+	sn.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE; sn.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
+	_near = rd.sampler_create(sn)
 	ss.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT; ss.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
 	_rep = rd.sampler_create(ss)
 	if paper_image:
@@ -265,7 +300,16 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 	_ensure(size)
 	var half := Vector2i(ceili(size.x / 2.0), ceili(size.y / 2.0))
 	var quarter := Vector2i(ceili(size.x / 4.0), ceili(size.y / 4.0))
-	if tilt:
+	# 깊이: MSAA면 Mobile이 단일 표본 깊이로 해결하지 않으므로(access_resolved_depth 미지원) MSAA 깊이의 첫 표본을 읽는다
+	var ms := sb.get_msaa_3d() != RenderingServer.VIEWPORT_MSAA_DISABLED and sb.has_texture("render_buffers", "depth_msaa")
+	var depth := RID()
+	if dof: depth = sb.get_texture("render_buffers", "depth_msaa") if ms else sb.get_depth_layer(0)
+	depth_ok = depth.is_valid()
+	var far_k := dof_far if depth_ok else 0.0
+	var near_k := dof_near if depth_ok else 0.0
+	if _vis and depth_ok: near_k += 10.0
+	var proj := render_data.get_render_scene_data().get_cam_projection()
+	if far_k + near_k > 0.001:
 		var sigma := size.y * 0.0042
 		var st := (sigma / 2.0) * 0.75
 		_dispatch("blur", [_samp(0, color), _img(1, _tex.ha)], PackedFloat32Array([st / half.x, 0, 1.0 / half.x, 1.0 / half.y]), half)
@@ -280,10 +324,11 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 	var lift: Vector3 = state.lift; var gam: Vector3 = state.gamma; var gain: Vector3 = state.gain
 	var push := PackedFloat32Array([
 		1.0 / size.x, 1.0 / size.y, ps, ps,
-		float(size.x) / size.y, focus_y, band, lum_mult,
-		top_bias, 0.75, 1.0 if tilt else 0.0, bloom_k,
+		float(size.x) / size.y, dof_focus, proj.z.z, lum_mult,
+		proj.w.z, far_k, near_k, bloom_k,
 		state.sat, pf, pf, state.night,
-		lift.x, lift.y, lift.z, past, gam.x, gam.y, gam.z, 0, gain.x, gain.y, gain.z, 0])
+		lift.x, lift.y, lift.z, past, gam.x, gam.y, gam.z, dof_margin, gain.x, gain.y, gain.z, dof_far_scale])
 	var paper_rid: RID = _paper_tex if _paper_tex.is_valid() else _tex.hb
-	_dispatch("final", [_samp(0, color), _samp(1, _tex.hb), _samp(2, _tex.qa), _samp(3, paper_rid, _rep), _img(4, _tex.out)], push, size)
+	var depth_rid: RID = depth if depth_ok else _tex.hb   # 깊이가 없으면 아무 판(far_k·near_k = 0이라 읽지 않는다)
+	_dispatch("final_ms" if ms and depth_ok else "final", [_samp(0, color), _samp(1, _tex.hb), _samp(2, _tex.qa), _samp(3, paper_rid, _rep), _img(4, _tex.out), _samp(5, depth_rid, _near)], push, size)
 	rd.texture_copy(_tex.out, color, Vector3.ZERO, Vector3.ZERO, Vector3(size.x, size.y, 1), 0, 0, 0, 0)
