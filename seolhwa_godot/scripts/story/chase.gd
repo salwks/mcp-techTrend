@@ -136,7 +136,9 @@ func _begin(from_cp: int) -> void:
 		started = true
 	else:
 		_place_runner()
-	if spec.has("camera"): d.camera(spec.camera)
+	if spec.has("camera"):
+		var cs: Dictionary = spec.camera.duplicate(); cs.lead = true   # 추격 앞보기 — 저작 컷이 아니다(1인칭은 그대로 눈높이)
+		d.camera(cs)
 	d.free_move = true
 	d.runner.log_line("chase", [id, "start", seg_i])
 
@@ -284,7 +286,7 @@ func _frame_camera() -> void:
 	var pp: Vector3 = d.main.player_pos
 	var v := Vector2(a.pos.x - pp.x, a.pos.z - pp.z)
 	v = v.limit_length(float(spec.get("frame_reach", 16.0))) * float(spec.get("frame_mix", 0.5))
-	d.main.rig.focus = { x = pp.x + v.x, z = pp.z + v.y, y = pp.y }
+	d.main.rig.focus = { x = pp.x + v.x, z = pp.z + v.y, y = pp.y, lead = true }
 
 # 플레이어를 follow 길에 비춘다(앞뒤로 좁은 창 안에서 — 길이 다시 지나가는 곳에서 건너뛰지 않게)
 func _measure_player() -> void:

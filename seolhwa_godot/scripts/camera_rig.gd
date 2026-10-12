@@ -54,6 +54,10 @@ const RIDE_SIDE_DEG := 28.0
 # 각본 시점(shot): 컷신 한 장면에서만 — 카메라 자리(pos)와 바라볼 점(look), fov를 그대로 쓴다(하늘을 올려다보는 동아줄 장면 등).
 # 평소 시점 계산(pitch·distance·yaw)은 건너뛴다. null로 되돌리면 다음 프레임부터 평소 시점(되돌릴 때는 암전 속에서).
 var shot = null   # { pos: Vector3, look: Vector3, fov: float }
+# 대화 구도(story_director.camera에 talk 표시가 붙은 값 — 공통 TALK·talk_camera_base)가 넣은 override·focus 사전 그대로.
+#   1인칭(region_main)은 이것을 저작 연출로 치지 않는다(1인칭에서는 애초에 넣지 않지만, 3인칭 대화 도중 0을 눌렀을 때를 위해).
+var talk_o = null
+var talk_f = null
 
 func _init(cam: Camera3D, w: World) -> void:
 	camera = cam
@@ -142,3 +146,20 @@ func glide(sec: float, to_point = null) -> void:
 
 func gliding() -> bool:
 	return _gl != null
+
+# 1인칭(region_main._fp_frame)이 쓴다: 미끄러짐에 목표 겨냥점이 있나 · 바로 끝내기(다음 update에서 목표에 닿는다) · 버리기
+func glide_has_target() -> bool:
+	return _gl != null and _gl.to != null
+
+func glide_finish() -> void:
+	if _gl != null: _gl.t = _gl.dur
+
+func glide_cancel() -> void:
+	_gl = null
+
+# 지금 카메라 값이 대화 구도가 아닌 저작 연출(d.camera·shot·glide·사건 override/focus)인가 — lead 표시 focus(추격 앞보기)는 빼고
+func authored() -> bool:
+	if shot != null: return true
+	if override != null and not is_same(override, talk_o): return true
+	if focus != null and not is_same(focus, talk_f) and not bool(focus.get("lead", false)): return true
+	return glide_has_target()

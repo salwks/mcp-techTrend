@@ -156,6 +156,7 @@ func _setup() -> void:
 	_setup_input()
 	ui = StoryUI.new()
 	add_child(ui)
+	ui.on_say = on_say
 	ui.log_lines = log_story
 	onboard = load("res://scripts/story/onboarding.gd").new(self)   # 처음 하는 사람 안내·먹점·Esc 메뉴(사건 없는 공간에서도)
 	add_child(onboard)
@@ -325,18 +326,26 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev.is_action("interact") and _target != null and String(_target.kind) == "ambient" and not ui.busy_input() \
 			and not (runner != null and runner.busy) and not (combat_view != null and combat_view.active):
 		get_viewport().set_input_as_handled()
+		_fp_face_target(_target)
 		ambient.talk(int(_target.key))
 		return
 	# 역참 마부·길목 깃발(사건이 없는 공간에서도) — 역마는 여기서만 고른다
 	if ev.is_action("interact") and _target != null and String(_target.kind) in ["keeper", "flag"] and not ui.busy_input() \
 			and not (runner != null and runner.busy) and not (combat_view != null and combat_view.active):
 		get_viewport().set_input_as_handled()
+		_fp_face_target(_target)
 		keeper.talk(_target)
 		return
 	if case_id == "" or not _started: return
 	if ev.is_action("interact") and _target != null and not ui.busy_input() and not runner.busy and not combat_view.active:
 		get_viewport().set_input_as_handled()
 		interact(_target.id)
+
+# 1인칭: 말 걸 곁 대상(고을 사람·마부·깃발)의 머리 쪽으로 시선을 돌린다
+func _fp_face_target(t) -> void:
+	if t == null or not bool(main.get("fp_active")): return
+	var p: Vector2 = t.p
+	main.fp_look_at(Vector3(p.x, world.height_at(p.x, p.y) + 1.45, p.y))
 
 func journal_data() -> Dictionary:
 	return load("res://scripts/story/journal_book.gd").build(self)
@@ -521,9 +530,19 @@ func shake_enabled() -> bool:
 func shake(p: float, sec: float) -> void:
 	if combat_view != null: combat_view.shake(p, sec * 1000.0)
 
+# 카메라 값. talk(대화 구도 — _talk_camera·talk_camera_base) · lead(추격 앞보기 — chase.gd) 표시가 붙은 값은 저작 컷이 아니다:
+#   1인칭(main.fp_active)에서는 넣지 않고 시선만 대화 쪽으로 돌린다(C68). 다른 값(사건 d.camera)은 1인칭에서도 저작대로 — region_main이 컷으로 보여 준다.
 func camera(spec) -> void:
+	var rig = main.rig
 	if spec == null or (spec is Dictionary and spec.is_empty()):
-		main.rig.override = null; main.rig.focus = null; return
+		rig.override = null; rig.focus = null; rig.talk_o = null; rig.talk_f = null; return
+	var soft := bool(spec.get("talk", false)) or bool(spec.get("lead", false))
+	if soft and bool(main.get("fp_active")):
+		if bool(spec.get("talk", false)) and spec.get("focus") != null:
+			var fp := anchor(spec.focus)
+			main.fp_look_at(Vector3(fp.x, world.height_at(fp.x, fp.y) + 1.45, fp.y))
+		rig.override = null; rig.focus = null; rig.talk_o = null; rig.talk_f = null
+		return
 	if spec.has("focus"):
 		if spec.focus == null: main.rig.focus = null
 		else:
@@ -533,6 +552,8 @@ func camera(spec) -> void:
 	for kk in ["pitch", "distance", "fov"]:
 		if spec.has(kk): o[kk] = float(spec[kk])
 	main.rig.override = o if not o.is_empty() else null
+	rig.talk_o = rig.override if soft else null
+	rig.talk_f = rig.focus if soft else null
 
 # ---------------------------------------------------------------------------
 # 자리
@@ -555,6 +576,7 @@ func teleport_to(at, face := "") -> void:
 	var p := anchor(at)
 	main.teleport(p.x, p.y)
 	if face != "": main.player.facing = face
+	if face != "" and bool(main.get("fp_active")): main.fp_face_dir(face)   # 1인칭: 순간이동은 컷 — 바라보는 쪽도 바로
 	main.rig.update(0, main.player_pos, main.player.facing, null, true)
 
 func arena(id: String) -> Dictionary:
@@ -676,8 +698,32 @@ func face_actor(id: String, dir, to) -> void:
 		var v := p - from
 		d = "right" if absf(v.x) > absf(v.y) * 1.05 and v.x > 0 else ("left" if absf(v.x) > absf(v.y) * 1.05 else ("down" if v.y > 0 else "up"))
 	if d == "": return
-	if id == "player": main.player.facing = d
+	if id == "player":
+		main.player.facing = d
+		if to != null and bool(main.get("fp_active")): main.fp_look_at(fp_head(to))   # 1인칭: 플레이어가 돌아보는 쪽으로 시선을 천천히
 	elif a != null: a.facing = d
+
+# 1인칭 시선 겨냥점: 이야기 인물이면 머리(발 + 1.45m), 자리면 그 땅 위 1.45m(사람 눈높이 — 고개를 거의 들지 않는다)
+func fp_head(at) -> Vector3:
+	var s := String(at) if at is String else ""
+	if s != "" and actors.has(s):
+		var ap: Vector3 = actors[s].pos
+		return ap + Vector3(0, 1.45, 0)
+	var p := anchor(at)
+	return Vector3(p.x, world.height_at(p.x, p.y) + 1.45, p.y)
+
+# 대사 하나가 뜰 때(story_runner say): 1인칭이면 말하는 이야기 인물(이름 또는 id, 14m 안 가장 가까운)을 바라본다 — 나그네(플레이어) 대사는 그대로
+func on_say(speaker: String) -> void:
+	if not bool(main.get("fp_active")) or speaker == "": return
+	var pp := Vector2(main.player_pos.x, main.player_pos.z)
+	var best := ""; var bd := 14.0
+	for id in actors:
+		var a: Dictionary = actors[id]
+		if String(id) != speaker and String(a.get("name", "")) != speaker: continue
+		if not bool(a.get("shown", true)): continue
+		var dd := pp.distance_to(Vector2(a.pos.x, a.pos.z))
+		if dd < bd and dd > 0.3: bd = dd; best = String(id)
+	if best != "": main.fp_look_at(fp_head(best))
 
 func anim_actor(id: String, nm: String, restart := true) -> void:
 	if id == "player":
@@ -952,7 +998,11 @@ func interact(id: String) -> void:
 		for o in data.get("objects", []):
 			if String(o.id) == id:
 				if not runner.cond(o.get("when", true)): return
-				steps = o.get("steps", []); break
+				steps = o.get("steps", [])
+				if bool(main.get("fp_active")):   # 1인칭 살펴보기: 물건 쪽(땅 위 0.6m)으로 고개를 숙여 본다
+					var op := anchor(o.at)
+					main.fp_look_at(Vector3(op.x, world.height_at(op.x, op.y) + float(o.get("look_y", 0.6)), op.y))
+				break
 	runner.log_line("interact", id)
 	if onboard != null: onboard.on_interact("actor" if actors.has(id) else "object")
 	_target = null
@@ -973,12 +1023,14 @@ func _talk_camera(id: String, tc: Dictionary) -> void:
 	var mid := (Vector2(main.player_pos.x, main.player_pos.z) + Vector2(a.pos.x, a.pos.z)) * 0.5
 	talk_cam = tc.duplicate()
 	talk_cam.focus = [mid.x, mid.y]
+	talk_cam.talk = true
 	camera(talk_cam)
 	Sound.music_level(0.5, 0.6)
 
 # 사건 단위 대화 카메라 값(인물 덮어쓰기 없이) — 사건 연출이 대화 구도를 다시 쓸 때(남원 마부·아이들·포수·이웃 아낙·노인). 꺼졌으면 {}
 func talk_camera_base() -> Dictionary:
 	var tc = CameraRig.talk_spec(data.get("case", {}))
+	if tc is Dictionary: tc.talk = true   # 대화 구도 표시(1인칭은 쓰지 않는다 — camera())
 	return tc if tc is Dictionary else {}
 
 func _talk_camera_end() -> void:

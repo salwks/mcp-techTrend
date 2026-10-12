@@ -228,6 +228,7 @@ func _ready() -> void:
 		var c: PackedStringArray = args.cam.split(",")
 		rig.override = { distance = float(c[0]), pitch = float(c[1]) if c.size() > 1 else 38.0, fov = float(c[2]) if c.size() > 2 else 30.0 }
 	rig.update(0, player_pos, player.facing, null, true)
+	_fp_mouse = load("res://scripts/region/fp_mouse.gd").new(self); add_child(_fp_mouse)   # 1인칭 마우스 잡기·놓기
 	if args.has("bench"):
 		_bench_left = float(args.bench)
 		_bench_speed = float(args.get("benchspeed", str(RUN)))
@@ -252,6 +253,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/story/prep_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("viewtest"):   # 1인칭 시점(0 키) 시험 — scripts/region/view_test.gd
 		_ride_test = load("res://scripts/region/view_test.gd").new(self); _ride_test.run.call_deferred()
+	elif args.has("fpshots"):   # 1인칭 v2 화면(창 필요, 시험 저장으로만) — scripts/region/fp_shots.gd
+		_ride_test = load("res://scripts/region/fp_shots.gd").new(self); _ride_test.run.call_deferred(String(args.fpshots))
 	elif args.has("talkshot"):
 		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
@@ -702,23 +705,29 @@ const DOF_WALK := { far = 0.55, near = 0.3, scale = 1.2, margin = 4.0 }
 const DOF_LOW := { far = 0.3, near = 0.15, scale = 2.5, margin = 8.0 }
 const DOF_STABLE := { far = 0.25, near = 0.2, scale = 2.0, margin = 6.0 }
 var _dof_fp := false
+# 먼 산 대기 원근(산수화, 2026-10 v2): 150m 밖에서 600m까지 흐림 +0.2 · 옅은 안개 0.12 — 150m 안은 전과 같다(PostEffect.aerial_*)
+const AERIAL_BLUR := 0.2
+const AERIAL_HAZE := 0.12
 const DOF_FP := { far = 0.35, near = 0.0, scale = 3.0, margin = 3.0 }
 func _update_dof(dt: float) -> void:
 	var look: Vector3 = rig.target
-	if fp_active: look = cam.global_position - cam.global_transform.basis.z * 7.0
+	if fp_view(): look = cam.global_position - cam.global_transform.basis.z * 7.0
 	elif rig.shot != null: look = rig.shot.look
 	var want_f := clampf(cam.global_position.distance_to(look), 2.0, 400.0)
 	var low: bool = rig.sailing or rig.riding
-	var stable: bool = not low and not fp_active and horse_ride != null and horse_ride.life != null and horse_ride.life.stable_view(player_pos)
-	var sp: Dictionary = DOF_FP if fp_active else (DOF_LOW if low else (DOF_STABLE if stable else DOF_WALK))
+	var stable: bool = not low and not fp_view() and horse_ride != null and horse_ride.life != null and horse_ride.life.stable_view(player_pos)
+	var sp: Dictionary = DOF_FP if fp_view() else (DOF_LOW if low else (DOF_STABLE if stable else DOF_WALK))
 	var k := minf(1.0, dt * 2.0)
-	if _dof_fp != fp_active: _dof_fp = fp_active; k = 1.0   # 1인칭 ↔ 3인칭: 바로
+	if _dof_fp != fp_view(): _dof_fp = fp_view(); k = 1.0   # 1인칭 ↔ 3인칭: 바로
 	var off := cine_sharp
 	var gs := GameSettings.get_v("dof") if not _view_automation() else "normal"   # 설정 '깊이 흐림' — 시험·촬영은 보통
 	if gs == "off": off = true
 	var mul := 0.5 if gs == "weak" else 1.0
 	post.dof_far += ((0.0 if off else float(sp.far) * mul) - post.dof_far) * (1.0 if off else k)
 	post.dof_near += ((0.0 if off else float(sp.near) * mul) - post.dof_near) * (1.0 if off else k)
+	post.aerial_blur = 0.0 if off else AERIAL_BLUR * mul   # 먼 산 대기 원근(150m 밖만 — C67 v2)
+	post.aerial_haze = 0.0 if off else AERIAL_HAZE * mul
+	post.aerial_range = (cam.far - post.aerial_start) if fp_view() else 450.0   # 1인칭(먼 끝 260m): 150m~먼 끝(하늘 그림판의 먼 산)까지
 	post.dof_far_scale += (float(sp.scale) - post.dof_far_scale) * k
 	post.dof_margin += (float(sp.margin) - post.dof_margin) * k
 	post.dof_focus += (want_f - post.dof_focus) * (1.0 if k >= 1.0 else minf(1.0, dt * 6.0))
@@ -729,7 +738,7 @@ func _occ_focus() -> Vector3:
 	return player_pos + Vector3(0, player.height * 0.8, 0)
 
 func _update_occlusion(dt: float, interior) -> void:
-	var want: Array = interior.hide if interior != null and not fp_active else []   # 1인칭: 지붕을 숨기지 않는다(안에서 올려다보면 지붕이 있어야)
+	var want: Array = interior.hide if interior != null and not fp_view() else []   # 1인칭: 지붕을 숨기지 않는다(안에서 올려다보면 지붕이 있어야)
 	for o in _hidden_interior:
 		if not want.has(o): o.visible = true
 	for o in want: o.visible = false
@@ -750,7 +759,7 @@ func _update_occlusion(dt: float, interior) -> void:
 		_occ_near = keep
 	if _occ_frame == 0:
 		for occ in _occ_near: occ.target = 1.0
-		if interior == null and not fp_active:
+		if interior == null and not fp_view():
 			var c := cam.global_position
 			for occ in _occ_near:
 				if occ_script != null or not occ.node.visible or not occ.node.is_inside_tree(): continue
@@ -778,31 +787,49 @@ static func _seg_hits_mesh(occ: Dictionary, a: Vector3, b: Vector3) -> bool:
 	return false
 
 # ---- 1인칭 시점(0 키) ----
-# first_person = 플레이어가 바란 시점(0 키 · 설정 '시점' · user://settings.json view), fp_active = 지금 실제 1인칭.
-# 이야기가 플레이어를 쥐었을 때(대화·컷신·전투·선택지·기록책·시작 메뉴) · 연출 카메라(override·focus·shot·glide) · 배·말 · 지도·역마 창·문서 등 큰 창 ·
-# 실내 넘나드는 암전 · 불러오기 · 떠나기 동안은 3인칭으로 돌아가고, 끝나면 다시 1인칭(바란 값은 그대로).
+# first_person = 플레이어가 바란 시점(0 키 · 설정 '시점' · user://settings.json view), fp_active = 지금 1인칭(C68).
+# 1인칭은 대화·선택지·살펴보기·문서·문제 카드·기록책·지도·역마 창·Esc·카메라 없는 각본 장면에서도 그대로다(2026-10 v2 — 대화마다 3인칭으로 바뀌던 것을 고침).
+#   대화가 시작되면 말하는 이(머리) 쪽으로, 살펴보기는 물건 쪽으로 0.4초 동안 천천히 돌아본다(fp_look_at — story_director가 부른다). 대화 구도(TALK 38/13.5/38)는 쓰지 않는다.
+#   저작 연출 카메라(d.camera · CameraRig.shot · glide · 사건 override/focus — rig.authored())는 컷이다: 눈높이에서 바로 그 구도로(사이에 3인칭 플레이어 시점 없음),
+#   끝나면 바로 눈높이로 돌아온다(fp_cut 동안은 플레이어가 보이고 near·far는 3인칭 값).
+#   3인칭으로 돌아가는 때는 셋뿐: 불러오기·떠나기 암전(loading) · 배·말(ride) · 전투(combat — 고정 시점 전제의 조준·예고 고리·구르기라 1인칭으로는 못 싸운다).
 # 눈높이 FP_EYE(1.55m), 바라보는 쪽 fp_yaw(0 = 북쪽, +는 동쪽으로 돈다). 움직임은 카메라 기준: W·S(↑↓) 앞뒤 · A·D 옆걸음 · ←→ 돌기 ·
-# 마우스 끌기(왼·오른 단추) 둘러보기. 플레이어 그림은 PLAYER_LAYER(20번 층)만 카메라에서 뺀다 — 그림자는 남는다.
+# 마우스: 커서를 잡아 숨기고 움직이면 둘러본다(위아래 ±70°, 설정 '마우스 감도'). 대화·선택·카드·창이 열리면 놓고 닫히면 다시 잡는다(scripts/region/fp_mouse.gd).
+# 플레이어 그림은 PLAYER_LAYER(20번 층)만 카메라에서 뺀다 — 그림자는 남는다.
 const PLAYER_LAYER := 1 << 19
 const FP_EYE := 1.55
 const FP_FOV := 62.0
 const FP_TURN := 1.9          # ←→ 돌기(라디안/초)
-const FP_MOUSE := 0.0045      # 마우스 끌기(라디안/픽셀)
+const FP_MOUSE := 0.0045      # 커서가 보일 때 단추 누른 채 끌기(라디안/픽셀)
+const FP_SENS := { low = 0.0016, normal = 0.0025, high = 0.0038 }   # 잡은 마우스(라디안/픽셀) — 설정 mouse_sens
+const FP_PITCH := 1.2217      # 위아래 ±70°
+const FP_LOOK_SEC := 0.4      # 말하는 이·물건 쪽으로 돌아보는 시간
+const FP_CUT_IN := 0.6        # 눈높이 → 저작 구도(shot은 바로)
+const FP_CUT_OUT := 0.5       # 저작 구도 → 눈높이(shot이었으면 바로)
 const FP_FAR := 260.0         # 1인칭 카메라 먼 끝(m) — 3인칭 6000. 한양 1인칭(2048×1536): 6000 → 45fps · 420 → 62 · 250 → 82 — 안개 너머라 화면은 같다
 var first_person := false
 var fp_active := false
+var fp_cut := false           # 1인칭 중 저작 연출 카메라가 화면을 쥔 동안
 var fp_yaw := 0.0
 var fp_pitch := -0.06
 var fp_block := ""            # 지금 1인칭을 막은 까닭(시험·안내)
+var fp_mouse_force := false   # 시험: 커서를 잡지 않고도 마우스 움직임으로 둘러보기
 var _view_set := ""           # 마지막으로 본 설정 값(설정 창에서 바꾸면 따라간다)
 var view_persist := true      # 시험은 끈다(사용자 settings.json에 쓰지 않게)
+var _fp_turn = null           # { y0, p0, y1, p1, t, dur } — fp_look_at
+var _fp_blend = null          # { from: Transform3D, fov, t, dur } — 눈높이 ↔ 저작 구도
+var _fp_last_xf := Transform3D.IDENTITY
+var _fp_last_fov := FP_FOV
+var _fp_was_shot := false
+var _fp_mouse = null          # scripts/region/fp_mouse.gd
+var _near_detail := 0.0
 
 var _auto = null
 func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:
@@ -815,7 +842,7 @@ func set_first_person(on: bool, save := true) -> void:
 	_view_set = "first" if on else "third"
 	_update_fp_state()
 	if on and not fp_active: _show_hud("지금은 3인칭 — 끝나면 1인칭으로 돌아간다 (0 되돌리기)")
-	elif on: _show_hud("1인칭 — W·S 앞뒤 · A·D 옆 · ←→·마우스 끌기 둘러보기 · 0 3인칭")
+	elif on: _show_hud("1인칭 — 마우스로 둘러보기 · W·S 앞뒤 · A·D 옆 · E 말 걸기 · Esc 메뉴 · 0 3인칭")
 	else: _show_hud("3인칭 시점 (0 1인칭)")
 
 func toggle_view() -> void:
@@ -823,14 +850,8 @@ func toggle_view() -> void:
 
 func fp_blocker() -> String:
 	if _loading or _leaving: return "loading"
-	if story != null and story.owns_player(): return "story"
-	if _story_talking(): return "talk"
-	if rig.override != null or rig.focus != null or rig.shot != null or rig.gliding(): return "camera"
-	if boats.riding() or horse_ride.busy(): return "ride"
-	if _map != null and _map.visible: return "map"
-	if fast_ui != null and is_instance_valid(fast_ui) and fast_ui.visible: return "fast"
-	if _indoor_busy: return "door"
-	if preload("res://scripts/hud_gate.gd").overlay_open(get_tree()): return "overlay"
+	if story != null and story.drives_player(): return "combat"
+	if boats.riding() or horse_ride.mounted(): return "ride"   # 역마 창(FAST_TRAVEL)은 창일 뿐 — 1인칭 그대로
 	return ""
 
 func _update_fp_state() -> void:
@@ -843,8 +864,20 @@ func _update_fp_state() -> void:
 	var want := first_person and fp_block == ""
 	if want == fp_active: return
 	fp_active = want
+	fp_cut = false; _fp_blend = null; _fp_turn = null
 	if want:
 		fp_yaw = _yaw_of(player.facing); fp_pitch = -0.06
+		_fp_cam_eye(true)
+		_fp_camera(0.0)
+		_fp_last_xf = cam.transform; _fp_last_fov = cam.fov
+	else:
+		_fp_cam_eye(false)
+		rig.update(0, player_pos, player.facing, world.interior_at(player_pos.x, player_pos.z), true)   # 3인칭 자리로 바로
+	print("VIEW %s%s" % ["first" if want else "third", "" if want or not first_person else " (막힘: %s)" % fp_block])
+
+# 눈높이 카메라 값(on) · 3인칭·저작 컷 값(off)
+func _fp_cam_eye(on: bool) -> void:
+	if on:
 		cam.cull_mask &= ~PLAYER_LAYER
 		cam.near = 0.1   # 벽 곁에서 벽이 잘리지 않게
 		cam.far = float(args.get("fpfar", str(FP_FAR)))   # 눈높이는 지평선 너머 도시 전체가 든다 — 멀리는 하늘 그림판의 먼 산·안개가 맡는다
@@ -852,14 +885,32 @@ func _update_fp_state() -> void:
 		cam.cull_mask |= PLAYER_LAYER
 		cam.near = 0.5
 		cam.far = 6000.0
-		rig.update(0, player_pos, player.facing, world.interior_at(player_pos.x, player_pos.z), true)   # 3인칭 자리로 바로
-	print("VIEW %s%s" % ["first" if want else "third", "" if want or not first_person else " (막힘: %s)" % fp_block])
+
+# 지금 눈높이 화면인가(1인칭이고 저작 컷이 아님) — 흐림·가림·지붕·땅 잔무늬가 본다
+func fp_view() -> bool:
+	return fp_active and not fp_cut
 
 func fp_look_dir() -> Vector2:
 	return Vector2(sin(fp_yaw), -cos(fp_yaw))
 
+# 1인칭 시선을 점(머리·물건) 쪽으로 sec초 동안 천천히(smoothstep). 1인칭이 아니면 아무것도 하지 않는다
+func fp_look_at(p: Vector3, sec := FP_LOOK_SEC) -> void:
+	if not fp_active: return
+	var eye := player_pos + Vector3(0, FP_EYE, 0)
+	var v := p - eye
+	var h := Vector2(v.x, v.z).length()
+	if h < 0.25: return
+	var y1 := atan2(v.x, -v.z)
+	var p1 := clampf(atan2(v.y, h), -0.9, 0.6)
+	_fp_turn = { y0 = fp_yaw, p0 = fp_pitch, y1 = fp_yaw + wrapf(y1 - fp_yaw, -PI, PI), p1 = p1, t = 0.0, dur = maxf(sec, 0.01) }
+
+# 각본 순간이동(facing) — 컷이라 바로
+func fp_face_dir(facing: String) -> void:
+	fp_yaw = _yaw_of(facing); fp_pitch = -0.06; _fp_turn = null
+
 func _fp_move(dt: float) -> Vector2:
 	var turn := (1.0 if Input.is_physical_key_pressed(KEY_RIGHT) else 0.0) - (1.0 if Input.is_physical_key_pressed(KEY_LEFT) else 0.0)
+	if turn != 0.0: _fp_turn = null
 	fp_yaw = wrapf(fp_yaw + turn * FP_TURN * dt, -PI, PI)
 	var fwd := (1.0 if Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP) else 0.0) \
 		- (1.0 if Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN) else 0.0)
@@ -869,14 +920,71 @@ func _fp_move(dt: float) -> Vector2:
 	var v := f * fwd + r * side
 	return v.normalized() if v.length() > 1.0 else v
 
-func _fp_camera() -> void:
+func _fp_camera(dt: float) -> void:
+	if _fp_turn != null:
+		_fp_turn.t += dt
+		var w := smoothstep(0.0, 1.0, clampf(_fp_turn.t / _fp_turn.dur, 0.0, 1.0))
+		fp_yaw = lerpf(_fp_turn.y0, _fp_turn.y1, w)
+		fp_pitch = lerpf(_fp_turn.p0, _fp_turn.p1, w)
+		if _fp_turn.t >= _fp_turn.dur: _fp_turn = null; fp_yaw = wrapf(fp_yaw, -PI, PI)
 	cam.transform = Transform3D(Basis.from_euler(Vector3(fp_pitch, -fp_yaw, 0.0), EULER_ORDER_YXZ), player_pos + Vector3(0, FP_EYE, 0))
 	cam.fov = FP_FOV
 
+# 1인칭 한 프레임(rig.update 뒤): 저작 컷이면 rig가 놓은 구도, 아니면 눈높이. 둘 사이는 바로 잇는다(shot은 끊어서, 나머지는 짧게 섞어서) —
+#   컷 시작에 rig를 목표 구도로 바로 놓아(미끄러짐도 끝으로) 3인칭 플레이어 시점이 사이에 끼지 않게, 끝의 '플레이어로 돌아오는 미끄러짐'은 버린다.
+func _fp_frame(dt: float, interior) -> void:
+	var auth: bool = rig.authored()
+	if auth != fp_cut:
+		var hard: bool = rig.shot != null or _fp_was_shot
+		fp_cut = auth
+		_fp_cam_eye(not auth)
+		if auth:
+			rig.glide_finish()
+			rig.update(0, player_pos, player.facing, interior, true)
+		else:
+			rig.glide_cancel()
+		_fp_blend = null if hard else { from = _fp_last_xf, fov = _fp_last_fov, t = 0.0, dur = FP_CUT_IN if auth else FP_CUT_OUT }
+		print("VIEW fp %s" % ("cut" if auth else "eye"))
+	elif not fp_cut and rig.gliding():
+		rig.glide_cancel()   # 컷 밖의 '평소 자리로 미끄러짐'(1인칭에는 평소 자리가 눈높이)
+	if not fp_cut: _fp_camera(dt)
+	_fp_was_shot = rig.shot != null
+	if _fp_blend != null:
+		_fp_blend.t += dt
+		var w := smoothstep(0.0, 1.0, clampf(_fp_blend.t / _fp_blend.dur, 0.0, 1.0))
+		cam.transform = (_fp_blend.from as Transform3D).interpolate_with(cam.transform, w)
+		cam.fov = lerpf(_fp_blend.fov, cam.fov, w)
+		if _fp_blend.t >= _fp_blend.dur: _fp_blend = null
+	_fp_last_xf = cam.transform; _fp_last_fov = cam.fov
+
+# 마우스를 잡아 둘러볼 때인가: 눈높이 화면이고 플레이어가 움직일 수 있을 때만 — 대화·선택·카드·컷·창·지도·멈춤에서는 놓는다
+func fp_mouse_wanted() -> bool:
+	if not fp_view() or _loading or _leaving: return false
+	if story != null and (story.owns_player() or _story_talking()): return false
+	if _map != null and _map.visible: return false
+	if fast_ui != null and is_instance_valid(fast_ui) and fast_ui.visible: return false
+	if get_tree().paused: return false
+	if preload("res://scripts/hud_gate.gd").overlay_open(get_tree()): return false
+	return true
+
+func fp_sens() -> float:
+	return float(FP_SENS.get(GameSettings.get_v("mouse_sens") if not _view_automation() else "normal", FP_SENS.normal))
+
+func _fp_mouse_look(rel: Vector2, k: float) -> void:
+	_fp_turn = null
+	fp_yaw = wrapf(fp_yaw + rel.x * k, -PI, PI)
+	fp_pitch = clampf(fp_pitch - rel.y * k, -FP_PITCH, FP_PITCH)
+
+func _input(ev: InputEvent) -> void:
+	# 잡은 마우스(커서 숨김): 단추 없이 움직이면 둘러본다 — GUI보다 먼저 받는다(화면 가운데 창 조각이 움직임을 먹지 않게)
+	if ev is InputEventMouseMotion and fp_view() and (Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or fp_mouse_force) and fp_mouse_wanted():
+		_fp_mouse_look(ev.relative, fp_sens())
+		get_viewport().set_input_as_handled()
+
 func _unhandled_input(ev: InputEvent) -> void:
-	if fp_active and ev is InputEventMouseMotion and (ev.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT)) != 0:
-		fp_yaw = wrapf(fp_yaw + ev.relative.x * FP_MOUSE, -PI, PI)
-		fp_pitch = clampf(fp_pitch - ev.relative.y * FP_MOUSE, -1.1, 0.8)
+	# 커서가 보일 때(시험·촬영 · 창이 포커스를 잃음): 단추를 누른 채 끌어 둘러보기
+	if fp_view() and ev is InputEventMouseMotion and (ev.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT)) != 0:
+		_fp_mouse_look(ev.relative, FP_MOUSE)
 		get_viewport().set_input_as_handled()
 
 # ---- 루프 ----
@@ -930,7 +1038,8 @@ func _process(delta: float) -> void:
 	_update_loading()
 	var mv := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	_update_fp_state()
-	if fp_active: mv = _fp_move(dt)
+	if fp_active:   # 눈높이에서 플레이어가 움직일 수 있을 때만 걷기·돌기(대화·선택 중 ↑↓·W·S는 고르기, 컷 중에는 돌지 않는다)
+		mv = _fp_move(dt) if fp_view() and not (story != null and story.owns_player()) else Vector2.ZERO
 	if _loading or _leaving or (_map and _map.visible): mv = Vector2.ZERO # 지도가 열려 있으면 멈춤
 	var speed := RUN if Input.is_action_pressed("run") else WALK
 	if not _ptest.is_empty() and not _loading and not _leaving and not boats.riding() and not horse_ride.busy():
@@ -995,17 +1104,19 @@ func _process(delta: float) -> void:
 	var interior = world.interior_at(player_pos.x, player_pos.z)
 	world.update_camera_zone(player_pos)
 	rig.update(dt, player_pos, player.facing, interior)
-	if fp_active: _fp_camera()
+	if fp_active: _fp_frame(dt, interior)
+	var nd := 1.0 if fp_view() and not args.has("nonear") else 0.0   # 1인칭 가까운 땅 잔무늬(region_terrain near_layer) — --nonear로 끔(비교)
+	if nd != _near_detail: _near_detail = nd; world.set_terrain_param("near_detail", nd)
 	if story != null: cam.position += story.shake_offset()
 	# 가림 점무늬(키트 재질): 카메라→플레이어 머리 선분 둘레의 나무·건물을 점무늬로 비운다. 실내에선 끔
 	RenderingServer.global_shader_parameter_set("occ_a", cam.global_position)
 	RenderingServer.global_shader_parameter_set("occ_b", _occ_focus())
-	var occ_r: float = 0.0 if interior != null or fp_active or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게 · 1인칭은 끔(눈이 플레이어 자리)
+	var occ_r: float = 0.0 if interior != null or fp_view() or args.has("nodither") else (3.8 if world.forest_active else 2.4)  # 숲에서는 더 넓게 · 1인칭은 끔(눈이 플레이어 자리)
 	if occ_script != null and interior == null: occ_r = float(occ_script.get("r", occ_r))
 	RenderingServer.global_shader_parameter_set("occ_r", occ_r)
 	occ_now = Vector2(occ_r, 0.0)
 	# 실내 near_fade=false(굴 등 좁은 실내): 카메라 앞 가림 점무늬를 끈다 — 바닥·벽이 카메라 12m 안이라 구멍이 뚫린다
-	var near_fade: bool = not args.has("nodither") and not fp_active and not (interior != null and not bool(interior.get("near_fade", true)))
+	var near_fade: bool = not args.has("nodither") and not fp_view() and not (interior != null and not bool(interior.get("near_fade", true)))
 	# 단면 실내(지붕을 숨긴 집·창고): 카메라가 10~13m 위라 바깥 거리(6~12m)로 비우면 바닥·가구에 점무늬 구멍이 난다 — 카메라 바로 곁(2~4m, 잎덩이)만
 	var occ_near_k: float = (0.33 if interior != null else 1.0) if near_fade else 0.0
 	if occ_script != null and occ_script.has("near"): occ_near_k = float(occ_script.near)   # 각본 장면이 카메라 앞 비우기를 정한다(0 = 끔 — 문 앞 가까운 시점)
@@ -1020,7 +1131,7 @@ func _process(delta: float) -> void:
 	_fill.light_energy = _fill_k * (3.0 + 4.0 * TimeOfDay.night_factor(hour)) * (1.0 - _dark_k)
 	_fill.visible = _fill_k > 0.01 and _dark_k < 0.98
 	_update_occlusion(dt, interior)
-	if interior == null and not fp_active: world.update_cutaway(dt, player_pos if occ_script == null else occ_script.focus, cam.global_position)
+	if interior == null and not fp_view(): world.update_cutaway(dt, player_pos if occ_script == null else occ_script.focus, cam.global_position)
 	world.update_scatter_lod(player_pos)
 	var _t2 := Time.get_ticks_usec()
 	world.update(dt, clock)

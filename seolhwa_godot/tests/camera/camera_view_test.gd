@@ -2,7 +2,7 @@
 #   godot --headless --path . -s res://tests/camera/camera_view_test.gd
 #   A 기본 각: CameraRig.DEFAULT pitch 40 · 권역 기본·고을 구역 40 · region.json camera_zones 전부 38~42(이전 45·47) · north.py 원본도 같은 값
 #   B 연출 값 그대로: 대화 TALK 38/13.5/38 · override(d.camera·각본)가 구역보다 이기고 값이 그대로 · shot(pos·look·fov)이 그대로 카메라에
-#   C 깊이 흐림: PostEffect.tilt(옛 이름)와 dof가 같은 값 · 끄면 둘 다 꺼짐 · 1인칭 상수(눈높이 1.55 · 층 20)
+#   C 깊이 흐림: PostEffect.tilt(옛 이름)와 dof가 같은 값 · 끄면 둘 다 꺼짐 · 1인칭 상수(눈높이 1.55 · 층 20 · ±70°) · 먼 산 대기 원근(150m 밖) · 땅 잔무늬 15m
 #   끝 줄: CAMVIEWTEST PASS n / CAMVIEWTEST FAIL n
 extends SceneTree
 
@@ -82,3 +82,11 @@ func _dof() -> void:
 	ok(pe.dof_far > 0.0 and pe.dof_far <= 0.6 and pe.dof_near <= 0.35, "기본 세기 약함(먼 %.2f · 앞 %.2f)" % [pe.dof_far, pe.dof_near])
 	ok(RegionMain.DOF_WALK.far <= 0.6 and RegionMain.DOF_LOW.far < RegionMain.DOF_WALK.far, "배·말 낮은 시점은 덜 흐림")
 	ok(is_equal_approx(RegionMain.FP_EYE, 1.55) and RegionMain.PLAYER_LAYER == 1 << 19, "1인칭 눈높이 1.55 · 플레이어 층 20")
+	# 먼 산 대기 원근(C67 v2): 150m 안은 그대로, 밖에서만 흐림 한 단계 + 옅은 안개
+	ok(pe.aerial_start >= 150.0 and pe.aerial_blur > 0.0 and pe.aerial_blur <= 0.25 and pe.aerial_haze <= 0.15, "먼 산 대기 원근: %.0fm 밖 · 흐림 +%.2f · 안개 %.2f" % [pe.aerial_start, pe.aerial_blur, pe.aerial_haze])
+	ok(RegionMain.AERIAL_BLUR == pe.aerial_blur and RegionMain.AERIAL_HAZE == pe.aerial_haze, "region_main 대기 원근 값 = PostEffect 기본")
+	ok(PostEffect.FINAL.contains("smoothstep(p.aerial.x, p.aerial.x + p.aerial.y, D)"), "대기 원근은 깊이로만(시작 거리 밖)")
+	# 1인칭 v2(C68): 마우스 위아래 ±70° · 가까운 땅 잔무늬(0~15m, 지형 셰이더)
+	ok(absf(rad_to_deg(RegionMain.FP_PITCH) - 70.0) < 0.1, "1인칭 위아래 ±70°")
+	var ter := FileAccess.get_file_as_string("res://shaders/region_terrain.gdshader")
+	ok(ter.contains("uniform float near_detail = 0.0") and ter.contains("smoothstep(9.0, 15.0, dist)"), "땅 잔무늬: 기본 끔 · 15m에서 사라짐")

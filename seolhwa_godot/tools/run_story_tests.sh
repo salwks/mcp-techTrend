@@ -102,8 +102,9 @@ TESTS=(
 	#   KNOWN은 역참·역마·깃발 조건을 채우지 않음 · 옛 저장에 상식 채움 · KNOWN 이름표 옅음/VISITED 보통(글 크기 같음) · 범례
 	"map:known-namwon|300|--region=JL_NAMWON_UNBONG --notitle --knowntest"
 	"map:known-hanyang|300|--region=GG_HANYANG --notitle --knowntest"
-	# 1인칭 시점(scripts/region/view_test.gd): 0 키 → 1인칭(눈높이·플레이어 층 숨김·점무늬 끔) · 카메라 기준 걷기·돌기 · 바라보는 고을 사람 E ·
-	#   말 걸기·컷신·연출 카메라·지도 동안 3인칭 → 끝나면 1인칭 · 0 키로 되돌림
+	# 1인칭 시점(scripts/region/view_test.gd — C68 v2): 0 키 → 1인칭(눈높이·플레이어 층 숨김·점무늬 끔·땅 잔무늬) · 카메라 기준 걷기·돌기 · 마우스 둘러보기 ±70° ·
+	#   고을 사람·이야기 인물 대화·살펴보기·선택지·문제 비교/결정·카메라 없는 장면·지도·Esc·역마 창 동안 1인칭 그대로(말하는 이·물건 쪽으로 돌아봄, 마우스 놓음) ·
+	#   저작 연출(d.camera·shot·glide)은 컷으로 → 바로 눈높이 · 말 위 3인칭 · 0 키로 되돌림
 	"view:namwon|300|--region=JL_NAMWON_UNBONG --viewtest --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	# 춘향 준비(scripts/story/prep_test.gd): 조건부 배치(F-11) 없음→있음→없음 · 옥(늘 있음·문 상태) · 오누이 흔적(우물·수수밭 푸름/붉음) · EventCrowd(인원·seed·when·이야기 인물 없음·먼 거리 숨김)
 	"chunhyang:prep|300|--region=JL_NAMWON_UNBONG --preptest --notitle"

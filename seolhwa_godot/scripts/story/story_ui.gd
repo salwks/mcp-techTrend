@@ -53,6 +53,7 @@ var auto_hold := 0.03               # 시험(auto): 대사·카드·선택을 �
 var log_lines := true              # 대사·선택을 표준 출력에 남긴다(시험 기록)
 var modal := false
 var journal_open := false
+var on_say: Callable = Callable()  # 대사가 뜰 때(말하는 이) — story_director.on_say(1인칭 시선)
 var _k := 1.0
 var _font: Font
 var _font_c: Font
@@ -487,6 +488,7 @@ func _wait(sec: float) -> void:
 # ---------------------------------------------------------------------------
 func say(who: String, lines) -> void:
 	if lines is String: lines = [lines]
+	if on_say.is_valid(): on_say.call(who)
 	modal = true
 	_dialog.visible = true
 	_dlg_name.text = who

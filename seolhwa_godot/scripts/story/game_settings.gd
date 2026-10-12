@@ -30,10 +30,13 @@ const VIEW := ["third", "first"]
 const VIEW_LABEL := { third = "3인칭", first = "1인칭" }
 const DOF := ["normal", "weak", "off"]
 const DOF_LABEL := { normal = "보통", weak = "약함", off = "끔" }
+# 1인칭 마우스 감도(region_main.FP_SENS): low 낮음 · normal 보통 · high 높음
+const MOUSE_SENS := ["low", "normal", "high"]
+const MOUSE_SENS_LABEL := { low = "낮음", normal = "보통", high = "높음" }
 const VOLUME := ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 const VOLUME_LABEL := {}
 const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", ride_slow = "on", cam_shake = "off",
-	view = "third", dof = "normal",
+	view = "third", dof = "normal", mouse_sens = "normal",
 	vol_master = "10", vol_bgm = "7", vol_sfx = "9", vol_ambient = "8" }
 
 static var _d = null

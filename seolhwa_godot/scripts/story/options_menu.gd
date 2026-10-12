@@ -1,7 +1,7 @@
 # 설정 · 잠시 멈춤 — 시작 메뉴의 '설정'과 놀이 중 Esc(scripts/story/onboarding.gd)가 연다.
 #   상호작용 안내(항상/초반만/최소/끔) · 조사 도움(기본/자세히/최소) — 전투 난이도와 상관없다(보강서 §26). user://settings.json.
 #   자동 기승 속도(보통/빠름) · 자동 감속(켬/끔) · 이동 카메라 흔들림(보통/약함/끔) — 이동수단 개선안 §31.
-#   시점(3인칭/1인칭 — 놀이 중 0 키와 같은 값) · 깊이 흐림(보통/약함/끔 — 먼 곳만 조금 흐리게, 2026-10).
+#   시점(3인칭/1인칭 — 놀이 중 0 키와 같은 값) · 마우스 감도(1인칭 둘러보기) · 깊이 흐림(보통/약함/끔 — 먼 곳만 조금 흐리게, 2026-10).
 #   놀이 중(in_game)이면 화면을 멈추고(get_tree().paused) '계속하기'·'저장'·'불러오기'(scripts/story/save_menu.gd — 칸 셋 + 자동 기록)·'여행 방법'(기록책)도 보인다.
 #   Esc를 누른 순간 화면을 작은 그림으로 잡아 둔다(저장 칸 그림).
 # 모양: 글 크기는 UiFonts 표(제목 TITLE · 줄 BODY · 덧글 KEYS). 놀이 중에는 두 단 — 왼쪽 할 일(계속·저장·불러오기·여행 방법·닫기·끝내기), 오른쪽 설정.
@@ -73,6 +73,7 @@ func _ready() -> void:
 	_add(box, k, { id = "ride_slow", kind = "opt", key = "ride_slow", values = GameSettings.RIDE_SLOW, names = GameSettings.RIDE_SLOW_LABEL, text = "자동 감속" })
 	_add(box, k, { id = "cam_shake", kind = "opt", key = "cam_shake", values = GameSettings.CAM_SHAKE, names = GameSettings.CAM_SHAKE_LABEL, text = "이동 카메라 흔들림" })
 	_add(box, k, { id = "view", kind = "opt", key = "view", values = GameSettings.VIEW, names = GameSettings.VIEW_LABEL, text = "시점 (0 키)" })
+	_add(box, k, { id = "mouse_sens", kind = "opt", key = "mouse_sens", values = GameSettings.MOUSE_SENS, names = GameSettings.MOUSE_SENS_LABEL, text = "마우스 감도 (1인칭)" })
 	_add(box, k, { id = "dof", kind = "opt", key = "dof", values = GameSettings.DOF, names = GameSettings.DOF_LABEL, text = "깊이 흐림" })
 	_add(box, k, { id = "vol_master", kind = "opt", key = "vol_master", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 전체" })
 	_add(box, k, { id = "vol_bgm", kind = "opt", key = "vol_bgm", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 음악" })
