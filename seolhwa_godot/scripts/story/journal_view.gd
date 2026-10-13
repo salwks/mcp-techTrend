@@ -91,14 +91,14 @@ func _relayout() -> void:
 # ---------------------------------------------------------------------------
 func _geometry() -> void:
 	var vs := size
-	_k = clampf(vs.y / 768.0, 0.75, 2.4)
+	_k = UiFonts.k(vs)
 	var k := _k
 	var bw := minf(vs.x * 0.92, vs.y * 1.62)
 	var bh := minf(vs.y * 0.725, bw * 0.62)
 	_book = Rect2((vs.x - bw) * 0.5, vs.y * 0.19, bw, bh)   # 위 갈피(꼬리표) 글이 커져 책을 조금 내렸다
-	var cm := 11.0 * k
+	var cm := 15.5 * k
 	_paper = _book.grow(-cm)
-	var pw := 46.0 * k
+	var pw := 64.7 * k
 	var cx := _paper.get_center().x
 	_pansim = Rect2(cx - pw * 0.5, _paper.position.y, pw, _paper.size.y)
 	_page_r[0] = Rect2(cx + pw * 0.5, _paper.position.y, _paper.end.x - cx - pw * 0.5, _paper.size.y)
@@ -107,12 +107,12 @@ func _geometry() -> void:
 	var foot := _paper.size.y * 0.055
 	for i in 2:
 		var pr: Rect2 = _page_r[i]
-		var outer := 24.0 * k; var inner := 6.0 * k
+		var outer := 33.8 * k; var inner := 8.4 * k
 		var x0 := pr.position.x + (inner if i == 0 else outer)
 		var x1 := pr.end.x - (outer if i == 0 else inner)
 		_frame_r[i] = Rect2(x0, pr.position.y + head, x1 - x0, pr.size.y - head - foot)
-		_inner_r[i] = (_frame_r[i] as Rect2).grow(-5.0 * k)
-	_fs = 25.0 * k   # 세로 본문(1024×768에서 25px — 예전 20.5)
+		_inner_r[i] = (_frame_r[i] as Rect2).grow(-7.0 * k)
+	_fs = 36.0 * k   # 세로 본문(1920×1080에서 36px — 1024×768 때 25)
 	_cell = _fs * 1.06
 	var iw: float = (_inner_r[0] as Rect2).size.x
 	_ncols = maxi(6, int(iw / (_fs * 1.72)))
@@ -281,10 +281,10 @@ func handle(ev: InputEvent) -> bool:
 func _hit(p: Vector2) -> String:
 	for s in _slips:
 		if (s.rect as Rect2).has_point(p): return "slip:%d" % s.sec
-	var edge := 70.0 * _k
+	var edge := 98.4 * _k
 	var lp: Rect2 = _page_r[1]; var rp: Rect2 = _page_r[0]
-	if Rect2(_book.position.x - 30 * _k, _book.position.y, edge + 30 * _k, _book.size.y).has_point(p) and spread < spread_count() - 1: return "next"
-	if Rect2(_book.end.x - edge, _book.position.y, edge + 30 * _k, _book.size.y).has_point(p) and spread > 0: return "prev"
+	if Rect2(_book.position.x - 42 * _k, _book.position.y, edge + 42 * _k, _book.size.y).has_point(p) and spread < spread_count() - 1: return "next"
+	if Rect2(_book.end.x - edge, _book.position.y, edge + 42 * _k, _book.size.y).has_point(p) and spread > 0: return "prev"
 	return ""
 
 # ---------------------------------------------------------------------------
@@ -319,12 +319,12 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.04, 0.035, 0.03, 0.78))
 	_draw_slips()
 	# 표지(감색) + 그림자
-	draw_rect(Rect2(_book.position + Vector2(5, 8) * k, _book.size), Color(0, 0, 0, 0.35))
+	draw_rect(Rect2(_book.position + Vector2(7, 11) * k, _book.size), Color(0, 0, 0, 0.35))
 	draw_rect(_book, COVER)
-	draw_rect(_book.grow(-3.0 * k), Color(1, 1, 1, 0.05), false, 1.0 * k)
+	draw_rect(_book.grow(-4.2 * k), Color(1, 1, 1, 0.05), false, 1.4 * k)
 	# 종이 두 쪽(뒤로 겹친 장 끝을 몇 줄)
 	for i in 3:
-		var g := (3 - i) * 1.6 * k
+		var g := (3 - i) * 2.2 * k
 		draw_rect(Rect2(_paper.position.x - g, _paper.position.y + g * 0.6, _paper.size.x + g * 2, _paper.size.y), PAPER_SHADE.darkened(0.06 * i))
 	var cur := spread
 	var flipping := _flip_t < 1.0
@@ -338,7 +338,7 @@ func _draw() -> void:
 	_draw_page(1, left_idx)
 	_draw_pansim(cur)
 	# 등 쪽 그늘(접힌 자리)
-	var sw := 26.0 * k
+	var sw := 36.6 * k
 	_shade(Rect2(_pansim.position.x - sw, _paper.position.y, sw, _paper.size.y), 0.0, 0.16)
 	_shade(Rect2(_pansim.end.x, _paper.position.y, sw, _paper.size.y), 0.16, 0.0)
 	if flipping: _draw_flip()
@@ -357,12 +357,12 @@ func _draw_paper(r: Rect2) -> void:
 func _draw_frame(side: int) -> void:
 	var fr: Rect2 = _frame_r[side]
 	var k := _k
-	draw_rect(fr, FRAME, false, 2.4 * k)
-	draw_rect(fr.grow(-3.4 * k), Color(FRAME, 0.55), false, 0.9 * k)
+	draw_rect(fr, FRAME, false, 3.4 * k)
+	draw_rect(fr.grow(-4.8 * k), Color(FRAME, 0.55), false, 1.3 * k)
 	var ir: Rect2 = _inner_r[side]
 	for j in range(1, _ncols):
 		var x := ir.end.x - j * _cw
-		draw_line(Vector2(x, fr.position.y + 3.4 * k), Vector2(x, fr.end.y - 3.4 * k), RULE, maxf(1.0, 0.8 * k))
+		draw_line(Vector2(x, fr.position.y + 4.8 * k), Vector2(x, fr.end.y - 4.8 * k), RULE, maxf(1.0, 1.1 * k))
 
 func _draw_page(side: int, idx: int) -> void:
 	_draw_paper(_page_r[side])
@@ -383,7 +383,7 @@ func _draw_note(x: float, frame_top: float, note: Dictionary) -> void:
 	var lines: Array = note.lines
 	var col: Color = note.col
 	var ns := maxf(_fs * 0.6, UiFonts.MIN * _k)   # 두주: 18px 아래로는 줄이지 않는다
-	var room := (frame_top - _paper.position.y) - 10.0 * _k
+	var room := (frame_top - _paper.position.y) - 14.1 * _k
 	var longest := 0.0
 	for l in lines: longest = maxf(longest, VText.length(_body, String(l), ns))
 	if longest > room: ns = maxf(UiFonts.MIN * _k * 0.9, ns * room / longest)
@@ -392,7 +392,7 @@ func _draw_note(x: float, frame_top: float, note: Dictionary) -> void:
 		var t := String(lines[i])
 		var xx := x + (0.0 if n == 1 else (0.24 - 0.48 * i / float(n - 1)) * _cw)
 		var len := VText.length(_body, t, ns)
-		var y0 := frame_top - 7.0 * _k - len
+		var y0 := frame_top - 9.8 * _k - len
 		VText.column(self, _body, Vector2(xx, y0), t, ns, col)
 
 # 판심: 위아래 검은 어미, 책 이름 · 갈피 이름 · 장 수
@@ -400,7 +400,7 @@ func _draw_pansim(cur: int) -> void:
 	var k := _k
 	var r := _pansim
 	_draw_paper(Rect2(r.position.x, _paper.position.y, r.size.x, _paper.size.y))
-	draw_rect(r, FRAME, false, 2.4 * k)
+	draw_rect(r, FRAME, false, 3.4 * k)
 	var cx := r.get_center().x
 	var w := r.size.x
 	var y_top := r.position.y + r.size.y * 0.16
@@ -409,18 +409,18 @@ func _draw_pansim(cur: int) -> void:
 	_eomi(cx, y_bot, w, -1)
 	var sec: Dictionary = sections[pages[cur * 2].sec] if not pages.is_empty() else {}
 	var fs := _fs * 0.78
-	var y := y_top + 12.0 * k
+	var y := y_top + 16.9 * k
 	y += VText.column(self, _classic, Vector2(cx, y), BOOK_NAME, fs, INK) + fs * 0.6
 	VText.column(self, _body, Vector2(cx, y), String(sec.get("tab", "")), fs * 0.82, INK_SOFT)
 	var num := VText.hanja_num(cur + 1)
 	var nl := VText.length(UiFonts.system(), num, fs)
-	VText.column(self, UiFonts.main(), Vector2(cx, y_bot - 10.0 * k - nl), num, fs, INK)
+	VText.column(self, UiFonts.main(), Vector2(cx, y_bot - 14.1 * k - nl), num, fs, INK)
 	draw_line(Vector2(cx, r.position.y), Vector2(cx, r.end.y), Color(INK, 0.12), 1.0)
 
 func _eomi(cx: float, y: float, w: float, dir: int) -> void:
-	var hw := w * 0.5 - 2.0 * _k
-	var h := 16.0 * _k * dir
-	var notch := 6.0 * _k * dir
+	var hw := w * 0.5 - 2.8 * _k
+	var h := 22.5 * _k * dir
+	var notch := 8.4 * _k * dir
 	draw_colored_polygon(PackedVector2Array([Vector2(cx - hw, y - h * 0.3), Vector2(cx + hw, y - h * 0.3), Vector2(cx + hw, y + h * 0.35),
 		Vector2(cx, y + h * 0.35 + notch * 0.2), Vector2(cx - hw, y + h * 0.35)]), Color(INK, 0.88))
 	draw_colored_polygon(PackedVector2Array([Vector2(cx - hw, y + h * 0.35), Vector2(cx, y + h * 0.35 + notch), Vector2(cx + hw, y + h * 0.35)]), Color(INK, 0.88))
@@ -428,27 +428,27 @@ func _eomi(cx: float, y: float, w: float, dir: int) -> void:
 func _draw_slips() -> void:
 	_slips = []
 	var k := _k
-	var sw := 36.0 * k
-	var gap := 7.0 * k
-	var x := _paper.end.x - 26.0 * k - sw
-	var ns := 19.0 * k
+	var sw := 50.6 * k
+	var gap := 9.8 * k
+	var x := _paper.end.x - 36.6 * k - sw
+	var ns := 26.7 * k
 	for oi in order.size():
 		var si: int = order[oi]
 		var on := si == cur_section
 		var label := String(sections[si].get("tab", ""))
 		var lns := ns
 		var len := VText.length(_body, label, lns)
-		var room := _book.position.y - 30.0 * k
+		var room := _book.position.y - 42.2 * k
 		if len > room:
 			lns *= room / len; len = room
-		var vis := len + 28.0 * k + (8.0 * k if on else 0.0)
-		var r := Rect2(x, _book.position.y - vis, sw, vis + 14.0 * k)
+		var vis := len + 39.4 * k + (11.2 * k if on else 0.0)
+		var r := Rect2(x, _book.position.y - vis, sw, vis + 19.7 * k)
 		var col: Color = SLIP_COLS[oi % SLIP_COLS.size()]
 		if not on: col = col.darkened(0.12)
-		draw_rect(Rect2(r.position + Vector2(2, 2) * k, r.size), Color(0, 0, 0, 0.3))
+		draw_rect(Rect2(r.position + Vector2(3, 3) * k, r.size), Color(0, 0, 0, 0.3))
 		draw_rect(r, col)
 		if _hover == "slip:%d" % si and not on: draw_rect(r, Color(1, 1, 1, 0.12))
-		draw_rect(r, Color(INK, 0.5), false, 1.0 * k)
+		draw_rect(r, Color(INK, 0.5), false, 1.4 * k)
 		var digit := str(oi + 1)
 		draw_string(_body, Vector2(x + sw * 0.5 - ns * 0.28, r.position.y + ns * 0.95), digit, HORIZONTAL_ALIGNMENT_LEFT, -1, int(UiFonts.MIN * k), Color(INK, 0.55))
 		VText.column(self, _body, Vector2(x + sw * 0.5, r.position.y + UiFonts.MIN * k * 1.25), label, lns, SEAL if on else INK)
@@ -467,11 +467,11 @@ func _draw_flip() -> void:
 	# 앞으로: 왼쪽 장이 들려 오른쪽으로 / 뒤로: 오른쪽 장이 왼쪽으로
 	var on_left := (c > 0.0) == (_flip_dir > 0)
 	var w := absf(c) * (wl if on_left else wr)
-	var lift := sin(ang) * 18.0 * _k
+	var lift := sin(ang) * 25.3 * _k
 	var x_out := cx - w if on_left else cx + w
 	var poly := PackedVector2Array([Vector2(cx, y0), Vector2(x_out, y0 - lift), Vector2(x_out, y1 + lift * 0.4), Vector2(cx, y1)])
 	# 덮이는 쪽에 드리운 그림자
-	var sh := 60.0 * _k * sin(ang)
+	var sh := 84.4 * _k * sin(ang)
 	var sx := x_out - sh if on_left else x_out
 	draw_rect(Rect2(minf(sx, x_out), y0, sh, y1 - y0), Color(0, 0, 0, 0.10 * sin(ang)))
 	var shade := 0.25 * (1.0 - absf(c))
@@ -482,7 +482,7 @@ func _draw_flip() -> void:
 	# 등에서 바깥쪽으로 짙어지는 그늘
 	_shade_poly(poly, 0.18 * (1.0 - absf(c)) + 0.04)
 	var edge := PackedVector2Array([poly[1], poly[2]])
-	draw_polyline(edge, Color(INK, 0.25), 1.2 * _k)
+	draw_polyline(edge, Color(INK, 0.25), 1.7 * _k)
 
 func _shade_poly(poly: PackedVector2Array, a: float) -> void:
 	var c0 := Color(0.2, 0.14, 0.08, a); var c1 := Color(0.2, 0.14, 0.08, 0.0)
@@ -496,23 +496,23 @@ func _draw_edges() -> void:
 	var can_prev := spread > 0
 	if can_next:
 		var a := 0.95 if _hover == "next" else 0.55
-		var x: float = _book.position.x - 22.0 * k
-		draw_colored_polygon(PackedVector2Array([Vector2(x - 8 * k, cy), Vector2(x + 6 * k, cy - 11 * k), Vector2(x + 6 * k, cy + 11 * k)]), Color(PAPER, a))
-		VText.column(self, _body, Vector2(x, cy + 22 * k), "다음 쪽", ns, Color(PAPER, a))
+		var x: float = _book.position.x - 30.9 * k
+		draw_colored_polygon(PackedVector2Array([Vector2(x - 11 * k, cy), Vector2(x + 8 * k, cy - 15 * k), Vector2(x + 8 * k, cy + 15 * k)]), Color(PAPER, a))
+		VText.column(self, _body, Vector2(x, cy + 31 * k), "다음 쪽", ns, Color(PAPER, a))
 	if can_prev:
 		var a := 0.95 if _hover == "prev" else 0.55
-		var x: float = _book.end.x + 22.0 * k
-		draw_colored_polygon(PackedVector2Array([Vector2(x + 8 * k, cy), Vector2(x - 6 * k, cy - 11 * k), Vector2(x - 6 * k, cy + 11 * k)]), Color(PAPER, a))
-		VText.column(self, _body, Vector2(x, cy + 22 * k), "앞 쪽", ns, Color(PAPER, a))
-	if _hover == "next" and can_next: _shade(Rect2(_paper.position.x, _paper.position.y, 50 * k, _paper.size.y), 0.14, 0.0)
-	if _hover == "prev" and can_prev: _shade(Rect2(_paper.end.x - 50 * k, _paper.position.y, 50 * k, _paper.size.y), 0.0, 0.14)
+		var x: float = _book.end.x + 30.9 * k
+		draw_colored_polygon(PackedVector2Array([Vector2(x + 11 * k, cy), Vector2(x - 8 * k, cy - 15 * k), Vector2(x - 8 * k, cy + 15 * k)]), Color(PAPER, a))
+		VText.column(self, _body, Vector2(x, cy + 31 * k), "앞 쪽", ns, Color(PAPER, a))
+	if _hover == "next" and can_next: _shade(Rect2(_paper.position.x, _paper.position.y, 70 * k, _paper.size.y), 0.14, 0.0)
+	if _hover == "prev" and can_prev: _shade(Rect2(_paper.end.x - 70 * k, _paper.position.y, 70 * k, _paper.size.y), 0.0, 0.14)
 
 func _draw_foot() -> void:
 	var k := _k
 	var fs := int(UiFonts.NOTE * k)
 	var t := "← A  다음 쪽      → D  앞 쪽      1–%d  갈피      R · Esc  덮기" % order.size()
 	var w := _body.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_string(_body, Vector2((size.x - w) * 0.5, _book.end.y + 30.0 * k), t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(PAPER, 0.82))
+	draw_string(_body, Vector2((size.x - w) * 0.5, _book.end.y + 42.2 * k), t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(PAPER, 0.82))
 	var pg := "%d / %d 장" % [spread + 1, spread_count()]
 	var w2 := _body.get_string_size(pg, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_string(_body, Vector2(_book.end.x - w2, _book.end.y + 30.0 * k), pg, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(PAPER, 0.6))
+	draw_string(_body, Vector2(_book.end.x - w2, _book.end.y + 42.2 * k), pg, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(PAPER, 0.6))

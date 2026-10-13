@@ -1,5 +1,5 @@
 # 1인칭 v2 화면 찍기(창 필요, 시험 저장으로만 — 사용자 저장 칸·progress.json을 건드리지 않게 --savefile을 꼭 준다):
-#   godot --path . res://scenes/region.tscn --resolution 1024x768 -- --region=JL_NAMWON_UNBONG --fpshots=shots/fp_v2 \
+#   godot --path . res://scenes/region.tscn --resolution 1920x1080 -- --region=JL_NAMWON_UNBONG --fpshots=shots/fp_v2 \
 #     --ridefixture=res://story/hwangju/test_post_hanyang.json --savefile=user://fpshots_progress.json --notitle --winshot --time=11 --weather=clear
 #   1인칭으로 바꾼 뒤: 고을 사람 대화(돌아봄) · 이야기 인물 대사 · 살펴보기 카드 · 문제 결정 카드 · 저작 컷(전·중·후) · 가까운 땅(잔무늬 끔/켬) ·
 #   먼 산(대기 원근 끔/켬, 1인칭·3인칭). 놀이에는 쓰이지 않는다.

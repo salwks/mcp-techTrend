@@ -8,9 +8,9 @@
 # 기록책(R): 갈피(pages — scripts/story/journal_book.gd가 만든다)를 세로쓰기 선장본 펼침면(scripts/story/journal_view.gd)으로 그린다.
 #   ← A 다음 쪽 · → D 앞 쪽 · 숫자·갈피 클릭 · 쪽 가장자리 클릭. 꼬리표: ◆ 확인 · ◇ 들음 — 발언자 · △ 추정 (테 위 작은 글씨 — 색만으로 가르지 않는다, 보강서 §22).
 # 글꼴: scripts/ui_fonts.gd(덕온공주체 — 본문 main, 이름·제목 classic). 키는 작은 먹 칸(E · R · Esc)으로 보인다.
-# 아래쪽 글(2026-10 크기 1.4~1.45배, 1024×768 기준): 위에서 아래로 자막(먹빛 반투명 띠, 40) → 처음 한 번 안내 한지 띠(30) → 조사·대화 안내 E(32, 처음엔 38)
-#   → 오른쪽 아래 키 안내 F(27) → 소지품(25). 줄이 서로 겹치지 않게 칸을 쌓고(BOTTOM_*), 긴 한국어 줄은 띄어쓰기에서만 고르게 끊는다(wrap_words).
-# 대화·선택·조사 카드·알림·종결 카드 글 크기는 UiFonts 표(BODY 28 · NAME 30 · HEAD 34 · DETAIL 24 · KEYS 22 — scripts/ui_fonts.gd). 선택이 12개 넘으면 두 단.
+# 아래쪽 글(1920×1080 기준 — 2026-10-13 1024×768 값 × 1.45): 위에서 아래로 자막(먹빛 반투명 띠, 58) → 처음 한 번 안내 한지 띠(44) → 조사·대화 안내 E(46, 처음엔 55)
+#   → 오른쪽 아래 키 안내 F(39) → 소지품(36). 줄이 서로 겹치지 않게 칸을 쌓고(BOTTOM_*), 긴 한국어 줄은 띄어쓰기에서만 고르게 끊는다(wrap_words).
+# 대화·선택·조사 카드·알림·종결 카드 글 크기는 UiFonts 표(BODY 40 · NAME 44 · HEAD 50 · DETAIL 35 · KEYS 32 — scripts/ui_fonts.gd). 선택이 12개 넘으면 두 단.
 # 저장 표시: save_stamp() — 오른쪽 아래 붉은 붓 도장 '기록을 남겼다'(progress.checkpoint). key_hint(키, 글) — 오른쪽 아래 작은 안내(주막 F 등).
 # 확인: E·Space·Enter·클릭 / 선택: ↑↓·W·S·숫자 / 기록: R / 닫기: Esc. 시험(auto)에서는 스스로 넘긴다.
 extends CanvasLayer
@@ -32,17 +32,19 @@ const SEAL := Color("#a8443c")
 const KIND_COL := { info = Color("#7a6e60"), clue = Color("#2b2622"), rule = Color("#a8443c"), journal = Color("#a8443c"), item = Color("#6b5a3a") }
 const KIND_TAG := { clue = "단서", rule = "버릇", journal = "기록", item = "소지품" }
 # 기록책 꼬리표(보강서 §22): 모양 + 낱말
-# 아래쪽 글 크기(1024×768에서 픽셀, _k로 늘어남)와 줄 자리(화면 아래에서 위로, _k 곱)
-const FS_CAPTION := 40
-const FS_HINT := 30
-const FS_PROMPT := 32
-const FS_PROMPT_BIG := 38
-const FS_KEYHINT := 27
-const FS_ITEMS := 25
-const BOTTOM_ITEMS := 46.0      # 소지품 줄 윗변(아래에서)
-const BOTTOM_KEYHINT := 94.0    # 오른쪽 아래 키 안내 윗변
-const BOTTOM_PROMPT := 152.0    # 조사·대화·말·배 안내 줄 윗변(높이 52)
-const BOTTOM_HINT := 160.0      # 안내 띠 아랫변
+# 아래쪽 글 크기(1920×1080에서 픽셀, _k로 늘어남)와 줄 자리(화면 아래에서 위로, _k 곱)
+const FS_CAPTION := 58
+const FS_HINT := 44
+const FS_PROMPT := 46
+const FS_PROMPT_BIG := 55
+const FS_KEYHINT := 39
+const FS_ITEMS := 36
+const FS_CHIP := 38           # 조사 안내 키 칸(E) 글 — 처음엔 FS_CHIP_BIG
+const FS_CHIP_BIG := 43
+const BOTTOM_ITEMS := 66.0      # 소지품 줄 윗변(아래에서)
+const BOTTOM_KEYHINT := 134.0   # 오른쪽 아래 키 안내 윗변
+const BOTTOM_PROMPT := 216.0    # 조사·대화·말·배 안내 줄 윗변(높이 73)
+const BOTTOM_HINT := 226.0      # 안내 띠 아랫변
 const KEYS_COMBAT := "J 베기(길게: 모아 베기) · K 구르기 · L 막기 · I 활 · U 떡 · Shift 달리기"
 const FACT_TAG := { fact = "◆ 확인", heard = "◇ 들음", guess = "△ 추정" }
 
@@ -147,20 +149,20 @@ func _label(size: int, col := INK, outline := false, classic := false) -> Label:
 	l.add_theme_color_override("font_color", col)
 	if outline:
 		l.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.035))
-		l.add_theme_constant_override("outline_size", 6)
+		l.add_theme_constant_override("outline_size", 8)
 		l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.35))
-		l.add_theme_constant_override("shadow_offset_y", 2)
+		l.add_theme_constant_override("shadow_offset_y", 3)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-func _paper(alpha := 0.96, border := 2, pad := 18) -> PanelContainer:
+func _paper(alpha := 0.96, border := 2, pad := 25) -> PanelContainer:
 	var p := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(PAPER.r, PAPER.g, PAPER.b, alpha)
 	sb.border_color = Color(INK, 0.78)
-	sb.set_border_width_all(mini(border, 2))
-	sb.set_corner_radius_all(2)
-	sb.shadow_color = Color(0, 0, 0, 0.28); sb.shadow_size = 8; sb.shadow_offset = Vector2(2, 4)
+	sb.set_border_width_all(mini(border, 3))
+	sb.set_corner_radius_all(3)
+	sb.shadow_color = Color(0, 0, 0, 0.28); sb.shadow_size = 11; sb.shadow_offset = Vector2(3, 6)
 	sb.content_margin_left = pad * 1.1; sb.content_margin_right = pad * 1.1; sb.content_margin_top = pad * 0.75; sb.content_margin_bottom = pad * 0.7
 	p.add_theme_stylebox_override("panel", sb)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -172,8 +174,8 @@ func _chip(key: String, size := UiFonts.KEYS - 1, light := false) -> PanelContai
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(PAPER, 0.95) if light else Color(INK, 0.88)
 	sb.border_color = Color(INK, 0.9); sb.set_border_width_all(1)
-	sb.set_corner_radius_all(3)
-	sb.content_margin_left = 7; sb.content_margin_right = 7; sb.content_margin_top = 0; sb.content_margin_bottom = 1
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 10; sb.content_margin_right = 10; sb.content_margin_top = 0; sb.content_margin_bottom = 1
 	p.add_theme_stylebox_override("panel", sb)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -187,10 +189,10 @@ func _chip(key: String, size := UiFonts.KEYS - 1, light := false) -> PanelContai
 func _keyrow(pairs: Array, size := UiFonts.KEYS) -> HBoxContainer:
 	var h := HBoxContainer.new(); h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.alignment = BoxContainer.ALIGNMENT_END
-	h.add_theme_constant_override("separation", 6)
+	h.add_theme_constant_override("separation", 8)
 	for i in pairs.size():
 		if i > 0:
-			var g := Control.new(); g.custom_minimum_size = Vector2(10, 0); g.mouse_filter = Control.MOUSE_FILTER_IGNORE; h.add_child(g)
+			var g := Control.new(); g.custom_minimum_size = Vector2(14, 0); g.mouse_filter = Control.MOUSE_FILTER_IGNORE; h.add_child(g)
 		h.add_child(_chip(String(pairs[i][0]), size - 1))
 		var l := _label(size, INK_SOFT); l.text = String(pairs[i][1]); h.add_child(l)
 	return h
@@ -199,7 +201,7 @@ func _bar(col: Color, h: float) -> ProgressBar:
 	var b := ProgressBar.new()
 	b.show_percentage = false
 	b.custom_minimum_size = Vector2(0, h)
-	var bg := StyleBoxFlat.new(); bg.bg_color = Color(PAPER.r, PAPER.g, PAPER.b, 0.75); bg.border_color = INK; bg.set_border_width_all(2)
+	var bg := StyleBoxFlat.new(); bg.bg_color = Color(PAPER.r, PAPER.g, PAPER.b, 0.75); bg.border_color = INK; bg.set_border_width_all(3)
 	bg.set_corner_radius_all(2)
 	var fg := StyleBoxFlat.new(); fg.bg_color = col; fg.set_corner_radius_all(2)
 	fg.skew = Vector2(-0.25, 0)   # 붓 획처럼 끝을 비스듬히
@@ -231,7 +233,7 @@ func _build() -> void:
 	_marks.draw.connect(_draw_marks)
 	_root.add_child(_marks)
 	# 처음 한 번 안내(WASD 이동 등) — 한지 띠, 확인 버튼 없음
-	_hint = _paper(0.92, 1, 18)
+	_hint = _paper(0.92, 1, 25)
 	_hint_l = _label(FS_HINT, INK); _hint_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint.add_child(_hint_l)
 	_hint.modulate.a = 0.0
@@ -239,8 +241,8 @@ func _build() -> void:
 	# 조사 안내: [E] 살펴보기 — 키 칸 + 흰 글(먹 테)
 	_prompt = HBoxContainer.new(); _prompt.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_prompt.alignment = BoxContainer.ALIGNMENT_CENTER
-	_prompt.add_theme_constant_override("separation", 10)
-	var pc := _chip("E", 26, true)
+	_prompt.add_theme_constant_override("separation", 14)
+	var pc := _chip("E", FS_CHIP, true)
 	_prompt_key = pc.get_node("key")
 	_prompt_l = _label(FS_PROMPT, Color(1, 1, 1), true)
 	_prompt.add_child(pc); _prompt.add_child(_prompt_l)
@@ -249,8 +251,8 @@ func _build() -> void:
 	# 오른쪽 아래 작은 안내(주막 F 등)
 	_khint = HBoxContainer.new(); _khint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_khint.alignment = BoxContainer.ALIGNMENT_END
-	_khint.add_theme_constant_override("separation", 8)
-	var kc := _chip("F", 22, true)
+	_khint.add_theme_constant_override("separation", 11)
+	var kc := _chip("F", 32, true)
 	_khint_key = kc.get_node("key")
 	_khint_l = _label(FS_KEYHINT, Color(1, 1, 1), true)
 	_khint.add_child(kc); _khint.add_child(_khint_l)
@@ -262,12 +264,12 @@ func _build() -> void:
 	_root.add_child(_items)
 	# 알림 띠
 	_toasts = VBoxContainer.new(); _toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_toasts.add_theme_constant_override("separation", 6)
+	_toasts.add_theme_constant_override("separation", 8)
 	_root.add_child(_toasts)
 	# 대화 상자
 	_dialog = _paper(0.95)
 	var dv := VBoxContainer.new(); dv.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dv.add_theme_constant_override("separation", 6)
+	dv.add_theme_constant_override("separation", 8)
 	_dlg_name = _label(UiFonts.NAME, SEAL, false, true)
 	_dlg_text = _label(UiFonts.BODY, INK)
 	_dlg_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -281,26 +283,26 @@ func _build() -> void:
 	# 선택지
 	_choice = _paper(0.96)
 	var cv := VBoxContainer.new(); cv.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	cv.add_theme_constant_override("separation", 6)
+	cv.add_theme_constant_override("separation", 8)
 	_choice_prompt = _label(UiFonts.DETAIL, INK_SOFT)
 	_choice_prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_choice_list = GridContainer.new(); _choice_list.mouse_filter = Control.MOUSE_FILTER_IGNORE   # 줄이 많으면 두 단(choice)
-	_choice_list.add_theme_constant_override("v_separation", 2); _choice_list.add_theme_constant_override("h_separation", 18)
+	_choice_list.add_theme_constant_override("v_separation", 3); _choice_list.add_theme_constant_override("h_separation", 25)
 	cv.add_child(_choice_prompt); cv.add_child(_choice_list)
 	cv.add_child(_keyrow([["↑↓", "고르기"], ["E", "정하기"]]))
 	_choice.add_child(cv)
 	_choice.visible = false
 	_root.add_child(_choice)
 	# 조사 카드
-	_card = _paper(0.98, 3, 28)
+	_card = _paper(0.98, 3, 39)
 	var kv := VBoxContainer.new(); kv.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	kv.add_theme_constant_override("separation", 10)
+	kv.add_theme_constant_override("separation", 14)
 	var head := HBoxContainer.new(); head.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_card_title = _label(UiFonts.HEAD, INK, false, true); _card_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_card_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_card_tag = _label(UiFonts.NOTE, SEAL, false, true)
 	head.add_child(_card_title); head.add_child(_card_tag)
-	var rule := ColorRect.new(); rule.color = Color(INK, 0.7); rule.custom_minimum_size = Vector2(0, 1.5); rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var rule := ColorRect.new(); rule.color = Color(INK, 0.7); rule.custom_minimum_size = Vector2(0, 2); rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_card_text = _label(UiFonts.BODY, INK); _card_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	kv.add_child(head); kv.add_child(rule); kv.add_child(_card_text); kv.add_child(_keyrow([["E", "확인"]]))
 	_card.add_child(kv)
@@ -326,29 +328,29 @@ func _build() -> void:
 	_hud.visible = false
 	_root.add_child(_hud)
 	var pv := VBoxContainer.new(); pv.name = "pv"; pv.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	pv.add_theme_constant_override("separation", 4)
+	pv.add_theme_constant_override("separation", 6)
 	var pn := _label(UiFonts.NOTE, Color(1, 1, 1), true); pn.text = "나그네"
-	_hp_bar = _bar(Color("#9a3a2c"), 16)
-	_st_bar = _bar(Color("#3a3430"), 9)
+	_hp_bar = _bar(Color("#9a3a2c"), 22)
+	_st_bar = _bar(Color("#3a3430"), 13)
 	pv.add_child(pn); pv.add_child(_hp_bar); pv.add_child(_st_bar)
 	_hud.add_child(pv)
 	_foe_box = VBoxContainer.new(); _foe_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_foe_name = _label(UiFonts.DETAIL, Color(1, 1, 1), true); _foe_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_foe_bar = _bar(Color("#2b2622"), 12)
+	_foe_bar = _bar(Color("#2b2622"), 17)
 	_foe_box.add_child(_foe_name); _foe_box.add_child(_foe_bar)
 	_hud.add_child(_foe_box)
-	_ammo = _label(28, Color(1, 1, 1), true)
+	_ammo = _label(41, Color(1, 1, 1), true)
 	_hud.add_child(_ammo)
-	_hud_say = _label(36, Color(1, 1, 1), true); _hud_say.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_hud_say = _label(52, Color(1, 1, 1), true); _hud_say.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hud_say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_hud.add_child(_hud_say)
-	_keys_hint = _label(21, Color(1, 1, 1, 0.88), true)
+	_keys_hint = _label(30, Color(1, 1, 1, 0.88), true)
 	_keys_hint.text = KEYS_COMBAT
 	_hud.add_child(_keys_hint)
 	# 종결 카드
 	_ending = ColorRect.new(); _ending.color = Color(PAPER.r, PAPER.g, PAPER.b, 0.97)
 	_ending.set_anchors_preset(Control.PRESET_FULL_RECT); _ending.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_end_box = VBoxContainer.new(); _end_box.add_theme_constant_override("separation", 14)
+	_end_box = VBoxContainer.new(); _end_box.add_theme_constant_override("separation", 20)
 	_end_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ending.add_child(_end_box)
 	_ending.visible = false
@@ -358,25 +360,25 @@ func _build() -> void:
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_fade)
 	# 검은 화면 위 가운데 글(이겸의 세 문장) — 페이드보다 위
-	_center = _label(30, Color(0.93, 0.9, 0.84), false, true); _center.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_center = _label(44, Color(0.93, 0.9, 0.84), false, true); _center.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_center.vertical_alignment = VERTICAL_ALIGNMENT_CENTER; _center.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_center.modulate.a = 0.0
 	_root.add_child(_center)
 	# 기록책 한 장(여는 장면) · 가운데 큰 글(지명·제목)
-	_book = _paper(0.98, 3, 40)
+	_book = _paper(0.98, 3, 56)
 	_book_box = VBoxContainer.new(); _book_box.alignment = BoxContainer.ALIGNMENT_CENTER; _book_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_book_box.add_theme_constant_override("separation", 18)
+	_book_box.add_theme_constant_override("separation", 25)
 	_book.add_child(_book_box)
 	_book.visible = false
 	_root.add_child(_book)
-	_title_l = _label(64, Color(1, 1, 1), true, true); _title_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title_l = _label(93, Color(1, 1, 1), true, true); _title_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_title_l.modulate.a = 0.0
 	_root.add_child(_title_l)
 
 func _resize() -> void:
 	var vs := get_viewport().get_visible_rect().size
-	_k = clampf(vs.y / 768.0, 0.8, 2.4)
+	_k = UiFonts.k(vs, 0.8)
 	var k := _k
 	for l in _root.find_children("*", "Label", true, false):
 		if not l.has_meta("base"): continue
@@ -384,46 +386,46 @@ func _resize() -> void:
 	var lbh := vs.y * 0.09
 	_lb_top.position = Vector2(0, -lbh if _lb_top.get_meta("on", false) == false else 0.0); _lb_top.size = Vector2(vs.x, lbh)
 	_lb_bot.position = Vector2(0, vs.y if _lb_bot.get_meta("on", false) == false else vs.y - lbh); _lb_bot.size = Vector2(vs.x, lbh)
-	var w := minf(vs.x * 0.9, 1000.0 * k)
-	_dialog.position = Vector2((vs.x - w) / 2, vs.y - 236 * k); _dialog.size = Vector2(w, 206 * k); _dialog.custom_minimum_size = Vector2(w, 186 * k)
+	var w := minf(vs.x * 0.9, 1406.2 * k)
+	_dialog.position = Vector2((vs.x - w) / 2, vs.y - 332 * k); _dialog.size = Vector2(w, 290 * k); _dialog.custom_minimum_size = Vector2(w, 262 * k)
 	var csb: StyleBoxFlat = _cap_box.get_theme_stylebox("panel")
-	csb.content_margin_left = 26 * k; csb.content_margin_right = 26 * k; csb.content_margin_top = 9 * k; csb.content_margin_bottom = 11 * k
-	_caption.add_theme_constant_override("line_spacing", int(5 * k))
-	_hint_l.add_theme_constant_override("line_spacing", int(4 * k))
-	_prompt.position = Vector2(0, vs.y - BOTTOM_PROMPT * k); _prompt.size = Vector2(vs.x, 52 * k)
-	_khint.position = Vector2(vs.x * 0.3, vs.y - BOTTOM_KEYHINT * k); _khint.size = Vector2(vs.x * 0.7 - 22 * k, 40 * k)
+	csb.content_margin_left = 37 * k; csb.content_margin_right = 37 * k; csb.content_margin_top = 13 * k; csb.content_margin_bottom = 15 * k
+	_caption.add_theme_constant_override("line_spacing", int(7 * k))
+	_hint_l.add_theme_constant_override("line_spacing", int(6 * k))
+	_prompt.position = Vector2(0, vs.y - BOTTOM_PROMPT * k); _prompt.size = Vector2(vs.x, 73 * k)
+	_khint.position = Vector2(vs.x * 0.3, vs.y - BOTTOM_KEYHINT * k); _khint.size = Vector2(vs.x * 0.7 - 31 * k, 56 * k)
 	_place_hint()
 	_place_caption()
 	_center.position = Vector2(vs.x * 0.15, vs.y * 0.3); _center.size = Vector2(vs.x * 0.7, vs.y * 0.4)
 	_title_l.position = Vector2(0, vs.y * 0.3); _title_l.size = Vector2(vs.x, vs.y * 0.3)
-	var bw := minf(vs.x * 0.5, 520 * k)
+	var bw := minf(vs.x * 0.5, 731 * k)
 	_book.custom_minimum_size = Vector2(bw, vs.y * 0.5); _book.size = Vector2(bw, vs.y * 0.5)
 	_book.position = Vector2((vs.x - bw) / 2, vs.y * 0.22); _book.pivot_offset = Vector2(bw / 2, vs.y * 0.25)
-	_items.position = Vector2(vs.x * 0.3, vs.y - BOTTOM_ITEMS * k); _items.size = Vector2(vs.x * 0.7 - 22 * k, 38 * k)
-	_toasts.position = Vector2(24 * k, 70 * k); _toasts.size = Vector2(700 * k, 300 * k)
-	var cw := minf(vs.x * 0.84, 860 * k)
+	_items.position = Vector2(vs.x * 0.3, vs.y - BOTTOM_ITEMS * k); _items.size = Vector2(vs.x * 0.7 - 31 * k, 53 * k)
+	_toasts.position = Vector2(34 * k, 98 * k); _toasts.size = Vector2(984 * k, 422 * k)
+	var cw := minf(vs.x * 0.84, 1209 * k)
 	_choice.position = Vector2((vs.x - cw) / 2, vs.y * 0.5); _choice.custom_minimum_size = Vector2(cw, 0); _choice.size = Vector2(cw, 0)
-	var kw := minf(vs.x * 0.84, 740 * k)
+	var kw := minf(vs.x * 0.84, 1041 * k)
 	_card.custom_minimum_size = Vector2(kw, 0); _card.size = Vector2(kw, 0)
 	# 줄바꿈 글은 너비를 정해 두어야 높이가 바로 잡힌다(안 그러면 판이 아래로 길게 남았다)
-	_card_text.custom_minimum_size = Vector2(kw - 64 * k, 0)
-	_card_title.custom_minimum_size = Vector2(kw - 64 * k - 110 * k, 0)
-	_choice_prompt.custom_minimum_size = Vector2(cw - 44 * k, 0)
+	_card_text.custom_minimum_size = Vector2(kw - 90 * k, 0)
+	_card_title.custom_minimum_size = Vector2(kw - 90 * k - 155 * k, 0)
+	_choice_prompt.custom_minimum_size = Vector2(cw - 62 * k, 0)
 	_card.position = Vector2((vs.x - kw) / 2, vs.y * 0.22)
 	_jv.position = Vector2.ZERO; _jv.size = vs
 	_end_box.position = Vector2(vs.x * 0.14, vs.y * 0.1); _end_box.size = Vector2(vs.x * 0.72, vs.y * 0.8)
 	var pv: Control = _hud.get_node("pv")
-	pv.position = Vector2(24 * k, 20 * k); pv.size = Vector2(300 * k, 60 * k)
-	_hp_bar.custom_minimum_size = Vector2(280 * k, 16 * k); _st_bar.custom_minimum_size = Vector2(280 * k, 9 * k)
-	_foe_box.position = Vector2(vs.x * 0.3, 18 * k); _foe_box.size = Vector2(vs.x * 0.4, 50 * k)
-	_ammo.position = Vector2(24 * k, vs.y - 54 * k); _ammo.size = Vector2(320 * k, 40 * k)
-	_hud_say.position = Vector2(vs.x * 0.12, vs.y * 0.6); _hud_say.size = Vector2(vs.x * 0.76, 100 * k)
+	pv.position = Vector2(34 * k, 28 * k); pv.size = Vector2(422 * k, 84 * k)
+	_hp_bar.custom_minimum_size = Vector2(394 * k, 22 * k); _st_bar.custom_minimum_size = Vector2(394 * k, 13 * k)
+	_foe_box.position = Vector2(vs.x * 0.3, 25 * k); _foe_box.size = Vector2(vs.x * 0.4, 70 * k)
+	_ammo.position = Vector2(34 * k, vs.y - 76 * k); _ammo.size = Vector2(450 * k, 56 * k)
+	_hud_say.position = Vector2(vs.x * 0.12, vs.y * 0.6); _hud_say.size = Vector2(vs.x * 0.76, 141 * k)
 	# 전투 키 안내: 화살·떡(왼쪽 아래)을 비켜 오른쪽 아래 두 줄까지
 	_keys_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_keys_hint.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-	_keys_hint.add_theme_constant_override("line_spacing", int(2 * k))
-	_keys_hint.position = Vector2(340 * k, vs.y - 80 * k); _keys_hint.size = Vector2(vs.x - 362 * k, 66 * k)
-	_keys_hint.text = wrap_words(_font, int(21 * k), KEYS_COMBAT, _keys_hint.size.x)
+	_keys_hint.add_theme_constant_override("line_spacing", int(3 * k))
+	_keys_hint.position = Vector2(478 * k, vs.y - 112 * k); _keys_hint.size = Vector2(vs.x - 509 * k, 93 * k)
+	_keys_hint.text = wrap_words(_font, int(30 * k), KEYS_COMBAT, _keys_hint.size.x)
 
 # ---------------------------------------------------------------------------
 # 입력
@@ -535,15 +537,15 @@ func choice(prompt: String, options: Array) -> int:
 		_choice_list.remove_child(c); c.queue_free()
 	_choice_btns.clear()
 	var first := -1
-	# 줄이 많으면(12개 넘게) 두 단으로 — 글을 줄이지 않고 화면 높이(768)에 넣는다. 긴 줄은 띄어쓰기에서 끊는다(wrap_words)
+	# 줄이 많으면(12개 넘게) 두 단으로 — 글을 줄이지 않고 화면 높이에 넣는다. 긴 줄은 띄어쓰기에서 끊는다(wrap_words)
 	var vs0 := get_viewport().get_visible_rect().size
 	var two := options.size() > 12
 	_choice_list.columns = 2 if two else 1
-	var cw := (vs0.x * 0.94) if two else minf(vs0.x * 0.84, 860 * _k)
+	var cw := (vs0.x * 0.94) if two else minf(vs0.x * 0.84, 1209 * _k)
 	_choice.custom_minimum_size = Vector2(cw, 0)
 	_choice.position.x = (vs0.x - cw) / 2
-	_choice_prompt.custom_minimum_size = Vector2(cw - 44 * _k, 0)
-	var bw := (cw - 50 * _k - (18 if two else 0)) / (2.0 if two else 1.0) - 14 * _k
+	_choice_prompt.custom_minimum_size = Vector2(cw - 62 * _k, 0)
+	var bw := (cw - 70 * _k - (25 if two else 0)) / (2.0 if two else 1.0) - 20 * _k
 	var fs := int(UiFonts.BODY * _k)
 	for i in options.size():
 		var o: Dictionary = options[i]
@@ -558,7 +560,7 @@ func choice(prompt: String, options: Array) -> int:
 		for st in ["normal", "hover", "pressed", "disabled", "focus"]:
 			var sb := StyleBoxFlat.new()
 			sb.bg_color = Color(0, 0, 0, 0) if st in ["normal", "disabled"] else Color(INK.r, INK.g, INK.b, 0.12)
-			sb.content_margin_left = 10; sb.content_margin_top = 4; sb.content_margin_bottom = 4
+			sb.content_margin_left = 14; sb.content_margin_top = 6; sb.content_margin_bottom = 6
 			if st == "focus": sb.draw_center = false
 			b.add_theme_stylebox_override(st, sb)
 		b.add_theme_color_override("font_color", INK)
@@ -600,7 +602,7 @@ func _place_choice() -> void:
 	_choice.reset_size()
 	var h := _choice.get_combined_minimum_size().y
 	_choice.size.y = h
-	_choice.position.y = clampf(vs.y * 0.6 - h * 0.5, 24 * _k, maxf(24 * _k, vs.y - h - 24 * _k))
+	_choice.position.y = clampf(vs.y * 0.6 - h * 0.5, 34 * _k, maxf(34 * _k, vs.y - h - 34 * _k))
 
 func _move_sel(d: int) -> void:
 	var n := _choice_btns.size()
@@ -654,9 +656,9 @@ func toast(text: String, kind := "info") -> void:
 	if log_lines: printerr("TOAST [%s] %s" % [kind, text])
 	var p := _paper(0.93, 1, 12)
 	var hb := HBoxContainer.new(); hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var bar := ColorRect.new(); bar.color = KIND_COL.get(kind, INK); bar.custom_minimum_size = Vector2(5 * _k, 0)
+	var bar := ColorRect.new(); bar.color = KIND_COL.get(kind, INK); bar.custom_minimum_size = Vector2(7 * _k, 0)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var l := _label(UiFonts.KEYS, INK); l.text = UiFonts.fit(_font, text, int(UiFonts.KEYS * _k), 680.0 * _k)
+	var l := _label(UiFonts.KEYS, INK); l.text = UiFonts.fit(_font, text, int(UiFonts.KEYS * _k), 956.2 * _k)
 	hb.add_child(bar); hb.add_child(l)
 	p.add_child(hb)
 	p.set_meta("t", 3.6)
@@ -678,8 +680,8 @@ func prompt(text: String) -> void:
 	var big := prompt_strong
 	var fs := int((FS_PROMPT_BIG if big else FS_PROMPT) * _k)
 	_prompt_l.add_theme_font_size_override("font_size", fs)
-	_prompt_key.add_theme_font_size_override("font_size", int((30 if big else 26) * _k))
-	_prompt_l.text = wrap_words(_font, fs, body, get_viewport().get_visible_rect().size.x * 0.86 - 60 * _k)
+	_prompt_key.add_theme_font_size_override("font_size", int((FS_CHIP_BIG if big else FS_CHIP) * _k))
+	_prompt_l.text = wrap_words(_font, fs, body, get_viewport().get_visible_rect().size.x * 0.86 - 84 * _k)
 
 # 오른쪽 아래 작은 키 안내(주막 F 쉬기 등) — 빈 글이면 숨긴다
 func key_hint(key: String, text: String) -> void:
@@ -701,8 +703,8 @@ func _draw_stamp() -> void:
 	var a := clampf(t / 0.25, 0.0, 1.0) * clampf((STAMP_SEC - t) / 0.6, 0.0, 1.0)
 	var k := _k
 	var vs := get_viewport().get_visible_rect().size
-	var s := 46.0 * k * (1.0 + 0.25 * maxf(0.0, 1.0 - t / 0.18))   # 찍을 때 살짝 크게
-	var c := Vector2(vs.x - 40.0 * k - s * 0.5, vs.y - 262.0 * k)   # 안내 줄(BOTTOM_PROMPT)·한 줄 안내 띠 위
+	var s := 64.7 * k * (1.0 + 0.25 * maxf(0.0, 1.0 - t / 0.18))   # 찍을 때 살짝 크게
+	var c := Vector2(vs.x - 56.2 * k - s * 0.5, vs.y - 368.4 * k)   # 안내 줄(BOTTOM_PROMPT)·한 줄 안내 띠 위
 	var col := Color(SEAL, 0.9 * a)
 	var rng := RandomNumberGenerator.new(); rng.seed = 18
 	var pts := PackedVector2Array()
@@ -720,10 +722,10 @@ func _draw_stamp() -> void:
 	var fs := s * 0.36
 	VText.column(_stamp, _font_c, c + Vector2(0, -fs * 1.05), "기록", fs, Color(PAPER, 0.95 * a))
 	var msg := "기록을 남겼다"
-	var mfs := int(22 * k)
+	var mfs := int(31 * k)
 	var w := _font.get_string_size(msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs).x
-	var mp := Vector2(c.x - s * 0.5 - 12.0 * k - w, c.y + mfs * 0.35)
-	_stamp.draw_string_outline(_font, mp, msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs, int(5 * k), Color(0.05, 0.04, 0.035, 0.8 * a))
+	var mp := Vector2(c.x - s * 0.5 - 16.9 * k - w, c.y + mfs * 0.35)
+	_stamp.draw_string_outline(_font, mp, msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs, int(7 * k), Color(0.05, 0.04, 0.035, 0.8 * a))
 	_stamp.draw_string(_font, mp, msg, HORIZONTAL_ALIGNMENT_LEFT, -1, mfs, Color(1, 1, 1, a))
 
 func items(list: Array) -> void:
@@ -838,13 +840,13 @@ func _place_caption() -> void:
 	if _cap_box == null: return
 	var vs := get_viewport().get_visible_rect().size
 	var fs := int(FS_CAPTION * _k)
-	var max_w := minf(vs.x * 0.86, 940.0 * _k) - 52.0 * _k
+	var max_w := minf(vs.x * 0.86, 1321.9 * _k) - 73.1 * _k
 	_caption.text = wrap_words(_font, fs, _cap_text, max_w)
 	_cap_box.reset_size()
 	var sz := _cap_box.get_combined_minimum_size()
 	_cap_box.size = sz
-	var bottom := vs.y - BOTTOM_PROMPT * _k - _bottom_extra - 10.0 * _k
-	if _hint != null and _hint.modulate.a > 0.05 and _hint_raw != "": bottom = minf(bottom, _hint.position.y - 10.0 * _k)
+	var bottom := vs.y - BOTTOM_PROMPT * _k - _bottom_extra - 14.1 * _k
+	if _hint != null and _hint.modulate.a > 0.05 and _hint_raw != "": bottom = minf(bottom, _hint.position.y - 14.1 * _k)
 	_cap_box.position = Vector2((vs.x - sz.x) / 2, bottom - sz.y)
 
 # 한국어 줄바꿈 — 띄어쓰기에서만 끊고(낱말 가운데 '털|이'처럼 끊지 않는다), 줄 길이를 고르게 해 마지막 줄에 한 낱말만 남지 않게.
@@ -897,35 +899,35 @@ func set_talk_marks(list: Array) -> void:
 # 한지 말풍선 + 붓 「…」: 둥근 종이, 엷은 먹 테, 아래로 짧은 꼬리, 가운데 먹점 셋
 func _draw_talk_mark(p: Vector2, a: float, s: float) -> void:
 	var k := _k * s
-	var w := 30.0 * k; var h := 19.0 * k
-	var c := p + Vector2(0, -h * 0.5 - 6.0 * k)
+	var w := 42.2 * k; var h := 26.7 * k
+	var c := p + Vector2(0, -h * 0.5 - 8.4 * k)
 	var ink := Color(INK.r, INK.g, INK.b, 0.82 * a)
 	var paper := Color(PAPER.r, PAPER.g, PAPER.b, 0.92 * a)
 	var pts := PackedVector2Array()
 	for i in 24:
 		var t := TAU * i / 24.0
 		pts.append(c + Vector2(cos(t) * w * 0.5, sin(t) * h * 0.5))
-	_marks.draw_colored_polygon(PackedVector2Array([c + Vector2(-4 * k, h * 0.35), c + Vector2(3 * k, h * 0.4), p]), paper)
+	_marks.draw_colored_polygon(PackedVector2Array([c + Vector2(-6 * k, h * 0.35), c + Vector2(4 * k, h * 0.4), p]), paper)
 	_marks.draw_colored_polygon(pts, paper)
 	pts.append(pts[0])
-	_marks.draw_polyline(pts, ink, 1.6 * k, true)
-	_marks.draw_line(c + Vector2(-4 * k, h * 0.45), p, ink, 1.4 * k, true)
+	_marks.draw_polyline(pts, ink, 2.2 * k, true)
+	_marks.draw_line(c + Vector2(-6 * k, h * 0.45), p, ink, 2.0 * k, true)
 	# 「 」 붓 꺾쇠와 먹점 셋
 	var bx := w * 0.36; var by := h * 0.26
-	_marks.draw_polyline(PackedVector2Array([c + Vector2(-bx + 3 * k, -by), c + Vector2(-bx, -by), c + Vector2(-bx, by * 0.4)]), ink, 1.4 * k, true)
-	_marks.draw_polyline(PackedVector2Array([c + Vector2(bx - 3 * k, by), c + Vector2(bx, by), c + Vector2(bx, -by * 0.4)]), ink, 1.4 * k, true)
+	_marks.draw_polyline(PackedVector2Array([c + Vector2(-bx + 4 * k, -by), c + Vector2(-bx, -by), c + Vector2(-bx, by * 0.4)]), ink, 2.0 * k, true)
+	_marks.draw_polyline(PackedVector2Array([c + Vector2(bx - 4 * k, by), c + Vector2(bx, by), c + Vector2(bx, -by * 0.4)]), ink, 2.0 * k, true)
 	for i in 3:
-		_marks.draw_circle(c + Vector2((i - 1) * 5.0 * k, 1.0 * k), 1.7 * k, ink)
+		_marks.draw_circle(c + Vector2((i - 1) * 7.0 * k, 1.4 * k), 2.4 * k, ink)
 
 func _draw_marks() -> void:
 	for m in _talk_marks: _draw_talk_mark(m.p, float(m.a), float(m.get("s", 1.0)))
 	for m in _mark_list:
 		var p: Vector2 = m.p
 		var a: float = float(m.a)
-		var r: float = 5.0 * _k * float(m.get("r", 1.0))
+		var r: float = 7.0 * _k * float(m.get("r", 1.0))
 		_marks.draw_circle(p, r * 2.2, Color(PAPER.r, PAPER.g, PAPER.b, 0.35 * a))   # 한지 번짐
 		_marks.draw_circle(p, r, Color(INK.r, INK.g, INK.b, 0.85 * a))                 # 먹점
-		_marks.draw_arc(p, r * 1.9, 0, TAU, 20, Color(INK.r, INK.g, INK.b, 0.45 * a), 1.2 * _k, true)   # 엷은 먹선 테
+		_marks.draw_arc(p, r * 1.9, 0, TAU, 20, Color(INK.r, INK.g, INK.b, 0.45 * a), 1.7 * _k, true)   # 엷은 먹선 테
 
 func center_text(text: String, sec := 2.0) -> void:
 	if log_lines: printerr("CENTER ", text)
@@ -936,7 +938,7 @@ func center_text(text: String, sec := 2.0) -> void:
 	tw.tween_property(_center, "modulate:a", 0.0, 0.05 if auto else 0.5)
 	await tw.finished
 
-func title_card(text: String, sec := 2.4, size := 64) -> void:
+func title_card(text: String, sec := 2.4, size := 93) -> void:
 	if log_lines: printerr("TITLE ", text)
 	preload("res://scripts/region/place_title.gd").note_story(text)   # 같은 지명이 곧 지명 표시로 겹쳐 뜨지 않게
 	_title_l.text = text
@@ -981,12 +983,12 @@ func ending(d: Dictionary) -> void:
 	modal = true
 	for c in _end_box.get_children(): c.queue_free()
 	var case_l := _label(UiFonts.DETAIL, SEAL, false, true); case_l.text = "「%s」 — 사건 종결" % d.get("case_title", "")
-	var t := _label(46, INK, false, true); t.text = d.get("title", "")
+	var t := _label(67, INK, false, true); t.text = d.get("title", "")
 	_end_box.add_child(case_l); _end_box.add_child(t)
-	var r := ColorRect.new(); r.color = INK; r.custom_minimum_size = Vector2(0, 2)
+	var r := ColorRect.new(); r.color = INK; r.custom_minimum_size = Vector2(0, 3)
 	_end_box.add_child(r)
 	for p in d.get("paragraphs", []):
-		var l := _label(UiFonts.BODY - 2, INK); l.text = p; l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var l := _label(UiFonts.BODY - 3, INK); l.text = p; l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_end_box.add_child(l)
 	var rec := _label(UiFonts.KEYS, INK_SOFT); rec.text = d.get("record", ""); rec.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_end_box.add_child(rec)

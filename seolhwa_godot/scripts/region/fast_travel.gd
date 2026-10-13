@@ -22,7 +22,7 @@ const SEAL := Color("#a8443c")
 const HORSE_KMH := 7.0          # 역마 하루 길(쉬는 때 포함 평균)
 const ANIM := 2.8
 const UiFonts := preload("res://scripts/ui_fonts.gd")
-const FS_LIST := 26             # 목록 줄(UiFonts 표 BODY 쪽 — 좁은 칸이라 26, 넘치면 말줄임)
+const FS_LIST := UiFonts.BODY   # 목록 줄(16:9에서는 목록 칸이 넓어 BODY 그대로 — 예전 1024×768에서는 좁아 26으로 줄였다, 넘치면 말줄임)
 
 var main
 var prefer := ""
@@ -51,7 +51,7 @@ func _init(m, prefer_portal := "") -> void:
 
 func _ready() -> void:
 	_font = preload("res://scripts/ui_fonts.gd").main()
-	_k = clampf(get_viewport().get_visible_rect().size.y / 768.0, 0.8, 2.4)
+	_k = UiFonts.k(get_viewport().get_visible_rect().size, 0.8)
 	_was_paused = get_tree().paused
 	get_tree().paused = true
 	var dim := ColorRect.new(); dim.color = Color(0, 0, 0, 0.5); dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -368,8 +368,8 @@ func skip() -> void:
 func _skip_rect() -> Rect2:
 	var p := _panel()
 	var fs := int(UiFonts.BODY * _k)
-	var w := _font.get_string_size("Space  건너뛰기", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 36.0
-	return Rect2(Vector2(p.end.x - w - 24.0 * _k, p.end.y - fs * 1.6 - 14.0 * _k), Vector2(w, fs * 1.6))
+	var w := _font.get_string_size("Space  건너뛰기", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 50.0 * _k
+	return Rect2(Vector2(p.end.x - w - 33.8 * _k, p.end.y - fs * 1.6 - 19.7 * _k), Vector2(w, fs * 1.6))
 
 func _on_input(e: InputEvent) -> void:
 	if _anim >= 0.0 and e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and _skip_rect().has_point(e.position):
@@ -388,13 +388,13 @@ func _panel() -> Rect2:
 
 func _list_rect() -> Rect2:
 	var p := _panel()
-	return Rect2(p.position + Vector2(24, 84) * _k, Vector2(p.size.x * 0.4, p.size.y - 132 * _k))
+	return Rect2(p.position + Vector2(34, 118) * _k, Vector2(p.size.x * 0.4, p.size.y - 186 * _k))
 
 func _map_rect() -> Rect2:
 	var p := _panel(); var l := _list_rect()
-	return Rect2(Vector2(l.end.x + 20 * _k, l.position.y), Vector2(p.end.x - l.end.x - 44 * _k, l.size.y))
+	return Rect2(Vector2(l.end.x + 28 * _k, l.position.y), Vector2(p.end.x - l.end.x - 62 * _k, l.size.y))
 
-func _row_h() -> float: return 38.0 * _k
+func _row_h() -> float: return 58.0 * _k
 
 func _rows_visible() -> int: return maxi(1, int(_list_rect().size.y / _row_h()))
 
@@ -412,21 +412,21 @@ func _text(s: String, at: Vector2, size: int, col: Color, center := false) -> vo
 func _draw() -> void:
 	var p := _panel()
 	_canvas.draw_rect(p, Color(PAPER.r, PAPER.g, PAPER.b, 0.98))
-	_canvas.draw_rect(p, INK, false, 3.0)
-	_text("역마 — 역에서 역으로" if not at_station.is_empty() else "역마 — 가 본 곳으로", p.position + Vector2(24, 52) * _k, UiFonts.HEAD, INK)
+	_canvas.draw_rect(p, INK, false, 4.0)
+	_text("역마 — 역에서 역으로" if not at_station.is_empty() else "역마 — 가 본 곳으로", p.position + Vector2(34, 73) * _k, UiFonts.HEAD, INK)
 	var sub := "삯 없음 · 처음 가는 길은 건너뛸 수 없다"
-	_text(sub, p.position + Vector2(p.size.x - 24 * _k - _font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, int(UiFonts.NOTE * _k)).x, 50 * _k), UiFonts.NOTE, INK_SOFT)
+	_text(sub, p.position + Vector2(p.size.x - 34 * _k - _font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, int(UiFonts.NOTE * _k)).x, 70 * _k), UiFonts.NOTE, INK_SOFT)
 	# 목록
 	var lr := _list_rect()
 	var nv := _rows_visible()
 	if sel < _list_top: _list_top = sel
 	if sel >= _list_top + nv: _list_top = sel - nv + 1
 	if items.is_empty():
-		_text(UiFonts.fit(_font, "아직 가 본 거점이 없다 — 고을·주막·나루에 들르면 적힌다", int(UiFonts.DETAIL * _k), lr.size.x), lr.position + Vector2(0, 28 * _k), UiFonts.DETAIL, INK_SOFT)
+		_text(UiFonts.fit(_font, "아직 가 본 거점이 없다 — 고을·주막·나루에 들르면 적힌다", int(UiFonts.DETAIL * _k), lr.size.x), lr.position + Vector2(0, 39 * _k), UiFonts.DETAIL, INK_SOFT)
 	var last_space := ""
 	for r in range(_list_top, mini(items.size(), _list_top + nv)):
 		var it: Dictionary = items[r]
-		var y := lr.position.y + (r - _list_top) * _row_h() + 28 * _k
+		var y := lr.position.y + (r - _list_top) * _row_h() + 39 * _k
 		var on := r == sel
 		var col := SEAL if on else (INK if it.ok else Color(INK_SOFT.r, INK_SOFT.g, INK_SOFT.b, 0.6))
 		var sp := "" if String(it.space) == last_space else String(it.space_name) + " · "
@@ -436,7 +436,7 @@ func _draw() -> void:
 	# 지도
 	var mr := _map_rect()
 	_canvas.draw_rect(mr, Color(0.93, 0.90, 0.83))
-	_canvas.draw_rect(mr, INK_SOFT, false, 1.5)
+	_canvas.draw_rect(mr, INK_SOFT, false, 2.0)
 	if not items.is_empty():
 		var it: Dictionary = items[sel]
 		if it.same: _draw_local(mr, it)
@@ -444,13 +444,13 @@ func _draw() -> void:
 		var foot := String(it.why) if not it.ok else ("Enter 간다 · ↑↓ 고르기 · Esc 닫기")
 		if _anim >= 0.0:
 			foot = "길에서 약 %s — %s → %s" % [_dur_text(float(_go.hours)), _clock(float(_go.h0)), _clock(lerpf(float(_go.h0), float(_go.h0) + float(_go.hours), clampf(_anim, 0.0, 1.0)))]
-		_text(UiFonts.fit(_font, foot, int(UiFonts.KEYS * _k), mr.size.x), Vector2(mr.position.x, mr.end.y + 32 * _k), UiFonts.KEYS, INK if it.ok else SEAL)
+		_text(UiFonts.fit(_font, foot, int(UiFonts.KEYS * _k), mr.size.x), Vector2(mr.position.x, mr.end.y + 45 * _k), UiFonts.KEYS, INK if it.ok else SEAL)
 	if _anim >= 0.0:   # 건너뛰기 단추(오른쪽 아래)
 		var br := _skip_rect()
 		_canvas.draw_rect(br, Color(1.0, 0.95, 0.82))
-		_canvas.draw_rect(br, SEAL, false, 3.0)
+		_canvas.draw_rect(br, SEAL, false, 4.0)
 		var fs := int(UiFonts.BODY * _k)
-		_canvas.draw_string(_font, br.position + Vector2(18.0, fs * 1.12), "Space  건너뛰기", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+		_canvas.draw_string(_font, br.position + Vector2(25.0 * _k, fs * 1.12), "Space  건너뛰기", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 
 static func _clock(h: float) -> String:
 	var hh := fposmod(h, 24.0)
@@ -493,12 +493,12 @@ func _draw_local(mr: Rect2, it: Dictionary) -> void:
 	var others: Array = []
 	for o in items:
 		if o.same and bb.has_point(o.at):
-			_canvas.draw_circle(X.call(o.at), 4.0 * _k, INK_SOFT)
+			_canvas.draw_circle(X.call(o.at), 5.6 * _k, INK_SOFT)
 			if o != it: others.append(o)
 	_draw_route_line(line, X)
-	_canvas.draw_circle(X.call(pp), 7.0 * _k, Color(0.75, 0.15, 0.1))
+	_canvas.draw_circle(X.call(pp), 9.8 * _k, Color(0.75, 0.15, 0.1))
 	# 이름(MAP_* — 지도 글 바닥 52): 여기 → 고른 곳 → 나머지(고른 곳에 가까운 것부터). 자리가 없으면 쓰지 않는다(겹침 없음)
-	_mtaken = [Rect2(X.call(pp) - Vector2(8, 8) * _k, Vector2(16, 16) * _k), Rect2(X.call(it.at) - Vector2(7, 7) * _k, Vector2(14, 14) * _k)]
+	_mtaken = [Rect2(X.call(pp) - Vector2(11, 11) * _k, Vector2(22, 22) * _k), Rect2(X.call(it.at) - Vector2(10, 10) * _k, Vector2(20, 20) * _k)]
 	map_labels = []
 	_map_label("여기", X.call(pp), UiFonts.MAP_LABEL, SEAL, mr)
 	_map_label(String(it.name), X.call(it.at), UiFonts.MAP_LABEL, INK, mr)
@@ -510,19 +510,19 @@ var _mtaken: Array = []
 var map_labels: Array = []
 func _map_label(s: String, at: Vector2, size: int, col: Color, mr: Rect2) -> bool:
 	var sz := int(size * _k)
-	var w := _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x + 8.0
+	var w := _font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x + 11.0
 	var h := sz * 1.2
-	var g := 14.0 * _k   # 점 표시(±8) + 띄움(4)보다 멀리
+	var g := 19.7 * _k   # 점 표시(±8) + 띄움(4)보다 멀리
 	for sp in [at + Vector2(g, -h / 2), at + Vector2(-g - w, -h / 2), at + Vector2(-w / 2, -g - h), at + Vector2(-w / 2, g)]:
 		var r := Rect2(sp, Vector2(w, h))
-		if not mr.grow(-4).encloses(r): continue
+		if not mr.grow(-6).encloses(r): continue
 		var hit := false
 		for t in _mtaken:
-			if (t as Rect2).intersects(r.grow(4.0)): hit = true; break
+			if (t as Rect2).intersects(r.grow(6.0)): hit = true; break
 		if hit: continue
 		_mtaken.append(r)
-		var base := r.position + Vector2(4, sz * 0.95)
-		_canvas.draw_string_outline(_font, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, 10, Color(0.96, 0.93, 0.85, 0.95))
+		var base := r.position + Vector2(6, sz * 0.95)
+		_canvas.draw_string_outline(_font, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, 14, Color(0.96, 0.93, 0.85, 0.95))
 		_canvas.draw_string(_font, base, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, col)
 		map_labels.append({ text = s, size = sz, rect = r })
 		return true
@@ -531,7 +531,7 @@ func _map_label(s: String, at: Vector2, size: int, col: Color, mr: Rect2) -> boo
 func _draw_route_line(line: PackedVector2Array, X: Callable) -> void:
 	var px := PackedVector2Array()
 	for q in line: px.append(X.call(q))
-	_canvas.draw_polyline(px, Color(0.62, 0.2, 0.12, 0.35), 3.0 * _k, true)
+	_canvas.draw_polyline(px, Color(0.62, 0.2, 0.12, 0.35), 4.2 * _k, true)
 	var f := clampf(_anim, 0.0, 1.0) if _anim >= 0.0 else 1.0
 	var total := 0.0
 	for i in px.size() - 1: total += px[i].distance_to(px[i + 1])
@@ -542,10 +542,10 @@ func _draw_route_line(line: PackedVector2Array, X: Callable) -> void:
 		if want <= l:
 			part.append(px[i].lerp(px[i + 1], want / maxf(l, 1e-6))); break
 		part.append(px[i + 1]); want -= l
-	if part.size() >= 2: _canvas.draw_polyline(part, SEAL, 4.0 * _k, true)
+	if part.size() >= 2: _canvas.draw_polyline(part, SEAL, 5.6 * _k, true)
 	var head: Vector2 = part[part.size() - 1]
-	_canvas.draw_circle(head, 6.0 * _k, SEAL if _anim >= 0.0 else Color(0.62, 0.2, 0.12, 0.6))
-	_canvas.draw_circle(px[px.size() - 1], 6.0 * _k, INK)
+	_canvas.draw_circle(head, 8.4 * _k, SEAL if _anim >= 0.0 else Color(0.62, 0.2, 0.12, 0.6))
+	_canvas.draw_circle(px[px.size() - 1], 8.4 * _k, INK)
 
 # 다른 공간: 전국 윤곽 + 지나는 노정 geo_line을 이은 선
 func _draw_nation(mr: Rect2, it: Dictionary) -> void:
@@ -582,12 +582,12 @@ func _draw_nation(mr: Rect2, it: Dictionary) -> void:
 		if r.get("lonlat") == null or not Discovery.region_known(String(r.id)): continue
 		var c: Vector2 = X.call(r.lonlat)
 		if not mr.has_point(c): continue
-		_canvas.draw_circle(c, 5.0 * _k, INK)
+		_canvas.draw_circle(c, 7.0 * _k, INK)
 		regs.append([String(r.get("short", r.id)), c, String(r.id) == String(it.space) or String(r.id) == here])
 	if line.size() >= 2: _draw_route_line(line, X)
 	# 권역 이름: 가는 곳·지금 공간 먼저, 나머지는 자리가 있을 때만(겹침 없음)
 	_mtaken = []
-	for q in line.slice(0, 1) + line.slice(line.size() - 1): _mtaken.append(Rect2(X.call(q) - Vector2(7, 7) * _k, Vector2(14, 14) * _k))
+	for q in line.slice(0, 1) + line.slice(line.size() - 1): _mtaken.append(Rect2(X.call(q) - Vector2(10, 10) * _k, Vector2(20, 20) * _k))
 	map_labels = []
 	if b != null: _map_label(String(it.name), X.call(b), UiFonts.MAP_LABEL, INK, mr)   # 가는 곳 이름 먼저
 	regs.sort_custom(func(x, y): return x[2] and not y[2])

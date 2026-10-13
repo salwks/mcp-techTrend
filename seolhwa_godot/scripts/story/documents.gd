@@ -136,7 +136,7 @@ func _start() -> void:
 	_hint = _label(UiFonts.DETAIL, INK); _hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER; _hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var hp := PanelContainer.new(); hp.name = "hint_panel"; hp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sb := StyleBoxFlat.new(); sb.bg_color = Color(PAPER, 0.95); sb.border_color = SEAL; sb.set_border_width_all(2); sb.set_corner_radius_all(3)
-	sb.content_margin_left = 14; sb.content_margin_right = 14; sb.content_margin_top = 8; sb.content_margin_bottom = 8
+	sb.content_margin_left = 20; sb.content_margin_right = 20; sb.content_margin_top = 11; sb.content_margin_bottom = 11
 	hp.add_theme_stylebox_override("panel", sb); hp.add_child(_hint); hp.visible = false
 	_root.add_child(hp)
 	_title.text = title_text
@@ -155,13 +155,13 @@ func _label(size: int, col: Color) -> Label:
 	l.set_meta("base", size)
 	l.add_theme_color_override("font_color", col)
 	l.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.035))
-	l.add_theme_constant_override("outline_size", 4 if col != INK else 0)
+	l.add_theme_constant_override("outline_size", 6 if col != INK else 0)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
 func _layout() -> void:
 	var vs := get_viewport().get_visible_rect().size
-	_k = clampf(vs.y / 768.0, 0.8, 2.4)
+	_k = UiFonts.k(vs, 0.8)
 	for l in _root.find_children("*", "Label", true, false):
 		l.add_theme_font_size_override("font_size", int(float(l.get_meta("base", 18)) * _k))
 	var left_w := vs.x * 0.64
@@ -181,16 +181,16 @@ func _layout() -> void:
 	_desk.position = Vector2.ZERO; _desk.size = vs
 	var ls := minf(vs.x * 0.3, vs.y * 0.42)
 	_loupe.position = Vector2(vs.x * 0.67, top); _loupe.size = Vector2(ls, ls)
-	_zoom_l.position = Vector2(vs.x * 0.67, top + ls + 4 * _k); _zoom_l.size = Vector2(ls, 24 * _k)
-	_side.position = Vector2(vs.x * 0.67, top + ls + 34 * _k); _side.size = Vector2(vs.x * 0.31, vs.y - (top + ls + 34 * _k) - 90 * _k)
-	_title.position = Vector2(gap, vs.y * 0.025); _title.size = Vector2(vs.x * 0.9, 40 * _k)
-	_note.position = Vector2(gap, vs.y * 0.025 + 40 * _k); _note.size = Vector2(left_w, 30 * _k)
-	_fb.position = Vector2(gap, top + h_max + 30 * _k); _fb.size = Vector2(left_w - gap, 60 * _k)
-	_keys.position = Vector2(0, vs.y - 36 * _k); _keys.size = Vector2(vs.x, 30 * _k)
+	_zoom_l.position = Vector2(vs.x * 0.67, top + ls + 6 * _k); _zoom_l.size = Vector2(ls, 34 * _k)
+	_side.position = Vector2(vs.x * 0.67, top + ls + 48 * _k); _side.size = Vector2(vs.x * 0.31, vs.y - (top + ls + 48 * _k) - 127 * _k)
+	_title.position = Vector2(gap, vs.y * 0.025); _title.size = Vector2(vs.x * 0.9, 56 * _k)
+	_note.position = Vector2(gap, vs.y * 0.025 + 56 * _k); _note.size = Vector2(left_w, 42 * _k)
+	_fb.position = Vector2(gap, top + h_max + 42 * _k); _fb.size = Vector2(left_w - gap, 84 * _k)
+	_keys.position = Vector2(0, vs.y - 51 * _k); _keys.size = Vector2(vs.x, 42 * _k)
 	var hp: Control = _root.get_node("hint_panel")
 	hp.custom_minimum_size = Vector2(vs.x * 0.76, 0); hp.reset_size()
-	hp.position = Vector2(vs.x * 0.12, vs.y - 100 * _k - hp.size.y * 0.5)
-	_hint.custom_minimum_size = Vector2(vs.x * 0.76 - 28, 0)
+	hp.position = Vector2(vs.x * 0.12, vs.y - 141 * _k - hp.size.y * 0.5)
+	_hint.custom_minimum_size = Vector2(vs.x * 0.76 - 40, 0)
 	_desk.queue_redraw(); _loupe.queue_redraw()
 
 func _first_hint() -> void:
@@ -246,7 +246,7 @@ func _input(ev: InputEvent) -> void:
 func _process(dt: float) -> void:
 	if not _open: return
 	if _key_move != Vector2.ZERO:
-		cursor += _key_move.normalized() * 260.0 * _k * dt
+		cursor += _key_move.normalized() * 365.6 * _k * dt
 		var vs := get_viewport().get_visible_rect().size
 		cursor = cursor.clamp(Vector2.ZERO, vs)
 		_redraw()
@@ -390,10 +390,10 @@ func _refresh_found() -> void:
 func _draw_desk() -> void:
 	for id in ids:
 		var r: Rect2 = _rects[id]
-		_desk.draw_rect(Rect2(r.position + Vector2(6, 8) * _k, r.size), Color(0, 0, 0, 0.35))
+		_desk.draw_rect(Rect2(r.position + Vector2(8, 11) * _k, r.size), Color(0, 0, 0, 0.35))
 		draw_doc(_desk, defs[id], id, r, 1.0)
 		var tl := String(defs[id].get("title", id))
-		_desk.draw_string(_font, Vector2(r.position.x, r.end.y + 24 * _k), tl, HORIZONTAL_ALIGNMENT_LEFT, r.size.x, int(UiFonts.NOTE * _k), Color(PAPER, 0.85))
+		_desk.draw_string(_font, Vector2(r.position.x, r.end.y + 34 * _k), tl, HORIZONTAL_ALIGNMENT_LEFT, r.size.x, int(UiFonts.NOTE * _k), Color(PAPER, 0.85))
 		# 짚은 자리 — 붉은 먹점
 		var f = d.S.flags.get("_doc_found", {})
 		if f is Dictionary:
@@ -401,13 +401,13 @@ func _draw_desk() -> void:
 				var parts := String(key).split("/")
 				if parts[0] != id: continue
 				var p := r.position + Vector2(float(f[key].x), float(f[key].y)) * r.size
-				_desk.draw_arc(p, 9.0 * _k, 0, TAU, 20, Color(SEAL, 0.9), 2.2 * _k, true)
+				_desk.draw_arc(p, 12.7 * _k, 0, TAU, 20, Color(SEAL, 0.9), 3.1 * _k, true)
 	# 돋보기 테
 	var cur := doc_at(cursor)
 	if cur != "":
 		var lsz: Vector2 = _loupe.size / float(ZOOMS[zoom_i])   # 확대 칸에 든 만큼(문서 화면 크기 기준)
-		_desk.draw_rect(Rect2(cursor - lsz * 0.5, lsz), Color(PAPER, 0.9), false, 1.5 * _k)
-	_desk.draw_circle(cursor, 3.0 * _k, Color(SEAL, 0.95))
+		_desk.draw_rect(Rect2(cursor - lsz * 0.5, lsz), Color(PAPER, 0.9), false, 2.1 * _k)
+	_desk.draw_circle(cursor, 4.2 * _k, Color(SEAL, 0.95))
 
 func _draw_loupe() -> void:
 	var sz := _loupe.size
@@ -421,7 +421,7 @@ func _draw_loupe() -> void:
 		draw_doc(_loupe, defs[id], id, big, z)
 	else:
 		_loupe.draw_string(_font, Vector2(12, sz.y * 0.5), "문서 위에 돋보기를 댄다", HORIZONTAL_ALIGNMENT_LEFT, sz.x - 24, int(UiFonts.NOTE * _k), Color(PAPER, 0.6))
-	_loupe.draw_rect(Rect2(Vector2.ZERO, sz), Color(PAPER, 0.85), false, 2.0 * _k)
+	_loupe.draw_rect(Rect2(Vector2.ZERO, sz), Color(PAPER, 0.85), false, 2.8 * _k)
 	_loupe.draw_line(Vector2(sz.x * 0.5 - 8, sz.y * 0.5), Vector2(sz.x * 0.5 + 8, sz.y * 0.5), Color(SEAL, 0.7), 1.0)
 	_loupe.draw_line(Vector2(sz.x * 0.5, sz.y * 0.5 - 8), Vector2(sz.x * 0.5, sz.y * 0.5 + 8), Color(SEAL, 0.7), 1.0)
 

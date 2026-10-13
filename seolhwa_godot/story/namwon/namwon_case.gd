@@ -445,10 +445,10 @@ func vista() -> void:
 	if not skipped:
 		var tt = d.main.get("_title")
 		if tt != null: tt.show_title("남원", true)   # 지명 표시(place_title)와 같은 결
-		else: d.ui.title_card("남원", 2.2, 52)
+		else: d.ui.title_card("남원", 2.2, 75)
 		skipped = await _sw(2.6)
 	if not skipped:
-		d.ui.title_card("설화록", 2.6, 92)
+		d.ui.title_card("설화록", 2.6, 133)
 		skipped = await _sw(2.8)
 	d.ui.title_card_stop()
 	d.camera(null)
@@ -3190,7 +3190,7 @@ func _sorghum_lure() -> void:
 var _lure_focus = null
 func _lure_follow(hold: Dictionary, on: Dictionary, sg: Vector2, gs: float) -> void:
 	var rig = d.main.rig
-	var vp_w: float = maxf(1.0, d.main.get_viewport().get_visible_rect().size.x)
+	var vp_w: float = maxf(1.0, float(d.main.scene_vp.size.x))   # 카메라는 장면 뷰포트(scene_vp) 화소로 투영한다
 	while on.on:
 		if d.runner.busy or d._cut or S.phase != "morning":   # 수수밭 장면 등이 서면 곧바로 손을 뗀다
 			sorghum_lure["why"] = "busy" if d.runner.busy else ("cut" if d._cut else S.phase)
@@ -3207,7 +3207,7 @@ func _lure_follow(hold: Dictionary, on: Dictionary, sg: Vector2, gs: float) -> v
 		if cam != null and not cam.is_position_behind(w):
 			var sp: Vector2 = cam.unproject_position(w)
 			var fx: float = sp.x / vp_w
-			var vis: bool = fx > 0.0 and fx < 1.0 and sp.y > 0.0 and sp.y < d.main.get_viewport().get_visible_rect().size.y
+			var vis: bool = fx > 0.0 and fx < 1.0 and sp.y > 0.0 and sp.y < float(d.main.scene_vp.size.y)
 			if vis and float(hold.k) > 0.99:
 				sorghum_lure.in_frame = true
 				sorghum_lure.frame_x = snappedf(fx, 0.01)

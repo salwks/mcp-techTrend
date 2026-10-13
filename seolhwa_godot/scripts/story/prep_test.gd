@@ -238,6 +238,7 @@ func _ndc_x_8a(at: Vector2, h := 0.9) -> float:
 	main.rig.update(0, main.player_pos, main.player.facing, null, true)
 	var P := Vector3(at.x, main.world.height_at(at.x, at.y) + h, at.y)
 	var q: Vector3 = cam.global_transform.affine_inverse() * P
+	# 4:3 저작 틀 기준 NDC(세로 시야를 지키므로 16:9 화면 가운데 4:3 띠가 저작 틀과 같다 — 16:9 전체 화면에서는 이 값 × 0.75)
 	return (q.x / -q.z) / (tan(deg_to_rad(cam.fov) * 0.5) * 4.0 / 3.0)
 
 func _sides_8a_checks() -> void:

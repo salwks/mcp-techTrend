@@ -180,10 +180,14 @@ func _ready() -> void:
 	scene_vp.msaa_3d = Viewport.MSAA_4X
 	scene_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(scene_vp)
+	fit_window(get_window())
 	_fit_viewport()
+	if not get_tree().root.has_node("WindowKeys"):
+		var wk: Node = load("res://scripts/ui/window_keys.gd").new(); wk.name = "WindowKeys"
+		get_tree().root.add_child.call_deferred(wk)   # F11 · Alt+Enter 전체 화면(맨 뒤 자식 — 입력을 먼저 받는다). 공간을 넘어가도(장면 다시 열기) 하나만
 	get_window().size_changed.connect(_fit_viewport)
 	post = PostEffect.new()
-	post.paper_ratio = scale
+	post.paper_ratio = scene_vp.size.y / 768.0
 	post.lum_mult = 2.0 if RenderingServer.get_current_rendering_method() == "mobile" else 1.0
 	post.paper_image = Image.load_from_file(ProjectSettings.globalize_path("res://data/paper.png"))
 	var view := TextureRect.new()
@@ -265,12 +269,36 @@ func _ready() -> void:
 	elif args.has("shot"): _run_shot.call_deferred(args.shot, int(args.get("frames", "30")))
 
 const MAX_RENDER_EDGE := 3840
+# 3D 장면 화소 한도(2026-10-13 16:9): 창 화소 × 화면 배율(레티나 2)이 이보다 많으면 줄여 그린다(창으로 늘려 보인다).
+#   예전 1024×768 창은 2048×1536(315만 화소)으로 그렸다 — 16:9 큰 창·전체 화면에서도 GPU 몫이 그 언저리(약 370만)를 넘지 않게.
+const MAX_RENDER_PIXELS := 2560 * 1440
 
 func _fit_viewport() -> void:
 	var win := get_window().size
 	var k := minf(_render_scale, float(MAX_RENDER_EDGE) / maxf(1.0, maxf(win.x, win.y)))
+	if not args.has("scale"): k = minf(k, sqrt(float(MAX_RENDER_PIXELS) / maxf(1.0, float(win.x) * float(win.y))))   # --scale=N을 주면 그대로(비교 촬영)
 	var s := Vector2i(maxi(1, roundi(win.x * k)), maxi(1, roundi(win.y * k)))
 	if scene_vp.size != s: scene_vp.size = s
+	if post != null: post.paper_ratio = s.y / 768.0   # 한지 결 크기는 장면 높이에 비례(예전 1536 높이에서 2)
+
+# 창: 기준 1920×1080(16:9) — 그냥 실행하면(사용자 인자 없음, 또는 --fitwindow) 화면(작업 영역)의 88% 안에 드는 가장 큰 16:9로 열고 가운데에 둔다.
+#   크기는 마음대로 바꿀 수 있고(캔버스가 같이 늘고 준다), F11 · Alt+Enter로 전체 화면을 켜고 끈다.
+static var _window_fitted := false
+static func fit_window(win: Window) -> void:
+	if _window_fitted: return   # 처음 한 번만(공간을 넘어가 장면을 다시 열 때 사용자가 바꾼 크기를 되돌리지 않는다)
+	_window_fitted = true
+	if DisplayServer.get_name() == "headless":
+		win.size = Vector2i(1920, 1080)   # 헤드리스 시험: 창이 정사각에 가깝게 잡혀(보이는 크기 1920×1920) — 기준 16:9로 놓고 잰다
+		return
+	# 엔진 인자(--resolution 등)는 스크립트가 볼 수 없다 — 사용자 인자(-- 뒤)가 있으면(시험·촬영) 창 크기를 건드리지 않는다
+	if not OS.get_cmdline_user_args().is_empty() and not "--fitwindow" in OS.get_cmdline_user_args(): return
+	if win.mode != Window.MODE_WINDOWED: return
+	var scr := DisplayServer.window_get_current_screen()
+	var ur := DisplayServer.screen_get_usable_rect(scr)
+	var h := mini(int(ur.size.y * 0.88), int(ur.size.x * 0.88 * 9.0 / 16.0))
+	var sz := Vector2i(roundi(h * 16.0 / 9.0), h)
+	win.size = sz
+	win.position = ur.position + (ur.size - sz) / 2
 
 func _setup_input() -> void:
 	var keys := {
@@ -316,6 +344,7 @@ func _build_scene() -> void:
 
 	cam = Camera3D.new()
 	cam.near = 0.5; cam.far = 6000.0; cam.fov = 30.0
+	cam.keep_aspect = Camera3D.KEEP_HEIGHT   # 16:9(2026-10-13): fov는 세로 시야 — 4:3 때 짠 구도(세로)가 그대로, 넓어진 만큼 옆이 더 보인다(공식 장면 다시 짜지 않음)
 	var comp := Compositor.new()
 	comp.compositor_effects = [post]
 	cam.compositor = comp
@@ -1307,16 +1336,17 @@ func _make_load_ui() -> void:
 	_load_ui.add_child(bg)
 	var title := Label.new(); title.text = "설화록"
 	var sub := Label.new(); sub.text = _space_title()
-	sub.add_theme_font_size_override("font_size", 26); sub.add_theme_color_override("font_color", Color("#5a5048"))
+	sub.add_theme_font_size_override("font_size", 38); sub.add_theme_color_override("font_color", Color("#5a5048"))
 	sub.set_anchors_preset(Control.PRESET_CENTER); sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.position = Vector2(-300, -10); sub.size = Vector2(600, 36)
-	title.add_theme_font_size_override("font_size", 72); title.add_theme_color_override("font_color", Color("#2b2622"))
+	sub.position = Vector2(-420, -14); sub.size = Vector2(840, 50)
+	title.add_theme_font_size_override("font_size", 104); title.add_theme_color_override("font_color", Color("#2b2622"))
 	title.set_anchors_preset(Control.PRESET_CENTER); title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.position = Vector2(-200, -90); title.size = Vector2(400, 100)
+	title.position = Vector2(-280, -127); title.size = Vector2(560, 140)
 	bg.add_child(title)
 	_load_label = Label.new(); _load_label.add_theme_color_override("font_color", Color("#5a5048"))
 	_load_label.set_anchors_preset(Control.PRESET_CENTER); _load_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_load_label.position = Vector2(-200, 30); _load_label.size = Vector2(400, 40)
+	_load_label.add_theme_font_size_override("font_size", 30)
+	_load_label.position = Vector2(-420, 42); _load_label.size = Vector2(840, 56)
 	bg.add_child(_load_label)
 	bg.add_child(sub)
 	add_child(_load_ui)
@@ -1579,9 +1609,9 @@ func _travel(pt: Dictionary) -> void:
 	var bg := ColorRect.new(); bg.color = Color("#efe6d2"); bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ui.add_child(bg)
 	var lb := Label.new(); lb.text = title + " 가는 길…"
-	lb.add_theme_font_size_override("font_size", 34); lb.add_theme_color_override("font_color", Color("#2b2622"))
+	lb.add_theme_font_size_override("font_size", 49); lb.add_theme_color_override("font_color", Color("#2b2622"))
 	lb.set_anchors_preset(Control.PRESET_CENTER); lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lb.position = Vector2(-400, -20); lb.size = Vector2(800, 50)
+	lb.position = Vector2(-560, -28); lb.size = Vector2(1120, 70)
 	bg.add_child(lb)
 	add_child(ui)
 	Travel.set_pending(nxt)
@@ -1681,7 +1711,7 @@ func open_fast_travel(prefer := "") -> void:
 	fast_ui = FastTravel.new(self, prefer)
 	add_child(fast_ui)
 
-# 아래 가운데 말·배 안내 — 이야기 UI의 조사·대화 안내(story_ui.prompt)와 같은 꼴·같은 줄(키 칸 + 흰 글, 32 · 1024×768 기준).
+# 아래 가운데 말·배 안내 — 이야기 UI의 조사·대화 안내(story_ui.prompt)와 같은 꼴·같은 줄(키 칸 + 흰 글, FS_PROMPT 46 · 1920×1080 기준).
 #   글이 키로 시작하면("E   말에 오른다 …", "Space  건너뛰기") 그 키를 칸에 넣는다. 긴 줄은 띄어쓰기에서만 고르게 끊는다(StoryUI.wrap_words).
 const _PROMPT_KEY := "^(?:[A-Z]|Space|Esc|Tab|Shift)$"
 var _boat_key: Label
@@ -1696,7 +1726,7 @@ func _boat_text(t: String) -> void:
 		var chip := PanelContainer.new(); chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color("#efe6d2", 0.95); sb.border_color = Color("#2b2622", 0.9); sb.set_border_width_all(1); sb.set_corner_radius_all(3)
-		sb.content_margin_left = 7; sb.content_margin_right = 7; sb.content_margin_top = 0; sb.content_margin_bottom = 1
+		sb.content_margin_left = 10; sb.content_margin_right = 10; sb.content_margin_top = 0; sb.content_margin_bottom = 1
 		chip.add_theme_stylebox_override("panel", sb)
 		chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		_boat_key = Label.new(); _boat_key.add_theme_font_override("font", UiFonts.main())
@@ -1706,9 +1736,9 @@ func _boat_text(t: String) -> void:
 		_boat_prompt.add_theme_font_override("font", UiFonts.main())
 		_boat_prompt.add_theme_color_override("font_color", Color("#f4ecd8"))
 		_boat_prompt.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.035))
-		_boat_prompt.add_theme_constant_override("outline_size", 6)
+		_boat_prompt.add_theme_constant_override("outline_size", 8)
 		_boat_prompt.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.35))
-		_boat_prompt.add_theme_constant_override("shadow_offset_y", 2)
+		_boat_prompt.add_theme_constant_override("shadow_offset_y", 3)
 		_boat_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		row.add_child(chip); row.add_child(_boat_prompt)
 		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(row); add_child(cl)
@@ -1723,7 +1753,7 @@ func _boat_text(t: String) -> void:
 		if story != null and story.get("ui") != null: story.ui.set_bottom_extra(0.0)
 		return
 	var vs := get_viewport().get_visible_rect().size
-	var k := clampf(vs.y / 768.0, 0.8, 2.4)
+	var k := preload("res://scripts/ui_fonts.gd").k(vs, 0.8)
 	var key := ""
 	var body := t.strip_edges()
 	var sp := body.find(" ")
@@ -1732,17 +1762,17 @@ func _boat_text(t: String) -> void:
 	var fs := int(StoryUI.FS_PROMPT * k)
 	_boat_key.get_parent().visible = key != ""
 	_boat_key.text = key
-	_boat_key.add_theme_font_size_override("font_size", int(26 * k))
+	_boat_key.add_theme_font_size_override("font_size", int(StoryUI.FS_CHIP * k))
 	_boat_prompt.add_theme_font_size_override("font_size", fs)
-	_boat_prompt.text = StoryUI.wrap_words(_boat_prompt.get_theme_font("font"), fs, body, vs.x * 0.86 - 60 * k)
-	row.add_theme_constant_override("separation", int(10 * k))
+	_boat_prompt.text = StoryUI.wrap_words(_boat_prompt.get_theme_font("font"), fs, body, vs.x * 0.86 - 84 * k)
+	row.add_theme_constant_override("separation", int(14 * k))
 	# story_ui 안내 줄(BOTTOM_PROMPT)과 같은 자리 — 두 줄이면 위로 자란다
 	row.reset_size()
 	var h := row.get_combined_minimum_size().y
 	var top := vs.y - StoryUI.BOTTOM_PROMPT * k
-	row.position = Vector2(0, top + 52 * k - maxf(h, 52 * k))
-	row.size = Vector2(vs.x, maxf(h, 52 * k))
-	if story != null and story.get("ui") != null: story.ui.set_bottom_extra(maxf(0.0, h - 52 * k))   # 두 줄이면 안내 띠·자막을 그만큼 올린다
+	row.position = Vector2(0, top + 73 * k - maxf(h, 73 * k))
+	row.size = Vector2(vs.x, maxf(h, 73 * k))
+	if story != null and story.get("ui") != null: story.ui.set_bottom_extra(maxf(0.0, h - 73 * k))   # 두 줄이면 안내 띠·자막을 그만큼 올린다
 
 # 화면(카메라 yaw) 기준 방향 이름 — 배 위처럼 카메라가 돌았을 때 그림 방향(up=등, down=앞, left·right=옆)
 func facing_cam(dx: float, dz: float, prev: String) -> String:
@@ -1768,11 +1798,12 @@ func _show_hud(t: String) -> void:
 	if _hud == null:
 		_hud = Label.new()
 		_hud.add_theme_font_override("font", preload("res://scripts/ui_fonts.gd").main())
-		_hud.add_theme_font_size_override("font_size", int(28 * clampf(get_viewport().get_visible_rect().size.y / 768.0, 0.8, 2.4)))
+		var hk := preload("res://scripts/ui_fonts.gd").k(get_viewport().get_visible_rect().size, 0.8)
+		_hud.add_theme_font_size_override("font_size", int(41 * hk))
 		_hud.add_theme_color_override("font_color", Color(1, 1, 1))
 		_hud.add_theme_color_override("font_outline_color", Color(0, 0, 0))
-		_hud.add_theme_constant_override("outline_size", 5)
-		_hud.position = Vector2(24, 20)
+		_hud.add_theme_constant_override("outline_size", 7)
+		_hud.position = Vector2(34, 28) * hk
 		var cl := CanvasLayer.new(); cl.layer = 6; cl.add_child(_hud); add_child(cl)
 		cl.add_to_group(preload("res://scripts/hud_gate.gd").HIDE)
 	_hud.text = t; _hud_t = 3.0; _hud.modulate.a = 1.0

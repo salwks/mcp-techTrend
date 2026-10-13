@@ -38,7 +38,7 @@ func _ready() -> void:
 	if in_game:
 		_was_paused = get_tree().paused
 		get_tree().paused = true
-	var k: float = clampf(get_viewport().get_visible_rect().size.y / 768.0, 0.8, 2.4)
+	var k: float = UiFonts.k(get_viewport().get_visible_rect().size, 0.8)
 	var dim := ColorRect.new(); dim.color = Color(0, 0, 0, 0.45); dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
 	var cc := CenterContainer.new(); cc.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -46,21 +46,21 @@ func _ready() -> void:
 	var p := PanelContainer.new()
 	var sb := StyleBoxFlat.new(); sb.bg_color = Color(PAPER.r, PAPER.g, PAPER.b, 0.97); sb.border_color = INK; sb.set_border_width_all(3)
 	sb.border_color = Color(INK, 0.8); sb.set_border_width_all(2); sb.shadow_color = Color(0, 0, 0, 0.35); sb.shadow_size = 10
-	sb.content_margin_left = 40 * k; sb.content_margin_right = 40 * k; sb.content_margin_top = 26 * k; sb.content_margin_bottom = 26 * k
+	sb.content_margin_left = 56 * k; sb.content_margin_right = 56 * k; sb.content_margin_top = 37 * k; sb.content_margin_bottom = 37 * k
 	p.add_theme_stylebox_override("panel", sb)
 	cc.add_child(p)
 	# 글 크기는 UiFonts 표(제목 TITLE · 줄 BODY · 덧글 KEYS). 놀이 중에는 줄이 열다섯이라 두 단으로 — 왼쪽 할 일, 오른쪽 설정
-	var outer := VBoxContainer.new(); outer.add_theme_constant_override("separation", int(10 * k))
+	var outer := VBoxContainer.new(); outer.add_theme_constant_override("separation", int(14 * k))
 	p.add_child(outer)
 	var t := _lab("잠시 멈춤" if in_game else "설정", int(UiFonts.TITLE * k), INK); t.add_theme_font_override("font", UiFonts.classic()); outer.add_child(t)
-	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2((820 if in_game else 520) * k, 1.5); outer.add_child(r)
-	var cols := HBoxContainer.new(); cols.add_theme_constant_override("separation", int(36 * k))
+	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2((1153 if in_game else 731) * k, 2); outer.add_child(r)
+	var cols := HBoxContainer.new(); cols.add_theme_constant_override("separation", int(51 * k))
 	outer.add_child(cols)
-	var acts := VBoxContainer.new(); acts.add_theme_constant_override("separation", int(10 * k))
-	var box := VBoxContainer.new(); box.add_theme_constant_override("separation", int(10 * k))
+	var acts := VBoxContainer.new(); acts.add_theme_constant_override("separation", int(14 * k))
+	var box := VBoxContainer.new(); box.add_theme_constant_override("separation", int(14 * k))
 	if in_game:
 		cols.add_child(acts)
-		var vr := ColorRect.new(); vr.color = Color(INK, 0.25); vr.custom_minimum_size = Vector2(1.5, 0); cols.add_child(vr)
+		var vr := ColorRect.new(); vr.color = Color(INK, 0.25); vr.custom_minimum_size = Vector2(2, 0); cols.add_child(vr)
 	cols.add_child(box)
 	if in_game: _add(acts, k, { id = "resume", kind = "act", text = "계속하기" })
 	if in_game and keeper != null:

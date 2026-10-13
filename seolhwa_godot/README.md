@@ -9,7 +9,10 @@ Godot 4.7.1(macOS, Apple M1)에서 검증했다.
 godot --path seolhwa_godot                            # 게임(시작 메뉴·이야기·말 걸기) — 첫 장면 region.tscn
 godot --path seolhwa_godot res://scenes/main.tscn   # G0 1차 마을 데모(--refset·--bench 등) — 첫 장면은 이제 region.tscn
 ```
-창 1024×768, 장면은 화면 배율(레티나 2)만큼 크게 그림.
+기준 화면 **1920×1080(16:9)**, stretch `canvas_items` · aspect `expand` — 창 크기를 바꾸면 UI가 같이 커지고 작아지며 3D 장면은 창을 꽉 채운다.
+그냥 실행하면 화면 작업 영역의 88% 안에 드는 가장 큰 16:9 창으로 열린다(`--` 뒤 인자가 있으면 시험·촬영으로 보고 창 크기를 건드리지 않는다 — `--fitwindow`로 강제).
+**F11 · Alt+Enter** 전체 화면. 3D 장면은 창 화소 × 화면 배율(레티나 2)로 그리되 2560×1440(약 370만 화소)을 넘지 않게 줄인다(`--scale=N`을 주면 그대로).
+창 촬영: `godot --path seolhwa_godot res://scenes/region.tscn --resolution 1920x1080 -- …`(맥 레티나에서 창 화소 = 1920×1080).
 
 | 키 | 동작 |
 |---|---|

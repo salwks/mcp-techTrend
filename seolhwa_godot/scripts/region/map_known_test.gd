@@ -70,7 +70,7 @@ static func run(map) -> void:
 	Discovery.tell(sp, "place:north_pass")
 	ok.call(Discovery.state(sp, "place:north_pass") == Discovery.KNOWN and Discovery.how(sp, "place:north_pass") == "told", "들음(told) → KNOWN")
 	# 6a 그림(KNOWN): 상식 건물(광한루 먼저)을 가운데 두고 2단계 이상으로 — 이름표가 옅다(솎기로 빠진 건물은 건너뛰고 다음 것)
-	if map.get_viewport().get_visible_rect().size.y < 700: tree.root.size = Vector2i(1024, 768)   # 헤드리스: 1024×768
+	if map.get_viewport().get_visible_rect().size.y < 1000: tree.root.size = Vector2i(1920, 1080)   # 헤드리스: 기준 화면 1920×1080
 	await tree.process_frame
 	map.page = 0
 	if not map.visible: map.toggle()
@@ -114,7 +114,7 @@ static func run(map) -> void:
 	var cols: int = map.legend_cols()
 	var colw: float = map._legend.size.x / float(cols)
 	for e in map.LEGEND:
-		if map.LEGEND_ICON_W + 6.0 + map._font.get_string_size(String(e[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.MAP_PANEL).x > colw + 0.5: ok.call(false, "범례 '%s' 칸 넘침" % e[1])
+		if map.LEGEND_ICON_W + 8.0 + map._font.get_string_size(String(e[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, UiFonts.MAP_PANEL).x > colw + 0.5: ok.call(false, "범례 '%s' 칸 넘침" % e[1])
 	map.set_page(0)
 	# 5 옛 저장: visited/told만 있는 이 공간 → 다음 진입(지도 발견 셈)에 상식이 채워지고 옛 값은 그대로
 	var old := { "town:%s" % String(map._towns[0][0]): "visited", "place:north_pass": "told" }

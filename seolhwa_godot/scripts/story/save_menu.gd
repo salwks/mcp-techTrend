@@ -37,7 +37,7 @@ func _init(m := "save", k = null) -> void:
 func _ready() -> void:
 	_was_paused = get_tree().paused
 	if keeper != null: get_tree().paused = true
-	_k = clampf(get_viewport().get_visible_rect().size.y / 768.0, 0.8, 2.4)
+	_k = UiFonts.k(get_viewport().get_visible_rect().size, 0.8)
 	var dim := ColorRect.new(); dim.color = Color(0, 0, 0, 0.5); dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
 	var cc := CenterContainer.new(); cc.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -45,10 +45,10 @@ func _ready() -> void:
 	var p := PanelContainer.new()
 	var sb := StyleBoxFlat.new(); sb.bg_color = Color(PAPER, 0.98); sb.border_color = Color(INK, 0.8); sb.set_border_width_all(2)
 	sb.set_corner_radius_all(2); sb.shadow_color = Color(0, 0, 0, 0.35); sb.shadow_size = 10
-	sb.content_margin_left = 34 * _k; sb.content_margin_right = 34 * _k; sb.content_margin_top = 22 * _k; sb.content_margin_bottom = 20 * _k
+	sb.content_margin_left = 48 * _k; sb.content_margin_right = 48 * _k; sb.content_margin_top = 31 * _k; sb.content_margin_bottom = 28 * _k
 	p.add_theme_stylebox_override("panel", sb)
 	cc.add_child(p)
-	_box = VBoxContainer.new(); _box.add_theme_constant_override("separation", int(8 * _k))
+	_box = VBoxContainer.new(); _box.add_theme_constant_override("separation", int(11 * _k))
 	p.add_child(_box)
 	_build()
 
@@ -59,7 +59,7 @@ func _lab(text: String, size: float, col: Color, classic := false) -> Label:
 func _build() -> void:
 	for c in _box.get_children(): c.queue_free()
 	_rows = []
-	var head := HBoxContainer.new(); head.add_theme_constant_override("separation", int(26 * _k))
+	var head := HBoxContainer.new(); head.add_theme_constant_override("separation", int(37 * _k))
 	for m in ["save", "load"]:
 		var on: bool = m == mode
 		var t := _lab("저장" if m == "save" else "불러오기", UiFonts.TITLE if on else UiFonts.NAME, SEAL if on else INK_SOFT, true)
@@ -69,7 +69,7 @@ func _build() -> void:
 		t.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT: _switch(mm))
 		head.add_child(t)
 	_box.add_child(head)
-	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2(760 * _k, 1.5); _box.add_child(r)
+	var r := ColorRect.new(); r.color = Color(INK, 0.7); r.custom_minimum_size = Vector2(1069 * _k, 1.5); _box.add_child(r)
 	for n in range(0, Progress.SLOTS + 1):
 		_add_row(n)
 	_msg = _lab("", UiFonts.KEYS, SEAL); _box.add_child(_msg)
@@ -87,12 +87,12 @@ func _add_row(n: int) -> void:
 	var ok := (n > 0) if mode == "save" else not info.is_empty()
 	var row := PanelContainer.new()
 	var sb := StyleBoxFlat.new(); sb.bg_color = Color(0, 0, 0, 0); sb.border_color = Color(INK, 0.25); sb.set_border_width_all(1)
-	sb.content_margin_left = 10 * _k; sb.content_margin_right = 10 * _k; sb.content_margin_top = 6 * _k; sb.content_margin_bottom = 6 * _k
+	sb.content_margin_left = 14 * _k; sb.content_margin_right = 14 * _k; sb.content_margin_top = 8 * _k; sb.content_margin_bottom = 8 * _k
 	row.add_theme_stylebox_override("panel", sb)
 	row.mouse_filter = Control.MOUSE_FILTER_STOP
-	var h := HBoxContainer.new(); h.add_theme_constant_override("separation", int(14 * _k)); h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var h := HBoxContainer.new(); h.add_theme_constant_override("separation", int(20 * _k)); h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(h)
-	var tr := TextureRect.new(); tr.custom_minimum_size = Vector2(160, 90) * _k
+	var tr := TextureRect.new(); tr.custom_minimum_size = Vector2(225, 127) * _k
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE; tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if String(info.get("thumb", "")) != "":
@@ -103,12 +103,12 @@ func _add_row(n: int) -> void:
 	frame.add_theme_stylebox_override("panel", fsb)
 	frame.add_child(tr)
 	h.add_child(frame)
-	var v := VBoxContainer.new(); v.add_theme_constant_override("separation", int(2 * _k)); v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var v := VBoxContainer.new(); v.add_theme_constant_override("separation", int(3 * _k)); v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# 칸 이름(NAME) · 고을·사건(BODY) · 시각·놀이 시간·남긴 때(DETAIL). 자동 기록 설명은 이름 줄 오른쪽에 짧게(DETAIL)
 	var name_l := _lab("자동 기록" if n == 0 else "칸 %d" % n, UiFonts.NAME, SEAL, true)
 	if n == 0 and mode == "save":
-		var nh := HBoxContainer.new(); nh.add_theme_constant_override("separation", int(14 * _k)); nh.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var nh := HBoxContainer.new(); nh.add_theme_constant_override("separation", int(20 * _k)); nh.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		nh.add_child(name_l)
 		var al := _lab("고을·사건·길 떠날 때 저절로", UiFonts.DETAIL, INK_SOFT); al.size_flags_vertical = Control.SIZE_SHRINK_END
 		nh.add_child(al)
