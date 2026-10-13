@@ -14,6 +14,7 @@ const SCRIPTS := {
 	"res://kit/story/park_mark.gd": ["_mat"],
 	"res://scripts/ui_fonts.gd": ["_raw", "_main", "_classic", "_sys"],
 	"res://scripts/story/journal_view.gd": ["_hanji"],
+	"res://scripts/ui/title_art.gd": ["_logo", "_halo"],
 }
 
 static func run() -> void:

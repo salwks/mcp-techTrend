@@ -63,3 +63,46 @@
 ## 6. 화면(1920×1080 창) — `shots/res_1080/`
 - `ui/`: dialog · choice · card · journal_* · esc_menu · options · save_menu · load_menu · map_all(범례 한 판) · station_map_pick · fast_window · hud_prompt_stamp
 - `town_play.png` · `map/`(고을·권역·전국·범례·확인 상자) · `fp/`(1인칭) · `cine/`(1A 단오장 · 8A 잔치) · `iib1/`(14A · 17A · 18A 전후)
+
+---
+
+# 2단계 — 시작 메뉴 움직이는 바탕 · 로고 자리
+
+## 7. 움직이는 바탕(living wallpaper) 옮기기
+- **출처**: 사용자 제공 `Seolhwarok_LivingWallpaper_Godot.zip`(2026-10-13, `~/Downloads`) — Godot 4 프로젝트(Node2D, 3840×2160 캔버스 11겹, gl_compatibility). 원본 README: 원화는 생성 원화를 3840×2160 캔버스에 배치·리샘플링한 것(네이티브 4K 아님), 족자 글씨는 서예풍 시각 표현(국립중앙박물관 이광사 행서 화기 참고).
+- **들인 것**: `scripts/ui/title_wallpaper.gd`(동작 — 원본 `LivingWallpaper.gd`의 물결·안개·선비·바람 셰이더 시간 전달, 꽃잎 28 경로(씨앗 1739)·학 셋 활공 수식 그대로), `shaders/title_wp_{water,mist,scholar,wind}.gdshader`(원본 그대로 — UV 기준이라 그림 크기와 상관없다), `assets/title_wallpaper/`(그림 + `wallpaper.json` 자리표).
+- **그림 줄이기**: 3840×2160 PNG 11장(약 40MB) → webp **약 1.9MB**. 셰이더가 붙는 겹(하늘·산·강·안개·소나무)은 캔버스 전체 1920×1080, 선비(족자 글씨)는 2560×1440, 셰이더 없는 겹(마을·앞 바위·로고)은 그림 둘레만 잘라(로고 2560 기준) 자리를 `wallpaper.json`에. 학 셋·꽃잎 아틀라스는 반으로(스프라이트 배율 ×2로 같은 크기). 겹 순서는 원본 장면 그대로(01 하늘 · 02 산 · 04 강 · 03 마을 · 07 안개 · 05 소나무 · 11 앞 바위 · 06 선비 · 학(z12) · 꽃잎(z20) · 10 로고(z30)). 원본의 숨긴 08_cranes·09_petals 통짜 겹은 쓰지 않아 뺐다.
+- **들이지 않은 것**: GIF/WebP 미리보기, preview_4k, source_art(꽃잎 아틀라스만 줄여서), validation 로그, references, 검사 스크립트.
+- **뺀 것**: 설정 창(H) · Space 멈춤 · F 전체 화면 · R 처음부터 · Esc · 시작 안내 글 · `--record` · `Engine.max_fps = 60` 고정 · 마우스 시차(꺼짐이 기본). 입력은 시작 메뉴가 가진다. 움직임 세기는 원본 기본(바람 0.75 '보통', 꽃잎 18).
+- **화면 맞춤**: 캔버스를 보이는 크기에 **덮기(cover)**, 가운데 기준(16:9면 잘림 없음). 메뉴 자리는 캔버스 좌표(0~1)로 정해 창 비율이 바뀌어도 그림의 같은 물 위를 따른다.
+- **렌더러**: 우리 Mobile 렌더러에서 네 셰이더 모두 고칠 것 없이 동작(창 촬영으로 확인 — 물결·안개·족자·학이 프레임마다 움직임, `shots/title_art/motion_frames_grid.png`).
+- **풀림**: 텍스처를 정적 캐시에 두지 않는다(메뉴 노드가 쥔다) → 메뉴가 닫히면(queue_free) 함께 풀린다. `continue:new`에 확인을 더했다(메뉴에 겹·학·꽃잎 30개 · 닫힌 뒤 바탕 WeakRef가 비었나). 로고(TitleArt `_logo`·`_halo`)는 `quit_cleanup`에 넣었다. 끝낼 때 leaked 경고 없음.
+- **성능**: 메뉴가 화면을 다 덮는 동안 뒤 3D 장면(scene_vp)은 그리지 않는다(불러오기가 끝난 뒤 · 닫히면 되돌림) — 1920×1080 창에서 48 → **72fps**(`TITLE frames … fps`).
+- `assets/ui/title_bg_source.webp`(정적 바탕)은 지웠다. `TitleArt.bg()`도 지움.
+
+## 8. 메뉴 자리 — (b) 아래 물 띠 가로 한 줄
+후보(`--titlelayout=water|row|panel`, `shots/title_art/candidate_*.png`):
+- **water**(오른쪽 아래 물 위 세로 줄): 다섯 줄 + 기록 줄 + 키 안내가 물 띠(세로 62~97%)에 다 들지 않아 마지막 줄·안내가 화면 끝에 겹쳤다. 더 올리면 마을(50~62%)을 가린다.
+- **panel**(오른쪽 아래 한지 판): 마을 아래쪽과 강의 넓은 물을 판이 덮어 그림의 숨 쉬는 자리가 사라진다.
+- **row(고름)**: 아래 물 띠(세로 약 90%)에 가로 한 줄 — 로고(오른쪽 위)·선비와 족자(왼쪽)·학·마을(가운데~오른쪽)을 하나도 가리지 않고, 가운데 잔잔한 물은 비워 둔다. 앞 바위(왼쪽 아래)를 비켜 가로 50~98%에 둔다. 글자는 NAME(44, Classic) — HEAD로는 다섯이 물 띠에 들지 않았다. 고른 항목은 붉은 글 + 붓 밑줄(가로 줄에서는 도장이 앞 항목에 붙어 밑줄만), 이어 하기 아래 기록 줄(DETAIL), 오른쪽 아래 키 안내(KEYS). 글 뒤 옅은 한지 번짐 · 한지빛 외곽선으로 물빛 위에서 읽힌다.
+- 항목·동작은 그대로(새 게임 · 이어 하기 · 불러오기 · 설정 · 그만하기, 마우스 올림 = 고름, ←→↑↓·A·D·W·S·1~4·Enter·E·Space·클릭). 사용할 수 없는 항목은 건너뛴다(연속 둘도).
+
+## 9. 로고 — 원래 「설화록」 제목이 있던 자리만
+- 불러오기 화면(`region_main._make_load_ui` — 72→104px 글이던 제목) → 붓글씨 로고(650px 너비, 한지 바탕이라 번짐 없이) — `shots/title_art/logo_loading_screen.png`
+- 남원 여는 장면 제목 카드 `title_card("설화록")` → 로고(번짐 한지 타원 위, 글은 시험·기록용으로 남기고 투명) — `shots/title_art/onboard/onboard_title_seolhwa.png`
+- 시작 메뉴: 바탕 그림 속 로고(10_logo)를 그대로 쓴다 — 따로 제목을 그리지 않는다. 다른 곳(일반 글 '설화록')은 그대로.
+
+## 10. 시험(2단계)
+- `continue:new`(바탕 겹·풀림 확인 더함) · `continue:namwon-early` · `continue:namwon-climax` · `continue:namwon-rope` · `continue:namwon-morning` · `namwon:onboard` · `namwon:A` — 모두 PASS. 창 모드 `namwon:onboard`(storyshots)도 PASS.
+- 전체 `tools/run_story_tests.sh` 한 번(TIMEOUT_SCALE=2): **73개 모두 PASS, SCRIPT ERROR 0**.
+
+## 11. 화면 — `shots/title_art/`
+- 후보: `candidate_water.png` · `candidate_row.png` · `candidate_panel.png`
+- 최종: `final_menu.png` · 움직임 `final_menu_0~3.png`(1.5초 간격) · `motion_frames_grid.png`
+- 로고 자리: `logo_loading_screen.png` · `onboard/onboard_title_seolhwa.png`
+- 예전 정적 바탕 때: `before_*.png`(앞 에이전트)
+
+## 남은 것
+- 바탕 그림은 1920×1080(선비·로고 2560)으로 줄였다 — 창이 1920보다 크면(이 맥 기본 창 2432×1368, 전체 화면 2880×1800) 1.3~1.5배 늘려 보인다. 붓·물빛 그림이라 크게 거슬리지 않지만, 더 큰 창에서 또렷하려면 2560 겹으로 바꾸면 된다(원본 3840에서 다시 뽑기 — 약 3.5MB 예상). 원본 자체가 4K보다 작은 생성 원화를 늘린 것이다.
+- 불러오기 화면 부제·진행 글은 아직 시스템 글꼴(UiFonts를 쓰기 전 화면).
+- 남원 수수밭 미끼 '틀 안' 판정은 이제 scene_vp 크기를 쓰지만, 레티나 창 모드에서 시험해 본 적은 없다(헤드리스 시험만).

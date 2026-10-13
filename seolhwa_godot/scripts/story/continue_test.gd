@@ -74,12 +74,16 @@ func run(spec: String) -> void:
 	_ok(d.title != null and d.title.active, "시작 메뉴가 떠 있음")
 	if d.title == null or not d.title.active:
 		_finish(""); return
+	var wp = d.title.get("_wp")
+	_ok(wp != null and wp.get_child_count() >= 9 + 3, "시작 메뉴 움직이는 바탕(겹·학·꽃잎) %s" % [wp.get_child_count() if wp != null else -1])
+	var wp_ref: WeakRef = weakref(wp) if wp != null else null
 	d.ui.auto = true
 	print("CONTTEST pick %s phase=%s seen=%s" % [spec, d.S.phase, d.S.seen.keys()])
 	d.title._pick(0 if spec == "new" else 1)
 	# 메뉴가 닫히고, 이야기가 시작되고(새 게임은 여는 장면), 조작이 풀릴 때까지
 	await _wait_until(func(): return d.title == null or not is_instance_valid(d.title) or not d.title.active, 10.0)
 	await main._wait_frames(30)
+	if spec == "new" and wp_ref != null: _ok(await _wait_until(func(): return wp_ref.get_ref() == null, 5.0), "메뉴가 닫히면 움직이는 바탕도 풀림")
 	var idle := func(): return d._started and not d.blocks_move() and not d.runner.busy and not d.combat_view.active
 	_ok(await _wait_until(idle, 120.0), "이야기 한가함 started=%s busy=%s modal=%s cut=%s" % [d._started, d.runner.busy, d.ui.modal, d._cut])
 	_ok(d.S.phase != "start", "phase=" + String(d.S.phase))

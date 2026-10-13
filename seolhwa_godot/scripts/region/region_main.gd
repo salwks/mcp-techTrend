@@ -1334,14 +1334,13 @@ func _make_load_ui() -> void:
 	_load_ui = CanvasLayer.new(); _load_ui.layer = 10
 	var bg := ColorRect.new(); bg.color = Color("#efe6d2"); bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_load_ui.add_child(bg)
-	var title := Label.new(); title.text = "설화록"
+	var title := preload("res://scripts/ui/title_art.gd").logo_node(false)   # 게임 제목: 붓글씨 로고(한지 바탕이라 번짐 없이)
 	var sub := Label.new(); sub.text = _space_title()
 	sub.add_theme_font_size_override("font_size", 38); sub.add_theme_color_override("font_color", Color("#5a5048"))
 	sub.set_anchors_preset(Control.PRESET_CENTER); sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sub.position = Vector2(-420, -14); sub.size = Vector2(840, 50)
-	title.add_theme_font_size_override("font_size", 104); title.add_theme_color_override("font_color", Color("#2b2622"))
-	title.set_anchors_preset(Control.PRESET_CENTER); title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.position = Vector2(-280, -127); title.size = Vector2(560, 140)
+	title.set_anchors_preset(Control.PRESET_CENTER)
+	title.position = Vector2(-325, -276); title.size = Vector2(650, 650 / 2000.0 * 758.0)
 	bg.add_child(title)
 	_load_label = Label.new(); _load_label.add_theme_color_override("font_color", Color("#5a5048"))
 	_load_label.set_anchors_preset(Control.PRESET_CENTER); _load_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1358,6 +1357,8 @@ func _update_loading() -> void:
 	var near_busy: bool = world.scatter_busy_near(c, 1) or placement.busy_near(c, 2)
 	var left: int = placement.pending_count()
 	_load_label.text = "산천을 그리는 중…  식생 %d타일 · 건물 %d 남음" % [world.stats.jobs, left]
+	if args.has("loadshot") and Engine.get_process_frames() == 20:   # 시험: 불러오기 화면 찍기
+		get_viewport().get_texture().get_image().save_png(_abs(String(args.loadshot)))
 	# 불러오기 화면이 장면을 가리는 동안은 장면을 그리지 않는다(셰이더 미리 데우기 몇 프레임만) — 한양처럼 큰 권역에서 프레임당 수십 ms
 	scene_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if Engine.get_process_frames() < 8 else SubViewport.UPDATE_DISABLED
 	if not near_busy and Time.get_ticks_msec() - _load_t0 > 300:

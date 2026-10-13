@@ -23,6 +23,7 @@ const JournalView := preload("res://scripts/story/journal_view.gd")
 const JournalBook := preload("res://scripts/story/journal_book.gd")
 const HudGate := preload("res://scripts/hud_gate.gd")
 const VText := preload("res://scripts/story/vtext.gd")
+const TitleArt := preload("res://scripts/ui/title_art.gd")
 
 const PAPER := Color("#efe6d2")
 const PAPER_D := Color("#e2d6bb")
@@ -118,6 +119,7 @@ var _mark_list: Array = []
 var _talk_marks: Array = []
 var _center: Label
 var _title_l: Label
+var _title_logo: Control   # 「설화록」 제목 카드는 글 대신 붓글씨 로고(_title_l의 자식 — 같은 페이드)
 var _book: PanelContainer
 var _book_box: VBoxContainer
 var _jdata := {}
@@ -375,6 +377,9 @@ func _build() -> void:
 	_title_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_title_l.modulate.a = 0.0
 	_root.add_child(_title_l)
+	_title_logo = TitleArt.logo_node()
+	_title_logo.visible = false
+	_title_l.add_child(_title_logo)
 
 func _resize() -> void:
 	var vs := get_viewport().get_visible_rect().size
@@ -398,6 +403,9 @@ func _resize() -> void:
 	_place_caption()
 	_center.position = Vector2(vs.x * 0.15, vs.y * 0.3); _center.size = Vector2(vs.x * 0.7, vs.y * 0.4)
 	_title_l.position = Vector2(0, vs.y * 0.3); _title_l.size = Vector2(vs.x, vs.y * 0.3)
+	var lw := minf(vs.x * 0.62, 844.0 * k)
+	_title_logo.size = Vector2(lw, lw / TitleArt.LOGO_ASPECT)
+	_title_logo.position = (_title_l.size - _title_logo.size) * 0.5
 	var bw := minf(vs.x * 0.5, 731 * k)
 	_book.custom_minimum_size = Vector2(bw, vs.y * 0.5); _book.size = Vector2(bw, vs.y * 0.5)
 	_book.position = Vector2((vs.x - bw) / 2, vs.y * 0.22); _book.pivot_offset = Vector2(bw / 2, vs.y * 0.25)
@@ -943,6 +951,10 @@ func title_card(text: String, sec := 2.4, size := 93) -> void:
 	preload("res://scripts/region/place_title.gd").note_story(text)   # 같은 지명이 곧 지명 표시로 겹쳐 뜨지 않게
 	_title_l.text = text
 	_title_l.add_theme_font_size_override("font_size", int(size * _k))
+	# 게임 제목은 붓글씨 로고로 — 글자는 남겨 두되(시험·로그가 읽는다) 보이지 않게
+	var is_logo := text == "설화록" and _title_logo.get_node("logo").texture != null
+	_title_logo.visible = is_logo
+	_title_l.self_modulate.a = 0.0 if is_logo else 1.0
 	var tw := create_tween()
 	tw.tween_property(_title_l, "modulate:a", 1.0, 0.05 if auto else 0.6)
 	tw.tween_interval(0.05 if auto else maxf(0.3, sec - 1.2))
