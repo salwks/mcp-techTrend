@@ -1,14 +1,15 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-10-13T19:34:56.641082Z",
+  "generated_at": "2026-10-13T21:09:45.465401Z",
   "source": "tamnd/threads-cli anonymous public crawler",
   "collection_limit": 100,
-  "collection_status": "ok",
+  "collection_status": "degraded",
   "latest_good_generated_at": "2026-10-13T19:34:56.641082Z",
   "limitations": [
-    "Anonymous crawler surface exposes recent public posts, not guaranteed full account history.",
-    "At most 100 recent records are collected per primary run.",
-    "Use choi_archive.json as the pending/unreported reporting queue; the Render watchdog can recover posts missed between primary runs."
+    "Current primary collection failed; previous successful latest snapshot was preserved.",
+    "The Render watchdog is checked independently and can still add observed unreported posts to the pending queue.",
+    "Do not infer or fabricate missing posts.",
+    "Primary collection failed, but the independent Render watchdog responded successfully."
   ],
   "post_count": 15,
   "posts": [
@@ -520,18 +521,21 @@
   ],
   "watchdog": {
     "status": "ok",
-    "checked_at": "2026-10-13T19:34:56.641082Z",
+    "checked_at": "2026-10-13T21:09:45.465401Z",
     "backup_base_url": "https://choi-threads-backup-collector.onrender.com",
     "endpoint": "/archive",
-    "backup_collected_at": "2026-10-13T19:35:09.706576541Z",
-    "backup_archive_count": 15,
-    "backup_post_count": 15,
-    "backup_only_current_count": 0,
-    "recovered_to_archive_count": 0,
-    "recovered_keys": [],
+    "backup_collected_at": "2026-10-13T21:10:34.582874855Z",
+    "backup_archive_count": 16,
+    "backup_post_count": 16,
+    "backup_only_current_count": 16,
+    "recovered_to_archive_count": 1,
+    "recovered_keys": [
+      "4007266610389541471"
+    ],
     "limitations": [
       "The watchdog is an independent runtime, but it uses the same anonymous Threads crawler family.",
       "Its in-memory archive is drained into GitHub before commit-triggered Render redeploys."
     ]
-  }
+  },
+  "error": "threads-cli exited 5: [th] walking posts for choi.openai\n          \n   ERROR  \n          \n  Rate limited (HTTP 429) after 4 attempts."
 }
