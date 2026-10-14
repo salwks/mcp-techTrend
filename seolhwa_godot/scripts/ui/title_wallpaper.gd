@@ -69,6 +69,9 @@ func _ready() -> void:
 		add_child(sp)
 		_cranes.append({ sprite = sp, phase = 0.65 + i * 0.065, duration = 88.0, height = 860.0 + i * 65.0 })
 	if _layers.has("10_logo"): _layers["10_logo"].z_index = 30
+	# 학(z 12)은 먼 하늘을 난다 — 앞에 선 소나무·앞 바위·선비는 학보다 앞(z 13, 꽃잎 20·로고 30보다는 뒤)
+	for n in ["05_pine", "11_foreground_rock", "06_scholar"]:
+		if _layers.has(n): _layers[n].z_index = 13
 	get_viewport().size_changed.connect(fit)
 	fit()
 	_apply()
