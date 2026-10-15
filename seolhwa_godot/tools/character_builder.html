@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>인물 빌더</title>
+<style>
+  :root { --ink:#2a2420; --paper:#ece6d6; --line:#c9bfa8; --acc:#8a2f37; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.35 -apple-system, "Apple SD Gothic Neo", sans-serif; color: var(--ink); background: #ddd6c4; display: grid; grid-template-columns: 330px 1fr 340px; height: 100vh; }
+  #ctl, #side { overflow: auto; padding: 10px; background: var(--paper); }
+  #ctl { border-right: 1px solid var(--line); } #side { border-left: 1px solid var(--line); }
+  h3 { margin: 12px 0 4px; font-size: 12px; color: var(--acc); border-bottom: 1px solid var(--line); }
+  label { display: grid; grid-template-columns: 92px 1fr 38px; align-items: center; gap: 4px; margin: 2px 0; }
+  label.c { grid-template-columns: 92px 1fr; }
+  select, input[type=text], input[type=number] { width: 100%; font: inherit; padding: 1px 3px; }
+  input[type=color] { width: 100%; height: 20px; padding: 0; border: 0; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+  button { font: inherit; padding: 4px 9px; border: 1px solid #8f8470; background: #f6f1e4; border-radius: 3px; cursor: pointer; }
+  button.main { background: var(--acc); color: #fff; border-color: var(--acc); }
+  #stage { display: flex; flex-direction: column; align-items: center; padding: 10px; overflow: auto; }
+  #views { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  canvas.v { background: #ece6d6; border: 1px solid var(--line); }
+  #grid { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; max-width: 100%; }
+  #grid canvas { background: #ece6d6; border: 1px solid var(--line); cursor: pointer; }
+  #grid canvas.sel { outline: 2px solid var(--acc); }
+  textarea { width: 100%; height: 46vh; font: 11px ui-monospace, monospace; }
+  #st { font-size: 12px; color: #6a5a48; min-height: 1.3em; }
+  .val { font-size: 11px; text-align: right; }
+</style></head>
+<body>
+<div id="ctl">
+  <div class="row"><button class="main" id="rand">Randomize</button><button id="again">같은 틀 다음</button></div>
+  <label class="c">틀(template)<select id="tpl"></select></label>
+  <label class="c">고을(region)<select id="reg"></select></label>
+  <label class="c">프리셋<select id="pre"><option value="">—</option></select></label>
+  <label>시드<input type="number" id="seed" value="1"><span></span></label>
+  <div id="fields"></div>
+</div>
+<div id="stage">
+  <div class="row">
+    <label class="c" style="width:200px">동작<select id="anim"></select></label>
+    <label class="c" style="width:170px">확대<select id="zoom"><option selected>1</option><option>1.5</option><option>2</option></select></label>
+  </div>
+  <div id="views"></div>
+  <div id="st"></div>
+  <div class="row"><button id="batch">묶음 만들기</button><label class="c" style="width:150px">개수<input type="number" id="cnt" value="12"></label><button id="allTpl">모든 틀 하나씩</button></div>
+  <div id="grid"></div>
+</div>
+<div id="side">
+  <h3>자료(JSON) — 고쳐서 「적용」</h3>
+  <textarea id="json"></textarea>
+  <div class="row"><button id="apply">적용</button><button id="dl1">자료 내려받기</button><button id="dlB">묶음 자료 내려받기</button></div>
+  <div class="row"><button id="save1">자료 저장(data/chars/specs)</button></div>
+  <h3>굽기(Godot 프레임)</h3>
+  <label class="c">묶음 이름<input type="text" id="setname" value="custom"></label>
+  <div class="row"><button id="bake1">이 인물 굽기</button><button id="bakeB">묶음 굽기</button></div>
+  <p style="font-size:11px">결과: data/chars/&lt;묶음&gt;.json + 페이지. Godot에서 <code>CharBank.ensure(id)</code>로 찾는다.</p>
+</div>
+<script type="module">
+import * as fc from '/src/chars/frameCore.js';
+import * as B from '/__tools/char_builder.js';
+
+const $ = (id) => document.getElementById(id);
+const st = (s) => { $('st').textContent = s; };
+const PX = 120;
+let spec = null, batch = [], baked = null, bakeToken = 0;
+
+// ---------- 고르기 ----------
+for (const [k, t] of Object.entries(B.TEMPLATES)) $('tpl').add(new Option(`${t.label} (${k})`, k));
+for (const [k, r] of Object.entries(B.REGIONS)) $('reg').add(new Option(`${r.name} ${k}`, k));
+for (const [k, p] of Object.entries(B.PRESETS)) $('pre').add(new Option(p.name, k));
+for (const a of B.ANIMS) $('anim').add(new Option(a, a));
+$('anim').value = 'walk';
+
+// ---------- 편집 칸(자료 경로 · 종류) ----------
+const L = (v) => B.LABEL[v] ? `${B.LABEL[v]} ${v}` : v;
+const F = [
+  ['몸', [['body.sex', 'sel', B.OPTIONS.sex], ['body.age', 'sel', B.OPTIONS.age], ['body.height', 'num', [0.9, 1.85, 0.01]], ['body.build', 'num', [0.8, 1.25, 0.01]],
+    ['body.stoop', 'num', [0, 0.4, 0.01]], ['body.head', 'num', [0.88, 1.12, 0.01]], ['body.legs', 'num', [0.9, 1.08, 0.01]]]],
+  ['얼굴', [['face.shape', 'sel', B.OPTIONS.faceShape], ['face.brows', 'sel', B.OPTIONS.brows], ['face.browW', 'num', [0.6, 1.5, 0.05]], ['face.eyes', 'sel', B.OPTIONS.eyes],
+    ['face.eyeSize', 'num', [0.8, 1.2, 0.01]], ['face.eyeGap', 'num', [0.34, 0.5, 0.01]], ['face.nose', 'sel', B.OPTIONS.nose], ['face.mouth', 'sel', B.OPTIONS.mouth],
+    ['face.mouthY', 'num', [0.54, 0.68, 0.01]], ['face.wrinkles', 'num', [0, 3, 1]], ['face.mark', 'sel', B.OPTIONS.mark], ['face.beard', 'sel', B.OPTIONS.beard],
+    ['face.moustache', 'sel', B.OPTIONS.moustache], ['face.skin', 'col'], ['face.cheek', 'num', [0, 0.45, 0.01]]]],
+  ['머리', [['hair.style', 'sel', B.OPTIONS.hair], ['hair.color', 'col'], ['headwear', 'sel', B.OPTIONS.headwear], ['hatColor', 'col']]],
+  ['옷', [['clothes.top', 'sel', B.OPTIONS.top], ['clothes.outer', 'sel', B.OPTIONS.outer], ['clothes.vest', 'sel', B.OPTIONS.vest], ['clothes.bottom', 'sel', B.OPTIONS.bottom],
+    ['clothes.sash', 'sel', B.OPTIONS.sash], ['clothes.shoes', 'sel', B.OPTIONS.shoes], ['clothes.apron', 'chk'], ['clothes.legwrap', 'chk']]],
+  ['물감', [['colors.coat', 'col'], ['colors.pants', 'col'], ['colors.skirt', 'col'], ['colors.vest', 'col'], ['colors.inner', 'col'], ['colors.goreum', 'col'],
+    ['colors.cloak', 'col'], ['colors.bundle', 'col']]],
+  ['소품', [['items.back', 'sel', B.OPTIONS.back], ['items.load', 'sel', B.OPTIONS.load], ['items.head', 'sel', B.OPTIONS.head], ['items.hand', 'sel', B.OPTIONS.hand],
+    ['items.handLoad', 'sel', B.OPTIONS.handLoad]]],
+  ['해짐', [['wear', 'num', [0, 1, 0.05]], ['dirt', 'num', [0, 1, 0.05]]]],
+];
+const get = (o, path) => path.split('.').reduce((a, k) => (a == null ? a : a[k]), o);
+const set = (o, path, v) => { const ks = path.split('.'); let a = o; for (const k of ks.slice(0, -1)) a = a[k] || (a[k] = {}); a[ks.at(-1)] = v; };
+const inputs = {};
+for (const [title, list] of F) {
+  const h = document.createElement('h3'); h.textContent = title; $('fields').appendChild(h);
+  for (const [path, kind, arg] of list) {
+    const lb = document.createElement('label'); lb.innerHTML = `<span>${path.split('.').at(-1)}</span>`;
+    let el, val = document.createElement('span'); val.className = 'val';
+    if (kind === 'sel') { el = document.createElement('select'); for (const v of arg) el.add(new Option(L(v), v)); }
+    else if (kind === 'num') { el = document.createElement('input'); el.type = 'range'; [el.min, el.max, el.step] = arg; }
+    else if (kind === 'col') { el = document.createElement('input'); el.type = 'color'; }
+    else { el = document.createElement('input'); el.type = 'checkbox'; }
+    el.addEventListener('input', () => {
+      const v = kind === 'num' ? +el.value : kind === 'chk' ? el.checked : el.value;
+      set(spec, path, v); val.textContent = kind === 'num' ? v : '';
+      refreshJson(); rebake();
+    });
+    lb.append(el, val); $('fields').appendChild(lb);
+    inputs[path] = { el, kind, val };
+  }
+}
+function syncInputs() {
+  for (const [path, { el, kind, val }] of Object.entries(inputs)) {
+    const v = get(spec, path);
+    if (kind === 'chk') el.checked = !!v;
+    else if (kind === 'col') el.value = /^#[0-9a-f]{6}$/i.test(v || '') ? v : '#000000';
+    else if (kind === 'num') { el.value = v ?? el.min; val.textContent = v ?? ''; }
+    else el.value = v ?? el.options[0].value;
+  }
+}
+const refreshJson = () => { $('json').value = JSON.stringify(spec, null, 1); };
+
+// ---------- 굽기 + 미리 보기 ----------
+// 싸게: 지금 동작 하나 × 세 시점만 굽는다(인물마다 약 0.3~1초). 동작을 바꾸면 그 동작만 더 굽는다.
+function bakeAnim(id, anim, px = PX) {
+  fc.TIERS.high[id] = px;
+  const b = new fc.BakeBank(id, 'high');
+  const out = {};
+  for (const v of ['front', 'side', 'back']) {
+    const c = b.clip(fc.clipKey(v, anim, false, false)); if (!c) continue;
+    let g = 0; while (!b.step(c) && g++ < 600);
+    out[v] = c;
+  }
+  return { b, clips: out };
+}
+let timer = null;
+function rebake() {
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    const tok = ++bakeToken, t0 = performance.now();
+    spec.id = spec.id || 'preview';
+    const id = B.registerSpec(spec);
+    baked = { ...bakeAnim(id, $('anim').value), t0: performance.now() };
+    if (tok === bakeToken) st(`${spec.id} · ${$('anim').value} · ${Math.round(performance.now() - t0)} ms`);
+  }, 60);
+}
+const cvs = {};
+for (const v of ['front', 'side', 'back']) { const c = document.createElement('canvas'); c.className = 'v'; $('views').appendChild(c); cvs[v] = c; }
+function drawFrame(g, bank, f, x, y, k) {
+  const pg = bank.pages[typeof f.page === 'number' ? f.page : f.page.index].cv;
+  const sx = f.u0 * 1024, sy = f.v0 * 1024, sw = (f.u1 - f.u0) * 1024, sh = (f.v1 - f.v0) * 1024;
+  const s = k * (PX * (f.x1 - f.x0)) / sw;
+  g.drawImage(pg, sx, sy, sw, sh, x + f.x0 * PX * k, y - f.y1 * PX * k, sw * s, sh * s);
+}
+function tick(now) {
+  requestAnimationFrame(tick);
+  if (!baked) return;
+  const k = +$('zoom').value, W = Math.round(PX * 1.5 * k), Hh = Math.round(PX * 2.75 * k);
+  for (const v of ['front', 'side', 'back']) {
+    const c = cvs[v], g = c.getContext('2d');
+    if (c.width !== W) { c.width = W; c.height = Hh; }
+    g.clearRect(0, 0, W, Hh);
+    const cl = baked.clips[v]; if (!cl) continue;
+    const t = (now - baked.t0) / 1000, sp = cl.spec;
+    let i;
+    if (sp.kind === 'phase') i = Math.floor((t / 0.95) * sp.n) % sp.n;
+    else if (sp.kind === 'loop') i = sp.loopStart + Math.floor(t / sp.step) % sp.n;
+    else i = Math.min(cl.frames.length - 1, Math.floor(t * 12) % (cl.frames.length + 6));
+    const f = cl.frames[Math.min(i, cl.frames.length - 1)];
+    drawFrame(g, baked.b, f, W / 2, Hh - 10 * k, k);
+    g.fillStyle = '#8a7a62'; g.font = '11px sans-serif'; g.fillText(v, 4, 13);
+  }
+}
+requestAnimationFrame(tick);
+
+function load(s) { spec = s; syncInputs(); refreshJson(); rebake(); }
+function genOne() { return B.generate({ template: $('tpl').value, region: $('reg').value, seed: +$('seed').value, count: 1 })[0]; }
+
+// ---------- 묶음(그리드) ----------
+function thumbs(list) {
+  batch = list; $('grid').innerHTML = '';
+  list.forEach((s, n) => {
+    const c = document.createElement('canvas'); c.width = 74; c.height = 128; c.title = `${s.id} (${s.template})`;
+    $('grid').appendChild(c);
+    setTimeout(() => {
+      const id = B.registerSpec(s);
+      const { b, clips } = bakeAnim(id, 'idle', 48);
+      const f = clips.front.frames[0], g = c.getContext('2d');
+      const pg = b.pages[f.page.index ?? f.page].cv, sx = f.u0 * 1024, sy = f.v0 * 1024, sw = (f.u1 - f.u0) * 1024, sh = (f.v1 - f.v0) * 1024;
+      g.drawImage(pg, sx, sy, sw, sh, 37 + f.x0 * 48, 124 - f.y1 * 48, sw, sh);
+    }, 20 * n);
+    c.onclick = () => { for (const o of $('grid').children) o.classList.remove('sel'); c.classList.add('sel'); load(structuredClone(s)); };
+  });
+}
+
+// ---------- 단추 ----------
+$('rand').onclick = () => { $('seed').value = Math.floor(Math.random() * 99999); load(genOne()); };
+$('again').onclick = () => { $('seed').value = +$('seed').value + 1; load(genOne()); };
+$('tpl').onchange = $('reg').onchange = $('seed').onchange = () => load(genOne());
+$('pre').onchange = () => { if ($('pre').value) load(structuredClone(B.PRESETS[$('pre').value])); };
+$('anim').onchange = rebake;
+$('apply').onclick = () => { try { load(JSON.parse($('json').value)); } catch (e) { st('JSON 오류: ' + e.message); } };
+$('batch').onclick = () => thumbs(B.generate({ template: $('tpl').value, region: $('reg').value, seed: +$('seed').value, count: +$('cnt').value }));
+$('allTpl').onclick = () => thumbs(Object.keys(B.TEMPLATES).map((t) => B.generate({ template: t, region: $('reg').value, seed: +$('seed').value, count: 1 })[0]));
+const download = (name, obj) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 1)], { type: 'application/json' })); a.download = name; a.click(); };
+$('dl1').onclick = () => download(`${spec.id}.json`, spec);
+$('dlB').onclick = () => download(`batch_${$('tpl').value}_${$('seed').value}.json`, batch);
+$('save1').onclick = async () => { const r = await fetch(`/export/chars/specs/${spec.id}.json`, { method: 'PUT', body: JSON.stringify(spec, null, 1) }); st(r.ok ? `저장: data/chars/specs/${spec.id}.json` : 'PUT 실패'); };
+async function bake(list) {
+  const E = await import('/__tools/export_char_frames.js');
+  st('굽는 중…');
+  const out = await E.bakeSet($('setname').value, list.map((s) => structuredClone(s)), { px: 96, anims: B.ANIMS, log: st });
+  st(`구움: data/chars/${$('setname').value}.json — ${JSON.stringify(out.stats)}`);
+}
+$('bake1').onclick = () => bake([spec]);
+$('bakeB').onclick = () => bake(batch.length ? batch : [spec]);
+
+// 주소: ?preset=jumo | ?template=farmer&region=JL&seed=3
+const q = new URLSearchParams(location.search);
+if (q.get('template')) $('tpl').value = q.get('template');
+if (q.get('region')) $('reg').value = q.get('region');
+if (q.get('seed')) $('seed').value = q.get('seed');
+if (q.get('anim')) $('anim').value = q.get('anim');
+if (q.get('preset')) { $('pre').value = q.get('preset'); load(structuredClone(B.PRESETS[q.get('preset')])); } else load(genOne());
+if (q.get('grid') === 'all') $('allTpl').click();
+</script>
+</body></html>

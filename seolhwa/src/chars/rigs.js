@@ -206,6 +206,7 @@ function beonggeoji(p, cx, hy, S, sp, view) {
 
 // ---- 머리 부위 ----
 function drawHead(p, view, S, sp) {
+  if (sp.drawHead) return sp.drawHead(p, view, S, sp);   // 인물 빌더: 얼굴·머리·쓰개를 자료대로
   const ws = S.ws, rx = S.headRX, ry = S.headRY, hy = headY(S);
   const skin = sp.skin || PAL.skin, hc = sp.hairColor || PAL.hair;
   const side = view === 'side', back = view === 'back';
@@ -745,7 +746,7 @@ function rngLocal(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; 
 
 // ---- 등짐 / 지팡이 ----
 function drawBundle(p, view, S, sp) {
-  const ws = S.ws, bc = sp.bundle || PAL.blue;
+  const ws = S.ws * (sp.bundleScale || 1), bc = sp.bundle || PAL.blue;   // bundleScale: 괴나리봇짐(작은 봇짐)
   if (view === 'side') {
     const path = p.poly([[0, -2], [14 * ws, 2], [22 * ws, 20 * ws], [20 * ws, 42 * ws], [6 * ws, 50 * ws], [-2, 44 * ws]], bc, { w: 2.3 });
     p.clip(path, () => { for (let i = 0; i < 4; i++) p.stroke([[2, 10 * ws + i * 10 * ws], [22 * ws, 6 * ws + i * 11 * ws]], { w: 1.1, color: shade(bc, 0.35) }); });
@@ -966,6 +967,7 @@ function humanView(view, S, sp) {
     part(L, 'staff', hand, [0, S.lArm + 2], side ? 10.95 : 6.15, draw, { abs: true, ls, tag: 'staff', r0: side && sp.staff === 'axe' ? 0.15 : 0 });
   }
   addCombatParts(L, view, S, sp, ls);
+  if (sp.partFx) { const done = new Set(); for (const q of L) if (q.img && !done.has(q.img)) { done.add(q.img); sp.partFx(q.img, q.name, view); } }
   if (sp.flour) {
     const done = new Set();
     for (const q of L) if (q.img && /^(torso|arm|leg|skirt)/.test(q.name) && !done.has(q.img)) { done.add(q.img); dustFlour(q.img, hashStr(view + q.name)); }
@@ -994,13 +996,15 @@ function drawFullArm(p, S, sp) {
   const ws = S.ws, U = S.uArm, L = S.uArm + S.lArm, skin = sp.skin || PAL.skin;
   p.poly([[-5 * ws, L - 4 * ws], [5 * ws, L - 4 * ws], [6.5 * ws, L + 3 * ws], [3 * ws, L + 8 * ws], [-3 * ws, L + 8 * ws], [-6.5 * ws, L + 3 * ws]], skin, { w: 1.8 });
   // 어깨에서 손목까지 한 장의 소매: 위는 좁고, 팔꿈치 아래로 배래가 둥글게 흘러내림
+  // sp.sleeveW: 소매 넓이(도포·장삼처럼 넓은 소매 > 1, 기본 1 — 예전 그대로). 배래 쪽(+x)만 넓힌다
+  const sw = sp.sleeveW || 1, bw = (v) => v * sw;
   const path = p.poly([
-    [-8.5 * ws, -2 * ws], [0, -7 * ws], [8.5 * ws, -2 * ws], [9.5 * ws, U * 0.7], [12 * ws, U + S.lArm * 0.25], [13.5 * ws, L - 12 * ws],
-    [10 * ws, L - 3 * ws], [3 * ws, L], [-7 * ws, L - 1 * ws, 'c'], [-10 * ws, L - 8 * ws], [-10.5 * ws, U + S.lArm * 0.2], [-9 * ws, U * 0.6],
-  ], sp.coat, { w: 2.2, shadeDown: 0.3 });
+    [-8.5 * ws, -2 * ws], [0, -7 * ws], [8.5 * ws, -2 * ws], [9.5 * ws, U * 0.7], [bw(12) * ws, U + S.lArm * 0.25], [bw(13.5) * ws, L - 12 * ws],
+    [bw(10) * ws, L - 3 * ws], [3 * ws, L], [-7 * ws, L - 1 * ws, 'c'], [-10 * ws, L - 8 * ws], [-10.5 * ws, U + S.lArm * 0.2], [-9 * ws, U * 0.6],
+  ], sp.armCoat || sp.coat, { w: 2.2, shadeDown: 0.3 });
   p.clip(path, () => {
     if (sp.cuff) p.stroke([[-14 * ws, L - 5 * ws], [16 * ws, L - 6 * ws]], { w: 8 * ws, color: sp.cuff, taper: false });
-    const fold = shade(sp.coat, -0.42);
+    const fold = shade(sp.armCoat || sp.coat, -0.42);
     p.stroke([[-3 * ws, U * 0.2], [-1 * ws, U * 0.9], [-3 * ws, U + S.lArm * 0.6], [0, L - 6 * ws]], { w: 0.9, color: fold });
     p.stroke([[5 * ws, U * 0.75], [9 * ws, U + S.lArm * 0.4], [9 * ws, L - 6 * ws]], { w: 0.8, color: fold });
   });
@@ -1070,6 +1074,7 @@ export function frameLimb(rig, view, name) {
     else { drawFullTigerLeg(P, L1 + 42, 40, 22, front, 0); L2 = 42; }
   }
   let { img, ox, oy } = P.end();
+  if (rig.spec.limbFx) rig.spec.limbFx(img, name, view);   // 인물 빌더: 해짐·흙때
   if (far) img = darkenCopy(img, 0.2);
   const out = { img, ox, oy, L1, L2, flip: !!(up && up.flip) };
   _fullCache.set(key, out);

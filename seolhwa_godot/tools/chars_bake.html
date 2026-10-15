@@ -1,0 +1,11 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Chars bake</title></head>
+<body style="background:#ddd;font:13px sans-serif">
+<p id="st">baking…</p><pre id="lg" style="max-height:80vh;overflow:auto"></pre>
+<script type="module">
+// 인물 빌더 굽기 — tools/export_char_frames.js 맨 위 설명 참고(?set=presets | amb_JL | amb_all). 결과: data/chars/<set>.json + 페이지
+const lg = document.getElementById('lg');
+import('/__tools/export_char_frames.js').then((m) => m.run((s) => { document.getElementById('st').textContent = s; lg.textContent = s + '\n' + lg.textContent.slice(0, 4000); console.log(s); }))
+  .catch((e) => { document.getElementById('st').textContent = 'ERROR ' + e.stack; console.error(e); });
+</script>
+</body></html>

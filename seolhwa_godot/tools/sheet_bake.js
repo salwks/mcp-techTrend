@@ -40,6 +40,29 @@ export function drawSheet(rows, cell = [150, 250], px = 116) {
   return cv;
 }
 
+/** 인물마다 첫 그림(+같은 인물의 다른 시점)을 칸에 — 다양성 표 */
+export function drawGrid(rows, cols, px) {
+  const byKind = new Map();
+  for (const r of rows) { const k = r.label.split(' ')[0]; if (!byKind.has(k)) byKind.set(k, []); byKind.get(k).push(r); }
+  const per = Math.max(...[...byKind.values()].map((l) => l.length));
+  const cw = Math.round(px * 1.0) * per + 10, ch = Math.round(px * 2.75);
+  const n = byKind.size, rowsN = Math.ceil(n / cols);
+  const cv = document.createElement('canvas'); cv.width = cw * cols; cv.height = ch * rowsN;
+  const g = cv.getContext('2d'); g.fillStyle = '#ece6d6'; g.fillRect(0, 0, cv.width, cv.height); g.font = '12px sans-serif';
+  [...byKind.entries()].forEach(([k, list], i) => {
+    const ox = (i % cols) * cw, oy = Math.floor(i / cols) * ch;
+    g.fillStyle = '#5a4a3a'; g.fillText(k, ox + 4, oy + 14);
+    list.forEach((r, j) => {
+      const f = r.frames[Math.min(r.frames.length - 1, 1)];
+      const pg = r.bank.pages[typeof f.page === 'number' ? f.page : f.page.index].cv;
+      const sx = f.u0 * 1024, sy = f.v0 * 1024, sw = (f.u1 - f.u0) * 1024, sh = (f.v1 - f.v0) * 1024;
+      const k2 = sw / ((f.x1 - f.x0) * px);
+      g.drawImage(pg, sx, sy, sw, sh, ox + 5 + px * (j + 0.5) + f.x0 * px, oy + ch - 8 - f.y1 * px, sw / k2, sh / k2);
+    });
+  });
+  return cv;
+}
+
 export async function put(name, data) {
   const r = await fetch('/export/' + name, { method: 'PUT', body: data });
   if (!r.ok) throw new Error('PUT ' + name + ' ' + r.status);
@@ -67,7 +90,7 @@ export async function run(log) {
     for (const key of keys) if (clips[key]) rows.push({ label: kind.replace('builder:', '') + ' ' + key, frames: clips[key], bank });
     log('baked ' + kind);
   }
-  const cv = drawSheet(rows, [Math.round(px * 1.35), Math.round(px * 2.6)], px);
+  const cv = q.get('layout') === 'grid' ? drawGrid(rows, +(q.get('cols') || 10), px) : drawSheet(rows, [Math.round(px * 1.35), Math.round(px * 2.6)], px);
   document.body.appendChild(cv);
   await put(`_sheets/${name}.png`, await toPng(cv));
   log('done ' + name);
