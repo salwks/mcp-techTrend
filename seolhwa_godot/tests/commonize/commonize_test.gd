@@ -1,7 +1,7 @@
 # 공통 승격 1차 시험(제작 규칙 v1.0 결정 4·5·6, F-1) — 헤드리스, 저장은 따로(user://st_commonize.json, 끝나면 지운다).
 #   godot --headless --path . -s res://tests/commonize/commonize_test.gd
 #   A 대화 카메라 우선순위: 공통 TALK → case.talk_camera → actor.talk_camera, false면 평소 카메라(CameraRig.talk_spec)
-#   B 고을 막음: 남원 첫 사건 막음이 사건 선언(namwon_data case.travel_gate)으로 그대로 · 가짜 사건(선언 있음)은 막고 · 선언 없는 사건은 안 막음
+#   B 고을 막음: 남원 첫 사건 막음은 뗐다(재기획 3단계 D1 — 오누이가 남원을 떠나는 것을 막지 않는다) · 가짜 사건(선언 있음)은 같은 장치로 막고 · 선언 없는 사건은 안 막음
 #   C 길목 깃발: land 노정·권역만 깃발, river·sea 노정은 없음(물 노정 깃발 6개 빠짐) · 그 거점의 fast는 그대로 · 깃발 충돌체 없음
 #   끝 줄: COMMONTEST PASS n / COMMONTEST FAIL n
 extends SceneTree
@@ -78,12 +78,13 @@ func _talk_camera() -> void:
 func _gate() -> void:
 	print("B 고을 막음(사건 선언)")
 	var nwd: Dictionary = CaseRegistry.load_data("namwon").case
-	ok(nwd.get("travel_gate") is Dictionary and String(nwd.travel_gate.get("leave_space_until", "")) == "CASE_NAMWON_COMPLETE", "남원 사건 머리에 travel_gate 선언")
+	# 재기획 3단계(D1): 오누이는 더는 남원을 떠나는 것을 막지 않는다 — 남원 travel_gate 선언을 뗐다. 장치 자체는 가짜 사건으로 본다(아래)
+	ok(not nwd.has("travel_gate"), "남원 사건 머리에 travel_gate 없음(D1)")
 	ok(not (FT as Script).get_script_constant_map().has("FIRST_SPACE"), "fast_travel에 FIRST_SPACE 하드코딩 없음")
 	FT.clear_gate_cache()
 	Progress.reset_all()
-	ok(FT.gate_for(NW) == NOTICE, "남원 첫 사건 전: 막힘 「%s」" % FT.gate_for(NW))
-	ok(FT.gate_for(NW, "namwon", "explore") == NOTICE, "남원 사건이 도는 중(explore): 막힘")
+	ok(FT.gate_for(NW) == "", "남원 첫 사건 전: 막지 않음(D1) 「%s」" % FT.gate_for(NW))
+	ok(FT.gate_for(NW, "namwon", "explore") == "", "남원 사건이 도는 중(explore): 막지 않음(D1)")
 	ok(FT.gate_for(NW, "namwon", "done") == "", "지금 도는 남원 사건 phase done: 풀림")
 	Progress.data().cases["namwon"] = { "phase": "done" }
 	ok(FT.gate_for(NW) == "", "저장된 남원 phase done: 풀림")

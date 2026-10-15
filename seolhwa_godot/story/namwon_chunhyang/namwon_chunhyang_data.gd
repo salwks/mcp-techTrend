@@ -2,7 +2,8 @@
 # 시나리오: seolhwa/docs/scenario/seolhwarok_NAMWON_CHUNHYANG_v1.1_scenario.md(ACT 0~5, §3~§17) · 결정 _DECISIONS.md(§1 변수 넷 · §4 진입 · §7 배치 확정)
 # 자산·좌표: seolhwa/docs/production/CHUNHYANG_ASSETS_PLACEMENT_v1.0.md · 차림(when)·군중·카메라: region_data/JL_NAMWON_UNBONG/placement_story_namwon_chunhyang.json
 #
-# 진입(결정 §4): CASE_NAMWON_COMPLETE && CASE_HANYANG_BOOKSHOP_COMPLETE — 한양을 다녀온 뒤 처음 남원에 돌아왔을 때(case_registry.choose가 오누이 다음으로 고른다).
+# 진입(결정 §4 → 재기획 3단계 D3): CASE_HANYANG_BOOKSHOP_COMPLETE — 한양을 다녀온 뒤 처음 남원에 돌아왔을 때(case_registry.choose ③ — 메인 서장이 시작 전·쉬는 자리면).
+#   예전 요구 CASE_NAMWON_COMPLETE(오누이 완료)는 뗐다.
 #   귀환 이유는 다른 고을의 소문(rumors_data CH_DANO_*)과 전국 지도 붉은 표(map_leads ch_dano_return) — 강제하지 않는다.
 # 단계(phase): dano(단오 낮 — ACT 0~2) → courtship(그날 저녁 ~ 백년가약 — ACT 3·4) → farewell(소식 · 오리정 곁 북쪽 길 이별 — ACT 5, PART I 끝 뒤에도 머문다).
 #   PART I 끝: CASE_NAMWON_CHUNHYANG_PART1_COMPLETE. 그 뒤 남원을 실제로 떠나면(region_main._travel → story.on_leave_space) LEFT_AFTER_PART1.
@@ -27,7 +28,9 @@ static func data() -> Dictionary:
 			"EVENT_CLASS": "FOLKLORE_EVENT", "SOURCE_ID": "F50", "CATALOG_ID": "HN01", "ANCHOR_NOTE": "A01 춘향 계열(지역 고정 앵커)을 남원 재방문 주 사건으로 올린 원전 등록",
 			"outcome_var": "CASE_NAMWON_CHUNHYANG_OUTCOME",
 			"complete_key": "NAMWON_CHUNHYANG",
-			"requires": { "CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
+			# 재기획 3단계(D3 — DECISIONS_stage1.md): 오누이 완료 요구(CASE_NAMWON_COMPLETE)를 뗐다. 한양 책방 완료만.
+			#   주의: 한양 사건은 아직 MAIN_MASTER_TRACE=HANYANG(오누이 끝 노인)에서만 선다 — 그 줄기는 선택 후속으로 둔다(보고서 §5)
+			"requires": { "CASE_HANYANG_BOOKSHOP_COMPLETE": true },
 			"reset_vars": ["CASE_NAMWON_CHUNHYANG_OUTCOME", "CASE_NAMWON_CHUNHYANG_COMPLETE", "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE", "CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1"],
 			"rule_label": "알아 둔 것",
 			"start_hour": 10.0,
@@ -331,7 +334,7 @@ static func _ev(id: String, trigger: String, loc: String, tw: String, actions: S
 static func events() -> Dictionary:
 	return {
 		# ACT 0 §3 — 다시 온 남원(조용히 선다: 컷신 없음, 단오 차림·군중·밝은 음악은 단계 dano의 when으로)
-		"C0001": _ev("C0001", "CASE_NAMWON_COMPLETE && CASE_HANYANG_BOOKSHOP_COMPLETE, 그 뒤 처음 남원", "남원 권역 어디든(도착)", "낮 · 맑음",
+		"C0001": _ev("C0001", "CASE_HANYANG_BOOKSHOP_COMPLETE(재기획 D3 — 오누이 완료 요구 뗌), 그 뒤 처음 남원", "남원 권역 어디든(도착)", "낮 · 맑음",
 			"남원을 걷는다", "-", "단오 차림(광한루·장터 둘레) · 단오 군중 28 · 밝은 음악", [
 			{ "phase": "dano" }, { "call": "start_case" },
 		]),

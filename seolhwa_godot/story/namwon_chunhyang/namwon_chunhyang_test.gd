@@ -1,6 +1,6 @@
 # 대본 시험(--storytest=namwon_chunhyang:<갈래>) — 「남원의 약속」 PART I.
 #   godot --path seolhwa_godot res://scenes/region.tscn -- --region=JL_NAMWON_UNBONG --storytest=namwon_chunhyang:a
-#   a     : 진입 판정(choose — 요구 둘 다일 때만) → C0001 단오(군중 28·차림·밝은 음악) → 오누이 뒤 남원 사람 → 1A → 부딪힘(주워 줌 · 맞소 · 같이 감) → 2A 거절 →
+#   a     : 진입 판정(choose — 한양 책방 완료면, 재기획 D3) → C0001 단오(군중 28·차림·밝은 음악) → 오누이 뒤 남원 사람 → 1A → 부딪힘(주워 줌 · 맞소 · 같이 감) → 2A 거절 →
 #           몽룡 → 저녁 월매 집 → 편지(열 수 없음) · 웃음 · 함께 걷기 → 밤 백년가약(들었습니다 → vow_witness · vow_heard) → 소식 · 5A 이별 → PART1_COMPLETE →
 #           춘향에게 “기다리실 겁니까?” → PART II 없음 · 떠나면 LEFT_AFTER_PART1 · 기록책
 #   b     : 다른 선택 — 지나감 · 혼자 가시오(나중에 그네 곁) · 고개 끄덕임 · 아무 말 없음
@@ -370,17 +370,17 @@ func _run() -> void:
 	expect(not d.case_fn.part2_open(), "PART II 닫힘(강릉·경주·황주 아직)")
 	await _done()
 
-# 진입 판정 — 요구 둘(오누이 완료 && 한양 책방 완료)일 때만 춘향
+# 진입 판정 — 재기획 3단계(D3): 오누이 완료 요구를 뗐다. 한양 책방 완료면 춘향(메인 서장이 아직 시작 전이거나 쉬는 자리일 때 — case_registry.choose ③)
 func _entry_gate() -> void:
 	var cands: Array = CaseRegistry.cases_for("JL_NAMWON_UNBONG")
-	expect(cands == ["namwon", "namwon_chunhyang"], "남원 등록부: 오누이 다음 춘향(%s)" % [cands])
+	expect(cands == ["main_p1", "namwon", "namwon_chunhyang"], "남원 등록부: 메인 서장 · 오누이 · 춘향(%s)" % [cands])
 	var none := { "CASE_NAMWON_COMPLETE": false, "CASE_HANYANG_BOOKSHOP_COMPLETE": false }
 	var only_nw := { "CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": false }
 	var only_hy := { "CASE_NAMWON_COMPLETE": false, "CASE_HANYANG_BOOKSHOP_COMPLETE": true }
 	var both := { "CASE_NAMWON_COMPLETE": true, "CASE_HANYANG_BOOKSHOP_COMPLETE": true }
-	expect(String(CaseRegistry.choose(cands, none).id) != "namwon_chunhyang", "요구 없음 → 춘향 아님")
-	expect(String(CaseRegistry.choose(cands, only_nw).id) == "namwon", "오누이만 끝 → 오누이(끝난 사건, 춘향 아님)")
-	expect(String(CaseRegistry.choose(cands, only_hy).id) != "namwon_chunhyang", "한양만 → 춘향 아님")
+	expect(String(CaseRegistry.choose(cands, none).id) == "main_p1", "요구 없음 → 메인 서장(춘향 아님)")
+	expect(String(CaseRegistry.choose(cands, only_nw).id) == "main_p1", "오누이만 끝 → 메인 서장 합류(춘향 아님)")
+	expect(String(CaseRegistry.choose(cands, only_hy).id) == "namwon_chunhyang", "한양만(오누이 안 끝) → 춘향(D3 — 오누이 의존 없음)")
 	expect(String(CaseRegistry.choose(cands, both).id) == "namwon_chunhyang", "둘 다 → 춘향")
 	# 귀환 이유 — 다른 고을 소문(강제 없음): 한양 책방 뒤에만, PART I 뒤에는 그치는 말
 	for r in Rumors.RUMORS:
@@ -389,7 +389,7 @@ func _entry_gate() -> void:
 			expect(Rumors.pick(r, { "CASE_HANYANG_BOOKSHOP_COMPLETE": false }, { "CASE_HANYANG_BOOKSHOP_COMPLETE": false }) == "", "소문 %s 한양 전에는 없음" % r.id)
 			expect(Rumors.pick(r, Progress.vars(), { "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE": true }) == "", "소문 %s PART I 뒤에는 그침" % r.id)
 	var head: Dictionary = d.data.case
-	expect(head.requires.size() == 2 and head.requires.has("CASE_NAMWON_COMPLETE") and head.requires.has("CASE_HANYANG_BOOKSHOP_COMPLETE"), "requires 둘(결정 §4)")
+	expect(head.requires.size() == 1 and head.requires.has("CASE_HANYANG_BOOKSHOP_COMPLETE"), "requires 한양 책방 하나(결정 §4 → 재기획 D3: 오누이 완료 요구를 뗌)")
 	var gl := []
 	for k in d.S.vars:
 		if String(k).begins_with("CASE_NAMWON_CHUNHYANG_"): gl.append(k)

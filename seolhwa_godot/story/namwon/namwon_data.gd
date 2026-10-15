@@ -51,10 +51,14 @@ static func data() -> Dictionary:
 			"start_hour": 9.5,
 			# v3.2 §8 CAMERA 1A — 이 사건 이야기 인물과 말할 때의 기준 카메라(플레이어와 인물 사이, 허리 위 클로즈업까지 가지 않는다)
 			"talk_camera": { "pitch": 38.0, "distance": 13.5, "fov": 38.0 },
-			# 도입부(보강서 v1.0 §3~§9): S0000 남원으로 가는 길 → S0001 남원 전경·첫 자유 이동
+			# 도입부(보강서 v1.0 §3~§9): S0000 남원으로 가는 길 → S0001 남원 전경·첫 자유 이동 — 이 사건을 처음부터 따로 돌릴 때(--case=namwon · 대본 시험)
 			"start_event": "S0000",
-			# 첫 사건 고을 막음(제작 규칙 F-1 — fast_travel.gate_for가 읽는다): 남원 일을 마치기 전에는 다른 공간으로 역마·깃발로 건너뛰지 못한다
-			"travel_gate": { "leave_space_until": "CASE_NAMWON_COMPLETE", "notice": "남원 일이 아직 끝나지 않았다 — 고을을 떠날 수 없다" },
+			# 재기획 3단계(D1 — DECISIONS_stage1.md): 새 게임은 메인 서장(main_p1)이다. 이 사건은 북문 밖 갈림길 행상(main_p1 peddler, 오누이 v3.4 F3401)에서
+			#   고르면 선다(story_director.switch_case → N0000 — 여는 장면·「설화록」 없이). 스스로 고르지 않는다(case_registry entry trigger).
+			#   진행 중인 옛 저장은 그대로 이 사건을 이어 하고(choose ①), 끝나면 메인으로 합류한다(yield_when_done — 추가 지시 2).
+			"entry": "trigger", "yield_when_done": true,
+			# 첫 사건 고을 막음(옛 travel_gate — CASE_NAMWON_COMPLETE 전에는 역마·깃발로 남원을 못 떠남)은 뗐다(D1 '남원을 떠나는 것을 막지 않는다').
+			#   밤 먼 길 막음(travel_lock — 아이들을 두고 떠날 수 없다)은 그대로다.
 			# 첫 사건 단서 안내 단계(§14·§28): 0 첫 단서 전 · 1 첫 단서 · 2 둘째 · 3 일반 조사 — scripts/story/onboarding.gd 먹점
 			"guidance_flag": "CASE_NAMWON_GUIDANCE_STAGE",
 			# 새로 시작할 때 되돌릴 공통 변수(story_state 기본 목록 + 결말 세부 — 지난 판 결말 글이 기록책에 남지 않게)
@@ -75,7 +79,7 @@ static func data() -> Dictionary:
 		"hidden_items": ["ITM_TOOL_009", "ITM_WPN_001", "ITM_WPN_002", "ITM_AMMO_001"],
 		"clues": {
 			"rumor": { "title": "떡장수 어미의 실종", "text": "고개 너머 사는 떡장수가 장에 갔다가 사흘째 돌아오지 않는다.", "kind": "heard", "by": "주모",
-				"by_if": [["fn('route_is', 'kids')", "누이"]] },
+				"by_if": [["fn('route_is', 'kids')", "누이"], ["fn('route_is', 'north')", "행상"]] },
 			"kids_story": { "title": "오누이의 말", "text": "어머니는 장에 갔다. 해 지기 전엔 온다고 했다. 집에는 아이 둘만 남아 있다.", "kind": "heard", "by": "누이" },
 			"cold_hearth": { "title": "식은 아궁이", "text": "재가 완전히 식었다. 이웃이 가져다주는 음식 말고는 며칠째 불을 쓰지 않은 것 같다.", "kind": "fact" },
 			"mother_route": { "title": "떡가루 묻은 함지", "text": "실종 당일 새벽에도 떡을 만들어 장으로 갔다.", "kind": "heard", "by": "누이" },
@@ -789,6 +793,19 @@ static func events() -> Dictionary:
 			{ "give": "ITM_AMMO_001", "n": 12, "quiet": true }, { "give": COIN, "n": 12, "quiet": true },
 			{ "flag": "s0000_started" },
 			{ "call": "prologue_open" },
+		]),
+		# 재기획 3단계(D1) 북쪽 들머리 — 메인 서장의 북문 밖 행상(오누이 v3.4 F3401)에게서 듣고 가 보겠다고 했을 때(story_director.switch_case가 부른다).
+		#   여는 장면(S0000·S0001 — 이겸 목소리·전경·「설화록」)은 메인 서장이 이미 보였으므로 건너뛴다. 사건은 여기서 선다(route north — 소문 '들음 · 행상').
+		#   그 뒤 흐름(주모·오누이·고갯길·밤)은 v3.2 그대로. 행상은 그 자리에 잠깐 남는다(장면 전용)
+		"N0000": _ev("N0000", "북문 밖 갈림길 행상 — 가 보겠다고 함", "남원 북문 밖 전주길 갈림길", "그 시각 그대로", "걷는다 · 고개 너머 외딴집을 찾는다", "-", "-", [
+			{ "phase": "explore" },
+			{ "give": "ITM_TOOL_009", "quiet": true }, { "give": "ITM_WPN_001", "quiet": true }, { "give": "ITM_WPN_002", "quiet": true },
+			{ "give": "ITM_AMMO_001", "n": 12, "quiet": true }, { "give": COIN, "n": 12, "quiet": true },
+			{ "flag": "s0000_started" }, { "flag": "INTRO_MASTER_VOICE_DONE" }, { "flag": "INTRO_NAMWON_TITLE_DONE" }, { "flag": "INTRO_CONFLICTING_RUMOR_HEARD" },
+			{ "flag": "roadside_seen" }, { "flag": "s0001_done" }, { "flag": "entry_north" },
+			{ "spawn": "n_peddler", "kind": "peddler", "at": [-3209.0, 63.0], "facing": "left", "name": "행상" },
+			{ "call": "start_case", "args": ["north"] },
+			{ "flag": "heard_pass_road" }, { "discover": "north_pass" },
 		]),
 		# S0001 — 남원 전경(지리산 능선 → 요천 → 읍성 → 플레이어) · 「남원」 · 「설화록」(15초 안팎, Esc·Space로 건너뜀) → 남원 첫 자유 이동
 		"S0001": _ev("S0001", "남원이 보이는 길목", "남원 동문 밖(통영별로)", "아침 · 맑음", "성 안팎을 자유롭게 다닌다", "-", "-", [
