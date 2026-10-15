@@ -23,6 +23,10 @@
 #   처음 가는 길 · 남원 첫 사건 막음)은 바랜 기호 — 손을 대거나 고르면 까닭. 고르면 위 확인 상자(이름 · 길·거리 · 걸리는 때),
 #   Enter·Y·한 번 더 누름 → pick_done({act: warp|ride, dest}) · Esc·M → pick_done({act: end}). ←→↑↓ 갈 수 있는 곳 차례로 · Tab 권역 ↔ 전국 ·
 #   R(또는 아래 단추) 마부만: '말만 빌리겠소 — 큰길 따라'(말 타고 갈 쪽을 같은 지도에서 고른다).
+# 목적지(재기획 3단계 최소판 — 지도 v1.3 §04 웨이포인트, 4단계에서 상세 카드·우클릭 해제로 넓힌다): 사건 표지 가운데 waypoint: true인 것을 누르면
+#   설명 상자 + [목적지 설정] 단추(또는 Enter). 정하면 progress.waypoint에 하나만 남고(다시 고르면 바뀐다) on_waypoint(목적지)를 부른다.
+#   정하기만 한다 — 순간이동·자동 이동은 없다(가 보지 않은 곳은 길 안내만). 지도에는 붉은 동그라미 '목적지', 세계에는 방위 줄(waypoint_hud.gd).
+#   표지에 frame: true가 있고 아직 그것을 목적지로 정하지 않았으면, 지도를 열 때 지금 자리와 그 표지가 함께 들도록 권역 지도로 연다(처음 한 번).
 extends CanvasLayer
 
 signal pick_done(res: Dictionary)
@@ -150,6 +154,9 @@ var _st_head: Label
 var pick := {}
 var _pick_page0 := 1
 var _pick_btn: Button
+var _wp_btn: Button                      # [목적지 설정]
+var on_waypoint: Callable = Callable()   # (목적지 사전) — onboarding이 건다(story_director.on_waypoint)
+var _framed := {}                        # frame 표지를 맞춰 연 것(사건/id)
 
 func setup(w, data_dir: String, loader = null) -> void:
 	world = w
@@ -314,6 +321,11 @@ func _ready() -> void:
 	_pick_btn.pressed.connect(func(): pick_ride_toggle())
 	_pick_btn.visible = false
 	add_child(_pick_btn)
+	_wp_btn = _pick_btn.duplicate(Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS) as Button   # 신호 연결은 따로
+	_wp_btn.text = "목적지 설정"
+	_wp_btn.pressed.connect(func(): waypoint_pinned())
+	_wp_btn.visible = false
+	add_child(_wp_btn)
 
 # ---- 오른쪽 판: L로 열고 닫기 — 0 닫힘(지도 넓게) · 1 열림(범례 · 사건 · 역참 한 판). 글은 모두 MAP_PANEL 이상 ----
 #   1024×768에서는 범례·사건·역참이 한 판에 들지 않아 쪽(범례 / 사건·역참)으로 나눴다 — 16:9(1920×1080)에서는 판을 넓혀
@@ -511,8 +523,46 @@ func toggle() -> void:
 	_refresh_dynamic()
 	if world.is_route and _tex == null: _show_nation(); return   # 노정에는 구운 권역 그림이 없다 — 전국 지도(노정 선·지금 자리)로 연다
 	var town = _town_at(Vector2(_player.x, _player.z))
-	if town != null: _show_city(town)
+	if _frame_lead(): pass
+	elif town != null: _show_city(town)
 	else: _show_all()
+
+# frame: true 표지(첫15 P02-C '여원재 방면')를 아직 목적지로 정하지 않았으면 — 지금 자리와 함께 드는 권역 배율로(처음 한 번)
+func _frame_lead() -> bool:
+	var wp := Progress.waypoint()
+	for l in _leads:
+		if not bool(l.get("frame", false)) or l.pos == null or String(l.space) != _space: continue
+		var key := "%s/%s" % [l.case, l.id]
+		if _framed.has(key) or String(wp.get("key", "")) == key: continue
+		_framed[key] = true
+		var a := Vector2(_player.x, _player.z); var b: Vector2 = l.pos
+		var span := Vector2(absf(a.x - b.x), absf(a.y - b.y)) * 1.35 + Vector2(240, 240)
+		mode = "all"
+		_k = clampf(minf(_canvas.size.x / span.x, _canvas.size.y / span.y), _k_min, MAX_K)
+		_center = (a + b) * 0.5
+		_after_view()
+		return true
+	return false
+
+# 누른 표지가 목적지로 정할 수 있는 것인가(같은 공간·자리 있음·waypoint 표시)
+func _pinned_wp() -> Dictionary:
+	if _pinned == null or not (_pinned is Dictionary) or not _pinned.has("lead"): return {}
+	var l: Dictionary = _pinned.lead
+	if not bool(l.get("waypoint", false)) or l.get("pos") == null or String(l.get("space", "")) != _space: return {}
+	return l
+
+# [목적지 설정] — 하나만(다시 고르면 바뀐다). 정하기만 하고 옮기지 않는다
+func waypoint_pinned() -> bool:
+	var l := _pinned_wp()
+	if l.is_empty(): return false
+	var p: Vector2 = l.pos
+	var w := { space = _space, x = snappedf(p.x, 0.1), z = snappedf(p.y, 0.1), name = String(l.name), key = "%s/%s" % [l.case, l.id],
+		state = "visited" if Discovery.is_visited(_space, "place:" + String(l.id).trim_prefix("mp_")) else "known" }
+	Progress.set_waypoint(w)
+	_pinned = null
+	if on_waypoint.is_valid(): on_waypoint.call(w)
+	_after_view()
+	return true
 
 func show_mode(m: String) -> void:
 	if not visible: toggle()
@@ -578,6 +628,14 @@ func _tier() -> int:
 
 func _after_view() -> void:
 	_update_hint(); _refresh_panel(); _canvas.queue_redraw()
+	_place_wp_btn()
+
+func _place_wp_btn() -> void:
+	if _wp_btn == null: return
+	_wp_btn.visible = visible and not picking() and not _pinned_wp().is_empty()
+	if _wp_btn.visible:
+		_wp_btn.reset_size()
+		_wp_btn.position = _canvas.position + Vector2(_canvas.size.x - _wp_btn.size.x - 20.0, _canvas.size.y - _wp_btn.size.y - 20.0)
 
 func _update_hint() -> void:
 	# 아래 안내는 한 줄(MAP_KEYS) — 조작만. 읽는 법(아는 곳만 이름 · 붉은 인)은 범례 쪽에 있다. 넓이가 모자라면 짧은 줄로
@@ -593,6 +651,10 @@ func _update_hint() -> void:
 		if String(pick.get("flash", "")) != "": tries = [String(pick.flash)]
 	elif mode == "nation" and not _fast_opts.is_empty() and _fast_sel < 0:
 		tries = ["금빛 길 눌러 건너뛰기 · L 범례 · M 닫기", "금빛 길 눌러 건너뛰기 · M 닫기"]
+	elif not _pinned_wp().is_empty():
+		tries = ["[목적지 설정] 단추·Enter 목적지로 · Esc 놓기 · M 닫기", "Enter 목적지로 · Esc 놓기 · M 닫기"]
+	elif _leads.any(func(l): return bool(l.get("waypoint", false)) and l.pos != null and String(l.space) == _space) and Progress.waypoint().is_empty():
+		tries = ["붉은 인 누르기 → 목적지 설정 · 휠 확대 · Tab 지도 · M 닫기", "붉은 인 누르기 → 목적지 설정 · M 닫기"]
 	else:
 		tries = ["Tab 지도 · 휠 확대 · L 범례 · H 역참 · M 닫기", "Tab 지도 · L 범례 · H 역참 · M 닫기", "Tab 지도 · L 범례 · M 닫기"]
 	var line := ""
@@ -618,6 +680,11 @@ func _layout() -> void:
 	if _pick_btn != null and _pick_btn.visible:
 		_pick_btn.reset_size()
 		_pick_btn.position = _canvas.position + Vector2(_canvas.size.x - _pick_btn.size.x - 20.0, _canvas.size.y - _pick_btn.size.y - 20.0)
+	if _wp_btn != null:
+		_wp_btn.visible = visible and not picking() and not _pinned_wp().is_empty()
+		if _wp_btn.visible:
+			_wp_btn.reset_size()
+			_wp_btn.position = _canvas.position + Vector2(_canvas.size.x - _wp_btn.size.x - 20.0, _canvas.size.y - _wp_btn.size.y - 20.0)
 	var world_w := float(_meta.w) * float(_meta.scale); var world_h := float(_meta.h) * float(_meta.scale)
 	# 가장 작은 배율은 '채움'(cover): 권역 그림이 테 안을 다 덮는다 — 맞춤(contain)이면 가로로 긴 권역 위아래에 빈 한지 띠가 컸다.
 	# 덮는 쪽으로 넘친 만큼은 끌어서 본다(_clamp_center가 그림 밖 빈 곳이 테 안에 들어오지 않게 막는다).
@@ -631,6 +698,8 @@ func _unhandled_input(e: InputEvent) -> void:
 		_pick_key(kc); get_viewport().set_input_as_handled(); return
 	if kc == KEY_M: toggle(); get_viewport().set_input_as_handled(); return
 	if not visible: return
+	if kc in [KEY_ENTER, KEY_KP_ENTER] and not _pinned_wp().is_empty() and _st_sel < 0 and _fast_sel < 0:
+		waypoint_pinned(); get_viewport().set_input_as_handled(); return
 	if _st_sel >= 0:   # 역참 확인
 		match kc:
 			KEY_ENTER, KEY_KP_ENTER, KEY_Y, KEY_SPACE: _station_go()
@@ -659,8 +728,8 @@ func _unhandled_input(e: InputEvent) -> void:
 		if not _st_on() and mode == "nation" and i < _fast_opts.size(): _fast_pick(i); get_viewport().set_input_as_handled(); return
 	match kc:
 		KEY_ESCAPE:
-			if _pinned != null: _pinned = null; _canvas.queue_redraw()
-			else: visible = false
+			if _pinned != null: _pinned = null; _after_view()
+			else: visible = false; _place_wp_btn()
 		KEY_TAB:
 			_fast_sel = -1
 			if mode == "city": _show_all()
@@ -695,9 +764,10 @@ func _on_input(e: InputEvent) -> void:
 					if h.has("station") and _st_on():
 						if int(h.station) == _st_sel: _station_go()
 						else: _station_pick(int(h.station))
-					else: _pinned = h; _canvas.queue_redraw()
+					else: _pinned = h; _update_hint(); _place_wp_btn(); _canvas.queue_redraw()
 					return
 				_pinned = null
+				_place_wp_btn()
 				if mode == "nation" and not _fast_opts.is_empty():
 					var i := _fast_hit(e.position)
 					if i >= 0 and i == _fast_sel: _fast_go()
@@ -1220,6 +1290,7 @@ func _draw_map() -> void:
 	else:
 		_clamp_center()
 		_draw_region()
+	if mode != "nation": _draw_waypoint()
 	_draw_frame()
 	_draw_title()
 	_draw_confirm()
@@ -1501,6 +1572,18 @@ func _draw_confirm() -> void:
 		placed.append({ text = ls[i], size = fs, rect = Rect2(box.position + Vector2(31, 17 + fs * 1.3 * i), Vector2(box.size.x - 62, fs * 1.3)), frame = true })
 
 # 표지 설명(마우스 올림·누름)
+# 목적지(progress.waypoint) — 붉은 겹동그라미와 '목적지'(이 공간일 때만)
+func _draw_waypoint() -> void:
+	var wp := Progress.waypoint()
+	if wp.is_empty() or String(wp.get("space", "")) != _space: return
+	var q := _to_px(Vector2(float(wp.x), float(wp.z)))
+	if not Rect2(Vector2.ZERO, _canvas.size).grow(-6).has_point(q): return
+	_canvas.draw_arc(q, 21.0, 0, TAU, 32, SEAL, 4.0, true)
+	_canvas.draw_arc(q, 12.0, 0, TAU, 24, SEAL, 3.0, true)
+	var fs := UiFonts.MAP_LABEL
+	_canvas.draw_string_outline(_font, q + Vector2(27, fs * 0.35), "목적지", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, HALO, PAPER)
+	_canvas.draw_string(_font, q + Vector2(27, fs * 0.35), "목적지", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, SEAL)
+
 func _draw_tip() -> void:
 	var h = _hover if _hover != null else _pinned
 	if h == null or not h.has("tip"): return

@@ -9,6 +9,7 @@
 #   "known": { "<공간 id>": { "<장소 키>": "visited" | "told" | "known" }, "_nation": {…} },   ← 지도에 적힌 곳(scripts/region/discovery.gd — VISITED / KNOWN, C65)
 #   "heard": [{ id, space, by, text, place }],   ← 사람에게 들은 소문(기록책 '사람의 말' — ◇ 들음 — 말한 사람, 사실로 올리지 않는다)
 #   "meta": { place, case, hour, play, reason },   ← 저장 칸 목록에 보일 것(지금 고을·사건·게임 안 시각·놀이 시간·까닭)
+#   "waypoint": { space, x, z, name, key, state },   ← 지도에서 정한 목적지 하나(재기획 3단계 — 없으면 없음)
 #   "saved_at": "…"
 # }
 # 저장 칸: 이 파일(path)이 곧 자동 기록 칸(0)이다 — 늘 지금 진행. 손으로 남기는 칸 1~3은 같은 자리 <이름>_slot<n>.json(+ 작은 그림 .png).
@@ -117,6 +118,23 @@ static func where() -> Dictionary:
 
 static func set_where(w: Dictionary) -> void:
 	data()["where"] = w
+	save()
+
+# ---- 지도 목적지(재기획 3단계 최소판 — 지도 v1.3 웨이포인트 하나) ----
+#   waypoint { space, x, z, name, key("사건/표지 id"), state("known" — 아직 안 가 봄) }. 없는 저장은 {}(옛 저장 그대로 읽힌다)
+static func waypoint() -> Dictionary:
+	var w = data().get("waypoint")
+	return w if w is Dictionary else {}
+
+static func set_waypoint(w: Dictionary) -> void:
+	data()["waypoint"] = w
+	version += 1
+	save()
+	print("PROGRESS waypoint ", JSON.stringify(w))
+
+static func clear_waypoint() -> void:
+	data().erase("waypoint")
+	version += 1
 	save()
 
 static func has_save() -> bool:

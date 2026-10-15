@@ -1,6 +1,7 @@
 # 지도 사건 표지(붉은 인) — 사건 데이터 story/<사건>/<사건>_data.gd의 "map_leads"(보강서 §20: 아는 것만, 알아낼 것은 아니다).
 #   항목: { id, name(지도 글), at(앵커 이름·인물 id·[x,z]), when(조건식 — 참이면 보임), until(조건식 — 참이면 사라짐),
-#           space(그 자리가 있는 공간 id, 기본 case.region), region(다른 권역을 가리킴 — 전국 지도에 그 권역 자리로), hub(true: 사건 거점), note }
+#           space(그 자리가 있는 공간 id, 기본 case.region), region(다른 권역을 가리킴 — 전국 지도에 그 권역 자리로), hub(true: 사건 거점), note,
+#           waypoint(true: 지도에서 [목적지 설정]을 고를 수 있다 — region_map), frame(true: 지도를 열 때 지금 자리와 함께 들게 — 처음 한 번) }
 #   조건식: story_runner와 같은 짧은 이름 — f c k ph v seen talked w out has n (fn은 쓰지 않는다: 지금 돌지 않는 사건은 저장만 보고 셈한다).
 #   지금 공간의 사건(story_director)은 그 runner.cond·anchor로, 나머지는 progress.json 사건 상태로 센다. case.requires가 안 맞으면 아무것도 없다.
 extends RefCounted
@@ -88,7 +89,8 @@ static func visible(director = null, state_over: Dictionary = {}, vars_over = nu
 			if ok and l.has("until"): ok = not (director.runner.cond(l.until) if live else ev.cond(l.until))
 			if not ok: continue
 			var e := { case = String(c.id), title = String(c.title), id = String(l.get("id", "")), name = String(l.get("name", "")),
-				space = String(l.get("space", c.region)), region = String(l.get("region", "")), hub = bool(l.get("hub", false)), pos = null, at = l.get("at") }
+				space = String(l.get("space", c.region)), region = String(l.get("region", "")), hub = bool(l.get("hub", false)), pos = null, at = l.get("at"),
+				waypoint = bool(l.get("waypoint", false)), frame = bool(l.get("frame", false)) }
 			if l.has("at"):
 				if live and e.space == String(director.space_id): e.pos = director.anchor(l.at)
 				else: e.pos = anchor_of(l.at, c.anchors, String(ev.st.get("phase", "start")) if ev != null else "start")
