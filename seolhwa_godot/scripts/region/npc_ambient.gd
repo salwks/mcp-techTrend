@@ -14,12 +14,21 @@
 #   날씨(비: 바깥 사람 줄고 도롱이, 눈: 줄고 들일 없음)·밤(거의 없음, 주막은 그대로)을 곱한 뒤 가까운 순으로 사람 110·짐승 36까지.
 #   화면 안 가까운 곳에서는 새로 나타나거나 사라지지 않는다(처음 채울 때만 예외). SpriteChar는 종류별로 풀에 돌려 다시 쓴다.
 # 비용 — 화면 밖 인물은 그림·높이 갱신을 건너뛰고, 35m 밖은 그림자를 끄고, 먹색 실루엣은 쓰지 않는다.
-# 프레임: data/frames_npc.json(웹 마을 사람 9종) + data/frames_amb.json(tools/export_npc_frames.js가 구운 고을 사람·짐승).
-#   frames_amb.json이 없으면 고을 사람은 가까운 기본 종류로 대신하고 짐승은 나오지 않는다.
+# 프레임: 사람은 인물 빌더 권역 묶음(data/chars/amb_<권역>.json — tools/export_char_frames.js, scripts/char_bank.gd)이 먼저다.
+#   역할(농부·아낙·상인…)마다 시드가 다른 여러 사람(권역당 최대 36명, 페이지 공유)이 있어, 칸 번호 해시로 그중 하나를 고른다
+#   (같은 칸 = 같은 사람). 묶음에 없는 역할(도롱이·포수·방앗간·나무꾼·목자·보살 등)과 짐승은 예전 그림:
+#   data/frames_npc.json(웹 마을 사람 9종) + data/frames_amb.json(tools/export_npc_frames.js가 구운 고을 사람·짐승).
+#   frames_amb.json이 없으면 고을 사람은 가까운 기본 종류로 대신하고 짐승은 나오지 않는다. --nobuilder면 빌더 묶음을 쓰지 않는다(비교·측정).
+#   짐을 든 빌더 사람은 걸을 때 carry 동작(짐 든 팔)을 쓴다.
 # 비우기 구역(제작 규칙 C63) — 사건이 길 한가운데를 잠시 비운다(행차·어사출두·관아 행사·상여 길): exclude(id, 구역) / release(id).
 #   구역 안에는 새로 나오지 않고, 이미 있던 사람·짐승은 바로 풀(pool)로 돌린다(말 거는 중인 사람만 예외). 걷는 사람은 구역 앞에서 돌아선다.
 #   풀면 아무것도 되돌리지 않는다 — 보통 스트리밍이 화면 밖에서 다시 채운다. 행렬 AI·길찾기·비켜서기는 만들지 않는다.
 extends Node3D
+
+const CharBank := preload("res://scripts/char_bank.gd")
+# npc_ambient 역할 → 빌더 묶음의 역할들(섞어 고름). 없는 역할은 이름 그대로
+const ROLE_VARIANTS := { elder = ["elder", "elder_f"], villager_m = ["villager_m", "cheonmin", "jungin"], villager_f = ["villager_f", "yangban_f"],
+	scholar = ["scholar", "yangban"], official = ["official", "pojol"], merchant = ["merchant", "jungin"], farmwife = ["farmwife"], innkeeper = ["innkeeper"] }
 
 const R_ACTIVE := 150.0
 const R_DROP := 175.0
@@ -99,6 +108,9 @@ var _fill_until := 0.0           # 처음 채우기: 이때까지는 화면 안�
 var _clock := 0.0
 var _player := Vector3.ZERO
 var _amb := false                # frames_amb.json 있음
+var _bset := ""                  # 인물 빌더 권역 묶음(amb_JL …) — 없으면 ""
+var _variants := {}              # 역할 → [빌더 인물 id]
+var _no_builder := OS.get_cmdline_user_args().has("--nobuilder")
 var _frame := 0
 var _debug := OS.get_cmdline_user_args().has("--npcstats")
 var _fail := {}               # 칸 키 → 다시 해 볼 시각(자리를 못 찾음)
@@ -341,6 +353,19 @@ func _finish_build() -> void:
 		if s.get("out", false):
 			for k in s.pool:
 				if k in CAPE: kinds.raincape = true
+	# 인물 빌더 권역 묶음: 역할마다 여러 사람
+	_variants.clear()
+	if not _no_builder and world != null and world.get("region") is Dictionary:
+		_bset = CharBank.region_set(String(world.region.get("region_id", world.region.get("route_id", ""))))
+	if _bset != "":
+		var all_ids := []
+		for k in kinds:
+			var ids := []
+			for r in ROLE_VARIANTS.get(k, [k]): ids.append_array(CharBank.ids(_bset, r))
+			if not ids.is_empty(): _variants[k] = ids; all_ids.append_array(ids)
+		var bs := CharBank.bank_src(_bset, all_ids)
+		for id in bs:
+			if not SpriteChar._banks.has(id): _bank_src[id] = bs[id]
 	var src := {}
 	for jf in ["frames_npc.json", "frames_amb.json"]:
 		var path: String = "res://data/" + jf
@@ -350,6 +375,7 @@ func _finish_build() -> void:
 			for k in all: src[k] = all[k]
 			if jf == "frames_amb.json": _amb = true
 	for k in kinds:
+		if _variants.has(k): continue   # 빌더 사람이 대신한다
 		var real := _real_kind(k, src)
 		if real != "" and src.has(real) and not SpriteChar._banks.has(real): _bank_src[real] = src[real]
 	var want := []
@@ -357,7 +383,8 @@ func _finish_build() -> void:
 		for p in _bank_src[k].pages:
 			if not want.has(p) and not _tex_cache.has(p): want.append(p)
 	_task = WorkerThreadPool.add_task(_load_pages.bind(want), false, "npc_ambient pages")
-	print("NPC sites=%d paths=%d kinds=%d pages=%d build_ms=%d amb=%s" % [sites.size(), paths.size(), _bank_src.size(), want.size(), _built.ms, _amb])
+	print("NPC sites=%d paths=%d kinds=%d pages=%d build_ms=%d amb=%s builder=%s variants=%d" % [sites.size(), paths.size(), _bank_src.size(), want.size(), _built.ms, _amb, _bset,
+		_variants.values().reduce(func(a, l): return a + l.size(), 0)])
 	_built = {}
 
 func _real_kind(k: String, src: Dictionary) -> String:
@@ -377,6 +404,7 @@ func _upload_pages() -> void:
 	while not _pending_pages.is_empty() and n < 3:
 		var e: Array = _pending_pages.pop_front()
 		_tex_cache[e[0]] = ImageTexture.create_from_image(e[1]); n += 1
+		CharBank.put_texture(String(e[0]), _tex_cache[e[0]])   # 군중(EventCrowd)도 같은 페이지를 쓴다
 	if _pending_pages.is_empty():
 		for k in _bank_src.keys():
 			var ok := true
@@ -505,6 +533,7 @@ func _scan() -> void:
 		print("NPC agents=%d want=%d people=%d animals=%d on_screen=%d cand_p=%d cand_a=%d" % [agents.size(), want.size(), stats.people, stats.animals, stats.on_screen, want_p.size(), want_a.size()])
 
 func _kind_bank(k: String) -> String:
+	if _variants.has(k): return String(_variants[k][0])
 	if SpriteChar._banks.has(k): return k
 	return FALLBACK.get(k, k)
 
@@ -568,8 +597,9 @@ func _spawn(key: int, kind: String, filling: bool) -> bool:
 	if site.mode != "gull" and excluded(p, 0.4): return false              # 비우기 구역(사건이 잠시 비운 길)
 	var pos := Vector3(p.x, 0.0, p.y)
 	if not filling and site.mode != "gull" and _visible_near(Vector3(p.x, world.height_at(p.x, p.y), p.y)): return false
-	var ch := _take(kind)
+	var ch := _take(_bank_for(kind, key))
 	if ch == null: return false
+	ag.carry = not ag.animal and ch.has_anim("carry")
 	ag.ch = ch
 	ag.pos = pos
 	_place(ag, p)
@@ -580,6 +610,12 @@ func _spawn(key: int, kind: String, filling: bool) -> bool:
 	ch.t = _h(key, 24) * 5.0
 	agents[key] = ag
 	return true
+
+# 역할 → 이 칸의 사람(빌더 묶음이면 칸 번호 해시로 여러 사람 중 하나 — 다시 와도 같은 사람)
+func _bank_for(kind: String, key: int) -> String:
+	if not _variants.has(kind): return kind
+	var ids: Array = _variants[kind]
+	return String(ids[int(_h(key, 61) * ids.size()) % ids.size()])
 
 func _take(kind: String) -> SpriteChar:
 	var bank := _kind_bank(kind)
@@ -707,7 +743,7 @@ func _step_agents(dt: float) -> void:
 				ag.pos = Vector3(p.x, ag.pos.y, p.y); ch.position = ag.pos
 		var want_anim: String
 		if ag.mode == "gull": want_anim = ch.anim
-		elif moved: want_anim = "walk"
+		elif moved: want_anim = "carry" if ag.get("carry", false) else "walk"
 		else: want_anim = ag.anim
 		ch.set_anim(want_anim)
 		if ag.animal and moved and ag.mode != "gull":

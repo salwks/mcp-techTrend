@@ -366,11 +366,11 @@ func update_char(dt: float, cam: Camera3D) -> void:
 		var v := Vector2(position.x - _last_pos.x, position.z - _last_pos.z).length() / dt
 		_measured += (v - _measured) * minf(1.0, dt * 10.0)
 	_last_pos = position
-	if anim == "walk" or anim == "run":
+	if anim == "walk" or anim == "run" or anim == "carry":   # carry: 짐 들고 걷기(인물 빌더) — 걷기 보폭
 		var def := 4.6 if anim == "run" else 2.2
 		var sp := move_speed if move_speed >= 0.0 else (_measured if _measured > 0.3 else def)
 		sp = maxf(sp, def * 0.35)
-		phase += dt * sp / STRIDE[anim]
+		phase += dt * sp / STRIDE["run" if anim == "run" else "walk"]
 	# 카메라 쪽을 향해 세우고 살짝 뒤로 젖힘
 	var fwd := -cam.global_transform.basis.z
 	if absf(fwd.x) + absf(fwd.z) > 1e-4:

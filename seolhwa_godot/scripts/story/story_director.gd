@@ -611,6 +611,7 @@ func _ensure_bank(kind: String) -> String:
 			pages.append(ImageTexture.create_from_image(img))
 		SpriteChar._banks[kind] = { pages = pages, clips = _bank_src[kind].clips }
 		return kind
+	if preload("res://scripts/char_bank.gd").ensure(kind): return kind   # 인물 빌더 인물(data/chars/*.json — 프리셋 p_jumo 등, 권역 사람 id)
 	if KIND_FALLBACK.has(kind): return _ensure_bank(KIND_FALLBACK[kind])
 	return "villager_m" if kind != "villager_m" else ""
 

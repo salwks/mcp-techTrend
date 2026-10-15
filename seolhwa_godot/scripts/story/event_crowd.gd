@@ -28,6 +28,12 @@
 extends Node3D
 
 const PlacementGate := preload("res://scripts/region/placement_gate.gd")
+const CharBank := preload("res://scripts/char_bank.gd")
+# 고을 사람 generic 그림 → 인물 빌더 권역 묶음의 역할(scripts/char_bank.gd). 여기 있는 kind는 군중에서 빌더 사람(시드마다 다른 얼굴·차림)으로
+# 바뀐다 — 계획(plan)의 kind는 그대로이고 그림(bank)만 바뀐다. 관속·포졸·서리·기생 generic은 예전 그림 그대로. --nobuilder면 모두 예전 그림.
+const BUILDER_ROLE := { villager_m = "villager_m", villager_f = "villager_f", elder = "elder", child_boy = "child_boy", child_girl = "child_girl",
+	farmer = "farmer", farmwife = "farmwife", merchant = "merchant", peddler = "peddler", traveler = "traveler", scholar = "scholar",
+	innkeeper = "innkeeper", monk = "monk", boatman = "boatman", haenyeo = "haenyeo" }
 
 const DENSITY := { low = [6, 10], medium = [10, 18], high = [18, 30] }
 const PRESETS := {
@@ -321,9 +327,11 @@ static func _face(v: Vector2, prev: String) -> String:
 func _build(c: Dictionary) -> void:
 	c.built = true
 	c.members = []
+	var i := 0
 	for p in plan(c.spec, c.density):
 		var m: Dictionary = p.duplicate()
-		var bank := _ensure_bank(String(m.kind))
+		var bank := _member_bank(c, i, String(m.kind))
+		i += 1
 		m.ch = null
 		m.bank = bank
 		m.pos2 = m.home
@@ -405,6 +413,17 @@ func _free_members(c: Dictionary) -> void:
 	for m in c.get("members", []):
 		if m.get("ch") != null and is_instance_valid(m.ch): m.ch.queue_free()
 	c.members = []
+
+# 군중 한 사람의 그림: 빌더 권역 묶음에 그 역할이 있으면 (군중 id·순번 해시로) 그중 한 사람, 없으면 예전 generic 그림
+func _member_bank(c: Dictionary, i: int, kind: String) -> String:
+	if BUILDER_ROLE.has(kind) and not OS.get_cmdline_user_args().has("--nobuilder") and main != null and main.get("world") != null:
+		var rid := String(main.world.region.get("region_id", main.world.region.get("route_id", ""))) if main.world.get("region") is Dictionary else ""
+		var bset := CharBank.region_set(rid)
+		var ids := CharBank.ids(bset, BUILDER_ROLE[kind]) if bset != "" else []
+		if not ids.is_empty():
+			var id := String(ids[absi(hash(String(c.spec.get("id", "")) + ":" + str(i))) % ids.size()])
+			if CharBank.ensure(id): return id
+	return _ensure_bank(kind)
 
 func _ensure_bank(kind: String) -> String:
 	if SpriteChar._banks.has(kind): return kind
