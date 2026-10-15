@@ -182,14 +182,14 @@ function jumpPose(view, t, S, k, chima, robe) {
   const q = Math.max(crouch, land);
   const air = u > 0.38 && u < 0.79 ? sin(PI * (u - 0.38) / 0.41) : 0;    // 공중 높이(0~1)
   const H = 40 * k * air;                                                // 위로(px) — 그림 높이 약 0.45m(배율 적용)
-  const tuck = air * 0.9;
+  const tuck = air * (chima || robe ? 0.35 : 0.9);   // 긴 옷(치마·두루마기)은 무릎을 덜 접는다 — 자락이 앞으로 크게 밀려 둥근 판처럼 보이지 않게
   // 팔(앞뒤): 웅크릴 때 뒤로, 박찰 때 앞·위로 크게, 공중에서 내려오고, 착지 때 앞으로 받침
   const armA = -0.75 * crouch + 2.3 * sm(0.3, 0.45, u) * (1 - sm(0.5, 0.8, u)) + 0.6 * sm(0.5, 0.8, u) * (1 - sm(0.85, 1, u)) + 0.35 * land;
   if (view === 'side') {
     return { root: [0.03 * q, 0, 18 * k * q - H], torso: [-0.42 * q - 0.08 * air], head: [0.18 * q - 0.1 * air],
       leg2: [0.95 * q + 0.75 * tuck], leg2_l: [-1.7 * q - 1.3 * tuck], leg1: [0.85 * q + 0.5 * tuck - 0.1 * air], leg1_l: [-1.6 * q - 1.0 * tuck],
-      arm2: [armA], arm2_l: [0.25 + 0.2 * air], arm1: [armA * 0.92 - 0.05], arm1_l: [0.3 + 0.2 * air],
-      skirt: [chima ? 0.08 * q - 0.1 * air : robe ? 0.1 * q - 0.12 * air : 0, 0, 0, 1 + 0.12 * air, 1 - 0.1 * air] };
+      arm2: [armA], arm2_l: [0.25 + 0.2 * air - 0.35 * crouch], arm1: [armA * 0.92 - 0.05], arm1_l: [0.3 + 0.2 * air - 0.4 * crouch],
+      skirt: [chima || robe ? -0.12 * q - 0.1 * air : 0, 0, 0, 1 + 0.08 * air, 1 - 0.1 * air] };
   }
   // 앞: 무릎을 굽히면 다리가 짧아지고(카메라 쪽으로 접힘) 조금 벌어진다. 팔은 웅크릴 때 뒤(짧게)로, 공중에서 양옆 위로
   const up = Math.max(0, armA);

@@ -55,7 +55,7 @@ export function drawGrid(rows, cols, px) {
     const ox = (i % cols) * cw, oy = Math.floor(i / cols) * ch;
     g.fillStyle = '#5a4a3a'; g.fillText(k, ox + 4, oy + 14);
     list.forEach((r, j) => {
-      const f = r.frames[Math.min(r.frames.length - 1, 1)];
+      const f = r.frames[Math.min(r.frames.length - 1, r.label.includes('jump') ? 5 : 1)];   // 뛰기는 공중 그림
       const pg = r.bank.pages[typeof f.page === 'number' ? f.page : f.page.index].cv;
       const sx = f.u0 * 1024, sy = f.v0 * 1024, sw = (f.u1 - f.u0) * 1024, sh = (f.v1 - f.v0) * 1024;
       const k2 = sw / ((f.x1 - f.x0) * px);
@@ -89,7 +89,7 @@ export async function run(log) {
     const keys = [];
     for (const a of anims) for (const v of views) keys.push(fc.clipKey(v, a, false, false));
     const { bank, clips } = await bakeKindFrames(k, keys, px);
-    for (const key of keys) if (clips[key]) rows.push({ label: kind.replace('builder:', '') + ' ' + key, frames: clips[key], bank });
+    for (const key of keys) if (clips[key]) rows.push({ label: kind.replace('builder:', 'B:') + ' ' + key, frames: clips[key], bank });
     log('baked ' + kind);
   }
   const cv = q.get('layout') === 'grid' ? drawGrid(rows, +(q.get('cols') || 10), px) : drawSheet(rows, [Math.round(px * 1.35), Math.round(px * 2.6)], px);
