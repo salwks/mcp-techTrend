@@ -378,6 +378,9 @@ func _keeper_cancel(hr, a: Dictionary) -> void:
 	await _key_e()
 	var mp = await _wait_pick()
 	if mp == null: _fail("취소 시험: 지도가 안 열림"); return
+	# 재기획 2단계: 마부와 겹치면 말 걸 때 한 걸음 비켜 선다(talk_frame.gd, 최대 2.6m) — '자리 그대로'는 지도가 열린 뒤 자리로 본다
+	var p1 := _pp()
+	if p1.distance_to(p0) > 2.7: _fail("말 걸기 한 걸음이 너무 멀다 %.2f" % p1.distance_to(p0))
 	await _key(KEY_ESCAPE)
 	await main._wait_frames(20)
 	await _idle_dialogue()
@@ -386,7 +389,7 @@ func _keeper_cancel(hr, a: Dictionary) -> void:
 		main.fast_ui != null and is_instance_valid(main.fast_ui), h0, main.hour, _pp().distance_to(p0)])
 	if mp.visible or mp.picking() or d.keeper.busy: _fail("Esc로 지도가 닫히지 않음")
 	if hr.state != "ON_FOOT" or (main.fast_ui != null and is_instance_valid(main.fast_ui)) or (L != null and L.has("bring")): _fail("그만뒀는데 말·역마가 움직임")
-	if absf(main.hour - h0) > 0.05 or _pp().distance_to(p0) > 0.5: _fail("그만뒀는데 시각·자리가 바뀜")
+	if absf(main.hour - h0) > 0.05 or _pp().distance_to(p1) > 0.5: _fail("그만뒀는데 시각·자리가 바뀜")
 	d.keeper.auto_pick = Callable()
 
 # 4d) 길목 깃발: 알기 → 깃발에서 역으로 → 역 마부에게서 깃발로 → 저장 파일
