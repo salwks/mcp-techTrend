@@ -14,6 +14,11 @@ godot --path seolhwa_godot res://scenes/main.tscn   # G0 1차 마을 데모(--re
 **F11 · Alt+Enter** 전체 화면. 3D 장면은 창 화소 × 화면 배율(레티나 2)로 그리되 2560×1440(약 370만 화소)을 넘지 않게 줄인다(`--scale=N`을 주면 그대로).
 창 촬영: `godot --path seolhwa_godot res://scenes/region.tscn --resolution 1920x1080 -- …`(맥 레티나에서 창 화소 = 1920×1080).
 
+**저장 지킴**(`scripts/region/save_guard.gd`): `--` 뒤에 놀이 인자(`savefile`·`devtravel`·`scale`·`view`·`region`·`fullscreen`) 말고 다른 인자가 하나라도 있거나 `-s` 스크립트로 돌리면 시험·도구 실행으로 본다.
+그러면 진행·저장 칸·작은 그림·`settings.json`의 `user://X`가 사용자 폴더 옆 모래상자 `…/app_userdata/설화록_test/X`(또는 `--saveroot=<폴더>`)로 간다.
+`--savefile` 없이 돈 시험·도구 실행은 모래상자 `tool_progress.json`을 늘 새로 쓴다. 사용자 저장(`…/설화록/progress.json`·`play_*`)은 놀이 실행만 쓴다.
+엔진 로그까지 떼려면 `--log-file <모래상자>/logs/x.log`(`tools/run_story_tests.sh`는 그렇게 한다).
+
 | 키 | 동작 |
 |---|---|
 | WASD / 방향키 | 이동 (Shift: 달리기) |
