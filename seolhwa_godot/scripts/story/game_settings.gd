@@ -39,16 +39,21 @@ const DEFAULTS := { guide = "early", help = "normal", ride_speed = "normal", rid
 	view = "third", dof = "normal", mouse_sens = "normal",
 	vol_master = "10", vol_bgm = "7", vol_sfx = "9", vol_ambient = "8" }
 
+const SaveGuard := preload("res://scripts/region/save_guard.gd")
 static var _d = null
 static var test_override := {}   # 대본 시험: 사용자 설정과 상관없이 기본값으로(--storytest·--onboardtest)
 
 static func data() -> Dictionary:
 	if _d == null:
 		_d = DEFAULTS.duplicate()
-		if FileAccess.file_exists(PATH):
-			var j = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+		if FileAccess.file_exists(path()):
+			var j = JSON.parse_string(FileAccess.get_file_as_string(path()))
 			if j is Dictionary: _d.merge(j, true)
 	return _d
+
+# 시험·도구 실행은 모래상자 settings.json(없으면 기본값) — 사용자 설정을 읽지도 쓰지도 않는다
+static func path() -> String:
+	return SaveGuard.resolve(PATH)
 
 static func get_v(k: String) -> String:
 	if test_override.has(k): return String(test_override[k])
@@ -56,7 +61,7 @@ static func get_v(k: String) -> String:
 
 static func set_v(k: String, v: String) -> void:
 	data()[k] = v
-	var f := FileAccess.open(PATH, FileAccess.WRITE)
+	var f := FileAccess.open(path(), FileAccess.WRITE)
 	if f != null:
 		f.store_string(JSON.stringify(data(), " "))
 		f.close()

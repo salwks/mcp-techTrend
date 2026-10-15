@@ -29,7 +29,7 @@ func ok(c: bool, what: String) -> void:
 		print("  FAIL ", what)
 
 func _init() -> void:
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path(SAVE)
 	Progress.reset_all()
 	_talk_camera()
@@ -37,7 +37,7 @@ func _init() -> void:
 	_waymarks()
 	CaseRegistry.clear_extra()
 	FT.clear_gate_cache()
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path("")
 	print("COMMONTEST %s %d" % ["PASS" if fails == 0 else "FAIL", n if fails == 0 else fails])
 	quit(0 if fails == 0 else 1)

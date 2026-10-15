@@ -39,7 +39,7 @@ func ok(c: bool, what: String) -> void:
 		print("  FAIL ", what)
 
 func _fresh() -> void:
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path(SAVE)
 	Progress.reset_all()
 
@@ -57,7 +57,7 @@ func _init() -> void:
 	_test_e_namwon()
 	CaseRegistry.clear_extra()
 	MapLeads._cases = null
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path("")
 	print("REGTEST %s %d" % ["PASS" if fails == 0 else "FAIL", n if fails == 0 else fails])
 	quit(0 if fails == 0 else 1)
@@ -184,7 +184,7 @@ func _test_e_namwon() -> void:
 	ok(not s.load_saved() and s.phase == "start", "새 게임 남원 상태 start")
 	# 이른 옛 저장(continue:namwon-early와 같은 것)
 	var j = JSON.parse_string(FileAccess.get_file_as_string("res://story/namwon/test_early_save.json"))
-	var f := FileAccess.open(SAVE, FileAccess.WRITE)
+	var f := FileAccess.open(Progress.SaveGuard.resolve(SAVE), FileAccess.WRITE)
 	f.store_string(JSON.stringify(j, " ")); f.close()
 	var p := _reread()
 	ok(p.cases.has("namwon") and int(p.version) == 2, "옛 저장 cases.namwon 그대로 읽힘(version 2)")

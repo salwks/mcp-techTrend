@@ -166,6 +166,10 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
+	# 저장 지킴(save_guard.gd): --savefile은 이야기 유무와 상관없이 가장 먼저(--nostory 촬영이 사용자 저장에 쓰던 구멍).
+	#   시험·도구 실행이면 모든 저장 경로가 모래상자로 간다
+	if args.has("savefile"): Progress.use_path(String(args.savefile))
+	if Progress.SaveGuard.sandboxed(): print("SAVEGUARD sandbox=%s why=%s progress=%s" % [Progress.SaveGuard.root(), Progress.SaveGuard.why(), Progress.slot_path(0)])
 	_setup_input()
 	get_tree().set_auto_accept_quit(false)   # 창 닫기 → _quit()(작업 스레드를 기다린 뒤 끝낸다)
 	if args.has("routedir"): Travel.extra_route_dirs = args.routedir.split(";", false)

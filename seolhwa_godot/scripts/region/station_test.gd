@@ -410,7 +410,7 @@ func _flags(hr, a: Dictionary) -> void:
 	if not kn: _fail("깃발 곁에 갔는데 가 봄이 아님")
 	if not live: _fail("깃발 그림이 없음/쪽빛이 아님")
 	# 저장 파일(이어 하기·저장 칸은 이 파일)에 남았나
-	var sf := ProjectSettings.globalize_path(String(main.args.get("savefile", "user://progress.json")))
+	var sf := ProjectSettings.globalize_path(Progress.slot_path(0))
 	var j = JSON.parse_string(FileAccess.get_file_as_string(sf)) if FileAccess.file_exists(sf) else null
 	var saved: bool = j is Dictionary and j.get("travel_nodes", {}).get(W.space, {}).has(String(f.id))
 	print("STATIONTEST flag saved=%s file=%s" % [saved, sf])
@@ -552,7 +552,7 @@ func _ride_once(hr, a: Dictionary, ride_to: String, skip: bool) -> Dictionary:
 
 # ---- 개발 '전국 이동 열림'(scripts/region/dev_travel.gd) ----
 func _save_text() -> String:
-	var sf := ProjectSettings.globalize_path(String(main.args.get("savefile", "user://progress.json")))
+	var sf := ProjectSettings.globalize_path(Progress.slot_path(0))
 	var j = JSON.parse_string(FileAccess.get_file_as_string(sf)) if FileAccess.file_exists(sf) else null
 	if not (j is Dictionary): return ""
 	return JSON.stringify([j.get("travel_nodes", {}), j.get("known", {}), j.get("routes_done", {})])

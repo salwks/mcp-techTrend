@@ -64,7 +64,7 @@ func ok(c: bool, what: String) -> void:
 		print("  FAIL ", what)
 
 func _fresh() -> void:
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path(SAVE)
 	Progress.reset_all()
 
@@ -106,7 +106,7 @@ func _initialize() -> void:
 	GameSettings.test_override = {}
 	for o in _made: o.free()
 	_made.clear()
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path("")
 	print("ONBOARDRULE %s %d" % ["PASS" if fails == 0 else "FAIL", n if fails == 0 else fails])
 	quit(0 if fails == 0 else 1)

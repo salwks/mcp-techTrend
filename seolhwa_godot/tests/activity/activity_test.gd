@@ -131,7 +131,7 @@ func _run(r, steps: Array) -> void:
 	await r.exec(steps, r.gen)
 
 func _init() -> void:
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	Progress.use_path(SAVE)
 	await _contract()
 	_hardcode()
@@ -139,7 +139,7 @@ func _init() -> void:
 	await _saveload()
 	_beats()
 	await _reuse()
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	print("ACTIVITYTEST %s %d" % ["PASS" if fails == 0 else "FAIL", n if fails == 0 else fails])
 	quit(0 if fails == 0 else 1)
 

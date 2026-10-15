@@ -7,7 +7,7 @@
 #   tools/run_story_tests.sh -l              # 목록만
 #
 # 판정: 로그에 PASS 줄(STORYTEST/ONBOARDTEST/RIDETEST/FASTTEST/TALKTEST/STATIONTEST/SAVETEST/CONTTEST/TRAVELTEST/MAPTEXTTEST/MAPKNOWNTEST/VIEWTEST PASS, 걷기는 WALK done + TRAVEL arrive)이 있고 종료 코드 0, SCRIPT ERROR 0.
-# 시험마다 저장 파일을 따로 쓴다(--savefile=user://st_<이름>.json) — 동시에 돌려도 서로 덮어쓰지 않는다.
+# 시험마다 저장 파일을 따로 쓴다(--savefile=user://st_<이름>.json → 모래상자 …/설화록_test/st_<이름>.json, save_guard.gd) — 동시에 돌려도 서로 덮어쓰지 않고, 사용자 저장 폴더에는 쓰지 않는다.
 # 로그: $LOGDIR(기본 /tmp/seolhwa_tests/<시각>/<이름>.log). 환경 변수 GODOT, LOGDIR, TIMEOUT_SCALE(제한 시간 배율).
 
 emulate -L zsh
@@ -28,6 +28,10 @@ done
 FILTERS=("$@")
 LOGDIR=${LOGDIR:-/tmp/seolhwa_tests/$(date +%Y%m%d_%H%M%S)}
 TSCALE=${TIMEOUT_SCALE:-1}
+# 저장 지킴(scripts/region/save_guard.gd): 시험 인자가 있으면 user://st_*.json은 사용자 저장 폴더가 아니라 이 모래상자에 쓰인다
+#   엔진 로그도 --log-file로 모래상자에(사용자 폴더 logs/의 돌려쓰기·지우기를 건드리지 않게)
+SANDBOX="$HOME/Library/Application Support/Godot/app_userdata/설화록_test"
+mkdir -p "$SANDBOX/logs"
 
 # 이름 | 제한(초) | 인자
 TESTS=(
@@ -159,8 +163,8 @@ run_one() {
 	local log=$LOGDIR/$safe.log
 	local t0=$SECONDS
 	# 시험마다 따로 저장(user://st_<이름>.json) — 남은 저장이 있으면 지운다(prepare가 새로 깐다)
-	rm -f "$HOME/Library/Application Support/Godot/app_userdata/설화록/st_${safe}.json" 2>/dev/null
-	timeout $(( limit * TSCALE )) $GODOT --headless --path $ROOT res://scenes/region.tscn -- ${=spec} --savefile=user://st_${safe}.json > $log 2>&1
+	rm -f "$SANDBOX/st_${safe}.json" "$SANDBOX"/st_${safe}_slot<1-3>.json(N) "$SANDBOX"/st_${safe}_slot<1-3>.png(N) 2>/dev/null
+	timeout $(( limit * TSCALE )) $GODOT --headless --log-file "$SANDBOX/logs/st_${safe}.log" --path $ROOT res://scenes/region.tscn -- ${=spec} --savefile=user://st_${safe}.json > $log 2>&1
 	local code=$?
 	local dt=$(( SECONDS - t0 ))
 	local verdict=FAIL why=""

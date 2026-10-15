@@ -18,12 +18,28 @@
 extends RefCounted
 
 const DEFAULT_PATH := "user://progress.json"
+const SaveGuard := preload("res://scripts/region/save_guard.gd")
+# 저장 지킴(save_guard.gd): 시험·도구 실행이면 path는 모래상자 안 절대 경로다. 놀이 실행이면 user:// 그대로
 static var path := DEFAULT_PATH
+static var _guarded := false
 static var _d = null
 # 바뀜 번호: 변수·사건 진행·파일이 바뀔 때마다 1씩 — 배치 조건(placement_gate.gd)이 매 프레임 이 수만 비교한다
 static var version := 0
 
+# 처음 한 번: 시험·도구 실행이면 경로를 모래상자로. --savefile 없이 돈 시험·도구 실행은 늘 새 tool_progress.json
+static func _guard() -> void:
+	if _guarded: return
+	_guarded = true
+	if SaveGuard.sandboxed() and path == DEFAULT_PATH:
+		path = SaveGuard.resolve(SaveGuard.TOOL_PROGRESS)
+		for n in SLOTS + 1:
+			if FileAccess.file_exists(slot_path(n)): DirAccess.remove_absolute(slot_path(n))
+		print("SAVEGUARD fresh ", path)
+	else:
+		path = SaveGuard.resolve(path)
+
 static func data() -> Dictionary:
+	_guard()
 	if _d == null:
 		_d = {}
 		if FileAccess.file_exists(path):
@@ -40,12 +56,15 @@ static func data() -> Dictionary:
 
 # 다른 저장 파일 쓰기(시험). 읽어 둔 것을 버린다
 static func use_path(p: String) -> void:
-	path = p if p != "" else DEFAULT_PATH
+	_guarded = true
+	path = SaveGuard.resolve(p if p != "" else DEFAULT_PATH)
 	_d = null
 	version += 1
 
 static func save() -> void:
 	var d := data()
+	if SaveGuard.sandboxed() and SaveGuard.is_real_user_path(path):
+		push_error("SAVEGUARD 막음: 시험·도구 실행이 사용자 저장에 쓰려 함 " + path); return
 	d["saved_at"] = Time.get_datetime_string_from_system()
 	if meta_fn.is_valid():
 		var m = meta_fn.call()
@@ -168,6 +187,7 @@ static func _notify(reason: String) -> void:
 	if on_checkpoint.is_valid(): on_checkpoint.call(reason)
 
 static func slot_path(n: int) -> String:
+	_guard()
 	if n <= 0: return path
 	return "%s_slot%d.json" % [path.get_basename(), n]
 

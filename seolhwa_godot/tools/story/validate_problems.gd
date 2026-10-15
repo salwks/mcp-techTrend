@@ -102,7 +102,7 @@ func _init() -> void:
 		for e in guard_errors(data): _fail(id, e)
 		for e in saveload_errors(String(id), data): _fail(id, e)
 		print("CASE %s problems=%d activities=%d" % [id, np, (data.get("activity_steps", {}) as Dictionary).size()])
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE))
+	DirAccess.remove_absolute(Progress.SaveGuard.resolve(SAVE))
 	if fails == 0: print("PROBLEMS PASS %d problems=%d" % [n_cases, n_probs])
 	else: print("PROBLEMS FAIL %d" % fails)
 	quit(0 if fails == 0 else 1)
