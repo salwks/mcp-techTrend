@@ -78,6 +78,11 @@ func run(spec: String) -> void:
 	var wp = d.title.get("_wp")
 	_ok(wp != null and wp.get_child_count() >= 9 + 3, "시작 메뉴 움직이는 바탕(겹·학·꽃잎) %s" % [wp.get_child_count() if wp != null else -1])
 	var wp_ref: WeakRef = weakref(wp) if wp != null else null
+	# 재기획 3단계 첫 15분 흐름(story/main_p1/main_p1_first15_test.gd): 새 게임부터 지도 목적지까지 한 번에
+	if spec == "first15":
+		var ft = load("res://story/main_p1/main_p1_first15_test.gd").new(self, main)
+		await ft.run()
+		_finish(""); return
 	d.ui.auto = true
 	print("CONTTEST pick %s phase=%s seen=%s" % [spec, d.S.phase, d.S.seen.keys()])
 	d.title._pick(0 if spec == "new" else 1)
@@ -90,6 +95,10 @@ func run(spec: String) -> void:
 	_ok(d.S.phase != "start", "phase=" + String(d.S.phase))
 	print("CONTTEST state phase=%s seen=%s talked=%s" % [d.S.phase, d.S.seen.keys(), d.S.talked])
 	match String(main.args.get("continueexpect", "")):
+		"join": await _join()
+		"chunhyang": await _chunhyang_entry()
+		"yield": await _yield()
+		"main_resume": await _main_resume()
 		"rollback": await _rollback()
 		"rollback_rope": await _rollback_rope()
 		"morning": await _morning()
@@ -198,8 +207,43 @@ func _morning() -> void:
 	_ok(not S.is_flag("elder_book") and not S.seen.has("S0011"), "노인·마지막 밤은 아직(걸어 내려가야)")
 	print("CONTTEST morning choice=%s hour=%.2f" % [S.vars.get("CASE_NAMWON_MORNING", ""), main.hour])
 
+# 재기획 3단계(추가 지시 2): 오누이를 끝낸 옛 저장 — 메인 서장에 합류(여는 장면 없이 JOIN), 오누이 결과·춘향 진입 변수는 그대로
+func _join() -> void:
+	_ok(d.case_id == "main_p1" and d.S.is_flag("JOINED") and d.S.is_flag("OP00_DONE"), "끝난 오누이 저장 → 메인 서장 합류(case=%s JOINED=%s)" % [d.case_id, d.S.is_flag("JOINED")])
+	_ok(not d.S.is_flag("START_AT_IEGYEOM_HOME"), "합류는 거처로 옮기지 않는다(여는 장면 없음)")
+	_ok(bool(Progress.get_var("CASE_NAMWON_COMPLETE", false)) and String(Progress.case_state("namwon").get("phase", "")) == "done", "오누이 완료·진행 그대로")
+	_ok(d.actors.has("peddler") and d.actors.has("solip_jumo"), "메인 서장 인물이 선다(행상·솔잎 주모)")
+	print("CONTTEST join case=%s phase=%s" % [d.case_id, d.S.phase])
+
+# 재기획 3단계(D3·추가 지시 3): 한양 책방까지 끝낸 옛 저장 — 남원에 오면 춘향(오누이 완료 요구 없이도 그대로 선다)
+func _chunhyang_entry() -> void:
+	_ok(d.case_id == "namwon_chunhyang", "한양 뒤 옛 저장 → 춘향 사건(case=%s)" % d.case_id)
+	var CR = load("res://scripts/story/case_registry.gd")
+	var cands: Array = CR.cases_for("JL_NAMWON_UNBONG")
+	var v := Progress.vars().duplicate(); v["CASE_NAMWON_COMPLETE"] = false
+	_ok(String(CR.choose(cands, v).id) == "namwon_chunhyang", "오누이 완료가 없어도 춘향 진입(D3)")
+	print("CONTTEST chunhyang case=%s phase=%s" % [d.case_id, d.S.phase])
+
+# 재기획 3단계(추가 지시 2): 오누이가 이 자리에서 끝났다(--case=namwon로 끝난 저장을 세움) — 한가해지면 메인 서장으로 합류
+func _yield() -> void:
+	main.args.erase("case")
+	var t0 := Time.get_ticks_msec()
+	var ok := await _wait_until(func(): return d.case_id == "main_p1" and d._started and not d.runner.busy, 20.0)
+	_ok(ok, "끝난 오누이 → %.1f초 뒤 메인 서장 합류(case=%s)" % [(Time.get_ticks_msec() - t0) / 1000.0, d.case_id])
+	_ok(d.S.is_flag("JOINED"), "합류(JOINED)")
+
+# 재기획 3단계 저장 재개: 메인 서장 도중 저장(test_main_letter_save.json — 편지를 읽은 뒤) 이어 하기
+func _main_resume() -> void:
+	_ok(d.case_id == "main_p1" and d.S.is_flag("LETTER_RECEIVED") and not d.S.is_flag("LETTER_SUSPICIOUS"), "편지 뒤 저장 → 메인 서장 그 자리(case=%s)" % d.case_id)
+	_ok(not d.S.seen.has("JOIN") and not d.S.is_flag("JOINED"), "새로 합류하지 않고 이어 함")
+	_ok(d._targets().any(func(t): return String(t.id) == "o_desk"), "서안 견주기가 E 대상으로 남아 있음")
+
 # 남원 참기름 감사 — 옛 v1 끝난 저장(test_v1_done_save.json: phase done · 결말 B · 세부 B_win). 값은 바꾸지 않고 문장만 B_hold로 읽는다
 func _v1_done() -> void:
+	# 재기획 3단계: 끝난 오누이 저장은 메인 서장에 합류한다 — 오누이 결말 글은 그 사건을 다시 세워(같은 자리) 본다
+	_ok(d.case_id == "main_p1", "끝난 옛 v1 저장 → 메인 서장 합류(case=%s)" % d.case_id)
+	_ok(d.switch_case("namwon", { "reload": true }), "오누이를 다시 세워 결말 글 보기")
+	await _wait_until(func(): return d._started and not d.runner.busy, 10.0)
 	var S = d.S
 	var c = d.case_fn
 	_ok(S.phase == "done" and String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "B" and String(S.vars.get("CASE_NAMWON_DETAIL", "")) == "B_win", "옛 v1 결말 B 그대로(phase=%s · %s · %s)" % [S.phase, S.vars.get("CASE_NAMWON_OUTCOME", ""), S.vars.get("CASE_NAMWON_DETAIL", "")])

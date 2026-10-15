@@ -89,7 +89,7 @@ TESTS=(
 	"travel:boat-skip|300|--region=GG_HANYANG --traveltest=boatskip --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"travel:mount-region|300|--region=JL_NAMWON_UNBONG --traveltest=mount --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	"travel:mount-route|300|--route=HH_HWANGJU-PA_PYEONGYANG --traveltest=mount --nostory --notitle"
-	"travel:namwon-night|300|--region=JL_NAMWON_UNBONG --traveltest=nightlock --notitle"
+	"travel:namwon-night|300|--region=JL_NAMWON_UNBONG --traveltest=nightlock --notitle --case=namwon"
 	# 강·바닷길 노정 깃발 없음(제작 규칙 결정 5): 남해~제주 뱃길 덕진다리 — 깃대·깃발 E 없음, '가 봄'·역마 창 목록·뱃길 그대로
 	"travel:sea-waymark|300|--route=SEA_NAMHAE_JEJU --traveltest=waymark --notitle"
 	# 고을 사람 말 걸기·이야기 인물 「…」(scripts/story/talk_test.gd) — 앞(새 저장) → 저장 얹고 뒤
@@ -97,8 +97,9 @@ TESTS=(
 	"talk:hanyang|420|--region=GG_HANYANG --talktest=chilpae_jang,ungjongga --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=need"
 	"talk:jeju|420|--region=JJ_JEJU --talktest=gimnyeong,jeju_jang --talkfixture=res://story/jeju/test_post_act4.json --talkvars=CASE_JEJU_OUTCOME=A,CASE_JEJU_COMPLETE=true --talkexpect=var"
 	# 대화 구도·복귀(재기획 2단계, scripts/story/talk_shot.gd --talkcycle): 네 방향에서 E 연타로 말 걸고 끝까지 — 카메라·가림·이동 잠금 복귀, 줄 건너뜀·다시 열림 없음
-	"talk:cycle|300|--talkshot=oil_wife --talkcycle=8 --newgame"
-	"talk:cycle-fp|300|--talkshot=oil_wife --talkcycle=4 --newgame --view=first"
+	#   (재기획 3단계: 새 게임 기본이 메인 서장이 되어 오누이 기름집 아낙은 --case=namwon으로 세운다)
+	"talk:cycle|300|--talkshot=oil_wife --talkcycle=8 --newgame --case=namwon"
+	"talk:cycle-fp|300|--talkshot=oil_wife --talkcycle=4 --newgame --view=first --case=namwon"
 	# 앉은 고을 사람(scripts/region/seat_test.gd — 인물 빌더 3단계): 장터 좌판·가가·시전 장꾼이 앉아 있고 자리를 지킨다 · 이야기 인물·사건 군중 자리는 비킨다 · 앉은 채 말 걸기 · 평상 손님·툇마루 노인 자리
 	"seat:namwon|300|--region=JL_NAMWON_UNBONG --seattest=namwon_jang --nostory --notitle"
 	"seat:hanyang|300|--region=GG_HANYANG --seattest=ungjongga --nostory --notitle"
@@ -111,6 +112,15 @@ TESTS=(
 	"continue:namwon-rope|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_rope_save.json --continueexpect=rollback_rope"
 	"continue:namwon-morning|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_morning_save.json --continueexpect=morning"
 	"continue:namwon-v1done|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_v1_done_save.json --continueexpect=v1_done"
+	# 재기획 3단계(추가 지시 2·3, D3) 옛 저장: 끝난 오누이 → 메인 서장 합류(JOIN) · 그 자리에서 끝난 오누이가 메인에 자리를 내줌 · 한양 뒤 → 춘향 그대로 · 메인 서장 도중(편지 뒤) 이어 하기
+	"continue:namwon-done-join|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_v1_done_save.json --continueexpect=join"
+	"continue:namwon-done-yield|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_v1_done_save.json --case=namwon --continueexpect=yield"
+	"continue:chunhyang-entry|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/hwangju/test_post_hanyang.json --continueexpect=chunhyang"
+	"continue:main-letter|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_letter_save.json --continueexpect=main_resume"
+	# 재기획 3단계 첫 15분(story/main_p1/main_p1_first15_test.gd): 시작 메뉴 → 새 게임 → 거처 → 편지 → 견주기 → 「설화록」 → 걸어서 솔잎 주막 → 지도 [목적지 설정]
+	#   D7(조작 반환 ≤12초) · 안내 여섯이 행동으로 끝남 · 이동 바로 복귀·카메라 복귀·E 겹침 없음 · 저장 재개 셋 · 순간이동 없음 / onui: 이어서 북문 밖 행상 → 오누이
+	"first15:new|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --storylog"
+	"first15:onui|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --first15=onui --storylog"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 	# 지도 글(scripts/region/region_map.gd --maptexttest): 권역·고을·전국 지도를 최소·중간·최대 배율로 — 이름표 글 크기·높이가 같은가 · 기호 속 글자 MAP_GLYPH ·
@@ -126,7 +136,7 @@ TESTS=(
 	#   저작 연출(d.camera·shot·glide)은 컷으로 → 바로 눈높이 · 말 위 3인칭 · 0 키로 되돌림
 	"view:namwon|300|--region=JL_NAMWON_UNBONG --viewtest --ridefixture=res://story/hwangju/test_post_hanyang.json --notitle"
 	# 춘향 준비(scripts/story/prep_test.gd): 조건부 배치(F-11) 없음→있음→없음 · 옥(늘 있음·문 상태) · 오누이 흔적(우물·수수밭 푸름/붉음) · EventCrowd(인원·seed·when·이야기 인물 없음·먼 거리 숨김)
-	"chunhyang:prep|300|--region=JL_NAMWON_UNBONG --preptest --notitle"
+	"chunhyang:prep|300|--region=JL_NAMWON_UNBONG --preptest --notitle --case=namwon"
 	# 춘향 PART II 준비(scripts/story/part2_prep_test.gd): 공용 자세(generic·이야기 인물) · PART II 차림 · SIT_SINK 없음 · 잔치 짜임 · set_pose 같은 사람 · PART II 소품 닫힘/강제
 	"chunhyang:part2prep|300|--region=JL_NAMWON_UNBONG --p2preptest --notitle"
 	# 춘향 PART I(story/namwon_chunhyang/namwon_chunhyang_test.gd): a 진입 판정·단오 군중 28·남원 사람·1A~5A 끝까지(같이 감·들었습니다·기다리실 겁니까) ·
