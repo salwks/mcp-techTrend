@@ -37,6 +37,8 @@ mkdir -p "$SANDBOX/logs"
 TESTS=(
 	"namwon:A|600|--storytest=namwon:A"
 	"namwon:B|600|--storytest=namwon:B"
+	# A2: 갈래 A + B와 무관한 검사 셋(beast_way 틀린 판단 Fail Forward · 해 질 무렵 대답 trace · 크게 밀리면 포수 화살) — 2026-10-16 참기름 감사로 B에서 옮김
+	"namwon:A2|600|--storytest=namwon:A2"
 	"namwon:C|240|--storytest=namwon:C"
 	"namwon:onboard|240|--storytest=namwon:onboard"
 	# 게임플레이 구조 1차 §4(scripts/story/oneonui_observe_test.gd): 관찰 기록 · 둘 뒤 초급 판단 · 서쪽 숲 Fail Forward · 관찰/판단 도중 저장·불러오기 · 한 번만 · FIXED_BEATS 그대로
@@ -105,6 +107,7 @@ TESTS=(
 	# 남원 v3.2: 새 흐름의 동아줄 도중 저장(꾸민 저장) → 같은 안전지점 · 옛 v3 아침 저장(꾸민 저장) → 새 아침(외딴집 마당)부터
 	"continue:namwon-rope|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_rope_save.json --continueexpect=rollback_rope"
 	"continue:namwon-morning|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_morning_save.json --continueexpect=morning"
+	"continue:namwon-v1done|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_v1_done_save.json --continueexpect=v1_done"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 	# 지도 글(scripts/region/region_map.gd --maptexttest): 권역·고을·전국 지도를 최소·중간·최대 배율로 — 이름표 글 크기·높이가 같은가 · 기호 속 글자 MAP_GLYPH ·

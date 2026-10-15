@@ -1,7 +1,7 @@
 # chamgireum-audit — 설화록 참기름 감사(2026-10-16)
 
 기준: 사용자 확정 참기름 기준(`seolhwa/docs/replanning/DECISIONS_stage1.md` '참기름 기준', 2026-10-16)과 오누이 v3.4(`seolhwa/docs/replanning/Seolhwarok_Onui_Playable_Script_v3_4.md`).
-범위: 문서·코드·데이터·시험·저장 픽스처. **이번 작업은 문서 주석과 이 보고뿐이다. 게임 코드·시나리오 갈래·데이터는 바꾸지 않았다.**
+범위: 문서·코드·데이터·시험·저장 픽스처. 첫 커밋(`1faf2f4`)은 문서 주석과 이 보고뿐이었다. 같은 날 사용자가 권장안(A1~A5)과 표현 정리 7건을 승인해 구현했다 — §g.
 
 먼저 구분해 둘 것:
 
@@ -221,7 +221,7 @@
 - `seolhwa/docs/replanning/DECISIONS_stage1.md` 참기름 부분을 사용자 확정 기준 7개로 교체(옛 정정은 이력 한 줄).
 - 이 보고.
 
-### f-2. 코드 수정, 승인 불필요(표현 중립화 — 적어만 둠, 구현하지 않음)
+### f-2. 코드 수정, 승인 불필요(표현 중립화) — 2026-10-16 사용자 승인 뒤 **구현함**(§g)
 
 1. `namwon_case.gd:3445` 해결법 B 귀띔 두 문장("미끄럽게 할 무언가가 있다면…", "기름병이 손에 있다. 쓸 데가 있을까…") 중립화.
 2. `namwon_data.gd:719` 기록책 물건 목록의 참기름을 '가졌을 때만' 보이게.
@@ -231,7 +231,7 @@
 6. `interact_data.gd:2` 주석 예시 문구 교체.
 7. 옛 v1 결말 세부(`B_win`/`B_repel`/`A_win`/`A_repel`) 빈 문단 메우기(§e-2) — 진행·갈래를 바꾸지 않는 읽기 호환.
 
-### f-3. 승인 필요(제안만)
+### f-3. 승인 필요 — 2026-10-16 사용자가 권장안대로 승인("네"), **구현함**(§g)
 
 | # | 대상 | 권장 |
 |---|---|---|
@@ -242,3 +242,56 @@
 | A5 | B 결말 반응(G8)·`namwon:B` 시험 재편 | 반응 대사는 옛 B 저장용으로 유지. 시험은 A1 구현 때 B에 얹힌 검사를 옮겨 재편 |
 
 원작 장면(G1: 누이의 참기름 거짓말, 범의 미끄러짐, `kids_lie` 기록, 큰 나무 번들거림)은 어느 선택지에서도 바꾸지 않는다.
+
+---
+
+## g. 구현(2026-10-16, 사용자 승인 뒤)
+
+### g-1. 바꾼 것
+
+| 승인 | 자리 | 내용 |
+|---|---|---|
+| A1 | `namwon_case.gd` `prep_count()`·`prep_room()`·`PREP_MAX=2`·`PREP_KEYS` | v3.4 F3406 준비 2개 상한. 놓아 둔 준비만 센다: 오솔길 떡(`cake_bait`) · 횃대 불(`torch_lit`) · **문 앞 장애물**(쪽문 디딤돌 기름 `oil_on_step`). 지닌 횃불은 세지 않는다 |
+| A1 | `namwon_data.gd` `cake_bait`·`yard_torch`·`back_step`의 `when`에 `fn('prep_room')` | 둘을 놓으면 나머지 준비 자리가 닫힌다 |
+| A1 | `namwon_case.gd` `pick_branch()`, `buy_time()` | 갈래를 C → B → A 순으로 고른다(떡+횃불이 갖춰지면 기름이 있어도 C). 예전의 "기름이 있으면 늘 B"를 없앴다 |
+| A1 | `wait_at_hide()` | 준비 확인 줄을 "준비(n/2): …"로, "디딤돌에 참기름" → "쪽문 디딤돌에 기름" |
+| A2 | — | 결말 B 「함정」(플레이어가 나무에 기름)은 코드에 없음을 확인. 옛 값 읽기만 남김(아래 표현 7) |
+| A3 | `namwon_data.gd` `oil_wife` | 아낙·판매(엽전 다섯 닢) 유지. 생활품으로 판다 |
+| A4 | `namwon_case.gd` `solutions()` | 해결법 B("미끄러운 디딤돌"·귀띔)를 새 진행 목록에서 뺐다. `CASE_NAMWON_OUTCOME == "B"`이고 아침·끝(`morning`/`done`)일 때만 "미끄러운 발밑"(고른 방법)으로 보인다 |
+| A5 | `scripts/story/story_test.gd`, `tools/run_story_tests.sh` | 새 시험 `namwon:A2`(갈래 A + beast_way 틀린 판단 Fail Forward · 해 질 무렵 대답 trace · 크게 밀리면 포수 화살). `namwon:B`는 문 앞 장애물 갈래만 본다: 생활품 구매, 새 진행 해결법에 B 없음, 준비 1/2·갈래 B, 2개 상한에서 떡 자리 닫힘, 떡+횃불이면 C가 먼저, 끝에 해결법 B는 B 저장에서만 |
+| 표현 1 | `solutions()` | B 귀띔 두 문장 삭제(B 항목째 빠짐) |
+| 표현 2 | `namwon_data.gd` 기록책 물건 목록 | 참기름은 가졌을 때만(`has(OIL)`) |
+| 표현 3 | `namwon_data.gd` `claw_marks` 단서·긁힌 껍질 조사·K_CLIMB | "매끈한 옹이 자리에선 미끄러진 자국뿐" · "미끄러운 줄기는 오르지 못한다" → "거친 껍질마다 발톱이 박혔다" · "나무를 높이 오른다. 아이들이 나무 위로 피해도 안전하지 않다." |
+| 표현 4 | `oil_wife` | "한 방울만 묻어도 손이 미끄러워요." → "나물 무칠 때 한두 방울이면 돼요." |
+| 표현 5 | `story/rumors_data.gd` NW_TOWN_AFTER B | "기름에 두 번이나…" → "외딴집 쪽문 앞에서 범이 나뒹굴었대. 그사이 아이들은 나무로 올라갔고." |
+| 표현 6 | `scripts/story/interact_data.gd` 주석 | 예시를 "횃대에 불을 옮겨 붙일 수 있다."·"○○은 범에게 강력한 …" 금지로 |
+| 표현 7 | `namwon_case.gd` `OLD_DETAIL`·`outcome_text()` | 옛 v1 세부 `B_win`/`B_repel` → `B_hold`, `A_win`/`A_repel` → `A_hold` 문장으로 읽는다(기록 요약·결말 화면). 저장 값은 바꾸지 않는다 |
+| 주석 | `namwon_data.gd`·`namwon_case.gd` 흐름·준비·S0006/S0008 설명 | "디딤돌 참기름 B" → "문 앞 장애물(디딤돌 기름)" · "떡 미끼·횃불·문 앞 장애물 — 2개까지" |
+
+원작 장면(G1: 누이 "참기름을 바르고 올라왔지.", 범이 부엌 기름을 발라 두 번 미끄러짐, `kids_lie` 기록, 큰 나무 번들거림)은 손대지 않았다.
+
+### g-2. 저장 호환
+
+- `CASE_NAMWON_OUTCOME = "B"`, `CASE_NAMWON_DETAIL = "B_hold"/"B_down"`, B 반응 대사(기름집 아낙 `out('B')`·소문·주변 말), `OUTCOME_TEXT` B 두 줄, `ITM_LIFE_002` 정의는 그대로다.
+- 옛 `oil_on_step`은 문 앞 장애물 하나로 센다(준비 1/2, 갈래 B). 상한을 넘긴 옛 저장(기름+떡+횃불)도 지우지 않고, 갈래는 C가 된다.
+- 픽스처 `test_climax_save.json`·`test_rope_save.json`·`test_morning_save.json`은 바꿀 필요가 없어 그대로 두었다. 새 픽스처 `story/namwon/test_v1_done_save.json`(옛 v1 끝난 저장: phase done · 결말 B · 세부 B_win · `oil_on_tree`).
+- `continue_test.gd`: rollback·rollback_rope에 "옛 디딤돌 기름 = 문 앞 장애물 하나(준비 1/2 · 갈래 B)", morning에 "끝낸 B 저장 — 해결법 B가 고른 방법으로"·"B 결말 문장 그대로", 새 `--continueexpect=v1_done`(`continue:namwon-v1done`).
+
+### g-3. 돌린 시험(헤드리스, 시험 모래상자만 — `…/설화록_test/st_*.json`, 사용자 저장은 건드리지 않음)
+
+| 시험 | 결과 | 비고 |
+|---|---|---|
+| `continue:namwon-early`·`-climax`·`-rope`·`-morning`·`-v1done` | **모두 PASS** | 새 검사 전부 ok(위 g-2). v1done: B·B_win 그대로, 결말 화면 둘째 문단 = B_hold 문장, 요약에 빈 문단 없음, 옛 세부 넷 → *_hold, 해결법 B 보임, 사건 풀림 |
+| `namwon:observe` | PASS | |
+| `namwon:A` · `namwon:A2` · `namwon:B` · `namwon:C` | **FAIL**(이 작업 밖의 실패) — 참기름 관련 새 검사는 모두 ok | 네 갈래 모두 똑같이 실패: "S0002 사건 기록 생성"·"주모 물음"·"S0003 오누이"·방앗간·포수 물음·"§39 노크 사이 조작"·"밤 조작 비율 70%"·"이웃 아낙을 다시 만나 들은 말". 모두 말 걸기가 열리기 전에 검사가 먼저 도는 자리(로그: `interact jumo` 직후 2.0초에 FAIL, S0002는 그 뒤에 돈다). 같은 작업 트리에서 진행 중인 2단계 대화 카메라 작업(말 걸기 접근 — `story_director`·`talk_frame` 등, 커밋 `bef3bde`·`18bd8bd`와 아직 커밋 안 된 수정)의 영향으로 본다. B 시험의 "참기름 삼(생활품)" 실패도 같은 까닭(기름집 아낙 말이 열리기 전에 검사)이고, 그 뒤 실제로 사서 디딤돌에 부었다(결말 B·B_hold) |
+| `namwon:onboard` | FAIL(이 작업 밖) | 주모·오누이·포수 물음 등 말 걸기 검사만 실패 — 위와 같은 원인 |
+| `tools/story/validate_case_meta` · `validate_event_class` · `validate_problems` · `map_leads_test` | 모두 PASS | CASEMETA PASS 9 · EVENTCLASS PASS 170 · PROBLEMS PASS 9 · MAPLEADS PASS 69 |
+
+갈래별로 확인한 새 검사(로그 ok): B — 새 진행 해결법에 B 없음 · 문 앞 장애물 · 준비 1/2 · 갈래 B · 2개면 떡 자리 닫힘 · 떡+횃불이면 C 먼저 · 되돌림 · 결말 B(B_hold) · 해결법 B는 B 저장에서만 · 미끄러짐 뒤 짧은 싸움(16.5초) · 화살 없음. A2 — 서쪽 숲 틀린 판단·Fail Forward · 대답 trace · 화살 한 번(6.0초, 체력 30) · 화살 뒤 곧 물러남(9.3초) · 결말 A. A — 대답 not_yet · 25초 버티기(26.5초). C — 대답 silent · 떡·횃불로 길 막음.
+
+### g-4. 남은 문제
+
+- `namwon:A/A2/B/C/onboard`의 말 걸기 검사 실패는 대화 카메라 작업 쪽에서 풀어야 한다(시험의 `go()`가 말 걸기 접근이 끝나기를 기다리지 않음). 풀린 뒤 이 다섯을 다시 돌려 전체 PASS를 확인해야 한다 — **아직 확인하지 못했다.**
+- 옛 v1 `B_win`/`B_repel` 저장은 승인대로 `B_hold` 문장으로 읽는데, 그 문장은 "디딤돌에 부어 둔 참기름"이라 v1(나무 밑동에 바름)의 실제 진행과 다르다. `A_win`(범을 쓰러뜨림) → `A_hold`("범은 쓰러지지 않았지만")도 같다. 빈 문단보다는 낫지만 정확히 맞추려면 v1 전용 중립 문장이 필요하다(제안).
+- 준비 상한은 놓아 둔 준비만 센다. 횃불을 지니기만 하고 떡+디딤돌 기름을 놓으면 C가 되고 기름은 쓰이지 않는다(v3.4 "선택은 실패 방지가 아니라 타이밍과 소모값 변경"과 맞다고 보았다).
+- 화면 확인(스크린샷)은 하지 않았다.

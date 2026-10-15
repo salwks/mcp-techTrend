@@ -10,7 +10,7 @@
 # v3.2 착수 순서 4 — ACT 3~5(§15~§30): 고갯길 단서(6~8m 먹빛·발견 때 카메라 잠깐 기울임·떡 셋의 말·치맛자락 인서트·피·발자국 따라가기·
 #   서낭당 광주리 CAMERA 3A) → 어머니의 과거 장면(CAMERA 3B, 기록하지 않음) → 첫 조우(트리거·공포·CAMERA 4A·전투 배우기 K·L) →
 #   포수 물음 → 방앗간 물음·밀가루 바닥 → 연결 추론(§29) → 외딴집 쪽 흰 발자국(§30, 목적이 '보호'로).
-# v3.2 착수 순서 5 — ACT 6~9(§31~§50): 해 질 무렵 귀환(dusk_return)·경고·포수와 역할 나누기 → 준비(디딤돌 기름·떡·횃불) → hide_spot “기다린다” →
+# v3.2 착수 순서 5 — ACT 6~9(§31~§50): 해 질 무렵 귀환(dusk_return)·경고·포수와 역할 나누기 → 준비(v3.4 F3406 — 떡 미끼·횃불·문 앞 장애물, 2개까지) → hide_spot “기다린다” →
 #   S0007 밤의 문(첫 노크 7A·7B·7C → 조작 → 둘째 노크 → 누이가 정한 탈출 → 문이 열린 뒤 처음 전신) → 시간 벌기(A/B/C, 밀쳐냄) → 우물·참기름·도끼 →
 #   마지막 개입 → S0009. 옛 dusk_wait·night_fall 다리와 옛 밤 들머리는 없앴다.
 # v3.2 착수 순서 6 — ACT 10~15(§51~§68): S0009 기도(첫 기도엔 아무 일도 없다 · 방어 · 둘이 함께) → 닿지 않는 줄 끝(10A) → 마지막 방어 동안 줄이 내려온다 →
@@ -97,7 +97,7 @@ static func data() -> Dictionary:
 			# v3.2 §30 — 흰 발자국이 외딴집 쪽으로(여기서 목적이 '보호'로 바뀐다)
 			"white_trail": { "title": "집 쪽으로 난 흰 발자국", "text": "흰 가루 묻은 큰 발자국이 숲가 외딴집 쪽으로 이어진다.", "kind": "fact" },
 			"hunter_word": { "title": "포수의 말", "text": "“산짐승이면 사람 냄새 나면 피하는 게 보통이오. 저건 안 그래.”", "kind": "heard", "by": "포수" },
-			"claw_marks": { "title": "큰 나무의 긁힌 껍질", "text": "사람 키를 넘는 곳까지 깊이 긁혔다. 매끈한 옹이 자리에선 미끄러진 자국뿐이다.", "kind": "fact" },
+			"claw_marks": { "title": "큰 나무의 긁힌 껍질", "text": "사람 키를 넘는 곳까지 깊이 긁혔다. 거친 껍질마다 발톱이 박혔다.", "kind": "fact" },
 			"territory": { "title": "숲속 빈터", "text": "뼈가 구르고 나무마다 발톱 자국. 어귀엔 타다 만 횃불 — 누군가 불로 몰아낸 적이 있는 것 같다.", "kind": "fact" },
 			# v3.2 §26 — 기록: 고갯마루의 범
 			"first_sight": { "title": "고갯마루의 범", "text": "나무 사이로 얼굴을 보았다. 뒤에서 덮쳐 왔고, 버티자 물러나 숲으로 사라졌다. 집채만 한 범이다.", "kind": "fact" },
@@ -127,7 +127,7 @@ static func data() -> Dictionary:
 				"text_if": [["c('door_tricks')", "문밖에서 어머니 목소리로 아이들을 불렀다. 목소리만으로는 믿을 수 없다."]] },
 			"K_FLOUR": { "title": "앞발이 희다", "text": "밀가루를 밟은 앞발 자국만 유난히 하얗다. 왜 가루를 묻히는지는 모른다.", "kind": "guess",
 				"text_if": [["c('door_tricks')", "밀가루를 바른 앞발을 문틈으로 내밀었다. 손을 보면 안다."]] },
-			"K_CLIMB": { "title": "나무를 탄다", "text": "높이 오른다. 다만 미끄러운 줄기는 오르지 못한다.", "kind": "guess" },
+			"K_CLIMB": { "title": "나무를 탄다", "text": "나무를 높이 오른다. 아이들이 나무 위로 피해도 안전하지 않다.", "kind": "guess" },
 			"K_TERRITORY": { "title": "숲속 빈터가 제 영역", "text": "숲속 빈터가 제 자리다. 불을 들이대면 잠시 그쪽으로 물러난다.", "kind": "guess" },
 		},
 		"anchors": anchors(),
@@ -422,7 +422,7 @@ static func actors() -> Array:
 					{ "say": "기름집 아낙", "lines": ["참기름 사러 오셨소? 갓 짠 거요."] },
 					{ "choice": "", "options": [
 						{ "label": "한 병 주시오. (엽전 다섯 닢)", "disabled_when": "n('%s') < 5" % COIN, "hint": "엽전이 모자란다.", "do": [
-							{ "take": COIN, "n": 5 }, { "give": OIL }, { "say": "기름집 아낙", "lines": ["한 방울만 묻어도 손이 미끄러워요."] }] },
+							{ "take": COIN, "n": 5 }, { "give": OIL }, { "say": "기름집 아낙", "lines": ["나물 무칠 때 한두 방울이면 돼요."] }] },
 						{ "label": "다음에 사겠소.", "end": true }] }] },
 				{ "when": "true", "steps": [{ "say": "기름집 아낙", "lines": ["고소하지요? 남원 참기름이 제일이에요."] }] },
 			] },
@@ -532,7 +532,7 @@ static func objects() -> Array:
 		{ "id": "claw", "at": "claw", "radius": 2.6, "label": "우물가 큰 나무 · 살펴보기",
 			"when": "f('case_started') and not c('claw_marks')",
 			"steps": [
-				{ "examine": "긁힌 껍질", "text": ["사람 키를 훌쩍 넘는 곳까지 껍질이 깊게 긁혀 있다.", "거친 껍질엔 발톱이 박혔고, 매끈한 옹이 자리에선 미끄러진 자국뿐이다."] },
+				{ "examine": "긁힌 껍질", "text": ["사람 키를 훌쩍 넘는 곳까지 껍질이 깊게 긁혀 있다.", "거친 껍질마다 발톱이 깊게 박혀 있다."] },
 				{ "clue": "claw_marks" }, { "rule": "K_CLIMB" }] },
 		{ "id": "barn", "at": "barn_front", "label": "헛간 · 살펴보기", "radius": 2.2, "when": "f('case_started') and not f('barn_seen')",
 			"steps": [{ "flag": "barn_seen" }, { "examine": "헛간", "text": ["볏단 사이에 곡식 자루와 떡 몇 덩이를 싼 보자기.", "장에 내다 팔고 남은 것이다."], "kind": "item" },
@@ -541,18 +541,20 @@ static func objects() -> Array:
 			"steps": [{ "examine": "숲속 빈터", "text": ["빈터 어귀에 짐승 뼈가 구른다. 둘레 나무마다 발톱 자국.", "타다 만 횃불 하나. 누군가 불을 들고 여기까지 몰아낸 적이 있다."] },
 				{ "clue": "territory" }, { "rule": "K_TERRITORY" }] },
 		# v3.2 §33 준비 시간(해 질 무렵 귀환 뒤 ~ hide_spot에서 기다리기 전) — 기존 물건 쓰기만(새 미니게임 없음)
+#   v3.4 F3406: 준비는 2개까지(떡 미끼 · 횃대 불 · 문 앞 장애물). 둘을 놓으면 나머지 자리는 닫힌다(fn('prep_room') — namwon_case.prep_room)
 		{ "id": "cake_bait", "at": "cake_bait", "label": "숲 오솔길 어귀 · 살펴보기", "radius": 2.4,
-			"when": "f('dusk_prep') and not f('night_wait_started') and not w('cake_bait') and has('%s')" % TTEOK,
+			"when": "f('dusk_prep') and not f('night_wait_started') and not w('cake_bait') and has('%s') and fn('prep_room')" % TTEOK,
 			"steps": [{ "if": "not k('K_FOOD')", "then": [{ "call": "place_bait" }] }],
 			"use": [{ "item": TTEOK, "when": "k('K_FOOD')", "line": "떡을 오솔길에 띄엄띄엄 놓을 수 있다.", "do": [{ "call": "place_bait" }] }] },
 		{ "id": "yard_torch", "at": "yard_torch", "label": "마당 횃대 · 살펴보기", "radius": 2.0,
-			"when": "f('dusk_prep') and not f('night_wait_started') and not w('torch_lit') and has('%s')" % TORCH,
+			"when": "f('dusk_prep') and not f('night_wait_started') and not w('torch_lit') and has('%s') and fn('prep_room')" % TORCH,
 			"steps": [{ "caption": "마당 귀퉁이의 빈 횃대.", "sec": 1.4 }],
 			"use": [{ "item": TORCH, "line": "횃대에 불을 옮겨 붙일 수 있다.", "do": [
 				{ "take": TORCH }, { "world": "torch_lit" }, { "caption": "마당이 붉게 일렁인다.", "sec": 2.0 }] }] },
-		# B: 쪽문 디딤돌에 참기름 — 아이들이 빠져나간 뒤 쫓아 나오는 범이 여기서 미끄러진다(나무에는 바르지 않는다: 나무 기름은 누이의 거짓말 몫)
+		# 문 앞 장애물(v3.4 F3406의 한 가지 · 갈래 B): 쪽문 디딤돌에 기름 — 아이들이 빠져나간 뒤 쫓아 나오는 범이 미끄러진다.
+#   여러 준비 가운데 하나일 뿐 정답이 아니다(2026-10-16 참기름 기준). 나무에는 바르지 않는다 — 나무 기름은 원작 장면(누이의 거짓말) 몫
 		{ "id": "back_step", "at": "back_step", "label": "쪽문 디딤돌 · 살펴보기", "radius": 2.4,
-			"when": "f('dusk_prep') and not f('night_wait_started') and has('%s') and not w('oil_on_step')" % OIL,
+			"when": "f('dusk_prep') and not f('night_wait_started') and has('%s') and not w('oil_on_step') and fn('prep_room')" % OIL,
 			"steps": [{ "caption": "부엌 쪽문 앞 디딤돌. 쪽문은 우물가 나무 쪽으로 나 있다.", "sec": 2.0 }],
 			"use": [{ "item": OIL, "line": "디딤돌에 참기름을 부을 수 있다.", "do": [{ "call": "oil_step" }] }] },
 		# §34 밤 기다리기 — 기다린다(23:30) / 아직 준비할 것이 있다
@@ -716,7 +718,7 @@ static func journal() -> Dictionary:
 		],
 		"solutions_when": "f('first_encounter')",
 		"items": [
-			{ "id": OIL, "when": "f('first_encounter')" },
+			{ "id": OIL, "when": "has('%s')" % OIL },   # 가졌을 때만(참기름은 생활품 — 미리 짚어 주지 않는다)
 			{ "id": TTEOK, "when": "k('K_FOOD')" },
 			{ "id": TORCH, "when": "k('K_TERRITORY')" },
 		],
@@ -753,7 +755,7 @@ static func props() -> Array:
 		{ "id": "p_white_paw", "kit": "story/clue", "params": { "kind": "white_paw" }, "at": "door_sill", "dy": 0.58, "ry": 3.14159, "when": "w('white_paw')" },
 		# v3.2 §38 CAMERA 7C — 문틈의 털 난 앞발(일부만)
 		{ "id": "p_hairy_paw", "kit": "story/clue", "params": { "kind": "hairy_paw" }, "at": "door_sill", "dy": 0.58, "ry": 3.14159, "when": "w('hairy_paw')" },
-		# v3: 우물(오누이가 비친 곳) · 쪽문 디딤돌(B 참기름) · 수수밭(범이 떨어져 붉게 물든다 — 사건 뒤에도 남는다)
+		# v3: 우물(오누이가 비친 곳) · 쪽문 디딤돌(문 앞 장애물 — 기름을 부었으면 번들거림) · 수수밭(범이 떨어져 붉게 물든다 — 사건 뒤에도 남는다)
 		{ "id": "p_well", "kit": "village/well", "params": { "seed": 49 }, "at": "well", "ry": 0.4 },
 		{ "id": "p_step", "kit": "story/tale", "params": { "kind": "step_stone" }, "at": "back_step", "ry": 0.0 },
 		{ "id": "p_oil_step", "kit": "story/tale", "params": { "kind": "oil_step" }, "at": "back_step", "ry": 0.0, "when": "w('oil_on_step') and not ph('done')" },
@@ -831,9 +833,9 @@ static func events() -> Dictionary:
 		# S0004·S0006·S0008은 장면 하나가 아니라 조사 대상·선택이 모인 구간 — 기록용(단서·결말을 고르면 seen에 남는다)
 		"S0004": _ev("S0004", "사건 기록 생성 뒤 고갯길", "고갯길(떡 셋·치맛자락·핏자국·발자국·서낭당 광주리)", "낮", "순서 없이 조사(3개 이상이면 첫 조우 가능). 서낭당 광주리에서 어머니의 과거 장면(§23, 기록하지 않음) — FIXED mother_harmed",
 			"-", "-", []),
-		"S0006": _ev("S0006", "첫 조우 뒤(선택)", "방앗간·포수·기름집·헛간·큰 나무·숲속 빈터", "낮~해질녘", "포수·방앗간 주인에게 묻는다 · 연결 추론(§29) · 외딴집 쪽 흰 발자국(§30) · 준비(참기름·떡·횃불)",
+		"S0006": _ev("S0006", "첫 조우 뒤(선택)", "방앗간·포수·기름집·헛간·큰 나무·숲속 빈터", "낮~해질녘", "포수·방앗간 주인에게 묻는다 · 연결 추론(§29) · 외딴집 쪽 흰 발자국(§30) · 준비(떡 미끼·횃불·문 앞 장애물 — 2개까지)",
 			"-", "-", []),
-		"S0008": _ev("S0008", "S0007 — 오누이가 뒷문으로 빠져나가고 범이 뒤쫓을 때", "외딴집 마당", "밤", "범 앞을 막아선다 / 디딤돌의 참기름 / 떡 냄새와 횃불로 길을 막는다(준비한 것에 따라)",
+		"S0008": _ev("S0008", "S0007 — 오누이가 뒷문으로 빠져나가고 범이 뒤쫓을 때", "외딴집 마당", "밤", "범 앞을 막아선다 / 떡 냄새와 횃불로 길을 막는다 / 문 앞 장애물(쪽문 디딤돌)에서 미끄러진다(준비한 것에 따라)",
 			"A 막아섬(약 25초, 죽지 않는 범) · B 디딤돌에서 미끄러진 범과 짧은 싸움(12~18초) · C 떡 냄새로 방향을 돌리고 횃불로 길을 막음(범은 곧 돌아온다) — 끝에 범이 밀쳐내고 아이들은 나무 위",
 			"CASE_NAMWON_OUTCOME = A | B | C (범을 죽이지 않는다)", []),
 		# v3.2 §24~§26: 음악·새소리가 끊기고(발걸음과 바람만) 무언가 오른쪽·왼쪽 나무 사이로 지나간다 → CAMERA 4A 얼굴 1초 → 그르렁 → 뒤에서 덮친다 →

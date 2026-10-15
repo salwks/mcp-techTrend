@@ -1,6 +1,8 @@
 # 대본 시험(--storytest=namwon:A|B|C) — 사건을 처음부터 끝까지 한 갈래로 몰아 본다.
 #   v3: 원작 장면(namwon_data FIXED_BEATS)이 모두, 그 순서로 일어났는지 · 범을 죽이지 않았는지 · 마을이 아이들을 거두지 않았는지 ·
 #   CASE_NAMWON_OUTCOME이 A/B/C로 남는지(진행·숙련 해금·뒤 사건 소문이 그대로 읽는다)를 본다.
+#   --storytest=namwon:A2 — 갈래 A에 B와 무관한 검사 셋(beast_way 틀린 판단 Fail Forward · 해 질 무렵 대답 "trace" · 크게 밀리면 포수 화살)을 얹어 본다
+#     (2026-10-16 참기름 감사: 예전에는 namwon:B에 얹혀 있었다 — B는 이제 문 앞 장애물 갈래만 본다).
 #   --storytest=namwon:onboard — 처음 하는 사람 안내(S0000 → S0002 → 첫 단서 단계 → 첫 호랑이 조우)만 본다(scripts/story/onboard_test.gd).
 #   자리로 순간이동해 대상과 대화·조사하고(director.interact), 선택은 결말별 우선 목록으로 고르고, 전투는 간단한 봇이 싸운다.
 #   단계마다 플래그·단서·버릇·소지품을 남기고, 끝에 결과를 STORYTEST PASS/FAIL로 찍은 뒤 끝낸다.
@@ -9,6 +11,8 @@ extends Node
 
 var d          # story_director
 var branch := "A"
+var label := "A"   # 찍는 이름(A2는 branch A + alt)
+var alt := false    # namwon:A2 — 틀린 판단·대답 trace·포수 화살
 var plan: Array = []
 var prefer: Array = []
 var deny: Array = []
@@ -28,6 +32,8 @@ func _init(director, spec: String) -> void:
 	d = director
 	var p := spec.split(":")
 	branch = (p[1] if p.size() > 1 else "A").to_upper()
+	label = branch
+	if branch == "A2": branch = "A"; alt = true
 	name = "story_test"
 
 func begin() -> void:
@@ -244,7 +250,7 @@ func _run() -> void:
 	expect(d.S.notes.has(d.case_fn.PAST_KEEP), "기록에는 빈 광주리와 피, 큰 짐승 흔적만")
 	snapshot("after S0005")
 	# 구조 1차 §4 — 첫 조우 뒤 길가 관찰 둘 → "어느 쪽 흔적을 먼저 확인할까?" (A 길 아래 · B 서쪽 숲 → Fail Forward · C 건너뜀) — 밤·결말은 그대로여야 한다
-	if branch in ["A", "B"]: await load("res://scripts/story/oneonui_observe_test.gd").new().beast_way(self, branch == "B")
+	if branch == "A": await load("res://scripts/story/oneonui_observe_test.gd").new().beast_way(self, alt)
 	# S0003 오누이(v3.2 §12: 세 물음 — 지난밤 목소리는 들은 대로, K_MIMIC은 아직)
 	await go("nui")
 	expect(d.S.is_flag("met_kids"), "S0003 오누이")
@@ -274,7 +280,8 @@ func _run() -> void:
 	d.ui.journal_close()
 	if branch == "B":
 		await go("oil_wife")
-		expect(d.S.has("ITM_LIFE_002"), "참기름 삼")
+		expect(d.S.has("ITM_LIFE_002"), "참기름 삼(생활품)")
+		expect(not d.case_fn.solutions().any(func(s): return String(s.id) == "B"), "새 진행 — 해결법 목록에 B(정답 이름) 없음")
 	if branch == "C":
 		prefer = ["횃불", "떡을 좀"]
 		await go("jumo")
@@ -286,7 +293,7 @@ func _run() -> void:
 	expect(not d.data.objects.any(func(o): return String(o.id) == "dusk_wait") and not d.data.triggers.any(func(t): return String(t.id) == "night_arrive"), "dusk_wait·옛 밤 들머리(night_arrive) 없음")
 	expect(not d.S.is_flag("hunter_watch"), "포수 역할 나누기는 낮의 물음이 아니다")
 	expect(d.case_fn.night_ready(), "해 질 무렵 귀환이 열린다(night_ready)")
-	prefer = { "A": [], "B": ["흔적을"], "C": ["대답하지"] }[branch]
+	prefer = { "A": ["흔적을"] if alt else [], "B": [], "C": ["대답하지"] }[branch]
 	_real_night()
 	await walk_to("yard")
 	for i in 600:
@@ -295,7 +302,7 @@ func _run() -> void:
 	await _idle()
 	prefer = []
 	expect(d.S.is_flag("dusk_return_seen") and d.S.is_flag("kids_warned") and d.S.is_flag("dusk_prep"), "§31~§32 귀환·경고 → 준비(kids_warned·dusk_prep)")
-	expect(d.case_fn.dusk_choice == { "A": "not_yet", "B": "trace", "C": "silent" }[branch], "§31 대답 %s" % d.case_fn.dusk_choice)
+	expect(d.case_fn.dusk_choice == { "A": "trace" if alt else "not_yet", "B": "not_yet", "C": "silent" }[branch], "§31 대답 %s" % d.case_fn.dusk_choice)
 	expect(d.S.is_flag("hunter_watch") and d.S.is_flag("hunter_role_dusk"), "결정 4 포수 역할 나누기(해 질 무렵) — hunter_watch")
 	expect(d.main.hour >= 18.4 and d.main.hour <= 22.6, "해 질 무렵 %.2f시" % d.main.hour)
 	var dsrc := FileAccess.get_file_as_string("res://story/namwon/namwon_case.gd")
@@ -314,7 +321,21 @@ func _run() -> void:
 			prefer = ["참기름"]
 			await go("back_step")
 			prefer = []
-			expect(bool(d.S.world.get("oil_on_step", false)), "쪽문 디딤돌에 참기름")
+			expect(bool(d.S.world.get("oil_on_step", false)), "문 앞 장애물 — 쪽문 디딤돌에 기름")
+			var cf = d.case_fn
+			expect(cf.prep_count() == 1 and cf.prep_room() and cf.pick_branch() == "B", "준비 1/2 · 갈래 B(prep=%d)" % cf.prep_count())
+			# 준비 2개 상한 · C가 B보다 먼저(참기름을 먼저 고르지 않는다) — 상태를 잠깐 바꿔 보고 바로 되돌린다(프레임을 넘기지 않는다)
+			var w0 := { "torch_lit": d.S.world.get("torch_lit"), "cake_bait": d.S.world.get("cake_bait") }
+			d.S.world["torch_lit"] = true
+			var capped: bool = not cf.prep_room() and not d.runner.cond(d.data.objects.filter(func(o): return String(o.id) == "cake_bait")[0].when)
+			d.S.world["cake_bait"] = true
+			var c_first: bool = cf.pick_branch() == "C"
+			for k in w0:
+				if w0[k] == null: d.S.world.erase(k)
+				else: d.S.world[k] = w0[k]
+			expect(capped, "준비 2개면 나머지 준비 자리(오솔길 떡)가 닫힌다")
+			expect(c_first, "떡+횃불(C)이 갖춰지면 디딤돌 기름이 있어도 C")
+			expect(cf.prep_count() == 1, "되돌림")
 		"C":
 			prefer = ["떡"]
 			await go("cake_bait")
@@ -343,6 +364,8 @@ func _run() -> void:
 	await shot("after", 40)
 	var o := String(d.S.vars.get("CASE_NAMWON_OUTCOME", ""))
 	expect(o == branch, "결말 %s (얻은 값 %s, %s)" % [branch, o, d.S.vars.get("CASE_NAMWON_DETAIL", "")])
+	expect(d.case_fn.solutions().any(func(s): return String(s.id) == "B") == (branch == "B"), "해결법 B는 B로 끝낸 저장에서만")
+	expect(d.case_fn.outcome_text(String(d.S.vars.get("CASE_NAMWON_DETAIL", ""))) != "", "결말 문장이 비지 않는다")
 	expect(String(d.S.vars.get("MAIN_MASTER_TRACE", "")) == "HANYANG", "S0010 MAIN_MASTER_TRACE = HANYANG")
 	expect(bool(d.S.vars.get("SKILL_BEAST_TRACE", false)), "S0010 SKILL_BEAST_TRACE")
 	expect(d.S.seen.has("S0009") and d.S.seen.has("S0010") and d.S.seen.has("S0011"), "S0009 동아줄·S0010 아침·S0011 밤하늘 장면")
@@ -356,8 +379,8 @@ func _run() -> void:
 	_log("vars=%s" % JSON.stringify(_case_vars()))
 	_log("seen=%s" % JSON.stringify(d.S.seen.keys()))
 	Engine.time_scale = 1.0
-	if _fails.is_empty(): printerr("STORYTEST PASS namwon:%s outcome=%s detail=%s time=%.0fs" % [branch, o, d.S.vars.get("CASE_NAMWON_DETAIL", ""), (Time.get_ticks_msec() - _t0) / 1000.0])
-	else: printerr("STORYTEST FAIL namwon:%s fails=%s" % [branch, JSON.stringify(_fails)])
+	if _fails.is_empty(): printerr("STORYTEST PASS namwon:%s outcome=%s detail=%s time=%.0fs" % [label, o, d.S.vars.get("CASE_NAMWON_DETAIL", ""), (Time.get_ticks_msec() - _t0) / 1000.0])
+	else: printerr("STORYTEST FAIL namwon:%s fails=%s" % [label, JSON.stringify(_fails)])
 	d.main._quit()
 
 func _night_only(b: String) -> void:
@@ -436,8 +459,8 @@ func _watch_night() -> void:
 				await _frames(30)
 				nw.door = true
 				d.teleport_to(hp, "left"); step = 3
-		# B: 시간 벌기 싸움 6초쯤 크게 밀린다(체력 20) → 먼 데서 포수의 화살(fail-forward). A는 25초를 끝까지 본다
-		if branch == "B" and not nw.arrow_set and S.is_flag("time_line") and d.combat_view.active and not S.is_flag("hunter_arrow") \
+		# A2: 시간 벌기 싸움 6초쯤 크게 밀린다(체력 20) → 먼 데서 포수의 화살(fail-forward). A는 25초를 끝까지 본다
+		if alt and not nw.arrow_set and S.is_flag("time_line") and d.combat_view.active and not S.is_flag("hunter_arrow") \
 				and not S.is_flag("tiger_shoved") and d.combat_view.battle.time > 6.0:
 			nw.arrow_set = true
 			d.combat_view.battle.player.hp = 20.0
@@ -478,10 +501,12 @@ func check_v32_night() -> void:
 	for e in d.runner.trace:
 		if e[0] == "fight" and String(e[1][1]) == "win": _fail("범을 죽인 싸움 " + str(e))
 	match branch:
-		"A": expect(float(c.fight_lens.get("A", 0.0)) >= 20.0 and float(c.fight_lens.get("A", 0.0)) <= 28.0, "§44 A 약 25초 버티기(%.1f초)" % float(c.fight_lens.get("A", 0.0)))
+		"A":
+			if alt: expect(float(c.fight_lens.get("A", 0.0)) >= 6.0 and float(c.fight_lens.get("A", 0.0)) <= 20.0, "§44 A2 화살 뒤 곧 물러남(%.1f초)" % float(c.fight_lens.get("A", 0.0)))
+			else: expect(float(c.fight_lens.get("A", 0.0)) >= 20.0 and float(c.fight_lens.get("A", 0.0)) <= 28.0, "§44 A 약 25초 버티기(%.1f초)" % float(c.fight_lens.get("A", 0.0)))
 		"B": expect(c.fight_lens.has("B") and float(c.fight_lens.B) >= 6.0 and float(c.fight_lens.B) <= 18.5, "§42 B 미끄러짐 뒤 짧은 싸움(%.1f초)" % float(c.fight_lens.get("B", 0.0)))
 		"C": expect(c.torch_blocked and not c.fight_lens.has("C_fight"), "§43 C 떡 냄새·횃불로 길을 막음(싸움 없이)")
-	if branch == "B":
+	if alt:
 		expect(S.is_flag("hunter_arrow") and not c.arrow_info.is_empty() and c.night_log.filter(func(e): return e[0] == "arrow").size() == 1,
 			"결정 4 fail-forward — 크게 밀리자 포수의 화살 한 번 %s" % JSON.stringify(c.arrow_info))
 	else:

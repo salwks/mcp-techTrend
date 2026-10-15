@@ -75,6 +75,26 @@ func jumo_asked() -> int:
 func c_ready() -> bool:
 	return bool(S.world.get("cake_bait", false)) and S.knows("K_FOOD") and (S.has(TORCH) or bool(S.world.get("torch_lit", false)))
 
+# v3.4 F3406 준비(2개까지) — 마당·길목에 놓아 둔 것만 센다: 오솔길 떡(cake_bait) · 횃대 불(torch_lit) · 문 앞 장애물(쪽문 디딤돌 기름 oil_on_step).
+#   지닌 횃불은 놓은 준비가 아니라 세지 않는다. 옛 저장의 oil_on_step은 문 앞 장애물 하나로 센다 — 상한을 넘긴 옛 저장도 지우지 않고 그대로 읽는다
+const PREP_MAX := 2
+const PREP_KEYS := ["cake_bait", "torch_lit", "oil_on_step"]
+func prep_count() -> int:
+	var n := 0
+	for k in PREP_KEYS:
+		if bool(S.world.get(k, false)): n += 1
+	return n
+
+func prep_room() -> bool:
+	return prep_count() < PREP_MAX
+
+# 시간 벌기 갈래(§42~§44) — 떡과 횃불(C)이 갖춰졌으면 C, 문 앞 장애물(디딤돌 기름)이 있으면 B, 아무것도 없으면 A.
+#   참기름을 다른 준비보다 먼저 고르지 않는다(2026-10-16 참기름 기준 — 예전에는 기름이 있으면 늘 B였다)
+func pick_branch() -> String:
+	if c_ready(): return "C"
+	if bool(S.world.get("oil_on_step", false)): return "B"
+	return "A"
+
 func route_is(r: String) -> bool:
 	return String(S.flags.get("route", "")) == r
 
@@ -294,7 +314,7 @@ func on_load() -> void:
 		if Vector2(d.main.player_pos.x, d.main.player_pos.z).distance_to(d.anchor("s0000_vista")) > 400.0: S.flags["INTRO_NAMWON_TITLE_DONE"] = true
 
 # 결정 6 · §76 안전지점 롤백 — 밤 도중 저장을 새 장면 중간에 1:1로 맞추지 않는다. 단서·아이템·일반 진행은 그대로 두고, 밤의 임시 플래그·결과·
-#   원작 밤 장면 기록(beat)만 지운다. 준비해 둔 것(디딤돌 기름·오솔길 떡·횃대 불)은 물건을 이미 쓴 것이라 그대로 둔다.
+#   원작 밤 장면 기록(beat)만 지운다. 준비해 둔 것(오솔길 떡·횃대 불·문 앞 장애물 디딤돌 기름)은 물건을 이미 쓴 것이라 그대로 둔다.
 #   옛 밤(주막 잠·night_fall·옛 절정 — dusk_prep 없음): 해 질 무렵(18.6시) 외딴집 마당 → 곧 귀환·경고·포수·준비(dusk_return)가 다시 돈다.
 #   새 밤(dusk_prep 있음): 준비 중(21시) 숨은 자리 — 다시 준비하고 “기다린다”를 고른다.
 const NIGHT_TEMP_FLAGS := ["climax_started", "pending_outcome", "pending_detail", "kids_in_tree", "kids_gone", "yard_losses", "hunter_helped",
@@ -990,7 +1010,7 @@ func _shot(nm: String) -> void:
 # ---------------------------------------------------------------------------
 # ACT 6 해 질 무렵 외딴집(v3.2 §31~§34)
 #   돌아오면 누이 “찾았어요?” — 어느 대답도 어머니의 죽음을 확정하지 않는다 → 경고(§32) → 포수와 역할 나누기(결정 4, hunter_watch) →
-#   준비(§33: 기존 물건 쓰기만 — 디딤돌 참기름 B · 오솔길 떡 + 횃불 C · 아무것도 없으면 A) → hide_spot “기다린다”(§34, 23:30).
+#   준비(§33 · v3.4 F3406: 기존 물건 쓰기만, 2개까지 — 오솔길 떡 + 횃불 C · 문 앞 장애물(디딤돌 기름) B · 아무것도 없으면 A) → hide_spot “기다린다”(§34, 23:30).
 #   옛 다리(dusk_wait → night_fall)와 옛 밤 들머리(“해가 지고, 달이 떴다…” · 정답을 먼저 말하던 문장 §3.3)는 없앴다.
 # ---------------------------------------------------------------------------
 const DUSK_HOUR := 18.9
@@ -1097,15 +1117,15 @@ func _hunter_leave() -> void:
 # §34 hide_spot — 기다린다(23:30) / 아직 준비할 것이 있다
 func wait_at_hide() -> void:
 	var prep := []
-	if S.world.get("oil_on_step", false): prep.append("디딤돌에 참기름")
 	if S.world.get("cake_bait", false): prep.append("오솔길 어귀에 떡")
+	if S.world.get("oil_on_step", false): prep.append("쪽문 디딤돌에 기름")
 	if S.world.get("torch_lit", false) or S.has(TORCH): prep.append("횃불")
-	var head := ("준비: " + " · ".join(prep)) if not prep.is_empty() else "아무 준비도 하지 않았다."
+	var head := ("준비(%d/%d): " % [prep_count(), PREP_MAX] + " · ".join(prep)) if not prep.is_empty() else "아무 준비도 하지 않았다."
 	_mark_shot("hide_wait")
 	var i: int = await d.ui.choice(head, [{ label = "기다린다." }, { label = "아직 준비할 것이 있다." }])
 	if i == 0: await R([{ "event": "S0007" }])
 
-# B: 쪽문 디딤돌 + 참기름(물건 쓰기)
+# 문 앞 장애물(갈래 B): 쪽문 디딤돌에 기름(물건 쓰기) — 준비 2개 가운데 하나
 func oil_step() -> void:
 	d.anim_actor("player", "throw")
 	await d.wait(0.5)
@@ -1755,7 +1775,7 @@ func _throw_jeogori(at: Vector2) -> void:
 			n.rotation.y = 2.2 * u, 0.0, 1.0, _dur(0.7))
 
 # ---------------------------------------------------------------------------
-# ACT 8 시간을 벌어라(v3.2 §42~§44) — 목표 한 줄. 준비에 따라: B 디딤돌에서 미끄러진 범과 짧은 싸움 · C 떡 냄새로 방향을 돌리고 횃불로 길을 막음 ·
+# ACT 8 시간을 벌어라(v3.2 §42~§44) — 목표 한 줄. 준비에 따라(pick_branch: C → B → A): B 문 앞 장애물(디딤돌)에서 미끄러진 범과 짧은 싸움 · C 떡 냄새로 방향을 돌리고 횃불로 길을 막음 ·
 #   A 약 25초 버티기. 범은 죽지 않는다(undying). 어느 갈래든 끝에 범이 플레이어를 3~4m 밀쳐내고(쓰러뜨리지 않는다) 아이들 쪽을 본다(§45).
 #   크게 밀리면(hunter_watch) 먼 데서 포수의 화살이 한 번 날아온다(결정 4 fail-forward).
 # ---------------------------------------------------------------------------
@@ -1772,7 +1792,7 @@ var torch_blocked := false
 func buy_time() -> void:
 	flag("time_line")
 	d.ui.toast("기록 — " + TIME_LINE, "journal")
-	var branch := "B" if S.world.get("oil_on_step", false) else ("C" if c_ready() else "A")
+	var branch := pick_branch()
 	branch_now = branch
 	_nlog("branch", "", branch)
 	var res := ""
@@ -3416,6 +3436,11 @@ const OUTCOME_TEXT := {
 	"B_down": "범이 아이들을 쫓아 쪽문으로 나오다 디딤돌에 부어 둔 참기름에 미끄러졌다. 그사이 아이들은 우물가 나무에 올랐다.",
 	"C": "범이 아이들을 쫓을 때, 오솔길 어귀의 떡 냄새로 범의 코를 돌려 놓고 횃불로 길을 막았다. 범은 곧 돌아왔지만, 그사이 아이들은 우물가 나무에 올랐다.",
 }
+# 옛 v1 저장(2026-10-05 v3 전)의 결말 세부 — 지금 문장이 없어 빈 문단이 되던 값을 *_hold 문장으로 읽는다(저장 값은 바꾸지 않는다)
+const OLD_DETAIL := { "A_win": "A_hold", "A_repel": "A_hold", "B_win": "B_hold", "B_repel": "B_hold" }
+func outcome_text(o: String) -> String:
+	return String(OUTCOME_TEXT.get(String(OLD_DETAIL.get(o, o)), ""))
+
 const TALE_END := [
 	"아이 둘이 하늘로 올라가는 것을 보았다. 범도 아이들 말투 그대로 줄을 빌었지만, 썩은 동아줄이 끊어져 수수밭에 떨어졌다.",
 	"그날 밤 하늘에 빛 둘이 자리를 잡았다. 이튿날 아침 집은 비어 있었고, 마을 사람들은 아이들이 어디 갔는지 모른다.",
@@ -3431,21 +3456,22 @@ func solutions() -> Array:
 	var k := func(id): return S.knows(id)
 	var has_torch: bool = S.has(TORCH) or bool(S.world.get("torch_lit", false))
 	var has_bait: bool = S.has(TTEOK) or bool(S.world.get("cake_bait", false))
-	var has_oil: bool = S.has(OIL) or bool(S.world.get("oil_on_step", false))
 	var cp := 0
 	for id in ["K_MIMIC", "K_FLOUR", "K_FOOD", "K_TERRITORY"]:
 		if k.call(id): cp += 1
 	var c_ok: bool = k.call("K_FOOD") and has_bait and has_torch
 	var c_hint := "범의 버릇을 더 알면 범을 잠시 집에서 떼어 놓을 수 있을지 모른다." if cp < 2 else "범이 무엇에 끌리고 무엇을 꺼리는지 하나씩 맞춰지고 있다."
 	if cp == 4: c_hint += ("" if has_torch else " 불이 있어야 할 것 같다.") if has_bait else " 꾈 것이 있어야 할 것 같다."
-	return [
+	var sols := [
 		{ "id": "A", "title": "범 앞을 막아선다", "available": true, "text": "범과 아이들 사이를 막아선다. 이 범은 쉽게 쓰러지지 않는다. 버티는 만큼 아이들이 멀어진다." },
-		{ "id": "B", "title": "미끄러운 디딤돌" if k.call("K_CLIMB") else "???", "available": k.call("K_CLIMB") and has_oil,
-			"text": "아이들이 드나드는 쪽문 디딤돌에 참기름을 부어 둔다. 쫓아 나오는 범이 미끄러진다.",
-			"hint": "범은 미끄러운 곳을 오르지 못했다. 미끄럽게 할 무언가가 있다면…" if k.call("K_CLIMB") else ("기름병이 손에 있다. 쓸 데가 있을까…" if has_oil else "범이 무엇에 미끄러지는지 아직 모른다.") },
 		{ "id": "C", "title": "떡과 횃불로 잠시 꾄다" if cp >= 2 else "???", "available": c_ok,
 			"text": "오솔길 어귀에 떡을 놓아 범의 코를 돌려 놓고, 횃불로 나무 쪽 길을 막는다. 범은 곧 돌아온다.", "hint": c_hint },
 	]
+	# B(문 앞 장애물)는 여러 준비 가운데 하나라 해결법 목록에 정답으로 올리지 않는다 — 이미 B로 끝낸 저장(옛 v1 결말 B 포함)에서만 고른 방법으로 보인다
+	if String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "B" and S.phase in ["morning", "done"]:
+		sols.insert(1, { "id": "B", "title": "미끄러운 발밑", "available": true,
+			"text": "기름을 부어 둔 자리에서 쫓아오던 범의 발이 미끄러졌다. 그사이 아이들이 멀어졌다." })
+	return sols
 
 func summary() -> Array:
 	var p := []
@@ -3474,7 +3500,7 @@ func summary() -> Array:
 	if f("dusk_prep") and o == "" and not f("night_wait_started"): p.append(DUSK_LINE)
 	if f("time_line") and o == "": p.append(TIME_LINE)
 	if S.has_clue("door_tricks"): p.append(NIGHT_TEXT)
-	if o != "": p.append(OUTCOME_TEXT.get(o, ""))
+	if o != "": p.append(outcome_text(o))
 	if S.has_clue("sky_rise"): p.append_array(TALE_END)
 	var mv := String(S.vars.get("CASE_NAMWON_MORNING", ""))
 	if MORNING_RECORD.has(mv): p.append(MORNING_RECORD[mv])
@@ -3514,6 +3540,6 @@ func ending_data() -> Dictionary:
 		"case_title": CASE_TITLE,
 		"title": "하늘로 오른 아이들",
 		"outcome": k,
-		"paragraphs": [NIGHT_TEXT, OUTCOME_TEXT.get(o, ""), TALE_END[0], TALE_END[1]],
+		"paragraphs": [NIGHT_TEXT, outcome_text(o), TALE_END[0], TALE_END[1]],
 		"record": "새 해결 수단 「짐승 흔적 읽기」. 기록책에 새로 적힌 곳 — 한양.",
 	}

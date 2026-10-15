@@ -8,6 +8,7 @@
 #     → 해 질 무렵 귀환(경고·포수·준비)이 다시 돌고 준비 상태(dusk_prep)가 되는지 본 뒤 1·2를 한다.
 #   --continueexpect=rollback_rope  (남원 v3.2) 새 흐름의 동아줄 도중 저장(test_rope_save.json) — 결말 변수 전이라 같은 안전지점(21시 숨은 자리)으로
 #   --continueexpect=morning  (남원 v3.2) 옛 v3 아침(북쪽 어귀 한 장면) 도중 저장(test_morning_save.json) — 새 아침(외딴집 마당·이웃 아낙)부터 다시
+#   --continueexpect=v1_done  (남원 참기름 감사) 옛 v1 끝난 저장(결말 B · 세부 B_win — 플레이어가 나무에 기름을 바르던 때) — 결말 B 그대로, 빈 결말 문단 없음, 해결법 B는 고른 방법으로
 #   --continueexpect=chunhyang_p2b  (춘향 II-B 플레이 시험 저장 play_chunhyang3) II-A 끝(옥의 첫 밤 뒤) — 관아 앞으로 걸어가면 이튿날 아침 아전이 일 셋을 맡긴다
 #   통과하면 "CONTTEST PASS", 아니면 "CONTTEST FAIL <까닭>".
 extends RefCounted
@@ -92,6 +93,7 @@ func run(spec: String) -> void:
 		"rollback": await _rollback()
 		"rollback_rope": await _rollback_rope()
 		"morning": await _morning()
+		"v1_done": await _v1_done()
 		"chunhyang_p2b": await _chunhyang_p2b()
 	await _story_actor()
 	# 21시 외딴집(새 밤 안전지점)에는 바깥에 다니는 고을 사람이 없다 — 그 경우만 고을 사람 말 걸기를 건너뛴다
@@ -154,6 +156,7 @@ func _rollback() -> void:
 	for k in old.get("items", {}): if int(S.items.get(k, 0)) != int(old.items[k]): items_ok = false
 	_ok(items_ok, "아이템 그대로 %s" % JSON.stringify(S.items))
 	_ok(bool(S.world.get("oil_on_step", false)), "준비해 둔 디딤돌 기름은 그대로")
+	_ok(d.case_fn.prep_count() == 1 and d.case_fn.prep_room() and d.case_fn.pick_branch() == "B", "옛 디딤돌 기름 = 문 앞 장애물 하나(준비 %d/2 · 갈래 %s)" % [d.case_fn.prep_count(), d.case_fn.pick_branch()])
 	_ok(not S.seen.has("S0007"), "S0007(밤의 문)을 다시 본다")
 	# 저녁 준비 바로 앞 — 마당에서 해 질 무렵 귀환이 다시 돈다(경고·포수·준비)
 	var ready := func(): return S.is_flag("dusk_prep") and not d.runner.busy
@@ -173,6 +176,7 @@ func _rollback_rope() -> void:
 		_ok(not S.flags.has(k), "동아줄·밤 플래그 지움 " + k)
 	_ok(String(S.flags.get("beats", "")) == "mother_harmed", "원작 장면 기록은 밤 앞까지만(%s)" % S.flags.get("beats", ""))
 	_ok(S.is_flag("dusk_prep") and S.is_flag("kids_warned") and bool(S.world.get("oil_on_step", false)), "준비 상태(dusk_prep·경고·디딤돌 기름)는 그대로")
+	_ok(d.case_fn.prep_count() == 1 and d.case_fn.prep_room() and d.case_fn.pick_branch() == "B", "옛 디딤돌 기름 = 문 앞 장애물 하나(준비 %d/2 · 갈래 %s)" % [d.case_fn.prep_count(), d.case_fn.pick_branch()])
 	_ok(not S.seen.has("S0007") and not S.seen.has("S0009"), "S0007·S0009를 다시 본다")
 	_ok(String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "" and not S.world.has("sorghum_red"), "결말 변수·붉은 수수밭 없음")
 	_ok(main.hour >= 20.5 and main.hour <= 22.6, "준비 중 %.2f시" % main.hour)
@@ -187,10 +191,26 @@ func _morning() -> void:
 	_ok(String(d.case_fn.get("rollback")) == "old_morning", "옛 아침 저장을 알아봄(rollback=%s)" % d.case_fn.get("rollback"))
 	_ok(S.phase == "morning" and S.seen.has("S0010") and S.is_flag("morning_yard_seen"), "S0010 외딴집 마당 아침(phase=%s)" % S.phase)
 	_ok(String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "B" and String(S.vars.get("CASE_NAMWON_MORNING", "")) != "", "결말 B 그대로 · 아침 대답 %s" % S.vars.get("CASE_NAMWON_MORNING", ""))
+	_ok(d.case_fn.solutions().any(func(s): return String(s.id) == "B" and s.available), "끝낸 B 저장 — 해결법 B가 고른 방법으로 보인다")
+	_ok(d.case_fn.outcome_text(String(S.vars.get("CASE_NAMWON_DETAIL", ""))) == String(d.case_fn.OUTCOME_TEXT.B_hold) and d.case_fn.summary().has(String(d.case_fn.OUTCOME_TEXT.B_hold)), "B 결말 문장 그대로(기록)")
 	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(d.anchor("yard")) < 12.0, "외딴집 마당에서 아침(순간이동으로 어귀에 가 있지 않다)")
 	_ok(S.is_flag("kids_gone") and not d.actors.nui.shown and bool(S.world.get("sorghum_red", false)) and bool(S.world.get("fall_traces", false)), "아이들 없음 · 붉은 수수밭 · 흔적")
 	_ok(not S.is_flag("elder_book") and not S.seen.has("S0011"), "노인·마지막 밤은 아직(걸어 내려가야)")
 	print("CONTTEST morning choice=%s hour=%.2f" % [S.vars.get("CASE_NAMWON_MORNING", ""), main.hour])
+
+# 남원 참기름 감사 — 옛 v1 끝난 저장(test_v1_done_save.json: phase done · 결말 B · 세부 B_win). 값은 바꾸지 않고 문장만 B_hold로 읽는다
+func _v1_done() -> void:
+	var S = d.S
+	var c = d.case_fn
+	_ok(S.phase == "done" and String(S.vars.get("CASE_NAMWON_OUTCOME", "")) == "B" and String(S.vars.get("CASE_NAMWON_DETAIL", "")) == "B_win", "옛 v1 결말 B 그대로(phase=%s · %s · %s)" % [S.phase, S.vars.get("CASE_NAMWON_OUTCOME", ""), S.vars.get("CASE_NAMWON_DETAIL", "")])
+	var ed: Dictionary = c.ending_data()
+	_ok(String(ed.paragraphs[1]) == String(c.OUTCOME_TEXT.B_hold), "결말 화면 둘째 문단이 비지 않는다(B_win → B_hold)")
+	_ok(c.summary().has(String(c.OUTCOME_TEXT.B_hold)) and not c.summary().has(""), "기록 요약에 빈 문단 없음")
+	_ok(c.outcome_text("B_repel") == String(c.OUTCOME_TEXT.B_hold) and c.outcome_text("A_win") == String(c.OUTCOME_TEXT.A_hold) and c.outcome_text("A_repel") == String(c.OUTCOME_TEXT.A_hold), "옛 세부 값 넷 → *_hold 문장")
+	_ok(c.solutions().any(func(s): return String(s.id) == "B" and s.available), "해결법 B가 고른 방법으로 보인다")
+	var jd: Dictionary = c.journal()
+	_ok(String(jd.cases[0].status) == "solved", "기록책 사건 — 풀림")
+	print("CONTTEST v1_done outcome=%s detail=%s" % [S.vars.get("CASE_NAMWON_OUTCOME", ""), S.vars.get("CASE_NAMWON_DETAIL", "")])
 
 # 춘향 II-B 플레이 시험 저장: II-A 끝(jail · p2a_done) — 관아 앞으로 가면 C1300(이튿날 아침 · 일 셋), 술 수레·박가네·노인이 선다
 func _chunhyang_p2b() -> void:
