@@ -20,7 +20,7 @@ static func cases() -> Array:
 		if d.is_empty(): continue
 		var cs: Dictionary = d.get("case", {})
 		var leads = d.get("map_leads", [])
-		out.append({ id = id, title = String(cs.get("record_title", id)), region = String(cs.get("region", "")),
+		out.append({ id = id, title = String(cs.get("record_title", id)), region = String(cs.get("region", "")), entry = String(cs.get("entry", "")),
 			requires = cs.get("requires", {}), outcome_var = String(cs.get("outcome_var", "")),
 			leads = leads if leads is Array else [], anchors = d.get("anchors", {}) })
 	_cases = out
@@ -77,6 +77,10 @@ static func visible(director = null, state_over: Dictionary = {}, vars_over = nu
 	for c in cases():
 		var live: bool = String(c.id) == act_id and state_over.is_empty()
 		if not live and not requires_met_with(c, vars_over): continue
+		# 들머리 트리거 사건(오누이 — 재기획 3단계 D1)은 들어가기 전에는 표지가 없다(아직 모르는 사건 — 보강서 §20 '아는 것만')
+		if not live and String(c.get("entry", "")) == "trigger":
+			var st0: Dictionary = state_over.get(c.id, Progress.case_state(String(c.id))) if not state_over.is_empty() else Progress.case_state(String(c.id))
+			if String(st0.get("phase", "start")) == "start": continue
 		var ev: Ev = null
 		if not live:
 			ev = Ev.new()

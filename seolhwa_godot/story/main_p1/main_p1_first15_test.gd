@@ -55,18 +55,18 @@ func _cam_home() -> bool:
 
 func _teleport(at, off := Vector2.ZERO) -> void:
 	var p: Vector2 = d.anchor(at) + off
-	main.teleport(p.x, p.y)
+	d.teleport_to(p)   # 카메라도 바로(찍을 때 옮겨 가는 도중이 찍히지 않게)
 	await _frames(6)
 
 # 대상(E)이 그것이 될 때까지 서서 E — 열렸는지는 then(콜러블)로
-func _e_on(id: String, opened: Callable, why: String) -> bool:
+func _e_on(id: String, opened: Callable, why: String, sec := 6.0) -> bool:
 	var near := func(): return d._target != null and String(d._target.get("id", "")) == id
 	if not await _wait(near, 4.0):
 		_ok(false, "%s: E 대상이 %s가 아님(지금 %s)" % [why, id, d._target.get("id", "없음") if d._target != null else "없음"]); return false
 	await _wait(func(): return not d.ui.busy_input(), 2.0)   # 닫은 뒤 E 겹침 막기(0.15~0.2초) 동안은 사람이 눌러도 버린다 — 지나서 누른다
 	print("FIRST15 press E target=%s busy_input=%s(cool %.2f) runner=%s talking=%s modal=%s journal=%s" % [d._target.get("id", "") if d._target != null else "-", d.ui.busy_input(), float(d.ui._cooldown), d.runner.busy, d.talking, d.ui.modal, d.ui.journal_open])
 	await ct._press_e()
-	var ok: bool = await _wait(opened, 6.0)
+	var ok: bool = await _wait(opened, sec if not shots else sec * 3.0)
 	if not ok:   # 한 번 더(무엇이 E를 받았는지 남긴다)
 		print("FIRST15 E 실패 target=%s busy_input=%s runner=%s talking=%s" % [d._target.get("id", "") if d._target != null else "-", d.ui.busy_input(), d.runner.busy, d.talking])
 	_ok(ok, why)

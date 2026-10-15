@@ -230,7 +230,7 @@ static func props() -> Array:
 	return [
 		{ "id": "p_desk", "kit": "story/clue", "params": { "kind": "seoan", "seed": 3171 }, "at": "desk", "ry": 0.0, "dy": 0.4 },
 		{ "id": "p_ledger", "kit": "story/clue", "params": { "kind": "ledger", "seed": 3172 }, "at": "ledger", "ry": 0.4, "dy": 0.77 },
-		{ "id": "p_brush", "kit": "story/clue", "params": { "kind": "brush", "seed": 3173 }, "at": "brush", "ry": 0.0, "dy": 1.28 },
+		{ "id": "p_brush", "kit": "story/clue", "params": { "kind": "brush", "seed": 3173 }, "at": "brush", "ry": 0.0, "dy": 0.42 },   # 창 밑 방바닥(앞벽은 실내에서 숨으므로 창턱에 띄우지 않는다)
 		{ "id": "p_shoes", "kit": "story/clue", "params": { "kind": "sandal", "seed": 3174 }, "at": "shoes", "ry": 0.3, "dy": 0.12 },
 		{ "id": "p_envelope", "kit": "story/clue", "params": { "kind": "ledger", "seed": 3175 }, "at": "threshold", "ry": -0.2, "dy": 0.42,
 			"when": "f('KNOCKED') and not f('LETTER_RECEIVED')" },

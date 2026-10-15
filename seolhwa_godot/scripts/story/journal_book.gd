@@ -78,6 +78,13 @@ static func _trace(v: Dictionary) -> Array:
 static func _empty(b: Array, text: String) -> void:
 	if b.size() <= 1: b.append({ t = "para", text = text, soft = true })
 
+# 메인 서장(main_p1) 깃발 — 그 사건을 시작하지 않은 판(옛 저장)이면 {}
+static func _main_p1_flags(d) -> Dictionary:
+	if d != null and d.get("S") != null and String(d.get("case_id")) == "main_p1": return {} if d.S.is_flag("JOINED") else d.S.flags
+	var st := Progress.case_state("main_p1")
+	if st.is_empty() or bool((st.get("flags", {}) as Dictionary).get("JOINED", false)): return {}
+	return st.get("flags", {})
+
 # ---- 0 여행 기록 ----
 static func _travel(d) -> Dictionary:
 	var v := _vars(d)
@@ -103,7 +110,18 @@ static func _travel(d) -> Dictionary:
 		if bool(v.get("ACT6_OPEN", false)):
 			b.append({ t = "para", text = "다음 — 한양. 서강 옛 창고와 칠패." })
 	b.append({ t = "head", text = "이겸의 흔적" })
-	b.append({ t = "entry", tag = "fact", title = "남원", text = "기록책 마지막 장 — “남원에서 확인할 것이…” 문장은 거기서 끊겼다." })
+	# 재기획 3단계: 메인 서장(main_p1)으로 시작한 판은 편지·솔잎 주막·여원재 방면(서장 대사 그대로), 옛 판(오누이로 시작)은 예전 한 줄
+	var mf := _main_p1_flags(d)
+	if mf.is_empty():
+		b.append({ t = "entry", tag = "fact", title = "남원", text = "기록책 마지막 장 — “남원에서 확인할 것이…” 문장은 거기서 끊겼다." })
+	else:
+		b.append({ t = "entry", tag = "fact", title = "남원 — 이겸의 거처", text = "주인이 곧 돌아올 것처럼 정돈된 방. 밥값 장부의 글씨는 늘 그렇듯 고쳐 쓴 채였다." })
+		if bool(mf.get("LETTER_RECEIVED", false)):
+			b.append({ t = "entry", tag = "guess" if bool(mf.get("LETTER_SUSPICIOUS", false)) else "fact", title = "이겸의 이름으로 온 편지",
+				text = "“나는 며칠 떠나 신선의 가르침을 구하겠노라.” 산 아래 주막에서 심부름꾼이 가져왔다." + (" 스승의 평소 글과 다르다 — 누가 썼는지는 아직 모른다." if bool(mf.get("LETTER_SUSPICIOUS", false)) else "") })
+		if bool(mf.get("TAVERN_CLUE", false)):
+			b.append({ t = "entry", tag = "fact", title = "솔잎 주막", text = "확인된 것은 이겸의 마지막 숙박. 고갯길 소문은 아직 전해 들은 말." })
+			b.append({ t = "entry", tag = "heard", by = "주모", title = "여원재 방면", text = "“산 아래에서 책장수를 만났다가, 여원재 쪽 행선지를 묻더군.”" })
 	for tk in trace:
 		var info: Dictionary = TRACE_LINE.get(tk, { tag = "fact", text = "" })
 		b.append({ t = "entry", tag = info.tag, by = String(info.get("by", "")), title = String(PLACE_KO.get(tk, tk)), text = String(info.text) })

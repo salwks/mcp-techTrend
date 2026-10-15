@@ -93,6 +93,7 @@ func op00() -> void:
 	flag("START_AT_IEGYEOM_HOME")
 	d.ui._fade.color.a = 1.0
 	d.cutscene(true)
+	if d.ui.get("_toasts") != null: d.ui._toasts.visible = false   # 여는 장면 동안 알림 줄(길목 깃발 발견 등)은 감춘다 — 조작이 돌아오면 다시
 	_cam({ "focus": "home_wide", "distance": 24.0, "pitch": 30.0, "fov": 34.0 }, 0.01)
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
 	d.main.player.play("idle", true)
@@ -121,6 +122,7 @@ func op00() -> void:
 		d.camera(null)
 		d.main.rig.glide(0.6)    # 9–9.6초 등 뒤 기본 시점으로 0.6초 블렌드 — 그동안에도 걸을 수 있다
 	d.cutscene(false)
+	if d.ui.get("_toasts") != null: d.ui._toasts.visible = true
 	if ob != null: ob.skippable = false; ob.skip = false
 	flag("OP00_DONE")
 	var base: float = float(TitleMenu.new_game_t0) / 1000.0 if TitleMenu.new_game_t0 > 0 else t0
