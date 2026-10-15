@@ -1,5 +1,7 @@
 # namwon-v32 보고 — 남원 「산길의 실종」 v3.2
 
+> **[2026-10-16 주석]** 이 보고가 적은 참기름 쓰임(§33 준비의 디딤돌 참기름(B), 시간 벌기 B)은 구현 당시의 기록이다. 참기름을 필수 준비물·최우선 아이템·특별한 정답으로 다루는 설계는 현행 기준이 아니다. 현행 오누이 기준은 Onui v3.4이고, 원작 장면(누이의 참기름 거짓말 — v3.4 F3411)은 유지한다. 게임 안 아이템 활용은 별도 검토 대상이다(`seolhwa_godot/docs/reports/chamgireum-audit.md`). 이력으로 보존한다.
+
 기준 문서는 `seolhwa/docs/scenario/seolhwarok_NAMWON_v3.2_scenario.md`와 `seolhwarok_NAMWON_v3.2_DECISIONS.md`다.
 대화 문체 요청서(`seolhwarok_DIALOGUE_REVISION_REQUEST_v1.0.md`)는 저장소에 없어서, 대사는 시나리오 원문을 그대로 썼다.
 
