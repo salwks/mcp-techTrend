@@ -6,6 +6,8 @@
 #   basket 엎어진 빈 광주리와 수건 · flour 찢긴 밀가루 자루와 흰 발자국 · claw 나무줄기 높은 발톱 긁힘 · oil 밑동에 바른 참기름(번들거림)
 #   white_paw 문틈 아래 흰 앞발 · hairy_paw 문틈으로 들어온 털 난 앞발(발톱 끝만 밝다) · oil_jars 기름집 참기름 병 · cake_trail 오솔길에 놓은 떡 · feast 잔칫상 · offering 서낭당 떡 공양
 #   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛) · sandal 길가에 닳은 짚신 한 짝(도입부 첫 조사, 단서 아님)
+#   seoan 이겸의 서안(낮은 책상 — 펼친 기록책·벼루·붓, 재기획 3단계 첫 15분) · ledger 한 장짜리 밥값 장부(접힌 종이·붓 자국)
+#   brush 창가에 말려 둔 붓(붓걸이·갈라진 붓끝) · ledger_hang 주막 기둥에 걸린 묵은 숙박 장부(끈으로 묶은 책)
 #   fall_traces 남원 §65 아침 수수밭 — 꺾인 수숫대 · 붉은 흔적 · 뜯긴 털 · 깊게 눌린 발자국(시신은 없다)
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
@@ -42,6 +44,10 @@ static func build(params: Dictionary) -> Dictionary:
 		"torch_fire": _torch_fire(m)
 		"sandal": _sandal(m)
 		"fall_traces": fp = _fall_traces(m)
+		"seoan": fp = _seoan(m)
+		"ledger": _ledger(m)
+		"brush": _brush(m)
+		"ledger_hang": _ledger_hang(m)
 	return m.result("단서_" + kind, fp, false)
 
 static func _disc(rx: float, rz: float, h: float, x: float, y: float, z: float, ry := 0.0, seg := 10) -> Kit.Geo:
@@ -241,3 +247,53 @@ static func _fall_traces(m: C.M) -> Vector2:
 	for i in 4:   # 깊게 눌린 큰 발자국(어둡고 크다)
 		_paw(m, -1.3 + i * 0.35, 0.9 - i * 0.18, 1.9, [0x2a2016, 0x1a140c], 0.6)
 	return Vector2(3.4, 2.6)
+
+# ---------------------------------------------------------------------------
+# 재기획 3단계(첫 15분) — 이겸의 거처·솔잎 주막 소품
+# ---------------------------------------------------------------------------
+const PAPER := [0xefe6cf, 0xd8ccb0]
+const INKC := [0x2b2622, 0x1a1714]
+# 낮은 서안(1.0×0.45) + 펼친 기록책 + 벼루·먹 + 붓 — 방 안 바닥에 앉아 쓰는 책상
+static func _seoan(m: C.M) -> Vector2:
+	var R := m.rng
+	m.add("p", "wood", C.PA(Kit.box(1.0, 0.04, 0.45, 0, 0.30, 0), C.WOOD_L, 0.04, R), 0.01)        # 상판
+	for sx in [-1, 1]:
+		m.add("p", "wood", C.PA(Kit.box(0.05, 0.28, 0.4, sx * 0.44, 0.14, 0), C.WOOD, 0.04, R), 0.01)   # 다리판
+	m.add("p", "wood", C.PA(Kit.box(1.04, 0.03, 0.06, 0, 0.33, -0.2), C.WOOD, 0.03, R), 0.005)     # 뒤 턱
+	# 펼친 기록책(두 쪽, 세로 먹줄)
+	for sx in [-1, 1]:
+		m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.26, 0.012, 0.34), sx * 0.14, 0.33, 0.02, 0, sx * 0.04, 0), PAPER, 0.03, R), 0.004)
+		for i in 4:
+			m.add("p", "flat", C.PA(Kit.box(0.008, 0.002, 0.26, sx * (0.06 + i * 0.05), 0.337, 0.02), INKC), 0.0)
+	m.add("p", "stone", C.PA(Kit.box(0.13, 0.03, 0.2, 0.38, 0.335, 0.05), [0x3a3a3c, 0x2a2a2c], 0.04, R), 0.004)   # 벼루
+	m.add("p", "flat", C.PA(Kit.box(0.025, 0.02, 0.09, 0.35, 0.36, -0.1), INKC), 0.002)                            # 먹
+	m.add("p", "wood", C.PA(Kit.xf(Kit.cyl(0.008, 0.008, 0.24, 5), -0.38, 0.34, 0.08, PI / 2, 0.6, 0), [0x8a6a3a, 0x6a4a2a]), 0.002)   # 붓
+	return Vector2(1.1, 0.6)
+
+# 한 장짜리 밥값 장부 — 소반 위 접힌 종이(가운데 접힌 자국·먹 글씨 두 줄, 고쳐 쓴 줄)
+static func _ledger(m: C.M) -> void:
+	var R := m.rng
+	m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.2, 0.006, 0.26), 0, 0.003, 0, 0, 0.3, 0), PAPER, 0.03, R), 0.003)
+	for i in 3:
+		m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.006, 0.002, 0.18 - i * 0.03), -0.05 + i * 0.05, 0.008, 0, 0, 0.3, 0), INKC), 0.0)
+	m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.05, 0.002, 0.012), 0.06, 0.008, 0.08, 0, 0.3, 0), INKC), 0.0)   # 그어 지운 자리
+
+# 창가에 말려 둔 붓 — 붓걸이(작은 틀)에 붓 셋, 하나는 끝이 갈라졌다
+static func _brush(m: C.M) -> void:
+	var R := m.rng
+	m.add("p", "wood", C.PA(Kit.box(0.34, 0.02, 0.08, 0, 0.0, 0), C.WOOD, 0.04, R), 0.004)
+	for sx in [-1, 1]: m.add("p", "wood", C.PA(Kit.box(0.02, 0.16, 0.02, sx * 0.15, 0.08, 0), C.WOOD, 0.04, R), 0.003)
+	m.add("p", "wood", C.PA(Kit.box(0.34, 0.015, 0.02, 0, 0.16, 0), C.WOOD, 0.04, R), 0.003)
+	for i in 3:
+		var x := -0.09 + i * 0.09
+		m.add("p", "wood", C.PA(Kit.cyl(0.007, 0.007, 0.13, 5, x, 0.1, 0.0), [0x8a6a3a, 0x6a4a2a]), 0.002)
+		var tip := Kit.xf(Kit.cone(0.012 if i != 1 else 0.02, 0.05, 5), x, 0.04, 0.0, PI, 0, 0)   # 붓끝(아래로)
+		m.add("p", "organic", C.PA(tip, [0x3a3028, 0x22201c]), 0.0)
+
+# 주막 기둥에 걸린 묵은 숙박 장부(끈으로 묶은 얇은 책 — 땅 위 1.1m에 걸어 둔다: 배치 dy)
+static func _ledger_hang(m: C.M) -> void:
+	var R := m.rng
+	m.add("p", "flat", C.PA(Kit.box(0.24, 0.32, 0.03, 0, 0.0, 0), PAPER, 0.04, R), 0.004)
+	m.add("p", "flat", C.PA(Kit.box(0.25, 0.04, 0.035, 0, 0.14, 0), [0x6a4430, 0x4a2e20]), 0.0)   # 묶은 끈 자리
+	for i in 4: m.add("p", "flat", C.PA(Kit.box(0.006, 0.22, 0.002, -0.08 + i * 0.05, -0.03, 0.017), INKC), 0.0)
+	m.add("p", "wood", C.PA(Kit.cyl(0.006, 0.006, 0.2, 4, 0, 0.26, 0.0), [0x6a4430, 0x4a2e20]), 0.0)   # 거는 끈

@@ -1,0 +1,11 @@
+{
+ "area": "namwon_main_p1",
+ "generator": "손으로 — 재기획 3단계(첫 15분) 메인 서장 「이겸의 수상한 편지」",
+ "note": "이겸의 거처(신규, 늘 있다 — when 없음). 객사 담(nw_gaeksa_wall_15·16) 앞, 읍내 동서길(namwon_eup_street_ew) 북쪽 빈 필지. 생성 배치(tools/placement/namwon.py)의 모양·길·성벽·광장 비움(keepout)을 모두 넣고 겹침 검사 — 집(8.2×6.4, 처마 포함) 틈 0.3m 겹침 없음, 마당 앞은 길 가장자리 0.2m. 솔잎 주막은 기존 nw_jumak_naru(요천 광한루 앞 나루 길가)를 그대로 쓴다(새 건물 없음). 근거·검사: seolhwa_godot/docs/reports/replanning-stage3-first15.md §2",
+ "items": [
+  {"id": "ig_house", "kit": "village/choga", "params": {"seed": 3151, "interior": true, "chimney": true, "w": 6.0, "d": 4.0}, "x": -3252.0, "z": 240.4, "ry": 0.0, "y": null, "flatten": true, "clear_veg": true, "group": "이겸의 거처", "footprint": [8.2, 6.4], "title": "이겸의 거처", "note": "이겸의 사랑방(초가삼간, 실내 — 방 안 서안·밥값 장부·말린 붓, 댓돌의 신발). 앞(남)이 마당·동서길"},
+  {"id": "ig_yard", "kit": "story/clearing", "params": {"w": 8.0, "d": 3.2}, "x": -3252.0, "z": 245.3, "ry": 0.0, "y": null, "flatten": true, "clear_veg": true, "yard": true, "group": "이겸의 거처", "footprint": [8.0, 3.2], "note": "좁은 앞마당(심부름꾼이 서는 곳 — 문 앞 2.5m 비움)"},
+  {"id": "ig_wall_w", "kit": "village/todam", "params": {"seed": 3152, "ax": 0.0, "az": -1.3, "bx": 0.0, "bz": 1.3, "h": 1.3, "cap": "thatch"}, "x": -3256.2, "z": 244.9, "ry": 0.0, "y": null, "flatten": false, "clear_veg": true, "yard": false, "group": "이겸의 거처", "footprint": [0.8, 3.4], "note": "마당 서쪽 토담(낮게)"},
+  {"id": "ig_wall_e", "kit": "village/todam", "params": {"seed": 3153, "ax": 0.0, "az": -1.3, "bx": 0.0, "bz": 1.3, "h": 1.3, "cap": "thatch"}, "x": -3248.0, "z": 244.9, "ry": 0.0, "y": null, "flatten": false, "clear_veg": true, "yard": false, "group": "이겸의 거처", "footprint": [0.8, 3.4], "note": "마당 동쪽 토담(낮게) — 앞(동서길 쪽)은 트였다"}
+ ]
+}
