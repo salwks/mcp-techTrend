@@ -3,7 +3,7 @@
 //   kinds: 웹 SPECS·굽기 표(kind_specs.ensureSpec)에 있는 사람 종류. 인물 빌더 인물은 builder:<preset> 또는 builder:<template>#<seed>.
 import * as fc from '/src/chars/frameCore.js';
 import { ensureSpec } from '/__tools/kind_specs.js';
-import { installPoses } from '/__tools/pose_common.js';
+import { installPoses, POSE_ANIMS, poseSpec } from '/__tools/pose_common.js';
 
 export async function bakeKindFrames(kind, keys, px = 116) {
   fc.TIERS.high[kind] = px;
@@ -11,6 +11,8 @@ export async function bakeKindFrames(kind, keys, px = 116) {
   const out = {};
   for (const key of keys) {
     const c = b.clip(key); if (!c) continue;
+    const a = key.split('|')[1];
+    if (POSE_ANIMS[a]) c.spec = poseSpec(a, c.spec);
     let g = 0; while (!b.step(c) && g++ < 600);
     out[key] = c.frames;
   }

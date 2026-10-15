@@ -90,6 +90,9 @@ TESTS=(
 	"talk:namwon|420|--region=JL_NAMWON_UNBONG --talktest=namwon_jang,namwon_eup --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=var"
 	"talk:hanyang|420|--region=GG_HANYANG --talktest=chilpae_jang,ungjongga --talkfixture=res://story/hwangju/test_post_hanyang.json --talkexpect=need"
 	"talk:jeju|420|--region=JJ_JEJU --talktest=gimnyeong,jeju_jang --talkfixture=res://story/jeju/test_post_act4.json --talkvars=CASE_JEJU_OUTCOME=A,CASE_JEJU_COMPLETE=true --talkexpect=var"
+	# 앉은 고을 사람(scripts/region/seat_test.gd — 인물 빌더 3단계): 장터 좌판·가가·시전 장꾼이 앉아 있고 자리를 지킨다 · 이야기 인물·사건 군중 자리는 비킨다 · 앉은 채 말 걸기 · 평상 손님·툇마루 노인 자리
+	"seat:namwon|300|--region=JL_NAMWON_UNBONG --seattest=namwon_jang --nostory --notitle"
+	"seat:hanyang|300|--region=GG_HANYANG --seattest=ungjongga --nostory --notitle"
 	# 시작 메뉴 → 이어 하기(남원 이른 옛 저장) / 새 게임 → 이야기 인물·고을 사람에게 E로 말 걸기(scripts/story/continue_test.gd)
 	"continue:namwon-early|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_early_save.json"
 	"continue:new|300|--region=JL_NAMWON_UNBONG --continuetest=new"
@@ -166,10 +169,10 @@ run_one() {
 	if [[ $name == walk:* ]]; then
 		grep -q "^WALK done" $log && grep -q "^TRAVEL arrive" $log && verdict=PASS
 	else
-		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) PASS" $log && verdict=PASS
-		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) FAIL" $log && verdict=FAIL
+		grep -q -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST|SEATTEST) PASS" $log && verdict=PASS
+		grep -q -E "^(RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST|SEATTEST) FAIL" $log && verdict=FAIL
 	fi
-	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST) //')
+	local detail=$(grep -E "^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST|SEATTEST) (PASS|FAIL)" $log | tail -1 | sed -E 's/^(STORYTEST|ONBOARDTEST|RIDETEST|FASTTEST|TALKTEST|STATIONTEST|SAVETEST|CONTTEST|TRAVELTEST|PREPTEST|MAPTEXTTEST|MAPKNOWNTEST|VIEWTEST|SEATTEST) //')
 	[[ $name == walk:* ]] && detail=$(grep "^WALK done" $log | tail -1 | sed -E 's/^WALK done //')
 	if (( code == 124 )); then why="시간 초과"; verdict=FAIL
 	elif (( code != 0 )); then why="종료 코드 $code"; verdict=FAIL

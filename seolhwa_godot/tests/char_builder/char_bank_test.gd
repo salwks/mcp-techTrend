@@ -1,6 +1,6 @@
 # 인물 빌더 묶음 시험(scripts/char_bank.gd · data/chars/*.json — tools/export_char_frames.js가 굽는다) — 헤드리스
 #   godot --headless --path . -s res://tests/char_builder/char_bank_test.gd
-#   A 프리셋(presets): 주모·방자·포졸·마을 사내가 id로 찾아지고 모든 동작(idle·walk·run·talk·sit·bow·kneel·carry) × 앞·옆·뒤 클립이 있다
+#   A 프리셋(presets): 주모·방자·포졸·마을 사내가 id로 찾아지고 모든 동작(idle·walk·run·talk·sit·sit_seat·sit_down·stand_up·bow·kneel·carry·jump) × 앞·옆·뒤 클립이 있다
 #   B 권역 묶음 amb_<권역> 여덟: 인물 수 ≤ 36(공간당 상한), 페이지 2048², 역할 고루, id 겹침 없음, 그림 크기 이상 없음
 #   C SpriteChar: 빌더 id로 만들고 동작이 있다, carry는 짐 든 사람에게만, carry도 걸음 위상이 돈다
 #   D 권역 이름 → 묶음(region_set), 모르는 이름은 JL
@@ -10,8 +10,8 @@
 extends SceneTree
 
 const CharBank := preload("res://scripts/char_bank.gd")
-const ANIMS := ["idle", "walk", "run", "talk", "sit", "bow", "kneel", "carry"]
-const AMB := ["idle", "walk", "talk", "sit", "bow", "kneel"]
+const ANIMS := ["idle", "walk", "run", "talk", "sit", "sit_seat", "sit_down", "stand_up", "sit_talk", "sit_work", "squat", "bow", "kneel", "carry", "jump"]
+const AMB := ["idle", "walk", "talk", "sit", "sit_seat", "sit_talk", "sit_work", "squat", "bow", "kneel", "jump"]   # 고을 사람: 모두 앉기 둘·뛰기 포함
 const REG := ["JL", "GG", "GS", "GW", "HH", "PA", "HG", "JJ"]
 
 var n := 0
@@ -39,6 +39,12 @@ func _initialize() -> void:
 				if not c.has("%s|%s" % [v, a]): miss.append("%s|%s" % [v, a])
 		ok(miss.is_empty(), "A %s 모든 동작·시점 (빠짐 %s)" % [id, miss])
 	ok(String(CharBank.info("p_jumo").get("role", "")) == "innkeeper", "A p_jumo 역할 innkeeper")
+	# 뛰기: 한 번 동작, 공중에서 그림이 떠 있다(lift) · 앉기 둘은 2장 자세
+	var jc: Dictionary = CharBank.info("p_bangja").get("clips", {}).get("side|jump", {})
+	var top := 0.0
+	for f in jc.get("frames", []): top = maxf(top, float(f.get("lift", 0.0)))
+	ok(String(jc.get("spec", {}).get("kind", "")) == "once" and jc.frames.size() >= 8 and top > 0.15, "A 뛰기 once %d장, 가장 높이 %.2fm" % [jc.get("frames", []).size(), top])
+	ok(CharBank.info("p_jumo").clips["front|sit_seat"].frames.size() == 2 and CharBank.info("p_jumo").clips["side|sit"].frames.size() == 2, "A 앉기(땅·높은 자리) 2장 자세")
 	# B
 	var all_ids := {}
 	for r in REG:
@@ -46,7 +52,7 @@ func _initialize() -> void:
 		ok(not m.is_empty(), "B amb_%s 있음" % r)
 		if m.is_empty(): continue
 		ok(m.chars.size() >= 24 and m.chars.size() <= 36, "B amb_%s 인물 %d (24~36)" % [r, m.chars.size()])
-		ok(m.pages.size() <= 8, "B amb_%s 페이지 %d ≤ 8" % [r, m.pages.size()])
+		ok(m.pages.size() <= 14, "B amb_%s 페이지 %d ≤ 14" % [r, m.pages.size()])
 		var bad := 0; var roles := {}; var dup := 0
 		for id in m.chars:
 			if all_ids.has(id): dup += 1
@@ -70,7 +76,7 @@ func _initialize() -> void:
 	# C
 	if CharBank.ensure("p_jumo"):
 		var sc := SpriteChar.new("p_jumo")
-		ok(sc.has_anim("walk") and sc.has_anim("carry") and sc.has_anim("kneel"), "C SpriteChar(p_jumo) 동작")
+		ok(sc.has_anim("walk") and sc.has_anim("carry") and sc.has_anim("kneel") and sc.has_anim("jump") and sc.has_anim("sit_seat"), "C SpriteChar(p_jumo) 동작(jump·sit_seat 포함)")
 		sc.set_anim("carry"); sc.move_speed = 1.2
 		var ph0 := sc.phase
 		root.add_child(sc)

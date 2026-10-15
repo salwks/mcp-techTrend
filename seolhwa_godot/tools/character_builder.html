@@ -56,6 +56,7 @@
 <script type="module">
 import * as fc from '/src/chars/frameCore.js';
 import * as B from '/__tools/char_builder.js';
+import { POSE_ANIMS, poseSpec } from '/__tools/pose_common.js';
 
 const $ = (id) => document.getElementById(id);
 const st = (s) => { $('st').textContent = s; };
@@ -127,6 +128,7 @@ function bakeAnim(id, anim, px = PX) {
   const out = {};
   for (const v of ['front', 'side', 'back']) {
     const c = b.clip(fc.clipKey(v, anim, false, false)); if (!c) continue;
+    if (POSE_ANIMS[anim]) c.spec = poseSpec(anim, c.spec);
     let g = 0; while (!b.step(c) && g++ < 600);
     out[v] = c;
   }
@@ -164,7 +166,7 @@ function tick(now) {
     let i;
     if (sp.kind === 'phase') i = Math.floor((t / 0.95) * sp.n) % sp.n;
     else if (sp.kind === 'loop') i = sp.loopStart + Math.floor(t / sp.step) % sp.n;
-    else i = Math.min(cl.frames.length - 1, Math.floor(t * 12) % (cl.frames.length + 6));
+    else { const T = sp.times, tt = t % (sp.dur + 0.6); i = 0; while (i + 1 < T.length && T[i + 1] <= tt) i++; }   // 한 번 동작: 끝에서 잠깐 쉬고 다시
     const f = cl.frames[Math.min(i, cl.frames.length - 1)];
     drawFrame(g, baked.b, f, W / 2, Hh - 10 * k, k);
     g.fillStyle = '#8a7a62'; g.font = '11px sans-serif'; g.fillText(v, 4, 13);

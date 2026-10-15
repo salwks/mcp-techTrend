@@ -80,11 +80,20 @@ static func bank_src(set_name: String, want: Array) -> Dictionary:
 		if m.chars.has(id): out[id] = { pages = m.pages, clips = m.chars[id].clips }
 	return out
 
-static func texture(file: String) -> Texture2D:
-	if _tex.has(file): return _tex[file]
+# 페이지 이미지 읽기(작업 스레드에서도 부른다): 밉맵 + 되면 S3TC(DXT5) 압축 — 2048² 한 장 22MB → 5.6MB, 압축은 장당 약 10ms.
+# 먹선·한지 테 그림에서 눈에 띄는 차이가 없었다(docs/reports/character-builder.md §4). 지원 안 하는 기기면 RGBA 그대로.
+static func load_page(file: String) -> Image:
 	var img := Image.load_from_file(ProjectSettings.globalize_path("res://data/" + file))
 	if img == null or img.is_empty(): return null
 	img.generate_mipmaps()
+	if file.begins_with("chars/") and RenderingServer.get_rendering_device() != null and RenderingServer.has_os_feature("s3tc") and not OS.get_cmdline_user_args().has("--nocompress"):
+		img.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_GENERIC)
+	return img
+
+static func texture(file: String) -> Texture2D:
+	if _tex.has(file): return _tex[file]
+	var img := load_page(file)
+	if img == null: return null
 	var t := ImageTexture.create_from_image(img)
 	_tex[file] = t
 	return t
@@ -109,8 +118,9 @@ static func ensure(id: String) -> bool:
 
 # 시험·측정: 읽은 페이지 수와 대략 VRAM(RGBA + 밉맵 4/3)
 static func stats() -> Dictionary:
-	var px := 0
+	var b := 0.0
 	for f in _tex:
 		var t: Texture2D = _tex[f]
-		px += t.get_width() * t.get_height()
-	return { pages = _tex.size(), mb = snappedf(px * 4.0 * 4.0 / 3.0 / 1048576.0, 0.1) }
+		var bpp := 1.0 if (t is ImageTexture and (t as ImageTexture).get_format() == Image.FORMAT_DXT5) else 4.0
+		b += t.get_width() * t.get_height() * bpp * 4.0 / 3.0
+	return { pages = _tex.size(), mb = snappedf(b / 1048576.0, 0.1) }

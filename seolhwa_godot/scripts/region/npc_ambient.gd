@@ -83,6 +83,32 @@ const ANCHOR := {
 	"village/seonghwangdang": "shrine", "village/cairn": "shrine", "village/jangseung": "shrine", "village/stone_jangseung": "shrine",
 }
 const HOUSE_HINT := ["compound", "choga", "giwa", "stone_house", "neowa_house", "guitul_house", "gulpi_house", "house_compound"]
+# 앉은 사람 자리(seat) — 키트 앵커(키트 build의 m.anchor, world.props.anchor로 월드 자리)에서 저절로. 앵커가 없는 키트는 로컬 자리(loc)로.
+#   kind: vendor(좌판·가가·시전 장꾼) · guest(주막 평상 손님) · platform(평상 소품·마을 마당) · boatman(나룻배 사공) · maru(툇마루·문간 노인)
+#         rest(큰 나무 그늘) · pavilion(정자 마루) · petition(관아 앞 쪼그려 기다림)
+#   sit: 그 자리의 앉음새 무게 — ground(땅·평상 위 sit) · seat(걸터앉기 sit_seat, 발은 땅) · squat · stand(서서 팔기)
+#   앉음새마다 돌아가며 할 동작: SEAT_ANIMS. 장꾼은 물건(goods)에 맞는 사람(SEAT_GOODS)
+const SEAT_GOODS := { fish = ["villager_f", "merchant", "farmwife"], cloth = ["merchant", "merchant", "villager_f"], onggi = ["merchant", "villager_m", "elder"],
+	grain = ["farmwife", "farmer", "villager_f"], straw = ["farmer", "villager_m", "elder"], mixed = ["villager_f", "merchant", "farmwife", "elder"] }
+const SEAT_KIT := {
+	"village/jwapan": { kind = "vendor", names = ["seller"], loc = Vector3(0, 0, -0.5), n = 1, pres = 0.95, sit = { ground = 0.7, seat = 0.1, stand = 0.2 }, night = 0.03 },
+	"village/market_shop": { kind = "vendor", names = ["seller"], loc = Vector3(0, 0, -1.0), n = 1, pres = 0.95, sit = { ground = 0.55, seat = 0.25, stand = 0.2 }, night = 0.03 },
+	"landmark/hy_sijeon": { kind = "vendor", names = ["counter_w", "counter_e"], n = 2, pres = 0.9, sit = { ground = 0.6, seat = 0.2, stand = 0.2 }, night = 0.03 },
+	"village/jumak": { kind = "guest", names = ["guest_seat"], n = 3, spread = 0.75, pres = 0.85, sit = { ground = 1.0 }, night = 1.0,
+		pool = ["traveler", "peddler", "villager_m", "elder", "merchant"] },
+	"village/props:pyeongsang": { kind = "platform", names = ["seat"], n = 2, spread = 0.7, pres = 0.3, sit = { ground = 1.0 }, night = 0.05,
+		pool = ["elder", "villager_m", "villager_f", "farmer", "elder"] },
+	"village/village_square": { kind = "platform", names = ["pyeongsang0", "pyeongsang1", "seat0", "seat1", "seat2"], n = 3, pres = 0.5, sit = { ground = 1.0 }, night = 0.05,
+		pool = ["elder", "elder", "villager_m", "villager_f", "child_boy", "child_girl"] },
+	"village/narutbae": { kind = "boatman", names = ["boatman"], n = 1, pres = 0.6, sit = { ground = 1.0 }, night = 0.1, pool = ["boatman"] },
+	"village/jeongja": { kind = "pavilion", names = ["floor"], n = 2, spread = 0.9, pres = 0.6, sit = { ground = 1.0 }, night = 0.0, pool = ["scholar", "elder", "elder"] },
+	"nature/big_tree": { kind = "rest", loc = Vector3(1.5, 0, 1.3), n = 2, pres = 0.4, sit = { ground = 0.8, squat = 0.2 }, night = 0.0,
+		pool = ["elder", "farmer", "villager_m", "villager_f", "elder"] },
+	"house": { kind = "maru", suffix = "maru", front = 0.35, n = 1, pres = 0.1, sit = { seat = 1.0 }, night = 0.0, pool = ["elder", "elder", "villager_f"] },
+	"office": { kind = "petition", front = 2.6, side = 1.6, n = 1, pres = 0.45, sit = { squat = 1.0 }, night = 0.0, pool = ["villager_m", "farmer", "elder"] },
+}
+const SEAT_ANIMS := { ground = ["sit", "sit_talk", "sit_work"], seat = ["sit_seat"], squat = ["squat"], stand = ["idle", "talk"] }
+const OFFICE_KITS := ["landmark/gwana", "landmark/dongheon", "landmark/hyeon_gwana", "landmark/gn_gwana", "landmark/jj_mokgwana"]
 
 var world
 var weather
@@ -183,6 +209,7 @@ func _build(input: Dictionary) -> void:
 	var out_sites: Array = []
 	var out_paths: Array = []
 	var anchors: Array = []
+	var seats: Array = []
 	# 길·고샅
 	var lines: Array = []
 	for r in reg.get("roads", []):
@@ -201,6 +228,8 @@ func _build(input: Dictionary) -> void:
 				for hh in HOUSE_HINT:
 					if kit.ends_with(hh): mode = "yard"; break
 			if mode != "": anchors.append([mode, Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0))), float(it.get("ry", 0.0)), kit])
+			var sk := _seat_key(kit, it)
+			if sk != "": seats.append([sk, it])
 	var route_acc := 0.0
 	for L in lines:
 		var raw: Array = L.pts
@@ -277,6 +306,25 @@ func _build(input: Dictionary) -> void:
 				site = { p = p, ry = a[2], mode = "yard", n = 4 if hens else 1, pres = 0.0, pool = [], kind_cls = "animal", out = false, r = 3.5, anim = "eat", hens = hens, dog = dog }
 				if cls == "capital": site.n = 1
 		out_sites.append(site)
+	# 앉은 사람 자리(장꾼·주막 손님·평상·사공·툇마루·나무 그늘·정자·관아 앞)
+	for e in seats:
+		var it: Dictionary = e[1]
+		var d: Dictionary = SEAT_KIT[e[0]]
+		var p := Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0)))
+		var st = _settle_at(sts, p)
+		if d.kind in ["maru", "platform", "rest"] and st == null: continue   # 고을 밖 집·나무는 비워 둔다
+		var cls: String = st.cls if st != null else "village"
+		var pool: Array = d.get("pool", [])
+		var goods := String((it.get("params", {}) as Dictionary).get("goods", "mixed"))
+		if d.kind == "vendor":
+			pool = SEAT_GOODS.get(goods, SEAT_GOODS.mixed)
+			if st != null and st.own.has("haenyeo") and goods == "fish": pool = ["haenyeo", "villager_f"]
+		var pres: float = d.pres
+		if d.kind == "maru" and cls == "capital": pres *= 0.5
+		var fp: Array = it.get("footprint", []) if it.get("footprint") is Array else []
+		out_sites.append({ p = p, ry = float(it.get("ry", 0.0)), mode = "seat", n = int(d.n), pres = pres, pool = pool, kind_cls = "people", out = true, r = 0.0,
+			anim = "sit", night = float(d.night), seat = { key = e[0], id = String(it.get("id", "")), goods = goods,
+				fd = float(fp[1]) if fp.size() > 1 else 6.0, fw = float(fp[0]) if fp.size() > 0 else 6.0 } })
 	# 고을 둘레 들·풀밭, 바닷가 갈매기
 	for st in sts:
 		var c: Vector2 = st.c
@@ -302,6 +350,49 @@ func _build(input: Dictionary) -> void:
 				out_sites.append({ p = c + Vector2(cos(k * 2.4 + 0.7), sin(k * 2.4 + 0.7)) * (st.r * 0.6), mode = "gull", n = 3, pres = 0.8, pool = ["gull"],
 					kind_cls = "animal", out = false, r = 18.0 })
 	_built = { sites = out_sites, paths = out_paths, ms = Time.get_ticks_msec() - t0, sts = sts }
+
+static func _seat_key(kit: String, it: Dictionary) -> String:
+	if SEAT_KIT.has(kit): return kit
+	if kit == "village/props" and String((it.get("params", {}) as Dictionary).get("kind", "")) == "pyeongsang": return "village/props:pyeongsang"
+	if kit in OFFICE_KITS: return "office"
+	for hh in HOUSE_HINT:
+		if kit.ends_with(hh): return "house"
+	return ""
+
+# 앉을 자리(월드 Vector3)와 바라볼 쪽(Vector2) — 키트가 놓인 뒤에만(world.props의 앵커·변환). 없으면 null
+func _seat_world(site: Dictionary, i: int) -> Variant:
+	var sd: Dictionary = site.seat
+	var d: Dictionary = SEAT_KIT[sd.key]
+	var props = world.get("props")
+	if props == null or sd.id == "" or not props._props.has(sd.id): return null
+	var xf: Transform3D = props._props[sd.id].xf
+	var fwd3 := xf.basis.z.normalized()
+	var fwd := Vector2(fwd3.x, fwd3.z).normalized()
+	var right := Vector2(-fwd.y, fwd.x)
+	var pos = null
+	var names: Array = d.get("names", [])
+	if d.has("suffix"):
+		for nm in (props._props[sd.id].info.get("anchors", {}) as Dictionary):
+			if String(nm).ends_with(String(d.suffix)): pos = props.anchor(sd.id, nm); break
+		if pos == null: pos = xf * Vector3(0, 0, float(sd.fd) * 0.5)   # 앵커 없는 집(초가): 앞면 가운데
+	elif not names.is_empty():
+		pos = props.anchor(sd.id, String(names[i % names.size()]))
+		if pos == null and d.has("loc"): pos = xf * (d.loc as Vector3)
+	elif d.has("loc"):
+		pos = xf * (d.loc as Vector3)
+	else:
+		pos = xf * Vector3(float(d.get("side", 0.0)), 0, float(sd.fd) * 0.5 + float(d.get("front", 0.0)))
+	if pos == null: return null
+	var p3: Vector3 = pos
+	var p2 := Vector2(p3.x, p3.z)
+	var o2 := Vector2(xf.origin.x, xf.origin.z)
+	# 여럿이 앉는 자리: 옆으로 벌려 앉는다(평상·정자). 나무 그늘은 줄기 둘레로 돌려 앉는다
+	if d.kind == "rest": p2 = o2 + (p2 - o2).rotated(float(i) * 2.2)
+	elif names.size() <= 1 and int(d.n) > 1: p2 += right * (float(i) - (float(d.n) - 1.0) * 0.5) * float(d.get("spread", 0.7))
+	if d.kind == "maru": p2 += fwd * float(d.front)
+	var face := fwd
+	if d.kind == "rest": face = (p2 - o2).normalized()
+	return [Vector3(p2.x, p3.y, p2.y), face]
 
 func _pick_pool(own: Array, prefer: Array, dflt: Array) -> Array:
 	var p: Array = []
@@ -394,9 +485,8 @@ func _real_kind(k: String, src: Dictionary) -> String:
 
 func _load_pages(files: Array) -> void:
 	for f in files:
-		var img := Image.load_from_file(ProjectSettings.globalize_path("res://data/" + f))
-		if img == null or img.is_empty(): continue
-		img.generate_mipmaps()
+		var img := CharBank.load_page(String(f))   # 빌더 묶음 페이지는 S3TC로 압축
+		if img == null: continue
 		_pending_pages.append([f, img])   # Array.append은 메인이 읽는 동안에도 안전하게 끝에 붙는다(메인은 작업이 끝난 뒤 읽는다)
 
 func _upload_pages() -> void:
@@ -467,8 +557,11 @@ func _slot_kind(site: Dictionary, si: int, i: int) -> String:
 		if not site.hens: return ""
 		return "rooster" if i == 1 else "hen"
 	var pool: Array = site.pool
+	if site.mode == "seat":   # 앉은 자세는 빌더 사람만 갖는다
+		pool = pool.filter(func(r): return _variants.has(r))
 	if pool.is_empty(): return ""
 	var k: String = pool[int(hk * pool.size()) % pool.size()]
+	if site.mode == "seat": return k
 	if site.get("out", false) and k in CAPE and weather != null and weather.cur.rain > 0.3 and _h(si, i + 300) < 0.75: k = "raincape"
 	return k
 
@@ -505,6 +598,8 @@ func _scan() -> void:
 		var ag: Dictionary = agents[key]
 		if not ag.get("hold", false) and ag.mode != "gull" and excluded(Vector2(ag.pos.x, ag.pos.z)):
 			_release(key); continue   # 비우기 구역 안 — 화면 안이어도 바로 놓는다
+		if ag.mode == "seat" and not ag.get("hold", false) and seat_taken(Vector2(ag.pos.x, ag.pos.z)):
+			_release(key); continue   # 이야기 인물·군중이 그 자리에 왔다
 		var keep: bool = want.get(key, "") == ag.kind or ag.get("hold", false)
 		if keep: continue
 		var site: Dictionary = sites[key / SLOTS]
@@ -576,6 +671,30 @@ func _spawn(key: int, kind: String, filling: bool) -> bool:
 		ag.anim = "talk" if stand and _h(key, 12) < 0.5 else "idle"
 		p = _path_pos(ag)
 		if site.kind_cls == "people" and not world.tiles.has(world.tile_of(p.x, p.y)): return false
+	elif site.mode == "seat":
+		if not _tile_ready(site.p): return false
+		var sw = _seat_world(site, i)
+		if sw == null: return false
+		var sp3: Vector3 = sw[0]
+		p = Vector2(sp3.x, sp3.z)
+		if seat_taken(p): return false   # 이야기 인물·사건 군중이 이미 쓰는 자리
+		var d: Dictionary = SEAT_KIT[site.seat.key]
+		var way := "ground"
+		var tot := 0.0
+		for w in d.sit: tot += float(d.sit[w])
+		var x := _h(key, 71) * tot
+		for w in d.sit:
+			x -= float(d.sit[w])
+			if x <= 0.0: way = w; break
+		ag.sit = way
+		ag.anims = SEAT_ANIMS[way]
+		ag.anim = String(ag.anims[0])
+		ag.face = sw[1]
+		ag.home = p; ag.r = 0.0
+		ag.t = 2.0 + _h(key, 72) * 6.0
+		var gy: float = world.height_at(p.x, p.y)
+		ag.seat_y = sp3.y if way == "ground" and sp3.y > gy + 0.05 else gy
+		ag.mode = "seat"
 	elif site.mode == "gull":
 		ag.ang = _h(key, 2) * TAU; ag.rad = float(site.r) * (0.6 + _h(key, 3) * 0.6); ag.alt = 9.0 + _h(key, 4) * 7.0
 		ag.w = (0.25 + _h(key, 5) * 0.2) * (1.0 if _h(key, 6) < 0.5 else -1.0)
@@ -604,6 +723,9 @@ func _spawn(key: int, kind: String, filling: bool) -> bool:
 	ag.pos = pos
 	_place(ag, p)
 	ch.facing = ["down", "left", "right", "up"][int(_h(key, 21) * 4.0) % 4]
+	if ag.mode == "seat":
+		ch.facing = _facing(ag.face.x, ag.face.y, "down")   # 길·손님 쪽
+		if not ch.has_anim(ag.anim): ag.anim = 'idle'
 	if ag.animal and ch.facing in ["up", "down"]: ch.facing = "left" if _h(key, 22) < 0.5 else "right"
 	ch.set_anim(ag.anim if ag.state == "idle" else "walk")
 	ch.anim_time = _h(key, 23) * 3.0
@@ -658,6 +780,8 @@ func _place(ag: Dictionary, p: Vector2) -> void:
 		var g: float = world.height_at(p.x, p.y)
 		if not is_nan(world.sea_y): g = maxf(g, world.sea_y)
 		y = g + ag.alt
+	elif ag.has("seat_y"):
+		y = ag.seat_y   # 평상·배·정자 위
 	else:
 		y = world.height_at(p.x, p.y)
 	ag.pos = Vector3(p.x, y, p.y)
@@ -681,7 +805,8 @@ func _step_agents(dt: float) -> void:
 		if ag.get("hold", false):   # 말하는 중: 멈춰 플레이어를 본다
 			var lk: Vector2 = ag.look - old
 			ch.facing = _facing(lk.x, lk.y, ch.facing)
-			ch.set_anim("talk" if ch.has_anim("talk") else "idle")
+			if ag.mode == "seat": ch.set_anim("sit_talk" if ag.get("sit", "") == "ground" and ch.has_anim("sit_talk") else String(ag.anim))
+			else: ch.set_anim("talk" if ch.has_anim("talk") else "idle")
 			if vis:
 				on += 1
 				ch.update_char(dt, cam)
@@ -705,6 +830,13 @@ func _step_agents(dt: float) -> void:
 					if _h(key, int(_clock * 3.0)) < 0.15: ag.state = "idle"; ag.t = 2.0 + _h(key, 31) * 5.0
 			"stand":
 				pass
+			"seat":
+				# 앉은 채로 하던 일을 바꾼다(부르기·매만지기·쉬기) — 자리를 떠나지 않는다
+				if ag.t <= 0.0:
+					var lst: Array = ag.anims
+					ag.anim = String(lst[int(_h(key, int(_clock * 3.0) + 9) * lst.size()) % lst.size()])
+					if not ch.has_anim(ag.anim): ag.anim = String(lst[0]) if ch.has_anim(String(lst[0])) else "idle"
+					ag.t = 3.0 + _h(key, int(_clock) + 5) * 6.0
 			"gull":
 				ag.ang += ag.w * dt
 				p = ag.home + Vector2(cos(ag.ang), sin(ag.ang)) * ag.rad
@@ -782,6 +914,22 @@ func info(key: int) -> Dictionary:
 	return { key = key, kind = String(ag.kind), mode = String(site.mode), p = p,
 		settle = String(st.id) if st != null else "", arch = String(st.arch) if st != null else "", cls = String(st.cls) if st != null else "",
 		place = String(st.name) if st != null else "" }
+
+# 이야기 인물·사건 군중이 그 자리(1.4m 안)를 쓰고 있나 — 앉은 고을 사람이 겹치지 않게(region_main이 story_ref·crowd_ref를 넣는다)
+var story_ref = null
+var crowd_ref = null
+func seat_taken(p: Vector2) -> bool:
+	if story_ref != null and story_ref.get("actors") is Dictionary:
+		for id in story_ref.actors:
+			var a = story_ref.actors[id]
+			if a is Dictionary and a.get("shown", true) and a.get("pos") is Vector3 and Vector2(a.pos.x, a.pos.z).distance_to(p) < 1.4: return true
+	if crowd_ref != null and crowd_ref.get("crowds") is Dictionary:
+		for cid in crowd_ref.crowds:
+			var c: Dictionary = crowd_ref.crowds[cid]
+			if not c.get("on", false): continue
+			for m in c.get("members", []):
+				if (m.get("home", Vector2.INF) as Vector2).distance_to(p) < 1.2: return true
+	return false
 
 func hold(key: int, toward: Vector3) -> void:
 	var ag = agents.get(key)

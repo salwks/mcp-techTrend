@@ -250,6 +250,8 @@ func _ready() -> void:
 		_ride_test = RideTest.new(self); _ride_test.run.call_deferred(String(args.ridetest))
 	elif args.has("fasttravel"):
 		_ride_test = RideTest.new(self); _ride_test.run_fast.call_deferred(String(args.fasttravel))
+	elif args.has("seattest"):   # 앉은 고을 사람(장꾼·평상·툇마루) — scripts/region/seat_test.gd
+		_ride_test = load("res://scripts/region/seat_test.gd").new(self); _ride_test.run.call_deferred(String(args.seattest))
 	elif args.has("talktest"):
 		_ride_test = load("res://scripts/story/talk_test.gd").new(self); _ride_test.run.call_deferred(String(args.talktest))
 	elif args.has("continuetest"):
@@ -403,6 +405,7 @@ func _build_scene() -> void:
 	player.set_layers(PLAYER_LAYER)   # 1인칭에서 카메라가 이 층만 빼고 그린다(그림자는 해가 그대로 드리운다)
 	if not args.has("nonpc") and not args.has("nochars"):
 		npcs_amb = NpcAmbient.new(); root.add_child(npcs_amb); npcs_amb.setup(world, weather, cam, placement)
+		npcs_amb.story_ref = story; npcs_amb.crowd_ref = crowd   # 앉은 고을 사람은 이야기 인물·군중 자리를 비킨다
 	boats = BoatRide.new(); boats.setup(self)
 	if args.has("sailspeed"): boats.speed_override = float(args.sailspeed)
 	boats.arrived.connect(_on_boat_arrived)
@@ -861,7 +864,7 @@ func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:
@@ -1209,6 +1212,14 @@ func _bench_report() -> void:
 	print("BENCH avg_fps=%.1f tris=%dk draws=%d worst_ms=%.1f p99_ms=%.1f over33=%d frames=%d render=%s speed=%.1f dist=%.0fm tiles_near=%d mid=%d scatter=%d statics=%d" % [
 		_bench_frames / _bench_time, int(_bench_gpu / maxf(1.0, a.size()) / 1000.0), int(_bench_draws / maxf(1.0, a.size())), _bench_worst * 1000.0, p99 * 1000.0, over, _bench_frames, scene_vp.size, _bench_speed,
 		_bench_dist, world.stats.near, world.stats.mid, world.stats.scatter_done, world.stats.statics])
+	# 인물 그림 비용(인물 빌더 1~3단계 측정): 텍스처 VRAM 전체 · 사람 종류(그림) 수 · 화면 안 사람
+	var banks := {}
+	if npcs_amb != null:
+		for k in npcs_amb.agents: banks[String(npcs_amb.agents[k].ch.kind)] = true
+	print("BENCH texmem_mb=%.0f vmem_mb=%.0f npc_people=%d npc_on_screen=%d npc_unique_looks=%d char_pages=%s" % [
+		Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0,
+		npcs_amb.stats.people if npcs_amb != null else 0, npcs_amb.stats.on_screen if npcs_amb != null else 0, banks.size(),
+		str(preload("res://scripts/char_bank.gd").stats())])
 	_quit()
 
 # ---- 자동 스크린샷 ----

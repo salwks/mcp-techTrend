@@ -10,6 +10,11 @@ class H(http.server.SimpleHTTPRequestHandler):
         # /__tools/ 아래는 이 폴더(내보내기 스크립트)
         if path.startswith('/__tools/'):
             return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.basename(path.split('?')[0]))
+        # /__data/ 아래는 seolhwa_godot/data(읽기만 — 다시 굽기 도구가 예전 클립 목록을 본다)
+        if path.startswith('/__data/'):
+            rel = os.path.normpath(path.split('?')[0][len('/__data/'):])
+            if rel.startswith('..') or os.path.isabs(rel): return os.path.join(OUT, '__nope__')
+            return os.path.join(OUT, rel)
         return super().translate_path(path)
     def end_headers(self):
         self.send_header('Cache-Control', 'no-store'); super().end_headers()

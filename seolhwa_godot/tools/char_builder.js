@@ -5,7 +5,7 @@
 //   generate({ template, region, seed, count }) → spec[]        같은 인자 → 같은 결과(시드 고정)
 //   registerSpec(spec) → 리그 종류 id(SPECS에 올리고 부속·공용 자세를 단다)
 //   PRESETS: 기존 인물을 빌더 자료로 옮긴 것(주모·방자·포졸·마을 사내)
-//   ANIMS: 모든 인물이 같은 동작 묶음 — idle·walk·run·talk·sit·bow·kneel·carry
+//   ANIMS: 모든 인물이 같은 동작 묶음 — idle·walk·run·talk·sit·sit_seat·sit_down·stand_up·bow·kneel·carry·jump
 // 미리 보기·편집: tools/character_builder.html · 굽기: tools/export_char_frames.js(chars_bake.html)
 // 설계·사용법: seolhwa_godot/docs/reports/character-builder.md
 import { SPECS, getRig, dropRig, HUMAN_DRAW as H } from '/src/chars/rigs.js';
@@ -13,7 +13,9 @@ import { mix } from '/src/chars/painter.js';
 import { installPoses } from '/__tools/pose_common.js';
 import { builderHead, extraParts, handItem, wearFx } from '/__tools/char_parts.js';
 
-export const ANIMS = ['idle', 'walk', 'run', 'talk', 'sit', 'bow', 'kneel', 'carry'];
+// sit = 땅에 앉기(사내 양반다리, 여인 한쪽 무릎 세움) · sit_seat = 평상·걸상·의자 · sit_down/stand_up = 앉고 일어나는 사이 · jump = 뛰어오르기(한 번)
+// sit_talk·sit_work = 앉아서 부르기/매만지기·먹기(장꾼·주막 손님) · squat = 쪼그려 앉기
+export const ANIMS = ['idle', 'walk', 'run', 'talk', 'sit', 'sit_seat', 'sit_down', 'stand_up', 'sit_talk', 'sit_work', 'squat', 'bow', 'kneel', 'carry', 'jump'];
 
 // ---------------------------------------------------------------------------
 // 고를 수 있는 값(편집기 드롭다운도 이것을 쓴다)
@@ -367,6 +369,7 @@ export function compile(spec) {
     headwear: spec.headwear || 'none', hatColor: spec.hatColor, gatBrim: spec.gatBrim, scarf: K.scarf,
     shoe: SHOE[C.shoes] || SHOE.jipsin, sock: '#f3efe4',
     drawHead: builderHead,
+    sitStyle: female ? 'knee' : undefined,   // 땅에 앉기: 여인은 한쪽 무릎을 세운다(pose_common)
   };
   if (C.bottom === 'chima') { sp.bottom = 'chima'; sp.skirt = fade(K.skirt || '#46627b'); }
   if (robe) sp.robeLen = outer === 'jangsam' || outer === 'dopo' ? 104 : outer === 'kwaeja' ? 92 : 98;
@@ -396,7 +399,7 @@ export function compile(spec) {
   if (I.back === 'jige') { sp.back = 'jige'; sp.load = I.load || 'straw'; }
   else if (I.back === 'bundle' || I.back === 'gwanari') { sp.back = 'bundle'; sp.bundle = K.bundle || '#6b4f3a'; if (I.back === 'gwanari') sp.bundleScale = 0.66; }
   if (I.head === 'basket' || I.head === 'jar') sp.carry = I.head;
-  if (I.hand && I.hand !== 'none') sp.staff = handItem(I.hand);
+  if (I.hand && I.hand !== 'none') { sp.staff = handItem(I.hand); sp.handSmall = ['fan', 'roundfan', 'longpipe', 'ladle', 'bell'].includes(I.hand); }
   if (I.handLoad && I.handLoad !== 'none') { sp.handLoad = I.handLoad; sp.bundle = sp.bundle || K.bundle || '#6b4f3a'; }
   if (spec.pipe) sp.pipe = true;
   if (K.patch) sp.patch = K.patch;
@@ -473,7 +476,7 @@ export const ROLE_TEMPLATE = {
 // 권역 무리 구성(역할: 수) — 합 40 이하(공간당 고유 인물 상한)
 export const POOL = {
   base: { farmer: 5, farmwife: 5, merchant: 4, villager_m: 3, villager_f: 3, elder: 2, elder_f: 2, child_boy: 2, child_girl: 2, scholar: 2, official: 2,
-    peddler: 2, traveler: 2, innkeeper: 1, monk: 1, cheonmin: 1, yangban: 1 },
+    peddler: 2, traveler: 2, innkeeper: 1, monk: 1, cheonmin: 1, yangban: 1, boatman: 1 },
   GG: { farmer: -2, farmwife: -1, scholar: 1, yangban: 1, yangban_f: 1, jungin: 1, official: 1, pojol: 1, gisaeng: 1, merchant: 1 },
   JJ: { farmwife: -2, haenyeo: 3, boatman: 1, scholar: -1, yangban: -1, merchant: -1, shaman: 1 },
   PA: { gisaeng: 1, merchant: 1, farmer: -1, boatman: 1 },

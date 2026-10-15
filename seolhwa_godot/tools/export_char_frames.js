@@ -2,16 +2,17 @@
 //   data/chars/<set>.json  { format:'chars-1', set, px, pages:['chars/<set>_0.png',…], chars:{ id:{ role, template, sex, age, name, spec, clips } } }
 //   clips는 SpriteChar 프레임 꼴 그대로(page = 이 묶음의 pages 번호). Godot scripts/char_bank.gd가 id로 찾는다.
 // 묶음:
-//   ?set=presets        기존 인물을 옮긴 프리셋(주모·방자·포졸·마을 사내) — 모든 동작, 116px/m(예전 high와 같음)
-//   ?set=amb_JL …       권역 고을 사람 무리(char_builder.poolSpecs) — idle(2장)·walk·talk·sit·bow·kneel(+짐 있으면 carry), 72px/m(1080p 화면 크기)
+//   ?set=presets        기존 인물을 옮긴 프리셋(주모·방자·포졸·마을 사내) — 모든 동작(ANIMS 12), 116px/m(예전 high와 같음)
+//   ?set=amb_JL …       권역 고을 사람 무리(char_builder.poolSpecs) — idle(2장)·walk·talk·sit·sit_seat·bow·kneel·jump(+짐 있으면 carry), 84px/m(1440p 화면에서 1m ≈ 87px)
 //   ?set=amb_all        여덟 권역 무리를 차례로
 //   ?set=custom&specs=… (편집기 「프레임 굽기」) — 편집기가 bakeSet()을 바로 부른다
 // 실행: python3 tools/web_export_server.py 8770 → 앱 브라우저 창으로 http://localhost:8770/__tools/chars_bake.html?set=amb_all
 import * as fc from '/src/chars/frameCore.js';
 import { ANIMS, PRESETS, registerSpec, poolSpecs, REGIONS } from '/__tools/char_builder.js';
+import { POSE_ANIMS, poseSpec } from '/__tools/pose_common.js';
 
 const ATLAS = 2048, MARGIN = 2;
-export const AMB_ANIMS = ['idle', 'walk', 'talk', 'sit', 'bow', 'kneel'];
+export const AMB_ANIMS = ['idle', 'walk', 'talk', 'sit', 'sit_seat', 'sit_talk', 'sit_work', 'squat', 'bow', 'kneel', 'jump'];   // 고을 사람: 달리기·앉고 일어나는 사이는 뺀다
 const VIEWS = ['front', 'side', 'back'];
 
 async function put(name, data) {
@@ -55,6 +56,7 @@ function bakeChar(atlas, spec, anims, px, lean = false) {
   for (const a of anims) for (const v of VIEWS) {
     const key = fc.clipKey(v, a, false, false);
     const c = b.clip(key); if (!c) continue;
+    if (POSE_ANIMS[a]) c.spec = poseSpec(a, c.spec);   // 자세 2장 · 뛰기/앉고 일어나기 정한 시각
     if (lean && a === 'idle') {
       // 고을 사람: 대기 숨쉬기 2장(4장 대신 — 멀리서는 차이가 안 보이고 그림이 준다)
       const d = c.spec.dur;
@@ -85,7 +87,7 @@ const animsFor = (spec, base) => {
 const strip = (s) => JSON.parse(JSON.stringify(s));
 
 /** 자료 묶음 굽기 → data/chars/<set>.json + 페이지 */
-export async function bakeSet(set, specs, { px = 72, anims = AMB_ANIMS, lean = false, log = () => {} } = {}) {
+export async function bakeSet(set, specs, { px = 84, anims = AMB_ANIMS, lean = false, log = () => {} } = {}) {
   const atlas = new Atlas();
   const chars = {};
   const t0 = performance.now();
