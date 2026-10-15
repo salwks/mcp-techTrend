@@ -23,6 +23,21 @@ func _init() -> void:
 	var real := OS.get_user_data_dir().trim_suffix("/") + "/"
 	ok(SaveGuard.sandboxed(), "-s 실행은 모래상자(why=%s)" % SaveGuard.why())
 	ok(SaveGuard.root() != "" and not (SaveGuard.root() + "/").begins_with(real), "모래상자 %s 는 사용자 폴더 %s 밖" % [SaveGuard.root(), real])
+	# 명령줄 가리기 — 1단계 사고를 낸 --nostory 촬영 등은 반드시 모래상자, 사용자 놀이 명령줄만 user://
+	var cases := [
+		[[], [], ""],
+		[["--savefile=user://play_chunhyang.json", "--devtravel"], [], ""],
+		[["--view=first", "--scale=1.5", "--fullscreen"], [], ""],
+		[["--warp=-3005,240", "--mapshots=/tmp/m", "--mapzooms", "--nostory"], [], "tool"],
+		[["--nostory"], [], "tool"],
+		[["--talkshot=oil_wife", "--newgame", "--winshot"], [], "tool"],
+		[["--savefile=user://progress.json", "--storytest=namwon:A"], [], "tool"],
+		[["--savefile=user://progress.json", "--saveroot=/tmp/x"], [], "tool"],
+		[[], ["--headless", "-s", "res://tests/save/save_guard_test.gd"], "tool"],
+	]
+	for c in cases:
+		var got := SaveGuard.classify(PackedStringArray(c[0]), PackedStringArray(c[1]))
+		ok((got == "") == (c[2] == ""), "명령줄 %s %s → %s" % [c[0], c[1], "놀이(user://)" if got == "" else "모래상자(" + got + ")"])
 	# 기본 경로(--savefile 없음) → tool_progress.json
 	var p0 := Progress.slot_path(0)
 	ok(p0.begins_with(SaveGuard.root()) and p0.ends_with("tool_progress.json"), "기본 진행 경로 %s" % p0)

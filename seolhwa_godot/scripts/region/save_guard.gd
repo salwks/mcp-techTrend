@@ -22,17 +22,8 @@ static var _why := ""
 static func _decide() -> void:
 	if _decided: return
 	_decided = true
-	var user := {}
-	for a in OS.get_cmdline_user_args():
-		var kv := a.trim_prefix("--").split("=", true, 1)
-		user[kv[0]] = kv[1] if kv.size() > 1 else "1"
-	var eng := OS.get_cmdline_args()
-	var tool := ""
-	if user.has("saveroot"): tool = "saveroot"
-	elif eng.has("-s") or eng.has("--script"): tool = "script"
-	else:
-		for k in user:
-			if not PLAY_ARGS.has(k): tool = "--" + String(k); break
+	var user := _parse(OS.get_cmdline_user_args())
+	var tool := classify(OS.get_cmdline_user_args(), OS.get_cmdline_args())
 	if tool == "": return
 	_why = tool
 	if user.has("saveroot") and String(user.saveroot) != "1":
@@ -40,6 +31,22 @@ static func _decide() -> void:
 	else:
 		_root = OS.get_user_data_dir().trim_suffix("/") + "_test"
 	DirAccess.make_dir_recursive_absolute(_root)
+
+static func _parse(user_args: PackedStringArray) -> Dictionary:
+	var user := {}
+	for a in user_args:
+		var kv := a.trim_prefix("--").split("=", true, 1)
+		user[kv[0]] = kv[1] if kv.size() > 1 else "1"
+	return user
+
+# 명령줄 가리기(순수 함수 — 지킴 시험이 여러 명령줄을 넣어 본다): "" = 놀이 실행, 그 밖 = 모래상자로 보내는 까닭
+static func classify(user_args: PackedStringArray, eng_args: PackedStringArray) -> String:
+	var user := _parse(user_args)
+	if user.has("saveroot"): return "saveroot"
+	if eng_args.has("-s") or eng_args.has("--script"): return "script"
+	for k in user:
+		if not PLAY_ARGS.has(k): return "--" + String(k)
+	return ""
 
 # 시험·도구 실행인가(모래상자에 쓰는가)
 static func sandboxed() -> bool:
