@@ -49,6 +49,7 @@ class FakeDirector extends RefCounted:
 	var runner = null
 	var combat_view = null
 	var free_move := false
+	var talking := false   # 재기획 2단계: 말 걸기 접근 동안(story_director.talking)
 	var _cut := false
 	var log_story := false
 
