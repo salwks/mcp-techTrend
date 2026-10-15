@@ -926,7 +926,8 @@ func info(key: int) -> Dictionary:
 	var site: Dictionary = sites[key / SLOTS]
 	var p := Vector2(ag.pos.x, ag.pos.z)
 	var st = _settle_at(_sts, p)
-	return { key = key, kind = String(ag.kind), mode = String(site.mode), p = p,
+	var ground_seat: bool = String(ag.mode) == "seat" and String(ag.get("sit", "")) in ["ground", "squat"]   # 땅에 앉은 자리(좌판·가가) — 평상·툇마루 아님
+	return { key = key, kind = String(ag.kind), mode = String(site.mode), p = p, ground_seat = ground_seat,
 		settle = String(st.id) if st != null else "", arch = String(st.arch) if st != null else "", cls = String(st.cls) if st != null else "",
 		place = String(st.name) if st != null else "" }
 

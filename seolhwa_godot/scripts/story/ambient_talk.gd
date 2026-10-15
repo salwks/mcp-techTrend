@@ -72,14 +72,17 @@ func talk(key: int) -> void:
 	d._target = null
 	# 판대 뒤 장꾼(mode stall): 플레이어 한 걸음으로 겹침을 못 풀면 장꾼이 먼저 한 걸음 비켜 선다(재기획 3단계 — 2단계 남은 문제 2, 사용자 결정 (2))
 	var np: Vector2 = inf.p
-	if String(inf.mode) == "stall" and not bool(d.main.get("fp_active")):
+	#   땅에 앉은 장꾼(좌판·가가 — mode seat, 바닥 자리)도 같다: 일어나 비켜 서서 말한다(평상·툇마루 위 자리는 그대로)
+	var stall_like: bool = String(inf.mode) == "stall" or (String(inf.mode) == "seat" and bool(inf.get("ground_seat", false)) and String(inf.get("cls", "")) == "market")
+	if stall_like and not bool(d.main.get("fp_active")):
 		var aside = stall_aside(inf.p)
+		if log_lines: printerr("AMBTALK stall_check key=%d %s" % [key, JSON.stringify({ why = last_aside.get("why", ""), evals = last_aside.get("evals", 0) })])
 		if aside != null:
 			npc.step_aside(key, aside, 0.4)
 			np = aside
 			stall_steps += 1
 			if log_lines: printerr("AMBTALK stall_aside key=%d (%.1f,%.1f)→(%.1f,%.1f)" % [key, inf.p.x, inf.p.y, np.x, np.y])
-			await d.wait(0.42)
+			await d.get_tree().create_timer(0.42).timeout   # 실제 걸음 시간(시험의 빠른 기다림 d.wait을 쓰지 않는다 — 다 비켜 선 뒤 구도를 잰다)
 			if not (is_instance_valid(npc) and npc.agents.has(key)):
 				busy = false; return
 			inf = npc.info(key)
@@ -113,22 +116,40 @@ func talk(key: int) -> void:
 var stall_steps := 0   # 시험 기록: 장꾼이 비켜 선 횟수
 
 # 장꾼이 비켜 설 자리 — 지금 자리에서 플레이어 한 걸음만으로 겹침 없는 구도가 나오면 null(비키지 않는다).
-#   아니면 플레이어와 장꾼을 잇는 선의 옆(0.8·1.1m)과 비스듬히 앞(0.6m) 가운데 걸어 설 수 있고 겹침이 없는 첫 자리
+#   아니면 둘레(0.7·1.0·1.3m, 30°마다) 가운데 화면에서 플레이어와 옆으로 더 벌어지는 자리부터(카메라 오른쪽 축 기준) — 걸어 설 수 있고
+#   겹침이 없는 첫 자리(구도 계산은 많아야 STALL_EVALS번)
+const STALL_EVALS := 8
+var last_aside := {}   # 시험 기록: { from, to, evals, why }
 func stall_aside(n: Vector2) -> Variant:
 	var TF = load("res://scripts/story/talk_frame.gd")
 	var tf = TF.new(d)
 	var w = d.main.world
 	var plan0: Dictionary = tf.plan(Vector3(n.x, w.height_at(n.x, n.y), n.y), 2.0, false, {}, false)
+	last_aside = { from = n, to = null, evals = 1, why = "clear" }
 	if float(plan0.get("overlap", 1.0)) <= 0.0: return null
 	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
-	var dir := (pp - n).normalized() if pp.distance_to(n) > 0.05 else Vector2(0, 1)
-	var perp := Vector2(-dir.y, dir.x)
-	for c in [perp * 0.8, -perp * 0.8, perp * 1.1, -perp * 1.1, dir * 0.45 + perp * 0.6, dir * 0.45 - perp * 0.6]:
-		var q: Vector2 = n + c
+	var yaw: float = float(d.main.rig.yaw)
+	var right := Vector2(cos(yaw), -sin(yaw))   # 화면 오른쪽(카메라 yaw 0 = 동쪽)
+	var side := signf((n - pp).dot(right)); if side == 0.0: side = 1.0
+	var cands := []
+	for r in [0.7, 1.0, 1.3]:
+		for k in 12:
+			var c: Vector2 = Vector2.from_angle(TAU * k / 12.0) * float(r)
+			var q: Vector2 = n + c
+			if q.distance_to(pp) < 0.8: continue
+			cands.append({ q = q, sep = absf((q - pp).dot(right)) + (0.2 if signf((q - pp).dot(right)) == side else 0.0) - r * 0.15 })
+	cands.sort_custom(func(a, b): return float(a.sep) > float(b.sep))
+	var evals := 0
+	for c in cands:
+		var q: Vector2 = c.q
 		if w.blocked(q.x, q.y, 0.28) or absf(w.height_at(q.x, q.y) - w.height_at(n.x, n.y)) > 0.4: continue
-		if q.distance_to(pp) < 0.8: continue
+		evals += 1
 		var pl: Dictionary = tf.plan(Vector3(q.x, w.height_at(q.x, q.y), q.y), 2.0, false, {}, false)
-		if float(pl.get("overlap", 1.0)) <= 0.0: return q
+		if float(pl.get("overlap", 1.0)) <= 0.0:
+			last_aside = { from = n, to = q, evals = evals + 1, why = "ok" }
+			return q
+		if evals >= STALL_EVALS: break
+	last_aside = { from = n, to = null, evals = evals + 1, why = "none" }
 	return null
 
 # 기록책 '사람의 말'(◇ 들음 — 말한 사람). 사실로 올리지 않는다

@@ -101,6 +101,7 @@ func _round(sid: String, n: int, gossip_first := false) -> void:
 			_target_try += 1
 			var tg = d._target
 			if tg != null and String(tg.kind) == "ambient": _target_ok += 1
+			else: print("TALKTEST note E 대상 아님 key=%d target=%s dist=%.2f" % [key, "없음" if tg == null else "%s:%s" % [tg.kind, tg.get("id", "")], Vector2(main.player_pos.x, main.player_pos.z).distance_to(Vector2(ag.pos.x, ag.pos.z))])
 		await d.ambient.talk(key)
 		_log_talk(sid)
 		_talked[key] = true
