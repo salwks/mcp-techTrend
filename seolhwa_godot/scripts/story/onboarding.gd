@@ -177,14 +177,14 @@ func _park_hint() -> void:
 
 # 새 안내를 띄우지 않을 때(예전과 같다): 대화·기록책·이야기 진행 중(추격처럼 플레이어가 움직이는 때는 빼고)
 func _hint_blocked() -> bool:
-	return d.ui.modal or d.ui.journal_open or (d.runner != null and d.runner.busy and not d.free_move)
+	return d.talking or d.ui.modal or d.ui.journal_open or (d.runner != null and d.runner.busy and not d.free_move)
 
 func _in_combat() -> bool:
 	return d.combat_view != null and d.combat_view.active
 
 # 떠 있는 안내를 잠시 감출 때: 대화창·기록책·컷신. 전투 중에는 건드리지 않는다(전투 안내 K·L이 같은 자리를 쓴다)
 func _hint_hide() -> bool:
-	return not _in_combat() and (d.ui.modal or d.ui.journal_open or d._cut)
+	return not _in_combat() and (d.talking or d.ui.modal or d.ui.journal_open or d._cut)   # talking: 말 걸기 접근(한 걸음·구도) 동안도
 
 func _update_hints(dt: float) -> void:
 	if _hint_key != "":
@@ -326,7 +326,7 @@ func _update_marks(dt: float) -> void:
 	if _mark_t > 0.0: return
 	_mark_t = 0.06
 	var lv := mark_level()
-	var busy: bool = d.case_id == "" or d.runner == null or d.runner.busy or d.ui.modal or d.ui.journal_open or (d.combat_view != null and d.combat_view.active) or d._cut
+	var busy: bool = d.case_id == "" or d.runner == null or d.talking or d.runner.busy or d.ui.modal or d.ui.journal_open or (d.combat_view != null and d.combat_view.active) or d._cut
 	if lv <= 0.0 or busy:
 		d.ui.set_marks([]); last_marked = []; return
 	var cam: Camera3D = d.main.cam
@@ -480,7 +480,7 @@ func _update_talk_marks(dt: float) -> void:
 	if _tm_t > 0.0: return
 	_tm_t = 0.033
 	talk_marked = []
-	var busy: bool = d.case_id == "" or d.S == null or not d._started or d.runner.busy or d.ui.modal or d.ui.journal_open \
+	var busy: bool = d.case_id == "" or d.S == null or not d._started or d.talking or d.runner.busy or d.ui.modal or d.ui.journal_open \
 		or (d.combat_view != null and d.combat_view.active) or d._cut or guide() == "off"
 	if busy:
 		d.ui.set_talk_marks([]); return

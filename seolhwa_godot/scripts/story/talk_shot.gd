@@ -5,6 +5,7 @@
 #   재기획 2단계(대화 구도 talk_frame.gd):
 #     --talkfrom=dx,dz   인물 발에서 이만큼 떨어진 자리에서 E(기본 -0.6,1.7 — 카메라 쪽, 가림을 일부러 재현하는 자리)
 #     --talkmid=프레임    E 뒤 이 프레임에 한 장 더(옮겨 가는 도중) · --talkback  대화를 끝까지 넘기고 돌아온 화면도 찍는다
+#     --talkpress=N      첫 화면 뒤 E를 N번 눌러 한 장 더(다음 줄·선택지) · --talklong  대화 뒤 긴 시험 글로 상자가 위로 자라는지 한 장
 #     --talkcycle=N      화면 없이도 도는 시험: 네 방향에서 N번 말 걸기 — E를 3프레임마다 연타하며 끝까지 넘기고,
 #                        끝난 뒤 카메라(yaw 0·talk_yaw 없음·override/focus 없음·평소 거리)·가림 기준점·이동 잠금이 되돌아왔나,
 #                        한 번 누름에 두 줄을 넘지 않나, 닫힌 뒤 E가 곧바로 대화를 다시 열지 않나. 1인칭(--view=first)이면 대화 구도를 쓰지 않나.
@@ -76,6 +77,20 @@ func run(spec: String) -> void:
 	print("TALKSHOT case=%s actor=%s talk_cam=%s override=%s cur=%.1f/%.0f/%.0f yaw=%.1f frame=%s" % [d.case_id, id, d.talk_cam, main.rig.override,
 		main.rig.cur.distance, main.rig.cur.pitch, main.rig.cur.fov, rad_to_deg(main.rig.yaw), d.last_frame])
 	main._save(dir.path_join(nm + ".png"))
+	if main.args.has("talkpress"):   # --talkpress=N: E를 N번(0.4초 간격) 눌러 다음 줄·선택지 화면도 찍는다
+		for i in int(main.args.talkpress):
+			if d.ui._choice.visible: break   # 선택지가 뜨면 거기서 찍는다
+			_press_e(); await main._wait_frames(40)
+		await main._wait_frames(30)
+		main._save(dir.path_join(nm + "_p%d.png" % int(main.args.talkpress)))
+	if main.args.has("talklong"):   # --talklong: 대화를 끝낸 뒤 긴 글(4줄 넘게) 상자가 위로 자라는지 한 장
+		await _finish_talk(9999)
+		d.ui.auto = false
+		d.ui.say("시험", ["(긴 글 상자 시험 — 놀이 대사가 아니다) 고개를 넘는 길은 해가 지면 어두워 발밑이 잘 보이지 않습니다. 장터에서 등불을 하나 사 두시고, 역참에서 말을 빌리면 반나절이면 닿습니다. 길목마다 깃발이 서 있으니 그 앞에서 쉬어 가셔도 됩니다. 이 글은 상자가 네 줄 넘게 자랄 때 위로 커지는지 보려는 것입니다."])
+		await main._wait_frames(240)
+		main._save(dir.path_join(nm + "_long.png"))
+		_press_e(); await main._wait_frames(4); _press_e()
+		await main._wait_frames(20)
 	if main.args.has("talkback"):
 		await _finish_talk(9999)
 		await main._wait_frames(45)
