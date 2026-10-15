@@ -76,18 +76,21 @@ func run(spec: String) -> void:
 		await main._wait_frames(120)
 	print("TALKSHOT case=%s actor=%s talk_cam=%s override=%s cur=%.1f/%.0f/%.0f yaw=%.1f frame=%s" % [d.case_id, id, d.talk_cam, main.rig.override,
 		main.rig.cur.distance, main.rig.cur.pitch, main.rig.cur.fov, rad_to_deg(main.rig.yaw), d.last_frame])
+	_log_dlg("first")
 	main._save(dir.path_join(nm + ".png"))
 	if main.args.has("talkpress"):   # --talkpress=N: E를 N번(0.4초 간격) 눌러 다음 줄·선택지 화면도 찍는다
 		for i in int(main.args.talkpress):
 			if d.ui._choice.visible: break   # 선택지가 뜨면 거기서 찍는다
 			_press_e(); await main._wait_frames(40)
 		await main._wait_frames(30)
+		_log_dlg("press")
 		main._save(dir.path_join(nm + "_p%d.png" % int(main.args.talkpress)))
 	if main.args.has("talklong"):   # --talklong: 대화를 끝낸 뒤 긴 글(4줄 넘게) 상자가 위로 자라는지 한 장
 		await _finish_talk(9999)
 		d.ui.auto = false
 		d.ui.say("시험", ["(긴 글 상자 시험 — 놀이 대사가 아니다) 고개를 넘는 길은 해가 지면 어두워 발밑이 잘 보이지 않습니다. 장터에서 등불을 하나 사 두시고, 역참에서 말을 빌리면 반나절이면 닿습니다. 길목마다 깃발이 서 있으니 그 앞에서 쉬어 가셔도 됩니다. 이 글은 상자가 네 줄 넘게 자랄 때 위로 커지는지 보려는 것입니다."])
 		await main._wait_frames(240)
+		_log_dlg("long")
 		main._save(dir.path_join(nm + "_long.png"))
 		_press_e(); await main._wait_frames(4); _press_e()
 		await main._wait_frames(20)
@@ -98,6 +101,18 @@ func run(spec: String) -> void:
 			main.rig.override, main.rig.focus, main.occ_script, d.talking, main.rig.cur.distance, main.rig.cur.pitch])
 		main._save(dir.path_join(nm + "_back.png"))
 	main._quit()
+
+# 대화 상자·선택지 자리(창 픽셀과 화면 비율) — 해상도 확인용
+func _log_dlg(tag: String) -> void:
+	var ui = main.story.ui
+	var win := Vector2(main.get_window().size)
+	var vs: Vector2 = ui.get_viewport().get_visible_rect().size
+	var sc := win.y / vs.y
+	var r: Rect2 = ui._dialog.get_global_rect() if ui._dialog.visible else Rect2()
+	var c: Rect2 = ui._choice.get_global_rect() if ui._choice.visible else Rect2()
+	print("TALKUI %s win=%dx%d view=%dx%d dlg=y%.0f-%.0f h=%.0f(%.1f%%) x=%.1f-%.1f%% choice=y%.0f-%.0f overlap=%s body_px=%.0f" % [tag, win.x, win.y, vs.x, vs.y,
+		r.position.y * sc, r.end.y * sc, r.size.y * sc, r.size.y / vs.y * 100.0, r.position.x / vs.x * 100.0, r.end.x / vs.x * 100.0,
+		c.position.y * sc, c.end.y * sc, r.intersects(c) and r.size.y > 0 and c.size.y > 0, float(ui._dlg_text.get_theme_font_size("font_size")) * sc])
 
 func _from() -> Vector2:
 	var p := String(main.args.get("talkfrom", "-0.6,1.7")).split(",")

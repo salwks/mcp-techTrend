@@ -285,6 +285,8 @@ func _build() -> void:
 	_dlg_name = _label(UiFonts.NAME, SEAL, false, true)
 	_dlg_text = _label(UiFonts.BODY, INK)
 	_dlg_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# 글자 찍기 동안에도 줄바꿈·높이는 온 글 기준(기본 BEFORE_SHAPING이면 찍히는 대로 낱말이 다음 줄로 뛰고 상자가 자란다)
+	_dlg_text.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
 	_dlg_text.add_theme_constant_override("line_spacing", 4)
 	_dlg_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_dlg_hint = _label(1, INK_SOFT); _dlg_hint.visible = false   # 예전 이름(다른 곳이 읽을 수 있게) — 나무에 달아 두어야 끝낼 때 함께 풀린다(글꼴 누수)
@@ -483,6 +485,7 @@ func _input(ev: InputEvent) -> void:
 func _process(dt: float) -> void:
 	if _cooldown > 0.0: _cooldown -= dt
 	_dlg_fade_step(dt)
+	if _dialog.visible: _keep_dialog_bottom()
 	if _typing:
 		_type_t += dt
 		var n := int(_type_t * 45.0)
@@ -514,6 +517,12 @@ func _place_dialog() -> void:
 	var h := maxf(_dialog.get_combined_minimum_size().y, DLG_H * k)
 	_dialog.size = Vector2(w, h)
 	_dialog.position = Vector2((vs.x - w) / 2, vs.y - DLG_BOTTOM * k - h)
+
+# 줄바꿈이 늦게 정해져 상자가 아래로 자라면(긴 글) 아랫변을 제자리로 — 긴 글은 위로 자란다
+func _keep_dialog_bottom() -> void:
+	var want := get_viewport().get_visible_rect().size.y - DLG_BOTTOM * _k
+	var bottom := _dialog.position.y + _dialog.size.y
+	if absf(bottom - want) > 0.5: _dialog.position.y = want - _dialog.size.y
 
 func _dlg_fade_step(dt: float) -> void:
 	var a := _dialog.modulate.a
