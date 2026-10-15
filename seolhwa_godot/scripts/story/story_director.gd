@@ -77,6 +77,8 @@ const TalkFrame := preload("res://scripts/story/talk_frame.gd")
 const TALK_IN := 0.55          # 대화 구도로 옮기는 시간(대화 카메라 v1.1 §4 CAM_TALK_2)
 const TALK_OUT := 0.45         # 대화 끝 평소 시점으로 돌아오는 시간
 const NPC_TURN_DELAY := 0.2    # 상대가 플레이어 쪽으로 도는 늦춤(§5)
+var hush_hints := false        # 걸으며 보는 제목(main_p1 OP01) 동안 안내 줄을 감춘다 — 이동은 막지 않는다
+var doc_hook: Callable = Callable()   # 시험: 문서 비교 화면이 열리면 부른다(documents.gd — test.doc_exam이 없을 때)
 var talking := false           # 말 걸기 접근(한 걸음·구도)부터 대화 끝까지 — 그동안 E·이동을 받지 않는다(중복 E 막기)
 var _step_face := ""          # 한 걸음이 정한 플레이어 그림 쪽(대본이 바꿨는지 보려고)
 var _stepping := false         # 플레이어 한 걸음(걷기 그림을 idle로 되돌리지 않게)
@@ -173,13 +175,15 @@ func _setup() -> void:
 	add_child(onboard)
 	ambient = load("res://scripts/story/ambient_talk.gd").new(self)
 	keeper = load("res://scripts/region/station_keeper.gd").new(self)
-	add_child(load("res://scripts/story/save_keeper.gd").new(self))   # 저장이 보이게: 자동 기록 도장·주막 쉬기·저장 칸(Esc)
+	add_child(load("res://scripts/story/save_keeper.gd").new(self))
+	add_child(load("res://scripts/ui/waypoint_hud.gd").new(self))   # 지도 목적지 방위 줄(재기획 3단계 최소판)   # 저장이 보이게: 자동 기록 도장·주막 쉬기·저장 칸(Esc)
 	_props_root = Node3D.new(); _props_root.name = "story_props"
 	main.scene_vp.add_child(_props_root)
 	# 이 공간에 올린 사건들(파일이 있는 것만). 대본 시험은 이름 앞부분(namwon:A → namwon)이 이 공간 사건이면 그것만 본다
 	var cands: Array = CaseRegistry.cases_for(space_id)
 	var prefer := String(args.get("storytest", "")).get_slice(":", 0)
 	if cands.has(prefer): cands = [prefer]
+	elif args.has("case") and cands.has(String(args.case)): cands = [String(args.case)]   # 시험·촬영: 이 공간에서 이 사건만(재기획 3단계 — 새 게임 기본이 메인 서장이 된 뒤 오누이 기준 시험)
 	if cands.is_empty():
 		_maybe_title()
 		return   # 소문만(노정·다른 권역)
@@ -203,25 +207,38 @@ func _setup() -> void:
 		data = {}; events = {}
 		_maybe_title()
 		return
-	var cscript = load(CaseRegistry.case_path(case_id))
-	if cscript == null or not cscript.can_instantiate():   # 사건 스크립트 해석 오류 — 게임은 소문만으로 이어 간다
-		printerr("STORY case=%s 사건 스크립트를 불러오지 못함 — 소문만" % case_id)
-		case_id = ""; data = {}; events = {}
-		_maybe_title()
-		return
-	data = pick.data
-	_filter_space()
-	events = data.get("events", {})
-	S = StoryState.new(case_id)
-	runner = StoryRunner.new(self, S)
-	case_fn = cscript.new(self)
-	runner.case_fn = case_fn
 	combat_view = CombatView.new()
 	combat_view.name = "combat"
 	main.scene_vp.add_child(combat_view)
 	combat_view.setup(self)
 	SpriteChar.merge_bank("frames_story_skills.json", ["player"])   # v2.2 숙련 동작(shove·quick_throw, 작다) — 없으면 그냥 지나간다
 	var fresh: bool = (args.has("newgame") or args.has("storytest")) and not arrived
+	if not _setup_case(case_id, pick.data, fresh):
+		_maybe_title()
+		return
+	printerr("STORY pick case=%s rule=%d" % [case_id, int(pick.get("rule", 0))])
+	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest") or args.has("preptest") or args.has("prepshot") or args.has("p2preptest") or args.has("p2prepshot"))
+	if args.has("storytest"):
+		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
+		add_child(test)
+	_maybe_title()
+	printerr("STORY ready case=%s phase=%s actors=%d props=%d events=%d" % [case_id, S.phase, actors.size(), data.get("props", []).size(), events.size()])
+
+# 사건 하나를 세운다(처음 · switch_case). fresh: 새로 시작(그 사건 저장을 비움) · 아니면 저장에서 읽는다. 스크립트를 못 읽으면 false(소문만)
+func _setup_case(id: String, dd: Dictionary, fresh: bool) -> bool:
+	var cscript = load(CaseRegistry.case_path(id))
+	if cscript == null or not cscript.can_instantiate():   # 사건 스크립트 해석 오류 — 게임은 소문만으로 이어 간다
+		printerr("STORY case=%s 사건 스크립트를 불러오지 못함 — 소문만" % id)
+		case_id = ""; data = {}; events = {}
+		return false
+	case_id = id
+	data = dd
+	_filter_space()
+	events = data.get("events", {})
+	S = StoryState.new(case_id)
+	runner = StoryRunner.new(self, S)
+	case_fn = cscript.new(self)
+	runner.case_fn = case_fn
 	if fresh: S.clear_saved(data.get("case", {}).get("reset_vars", null))
 	elif S.load_saved():
 		printerr("STORY loaded case=%s phase=%s flags=%d clues=%d" % [case_id, S.phase, S.flags.size(), S.clues.size()])
@@ -232,12 +249,79 @@ func _setup() -> void:
 	sensing = load("res://scripts/story/sensing.gd").new()
 	add_child(sensing)
 	sensing.setup(self)
-	passive = not args.has("storytest") and (args.has("bench") or args.has("tour") or args.has("shot") or args.has("portaltest") or args.has("walkroute") or args.has("talktest") or args.has("preptest") or args.has("prepshot") or args.has("p2preptest") or args.has("p2prepshot"))
-	if args.has("storytest"):
-		test = load(test_path if FileAccess.file_exists(test_path) else "res://scripts/story/story_test.gd").new(self, String(args.storytest))
-		add_child(test)
-	_maybe_title()
-	printerr("STORY ready case=%s phase=%s actors=%d props=%d events=%d" % [case_id, S.phase, actors.size(), data.get("props", []).size(), events.size()])
+	_dirty = true
+	return true
+
+# 지금 사건을 내린다(저장한 뒤 인물·소품·잔영·감응·비우기 구역을 거둔다). 전투·대화 도중에는 부르지 않는다(switch_case가 막는다)
+func _teardown_case() -> void:
+	if S != null and test == null: S.save()
+	elif S != null and main.args.has("storysave"): S.save()
+	if runner != null: runner.gen += 1; runner.busy_count = 0
+	for id in actors.keys():
+		var a: Dictionary = actors[id]
+		if a.ch != null and is_instance_valid(a.ch): a.ch.queue_free()
+	actors.clear()
+	for id in props.keys():
+		var rec: Dictionary = props[id]
+		if rec.node != null and is_instance_valid(rec.node): rec.node.queue_free()
+		if rec.get("decals", []) is Array and not (rec.decals as Array).is_empty(): _decal_prop(rec, false, Vector2.ZERO)
+	props.clear()
+	for zid in _excl_on.keys(): ambient_release(zid)
+	if spirits != null and is_instance_valid(spirits): spirits.queue_free()
+	if sensing != null and is_instance_valid(sensing): sensing.queue_free()
+	spirits = null; sensing = null
+	camera(null)
+	cutscene(false)
+	_talk_occ_end()
+	talking = false
+	_target = null
+	ui.prompt("")
+	_music_cur = "?"
+	_rumor_seen = {}
+
+# 같은 공간에서 도는 사건을 바꾼다(장면을 다시 열지 않는다 — 재기획 3단계):
+#   새 게임(title_menu) · 메인 서장 → 오누이 들머리(행상) · 오누이 끝 → 메인 합류(yield_when_done) · 시험의 저장 재개.
+#   opts: fresh(그 사건을 새로 — 저장을 비움) · event(세운 뒤 곧바로 돌릴 장면 id) · reload(같은 사건이어도 저장에서 다시 읽기)
+#   대화·전투·컷 도중이면 하지 않고 false.
+signal case_switched(id: String)
+func switch_case(id: String, opts := {}) -> bool:
+	if combat_view != null and combat_view.active: return false
+	if id == case_id and not bool(opts.get("reload", false)) and not bool(opts.get("fresh", false)): return false
+	var dd := CaseRegistry.load_data(id)
+	if dd.is_empty(): return false
+	var from := case_id
+	_teardown_case()
+	if not _setup_case(id, dd, bool(opts.get("fresh", false))): return false
+	_started = false   # 다음 프레임 update()가 _apply_world → 첫 장면(start_event)·이어 하기 판정
+	_keep_hour = not bool(opts.get("fresh", false))
+	_switch_event = String(opts.get("event", ""))
+	_yield_t = 0.0
+	if main.get("placement") != null: main.placement.gate.mark()
+	printerr("STORY switch %s → %s phase=%s fresh=%s event=%s" % [from, id, S.phase, bool(opts.get("fresh", false)), _switch_event])
+	case_switched.emit(id)
+	return true
+var _switch_event := ""
+var _keep_hour := false
+var _yield_t := 0.0
+var _test_begun := false
+
+# 끝난 독립 사건이 메인에 자리를 내준다(case.yield_when_done — 오누이): 끝(phase done)이고 한가한 채 YIELD_SEC 지나면 다시 고른다(추가 지시 2)
+const YIELD_SEC := 4.0
+func _update_yield(dt: float) -> void:
+	if S == null or S.phase != "done" or not bool(data.get("case", {}).get("yield_when_done", false)): _yield_t = 0.0; return
+	if runner.busy or talking or ui.modal or ui.journal_open or _cut or (combat_view != null and combat_view.active) or test != null: _yield_t = 0.0; return
+	_yield_t += dt
+	if _yield_t < YIELD_SEC: return
+	_yield_t = 0.0
+	S.save()
+	if rechoose(): printerr("STORY yield %s 끝 — 메인으로 합류" % "done")
+
+# 이 공간의 사건을 다시 고른다(case_registry.choose) — 다른 사건이 나오면 바꾼다
+func rechoose() -> bool:
+	var pick: Dictionary = CaseRegistry.choose(CaseRegistry.cases_for(space_id))
+	var nid := String(pick.id)
+	if nid == "" or nid == case_id: return false
+	return switch_case(nid)
 
 # 여러 공간에 걸친 사건: 항목에 "space"(공간 id 하나 또는 배열)가 있으면 그 공간에서만 쓴다
 func _filter_space() -> void:
@@ -283,14 +367,21 @@ func update(dt: float) -> void:
 		_apply_world()
 		var cs: Dictionary = data.get("case", {})
 		var arrive_ok: bool = main._pending.is_empty() or bool(cs.get("start_on_arrival", false)) or bool(main._pending.get("newgame", false))
-		if S.phase == "start" and arrive_ok and not passive:
+		if _switch_event != "":   # switch_case가 정한 첫 장면(오누이 북쪽 들머리 N0000 등) — 시작 장면 대신
+			var ev := _switch_event
+			_switch_event = ""
+			runner.run([{ "event": ev }])
+		elif S.phase == "start" and arrive_ok and not passive:
 			var se = cs.get("start_event", "S0001")
 			if se is Dictionary: se = se.get(space_id, "")   # 공간마다 다른 첫 장면("" = 그 공간에서는 시작하지 않음)
 			if String(se) == "": S.phase = "start"
-			elif test == null: runner.run([{ "event": String(se) }])
+			elif test == null or test.get("run_start_event") == true: runner.run([{ "event": String(se) }])
 		elif S.phase == "start":
 			S.phase = "explore"
-		if test != null: test.begin()
+		if test != null and test.has_method("begin") and not _test_begun:
+			_test_begun = true
+			test.begin()
+	_update_yield(dt)
 	if blocks_move() and not drives_player() and not _stepping and main.player.anim in ["walk", "run"]: main.player.set_anim("idle")
 	_update_actors(dt)
 	if _dirty: _refresh()
@@ -358,6 +449,12 @@ func _fp_face_target(t) -> void:
 	if t == null or not bool(main.get("fp_active")): return
 	var p: Vector2 = t.p
 	main.fp_look_at(Vector3(p.x, world.height_at(p.x, p.y) + 1.45, p.y))
+
+# 지도에서 목적지를 정했다(region_map.waypoint_pinned) — 안내(WAYPOINT)를 끝내고 사건에 알린다. 세계 방위 줄은 waypoint_hud가 저장을 읽는다
+func on_waypoint(w: Dictionary) -> void:
+	if runner != null: runner.log_line("waypoint", w)
+	if onboard != null: onboard.on_waypoint_set(w)
+	if case_fn != null and case_fn.has_method("on_waypoint"): case_fn.on_waypoint(w)
 
 func journal_data() -> Dictionary:
 	return load("res://scripts/story/journal_book.gd").build(self)
@@ -735,6 +832,7 @@ func fp_head(at) -> Vector3:
 
 # 대사 하나가 뜰 때(story_runner say): 1인칭이면 말하는 이야기 인물(이름 또는 id, 14m 안 가장 가까운)을 바라본다 — 나그네(플레이어) 대사는 그대로
 func on_say(speaker: String) -> void:
+	if onboard != null: onboard.on_line()   # 대화 안내(TALK)는 첫 줄이 보일 때 끝난다
 	if not bool(main.get("fp_active")) or speaker == "": return
 	var pp := Vector2(main.player_pos.x, main.player_pos.z)
 	var best := ""; var bd := 14.0
@@ -948,7 +1046,12 @@ func _decal_prop(rec: Dictionary, want: bool, at: Vector2) -> void:
 		rec.decals = dc.trail("story_" + String(p.id), String(tr.kind), pts, opts)
 
 func _apply_world() -> void:
-	set_hour(S.time if S.phase != "start" else float(data.get("case", {}).get("start_hour", 10.0)))
+	if _keep_hour:   # 같은 공간에서 사건만 바꿨다(switch_case) — 세상 시각은 그대로 이어 간다(저장된 그 사건의 옛 시각으로 되돌리지 않는다)
+		_keep_hour = false
+		S.time = main.hour
+		set_hour(main.hour)
+	else:
+		set_hour(S.time if S.phase != "start" else float(data.get("case", {}).get("start_hour", 10.0)))
 	if case_fn.has_method("on_load"): case_fn.on_load()
 	if S.phase == "done": _case_complete()   # 이 체계 전에 끝낸 저장도 해금(조용히)
 	_dirty = true

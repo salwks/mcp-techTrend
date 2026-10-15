@@ -1,5 +1,6 @@
 # 시작 메뉴 — 새 게임 / 이어 하기(--newgame 없이 시험할 수 있게). story_director가 그냥 실행했을 때만 띄운다.
-#   새 게임: 저장(user://progress.json)을 비우고 남원 S0001부터. 남원에 있으면 그 자리에서, 아니면 남원으로 넘어간다.
+#   새 게임: 저장(user://progress.json)을 비우고 남원 사건을 다시 고른다 — 메인 서장 「이겸의 수상한 편지」(main_p1 OP00, 재기획 3단계 D1).
+#     남원에 있으면 그 자리에서 사건만 바꾸고(story_director.switch_case — 장면을 다시 열지 않는다), 아니면 남원으로 넘어간다.
 #   이어 하기: 가장 새 기록(자동 기록 · 칸 1~3 가운데 남긴 때가 늦은 것 — progress.latest_slot)을 지금 진행으로 놓고 그 자리(progress.where)로.
 #     다른 공간이면 그 공간으로 넘어간다(Travel 예약 + resume_at). 버튼 아래 그 기록의 고을 · 사건 · 시각을 작게 보인다.
 #   불러오기: 칸을 골라(scripts/story/save_menu.gd) 그 기록으로.
@@ -17,6 +18,7 @@ const Progress := preload("res://scripts/region/progress.gd")
 const Travel := preload("res://scripts/region/travel.gd")
 const UiFonts := preload("res://scripts/ui_fonts.gd")
 const SaveKeeper := preload("res://scripts/story/save_keeper.gd")
+const CaseRegistry := preload("res://scripts/story/case_registry.gd")
 const TitleWallpaper := preload("res://scripts/ui/title_wallpaper.gd")
 const PAPER := Color("#efe6d2")
 const INK := Color("#2b2622")
@@ -40,6 +42,7 @@ var _fx: Control
 var _sub: Label = null
 var _keys: Label
 var _layout := LAYOUT_DEFAULT
+static var new_game_t0 := 0   # 새 게임을 고른 때(ms) — D7 재기
 
 func _init(director) -> void:
 	d = director
@@ -269,17 +272,22 @@ func _pick(i: int) -> void:
 func _close() -> void:
 	active = false
 	var tw := create_tween()
-	tw.tween_property(_root, "modulate:a", 0.0, 0.4)
+	tw.tween_property(_root, "modulate:a", 0.0, 0.6)   # 재기획 OP-00 '새 게임 선택 후 0.6초 페이드아웃'
 	tw.tween_callback(queue_free)
 
 func _new_game() -> void:
 	Progress.reset_all()
+	new_game_t0 = Time.get_ticks_msec()   # D7(새 게임 → 조작 반환 12초) 재기: 메인 서장(main_p1)이 조작을 돌려줄 때 이 값과 비교한다
 	var w = d.main.world
 	if w.get("props") != null and w.props.has_method("reset_all"): w.props.reset_all()
 	if d.space_id == NAMWON and d.S != null:
-		d.S.reset()
-		d.on_phase()
-		d._started = false   # 다음 프레임에 S0001(여는 화면)
+		# 재기획 3단계(D1): 새 게임은 이 공간 사건을 다시 고른다(빈 저장 → 메인 서장 main_p1). 장면은 다시 열지 않는다
+		var pick: Dictionary = CaseRegistry.choose(CaseRegistry.cases_for(d.space_id))
+		if String(pick.id) != "" and String(pick.id) != d.case_id: d.switch_case(String(pick.id), { fresh = true })
+		else:
+			d.S.reset()
+			d.on_phase()
+			d._started = false   # 다음 프레임에 첫 장면(여는 화면)
 		_close()
 		return
 	_go(NAMWON, "region", NAMWON_START, { newgame = true, hour = 9.5, title = "남원" })

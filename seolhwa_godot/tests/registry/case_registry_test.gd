@@ -4,7 +4,7 @@
 #   B 사건마다 따로 저장 키(cases.<id>), 저장 version 2 그대로
 #   C 한 사건의 완료·깃발·지우기가 다른 사건 상태를 덮지 않는다(완료 변수 CASE_<ID>_COMPLETE, 지도 표지·기록책도 사건별)
 #   D 없는 사건 id는 건너뛰고 멈추지 않는다
-#   E 기존 단일 사건은 예전 CASES와 같고, 남원은 새로 시작·이른 저장 이어 하기가 그대로
+#   E 기존 단일 사건은 예전 CASES와 같고(남원은 앞에 메인 서장 main_p1 — 재기획 3단계 D1), 새 게임은 메인 서장 · 이른 오누이 저장 이어 하기는 그대로
 #   끝 줄: REGTEST PASS n / REGTEST FAIL n
 extends SceneTree
 
@@ -24,9 +24,11 @@ const OLD_CASES := { "JL_NAMWON_UNBONG": "namwon", "GG_HANYANG": "hanyang", "GW_
 	"HH_HWANGJU": "hwangju", "HH_HWANGJU-JANGSANGOT": "hwangju", "GS_GYEONGJU": "gyeongju", "PA_PYEONGYANG": "pyongyang",
 	"PA_PYEONGYANG-HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG": "hamhung", "HG_HAMHEUNG-BUKCHEONG": "hamhung",
 	"SEA_NAMHAE_JEJU": "jeju", "JJ_JEJU": "jeju" }
-const OLD_MAP_IDS := ["namwon", "namwon_chunhyang", "hanyang", "gangneung", "gyeongju", "hwangju", "pyongyang", "hamhung", "jeju"]
+const OLD_MAP_IDS := ["main_p1", "namwon", "namwon_chunhyang", "hanyang", "gangneung", "gyeongju", "hwangju", "pyongyang", "hamhung", "jeju"]   # 재기획 3단계: 메인 서장 main_p1이 맨 앞
 # 그 뒤 같은 공간에 더한 사건(춘향 PART I — 2026-10-11): 예전 사건 다음 차례
 const ADDED := { "JL_NAMWON_UNBONG": ["namwon_chunhyang"] }
+# 재기획 3단계(D1): 남원 공간 맨 앞에 메인 서장(main_p1) — 새 게임은 이것, 오누이는 들머리 트리거 사건
+const PREPENDED := { "JL_NAMWON_UNBONG": ["main_p1"] }
 
 var n := 0
 var fails := 0
@@ -67,8 +69,8 @@ func _test_e_registry() -> void:
 	print("E 기존 공간 → 사건(등록부 = 예전 CASES)")
 	var same := true
 	for sp in OLD_CASES:
-		if CaseRegistry.cases_for(sp) != [OLD_CASES[sp]] + ADDED.get(sp, []): same = false; print("    다름 ", sp, " ", CaseRegistry.cases_for(sp))
-	ok(same, "공간마다 기존 사건 하나 + 더한 사건(남원 춘향)(%d 공간)" % OLD_CASES.size())
+		if CaseRegistry.cases_for(sp) != PREPENDED.get(sp, []) + [OLD_CASES[sp]] + ADDED.get(sp, []): same = false; print("    다름 ", sp, " ", CaseRegistry.cases_for(sp))
+	ok(same, "공간마다 기존 사건 하나 + 더한 사건(남원: 앞에 메인 서장 · 뒤에 춘향)(%d 공간)" % OLD_CASES.size())
 	ok(CaseRegistry.SPACE_CASES.size() == OLD_CASES.size(), "등록부에 다른 공간이 더 없다")
 	ok(CaseRegistry.all_ids() == OLD_MAP_IDS, "사건 목록·차례가 예전 지도 표지 목록과 같다 %s" % [CaseRegistry.all_ids()])
 	ok(CaseRegistry.cases_for("GG_HANYANG-JL_NAMWON_UNBONG").is_empty(), "사건 없는 공간(노정)은 빈 목록")
@@ -77,20 +79,20 @@ func _test_e_registry() -> void:
 func _test_a() -> void:
 	print("A 한 공간에 사건 여러 개")
 	CaseRegistry.register(NW, DUMMY, DUMMY_DIR)
-	ok(CaseRegistry.ids_for(NW) == ["namwon", "namwon_chunhyang", DUMMY], "JL_NAMWON_UNBONG 등록 = [namwon, namwon_chunhyang, reg_dummy]")
-	ok(CaseRegistry.cases_for(NW) == ["namwon", "namwon_chunhyang", DUMMY], "셋 다 파일이 있어 돌릴 수 있다")
+	ok(CaseRegistry.ids_for(NW) == ["main_p1", "namwon", "namwon_chunhyang", DUMMY], "JL_NAMWON_UNBONG 등록 = [main_p1, namwon, namwon_chunhyang, reg_dummy]")
+	ok(CaseRegistry.cases_for(NW) == ["main_p1", "namwon", "namwon_chunhyang", DUMMY], "넷 다 파일이 있어 돌릴 수 있다")
 	CaseRegistry.register(NW, DUMMY, DUMMY_DIR)
-	ok(CaseRegistry.ids_for(NW).size() == 3, "같은 id를 두 번 올려도 하나")
-	ok(CaseRegistry.SPACE_CASES[NW] == ["namwon", "namwon_chunhyang"], "놀이 등록(SPACE_CASES)에는 가짜 사건이 없다")
+	ok(CaseRegistry.ids_for(NW).size() == 4, "같은 id를 두 번 올려도 하나")
+	ok(CaseRegistry.SPACE_CASES[NW] == ["main_p1", "namwon", "namwon_chunhyang"], "놀이 등록(SPACE_CASES)에는 가짜 사건이 없다")
 	ok(CaseRegistry.load_data(DUMMY).get("case", {}).get("id", "") == DUMMY, "시험 폴더의 사건 데이터를 읽는다")
-	ok(CaseRegistry.all_ids().has(DUMMY) and CaseRegistry.all_ids()[0] == "namwon", "전체 목록에 더해지고 남원이 먼저")
+	ok(CaseRegistry.all_ids().has(DUMMY) and CaseRegistry.all_ids()[0] == "main_p1", "전체 목록에 더해지고 메인 서장이 먼저")
 
 # B·C: 사건마다 따로 저장, 서로 덮지 않음
 func _test_b_c() -> void:
 	print("B 사건마다 따로 저장 키 / C 서로 덮지 않음")
 	_fresh()
 	# 고르기: 남원이 안 끝났으면 남원(가짜 사건은 CASE_NAMWON_COMPLETE를 요구)
-	ok(String(CaseRegistry.choose(CaseRegistry.cases_for(NW)).id) == "namwon", "새 저장 → 남원이 선다")
+	ok(String(CaseRegistry.choose(CaseRegistry.cases_for(NW)).id) == "main_p1", "새 저장 → 메인 서장이 선다(오누이는 들머리 트리거 — 스스로 서지 않음)")
 	# 남원 진행 → 저장
 	var s1 = StoryState.new("namwon")
 	s1.phase = "explore"; s1.flags["case_started"] = true; s1.flags["nw_only"] = true; s1.clues.append("CLUE_NW")
@@ -123,7 +125,7 @@ func _test_b_c() -> void:
 	ok(bool(p.vars.get("CASE_NAMWON_COMPLETE", false)) and bool(p.vars.get(cv, false)), "두 완료 변수가 같이 남는다")
 	ok(String(p.vars.get("CASE_NAMWON_OUTCOME", "")) == "A" and String(p.vars.get("CASE_REG_DUMMY_OUTCOME", "")) == "B", "결말 변수도 사건마다")
 	# 둘 다 끝났으면 첫 사건(남원)을 연다 — 예전처럼 끝난 남원에 들어선다
-	ok(String(CaseRegistry.choose(CaseRegistry.cases_for(NW)).id) == "namwon", "둘 다 끝 → 남원(첫 사건)")
+	ok(String(CaseRegistry.choose(CaseRegistry.cases_for(NW)).id) == "main_p1", "둘 다 끝 → 메인 서장(아직 안 끝난 메인 — ④)")
 	# 지도 표지: 사건마다 따로 — 남원 표지가 줄거나 덮이지 않는다
 	MapLeads._cases = null
 	var by_case := {}
@@ -179,7 +181,7 @@ func _test_e_namwon() -> void:
 	MapLeads._cases = null
 	_fresh()
 	var r := CaseRegistry.choose(CaseRegistry.cases_for(NW))
-	ok(String(r.id) == "namwon" and String(r.data.get("case", {}).get("id", "")) == "namwon", "새 게임 → 남원, 남원 데이터")
+	ok(String(r.id) == "main_p1" and String(r.data.get("case", {}).get("id", "")) == "main_p1", "새 게임 → 메인 서장, 메인 데이터(재기획 D1)")
 	var s = StoryState.new("namwon")
 	ok(not s.load_saved() and s.phase == "start", "새 게임 남원 상태 start")
 	# 이른 옛 저장(continue:namwon-early와 같은 것)
