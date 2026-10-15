@@ -70,8 +70,23 @@ func talk(key: int) -> void:
 	npc.hold(key, d.main.player_pos)
 	d.ui.prompt("")
 	d._target = null
-	# 겹치면 한 걸음 비켜 서고 두 사람 둘레 가림을 비운다(카메라는 그대로 — D5·C27, scripts/story/talk_frame.gd)
-	var fr: Dictionary = await d.talk_plain_begin(inf.p, 2.0)
+	# 판대 뒤 장꾼(mode stall): 플레이어 한 걸음으로 겹침을 못 풀면 장꾼이 먼저 한 걸음 비켜 선다(재기획 3단계 — 2단계 남은 문제 2, 사용자 결정 (2))
+	var np: Vector2 = inf.p
+	if String(inf.mode) == "stall" and not bool(d.main.get("fp_active")):
+		var aside = stall_aside(inf.p)
+		if aside != null:
+			npc.step_aside(key, aside, 0.4)
+			np = aside
+			stall_steps += 1
+			if log_lines: printerr("AMBTALK stall_aside key=%d (%.1f,%.1f)→(%.1f,%.1f)" % [key, inf.p.x, inf.p.y, np.x, np.y])
+			await d.wait(0.42)
+			if not (is_instance_valid(npc) and npc.agents.has(key)):
+				busy = false; return
+			inf = npc.info(key)
+			np = inf.p
+	# 겹치면 한 걸음 비켜 서고 두 사람 둘레 가림을 비운다(카메라는 평소 그대로가 먼저 — D5·C27, scripts/story/talk_frame.gd)
+	#   그래도 겹치면 마지막으로 카메라 옆 돌기(사용자 결정 (3) — C27 승인된 예외)
+	var fr: Dictionary = await d.talk_plain_begin(np, 2.0)
 	if is_instance_valid(npc) and npc.agents.has(key):   # 옮긴 자리를 다시 본다(카메라가 돌았으면 그 yaw 기준 그림 쪽으로)
 		npc.hold(key, d.main.player_pos, d.face_toward_player(inf.p) if bool(fr.get("turned", false)) else "")
 	if d.onboard != null: d.onboard.on_interact("actor")
@@ -85,6 +100,7 @@ func talk(key: int) -> void:
 	var lines: Array = r.lines
 	if lines.size() == 1 and String(lines[0]).length() <= 16 and r.src != "rumor":
 		d.ui.caption("%s  “%s”" % [speaker, lines[0]], 2.4)   # 아주 짧은 말은 자막으로(조작을 막지 않는다)
+		if d.onboard != null: d.onboard.on_line()
 		d.talk_plain_end()
 		busy = false
 		await d.wait(2.2)
@@ -93,6 +109,27 @@ func talk(key: int) -> void:
 		d.talk_plain_end()
 		busy = false
 	if is_instance_valid(npc) and (gen == _gen or int(last.get("key", -1)) != key): npc.unhold(key)   # 그사이 같은 사람과 또 말하면 그쪽이 놓는다
+
+var stall_steps := 0   # 시험 기록: 장꾼이 비켜 선 횟수
+
+# 장꾼이 비켜 설 자리 — 지금 자리에서 플레이어 한 걸음만으로 겹침 없는 구도가 나오면 null(비키지 않는다).
+#   아니면 플레이어와 장꾼을 잇는 선의 옆(0.8·1.1m)과 비스듬히 앞(0.6m) 가운데 걸어 설 수 있고 겹침이 없는 첫 자리
+func stall_aside(n: Vector2) -> Variant:
+	var TF = load("res://scripts/story/talk_frame.gd")
+	var tf = TF.new(d)
+	var w = d.main.world
+	var plan0: Dictionary = tf.plan(Vector3(n.x, w.height_at(n.x, n.y), n.y), 2.0, false, {}, false)
+	if float(plan0.get("overlap", 1.0)) <= 0.0: return null
+	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var dir := (pp - n).normalized() if pp.distance_to(n) > 0.05 else Vector2(0, 1)
+	var perp := Vector2(-dir.y, dir.x)
+	for c in [perp * 0.8, -perp * 0.8, perp * 1.1, -perp * 1.1, dir * 0.45 + perp * 0.6, dir * 0.45 - perp * 0.6]:
+		var q: Vector2 = n + c
+		if w.blocked(q.x, q.y, 0.28) or absf(w.height_at(q.x, q.y) - w.height_at(n.x, n.y)) > 0.4: continue
+		if q.distance_to(pp) < 0.8: continue
+		var pl: Dictionary = tf.plan(Vector3(q.x, w.height_at(q.x, q.y), q.y), 2.0, false, {}, false)
+		if float(pl.get("overlap", 1.0)) <= 0.0: return q
+	return null
 
 # 기록책 '사람의 말'(◇ 들음 — 말한 사람). 사실로 올리지 않는다
 func _record(r: Dictionary, speaker: String, inf: Dictionary) -> void:

@@ -802,6 +802,21 @@ func _step_agents(dt: float) -> void:
 		var old := Vector2(ag.pos.x, ag.pos.z)
 		var p := old
 		ag.t -= dt
+		if ag.has("aside_mv"):   # 판대 뒤 장꾼이 한 걸음 비켜 섬 / 제자리로 돌아감(step_aside — 재기획 3단계, 2단계 남은 문제 2)
+			var mv: Dictionary = ag.aside_mv
+			mv.t = float(mv.t) + dt
+			var u := clampf(float(mv.t) / maxf(float(mv.sec), 0.01), 0.0, 1.0)
+			var q: Vector2 = (mv.a as Vector2).lerp(mv.b, smoothstep(0.0, 1.0, u))
+			var dq := q - old
+			if dq.length() > 1e-4: ch.facing = _facing(dq.x, dq.y, ch.facing)
+			_place(ag, q)
+			ch.set_anim("walk" if u < 1.0 else ("talk" if ag.get("hold", false) and ch.has_anim("talk") else String(ag.anim)))
+			if vis: on += 1; ch.update_char(dt, cam)
+			np += 1
+			if u >= 1.0:
+				ag.erase("aside_mv")
+				if bool(mv.get("back", false)): ag.erase("aside_home")
+			continue
 		if ag.get("hold", false):   # 말하는 중: 멈춰 플레이어를 본다
 			var lk: Vector2 = ag.look - old
 			ch.facing = String(ag.hold_face) if ag.has("hold_face") else _facing(lk.x, lk.y, ch.facing)
@@ -941,9 +956,19 @@ func hold(key: int, toward: Vector3, face := "") -> void:
 	else: ag.erase("hold_face")
 	if ag.mode == "walk": ag.state = "idle"
 
+# 말 거는 동안 한 걸음 비켜 서기(판대 뒤 장꾼 — 판대에 가려 두 사람이 겹칠 때). unhold하면 제자리로 돌아간다
+func step_aside(key: int, to: Vector2, sec := 0.4) -> void:
+	var ag = agents.get(key)
+	if ag == null: return
+	var cur := Vector2(ag.pos.x, ag.pos.z)
+	if not ag.has("aside_home"): ag.aside_home = cur
+	ag.aside_mv = { a = cur, b = to, t = 0.0, sec = sec, back = false }
+
 func unhold(key: int) -> void:
 	var ag = agents.get(key)
 	if ag == null: return
+	if ag.has("aside_home"):
+		ag.aside_mv = { a = Vector2(ag.pos.x, ag.pos.z), b = ag.aside_home, t = 0.0, sec = 0.45, back = true }
 	ag.erase("hold"); ag.erase("hold_face")
 	ag.t = 0.8 + _h(key, int(_clock)) * 1.5
 
