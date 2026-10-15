@@ -71,8 +71,9 @@ func talk(key: int) -> void:
 	d.ui.prompt("")
 	d._target = null
 	# 겹치면 한 걸음 비켜 서고 두 사람 둘레 가림을 비운다(카메라는 그대로 — D5·C27, scripts/story/talk_frame.gd)
-	await d.talk_plain_begin(inf.p, 2.0)
-	if is_instance_valid(npc) and npc.agents.has(key): npc.hold(key, d.main.player_pos)   # 옮긴 자리를 다시 본다
+	var fr: Dictionary = await d.talk_plain_begin(inf.p, 2.0)
+	if is_instance_valid(npc) and npc.agents.has(key):   # 옮긴 자리를 다시 본다(카메라가 돌았으면 그 yaw 기준 그림 쪽으로)
+		npc.hold(key, d.main.player_pos, d.face_toward_player(inf.p) if bool(fr.get("turned", false)) else "")
 	if d.onboard != null: d.onboard.on_interact("actor")
 	var r := pick(key, inf)
 	var speaker := speaker_of(inf)

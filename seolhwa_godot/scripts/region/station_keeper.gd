@@ -60,7 +60,9 @@ func talk_keeper(st: Dictionary) -> void:
 	life.hold(st, d.main.player_pos)
 	var gp: Vector3 = life.groom_pos(st)
 	d.ui.prompt(""); d._target = null
-	if gp != Vector3.INF: await d.talk_plain_begin(Vector2(gp.x, gp.z), 2.0)   # 겹치면 한 걸음·가림 비우기(카메라 그대로 — D5)
+	if gp != Vector3.INF:   # 겹치면 한 걸음·가림 비우기(카메라는 그대로가 먼저 — D5), 카메라가 돌았으면 마부 그림 쪽도 그 기준으로
+		var fr: Dictionary = await d.talk_plain_begin(Vector2(gp.x, gp.z), 2.0)
+		if bool(fr.get("turned", false)) and life.live.has(String(st.id)): life.live[String(st.id)].groom.ch.facing = d.face_toward_player(Vector2(gp.x, gp.z))
 	if d.onboard != null: d.onboard.on_interact("actor")
 	print("KEEPER talk %s" % st.id)
 	await d.ui.say("마부", ["어디로 가시오? 지도에서 짚어 주시오."])

@@ -78,8 +78,10 @@ const TALK_IN := 0.55          # 대화 구도로 옮기는 시간(대화 카메
 const TALK_OUT := 0.45         # 대화 끝 평소 시점으로 돌아오는 시간
 const NPC_TURN_DELAY := 0.2    # 상대가 플레이어 쪽으로 도는 늦춤(§5)
 var talking := false           # 말 걸기 접근(한 걸음·구도)부터 대화 끝까지 — 그동안 E·이동을 받지 않는다(중복 E 막기)
+var _step_face := ""          # 한 걸음이 정한 플레이어 그림 쪽(대본이 바꿨는지 보려고)
 var _stepping := false         # 플레이어 한 걸음(걷기 그림을 idle로 되돌리지 않게)
 var _tf = null                 # scripts/story/talk_frame.gd
+var _plain_turned := false     # 고을 사람 대화가 카메라를 옆으로 돌렸나(talk_plain_end가 되돌린다)
 var _talk_occ = null           # 대화 동안 건 가림 기준점(region_main.occ_script) — 내가 건 것만 푼다
 var last_frame := {}           # 마지막 대화 구도(시험·촬영 로그)
 var talk_cam := {}             # 지금 이야기 인물 대화 카메라(CameraRig.talk_spec — 공통 TALK·사건·인물 덮어쓰기). 대화가 끝나면 비운다
@@ -111,7 +113,7 @@ static func create_for(m) -> Node:
 
 # ---- region_main이 부르는 것 ----
 func blocks_move() -> bool:
-	return talking or (runner != null and runner.busy and not free_move) or (ui != null and (ui.modal or ui.journal_open)) or _cut or (title != null and title.active)
+	return (talking and not free_move) or (runner != null and runner.busy and not free_move) or (ui != null and (ui.modal or ui.journal_open)) or _cut or (title != null and title.active)
 
 func drives_player() -> bool:
 	return combat_view != null and combat_view.active
@@ -1027,10 +1029,11 @@ func interact(id: String) -> void:
 	ui.prompt("")
 	var tc = CameraRig.talk_spec(data.get("case", {}), actors[id].spec) if actors.has(id) else null
 	var cam_on: bool = tc is Dictionary and not steps.is_empty()
-	if actors.has(id): await _talk_approach(id, tc if cam_on else null, not steps.is_empty())
+	if actors.has(id): _talk_approach(id, tc if cam_on else null, not steps.is_empty())
 	await runner.run(steps)
 	if cam_on and not talk_cam.is_empty(): _talk_camera_end()
 	_talk_occ_end()
+	_plain_turn_end()
 	talking = false
 	if onboard != null: onboard._pend_t = 0.0   # 「…」 바로 다시 본다
 
@@ -1046,62 +1049,103 @@ func _talk_approach(id: String, tc, has_steps: bool) -> void:
 		return
 	if _tf == null: _tf = TalkFrame.new(self)
 	var nh: float = float(a.ch.height) if a.ch != null else 2.0
-	var pl: Dictionary = _tf.plan(a.pos, nh, tc != null, tc if tc != null else {})
+	var pl: Dictionary = _tf.plan(a.pos, nh, tc != null, tc if tc != null else {}, true)
 	last_frame = pl.duplicate(); last_frame.id = id
 	_log_frame(id, pl)
-	var t0 := Time.get_ticks_msec()
 	if tc != null: _talk_camera(id, tc, pl)
+	else: _plain_turn_begin(pl)   # 대화 카메라를 끈 인물(talk_camera false): 겹침을 못 풀 때만 옆 돌기
 	var stand_p: Vector2 = pl.stand if pl.stand != null else Vector2(main.player_pos.x, main.player_pos.z)
 	_talk_occ_begin(Vector3(stand_p.x, world.height_at(stand_p.x, stand_p.y), stand_p.y), float(main.player.height), a.pos, nh)
-	if pl.stand != null: await _step_player(pl.stand, clampf(float(pl.move) / TalkFrame.WALK_SPEED, 0.2, 0.6))
-	face_actor("player", null, id, 0.7)
+	# 장면(대본)은 곧바로 시작한다 — 카메라 미끄러짐(0.55초)·한 걸음·상대 돌아봄은 첫 대사와 함께 흐른다(대본이 늦게 서면 사건 흐름·시험이 어긋난다).
+	#   첫 상자는 0.18초에 걸쳐 흐려지며 들어오므로 구도가 서는 동안 갑자기 덮지 않는다.
+	if pl.stand == null: face_actor("player", null, id, 0.7)
+	_approach_tail(id, pl)
+
+# 접근 뒷부분(기다리지 않는다): 한 걸음 → 상대를 봄, 0.2초 뒤 상대가 플레이어를 봄
+#   대본이 그사이 누구를 돌려 세우면(face 단계) 그것이 이긴다 — 내가 본 뒤로 바뀌지 않았을 때만 돌린다
+func _approach_tail(id: String, pl: Dictionary) -> void:
+	var t0 := Time.get_ticks_msec()
+	var npc_f0: String = String(actors[id].facing)
+	if pl.stand != null:
+		var ok := await _step_player(pl.stand, clampf(float(pl.move) / TalkFrame.WALK_SPEED, 0.2, 0.6))
+		if ok and actors.has(id) and main.player.facing == _step_face: face_actor("player", null, id, 0.7)
 	var el := (Time.get_ticks_msec() - t0) / 1000.0
 	if el < NPC_TURN_DELAY: await wait(NPC_TURN_DELAY - el)
-	face_actor(id, null, "player", 0.7)
-	el = (Time.get_ticks_msec() - t0) / 1000.0
-	if tc != null and el < TALK_IN: await wait(TALK_IN - el)   # 상자는 구도가 선 뒤(콘티 0.70초 언저리)
+	if actors.has(id) and not _cut and String(actors[id].facing) == npc_f0: face_actor(id, null, "player", 0.7)
 
-# 고을 사람·역참 마부 말 걸기(카메라는 움직이지 않는다 — D5·C27): 겹치면 한 걸음, 두 사람 둘레 가림 점무늬. 끝나면 talk_plain_end()
-func talk_plain_begin(p: Vector2, h := 2.0) -> void:
+# 고을 사람·역참 마부 말 걸기(D5·C27 — 카메라는 평소 그대로가 먼저): 겹치면 한 걸음, 두 사람 둘레 가림 점무늬.
+#   한 걸음으로도 겹침을 못 풀 때만(좁은 장터 가게 앞 등) 카메라를 옆으로 돌린다(D5 '인물 가림은 절대 없게', D9 첫 수단) — 0.55초, 끝나면 0.45초 복귀.
+#   돌려줌: 구도(talk_frame.plan) — 부른 쪽이 상대를 플레이어 쪽으로 돌릴 때 face_toward_player()로 쓴다. 끝나면 talk_plain_end()
+func talk_plain_begin(p: Vector2, h := 2.0) -> Dictionary:
 	talking = true
 	if bool(main.get("fp_active")):
-		face_actor("player", null, p); return
+		face_actor("player", null, p); return {}
 	if _tf == null: _tf = TalkFrame.new(self)
 	var npc := Vector3(p.x, world.height_at(p.x, p.y), p.y)
-	var pl: Dictionary = _tf.plan(npc, h, false, {})
+	var pl: Dictionary = _tf.plan(npc, h, false, {}, true)
 	last_frame = pl.duplicate(); last_frame.id = "plain"
 	_log_frame("plain", pl)
+	var t0 := Time.get_ticks_msec()
+	_plain_turn_begin(pl)
 	var stand_p: Vector2 = pl.stand if pl.stand != null else Vector2(main.player_pos.x, main.player_pos.z)
 	_talk_occ_begin(Vector3(stand_p.x, world.height_at(stand_p.x, stand_p.y), stand_p.y), float(main.player.height), npc, h)
 	if pl.stand != null: await _step_player(pl.stand, clampf(float(pl.move) / TalkFrame.WALK_SPEED, 0.2, 0.6))
 	face_actor("player", null, p, 0.7)
+	var el := (Time.get_ticks_msec() - t0) / 1000.0
+	if _plain_turned and el < TALK_IN: await wait(TALK_IN - el)
+	return pl
 
 func talk_plain_end() -> void:
 	_talk_occ_end()
+	_plain_turn_end()
 	talking = false
+
+func _plain_turn_begin(pl: Dictionary) -> void:
+	_plain_turned = bool(pl.get("turned", false)) and main.rig.shot == null
+	if _plain_turned:
+		main.rig.talk_yaw = float(pl.yaw)
+		main.rig.glide(TALK_IN, null, true)
+
+func _plain_turn_end() -> void:
+	if not _plain_turned: return
+	_plain_turned = false
+	main.rig.talk_yaw = null
+	if not bool(main.get("fp_active")) and main.rig.shot == null and not main.rig.gliding():
+		main.rig.glide(TALK_OUT, null, true)
+
+# 상대(고을 사람·마부)가 플레이어를 볼 때의 그림 쪽 — 대화 옆 돌기 yaw 기준(돌지 않았으면 예전과 같다)
+func face_toward_player(from: Vector2) -> String:
+	return dir_of(Vector2(main.player_pos.x, main.player_pos.z) - from, 0.7)
 
 func _log_frame(id: String, pl: Dictionary) -> void:
 	if not (log_story or main.args.has("talkshot") or main.args.has("talktest") or main.args.has("viewtest")): return
-	print("TALKFRAME id=%s phase=%s yaw=%.0f dist=%.1f move=%.2f stand=%s overlap=%.2f occ_npc=%d occ_player=%d cands=%d" % [id, pl.phase,
-		rad_to_deg(float(pl.yaw)), float(pl.distance), float(pl.move), pl.stand, float(pl.overlap), int(pl.occ_npc), int(pl.occ_player), int(pl.n)])
+	print("TALKFRAME id=%s phase=%s yaw=%.0f dist=%.1f move=%.2f stand=%s overlap=%.2f raw=%.2f occ_npc=%d occ_player=%d cands=%d ms=%.1f rel=%s rej=%s" % [id, pl.phase,
+		rad_to_deg(float(pl.yaw)), float(pl.distance), float(pl.move), pl.stand, float(pl.overlap), float(pl.get("overlap_raw", 0.0)), int(pl.occ_npc), int(pl.occ_player), int(pl.n), float(pl.get("ms", 0.0)), pl.get("rel", Vector2.ZERO), pl.get("rej", {})])
 
 # 플레이어 한 걸음(걷기 그림, 직선 — talk_frame이 막힘 없는 길만 고른다). 시험 자동 진행은 바로 옮긴다
-func _step_player(to: Vector2, dur: float) -> void:
+# 돌려줌: 끝까지 걸었나(사건 연출이 그사이 플레이어를 옮기면 그만둔다 — false)
+func _step_player(to: Vector2, dur: float) -> bool:
 	var from := Vector2(main.player_pos.x, main.player_pos.z)
 	if ui.auto and not ui.auto_real:
-		set_player_pos(Vector3(to.x, world.height_at(to.x, to.y), to.y)); return
+		set_player_pos(Vector3(to.x, world.height_at(to.x, to.y), to.y)); _step_face = main.player.facing; return true
 	_stepping = true
 	main.player.facing = dir_of(to - from)
+	_step_face = main.player.facing
 	main.player.set_anim("walk")
 	var t := 0.0
+	var last := from
+	var ok := true
 	while t < dur:
 		await get_tree().process_frame
-		if not is_inside_tree(): return
+		if not is_inside_tree(): return false
+		if Vector2(main.player_pos.x, main.player_pos.z).distance_to(last) > 0.05: ok = false; break   # 누가 옮겼다
 		t += get_process_delta_time()
 		var q := from.lerp(to, smoothstep(0.0, 1.0, clampf(t / dur, 0.0, 1.0)))
 		set_player_pos(Vector3(q.x, world.height_at(q.x, q.y), q.y))
-	main.player.set_anim("idle")
+		last = q
+	if main.player.anim == "walk": main.player.set_anim("idle")
 	_stepping = false
+	return ok
 
 func _talk_occ_begin(pp: Vector3, ph: float, npc: Vector3, nh: float) -> void:
 	if main.occ_script != null: return   # 사건이 건 각본 가림이 먼저

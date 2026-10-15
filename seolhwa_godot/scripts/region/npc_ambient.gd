@@ -804,7 +804,7 @@ func _step_agents(dt: float) -> void:
 		ag.t -= dt
 		if ag.get("hold", false):   # 말하는 중: 멈춰 플레이어를 본다
 			var lk: Vector2 = ag.look - old
-			ch.facing = _facing(lk.x, lk.y, ch.facing)
+			ch.facing = String(ag.hold_face) if ag.has("hold_face") else _facing(lk.x, lk.y, ch.facing)
 			if ag.mode == "seat": ch.set_anim("sit_talk" if ag.get("sit", "") == "ground" and ch.has_anim("sit_talk") else String(ag.anim))
 			else: ch.set_anim("talk" if ch.has_anim("talk") else "idle")
 			if vis:
@@ -931,17 +931,20 @@ func seat_taken(p: Vector2) -> bool:
 				if (m.get("home", Vector2.INF) as Vector2).distance_to(p) < 1.2: return true
 	return false
 
-func hold(key: int, toward: Vector3) -> void:
+# face: 그림 쪽을 정해 줄 때(대화 카메라가 옆으로 돌아 땅 방향과 화면 방향이 다를 때 — story_director.face_toward_player). "" = 땅 방향으로
+func hold(key: int, toward: Vector3, face := "") -> void:
 	var ag = agents.get(key)
 	if ag == null: return
 	ag.hold = true
 	ag.look = Vector2(toward.x, toward.z)
+	if face != "": ag.hold_face = face
+	else: ag.erase("hold_face")
 	if ag.mode == "walk": ag.state = "idle"
 
 func unhold(key: int) -> void:
 	var ag = agents.get(key)
 	if ag == null: return
-	ag.erase("hold")
+	ag.erase("hold"); ag.erase("hold_face")
 	ag.t = 0.8 + _h(key, int(_clock)) * 1.5
 
 # ---------------------------------------------------------------------------
