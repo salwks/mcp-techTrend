@@ -197,7 +197,8 @@ func _first_case_gate() -> void:
 	Progress.data().vars["CASE_NAMWON_COMPLETE"] = v0
 	if not cs.is_empty(): cs.phase = ph0
 	print("STATIONTEST first-case gate why=%s reach=%s" % [why, reach.keys()])
-	if why == "" or reach.size() != 1: _fail("남원 첫 사건 전인데 남원 밖 역마가 열림")
+	# 재기획 3단계(D1): 오누이는 더는 남원을 떠나는 것을 막지 않는다 — 첫 사건 전에도 막음 없음
+	if why != "" or reach.size() <= 1: _fail("오누이 전인데 남원 밖 역마가 막힘(D1 — 막지 않아야 함) why=%s" % why)
 	if FT.gate_why(main) != "": _fail("남원을 마친 저장인데 막힘")
 
 # 4a) 역 문 앞: 말 안내 없음, E를 눌러도 말이 오지 않음(마부 곁이 아닌 자리)
@@ -580,7 +581,10 @@ func _dev() -> void:
 	var dl: Array = d.keeper.destinations()
 	var cross: Array = (dl[0] as Array).filter(func(o): return not bool(o.same))
 	print("STATIONTEST dev off gate=%s cross=%s" % [gate, cross.map(func(o): return "%s:%s:%s" % [o.label, o.ok, o.why])])
-	if gate == "" or cross.is_empty() or cross.any(func(o): return bool(o.ok) or String(o.why) != gate): _fail("첫 사건 막음이 지도 갈 곳에서 흐림·까닭으로 안 보임")
+	# 재기획 3단계(D1): 첫 사건 막음은 없다 — 못 가는 다른 공간 갈 곳(처음 가는 길 등)은 그래도 흐림·까닭으로 보인다
+	if gate != "": _fail("오누이 첫 사건 막음이 남아 있음(D1) 「%s」" % gate)
+	if cross.any(func(o): return not bool(o.ok) and String(o.why) == ""): _fail("못 가는 다른 공간 갈 곳에 까닭이 없음")
+	if bool(Stations.state("jeju").ok): _fail("개발 끔: 처음 가는 길(제주)이 열려 있음")
 	# 2) 켬: 첫 사건 중이어도 모두 열림
 	var save0 := _save_text()
 	DevTravel.set_on(true)
@@ -632,7 +636,7 @@ func _dev() -> void:
 	js = Stations.state("jeju")
 	var gate2: String = FT.gate_why(main)
 	print("STATIONTEST dev off again jeju=%s gate=%s" % [js, gate2])
-	if bool(js.ok) or gate2 == "": _fail("개발을 껐는데 막힘이 안 돌아옴")
+	if bool(js.ok) or gate2 != "": _fail("개발을 껐는데 막힘(처음 가는 길)이 안 돌아옴 / 첫 사건 막음이 생김")
 	Progress.data().vars["CASE_NAMWON_COMPLETE"] = v0
 	if not cs.is_empty(): cs.phase = ph0
 	d.keeper.auto_pick = Callable()

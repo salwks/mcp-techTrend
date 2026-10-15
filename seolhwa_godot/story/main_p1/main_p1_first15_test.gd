@@ -254,6 +254,8 @@ func run() -> void:
 	await _e_on("o_desk", func(): return d.ui.modal, "E 서안 — 견주기 열기")
 	await _wait(func(): return not d.runner.busy and not d.ui.modal, 30.0)
 	_ok(not d.S.is_flag("LETTER_SUSPICIOUS"), "하나만 짚고 덮으면 아직 의심 전(벌점 없음 · 다시 이어 할 수 있음)")
+	await _resume_check("저장 재개 — 견주기 도중", ["LETTER_RECEIVED"])
+	_ok((d.S.flags.get("_doc_found", {}) as Dictionary).has("old_record/o_date"), "견주기 도중 저장 — 짚은 자리 그대로(_doc_found)")
 	_doc_plan = ["full"]
 	await _e_on("o_desk", func(): return d.ui.modal, "E 서안 — 다시 열어 이어 하기")
 	await _wait(func(): return d.S.is_flag("LETTER_SUSPICIOUS") and not d.runner.busy, 40.0)
