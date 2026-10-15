@@ -961,7 +961,8 @@ function humanView(view, S, sp) {
   // 지팡이
   if (sp.staff) {
     const hand = side ? 'arm2_l' : back ? 'arm1_l' : 'arm2_l';
-    const draw = sp.staff === 'ladle' ? (p) => drawLadle(p, S) : sp.staff === 'axe' ? (p) => drawAxe(p, S) : (p) => drawStaff(p, S, sp);
+    // sp.staff가 함수면 그것으로 그린다(인물 빌더의 손 소품 — 담뱃대·부채 등, (p, S, sp, view))
+    const draw = typeof sp.staff === 'function' ? (p) => sp.staff(p, S, sp, view) : sp.staff === 'ladle' ? (p) => drawLadle(p, S) : sp.staff === 'axe' ? (p) => drawAxe(p, S) : (p) => drawStaff(p, S, sp);
     part(L, 'staff', hand, [0, S.lArm + 2], side ? 10.95 : 6.15, draw, { abs: true, ls, tag: 'staff', r0: side && sp.staff === 'axe' ? 0.15 : 0 });
   }
   addCombatParts(L, view, S, sp, ls);
@@ -1105,7 +1106,8 @@ function humanBasePose(view, anim, t, rig, st = {}) {
   const P = {};
   const set = (n, r = 0, x = 0, y = 0, sx = 1, sy = 1) => (P[n] = { r, x, y, sx, sy });
   const stoop = sp.stoop || 0;
-  const run = anim === 'run', walk = anim === 'walk' || run;
+  const run = anim === 'run', carry = anim === 'carry', walk = anim === 'walk' || run || carry;
+  const headLoad = sp.carry === 'basket' || sp.carry === 'jar';
   // 위상: 이동 속도로 진행(없으면 시간)
   const cyc = st.phase != null ? st.phase : t / ((run ? 0.62 : 0.8) * (sp.child ? 0.82 : 1));
   const ph = cyc * PI * 2, s = sin(ph), c = cos(ph);
@@ -1125,12 +1127,16 @@ function humanBasePose(view, anim, t, rig, st = {}) {
       set('leg2_l', -B * pow(max(0, c), 1.3) - 0.1 * max(0, -s));
       set('leg1', -A * s + (run ? 0.1 : 0));
       set('leg1_l', -B * pow(max(0, -c), 1.3) - 0.1 * max(0, s));
-      // 팔은 다리 반대로, 반 박자 늦게, 앞으로 갈 때 팔꿈치가 굽음
-      const as = sin(ph - 0.35);
-      set('arm2', -0.75 * A * as);
-      set('arm2_l', (run ? 1.1 : 0.15) + 0.35 * max(0, -as));
-      set('arm1', 0.75 * A * as);
-      set('arm1_l', (run ? 1.1 : 0.15) + 0.35 * max(0, as));
+      // 팔(2026-10-15 고침): 다리와 반대로, 반 박자 늦게 앞뒤로 고르게 흔든다. 예전에는 r0(앞으로 0.06~0.15)에 팔꿈치 굽힘이
+      // 늘 더해져 손이 몸 뒤로 한 번도 가지 않았다(늘 앞으로 내민 팔). 이제 뒤로 갈 때는 팔이 거의 곧게 엉덩이 뒤로,
+      // 앞으로 갈 때만 팔꿈치가 조금 굽는다. 뛰기는 팔꿈치를 굽힌 채 앞뒤로 크게.
+      const as = sin(ph - 0.3);
+      const Aw = run ? 0.62 : 0.36 * (sp.bottom === 'chima' ? 0.8 : 1);
+      const f2 = max(0, -as), f1 = max(0, as);   // 앞으로 나간 정도(가까운 팔 arm2 / 먼 팔 arm1)
+      set('arm2', -Aw * as - (run ? 0.1 : 0.07));
+      set('arm2_l', run ? 1.0 + 0.35 * f2 : -0.1 + 0.42 * f2);
+      set('arm1', Aw * as - (run ? 0.12 : 0.1));
+      set('arm1_l', run ? 0.95 + 0.35 * f1 : -0.13 + 0.42 * f1);
       set('root', 0.015 * down, 0, down * bob - (run ? 4 : 0) * k);
       set('torso', (run ? -0.2 : -0.05) - stoop + 0.02 * down);
       set('head', (run ? 0.12 : 0.03) + stoop * 0.7 - 0.02 * down);
@@ -1150,11 +1156,19 @@ function humanBasePose(view, anim, t, rig, st = {}) {
       if (anim === 'talk') {
         const g = sin(t * PI * 2 * 0.9);
         set('head', stoop * 0.7 + 0.05 * sin(t * PI * 2 * 1.7), 0, -1.2 * br * k);
-        set(gestArmSide, 0.5 + 0.1 * g);
-        set(gestArmSide + '_l', 0.9 + 0.25 * g);
+        set(gestArmSide, 0.32 + 0.1 * g);
+        set(gestArmSide + '_l', 0.75 + 0.25 * g);
       }
     }
-    if (sp.carry === 'basket') { set('arm2', 2.75 + 0.03 * s); set('arm2_l', 0.4); }
+    if (headLoad) { set('arm2', 2.75 + 0.03 * s); set('arm2_l', 0.4); }
+    else if (carry && (sp.back === 'jige' || sp.back === 'bundle' || sp.back === 'gwanari')) {
+      // 멜빵을 두 손으로 잡음(팔꿈치 굽혀 손이 가슴께)
+      set('arm2', 0.22 + 0.03 * s); set('arm2_l', 1.85); set('arm1', 0.16 - 0.03 * s); set('arm1_l', 1.75);
+    } else if (carry) {
+      // 가까운 손에 짐을 늘어뜨려 듦(흔들지 않음), 먼 팔만 흔든다
+      set('arm2', 0.02 + 0.03 * s); set('arm2_l', -0.04);
+      P.hand_load = { r: 0.04 * s, x: 0, y: 0, sx: 1, sy: 1, a: 1 };
+    }
   } else {
     const flip = view === 'back' ? -1 : 1;
     if (walk) {
@@ -1164,10 +1178,29 @@ function humanBasePose(view, anim, t, rig, st = {}) {
       set('leg1_l', -0.05 * s, 0, 0, 1, 1 - 0.08 * max(0, s));
       set('leg2', 0.04 * s, 0, -l2, 1, 1);
       set('leg2_l', -0.05 * s, 0, 0, 1, 1 - 0.08 * max(0, -s));
-      const as = run ? 0.28 : 0.14, sa = sin(ph - 0.35);
-      set('arm1', as * 0.5 * sa + (run ? 0.18 : 0), 0, 0, 1, 1 - as * 0.7 * max(0, -sa * flip));
-      set('arm2', as * 0.5 * sa - (run ? 0.18 : 0), 0, 0, 1, 1 - as * 0.7 * max(0, sa * flip));
-      set('arm1_l', run ? -0.6 : -0.05 * sa); set('arm2_l', run ? 0.6 : -0.05 * sa);
+      // 팔(2026-10-15 고침): 앞·뒤 모습에서 팔은 몸 옆에 늘어져 다리와 반대로 앞뒤(화면 깊이)로 흔든다.
+      // 깊이 방향 흔들림은 짧아짐(앞으로 간 팔은 팔꿈치가 굽어 아래팔이 더 짧아 보임)과 손의 작은 안팎 움직임으로 보인다.
+      // 예전 뛰기는 아래팔을 배 앞으로 모아(±0.6) 팔을 늘 앞으로 내민 모습이었다 — 이제 손은 몸 옆(허리께)에 남는다.
+      const sa = sin(ph - 0.3);
+      const Aw = run ? 0.55 : 0.34;
+      const w1 = -sa, w2 = sa;   // +: 앞으로(앞 모습이면 카메라 쪽). arm1은 leg1과 반대
+      const f1 = max(0, w1), b1 = max(0, -w1), f2 = max(0, w2), b2 = max(0, -w2);
+      if (run) {
+        set('arm1', -0.05 * f1 + 0.06 * b1, 0, 0, 1, 0.9 - 0.08 * f1);
+        set('arm2', 0.05 * f2 - 0.06 * b2, 0, 0, 1, 0.9 - 0.08 * f2);
+        set('arm1_l', -0.22 - 0.1 * f1, 0, 0, 1, 0.62 - 0.3 * f1 + 0.1 * b1);
+        set('arm2_l', 0.22 + 0.1 * f2, 0, 0, 1, 0.62 - 0.3 * f2 + 0.1 * b2);
+      } else {
+        // 앞으로 간 팔: 손이 조금 안쪽으로 오고 팔꿈치가 굽어 아래팔이 짧아 보임 · 뒤로 간 팔: 엉덩이 뒤로 숨어 몸통 뒤에 그린다
+        set('arm1', -0.07 * f1 - 0.05 * b1, 0, 0, 1, 1 - 0.1 * f1 - 0.06 * b1);
+        set('arm2', 0.07 * f2 + 0.05 * b2, 0, 0, 1, 1 - 0.1 * f2 - 0.06 * b2);
+        set('arm1_l', -0.12 * f1 - 0.04 * b1, 0, 0, 1, 1 - 0.38 * f1 - 0.05 * b1);
+        set('arm2_l', 0.12 * f2 + 0.04 * b2, 0, 0, 1, 1 - 0.38 * f2 - 0.05 * b2);
+      }
+      // 몸통(5)보다 뒤(4.6)로: 앞 모습은 뒤로 흔든 팔, 뒤 모습은 앞으로 흔든 팔(카메라에서 먼 쪽)
+      const away1 = view === 'back' ? w1 > 0.25 : w1 < -0.25, away2 = view === 'back' ? w2 > 0.25 : w2 < -0.25;
+      if (away1) P.arm1.z = 4.6;
+      if (away2) P.arm2.z = 4.6;
       // 체중 이동: 디딘 발 쪽으로 엉덩이가 실린다
       set('root', 0.02 * s, 2.2 * s * k, down * bob * 0.8);
       set('torso', -0.025 * s, 0, 0, 1, (stoop ? 0.95 : 1) - 0.01 * down);
@@ -1186,13 +1219,23 @@ function humanBasePose(view, anim, t, rig, st = {}) {
       if (anim === 'talk') {
         const g = sin(t * PI * 2 * 0.9);
         set('head', 0.05 * sin(t * PI * 2 * 1.7), 0, (stoop ? 6 : 0) - 1.2 * br * k);
-        set('arm1', 0.22 + 0.06 * g);
-        set('arm1_l', -1.3 + 0.3 * g, 0, 0, 1, 0.85);
+        // 손짓: 아래팔을 몸 밖으로 들어 손바닥을 보인다(예전에는 아래팔이 배 앞을 가로질러 앞으로 내민 팔처럼 보였다)
+        set('arm1', 0.2 + 0.05 * g);
+        set('arm1_l', 0.45 + 0.25 * g, 0, 0, 1, 0.8);
       }
     }
-    if (sp.carry === 'basket') {
+    if (headLoad) {
       const a = view === 'back' ? 'arm2' : 'arm1', sg = view === 'back' ? -1 : 1;
       set(a, sg * (2.6 + 0.02 * s)); set(a + '_l', sg * 0.75);
+    } else if (carry && (sp.back === 'jige' || sp.back === 'bundle' || sp.back === 'gwanari')) {
+      // 멜빵 잡음: 아래팔이 위로 접혀 손이 가슴 옆(앞에서는 짧아 보임)
+      set('arm1', -0.04, 0, 0, 1, 0.95); set('arm1_l', -0.5, 0, 0, 1, 0.45);
+      set('arm2', 0.04, 0, 0, 1, 0.95); set('arm2_l', 0.5, 0, 0, 1, 0.45);
+    } else if (carry) {
+      // 짐 든 팔(앞: arm2, 뒤: arm1 — 같은 오른손)은 곧게 늘어뜨려 몸 밖으로 조금
+      const a = view === 'back' ? 'arm1' : 'arm2', sg = view === 'back' ? 1 : -1;
+      set(a, sg * 0.1, 0, 0, 1, 1); set(a + '_l', sg * 0.05, 0, 0, 1, 1);
+      P.hand_load = { r: 0.03 * s, x: 0, y: 0, sx: 1, sy: 1, a: 1 };
     }
   }
   return P;
@@ -1696,6 +1739,18 @@ export const SPECS = {
 
 const _rigs = new Map();
 
+/** 인물 빌더(미리 보기에서 차림을 바꿀 때): 그 종류의 리그·팔다리 그림 캐시를 버린다 */
+export function dropRig(kind) {
+  _rigs.delete(kind);
+  for (const k of [..._fullCache.keys()]) if (k.startsWith(kind + '|')) _fullCache.delete(k);
+}
+/** 인물 빌더가 다시 쓰는 그림 함수(웹 차림 그대로 — 새 부속은 빌더 쪽에서) */
+export const HUMAN_DRAW = {
+  ADULT, CHILD, headY, faceFront, faceSide, hairCapPts, hairStreaks, satgat, gat, beonggeoji, drawHead, bandFront, bandSide, bandBack,
+  beardFront, beardSide, braidFront, drawTorso, drawSkirt, drawUpperArm, drawLowerArm, drawThigh, drawShin, drawJige, drawBasket, drawPipe,
+  drawScarf, drawBundle, drawStaff, drawLadle, drawAxe, hashStr,
+};
+
 /** 종류별 리그(부위 이미지)를 한 번만 만들어 모든 인스턴스가 공유 */
 export function getRig(kind) {
   if (_rigs.has(kind)) return _rigs.get(kind);
@@ -1710,9 +1765,11 @@ export function getRig(kind) {
     };
   } else {
     const B = sp.child ? CHILD : ADULT, b = sp.build || 1;
-    const S = { ...B, shHalf: B.shHalf * b, waistHalf: B.waistHalf * b, legX: B.legX * (0.5 + b * 0.5) };
+    // sp.S: 인물 빌더가 정한 골격(나이·체형·비례). 없으면 예전 그대로(성인/아이 + build)
+    const S = sp.S ? { ...sp.S } : { ...B, shHalf: B.shHalf * b, waistHalf: B.waistHalf * b, legX: B.legX * (0.5 + b * 0.5) };
     // 키 보정: 기준 골격(성인 약 1.62m 상당) 대비 ppm 조정
-    const basePx = sp.child ? 205 : 312;
+    const tall = (q) => q.hip + q.torso + q.neck + 2 * q.headRY;
+    const basePx = sp.S ? 312 * tall(S) / tall(ADULT) : sp.child ? 205 : 312;
     const ppm = basePx / (sp.height - (sp.stoop ? -0.04 : 0));
     // 넘어짐·베기 궤적이 들어가도록 넉넉한 판 (대부분 투명)
     const W = sp.child ? 256 : 384, H = sp.child ? 320 : 448;

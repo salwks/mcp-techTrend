@@ -11,6 +11,8 @@ const flip = (c) => (c < 0 ? -1 : 1) * max(0.3, abs(c));
 /** 애니메이션 표: loop=true면 반복(dur은 한 주기 길이) */
 export const HUMAN_ANIMS = {
   idle: { dur: 3.2, loop: true }, walk: { dur: 0.95, loop: true }, run: { dur: 0.6, loop: true }, talk: { dur: 1.1, loop: true },
+  // 짐 들고 걷기(걷기 다리 + 짐에 맞춘 팔 — rigs.humanBasePose): 이고(머리) 한 손으로 받침 · 지고(등) 멜빵 잡음 · 들고(손) 한 팔은 늘어뜨려 짐을 듦
+  carry: { dur: 0.95, loop: true },
   attack1: { dur: 0.32 }, attack2: { dur: 0.32 }, attack3: { dur: 0.45 },
   charge: { dur: 0.6, loop: true }, heavy: { dur: 0.6 }, guard: { dur: 1.2, loop: true },
   dodge: { dur: 0.45 }, bow_draw: { dur: 1.0, loop: true }, bow_shoot: { dur: 0.35 }, throw: { dur: 0.45 },

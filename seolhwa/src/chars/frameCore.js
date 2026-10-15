@@ -29,7 +29,7 @@ const BODY_SPRINGS = {
 };
 const FAST_HUMAN = new Set(['attack1', 'attack2', 'attack3', 'heavy', 'dodge', 'bow_shoot']);
 const FAST_ALL = new Set([...FAST_HUMAN, 'pounce', 'swipe', 'slip', 'climb_try']);
-const PHASE_ANIMS = new Set(['walk', 'run', 'prowl', 'retreat']);
+const PHASE_ANIMS = new Set(['walk', 'run', 'prowl', 'retreat', 'carry']);
 const INTRO = { charge: 0.18, guard: 0.18, bow_draw: 0.18, crouch: 0.2 };
 const COMBAT_H = new Set(['attack1', 'attack2', 'attack3', 'charge', 'heavy', 'guard', 'dodge', 'bow_draw', 'bow_shoot', 'throw', 'hit', 'down', 'getup', 'dead']);
 
@@ -508,7 +508,7 @@ export class BakeBank {
     let out = c.view + c.variant + (c.armed ? 'a' : '') + c.anim.length;
     for (const P of [s.P, FAST_ALL.has(c.anim) ? s.Pp : null]) {
       if (!P) continue;
-      for (const n of Object.keys(P).sort()) { const p = P[n]; out += n + q(p.r) + ',' + q(p.x) + ',' + q(p.y) + ',' + q(p.sx) + ',' + q(p.sy) + ',' + (p.a == null ? 1 : q(p.a)) + ';'; }
+      for (const n of Object.keys(P).sort()) { const p = P[n]; out += n + q(p.r) + ',' + q(p.x) + ',' + q(p.y) + ',' + q(p.sx) + ',' + q(p.sy) + ',' + (p.a == null ? 1 : q(p.a)) + (p.z == null ? '' : 'z' + p.z) + ';'; }
     }
     return out;
   }
@@ -560,7 +560,12 @@ export class BakeBank {
     const byName = Object.fromEntries(parts.map((p) => [p.name, p]));
     const skip = new Set(['arm1_l', 'arm2_l', 'leg1_l', 'leg2_l', 'head_blink']);
     const side = view === 'side';
-    for (const p of parts.draw) {
+    // 자세가 그리는 순서(z)를 바꿀 수 있다: 앞·뒤 모습 걷기에서 뒤로 흔든 팔은 몸통 뒤로(rigs.humanBasePose)
+    let order = parts.draw;
+    if (parts.draw.some((p) => P[p.name] && P[p.name].z != null)) {
+      order = parts.draw.map((p, i) => ({ p, i, z: P[p.name] && P[p.name].z != null ? P[p.name].z : p.z })).sort((a, b) => a.z - b.z || a.i - b.i).map((e) => e.p);
+    }
+    for (const p of order) {
       if (skip.has(p.name)) continue;
       const ps = P[p.name];
       if (p.tag === 'fx' || p.tag === 'alt') { if (!ps || !(ps.a > 0.5)) continue; }
