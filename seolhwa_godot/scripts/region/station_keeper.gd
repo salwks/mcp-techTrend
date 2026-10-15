@@ -59,11 +59,12 @@ func talk_keeper(st: Dictionary) -> void:
 	var life = hr.life
 	life.hold(st, d.main.player_pos)
 	var gp: Vector3 = life.groom_pos(st)
-	if gp != Vector3.INF: d.face_actor("player", null, Vector2(gp.x, gp.z))
 	d.ui.prompt(""); d._target = null
+	if gp != Vector3.INF: await d.talk_plain_begin(Vector2(gp.x, gp.z), 2.0)   # 겹치면 한 걸음·가림 비우기(카메라 그대로 — D5)
 	if d.onboard != null: d.onboard.on_interact("actor")
 	print("KEEPER talk %s" % st.id)
 	await d.ui.say("마부", ["어디로 가시오? 지도에서 짚어 주시오."])
+	d.talk_plain_end()
 	var a: Dictionary = await menu({ kind = "keeper", st = st })
 	life.unhold(st)
 	busy = false

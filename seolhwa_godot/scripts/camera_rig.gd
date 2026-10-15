@@ -58,6 +58,9 @@ var shot = null   # { pos: Vector3, look: Vector3, fov: float }
 #   1인칭(region_main)은 이것을 저작 연출로 치지 않는다(1인칭에서는 애초에 넣지 않지만, 3인칭 대화 도중 0을 눌렀을 때를 위해).
 var talk_o = null
 var talk_f = null
+# 대화 옆 돌기(재기획 2단계 CAM_TALK_2 — scripts/story/talk_frame.gd): null = 평소(yaw 0) · 라디안 = 대화 동안 이 yaw로 선다.
+#   배·말 풍경 시점과 같은 yaw 경로를 쓴다(새 카메라 체계 없음). 미끄러짐(glide) 동안은 yaw도 smoothstep으로 함께 옮긴다.
+var talk_yaw = null
 
 func _init(cam: Camera3D, w: World) -> void:
 	camera = cam
@@ -113,8 +116,14 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 		tx = pos.x + ride_dir.x * 5.0 * ride_k; tz = pos.z + ride_dir.y * 5.0 * ride_k; ty = pos.y + 1.0 + 0.8 * ride_k
 		var back2 := (-ride_dir).rotated(deg_to_rad(RIDE_SIDE_DEG) * ride_side)
 		want_yaw = atan2(back2.x, back2.y)
+	elif talk_yaw != null and not sailing and not riding and shot == null:
+		want_yaw = float(talk_yaw)
 	var ky := 1.0 if snap else 1.0 - exp(-dt * (0.45 if riding else (1.1 if sailing else 1.6)))   # 말: 천천히 돈다
-	yaw = wrapf(yaw + wrapf(want_yaw - yaw, -PI, PI) * ky, -PI, PI)
+	if _gl != null and _gl.has("yaw0"):
+		var wy := smoothstep(0.0, 1.0, clampf((_gl.t + dt) / maxf(_gl.dur, 0.01), 0.0, 1.0))
+		yaw = wrapf(lerp_angle(float(_gl.yaw0), want_yaw, wy), -PI, PI)
+	else:
+		yaw = wrapf(yaw + wrapf(want_yaw - yaw, -PI, PI) * ky, -PI, PI)
 	if absf(yaw) < 1e-4 and want_yaw == 0.0: yaw = 0.0
 	var kf := 1.0 if snap else 1.0 - exp(-dt * 4.0)
 	if _gl != null:
@@ -141,8 +150,9 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 
 # 연출 미끄러짐 시작: 지금 화면에서 출발해 sec초 동안 새 focus/override(또는 평소 시점)로 천천히 옮긴다.
 # 부르기 전에 focus·override를 목표로 바꿔 둔다. to_point = null이면 평소 겨냥점(플레이어)으로.
-func glide(sec: float, to_point = null) -> void:
+func glide(sec: float, to_point = null, with_yaw := false) -> void:
 	_gl = { t = 0.0, dur = sec, from = target, to = to_point, cur0 = cur.duplicate() }
+	if with_yaw: _gl.yaw0 = yaw   # 대화 구도: yaw도 같은 시간에 smoothstep(talk_yaw ↔ 0)
 
 func gliding() -> bool:
 	return _gl != null

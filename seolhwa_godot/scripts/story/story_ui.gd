@@ -109,6 +109,16 @@ var _typing := false
 var _type_t := 0.0
 var _type_full := ""
 var _cooldown := 0.0
+# 대화 상자(재기획 2단계 — 대화 카메라 v1.1 §3, 결정 D8): 1080 기준 너비 82%(9~91%, 최대 1574) · 높이 215(약 20%, 예전 290 = 27%) ·
+#   아랫변 화면 아래에서 70. 이름과 'E 다음'을 한 줄에 두어 본문 두 줄이 들어간다. 글이 길면 상자가 위로 자란다(아래로 넘치지 않게).
+#   글 크기는 그대로(이름 44 · 본문 40 — C64, 문서 '본문 36px 이상'). 들어오고 나갈 때 0.18초 흐려짐. 닫은 뒤 E 0.2초 막음(§6).
+const DLG_W := 0.82
+const DLG_MAXW := 1574.0
+const DLG_H := 215.0
+const DLG_BOTTOM := 70.0
+const DLG_FADE := 0.18
+const E_COOLDOWN := 0.2
+var _dlg_a := 0.0          # 상자 목표 불투명(0/1) — _process가 DLG_FADE초에 걸쳐 따라간다
 var _hint: PanelContainer
 var _hint_l: Label
 var _hint_tw: Tween
@@ -278,7 +288,13 @@ func _build() -> void:
 	_dlg_text.add_theme_constant_override("line_spacing", 4)
 	_dlg_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_dlg_hint = _label(1, INK_SOFT); _dlg_hint.visible = false   # 예전 이름(다른 곳이 읽을 수 있게) — 나무에 달아 두어야 끝낼 때 함께 풀린다(글꼴 누수)
-	dv.add_child(_dlg_name); dv.add_child(_dlg_text); dv.add_child(_keyrow([["E", "다음"]])); dv.add_child(_dlg_hint)
+	dv.add_theme_constant_override("separation", 4)
+	var nrow := HBoxContainer.new(); nrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dlg_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var kr := _keyrow([["E", "다음"]])
+	kr.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	nrow.add_child(_dlg_name); nrow.add_child(kr)
+	dv.add_child(nrow); dv.add_child(_dlg_text); dv.add_child(_dlg_hint)
 	_dialog.add_child(dv)
 	_dialog.visible = false
 	_root.add_child(_dialog)
@@ -391,8 +407,7 @@ func _resize() -> void:
 	var lbh := vs.y * 0.09
 	_lb_top.position = Vector2(0, -lbh if _lb_top.get_meta("on", false) == false else 0.0); _lb_top.size = Vector2(vs.x, lbh)
 	_lb_bot.position = Vector2(0, vs.y if _lb_bot.get_meta("on", false) == false else vs.y - lbh); _lb_bot.size = Vector2(vs.x, lbh)
-	var w := minf(vs.x * 0.9, 1406.2 * k)
-	_dialog.position = Vector2((vs.x - w) / 2, vs.y - 332 * k); _dialog.size = Vector2(w, 290 * k); _dialog.custom_minimum_size = Vector2(w, 262 * k)
+	_place_dialog()
 	var csb: StyleBoxFlat = _cap_box.get_theme_stylebox("panel")
 	csb.content_margin_left = 37 * k; csb.content_margin_right = 37 * k; csb.content_margin_top = 13 * k; csb.content_margin_bottom = 15 * k
 	_caption.add_theme_constant_override("line_spacing", int(7 * k))
@@ -467,6 +482,7 @@ func _input(ev: InputEvent) -> void:
 
 func _process(dt: float) -> void:
 	if _cooldown > 0.0: _cooldown -= dt
+	_dlg_fade_step(dt)
 	if _typing:
 		_type_t += dt
 		var n := int(_type_t * 45.0)
@@ -486,6 +502,29 @@ func _process(dt: float) -> void:
 		t.modulate.a = clampf(left / 0.6, 0.0, 1.0)
 		if left <= 0.0: t.queue_free()
 
+# 대화 상자 자리: 너비·최소 높이를 정하고 내용 높이에 맞춘 뒤 아랫변을 고정한다(긴 글은 위로 자란다)
+func _place_dialog() -> void:
+	var vs := get_viewport().get_visible_rect().size
+	var k := _k
+	var w := minf(vs.x * DLG_W, DLG_MAXW * k)
+	_dialog.custom_minimum_size = Vector2(w, DLG_H * k)
+	_dlg_text.custom_minimum_size = Vector2(w - 60.0 * k, 0)
+	_dialog.size = Vector2(w, 0)
+	_dialog.reset_size()
+	var h := maxf(_dialog.get_combined_minimum_size().y, DLG_H * k)
+	_dialog.size = Vector2(w, h)
+	_dialog.position = Vector2((vs.x - w) / 2, vs.y - DLG_BOTTOM * k - h)
+
+func _dlg_fade_step(dt: float) -> void:
+	var a := _dialog.modulate.a
+	if is_equal_approx(a, _dlg_a):
+		if _dlg_a <= 0.0 and _dialog.visible: _dialog.visible = false
+		return
+	var step := dt / DLG_FADE
+	a = minf(_dlg_a, a + step) if _dlg_a > a else maxf(_dlg_a, a - step)
+	_dialog.modulate.a = a
+	if a <= 0.0: _dialog.visible = false
+
 # 다른 입력(조사 E 등)이 방금 대화를 닫은 키를 다시 쓰지 않게
 func busy_input() -> bool:
 	return modal or journal_open or _cooldown > 0.0
@@ -500,12 +539,19 @@ func say(who: String, lines) -> void:
 	if lines is String: lines = [lines]
 	if on_say.is_valid(): on_say.call(who)
 	modal = true
+	var instant := auto and not auto_real
+	if not _dialog.visible:
+		_dialog.modulate.a = 1.0 if instant else 0.0
 	_dialog.visible = true
+	_dlg_a = 1.0
+	if instant: _dialog.modulate.a = 1.0
 	_dlg_name.text = who
 	_dlg_name.visible = who != ""
 	for line in lines:
 		if log_lines: printerr("SAY %s: %s" % [who, line])
 		_dlg_text.text = line
+		_place_dialog()
+		_place_dialog.call_deferred()   # 줄바꿈 높이가 정해진 뒤 다시
 		_type_full = line
 		_dlg_text.visible_characters = 0
 		_typing = true; _type_t = 0.0
@@ -514,9 +560,11 @@ func say(who: String, lines) -> void:
 		else: await _confirm
 		_typing = false
 	_waiting = ""
-	_dialog.visible = false
+	_dlg_a = 0.0   # 0.18초 흐려지며 닫힌다(_dlg_fade_step) — 곧바로 다음 say가 오면 그대로 이어진다
+	if auto and not auto_real:
+		_dialog.visible = false; _dialog.modulate.a = 0.0
 	modal = false
-	_cooldown = 0.15
+	_cooldown = E_COOLDOWN
 
 func examine(title: String, text, kind := "clue") -> void:
 	if text is Array: text = "\n".join(text)
@@ -534,11 +582,12 @@ func examine(title: String, text, kind := "clue") -> void:
 	_waiting = ""
 	_card.visible = false
 	modal = false
-	_cooldown = 0.15
+	_cooldown = E_COOLDOWN
 
 # options: [{label, disabled, hint}] → 고른 번호
 func choice(prompt: String, options: Array) -> int:
 	modal = true
+	_dialog.visible = false; _dlg_a = 0.0; _dialog.modulate.a = 0.0   # 닫히던 대화 상자와 겹치지 않게
 	_choice_prompt.text = prompt
 	_choice_prompt.visible = prompt != ""
 	for c in _choice_list.get_children():
@@ -595,7 +644,7 @@ func choice(prompt: String, options: Array) -> int:
 	_waiting = ""
 	_choice.visible = false
 	modal = false
-	_cooldown = 0.15
+	_cooldown = E_COOLDOWN
 	if log_lines: printerr("CHOICE [%s] → %s" % [prompt, options[idx].label if idx >= 0 else "-"])
 	return idx
 
@@ -610,7 +659,8 @@ func _place_choice() -> void:
 	_choice.reset_size()
 	var h := _choice.get_combined_minimum_size().y
 	_choice.size.y = h
-	_choice.position.y = clampf(vs.y * 0.6 - h * 0.5, 34 * _k, maxf(34 * _k, vs.y - h - 34 * _k))
+	# 대화 상자 자리(아랫변 고정)에서 위로 — 화면 가운데의 두 사람을 덮지 않게(대화 v1.1 §3 '본문 상자 위 또는 아래 안전 영역')
+	_choice.position.y = clampf(vs.y - DLG_BOTTOM * _k - h, 34 * _k, maxf(34 * _k, vs.y - h - 34 * _k))
 
 func _move_sel(d: int) -> void:
 	var n := _choice_btns.size()
@@ -802,7 +852,7 @@ func journal_close() -> void:
 	if _jv.visible: _items.visible = bool(_items.get_meta("was", true))
 	_jv.visible = false
 	journal_open = false
-	_cooldown = 0.15
+	_cooldown = E_COOLDOWN
 
 # ---------------------------------------------------------------------------
 # 처음 한 번 안내 · 조사 먹점 · 여는 장면(검은 화면 글, 기록책 한 장, 큰 제목)
@@ -1018,7 +1068,7 @@ func ending(d: Dictionary) -> void:
 	await tw.finished
 	_ending.visible = false
 	modal = false
-	_cooldown = 0.15
+	_cooldown = E_COOLDOWN
 
 # ---------------------------------------------------------------------------
 # 전투 HUD

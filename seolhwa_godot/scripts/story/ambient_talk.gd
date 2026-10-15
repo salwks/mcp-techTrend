@@ -68,9 +68,11 @@ func talk(key: int) -> void:
 	var gen := _gen
 	var inf: Dictionary = npc.info(key)
 	npc.hold(key, d.main.player_pos)
-	d.face_actor("player", null, inf.p)
 	d.ui.prompt("")
 	d._target = null
+	# 겹치면 한 걸음 비켜 서고 두 사람 둘레 가림을 비운다(카메라는 그대로 — D5·C27, scripts/story/talk_frame.gd)
+	await d.talk_plain_begin(inf.p, 2.0)
+	if is_instance_valid(npc) and npc.agents.has(key): npc.hold(key, d.main.player_pos)   # 옮긴 자리를 다시 본다
 	if d.onboard != null: d.onboard.on_interact("actor")
 	var r := pick(key, inf)
 	var speaker := speaker_of(inf)
@@ -82,10 +84,12 @@ func talk(key: int) -> void:
 	var lines: Array = r.lines
 	if lines.size() == 1 and String(lines[0]).length() <= 16 and r.src != "rumor":
 		d.ui.caption("%s  “%s”" % [speaker, lines[0]], 2.4)   # 아주 짧은 말은 자막으로(조작을 막지 않는다)
+		d.talk_plain_end()
 		busy = false
 		await d.wait(2.2)
 	else:
 		await d.ui.say(speaker, lines)
+		d.talk_plain_end()
 		busy = false
 	if is_instance_valid(npc) and (gen == _gen or int(last.get("key", -1)) != key): npc.unhold(key)   # 그사이 같은 사람과 또 말하면 그쪽이 놓는다
 

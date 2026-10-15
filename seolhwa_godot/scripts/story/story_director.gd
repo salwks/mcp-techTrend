@@ -73,6 +73,15 @@ var _vign = null               # 길가 장면(scripts/story/vignettes.gd — v2
 var _rub = null                # 탁본(scripts/story/rubbing.gd — SKILL_RUBBING, 어느 공간에서나)
 var ambient = null             # 고을 사람 말 걸기(scripts/story/ambient_talk.gd)
 var keeper = null              # 역참 마부·길목 깃발 대화 — 역마 입구(scripts/region/station_keeper.gd)
+const TalkFrame := preload("res://scripts/story/talk_frame.gd")
+const TALK_IN := 0.55          # 대화 구도로 옮기는 시간(대화 카메라 v1.1 §4 CAM_TALK_2)
+const TALK_OUT := 0.45         # 대화 끝 평소 시점으로 돌아오는 시간
+const NPC_TURN_DELAY := 0.2    # 상대가 플레이어 쪽으로 도는 늦춤(§5)
+var talking := false           # 말 걸기 접근(한 걸음·구도)부터 대화 끝까지 — 그동안 E·이동을 받지 않는다(중복 E 막기)
+var _stepping := false         # 플레이어 한 걸음(걷기 그림을 idle로 되돌리지 않게)
+var _tf = null                 # scripts/story/talk_frame.gd
+var _talk_occ = null           # 대화 동안 건 가림 기준점(region_main.occ_script) — 내가 건 것만 푼다
+var last_frame := {}           # 마지막 대화 구도(시험·촬영 로그)
 var talk_cam := {}             # 지금 이야기 인물 대화 카메라(CameraRig.talk_spec — 공통 TALK·사건·인물 덮어쓰기). 대화가 끝나면 비운다
 var _music_t := 0.0
 var _music_cur := "?"          # 지금 튼 음악 id(사건 case_fn.music_wanted — 없으면 "")
@@ -102,7 +111,7 @@ static func create_for(m) -> Node:
 
 # ---- region_main이 부르는 것 ----
 func blocks_move() -> bool:
-	return (runner != null and runner.busy and not free_move) or (ui != null and (ui.modal or ui.journal_open)) or _cut or (title != null and title.active)
+	return talking or (runner != null and runner.busy and not free_move) or (ui != null and (ui.modal or ui.journal_open)) or _cut or (title != null and title.active)
 
 func drives_player() -> bool:
 	return combat_view != null and combat_view.active
@@ -263,7 +272,7 @@ func update(dt: float) -> void:
 	if case_id == "":
 		_update_rumors(dt)
 		_rub.update(dt)
-		if ui.modal or ui.journal_open or ambient.busy or keeper.busy:
+		if talking or ui.modal or ui.journal_open or ambient.busy or keeper.busy:
 			ui.prompt(""); _target = null
 		else: _update_target()
 		return
@@ -280,7 +289,7 @@ func update(dt: float) -> void:
 		elif S.phase == "start":
 			S.phase = "explore"
 		if test != null: test.begin()
-	if blocks_move() and not drives_player() and main.player.anim in ["walk", "run"]: main.player.set_anim("idle")
+	if blocks_move() and not drives_player() and not _stepping and main.player.anim in ["walk", "run"]: main.player.set_anim("idle")
 	_update_actors(dt)
 	if _dirty: _refresh()
 	_update_props()
@@ -288,7 +297,7 @@ func update(dt: float) -> void:
 	_update_ambient(dt)
 	if spirits != null: spirits.update(dt)
 	if sensing != null: sensing.update(dt)
-	if runner.busy or ui.modal or combat_view.active or ambient.busy or keeper.busy:
+	if talking or runner.busy or ui.modal or combat_view.active or ambient.busy or keeper.busy:
 		ui.prompt("")
 		_target = null
 		return
@@ -323,6 +332,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	# 고을 사람 말 걸기(사건이 없는 공간에서도)
+	if talking: return
 	if ev.is_action("interact") and _target != null and String(_target.kind) == "ambient" and not ui.busy_input() \
 			and not (runner != null and runner.busy) and not (combat_view != null and combat_view.active):
 		get_viewport().set_input_as_handled()
@@ -535,8 +545,9 @@ func shake(p: float, sec: float) -> void:
 func camera(spec) -> void:
 	var rig = main.rig
 	if spec == null or (spec is Dictionary and spec.is_empty()):
-		rig.override = null; rig.focus = null; rig.talk_o = null; rig.talk_f = null; return
+		rig.override = null; rig.focus = null; rig.talk_o = null; rig.talk_f = null; rig.talk_yaw = null; return
 	var soft := bool(spec.get("talk", false)) or bool(spec.get("lead", false))
+	if not bool(spec.get("talk", false)): rig.talk_yaw = null   # 저작 연출·추격 앞보기는 대화 옆 돌기를 쓰지 않는다
 	if soft and bool(main.get("fp_active")):
 		if bool(spec.get("talk", false)) and spec.get("focus") != null:
 			var fp := anchor(spec.focus)
@@ -690,19 +701,26 @@ func place_actor(id: String, at, y = null, facing := "") -> void:
 	if facing != "": a.facing = facing
 	_dirty = true
 
-func face_actor(id: String, dir, to) -> void:
+func face_actor(id: String, dir, to, side_k := 1.05) -> void:
 	var a = actors.get(id) if id != "player" else null
 	var d := String(dir) if dir != null else ""
 	if to != null:
 		var p := anchor(to)
 		var from := Vector2(main.player_pos.x, main.player_pos.z) if id == "player" else Vector2(a.pos.x, a.pos.z)
-		var v := p - from
-		d = "right" if absf(v.x) > absf(v.y) * 1.05 and v.x > 0 else ("left" if absf(v.x) > absf(v.y) * 1.05 else ("down" if v.y > 0 else "up"))
+		d = dir_of(p - from, side_k)
 	if d == "": return
 	if id == "player":
 		main.player.facing = d
 		if to != null and bool(main.get("fp_active")): main.fp_look_at(fp_head(to))   # 1인칭: 플레이어가 돌아보는 쪽으로 시선을 천천히
 	elif a != null: a.facing = d
+
+# 바라보는 쪽 이름(그림 front/back/side): 카메라 yaw(대화 옆 돌기면 그 목표 yaw) 기준 — yaw 0이면 예전과 같다(남→북 고정)
+#   side_k: 옆모습으로 치는 문턱(|x| > |z|·k). 대화 마주보기는 0.7 — 비스듬히 마주 서도 서로 옆모습으로 본다
+func dir_of(v: Vector2, side_k := 1.05) -> String:
+	var rig = main.rig
+	var y: float = float(rig.talk_yaw) if rig.talk_yaw != null else float(rig.yaw)
+	if absf(y) > 0.01: v = v.rotated(y)
+	return "right" if absf(v.x) > absf(v.y) * side_k and v.x > 0 else ("left" if absf(v.x) > absf(v.y) * side_k else ("down" if v.y > 0 else "up"))
 
 # 1인칭 시선 겨냥점: 이야기 인물이면 머리(발 + 1.45m), 자리면 그 땅 위 1.45m(사람 눈높이 — 고개를 거의 들지 않는다)
 func fp_head(at) -> Vector3:
@@ -984,7 +1002,8 @@ func _update_target() -> void:
 	ui.prompt(best.label if best != null else "")
 
 func interact(id: String) -> void:
-	if runner.busy: return
+	if runner.busy or talking: return
+	talking = true
 	var steps := []
 	if actors.has(id):
 		var a: Dictionary = actors[id]
@@ -993,12 +1012,10 @@ func interact(id: String) -> void:
 		for t in a.spec.get("talk", []):
 			if runner.cond(t.get("when", true)):
 				steps = t.get("steps", []); break
-		face_actor(id, null, "player")
-		face_actor("player", null, id)
 	else:
 		for o in data.get("objects", []):
 			if String(o.id) == id:
-				if not runner.cond(o.get("when", true)): return
+				if not runner.cond(o.get("when", true)): talking = false; return
 				steps = o.get("steps", [])
 				if bool(main.get("fp_active")):   # 1인칭 살펴보기: 물건 쪽(땅 위 0.6m)으로 고개를 숙여 본다
 					var op := anchor(o.at)
@@ -1010,22 +1027,107 @@ func interact(id: String) -> void:
 	ui.prompt("")
 	var tc = CameraRig.talk_spec(data.get("case", {}), actors[id].spec) if actors.has(id) else null
 	var cam_on: bool = tc is Dictionary and not steps.is_empty()
-	if cam_on: _talk_camera(id, tc)
+	if actors.has(id): await _talk_approach(id, tc if cam_on else null, not steps.is_empty())
 	await runner.run(steps)
 	if cam_on and not talk_cam.is_empty(): _talk_camera_end()
+	_talk_occ_end()
+	talking = false
 	if onboard != null: onboard._pend_t = 0.0   # 「…」 바로 다시 본다
+
+# 말 걸기 접근(재기획 2단계 — 대화 카메라 v1.1 §5·§6, D5·D9): 3인칭이면 구도를 한 번 계산해(talk_frame.gd)
+#   ① 플레이어가 겹치면 상대 곁으로 한 걸음 ② 이야기 인물이면 카메라 옆 돌기·거리(0.55초 미끄러짐) ③ 두 사람 둘레 가림 점무늬
+#   ④ 플레이어는 상대를, 상대는 0.2초 늦게 플레이어를 본다. 1인칭(C68)은 예전 그대로(돌아보기, 대화 구도 없음).
+func _talk_approach(id: String, tc, has_steps: bool) -> void:
+	var a: Dictionary = actors[id]
+	if bool(main.get("fp_active")) or not has_steps:
+		face_actor(id, null, "player")
+		face_actor("player", null, id)
+		if tc != null: _talk_camera(id, tc)
+		return
+	if _tf == null: _tf = TalkFrame.new(self)
+	var nh: float = float(a.ch.height) if a.ch != null else 2.0
+	var pl: Dictionary = _tf.plan(a.pos, nh, tc != null, tc if tc != null else {})
+	last_frame = pl.duplicate(); last_frame.id = id
+	_log_frame(id, pl)
+	var t0 := Time.get_ticks_msec()
+	if tc != null: _talk_camera(id, tc, pl)
+	var stand_p: Vector2 = pl.stand if pl.stand != null else Vector2(main.player_pos.x, main.player_pos.z)
+	_talk_occ_begin(Vector3(stand_p.x, world.height_at(stand_p.x, stand_p.y), stand_p.y), float(main.player.height), a.pos, nh)
+	if pl.stand != null: await _step_player(pl.stand, clampf(float(pl.move) / TalkFrame.WALK_SPEED, 0.2, 0.6))
+	face_actor("player", null, id, 0.7)
+	var el := (Time.get_ticks_msec() - t0) / 1000.0
+	if el < NPC_TURN_DELAY: await wait(NPC_TURN_DELAY - el)
+	face_actor(id, null, "player", 0.7)
+	el = (Time.get_ticks_msec() - t0) / 1000.0
+	if tc != null and el < TALK_IN: await wait(TALK_IN - el)   # 상자는 구도가 선 뒤(콘티 0.70초 언저리)
+
+# 고을 사람·역참 마부 말 걸기(카메라는 움직이지 않는다 — D5·C27): 겹치면 한 걸음, 두 사람 둘레 가림 점무늬. 끝나면 talk_plain_end()
+func talk_plain_begin(p: Vector2, h := 2.0) -> void:
+	talking = true
+	if bool(main.get("fp_active")):
+		face_actor("player", null, p); return
+	if _tf == null: _tf = TalkFrame.new(self)
+	var npc := Vector3(p.x, world.height_at(p.x, p.y), p.y)
+	var pl: Dictionary = _tf.plan(npc, h, false, {})
+	last_frame = pl.duplicate(); last_frame.id = "plain"
+	_log_frame("plain", pl)
+	var stand_p: Vector2 = pl.stand if pl.stand != null else Vector2(main.player_pos.x, main.player_pos.z)
+	_talk_occ_begin(Vector3(stand_p.x, world.height_at(stand_p.x, stand_p.y), stand_p.y), float(main.player.height), npc, h)
+	if pl.stand != null: await _step_player(pl.stand, clampf(float(pl.move) / TalkFrame.WALK_SPEED, 0.2, 0.6))
+	face_actor("player", null, p, 0.7)
+
+func talk_plain_end() -> void:
+	_talk_occ_end()
+	talking = false
+
+func _log_frame(id: String, pl: Dictionary) -> void:
+	if not (log_story or main.args.has("talkshot") or main.args.has("talktest") or main.args.has("viewtest")): return
+	print("TALKFRAME id=%s phase=%s yaw=%.0f dist=%.1f move=%.2f stand=%s overlap=%.2f occ_npc=%d occ_player=%d cands=%d" % [id, pl.phase,
+		rad_to_deg(float(pl.yaw)), float(pl.distance), float(pl.move), pl.stand, float(pl.overlap), int(pl.occ_npc), int(pl.occ_player), int(pl.n)])
+
+# 플레이어 한 걸음(걷기 그림, 직선 — talk_frame이 막힘 없는 길만 고른다). 시험 자동 진행은 바로 옮긴다
+func _step_player(to: Vector2, dur: float) -> void:
+	var from := Vector2(main.player_pos.x, main.player_pos.z)
+	if ui.auto and not ui.auto_real:
+		set_player_pos(Vector3(to.x, world.height_at(to.x, to.y), to.y)); return
+	_stepping = true
+	main.player.facing = dir_of(to - from)
+	main.player.set_anim("walk")
+	var t := 0.0
+	while t < dur:
+		await get_tree().process_frame
+		if not is_inside_tree(): return
+		t += get_process_delta_time()
+		var q := from.lerp(to, smoothstep(0.0, 1.0, clampf(t / dur, 0.0, 1.0)))
+		set_player_pos(Vector3(q.x, world.height_at(q.x, q.y), q.y))
+	main.player.set_anim("idle")
+	_stepping = false
+
+func _talk_occ_begin(pp: Vector3, ph: float, npc: Vector3, nh: float) -> void:
+	if main.occ_script != null: return   # 사건이 건 각본 가림이 먼저
+	_talk_occ = TalkFrame.occ_spec(pp, ph, npc, nh)
+	main.set_occ_script(_talk_occ)
+
+func _talk_occ_end() -> void:
+	if _talk_occ != null and is_same(main.occ_script, _talk_occ): main.set_occ_script(null)
+	_talk_occ = null
 
 # 이야기 인물 대화 카메라(공통 — 제작 규칙 v1.0 결정 4, 남원 v3.2 §8 CAMERA 1A에서 승격): 이야기 인물에게 직접 말을 걸 때만
 #   (고을 사람·마부·깃발은 이 길을 지나지 않는다). 값은 CameraRig.talk_spec: 공통 TALK 38/13.5/38 → case.talk_camera → actor.talk_camera,
 #   false면 평소 카메라. 플레이어와 인물 사이를 겨냥하고 대화 동안 음악을 조금 낮춘다.
 #   대화 안에서 연출이 카메라를 바꾸면(컷신) 그쪽이 이긴다 — 끝날 때 평소 시점으로
-func _talk_camera(id: String, tc: Dictionary) -> void:
+func _talk_camera(id: String, tc: Dictionary, pl := {}) -> void:
 	var a: Dictionary = actors[id]
 	var mid := (Vector2(main.player_pos.x, main.player_pos.z) + Vector2(a.pos.x, a.pos.z)) * 0.5
+	if pl.has("focus"): mid = pl.focus
 	talk_cam = tc.duplicate()
 	talk_cam.focus = [mid.x, mid.y]
 	talk_cam.talk = true
+	if pl.has("distance"): talk_cam.distance = float(pl.distance)
 	camera(talk_cam)
+	if not pl.is_empty() and not bool(main.get("fp_active")):
+		main.rig.talk_yaw = float(pl.yaw)
+		main.rig.glide(TALK_IN, null, true)   # 0.55초 smoothstep — 겨냥점·pitch·거리·fov·yaw를 함께
 	Sound.music_level(0.5, 0.6)
 
 # 사건 단위 대화 카메라 값(인물 덮어쓰기 없이) — 사건 연출이 대화 구도를 다시 쓸 때(남원 마부·아이들·포수·이웃 아낙·노인). 꺼졌으면 {}
@@ -1036,7 +1138,12 @@ func talk_camera_base() -> Dictionary:
 
 func _talk_camera_end() -> void:
 	talk_cam = {}
+	var turned: bool = main.rig.talk_yaw != null or absf(float(main.rig.yaw)) > 0.001
 	camera(null)
+	# 평소 시점으로 0.45초(대화 v1.1 §4) — 평소 시점은 플레이어 자리·구역으로 정해지므로 그것이 곧 '이전 시점'이다.
+	#   사건 연출이 미끄러짐·각본 시점을 쥐고 있으면 그쪽에 맡긴다
+	if not bool(main.get("fp_active")) and main.rig.shot == null and not main.rig.gliding():
+		main.rig.glide(TALK_OUT, null, turned)
 	Sound.music_level(1.0, 1.0)
 
 func _check_triggers() -> void:
