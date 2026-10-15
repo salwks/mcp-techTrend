@@ -142,6 +142,8 @@ export function posePose(view, anim, t, rig) {
         leg1: [0.18, 0, -S.thigh * 0.62, 1, 0.38], leg1_l: [-0.12], leg2: [-0.18, 0, -S.thigh * 0.62, 1, 0.38], leg2_l: [0.12],
         arm1: [0.18], arm1_l: [-0.7], arm2: [-0.18], arm2_l: [0.7],
         skirt: robe ? [0, 0, -2 * k, 1.25, 0.72] : [0] };
+      // sit_seat(빌더): 종아리는 허벅지의 짧아짐(0.38)을 물려받지 않게 되돌려 땅까지 보인다(sit_chair는 예전 그림 그대로)
+      if (anim === 'sit_seat') { F.leg1_l = [-0.06, 0, 0, 1, 1 / 0.38]; F.leg2_l = [0.06, 0, 0, 1, 1 / 0.38]; }
       if (view === 'back') F = null;
     }
   }
