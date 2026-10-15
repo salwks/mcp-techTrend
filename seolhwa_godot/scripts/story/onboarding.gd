@@ -39,7 +39,10 @@ var _hint_until: Callable = Callable()
 var _queue: Array = []     # [[key, text, until, sec, core]]
 # 핵심 안내 — 시간으로 끝나지 않고 행동해야 끝난다(§4·§26). MOVE 5m 걷기 → RUN 2초 달리기(track_move) · INSPECT·TALK(on_interact) ·
 #   JOURNAL(사건 기록이 선 뒤 — on_case_started, 기록책을 열면) · MAP(들은 곳이 지도에 적힐 때 — on_discover, 지도를 열면).
-const CORE := ["MOVE", "RUN", "INSPECT", "TALK", "JOURNAL", "MAP", "COMBAT_DODGE", "COMBAT_GUARD"]
+#   재기획 3단계(첫15 §07): WAYPOINT(지도에 목적지 표기 뒤 — 실제로 [목적지 설정]을 해야 끝, on_waypoint_lead · region_map → on_waypoint_set).
+#   사건 머리 case.onboard로 사건별로 바꾼다: move_m(이동 문턱 — 메인 서장 3m, 기본 5m 그대로) · journal_close(기록책을 실제로 열고 닫아야 끝).
+#   TALK는 대화가 시작되고 첫 줄이 보일 때 끝난다(on_line — 첫15 '대화 시작 후 1줄 재생').
+const CORE := ["MOVE", "RUN", "INSPECT", "TALK", "JOURNAL", "MAP", "WAYPOINT", "COMBAT_DODGE", "COMBAT_GUARD"]
 # 전투 핵심 안내 — 전투 중에만 뜬다(ONBOARD_PENDING에 남기지 않는다 — 이어 하기 뒤 들판에 뜨지 않게, 다음 범 싸움에서 다시 선다)
 const COMBAT_CORE := ["COMBAT_DODGE", "COMBAT_GUARD"]
 const MIN_SHOWN := 2.5     # 정보 안내가 끊겼을 때 이만큼 보였으면 본 것으로
@@ -78,7 +81,8 @@ func _init(director) -> void:
 
 func _ready() -> void:
 	_play = float(Progress.onboard("PLAY_TIME", 0.0))
-	d.ui.on_journal_page = func(_id): seen_now("JOURNAL")
+	d.ui.on_journal_page = func(_id):
+		if not _case_onboard().get("journal_close", false): seen_now("JOURNAL")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_restore_pending()
 
@@ -93,7 +97,7 @@ func _restore_pending() -> void:
 # 다시 불러온 핵심 안내의 끝 조건(대개는 행동하는 곳에서 seen_now가 부른다 — 여기는 그 밖의 것만)
 func _until_for(k: String) -> Callable:
 	match k:
-		"JOURNAL": return func(): return d.ui.journal_open
+		"JOURNAL": return _journal_until()
 		"MAP": return func(): return _map_open()
 	return Callable()
 
@@ -116,8 +120,18 @@ func _set_pending(k: String, text: String) -> void:
 func guide() -> String: return GameSettings.guide()
 func help() -> String: return GameSettings.help()
 
+# 초반(C37): 놀이 25분 안 — 오누이를 끝냈거나 메인 서장에서 목적지를 정했으면(재기획 3단계) 초반이 아니다
 func early() -> bool:
-	return _play < EARLY_SEC and not bool(Progress.get_var("CASE_NAMWON_COMPLETE", false)) and not (d.S != null and bool(d.S.vars.get("CASE_NAMWON_COMPLETE", false)))
+	if _play >= EARLY_SEC: return false
+	if bool(Progress.get_var("CASE_NAMWON_COMPLETE", false)) or (d.S != null and bool(d.S.vars.get("CASE_NAMWON_COMPLETE", false))): return false
+	if d.get("case_id") == "main_p1" and d.S != null and d.S.is_flag("WAYPOINT_SET"): return false
+	return not bool((Progress.case_state("main_p1").get("flags", {}) as Dictionary).get("WAYPOINT_SET", false))
+
+# 지금 사건의 안내 설정(case.onboard — 머리말)
+func _case_onboard() -> Dictionary:
+	var dd = d.get("data")
+	var o = dd.get("case", {}).get("onboard", {}) if dd is Dictionary else {}
+	return o if o is Dictionary else {}
 
 # 먹점 세기: 0이면 그리지 않는다
 func mark_level() -> float:
@@ -184,7 +198,7 @@ func _in_combat() -> bool:
 
 # 떠 있는 안내를 잠시 감출 때: 대화창·기록책·컷신. 전투 중에는 건드리지 않는다(전투 안내 K·L이 같은 자리를 쓴다)
 func _hint_hide() -> bool:
-	return not _in_combat() and ((d.talking and not d.free_move) or d.ui.modal or d.ui.journal_open or d._cut)   # talking: 말 걸기 접근(한 걸음·구도) 동안도
+	return not _in_combat() and ((d.talking and not d.free_move) or d.ui.modal or d.ui.journal_open or d._cut or d.get("hush_hints") == true)   # hush_hints: 걸으며 보는 제목(OP01) 동안   # talking: 말 걸기 접근(한 걸음·구도) 동안도
 
 func _update_hints(dt: float) -> void:
 	if _hint_key != "":
@@ -241,14 +255,51 @@ func observe(about: String, text: String) -> void:
 # 기록책 안내(R)는 첫 조사 뒤가 아니라 사건 기록이 선 뒤(v3.2 §9 — on_case_started)
 func on_interact(kind: String) -> void:
 	if kind == "object": seen_now("INSPECT")
-	else: seen_now("TALK")
+	else: _talk_wait = true   # 첫 줄이 보이면 끝(on_line)
+
+var _talk_wait := false
+# 대사·짧은 말(자막)이 보였다 — story_director.on_say · ambient_talk(짧은 말)
+func on_line() -> void:
+	if _talk_wait:
+		_talk_wait = false
+		seen_now("TALK")
+
+# 기록책 안내의 끝: 사건이 journal_close면 실제로 열고 닫아야(첫15 §07 'R 기록책 — 실제 열고 닫음'), 아니면 열면
+func _journal_until() -> Callable:
+	if not _case_onboard().get("journal_close", false): return func(): return d.ui.journal_open
+	var st := [false]
+	return func():
+		if d.ui.journal_open: st[0] = true
+		return st[0] and not d.ui.journal_open
+
+# 기록책을 실제로 열었다가 닫았다(journal_close 사건) — 안내가 아직 줄에서 기다리는 동안 열고 닫아도 끝난다(안내가 떠 있을 때만 보던 것을 고침)
+var _jr_open := false
+func _track_journal() -> void:
+	if not _case_onboard().get("journal_close", false) or is_seen("JOURNAL"): return
+	if d.ui.journal_open: _jr_open = true; return
+	if not _jr_open: return
+	_jr_open = false
+	var asked: bool = _hint_key == "JOURNAL" or _queue.any(func(q): return String(q[0]) == "JOURNAL")
+	if asked: seen_now("JOURNAL")
+
+# 메인 서장: 첫 기록(조사 단서)이 적혔다 → R 기록책(첫15 P00-A '조사 완료 후 R 안내는 기록 한 장 획득했을 때만')
+func on_first_record() -> void:
+	once("JOURNAL", "R   기록책 — 살펴본 것이 적혔다", _journal_until(), 8.0)
+
+# 메인 서장: 지도에 목적지 후보가 적혔다 → 목적지 설정(핵심 — 실제로 정해야 끝)
+func on_waypoint_lead() -> void:
+	once("WAYPOINT", "M 지도에서 붉은 인을 눌러 [목적지 설정]", func(): return is_seen("WAYPOINT"), 9.0)
+
+# region_map이 목적지를 정했다
+func on_waypoint_set(_w: Dictionary) -> void:
+	seen_now("WAYPOINT")
 
 func on_discover(nm: String, how: String) -> void:
 	if how == "told": once("MAP", "M   지도 — 들은 곳이 적혔다", func(): return _map_open(), 9.0)
 
 # 사건 기록이 섰다 → R 기록책(핵심 — 실제로 열어야 끝난다). 지도(M)는 들은 곳이 지도에 적힐 때(on_discover)
 func on_case_started() -> void:
-	once("JOURNAL", "R   기록책 — 새 사건이 적혔다", func(): return d.ui.journal_open, 8.0)
+	once("JOURNAL", "R   기록책 — 새 사건이 적혔다", _journal_until(), 8.0)
 
 func _map_open() -> bool:
 	var m = d.main.get("_map")
@@ -266,9 +317,11 @@ func _process(delta: float) -> void:
 		Progress.set_onboard("PLAY_TIME", snappedf(_play, 1.0), d.test == null)
 	var mp = d.main.get("_map")
 	if mp != null and not mp.on_discover.is_valid(): mp.on_discover = on_discover
+	if mp != null and mp.get("on_waypoint") != null and not mp.on_waypoint.is_valid(): mp.on_waypoint = d.on_waypoint
 	if _map_open():
 		_map_was_open = true
 		seen_now("MAP")
+	_track_journal()
 	_update_move(dt)
 	_update_prompt_style()
 	_update_hints(dt)
@@ -301,7 +354,7 @@ func track_move(step: float, running: bool, dt: float) -> void:
 	if step > JUMP_M or step <= 0.0001: return
 	if not is_seen("MOVE"):
 		moved_m += step
-		if moved_m >= MOVE_M:
+		if moved_m >= float(_case_onboard().get("move_m", MOVE_M)):
 			seen_now("MOVE")
 			if not is_seen("RUN"): once("RUN", "Shift   달리기", Callable(), 5.0)
 		return

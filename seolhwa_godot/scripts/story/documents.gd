@@ -25,7 +25,8 @@
 # 쓰기:  var r: Dictionary = await Docs.open(d, { "docs": ["deed_a", "deed_b"], "title": "…", "note": "…" })
 #        r = { found: [이번에 새로 짚은 "문서/짚을 곳" …], all: [지금까지 짚은 것 …], closed: true }
 #   짚은 것은 S.flags["_doc_found"]에 남는다(다시 열면 붉은 먹점으로 보인다).
-#   시험: d.test에 doc_exam(exam)이 있으면 열린 뒤 그것을 부른다(exam.mark_spot(문서, 짚을 곳) · exam.close()). 없고 ui.auto면 바로 덮는다.
+#   시험: d.test에 doc_exam(exam)이 있으면 열린 뒤 그것을 부른다(exam.mark_spot(문서, 짚을 곳) · exam.close()). 없으면 d.doc_hook(흐름 시험), 없고 ui.auto면 바로 덮는다.
+#   opts.hint_after(초)·hint_text: 그동안 새로 짚은 것이 없으면 도움말 한 줄(한 번 — 벌점·정답 표시 없음).
 extends CanvasLayer
 
 signal closed
@@ -67,6 +68,11 @@ var _zoom_l: Label
 var _k := 1.0
 var _key_move := Vector2.ZERO
 var _open := false
+# 늦은 도움말(재기획 3단계 — 첫15 P01-B '60초 무진행 시 선택형 힌트'): opts.hint_after초 동안 새로 짚은 것이 없으면 hint_text를 한 번
+var hint_after := 0.0
+var hint_late := ""
+var _idle_t := 0.0
+var late_hint_shown := false   # 시험 기록
 
 static func open(director, opts: Dictionary) -> Dictionary:
 	var ex = load("res://scripts/story/documents.gd").new()
@@ -76,6 +82,8 @@ static func open(director, opts: Dictionary) -> Dictionary:
 	ex._start()
 	if director.test != null and director.test.has_method("doc_exam"):
 		director.test.doc_exam.call_deferred(ex)
+	elif director.get("doc_hook") is Callable and director.doc_hook.is_valid():   # 사건 시험이 아닌 흐름 시험(continue_test first15 등)
+		director.doc_hook.call_deferred(ex)
 	elif director.ui.auto:
 		ex.close.call_deferred()
 	await ex.closed
@@ -96,6 +104,8 @@ func _setup(opts: Dictionary) -> void:
 	ids = Array(opts.get("docs", [])).filter(func(i): return defs.has(String(i)))
 	title_text = String(opts.get("title", "문서 살피기" if ids.size() < 2 else "문서 비교"))
 	note_text = String(opts.get("note", ""))
+	hint_after = float(opts.get("hint_after", 0.0))
+	hint_late = String(opts.get("hint_text", ""))
 	skill = bool(opts.get("skill", bool(d.S.vars.get("SKILL_DOCUMENT_CHECK", false))))
 	_font = preload("res://scripts/ui_fonts.gd").main()
 	for id in ids: _fibers[id] = _make_fibers(defs[id], int(defs[id].get("seed", hash(id) % 9973)))
@@ -193,6 +203,16 @@ func _layout() -> void:
 	_hint.custom_minimum_size = Vector2(vs.x * 0.76 - 40, 0)
 	_desk.queue_redraw(); _loupe.queue_redraw()
 
+func _show_late_hint() -> void:
+	late_hint_shown = true
+	_hint.text = hint_late
+	var hp: Control = _root.get_node("hint_panel")
+	hp.visible = true
+	_layout()
+	if d.log_story: printerr("HINT late ", hint_late)
+	await get_tree().create_timer(8.0, true, false, true).timeout
+	if is_instance_valid(hp): hp.visible = false
+
 func _first_hint() -> void:
 	var ob = d.get("onboard")
 	var lines := []
@@ -245,6 +265,9 @@ func _input(ev: InputEvent) -> void:
 
 func _process(dt: float) -> void:
 	if not _open: return
+	if hint_after > 0.0 and hint_late != "" and not late_hint_shown:
+		_idle_t += dt
+		if _idle_t >= hint_after: _show_late_hint()
 	if _key_move != Vector2.ZERO:
 		cursor += _key_move.normalized() * 365.6 * _k * dt
 		var vs := get_viewport().get_visible_rect().size
@@ -328,6 +351,7 @@ func mark() -> void:
 	f[key] = { x = snappedf(q.x, 0.001), y = snappedf(q.y, 0.001) }
 	d.S.flags["_doc_found"] = f
 	found_now.append(key)
+	_idle_t = 0.0
 	d.runner.log_line("doc", key)
 	_say("%s — %s" % [String(h.get("label", "")), String(h.get("text", ""))], 5.0)
 	if String(h.get("clue", "")) != "": d.learn_clue(String(h.clue))

@@ -1005,7 +1005,8 @@ func center_text(text: String, sec := 2.0) -> void:
 	tw.tween_property(_center, "modulate:a", 0.0, 0.05 if auto else 0.5)
 	await tw.finished
 
-func title_card(text: String, sec := 2.4, size := 93) -> void:
+# fade_in·fade_out: 들어옴·나감(초, 기본 0.6 — 오누이 S0001 그대로). 메인 서장 OP01은 재기획 OP-04대로 0.8·1.0(보임 4초 + 사라짐 1초)
+func title_card(text: String, sec := 2.4, size := 93, fade_in := 0.6, fade_out := 0.6) -> void:
 	if log_lines: printerr("TITLE ", text)
 	preload("res://scripts/region/place_title.gd").note_story(text)   # 같은 지명이 곧 지명 표시로 겹쳐 뜨지 않게
 	_title_l.text = text
@@ -1015,9 +1016,9 @@ func title_card(text: String, sec := 2.4, size := 93) -> void:
 	_title_logo.visible = is_logo
 	_title_l.self_modulate.a = 0.0 if is_logo else 1.0
 	var tw := create_tween()
-	tw.tween_property(_title_l, "modulate:a", 1.0, 0.05 if auto else 0.6)
-	tw.tween_interval(0.05 if auto else maxf(0.3, sec - 1.2))
-	tw.tween_property(_title_l, "modulate:a", 0.0, 0.05 if auto else 0.6)
+	tw.tween_property(_title_l, "modulate:a", 1.0, 0.05 if auto and not auto_real else fade_in)
+	tw.tween_interval(0.05 if auto and not auto_real else maxf(0.3, sec - fade_in - fade_out))
+	tw.tween_property(_title_l, "modulate:a", 0.0, 0.05 if auto and not auto_real else fade_out)
 	await tw.finished
 
 func title_card_stop() -> void:
