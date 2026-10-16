@@ -502,6 +502,19 @@ func _maybe_title() -> void:
 	title = load("res://scripts/story/title_menu.gd").new(self)
 	add_child(title)
 
+# 시험(--titletest=newcap): 새 게임부터 step초마다 화면을 찍는다 — 오프닝 연속 캡처. 끝나면 게임을 닫는다
+func newgame_capture(dir: String, secs: float, step: float) -> void:
+	DirAccess.make_dir_recursive_absolute(dir)
+	var t0 := Time.get_ticks_msec()
+	var n := 0
+	while float(Time.get_ticks_msec() - t0) / 1000.0 < secs:
+		await get_tree().create_timer(step).timeout
+		var t := float(Time.get_ticks_msec() - t0) / 1000.0
+		get_viewport().get_texture().get_image().save_jpg(dir.path_join("%02d_t%05.2f.jpg" % [n, t]), 0.8)
+		n += 1
+	printerr("NEWCAP %d frames → %s" % [n, dir])
+	main._quit()
+
 func outcome_var() -> String:
 	return String(data.get("case", {}).get("outcome_var", "CASE_%s_OUTCOME" % case_id.to_upper()))   # 남원은 데이터에 CASE_NAMWON_OUTCOME
 
