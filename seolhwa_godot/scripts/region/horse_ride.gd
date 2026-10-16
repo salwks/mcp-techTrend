@@ -122,6 +122,10 @@ func setup(m) -> void:
 		var tt = load("res://scripts/region/travel_rules_test.gd").new(m)
 		tt.run.call_deferred(String(m.args.traveltest))
 		m.set_meta("travel_test", tt)
+	if m.args.has("mappintest"):   # 지도 목적지·역마 시험(scripts/region/map_pin_test.gd — 재기획 4단계)
+		var mpt = load("res://scripts/region/map_pin_test.gd").new(m)
+		mpt.run.call_deferred(String(m.args.mappintest))
+		m.set_meta("mappin_test", mpt)
 	if m.args.has("stationtest"):
 		var tst = load("res://scripts/region/station_test.gd").new(m)
 		tst.run.call_deferred(String(m.args.stationtest))
@@ -220,10 +224,19 @@ func _update_foot(dt: float, free: bool, want_e: bool) -> void:
 		if fired or pp0.distance_to(_approach.p) > float(_approach.r) + STORY_APPROACH + 160.0 or float(_approach.t) > 240.0:
 			_approach = {}
 			_set_state("ON_FOOT")
+	if not intent.is_empty() and Progress.waypoint().is_empty(): intent = {}   # 목적지를 지웠다
 	if not free: return
-	# 역참 문 앞: 넓은 구역 E(예전 '역마를 낸다')를 없앴다 — 마부에게 말을 걸어 고른다
+	# 역참 문 앞: 넓은 구역 E(예전 '역마를 낸다')를 없앴다 — 마부에게 말을 걸어 고른다.
+	#   예외(재기획 4단계 — C05): 지도에서 [말로 이동]을 골라 말 타는 곳까지 걸어온 경우(intent)는 여기서 E 한 번으로 마부가 말을 끌어 온다
 	if life != null and life.enabled() and not life.near(Vector2(main.player_pos.x, main.player_pos.z), STATION_QUIET).is_empty():
 		_choice_from = -1
+		if not intent.is_empty():
+			_ip_t -= dt
+			if _ip_t <= 0.0: _ip = pin_plan(intent.t); _ip_t = 1.0   # 길 찾기는 1초마다
+			var pl := _ip
+			if bool(pl.get("ok", false)) and (pl.walk_to as Dictionary).is_empty():
+				prompt = "E   말에 오른다 — 목적지 · %s 쪽으로 (약 %d분)" % [String(intent.t.get("name", "")), int(pl.mins)]
+				if want_e: ride_pin(intent.t)
 		return
 	var chk := mount_check()
 	if not bool(chk.ok):
@@ -322,6 +335,11 @@ func _build_choices(gi: int) -> void:
 	choices.sort_custom(func(a, b): return float(a.score) < float(b.score))
 	# 너무 많으면 가까운 것 위주로(이야기·노정 끝은 남김)
 	if choices.size() > 9: choices = choices.slice(0, 9)
+	# 지도 목적지가 있으면 맨 앞(같은 거점이면 하나로)
+	var wc := _waypoint_choice(dj)
+	if not wc.is_empty():
+		choices = choices.filter(func(x): return String(x.node.id) != String(wc.node.id))
+		choices.push_front(wc)
 
 func _node_name(n: Dictionary) -> String:
 	var nm := String(n.get("name", ""))
@@ -347,6 +365,155 @@ func station_ride_choices(st: Dictionary) -> Array:
 	_choice_from = -1
 	return out
 
+# ---- 지도 목적지로 말 타기(재기획 4단계 — 지도 v1.3 §07, 역마 결정: 지도에서 고르는 것이 기본 입구 · 마부·깃발은 보조) ----
+#   목적지(waypoint_plan.gd 목적지 사전) → 이 공간의 말 목적지: 역마 거점이면 그 어귀, 고을·마을 구역 안이면 그 거점 어귀,
+#   그 밖(빈 곳·이름난 곳)은 PIN_SNAP 안 가장 가까운 큰길 점, 다른 공간이면 그쪽 노정 길 끝(ROUTE_END — 넘어가서 다시 잇는다).
+#   탈 자리: 말 위면 지금 자리(다시 길 찾기), 탈 수 있는 자리면 여기, 아니면 가장 가까운 말 타는 곳까지 **걸어서**(intent — 순간이동 없음).
+#   멈춤·감속·하차(성문·사건 앞·노정 끝)는 보통 말 타기와 같다(_plan_marks). 목적지는 저장(progress.waypoint), 말 상태는 저장하지 않는다.
+const PIN_SNAP := 400.0      # 짚은 곳에서 이만큼 안의 큰길 점까지 말로(그 너머는 걸어서)
+const PIN_NEAR := 70.0       # 큰길로 이보다 가까우면 말을 탈 까닭이 없다
+const WaypointPlan := preload("res://scripts/region/waypoint_plan.gd")
+var intent := {}             # 말 타는 곳까지 걸어가는 중 { p: Vector2, name, t(목적지 사전) } — 저장하지 않는다
+var map_halt := false        # D6: 말 위에서 지도를 열어 세웠다(S로 다시 가거나 지도에서 [말로 이동])
+var _ip := {}                # intent 길 찾기 결과(1초마다)
+var _ip_t := 0.0
+
+func pin_goal(t: Dictionary) -> Dictionary:
+	if not enabled: return { why = "이 길에는 말이 다닐 큰길이 없다" }
+	var here: String = net.space
+	var sp := String(t.get("space", here))
+	if sp != here:
+		var ex := WaypointPlan.exit_for(here, sp)
+		if ex.is_empty() or not net.node_by.has(String(ex.id)): return { why = "그쪽으로 이어진 길을 모른다" }
+		var ne: Dictionary = net.node_by[String(ex.id)]
+		return { node = ne, gi = -1, name = String(ne.name), cross = true, next = String(ex.next) }
+	var nid := String(t.get("node", ""))
+	if nid != "" and net.node_by.has(nid) and not (net.node_by[nid].get("gates", []) as Array).is_empty():
+		return { node = net.node_by[nid], gi = -1, name = _node_name(net.node_by[nid]) }
+	if not (t.get("c") is Vector2): return { why = "자리를 모른다" }
+	var c: Vector2 = t.c
+	var zn: Dictionary = net.node_at(c)   # 고을·마을·역 구역 안을 짚었으면 그 거점 어귀까지(성 안은 걸어서 든다)
+	if not zn.is_empty() and not HIDDEN_KINDS.has(String(zn.kind)) and not (zn.get("gates", []) as Array).is_empty():
+		return { node = zn, gi = -1, name = _node_name(zn) }
+	var gi: int = net.nearest(c, PIN_SNAP)
+	if gi < 0: return { why = "가까이 말이 다닐 큰길이 없다 — 걸어서 간다" }
+	return { node = { id = "waypoint", kind = "PIN", name = String(t.get("name", "목적지")), gates = [] }, gi = gi, name = String(t.get("name", "목적지")) }
+
+# 말에 오를 자리 {gi, here(지금 자리에서 탐)} 또는 {why} 또는 {walk: true}(여기서는 못 탄다 — 말 타는 곳까지 걷는다)
+func pin_start() -> Dictionary:
+	var pp := Vector2(main.player_pos.x, main.player_pos.z)
+	if mounted():
+		if not riding(): return { why = "말에 오르내리는 중이다" }
+		return { gi = net.nearest(pp, ROAD_R + 8.0), here = true }
+	if world.indoor != null: return { why = "실내에서는 말을 탈 수 없다" }
+	if _blizzard(): return { why = "눈보라 — 말은 고삐를 잡고 끌며 걷는다" }
+	var chk := mount_check()
+	if bool(chk.ok): return { gi = int(chk.gi), here = true }
+	if life != null and life.enabled():   # 역 문 앞(조용 구역): 마부가 마방의 말을 끌어 온다
+		var st: Dictionary = life.near(pp, STATION_QUIET)
+		if not st.is_empty():
+			var g0: int = net.nearest(Vector2(float(st.yard[0]), float(st.yard[1])), ROAD_R + 6.0)
+			if g0 >= 0: return { gi = g0, here = true }
+	return { walk = true }
+
+# 걸어서 갈 말 타는 곳 후보(가까운 차례): 권역은 역 문 앞·노정 끝·나루(C06·C08)·막 내린 자리, 노정은 가까운 큰길 — [{p, name, gi}]
+func _mount_cands() -> Array:
+	var pp := Vector2(main.player_pos.x, main.player_pos.z)
+	var out := []
+	if world.is_route:
+		var g1: int = net.nearest(pp, 400.0)
+		if g1 >= 0: out.append({ p = net.pts[g1], name = "큰길", gi = g1, d = 0.0 })
+		return out
+	for mt in net.mounts:
+		var q := Vector2(float(mt.x), float(mt.z))
+		var nm := String(net.node_by.get(String(mt.id), {}).get("name", "말 타는 곳"))
+		if String(mt.get("station", "")) != "": nm = String(Stations.by_id(String(mt.station)).get("name", nm))
+		out.append({ p = q, name = nm, d = q.distance_to(pp) })
+	for q2 in [_last_dismount, _arrived_mount]:
+		if q2 != Vector2.INF: out.append({ p = q2, name = "말에서 내린 자리", d = (q2 as Vector2).distance_to(pp) })
+	out.sort_custom(func(a, b): return float(a.d) < float(b.d))
+	for o in out: o.gi = net.nearest(o.p, ROAD_R + 8.0)
+	return out.filter(func(o): return int(o.gi) >= 0)
+
+# 출발점 src에서 목적지 g까지: {gi, d, dj} 또는 {} (큰길이 이어지지 않음 — 큰길 그래프는 읍성 안을 지나지 않고, 떨어진 길도 있다)
+func _pin_reach(src: int, g: Dictionary) -> Dictionary:
+	var dj: Dictionary = net.dijkstra(src)
+	var gi := int(g.gi)
+	if String(g.node.get("kind", "")) != "PIN": gi = int(net.node_goal(dj, g.node).gi)
+	if gi < 0 or is_inf(float(dj.dist[gi])): return {}
+	return { gi = gi, d = float(dj.dist[gi]), dj = dj }
+
+# [말로 이동]을 할 수 있나 — {ok, why, c(말 목적지), ids, src, walk_to, mins, arrive, d}
+#   여기서 탈 수 있고 길이 이어지면 여기서. 아니면 목적지까지 큰길이 이어진 말 타는 곳 가운데 가장 가까운 곳까지 걸어서(walk_to)
+func pin_plan(t: Dictionary) -> Dictionary:
+	var lk: String = load("res://scripts/region/fast_travel.gd").lock_why(main)
+	if lk != "": return { ok = false, why = lk }
+	var g := pin_goal(t)
+	if g.has("why"): return { ok = false, why = String(g.why) }
+	var st := pin_start()
+	if st.has("why"): return { ok = false, why = String(st.why) }
+	var walk_to := {}
+	var src := -1
+	var r := {}
+	if not st.has("walk") and int(st.gi) >= 0:
+		src = int(st.gi)
+		r = _pin_reach(src, g)
+		if r.is_empty() and mounted(): return { ok = false, why = "이 큰길로는 닿지 않는다 — 내려서 걸어간다" }
+	if r.is_empty():
+		for mc in _mount_cands().slice(0, 8):
+			r = _pin_reach(int(mc.gi), g)
+			if not r.is_empty():
+				src = int(mc.gi); walk_to = { p = mc.p, name = String(mc.name) }; break
+	if r.is_empty(): return { ok = false, why = "이어진 큰길이 없다 — 걸어서 간다" }
+	if walk_to.is_empty() and float(r.d) < PIN_NEAR: return { ok = false, why = "현재 위치와 같다 — 말을 탈 까닭이 없다" }
+	var gi := int(r.gi)
+	var d := float(r.d)
+	var ids: PackedInt32Array = net.path_ids(r.dj, gi)
+	var c := { node = g.node, gi = gi, d = d, name = String(g.name), pin = true, cross = bool(g.get("cross", false)), next = String(g.get("next", "")) }
+	return { ok = true, why = "", c = c, ids = ids, src = src, walk_to = walk_to, d = d, arrive = net.pts[gi],
+		mins = int(maxf(1.0, round(d / (_top_speed() * 0.75) / 60.0))) }
+
+# [말로 이동]: 말 위면 다시 길을 잡고, 탈 수 있으면 지금 말이 오고, 아니면 말 타는 곳까지 걸어가라고 안내(intent). 반환 {ok, why, walk}
+func ride_pin(t: Dictionary) -> Dictionary:
+	var pl := pin_plan(t)
+	if not bool(pl.ok): return pl
+	if mounted():
+		reroute(pl.c, pl.ids)
+		return { ok = true, why = "", walk = false }
+	if not (pl.walk_to as Dictionary).is_empty():
+		intent = { p = pl.walk_to.p, name = String(pl.walk_to.name), t = t }
+		print("RIDE intent walk_to=%s (%.0f,%.0f) for %s" % [intent.name, (intent.p as Vector2).x, (intent.p as Vector2).y, String(t.get("name", ""))])
+		return { ok = true, why = "", walk = true, walk_to = pl.walk_to }
+	_choice_from = int(pl.src)
+	var okb := begin_ride(pl.c)
+	_choice_from = -1
+	return { ok = okb, why = "" if okb else "지금은 말을 탈 수 없다", walk = false }
+
+# 말 위에서 목적지를 바꿨다: 지금 자리에서 새 길(지나온 길은 버린다 — 멈춘 채 다시 출발)
+func reroute(c: Dictionary, ids: PackedInt32Array) -> void:
+	if ids.size() < 2 or not riding(): return
+	var old := String(dest.get("name", ""))
+	dest = c
+	_make_path(Vector2(main.player_pos.x, main.player_pos.z), ids)
+	s = 0.0; halted = false; map_halt = false
+	_plan_marks()
+	_find_forks(ids)
+	print("RIDE reroute %s → %s len=%.0fm marks=%d stop=%.0f" % [old, String(c.name), L, marks.size(), stop_s])
+
+# 걷기에서 고르는 목적지 후보 맨 앞: 지도 목적지(이 공간이면 그 자리 쪽, 다른 공간이면 그쪽 길 끝)
+func _waypoint_choice(dj: Dictionary) -> Dictionary:
+	var wp := Progress.waypoint()
+	if wp.is_empty() or not wp.has("x"): return {}
+	var t := { space = String(wp.get("space", net.space)), c = Vector2(float(wp.x), float(wp.z)), name = String(wp.get("name", "")), node = String(wp.get("node", "")) }
+	var g := pin_goal(t)
+	if g.has("why"): return {}
+	var gi := int(g.gi)
+	if String(g.node.get("kind", "")) != "PIN": gi = int(net.node_goal(dj, g.node).gi)
+	if gi < 0 or is_inf(float(dj.dist[gi])) or float(dj.dist[gi]) < PIN_NEAR: return {}
+	var nm := "목적지 · %s" % String(t.name)
+	if bool(g.get("cross", false)): nm += " — %s" % String(g.name)
+	return { node = g.node, gi = gi, d = float(dj.dist[gi]), name = nm, score = -2e6, story = false, pin = true }
+
 # ---- 타기 시작 ----
 # st: 역참 마부가 말을 끌어 오는 역(마부 대화에서 고른 것) — 비우면 예전처럼 문 앞 25m 안 역
 func begin_ride(c: Dictionary, st_force := {}) -> bool:
@@ -357,6 +524,7 @@ func begin_ride(c: Dictionary, st_force := {}) -> bool:
 	var ids: PackedInt32Array = net.path_ids(dj, int(c.gi))
 	if ids.size() < 2: return false
 	dest = c
+	intent = {}; map_halt = false
 	_make_path(pp, ids)
 	s = 0.0; v = 0.0; halted = false
 	_plan_marks()
@@ -618,13 +786,19 @@ func _update_ride(dt: float, free: bool) -> void:
 	if _seat != Vector3.INF and main.player_pos.distance_to(_seat) > 3.0:
 		_drop("옮겨짐", true); return
 	var paused: bool = st != null and st.owns_player()
+	# D6(재기획 4단계): 말 위에서 지도를 열면 말을 세운다 — 평소보다 빨리(약 1.5초) 서고, 지도를 닫아도 선 채(S 다시 감 · 지도 [말로 이동])
+	var mp = main.get("_map")
+	if mp != null and mp.visible and not halted:
+		halted = true; map_halt = true
+		audio_cue.emit("halt", v)
+		print("RIDE map_halt s=%.0f/%.0f v=%.1f" % [s, L, v])
 	if _blizzard():
 		if stop_mark.get("why", "") != "blizzard":
 			stop_s = minf(stop_s, s + maxf(4.0, v * v / (2.0 * DECEL) + 2.0)); stop_mark = { kind = "stop", s0 = stop_s, id = "blizzard", name = "눈보라", why = "blizzard" }
 	# 입력: S 멈춤·다시 감(Space는 건너뛰기 — travel_overlay), E 내리기, 갈림길 A/D/W
 	if free and not paused and not skipping_now:
 		if Input.is_action_just_pressed("move_down"):
-			halted = not halted
+			halted = not halted; map_halt = false
 			audio_cue.emit("halt" if halted else "hooves_start", v)
 		if Input.is_action_just_pressed("interact"):
 			stop_s = minf(stop_s, s + maxf(3.0, v * v / (2.0 * DECEL) + 1.0)); stop_mark = { kind = "stop", s0 = stop_s, id = "player", name = "", why = "player" }
@@ -664,7 +838,7 @@ func _update_ride(dt: float, free: bool) -> void:
 	else: _block_t = 0.0
 	if _block_t > 0.0: want = 0.0 if _block_t < 1.2 else minf(want, 2.5)
 	if halted or paused: want = 0.0
-	v = move_toward(v, want, (ACCEL if want > v else DECEL * 1.6) * dt)
+	v = move_toward(v, want, (ACCEL if want > v else DECEL * (3.0 if map_halt else 1.6)) * dt)
 	s = minf(s + v * dt, L)
 	if test_log:
 		stats.dist = s; stats.max_v = maxf(float(stats.max_v), v)
@@ -787,6 +961,7 @@ func _arrive_stop() -> void:
 			if k == "CITY": _hud = "%s — 성 안은 걸어서 든다" % String(dest.name)
 			elif k == "ROUTE_END": _hud = "길 끝 — 여기서부터 걸어서 넘어간다"
 			elif k == "BOAT": _hud = "%s — 배는 걸어서 오른다" % String(dest.name)
+			elif k == "PIN": _hud = "%s — 큰길은 여기까지, 걸어서 간다" % String(dest.name)
 			else: _hud = "%s 어귀에 닿았다" % String(dest.name)
 		"city": _hud = "성문 앞 — 말에서 내린다"
 		"end": _hud = "길 끝 — 말에서 내린다"
@@ -925,6 +1100,8 @@ var skipping_now := false
 
 func can_skip() -> bool:
 	if not riding() or skipping_now or _blizzard(): return false
+	var mp = main.get("_map")
+	if mp != null and mp.visible: return false   # D6: 지도가 열린 동안 Space는 건너뛰지 않는다(말은 서 있다)
 	var st = main.story
 	if st != null and st.owns_player(): return false
 	for mk in marks:   # 길가 이야기 구역 안에서는 건너뛰지 않는다(엿듣는 대사·장면이 끝까지 돌게)
