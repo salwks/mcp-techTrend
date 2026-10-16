@@ -271,6 +271,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/region/view_test.gd").new(self); _ride_test.run.call_deferred()
 	elif args.has("fpshots"):   # 1인칭 v2 화면(창 필요, 시험 저장으로만) — scripts/region/fp_shots.gd
 		_ride_test = load("res://scripts/region/fp_shots.gd").new(self); _ride_test.run.call_deferred(String(args.fpshots))
+	elif args.has("buildshots"):   # 건물 바닥·계단·초가 처마 모서리 점검 촬영 — scripts/region/building_shots.gd
+		_ride_test = load("res://scripts/region/building_shots.gd").new(self); _ride_test.run.call_deferred(String(args.buildshots))
 	elif args.has("talkshot"):
 		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
