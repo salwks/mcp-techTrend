@@ -283,7 +283,7 @@ func _new_game() -> void:
 	if d.space_id == NAMWON and d.S != null:
 		# 재기획 3단계(D1): 새 게임은 이 공간 사건을 다시 고른다(빈 저장 → 메인 서장 main_p1). 장면은 다시 열지 않는다
 		var pick: Dictionary = CaseRegistry.choose(CaseRegistry.cases_for(d.space_id))
-		if String(pick.id) != "" and String(pick.id) != d.case_id: d.switch_case(String(pick.id), { fresh = true })
+		if String(pick.id) != "" and String(pick.id) != d.case_id: d.switch_case(String(pick.id), { fresh = true, nosave = true })
 		else:
 			d.S.reset()
 			d.on_phase()

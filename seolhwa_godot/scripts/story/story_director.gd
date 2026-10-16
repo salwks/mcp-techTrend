@@ -253,9 +253,9 @@ func _setup_case(id: String, dd: Dictionary, fresh: bool) -> bool:
 	return true
 
 # 지금 사건을 내린다(저장한 뒤 인물·소품·잔영·감응·비우기 구역을 거둔다). 전투·대화 도중에는 부르지 않는다(switch_case가 막는다)
-func _teardown_case() -> void:
-	if S != null and test == null: S.save()
-	elif S != null and main.args.has("storysave"): S.save()
+func _teardown_case(keep_save := true) -> void:
+	# keep_save=false(새 게임): 방금 비운 저장에 내리는 사건 상태를 다시 쓰지 않는다(쓰면 메인 서장이 옛 저장 합류로 오인)
+	if keep_save and S != null and (test == null or main.args.has("storysave")): S.save()
 	if runner != null: runner.gen += 1; runner.busy_count = 0
 	for id in actors.keys():
 		var a: Dictionary = actors[id]
@@ -281,7 +281,7 @@ func _teardown_case() -> void:
 
 # 같은 공간에서 도는 사건을 바꾼다(장면을 다시 열지 않는다 — 재기획 3단계):
 #   새 게임(title_menu) · 메인 서장 → 오누이 들머리(행상) · 오누이 끝 → 메인 합류(yield_when_done) · 시험의 저장 재개.
-#   opts: fresh(그 사건을 새로 — 저장을 비움) · event(세운 뒤 곧바로 돌릴 장면 id) · reload(같은 사건이어도 저장에서 다시 읽기)
+#   opts: fresh(그 사건을 새로 — 저장을 비움) · nosave(내리는 사건을 저장하지 않음 — 새 게임) · event(세운 뒤 곧바로 돌릴 장면 id) · reload(같은 사건이어도 저장에서 다시 읽기)
 #   대화·전투·컷 도중이면 하지 않고 false.
 signal case_switched(id: String)
 func switch_case(id: String, opts := {}) -> bool:
@@ -290,7 +290,7 @@ func switch_case(id: String, opts := {}) -> bool:
 	var dd := CaseRegistry.load_data(id)
 	if dd.is_empty(): return false
 	var from := case_id
-	_teardown_case()
+	_teardown_case(not bool(opts.get("nosave", false)))
 	if not _setup_case(id, dd, bool(opts.get("fresh", false))): return false
 	_started = false   # 다음 프레임 update()가 _apply_world → 첫 장면(start_event)·이어 하기 판정
 	_keep_hour = not bool(opts.get("fresh", false))
