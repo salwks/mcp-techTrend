@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from namwon_data import Region, Fields, add_village_dist, ROOT, RDIR, rect_corners, rect_points, poly_overlap, local_to_world
 
 SEED = 1870
+BOAT_LAT = 3.2    # 나루 나룻배: 건너는 길에서 옆으로 비킨 거리(m) — 배 폭 1.9 + 사람 반지름 + 여유
 OUT = os.path.join(RDIR, "placement_namwon.json")
 
 # ── 읍성 기하 (region.json 네 문 ±93과 같게) ──
@@ -698,7 +699,8 @@ def place_fixed_misc(P, R, rng):
                   rects=[(0, 0, 2.8, L)], tris=1500, y=y_br, flatten=False, group="건널목", kind="prop",
                   note="%s 홍예 돌다리(가설, 대로). %s" % (cr["name"], fit_note))
         elif t == "나루":
-            bx, bz = local_to_world(cr["x"], cr["z"], ry, 0, -water_w * 0.32)
+            # 나룻배는 건너는 길(나루 가운데) 옆에 대어 둔다 — 가운데에 두면 걸어 건너는 사람이 배에 걸린다(이겸 거처 이전 4단계 실입력 걷기에서 찾음)
+            bx, bz = local_to_world(cr["x"], cr["z"], ry, -BOAT_LAT, -water_w * 0.32)
             P.add("nw_cross_" + cr["id"] + "_boat", "village/narutbae", {"seed": 54, "len": 6.4}, bx, bz, ry,
                   rects=[], tris=240, flatten=False, clear_veg=False, group="건널목", kind="prop",
                   note="요천 광한루 앞 나루 나룻배(가설). 원점=수면, 이물이 읍내 쪽")
