@@ -1,5 +1,5 @@
 # 키트 build() 결과 디스크 캐시 — user://kit_cache/<해시>.scn(노드·메시) + .info(충돌체·조명·walk 등).
-# 해시 = kit 경로 + params + 키트 스크립트와 같은 칸의 공용 스크립트(_*.gd) + scripts/kit/kit.gd 내용.
+# 해시 = kit 경로 + params + 키트 스크립트와 같은 칸의 공용 스크립트(_*.gd) + scripts/kit/kit.gd + 키트가 preload/load하는 kit/ 스크립트(따라가며) 내용.
 # 스크립트를 고치면 해시가 바뀌어 저절로 다시 짓는다. 작업 스레드에서 불러도 된다(노드는 트리 밖).
 # 재질: Kit 공용 재질(Kit.material)은 파일에 넣지 않고 종류 이름만 적어 두었다가 불러올 때 다시 붙인다(모두 같은 재질 하나를 쓰게).
 extends RefCounted
@@ -33,8 +33,38 @@ static func _dir_hash(kit: String) -> String:
 
 static func _key(kit: String, params: Dictionary) -> String:
 	var s := VERSION + "|" + kit + "|" + JSON.stringify(params, "", true) + "|" + _dir_hash(kit)
-	s += "|" + FileAccess.get_md5("res://kit/%s.gd" % kit)
+	s += "|" + _dep_hash("res://kit/%s.gd" % kit)
 	return s.md5_text()
+
+# 키트 스크립트 + 그 스크립트가 preload/load로 끌어 쓰는 다른 키트 스크립트(다른 칸·밑줄 없는 파일 포함, 따라가며) 내용 해시.
+# 예: village/jumak.gd → village/choga.gd(몸체·지붕), culture/*·landmark/* → village/_common.gd. 같은 칸 _*.gd만 보던 때는
+# choga.gd를 고쳐도 주막·너와집·낮은 초가 캐시가 옛 모양으로 남았다(2026-10-16 건물 바닥·초가 지붕 작업에서 확인).
+static var _dep_cache := {}
+static func _dep_hash(path: String) -> String:
+	_lock.lock()
+	var h = _dep_cache.get(path)
+	_lock.unlock()
+	if h != null: return h
+	var seen := {}
+	var todo := [path]
+	var parts := PackedStringArray()
+	var re := RegEx.create_from_string("(?:preload|load)\\(\\s*\"(res://kit/[^\"]+\\.gd)\"")
+	while not todo.is_empty():
+		var p: String = todo.pop_back()
+		if seen.has(p) or not FileAccess.file_exists(p): continue
+		seen[p] = true
+		var src := FileAccess.get_file_as_string(p)
+		parts.append(p + ":" + src.md5_text())
+		for mt in re.search_all(src): todo.append(mt.get_string(1))
+		if src.contains("load(\"res://kit/%s"):   # 조각 키트를 이름으로 불러 짓는 묶음(집 묶음 compose): 같은 칸 스크립트 전부
+			var da := DirAccess.open(p.get_base_dir())
+			if da:
+				for f in da.get_files():
+					if f.ends_with(".gd"): todo.append(p.get_base_dir() + "/" + f)
+	parts.sort()
+	var out := "|".join(parts).md5_text()
+	_lock.lock(); _dep_cache[path] = out; _lock.unlock()
+	return out
 
 # 캐시에서 읽거나 지어서 저장한다
 static func build(kit: String, scr: Script, params: Dictionary) -> Dictionary:

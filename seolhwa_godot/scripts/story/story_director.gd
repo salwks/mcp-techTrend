@@ -263,6 +263,7 @@ func _teardown_case(keep_save := true) -> void:
 	actors.clear()
 	for id in props.keys():
 		var rec: Dictionary = props[id]
+		_prop_cols(rec, false)
 		if rec.node != null and is_instance_valid(rec.node): rec.node.queue_free()
 		if rec.get("decals", []) is Array and not (rec.decals as Array).is_empty(): _decal_prop(rec, false, Vector2.ZERO)
 	props.clear()
@@ -1015,6 +1016,7 @@ func _update_props() -> void:
 			rec.node = _build_prop(p, at)
 		if p.has("decal") or p.has("trail"): _decal_prop(rec, want, at)
 		if rec.node != null: rec.node.visible = want
+		_prop_cols(rec, want)
 		rec.shown = want
 
 func _build_prop(p: Dictionary, at: Vector2) -> Node3D:
@@ -1023,8 +1025,9 @@ func _build_prop(p: Dictionary, at: Vector2) -> Node3D:
 	var info: Dictionary = load(path).build(p.get("params", {}))
 	var n: Node3D = info.node
 	_props_root.add_child(n)
-	var y: float = world.height_at(at.x, at.y) + float(p.get("dy", 0.0))
+	var y: float = _prop_ground(at) + float(p.get("dy", 0.0))
 	if p.has("y"): y = float(p.y)
+	if bool(info.get("block", false)) and not (info.get("colliders", []) as Array).is_empty(): n.set_meta("cols", info.colliders)   # 서안 등(키트 block) — _prop_cols가 보일 때만 세운다
 	n.global_transform = Transform3D(Basis(Vector3.UP, float(p.get("ry", 0.0))), Vector3(at.x, y, at.y))
 	for l in info.get("lights", []):
 		var o := OmniLight3D.new()
@@ -1032,6 +1035,21 @@ func _build_prop(p: Dictionary, at: Vector2) -> Node3D:
 		o.position = Vector3(l.x, l.y, l.z)
 		n.add_child(o)
 	return n
+
+# 소품 dy의 바닥: 건물 걷기 면(기단·마루·방바닥)을 뺀 높이 — dy는 땅(터 고르기 뒤) 기준으로 맞춰 왔다(방 안 서안 dy 0.4 = 기단 F)
+func _prop_ground(at: Vector2) -> float:
+	return world.height_base_at(at.x, at.y) if world.has_method("height_base_at") else world.height_at(at.x, at.y)
+
+# 이야기 소품의 충돌체(키트 colliders): 보이는 동안만 world 동적 충돌체로 — 서안·소반을 뚫고 걷지 않게
+func _prop_cols(rec: Dictionary, on: bool) -> void:
+	if not world.has_method("add_dynamic_collider"): return
+	var have: Array = rec.get("cols", [])
+	if on and have.is_empty() and rec.node != null and is_instance_valid(rec.node) and rec.node.has_meta("cols"):
+		for c in rec.node.get_meta("cols"): have.append(world.add_dynamic_collider(c, rec.node.global_transform))
+		rec.cols = have
+	elif not on and not have.is_empty():
+		for wc in have: world.remove_dynamic_collider(wc)
+		rec.cols = []
 
 # 데칼(world.decals — 사건용 세계 API가 있으면). 없으면 그냥 건너뛴다(키트 소품에 작은 모양이 따로 있다)
 func _decal_prop(rec: Dictionary, want: bool, at: Vector2) -> void:
@@ -1047,7 +1065,7 @@ func _decal_prop(rec: Dictionary, want: bool, at: Vector2) -> void:
 		var sp: Dictionary = p.decal.duplicate()
 		sp.id = "story_" + String(p.id); sp.x = at.x; sp.z = at.y; sp.group = "story"
 		if sp.has("dy"):
-			sp.y = world.height_at(at.x, at.y) + float(sp.dy); sp.erase("dy")
+			sp.y = _prop_ground(at) + float(sp.dy); sp.erase("dy")
 		rec.decals = [dc.add(sp)]
 	else:
 		var tr: Dictionary = p.trail

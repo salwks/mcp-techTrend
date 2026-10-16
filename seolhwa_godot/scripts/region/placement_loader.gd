@@ -12,6 +12,7 @@
 #   - state: 프롭 상태(prop_states.gd) — 문자열이면 주 상태, 사전이면 그룹별 {"main":"BURNT","hatch":"OPEN"}. 배치형 조각은 조각 state
 #     또는 부모 항목의 "states": {조각 tag: 상태}. dy: 지형(터 고르기 뒤) 위로 더 올림(m) — 건물 마루 위 소품.
 #   - walk(걷기 면): build() 결과의 walk 배열(§8 형식) — 없으면 돌다리·섶다리·징검다리는 params로 만든다.
+#     건물 걷기 면(floor = true: 기단 윗면·댓돌·툇마루·방바닥·계단 — 키트의 M.walk_floor)도 같은 길로 들어가 height_at이 발을 바닥에 세운다.
 #     다리 y가 null이면 둑 높이(다리 양 끝 지형 평균), 징검다리·나루배·빨래터는 가까운 하천 수면.
 #   - when(F-11, 조건부 배치): 이야기 조건식(ph·f·w·v·active·fn) — 파일 머리 "case"(또는 항목 "case")의 사건 상태로 본다(placement_gate.gd).
 #     조건이 거짓이면 장면에서 떼고 충돌체를 뺀다(지은 노드는 남겨 두었다가 참이 되면 다시 붙인다). 조건은 사건·변수가 바뀔 때만 다시 본다.
@@ -219,7 +220,9 @@ func load_all() -> void:
 		r.walk_done = false
 		var ws := _walks_for(r, _cache.get(_key(r.kit, r.params), {}))
 		if not ws.is_empty():
-			for w in ws: world.add_walk(r.xf, w); stats.walks += 1
+			for w in ws:
+				if r.when != "" and bool(w.get("floor", false)): continue
+				world.add_walk(r.xf, w); stats.walks += 1
 			r.walk_done = true
 		var t: Vector2i = world.tile_of(r.x, r.z)
 		if not _pending.has(t): _pending[t] = []
@@ -347,7 +350,9 @@ func _place_one(r: Dictionary) -> void:
 		var wd = world
 		gate.add(String(r.id), r.when, r.case, func(on: bool) -> void: wd.set_static_enabled(e, on))
 	if not r.walk_done:
-		for w in _walks_for(r, info): world.add_walk(r.xf, w); stats.walks += 1
+		for w in _walks_for(r, info):
+			if r.when != "" and bool(w.get("floor", false)): continue   # 조건부 항목의 건물 걷기 면은 두지 않는다(꺼져도 바닥이 남지 않게)
+			world.add_walk(r.xf, w); stats.walks += 1
 	if info.get("water") is Dictionary and not _has(_script(r.kit), "outline"):
 		push_warning("배치: %s는 water가 있지만 늦게 지어져 땅을 파지 못했다(키트에 static outline()을 두거나 footprint 없이 두면 시작 때 짓는다)" % r.kit)
 	stats.placed += 1

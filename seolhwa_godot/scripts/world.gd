@@ -5,6 +5,7 @@ extends Node3D
 
 const DATA := "res://data/"
 const MAX_SLOPE := 1.1
+const MAX_STEP := 0.32   # 건물 걷기 면(기단·댓돌·마루·계단)에서 한 걸음에 오를 수 있는 단 높이(m) — climb_ok
 
 var data: Dictionary
 var heights: PackedFloat32Array
@@ -146,6 +147,10 @@ func blocked(x: float, z: float, r: float) -> bool:
 func _step_ok(fx: float, fz: float, tx: float, tz: float, r: float, extra: Callable) -> bool:
 	if blocked(tx, tz, r): return false
 	if extra.is_valid() and extra.call(tx, tz): return false
+	return climb_ok(fx, fz, tx, tz, r)
+
+# 높이 판정(비탈) — RegionWorld가 건물 걷기 면의 단 오르기를 더해 덮어쓴다
+func climb_ok(fx: float, fz: float, tx: float, tz: float, _r := 0.0) -> bool:
 	var dist := maxf(Vector2(tx - fx, tz - fz).length(), 1e-6)
 	return (height_at(tx, tz) - height_at(fx, fz)) / dist <= MAX_SLOPE
 

@@ -50,7 +50,9 @@ static func build(params: Dictionary) -> Dictionary:
 		"brush": _brush(m)
 		"ledger_hang": _ledger_hang(m)
 		"paper_dry": fp = _paper_dry(m, int(params.get("n", 4)), bool(params.get("bound", false)))
-	return m.result("단서_" + kind, fp, false)
+	var res := m.result("단서_" + kind, fp, false)
+	if kind == "seoan": res.block = true   # 이야기 소품이 충돌체를 세우는 것은 block이 있을 때만(story_director._prop_cols)
+	return res
 
 static func _disc(rx: float, rz: float, h: float, x: float, y: float, z: float, ry := 0.0, seg := 10) -> Kit.Geo:
 	return Kit.xf(Kit.cyl(1.0, 1.0, h, seg), x, y, z, 0, ry, 0, rx, 1, rz)
@@ -270,6 +272,7 @@ static func _seoan(m: C.M) -> Vector2:
 	m.add("p", "stone", C.PA(Kit.box(0.13, 0.03, 0.2, 0.38, 0.335, 0.05), [0x3a3a3c, 0x2a2a2c], 0.04, R), 0.004)   # 벼루
 	m.add("p", "flat", C.PA(Kit.box(0.025, 0.02, 0.09, 0.35, 0.36, -0.1), INKC), 0.002)                            # 먹
 	m.add("p", "wood", C.PA(Kit.xf(Kit.cyl(0.008, 0.008, 0.24, 5), -0.38, 0.34, 0.08, PI / 2, 0.6, 0), [0x8a6a3a, 0x6a4a2a]), 0.002)   # 붓
+	m.box_c(-0.52, 0.52, -0.24, 0.24)   # 낮은 책상 — 뚫고 걷지 않게(이야기 소품 충돌체, story_director._prop_cols)
 	return Vector2(1.1, 0.6)
 
 # 한 장짜리 밥값 장부 — 소반 위 접힌 종이(가운데 접힌 자국·먹 글씨 두 줄, 고쳐 쓴 줄)

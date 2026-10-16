@@ -109,6 +109,10 @@ var _veg_cond := {}
 var veg_cond_hidden := 0         # 지금 숨긴 식생 인스턴스 수(시험)
 var _cond_hid := {}              # [MultiMesh id, 번호] → true — 가림 처리(_cut)가 되살리지 않게
 var _walk_grid := {}            # 칸 → [walk]
+# 건물 걷기 면(walk에 floor = true — 기단 윗면·댓돌·툇마루·방바닥·계단, kit/village/_common.gd M.walk_floor): 다리와 따로 촘촘한 칸(8m)에 둔다.
+#   height_at에는 들고(발이 바닥에 선다), height_base_at·물 판정에는 들지 않는다(옛 높이 기준 연출값·나루 건너기 그대로).
+var _floor_grid := {}
+const FLOOR_GRID := 8.0
 var _walks := []
 var tile_listener := Callable()
 var _ponds := []                # [{poly: PackedVector2Array(월드), bb: Rect2, y}] 못(걸어 들어가지 못함)   # 새 타일이 생길 때 불림(배치 지연 짓기)
@@ -503,9 +507,39 @@ func height_at(x: float, z: float) -> float:
 	var h := ground_at(x, z)
 	for it in interiors:
 		if it.has("floor_world") and in_box(it, x, z): h = maxf(h, it.floor_world)
-	if _walk_grid.is_empty(): return h
+	if _walk_grid.is_empty() and _floor_grid.is_empty(): return h
 	var w = walk_at(x, z)
 	return maxf(h, w) if w != null else h
+
+# 건물 걷기 면(floor)을 뺀 높이 — 예전 height_at과 같다(지형 + 실내 floor_y + 다리). 이야기 소품 dy처럼 땅 기준으로 맞춘 값용
+func height_base_at(x: float, z: float) -> float:
+	if indoor != null: return indoor.height_at(x, z)
+	var h := ground_at(x, z)
+	for it in interiors:
+		if it.has("floor_world") and in_box(it, x, z): h = maxf(h, it.floor_world)
+	if _walk_grid.is_empty(): return h
+	var w = walk_at(x, z, false)
+	return maxf(h, w) if w != null else h
+
+# 높이 판정: 지형 비탈(MAX_SLOPE)은 그대로, 건물 걷기 면의 끊긴 단은 MAX_STEP(0.32m)까지 한 걸음에 오른다(댓돌·계단 한 단).
+#   높은 기단(0.32m 넘게)은 계단·댓돌로만 오른다. r > 0이면 몸 앞쪽(반지름 절반)도 보아 높은 단 모서리에 몸이 묻히지 않게 멈춘다.
+func climb_ok(fx: float, fz: float, tx: float, tz: float, r := 0.0) -> bool:
+	if indoor != null: return super.climb_ok(fx, fz, tx, tz, r)
+	var hf := height_at(fx, fz); var ht := height_at(tx, tz)
+	var dist := maxf(Vector2(tx - fx, tz - fz).length(), 1e-6)
+	if (ht - hf) / dist > MAX_SLOPE:
+		if _floor_grid.is_empty() or ht - hf > MAX_STEP: return false
+		if not (_on_floor(tx, tz) or _on_floor(fx, fz)): return false
+	if r > 0.0 and not _floor_grid.is_empty():
+		# 몸 반지름의 절반 앞(계단 디딤 0.35m보다 짧게 — 두 단 앞을 보고 막지 않게)
+		var lx := tx + (tx - fx) / dist * r * 0.5; var lz := tz + (tz - fz) / dist * r * 0.5
+		var hl := height_at(lx, lz)
+		if hl - ht > MAX_STEP and _on_floor(lx, lz): return false
+	return true
+
+func _on_floor(x: float, z: float) -> bool:
+	var f = _floor_at(x, z)
+	return f != null and float(f) >= ground_at(x, z) - 0.02
 
 # 보이는 땅: 논·밭 필지 안이면 필지 면(논바닥·물·둑, 밭 이랑), 아니면 지형
 func ground_at(x: float, z: float) -> float:
@@ -1805,7 +1839,7 @@ func blocked(x: float, z: float, r: float) -> bool:
 	if indoor != null: return indoor.blocked(x, z, r)
 	if x < hx0 + 2.0 or z < hz0 + 2.0 or x > hx0 + (hnx - 1) * hstep - 2.0 or z > hz0 + (hnz - 1) * hstep - 2.0: return true
 	if block_water and _in_river(x, z, r) and not _near_crossing(x, z): return true
-	if not _ponds.is_empty() and in_pond(x, z) and (_walk_grid.is_empty() or walk_at(x, z) == null): return true
+	if not _ponds.is_empty() and in_pond(x, z) and (_walk_grid.is_empty() or walk_at(x, z, false) == null): return true
 	var ci := floori(x / GRID); var cj := floori(z / GRID)
 	var t := tile_of(x, z)
 	var sg = _scatter_grid.get(t)
@@ -1830,7 +1864,7 @@ func blocked(x: float, z: float, r: float) -> bool:
 	return false
 
 func _in_river(x: float, z: float, r: float) -> bool:
-	if not _walk_grid.is_empty() and walk_at(x, z) != null: return false  # 다리·징검다리 위
+	if not _walk_grid.is_empty() and walk_at(x, z, false) != null: return false  # 다리·징검다리 위
 	if landuse_at(x, z) == 5 and not is_dry_bed(x, z): return true
 	if not is_nan(sea_y) and ground_at(x, z) < sea_y - 0.15: return true   # 바다 밑 바위·모래(토지이용이 물이 아닌 칸)
 	if not lakes.is_empty():
@@ -2040,11 +2074,11 @@ func reset_edits() -> void:
 			Jobs.wait(tiles[t].scatter_job); tiles[t].scatter_job = -1
 			_free_scatter_hold(tiles[t].scatter_hold); tiles[t].scatter_hold = null
 	_poll_orphans(true)
-	_walk_grid.clear()
+	_walk_grid.clear(); _floor_grid.clear()
 	_ponds.clear()
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
 	pbytes = _p_roads.duplicate(); _paint_dirty = true
-	_veg_excl.clear(); _walk_grid.clear(); _walks.clear()
+	_veg_excl.clear(); _walk_grid.clear(); _floor_grid.clear(); _walks.clear()
 	for k in _veg_cond: _veg_cond[k].on = false
 	_veg_cond_apply_all()
 	_veg_cond.clear()
@@ -2289,24 +2323,48 @@ static func _excluded(excl: Array, p: Vector2, pad: float) -> bool:
 	return false
 
 # 걷기 면(§8 walk): xf = 물체의 월드 변환, w = { minX, maxX, minZ, maxZ, z:[…], y:[…] } (로컬, y는 원점 기준) 또는 axis:"x"와 x:[…]
+#   floor: true — 건물 걷기 면(기단·마루·방바닥·계단): 촘촘한 칸(_floor_grid)에 두고 나루 건너기 허용은 건드리지 않는다
+#   xf(선택): 그 물체 안의 부분 변환(집 묶음의 건물 하나, 비스듬히 놓인 채) — 물체 변환 뒤에 곱한다
 func add_walk(xf: Transform3D, w: Dictionary) -> void:
 	var axis: String = w.get("axis", "z")
 	var ks := PackedFloat32Array(w.get(axis, [])); var ys := PackedFloat32Array(w.get("y", []))
 	if ks.size() < 2 or ks.size() != ys.size(): return
-	var e := { inv = xf.affine_inverse(), y0 = xf.origin.y, minX = float(w.minX), maxX = float(w.maxX), minZ = float(w.minZ), maxZ = float(w.maxZ), axis = axis, ks = ks, ys = ys, c = Vector2(xf.origin.x, xf.origin.z) }
+	var fx: Transform3D = xf * (w.xf as Transform3D) if w.get("xf") is Transform3D else xf
+	var fl := bool(w.get("floor", false))
+	var e := { inv = fx.affine_inverse(), y0 = fx.origin.y, minX = float(w.minX), maxX = float(w.maxX), minZ = float(w.minZ), maxZ = float(w.maxZ), axis = axis, ks = ks, ys = ys, c = Vector2(fx.origin.x, fx.origin.z), floor = fl }
 	_walks.append(e)
-	var bb := _xf_box(w, xf)
-	_grid_insert(_walk_grid, { type = "box", minX = bb.minX, maxX = bb.maxX, minZ = bb.minZ, maxZ = bb.maxZ, walk = e })
+	var bb := _xf_box(w, fx)
+	var gc := { type = "box", minX = bb.minX, maxX = bb.maxX, minZ = bb.minZ, maxZ = bb.maxZ, walk = e }
+	if fl:
+		for j in range(floori(bb.minZ / FLOOR_GRID), floori(bb.maxZ / FLOOR_GRID) + 1):
+			for i in range(floori(bb.minX / FLOOR_GRID), floori(bb.maxX / FLOOR_GRID) + 1):
+				var k := Vector2i(i, j)
+				if not _floor_grid.has(k): _floor_grid[k] = []
+				_floor_grid[k].append(gc)
+		return
+	_grid_insert(_walk_grid, gc)
 	# 다리가 놓인 나루·여울 자리에서는 물을 걸어 건너는 임시 허용을 끈다
 	var keep := []
 	for cr in _crossings:
 		if cr.distance_to(e.c) > 25.0: keep.append(cr)
 	_crossings = keep
 
-# 걷기 면 높이(없으면 null)
-func walk_at(x: float, z: float) -> Variant:
+# 걷기 면 높이(없으면 null). floors = false면 다리·징검다리만(건물 걷기 면 빼고)
+func walk_at(x: float, z: float, floors := true) -> Variant:
+	var best = _walk_in(_walk_grid.get(Vector2i(floori(x / GRID), floori(z / GRID)), []), x, z)
+	if floors and not _floor_grid.is_empty():
+		var f = _floor_at(x, z)
+		if f != null and (best == null or f > best): best = f
+	return best
+
+# 건물 걷기 면만(없으면 null)
+func _floor_at(x: float, z: float) -> Variant:
+	return _walk_in(_floor_grid.get(Vector2i(floori(x / FLOOR_GRID), floori(z / FLOOR_GRID)), []), x, z)
+
+static func _walk_in(cell: Array, x: float, z: float) -> Variant:
 	var best = null
-	for c in _walk_grid.get(Vector2i(floori(x / GRID), floori(z / GRID)), []):
+	for c in cell:
+		if x < c.minX or x > c.maxX or z < c.minZ or z > c.maxZ: continue
 		var e: Dictionary = c.walk
 		var l: Vector3 = e.inv * Vector3(x, e.y0, z)
 		if l.x < e.minX or l.x > e.maxX or l.z < e.minZ or l.z > e.maxZ: continue

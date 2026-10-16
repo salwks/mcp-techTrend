@@ -159,13 +159,11 @@ func _walkable(a: Vector2, b: Vector2, r: float) -> bool:
 	if _hit(b.x, b.y, r): return false
 	var n := maxi(1, ceili(a.distance_to(b) / 0.2))
 	var prev := a
-	var hp: float = w.height_at(a.x, a.y)
 	for i in range(1, n + 1):
 		var q := a.lerp(b, float(i) / n)
 		if i < n and _hit(q.x, q.y, r): return false
-		var hq: float = w.height_at(q.x, q.y)
-		if (hq - hp) / maxf(prev.distance_to(q), 1e-6) > w.MAX_SLOPE: return false
-		prev = q; hp = hq
+		if not w.climb_ok(prev.x, prev.y, q.x, q.y, r): return false   # 비탈 + 건물 걷기 면 단(댓돌·계단 한 단까지)
+		prev = q
 	return true
 
 var _cols := []

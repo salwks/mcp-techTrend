@@ -389,7 +389,12 @@ func _seat_world(site: Dictionary, i: int) -> Variant:
 	# 여럿이 앉는 자리: 옆으로 벌려 앉는다(평상·정자). 나무 그늘은 줄기 둘레로 돌려 앉는다
 	if d.kind == "rest": p2 = o2 + (p2 - o2).rotated(float(i) * 2.2)
 	elif names.size() <= 1 and int(d.n) > 1: p2 += right * (float(i) - (float(d.n) - 1.0) * 0.5) * float(d.get("spread", 0.7))
-	if d.kind == "maru": p2 += fwd * float(d.front)
+	if d.kind == "maru":
+		p2 += fwd * float(d.front)
+		# 걸터앉기는 발이 땅에 — 툇마루·기단 걷기 면 위면 앞으로 내려선다(깊은 一자 툇마루)
+		for k in 12:
+			if world.height_at(p2.x, p2.y) <= world.ground_at(p2.x, p2.y) + 0.05: break
+			p2 += fwd * 0.1
 	var face := fwd
 	if d.kind == "rest": face = (p2 - o2).normalized()
 	return [Vector3(p2.x, p3.y, p2.y), face]
