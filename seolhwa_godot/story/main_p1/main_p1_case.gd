@@ -209,6 +209,45 @@ func _pro_open_book() -> void:
 		root.add_child(pg)
 	_pro_nodes["book"] = root
 
+# 지난날 붓(INTRO_03) — 이겸이 제자에게 내미는 붓 한 자루. 새 동작 없이 소품 자리·방향만 옮긴다(2026-10-17 결정 3 (가)).
+#   방 안 붓걸이의 '끝이 갈라진 붓'과 같은 물건(조사 문구 "그날 건네주시려던 붓이다…"). 인물 그림(약 2m)에 맞춰 실물보다 조금 크게
+const BRUSH_LEN := 0.5
+func _pro_brush() -> Node3D:
+	var root := Node3D.new(); root.name = "pro_brush"
+	d._props_root.add_child(root)
+	var shaft := MeshInstance3D.new()
+	var sm := CylinderMesh.new(); sm.top_radius = 0.022; sm.bottom_radius = 0.026; sm.height = BRUSH_LEN; sm.radial_segments = 8
+	shaft.mesh = sm
+	var wm := StandardMaterial3D.new(); wm.albedo_color = Color("#7a5634"); wm.roughness = 0.8; shaft.material_override = wm
+	shaft.rotation_degrees = Vector3(0, 0, -90)   # 붓대가 +x(붓끝 쪽)로 눕는다
+	root.add_child(shaft)
+	var tip := MeshInstance3D.new()
+	var tm := CylinderMesh.new(); tm.top_radius = 0.034; tm.bottom_radius = 0.0; tm.height = 0.13; tm.radial_segments = 8
+	tip.mesh = tm
+	var im := StandardMaterial3D.new(); im.albedo_color = Color("#1b1714"); im.roughness = 0.9; tip.material_override = im
+	tip.rotation_degrees = Vector3(0, 0, -90)
+	tip.position = Vector3(BRUSH_LEN * 0.5 + 0.05, 0, 0)
+	root.add_child(tip)
+	_pro_nodes["brush"] = root
+	return root
+
+# 붓을 자리에: 이겸 손 높이에서 제자 쪽(dir)으로 reach만큼. 카메라 쪽으로 조금 앞(인물 그림 앞에 보이게)
+func _brush_at(n: Node3D, reach: float, lift: float, sec: float) -> void:
+	var ig = d.actors.get("yigyeom_past")
+	if n == null or ig == null: return
+	var a := Vector2(ig.pos.x, ig.pos.z)
+	var b := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var dir := (b - a).normalized()
+	var p := a + dir * reach
+	var y: float = d.world.height_at(a.x, a.y) + lift
+	var to := Vector3(p.x, y, p.y + 0.42)
+	var yaw := -atan2(dir.y, dir.x)
+	if sec <= 0.0:
+		n.global_position = to; n.rotation = Vector3(0, yaw, deg_to_rad(8.0)); return
+	var tw := n.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(n, "global_position", to, sec)
+	tw.parallel().tween_property(n, "rotation", Vector3(0, yaw, deg_to_rad(8.0)), sec)
+
 # 펼친 쪽을 내려다보는 자리(위에서 조금 남쪽 — 기본 yaw 0이라 쪽 위가 화면 위)
 func _look_page(sec: float) -> void:
 	var p: Vector3 = _book_page_at()
@@ -290,7 +329,17 @@ func prologue() -> void:
 		sk = await _sw(1.9)
 	if not sk:
 		d.face_actor("yigyeom_past", "right", null)
-		sk = await _sw(0.5)   # 내민 손 — 그러다 제자 손의 먹을 본다
+		var br := _pro_brush()   # 붓을 손에 들고(가슴께) → 제자 쪽으로 내민다 — 제자는 스승 쪽을 보고 있다(손을 내밀려다 먹이 보인다)
+		_brush_at(br, 0.32, 1.12, 0.0)
+		_cam({ "focus": "pro_ig_hand", "distance": 7.0, "pitch": 30.0, "fov": 34.0 }, 0.8)
+		sk = await _sw(0.35)
+		if not sk:
+			_brush_at(br, 0.8, 1.08, 0.55)
+			d.main.player.facing = "left"
+			sk = await _sw(1.5)   # 내민 붓 — 그러다 제자 손의 먹을 본다
+		if not sk:
+			_brush_at(br, 0.30, 0.95, 0.4)   # 붓을 거둔다(건네지 못한 채)
+			sk = await _sw(0.35)
 	if not sk:
 		d.anim_actor("yigyeom_past", "bow")   # 옷자락으로 닦아 준다
 		d.sfx("flour_rustle")
@@ -421,7 +470,7 @@ func join() -> void:
 const ROOM_TEXT := {
 	"ledger": ["밥값 장부", ["“국 두 그릇. 제자 몫은 내가 냄… 아니다, 둘 다 내가 냄.”"], "글씨는 늘 이렇게 고치셨지."],
 	"shoes": ["다시 기운 신발", ["뒤축을 또 기웠다."], "걷는 데 문제없다더니, 다시 기우셨네."],
-	"brush": ["말려 둔 붓", ["창가에 붓 셋을 말려 두었다. 하나는 끝이 갈라졌다."], "새 붓을 사 드려도 이것만 쓰셨지."],   # 붓 — 신규 대사
+	"brush": ["말려 둔 붓", ["창가에 붓 셋을 말려 두었다. 하나는 끝이 갈라졌다."], "그날 건네주시려던 붓이다. 끝이 갈라졌는데도 여전히 쓰셨다."],   # 2026-10-17 결정 — 프롤로그 INTRO_03에서 내민 그 붓
 }
 
 func inspect_room(kind: String) -> void:
