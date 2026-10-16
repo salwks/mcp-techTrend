@@ -331,7 +331,7 @@ func run() -> void:
 	_ok(d.S.is_flag("LETTER_COMPARE_2") and d.S.is_flag("LETTER_SUSPICIOUS") and d.S.has_clue("cmp_unknown"), "모르는 것 ↔ 신선 쌍이 들면 LETTER_SUSPICIOUS(추정 — 위조 확정 아님)")
 	var cset: Array = choice_sets.filter(func(l): return l.has("스승이 일부러 평소처럼 쓰지 않았나?"))
 	_ok(not cset.is_empty() and cset[0] == ["글씨를 흉내 낸 자가 있다.", "누가 내용을 대신 써줬을지도 모른다.", "스승이 일부러 평소처럼 쓰지 않았나?"], "결론 선택 A·B·C = 메인 대본 P01-B %s" % [cset])
-	var order := ["나그네|기다리라고? …누가 날 찾지 못하게 하려는 거라면?", "CHOICE", "나그네|직접 확인해야 한다."]
+	var order := ["나그네|기다리라고? …내가 찾아 나서지 못하게 하려는 거라면?", "CHOICE", "나그네|직접 확인해야 한다."]
 	if d.case_fn.echo_ok(): order.append("CAP|이겸  “틀린 자리를 다시 찾을 수 있지.”")   # 프롤로그를 건너뛴 판은 메아리 없음
 	_ok(_seq.filter(func(x): return order.has(x)) == order, "견주기 뒤 차례: 의심 한 줄 → A/B/C → 직접 확인 → 이겸 메아리 %s" % [_seq])
 	_ok(_said.size() == 2, "견주기 뒤 나그네 줄은 둘뿐(결론을 되풀이하지 않음) %s" % [_said])
@@ -367,7 +367,7 @@ func run() -> void:
 	await _e_on("solip_jumo", func(): return d.S.is_flag("TAVERN_TALK") or int(d.S.talked.get("solip_jumo", 0)) > 0, "E 주모에게 말 걸기")
 	await _after_close("주모 대화")
 	_ok(d.S.is_flag("TAVERN_TALK") and d.S.has_clue("tv_jumo_last") and not d.S.has_clue("tv_jumo"), "주모 첫 대화(TAVERN_TALK) · ① 마지막으로 본 때(◇)")
-	var jumo_want := ["주모|이겸? 매번 묵으면 먹은 것과 쓴 것을 죄 적던 양반 말이오? 국에 파를 빼달라고 해 놓고, 나중에는 그 사정까지 기록하더니.",
+	var jumo_want := ["주모|이겸? 매번 들르면 먹은 것과 쓴 것을 죄 적던 양반 말이오? 국에 파를 빼달라고 해 놓고, 나중에는 그 사정까지 기록하더니.",
 		"주모|며칠 전 산에서 내려오는 장사꾼에게 뭔가 물었소. 아이 하나가 없어졌다는 소문도 캐묻고.",
 		"주모|그런 편지가 여기서 넘어갔다고? 심부름꾼은 왔다 갔소. 누가 썼는지까지 내가 보지는 못했지.",
 		"주모|그 편지는 글씨가 참 반듯했는데, 글을 맡긴 양반 손이 먹투성이였단 말은 못 들었소. ...아니, 내가 본 건 아니고.",
@@ -379,8 +379,8 @@ func run() -> void:
 	await _resume_check("저장 재개 — 주막 대화 뒤", ["TAVERN_TALK", "LETTER_SUSPICIOUS", "TITLE_IN_WORLD_SEEN"])
 	# --- 장부(확인) · 손님(들음) ---
 	await _teleport("solip_ledger", Vector2(0.2, 1.0))
-	await _e_on("o_solip_ledger", func(): return d.S.has_clue("tv_last"), "E 숙박 장부(확인된 사실)")
-	await _after_close("숙박 장부")
+	await _e_on("o_solip_ledger", func(): return d.S.has_clue("tv_last"), "E 밥값 장부(확인된 사실)")
+	await _after_close("밥값 장부")
 	_ok(not d.S.is_flag("TAVERN_CLUE") and d.main.get("_map") != null, "장부 하나로는 아직 지도 등록 없음(둘 이상 — 메인 대본 P02-A)")
 	_ok(String(d.data.clues.tv_last.kind) == "fact" and String(d.data.clues.tv_baekun.kind) == "heard" and String(d.data.clues.tv_guest2.kind) == "heard", "확인(◆ 장부)·들음(◇ 손님 증언) 구분")
 	await _teleport("solip_guest2", Vector2(0.9, 0.9))

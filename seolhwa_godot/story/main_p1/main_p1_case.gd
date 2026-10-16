@@ -513,7 +513,7 @@ func compare_letter() -> void:
 		await d.ui.caption(NUDGE, 3.6)   # 서안은 그대로 다시 열 수 있다
 		return
 	flag("LETTER_COMPARE_2")
-	await d.ui.say("나그네", ["기다리라고? …누가 날 찾지 못하게 하려는 거라면?"])   # 사용자 지정 대사 — 의심이지 확정이 아니다
+	await d.ui.say("나그네", ["기다리라고? …내가 찾아 나서지 못하게 하려는 거라면?"])   # 사용자 지정 대사 — 의심이지 확정이 아니다
 	await d.runner.exec([{ "choice": "", "options": [   # 메인 대본 P01-B [선택: 결론] A·B·C — 모두 '직접 확인해야 한다'로 귀결
 		{ "label": "글씨를 흉내 낸 자가 있다.", "do": [] },
 		{ "label": "누가 내용을 대신 써줬을지도 모른다.", "do": [] },
@@ -549,7 +549,7 @@ func title_walk() -> void:
 	title_t = [["start", 0.0]]
 	_log("title_start")
 	_cam({ "focus": "title_mid", "pitch": 46.0, "distance": 32.0, "fov": 34.0 }, 2.0)   # 0–2.0 어귀 와이드(카메라 상승)
-	d.ui.caption("나그네  “사라진 길을 따라가야겠다.”", 2.4)        # 선택형 독백
+	# (2026-10-17: 독백 "사라진 길을 따라가야겠다." 삭제 — 설명 대사 대신 걷는 침묵)
 	var sk := await _sw(2.0)
 	if not sk:
 		title_t.append(["reframe", _now() - t0])
@@ -580,12 +580,12 @@ func tavern_ledger() -> void:
 	_cam({ "focus": "solip_ledger", "distance": 6.0, "pitch": 46.0 }, OBJ_IN)
 	await d.wait(OBJ_IN)
 	d.sfx("page_turn")
-	await d.ui.examine("숙박 장부", ["묵은 숙박 장부. 며칠 전 줄에 ‘이겸 — 하룻밤’.", "국값 줄을 고쳐 쓴 글씨가 스승의 것이다."], "clue")   # 신규 문구(첫15 '확인된 숙박 사실')
+	await d.ui.examine("밥값 장부", ["주막 밥값 장부. 며칠 전 아침 줄에 ‘이겸 — 국 한 그릇’.", "국값 줄을 고쳐 쓴 글씨가 스승의 것이다."], "clue")   # 2026-10-17: 숙박 → 밥값(거처가 주막에서 걸어 2분 — 길 떠나기 전에 들렀다)
 	d.learn_clue("tv_last")
 	_cam(null, OBJ_IN)
 	await tavern_clue()
 
-# 짚신 손님 증언 · 숙박 장부 · 백운 소문 가운데 둘 이상 — 지도 목적지 후보 '여원재 방면'(메인 대본 P02-A 조건 · KNOWN_NOT_VISITED).
+# 짚신 손님 증언 · 밥값 장부 · 백운 소문 가운데 둘 이상 — 지도 목적지 후보 '여원재 방면'(메인 대본 P02-A 조건 · KNOWN_NOT_VISITED).
 #   옛 판 주모 증언 tv_jumo(여원재 쪽 행선지)도 셈에 든다(옛 저장)
 func tavern_sources() -> int:
 	var n := 0
@@ -613,7 +613,7 @@ func on_waypoint(w: Dictionary) -> void:
 	printerr("FIRST15 waypoint %s" % JSON.stringify(w))
 	if key.ends_with("mp_yeowon") and not f("WAYPOINT_SET"):
 		flag("WAYPOINT_SET"); flag("WAYPOINT_SELECTED")
-		if d.onboard != null: d.onboard.observe("여원재", "확인된 것은 이겸의 마지막 숙박. 고갯길 소문은 아직 전해 들은 말.")   # 첫15 P02-C 기록
+		if d.onboard != null: d.onboard.observe("여원재", "확인된 것은 이겸의 마지막 행적(주막 밥값 장부). 고갯길 소문은 아직 전해 들은 말.")   # 첫15 P02-C 기록
 		d.ui.toast("목적지를 표시했다. 직접 가거나 역마를 이용할 수 있다.", "info")   # 첫15 P02-C 시스템 문구
 		S.phase = "road"; d.on_phase()
 		Progress.checkpoint("목적지를 정했다")

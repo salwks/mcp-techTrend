@@ -8,7 +8,7 @@
 # 흐름: OP00 서장 프롤로그 「이겸과 제자의 어느 날」(새 게임만 — 마당의 지난 오후 약 52초, S1.0 P00-B 대사 → 빈 마당 → 0.25초 dip으로 방 안, 조작) →
 #   P00-A 방 물건 셋(장부 필수 아님 — 아무거나 하나) → 문 두드림(첫 조사 뒤) → [P00-B 셋 다 보면 — 재생 없음, 깃발만] → P01-A 마당의 심부름꾼(대화 선택) · 문턱의 봉투(E — 편지 읽기, LETTER_RECEIVED) →
 #   P01-B 서안: 옛 기록과 편지 견주기(문서 비교 — 두 쌍, 그 하나는 '모르는 것 ↔ 신선' 쌍이어야, LETTER_SUSPICIOUS) → OP01 구례 길 장승 어귀: 「설화록」(조작 그대로) →
-#   P02-A 솔잎 주막 주모(TAVERN_TALK) → P02-B 짚신 손님·숙박 장부·백운 소문 가운데 둘(TAVERN_CLUE — 지도 '여원재 방면' KNOWN) → P02-C M 지도 · [목적지 설정](WAYPOINT_SET).
+#   P02-A 솔잎 주막 주모(TAVERN_TALK) → P02-B 짚신 손님·밥값 장부·백운 소문 가운데 둘(TAVERN_CLUE — 지도 '여원재 방면' KNOWN) → P02-C M 지도 · [목적지 설정](WAYPOINT_SET).
 # 국면(phase): start → home(거처) → town(편지 의심 뒤 — 거리) → road(목적지를 정함 — 후속 운봉 길 앞, 쉬는 자리 rest_flag).
 # 오누이 들머리(D1): 북문 밖 갈림길 행상(오누이 v3.4 F3401 대사) — 고르면 story_director.switch_case("namwon", N0000). 메인을 막지 않는다.
 # 조건식: story_runner(f·c·ph·v·talked·fn).
@@ -46,7 +46,7 @@ static func data() -> Dictionary:
 			"onboard": { "move_m": 3.0, "journal_close": true },   # 기록책은 실제로 열고 닫아야 끝(첫15 §07)
 			"BASE_VERSION": "메인 스토리 시나리오 1부 S1.0 서장(창작 메인 프레임)",
 			"ENTRY": "새 게임. 이겸이 사라지기 전 어느 날 오후(서장 프롤로그) 뒤, 남원읍성 밖 솔숲 자락 이겸의 거처에서 스승의 흔적을 살피다가 수상한 편지를 받는다.",
-			"CONTINUITY": "편지를 의심하고 솔잎 주막에서 스승의 마지막 숙박과 '여원재 쪽 행선지'를 확인해 지도에 목적지를 정한다. 운봉·백운은 후속.",
+			"CONTINUITY": "편지를 의심하고 솔잎 주막에서 스승의 마지막 행적(밥값 장부)과 '여원재 쪽 행선지'를 확인해 지도에 목적지를 정한다. 운봉·백운은 후속.",
 			"GAME_ADAPTATION": "튜토리얼(이동·조사·대화·기록책·지도·목적지)을 설명 창 없이 사건 맥락에서 실제 행동으로 끝낸다. 위조자는 이 서장에서 정하지 않는다.",
 		},
 		"items": { LETTER: "출처 미확인 편지", COIN: "엽전", "ITM_TOOL_009": "사건 기록책" },
@@ -87,7 +87,7 @@ static func clues() -> Dictionary:
 		# P02 솔잎 주막(메인 대본 P02-A — 짚신 손님 '북쪽 산마을'은 사용자 결정으로 '여원재 너머')
 		"tv_jumo_last": { "title": "주모의 말", "text": "“며칠 전 산에서 내려오는 장사꾼에게 뭔가 물었소. 아이 하나가 없어졌다는 소문도 캐묻고.”", "kind": "heard", "by": "주모" },
 		"tv_guest2": { "title": "짚신 손님의 말", "text": "“이겸이 여원재 너머로 간다 했다.”", "kind": "heard", "by": "짚신 손님" },
-		"tv_last": { "title": "마지막 숙박", "text": "솔잎 주막 숙박 장부 — 이겸, 하룻밤 묵음. 국값 줄에 스승의 고쳐 쓴 글씨.", "kind": "fact" },
+		"tv_last": { "title": "마지막 행적", "text": "솔잎 주막 밥값 장부 — 며칠 전 아침, 이겸 국 한 그릇. 국값 줄에 스승의 고쳐 쓴 글씨.", "kind": "fact" },
 		"tv_baekun": { "title": "백운 도사 소문", "text": "“백운 도사라는 자가 고개 너머에 나타났대.”", "kind": "heard", "by": "손님" },
 		# 옛 판 주모 증언(개편 전 — 여원재 쪽 행선지). 새 판에서는 얻지 못한다. 옛 저장에 있으면 지도 등록 셈(TAVERN_SOURCES)에 든다
 		"tv_jumo": { "title": "주모의 말", "text": "“산 아래에서 책장수를 만났다가, 여원재 쪽 행선지를 묻더군.”", "kind": "heard", "by": "주모" },
@@ -141,7 +141,8 @@ static func jumo_choice() -> Dictionary:
 			{ "say": "주모", "lines": ["그런 편지가 여기서 넘어갔다고? 심부름꾼은 왔다 갔소. 누가 썼는지까지 내가 보지는 못했지."] },
 			{ "say": "주모", "lines": ["그 편지는 글씨가 참 반듯했는데, 글을 맡긴 양반 손이 먹투성이였단 말은 못 들었소. ...아니, 내가 본 건 아니고."] },
 			{ "choice": "", "options": [{ "label": "직접 본 것만 말씀해 주세요.", "do": [
-				{ "say": "주모", "lines": ["옳지. 당신 스승이 꼭 그렇게 말하더라고."] }] }] }] },
+				{ "say": "주모", "lines": ["옳지. 당신 스승이 꼭 그렇게 말하더라고."] },
+				{ "wait": 0.8 }, { "anim": "player", "name": "bow" }, { "wait": 1.2 }, { "anim": "player", "name": "idle" }] }] }] },
 		{ "label": "고맙소.", "when": "f('TAVERN_TALK')", "end": true }] }
 
 static func actors() -> Array:
@@ -173,7 +174,7 @@ static func actors() -> Array:
 		{ "id": "solip_jumo", "kind": "innkeeper", "name": "주모", "at": "solip_jumo", "facing": "left",
 			"talk": [
 				{ "when": "not f('TAVERN_TALK')", "steps": [
-					{ "say": "주모", "lines": ["이겸? 매번 묵으면 먹은 것과 쓴 것을 죄 적던 양반 말이오? 국에 파를 빼달라고 해 놓고, 나중에는 그 사정까지 기록하더니."] },
+					{ "say": "주모", "lines": ["이겸? 매번 들르면 먹은 것과 쓴 것을 죄 적던 양반 말이오? 국에 파를 빼달라고 해 놓고, 나중에는 그 사정까지 기록하더니."] },
 					jumo_choice()] },
 				{ "when": "not (f('tq_last') and f('tq_who') and f('tq_letter'))", "steps": [
 					{ "say": "주모", "lines": ["장부는 저 기둥에 걸려 있소."], "when": "not c('tv_last')" },   # 신규 대사(개편 전 판부터)
@@ -209,8 +210,8 @@ static func objects() -> Array:
 		# P01-B 서안 — 옛 기록과 편지 견주기(문서 비교, 덮었다가 다시 열 수 있다)
 		{ "id": "o_desk", "at": "desk", "label": "서안 · 옛 기록과 편지 견주기", "radius": 1.7, "when": "f('LETTER_RECEIVED') and not f('LETTER_SUSPICIOUS')", "highlight": "tutorial_high",
 			"steps": [{ "call": "compare_letter" }] },
-		# P02-B 솔잎 주막 숙박 장부(확인된 사실 — ◆)
-		{ "id": "o_solip_ledger", "at": "solip_ledger", "label": "숙박 장부 · 읽기", "radius": 1.8, "when": "f('TAVERN_NEAR') and not c('tv_last')",
+		# P02-B 솔잎 주막 밥값 장부(확인된 사실 — ◆)
+		{ "id": "o_solip_ledger", "at": "solip_ledger", "label": "밥값 장부 · 읽기", "radius": 1.8, "when": "f('TAVERN_NEAR') and not c('tv_last')",
 			"steps": [{ "call": "tavern_ledger" }] },
 	]
 
@@ -291,7 +292,7 @@ static func map_leads() -> Array:
 		{ "id": "mp_solip", "name": "솔잎 주막", "at": "solip", "when": "f('TALK_SEEN') or f('LETTER_SUSPICIOUS')", "until": "f('TAVERN_TALK')", "waypoint": true,
 			"note": "심부름꾼 “주막 간판은 솔잎 그림이었습니다.”(메인 대본 — 어느 경우든 지도에) · 편지를 의심한 뒤에도" },
 		{ "id": "mp_yeowon", "name": "여원재 방면", "at": "yeowon", "when": "f('TAVERN_CLUE')", "until": "false", "waypoint": true, "frame": true,
-			"note": "메인 대본 P02-A — 짚신 손님·숙박 장부·백운 소문 가운데 둘 → '여원재 방면' 후보(KNOWN_NOT_VISITED). 목적지 설정(P02-C)" },
+			"note": "메인 대본 P02-A — 짚신 손님·밥값 장부·백운 소문 가운데 둘 → '여원재 방면' 후보(KNOWN_NOT_VISITED). 목적지 설정(P02-C)" },
 	]
 
 static func journal() -> Dictionary:
