@@ -23,7 +23,13 @@ static func draw(m: C.M, o: Dictionary) -> Dictionary:
 	m.add("base", "stone", C.P(Kit.box(W + 1.2, F + 0.1, D + 1.2, 0, (F - 0.1) / 2, 0), 0xaaa498, 0x7b766c, 0.05, R), 0.03)
 	var nst := int(round(W * 1.5))
 	for i in nst: m.add("base", "stone", C.P(Kit.box(0.64, 0.3, 0.05, -W / 2 - 0.3 + i * (W + 0.6) / (nst - 1), 0.28 + (i % 2) * 0.3, D / 2 + 0.61), 0xb5afa2, 0x948f84, 0.06, R), 0)
-	for s in 3: m.add("base", "stone", C.P(Kit.box(1.8, 0.25, 0.4, 0, 0.12 + s * 0.25, D / 2 + 1.2 - s * 0.35), 0xb8b2a5, 0x8e897f, 0.04, R), 0.02)
+	# 계단 3단(단 높이 0.25m — 한 걸음 단 world.MAX_STEP 0.32m 안). 남부 一자는 깊은 툇마루(앞 1.05m) 앞으로 내어 놓는다(마루 밑에 묻히지 않게)
+	var plan: String = o.get("plan", "")
+	var sz := D / 2 + (1.25 if plan == "il" else 0.5)   # 맨 윗단 가운데 z
+	for s in 3:
+		var stop := 0.245 + s * 0.25; var szs := sz + (2 - s) * 0.35
+		m.add("base", "stone", C.P(Kit.box(1.8, stop, 0.4, 0, stop / 2, szs), 0xb8b2a5, 0x8e897f, 0.04, R), 0.02)
+		m.walk_floor(-0.9, 0.9, szs - 0.2, szs + 0.2, stop)
 	# 둥근 기둥(앞), 뒤는 각기둥으로 단순화(무대 세트)
 	var pil: Array = [0x6b5038, 0x4d3826] if plain else C.DANCHEONG_R
 	for i in bays + 1:
@@ -59,7 +65,6 @@ static func draw(m: C.M, o: Dictionary) -> Dictionary:
 	m.add("body", "flat", C.PA(Kit.box(W + 0.5, 0.3, 0.3, 0, top + 0.15, -zf), beam), 0.02)
 	for s in [-1, 1]: m.add("body", "flat", C.PA(Kit.box(0.3, 0.3, D + 0.4, s * W / 2, top + 0.15, 0), beam), 0.02)
 	# 툇마루
-	var plan: String = o.get("plan", "")
 	var wing_len: float = o.get("wing_len", 3.2)
 	if plan == "il":
 		m.add("front", "wood", C.PA(Kit.box(W + 0.2, 0.08, 1.05, 0, F - 0.02, zf + 0.52), C.WOOD_L), 0.015)
@@ -86,8 +91,17 @@ static func draw(m: C.M, o: Dictionary) -> Dictionary:
 		C.ridge_cap(m, "roof", r2.ridge_half + 0.1, r2.ridge_y)
 		m.pop(old)
 		m.box_c(W / 2 - bw - 0.6, W / 2 + 0.6, zf, zf + wing_len + 0.6)
-	m.box_c(-W / 2 - 0.6, W / 2 + 0.6, -D / 2 - 0.6, D / 2 + 1.45)
+	# 충돌체: 벽(과 기단 옆·뒤 띠)만 — 가운데 대청 칸은 앞이 트여 마루에 올라선다. 기단 앞 띠·툇마루·대청·계단은 걷기 면
+	var dx0 := -W / 2 + mid * bw; var dx1 := dx0 + bw
+	m.box_c(-W / 2 - 0.6, W / 2 + 0.6, -D / 2 - 0.6, zf - 1.36)          # 뒤 + 대청 뒤 판문
+	m.box_c(-W / 2 - 0.6, dx0 + 0.05, -D / 2 - 0.6, zf + 0.12)
+	m.box_c(dx1 - 0.05, W / 2 + 0.6, -D / 2 - 0.6, zf + 0.12)
+	m.walk_floor(-W / 2 - 0.6, W / 2 + 0.6, -D / 2 - 0.6, D / 2 + 0.6, F)   # 기단 윗면
+	if plan == "il": m.walk_floor(-(W + 0.2) / 2, (W + 0.2) / 2, zf - 0.005, zf + 1.045, F + 0.02)
+	elif plan == "giyeok": m.walk_floor(-W / 2 - 0.1, W / 2 - bw - 0.1, zf, zf + 0.7, F + 0.02)
+	else: m.walk_floor(-(W - 0.2) / 2, (W - 0.2) / 2, zf, zf + 0.7, F + 0.02)
+	m.walk_floor(dx0, dx1, zf - 1.4, zf, F + 0.06)   # 대청 마루
 	m.anchor("daecheong", Vector3(0, F, zf - 0.6))
-	m.anchor("steps", Vector3(0, 0, zf + 1.7))
+	m.anchor("steps", Vector3(0, 0, sz + 1.2))
 	m.anchor("maru", Vector3(-bw, F, zf + 0.35))
 	return { F = F, top = top, eave = eave, W = W, D = D }

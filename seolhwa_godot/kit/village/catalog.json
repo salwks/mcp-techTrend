@@ -19,12 +19,12 @@
       "params": {
         "seed": 1
       },
-      "tris": 1984,
+      "tris": 2350,
       "footprint": [
         8.2,
         6.4
       ],
-      "colliders": 2,
+      "colliders": 5,
       "lights": 2,
       "occluder": true,
       "anchors": [
@@ -33,7 +33,7 @@
         "kitchen"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 0,
       "layout": false,
       "variants": [
@@ -43,12 +43,12 @@
             "w": 5.4,
             "gourd": true
           },
-          "tris": 2488,
+          "tris": 2854,
           "footprint": [
             7.6,
             6.4
           ],
-          "colliders": 2,
+          "colliders": 5,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -57,7 +57,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         },
@@ -66,7 +66,7 @@
             "seed": 3,
             "interior": true
           },
-          "tris": 3010,
+          "tris": 3376,
           "footprint": [
             8.2,
             6.4
@@ -80,7 +80,7 @@
             "kitchen"
           ],
           "interior": true,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         },
@@ -90,12 +90,12 @@
             "plan": "il",
             "w": 7.2
           },
-          "tris": 2032,
+          "tris": 2398,
           "footprint": [
             9.4,
             6.4
           ],
-          "colliders": 2,
+          "colliders": 5,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -104,7 +104,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         },
@@ -113,12 +113,12 @@
             "seed": 1,
             "plan": "giyeok"
           },
-          "tris": 2810,
+          "tris": 3420,
           "footprint": [
             8.2,
             6.4
           ],
-          "colliders": 3,
+          "colliders": 6,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -127,7 +127,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         }
@@ -146,7 +146,7 @@
         12.6,
         8.8
       ],
-      "colliders": 1,
+      "colliders": 3,
       "lights": 4,
       "occluder": true,
       "anchors": [
@@ -155,7 +155,7 @@
         "maru"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 0,
       "layout": false,
       "variants": [
@@ -171,7 +171,7 @@
             10.8,
             8.8
           ],
-          "colliders": 1,
+          "colliders": 3,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -180,7 +180,7 @@
             "maru"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         },
@@ -195,7 +195,7 @@
             12.6,
             8.8
           ],
-          "colliders": 1,
+          "colliders": 3,
           "lights": 4,
           "occluder": true,
           "anchors": [
@@ -204,7 +204,7 @@
             "maru"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         },
@@ -219,7 +219,7 @@
             12.6,
             8.8
           ],
-          "colliders": 2,
+          "colliders": 4,
           "lights": 4,
           "occluder": true,
           "anchors": [
@@ -228,7 +228,7 @@
             "maru"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         }
@@ -729,12 +729,12 @@
       "params": {
         "seed": 1
       },
-      "tris": 4410,
+      "tris": 4776,
       "footprint": [
         11.2,
         9.6
       ],
-      "colliders": 11,
+      "colliders": 14,
       "lights": 4,
       "occluder": true,
       "anchors": [
@@ -747,7 +747,7 @@
         "jumo"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 0,
       "layout": false,
       "variants": [
@@ -757,12 +757,12 @@
             "w": 6.0,
             "flag": false
           },
-          "tris": 4186,
+          "tris": 4552,
           "footprint": [
             10.0,
             9.6
           ],
-          "colliders": 10,
+          "colliders": 13,
           "lights": 3,
           "occluder": true,
           "anchors": [
@@ -775,7 +775,7 @@
             "jumo"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         }
@@ -1058,7 +1058,7 @@
       "params": {
         "seed": 1
       },
-      "tris": 468,
+      "tris": 596,
       "footprint": [
         2.7,
         2.5
@@ -1132,7 +1132,7 @@
             "style": "thatch",
             "open": false
           },
-          "tris": 424,
+          "tris": 552,
           "footprint": [
             3.5,
             2.4
@@ -1883,12 +1883,12 @@
         "seed": 1,
         "size": "small"
       },
-      "tris": 8780,
+      "tris": 9274,
       "footprint": [
         14.8,
         14.0
       ],
-      "colliders": 21,
+      "colliders": 24,
       "lights": 2,
       "occluder": true,
       "anchors": [
@@ -1901,7 +1901,7 @@
         "gate_gate_in"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 11,
       "layout": true,
       "variants": [
@@ -1910,12 +1910,12 @@
             "seed": 1,
             "size": "medium"
           },
-          "tris": 12972,
+          "tris": 13960,
           "footprint": [
             20.0,
             16.8
           ],
-          "colliders": 28,
+          "colliders": 34,
           "lights": 4,
           "occluder": true,
           "anchors": [
@@ -1935,7 +1935,7 @@
             "gate_wall_r"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 13,
           "layout": true
         },
@@ -1944,12 +1944,12 @@
             "seed": 1,
             "size": "large"
           },
-          "tris": 14792,
+          "tris": 14920,
           "footprint": [
             24.8,
             21.8
           ],
-          "colliders": 22,
+          "colliders": 26,
           "lights": 9,
           "occluder": true,
           "anchors": [
@@ -1967,7 +1967,7 @@
             "gate_wall_r"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 11,
           "layout": true
         },
@@ -1977,7 +1977,7 @@
             "size": "small",
             "lod": 1
           },
-          "tris": 726,
+          "tris": 950,
           "footprint": [
             14.8,
             14.0
@@ -1997,7 +1997,7 @@
             "size": "medium",
             "lod": 1
           },
-          "tris": 1348,
+          "tris": 1796,
           "footprint": [
             20.0,
             16.8
@@ -2017,7 +2017,7 @@
             "size": "large",
             "lod": 1
           },
-          "tris": 2120,
+          "tris": 2216,
           "footprint": [
             24.8,
             21.8
@@ -2038,12 +2038,12 @@
             "roof": "neowa",
             "wall": "stone_terrace"
           },
-          "tris": 12562,
+          "tris": 12690,
           "footprint": [
             14.8,
             14.0
           ],
-          "colliders": 21,
+          "colliders": 24,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -2056,7 +2056,7 @@
             "gate_gate_in"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 11,
           "layout": true
         },
@@ -2067,12 +2067,12 @@
             "roof": "gulpi",
             "wall": "stone"
           },
-          "tris": 13704,
+          "tris": 13832,
           "footprint": [
             20.0,
             16.8
           ],
-          "colliders": 28,
+          "colliders": 34,
           "lights": 4,
           "occluder": true,
           "anchors": [
@@ -2090,7 +2090,7 @@
             "gate_gate_in"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 13,
           "layout": true
         },
@@ -2101,12 +2101,12 @@
             "roof": "choga_low",
             "wall": "stone"
           },
-          "tris": 9712,
+          "tris": 10154,
           "footprint": [
             14.8,
             14.0
           ],
-          "colliders": 21,
+          "colliders": 24,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -2119,7 +2119,7 @@
             "gate_gate_in"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 11,
           "layout": true
         },
@@ -2130,7 +2130,7 @@
             "roof": "guitul",
             "wall": "fence"
           },
-          "tris": 9386,
+          "tris": 9514,
           "footprint": [
             14.8,
             14.0
@@ -2159,12 +2159,12 @@
             "roof": "giwa",
             "plan": "giyeok"
           },
-          "tris": 13586,
+          "tris": 13842,
           "footprint": [
             20.0,
             16.8
           ],
-          "colliders": 27,
+          "colliders": 31,
           "lights": 4,
           "occluder": true,
           "anchors": [
@@ -2184,7 +2184,7 @@
             "gate_wall_r"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 13,
           "layout": true
         },
@@ -2195,12 +2195,12 @@
             "plan": "il",
             "wall": "fence"
           },
-          "tris": 12576,
+          "tris": 13436,
           "footprint": [
             20.0,
             16.8
           ],
-          "colliders": 28,
+          "colliders": 34,
           "lights": 4,
           "occluder": true,
           "anchors": [
@@ -2218,7 +2218,7 @@
             "gate_gate_in"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 13,
           "layout": true
         },
@@ -2230,7 +2230,7 @@
             "wall": "stone",
             "lod": 1
           },
-          "tris": 908,
+          "tris": 1004,
           "footprint": [
             20.0,
             16.8
@@ -2473,7 +2473,7 @@
         "seed": 1,
         "set": "manure_coop"
       },
-      "tris": 548,
+      "tris": 644,
       "footprint": [
         4.4,
         3.0
@@ -2565,7 +2565,7 @@
         8.6,
         6.8
       ],
-      "colliders": 2,
+      "colliders": 5,
       "lights": 2,
       "occluder": true,
       "anchors": [
@@ -2574,7 +2574,7 @@
         "kitchen"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 0,
       "layout": false,
       "variants": [
@@ -2588,7 +2588,7 @@
             8.6,
             9.6
           ],
-          "colliders": 3,
+          "colliders": 6,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -2597,7 +2597,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         },
@@ -2611,7 +2611,7 @@
             8.6,
             6.8
           ],
-          "colliders": 2,
+          "colliders": 5,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -2620,7 +2620,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         }
@@ -2639,7 +2639,7 @@
         8.2,
         6.6
       ],
-      "colliders": 2,
+      "colliders": 5,
       "lights": 2,
       "occluder": true,
       "anchors": [
@@ -2648,7 +2648,7 @@
         "kitchen"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 0,
       "layout": false,
       "variants": [
@@ -2662,7 +2662,7 @@
             8.2,
             6.6
           ],
-          "colliders": 2,
+          "colliders": 5,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -2671,7 +2671,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         }
@@ -2759,12 +2759,12 @@
       "params": {
         "seed": 1
       },
-      "tris": 3412,
+      "tris": 3726,
       "footprint": [
         8.0,
         6.2
       ],
-      "colliders": 2,
+      "colliders": 5,
       "lights": 2,
       "occluder": true,
       "anchors": [
@@ -2773,7 +2773,7 @@
         "kitchen"
       ],
       "interior": false,
-      "walk": false,
+      "walk": true,
       "pieces": 0,
       "layout": false,
       "variants": [
@@ -2783,12 +2783,12 @@
             "plan": "il",
             "grid": 5
           },
-          "tris": 3060,
+          "tris": 3374,
           "footprint": [
             8.0,
             6.2
           ],
-          "colliders": 2,
+          "colliders": 5,
           "lights": 2,
           "occluder": true,
           "anchors": [
@@ -2797,7 +2797,7 @@
             "kitchen"
           ],
           "interior": false,
-          "walk": false,
+          "walk": true,
           "pieces": 0,
           "layout": false
         }

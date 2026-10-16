@@ -50,6 +50,7 @@ class M:
 	var colliders := []
 	var lights := []
 	var anchors := {}
+	var walks := []            # 건물 걷기 면(floor) — §8 walk 형식, result()의 walk
 	var merge_parts := true    # true면 모든 part를 'all' 하나로(내부가 없는 모델)
 	var prefix := ""           # 앵커 이름 앞에 붙임(집 묶음에서 건물별 구분)
 
@@ -95,6 +96,18 @@ class M:
 	func anchor(name: String, v: Vector3) -> void:
 		anchors[prefix + name] = xform * v
 
+	# 건물 걷기 면: 로컬 사각형(minX..maxX, minZ..maxZ) 위 높이 y(원점 기준, 평평) — 기단 윗면·댓돌·툇마루·방바닥·계단 한 단.
+	#   배치 로더가 world.add_walk로 넘기고 height_at이 발을 그 높이에 세운다. 단 사이 오르기는 world.MAX_STEP(0.32m)까지.
+	#   지금 xform이 90° 단위 회전이면 사각형을 그대로 옮기고, 아니면 변환(xf)을 함께 적는다.
+	func walk_floor(minX: float, maxX: float, minZ: float, maxZ: float, y: float) -> void:
+		var b := xform.basis
+		if absf(b.x.x * b.x.z) < 1e-6 and absf(b.y.y - 1.0) < 1e-6:
+			var a := xform * Vector3(minX, 0, minZ); var c := xform * Vector3(maxX, 0, maxZ)
+			var z0 := minf(a.z, c.z); var z1 := maxf(a.z, c.z); var yy := y + xform.origin.y
+			walks.append({ minX = minf(a.x, c.x), maxX = maxf(a.x, c.x), minZ = z0, maxZ = z1, z = [z0, z1], y = [yy, yy], floor = true })
+		else:
+			walks.append({ minX = minX, maxX = maxX, minZ = minZ, maxZ = maxZ, z = [minZ, maxZ], y = [y, y], floor = true, xf = xform })
+
 	func tris() -> int:
 		var n := 0
 		for p in parts: n += parts[p].tris
@@ -118,7 +131,9 @@ class M:
 
 	func result(name: String, footprint: Vector2, occluder := true) -> Dictionary:
 		var node := build_node(name)
-		return { node = node, colliders = colliders, lights = lights, occluder = occluder, footprint = footprint, anchors = anchors }
+		var res := { node = node, colliders = colliders, lights = lights, occluder = occluder, footprint = footprint, anchors = anchors }
+		if not walks.is_empty(): res.walk = walks
+		return res
 
 	func part_node(node: Node3D, p: String) -> Node3D:
 		return node.get_node_or_null(p)
@@ -319,16 +334,132 @@ static func onggi(r: float, h: float, seg := 10) -> Kit.Geo:
 		pts.append(Vector2(q[0] * r, q[1] * h))
 	return lathe(pts, seg)
 
-# 작은 초가 지붕(헛간·뒷간·주막 부속 등): 박공 없이 둥근 이엉 덮개. 중심 (0, eave, 0), 반폭 X·Z, 높이 hh
-static func thatch_cap(m: M, part: String, X: float, Z: float, eave: float, hh: float, ws := 12, hs := 4) -> void:
-	var th := 1.12
+# ---------------------------------------------------------------------------
+# 둥근 모서리 사각 이엉(초가 지붕 몸) — 옛 타원 돔(구면 캡을 X·Z로 늘림)은 처마선이 타원이라 벽 모서리에서 처마가 벽선 안으로
+# 들어갔다(6×4 초가: 모서리 (3, 2)에서 처마 z ≈ 1.68). 처마 둘레를 '모서리만 둥근 직사각형'으로 두어 네 벽과 모서리를 모두
+# 고른 폭으로 덮는다. 단면은 옛 돔과 같은 구면 부풂(th): 처마에서 용마루 쪽으로 갈수록 둘레가 점점 둥글어진다(꼭대기는 둥근 덩이).
+# ---------------------------------------------------------------------------
+# 가운데에서 방향 d(단위)로 쏜 선이 둥근 모서리 사각형(반폭 hx·hz, 모서리 반지름 rc) 둘레에 닿는 거리
+static func rr_ray(hx: float, hz: float, rc: float, d: Vector2) -> float:
+	rc = clampf(rc, 0.0, minf(hx, hz))
+	var ax := absf(d.x); var az := absf(d.y)
+	var t := minf(hx / ax if ax > 1e-6 else INF, hz / az if az > 1e-6 else INF)
+	if ax * t > hx - rc and az * t > hz - rc and rc > 0.0:
+		var c := Vector2(hx - rc, hz - rc)
+		var b := Vector2(ax, az).dot(c)
+		t = b + sqrt(maxf(0.0, b * b - c.length_squared() + rc * rc))
+	return t
+
+# 둘레를 길이로 고르게 n 토막 낸 점의 방향(+x에서 시작, 반시계 x→z) — 모서리 둥근 곳에도 점이 고르게 간다
+static func rr_dirs(hx: float, hz: float, rc: float, n: int) -> PackedVector2Array:
+	rc = clampf(rc, 0.0, minf(hx, hz))
+	var e1 := hz - rc; var ea := PI / 2.0 * rc; var e2 := hx - rc
+	var q := e1 + ea + e2
+	var out := PackedVector2Array()
+	for i in n:
+		var u := fmod(4.0 * q * i / n, 4.0 * q)
+		var qi := int(u / q); var w := u - qi * q
+		if qi == 1 or qi == 3: w = q - w   # 거울 사분면은 거꾸로 따라간다
+		var p: Vector2
+		if w <= e1: p = Vector2(hx, w)
+		elif w <= e1 + ea:
+			var a := (w - e1) / maxf(rc, 1e-6)
+			p = Vector2(hx - rc + rc * cos(a), hz - rc + rc * sin(a))
+		else: p = Vector2(hx - rc - (w - e1 - ea), hz)
+		match qi:
+			1: p = Vector2(-p.x, p.y)
+			2: p = Vector2(-p.x, -p.y)
+			3: p = Vector2(p.x, -p.y)
+		out.append(p.normalized())
+	return out
+
+# z 자리 v에서 둥근 모서리 사각형의 x 반폭
+static func rr_extent(hx: float, hz: float, rc: float, v: float) -> float:
+	rc = clampf(rc, 0.0, minf(hx, hz))
+	var a := absf(v)
+	if a >= hz: return 0.0
+	if a <= hz - rc: return hx
+	var dz := a - (hz - rc)
+	return hx - rc + sqrt(maxf(0.0, rc * rc - dz * dz))
+
+# 고리 k(0 = 꼭대기)의 둘레 크기 비율 s와 모서리 반지름(처마 rc, 위로 갈수록 짧은 반폭만큼 둥글게)
+static func _rr_ring(X: float, Z: float, rc: float, th: float, tk: float) -> Vector3:
+	var s := sin(tk) / sin(th)
+	var rk := lerpf(minf(X, Z), rc, s) * s
+	return Vector3(X * s, Z * s, rk)
+
+# 이엉 덮개 몸 → Geo. 처마 반폭 X·Z, 처마 모서리 반지름 rc, 처마 높이 eave, 지붕 높이 hh, 중심 z zc, 단면 각 th, 둘레 n, 고리 rings
+static func rr_dome(X: float, Z: float, rc: float, eave: float, hh: float, zc := 0.0, th := 1.12, n := 28, rings := 6) -> Kit.Geo:
 	var Ry := hh / (1.0 - cos(th))
-	var dome := sphere(1, ws, hs, 0, TAU, 0, th)
-	Kit.xf(dome, 0, eave - Ry * cos(th), 0, 0, 0, 0, X / sin(th), Ry, Z / sin(th))
-	m.add(part, "thatch", PA(dome, THATCH, 0.05, m.rng), 0.04)
-	var lip := Kit.cyl(1, 1.02, 0.26, ws + 2, 0, eave - 0.12, 0)
-	Kit.xf(lip, 0, 0, 0, 0, 0, 0, X, 1, Z)
-	m.add(part, "thatch", PA(lip, THATCH_LIP, 0.04, m.rng), 0.035)
+	var cy := eave - Ry * cos(th)
+	var dirs := rr_dirs(X, Z, rc, n)
+	var g := Kit.Geo.new()
+	var ctr := Vector3(0, cy, zc)
+	var prev := []
+	for k in rings + 1:
+		var tk := th * k / rings
+		var rr := _rr_ring(X, Z, rc, th, tk)
+		var y := cy + Ry * cos(tk)
+		var ring := []
+		for i in n + 1:
+			var d := dirs[i % n]
+			var t := rr_ray(rr.x, rr.y, rr.z, d) if k > 0 else 0.0
+			ring.append(Vector3(d.x * t, y, zc + d.y * t))
+		if k > 0:
+			var v0 := 1.0 - float(k - 1) / rings; var v1 := 1.0 - float(k) / rings
+			for i in n:
+				var u0 := float(i) / n; var u1 := float(i + 1) / n
+				var a: Vector3 = prev[i]; var b: Vector3 = prev[i + 1]; var c: Vector3 = ring[i + 1]; var dd: Vector3 = ring[i]
+				var want := (a + b + c + dd) * 0.25 - ctr
+				if k == 1:
+					var ua := Vector2((u0 + u1) * 0.5, v0)
+					if (c - a).cross(dd - a).dot(want) >= 0.0: g.tri(a, c, dd, ua, Vector2(u1, v1), Vector2(u0, v1))
+					else: g.tri(a, dd, c, ua, Vector2(u0, v1), Vector2(u1, v1))
+				elif (b - a).cross(c - a).dot(want) >= 0.0: g.quad(a, b, c, dd, Vector2(u0, v0), Vector2(u1, v0), Vector2(u1, v1), Vector2(u0, v1))
+				else: g.quad(a, dd, c, b, Vector2(u0, v0), Vector2(u0, v1), Vector2(u1, v1), Vector2(u1, v0))
+		prev = ring
+	return g
+
+# 처마 두께 띠(옛 Kit.cyl(1, 1.02, h)를 X·Z로 늘린 것과 같은 자리): 위 y_top 둘레 = (X, Z, rc), 아래 y_bot는 grow만큼 바깥. 밑면(처마 안쪽) 막음
+static func rr_band(X: float, Z: float, rc: float, y_top: float, y_bot: float, zc := 0.0, grow := 0.02, n := 28) -> Kit.Geo:
+	var dirs := rr_dirs(X, Z, rc, n)
+	var g := Kit.Geo.new()
+	var k := 1.0 + grow
+	for i in n:
+		var d0 := dirs[i]; var d1 := dirs[(i + 1) % n]
+		var t0 := rr_ray(X, Z, rc, d0); var t1 := rr_ray(X, Z, rc, d1)
+		var a := Vector3(d0.x * t0, y_top, zc + d0.y * t0); var b := Vector3(d1.x * t1, y_top, zc + d1.y * t1)
+		var c := Vector3(d1.x * t1 * k, y_bot, zc + d1.y * t1 * k); var dd := Vector3(d0.x * t0 * k, y_bot, zc + d0.y * t0 * k)
+		var u0 := float(i) / n; var u1 := float(i + 1) / n
+		qf(g, dd, c, b, a, Vector3(d0.x + d1.x, 0, d0.y + d1.y))
+		var cb := Vector3(0, y_bot, zc)
+		tf(g, cb, dd, c, Vector3.DOWN)
+		tf(g, Vector3(0, y_top, zc), a, b, Vector3.UP)
+	return g
+
+# 지붕 겉 높이(x, z) — 박 넝쿨·새끼 그물을 지붕 위에 얹을 때. 처마 밖이면 eave
+static func rr_height(X: float, Z: float, rc: float, eave: float, hh: float, zc: float, th: float, x: float, z: float) -> float:
+	var Ry := hh / (1.0 - cos(th))
+	var cy := eave - Ry * cos(th)
+	var p := Vector2(x, z - zc)
+	var r := p.length()
+	if r < 1e-5: return cy + Ry
+	var d := p / r
+	if r >= rr_ray(X, Z, rc, d): return eave
+	var lo := 0.0; var hi := th
+	for it in 22:
+		var mid := (lo + hi) * 0.5
+		var rr := _rr_ring(X, Z, rc, th, mid)
+		if rr_ray(rr.x, rr.y, rr.z, d) < r: lo = mid
+		else: hi = mid
+	return cy + Ry * cos((lo + hi) * 0.5)
+
+# 작은 초가 지붕(헛간·뒷간·주막 부속 등): 박공 없이 둥근 이엉 덮개(둥근 모서리 사각 — rr_dome). 중심 (0, eave, 0), 반폭 X·Z, 높이 hh
+static func thatch_cap(m: M, part: String, X: float, Z: float, eave: float, hh: float, ws := 12, hs := 4) -> void:
+	var rc := 0.55 * minf(X, Z)
+	var n := maxi(16, ws + 8)
+	m.add(part, "thatch", PA(rr_dome(X, Z, rc, eave, hh, 0.0, 1.12, n, hs), THATCH, 0.05, m.rng), 0.04)
+	m.add(part, "thatch", PA(rr_band(X, Z, rc, eave - 0.12 + 0.13, eave - 0.12 - 0.13, 0.0, 0.02, n), THATCH_LIP, 0.04, m.rng), 0.035)
 
 # 맞배 이엉 지붕(길쭉한 헛간·외양간용): 용마름 있는 박공형. 길이 L(x), 깊이 D(z), 처마 높이 eave, 지붕 높이 rh
 static func thatch_gable(m: M, part: String, L: float, D: float, eave: float, rh: float, cols: Array = THATCH, ridge_cols: Array = [0xb39d6c, 0x8f7b52]) -> void:

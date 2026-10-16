@@ -157,7 +157,7 @@ static func _enclose(L: Array, seed: int, x0: float, x1: float, z0: float, z1: f
 # 조각마다 지어 자식 노드로 묶음(충돌체·조명·앵커는 묶음 로컬로 옮김, 앵커 이름 앞에 tag_)
 static func compose(list: Array, name: String, fp: Vector2) -> Dictionary:
 	var root := Node3D.new(); root.name = name
-	var cols := []; var lights := []; var anchors := {}
+	var cols := []; var lights := []; var anchors := {}; var walks := []
 	for e in list:
 		var info: Dictionary = load("res://kit/%s.gd" % e.kit).build(e.params)
 		var t := Transform3D(Basis(Vector3.UP, e.ry), Vector3(e.x, 0, e.z))
@@ -178,7 +178,13 @@ static func compose(list: Array, name: String, fp: Vector2) -> Dictionary:
 			lights.append({ x = p.x, y = p.y, z = p.z, kind = l.kind })
 		var an: Dictionary = info.get("anchors", {})
 		for k in an: anchors["%s_%s" % [e.tag, k]] = t * (an[k] as Vector3)
-	return { node = root, colliders = cols, lights = lights, occluder = true, footprint = fp, anchors = anchors }
+		for w in info.get("walk", []):   # 건물 걷기 면(기단·마루·계단) — 조각 변환을 xf로 붙인다(world.add_walk가 곱한다)
+			var q: Dictionary = w.duplicate()
+			q.xf = t * (w.xf as Transform3D) if w.get("xf") is Transform3D else t
+			walks.append(q)
+	var res := { node = root, colliders = cols, lights = lights, occluder = true, footprint = fp, anchors = anchors }
+	if not walks.is_empty(): res.walk = walks
+	return res
 
 # ---------------------------------------------------------------------------
 # LOD: 같은 자리에 아주 단순한 몸체·지붕만(먹선은 지붕만)
