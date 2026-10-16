@@ -95,7 +95,7 @@ static func anchors() -> Dictionary:
 		"street": L(-8.0, 8.6),   # 마당 서쪽 오솔길 들머리(옛 '동서길' 자리 이름 그대로 — 시험·안내가 쓴다)
 		# 서장 프롤로그 「이겸과 제자의 어느 날」(마당 B — placement ig_pyeongsang L(2.6,5.6) · ig_meongseok L(-1.9,6.4))
 		"pro_mat": L(-1.9, 6.4), "pro_ig_kneel": L(-1.0, 7.0), "pro_ig_stand": L(-0.6, 6.9), "pro_ig_hand": L(1.25, 6.5),
-		"pro_disc": L(2.15, 5.75), "pro_desk": L(3.05, 5.45), "pro_ig_desk": L(3.1, 6.55), "pro_two": L(0.7, 6.3), "pro_wide": L(0.4, 4.6),
+		"pro_disc": L(2.15, 5.75), "pro_desk": L(3.05, 5.45), "pro_ig_via": L(3.95, 6.75), "pro_ig_desk": L(4.1, 5.55), "pro_two": L(0.7, 6.3), "pro_wide": L(0.4, 4.6),
 		"pro_present": L(0.35, 4.3),
 		# 구례 길 골짜기 어귀 — 장승·솟대(placement_namwon nw_jangseung_01·02 · nw_sotdae_03): 숲길이 끝나고 요천 너머 광한루·읍성이 열린다(OP01 제목 자리)
 		"title_view": [-3222.0, 560.0], "title_mid": [-3218.0, 532.0], "title_look": [-3224.0, 470.0], "naru": [-3201.3, 514.3],

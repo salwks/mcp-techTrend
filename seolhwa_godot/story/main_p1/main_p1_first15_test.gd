@@ -396,6 +396,8 @@ func _watch_title() -> void:
 	while _title_at == Vector2.INF and n < 30000:
 		await _frames(1); n += 1
 		if d.case_fn.title_running or d.S.is_flag("TITLE_IN_WORLD_SEEN"): _title_at = Vector2(main.player_pos.x, main.player_pos.z)
+	if shots and _title_at != Vector2.INF:
+		await d.wait(5.5); await shot("11_title_jangseung")
 
 # 거처 오솔길 끝 → 구례 길 북쪽 → 나루(걸어 건넘) → 주막 앞(길 그래프 namwon_gurye_road 점 — 이겸 거처 이전 4단계 측정과 같은 길)
 const ROUTE_GURYE := [

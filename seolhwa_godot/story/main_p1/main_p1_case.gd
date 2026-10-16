@@ -253,18 +253,19 @@ func prologue() -> void:
 		_beat("INTRO_04", p0)
 		d.main.player.facing = "left"
 		_cam({ "focus": "pro_desk", "distance": 8.0, "pitch": 40.0, "fov": 34.0 }, 1.2)
-		d.move_actor("yigyeom_past", ["pro_ig_desk"], 1.3, "walk", "idle")
-		sk = await _sw(1.5)
+		d.move_actor("yigyeom_past", ["pro_ig_via", "pro_ig_desk"], 1.6, "walk", "idle")   # 평상 동쪽으로 돌아 서안 옆에(카메라와 책 사이를 막지 않게)
+		sk = await _sw(1.7)
 	if not sk:
-		d.face_actor("yigyeom_past", "up", null)
+		d.face_actor("yigyeom_past", "left", null)
 		d.anim_actor("yigyeom_past", "bow")   # 서안 위에 기록책을 둔다
 		sk = await _sw(0.8)
 	if not sk:
 		_pro_show("book", true)
+		_occ_off("pro_desk")
 		d.sfx("page_turn")
 		d.anim_actor("yigyeom_past", "idle")
-		_cam({ "focus": "pro_desk", "distance": 5.5, "pitch": 55.0, "fov": 32.0 }, 0.4)   # CAM_OBJECT — 덮인 기록책(글은 보이지 않는다)
-		sk = await _sw(1.6)
+		_cam({ "focus": "pro_desk", "distance": 6.5, "pitch": 58.0, "fov": 30.0 }, 0.4)   # CAM_OBJECT — 덮인 기록책(글은 보이지 않는다)
+		sk = await _sw(1.4)
 	if not sk:
 		_beat("fade_out", p0)
 		d.ui.fade(true, 0.9)
@@ -279,7 +280,8 @@ func prologue() -> void:
 		d.ui.fade(false, 0.9)
 		sk = await _sw(2.4)               # 바람뿐인 마당, 남은 물건(평상의 서안·멍석의 기록지 한 장)
 	if not sk:
-		_cam({ "focus": "door", "distance": 6.0, "pitch": 40.0, "fov": 34.0 }, 1.5)   # 조용한 방 쪽으로
+		_occ_off("door")
+		_cam({ "focus": "door", "distance": 8.5, "pitch": 40.0, "fov": 34.0 }, 1.5)   # 조용한 방 쪽으로(너무 다가가 앞벽이 반투명해지기 전까지)
 		sk = await _sw(1.5)
 	if not sk:
 		_beat("dip", p0)
@@ -307,6 +309,7 @@ func prologue() -> void:
 
 # 지난날 → 지금(검은 화면 안): 이겸을 지우고 지난날 소품을 치우고 남은 물건만 — 색감도 지금으로
 func _present_swap() -> void:
+	_occ_off(null)
 	d.despawn_actor("yigyeom_past")
 	for k in _pro_nodes:
 		var n = _pro_nodes[k]
@@ -321,7 +324,15 @@ func _present_swap() -> void:
 	_cam({ "focus": "pro_wide", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 0.01)
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
 
+# 컷 한 장면만 가림 점무늬·카메라 앞 비우기를 끈다(평상 위 제자 곁의 서안·문 앞이 점무늬로 비지 않게) — null이면 평소
+func _occ_off(at) -> void:
+	if not d.main.has_method("set_occ_script"): return
+	if at == null: d.main.set_occ_script(null); return
+	var p: Vector2 = d.anchor(at)
+	d.main.set_occ_script({ "focus": Vector3(p.x, d.world.height_at(p.x, p.y) + 0.9, p.y), "r": 0.0, "near": 0.0 })
+
 func _to_room() -> void:
+	_occ_off(null)
 	d.teleport_to("home_start", "up")
 	d.camera(null)
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
