@@ -61,6 +61,7 @@ static func get_v(k: String) -> String:
 
 static func set_v(k: String, v: String) -> void:
 	data()[k] = v
+	if not SaveGuard.write_ok(path()): return   # 저장 지킴: 막힌 실행·시험이 사용자 설정을 쓰지 않는다
 	var f := FileAccess.open(path(), FileAccess.WRITE)
 	if f != null:
 		f.store_string(JSON.stringify(data(), " "))

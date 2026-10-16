@@ -34,10 +34,26 @@ func _init() -> void:
 		[["--savefile=user://progress.json", "--storytest=namwon:A"], [], "tool"],
 		[["--savefile=user://progress.json", "--saveroot=/tmp/x"], [], "tool"],
 		[[], ["--headless", "-s", "res://tests/save/save_guard_test.gd"], "tool"],
+		# 2026-10-16 사고: 게임 인자를 '--' 없이 넘김 → Godot이 버려 놀이 실행이 되던 것 → 이제 실행 중단
+		[[], ["--path", ".", "--resolution", "1280x720", "--savefile=user://st_op_cap.json", "--titletest=newcap:x", "--storylog"], "blocked"],
+		[[], ["--path", ".", "--titletest=new"], "blocked"],
+		[[], ["--headless", "--path", ".", "--storytest=namwon:A"], "blocked"],
+		[[], ["--path", ".", "--write-movie", "/tmp/a.avi", "--nostory"], "blocked"],
+		# 엔진 도구 인자만 → 모래상자
+		[[], ["--path", ".", "--write-movie", "/tmp/a.avi", "--fixed-fps", "10"], "tool"],
+		[[], ["--headless", "--path", "."], "tool"],
+		[[], ["--path", ".", "--quit-after", "100"], "tool"],
+		# 놀이 실행(편집기 F5가 붙이는 인자 포함) → 그대로 user://
+		[[], ["--path", "."], ""],
+		[[], ["--path", ".", "--resolution", "1920x1080", "--log-file", "/tmp/g.log", "--verbose"], ""],
+		[[], ["--remote-debug", "tcp://127.0.0.1:6007", "--editor-pid", "5805", "--position", "100,100", "--path", ".", "--scene", "res://scenes/region.tscn"], ""],
+		[["--savefile=user://play_chunhyang.json"], ["--path", ".", "--", "--savefile=user://play_chunhyang.json"], ""],
+		[["--storytest=namwon:A"], ["--headless", "--path", ".", "--", "--storytest=namwon:A"], "tool"],
 	]
 	for c in cases:
 		var got := SaveGuard.classify(PackedStringArray(c[0]), PackedStringArray(c[1]))
-		ok((got == "") == (c[2] == ""), "명령줄 %s %s → %s" % [c[0], c[1], "놀이(user://)" if got == "" else "모래상자(" + got + ")"])
+		var kind := "" if got == "" else ("blocked" if got.begins_with("blocked:") else "tool")
+		ok(kind == c[2], "명령줄 %s %s → %s" % [c[0], c[1], "놀이(user://)" if got == "" else ("실행 중단" if kind == "blocked" else "모래상자(" + got + ")")])
 	# 기본 경로(--savefile 없음) → tool_progress.json
 	var p0 := Progress.slot_path(0)
 	ok(p0.begins_with(SaveGuard.root()) and p0.ends_with("tool_progress.json"), "기본 진행 경로 %s" % p0)

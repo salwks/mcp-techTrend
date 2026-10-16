@@ -33,6 +33,7 @@ static func _guard() -> void:
 	_guarded = true
 	if SaveGuard.sandboxed() and path == DEFAULT_PATH:
 		path = SaveGuard.resolve(SaveGuard.TOOL_PROGRESS)
+		if SaveGuard.blocked() != "": return   # 막힌 실행은 모래상자도 건드리지 않는다
 		for n in SLOTS + 1:
 			if FileAccess.file_exists(slot_path(n)): DirAccess.remove_absolute(slot_path(n))
 		print("SAVEGUARD fresh ", path)
@@ -64,8 +65,8 @@ static func use_path(p: String) -> void:
 
 static func save() -> void:
 	var d := data()
-	if SaveGuard.sandboxed() and SaveGuard.is_real_user_path(path):
-		push_error("SAVEGUARD 막음: 시험·도구 실행이 사용자 저장에 쓰려 함 " + path); return
+	if not SaveGuard.write_ok(path):
+		push_error("SAVEGUARD 막음: 저장하지 않음(%s) %s" % [SaveGuard.blocked() if SaveGuard.blocked() != "" else "시험·도구 실행이 사용자 저장에 쓰려 함", path]); return
 	d["saved_at"] = Time.get_datetime_string_from_system()
 	if meta_fn.is_valid():
 		var m = meta_fn.call()
@@ -219,6 +220,7 @@ static func _read(p: String) -> Dictionary:
 
 # 칸 n(0 = 자동)을 쓴다: 지금 진행 그대로 + 작은 그림
 static func save_slot(n: int, thumb: Image = null) -> bool:
+	if not SaveGuard.write_ok(slot_path(n)): push_error("SAVEGUARD 막음: 칸 저장 안 함 " + slot_path(n)); return false
 	save()
 	if n > 0:
 		var f := FileAccess.open(slot_path(n), FileAccess.WRITE)
@@ -233,6 +235,7 @@ static func save_slot(n: int, thumb: Image = null) -> bool:
 static func load_slot(n: int) -> bool:
 	var j := _read(slot_path(n))
 	if j.is_empty(): return false
+	if n > 0 and not SaveGuard.write_ok(path): push_error("SAVEGUARD 막음: 칸 불러오기 저장 안 함 " + path); return false
 	if n > 0:
 		var f := FileAccess.open(path, FileAccess.WRITE)
 		if f == null: return false

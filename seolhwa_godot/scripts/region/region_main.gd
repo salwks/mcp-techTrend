@@ -163,6 +163,9 @@ var fast_ui = null        # 역마 창 — 알게 된 거점 빠른 이동(scrip
 var _ride_test = null
 
 func _ready() -> void:
+	if Progress.SaveGuard.blocked() != "":   # 저장 지킴: 게임 인자를 '--' 없이 넘긴 실행 · 모래상자 실패 → 놀이 저장으로 넘어가지 않고 끝낸다
+		printerr("SAVEGUARD 실행 중단 — ", Progress.SaveGuard.blocked())
+		get_tree().quit(3); return
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"

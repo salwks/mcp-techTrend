@@ -70,7 +70,7 @@ func _on_checkpoint(reason: String) -> void:
 	if now - _auto_thumb_t > 30000:
 		_auto_thumb_t = now
 		var img := grab()
-		if img != null: img.save_png(Progress.thumb_path(0))
+		if img != null and Progress.SaveGuard.write_ok(Progress.thumb_path(0)): img.save_png(Progress.thumb_path(0))
 
 # ---- 주막: [F] 쉬며 기록을 정리한다 ----
 func _busy() -> bool:
