@@ -5,9 +5,9 @@
 #   (새로 쓴 줄은 아래 "신규 대사"로 표시 — 보고서 replanning-stage3-first15.md §2).
 # 사용자 결정: seolhwa/docs/replanning/DECISIONS_stage1.md — D1(새 게임 = 이겸의 편지, 오누이는 북쪽 길목 선택 사건) · D3 · D7(12초 안 조작).
 #
-# 흐름: OP00 거처 방(검은 화면 → 담 와이드 → 책상 쪽 → 등 뒤, 9.6초에 조작) → P00-A 방 물건 셋(장부 필수 아님 — 아무거나 하나) →
-#   문 두드림(첫 조사 뒤) → [P00-B 셋 다 보면 짧은 기억] → P01-A 마당의 심부름꾼(대화 선택) · 문턱의 봉투(E — 편지 읽기, LETTER_RECEIVED) →
-#   P01-B 서안: 옛 기록과 편지 견주기(문서 비교 — 셋 중 두 쌍, LETTER_SUSPICIOUS) → OP01 거처 밖 4m: 「설화록」(조작 그대로) →
+# 흐름: OP00 서장 프롤로그 「이겸과 제자의 어느 날」(새 게임만 — 마당의 지난 오후 약 52초, S1.0 P00-B 대사 → 빈 마당 → 0.25초 dip으로 방 안, 조작) →
+#   P00-A 방 물건 셋(장부 필수 아님 — 아무거나 하나) → 문 두드림(첫 조사 뒤) → [P00-B 셋 다 보면 — 재생 없음, 깃발만] → P01-A 마당의 심부름꾼(대화 선택) · 문턱의 봉투(E — 편지 읽기, LETTER_RECEIVED) →
+#   P01-B 서안: 옛 기록과 편지 견주기(문서 비교 — 셋 중 두 쌍, LETTER_SUSPICIOUS) → OP01 구례 길 장승 어귀: 「설화록」(조작 그대로) →
 #   P02-A 솔잎 주막 주모(TAVERN_TALK) → P02-B 숙박 장부 또는 손님(TAVERN_CLUE — 지도 '여원재 방면' KNOWN) → P02-C M 지도 · [목적지 설정](WAYPOINT_SET).
 # 국면(phase): start → home(거처) → town(편지 의심 뒤 — 거리) → road(목적지를 정함 — 후속 운봉 길 앞, 쉬는 자리 rest_flag).
 # 오누이 들머리(D1): 북문 밖 갈림길 행상(오누이 v3.4 F3401 대사) — 고르면 story_director.switch_case("namwon", N0000). 메인을 막지 않는다.
@@ -16,8 +16,11 @@ extends RefCounted
 
 const LETTER := "ITM_MAIN_LETTER"   # 출처 미확인 편지(메인 대본 P01-A '출처 미확인 편지' 인벤토리)
 const COIN := "COIN"
-const HX := -3252.0                 # 이겸의 거처(placement_story_main_p1.json ig_house) — 초가 가운데
-const HZ := 240.4
+const HX := -3192.0                 # 이겸의 거처(placement_story_main_p1.json ig_house) — 초가 가운데. 읍성 밖 요천 나루 건너 구례 길 솔숲 자락(거처 이전 4단계)
+const HZ := 700.0
+const OLD_HX := -3252.0             # 옛 자리(재기획 3단계 — 객사 담 앞). 그때 거처 안에서 저장한 옛 저장만 새 거처로 옮긴다(main_p1_case.on_load)
+const OLD_HZ := 240.4
+const OLD_RECT := [-4.6, -3.6, 4.6, 6.9]   # 옛 집 + 앞마당(옛 집 가운데 기준 x0, z0, x1, z1)
 const JX := -3206.91                # 솔잎 주막 = 기존 nw_jumak_naru(placement_namwon.json) — 새 건물 없음
 const JZ := 484.16
 
@@ -40,7 +43,7 @@ static func data() -> Dictionary:
 			# 안내(첫15 §07): 이동 안내는 실제 3m 걸으면 끝(오누이는 5m 그대로 — onboarding.MOVE_M)
 			"onboard": { "move_m": 3.0, "journal_close": true },   # 기록책은 실제로 열고 닫아야 끝(첫15 §07)
 			"BASE_VERSION": "메인 스토리 시나리오 1부 S1.0 서장(창작 메인 프레임)",
-			"ENTRY": "새 게임. 남원 읍내 이겸의 거처에서 스승의 흔적을 살피다가 수상한 편지를 받는다.",
+			"ENTRY": "새 게임. 이겸이 사라지기 전 어느 날 오후(서장 프롤로그) 뒤, 남원읍성 밖 솔숲 자락 이겸의 거처에서 스승의 흔적을 살피다가 수상한 편지를 받는다.",
 			"CONTINUITY": "편지를 의심하고 솔잎 주막에서 스승의 마지막 숙박과 '여원재 쪽 행선지'를 확인해 지도에 목적지를 정한다. 운봉·백운은 후속.",
 			"GAME_ADAPTATION": "튜토리얼(이동·조사·대화·기록책·지도·목적지)을 설명 창 없이 사건 맥락에서 실제 행동으로 끝낸다. 위조자는 이 서장에서 정하지 않는다.",
 		},
@@ -58,7 +61,8 @@ static func data() -> Dictionary:
 		"map_leads": map_leads(),
 		"journal": journal(),
 		# 솔잎 주막 앞마당(주모·손님·장부 자리)에는 고을 사람을 세우지 않는다(겹침 — 제작 규칙 C63 비우기 구역). 다른 길은 그대로
-		"ambient_exclude": [{ "id": "solip_yard", "rect": [JX - 6.5, JZ + 2.0, JX + 6.5, JZ + 7.0], "when": "true" }],
+		"ambient_exclude": [{ "id": "solip_yard", "rect": [JX - 6.5, JZ + 2.0, JX + 6.5, JZ + 7.0], "when": "true" },
+			{ "id": "ig_yard", "rect": [HX - 7.5, HZ + 2.6, HX + 7.5, HZ + 10.2], "when": "true" }],   # 이겸의 거처 마당(프롤로그 무대 — 지나는 사람이 컷에 끼지 않게)
 		"events": events(),
 	}
 
@@ -88,11 +92,17 @@ static func anchors() -> Dictionary:
 		"home_start": L(0.55, 0.55), "home_center": L(0.0, 0.0), "home_wide": L(0.0, 2.6),
 		"desk": L(-0.6, -1.3), "desk_front": L(-0.55, -0.35), "ledger": L(0.75, -1.05), "brush": L(-2.0, 1.72), "shoes": L(1.95, 2.6),
 		"door": L(0.0, 2.15), "threshold": L(-0.55, 2.38), "yard": L(0.0, 4.9), "messenger": L(1.25, 5.3), "yard_front": L(0.0, 6.75),
-		"street": L(0.0, 8.6),
+		"street": L(-8.0, 8.6),   # 마당 서쪽 오솔길 들머리(옛 '동서길' 자리 이름 그대로 — 시험·안내가 쓴다)
+		# 서장 프롤로그 「이겸과 제자의 어느 날」(마당 B — placement ig_pyeongsang L(2.6,5.6) · ig_meongseok L(-1.9,6.4))
+		"pro_mat": L(-1.9, 6.4), "pro_ig_kneel": L(-1.0, 7.0), "pro_ig_stand": L(-0.6, 6.9), "pro_ig_hand": L(1.25, 6.5),
+		"pro_disc": L(2.15, 5.75), "pro_desk": L(3.05, 5.45), "pro_ig_desk": L(3.1, 6.55), "pro_two": L(0.7, 6.3), "pro_wide": L(0.4, 4.6),
+		"pro_present": L(0.35, 4.3),
+		# 구례 길 골짜기 어귀 — 장승·솟대(placement_namwon nw_jangseung_01·02 · nw_sotdae_03): 숲길이 끝나고 요천 너머 광한루·읍성이 열린다(OP01 제목 자리)
+		"title_view": [-3222.0, 560.0], "title_mid": [-3218.0, 532.0], "title_look": [-3224.0, 470.0], "naru": [-3201.3, 514.3],
 		# 솔잎 주막(nw_jumak_naru, kit/village/jumak.gd 앵커: jumo · guest_seat) — 앞마당 3~4m 비움(첫15 §04)
 		"solip": J(0.0, 2.0), "solip_jumo": J(3.0, 5.15), "solip_guest": J(-2.7, 5.75), "solip_guest2": J(-4.3, 3.45), "solip_ledger": J(-1.2, 2.32),
 		"solip_front": J(0.0, 7.2), "solip_sign": J(5.1, 4.8),
-		# 남원 남문(완월루) 앞 — 골목 끝 소리 안내 자리
+		# 남원 남문(완월루) 앞 — (옛) 골목 끝 소리 안내 자리. 거처 이전 뒤 소리 안내는 구례 길 어귀(title_view)에서
 		"south_gate": [-3228.0, 344.0],
 		# 북문 밖 전주길 갈림길(namwon_north_road · 여단 오솔길 갈림, 기름집 맞은편) — 오누이 v3.4 F3401 행상
 		"north_fork": [-3209.0, 63.0],
@@ -220,8 +230,8 @@ static func documents() -> Dictionary:
 
 static func triggers() -> Array:
 	return [
-		# P02-A 길 안내(첫15 OP01 '주막 안내는 골목 끝 소리·간판·지도'): 남문 앞에 오면 나루 쪽에서 웃음소리 한 번
-		{ "id": "solip_sound", "at": "south_gate", "radius": 22.0, "when": "ph('town') and not f('TAVERN_NEAR')", "steps": [{ "sfx": "laugh_far", "at": "solip_jumo" }] },
+		# P02-A 길 안내(첫15 OP01 '주막 안내는 골목 끝 소리·간판·지도'): 구례 길 어귀(장승)에 오면 나루 건너 주막 쪽에서 웃음소리 한 번
+		{ "id": "solip_sound", "at": "title_view", "radius": 22.0, "when": "ph('town') and not f('TAVERN_NEAR')", "steps": [{ "sfx": "laugh_far", "at": "solip_jumo" }] },
 		# 주막 앞마당 16m — 사발 소리, 주모 머리 위 「…」(onboarding talk marks), 장부가 E 대상이 된다
 		{ "id": "solip_near", "at": "solip", "radius": 16.0, "when": "not f('TAVERN_NEAR')", "steps": [{ "flag": "TAVERN_NEAR" }, { "sfx": "cup_clink", "at": "solip_jumo" }] },
 	]
@@ -234,6 +244,9 @@ static func props() -> Array:
 		{ "id": "p_shoes", "kit": "story/clue", "params": { "kind": "sandal", "seed": 3174 }, "at": "shoes", "ry": 0.3, "dy": 0.12 },
 		{ "id": "p_envelope", "kit": "story/clue", "params": { "kind": "ledger", "seed": 3175 }, "at": "threshold", "ry": -0.2, "dy": 0.42,
 			"when": "f('KNOCKED') and not f('LETTER_RECEIVED')" },
+		# 마당 평상 위 서안(벼루·먹·붓·펼친 책 — 프롤로그에서 이겸이 기록책을 두는 책상, 지금은 남은 물건) · 멍석에 남은 기록지 한 장
+		{ "id": "p_yard_desk", "kit": "story/clue", "params": { "kind": "seoan", "seed": 3177 }, "at": "pro_desk", "ry": 0.0, "dy": 0.49 },
+		{ "id": "p_paper_left", "kit": "story/clue", "params": { "kind": "paper_dry", "n": 1, "seed": 3178 }, "at": "pro_mat", "ry": 0.0, "dy": 0.05 },
 		{ "id": "p_solip_ledger", "kit": "story/clue", "params": { "kind": "ledger_hang", "seed": 3176 }, "at": "solip_ledger", "ry": 0.0, "dy": 1.25 },
 	]
 
@@ -282,9 +295,9 @@ static func _ev(id: String, trigger: String, loc: String, tw: String, actions: S
 static func events() -> Dictionary:
 	return {
 		# OP00 — 새 게임(첫15 OP00 · D7 12초 안 조작). 옛 저장(오누이를 지난 사람)이 처음 이 사건을 만나면 JOIN(여는 장면 없이 합류)
-		"OP00": _ev("OP00", "새 게임", "남원 읍내 이겸의 거처(실내)", "오전 09:30 · 맑음", "걷는다 · 방 물건을 살핀다",
+		"OP00": _ev("OP00", "새 게임", "남원읍성 밖 솔숲 자락 이겸의 거처(마당 → 실내)", "지난 어느 날 오후(프롤로그) → 오전 09:30 · 맑음", "프롤로그를 본다(건너뛸 수 있다) · 걷는다 · 방 물건을 살핀다",
 			[{ "call": "open" }]),
-		"P00B": _ev("P00B", "방 물건 셋을 다 살핌", "이겸의 거처", "오전", "짧은 기억(건너뛸 수 있다)", [{ "call": "flashback" }]),
+		"P00B": _ev("P00B", "방 물건 셋을 다 살핌", "이겸의 거처", "오전", "(재생 없음 — 프롤로그와 겹쳐 뺐다. 깃발 FLASHBACK_SEEN만)", [{ "call": "flashback" }]),
 		"P01B": _ev("P01B", "편지를 받은 뒤 서안", "이겸의 거처", "오전", "옛 기록과 편지를 견준다", [{ "call": "compare_letter" }]),
 		"P02C": _ev("P02C", "여원재 방면이 지도에 적힌 뒤", "남원 — 지도", "낮", "M 지도 · 목적지 설정", []),
 	}
