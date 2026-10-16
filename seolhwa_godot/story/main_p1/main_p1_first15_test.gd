@@ -1,7 +1,8 @@
 # 첫 15분 흐름 시험(재기획 3단계) — 시작 메뉴 → 새 게임 → 이겸의 거처 → 방 물건 → 문 두드림 → 심부름꾼 → 봉투 → 서안 견주기 →
 #   거처 밖 「설화록」 → 걸어서 솔잎 주막 → 주모 → 장부·손님 → M 지도 → [목적지 설정] 을 한 번에 이어 논다.
 #   region_main --continuetest=first15(scripts/story/continue_test.gd가 시작 메뉴를 확인한 뒤 부른다 — tools/run_story_tests.sh first15:*).
-#   잰다: D7(새 게임 → 조작 반환 ≤ 12초) · 안내 하나하나가 실제 행동으로 끝나는가(시간으로 끝나지 않는가) · 대화·조사 뒤 이동 바로 복귀(0.3초) ·
+#   잰다: 서장 프롤로그(새 게임 → 프롤로그 박자 INTRO_01~04 → 0.25초 dip → 방 안 조작, 뒤에 따로 여는 장면 없음 · --first15=skip이면 건너뛰기와
+#     새 게임 Enter 0.5초 막이) · 짧은 기억(P00-B) 재생 없음 · 안내 하나하나가 실제 행동으로 끝나는가(시간으로 끝나지 않는가) · 대화·조사 뒤 이동 바로 복귀(0.3초) ·
 #     E 겹침(닫힌 뒤 E 연타로 창 둘이 열리지 않음) · 카메라 복귀(override·focus·talk_yaw 없음) · 제목 단계 시각(재기획 OP-04) · 거처 → 주막 도보 시간 ·
 #     저장 재개(편지 뒤·주막 대화 뒤·목적지 뒤 — 저장에서 사건을 다시 읽어 같은 자리) · 목적지는 정하기만(순간이동 없음) · 오누이 들머리(--first15=onui).
 #   --storyshots=폴더(창 실행)면 장면마다 찍는다(shots/replan_stage3/). 끝 줄은 continue_test의 CONTTEST PASS/FAIL.
@@ -165,17 +166,60 @@ func run() -> void:
 	await _wait(func(): return d.case_id == "main_p1" and d._started, 15.0)
 	_ok(d.case_id == "main_p1", "새 게임 → 메인 서장 main_p1(오누이 아님)")
 	var c = d.case_fn
+	var skip_mode := String(main.args.get("first15", "")) == "skip"
+	if skip_mode:
+		# 새 게임을 고른 키(Enter)가 곧바로 한 번 더 들어와도(0.2초) 건너뛰지 않는다 → 3초에 Esc로 건너뛴다
+		await _wait(func(): return c.prologue_played, 10.0)
+		await d.wait(0.2); await _key(KEY_ENTER)
+		await d.wait(0.6)
+		_ok(not c.op00_skipped and c.prologue_t.size() >= 1 and d._cut, "새 게임 Enter(0.2초)는 건너뛰기로 읽지 않음(처음 0.5초 막이)")
+		await d.wait(2.0)
+		var t_esc := _now()
+		await _key(KEY_ESCAPE)
+		var ok_sk: bool = await _wait(func(): return d.S.is_flag("OP00_DONE") and _free(), 3.0)
+		var dt_sk := _now() - t_esc
+		_ok(ok_sk and c.op00_skipped and d.S.is_flag("PROLOGUE_SKIPPED") and d.S.is_flag("PROLOGUE_SEEN"), "Esc로 프롤로그 건너뜀 → %.2f초 뒤 조작" % dt_sk)
+		_ok(dt_sk <= 1.5, "건너뛰기 → 조작 1.5초 안(%.2f초)" % dt_sk)
+		_ok(not d.actors.has("yigyeom_past") and c._pro_nodes.is_empty(), "건너뛰면 지난날 이겸·소품이 남지 않음")
+		var post = main.get("post")
+		_ok(post == null or float(post.past) == 0.0, "건너뛰면 색감도 지금으로(past 0)")
+		_ok(not c.echo_ok(), "건너뛴 판은 견주기 끝 메아리(프롤로그 L3)를 띄우지 않음")
 	if shots:
-		await d.wait(1.0); await shot("01_op00_black")
-		await _wait(func(): return c.steps_log.any(func(s): return s[0] == "op00_wide"), 6.0)
-		await d.wait(1.2); await shot("02_op00_wide")
-		await _wait(func(): return c.steps_log.any(func(s): return s[0] == "op00_push"), 6.0)
-		await d.wait(2.4); await shot("03_op00_push")
-	var ctl: bool = await _wait(func(): return d.S.is_flag("OP00_DONE") and _free(), 20.0)
+		await _wait(func(): return c.prologue_t.size() >= 1, 10.0)
+		await d.wait(3.0); await shot("01_intro01_wide")
+		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "INTRO_02"), 20.0)
+		await d.wait(3.0); await shot("02_intro02_twoshot")
+		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "INTRO_03"), 30.0)
+		await d.wait(3.8); await shot("03_intro03_wipe")
+		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "INTRO_04"), 30.0)
+		await d.wait(2.9); await shot("04_intro04_book")
+		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "present"), 20.0)
+		await d.wait(1.6); await shot("05_present_yard")
+		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "last_line"), 20.0)
+		await d.wait(1.0); await shot("06_room_last_line")
+	var ctl: bool = await _wait(func(): return d.S.is_flag("OP00_DONE") and _free(), 90.0)
 	var t_ctl := _now() - t_click
 	result.control = c.control_t
-	_ok(ctl and c.control_t > 0.0 and c.control_t <= 12.0, "D7 새 게임 → 조작 반환 %.2f초(≤12, 시험 측정 %.2f초)" % [c.control_t, t_ctl])
+	result.prologue = c.prologue_t
+	print("FIRST15 prologue beats %s" % JSON.stringify(c.prologue_t))
+	if not skip_mode:
+		var names: Array = c.prologue_t.map(func(b): return String(b[0]))
+		_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "fade_out", "silence", "present", "dip", "last_line", "control"],
+			"프롤로그 박자 차례 %s" % [names])
+		var tot: float = float(c.prologue_t[-1][1]) if c.prologue_t.size() > 0 else 0.0
+		_ok(ctl and tot >= 44.0 and tot <= 58.0, "프롤로그 길이 %.1f초(약 50초 — 44~58)" % tot)
+		_ok(not d.S.is_flag("PROLOGUE_SKIPPED") and d.S.is_flag("PROLOGUE_SEEN") and c.echo_ok(), "끝까지 봄(PROLOGUE_SEEN · 건너뛰지 않음)")
+		var dip0 := 0.0; var room0 := 0.0
+		for b in c.prologue_t:
+			if b[0] == "dip": dip0 = float(b[1])
+			if b[0] == "last_line": room0 = float(b[1])
+		_ok(room0 - dip0 > 0.2 and room0 - dip0 < 0.45, "0.25초 dip으로 방 안(dip→마지막 줄 %.2f초)" % (room0 - dip0))
+	_ok(ctl and c.control_t > 0.0, "새 게임 → 조작 반환 %.2f초(시험 측정 %.2f초)" % [c.control_t, t_ctl])
+	_ok(c.steps_log.size() >= 2 and c.steps_log[-1][0] == "op00_control" and not c.steps_log.any(func(s): return String(s[0]).begins_with("op00_wide") or String(s[0]).begins_with("op00_push")),
+		"프롤로그 뒤 따로 여는 장면 없음(옛 OP00 9초·VO 없음)")
+	_ok(not d._cut and not d.actors.has("yigyeom_past"), "조작이 돌아오면 컷·지난날 이겸 없음")
 	_ok(d.world.interior_at(main.player_pos.x, main.player_pos.z) != null, "시작 자리가 거처 방 안(START_AT_IEGYEOM_HOME)")
+	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(Vector2(D.HX, D.HZ)) < 4.0, "새 거처(%.0f, %.0f) — 읍성 밖 솔숲 자락" % [D.HX, D.HZ])
 	_ok(not d.onboard.is_seen("MOVE"), "이동 안내는 아직(시간으로 끝나지 않음)")
 	await d.wait(0.5)
 	await shot("04_control_move_hint")
@@ -211,12 +255,10 @@ func run() -> void:
 	await _after_close("신발 조사")
 	await _teleport("brush", Vector2(0.7, -0.6))
 	await _e_on("o_brush", func(): return d.S.has_clue("brush"), "E 붓 조사")
-	if shots:
-		await _wait(func(): return c.steps_log.any(func(s): return s[0] == "flashback"), 10.0)
-		await d.wait(2.6); await shot("07_flashback")
-	await _wait(func(): return d.S.is_flag("FLASHBACK_SEEN") and not d.runner.busy, 30.0)
-	_ok(d.S.is_flag("FLASHBACK_SEEN"), "셋 다 보면 짧은 기억(P00-B)")
-	await _after_close("짧은 기억")
+	await _wait(func(): return d.S.is_flag("FLASHBACK_SEEN") and not d.runner.busy, 10.0)
+	_ok(d.S.is_flag("FLASHBACK_SEEN") and not d._cut and not d.actors.has("yigyeom_past"), "셋 다 보면 깃발만(P00-B 재생 없음 — 프롤로그와 겹침)")
+	_ok(d.S.has_clue("ledger") and d.S.has_clue("shoes") and d.S.has_clue("brush"), "방 물건 조사 결과·기록은 그대로")
+	await _after_close("붓 조사")
 	# --- 문 두드림 → 심부름꾼 ---
 	var kn: bool = await _wait(func(): return d.S.is_flag("KNOCKED"), 15.0)
 	_ok(kn, "첫 조사 뒤 문 두드림(KNOCKED)")
@@ -263,33 +305,27 @@ func run() -> void:
 	_ok(String(d.data.clues.suspicious.kind) == "guess", "수상한 편지는 추정(△)으로 적힘")
 	await _after_close("견주기")
 	_ok(String(d.S.phase) == "town", "국면 town")
-	# --- 거처 밖 4m → 「설화록」(조작 그대로) ---
+	# --- 거처 → 오솔길 → 구례 길 → 장승 어귀 「설화록」(조작 그대로) → 나루 → 솔잎 주막 — 한 번에 걸어서 ---
 	await _teleport("door", Vector2(0.0, 0.6))
-	d.ui.auto_real = true   # 제목 단계 시각을 실제 시간으로 잰다(재기획 OP-04)
-	var tw: Dictionary = await walk(["yard", "yard_front", "street", [D.HX + 6.0, D.HZ + 10.0]], "거처 → 동서길(제목)", false, 30.0, 0.4)
-	await _wait(func(): return d.case_fn.title_running or d.S.is_flag("TITLE_IN_WORLD_SEEN"), 4.0)
-	_ok(d.S.is_flag("TITLE_IN_WORLD_SEEN"), "거처 밖 4m에서 제목(TITLE_IN_WORLD_SEEN)")
-	var moving := func(): return not d.blocks_move()
-	_ok(moving.call(), "제목 동안 이동 막지 않음")
-	var p_before := Vector2(main.player_pos.x, main.player_pos.z)
-	if shots:
-		await d.wait(5.0); await shot("11_title_in_world")
-	await walk([[D.HX + 16.0, D.HZ + 9.5]], "제목 중 걷기", false, 30.0, 0.4)
-	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(p_before) > 3.0, "제목 중에도 실제로 걸어간다")
+	d.ui.auto_real = true   # 제목 단계 시각·걷는 시간을 실제 시간으로(재기획 OP-04)
+	var route := ["yard", "street", [-3214.0, 708.6]] + ROUTE_GURYE + ["solip_front"]
+	_title_at = Vector2.INF
+	_watch_title()   # 제목이 뜬 자리를 기다리며 적는다(걷기와 함께 돈다)
+	var wk: Dictionary = await walk(route, "거처 → 솔잎 주막(걷기)", false, 260.0)
+	var title_at := _title_at
+	result.walk = wk
+	_ok(d.S.is_flag("TITLE_IN_WORLD_SEEN"), "가는 길에 제목(TITLE_IN_WORLD_SEEN)")
+	var td: float = title_at.distance_to(d.anchor("title_view")) if title_at != Vector2.INF else 999.0
+	_ok(td <= c.TITLE_AT_M + 1.5, "제목은 구례 길 장승 어귀에서(%.1fm)" % td)
+	result.title_at = [title_at.x, title_at.y]
 	await _wait(func(): return not d.case_fn.title_running, 14.0)
 	d.ui.auto_real = shots
 	_ok(d.case_fn.title_t.size() >= 5, "제목 단계 시각 %s" % JSON.stringify(d.case_fn.title_t))
 	result.title = d.case_fn.title_t
-	await _wait(_cam_home, 2.0)
-	_ok(_cam_home(), "제목 뒤 카메라만 돌아옴")
-	# --- 걸어서 솔잎 주막(골목 → 대로 → 주막 간판) ---
-	await _teleport("street")
-	var route := [[-3228.6, 249.6], [-3228.6, 300.0], [-3228.4, 338.0], [-3228.0, 352.0], [-3229.5, 362.0], [-3232.0, 378.0], [-3232.0, 452.0], [-3217.5, 481.5], "solip_front"]
-	var wk: Dictionary = await walk(route, "거처 앞 → 솔잎 주막(걷기)", false, 260.0)
-	result.walk = wk
-	_ok(wk.stuck == 0, "거처 → 주막 길에 막힘 없음(stuck %d)" % wk.stuck)
+	_ok(wk.stuck == 0, "거처 → 주막 길에 막힘 없음(stuck %d — 나루 나룻배 포함)" % wk.stuck)
+	_ok(wk.t >= 100.0 and wk.t <= 180.0, "걷기 %.0f초(사용자 기준 2~3분)" % wk.t)
 	_ok(d.S.is_flag("TAVERN_NEAR"), "주막 앞마당에 닿음(TAVERN_NEAR)")
-	print("FIRST15 route walk %.1fs %.0fm (첫15 목표 60~110초)" % [wk.t, wk.dist])
+	print("FIRST15 route walk %.1fs %.0fm (거처 이전 — 2~3분)" % [wk.t, wk.dist])
 	await shot("12_solip_arrive")
 	# --- 주모 ---
 	await _teleport("solip_jumo", Vector2(-1.2, 1.3))
@@ -353,6 +389,20 @@ func run() -> void:
 	result.total = _now() - T0
 	print("FIRST15 result %s" % JSON.stringify(result))
 	if String(main.args.get("first15", "")) == "onui": await _onui()
+
+var _title_at := Vector2.INF
+func _watch_title() -> void:
+	var n := 0
+	while _title_at == Vector2.INF and n < 30000:
+		await _frames(1); n += 1
+		if d.case_fn.title_running or d.S.is_flag("TITLE_IN_WORLD_SEEN"): _title_at = Vector2(main.player_pos.x, main.player_pos.z)
+
+# 거처 오솔길 끝 → 구례 길 북쪽 → 나루(걸어 건넘) → 주막 앞(길 그래프 namwon_gurye_road 점 — 이겸 거처 이전 4단계 측정과 같은 길)
+const ROUTE_GURYE := [
+	[-3216.2, 700.9], [-3217.0, 687.9], [-3222.0, 674.7], [-3231.0, 665.1], [-3239.4, 655.3], [-3246.5, 645.0],
+	[-3251.3, 633.4], [-3251.5, 619.1], [-3246.5, 607.6], [-3239.1, 597.6], [-3236.0, 585.6], [-3235.1, 572.6],
+	[-3229.4, 561.1], [-3221.3, 550.3], [-3210.3, 541.2], [-3209.4, 530.4], [-3199.5, 526.0], [-3202.6, 512.6],
+	[-3209.9, 505.5], [-3215.4, 494.9], [-3215.8, 490.4]]
 
 # 문서 비교 화면 시험(documents.gd doc_hook) — 처음엔 하나만 짚고 덮기, 다음엔 두 쌍
 var _doc_plan: Array = ["full"]

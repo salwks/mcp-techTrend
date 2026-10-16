@@ -1,0 +1,172 @@
+{
+ "cases": {
+  "main_p1": {
+   "clues": [
+    "ledger",
+    "shoes",
+    "brush",
+    "messenger",
+    "letter"
+   ],
+   "flags": {
+    "FLASHBACK_SEEN": true,
+    "KNOCKED": true,
+    "LETTER_RECEIVED": true,
+    "OP00_DONE": true,
+    "P00_ITEM_SEEN": true,
+    "START_AT_IEGYEOM_HOME": true,
+    "TALK_SEEN": true
+   },
+   "items": {
+    "COIN": 12,
+    "ITM_MAIN_LETTER": 1,
+    "ITM_TOOL_009": 1
+   },
+   "notes": [],
+   "phase": "home",
+   "rules": [],
+   "seen": {
+    "OP00": true,
+    "_talk": {
+     "messenger": [
+      "0|누가 보냈지?|어디서 왔지?|숨부터 고르고.|s1"
+     ]
+    }
+   },
+   "talked": {
+    "messenger": 2
+   },
+   "time": 9.5,
+   "v": 2,
+   "world": {}
+  }
+ },
+ "heard": [],
+ "known": {
+  "JL_NAMWON_UNBONG": {
+   "bld:광한루@-3271,450": "known",
+   "bld:광한루원@-3279,483": "known",
+   "bld:남원향교@-3247,-98": "known",
+   "bld:동헌@-3162,204": "known",
+   "bld:실상사@3682,17": "known",
+   "bld:여원치 마애불@-41,-939": "known",
+   "bld:용성관@-3228,196": "visited",
+   "bld:운봉현 관아@892,-766": "known",
+   "bld:이겸의 거처@-3252,240": "visited",
+   "bld:주막@-3207,484": "told",
+   "bld:황산대첩비@1671,-1346": "known",
+   "lm:gwanghallu": "known",
+   "lm:hwangsan_daecheopbi": "known",
+   "lm:namwon_dongheon": "known",
+   "lm:namwon_east_gate": "known",
+   "lm:namwon_eupseong": "visited",
+   "lm:namwon_north_gate": "known",
+   "lm:namwon_south_gate": "known",
+   "lm:namwon_west_gate": "known",
+   "lm:ojakgyo": "known",
+   "lm:silsangsa": "known",
+   "lm:unbong_gwana": "known",
+   "lm:yeowonchi_maaebul": "known",
+   "lm:yongseonggwan": "visited",
+   "pass:yeowonjae": "known",
+   "place:iegyeom_house": "visited",
+   "place:solip_jumak": "told",
+   "town:남원": "visited",
+   "town:실상사": "known",
+   "town:요천": "known",
+   "town:운봉": "known",
+   "town:인월": "known"
+  },
+  "_nation": {
+   "region:JL_NAMWON_UNBONG": "visited",
+   "sh:남원": "visited"
+  }
+ },
+ "meta": {
+  "case": "이겸의 수상한 편지",
+  "hour": 9.5,
+  "place": "남원",
+  "play": 0.0,
+  "space": "JL_NAMWON_UNBONG"
+ },
+ "onboard": {
+  "ONBOARD_INSPECT_SEEN": true,
+  "ONBOARD_JOURNAL_SEEN": true,
+  "ONBOARD_MOVE_SEEN": true,
+  "ONBOARD_PENDING": {
+   "MAP": "M   지도 — 들은 곳이 적혔다",
+   "RUN": "Shift   달리기"
+  },
+  "ONBOARD_TALK_SEEN": true
+ },
+ "routes_done": {},
+ "saved_at": "2026-10-16T06:59:47",
+ "travel_nodes": {
+  "JL_NAMWON_UNBONG": {
+   "namwon_eup": "2026-10-16T06:59:32"
+  }
+ },
+ "vars": {
+  "ACT2_OPEN": false,
+  "ACT3_OPEN": false,
+  "ACT6_OPEN": false,
+  "CASE_GANGNEUNG_COMPLETE": false,
+  "CASE_GANGNEUNG_OUTCOME": "",
+  "CASE_GYEONGJU_COMPLETE": false,
+  "CASE_GYEONGJU_OUTCOME": "",
+  "CASE_HAMHUNG_COMPLETE": false,
+  "CASE_HAMHUNG_OUTCOME": "",
+  "CASE_HANYANG_BOOKSHOP_COMPLETE": false,
+  "CASE_HANYANG_OUTCOME": "",
+  "CASE_HWANGJU_COMPLETE": false,
+  "CASE_HWANGJU_OUTCOME": "",
+  "CASE_JEJU_COMPLETE": false,
+  "CASE_JEJU_OUTCOME": "",
+  "CASE_NAMWON_CHUNHYANG_COMPLETE": false,
+  "CASE_NAMWON_CHUNHYANG_LEFT_AFTER_PART1": false,
+  "CASE_NAMWON_CHUNHYANG_OUTCOME": "",
+  "CASE_NAMWON_CHUNHYANG_PART1_COMPLETE": false,
+  "CASE_NAMWON_COMPLETE": false,
+  "CASE_NAMWON_MORNING": "",
+  "CASE_NAMWON_OUTCOME": "",
+  "CASE_PYONGYANG_COMPLETE": false,
+  "CASE_PYONGYANG_OUTCOME": "",
+  "FINAL_CIVILIAN_HARM": 0,
+  "FINAL_CRIME_RESOLVED": false,
+  "FINAL_EVIDENCE_SCORE": 0,
+  "FINAL_PUBLIC_EXPOSURE": false,
+  "FINAL_SPIRIT_RESOLVED": false,
+  "FINAL_WOOCHI_METHOD": 0,
+  "HAMHUNG_MESSENGERS_RETURNED": 0,
+  "HAMHUNG_SEOGANG_CARD_SEEN": false,
+  "ITEM_KEY_001": false,
+  "ITEM_SENSING_KNOT": false,
+  "ITEM_TALISMAN_SLOT": 0,
+  "MAIN_GWAK_FOUND": false,
+  "MAIN_GWAK_NAME_KNOWN": false,
+  "MAIN_MASTER_FOUND": false,
+  "MAIN_MASTER_TRACE": "",
+  "MAIN_PARK_MARK_COUNT": 0,
+  "MAIN_PARK_NAME_KNOWN": false,
+  "MAIN_PAST_EVENT_KNOWN": false,
+  "MAIN_WOOCHI_KNOWN": false,
+  "PLAYER_FIRST_LINE": "",
+  "SKILL_BEAST_SIDESTEP": false,
+  "SKILL_BEAST_TRACE": false,
+  "SKILL_DOCUMENT_CHECK": false,
+  "SKILL_EVADE_SLASH": false,
+  "SKILL_GUARD_SHOVE": false,
+  "SKILL_QUICK_THROW": false,
+  "SKILL_RUBBING": false,
+  "SKILL_SNAP_SHOT": false,
+  "SKILL_TOOL_SLOT_PLUS": false
+ },
+ "version": 2,
+ "where": {
+  "hour": 9.5,
+  "kind": "region",
+  "space": "JL_NAMWON_UNBONG",
+  "x": -3251.0,
+  "z": 249.4
+ }
+}

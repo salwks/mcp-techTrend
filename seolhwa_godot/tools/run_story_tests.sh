@@ -116,11 +116,17 @@ TESTS=(
 	"continue:namwon-done-join|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_v1_done_save.json --continueexpect=join"
 	"continue:namwon-done-yield|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon/test_v1_done_save.json --case=namwon --continueexpect=yield"
 	"continue:chunhyang-entry|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/hwangju/test_post_hanyang.json --continueexpect=chunhyang"
-	"continue:main-letter|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_letter_save.json --continueexpect=main_resume"
+	"continue:main-letter|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_letter_new_save.json --continueexpect=main_resume"
+	# 이겸 거처 이전(4~7단계): 옛 거처 안 저장(옛 판 test_main_letter_save.json 그대로) → 새 거처로 옮김 · 옛 자리 가까이 보통 저장(길 위 home · 마당 안 town) → 옮기지 않음 · 춘향 도중 → 춘향 그대로
+	"continue:main-migrate|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_letter_save.json --continueexpect=main_migrate"
+	"continue:main-oldspot-street|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_oldspot_street_save.json --continueexpect=main_nomove"
+	"continue:main-oldspot-town|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_oldspot_town_save.json --continueexpect=main_nomove"
+	"continue:chunhyang-mid|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon_chunhyang/test_chunhyang_mid_save.json --continueexpect=chunhyang_mid"
 	# 재기획 3단계 첫 15분(story/main_p1/main_p1_first15_test.gd): 시작 메뉴 → 새 게임 → 거처 → 편지 → 견주기 → 「설화록」 → 걸어서 솔잎 주막 → 지도 [목적지 설정]
-	#   D7(조작 반환 ≤12초) · 안내 여섯이 행동으로 끝남 · 이동 바로 복귀·카메라 복귀·E 겹침 없음 · 저장 재개 셋 · 순간이동 없음 / onui: 이어서 북문 밖 행상 → 오누이
+	#   서장 프롤로그(박자·길이·0.25초 dip·뒤에 여는 장면 없음 — 옛 D7 12초를 대신함) · skip: 새 게임 Enter 0.5초 막이·Esc 건너뛰기 · 안내 여섯이 행동으로 끝남 · 이동 바로 복귀·카메라 복귀·E 겹침 없음 · 저장 재개 셋 · 순간이동 없음 / onui: 이어서 북문 밖 행상 → 오누이
 	"first15:new|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --storylog"
 	"first15:onui|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --first15=onui --storylog"
+	"first15:skip|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --first15=skip --storylog"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 	# 지도 글(scripts/region/region_map.gd --maptexttest): 권역·고을·전국 지도를 최소·중간·최대 배율로 — 이름표 글 크기·높이가 같은가 · 기호 속 글자 MAP_GLYPH ·

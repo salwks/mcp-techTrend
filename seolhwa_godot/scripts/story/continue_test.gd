@@ -99,6 +99,9 @@ func run(spec: String) -> void:
 		"chunhyang": await _chunhyang_entry()
 		"yield": await _yield()
 		"main_resume": await _main_resume()
+		"main_migrate": await _main_migrate()
+		"main_nomove": await _main_nomove()
+		"chunhyang_mid": await _chunhyang_mid()
 		"rollback": await _rollback()
 		"rollback_rope": await _rollback_rope()
 		"morning": await _morning()
@@ -237,6 +240,46 @@ func _main_resume() -> void:
 	_ok(d.case_id == "main_p1" and d.S.is_flag("LETTER_RECEIVED") and not d.S.is_flag("LETTER_SUSPICIOUS"), "편지 뒤 저장 → 메인 서장 그 자리(case=%s)" % d.case_id)
 	_ok(not d.S.seen.has("JOIN") and not d.S.is_flag("JOINED"), "새로 합류하지 않고 이어 함")
 	_ok(d._targets().any(func(t): return String(t.id) == "o_desk"), "서안 견주기가 E 대상으로 남아 있음")
+
+# 이겸 거처 이전(4~7단계): 옛 거처(객사 담 앞) 안에서 저장한 옛 저장(test_main_letter_save.json 원본 그대로 — 자리 -3251.9, 243.8) →
+#   새 거처 안 같은 상대 자리로 · 지도 키 bld:이겸의 거처@ 옮김 · 사건 진행·기록·인물 그대로 · 프롤로그 없음
+func _main_migrate() -> void:
+	var c = d.case_fn
+	var D = load("res://story/main_p1/main_p1_data.gd")
+	await _wait_until(func(): return c.get("_migrate_to") == null, 5.0)
+	await main._wait_frames(10)
+	var pp := Vector2(main.player_pos.x, main.player_pos.z)
+	var want := Vector2(D.HX, D.HZ) + Vector2(-3251.9 - D.OLD_HX, 243.8 - D.OLD_HZ)
+	_ok(c.migrated and d.S.is_flag("HOME_MOVED"), "옛 거처 안 저장 → 새 거처로 옮김(HOME_MOVED)")
+	_ok(pp.distance_to(want) < 1.0, "새 거처 안 같은 상대 자리(%.1f, %.1f) — 바람 (%.1f, %.1f)" % [pp.x, pp.y, want.x, want.y])
+	var rel := pp - Vector2(D.HX, D.HZ)
+	_ok(absf(rel.x) <= 4.6 and rel.y >= -3.6 and rel.y <= 6.9, "옮긴 자리가 새 거처 집·앞마당 안(상대 %.1f, %.1f — 옛 저장은 문턱 앞)" % [rel.x, rel.y])
+	var kn: Dictionary = Progress.known("JL_NAMWON_UNBONG")
+	_ok(not kn.has("bld:이겸의 거처@-3252,240") and String(kn.get("bld:이겸의 거처@%d,%d" % [roundi(D.HX), roundi(D.HZ)], "")) == "visited", "지도 키 옮김(옛 키 없음 · 새 키 visited)")
+	_ok(d.case_id == "main_p1" and d.S.is_flag("LETTER_RECEIVED") and not d.S.is_flag("LETTER_SUSPICIOUS") and String(d.S.phase) == "home", "사건 진행 그대로(편지 뒤 · 국면 home)")
+	_ok(["ledger", "shoes", "brush", "messenger", "letter"].all(func(k): return d.S.has_clue(k)) and d.S.has(D.LETTER), "기록(단서 다섯)·소지품 그대로")
+	_ok(int(d.S.talked.get("messenger", 0)) == 2 and d.S.is_flag("KNOCKED"), "인물 상태 그대로(심부름꾼 대화 2·문 두드림)")
+	_ok(not c.prologue_played and not d.S.is_flag("PROLOGUE_SEEN"), "옛 저장에 프롤로그 없음")
+	_ok(d._targets().any(func(t): return String(t.id) == "o_desk"), "서안 견주기가 E 대상(새 거처)")
+	print("CONTTEST main_migrate at=(%.1f,%.1f)" % [pp.x, pp.y])
+
+# 옛 자리 가까이의 보통 저장(옛 거처 밖 길 위 · 또는 편지를 의심한 뒤 국면 town) — 옮기지 않는다
+func _main_nomove() -> void:
+	var c = d.case_fn
+	await main._wait_frames(30)
+	var wh: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(String(main.args.continuefixture))).get("where", {})
+	var pp := Vector2(main.player_pos.x, main.player_pos.z)
+	_ok(not c.migrated and not d.S.is_flag("HOME_MOVED"), "옮기지 않음(HOME_MOVED 없음)")
+	_ok(pp.distance_to(Vector2(float(wh.x), float(wh.z))) < 1.5, "저장 자리 그대로(%.1f, %.1f)" % [pp.x, pp.y])
+	_ok(not c.prologue_played, "옛 저장에 프롤로그 없음")
+	print("CONTTEST main_nomove phase=%s at=(%.1f,%.1f)" % [d.S.phase, pp.x, pp.y])
+
+# 춘향 도중 옛 저장(test_chunhyang_mid_save.json — 한양 뒤 + 춘향 단오 진행 중) — 춘향을 그대로 이어 간다(메인 서장·프롤로그가 끼지 않는다)
+func _chunhyang_mid() -> void:
+	_ok(d.case_id == "namwon_chunhyang", "춘향 도중 저장 → 춘향 그대로(case=%s)" % d.case_id)
+	_ok(d.S.is_flag("case_started") and String(d.S.phase) != "start", "춘향 진행 그대로(phase=%s)" % d.S.phase)
+	var mst := Progress.case_state("main_p1")
+	_ok(not bool((mst.get("flags", {}) as Dictionary).get("PROLOGUE_SEEN", false)), "메인 서장 프롤로그가 끼지 않음")
 
 # 남원 참기름 감사 — 옛 v1 끝난 저장(test_v1_done_save.json: phase done · 결말 B · 세부 B_win). 값은 바꾸지 않고 문장만 B_hold로 읽는다
 func _v1_done() -> void:
