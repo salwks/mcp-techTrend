@@ -128,10 +128,16 @@ func _set_move(n: Vector2) -> void:
 func _release() -> void:
 	for a in ["move_right", "move_left", "move_down", "move_up"]: Input.action_release(a)
 
+# 고를 차례(앞이 먼저): 심부름꾼 달래기 · 견주기 결론 C(메인 대본 P01-B) · 주모 ① → ③ → '직접 본 것만…' → 고맙소(② 누구와 만났습니까는 남긴다 — 다시 말 걸면 남은 물음)
+const PICK := ["숨부터 고르고.", "스승이 일부러 평소처럼 쓰지 않았나?", "마지막으로 언제 봤습니까?", "이 편지는 여기서 보내졌습니까?", "직접 본 것만 말씀해 주세요.", "고맙소."]
+var picked: Array = []   # 시험 기록: 고른 줄
+var choice_sets: Array = []   # 시험 기록: 뜬 선택지 묶음
+
 func _choose(prompt: String, labels: Array) -> int:
-	var want := { "누가 보냈지?": false, "숨부터 고르고.": true, "대신 쓴 이가 있나?": true, "마지막으로 어디서 보셨소?": true, "고맙소.": true }
-	for i in labels.size():
-		if want.get(String(labels[i]), false): return i
+	choice_sets.append(labels.duplicate())
+	for want in PICK:
+		var i := labels.find(want)
+		if i >= 0: picked.append(want); return i
 	for i in labels.size():
 		if String(labels[i]).begins_with("지금은 가던 길") and not main.args.get("first15", "") == "onui": return i
 		if String(labels[i]).begins_with("고개 너머 그 집에") and main.args.get("first15", "") == "onui": return i
@@ -160,6 +166,8 @@ func run() -> void:
 	d.ui.auto_real = true   # 여는 장면은 실제 시간으로(D7을 잰다)
 	d.ui.auto_choice = _choose
 	d.doc_hook = _doc_exam
+	if shots: d.ui.auto_hold = 1.4   # 찍을 때만: 선택지·카드를 찍을 만큼 띄워 둔다
+	_listen()
 	print("FIRST15 begin case=%s" % d.case_id)
 	var t_click := _now()
 	d.title._pick(0)   # 새 게임
@@ -191,8 +199,9 @@ func run() -> void:
 		await d.wait(3.0); await shot("02_intro02_twoshot")
 		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "INTRO_03"), 30.0)
 		await d.wait(3.8); await shot("03_intro03_wipe")
-		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "INTRO_04"), 30.0)
-		await d.wait(2.9); await shot("04_intro04_book")
+		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "book_look"), 30.0)
+		await d.wait(1.3); await shot("04_intro04_book")   # 펼친 쪽을 내려다봄 — 첫 줄 '구월 열이틀 맑음'
+		await d.wait(1.0); await shot("04b_intro04_book_late")
 		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "present"), 20.0)
 		await d.wait(1.6); await shot("05_present_yard")
 		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "last_line"), 20.0)
@@ -204,10 +213,16 @@ func run() -> void:
 	print("FIRST15 prologue beats %s" % JSON.stringify(c.prologue_t))
 	if not skip_mode:
 		var names: Array = c.prologue_t.map(func(b): return String(b[0]))
-		_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "fade_out", "silence", "present", "dip", "last_line", "control"],
+		_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "book_look", "fade_out", "silence", "present", "dip", "last_line", "control"],
 			"프롤로그 박자 차례 %s" % [names])
 		var tot: float = float(c.prologue_t[-1][1]) if c.prologue_t.size() > 0 else 0.0
 		_ok(ctl and tot >= 44.0 and tot <= 58.0, "프롤로그 길이 %.1f초(약 50초 — 44~58)" % tot)
+		var bl := 0.0; var fo := 0.0
+		for b in c.prologue_t:
+			if b[0] == "book_look": bl = float(b[1])
+			if b[0] == "fade_out": fo = float(b[1])
+		_ok(fo - bl >= c.line_sec(c.BOOK_FIRST) + 0.5, "기록책 펼친 쪽 내려다보기 %.2f초(첫 줄 '%s'을 읽는 시간 %.2f초 + 내려다봄)" % [fo - bl, c.BOOK_FIRST, c.line_sec(c.BOOK_FIRST)])
+		_ok(String(D.documents().old_record.cols[0].text) == c.BOOK_FIRST, "프롤로그 기록책 첫 줄 = 견주기 옛 기록 첫 줄(같은 기록책)")
 		_ok(not d.S.is_flag("PROLOGUE_SKIPPED") and d.S.is_flag("PROLOGUE_SEEN") and c.echo_ok(), "끝까지 봄(PROLOGUE_SEEN · 건너뛰지 않음)")
 		var dip0 := 0.0; var room0 := 0.0
 		for b in c.prologue_t:
@@ -289,6 +304,8 @@ func run() -> void:
 		await _wait(func(): return d.ui._card.visible, 3.0); await d.wait(0.6); await shot("10_letter")
 	await _after_close("편지 읽기")
 	_ok(d.S.has(D.LETTER), "출처 미확인 편지가 소지품에")
+	_ok(_said.has("나그네|이상하네. 스승님이 이런 글을 쓰실 분인가?"), "편지 첫 읽기 — 나그네의 혼잣말(시스템이 날짜 없음을 먼저 말하지 않음)")
+	_ok(not _exam_text.contains("날짜") and not _caps.has("서안의 옛 기록과 견주어 보자."), "편지 카드에 '날짜·표시 없음' 없음 · 목표 자막 '서안의 옛 기록과 견주어 보자.' 없음")
 	await _resume_check("저장 재개 — 편지 읽은 뒤", ["LETTER_RECEIVED", "KNOCKED", "TALK_SEEN", "OP00_DONE"])
 	# --- 서안: 옛 기록과 편지 견주기 ---
 	await _teleport("desk_front")
@@ -298,10 +315,26 @@ func run() -> void:
 	_ok(not d.S.is_flag("LETTER_SUSPICIOUS"), "하나만 짚고 덮으면 아직 의심 전(벌점 없음 · 다시 이어 할 수 있음)")
 	await _resume_check("저장 재개 — 견주기 도중", ["LETTER_RECEIVED"])
 	_ok((d.S.flags.get("_doc_found", {}) as Dictionary).has("old_record/o_date"), "견주기 도중 저장 — 짚은 자리 그대로(_doc_found)")
-	_doc_plan = ["full"]
+	_doc_plan = ["nokey"]   # 날짜·방향 두 쌍만 — 열쇠 짝(모르는 것 ↔ 신선) 없이 덮는다
 	await _e_on("o_desk", func(): return d.ui.modal, "E 서안 — 다시 열어 이어 하기")
+	await _wait(func(): return not d.runner.busy and not d.ui.modal, 30.0)
+	await _wait(func(): return d.case_fn.steps_log.any(func(s): return s[0] == "compare_nudge") and _caps.has(c.NUDGE), 4.0)
+	_ok(d.S.has_clue("cmp_date") and d.S.has_clue("cmp_way") and not d.S.is_flag("LETTER_SUSPICIOUS") and not d.S.is_flag("LETTER_COMPARE_2"), "날짜·방향 두 쌍만으로는 끝나지 않음(날짜 없음·말투 차이만으로 위조 확정 없음)")
+	_ok(_caps.has(c.NUDGE) and d.case_fn.steps_log.any(func(s): return s[0] == "compare_nudge"), "두 쌍이지만 열쇠 짝이 없으면 정답이 아닌 귀띔 한 줄 %s" % [_caps.slice(-3)])
+	_ok(d._targets().any(func(t): return String(t.id) == "o_desk"), "귀띔 뒤 서안을 다시 열 수 있음")
+	await _after_close("견주기(귀띔)")
+	_doc_plan = ["key"]
+	_said.clear(); _caps.clear()
+	_watch_conclusion()
+	await _e_on("o_desk", func(): return d.ui.modal, "E 서안 — 다시 열어 모르는 것 ↔ 신선 짚기")
 	await _wait(func(): return d.S.is_flag("LETTER_SUSPICIOUS") and not d.runner.busy, 40.0)
-	_ok(d.S.is_flag("LETTER_COMPARE_2") and d.S.is_flag("LETTER_SUSPICIOUS"), "두 쌍을 짚으면 LETTER_SUSPICIOUS(추정 — 위조 확정 아님)")
+	_ok(d.S.is_flag("LETTER_COMPARE_2") and d.S.is_flag("LETTER_SUSPICIOUS") and d.S.has_clue("cmp_unknown"), "모르는 것 ↔ 신선 쌍이 들면 LETTER_SUSPICIOUS(추정 — 위조 확정 아님)")
+	var cset: Array = choice_sets.filter(func(l): return l.has("스승이 일부러 평소처럼 쓰지 않았나?"))
+	_ok(not cset.is_empty() and cset[0] == ["글씨를 흉내 낸 자가 있다.", "누가 내용을 대신 써줬을지도 모른다.", "스승이 일부러 평소처럼 쓰지 않았나?"], "결론 선택 A·B·C = 메인 대본 P01-B %s" % [cset])
+	var order := ["나그네|기다리라고? …누가 날 찾지 못하게 하려는 거라면?", "CHOICE", "나그네|직접 확인해야 한다."]
+	if d.case_fn.echo_ok(): order.append("CAP|이겸  “틀린 자리를 다시 찾을 수 있지.”")   # 프롤로그를 건너뛴 판은 메아리 없음
+	_ok(_seq.filter(func(x): return order.has(x)) == order, "견주기 뒤 차례: 의심 한 줄 → A/B/C → 직접 확인 → 이겸 메아리 %s" % [_seq])
+	_ok(_said.size() == 2, "견주기 뒤 나그네 줄은 둘뿐(결론을 되풀이하지 않음) %s" % [_said])
 	_ok(String(d.data.clues.suspicious.kind) == "guess", "수상한 편지는 추정(△)으로 적힘")
 	await _after_close("견주기")
 	_ok(String(d.S.phase) == "town", "국면 town")
@@ -329,21 +362,38 @@ func run() -> void:
 	await shot("12_solip_arrive")
 	# --- 주모 ---
 	await _teleport("solip_jumo", Vector2(-1.2, 1.3))
+	_said.clear()
+	_watch_jumak()
 	await _e_on("solip_jumo", func(): return d.S.is_flag("TAVERN_TALK") or int(d.S.talked.get("solip_jumo", 0)) > 0, "E 주모에게 말 걸기")
-	if shots:
-		await _wait(shot_talk, 3.0); await d.wait(0.7); await shot("13_jumo_talk")
 	await _after_close("주모 대화")
-	_ok(d.S.is_flag("TAVERN_TALK") and d.S.has_clue("tv_jumo"), "주모 첫 대화 + 행선지 증언(TAVERN_TALK)")
+	_ok(d.S.is_flag("TAVERN_TALK") and d.S.has_clue("tv_jumo_last") and not d.S.has_clue("tv_jumo"), "주모 첫 대화(TAVERN_TALK) · ① 마지막으로 본 때(◇)")
+	var jumo_want := ["주모|이겸? 매번 묵으면 먹은 것과 쓴 것을 죄 적던 양반 말이오? 국에 파를 빼달라고 해 놓고, 나중에는 그 사정까지 기록하더니.",
+		"주모|며칠 전 산에서 내려오는 장사꾼에게 뭔가 물었소. 아이 하나가 없어졌다는 소문도 캐묻고.",
+		"주모|그런 편지가 여기서 넘어갔다고? 심부름꾼은 왔다 갔소. 누가 썼는지까지 내가 보지는 못했지.",
+		"주모|그 편지는 글씨가 참 반듯했는데, 글을 맡긴 양반 손이 먹투성이였단 말은 못 들었소. ...아니, 내가 본 건 아니고.",
+		"주모|옳지. 당신 스승이 꼭 그렇게 말하더라고."]
+	_ok(_said == jumo_want, "주모 줄 = 메인 대본 P02-A(여는 말 · ① · ③ · 더듬는 말 · '직접 본 것만…' 답) %s" % [_said])
+	_ok(picked.has("직접 본 것만 말씀해 주세요."), "③ 뒤 '직접 본 것만 말씀해 주세요.' 선택")
+	_ok(not _said.any(func(x): return String(x).contains("직접 본 건 숙박 장부뿐") or String(x).contains("나도 들은 말이오")), "주모·손님이 제자처럼 '본/들은'을 나누는 옛 줄 없음")
+	_ok(not d.S.is_flag("TAVERN_CLUE"), "주모 말만으로는 지도 등록 없음")
 	await _resume_check("저장 재개 — 주막 대화 뒤", ["TAVERN_TALK", "LETTER_SUSPICIOUS", "TITLE_IN_WORLD_SEEN"])
 	# --- 장부(확인) · 손님(들음) ---
 	await _teleport("solip_ledger", Vector2(0.2, 1.0))
 	await _e_on("o_solip_ledger", func(): return d.S.has_clue("tv_last"), "E 숙박 장부(확인된 사실)")
 	await _after_close("숙박 장부")
-	_ok(d.S.is_flag("TAVERN_CLUE"), "장부 하나로 지도 후보(TAVERN_CLUE)")
-	_ok(String(d.data.clues.tv_last.kind) == "fact" and String(d.data.clues.tv_baekun.kind) == "heard", "확인(◆)·들음(◇) 구분")
+	_ok(not d.S.is_flag("TAVERN_CLUE") and d.main.get("_map") != null, "장부 하나로는 아직 지도 등록 없음(둘 이상 — 메인 대본 P02-A)")
+	_ok(String(d.data.clues.tv_last.kind) == "fact" and String(d.data.clues.tv_baekun.kind) == "heard" and String(d.data.clues.tv_guest2.kind) == "heard", "확인(◆ 장부)·들음(◇ 손님 증언) 구분")
+	await _teleport("solip_guest2", Vector2(0.9, 0.9))
+	_said.clear()
+	await _e_on("solip_guest2", func(): return d.S.has_clue("tv_guest2"), "E 짚신 손님 — 여원재 너머(들음)")
+	if shots: await shot("13d_guest2")
+	await _after_close("짚신 손님 대화")
+	_ok(_said == ["짚신 손님|이겸이 여원재 너머로 간다 했다."], "짚신 손님 줄 %s" % [_said])
+	_ok(d.S.is_flag("TAVERN_CLUE"), "장부 + 짚신 손님 = 둘 → 지도 후보 '여원재 방면'(TAVERN_CLUE)")
 	await _teleport("solip_guest", Vector2(0.9, 0.9))
 	await _e_on("solip_guest", func(): return d.S.has_clue("tv_baekun"), "E 손님 — 백운 소문(선택)")
 	await _after_close("손님 대화")
+	_ok(not d._targets().any(func(t): return String(t.id) == "solip_guest" or String(t.id) == "solip_guest2"), "증언한 손님은 되풀이 줄 없이 장면으로(제자처럼 말하는 옛 줄 없음)")
 	# --- M 지도 → 여원재 방면 → [목적지 설정] ---
 	_ok(not d.onboard.is_seen("MAP") and not d.onboard.is_seen("WAYPOINT"), "지도·목적지 안내는 행동 전 그대로")
 	var pos0 := Vector2(main.player_pos.x, main.player_pos.z)
@@ -390,6 +440,55 @@ func run() -> void:
 	print("FIRST15 result %s" % JSON.stringify(result))
 	if String(main.args.get("first15", "")) == "onui": await _onui()
 
+# 대사·자막 엿듣기(story_ui.log_lines를 쓰지 않고 — say·caption 앞 on_say와 _cap_text를 프레임마다 본다)
+var _said: Array = []    # ["누가|줄"]
+var _caps: Array = []
+var _seq: Array = []     # 차례: "누가|줄" · "CHOICE" · "CAP|자막"
+var _exam_text := ""
+var _last_dlg := ""
+var _last_cap := ""
+var _choice_on := false
+func _listen() -> void:
+	while true:
+		await _frames(1)
+		var ui = d.ui
+		if ui._dialog.visible and String(ui._type_full) != "" and String(ui._dlg_name.text) + "|" + String(ui._type_full) != _last_dlg:
+			_last_dlg = String(ui._dlg_name.text) + "|" + String(ui._type_full)
+			_said.append(_last_dlg); _seq.append(_last_dlg)
+		if not ui._dialog.visible: _last_dlg = ""
+		if String(ui._cap_text) != _last_cap:
+			_last_cap = String(ui._cap_text)
+			if _last_cap != "": _caps.append(_last_cap); _seq.append("CAP|" + _last_cap)
+		if ui._card.visible: _exam_text = String(ui._card_text.text) if String(ui._card_title.text) == "편지" else _exam_text
+		if ui._choice.visible != _choice_on:
+			_choice_on = ui._choice.visible
+			if _choice_on: _seq.append("CHOICE")
+
+func _watch_conclusion() -> void:
+	_seq.clear()
+	if not shots: return
+	await _wait(func(): return d.ui._dialog.visible and String(d.ui._type_full).begins_with("기다리라고"), 60.0)
+	await d.wait(1.2); await shot("10e_doubt_line")
+	await _wait(func(): return d.ui._choice.visible, 20.0)
+	await d.wait(0.4); await shot("10f_conclusion_choice")
+	await _wait(func(): return d.ui._dialog.visible and String(d.ui._type_full) == "직접 확인해야 한다.", 20.0)
+	await d.wait(0.8); await shot("10g_check_myself")
+	await _wait(func(): return String(d.ui._cap_text).contains("틀린 자리"), 20.0)
+	await d.wait(0.6); await shot("10h_echo")
+
+func _watch_jumak() -> void:
+	if not shots: return
+	await _wait(func(): return d.ui._dialog.visible and String(d.ui._type_full).begins_with("이겸? 매번"), 30.0)
+	await d.wait(1.6); await shot("13_jumo_talk")
+	await _wait(func(): return d.ui._choice.visible, 20.0)
+	await d.wait(0.4); await shot("13a_jumo_choices")
+	await _wait(func(): return d.ui._dialog.visible and String(d.ui._type_full).begins_with("그 편지는 글씨가"), 40.0)
+	await d.wait(2.2); await shot("13b_jumo_letter")
+	await _wait(func(): return d.ui._choice.visible, 20.0)
+	await d.wait(0.4); await shot("13c_jumo_direct")
+	await _wait(func(): return d.ui._dialog.visible and String(d.ui._type_full).begins_with("옳지"), 20.0)
+	await d.wait(1.0); await shot("13c2_jumo_teacher")
+
 var _title_at := Vector2.INF
 func _watch_title() -> void:
 	var n := 0
@@ -417,15 +516,32 @@ func _doc_exam(ex) -> void:
 		await _frames(4)
 		_ok(String(ex._fb.text).contains("별다른 것"), "엉뚱한 자리를 짚으면 정보만(벌점 없음)")
 		ex.close(); return
-	await shot("10b_compare_open")
-	ex.mark_spot("letter", "l_nodate")
+	if _doc_plan.has("nokey"):
+		_ok(ex.note_text == "", "견주기 머리말 없음('날짜·방향·목격자를 적던 분인데.' — 답을 주는 말을 뺐다)")
+		_ok(ex.hint_after == 60.0 and ex.hint_late == "날짜와 목적을 먼저 대조해 보자.", "늦은 도움말 60초 · 메인 대본 P01-B 문구")
+		await shot("10b_compare_open")
+		ex._idle_t = ex.hint_after - 0.05   # 60초 기다림을 줄여 본다(같은 _process 셈)
+		await _wait(func(): return ex.late_hint_shown, 2.0)
+		await _frames(2)
+		var hp: Control = ex._root.get_node("hint_panel")
+		_ok(ex.late_hint_shown and hp.visible and ex._hint.text == "날짜와 목적을 먼저 대조해 보자.", "짚은 것 없이 60초 → 늦은 도움말 한 번(정답 표시 없음)")
+		await shot("10b2_compare_late_hint")
+		ex.mark_spot("letter", "l_nodate")
+		await _frames(4)
+		ex.mark_spot("old_record", "o_way")
+		await _frames(4)
+		ex.mark_spot("letter", "l_days")
+		await _frames(6)
+		_ok(d.S.has_clue("cmp_date") and d.S.has_clue("cmp_way") and not d.S.has_clue("cmp_unknown"), "두 쌍 견주기(날짜·방향) — 열쇠 짝 아님")
+		_ok(ex._open and d.ui.modal, "두 쌍을 짚어도 견주기는 저절로 닫히지 않음(자동 고르기 없음)")
+		await shot("10c_compare_pairs")
+		ex.close(); return
+	ex.mark_spot("old_record", "o_unknown")
 	await _frames(4)
-	ex.mark_spot("old_record", "o_way")
-	await _frames(4)
-	ex.mark_spot("letter", "l_days")
+	ex.mark_spot("letter", "l_sinseon")
 	await _frames(6)
-	_ok(d.S.has_clue("cmp_date") and d.S.has_clue("cmp_way"), "두 쌍 견주기(날짜·방향)")
-	await shot("10c_compare_pairs")
+	_ok(d.S.has_clue("cmp_unknown"), "모르는 것 ↔ 신선 쌍(cmp_unknown)")
+	await shot("10c2_compare_key")
 	ex.close()
 
 # 오누이 들머리(D1): 북문 밖 행상 → 「산길의 실종」이 선다(여는 장면 없이, 시각 그대로, 메인 저장은 그대로 쉰다)

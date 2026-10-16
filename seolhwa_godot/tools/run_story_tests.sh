@@ -121,6 +121,9 @@ TESTS=(
 	"continue:main-migrate|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_letter_save.json --continueexpect=main_migrate"
 	"continue:main-oldspot-street|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_oldspot_street_save.json --continueexpect=main_nomove"
 	"continue:main-oldspot-town|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_oldspot_town_save.json --continueexpect=main_nomove"
+	# 편지 조사 개편(2026-10-17) 옛 저장: 견주기 도중 옛 짝(cmp_date + cmp_blame) → 다시 열고 덮으면 끝까지 · 주막 도중 옛 주모 증언(tv_jumo) → 짚신 손님 하나로 지도 등록
+	"continue:main-oldcmp|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_compare_old_save.json --continueexpect=main_oldcmp"
+	"continue:main-oldjumak|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_main_jumak_old_save.json --continueexpect=main_oldjumak"
 	"continue:chunhyang-mid|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/namwon_chunhyang/test_chunhyang_mid_save.json --continueexpect=chunhyang_mid"
 	# 재기획 3단계 첫 15분(story/main_p1/main_p1_first15_test.gd): 시작 메뉴 → 새 게임 → 거처 → 편지 → 견주기 → 「설화록」 → 걸어서 솔잎 주막 → 지도 [목적지 설정]
 	#   서장 프롤로그(박자·길이·0.25초 dip·뒤에 여는 장면 없음 — 옛 D7 12초를 대신함) · skip: 새 게임 Enter 0.5초 막이·Esc 건너뛰기 · 안내 여섯이 행동으로 끝남 · 이동 바로 복귀·카메라 복귀·E 겹침 없음 · 저장 재개 셋 · 순간이동 없음 / onui: 이어서 북문 밖 행상 → 오누이

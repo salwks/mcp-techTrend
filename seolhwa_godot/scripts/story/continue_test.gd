@@ -101,6 +101,8 @@ func run(spec: String) -> void:
 		"main_resume": await _main_resume()
 		"main_migrate": await _main_migrate()
 		"main_nomove": await _main_nomove()
+		"main_oldcmp": await _main_oldcmp()
+		"main_oldjumak": await _main_oldjumak()
 		"chunhyang_mid": await _chunhyang_mid()
 		"rollback": await _rollback()
 		"rollback_rope": await _rollback_rope()
@@ -273,6 +275,44 @@ func _main_nomove() -> void:
 	_ok(pp.distance_to(Vector2(float(wh.x), float(wh.z))) < 1.5, "저장 자리 그대로(%.1f, %.1f)" % [pp.x, pp.y])
 	_ok(not c.prologue_played, "옛 저장에 프롤로그 없음")
 	print("CONTTEST main_nomove phase=%s at=(%.1f,%.1f)" % [d.S.phase, pp.x, pp.y])
+
+# 편지 조사 개편(2026-10-17) 옛 저장: 견주기 도중(test_main_compare_old_save.json — 옛 짝 cmp_date + cmp_blame, 옛 짚은 자리 o_witness·l_blame) →
+#   서안을 다시 열고 덮으면 옛 규칙(이미 시작한 견주기의 cmp_blame을 열쇠 짝으로 인정)으로 끝까지 — 새 짝 cmp_unknown 없이도 막히지 않는다
+func _e_target(id: String, why: String) -> bool:
+	var tp := Vector2.ZERO
+	for t in d._targets():
+		if String(t.id) == id: tp = t.p
+	main.teleport(tp.x + 0.6, tp.y + 0.5)
+	var near := func(): return d._target != null and String(d._target.get("id", "")) == id
+	var ok := await _wait_until(near, 4.0)
+	_ok(ok, "%s: E 대상 %s" % [why, id])
+	await _wait_until(func(): return not d.ui.busy_input(), 2.0)
+	await _press_e()
+	return ok
+
+func _main_oldcmp() -> void:
+	var c = d.case_fn
+	_ok(d.case_id == "main_p1" and d.S.is_flag("LETTER_RECEIVED") and not d.S.is_flag("LETTER_SUSPICIOUS") and d.S.has_clue("cmp_blame"), "옛 견주기 도중 저장(cmp_date + cmp_blame) 불러옴")
+	_ok(c.compare_state() == 2 and c.compare_pairs() == 2, "옛 짝 둘 — 옛 규칙으로 끝낼 수 있음(state %d)" % c.compare_state())
+	_ok(d.data.clues.has("cmp_blame") and d.data.clues.has("cmp_unknown"), "옛 단서 cmp_blame 정의가 남아 기록책에 보임")
+	_ok(d._targets().any(func(t): return String(t.id) == "o_desk"), "서안 견주기가 E 대상")
+	var ui_auto: bool = d.ui.auto
+	await _e_target("o_desk", "옛 견주기 이어 하기")
+	var ok := await _wait_until(func(): return d.S.is_flag("LETTER_SUSPICIOUS") and not d.runner.busy, 30.0)
+	_ok(ok and d.S.is_flag("LETTER_COMPARE_2") and String(d.S.phase) == "town" and not d.S.has_clue("cmp_unknown"), "다시 열고 덮으면 끝까지(LETTER_SUSPICIOUS · 국면 town) — 새 짝 없이")
+	print("CONTTEST main_oldcmp phase=%s auto=%s" % [d.S.phase, ui_auto])
+
+# 편지 조사 개편 옛 저장: 주막 도중(test_main_jumak_old_save.json — 옛 판 주모 증언 tv_jumo만, TAVERN_CLUE 전) → 옛 단서가 지도 등록 셈에 든다:
+#   짚신 손님 하나만 더 들으면 '여원재 방면'(둘)
+func _main_oldjumak() -> void:
+	var c = d.case_fn
+	_ok(d.case_id == "main_p1" and d.S.has_clue("tv_jumo") and not d.S.is_flag("TAVERN_CLUE") and String(d.S.phase) == "town", "옛 주막 저장(tv_jumo · TAVERN_CLUE 전) 불러옴")
+	_ok(c.tavern_sources() == 1, "옛 판 주모 증언 tv_jumo가 지도 등록 셈에 듦(1)")
+	await _e_target("solip_guest2", "짚신 손님")
+	var ok := await _wait_until(func(): return d.S.has_clue("tv_guest2") and d.S.is_flag("TAVERN_CLUE") and not d.runner.busy, 20.0)
+	_ok(ok and c.tavern_sources() == 2, "옛 tv_jumo + 짚신 손님 = 둘 → 지도 '여원재 방면'(TAVERN_CLUE)")
+	_ok(d.data.map_leads.any(func(l): return String(l.id) == "mp_yeowon" and d.runner.cond(l.when)), "지도 붉은 인 '여원재 방면'(목적지 후보) 조건이 섬")
+	print("CONTTEST main_oldjumak sources=%d" % c.tavern_sources())
 
 # 춘향 도중 옛 저장(test_chunhyang_mid_save.json — 한양 뒤 + 춘향 단오 진행 중) — 춘향을 그대로 이어 간다(메인 서장·프롤로그가 끼지 않는다)
 func _chunhyang_mid() -> void:
