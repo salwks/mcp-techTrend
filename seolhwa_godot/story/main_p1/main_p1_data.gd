@@ -7,8 +7,8 @@
 #
 # 흐름: OP00 서장 프롤로그 「이겸과 제자의 어느 날」(새 게임만 — 마당의 지난 오후 약 52초, S1.0 P00-B 대사 → 빈 마당 → 0.25초 dip으로 방 안, 조작) →
 #   P00-A 방 물건 셋(장부 필수 아님 — 아무거나 하나) → 문 두드림(첫 조사 뒤) → [P00-B 셋 다 보면 — 재생 없음, 깃발만] → P01-A 마당의 심부름꾼(대화 선택) · 문턱의 봉투(E — 편지 읽기, LETTER_RECEIVED) →
-#   P01-B 서안: 옛 기록과 편지 견주기(문서 비교 — 셋 중 두 쌍, LETTER_SUSPICIOUS) → OP01 구례 길 장승 어귀: 「설화록」(조작 그대로) →
-#   P02-A 솔잎 주막 주모(TAVERN_TALK) → P02-B 숙박 장부 또는 손님(TAVERN_CLUE — 지도 '여원재 방면' KNOWN) → P02-C M 지도 · [목적지 설정](WAYPOINT_SET).
+#   P01-B 서안: 옛 기록과 편지 견주기(문서 비교 — 두 쌍, 그 하나는 '모르는 것 ↔ 신선' 쌍이어야, LETTER_SUSPICIOUS) → OP01 구례 길 장승 어귀: 「설화록」(조작 그대로) →
+#   P02-A 솔잎 주막 주모(TAVERN_TALK) → P02-B 짚신 손님·숙박 장부·백운 소문 가운데 둘(TAVERN_CLUE — 지도 '여원재 방면' KNOWN) → P02-C M 지도 · [목적지 설정](WAYPOINT_SET).
 # 국면(phase): start → home(거처) → town(편지 의심 뒤 — 거리) → road(목적지를 정함 — 후속 운봉 길 앞, 쉬는 자리 rest_flag).
 # 오누이 들머리(D1): 북문 밖 갈림길 행상(오누이 v3.4 F3401 대사) — 고르면 story_director.switch_case("namwon", N0000). 메인을 막지 않는다.
 # 조건식: story_runner(f·c·ph·v·talked·fn).
@@ -21,6 +21,8 @@ const HZ := 700.0
 const OLD_HX := -3252.0             # 옛 자리(재기획 3단계 — 객사 담 앞). 그때 거처 안에서 저장한 옛 저장만 새 거처로 옮긴다(main_p1_case.on_load)
 const OLD_HZ := 240.4
 const OLD_RECT := [-4.6, -3.6, 4.6, 6.9]   # 옛 집 + 앞마당(옛 집 가운데 기준 x0, z0, x1, z1)
+# 지도 '여원재 방면' 등록(TAVERN_CLUE): 이 가운데 둘 이상(메인 대본 P02-A '두 정보 이상'). tv_jumo는 옛 판 주모 증언(여원재 쪽 행선지) — 옛 저장만 가진다
+const TAVERN_SOURCES := ["tv_guest2", "tv_last", "tv_baekun", "tv_jumo"]
 const JX := -3206.91                # 솔잎 주막 = 기존 nw_jumak_naru(placement_namwon.json) — 새 건물 없음
 const JZ := 484.16
 
@@ -75,15 +77,20 @@ static func clues() -> Dictionary:
 		# P01-A 편지(첫15·메인 대본 P01-A 전문)
 		"letter": { "title": "이겸의 이름으로 온 편지", "text": "“나는 며칠 떠나 신선의 가르침을 구하겠노라. 걱정하지 말고 기다려라. 이 산의 일은 모두 내 뜻이니 남에게 책임을 묻지 말라. — 이겸” 산 아래 주막에서 심부름꾼이 가져왔다. 보낸 이는 확인하지 못했다.", "kind": "fact" },
 		"messenger": { "title": "심부름꾼의 말", "text": "“산 아래 주막에서 전하라 했습니다. 이름을 두 번 묻더군요.”", "kind": "heard", "by": "심부름꾼" },
-		# P01-B 견주기(문서 비교 짝 — documents.gd pair). 셋 중 둘이면 LETTER_SUSPICIOUS(메인 대본 P01-B)
+		# P01-B 견주기(문서 비교 짝 — documents.gd pair). 두 쌍 + 그 하나가 cmp_unknown(모르는 것 ↔ 신선)이면 LETTER_SUSPICIOUS(2026-10-17 편지 조사 개편)
 		"cmp_date": { "title": "날짜가 없다", "text": "스승은 길을 나설 때마다 날짜부터 적었다. 이 편지에는 날짜가 없다.", "kind": "fact" },
 		"cmp_way": { "title": "방향이 없다", "text": "옛 기록은 어느 길로 가는지 적는다. 편지는 ‘며칠 떠나’뿐이다.", "kind": "fact" },
+		"cmp_unknown": { "title": "‘신선의 가르침을 구하겠노라’", "text": "옛 기록은 모르는 것은 모른다고 적는다. 편지는 신선의 가르침을 구하겠다고 잘라 말한다.", "kind": "fact" },   # 신규 문구
+		# 옛 짝(개편 전 판) — 새 판에서는 얻지 못한다. 옛 저장의 기록책 글과 견주기 판정(compare_letter: 이미 시작한 견주기는 옛 규칙으로 인정)에만 남긴다
 		"cmp_blame": { "title": "‘남에게 책임을 묻지 말라’", "text": "옛 기록은 본 것과 들은 것을 나눠 적는다. 편지는 본 이도 들은 이도 없이 누구 탓도 하지 말라고만 한다.", "kind": "fact" },
-		"suspicious": { "title": "수상한 편지", "text": "글씨 모양은 비슷하다. 하지만 스승이라면 날짜와 방향, 본 것과 들은 것을 적었을 것이다. 누가 대신 썼는지는 모른다 — 확인은 아직이다.", "kind": "guess" },
-		# P02 솔잎 주막
-		"tv_jumo": { "title": "주모의 말", "text": "“산 아래에서 책장수를 만났다가, 여원재 쪽 행선지를 묻더군.”", "kind": "heard", "by": "주모" },
+		"suspicious": { "title": "수상한 편지", "text": "글씨 모양은 비슷하다. 하지만 스승이라면 모르는 일을 모른다고 적었을 것이다. 누가 왜 이렇게 썼는지는 모른다 — 확인은 아직이다.", "kind": "guess" },   # 메인 대본 P01-B 관찰 문구
+		# P02 솔잎 주막(메인 대본 P02-A — 짚신 손님 '북쪽 산마을'은 사용자 결정으로 '여원재 너머')
+		"tv_jumo_last": { "title": "주모의 말", "text": "“며칠 전 산에서 내려오는 장사꾼에게 뭔가 물었소. 아이 하나가 없어졌다는 소문도 캐묻고.”", "kind": "heard", "by": "주모" },
+		"tv_guest2": { "title": "짚신 손님의 말", "text": "“이겸이 여원재 너머로 간다 했다.”", "kind": "heard", "by": "짚신 손님" },
 		"tv_last": { "title": "마지막 숙박", "text": "솔잎 주막 숙박 장부 — 이겸, 하룻밤 묵음. 국값 줄에 스승의 고쳐 쓴 글씨.", "kind": "fact" },
 		"tv_baekun": { "title": "백운 도사 소문", "text": "“백운 도사라는 자가 고개 너머에 나타났대.”", "kind": "heard", "by": "손님" },
+		# 옛 판 주모 증언(개편 전 — 여원재 쪽 행선지). 새 판에서는 얻지 못한다. 옛 저장에 있으면 지도 등록 셈(TAVERN_SOURCES)에 든다
+		"tv_jumo": { "title": "주모의 말", "text": "“산 아래에서 책장수를 만났다가, 여원재 쪽 행선지를 묻더군.”", "kind": "heard", "by": "주모" },
 	}
 
 static func anchors() -> Dictionary:
@@ -123,6 +130,20 @@ static func peddler_talk() -> Array:
 				{ "label": "지금은 가던 길을 가겠소.", "end": true }] }] },
 	]
 
+# 주모 물음 ①②③(메인 대본 P02-A) — 한 번씩, 아무 차례로. ③ 뒤 [연출] 더듬는 말 → [선택] '직접 본 것만 말씀해 주세요.'
+static func jumo_choice() -> Dictionary:
+	return { "choice": "", "loop": true, "options": [
+		{ "label": "마지막으로 언제 봤습니까?", "when": "not f('tq_last')", "do": [{ "flag": "tq_last" }, { "flag": "TAVERN_TALK" },
+			{ "say": "주모", "lines": ["며칠 전 산에서 내려오는 장사꾼에게 뭔가 물었소. 아이 하나가 없어졌다는 소문도 캐묻고."] }, { "clue": "tv_jumo_last" }] },
+		{ "label": "누구와 만났습니까?", "when": "not f('tq_who')", "do": [{ "flag": "tq_who" }, { "flag": "TAVERN_TALK" },
+			{ "say": "주모", "lines": ["도술책 팔던 장사꾼이지. 아주 입이 달았어. 안 사면 복이 달아난다나."] }] },
+		{ "label": "이 편지는 여기서 보내졌습니까?", "when": "not f('tq_letter')", "do": [{ "flag": "tq_letter" }, { "flag": "TAVERN_TALK" },
+			{ "say": "주모", "lines": ["그런 편지가 여기서 넘어갔다고? 심부름꾼은 왔다 갔소. 누가 썼는지까지 내가 보지는 못했지."] },
+			{ "say": "주모", "lines": ["그 편지는 글씨가 참 반듯했는데, 글을 맡긴 양반 손이 먹투성이였단 말은 못 들었소. ...아니, 내가 본 건 아니고."] },
+			{ "choice": "", "options": [{ "label": "직접 본 것만 말씀해 주세요.", "do": [
+				{ "say": "주모", "lines": ["옳지. 당신 스승이 꼭 그렇게 말하더라고."] }] }] }] },
+		{ "label": "고맙소.", "when": "f('TAVERN_TALK')", "end": true }] }
+
 static func actors() -> Array:
 	return [
 		# P01-A 심부름꾼(열너댓 살 — 메인 대본). 문 두드린 뒤 마당에, 거처를 떠나 제목이 뜨면 돌아간다
@@ -147,29 +168,28 @@ static func actors() -> Array:
 					{ "say": "심부름꾼", "lines": ["봉투는 문턱에 두었습니다."], "when": "not f('LETTER_RECEIVED')" }] },   # 신규 대사(봉투 자리)
 				{ "when": "true", "steps": [{ "say": "심부름꾼", "lines": ["솔잎 그림 간판이오. 광한루 앞 나루 길가요."] }] },   # 신규 대사
 			] },
-		# P02-A·B 솔잎 주막 — 주모(첫15 대사)·손님(백운 소문)·짚신 묶는 손님(장면만)
+		# P02-A·B 솔잎 주막(메인 대본 S1.0 P02-A 그대로 — 2026-10-17 편지 조사 개편) — 주모·밥 먹는 손님(백운 소문)·짚신 손님(행선지)
+		#   '본 것/들은 것'은 주모의 ③ 편지 이야기 → '직접 본 것만…' → “당신 스승이 꼭 그렇게 말하더라고.”에서만 나온다(손님·주모가 이겸의 제자처럼 말하지 않게)
 		{ "id": "solip_jumo", "kind": "innkeeper", "name": "주모", "at": "solip_jumo", "facing": "left",
 			"talk": [
 				{ "when": "not f('TAVERN_TALK')", "steps": [
-					{ "say": "주모", "lines": ["이겸이라면… 국값까지 적던 선비 아닌가."] },
-					{ "choice": "", "loop": true, "options": [
-						{ "label": "마지막으로 어디서 보셨소?", "when": "not f('tq_last')", "do": [{ "flag": "tq_last" }, { "flag": "TAVERN_TALK" },
-							{ "say": "주모", "lines": ["산 아래에서 책장수를 만났다가, 여원재 쪽 행선지를 묻더군."] }, { "clue": "tv_jumo" }] },
-						{ "label": "누구와 만났소?", "when": "not f('tq_who')", "do": [{ "flag": "tq_who" },
-							{ "say": "주모", "lines": ["도술책 팔던 장사꾼이지. 아주 입이 달았어. 안 사면 복이 달아난다나."] }] },   # 메인 대본 P02-A ②
-						{ "label": "고맙소.", "when": "f('TAVERN_TALK')", "end": true }] },
-					{ "say": "주모", "lines": ["직접 본 건 숙박 장부뿐이오. 누구와 갔는지는 들은 말이지."] }] },   # 첫15 P02-B
-				{ "when": "true", "steps": [
-					{ "say": "주모", "lines": ["직접 본 건 숙박 장부뿐이오. 누구와 갔는지는 들은 말이지."] },
-					{ "say": "주모", "lines": ["장부는 저 기둥에 걸려 있소."], "when": "not c('tv_last')" }] },   # 신규 대사
+					{ "say": "주모", "lines": ["이겸? 매번 묵으면 먹은 것과 쓴 것을 죄 적던 양반 말이오? 국에 파를 빼달라고 해 놓고, 나중에는 그 사정까지 기록하더니."] },
+					jumo_choice()] },
+				{ "when": "not (f('tq_last') and f('tq_who') and f('tq_letter'))", "steps": [
+					{ "say": "주모", "lines": ["장부는 저 기둥에 걸려 있소."], "when": "not c('tv_last')" },   # 신규 대사(개편 전 판부터)
+					jumo_choice()] },
+				{ "when": "not c('tv_last')", "steps": [{ "say": "주모", "lines": ["장부는 저 기둥에 걸려 있소."] }] },
 			] },
 		{ "id": "solip_guest", "kind": "traveler", "name": "손님", "at": "solip_guest", "facing": "right",
 			"talk": [
 				{ "when": "not c('tv_baekun')", "steps": [
 					{ "say": "손님", "lines": ["백운 도사라는 자가 고개 너머에 나타났대."] }, { "clue": "tv_baekun" }, { "call": "tavern_clue" }] },
-				{ "when": "true", "steps": [{ "say": "손님", "lines": ["나도 들은 말이오. 본 건 아니고."] }] },   # 신규 대사
 			] },
-		{ "id": "solip_guest2", "kind": "villager_m", "name": "짚신 손님", "at": "solip_guest2", "facing": "down" },
+		{ "id": "solip_guest2", "kind": "villager_m", "name": "짚신 손님", "at": "solip_guest2", "facing": "down",
+			"talk": [
+				{ "when": "not c('tv_guest2')", "steps": [
+					{ "say": "짚신 손님", "lines": ["이겸이 여원재 너머로 간다 했다."] }, { "clue": "tv_guest2" }, { "call": "tavern_clue" }] },   # 메인 대본 P02-A('북쪽 산마을' → 사용자 결정 '여원재 너머')
+			] },
 		# 북문 밖 갈림길 행상 — 오누이 들머리(D1)
 		{ "id": "peddler", "kind": "peddler", "name": "행상", "at": "north_fork", "facing": "left", "talk": peddler_talk() },
 	]
@@ -194,14 +214,17 @@ static func objects() -> Array:
 			"steps": [{ "call": "tavern_ledger" }] },
 	]
 
-# 문서 비교(scripts/story/documents.gd) — 세로쓰기는 오른쪽 줄부터. 짝(pair) 셋 가운데 둘을 양쪽에서 짚으면 LETTER_SUSPICIOUS
+# 문서 비교(scripts/story/documents.gd) — 세로쓰기는 오른쪽 줄부터. 짝(pair) 셋(날짜·방향·모르는 것↔신선) 가운데 둘, 그 하나는 cmp_unknown이면 LETTER_SUSPICIOUS.
+#   옛 기록은 서장 프롤로그 INTRO_04에서 이겸이 서안에 펴 두는 바로 그 기록책의 한 쪽이다(같은 글 — main_p1_case._pro_open_book이 이 그림을 쓴다).
+#   지난 어느 나들이의 기록이다(사라진 날이 아니다). 방향은 여원재(동쪽)를 미리 가리키지 않게 남문 밖 구례 길(region.json roads namwon_gurye_road) —
+#   오누이 북쪽 길(북문 밖 전주길)과도 겹치지 않는다.
 static func documents() -> Dictionary:
 	return {
 		"old_record": { "title": "스승의 옛 기록", "short": "옛 기록", "aspect": 1.36, "seed": 3161,
 			"paper": { "base": "#e8dcbc", "fiber": 0.6, "fiber_col": "#8a7656", "lines": 6, "line_col": "#9a6a5060" },
 			"cols": [
 				{ "x": 0.86, "y": 0.07, "text": "구월 열이틀 맑음", "size": 0.062, "ink": 0.95 },
-				{ "x": 0.72, "y": 0.07, "text": "남원 동문 밖 동쪽 큰길로", "size": 0.058, "ink": 0.92 },
+				{ "x": 0.72, "y": 0.07, "text": "남원 남문 밖 구례 길로", "size": 0.058, "ink": 0.92 },
 				{ "x": 0.58, "y": 0.07, "text": "짚신 손님에게 들음 내가 보지 못함", "size": 0.052, "ink": 0.9 },
 				{ "x": 0.44, "y": 0.07, "text": "국 두 그릇 내가 냄", "size": 0.058, "ink": 0.9, "bleed": 0.3 },
 				{ "x": 0.30, "y": 0.07, "text": "모르는 것은 모른다고 적는다", "size": 0.055, "ink": 0.88 },
@@ -209,7 +232,8 @@ static func documents() -> Dictionary:
 			"hotspots": [
 				{ "id": "o_date", "rect": [0.81, 0.04, 0.1, 0.62], "label": "날짜", "text": "길을 나선 날과 날씨부터 적었다.", "pair": "cmp_date" },
 				{ "id": "o_way", "rect": [0.67, 0.04, 0.1, 0.8], "label": "방향", "text": "어느 문으로 나가 어느 길로 갔는지.", "pair": "cmp_way" },
-				{ "id": "o_witness", "rect": [0.53, 0.04, 0.1, 0.9], "label": "들은 것 · 본 것", "text": "누구에게 들었는지, 직접 보지 못한 것까지 나눠 적었다.", "pair": "cmp_blame" },
+				{ "id": "o_witness", "rect": [0.53, 0.04, 0.1, 0.9], "label": "들은 것 · 본 것", "text": "누구에게 들었는지, 직접 보지 못한 것까지 나눠 적었다." },   # 짝 없음(옛 cmp_blame 짝은 뺐다)
+				{ "id": "o_unknown", "rect": [0.25, 0.04, 0.1, 0.7], "label": "모르는 것", "text": "모르는 것은 모른다고 적는다.", "pair": "cmp_unknown" },
 			] },
 		"letter": { "title": "이겸의 이름으로 온 편지", "short": "새 편지", "aspect": 1.36, "seed": 3162,
 			"paper": { "base": "#f3eddc", "fiber": 0.25, "fiber_col": "#a49478" },
@@ -224,7 +248,8 @@ static func documents() -> Dictionary:
 			"hotspots": [
 				{ "id": "l_nodate", "rect": [0.84, 0.02, 0.14, 0.15], "label": "날짜 자리", "text": "첫 줄 위가 비었다. 날짜도 날씨도 없다.", "pair": "cmp_date" },
 				{ "id": "l_days", "rect": [0.75, 0.16, 0.1, 0.5], "label": "‘며칠 떠나’", "text": "어디로, 어느 길로 가는지가 없다.", "pair": "cmp_way" },
-				{ "id": "l_blame", "rect": [0.23, 0.16, 0.1, 0.8], "label": "‘남에게 책임을 묻지 말라’", "text": "본 이도 들은 이도 없이, 누구 탓도 하지 말라고만 한다.", "pair": "cmp_blame" },
+				{ "id": "l_sinseon", "rect": [0.62, 0.16, 0.1, 0.62], "label": "‘신선의 가르침’", "text": "신선의 가르침을 구하겠다고 한다.", "pair": "cmp_unknown" },
+				{ "id": "l_blame", "rect": [0.23, 0.16, 0.1, 0.8], "label": "‘남에게 책임을 묻지 말라’", "text": "누구 탓도 하지 말라고 한다." },   # 짝 없음(옛 cmp_blame 짝은 뺐다)
 			] },
 	}
 
@@ -266,7 +291,7 @@ static func map_leads() -> Array:
 		{ "id": "mp_solip", "name": "솔잎 주막", "at": "solip", "when": "f('TALK_SEEN') or f('LETTER_SUSPICIOUS')", "until": "f('TAVERN_TALK')", "waypoint": true,
 			"note": "심부름꾼 “주막 간판은 솔잎 그림이었습니다.”(메인 대본 — 어느 경우든 지도에) · 편지를 의심한 뒤에도" },
 		{ "id": "mp_yeowon", "name": "여원재 방면", "at": "yeowon", "when": "f('TAVERN_CLUE')", "until": "false", "waypoint": true, "frame": true,
-			"note": "첫15 P02-B 장부 또는 손님 → '여원재 방면' 후보(KNOWN_NOT_VISITED). 목적지 설정(P02-C)" },
+			"note": "메인 대본 P02-A — 짚신 손님·숙박 장부·백운 소문 가운데 둘 → '여원재 방면' 후보(KNOWN_NOT_VISITED). 목적지 설정(P02-C)" },
 	]
 
 static func journal() -> Dictionary:

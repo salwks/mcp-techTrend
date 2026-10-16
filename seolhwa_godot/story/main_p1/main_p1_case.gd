@@ -1,6 +1,6 @@
 # 메인 서장 「이겸의 수상한 편지」(main_p1) — 첫 15분의 연출·판정(재기획 3단계). 데이터: main_p1_data.gd
-#   OP00 = 서장 프롤로그 「이겸과 제자의 어느 날」(거처 이전 4~7단계 — 새 게임만, 약 52초, 건너뛰기 Esc·Space·Enter, 처음 0.5초는 받지 않음):
-#     INTRO_01 마당 와이드·다가감(대사 없음) · 02 투샷 S1.0 P00-B 앞 세 줄 · 03 가깝게 — 붓을 건네려다 손의 먹을 닦음 · 04 기록책을 서안에 → 페이드·정적 →
+#   OP00 = 서장 프롤로그 「이겸과 제자의 어느 날」(거처 이전 4~7단계 — 새 게임만, 약 54초, 건너뛰기 Esc·Space·Enter, 처음 0.5초는 받지 않음):
+#     INTRO_01 마당 와이드·다가감(대사 없음) · 02 투샷 S1.0 P00-B 앞 세 줄 · 03 가깝게 — 붓을 건네려다 손의 먹을 닦음 · 04 기록책을 서안에 펴 둠 → 펼친 쪽 첫 줄 내려다봄(약 2.9초) → 페이드·정적 →
 #     이겸 없는 같은 마당 → 문 쪽 → 0.25초 dip으로 방 안 → “스승님은 어디로 가신 걸까.” → 조작. 옛 9초 여는 장면·“본 것은 본 대로” VO는 없앴다.
 #   조사 CAM_OBJECT 0.35 진입·복귀 / 편지 0.4 / OP01 재기획 OP-04: 0–2 상승 · 2–4.5 요천·광한루 쪽 리프레이밍 · 4.5–8.5 「설화록」 · 8.5–9.5 사라짐
 #     (구례 길 장승 어귀 — 조작은 막지 않는다. 다른 길로 가도 놓치지 않게: 거처에서 160m 넘게 · 나루 30m 안).
@@ -153,6 +153,69 @@ func _pro_show(key: String, on: bool) -> void:
 	var n = _pro_nodes.get(key)
 	if n != null and is_instance_valid(n): n.visible = on
 
+# 펼친 기록책(프롤로그 INTRO_04) — 표지 위 두 쪽: 왼쪽은 빈 쪽, 오른쪽은 문서 비교의 '스승의 옛 기록'(main_p1_data documents.old_record)을
+#   documents.gd의 같은 그리기(draw_doc)로 그린 쪽. 새 동작·연출 체계 없이 소품 하나와 카메라 값만.
+const BOOK_FIRST := "구월 열이틀 맑음"   # 옛 기록 첫 줄(D.documents().old_record.cols[0])
+const BOOK_PAGE := 0.24                  # 쪽 너비(m) — 높이는 문서 aspect(1.36). 서안 키트의 펼친 책(0.54×0.34)을 덮는 크기
+const BOOK_DY := 0.49 + 0.335            # 마당 서안(p_yard_desk dy 0.49) 상판 위
+const BOOK_DZ := 0.02                    # 서안 키트 책 자리(z +0.02)
+var _page_drawer = null                   # documents.gd 그리기(트리 밖 — 프롤로그가 끝나면 지운다)
+
+func _book_page_at() -> Vector3:
+	var a: Vector2 = d.anchor("pro_desk")
+	var x := a.x + BOOK_PAGE * 0.5
+	return Vector3(x, d._prop_ground(a) + BOOK_DY + 0.014, a.y + BOOK_DZ)
+
+func _pro_open_book() -> void:
+	var spec: Dictionary = D.documents().old_record
+	var asp := float(spec.get("aspect", 1.36))
+	var W := 640; var H := int(W * asp)
+	var root := Node3D.new(); root.name = "pro_open_book"
+	d._props_root.add_child(root)
+	var vp := SubViewport.new()
+	vp.size = Vector2i(W, H); vp.disable_3d = true; vp.transparent_bg = false
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(vp)
+	var ex = load("res://scripts/story/documents.gd").new()
+	ex.d = d
+	ex._font = preload("res://scripts/ui_fonts.gd").main()
+	ex._fibers["old_record"] = ex._make_fibers(spec, int(spec.get("seed", 3161)))
+	_page_drawer = ex
+	var cv := Control.new()
+	cv.size = Vector2(W, H)
+	cv.draw.connect(func(): ex.draw_doc(cv, spec, "old_record", Rect2(Vector2.ZERO, Vector2(W, H)), float(W) / 360.0))
+	vp.add_child(cv)
+	var top: Vector3 = _book_page_at()
+	var a: Vector2 = d.anchor("pro_desk")
+	var ph := BOOK_PAGE * asp
+	var base := top.y - 0.014
+	root.global_position = Vector3(a.x, base, a.y + BOOK_DZ)
+	var cover := MeshInstance3D.new()   # 누런 표지(두 쪽 아래 조금 넓게)
+	var cb := BoxMesh.new(); cb.size = Vector3(BOOK_PAGE * 2.0 + 0.08, 0.008, ph + 0.04); cover.mesh = cb
+	var cm := StandardMaterial3D.new(); cm.albedo_color = Color("#b89a6a"); cm.roughness = 0.9; cover.material_override = cm
+	cover.position = Vector3(0, 0.004, 0)
+	root.add_child(cover)
+	for side in [-1, 1]:
+		var pg := MeshInstance3D.new()
+		var pm := PlaneMesh.new(); pm.size = Vector2(BOOK_PAGE, ph); pg.mesh = pm
+		var mm := StandardMaterial3D.new(); mm.roughness = 0.95
+		if side > 0:
+			mm.albedo_texture = vp.get_texture()
+			mm.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		else:
+			mm.albedo_color = Color(spec.get("paper", {}).get("base", "#e8dcbc"))
+		pg.material_override = mm
+		pg.position = Vector3(side * BOOK_PAGE * 0.5, 0.0095 + (0.001 if side > 0 else 0.0), 0)
+		root.add_child(pg)
+	_pro_nodes["book"] = root
+
+# 펼친 쪽을 내려다보는 자리(위에서 조금 남쪽 — 기본 yaw 0이라 쪽 위가 화면 위)
+func _look_page(sec: float) -> void:
+	var p: Vector3 = _book_page_at()
+	d.main.rig.focus = { x = p.x, z = p.z, y = p.y - 0.9 }
+	d.main.rig.override = { "pitch": 74.0, "distance": 1.05, "fov": 30.0 }
+	d.main.rig.glide(sec)
+
 func _story_prop(id: String, on: bool) -> void:
 	var rec = d.props.get(id)
 	if rec != null and rec.get("node") != null and is_instance_valid(rec.node): rec.node.visible = on
@@ -181,7 +244,6 @@ func prologue() -> void:
 	d.spawn_actor("yigyeom_past", "yigyeom", d.anchor("pro_ig_kneel"), "left", "이겸", "")
 	d.anim_actor("yigyeom_past", "kneel")
 	for k in range(1, 5): _pro_prop("paper%d" % k, { "kind": "paper_dry", "n": k, "seed": 3190 }, "pro_mat", 0.05)
-	_pro_prop("book", { "kind": "paper_dry", "bound": true, "seed": 3191 }, "pro_desk", 0.49 + 0.335, 0.2)
 	for k in _pro_nodes: _pro_show(k, false)
 	_story_prop("p_paper_left", false)
 	var post = d.main.get("post")
@@ -205,6 +267,8 @@ func prologue() -> void:
 	# ---- INTRO_02 (7.4–21.0): 이겸이 기록을 들어 올린다 · 제자가 고개를 든다 — 컷 없는 투샷
 	if not sk:
 		_beat("INTRO_02", p0)
+		_pro_open_book()   # 서안 위에 펴 둘 기록책(INTRO_04까지 숨김) — 견주기의 '스승의 옛 기록'과 같은 쪽. 처음 0.5초 건너뛰기 막이 동안 만들지 않는다(글자 굽기로 프레임이 밀리지 않게)
+		_pro_show("book", false)
 		d.place_actor("yigyeom_past", "pro_ig_stand", null, "right")
 		d.anim_actor("yigyeom_past", "read")
 		sk = await _sw(0.5)
@@ -248,7 +312,8 @@ func prologue() -> void:
 		d.sfx("laugh_soft")
 		_cam({ "focus": "pro_two", "distance": 11.0, "pitch": 33.0, "fov": 34.0 }, 1.0)
 		sk = await _sw(1.0)
-	# ---- INTRO_04 (39.0–52): 기록책을 서안에 → 잠깐 비춤 → 페이드·정적 → 이겸 없는 같은 마당 → 방 안
+	# ---- INTRO_04 (39.0–54): 기록책을 서안에 펴 둔다 → 카메라가 펼친 쪽을 잠깐 내려다본다(첫 줄 '구월 열이틀 맑음' — 강조·설명 자막 없음) →
+	#      페이드·정적 → 이겸 없는 같은 마당 → 방 안
 	if not sk:
 		_beat("INTRO_04", p0)
 		d.main.player.facing = "left"
@@ -264,8 +329,9 @@ func prologue() -> void:
 		_occ_off("pro_desk")
 		d.sfx("page_turn")
 		d.anim_actor("yigyeom_past", "idle")
-		_cam({ "focus": "pro_desk", "distance": 6.5, "pitch": 58.0, "fov": 30.0 }, 0.4)   # CAM_OBJECT — 덮인 기록책(글은 보이지 않는다)
-		sk = await _sw(1.4)
+		_beat("book_look", p0)
+		_look_page(0.7)   # 펼친 쪽을 내려다본다 — 첫 줄을 읽을 만큼 가깝게
+		sk = await _sw(0.7 + line_sec(BOOK_FIRST))   # 내려다보는 0.7초 + 첫 줄을 온전히 읽는 시간(자막 머묾과 같은 셈)
 	if not sk:
 		_beat("fade_out", p0)
 		d.ui.fade(true, 0.9)
@@ -315,6 +381,8 @@ func _present_swap() -> void:
 		var n = _pro_nodes[k]
 		if n != null and is_instance_valid(n): n.queue_free()
 	_pro_nodes = {}
+	if _page_drawer != null and is_instance_valid(_page_drawer): _page_drawer.free()
+	_page_drawer = null
 	_story_prop("p_paper_left", true)
 	var post = d.main.get("post")
 	if post != null: post.past = 0.0
@@ -396,49 +464,69 @@ func read_letter() -> void:
 	_cam({ "focus": "threshold", "distance": 6.0, "pitch": 54.0 }, LETTER_IN)
 	await d.wait(LETTER_IN)
 	d.sfx("page_turn")
-	await d.ui.examine("편지", ["앞면에 스승의 이름. 늘 쓰던 날짜도 표시도 없다. 밀봉은 평범한 풀이다.",
+	await d.ui.examine("편지", ["앞면에 스승의 이름. 밀봉은 평범한 풀이다.",   # 무엇이 이상한지는 시스템이 먼저 말하지 않는다(2026-10-17 개편 — '날짜도 표시도 없다'를 뺐다)
 		"“나는 며칠 떠나 신선의 가르침을 구하겠노라. 걱정하지 말고 기다려라.", "이 산의 일은 모두 내 뜻이니 남에게 책임을 묻지 말라. — 이겸”"], "item")
 	flag("LETTER_RECEIVED")   # 대화를 넘겨도 편지는 남는다(첫15 P01-A)
 	d.give(D.LETTER, 1)
 	d.learn_clue("letter")
 	_cam(null, LETTER_IN)
 	_log("letter")
-	await d.ui.caption("서안의 옛 기록과 견주어 보자.", 2.6)   # 신규 문구(목표)
+	await d.ui.say("나그네", ["이상하네. 스승님이 이런 글을 쓰실 분인가?"])   # 사용자 지정 대사(개편). 목표 자막 '서안의 옛 기록과 견주어 보자.'는 뺐다 — 서안 먹점(tutorial_high)이 이끈다
 
 # P01-B 메아리를 띄울까: 프롤로그를 끝까지 봤거나, 옛 저장(프롤로그 전 판)에서 짧은 기억을 봤으면
 func echo_ok() -> bool:
 	if f("PROLOGUE_SEEN"): return not f("PROLOGUE_SKIPPED")
 	return f("FLASHBACK_SEEN")
 
+# 견주기 판정(2026-10-17 개편): 두 쌍 + 그 하나는 cmp_unknown(옛 기록 '모르는 것은 모른다고' ↔ 편지 '신선의 가르침을 구하겠노라').
+#   날짜·방향 쌍은 마음대로 짚는다. 정답 표시·자동 고르기·열쇠 짝 귀띔은 없다 — 날짜가 없다거나 말투가 다르다는 것만으로는 끝나지 않는다.
+#   옛 저장: 개편 전 짝 cmp_blame은 이미 시작한 견주기에서 열쇠 짝으로 인정한다(새 판에서는 cmp_blame을 얻을 길이 없다) · LETTER_COMPARE_2(옛 규칙 통과)도 그대로 인정
+const PAIRS := ["cmp_date", "cmp_way", "cmp_unknown", "cmp_blame"]
+const NUDGE := "글씨보다, 스승님이 무엇을 적고 무엇을 적지 않는 분이었는지 떠올려 보자."   # 사용자 지정 문구(두 쌍이지만 열쇠 짝이 없을 때 — 정답이 아닌 귀띔)
+
+func compare_pairs() -> int:
+	var n := 0
+	for c in PAIRS:
+		if S.has_clue(c): n += 1
+	return n
+
+# 0 = 아직 두 쌍 전 · 1 = 두 쌍이지만 '모르는 것 ↔ 신선' 쌍이 없음 · 2 = 끝
+func compare_state() -> int:
+	if f("LETTER_COMPARE_2"): return 2
+	if compare_pairs() < 2: return 0
+	return 2 if S.has_clue("cmp_unknown") or S.has_clue("cmp_blame") else 1
+
 func compare_letter() -> void:
 	_cam({ "focus": "desk", "distance": 5.5, "pitch": 58.0 }, OBJ_IN)
 	await d.wait(OBJ_IN)
 	_log("compare_open")
 	var r: Dictionary = await Docs.open(d, { "docs": ["old_record", "letter"], "title": "옛 기록과 편지",
-		"note": "날짜·방향·목격자를 적던 분인데.", "hint_after": 60.0, "hint_text": "날짜와 목적을 먼저 대조해 보자." })
+		"hint_after": 60.0, "hint_text": "날짜와 목적을 먼저 대조해 보자." })   # 메인 대본 P01-B 힌트(늦은 도움말 — 한 번). 답을 주는 머리말('날짜·방향·목격자를 적던 분인데.')은 뺐다
 	_cam(null, OBJ_IN)
-	var pairs := 0
-	for c in ["cmp_date", "cmp_way", "cmp_blame"]:
-		if S.has_clue(c): pairs += 1
-	_log("compare_close_%d" % pairs)
-	if pairs < 2:
+	var st := compare_state()
+	_log("compare_close_%d_%d" % [compare_pairs(), st])
+	if st == 0:
 		await d.ui.caption("아직 두 군데를 다 견주지 못했다. 서안에서 다시 이어 볼 수 있다.", 2.6)   # 신규 문구 — ESC로 닫아도 이어 한다
 		return
+	if st == 1:
+		_log("compare_nudge")
+		await d.ui.caption(NUDGE, 3.6)   # 서안은 그대로 다시 열 수 있다
+		return
 	flag("LETTER_COMPARE_2")
-	await d.runner.exec([{ "choice": "", "options": [
-		{ "label": "글씨가 비슷해도 내용이 다르다.", "do": [] },
-		{ "label": "대신 쓴 이가 있나?", "do": [] },
-		{ "label": "확인은 필요해.", "do": [] }] }], d.runner.gen)
-	await d.ui.say("나그네", ["직접 확인해야 한다."])   # 메인 대본 P01-B '모두 직접 확인해야 한다로 귀결'
+	await d.ui.say("나그네", ["기다리라고? …누가 날 찾지 못하게 하려는 거라면?"])   # 사용자 지정 대사 — 의심이지 확정이 아니다
+	await d.runner.exec([{ "choice": "", "options": [   # 메인 대본 P01-B [선택: 결론] A·B·C — 모두 '직접 확인해야 한다'로 귀결
+		{ "label": "글씨를 흉내 낸 자가 있다.", "do": [] },
+		{ "label": "누가 내용을 대신 써줬을지도 모른다.", "do": [] },
+		{ "label": "스승이 일부러 평소처럼 쓰지 않았나?", "do": [] }] }], d.runner.gen)
+	await d.ui.say("나그네", ["직접 확인해야 한다."])   # 메인 대본 P01-B
 	d.learn_clue("suspicious")   # 추정(△) — 확정 위조로 기록하지 않는다
 	flag("LETTER_SUSPICIOUS")
 	S.phase = "town"; d.on_phase()
-	if echo_ok(): d.ui.caption("이겸  “틀린 자리를 다시 찾을 수 있지.”", 2.2)   # 메인 대본 P01-B 연출 — 프롤로그 L3의 메아리
-	await d.wait(0.2)
+	if echo_ok(): await d.ui.caption("이겸  “틀린 자리를 다시 찾을 수 있지.”", 2.4)   # 메인 대본 P01-B 연출 — 프롤로그 L3의 메아리(끝까지 보이게 기다린다)
 	if d.onboard != null: d.onboard.step({ "discover": "solip_jumak" })
 	Progress.checkpoint("편지를 의심했다")
 	_log("suspicious")
-	await d.ui.caption("솔잎 주막을 찾아가자 — 광한루 앞 나루 길가.", 3.0)   # 신규 문구(목표)
+	await d.ui.caption("솔잎 주막을 찾아가자 — 광한루 앞 나루 길가.", 3.0)   # 신규 문구(목표 — 갈 곳 안내. 결론을 되풀이하지 않는다)
 
 # ---------------------------------------------------------------------------
 # OP01 거처 밖 4m — 「설화록」(재기획 OP-04 시간, 첫15 시점·조작 유지). 이야기 줄(runner)이 아니라 따로 돈다 — 이동을 막지 않는다
@@ -497,9 +585,19 @@ func tavern_ledger() -> void:
 	_cam(null, OBJ_IN)
 	await tavern_clue()
 
-# 장부 또는 손님 증언 — 지도 목적지 후보 '여원재 방면'(첫15 P02-B · KNOWN_NOT_VISITED)
+# 짚신 손님 증언 · 숙박 장부 · 백운 소문 가운데 둘 이상 — 지도 목적지 후보 '여원재 방면'(메인 대본 P02-A 조건 · KNOWN_NOT_VISITED).
+#   옛 판 주모 증언 tv_jumo(여원재 쪽 행선지)도 셈에 든다(옛 저장)
+func tavern_sources() -> int:
+	var n := 0
+	for k in D.TAVERN_SOURCES:
+		if S.has_clue(String(k)): n += 1
+	return n
+
 func tavern_clue() -> void:
 	if f("TAVERN_CLUE"): return
+	if tavern_sources() < 2:
+		_log("tavern_source_%d" % tavern_sources())
+		return
 	flag("TAVERN_CLUE")
 	_log("tavern_clue")
 	if d.onboard != null:
