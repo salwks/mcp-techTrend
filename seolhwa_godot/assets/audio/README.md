@@ -41,6 +41,9 @@
 | chuldu_cry | sfx/chuldu_cry.wav | "암행어사 출두야" 외침 자리 — 지금은 사람 목소리 비슷한 모음 띠(자막이 말을 맡는다). 실제 녹음으로 꼭 바꿀 것(춘향 §43) | placeholder, replace later |
 | cup_clink | sfx/cup_clink.wav | 사기 술잔 맞닿음 두 번(춘향 §40·§42) | placeholder, replace later |
 | brush_stroke | sfx/brush_stroke.wav | 붓이 한지를 지나감, 작게(춘향 §42 시) | placeholder, replace later |
+| laugh_soft | sfx/laugh_soft.wav | 곁에서 작게 웃음, 한 사람(서장 프롤로그 — 제자) | placeholder, replace later |
+| birds_day | sfx/birds_day.wav | 낮 숲 새소리 4초, 멀리(Ambient 버스, 서장 프롤로그) | placeholder, replace later |
+| stream_small | sfx/stream_small.wav | 작은 개울 졸졸 5초(Ambient 버스, 서장 프롤로그) | placeholder, replace later |
 
 ## 음악 (bgm/)
 

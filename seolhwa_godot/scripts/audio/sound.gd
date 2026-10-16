@@ -28,6 +28,9 @@ const SILENT := 0.0005    # 이보다 작은 크기는 -80dB로
 # id별 기본값: bus · db(더할 크기) · pitch(높낮이 흔들기 ±)
 const TUNE := {
 	"wind": { bus = "Ambient" },
+	"birds_day": { bus = "Ambient" },
+	"stream_small": { bus = "Ambient" },
+	"laugh_soft": { pitch = 0.04 },
 	"crowd_dano": { bus = "Ambient" },
 	"laugh_far": { pitch = 0.05 },
 	"footstep_heavy": { pitch = 0.06 },

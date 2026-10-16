@@ -344,6 +344,51 @@ def laugh_far(rng):
     return norm(band(fade(x), 200, 3500), -20)
 
 
+def laugh_soft(rng):
+    # 곁에서 작게 웃음(한 사람, 코웃음 섞인 '흐흐' 두세 마디 — 서장 프롤로그 제자)
+    sec = 1.3
+    x = np.zeros(int(SR * sec))
+    for i, (f0, g) in enumerate(((260.0, 1.0), (245.0, 0.8), (232.0, 0.55))):
+        d = 0.2
+        tt = t_axis(d)
+        v = (np.sin(2 * np.pi * f0 * tt) + 0.3 * np.sin(2 * np.pi * f0 * 2 * tt)) * env_exp(d, 0.07, 0.015) * 0.6
+        v += band(noise(d, rng), 500, 2600) * env_exp(d, 0.08, 0.01)
+        place(x, v * g, 0.04 + i * 0.24)
+    return norm(band(fade(x), 150, 3200), -16)
+
+
+def birds_day(rng):
+    # 낮 숲 새소리(4초, 멀리 두세 마리 — 짧게 오르내리는 지저귐)
+    sec = 4.0
+    x = np.zeros(int(SR * sec))
+    at = 0.2
+    while at < sec - 0.5:
+        n = int(rng.integers(2, 5))
+        f0 = float(rng.uniform(2600, 4200))
+        for k in range(n):
+            d = float(rng.uniform(0.05, 0.1))
+            tt = t_axis(d)
+            sweep = f0 * (1.0 + 0.25 * np.sin(np.pi * tt / d) * (1 if k % 2 == 0 else -1))
+            ph = 2 * np.pi * np.cumsum(sweep) / SR
+            place(x, np.sin(ph) * np.sin(np.pi * tt / d) ** 2, at + k * (d + 0.03))
+        at += float(rng.uniform(0.6, 1.3))
+    return norm(fade(x, 0.05, 0.3), -22)
+
+
+def stream_small(rng):
+    # 작은 개울(5초 — 졸졸 흐르는 물: 띠 잡음 + 짧은 물방울 울림, 앞뒤 부드럽게)
+    sec = 5.0
+    t = t_axis(sec)
+    base = band(noise(sec, rng), 400, 2400) * (0.55 + 0.15 * np.sin(2 * np.pi * 0.7 * t))
+    for _ in range(40):
+        d = 0.05
+        tt = t_axis(d)
+        f0 = float(rng.uniform(700, 1600))
+        drop = np.sin(2 * np.pi * f0 * (1 + 0.6 * tt / d) * tt) * env_exp(d, 0.015, 0.002)
+        place(base, drop * 0.7, float(rng.uniform(0.1, sec - 0.2)))
+    return norm(fade(base, 0.6, 0.6), -24)
+
+
 def bgm_dano_bright(rng):
     # 단오 낮 — 밝은 고리: 장구 장단(덩-기덕) 위에 높은 5음 뜯는 소리가 촘촘히
     sec = 24.0
@@ -510,10 +555,13 @@ SFX = {
     "chuldu_cry": (chuldu_cry, "출두 외침(여럿이 길게 — 임시 모음 띠)"),
     "cup_clink": (cup_clink, "술잔 맞닿음(팅 두 번)"),
     "brush_stroke": (brush_stroke, "붓이 한지를 지나감(작게)"),
+    "laugh_soft": (laugh_soft, "곁에서 작게 웃음(한 사람, 서장 프롤로그)"),
+    "birds_day": (birds_day, "낮 숲 새소리(4초, 멀리)"),
+    "stream_small": (stream_small, "작은 개울 졸졸(5초, Ambient)"),
 }
 # 처음 판(14개) 뒤에 더한 소리 — 씨앗 순서를 뒤에 붙여 예전 파일이 다시 돌려도 바뀌지 않게
 LATE = ["brush_rustle", "crowd_dano", "drum_far", "laugh_far", "gonjang_hit", "gate_shut", "breath_pain",
-        "hoofbeats", "chuldu_cry", "cup_clink", "brush_stroke"]
+        "hoofbeats", "chuldu_cry", "cup_clink", "brush_stroke", "laugh_soft", "birds_day", "stream_small"]
 BGM = {
     "bgm_day_calm": (bgm_day_calm, "낮 잔잔한 고리(지속음 + 뜯는 5음, 24.5초)"),
     "bgm_night_drone": (bgm_night_drone, "밤 긴장 지속음(맥놀이, 24초)"),

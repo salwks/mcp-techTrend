@@ -8,6 +8,7 @@
 #   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛) · sandal 길가에 닳은 짚신 한 짝(도입부 첫 조사, 단서 아님)
 #   seoan 이겸의 서안(낮은 책상 — 펼친 기록책·벼루·붓, 재기획 3단계 첫 15분) · ledger 한 장짜리 밥값 장부(접힌 종이·붓 자국)
 #   brush 창가에 말려 둔 붓(붓걸이·갈라진 붓끝) · ledger_hang 주막 기둥에 걸린 묵은 숙박 장부(끈으로 묶은 책)
+#   paper_dry 말리는 기록지(서장 프롤로그) — n장(1~6)을 멍석 위에 비스듬히 펼친 한지(먹줄), bound=true면 실로 맨 덮인 기록책 한 권
 #   fall_traces 남원 §65 아침 수수밭 — 꺾인 수숫대 · 붉은 흔적 · 뜯긴 털 · 깊게 눌린 발자국(시신은 없다)
 extends RefCounted
 const C := preload("res://kit/village/_common.gd")
@@ -48,6 +49,7 @@ static func build(params: Dictionary) -> Dictionary:
 		"ledger": _ledger(m)
 		"brush": _brush(m)
 		"ledger_hang": _ledger_hang(m)
+		"paper_dry": fp = _paper_dry(m, int(params.get("n", 4)), bool(params.get("bound", false)))
 	return m.result("단서_" + kind, fp, false)
 
 static func _disc(rx: float, rz: float, h: float, x: float, y: float, z: float, ry := 0.0, seg := 10) -> Kit.Geo:
@@ -297,3 +299,22 @@ static func _ledger_hang(m: C.M) -> void:
 	m.add("p", "flat", C.PA(Kit.box(0.25, 0.04, 0.035, 0, 0.14, 0), [0x6a4430, 0x4a2e20]), 0.0)   # 묶은 끈 자리
 	for i in 4: m.add("p", "flat", C.PA(Kit.box(0.006, 0.22, 0.002, -0.08 + i * 0.05, -0.03, 0.017), INKC), 0.0)
 	m.add("p", "wood", C.PA(Kit.cyl(0.006, 0.006, 0.2, 4, 0, 0.26, 0.0), [0x6a4430, 0x4a2e20]), 0.0)   # 거는 끈
+
+# 말리는 기록지(서장 프롤로그 「이겸과 제자의 어느 날」) — 멍석 위에 펼친 한지 n장(먹줄 몇 줄, 번진 자리 하나) · bound: 실로 맨 덮인 기록책 한 권
+static func _paper_dry(m: C.M, n: int, bound: bool) -> Vector2:
+	var R := m.rng
+	if bound:
+		m.add("p", "flat", C.PA(Kit.box(0.2, 0.035, 0.27, 0, 0.018, 0), [0xb89a6a, 0x9a7e52], 0.03, R), 0.004)   # 누런 표지
+		m.add("p", "flat", C.PA(Kit.box(0.19, 0.03, 0.26, 0.004, 0.018, 0), PAPER, 0.02, R), 0.0)                # 속장(옆면)
+		for i in 4: m.add("p", "flat", C.PA(Kit.box(0.008, 0.038, 0.006, -0.085, 0.019, -0.09 + i * 0.06), INKC), 0.0)   # 맨 실
+		return Vector2(0.4, 0.4)
+	n = clampi(n, 1, 6)
+	for i in n:
+		var cx: float = -0.62 + float(i % 3) * 0.6 + R.between(-0.05, 0.05)
+		var cz: float = -0.22 + float(i / 3) * 0.48 + R.between(-0.04, 0.04)
+		var a: float = R.between(-0.18, 0.18)
+		m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.34, 0.004, 0.44), cx, 0.003 + i * 0.0008, cz, 0, a, 0), PAPER, 0.03, R), 0.002)
+		for k in 3:
+			m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.008, 0.002, 0.3 - k * 0.05), cx - 0.09 + k * 0.08, 0.006 + i * 0.0008, cz, 0, a, 0), INKC), 0.0)
+		if i == 0: m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.09, 0.002, 0.07), cx + 0.06, 0.007, cz + 0.1, 0, a, 0), [0x8a8478, 0x6a645a]), 0.0)   # 젖어 번진 자리
+	return Vector2(1.9, 1.1)

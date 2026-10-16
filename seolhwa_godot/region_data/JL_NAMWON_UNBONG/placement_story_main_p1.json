@@ -1,11 +1,194 @@
 {
  "area": "namwon_main_p1",
- "generator": "손으로 — 재기획 3단계(첫 15분) 메인 서장 「이겸의 수상한 편지」",
- "note": "이겸의 거처(신규, 늘 있다 — when 없음). 객사 담(nw_gaeksa_wall_15·16) 앞, 읍내 동서길(namwon_eup_street_ew) 북쪽 빈 필지. 생성 배치(tools/placement/namwon.py)의 모양·길·성벽·광장 비움(keepout)을 모두 넣고 겹침 검사 — 집(8.2×6.4, 처마 포함) 틈 0.3m 겹침 없음, 마당 앞은 길 가장자리 0.2m. 솔잎 주막은 기존 nw_jumak_naru(요천 광한루 앞 나루 길가)를 그대로 쓴다(새 건물 없음). 근거·검사: seolhwa_godot/docs/reports/replanning-stage3-first15.md §2",
+ "generator": "손으로 — 메인 서장 「이겸의 수상한 편지」 이겸의 거처(거처 이전·프롤로그 4~7단계)",
+ "note": "이겸의 거처(늘 있다 — when 없음). 남원읍성 밖 요천 나루 건너 구례 길(namwon_gurye_road) 골짜기 동쪽, 솔숲 언덕 자락(해발 ≈ 99m). 주촌천(r018) 40m 서쪽. 옛 자리(-3252.0, 240.4, 객사 담 앞)에서 옮김. 후보·측정: seolhwa_godot/docs/reports/iegyeom-house-prologue-proposal.md · -impl.md. 솔잎 주막은 기존 nw_jumak_naru 그대로",
  "items": [
-  {"id": "ig_house", "kit": "village/choga", "params": {"seed": 3151, "interior": true, "chimney": true, "w": 6.0, "d": 4.0}, "x": -3252.0, "z": 240.4, "ry": 0.0, "y": null, "flatten": true, "clear_veg": true, "group": "이겸의 거처", "footprint": [8.2, 6.4], "title": "이겸의 거처", "note": "이겸의 사랑방(초가삼간, 실내 — 방 안 서안·밥값 장부·말린 붓, 댓돌의 신발). 앞(남)이 마당·동서길"},
-  {"id": "ig_yard", "kit": "story/clearing", "params": {"w": 8.0, "d": 3.2}, "x": -3252.0, "z": 245.3, "ry": 0.0, "y": null, "flatten": true, "clear_veg": true, "yard": true, "group": "이겸의 거처", "footprint": [8.0, 3.2], "note": "좁은 앞마당(심부름꾼이 서는 곳 — 문 앞 2.5m 비움)"},
-  {"id": "ig_wall_w", "kit": "village/todam", "params": {"seed": 3152, "ax": 0.0, "az": -1.3, "bx": 0.0, "bz": 1.3, "h": 1.3, "cap": "thatch"}, "x": -3256.2, "z": 244.9, "ry": 0.0, "y": null, "flatten": false, "clear_veg": true, "yard": false, "group": "이겸의 거처", "footprint": [0.8, 3.4], "note": "마당 서쪽 토담(낮게)"},
-  {"id": "ig_wall_e", "kit": "village/todam", "params": {"seed": 3153, "ax": 0.0, "az": -1.3, "bx": 0.0, "bz": 1.3, "h": 1.3, "cap": "thatch"}, "x": -3248.0, "z": 244.9, "ry": 0.0, "y": null, "flatten": false, "clear_veg": true, "yard": false, "group": "이겸의 거처", "footprint": [0.8, 3.4], "note": "마당 동쪽 토담(낮게) — 앞(동서길 쪽)은 트였다"}
+  {
+   "id": "ig_house",
+   "kit": "village/choga",
+   "params": {
+    "seed": 3151,
+    "interior": true,
+    "chimney": true,
+    "w": 6.0,
+    "d": 4.0
+   },
+   "x": -3192.0,
+   "z": 700.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    8.2,
+    6.4
+   ],
+   "note": "이겸의 사랑방(초가삼간, 실내 — 방 안 서안·밥값 장부·말린 붓, 댓돌의 신발). 남향. 앞이 마당(B), 서쪽이 구례 길로 내려가는 오솔길(A)",
+   "title": "이겸의 거처"
+  },
+  {
+   "id": "ig_yard",
+   "kit": "story/clearing",
+   "params": {
+    "w": 11.0,
+    "d": 6.2
+   },
+   "x": -3192.0,
+   "z": 706.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    11.0,
+    6.2
+   ],
+   "yard": true,
+   "note": "흙마당(B — 프롤로그 무대): 평상·멍석(기록 말리기). 문 앞 2.5m 비움(심부름꾼 자리)"
+  },
+  {
+   "id": "ig_path",
+   "kit": "story/clearing",
+   "params": {
+    "w": 17.0,
+    "d": 2.2
+   },
+   "x": -3205.5,
+   "z": 708.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    17.0,
+    2.2
+   ],
+   "yard": true,
+   "note": "오솔길(A): 마당 서쪽 끝 → 구례 길(namwon_gurye_road). 땅은 그대로(고르지 않음), 식생만 비움"
+  },
+  {
+   "id": "ig_pyeongsang",
+   "kit": "village/props",
+   "params": {
+    "seed": 3154,
+    "kind": "pyeongsang",
+    "w": 2.0,
+    "d": 1.3
+   },
+   "x": -3189.4,
+   "z": 705.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    2.0,
+    1.3
+   ],
+   "note": "평상 — 제자가 앉아 기록을 받는 자리(프롤로그). 위의 서안은 사건 소품(p_yard_desk)"
+  },
+  {
+   "id": "ig_meongseok",
+   "kit": "village/props",
+   "params": {
+    "seed": 3155,
+    "kind": "meongseok"
+   },
+   "x": -3193.9,
+   "z": 706.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    2.0,
+    1.4
+   ],
+   "note": "멍석 — 젖은 기록지를 말리는 자리(프롤로그 이겸). 종이는 사건 소품 p_paper_*"
+  },
+  {
+   "id": "ig_firewood",
+   "kit": "village/firewood",
+   "params": {
+    "seed": 3156
+   },
+   "x": -3186.7,
+   "z": 701.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    1.9,
+    1.2
+   ],
+   "note": "장작더미(집 동쪽 벽)"
+  },
+  {
+   "id": "ig_dok",
+   "kit": "village/props",
+   "params": {
+    "seed": 3157,
+    "kind": "dok",
+    "n": 3
+   },
+   "x": -3197.1,
+   "z": 701.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    1.6,
+    1.0
+   ],
+   "note": "물독·항아리(부엌 쪽)"
+  },
+  {
+   "id": "ig_heotgan",
+   "kit": "village/heotgan",
+   "params": {
+    "seed": 3158
+   },
+   "x": -3200.4,
+   "z": 700.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    5.0,
+    4.0
+   ],
+   "note": "헛간(딸린 칸) — 앞이 트인 맞배"
+  },
+  {
+   "id": "ig_teotbat",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 3159,
+    "size": "small"
+   },
+   "x": -3198.6,
+   "z": 710.6,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "이겸의 거처",
+   "footprint": [
+    3.8,
+    2.9
+   ],
+   "note": "텃밭(싸리울) — 마당 남서쪽"
+  }
  ]
 }
