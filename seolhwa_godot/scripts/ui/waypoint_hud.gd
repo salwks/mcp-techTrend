@@ -1,13 +1,15 @@
 # 세계 방위 줄(재기획 3단계 최소판 — 첫15 P02-C '월드에 방위 안내', 지도 v1.3 §04): 지도에서 정한 목적지(progress.waypoint)가
 #   이 공간에 있으면 화면 위쪽 가운데에 한 줄 — "목적지 · 여원재 방면   동북동쪽 3.3km"(땅 방위 — 기본 시점은 화면 위가 북).
 #   화살 글자는 쓰지 않는다(본문 글꼴에 없을 수 있다 — tools/font_coverage.gd).
-#   대화·컷·기록책·큰 창(지도·문서·Esc — HudGate) 동안·시작 메뉴·걸으며 보는 제목 동안은 감춘다. 4단계에서 길 안내·도착 처리로 넓힌다.
+#   대화·컷·기록책·큰 창(지도·문서·Esc — HudGate) 동안·시작 메뉴·걸으며 보는 제목 동안은 감춘다.
+#   4단계: 다른 공간 목적지는 그쪽 길 끝을, [말로 이동] 뒤 말 타는 곳까지 걸어가는 중이면 그 자리를 가리킨다.
 #   story_director가 만들어 붙인다(사건이 없는 공간에서도). 0.25초마다 글만 고친다.
 extends CanvasLayer
 
 const Progress := preload("res://scripts/region/progress.gd")
 const UiFonts := preload("res://scripts/ui_fonts.gd")
 const HudGate := preload("res://scripts/hud_gate.gd")
+const WaypointPlan := preload("res://scripts/region/waypoint_plan.gd")
 const INK := Color("#2b2622")
 const PAPER := Color("#efe6d2")
 const SEAL := Color("#a8443c")
@@ -67,14 +69,29 @@ func _hidden() -> bool:
 
 func _line() -> String:
 	var wp := Progress.waypoint()
-	if wp.is_empty() or String(wp.get("space", "")) != String(d.space_id) or _hidden(): return ""
+	if wp.is_empty() or _hidden(): return ""
 	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
+	var nm := String(wp.get("name", ""))
+	# 다른 공간 목적지(재기획 4단계): 그쪽으로 이어진 길 끝을 가리킨다 — 넘어가면 다음 공간에서 다시 잇는다
+	if String(wp.get("space", "")) != String(d.space_id):
+		var ex := WaypointPlan.exit_for(String(d.space_id), String(wp.space))
+		if ex.is_empty(): return "목적지 · %s (다른 고을 — 길을 모른다)" % nm
+		return "목적지 · %s — %s %s" % [nm, String(ex.name), _bearing(ex.p - pp)]
 	var tgt := Vector2(float(wp.x), float(wp.z))
 	var v := tgt - pp
+	if v.length() < 25.0: return "목적지 · %s  — 여기" % nm
+	var line := "목적지 · %s   %s" % [nm, _bearing(v)]
+	# [말로 이동]을 골랐는데 말 타는 곳이 멀어 걸어가는 중(horse_ride.intent)
+	var hr = d.main.get("horse_ride")
+	if hr != null and not hr.intent.is_empty() and not hr.mounted():
+		var mv: Vector2 = (hr.intent.p as Vector2) - pp
+		line = "말 타는 곳 · %s   %s   (목적지 · %s)" % [String(hr.intent.name), _bearing(mv) if mv.length() >= 20.0 else "여기 — E", nm]
+	return line
+
+# 땅 방위 + 거리: 북 = −z(기본 시점은 화면 위가 북) — "동북동쪽 3.2km"
+static func _bearing(v: Vector2) -> String:
 	var dist := v.length()
-	if dist < 25.0: return "목적지 · %s  — 여기" % String(wp.get("name", ""))
-	# 땅 방위: 북 = −z. 화면 화살: 카메라 yaw만큼 돌린다(yaw 0 = 남→북, 화면 위가 북)
 	var ang := atan2(v.x, -v.y)                       # 북에서 시계 방향
 	var dir: String = DIRS[int(round(fposmod(ang, TAU) / TAU * 16.0)) % 16]
 	var ds := ("%.1fkm" % (dist / 1000.0)) if dist >= 1000.0 else ("%dm" % int(round(dist / 10.0) * 10.0))
-	return "목적지 · %s   %s쪽 %s" % [String(wp.get("name", "")), dir, ds]
+	return "%s쪽 %s" % [dir, ds]
