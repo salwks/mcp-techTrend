@@ -1,5 +1,7 @@
 # 이겸 거처 옮기기 · 서장 프롤로그 「이겸과 제자의 어느 날」 — 1~3단계 조사·제안
 
+> 구현 결과(4~7단계, 사용자 승인 — SA): `iegyeom-house-prologue-impl.md`
+
 - 기준: 사용자 지시(거처 이전 + 프롤로그) · `seolhwa/docs/opening/Main_Story_Script_Part01_v1_0.md`(**S1.0**) P00-A·P00-B · `seolhwa/docs/replanning/` 첫15 v1.2 · 재기획 v1.0 · 대화 카메라 v1.1 · `DECISIONS_stage1.md`
 - 이전 보고서: `replanning-stage3-first15.md`(지금 거처·첫 15분) · `replanning-stage4-map-horse.md`(지도·말) · `opening-rework-stage1-analysis.md`(첫 후보) · `save-guard-hardening.md`
 - 브랜치 `claude/youthful-gauss-d0fxzv`, 시작 HEAD `2eb9124`, Godot 4.7.1, M1 Mac.
