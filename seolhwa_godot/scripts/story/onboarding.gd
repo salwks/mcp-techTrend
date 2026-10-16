@@ -55,6 +55,7 @@ var _last_p := Vector3.INF
 var moved_m := 0.0           # 시험 기록
 var ran_sec := 0.0
 var _mark_t := 0.0
+var _mark_cache := {}   # 대상 id → {w: 땅 위 자리, a: 지금 짙기, to: 목표 짙기, r} — 고르기는 0.06초마다, 화면 자리·짙기는 매 프레임(카메라가 움직여도 먹점이 튀거나 깜빡이지 않게)
 var _save_t := 0.0
 var _play := 0.0
 var _slow := false
@@ -376,16 +377,38 @@ func _update_prompt_style() -> void:
 # ---- 조사 대상 먹점 ----
 func _update_marks(dt: float) -> void:
 	_mark_t -= dt
-	if _mark_t > 0.0: return
-	_mark_t = 0.06
+	if _mark_t <= 0.0:
+		_mark_t = 0.06
+		_pick_marks()
+	_draw_marks_frame(dt)
+
+# 매 프레임: 고른 대상을 지금 카메라로 다시 비춰 찍는다. 짙기는 부드럽게 따라간다(나타남 0.15초 · 사라짐 0.1초)
+func _draw_marks_frame(dt: float) -> void:
+	if _mark_cache.is_empty():
+		d.ui.set_marks([]); return
+	var cam: Camera3D = d.main.cam
+	var sc: Vector2 = d.ui.get_viewport().get_visible_rect().size / Vector2(d.main.scene_vp.size)
+	var out := []
+	for id in _mark_cache.keys():
+		var m: Dictionary = _mark_cache[id]
+		var to: float = float(m.to)
+		m.a = move_toward(float(m.a), to, dt * (7.0 if to > float(m.a) else 10.0))
+		if float(m.a) <= 0.005 and to <= 0.0:
+			_mark_cache.erase(id); continue
+		var wp: Vector3 = m.w
+		if cam.is_position_behind(wp) or not cam.is_position_in_frustum(wp): continue
+		out.append({ p = cam.unproject_position(wp) * sc, a = float(m.a), r = float(m.r) })
+	d.ui.set_marks(out)
+
+func _fade_marks() -> void:
+	for id in _mark_cache: _mark_cache[id].to = 0.0
+
+func _pick_marks() -> void:
 	var lv := mark_level()
 	var busy: bool = d.case_id == "" or d.runner == null or d.talking or d.runner.busy or d.ui.modal or d.ui.journal_open or (d.combat_view != null and d.combat_view.active) or d._cut
 	if lv <= 0.0 or busy:
-		d.ui.set_marks([]); last_marked = []; return
+		_fade_marks(); last_marked = []; return
 	var cam: Camera3D = d.main.cam
-	var vp_size: Vector2 = Vector2(d.main.scene_vp.size)
-	var ui_size: Vector2 = d.ui.get_viewport().get_visible_rect().size
-	var sc := ui_size / vp_size
 	var pp := Vector2(d.main.player_pos.x, d.main.player_pos.z)
 	var help_k: float = { detailed = 1.4, minimal = 0.6 }.get(help(), 1.0)
 	var near: float = (11.0 if lv >= 1.0 else 7.5) * help_k
@@ -411,10 +434,13 @@ func _update_marks(dt: float) -> void:
 		if dd < float(t.r): a *= 0.45   # 손 닿는 거리 — 글 안내가 대신한다
 		var wp := Vector3(t.p.x, d.world.height_at(t.p.x, t.p.y) + (2.15 if t.kind == "actor" else 0.55), t.p.y)
 		if cam.is_position_behind(wp): continue
-		var sp: Vector2 = cam.unproject_position(wp) * sc
-		out.append({ p = sp, a = a, r = 0.9 if t.kind == "actor" else 1.0 })
+		out.append(String(t.id))
+		var m: Dictionary = _mark_cache.get(String(t.id), { a = 0.0 })
+		m.w = wp; m.to = a; m.r = 0.9 if t.kind == "actor" else 1.0
+		_mark_cache[String(t.id)] = m
 		last_marked.append(String(t.id))
-	d.ui.set_marks(out)
+	for id in _mark_cache:
+		if not out.has(id): _mark_cache[id].to = 0.0
 
 # 첫 사건 단서 안내 단계(§14·§28) — 사건 데이터 case.guidance_flag(없으면 3: 일반 조사)
 func guidance_stage() -> int:
@@ -531,7 +557,7 @@ func _update_talk_marks(dt: float) -> void:
 	_tm_t -= dt
 	_pend_t -= dt
 	if _tm_t > 0.0: return
-	_tm_t = 0.033
+	_tm_t = 0.0   # 매 프레임(카메라가 움직일 때 말풍선이 튀지 않게)
 	talk_marked = []
 	var busy: bool = d.case_id == "" or d.S == null or not d._started or d.talking or d.runner.busy or d.ui.modal or d.ui.journal_open \
 		or (d.combat_view != null and d.combat_view.active) or d._cut or guide() == "off"
