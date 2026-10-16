@@ -55,7 +55,11 @@ func _process(dt: float) -> void:
 	_l.add_theme_font_size_override("font_size", int(UiFonts.KEYS * k))
 	_l.text = s
 	_box.reset_size()
-	_box.position = Vector2((vs.x - _box.size.x) * 0.5, vs.y * 0.035)
+	var y := vs.y * 0.035
+	var h = d.main.get("_hud")   # 왼쪽 위 알림 줄(region_main._show_hud)이 떠 있으면 그 아래로 — 두 줄이 겹치지 않게
+	if h != null and is_instance_valid(h) and h.is_visible_in_tree() and h.modulate.a > 0.05 and String(h.text) != "":
+		y = maxf(y, h.position.y + h.size.y + 10.0)
+	_box.position = Vector2((vs.x - _box.size.x) * 0.5, y)
 
 func _hidden() -> bool:
 	if d == null or d.main == null or d.main._loading: return true

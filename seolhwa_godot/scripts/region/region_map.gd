@@ -577,7 +577,7 @@ func toggle() -> void:
 	if _meta.is_empty(): return
 	if visible:
 		if picking(): _pick_finish({ act = "end" }); return
-		visible = false; card_t = {}; _place_card(); return
+		visible = false; card_t = {}; _card_restore_page(); _place_card(); return
 	visible = true
 	card_t = {}; card_plan = {}; _pinned = null; _drag = false; _dragging = false; _za = {}
 	_layout()
@@ -671,6 +671,8 @@ func _hr():
 func open_card(t: Dictionary) -> void:
 	if picking() or t.is_empty(): return
 	card_t = t
+	if page > 0 and _card_page0 < 0:   # 카드가 오른쪽 판 자리를 쓴다(지도 v1.3 §03) — 범례 판은 카드를 닫으면 다시
+		_card_page0 = page; page = 0; _layout()
 	var hr = _hr()
 	var ride := { ok = false, why = "이곳에서는 말을 탈 수 없다" }
 	if hr != null and (t.get("c") is Vector2 or String(t.get("space", _space)) != _space): ride = hr.pin_plan(t)
@@ -687,7 +689,14 @@ func open_card(t: Dictionary) -> void:
 func card_close() -> void:
 	if card_t.is_empty() and _pinned == null: return
 	card_t = {}; card_plan = {}; _pinned = null
+	_card_restore_page()
 	_after_view()
+
+var _card_page0 := -1
+func _card_restore_page() -> void:
+	if _card_page0 < 0: return
+	page = _card_page0; _card_page0 = -1
+	if visible: _layout()
 
 func _card_refresh() -> void:
 	if _card == null: return
@@ -716,8 +725,9 @@ func _card_refresh() -> void:
 	if bool(ride.get("ok", false)):
 		_ride_btn.text = "말로 이동 (약 %d분)" % int(ride.get("mins", 1))
 		var wt: Dictionary = ride.get("walk_to", {})
-		if bool(ride.c.get("cross", false)): _ride_why.text = "%s까지 말로 — 그 뒤 노정을 따라 넘어간다" % String(ride.c.name)
-		elif not wt.is_empty(): _ride_why.text = "말 타는 곳(%s)까지 걸어가서 탄다 — 큰길 따라" % String(wt.name)
+		var lead := ("말 타는 곳(%s)까지 걸어가서 " % String(wt.name)) if not wt.is_empty() else ""
+		if bool(ride.c.get("cross", false)): _ride_why.text = "%s%s까지 말로 — 그 뒤 노정을 따라 넘어간다" % [lead, String(ride.c.name)]
+		elif not wt.is_empty(): _ride_why.text = lead + "탄다 — 큰길 따라"
 		else: _ride_why.text = "큰길 따라 저절로 간다 · 성문·사건 앞에서 내린다"
 	else:
 		_ride_btn.text = "말로 이동"
@@ -750,6 +760,21 @@ func _place_card_late() -> void:   # 한 프레임 뒤(줄바꿈이 제 너비�
 	_card.size = Vector2(_card.size.x, 0)
 	_card.reset_size()
 	_card.position = _canvas.position + Vector2(_canvas.size.x - _card.size.x - 22.0, _canvas.size.y - _card.size.y - 22.0)
+	# 고른 곳이 카드 밑에 깔리면 지도를 옮겨 카드 왼쪽 가운데로(핀·말 길이 보이게)
+	if card_t.get("c") is Vector2:
+		var nation := mode == "nation"
+		var q: Vector2
+		if nation:
+			var ll = load("res://scripts/region/fast_travel.gd")._ll(String(card_t.get("space", _space)), card_t.c)
+			if ll == null: return
+			q = _n_px(ll)
+		elif String(card_t.get("space", _space)) == _space: q = _to_px(card_t.c)
+		else: return
+		var cr := Rect2(_card.position - _canvas.position, _card.size).grow(36.0)
+		if cr.has_point(q):
+			var want := Vector2((_canvas.size.x - _card.size.x - 22.0) / 2.0, clampf(q.y, 120.0, _canvas.size.y - 120.0))
+			_pan(want - q)
+			_canvas.queue_redraw()
 
 # 화면 자리의 카드 영역(시험·누르기 막음)
 func card_rect() -> Rect2:
@@ -762,7 +787,7 @@ func card_ride() -> void:
 	var hr = _hr()
 	if hr == null: return
 	if not _is_current(t) and t.get("c") is Vector2: waypoint_pinned()
-	card_t = {}; card_plan = {}
+	card_t = {}; card_plan = {}; _card_restore_page()
 	visible = false; _place_card()
 	var r: Dictionary = hr.ride_pin(t)
 	var m := get_parent()
@@ -779,7 +804,7 @@ func card_ride() -> void:
 func card_fast() -> void:
 	var f: Dictionary = card_plan.get("fast", {})
 	if not bool(f.get("ok", false)): return
-	card_t = {}; card_plan = {}
+	card_t = {}; card_plan = {}; _card_restore_page()
 	visible = false; _place_card()
 	wp_event = "FAST"
 	print("MAP fast %s/%s" % [f.space, f.node])
