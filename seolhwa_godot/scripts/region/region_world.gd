@@ -402,7 +402,7 @@ var _cz_frame := 0
 #   조금 낮고 가깝게 — 좁고 촘촘한 무대처럼, 앞 지붕·담이 화면 아래를 지나가고 깊이 흐림이 앞뒤를 나눈다.
 #   되돌리기: 이 두 값을 pitch 40 · dist_k 1.0으로(원본 CAM_TOWN·region.json은 그대로 40). 비교 촬영: --townframe=각,거리배율
 #   그대로 두는 것: 권역 기본 · 숲길 48 · 길 밖 숲 55 · 고개 30 · 실내 · 대화 TALK · 1인칭 · 말·배 · 지도 · 사건 카메라(override)
-static var TOWN_FRAME := { pitch = 36.0, dist_k = 0.86 }
+static var TOWN_FRAME := { pitch = 32.0, dist_k = 0.78 }   # 2026-10-17 사용자: 36°보다 더 낮게
 
 static func town_cam(cam: Dictionary) -> Dictionary:
 	var o := cam.duplicate()
