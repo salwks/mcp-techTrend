@@ -439,10 +439,10 @@ static func _zone(name: String, x0: float, x1: float, z0: float, z1: float, cam:
 	return { name = name, minX = x0, maxX = x1, minZ = z0, maxZ = z1, pitch = cam.pitch, distance = cam.distance }
 
 # 플레이어 둘레(반경 14m 9점) 반 넘게 숲·대숲이고 고을 안이 아니면 숲 구역을 플레이어에 씌운다(10프레임마다)
-func update_camera_zone(pos: Vector3) -> void:
+func update_camera_zone(pos: Vector3, force := false) -> void:
 	if indoor != null: forest_active = false; return
 	_cz_frame += 1
-	if _cz_frame % 10 != 0: return
+	if _cz_frame % 10 != 0 and not force: return
 	var n := 0
 	for dz in [-14.0, 0.0, 14.0]:
 		for dx in [-14.0, 0.0, 14.0]:

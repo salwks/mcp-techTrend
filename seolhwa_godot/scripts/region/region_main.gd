@@ -513,6 +513,7 @@ func teleport(x: float, z: float) -> void:
 	var p := _nearest_free(x, z, player.radius)
 	player_pos = Vector3(p.x, world.height_at(p.x, p.y), p.y)
 	player.position = player_pos
+	world.update_camera_zone(player_pos, true)   # 순간이동: 숲·집 둘레 구역을 바로 다시 잡는다(카메라가 옛 구역 값으로 미끄러지지 않게)
 	var _t0 := Time.get_ticks_usec()
 	var _ev: String = world.stats.get("event", "")
 	world.focus(player_pos)
