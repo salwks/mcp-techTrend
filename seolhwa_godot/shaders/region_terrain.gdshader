@@ -267,7 +267,8 @@ vec3 t_stones(vec3 base, vec2 p, float cell, float rmin, float rmax, float dens,
 	vec2 d = f - (vec2(0.3) + vec2(h1, h2) * 0.4);
 	float an = h0 * 40.0 + h2 * 9.0;
 	d = mat2(vec2(cos(an), sin(an)), vec2(-sin(an), cos(an))) * d * vec2(1.0, 1.2 + 0.5 * h2);
-	float dl = length(d) * (1.0 + 0.25 * (texture(noise_tex, p * 1.7 / cell + vec2(h1, h2)).r - 0.5) * 2.0);
+	if (dot(d, d) > r * r * 4.0) return base;   // 돌·그늘 밖
+	float dl = length(d + vec2(d.y, -d.x) * (h2 - 0.5) * 0.3) * (1.0 + 0.12 * (h1 - 0.5));
 	float aa = px / cell;
 	float body = 1.0 - smoothstep(r - aa, r + aa * 0.5, dl);
 	float sh = (1.0 - smoothstep(r, r * 1.7 + aa, length(d - vec2(0.0, r * 0.5)))) * (1.0 - body);
@@ -292,6 +293,7 @@ vec3 t_tufts(vec3 base, vec2 p, float cell, float size, float dens, float px, fl
 	vec2 c = vec2(0.3) + vec2(r_hash(ci + ivec2(3, 97)), r_hash(ci + ivec2(41, 9))) * 0.4;
 	float a0 = atan(away.y, away.x) + (r_hash(ci + ivec2(11, 5)) - 0.5) * 0.6;
 	float sz = size * (0.7 + 0.6 * fract(h0 * 13.1)) / cell;
+	if (length(f - c) > sz * 1.05) return base;   // 포기 밖 화소는 잎 고리를 돌지 않는다(대부분)
 	float ink = 0.0, tipk = 0.0;
 	for (int i = 0; i < 5; i++) {
 		float fk = float(i) / 4.0 - 0.5;
@@ -459,8 +461,8 @@ vec3 town_layer(vec3 base, vec2 p, vec3 col, float dirt, float slope, float rd, 
 	}
 	// 4 흙 땅 전체: 흙 결(0.6~2m 얼룩) · 마당 빗자루 자국(반달 줄) · 성긴 잔돌·자갈(밟힌 길 가운데는 적게)
 	float mid = rd < rhw ? smoothstep(rhw * 0.25, rhw * 0.8, rhw - rd) : 0.0;
-	float m1 = texture(noise_tex, p * 0.43 + vec2(0.13, 0.71)).r, m2 = texture(noise_tex, p * 1.37 + vec2(0.5, 0.2)).r;
-	base *= 1.0 + k * dirt * ((m1 - 0.5) * 0.16 + (m2 - 0.5) * 0.07 * (1.0 - smoothstep(0.02, 0.05, px)));
+	float m1 = texture(noise_tex, p * 0.43 + vec2(0.13, 0.71)).r;
+	base *= 1.0 + k * dirt * (m1 - 0.5) * 0.18;
 	float yardk = dirt * step(rhw + 0.6, rd) * (1.0 - paved) * (1.0 - smoothstep(0.025, 0.06, px));
 	if (yardk > 0.01) {
 		vec2 q = p / 1.7; ivec2 ci = ivec2(floor(q)); vec2 f = fract(q);
@@ -468,14 +470,14 @@ vec3 town_layer(vec3 base, vec2 p, vec3 col, float dirt, float slope, float rd, 
 		vec2 c0 = vec2(r_hash(ci + ivec2(2, 3)), r_hash(ci + ivec2(7, 1))) * 0.6 + 0.2;
 		vec2 dd = (f - c0) * 1.7;
 		float rr = length(dd);
-		float ang = atan(dd.y, dd.x) - h0 * 6.2832;
-		float sector = smoothstep(1.3, 0.7, abs(mod(ang + 3.1416, 6.2832) - 3.1416));
+		if (rr < 0.35 || rr > 1.25) { } else {
+		float sector = smoothstep(0.25, 0.75, dot(dd / max(rr, 1e-3), vec2(cos(h0 * 6.2832), sin(h0 * 6.2832))));
 		float band = smoothstep(0.35, 0.5, rr) * (1.0 - smoothstep(1.0, 1.25, rr));
 		float st = sin(rr * 6.2832 / 0.075 + h0 * 20.0);
 		base *= 1.0 + yardk * k * sector * band * st * 0.045 * step(h0, 0.55);
+		}
 	}
-	base = t_stones(base, p, 0.9, 0.04, 0.12, (0.06 + 0.1 * rocky) * dirt * (1.0 - 0.6 * mid) * (1.0 - paved), px, k, 23);
-	base = t_stones(base, p, 0.35, 0.02, 0.045, 0.18 * dirt * (1.0 - 0.5 * mid) * (1.0 - paved), px, k, 31);
+	base = t_stones(base, p, 0.5, 0.025, 0.1, (0.12 + 0.12 * rocky) * dirt * (1.0 - 0.5 * mid) * (1.0 - paved), px, k, 23);
 	// 5 장터: 짚 부스러기·배추 잎 · 마당 흙에도 짚 조금
 	base = t_litter(base, p, (mk * 0.55 + 0.05 * dirt * smoothstep(0.0, 2.0, sd) * (1.0 - smoothstep(4.0, 7.0, sd))) * (1.0 - paved), mk * 0.22 * (1.0 - paved), px, k);
 	// 5b 냇가·강가(토지이용 물 칸과 맞닿은 띠): 젖어 짙은 테 · 둥근 냇돌 · 물풀 포기

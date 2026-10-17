@@ -25,7 +25,7 @@
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
-# 비교용 끄기: --noao(먹 그늘) --nodress(생활 소품) --noground(땅 꾸밈) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
+# 비교용 끄기: --nofx(바깥 기운) --noao(먹 그늘) --nodress(생활 소품) --noground(땅 꾸밈) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
 const RegionWorld := preload("res://scripts/region/region_world.gd")
@@ -127,6 +127,7 @@ var _lantern: OmniLight3D
 var _reload_t := 0.0
 var weather    # Weather
 var npcs_amb    # NpcAmbient(주변 인물·짐승) — --nonpc로 끔
+var ambient_fx = null   # AmbientFx(scripts/region/ambient_fx.gd) — --nofx로 끔
 var crowd = null  # EventCrowd(scripts/story/event_crowd.gd — 사건 때만 늘어나는 군중, C60). --nochars면 없음
 # 실내 공간(scripts/region/interior_space.gd, region_data/interiors/<id>/interior.json): 굴·지하 같은 큰 실내를 따로 세운 공간.
 #   enter_interior(id, entrance_id) · exit_interior(exit_id) — 권역을 다시 읽지 않고 지형·식생을 숨긴 채 실내 키트만 세운다(짧은 암전).
@@ -387,6 +388,7 @@ func _build_scene() -> void:
 	root.add_child(world)
 	world.loading = true
 	world.load_region(_data_dir)
+	world.set_terrain_param("dress_far", 45.0 if gfx_low() else 75.0)   # 땅 꾸밈 무늬 거리(설정 '화면 품질')
 	weather = Weather.new()
 	root.add_child(weather)
 	weather.setup(world, world.data_dir, String(_pending.get("weather", args.get("weather", ""))))
@@ -435,6 +437,11 @@ func _build_scene() -> void:
 	if not args.has("nonpc") and not args.has("nochars"):
 		npcs_amb = NpcAmbient.new(); root.add_child(npcs_amb); npcs_amb.setup(world, weather, cam, placement)
 		npcs_amb.story_ref = story; npcs_amb.crowd_ref = crowd   # 앉은 고을 사람은 이야기 인물·군중 자리를 비킨다
+	if not args.has("nofx"):   # 바깥 기운(볕 먼지·발밑 흙먼지·굴뚝 연기·날리는 잎·물 반짝이·반딧불 — visual-pass 4단계)
+		ambient_fx = load("res://scripts/region/ambient_fx.gd").new()
+		ambient_fx.low = gfx_low()
+		root.add_child(ambient_fx); ambient_fx.setup(self)
+		ambient_fx.set_chimneys(placement.chimneys)
 	boats = BoatRide.new(); boats.setup(self)
 	if args.has("sailspeed"): boats.speed_override = float(args.sailspeed)
 	boats.arrived.connect(_on_boat_arrived)
@@ -1247,6 +1254,7 @@ func _process(delta: float) -> void:
 	sky_mat.set_shader_parameter("u_time", clock)
 	player.update_char(dt, cam)
 	if npcs_amb: npcs_amb.update(dt, player_pos, hour, _loading or _leaving)
+	if ambient_fx != null: ambient_fx.update(dt, player_pos, hour, player.anim == "run", interior != null or world.indoor != null or boats.riding())
 	if crowd != null and not _loading: crowd.update(dt)
 	_update_dof(dt)
 	if args.has("bench") and _bench_time > 2.0 and delta > 0.03 and not _bench_loading:
@@ -1466,6 +1474,7 @@ func _free_later(nodes: Array, frames: int) -> void:
 func _reload_place() -> void:
 	_reload_t = 0.0
 	placement.reload()
+	if ambient_fx != null: ambient_fx.set_chimneys(placement.chimneys)
 	if crowd != null: crowd.rebuild()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")
 	if not args.has("nowallproxy"): world.build_wall_proxies(placement)
