@@ -1,7 +1,7 @@
 # 첫 15분 흐름 시험(재기획 3단계) — 시작 메뉴 → 새 게임 → 이겸의 거처 → 방 물건 → 문 두드림 → 심부름꾼 → 봉투 → 서안 견주기 →
 #   거처 밖 「설화록」 → 걸어서 솔잎 주막 → 주모 → 장부·손님 → M 지도 → [목적지 설정] 을 한 번에 이어 논다.
 #   region_main --continuetest=first15(scripts/story/continue_test.gd가 시작 메뉴를 확인한 뒤 부른다 — tools/run_story_tests.sh first15:*).
-#   잰다: 서장 프롤로그(새 게임 → 프롤로그 박자 INTRO_01~04 → 0.25초 dip → 방 안 조작, 뒤에 따로 여는 장면 없음 · --first15=skip이면 건너뛰기와
+#   잰다: 서장 프롤로그(새 게임 → 프롤로그 박자 INTRO_01~04 + 승인 연출 E1~E7(E3 끊김·E5 끼움·E6 두드림) → 0.25초 dip → 방 안 조작, 뒤에 따로 여는 장면 없음 · --first15=skip이면 건너뛰기와
 #     새 게임 Enter 0.5초 막이) · 짧은 기억(P00-B) 재생 없음 · 안내 하나하나가 실제 행동으로 끝나는가(시간으로 끝나지 않는가) · 대화·조사 뒤 이동 바로 복귀(0.3초) ·
 #     E 겹침(닫힌 뒤 E 연타로 창 둘이 열리지 않음) · 카메라 복귀(override·focus·talk_yaw 없음) · 제목 단계 시각(재기획 OP-04) · 거처 → 주막 도보 시간 ·
 #     저장 재개(편지 뒤·주막 대화 뒤·목적지 뒤 — 저장에서 사건을 다시 읽어 같은 자리) · 목적지는 정하기만(순간이동 없음) · 오누이 들머리(--first15=onui).
@@ -192,6 +192,9 @@ func run() -> void:
 		var post = main.get("post")
 		_ok(post == null or float(post.past) == 0.0, "건너뛰면 색감도 지금으로(past 0)")
 		_ok(not c.echo_ok(), "건너뛴 판은 견주기 끝 메아리(프롤로그 L3)를 띄우지 않음")
+		_ok(not c._e2_on and not c._pro_live, "건너뛰면 지난 오후 바탕 소리(E2 엿장수)가 방 안까지 이어지지 않음")
+		var dew = c._e5_nodes.get("dew")
+		_ok(dew != null and is_instance_valid(dew) and dew.visible, "건너뛰어도 지금 마당 기록지는 이슬에 번진 것(E5)")
 	if shots:
 		await _wait(func(): return c.prologue_t.size() >= 1, 10.0)
 		await d.wait(3.0); await shot("01_intro01_wide")
@@ -213,10 +216,17 @@ func run() -> void:
 	print("FIRST15 prologue beats %s" % JSON.stringify(c.prologue_t))
 	if not skip_mode:
 		var names: Array = c.prologue_t.map(func(b): return String(b[0]))
-		_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "book_look", "fade_out", "silence", "present", "dip", "last_line", "control"],
+		_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "book_look", "sound_cut", "fade_out", "silence", "present", "E5_insert", "E6_knock", "dip", "last_line", "control"],
 			"프롤로그 박자 차례 %s" % [names])
 		var tot: float = float(c.prologue_t[-1][1]) if c.prologue_t.size() > 0 else 0.0
-		_ok(ctl and tot >= 44.0 and tot <= 58.0, "프롤로그 길이 %.1f초(약 50초 — 44~58)" % tot)
+		# 2026-10-18 E1~E7을 넣어 약 57.5초(E5 끼움 1.2 + E6 1.0 − 와이드 0.8 + 되돌림 컷 0.05). D7 '빨리 조작'은 프롤로그 판정으로 바뀌어 있다 — 길이 상한만 지킨다
+		_ok(ctl and tot >= 46.0 and tot <= 61.0, "프롤로그 길이 %.1f초(약 57.5초 — 46~61)" % tot)
+		var bt := {}
+		for b in c.prologue_t: bt[b[0]] = float(b[1])
+		_ok(bt.has("sound_cut") and bt.fade_out - bt.sound_cut >= 0.2 and bt.fade_out - bt.sound_cut <= 0.45, "E3 소리가 그림보다 먼저 끊김(%.2f초 앞)" % (bt.get("fade_out", 0.0) - bt.get("sound_cut", 0.0)))
+		_ok(bt.E6_knock - bt.E5_insert >= 1.15 and bt.E6_knock - bt.E5_insert <= 1.5, "E5 번진 기록지 끼움 컷 %.2f초(1.2초)" % (bt.get("E6_knock", 0.0) - bt.get("E5_insert", 0.0)))
+		_ok(bt.dip - bt.E6_knock >= 2.3 and bt.dip - bt.E6_knock <= 2.8, "E6 두드림 → 대답 없이 → dip %.2f초(2.5초)" % (bt.get("dip", 0.0) - bt.get("E6_knock", 0.0)))
+		_ok(not c._e2_on, "조작이 돌아오면 지난 오후 바탕 소리(E2)는 멈춤")
 		var bl := 0.0; var fo := 0.0
 		for b in c.prologue_t:
 			if b[0] == "book_look": bl = float(b[1])
@@ -429,6 +439,8 @@ func run() -> void:
 	await _wait(func(): return not mp.visible, 3.0)
 	await _frames(30)
 	var hud = d.get_node_or_null("waypoint_hud")
+	# 방위 줄은 0.25초마다 글을 고친다 — 헤드리스에서 프레임이 빠르면 30프레임이 그보다 짧아 빈 글을 읽었다(2026-10-18 묶음에서 두 번). 2초까지 기다린다
+	if hud != null: await _wait(func(): return String(hud.text) != "", 2.0)
 	_ok(hud != null and String(hud.text).contains("여원재 방면"), "세계 방위 줄 「%s」" % (hud.text if hud != null else "-"))
 	await shot("17_world_bearing")
 	_ok(d.S.is_flag("M_OPEN_SEEN"), "M_OPEN_SEEN")

@@ -6,6 +6,7 @@
 #   basket 엎어진 빈 광주리와 수건 · flour 찢긴 밀가루 자루와 흰 발자국 · claw 나무줄기 높은 발톱 긁힘 · oil 밑동에 바른 참기름(번들거림)
 #   white_paw 문틈 아래 흰 앞발 · hairy_paw 문틈으로 들어온 털 난 앞발(발톱 끝만 밝다) · oil_jars 기름집 참기름 병 · cake_trail 오솔길에 놓은 떡 · feast 잔칫상 · offering 서낭당 떡 공양
 #   bones 영역 어귀 뼈·타다 만 횃불 · jeogori 떨어진 저고리 · torch_fire 횃대 불(빛) · sandal 길가에 닳은 짚신 한 짝(도입부 첫 조사, 단서 아님)
+#   ink_dry 서안 벼루 위 마른 먹 갈라짐(프롤로그 E5 — 서안과 같은 자리에 겹쳐 세움)
 #   seoan 이겸의 서안(낮은 책상 — 펼친 기록책·벼루·붓, 재기획 3단계 첫 15분) · ledger 한 장짜리 밥값 장부(접힌 종이·붓 자국)
 #   brush 창가에 말려 둔 붓(붓걸이·갈라진 붓끝) · ledger_hang 주막 기둥에 걸린 묵은 숙박 장부(끈으로 묶은 책)
 #   paper_dry 말리는 기록지(서장 프롤로그) — n장(1~6)을 멍석 위에 비스듬히 펼친 한지(먹줄), bound=true면 실로 맨 덮인 기록책 한 권
@@ -50,6 +51,7 @@ static func build(params: Dictionary) -> Dictionary:
 		"brush": _brush(m)
 		"ledger_hang": _ledger_hang(m)
 		"paper_dry": fp = _paper_dry(m, int(params.get("n", 4)), bool(params.get("bound", false)))
+		"ink_dry": _ink_dry(m)   # 메인 서장 프롤로그 E5 — 서안 벼루 위 마른 먹 갈라짐
 	var res := m.result("단서_" + kind, fp, false)
 	if kind == "seoan": res.block = true   # 이야기 소품이 충돌체를 세우는 것은 block이 있을 때만(story_director._prop_cols)
 	return res
@@ -321,3 +323,9 @@ static func _paper_dry(m: C.M, n: int, bound: bool) -> Vector2:
 			m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.008, 0.002, 0.3 - k * 0.05), cx - 0.09 + k * 0.08, 0.006 + i * 0.0008, cz, 0, a, 0), INKC), 0.0)
 		if i == 0: m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.09, 0.002, 0.07), cx + 0.06, 0.007, cz + 0.1, 0, a, 0), [0x8a8478, 0x6a645a]), 0.0)   # 젖어 번진 자리
 	return Vector2(1.9, 1.1)
+
+# 메인 서장 프롤로그 E5 시간의 흔적: 서안 벼루(_seoan 0.38,0.335,0.05) 위에 말라 허옇게 뜬 먹 자리와 갈라진 금(번진 기록지는 story/main_p1/dew_paper.gd)
+static func _ink_dry(m: C.M) -> void:
+	m.add("p", "stone", C.PA(Kit.box(0.11, 0.004, 0.17, 0.38, 0.352, 0.05), [0x77746c, 0x5e5b55]), 0.0)   # 말라 허옇게 뜬 먹 자리
+	for i in 4:
+		m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.004, 0.003, 0.09), 0.34 + i * 0.025, 0.355, 0.05, 0, 0.5 - i * 0.3, 0), [0x1a1714, 0x101010]), 0.0)   # 갈라진 금

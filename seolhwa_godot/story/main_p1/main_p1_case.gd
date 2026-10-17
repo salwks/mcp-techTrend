@@ -1,7 +1,8 @@
 # 메인 서장 「이겸의 수상한 편지」(main_p1) — 첫 15분의 연출·판정(재기획 3단계). 데이터: main_p1_data.gd
-#   OP00 = 서장 프롤로그 「이겸과 제자의 어느 날」(거처 이전 4~7단계 — 새 게임만, 약 54초, 건너뛰기 Esc·Space·Enter, 처음 0.5초는 받지 않음):
+#   OP00 = 서장 프롤로그 「이겸과 제자의 어느 날」(거처 이전 4~7단계 — 새 게임만, 약 57초, 건너뛰기 Esc·Space·Enter, 처음 0.5초는 받지 않음):
 #     INTRO_01 마당 와이드·다가감(대사 없음) · 02 투샷 S1.0 P00-B 앞 세 줄 · 03 가깝게 — 붓을 건네려다 손의 먹을 닦음 · 04 기록책을 서안에 펴 둠 → 펼친 쪽 첫 줄 내려다봄(약 2.9초) → 페이드·정적 →
 #     이겸 없는 같은 마당 → 문 쪽 → 0.25초 dip으로 방 안 → “스승님은 어디로 가신 걸까.” → 조작. 옛 9초 여는 장면·“본 것은 본 대로” VO는 없앴다.
+#     + 승인 연출 E1~E7(2026-10-18): 검은 화면 두드림 · 엿장수 · 소리 먼저 끊김 · 바람뿐 · 번진 기록지 끼움 컷 · 대답 없는 두드림 · 심부름꾼의 빠른 두드림(아래 _e2_loop 위 설명)
 #   조사 CAM_OBJECT 0.35 진입·복귀 / 편지 0.4 / OP01 재기획 OP-04: 0–2 상승 · 2–4.5 요천·광한루 쪽 리프레이밍 · 4.5–8.5 「설화록」 · 8.5–9.5 사라짐
 #     (구례 길 장승 어귀 — 조작은 막지 않는다. 다른 길로 가도 놓치지 않게: 거처에서 160m 넘게 · 나루 30m 안).
 #   이야기 인물 대화는 2단계 대화 구도(CAM_TALK_2 0.55 / 복귀 0.45 — story_director·talk_frame)를 그대로 쓴다.
@@ -13,6 +14,7 @@ const D := preload("res://story/main_p1/main_p1_data.gd")
 const Docs := preload("res://scripts/story/documents.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const TitleMenu := preload("res://scripts/story/title_menu.gd")
+const Sound := preload("res://scripts/audio/sound.gd")   # 프롤로그 E1~E7 — 작은 소리·높낮이
 
 const ROOM := ["ledger", "shoes", "brush"]
 const KNOCK_AFTER := 6.0       # 첫 조사 뒤 문 두드림까지(조작 중 — 한가한 시간만 센다)
@@ -40,6 +42,13 @@ var title_running := false
 var title_t := []              # 시험 기록: 제목 연출 단계별 시각
 var steps_log: Array = []      # 시험 기록: [단계, 시각]
 var _knock_t := -1.0
+
+# ---- 프롤로그 승인 연출 E1~E7(2026-10-18 사용자 결정 — prologue_v2_existing_flow_eval.md v1.1. 액자판은 채택하지 않음) ----
+#   E1 검은 화면 느린 두드림 · E2 지난 오후 먼 엿장수 가위(임시 소리) · E3 소리가 그림보다 0.3초 먼저 끊김 · E4 지금 마당은 바람뿐 ·
+#   E5 이슬에 번진 기록지 끼움 컷 1.2초 + 마른 벼루 · E6 대답 없는 두드림 · E7 심부름꾼의 빠른 두드림
+var _e2_on := false            # E2 지난 오후 바탕 소리 도는 중
+var _pro_live := false         # 프롤로그가 아직 건너뛰지 않고 도는 중(늦게 오는 소리 타이머가 방 안에서 울리지 않게)
+var _pt0 := 0.0                # 기록 기준(프롤로그 시작)
 
 func _init(director) -> void:
 	d = director
@@ -267,16 +276,69 @@ func _seat_player(at: String, h: float, facing: String) -> void:
 	d.main.player.facing = facing
 	d.main.player.play("sit", true)
 
-func prologue() -> void:
-	var ob = d.onboard
-	prologue_played = true
-	prologue_t = []
-	var p0 := _now()
-	_skip_ok_at = p0 + PRO_SKIP_GUARD
-	if ob != null: ob.skippable = true; ob.skip = false
-	d.ui._fade.color.a = 1.0
-	d.cutscene(true)
-	if d.ui.get("_toasts") != null: d.ui._toasts.visible = false   # 컷 동안 알림 줄(길목 깃발 발견 등)은 감춘다
+# 프롤로그 소리(기록 줄 FIRST15 sfx — 시각표의 '첫 소리'용)
+func _tsfx(id: String, db := 0.0, pitch := 1.0, at = null) -> void:
+	printerr("FIRST15 sfx %s t=%.2f" % [id, _now() - _pt0])
+	if at != null and db == 0.0 and pitch == 1.0: d.sfx(id, at); return
+	d.sfx_cue.emit(id)
+	Sound.play(id, { "db": db, "pitch": pitch })
+
+# E1·E6 느린 두 번 두드림(같은 knock.wav를 낮고 느리게 — 두 번 사이 약 0.53초) · E7 빠른 여러 번
+func _knock_slow() -> void: _tsfx("knock", -2.0, 0.6)
+
+# E2 지난 오후 바탕(임시): 먼 엿장수 가위 '찰칵, 찰칵'(cup_clink 높게·작게 — 임시 소리) + 새·개울을 이어 튼다(한 번 틀고 끝나는 소리라 E3 끊김이 들리게)
+func _e2_loop() -> void:
+	_e2_on = true
+	var k := 0
+	while _e2_on and _pro_live and d.is_inside_tree():
+		if k % 2 == 0: _tsfx("cup_clink", -21.0, 1.7)   # 임시 — 엿장수 가위
+		if k % 3 == 1: Sound.play("birds_day", { "db": -6.0 })
+		if k % 3 == 2: Sound.play("stream_small", { "db": -6.0 })
+		k += 1
+		await d.get_tree().create_timer(1.9, false).timeout
+
+func _e3_cut() -> void:
+	_e2_on = false
+	_beat("sound_cut", _pt0)
+	Sound.stop_sfx()
+
+# E5 시간의 흔적: 멍석의 기록지 한 장을 '이슬에 번진' 것으로(dew_paper.gd 그림 한 장), 서안 벼루에 마른 먹 갈라짐.
+#   지금 마당에 남는다(조사 대상 아님 — 장면을 다시 열면 원래 기록지 소품으로 돌아온다. 놀이·저장에 영향 없음)
+var _e5_nodes := {}
+const DewPaper := preload("res://story/main_p1/dew_paper.gd")
+func _dew_sheet() -> Node3D:
+	var a: Vector2 = d.anchor("pro_mat")
+	var mi := MeshInstance3D.new(); mi.name = "pro_dew_paper"
+	var pm := PlaneMesh.new(); pm.size = Vector2(0.36, 0.466); mi.mesh = pm
+	var mm := StandardMaterial3D.new(); mm.albedo_texture = DewPaper.texture(); mm.roughness = 0.95
+	mm.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	mi.material_override = mm
+	d._props_root.add_child(mi)
+	mi.global_position = Vector3(a.x - 0.62, d._prop_ground(a) + 0.05 + 0.006, a.y - 0.22)   # 멍석 첫 장 자리(clue.gd _paper_dry i=0)
+	mi.rotation = Vector3(0, 0.08, 0)
+	return mi
+func _e5_props(on: bool) -> void:
+	if on and _e5_nodes.is_empty():
+		_e5_nodes["dew"] = _dew_sheet()
+		var b: Vector2 = d.anchor("pro_desk")
+		var m = d._build_prop({ "kit": "story/clue", "params": { "kind": "ink_dry", "seed": 3179 }, "ry": 0.0, "dy": 0.49 }, b)
+		if m != null: _e5_nodes["ink"] = m
+	for k in _e5_nodes:
+		var x = _e5_nodes[k]
+		if x != null and is_instance_valid(x): x.visible = on
+	_story_prop("p_paper_left", not on)
+
+# 기록지 가까이(E5 끼움 컷의 시작 자리 — 곧바로 번진 종이 위로 좁힌다)
+func _mat_close(sec: float) -> void:
+	var a: Vector2 = d.anchor("pro_mat")
+	var p := Vector2(a.x - 0.35, a.y + 0.1)
+	var y: float = d.world.height_at(p.x, p.y)
+	d.main.rig.focus = { x = p.x, z = p.y, y = y - 0.55 }
+	d.main.rig.override = { "pitch": 52.0, "distance": 3.4, "fov": 32.0 }
+	d.main.rig.glide(sec)
+
+# 지난날 상태 세우기(프롤로그 처음)
+func _past_setup() -> void:
 	d.set_hour(15.0)   # 지난날 오후
 	d.teleport_to("pro_disc", "right")
 	_seat_player("pro_disc", 0.49, "right")
@@ -287,14 +349,33 @@ func prologue() -> void:
 	_story_prop("p_paper_left", false)
 	var post = d.main.get("post")
 	if post != null: post.past = PRO_PAST
+
+func prologue() -> void:
+	var ob = d.onboard
+	prologue_played = true
+	prologue_t = []
+	var p0 := _now()
+	_pt0 = p0
+	_pro_live = true
+	printerr("FIRST15 prologue_clock p0_ms=%d ng0_ms=%d" % [int(p0 * 1000.0), TitleMenu.new_game_t0])
+	_skip_ok_at = p0 + PRO_SKIP_GUARD
+	if ob != null: ob.skippable = true; ob.skip = false
+	d.ui._fade.color.a = 1.0
+	d.cutscene(true)
+	if d.ui.get("_toasts") != null: d.ui._toasts.visible = false   # 컷 동안 알림 줄(길목 깃발 발견 등)은 감춘다
+	_past_setup()
 	_cam({ "focus": "pro_two", "distance": 30.0, "pitch": 46.0, "fov": 34.0 }, 0.01)
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
 	_log("prologue_start")
 	var sk := false
+	_knock_slow()   # E1 검은 화면에 느린 두 번 두드림(0.0~1.2)
 	# ---- INTRO_01 (0–7.4): 솔숲·물·새·바람 — 카메라가 다가가 둘을 한 화면에. 이겸은 멍석에 젖은 기록지를 편다(S1.0). 대사 없음
 	_beat("INTRO_01", p0)
-	d.sfx("wind"); d.sfx("birds_day"); d.sfx("stream_small")
-	d.ui.fade(false, 1.2)
+	# E1: 두드림 동안 검은 화면을 둔다(시작 메뉴가 0.6초에 걸쳐 사라진 뒤 1.0초까지 검정 → 0.8초 페이드) · 바탕 소리는 1.2초에(+E2 엿장수)
+	d.get_tree().create_timer(1.0, false).timeout.connect(func(): if _pro_live: d.ui.fade(false, 0.8))
+	d.get_tree().create_timer(1.2, false).timeout.connect(func():
+		if not _pro_live: return
+		_tsfx("wind"); _tsfx("birds_day"); _tsfx("stream_small"); _e2_loop())
 	_cam({ "focus": "pro_two", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 5.2)
 	for k in range(1, 5):
 		if sk: break
@@ -380,7 +461,10 @@ func prologue() -> void:
 		d.anim_actor("yigyeom_past", "idle")
 		_beat("book_look", p0)
 		_look_page(0.7)   # 펼친 쪽을 내려다본다 — 첫 줄을 읽을 만큼 가깝게
-		sk = await _sw(0.7 + line_sec(BOOK_FIRST))   # 내려다보는 0.7초 + 첫 줄을 온전히 읽는 시간(자막 머묾과 같은 셈)
+		sk = await _sw(0.7 + line_sec(BOOK_FIRST) - 0.3)   # 내려다보는 0.7초 + 첫 줄을 온전히 읽는 시간(자막 머묾과 같은 셈) — 마지막 0.3초는 소리 없이
+		if not sk:
+			_e3_cut()   # E3: 소리가 그림보다 0.3초 먼저 끊긴다
+			sk = await _sw(0.3)
 	if not sk:
 		_beat("fade_out", p0)
 		d.ui.fade(true, 0.9)
@@ -388,16 +472,34 @@ func prologue() -> void:
 	if not sk:
 		_beat("silence", p0)
 		_present_swap()                  # 검은 화면 안에서: 이겸이 없는 지금으로
+		_e5_props(true)   # E5 시간의 흔적(번진 기록지·마른 벼루)
 		sk = await _sw(1.0)
 	if not sk:
 		_beat("present", p0)
-		d.sfx("wind")
+		_tsfx("wind")   # E4 바람뿐(엿장수 소리가 없다)
 		d.ui.fade(false, 0.9)
-		sk = await _sw(2.4)               # 바람뿐인 마당, 남은 물건(평상의 서안·멍석의 기록지 한 장)
+		sk = await _sw(1.6)   # 바람뿐인 마당, 남은 물건(평상의 서안·멍석의 기록지 한 장) — E5 끼움 컷 때문에 2.4 → 1.6초
+	if not sk:
+		_beat("E5_insert", p0)   # E5 이슬에 번진 기록지 끼움 컷(1.2초) — 종이 한 장이 화면 가운데 읽힐 만큼 가깝게
+		_occ_off("pro_mat")
+		_mat_close(0.01)
+		var sp: Vector3 = (_e5_nodes["dew"] as Node3D).global_position if _e5_nodes.get("dew") != null else Vector3.ZERO
+		if sp != Vector3.ZERO:
+			d.main.rig.focus = { x = sp.x, z = sp.z + 0.1, y = sp.y - 0.62 }
+			d.main.rig.override = { "pitch": 60.0, "distance": 1.9, "fov": 32.0 }
+		d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+		sk = await _sw(1.2)
+		if not sk:   # 끼움 컷이 끝나면 와이드로 되돌아 컷 — 가까운 자리에서 문 쪽으로 미끄러지면 땅을 훑고 나그네 등에 부딪혀 보였다
+			_cam({ "focus": "pro_wide", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 0.01)
+			d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+			sk = await _sw(0.05)   # 와이드가 한 번 그려진 뒤에 문 쪽 미끄러짐을 시작(같은 프레임이면 가까운 자리에서 출발한다)
 	if not sk:
 		_occ_off("door")
 		_cam({ "focus": "door", "distance": 8.5, "pitch": 40.0, "fov": 34.0 }, 1.5)   # 조용한 방 쪽으로(너무 다가가 앞벽이 반투명해지기 전까지)
-		sk = await _sw(1.5)
+		_beat("E6_knock", p0)   # E6 대답 없는 집: 밀어 들어가며 느린 두 번 두드림(E1과 같은 소리) → 대답 없이 1.0초
+		sk = await _sw(0.3)
+		if not sk: _knock_slow(); sk = await _sw(1.2)
+		if not sk: sk = await _sw(1.0)
 	if not sk:
 		_beat("dip", p0)
 		await d.ui.fade(true, 0.12)       # 0.25초 dip(나감 0.12 · 들어옴 0.13)으로 방 안
@@ -412,10 +514,14 @@ func prologue() -> void:
 		flag("PROLOGUE_SKIPPED")
 		_beat("skipped", p0)
 		await d.ui.fade(true, 0.08)
+		_pro_live = false
+		_e3_cut()
 		_present_swap()
+		_e5_props(true)
 		_to_room()
 		d.ui.caption("", 0.01)
 		d.ui.fade(false, 0.25)   # 건너뛰면 0.25초 페이드 뒤 방 안(첫15 OP00 건너뛰기와 같다)
+	_pro_live = false; _e2_on = false
 	_beat("control", p0)
 	d.cutscene(false)
 	if d.ui.get("_toasts") != null: d.ui._toasts.visible = true
@@ -502,13 +608,19 @@ func knock() -> void:
 	if f("KNOCKED"): return
 	flag("KNOCKED")
 	_log("knock")
-	d.sfx("knock", "yard_front")
+	# E7 낯선 손: 빠르고 여러 번(knock.wav 두 번 소리를 1.6배 빠르게 두 차례 — 탕탕탕탕, 0.2초 간격). 마당 앞에서 3D로(방 안에서는 조금 멀게)
+	d.sfx_cue.emit("knock")
+	var at: Vector3 = d.audio_pos("yard_front")
+	for i in 2: get_e7_timer(i * 0.4).connect(func(): Sound.play_at("knock", at, d.main.scene_vp, { "pitch": 1.6, "db": 2.0 }))
 	d.ui.caption("마당에서 문 두드리는 소리. “거기 계십니까? 이겸 어른 댁 맞소?”", 3.0)   # 메인 대본 P00-A
 	d.mark_dirty()
 
 # ---------------------------------------------------------------------------
 # P01-A 문턱의 봉투 · P01-B 견주기
 # ---------------------------------------------------------------------------
+func get_e7_timer(sec: float) -> Signal:
+	return d.get_tree().create_timer(maxf(sec, 0.001), false).timeout
+
 func read_letter() -> void:
 	_cam({ "focus": "threshold", "distance": 6.0, "pitch": 54.0 }, LETTER_IN)
 	await d.wait(LETTER_IN)

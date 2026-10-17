@@ -4,7 +4,7 @@
 #
 # 부르는 법(모두 static — const Sound := preload("res://scripts/audio/sound.gd")):
 #   Sound.play(id, {db, pitch, bus})          효과음 한 번. 같은 id를 겹쳐 틀 수 있다(id당 PER_ID개, 넘으면 가장 오래된 것을 끊는다)
-#   Sound.play_at(id, 자리 Vector3, 부모 Node3D, {db, unit, max_dist})   자리 있는 효과음(AudioStreamPlayer3D, 끝나면 사라짐).
+#   Sound.play_at(id, 자리 Vector3, 부모 Node3D, {db, unit, max_dist, pitch})   자리 있는 효과음(AudioStreamPlayer3D, 끝나면 사라짐).
 #                                             부모가 없으면 그냥 play(). 부모가 SubViewport 안이면 그 뷰포트의 3D 듣기를 켠다.
 #   Sound.music(id, 페이드초)                  음악(BGM) 틀기 — 틀던 것이 있으면 맞바꿈(crossfade). ""이면 멈춤
 #   Sound.music_stop(페이드초) · Sound.music_level(0~1, 초)   음악 멈춤 · 음악 크기를 천천히 바꿈(1이 기본)
@@ -264,7 +264,7 @@ func _play_at(id: String, pos: Vector3, parent: Node, opts: Dictionary) -> void:
 	p.unit_size = float(opts.get("unit", 14.0))
 	p.max_distance = float(opts.get("max_dist", 120.0))
 	var pv: float = float(tune.get("pitch", 0.0))
-	p.pitch_scale = 1.0 + randf_range(-pv, pv)
+	p.pitch_scale = float(opts.get("pitch", 1.0)) * (1.0 + randf_range(-pv, pv))   # opts.pitch(메인 서장 E7 빠른 두드림)
 	parent.add_child(p)
 	p.global_position = pos
 	p.finished.connect(p.queue_free)

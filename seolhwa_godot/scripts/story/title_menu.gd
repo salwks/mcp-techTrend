@@ -209,13 +209,14 @@ func _hover(i: int) -> void:
 	_hilite()
 
 # 시험: --titletest=new|continue|shot[:찍을 파일.png] — 불러오기가 끝나면 화면을 찍고 그 메뉴를 고른다(shot: 찍고 끝낸다)
-#   newcap:<폴더> — 새 게임을 고르고 0.5초마다 화면을 찍는다(파일 이름에 새 게임부터 걸린 초). 20초 뒤 끝낸다(--capsecs=N이면 N초 — 서장 프롤로그는 60)
+#   newcap:<폴더> — 새 게임을 고르고 0.5초마다 화면을 찍는다(파일 이름에 새 게임부터 걸린 초). 20초 뒤 끝낸다(--capsecs=N이면 N초 — 서장 프롤로그는 60 · --capstep·--capfine으로 처음 몇 초를 더 촘촘히)
 func _self_test(spec: String) -> void:
 	var p := spec.split(":", true, 1)
 	if p[0] == "newcap":
 		while d.main._loading: await get_tree().process_frame
 		for i in 30: await get_tree().process_frame
-		d.newgame_capture(d.main._abs(p[1]), float(d.main.args.get("capsecs", "20")), 0.5)
+		d.newgame_capture(d.main._abs(p[1]), float(d.main.args.get("capsecs", "20")), 0.5,
+			float(d.main.args.get("capstep", "0")), float(d.main.args.get("capfine", "0")))   # --capstep=초 --capfine=초: 처음 capfine초는 capstep초마다(촘촘한 오프닝 캡처)
 		_pick(0); return
 	while d.main._loading: await get_tree().process_frame
 	for i in 30: await get_tree().process_frame
