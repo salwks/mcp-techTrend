@@ -193,7 +193,9 @@ void fragment() {
 #endif
 """ + TREE_LOD_FRAG + """
 	// 눈앞 1.5m 안 잎 카드는 점무늬로 비운다(1인칭으로 덤불·가지 사이를 지날 때 카드 한 장이 화면을 덮지 않게) + 가림 흐림(fade)
-	float fk = min(fade, smoothstep(0.7, 1.6, -VERTEX.z));
+	// 옆으로 비스듬히 보이는 카드(면이 시선과 거의 나란함)는 늘어진 줄무늬가 되므로 점무늬로 덜어 낸다
+	float graze = abs(dot(normalize(cross(dFdx(VERTEX), dFdy(VERTEX))), normalize(VERTEX)));
+	float fk = min(min(fade, smoothstep(0.7, 1.6, -VERTEX.z)), smoothstep(0.1, 0.32, graze));
 	if (fk < 0.999) {
 		ivec2 fq = ivec2(FRAGCOORD.xy) % 4;
 		const float FB[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
