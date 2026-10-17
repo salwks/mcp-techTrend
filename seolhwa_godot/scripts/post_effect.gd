@@ -30,6 +30,13 @@ var aerial_blur := 0.2
 var aerial_haze := 0.12
 var bloom := true
 var paper := true
+# 먹 그늘(화면 공간 차폐 AO, visual-pass 2026-10-17): Mobile에는 Godot SSAO가 없고, Forward+ SSAO도 이 게임 재질(반구광을 EMISSION으로)의
+#   그늘을 어둡게 하지 못한다 → 깊이 버퍼로 직접 잰다. 1/2 해상도 12표본(4×4 회전) → 깊이를 보는 4×4 흐림 → 최종 패스에서 장면 색에 곱한다.
+#   ao_strength 0이면 끈다(판을 1로 비운다). ao_radius(m) 둘레 가림, ao_far(m) 너머는 서서히 없어진다(먼 산·안개에 얼룩 없게).
+var ao_strength := 0.0
+var ao_radius := 0.9
+var ao_far := 70.0
+var ao_low := false        # 낮음: 4표본(설정 '화면 품질' 낮음)
 var focus_y := 0.45        # 옛 값(틸트시프트) — main.gd·kit_preview가 아직 넣는다. 쓰지 않는다
 var band := 0.07
 var top_bias := 1.0
@@ -53,6 +60,8 @@ var _lin: RID
 var _near: RID
 var _rep: RID
 var _paper_tex: RID
+var _ao_clear := true   # 먹 그늘 판을 1로 비워야 하나(끔·크기 바뀜)
+var ao_ok := false      # 이번 프레임 먹 그늘을 그렸나(시험)
 
 const COMMON := """
 #version 450
@@ -92,6 +101,97 @@ void main() {
 	imageStore(dst, g, vec4(c * 0.25 / p.lum, 1.0));
 }
 """
+# 먹 그늘 0: 1/2 해상도 선형 깊이(m) — MSAA 깊이를 표본마다 읽으면 느리다(M1에서 12표본 ≈ 4ms) → 한 번만 읽어 둔다
+const AO_Z := """
+#ifdef DEPTH_MS
+layout(set = 0, binding = 0) uniform sampler2DMS t_depth;
+#else
+layout(set = 0, binding = 0) uniform sampler2D t_depth;
+#endif
+layout(r32f, set = 0, binding = 1) uniform restrict writeonly image2D dst;
+layout(push_constant, std430) uniform P { vec2 full; vec2 inv_half; float pa; float pb; float pad0; float pad1; } p;
+void main() {
+	ivec2 g = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 sz = imageSize(dst);
+	if (any(greaterThanEqual(g, sz))) return;
+	vec2 uv = (vec2(g) + 0.5) * p.inv_half;
+#ifdef DEPTH_MS
+	float d = texelFetch(t_depth, clamp(ivec2(uv * p.full), ivec2(0), ivec2(p.full) - 1), 0).r;
+#else
+	float d = textureLod(t_depth, uv, 0.0).r;
+#endif
+	imageStore(dst, g, vec4(d <= 1e-6 ? 1e5 : p.pb / max(d + p.pa, 1e-7)));
+}
+"""
+# 먹 그늘 1: 선형 깊이로 보기 공간 자리·법선을 풀고 둘레 표본이 반구 안에서 가리는 정도(Alchemy AO 꼴)
+const AO := """
+layout(set = 0, binding = 0) uniform sampler2D t_z;
+layout(rg16f, set = 0, binding = 1) uniform restrict writeonly image2D dst;
+layout(push_constant, std430) uniform P { vec2 half_sz; vec2 inv_half; float p00; float p11; float radius; float far_m; float n; float pad0; float pad1; float pad2; } p;
+vec3 vpos(ivec2 c) {
+	float D = texelFetch(t_z, c, 0).r;
+	vec2 ndc = (vec2(c) + 0.5) * p.inv_half * 2.0 - 1.0;
+	return vec3(ndc.x / p.p00 * D, -ndc.y / p.p11 * D, -D);
+}
+void main() {
+	ivec2 g = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 sz = imageSize(dst);
+	if (any(greaterThanEqual(g, sz))) return;
+	vec3 P = vpos(g);
+	float D = -P.z;
+	if (D > p.far_m * 1.2) { imageStore(dst, g, vec4(0.0, D, 0.0, 0.0)); return; }
+	ivec2 mx = sz - 1;
+	vec3 Pr = vpos(min(g + ivec2(1, 0), mx)), Pl = vpos(max(g - ivec2(1, 0), ivec2(0)));
+	vec3 Pd = vpos(min(g + ivec2(0, 1), mx)), Pu = vpos(max(g - ivec2(0, 1), ivec2(0)));
+	vec3 dx = abs(Pr.z - P.z) < abs(P.z - Pl.z) ? Pr - P : P - Pl;
+	vec3 dy = abs(Pd.z - P.z) < abs(P.z - Pu.z) ? Pd - P : P - Pu;
+	vec3 N = normalize(cross(dy, dx));
+	if (N.z < 0.0) N = -N;
+	vec2 r_px = vec2(p.radius * p.p00, p.radius * p.p11) * 0.5 / D * p.half_sz;
+	const float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
+	ivec2 q = g % 4;
+	float rot = BAYER[q.y * 4 + q.x] / 16.0 * 6.2832;
+	int n = int(p.n);
+	float occ = 0.0;
+	float r2 = p.radius * p.radius;
+	for (int i = 0; i < n; i++) {
+		float t = (float(i) + 0.5) / float(n);
+		float a = rot + float(i) * 2.39996;   // 황금각 나선
+		ivec2 sc = g + ivec2(vec2(cos(a), sin(a)) * sqrt(t) * r_px);
+		if (any(lessThan(sc, ivec2(0))) || any(greaterThan(sc, mx))) continue;
+		vec3 v = vpos(sc) - P;
+		if (v.z < -p.radius * 4.0) continue;   // 하늘·먼 곳
+		float vv = dot(v, v);
+		float h = max(dot(v, N) - 0.002 * D - 0.05, 0.0) / (vv + 0.01 * r2);
+		occ += h * max(1.0 - vv / (r2 * 2.0), 0.0);
+	}
+	occ = clamp(occ * 3.2 * p.radius / float(n), 0.0, 1.0);
+	imageStore(dst, g, vec4(occ, D, 0.0, 0.0));
+}
+"""
+# 먹 그늘 2: 깊이를 보는 4×4 흐림(회전 무늬 4×4를 꼭 덮는다) → 곱할 값(1 = 그늘 없음)
+const AO_BLUR := """
+layout(set = 0, binding = 0) uniform sampler2D src;
+layout(rgba16f, set = 0, binding = 1) uniform restrict writeonly image2D dst;
+layout(push_constant, std430) uniform P { vec2 inv_half; float strength; float far_m; } p;
+void main() {
+	ivec2 g = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 sz = imageSize(dst);
+	if (any(greaterThanEqual(g, sz))) return;
+	vec2 c0 = texelFetch(src, g, 0).rg;
+	float D = c0.g;
+	float s = 0.0, w = 0.0;
+	for (int y = -2; y < 2; y++) for (int x = -2; x < 2; x++) {
+		vec2 c = texelFetch(src, clamp(g + ivec2(x, y), ivec2(0), sz - 1), 0).rg;
+		float k = max(0.0, 1.0 - abs(c.g - D) / (0.04 * D + 0.1));
+		s += c.r * k; w += k;
+	}
+	float occ = w > 0.0 ? s / w : 0.0;
+	float fade = 1.0 - smoothstep(p.far_m * 0.6, p.far_m, D);
+	float m = 1.0 - p.strength * occ * fade;
+	imageStore(dst, g, vec4(m, m, m, 1.0));
+}
+"""
 const FINAL := """
 layout(set = 0, binding = 0) uniform sampler2D t_scene;
 layout(set = 0, binding = 1) uniform sampler2D t_blur;
@@ -103,6 +203,7 @@ layout(set = 0, binding = 5) uniform sampler2DMS t_depth;
 #else
 layout(set = 0, binding = 5) uniform sampler2D t_depth;
 #endif
+layout(set = 0, binding = 6) uniform sampler2D t_ao;   // 먹 그늘(1/2 해상도 곱할 값, 끄면 1)
 layout(push_constant, std430) uniform P {
 	vec2 texel; vec2 paper_scale;
 	float aspect; float focus; float pa; float lum;
@@ -140,6 +241,10 @@ void main() {
 	if (any(greaterThanEqual(g, sz))) return;
 	vec2 uv = (vec2(g) + 0.5) / vec2(sz);
 	float vy = 1.0 - uv.y;
+	float ao = textureLod(t_ao, uv, 0.0).r;
+#ifdef AOVIS
+	imageStore(dst, g, vec4(to_linear(vec3(ao)) / p.lum, 1.0)); return;
+#endif
 	vec3 c = textureLod(t_scene, uv, 0.0).rgb * p.lum;
 	float amt = 0.0;
 	float haze = 0.0;
@@ -162,6 +267,7 @@ void main() {
 		if (vis) { imageStore(dst, g, vec4(to_linear(vec3(amt)), 1.0) / p.lum); return; }
 		c = mix(c, textureLod(t_blur, uv, 0.0).rgb * p.lum, amt);
 	}
+	c *= ao * vec3(1.0, 0.995, 0.985) + (1.0 - ao) * vec3(0.06, 0.05, 0.045);   // 그늘은 조금 따뜻한 먹빛으로
 	if (p.ink > 0.0 && amt < 0.6) {
 		float l = sqrt(luma(textureLod(t_scene, uv - vec2(p.texel.x, 0.0), 0.0).rgb * p.lum));
 		float r = sqrt(luma(textureLod(t_scene, uv + vec2(p.texel.x, 0.0), 0.0).rgb * p.lum));
@@ -226,11 +332,15 @@ func _build(fmt: int) -> void:
 	_fmt = fmt
 	print("POST color format ", fmt, " ", _fmt_name(fmt), " lum_mult=", lum_mult)
 	var fname := _fmt_name(fmt)
-	var srcs := { blur = BLUR, bright = BRIGHT, final = FINAL, final_ms = "#define DEPTH_MS\n" + FINAL }
+	var srcs := { blur = BLUR, bright = BRIGHT, final = FINAL, final_ms = "#define DEPTH_MS\n" + FINAL, ao_z = AO_Z, ao_z_ms = "#define DEPTH_MS\n" + AO_Z, ao = AO, ao_blur = AO_BLUR }
 	for k in srcs:
 		var src := RDShaderSource.new()
 		src.language = RenderingDevice.SHADER_LANGUAGE_GLSL
-		src.source_compute = COMMON + (srcs[k] as String).replace("%FMT%", fname)
+		var body := srcs[k] as String
+		var defs := "#define AOVIS\n" if OS.has_environment("AOVIS") and String(k).begins_with("final") else ""
+		if body.begins_with("#define"):
+			var d0 := body.get_slice("\n", 0) + "\n"; body = body.substr(d0.length()); defs += d0
+		src.source_compute = COMMON + defs + body.replace("%FMT%", fname)
 		var spirv := rd.shader_compile_spirv_from_source(src)
 		if spirv.compile_error_compute != "":
 			push_error("post %s: %s" % [k, spirv.compile_error_compute]); return
@@ -258,10 +368,10 @@ func _free_textures() -> void:
 	for k in _tex: if _tex[k].is_valid(): rd.free_rid(_tex[k])
 	_tex.clear()
 
-func _mk(w: int, h: int) -> RID:
+func _mk(w: int, h: int, fmt := -1) -> RID:
 	var tf := RDTextureFormat.new()
 	tf.width = maxi(1, w); tf.height = maxi(1, h)
-	tf.format = _fmt
+	tf.format = _fmt if fmt < 0 else fmt
 	tf.usage_bits = RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_STORAGE_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT | RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT
 	return rd.texture_create(tf, RDTextureView.new())
 
@@ -274,6 +384,10 @@ func _ensure(size: Vector2i) -> void:
 	_tex.ha = _mk(half.x, half.y); _tex.hb = _mk(half.x, half.y)
 	_tex.qa = _mk(quarter.x, quarter.y); _tex.qb = _mk(quarter.x, quarter.y)
 	_tex.out = _mk(size.x, size.y)
+	_tex.ao_z = _mk(half.x, half.y, RenderingDevice.DATA_FORMAT_R32_SFLOAT)
+	_tex.ao_a = _mk(half.x, half.y, RenderingDevice.DATA_FORMAT_R16G16_SFLOAT)
+	_tex.ao_b = _mk(half.x, half.y, RenderingDevice.DATA_FORMAT_R16G16B16A16_SFLOAT)
+	_ao_clear = true
 
 func _samp(binding: int, tex: RID, sampler := RID()) -> RDUniform:
 	var u := RDUniform.new()
@@ -327,6 +441,18 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 		var st := (sigma / 2.0) * 0.75
 		_dispatch("blur", [_samp(0, color), _img(1, _tex.ha)], PackedFloat32Array([st / half.x, 0, 1.0 / half.x, 1.0 / half.y]), half)
 		_dispatch("blur", [_samp(0, _tex.ha), _img(1, _tex.hb)], PackedFloat32Array([0, st / half.y, 1.0 / half.x, 1.0 / half.y]), half)
+	ao_ok = false
+	var ao_depth: RID = sb.get_texture("render_buffers", "depth_msaa") if ms else sb.get_depth_layer(0)
+	if ao_strength > 0.001 and ao_depth.is_valid():
+		var pr := proj
+		_dispatch("ao_z_ms" if ms else "ao_z", [_samp(0, ao_depth, _near), _img(1, _tex.ao_z)], PackedFloat32Array([size.x, size.y, 1.0 / half.x, 1.0 / half.y, pr.z.z, pr.w.z, 0, 0]), half)
+		_dispatch("ao", [_samp(0, _tex.ao_z, _near), _img(1, _tex.ao_a)], PackedFloat32Array([half.x, half.y, 1.0 / half.x, 1.0 / half.y,
+			pr.x.x, pr.y.y, ao_radius, ao_far, 4.0 if ao_low else 8.0, 0, 0, 0]), half)
+		_dispatch("ao_blur", [_samp(0, _tex.ao_a, _near), _img(1, _tex.ao_b)], PackedFloat32Array([1.0 / half.x, 1.0 / half.y, ao_strength, ao_far]), half)
+		ao_ok = true; _ao_clear = true
+	elif _ao_clear:
+		rd.texture_clear(_tex.ao_b, Color(1, 1, 1, 1), 0, 1, 0, 1)
+		_ao_clear = false
 	var bloom_k: float = state.bloom * 0.45 if bloom else 0.0
 	if bloom_k > 0.001:
 		_dispatch("bright", [_samp(0, color), _img(1, _tex.qa)], PackedFloat32Array([1.0 / size.x, 1.0 / size.y, 1.0 / quarter.x, 1.0 / quarter.y, state.thr, lum_mult, 0, 0]), quarter)
@@ -344,5 +470,5 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 		aerial_start, aerial_range, aerial_blur if depth_ok else 0.0, aerial_haze if depth_ok else 0.0])
 	var paper_rid: RID = _paper_tex if _paper_tex.is_valid() else _tex.hb
 	var depth_rid: RID = depth if depth_ok else _tex.hb   # 깊이가 없으면 아무 판(far_k·near_k = 0이라 읽지 않는다)
-	_dispatch("final_ms" if ms and depth_ok else "final", [_samp(0, color), _samp(1, _tex.hb), _samp(2, _tex.qa), _samp(3, paper_rid, _rep), _img(4, _tex.out), _samp(5, depth_rid, _near)], push, size)
+	_dispatch("final_ms" if ms and depth_ok else "final", [_samp(0, color), _samp(1, _tex.hb), _samp(2, _tex.qa), _samp(3, paper_rid, _rep), _img(4, _tex.out), _samp(5, depth_rid, _near), _samp(6, _tex.ao_b)], push, size)
 	rd.texture_copy(_tex.out, color, Vector3.ZERO, Vector3.ZERO, Vector3(size.x, size.y, 1), 0, 0, 0, 0)

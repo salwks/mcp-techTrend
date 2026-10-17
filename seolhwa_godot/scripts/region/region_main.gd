@@ -25,7 +25,7 @@
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
-# 비교용 끄기: --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
+# 비교용 끄기: --noao(먹 그늘) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
 const RegionWorld := preload("res://scripts/region/region_world.gd")
@@ -311,6 +311,20 @@ static func fit_window(win: Window) -> void:
 	win.size = sz
 	win.position = ur.position + (ur.size - sz) / 2
 
+# 렌더러 시험(visual-pass 2단계, 2026-10-17): --envfx=ssao,ssil,vfog,glow,sdfgi — Godot 환경 효과를 켜 본다(Forward+에서만 듣는다:
+#   `godot --rendering-method forward_plus …`). 이 게임 재질은 반구광을 EMISSION으로 넣어 SSAO가 그늘(반구광)을 어둡게 하지 못한다 — visual-pass.md §1
+func _env_trial(spec: String) -> void:
+	var fx := spec.split(",", false)
+	if fx.has("ssao"):
+		env.ssao_enabled = true; env.ssao_radius = 1.2; env.ssao_intensity = 2.5; env.ssao_light_affect = 1.0; env.ssao_detail = 0.5
+	if fx.has("ssil"): env.ssil_enabled = true; env.ssil_radius = 4.0
+	if fx.has("vfog"):
+		env.volumetric_fog_enabled = true; env.volumetric_fog_density = 0.004; env.volumetric_fog_albedo = Color(0.9, 0.88, 0.82)
+		env.volumetric_fog_length = 96.0
+	if fx.has("glow"): env.glow_enabled = true; env.glow_intensity = 0.4; env.glow_bloom = 0.05
+	if fx.has("sdfgi"): env.sdfgi_enabled = true
+	print("ENVFX ", fx, " method=", RenderingServer.get_current_rendering_method())
+
 func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
@@ -343,6 +357,7 @@ func _build_scene() -> void:
 	env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	var we := WorldEnvironment.new(); we.environment = env
 	root.add_child(we)
+	if args.has("envfx"): _env_trial(String(args.envfx))
 
 	sun = DirectionalLight3D.new()
 	sun.shadow_enabled = true
@@ -753,6 +768,14 @@ var _dof_fp := false
 const AERIAL_BLUR := 0.2
 const AERIAL_HAZE := 0.12
 const DOF_FP := { far = 0.35, near = 0.0, scale = 3.0, margin = 3.0 }
+const AO_STRENGTH := 0.85   # 먹 그늘 세기(0~1)
+const AO_RADIUS := 1.2      # m — 3인칭(벽 밑·기단·인물 발밑)
+const AO_RADIUS_FP := 0.5   # 1인칭(가까워 같은 화면 크기)
+# 설정 '화면 품질' 낮음(시험·촬영은 늘 높음 — 바꾸려면 --gfx=low)
+func gfx_low() -> bool:
+	if args.has("gfx"): return String(args.gfx) == "low"
+	return not _view_automation() and GameSettings.get_v("gfx") == "low"
+
 func _update_dof(dt: float) -> void:
 	var look: Vector3 = rig.target
 	if fp_view(): look = cam.global_position - cam.global_transform.basis.z * 7.0
@@ -772,6 +795,10 @@ func _update_dof(dt: float) -> void:
 	post.aerial_blur = 0.0 if off else AERIAL_BLUR * mul   # 먼 산 대기 원근(150m 밖만 — C67 v2)
 	post.aerial_haze = 0.0 if off else AERIAL_HAZE * mul
 	post.aerial_range = (cam.far - post.aerial_start) if fp_view() else 450.0   # 1인칭(먼 끝 260m): 150m~먼 끝(하늘 그림판의 먼 산)까지
+	# 먹 그늘(post_effect AO — visual-pass): 설정 '화면 품질' 낮음이면 표본 반. --noao 비교 끄기
+	post.ao_strength = 0.0 if args.has("noao") else float(args.get("ao", str(AO_STRENGTH)))
+	post.ao_low = gfx_low()
+	post.ao_radius = AO_RADIUS_FP if fp_view() else AO_RADIUS
 	post.dof_far_scale += (float(sp.scale) - post.dof_far_scale) * k
 	post.dof_margin += (float(sp.margin) - post.dof_margin) * k
 	post.dof_focus += (want_f - post.dof_focus) * (1.0 if k >= 1.0 else minf(1.0, dt * 6.0))

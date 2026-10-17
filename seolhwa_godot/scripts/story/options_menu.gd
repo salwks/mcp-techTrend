@@ -75,6 +75,7 @@ func _ready() -> void:
 	_add(box, k, { id = "view", kind = "opt", key = "view", values = GameSettings.VIEW, names = GameSettings.VIEW_LABEL, text = "시점 (0 키)" })
 	_add(box, k, { id = "mouse_sens", kind = "opt", key = "mouse_sens", values = GameSettings.MOUSE_SENS, names = GameSettings.MOUSE_SENS_LABEL, text = "마우스 감도 (1인칭)" })
 	_add(box, k, { id = "dof", kind = "opt", key = "dof", values = GameSettings.DOF, names = GameSettings.DOF_LABEL, text = "깊이 흐림" })
+	_add(box, k, { id = "gfx", kind = "opt", key = "gfx", values = GameSettings.GFX, names = GameSettings.GFX_LABEL, text = "화면 품질" })
 	_add(box, k, { id = "vol_master", kind = "opt", key = "vol_master", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 전체" })
 	_add(box, k, { id = "vol_bgm", kind = "opt", key = "vol_bgm", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 음악" })
 	_add(box, k, { id = "vol_sfx", kind = "opt", key = "vol_sfx", values = GameSettings.VOLUME, names = GameSettings.VOLUME_LABEL, text = "소리 — 효과음" })
