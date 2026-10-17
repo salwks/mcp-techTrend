@@ -82,6 +82,13 @@ var pbytes: PackedByteArray
 var _p_roads: PackedByteArray   # 길만 그린 상태(배치 다시 읽기 때 되돌림)
 var paint_tex: ImageTexture
 var _paint_dirty := false
+# 땅 꾸밈 칠하기(visual-pass 2026-10-17 — 지형 셰이더 town_layer): 높이 격자와 같은 칸, RGBA8
+#   R = 건물(지붕 있는 키트) 처마 선까지 부호 거리 128 + d·16(안쪽 −, ±8m) — 낙숫물 줄·처마 밑 그늘·기단 때·담 밑 풀
+#   G = 장터 정도(0~255) — 짚 부스러기·배추 잎 · B = 물가(우물·빨래터·나루) 거리·16(16m까지) — 진흙·물웅덩이
+#   A = 박석 깐 마당(관아·향교·객사 등 담 안): 0 밖, 1 + 안쪽 가장자리 거리·32 — 경계석 줄
+var dbytes := PackedByteArray()
+var dress_tex: ImageTexture
+var _dress_dirty := false
 var landuse_tex: ImageTexture
 var lights_version := 0
 var stats := { near = 0, mid = 0, jobs = 0, scatter_done = 0, statics = 0 }
@@ -306,6 +313,77 @@ func paint_yard(c: Vector2, ry: float, half: Vector2) -> void:
 				if dq < pbytes[k]: pbytes[k] = dq
 			lx += sx; lz += sz; k += 4
 	_paint_dirty = true
+
+func _dress_init() -> void:
+	if not dbytes.is_empty(): return
+	var img := Image.create(hnx, hnz, false, Image.FORMAT_RGBA8)
+	img.fill(Color(1, 0, 1, 0))   # R 255(처마에서 멂) · B 255(물가에서 멂)
+	dbytes = img.get_data()
+	_dress_dirty = true
+
+# 회전 사각형 둘레 칸 범위
+func _rect_cells(c: Vector2, R: float) -> Rect2i:
+	var i0 := clampi(floori((c.x - R - hx0) / hstep), 0, hnx - 1); var i1 := clampi(ceili((c.x + R - hx0) / hstep), 0, hnx - 1)
+	var j0 := clampi(floori((c.y - R - hz0) / hstep), 0, hnz - 1); var j1 := clampi(ceili((c.y + R - hz0) / hstep), 0, hnz - 1)
+	return Rect2i(i0, j0, i1 - i0, j1 - j0)
+
+# 건물 처마 선(footprint) 부호 거리 → R(합집합 = 최소)
+func dress_building(c: Vector2, ry: float, half: Vector2) -> void:
+	_dress_init()
+	var ca := cos(ry); var sa := sin(ry)
+	var rc := _rect_cells(c, half.length() + 3.5)   # 셰이더는 바깥 2.5m까지만 쓴다
+	var sx := hstep * ca; var sz := hstep * sa
+	for j in range(rc.position.y, rc.end.y + 1):
+		var dz := hz0 + j * hstep - c.y
+		var dx0 := hx0 + rc.position.x * hstep - c.x
+		var lx := dx0 * ca - dz * sa; var lz := dx0 * sa + dz * ca
+		for i in range(rc.position.x, rc.end.x + 1):
+			var qx := absf(lx) - half.x; var qz := absf(lz) - half.y
+			lx += sx; lz += sz
+			if qx > 3.0 or qz > 3.0: continue
+			var sd := Vector2(maxf(qx, 0.0), maxf(qz, 0.0)).length() + minf(maxf(qx, qz), 0.0)
+			var v := clampi(roundi(128.0 + sd * 16.0), 0, 255)
+			var k := (j * hnx + i) * 4
+			if v < dbytes[k]: dbytes[k] = v
+	_dress_dirty = true
+
+# 둥근 범위: ch 1 = 장터 정도(가운데 255 → r에서 0, 최대값), 2 = 물가 거리(최소값)
+func dress_disc(ch: int, c: Vector2, r: float) -> void:
+	_dress_init()
+	var rc := _rect_cells(c, r)
+	for j in range(rc.position.y, rc.end.y + 1):
+		for i in range(rc.position.x, rc.end.x + 1):
+			var d := Vector2(hx0 + i * hstep, hz0 + j * hstep).distance_to(c)
+			if d > r: continue
+			var k := (j * hnx + i) * 4 + ch
+			if ch == 1: dbytes[k] = maxi(dbytes[k], clampi(roundi(255.0 * (1.0 - d / r)), 0, 255))
+			else: dbytes[k] = mini(dbytes[k], clampi(roundi(d * 16.0), 0, 255))
+	_dress_dirty = true
+
+# 박석 마당: 회전 사각형 안 — 1 + 안쪽 가장자리까지 거리·32
+func dress_paved(c: Vector2, ry: float, half: Vector2) -> void:
+	_dress_init()
+	var ca := cos(ry); var sa := sin(ry)
+	var rc := _rect_cells(c, half.length() + 1.0)
+	for j in range(rc.position.y, rc.end.y + 1):
+		for i in range(rc.position.x, rc.end.x + 1):
+			var d := Vector2(hx0 + i * hstep - c.x, hz0 + j * hstep - c.y)
+			var lx := d.x * ca - d.y * sa; var lz := d.x * sa + d.y * ca
+			var inner := minf(half.x - absf(lx), half.y - absf(lz))
+			if inner < -1.0: continue
+			var k := (j * hnx + i) * 4 + 3
+			dbytes[k] = maxi(dbytes[k], clampi(roundi(1.0 + maxf(inner + 1.0, 0.0) * 32.0), 1, 255))
+	_dress_dirty = true
+
+func _dress_commit() -> void:
+	if not _dress_dirty or dbytes.is_empty(): return
+	_dress_dirty = false
+	var img := Image.create_from_data(hnx, hnz, false, Image.FORMAT_RGBA8, dbytes)
+	if dress_tex == null:
+		dress_tex = ImageTexture.create_from_image(img)
+		for m in [mat_near, mat_mid]:
+			if m != null: m.set_shader_parameter("dress_tex", dress_tex); m.set_shader_parameter("dress_on", 1.0)
+	else: dress_tex.update(img)
 
 # 카메라 구역(웹 마을과 같은 값): 권역 기본 22m·40°, 고을·장터 22/40, 숲·산길 20/48(플레이어 둘레 숲을 보고 움직이는 구역),
 # 고개 22/30(웹 고갯마루). 뒤에 있는 구역이 이긴다(CameraRig). region.json.camera_zones가 있으면 맨 뒤에 붙인다.
@@ -2078,6 +2156,7 @@ func reset_edits() -> void:
 	_ponds.clear()
 	hbytes = _h_orig.duplicate(); lbytes = _l_orig.duplicate()
 	pbytes = _p_roads.duplicate(); _paint_dirty = true
+	if not dbytes.is_empty(): dbytes = PackedByteArray(); _dress_init()
 	_veg_excl.clear(); _walk_grid.clear(); _floor_grid.clear(); _walks.clear()
 	for k in _veg_cond: _veg_cond[k].on = false
 	_veg_cond_apply_all()
@@ -2136,6 +2215,7 @@ static func _to_local(d: Vector2, ca: float, sa: float) -> Vector2:
 # 고친 높이·토지이용을 GPU 텍스처에 올리고, 타일(높이 범위·식생)을 다시 만든다
 func commit_terrain() -> void:
 	if farm != null: farm.commit()
+	_dress_commit()
 	if _paint_dirty:
 		_paint_dirty = false
 		paint_tex.update(Image.create_from_data(hnx, hnz, false, Image.FORMAT_RGBA8, pbytes))

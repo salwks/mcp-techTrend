@@ -101,6 +101,7 @@ func reload() -> void:
 func load_all() -> void:
 	var t0 := Time.get_ticks_msec()
 	_mtimes = {}
+	_dress_excl = []
 	var raw := []
 	crowds = []
 	for f in files():
@@ -109,6 +110,7 @@ func load_all() -> void:
 		if not (d is Dictionary) or not d.has("items"):
 			push_warning("배치 파일 형식 오류: " + f); continue
 		var fcase := String(d.get("case", ""))
+		_dress_note_file(f, d)
 		for it in d.items:
 			if not (it is Dictionary and it.has("kit")): continue
 			var item: Dictionary = it
@@ -212,6 +214,7 @@ func load_all() -> void:
 			var pv: PackedVector2Array = ol if ol is PackedVector2Array else PackedVector2Array(ol)
 			world.carve_water(Transform3D(Basis(Vector3.UP, r.ry), Vector3(r.x, y0, r.z)), pv, float(info.water.get("y", 0.0)))
 			stats.ponds = stats.get("ponds", 0) + 1
+	if world.has_method("dress_building") and dress_ground: _paint_dress(composite, place)
 	world.commit_terrain()
 	# 4) 높이·변환·걷기 면(다리는 params로 — 짓기 전에도 걸을 수 있게)을 정하고 타일별 대기열에 넣는다
 	for r in place:
@@ -227,11 +230,13 @@ func load_all() -> void:
 		var t: Vector2i = world.tile_of(r.x, r.z)
 		if not _pending.has(t): _pending[t] = []
 		_pending[t].append(r)
+	if dress_props: _plan_dress(place)
 	world.tile_listener = request_tile
 	for t in world.tiles: request_tile(t)
 	stats.ms = Time.get_ticks_msec() - t0
 	if world.get("decals") != null: world.decals.reload_data()   # 데칼은 터 고르기 뒤 높이로
 	print("PLACEMENT files=%d items=%d pieces=%d built_now=%d flatten=%d yards=%d walks=%d missing=%d gated=%d crowds=%d ms=%d (나머지는 타일이 가까워질 때 백그라운드로 짓는다)" % [stats.files, stats.items, place.size(), stats.builds_now, stats.flatten, stats.yards, stats.walks, stats.missing, stats.gated, crowds.size(), stats.ms])
+	print("DRESS buildings=%d props_planned=%d excl=%d" % [stats.get("dress_buildings", 0), stats.get("dress_planned", 0), _dress_excl.size()])
 
 # ---------------------------------------------------------------------------
 # 지연 짓기: 타일이 생기면(중경 포함) 그 타일 항목의 키트를 작업 스레드에서 짓고, 메인 스레드는 프레임당 조금씩 놓는다
@@ -328,6 +333,7 @@ func _place_one(r: Dictionary) -> void:
 	var k := _key(r.kit, r.params)
 	var info = _cache.get(k)
 	if not (info is Dictionary) or info.get("node") == null: return
+	if r.get("dress", false) and not _dress_ok(r): stats.dress_skipped = int(stats.get("dress_skipped", 0)) + 1; return
 	if not _used.has(k): KitCache.save_if_needed(info)
 	var node: Node3D
 	# 같은 키트를 여러 번 놓을 때: Node.duplicate()는 느리다(한양 5천 개에 2.5s) → 처음 쓸 때 PackedScene으로 싸 두고 instantiate
@@ -381,6 +387,183 @@ func stop() -> void:
 	_cancel = false
 
 # 마당 흙을 칠할 키트: 건물·소품(담장·성벽·다리·나무 제외)
+# ---- 땅 꾸밈 칠하기(visual-pass — region_world.dbytes, 지형 셰이더 town_layer) ----
+# 지붕 있는 건물: 처마 선 부호 거리(낙숫물 줄·처마 밑 그늘·기단 때) · 장터: 짚·배추 잎 · 물가: 진흙·웅덩이 · 관아·궁궐·향교 담 안: 박석
+const DRESS_NOT_BUILDING := ["wall", "seong_", "pond", "tap", "seok", "rock", "gyo", "dan", "maaebul", "tumulus", "cheomseongdae", "dolhareubang",
+	"jangsangot", "giringgul", "eulmildae", "bansong", "madang", "naru", "cheoyongam", "gimnyeongsagul", "samseonghyeol", "dangganjiju",
+	"todam", "fence", "village_square", "stone_terrace", "house_compound", "jangseung", "sotdae", "torch_post", "teotbat", "yard_props",
+	"props", "firewood", "jige", "haystack", "jangdok", "well", "jingeom", "bridge", "narutbae", "ppallaeteo", "cairn", "jwapan", "saripmun", "ijeongpyo", "myo", "sinmok", "dotbae", "waterfall", "tteotmok", "jounseon", "nature/", "story/", "scenario/"]
+const DRESS_PAVED := ["landmark/gwana", "landmark/hyanggyo", "landmark/hyeon_gwana", "landmark/gn_gwana", "landmark/gn_imyeonggwan", "landmark/hh_bongung",
+	"landmark/jj_mokgwana", "landmark/hy_gyeongbokgung", "landmark/hy_changdeokgung", "landmark/gj_bulguksa"]
+const DRESS_MARKET := ["market_shop", "jwapan", "hy_sijeon"]
+const DRESS_WET := { "village/well": 5.0, "village/ppallaeteo": 6.0, "village/narutbae": 7.0, "village/jingeom": 4.0 }
+
+# ---- 생활 소품 저절로 놓기(visual-pass 1단계) ----
+# 집(지붕 있는 키트)마다 뒤·옆·앞 모서리 처마 밖 0.5~1m에 2~4개. 앞 가운데(문·댓돌 쪽 +z)·길(가장자리 1.6m)·이야기 배치·조건부 배치·역참 둘레는 비운다.
+# 놓는 순간(그 타일 정적 물체가 놓인 뒤) 둘레가 막혔는지(world.blocked)와 바깥으로 지나갈 틈(1.3m)을 다시 본다 — 길·문·댓돌·앉을 자리를 막지 않게.
+# 같은 kit+params 몇 벌만 쓴다(키트 캐시·PackedScene 재사용). --nodress로 끔(비교).
+var dress_props := true
+var dress_ground := true   # 땅 꾸밈 칠하기(--noground로 끔)
+var _dress_excl := []   # [Vector2 자리, 반지름]
+var chimneys := []      # 굴뚝 연기 자리(Vector3 — ambient_fx): 사람 사는 초가·주막·너와·굴피·귀틀집의 반쯤
+const CHIMNEY_KITS := ["village/choga", "village/choga_low", "village/jumak", "village/neowa_house", "village/gulpi_house", "village/guitul_house"]
+const DRESS_SETS := {
+	common = [
+		{ kit = "village/props", params = { kind = "dok", n = 3, seed = 9101 }, r = 0.8, d = 1.0 },
+		{ kit = "village/props", params = { kind = "dok", n = 2, seed = 9102 }, r = 0.65, d = 0.9 },
+		{ kit = "village/props", params = { kind = "soguri", fill = "grain", seed = 9103 }, r = 0.42, d = 0.8 },
+		{ kit = "village/props", params = { kind = "soguri", fill = "veg", seed = 9104 }, r = 0.42, d = 0.8 },
+		{ kit = "village/props", params = { kind = "byeotdan", seed = 9105 }, r = 0.85, d = 1.4 },
+		{ kit = "village/firewood", params = { seed = 9106, len = 1.6, rows = 3 }, r = 0.9, d = 1.0, wall = true },
+		{ kit = "village/jige", params = { seed = 9107, load = "wood" }, r = 0.45, d = 1.0 },
+		{ kit = "village/props", params = { kind = "jeolgu", seed = 9108 }, r = 0.35, d = 0.7 },
+		{ kit = "village/dress_props", params = { kind = "tools", seed = 9109 }, r = 0.65, d = 0.6, wall = true },
+		{ kit = "village/dress_props", params = { kind = "laundry", seed = 9110 }, r = 1.6, d = 0.7, wall = true, side = false },
+		{ kit = "village/dress_props", params = { kind = "flowers", seed = 9111 }, r = 0.8, d = 0.9, wall = true },
+		{ kit = "village/dress_props", params = { kind = "gochu", seed = 9112 }, r = 0.95, d = 1.3, rare = true },
+	],
+	shop = [
+		{ kit = "village/props", params = { kind = "dok", n = 3, seed = 9101 }, r = 0.8, d = 1.0 },
+		{ kit = "village/props", params = { kind = "soguri", fill = "veg", seed = 9104 }, r = 0.42, d = 0.8 },
+		{ kit = "village/props", params = { kind = "byeotdan", seed = 9105 }, r = 0.85, d = 1.4 },
+		{ kit = "village/jige", params = { seed = 9107, load = "basket" }, r = 0.45, d = 1.0 },
+	],
+	barn = [
+		{ kit = "village/props", params = { kind = "byeotdan", seed = 9105 }, r = 0.85, d = 1.4 },
+		{ kit = "village/jige", params = { seed = 9107, load = "wood" }, r = 0.45, d = 1.0 },
+		{ kit = "village/firewood", params = { seed = 9106, len = 1.6, rows = 3 }, r = 0.9, d = 1.0, wall = true },
+	],
+}
+const DRESS_HOUSES := ["choga", "giwa", "jumak", "neowa_house", "gulpi_house", "guitul_house", "mulbang_a", "didil_bang_a", "dwitgan", "oeyanggan", "culture/"]
+
+func _dress_note_file(f: String, d: Dictionary) -> void:
+	var story := f.get_file().begins_with("placement_story_") or f.get_file().begins_with("placement_scenario")
+	var station := f.get_file().begins_with("placement_stations")
+	if not (story or station):
+		return
+	for it in d.get("items", []):
+		if not (it is Dictionary) or not it.has("x") or not it.has("z"): continue
+		var fp: Vector2 = world.to_v2(it.get("footprint", Vector2(4, 4)))
+		_dress_excl.append([Vector2(float(it.x), float(it.z)), fp.length() * 0.5 + (12.0 if station else 4.0)])
+	var an = d.get("anchors", {})
+	if an is Dictionary:
+		for k in an:
+			var v = an[k]
+			if v is Array and v.size() >= 2: _dress_excl.append([Vector2(float(v[0]), float(v[1])), 3.0])
+			elif v is Dictionary and v.has("x"): _dress_excl.append([Vector2(float(v.x), float(v.get("z", 0.0))), 3.0])
+
+func _dress_excluded(p: Vector2) -> bool:
+	for e in _dress_excl:
+		if p.distance_squared_to(e[0]) < e[1] * e[1]: return true
+	return false
+
+func _plan_dress(place: Array) -> void:
+	var n := 0
+	chimneys = []
+	for r in place:
+		if r.when != "" or r.fp == Vector2.ZERO or r.get("dress", false): continue
+		if r.kit in CHIMNEY_KITS and str(r.params.get("chimney", true)) != "false" and str(r.params.get("interior", false)) != "true" \
+				and absi(hash(String(r.id) + "smoke")) % 2 == 0 and not _dress_excluded(Vector2(r.x, r.z)):
+			# 초가 굴뚝: 오른쪽(+x) 벽 끝 바깥, 뒤쪽 — 키트 choga.gd(W/2 + 0.55, 꼭대기 1.25, −zf + 0.4)를 footprint로 어림
+			var lc := Vector2(r.fp.x * 0.5 - 0.6, -r.fp.y * 0.5 + 1.5)
+			var cc := cos(r.ry); var ss := sin(r.ry)
+			var w := Vector2(r.x, r.z) + Vector2(lc.x * cc + lc.y * ss, -lc.x * ss + lc.y * cc)
+			chimneys.append(Vector3(w.x, (r.xf as Transform3D).origin.y + 1.35, w.y))
+		var kit: String = r.kit
+		var set_name := ""
+		if kit.contains("market_shop"): set_name = "shop"
+		elif kit.contains("heotgan"): set_name = "barn"
+		else:
+			for h in DRESS_HOUSES:
+				if kit.contains(h): set_name = "common"; break
+		if set_name == "": continue
+		if str(r.params.get("interior", false)) == "true": continue   # 들어가는 외딴집(이야기 무대 — 이겸 거처 등)은 손대지 않는다
+		var c := Vector2(r.x, r.z)
+		if _dress_excluded(c): continue
+		var hsh := absi(hash(String(r.id) + kit + str(snappedf(r.x, 0.1)))) 
+		var want := 2 + (hsh % 3)   # 2~4개
+		if set_name == "shop": want = 1 + (hsh % 2)
+		var lst: Array = DRESS_SETS[set_name]
+		var half: Vector2 = r.fp * 0.5
+		var ca := cos(r.ry); var sa := sin(r.ry)
+		var used := []
+		for q in want * 3:
+			if used.size() >= want: break
+			var h2 := absi(hash(hsh + q * 7919))
+			var spec: Dictionary = lst[h2 % lst.size()]
+			if spec.get("rare", false) and (h2 >> 5) % 4 != 0: continue
+			var dup := false
+			for u in used:
+				if u.kit == spec.kit and u.params == spec.params: dup = true
+			if dup: continue
+			# 면: 0 뒤(−z) · 1 왼쪽(−x) · 2 오른쪽(+x) · 3·4 앞 모서리(처마 끝 바깥 — 가운데 문·댓돌 쪽은 비운다). 3인칭 카메라는 남쪽에서 보므로
+			#   대개 남향인 집의 앞 모서리·옆이 화면에 든다. 벽에 기대는 소품은 앞 모서리에 두지 않는다
+			var face: int = [0, 1, 2, 1, 2, 3, 4, 3, 4][(h2 >> 3) % 9]
+			if spec.get("wall", false) and face >= 3: face -= 2
+			if not spec.get("side", true): face = 0
+			var t := (float((h2 >> 7) % 1000) / 1000.0 - 0.5)
+			var dep: float = spec.d * 0.5 + 0.55
+			var lp: Vector2; var lry := 0.0
+			match face:
+				0: lp = Vector2(t * maxf(half.x * 2.0 - 2.4, 0.0), -half.y - dep); lry = PI
+				1: lp = Vector2(-half.x - dep, -half.y * (0.15 + 0.6 * (t + 0.5))); lry = -PI / 2
+				2: lp = Vector2(half.x + dep, -half.y * (0.15 + 0.6 * (t + 0.5))); lry = PI / 2
+				_:
+					if half.x < 2.6: continue   # 좁은 집은 앞 모서리가 문 곁이다
+					lp = Vector2((-1.0 if face == 3 else 1.0) * (half.x - float(spec.r) * 0.6 - 0.2), half.y + dep * 0.8); lry = 0.0
+			# 로컬 → 월드(Basis(UP, ry)): x' = x·cos + z·sin, z' = −x·sin + z·cos
+			var wp := c + Vector2(lp.x * ca + lp.y * sa, -lp.x * sa + lp.y * ca)
+			var out := Vector2(sin(r.ry + lry), cos(r.ry + lry))   # 벽에서 바깥쪽(소품 앞 +z가 마당 쪽)
+			if not spec.get("wall", false): lry += (float((h2 >> 11) % 100) / 100.0 - 0.5) * 0.8
+			var ok := true
+			for u in used:
+				if wp.distance_to(u.p) < float(u.r) + float(spec.r) + 0.3: ok = false
+			if not ok or _dress_excluded(wp): continue
+			if world.has_method("road_distance") and world.road_distance(wp.x, wp.y) < float(spec.r) + 1.6: continue
+			var rec := { id = "dress_%s_%d" % [String(r.id) if r.id != "" else str(hsh), used.size()], kit = spec.kit, params = spec.params,
+				x = wp.x, z = wp.y, ry = r.ry + lry, y = null, flatten = false, clear_veg = false, fp = Vector2(spec.r * 2.0, spec.d), flat_y = NAN,
+				yard = false, state = null, states = {}, dy = 0.0, when = "", case = "", dress = true, dress_r = float(spec.r), dress_out = out, walk_done = true }
+			rec.xf = Transform3D(Basis(Vector3.UP, rec.ry), Vector3(wp.x, _y_for(rec, {}), wp.y))
+			used.append({ kit = spec.kit, params = spec.params, p = wp, r = spec.r })
+			var tt: Vector2i = world.tile_of(wp.x, wp.y)
+			if not _pending.has(tt): _pending[tt] = []
+			_pending[tt].append(rec)
+			n += 1
+	stats.dress_planned = n
+
+# 놓기 직전: 그 자리와 바깥쪽 지나갈 틈이 비었나(그 타일의 정적 물체·식생 충돌체가 이미 들어온 뒤)
+func _dress_ok(r: Dictionary) -> bool:
+	if not world.has_method("blocked"): return true
+	var rr: float = r.dress_r
+	if world.blocked(r.x, r.z, rr * 0.8): return false
+	var o: Vector2 = r.dress_out
+	var p2 := Vector2(r.x, r.z) + o * (rr + 1.0)
+	if world.blocked(p2.x, p2.y, 0.45): return false
+	if world.has_method("walk_at") and world.walk_at(r.x, r.z, false) != null: return false   # 기단·마루·다리 걷기 면 위에는 두지 않는다
+	return true
+
+static func dress_is_building(kit: String) -> bool:
+	if not (kit.begins_with("village/") or kit.begins_with("landmark/") or kit.begins_with("culture/") or kit.begins_with("route/")): return false
+	for w in DRESS_NOT_BUILDING:
+		if kit.contains(w): return false
+	return true
+
+func _paint_dress(composite: Array, place: Array) -> void:
+	var nb := 0
+	for r in place:
+		if r.when != "": continue   # 조건부 항목은 땅을 바꾸지 않는다(규칙 잠금)
+		var c := Vector2(r.x, r.z)
+		var fp: Vector2 = r.fp
+		if fp != Vector2.ZERO and dress_is_building(r.kit) and not _catalog_composite(r.kit):
+			world.dress_building(c, r.ry, fp * 0.5); nb += 1
+		for m in DRESS_MARKET:
+			if r.kit.contains(m): world.dress_disc(1, c, 7.0 + fp.length() * 0.3); break
+		if DRESS_WET.has(r.kit): world.dress_disc(2, c, DRESS_WET[r.kit])
+	for r in composite:
+		if r.when != "" or r.fp == Vector2.ZERO: continue
+		if r.kit in DRESS_PAVED: world.dress_paved(Vector2(r.x, r.z), r.ry, r.fp * 0.5 - Vector2(1.5, 1.5))
+	stats.dress_buildings = nb
+
 static func _yard_kit(r: Dictionary) -> bool:
 	var k: String = r.kit
 	if k.begins_with("nature/"): return false

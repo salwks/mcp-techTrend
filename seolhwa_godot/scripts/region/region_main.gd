@@ -25,7 +25,7 @@
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
-# 비교용 끄기: --noao(먹 그늘) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
+# 비교용 끄기: --noao(먹 그늘) --nodress(생활 소품) --noground(땅 꾸밈) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
 const RegionWorld := preload("res://scripts/region/region_world.gd")
@@ -393,6 +393,8 @@ func _build_scene() -> void:
 	# 배치(§8): placement_*.json → 키트 → add_static (+ --placedir=폴더1;폴더2 추가 폴더)
 	placement = PlacementLoader.new(world, args.get("placedir", "").split(";", false) if args.has("placedir") else [])
 	placement.parallel = not args.has("serialbuild")
+	placement.dress_props = not args.has("nodress")    # 집 뒤·옆 생활 소품(visual-pass) — --nodress 비교
+	placement.dress_ground = not args.has("noground")  # 땅 꾸밈 칠하기(처마·박석·장터·물가) — --noground 비교
 	placement.gate.main = self   # when 조건(F-11)이 이야기·시간을 본다
 	if not args.has("noplace"): placement.load_all()
 	if placement.stats.get("placed", 0) > 0 and not args.has("markers"): world.remove_tagged("marker")

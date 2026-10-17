@@ -32,6 +32,9 @@ uniform sampler2D farm_tex : filter_linear, repeat_disable;
 uniform vec4 farm_meta = vec4(0.0, 0.0, 0.5, 0.0);   // x0, z0, 1/cell
 uniform vec2 farm_size = vec2(1.0);
 uniform float farm_on = 0.0;
+uniform sampler2D dress_tex : filter_linear, repeat_disable;   // 땅 꾸밈 칠하기(region_world.dbytes): 처마 부호 거리 · 장터 · 물가 · 박석
+uniform float dress_on = 0.0;      // 꾸밈 칠하기가 있으면 1(배치 로더)
+uniform float dress_far = 75.0;    // 이 너머(카메라 m)는 꾸밈 무늬를 그리지 않는다(설정 '화면 품질' 낮음이면 45)
 uniform float near_detail = 0.0;   // 1인칭 가까운 땅 잔무늬(region_main — 눈높이 화면만 1, 3인칭 0). near_layer
 uniform float mist_base = 0.0;     // 낮은 안개 기준 높이(플레이어 발 높이). 기존 Materials는 마을 바닥 y=0 기준         // 먼 능선을 먹빛으로 남기는 정도(0 = 기존 안개 그대로)
 
@@ -248,6 +251,251 @@ vec3 near_layer(vec3 base, vec2 p, vec3 col, float dirt, float slope, vec2 rdir,
 	return base;
 }
 
+
+// ---- 땅 꾸밈(visual-pass 2026-10-17, 3인칭 거리) ----
+// 잔돌: cell m 칸마다 하나(dens 확률), 반지름 rmin~rmax m. 밝은 윗면 + 아래 먹 테 + 남쪽 옅은 그늘. 화소보다 작아지면 지운다.
+vec3 t_stones(vec3 base, vec2 p, float cell, float rmin, float rmax, float dens, float px, float k, int salt) {
+	if (dens <= 0.002 || k <= 0.002) return base;
+	float sk = k * (1.0 - smoothstep(rmin * 0.6, rmin * 1.4, px));
+	if (sk <= 0.002) return base;
+	vec2 q = p / cell;
+	ivec2 ci = ivec2(floor(q));
+	vec2 f = fract(q);
+	float h0 = r_hash(ci + ivec2(17 + salt, 3)), h1 = r_hash(ci + ivec2(5, 41 + salt)), h2 = r_hash(ci + ivec2(29 + salt, 7));
+	if (h0 >= dens) return base;
+	float r = (rmin + (rmax - rmin) * h1 * h1) / cell;
+	vec2 d = f - (vec2(0.3) + vec2(h1, h2) * 0.4);
+	float an = h0 * 40.0 + h2 * 9.0;
+	d = mat2(vec2(cos(an), sin(an)), vec2(-sin(an), cos(an))) * d * vec2(1.0, 1.2 + 0.5 * h2);
+	float dl = length(d) * (1.0 + 0.25 * (texture(noise_tex, p * 1.7 / cell + vec2(h1, h2)).r - 0.5) * 2.0);
+	float aa = px / cell;
+	float body = 1.0 - smoothstep(r - aa, r + aa * 0.5, dl);
+	float sh = (1.0 - smoothstep(r, r * 1.7 + aa, length(d - vec2(0.0, r * 0.5)))) * (1.0 - body);
+	float rim = smoothstep(r * 0.5, r, dl) * smoothstep(-0.3, 0.8, d.y / r);
+	float top = 1.0 - smoothstep(0.0, r * 0.8, length(d + vec2(0.0, r * 0.35)));
+	vec3 stone = mix(base * 1.08, srgb(vec3(0.62, 0.6, 0.55)), 0.4 + 0.3 * h2) * (1.0 + 0.2 * top);
+	stone = mix(stone, srgb(vec3(0.24, 0.22, 0.2)), rim * 0.75);
+	base *= 1.0 - sh * sk * 0.3;
+	return mix(base, stone, body * sk);
+}
+
+// 풀 포기(먹선 잎 다섯 가닥, 화면 위쪽 = 카메라에서 먼 쪽으로 부채꼴 — 비스듬히 내려다보면 서 있는 포기처럼 읽힌다)
+vec3 t_tufts(vec3 base, vec2 p, float cell, float size, float dens, float px, float k, vec2 away) {
+	if (dens <= 0.002 || k <= 0.002) return base;
+	float tk = k * (1.0 - smoothstep(0.03, 0.07, px));
+	if (tk <= 0.002) return base;
+	vec2 q = p / cell;
+	ivec2 ci = ivec2(floor(q));
+	vec2 f = fract(q);
+	float h0 = r_hash(ci + ivec2(71, 13));
+	if (h0 >= dens) return base;
+	vec2 c = vec2(0.3) + vec2(r_hash(ci + ivec2(3, 97)), r_hash(ci + ivec2(41, 9))) * 0.4;
+	float a0 = atan(away.y, away.x) + (r_hash(ci + ivec2(11, 5)) - 0.5) * 0.6;
+	float sz = size * (0.7 + 0.6 * fract(h0 * 13.1)) / cell;
+	float ink = 0.0, tipk = 0.0;
+	for (int i = 0; i < 5; i++) {
+		float fk = float(i) / 4.0 - 0.5;
+		float a = a0 + fk * 1.4 + sin(float(i) * 2.7 + h0 * 9.0) * 0.2;
+		float L = sz * (0.55 + 0.45 * fract(h0 * 7.3 + float(i) * 0.37)) * (1.0 - 0.4 * abs(fk));
+		vec2 b0 = c + vec2(-sin(a), cos(a)) * fk * 0.05;
+		vec2 dt = seg_dt(f, b0, b0 + vec2(cos(a), sin(a)) * L);
+		float w = (0.022 * (1.0 - 0.75 * dt.y)) / cell;
+		float m = 1.0 - smoothstep(w, w + px / cell, dt.x);
+		if (m > ink) { ink = m; tipk = dt.y; }
+	}
+	vec3 leaf = mix(srgb(vec3(0.22, 0.27, 0.13)), srgb(C_GRASS * 0.9), tipk);
+	return mix(base, leaf, ink * tk * (0.9 - 0.3 * tipk));
+}
+
+// 짚 부스러기(장터·마당): 짧은 노란 획 몇 개, 배추 잎(장터): 둥근 초록 조각
+vec3 t_litter(vec3 base, vec2 p, float straw, float leaf, float px, float k) {
+	float sk = k * (1.0 - smoothstep(0.02, 0.05, px));
+	if (sk <= 0.002) return base;
+	if (straw > 0.002) {
+		vec2 q = p / 0.42; ivec2 ci = ivec2(floor(q)); vec2 f = fract(q);
+		float h0 = r_hash(ci + ivec2(7, 61));
+		if (h0 < straw * 0.6) {
+			float a = r_hash(ci + ivec2(19, 3)) * 6.2832;
+			vec2 c = vec2(0.25) + vec2(r_hash(ci + ivec2(2, 8)), r_hash(ci + ivec2(9, 4))) * 0.5;
+			vec2 dir = vec2(cos(a), sin(a)) * (0.2 + 0.25 * h0 / max(straw, 0.01)) / 0.42;
+			vec2 dt = seg_dt(f, c - dir * 0.5, c + dir * 0.5);
+			float m = 1.0 - smoothstep(0.008 / 0.42, (0.008 + px) / 0.42, dt.x);
+			vec3 sc = mix(srgb(vec3(0.84, 0.74, 0.46)), srgb(vec3(0.66, 0.55, 0.32)), r_hash(ci + ivec2(5, 5)));
+			base = mix(base, sc, m * sk * 0.75);
+		}
+	}
+	if (leaf > 0.002) {
+		vec2 q = p / 1.1; ivec2 ci = ivec2(floor(q)); vec2 f = fract(q);
+		float h0 = r_hash(ci + ivec2(37, 23));
+		if (h0 < leaf) {
+			vec2 c = vec2(0.3) + vec2(r_hash(ci + ivec2(1, 77)), r_hash(ci + ivec2(66, 2))) * 0.4;
+			vec2 d = (f - c) * 1.1;
+			float a = h0 * 31.0;
+			d = mat2(vec2(cos(a), sin(a)), vec2(-sin(a), cos(a))) * d * vec2(1.0, 1.5);
+			float r = 0.13 + 0.07 * r_hash(ci + ivec2(4, 4));
+			float dl = length(d) * (1.0 + 0.3 * (texture(noise_tex, p * 3.1).r - 0.5));
+			float m = 1.0 - smoothstep(r - px, r + px * 0.5, dl);
+			float vein = 1.0 - smoothstep(0.004, 0.004 + px, abs(d.y));
+			vec3 lc = mix(srgb(vec3(0.62, 0.72, 0.42)), srgb(vec3(0.82, 0.86, 0.62)), r_hash(ci + ivec2(8, 1)));
+			lc = mix(lc, lc * 0.75, vein * 0.6);
+			base = mix(base, lc, m * sk);
+		}
+	}
+	return base;
+}
+
+// 박석(넓적한 자연석을 깐 마당): 흔든 격자의 가장 가까운 두 점으로 돌 경계(먹 줄)와 돌마다 다른 빛
+vec3 t_paving(vec3 base, vec2 p, float inner, float px, float k) {
+	float pk = k * smoothstep(0.0, 0.25, inner);
+	if (pk <= 0.002) return base;
+	vec2 q = p / 0.75;
+	ivec2 ci = ivec2(floor(q));
+	vec2 f = fract(q);
+	float d1 = 9.0, d2 = 9.0; ivec2 best = ci;
+	for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) {
+		ivec2 cc = ci + ivec2(x, y);
+		vec2 o = vec2(float(x), float(y)) + vec2(0.5) + (vec2(r_hash(cc + ivec2(3, 11)), r_hash(cc + ivec2(13, 5))) - 0.5) * 0.7;
+		float d = length(f - o);
+		if (d < d1) { d2 = d1; d1 = d; best = cc; } else if (d < d2) d2 = d;
+	}
+	float edge = (d2 - d1) * 0.75;   // m
+	float gap = 1.0 - smoothstep(0.015, 0.015 + px * 1.2, edge);
+	float hs = r_hash(best + ivec2(21, 9));
+	vec3 st = srgb(mix(vec3(0.70, 0.67, 0.60), vec3(0.58, 0.56, 0.51), hs)) * (0.93 + 0.14 * texture(noise_tex, p * 0.9).r);
+	st = mix(st, base, 0.25);
+	vec3 c = mix(st, srgb(vec3(0.30, 0.27, 0.23)), gap * 0.8);
+	// 가장자리 경계석: 안쪽 0.35m 띠는 긴 장대석
+	float curb = 1.0 - smoothstep(0.35, 0.4, inner);
+	if (curb > 0.0) {
+		float seg = fract(dot(p, vec2(0.707)) / 1.2);
+		float cg = 1.0 - smoothstep(0.02, 0.02 + px * 2.0, min(seg, 1.0 - seg) * 1.2);
+		vec3 cs = srgb(vec3(0.64, 0.62, 0.57)) * (0.95 + 0.1 * texture(noise_tex, p * 0.6).r);
+		cs = mix(cs, srgb(vec3(0.3, 0.27, 0.23)), max(cg, 1.0 - smoothstep(0.0, 0.05, inner)) * 0.7);
+		c = mix(c, cs, curb);
+	}
+	return mix(base, c, pk);
+}
+
+// town_layer: dress_tex(처마 부호 거리 sd · 장터 mk · 물가 wd · 박석 pav)와 길 칠하기(rd·rhw)로 땅에 꾸밈을 얹는다.
+//   water: 웅덩이(하늘 반사) 비율을 올려 준다
+vec3 town_layer(vec3 base, vec2 p, vec3 col, float dirt, float slope, float rd, float rhw, float dist, float px, vec2 cam_xz, float bankw, inout float water) {
+	float k = dress_on * (1.0 - smoothstep(dress_far * 0.7, dress_far, dist));
+	if (k < 0.002) return base;
+	vec4 dv = texture(dress_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size));
+	float sd = (dv.r * 255.0 - 128.0) / 16.0;
+	float mk = dv.g;
+	float wd = dv.b * 255.0 / 16.0;
+	float pav = dv.a * 255.0;
+	float rocky = smoothstep(0.5, 1.0, slope);
+	float green = clamp((col.g - col.r) * 9.0 + 0.4, 0.0, 1.0) * (1.0 - dirt) * (1.0 - rocky);
+	vec2 away = normalize(p - cam_xz + vec2(1e-4));
+	float n = texture(noise_tex, p * 0.37).r;
+	float edge = rd - rhw;   // 길 가장자리(+ 바깥)
+	// 1 박석 마당
+	if (pav > 0.5) base = t_paving(base, p, (pav - 1.0) / 32.0 - 1.0, px, k);
+	float paved = pav > 0.5 ? smoothstep(0.0, 0.25, (pav - 1.0) / 32.0 - 1.0) : 0.0;
+	// 2 처마 밑·낙숫물 줄·기단 둘레
+	if (sd < 7.5) {
+		float under = smoothstep(0.05, -0.35, sd);
+		base *= 1.0 - k * under * 0.22;
+		base = mix(base, base * vec3(1.04, 1.0, 0.94), k * under * 0.3);   // 처마 밑은 마른 흙
+		float drip = 1.0 - smoothstep(0.08, 0.3, abs(sd - 0.28 + (n - 0.5) * 0.12));
+		float dk = k * drip * (1.0 - smoothstep(0.03, 0.08, px));
+		base *= 1.0 - dk * 0.16 * (1.0 - paved);
+		// 낙숫물 구멍(작은 먹 점) 줄
+		if (dk > 0.01) {
+			vec2 q = p / 0.16; ivec2 ci = ivec2(floor(q));
+			float h = r_hash(ci + ivec2(41, 77));
+			float dd = length(fract(q) - 0.5) * 0.16;
+			base *= 1.0 - dk * 0.35 * step(h, 0.5) * (1.0 - smoothstep(0.018, 0.018 + px, dd));
+		}
+		// 기단·담 밑: 바깥 0.4~1.6m 띠에 잔돌 · 풀 포기(풀빛 땅)
+		float wall = smoothstep(0.3, 0.5, sd) * (1.0 - smoothstep(1.0, 1.9, sd + (n - 0.5) * 0.8));
+		base = t_stones(base, p, 0.45, 0.035, 0.09, 0.45 * wall * (1.0 - paved), px, k, 5);
+		base = t_tufts(base, p, 0.55, 0.32, (0.25 + 0.5 * green) * wall * (1.0 - paved) * (1.0 - dirt * 0.6), px, k, away);
+	}
+	// 3 길 가장자리: 부서진 테 + 잔돌 + 길섶 풀 포기
+	if (edge > -1.0 && edge < 2.2) {
+		float rim = 1.0 - smoothstep(0.0, 0.9, abs(edge + 0.15 + (n - 0.5) * 0.7));
+		base = t_stones(base, p, 0.5, 0.03, 0.08, 0.4 * rim * (1.0 - paved), px, k, 11);
+		float verge = smoothstep(-0.1, 0.35, edge) * (1.0 - smoothstep(1.0, 2.0, edge));
+		base = t_tufts(base, p + vec2(0.21, 0.37), 0.6, 0.34, 0.55 * verge * (1.0 - paved) * (0.3 + 0.7 * (1.0 - dirt * 0.5)), px, k, away);
+	}
+	// 3b 길 바닥: 바퀴·발 자국 줄(길 방향 — 칠하기 거리의 기울기에 수직) · 밟혀 짙은 가운데 · 옅은 가장자리 흙 · 말발굽 점
+	if (rd < rhw + 0.3 && rhw > 0.6) {
+		vec2 uvp = ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size);
+		vec2 e1 = vec2(1.0 / float(h_size.x), 0.0), e2 = vec2(0.0, 1.0 / float(h_size.y));
+		vec2 gr = vec2(texture(paint_tex, uvp + e1).r - texture(paint_tex, uvp - e1).r, texture(paint_tex, uvp + e2).r - texture(paint_tex, uvp - e2).r);
+		vec2 tdir = dot(gr, gr) > 1e-9 ? normalize(vec2(-gr.y, gr.x)) : vec2(1.0, 0.0);
+		vec2 nrm = vec2(-tdir.y, tdir.x);
+		float along = dot(p, tdir), across = dot(p, nrm);
+		float roadk = k * (1.0 - smoothstep(rhw - 0.3, rhw + 0.2, rd));
+		// 짙게 밟힌 가운데(폭의 60%) · 바깥 30%는 부슬흙
+		base *= 1.0 - roadk * 0.07 * (1.0 - smoothstep(rhw * 0.45, rhw * 0.8, rd)) + roadk * 0.05 * smoothstep(rhw * 0.65, rhw * 0.95, rd);
+		// 자국 줄: 가로 0.22m 주기 잡음 줄무늬, 길 따라 끊김
+		float br = texture(noise_tex, vec2(along * 0.035, across * 0.9)).r;
+		float lines = smoothstep(0.58, 0.72, br) * (0.6 + 0.4 * texture(noise_tex, vec2(along * 0.12, 0.3)).r);
+		base *= 1.0 - roadk * 0.11 * lines * (1.0 - smoothstep(0.02, 0.05, px));
+		// 수레바퀴 두 줄(큰길 · 지선): 가운데에서 ±0.7m
+		float wheel = (1.0 - smoothstep(0.05, 0.13, abs(rd - 0.75))) * step(1.25, rhw);
+		base *= 1.0 - roadk * 0.12 * wheel * (0.5 + 0.5 * texture(noise_tex, vec2(along * 0.07, 0.6)).r);
+		// 말발굽·짚신 자국 점(작은 반달)
+		vec2 fq = vec2(along / 0.5, across / 0.38); ivec2 fc = ivec2(floor(fq)); vec2 ff = fract(fq) - 0.5;
+		float fh = r_hash(fc + ivec2(5, 91));
+		float fm = (1.0 - smoothstep(0.16, 0.22, length(ff * vec2(1.0, 1.4)))) * step(fh, 0.18) * smoothstep(-0.05, 0.1, ff.x);
+		base *= 1.0 - roadk * 0.12 * fm * (1.0 - smoothstep(0.015, 0.035, px));
+	}
+	// 3c 풀빛 땅(마을 안 빈터·길섶 바깥): 포기·작은 들꽃 점
+	if (green > 0.2) {
+		base = t_tufts(base, p + vec2(0.13, 0.71), 0.85, 0.36, 0.35 * green, px, k, away);
+		vec2 q = p / 0.6; ivec2 ci = ivec2(floor(q));
+		float fh = r_hash(ci + ivec2(33, 17));
+		if (fh < 0.05 * green) {
+			vec2 f = fract(q) - (vec2(r_hash(ci + ivec2(1, 2)), r_hash(ci + ivec2(2, 1))) * 0.5 + 0.25);
+			float dm = 1.0 - smoothstep(0.035, 0.035 + px, length(f) * 0.6);
+			vec3 fc2 = fh < 0.02 * green ? srgb(vec3(0.95, 0.92, 0.82)) : (fh < 0.035 * green ? srgb(vec3(0.92, 0.78, 0.3)) : srgb(vec3(0.78, 0.5, 0.62)));
+			base = mix(base, fc2, dm * k * (1.0 - smoothstep(0.02, 0.04, px)));
+		}
+	}
+	// 4 흙 땅 전체: 흙 결(0.6~2m 얼룩) · 마당 빗자루 자국(반달 줄) · 성긴 잔돌·자갈(밟힌 길 가운데는 적게)
+	float mid = rd < rhw ? smoothstep(rhw * 0.25, rhw * 0.8, rhw - rd) : 0.0;
+	float m1 = texture(noise_tex, p * 0.43 + vec2(0.13, 0.71)).r, m2 = texture(noise_tex, p * 1.37 + vec2(0.5, 0.2)).r;
+	base *= 1.0 + k * dirt * ((m1 - 0.5) * 0.16 + (m2 - 0.5) * 0.07 * (1.0 - smoothstep(0.02, 0.05, px)));
+	float yardk = dirt * step(rhw + 0.6, rd) * (1.0 - paved) * (1.0 - smoothstep(0.025, 0.06, px));
+	if (yardk > 0.01) {
+		vec2 q = p / 1.7; ivec2 ci = ivec2(floor(q)); vec2 f = fract(q);
+		float h0 = r_hash(ci + ivec2(13, 59));
+		vec2 c0 = vec2(r_hash(ci + ivec2(2, 3)), r_hash(ci + ivec2(7, 1))) * 0.6 + 0.2;
+		vec2 dd = (f - c0) * 1.7;
+		float rr = length(dd);
+		float ang = atan(dd.y, dd.x) - h0 * 6.2832;
+		float sector = smoothstep(1.3, 0.7, abs(mod(ang + 3.1416, 6.2832) - 3.1416));
+		float band = smoothstep(0.35, 0.5, rr) * (1.0 - smoothstep(1.0, 1.25, rr));
+		float st = sin(rr * 6.2832 / 0.075 + h0 * 20.0);
+		base *= 1.0 + yardk * k * sector * band * st * 0.045 * step(h0, 0.55);
+	}
+	base = t_stones(base, p, 0.9, 0.04, 0.12, (0.06 + 0.1 * rocky) * dirt * (1.0 - 0.6 * mid) * (1.0 - paved), px, k, 23);
+	base = t_stones(base, p, 0.35, 0.02, 0.045, 0.18 * dirt * (1.0 - 0.5 * mid) * (1.0 - paved), px, k, 31);
+	// 5 장터: 짚 부스러기·배추 잎 · 마당 흙에도 짚 조금
+	base = t_litter(base, p, (mk * 0.55 + 0.05 * dirt * smoothstep(0.0, 2.0, sd) * (1.0 - smoothstep(4.0, 7.0, sd))) * (1.0 - paved), mk * 0.22 * (1.0 - paved), px, k);
+	// 5b 냇가·강가(토지이용 물 칸과 맞닿은 띠): 젖어 짙은 테 · 둥근 냇돌 · 물풀 포기
+	if (bankw > 0.02 && bankw < 0.98) {
+		float bk = smoothstep(0.02, 0.3, bankw) * (1.0 - smoothstep(0.75, 0.98, bankw));
+		base *= 1.0 - k * bk * 0.18;
+		base = t_stones(base, p, 0.55, 0.05, 0.16, 0.5 * bk, px, k, 41);
+		base = t_tufts(base, p + vec2(0.4, 0.2), 0.7, 0.42, 0.4 * bk * smoothstep(0.1, 0.4, bankw), px, k, away);
+	}
+	// 6 물가(우물·빨래터·나루): 진흙 → 웅덩이
+	if (wd < 6.0) {
+		float wn2 = texture(noise_tex, p * 0.21 + vec2(0.4, 0.1)).r;
+		float mud = (1.0 - smoothstep(1.5, 5.5, wd + (wn2 - 0.5) * 2.5)) * (1.0 - paved * 0.7);
+		base = mix(base, base * vec3(0.62, 0.58, 0.54), k * mud * 0.7);
+		float pud = smoothstep(0.62, 0.72, wn2 + (1.0 - smoothstep(1.0, 3.5, wd)) * 0.35) * mud;
+		water = max(water, k * pud * 0.75);
+	}
+	return base;
+}
+
 void fragment() {
 	vec2 p = v_wp.xz;
 	float px = length(fwidth(p));   // 화소 하나가 덮는 땅 크기(m) — near_layer
@@ -338,6 +586,10 @@ void fragment() {
 		dirt = max(dirt, road);
 	}
 	vec3 base = srgb(col) * texture(ground_tex, p / 7.0).rgb;
+	if (dress_on > 0.0) {
+		float bankw = mix(mix(float(ca == 5), float(cb == 5), t.x), mix(float(cc == 5), float(cd == 5), t.x), t.y);
+		base = town_layer(base, p, col, dirt * (1.0 - water), slope, rd, rhw, length(VERTEX), px, (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xz, bankw, water);
+	}
 	if (near_detail > 0.0) {
 		vec2 rdir = vec2(1.0, 0.0);
 		if (dirt > 0.01) {   // 길 방향 = 길 거리 칠하기의 기울기에 수직
