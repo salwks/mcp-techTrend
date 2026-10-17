@@ -1458,9 +1458,24 @@ func _drain_jobs() -> void:
 		n += 1
 	if n > 0: print("DRAIN jobs waited frames=%d ms=%d" % [n, Time.get_ticks_msec() - t0])
 
+const BG_FPS := 10          # 창이 포커스를 잃으면(다른 앱을 보는 동안) 이만큼만 그린다 — 발열·전력
+var _fg_max_fps := -1      # 포커스를 잃기 전 Engine.max_fps(-1 = 낮추지 않음)
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST: _quit()   # 창 닫기도 같은 길로(auto_accept_quit 끔)
 	elif what == NOTIFICATION_PREDELETE: _release_refs()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT: _bg_throttle(true)
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN: _bg_throttle(false)
+
+# 놀이 실행에서만: 시험·촬영·벤치(모래상자 실행)는 포커스와 상관없이 제 빠르기로 돈다
+func _bg_throttle(on: bool) -> void:
+	if Progress.SaveGuard.sandboxed() or args.has("bench"): return
+	if on:
+		if _fg_max_fps < 0: _fg_max_fps = Engine.max_fps
+		Engine.max_fps = BG_FPS
+	elif _fg_max_fps >= 0:
+		Engine.max_fps = _fg_max_fps
+		_fg_max_fps = -1
 
 # RefCounted끼리 서로 잡은 고리를 끊는다(배 타기 ↔ 강 뱃길) — 장면을 다시 열거나 끝낼 때 새지 않게
 # 변수는 비우지 않는다(끝내기 뒤에도 _process가 한두 프레임 돈다) — 한쪽 고리만 끊으면 둘 다 풀린다
