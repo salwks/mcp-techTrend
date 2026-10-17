@@ -394,24 +394,46 @@ const CAM_DEEP := { pitch = 55.0, distance = 17.0 }         # 길 밖 숲 한가
 var forest_active := false   # 숲 구역 안(region_main이 가림 점무늬를 넓힌다)
 const CAM_PASS := { pitch = 30.0, distance = 22.0 }
 var _forest_zone := {}
+var _hamlet_zone := {}
 var _settle_boxes := []
 var _cz_frame := 0
+
+# 마을 무대 구도(visual-pass 3단계, 2026-10-17 — 사용자 결정 대기 제안): 고을·장터(settlements)와 도시 구역(region.json camera_zones 중 40° 구역)만
+#   조금 낮고 가깝게 — 좁고 촘촘한 무대처럼, 앞 지붕·담이 화면 아래를 지나가고 깊이 흐림이 앞뒤를 나눈다.
+#   되돌리기: 이 두 값을 pitch 40 · dist_k 1.0으로(원본 CAM_TOWN·region.json은 그대로 40). 비교 촬영: --townframe=각,거리배율
+#   그대로 두는 것: 권역 기본 · 숲길 48 · 길 밖 숲 55 · 고개 30 · 실내 · 대화 TALK · 1인칭 · 말·배 · 지도 · 사건 카메라(override)
+static var TOWN_FRAME := { pitch = 36.0, dist_k = 0.86 }
+
+static func town_cam(cam: Dictionary) -> Dictionary:
+	var o := cam.duplicate()
+	if float(cam.get("pitch", 40.0)) >= 38.0 and float(cam.get("pitch", 40.0)) <= 42.0:
+		o.pitch = float(TOWN_FRAME.pitch)
+		o.distance = float(cam.get("distance", 22.0)) * float(TOWN_FRAME.dist_k)
+		o.town_frame = true
+	return o
 
 func _build_camera_zones() -> void:
 	camera_zones = []
 	var big := 1e6
 	camera_zones.append(_zone("권역", -big, big, -big, big, CAM_DEFAULT))
 	_settle_boxes = []
+	var town := town_cam(CAM_TOWN)
 	for s in region.get("settlements", []):
 		var r := clampf(float(s.get("radius_m", 60.0)), 30.0, 220.0)
-		var z := _zone(String(s.get("name", "")), float(s.x) - r, float(s.x) + r, float(s.z) - r, float(s.z) + r, CAM_TOWN)
+		var z := _zone(String(s.get("name", "")), float(s.x) - r, float(s.x) + r, float(s.z) - r, float(s.z) + r, town)
 		camera_zones.append(z); _settle_boxes.append(z)
 	_forest_zone = _zone("숲·산길", big, big, big, big, CAM_FOREST)
 	camera_zones.append(_forest_zone)
+	# 외딴 집·나루·주막(고을 구역 밖 집 둘레): 플레이어 둘레 12m 안에 지붕 있는 건물이 있으면 마을 무대 구도를 씌운다(숲보다 이긴다)
+	_hamlet_zone = _zone("집 둘레", big, big, big, big, town_cam(CAM_DEFAULT))
+	camera_zones.append(_hamlet_zone)
 	for p in region.get("passes", []):
 		var r := 45.0
 		camera_zones.append(_zone(String(p.get("name", "고개")), float(p.x) - r, float(p.x) + r, float(p.z) - r, float(p.z) + r, CAM_PASS))
-	for z in region.get("camera_zones", []): camera_zones.append(z)
+	for z in region.get("camera_zones", []):
+		var zz: Dictionary = z.duplicate()
+		if String(z.get("src", "")) == "north": zz = town_cam(zz)   # 도성 안·운종가·육조거리·평양 내성·함흥 성 안(배치 생성 도시 구역)
+		camera_zones.append(zz)
 
 static func _zone(name: String, x0: float, x1: float, z0: float, z1: float, cam: Dictionary) -> Dictionary:
 	return { name = name, minX = x0, maxX = x1, minZ = z0, maxZ = z1, pitch = cam.pitch, distance = cam.distance }
@@ -436,6 +458,18 @@ func update_camera_zone(pos: Vector3) -> void:
 	elif not in_box(_forest_zone, pos.x, pos.z) or n <= 2 or in_town:
 		_forest_zone.minX = 1e6; _forest_zone.maxX = 1e6
 	forest_active = in_box(_forest_zone, pos.x, pos.z)
+	if not _hamlet_zone.is_empty():
+		var near_house := false
+		if not in_town and not dbytes.is_empty() and float(TOWN_FRAME.pitch) < 39.5:
+			for dz in [-12.0, 0.0, 12.0]:
+				for dx in [-12.0, 0.0, 12.0]:
+					var i := clampi(roundi((pos.x + dx - hx0) / hstep), 0, hnx - 1); var j := clampi(roundi((pos.z + dz - hz0) / hstep), 0, hnz - 1)
+					if dbytes[(j * hnx + i) * 4] < 128 + 48: near_house = true   # 처마에서 3m 안
+		if near_house:
+			_hamlet_zone.minX = pos.x - 18.0; _hamlet_zone.maxX = pos.x + 18.0; _hamlet_zone.minZ = pos.z - 18.0; _hamlet_zone.maxZ = pos.z + 18.0
+			if forest_active: _forest_zone.minX = 1e6; _forest_zone.maxX = 1e6; forest_active = false
+		elif not in_box(_hamlet_zone, pos.x, pos.z) or in_town:
+			_hamlet_zone.minX = 1e6; _hamlet_zone.maxX = 1e6
 
 # 가장 가까운 길(region.json roads) 가장자리까지 거리(m, 칠하기 텍스처 R·G)
 func road_distance(x: float, z: float) -> float:

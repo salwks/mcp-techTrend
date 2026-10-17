@@ -377,6 +377,9 @@ func _build_scene() -> void:
 	root.add_child(cam)
 	cam.current = true
 
+	if args.has("townframe"):   # 마을 구도 비교 촬영: --townframe=36,0.86 (각, 거리 배율) — 기본은 RegionWorld.TOWN_FRAME
+		var tf: PackedStringArray = String(args.townframe).split(",")
+		RegionWorld.TOWN_FRAME = { pitch = float(tf[0]), dist_k = float(tf[1]) if tf.size() > 1 else 1.0 }
 	world = RegionWorld.new()
 	world.markers = args.has("markers") # 임시 위치 표지(이름표 달린 기둥)는 개발 확인용 — 기본 끔
 	world.use_scatter = not args.has("noscatter")
@@ -649,6 +652,13 @@ func where_outside() -> Vector2:
 func _apply_time() -> void:
 	_base_state = TimeOfDay.sample(hour)
 	_base_dir = TimeOfDay.light_direction(hour, _base_state.dayMix)
+	# 볕 방향(visual-pass 2026-10-17): 낮 해를 남쪽(카메라 쪽)에서 서남쪽으로 조금 돌린다 — 그림자가 물체 뒤에 숨지 않고 화면 옆으로 길게 드러난다.
+	#   밤(달)은 그대로. --sunyaw=0이면 예전과 같다. 볕 빛깔은 낮에만 조금 따뜻하게(KEY_WARM)
+	var yaw := float(args.get("sunyaw", str(KEY_YAW))) * float(_base_state.dayMix)
+	if absf(yaw) > 1e-4: _base_dir = _base_dir.rotated(Vector3.UP, yaw)
+	if KEY_WARM > 0.0 and not args.has("sunyaw"):
+		var sc: Vector3 = _base_state.sun
+		_base_state.sun = sc * Vector3(1.0, 1.0 - KEY_WARM * 0.4, 1.0 - KEY_WARM) * float(_base_state.dayMix) + sc * (1.0 - float(_base_state.dayMix))
 	_apply_atmo()
 	world.update_scatter_lod(player_pos, true)
 
@@ -770,6 +780,8 @@ var _dof_fp := false
 const AERIAL_BLUR := 0.2
 const AERIAL_HAZE := 0.12
 const DOF_FP := { far = 0.35, near = 0.0, scale = 3.0, margin = 3.0 }
+const KEY_YAW := -0.6     # rad — 낮 해 방향을 Y축으로 돌림(− = 서쪽으로: 그림자가 화면 오른쪽 위로)
+const KEY_WARM := 0.07    # 낮 볕을 이만큼 따뜻하게(초록·파랑을 조금 뺌)
 const AO_STRENGTH := 0.85   # 먹 그늘 세기(0~1)
 const AO_RADIUS := 1.2      # m — 3인칭(벽 밑·기단·인물 발밑)
 const AO_RADIUS_FP := 0.5   # 1인칭(가까워 같은 화면 크기)
