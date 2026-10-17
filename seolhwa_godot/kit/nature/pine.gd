@@ -1,7 +1,9 @@
 # 소나무(적송) — 웹 vegetation.js pine 이식: 휘어진 붉은 줄기 + 납작한 우산 솔잎 뭉치(민화식)
-# params: seed, s(크기 배율, 1), lod(0 기본 / 1 원거리)
+# params: seed, s(크기 배율, 1), lod(0 기본 / 1 원거리), old(true면 예전 납작 덩이판 — 비교용)
+# 2026-10-18 나무 손질 시험: 가지 구조 + 솔잎 카드(kit/nature/_tree.gd pine). 아래 옛 코드는 old=true 비교용으로만 남긴다.
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
+const TREE := preload("res://kit/nature/_tree.gd")
 const LEAF := [["#7d9160", "#34432f"], ["#708a5a", "#2f3e2c"], ["#8a9866", "#3d4c35"]]
 
 # 솔잎 뭉치: 납작한 타원체(윗면 밝고 아랫면 짙은 바림) + 위에 작은 덩이
@@ -15,6 +17,7 @@ static func needle_clump(b: Kit.Batch, r: Kit.Rng, cx: float, cy: float, cz: flo
 		b.add("needle", Kit.paint(g2, C.c(col[0]), C.c(col[0]), 0.03, r), 0.035 * s)
 
 static func build(params: Dictionary) -> Dictionary:
+	if not bool(params.get("old", false)): return TREE.pine(params)
 	var r := Kit.Rng.new(int(params.get("seed", 1)))
 	var s := float(params.get("s", 1.0))
 	var lod := int(params.get("lod", 0))

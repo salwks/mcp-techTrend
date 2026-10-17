@@ -1,8 +1,10 @@
 # 큰 정자나무 — 웹 buildings.js bigTree 이식. variant: zelkova(느티나무, 마을 어귀 정자나무) / willow(버드나무, 개울가) / chestnut(밤나무, 집 뒤)
 #   / broadleaf(마을 가 활엽수) / persimmon(감나무, 주황 열매). 예산 맞추려고 보조 잎덩이는 detail 0.
 # params: seed, variant("zelkova"), h, spread, trunk, branches, lod(0|1), bare(false)
+# 2026-10-18 나무 손질 시험: zelkova(느티나무)만 가지 구조 + 잎 카드(kit/nature/_tree.gd zelkova). 나머지 변종은 아직 예전 덩이(다음 단계).
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
+const TREE := preload("res://kit/nature/_tree.gd")
 
 const PRESET := {
 	zelkova = { h = 7.2, spread = 4.6, trunk = 0.55, branches = 5, leaf = [["#a2ab66", "#5f6c3e"], ["#94a05e", "#566238"]] },
@@ -17,6 +19,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var variant := str(params.get("variant", "zelkova"))
 	var o: Dictionary = PRESET.get(variant, PRESET.zelkova).duplicate()
 	for k in params: o[k] = params[k]
+	if variant == "zelkova" and not bool(o.get("old", false)): return TREE.zelkova(o)
 	var r := Kit.Rng.new(int(o.get("seed", 1)))
 	var lod := int(o.get("lod", 0))
 	var hgt := float(o.h); var spread := float(o.spread); var tr := float(o.trunk)

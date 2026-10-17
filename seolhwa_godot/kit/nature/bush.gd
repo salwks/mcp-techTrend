@@ -1,7 +1,9 @@
 # 덤불 — 웹 vegetation.js bush 이식. flowers=true면 진달래 꽃송이 점
 # params: seed, s(1), flowers(false)
+# 2026-10-18 나무 손질 시험: 잎 카드 둥근 덩이(kit/nature/_tree.gd bush). old=true면 예전 납작 공(비교용)
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
+const TREE := preload("res://kit/nature/_tree.gd")
 
 static func build(params: Dictionary) -> Dictionary:
 	var r := Kit.Rng.new(int(params.get("seed", 1)))
@@ -9,6 +11,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var fl := bool(params.get("flowers", false))
 	var b := Kit.Batch.new()
 	var col: Array = ["#8f9a60", "#55603c"] if fl else C.pick([["#8e9a60", "#55603c"], ["#9aa06a", "#626b42"], ["#7d8c58", "#4a5638"]], r)
+	if not bool(params.get("old", false)): return TREE.bush(params, col, fl)
 	var n := 1 + int(r.next() * 2)
 	for i in n:
 		var g := C.sphere((0.5 + r.next() * 0.3) * s, 7, 3)
