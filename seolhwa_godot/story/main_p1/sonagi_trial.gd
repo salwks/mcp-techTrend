@@ -37,6 +37,7 @@ var _p0 := 0.0
 var _eaves_mark: MeshInstance3D = null
 var _ink_cloud: MeshInstance3D = null
 var _bot_e := false
+var _hint_mine := ""         # 소나기 동안 안내 줄(처음 하는 안내 MOVE 등이 같은 자리를 덮지 않게 매 프레임 지킨다 — 그동안 hush_hints)
 var skipped := false
 
 func _init(case_fn, v: String) -> void:
@@ -175,6 +176,8 @@ func cleanup() -> void:
 	_rain = null
 	d.free_move = false
 	d.set("story_prompt", "")
+	_hint_mine = ""
+	d.hush_hints = false
 	d.ui.hint_clear()
 	for a in ["move_right", "move_left", "move_down", "move_up", "run", "interact"]: Input.action_release(a)
 
@@ -314,6 +317,7 @@ func _frame() -> bool:
 	if dt > 0.12: printerr("FIRST15 sonagi hitch dt=%.2f t=%.2f" % [dt, _now() - _p0])   # 끊김 기록(첫 조작 시각을 미는 것)
 	_update_papers(dt)
 	_bot_tick(dt)
+	if _hint_mine != "" and d.ui.hint_text() != _hint_mine: d.ui.hint(_hint_mine)
 	return _skip_now()
 
 # 프롤로그 시작(p0)부터 t초가 될 때까지(끊김이 있어도 차례가 밀려 쌓이지 않게)
@@ -378,7 +382,9 @@ func run(p0: float) -> bool:
 	d.free_move = true
 	_mark("control")
 	c._beat("control_play", p0)
-	d.ui.hint("기록지를 줍자  —  W A S D 이동 · E 줍기")
+	d.hush_hints = true   # 저장에 남은 처음 안내(MOVE 등)가 이 줄을 덮지 않게 — 방 안 조작에서 다시 뜬다
+	_hint_mine = "기록지를 줍자  —  W A S D 이동 · E 줍기"
+	d.ui.hint(_hint_mine)
 	d.anim_actor("yigyeom_past", "kneel")
 	d.face_actor("yigyeom_past", "left", null)
 	_bot_go(func(): return Vector2(papers.p1.n.global_position.x, papers.p1.n.global_position.z), 0.5)
@@ -433,7 +439,8 @@ func run(p0: float) -> bool:
 							c.flag("SONAGI_LINE", line_for(saved))
 							d.save()   # 갈래를 바로 저장(프롤로그 도중 끝내도 남게)
 							stage = 4
-							d.ui.hint("처마 밑에 두자  —  E")
+							_hint_mine = "처마 밑에 두자  —  E"
+							d.ui.hint(_hint_mine)
 							_eaves_mark = _ring(0.75, Color(1.0, 0.95, 0.75, 0.5))
 							_eaves_mark.global_position = Vector3(EAVES.x, _y(EAVES) + 0.05, EAVES.y)
 							c._pro_nodes["s_eaves"] = _eaves_mark
@@ -449,6 +456,8 @@ func run(p0: float) -> bool:
 		_show_marker(stage)
 		d.set("story_prompt", prompt)
 	d.set("story_prompt", "")
+	_hint_mine = ""
+	d.hush_hints = false
 	d.ui.hint_clear()
 	d.free_move = false
 	for a in ["move_right", "move_left", "move_down", "move_up"]: Input.action_release(a)
