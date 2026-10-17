@@ -18,6 +18,7 @@ const Jobs := preload("res://scripts/region/jobs.gd")
 const PropStates := preload("res://scripts/region/prop_states.gd")
 const Decals := preload("res://scripts/region/decals.gd")
 const Farm := preload("res://scripts/region/farm.gd")
+const WaterFX := preload("res://scripts/region/water_fx.gd")
 var farm = null    # 논·밭 필지(parcels.bin) — 없으면 null(예전 칠한 필지 무늬)
 # 사건용 세계 API(docs/reports/world-scenario.md): 프롭 상태(props)·데칼(decals)·장소 덧붙임(world_scenario.json)
 var props          # PropStates — set_prop_state(id, 상태)
@@ -514,8 +515,10 @@ func _make_materials() -> void:
 	mat_far = ShaderMaterial.new(); mat_far.shader = load("res://shaders/region_far.gdshader")
 	_common_params(mat_far)
 	mat_far.set_shader_parameter("grid_step", float(FAR_STEP))
+	WaterFX.ensure_globals()   # 물 셰이더가 쓰는 전역 uniform(water_*) — 셰이더를 읽기 전에
+	Kit.material("water"); Kit.material("water_refl")   # 키트 물 재질은 여기(주 스레드)서 먼저 — 키트 짓기 일꾼 스레드가 셰이더를 읽지 않게
 	mat_water = ShaderMaterial.new(); mat_water.shader = load("res://shaders/region_water.gdshader")
-	mat_water.set_shader_parameter("water_tex", Kit.texture("water"))
+	_common_params(mat_water)   # 수심(높이맵)
 	mat_water.set_shader_parameter("ramp_tex", Materials.ramp_texture())
 
 static func _noise_texture() -> ImageTexture:
@@ -753,7 +756,8 @@ var sea_y := NAN
 var lakes: Array = []            # [{name, y, poly: PackedVector2Array, bb: Rect2}]
 var water_mask: Image            # lw×lh RG8 (바다가 없으면 null)
 var sea_map: Image               # 같은 격자 LA8 — 지도(region_map)가 바다 색으로 물들여 그린다
-var _water_mats: Array = []      # mist_base 등 공용 값을 같이 받을 물 재질
+var _water_mats: Array = []      # mist_base 등 공용 값을 같이 받을 물 재질(논물 등 포함)
+var surface_mats: Array = []     # 물 층(WaterFX.WATER_LAYER) 메시만 쓰는 물 재질 — 평면 반사 그림을 받아도 되는 것(반사 카메라가 그리지 않음)
 
 func _build_sea() -> void:
 	var sea = region.get("sea")
@@ -775,7 +779,6 @@ func _build_sea() -> void:
 	var sh: Shader = load("res://shaders/region_sea.gdshader")
 	var proto := ShaderMaterial.new(); proto.shader = sh
 	_common_params(proto)
-	proto.set_shader_parameter("water_tex", Kit.texture("water"))
 	proto.set_shader_parameter("ramp_tex", Materials.ramp_texture())
 	proto.set_shader_parameter("mask_blur", mtex_blur)
 	proto.set_shader_parameter("mask_meta", Vector4(lx0 - lcell * 0.5, lz0 - lcell * 0.5, 1.0 / (lcell * lw), 1.0 / (lcell * lh)))
@@ -788,8 +791,10 @@ func _build_sea() -> void:
 		if sea_is_river:
 			# 강물 결: 흐름 방향 지도(큰 강 중심선 → 32m 칸) + 강 빛깔, 바다 물결 띠·흰 파도 없음
 			proto.set_shader_parameter("is_river", 1.0)
-			proto.set_shader_parameter("deep_col", Vector3(0.24, 0.34, 0.31))
-			proto.set_shader_parameter("shallow_col", Vector3(0.42, 0.53, 0.45))
+			proto.set_shader_parameter("deep_col", Vector3(0.05, 0.095, 0.085))
+			proto.set_shader_parameter("shallow_col", Vector3(0.14, 0.17, 0.13))
+			proto.set_shader_parameter("wave_a", WaterFX.BIG_RIVER.x)
+			proto.set_shader_parameter("wave_ls", WaterFX.BIG_RIVER.y)
 			var fm := _make_flow_map()
 			if fm != null:
 				proto.set_shader_parameter("flow_tex", ImageTexture.create_from_image(fm))
@@ -818,6 +823,8 @@ func _build_sea() -> void:
 			print("REGION river water cells inner=%d edge=%d" % [parts.inner.size() / 4, parts.edge.size() / 4])
 		else:
 			_flat_water("sea", v, idx, proto).custom_aabb = aabb
+			sea_far_mat = proto
+			if not OS.get_cmdline_user_args().has("--nowaves"): _build_sea_patch(proto)
 	for l in lakes:
 		var tri := Geometry2D.triangulate_polygon(l.poly)
 		if tri.is_empty(): push_warning("호수 윤곽을 삼각형으로 나누지 못했다: " + l.name); continue
@@ -825,10 +832,41 @@ func _build_sea() -> void:
 		for q in l.poly: v.append(Vector3(q.x, l.y, q.y))
 		var mat: ShaderMaterial = proto.duplicate()
 		mat.set_shader_parameter("is_lake", 1.0)
-		mat.set_shader_parameter("deep_col", Vector3(0.27, 0.40, 0.42))
-		mat.set_shader_parameter("shallow_col", Vector3(0.45, 0.60, 0.56))
+		mat.set_shader_parameter("deep_col", Vector3(0.05, 0.10, 0.10))
+		mat.set_shader_parameter("shallow_col", Vector3(0.15, 0.19, 0.16))
+		mat.set_shader_parameter("wave_a", 0.03)
+		mat.set_shader_parameter("wave_ls", 0.3)
 		_flat_water("lake_" + l.name, v, tri, mat)
 	print("REGION sea y=%s kind=%s lakes=%d mask_ms=%d" % [sea_y, "river" if sea_is_river else "sea", lakes.size(), Time.get_ticks_msec() - t0])
+
+# 바다 물결 판(water pass): 카메라 초점을 따라다니는 촘촘한 격자(SEA_PATCH_HALF×2 m, SEA_PATCH_STEP 간격) — 꼭짓점이 너울로 움직인다.
+# 먼 바다 판(16×16)은 이 네모 안을 버린다(hole). 가장자리 SEA_PATCH_FADE m는 물결을 0으로 줄여 먼 판과 높이가 맞는다. WaterFX가 옮긴다
+const SEA_PATCH_HALF := 128.0
+const SEA_PATCH_STEP := 2.0
+const SEA_PATCH_FADE := 32.0
+var sea_patch: MeshInstance3D
+var sea_far_mat: ShaderMaterial
+
+func _build_sea_patch(proto: ShaderMaterial) -> void:
+	var n := int(SEA_PATCH_HALF * 2.0 / SEA_PATCH_STEP)
+	var v := PackedVector3Array(); v.resize((n + 1) * (n + 1))
+	for j in n + 1:
+		for i in n + 1:
+			v[j * (n + 1) + i] = Vector3(-SEA_PATCH_HALF + i * SEA_PATCH_STEP, 0.0, -SEA_PATCH_HALF + j * SEA_PATCH_STEP)
+	var idx := PackedInt32Array(); idx.resize(n * n * 6)
+	var q := 0
+	for j in n:
+		for i in n:
+			var a := j * (n + 1) + i
+			idx[q] = a; idx[q + 1] = a + 1; idx[q + 2] = a + n + 1
+			idx[q + 3] = a + 1; idx[q + 4] = a + n + 2; idx[q + 5] = a + n + 1
+			q += 6
+	var mat: ShaderMaterial = proto.duplicate()
+	mat.set_shader_parameter("wave_disp", 1.0)
+	mat.set_shader_parameter("wave_patch", Vector4(0, 0, SEA_PATCH_HALF, SEA_PATCH_FADE))
+	sea_patch = _flat_water("sea_waves", v, idx, mat)
+	sea_patch.custom_aabb = AABB(Vector3(-SEA_PATCH_HALF, -2.0, -SEA_PATCH_HALF), Vector3(SEA_PATCH_HALF * 2.0, 4.0, SEA_PATCH_HALF * 2.0))
+	sea_patch.position = Vector3(1e6, sea_y, 1e6)   # WaterFX가 첫 프레임에 옮긴다
 
 # 큰 강 물면 칸 나누기: 물 가림 밉맵(상자 평균)에서 칸 크기가 RIVER_CELL에 가장 가까운 단을 읽는다.
 # R = 255(칸 안이 모두 바다)이고 둘레 8칸도 그러면 '한가운데', 둘레에 바다가 조금이라도 있으면 '물가'(셰이더가 고른다), 없으면 판 없음.
@@ -888,7 +926,9 @@ func _flat_water(nm: String, v: PackedVector3Array, idx: PackedInt32Array, mat: 
 	var mi := MeshInstance3D.new(); mi.name = nm; mi.mesh = m
 	mi.material_override = mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	_water_mats.append(mat)
+	mi.layers = WaterFX.WATER_LAYER
+	if not _water_mats.has(mat): _water_mats.append(mat)
+	if not surface_mats.has(mat): surface_mats.append(mat)
 	water_root.add_child(mi)
 	return mi
 
@@ -1087,12 +1127,9 @@ func _place_boat(f: Dictionary, s: float, lat := 0.0) -> void:
 	if f.boat == null: return
 	var p: Vector2 = f.a + f.dir * f.s + Vector2(-f.dir.y, f.dir.x) * clampf(lat, -0.6, 0.6)
 	var bs := Basis(Vector3.UP, f.ry)
-	var bob := 0.0
-	if f.get("sea", false):   # 바다: 너울에 조금 흔들림(갑판 걷기 면은 그대로)
-		var t := Time.get_ticks_msec() / 1000.0
-		bs = bs * Basis(Vector3(0, 0, 1), sin(t * 0.9) * 0.035) * Basis(Vector3(1, 0, 0), sin(t * 0.63 + 1.0) * 0.02)
-		bob = sin(t * 1.1) * 0.06
-	f.boat.transform = Transform3D(bs, Vector3(p.x, sea_y + 0.02 + bob, p.y))
+	# 물결을 탄다(셰이더와 같은 물결 — WaterFX.wave). 바다는 너울, 강은 잔물결(갑판 걷기 면은 그대로)
+	var kind: Vector2 = WaterFX.BIG_RIVER if sea_is_river else WaterFX.SEA
+	f.boat.transform = WaterFX.boat_xf(bs, p, sea_y + 0.02, kind, sea_y - ground_at(p.x, p.y))
 
 # 예전 API(읽기 전용): 지금 나루·바다 뱃길 배를 타고 있으면 {dir, speed, name, start, to, id}, 아니면 {} — 배는 boat_ride.gd가 몬다
 var boat_ride = null
@@ -1343,8 +1380,10 @@ static func _resample(p: Array, step: float) -> Array:
 	o.append(p[p.size() - 1])
 	return o
 
+const RIVER_COLS := 4
 func _river_chunk(pts: Array, wp: Array, s: int, e: int, name: String) -> MeshInstance3D:
 	var v := PackedVector3Array(); var uv := PackedVector2Array(); var col := PackedColorArray(); var nrm := PackedVector3Array()
+	var tan := PackedFloat32Array()
 	var idx := PackedInt32Array()
 	var dist := 0.0
 	for i in range(0, s): dist += Vector2(pts[i + 1].x - pts[i].x, pts[i + 1].z - pts[i].z).length()
@@ -1362,22 +1401,29 @@ func _river_chunk(pts: Array, wp: Array, s: int, e: int, name: String) -> MeshIn
 		var w: float = wp[mini(i, wp.size() - 1)].y
 		var hw := w * 0.5 * 1.18 + 0.6
 		var c := Color(rapid, pool, w / 40.0)
-		for k in 2:
-			var sgn := -1.0 if k == 0 else 1.0
+		# 가로로 RIVER_COLS칸(물결이 꼭짓점을 움직이도록 가운데에도 꼭짓점) + 하류 방향 TANGENT(잔물결이 흐르는 쪽)
+		for k in RIVER_COLS + 1:
+			var f := float(k) / RIVER_COLS
+			var sgn := f * 2.0 - 1.0
 			v.append(Vector3(p.x + n.x * hw * sgn, p.y, p.z + n.y * hw * sgn))
-			uv.append(Vector2(dist / 7.0, float(k)))
+			uv.append(Vector2(dist / 7.0, f))
 			col.append(c); nrm.append(Vector3.UP)
+			tan.append_array(PackedFloat32Array([t.x, 0.0, t.y, 1.0]))
 		if i < e:
-			var q := (i - s) * 2
-			idx.append_array(PackedInt32Array([q, q + 2, q + 1, q + 1, q + 2, q + 3]))
+			var R := RIVER_COLS + 1
+			for k in RIVER_COLS:
+				var q := (i - s) * R + k
+				idx.append_array(PackedInt32Array([q, q + R, q + 1, q + 1, q + R, q + R + 1]))
 			dist += Vector2(pts[i + 1].x - p.x, pts[i + 1].z - p.z).length()
 	var arr := []; arr.resize(Mesh.ARRAY_MAX)
 	arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_TEX_UV] = uv; arr[Mesh.ARRAY_COLOR] = col; arr[Mesh.ARRAY_NORMAL] = nrm
+	arr[Mesh.ARRAY_TANGENT] = tan
 	arr[Mesh.ARRAY_INDEX] = idx
 	var m := ArrayMesh.new(); m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
 	var mi := MeshInstance3D.new(); mi.name = name
 	mi.mesh = m; mi.material_override = mat_water
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.layers = WaterFX.WATER_LAYER   # 반사 카메라가 물 자신을 그리지 않게
 	mi.visibility_range_end = TILE * (MID_R + 0.5)  # 원경(먹빛 능선) 위에는 물을 그리지 않는다
 	return mi
 
@@ -1753,6 +1799,8 @@ func update_scatter_lod(player: Vector3, force := false) -> void:
 # 돌려주는 값: 정적 물체 항목 { node, colliders, lights, occ, interior, attached … } (프롭 상태가 불빛을 더할 때 쓴다)
 func add_static(node: Node3D, world_xform: Transform3D, info: Dictionary = {}, tag := "") -> Dictionary:
 	node.transform = world_xform
+	_split_water(node)
+	_mark_small(node)
 	var cols := []
 	for c in info.get("colliders", []):
 		var wc := _xf_collider(c, world_xform)
@@ -2464,6 +2512,68 @@ func add_walk(xf: Transform3D, w: Dictionary) -> void:
 	for cr in _crossings:
 		if cr.distance_to(e.c) > 25.0: keep.append(cr)
 	_crossings = keep
+
+# 작은 정적 물체(장독·소쿠리·장작 등 3m 안)는 WaterFX.SMALL_LAYER로 — 물 반사 카메라가 그리지 않는다(물에 비쳐도 작아
+# 읽히지 않고, 반사 그리기의 그리기 호출 대부분을 차지했다). 본 화면·그림자는 그대로(카메라·해는 모든 층을 본다)
+func _mark_small(node: Node) -> void:
+	var gis: Array = node.find_children("*", "GeometryInstance3D", true, false)
+	if node is GeometryInstance3D: gis.push_front(node)
+	if gis.is_empty(): return
+	var bb := AABB(); var first := true
+	for gi: GeometryInstance3D in gis:
+		if gi.layers != 1: return   # 이미 다른 층(물 등)을 쓰는 것은 건드리지 않는다
+		var b := (gi.transform if gi != node else Transform3D.IDENTITY) * gi.get_aabb()
+		bb = b if first else bb.merge(b)
+		first = false
+	if bb.size.x > SMALL_M or bb.size.z > SMALL_M or bb.size.y > SMALL_M: return
+	for gi: GeometryInstance3D in gis: gi.layers = WaterFX.SMALL_LAYER
+const SMALL_M := 3.0
+
+# 키트 'water' 표면(못·연못 물면)을 물 층(WaterFX.WATER_LAYER) 메시로 떼어 반사 그림을 받는 'water_refl' 재질을 준다.
+# 반사 카메라는 물 층을 그리지 않으므로 반사 그림을 그리는 동안 그 그림을 읽는 면이 없다. 메시는 키트끼리 같이 쓰므로 나눈 결과를 기억한다
+const _CUSTOM_FMT := (Mesh.ARRAY_FORMAT_CUSTOM_MASK << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) | (Mesh.ARRAY_FORMAT_CUSTOM_MASK << Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT) | (Mesh.ARRAY_FORMAT_CUSTOM_MASK << Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT) | (Mesh.ARRAY_FORMAT_CUSTOM_MASK << Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT)   # ARRAY_FORMAT_CUSTOM0..3 (사용자 채널 형식 비트)
+var _water_split := {}   # 원래 메시 → [뭍 메시(또는 null), 물 메시]
+func _split_water(node: Node) -> void:
+	var wm: Material = Kit.material("water")
+	var meshes: Array = node.find_children("*", "MeshInstance3D", true, false)
+	if node is MeshInstance3D: meshes.push_front(node)
+	for mi: MeshInstance3D in meshes:
+		var am := mi.mesh as ArrayMesh
+		if am == null or mi.layers == WaterFX.WATER_LAYER: continue
+		var sp = _water_split.get(am)
+		if sp == null:
+			var keep := []; var wat := []
+			for s in am.get_surface_count():
+				(wat if am.surface_get_material(s) == wm else keep).append(s)
+			if wat.is_empty():
+				_water_split[am] = []
+				continue
+			var land: ArrayMesh = null
+			if not keep.is_empty():
+				land = ArrayMesh.new()
+				for s in keep:
+					land.add_surface_from_arrays(am.surface_get_primitive_type(s), am.surface_get_arrays(s), [], {}, am.surface_get_format(s) & _CUSTOM_FMT)
+					land.surface_set_material(land.get_surface_count() - 1, am.surface_get_material(s))
+			var water := ArrayMesh.new()
+			for s in wat:
+				water.add_surface_from_arrays(am.surface_get_primitive_type(s), am.surface_get_arrays(s), [], {}, am.surface_get_format(s) & _CUSTOM_FMT)
+				water.surface_set_material(water.get_surface_count() - 1, Kit.material("water_refl"))
+			sp = [land, water]
+			_water_split[am] = sp
+		if (sp as Array).is_empty(): continue
+		var wmi := MeshInstance3D.new()
+		wmi.name = "water_surface"
+		wmi.mesh = sp[1]
+		wmi.transform = mi.transform
+		wmi.layers = WaterFX.WATER_LAYER
+		wmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if mi == node:
+			wmi.transform = Transform3D.IDENTITY
+			node.add_child(wmi)
+		else:
+			mi.get_parent().add_child(wmi)
+		if sp[0] != null: mi.mesh = sp[0]
+		else: mi.visible = false
 
 # 걷기 면 높이(없으면 null). floors = false면 다리·징검다리만(건물 걷기 면 빼고)
 func walk_at(x: float, z: float, floors := true) -> Variant:

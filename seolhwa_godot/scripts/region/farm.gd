@@ -122,7 +122,10 @@ func _make_materials() -> void:
 	mat_water = ShaderMaterial.new(); mat_water.shader = load("res://shaders/region_paddy_water.gdshader")
 	mat_water.set_shader_parameter("water_tex", Kit.texture("water"))
 	mat_water.set_shader_parameter("noise_tex", noise)
-	mat_spout = world.mat_water   # 하천 물 재질(UV.x 흐름) — 다랑이 물꼬에서 떨어지는 물
+	# 하천 물 재질(UV.x 흐름) — 다랑이 물꼬에서 떨어지는 물. 복사본: 물꼬는 물 층이 아니라 평면 반사 그림을 받으면 안 된다(water pass)
+	mat_spout = world.mat_water.duplicate()
+	mat_spout.set_shader_parameter("wnrm_tex", world.WaterFX.normal_tex())
+	mat_spout.set_shader_parameter("has_depth", 0.0)
 	world._water_mats.append(mat_ground); world._water_mats.append(mat_water)
 
 const C_ := preload("res://kit/nature/_common.gd")

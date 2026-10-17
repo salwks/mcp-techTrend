@@ -1,7 +1,12 @@
-// 권역 하천 물 — 웹 개울(buildStream)과 같은 민화식 물결 텍스처(water.png, 7m 반복)가 흐름 방향으로 흐르는 반투명 띠.
-// UV.x = 하류 방향 거리/7, UV.y = 가로(0~1). COLOR.r = 여울(물살 빠름), COLOR.g = 소(깊고 고요함), COLOR.b = 강폭(m)/40
+// 권역 하천 물(water pass 2026-10-17): 흐르는 띠 — 잔물결 꼭짓점 물결 + 흐름 방향으로 흐르는 잔물결 법선 + 반사(평면/하늘) + 해 반짝임.
+// 예전 민화식 물결 줄 텍스처(water.png)는 쓰지 않는다(그림 맥락이 다른 제목 화면·지도만 그대로).
+// UV.x = 하류 방향 거리/7, UV.y = 가로(0~1). COLOR.r = 여울(물살 빠름), COLOR.g = 소(깊고 고요함), COLOR.b = 강폭(m)/40, TANGENT = 하류 방향
+// 수심은 높이맵(region_common r_hdata)으로: 물가 얕은 곳은 바닥이 비치고, 물가선에 젖은 테·잔 거품.
 shader_type spatial;
-render_mode specular_disabled, cull_disabled, blend_mix, depth_draw_opaque;
+render_mode cull_disabled, blend_mix, depth_draw_opaque;
+
+#include "res://shaders/region_common.gdshaderinc"
+#include "res://shaders/water_common.gdshaderinc"
 
 global uniform vec3 hemi_sky;
 global uniform vec3 hemi_ground;
@@ -9,38 +14,74 @@ global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
 
-uniform sampler2D water_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D ramp_tex : filter_linear, repeat_disable;
-uniform vec4 albedo = vec4(0.457, 0.591, 0.578, 0.88); // 웹 0xb4cac8(선형), 불투명도 0.88
+uniform vec3 deep_col = vec3(0.028, 0.07, 0.06);
+uniform vec3 shallow_col = vec3(0.17, 0.17, 0.115);   // 비치는 냇바닥(모래·자갈)
+uniform vec3 foam_col = vec3(0.86, 0.89, 0.86);
 uniform float mist_base = 0.0;
 uniform float gate = 1.0;
-uniform float dry = 0.0;    // 건천: 마른 현무암 자갈·바위 바닥, gate만큼 가운데 물줄기
+uniform float dry = 0.0;    // 건천: 마른 현무암 자갈·바위 바닥, gate만큼 가운데 물줄기(비 올 때만 0→1 — region_world._update_dry)
+uniform float has_depth = 1.0;
 float wh(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float wn(vec2 p) { vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
-	return mix(mix(wh(i), wh(i + vec2(1, 0)), u.x), mix(wh(i + vec2(0, 1)), wh(i + vec2(1, 1)), u.x), u.y); }   // 건천(dry) 물줄기: 비 올 때만 0→1 (region_world._update_dry)
+	return mix(mix(wh(i), wh(i + vec2(1, 0)), u.x), mix(wh(i + vec2(0, 1)), wh(i + vec2(1, 1)), u.x), u.y); }
+
+const vec2 RIVER_W = vec2(0.022, 0.22);   // WaterFX.RIVER
 
 varying vec3 v_wp;
 varying vec3 v_c;
+varying vec2 v_flow;
 
 void vertex() {
 	v_wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	v_c = COLOR.rgb;
+	v_flow = normalize((MODEL_MATRIX * vec4(TANGENT, 0.0)).xz + vec2(1e-5, 0.0));
+	if (dry < 0.5) {
+		// 잔물결(소는 더 잔잔하게, 여울은 조금 더) — 물가(가로 끝)는 붙여 둔다
+		float edge = smoothstep(0.0, 0.25, min(UV.y, 1.0 - UV.y));
+		float a = RIVER_W.x * mix(1.0, water_k, 0.5) * (1.0 - COLOR.g * 0.6 + COLOR.r * 0.8) * edge;
+		VERTEX.y += w_wave(v_wp.xz, w_time(), a, RIVER_W.y).x;
+	}
 }
 
 void fragment() {
+	float t = w_time();
 	float rapid = v_c.r, pool = v_c.g;
-	float width = max(v_c.b * 40.0, 1.0);
-	float spd = 0.045 * (1.0 + rapid * 2.5) * (1.0 - pool * 0.6);
-	vec2 uv = vec2(UV.x - TIME * spd, UV.y * width / 7.0 + sin(TIME * 0.6) * 0.01);
-	vec3 t = texture(water_tex, uv).rgb;
-	// 여울: 흰 물살 줄을 한 겹 더(빠르게), 소: 짙고 고요하게
-	vec3 t2 = texture(water_tex, vec2(UV.x * 1.7 - TIME * spd * 2.2, UV.y * width / 4.0 + 0.37)).rgb;
-	float foam = smoothstep(0.72, 0.9, max(t2.r, t2.g)) * rapid;
-	vec3 base = albedo.rgb * t;
-	base = mix(base, base * vec3(0.62, 0.7, 0.72), pool * 0.7);
-	base = mix(base, vec3(0.86, 0.89, 0.86), foam * 0.8);
-	float edge = smoothstep(0.0, 0.14, min(UV.y, 1.0 - UV.y));
-	float a = albedo.a * mix(0.55, 1.0, edge) * (1.0 - rapid * 0.1);
+	vec2 xz = v_wp.xz;
+	// 흐름: 하류로 미는 거리(m) — 여울 빠르게, 소 느리게
+	float spd = 0.32 * (1.0 + rapid * 2.5) * (1.0 - pool * 0.6);
+	vec2 off = v_flow * t * spd;
+	vec3 dt = w_detail(xz, off, mix(1.0, 0.7, rapid));
+	float uv_edge = min(UV.y, 1.0 - UV.y);
+	float edge_amp = smoothstep(0.0, 0.25, uv_edge);
+	vec3 wv = w_wave(xz, t, RIVER_W.x * mix(1.0, water_k, 0.5) * (1.0 - pool * 0.6 + rapid * 0.8) * edge_amp, RIVER_W.y);
+	float gust = w_gust(xz, t);
+	vec2 slope = wv.yz + dt.xy * mix(0.42, 0.6, rapid) * mix(1.0, 0.6, pool) * mix(0.35, 1.5, gust) + w_rain(xz, t);
+	vec3 nw = normalize(vec3(-slope.x, 1.0, -slope.y));
+	// 수심(높이맵) — 물 띠가 땅 위로 떠 있는 곳도 가장자리(UV)는 얕게 본다
+	float d = has_depth > 0.5 ? v_wp.y - r_hdata(xz) : 1.0;
+	float shallow = max(1.0 - smoothstep(0.04, 0.75, d), 1.0 - smoothstep(0.02, 0.2, uv_edge));
+	vec3 body = mix(deep_col, shallow_col, shallow * 0.85);
+	body = mix(body, body * vec3(0.78, 0.9, 0.92), pool * 0.6);
+	body *= 0.8 + 0.4 * dt.z;   // 잔물결 골은 조금 짙게(붓 바림)
+	// 흰 물살(여울): 흐름 쪽으로 늘인 잡음 — 그린 줄이 아니라 덩어리로 끊긴다
+	float fh = texture(wnrm_tex, vec2(dot(xz, v_flow) * 0.09 - t * spd * 0.2, dot(xz, vec2(-v_flow.y, v_flow.x)) * 0.35)).a;
+	float foam = smoothstep(0.58, 0.74, fh * 0.7 + dt.z * 0.3) * rapid;
+	// 물가선: 아주 얕은 띠에 젖은 밝은 테·잔 거품(물결 따라 끊김)
+	float lip = (1.0 - smoothstep(0.0, 0.07, d)) * smoothstep(0.35, 0.65, dt.z) * has_depth;
+	foam = max(foam, lip * 0.55);
+	vec3 v = normalize((INV_VIEW_MATRIX * vec4(VIEW, 0.0)).xyz);
+	float dist = length(VERTEX);
+	float F = w_fresnel(nw, v) * mix(1.0, 0.55, shallow) * refl_gain;
+	vec3 refl = w_reflect(v_wp, nw, v, dist);
+	vec3 alb = body * (1.0 - F);
+	alb = mix(alb, foam_col, foam * 0.85);
+	float ink = water_ink * (1.0 - smoothstep(0.0, 0.05, uv_edge)) * 0.5;
+	alb = mix(alb, vec3(0.05, 0.055, 0.05), ink);
+	float edge = smoothstep(0.0, 0.12, uv_edge);
+	float a = mix(0.97, 0.6, shallow) * mix(0.5, 1.0, edge);
+	a = max(a, foam * 0.9);
+	vec3 emis = refl * F * (1.0 - foam);
 	if (dry > 0.5) {
 		// 돌 바닥: 짙은 현무암 자갈 + 둥근 바위(밝은 윗면, 먹빛 테). 젖으면 어둡게
 		vec2 p = v_wp.xz;
@@ -50,23 +91,19 @@ void fragment() {
 		vec3 st = mix(grav, vec3(0.22, 0.205, 0.185) * (0.85 + 0.3 * wn(p * 6.0)), rock);
 		st = mix(st, vec3(0.05), rim * 0.5) * (1.0 - 0.35 * gate);
 		float stream = (1.0 - smoothstep(0.05, 0.1, abs(UV.y - 0.5) - gate * 0.06)) * gate;
-		base = mix(st, base, stream);
-		a = mix(smoothstep(0.0, 0.22, min(UV.y, 1.0 - UV.y)), a, stream);
+		alb = mix(st, alb, stream);
+		emis *= stream;
+		a = mix(smoothstep(0.0, 0.22, uv_edge), a, stream);
+		nw = normalize(mix(vec3(0.0, 1.0, 0.0), nw, stream));
 	}
-	ALBEDO = base;
+	ALBEDO = alb;
 	ALPHA = a;
-	vec3 wn = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
-	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * wn.y + 0.5) * hemi_i;
-	EMISSION = base * hemi / PI;
-	float fog_d = -VERTEX.z;
-	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
-	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, v_wp.y - mist_base)) * smoothstep(14.0, 48.0, fog_d);
-	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
-	FOG = vec4(fog_color, fog_f);
+	NORMAL = normalize((VIEW_MATRIX * vec4(nw, 0.0)).xyz);
+	vec3 hemi = mix(hemi_ground, hemi_sky, 0.85) * hemi_i;
+	EMISSION = alb * hemi / PI + emis;
+	FOG = w_fog(fog_color, fog_density, mist_base, v_wp.y, -VERTEX.z);
 }
 
 void light() {
-	float ndl = dot(NORMAL, LIGHT);
-	float ramp = texture(ramp_tex, vec2(ndl * 0.5 + 0.5, 0.5)).r;
-	DIFFUSE_LIGHT += ramp * ATTENUATION * LIGHT_COLOR / (PI * PI);
+	WATER_LIGHT
 }

@@ -25,6 +25,8 @@
 #   --portaltest[=n]  불러오기가 끝나면 포털로 걸어가 n번 공간을 넘어가며 도착 화면을 --shotdir(기본 shots/region/travel)에 찍는다
 #   --nowallproxy     region.json walls 대신 벽(키트가 없는 성벽 구간) 끄기
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
+#   --nowaterrefl 물 평면 반사 끄기(하늘빛 반사만 — 화면 품질 낮음과 같음) --nowaves 바다 물결 판 끄기 --waterink 물가 먹선 켜기
+#   --fpyaw=도[,숙임도] 1인칭 바라보는 쪽 고정(촬영) --watershots=n 불러오기 뒤 0.3초 간격 n장을 --shotdir에 찍고 끝냄(물결 움직임)
 # 비교용 끄기: --nofx(바깥 기운) --noao(먹 그늘) --nodress(생활 소품) --noground(땅 꾸밈) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
@@ -68,6 +70,7 @@ const TOUR := [
 var args := {}
 var post: PostEffect
 var scene_vp: SubViewport
+var water_fx = null   # scripts/region/water_fx.gd — 물결 시각·바람, 평면 반사(설정 '화면 품질' 높음)
 var world  # RegionWorld (World를 이어받음)
 var cam: Camera3D
 var rig: CameraRig
@@ -442,6 +445,9 @@ func _build_scene() -> void:
 		ambient_fx.low = gfx_low()
 		root.add_child(ambient_fx); ambient_fx.setup(self)
 		ambient_fx.set_chimneys(placement.chimneys)
+	if not args.has("nowater"):   # 물 물결·반사(water pass — scripts/region/water_fx.gd). --nowaterrefl 반사 끔(하늘빛만) · --waterink 물가 먹선
+		water_fx = load("res://scripts/region/water_fx.gd").new()
+		add_child(water_fx); water_fx.setup(self)
 	boats = BoatRide.new(); boats.setup(self)
 	if args.has("sailspeed"): boats.speed_override = float(args.sailspeed)
 	boats.arrived.connect(_on_boat_arrived)
@@ -922,7 +928,7 @@ func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:

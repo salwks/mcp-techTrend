@@ -5,6 +5,6 @@
 // 낮은 논·지도 밖 뭍 쪽)을 버린다. 호수 판은 윤곽 다각형이라 R을 보지 않는다(is_lake).
 // 툰 규칙: region_water와 같은 붓 바림 램프 빛, 반구광 EMISSION, 같은 안개 식. 물결 텍스처(water.png)를 아주 느리게.
 shader_type spatial;
-render_mode specular_disabled, cull_disabled, blend_mix, depth_draw_opaque;
+render_mode cull_disabled, blend_mix, depth_draw_opaque;
 
 #include "res://shaders/region_sea_body.gdshaderinc"

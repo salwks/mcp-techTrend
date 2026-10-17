@@ -31,6 +31,7 @@ const KEY_REG := {
 const FACETED := ["flat", "wood", "mud", "paper", "tile", "makse", "stone"]
 const INK := 0x2b2622
 const OUTLINE_SCALE := 0.7
+const WaterFX := preload("res://scripts/region/water_fx.gd")
 const ASSETS := "res://assets/kit/"
 
 # ---------------------------------------------------------------------------
@@ -383,10 +384,14 @@ static func material(kind := "atlas") -> ShaderMaterial:
 
 static func _make_material(kind: String) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
-	if kind == "water":
-		m.shader = Materials.world_shader(true, true, false)
+	if kind == "water" or kind == "water_refl":
+		# 물(water pass 2026-10-17): 잔물결 법선·반사·해 반짝임(shaders/kit_water.gdshader). 'water_refl'은 권역에 놓인 못만 쓰는
+		# 같은 셰이더 재질 — 평면 반사 그림을 받는다(region_world.add_static이 물 표면을 물 층 메시로 떼어 이것으로 바꾼다).
+		# 그냥 'water'는 반사 그림을 받지 않는다(반사 카메라가 그 면을 그리는 동안 같은 그림을 읽지 않게).
+		WaterFX.ensure_globals()
+		m.shader = load("res://shaders/kit_water.gdshader")
 		m.set_shader_parameter("ramp_tex", Materials.ramp_texture())
-		m.set_shader_parameter("albedo_tex", texture("water"))
+		m.set_shader_parameter("wnrm_tex", WaterFX.normal_tex())
 		var c := hex(0xb4cac8)
 		m.set_shader_parameter("albedo_color", Vector4(c.r, c.g, c.b, 0.88))
 		return m
