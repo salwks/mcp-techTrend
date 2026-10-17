@@ -50,6 +50,7 @@ static func _side(o: Dictionary, x: float, z: float) -> bool:
 static func surfaces(o: Dictionary) -> Dictionary:
 	var hw: float = o.hw; var hd: float = o.hd
 	var nx: int = o.get("nx", 28); var nz: int = o.get("nz", 16)
+	nz += nz % 2   # 짝수로: 용마루 줄(z = 0)에 꼭짓점이 있어야 마루가 용마루에 닿는다(fix-1017)
 	var thick: float = o.get("thick", 0.24)
 	var c_top := Kit.hex(C_TOP); var c_low := Kit.hex(C_LOW); var c_bot := Kit.hex(C_BOT)
 	var g := Kit.Geo.new()
@@ -95,7 +96,7 @@ static func surfaces(o: Dictionary) -> Dictionary:
 
 # 용마루 + 치켜든 끝(웹 ridgeCap)
 static func ridge_cap(b, half: float, y: float, w := 0.36, out := 0.03) -> void:
-	b.add("flat", Kit.paint(Kit.box(half * 2, 0.3, w, 0, y + 0.08, 0), Kit.hex(RIDGE[0]), Kit.hex(RIDGE[1]), 0.02), out)
+	b.add("flat", Kit.paint(Kit.box(half * 2, 0.42, w, 0, y + 0.02, 0), Kit.hex(RIDGE[0]), Kit.hex(RIDGE[1]), 0.02), out)
 	for s in [-1, 1]:
 		b.add("flat", Kit.paint(Kit.xf(Kit.box(0.5, 0.26, w * 0.9), s * (half + 0.12), y + 0.22, 0, 0, 0, s * 0.55), Kit.hex(RIDGE[0]), Kit.hex(RIDGE[1]), 0.02), out)
 
@@ -155,7 +156,7 @@ static func add(b, o: Dictionary, x := 0.0, z := 0.0, ry := 0.0) -> Dictionary:
 		b.add(p[0], Kit.apply(p[1], xfm), p[2])
 	# 용마루
 	var w: float = o.get("ridge_w", 0.36)
-	var gr := Kit.paint(Kit.box(rh * 2, 0.3, w, 0, ry_ + 0.08, 0), Kit.hex(RIDGE[0]), Kit.hex(RIDGE[1]), 0.02)
+	var gr := Kit.paint(Kit.box(rh * 2, 0.42, w, 0, ry_ + 0.02, 0), Kit.hex(RIDGE[0]), Kit.hex(RIDGE[1]), 0.02)
 	b.add("flat", Kit.apply(gr, xfm), 0.03)
 	for sx in [-1, 1]:
 		var ge := Kit.paint(Kit.xf(Kit.box(0.55, 0.28, w * 0.9), sx * (rh + 0.12), ry_ + 0.24, 0, 0, 0, sx * 0.55), Kit.hex(RIDGE[0]), Kit.hex(RIDGE[1]), 0.02)

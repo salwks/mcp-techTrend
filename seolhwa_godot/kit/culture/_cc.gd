@@ -354,7 +354,7 @@ static func env_roof(m: C.M, rects: Array, roof: String, ropts := {}) -> Diction
 			var y: float = r.eave + r.rise
 			var rot := 0.0 if r.axis == "x" else PI / 2
 			if prof == "giwa":
-				m.add("p", "flat", Kit.xf(C.P(Kit.box(half * 2 + 0.3, 0.3, 0.38), C.ROOF_DARK, 0x2d2e30, 0.02), cx, y + 0.08, cz, 0, rot, 0), 0.03)
+				m.add("p", "flat", Kit.xf(C.P(Kit.box(half * 2 + 0.3, 0.42, 0.38), C.ROOF_DARK, 0x2d2e30, 0.02), cx, y + 0.02, cz, 0, rot, 0), 0.03)
 				for s in [-1, 1]:
 					var tip := Kit.xf(Kit.box(0.5, 0.26, 0.34), 0, 0, 0, 0, 0, s * 0.55)
 					Kit.xf(tip, s * (half + 0.2), y + 0.22, 0)

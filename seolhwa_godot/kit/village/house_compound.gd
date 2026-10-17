@@ -212,7 +212,7 @@ static func lod_draw(m: C.M, e: Dictionary) -> void:
 			var r := C.curved_roof(W / 2 + 1.7, D / 2 + 1.55, 3.6, 2.4, 0.6, 1.9, 0.26, 10, 5)
 			m.add("p", "tile", r.roof, 0.05)
 			m.add("p", "makse", r.edge, 0)
-			m.add("p", "flat", C.P(Kit.box(r.ridge_half * 2 + 0.4, 0.3, 0.36, 0, r.ridge_y + 0.08, 0), C.ROOF_DARK), 0)
+			m.add("p", "flat", C.P(Kit.box(r.ridge_half * 2 + 0.4, 0.42, 0.36, 0, r.ridge_y + 0.02, 0), C.ROOF_DARK), 0)
 			m.light(0, 1.9, D / 2 + 0.2, "window")
 			m.box_c(-W / 2 - 0.6, W / 2 + 0.6, -D / 2 - 0.6, D / 2 + 1.45)
 		"village/neowa_house", "village/gulpi_house", "village/guitul_house", "village/choga_low":

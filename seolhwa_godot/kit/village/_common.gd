@@ -255,6 +255,9 @@ static func beam(a: Vector3, b: Vector3, w: float, h: float) -> Kit.Geo:
 # ---------------------------------------------------------------------------
 # 곡선 기와지붕 → { roof, edge, ridge_y, ridge_half }
 static func curved_roof(hw: float, hd: float, eave_y: float, rise: float, lift: float, k := 1.8, thick := 0.22, nx := 36, nz := 20) -> Dictionary:
+	# 깊이 칸 수는 짝수로(fix-1017): 홀수면 용마루 줄(z = 0)에 꼭짓점이 없어 지붕 마루가 rise의 1/3까지 낮게 접히고
+	# 용마루가 떠 보였다(집 묶음 기와 roof_nz 9·7, 먼 읍내 lod nz 5)
+	nz += nz % 2
 	var H := func(x: float, z: float) -> float:
 		var ex := (hw - absf(x)) * k; var ez := hd - absf(z)
 		var e := maxf(0.0, minf(ex, ez))
@@ -302,8 +305,9 @@ static func curved_roof(hw: float, hd: float, eave_y: float, rise: float, lift: 
 	return { roof = g, edge = e, ridge_y = eave_y + rise, ridge_half = maxf(0.0, hw - hd / k) }
 
 # 용마루 + 치켜든 끝
+# 용마루 몸은 위 끝(y + 0.23)은 그대로 두고 아래로 깊게(y − 0.19) — 마루 양쪽 비탈이 내려가는 자리에 틈이 보이지 않게(fix-1017)
 static func ridge_cap(m: M, part: String, half: float, y: float, w := 0.36) -> void:
-	m.add(part, "flat", P(Kit.box(half * 2, 0.3, w, 0, y + 0.08, 0), ROOF_DARK, 0x2d2e30, 0.02), 0.03)
+	m.add(part, "flat", P(Kit.box(half * 2, 0.42, w, 0, y + 0.02, 0), ROOF_DARK, 0x2d2e30, 0.02), 0.03)
 	for s in [-1, 1]:
 		m.add(part, "flat", P(Kit.xf(Kit.box(0.5, 0.26, w * 0.9), s * (half + 0.12), y + 0.22, 0, 0, 0, s * 0.55), ROOF_DARK, 0x2d2e30, 0.02), 0.03)
 
