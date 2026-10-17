@@ -25,12 +25,14 @@ static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.5, c
 	var n := maxi(2, int(len / 0.75))
 	for row in 2:
 		for i in n:
-			if m.r() < 0.25: continue
-			var x := -len / 2 + (i + 0.5 + 0.35 * row) * len / n
-			if x > len / 2 - 0.2: continue
-			var g := Kit.lump(0.17 + m.r() * 0.06, 0, R, 0.3, 0.6)
-			Kit.xf(g, x, 0.3 + row * 0.55, t / 2 - 0.02, 0, m.r() * 3, 0, 1.3, 1, 0.45)
-			m.add("p", "stone", C.P(g, 0xb3ac9c, 0x8f887a, 0.08, R), 0)
+			if m.r() < 0.35: continue
+			# fix-1017: 고른 두 줄의 같은 크기 밝은 점(물방울 무늬처럼 보임) 대신 — 자리·높이를 흩고 크기를 달리, 흙에 반쯤 묻힌 빛깔
+			var x := -len / 2 + (i + 0.5 + 0.35 * row + (m.r() - 0.5) * 0.5) * len / n
+			if absf(x) > len / 2 - 0.2: continue
+			var rr := 0.1 + m.r() * m.r() * 0.16
+			var g := Kit.lump(rr, 0, R, 0.3, 0.6)
+			Kit.xf(g, x, 0.25 + row * 0.55 + (m.r() - 0.5) * 0.22, t / 2 - 0.035, 0, m.r() * 3, 0, 1.2 + m.r() * 0.5, 0.8 + m.r() * 0.3, 0.4)
+			m.add("p", "stone", C.P(g, 0xa59c88, 0x857c6a, 0.1, R), 0)
 	# 갓: 마디로 나눈 맞배 덮개(기와는 0.4m 마디 = 기와 골 한 줄씩)
 	var segs := maxi(1, roundi(len / (tile_seg if cap == "tile" else 1.2)))
 	var cw := t / 2 + 0.22
