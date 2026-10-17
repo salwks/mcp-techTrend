@@ -392,6 +392,9 @@ func _build_scene() -> void:
 	world.loading = true
 	world.load_region(_data_dir)
 	world.set_terrain_param("dress_far", 45.0 if gfx_low() else 75.0)   # 땅 꾸밈 무늬 거리(설정 '화면 품질')
+	# 나무 근경(가지·잎 카드) ↔ 원경 판 바뀌는 띠(m, 플레이어에서): 화면 품질 낮음이면 가까이(잎 카드 화소·꼭짓점을 줄인다)
+	Kit.ensure_tree_globals()
+	RenderingServer.global_shader_parameter_set("tree_lod_band", Vector2(14.0, 20.0) if gfx_low() else Vector2(24.0, 30.0))
 	weather = Weather.new()
 	root.add_child(weather)
 	weather.setup(world, world.data_dir, String(_pending.get("weather", args.get("weather", ""))))
@@ -1455,7 +1458,7 @@ func _update_loading() -> void:
 func _prewarm_shaders() -> void:
 	var mats := []
 	Kit.material("water")   # 물 재질도 메인 스레드에서 미리(키트 짓기 작업 스레드에서 처음 만들지 않게)
-	for k in ["atlas", "cloth"]:
+	for k in ["atlas", "cloth", "bark_wind", "foliage"]:
 		var m: ShaderMaterial = Kit.material(k)
 		mats.append(m); mats.append(Materials.faded_copy(m))
 	for lit in [true, false]:

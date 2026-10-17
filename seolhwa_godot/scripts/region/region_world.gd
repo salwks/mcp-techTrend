@@ -516,7 +516,7 @@ func _make_materials() -> void:
 	_common_params(mat_far)
 	mat_far.set_shader_parameter("grid_step", float(FAR_STEP))
 	WaterFX.ensure_globals()   # 물 셰이더가 쓰는 전역 uniform(water_*) — 셰이더를 읽기 전에
-	Kit.material("water"); Kit.material("water_refl")   # 키트 물 재질은 여기(주 스레드)서 먼저 — 키트 짓기 일꾼 스레드가 셰이더를 읽지 않게
+	Kit.material("water"); Kit.material("water_refl"); Kit.material("foliage"); Kit.material("bark_wind")   # 키트 물·나무 재질은 여기(주 스레드)서 먼저 — 키트 짓기 일꾼 스레드가 셰이더를 읽지 않게
 	mat_water = ShaderMaterial.new(); mat_water.shader = load("res://shaders/region_water.gdshader")
 	_common_params(mat_water)   # 수심(높이맵)
 	mat_water.set_shader_parameter("ramp_tex", Materials.ramp_texture())
@@ -1625,7 +1625,8 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 			for k in groups:
 				var g: Dictionary = groups[k]
 				var e := { xf = base, mat = n0.material_override, mesh = mm.mesh, colors = mm.use_colors, custom = mm.use_custom_data, buf = g.buf, count = g.n,
-					lod = lod, rect = Rect2(g.lo, g.hi - g.lo), cast = cast, mm = null, node = null }
+					lod = lod, rect = Rect2(g.lo, g.hi - g.lo), cast = cast, mm = null, node = null,
+					xfade = int(n0.get_meta("xfade", 0)), shadow_only = n0.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY }
 				out.append(e)
 				if is_tall and lod == 0:
 					for i in int(g.n):
@@ -1655,6 +1656,10 @@ static func _make_node(e: Dictionary) -> Node3D:
 	c.transform = e.xf
 	c.material_override = e.mat
 	c.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if e.cast else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# 그림자 전용 대리(나무 LOD1)는 그림자만 — 예전에는 본 그림에도 같이 그려졌다(나무 손질 시험에서 고침)
+	if e.get("shadow_only", false): c.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if e.cast else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# 원근 교차(잎 카드 나무): 1 근경 벌 · 2 원경 판 벌 — 셰이더 instance uniform(Materials.TREE_GLOBALS)
+	if int(e.get("xfade", 0)) > 0: c.set_instance_shader_parameter("lod_mode", float(e.xfade))
 	c.multimesh = m
 	e.mm = m
 	e.node = c
@@ -1778,6 +1783,7 @@ func _poll_jobs() -> void:
 # 식생 묶음 고르기: 플레이어에서 lod0_dist 안은 자세한 벌, scatter_far 안은 거친 벌, 그 너머(안개 속)는 그리지 않는다
 func update_scatter_lod(player: Vector3, force := false) -> void:
 	if indoor != null: return
+	RenderingServer.global_shader_parameter_set("tree_focus", player)   # 나무 원근 교차 기준(셰이더)
 	if farm != null: farm.update(player)
 	_lod_frame += 1
 	if not force and not _lod_dirty and _lod_frame % 6 != 0: return
@@ -1787,7 +1793,8 @@ func update_scatter_lod(player: Vector3, force := false) -> void:
 		for e in tiles[t].scatter_nodes:
 			var r: Rect2 = e.rect
 			var d := Vector2(maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x), maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)).length()
-			var on: bool = (d < lod0_dist) if e.lod == 0 else (d >= lod0_dist and d < scatter_far)
+			# 잎 카드 나무의 원경 판 벌(xfade 2)은 근경 묶음과 겹쳐서도 켠다 — 셰이더가 나무마다 거리 띠(tree_lod_band)에서 점무늬로 바꾼다
+			var on: bool = (d < lod0_dist) if e.lod == 0 else ((d >= lod0_dist or int(e.get("xfade", 0)) == 2) and d < scatter_far)
 			if on != e.shown:
 				e.shown = on
 				e.node.visible = on

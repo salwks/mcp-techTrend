@@ -125,7 +125,10 @@ static func model(kind: String, variant: int, lod: int) -> Dictionary:
 	p.lod = int(spec.get("flod", lod))   # flod: 어린나무처럼 늘 원거리 메시를 쓰는 종류
 	var info: Dictionary = load(N + spec.s).build(p)
 	var mesh: ArrayMesh = info.mesh
-	var out := { mesh = mesh, arrays = mesh.surface_get_arrays(0), colliders = info.colliders, tris = info.get("tris", 0) }
+	# 합치기(_merge)는 아틀라스 표면 하나짜리만 — 잎 카드·바람 껍질(나무 손질 시험)은 MultiMesh로만 그린다(모델 공간 바람·원근 교차가 인스턴스 변환을 쓴다)
+	var one := mesh.get_surface_count() == 1 and mesh.surface_get_material(0) == Kit.material("atlas")
+	var out := { mesh = mesh, arrays = mesh.surface_get_arrays(0), colliders = info.colliders, tris = info.get("tris", 0), mergeable = one,
+		xfade = mesh.get_surface_count() > 0 and (mesh.surface_get_material(mesh.get_surface_count() - 1) == Kit.material("foliage")) }
 	(info.node as Node).free()
 	_mtx.lock()
 	_cache[key] = out
@@ -679,7 +682,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			var n_inst: int = J.groups[key].size() / 12
 			var mtris: int = m.tris
 			var verts: int = n_inst * (m.arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
-			if idx >= MAX_MM and n_inst <= MERGE_MAX and verts <= MERGE_VERTS:
+			if idx >= MAX_MM and n_inst <= MERGE_MAX and verts <= MERGE_VERTS and m.mergeable:
 				(rest_cast if cast else rest_flat).append([m, J.groups[key]])
 				merged_inst += n_inst
 				tris_main += n_inst * mtris
@@ -687,6 +690,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 				continue
 			var buf := PackedFloat32Array(J.groups[key])
 			var mmi := _mmi(m.mesh, buf, "%s_v%d_c%d" % [_names[kk], v, ch])
+			# 원근 교차(나무 손질 시험): 잎 카드 나무는 근경 벌(lod 0)·원경 판 벌(lod 1)을 거리 띠에서 점무늬로 바꾼다 — region_world가 이 표시를 본다
+			if tree and m.xfade: mmi.set_meta("xfade", 1 if lod == 0 else 2)
 			tris_main += n_inst * mtris
 			if tree and cast and lod == 0:
 				# 나무: 본 그림은 그림자를 끄고, 같은 버퍼로 LOD1 메시를 그림자 전용으로(그림자 패스 삼각형 ≈1/7)
