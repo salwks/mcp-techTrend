@@ -215,7 +215,8 @@ func _self_test(spec: String) -> void:
 	if p[0] == "newcap":
 		while d.main._loading: await get_tree().process_frame
 		for i in 30: await get_tree().process_frame
-		d.newgame_capture(d.main._abs(p[1]), float(d.main.args.get("capsecs", "20")), 0.5)
+		d.newgame_capture(d.main._abs(p[1]), float(d.main.args.get("capsecs", "20")), 0.5,
+			float(d.main.args.get("capstep", "0")), float(d.main.args.get("capfine", "0")))   # 프롤로그 비교 시험(임시): 처음 capfine초는 capstep초마다
 		_pick(0); return
 	while d.main._loading: await get_tree().process_frame
 	for i in 30: await get_tree().process_frame

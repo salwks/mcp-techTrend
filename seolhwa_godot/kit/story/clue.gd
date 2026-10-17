@@ -49,7 +49,10 @@ static func build(params: Dictionary) -> Dictionary:
 		"ledger": _ledger(m)
 		"brush": _brush(m)
 		"ledger_hang": _ledger_hang(m)
-		"paper_dry": fp = _paper_dry(m, int(params.get("n", 4)), bool(params.get("bound", false)))
+		"paper_dry":
+			fp = _paper_dry(m, int(params.get("n", 4)), bool(params.get("bound", false)))
+			if bool(params.get("dew", false)): _paper_dew(m)   # 프롤로그 비교 시험(임시) E5
+		"ink_dry": _ink_dry(m)   # 프롤로그 비교 시험(임시) E5
 	var res := m.result("단서_" + kind, fp, false)
 	if kind == "seoan": res.block = true   # 이야기 소품이 충돌체를 세우는 것은 block이 있을 때만(story_director._prop_cols)
 	return res
@@ -321,3 +324,17 @@ static func _paper_dry(m: C.M, n: int, bound: bool) -> Vector2:
 			m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.008, 0.002, 0.3 - k * 0.05), cx - 0.09 + k * 0.08, 0.006 + i * 0.0008, cz, 0, a, 0), INKC), 0.0)
 		if i == 0: m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.09, 0.002, 0.07), cx + 0.06, 0.007, cz + 0.1, 0, a, 0), [0x8a8478, 0x6a645a]), 0.0)   # 젖어 번진 자리
 	return Vector2(1.9, 1.1)
+
+# 프롤로그 비교 시험(임시 — claude/prologue-framed-trial) E5 시간의 흔적: 첫 장(n=1의 자리)에 이슬로 먹이 번진 큰 얼룩 · 서안 벼루의 마른 먹 갈라짐
+static func _paper_dew(m: C.M) -> void:
+	var R := m.rng
+	var cx := -0.62; var cz := -0.22
+	for k in 5:
+		var w := R.between(0.07, 0.14); var l := R.between(0.06, 0.12)
+		m.add("p", "flat", C.PA(Kit.xf(Kit.box(w, 0.002, l), cx + R.between(-0.12, 0.12), 0.0085, cz + R.between(-0.16, 0.16), 0, R.between(-0.6, 0.6), 0), [0x8d8c8e, 0x77777c]), 0.0)
+	m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.3, 0.001, 0.36), cx, 0.0078, cz, 0, 0.05, 0), [0xc9bfa6, 0xb8ad93], 0.03, R), 0.0)   # 젖었다 마른 누런 물자국
+
+static func _ink_dry(m: C.M) -> void:
+	m.add("p", "stone", C.PA(Kit.box(0.11, 0.004, 0.17, 0.38, 0.352, 0.05), [0x77746c, 0x5e5b55]), 0.0)   # 말라 허옇게 뜬 먹 자리
+	for i in 4:
+		m.add("p", "flat", C.PA(Kit.xf(Kit.box(0.004, 0.003, 0.09), 0.34 + i * 0.025, 0.355, 0.05, 0, 0.5 - i * 0.3, 0), [0x1a1714, 0x101010]), 0.0)   # 갈라진 금

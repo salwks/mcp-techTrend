@@ -13,6 +13,7 @@ const D := preload("res://story/main_p1/main_p1_data.gd")
 const Docs := preload("res://scripts/story/documents.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const TitleMenu := preload("res://scripts/story/title_menu.gd")
+const Sound := preload("res://scripts/audio/sound.gd")   # 프롤로그 비교 시험(임시) — 작은 소리·높낮이
 
 const ROOM := ["ledger", "shoes", "brush"]
 const KNOCK_AFTER := 6.0       # 첫 조사 뒤 문 두드림까지(조작 중 — 한가한 시간만 센다)
@@ -40,6 +41,16 @@ var title_running := false
 var title_t := []              # 시험 기록: 제목 연출 단계별 시각
 var steps_log: Array = []      # 시험 기록: [단계, 시각]
 var _knock_t := -1.0
+
+# ---- 프롤로그 비교 시험(임시 — claude/prologue-framed-trial 전용, 기본 꺼짐) ------------------------------------
+#   -- --prologue=current_e : 지금 프롤로그 + 승인 연출 E1~E7 · -- --prologue=framed : 액자판(지금 빈 마당 → 젖은 기록지 → dip →
+#   그날 오후 INTRO_01'~04 → 같은 구도의 빈 마당(나그네 없음) → 방 안) + E1~E7. 인자가 없으면 아래 값은 모두 꺼져 지금 프롤로그 그대로다.
+#   근거: 이야기 문서 prologue_framed_comparison_v1.md · prologue_v2_existing_flow_eval.md v1.1. 결정 전 비교 초안 — 출시 구현이 아니다.
+var pro_var := ""              # "" | "current_e" | "framed"
+var _e2_on := false            # E2 지난 오후 바탕 소리(먼 엿장수 가위 — 임시: cup_clink 높게) 도는 중
+var _pt0 := 0.0                # 시험 기록 기준(프롤로그 시작)
+const PRO_PAST_FR := 0.30      # 액자판만: dip 직후 지난날 색감 0.30 → 1초 동안 PRO_PAST(0.15)로 — 사용자 확인 필요(구현 결정은 0.15 고정)
+const FR_STAND := [-3193.15, 705.75]   # 액자판 F1 나그네가 등을 보이고 서는 자리(멍석 동쪽 곁 — D.L(-1.15, 5.75))
 
 func _init(director) -> void:
 	d = director
@@ -267,16 +278,85 @@ func _seat_player(at: String, h: float, facing: String) -> void:
 	d.main.player.facing = facing
 	d.main.player.play("sit", true)
 
-func prologue() -> void:
-	var ob = d.onboard
-	prologue_played = true
-	prologue_t = []
-	var p0 := _now()
-	_skip_ok_at = p0 + PRO_SKIP_GUARD
-	if ob != null: ob.skippable = true; ob.skip = false
-	d.ui._fade.color.a = 1.0
-	d.cutscene(true)
-	if d.ui.get("_toasts") != null: d.ui._toasts.visible = false   # 컷 동안 알림 줄(길목 깃발 발견 등)은 감춘다
+func _ev() -> bool: return pro_var != ""
+func _fr() -> bool: return pro_var == "framed"
+
+# 시험(임시): 소리 신호 기록 — 시각표의 '첫 소리'용
+func _tsfx(id: String, db := 0.0, pitch := 1.0, at = null) -> void:
+	printerr("PROTRIAL sfx %s t=%.2f" % [id, _now() - _pt0])
+	if at != null and db == 0.0 and pitch == 1.0: d.sfx(id, at); return
+	d.sfx_cue.emit(id)
+	Sound.play(id, { "db": db, "pitch": pitch })
+
+# E1·E6 느린 두 번 두드림(같은 knock.wav를 낮고 느리게 — 두 번 사이 약 0.53초) · E7 빠른 여러 번
+func _knock_slow() -> void: _tsfx("knock", -2.0, 0.6)
+
+# E2 지난 오후 바탕(임시): 먼 엿장수 가위 '찰칵, 찰칵'(cup_clink 높게·작게 — 임시 소리) + 새·개울을 이어 튼다(한 번 틀고 끝나는 소리라 E3 끊김이 들리게)
+func _e2_loop() -> void:
+	_e2_on = true
+	var k := 0
+	while _e2_on and d.is_inside_tree():
+		if k % 2 == 0: _tsfx("cup_clink", -21.0, 1.7)   # 임시 — 엿장수 가위
+		if k % 3 == 1: Sound.play("birds_day", { "db": -6.0 })
+		if k % 3 == 2: Sound.play("stream_small", { "db": -6.0 })
+		k += 1
+		await d.get_tree().create_timer(1.9).timeout
+
+func _e3_cut() -> void:
+	_e2_on = false
+	printerr("PROTRIAL sound_cut t=%.2f" % (_now() - _pt0))
+	Sound.stop_sfx()
+
+# E5 시간의 흔적: 멍석의 기록지 한 장을 '이슬에 번진' 것으로, 서안 벼루에 마른 먹 갈라짐(지금 마당 — 다음 실행까지 남아도 놀이에 영향 없음)
+var _trial_nodes := {}
+func _e5_props(on: bool) -> void:
+	if on and _trial_nodes.is_empty():
+		var a: Vector2 = d.anchor("pro_mat")
+		var n = d._build_prop({ "kit": "story/clue", "params": { "kind": "paper_dry", "n": 1, "seed": 3178, "dew": true }, "ry": 0.0, "dy": 0.05 }, a)
+		if n != null: _trial_nodes["dew"] = n
+		var b: Vector2 = d.anchor("pro_desk")
+		var m = d._build_prop({ "kit": "story/clue", "params": { "kind": "ink_dry", "seed": 3179 }, "ry": 0.0, "dy": 0.49 }, b)
+		if m != null: _trial_nodes["ink"] = m
+	for k in _trial_nodes:
+		var x = _trial_nodes[k]
+		if x != null and is_instance_valid(x): x.visible = on
+	_story_prop("p_paper_left", not on)
+
+# 기록지 가까이(F2·F3·E5 끼움 컷): 멍석 첫 장과 이겸이 무릎 꿇던 자리 사이를 위에서 비스듬히 — 지금/지난날 같은 각도
+func _mat_close(sec: float) -> void:
+	var a: Vector2 = d.anchor("pro_mat")
+	var p := Vector2(a.x - 0.35, a.y + 0.1)
+	var y: float = d.world.height_at(p.x, p.y)
+	d.main.rig.focus = { x = p.x, z = p.y, y = y - 0.55 }
+	d.main.rig.override = { "pitch": 52.0, "distance": 3.4, "fov": 32.0 }
+	d.main.rig.glide(sec)
+
+# 액자판 F1: 지금 빈 마당 — 이겸 없음, 남은 물건(E5), 아침 빛, 나그네가 멍석 곁에 등을 보이고 서 있다
+func _framed_present_setup() -> void:
+	d.set_hour(9.5)
+	if post_ref() != null: post_ref().past = 0.0
+	_e5_props(true)
+	d.teleport_to(FR_STAND, "up")
+	d.main.player.play("idle", true)
+
+func post_ref():
+	return d.main.get("post")
+
+# 액자판 F3: 지금 → 지난 오후(dip 검은 화면 안). 지난날 소품·이겸·제자 자리(구현 프롤로그 처음과 같은 상태) · 색감 0.30 → 0.15
+func _past_swap() -> void:
+	_e5_props(false)
+	_story_prop("p_paper_left", false)
+	_past_setup()
+	_pro_show("paper1", true)
+	var post = post_ref()
+	if post != null:
+		post.past = PRO_PAST_FR
+		d.create_tween().tween_property(post, "past", PRO_PAST, 1.0)
+	_mat_close(0.01)
+	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+
+# 지난날 상태 세우기(구현 프롤로그 처음 — 기본판은 여기서 그대로 부른다)
+func _past_setup() -> void:
 	d.set_hour(15.0)   # 지난날 오후
 	d.teleport_to("pro_disc", "right")
 	_seat_player("pro_disc", 0.49, "right")
@@ -287,22 +367,96 @@ func prologue() -> void:
 	_story_prop("p_paper_left", false)
 	var post = d.main.get("post")
 	if post != null: post.past = PRO_PAST
-	_cam({ "focus": "pro_two", "distance": 30.0, "pitch": 46.0, "fov": 34.0 }, 0.01)
+
+func prologue() -> void:
+	var ob = d.onboard
+	prologue_played = true
+	prologue_t = []
+	var p0 := _now()
+	_pt0 = p0
+	var pv := String(d.main.args.get("prologue", "")) if d.main.get("args") != null else ""
+	pro_var = pv if pv in ["current_e", "framed"] else ""
+	printerr("PROTRIAL variant=%s p0_ms=%d ng0_ms=%d" % [pro_var if pro_var != "" else "current", int(p0 * 1000.0), TitleMenu.new_game_t0])
+	_skip_ok_at = p0 + PRO_SKIP_GUARD
+	if ob != null: ob.skippable = true; ob.skip = false
+	d.ui._fade.color.a = 1.0
+	d.cutscene(true)
+	if d.ui.get("_toasts") != null: d.ui._toasts.visible = false   # 컷 동안 알림 줄(길목 깃발 발견 등)은 감춘다
+	if _fr():
+		_framed_present_setup()
+		_cam({ "focus": "pro_wide", "distance": 17.5, "pitch": 37.0, "fov": 34.0 }, 0.01)
+	else:
+		_past_setup()
+		_cam({ "focus": "pro_two", "distance": 30.0, "pitch": 46.0, "fov": 34.0 }, 0.01)
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
 	_log("prologue_start")
 	var sk := false
-	# ---- INTRO_01 (0–7.4): 솔숲·물·새·바람 — 카메라가 다가가 둘을 한 화면에. 이겸은 멍석에 젖은 기록지를 편다(S1.0). 대사 없음
-	_beat("INTRO_01", p0)
-	d.sfx("wind"); d.sfx("birds_day"); d.sfx("stream_small")
-	d.ui.fade(false, 1.2)
-	_cam({ "focus": "pro_two", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 5.2)
-	for k in range(1, 5):
-		if sk: break
-		sk = await _sw(1.4)
+	if _ev(): _knock_slow()   # E1 검은 화면에 느린 두 번 두드림(0.0~1.2)
+	if _fr():
+		# ---- F1 (1.2–7.2) 지금의 빈 마당: 아침 빛, 와이드에서 천천히 다가감. 바람뿐(E4). 나그네가 멍석 곁에 등을 보이고 서 있다
+		sk = await _sw(1.2)
 		if not sk:
-			for j in range(1, 5): _pro_show("paper%d" % j, j == k)
-			d.sfx("page_turn")
-	if not sk: sk = await _sw(1.6)
+			_beat("F1_present", p0)
+			_tsfx("wind")
+			d.ui.fade(false, 1.0)
+			_cam({ "focus": "pro_wide", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 6.0)
+			sk = await _sw(4.6)
+		if not sk:
+			d.main.player.play("bow", true)   # 기록지 쪽으로 고개를 숙임(있는 자세 — 위험 1 받침)
+			sk = await _sw(1.4)
+		# ---- F2 (7.2–8.4) 기록지 가까이: 이슬에 먹이 번진 종이(E5). 바람, 종이 바스락
+		if not sk:
+			_beat("F2_record", p0)
+			_occ_off("pro_mat")
+			_mat_close(0.01)
+			d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+			_tsfx("wind", -4.0)
+			_tsfx("page_turn", -10.0, 0.8)
+			sk = await _sw(1.2)
+		# ---- F3 (8.4–8.65) 0.25초 dip → 지난 오후, 같은 멍석·같은 각도. 바탕 소리가 dip 안에서 바뀜(바람 → 새·개울·엿장수 E2)
+		if not sk:
+			_beat("F3_dip", p0)
+			await d.ui.fade(true, 0.12)
+			Sound.stop_sfx()
+			_past_swap()
+			_tsfx("birds_day"); _tsfx("stream_small")
+			_e2_loop()
+			d.ui.fade(false, 0.13)
+			sk = await _sw(0.13)
+		# ---- INTRO_01' (8.65–14.2): 기록지 1→4장 · 같은 각도에서 시작해 둘을 한 화면에(5.55초). 대사 없음
+		if not sk:
+			_beat("INTRO_01", p0)
+			_tsfx("page_turn")
+			sk = await _sw(1.25)
+		if not sk:
+			_occ_off(null)
+			_cam({ "focus": "pro_two", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 4.0)
+		for k in range(2, 5):
+			if sk: break
+			sk = await _sw(1.25)
+			if not sk:
+				for j in range(1, 5): _pro_show("paper%d" % j, j == k)
+				d.sfx("page_turn")
+		if not sk: sk = await _sw(0.55)
+	else:
+		# ---- INTRO_01 (0–7.4): 솔숲·물·새·바람 — 카메라가 다가가 둘을 한 화면에. 이겸은 멍석에 젖은 기록지를 편다(S1.0). 대사 없음
+		_beat("INTRO_01", p0)
+		if _ev():
+			# E1: 두드림 동안 검은 화면을 둔다(시작 메뉴가 0.6초에 걸쳐 사라진 뒤 1.0초까지 검정 → 0.8초 페이드) · 바탕 소리는 1.2초에(+E2 엿장수)
+			d.get_tree().create_timer(1.0).timeout.connect(func(): d.ui.fade(false, 0.8))
+			d.get_tree().create_timer(1.2).timeout.connect(func():
+				_tsfx("wind"); _tsfx("birds_day"); _tsfx("stream_small"); _e2_loop())
+		else:
+			d.sfx("wind"); d.sfx("birds_day"); d.sfx("stream_small")
+			d.ui.fade(false, 1.2)
+		_cam({ "focus": "pro_two", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 5.2)
+		for k in range(1, 5):
+			if sk: break
+			sk = await _sw(1.4)
+			if not sk:
+				for j in range(1, 5): _pro_show("paper%d" % j, j == k)
+				d.sfx("page_turn")
+		if not sk: sk = await _sw(1.6)
 	# ---- INTRO_02 (7.4–21.0): 이겸이 기록을 들어 올린다 · 제자가 고개를 든다 — 컷 없는 투샷
 	if not sk:
 		_beat("INTRO_02", p0)
@@ -380,7 +534,13 @@ func prologue() -> void:
 		d.anim_actor("yigyeom_past", "idle")
 		_beat("book_look", p0)
 		_look_page(0.7)   # 펼친 쪽을 내려다본다 — 첫 줄을 읽을 만큼 가깝게
-		sk = await _sw(0.7 + line_sec(BOOK_FIRST))   # 내려다보는 0.7초 + 첫 줄을 온전히 읽는 시간(자막 머묾과 같은 셈)
+		if _ev():   # E3: 소리가 그림보다 0.3초 먼저 끊긴다
+			sk = await _sw(0.7 + line_sec(BOOK_FIRST) - 0.3)
+			if not sk:
+				_e3_cut()
+				sk = await _sw(0.3)
+		else:
+			sk = await _sw(0.7 + line_sec(BOOK_FIRST))   # 내려다보는 0.7초 + 첫 줄을 온전히 읽는 시간(자막 머묾과 같은 셈)
 	if not sk:
 		_beat("fade_out", p0)
 		d.ui.fade(true, 0.9)
@@ -388,16 +548,34 @@ func prologue() -> void:
 	if not sk:
 		_beat("silence", p0)
 		_present_swap()                  # 검은 화면 안에서: 이겸이 없는 지금으로
+		if _ev(): _e5_props(true)
+		if _fr():   # 처음 F1과 같은 구도 — 나그네만 없다(방 쪽으로 간 뒤)
+			d.main.player.visible = false   # 방 안으로 옮기면 집 앞벽이 잘려 보이므로 자리는 두고 감춘다(_to_room에서 되돌림)
+			_cam({ "focus": "pro_wide", "distance": 13.0, "pitch": 34.0, "fov": 34.0 }, 0.01)
+			d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
 		sk = await _sw(1.0)
 	if not sk:
 		_beat("present", p0)
-		d.sfx("wind")
+		if _ev(): _tsfx("wind")   # E4 바람뿐
+		else: d.sfx("wind")
 		d.ui.fade(false, 0.9)
-		sk = await _sw(2.4)               # 바람뿐인 마당, 남은 물건(평상의 서안·멍석의 기록지 한 장)
+		sk = await _sw(1.6 if _ev() else 2.4)   # 바람뿐인 마당, 남은 물건(평상의 서안·멍석의 기록지 한 장) — E판은 와이드를 0.8초 줄인다
+	if not sk and pro_var == "current_e":
+		_beat("E5_insert", p0)   # E5 이슬에 번진 기록지 끼움 컷(1.2초) — 액자판은 F2에서 이미 봤으므로 없음
+		_occ_off("pro_mat")
+		_mat_close(0.01)
+		d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+		sk = await _sw(1.2)
 	if not sk:
 		_occ_off("door")
 		_cam({ "focus": "door", "distance": 8.5, "pitch": 40.0, "fov": 34.0 }, 1.5)   # 조용한 방 쪽으로(너무 다가가 앞벽이 반투명해지기 전까지)
-		sk = await _sw(1.5)
+		if _ev():   # E6 대답 없는 집: 밀어 들어가며 느린 두 번 두드림(E1과 같은 소리) → 대답 없이 1.0초
+			_beat("E6_knock", p0)
+			sk = await _sw(0.3)
+			if not sk: _knock_slow(); sk = await _sw(1.2)
+			if not sk: sk = await _sw(1.0)
+		else:
+			sk = await _sw(1.5)
 	if not sk:
 		_beat("dip", p0)
 		await d.ui.fade(true, 0.12)       # 0.25초 dip(나감 0.12 · 들어옴 0.13)으로 방 안
@@ -412,7 +590,9 @@ func prologue() -> void:
 		flag("PROLOGUE_SKIPPED")
 		_beat("skipped", p0)
 		await d.ui.fade(true, 0.08)
+		if _ev(): _e3_cut()
 		_present_swap()
+		if _ev(): _e5_props(true)
 		_to_room()
 		d.ui.caption("", 0.01)
 		d.ui.fade(false, 0.25)   # 건너뛰면 0.25초 페이드 뒤 방 안(첫15 OP00 건너뛰기와 같다)
@@ -450,6 +630,7 @@ func _occ_off(at) -> void:
 
 func _to_room() -> void:
 	_occ_off(null)
+	if pro_var == "framed": d.main.player.visible = true
 	d.teleport_to("home_start", "up")
 	d.camera(null)
 	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
@@ -502,13 +683,19 @@ func knock() -> void:
 	if f("KNOCKED"): return
 	flag("KNOCKED")
 	_log("knock")
-	d.sfx("knock", "yard_front")
+	if pro_var != "":   # E7(시험 임시): 낯선 손 — 빠르고 여러 번
+		for i in 3: get_e7_timer(i * 0.24).connect(func(): Sound.play("knock", { "pitch": 1.2, "db": 1.0 }))
+	else:
+		d.sfx("knock", "yard_front")
 	d.ui.caption("마당에서 문 두드리는 소리. “거기 계십니까? 이겸 어른 댁 맞소?”", 3.0)   # 메인 대본 P00-A
 	d.mark_dirty()
 
 # ---------------------------------------------------------------------------
 # P01-A 문턱의 봉투 · P01-B 견주기
 # ---------------------------------------------------------------------------
+func get_e7_timer(sec: float) -> Signal:
+	return d.get_tree().create_timer(maxf(sec, 0.001)).timeout
+
 func read_letter() -> void:
 	_cam({ "focus": "threshold", "distance": 6.0, "pitch": 54.0 }, LETTER_IN)
 	await d.wait(LETTER_IN)

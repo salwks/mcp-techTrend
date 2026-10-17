@@ -504,12 +504,14 @@ func _maybe_title() -> void:
 	add_child(title)
 
 # 시험(--titletest=newcap): 새 게임부터 step초마다 화면을 찍는다 — 오프닝 연속 캡처. 끝나면 게임을 닫는다
-func newgame_capture(dir: String, secs: float, step: float) -> void:
+func newgame_capture(dir: String, secs: float, step: float, fine_step := 0.0, fine_secs := 0.0) -> void:
 	DirAccess.make_dir_recursive_absolute(dir)
 	var t0 := Time.get_ticks_msec()
+	printerr("NEWCAP t0_ms=%d" % t0)
 	var n := 0
 	while float(Time.get_ticks_msec() - t0) / 1000.0 < secs:
-		await get_tree().create_timer(step).timeout
+		var fine := fine_step > 0.0 and float(Time.get_ticks_msec() - t0) / 1000.0 < fine_secs
+		await get_tree().create_timer(fine_step if fine else step).timeout
 		var t := float(Time.get_ticks_msec() - t0) / 1000.0
 		get_viewport().get_texture().get_image().save_jpg(dir.path_join("%02d_t%05.2f.jpg" % [n, t]), 0.8)
 		n += 1
