@@ -129,7 +129,7 @@ func run() -> void:
 	await main._wait_frames(3)
 	_ok(not main.first_person and not main.fp_active, "0 키 → 3인칭")
 	_ok((main.cam.cull_mask & main.PLAYER_LAYER) != 0 and is_equal_approx(main.cam.near, 0.5), "3인칭: 층·near 되돌림")
-	_ok(main.rig.cur.pitch > 35.0, "3인칭 각 %.1f" % main.rig.cur.pitch)
+	_ok(main.rig.cur.pitch >= float(main.world.TOWN_FRAME.pitch) - 1.0, "3인칭 각 %.1f(마을 구도 %.0f° 이상)" % [main.rig.cur.pitch, float(main.world.TOWN_FRAME.pitch)])   # fix-1017: 마을 구도 22°
 	_ok(main._near_detail == 0.0, "3인칭: 땅 잔무늬 끔")
 	if _fails.is_empty(): print("VIEWTEST PASS checks=%d" % _n)
 	else: print("VIEWTEST FAIL ", "; ".join(_fails))

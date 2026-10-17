@@ -402,13 +402,15 @@ var _cz_frame := 0
 #   조금 낮고 가깝게 — 좁고 촘촘한 무대처럼, 앞 지붕·담이 화면 아래를 지나가고 깊이 흐림이 앞뒤를 나눈다.
 #   되돌리기: 이 두 값을 pitch 40 · dist_k 1.0으로(원본 CAM_TOWN·region.json은 그대로 40). 비교 촬영: --townframe=각,거리배율
 #   그대로 두는 것: 권역 기본 · 숲길 48 · 길 밖 숲 55 · 고개 30 · 실내 · 대화 TALK · 1인칭 · 말·배 · 지도 · 사건 카메라(override)
-static var TOWN_FRAME := { pitch = 32.0, dist_k = 0.78 }   # 2026-10-17 사용자: 36°보다 더 낮게
+static var TOWN_FRAME := { pitch = 22.0, dist_k = 0.64 }   # 2026-10-17 fix-1017: 사용자 "32°보다 더 낮게"(성벽 말고는 단층) — 32·28·25·22 비교 뒤 22°(shots/fix_1017/camera_sheet.jpg)
 
 static func town_cam(cam: Dictionary) -> Dictionary:
 	var o := cam.duplicate()
 	if float(cam.get("pitch", 40.0)) >= 38.0 and float(cam.get("pitch", 40.0)) <= 42.0:
 		o.pitch = float(TOWN_FRAME.pitch)
 		o.distance = float(cam.get("distance", 22.0)) * float(TOWN_FRAME.dist_k)
+		# 도시 구역 겨냥 옮김(aimZ, 운종가 −5 등)은 거리가 줄면 화면에서 더 크게 먹혀 플레이어가 화면 아래로 내려간다 — 낮은 구도에선 덜 옮긴다
+		if cam.has("aimZ"): o.aimZ = float(cam.aimZ) * clampf((float(TOWN_FRAME.pitch) - 15.0) / 25.0, 0.0, 1.0)
 		o.town_frame = true
 	return o
 

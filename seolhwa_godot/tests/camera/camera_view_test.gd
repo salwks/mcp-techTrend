@@ -1,7 +1,7 @@
 # 카메라 기본 각·깊이 흐림 손잡이 시험(2026-10 — 기본 40° · 도시 구역 40 · 깊이 흐림 · 1인칭 값) — 헤드리스, 저장 없음.
 #   godot --headless --path . -s res://tests/camera/camera_view_test.gd
 #   A 기본 각: CameraRig.DEFAULT pitch 40 · 권역 기본·고을 구역 40 · region.json camera_zones 전부 38~42(이전 45·47) · north.py 원본도 같은 값
-#     마을 무대 구도(visual-pass): 짓는 고을·도시 구역만 RegionWorld.TOWN_FRAME(30~40°) — 숲·고개는 그대로
+#     마을 무대 구도(visual-pass): 짓는 고을·도시 구역만 RegionWorld.TOWN_FRAME(20~40°) — 숲·고개는 그대로
 #   B 연출 값 그대로: 대화 TALK 38/13.5/38 · override(d.camera·각본)가 구역보다 이기고 값이 그대로 · shot(pos·look·fov)이 그대로 카메라에
 #   C 깊이 흐림: PostEffect.tilt(옛 이름)와 dof가 같은 값 · 끄면 둘 다 꺼짐 · 1인칭 상수(눈높이 1.55 · 층 20 · ±70°) · 먼 산 대기 원근(150m 밖) · 땅 잔무늬 15m
 #   끝 줄: CAMVIEWTEST PASS n / CAMVIEWTEST FAIL n
@@ -46,7 +46,7 @@ func _pitch() -> void:
 	var tf: Dictionary = RegionWorld.TOWN_FRAME
 	var tc: Dictionary = RegionWorld.town_cam(RegionWorld.CAM_TOWN)
 	ok(is_equal_approx(float(tc.pitch), float(tf.pitch)) and is_equal_approx(float(tc.distance), 22.0 * float(tf.dist_k)), "고을 구역 → 마을 무대 구도 %.0f° / %.1fm" % [float(tc.pitch), float(tc.distance)])
-	ok(float(tf.pitch) >= 30.0 and float(tf.pitch) <= 40.0 and float(tf.dist_k) >= 0.7 and float(tf.dist_k) <= 1.0, "마을 무대 구도 범위(30~40° · 거리 0.7~1.0배)")
+	ok(float(tf.pitch) >= 20.0 and float(tf.pitch) <= 40.0 and float(tf.dist_k) >= 0.6 and float(tf.dist_k) <= 1.0, "마을 무대 구도 범위(20~40° · 거리 0.6~1.0배)")
 	var tforest: Dictionary = RegionWorld.town_cam(RegionWorld.CAM_FOREST)
 	var tpass: Dictionary = RegionWorld.town_cam(RegionWorld.CAM_PASS)
 	ok(float(tforest.pitch) == 48.0 and float(tpass.pitch) == 30.0 and float(RegionWorld.CAM_DEEP.pitch) == 55.0, "숲길 48 · 고개 30 · 길 밖 숲 55 그대로(마을 구도 안 받음)")

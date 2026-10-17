@@ -167,7 +167,8 @@ func run() -> void:
 	await main._wait_frames(20)
 	var s0: Dictionary = crowd.stats
 	print("PREPTEST crowd near stats=", s0)
-	_check(int(s0.shown) > 0 and int(s0.active) > 0, "가까운 군중은 그려지고 움직임(%s)" % s0)
+	# 움직임 = 매 프레임(active) 또는 세 프레임에 한 번(reduced). 화면 안 인원 수는 마을 구도 각에 따라 달라진다(fix-1017 22°)
+	_check(int(s0.shown) > 0 and int(s0.active) + int(s0.reduced) > 0, "가까운 군중은 그려지고 움직임(%s)" % s0)
 	_check(int(s0.hidden) > 0, "60m 밖 군중은 숨김(%s)" % s0)
 	_check(int(s0.frozen) + int(s0.reduced) > 0, "화면 밖·중간 거리 군중은 멈추거나 덜 갱신(%s)" % s0)
 	var mem: Array = crowd.members("dano_market")
