@@ -120,6 +120,33 @@ static func platform(b, w: float, d: float, h: float, rng: Kit.Rng, cz := 0.0, s
 			var sh := h * (s + 1) / ns
 			b.add("stone", pnt(Kit.box(step_w, sh, 0.36, cx + sx, sh / 2, cz + d / 2 + 0.18 + (ns - 1 - s) * 0.34), STONE_L, 0.04, rng), 0.02)
 
+# 나무 계단(누각·누정 마루로 오르는 계단, fix-1017): 땅(y 0)에서 마루(F)까지 n단 — 디딤판 n−1장 + 마지막 단은 마루 자체.
+#   x: 계단 가운데, z_top: 마루 끝(윗단이 닿는 자리), dir: 내려가는 쪽(−1 = −z로, +1 = +z로), w: 디딤판 폭, run: 한 단 너비.
+#   디딤판 앞 끝(코)은 땅 끝(n·run, 0) ↔ 마루 끝(0, F)을 잇는 한 직선 위에 있다. 두 옆판(stringer)은 그 직선 바로 밑을 따라
+#   땅속에서 마루 밑까지 이어져 디딤판 양 끝을 받친다. 옛 판은 옆판 기울기 부호(rx)가 반대이고 길이가 짧아 디딤판과 엇갈렸다.
+#   반환 { geo, walks(디딤판마다 건물 걷기 면 — 한 단 F/n ≤ World.MAX_STEP), foot(z: 맨 아랫단 앞 땅) }
+static func wood_stair(x: float, z_top: float, F: float, w := 1.3, dir := -1.0, run := 0.28, rise := 0.23) -> Dictionary:
+	var n := maxi(3, ceili(F / rise))
+	var D := n * run
+	var parts := []
+	var walks := []
+	for k in range(1, n):
+		var y := F * k / n
+		var a0 := (n - k - 1) * run; var a1 := (n - k) * run   # 마루 끝에서 잰 거리(뒤 끝 a0 · 앞 코 a1)
+		parts.append(Kit.box(w, 0.06, run + 0.05, x, y - 0.03, z_top + dir * (a0 + a1) * 0.5))
+		var za := z_top + dir * a0; var zb := z_top + dir * a1
+		var z0 := minf(za, zb); var z1 := maxf(za, zb)
+		walks.append({ minX = x - w / 2, maxX = x + w / 2, minZ = z0, maxZ = z1, z = [z0, z1], y = [y, y], floor = true })
+	var L := sqrt(D * D + F * F)
+	var th := atan2(F, D)
+	var sh := 0.3; var drop := 0.1   # 옆판 높이 · 디딤판 코 줄에서 옆판 가운데까지 내림
+	var ext := 0.35                   # 아래 끝을 땅속으로 조금 묻는다
+	var ac := D * 0.5 - F / L * drop + D / L * ext * 0.5
+	var yc := F * 0.5 - D / L * drop - F / L * ext * 0.5
+	for sx in [-1.0, 1.0]:
+		parts.append(Kit.xf(Kit.box(0.08, sh, L + ext), x + sx * (w / 2 + 0.04), yc, z_top + dir * ac, dir * th, 0, 0))
+	return { geo = Kit.merge(parts), walks = walks, foot = z_top + dir * (D + 0.4) }
+
 # ---------------------------------------------------------------------------
 # 범용 목조 건물(hall). body/roof 두 Batch에 넣는다. 정면 +z.
 # o: bays(Array 정면 칸 폭), depth(측면 길이 D), dbays(측면 칸 수), F(기단 높이), H(기둥 높이),

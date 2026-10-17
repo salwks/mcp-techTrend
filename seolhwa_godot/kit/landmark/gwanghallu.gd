@@ -35,10 +35,11 @@ static func build(params: Dictionary) -> Dictionary:
 	var ov := 0.9
 	b.add("wood", Co.pnt(Kit.box(W + ov * 2, 0.22, D + ov * 2, 0, F - 0.11, 0), Co.WOOD_L, 0.03, rng), 0.02)
 	b.add("flat", Co.pnt(Kit.box(W + ov * 2 + 0.1, 0.18, D + ov * 2 + 0.1, 0, F - 0.3, 0), Co.DAN_G, 0.0), 0.015)
-	# 계자난간(바깥 둘레, 앞 가운데는 틔움 없음)
+	# 계자난간(바깥 둘레). 뒤(북)쪽은 계단 머리(sx ± sgw)만 틔운다 — 예전에는 난간이 계단 머리를 막았다
 	var rg := []
 	var hw := W / 2 + ov - 0.05; var hd := D / 2 + ov - 0.05
-	for e in [[Vector2(-hw, hd), Vector2(hw, hd)], [Vector2(hw, -hd), Vector2(-hw, -hd)], [Vector2(hw, hd), Vector2(hw, -hd)], [Vector2(-hw, -hd), Vector2(-hw, hd)]]:
+	var sx_st := W / 2 - 1.6; var sw := 1.3; var sgw := sw / 2 + 0.12
+	for e in [[Vector2(-hw, hd), Vector2(hw, hd)], [Vector2(hw, -hd), Vector2(sx_st + sgw, -hd)], [Vector2(sx_st - sgw, -hd), Vector2(-hw, -hd)], [Vector2(hw, hd), Vector2(hw, -hd)], [Vector2(-hw, -hd), Vector2(-hw, hd)]]:
 		var a: Vector2 = e[0]; var c: Vector2 = e[1]
 		var L := a.distance_to(c); var m := (a + c) / 2
 		var along_x := absf(a.y - c.y) < 0.01
@@ -46,7 +47,7 @@ static func build(params: Dictionary) -> Dictionary:
 		rg.append(Kit.box(sx, 0.08, sz, m.x, F + 0.85, m.y))
 		rg.append(Kit.box(sx * (1 if along_x else 1.5), 0.14, sz * (1.5 if along_x else 1), m.x, F + 0.12, m.y))
 		rg.append(Kit.box(sx, 0.05, sz, m.x, F + 0.45, m.y))
-		var n := roundi(L / 0.9)
+		var n := maxi(1, roundi(L / 0.9))
 		for i in n + 1:
 			var p := a.lerp(c, float(i) / n)
 			rg.append(Kit.box(0.07, 0.75, 0.07, p.x, F + 0.47, p.y))
@@ -59,16 +60,9 @@ static func build(params: Dictionary) -> Dictionary:
 	# 현판(광한루, 호남제일루)
 	b.add("wood", Co.pnt(Kit.box(2.6, 0.85, 0.1, 0, info.top - 0.5, D / 2 + 0.35), [0x3a2c22, 0x2c2018]), 0.012)
 	b.add("flat", Co.pnt(Kit.box(2.1, 0.46, 0.04, 0, info.top - 0.5, D / 2 + 0.41), [0xe8dcb8]), 0.0)
-	# 오르는 나무 계단(뒤 동쪽 끝)
-	var st := []
-	var ns := 15
-	for s in ns:
-		var y := F * (s + 1) / ns
-		st.append(Kit.box(1.3, 0.08, 0.32, W / 2 - 1.6, y - 0.04, -D / 2 - ov - 0.25 - (ns - 1 - s) * 0.28))
-	var sl := -D / 2 - ov - 0.25 - (ns - 1) * 0.28 / 2
-	for sx in [-1, 1]:
-		st.append(Kit.xf(Kit.box(0.1, 0.25, ns * 0.3 + 0.4), W / 2 - 1.6 + sx * 0.68, F / 2, sl, atan2(F, ns * 0.28), 0, 0))
-	b.add("wood", Co.pnt(Kit.merge(st), Co.WOOD_L, 0.03, rng), 0.012)
+	# 오르는 나무 계단(뒤 동쪽 끝): 땅에서 마루 끝까지 15단, 옆판 둘이 디딤판을 받친다 + 디딤판마다 걷기 면(Co.wood_stair)
+	var stair := Co.wood_stair(sx_st, -D / 2 - ov, F, sw, -1.0)
+	b.add("wood", Co.pnt(stair.geo, Co.WOOD_L, 0.03, rng), 0.012)
 	var root := Node3D.new(); root.name = "광한루"
 	var main := Co.node2("본루", b, roof)
 	root.add_child(main)
@@ -76,6 +70,13 @@ static func build(params: Dictionary) -> Dictionary:
 	for x in colx:
 		for j in 5:
 			cols.append({ type = "circle", x = x, z = -D / 2 + D * j / 4, r = 0.4 })
+	# 난간 충돌(마루 위에서 난간 밖으로 떨어지지 않게) — 계단 머리만 열어 둔다. 마루 밑 땅은 실내 바닥(floor_y)이 F라 원래 못 들어간다
+	var rt := 0.12; var ex := W / 2 + ov; var ez := D / 2 + ov
+	cols.append({ type = "box", minX = -ex, maxX = ex, minZ = ez - rt, maxZ = ez + rt })
+	cols.append({ type = "box", minX = ex - rt, maxX = ex + rt, minZ = -ez, maxZ = ez })
+	cols.append({ type = "box", minX = -ex - rt, maxX = -ex + rt, minZ = -ez, maxZ = ez })
+	cols.append({ type = "box", minX = -ex, maxX = sx_st - sgw, minZ = -ez - rt, maxZ = -ez + rt })
+	cols.append({ type = "box", minX = sx_st + sgw, maxX = ex, minZ = -ez - rt, maxZ = -ez + rt })
 	var foot := Vector2(info.roof_hw * 2, info.roof_hd * 2)
 	if params.get("iklu", true):
 		var ib := Kit.Batch.new(); var ir := Kit.Batch.new()
@@ -101,7 +102,7 @@ static func build(params: Dictionary) -> Dictionary:
 	return {
 		node = root, colliders = cols,
 		lights = [{ x = -4.0, y = F + 2.6, z = D / 2 + 0.8, kind = "lantern" }, { x = 4.0, y = F + 2.6, z = D / 2 + 0.8, kind = "lantern" }],
-		occluder = true, footprint = foot,
-		anchors = { upper_floor = Vector3(0, F, 0), front = Vector3(0, 0, D / 2 + 3.0), stair_foot = Vector3(W / 2 - 1.6, 0, -D / 2 - ov - 3.8), under = Vector3(0, 0, 0) },
+		occluder = true, footprint = foot, walk = stair.walks,
+		anchors = { upper_floor = Vector3(0, F, 0), front = Vector3(0, 0, D / 2 + 3.0), stair_foot = Vector3(sx_st, 0, float(stair.foot)), under = Vector3(0, 0, 0) },
 		interior = { minX = -W / 2 - ov, maxX = W / 2 + ov, minZ = -D / 2 - ov, maxZ = D / 2 + ov, floor_y = F, camera = { pitch = 48, distance = 18 }, hide = [main.get_node("roof")] },
 	}

@@ -102,15 +102,10 @@ static func pavilion(b, r, o: Dictionary, rng: Kit.Rng) -> Dictionary:
 	if o.get("rail", true) and F > 0.9:
 		railing(b, W / 2 + ov - 0.05, D / 2 + ov - 0.05, F, cx, cz, o.get("rail_gaps", [["N", 0.0, 0.8]]), o.get("rail_color", Co.DAN_R))
 	if o.get("stair", true) and F > 0.9:
-		# 뒤(북) 가운데 나무 계단
-		var n := maxi(3, roundi(F / 0.25))
-		var sg := []
-		for k in n:
-			var yy := F * (k + 1) / n
-			sg.append(Kit.box(1.4, 0.08, 0.32, cx, yy - 0.04, cz - D / 2 - ov - (n - 1 - k) * 0.3 - 0.15))
-		sg.append(Kit.xf(Kit.box(0.1, 0.2, n * 0.3 + 0.4), cx - 0.72, F / 2, cz - D / 2 - ov - n * 0.15, atan2(F, n * 0.3), 0, 0))
-		sg.append(Kit.xf(Kit.box(0.1, 0.2, n * 0.3 + 0.4), cx + 0.72, F / 2, cz - D / 2 - ov - n * 0.15, atan2(F, n * 0.3), 0, 0))
-		b.add("wood", Co.pnt(Kit.merge(sg), Co.WOOD, 0.03, rng), 0.012)
+		# 뒤(북) 가운데 나무 계단 — 옆판이 디딤판을 받치게(Co.wood_stair, fix-1017). 걷기 면은 info.stair_walks(마루 걷기는 키트마다 — 아직 없음)
+		var stp := Co.wood_stair(cx, cz - D / 2 - ov, F, 1.4, -1.0, 0.3, 0.25)
+		b.add("wood", Co.pnt(stp.geo, Co.WOOD, 0.03, rng), 0.012)
+		info.stair_walks = stp.walks
 	info.F = F
 	return info
 
