@@ -130,6 +130,12 @@ TESTS=(
 	"first15:new|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --storylog"
 	"first15:onui|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --first15=onui --storylog"
 	"first15:skip|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --first15=skip --storylog"
+	# 여는 사건 A 「소나기」 시험(claude/opening-a-sonagi-trial 전용 — 메인에 합치지 않음): 이름 쪽 · 날씨 쪽 · 소나기 도중 건너뛰기 · 프롤로그 도중 저장 이어 하기
+	"first15:sonagi-name|480|--region=JL_NAMWON_UNBONG --continuetest=first15 --opening=sonagi --sonagibot=name --storylog"
+	"first15:sonagi-other|480|--region=JL_NAMWON_UNBONG --continuetest=first15 --opening=sonagi --sonagibot=other --storylog"
+	"first15:sonagi-skip|420|--region=JL_NAMWON_UNBONG --continuetest=first15 --opening=sonagi --first15=skip --storylog"
+	"continue:sonagi-mid-name|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_sonagi_mid_name_save.json --continueexpect=sonagi_mid --sonagiwant=name"
+	"continue:sonagi-mid-other|300|--region=JL_NAMWON_UNBONG --continuetest=continue --continuefixture=res://story/main_p1/test_sonagi_mid_other_save.json --continueexpect=sonagi_mid --sonagiwant=other"
 	# 저장 칸(scripts/story/ui_test.gd): 칸 1 저장 → 바꿈 → 칸 1 불러오기(장면 다시 열기) → 되돌아왔나 · 버전 1 저장 읽기
 	"save:slot-load|300|--region=JL_NAMWON_UNBONG --notitle --savetest"
 	# 지도 글(scripts/region/region_map.gd --maptexttest): 권역·고을·전국 지도를 최소·중간·최대 배율로 — 이름표 글 크기·높이가 같은가 · 기호 속 글자 MAP_GLYPH ·

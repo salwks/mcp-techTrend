@@ -101,6 +101,7 @@ func run(spec: String) -> void:
 		"main_resume": await _main_resume()
 		"main_migrate": await _main_migrate()
 		"main_nomove": await _main_nomove()
+		"sonagi_mid": await _sonagi_mid()
 		"main_oldcmp": await _main_oldcmp()
 		"main_oldjumak": await _main_oldjumak()
 		"chunhyang_mid": await _chunhyang_mid()
@@ -264,6 +265,21 @@ func _main_migrate() -> void:
 	_ok(not c.prologue_played and not d.S.is_flag("PROLOGUE_SEEN"), "옛 저장에 프롤로그 없음")
 	_ok(d._targets().any(func(t): return String(t.id) == "o_desk"), "서안 견주기가 E 대상(새 거처)")
 	print("CONTTEST main_migrate at=(%.1f,%.1f)" % [pp.x, pp.y])
+
+# 여는 사건 A 「소나기」 시험(claude/opening-a-sonagi-trial 전용): 소나기에서 갈래를 정한 바로 그때의 저장(프롤로그 도중 — OP00_DONE 전) →
+#   프롤로그를 다시 틀지 않고(옛 저장 규칙 그대로) 거처에서 이어 하며, 갈래·기록책 첫 줄·지금 마당의 갈래 소품이 남는다. 지난날 이겸·비·이동 허용이 남지 않는다
+func _sonagi_mid() -> void:
+	var c = d.case_fn
+	var want := String(main.args.get("sonagiwant", ""))
+	await _wait_until(func(): return c._sonagi_built, 6.0)
+	_ok(d.case_id == "main_p1" and String(d.S.phase) == "home" and d.S.is_flag("OP00_DONE"), "프롤로그 도중 저장 → 거처 국면에서 이어 함(OP00_DONE은 불러올 때 섬)")
+	_ok(not c.prologue_played and not d.actors.has("yigyeom_past"), "프롤로그를 다시 틀지 않음 · 지난날 이겸 없음")
+	_ok(c.sonagi_saved() == want and c.summary().size() == 1, "소나기 갈래 그대로(%s) · 기록책 첫 줄 %s" % [c.sonagi_saved(), c.summary()])
+	_ok(c._sonagi_built and c._sonagi_nodes.has("tucked") and c._sonagi_nodes.has("ring") == (want == "other"), "지금 마당에 갈래 소품이 다시 섬 %s" % [c._sonagi_nodes.keys()])
+	var wx = main.weather
+	_ok(not d.free_move and String(d.story_prompt) == "" and (wx == null or String(wx.kind) != "rain"), "비·이동 허용·줍기 안내가 남지 않음")
+	_ok(["ledger", "shoes", "brush"].all(func(k): return not d.S.has_clue(k)) and not d.S.is_flag("KNOCKED"), "진행은 프롤로그 직후 그대로(방 조사 전)")
+	print("CONTTEST sonagi_mid want=%s at=(%.1f,%.1f) hour=%.1f" % [want, main.player_pos.x, main.player_pos.z, main.hour])
 
 # 옛 자리 가까이의 보통 저장(옛 거처 밖 길 위 · 또는 편지를 의심한 뒤 국면 town) — 옮기지 않는다
 func _main_nomove() -> void:

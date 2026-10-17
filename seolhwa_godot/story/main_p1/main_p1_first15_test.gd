@@ -11,6 +11,7 @@ extends RefCounted
 const Progress := preload("res://scripts/region/progress.gd")
 const TitleMenu := preload("res://scripts/story/title_menu.gd")
 const D := preload("res://story/main_p1/main_p1_data.gd")
+const SonagiT := preload("res://story/main_p1/sonagi_trial.gd")   # 여는 사건 A 시험
 
 var ct            # continue_test(_ok·_fail·_wait_until·_press_e)
 var main
@@ -158,6 +159,18 @@ func _resume_check(why: String, flags: Array) -> void:
 	var miss := flags.filter(func(k): return not d.S.is_flag(String(k)))
 	_ok(miss.is_empty() and String(d.S.phase) == ph, "%s: 다시 읽은 뒤 같은 국면(%s)·깃발(빠짐 %s)" % [why, d.S.phase, miss])
 	_ok(Vector2(main.player_pos.x, main.player_pos.z).distance_to(pos) < 0.5, "%s: 자리 그대로(순간이동 없음)" % why)
+	if _sonagi_want != "":
+		_ok(d.case_fn.sonagi_saved() == _sonagi_want and d.case_fn.summary().size() == 1, "%s: 소나기 갈래·기록책 첫 줄 그대로(%s)" % [why, d.case_fn.sonagi_saved()])   # 여는 사건 A 시험: 갈래가 저장·불러오기를 거쳐 남는가
+
+# 여는 사건 A 「소나기」 시험(--opening=sonagi* · --sonagibot=name|other): 갈래가 정해진 순간의 저장을 모래상자에 떠 둔다(--sonagidump — 프롤로그 도중 저장 이어 하기 시험의 원본)
+var _sonagi_want := ""
+func _sonagi_dump() -> void:
+	if not await _wait(func(): return d.S != null and String(d.S.flags.get("SONAGI_SAVED", "")) != "", 60.0): return
+	await _frames(2)
+	var pth := Progress.SaveGuard.resolve("user://sonagi_mid_%s.json" % String(d.S.flags.SONAGI_SAVED))
+	var f := FileAccess.open(pth, FileAccess.WRITE)
+	if f != null: f.store_string(JSON.stringify(Progress.data(), " ")); f.close()
+	print("FIRST15 sonagi dump %s op00_done=%s" % [pth, d.S.is_flag("OP00_DONE")])
 
 func run() -> void:
 	d = main.story
@@ -175,6 +188,9 @@ func run() -> void:
 	_ok(d.case_id == "main_p1", "새 게임 → 메인 서장 main_p1(오누이 아님)")
 	var c = d.case_fn
 	var skip_mode := String(main.args.get("first15", "")) == "skip"
+	var sonagi_mode: bool = c.opening() != ""
+	if sonagi_mode and not skip_mode: _sonagi_want = String(main.args.get("sonagibot", ""))
+	if sonagi_mode and main.args.has("sonagidump"): _sonagi_dump()
 	if skip_mode:
 		# 새 게임을 고른 키(Enter)가 곧바로 한 번 더 들어와도(0.2초) 건너뛰지 않는다 → 3초에 Esc로 건너뛴다
 		await _wait(func(): return c.prologue_played, 10.0)
@@ -195,6 +211,10 @@ func run() -> void:
 		_ok(not c._e2_on and not c._pro_live, "건너뛰면 지난 오후 바탕 소리(E2 엿장수)가 방 안까지 이어지지 않음")
 		var dew = c._e5_nodes.get("dew")
 		_ok(dew != null and is_instance_valid(dew) and dew.visible, "건너뛰어도 지금 마당 기록지는 이슬에 번진 것(E5)")
+		if sonagi_mode:
+			var wx = main.weather
+			_ok(not d.free_move and d.story_prompt == "" and (wx == null or String(wx.kind) != "rain"), "소나기 도중 건너뛰면 비·이동 허용·줍기 안내가 남지 않음(날씨 %s)" % (wx.kind if wx != null else "-"))
+			_ok(c.sonagi_saved() == "" and c.summary().is_empty(), "고르기 전에 건너뛰면 갈래 없음 — 지금 마당·기록책은 출시판 그대로")
 	if shots:
 		await _wait(func(): return c.prologue_t.size() >= 1, 10.0)
 		await d.wait(3.0); await shot("01_intro01_wide")
@@ -209,18 +229,40 @@ func run() -> void:
 		await d.wait(1.6); await shot("05_present_yard")
 		await _wait(func(): return c.prologue_t.any(func(s): return s[0] == "last_line"), 20.0)
 		await d.wait(1.0); await shot("06_room_last_line")
-	var ctl: bool = await _wait(func(): return d.S.is_flag("OP00_DONE") and _free(), 90.0)
+	var ctl: bool = await _wait(func(): return d.S.is_flag("OP00_DONE") and _free(), 130.0 if sonagi_mode else 90.0)
 	var t_ctl := _now() - t_click
 	result.control = c.control_t
 	result.prologue = c.prologue_t
 	print("FIRST15 prologue beats %s" % JSON.stringify(c.prologue_t))
+	if not skip_mode and sonagi_mode:
+		# 여는 사건 A 「소나기」 시험 — 옛 '프롤로그 44~58초' 판정은 쓰지 않는다(사용자 결정). 첫 조작 시각 · 갈래 · 지금 마당 · 기록책 첫 줄
+		var names_s: Array = c.prologue_t.map(func(b): return String(b[0]))
+		_ok(c.prologue_played and names_s == ["SONAGI_open", "control_play", "split", "branch_" + _sonagi_want, "rain_end", "reaction", "INTRO_02", "INTRO_03", "INTRO_04", "book_look", "sound_cut", "fade_out", "silence", "present", "E5_insert", "E6_knock", "dip", "last_line", "control"],
+			"소나기 박자 차례 %s" % [names_s])
+		var bs := {}
+		for b in c.prologue_t: bs[b[0]] = float(b[1])
+		var off: float = c._pt0 - float(TitleMenu.new_game_t0) / 1000.0
+		var first_ctl: float = bs.get("control_play", 99.0) + off
+		_ok(first_ctl <= 3.0, "첫 조작 %.2f초(목표 2.5초)" % first_ctl)
+		var sg = c.sonagi
+		_ok(sg != null and sg.t.has("first_e") and sg.t.has("branch") and sg.t.has("deliver"), "줍기 ①·②(이동·E 익히기) → 고르기 → 처마 차례 %s" % [sg.t if sg != null else {}])
+		_ok(c.sonagi_saved() == _sonagi_want, "갈래 %s(바람 %s)" % [c.sonagi_saved(), _sonagi_want])
+		_ok(c.summary().size() == 1 and String(c.summary()[0]) == SonagiT.line_for(_sonagi_want), "기록책 사건 첫 줄 '%s'" % [c.summary()])
+		_ok(c._sonagi_built and c._sonagi_nodes.has("tucked") and (c._sonagi_nodes.has("ring") == (_sonagi_want == "other")) and (c._sonagi_nodes.has("tucked_ring") == (_sonagi_want == "name")),
+			"지금 마당에 남은 것: 갈래별 번진 종이·서안 책에 끼운 종이 %s" % [c._sonagi_nodes.keys()])
+		var wx2 = main.weather
+		_ok(not d.free_move and d.story_prompt == "" and (wx2 == null or String(wx2.kind) != "rain"), "프롤로그가 끝나면 비·이동 허용·줍기 안내가 남지 않음")
+		var tot_s: float = float(c.prologue_t[-1][1]) if c.prologue_t.size() > 0 else 0.0
+		_ok(ctl and tot_s >= 50.0 and tot_s <= 110.0, "방 안 조작 %.1f초(옛 44~58 판정 대신 넉넉한 상한만)" % (tot_s + off))
+		print("FIRST15 sonagi times %s first_control=%.2f off=%.2f" % [JSON.stringify(sg.t if sg != null else {}), first_ctl, off])
 	if not skip_mode:
 		var names: Array = c.prologue_t.map(func(b): return String(b[0]))
-		_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "book_look", "sound_cut", "fade_out", "silence", "present", "E5_insert", "E6_knock", "dip", "last_line", "control"],
-			"프롤로그 박자 차례 %s" % [names])
+		if not sonagi_mode:
+			_ok(c.prologue_played and names == ["INTRO_01", "INTRO_02", "INTRO_03", "INTRO_04", "book_look", "sound_cut", "fade_out", "silence", "present", "E5_insert", "E6_knock", "dip", "last_line", "control"],
+				"프롤로그 박자 차례 %s" % [names])
 		var tot: float = float(c.prologue_t[-1][1]) if c.prologue_t.size() > 0 else 0.0
 		# 2026-10-18 E1~E7을 넣어 약 57.5초(E5 끼움 1.2 + E6 1.0 − 와이드 0.8 + 되돌림 컷 0.05). D7 '빨리 조작'은 프롤로그 판정으로 바뀌어 있다 — 길이 상한만 지킨다
-		_ok(ctl and tot >= 46.0 and tot <= 61.0, "프롤로그 길이 %.1f초(약 57.5초 — 46~61)" % tot)
+		if not sonagi_mode: _ok(ctl and tot >= 46.0 and tot <= 61.0, "프롤로그 길이 %.1f초(약 57.5초 — 46~61)" % tot)
 		var bt := {}
 		for b in c.prologue_t: bt[b[0]] = float(b[1])
 		_ok(bt.has("sound_cut") and bt.fade_out - bt.sound_cut >= 0.2 and bt.fade_out - bt.sound_cut <= 0.45, "E3 소리가 그림보다 먼저 끊김(%.2f초 앞)" % (bt.get("fade_out", 0.0) - bt.get("sound_cut", 0.0)))
@@ -448,6 +490,8 @@ func run() -> void:
 	_ok(String(d.S.phase) == "road", "국면 road(쉬는 자리)")
 	var hold_core := ["MOVE", "INSPECT", "TALK", "JOURNAL", "MAP", "WAYPOINT"]
 	_ok(hold_core.all(func(k): return d.onboard.is_seen(k)), "첫15 §07 안내 여섯이 모두 행동으로 끝남")
+	if _sonagi_want != "":
+		_ok(d.case_fn.sonagi_saved() == _sonagi_want and d.case_fn.summary().size() == 1, "끝까지 간 뒤에도 소나기 갈래·기록책 첫 줄이 남음(%s)" % d.case_fn.sonagi_saved())
 	result.total = _now() - T0
 	print("FIRST15 result %s" % JSON.stringify(result))
 	if String(main.args.get("first15", "")) == "onui": await _onui()
