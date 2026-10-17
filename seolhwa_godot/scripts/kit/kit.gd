@@ -26,6 +26,7 @@ const KEY_REG := {
 	paper = "lattice", thatch = "thatch", tile = "tile", makse = "makse", rock = "rock", mud = "mud",
 	needle = "needle", leaf = "leaf", bark = "bark", face0 = "face0", face1 = "face1", lamp = "lamp", glow = "lamp",
 	wood = "wood", stone = "stone",
+	wbark = "bark",   # 바람에 흔들리는 나무껍질(나무 손질 시험 2026-10-18: kit/nature/_tree.gd) — 재질 'bark_wind'
 }
 # 각진 음영(면 법선)을 쓰는 인공물. 나머지는 부드러운 법선(붓 번짐 느낌)
 const FACETED := ["flat", "wood", "mud", "paper", "tile", "makse", "stone"]
@@ -369,6 +370,34 @@ static func texture(name: String) -> Texture2D:
 	_lock.unlock()
 	return t
 
+# 나무 셰이더가 쓰는 전역 uniform: 바람은 물과 같은 water_t·water_k·water_wind(water_fx가 매 프레임 넣는다),
+# 원근 교차 흐림 기준점 tree_focus(플레이어 — region_world.update_scatter_lod)와 띠 tree_lod_band(m, 화면 품질).
+static var _tree_globals := false
+static func ensure_tree_globals() -> void:
+	_lock.lock()
+	var done := _tree_globals
+	_tree_globals = true
+	_lock.unlock()
+	if done: return
+	WaterFX.ensure_globals()
+	RenderingServer.global_shader_parameter_add("tree_focus", RenderingServer.GLOBAL_VAR_TYPE_VEC3, Vector3.ZERO)
+	RenderingServer.global_shader_parameter_add("tree_lod_band", RenderingServer.GLOBAL_VAR_TYPE_VEC2, Vector2(24.0, 30.0))
+
+# 잎 카드 그림 — tools/trees/paint_foliage.gd가 미리 만든 밉맵 그림(assets/kit/foliage.res, 2048×512 + 밉맵).
+# 밉맵은 덮임(알파 0.5 넘는 비율)을 지키게 만들었다(보통 밉맵은 먼 잎이 성기게 녹아 없어진다). 보기용 같은 그림: foliage.png
+static var _fol_tex: Texture2D
+static func foliage_texture() -> Texture2D:
+	_lock.lock()
+	if _fol_tex == null:
+		var img = ResourceLoader.load(ASSETS + "foliage.res", "Image")
+		if not (img is Image):
+			img = Image.load_from_file(ProjectSettings.globalize_path(ASSETS + "foliage.png"))
+			img.generate_mipmaps()
+		_fol_tex = ImageTexture.create_from_image(img)
+	var t := _fol_tex
+	_lock.unlock()
+	return t
+
 # 'atlas'(거의 전부, 창호지·초롱은 밤에 빛남) / 'cloth'(양면 천) / 'water'(반투명 물결, 웹 개울과 같은 재질)
 static func material(kind := "atlas") -> ShaderMaterial:
 	_lock.lock()
@@ -384,6 +413,18 @@ static func material(kind := "atlas") -> ShaderMaterial:
 
 static func _make_material(kind: String) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
+	if kind == "foliage" or kind == "bark_wind":
+		# 나무(trees-overhaul 2026-10-18): 잎 카드(알파 자르기·둥근 법선·바람·원근 교차 흐림) / 바람 껍질(아틀라스 셰이더 + 바람)
+		ensure_tree_globals()
+		if kind == "foliage":
+			m.shader = Materials.foliage_shader()
+			m.set_shader_parameter("albedo_tex", foliage_texture())
+		else:
+			m.shader = Materials.world_shader(true, false, false, true)
+			m.set_shader_parameter("kit_tiling", 1.0)
+			m.set_shader_parameter("albedo_tex", texture("atlas"))
+		m.set_shader_parameter("ramp_tex", Materials.ramp_texture())
+		return m
 	if kind == "water" or kind == "water_refl":
 		# 물(water pass 2026-10-17): 잔물결 법선·반사·해 반짝임(shaders/kit_water.gdshader). 'water_refl'은 권역에 놓인 못만 쓰는
 		# 같은 셰이더 재질 — 평면 반사 그림을 받는다(region_world.add_static이 물 표면을 물 층 메시로 떼어 이것으로 바꾼다).
