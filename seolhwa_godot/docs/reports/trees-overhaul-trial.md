@@ -155,7 +155,7 @@
 | `tests/commonize/commonize_test.gd` | COMMONTEST PASS 49 |
 | 흩뿌리기 검증 `scatter_preview.gd`(전/후) | deterministic=true, 종류별 개수 전후 같음, 타일 짓기 35.3 → 35.2ms, 모델 데우기 410 → 470ms |
 | `run_story_tests.sh -j 2 view talk first15 seat` | 10/11 PASS. talk:namwon 첫 실행 FAIL("E 대상 11/20" — 둘레 사람 대상 잡기) → 같은 브랜치 다시 PASS, 시험 전 사본도 PASS(흔들리는 시험으로 봄) |
-| 전체 `tools/run_story_tests.sh` | §4-2 |
+| 전체 `tools/run_story_tests.sh -j 3` | **93/94 PASS**, SCRIPT ERROR 0(§4-2) |
 
 ### 4-1. 성능 — 1920×1080 렌더(`--scale=1`), 제자리 12초 `--bench=12 --benchspeed=0`, 맑음 11시, `--nostory`
 
@@ -190,7 +190,10 @@
 - 시험 타일 삼각형(`scatter_preview`): 근경 벌 571k → 760k, 산 타일 552k → 977k다. 실제로는 30m 밖 근경 나무는 꼭짓점이 모여 화소가 없고, 그리기는 원경 판이 맡는다.
 
 ### 4-2. 전체 시험
-(아래 '전체 시험 결과' 줄에 적음)
+- `tools/run_story_tests.sh -j 3`(마지막 커밋, 다른 시험 묶음이 돌지 않을 때 시작) 결과는 **93/94 PASS**, 모든 로그에서 SCRIPT ERROR 0이다.
+- 실패 하나는 `namwon_chunhyang:p2a`의 "굽기 결과가 머리 고침보다 새것(json 1792075836 · 원본 1792272244)"이다.
+  - 이 검사는 파일 수정 시각을 비교한다. 이 worktree에서 원본 스크립트 시각은 체크아웃 시각인데, 굽기 결과 json은 링크한 본 worktree `data/`의 것이라 더 오래되었다.
+  - **시험 시작 커밋 사본에서도 똑같이 실패**했다. 나무와 무관한 worktree 환경 차이다.
 
 ## 5. 남은 문제
 
@@ -203,7 +206,8 @@
 5. 아직 예전 모양인 수종이 있다: 상수리·신갈·구상나무·곧은 소나무(fir)·감나무·밤나무·활엽수·버드나무·대나무·진달래·철쭉. 한 화면에 새 나무와 섞이면 덩이판이 더 눈에 띈다(`after/water_fp.jpg`의 버드나무, `after/zelkova_fp.jpg` 오른쪽 상수리).
 6. 덤불(특히 1.6~2.6배 숲 밑 덤불)은 카드가 커서 가까이서 잎이 크게 보인다.
 7. MSAA 알파 가장자리를 껐기 때문에 잎 가장자리가 계단져 보일 수 있다. 깊이 흐림·먹선 후처리가 대부분 덮는다.
-8. talk:namwon이 한 번 흔들렸다(다시 돌리면 PASS, 시험 전 사본도 PASS).
+8. talk:namwon이 한 번 흔들렸다(다시 돌리면 PASS, 시험 전 사본도 PASS). 전체 묶음에서는 PASS다.
+9. `namwon_chunhyang:p2a`는 이 worktree에서 파일 시각 비교로 실패한다(시험 전 사본도 같음, §4-2). 본 worktree에서는 해당하지 않는다.
 
 ## 6. 다음 단계
 
