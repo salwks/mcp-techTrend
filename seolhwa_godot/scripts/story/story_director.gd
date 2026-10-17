@@ -77,6 +77,7 @@ const TalkFrame := preload("res://scripts/story/talk_frame.gd")
 const TALK_IN := 0.55          # 대화 구도로 옮기는 시간(대화 카메라 v1.1 §4 CAM_TALK_2)
 const TALK_OUT := 0.45         # 대화 끝 평소 시점으로 돌아오는 시간
 const NPC_TURN_DELAY := 0.2    # 상대가 플레이어 쪽으로 도는 늦춤(§5)
+var story_prompt := ""         # 여는 사건 A 「소나기」 시험(claude/opening-a-sonagi-trial): 이야기가 도는 동안에도 띄울 E 안내(예: "기록지 줍기"). 기본 ""(출시판 그대로)
 var hush_hints := false        # 걸으며 보는 제목(main_p1 OP01) 동안 안내 줄을 감춘다 — 이동은 막지 않는다
 var doc_hook: Callable = Callable()   # 시험: 문서 비교 화면이 열리면 부른다(documents.gd — test.doc_exam이 없을 때)
 var talking := false           # 말 걸기 접근(한 걸음·구도)부터 대화 끝까지 — 그동안 E·이동을 받지 않는다(중복 E 막기)
@@ -392,7 +393,7 @@ func update(dt: float) -> void:
 	if spirits != null: spirits.update(dt)
 	if sensing != null: sensing.update(dt)
 	if talking or runner.busy or ui.modal or combat_view.active or ambient.busy or keeper.busy:
-		ui.prompt("")
+		ui.prompt(story_prompt if runner.busy and free_move else "")
 		_target = null
 		return
 	# 첫 E가 가끔 버려지던 까닭(새 게임 직후 주모): E 대상이 먼저 잡히고 같은 자리의 트리거(전경 늦은 트리거 s0001_vista_late)는

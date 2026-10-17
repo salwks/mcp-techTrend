@@ -15,6 +15,7 @@ const Docs := preload("res://scripts/story/documents.gd")
 const Progress := preload("res://scripts/region/progress.gd")
 const TitleMenu := preload("res://scripts/story/title_menu.gd")
 const Sound := preload("res://scripts/audio/sound.gd")   # 프롤로그 E1~E7 — 작은 소리·높낮이
+const Sonagi := preload("res://story/main_p1/sonagi_trial.gd")   # 여는 사건 A 「소나기」 시험(claude/opening-a-sonagi-trial 전용 — 메인에 합치지 않음)
 
 const ROOM := ["ledger", "shoes", "brush"]
 const KNOCK_AFTER := 6.0       # 첫 조사 뒤 문 두드림까지(조작 중 — 한가한 시간만 센다)
@@ -49,6 +50,16 @@ var _knock_t := -1.0
 var _e2_on := false            # E2 지난 오후 바탕 소리 도는 중
 var _pro_live := false         # 프롤로그가 아직 건너뛰지 않고 도는 중(늦게 오는 소리 타이머가 방 안에서 울리지 않게)
 var _pt0 := 0.0                # 기록 기준(프롤로그 시작)
+var sonagi = null              # 여는 사건 A 시험: -- --opening=sonagi | sonagi_knock 일 때만(기본은 출시판)
+var _sonagi_built := false     # 지금 마당의 갈래 소품을 세웠나(불러오기 뒤에도)
+var _sonagi_nodes := {}
+
+# 여는 사건 A 「소나기」 시험 스위치(-- 뒤 게임 인자). 기본 ""(출시판 = 지금 판 + E1~E7)
+func opening() -> String:
+	var a = d.main.get("args")
+	if a == null: return ""
+	var v := String(a.get("opening", ""))
+	return v if v in ["sonagi", "sonagi_knock"] else ""
 
 func _init(director) -> void:
 	d = director
@@ -361,15 +372,26 @@ func prologue() -> void:
 	_skip_ok_at = p0 + PRO_SKIP_GUARD
 	if ob != null: ob.skippable = true; ob.skip = false
 	d.ui._fade.color.a = 1.0
-	d.cutscene(true)
 	if d.ui.get("_toasts") != null: d.ui._toasts.visible = false   # 컷 동안 알림 줄(길목 깃발 발견 등)은 감춘다
-	_past_setup()
-	_cam({ "focus": "pro_two", "distance": 30.0, "pitch": 46.0, "fov": 34.0 }, 0.01)
-	d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
-	_log("prologue_start")
 	var sk := false
-	_knock_slow()   # E1 검은 화면에 느린 두 번 두드림(0.0~1.2)
-	# ---- INTRO_01 (0–7.4): 솔숲·물·새·바람 — 카메라가 다가가 둘을 한 화면에. 이겸은 멍석에 젖은 기록지를 편다(S1.0). 대사 없음
+	if opening() != "":
+		# 여는 사건 A 「소나기」(시험): INTRO_01 자리를 놀이로 — 끝나면 비 그친 마당에서 INTRO_02 L1 바로 앞
+		sonagi = Sonagi.new(self, opening())
+		sk = await sonagi.run(p0)
+	else:
+		d.cutscene(true)
+		_past_setup()
+		_cam({ "focus": "pro_two", "distance": 30.0, "pitch": 46.0, "fov": 34.0 }, 0.01)
+		d.main.rig.update(0, d.main.player_pos, d.main.player.facing, null, true)
+		_log("prologue_start")
+		_knock_slow()   # E1 검은 화면에 느린 두 번 두드림(0.0~1.2)
+		sk = await _intro01(p0)
+	# ---- INTRO_02 이하는 두 판이 같다 ----
+	await _after_intro01(p0, sk)
+
+# ---- INTRO_01 (0–7.4): 솔숲·물·새·바람 — 카메라가 다가가 둘을 한 화면에. 이겸은 멍석에 젖은 기록지를 편다(S1.0). 대사 없음
+func _intro01(p0: float) -> bool:
+	var sk := false
 	_beat("INTRO_01", p0)
 	# E1: 두드림 동안 검은 화면을 둔다(시작 메뉴가 0.6초에 걸쳐 사라진 뒤 1.0초까지 검정 → 0.8초 페이드) · 바탕 소리는 1.2초에(+E2 엿장수)
 	d.get_tree().create_timer(1.0, false).timeout.connect(func(): if _pro_live: d.ui.fade(false, 0.8))
@@ -384,6 +406,10 @@ func prologue() -> void:
 			for j in range(1, 5): _pro_show("paper%d" % j, j == k)
 			d.sfx("page_turn")
 	if not sk: sk = await _sw(1.6)
+	return sk
+
+func _after_intro01(p0: float, sk: bool) -> void:
+	var ob = d.onboard
 	# ---- INTRO_02 (7.4–21.0): 이겸이 기록을 들어 올린다 · 제자가 고개를 든다 — 컷 없는 투샷
 	if not sk:
 		_beat("INTRO_02", p0)
@@ -404,6 +430,7 @@ func prologue() -> void:
 	# ---- INTRO_03 (21.0–39.0): 붓을 건네려다 제자 손의 먹을 보고 옷자락으로 닦아 준다 → 이름 이야기 → 제 도포를 보고 멈칫 → 제자가 작게 웃는다
 	if not sk:
 		_beat("INTRO_03", p0)
+		if sonagi != null: sonagi.drop_paper()   # 시험: 들고 있던 그날의 종이를 내려놓고 붓을 든다
 		d.anim_actor("yigyeom_past", "read")   # 종이와 붓을 든 손
 		_cam({ "focus": "pro_ig_hand", "distance": 9.0, "pitch": 32.0, "fov": 34.0 }, 2.0)
 		d.move_actor("yigyeom_past", ["pro_ig_hand"], 1.3, "walk", "talk")   # 붓을 건네려 다가간다
@@ -456,6 +483,7 @@ func prologue() -> void:
 		sk = await _sw(0.8)
 	if not sk:
 		_pro_show("book", true)
+		if sonagi != null: sonagi.tuck_in_book()   # 시험: 건진 종이를 기록책 왼쪽 빈 쪽에 끼워 둔다(오른쪽 첫 줄은 그대로)
 		_occ_off("pro_desk")
 		d.sfx("page_turn")
 		d.anim_actor("yigyeom_past", "idle")
@@ -473,6 +501,7 @@ func prologue() -> void:
 		_beat("silence", p0)
 		_present_swap()                  # 검은 화면 안에서: 이겸이 없는 지금으로
 		_e5_props(true)   # E5 시간의 흔적(번진 기록지·마른 벼루)
+		sonagi_present()  # 시험: 갈래에 따라 남은 종이(번진 이름 종이의 먹 동그라미 · 서안 책에 끼운 종이)
 		sk = await _sw(1.0)
 	if not sk:
 		_beat("present", p0)
@@ -518,6 +547,7 @@ func prologue() -> void:
 		_e3_cut()
 		_present_swap()
 		_e5_props(true)
+		sonagi_present()
 		_to_room()
 		d.ui.caption("", 0.01)
 		d.ui.fade(false, 0.25)   # 건너뛰면 0.25초 페이드 뒤 방 안(첫15 OP00 건너뛰기와 같다)
@@ -531,6 +561,9 @@ func prologue() -> void:
 # 지난날 → 지금(검은 화면 안): 이겸을 지우고 지난날 소품을 치우고 남은 물건만 — 색감도 지금으로
 func _present_swap() -> void:
 	_occ_off(null)
+	if sonagi != null:   # 시험: 비·소리·조작 상태를 거둔다(건너뛰었을 때도)
+		sonagi.cleanup()
+		d.set_weather("clear")
 	d.despawn_actor("yigyeom_past")
 	for k in _pro_nodes:
 		var n = _pro_nodes[k]
@@ -791,6 +824,7 @@ func enter_onui() -> void:
 # ---------------------------------------------------------------------------
 func ambient(dt: float) -> void:
 	var busy: bool = d.runner.busy or d.ui.modal or d.talking or d._cut or d.ui.journal_open
+	if not _sonagi_built and not _pro_live and f("OP00_DONE") and sonagi_saved() != "" and d.props.get("p_paper_left", {}).get("node") != null: sonagi_present()   # 시험: 불러오기 뒤 지금 마당의 갈래 소품
 	if _knock_t >= 0.0 and not busy:
 		var far := Vector2(d.main.player_pos.x, d.main.player_pos.z).distance_to(d.anchor("home_center")) > KNOCK_NEAR
 		if not far: _knock_t -= dt
@@ -846,6 +880,56 @@ func _migrate_player() -> void:
 	var rel = _old_home_rel(p.x, p.y)
 	if rel != null: d.teleport_to(Vector2(D.HX, D.HZ) + rel, "up")
 	_migrate_to = null
+
+# ---------------------------------------------------------------------------
+# 여는 사건 A 「소나기」 시험 — 지금 마당에 남는 것(갈래별) · 기록책 첫 줄
+#   이름을 건졌으면: 멍석의 번진 종이는 웅덩이에 빠졌던 날씨 기록(먹 동그라미 없음) · 서안 책에 이름 종이(동그라미)가 끼워져 있다
+#   날씨를 건졌으면: 멍석의 번진 종이는 도랑에 잠겼던 이름 종이(번진 먹 동그라미가 남음) · 서안 책에 날씨 기록이 끼워져 있다
+#   어떻게 거기 있나(세계 안): 이겸은 기록을 버리지 않는다 — 비가 그친 뒤 도랑·웅덩이에서 건져 멍석에 다시 펴 말렸고(INTRO_02 화면),
+#   며칠째 그대로 말리는 중에 이겸이 떠났다(E5 '이슬에 번진' 그 종이). 조사 대상이 아니다 — 진행·필수 정보와 무관
+# ---------------------------------------------------------------------------
+func sonagi_saved() -> String:
+	var v = S.flags.get("SONAGI_SAVED", "")
+	return String(v) if v is String else ""
+
+func sonagi_present() -> void:
+	var k := sonagi_saved()
+	if k == "" or _sonagi_built: return
+	_sonagi_built = true
+	if _e5_nodes.is_empty(): _e5_props(true)   # 불러오기 뒤: 번진 기록지·마른 벼루를 다시 세운다(갈래가 있는 시험 저장만)
+	var dew = _e5_nodes.get("dew")
+	if k == "other" and dew != null and is_instance_valid(dew):   # 번진 이름 종이: 붉은 먹 동그라미가 번진 채 남음(임시 고리)
+		var tm := TorusMesh.new(); tm.inner_radius = 0.07; tm.outer_radius = 0.095; tm.rings = 24; tm.ring_segments = 4
+		var ring := MeshInstance3D.new(); ring.mesh = tm
+		var m := StandardMaterial3D.new(); m.albedo_color = Color(0.55, 0.22, 0.2, 0.75); m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		ring.material_override = m
+		d._props_root.add_child(ring)
+		ring.global_position = (dew as Node3D).global_position + Vector3(0.07, 0.004, -0.11)
+		ring.scale = Vector3(1.0, 0.15, 1.0)
+		_sonagi_nodes["ring"] = ring
+	# 서안 위 책(p_yard_desk 키트의 펼친 책 자리)에 건진 종이를 끼워 둠 — 작은 종이 한 장(임시)
+	var a: Vector2 = d.anchor("pro_desk")
+	var sh := MeshInstance3D.new()
+	var pm := PlaneMesh.new(); pm.size = Vector2(0.17, 0.22); sh.mesh = pm
+	var sm := StandardMaterial3D.new(); sm.albedo_color = Color("#ece2c6"); sm.roughness = 0.95
+	sh.material_override = sm
+	d._props_root.add_child(sh)
+	sh.global_position = Vector3(a.x - 0.13, d._prop_ground(a) + BOOK_DY + 0.012, a.y + BOOK_DZ + 0.01)
+	_sonagi_nodes["tucked"] = sh
+	if k == "name":
+		var tm2 := TorusMesh.new(); tm2.inner_radius = 0.035; tm2.outer_radius = 0.048; tm2.rings = 20; tm2.ring_segments = 4
+		var r2 := MeshInstance3D.new(); r2.mesh = tm2
+		var m2 := StandardMaterial3D.new(); m2.albedo_color = Color("#a3221a"); r2.material_override = m2
+		d._props_root.add_child(r2)
+		r2.global_position = sh.global_position + Vector3(0.03, 0.002, -0.05)
+		r2.scale = Vector3(1.0, 0.15, 1.0)
+		_sonagi_nodes["tucked_ring"] = r2
+	printerr("FIRST15 sonagi present saved=%s" % k)
+
+# 기록책 사건 쪽 맨 위 한 줄(journal_book._case_detail이 summary()를 먼저 적는다) — 갈래가 없으면 없음(출시판 그대로)
+func summary() -> Array:
+	var line = S.flags.get("SONAGI_LINE", "")
+	return [String(line)] if line is String and String(line) != "" else []
 
 func on_load() -> void:
 	migrate_old_home()
