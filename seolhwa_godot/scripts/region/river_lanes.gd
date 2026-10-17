@@ -7,6 +7,7 @@
 #   - river_traffic: 뗏목·세곡선·장삿배가 물길을 따라 오르내린다(그림만, 충돌 없음).
 # region_main: setup(world) → BoatRide.setup → 매 프레임 update(dt, player)(떠가는 배). auto(player)는 예전 꼴의 읽기 전용(지금 타는 배).
 extends RefCounted
+const WaterFX := preload("res://scripts/region/water_fx.gd")
 
 const HW := 1.9            # 뱃길 반폭(region_world FERRY_HW와 같음)
 const DECK := 0.32         # 물 면 위 갑판 높이(region_world FERRY_DECK와 같음)
@@ -89,8 +90,8 @@ func update(dt: float, _player: Vector3) -> void:
 		tr.s = fposmod(float(tr.s) + float(tr.speed) * dt, float(tr.len))
 		var p := _at(tr.pts, tr.cum, tr.s)
 		var h := _tan_pts(tr.pts, tr.cum, tr.s, tr.len) * signf(float(tr.speed))
-		var bs := Basis(Vector3.UP, atan2(h.x, h.y)) * Basis(Vector3(0, 0, 1), sin(t * 0.8 + float(tr.ph)) * 0.025)
-		tr.node.transform = Transform3D(bs, Vector3(p.x, world.sea_y + 0.02 + sin(t * 1.1 + float(tr.ph)) * 0.05, p.y))
+		var bs := Basis(Vector3.UP, atan2(h.x, h.y)) * Basis(Vector3(0, 0, 1), sin(t * 0.8 + float(tr.ph)) * 0.012)
+		tr.node.transform = WaterFX.boat_xf(bs, p, world.sea_y + 0.02, WaterFX.BIG_RIVER if world.sea_is_river else WaterFX.SEA)   # 물결을 탄다(water pass)
 
 func _place(f: Dictionary, s: float, lat: float, dir: int) -> void:
 	f.s = clampf(s, f.half, maxf(f.half, f.len - f.half))
@@ -99,8 +100,8 @@ func _place(f: Dictionary, s: float, lat: float, dir: int) -> void:
 	var p: Vector2 = _at(f.pts, f.cum, f.s) + Vector2(-t.y, t.x) * clampf(lat, -0.6, 0.6)
 	var h: Vector2 = t * float(dir if dir != 0 else 1)
 	var tm := Time.get_ticks_msec() / 1000.0
-	var bs := Basis(Vector3.UP, atan2(h.x, h.y)) * Basis(Vector3(0, 0, 1), sin(tm * 0.7) * 0.02)
-	f.boat.transform = Transform3D(bs, Vector3(p.x, world.sea_y + 0.02 + sin(tm * 1.0) * 0.03, p.y))
+	var bs := Basis(Vector3.UP, atan2(h.x, h.y)) * Basis(Vector3(0, 0, 1), sin(tm * 0.7) * 0.01)
+	f.boat.transform = WaterFX.boat_xf(bs, p, world.sea_y + 0.02, WaterFX.BIG_RIVER if world.sea_is_river else WaterFX.SEA)   # 물결을 탄다(water pass)
 
 # 꺾은선 위 가장 가까운 자리: {s(길이), lat(왼쪽 +)}
 func _project(f: Dictionary, p: Vector2) -> Dictionary:

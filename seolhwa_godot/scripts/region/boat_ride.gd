@@ -17,6 +17,7 @@
 #   signal boarded(id, dir) · signal arrived(id, place_name) · signal left(id)   (left: 도착 전에 내림 — 취소·이야기 teleport)
 #   region_world.ferry_auto(p) · river_lanes.auto(p)은 예전 꼴({dir, speed, name, start, to})로 지금 타는 배를 돌려준다(읽기만).
 extends RefCounted
+const WaterFX := preload("res://scripts/region/water_fx.gd")
 
 signal boarded(id: String, dir: int)
 signal arrived(id: String, place_name: String)
@@ -353,14 +354,10 @@ func _place(r: Dictionary, _dt: float) -> void:
 	var tm := Time.get_ticks_msec() / 1000.0
 	var ph := float(hash(r.id) & 255) * 0.05
 	var bs := Basis(Vector3.UP, atan2(h.x, h.y) + (PI if r.narut else 0.0))
-	var bob := 0.0
-	if r.sea:
-		bs = bs * Basis(Vector3(0, 0, 1), sin(tm * 0.9 + ph) * 0.035) * Basis(Vector3(1, 0, 0), sin(tm * 0.63 + 1.0 + ph) * 0.02)
-		bob = sin(tm * 1.1 + ph) * 0.06
-	else:
-		bs = bs * Basis(Vector3(0, 0, 1), sin(tm * 0.7 + ph) * 0.015)
-		bob = sin(tm * 1.0 + ph) * 0.025
-	var xf := Transform3D(bs, Vector3(p.x, world.sea_y + 0.02 + bob, p.y))
+	# 물결을 탄다(water pass): 셰이더와 같은 물결(WaterFX.wave) — 바다는 너울, 큰 강은 잔물결. 사공이 젓는 작은 좌우 흔들림만 더한다
+	bs = bs * Basis(Vector3(0, 0, 1), sin(tm * 0.7 + ph) * 0.01)
+	var kind: Vector2 = WaterFX.SEA if r.sea and not world.sea_is_river else WaterFX.BIG_RIVER
+	var xf: Transform3D = WaterFX.boat_xf(bs, p, world.sea_y + 0.02, kind, world.sea_y - world.ground_at(p.x, p.y))
 	if r.boat != null: r.boat.transform = xf
 	if r.man != null:
 		var m: Vector2 = p + h * float(r.stern)
