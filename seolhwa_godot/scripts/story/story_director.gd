@@ -184,6 +184,11 @@ func _setup() -> void:
 	var prefer := String(args.get("storytest", "")).get_slice(":", 0)
 	if cands.has(prefer): cands = [prefer]
 	elif args.has("case") and cands.has(String(args.case)): cands = [String(args.case)]   # 시험·촬영: 이 공간에서 이 사건만(재기획 3단계 — 새 게임 기본이 메인 서장이 된 뒤 오누이 기준 시험)
+	# 회색 상자 시험(--graybox=m605): res://graybox/<이름>/gb_<이름>_* 사건만 잠깐 올린다 — 본편 등록부(SPACE_CASES)에는 없다
+	if args.has("graybox"):
+		var gid := "gb_" + String(args.graybox)
+		CaseRegistry.register(space_id, gid, "res://graybox/%s/" % String(args.graybox))
+		cands = [gid]
 	if cands.is_empty():
 		_maybe_title()
 		return   # 소문만(노정·다른 권역)
@@ -212,7 +217,7 @@ func _setup() -> void:
 	main.scene_vp.add_child(combat_view)
 	combat_view.setup(self)
 	SpriteChar.merge_bank("frames_story_skills.json", ["player"])   # v2.2 숙련 동작(shove·quick_throw, 작다) — 없으면 그냥 지나간다
-	var fresh: bool = (args.has("newgame") or args.has("storytest")) and not arrived
+	var fresh: bool = (args.has("newgame") or args.has("storytest") or args.has("graybox")) and not arrived
 	if not _setup_case(case_id, pick.data, fresh):
 		_maybe_title()
 		return
@@ -223,6 +228,8 @@ func _setup() -> void:
 		add_child(test)
 	_maybe_title()
 	printerr("STORY ready case=%s phase=%s actors=%d props=%d events=%d" % [case_id, S.phase, actors.size(), data.get("props", []).size(), events.size()])
+	if args.has("graybox") and args.has("gbbot"):   # 회색 상자 시험 봇(read · brute)
+		add_child(load(CaseRegistry.dir_of(case_id) + case_id + "_bot.gd").new(self, String(args.gbbot)))
 
 # 사건 하나를 세운다(처음 · switch_case). fresh: 새로 시작(그 사건 저장을 비움) · 아니면 저장에서 읽는다. 스크립트를 못 읽으면 false(소문만)
 func _setup_case(id: String, dd: Dictionary, fresh: bool) -> bool:
@@ -497,7 +504,7 @@ func _save_where(dt: float) -> void:
 # 시작 메뉴(새 게임 / 이어 하기): 그냥 실행했을 때만(시험·넘어온 장면·--newgame·--continue·--notitle 아님)
 func _maybe_title() -> void:
 	var args: Dictionary = main.args
-	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset", "warp", "talktest"]:
+	for k in ["storytest", "bench", "tour", "shot", "portaltest", "walkroute", "newgame", "continue", "notitle", "refset", "warp", "talktest", "graybox"]:
 		if args.has(k): return
 	if not main._pending.is_empty(): return
 	title = load("res://scripts/story/title_menu.gd").new(self)
