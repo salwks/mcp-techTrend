@@ -82,3 +82,55 @@ snow_line={
 "type": "float",
 "value": 100000.0
 }
+look_pbr={
+"type": "float",
+"value": 1.0
+}
+pbr_q={
+"type": "float",
+"value": 1.0
+}
+amb_k={
+"type": "float",
+"value": 1.0
+}
+sun_dir={
+"type": "vec3",
+"value": Vector3(0.3, 0.8, 0.5)
+}
+sun_col={
+"type": "vec3",
+"value": Vector3(3, 3, 3)
+}
+pbr_a={
+"type": "sampler2DArray",
+"value": "res://assets/pbr/pbr_a.res"
+}
+pbr_b={
+"type": "sampler2DArray",
+"value": "res://assets/pbr/pbr_b.res"
+}
+pbr_ids={
+"type": "sampler2D",
+"value": ""
+}
+shelter_tex={
+"type": "sampler2D",
+"value": ""
+}
+shelter_meta={
+"type": "vec4",
+"value": Vector4(0, 0, 1, 0)
+}
+shelter_size={
+"type": "vec2",
+"value": Vector2(1, 1)
+}
+sky_top={
+"type": "vec3",
+"value": Vector3(0.23, 0.39, 0.56)
+}
+sky_hor={
+"type": "vec3",
+"value": Vector3(0.8, 0.78, 0.62)
+}

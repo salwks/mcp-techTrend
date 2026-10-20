@@ -165,6 +165,7 @@ var story = null          # 이야기(scripts/story/story_director.gd): 사건·
 var horse_ride = null     # 자동 기승(scripts/region/horse_ride.gd) — 큰길을 말이 저절로 간다
 var fast_ui = null        # 역마 창 — 알게 된 거점 빠른 이동(scripts/region/fast_travel.gd: 역참 마부·깃발 대화, 지나온 노정 포털 곁 H)
 var _ride_test = null
+var look = null           # 사실 재질·빛 운전(scripts/render/look.gd) — --look=ink면 예전 붓 바림
 
 func _ready() -> void:
 	if Progress.SaveGuard.blocked() != "":   # 저장 지킴: 게임 인자를 '--' 없이 넘긴 실행 · 모래상자 실패 → 놀이 저장으로 넘어가지 않고 끝낸다
@@ -176,6 +177,7 @@ func _ready() -> void:
 	# 저장 지킴(save_guard.gd): --savefile은 이야기 유무와 상관없이 가장 먼저(--nostory 촬영이 사용자 저장에 쓰던 구멍).
 	#   시험·도구 실행이면 모든 저장 경로가 모래상자로 간다
 	if args.has("savefile"): Progress.use_path(String(args.savefile))
+	Pbr.set_real(String(args.get("look", "real")) != "ink")   # 사실 재질·빛(scripts/render/pbr.gd) — 재질 셰이더를 만들기 전에
 	if Progress.SaveGuard.sandboxed(): print("SAVEGUARD sandbox=%s why=%s progress=%s" % [Progress.SaveGuard.root(), Progress.SaveGuard.why(), Progress.slot_path(0)])
 	_setup_input()
 	get_tree().set_auto_accept_quit(false)   # 창 닫기 → _quit()(작업 스레드를 기다린 뒤 끝낸다)
@@ -209,6 +211,7 @@ func _ready() -> void:
 	add_child(view)
 	_load_t0 = Time.get_ticks_msec()
 	_build_scene()
+	look = load("res://scripts/render/look.gd").new(); add_child(look); look.setup(self)
 	_prewarm_shaders()
 	_make_load_ui()
 	if args.has("ridefixture") or args.has("ridevars") or args.has("ridedone") or args.has("ridefresh"): RideTest.apply_fixture(args)   # 시험 출발 저장(이야기보다 먼저)
@@ -277,6 +280,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/region/fp_shots.gd").new(self); _ride_test.run.call_deferred(String(args.fpshots))
 	elif args.has("buildshots"):   # 건물 바닥·계단·초가 처마 모서리 점검 촬영 — scripts/region/building_shots.gd
 		_ride_test = load("res://scripts/region/building_shots.gd").new(self); _ride_test.run.call_deferred(String(args.buildshots))
+	elif args.has("mlshots"):   # 재질·빛 점검 촬영(material-lighting) — scripts/region/matlight_shots.gd
+		_ride_test = load("res://scripts/region/matlight_shots.gd").new(self); _ride_test.run.call_deferred(String(args.mlshots))
 	elif args.has("roofshots"):   # 초가 지붕 뚫림·실내 벽 깜빡임 점검 촬영(fix-1021) — scripts/region/roof_interior_shots.gd
 		_ride_test = load("res://scripts/region/roof_interior_shots.gd").new(self); _ride_test.run.call_deferred(String(args.roofshots))
 	elif args.has("talkshot"):
@@ -721,6 +726,7 @@ func _apply_atmo() -> void:
 	_scatter_base = world.scatter_far
 	if rig != null and (rig.sailing or rig.riding): world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
 	post.state = s
+	if look != null: look.atmo(s, dir)
 
 static func _srgb(v: Vector3) -> Color:
 	return Color(v.x, v.y, v.z).linear_to_srgb()
@@ -841,8 +847,12 @@ func _occ_focus() -> Vector3:
 func _update_occlusion(dt: float, interior) -> void:
 	var want: Array = interior.hide if interior != null and not fp_view() else []   # 1인칭: 지붕을 숨기지 않는다(안에서 올려다보면 지붕이 있어야)
 	for o in _hidden_interior:
-		if not want.has(o): o.visible = true
-	for o in want: o.visible = false
+		if not want.has(o):
+			if look != null: look.set_hidden(o, false)
+			else: o.visible = true
+	for o in want:
+		if look != null: look.set_hidden(o, true)
+		else: o.visible = false
 	_hidden_interior = want.duplicate()
 	_occ_frame = (_occ_frame + 1) % 3
 	# 권역에는 가림 물체가 수천 개라, 15프레임마다 플레이어 50m 안 것만 골라 둔다(+ 아직 흐려져 있는 것)
@@ -930,7 +940,7 @@ func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "roofshots"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "roofshots", "mlshots"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:

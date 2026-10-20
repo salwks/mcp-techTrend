@@ -2,9 +2,11 @@
 // 재질은 Materials 툰 셰이더와 같은 규칙: 붓 바림 램프(LIGHT_COLOR/π²) + 반구광(EMISSION = base·hemi/π) + 높이 안개.
 // 색은 웹 terrain.js의 들판·숲·길·바위 색을 토지이용별로 고르고, 웹 땅 붓 텍스처(ground.png, 7m 반복)를 곱한다.
 shader_type spatial;
-render_mode specular_disabled, cull_back;
+render_mode cull_back;
+#define LOOK_PBR   // 사실 재질·빛 — --look=ink면 scripts/render/pbr.gd가 이 줄을 빼고 컴파일한다
 
 #include "res://shaders/region_common.gdshaderinc"
+#include "res://shaders/pbr_common.gdshaderinc"
 
 global uniform vec3 hemi_sky;
 global uniform vec3 hemi_ground;
@@ -601,7 +603,11 @@ void fragment() {
 		col = mix(col, rc, road);
 		dirt = max(dirt, road);
 	}
-	vec3 base = srgb(col) * texture(ground_tex, p / 7.0).rgb;
+	vec3 gtx = texture(ground_tex, p / 7.0).rgb;
+#ifdef LOOK_PBR
+	gtx = mix(vec3(dot(gtx, vec3(0.333))), gtx, 0.5) * 0.5 + 0.5 * vec3(0.93, 0.92, 0.9);   // 붓 땅 무늬는 반만(사실 디테일이 맡는다)
+#endif
+	vec3 base = srgb(col) * gtx;
 	if (dress_on > 0.0) {
 		float bankw = mix(mix(float(ca == 5), float(cb == 5), t.x), mix(float(cc == 5), float(cd == 5), t.x), t.y);
 		base = town_layer(base, p, col, dirt * (1.0 - water), slope, rd, rhw, length(VERTEX), px, (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xz, bankw, water);
@@ -617,6 +623,7 @@ void fragment() {
 		base = near_layer(base, p, col, dirt * (1.0 - water), slope, rdir, length(VERTEX), px, (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xz);
 	}
 	// 날씨: 젖은 땅은 어둡고 길·마당·평지에 물웅덩이(하늘 반사), 눈은 평평한 곳부터 덮고 길은 밟혀 덜 덮인다
+	float t_cov = 0.0;
 	if (wet > 0.0 || snow > 0.0 || snow_line < 9e4) {
 		float flat_k = smoothstep(0.86, 0.97, v_wn.y);
 		float on_road = (rd < rhw + 0.3) ? 1.0 : (yd < 2.0 ? 0.6 : 0.0);
@@ -634,6 +641,7 @@ void fragment() {
 		vec3 gt = texture(ground_tex, p / 7.0).rgb;
 		base = mix(base, vec3(0.80, 0.83, 0.88) * (0.9 + 0.1 * n2) * mix(vec3(1.0), gt / max(dot(gt, vec3(0.333)), 0.05), 0.35), cov);
 		water *= 1.0 - cov;
+		t_cov = cov;
 	}
 	// 물 댄 논: 하늘빛 반사(위를 볼수록 진흙이 비침)
 	vec3 wn = v_wn;
@@ -641,8 +649,86 @@ void fragment() {
 	float fres = 0.35 + 0.65 * pow(1.0 - clamp(dot(vdir, vec3(0, 1, 0)), 0.0, 1.0), 2.0);
 	vec3 sky = mix(mix(hemi_sky, fog_color, 0.35), hemi_sky * vec3(0.62, 0.8, 0.8), 0.45);
 	ALBEDO = mix(base, base * vec3(0.5, 0.58, 0.58), water);
+#ifdef LOOK_PBR
+	{
+		// 사실 땅: 흙 마당·다진 길·풀·바위·박석 디테일(세계 xz) — 높이·법선·거칠기·오목, 젖음은 낮은 데부터 고인다
+		float dfar = 1.0 - smoothstep(40.0, 70.0, length(VERTEX));
+		float rock_k = smoothstep(0.75, 1.15, slope);
+		float road_k = (rd < rhw + 3.0) ? 1.0 - smoothstep(-0.2, 0.2, rd - rhw + pn * 0.45) : 0.0;
+		float grass_k = clamp((col.g - col.r) * 9.0 + 0.4, 0.0, 1.0) * (1.0 - dirt) * (1.0 - rock_k);
+		float pav_k = 0.0;
+		if (dress_on > 0.0) { float pav = texture(dress_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size)).a * 255.0; pav_k = pav > 0.5 ? smoothstep(0.0, 0.25, (pav - 1.0) / 32.0 - 1.0) : 0.0; }
+		float soil_k = max(1.0 - grass_k - rock_k - pav_k, 0.0);
+		vec3 dA = vec3(0.0); float dh = 0.0, dr = 0.0, dao = 0.0; vec2 dsl = vec2(0.0); float wsum = 0.0;
+		vec2 gx = dFdx(p), gy = dFdy(p);
+		// 두 층만 읽는다(땅은 화면 대부분 — 표본·지역 배열이 곧 비용): 흙/풀 중 큰 쪽 + 바위·박석·나머지 중 큰 쪽
+		int soil_l = road_k > 0.5 ? M_PATH : M_DIRT;
+		int l1 = soil_k >= grass_k ? soil_l : M_GRASS;
+		float w1 = max(soil_k, grass_k);
+		int l2 = M_ROCK; float w2 = rock_k;
+		if (pav_k > w2) { l2 = M_PAVING; w2 = pav_k; }
+		float wo = min(soil_k, grass_k);
+		if (wo > w2) { l2 = soil_k >= grass_k ? M_GRASS : soil_l; w2 = wo; }
+		bool near_n = length(VERTEX) < 28.0 && pbr_q > 0.5;
+		if (dfar > 0.0) {
+			float tl = MP_TILE[l1];
+			vec3 uvl = vec3(p / tl, float(l1));
+			vec4 a4 = textureGrad(pbr_a, uvl, gx / tl, gy / tl);
+			vec4 b4 = near_n ? textureGrad(pbr_b, uvl, gx / tl, gy / tl) : vec4(0.92, 0.5, 1.0, 0.5);
+			vec2 sx = b4.ag * 2.0 - 1.0;
+			dA = a4.rgb * 2.0 * w1; dh = a4.a * w1; dr = b4.r * w1; dao = b4.b * w1; dsl = sx * w1; wsum = w1;
+			if (w2 > 0.02 && pbr_q > 0.5) {
+				tl = MP_TILE[l2];
+				uvl = vec3(p / tl, float(l2));
+				a4 = textureGrad(pbr_a, uvl, gx / tl, gy / tl);
+				b4 = near_n ? textureGrad(pbr_b, uvl, gx / tl, gy / tl) : vec4(0.92, 0.5, 1.0, 0.5);
+				sx = b4.ag * 2.0 - 1.0;
+				dA += a4.rgb * 2.0 * w2; dh += a4.a * w2; dr += b4.r * w2; dao += b4.b * w2; dsl += sx * w2; wsum += w2;
+			}
+		}
+		if (wsum > 0.0) { dA /= wsum; dh /= wsum; dr /= wsum; dao /= wsum; dsl /= wsum; } else { dA = vec3(1.0); dh = 0.5; dr = 0.92; dao = 1.0; }
+		dA = mix(vec3(1.0), dA, dfar); dsl *= dfar; dao = mix(1.0, dao, dfar);
+		vec3 alb = ALBEDO * mix(vec3(1.0), dA, 1.0 - t_cov);
+		float rough = mix(0.92, dr, dfar);
+		// 젖음: 흙은 짙어지고 반들, 바퀴 자국·낮은 데(높이)에 물이 고인다
+		if (wet > 0.0) {
+			float wk = wet * (1.0 - t_cov);
+			rough = mix(rough, mix(rough, 0.4, 0.8 - 0.45 * grass_k), wk);   // 젖은 흙은 반들하되 거울은 아니다 — 거울은 고인 물만
+			alb *= 1.0 - 0.3 * wk * (1.0 - grass_k * 0.6);
+			float flat_k = smoothstep(0.88, 0.97, v_wn.y);
+			float level = 0.08 + 0.22 * wet + 0.1 * road_k;
+			float pud = (1.0 - smoothstep(level - 0.1, level, dh)) * flat_k * wk * (1.0 - grass_k * 0.8);
+			water = max(water, pud * 0.7);
+			alb *= 1.0 - 0.35 * pud;
+			rough = mix(rough, 0.03, max(pud, smoothstep(0.25, 0.5, water)));
+			dsl *= 1.0 - max(pud, water);
+			if (pud > 0.01) dsl += pbr_ripple(p, TIME) * pud * wet;
+		}
+		vec3 tn_ = vec3(dsl * (1.0 - t_cov * 0.7), 1.0);
+		if (t_cov > 0.0) {
+			vec4 sb = texture(pbr_b, vec3(p / MP_TILE[M_SNOW], float(M_SNOW)));
+			tn_.xy = mix(tn_.xy, (sb.ag * 2.0 - 1.0), t_cov);
+			rough = mix(rough, 0.82, t_cov);
+			dao = mix(dao, 1.0, t_cov);
+		}
+		vec3 N0 = normalize(v_wn);
+		vec3 Tw = normalize(vec3(1.0, 0.0, 0.0) - N0 * N0.x), Bw = normalize(vec3(0.0, 0.0, 1.0) - N0 * N0.z);
+		vec3 nw = normalize(Tw * tn_.x + Bw * tn_.y + N0 * tn_.z);
+		NORMAL = normalize((VIEW_MATRIX * vec4(nw, 0.0)).xyz);
+		ALBEDO = alb;
+		ROUGHNESS = clamp(rough, 0.03, 1.0);
+		BACKLIGHT = vec3(0.12 * grass_k + 0.18 * t_cov);
+		vec3 irr = pbr_irr(nw, hemi_sky, hemi_ground, fog_color, hemi_i);
+		vec3 vw = vdir;
+		float nv = max(dot(nw, vw), 1e-3);
+		vec2 AB = pbr_env_brdf(nv, ROUGHNESS);
+		vec3 env = mix(pbr_sky(reflect(-vw, nw), hemi_sky, hemi_ground, fog_color, hemi_i), irr / PI, ROUGHNESS * ROUGHNESS);
+		EMISSION = alb * irr * dao * amb_k / PI + env * (0.04 * AB.x + AB.y) * dao;
+	}
+#else
 	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * wn.y + 0.5) * hemi_i;
 	EMISSION = ALBEDO * hemi / PI + sky * water * fres * 0.55;
+#endif
 	// 안개(Materials와 같은 식) + 먼 능선은 먹빛을 조금 남긴다
 	float fog_d = -VERTEX.z;
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
@@ -656,11 +742,17 @@ void fragment() {
 		float steep = 1.0 - smoothstep(0.55, 0.95, wn.y);
 		fc = mix(fog_color, far_ink, far * clamp(0.25 + 0.45 * hrel + 0.15 * steep, 0.0, 0.8));
 	}
-	FOG = vec4(fc, fog_f);
+	FOG = vec4(pbr_fog_color(fc, -vdir), fog_f);
 }
 
 void light() {
+#ifdef LOOK_PBR
+	vec3 dl = vec3(0.0), sl = vec3(0.0);
+	pbr_direct(NORMAL, LIGHT, VIEW, LIGHT_COLOR, ATTENUATION, ROUGHNESS, BACKLIGHT.r, dl, sl);
+	DIFFUSE_LIGHT += dl; SPECULAR_LIGHT += sl;
+#else
 	float ndl = dot(NORMAL, LIGHT);
 	float ramp = texture(ramp_tex, vec2(ndl * 0.5 + 0.5, 0.5)).r;
 	DIFFUSE_LIGHT += ramp * ATTENUATION * LIGHT_COLOR / (PI * PI);
+#endif
 }

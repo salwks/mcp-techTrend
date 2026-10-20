@@ -47,6 +47,8 @@ var state := {}
 var paper_image: Image
 # Mobile 렌더러는 장면 버퍼에 밝기를 1/2로 저장한다(0~2 범위를 10비트에 담기 위해). 읽을 때 곱하고 쓸 때 나눈다.
 var lum_mult := 1.0
+var real := false          # 사실 쪽(scripts/render/look.gd): AgX 톤매핑 + 노출, 먹선·한지 끔, 렌즈 비네트만
+var exposure := 1.0
 # 지난 일 장면(남원 v3.2 §23 어머니의 과거 장면): 0 보통 ~ 1 — 채도를 크게 빼고 먹빛 가장자리를 두른다(push lift.w로 넘긴다)
 var past := 0.0
 
@@ -227,6 +229,22 @@ vec3 neutral_tm(vec3 color) {
 	float g = 1.0 - 1.0 / (D * (peak - np) + 1.0);
 	return mix(color, vec3(np), g);
 }
+// AgX(Troy Sobotka) 기본 + Punchy 모양 — 출력은 화면(감마) 값
+vec3 agx(vec3 c) {
+	const mat3 inm = mat3(vec3(0.842479062253094, 0.0423282422610123, 0.0423756549057051), vec3(0.0784335999999992, 0.878468636469772, 0.0784336), vec3(0.0792237451477643, 0.0791661274605434, 0.879142973793104));
+	const mat3 outm = mat3(vec3(1.19687900512017, -0.0528968517574562, -0.0529716355144438), vec3(-0.0980208811401368, 1.15190312990417, -0.0980434501171241), vec3(-0.0990297440797205, -0.0989611768448433, 1.15107367264116));
+	const float mn = -12.47393, mx = 4.026069;
+	c = inm * max(c, vec3(0.0));
+	c = clamp(log2(max(c, vec3(1e-10))), mn, mx);
+	c = (c - mn) / (mx - mn);
+	vec3 x2 = c * c; vec3 x4 = x2 * x2;
+	c = 15.5 * x4 * x2 - 40.14 * x4 * c + 31.96 * x4 - 6.868 * x2 * c + 0.4298 * x2 + 0.1191 * c - 0.00232;
+	c = pow(max(c, vec3(0.0)), vec3(1.3));   // Punchy: 대비
+	float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+	c = l + 1.3 * (c - l);                    // Punchy: 채도
+	c = outm * c;
+	return clamp(c, 0.0, 1.0);
+}
 vec3 to_srgb(vec3 c) {
 	c = max(c, vec3(0.0));
 	return mix(pow(c, vec3(0.41666)) * 1.055 - 0.055, c * 12.92, vec3(lessThanEqual(c, vec3(0.0031308))));
@@ -268,6 +286,8 @@ void main() {
 		c = mix(c, textureLod(t_blur, uv, 0.0).rgb * p.lum, amt);
 	}
 	c *= ao * vec3(1.0, 0.995, 0.985) + (1.0 - ao) * vec3(0.06, 0.05, 0.045);   // 그늘은 조금 따뜻한 먹빛으로
+	bool real = p.ink < 0.0;
+	if (real) c *= -p.ink;
 	if (p.ink > 0.0 && amt < 0.6) {
 		float l = sqrt(luma(textureLod(t_scene, uv - vec2(p.texel.x, 0.0), 0.0).rgb * p.lum));
 		float r = sqrt(luma(textureLod(t_scene, uv + vec2(p.texel.x, 0.0), 0.0).rgb * p.lum));
@@ -277,7 +297,7 @@ void main() {
 		c *= 1.0 - p.ink * 0.35 * smoothstep(0.06, 0.28, e) * (1.0 - amt / 0.6);
 	}
 	if (p.bloom > 0.0) c += textureLod(t_bloom, uv, 0.0).rgb * p.lum * p.bloom;
-	c = to_srgb(neutral_tm(c));
+	c = real ? agx(c) : to_srgb(neutral_tm(c));
 	c = mix(c, vec3(0.85, 0.855, 0.835), haze * (1.0 - 0.8 * p.night));   // 먼 산 옅은 안개(대기 원근)
 	c = p.gain.rgb * (c + p.lift.rgb * (1.0 - c));
 	c = pow(max(c, vec3(0.0)), 1.0 / p.gamma.rgb);
@@ -294,6 +314,7 @@ void main() {
 	float v = smoothstep(0.35 + 0.5 * p.aspect, 0.25, length(q) * 0.9);
 	vec3 vc = mix(vec3(0.16, 0.12, 0.09), vec3(0.05, 0.06, 0.1), p.night);
 	c = mix(c, c * vc * 2.2, (1.0 - v) * p.paper * 0.55);
+	if (real) c *= mix(1.0, smoothstep(1.25, 0.35, length(q)), 0.35);   // 렌즈 비네트(옅게)
 	float past = p.lift.w;
 	if (past > 0.0) {
 		// 지난 일: 채도를 크게 빼고 한지빛으로 · 붓 자국처럼 들쭉날쭉한 먹빛 가장자리
@@ -465,7 +486,7 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 		1.0 / size.x, 1.0 / size.y, ps, ps,
 		float(size.x) / size.y, dof_focus, proj.z.z, lum_mult,
 		proj.w.z, far_k, near_k, bloom_k,
-		state.sat, pf, pf, state.night,
+		state.sat, pf, (-maxf(exposure, 0.01) if real else pf), state.night,
 		lift.x, lift.y, lift.z, past, gam.x, gam.y, gam.z, dof_margin, gain.x, gain.y, gain.z, dof_far_scale,
 		aerial_start, aerial_range, aerial_blur if depth_ok else 0.0, aerial_haze if depth_ok else 0.0])
 	var paper_rid: RID = _paper_tex if _paper_tex.is_valid() else _tex.hb

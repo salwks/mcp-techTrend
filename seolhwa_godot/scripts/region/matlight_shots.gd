@@ -9,7 +9,9 @@ var dir := ""
 var tag := "before"
 
 # 상태: 이름 → [시각, 날씨]
-const STATES := { day = [10.5, "clear"], dusk = [18.3, "clear"], night = [22.0, "clear"], rain = [10.5, "rain"], snow = [10.5, "snow"] }
+const STATES := { day = [10.5, "clear"], dusk = [18.3, "clear"], night = [22.0, "clear"], rain = [10.5, "rain"], snow = [10.5, "snow"],
+	low = [17.4, "clear"], overcast = [11.0, "cloudy"] }
+# --mlviews=close: 1인칭 1~3m 가까이(재질 굴곡·시차 매핑) — 흙벽 모서리 · 기단·주춧돌 · 이엉 처마 · 기와 처마 밑 · 내아 마당 땅 · 내아 기단 돌
 # 볼 집: 남원 一자 초가(마을 구도), 이겸 집(실내), 관아 내아(기와)
 const HOUSE_TOWN := "nw_house_005"
 const HOUSE_IN := "ig_house"
@@ -64,9 +66,11 @@ func run(spec: String) -> void:
 	main.view_persist = false
 	await _wait_load()
 	var states := String(main.args.get("mlstates", "day,dusk,night,rain,snow")).split(",", false)
+	var close := String(main.args.get("mlviews", "")) == "close"
 	for st in states:
 		_set_state(st)
-		await _views(st)
+		if close: await _close(st)
+		else: await _views(st)
 	print("MLSHOT done")
 	main._quit()
 
@@ -93,6 +97,17 @@ func _views(st: String) -> void:
 	await _sec(1.5)
 	await _shot("%s_cut" % st)
 	main.set_occ_script(null)
+
+func _close(st: String) -> void:
+	var xi := _xf(HOUSE_IN); var xg := _xf(HOUSE_GIWA)
+	main.set_first_person(true, false)
+	await _fp(xi, Vector3(4.4, 0, 3.6), Vector3(3.0, 1.3, 2.0), "%s_c_mudwall" % st)
+	await _fp(xi, Vector3(2.4, 0, 3.9), Vector3(1.4, 0.35, 2.4), "%s_c_base" % st)
+	await _fp(xi, Vector3(5.5, 0, 6.5), Vector3(2.0, 2.7, 2.6), "%s_c_thatch" % st)
+	await _fp(xg, Vector3(2.5, 0, 8.5), Vector3(1.5, 3.8, 3.2), "%s_c_giwa" % st)
+	await _fp(xg, Vector3(-1.0, 0, 9.5), Vector3(-0.6, 0.0, 6.5), "%s_c_ground" % st)
+	await _fp(xg, Vector3(1.6, 0, 4.8), Vector3(0.6, 0.6, 3.2), "%s_c_giwabase" % st)
+	main.set_first_person(false, false)
 
 func _put(p: Vector3) -> void:
 	main.player_pos = Vector3(p.x, main.world.height_at(p.x, p.z), p.z)
