@@ -1,5 +1,6 @@
 # 건물 빌더 묶음(집 한 채 = 마당 둘레 건물 여럿 + 담·문 + 마당 것) — 마당 가운데가 원점, 대문이 +z(남).
-#   params: { type: "choga_house"|"jungnong"|"yangban"|"jumak_yard", region, cls, seed }
+#   params: { type: "choga_house"|"jungnong"|"giwa_house"|"yangban"|"jumak_yard", region, cls, seed, lot?: [w, d] }
+#     lot: 필지 크기(m) — 담·마당을 그 안으로 줄인다(건물은 줄이지 않는다. 안 들면 고을 틀이 다른 시드를 고른다)
 #   layout(params) → 배치 로더 조각 목록(건물마다 bldg/building으로 따로 지어 가림·스트리밍·LOD가 건물 단위)
 #   build(params)  → 한 덩이(미리보기·갤러리) + pieces + yard
 # 배치(고증 요지 — docs/reports/building-reference-map.md):
@@ -88,9 +89,10 @@ static func plan(params: Dictionary) -> Dictionary:
 		"jungnong": out = _jungnong(r, region, seed)
 		"yangban": out = _yangban(r, region, seed)
 		"jumak_yard": out = _jumak_yard(r, region, seed)
+		"giwa_house": out = _giwa_house(r, region, seed, _lot(params), String(params.get("cls", "middle")))
 		"gate_demo": out = _gate_demo(params, seed)
 		"village_entry": out = _village_entry(params, seed)
-		_: out = _choga_house(r, region, seed)
+		_: out = _choga_house(r, region, seed, _lot(params))
 	_separate(out.pieces)
 	# interior: 살림채(안채·사랑채·주막)를 실내까지 지어 들어가 볼 수 있게
 	if params.get("interior", false):
@@ -102,12 +104,20 @@ static func _out(L: Array, X: float, Z0: float, Z1: float) -> Dictionary:
 	return { pieces = L, fp = Vector2(X * 2 + 1.0, Z1 - Z0 + 1.0), yard = { minX = -X + 1.0, maxX = X - 1.0, minZ = Z0 + 1.0, maxZ = Z1 - 1.0 } }
 
 # 서민 초가 한 채 ---------------------------------------------------------------------------------------
-static func _choga_house(r: Kit.Rng, region: String, seed: int) -> Dictionary:
+static func _lot(params: Dictionary) -> Vector2:
+	var l = params.get("lot", null)
+	if l is Array and l.size() >= 2: return Vector2(float(l[0]), float(l[1]))
+	return Vector2(INF, INF)
+
+static func _choga_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(INF, INF)) -> Dictionary:
 	var cls := "poor" if r.next() < 0.4 else "commoner"
 	var bp := { type = "choga", region = region, cls = cls, seed = seed }
 	var bb := B.bounds(S.resolve(bp))
 	var X := maxf(bb.size.x / 2 + r.between(2.8, 4.2), 7.0)
 	var madang := r.between(6.5, 9.0)
+	# 필지: 담을 안으로(건물 옆 1.2m는 남김), 마당을 줄인다(4.5m까지)
+	X = maxf(minf(X, lot.x / 2 - 0.5), bb.size.x / 2 + 1.2)
+	madang = maxf(minf(madang, lot.y - 1.0 - bb.size.y - 1.4), 4.5)
 	var Z0 := -(bb.size.y + madang + 1.4) / 2; var Z1 := -Z0
 	var L := []
 	var ax := -bb.get_center().x + r.between(-0.8, 0.8)
@@ -115,7 +125,7 @@ static func _choga_house(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 	L.append(_b("anchae", bp, ax, az))
 	var sx := 1.0 if r.next() < 0.5 else -1.0
 	# 헛간(마당 옆, 안쪽을 봄)
-	if r.next() < 0.8:
+	if r.next() < 0.8 and X >= bb.size.x / 2 + 3.4:
 		L.append(_b("heotgan", { type = "gotgan", region = region, cls = "commoner", seed = seed + 11 }, sx * (X - 2.4), az + bb.end.y + 1.6, -sx * PI / 2))
 	L.append(_v("dwitgan", "village/dwitgan", { seed = seed * 10 + 3, s = 1.4 }, -sx * (X - 1.3), Z1 - 1.6, sx * PI / 2))
 	if region != "jeju" and r.next() < 0.75:
@@ -135,6 +145,32 @@ static func _choga_house(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 		_:
 			_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "fence", 0, 0, true)
 			_front_gate(L, seed * 10, X, Z1, gx, { type = "sarip", seed = seed }, "fence")
+	return _out(L, X, Z0, Z1)
+
+# 읍내 기와집(중인·향리) ------------------------------------------------------------------------------
+#   기와 一자 몸채(giwajip)가 마당 뒤에 앉고, 초가 곳간이 마당 옆, 장독대, 기와 갓 토담 + 평대문/일각문(문 안 짧은 내외담은 반쯤)
+static func _giwa_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(INF, INF), cls := "middle") -> Dictionary:
+	var bp := { type = "giwajip", region = region, cls = cls, seed = seed }
+	var bb := B.bounds(S.resolve(bp))
+	var X := maxf(bb.size.x / 2 + r.between(1.4, 2.6), 6.8)
+	X = maxf(minf(X, lot.x / 2 - 0.5), bb.size.x / 2 + 1.0)
+	var madang := maxf(minf(r.between(6.0, 8.0), lot.y - 1.0 - bb.size.y - 1.8), 4.5)
+	var Z0 := -(bb.size.y + madang + 1.8) / 2; var Z1 := -Z0
+	var L := []
+	var az := Z0 + 1.2 - bb.position.y
+	L.append(_b("anchae", bp, -bb.get_center().x, az))
+	var sx := 1.0 if r.next() < 0.5 else -1.0
+	var gp := { type = "gotgan", region = region, cls = "middle", seed = seed + 11 }
+	var gb := B.bounds(S.resolve(gp))
+	if X - 0.6 - gb.size.y >= 2.6 and r.next() < 0.75:
+		L.append(_b("gotgan", gp, sx * (X - 0.6 + gb.position.y), az + bb.end.y + 0.8 + gb.size.x / 2, -sx * PI / 2))
+	L.append(_v("jangdok", "village/jangdok", { seed = seed * 10 + 3, w = 2.4, d = 1.8 }, -sx * (X - 1.8), Z0 + 1.0, 0))
+	if r.next() < 0.55: L.append(_v("tree", "nature/persimmon", { seed = seed * 10 + 6, s = 0.9 }, -sx * (X - 1.4), Z1 - 1.8, 0))
+	var gx := -sx * r.between(0.5, maxf(0.6, X - 3.0))
+	_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "todam_tile", 0, 0, true)
+	var gt := "pyeong" if r.next() < 0.6 else "ilgak"
+	_front_gate(L, seed * 10, X, Z1, gx, { type = gt, seed = seed, wall_h = 1.7 }, "todam_tile")
+	if r.next() < 0.5: _naeoe(L, seed + 61, gx, Z1 - 2.6, 2.6)
 	return _out(L, X, Z0, Z1)
 
 # 중농 -------------------------------------------------------------------------------------------------

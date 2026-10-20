@@ -146,6 +146,7 @@ static func generate(type: String, region: String, cls: String, seed: int) -> Di
 		"sadang": sp = _sadang(r, region)
 		"gotgan": sp = _gotgan(r, region, cls if cls != "" else "middle")
 		"araechae": sp = _araechae(r, region, cls if cls != "" else "middle")
+		"giwajip": sp = _giwajip(r, region, cls if cls != "" else "middle")
 		"dongheon": sp = _dongheon(r, region)
 		"gaeksa": sp = _gaeksa(r, region)
 		"daeseong": sp = _daeseong(r, region)
@@ -397,6 +398,30 @@ static func _gotgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 		roof = { kind = "giwa", form = "gable", eave = 0.8, rise_k = 0.52, lift = 0.1 } if giwa else { kind = "thatch", form = "gable", eave = 0.7, rise_k = 0.6 },
 		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [2.4], bays = bays, ends = ["gable", "gable"] }] }
 	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
+	return sp
+
+# 읍내 기와집(중인·향리·아전): 一자 3~4칸(부엌·안방·대청·건넌방), 막돌 기단, 각기둥, 흙벽/회벽, 맞배·팔작 — 양반가 안채보다 작고 낮다.
+#   고을 배치에서 작은 필지(15×14m)에 들도록 칸 2.1~2.45m. 참고: 김홍도·김준근 읍내 풍속(기와집 몸채 + 초가 곳간이 섞임)
+static func _giwajip(r: Kit.Rng, region: String, cls: String) -> Dictionary:
+	var bw := r.between(2.1, 2.45)
+	var kl := r.next() < 0.5
+	var bays := [bay(bw * 1.1, "kitchen"), bay(bw, "room", { role = "anbang" })]
+	if r.next() < 0.65: bays.append(bay(bw * r.between(1.0, 1.15), "hall"))
+	bays.append(bay(bw * r.between(0.85, 1.0), "room", { role = "geonneon" }))
+	if kl: bays.reverse()
+	var form: String = _pick(r, ["gable", "hipgable", "gable"])
+	var tk: String = _pick(r, ["toet", "jjok", "toet"])
+	var sp := { cls = cls, wear = r.between(0.2, 0.7), base = { kind = "stone", h = snappedf(r.between(0.38, 0.55), 0.01) }, floor_dh = 0.3,
+		cho = "dumbeong" if r.next() < 0.6 else "dressed", column = "square", col = 0.2, wall = "plaster" if r.next() < 0.45 else "mud", wall_h = snappedf(r.between(2.0, 2.15), 0.01),
+		lattice = _pick(r, ["ddi", "ddi", "yong"]), meoreum = r.next() < 0.3,
+		roof = { kind = "giwa", form = form, eave = r.between(0.95, 1.12), rise_k = r.between(0.52, 0.62), lift = r.between(0.15, 0.3) },
+		chimney = { kind = _pick(r, ["pot", "stone", "mud"]), at = "side_right" if kl else "side_left" }, refs = ["yangban"], attach = [] }
+	sp.wings = [{ id = "main", depth = [r.between(2.4, 2.7)], toet = { kind = tk, d = snappedf(r.between(0.75, 0.9), 0.01) if tk == "toet" else 0.55 }, bays = bays, ends = [form, form] }]
+	var L := 0.0
+	for b in bays: L += b.w
+	var ks := -1.0 if kl else 1.0
+	sp.attach.append({ kind = "jangdok_s", x = ks * (L / 2 - 1.0), z = -1.3 - 1.3, n = 3 + int(r.next() * 3) })
+	if r.next() < 0.5: sp.attach.append({ kind = "firewood", x = ks * (L / 2 + 0.8), z = -0.2, ry = PI / 2 * ks, len = r.between(1.4, 2.0) })
 	return sp
 
 # 중농 아래채: 사랑방 + 외양간 + 헛간(곳간)

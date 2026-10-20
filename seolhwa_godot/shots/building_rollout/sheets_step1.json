@@ -1,0 +1,167 @@
+{
+ "sheets": [
+  {
+   "out": "res://shots/building_rollout/step1_town.jpg",
+   "title": "1단계 남원 서문 밖 구역 — 마을 카메라(22°) 전(옛 house_compound) · 후(bldg/compound)",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/west_t1_before.png",
+     "label": "장터길북 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t1_after.png",
+     "label": "장터길북 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t2_before.png",
+     "label": "장터길가운데 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t2_after.png",
+     "label": "장터길가운데 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t3_before.png",
+     "label": "장터길남 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t3_after.png",
+     "label": "장터길남 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t4_before.png",
+     "label": "오솔길어귀 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t4_after.png",
+     "label": "오솔길어귀 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t5_before.png",
+     "label": "오솔길서쪽 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t5_after.png",
+     "label": "오솔길서쪽 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t6_before.png",
+     "label": "북쪽안골목 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t6_after.png",
+     "label": "북쪽안골목 · after"
+    }
+   ]
+  },
+  {
+   "out": "res://shots/building_rollout/step1_walk.jpg",
+   "title": "1단계 — 장터길·오솔길 걷기(마을 카메라 · 1인칭) 전 · 후",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_1_town_before.png",
+     "label": "장터길1 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_1_town_after.png",
+     "label": "장터길1 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_1_fp_before.png",
+     "label": "장터길1_1인칭 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_1_fp_after.png",
+     "label": "장터길1_1인칭 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_3_town_before.png",
+     "label": "장터길3 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_3_town_after.png",
+     "label": "장터길3 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_3_fp_before.png",
+     "label": "장터길3_1인칭 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_3_fp_after.png",
+     "label": "장터길3_1인칭 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_1_town_before.png",
+     "label": "오솔길1 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_1_town_after.png",
+     "label": "오솔길1 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_1_fp_before.png",
+     "label": "오솔길1_1인칭 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_1_fp_after.png",
+     "label": "오솔길1_1인칭 · after"
+    }
+   ]
+  },
+  {
+   "out": "res://shots/building_rollout/step1_std_fp_over.jpg",
+   "title": "1단계 — 기본 카메라 · 1인칭 · 내려다보기 전 · 후",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/west_s1_before.png",
+     "label": "기본카메라장터길 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_s1_after.png",
+     "label": "기본카메라장터길 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_s2_before.png",
+     "label": "기본카메라오솔길 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_s2_after.png",
+     "label": "기본카메라오솔길 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f1_before.png",
+     "label": "1인칭장터길서쪽 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f1_after.png",
+     "label": "1인칭장터길서쪽 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f3_before.png",
+     "label": "1인칭오솔길 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f3_after.png",
+     "label": "1인칭오솔길 · after"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_o1_before.png",
+     "label": "내려다보기 · before"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_o1_after.png",
+     "label": "내려다보기 · after"
+    }
+   ]
+  }
+ ]
+}

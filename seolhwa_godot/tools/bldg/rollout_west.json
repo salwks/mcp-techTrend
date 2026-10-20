@@ -1,0 +1,529 @@
+{
+ "district": "west",
+ "revert": false,
+ "items": [
+  {
+   "id": "nw_house_051",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "jungnong",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1058,
+    "lot": [
+     20.0,
+     16.7999992370605
+    ]
+   },
+   "x": -3355.4,
+   "z": 305.92,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    16.6
+   ],
+   "note": "길가:namwon_market_lane / medium",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 151.0,
+     "size": "medium",
+     "plan": "il"
+    },
+    "footprint": [
+     20.0,
+     16.8
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_052",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "giwa_house",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1064,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3353.2,
+   "z": 286.78,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.8,
+    14.0
+   ],
+   "note": "길가:namwon_market_lane / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 152.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il",
+     "roof": "giwa"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_053",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "jungnong",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1072,
+    "lot": [
+     20.0,
+     16.7999992370605
+    ]
+   },
+   "x": -3354.8,
+   "z": 268.51,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    15.7
+   ],
+   "note": "길가:namwon_market_lane / medium",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 153.0,
+     "size": "medium",
+     "plan": "il"
+    },
+    "footprint": [
+     20.0,
+     16.8
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_054",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "giwa_house",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1078,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3351.05,
+   "z": 249.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.6,
+    14.0
+   ],
+   "note": "길가:namwon_market_lane / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 154.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il",
+     "roof": "giwa"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_055",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "jungnong",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1088,
+    "lot": [
+     20.0,
+     16.7999992370605
+    ]
+   },
+   "x": -3353.69,
+   "z": 229.82,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    19.0,
+    15.2
+   ],
+   "note": "길가:namwon_market_lane / medium",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 155.0,
+     "size": "medium",
+     "plan": "il"
+    },
+    "footprint": [
+     20.0,
+     16.8
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_059",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "choga_house",
+    "region": "south",
+    "cls": "commoner",
+    "seed": 1113,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3330.33,
+   "z": 274.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.8,
+    14.0
+   ],
+   "note": "길가:namwon_market_lane / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 159.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_077",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "choga_house",
+    "region": "south",
+    "cls": "commoner",
+    "seed": 1239,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3353.04,
+   "z": 210.13,
+   "ry": -0.0532,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.8,
+    14.0
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 177.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_087",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "choga_house",
+    "region": "south",
+    "cls": "commoner",
+    "seed": 1309,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3377.72,
+   "z": 260.46,
+   "ry": 0.0546,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.8,
+    13.3
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 187.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_088",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "giwa_house",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1316,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3395.87,
+   "z": 270.04,
+   "ry": 0.0543,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.6,
+    14.0
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 188.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il",
+     "roof": "giwa"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_090",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "giwa_house",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1330,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3377.15,
+   "z": 278.72,
+   "ry": 0.0088,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.8,
+    14.0
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 190.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il",
+     "roof": "giwa"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_102",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "giwa_house",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1414,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3374.67,
+   "z": 296.64,
+   "ry": -0.0209,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.6,
+    14.0
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 202.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il",
+     "roof": "giwa"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_134",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "giwa_house",
+    "region": "south",
+    "cls": "middle",
+    "seed": 1638,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3369.78,
+   "z": 339.05,
+   "ry": -0.0456,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.6,
+    14.0
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 234.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il",
+     "roof": "giwa"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  },
+  {
+   "id": "nw_house_141",
+   "kit": "bldg/compound",
+   "params": {
+    "type": "choga_house",
+    "region": "south",
+    "cls": "commoner",
+    "seed": 1687,
+    "lot": [
+     14.8000001907349,
+     14.0
+    ]
+   },
+   "x": -3370.18,
+   "z": 356.58,
+   "ry": 0.0125,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "남원 읍내(성 밖)",
+   "footprint": [
+    14.8,
+    14.0
+   ],
+   "note": "마을 터 채우기 / small",
+   "was": {
+    "kit": "village/house_compound",
+    "params": {
+     "seed": 241.0,
+     "size": "small",
+     "wall": "todam",
+     "plan": "il"
+    },
+    "footprint": [
+     14.8,
+     14.0
+    ]
+   },
+   "rollout": "building-rollout-1/west"
+  }
+ ]
+}

@@ -27,11 +27,11 @@ func _init() -> void:
 		fails += _check_building(String(args.only), S.resolve({ type = q[0], region = q[1], seed = int(q[2]) }))
 		set = "none"
 	if set in ["builder", "all"]:
-		for t in ["choga", "jumak", "sijeon", "anchae", "sarang", "haengrang", "sadang", "gotgan", "araechae", "dongheon", "gaeksa", "daeseong", "gangdang", "jeongja", "nugak", "mill", "smithy", "daeung"]:
+		for t in ["choga", "jumak", "sijeon", "anchae", "sarang", "haengrang", "sadang", "gotgan", "araechae", "dongheon", "gaeksa", "daeseong", "gangdang", "jeongja", "nugak", "mill", "smithy", "daeung", "giwajip"]:
 			for rg in ["south", "central", "north", "jeju"]:
 				for s in [1, 2, 3]:
 					fails += _check_building("%s/%s/%d" % [t, rg, s], S.resolve({ type = t, region = rg, seed = s }))
-		for t in ["choga_house", "jungnong", "yangban", "jumak_yard"]:
+		for t in ["choga_house", "jungnong", "giwa_house", "yangban", "jumak_yard"]:
 			for rg in ["south", "central"]:
 				for s in [1, 2, 3, 4, 5, 6]:
 					fails += _check_compound("compound/%s/%s/%d" % [t, rg, s], { type = t, region = rg, seed = s })
@@ -45,6 +45,8 @@ func _init() -> void:
 		fails += _check_single_old("village/giwa/giyeok", "village/giwa", { seed = 1, plan = "giyeok" })
 		fails += _check_single_old("village/choga/giyeok", "village/choga", { seed = 1, plan = "giyeok" })
 		for st in ["tile", "soseul", "thatch"]: fails += _check_single_old("village/daemun/" + st, "village/daemun", { seed = 1, style = st })
+	if set == "place":
+		fails += _check_place(String(args.get("file", "res://region_data/JL_NAMWON_UNBONG/placement_namwon.json")), String(args.get("bbox", "-3420,200,-3322,365")).split(","))
 	var out: String = args.get("out", "res://shots/building_builder/roof_check.json")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out.get_base_dir()))
 	var f := FileAccess.open(ProjectSettings.globalize_path(out), FileAccess.WRITE)
@@ -247,6 +249,54 @@ func _check_compound(name: String, params: Dictionary) -> int:
 			if not g.top.is_empty(): grids.append(g)
 			r.node.free()
 	return _finish(name, grids)
+
+# 배치에 놓인 건물 전부(범위 안): 빌더 묶음·건물은 조각마다, 옛 키트(초가·기와·집 묶음)는 지어서 — 다른 항목끼리 · 묶음 안 조각끼리 · 벽–지붕 여유
+#   --set=place --file=res://…/placement_namwon.json --bbox=x0,z0,x1,z1
+func _check_place(file: String, bb: PackedStringArray) -> int:
+	var d = JSON.parse_string(FileAccess.get_file_as_string(file))
+	var grids := []
+	var fails := 0
+	var x0 := float(bb[0]); var z0 := float(bb[1]); var x1 := float(bb[2]); var z1 := float(bb[3])
+	var nb := 0
+	for it in d.items:
+		var X := float(it.x); var Z := float(it.z)
+		if X < x0 or X > x1 or Z < z0 or Z > z1: continue
+		var kit := String(it.kit)
+		var ixf := Transform3D(Basis(Vector3.UP, float(it.get("ry", 0.0))), Vector3(X, 0, Z))
+		var id := String(it.id)
+		if kit == "bldg/compound":
+			for e in CP.plan(it.params).pieces:
+				var xf := ixf * Transform3D(Basis(Vector3.UP, float(e.ry)), Vector3(float(e.x), 0, float(e.z)))
+				if e.kit == "bldg/building":
+					var sp := S.resolve(e.params)
+					for g in _builder_grids(id + "/" + String(e.tag), sp, xf): g.group = id + "/" + String(e.tag); grids.append(g)
+					fails += _check_clear(id + "/" + String(e.tag), sp); nb += 1
+				elif _is_wall(e.kit) or e.kit.contains("gate"):
+					var r: Dictionary = load("res://kit/%s.gd" % e.kit).build(e.params)
+					var g := _mesh_grid(r.node, id + "/" + String(e.tag), id + "/" + String(e.tag), "coping" if _is_wall(e.kit) else "roof", xf, 0.9 if _is_wall(e.kit) else 1.6)
+					if not g.top.is_empty(): grids.append(g)
+					r.node.free()
+		elif kit == "bldg/building":
+			var sp := S.resolve(it.params)
+			for g in _builder_grids(id, sp, ixf): g.group = id; grids.append(g)
+			fails += _check_clear(id, sp); nb += 1
+		elif kit in ["village/choga", "village/giwa", "village/jumak"]:
+			var r: Dictionary = load("res://kit/%s.gd" % kit).build(it.params)
+			var g := _mesh_grid(r.node, id, id, "roof", ixf, 1.7)
+			if not g.top.is_empty(): grids.append(g)
+			r.node.free(); nb += 1
+		elif kit == "village/house_compound":
+			for e in load("res://kit/village/house_compound.gd").layout(it.params):
+				if e.kit.contains("jangdok") or e.kit.contains("firewood") or e.kit.contains("teotbat"): continue
+				var r: Dictionary = load("res://kit/%s.gd" % e.kit).build(e.params)
+				var xf := ixf * Transform3D(Basis(Vector3.UP, float(e.ry)), Vector3(float(e.x), 0, float(e.z)))
+				var wall := _is_wall(e.kit)
+				var g := _mesh_grid(r.node, id + "/" + String(e.tag), id + "/" + String(e.tag), "coping" if wall else "roof", xf, 0.9 if wall else 1.7)
+				if not g.top.is_empty(): grids.append(g)
+				r.node.free()
+			nb += 1
+	print("ROOFCHECK place items(buildings)=%d grids=%d" % [nb, grids.size()])
+	return fails + _finish("place:" + file.get_file(), grids)
 
 # 기존 묶음(village/house_compound): 조각마다 지어서 메시로
 func _check_old(name: String, kit: String, params: Dictionary) -> int:

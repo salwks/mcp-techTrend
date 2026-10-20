@@ -15,7 +15,7 @@ func _init() -> void:
 	var args := {}
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1); args[kv[0]] = kv[1] if kv.size() > 1 else "1"
-	var types: PackedStringArray = String(args.get("types", "choga,jumak,sijeon,anchae,sarang,haengrang,sadang,gotgan,araechae,dongheon,gaeksa,daeseong,gangdang,jeongja,nugak,mill,smithy,daeung")).split(",")
+	var types: PackedStringArray = String(args.get("types", "choga,jumak,sijeon,anchae,sarang,haengrang,sadang,gotgan,araechae,dongheon,gaeksa,daeseong,gangdang,jeongja,nugak,mill,smithy,daeung,giwajip")).split(",")
 	var regions: PackedStringArray = String(args.get("regions", "south,central,north,jeju")).split(",")
 	var seeds := int(args.get("seeds", "2"))
 	var modes: Array = [true, false] if String(args.get("interior", "both")) == "both" else [String(args.interior) == "1"]
@@ -33,7 +33,7 @@ func _init() -> void:
 					if r.pairs > 0:
 						fails += 1
 						print("FACECHECK %s FAIL pairs=%d area=%.4f at=%s" % [name, r.pairs, r.area, str(r.at)])
-	var out := "res://shots/building_builder/face_check.json"
+	var out: String = args.get("out", "res://shots/building_builder/face_check.json")
 	var f := FileAccess.open(ProjectSettings.globalize_path(out), FileAccess.WRITE)
 	f.store_string(JSON.stringify(report, "\t")); f.close()
 	print("FACECHECK total fail=%d checked=%d" % [fails, n])
