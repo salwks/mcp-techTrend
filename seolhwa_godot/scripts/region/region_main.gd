@@ -277,6 +277,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/region/fp_shots.gd").new(self); _ride_test.run.call_deferred(String(args.fpshots))
 	elif args.has("buildshots"):   # 건물 바닥·계단·초가 처마 모서리 점검 촬영 — scripts/region/building_shots.gd
 		_ride_test = load("res://scripts/region/building_shots.gd").new(self); _ride_test.run.call_deferred(String(args.buildshots))
+	elif args.has("roofshots"):   # 초가 지붕 뚫림·실내 벽 깜빡임 점검 촬영(fix-1021) — scripts/region/roof_interior_shots.gd
+		_ride_test = load("res://scripts/region/roof_interior_shots.gd").new(self); _ride_test.run.call_deferred(String(args.roofshots))
 	elif args.has("talkshot"):
 		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
@@ -928,7 +930,7 @@ func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "roofshots"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:

@@ -39,6 +39,8 @@ static func build(params: Dictionary) -> Dictionary:
 	PR.dok(m, 3)
 	m.pop(old)
 	# 마당 짚더미 대신 장작 몇 개
-	for i in 5: m.add("p", "wood", C.P(Kit.cyl(0.08, 0.08, 1.0, 6, -W / 2 - 0.9, 0.1 + (i / 3) * 0.16, -0.3 + (i % 3) * 0.19, PI / 2, 0, 0), 0x9a7852, 0x6b5038, 0.06, m.rng), 0.01)
+	# 통나무는 x축으로 눕혀 z로 나란히, 윗줄은 아랫줄 골에 얹는다 — 옛것은 z축으로 눕힌 통나무 셋이 한 줄 위에서 서로 파고들어
+	#   면이 같은 평면으로 겹쳤다(fix-1021)
+	for i in 5: m.add("p", "wood", C.P(Kit.cyl(0.08, 0.08, 1.0, 6, -W / 2 - 0.9, 0.1 + (i / 3) * 0.14, -0.3 + (i % 3) * 0.19 + (i / 3) * 0.095, 0, 0, PI / 2), 0x9a7852, 0x6b5038, 0.06, m.rng), 0.01)
 	m.circle(-W / 2 - 0.9, -0.1, 0.6)
 	return m.result("주막", Vector2(W + 4.0, D + 5.2))

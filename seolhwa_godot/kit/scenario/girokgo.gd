@@ -41,9 +41,10 @@ static func build(params: Dictionary) -> Dictionary:
 	# 문 앞 돌계단(마루 높이)
 	for k in 2: s.add("base", "stone", SC.pa(Kit.box(2.0, F * (2 - k) / 2.0, 0.4, 0, F * (2 - k) / 4.0, zf + 0.55 + k * 0.38), SC.STONE), 0.015)
 	# 시렁(벽 선반) — 뒷벽(창 자리 비움)·양옆
-	_rack(s, 1.4, zb + 0.26, 4.6, 0.0)
-	_rack(s, -W / 2 + 0.26, -0.2, 3.6, PI / 2)
-	_rack(s, W / 2 - 0.26, -0.2, 3.6, -PI / 2)
+	#   벽선에서 0.32(깊이 0.42의 뒤가 기둥 안면(벽선 - 0.1) 앞에 오게 — 옛 0.26은 시렁·짐이 기둥·벽 속에 묻혀 면이 겹쳤다, fix-1021)
+	_rack(s, 1.4, zb + 0.32, 4.6, 0.0)
+	_rack(s, -W / 2 + 0.32, -0.2, 3.6, PI / 2)
+	_rack(s, W / 2 - 0.32, -0.2, 3.6, -PI / 2)
 	# 서리 책상 자리(낮은 서안) — 움직이는 문서는 따로 배치
 	s.add("interior", "wood", SC.pa(Kit.box(1.1, 0.04, 0.5, 2.4, F + 0.32, 1.3), [0x6a4428, 0x4a2e1c]), 0.012)
 	for sx in [-1, 1]: s.add("interior", "wood", SC.pa(Kit.box(0.05, 0.3, 0.46, 2.4 + sx * 0.5, F + 0.15, 1.3), [0x6a4428]), 0.0)
@@ -61,15 +62,17 @@ static func _rack(s: SC.S, x: float, z: float, w: float, ry: float) -> void:
 	var old: Transform3D = s.m.push(x, F, z, ry)
 	var h := 1.9; var d := 0.42
 	var frame := []
-	for sx in [-1, 0, 1]: frame.append(Kit.box(0.06, h, d, sx * (w / 2 - 0.03), h / 2, 0))
-	for k in 3: frame.append(Kit.box(w, 0.04, d, 0, 0.35 + k * 0.6, 0))
+	# 기둥 0.064(면이 0.1 걸음으로 놓이는 짐 끝과 우연히 같은 평면이 되지 않게, fix-1021)
+	for sx in [-1, 0, 1]: frame.append(Kit.box(0.064, h, d, sx * (w / 2 - 0.03), h / 2, 0))
+	# 선반널은 기둥 사이에 끼우고 앞뒤를 0.006 들인다 — 기둥과 앞면·끝면이 같은 평면으로 겹치지 않게(fix-1021)
+	for k in 3: frame.append(Kit.box(w - 0.02, 0.04, d - 0.012, 0, 0.35 + k * 0.6, 0))
 	s.add("interior", "wood", SC.pa(Kit.merge(frame), [0x5a3e28, 0x3e2a1a], 0.03), 0.012)
 	var R := s.rng
 	var items := []
 	for k in 3:
 		var y := 0.37 + k * 0.6
 		var bx := -w / 2 + 0.1
-		while bx < w / 2 - 0.3:
+		while bx < w / 2 - 0.42:   # 마지막 짐(최대 0.34)이 끝 기둥 안쪽에서 멈추게
 			var r := R.next()
 			if r < 0.45:   # 두루마리 몇
 				for j in 3:

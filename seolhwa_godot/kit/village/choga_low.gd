@@ -27,7 +27,8 @@ static func low_roof(m: C.M, X: float, Z: float, eave: float, Hh: float, zc: flo
 	var th := 1.0
 	var seg_n := 20 if lod else 28
 	m.add("roof", "thatch", C.PA(C.rr_dome(X, Z, RC, eave, Hh, zc, th, seg_n, 3 if lod else 5), C.THATCH_SEA, 0.05, R), 0.05)
-	m.add("roof", "thatch", C.PA(C.rr_band(X, Z, RC, eave + 0.01, eave - 0.25, zc, 0.02, seg_n), C.THATCH_SEA_LIP, 0.04, R), 0.035)
+	# 처마 밑면: 안쪽 0.5m까지 올라 처마 + 0.07 천장(fix-1021 — 낮은 초가는 처마가 top + 0.1이라 도리 윗면 top + 0.11이 처마보다 높다)
+	m.add("roof", "thatch", C.PA(C.rr_band(X, Z, RC, eave + 0.01, eave - 0.25, zc, 0.02, seg_n, eave + 0.07, 0.5), C.THATCH_SEA_LIP, 0.04, R), 0.035)
 	var H := func(x: float, z: float) -> float: return C.rr_height(X, Z, RC, eave, Hh, zc, th, x, z) + 0.035
 	var rope := Kit.Geo.new()
 	var stones := []

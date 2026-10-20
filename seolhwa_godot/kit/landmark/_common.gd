@@ -72,7 +72,8 @@ static func holed_wall(b, x0: float, x1: float, y0: float, y1: float, hx0: float
 static func paper_panel(b, cx: float, cy: float, w: float, h: float, z: float, frame := true) -> void:
 	b.add("paper", vplane(w, h, cx, cy, z), 0.0)
 	if not frame: return
-	var f := 0.07
+	# 틀 폭 0.05: 문짝 사이 틈(0.1)의 절반 — 이웃 문짝 틀과 겹치지 않고 맞닿는다(옛 0.07은 이웃 틀과 0.04씩 같은 평면으로 겹쳐 깜빡였다, fix-1021)
+	var f := 0.05
 	var fr := Kit.merge([vplane(w + f * 2, f, cx, cy + h / 2 + f / 2, z + 0.03), vplane(w + f * 2, f, cx, cy - h / 2 - f / 2, z + 0.03),
 		vplane(f, h, cx - w / 2 - f / 2, cy, z + 0.03), vplane(f, h, cx + w / 2 + f / 2, cy, z + 0.03)])
 	b.add("wood", pnt(fr, WOOD), 0.0)
@@ -236,11 +237,11 @@ static func hall(body, roofb, o: Dictionary, rng: Kit.Rng) -> Dictionary:
 				var pw := (bw - 0.4) / np
 				for k in np:
 					paper_panel(body, bcx - bw / 2 + 0.2 + pw * (k + 0.5), F + 0.3 + dh / 2, pw - 0.1, dh - 0.12, zf + 0.02)
-				body.add("wood", pnt(Kit.box(bw, 0.3, 0.22, bcx, F + 0.15, zf), WOOD_L), 0.012)
+				body.add("wood", pnt(Kit.box(bw, 0.32, 0.22, bcx, F + 0.16, zf), WOOD_L), 0.012)   # 문지방 윗면이 문 구멍 밑면(F + 0.3)보다 0.02 높게
 			"window":
 				holed_wall(body, bx0, bx1, F, top, bcx - 0.5, bcx + 0.5, F + 0.95, F + 1.75, zf, t, wall_col, "mud", rng)
 				paper_panel(body, bcx, F + 1.35, 1.0, 0.8, zf + 0.02)
-				body.add("wood", pnt(Kit.box(bw, 0.5, 0.22, bcx, F + 0.25, zf + 0.01), WOOD_L), 0.012)
+				body.add("wood", pnt(Kit.box(bw, 0.5, 0.22, bcx, F + 0.25, zf + 0.015), WOOD_L), 0.012)   # 뒷면이 벽 안면(zf - 0.1)과 겹치지 않게
 			"open":
 				# 대청: 안쪽 어둡게(뒷벽 판문 느낌)
 				body.add("flat", pnt(Kit.box(bw, H, 0.05, bcx, F + H / 2, zb + 0.18), DARK), 0.0)
@@ -268,8 +269,8 @@ static func hall(body, roofb, o: Dictionary, rng: Kit.Rng) -> Dictionary:
 	body.add("flat", pnt(Kit.box(W + 0.5, 0.26, 0.3, cx, top + 0.13, zf), band, 0.02), 0.02)
 	body.add("flat", pnt(Kit.box(W + 0.5, 0.08, 0.32, cx, top + 0.3, zf), [DAN_LINE]), 0.01)
 	body.add("flat", pnt(Kit.box(W + 0.5, 0.3, 0.3, cx, top + 0.15, zb), band), 0.02)
-	for s in [-1, 1]:
-		body.add("flat", pnt(Kit.box(0.3, 0.3, D + 0.4, cx + s * W / 2, top + 0.15, cz), band), 0.02)
+	for s in [-1, 1]:   # 옆 창방은 0.28(앞 0.26·뒤 0.3 창방과 모서리에서 윗면·밑면이 같은 높이로 겹치지 않게, fix-1021)
+		body.add("flat", pnt(Kit.box(0.3, 0.28, D + 0.4, cx + s * W / 2, top + 0.15, cz), band), 0.02)
 	# 공포
 	var br: String = o.get("bracket", "ikgong")
 	var bg := []

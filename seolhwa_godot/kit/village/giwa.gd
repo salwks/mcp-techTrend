@@ -71,7 +71,7 @@ static func draw(m: C.M, o: Dictionary) -> Dictionary:
 	elif plan == "giyeok":
 		var mx1 := W / 2 - bw - 0.1
 		m.add("front", "wood", C.PA(Kit.box(mx1 + W / 2 + 0.1, 0.08, 0.7, (mx1 - W / 2 - 0.1) / 2, F - 0.02, zf + 0.35), C.WOOD_L), 0.015)
-		preload("res://kit/village/choga.gd").wing(m, W / 2 - bw, W / 2, zf, zf + wing_len, F, top, t, C.PLASTER, "mud", [0xaaa498, 0x7b766c])
+		preload("res://kit/village/choga.gd").wing(m, W / 2 - bw, W / 2, zf, zf + wing_len, F, top, t, C.PLASTER, "mud", [0xaaa498, 0x7b766c], 0.6)
 	else:
 		m.add("front", "wood", C.PA(Kit.box(W - 0.2, 0.08, 0.7, 0, F - 0.02, zf + 0.35), C.WOOD_L), 0.015)
 	# 지붕

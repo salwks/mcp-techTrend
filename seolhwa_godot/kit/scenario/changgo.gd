@@ -114,8 +114,8 @@ static func _fill(s: SC.S, fill: String, W: float, D: float, F: float, hole) -> 
 	if not sacks.is_empty(): s.add("interior", "thatch", Kit.merge(sacks), 0.01)
 	if fill == "goods" or fill == "grain":
 		# 궤짝·저울·말(되)
-		for q in [[W / 2 - 1.0, D / 2 - 1.2], [W / 2 - 1.6, D / 2 - 1.0]]:
-			s.add("interior", "wood", SC.pa(Kit.box(0.8, 0.6, 0.6, q[0], F + 0.3, q[1]), [0x7a5a3a, 0x5a4028], 0.04, R), 0.012)
+		for q in [[W / 2 - 1.0, D / 2 - 1.2, 0.6], [W / 2 - 1.6, D / 2 - 1.0, 0.56]]:   # 겹쳐 놓인 두 궤짝은 높이를 달리(윗면 겹침 없게)
+			s.add("interior", "wood", SC.pa(Kit.box(0.8, q[2], 0.6, q[0], F + q[2] / 2, q[1]), [0x7a5a3a, 0x5a4028], 0.04, R), 0.012)
 		s.add("interior", "wood", SC.pa(Kit.box(0.34, 0.2, 0.34, -W / 2 + 1.2, F + 0.1, D / 2 - 1.0), [0x9a7852, 0x7a5c3e]), 0.008)
 		# 대저울(막대 + 추) — 걸이
 		s.add("interior", "wood", SC.pa(Kit.box(1.2, 0.04, 0.04, -W / 2 + 1.6, F + 1.6, D / 2 - 1.6), [0x6a4428]), 0.004)
@@ -243,7 +243,7 @@ static func _ruin(s: SC.S, W: float, D: float, F: float, H: float, old: bool, ho
 	for x in [-W / 2, -W / 6, W / 6, W / 2]:
 		for z in [-D / 2, D / 2]:
 			var h := R.between(0.4, 2.0)
-			stubs.append(Kit.xf(Kit.box(0.2, h, 0.2), x, F + h / 2, z, R.between(-0.1, 0.1), 0, R.between(-0.15, 0.15)))
+			stubs.append(Kit.xf(Kit.box(0.22, h, 0.22), x, F + h / 2, z, R.between(-0.1, 0.1), 0, R.between(-0.15, 0.15)))   # 남은 벽(0.18)보다 굵게 — 면이 벽 면과 겹치지 않게
 	p.add("wood", SC.pa(Kit.merge(stubs), SC.CHAR, 0.06), 0.015)
 	# 낮게 남은 벽(그을린 흙)
 	var wcol := [0x5a4a3a, 0x2a2018]
