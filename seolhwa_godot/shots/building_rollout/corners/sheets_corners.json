@@ -1,0 +1,118 @@
+{
+ "sheets": [
+  {
+   "out": "res://shots/building_rollout/corners/corners_a.jpg",
+   "title": "외벽 모서리 이음 — 전(왼) · 후(오른) 가까이(1/2)",
+   "cols": 2,
+   "cw": 800,
+   "ch": 600,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/corners/raw/c1_choga_c1_junction_before.png",
+     "label": "초가 중부 ㄱ 이음(부엌 날개↔몸채 뒤) · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c1_choga_c1_junction_after.png",
+     "label": "초가 중부 ㄱ 이음(부엌 날개↔몸채 뒤) · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c2_anchae_c1_junction_before.png",
+     "label": "안채 중부 ㄱ 이음 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c2_anchae_c1_junction_after.png",
+     "label": "안채 중부 ㄱ 이음 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c3_anchae_n2_junction_before.png",
+     "label": "안채 북부 ㄱ 이음 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c3_anchae_n2_junction_after.png",
+     "label": "안채 북부 ㄱ 이음 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c4_choga_s1_frontR_before.png",
+     "label": "초가 남부 앞 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c4_choga_s1_frontR_after.png",
+     "label": "초가 남부 앞 모서리 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c5_choga_s1_backL_before.png",
+     "label": "초가 남부 뒤 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c5_choga_s1_backL_after.png",
+     "label": "초가 남부 뒤 모서리 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c6_gotgan_frontR_before.png",
+     "label": "곳간 앞 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c6_gotgan_frontR_after.png",
+     "label": "곳간 앞 모서리 · 후"
+    }
+   ]
+  },
+  {
+   "out": "res://shots/building_rollout/corners/corners_b.jpg",
+   "title": "외벽 모서리 이음 — 전(왼) · 후(오른) 가까이(2/2)",
+   "cols": 2,
+   "cw": 800,
+   "ch": 600,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/corners/raw/c7_choga_j1_backR_before.png",
+     "label": "제주 돌벽 뒤 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c7_choga_j1_backR_after.png",
+     "label": "제주 돌벽 뒤 모서리 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c8_giwajip_backR_before.png",
+     "label": "읍내 기와집 뒤 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c8_giwajip_backR_after.png",
+     "label": "읍내 기와집 뒤 모서리 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c9_choga_s1_inside_before.png",
+     "label": "초가 방 안 모서리(실내) · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c9_choga_s1_inside_after.png",
+     "label": "초가 방 안 모서리(실내) · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c10_anchae_s2_inside_before.png",
+     "label": "안채 실내 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c10_anchae_s2_inside_after.png",
+     "label": "안채 실내 모서리 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c11_giwahouse_wallcorner_before.png",
+     "label": "기와 갓 토담 모서리 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c11_giwahouse_wallcorner_after.png",
+     "label": "기와 갓 토담 모서리 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c12_giwahouse_gatejoin_before.png",
+     "label": "평대문–토담 이음 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/corners/raw/c12_giwahouse_gatejoin_after.png",
+     "label": "평대문–토담 이음 · 후"
+    }
+   ]
+  }
+ ]
+}

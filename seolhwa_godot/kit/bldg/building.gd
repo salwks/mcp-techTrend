@@ -237,6 +237,12 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			m.add("front", "wood", C.PA(Kit.box(0.12, 0.17, T - 0.1, xs[i], top + 0.1, zf + T / 2), ctx.wood, 0.03, R), 0.012)
 	# 하방(문지방 줄) 없는 칸 바닥 귀틀: 트인 칸 앞 끝
 	# --- 면(벽·창호) ---------------------------------------------------------------------------
+	var side_ok := func(sd: int) -> bool:
+		if w.open_end[sd]: return false
+		var eb: Dictionary = bays[0 if sd == 0 else bays.size() - 1]
+		if raised and eb.fn == "maru": return false
+		if eb.has("side"): return not (String(eb.side.kind) in ["open", "rail", "join"])
+		return eb.fn != "maru"
 	var lights := 0
 	for i in bays.size():
 		var b: Dictionary = bays[i]
@@ -245,8 +251,15 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		if raised and b.fn == "maru": continue
 		var fk: String = b.front.kind
 		if sp.interior and b.fn == "room" and fk in ["door2", "door1"]: b.front.open = true
-		_face(m, "front", sp, ctx, Vector3(cx, 0, zf), 0.0, bw, y0, top, b.front, b, lod)
-		_face(m, "body", sp, ctx, Vector3(cx, 0, zb), PI, bw, y0, top, b.back, b, lod)
+		# 모서리: 끝 칸 앞·뒷벽은 옆벽 바깥면까지 늘려(옆벽은 그 안쪽면에 맞댐) 두 벽이 한 덩이로 만난다 — 기둥이 낮게 시작하는 부엌·헛간 칸에서도 틈 없이
+		var el := 1.0 if i == 0 and side_ok.call(0) else 0.0
+		var er := 1.0 if i == bays.size() - 1 and side_ok.call(1) else 0.0
+		_face(m, "front", sp, ctx, Vector3(cx, 0, zf), 0.0, bw, y0, top, b.front, b, lod, Vector2(el, er))
+		# ㄱ·ㄷ 날개가 붙은 끝(base_cut): 뒷벽은 날개 옆벽이 이어 받으므로 맞댐(−1) — 날개 옆벽이 모서리를 채운다(두 벽이 한 평면에 겹치지 않게)
+		var bc: Array = w.get("base_cut", [false, false])
+		var bl := (-1.0 if bc[0] else el) if el != 0.0 else 0.0
+		var br := (-1.0 if bc[1] else er) if er != 0.0 else 0.0
+		_face(m, "body", sp, ctx, Vector3(cx, 0, zb), PI, bw, y0, top, b.back, b, lod, Vector2(br, bl))
 		if b.fn == "room" and lights < 2 and fk in ["door2", "door1", "window", "door4"]:
 			m.light(cx, y0 + 1.1, zf + 0.25, "window"); lights += 1
 	# 옆벽(끝 칸)
@@ -257,14 +270,20 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		if raised and b.fn == "maru": continue
 		var x: float = -L / 2 if sd == 0 else L / 2
 		var zz := zb
-		for d in w.depth:
-			var seg := float(d)
+		var nseg: int = w.depth.size()
+		for k in nseg:
+			var seg := float(w.depth[k])
 			var kind := "wall"
 			if b.has("side"): kind = b.side.kind
 			elif b.fn in ["maru"]: kind = "open"
 			elif b.fn in ["room"] and seg > 2.0 and R.next() < 0.5: kind = "smallwin"
 			elif b.fn == "kitchen" and R.next() < 0.6: kind = "salchang"
-			_face(m, "body", sp, ctx, Vector3(x, 0, zz + seg / 2), -PI / 2 if sd == 0 else PI / 2, seg, floors[bi], top, { kind = kind }, b, lod)
+			# 옆벽 모서리 끝: 앞·뒷벽 안쪽면까지(맞댐) — 로컬 +x가 sd=0은 앞, sd=1은 뒤
+			#   그 끝 칸의 앞·뒷벽이 없으면(트임·날개 이음 join) 옆벽이 모서리 바깥면까지 나가 모서리를 혼자 채운다
+			var pk_b := String(b.back.get("kind", "wall")); var pk_f := String(b.front.get("kind", "wall"))
+			var eb := (1.0 if pk_b in ["open", "rail", "join"] else -1.0) if k == 0 else 0.0
+			var ef := (1.0 if pk_f in ["open", "rail", "join"] else -1.0) if k == nseg - 1 else 0.0
+			_face(m, "body", sp, ctx, Vector3(x, 0, zz + seg / 2), -PI / 2 if sd == 0 else PI / 2, seg, floors[bi], top, { kind = kind }, b, lod, Vector2(eb, ef) if sd == 0 else Vector2(ef, eb))
 			zz += seg
 	# 칸막이(실내 또는 트인 칸 옆)
 	for i in range(1, bays.size()):
@@ -513,7 +532,8 @@ static func _dancheong_beam(m: C.M, part: String, L: float, h: float, z: float, 
 
 # ---------------------------------------------------------------------------------------------------
 # 면 하나: 지금 프레임에서 (c.x, c.z)에 돌려(ry) 놓는다 — 로컬: 벽은 x 축(−w/2…w/2), 바깥 +z
-static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vector3, ry: float, w: float, y0: float, y1: float, f: Dictionary, b: Dictionary, lod: int) -> void:
+#   ext(x 왼끝, y 오른끝): +1 = 모서리 바깥으로 벽 두께 절반만큼 늘림(옆벽 바깥면까지), −1 = 맞댐(앞·뒷벽 안쪽면까지), 0 = 기둥 속에서 멈춤
+static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vector3, ry: float, w: float, y0: float, y1: float, f: Dictionary, b: Dictionary, lod: int, ext := Vector2.ZERO) -> void:
 	var kind: String = f.get("kind", "wall")
 	if kind in ["join"]: return
 	var old := m.push(c.x, 0, c.z, ry)
@@ -575,11 +595,16 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			op = [xa, xb, y0 + 0.0, y0 + H - 0.25]
 	# 벽 채움(구멍 둘레) — 흙·회벽은 짜임(인방) 사이 채움
 	var rects := []
+	# 모서리 끝(ext): 벽 채움만 늘린다(구멍 자리는 그대로). +1 → w/2 + t/2(옆벽 바깥면), −1 → w/2 − t/2(앞·뒷벽 안쪽면)
+	var xa_f := xa if ext.x == 0.0 else -(w / 2 + ext.x * t / 2)
+	var xb_f := xb if ext.y == 0.0 else (w / 2 + ext.y * t / 2)
 	if op.is_empty():
-		rects.append([xa, xb, y0, y1])
+		rects.append([xa_f, xb_f, y0, y1])
 	else:
-		if op[0] > xa + 0.02: rects.append([xa, op[0], y0, y1])
-		if op[1] < xb - 0.02: rects.append([op[1], xb, y0, y1])
+		if op[0] > xa + 0.02: rects.append([xa_f, op[0], y0, y1])
+		elif xa_f < xa - 0.005: rects.append([xa_f, xa, y0, y1])   # 구멍이 기둥 곁까지 — 모서리 덩이만
+		if op[1] < xb - 0.02: rects.append([op[1], xb_f, y0, y1])
+		elif xb_f > xb + 0.005: rects.append([xb, xb_f, y0, y1])
 		if op[2] > y0 + 0.02: rects.append([op[0], op[1], y0, op[2]])
 		if op[3] < y1 - 0.02: rects.append([op[0], op[1], op[3], y1])
 	for r in rects:
@@ -590,13 +615,15 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			m.add(part, "wood", C.PA(g, [0x6a4e36, 0x4e3a28], 0.03, R), 0.015)
 			A.add(m, part, "panbyeok", A.panel(r[1] - r[0], r[3] - r[2], (r[0] + r[1]) / 2, (r[2] + r[3]) / 2, t / 2 + 0.004), 0)
 		elif wkey == "stone":
-			A.add_tiled(m, part, "rock", _uv_box(g, 1.2), 0.015)
-			C.PA(g, wallc, 0.06, R)
+			_wall_tiled(m, part, "rock", g, wallc, 0.06, R, y1, 1.2)
 		else:
-			m.add(part, wkey, C.PA(g, wallc, 0.04, R), 0.015)
+			# 흙·회벽: 칸마다 0~1로 늘인 무늬 대신 건물 좌표 반복 무늬(1.6m) + 건물 전체 높이로 맞춘 빛 — 이웃 벽 조각·모서리 너머로 무늬 크기·빛이 이어진다
+			_wall_tiled(m, part, wkey, g, wallc, 0.02, R, y1, 1.6)
 		if sp.interior and b.fn == "room" and not (wkey == "stone"):
 			# 방 안 벽은 흰 도배
-			m.add(part if part == "front" else "interior", "flat", C.P(Kit.box(r[1] - r[0], r[3] - r[2], 0.01, (r[0] + r[1]) / 2, (r[2] + r[3]) / 2, -t / 2 - 0.006), 0xf0e8d4, 0xe0d4ba, 0.02), 0)
+			var pa: float = maxf(r[0], xa); var pb: float = minf(r[1], xb)   # 도배는 기둥 사이만(모서리로 늘린 벽 덩이 안쪽으로 나가지 않게)
+			if pb - pa > 0.02:
+				m.add(part if part == "front" else "interior", "flat", C.P(Kit.box(pb - pa, r[3] - r[2], 0.01, (pa + pb) / 2, (r[2] + r[3]) / 2, -t / 2 - 0.006), 0xf0e8d4, 0xe0d4ba, 0.02), 0)
 	if lod > 0:
 		m.pop(old); return
 	# 짜임: 하인방 · 중방 · 상인방 · 문선(돌벽은 없음)
@@ -605,18 +632,21 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 	# 가로재(인방)는 벽보다 0.5cm, 세로재(문선)는 1.5cm 나오고 기둥보다는 들어간다 — 같은 평면에 겹친 면이 없게(z-fighting)
 	var fm := func(x0: float, x1: float, ya: float, yb: float, dep := 0.01) -> void:
 		m.add(part, "wood", C.PA(Kit.box(x1 - x0, yb - ya, t + dep, (x0 + x1) / 2, (ya + yb) / 2, 0), fw, 0.03, R), 0.012)
+	# 가로재도 모서리로 늘린 벽 덩이 끝까지(바깥 평면보다 6mm 안에서 멈춤 — 옆벽 바깥면과 한 평면에 겹치지 않게): 하인방·중방·상인방 줄이 모서리를 돌아 이어진다
+	var xa_r := xa if ext.x == 0.0 else -(w / 2 + ext.x * t / 2 - 0.006)
+	var xb_r := xb if ext.y == 0.0 else (w / 2 + ext.y * t / 2 - 0.006)
 	if frame:
-		fm.call(xa, xb, y0, y0 + 0.11)                             # 하인방
+		fm.call(xa_r, xb_r, y0, y0 + 0.11)                         # 하인방
 		if op.is_empty() or op[2] > y0 + 0.5:
 			var ym: float = y0 + minf(0.95, H * 0.45) if op.is_empty() else op[2]
-			fm.call(xa, xb, ym - 0.05, ym + 0.05)                  # 중방 · 창 하방
+			fm.call(xa_r, xb_r, ym - 0.05, ym + 0.05)              # 중방 · 창 하방
 		if not op.is_empty():
-			fm.call(xa, xb, op[3], op[3] + 0.12)                   # 상인방
+			fm.call(xa_r, xb_r, op[3], op[3] + 0.12)               # 상인방
 			# 문선: 구멍 안으로 1cm 물려(벽 끝면과 같은 평면에 겹치지 않게)
 			if op[0] > xa + 0.05: fm.call(op[0] - 0.07, op[0] + 0.01, y0 + 0.1, op[3], 0.03)
 			if op[1] < xb - 0.05: fm.call(op[1] - 0.01, op[1] + 0.07, y0 + 0.1, op[3], 0.03)
 		elif H > 2.0:
-			fm.call(xa, xb, y0 + H * 0.78, y0 + H * 0.78 + 0.09)   # 상인방(벽만)
+			fm.call(xa_r, xb_r, y0 + H * 0.78, y0 + H * 0.78 + 0.09)   # 상인방(벽만)
 		# 머름(창 밑 널 판)
 		if kind == "window" and (hi or sp.meoreum):
 			var mh: float = op[2] - y0 - 0.12
@@ -695,6 +725,21 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 		"shop":
 			_shop_front(m, part, sp, ctx, op, b, w, y0, y1, t)
 	m.pop(old)
+
+# 벽 채움 한 조각: 건물 좌표로 옮긴 뒤 무늬(반복 period m)·빛(0 ~ 창방 밑 높이 공통 그라데이션)을 매겨 rect 모드로 — 조각끼리 이음매가 없다
+static func _wall_tiled(m: C.M, part: String, key: String, g: Kit.Geo, cols: Array, jit: float, R: Kit.Rng, ytop: float, period: float) -> void:
+	if m.xform != Transform3D.IDENTITY: Kit.apply(g, m.xform)
+	_uv_box(g, period)
+	var top := Kit.hex(cols[0]); var bot := Kit.hex(cols[1])
+	for i in range(0, g.pos.size(), 3):
+		var j := (R.next() - 0.5) * jit
+		for k in 3:
+			var tt := clampf(g.pos[i + k].y / maxf(ytop, 0.5), 0.0, 1.0)
+			g.col[i + k] = Color(maxf(0, lerpf(bot.r, top.r, tt) + j), maxf(0, lerpf(bot.g, top.g, tt) + j), maxf(0, lerpf(bot.b, top.b, tt) + j * 0.8))
+	var old := m.xform
+	m.xform = Transform3D.IDENTITY
+	A.add_tiled(m, part, key, g, 0.015)
+	m.xform = old
 
 # 박스 UV를 m 단위 반복으로(rect 모드) — 돌벽 등
 static func _uv_box(g: Kit.Geo, period: float) -> Kit.Geo:

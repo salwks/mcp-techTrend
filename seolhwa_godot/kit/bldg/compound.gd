@@ -94,6 +94,7 @@ static func plan(params: Dictionary) -> Dictionary:
 		"village_entry": out = _village_entry(params, seed)
 		_: out = _choga_house(r, region, seed, _lot(params))
 	_separate(out.pieces)
+	_join_walls(out.pieces)
 	# interior: 살림채(안채·사랑채·주막)를 실내까지 지어 들어가 볼 수 있게
 	if params.get("interior", false):
 		for e in out.pieces:
@@ -354,6 +355,64 @@ static func _separate(pieces: Array) -> void:
 				rects[i].position += d
 				moved = true
 		if not moved: break
+
+# 담 모서리 잇기: 두 흙담이 끝점에서 직각으로 만나면(모서리) 두 끝을 45°로 맞춘다(miter) — 바깥 모서리에 네모난 홈(두 끝이 가운데 줄에서
+#   멈춰 생기는 빈 자리)이 없고, 맞댄 끝 면·먹선이 바깥 면에 세로줄로 남지 않는다. 돌담이 끼면 가로 토막을 늘리고 세로 토막을 물려 맞댄다.
+#   한 토막 끝이 다른 토막 가운데에 닿으면(T자: 중문 담·사당 담) 그 끝을 두께 절반 물려 상대 담 옆면에 맞댄다.
+#   같은 kit의 같은 흙·돌 빛이라 모서리만 다르게 보이지 않는다. 싸리울(fence)은 성긴 울이라 그대로.
+const WALL_T := { "village/todam": 0.45, "village/stone_wall": 0.55 }
+static func _join_walls(pieces: Array) -> void:
+	var W := []
+	for e in pieces:
+		if WALL_T.has(String(e.kit)) and (e.params as Dictionary).has("ax"): W.append(e)
+	var ends := []   # [piece, which(0=a,1=b), point, dir(끝에서 바깥으로)]
+	for e in W:
+		var a := Vector2(float(e.params.ax), float(e.params.az)); var b := Vector2(float(e.params.bx), float(e.params.bz))
+		if a.distance_to(b) < 0.3: continue
+		var d := (b - a).normalized()
+		ends.append([e, 0, a, -d]); ends.append([e, 1, b, d])
+	var moves := []   # [piece, which, delta(Vector2), open(맞댐), miter(0|±1)]
+	for i in ends.size():
+		var done := false
+		for j in ends.size():
+			if i == j or ends[i][0] == ends[j][0]: continue
+			if (ends[i][2] as Vector2).distance_to(ends[j][2]) > 0.06: continue
+			var di: Vector2 = ends[i][3]; var dj: Vector2 = ends[j][3]
+			if absf(di.dot(dj)) > 0.3: continue   # 곧게 이어지는 담(문 양옆 토막 등)
+			var e: Dictionary = ends[i][0]
+			if String(e.kit) == "village/todam" and String(ends[j][0].kit) == "village/todam":
+				# 흙담끼리: 45° 맞춤 — 다른 담이 뻗는 쪽(−dj = 이 모서리에서 그 담 가운데 쪽)이 이 담 로컬 z로 어느 쪽인가
+				var a := Vector2(float(e.params.ax), float(e.params.az)); var b := Vector2(float(e.params.bx), float(e.params.bz))
+				var ang := atan2(b.y - a.y, b.x - a.x)
+				var lz := Vector2(-sin(ang), cos(ang))   # 로컬 +z의 월드 방향(seg_xform: Basis(UP, −ang))
+				var s := signf((-dj).dot(lz))
+				moves.append([e, ends[i][1], Vector2.ZERO, false, s])
+			else:
+				var hw: float = minf(WALL_T[String(e.kit)], WALL_T[String(ends[j][0].kit)]) / 2
+				var horiz := absf(di.x) > absf(di.y)
+				moves.append([e, ends[i][1], di * (hw if horiz else -hw), not horiz, 0.0])
+			done = true; break
+		if done: continue
+		# T자: 이 끝이 다른 토막의 가운데 줄 위
+		var p: Vector2 = ends[i][2]
+		for e in W:
+			if e == ends[i][0]: continue
+			var a := Vector2(float(e.params.ax), float(e.params.az)); var b := Vector2(float(e.params.bx), float(e.params.bz))
+			var ab := b - a
+			var t := clampf((p - a).dot(ab) / maxf(ab.length_squared(), 1e-6), 0.0, 1.0)
+			if t < 0.02 or t > 0.98: continue
+			if (a + ab * t).distance_to(p) > 0.06: continue
+			var di: Vector2 = ends[i][3]
+			if absf(di.dot(ab.normalized())) > 0.3: continue
+			moves.append([ends[i][0], ends[i][1], -di * (float(WALL_T[String(e.kit)]) / 2), true, 0.0])
+			break
+	for mv in moves:
+		var e: Dictionary = mv[0]; var dv: Vector2 = mv[2]
+		var k := "a" if mv[1] == 0 else "b"
+		e.params[k + "x"] = snappedf(float(e.params[k + "x"]) + dv.x, 0.001)
+		e.params[k + "z"] = snappedf(float(e.params[k + "z"]) + dv.y, 0.001)
+		if mv[3] and String(e.kit) == "village/todam": e.params["open_" + k] = true   # 맞댄 끝: 끝 면(과 그 먹선)을 그리지 않는다
+		if float(mv[4]) != 0.0: e.params["miter_" + k] = float(mv[4])
 
 # 대문 견본: 문 하나 + 양옆 담 토막(갤러리·비교용). params.gate = 대문 종류
 static func _gate_demo(params: Dictionary, seed: int) -> Dictionary:
