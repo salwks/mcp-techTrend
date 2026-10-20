@@ -92,7 +92,7 @@ static func plan(params: Dictionary) -> Dictionary:
 		"giwa_house": out = _giwa_house(r, region, seed, _lot(params), String(params.get("cls", "middle")))
 		"gate_demo": out = _gate_demo(params, seed)
 		"village_entry": out = _village_entry(params, seed)
-		_: out = _choga_house(r, region, seed, _lot(params))
+		_: out = _choga_house(r, region, seed, _lot(params), String(params.get("wall", "")))
 	_separate(out.pieces)
 	_join_walls(out.pieces)
 	# interior: 살림채(안채·사랑채·주막)를 실내까지 지어 들어가 볼 수 있게
@@ -110,7 +110,8 @@ static func _lot(params: Dictionary) -> Vector2:
 	if l is Array and l.size() >= 2: return Vector2(float(l[0]), float(l[1]))
 	return Vector2(INF, INF)
 
-static func _choga_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(INF, INF)) -> Dictionary:
+#   wall: 둘레 담 덮어쓰기("fence" 싸리울 | "todam_thatch" 이엉 갓 흙담 | "stone" 돌담) — 고을 틀(읍내 골목)이 흙담을 고른다
+static func _choga_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(INF, INF), wall_k := "") -> Dictionary:
 	var cls := "poor" if r.next() < 0.4 else "commoner"
 	var bp := { type = "choga", region = region, cls = cls, seed = seed }
 	var bb := B.bounds(S.resolve(bp))
@@ -144,8 +145,10 @@ static func _choga_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(I
 				_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "fence", 0, 0, true)
 				_front_gate(L, seed * 10, X, Z1, gx, { type = "sarip", seed = seed }, "fence")
 		_:
-			_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "fence", 0, 0, true)
-			_front_gate(L, seed * 10, X, Z1, gx, { type = "sarip", seed = seed }, "fence")
+			var wk := wall_k if wall_k in ["fence", "todam_thatch", "stone"] else "fence"
+			_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, wk, 0, 0, true)
+			var gt := "chomun" if wk == "todam_thatch" else "sarip"
+			_front_gate(L, seed * 10, X, Z1, gx, { type = gt, seed = seed, wall_h = 1.5, w = 1.9 if gt == "chomun" else 1.6 } if gt == "chomun" else { type = "sarip", seed = seed }, wk)
 	return _out(L, X, Z0, Z1)
 
 # 읍내 기와집(중인·향리) ------------------------------------------------------------------------------

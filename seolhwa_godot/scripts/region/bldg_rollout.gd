@@ -52,6 +52,25 @@ func run(spec: String) -> void:
 	main.teleport(float(v0.x), float(v0.z))
 	await _wait_load()
 	await _sec(1.0)
+	if main.args.has("brprobe"):   # 막힘 격자 찍기(디버그): --brprobe=x0,z0,x1,z1
+		var q: PackedStringArray = String(main.args.brprobe).split(",")
+		main.teleport(float(q[0]), float(q[1])); await _wait_load()
+		var z := float(q[1])
+		while z <= float(q[3]):
+			var line := ""
+			var x := float(q[0])
+			while x <= float(q[2]):
+				line += "#" if main.world.blocked(x, z, main.player.radius) else "."
+				x += 0.25
+			print("BRPROBE %.2f %s" % [z, line]); z += 0.25
+		var w = main.world
+		var px := (float(q[0]) + float(q[2])) / 2; var pz := (float(q[1]) + float(q[3])) / 2
+		print("BRPROBE at (%.1f,%.1f) blocked=%s river=%s pond=%s" % [px, pz, w.blocked(px, pz, main.player.radius), w._in_river(px, pz, main.player.radius) and not w._near_crossing(px, pz), (not w._ponds.is_empty()) and w.in_pond(px, pz)])
+		var ci := floori(px / w.GRID); var cj := floori(pz / w.GRID)
+		for j in range(cj - 1, cj + 2):
+			for i in range(ci - 1, ci + 2):
+				for c in w._static_grid.get(Vector2i(i, j), []):
+					if w._hit(c, px, pz, main.player.radius): print("BRPROBE hit ", str(c).substr(0, 300))
 	if not main.args.has("brnoshots"):
 		for v in S.get("views", []): await _view(setname, v)
 		for w in S.get("walks", []): await _walk(setname, w)

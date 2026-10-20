@@ -20,6 +20,7 @@ func _init() -> void:
 	var out: String = args.get("out", "res://shots/building_builder/_place_%s/" % set)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
 	if set == "block": _block()
+	elif set == "town": _town(out)
 	elif set == "integ": _put(_e("integ_yangban", "통합 점검 양반가", "integ", "bldg/compound", { type = "yangban", region = "south", seed = 3, interior = true }), -3487.0, 526.0)
 	else: _gallery()
 	var f := FileAccess.open(ProjectSettings.globalize_path(out.path_join("placement_bldg_%s.json" % set)), FileAccess.WRITE)
@@ -139,6 +140,49 @@ func _gallery() -> void:
 	z = _rows(Gs, cx, z + 12.0, 320.0, 8.0) + 14.0   # 다음 줄(실내)이 대문 마을 카메라 자리에 걸리지 않게
 	z = _rows(I, cx, z + 16.0, 320.0)
 	print("GPLACE gallery z_end=%.1f (터 끝 %.1f)" % [z, 526.0 + 115.0])
+
+# 고을 배치 틀 견본(kit/bldg/town.gd): 장터 · 골목(서민·중인·양반) · 주막거리 · 관아 · 우물 블록 — 남원 읍성 서쪽 풀밭
+#   찍기 시점은 views.json(scripts/region/bldg_rollout.gd --brset=town): 틀마다 마을 카메라(길 위) · 기본 카메라 · 내려다보기 · 길 걷기(1인칭 함께)
+const TW := preload("res://kit/bldg/town.gd")
+func _town(out: String) -> void:
+	var sites := [
+		["market", "장터(시전 행랑·좌판·주막·우물)", -3700.0, 425.0, { region = "south", cls = "middle", seed = 1 }],
+		["alley", "골목(서민 — 흙담·돌담 초가·중농·기와집)", -3700.0, 610.0, { region = "south", cls = "commoner", seed = 2 }],
+		["alley_mid", "골목(중인·향리 — 기와집 많게)", -3530.0, 445.0, { region = "south", cls = "middle", seed = 3 }],
+		["jumak", "주막거리(주막 마당·대장간)", -3640.0, 560.0, { region = "south", seed = 4 }],
+		["gwana", "관아 구역(홍살문 → 외삼문 → 동헌)", -3560.0, 620.0, { region = "south", seed = 5 }],
+		["well", "우물 블록(대문이 우물 쪽)", -3520.0, 545.0, { region = "south", cls = "commoner", seed = 6 }],
+	]
+	var views := []; var walks := []
+	for st in sites:
+		var tpl: String = String(st[0]).trim_suffix("_mid")
+		var lay := TW.layout(tpl, st[4])
+		var its := TW.place(lay.items, st[2], st[3], 0.0)
+		for e in its:
+			var it := { id = "town_%s_%s" % [st[0], e.tag], kit = e.kit, params = e.params, x = e.x, z = e.z, ry = e.ry, flatten = false, clear_veg = true }
+			if e.has("fp"): it.footprint = e.fp
+			items.append(it)
+		var cx: float = st[2]; var cz: float = st[3]
+		# 틀 하나를 한 번에 고른다(필지마다 따로 고르면 골목에 높이 턱이 생긴다) — 보이지 않는 빈터 항목 + 건물은 flatten 끔
+		var mn := Vector2(INF, INF); var mx := Vector2(-INF, -INF)
+		for e in its:
+			var hf := Vector2(e.fp[0], e.fp[1]) / 2 if e.has("fp") else Vector2(4, 4)
+			mn = mn.min(Vector2(e.x, e.z) - hf); mx = mx.max(Vector2(e.x, e.z) + hf)
+		items.append({ id = "town_%s_ground" % st[0], kit = "story/clearing", params = { w = snappedf(mx.x - mn.x + 8.0, 0.1), d = snappedf(mx.y - mn.y + 8.0, 0.1) }, x = snappedf((mn.x + mx.x) / 2, 0.1), z = snappedf((mn.y + mx.y) / 2, 0.1), ry = 0.0, flatten = true, clear_veg = true, yard = false })
+		var sz: float = cz + (0.0 if tpl != "gwana" else 40.0) + (6.0 if tpl == "well" else 0.0)
+		views.append({ id = st[0] + "_t", label = String(st[1]) + " · 마을 카메라", mode = "town", x = cx, z = sz })
+		views.append({ id = st[0] + "_s", label = String(st[1]) + " · 기본 카메라", mode = "std", x = cx, z = sz })
+		views.append({ id = st[0] + "_o", label = String(st[1]) + " · 내려다보기", mode = "over", x = cx, z = cz + (-4.0 if tpl == "gwana" else 0.0), dist = 95.0, pitch = 55.0 })
+		if tpl == "gwana":
+			walks.append({ id = st[0], label = String(st[1]), pts = [[cx, cz + 44.0], [cx, cz + 36.0], [cx, cz + 22.0], [cx, cz + 17.6], [cx, cz + 12.0], [cx, cz + 4.0]], shots = [1, 3, 5] })
+		elif tpl == "well":
+			walks.append({ id = st[0], label = String(st[1]), pts = [[cx + 3.0, cz + 4.0], [cx, cz + 1.5], [cx - 4.0, cz - 1.0]], shots = [1, 2] })
+		else:
+			walks.append({ id = st[0], label = String(st[1]), pts = [[cx - 26.0, cz], [cx - 12.0, cz], [cx, cz], [cx + 12.0, cz], [cx + 24.0, cz]], shots = [1, 2, 3] })
+		manifest.append({ id = st[0], label = st[1], x = cx, z = cz })
+	var vf := FileAccess.open(ProjectSettings.globalize_path(out.path_join("views.json")), FileAccess.WRITE)
+	vf.store_string(JSON.stringify({ sets = { town = { label = "고을 배치 틀 견본", views = views, walks = walks } } }, "\t"))
+	vf.close()
 
 # 성능 시험 마을 블록: 30채(서민 초가·중농·주막·양반가·시전 섞임) — 길을 사이에 두고 두 줄 + 안쪽 줄
 func _block() -> void:

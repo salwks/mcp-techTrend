@@ -1,0 +1,299 @@
+{
+ "sheets": [
+  {
+   "out": "res://shots/building_rollout/town/town_templates.jpg",
+   "title": "③ 고을 배치 틀 견본 — 내려다보기 · 마을 카메라",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/town_market_o_gal.png",
+     "label": "장터 · 내려다보기"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_market_t_gal.png",
+     "label": "장터 · 마을 카메라"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_o_gal.png",
+     "label": "골목(서민) · 내려다보기"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_t_gal.png",
+     "label": "골목(서민) · 마을 카메라"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_o_gal.png",
+     "label": "골목(중인) · 내려다보기"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_t_gal.png",
+     "label": "골목(중인) · 마을 카메라"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_o_gal.png",
+     "label": "주막거리 · 내려다보기"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_t_gal.png",
+     "label": "주막거리 · 마을 카메라"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_gwana_o_gal.png",
+     "label": "관아 · 내려다보기"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_gwana_t_gal.png",
+     "label": "관아 · 마을 카메라"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_well_o_gal.png",
+     "label": "우물 블록 · 내려다보기"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_well_t_gal.png",
+     "label": "우물 블록 · 마을 카메라"
+    }
+   ]
+  },
+  {
+   "out": "res://shots/building_rollout/town/town_streets.jpg",
+   "title": "③ 고을 배치 틀 — 길 걷기(마을 카메라 · 1인칭)",
+   "cols": 4,
+   "cw": 640,
+   "ch": 360,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/town_market_1_town_gal.png",
+     "label": "장터 · 걷기 마을 카메라 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_market_1_fp_gal.png",
+     "label": "장터 · 걷기 1인칭 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_market_2_town_gal.png",
+     "label": "장터 · 걷기 마을 카메라 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_market_2_fp_gal.png",
+     "label": "장터 · 걷기 1인칭 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_market_3_town_gal.png",
+     "label": "장터 · 걷기 마을 카메라 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_market_3_fp_gal.png",
+     "label": "장터 · 걷기 1인칭 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_1_town_gal.png",
+     "label": "골목(서민) · 걷기 마을 카메라 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_1_fp_gal.png",
+     "label": "골목(서민) · 걷기 1인칭 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_2_town_gal.png",
+     "label": "골목(서민) · 걷기 마을 카메라 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_2_fp_gal.png",
+     "label": "골목(서민) · 걷기 1인칭 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_3_town_gal.png",
+     "label": "골목(서민) · 걷기 마을 카메라 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_3_fp_gal.png",
+     "label": "골목(서민) · 걷기 1인칭 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_1_town_gal.png",
+     "label": "골목(중인) · 걷기 마을 카메라 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_1_fp_gal.png",
+     "label": "골목(중인) · 걷기 1인칭 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_2_town_gal.png",
+     "label": "골목(중인) · 걷기 마을 카메라 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_2_fp_gal.png",
+     "label": "골목(중인) · 걷기 1인칭 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_3_town_gal.png",
+     "label": "골목(중인) · 걷기 마을 카메라 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_alley_mid_3_fp_gal.png",
+     "label": "골목(중인) · 걷기 1인칭 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_1_town_gal.png",
+     "label": "주막거리 · 걷기 마을 카메라 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_1_fp_gal.png",
+     "label": "주막거리 · 걷기 1인칭 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_2_town_gal.png",
+     "label": "주막거리 · 걷기 마을 카메라 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_2_fp_gal.png",
+     "label": "주막거리 · 걷기 1인칭 2"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_3_town_gal.png",
+     "label": "주막거리 · 걷기 마을 카메라 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_jumak_3_fp_gal.png",
+     "label": "주막거리 · 걷기 1인칭 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_gwana_1_town_gal.png",
+     "label": "관아 · 걷기 마을 카메라 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_gwana_1_fp_gal.png",
+     "label": "관아 · 걷기 1인칭 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_gwana_3_town_gal.png",
+     "label": "관아 · 걷기 마을 카메라 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_gwana_3_fp_gal.png",
+     "label": "관아 · 걷기 1인칭 3"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_well_1_town_gal.png",
+     "label": "우물 블록 · 걷기 마을 카메라 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_well_1_fp_gal.png",
+     "label": "우물 블록 · 걷기 1인칭 1"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/town_well_2_town_gal.png",
+     "label": "우물 블록 · 걷기 마을 카메라 2"
+    }
+   ]
+  },
+  {
+   "out": "res://shots/building_rollout/town/west_gates.jpg",
+   "title": "③ 남원 서문 밖 구역 — 대문을 길·골목 쪽으로(왼 1단계 · 오른 3단계)",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/west_t1_after.png",
+     "label": "장터길 북 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t1_step3.png",
+     "label": "장터길 북 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t2_after.png",
+     "label": "장터길 가운데 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t2_step3.png",
+     "label": "장터길 가운데 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t3_after.png",
+     "label": "장터길 남 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t3_step3.png",
+     "label": "장터길 남 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t4_after.png",
+     "label": "오솔길 어귀 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t4_step3.png",
+     "label": "오솔길 어귀 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t5_after.png",
+     "label": "오솔길 서쪽 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t5_step3.png",
+     "label": "오솔길 서쪽 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t6_after.png",
+     "label": "북쪽 안 골목 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_t6_step3.png",
+     "label": "북쪽 안 골목 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_o1_after.png",
+     "label": "내려다보기 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_o1_step3.png",
+     "label": "내려다보기 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_2_town_after.png",
+     "label": "장터길 걷기 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_lane_2_town_step3.png",
+     "label": "장터길 걷기 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_1_town_after.png",
+     "label": "오솔길 걷기 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_1_town_step3.png",
+     "label": "오솔길 걷기 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_2_town_after.png",
+     "label": "오솔길 걷기 2 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_path_2_town_step3.png",
+     "label": "오솔길 걷기 2 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f1_after.png",
+     "label": "1인칭 장터길에서 서쪽 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f1_step3.png",
+     "label": "1인칭 장터길에서 서쪽 · 3단계(대문 길 쪽)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f3_after.png",
+     "label": "1인칭 오솔길 · 1단계(대문 남향)"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/west_f3_step3.png",
+     "label": "1인칭 오솔길 · 3단계(대문 길 쪽)"
+    }
+   ]
+  }
+ ]
+}
