@@ -281,6 +281,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/region/bldg_integ.gd").new(self); _ride_test.run.call_deferred(String(args.bldginteg))
 	elif args.has("bldgallery"):   # 건물 빌더 갤러리 촬영(마을 카메라·기본·1인칭·실내) — scripts/region/bldg_gallery.gd
 		_ride_test = load("res://scripts/region/bldg_gallery.gd").new(self); _ride_test.run.call_deferred(String(args.bldgallery))
+	elif args.has("roofshots"):   # 초가 지붕 뚫림·실내 벽 깜빡임 점검 촬영(fix-1021) — scripts/region/roof_interior_shots.gd
+		_ride_test = load("res://scripts/region/roof_interior_shots.gd").new(self); _ride_test.run.call_deferred(String(args.roofshots))
 	elif args.has("talkshot"):
 		_ride_test = load("res://scripts/story/talk_shot.gd").new(self); _ride_test.run.call_deferred(String(args.talkshot))
 	elif args.has("ridetest"): _ride_test_boat.call_deferred(String(args.ridetest))
@@ -932,7 +934,7 @@ func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "bldgallery", "bldginteg"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "bldgallery", "bldginteg", "roofshots"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:

@@ -23,14 +23,14 @@ static func build(params: Dictionary) -> Dictionary:
 	_shelf(s, -1.9, zb + 0.24, 2.4, 0.0)
 	_shelf(s, -W / 2 + 0.24, -0.4, 2.6, PI / 2)
 	_shelf(s, W / 2 - 0.24, 0.1, 1.6, -PI / 2)
-	# 바닥 책 더미·종이 묶음(움직이지 않는 것)
+	# 바닥 책 더미·종이 묶음(움직이지 않는 것) — 맨 밑 책은 마루 윗면(F + 0.04) 위에(옛 F + 0.02는 맨 밑 책 윗면이 마루 윗면과 겹쳐 깜빡였다)
 	var cols := [0x8a6a40, 0x3f5f7a, 0x6a3a2a, 0xd8c9a0, 0xa88a58]
 	var stacks := []
 	for q in [[-2.6, 0.9], [-2.2, 1.3], [2.7, -1.0], [2.6, 1.2], [0.6, -1.5]]:
 		var n := 3 + int(s.r() * 6)
 		for i in n:
 			var col: int = cols[(i + int(q[0] * 3)) % cols.size()]
-			stacks.append(Kit.paint(Kit.xf(Kit.box(0.24, 0.04, 0.32), q[0] + (s.r() - 0.5) * 0.04, F + 0.02 + i * 0.042, q[1] + (s.r() - 0.5) * 0.04, 0, (s.r() - 0.5) * 0.3, 0), Kit.hex(col), Kit.hex(col), 0.03))
+			stacks.append(Kit.paint(Kit.xf(Kit.box(0.24, 0.04, 0.32), q[0] + (s.r() - 0.5) * 0.04, F + 0.06 + i * 0.042, q[1] + (s.r() - 0.5) * 0.04, 0, (s.r() - 0.5) * 0.3, 0), Kit.hex(col), Kit.hex(col), 0.03))
 	s.add("interior", "flat", Kit.merge(stacks), 0.0)
 	# 종이 묶음(끈으로 묶은 한지 뭉치) 둘
 	for q in [[2.2, 1.5], [-1.0, -1.4]]:
@@ -54,7 +54,8 @@ static func _shelf(s: SC.S, x: float, z: float, w: float, ry: float) -> void:
 	var old: Transform3D = s.m.push(x, F, z, ry)
 	var frame := []
 	for sx in [-1, 1]: frame.append(Kit.box(0.05, h, d, sx * (w / 2 - 0.025), h / 2, 0))
-	for k in 5: frame.append(Kit.box(w, 0.035, d, 0, 0.05 + k * (h - 0.05) / 4, 0))
+	# 칸널은 옆널 사이에 끼우고 앞뒤를 0.006 들인다 — 옆널과 앞면·끝면이 같은 평면으로 겹치지 않게(fix-1021)
+	for k in 5: frame.append(Kit.box(w - 0.02, 0.035, d - 0.012, 0, 0.05 + k * (h - 0.05) / 4, 0))
 	s.add("interior", "wood", C.P(Kit.merge(frame), 0x6a4428, 0x4a2e1c), 0.012)
 	var cols := [0x8a6a40, 0x3f5f7a, 0x6a3a2a, 0xd8c9a0, 0x5a6a48, 0xa88a58]
 	var books := []

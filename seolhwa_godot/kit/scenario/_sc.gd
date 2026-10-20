@@ -215,10 +215,12 @@ static func shell(s: S, o: Dictionary) -> Dictionary:
 	for b in bays:
 		acc += float(b.w); xs.append(acc)
 	var cols := []
+	# 기둥은 벽보다 0.03 높게(도리 속까지) — 벽·칸막이 윗면과 같은 높이로 겹치면 잘라 보기에서 깜빡인다(fix-1021)
+	var ph := H + 0.03
 	for x in xs:
-		cols.append(Kit.box(0.2, H, 0.2, x, F + H / 2, zf))
-		cols.append(Kit.box(0.2, H, 0.2, x, F + H / 2, zb))
-	for sx in [-1, 1]: cols.append(Kit.box(0.2, H, 0.2, sx * W / 2, F + H / 2, 0))
+		cols.append(Kit.box(0.2, ph, 0.2, x, F + ph / 2, zf))
+		cols.append(Kit.box(0.2, ph, 0.2, x, F + ph / 2, zb))
+	for sx in [-1, 1]: cols.append(Kit.box(0.2, ph, 0.2, sx * W / 2, F + ph / 2, 0))
 	s.add("body", "wood", C.PA(Kit.merge(cols), wood, 0.03), 0.02)
 	# 뒷벽(창 구멍)
 	var bwin = o.get("back_window")
@@ -226,12 +228,13 @@ static func shell(s: S, o: Dictionary) -> Dictionary:
 		var wx: float = bwin.get("x", 0.0); var ww: float = bwin.get("w", 0.9); var wh: float = bwin.get("h", 0.75); var wy: float = F + float(bwin.get("y", 1.0))
 		Co.holed_wall(s.p("body"), -W / 2, W / 2, F, top, wx - ww / 2, wx + ww / 2, wy, wy + wh, zb, t, wall, wkey, R)
 		# 창틀
-		s.add("body", "wood", C.PA(Kit.merge([Kit.box(ww + 0.16, 0.08, 0.24, wx, wy - 0.04, zb), Kit.box(ww + 0.16, 0.08, 0.24, wx, wy + wh + 0.04, zb),
-			Kit.box(0.08, wh, 0.24, wx - ww / 2 - 0.04, wy + wh / 2, zb), Kit.box(0.08, wh, 0.24, wx + ww / 2 + 0.04, wy + wh / 2, zb)]), wood), 0.012)
+		# 창틀은 창 구멍 안쪽으로 0.02 들인다(틀 안면이 구멍 벽 면과 같은 평면이면 깜빡인다, fix-1021)
+		s.add("body", "wood", C.PA(Kit.merge([Kit.box(ww + 0.12, 0.08, 0.24, wx, wy - 0.02, zb), Kit.box(ww + 0.12, 0.08, 0.24, wx, wy + wh + 0.02, zb),
+			Kit.box(0.08, wh - 0.04, 0.24, wx - ww / 2 - 0.02, wy + wh / 2, zb), Kit.box(0.08, wh - 0.04, 0.24, wx + ww / 2 + 0.02, wy + wh / 2, zb)]), wood), 0.012)
 		# SEALED: 닫힌 창호(안에서 보면 창호지) / OPEN: 바깥(−z)으로 들어 올려 연 창(들창) / BROKEN: 찢긴 창호 + 부러진 살
 		var cl := s.st("window", "SEALED", String(bwin.get("default", "SEALED")))
 		cl.add("paper", Co.vplane(ww, wh, wx, wy + wh / 2, zb + 0.06, 1.0), 0.0)
-		cl.add("wood", C.PA(Kit.merge([Kit.box(ww, 0.04, 0.04, wx, wy + wh * 0.33, zb + 0.07), Kit.box(ww, 0.04, 0.04, wx, wy + wh * 0.66, zb + 0.07), Kit.box(0.04, wh, 0.04, wx, wy + wh / 2, zb + 0.07)]), wood), 0.0)
+		cl.add("wood", C.PA(Kit.merge([Kit.box(ww, 0.04, 0.04, wx, wy + wh * 0.33, zb + 0.07), Kit.box(ww, 0.04, 0.04, wx, wy + wh * 0.66, zb + 0.07), Kit.box(0.04, wh, 0.034, wx, wy + wh / 2, zb + 0.07)]), wood), 0.0)   # 세로 살은 얇게(가로 살과 엇갈리는 자리 면 겹침 없게)
 		var op := s.st("window", "OPEN")
 		var pane := Kit.box(ww, wh, 0.05, 0, -wh / 2, 0)
 		Kit.apply(pane, Transform3D(Basis(Vector3.RIGHT, 1.1), Vector3(wx, wy + wh, zb - 0.1)))
@@ -240,7 +243,7 @@ static func shell(s: S, o: Dictionary) -> Dictionary:
 		var br := s.st("window", "BROKEN")
 		var shred := Kit.box(ww * 0.45, wh * 0.6, 0.02, wx - ww * 0.22, wy + wh * 0.62, zb + 0.06)
 		br.add("paper", shred, 0.0)
-		br.add("wood", C.PA(Kit.merge([Kit.xf(Kit.box(0.04, wh * 0.7, 0.04), wx + 0.1, wy + wh * 0.45, zb + 0.07, 0, 0, 0.5), Kit.xf(Kit.box(ww * 0.6, 0.04, 0.04), wx, wy + wh * 0.3, zb + 0.07, 0, 0, -0.3)]), wood), 0.0)
+		br.add("wood", C.PA(Kit.merge([Kit.xf(Kit.box(0.04, wh * 0.7, 0.04), wx + 0.1, wy + wh * 0.45, zb + 0.07, 0, 0, 0.5), Kit.xf(Kit.box(ww * 0.6, 0.04, 0.034), wx, wy + wh * 0.3, zb + 0.07, 0, 0, -0.3)]), wood), 0.0)
 		br.add("flat", pa(Kit.xf(Kit.box(0.3, 0.02, 0.22), wx + 0.2, F + 0.05, zb + 0.5, 0, 0.7, 0), PAPER), 0.0)
 		s.anchor("back_window", Vector3(wx, F, zb + 0.7))
 		s.anchor("back_window_out", Vector3(wx, 0, zb - 1.0))
@@ -295,7 +298,8 @@ static func shell(s: S, o: Dictionary) -> Dictionary:
 			_:
 				fp.add(wkey, C.PA(Kit.box(bw, H, t, cx, F + H / 2, zf), wall, 0.04, R), 0.02)
 	# 도리·창방
-	s.add("body", "wood", C.PA(Kit.merge([Kit.box(W + 0.4, 0.2, 0.24, 0, top + 0.08, zb), Kit.box(0.24, 0.2, D + 0.3, -W / 2, top + 0.08, 0), Kit.box(0.24, 0.2, D + 0.3, W / 2, top + 0.08, 0)]), wood), 0.02)
+	# 옆 도리는 top - 0.035 ~ top + 0.175(앞·뒤 도리 top - 0.02 ~ top + 0.18과 윗면·밑면이 모서리에서 같은 높이로 겹치지 않게, fix-1021)
+	s.add("body", "wood", C.PA(Kit.merge([Kit.box(W + 0.4, 0.2, 0.24, 0, top + 0.08, zb), Kit.box(0.24, 0.21, D + 0.3, -W / 2, top + 0.07, 0), Kit.box(0.24, 0.21, D + 0.3, W / 2, top + 0.07, 0)]), wood), 0.02)
 	fp.add("wood", C.PA(Kit.box(W + 0.4, 0.2, 0.24, 0, top + 0.08, zf), wood), 0.02)
 	# 앞 댓돌(문마다)
 	for x in doors:

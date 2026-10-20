@@ -71,7 +71,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var dx: float = -W / 2 + 2.3 + 1.1
 	var sealed := s.st("door", "SEALED")
 	sealed.add("paper", SC.Co.vplane(1.5, 1.8, dx, F + 0.92, zf + 0.07), 0.0)
-	sealed.add("wood", SC.pa(Kit.merge([Kit.box(1.55, 0.06, 0.05, dx, F + 1.35, zf + 0.08), Kit.box(1.55, 0.06, 0.05, dx, F + 0.5, zf + 0.08), Kit.box(0.06, 1.8, 0.05, dx, F + 0.92, zf + 0.08)]), SC.WOOD_OLD), 0.0)
+	sealed.add("wood", SC.pa(Kit.merge([Kit.box(1.55, 0.06, 0.05, dx, F + 1.35, zf + 0.08), Kit.box(1.55, 0.06, 0.05, dx, F + 0.5, zf + 0.08), Kit.box(0.06, 1.8, 0.044, dx, F + 0.92, zf + 0.08)]), SC.WOOD_OLD), 0.0)
 	s.st("door", "OPEN", "OPEN")
 	s.scol("door", "SEALED", { type = "box", minX = dx - 0.75, maxX = dx + 0.75, minZ = zf - 0.15, maxZ = zf + 0.12 })
 	s.anchor("room", Vector3(-W / 2 + 2.2, F, -0.3))

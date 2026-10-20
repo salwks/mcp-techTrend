@@ -53,10 +53,12 @@ class M:
 	var walks := []            # 건물 걷기 면(floor) — §8 walk 형식, result()의 walk
 	var merge_parts := true    # true면 모든 part를 'all' 하나로(내부가 없는 모델)
 	var prefix := ""           # 앵커 이름 앞에 붙임(집 묶음에서 건물별 구분)
+	# 시험 전용(tests/kit/roof_interior_test.gd): true면 모든 모델이 part별 노드로 나뉜다 — 지붕·벽을 따로 재려고. 놀이에서는 늘 false
+	static var keep_parts := false
 
 	func _init(seed := 1, merged := true) -> void:
 		rng = Kit.Rng.new(seed)
-		merge_parts = merged
+		merge_parts = merged and not keep_parts
 
 	func r() -> float: return rng.next()
 	func between(a: float, b: float) -> float: return rng.between(a, b)
@@ -325,11 +327,12 @@ static func holed_wall(m: M, part: String, x0: float, x1: float, y0: float, y1: 
 static func paper_panel(m: M, part: String, cx: float, cy: float, w: float, h: float, z: float, frame := true) -> void:
 	m.add(part, "paper", vplane(w, h, cx, cy, z), 0)
 	if not frame: return
-	var f := 0.07
-	m.add(part, "wood", PA(Kit.box(w + f * 2, f, 0.12, cx, cy + h / 2 + f / 2, z), WOOD), 0.012)
-	m.add(part, "wood", PA(Kit.box(w + f * 2, f, 0.12, cx, cy - h / 2 - f / 2, z), WOOD), 0.012)
-	m.add(part, "wood", PA(Kit.box(f, h, 0.12, cx - w / 2 - f / 2, cy, z), WOOD), 0.012)
-	m.add(part, "wood", PA(Kit.box(f, h, 0.12, cx + w / 2 + f / 2, cy, z), WOOD), 0.012)
+	# 틀은 창호지 둘레 안쪽으로 0.02 들인다 — 창 구멍(holed_wall)이 창호지와 같은 크기라 틀 안면이 구멍 벽 면과 같은 평면이면 깜빡인다(fix-1021)
+	var f := 0.07; var k := f / 2 - 0.02
+	m.add(part, "wood", PA(Kit.box(w + k * 2 + f, f, 0.12, cx, cy + h / 2 + k, z), WOOD), 0.012)
+	m.add(part, "wood", PA(Kit.box(w + k * 2 + f, f, 0.12, cx, cy - h / 2 - k, z), WOOD), 0.012)
+	m.add(part, "wood", PA(Kit.box(f, h + k * 2 - f, 0.12, cx - w / 2 - k, cy, z), WOOD), 0.012)
+	m.add(part, "wood", PA(Kit.box(f, h + k * 2 - f, 0.12, cx + w / 2 + k, cy, z), WOOD), 0.012)
 
 # 옹기(웹 onggiGeo)
 static func onggi(r: float, h: float, seg := 10) -> Kit.Geo:
@@ -424,21 +427,34 @@ static func rr_dome(X: float, Z: float, rc: float, eave: float, hh: float, zc :=
 		prev = ring
 	return g
 
-# 처마 두께 띠(옛 Kit.cyl(1, 1.02, h)를 X·Z로 늘린 것과 같은 자리): 위 y_top 둘레 = (X, Z, rc), 아래 y_bot는 grow만큼 바깥. 밑면(처마 안쪽) 막음
-static func rr_band(X: float, Z: float, rc: float, y_top: float, y_bot: float, zc := 0.0, grow := 0.02, n := 28) -> Kit.Geo:
+# 처마 두께 띠(옛 Kit.cyl(1, 1.02, h)를 X·Z로 늘린 것과 같은 자리): 위 y_top 둘레 = (X, Z, rc), 아래 y_bot는 grow만큼 바깥.
+# 밑면(처마 안쪽, soffit): 띠 아래끝에서 안쪽으로 inset만큼 들어가며 y_in까지 비스듬히 올라가고, 그 안은 y_in 높이 천장 한 장.
+#   fix-1021: 옛 밑면은 띠 아래끝(처마 - 0.32, 벽 꼭대기보다 0.2m 낮음) 높이의 평평한 원판이라 벽·기둥·도리가 그 판을 뚫고 올라갔다
+#   (1인칭 방 안 천장이 눈높이 + 8cm, 처마 밑에서 올려다보면 벽 윗단이 천장 속으로 잘려 들어감). y_in은 부르는 쪽이 벽·도리 꼭대기 +
+#   먹선 + 여유보다 높게 준다(시험 tests/kit/roof_interior_test.gd가 모든 변형에서 잰다). inset은 처마가 벽선 밖으로 나온 폭보다 작게.
+#   위 덮개 원판은 두지 않는다(이엉 몸이 위를 덮는다 — 원판 먹선 껍질이 밑에서 보이지 않게).
+static func rr_band(X: float, Z: float, rc: float, y_top: float, y_bot: float, zc := 0.0, grow := 0.02, n := 28, y_in := 0.0, inset := 0.45) -> Kit.Geo:
 	var dirs := rr_dirs(X, Z, rc, n)
 	var g := Kit.Geo.new()
 	var k := 1.0 + grow
+	var Xi := X - inset; var Zi := Z - inset
+	var rci := clampf(rc - inset, 0.05, minf(Xi, Zi))   # 이엉 몸 처마 위 고리처럼 모서리를 둥글게(밑면 모서리가 이엉 겉 위로 나오지 않게)
+	var yi := maxf(y_in, y_bot)
+	var cb := Vector3(0, yi, zc)
+	var sub := 2   # 밑면은 한 토막을 2로 더 잘게 — 안쪽 둘레 모서리를 현(弦)이 깎아 먹지 않게(바깥 둘레는 이엉 몸 처마선 그대로)
 	for i in n:
 		var d0 := dirs[i]; var d1 := dirs[(i + 1) % n]
 		var t0 := rr_ray(X, Z, rc, d0); var t1 := rr_ray(X, Z, rc, d1)
 		var a := Vector3(d0.x * t0, y_top, zc + d0.y * t0); var b := Vector3(d1.x * t1, y_top, zc + d1.y * t1)
 		var c := Vector3(d1.x * t1 * k, y_bot, zc + d1.y * t1 * k); var dd := Vector3(d0.x * t0 * k, y_bot, zc + d0.y * t0 * k)
-		var u0 := float(i) / n; var u1 := float(i + 1) / n
 		qf(g, dd, c, b, a, Vector3(d0.x + d1.x, 0, d0.y + d1.y))
-		var cb := Vector3(0, y_bot, zc)
-		tf(g, cb, dd, c, Vector3.DOWN)
-		tf(g, Vector3(0, y_top, zc), a, b, Vector3.UP)
+		for j in sub:
+			var o0 := dd.lerp(c, float(j) / sub); var o1 := dd.lerp(c, float(j + 1) / sub)
+			var q0 := Vector2(o0.x, o0.z - zc).normalized(); var q1 := Vector2(o1.x, o1.z - zc).normalized()
+			var s0 := rr_ray(Xi, Zi, rci, q0); var s1 := rr_ray(Xi, Zi, rci, q1)
+			var e0 := Vector3(q0.x * s0, yi, zc + q0.y * s0); var e1 := Vector3(q1.x * s1, yi, zc + q1.y * s1)
+			qf(g, o0, o1, e1, e0, Vector3.DOWN)
+			tf(g, cb, e0, e1, Vector3.DOWN)
 	return g
 
 # 지붕 겉 높이(x, z) — 박 넝쿨·새끼 그물을 지붕 위에 얹을 때. 처마 밖이면 eave
@@ -463,7 +479,8 @@ static func thatch_cap(m: M, part: String, X: float, Z: float, eave: float, hh: 
 	var rc := 0.55 * minf(X, Z)
 	var n := maxi(16, ws + 8)
 	m.add(part, "thatch", PA(rr_dome(X, Z, rc, eave, hh, 0.0, 1.12, n, hs), THATCH, 0.05, m.rng), 0.04)
-	m.add(part, "thatch", PA(rr_band(X, Z, rc, eave - 0.12 + 0.13, eave - 0.12 - 0.13, 0.0, 0.02, n), THATCH_LIP, 0.04, m.rng), 0.035)
+	# 밑면 천장은 처마 + 0.03(벽 꼭대기는 처마보다 0.1 이상 낮게 짓는다), 처마 밑 비탈 폭은 처마 나온 폭의 0.7배까지
+	m.add(part, "thatch", PA(rr_band(X, Z, rc, eave - 0.12 + 0.13, eave - 0.12 - 0.13, 0.0, 0.02, n, eave + 0.03, minf(0.35, 0.45 * minf(X, Z))), THATCH_LIP, 0.04, m.rng), 0.035)
 
 # 맞배 이엉 지붕(길쭉한 헛간·외양간용): 용마름 있는 박공형. 길이 L(x), 깊이 D(z), 처마 높이 eave, 지붕 높이 rh
 static func thatch_gable(m: M, part: String, L: float, D: float, eave: float, rh: float, cols: Array = THATCH, ridge_cols: Array = [0xb39d6c, 0x8f7b52]) -> void:
