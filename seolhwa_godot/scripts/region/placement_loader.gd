@@ -34,7 +34,7 @@ const TAG := "placement"
 const WATER_KITS := ["village/jingeom", "village/narutbae", "village/ppallaeteo"]
 const BOAT_KITS := ["village/narutbae", "route/dotbae"]
 const BRIDGE_KITS := ["village/stone_bridge", "village/seop_bridge"]
-const YARD_COMPOSITES := ["house_compound", "gwana", "hyanggyo", "silsangsa", "jumak"]
+const YARD_COMPOSITES := ["house_compound", "gwana", "hyanggyo", "silsangsa", "jumak", "bldg/compound"]
 
 var world   # RegionWorld
 var dirs: Array = []
@@ -543,7 +543,7 @@ func _dress_ok(r: Dictionary) -> bool:
 	return true
 
 static func dress_is_building(kit: String) -> bool:
-	if not (kit.begins_with("village/") or kit.begins_with("landmark/") or kit.begins_with("culture/") or kit.begins_with("route/")): return false
+	if not (kit.begins_with("village/") or kit.begins_with("landmark/") or kit.begins_with("culture/") or kit.begins_with("route/") or kit.begins_with("bldg/")): return false
 	for w in DRESS_NOT_BUILDING:
 		if kit.contains(w): return false
 	return true
