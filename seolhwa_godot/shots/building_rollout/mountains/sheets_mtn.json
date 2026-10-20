@@ -1,0 +1,110 @@
+{
+ "sheets": [
+  {
+   "out": "res://shots/building_rollout/mountains/mountains_fp.jpg",
+   "title": "④ 남원 먼 산(배산임수) — 1인칭 · 낮은 원경 전(왼) · 후(오른)",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_gh_before.png",
+     "label": "1인칭 광한루 앞 → 북(읍성 뒤 진산) · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_gh_after.png",
+     "label": "1인칭 광한루 앞 → 북(읍성 뒤 진산) · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_n_before.png",
+     "label": "1인칭 읍성 안 → 북 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_n_after.png",
+     "label": "1인칭 읍성 안 → 북 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_nw_before.png",
+     "label": "1인칭 읍성 안 → 서북(교룡산 쪽) · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_nw_after.png",
+     "label": "1인칭 읍성 안 → 서북(교룡산 쪽) · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_s_before.png",
+     "label": "1인칭 읍성 안 → 남(요천·안산) · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_s_after.png",
+     "label": "1인칭 읍성 안 → 남(요천·안산) · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_e_before.png",
+     "label": "1인칭 동문 밖 → 동 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_e_after.png",
+     "label": "1인칭 동문 밖 → 동 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_w_before.png",
+     "label": "1인칭 서문 밖 → 서 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_fp_w_after.png",
+     "label": "1인칭 서문 밖 → 서 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_low_s_before.png",
+     "label": "낮은 원경 남 → 북 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_low_s_after.png",
+     "label": "낮은 원경 남 → 북 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_low_e_before.png",
+     "label": "낮은 원경 동 → 서 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_low_e_after.png",
+     "label": "낮은 원경 동 → 서 · 후"
+    }
+   ]
+  },
+  {
+   "out": "res://shots/building_rollout/mountains/mountains_cams.jpg",
+   "title": "④ 먼 산 — 마을 카메라(22°) · 기본 카메라(40°): 화면 위 끝이 지평선 아래라 먼 산이 들지 않는다(그대로임을 확인)",
+   "cols": 2,
+   "cw": 960,
+   "ch": 540,
+   "cells": [
+    {
+     "path": "res://shots/building_rollout/raw/mtn_town_c_before.png",
+     "label": "마을 카메라 읍성 안 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_town_c_after.png",
+     "label": "마을 카메라 읍성 안 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_town_w_before.png",
+     "label": "마을 카메라 서문 밖 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_town_w_after.png",
+     "label": "마을 카메라 서문 밖 · 후"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_std_c_before.png",
+     "label": "기본 카메라 읍성 안 · 전"
+    },
+    {
+     "path": "res://shots/building_rollout/raw/mtn_std_c_after.png",
+     "label": "기본 카메라 읍성 안 · 후"
+    }
+   ]
+  }
+ ]
+}

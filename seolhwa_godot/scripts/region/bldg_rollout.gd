@@ -102,7 +102,7 @@ func _view(setname: String, v: Dictionary) -> void:
 			var d := float(v.get("dist", 70.0))
 			main.rig.shot = { pos = look + Vector3(sin(yw) * cos(pd), sin(pd), cos(yw) * cos(pd)) * d, look = look, fov = float(v.get("fov", 30.0)) }
 			main.set_occ_script({ "focus": look, "r": 0.0, "near": 0.0 })
-			main.fog_on = false; main._apply_time()
+			main.fog_on = bool(v.get("fog", false)); main._apply_time()
 	main.rig.update(0, main.player_pos, main.player.facing, null, true)
 	await _sec(float(v.get("wait", 1.2)))
 	_shot("%s_%s" % [setname, String(v.id)])

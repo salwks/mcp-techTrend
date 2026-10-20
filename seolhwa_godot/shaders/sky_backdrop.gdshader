@@ -15,7 +15,10 @@ uniform float u_night;
 uniform float u_time;
 uniform vec3 u_sun_dir = vec3(0.0, 0.3, 1.0);
 uniform vec3 u_moon_dir = vec3(0.4072, 0.1267, -0.9049);
-uniform float u_moon = 1.0;   // 기본 달 보이기(0이면 감춘다 — 남원 마지막 밤의 두 빛 동안만)
+uniform float u_moon = 1.0;
+// 권역 먼 산(scripts/region/backdrop.gd): 방위 1024칸 × 세 겹 높이각(사인). 없으면(u_prof_on 0) 예전 능선 그대로
+uniform sampler2D u_prof : filter_linear, repeat_enable;
+uniform float u_prof_on = 0.0;   // 기본 달 보이기(0이면 감춘다 — 남원 마지막 밤의 두 빛 동안만)
 
 float hash11(float p) { p = fract(p * 0.1031); p *= p + 33.33; p *= p + p; return fract(p); }
 float hash21(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
@@ -82,12 +85,22 @@ void fragment() {
 		float base = 0.015 - fi * 0.075;
 		float amp = 0.1 + fi * 0.035;
 		float h = base + amp * (ridge(az * (3.2 + fi * 1.7), 11.0 + fi * 17.0) - 0.35);
+		float hs = h;   // 산발치 안개(fade)는 잔 굴곡 없는 높이로 — 잔 굴곡을 따라가면 안개에 세로 줄이 진다
+		if (u_prof_on > 0.5) {
+			// 먼 산 높이각 + 잔 봉우리 굴곡(겹마다 다른 결) — 바탕 능선은 낮춰 먼 산이 주인이 되게
+			float hp0 = texture(u_prof, vec2(fract(az / 6.2831853 + 0.5), 0.5))[i];
+			float hp = hp0 + (0.006 + fi * 0.002) * (ridge(az * (38.0 + fi * 21.0), 5.0 + fi * 9.0) - 0.45) * step(-0.2, hp0);
+			hs = max(h - 0.03, hp0);
+			h = max(h - 0.03, hp);
+		}
 		float inside = smoothstep(h + 0.0015, h - 0.0015, e);
 		if (inside > 0.0) {
 			vec3 mtn = mix(u_hor, u_ink, 0.26 + fi * 0.17);
 			mtn = mix(mtn, u_glow, 0.18 * u_glow_i * (1.0 - fi * 0.3));
-			float fade = smoothstep(h - 0.01, h - 0.09 - fi * 0.02, e);
+			float fade = smoothstep(hs - 0.01, hs - 0.09 - fi * 0.02, e);
 			vec3 mist = mix(sea, u_hor, 0.25);
+			// 지평선 위(e > 0)는 운해 무늬(바닥 투영 — 위로는 방위만 따라 세로 줄이 된다) 대신 고른 안개빛
+			mist = mix(mist, mix(mix(u_low, u_fog, 0.5), u_hor, 0.25), smoothstep(-0.02, 0.01, e));
 			mtn *= 1.0 - 0.18 * smoothstep(h - 0.012, h - 0.001, e);
 			col = mix(col, mix(mtn, mist, fade * 0.9), inside);
 		}

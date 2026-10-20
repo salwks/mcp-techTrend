@@ -27,6 +27,7 @@
 #   --kitcache=user://폴더/  키트 디스크 캐시 폴더(기본 user://kit_cache/)   --nokitcache  캐시 끄기
 #   --nowaterrefl 물 평면 반사 끄기(하늘빛 반사만 — 화면 품질 낮음과 같음) --nowaves 바다 물결 판 끄기 --waterink 물가 먹선 켜기
 #   --fpyaw=도[,숙임도] 1인칭 바라보는 쪽 고정(촬영) --watershots=n 불러오기 뒤 0.3초 간격 n장을 --shotdir에 찍고 끝냄(물결 움직임)
+# --nobackdrop 권역 밖 먼 산(backdrop.json) 끄기
 # 비교용 끄기: --nofx(바깥 기운) --noao(먹 그늘) --nodress(생활 소품) --noground(땅 꾸밈) --nofog --nopost --nodof(=--notilt, 깊이 흐림) --nobloom --noshadow --nomsaa --nolamps --nochars --noworld --noocc --nofar --nowater
 extends Node
 
@@ -400,6 +401,7 @@ func _build_scene() -> void:
 	world.loading = true
 	world.load_region(_data_dir)
 	world.set_terrain_param("dress_far", 45.0 if gfx_low() else 75.0)   # 땅 꾸밈 무늬 거리(설정 '화면 품질')
+	if not args.has("nobackdrop"): _backdrop = load("res://scripts/region/backdrop.gd").new(self, world.data_dir)   # 권역 밖 먼 산(배산임수) — 하늘 그림판 능선
 	weather = Weather.new()
 	root.add_child(weather)
 	weather.setup(world, world.data_dir, String(_pending.get("weather", args.get("weather", ""))))
@@ -1107,8 +1109,10 @@ var _map: CanvasLayer = null
 var _btitles = null
 var _map_opened := false
 
+var _backdrop = null   # scripts/region/backdrop.gd
 func _process(delta: float) -> void:
 	if _draining: return
+	if _backdrop != null: _backdrop.update(cam.global_position if cam != null and cam.is_inside_tree() else player_pos + Vector3(0, 1.6, 0))
 	if _title == null and world and not world.region.is_empty():
 		_title = preload("res://scripts/region/place_title.gd").new()
 		add_child(_title)
