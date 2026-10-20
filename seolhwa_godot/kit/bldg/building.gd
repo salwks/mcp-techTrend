@@ -1040,12 +1040,26 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 				var oxv: float = float(rf.eave) * 0.9; var ozv: float = float(rf.eave)
 				var rcv: float = float(rf.get("rc", 1.1))
 				while rcv > 0.3 and pow(rcv - oxv, 2) + pow(rcv - ozv, 2) > pow(rcv - 0.32, 2): rcv -= 0.05
+				var tv := _thatch_vary(sp)
 				var rr := RF.thatch(m, "roof", { hw = hw, hd = hd, eave = eave, rise = rise, rc = rcv, lod = lod, L = L, D = D,
 					ov = minf(float(rf.eave), float(rf.eave) * 0.9), wall_top = top + 0.48, hide_under = _hide_under(sp, ctx, w, cxr, czr),
-					cols = rf.get("cols", C.THATCH), net = int(rf.get("net", 0)), wear = sp.wear })
+					cols = rf.get("cols", C.THATCH), net = int(rf.get("net", 0)), wear = sp.wear,
+					seed = int(sp.seed) * 7 + int(w.get("x", 0.0) * 13.0), bulge = tv.bulge, hip_k = tv.hip_k, sag = tv.sag, patch = tv.patch, edge = tv.edge, bands = tv.bands })
 				info.thatch = { hw = hw, hd = hd, rc = float(rf.get("rc", 1.1)), eave = eave, rise = rise, cx = cxr, cz = czr }
 	m.pop(old)
 	return Rect2(xa, za, xb - xa, zb2 - za)
+
+# 이엉 변주(rollout ②): 명세 roof에 적힌 값이 있으면 그대로, 없으면 시드·낡음으로 — 같은 남부 초가라도 지붕 꼴이 다르게
+#   bulge(단면 볼록) · hip_k(옆 비탈 배율 → 용마루 길이·둥근 정도) · sag(용마루 처짐) · patch(덧이엉 조각) · edge(처마 끝 ragged|combed) · bands(켜 띠)
+static func _thatch_vary(sp: Dictionary) -> Dictionary:
+	var rf: Dictionary = sp.roof
+	var r := Kit.Rng.new(int(sp.seed) * 131 + 17)
+	var wear: float = float(sp.wear)
+	var out := { bulge = r.between(0.25, 0.8), hip_k = r.between(0.8, 1.3), sag = wear * r.between(0.03, 0.12),
+		patch = (int(r.next() * 3.0) if wear > 0.45 else (1 if r.next() < 0.25 else 0)), edge = "ragged" if (wear > 0.45 or r.next() < 0.35) else "combed", bands = true }
+	for k in out:
+		if rf.has(k): out[k] = rf[k]
+	return out
 
 # 풍판: 맞배 박공 밑을 가리는 세로 널(지붕 밑면 아래, 처마 끝 안쪽)
 static func _pungpan(m: C.M, x: float, hd: float, eave: float, rise: float, top: float, sd: float, D: float, zcol: float, czr: float) -> void:

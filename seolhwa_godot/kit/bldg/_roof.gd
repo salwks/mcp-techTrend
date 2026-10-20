@@ -340,20 +340,47 @@ static func _box_into(g: Kit.Geo, a: Vector3, b: Vector3, w: float, h: float) ->
 
 # 초가 지붕 -------------------------------------------------------------------------------------------------
 # 둥근 모서리 우진각(이엉). o: hw, hd, eave, rise, rc(모서리 반지름), thick(이엉 두께 띠 0.3), lod, L, D, wear, cols, net(새끼 그물 줄 수)
-# 안쪽 거리 e(둥근 사각 둘레에서 안으로)의 등고선이 고리. e = hd에서 용마루 선(길이 2(hw-hd)).
+#   2026-10-21 rollout ②(김홍도·김득신·신윤복·김준근 초가 장면 — building_refs.json choga): 이엉이 한 덩이로 읽히지 않게
+#   seed      변주 씨앗(무늬·띠·덧이엉·처마 끝)
+#   bulge     단면 볼록함(0.2 납작 ~ 0.8 둥글게 부푼) — 프로필 s(1 + b − b s)
+#   hip_k     옆(합각 쪽) 비탈 기울기 배율(처마 내밀기 ov 안쪽은 그대로 — 벽 위 여유 규칙). 크면 용마루가 짧고 둥근 집, 작으면 용마루가 긴 집
+#   sag       용마루 가운데 처짐(m)
+#   bands     켜 띠(이엉을 해마다 아래부터 덮어 올린 켜 — 켜마다 0.06m 턱 + 짧은 처마 그림자)
+#   patch     덧이엉(새 짚으로 기운 자리) 수 0~3 — 묵은 지붕 위 금빛 조각(0.03m 위)
+#   edge      "ragged"(묵은 이엉 처마 끝 들쭉날쭉 + 짚 끝 술) | "combed"(새로 다듬은 처마: 고른 선 + 얕은 물결)
+# 안쪽 거리 e(둥근 사각 둘레에서 안으로)의 등고선이 고리. e = hd에서 용마루 선.
+static func _hn(a: float, b: float, s: float) -> float:
+	var v := sin(a * 12.9898 + b * 78.233 + s * 37.719) * 43758.5453
+	return v - floorf(v)
+
+# 둘레 각 θ의 주기 무늬(0~1) — 정수 진동수라 둘레를 돌아 이어진다
+static func _per(th: float, s: float, k1: int, k2: int) -> float:
+	return 0.5 + 0.3 * sin(th * k1 + s * 1.7) + 0.2 * sin(th * k2 + s * 4.1)
+
 static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 	var hw: float = o.hw; var hd: float = o.hd; var eave: float = o.eave; var rise: float = o.rise
 	var rc: float = minf(o.get("rc", 1.1), hd * 0.95); var lod: int = o.get("lod", 0)
 	var thick: float = o.get("thick", 0.32)
+	var sd: float = float(o.get("seed", 1)) * 0.618
+	var bulge: float = clampf(float(o.get("bulge", 0.5)), 0.15, 0.85)
+	var e0: float = maxf(float(o.get("ov", 0.8)), 0.2)
+	var hk_max: float = (hw - 0.35 - e0) / maxf(hd - e0, 0.1)
+	var hk: float = clampf(float(o.get("hip_k", 1.0)), 0.7, maxf(1.0, hk_max))
+	var sag: float = float(o.get("sag", 0.0))
+	var wear: float = o.get("wear", 0.3)
 	var nr: int = [9, 4, 2][lod]
 	var nside_x := maxi(1, ceili((hw - rc) / ([0.9, 2.0, 4.0][lod])))
 	var nside_z := maxi(1, ceili((hd - rc) / ([0.9, 2.0, 4.0][lod])))
 	var narc: int = [4, 2, 1][lod]
 	var cols: Array = o.get("cols", C.THATCH)
-	var Hf := func(e: float) -> float: return eave + rise * prof_thatch(e / hd)
+	var prof := func(t: float) -> float:
+		t = clampf(t, 0, 1)
+		return t * (1.0 + bulge - bulge * t)
+	var Hf := func(e: float) -> float: return eave + rise * prof.call(e / hd)
+	var ex := func(e: float) -> float: return e if e <= e0 else e0 + (e - e0) * hk   # 옆 비탈 배율(처마 안쪽만)
 	# 고리 점: 둥근 사각(반폭 a, b, 반지름 r)의 둘레 점 — 사분면마다 [z변 절반, 호, x변 절반]
 	var ring := func(e: float, sharp := false) -> Array:
-		var a := maxf(hw - e, 0.0); var b := maxf(hd - e, 0.0); var r := 0.0 if sharp else maxf(rc - e, 0.0)
+		var a := maxf(hw - ex.call(e), 0.0); var b := maxf(hd - e, 0.0); var r := 0.0 if sharp else maxf(rc - e, 0.0)
 		r = minf(r, minf(a, b))
 		var P := []
 		for k in nside_z: P.append(Vector2(a, (b - r) * k / nside_z))
@@ -371,41 +398,80 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		pts.append(Vector2(0, -b))
 		for p in Qr: pts.append(Vector2(p.x, -p.y))
 		return pts
+	# 켜 띠: 어느 고리에서 위 켜가 시작하나(씨앗마다 자리 다르게)
+	var bands := {}
+	if lod == 0 and bool(o.get("bands", true)):
+		var pick := [[2, 4, 6], [2, 5, 7], [3, 5, 7], [2, 4, 7], [3, 6]]
+		for k in pick[int(_hn(sd, 3.0, 1.0) * pick.size()) % pick.size()]: bands[k] = true
+	var STEP := 0.06
 	var rings := []
 	for k in nr + 1:
 		var e := hd * float(k) / nr
 		if k == nr: e = hd - 1e-4
-		rings.append([ring.call(e), Hf.call(e), e])
+		var pts: Array = ring.call(e)
+		# 고리 울퉁불퉁(묵은 이엉일수록): 처마·용마루 고리는 그대로
+		if k > 0 and k < nr and lod == 0:
+			var amp := 0.012 + 0.02 * wear
+			for i in pts.size():
+				var p: Vector2 = pts[i]
+				var L2 := p.length()
+				if L2 > 0.01: pts[i] = p + p / L2 * (_hn(float(i), float(k), sd) - 0.5) * amp * 2.0
+		rings.append([pts, Hf.call(e), e])
 	var top := Kit.Geo.new(); var bot := Kit.Geo.new()
+	var lips := Kit.Geo.new()   # 켜 턱(짧은 처마)
 	var n: int = (rings[0][0] as Array).size()
+	var ridge_half := maxf(hw - ex.call(hd), 0.3)
+	var sagf := func(x: float, e: float) -> float: return sag * pow(clampf(e / hd, 0, 1), 2.0) * (1.0 - clampf(pow(x / maxf(hw, 0.5), 2.0), 0, 1))
 	for k in nr:
 		var r0: Array = rings[k][0]; var r1: Array = rings[k + 1][0]
-		var y0: float = rings[k][1]; var y1: float = rings[k + 1][1]
-		var e0: float = rings[k][2]; var e1: float = rings[k + 1][2]
+		var e0k: float = rings[k][2]; var e1: float = rings[k + 1][2]
+		var y0: float = float(rings[k][1]) + (STEP if bands.has(k) else 0.0)
+		var y1: float = rings[k + 1][1]
 		for i in n:
 			var i2 := (i + 1) % n
-			var a := Vector3(r0[i].x, y0, r0[i].y); var b := Vector3(r0[i2].x, y0, r0[i2].y)
-			var c := Vector3(r1[i2].x, y1, r1[i2].y); var d := Vector3(r1[i].x, y1, r1[i].y)
+			var a := Vector3(r0[i].x, y0 - sagf.call(r0[i].x, e0k), r0[i].y); var b := Vector3(r0[i2].x, y0 - sagf.call(r0[i2].x, e0k), r0[i2].y)
+			var c := Vector3(r1[i2].x, y1 - sagf.call(r1[i2].x, e1), r1[i2].y); var d := Vector3(r1[i].x, y1 - sagf.call(r1[i].x, e1), r1[i].y)
 			# 이엉 결: u = 둘레 쪽, v = 비탈(안쪽 거리)
-			var ua := Vector2(_tu(a), e0 / 1.6); var ub := Vector2(_tu(b), e0 / 1.6); var uc := Vector2(_tu(c), e1 / 1.6); var ud := Vector2(_tu(d), e1 / 1.6)
+			var ua := Vector2(_tu(a), e0k / 1.6); var ub := Vector2(_tu(b), e0k / 1.6); var uc := Vector2(_tu(c), e1 / 1.6); var ud := Vector2(_tu(d), e1 / 1.6)
 			if absf(ub.x - ua.x) > 2.0: ub.x = ua.x + 0.3
 			if absf(uc.x - ud.x) > 2.0: uc.x = ud.x + 0.3
 			tw(top, a, b, c, ua, ub, uc, Vector3.UP)
 			tw(top, a, c, d, ua, uc, ud, Vector3.UP)
+			if bands.has(k):
+				# 켜 턱: 위 켜 시작(y0) → 아래 켜 위로 조금 나와(3.5cm) 내려옴 — 켜 사이 짧은 그림자
+				var oa := Vector3(r0[i].x, 0, r0[i].y).normalized() * 0.035; var ob := Vector3(r0[i2].x, 0, r0[i2].y).normalized() * 0.035
+				var ya := y0 - STEP - 0.015; var yb := y0 - STEP - 0.015
+				var la := Vector3(a.x + oa.x, ya - sagf.call(r0[i].x, e0k), a.z + oa.z); var lb := Vector3(b.x + ob.x, yb - sagf.call(r0[i2].x, e0k), b.z + ob.z)
+				var out := Vector3(a.x + b.x, 0.3, a.z + b.z)
+				tw(lips, la, lb, b, Vector2(_tu(a), 0.3), Vector2(_tu(a) + a.distance_to(b) / 1.2, 0.3), Vector2(_tu(a) + a.distance_to(b) / 1.2, 0.0), out)
+				tw(lips, la, b, a, Vector2(_tu(a), 0.3), Vector2(_tu(a) + a.distance_to(b) / 1.2, 0.0), Vector2(_tu(a), 0.0), out)
 	# 처마 두께 띠 + 밑면 — 밑면 안쪽 고리는 벽·기둥 줄 바로 바깥(e_in)에서 벽 윗면 + 0.08m(벽이 이엉 밑면을 뚫지 않게)
 	var r0: Array = rings[0][0]
 	var e_in: float = maxf(float(o.get("ov", 0.8)) - 0.06, 0.1)
 	var rin: Array = ring.call(e_in, true)   # 모서리 날카롭게 — 둥근 고리는 벽 모서리 안으로 파고든다
 	var y_in: float = maxf(float(o.get("wall_top", eave - thick)) + 0.08, eave - thick + 0.05)
-	var lip := Kit.Geo.new()
-	var ctr := Vector3(0, eave - thick, 0)
+	var lip := Kit.Geo.new(); var tufts := Kit.Geo.new()
+	var ragged: bool = String(o.get("edge", "ragged")) == "ragged"
+	var grow := 1.0 + 0.03
+	# 처마 끝 아래 선(점마다): 들쭉날쭉 — 묵은 이엉은 깊게(최대 8cm), 다듬은 처마는 얕은 물결(1.5cm)
 	var hide = o.get("hide_under")
+	var drop := []
+	for i in n:
+		var th := atan2(float(r0[i].y), float(r0[i].x))
+		var dv := (0.02 + 0.06 * wear) * _hn(float(i), 5.0, sd) + 0.03 * _per(th, sd, 7, 13) if ragged else 0.015 * _per(th, sd, 5, 9)
+		# 다른 날개(ㄱ·ㄷ 이음) 가까이는 처마 끝을 내리지 않는다 — 이음 안쪽 모서리에서 이웃 날개 벽 위 여유(≥ 0.04m)를 지킨다
+		if hide is Callable:
+			var pp := Vector2(r0[i].x, r0[i].y)
+			for f in [1.0, 0.85, 0.7]:
+				var q: Vector2 = pp * f
+				if (hide as Callable).call(q.x, q.y) or (hide as Callable).call(q.x + 0.6, q.y) or (hide as Callable).call(q.x - 0.6, q.y) or (hide as Callable).call(q.x, q.y + 0.6) or (hide as Callable).call(q.x, q.y - 0.6):
+					dv = 0.0
+		drop.append(dv if lod == 0 else 0.0)
 	for i in n:
 		var i2 := (i + 1) % n
 		var a := Vector3(r0[i].x, eave, r0[i].y); var b := Vector3(r0[i2].x, eave, r0[i2].y)
 		if hide is Callable and (hide as Callable).call((a.x + b.x) * 0.5, (a.z + b.z) * 0.5): continue   # 다른 날개 방 위 — 처마 띠·밑면 없음
-		var grow := 1.0 + 0.03
-		var a1 := Vector3(r0[i].x * grow, eave - thick, r0[i].y * grow); var b1 := Vector3(r0[i2].x * grow, eave - thick, r0[i2].y * grow)
+		var a1 := Vector3(r0[i].x * grow, eave - thick - float(drop[i]), r0[i].y * grow); var b1 := Vector3(r0[i2].x * grow, eave - thick - float(drop[i2]), r0[i2].y * grow)
 		var out := Vector3(a.x + b.x, 0, a.z + b.z)
 		var ua := _tu(a); var ub := ua + a.distance_to(b) / 1.2
 		tw(lip, a1, b1, b, Vector2(ua, 0.35), Vector2(ub, 0.35), Vector2(ub, 0.0), out)
@@ -414,13 +480,73 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		var ia := Vector3(rin[i].x, y_in, rin[i].y); var ib := Vector3(rin[i2].x, y_in, rin[i2].y)
 		C.qf(bot, a1, b1, ib, ia, Vector3.DOWN)
 		C.tf(bot, ia, ib, Vector3(0, y_in, 0), Vector3.DOWN)
-	var wear: float = o.get("wear", 0.3)
-	A.add_tiled(m, part, "thatch", C.PA(top, cols, 0.05, m.rng), 0.05 if lod < 2 else 0.0)
-	A.add_tiled(m, part, "thatch", C.PA(lip, o.get("lip_cols", C.THATCH_LIP), 0.04, m.rng), 0.035 if lod == 0 else 0.0)
+		# 짚 끝 술(묵은 이엉): 처마 아래끝에 촘촘한(0.055m) 가는 짚 끝 — 길이 2~8cm, 이엉 처마 띠와 같은 짚 빛·결
+		if ragged and lod == 0:
+			var seg := a1.distance_to(b1)
+			var nt := maxi(1, int(seg / 0.055))
+			var od := out.normalized()
+			for t in nt:
+				var hz := _hn(float(i * 31 + t), 9.0, sd)
+				if hz < 0.3: continue   # 빈 자리(가지런하지 않게)
+				var f0 := (t + 0.2 * _hn(float(i * 17 + t), 7.0, sd)) / nt; var f1 := minf(1.0, (t + 0.8 + 0.6 * _hn(float(i * 19 + t), 6.0, sd)) / nt)
+				var fm := lerpf(f0, f1, 0.2 + 0.6 * _hn(float(i * 53 + t), 8.0, sd))
+				var p0 := a1.lerp(b1, f0); var p1 := a1.lerp(b1, f1)
+				var ln := 0.015 + 0.09 * pow(_hn(float(i * 37 + t), 10.0, sd), 2.0) * (0.5 + wear)
+				var tip := a1.lerp(b1, fm) + od * 0.015 + Vector3(0, -ln, 0)
+				p0 += od * 0.004 + Vector3(0, 0.03, 0); p1 += od * 0.004 + Vector3(0, 0.03, 0)
+				var u0 := _tu(a) + f0 * seg / 1.2; var u1 := _tu(a) + f1 * seg / 1.2
+				tw(tufts, p0, p1, tip, Vector2(u0, 0.3), Vector2(u1, 0.3), Vector2((u0 + u1) / 2, 0.36 + ln), od)
+	# --- 빛: 높이 그라데이션 + 빗물 줄(처마 쪽 짙게) + 묵은 잿빛·이끼(낡음) + 켜마다 다른 해의 짚 빛 ---------------
+	var ctop := Kit.hex(cols[0]); var cbot := Kit.hex(cols[1])
+	var grey := Kit.hex(0x6c665a); var moss := Kit.hex(0x5f6646)
+	var band_of := func(e: float) -> int:
+		var bi := 0
+		for k in bands:
+			if e >= hd * float(k) / nr - 1e-3: bi += 1
+		return bi
+	var paint := func(g: Kit.Geo, dark: float) -> void:
+		for i in g.pos.size():
+			var p: Vector3 = g.pos[i]
+			var t := clampf((p.y - eave) / maxf(rise, 0.3), 0.0, 1.0)
+			var c := cbot.lerp(ctop, 0.3 + 0.7 * t)
+			var th := atan2(p.z, p.x * hd / maxf(hw, 0.5))
+			var streak := _per(th, sd, 29, 47) * (1.0 - t)
+			c = c.darkened(dark + (0.08 + 0.22 * wear) * streak * streak)
+			c = c.lerp(grey, clampf(wear * 0.45 * _per(th, sd + 2.0, 3, 8), 0, 0.5))
+			if wear > 0.5: c = c.lerp(moss, clampf((wear - 0.5) * 0.7 * _per(th, sd + 5.0, 4, 11) * (1.0 - t), 0, 0.3))
+			var e_here := hd * clampf(t, 0, 1)
+			var bi: int = band_of.call(e_here)
+			c = c.lightened(0.04 if bi % 2 == 1 else 0.0)
+			c = c.darkened((_hn(float(i / 3), 2.0, sd) - 0.5) * 0.04)
+			g.col[i] = c
+	paint.call(top, 0.0)
+	paint.call(lips, 0.22)
+	# --- 덧이엉: 묵은 지붕을 새 짚으로 기운 자리 — 켜 하나(띠) 안에서 둘레 몇 m만 금빛, 가장자리는 부드럽게(판처럼 보이지 않게) ---
+	var npatch: int = int(o.get("patch", 0)) if lod == 0 else 0
+	if npatch > 0:
+		var fresh := Kit.hex(0xd9c288)
+		for q in npatch:
+			var thc := (_hn(float(q), 11.0, sd) * 2.0 - 1.0) * PI
+			var tw2 := 0.22 + 0.2 * _hn(float(q), 12.0, sd)
+			var tlo := 0.15 + 0.35 * _hn(float(q), 13.0, sd); var thi := tlo + 0.18 + 0.12 * _hn(float(q), 14.0, sd)
+			for i in top.pos.size():
+				var p: Vector3 = top.pos[i]
+				var t := (p.y - eave) / maxf(rise, 0.3)
+				var th := atan2(p.z, p.x * hd / maxf(hw, 0.5))
+				var da := absf(wrapf(th - thc, -PI, PI)) / tw2
+				var dt := maxf(tlo - t, t - thi) / 0.06
+				var f := clampf(1.0 - da, 0, 1) * clampf(1.0 - dt, 0, 1)
+				f *= 0.75 + 0.25 * _hn(float(i / 3), 6.0, sd)
+				if f > 0.0: top.col[i] = top.col[i].lerp(fresh.lerp(top.col[i], 0.25 + 0.35 * t), clampf(f * 1.4, 0, 0.85))
+	A.add_tiled(m, part, "thatch", top, 0.05 if lod < 2 else 0.0)
+	if lips.size() > 0: A.add_tiled(m, part, "thatch", lips, 0.0)
+	var lipc: Array = o.get("lip_cols", C.THATCH_LIP)
+	A.add_tiled(m, part, "thatch", C.PA(lip, lipc, 0.04, m.rng), 0.035 if lod == 0 else 0.0)
+	if tufts.size() > 0: A.add_tiled(m, part, "thatch", C.PA(tufts, lipc, 0.06, m.rng), 0.0)
 	m.add(part, "flat", C.P(bot, 0x5a4a36, 0x3e3226, 0.03), 0)
-	var ridge_y: float = Hf.call(hd)
-	var rh := maxf(hw - hd, 0.4)
-	# 용마름: 용마루 줄을 덮는 엮은 짚 ∧ 덮개(세모 기둥) — 양 끝은 둥근 끝으로 줄어든다
+	var ridge_y: float = Hf.call(hd) - sag
+	var rh := ridge_half
+	# 용마름: 용마루 줄을 덮는 엮은 짚 ∧ 덮개(세모 기둥) — 양 끝은 둥근 끝으로 줄어든다 + 엮은 결(∧ 짚 묶음 줄)
 	if lod < 2:
 		var ym := Kit.Geo.new()
 		var wy := 0.42; var hy := 0.2; var tp := 0.7
@@ -437,6 +563,20 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 			tw(ym, Vector3(sx * L2, y0, -wy), Vector3(sx * L2, y0, wy), Vector3(sx * (L2 - tp * 0.5), y0 + hy, 0), Vector2(0, 1), Vector2(1, 1), Vector2(0.5, 0.5), Vector3(sx, 0.5, 0))
 			tw(ym, Vector3(sx * L2, y0, -wy), tip, Vector3(sx * L2, y0, wy), Vector2(0, 1), Vector2(0.5, 0.6), Vector2(1, 1), Vector3(sx, 1, 0))
 		A.add_tiled(m, part, "yongmareum", C.PA(ym, o.get("cols", C.THATCH), 0.03), 0.02 if lod == 0 else 0.0)
+		if lod == 0:
+			# 엮은 결: 0.3m마다 ∧ 짚 묶음(용마름 면 위 1.2cm) — 김홍도 「벼타작」·김준근 초가 용마름의 비늘 줄
+			var ch := Kit.Geo.new()
+			var nch := maxi(3, int((2.0 * L2 - tp) / 0.24))
+			for q in nch:
+				var x := -L2 + tp * 0.5 + (2.0 * L2 - tp) * (q + 0.5) / nch
+				for sgn in [-1.0, 1.0]:
+					var pa := Vector3(x, y0 + hy + 0.008, 0.0)
+					var pb := Vector3(x - 0.2, y0 + 0.07 + 0.008, sgn * wy * 0.7)
+					var w2 := Vector3(0.025, 0, 0)
+					tw(ch, pa - w2, pa + w2, pb + w2, Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector3(0, 1, sgn))
+					tw(ch, pa - w2, pb + w2, pb - w2, Vector2(0, 0), Vector2(1, 1), Vector2(0, 1), Vector3(0, 1, sgn))
+			var cy := Kit.hex(cols[0]).lerp(Kit.hex(cols[1]), 0.6).darkened(0.05 + 0.08 * wear)
+			m.add(part, "flat", C.P(ch, cy.to_rgba32() >> 8, cy.darkened(0.15).to_rgba32() >> 8, 0.04), 0.0)
 	# 서까래 끝(이엉 처마 밑 가는 통나무) — 앞뒤만
 	if lod == 0 and o.has("L"):
 		var L: float = o.L; var D: float = o.D
@@ -459,7 +599,8 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		var Hxz := func(x: float, z: float) -> float:
 			var q := Vector2(absf(x) - (hw - rc), absf(z) - (hd - rc))
 			var dist := Vector2(maxf(q.x, 0), maxf(q.y, 0)).length() + minf(maxf(q.x, q.y), 0.0) - rc
-			return Hf.call(clampf(-dist, 0, hd)) + 0.04
+			var e := clampf(-dist, 0, hd)
+			return Hf.call(e) + 0.04 + (STEP if lod == 0 and e > hd * 2.0 / nr else 0.0) + 0.03 - sagf.call(x, e)
 		for k in net + 1:
 			var x := lerpf(-hw + 0.6, hw - 0.6, float(k) / net)
 			var prev := Vector3.ZERO
@@ -470,7 +611,7 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 				prev = p
 		for e in [0.35, 0.7]:
 			var rg: Array = ring.call(hd * e)
-			var y: float = Hf.call(hd * e) + 0.04
+			var y: float = Hf.call(hd * e) + 0.04 + (STEP if lod == 0 else 0.0) + 0.03
 			for i in rg.size():
 				var a: Vector2 = rg[i]; var b: Vector2 = rg[(i + 1) % rg.size()]
 				if a.distance_to(b) < 0.02: continue
