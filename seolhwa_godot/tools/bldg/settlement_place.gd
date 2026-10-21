@@ -74,7 +74,7 @@ func _initialize() -> void:
 			tc[k] = int(tc.get(k, 0)) + 1
 		print("SETTLE %s %s items=%d majors=%d districts=%s supersede=%d story_in_box=%d ms=%d bbox=%s" % [name, res.label, res.items.size(), res.majors.size(), str(res.districts.map(func(d): return "%s:%d" % [d.id, d.lots])), sup.size(), story_hit, ms, str(bb)])
 		print("SETTLE %s kinds %s" % [name, str(tc)])
-		for l in res.log: if String(l).contains("필지 ") and String(l).contains("채움"): print("SETTLE %s %s" % [name, String(l).substr(0, 90)])
+		for l in res.log: if (String(l).contains("필지 ") and String(l).contains("채움")) or String(l).contains("실측") or String(l).contains("틈") or String(l).contains("텃밭"): print("SETTLE %s %s" % [name, String(l).substr(0, 90)])
 		V.sets[name] = _views(name, cfg, res, bb)
 	var g := FileAccess.open(ProjectSettings.globalize_path(vpath), FileAccess.WRITE)
 	g.store_string(JSON.stringify(V, " ", false)); g.close()

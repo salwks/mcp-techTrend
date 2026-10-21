@@ -22,10 +22,15 @@ const DISTRICTS := {
 		plazas = [{ c = [-3349, 246], r = 7.5, kind = "gate" }, { c = [-3350, 291], r = 6.0, kind = "well" }],
 		centers = [{ c = [-3342, 246], r = 75.0, w = 1.0 }, { c = [-3342, 300], r = 55.0, w = 0.8 }],
 		base_density = 0.12,
-		branch = { gap_a = 38.0, gap_b = 56.0, p = 0.9, len_a = 40.0, len_b = 95.0, alley_gap_a = 26.0, alley_gap_b = 40.0, alley_p = 0.45 },
-		street_spacing = 40.0, alley_spacing = 22.0,
+		# 실측: 지선 간격 80~120m × 1.2, 고샅은 그 사이 하나 안팎
+		# 성 밖: 지선은 실측 간격(80~120m × 1.2), 그 사이는 고샅(1~3m × 1.2, 굽고 갈래 — 하회·외암)
+		#   성 밖 마을 쪽은 고샅 그물(하회·외암 마을길 1~6m, 막다른 ≤30m)이라 지선 간격을 마을 쪽으로 좁힌다(약 50~80m)
+		branch = { gap_a = 40.0, gap_b = 64.0, p = 1.0, len_a = 60.0, len_b = 110.0, alley_gap_a = 26.0, alley_gap_b = 40.0, alley_p = 0.9 },
+		street_spacing = 44.0, alley_spacing = 26.0,
 		# 성 밖 초가 무리(참고: ACON 2203 #1 서문·남문 밖 초가 덩이): 마당집으로 촘촘히, 빈 땅은 밭
-		inner_inset = 0.6, court_gap = 0.6, block_front = [15.0, 20.0], trunk_shop = 0.3, partial_walls = 0.25,
+		inner_inset = 0.6, court_gap = 0.6, block_front = [12.0, 16.0], block_front_out = [13.0, 18.0], trunk_shop = 0.45, partial_walls = 0.25,
+		street_w = [4.1, 6.0], alley_w = [2.4, 3.6],
+		lots = "measured", zone_trunk = "market", zone_side = "out", street_zone = { path_namwon_seonghwangsa = "out" }, block_depth = 60.0,
 		junction_plaza_p = 0.35, empty_out = 0.12, empty_in = 0.02,
 	},
 	# 읍성 안 남쪽 절반(남문 ↔ 십자로, 서문 ↔ 동문 사이) — 옛 배치는 바둑판 줄(house_compound·giwa·choga). 북쪽 객사·관아(이야기 자리)는 그대로
@@ -40,11 +45,13 @@ const DISTRICTS := {
 		plazas = [{ c = [-3227.8, 331], r = 8.0, kind = "gate" }, { c = [-3227.8, 256], r = 6.5, kind = "well" }],
 		centers = [{ c = [-3227.8, 300], r = 70.0, w = 1.0 }, { c = [-3227.8, 252], r = 60.0, w = 1.0 }],
 		base_density = 0.45,
-		branch = { gap_a = 36.0, gap_b = 52.0, p = 0.95, len_a = 30.0, len_b = 80.0, alley_gap_a = 24.0, alley_gap_b = 36.0, alley_p = 0.4 },
-		street_spacing = 42.0, alley_spacing = 22.0,
+		# 실측: 지선 간격 80~120m(× 1.2) — 읍성 안 남쪽은 남북대로·동서대로·둘레길로 이미 블록 약 85×80m라 새 지선을 내지 않는다
+		branch = { gap_a = 96.0, gap_b = 144.0, p = 0.0, len_a = 30.0, len_b = 80.0, alley_gap_a = 96.0, alley_gap_b = 144.0, alley_p = 0.0 },
+		street_spacing = 96.0, alley_spacing = 40.0, block_depth = 60.0, gate_corner = 1.8, lots = "measured", zone_trunk = "arterial", zone_side = "side",
+		street_zone = { inner_ring_s = "side", inner_ring_w = "side", inner_ring_e = "side" }, block_front = [11.0, 15.0], block_front_out = [12.0, 16.0], pack_ratio = 0.7, pack_max = 7, yard_min = 2.0, front_min_depth = 14.0,
 		junction_plaza_p = 0.3, empty_out = 0.05, empty_in = 0.0,
 		# 성 안: 촘촘하게 — 마당 흙(urban), 빈터 나무 적게, 한 필지에 곁채 여럿(낙안읍성 필지 실측: 집마다 헛간채·아래채·가게채 2~4채)
-		urban = true, trees = 0.12, extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.45, court_gap = 0.5, trunk_shop = 0.55, front_yard = [3.4, 5.5], extras_gap = 0.9,
+		urban = true, trees = 0.12, extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.45, court_gap = 0.5, trunk_shop = 0.8, front_yard = [3.4, 5.5], extras_gap = 0.9,
 		# 문헌 규칙으로 더하는 공해(settlement-rules.md §2): 향청·작청은 관아(외삼문 −3162, 239.5) 앞 동서대로 건너에서 관아를 봄, 사창은 성 안 서남, 관아 앞 하마비
 		majors = [
 			{ tag = "hyangcheong", kit = "bldg/building", params = { type = "gangdang", region = "south", seed = 1874 }, at = [-3184.0, 262.0], ry = PI, fp = true },
@@ -170,7 +177,7 @@ func _initialize() -> void:
 	var res := g.run()
 	for l in res.log: print("ORGANIC ", l)
 	var ns := { trunk = 0, street = 0, alley = 0 }
-	for s in res.streets: ns[s.kind] += 1
+	for s in res.streets: ns[s.kind] = int(ns.get(s.kind, 0)) + 1
 	print("ORGANIC streets trunk=%d street=%d alley=%d plazas=%d lots=%d items=%d supersede=%d keep=%d ms=%d" % [ns.trunk, ns.street, ns.alley, res.plazas.size(), res.lots.size(), res.items.size(), sup.size(), keep.size(), Time.get_ticks_msec() - t0])
 	var tc := {}
 	for it in res.items:

@@ -126,6 +126,28 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 			junction_plaza_p = d.get("junction_plaza_p", 0.3), empty_out = d.get("empty_out", 0.08), empty_in = d.get("empty_in", 0.0),
 			table = d.get("table", {}), trunk_shop = d.get("trunk_shop", 0.0), terrace = true, trees = d.get("trees", 0.35 if String(d.id).begins_with("in") else 0.8),
 		}
+		# 실측 규칙 짜임(docs/reports/settlement-metrics.md): 구역 종류별 길 간격·필지 분포·집 짜임(세계 배율 ×1.2)
+		var did := String(d.id)
+		oc.lots = "measured"; oc.street_w = [4.1, 6.0]; oc.alley_w = [2.4, 3.6]; oc.block_depth = 60.0; oc.gate_corner = 1.8; oc.yard_min = 2.0
+		var vkind := String(cfg.get("kind", "minchon"))
+		if did.begins_with("in"):
+			oc.zone_trunk = "arterial"; oc.zone_side = "side"
+			oc.street_zone = { ring_s = "side", ring_w = "side", ring_e = "side", ring_n = "side", n_gate = "side", w_lane = "side", e_lane = "side" }
+			oc.branch = d.get("branch", { gap_a = 96.0, gap_b = 144.0, p = 0.9, len_a = 30.0, len_b = 85.0, alley_gap_a = 48.0, alley_gap_b = 72.0, alley_p = 0.5 })
+			oc.street_spacing = 80.0; oc.alley_spacing = 36.0
+		elif did.begins_with("out"):
+			oc.zone_trunk = "market"; oc.zone_side = "out"
+			# 성 밖: 지선 실측 간격(80~120m × 1.2), 사이는 고샅 하나 안팎
+			oc.branch = d.get("branch", { gap_a = 96.0, gap_b = 144.0, p = 1.0, len_a = 50.0, len_b = 100.0, alley_gap_a = 48.0, alley_gap_b = 72.0, alley_p = 0.7 })
+			oc.street_spacing = 80.0; oc.alley_spacing = 40.0
+		else:
+			var vz := "minchon"
+			if vkind == "banchon": vz = "banchon" if did == "upper" else "minchon"
+			elif vkind == "sanchon": vz = "sanchon"
+			oc.zone_trunk = "market" if vkind == "yeokchon" else vz; oc.zone_side = vz
+			# 마을: 큰길에서 고샅이 촘촘히 갈라진다(하회·외암 마을길 그물 — 집마다 고샅에 닿음, 막다른 ≤30m)
+			oc.branch = d.get("branch", { gap_a = 44.0, gap_b = 70.0, p = 1.0, len_a = 40.0, len_b = 90.0, alley_gap_a = 30.0, alley_gap_b = 46.0, alley_p = 0.9 })
+			oc.street_spacing = 50.0; oc.alley_spacing = 30.0; oc.alley_w = [2.0, 3.0]; oc.street_w = [3.0, 4.3]; oc.depth_max = 46.0
 		# 성 안(읍내) 구역: 촘촘하게(마당 흙·곁채·깊은 필지·빈 땅은 채마밭) — 남원 읍성 안 남쪽(eup)과 같은 값
 		var urban: bool = d.get("urban", String(d.id).begins_with("in"))
 		if urban:
@@ -169,10 +191,10 @@ static func _walls(X: Ctx, side: float, ong: bool) -> void:
 	var ongp = { S = "front", N = "west", E = "south", W = "north" } if ong else false
 	X.put("eupseong", "landmark/namwon_eupseong", { seed = X.seed, side = side, ongseong = ongp }, 0, 0, 0.0, Vector2.ZERO, 0.0, { flatten = false })
 	var h := side / 2.0 - 8.0
-	X.trunk("ring_s", [[-h, h], [0, h + 0.5], [h, h]], 3.2)
-	X.trunk("ring_w", [[-h, h], [-h - 0.5, 0], [-h, -h]], 3.0)
-	X.trunk("ring_e", [[h, h], [h + 0.5, 0], [h, -h]], 3.0)
-	X.trunk("ring_n", [[-h, -h], [0, -h - 0.5], [h, -h]], 3.0)
+	X.trunk("ring_s", [[-h, h], [0, h + 0.5], [h, h]], 4.1)
+	X.trunk("ring_w", [[-h, h], [-h - 0.5, 0], [-h, -h]], 4.1)
+	X.trunk("ring_e", [[h, h], [h + 0.5, 0], [h, -h]], 4.1)
+	X.trunk("ring_n", [[-h, -h], [0, -h - 0.5], [h, -h]], 4.1)
 
 # 삼단일묘·향교(성 밖): 사직단 서, 여단 북, 성황사 진산 쪽(북서), 향교 동(성에서 조금 떨어져) + 향교 앞 홍살문·하마비
 static func _sandan(X: Ctx, side: float, far := 1.0) -> void:
@@ -210,8 +232,8 @@ static func _city(X: Ctx) -> void:
 	_walls(X, side, true)
 	# 주 가로: 남문 → 객사 앞(남북 대로), 서문 ↔ 동문(동서 대로) — 객사 앞에서 T·十자
 	var zg := -side * 0.08   # 객사 삼문 앞
-	X.trunk("ns", [[0, h + 95.0], [0, h], [0, zg]], 5.0)
-	X.trunk("ew", [[-(h + 40.0), 0], [-h, 0], [h, 0], [h + 40.0, 0]], 5.0)
+	X.trunk("ns", [[0, h + 95.0], [0, h], [0, zg]], 7.2)
+	X.trunk("ew", [[-(h + 40.0), 0], [-h, 0], [h, 0], [h + 40.0, 0]], 7.2)
 	X.trunk("n_gate", [[0, -(h + 40.0)], [0, -h], [0, -h + 12.0], [side * 0.3, -h + 12.0]], 3.4)
 	# 객사(전패 봉안 — 읍치 가운데, 남향, 남문 축 위) + 삼문 + 앞 박석 마당
 	X.put("gaeksa", "landmark/gaeksa", { seed = X.seed + 1, jeongdang_bays = 5 }, 0, -side * 0.28, 0.0, Vector2(67.2, 14.0), 3.0)
@@ -252,11 +274,11 @@ static func _metro(X: Ctx) -> void:
 	var h := side / 2.0
 	_walls(X, side, true)
 	var zg := -side * 0.1
-	X.trunk("ns", [[0, h + 110.0], [0, h], [0, zg]], 6.0)
-	X.trunk("ew", [[-(h + 50.0), 0], [-h, 0], [h, 0], [h + 50.0, 0]], 6.0)
+	X.trunk("ns", [[0, h + 110.0], [0, h], [0, zg]], 8.0)
+	X.trunk("ew", [[-(h + 50.0), 0], [-h, 0], [h, 0], [h + 50.0, 0]], 8.0)
 	X.trunk("n_gate", [[0, -(h + 50.0)], [0, -h], [0, -h + 12.0], [side * 0.36, -h + 12.0]], 3.6)
-	X.trunk("w_lane", [[-side * 0.25, 0], [-side * 0.25, h - 8.0]], 4.0)
-	X.trunk("e_lane", [[side * 0.25, 0], [side * 0.25, h - 8.0]], 4.0)
+	X.trunk("w_lane", [[-side * 0.25, 0], [-side * 0.25, h - 8.0]], 4.8)
+	X.trunk("e_lane", [[side * 0.25, 0], [side * 0.25, h - 8.0]], 4.8)
 	# 감영(관찰사 — 선화당·내아·포정문) : 가운데 북, 크게
 	X.put("gamyeong", "landmark/gwana", { seed = X.seed + 1, width = 70.0, depth = 84.0 }, 0, -side * 0.24, 0.0, Vector2(72, 90), 2.0)
 	X.put("gamyeong_hongsal", "bldg/gate", { type = "hongsal", seed = X.seed + 2 }, 0, zg - 2.0, 0.0, Vector2(4.4, 1.2), 0.3)
@@ -292,11 +314,11 @@ static func _town(X: Ctx) -> void:
 	var h := side / 2.0
 	var walled: bool = bool(X.cfg.get("walled", true))
 	if walled: _walls(X, side, false)
-	X.trunk("ns", [[0, h + 90.0], [0, h], [0, -side * 0.08]], 4.0)
+	X.trunk("ns", [[0, h + 90.0], [0, h], [0, -side * 0.08]], 6.0)
 	# 성문은 성벽 가운데(z=0)에 나므로 동서길은 문을 지나 안에서 남쪽으로 꺾여 든다(무성읍치는 곧게)
 	var ez := side * 0.12
-	if walled: X.trunk("ew", [[-(h + 40.0), 0], [-h, 0], [-h + 10.0, ez], [h - 10.0, ez], [h, 0], [h + 40.0, 0]], 4.0)
-	else: X.trunk("ew", [[-(h + 40.0), ez], [-h, ez], [h, ez], [h + 40.0, ez]], 4.0)
+	if walled: X.trunk("ew", [[-(h + 40.0), 0], [-h, 0], [-h + 10.0, ez], [h - 10.0, ez], [h, 0], [h + 40.0, 0]], 6.0)
+	else: X.trunk("ew", [[-(h + 40.0), ez], [-h, ez], [h, ez], [h + 40.0, ez]], 6.0)
 	X.put("gwana", "landmark/hyeon_gwana", { seed = X.seed + 1 }, side * 0.12, -side * 0.24, 0.0, Vector2(38, 42), 2.0)
 	X.put("gwana_hongsal", "bldg/gate", { type = "hongsal", seed = X.seed + 2 }, side * 0.12, -side * 0.24 + 25.0, 0.0, Vector2(4.4, 1.2), 0.3)
 	var gp := { type = "gaeksa", region = X.region, seed = X.seed + 3 }

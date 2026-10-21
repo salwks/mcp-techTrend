@@ -41,6 +41,13 @@ static func resolve(params: Dictionary) -> Dictionary:
 	else: sp = generate(String(params.get("type", "choga")), String(params.get("region", "south")), String(params.get("cls", "")), int(params.get("seed", 1)), bool(params.get("rs", true)))
 	for k in params.get("over", {}): sp[k] = params.over[k]
 	if params.has("interior"): sp.interior = bool(params.interior)
+	# nbays: 一자 채의 칸 수를 줄인다(고을 짜임 — 좁은 필지 길가 가게채·행랑을 필지 너비에 맞춤). 골목 통로 칸은 끝에 남기지 않는다
+	if params.has("nbays") and (sp.get("wings", []) as Array).size() == 1:
+		var bl: Array = sp.wings[0].bays
+		var nb := clampi(int(params.nbays), 1, bl.size())
+		bl = bl.slice(0, nb)
+		while bl.size() > 1 and String(bl[bl.size() - 1].fn) == "gate": bl.pop_back()
+		sp.wings[0].bays = bl
 	return normalize(sp)
 
 static func normalize(sp: Dictionary) -> Dictionary:
@@ -145,6 +152,8 @@ static func generate(type: String, region: String, cls: String, seed: int, rs :=
 		"haengrang": sp = _haengrang(r, region, cls if cls != "" else "yangban")
 		"sadang": sp = _sadang(r, region)
 		"gotgan": sp = _gotgan(r, region, cls if cls != "" else "middle")
+		"dwitgan": sp = _dwitgan(r, region, cls if cls != "" else "commoner")
+		"oeyang": sp = _oeyang(r, region, cls if cls != "" else "commoner")
 		"araechae": sp = _araechae(r, region, cls if cls != "" else "middle")
 		"giwajip": sp = _giwajip(r, region, cls if cls != "" else "middle")
 		"dongheon": sp = _dongheon(r, region)
@@ -445,6 +454,25 @@ static func _gotgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 		roof = { kind = "giwa", form = "gable", eave = 0.8, rise_k = 0.52, lift = 0.1 } if giwa else { kind = "thatch", form = "gable", eave = 0.7, rise_k = 0.6 },
 		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [2.4], bays = bays, ends = ["gable", "gable"] }] }
 	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
+	return sp
+
+# 뒷간·잿간(1칸, 마당 뒤 구석) — 낙안읍성 민가처럼 몸채 뒤·담 곁에 붙는 작은 채
+static func _dwitgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
+	var giwa := cls in ["yangban", "middle"] and r.next() < 0.4
+	var sp := { cls = cls, wear = r.between(0.4, 0.9), base = { kind = "earth", h = 0.15 }, floor_dh = 0.0, wall = "mud", wall_h = 1.75,
+		roof = { kind = "giwa", form = "gable", eave = 0.6, rise_k = 0.5, lift = 0.05 } if giwa else { kind = "thatch", form = "gable", eave = 0.55, rise_k = 0.6 },
+		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [r.between(1.6, 1.9)], bays = [bay(r.between(1.6, 2.0), "store" if r.next() < 0.5 else "shed")], ends = ["gable", "gable"] }] }
+	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
+	return sp
+
+# 외양간(1~2칸, 소 칸 + 여물 칸) — 마당 옆·대문 곁
+static func _oeyang(r: Kit.Rng, region: String, cls: String) -> Dictionary:
+	var bays := [bay(r.between(2.2, 2.6), "stable")]
+	if r.next() < 0.6: bays.append(bay(r.between(1.6, 2.0), "shed"))
+	var sp := { cls = cls, wear = r.between(0.4, 0.9), base = { kind = "earth", h = 0.15 }, floor_dh = 0.0, wall = "mud", wall_h = 1.9,
+		roof = { kind = "thatch", form = "gable", eave = 0.65, rise_k = 0.6 }, chimney = { kind = "none" }, attach = [],
+		wings = [{ id = "main", depth = [r.between(2.2, 2.6)], bays = bays, ends = ["gable", "gable"] }] }
+	sp.roof.cols = thatch_cols(sp.wear)
 	return sp
 
 # 읍내 기와집(중인·향리·아전): 一자 3~4칸(부엌·안방·대청·건넌방), 막돌 기단, 각기둥, 흙벽/회벽, 맞배·팔작 — 양반가 안채보다 작고 낮다.
