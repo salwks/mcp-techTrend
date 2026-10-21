@@ -24,7 +24,7 @@ const N := "res://kit/nature/"
 
 # 종류: 스크립트, 기본 params, 변형 수(seed 다름), 그림자, 줄기 충돌 반지름(배율 1 기준, 0=없음), 원거리(lod1)에서 뺄지
 const KINDS := {
-	pine = { s = "pine.gd", p = {}, v = 4, cast = true, col = 0.3, tree = true },
+	pine = { s = "pine.gd", p = {}, v = 6, cast = true, col = 0.3, tree = true },
 	fir = { s = "fir.gd", p = {}, v = 1, cast = true, col = 0.25, tree = true },
 	sangsuri = { s = "oak.gd", p = { kind = "sangsuri" }, v = 3, cast = true, col = 0.4, tree = true },
 	singal = { s = "oak.gd", p = { kind = "singal" }, v = 3, cast = true, col = 0.35, tree = true },
@@ -47,7 +47,7 @@ const KINDS := {
 	sapling_singal = { s = "oak.gd", p = { kind = "singal" }, flod = 1, v = 1, cast = false, col = 0.0 },
 	sapling_gusang = { s = "korean_fir.gd", p = {}, flod = 1, v = 2, cast = false, col = 0.0 },
 	# 숲 밑 덤불: 같은 덤불을 1.2~2배로 크게(배율은 삼각형이 들지 않으니 바닥을 싸게 덮는다)
-	undergrowth = { s = "bush.gd", p = {}, v = 2, cast = false, col = 0.0 },
+	undergrowth = { s = "fern.gd", p = {}, v = 4, cast = false, col = 0.0 },   # integ-mountain: 고사리·조릿대(예전 bush 1.6~2.6배는 멀리서 둥근 바위처럼 읽혔다)
 	# 카메라 통로(§9)용 작은 나무: 수관 꼭대기 6m 이하가 되게 배율을 묶는다. LOD0 메시, 그림자 대리 없이 직접 그림자
 	small_pine = { s = "pine.gd", p = {}, v = 2, cast = true, col = 0.2 },
 	small_oak = { s = "oak.gd", p = { kind = "sangsuri" }, v = 1, cast = true, col = 0.2 },
@@ -58,7 +58,7 @@ const KINDS := {
 	rock = { s = "rock.gd", p = { s = 0.7 }, v = 3, cast = false, col = 0.6, far_skip = true },
 	rock_big = { s = "rock.gd", p = { s = 1.5, mossy = false }, v = 1, cast = true, col = 1.25 },
 	boulder = { s = "boulder.gd", p = { s = 2.2 }, v = 3, cast = true, col = -1.0 },
-	cliff = { s = "cliff.gd", p = {}, v = 2, cast = true, col = -1.0 },
+	cliff = { s = "cliff.gd", p = {}, v = 5, cast = true, col = -1.0 },   # v 5 = 벼랑 꼴 다섯(cliff.gd FORMS — seed로 고른다)
 	slab = { s = "slab_rock.gd", p = {}, v = 1, cast = true, col = 0.0 },
 	stones = { s = "stream_stones.gd", p = {}, v = 1, cast = false, col = 0.0, far_skip = true },
 	rice = { s = "rice_tuft.gd", p = { patch = 4, spacing = 1.0 }, v = 1, cast = false, col = 0.0 },
@@ -76,7 +76,7 @@ const KINDS := {
 const SCALE := {
 	pine = [1.05, 1.45], fir = [1.0, 1.35], sangsuri = [1.0, 1.35], singal = [0.9, 1.25], gusang = [0.9, 1.3], deadwood = [0.8, 1.2], snag = [0.8, 1.3],
 	zelkova = [0.95, 1.1], willow = [0.9, 1.15], broadleaf = [0.85, 1.1], persimmon = [0.85, 1.1], chestnut = [0.85, 1.15], garden = [1.0, 1.0], pumpkin = [0.8, 1.2], bamboo = [0.85, 1.15],
-	bush = [0.7, 1.2], small_pine = [0.55, 0.7], small_oak = [0.45, 0.6], small_gusang = [0.5, 0.65], undergrowth = [1.6, 2.6], sapling_pine = [0.4, 0.6], sapling_oak = [0.4, 0.6], sapling_singal = [0.4, 0.6], sapling_gusang = [0.45, 0.65], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
+	bush = [0.7, 1.2], small_pine = [0.55, 0.7], small_oak = [0.45, 0.6], small_gusang = [0.5, 0.65], undergrowth = [0.9, 1.5], sapling_pine = [0.4, 0.6], sapling_oak = [0.4, 0.6], sapling_singal = [0.4, 0.6], sapling_gusang = [0.45, 0.65], jindallae = [0.7, 1.15], cheoljjuk = [0.7, 1.2], rock = [0.6, 1.3], rock_big = [0.8, 1.3], boulder = [0.75, 1.3], cliff = [0.8, 1.2], slab = [0.8, 1.2],
 	stones = [0.8, 1.2], rice = [1.0, 1.0], crop_bean = [1.0, 1.0], crop_millet = [1.0, 1.0], crop_barley = [1.0, 1.0],
 }
 
@@ -546,7 +546,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					var near := settled * clampf((450.0 - alt) / 150.0, 0.0, 1.0)
 					var bald := near > 0.5 and Kit.vnoise(cx * 0.015 + 3.1, cz * 0.015 - 7.7) > 0.62 - near * 0.12   # 마을 쪽 산의 15~20%쯤
 					if tree_ok:
-						var tk := (0.28 if slope < 1.0 else 0.18) * tree_k * (0.35 if bald else 1.0)
+						# integ-mountain: 수관이 닫히게(멀리서 맨땅이 덜 보이게) 0.28/0.18 → 0.46/0.34
+						var tk := (0.46 if slope < 1.0 else 0.34) * tree_k * (0.35 if bald else 1.0)
 						J.emit_mix(mix_village_ids if near > 0.3 else mix_ids(alt), tk, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
 					if bald:
 						J.emit(k_cm, 0.3, cx, cz, slope, r_d)
@@ -634,6 +635,9 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					if slope > 0.7 and r_d >= 3 and rng.randf() < 0.07 + 0.16 * clampf((slope - 1.0) / 0.6, 0.0, 1.0):
 						var ry := atan2(-gxv, -gzv)   # 정면(+z)을 내리막으로
 						J.put(k_cliff, cx + (rng.randf() - 0.5) * 2, cz + (rng.randf() - 0.5) * 2, ry, lerpf(0.8, 1.2, rng.randf()), slope, r_d, false, 0.4 + slope * 1.2)
+					# integ-mountain: 바위 칸이라도 덜 가파른 데(노두 사이)는 소나무·신갈이 바위틈에 선다 — 산 비탈이 맨 바위로 비지 않게
+					if tree_ok and slope < 1.3: J.emit_mix(mix_ids(alt), (0.22 if slope < 1.0 else 0.12) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					if slope < 1.3: J.emit_even(k_under, 0.12 * bush_k, cx, cz, slope, r_d, ((j + 2) % 4) * 4 + ((i + 1) % 4))
 					J.emit(k_boul, 0.04, cx, cz, slope, r_d)
 					J.emit(k_rockb, 0.07, cx, cz, slope, r_d)
 					J.emit(k_rock, 0.2, cx, cz, slope, r_d)

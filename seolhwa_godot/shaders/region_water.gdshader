@@ -77,10 +77,12 @@ void fragment() {
 	float s1 = texture(wnrm_tex, vec2(along * 0.025 - t * spd * 0.25, across * 0.6)).a;
 	float s2 = texture(wnrm_tex, vec2(along * 0.06 - t * spd * 0.35 + 0.37, across * 1.1 + 0.5)).a;
 	float streak = s1 * 0.65 + s2 * 0.35;
-	float foam = smoothstep(0.5, 0.82, streak) * rapid * 0.8;
+	// 산골 개울(폭 ~10m 아래 — integ-mountain): 맑고 얕아 바닥 냇돌이 비치고, 흰 물살은 정말 센 여울(폭포 아래·급경사)에만
+	float narrow = 1.0 - smoothstep(6.0, 14.0, v_c.b * 40.0);
+	float foam = smoothstep(0.5, 0.82, streak) * rapid * 0.8 * mix(1.0, smoothstep(0.62, 0.95, rapid) * smoothstep(0.62, 0.8, streak), narrow);
 	// 물가선: 아주 얕은 띠에 이어진 옅은 젖은 테(줄 결로만 살짝 끊김)
 	float lip = (1.0 - smoothstep(0.0, 0.07, d)) * (0.55 + 0.45 * s1) * has_depth;
-	foam = max(foam, lip * 0.35);
+	foam = max(foam, lip * mix(0.35, 0.12, narrow));
 	vec3 v = normalize((INV_VIEW_MATRIX * vec4(VIEW, 0.0)).xyz);
 	float dist = length(VERTEX);
 	float F = w_fresnel(nw, v) * mix(1.0, 0.55, shallow) * refl_gain;
@@ -90,7 +92,8 @@ void fragment() {
 	float ink = water_ink * (1.0 - smoothstep(0.0, 0.05, uv_edge)) * 0.5;
 	alb = mix(alb, vec3(0.05, 0.055, 0.05), ink);
 	float edge = smoothstep(0.0, 0.12, uv_edge);
-	float a = mix(0.97, 0.6, shallow) * mix(0.5, 1.0, edge);
+	float a = mix(mix(0.97, 0.6, shallow), mix(0.7, 0.3, shallow), narrow) * mix(0.5, 1.0, edge);
+	alb = mix(alb, alb * vec3(0.7, 0.85, 0.85), narrow * (1.0 - foam));   // 맑은 물: 바닥색을 덮는 흙빛을 덜고 푸르스름하게
 	a = max(a, foam * 0.9);
 	vec3 emis = refl * F * (1.0 - foam);
 	if (dry > 0.5) {

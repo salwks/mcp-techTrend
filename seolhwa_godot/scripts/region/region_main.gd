@@ -966,6 +966,7 @@ const FP_LOOK_SEC := 0.4      # 말하는 이·물건 쪽으로 돌아보는 시
 const FP_CUT_IN := 0.6        # 눈높이 → 저작 구도(shot은 바로)
 const FP_CUT_OUT := 0.5       # 저작 구도 → 눈높이(shot이었으면 바로)
 const FP_FAR_MTN := 4500.0    # 산 지형 권역(height.remap — mountain-terrain): 1인칭에서도 실제 먼 산줄기(지형·원경)가 보이게. 물체는 안개로 200m 남짓에서 사라진다
+const FP_FAR_MTN_LOW := 1500.0   # 화면 품질 낮음(integ-mountain 결정): 산 권역 1인칭 먼 끝을 1.5km로 — 가까운 산줄기까지만
 const FP_FAR := 260.0         # 1인칭 카메라 먼 끝(m) — 3인칭 6000. 한양 1인칭(2048×1536): 6000 → 45fps · 420 → 62 · 250 → 82 — 안개 너머라 화면은 같다
 var first_person := false
 var fp_active := false
@@ -1040,7 +1041,7 @@ func _fp_cam_eye(on: bool) -> void:
 	if on:
 		cam.cull_mask &= ~PLAYER_LAYER
 		cam.near = 0.1   # 벽 곁에서 벽이 잘리지 않게
-		cam.far = float(args.get("fpfar", str(FP_FAR_MTN if not world.remap_dst.is_empty() else FP_FAR)))   # 눈높이는 지평선 너머 도시 전체가 든다 — 멀리는 하늘 그림판의 먼 산·안개가 맡는다
+		cam.far = float(args.get("fpfar", str((FP_FAR_MTN_LOW if gfx_low() else FP_FAR_MTN) if not world.remap_dst.is_empty() else FP_FAR)))   # 눈높이는 지평선 너머 도시 전체가 든다 — 멀리는 하늘 그림판의 먼 산·안개가 맡는다
 	else:
 		cam.cull_mask |= PLAYER_LAYER
 		cam.near = 0.5
