@@ -1,26 +1,272 @@
-{ "sets": { "mtn": {
-  "views": [
-    {"id": "n1_town_north", "label": "남원 북문 밖(마을 카메라)", "mode": "town", "x": -3228, "z": 110},
-    {"id": "n2_std_north", "label": "남원 북문 밖(기본 카메라)", "mode": "std", "x": -3228, "z": 110},
-    {"id": "n3_town_hyanggyo", "label": "향교 앞(마을 카메라)", "mode": "town", "x": -3247, "z": -70},
-    {"id": "n4_game_baesan", "label": "서북쪽 배산 기슭(게임 카메라)", "mode": "town", "x": -3530, "z": 75},
-    {"id": "n5_fp_gyoryong", "label": "남문 밖 1인칭 → 교룡산", "mode": "fp", "x": -3228, "z": 380, "yaw": -48, "pitch": 4},
-    {"id": "n6_fp_yeowon", "label": "남원 들 1인칭 → 여원치 줄기", "mode": "fp", "x": -3110, "z": 470, "yaw": 70, "pitch": 3},
-    {"id": "n7_fp_jiri", "label": "남원 들 1인칭 → 지리산 쪽", "mode": "fp", "x": -3110, "z": 470, "yaw": 112, "pitch": 3},
-    {"id": "p1_std_foot", "label": "여원재 들머리(기본 카메라)", "mode": "std", "x": -725, "z": -732},
-    {"id": "p2_fp_foot", "label": "들머리 1인칭 → 재", "mode": "fp", "x": -725, "z": -732, "yaw": 60, "pitch": 6},
-    {"id": "p3_game_jumak", "label": "아랫주막(게임 카메라)", "mode": "town", "x": -300, "z": -885},
-    {"id": "p4_game_switch", "label": "갈지자 고갯길(게임 카메라)", "mode": "town", "x": -308, "z": -996},
-    {"id": "p5_game_valley", "label": "계곡길·골물(게임 카메라)", "mode": "town", "x": -170, "z": -905},
-    {"id": "p6_game_falls", "label": "골 폭포(게임 카메라)", "mode": "town", "x": -112, "z": -926},
-    {"id": "p7_fp_falls", "label": "골 폭포 1인칭", "mode": "fp", "x": -105, "z": -930, "yaw": -70, "pitch": 6},
-    {"id": "p8_game_top", "label": "재 마루 쉼터(전망 구도 — 남원 쪽)", "mode": "town", "x": 14, "z": -966},
-    {"id": "p9_fp_top_back", "label": "재 마루 1인칭 → 남원 분지", "mode": "fp", "x": 14, "z": -966, "yaw": -110, "pitch": -3},
-    {"id": "pa_fp_top_east", "label": "재 마루 1인칭 → 운봉 고원·지리산", "mode": "fp", "x": 70, "z": -975, "yaw": 95, "pitch": 0},
-    {"id": "pb_fp_ridge", "label": "능선 봉우리 1인칭(서)", "mode": "fp", "x": -326, "z": -1134, "yaw": -120, "pitch": -2},
-    {"id": "pc_fp_ridge_jiri", "label": "능선 봉우리 1인칭(남동 → 지리산)", "mode": "fp", "x": -326, "z": -1134, "yaw": 150, "pitch": 1},
-    {"id": "pd_game_peak", "label": "능선 봉우리(전망 구도)", "mode": "town", "x": -326, "z": -1134},
-    {"id": "o1_over_pass", "label": "여원재 내려다보기(안개 끔)", "mode": "over", "x": -250, "z": -900, "pitch": 34, "yaw": -150, "dist": 650, "fov": 40, "fog": false, "wait": 3.0},
-    {"id": "o2_over_town", "label": "남원·교룡산 내려다보기(안개 끔)", "mode": "over", "x": -3500, "z": -50, "pitch": 26, "yaw": 160, "dist": 900, "fov": 40, "fog": false, "wait": 3.0}
-  ]
-}}}
+{
+ "sets": {
+  "mtn": {
+   "views": [
+    {
+     "id": "n1_town_north",
+     "label": "남원 북문 밖(마을 카메라)",
+     "mode": "town",
+     "x": -3228,
+     "z": 110
+    },
+    {
+     "id": "n2_std_north",
+     "label": "남원 북문 밖(기본 카메라)",
+     "mode": "std",
+     "x": -3228,
+     "z": 110
+    },
+    {
+     "id": "n3_town_hyanggyo",
+     "label": "향교 앞(마을 카메라)",
+     "mode": "town",
+     "x": -3247,
+     "z": -70
+    },
+    {
+     "id": "n4_game_baesan",
+     "label": "서북쪽 배산 기슭(게임 카메라)",
+     "mode": "town",
+     "x": -3530,
+     "z": 75
+    },
+    {
+     "id": "n5_fp_gyoryong",
+     "label": "남문 밖 1인칭 → 교룡산",
+     "mode": "fp",
+     "x": -3228,
+     "z": 380,
+     "yaw": -48,
+     "pitch": 4
+    },
+    {
+     "id": "n6_fp_yeowon",
+     "label": "남원 들 1인칭 → 여원치 줄기",
+     "mode": "fp",
+     "x": -3110,
+     "z": 470,
+     "yaw": 70,
+     "pitch": 3
+    },
+    {
+     "id": "n7_fp_jiri",
+     "label": "남원 들 1인칭 → 지리산 쪽",
+     "mode": "fp",
+     "x": -3110,
+     "z": 470,
+     "yaw": 112,
+     "pitch": 3
+    },
+    {
+     "id": "p1_std_foot",
+     "label": "여원재 들머리(기본 카메라)",
+     "mode": "std",
+     "x": -725,
+     "z": -732
+    },
+    {
+     "id": "p2_fp_foot",
+     "label": "들머리 1인칭 → 재",
+     "mode": "fp",
+     "x": -725,
+     "z": -732,
+     "yaw": 60,
+     "pitch": 6
+    },
+    {
+     "id": "p3_game_jumak",
+     "label": "아랫주막(게임 카메라)",
+     "mode": "town",
+     "x": -300,
+     "z": -885
+    },
+    {
+     "id": "p4_game_switch",
+     "label": "갈지자 고갯길(게임 카메라)",
+     "mode": "town",
+     "x": -308,
+     "z": -996
+    },
+    {
+     "id": "p5_game_valley",
+     "label": "계곡길·골물(게임 카메라)",
+     "mode": "town",
+     "x": -170,
+     "z": -905
+    },
+    {
+     "id": "p6_game_falls",
+     "label": "골 폭포(게임 카메라)",
+     "mode": "town",
+     "x": -112,
+     "z": -926
+    },
+    {
+     "id": "p7_fp_falls",
+     "label": "골 폭포 1인칭",
+     "mode": "fp",
+     "x": -105,
+     "z": -930,
+     "yaw": -70,
+     "pitch": 6
+    },
+    {
+     "id": "p8_game_top",
+     "label": "재 마루 쉼터(전망 구도 — 남원 쪽)",
+     "mode": "town",
+     "x": 14,
+     "z": -966
+    },
+    {
+     "id": "p9_fp_top_back",
+     "label": "재 마루 1인칭 → 남원 분지",
+     "mode": "fp",
+     "x": 14,
+     "z": -966,
+     "yaw": -110,
+     "pitch": -3
+    },
+    {
+     "id": "pa_fp_top_east",
+     "label": "재 마루 1인칭 → 운봉 고원·지리산",
+     "mode": "fp",
+     "x": 70,
+     "z": -975,
+     "yaw": 95,
+     "pitch": 0
+    },
+    {
+     "id": "pb_fp_ridge",
+     "label": "능선 봉우리 1인칭(서)",
+     "mode": "fp",
+     "x": -326,
+     "z": -1134,
+     "yaw": -120,
+     "pitch": -2
+    },
+    {
+     "id": "pc_fp_ridge_jiri",
+     "label": "능선 봉우리 1인칭(남동 → 지리산)",
+     "mode": "fp",
+     "x": -326,
+     "z": -1134,
+     "yaw": 150,
+     "pitch": 1
+    },
+    {
+     "id": "pd_game_peak",
+     "label": "능선 봉우리(전망 구도)",
+     "mode": "town",
+     "x": -326,
+     "z": -1134
+    },
+    {
+     "id": "o1_over_pass",
+     "label": "여원재 내려다보기(안개 끔)",
+     "mode": "over",
+     "x": -250,
+     "z": -900,
+     "pitch": 34,
+     "yaw": -150,
+     "dist": 650,
+     "fov": 40,
+     "fog": false,
+     "wait": 3.0
+    },
+    {
+     "id": "o2_over_town",
+     "label": "남원·교룡산 내려다보기(안개 끔)",
+     "mode": "over",
+     "x": -3500,
+     "z": -50,
+     "pitch": 26,
+     "yaw": 160,
+     "dist": 900,
+     "fov": 40,
+     "fog": false,
+     "wait": 3.0
+    },
+    {
+     "id": "r1_game_cliff",
+     "label": "벼랑·바위 비탈(남쪽 골, 게임 카메라)",
+     "mode": "town",
+     "x": -150,
+     "z": -880
+    },
+    {
+     "id": "r2_fp_cliff",
+     "label": "계곡길 위 벼랑 1인칭",
+     "mode": "fp",
+     "x": -173.3,
+     "z": -898.7,
+     "yaw": 155,
+     "pitch": 14
+    },
+    {
+     "id": "r2b_fp_cliff_road",
+     "label": "갈지자 대로 위 벼랑 1인칭",
+     "mode": "fp",
+     "x": -302.7,
+     "z": -996.8,
+     "yaw": 0,
+     "pitch": 12
+    },
+    {
+     "id": "r3_fp_ridge_rock",
+     "label": "능선길 암릉 1인칭",
+     "mode": "fp",
+     "x": -246,
+     "z": -1100,
+     "yaw": -60,
+     "pitch": 2
+    },
+    {
+     "id": "r4_game_gyoryong_rock",
+     "label": "교룡산 정상 바위(게임 카메라)",
+     "mode": "town",
+     "x": -3990,
+     "z": -405
+    },
+    {
+     "id": "r5_game_stream",
+     "label": "계곡 개울 — 돌·너럭바위(게임 카메라)",
+     "mode": "town",
+     "x": -210,
+     "z": -893
+    },
+    {
+     "id": "r6_fp_stream",
+     "label": "계곡 개울 1인칭(상류 쪽)",
+     "mode": "fp",
+     "x": -215,
+     "z": -893,
+     "yaw": 80,
+     "pitch": -8
+    },
+    {
+     "id": "r7_game_yocheon",
+     "label": "요천 기슭(광한루 남쪽, 게임 카메라)",
+     "mode": "town",
+     "x": -3253,
+     "z": 512
+    },
+    {
+     "id": "r8_fp_yocheon",
+     "label": "요천 기슭 1인칭",
+     "mode": "fp",
+     "x": -3240,
+     "z": 505,
+     "yaw": -100,
+     "pitch": -6
+    },
+    {
+     "id": "m1_map",
+     "label": "지도(권역 — 여원치 둘레, 지도 열기)",
+     "mode": "town",
+     "x": -300,
+     "z": -880
+    }
+   ]
+  }
+ }
+}

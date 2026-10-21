@@ -108,6 +108,9 @@ var _bench_dir := 0.0
 var _bench_speed := RUN
 var _bench_dist := 0.0
 var _bench_start := Vector3.ZERO
+# --benchroute=<길 id>[:x0,z0,x1,z1] — 자동 걷기가 그 길의 점(범위 안)을 차례로 따라간다(산 지형 성능: 여원재 오르막 등)
+var _bench_route := PackedVector2Array()
+var _bench_rk := 0
 var _lights_seen := -1
 var _glow_shader: Shader
 var _glow_mats := {}   # 종류 → [ShaderMaterial, QuadMesh]
@@ -254,6 +257,17 @@ func _ready() -> void:
 	if args.has("devtravel"): DevTravel.set_on(true)
 	if args.has("bench"):
 		_bench_left = float(args.bench)
+		if args.has("benchroute"):
+			var sp_: PackedStringArray = String(args.benchroute).split(":")
+			var bb := [-1e9, -1e9, 1e9, 1e9]
+			if sp_.size() > 1:
+				var q_: PackedStringArray = sp_[1].split(",")
+				bb = [float(q_[0]), float(q_[1]), float(q_[2]), float(q_[3])]
+			for r_ in world.region.get("roads", []):
+				if String(r_.id) != sp_[0]: continue
+				for p_ in r_.points:
+					if float(p_[0]) >= bb[0] and float(p_[1]) >= bb[1] and float(p_[0]) <= bb[2] and float(p_[1]) <= bb[3]: _bench_route.append(Vector2(float(p_[0]), float(p_[1])))
+			if not _bench_route.is_empty(): teleport(_bench_route[0].x, _bench_route[0].y)
 		_bench_speed = float(args.get("benchspeed", str(RUN)))
 		_bench_start = player_pos
 		Engine.max_fps = 0
@@ -1192,6 +1206,9 @@ func _process(delta: float) -> void:
 			print("BENCH initial_load_s=%.1f" % _bench_load_t)
 	elif _bench_left > 0.0:
 		mv = Vector2(sin(_bench_dir), -cos(_bench_dir))
+		if not _bench_route.is_empty():
+			while _bench_rk < _bench_route.size() and Vector2(_bench_route[_bench_rk].x - player_pos.x, _bench_route[_bench_rk].y - player_pos.z).length() < 0.6: _bench_rk += 1
+			mv = (_bench_route[_bench_rk] - Vector2(player_pos.x, player_pos.z)).normalized() if _bench_rk < _bench_route.size() else Vector2.ZERO
 		speed = _bench_speed
 		_bench_left -= delta
 		_bench_frames += 1; _bench_time += delta
@@ -1223,7 +1240,8 @@ func _process(delta: float) -> void:
 			player.set_anim("run" if speed > WALK else "walk")
 		else:
 			player.set_anim("idle")
-			if _bench_left > 0.0: _bench_dir += 1.3 + randf()  # 막히면 방향을 바꾼다
+			if _bench_left > 0.0 and _bench_route.is_empty(): _bench_dir += 1.3 + randf()  # 막히면 방향을 바꾼다
+			elif _bench_left > 0.0: _bench_rk += 1; print("BENCH route blocked at ", player_pos)   # 길 따라 걷기: 막히면 다음 점
 	else:
 		player.set_anim("idle")
 	if _bench_left > 0.0: _bench_dir += sin(clock * 0.21) * 0.004

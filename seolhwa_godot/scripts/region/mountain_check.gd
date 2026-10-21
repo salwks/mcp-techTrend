@@ -1,11 +1,11 @@
-# 산 지형 점검(mountain-terrain) — region_main --mtncheck=walk|perf. 시험 저장으로만(--savefile), 창 필요.
+# 산 지형 점검(mountain-terrain) — region_main --mtncheck=walk|routes|probe:…. 시험 저장으로만(--savefile), 창 필요.
 #   godot --path . res://scenes/region.tscn --resolution 1920x1080 -- --region=JL_NAMWON_UNBONG --mtncheck=walk \
 #     --savefile=user://mtn_test.json --kitcache=/tmp/seolhwa_mtn_kit_cache/ --nostory --notitle --time=11 --weather=clear
 #   walk : mountain.json 산길 경로(길 id의 점들)를 플레이어 판정(move_circle 8cm 걸음)으로 끝까지 걷는다 — 막힌 곳·구배.
 #          + 땅·충돌 같음(원경 16m 격자 실루엣 오차), 떠 있거나 묻힌 건물·소품·나무, 가파른 비탈 막힘 규칙, 카메라가 비탈에 묻히지 않음,
 #          고을(평지)에서는 카메라 올림이 0인지. 끝 줄: MTNPASS n / MTNFAIL n
-#   perf : --mtnroute=<경로 id>(기본 yeowonchi) --mtnspeed=2.2 --mtnsec=40 — 그 경로를 게임 카메라로 걸으며 프레임 시간(평균·p99·최악)
-#          (불러오기가 끝난 뒤부터, 키트 캐시 더움 권장). 줄: MTNPERF …
+#   probe:x,z;x,z : 그 자리의 높이·기울기·막힘·충돌체(디버그)
+#   성능은 region_main --bench=초 --benchroute=<길 id>[:x0,z0,x1,z1] --benchspeed=m/s (tools/mountain/bench.sh)
 extends RefCounted
 
 var main
@@ -44,8 +44,10 @@ func route_points(rt: Dictionary) -> Array:
 	for id in rt.get("roads", []):
 		var pts := _road(String(id))
 		var seg := []
+		var bb: Array = rt.get("bbox", [-1e9, -1e9, 1e9, 1e9])
 		for p in pts:
 			if String(id) == "tongyeong_byeolro" and not (float(p[0]) > -1010.0 and float(p[0]) < 140.0 and float(p[1]) > -1010.0 and float(p[1]) < -540.0): continue
+			if float(p[0]) < float(bb[0]) or float(p[1]) < float(bb[1]) or float(p[0]) > float(bb[2]) or float(p[1]) > float(bb[3]): continue
 			seg.append(Vector2(float(p[0]), float(p[1])))
 		if not seg.is_empty(): out.append({ id = String(id), pts = seg })
 	return out
@@ -53,7 +55,6 @@ func route_points(rt: Dictionary) -> Array:
 func run(spec: String) -> void:
 	mj = main.world.mountain
 	main.set_first_person(false, false)
-	if spec == "perf": await _perf(); return
 	if spec.begins_with("probe:"):
 		for q in spec.substr(6).split(";"):
 			var xz := q.split(",")
@@ -274,48 +275,3 @@ func _camera_checks() -> void:
 		for f in 4: rig.update(0.1, main.player_pos, "up", null, f == 0)
 		if rig._lift > 0.001: town_lift += 1; print("MTNCAM town lift at ", p, " = ", rig._lift)
 	_ok(town_lift == 0, "고을 평지에서 카메라 올림 없음(마을 카메라 값 그대로)")
-
-# ---- 성능: 경로를 게임 카메라로 걷기
-func _perf() -> void:
-	var w = main.world
-	var rid: String = main.args.get("mtnroute", "yeowonchi")
-	var spd := float(main.args.get("mtnspeed", "2.2"))
-	var secs := float(main.args.get("mtnsec", "40"))
-	var rt := {}
-	for r in mj.get("routes", []):
-		if String(r.id) == rid: rt = r
-	var parts := route_points(rt)
-	if parts.is_empty(): print("MTNPERF no route ", rid); main._quit(); return
-	var pts: Array = parts[0].pts
-	main.teleport(pts[0].x, pts[0].y)
-	await _wait_load(); await _sec(2.0)
-	var dts := PackedFloat32Array()
-	var k := 1
-	var t_end := Time.get_ticks_msec() + int(secs * 1000.0)
-	var last := Time.get_ticks_usec()
-	var tris := 0.0; var draws := 0.0; var nfr := 0
-	while Time.get_ticks_msec() < t_end and k < pts.size():
-		await main._wait_frames(1)
-		var now := Time.get_ticks_usec(); var dt := (now - last) / 1e6; last = now
-		dts.append(dt)
-		tris += RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
-		draws += RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME); nfr += 1
-		var budget := spd * dt
-		while budget > 0.0 and k < pts.size():
-			var t: Vector2 = pts[k]
-			var pos: Vector3 = main.player_pos
-			var v := Vector2(t.x - pos.x, t.y - pos.z)
-			if v.length() < 0.15: k += 1; continue
-			var st := v.normalized() * minf(budget, v.length())
-			var q = w.move_circle(pos, st.x, st.y, main.player.radius)
-			if q == null or Vector2(q.x - pos.x, q.z - pos.z).length() < 0.001:
-				q = Vector3(t.x, 0, t.y); k += 1
-			budget -= st.length()
-			main.player_pos = Vector3(q.x, w.height_at(q.x, q.z), q.z)
-			main.player.position = main.player_pos
-			main.player.facing = main.facing_from(st.x, st.y, main.player.facing)
-	var s := dts.duplicate(); s.sort()
-	var sum := 0.0
-	for d in dts: sum += d
-	print("MTNPERF route=%s speed=%.1f frames=%d avg_fps=%.1f p99_ms=%.1f worst_ms=%.1f over33=%d tris=%dk draws=%d" % [rid, spd, dts.size(), dts.size() / maxf(sum, 1e-6), s[int(s.size() * 0.99)] * 1000.0, s[s.size() - 1] * 1000.0, Array(dts).filter(func(d): return d > 0.0333).size(), int(tris / maxi(nfr, 1) / 1000.0), int(draws / maxi(nfr, 1))])
-	main._quit()

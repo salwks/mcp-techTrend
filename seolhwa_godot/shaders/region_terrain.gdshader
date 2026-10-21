@@ -132,7 +132,12 @@ vec3 lu_color(int c, vec2 p, float n1, float n2, vec4 cq, float block_edge, inou
 			vec3 c5 = mix(grav, C_BOULDER * (0.9 + 0.2 * n1), rock);
 			return mix(c5, C_BASALT * 0.6, rim * 0.7);
 		}
-		return C_BED;
+		// 하상(mountain-terrain): 물에 닳은 둥근 돌·자갈 바닥 — 물이 반투명이라 비친다
+		float bv = r_vnoise(p * 0.8) * 0.65 + r_vnoise(p * 2.1 + vec2(3.7, 1.9)) * 0.35;
+		float st = smoothstep(0.56, 0.62, bv);
+		vec3 bed = mix(C_BED, C_BED * 1.25, clamp(0.5 + n2, 0.0, 1.0));
+		bed = mix(bed, C_BOULDER * (0.8 + 0.25 * n1), st);
+		return mix(bed, C_BED * 0.6, (smoothstep(0.5, 0.55, bv) - st) * 0.6);
 	}
 	// 마을 터: 웹 마을 땅처럼 풀밭 + 마른 흙 얼룩(맨 흙은 건물 둘레·길에만 — 칠하기 텍스처)
 	if (c == 6) {
@@ -140,8 +145,23 @@ vec3 lu_color(int c, vec2 p, float n1, float n2, vec4 cq, float block_edge, inou
 		g = mix(g, C_DRY, clamp(n2 * 0.5 + 0.1, 0.0, 0.4));
 		return mix(g, C_LANE, smoothstep(0.25, 0.55, n1 + n2 * 0.2) * 0.35);
 	}
-	if (c == 7) return mix(C_ROCK, C_CLIFF, clamp(0.5 + n1 * 1.5, 0.0, 1.0));
-	if (c == 8) return mix(C_SAND, C_BANK, clamp(0.5 + n2, 0.0, 1.0));
+	if (c == 7) {
+		// 드러난 바위(mountain-terrain): 화강암 바탕 + 층리(높이 따라 결) + 금(먹빛 갈라짐) + 이끼·지의 얼룩
+		vec3 rk = mix(C_ROCK * 1.08, C_CLIFF, clamp(0.5 + n1 * 1.5, 0.0, 1.0));
+		float strata = smoothstep(0.82, 0.95, fract(v_wp.y * 0.55 + r_vnoise(p * 0.12) * 1.4));
+		rk = mix(rk, C_CLIFF * 0.72, strata * 0.55);
+		float crack = 1.0 - smoothstep(0.0, 0.035, abs(r_vnoise(p * 0.35 + vec2(7.0, 2.0)) - 0.5));
+		rk = mix(rk, vec3(0.20, 0.19, 0.18), crack * 0.5);
+		return mix(rk, C_FOREST2 * 0.9, smoothstep(0.62, 0.8, r_vnoise(p * 0.07 + vec2(1.3, 9.1))) * 0.45);
+	}
+	if (c == 8) {
+		// 자갈·모래 기슭 / 너덜: 모래 바탕에 둥근 돌(물가에서 멀수록 모난 돌이 많다 — 셰이더는 한 무늬)
+		vec3 sb = mix(C_SAND, C_BANK, clamp(0.5 + n2, 0.0, 1.0));
+		float gv = r_vnoise(p * 1.1) * 0.6 + r_vnoise(p * 3.0 + vec2(5.1, 2.3)) * 0.4;
+		float pb = smoothstep(0.58, 0.64, gv);
+		sb = mix(sb, C_BOULDER * (0.85 + 0.2 * n1), pb);
+		return mix(sb, C_CLIFF * 0.7, (smoothstep(0.53, 0.58, gv) - pb) * 0.5);
+	}
 	return mix(C_BAMBOO, C_FOREST2, clamp(0.5 + n1, 0.0, 1.0));
 }
 
@@ -565,6 +585,9 @@ void fragment() {
 			mix(lu_color(cc, p, n1, n2, cq, block_edge, wc), lu_color(cd, p, n1, n2, cq, block_edge, wd), t.x), t.y);
 		water = mix(mix(wa, wb, t.x), mix(wc, wd, t.x), t.y);
 	}
+	// 젖은 기슭(mountain-terrain): 물(5) 칸 곁은 짙고 푸르스름하게
+	float wetb = mix(mix(float(ca == 5), float(cb == 5), t.x), mix(float(cc == 5), float(cd == 5), t.x), t.y);
+	col = mix(col, col * vec3(0.72, 0.76, 0.78), clamp(wetb * 2.0, 0.0, 1.0) * (1.0 - water));
 	// 붓질 같은 얼룩(웹과 같은 식)
 	float br = tn(vec2(p.x * 0.044 + p.y * 0.015, p.y * 0.0625) + vec2(0.8, 0.4));
 	col = mix(col, C_FOREST2, clamp(br - 0.15, 0.0, 0.3) * 0.5);

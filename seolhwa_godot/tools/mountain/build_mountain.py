@@ -381,6 +381,7 @@ def main():
 	det = (ridged(n1) - 0.62) * 13.0 + (ridged(n2) - 0.62) * 5.0 + (n3 - 0.5) * 2.2
 	mask = sstep(0.22, 0.6, slope) * sstep(40.0, 90.0, H) * sstep(10.0, 40.0, dprot)
 	H += det * mask
+	H_pre = H.copy()   # 물·길 깎기 전(절개면 찾기)
 	log("산 디테일: 최대 |Δ| %.1fm, 적용 비율 %.1f%%" % (np.abs(det * mask).max(), (mask > 0.05).mean() * 100))
 
 	anchors = []; new_roads = []; new_rivers = []; new_cross = []; props = []
@@ -708,15 +709,123 @@ def main():
 			else: k += 1
 	log("건널목 %d곳" % len(new_cross))
 
-	# ---- 7) 바위·벼랑: 아주 가파른 숲 비탈 → 토지이용 7
-	gy, gx = np.gradient(ndimage.uniform_filter(H, 3), CELL); slope = np.hypot(gx, gy)
-	sl4 = slope[::2, ::2][:LU.shape[0], :LU.shape[1]]
-	dprot4 = (ndimage.distance_transform_edt(~prot) * CELL)[::2, ::2][:LU.shape[0], :LU.shape[1]]
+	# ---- 7) 바위가 드러난 땅: 벼랑·바위 비탈(기울기) · 길을 깎은 절개면 · 암릉(능선 마루) · 너덜(벼랑 발치) · 물길 바닥과 기슭
+	#   토지이용 7(바위·벼랑) / 8(자갈·모래·너덜)이면 식생(scatter)이 벼랑·큰 바위·바위·너덜 덮개·여울 돌을 실제 메시(+충돌)로 놓고,
+	#   지형 셰이더는 바위결(층리·금)·자갈 무늬·젖은 기슭으로 칠한다. (material-lighting 병합 때 7 → M_ROCK, 8 → M_PATH/자갈, 5 → 하상 돌)
+	LW, LH = LU.shape[1], LU.shape[0]
+	def to4(a): return a[::2, ::2][:LH, :LW]
+	Hs3 = ndimage.uniform_filter(H, 3)
+	gy, gx = np.gradient(Hs3, CELL); slope = np.hypot(gx, gy)
+	sl4 = to4(slope); H4 = to4(H)
+	dprot4 = to4(ndimage.distance_transform_edt(~prot) * CELL)
+	cut4 = to4(H_pre - H)                                  # 길·물을 깎아 낮아진 깊이(+ = 절개)
+	ridge4 = to4(H - ndimage.gaussian_filter(H, 6.0))      # 둘레보다 솟은 정도(능선 마루 +)
 	rn = value_noise(LU.shape, 9, np.random.default_rng(SEED + 7))
-	rock = (sl4 > 1.0 + 0.5 * rn) & ((LU & 127) == 0) & (dprot4 > 6.0)
-	rock = ndimage.binary_opening(rock, iterations=1)
+	rn2 = value_noise(LU.shape, 4, np.random.default_rng(SEED + 9))
+	luc = LU & 127
+	soft = np.isin(luc, [0, 1])
+	steep = (sl4 > 1.0 + 0.45 * rn) & soft & (dprot4 > 4.0)
+	steep = ndimage.binary_opening(steep, iterations=1)
+	cutbank = (cut4 > 1.2) & (sl4 > 0.6) & soft
+	amneung = (ridge4 > 4.0) & (sl4 > 0.35) & (H4 > 130.0) & (rn2 > 0.62) & soft & (dprot4 > 4.0)
+	rock = steep | cutbank | amneung
 	LU[rock] = 7
-	log("바위·벼랑 토지이용: %d칸(%.2f%%)" % (rock.sum(), rock.mean() * 100))
+	# 너덜: 바위 칸에서 12m 안 아래쪽(더 낮은) 비탈
+	dist_r, idx_r = ndimage.distance_transform_edt(~rock, return_indices=True)
+	hr = H4[idx_r[0], idx_r[1]]
+	scree = (~rock) & (dist_r * LCELL <= 8.0) & (H4 < hr - 1.5) & (sl4 > 0.35) & (sl4 < 1.0) & np.isin(LU & 127, [0, 1]) & (rn2 > 0.58) & (dprot4 > 4.0)
+	LU[scree] = 8
+	log("바위 드러남: 비탈 %d · 절개면 %d · 암릉 %d · 너덜 %d칸 (바위 %.2f%%)" % (steep.sum(), cutbank.sum(), amneung.sum(), scree.sum(), (LU & 127 == 7).mean() * 100))
+	# 물길: 바닥(5)을 물폭만큼 확실히, 기슭 띠는 들·마을 냇가면 자갈·모래(8), 산골·가파른 기슭이면 바위(7)
+	cl = np.zeros(LU.shape, bool); wgrid = np.zeros(LU.shape); ggrid = np.zeros(LU.shape)
+	for r in rivers + new_rivers:
+		w = max(float(r.get("width_m", 2.5)), 5.2); g = {"B": 7.0, "C": 4.5}.get(r.get("grade", "D"), 3.0)
+		pts = np.array([p[:2] for p in r["points"]], float)
+		xy, _ = resample(pts, 2.0)
+		jj = np.clip(np.round((xy[:, 1] - Z0) / LCELL).astype(int), 0, LH - 1); ii = np.clip(np.round((xy[:, 0] - X0) / LCELL).astype(int), 0, LW - 1)
+		cl[jj, ii] = True; wgrid[jj, ii] = np.maximum(wgrid[jj, ii], w); ggrid[jj, ii] = np.maximum(ggrid[jj, ii], g)
+	dw, iw = ndimage.distance_transform_edt(~cl, return_indices=True)
+	dw = dw * LCELL
+	ww = wgrid[iw[0], iw[1]]; bw = ggrid[iw[0], iw[1]]
+	chw = ww / 2.0 * 0.8
+	busy = np.zeros(shape, bool)   # 길·배치(물은 뺀다 — 물가 띠를 칠해야 하므로)
+	for r in roads + new_roads: busy |= raster_polyline(shape, [p[:2] for p in r["points"]], float(r.get("width_m", 3)) / 2 + 1.0)
+	for it in [it for d in pl.values() for it in d["items"]] + sp["items"]:
+		j = int((it["z"] - Z0) / CELL); i = int((it["x"] - X0) / CELL); busy[max(0, j - 4):j + 5, max(0, i - 4):i + 5] = True
+	settled = np.isin(luc, [4, 6]) | to4(busy)
+	core = (dw <= chw) & ~settled
+	LU[core & ((LU & 127) != 5)] = 5
+	band = (dw > chw) & (dw <= chw + bw * (0.7 + 0.6 * rn)) & ~settled & np.isin(LU & 127, [0, 1, 2, 3, 9]) & ~((np.isin(LU & 127, [2, 3])) & (dw > chw + 1.5))
+	rocky_bank = band & ((sl4 > 0.45) | ((H4 > 95.0) & (bw <= 3.0)))
+	LU[rocky_bank] = 7
+	LU[band & ~rocky_bank] = 8
+	log("물길: 바닥 %d · 자갈·모래 기슭 %d · 바위 기슭 %d칸" % (core.sum(), (band & ~rocky_bank).sum(), rocky_bank.sum()))
+	# ---- 7b) 큰 벼랑·암릉 바위(실제 메시 + 충돌 — 배치 소품): 길에서 보이는 가장 가파른 비탈과 능선 마루
+	#   벼랑: 비탈 발치(내리막 쪽)에 밑동을 두고 윗비탈 높이까지 솟게(h = 위 땅 − 발치 + 1.5m), 정면(+z)이 내리막. 길 중심에서 7m 넘게.
+	#   암릉: 능선 마루(둘레보다 4m 넘게 솟은 곳)에 큰 바위 무더기.
+	S6 = ndimage.gaussian_filter(H, 3.0)
+	gy6, gx6 = np.gradient(S6, CELL); sl6 = np.hypot(gx6, gy6)
+	trail_pts = np.vstack([tr["xy"][::2] for tr in TRAILS])
+	ttr = cKDTree(trail_pts)
+	def nms_pick(mask, score, spacing, cap, area):
+		jj, ii = np.nonzero(mask)
+		if len(jj) == 0: return []
+		order = np.argsort(-score[jj, ii])
+		picked = []
+		for o in order:
+			x, z = cell_xz(jj[o], ii[o])
+			if not (area[0] <= x <= area[2] and area[1] <= z <= area[3]): continue
+			if any((x - px) ** 2 + (z - pz) ** 2 < spacing ** 2 for px, pz in picked): continue
+			picked.append((x, z))
+			if len(picked) >= cap: break
+		return picked
+	dtr = np.full(shape, 1e9)
+	sub_m = np.zeros(shape, bool)
+	n_cliff = 0; n_rock = 0
+	for area, cap_c, cap_r in [((-1100.0, -1300.0, 300.0, -600.0), 70, 40), ((-4200.0, -620.0, -3450.0, 120.0), 45, 25)]:
+		j0, j1 = int((area[1] - Z0) / CELL), int((area[3] - Z0) / CELL); i0, i1 = int((area[0] - X0) / CELL), int((area[2] - X0) / CELL)
+		J, I = np.mgrid[j0:j1:3, i0:i1:3]
+		X = X0 + I * CELL; Z = Z0 + J * CELL
+		d, _ = ttr.query(np.stack([X.ravel(), Z.ravel()], 1)); d = d.reshape(X.shape)
+		dfull = np.full(shape, 1e9); dfull[j0:j1:3, i0:i1:3] = d
+		near_ok = (dfull > 9.0) & (dfull < 260.0)
+		luv = np.repeat(np.repeat(LU & 127, 2, 0), 2, 1)[:shape[0], :shape[1]]
+		cm = near_ok & (sl6 > 1.15) & ~prot & ~np.isin(luv, [4, 5, 6])
+		for (x, z) in nms_pick(cm, sl6, 16.0, cap_c, area):
+			j, i = ij(x, z); j = int(round(float(j))); i = int(round(float(i)))
+			dn = -np.array([gx6[j, i], gy6[j, i]]); dn /= max(np.linalg.norm(dn), 1e-6)   # 내리막
+			foot = np.array([x, z]) + dn * 3.0
+			wcl = 7.0 + (n_cliff * 37 % 50) / 10.0
+			if ttr.query(foot)[0] < wcl * 0.5 + 4.5 or ttr.query(np.array([x, z]))[0] < wcl * 0.5 + 4.5: continue
+			yf = float(sample(H, *foot)[0]); yt = float(sample(H, *(np.array([x, z]) - dn * 5.0))[0])
+			h = float(np.clip(yt - yf + 1.5, 4.0, 14.0))
+			ry = math.atan2(dn[0], dn[1])
+			props.append({ "id": f"mt_cliff_{n_cliff:03d}", "kit": "nature/cliff", "params": { "w": round(7.0 + (n_cliff * 37 % 50) / 10.0, 1), "h": round(h, 1), "d": 3.5, "seed": 100 + n_cliff },
+				"x": round(float(foot[0]), 2), "z": round(float(foot[1]), 2), "ry": round(ry, 4), "y": round(yf - 0.4, 2), "flatten": False, "clear_veg": True, "group": "벼랑(산 지형)" })
+			n_cliff += 1
+		ridge_full = H - ndimage.gaussian_filter(H, 6.0)
+		rmask = (dfull > 10.0) & (dfull < 200.0) & (ridge_full > 4.0) & (sl6 > 0.3) & ~prot & ~np.isin(luv, [4, 5, 6])
+		for (x, z) in nms_pick(rmask, ridge_full, 12.0, cap_r, area):
+			props.append({ "id": f"mt_amneung_{n_rock:03d}", "kit": "nature/boulder", "params": { "s": round(2.4 + (n_rock * 13 % 20) / 10.0, 1), "seed": 300 + n_rock },
+				"x": round(float(x), 2), "z": round(float(z), 2), "ry": round((n_rock * 1.7) % 6.283, 3), "y": None, "flatten": False, "clear_veg": True, "group": "암릉(산 지형)" })
+			n_rock += 1
+	log("큰 벼랑 %d · 암릉 바위 %d (배치 소품)" % (n_cliff, n_rock))
+
+	# 계곡 너럭바위·큰 바위(지리 소품 — 충돌 있음): 골물 따라 18m마다 한쪽 기슭에
+	rngp = np.random.default_rng(SEED + 11)
+	for k in range(30, len(gol_xy) - 30, 18):
+		if any(abs(k - q) < 14 for _, q in falls): continue
+		tdir = gol_xy[min(k + 2, len(gol_xy) - 1)] - gol_xy[k - 2]; tdir /= max(np.linalg.norm(tdir), 1e-6); nrm = np.array([-tdir[1], tdir[0]])
+		side = 1.0 if rngp.random() < 0.5 else -1.0
+		c = gol_xy[k] + nrm * side * (3.4 + rngp.random() * 1.2)
+		if min(np.min(np.hypot(*(tr["xy"] - c).T)) for tr in TRAILS) < 3.5: continue   # 길 위에는 놓지 않는다
+		kit = "nature/slab_rock" if rngp.random() < 0.45 else "nature/boulder"
+		props.append({ "id": f"mt_gol_rock_{k}", "kit": kit, "params": ({ "seed": int(k) } if kit == "nature/slab_rock" else { "s": round(1.6 + rngp.random() * 1.2, 2), "seed": int(k) }),
+			"x": round(float(c[0]), 2), "z": round(float(c[1]), 2), "ry": round(float(rngp.random() * 6.283), 3), "y": None, "flatten": False, "clear_veg": True, "group": "여원치 골(산 지형)" })
+	# 건널목 징검돌(보기 — 걸어 건너기는 여울 규칙 그대로)
+	for cr in new_cross:
+		if cr.get("river_id") == "yeowonchi_gol" or cr["type"] == "여울":
+			props.append({ "id": "mt_" + cr["id"] + "_stones", "kit": "nature/stream_stones", "params": { "seed": len(props) }, "x": cr["x"], "z": cr["z"], "ry": 0.0, "y": None, "flatten": False, "clear_veg": False, "group": "건널목 징검돌(보기)" })
 
 	# ---- 8) y 채우기·쓰기
 	for a in anchors:
@@ -734,6 +843,7 @@ def main():
 			{ "id": "yw_valley", "name": "여원치 계곡길", "roads": ["yw_valley_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in vxy[::20]] + [[round(float(vxy[-1][0]), 1), round(float(vxy[-1][1]), 1)]] },
 			{ "id": "yw_gully", "name": "여원치 남쪽 골 오름길", "roads": ["yw_gully_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in uxy[::12]] } if gully_end is not None else None,
 			{ "id": "yw_ridge", "name": "여원재 능선길", "roads": ["yw_ridge_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in rxy[::20]] + [[round(float(rxy[-1][0]), 1), round(float(rxy[-1][1]), 1)]] },
+			{ "id": "yocheon_bank", "name": "요천 기슭 길(광한루–요천 나루) — 물가 바닥·기슭 점검", "roads": ["namwon_gurye_road"], "bbox": [-3420.0, 380.0, -3050.0, 1000.0] },
 			{ "id": "gyoryong", "name": "교룡산 산길", "roads": ["gyoryong_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in gxy[::20]] + [[round(float(gxy[-1][0]), 1), round(float(gxy[-1][1]), 1)]] },
 		],
 		"anchors": anchors }

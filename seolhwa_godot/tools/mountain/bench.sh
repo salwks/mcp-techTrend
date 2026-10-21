@@ -15,3 +15,10 @@ run --warp=-166,-917 --benchspeed=0                       # 여원재 골짜기 
 run --warp=-166,-917 --benchspeed=2.2                     # 여원재 걷기(방향 무작위 — 막히면 돈다)
 run --warp=14,-966 --view=first --fpyaw=-110,3 --benchspeed=0   # 재 마루 1인칭, 남원 쪽(먼 산)
 run --warp=-3228,380 --view=first --fpyaw=-48,4 --benchspeed=0  # 남원 남문 밖 1인칭, 교룡산 쪽
+# 여원재 오르막을 길 따라 걷기(산 지형 뒤에만 — --benchroute)
+if grep -q benchroute scripts/region/region_main.gd; then
+  R[13]=--bench=40
+  run --benchroute=tongyeong_byeolro:-1010,-1010,140,-540 --benchspeed=2.2
+  run --benchroute=tongyeong_byeolro:-1010,-1010,140,-540 --benchspeed=4.6
+  run --benchroute=yw_valley_trail --benchspeed=2.2
+fi
