@@ -34,7 +34,7 @@ const TAG := "placement"
 const WATER_KITS := ["village/jingeom", "village/narutbae", "village/ppallaeteo"]
 const BOAT_KITS := ["village/narutbae", "route/dotbae"]
 const BRIDGE_KITS := ["village/stone_bridge", "village/seop_bridge"]
-const YARD_COMPOSITES := ["house_compound", "gwana", "hyanggyo", "silsangsa", "jumak", "bldg/compound"]
+const YARD_COMPOSITES := ["house_compound", "gwana", "hyanggyo", "silsangsa", "jumak", "bldg/compound", "bldg/lot"]
 
 var world   # RegionWorld
 var dirs: Array = []
@@ -104,15 +104,26 @@ func load_all() -> void:
 	_dress_excl = []
 	var raw := []
 	crowds = []
+	# supersede(town-organic): 파일 머리 "supersede": [id…] — 다른 파일의 그 id 항목을 빼고 이 파일 것으로 갈음한다(고을 구역 다시 짜기).
+	#   원본 배치(namwon.py 생성물)를 고치지 않아 생성기를 다시 돌려도·되돌려도(이 파일을 지우면 끝) 충돌이 없다.
+	var sup := {}
+	var fdata := []
 	for f in files():
 		_mtimes[f] = FileAccess.get_modified_time(f)
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
+		fdata.append([f, d])
+		if d is Dictionary:
+			for s in d.get("supersede", []): sup[String(s)] = true
+	for fd in fdata:
+		var f: String = fd[0]
+		var d = fd[1]
 		if not (d is Dictionary) or not d.has("items"):
 			push_warning("배치 파일 형식 오류: " + f); continue
 		var fcase := String(d.get("case", ""))
 		_dress_note_file(f, d)
 		for it in d.items:
 			if not (it is Dictionary and it.has("kit")): continue
+			if not sup.is_empty() and sup.has(String(it.get("id", ""))) and not (d.get("supersede", []) as Array).has(it.get("id", "")): continue
 			var item: Dictionary = it
 			if item.has("when") and not item.has("case"):
 				item = item.duplicate(); item["case"] = fcase

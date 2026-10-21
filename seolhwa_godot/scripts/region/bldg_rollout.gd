@@ -173,10 +173,64 @@ func _gates(g: Dictionary) -> void:
 	for f in files:
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
 		for it in d.items:
-			if String(it.kit) != "bldg/compound": continue
+			if not String(it.kit) in ["bldg/compound", "bldg/lot"]: continue
 			var x := float(it.x); var z := float(it.z)
 			if x < float(bb[0]) or x > float(bb[2]) or z < float(bb[1]) or z > float(bb[3]): continue
-			await _gate_item(it)
+			if String(it.kit) == "bldg/lot": await _lot_item(it)
+			else: await _gate_item(it)
+
+# 고을 짜임 필지(bldg/lot, town-organic): 대문 밖 1.6m → 문지방 → 마당 안 3m(내외담이면 옆으로 돌아) · 뒷담 밖 1.5m → 필지 가운데: 막혀야
+func _lot_item(it: Dictionary) -> void:
+	var id: String = it.id
+	var C0 := Vector2(float(it.x), float(it.z))
+	var ry := float(it.get("ry", 0.0))
+	var rot := func(v: Vector2) -> Vector2: return C0 + Vector2(v.x * cos(ry) + v.y * sin(ry), -v.x * sin(ry) + v.y * cos(ry))
+	var gate := {}
+	for e in it.params.get("pieces", []):
+		if String(e.tag) == "gate": gate = e
+	var poly: Array = it.params.get("poly", [])
+	var cen := Vector2.ZERO
+	for q in poly: cen += Vector2(float(q[0]), float(q[1]))
+	cen /= maxf(1.0, poly.size())
+	if not gate.is_empty():
+		var gl := Vector2(float(gate.x), float(gate.z)); var gry := float(gate.ry)
+		var dir := Vector2(sin(gry), cos(gry))   # 문 로컬 +z = 바깥(길)
+		var out: Vector2 = rot.call(gl + dir * 1.6)
+		var thr: Vector2 = rot.call(gl)
+		var inn: Vector2 = rot.call(gl - dir * 3.0)
+		main.set_first_person(false, false)
+		main.teleport(out.x, out.y)
+		await _wait_load(); await _sec(0.3)
+		var y0: float = main.world.height_at(out.x, out.y)
+		var a := _walk_to(Vector3(thr.x, 0, thr.y))
+		var foot_thr: float = main.player_pos.y - y0
+		var b := _walk_to(Vector3(inn.x, 0, inn.y))
+		var detour := ""
+		if a and not b:
+			var side := Vector2(dir.y, -dir.x)
+			for sx in [1.0, -1.0]:
+				main.player_pos = Vector3(thr.x, main.world.height_at(thr.x, thr.y), thr.y)
+				var s1: Vector2 = rot.call(gl - dir * 1.0)
+				var s2: Vector2 = rot.call(gl - dir * 1.2 + side * sx * 2.4)
+				var s3: Vector2 = rot.call(gl - dir * 4.0 + side * sx * 2.4)
+				if _walk_to(Vector3(s1.x, 0, s1.y)) and _walk_to(Vector3(s2.x, 0, s2.y)) and _walk_to(Vector3(s3.x, 0, s3.y)):
+					b = true; detour = "옆으로 돌아"; break
+		print("BRGATE %s(%s) gate_world=(%.1f,%.1f) to_threshold=%s in=%s foot_thr=%.2f end=(%.1f,%.1f) %s" % [id, String(it.params.get("type", "")), thr.x, thr.y, a, b, foot_thr, main.player_pos.x, main.player_pos.z, detour])
+		_ok(a and b, "%s 대문 밖 → 문지방 → 마당 안" % id)
+	if int((it.get("organic", {}) as Dictionary).get("walls", 0)) > 0 and poly.size() >= 4 and not String(it.params.get("type", "")) in ["hut", "field", "shop"]:
+		# 뒷변(앞 변 반대쪽 = 마지막 변: b1 → b0) 가운데 밖 1.5m에서 필지 가운데로
+		var n := poly.size()
+		var pa := Vector2(float(poly[n - 2][0]), float(poly[n - 2][1])); var pb := Vector2(float(poly[n - 1][0]), float(poly[n - 1][1]))
+		var mid := (pa + pb) / 2.0
+		var outv := (mid - cen).normalized()
+		var sw: Vector2 = rot.call(mid + outv * 1.5)
+		var mc: Vector2 = rot.call(cen)
+		main.teleport(sw.x, sw.y)
+		await _sec(0.2)
+		var blocked_start: bool = main.world.blocked(sw.x, sw.y, main.player.radius)
+		var c := _walk_to(Vector3(mc.x, 0, mc.y))
+		print("BRGATE %s back_wall from=(%.1f,%.1f) start_blocked=%s crossed=%s" % [id, sw.x, sw.y, blocked_start, c])
+		if not blocked_start: _ok(not c, "%s 뒷담을 뚫고 지나가지 않음" % id)
 
 static func gate_local(params: Dictionary) -> Vector2:
 	var p := CP.plan(params)
