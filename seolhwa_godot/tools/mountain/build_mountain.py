@@ -714,6 +714,12 @@ def main():
 	#   지형 셰이더는 바위결(층리·금)·자갈 무늬·젖은 기슭으로 칠한다. (material-lighting 병합 때 7 → M_ROCK, 8 → M_PATH/자갈, 5 → 하상 돌)
 	LW, LH = LU.shape[1], LU.shape[0]
 	def to4(a): return a[::2, ::2][:LH, :LW]
+	# 고을(마을 터 bbox + 40m) 안은 바위·너덜·물길 칠하기를 하지 않는다(고을 사람 자리·이야기 무대·걷기 시험이 예전 그대로)
+	town = np.zeros(LU.shape, bool)
+	for st_ in R["settlements"]:
+		bb = st_.get("bbox")
+		if not bb: continue
+		town[max(0, int((bb[1] - 40 - Z0) / LCELL)):int((bb[3] + 40 - Z0) / LCELL) + 1, max(0, int((bb[0] - 40 - X0) / LCELL)):int((bb[2] + 40 - X0) / LCELL) + 1] = True
 	Hs3 = ndimage.uniform_filter(H, 3)
 	gy, gx = np.gradient(Hs3, CELL); slope = np.hypot(gx, gy)
 	sl4 = to4(slope); H4 = to4(H)
@@ -723,7 +729,7 @@ def main():
 	rn = value_noise(LU.shape, 9, np.random.default_rng(SEED + 7))
 	rn2 = value_noise(LU.shape, 4, np.random.default_rng(SEED + 9))
 	luc = LU & 127
-	soft = np.isin(luc, [0, 1])
+	soft = np.isin(luc, [0, 1]) & ~town
 	steep = (sl4 > 1.0 + 0.45 * rn) & soft & (dprot4 > 4.0)
 	steep = ndimage.binary_opening(steep, iterations=1)
 	cutbank = (cut4 > 1.2) & (sl4 > 0.6) & soft
@@ -753,9 +759,9 @@ def main():
 	for it in [it for d in pl.values() for it in d["items"]] + sp["items"]:
 		j = int((it["z"] - Z0) / CELL); i = int((it["x"] - X0) / CELL); busy[max(0, j - 4):j + 5, max(0, i - 4):i + 5] = True
 	settled = np.isin(luc, [4, 6]) | to4(busy)
-	core = (dw <= chw) & ~settled
+	core = (dw <= chw) & ~settled & ~town
 	LU[core & ((LU & 127) != 5)] = 5
-	band = (dw > chw) & (dw <= chw + bw * (0.7 + 0.6 * rn)) & ~settled & np.isin(LU & 127, [0, 1, 2, 3, 9]) & ~((np.isin(LU & 127, [2, 3])) & (dw > chw + 1.5))
+	band = (dw > chw) & (dw <= chw + bw * (0.7 + 0.6 * rn)) & ~settled & ~town & np.isin(LU & 127, [0, 1, 2, 3, 9]) & ~((np.isin(LU & 127, [2, 3])) & (dw > chw + 1.5))
 	rocky_bank = band & ((sl4 > 0.45) | ((H4 > 95.0) & (bw <= 3.0)))
 	LU[rocky_bank] = 7
 	LU[band & ~rocky_bank] = 8
