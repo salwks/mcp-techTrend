@@ -885,6 +885,8 @@ func _update_dof(dt: float) -> void:
 	# 먹 그늘(post_effect AO — visual-pass): 설정 '화면 품질' 낮음이면 표본 반. --noao 비교 끄기
 	post.ao_strength = 0.0 if args.has("noao") else float(args.get("ao", str(AO_STRENGTH)))
 	post.ao_low = gfx_low()
+	if world.tree_lod != null and weather != null:   # trees-khs: 나무 바람 = 날씨 바람(맑음 0.1 → 0.28, 강풍 1)
+		world.tree_lod.wind = 0.2 + 0.8 * float(weather.cur.get("wind", 0.1))
 	if world.tree_lod != null and _trees_low != post.ao_low:   # trees-khs: 화면 품질 낮음이면 가까운 사실 나무 벌을 줄인다
 		_trees_low = post.ao_low
 		KhsTreesRM.set_low(_trees_low)

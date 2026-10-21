@@ -10,7 +10,7 @@ const OUT := "res://assets/trees/"
 const KHS := "res://assets/trees/khs_gomsol/src/"
 const WORK := "res://assets/trees/_work/"
 const CELL := Vector2i(512, 1024)     # 굽는 칸(파이썬이 반으로 줄여 256×512 — 층 1024²)
-const CARD_K := [1.22, 1.38]          # 곰솔 잎 카드 키움(LOD0, LOD1 — LOD1은 복제가 적어 더 키운다)
+const CARD_K := [1.22, 1.55]          # 곰솔 잎 카드 키움(LOD0, LOD1 — LOD1은 복제가 적어 더 키운다)
 
 # 변형 표 — 층 번호 = 순서(kit/nature/khs_trees.gd VARIANTS와 같다)
 const GOMSOL := [
