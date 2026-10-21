@@ -5,6 +5,7 @@ shader_type spatial;
 render_mode specular_disabled, cull_back;
 
 #include "res://shaders/region_common.gdshaderinc"
+#include "res://shaders/region_far_look.gdshaderinc"
 
 global uniform vec3 hemi_sky;
 global uniform vec3 hemi_ground;
@@ -575,6 +576,10 @@ void fragment() {
 	col = mix(col, C_CLIFF, smoothstep(1.2, 1.9, slope) * 0.9);
 	// 높은 산은 조금 차갑고 옅게
 	col = mix(col, C_HIGH, smoothstep(200.0, 520.0, v_wp.y) * 0.35);
+	// 먼 숲 = 수관 빛(나무를 그리지 않는 거리부터 — region_far_look). 바위 비탈은 그대로
+	float cam_d = length(VERTEX);
+	float fw = mix(mix(float(ca == 0 || ca == 9), float(cb == 0 || cb == 9), t.x), mix(float(cc == 0 || cc == 9), float(cd == 0 || cd == 9), t.x), t.y);
+	col = mix(col, canopy_color(p, v_wp.y), fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.05, 1.5, slope)));
 	// 길·마당 칠하기(웹 마을 가운데 흙길 느낌): 흙길 + 바퀴·발 자국 + 가장자리 풀 섶, 건물 둘레 2~4m 흙 마당
 	vec4 pt = texture(paint_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size));
 	float rd = pt.r * 16.0, rhw = pt.g * 8.0, yd = pt.b * 16.0;
@@ -600,6 +605,11 @@ void fragment() {
 		rc = mix(rc, C_PATH * 0.86, rut * (cls >= 2.5 ? 0.45 : 0.25));
 		col = mix(col, rc, road);
 		dirt = max(dirt, road);
+	}
+	// 먼 고을 = 처마 안 땅을 지붕 빛으로(건물이 안개에 묻히는 거리부터)
+	if (dress_on > 0.0 && cam_d > canopy_d0) {
+		float ed = texture(dress_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size)).r * 255.0 - 128.0;
+		col = mix(col, roof_color(p), (1.0 - smoothstep(-6.0, 2.0, ed)) * smoothstep(canopy_d0, canopy_d1, cam_d));
 	}
 	vec3 base = srgb(col) * texture(ground_tex, p / 7.0).rgb;
 	if (dress_on > 0.0) {
@@ -648,7 +658,9 @@ void fragment() {
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, v_wp.y - mist_base)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
-	vec3 fc = fog_color;
+	// 먼 땅은 공기원근으로 남는다(region_far_look — 원경 region_far와 같은 식)
+	fog_f = aer_haze(fog_f, fog_d, v_wp.y, mist_base, fog_density);
+	vec3 fc = aer_tint(fog_color, far_ink, fog_d, v_wp.y, mist_base, wn.y);
 	if (far_k > 0.0) {
 		// 원경: 안개에 묻히는 대신 하늘 그림판의 먼 산처럼 — 높은 능선은 먹빛, 골짜기·산발치는 안개빛
 		float far = smoothstep(120.0, 500.0, fog_d) * far_k;

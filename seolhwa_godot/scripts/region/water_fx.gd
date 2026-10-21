@@ -144,7 +144,8 @@ func setup(m) -> void:
 	rcam = Camera3D.new()
 	rcam.keep_aspect = Camera3D.KEEP_HEIGHT
 	rcam.near = 0.3
-	if world.far_node != null: world.far_node.layers = FAR_LAYER
+	if world.has_method("set_far_layers"): world.set_far_layers(FAR_LAYER)
+	elif world.far_node != null: world.far_node.layers = FAR_LAYER
 	vp.add_child(rcam)
 	rcam.current = true
 	collect_materials()

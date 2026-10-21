@@ -162,7 +162,10 @@ func _snow_line(reg: Dictionary, cm: Dictionary) -> float:
 		var zi := ZONES.find(default_zone)   # 위도 띠 덮어쓰기(band·climate.png 다수)를 눈선에도
 		if zi >= 0 and zi < 3: band = str(zi)
 		var alt = rule.alpine_alt_m.get(band)
-		if alt != null: return (float(alt) - base) * K - 15.0   # 눈 덮기는 눈선 위 30m에 걸쳐 짙어지므로 조금 아래서 시작
+		if alt != null:
+			var ys := (float(alt) - base) * K
+			if world != null and world.has_method("remap_y"): ys = world.remap_y(ys)   # 세로 되살림(mountain-terrain)
+			return ys - 15.0   # 눈 덮기는 눈선 위 30m에 걸쳐 짙어지므로 조금 아래서 시작
 	if cw > 0:
 		var lo := INF
 		for j in range(0, ch, 3):

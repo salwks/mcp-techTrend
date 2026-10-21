@@ -67,6 +67,7 @@ void fragment() {
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, v_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
+	fog_f = aer_haze(fog_f, fog_d, v_wp.y, fog_base, fog_density);   // 공기원근(region_aer — water_common이 넣는다)
 	FOG = vec4(fog_color, fog_f);
 }
 

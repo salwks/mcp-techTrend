@@ -81,6 +81,18 @@ const SCALE := {
 }
 
 static var _cache := {}
+# 세로 되살림(region.json height.remap — mountain-terrain): 게임 y → 재매핑 전 y로 되돌려 해발을 셈한다(수종 해발대가 실제 해발을 따르게).
+#   region_world가 권역을 읽을 때 넣는다(없으면 빈 배열 = 그대로). 작업 스레드에서는 읽기만 한다.
+static var remap_src := PackedFloat32Array()
+static var remap_dst := PackedFloat32Array()
+static func alt_of(y: float) -> float:
+	var n := remap_dst.size()
+	if n >= 2:
+		var k := 0
+		while k < n - 2 and y > remap_dst[k + 1]: k += 1
+		var t := (y - remap_dst[k]) / maxf(remap_dst[k + 1] - remap_dst[k], 1e-6)
+		y = lerpf(remap_src[k], remap_src[k + 1], t)
+	return y / K + 60.0
 static var _mtx := Mutex.new()
 static var _names: PackedStringArray
 static var _ids := {}
@@ -516,7 +528,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			var l := lu[k]
 			if l == 4: continue
 			var cx := gx0 + (i + 0.5) * CELL; var cz := gz0 + (j + 0.5) * CELL
-			var alt := hg[k] / K + 60.0
+			var alt := alt_of(hg[k])
 			var gxv := (hg[k + 1] - hg[k - 1]) / (2.0 * CELL); var gzv := (hg[k + W] - hg[k - W]) / (2.0 * CELL)
 			var slope := sqrt(gxv * gxv + gzv * gzv)   # tan(경사각)
 			var r_d := rd[k]; var w_d := wd[k]
