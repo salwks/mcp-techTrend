@@ -1313,7 +1313,14 @@ func _build_rivers() -> void:
 		var pts := []
 		for p in r.points: pts.append(Vector3(float(p[0]), float(p[2]) if p.size() > 2 else data_height(p[0], p[1]), float(p[1])))
 		if pts.size() < 2: continue
+		# 물은 높은 데서 낮은 데로: 자료 점 순서가 거꾸로(첫머리가 끝보다 낮음)면 뒤집어 하류 방향(TANGENT·UV)을 맞춘다
+		var nq := maxi(1, pts.size() / 8)
+		var y0 := 0.0; var y1 := 0.0
+		for k in nq: y0 += pts[k].y; y1 += pts[pts.size() - 1 - k].y
+		var rev := y0 < y1 - 0.5 * nq
+		if rev: pts.reverse()
 		var ws := _river_widths(r, pts.size())
+		if rev: ws.reverse()   # 자료 폭(widths)은 자료 점 순서 그대로라 함께 뒤집는다
 		var dry: bool = r.get("dry") == true or String(r.get("flow", "")) == "intermittent"
 		if dry:
 			# 건천: 바닥 표시(걷기 허용·지형 셰이더 돌 바닥) + 마른 돌 바닥 리본(비 오면 가운데에 물줄기)
