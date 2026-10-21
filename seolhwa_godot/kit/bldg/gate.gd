@@ -152,8 +152,8 @@ static func _gable_roof(m: C.M, hw: float, hd: float, eave: float, rise: float, 
 static func _framed(m: C.M, t: String, w: float, wall_h: float, open: bool) -> Dictionary:
 	var R := m.rng
 	var deep: bool = t in ["pyeong", "chomun"]
-	var post_h := 2.35 if t != "hyeop" else 1.95
-	if t == "jungmun": post_h = 2.15
+	var post_h := 2.6 if t != "hyeop" else 2.1   # 실제 크기(town-organic): 문 안 높이 ≈ 2.2m(인물 2.0m가 드나듦)
+	if t == "jungmun": post_h = 2.35
 	# 처마 밑(지붕 밑면)이 담 갓(wall_h + 0.3) 위로 0.1m — 갓이 처마 밑으로 들어간다(뚫지 않음)
 	var eave := maxf(post_h + 0.32, wall_h + 0.3 + 0.1 + 0.18 + 0.05)
 	var r := 0.12 if t != "hyeop" else 0.1

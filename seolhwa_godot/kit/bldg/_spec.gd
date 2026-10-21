@@ -38,7 +38,7 @@ static func region_of(r: String) -> String:
 static func resolve(params: Dictionary) -> Dictionary:
 	var sp: Dictionary
 	if params.has("spec"): sp = (params.spec as Dictionary).duplicate(true)
-	else: sp = generate(String(params.get("type", "choga")), String(params.get("region", "south")), String(params.get("cls", "")), int(params.get("seed", 1)))
+	else: sp = generate(String(params.get("type", "choga")), String(params.get("region", "south")), String(params.get("cls", "")), int(params.get("seed", 1)), bool(params.get("rs", true)))
 	for k in params.get("over", {}): sp[k] = params.over[k]
 	if params.has("interior"): sp.interior = bool(params.interior)
 	return normalize(sp)
@@ -132,7 +132,7 @@ static func add_wing(main: Dictionary, wings: Array, sx: float, D: float, L: flo
 	return w
 
 # 프리셋 ------------------------------------------------------------------------------------------------
-static func generate(type: String, region: String, cls: String, seed: int) -> Dictionary:
+static func generate(type: String, region: String, cls: String, seed: int, rs := true) -> Dictionary:
 	region = region_of(region)
 	var r := _rng(type, region, seed)
 	var sp: Dictionary
@@ -160,7 +160,48 @@ static func generate(type: String, region: String, cls: String, seed: int) -> Di
 	sp.type = type; sp.region = region; sp.seed = seed
 	if not sp.has("cls"): sp.cls = cls if cls != "" else "commoner"
 	sp.id = "%s_%s_%d" % [type, region, seed]
+	if rs: real_scale(sp)
 	return sp
+
+# 실제 크기(town-organic, 2026-10-21): 프리셋 치수는 사람 키 1.6m 남짓 기준 옛 키트 비례였다. 게임 인물 그림은 갓까지 약 2.0m(웹 rigs —
+#   sprite_char.height 2.06)라 집이 인물보다 작아 보였다(초가 벽 1.8~2.0m < 인물 키, 문 1.6~1.7m). 실제 조선 집 치수(초가 칸 7~8자 2.1~2.4m ·
+#   기둥 7자 2.1m 안팎 · 양반가 칸 8~10자 · 기둥 8~9자 · 기단 2~3자)에 인물 비(2.0/1.62 ≈ 1.23)를 곱한 쪽으로 키운다 — 고증은 참고(정확히 맞추지 않음).
+#   가로(칸 너비·깊이·툇마루·처마·날개 자리·곁 것 자리) × kh, 세로(벽 높이·기단·마루 높이·지붕 올림) × kv. 문·창 높이는 building.gd가 벽 높이 비로 따라간다.
+#   kh = kv(한 배율)로 둔다: 가로·세로를 달리 키우면(1.16/1.24) 이엉 처마 밑 여유(벽 위 0.3m 고정)가 ㄱ자 날개 이음에서 깨졌다(roof_check WALLCLEAR).
+#   기둥 굵기(col)는 키우지 않는다(실제 굵기 0.2~0.3m 그대로 — 굵히면 끝 칸 모서리 문틀과 겹쳐 corner_check 틈이 났다).
+#   발 걸음(0.32)·문지방(0.18)·가구·장독은 사람 크기라 그대로. 명세를 통째로 적은 집(params.spec — 이야기 집 잠금)은 다시 키우지 않는다.
+const SCALE_CLS := { poor = [1.16, 1.16], commoner = [1.22, 1.22], middle = [1.22, 1.22], yangban = [1.22, 1.22], official = [1.2, 1.2] }
+static func real_scale(sp: Dictionary) -> void:
+	var k: Array = SCALE_CLS.get(String(sp.get("cls", "commoner")), [1.22, 1.22])
+	var kh: float = k[0]; var kv: float = k[1]
+	sp.real_scale = [kh, kv]
+	if sp.has("wall_h"): sp.wall_h = snappedf(float(sp.wall_h) * kv, 0.01)
+	if sp.has("floor_dh"): sp.floor_dh = snappedf(float(sp.floor_dh) * kv, 0.01)
+	if sp.get("base") is Dictionary and (sp.base as Dictionary).has("h"): sp.base.h = snappedf(float(sp.base.h) * kv, 0.01)
+	if sp.get("roof") is Dictionary:
+		for kk in ["eave", "lift", "rc"]:
+			if (sp.roof as Dictionary).has(kk): sp.roof[kk] = snappedf(float(sp.roof[kk]) * kh, 0.01)
+	for w in sp.get("wings", []):
+		for kk in ["x", "z"]:
+			if w.has(kk): w[kk] = snappedf(float(w[kk]) * kh, 0.01)
+		if w.has("depth"):
+			var dd := []
+			for d in w.depth: dd.append(snappedf(float(d) * kh, 0.01))
+			w.depth = dd
+		if w.get("toet") is Dictionary and (w.toet as Dictionary).has("d"): w.toet.d = snappedf(float(w.toet.d) * kh, 0.01)
+		if w.has("corner_w"):
+			var cw := []
+			for c in w.corner_w: cw.append(snappedf(float(c) * kh, 0.01))
+			w.corner_w = cw
+		for kk in ["roof_up", "floor_up", "lower"]:
+			if w.has(kk): w[kk] = snappedf(float(w[kk]) * kv, 0.01)
+		for b in w.get("bays", []):
+			b.w = snappedf(float(b.w) * kh, 0.01)
+			if b.has("floor_up"): b.floor_up = snappedf(float(b.floor_up) * kv, 0.01)
+	for a in sp.get("attach", []):
+		for kk in ["x", "z"]:
+			if a.has(kk): a[kk] = snappedf(float(a[kk]) * kh, 0.01)
+		if String(a.get("kind", "")) == "wheel" and a.has("r"): a.r = snappedf(float(a.r) * kv, 0.01)
 
 # 낡음 → 이엉 빛(새 이엉 금빛 ~ 묵은 이엉 잿빛 갈색)
 static func thatch_cols(wear: float) -> Array:

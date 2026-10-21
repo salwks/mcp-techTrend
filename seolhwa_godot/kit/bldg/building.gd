@@ -618,6 +618,9 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 	var both: bool = inner or sp.interior
 	var H := y1 - y0
 	var op := []   # [ox0, ox1, oy0, oy1]
+	# 실제 크기 배율(_spec.real_scale): 문·창 높이·너비를 벽 높이와 같이 키운다(문턱·창 밑 높이는 사람 크기라 그대로)
+	var dk: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[1])
+	var dw_k: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[0])
 	match kind:
 		"open", "rail":
 			if kind == "rail":
@@ -634,28 +637,28 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			if both: A.add(m, part, "panbyeok", A.panel(xb - xa, H, 0, y0 + H / 2, -t / 2 - 0.005, PI), 0)
 			m.pop(old); return
 		"window":
-			var ww := minf(xb - xa - 0.3, 1.25 if hi else 1.0)
+			var ww := minf(xb - xa - 0.3, (1.25 if hi else 1.0) * dw_k)
 			var sill := 0.62 if (hi or sp.meoreum) else 0.8
-			var wh := 1.05 if hi else 0.85
+			var wh := (1.05 if hi else 0.85) * dk
 			op = [-ww / 2, ww / 2, y0 + sill, y0 + sill + wh]
 		"smallwin":
 			var ww := 0.5
-			op = [-ww / 2 + (0.0 if w < 2.2 else -0.3), ww / 2 + (0.0 if w < 2.2 else -0.3), y0 + 1.05, y0 + 1.5]
+			op = [-ww / 2 + (0.0 if w < 2.2 else -0.3), ww / 2 + (0.0 if w < 2.2 else -0.3), y0 + 1.05 * dk, y0 + 1.5 * dk]
 		"salchang":
-			op = [-0.45, 0.45, y0 + 1.35, y0 + 1.8]
+			op = [-0.45, 0.45, y0 + 1.35 * dk, y0 + 1.8 * dk]
 		"door2":
-			var dw := minf(xb - xa - 0.35, 1.5 if hi else 1.35)
-			op = [-dw / 2, dw / 2, y0 + 0.05, y0 + minf(H - 0.35, 1.85 if hi else 1.7)]
+			var dw := minf(xb - xa - 0.35, (1.5 if hi else 1.35) * dw_k)
+			op = [-dw / 2, dw / 2, y0 + 0.05, y0 + minf(H - 0.35, (1.85 if hi else 1.7) * dk)]
 		"door1":
-			var dw := 0.74
+			var dw := 0.74 * dw_k
 			var off: float = 0.0 if inner else clampf(float(f.get("off", 0.0)), -(xb - xa) / 2 + 0.5, (xb - xa) / 2 - 0.5)
-			op = [off - dw / 2, off + dw / 2, y0 + 0.05, y0 + minf(H - 0.3, 1.7)]
+			op = [off - dw / 2, off + dw / 2, y0 + 0.05, y0 + minf(H - 0.3, 1.7 * dk)]
 		"door4", "bunhap_up":
 			op = [xa + 0.02, xb - 0.02, y0 + 0.05, y0 + H - (0.5 if H > 2.4 else 0.35)]
 		"plank":
-			op = [-0.45, 0.45, y0 + 0.03, y0 + minf(H - 0.3, 1.72)]
+			op = [-0.45 * dw_k, 0.45 * dw_k, y0 + 0.03, y0 + minf(H - 0.3, 1.72 * dk)]
 		"plank2":
-			op = [-0.75, 0.75, y0 + 0.03, y0 + minf(H - 0.3, 1.8)]
+			op = [-0.75 * dw_k, 0.75 * dw_k, y0 + 0.03, y0 + minf(H - 0.3, 1.8 * dk)]
 		"gate":
 			op = [xa + 0.05, xb - 0.05, y0, y0 + H - 0.3]
 		"shop":
@@ -1267,11 +1270,12 @@ static func _wing_coarse(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary,
 		var wc: Array = ctx.wallc
 		m.add("body", "mud" if sp.wall != "board" else "wood", C.PA(Kit.box(x1 - x0, top - y0, D, cx, (y0 + top) / 2, 0), wc, 0.04, R), 0.0)
 		if lod == 1 and b.front.kind in ["door2", "door1", "window", "door4", "bunhap_up", "smallwin"]:
-			var fh := 1.5 if b.front.kind != "smallwin" else 0.45
+			var fh: float = (1.5 if b.front.kind != "smallwin" else 0.45) * float((sp.get("real_scale", [1.0, 1.0]) as Array)[1])
 			var fw := minf(x1 - x0 - 0.4, 1.4) if b.front.kind != "smallwin" else 0.5
 			A.add(m, "body", ctx.lattice if b.front.kind != "smallwin" else "yong", A.panel(fw, fh, cx, y0 + 0.2 + fh / 2 + (0.6 if b.front.kind == "window" else 0.0), zf + 0.01), 0)
 		elif lod == 1 and b.front.kind in ["plank", "plank2"]:
-			A.add(m, "body", "panbyeok", A.panel(0.9, 1.6, cx, y0 + 0.85, zf + 0.01), 0)
+			var pk: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[1])
+			A.add(m, "body", "panbyeok", A.panel(0.9, 1.6 * pk, cx, y0 + 0.05 + 0.8 * pk, zf + 0.01), 0)
 	if lod == 1:
 		for x in xs: m.add("body", "wood", C.PA(Kit.box(0.22, top - ctx.Fb, 0.22, x, (top + ctx.Fb) / 2, zcol), ctx.col), 0.0)
 		m.add("body", "wood", C.PA(Kit.box(L + 0.3, 0.24, 0.22, 0, top + 0.12, zcol), ctx.beam), 0.0)

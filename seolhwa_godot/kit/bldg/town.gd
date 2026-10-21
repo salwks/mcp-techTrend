@@ -105,11 +105,11 @@ static func layout(template: String, params: Dictionary) -> Dictionary:
 			var Wx := 34.0
 			var zg := 16.0; var zb := -26.0
 			L.append({ tag = "hongsal", kit = "bldg/gate", params = { type = "hongsal", seed = seed }, x = 0.0, z = 34.0, ry = 0.0 })
-			var gp := { type = "samun", seed = seed, wall_h = 1.9 }
+			var gp := { type = "samun", seed = seed, wall_h = 2.2 }
 			L.append({ tag = "samun", kit = "bldg/gate", params = gp, x = 0.0, z = zg, ry = 0.0 })
 			var hf := preload("res://kit/bldg/gate.gd").half(gp)
 			for seg in [[-Wx / 2, zg, -hf, zg], [hf, zg, Wx / 2, zg], [-Wx / 2, zb, Wx / 2, zb], [-Wx / 2, zb, -Wx / 2, zg], [Wx / 2, zb, Wx / 2, zg]]:
-				L.append({ tag = "wall%d" % L.size(), kit = "village/todam", params = { seed = seed + L.size(), ax = seg[0], az = seg[1], bx = seg[2], bz = seg[3], h = 1.9, cap = "tile", tile_seg = 0.5 }, x = 0.0, z = 0.0, ry = 0.0 })
+				L.append({ tag = "wall%d" % L.size(), kit = "village/todam", params = { seed = seed + L.size(), ax = seg[0], az = seg[1], bx = seg[2], bz = seg[3], h = 2.2, cap = "tile", tile_seg = 0.5 }, x = 0.0, z = 0.0, ry = 0.0 })
 			var dh := { type = "dongheon", region = region, seed = seed }
 			var db := B.bounds(S.resolve(dh))
 			L.append({ tag = "dongheon", kit = "bldg/building", params = dh, x = snappedf(-db.get_center().x, 0.01), z = snappedf(zb + 3.0 - db.position.y, 0.01), ry = 0.0 })

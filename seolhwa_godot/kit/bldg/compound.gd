@@ -12,6 +12,10 @@ const S := preload("res://kit/bldg/_spec.gd")
 const B := preload("res://kit/bldg/building.gd")
 const HC := preload("res://kit/village/house_compound.gd")
 const GT := preload("res://kit/bldg/gate.gd")
+# 담 높이(town-organic 실제 크기): 인물 그림 약 2.0m에 맞춰 — 기와 갓 토담은 어깨~머리 위, 이엉 갓 흙담은 어깨, 돌담은 가슴
+const WH_TILE := 1.95
+const WH_THATCH := 1.7
+const WH_STONE := 1.4
 
 # 앞 담 + 대문: 대문 양옆 담이 문 기둥(anchors wall_l/r)에 맞닿는다. setback > 0이면 담을 안으로 꺾어 문간 마당(골목에서 물러난 대문)
 static func _front_gate(L: Array, seed: int, X: float, Z1: float, gx: float, gp: Dictionary, kind: String, setback := 0.0) -> void:
@@ -29,9 +33,9 @@ static func _front_gate(L: Array, seed: int, X: float, Z1: float, gx: float, gp:
 		var p := { seed = seed + 40 + i, ax = snappedf(sg[0], 0.01), az = snappedf(sg[1], 0.01), bx = snappedf(sg[2], 0.01), bz = snappedf(sg[3], 0.01) }
 		match kind:
 			"fence": p.lite = true; L.append(_v("wall_f%d" % i, "village/fence", p, 0, 0))
-			"stone": p.lite = true; p.sparse = true; p.h = 1.25; L.append(_v("wall_f%d" % i, "village/stone_wall", p, 0, 0))
-			"todam_thatch": p.h = 1.5; p.cap = "thatch"; L.append(_v("wall_f%d" % i, "village/todam", p, 0, 0))
-			_: p.h = 1.7; p.cap = "tile"; p.tile_seg = 0.5; L.append(_v("wall_f%d" % i, "village/todam", p, 0, 0))
+			"stone": p.lite = true; p.sparse = true; p.h = WH_STONE; L.append(_v("wall_f%d" % i, "village/stone_wall", p, 0, 0))
+			"todam_thatch": p.h = WH_THATCH; p.cap = "thatch"; L.append(_v("wall_f%d" % i, "village/todam", p, 0, 0))
+			_: p.h = WH_TILE; p.cap = "tile"; p.tile_seg = 0.5; L.append(_v("wall_f%d" % i, "village/todam", p, 0, 0))
 		i += 1
 	if gp.get("type", "") != "none": L.append(_v("gate", "bldg/gate", gp, gx, gz, 0))
 
@@ -74,9 +78,9 @@ static func _enclose(L: Array, seed: int, x0: float, x1: float, z0: float, z1: f
 		var p := { seed = seed + i, ax = snappedf(s[1], 0.01), az = snappedf(s[2], 0.01), bx = snappedf(s[3], 0.01), bz = snappedf(s[4], 0.01) }
 		match kind:
 			"fence": p.lite = true; L.append(_v(s[0], "village/fence", p, 0, 0))
-			"todam_thatch": p.h = 1.5; p.cap = "thatch"; L.append(_v(s[0], "village/todam", p, 0, 0))
-			"todam_tile": p.h = 1.7; p.cap = "tile"; p.tile_seg = 0.5; L.append(_v(s[0], "village/todam", p, 0, 0))
-			"stone": p.lite = true; p.sparse = true; p.h = 1.25; L.append(_v(s[0], "village/stone_wall", p, 0, 0))
+			"todam_thatch": p.h = WH_THATCH; p.cap = "thatch"; L.append(_v(s[0], "village/todam", p, 0, 0))
+			"todam_tile": p.h = WH_TILE; p.cap = "tile"; p.tile_seg = 0.5; L.append(_v(s[0], "village/todam", p, 0, 0))
+			"stone": p.lite = true; p.sparse = true; p.h = WH_STONE; L.append(_v(s[0], "village/stone_wall", p, 0, 0))
 		i += 1
 
 static func plan(params: Dictionary) -> Dictionary:
@@ -149,7 +153,7 @@ static func _choga_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(I
 			var wk := wall_k if wall_k in ["fence", "todam_thatch", "stone"] else "fence"
 			_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, wk, 0, 0, true)
 			var gt := "chomun" if wk == "todam_thatch" else "sarip"
-			_front_gate(L, seed * 10, X, Z1, gx, { type = gt, seed = seed, wall_h = 1.5, w = 1.9 if gt == "chomun" else 1.6 } if gt == "chomun" else { type = "sarip", seed = seed }, wk)
+			_front_gate(L, seed * 10, X, Z1, gx, { type = gt, seed = seed, wall_h = WH_THATCH, w = 1.9 if gt == "chomun" else 1.6 } if gt == "chomun" else { type = "sarip", seed = seed }, wk)
 	return _out(L, X, Z0, Z1)
 
 # 읍내 기와집(중인·향리) ------------------------------------------------------------------------------
@@ -174,7 +178,7 @@ static func _giwa_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(IN
 	var gx := -sx * r.between(0.5, maxf(0.6, X - 3.0))
 	_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "todam_tile", 0, 0, true)
 	var gt := "pyeong" if r.next() < 0.6 else "ilgak"
-	_front_gate(L, seed * 10, X, Z1, gx, { type = gt, seed = seed, wall_h = 1.7 }, "todam_tile")
+	_front_gate(L, seed * 10, X, Z1, gx, { type = gt, seed = seed, wall_h = WH_TILE }, "todam_tile")
 	if r.next() < 0.5: _naeoe(L, seed + 61, gx, Z1 - 2.6, 2.6)
 	return _out(L, X, Z0, Z1)
 
@@ -210,7 +214,7 @@ static func _jungnong(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 	if r.next() < 0.6: L.append(_v("tree", "nature/persimmon", { seed = seed * 10 + 6, s = 0.9 }, -sx * (X - 1.6), Z0 + 2.0, 0))
 	var wall: String = "stone" if region in ["jeju", "mountain"] else "todam_thatch"
 	_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, wall, 0, 0, true)
-	_front_gate(L, seed * 10, X, Z1, gx, { type = "chomun" if wall == "todam_thatch" else "sarip", seed = seed, wall_h = 1.5, w = 1.6 if wall != "todam_thatch" else 1.9 }, wall)
+	_front_gate(L, seed * 10, X, Z1, gx, { type = "chomun" if wall == "todam_thatch" else "sarip", seed = seed, wall_h = WH_THATCH, w = 1.6 if wall != "todam_thatch" else 1.9 }, wall)
 	return _out(L, X, Z0, Z1)
 
 static func _pick(r: Kit.Rng, a: Array):
@@ -254,7 +258,7 @@ static func _yangban(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 		# 중문: 대문 줄에서 비켜 낸다(대문 → 중문 → 안채가 한 줄로 보이지 않게) + 안마당 쪽 내외담
 		var gxl0 := -hrb.get_center().x
 		var mg := -sx * r.between(2.5, 4.0)
-		var jp := { type = "jungmun", seed = seed + 3, wall_h = 1.7 }
+		var jp := { type = "jungmun", seed = seed + 3, wall_h = WH_TILE }
 		var jh := GT.half(jp)
 		for seg in [[-X, mg - jh], [mg + jh, X]]:
 			L.append(_wall("midwall%d" % L.size(), seed + L.size(), seg[0], zm, seg[1], zm, "todam_tile"))
@@ -283,7 +287,7 @@ static func _yangban(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 		var gx := -sx * r.between(1.0, 3.0)
 		_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "todam_tile", 0, 0, true)
 		# 골목에서 물러난 평대문(문간 마당) + 문 안 내외담
-		_front_gate(L, seed * 10, X, Z1, gx, { type = "pyeong", seed = seed, wall_h = 1.7 }, "todam_tile", 1.8)
+		_front_gate(L, seed * 10, X, Z1, gx, { type = "pyeong", seed = seed, wall_h = WH_TILE }, "todam_tile", 1.8)
 		_naeoe(L, seed + 61, gx, Z1 - 1.8 - 2.6, 3.0)
 	else:
 		# 튼ㅁ자: 사랑채가 앞줄(남향), 옆에 평대문, 안채와 곳간이 안마당을 둘러쌈
@@ -299,7 +303,7 @@ static func _yangban(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 		var gx := sx * (X - 2.6)
 		var sedge := sxp + sab.size.x / 2 * (1.0 if sx > 0 else -1.0)
 		_enclose(L, seed * 10 + 20, -X, X, Z0, Z1, "todam_tile", 0, 0, true)
-		_front_gate(L, seed * 10, X, Z1, gx, { type = "ilgak" if r.next() < 0.5 else "pyeong", seed = seed, wall_h = 1.7 }, "todam_tile")
+		_front_gate(L, seed * 10, X, Z1, gx, { type = "ilgak" if r.next() < 0.5 else "pyeong", seed = seed, wall_h = WH_TILE }, "todam_tile")
 		_naeoe(L, seed + 61, gx - sx * 0.6, Z1 - 3.0, 3.0)
 		L.append(_v("well", "village/well", { seed = seed * 10 + 2 }, -gx * 0.4 - sx * 2.0, az + anb.end.y + yard * 0.4, 0))
 	if has_sd:
@@ -311,8 +315,8 @@ static func _yangban(r: Kit.Rng, region: String, seed: int) -> Dictionary:
 	return _out(L, X, Z0, Z1)
 
 static func _wall(tag: String, seed: int, ax: float, az: float, bx: float, bz: float, kind: String) -> Dictionary:
-	var p := { seed = seed, ax = snappedf(ax, 0.01), az = snappedf(az, 0.01), bx = snappedf(bx, 0.01), bz = snappedf(bz, 0.01), h = 1.7, cap = "tile", tile_seg = 0.5 }
-	if kind == "todam_thatch": p.h = 1.5; p.cap = "thatch"
+	var p := { seed = seed, ax = snappedf(ax, 0.01), az = snappedf(az, 0.01), bx = snappedf(bx, 0.01), bz = snappedf(bz, 0.01), h = WH_TILE, cap = "tile", tile_seg = 0.5 }
+	if kind == "todam_thatch": p.h = WH_THATCH; p.cap = "thatch"
 	return _v(tag, "village/todam", p, 0, 0)
 
 # 주막 마당: 주막 + 반쯤 두른 싸리울 + 길가 쪽 트임
@@ -466,7 +470,7 @@ static func _ruin(out: Dictionary, ruin: Dictionary, seed: int) -> void:
 static func _gate_demo(params: Dictionary, seed: int) -> Dictionary:
 	var gt: String = params.get("gate", "pyeong")
 	var wall: String = { sarip = "fence", chomun = "todam_thatch", hongsal = "none", samun = "stone" }.get(gt, "todam_tile")
-	var gp := { type = gt, seed = seed, wall_h = 1.5 if wall == "todam_thatch" else 1.7 }
+	var gp := { type = gt, seed = seed, wall_h = WH_THATCH if wall == "todam_thatch" else WH_TILE }
 	var L := []
 	var hf := GT.half(gp)
 	var X := hf + 3.2
