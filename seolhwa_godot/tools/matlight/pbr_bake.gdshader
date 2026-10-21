@@ -184,38 +184,71 @@ void surf(vec2 uv, out vec3 alb, out float h, out float r) {
 		float joint = 1.0 - smoothstep(0.0, 0.04, v.y);
 		alb = mix(vec3(0.9 + 0.2 * v.z) * (1.0 + 0.14 * (n - 0.5)), vec3(0.6, 0.55, 0.46), joint);
 		r = mix(0.78, 0.95, joint);
-	} else if (layer == 10 || layer == 11) {   // 흙 마당 / 다진 길: 흙덩이 · 자갈
-		float n = fbm(uv, vec2(6), 6);
-		vec3 g1 = vor(uv, vec2(layer == 10 ? 22.0 : 34.0), 1.0);
-		float peb = (1.0 - smoothstep(0.18, 0.32, g1.x)) * step(layer == 10 ? 0.72 : 0.55, g1.z);
-		vec3 g2 = vor(uv, vec2(7), 1.0);
-		float stone = (1.0 - smoothstep(0.1, 0.2, g2.x)) * step(0.9, g2.z);
-		float clod = layer == 10 ? ridged(uv, vec2(8), 3) : 0.5;
-		h = 0.4 + (layer == 10 ? 0.3 : 0.15) * (n - 0.5) + 0.25 * peb * (1.0 - g1.x / 0.32) + 0.4 * stone + (layer == 10 ? 0.15 * (clod - 0.5) : 0.0);
-		alb = vec3(1.0 + 0.16 * (n - 0.5)) * mix(vec3(1.0), vec3(0.95, 0.95, 1.0) * (0.85 + 0.3 * g1.z), peb) * mix(vec3(1.0), vec3(0.9, 0.9, 0.92), stone);
-		r = 0.95 - 0.08 * peb;
-	} else if (layer == 12) {   // 풀: 짧은 잎 획 다발
-		float acc = 0.0, top = 0.0;
+	} else if (layer == 10 || layer == 11) {   // 흙 마당 / 다진 길(2차): 흙빛 얼룩 · 흙덩이 · 마른 갈라짐 · 잔자갈 · 자갈 · 돌(크기 세 단, 돌마다 빛깔)
+		bool yard = layer == 10;
+		float n = fbm(uv, vec2(5), 6);
+		float n2 = fbm(uv + 0.31, vec2(3), 4);
+		float clod = yard ? ridged(uv, vec2(9), 4) : ridged(uv, vec2(14), 3);
+		// 마른 흙 갈라짐(마당은 군데군데, 길은 거의 없음)
+		vec3 cv = vor(uv, vec2(6), 0.9);
+		float crack = (1.0 - smoothstep(0.0, 0.012, cv.y)) * smoothstep(yard ? 0.52 : 0.7, yard ? 0.66 : 0.8, fbm(uv, vec2(2), 3));
+		// 돌 세 단: 잔자갈(조밀) · 자갈 · 돌 — 보로노이 칸의 안쪽(경계에서 떨어진 데)을 돌로: 모난 자연석 모양. 좌표를 흔들어 둥근 판박이를 피한다
+		vec2 wq = uv + (vec2(fbm(uv, vec2(9), 3), fbm(uv + 0.7, vec2(9), 3)) - 0.5) * 0.02;
+		vec3 g0 = vor(wq, vec2(yard ? 52.0 : 64.0), 1.0);
+		float grit = smoothstep(0.1, 0.2, g0.y) * step(yard ? 0.6 : 0.45, g0.z);
+		vec3 g1 = vor(wq * 1.0 + 0.13, vec2(yard ? 18.0 : 22.0), 1.0);
+		float pk1 = step(yard ? 0.76 : 0.66, g1.z);
+		float peb = smoothstep(0.12, 0.2, g1.y) * pk1;
+		vec3 g2 = vor(wq + 0.41, vec2(7), 1.0);
+		float pk2 = step(yard ? 0.88 : 0.92, g2.z);
+		float stone = smoothstep(0.14, 0.22, g2.y) * pk2;
+		float pd = smoothstep(0.12, 0.45, g1.y), sdm = smoothstep(0.14, 0.5, g2.y);
+		h = 0.42 + (yard ? 0.26 : 0.12) * (n - 0.5) + (yard ? 0.2 : 0.08) * (clod - 0.5) - 0.3 * crack
+			+ 0.1 * grit + 0.3 * peb * sqrt(pd) + 0.5 * stone * sqrt(sdm);
+		// 흙빛: 붉은 흙 ↔ 잿빛 흙 큰 얼룩, 흙덩이 그늘, 갈라짐은 짙게
+		vec3 soil = mix(vec3(1.1, 0.98, 0.86), vec3(0.9, 0.93, 0.98), smoothstep(0.35, 0.7, n2));
+		soil *= 1.0 + 0.34 * (n - 0.5) + (yard ? 0.22 : 0.12) * (clod - 0.5);
+		soil *= 1.0 - 0.45 * crack;
+		vec3 pc0 = mix(vec3(0.95, 0.95, 0.98), vec3(1.3, 1.18, 1.0), h21(vec2(g0.z * 91.0, 3.0)));
+		float t1 = fract(g1.z * 17.0), t2 = fract(g2.z * 7.3);
+		float spk = 0.82 + 0.36 * h21(floor(uv * 512.0) + 0.5) * (0.6 + 0.4 * fbm(uv, vec2(64), 2));   // 화강암 알갱이
+		vec3 pc1 = mix(mix(vec3(0.78, 0.86, 1.0), vec3(1.45, 1.42, 1.38), t1), vec3(1.15, 0.85, 0.65), step(0.8, fract(g1.z * 41.0)) * 0.7) * spk;
+		vec3 pc2 = mix(vec3(0.82, 0.88, 1.0), vec3(1.4, 1.38, 1.32), t2) * spk;
+		alb = mix(soil, pc0, grit * 0.7);
+		alb = mix(alb, pc1 * (0.82 + 0.3 * pd), peb);
+		alb = mix(alb, pc2 * (0.78 + 0.35 * sdm) * (1.0 + 0.12 * (fbm(uv, vec2(40), 3) - 0.5)), stone);
+		// 박힌 돌 둘레 흙 그늘
+		alb *= 1.0 - 0.14 * (1.0 - smoothstep(0.08, 0.12, g1.y)) * pk1 * (1.0 - peb);
+		alb *= 1.0 - 0.2 * (1.0 - smoothstep(0.09, 0.14, g2.y)) * pk2 * (1.0 - stone);
+		r = 0.97 - 0.12 * peb - 0.15 * stone - (yard ? 0.0 : 0.06);
+	} else if (layer == 12) {   // 풀(2차): 포기 덩이(짙은 풀 ↔ 마른 풀) · 포기 사이 흙 · 잎 획 세 켜
+		float acc = 0.0, top = 0.0, kind = 0.0;
 		for (int k = 0; k < 3; k++) {
-			vec2 P = vec2(28.0 + float(k) * 9.0);
+			vec2 P = vec2(30.0 + float(k) * 11.0);
 			vec2 q = uv * P; vec2 ci = floor(q);
 			for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) {
 				vec2 c = ci + vec2(float(x), float(y));
 				vec2 hh = h22(mod(c, P) + float(k) * 13.0);
-				float a = -1.5708 + (hh.x - 0.5) * 1.6;
+				float a = -1.5708 + (hh.x - 0.5) * 2.2;
 				vec2 dir = vec2(cos(a), sin(a));
 				vec2 d = q - (c + hh);
 				float al = dot(d, dir), ac = dot(d, vec2(-dir.y, dir.x));
-				float len = 0.8 + 0.6 * hh.y;
-				float w = 0.08 * (1.0 - clamp(al / len, 0.0, 1.0));
-				float m = (1.0 - smoothstep(w * 0.6, w, abs(ac))) * step(0.0, al) * step(al, len);
-				if (m > acc) { acc = m; top = al / len; }
+				float len = 0.9 + 0.8 * hh.y;
+				float w = 0.11 * (1.0 - clamp(al / len, 0.0, 1.0));
+				float m = (1.0 - smoothstep(w * 0.55, w, abs(ac))) * step(0.0, al) * step(al, len);
+				if (m > acc) { acc = m; top = al / len; kind = h21(mod(c, P) + 7.0 + float(k)); }
 			}
 		}
-		float n = fbm(uv, vec2(4), 4);
-		h = 0.2 + 0.7 * acc * (0.4 + 0.6 * top) + 0.1 * n;
-		alb = vec3(0.65 + 0.55 * acc * (0.6 + 0.4 * top)) * mix(vec3(1.0), vec3(1.1, 1.05, 0.8), smoothstep(0.6, 0.8, n) * 0.6);
-		r = 0.9;
+		float clump = fbm(uv, vec2(4), 5);        // 포기 덩이(0.25m 남짓)
+		float dry = smoothstep(0.55, 0.75, fbm(uv + 0.5, vec2(2), 4));
+		float bare = 1.0 - smoothstep(0.3, 0.5, clump);   // 포기 사이 흙
+		float cov = acc * (1.0 - bare * 0.85);
+		h = 0.15 + 0.55 * clump + 0.3 * cov * (0.4 + 0.6 * top);
+		vec3 lush = vec3(0.78, 1.0, 0.62), dryc = vec3(1.45, 1.25, 0.78), soilc = vec3(0.95, 0.68, 0.5) * 0.55;
+		vec3 blade = mix(lush, dryc, max(dry, step(0.82, kind) * 0.8)) * (0.55 + 0.6 * top) * (0.85 + 0.3 * kind);
+		vec3 under = mix(lush * 0.42, soilc, bare);   // 잎 사이(그늘 진 밑동 · 흙)
+		alb = mix(under, blade, cov) * (0.9 + 0.25 * (clump - 0.5));
+		r = 0.88;
 	} else if (layer == 13) {   // 장판: 기름 먹인 종이 — 고운 결, 반들
 		float n = fbm(uv, vec2(12), 5);
 		h = 0.5 + 0.1 * (n - 0.5);

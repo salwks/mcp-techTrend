@@ -94,6 +94,10 @@ amb_k={
 "type": "float",
 "value": 1.0
 }
+sun_k={
+"type": "float",
+"value": 1.0
+}
 sun_dir={
 "type": "vec3",
 "value": Vector3(0.3, 0.8, 0.5)

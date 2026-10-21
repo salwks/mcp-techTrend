@@ -299,8 +299,14 @@ void main() {
 	if (p.bloom > 0.0) c += textureLod(t_bloom, uv, 0.0).rgb * p.lum * p.bloom;
 	c = real ? agx(c) : to_srgb(neutral_tm(c));
 	c = mix(c, vec3(0.85, 0.855, 0.835), haze * (1.0 - 0.8 * p.night));   // 먼 산 옅은 안개(대기 원근)
-	c = p.gain.rgb * (c + p.lift.rgb * (1.0 - c));
-	c = pow(max(c, vec3(0.0)), 1.0 / p.gamma.rgb);
+	if (real) {
+		// 사실 쪽: 시간대 색보정의 검정 들기(lift)·감마 들기는 그림 쪽 것 — 낮에는 뿌연 막이 되므로 빼고 빛깔(gain)만 남긴다.
+		//   밤은 달빛 푸른 들기를 반쯤 남긴다(어둠 속 길·집 모양이 읽히게)
+		c = p.gain.rgb * (c + p.lift.rgb * 0.6 * p.night * (1.0 - c));
+	} else {
+		c = p.gain.rgb * (c + p.lift.rgb * (1.0 - c));
+		c = pow(max(c, vec3(0.0)), 1.0 / p.gamma.rgb);
+	}
 	float L = luma(c);
 	c = mix(vec3(L), c, p.sat);
 	float sh = (1.0 - L) * (1.0 - L);
