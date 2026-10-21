@@ -349,7 +349,7 @@ func _depth_at(si: int, side: float, s: float, bk: float) -> float:
 	while k < 40.0:
 		var p := F + n * (k + 0.5)
 		if not _owned(p, si, side):
-			if k == 0.0 and OS.has_environment("ORG_DBG3") and si == 0 and side < 0: print("DBGD p=%s own=%s blocked=%s" % [str(p), str(_own.get(Vector2i(int(floorf(p.x)), int(floorf(p.y))))), _blocked(p, 0.3)])
+			if k == 0.0 and OS.has_environment("ORG_DBG3"): print("DBGD p=%s own=%s blocked=%s" % [str(p), str(_own.get(Vector2i(int(floorf(p.x)), int(floorf(p.y))))), _blocked(p, 0.3)])
 			break
 		k += 0.5
 	return k
@@ -374,7 +374,8 @@ func cut_lots_v() -> void:
 				var den := density(p)
 				if r.next() < lerpf(float(cfg.get("empty_out", 0.22)), float(cfg.get("empty_in", 0.04)), den) * 0.6:
 					s += r.between(4.0, 10.0); continue
-				var f: float = lerpf(r.between(15.5, 20.0), r.between(14.0, 17.5), den)   # 초가 3칸(처마 포함 약 11m) + 담 안 여유가 드는 너비
+				var fr_in: Array = cfg.get("front_in", [14.0, 17.5])
+				var f: float = lerpf(r.between(15.5, 20.0), r.between(float(fr_in[0]), float(fr_in[1])), den)   # 초가 3칸(처마 포함 약 11m) + 담 안 여유가 드는 너비
 				if st.kind == "alley": f *= 0.95
 				# 종류를 먼저 고르고 그에 맞는 앞 너비(기와집·양반가는 몸채가 길어 넓게)
 				var t0 := _pick_type(den, {})
@@ -390,7 +391,8 @@ func cut_lots_v() -> void:
 						if not _accept(lot): lot = {}
 				if lot.is_empty():
 					s += 1.5; continue
-				s += float(lot.flen) + r.between(0.7, 1.1)
+				var lg: Array = cfg.get("lot_gap", [0.7, 1.1])
+				s += float(lot.flen) + r.between(float(lg[0]), float(lg[1]))
 
 func _strip_lot(si: int, side: float, s: float, f0: float, den: float) -> Dictionary:
 	var st: Dictionary = streets[si]
@@ -409,7 +411,8 @@ func _strip_lot(si: int, side: float, s: float, f0: float, den: float) -> Dictio
 				why["strip_shallow"] = int(why.get("strip_shallow", 0)) + 1
 				if OS.has_environment("ORG_DBG2"): print("DBGSTRIP si=%d side=%d s=%.0f bk=%.1f dmin=%.1f" % [si, side, s, bk, dmin])
 				continue
-			var dcap: float = lerpf(r.between(17.0, 25.0), r.between(13.5, 18.0), den)
+			var dc_in: Array = cfg.get("depth_in", [13.5, 18.0])
+			var dcap: float = lerpf(r.between(17.0, 25.0), r.between(float(dc_in[0]), float(dc_in[1])), den)
 			var d0: float = minf(_depth_at(si, side, s + 0.4, bk), dcap) - 0.4
 			var d1: float = minf(_depth_at(si, side, s + f - 0.4, bk), dcap) - 0.4
 			d0 = maxf(d0, 8.5); d1 = maxf(d1, 8.5)
@@ -457,8 +460,10 @@ func cut_lots() -> void:
 					if pass_i == 0:
 						f = lerpf(r.between(15.0, 22.0), r.between(11.5, 16.0), den)
 						d = lerpf(r.between(20.0, 30.0), r.between(17.0, 26.0), den)   # 깊게 잡고 막히면 줄인다 — 뒤 필지와 등을 맞대게
+						if cfg.has("depth_in"): d = maxf(d, float(cfg.depth_in[1]) * 0.8)
 					else:
 						f = r.between(11.0, 14.0); d = r.between(14.0, 24.0)
+						if cfg.has("depth_in"): d = maxf(d, float(cfg.depth_in[1]) * 0.8)   # 읍내: 깊게 잡고 막히면 줄인다(뒤 필지와 등을 맞대게)
 					if st.kind == "alley": f *= 0.92; d *= 0.92
 					var lot := _try_lot(si, s, f, d, side, den)
 					if not lot.is_empty() and not _accept(lot): lot = {}
@@ -616,7 +621,7 @@ func _fill(li: int, lot: Dictionary, t: String) -> Dictionary:
 	var ry: float = fm.ry + r.between(-0.05, 0.05)   # 몇 도 어긋남
 	var poly: Array = lot.poly
 	var wall_line := inset(poly, 0.35)              # 담 가운데 줄
-	var inner := inset(poly, 1.0)                   # 건물이 들 자리(담 + 처마 물받이)
+	var inner := inset(poly, float(cfg.get("inner_inset", 1.0)))   # 건물이 들 자리(담 + 처마 물받이) — 읍내는 처마가 담 줄에 닿을 만큼 바짝(0.6)
 	var fa: Vector2 = lot.fa; var fb: Vector2 = lot.fb
 	# 로컬(앞 변 = 대문 줄) 크기 어림: 너비 = 앞 변, 깊이 = 평균 깊이
 	var lw: float = fa.distance_to(fb) - 1.0
@@ -646,7 +651,8 @@ func _fill(li: int, lot: Dictionary, t: String) -> Dictionary:
 				bp.seed = seed0 + k
 				var bb := _bounds(bp)
 				# 몸채 앞 처마가 앞 변에서 fi 안(가게 0.6m — 가게 칸이 길로 트임, 집은 앞마당 3~7m)
-				var fi: float = 0.6 if t == "shop" else (r.between(2.0, 4.5) if t == "hut" else r.between(3.2, 7.0))
+				var fy: Array = cfg.get("front_yard", [3.2, 7.0])
+				var fi: float = 0.6 if t == "shop" else (r.between(2.0, 4.5) if t == "hut" else r.between(float(fy[0]), float(fy[1])))
 				if k >= 4 and t != "shop": fi = 3.4
 				# 좁은 필지: 몸채를 옆으로 돌려(박공이 길 쪽) 옆마당을 보게 — 읍내 좁은 필지에 흔한 꼴
 				var turn := 0.0
@@ -737,6 +743,8 @@ func _fill(li: int, lot: Dictionary, t: String) -> Dictionary:
 					var b2: Vector2 = pc + rot(Vector2(float(q.params.bx), float(q.params.bz)), ry + float(e.ry))
 					if not (pip(inner, a2) and pip(inner, b2)): continue
 				elif e.kit != "bldg/building" and not pip(inner, pc): continue
+				# 대문 → 마당 안 길(안으로 5m, 폭 ±1.8m)에 놓인 마당 것(일거리·텃밭·장독)은 뺀다 — 묶음 짜임이 필지 담 대문 자리와 어긋날 때
+				if e.kit != "bldg/building" and not (q.params as Dictionary).has("ax") and seg_dist(pc, G, G - (lot.n as Vector2) * 5.0) < 1.8 + (2.0 if String(e.kit) in ["village/teotbat", "village/jangdok"] else 0.6): continue
 				q.x = pc.x; q.z = pc.y; q.ry = ry + float(e.ry)   # 월드(아래 _emit에서 필지 로컬로)
 				q.world = true
 				pieces.append(q)
@@ -794,15 +802,16 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 		out.append(q)
 	# 넓은 필지: 남은 마당에 곁채(곳간·헛간)·텃밭·짚가리 — 마당이 비어 보이지 않게(필지 면적 대비 건물이 작을 때만)
 	if t in ["house_c", "house_g", "choga_house", "jungnong", "giwa_house", "hut"]:
-		var inner2 := inset(poly, 1.1)
+		var inner2 := inset(poly, float(cfg.get("inner_inset", 1.0)) + 0.1)
 		var built := 0.0
 		for rr in brects: built += absf(area(rr))
 		var la := absf(area(poly))
 		var tries := 0
 		var added := 0
-		while built < la * 0.4 and tries < 50 and added < 3:
+		var xr := float(cfg.get("extras_ratio", 0.4)); var xm := int(cfg.get("extras_max", 3))
+		while built < la * xr and tries < 60 and added < xm:
 			tries += 1
-			var kind: String = _pick(["gotgan", "gotgan", "teotbat", "hay"]) if float(lot.zone) < 0.5 else _pick(["gotgan", "gotgan", "jangdok"])
+			var kind: String = _pick(["gotgan", "gotgan", "teotbat", "hay"]) if float(lot.zone) < 0.5 else _pick(["gotgan", "gotgan", "gotgan", "araechae", "jangdok"])
 			var c2: Vector2 = _centroid(poly) + Vector2(r.between(-1, 1), r.between(-1, 1)) * sqrt(la) * 0.45
 			var ry2: float = lry + (0.0 if r.next() < 0.5 else PI / 2) + (PI if r.next() < 0.5 else 0.0)
 			var e2 := {}
@@ -812,6 +821,12 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 					var gp := { type = "gotgan", region = String(cfg.get("region", "south")), cls = "middle" if t in ["house_g", "giwa_house"] else "commoner", seed = seed_of(li) + 31 + tries }
 					bb2 = _bounds(gp)
 					e2 = { tag = "gotgan", kit = "bldg/building", params = gp }
+				"araechae":
+					# 아래채·가게채(낙안읍성 집들처럼 한 필지에 두세 채 — 아래채·헛간채·가게채)
+					var ap2 := { type = "araechae", region = String(cfg.get("region", "south")), cls = "commoner", seed = seed_of(li) + 33 + tries }
+					bb2 = _bounds(ap2)
+					e2 = { tag = "araechae", kit = "bldg/building", params = ap2 }
+					kind = "gotgan"
 				"teotbat": bb2 = Rect2(-2.4, -1.7, 4.8, 3.4); e2 = { tag = "teotbat", kit = "village/teotbat", params = { seed = seed_of(li) + 41, w = 4.4, d = 3.0 } }
 				"hay": bb2 = Rect2(-1.3, -1.3, 2.6, 2.6); e2 = { tag = "hay", kit = "village/haystack", params = { seed = seed_of(li) + 43, s = r.between(0.85, 1.1) } }
 				"jangdok": bb2 = Rect2(-1.2, -0.9, 2.4, 1.8); e2 = { tag = "jangdok2", kit = "village/jangdok", params = { seed = seed_of(li) + 47, w = 2.2, d = 1.6 } }
@@ -819,7 +834,7 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 			var mine := _rect_world(bb2, c2, ry2, 0.0)
 			var clash := false
 			for rr in brects:
-				if poly_dist(mine, rr) < 1.4: clash = true; break
+				if poly_dist(mine, rr) < float(cfg.get("extras_gap", 1.4)): clash = true; break
 			# 대문 → 마당 안 길(대문에서 안으로 7m 띠, 폭 ±1.7m)은 비운다 — 문 안 내외담은 묶음 것이라 그대로
 			if not gate.is_empty():
 				var Gw := Vector2(float(gate.x), float(gate.z))
@@ -855,7 +870,9 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 	#   땅은 생성할 때의 높이장(hf) 기준. 지형이 바뀌면 생성기를 다시 돌린다(docs/reports/town-organic.md 지형 가정)
 	if hf.is_valid() and bool(cfg.get("terrace", true)):
 		var h0 := _h(_centroid(poly))
+		var nfr3 := 2 if poly.size() == 5 else 1
 		for i in poly.size():
+			if i < nfr3: continue   # 앞 변(길·대문 쪽)에는 축대를 두지 않는다 — 대문 앞을 막지 않게(터 고르기 가장자리 경사로 오른다)
 			var a3: Vector2 = poly[i]; var b3: Vector2 = poly[(i + 1) % poly.size()]
 			var mid3 := (a3 + b3) / 2.0
 			var outn := (mid3 - _centroid(poly)).normalized()
@@ -877,9 +894,14 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 		var wl := inset(poly, 0.35)
 		var nfront := 2 if poly.size() == 5 else 1    # 앞 변 마디 수(오각이면 앞 두 변)
 		var segs := []   # [a, b, is_front]
+		var side_skip := -1
+		if float(cfg.get("partial_walls", 0.0)) > 0.0 and wk in ["fence", "stone"] and r.next() < float(cfg.get("partial_walls", 0.0)):
+			side_skip = nfront if r.next() < 0.5 else wl.size() - 1   # 앞 변 바로 다음 변(오른 옆) 또는 마지막 변(왼 옆)
 		for i in wl.size():
 			var isf: bool = i < nfront
 			if isf and not front: continue
+			# 담을 다 두르지 않은 집(옆 한 변 없음 — 이웃 담·텃밭이 경계, ACON 47649 평면·낙안읍성 '맞담'): cfg.partial_walls 확률, 싸리울·돌담 집만
+			if not isf and side_skip == i: continue
 			segs.append([wl[i], wl[(i + 1) % wl.size()], isf, i])
 		# 대문 틈
 		var gpiece := {}
@@ -1025,6 +1047,13 @@ func dress() -> void:
 			if sd < 2.0: continue
 			var den := density(p)
 			var u := r.next()
+			if bool(cfg.get("urban", false)):
+				# 읍내 빈 땅은 채마밭(텃밭)·장작더미 — 풀숲이 아니라 쓰는 땅으로(낙안읍성 텃밭)
+				if u < 0.3: items.append(_free("garden", "nature/garden_plot", { seed = k, w = snappedf(r.between(4.5, 7.0), 0.1), d = snappedf(r.between(4.0, 6.0), 0.1) }, p, r.between(-0.4, 0.4)))
+				elif u < 0.42: items.append(_free("teotbat", "village/teotbat", { seed = k, w = r.between(4.0, 6.0), d = r.between(3.0, 4.2) }, p, r.between(-0.3, 0.3)))
+				elif u < 0.48: items.append(_free("tree", "nature/persimmon", { seed = k, s = r.between(0.9, 1.15) }, p, 0.0))
+				k += 1
+				continue
 			if u < 0.34 * float(cfg.get("trees", 1.0)): items.append(_free("tree", "nature/pine" if r.next() < 0.55 else "nature/oak", { seed = k, s = r.between(0.85, 1.25) }, p, r.between(0, TAU)))
 			elif u < 0.36 and den < 0.5: items.append(_free("teotbat", "village/teotbat", { seed = k, w = r.between(4.0, 6.0), d = r.between(3.0, 4.2) }, p, r.between(-0.3, 0.3)))
 			elif u < 0.42 and den < 0.4: items.append(_free("hay", "village/haystack", { seed = k, s = r.between(0.8, 1.15) }, p, 0.0))

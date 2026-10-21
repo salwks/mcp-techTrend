@@ -113,6 +113,7 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 	# 구역마다 고을 짜임(갈래길·필지·집)
 	var alleys := []
 	var dsum := []
+	var urban_rects := []
 	for k in X.districts.size():
 		var d: Dictionary = X.districts[k]
 		var oc := {
@@ -121,8 +122,16 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 			plazas = d.get("plazas", []), centers = d.get("centers", []), base_density = d.get("base_density", 0.3),
 			branch = d.get("branch", { gap_a = 22.0, gap_b = 36.0, p = 0.9, len_a = 30.0, len_b = 80.0, alley_gap_a = 16.0, alley_gap_b = 26.0, alley_p = 0.7 }),
 			junction_plaza_p = d.get("junction_plaza_p", 0.3), empty_out = d.get("empty_out", 0.08), empty_in = d.get("empty_in", 0.0),
-			table = d.get("table", {}), trunk_shop = d.get("trunk_shop", 0.0), terrace = true, trees = d.get("trees", 0.35 if String(d.id).begins_with("in") else 0.8),
+			table = d.get("table", {}), trunk_shop = d.get("trunk_shop", 0.0), terrace = true, trees = d.get("trees", 0.35 if String(d.id).begins_with("in") else 0.8), partial_walls = d.get("partial_walls", 0.25),
 		}
+		# 성 안(읍내) 구역: 촘촘하게(마당 흙·곁채·깊은 필지·빈 땅은 채마밭) — 남원 읍성 안 남쪽(eup)과 같은 값
+		var urban: bool = d.get("urban", String(d.id).begins_with("in"))
+		if urban:
+			for kk in ["extras_ratio", "extras_max", "front_in", "depth_in", "lot_gap", "inner_inset", "front_yard", "extras_gap"]:
+				oc[kk] = d.get(kk, { extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.6, front_yard = [3.4, 5.5], extras_gap = 0.9 }[kk])
+			oc.urban = true
+			var ab := OG._bbox(apoly_of(d.area))
+			urban_rects.append([snappedf(ab.position.x, 0.1), snappedf(ab.position.y, 0.1), snappedf(ab.end.x, 0.1), snappedf(ab.end.y, 0.1)])
 		# 이 구역에 닿는 큰길(구역 둘레 40m 안 마디)
 		var apoly := []
 		for q in d.area: apoly.append(Vector2(float(q[0]), float(q[1])))
@@ -145,7 +154,12 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 		for l in res.log: X.log.append("[%s] %s" % [d.id, l])
 	for t in X.trunks:
 		if t.get("paint", true): alleys.append({ id = "%s_%s" % [X.pre, t.id], points = t.pts, width_m = snappedf(float(t.w) - 0.4, 0.01), kind = "trunk" })
-	return { items = X.items, alleys = alleys, majors = X.majors, districts = dsum, log = X.log, tier = tier, label = TIERS.get(tier, {}).get("label", tier) }
+	return { items = X.items, alleys = alleys, majors = X.majors, districts = dsum, log = X.log, tier = tier, label = TIERS.get(tier, {}).get("label", tier), urban = urban_rects }
+
+static func apoly_of(area: Array) -> Array:
+	var out := []
+	for q in area: out.append(Vector2(float(q[0]), float(q[1])))
+	return out
 
 # ------------------------------------------------------------------------------------------------------
 # 공통: 읍성(방형 석성, 4문 + 옹성) · 성문 축 · 성 안 둘레길 · 성 밖 삼단일묘·향교·장시

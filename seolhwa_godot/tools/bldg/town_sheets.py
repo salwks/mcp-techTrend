@@ -7,6 +7,15 @@ V = json.load(open(os.path.join(here, 'town_views.json')))
 raw = 'res://shots/town_organic/raw/'
 sheets = []
 for dn in sys.argv[1:]:
+    if dn not in ('west', 'eup'):
+        # 도시·마을 빌더 견본: 전이 없다 — 한 장에 내려다보기 3 + 마을 카메라 + 1인칭
+        vs = V['sets'][dn]['views']
+        cells = []
+        for v in vs:
+            p = '%s%s_%s_after.png' % (raw, dn, v['id'])
+            if os.path.exists(os.path.join(root, p[6:])): cells.append(dict(path=p, label=v['label']))
+        sheets.append(dict(out='res://shots/town_organic/settle_%s.jpg' % dn, title='도시·마을 빌더 견본 — %s' % V['sets'][dn].get('label', dn), cols=3, cw=640, ch=360, cells=cells))
+        continue
     vs = V['sets'][dn]['views']
     def pairs(ids):
         cells = []

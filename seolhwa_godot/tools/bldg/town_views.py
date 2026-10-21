@@ -37,7 +37,12 @@ views += [dict(id='o1', label='구역 내려다보기', mode='over', x=cx, z=cz,
           dict(id='o3', label='남쪽에서 비스듬히', mode='over', x=cx, z=cz - 5, dist=180, pitch=34, yaw=0)]
 walks = []
 for a in streets:
-    p = a['points']; pts = p[::3] + ([p[-1]] if (len(p) - 1) % 3 else [])
+    p = [list(q) for q in a['points']]
+    # 막다른 끝은 1.5m 당긴다(길 끝이 담·건물 처마 밑에 닿아 발 둘레가 끼는 자리 — 걷기 판정만)
+    if len(p) >= 2:
+        dx = p[-2][0] - p[-1][0]; dz = p[-2][1] - p[-1][1]; L = max(1e-6, (dx * dx + dz * dz) ** 0.5)
+        k = min(1.5, L * 0.5) / L; p[-1] = [p[-1][0] + dx * k, p[-1][1] + dz * k]
+    pts = p[::3] + ([p[-1]] if (len(p) - 1) % 3 else [])
     walks.append(dict(id=a['id'].replace(pre + '_', ''), label=a['id'], pts=[[round(x, 1), round(z, 1)] for x, z in pts], shots=[]))
 if fx.get('lane'): walks.append(dict(id='lane', label='큰길', pts=fx['lane'], shots=[]))
 xs = [p[0] for p in D['area']]; zs = [p[1] for p in D['area']]

@@ -66,7 +66,7 @@ func _initialize() -> void:
 		var out := "res://shots/town_organic/_place_%s/" % name
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
 		var f := FileAccess.open(ProjectSettings.globalize_path(out + "placement_settle_%s.json" % name), FileAccess.WRITE)
-		f.store_string(JSON.stringify({ note = "도시·마을 빌더 견본 " + String(cfg.label) + " — tools/bldg/settlement_place.gd", tier = res.tier, majors = res.majors, districts = res.districts, supersede = sup, alleys = res.alleys, items = res.items }, " ", false))
+		f.store_string(JSON.stringify({ note = "도시·마을 빌더 견본 " + String(cfg.label) + " — tools/bldg/settlement_place.gd", tier = res.tier, majors = res.majors, districts = res.districts, supersede = sup, alleys = res.alleys, urban = res.urban, items = res.items }, " ", false))
 		f.close()
 		var tc := {}
 		for it in res.items:
@@ -92,8 +92,12 @@ func _views(name: String, cfg: Dictionary, res: Dictionary, bb: Rect2) -> Dictio
 	var al: Array = res.alleys.duplicate()
 	al.sort_custom(func(a, b): return (a.points as Array).size() > (b.points as Array).size())
 	for a in al:
-		var p: Array = a.points
+		var p: Array = (a.points as Array).duplicate(true)
 		if p.size() < 3: continue
+		# 막다른 끝 1.5m 당김(걷기 판정 — 길 끝이 담·처마 밑에 닿는 자리)
+		var e1 := Vector2(float(p[p.size() - 1][0]), float(p[p.size() - 1][1])); var e0 := Vector2(float(p[p.size() - 2][0]), float(p[p.size() - 2][1]))
+		var e2 := e1 + (e0 - e1).normalized() * minf(1.5, e0.distance_to(e1) * 0.5)
+		p[p.size() - 1] = [e2.x, e2.y]
 		if k <= 5:
 			var m: Array = p[p.size() / 2]
 			views.append({ id = "t%d" % k, label = "%s 가운데(마을 카메라)" % String(a.id), mode = "town", x = float(m[0]), z = float(m[1]) })

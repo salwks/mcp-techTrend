@@ -27,7 +27,7 @@ const DISTRICTS := {
 	},
 	# 읍성 안 남쪽 절반(남문 ↔ 십자로, 서문 ↔ 동문 사이) — 옛 배치는 바둑판 줄(house_compound·giwa·choga). 북쪽 객사·관아(이야기 자리)는 그대로
 	eup = {
-		seed = 1872, prefix = "orge", group = "남원 읍성 안 남쪽(고을 짜임)", region = "south",
+		seed = 1877, prefix = "orge", group = "남원 읍성 안 남쪽(고을 짜임)", region = "south",
 		area = [[-3315, 253], [-3140, 253], [-3140, 336], [-3315, 336]],
 		trunk_ids = { namwon_eup_street = 5.0, namwon_eup_street_ew = 5.0 },
 		# 성 안 둘레길(순성로 — 성벽 안쪽을 도는 길): 남·서·동 안쪽
@@ -37,12 +37,14 @@ const DISTRICTS := {
 		plazas = [{ c = [-3227.8, 331], r = 8.0, kind = "gate" }, { c = [-3227.8, 256], r = 6.5, kind = "well" }],
 		centers = [{ c = [-3227.8, 300], r = 70.0, w = 1.0 }, { c = [-3227.8, 252], r = 60.0, w = 1.0 }],
 		base_density = 0.45,
-		branch = { gap_a = 22.0, gap_b = 36.0, p = 0.9, len_a = 30.0, len_b = 80.0, alley_gap_a = 15.0, alley_gap_b = 26.0, alley_p = 0.7 },
+		branch = { gap_a = 22.0, gap_b = 34.0, p = 0.95, len_a = 30.0, len_b = 80.0, alley_gap_a = 15.0, alley_gap_b = 24.0, alley_p = 0.7 },
 		junction_plaza_p = 0.3, empty_out = 0.05, empty_in = 0.0,
+		# 성 안: 촘촘하게 — 마당 흙(urban), 빈터 나무 적게, 한 필지에 곁채 여럿(낙안읍성 필지 실측: 집마다 헛간채·아래채·가게채 2~4채)
+		urban = true, trees = 0.12, extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.6, front_yard = [3.4, 5.5], extras_gap = 0.9,
 		# 문헌 규칙으로 더하는 공해(settlement-rules.md §2): 향청·작청은 관아(외삼문 −3162, 239.5) 앞 동서대로 건너에서 관아를 봄, 사창은 성 안 서남, 관아 앞 하마비
 		majors = [
 			{ tag = "hyangcheong", kit = "bldg/building", params = { type = "gangdang", region = "south", seed = 1874 }, at = [-3184.0, 262.0], ry = PI, fp = true },
-			{ tag = "jakcheong", kit = "bldg/building", params = { type = "haengrang", region = "south", cls = "official", seed = 1875 }, at = [-3150.0, 261.0], ry = PI, fp = true },
+			{ tag = "jakcheong", kit = "bldg/building", params = { type = "haengrang", region = "south", cls = "official", seed = 1875 }, at = [-3157.5, 262.0], ry = PI, fp = true },
 			{ tag = "hama", kit = "bldg/stone", params = { kind = "bi", kind_bi = "hama", seed = 1876 }, at = [-3171.5, 243.6], ry = 0.0, fp = false },
 		],
 		table = {
@@ -73,6 +75,8 @@ func _initialize() -> void:
 	out.items = (out.items as Array).filter(func(it): return not String(it.id).begins_with(pre + "_"))
 	out.alleys = (out.alleys as Array).filter(func(al): return not String(al.get("id", "")).begins_with(pre + "_"))
 	out.supersede = (out.supersede as Array).filter(func(s): return not old_sup.has(s))
+	var old_urb: Array = old_d.get("urban", [])
+	if out.has("urban"): out.urban = (out.urban as Array).filter(func(u): return not old_urb.has(u))
 	(out.districts as Dictionary).erase(dname)
 	if args.has("revert"):
 		_save(out); print("ORGANIC revert district=%s" % dname); quit(); return
@@ -81,6 +85,7 @@ func _initialize() -> void:
 	# 옛 항목: 구역 안 집·마당 것 → supersede, 나머지(좌판 등) → keep
 	var sup := []
 	var keep := []
+	var keep_rects := []
 	var da := DirAccess.open(DIR)
 	for f in da.get_files():
 		if not (f.begins_with("placement_") and f.ends_with(".json")) or f == OUT.get_file(): continue
@@ -97,7 +102,15 @@ func _initialize() -> void:
 			if not near: continue
 			if inside and not story and String(it.kit) in REPLACE_KITS: sup.append(String(it.id)); continue
 			var rr := 2.0
-			if it.get("footprint") is Array: rr = Vector2(float(it.footprint[0]), float(it.footprint[1])).length() / 2 + 1.0
+			if it.get("footprint") is Array and not story:
+				# 바닥 크기가 있는 항목은 돌린 사각(+1m)으로 비운다 — 원(대각 반지름)은 길 건너 필지까지 막았다
+				var fw := Vector2(float(it.footprint[0]), float(it.footprint[1])) / 2 + Vector2(1, 1)
+				var iry := float(it.get("ry", 0.0))
+				var kp := []
+				for q in [Vector2(-fw.x, -fw.y), Vector2(fw.x, -fw.y), Vector2(fw.x, fw.y), Vector2(-fw.x, fw.y)]:
+					kp.append([p.x + q.x * cos(iry) + q.y * sin(iry), p.y - q.x * sin(iry) + q.y * cos(iry)])
+				keep_rects.append(kp)
+				continue
 			if String(it.kit) == "village/jwapan": rr = 1.6
 			if story: rr = maxf(rr, 4.0)
 			keep.append({ c = [p.x, p.y], r = rr, id = String(it.id) })
@@ -147,7 +160,7 @@ func _initialize() -> void:
 				poly.append([c.x + g2.x * cos(ry) + g2.y * sin(ry), c.y - g2.x * sin(ry) + g2.y * cos(ry)])
 			kpoly.append(poly)
 		major_items.append(it)
-	D.keep_poly = kpoly
+	D.keep_poly = kpoly + keep_rects
 	var t0 := Time.get_ticks_msec()
 	var g := OG.new(D, hfn)
 	var res := g.run()
@@ -178,7 +191,13 @@ func _initialize() -> void:
 	out.supersede.append_array(sup)
 	var plz := []
 	for pz in res.plazas: plz.append({ c = [snappedf(pz.c.x, 0.01), snappedf(pz.c.y, 0.01)], r = snappedf(float(pz.r), 0.01), kind = pz.kind })
-	out.districts[dname] = { seed = int(D.seed), area = D.area, supersede = sup, plazas = plz, lots = res.lots.size(), items = res.items.size() }
+	var urb := []
+	if D.get("urban", false):
+		var ab := OG._bbox(area)
+		urb = [[snappedf(ab.position.x, 0.1), snappedf(ab.position.y, 0.1), snappedf(ab.end.x, 0.1), snappedf(ab.end.y, 0.1)]]
+	if not out.has("urban"): out.urban = []
+	out.urban.append_array(urb)
+	out.districts[dname] = { seed = int(D.seed), area = D.area, supersede = sup, plazas = plz, lots = res.lots.size(), items = res.items.size(), urban = urb }
 	if not args.has("dry"): _save(out)
 	print("ORGANIC done district=%s%s" % [dname, " (dry)" if args.has("dry") else ""])
 	quit()
