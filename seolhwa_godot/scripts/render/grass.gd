@@ -1,10 +1,10 @@
 # 가까운 풀잎(material-lighting 2차) — 사실 쪽(--look=real)에서만. look.gd가 하나 만든다.
-#   카메라가 보는 자리(플레이어 · 1인칭이면 눈앞) 둘레 R m 격자에 풀 포기(잎 7장)를 MultiMesh로 깔고, 자리·높이·풀 덮임은
+#   카메라가 보는 자리(플레이어 · 1인칭이면 눈앞) 둘레 R m 격자에 풀 포기(잎 6장)를 MultiMesh로 깔고, 자리·높이·풀 덮임은
 #   셰이더(shaders/grass.gdshader)가 땅 셰이더와 같은 식으로 정한다 — CPU는 노드를 격자 간격 단위로 옮기고 지형 재질 값을 베낄 뿐.
 #   화면 품질 낮음: 반경·밀도를 줄인다. 실내 공간·배 위에서는 끈다.
 extends MultiMeshInstance3D
 
-const BLADES := 7
+const BLADES := 6
 var main
 var spacing := 0.33
 var radius := 24.0
@@ -18,7 +18,7 @@ func setup(m) -> void:
 	name = "Grass"
 	var low: bool = main.gfx_low()
 	spacing = 0.42 if low else 0.33
-	radius = 15.0 if low else 24.0
+	radius = 14.0 if low else 22.0
 	if main.args.has("grassr"): radius = float(main.args.grassr)
 	var n := int(ceil(radius * 2.0 / spacing))
 	_mat = ShaderMaterial.new()

@@ -12,8 +12,8 @@ var low := false
 var exposure := 1.0
 const EXPO_BASE := 1.08
 # 해:하늘빛 비(2차 — 맑은 낮 실제는 5:1 남짓). 예전(1:1 배율)은 그늘이 볕의 40%라 그림자·볼륨이 납작했다
-const SUN_K := 1.65     # 낮 해 직접광 배율(사실 재질 · 논밭)
-const AMB_K := 0.72     # 낮 하늘빛 배율
+const SUN_K := 1.55     # 낮 해 직접광 배율(사실 재질 · 논밭)
+const AMB_K := 0.8     # 낮 하늘빛 배율
 const FOG_K := 0.6      # 안개 농도 배율 — 마을 거리(20~60m)에 덮이던 뿌연 막을 걷는다(먼 산 대기 원근은 남는다)
 var exposure_target := 1.0
 var _shelter_tex: Texture2D = null
