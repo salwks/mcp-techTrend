@@ -69,15 +69,18 @@ void fragment() {
 	float shallow = max(1.0 - smoothstep(0.04, 0.75, d), 1.0 - smoothstep(0.02, 0.2, uv_edge));
 	vec3 body = mix(deep_col, shallow_col, shallow * 0.85);
 	body = mix(body, body * vec3(0.78, 0.9, 0.92), pool * 0.6);
-	body *= 0.8 + 0.4 * dt.z;   // 잔물결 골은 조금 짙게(붓 바림)
+	body *= 0.9 + 0.2 * dt.z;   // 잔물결 골은 조금 짙게 — 세게 하면 얼룩덜룩(점박이)해 보인다
 	// 흰 물살(여울): 흐름 쪽으로 늘인 잡음 — 그린 줄이 아니라 덩어리로 끊긴다
 	//   물길 좌표(UV.x = 하류 거리/7, UV.y = 가로)로 — 세계 좌표를 흐름 방향에 투영하면 굽이에서 줄무늬가 부채꼴로 휜다
 	float along = UV.x * 7.0, across = (UV.y - 0.5) * max(v_c.b * 40.0, 2.0);
-	float fh = texture(wnrm_tex, vec2(along * 0.09 - t * spd * 0.2, across * 0.35)).a;
-	float foam = smoothstep(0.58, 0.74, fh * 0.7 + dt.z * 0.3) * rapid;
-	// 물가선: 아주 얕은 띠에 젖은 밝은 테·잔 거품(물결 따라 끊김)
-	float lip = (1.0 - smoothstep(0.0, 0.07, d)) * smoothstep(0.35, 0.65, dt.z) * has_depth;
-	foam = max(foam, lip * 0.55);
+	// 물살 줄: 흐름 쪽으로 길게(하류 40m·가로 1.7m 결) 늘인 두 겹 — 둥근 잡음 덩어리(점박이)가 아니라 갈래 진 흰 줄로 읽히게
+	float s1 = texture(wnrm_tex, vec2(along * 0.025 - t * spd * 0.25, across * 0.6)).a;
+	float s2 = texture(wnrm_tex, vec2(along * 0.06 - t * spd * 0.35 + 0.37, across * 1.1 + 0.5)).a;
+	float streak = s1 * 0.65 + s2 * 0.35;
+	float foam = smoothstep(0.5, 0.82, streak) * rapid * 0.8;
+	// 물가선: 아주 얕은 띠에 이어진 옅은 젖은 테(줄 결로만 살짝 끊김)
+	float lip = (1.0 - smoothstep(0.0, 0.07, d)) * (0.55 + 0.45 * s1) * has_depth;
+	foam = max(foam, lip * 0.35);
 	vec3 v = normalize((INV_VIEW_MATRIX * vec4(VIEW, 0.0)).xyz);
 	float dist = length(VERTEX);
 	float F = w_fresnel(nw, v) * mix(1.0, 0.55, shallow) * refl_gain;
