@@ -25,7 +25,7 @@ def sheet(name, title, views, tags=("before", "after")):
 	d = ImageDraw.Draw(img)
 	d.text((12, 14), title, fill=(240, 230, 200), font=font(28))
 	for c, t in enumerate(tags):
-		d.text((c * W + W // 2 - 30, 18), {"before": "전(1da7b59)", "after": "후(산 지형)"}.get(t, t), fill=(200, 200, 200), font=font(22))
+		d.text((c * W + W - 260, 18), {"before": "전(1da7b59)", "after": "후(산 지형)"}.get(t, t), fill=(200, 200, 200), font=font(22))
 	for r, v in enumerate(rows):
 		y = 60 + r * (H + 34)
 		d.text((12, y + 4), v.get("label", v["id"]) + f"  ({v['x']}, {v['z']})", fill=(230, 230, 230), font=font(22))
