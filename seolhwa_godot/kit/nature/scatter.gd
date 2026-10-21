@@ -521,6 +521,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 	var gtree_lo := ids([["pine", 0.5], ["sangsuri", 0.3], ["broadleaf", 0.2]])
 	var gtree_hi := ids([["singal", 0.6], ["pine", 0.25], ["deadwood", 0.15]])
 	var k_crops := [kid("crop_bean"), kid("crop_millet"), kid("crop_barley")]
+	var mtn_k := remap_dst.size() >= 2   # 산 지형 권역(integ-mountain 숲 밀도)
 
 	for j in range(PAD, PAD + nz):
 		for i in range(PAD, PAD + nx):
@@ -547,7 +548,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					var bald := near > 0.5 and Kit.vnoise(cx * 0.015 + 3.1, cz * 0.015 - 7.7) > 0.62 - near * 0.12   # 마을 쪽 산의 15~20%쯤
 					if tree_ok:
 						# integ-mountain: 수관이 닫히게(멀리서 맨땅이 덜 보이게) 0.28/0.18 → 0.46/0.34
-						var tk := (0.46 if slope < 1.0 else 0.34) * tree_k * (0.35 if bald else 1.0)
+						#   산 지형 권역(세로 되살림 — remap)만: 다른 권역은 예전 밀도(이야기 싸움터·길목 충돌 배치를 바꾸지 않게 — gyeongju:A 싸움이 갈렸다)
+						var tk := ((0.46 if slope < 1.0 else 0.34) if mtn_k else (0.28 if slope < 1.0 else 0.18)) * tree_k * (0.35 if bald else 1.0)
 						J.emit_mix(mix_village_ids if near > 0.3 else mix_ids(alt), tk, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
 					if bald:
 						J.emit(k_cm, 0.3, cx, cz, slope, r_d)
@@ -636,8 +638,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 						var ry := atan2(-gxv, -gzv)   # 정면(+z)을 내리막으로
 						J.put(k_cliff, cx + (rng.randf() - 0.5) * 2, cz + (rng.randf() - 0.5) * 2, ry, lerpf(0.8, 1.2, rng.randf()), slope, r_d, false, 0.4 + slope * 1.2)
 					# integ-mountain: 바위 칸이라도 덜 가파른 데(노두 사이)는 소나무·신갈이 바위틈에 선다 — 산 비탈이 맨 바위로 비지 않게
-					if tree_ok and slope < 1.3: J.emit_mix(mix_ids(alt), (0.22 if slope < 1.0 else 0.12) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
-					if slope < 1.3: J.emit_even(k_under, 0.12 * bush_k, cx, cz, slope, r_d, ((j + 2) % 4) * 4 + ((i + 1) % 4))
+					if mtn_k and tree_ok and slope < 1.3: J.emit_mix(mix_ids(alt), (0.22 if slope < 1.0 else 0.12) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					if mtn_k and slope < 1.3: J.emit_even(k_under, 0.12 * bush_k, cx, cz, slope, r_d, ((j + 2) % 4) * 4 + ((i + 1) % 4))
 					J.emit(k_boul, 0.04, cx, cz, slope, r_d)
 					J.emit(k_rockb, 0.07, cx, cz, slope, r_d)
 					J.emit(k_rock, 0.2, cx, cz, slope, r_d)
