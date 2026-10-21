@@ -33,9 +33,9 @@ static func build(params: Dictionary) -> Dictionary:
 	var col: Array = C.pick(LEAF, r)
 	var top: Vector3 = pts[4]
 	var clumps := [[top.x, top.y + 0.15 * s, top.z, (1.5 if upright else 1.55) * s]]
-	var nb := ((2 + int(r.next() * 2)) if lod else (4 + int(r.next() * 3))) if upright else ((1 + int(r.next() * 2)) if lod else (2 + int(r.next() * 2)))
+	var nb := ((3 + int(r.next() * 2)) if lod else (6 + int(r.next() * 3))) if upright else ((1 + int(r.next() * 2)) if lod else (2 + int(r.next() * 2)))
 	for i in nb:
-		var t := (0.55 + 0.4 * (float(i) + r.next() * 0.6) / float(nb)) if upright else (0.5 + r.next() * 0.35)
+		var t := (0.6 + 0.36 * (float(i) + r.next() * 0.6) / float(nb)) if upright else (0.5 + r.next() * 0.35)
 		var bi := mini(3, int(t * 4))
 		var from: Vector3 = (pts[bi] as Vector3).lerp(pts[bi + 1], t * 4 - bi)
 		var a := r.next() * TAU
@@ -45,6 +45,6 @@ static func build(params: Dictionary) -> Dictionary:
 		clumps.append([tip.x, tip.y + 0.1 * s, tip.z, ((1.15 + r.next() * 0.5) if upright else (0.95 + r.next() * 0.5)) * s])
 	var ext := 0.0
 	for cl in clumps:
-		needle_clump(b, r, cl[0], cl[1], cl[2], cl[3], col, lod, s, 0.5 if upright else 0.34)   # 곧은 소나무: 덩이가 두툼하게 겹쳐 한 수관으로
+		needle_clump(b, r, cl[0], cl[1], cl[2], cl[3], col, lod, s, 0.68 if upright else 0.34)   # 곧은 소나무: 덩이가 두툼하게 겹쳐 한 수관으로
 		ext = maxf(ext, maxf(absf(cl[0]), absf(cl[2])) + cl[3])
 	return C.result(b, "소나무", [{ type = "circle", x = 0.0, z = 0.0, r = 0.3 * s }], Vector2(ext * 2, ext * 2), true, { height = h + 0.6 * s })

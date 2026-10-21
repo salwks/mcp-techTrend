@@ -106,7 +106,7 @@
 			float hi = smoothstep(34.0, 64.0, v_wp.y) * aer_k * (1.0 - urban_ground);   // 산 지형 권역의 고을 바닥(y≤30) 위
 			float fz = max(fo, hi);
 			float cls = pt.a * 255.0 / 60.0;
-			float trail_k = road_k * fz * (1.0 - 0.55 * step(2.5, cls));                       // 숲·산 길(대로는 반쯤 — 바퀴 길은 밝게 다져짐)
+			float trail_k = road_k * fz * (1.0 - 0.25 * step(2.5, cls));                       // 숲·산 길(대로도 거의 — 산 대로는 짙은 흙, 바퀴 자국 결만 조금 밝게)
 			float near_rd = 1.0 - smoothstep(rhw + 2.0, rhw + 10.0, rd);
 			float cut = smoothstep(0.75, 1.05, slope) * (1.0 - smoothstep(rhw + 1.0, rhw + 5.0, rd)) * (1.0 - road_k);   // 길 절개면(길 바로 곁 가파른 데만)
 			float bare = smoothstep(0.95, 1.4, slope + (g_n0 - 0.5) * 0.4) * fz * smoothstep(0.45, 0.62, 1.0 - g_big) * 0.8;   // 가파른 숲 비탈 군데군데(사태 자국): 마사토
