@@ -16,13 +16,16 @@ const REPLACE_KITS := ["village/choga", "village/house_compound", "village/giwa"
 const DISTRICTS := {
 	# 서문 밖 장터길 민가 구역(building-rollout-1 west 자리) — 동쪽 = 장터길(읍성 서벽 앞), 서쪽 = 개울 r055, 가운데를 성황사 오솔길이 지난다
 	west = {
-		seed = 1871, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
+		seed = 1873, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
 		area = [[-3341, 200], [-3341, 359], [-3460, 368], [-3445, 345], [-3434, 320], [-3424, 300], [-3410, 285], [-3410, 262], [-3428, 249], [-3428, 230], [-3405, 200]],
 		trunk_ids = { namwon_market_lane = 3.6, namwon_west_gate_lane = 3.6, path_namwon_seonghwangsa = 3.0 },
 		plazas = [{ c = [-3349, 246], r = 7.5, kind = "gate" }, { c = [-3350, 291], r = 6.0, kind = "well" }],
 		centers = [{ c = [-3342, 246], r = 75.0, w = 1.0 }, { c = [-3342, 300], r = 55.0, w = 0.8 }],
 		base_density = 0.12,
-		branch = { gap_a = 20.0, gap_b = 34.0, p = 0.9, len_a = 40.0, len_b = 95.0, alley_gap_a = 15.0, alley_gap_b = 26.0, alley_p = 0.75 },
+		branch = { gap_a = 38.0, gap_b = 56.0, p = 0.9, len_a = 40.0, len_b = 95.0, alley_gap_a = 26.0, alley_gap_b = 40.0, alley_p = 0.45 },
+		street_spacing = 40.0, alley_spacing = 22.0,
+		# 성 밖 초가 무리(참고: ACON 2203 #1 서문·남문 밖 초가 덩이): 마당집으로 촘촘히, 빈 땅은 밭
+		inner_inset = 0.6, court_gap = 0.6, block_front = [15.0, 20.0], trunk_shop = 0.3, partial_walls = 0.25,
 		junction_plaza_p = 0.35, empty_out = 0.12, empty_in = 0.02,
 	},
 	# 읍성 안 남쪽 절반(남문 ↔ 십자로, 서문 ↔ 동문 사이) — 옛 배치는 바둑판 줄(house_compound·giwa·choga). 북쪽 객사·관아(이야기 자리)는 그대로
@@ -37,10 +40,11 @@ const DISTRICTS := {
 		plazas = [{ c = [-3227.8, 331], r = 8.0, kind = "gate" }, { c = [-3227.8, 256], r = 6.5, kind = "well" }],
 		centers = [{ c = [-3227.8, 300], r = 70.0, w = 1.0 }, { c = [-3227.8, 252], r = 60.0, w = 1.0 }],
 		base_density = 0.45,
-		branch = { gap_a = 22.0, gap_b = 34.0, p = 0.95, len_a = 30.0, len_b = 80.0, alley_gap_a = 15.0, alley_gap_b = 24.0, alley_p = 0.7 },
+		branch = { gap_a = 36.0, gap_b = 52.0, p = 0.95, len_a = 30.0, len_b = 80.0, alley_gap_a = 24.0, alley_gap_b = 36.0, alley_p = 0.4 },
+		street_spacing = 42.0, alley_spacing = 22.0,
 		junction_plaza_p = 0.3, empty_out = 0.05, empty_in = 0.0,
 		# 성 안: 촘촘하게 — 마당 흙(urban), 빈터 나무 적게, 한 필지에 곁채 여럿(낙안읍성 필지 실측: 집마다 헛간채·아래채·가게채 2~4채)
-		urban = true, trees = 0.12, extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.6, front_yard = [3.4, 5.5], extras_gap = 0.9,
+		urban = true, trees = 0.12, extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.45, court_gap = 0.5, trunk_shop = 0.55, front_yard = [3.4, 5.5], extras_gap = 0.9,
 		# 문헌 규칙으로 더하는 공해(settlement-rules.md §2): 향청·작청은 관아(외삼문 −3162, 239.5) 앞 동서대로 건너에서 관아를 봄, 사창은 성 안 서남, 관아 앞 하마비
 		majors = [
 			{ tag = "hyangcheong", kit = "bldg/building", params = { type = "gangdang", region = "south", seed = 1874 }, at = [-3184.0, 262.0], ry = PI, fp = true },

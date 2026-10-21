@@ -79,6 +79,17 @@ func _piece(c: Vector2, ry: float, e: Dictionary) -> void:
 		var a := _xf(pc, pry, Vector2(float(p.ax), float(p.az))); var b2 := _xf(pc, pry, Vector2(float(p.bx), float(p.bz)))
 		var col := Color(0.42, 0.2, 0.12) if kit == "village/todam" else (Color(0.45, 0.45, 0.42) if kit == "village/stone_wall" else Color(0.55, 0.45, 0.3))
 		_line(a, b2, 0.45 if kit != "village/fence" else 0.2, col); return
+	if kit == "bldg/wall":
+		# 담 길: 까닭에 따라 빛 — 굽음(등고선·마을 막돌·둥근 모서리·나무 비킴·굽은 길) 파랑, 곧음 밤색
+		var curved := false
+		for w in p.get("why", []):
+			if not (String(w).contains("곧은") or String(w).contains("곧게")): curved = true
+		var col := Color(0.15, 0.35, 0.85) if curved else Color(0.42, 0.2, 0.12)
+		var pts: Array = p.get("pts", [])
+		for k in pts.size() - (0 if p.get("closed", false) else 1):
+			var a := _xf(pc, pry, Vector2(float(pts[k][0]), float(pts[k][1]))); var b2 := _xf(pc, pry, Vector2(float(pts[(k + 1) % pts.size()][0]), float(pts[(k + 1) % pts.size()][1])))
+			_line(a, b2, 0.45, col)
+		return
 	if kit == "bldg/gate": _dot(pc.x, pc.y, 0.9, Color(0.85, 0.12, 0.1)); return
 	if kit.begins_with("nature/"): _dot(pc.x, pc.y, float(p.get("s", 1.0)) * 1.8, Color(0.25, 0.5, 0.2)); return
 	if kit == "village/well": _dot(pc.x, pc.y, 0.9, Color(0.2, 0.4, 0.8)); return

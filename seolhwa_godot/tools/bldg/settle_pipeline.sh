@@ -5,7 +5,7 @@ cd "$(dirname "$0")/../.."
 G=${GODOT:-/opt/homebrew/bin/godot}
 EX=${*:-metro city town town_open minchon yeokchon banchon sanchon}
 ONLY=$(echo $EX | tr ' ' ',')
-timeout 3600 $G --headless --path . -s res://tools/bldg/settlement_place.gd -- --only=$ONLY > /tmp/town_logs/settle_pipe_gen.log 2>&1
+[ -z "$NOGEN" ] && timeout 3600 $G --headless --path . -s res://tools/bldg/settlement_place.gd -- --only=$ONLY > /tmp/town_logs/settle_pipe_gen.log 2>&1
 for n in $EX; do
   timeout 3000 $G --path . res://scenes/region.tscn --resolution 1920x1080 -- --region=JL_NAMWON_UNBONG --placedir=res://shots/town_organic/_place_$n/ \
     --bldgrollout=res://tools/bldg/town_views.json --brset=$n --brtag=after --brout=shots/town_organic/raw --savefile=user://town_test_$n.json \
