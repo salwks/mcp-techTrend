@@ -12,6 +12,9 @@ global uniform float fog_density;
 global uniform float wet;
 global uniform float snow;
 global uniform float snow_line;
+global uniform float look_pbr;  // 사실 쪽(scripts/render/look.gd): 램버트 + 해:하늘빛 비(sun_k·amb_k). ink는 둘 다 1, look_pbr 0
+global uniform float sun_k;
+global uniform float amb_k;
 
 uniform sampler2D ground_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable, hint_default_white;
 uniform sampler2D ramp_tex : filter_linear, repeat_disable;
@@ -79,7 +82,7 @@ void fragment() {
 	}
 	ALBEDO = base;
 	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * v_wn.y + 0.5) * hemi_i;
-	EMISSION = ALBEDO * hemi / PI;
+	EMISSION = ALBEDO * hemi * amb_k / PI;
 	float fog_d = -VERTEX.z;
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, v_wp.y - mist_base)) * smoothstep(14.0, 48.0, fog_d);
@@ -90,5 +93,6 @@ void fragment() {
 void light() {
 	float ndl = dot(NORMAL, LIGHT);
 	float ramp = texture(ramp_tex, vec2(ndl * 0.5 + 0.5, 0.5)).r;
-	DIFFUSE_LIGHT += ramp * ATTENUATION * LIGHT_COLOR / (PI * PI);
+	ramp = mix(ramp, max(ndl, 0.0), look_pbr);
+	DIFFUSE_LIGHT += ramp * ATTENUATION * (LIGHT_IS_DIRECTIONAL ? sun_k : 1.0) * LIGHT_COLOR / (PI * PI);
 }

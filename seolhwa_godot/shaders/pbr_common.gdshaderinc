@@ -12,6 +12,7 @@ global uniform float pbr_q;
 global uniform vec3 sun_dir;
 global uniform vec3 sun_col;
 global uniform float amb_k;
+global uniform float sun_k;   // 해(방향광) 직접광 배율 — 사실 쪽 해:하늘빛 비(look.gd). ink는 1
 global uniform vec3 sky_top;   // 하늘 그림판과 같은 하늘빛(복사휘도) — 반사(젖은 땅·물 고임·기와)에 쓴다
 global uniform vec3 sky_hor;
 global uniform sampler2DArray pbr_a : filter_linear_mipmap_anisotropic, repeat_enable;
@@ -36,6 +37,11 @@ const float MP_POROUS[18] = float[](0.5,  0.8,  0.6,  0.25, 0.55, 0.2,  0.4,  0.
 const float MP_WETGLOSS[18]=float[](0.35, 0.5,  0.25, 0.95, 0.6,  0.7,  0.1,  0.85, 0.85, 0.9,  0.6,  0.8,  0.5,  0.3,  0.5,  0.7,  0.1,  0.0);
 const float MP_TRANS[18]  = float[](0.0,  0.0,  0.04, 0.0,  0.0,  0.0,  0.55, 0.0,  0.0,  0.0,  0.0,  0.0,  0.2,  0.0,  0.0,  0.35, 0.25, 0.1);
 const float MP_POM[18]    = float[](0.0,  1.0,  1.0,  1.0,  0.0,  0.0,  0.0,  1.0,  1.0,  1.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0);
+// 2차: 디테일 바탕색 대비(배율^k)와 법선 세기 — 3인칭 거리(밉맵이 잔무늬를 평균으로 뭉갬)에서도 결이 읽히게
+const float MP_ACON[18]   = float[](1.8,  1.7,  1.5,  1.6,  1.8,  1.3,  1.0,  1.5,  1.5,  1.4,  1.3,  1.3,  1.2,  1.0,  1.5,  1.2,  1.0,  1.0);
+const float MP_NRM[18]    = float[](2.0,  2.2,  1.6,  1.5,  2.0,  1.3,  1.0,  1.6,  1.5,  1.5,  1.7,  1.7,  1.5,  1.0,  1.6,  1.2,  1.0,  1.0);
+// 큰 얼룩(같은 층을 5.3배 크게)·벽발치 때·빗물 자국을 받는 벽 재질(회벽·흙벽·나무·돌)
+const float MP_WEATHER[18]= float[](1.0,  1.0,  0.0,  0.0,  0.7,  0.0,  0.0,  0.8,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0);
 const vec3 SNOW_ALB = vec3(0.80, 0.84, 0.90);
 
 // 처마 부호 거리(m, 안쪽 음수). 칠하기가 없으면 9
@@ -147,6 +153,7 @@ vec2 pbr_ripple(vec2 p, float tm) {
 
 // 직접광(해·등불): 램버트 + GGX. 밝기 규칙은 툰과 같다(LIGHT_COLOR/π² = 색×세기/π)
 void pbr_direct(vec3 N, vec3 L, vec3 V, vec3 lc, float att, float rough, float trans, inout vec3 dl, inout vec3 sl) {
+	// 해(방향광)만 sun_k 배 — 부르는 쪽이 att에 곱해 넘긴다
 	float ndl = dot(N, L);
 	float nl = max(ndl, 0.0);
 	vec3 Ei = att * lc / (PI * PI);

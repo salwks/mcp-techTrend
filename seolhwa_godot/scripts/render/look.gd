@@ -1,6 +1,6 @@
 # 사실 재질·빛 운전(material-lighting) — region_main이 하나 만든다. 전역 셰이더 값·해 그림자·노출(눈 적응)·후처리 모드를 맞춘다.
 #   --look=ink   예전 붓 바림(툰·먹선·한지) 그대로        --look=real(기본)
-#   --nopom      시차 매핑 끄기(비교)   --shadowsplits=1|2|4   --noexpo 노출 적응 끄기
+#   --nopom      시차 매핑 끄기(비교)   --nograss 가까운 풀잎 끄기   --shadowsplits=1|2|4   --noexpo 노출 적응 끄기
 # 화면 품질(설정 gfx): 높음 = 시차 매핑 · 그림자 4단(PSSM) · 1인칭 그림자 100m / 낮음 = 시차 없음 · 2단 · 60m
 extends Node
 
@@ -10,7 +10,11 @@ var main
 var real := true
 var low := false
 var exposure := 1.0
-const EXPO_BASE := 1.1
+const EXPO_BASE := 1.08
+# 해:하늘빛 비(2차 — 맑은 낮 실제는 5:1 남짓). 예전(1:1 배율)은 그늘이 볕의 40%라 그림자·볼륨이 납작했다
+const SUN_K := 1.65     # 낮 해 직접광 배율(사실 재질 · 논밭)
+const AMB_K := 0.72     # 낮 하늘빛 배율
+const FOG_K := 0.6      # 안개 농도 배율 — 마을 거리(20~60m)에 덮이던 뿌연 막을 걷는다(먼 산 대기 원근은 남는다)
 var exposure_target := 1.0
 var _shelter_tex: Texture2D = null
 var _fp_shadow := false
@@ -31,6 +35,9 @@ func setup(m) -> void:
 	if real:
 		post.paper = false   # 한지 결·종이 비네트는 그림 같은 쪽 — 사실 쪽은 렌즈 비네트만
 		_setup_sun()
+		if not main.args.has("nograss"):   # 가까운 풀잎(scripts/render/grass.gd) — --nograss 비교
+			var g = load("res://scripts/render/grass.gd").new()
+			main.scene_vp.add_child(g); g.setup(main)
 	print("LOOK real=%s low=%s pom=%s splits=%d" % [real, low, not (low or main.args.has("nopom")), main.sun.directional_shadow_mode])
 
 func _setup_sun() -> void:
@@ -42,8 +49,8 @@ func _setup_sun() -> void:
 	sun.directional_shadow_split_3 = 0.5
 	sun.directional_shadow_blend_splits = not low
 	sun.directional_shadow_fade_start = 0.85
-	sun.shadow_bias = 0.03
-	sun.shadow_normal_bias = 1.0
+	sun.shadow_bias = 0.02   # 2차: 물체 발밑 그림자가 떠 보이지 않게(0.03·1.0 → 0.02·0.6)
+	sun.shadow_normal_bias = 0.6
 
 # region_main._apply_atmo 끝에서: 해 방향·색을 셰이더에, 구름이 끼면 그림자가 무르고 옅어진다
 func atmo(s: Dictionary, dir: Vector3) -> void:
@@ -58,8 +65,12 @@ func atmo(s: Dictionary, dir: Vector3) -> void:
 	var sun: DirectionalLight3D = main.sun
 	sun.shadow_blur = 1.0 + _cloud * 3.5
 	sun.shadow_opacity = 1.0 - 0.55 * smoothstep(0.4, 1.0, _cloud)
-	# 비·눈 날: 흐린 하늘이 고르게 밝다 — 하늘빛을 조금 올린다(해가 빠진 만큼)
-	RenderingServer.global_shader_parameter_set("amb_k", 1.0 + 0.35 * _cloud)
+	# 해:하늘빛 비 — 낮은 해를 세게·하늘빛을 줄여 볕과 그늘의 차이를 키운다. 밤·새벽은 덜(달빛이 거칠지 않게)
+	#   비·눈 날: 흐린 하늘이 고르게 밝다 — 해 배율을 내리고 하늘빛을 올린다(해가 빠진 만큼)
+	var day := clampf(float(s.get("dayMix", 1.0)), 0.0, 1.0)
+	RenderingServer.global_shader_parameter_set("sun_k", lerpf(1.2, SUN_K, day) * (1.0 - 0.3 * _cloud))
+	RenderingServer.global_shader_parameter_set("amb_k", lerpf(0.85, AMB_K, day) * (1.0 + 0.6 * _cloud))
+	if main.fog_on: RenderingServer.global_shader_parameter_set("fog_density", float(s.dens) * lerpf(FOG_K, 1.0, _cloud))
 
 func _process(dt: float) -> void:
 	if main == null or main.world == null: return
@@ -84,7 +95,7 @@ func _process(dt: float) -> void:
 	if fp or w.indoor != null or main._hidden_interior.size() > 0: inside = clampf(-sd_e / 1.6, 0.0, 1.0)
 	if w.indoor != null: inside = 1.0
 	# 밤 실내는 등잔이 밝혀 주므로 더 열지 않는다
-	exposure_target = EXPO_BASE * (1.0 + 0.45 * night) * (1.0 + 0.7 * inside * (1.0 - night)) * (1.0 + 0.2 * _cloud)
+	exposure_target = EXPO_BASE * (1.0 + 0.8 * night) * (1.0 + 0.7 * inside * (1.0 - night)) * (1.0 + 0.2 * _cloud)
 	if main.args.has("noexpo"): exposure_target = 1.0
 	exposure += (exposure_target - exposure) * minf(1.0, dt * 1.6)
 	main.post.exposure = exposure

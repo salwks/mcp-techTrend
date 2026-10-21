@@ -160,12 +160,26 @@ const PBR_CODE := """
 		vec4 tA = textureGrad(pbr_a, duv, dmx / tile_m, dmy / tile_m);
 		vec4 tB = textureGrad(pbr_b, duv, dmx / tile_m, dmy / tile_m);
 		vec3 a_col = p_solid ? t.rgb : mix(cell_avg, t.rgb, MP_KEEP[mid]);
-		vec3 alb = albedo_color.rgb * a_col * COLOR.rgb * (tA.rgb * 2.0);
+		vec3 alb = albedo_color.rgb * a_col * COLOR.rgb * pow(tA.rgb * 2.0, vec3(MP_ACON[mid]));
+		// 2차: 벽 재질 풍화 — 큰 얼룩(같은 층 5.3배) · 벽발치 때(튄 흙탕, 건물 바닥에서 0.5~0.9m) · 처마 밑 빗물 자국(세로)
+		float wk = MP_WEATHER[mid] * (1.0 - smoothstep(0.55, 0.85, abs(p_gn.y)));
+		if (wk > 0.0) {
+			vec2 mcm = mat2(vec2(0.8, 0.6), vec2(-0.6, 0.8)) * mc / (tile_m * 5.3);
+			vec3 mac = textureGrad(pbr_a, vec3(mcm, float(mid)), dmx / (tile_m * 5.3), dmy / (tile_m * 5.3)).rgb * 2.0;
+			alb *= mix(vec3(1.0), pow(mac, vec3(2.4)), 0.8 * wk);
+			float hb = p_wp.y - MODEL_MATRIX[3].y;
+			float hn = textureGrad(pbr_a, vec3(mc / vec2(0.9, 0.35), float(M_ROCK)), dmx / 0.9, dmy / 0.35).a;
+			float grime = 1.0 - smoothstep(0.25, 0.75 + 0.35 * hn, hb);
+			alb *= mix(vec3(1.0), vec3(0.6, 0.55, 0.5), grime * wk * 0.85);
+			float streak = textureGrad(pbr_a, vec3(mc.x / 0.7, mc.y / 7.0, float(M_ROCK)), dmx / 0.7, dmy / 7.0).a;
+			alb *= 1.0 - 0.22 * wk * smoothstep(0.5, 0.8, streak) * smoothstep(-0.2, -1.2, sd);
+		}
 		float h = tA.a;
 		float rough = tB.r;
 		float ao = tB.b;
 		vec2 sxy = (vec2(tB.a, tB.g) * 2.0 - 1.0);
 		sxy /= max(sqrt(max(1.0 - dot(sxy, sxy), 0.0)), 0.2);
+		sxy *= MP_NRM[mid];
 		// 아틀라스 밝기 기울기 → 굴곡(기와골·창살·널 이음)
 		if (ar != 0.0) {
 			float e = 1.5 / 64.0;
@@ -202,7 +216,8 @@ const PBR_CODE := """
 		BACKLIGHT = vec3(trans);
 		// 하늘빛: 처마 안쪽(실내·툇마루 밑)은 하늘이 적게 보인다 — 지붕(이엉·기와)·나무는 그대로
 		bool roofish = mid == M_THATCH || mid == M_TILE || mid == M_FOLIAGE || mid == M_BARK;
-		float skyvis = roofish ? 1.0 : mix(1.0, 0.28, smoothstep(0.1, 2.6, -sd));
+		// 2차: 처마 밑 벽은 하늘이 반쯤 가려진다(처마 깊이 0.6~1.2m) — 바닥은 더 깊이 들어가야 가려진다
+		float skyvis = roofish ? 1.0 : mix(1.0, 0.28, smoothstep(0.1, 2.6, -sd)) * mix(1.0, 0.68, smoothstep(-0.05, 1.0, -sd) * (1.0 - smoothstep(0.5, 0.9, p_gn.y)));
 		vec3 nw = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 		vec3 vw = normalize((INV_VIEW_MATRIX * vec4(VIEW, 0.0)).xyz);
 		vec3 irr = pbr_irr(nw, hemi_sky, hemi_ground, fog_color, hemi_i);
@@ -285,7 +300,7 @@ void fragment() {
 void light() {
 #ifdef LOOK_PBR
 	vec3 dl = vec3(0.0), sl = vec3(0.0);
-	pbr_direct(NORMAL, LIGHT, VIEW, LIGHT_COLOR, ATTENUATION, ROUGHNESS, BACKLIGHT.r, dl, sl);
+	pbr_direct(NORMAL, LIGHT, VIEW, LIGHT_COLOR, ATTENUATION * (LIGHT_IS_DIRECTIONAL ? sun_k : 1.0), ROUGHNESS, BACKLIGHT.r, dl, sl);
 	DIFFUSE_LIGHT += dl; SPECULAR_LIGHT += sl;
 #else
 	float ndl = dot(NORMAL, LIGHT);
