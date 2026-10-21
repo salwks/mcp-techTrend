@@ -277,6 +277,8 @@ func _paint_roads() -> void:
 						pbytes[k] = dq; pbytes[k + 1] = clampi(roundi(hw * 32.0), 0, 255); pbytes[k + 3] = cls * 60
 	_paint_urban()
 	_p_roads = pbytes.duplicate()
+	# 식생 흩뿌리기도 배치 고샅을 길로 안다(고샅 한가운데 나무가 나서 길을 막지 않게 — town-organic)
+	_roads_arg = all_roads
 
 # 도시 땅(placement_*.json 최상위 urban: [[x0,z0,x1,z1],…] — 도성·평양 내성 골목 구역): 마을 터(6)·길(4) 칸을 모두 마당 흙(B=0)으로,
 # 그 사각형 안 식생(풀·꽃·나무)은 비운다. 궁궐·종묘·정원 자리는 배치가 사각형에서 뺐다. 지형 셰이더 urban_ground=1이면 길섶 풀 띠도 흙 위에선 끈다.

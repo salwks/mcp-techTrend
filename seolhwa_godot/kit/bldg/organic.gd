@@ -1328,9 +1328,25 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 			break
 	# 비탈 필지(축대): 필지 가운데 땅보다 변 바깥 땅이 0.45m 넘게 낮으면 그 변을 따라 막돌 축대(village/stone_terrace) — 터 고르기로 생긴 단을 받친다.
 	#   땅은 생성할 때의 높이장(hf) 기준. 지형이 바뀌면 생성기를 다시 돌린다(docs/reports/town-organic.md 지형 가정)
+	# 터 높이: 비탈에서는 앞 변 바깥 길 높이에 맞춘다(길 양쪽 필지가 각자 가운데 높이로 고르면 그 사이 길이 가파른 턱이 되어 대문에 못 든다).
+	#   뒤가 낮으면 축대가 받치고, 높으면 터 고르기 가장자리가 깎는다.
+	#   (높이장 PNG는 Godot가 8비트로 읽어 ±0.7m 오차 — 높이 값 대신 잴 점(flat_at, 월드)을 넘기고 로더가 실제 땅에서 잰다)
+	var pad_y = null
+	var flat_at := []
+	var nfr3: int = int(lot.get("nfront", 2 if poly.size() == 5 else 1))
+	if hf.is_valid():
+		var hc := _h(_centroid(poly))
+		var hs := 0.0
+		for i in mini(nfr3, poly.size()):
+			var a4: Vector2 = poly[i]; var b4: Vector2 = poly[(i + 1) % poly.size()]
+			var on := ((a4 + b4) / 2.0 - _centroid(poly)).normalized()
+			for f in [0.2, 0.5, 0.8]:
+				var q4: Vector2 = a4.lerp(b4, f) + on * 1.5
+				hs += _h(q4); flat_at.append([snappedf(q4.x, 0.01), snappedf(q4.y, 0.01)])
+		if flat_at.size() > 0 and absf(hs / flat_at.size() - hc) > 0.3: pad_y = hs / flat_at.size()
+		else: flat_at = []
 	if hf.is_valid() and bool(cfg.get("terrace", true)):
-		var h0 := _h(_centroid(poly))
-		var nfr3: int = int(lot.get("nfront", 2 if poly.size() == 5 else 1))
+		var h0: float = float(pad_y) if pad_y != null else _h(_centroid(poly))
 		for i in poly.size():
 			if i < nfr3: continue   # 앞 변(길·대문 쪽)에는 축대를 두지 않는다 — 대문 앞을 막지 않게(터 고르기 가장자리 경사로 오른다)
 			var a3: Vector2 = poly[i]; var b3: Vector2 = poly[(i + 1) % poly.size()]
@@ -1431,7 +1447,7 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 	var c := O
 	var it := { id = "%s_lot%03d" % [String(cfg.get("prefix", "org")), li], kit = "bldg/lot",
 		params = { type = t, seed = seed_of(li), fp = [snappedf(maxf(fp.x - 2.0, 4.0), 0.1), snappedf(maxf(fp.y - 2.0, 4.0), 0.1)], pieces = out, poly = _poly_local(poly, O, lry) },
-		x = snappedf(c.x, 0.01), z = snappedf(c.y, 0.01), ry = snappedf(lry, 0.0001), y = null, flatten = true, clear_veg = true,
+		x = snappedf(c.x, 0.01), z = snappedf(c.y, 0.01), ry = snappedf(lry, 0.0001), y = null, flat_at = flat_at, flatten = true, clear_veg = true,
 		group = String(cfg.get("group", "고을 짜임")), footprint = [snappedf(maxf(fp.x - 2.0, 4.0), 0.1), snappedf(maxf(fp.y - 2.0, 4.0), 0.1)],
 		organic = { lot = li, zone = snappedf(float(lot.zone), 0.01), street = String(streets[lot.street].id), walls = nwall } }
 	return it

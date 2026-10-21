@@ -195,6 +195,12 @@ func load_all() -> void:
 		var c := Vector2(r.x, r.z)
 		if r.flatten and not r.get("is_piece", false):
 			var yt: float = r.y if r.y != null else NAN
+			# 비탈 필지(고을 짜임): 앞 길 높이에 맞춰 고른다 — flat_at 점들의 땅 높이 평균
+			var fa: Array = r.get("flat_at", [])
+			if r.y == null and fa.size() > 0:
+				var sy := 0.0
+				for q in fa: sy += world.data_height(float(q[0]), float(q[1]))
+				yt = sy / fa.size()
 			r.flat_y = world.flatten_rect(c, r.ry, fp * 0.5 + Vector2(FLAT_MARGIN, FLAT_MARGIN), yt, FLAT_EDGE)
 			stats.flatten += 1
 		if r.clear_veg:
@@ -622,7 +628,7 @@ func _rec(it: Dictionary) -> Dictionary:
 		y = (float(it.y) if it.get("y") != null else null), flatten = bool(it.get("flatten", false)) and _when_of(it) == "",
 		clear_veg = bool(it.get("clear_veg", true)), fp = world.to_v2(it.get("footprint", Vector2.ZERO)), flat_y = NAN,
 		yard = bool(it.get("yard", true)), state = it.get("state"), states = it.get("states", {}) if it.get("states") is Dictionary else {},
-		dy = float(it.get("dy", 0.0)), when = _when_of(it), case = String(it.get("case", "")) }
+		dy = float(it.get("dy", 0.0)), when = _when_of(it), case = String(it.get("case", "")), flat_at = it.get("flat_at", []) }
 
 static func _when_of(it: Dictionary) -> String:
 	var w := PlacementGate._norm(it.get("when"))

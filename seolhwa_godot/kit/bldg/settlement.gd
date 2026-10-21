@@ -293,7 +293,10 @@ static func _town(X: Ctx) -> void:
 	var walled: bool = bool(X.cfg.get("walled", true))
 	if walled: _walls(X, side, false)
 	X.trunk("ns", [[0, h + 90.0], [0, h], [0, -side * 0.08]], 4.0)
-	X.trunk("ew", [[-(h + 40.0), side * 0.12], [-h, side * 0.12], [h, side * 0.12], [h + 40.0, side * 0.12]], 4.0)
+	# 성문은 성벽 가운데(z=0)에 나므로 동서길은 문을 지나 안에서 남쪽으로 꺾여 든다(무성읍치는 곧게)
+	var ez := side * 0.12
+	if walled: X.trunk("ew", [[-(h + 40.0), 0], [-h, 0], [-h + 10.0, ez], [h - 10.0, ez], [h, 0], [h + 40.0, 0]], 4.0)
+	else: X.trunk("ew", [[-(h + 40.0), ez], [-h, ez], [h, ez], [h + 40.0, ez]], 4.0)
 	X.put("gwana", "landmark/hyeon_gwana", { seed = X.seed + 1 }, side * 0.12, -side * 0.24, 0.0, Vector2(38, 42), 2.0)
 	X.put("gwana_hongsal", "bldg/gate", { type = "hongsal", seed = X.seed + 2 }, side * 0.12, -side * 0.24 + 25.0, 0.0, Vector2(4.4, 1.2), 0.3)
 	var gp := { type = "gaeksa", region = X.region, seed = X.seed + 3 }
@@ -304,7 +307,7 @@ static func _town(X: Ctx) -> void:
 	var k := 0
 	for sx in [-1.0, 1.0]:
 		var z := side * 0.16
-		while z < h - 4.0:
+		while z < h - (13.0 if walled else 4.0):   # 성 안 둘레길(성벽 안 7.5m)을 막지 않게
 			X.put("jwapan", "village/jwapan", { seed = X.seed * 100 + k, goods = ["grain", "onggi", "straw", "cloth"][k % 4], awning = k % 2 == 0 }, sx * 4.6, z, PI / 2 * sx, Vector2(2.4, 1.6), 0.2, { flatten = false })
 			z += 4.2; k += 1
 	X.trunk("out_ew", [[-side * 0.7, h + 18.0], [0, h + 20.0], [side * 0.7, h + 18.0]], 3.4)

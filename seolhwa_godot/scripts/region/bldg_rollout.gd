@@ -145,12 +145,44 @@ func _walk_live(t: Vector3) -> bool:
 		if v.length() < 0.08: break
 		var st := v.normalized() * minf(0.09, v.length())
 		var q = w.move_circle(pos, st.x, st.y, main.player.radius)
-		if q == null or Vector2(q.x - pos.x, q.z - pos.z).length() < 0.004: break
+		if q == null or Vector2(q.x - pos.x, q.z - pos.z).length() < 0.004:
+			_stall_why(pos, st)
+			break
 		main.player_pos = Vector3(q.x, w.height_at(q.x, q.z), q.z)
 		main.player.position = main.player_pos
 		main.player.facing = main.facing_from(st.x, st.y, main.player.facing)
 		if i % 2 == 0: await main._wait_frames(1)
 	return Vector2(t.x - main.player_pos.x, t.z - main.player_pos.z).length() < 0.2
+
+# 막힌 까닭(점검 기록): 충돌체(가장 가까운 것) 또는 비탈
+func _stall_why(pos: Vector3, st: Vector2) -> void:
+	var w = main.world
+	var tx := pos.x + st.x; var tz := pos.z + st.y
+	var r: float = main.player.radius
+	var why := "?"
+	if w.blocked(tx, tz, r):
+		if w.has_method("_in_river") and w._in_river(tx, tz, r): why = "river"
+		elif w.has_method("in_pond") and w.in_pond(tx, tz): why = "pond"
+		elif w.has_method("tile_of"):
+			var sg = w._scatter_grid.get(w.tile_of(tx, tz))
+			if sg != null:
+				for k in [Vector2i(floori(tx / w.GRID), floori(tz / w.GRID))]:
+					for j in range(-1, 2):
+						for i in range(-1, 2):
+							for c in sg.get(k + Vector2i(i, j), []):
+								if not c.get("off", false) and w._hit(c, tx, tz, r): why = "scatter %s" % str(c).left(120)
+		for c in w.colliders:
+			var hit := false
+			if c.type == "circle": hit = Vector2(tx - c.x, tz - c.z).length() < r + c.r
+			else: hit = Vector2(tx - clampf(tx, c.minX, c.maxX), tz - clampf(tz, c.minZ, c.maxZ)).length() < r
+			if hit:
+				why = "collider %s %s" % [c.type, str(c.get("tag", c.get("name", c.get("id", ""))))]
+				if c.type == "circle": why += " at=(%.1f,%.1f) r=%.2f" % [c.x, c.z, c.r]
+				else: why += " box=(%.1f..%.1f, %.1f..%.1f)" % [c.minX, c.maxX, c.minZ, c.maxZ]
+				break
+	else:
+		why = "slope dh=%.2f over %.2f" % [w.height_at(tx, tz) - w.height_at(pos.x, pos.z), st.length()]
+	print("BRSTALL at=(%.1f,%.1f) %s" % [pos.x, pos.z, why])
 
 func _walk_to(t: Vector3) -> bool:
 	var w = main.world
@@ -160,7 +192,9 @@ func _walk_to(t: Vector3) -> bool:
 		if v.length() < 0.06: break
 		var st := v.normalized() * minf(0.05, v.length())
 		var q = w.move_circle(pos, st.x, st.y, main.player.radius)
-		if q == null: break
+		if q == null:
+			_stall_why(pos, st)
+			break
 		pos = Vector3(q.x, w.height_at(q.x, q.z), q.z)
 	main.player_pos = pos
 	main.player.position = pos
