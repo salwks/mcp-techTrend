@@ -12,6 +12,7 @@ const RF := preload("res://kit/bldg/_roof.gd")
 const S := preload("res://kit/bldg/_spec.gd")
 const FU := preload("res://kit/bldg/_furn.gd")
 const PR := preload("res://kit/village/props.gd")
+const RU := preload("res://kit/bldg/_ruin.gd")
 const MS := preload("res://kit/village/market_shop.gd")
 const JD := preload("res://kit/village/jangdok.gd")
 const FW := preload("res://kit/village/firewood.gd")
@@ -24,6 +25,18 @@ const OPEN_FNS := ["hall", "maru", "shed", "mill", "forge", "shop", "stable"]
 static func build(params: Dictionary) -> Dictionary:
 	var t0 := Time.get_ticks_usec()
 	var sp := S.resolve(params)
+	# 폐가(ruin): 단계 값 풀기 · 낡음 끌어올림(빛) · 실내 들어가기(단계 3부터 없음) — 없으면 아무것도 바꾸지 않는다
+	var rz := RU.resolve(sp)
+	if not rz.is_empty():
+		RU.plan(sp, rz)
+		sp._rz = rz
+		sp.wear = maxf(float(sp.wear), minf(1.0, 0.55 + 0.12 * float(rz.stage)))
+		if sp.roof.kind == "thatch":
+			# 썩은 이엉: 묵은 잿빛에서 단계만큼 검게(이끼·썩음)
+			var tc := S.thatch_cols(1.0)
+			var k := clampf(float(rz.stage) / 3.0, 0.0, 1.0)
+			sp.roof.cols = [Color.hex((tc[0] << 8) | 0xff).lerp(Color.hex(0x5a5242ff), k * 0.7).to_rgba32() >> 8, Color.hex((tc[1] << 8) | 0xff).lerp(Color.hex(0x37301fff), k * 0.7).to_rgba32() >> 8]
+		if not rz.interior_ok: sp.interior = false
 	var want: int = int(params.get("lod", -1))
 	var lods: Array = [0, 1, 2] if want < 0 else [want]
 	var inside: bool = sp.interior
@@ -31,8 +44,9 @@ static func build(params: Dictionary) -> Dictionary:
 	var res := {}
 	var tris := []
 	for lod in lods:
-		var m := C.M.new(int(sp.seed) * 31 + 7, not (inside and lod == 0))
+		var m := C.M.new(int(sp.seed) * 31 + 7, not (inside and lod == 0) and rz.is_empty())
 		var info := draw(m, sp, lod)
+		if not rz.is_empty(): _ruin_post(m, sp, rz, lod, inside and lod == 0)
 		var node := m.build_node(LOD_NAMES[lod])
 		tris.append(m.tris())
 		if want < 0:
@@ -76,7 +90,7 @@ static func draw(m: C.M, sp: Dictionary, lod: int) -> Dictionary:
 	for w in sp.wings:
 		var old := m.push(float(w.x), 0, float(w.z), float(w.ry))
 		var info := _wing(m, sp, ctx, w, lod, wi)
-		if wi == int(sp.chimney.get("wing", 0)) and sp.chimney.kind != "none":
+		if wi == int(sp.chimney.get("wing", 0)) and sp.chimney.kind != "none" and float(ctx.ruin.get("stage", 0.0)) < 2.5:
 			chimney_at = _chimney(m, sp, ctx, info, lod)
 		m.pop(old)
 		var xf := Transform3D(Basis(Vector3.UP, float(w.ry)), Vector3(float(w.x), 0, float(w.z)))
@@ -87,7 +101,7 @@ static func draw(m: C.M, sp: Dictionary, lod: int) -> Dictionary:
 		else:
 			fp_box = fp_box.merge(rf)
 		wi += 1
-	if lod == 0: _attachments(m, sp, ctx)
+	if lod == 0 and float(ctx.ruin.get("stage", 0.0)) < 2.25: _attachments(m, sp, ctx)
 	var out := { body = body, footprint = Vector2(maxf(absf(fp_box.position.x), absf(fp_box.end.x)) * 2.0 + 0.4, maxf(absf(fp_box.position.y), absf(fp_box.end.y)) * 2.0 + 0.4) }
 	if chimney_at != null: out.chimney = chimney_at
 	return out
@@ -118,7 +132,10 @@ static func _ctx(sp: Dictionary) -> Dictionary:
 			if tint < 0.33: wallc = [0xc9a476, 0x9a7a52]       # 붉은 황토
 			elif tint > 0.75: wallc = [0xb8ad94, 0x8c826c]     # 잿빛 흙
 	var Fb: float = float(sp.base.h) if sp.base.kind != "none" else 0.05
-	return { wear = wear, hi = hi, wood = wood, col = col, beam = beam, wallc = wallc, Fb = Fb, Ff = Fb + float(sp.floor_dh),
+	if sp.has("_rz"):
+		var st: float = float(sp._rz.stage)
+		if st >= 1.5: wood = [0x5a5048, 0x3e3830]; col = wood   # 썩어 잿빛·검게
+	return { ruin = sp.get("_rz", {}), wear = wear, hi = hi, wood = wood, col = col, beam = beam, wallc = wallc, Fb = Fb, Ff = Fb + float(sp.floor_dh),
 		paint = paint, lattice = String(sp.lattice), thick_roof = sp.roof.kind == "giwa" }
 
 # 바닥 높이(칸 쓰임별)
@@ -153,6 +170,11 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 	var R := m.rng
 	var hiq: bool = ctx.hi
 	var info := { L = L, D = D, zf = zf, zb = zb, top = top, Ff = Ff, xs = xs, body = Rect2(-L / 2, zb, L, D) }
+	# 폐가: 이 날개의 꺼진 칸 · 터만 남음
+	var rz: Dictionary = ctx.ruin
+	var colset: Array = rz.get("collapsed", {}).get(wi, []) if not rz.is_empty() else []
+	w["_col"] = colset
+	var site: bool = not rz.is_empty() and bool(rz.site)
 
 	# --- 기단 ---------------------------------------------------------------------------------
 	var runs := _runs(bays, func(b): return not (b.fn in ["kitchen", "gate"] or b.front.kind == "join"))
@@ -179,6 +201,19 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			var x0: float = xs[rn[0]]; var x1: float = xs[rn[1] + 1]
 			m.add("base", "mud" if sp.wall != "stone" else "stone", C.PA(Kit.box(x1 - x0 - 0.004, Ff - Fb - 0.004, D - 0.004, (x0 + x1) / 2, (Fb + Ff) / 2 - 0.002, 0), [0x9a8462, 0x7a6648] if sp.wall != "plaster" else [0xb8b0a0, 0x908878], 0.04, R), 0.02 if lod == 0 else 0.0)
 
+	# --- 폐가 터(단계 4): 기단 + 주춧돌 줄 + 흙·짚·기와 더미 + 풀 — 벽·기둥·지붕 없음 ---------------------------
+	if site:
+		if lod == 0:
+			for i in xs.size():
+				for z in [zb, zf]:
+					if m.r() < 0.8: m.add("base", "stone", C.P(Kit.xf(Kit.lump(0.2, 0, R, 0.25, 0.45), float(xs[i]) + (m.r() - 0.5) * 0.3, Fb + 0.02, z + (m.r() - 0.5) * 0.3), 0xaaa498, 0x847f75, 0.06, R), 0.012)
+		for i in bays.size():
+			if lod == 0: RU.mound(m, "body", float(xs[i]), float(xs[i + 1]), zb, zf, Fb - 0.05, sp.roof.kind == "giwa", float(rz.debris))
+		if lod == 1:   # 중경: 낮은 흙 둔덕 하나(삼각형 적게)
+			m.add("body", "mud", C.P(Kit.box(L * 0.9, 0.5, D * 0.8, 0, Fb + 0.2, 0), 0x8c7656, 0x6a573e, 0.05, R), 0.0)
+		if lod == 0: _ruin_grass(m, ctx, rz, -L / 2 - 0.7, L / 2 + 0.7, zb - 0.7, zf + 0.9, Fb, 1.0)
+		info.eaves = Rect2(-L / 2 - 0.6, zb - 0.6, L + 1.2, D + 1.2)
+		return info
 	# --- 아래 단계(mid·far): 몸 상자 + 창호 판 + 지붕 --------------------------------------------
 	if lod > 0:
 		_wing_coarse(m, sp, ctx, w, lod, info, bays, xs, floors, top, zf, zb, zcol, T, tk, raised)
@@ -215,22 +250,41 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			if ok: cols.append([x, zcol, Fb])
 	var cr: float = float(sp.col) / 2.0
 	for c in cols:
-		_column(m, sp, ctx, c[0], c[1], c[2], top, cr, raised)
+		var ctop := top
+		if not colset.is_empty():
+			# 꺼진 칸에만 닿은 기둥: 부러져 짧은 토막(0.5~1.6m) — 둘 다 꺼진 칸이거나 끝 기둥
+			var ci := xs.find(c[0])
+			var lc := ci > 0 and colset.has(ci - 1); var rc := ci < bays.size() and colset.has(ci)
+			if (lc or ci == 0) and (rc or ci == bays.size()) and (lc or rc):
+				if m.r() < 0.3: continue
+				ctop = float(c[2]) + 0.4 + 1.2 * m.r()
+		_column(m, sp, ctx, c[0], c[1], c[2], ctop, cr, raised)
 
 	# --- 창방 · 도리 · 퇴보 ---------------------------------------------------------------------
 	var beam: Array = ctx.beam
 	var bh := 0.22
+	# 폐가: 창방·도리는 남은 칸 위에만(꺼진 칸 위는 부러져 없음)
+	var kx0 := -L / 2; var kx1 := L / 2
+	for i in bays.size():
+		if colset.has(i):
+			if i == 0 or colset.has(i - 1) and kx0 >= float(xs[i]) - 1e-3: kx0 = float(xs[i + 1])
+	for i in range(bays.size() - 1, -1, -1):
+		if colset.has(i) and kx1 <= float(xs[i + 1]) + 1e-3: kx1 = float(xs[i])
+	var kL := maxf(kx1 - kx0, 0.0); var kc := (kx0 + kx1) / 2
 	for z in [zcol, zb]:
-		var g := Kit.box(L + 0.1, bh, 0.2, 0, top + bh / 2, z)
+		if kL < 0.3: break
+		var g := Kit.box(kL + (0.1 if kL >= L - 1e-3 else 0.0), bh, 0.2, kc, top + bh / 2, z)
 		if ctx.paint == "full":
 			_dancheong_beam(m, "front" if z > 0 else "body", L + 0.3, bh, z, top + bh / 2)
 		else:
 			m.add("front" if z > 0 else "body", "wood", C.PA(g, beam, 0.03, R), 0.02)
 		var dext := 0.3 if sp.roof.kind == "giwa" else 0.15   # 도리 내밀기(초가는 둥근 처마 모서리 밖으로 나오지 않게 짧게)
-		var dor := Kit.cyl(0.13, 0.13, L + dext, 8, 0, top + bh + 0.13, z, 0, 0, PI / 2) if hiq else Kit.box(L + dext - 0.1, 0.18, 0.18, 0, top + bh + 0.09, z)
+		var dl := (L + dext) if kL >= L - 1e-3 else kL
+		var dor := Kit.cyl(0.13, 0.13, dl, 8, kc, top + bh + 0.13, z, 0, 0, PI / 2) if hiq else Kit.box(dl - 0.1, 0.18, 0.18, kc, top + bh + 0.09, z)
 		m.add("front" if z > 0 else "body", "wood", C.PA(dor, ctx.wood, 0.03, R), 0.02)
 	for sx in [-1.0, 1.0]:
 		if w.open_end[0 if sx < 0 else 1]: continue
+		if colset.has(0 if sx < 0 else bays.size() - 1): continue
 		m.add("body", "wood", C.PA(Kit.box(0.15, bh - 0.02, zcol - zb - 0.2, sx * L / 2, top + bh / 2, (zcol + zb) / 2), beam, 0.03, R), 0.02)   # 옆 창방(앞뒤 창방 사이 — 모서리에서 겹치지 않게 조금 가늘고 짧게)
 	if tk == "toet":
 		for i in xs.size():
@@ -249,6 +303,7 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		var x0: float = xs[i]; var x1: float = xs[i + 1]; var cx := (x0 + x1) / 2; var bw := x1 - x0
 		var y0: float = floors[i]
 		if raised and b.fn == "maru": continue
+		if colset.has(i): continue
 		var fk: String = b.front.kind
 		if sp.interior and b.fn == "room" and fk in ["door2", "door1"]: b.front.open = true
 		# 모서리: 끝 칸 앞·뒷벽은 옆벽 바깥면까지 늘려(옆벽은 그 안쪽면에 맞댐) 두 벽이 한 덩이로 만난다 — 기둥이 낮게 시작하는 부엌·헛간 칸에서도 틈 없이
@@ -268,6 +323,7 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		var bi: int = 0 if sd == 0 else bays.size() - 1
 		var b: Dictionary = bays[bi]
 		if raised and b.fn == "maru": continue
+		if colset.has(bi): continue
 		var x: float = -L / 2 if sd == 0 else L / 2
 		var zz := zb
 		var nseg: int = w.depth.size()
@@ -289,9 +345,11 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 	for i in range(1, bays.size()):
 		var a: Dictionary = bays[i - 1]; var b: Dictionary = bays[i]
 		var oa := _is_open(a); var ob := _is_open(b)
-		if not (sp.interior or oa or ob): continue
-		if oa and ob: continue
-		var kind := _partition_kind(a, b)
+		var cut_edge: bool = colset.has(i - 1) != colset.has(i)   # 폐가: 남은 칸과 꺼진 칸 사이 = 드러난 끝벽
+		if colset.has(i - 1) and colset.has(i): continue
+		if not (sp.interior or oa or ob or cut_edge): continue
+		if oa and ob and not cut_edge: continue
+		var kind := _partition_kind(a, b) if not cut_edge else "wall"
 		var zz := zb
 		for d in w.depth:
 			var seg := float(d)
@@ -310,6 +368,10 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		var x0: float = xs[i]; var x1: float = xs[i + 1]; var cx := (x0 + x1) / 2; var bw := x1 - x0
 		var y: float = floors[i]
 		var part := "interior" if sp.interior else "body"
+		if colset.has(i):
+			RU.mound(m, "body", x0, x1, zb, zf, Fb - 0.05, sp.roof.kind == "giwa", float(rz.debris))
+			_ruin_grass(m, ctx, rz, x0, x1, zb, zf, Fb, 0.5)
+			continue
 		match String(b.fn):
 			"room", "shrine":
 				if sp.interior or b.fn == "shrine": A.add(m, part, "jangpan" if b.fn == "room" else "maru", A.floor_quad(bw - 0.12, D - 0.12, cx, y + 0.012, 0), 0)
@@ -350,12 +412,14 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		var b: Dictionary = bays[i]
 		var x0: float = xs[i]; var x1: float = xs[i + 1]
 		if not (sp.interior or _is_open(b) or b.fn == "kitchen" and b.front.kind == "open"): continue
+		if colset.has(i) or (not rz.is_empty() and bool(rz.salvaged) and float(rz.stage) >= 0.5): continue   # 폐가: 살림은 떼어 감(빈 방)
 		_furnish(m, sp, ctx, b, x0, x1, zb, zf, floors[i], i, bays, top)
 
 	# --- 충돌체 ---------------------------------------------------------------------------------
 	for i in bays.size():
 		var b: Dictionary = bays[i]
 		var x0: float = xs[i]; var x1: float = xs[i + 1]
+		if colset.has(i): continue   # 꺼진 칸: 더미 충돌(RU.mound)만
 		var open: bool = _is_open(b) or b.fn == "gate" or (sp.interior and b.fn in ["room", "kitchen", "shrine", "jeongju"]) or (b.fn == "kitchen" and b.front.kind == "open")
 		if raised: open = true
 		if not open:
@@ -389,6 +453,9 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			"kitchen": if not m.anchors.has(pre + "kitchen"): m.anchor(pre + "kitchen", Vector3(cx, floors[i], zf + 0.6))
 			"room": if not m.anchors.has(pre + "door"): m.anchor(pre + "door", Vector3(cx, 0, zf + T + 1.3))
 			"shop": m.anchor(pre + "shop%d" % i, Vector3(cx, 0, zf + 1.2))
+	# --- 폐가 풀(기단 둘레) --------------------------------------------------------------------
+	if not rz.is_empty() and float(rz.overgrowth) > 0.2:
+		_ruin_grass(m, ctx, rz, -L / 2 - 0.8, L / 2 + 0.8, zb - 0.9, zf + (T + 0.6 if tk != "none" else 0.6) + 0.4, Fb * 0.0, 0.0)
 	# --- 지붕 -----------------------------------------------------------------------------------
 	info.eaves = _roof(m, sp, ctx, w, lod, info, zcol)
 	_soseul(m, sp, ctx, w, lod, info, bays, xs, zcol)
@@ -607,6 +674,13 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 		elif xb_f > xb + 0.005: rects.append([xb, xb_f, y0, y1])
 		if op[2] > y0 + 0.02: rects.append([op[0], op[1], y0, op[2]])
 		if op[3] < y1 - 0.02: rects.append([op[0], op[1], op[3], y1])
+	var rzf: Dictionary = ctx.ruin
+	if not rzf.is_empty() and lod == 0 and float(rzf.wall_loss) > 0.01:
+		var nr := []
+		for r in rects:
+			if r[1] - r[0] < 0.02 or r[3] - r[2] < 0.02: continue
+			nr.append_array(RU.wall_rects(m, part, rzf, r, sp.wall != "stone"))
+		rects = nr
 	for r in rects:
 		if r[1] - r[0] < 0.02 or r[3] - r[2] < 0.02: continue
 		# 벽 채움: 위아래 0.4cm 물려(창방 밑면·바닥과 같은 평면에 겹치지 않게)
@@ -687,6 +761,7 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 					Kit.xf(g2, hx, ocy, t / 2 + 0.03, 0, side * -1.25, 0)
 					A.add(m, part, lkey, g2, 0)
 					continue
+				if RU.leaf(m, part, ctx.ruin, lx, ocy, leaf_w, oh, lkey, fw, float(ctx.Fb)): continue   # 폐가: 찢긴 창호·기운/떨어진/없어진 문짝
 				A.add(m, part, lkey, A.panel(leaf_w - 0.05, oh - 0.05, lx, ocy, 0.012), 0)
 				if both: A.add(m, part, lkey, A.panel(leaf_w - 0.05, oh - 0.05, lx, ocy, -0.012, PI), 0)
 				# 문울거미(테)
@@ -712,6 +787,7 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			for k in n:
 				var lw := ow / n
 				var lx: float = op[0] + lw * (k + 0.5)
+				if RU.leaf(m, part, ctx.ruin, lx, ocy, lw, oh, "panbyeok", [0x7a6450, 0x5a4838], float(ctx.Fb)): continue
 				var g := A.panel(lw - 0.03, oh - 0.03, lx, ocy, 0.02)
 				if opened and k == 0:
 					g = A.panel(lw - 0.03, oh - 0.03, lw / 2, 0, 0)
@@ -1016,7 +1092,7 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 					if cf != null: clip = cf
 				RF.giwa(m, "roof", { hw = shw, hd = hd, eave = eave, rise = rise, thick = 0.24, lift = float(rf.lift), ends = se, hap = 0.45, clip = clip,
 					lift_ends = [0.0 if float(sext[0]) > 0.0 or (gate.size() == 2 and sxa == gate[1]) else 1.0, 0.0 if float(sext[1]) > 0.0 or (gate.size() == 2 and sxb == gate[0]) else 1.0],
-					L = minf(L, sxb - sxa), wx0 = maxf(-L / 2, sxa) - scx, wx1 = minf(L / 2, sxb) - scx, D = info.zf - info.zb + (zcol - info.zf), lod = lod, buyeon = rf.get("buyeon", false), sag = float(sp.wear) * 0.12,
+					L = minf(L, sxb - sxa), wx0 = maxf(-L / 2, sxa) - scx, wx1 = minf(L / 2, sxb) - scx, D = info.zf - info.zb + (zcol - info.zf), lod = lod, buyeon = rf.get("buyeon", false), sag = float(sp.wear) * 0.12 + float(ctx.ruin.get("sag", 0.0)),
 					rafter_col = ctx.col if ctx.paint != "none" else ctx.wood, c_top = 0x8f9296 if sp.wear < 0.5 else 0x878a84, c_low = 0x6d7176 })
 				# 맞배 끝: 풍판(박공 아래 널) — 다른 지붕에 묻히는 끝·대문 쪽 끝은 없음
 				if lod == 0:
@@ -1049,6 +1125,94 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 	m.pop(old)
 	return Rect2(xa, za, xb - xa, zb2 - za)
 
+# 폐가 풀: 사각형 둘레(edge > 0: 가장자리 띠만, 0: 둘레 띠) 또는 안(fill)에 풀 무더기 — overgrowth만큼
+static func _ruin_grass(m: C.M, ctx: Dictionary, rz: Dictionary, x0: float, x1: float, z0: float, z1: float, y: float, fill: float) -> void:
+	var og := float(rz.overgrowth)
+	if og < 0.05: return
+	var pts := []
+	var per := 2.0 * ((x1 - x0) + (z1 - z0))
+	var n := int(per / 1.4 * og) if fill <= 0.0 else int((x1 - x0) * (z1 - z0) / 3.0 * og * fill) + 1
+	for k in n:
+		if fill > 0.0:
+			pts.append(Vector2(lerpf(x0, x1, m.r()), lerpf(z0, z1, m.r())))
+		else:
+			var t := m.r() * per
+			var p: Vector2
+			if t < x1 - x0: p = Vector2(x0 + t, z0)
+			elif t < (x1 - x0) * 2.0: p = Vector2(x0 + t - (x1 - x0), z1)
+			elif t < (x1 - x0) * 2.0 + (z1 - z0): p = Vector2(x0, z0 + t - (x1 - x0) * 2.0)
+			else: p = Vector2(x1, z0 + t - (x1 - x0) * 2.0 - (z1 - z0))
+			pts.append(p + Vector2(m.r() - 0.5, m.r() - 0.5) * 0.5)
+	RU.grass(m, "body", pts, y, og, float(rz.stage))
+	if float(rz.stage) >= 1.75 and fill <= 0.0:
+		for k in int(og * 3.0):
+			var t := m.r()
+			RU.shrub(m, "body", lerpf(x0, x1, t), z0 - 0.3 if m.r() < 0.5 else z1 + 0.2, y, 0.7 + og * 0.6)
+
+# 폐가 마무리(단계마다): 지붕 자르기(꺼진 칸·구멍) + 드러난 서까래 + 기울기 + (실내 없으면) 한 덩이로
+static func _ruin_post(m: C.M, sp: Dictionary, rz: Dictionary, lod: int, inside: bool, merge := true) -> void:
+	var ctx := _ctx(sp)
+	var spans := []   # [Transform3D 역(건물 → 날개 로컬), x0, x1, zr(반깊이 + 처마), top]
+	var wi := 0
+	for w in sp.wings:
+		var xf := Transform3D(Basis(Vector3.UP, float(w.ry)), Vector3(float(w.x), 0, float(w.z)))
+		var inv := xf.affine_inverse()
+		var L := 0.0
+		for b in w.bays: L += float(b.w)
+		var D := 0.0
+		for d in w.depth: D += float(d)
+		var col: Array = rz.collapsed.get(wi, [])
+		var x := -L / 2
+		var top: float = float(ctx.Ff) + float(w.floor_up) + float(sp.wall_h) + float(w.roof_up)
+		for i in w.bays.size():
+			var bw := float(w.bays[i].w)
+			if col.has(i) or bool(rz.site):
+				var ext0 := 2.0 if i == 0 else 0.0; var ext1 := 2.0 if i == w.bays.size() - 1 else 0.0
+				spans.append([inv, x - ext0, x + bw + ext1, D / 2 + 2.2, top])
+			x += bw
+		wi += 1
+	var holes: Array = rz.get("holes", [])
+	var winv := []
+	for w in sp.wings: winv.append(Transform3D(Basis(Vector3.UP, float(w.ry)), Vector3(float(w.x), 0, float(w.z))).affine_inverse())
+	var cut := func(x: float, z: float, y: float) -> bool:
+		for sp2 in spans:
+			var l: Vector3 = (sp2[0] as Transform3D) * Vector3(x, 0, z)
+			if l.x > sp2[1] and l.x < sp2[2] and absf(l.z) < sp2[3]: return true
+		for h in holes:
+			var l: Vector3 = (winv[int(h[0])] as Transform3D) * Vector3(x, 0, z)
+			if Vector2(l.x - float(h[1]), l.z - float(h[2])).length() < float(h[3]): return true
+		return false
+	if not spans.is_empty() or not holes.is_empty():
+		RU.cut_roof(m, cut)
+		# 구멍 너머 서까래(산자): 도리에서 용마루 쪽으로 기운 막대 몇 가닥 — 구멍 자리에만
+		if lod == 0:
+			var g := Kit.Geo.new()
+			for h in holes:
+				var w: Dictionary = sp.wings[int(h[0])]
+				var xf := Transform3D(Basis(Vector3.UP, float(w.ry)), Vector3(float(w.x), 0, float(w.z)))
+				var D := 0.0
+				for d in w.depth: D += float(d)
+				var top: float = float(ctx.Ff) + float(w.floor_up) + float(sp.wall_h) + float(w.roof_up)
+				var fr := _roof_frame(sp, ctx, w)
+				var sz := signf(float(h[2])) if absf(float(h[2])) > 0.05 else 1.0
+				for k in 3:
+					var xx := float(h[1]) + (k - 1) * 0.36
+					var a: Vector3 = xf * Vector3(xx, top + 0.35, sz * D / 2)
+					var b: Vector3 = xf * Vector3(xx, top + float(fr.rise) * 0.85, 0.0)
+					g = Kit.merge([g, _rod_geo(a, b, 0.045)])
+			if g.size() > 0: m.add("roof", "wood", C.P(g, 0x4a3e32, 0x352c24, 0.05), 0.01)
+	var dirx := -1.0 if String(rz.side) == "left" else 1.0
+	RU.lean(m, float(rz.lean_deg) if not bool(rz.site) else 0.0, dirx, float(ctx.Fb) + 0.05)
+	if not inside and merge: RU.merge_all(m)
+
+static func _rod_geo(a: Vector3, b: Vector3, r: float) -> Kit.Geo:
+	var d := b - a
+	var L := d.length()
+	var g := Kit.box(r * 2, r * 2, L)
+	var basis := Basis.looking_at(d.normalized(), Vector3.UP if absf(d.normalized().y) < 0.99 else Vector3.RIGHT)
+	Kit.apply(g, Transform3D(basis, (a + b) / 2))
+	return g
+
 # 이엉 변주(rollout ②): 명세 roof에 적힌 값이 있으면 그대로, 없으면 시드·낡음으로 — 같은 남부 초가라도 지붕 꼴이 다르게
 #   bulge(단면 볼록) · hip_k(옆 비탈 배율 → 용마루 길이·둥근 정도) · sag(용마루 처짐) · patch(덧이엉 조각) · edge(처마 끝 ragged|combed) · bands(켜 띠)
 static func _thatch_vary(sp: Dictionary) -> Dictionary:
@@ -1059,6 +1223,9 @@ static func _thatch_vary(sp: Dictionary) -> Dictionary:
 		patch = (int(r.next() * 3.0) if wear > 0.45 else (1 if r.next() < 0.25 else 0)), edge = "ragged" if (wear > 0.45 or r.next() < 0.35) else "combed", bands = true }
 	for k in out:
 		if rf.has(k): out[k] = rf[k]
+	if sp.has("_rz"):
+		out.sag = float(out.sag) + float(sp._rz.sag) * 0.8
+		out.edge = "ragged"; out.patch = 0
 	return out
 
 # 풍판: 맞배 박공 밑을 가리는 세로 널(지붕 밑면 아래, 처마 끝 안쪽)
@@ -1092,6 +1259,7 @@ static func _wing_coarse(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary,
 		var b: Dictionary = bays[i]
 		var x0: float = xs[i]; var x1: float = xs[i + 1]; var cx := (x0 + x1) / 2
 		var y0: float = floors[i]
+		if w.get("_col", []).has(i): continue   # 폐가 꺼진 칸
 		var open: bool = _is_open(b) or b.fn == "gate"
 		if open and lod == 1:
 			m.add("body", "flat", C.P(Kit.box(x1 - x0, top - y0, 0.1, cx, (y0 + top) / 2, zb), 0x3e3128, 0x2c231c), 0)
@@ -1440,6 +1608,7 @@ static func roof_geos(sp: Dictionary) -> Array:
 		var old := m.push(float(w.x), 0, float(w.z), float(w.ry))
 		_wing(m, sp, ctx, w, 0, wi)
 		m.pop(old)
+		if sp.has("_rz"): _ruin_post(m, sp, sp._rz, 0, true, false)   # 폐가: 자른 지붕·기울기까지(검사가 실제 모양을 보게)
 		var b = m.parts.get("roof")
 		var wl := []
 		for p in ["body", "front"]:

@@ -1,5 +1,5 @@
 # 건물 빌더 대문·문 — 담에 끼우는 문 한 채. 원점 = 문 가운데 바닥(담 줄 위), 바깥(골목) = +z, 안(마당) = -z.
-#   params: { type, seed, open(true), wall_h(1.7: 양옆 담 높이 — 지붕 처마가 담 갓 위로 지나가게), cls, w(문 너비) }
+#   params: { type, seed, open(true), wall_h(1.7: 양옆 담 높이 — 지붕 처마가 담 갓 위로 지나가게), cls, w(문 너비), ruin(폐가 단계 0~4: 1 문짝 하나 기움 · 2 떨어져 누움/없음 · 3~ 문짝 없음) }
 #   type:
 #     sarip    사립문 — 싸리·잡목 엮은 문짝, 거친 기둥 둘(서민 싸리울·돌담)
 #     ilgak    일각문 — 기둥 둘 + 작은 맞배 기와지붕(담 사이 단독 문, 사당·별당·뒷문)
@@ -52,6 +52,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var w := _width(params)
 	var wall_h: float = float(params.get("wall_h", 1.7))
 	var open: bool = bool(params.get("open", true))
+	m.set_meta("ruin", float(params.get("ruin", 0.0)))
 	var info := { half = w / 2 + 0.15, eave_min = 99.0 }
 	match t:
 		"sarip": _sarip(m, w, open)
@@ -89,12 +90,21 @@ static func _sill(m: C.M, w: float, h := 0.18) -> void:
 # 문짝 둘(널판, 안으로 열림) + 문고리(바깥) + 빗장 걸이·빗장(안) + 둔테(위아래 축 받침)
 static func _leaves(m: C.M, w: float, h: float, y0: float, open: bool, n := 2, paint := false) -> void:
 	var lw := w / n
+	var ruin: float = float(m.get_meta("ruin", 0.0))
 	for k in n:
 		var side := -1.0 if k == 0 else 1.0
 		if n == 1: side = -1.0
 		var hx: float = -w / 2 if side < 0 else w / 2
 		var ang: float = (-side * 1.35) if open else 0.0   # 안(-z)으로 열림
+		# 폐가: 문짝이 없거나(떼어 감) 떨어져 문간 안에 눕거나, 경첩 하나 빠져 기움
+		var rs := m.r()
+		if ruin >= 2.75 or (ruin >= 1.75 and rs < 0.5): continue
 		var old := m.push(hx, y0, -0.06, ang)
+		if ruin >= 1.75:
+			m.pop(old); old = m.push(-side * 0.3, 0.05, -0.9 - k * 0.3, side * 0.4)
+			m.xform = m.xform * Transform3D(Basis(Vector3.RIGHT, -PI / 2 + 0.05), Vector3.ZERO)
+		elif ruin >= 0.75 and k == 0:
+			m.xform = m.xform * Transform3D(Basis(Vector3.BACK, side * 0.22), Vector3(0, -0.06, 0))
 		var cx: float = -side * lw / 2
 		var g := A.panel(lw - 0.03, h, cx, h / 2, 0.025)
 		A.add(m, "p", "panbyeok", C.P(g, 0x9a7a58, 0x7a5c40, 0.03, m.rng), 0)
@@ -115,7 +125,7 @@ static func _leaves(m: C.M, w: float, h: float, y0: float, open: bool, n := 2, p
 		# 둔테(축 받침): 기둥 안쪽 위·아래
 		for yy in [y0 + 0.06, y0 + h - 0.04]:
 			m.add("p", "wood", C.PA(Kit.box(0.16, 0.1, 0.22, hx - side * 0.0, yy, -0.12), [0x5a4432, 0x3f2f22]), 0.008)
-	if not open:
+	if not open and ruin < 1.75:
 		m.add("p", "wood", C.PA(Kit.box(w * 0.6, 0.08, 0.08, 0, y0 + h * 0.52, -0.12), C.WOOD), 0.008)   # 빗장(닫힘)
 		m.box_c(-w / 2, w / 2, -0.12, 0.12)
 	else:

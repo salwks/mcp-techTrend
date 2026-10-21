@@ -95,6 +95,7 @@ static func plan(params: Dictionary) -> Dictionary:
 		_: out = _choga_house(r, region, seed, _lot(params), String(params.get("wall", "")))
 	_separate(out.pieces)
 	_join_walls(out.pieces)
+	if params.get("ruin") is Dictionary and float(params.ruin.get("stage", 0.0)) > 0.0: _ruin(out, params.ruin, seed)
 	# interior: 살림채(안채·사랑채·주막)를 실내까지 지어 들어가 볼 수 있게
 	if params.get("interior", false):
 		for e in out.pieces:
@@ -416,6 +417,50 @@ static func _join_walls(pieces: Array) -> void:
 		e.params[k + "z"] = snappedf(float(e.params[k + "z"]) + dv.y, 0.001)
 		if mv[3] and String(e.kit) == "village/todam": e.params["open_" + k] = true   # 맞댄 끝: 끝 면(과 그 먹선)을 그리지 않는다
 		if float(mv[4]) != 0.0: e.params["miter_" + k] = float(mv[4])
+
+# 폐가 묶음(ruin): 건물마다 단계 ± 변주(곳간·헛간·아래채가 먼저 무너지고 안채·사랑채가 오래 감), 담은 낮아지고 갓이 빠지며
+#   단계 2부터 허물어진 틈(넘나드는 자리 — 충돌 없음), 싸리울은 군데군데 쓰러져 없음, 대문 문짝은 기울고 떨어지고 없어진다.
+#   마당에는 풀·덤불·잔해(kit/bldg/ruin_yard.gd). ruin = 건물 명세와 같은 칸(stage, seed …)
+static func _ruin(out: Dictionary, ruin: Dictionary, seed: int) -> void:
+	var st := clampf(float(ruin.get("stage", 0.0)), 0.0, 4.0)
+	var r := Kit.Rng.new(int(ruin.get("seed", seed)) * 101 + 7)
+	var keep := []
+	for e in out.pieces:
+		var kit := String(e.kit)
+		if kit == "bldg/building":
+			var d := 0.0
+			match String(e.tag):
+				"anchae", "sarang", "jumak": d = -0.3
+				"gotgan", "heotgan", "araechae", "haengrang": d = 0.5
+			var rr: Dictionary = ruin.duplicate()
+			rr.stage = clampf(st + d + (r.next() - 0.5) * 0.3, 0.0, 4.0)
+			rr.seed = int(ruin.get("seed", seed)) * 7 + keep.size()
+			var p: Dictionary = (e.params as Dictionary).duplicate()
+			p.over = (p.get("over", {}) as Dictionary).merged({ ruin = rr }, true)
+			e.params = p
+		elif kit == "bldg/gate":
+			e.params = (e.params as Dictionary).merged({ ruin = st }, true)
+		elif kit == "village/todam" or kit == "village/stone_wall":
+			var p: Dictionary = (e.params as Dictionary).duplicate()
+			p.h = maxf(0.45, float(p.get("h", 1.5)) * (1.0 - 0.13 * st))
+			if kit == "village/todam" and st >= 1.75: p.cap = "none"
+			e.params = p
+			# 허물어진 틈: 4m 넘는 토막을 둘로 — 틈 1.2~2.2m(충돌 없음, 사람이 넘나듦)
+			var a := Vector2(float(p.ax), float(p.az)); var b := Vector2(float(p.bx), float(p.bz))
+			if st >= 1.75 and a.distance_to(b) > 4.0 and r.next() < 0.35 + 0.15 * st:
+				var t := 0.25 + 0.5 * r.next(); var gl := (1.2 + r.next()) / a.distance_to(b)
+				var m1 := a.lerp(b, t - gl / 2); var m2 := a.lerp(b, t + gl / 2)
+				p.bx = snappedf(m1.x, 0.01); p.bz = snappedf(m1.y, 0.01); p.erase("miter_b"); p.open_b = false
+				var q: Dictionary = (e.params as Dictionary).duplicate()
+				q.ax = snappedf(m2.x, 0.01); q.az = snappedf(m2.y, 0.01); q.erase("miter_a"); q.open_a = false; q.seed = int(q.get("seed", 1)) + 500
+				keep.append({ tag = String(e.tag) + "_b", kit = kit, params = q, x = e.x, z = e.z, ry = e.ry })
+		elif kit == "village/fence" and st >= 1.75 and r.next() < 0.25 * st:
+			e.params = (e.params as Dictionary).merged({ _gone = true }, true)
+	out.pieces = out.pieces.filter(func(e): return not (e.params as Dictionary).get("_gone", false))
+	out.pieces.append_array(keep)
+	var y: Dictionary = out.yard
+	out.pieces.append(_v("ruin_yard", "bldg/ruin_yard", { seed = int(ruin.get("seed", seed)) * 3 + 1, stage = st, w = snappedf(float(y.maxX) - float(y.minX), 0.01), d = snappedf(float(y.maxZ) - float(y.minZ), 0.01) },
+		(float(y.minX) + float(y.maxX)) / 2, (float(y.minZ) + float(y.maxZ)) / 2, 0))
 
 # 대문 견본: 문 하나 + 양옆 담 토막(갤러리·비교용). params.gate = 대문 종류
 static func _gate_demo(params: Dictionary, seed: int) -> Dictionary:

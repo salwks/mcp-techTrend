@@ -45,6 +45,19 @@ func _init() -> void:
 		fails += _check_single_old("village/giwa/giyeok", "village/giwa", { seed = 1, plan = "giyeok" })
 		fails += _check_single_old("village/choga/giyeok", "village/choga", { seed = 1, plan = "giyeok" })
 		for st in ["tile", "soseul", "thatch"]: fails += _check_single_old("village/daemun/" + st, "village/daemun", { seed = 1, style = st })
+	if set == "ruin":
+		# 폐가 단계마다(자른 지붕·처짐·기울기 포함): 남은 지붕 밑에서 벽이 뚫고 나오지 않나 — 지붕이 없어진 자리의 벽('outside')은 폐가라 셈하지 않는다
+		for t in ["choga", "anchae", "sarang", "gotgan", "araechae", "jumak", "giwajip", "haengrang"]:
+			for rg in ["south", "central", "north", "jeju"]:
+				for st in [1.0, 2.0, 3.0]:
+					var sp := S.resolve({ type = t, region = rg, seed = 1 })
+					sp.ruin = { stage = st, seed = 5 }
+					var rz := preload("res://kit/bldg/_ruin.gd").resolve(sp)
+					preload("res://kit/bldg/_ruin.gd").plan(sp, rz)
+					sp._rz = rz
+					ruin_mode = true
+					fails += _check_clear("ruin/%s/%s/%d" % [t, rg, int(st)], sp)
+		ruin_mode = false
 	if set == "place":
 		fails += _check_place(String(args.get("file", "res://region_data/JL_NAMWON_UNBONG/placement_namwon.json")), String(args.get("bbox", "-3420,200,-3322,365")).split(","))
 	var out: String = args.get("out", "res://shots/building_builder/roof_check.json")
@@ -177,6 +190,7 @@ func _check_building(name: String, sp: Dictionary) -> int:
 # 벽·기둥·도리 윗면이 지붕 밑면보다 낮은가(처마 밖으로 나온 벽 모서리·이엉을 뚫는 벽이 없나) — 칸마다 여유 CLEAR
 const CLEAR := 0.03
 var clear_report := []
+var ruin_mode := false
 func _check_clear(name: String, sp: Dictionary) -> int:
 	# 벽·기둥 윗면(벽 높이 top 이하) ↔ 지붕 밑면: 여유 CLEAR 이상 · 창방·도리(top 위) ↔ 지붕 겉면: 뚫고 나오지 않음 · 처마 밖 벽 칸 없음
 	var roof := Grid.new(); var wall := Grid.new(); var beam := Grid.new()
@@ -196,10 +210,10 @@ func _check_clear(name: String, sp: Dictionary) -> int:
 			n_hit += 1; at = Vector2((k.x + 0.5) * CELL, (k.y + 0.5) * CELL)
 			if OS.get_cmdline_user_args().has("--dbg"): print("  DBG %s cell=%s wall_y=%.2f under=%.2f roof_top=%.2f has_under=%s" % [name, str(at), wy, _under(roof, k), roof.top[k], roof.under.has(k)])
 	for k in beam.top:
-		if not roof.top.has(k) or beam.top[k] > roof.top[k] - 0.02:
+		if (not roof.top.has(k) and not ruin_mode) or (roof.top.has(k) and beam.top[k] > roof.top[k] - 0.02):
 			n_top += 1
 			if OS.get_cmdline_user_args().has("--dbg"): print("  DBGB %s cell=(%.2f,%.2f) beam_y=%.2f roof_top=%s" % [name, (k.x + 0.5) * CELL, (k.y + 0.5) * CELL, beam.top[k], str(roof.top.get(k))])
-	var ok := n_out <= 2 and n_hit <= 2 and n_top <= 2
+	var ok := (n_out <= 2 or ruin_mode) and n_hit <= 2 and n_top <= 2
 	clear_report.append({ name = name, ok = ok, wall_cells = wall.top.size(), outside = n_out, through = n_hit, beam_through_top = n_top, min_clear = snappedf(minc, 0.01), at = [snappedf(at.x, 0.1), snappedf(at.y, 0.1)] })
 	if not ok: print("WALLCLEAR %s FAIL outside=%d through=%d beam_top=%d min_clear=%.2f at=%s" % [name, n_out, n_hit, n_top, minc, str(at)])
 	return 0 if ok else 1

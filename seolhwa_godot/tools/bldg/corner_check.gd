@@ -76,7 +76,9 @@ func _init() -> void:
 				if rg == "mountain" and t != "choga": continue
 				for s in seeds:
 					for inside in ([false, true] if t in ["choga", "anchae", "sarang", "jumak", "giwajip"] else [false]):
-						var r := _building("%s/%s/%d%s" % [t, rg, s + 1, "/int" if inside else ""], { type = t, region = rg, seed = s + 1, interior = inside })
+						var pp := { type = t, region = rg, seed = s + 1, interior = inside }
+						if args.has("ruin"): pp.over = { ruin = { stage = float(args.ruin), seed = 5 } }   # 폐가 단계(0·1 — 2부터는 일부러 무너진 벽이라 뺀다)
+						var r := _building("%s/%s/%d%s" % [t, rg, s + 1, "/int" if inside else ""], pp)
 						gaps += r.x; rays += r.y
 	if set in ["compound", "all"]:
 		for t in ["choga_house", "jungnong", "giwa_house", "yangban", "jumak_yard"]:

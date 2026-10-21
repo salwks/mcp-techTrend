@@ -169,7 +169,7 @@ func _walk_to(t: Vector3) -> bool:
 # 묶음 대문 걷기 · 옆 담 막힘
 func _gates(g: Dictionary) -> void:
 	var bb: Array = g.bbox
-	var files := ["res://region_data/JL_NAMWON_UNBONG/placement_namwon.json"]
+	var files := [String(g.get("file", "res://region_data/JL_NAMWON_UNBONG/placement_namwon.json"))]
 	for f in files:
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
 		for it in d.items:

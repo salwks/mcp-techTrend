@@ -21,6 +21,7 @@ func _init() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
 	if set == "block": _block()
 	elif set == "town": _town(out)
+	elif set == "ruin": _ruin_set(out)
 	elif set == "integ": _put(_e("integ_yangban", "통합 점검 양반가", "integ", "bldg/compound", { type = "yangban", region = "south", seed = 3, interior = true }), -3487.0, 526.0)
 	else: _gallery()
 	var f := FileAccess.open(ProjectSettings.globalize_path(out.path_join("placement_bldg_%s.json" % set)), FileAccess.WRITE)
@@ -182,6 +183,38 @@ func _town(out: String) -> void:
 		manifest.append({ id = st[0], label = st[1], x = cx, z = cz })
 	var vf := FileAccess.open(ProjectSettings.globalize_path(out.path_join("views.json")), FileAccess.WRITE)
 	vf.store_string(JSON.stringify({ sets = { town = { label = "고을 배치 틀 견본", views = views, walks = walks } } }, "\t"))
+	vf.close()
+
+# ⑤ 폐가 견본: 초가 묶음 · 읍내 기와집 묶음 단계 0~4 두 줄 + 실내 들어가는 폐가 한 채(단계 1·2) — 남원 읍성 서쪽 풀밭(개울 비킨 자리)
+func _ruin_set(out: String) -> void:
+	var views := []; var walks := []
+	var x0 := -3790.0
+	for row in 2:
+		var cz := 652.0 + row * 34.0
+		for st in 5:
+			var t := "choga_house" if row == 0 else "giwa_house"
+			var p := { type = t, region = "south", seed = 1113 if row == 0 else 1064, lot = [14.8, 14.0], ruin = { stage = float(st), seed = 4 + st }, interior = true }
+			var cx := x0 + st * 24.0
+			var e := _e("ruin_%s_s%d" % [t, st], "%s 단계 %d" % [t, st], "ruin", "bldg/compound", p)
+			_put(e, cx, cz)
+			var fp: Vector2 = e.fp
+			views.append({ id = "%s_s%d_t" % [t, st], label = "%s 단계 %d · 마을 카메라" % ["초가 묶음" if row == 0 else "기와집 묶음", st], mode = "town", x = cx, z = cz + fp.y / 2 + 3.0 })
+			var gl: Vector2 = load("res://scripts/region/bldg_rollout.gd").gate_local(p)
+			walks.append({ id = "%s_s%d" % [t, st], label = "%s 단계 %d 걸어 들어감" % [t, st], pts = [[cx + gl.x, cz + gl.y + 4.0], [cx + gl.x, cz + gl.y + 1.2], [cx + gl.x + (2.4 if t == "giwa_house" else 0.0), cz + gl.y - 2.0], [cx + gl.x * 0.3, cz - 1.0]], shots = [1, 2] })
+	# 실내 들어가는 폐가(단계 1·2 — 들어감 / 단계 3 — 실내 없음): 방 칸 가운데 줄로 문 앞 → 방 안
+	for k in 3:
+		var st: float = [1.0, 2.0, 3.0][k]
+		var p := { type = "choga", region = "south", seed = 3, interior = true, over = { ruin = { stage = st, seed = 11, collapse_side = "right" } } }
+		var e := _e("ruin_room_s%d" % int(st), "초가 단계 %d 실내" % int(st), "ruin", "bldg/building", p)
+		var cx := -3790.0 + k * 22.0; var cz := 720.0
+		_put(e, cx, cz)
+		var xr := 0.0
+		for q in e.inside:
+			if q[0] == "room": xr = float(q[1]); break
+		views.append({ id = "room_s%d_t" % int(st), label = "초가 단계 %d · 마을 카메라" % int(st), mode = "town", x = cx + xr, z = cz + 6.0 })
+		walks.append({ id = "room_s%d" % int(st), label = "초가 단계 %d 방으로" % int(st), pts = [[cx + xr, cz + 5.0], [cx + xr, cz + 2.4], [cx + xr, cz + 0.2]], shots = [1, 2], fp_turn = 0 })
+	var vf := FileAccess.open(ProjectSettings.globalize_path(out.path_join("views.json")), FileAccess.WRITE)
+	vf.store_string(JSON.stringify({ sets = { ruin = { label = "폐가 견본", views = views, walks = walks, gates = { bbox = [-3810, 630, -3650, 700], file = out.path_join("placement_bldg_ruin.json") } } } }, "\t"))
 	vf.close()
 
 # 성능 시험 마을 블록: 30채(서민 초가·중농·주막·양반가·시전 섞임) — 길을 사이에 두고 두 줄 + 안쪽 줄

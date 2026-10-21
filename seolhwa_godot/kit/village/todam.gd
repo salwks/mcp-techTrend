@@ -2,6 +2,7 @@
 # 고증: 조선 후기 남부 민가는 돌담·토석담이 흔하고, 담 위는 이엉을 얹거나(초가) 기와를 얹었다(양반가).
 # params: seed, ax,az,bx,bz (없으면 len(5)), h(1.5), cap:"thatch"|"tile", tile_seg(0.4: 기와 갓 마디 길이)
 #         open_a·open_b(false): 그 끝 면을 그리지 않는다 — T자로 다른 담 옆면에 맞댄 끝(건물 빌더 묶음이 씀)
+#         cap "none": 갓 없음(폐가 — 갓이 다 빠진 흙담)
 #         miter_a·miter_b(0 | ±1): 직각 모서리 끝을 45° 맞춤(끝점 = 두 담 가운데 줄 교점, 부호 = 다른 담이 뻗는 쪽의 로컬 z) — 두 담의 바깥 면·갓이
 #           모서리 선 하나에서 만난다(끝 면·먹선이 바깥 면에 줄로 남지 않고, 모서리 덩이를 따로 두지 않는다)
 # 삼각형: 약 40~60/m(돌담보다 싸서 집 묶음 둘레에 쓴다).
@@ -64,7 +65,10 @@ static func draw(m: C.M, ax: float, az: float, bx: float, bz: float, h := 1.5, c
 		var p0 := Vector3(x, h, -cw); var p1 := Vector3(x, h, cw); var p2 := Vector3(x, h + rh, 0)
 		if sx > 0: g.tri(p0, p2, p1)
 		else: g.tri(p0, p1, p2)
-	if cap == "tile":
+	if cap == "none":
+		# 갓이 빠진 흙담: 윗면이 둥글게 녹아 낮아진 흙 띠(갓 대신)
+		m.add("p", "mud", C.P(Kit.xf(Kit.cyl(t * 0.5, t * 0.5, len, 6, 0, 0, 0, 0, 0, PI / 2), 0, h - 0.02, 0, 0, 0, 0, 1.0, 0.45, 1.0), 0xbfa47e, 0xa08866, 0.05, R), 0.02)
+	elif cap == "tile":
 		m.add("p", key, C.P(g, 0xd9d9d4, 0xb9b8b2, 0.03, R), 0.03)
 		var rl := len + (0.15 if miter_a == 0.0 else 0.0) + (0.15 if miter_b == 0.0 else 0.0)
 		var rx := ((0.15 if miter_b == 0.0 else 0.0) - (0.15 if miter_a == 0.0 else 0.0)) / 2

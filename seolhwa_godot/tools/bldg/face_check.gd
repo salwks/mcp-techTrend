@@ -26,6 +26,12 @@ func _init() -> void:
 			for s in seeds:
 				for inside in modes:
 					var sp := S.resolve({ type = t, region = rg, seed = s + 1, interior = inside })
+					if args.has("ruin"):
+						# 폐가 단계(--ruin=2): 잔해·떨어진 문짝·외엮기가 바닥·벽과 한 평면에 겹치지 않나
+						const RUI := preload("res://kit/bldg/_ruin.gd")
+						sp.ruin = { stage = float(args.ruin), seed = 5 }
+						var rz := RUI.resolve(sp); RUI.plan(sp, rz); sp._rz = rz
+						if not rz.interior_ok: sp.interior = false
 					var r := _check(sp, args.has("dbg"))
 					var name := "%s/%s/%d%s" % [t, rg, s + 1, "/int" if inside else ""]
 					report.append({ name = name, pairs = r.pairs, minor = r.minor, area = snappedf(r.area, 0.0001), at = r.at, tris = r.tris })
