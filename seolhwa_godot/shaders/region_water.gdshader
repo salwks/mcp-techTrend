@@ -50,8 +50,14 @@ void fragment() {
 	vec2 xz = v_wp.xz;
 	// 흐름: 하류로 미는 거리(m) — 여울 빠르게, 소 느리게
 	float spd = 0.32 * (1.0 + rapid * 2.5) * (1.0 - pool * 0.6);
-	vec2 off = v_flow * t * spd;
-	vec3 dt = w_detail(xz, off, mix(1.0, 0.7, rapid));
+	// 흐름 두 박자(flow map): 미는 거리를 T초마다 되감고 반 박자 어긋난 두 장을 엇갈려 섞는다.
+	//   예전엔 v_flow·t를 끝없이 키워서, 굽이에서 이웃 화소의 흐름 방향 차이가 시간에 비례해 벌어져 무늬가 뒤틀렸다.
+	const float FT = 3.0;
+	float ph0 = fract(t / FT), ph1 = fract(t / FT + 0.5);
+	float dsc = mix(1.0, 0.7, rapid);
+	vec3 d0 = w_detail(xz, v_flow * spd * ph0 * FT, dsc);
+	vec3 d1 = w_detail(xz + vec2(7.3, 3.1), v_flow * spd * ph1 * FT, dsc);
+	vec3 dt = mix(d0, d1, abs(ph0 * 2.0 - 1.0));
 	float uv_edge = min(UV.y, 1.0 - UV.y);
 	float edge_amp = smoothstep(0.0, 0.25, uv_edge);
 	vec3 wv = w_wave(xz, t, RIVER_W.x * mix(1.0, water_k, 0.5) * (1.0 - pool * 0.6 + rapid * 0.8) * edge_amp, RIVER_W.y);
@@ -65,7 +71,9 @@ void fragment() {
 	body = mix(body, body * vec3(0.78, 0.9, 0.92), pool * 0.6);
 	body *= 0.8 + 0.4 * dt.z;   // 잔물결 골은 조금 짙게(붓 바림)
 	// 흰 물살(여울): 흐름 쪽으로 늘인 잡음 — 그린 줄이 아니라 덩어리로 끊긴다
-	float fh = texture(wnrm_tex, vec2(dot(xz, v_flow) * 0.09 - t * spd * 0.2, dot(xz, vec2(-v_flow.y, v_flow.x)) * 0.35)).a;
+	//   물길 좌표(UV.x = 하류 거리/7, UV.y = 가로)로 — 세계 좌표를 흐름 방향에 투영하면 굽이에서 줄무늬가 부채꼴로 휜다
+	float along = UV.x * 7.0, across = (UV.y - 0.5) * max(v_c.b * 40.0, 2.0);
+	float fh = texture(wnrm_tex, vec2(along * 0.09 - t * spd * 0.2, across * 0.35)).a;
 	float foam = smoothstep(0.58, 0.74, fh * 0.7 + dt.z * 0.3) * rapid;
 	// 물가선: 아주 얕은 띠에 젖은 밝은 테·잔 거품(물결 따라 끊김)
 	float lip = (1.0 - smoothstep(0.0, 0.07, d)) * smoothstep(0.35, 0.65, dt.z) * has_depth;
