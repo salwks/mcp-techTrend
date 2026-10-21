@@ -45,7 +45,7 @@
 
   - 삼각형은 늘었고(빌더 near가 더 무겁다) 그리기는 줄었다(건물마다 한 메시). fps 차이의 일부는 같은 맥에서 다른 일이 돈 차이일 수 있다(전 측정이 먼저, 이야기 시험 3개가 함께 돌았다). 기준(≥60fps, p99 ≤ 16ms)은 둘 다 통과.
 - **이야기 시험**(`EXTRA_ARGS=--kitcache=/tmp/… tools/run_story_tests.sh -j 3 first15 namwon`): **17 PASS · 1 FAIL**. 실패는 `namwon_chunhyang:p2a` "굽기 결과가 머리 고침보다 새것" — 알려진 작업 트리 수정 시각 문제(building-builder §11과 같은 줄). first15 세 갈래(new·onui·skip) 통과.
-  - 이 실행이 도는 도중에 §C 모서리 수정을 `building.gd`에 쓰기 시작했다. 끝에 전체 시험을 다시 돌렸다(§끝).
+  - 이 실행이 도는 도중에 §C 모서리 수정을 `building.gd`에 쓰기 시작했다. 끝에 전체 시험을 다시 돌렸다(§끝 — 전체 결과).
 
 ### 1-4. 화면
 - `step1_town.jpg` — 마을 카메라 6곳 전·후. `step1_walk.jpg` — 장터길·오솔길 걷기(마을 카메라 + 1인칭) 전·후. `step1_std_fp_over.jpg` — 기본 카메라 · 1인칭 · 구역 내려다보기 전·후.
@@ -232,3 +232,23 @@ s1 0.86·0.98·0.83·0.54·1.24·0.07·0·ragged / s2 0.84·0.91·0.86·0.46·1.
 - 기와 안채 ㄱ자 단계 2~3에서 날개 처마 띠 한 토막이 잘린 칸 너머로 가늘게 남는 자리가 있다(시트 안채 2·3).
 - 무너진 벽 조각은 칸 단위로 고른다(벽 전체가 비스듬히 무너진 모양은 없음). 단계 3의 '남은 기둥 8~15° 기욺'은 몸 전체 전단 하나로만 한다.
 - 이야기 쓰임(흉가·도깨비 빗자루·여우 집 0↔3 갈아 끼우기)은 앵커(`broom_old`)와 명세 교체만 준비했다. 이야기 쪽 연결은 하지 않았다.
+
+## 끝 — 전체 결과 · 실행
+
+### 전체 이야기 시험(⑤까지 반영 뒤 마지막 한 번)
+`EXTRA_ARGS="--kitcache=/tmp/seolhwa_bldg_kit_cache/" tools/run_story_tests.sh -j 3` → **93 PASS · 1 FAIL**.
+- 실패: `namwon_chunhyang:p2a` "굽기 결과가 머리 고침보다 새것(json … · 원본 …)" — 새 작업 트리의 원본 수정 시각 문제(알려진 것, building-builder §11과 같은 줄). 말 속도 시간 흔들림은 이번에 나지 않았다.
+- 저장 관련 코드는 바꾸지 않았다(save_guard_e2e는 돌리지 않음). 모든 게임 실행은 `--` 뒤 게임 인자 + `--savefile=user://st_*.json`(모래상자) + `--kitcache=/tmp/seolhwa_bldg_kit_cache/`.
+
+### 커밋(claude/building-builder)
+3869fa9 합침(youthful-gauss a283bf1·9550854) · 82a04e9 ① 남원 한 구역 · cda88bf C 외벽 모서리 · a9e180e ② 초가 지붕 · 8006c21 ③ 고을 틀·대문 방향 · 699b9ed ④ 먼 산 · 56e4af8 ⑤ 폐가 · (이 보고서 마무리 커밋)
+
+### 바뀐 구역을 게임에서 보기
+```sh
+cd seolhwa_godot
+godot --path . res://scenes/region.tscn -- --region=JL_NAMWON_UNBONG --warp=-3341,290 \
+  --savefile=user://st_rollout_play.json --kitcache=/tmp/seolhwa_bldg_kit_cache/
+# --warp·--kitcache가 있으면 저장은 모래상자(…/설화록_test)로 간다. 먼 산 끄고 견주기: --nobackdrop
+# 견본: --placedir=res://shots/building_builder/_place_town/ (고을 틀, --warp=-3700,425) · _place_ruin/ (폐가, --warp=-3740,665)
+#   (견본 배치는 tools/bldg/gallery_place.gd -- --set=town|ruin 으로 다시 만든다 — shots/는 깃 밖)
+```
