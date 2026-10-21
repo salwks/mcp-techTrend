@@ -103,10 +103,13 @@ func _view(setname: String, v: Dictionary) -> void:
 			main.rig.shot = { pos = look + Vector3(sin(yw) * cos(pd), sin(pd), cos(yw) * cos(pd)) * d, look = look, fov = float(v.get("fov", 30.0)) }
 			main.set_occ_script({ "focus": look, "r": 0.0, "near": 0.0 })
 			main.fog_on = bool(v.get("fog", false)); main._apply_time()
+	if v.get("gaze", false): main.args["gazetest"] = "1"   # 바라보기(integ-mountain) — 누르고 있는 것처럼, 다 들 때까지 기다린다
 	main.rig.update(0, main.player_pos, main.player.facing, null, true)
-	await _sec(float(v.get("wait", 1.2)))
+	await _sec(float(v.get("wait", 2.0 if v.get("gaze", false) else 1.2)))
 	_shot("%s_%s" % [setname, String(v.id)])
-	print("BRSHOT %s_%s mode=%s at=(%.1f,%.1f) fps=%.0f tris=%dk" % [setname, v.id, mode, x, z, Engine.get_frames_per_second(), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) / 1000])
+	main.args.erase("gazetest")
+	print("BRSHOT %s_%s mode=%s at=(%.1f,%.1f) fps=%.0f tris=%dk zone=%s pitch=%.1f dist=%.1f tilt=%.1f gaze=%.2f lift=%.1f camdy=%.1f" % [setname, v.id, mode, x, z, Engine.get_frames_per_second(), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) / 1000,
+		main.rig.zone_name, main.rig.cur.pitch, main.rig.cur.distance, float(main.rig.cur.get("tilt", 0.0)), float(main.rig.get("gaze") if main.rig.get("gaze") != null else 0.0), float(main.rig.get("_lift") if main.rig.get("_lift") != null else 0.0), main.cam.global_position.y - main.player_pos.y])
 	if mode == "over":
 		main.set_occ_script(null); main.fog_on = true; main._apply_time()
 	main.rig.shot = null; main.rig.override = null

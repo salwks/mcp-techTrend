@@ -6,7 +6,14 @@
 class_name CameraRig
 extends RefCounted
 
-const DEFAULT := { pitch = 40.0, distance = 16.0, fov = 30.0, lookAhead = 1.2, aimZ = 0.0 }   # aimZ: 겨냥점을 z로 옮김(−=북쪽, 구역 값)
+const DEFAULT := { pitch = 40.0, distance = 16.0, fov = 30.0, lookAhead = 1.2, aimZ = 0.0, tilt = 0.0 }   # tilt: 겨눈 뒤 카메라를 위로 드는 각(도) — 들·산 구도(RegionWorld.FIELD_FRAME)
+# 바라보기(integ-mountain): 누르고 있는 동안 고개를 들어 지평선·하늘·먼 산을 본다(V · 마우스 오른쪽 단추 · 패드 오른 스틱 누름 — region_main 'gaze').
+#   낮게 서서(pitch 14°) 카메라를 위로 들어(tilt 16° → 시선 2° 위) 화면 위쪽 대부분이 하늘·먼 산줄기. 넓게(fov 52). 놓으면 그 구역 구도로 부드럽게 돌아온다.
+const GAZE := { pitch = 14.0, tilt = 16.0, fov = 52.0 }
+const GAZE_IN := 4.0    # 들어 올림 빠르기(1/초, 지수 — 약 0.6초에 다 든다)
+const GAZE_OUT := 3.0   # 내림 빠르기
+var gaze_on := false    # 바라보기 키를 누르는 중(region_main이 매 프레임 넣는다)
+var gaze := 0.0         # 0 = 평소 · 1 = 다 든 상태(부드럽게 따라감)   # aimZ: 겨냥점을 z로 옮김(−=북쪽, 구역 값)
 
 var camera: Camera3D
 var world: World
@@ -83,7 +90,7 @@ func params(pos: Vector3, interior) -> Dictionary:
 		if World.in_box(z, pos.x, pos.z): zone = z
 	zone_name = zone.name if zone != null else ""
 	if zone != null:
-		for k in ["pitch", "distance", "fov", "lookAhead", "aimZ"]:
+		for k in ["pitch", "distance", "fov", "lookAhead", "aimZ", "tilt"]:
 			if zone.has(k): p[k] = float(zone[k])
 		if zone.has("yaw"): p.yaw = float(zone.yaw)   # 전망 자리(산 자리 view_yaw): 바라보는 쪽으로 돈다(도)
 	return p
@@ -99,8 +106,11 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 		return
 	var p := params(pos, interior)
 	var k := 1.0 if snap else 1.0 - exp(-dt * 2.2)
-	for key in ["pitch", "distance", "fov", "lookAhead", "aimZ"]:
+	for key in ["pitch", "distance", "fov", "lookAhead", "aimZ", "tilt"]:
 		cur[key] += (float(p.get(key, 0.0)) - cur[key]) * k
+	var g_want := 1.0 if gaze_on and override == null and focus == null and _gl == null else 0.0
+	gaze += (g_want - gaze) * (1.0 if snap else 1.0 - exp(-dt * (GAZE_IN if g_want > gaze else GAZE_OUT)))
+	if gaze < 0.002 and g_want == 0.0: gaze = 0.0
 	var ahead: Vector2 = { down = Vector2(0, 0.6), up = Vector2(0, -1), left = Vector2(-1, 0), right = Vector2(1, 0) }.get(facing, Vector2.ZERO)
 	var tx: float; var tz: float; var ty: float
 	if focus != null:
@@ -134,29 +144,32 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 		var w := smoothstep(0.0, 1.0, clampf(_gl.t / maxf(_gl.dur, 0.01), 0.0, 1.0))
 		var gt: Vector3 = _gl.to if _gl.to != null else Vector3(tx, ty, tz)
 		target = (_gl.from as Vector3).lerp(gt, w)
-		for key in ["pitch", "distance", "fov", "lookAhead", "aimZ"]:
-			cur[key] = lerpf(float(_gl.cur0[key]), float(p.get(key, 0.0)), w)
+		for key in ["pitch", "distance", "fov", "lookAhead", "aimZ", "tilt"]:
+			cur[key] = lerpf(float(_gl.cur0.get(key, 0.0)), float(p.get(key, 0.0)), w)
 		if _gl.t >= _gl.dur: _gl = null
 	else:
 		target += (Vector3(tx, ty, tz) - target) * kf
-	var pr := deg_to_rad(cur.pitch)
+	var gk := smoothstep(0.0, 1.0, gaze)
+	var pr := deg_to_rad(lerpf(cur.pitch, minf(cur.pitch, GAZE.pitch), gk))
 	var d: float = cur.distance
 	var off := Vector3(sin(yaw) * cos(pr) * d, sin(pr) * d, cos(yaw) * cos(pr) * d)
 	if yaw == 0.0: off = Vector3(0, sin(pr) * d, cos(pr) * d)   # 기본 시점은 예전 식 그대로
 	var cp := target + off
 	if sailing or riding or yaw != 0.0:   # 낮은 시점: 기슭·둑 속으로 들어가지 않게
 		cp.y = maxf(cp.y, world.height_at(cp.x, cp.z) + 1.6)
-	if interior == null and world.has_method("ground_at"): cp = _clear_terrain(cp, target)
+	if interior == null and world.has_method("ground_at"): cp = _clear_terrain(cp, target, snap)
 	cp.y += shake_y
 	camera.position = cp
 	camera.look_at(target, Vector3.UP)
-	camera.fov = cur.fov
+	var tl := lerpf(cur.tilt, GAZE.tilt, gk)
+	if tl != 0.0: camera.rotate_object_local(Vector3.RIGHT, deg_to_rad(tl))   # 들·산 구도·바라보기: 플레이어는 화면 아래쪽, 위쪽에 먼 땅·하늘
+	camera.fov = lerpf(cur.fov, maxf(cur.fov, GAZE.fov), gk)
 
 # 산 비탈 가림(mountain-terrain): 겨냥점 → 카메라 선분이 땅(지형만 — 건물 바닥·다리 면은 보지 않음)에 걸리면 카메라를 들어 올린다.
 #   당기기(거리 줄이기) 대신 올리기 — 화면 크기(거리)는 그대로, 비탈 위에서 내려다보는 각만 깊어진다. 평지 고을에서는 걸리는 일이 없어 그대로.
 #   급히 튀지 않게 올린 양은 부드럽게 줄인다(_lift).
 var _lift := 0.0
-func _clear_terrain(cp: Vector3, tgt: Vector3) -> Vector3:
+func _clear_terrain(cp: Vector3, tgt: Vector3, snap := false) -> Vector3:
 	var need := 0.0
 	var gc: float = world.ground_at(cp.x, cp.z) + 1.4
 	need = maxf(need, gc - cp.y)
@@ -166,8 +179,9 @@ func _clear_terrain(cp: Vector3, tgt: Vector3) -> Vector3:
 		var g: float = world.ground_at(q.x, q.z) + 0.9
 		if g > q.y:   # 이 표본에서 선분이 땅에 묻힘 → 카메라 높이 c가 tgt.y + (g − tgt.y)/t 이상이어야 한다
 			need = maxf(need, tgt.y + (g - tgt.y) / t - cp.y)
-	if need > _lift: _lift = need
-	else: _lift = maxf(need, _lift - 0.25)
+	# 순간이동·컷(snap)은 그 자리 값 그대로 — 예전 자리에서 올린 양(수백 m)이 천천히 줄며 하늘에서 내려다보던 것을 고침(integ-mountain)
+	if need > _lift or snap: _lift = need
+	else: _lift = maxf(need, _lift - maxf(0.25, _lift * 0.06))
 	cp.y += _lift
 	return cp
 

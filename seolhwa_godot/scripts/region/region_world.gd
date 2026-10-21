@@ -422,6 +422,14 @@ var _cz_frame := 0
 #   그대로 두는 것: 권역 기본 · 숲길 48 · 길 밖 숲 55 · 고개 30 · 실내 · 대화 TALK · 1인칭 · 말·배 · 지도 · 사건 카메라(override)
 static var TOWN_FRAME := { pitch = 22.0, dist_k = 0.64 }   # 2026-10-17 fix-1017: 사용자 "32°보다 더 낮게"(성벽 말고는 단층) — 32·28·25·22 비교 뒤 22°(shots/fix_1017/camera_sheet.jpg)
 
+# 들·길·산 구도(integ-mountain, 2026-10-21 사용자 결정 "고을 밖은 낮고 멀리 보는 구도"): 고을(마을 무대 구도) 밖 — 권역 기본·고개·숲길 —
+#   카메라는 플레이어 위 30°에 서고(거리 13.5m, fov 50) 겨눈 뒤 위로 13° 든다 → 시선은 17° 아래, 화면 위 끝이 수평 위 약 8°.
+#   플레이어는 화면 아래 ¾쯤, 위쪽에 들 너머 산줄기(실제 지형)가 든다. 고을 경계에서는 구역 값이 부드럽게 섞인다(CameraRig 2.2/초).
+#   숲길은 나무 사이라 조금 높게(36°, 9° 듦). 길 밖 깊은 숲(CAM_DEEP 55°)·고을·집 둘레·실내·대화·말·배는 그대로.
+#   비교·되돌리기: --fieldframe=40,22,30,0(각, 거리, fov, 듦 — 예전 권역 기본 값) · --fieldframe=off
+static var FIELD_FRAME := { pitch = 30.0, distance = 13.5, fov = 50.0, tilt = 13.0, lookAhead = 1.6 }
+static var FIELD_FOREST := { pitch = 36.0, distance = 14.0, fov = 46.0, tilt = 9.0, lookAhead = 1.4 }
+
 static func town_cam(cam: Dictionary) -> Dictionary:
 	var o := cam.duplicate()
 	if float(cam.get("pitch", 40.0)) >= 38.0 and float(cam.get("pitch", 40.0)) <= 42.0:
@@ -435,7 +443,7 @@ static func town_cam(cam: Dictionary) -> Dictionary:
 func _build_camera_zones() -> void:
 	camera_zones = []
 	var big := 1e6
-	camera_zones.append(_zone("권역", -big, big, -big, big, CAM_DEFAULT))
+	camera_zones.append(_field(_zone("권역", -big, big, -big, big, CAM_DEFAULT), FIELD_FRAME))
 	_settle_boxes = []
 	var town := town_cam(CAM_TOWN)
 	for s in region.get("settlements", []):
@@ -449,7 +457,7 @@ func _build_camera_zones() -> void:
 	camera_zones.append(_hamlet_zone)
 	for p in region.get("passes", []):
 		var r := 45.0
-		camera_zones.append(_zone(String(p.get("name", "고개")), float(p.x) - r, float(p.x) + r, float(p.z) - r, float(p.z) + r, CAM_PASS))
+		camera_zones.append(_field(_zone(String(p.get("name", "고개")), float(p.x) - r, float(p.x) + r, float(p.z) - r, float(p.z) + r, CAM_PASS), FIELD_FRAME))
 	# 전망 자리(산 자리 중 view_yaw가 있는 것): 낮게 서서 바라보는 쪽으로 돈다(재 마루에서 남원 쪽, 봉우리에서 먼 줄기)
 	for a in mountain.get("anchors", []):
 		if not a.has("view_yaw"): continue
@@ -461,6 +469,13 @@ func _build_camera_zones() -> void:
 		var zz: Dictionary = z.duplicate()
 		if String(z.get("src", "")) == "north": zz = town_cam(zz)   # 도성 안·운종가·육조거리·평양 내성·함흥 성 안(배치 생성 도시 구역)
 		camera_zones.append(zz)
+
+# 들·산 구도 씌우기(FIELD_FRAME이 비었으면 — --fieldframe=off — 그대로)
+static func _field(z: Dictionary, f: Dictionary) -> Dictionary:
+	if f.is_empty(): return z
+	for k in f: z[k] = f[k]
+	z.field = true
+	return z
 
 static func _zone(name: String, x0: float, x1: float, z0: float, z1: float, cam: Dictionary) -> Dictionary:
 	return { name = name, minX = x0, maxX = x1, minZ = z0, maxZ = z1, pitch = cam.pitch, distance = cam.distance }
@@ -480,8 +495,10 @@ func update_camera_zone(pos: Vector3, force := false) -> void:
 		if in_box(b, pos.x, pos.z): in_town = true; break
 	if n >= 5 and not in_town:
 		_forest_zone.minX = pos.x - 40.0; _forest_zone.maxX = pos.x + 40.0; _forest_zone.minZ = pos.z - 40.0; _forest_zone.maxZ = pos.z + 40.0
-		var cam: Dictionary = CAM_DEEP if road_distance(pos.x, pos.z) > 6.0 else CAM_FOREST
-		_forest_zone.pitch = cam.pitch; _forest_zone.distance = cam.distance
+		var deep := road_distance(pos.x, pos.z) > 6.0
+		var cam: Dictionary = CAM_DEEP if deep else (FIELD_FOREST if not FIELD_FOREST.is_empty() else CAM_FOREST)
+		for k in ["fov", "tilt", "lookAhead"]: _forest_zone.erase(k)
+		for k in cam: _forest_zone[k] = cam[k]
 	elif not in_box(_forest_zone, pos.x, pos.z) or n <= 2 or in_town:
 		_forest_zone.minX = 1e6; _forest_zone.maxX = 1e6
 	forest_active = in_box(_forest_zone, pos.x, pos.z)

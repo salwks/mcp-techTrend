@@ -367,7 +367,7 @@ func _setup_input() -> void:
 	var keys := {
 		move_up = [KEY_W, KEY_UP], move_down = [KEY_S, KEY_DOWN], move_left = [KEY_A, KEY_LEFT], move_right = [KEY_D, KEY_RIGHT],
 		run = [KEY_SHIFT], time_step = [KEY_T], toggle_post = [KEY_P], reload_place = [KEY_F5], weather_step = [KEY_F6], fast_travel = [KEY_H],
-		interact = [KEY_E], boat_skip = [KEY_SPACE], view_toggle = [KEY_0, KEY_KP_0],
+		interact = [KEY_E], boat_skip = [KEY_SPACE], view_toggle = [KEY_0, KEY_KP_0], gaze = [KEY_V],
 	}
 	for act in keys:
 		if not InputMap.has_action(act): InputMap.add_action(act)
@@ -375,6 +375,12 @@ func _setup_input() -> void:
 		for k in keys[act]:
 			var ev := InputEventKey.new(); ev.physical_keycode = k
 			InputMap.action_add_event(act, ev)
+	# 바라보기(integ-mountain): V 말고도 마우스 오른쪽 단추(3인칭에서는 쓰지 않던 단추)·패드 오른 스틱 누름을 누르고 있는 동안
+	if InputMap.action_get_events("gaze").size() < 3:
+		var mb := InputEventMouseButton.new(); mb.button_index = MOUSE_BUTTON_RIGHT
+		InputMap.action_add_event("gaze", mb)
+		var jb := InputEventJoypadButton.new(); jb.button_index = JOY_BUTTON_RIGHT_STICK
+		InputMap.action_add_event("gaze", jb)
 
 func _build_scene() -> void:
 	var root := scene_vp
@@ -415,6 +421,11 @@ func _build_scene() -> void:
 	root.add_child(cam)
 	cam.current = true
 
+	if args.has("fieldframe"):   # 들·산 구도 비교: --fieldframe=각,거리,fov,듦 · off(예전 권역 기본 40°) — 기본은 RegionWorld.FIELD_FRAME
+		if String(args.fieldframe) == "off": RegionWorld.FIELD_FRAME = {}; RegionWorld.FIELD_FOREST = {}
+		else:
+			var ff: PackedStringArray = String(args.fieldframe).split(",")
+			RegionWorld.FIELD_FRAME = { pitch = float(ff[0]), distance = float(ff[1]), fov = float(ff[2]) if ff.size() > 2 else 30.0, tilt = float(ff[3]) if ff.size() > 3 else 0.0, lookAhead = 1.2 }
 	if args.has("townframe"):   # 마을 구도 비교 촬영: --townframe=36,0.86 (각, 거리 배율) — 기본은 RegionWorld.TOWN_FRAME
 		var tf: PackedStringArray = String(args.townframe).split(",")
 		RegionWorld.TOWN_FRAME = { pitch = float(tf[0]), dist_k = float(tf[1]) if tf.size() > 1 else 1.0 }
@@ -992,7 +1003,7 @@ func set_first_person(on: bool, save := true) -> void:
 	_update_fp_state()
 	if on and not fp_active: _show_hud("지금은 3인칭 — 끝나면 1인칭으로 돌아간다 (0 되돌리기)")
 	elif on: _show_hud("1인칭 — 마우스로 둘러보기 · W·S 앞뒤 · A·D 옆 · E 말 걸기 · Esc 메뉴 · 0 3인칭")
-	else: _show_hud("3인칭 시점 (0 1인칭)")
+	else: _show_hud("3인칭 시점 (0 1인칭 · V 누르고 있기 — 바라보기)")
 
 func toggle_view() -> void:
 	set_first_person(not first_person)
@@ -1265,6 +1276,7 @@ func _process(delta: float) -> void:
 	RenderingServer.global_shader_parameter_set("fog_base", player_pos.y) # 키트·캐릭터 산안개도 발 높이 기준
 	var interior = world.interior_at(player_pos.x, player_pos.z)
 	world.update_camera_zone(player_pos)
+	rig.gaze_on = (Input.is_action_pressed("gaze") or args.has("gazetest")) and not fp_view() and interior == null and not (_map != null and _map.visible) and not _loading
 	rig.update(dt, player_pos, player.facing, interior)
 	if fp_active: _fp_frame(dt, interior)
 	var nd := 1.0 if fp_view() and not args.has("nonear") else 0.0   # 1인칭 가까운 땅 잔무늬(region_terrain near_layer) — --nonear로 끔(비교)
