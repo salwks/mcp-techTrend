@@ -71378,24 +71378,24 @@
   {
    "id": "x_mt_tongyeong_byeolro_1",
    "name": "여원치 골물 건널목",
-   "type": "여울",
+   "type": "돌다리",
    "river_id": "yeowonchi_gol",
    "road_id": "tongyeong_byeolro",
    "x": -375.2,
    "z": -876.2,
    "confidence": "가설",
-   "notes": "mountain-terrain: 길이 물길을 건너는 곳(물속을 걸어 건넘)"
+   "notes": "integ-mountain: 대로가 골물을 건넘 — 홍예 돌다리(tools/mountain/fix_pass_ford.py)"
   },
   {
    "id": "x_mt_tongyeong_byeolro_2",
    "name": "여원치 골물 건널목",
-   "type": "여울",
+   "type": "돌다리",
    "river_id": "yeowonchi_gol",
    "road_id": "tongyeong_byeolro",
    "x": -363.4,
    "z": -878.3,
    "confidence": "가설",
-   "notes": "mountain-terrain: 길이 물길을 건너는 곳(물속을 걸어 건넘)"
+   "notes": "integ-mountain: 대로가 골물을 건넘 — 홍예 돌다리(tools/mountain/fix_pass_ford.py)"
   },
   {
    "id": "x_mt_tongyeong_byeolro_3",
@@ -73812,5 +73812,15 @@
   "tool": "tools/region/build.py",
   "warnings": [],
   "mountain": "tools/mountain/build_mountain.py"
- }
+ },
+ "integ_fixes": [
+  {
+   "id": "integ_pass_ford",
+   "ends": [
+    109.02227546349283,
+    115.39740596627757
+   ],
+   "note": "여원재 대로 아랫주막 아래 노면 고름(약 11%) + 골물 건널목 돌다리 2 — tools/mountain/fix_pass_ford.py"
+  }
+ ]
 }

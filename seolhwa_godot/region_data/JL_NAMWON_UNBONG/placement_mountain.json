@@ -3815,6 +3815,42 @@
    "flatten": false,
    "clear_veg": false,
    "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_br_x_mt_tongyeong_byeolro_1",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 51,
+    "len": 7.0,
+    "hw": 1.6,
+    "arch": 0.35
+   },
+   "x": -375.2,
+   "z": -876.18,
+   "ry": 1.7888,
+   "y": 111.466,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "note": "여원치 골물 대로 홍예 돌다리(가설) — integ-mountain fix_pass_ford.py"
+  },
+  {
+   "id": "mt_br_x_mt_tongyeong_byeolro_2",
+   "kit": "village/stone_bridge",
+   "params": {
+    "seed": 52,
+    "len": 7.0,
+    "hw": 1.6,
+    "arch": 0.35
+   },
+   "x": -363.39,
+   "z": -878.33,
+   "ry": 1.7153,
+   "y": 112.741,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "다리·징검다리(도강점)",
+   "note": "여원치 골물 대로 홍예 돌다리(가설) — integ-mountain fix_pass_ford.py"
   }
  ]
 }

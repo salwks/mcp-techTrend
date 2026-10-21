@@ -101,6 +101,7 @@ func _walk_routes() -> void:
 			var pos := Vector3(pts[0].x, w.height_at(pts[0].x, pts[0].y), pts[0].y)
 			var L := 0.0
 			var hist := []   # [거리, 높이]
+			var pos_log := []
 			for k in range(1, pts.size()):
 				var t: Vector2 = pts[k]
 				var guard := 0
@@ -116,15 +117,22 @@ func _walk_routes() -> void:
 						break
 					L += Vector2(q.x - pos.x, q.z - pos.z).length()
 					pos = Vector3(q.x, w.height_at(q.x, q.z), q.z)
-					hist.append(Vector2(L, pos.y))
+					hist.append(Vector2(L, pos.y)); pos_log.append(Vector2(pos.x, pos.z))
 				if Vector2(t.x - pos.x, t.y - pos.z).length() >= 0.25:
 					# 막힌 마디는 기록하고 다음 마디로 옮겨 계속(모든 막힘을 모은다)
 					pos = Vector3(t.x, w.height_at(t.x, t.y), t.y)
 			# 10m 구배 최대
 			var j := 0
+			var at_max := -1
+			var gcount := 0   # 10m 구간 가운데 18% 넘는 비율(integ-mountain — 굽이 한 곳인지 줄곧인지)
 			for i in hist.size():
 				while j < hist.size() and hist[j].x - hist[i].x < 10.0: j += 1
-				if j < hist.size(): maxg = maxf(maxg, absf(hist[j].y - hist[i].y) / maxf(hist[j].x - hist[i].x, 0.1))
+				if j < hist.size():
+					var g := absf(hist[j].y - hist[i].y) / maxf(hist[j].x - hist[i].x, 0.1)
+					if g > 0.18: gcount += 1
+					if g > maxg: maxg = g; at_max = i
+			if at_max >= 0 and not hist.is_empty(): print("   MTNGRADE %s max at L=%.0fm · >18%% %.1f%% of 10m windows" % [part.id, hist[at_max].x, 100.0 * gcount / maxf(hist.size(), 1.0)])
+			if hist.size() > 0 and at_max >= 0 and pos_log.size() > at_max: print("   MTNGRADE at (%.1f, %.1f)" % [pos_log[at_max].x, pos_log[at_max].y])
 			var ys := hist.map(func(h): return h.y)
 			print("MTNWALK %s/%s len=%.0fm y=%.1f..%.1f max_grade10=%.0f%% stuck=%d %s" % [rt.id, part.id, L, ys.min() if not ys.is_empty() else 0.0, ys.max() if not ys.is_empty() else 0.0, maxg * 100.0, stuck.size(), str(stuck.slice(0, 6))])
 			_ok(stuck.is_empty(), "산길 %s/%s 끝까지 걸음(%.0fm, 최대 구배 %.0f%%)" % [rt.id, part.id, L, maxg * 100.0])

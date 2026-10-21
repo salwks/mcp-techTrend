@@ -1,0 +1,33 @@
+{
+ "sets": {
+  "cam": { "views": [
+   { "id": "c1_town", "label": "남원 장터 — 마을 구도(그대로)", "mode": "town", "x": -3341, "z": 290 },
+   { "id": "c2_town_gaze", "label": "남원 장터 — 바라보기(V)", "mode": "town", "x": -3341, "z": 290, "gaze": true },
+   { "id": "c3_field_east", "label": "남원 동쪽 들 큰길 — 들·길 구도", "mode": "town", "x": -2767, "z": 126 },
+   { "id": "c4_field_east_gaze", "label": "남원 동쪽 들 큰길 — 바라보기", "mode": "town", "x": -2767, "z": 126, "gaze": true },
+   { "id": "c5_field_south", "label": "남원 남쪽 들(구례길) — 들·길 구도", "mode": "town", "x": -3222, "z": 675 },
+   { "id": "c6_north_road", "label": "남원 북쪽 큰길(교룡산 아래) — 들·길 구도", "mode": "town", "x": -3295, "z": -487 },
+   { "id": "c7_yw_road", "label": "여원재 오르막 — 산 구도", "mode": "town", "x": -736, "z": -685 },
+   { "id": "c8_yw_road_gaze", "label": "여원재 오르막 — 바라보기", "mode": "town", "x": -736, "z": -685, "gaze": true },
+   { "id": "c9_unbong", "label": "운봉 들 — 들·길 구도", "mode": "town", "x": 600, "z": -400 },
+   { "id": "c10_unbong_gaze", "label": "운봉 들 — 바라보기", "mode": "town", "x": 600, "z": -400, "gaze": true }
+  ]},
+  "mtn": { "views": [
+   { "id": "m1_cliff", "label": "남쪽 골 벼랑·바위 비탈(게임 카메라)", "mode": "town", "x": -150, "z": -880 },
+   { "id": "m2_fp_cliff", "label": "계곡길 위 벼랑 1인칭", "mode": "fp", "x": -173.3, "z": -898.7, "yaw": 155, "pitch": 3 },
+   { "id": "m3_fp_cliff_road", "label": "갈지자 대로 위 벼랑 1인칭", "mode": "fp", "x": -302.7, "z": -996.8, "yaw": 0, "pitch": 3 },
+   { "id": "m4_fp_ridge_rock", "label": "능선길 암릉 1인칭", "mode": "fp", "x": -246, "z": -1100, "yaw": -60, "pitch": 3 },
+   { "id": "m5_stream", "label": "계곡 개울(게임 카메라)", "mode": "town", "x": -210, "z": -893 },
+   { "id": "m6_fp_stream", "label": "계곡 개울 1인칭(상류)", "mode": "fp", "x": -215, "z": -893, "yaw": 80, "pitch": -8 },
+   { "id": "m7_falls", "label": "골 폭포(게임 카메라)", "mode": "town", "x": -112, "z": -926 },
+   { "id": "m8_fp_falls", "label": "골 폭포 1인칭", "mode": "fp", "x": -105, "z": -930, "yaw": -70, "pitch": 3 },
+   { "id": "m9_valley_forest", "label": "계곡길 숲(게임 카메라)", "mode": "town", "x": -170, "z": -905 },
+   { "id": "m10_fp_forest", "label": "교룡산 산길 숲 1인칭", "mode": "fp", "x": -3698, "z": -336, "yaw": -80, "pitch": 2 },
+   { "id": "m11_fp_gyoryong", "label": "남원 남문 밖 1인칭 → 교룡산", "mode": "fp", "x": -3228, "z": 380, "yaw": -48, "pitch": 4 },
+   { "id": "m12_fp_yeowon", "label": "남원 들 1인칭 → 여원치 줄기", "mode": "fp", "x": -3110, "z": 470, "yaw": 70, "pitch": 4 },
+   { "id": "m13_fp_ridge_w", "label": "능선 봉우리 1인칭(서)", "mode": "fp", "x": -326, "z": -1134, "yaw": -120, "pitch": 0 },
+   { "id": "m14_fp_ridge_se", "label": "능선 봉우리 1인칭(남동 → 지리산)", "mode": "fp", "x": -326, "z": -1134, "yaw": 150, "pitch": 0 },
+   { "id": "m15_fp_top", "label": "재 마루 1인칭 → 남원 분지", "mode": "fp", "x": 14, "z": -966, "yaw": -110, "pitch": 0 }
+  ]}
+ }
+}
