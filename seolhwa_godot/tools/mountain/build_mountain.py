@@ -13,7 +13,8 @@
 실행(miniconda 파이썬: numpy·scipy·PIL):
   /Users/sinjaeho/miniconda3/bin/python3 tools/mountain/build_mountain.py            # region_data에 쓴다
   /Users/sinjaeho/miniconda3/bin/python3 tools/mountain/build_mountain.py --dry      # 계산·검사만(쓰지 않음)
-뒤처리: python3 tools/region/render_joseon_map.py JL_NAMWON_UNBONG(지도) · python3 tools/region/make_travel_gates.py JL_NAMWON_UNBONG(말길)
+뒤처리(이 순서): python3 tools/region/parcels.py JL_NAMWON_UNBONG(논·밭 필지 — 새 땅에 맞춰) · render_joseon_map.py JL_NAMWON_UNBONG(지도) · make_travel_gates.py JL_NAMWON_UNBONG(말길)
+  (모두 miniconda 파이썬. tools/mountain/rebuild.sh가 차례로 돌린다)
 """
 import heapq, json, math, os, subprocess, sys, gzip, struct
 import numpy as np
@@ -222,7 +223,7 @@ def road_profile(H, pts, gmax, win=10, y0=None, y1=None):
 		if y1 is not None: t[-1] = y1
 	return xy, s, t
 
-def carve(H, xy, tgt, hw, bank=0.9, reach=30.0, only_cut=False, only_fill=False, landuse=None, lu_val=None, lu_hw=None):
+def carve(H, xy, tgt, hw, bank=0.9, reach=30.0, only_cut=False, only_fill=False, landuse=None, lu_val=None, lu_hw=None, keep=None):
 	x0 = xy[:, 0].min() - hw - reach; x1 = xy[:, 0].max() + hw + reach
 	z0 = xy[:, 1].min() - hw - reach; z1 = xy[:, 1].max() + hw + reach
 	j0 = max(0, int((z0 - Z0) / CELL)); j1 = min(H.shape[0] - 1, int((z1 - Z0) / CELL) + 1)
@@ -239,6 +240,7 @@ def carve(H, xy, tgt, hw, bank=0.9, reach=30.0, only_cut=False, only_fill=False,
 	B = np.clip(np.abs(dh) / bank, 1.0, reach)
 	u = (d - hw) / B
 	w = np.where(d <= hw, 1.0, np.where(u < 1.0, 1.0 - smooth01(u), 0.0)) * ok
+	if keep is not None: w = w * ~keep[j0:j1 + 1, i0:i1 + 1]
 	if only_cut: w = np.where(dh > 0, w, 0.0)
 	if only_fill: w = np.where(dh < 0, w, 0.0)
 	H[j0:j1 + 1, i0:i1 + 1] = sub + (t - sub) * w
@@ -365,6 +367,10 @@ def main():
 	# 부드러운 최대(산발치가 들과 매끈하게 이어지게)
 	add = add * add / (add + 6.0)
 	H[j0:j1, i0:i1] = sub + add * wm
+	# 솟은 줄기 위 들(풀밭·논·밭) → 숲(줄기에 다랑이가 얹히지 않게 — 필지는 parcels.py가 다시 만든다)
+	raised = np.zeros(shape, bool); raised[j0:j1, i0:i1] = add * wm > 3.0
+	r4 = raised[::2, ::2][:LU.shape[0], :LU.shape[1]]
+	LU[r4 & np.isin(LU & 127, [1, 2, 3])] = 0
 	log("남원 배산(교룡산 남동 줄기): 최대 돋움 %.1fm" % (add * wm).max())
 
 	# ---- 산 디테일: 능선형 잡음(등성이·골·바위턱) — 비탈·고지대·지킬 곳에서 먼 곳만
@@ -436,31 +442,52 @@ def main():
 		ry = math.atan2(-up[0], -up[1])
 		props.append({ "id": f"mt_falls_{n+1:02d}", "kit": "route/waterfall", "params": { "seed": 81 + n, "h": round(float(min(dd + 1.0, 8.0)), 2), "w": 1.6, "r": 3.4, "water_y": 0.06 },
 			"x": round(float(px), 2), "z": round(float(pz), 2), "ry": round(ry, 4), "y": round(float(wy[kb] - 0.06), 3), "flatten": False, "clear_veg": True, "group": "여원치 골(산 지형)" })
-		anchor(f"yw_falls_{n+1}", "여원치 골 폭포" + ("" if n == 0 else f" {n+1}"), "폭포·소", px, pz, "골물이 바위턱에서 %.1fm 떨어져 소를 이룬다" % dd, "yw_valley_trail" if pz < -880 and px < -60 else "yw_gully_trail")
+		anchor(f"yw_falls_{n+1}", "여원치 골 폭포" + ("" if n == 0 else f" {n+1}"), "폭포·소", px, pz, "골물이 바위턱에서 %.1fm 떨어져 소를 이룬다" % dd, "yw_valley_trail" if pz < -880 and px < -60 else "yw_gully_trail", r=9.0)
 	log("골물: 길이 %.0fm, 수면 %.1f→%.1f, 폭포 %s" % (s[-1], wy[0], wy[-1], [(round(d, 1), int(k)) for d, k in falls]))
 
+	# 물길 핵심 칸(길 깎기가 메우지 않는다 — 건널목은 여울·징검다리로 물속을 걸어 건넘): 모든 하천 + 골물
+	all_rivers = rivers + new_rivers
+	river_core = np.zeros(shape, bool)
+	for r in all_rivers:
+		river_core |= raster_polyline(shape, [p[:2] for p in r["points"]], max(float(r.get("width_m", 2.5)), 5.2) / 2 * 0.8 + 0.4)
 	# 물길 벌점 격자(길 A*가 물을 따라 걷지 않게, 건너기는 허용)
 	water_av = np.zeros(shape)
-	m = raster_polyline(shape, gol_xy[::3], 7.0); water_av[m] = 3.0
-	for r in rivers:
+	for r in all_rivers:
 		mm = raster_polyline(shape, [p[:2] for p in r["points"]], max(float(r.get("width_m", 2.5)), 5.2) / 2 + 3)
-		water_av[mm] = np.maximum(water_av[mm], 3.0)
-	# 주막·마애불·서낭당 둘레는 길이 뚫지 않게(문 앞은 지나가게 웨이포인트를 둔다)
-	bld_av = np.zeros(shape)
-	for it in pl["placement_east.json"]["items"]:
-		if it["id"] in ("ea_yj_jumak_01", "ea_yj_choga_01", "ea_yw_maaebul_01", "ea_yw_seonghwangdang_01", "ea_yw_jumak_01"):
-			j = int((it["z"] - Z0) / CELL); i = int((it["x"] - X0) / CELL); bld_av[j - 5:j + 6, i - 5:i + 6] = 40.0
+		water_av[mm] = 3.0
+	# 배치(건물·소품·이야기 무대) 둘레는 길이 뚫지 않게
+	pl_av = np.zeros(shape)
+	def av_r(kit):
+		if kit.startswith("landmark/"): return 32.0
+		if kit.startswith("bldg/") or any(k in kit for k in ("compound", "jumak", "choga", "giwa", "heotgan", "teotbat")): return 12.0
+		if kit in ("route/waterfall", "nature/cliff"): return 8.0
+		return 4.0
+	for it in [it for d in pl.values() for it in d["items"]] + sp["items"] + props:
+		rr = int(av_r(str(it.get("kit", ""))) / CELL)
+		j = int((it["z"] - Z0) / CELL); i = int((it["x"] - X0) / CELL); pl_av[max(0, j - rr):j + rr + 1, max(0, i - rr):i + rr + 1] = 40.0
+	gt = cKDTree(gol_xy)
+	TRAILS = []
+	def lay(id, pts, hw, gmax, win, bank, reach, lu_hw, y0=None, y1=None):
+		xy, s, t = road_profile(H, pts, gmax, win=win, y0=y0, y1=y1)
+		if hw < 2.0: lu_hw = max(lu_hw, hw + 0.6)   # 산길: 길 칸(토지이용 4)을 넉넉히 — 식생 큰 바위·나무가 길에 걸치지 않게
+		mx = carve(H, xy, t, hw, bank=bank, reach=reach, landuse=LU, lu_val=4, lu_hw=lu_hw, keep=river_core)
+		TRAILS.append({ "id": id, "xy": xy, "hw": hw, "gmax": gmax, "win": win, "bank": bank, "reach": reach, "lu_hw": lu_hw, "y0": float(t[0]), "y1": y1 })
+		return xy, s, t, mx
+	def road_rec(id, name, cls, width, xy, every, src, notes):
+		pts = [[round(float(a), 1), round(float(b), 1)] for a, b in xy[::every]]
+		if (len(xy) - 1) % every: pts.append([round(float(xy[-1][0]), 1), round(float(xy[-1][1]), 1)])
+		return { "id": id, "name": name, "class": cls, "width_m": width, "points": pts, "confidence": "가설", "source": src, "notes": notes }
+	def g10(t): return np.max(np.abs(t[10:] - t[:-10])) / 10 * 100 if len(t) > 11 else 0.0
 
-	# ---- 2) 통영별로 여원재 오르막 다시 놓기(갈지자, 대로 g ≤ 0.14)
+	# ---- 2) 통영별로 여원재 오르막 다시 놓기(갈지자, 대로 구배 ≤ 18%)
 	P = np.array([p[:2] for p in tong["points"]])
 	def nearest_idx(x, z): return int(np.argmin(np.hypot(P[:, 0] - x, P[:, 1] - z)))
 	ia = nearest_idx(-1000.0, -560.0)   # 오르막 시작(백암천 골 어귀)
-	ijm = nearest_idx(-322.0, -878.0)   # 아랫주막 앞
 	ib = nearest_idx(126.0, -963.0)     # 재 넘어 운봉 쪽
 	ipass = nearest_idx(35.4, -978.6)
-	way1 = [tuple(P[ia]), (-326.0, -876.0)]                 # 골 어귀 → 아랫주막 앞(옛 선형 근처)
+	way1 = [tuple(P[ia]), (-326.0, -876.0)]                      # 골 어귀 → 아랫주막 앞(옛 선형 근처)
 	way2 = [(-326.0, -876.0), (-58.0, -952.0), (35.4, -978.6)]   # 주막 → 마애불 아래 → 재 마루
-	av = water_av + bld_av
+	av = water_av + np.where(pl_av > 0, 12.0, 0.0)
 	seg = []
 	for ws, (g0, gcap) in [(way1, (0.10, 0.17)), (way2, (0.12, 0.19))]:
 		for a, b in zip(ws[:-1], ws[1:]):
@@ -469,109 +496,82 @@ def main():
 	seg += [tuple(q) for q in P[ipass + 1:ib + 1]]
 	seg = smooth_path(seg, 3.0)
 	y_a = float(sample(H, *P[ia])[0]); y_b = float(sample(H, *P[ib])[0])
-	xy, s, t = road_profile(H, seg, 0.18, win=8, y0=y_a, y1=y_b)
-	mx = carve(H, xy, t, 2.5 + 0.6, bank=0.85, reach=26.0, landuse=LU, lu_val=4, lu_hw=2.5)
-	newP = [list(q) for q in P[:ia]] + [[round(float(a), 1), round(float(b), 1)] for a, b in xy[::6]] + [list(q) for q in P[ib + 1:]]
-	tong["points"] = newP
+	xy, s, t, mx = lay("tongyeong_byeolro", seg, 3.1, 0.18, 8, 0.85, 26.0, 2.5, y0=y_a, y1=y_b)
+	tong_head = [list(q) for q in P[:ia]]; tong_tail = [list(q) for q in P[ib + 1:]]
 	tong["notes"] = tong.get("notes", "") + " / mountain-terrain(2026-10-21): 여원재 오르막(백암천 골 어귀→아랫주막→마애불 아래→재 마루)을 세로 되살림 지형에 맞춰 갈지자로 다시 놓음(구배 ≤ 18%)."
-	gr = np.abs(np.diff(t)) ; log("통영별로 여원재 오르막: %.0fm, 높이 %.1f→%.1f, 최대 구배 %.1f%%(10m 평균), 최대 깎기/돋우기 %.1fm" % (s[-1], t[0], t.max(), np.max(np.abs(t[10:] - t[:-10])) / 10 * 100, mx))
-	pass_route = xy; pass_t = t
-	# 재 마루 쉼터(주막·서낭당 앞 마당): 길 높이로 고른다
-	k_top = int(np.argmin(np.hypot(xy[:, 0] - 35.4, xy[:, 1] + 978.6)))
-	ytop = float(t[k_top])
+	log("통영별로 여원재 오르막: %.0fm, 높이 %.1f→%.1f, 최대 구배 %.1f%%(10m), 최대 깎기/돋우기 %.1fm" % (s[-1], t[0], t.max(), g10(t), mx))
+	pass_route = xy
+	ttree = cKDTree(xy)
+	def on_tong(x, z):
+		d, k = ttree.query((x, z)); q = xy[k]
+		# 물길 핵심 칸이 아닌 가장 가까운 점
+		for kk in sorted(range(max(0, k - 30), min(len(xy), k + 30)), key=lambda v: abs(v - k)):
+			jj_, ii_ = ij(*xy[kk])
+			if not river_core[int(round(float(jj_))), int(round(float(ii_)))]: return tuple(xy[kk])
+		return tuple(q)
 
-	# ---- 3) 계곡길(산길): 아랫주막 → 골물 북안을 따라 → 폭포 소 → 굴 어귀 → 마애불 앞 대로
-	gt = cKDTree(gol_xy)
-	# 골물 따라가기: 골물 선에서 4.5m 바깥(북·서안) 점들을 웨이포인트로
+	# ---- 2b) 봉우리 너럭(전망 바위): 길 끝을 여기에 붙인다
+	def top_of(c, r):
+		pj, pi = ij(*c); r = int(r)
+		hh = H[int(pj) - r:int(pj) + r + 1, int(pi) - r:int(pi) + r + 1]
+		q = np.unravel_index(hh.argmax(), hh.shape); return cell_xz(int(pj) - r + q[0], int(pi) - r + q[1])
+	peak = top_of((-326.0, -1150.0), 20)
+	ypk = flatten_pad(H, peak[0], peak[1], 5.0, 4.0, 0.3, y=float(sample(H, *peak)[0]) - 0.6, edge=5.0)
+	gy_peak = top_of((-4018.0, -415.0), 30)
+	yg = flatten_pad(H, gy_peak[0], gy_peak[1], 5.0, 4.0, 0.0, y=float(sample(H, *gy_peak)[0]) - 0.6, edge=5.0)
+
+	# ---- 3) 계곡길(산길): 아랫주막 동쪽 → 골물 북안을 따라 → 폭포 소 → 마애불 앞 대로
 	valley_pts = []
 	for k in range(len(gol_xy) - 1, 0, -1):
 		x, z = gol_xy[k]
-		if not (-330 < x < -70 and -960 < z < -862): continue
+		if not (-300 < x < -70 and -960 < z < -862): continue
 		tdir = gol_xy[k - 1] - gol_xy[k]; tdir /= max(np.linalg.norm(tdir), 1e-6); nrm = np.array([-tdir[1], tdir[0]])
-		valley_pts.append(gol_xy[k] + nrm * 4.5)
+		valley_pts.append(gol_xy[k] + nrm * 5.0)
 	valley_pts = np.array(valley_pts[::10]) if valley_pts else np.zeros((0, 2))
-	trail_av = bld_av.copy(); trail_av[raster_polyline(shape, gol_xy[::2], 3.2)] = 25.0
+	trail_av = pl_av.copy(); trail_av[raster_polyline(shape, gol_xy[::2], 6.0)] = 12.0; trail_av[raster_polyline(shape, gol_xy[::2], 3.6)] = 30.0
 	near_gol = np.zeros(shape); near_gol[raster_polyline(shape, gol_xy[::2], 14.0)] = 1.0
-	ws = [(-318.0, -868.0)] + [tuple(q) for q in valley_pts[1:-1:3]] + [(-52.0, -945.0)]
+	v_start = on_tong(-288.0, -888.0); v_end = on_tong(-62.0, -950.0)
+	ws = [v_start] + [tuple(q) for q in valley_pts[1:-1:3]] + [v_end]
 	trail = []
 	for a, b in zip(ws[:-1], ws[1:]):
 		p = astar(H, a, b, 0.18, 0.42, avoid=trail_av, prefer=near_gol, pad=60.0, side_w=0.5, turn_w=6.0)
 		trail += p if not trail else p[1:]
 	trail = smooth_path(trail, 2.0)
-	ya = float(sample(H, *trail[0])[0]); yb = float(sample(H, *trail[-1])[0])
-	vxy, vs, vt = road_profile(H, trail, 0.36, win=4, y0=ya, y1=yb)
-	carve(H, vxy, vt, 1.1, bank=0.95, reach=12.0, landuse=LU, lu_val=4, lu_hw=0.9)
-	new_roads.append({ "id": "yw_valley_trail", "name": "여원치 계곡길(골물 따라 폭포·굴 어귀)", "class": "산길", "width_m": 2.0,
-		"points": [[round(float(a), 1), round(float(b), 1)] for a, b in vxy[::4]] + [[round(float(vxy[-1][0]), 1), round(float(vxy[-1][1]), 1)]],
-		"confidence": "가설", "source": ["mountain-terrain(2026-10-21): 재매핑 지형 A*(구배 ≤ 36%) — 지리 놀이 공간(이야기 없음)"],
-		"notes": "아랫주막 뒤에서 골물 북안을 따라 오르다 폭포 소를 지나 마애불 앞에서 대로에 붙는다." })
-	log("계곡길: %.0fm, %.1f→%.1f, 최대 구배(10m) %.0f%%" % (vs[-1], vt[0], vt[-1], np.max(np.abs(vt[10:] - vt[:-10])) / 10 * 100))
-	# 계곡길이 골물을 건너는 곳 → 여울 건널목
-	dd, kk = gt.query(vxy)
-	cross_k = [k for k in range(1, len(vxy)) if dd[k] < 3.0 and dd[k - 1] >= 3.0]
-	for n, k in enumerate(cross_k):
-		new_cross.append({ "id": f"x_yw_valley_{n+1}", "name": "여원치 골물 건널목", "type": "징검다리" if n % 2 == 0 else "여울", "river_id": "yeowonchi_gol",
-			"road_id": "yw_valley_trail", "x": round(float(vxy[k][0]), 1), "z": round(float(vxy[k][1]), 1), "confidence": "가설", "notes": "mountain-terrain: 계곡길이 골물을 건너는 곳" })
-	dd2, _ = gt.query(xy)
-	for n, k in enumerate([k for k in range(1, len(xy)) if dd2[k] < 3.5 and dd2[k - 1] >= 3.5]):
-		new_cross.append({ "id": f"x_yw_tong_{n+1}", "name": "여원치 골물 돌다리 자리", "type": "여울", "river_id": "yeowonchi_gol",
-			"road_id": "tongyeong_byeolro", "x": round(float(xy[k][0]), 1), "z": round(float(xy[k][1]), 1), "confidence": "가설", "notes": "mountain-terrain: 대로가 골물을 건너는 곳(여울 — 다리 키트는 아직)" })
+	vxy, vs, vt, _ = lay("yw_valley_trail", trail, 1.4, 0.36, 4, 0.95, 12.0, 1.0, y0=float(sample(H, *trail[0])[0]), y1=float(sample(H, *trail[-1])[0]))
+	log("계곡길: %.0fm, %.1f→%.1f, 최대 구배(10m) %.0f%%" % (vs[-1], vt[0], vt[-1], g10(vt)))
 
-	# ---- 3b) 골 오름길(산길): 마애불 앞 → 남쪽 골물을 따라 폭포 둘 → 바위굴 어귀(가파른 오르막)
-	gully_end = None
+	# ---- 3b) 골 오름길(산길): 계곡길 끝(마애불 앞) → 남쪽 골물을 따라 폭포 둘 → 바위굴 어귀(가파른 오르막)
+	gully_end = None; cave = None
 	if falls:
 		kf = min(falls[0][1] + 6, len(gol_xy) - 1)
 		up0 = gol_xy[max(falls[0][1] - 2, 0)] - gol_xy[kf]; up0 /= np.linalg.norm(up0); nrm0 = np.array([-up0[1], up0[0]])
-		gully_end = gol_xy[kf] + nrm0 * 9.0 + up0 * 2.0 - nrm0 * 3.0
-		gw2 = [(-52.0, -945.0), tuple(gully_end)]
-		gp = []
-		for a, b in zip(gw2[:-1], gw2[1:]):
-			p = astar(H, a, b, 0.22, 0.6, avoid=trail_av, prefer=near_gol, pad=50.0, side_w=0.4, turn_w=5.0)
-			gp += p if not gp else p[1:]
+		cave = gol_xy[kf] + nrm0 * 9.0 + up0 * 2.0
+		cy = flatten_pad(H, cave[0], cave[1], 3.0, 2.5, math.atan2(up0[0], up0[1]), edge=4.0)
+		gully_end = cave - up0 * 3.0          # 굴 어귀 앞(아래쪽) — 벼랑은 굴 뒤(위쪽)에 선다
+		g_start = vxy[int(len(vxy) * 0.85)]   # 계곡길 위쪽(대로 깎은 비탈 들머리를 비킴)
+		gp = astar(H, tuple(g_start), tuple(gully_end), 0.22, 0.6, avoid=trail_av, prefer=near_gol, pad=50.0, side_w=0.4, turn_w=5.0)
 		gp = smooth_path(gp, 2.0)
-		uxy, us, ut = road_profile(H, gp, 0.55, win=3, y0=float(sample(H, *gp[0])[0]), y1=None)
-		carve(H, uxy, ut, 0.9, bank=1.0, reach=10.0, landuse=LU, lu_val=4, lu_hw=0.7)
-		new_roads.append({ "id": "yw_gully_trail", "name": "여원치 남쪽 골 오름길(폭포·바위굴)", "class": "산길", "width_m": 1.6,
-			"points": [[round(float(a), 1), round(float(b), 1)] for a, b in uxy[::4]] + [[round(float(uxy[-1][0]), 1), round(float(uxy[-1][1]), 1)]],
-			"confidence": "가설", "source": ["mountain-terrain(2026-10-21) A*(구배 ≤ 55%)"], "notes": "마애불 앞에서 남쪽 골물을 거슬러 폭포 둘을 지나 바위굴 어귀까지(가파른 오르막)." })
-		dd3, _ = gt.query(uxy)
-		for n, k in enumerate([k for k in range(1, len(uxy)) if dd3[k] < 3.0 and dd3[k - 1] >= 3.0]):
-			new_cross.append({ "id": f"x_yw_gully_{n+1}", "name": "여원치 남쪽 골물 건널목", "type": "여울", "river_id": "yeowonchi_gol",
-				"road_id": "yw_gully_trail", "x": round(float(uxy[k][0]), 1), "z": round(float(uxy[k][1]), 1), "confidence": "가설", "notes": "mountain-terrain" })
-		log("골 오름길: %.0fm, %.1f→%.1f, 최대 구배(10m) %.0f%%" % (us[-1], ut[0], ut[-1], np.max(np.abs(ut[10:] - ut[:-10])) / 10 * 100))
+		uxy, us, ut, _ = lay("yw_gully_trail", gp, 1.3, 0.55, 3, 1.0, 10.0, 0.9, y0=float(sample(H, *gp[0])[0]), y1=cy)
+		log("골 오름길: %.0fm, %.1f→%.1f, 최대 구배(10m) %.0f%%" % (us[-1], ut[0], ut[-1], g10(ut)))
 
 	# ---- 4) 능선길(백두대간 마루금): 재 마루 → 북쪽 봉우리 전망 바위
-	peak = (-326.0, -1150.0)
-	# 봉우리 둘레 40m에서 가장 높은 곳
-	jj, ii = np.mgrid[-20:21, -20:21]
-	pj, pi = ij(*peak); hh = H[int(pj) - 20:int(pj) + 21, int(pi) - 20:int(pi) + 21]
-	q = np.unravel_index(hh.argmax(), hh.shape); peak = cell_xz(int(pj) - 20 + q[0], int(pi) - 20 + q[1])
-	ridge_prefer = np.zeros(shape)
-	Hs = ndimage.gaussian_filter(H, 6)
 	ridge_prefer = np.clip((H - ndimage.uniform_filter(H, 41)) / 12.0, 0, 1)
-	rw = [(42.0, -992.0), (-130.0, -1050.0), (-246.0, -1100.0), (peak[0] + 8.0, peak[1] + 10.0)]
+	r_start = on_tong(42.0, -985.0)
+	rw = [r_start, (-130.0, -1050.0), (-246.0, -1100.0), tuple(peak)]
 	rt = []
 	for a, b in zip(rw[:-1], rw[1:]):
-		p = astar(H, a, b, 0.2, 0.55, avoid=bld_av, prefer=ridge_prefer, pad=70.0, side_w=0.3, turn_w=6.0)
+		p = astar(H, a, b, 0.2, 0.55, avoid=pl_av, prefer=ridge_prefer, pad=70.0, side_w=0.3, turn_w=6.0)
 		rt += p if not rt else p[1:]
 	rt = smooth_path(rt, 2.0)
-	rxy, rs, rtt = road_profile(H, rt, 0.5, win=3, y0=float(sample(H, *rt[0])[0]), y1=None)
-	carve(H, rxy, rtt, 0.9, bank=1.0, reach=8.0, landuse=LU, lu_val=4, lu_hw=0.7)
-	new_roads.append({ "id": "yw_ridge_trail", "name": "여원재 능선길(대간 마루금 → 북쪽 봉우리)", "class": "산길", "width_m": 1.6,
-		"points": [[round(float(a), 1), round(float(b), 1)] for a, b in rxy[::4]] + [[round(float(rxy[-1][0]), 1), round(float(rxy[-1][1]), 1)]],
-		"confidence": "가설", "source": ["mountain-terrain(2026-10-21): 마루금 선호 A*"], "notes": "재 마루 서낭당 뒤에서 북쪽 마루금을 타고 전망 바위 봉우리까지." })
-	ypk = flatten_pad(H, peak[0], peak[1], 5.0, 4.0, 0.3, y=float(sample(H, *peak)[0]) - 0.6, edge=5.0)
-	log("능선길: %.0fm, %.1f→%.1f, 봉우리 (%.0f,%.0f) y=%.1f" % (rs[-1], rtt[0], rtt[-1], peak[0], peak[1], ypk))
+	rxy, rs, rtt, _ = lay("yw_ridge_trail", rt, 1.3, 0.5, 3, 1.0, 9.0, 0.9, y0=float(sample(H, *rt[0])[0]), y1=ypk)
+	log("능선길: %.0fm, %.1f→%.1f, 봉우리 (%.0f,%.0f) y=%.1f, 최대 구배(10m) %.0f%%" % (rs[-1], rtt[0], rtt[-1], peak[0], peak[1], ypk, g10(rtt)))
 
-	# ---- 5) 교룡산 산길: 남원 북쪽 길(향교 위) → 산성 동문 터 → 선국사 터(산사) → 정상
+	# ---- 5) 교룡산 산길: 남원 북쪽 길 → 교룡산 남동 줄기(배산) → 산성 동문 터 → 선국사 터(산사) → 정상
 	ny = next(r for r in roads if r["id"] == "namwon_north_road")
 	NP = np.array([p[:2] for p in ny["points"]])
-	k0 = int(np.argmin(np.hypot(NP[:, 0] + 3330, NP[:, 1] + 120)))
-	gy_peak = (-4018.0, -415.0)
-	pj, pi = ij(*gy_peak); hh = H[int(pj) - 30:int(pj) + 31, int(pi) - 30:int(pi) + 31]
-	q = np.unravel_index(hh.argmax(), hh.shape); gy_peak = cell_xz(int(pj) - 30 + q[0], int(pi) - 30 + q[1])
-	gw = [tuple(NP[k0]), (-3520.0, -170.0), (gy_peak[0] + 10.0, gy_peak[1] + 12.0)]
-	g_av = np.zeros(shape)
+	k0 = int(np.argmin(np.hypot(NP[:, 0] + 3175, NP[:, 1] + 152)))   # 광치천 징검다리·향교(−3247,−98) 북쪽 — 향교 담과 물을 비켜 서쪽으로
+	gw = [tuple(NP[k0]), (-3520.0, -170.0), tuple(gy_peak)]
+	g_av = pl_av.copy()
 	for it in sp["items"]:
 		j = int((it["z"] - Z0) / CELL); i = int((it["x"] - X0) / CELL); g_av[j - 12:j + 13, i - 12:i + 13] = 40.0
 	gt_ = []
@@ -579,18 +579,14 @@ def main():
 		p = astar(H, a, b, 0.16, 0.45, avoid=g_av + water_av, pad=120.0, side_w=0.6, turn_w=8.0)
 		gt_ += p if not gt_ else p[1:]
 	gt_ = smooth_path(gt_, 2.5)
-	gxy, gs, gtt = road_profile(H, gt_, 0.38, win=5, y0=float(sample(H, *gt_[0])[0]), y1=None)
-	carve(H, gxy, gtt, 1.1, bank=0.95, reach=12.0, landuse=LU, lu_val=4, lu_hw=0.9)
-	new_roads.append({ "id": "gyoryong_trail", "name": "교룡산 산길(북쪽 길 → 산성 동문 터 → 선국사 터 → 정상)", "class": "산길", "width_m": 2.0,
-		"points": [[round(float(a), 1), round(float(b), 1)] for a, b in gxy[::4]] + [[round(float(gxy[-1][0]), 1), round(float(gxy[-1][1]), 1)]],
-		"confidence": "가설", "source": ["교룡산성·선국사: 남원 교룡산(고증 참고 — 위치는 게임 지형에 맞춤)", "mountain-terrain(2026-10-21) A*"],
-		"notes": "namwon_north_road에서 갈라져 교룡산 남동 비탈을 올라 산성 동문 터·선국사 터를 지나 정상 마루." })
-	log("교룡산 산길: %.0fm, %.1f→%.1f, 정상 (%.0f,%.0f)" % (gs[-1], gtt[0], gtt[-1], gy_peak[0], gy_peak[1]))
+	gxy, gs, gtt, _ = lay("gyoryong_trail", gt_, 1.4, 0.38, 5, 0.95, 12.0, 1.0, y0=float(sample(H, *gt_[0])[0]), y1=yg)
+	log("교룡산 산길: %.0fm, %.1f→%.1f, 정상 (%.0f,%.0f), 최대 구배(10m) %.0f%%" % (gs[-1], gtt[0], gtt[-1], gy_peak[0], gy_peak[1], g10(gtt)))
 
-	# ---- 6) 자리(slot) 고르기: 길 곁 가장 덜 가파른 곳을 찾아 평평하게
+	# ---- 6) 자리(slot) 고르기: 길 곁 가장 덜 가파른 곳을 찾아 평평하게(길에서 10m 넘으면 이음 오솔길)
 	taken = [(it["x"], it["z"]) for d in pl.values() for it in d["items"]] + [(it["x"], it["z"]) for it in sp["items"]]
 	taken_t = cKDTree(np.array(taken))
-	def best_spot(route_xy, s_lo, s_hi, off_lo=6.0, off_hi=26.0, rad=8.0, side=None):
+	slots = []
+	def best_spot(route_xy, s_lo, s_hi, off_lo=6.0, off_hi=26.0, side=None):
 		gy_, gx_ = np.gradient(ndimage.uniform_filter(H, 5), CELL); sl_ = np.hypot(gx_, gy_)
 		tk = cKDTree(np.array(taken + [(a["x"], a["z"]) for a in slots])) if slots else taken_t
 		best = None
@@ -601,55 +597,116 @@ def main():
 					c = route_xy[k] + nrm * sg * off
 					if tk.query(c)[0] < 35.0: continue
 					j, i = ij(*c)
+					if river_core[int(j) - 6:int(j) + 7, int(i) - 6:int(i) + 7].any(): continue
 					v = sl_[int(j) - 3:int(j) + 4, int(i) - 3:int(i) + 4].mean()
 					if best is None or v < best[0]: best = (v, c, k)
 		return best
-	slots = []
-	def slot(id, name, typ, c, rx, rz, notes, route, lu=4, ry=0.0, y=None, view=None):
+	links = []
+	def slot(id, name, typ, c, rx, rz, notes, route, route_xy, lu=4, ry=0.0, y=None, view=None):
 		yy = flatten_pad(H, c[0], c[1], rx, rz, ry, y=y, edge=7.0)
 		jj0, ii0 = int((c[1] - rz - Z0) / LCELL), int((c[0] - rx - X0) / LCELL); jj1, ii1 = int((c[1] + rz - Z0) / LCELL), int((c[0] + rx - X0) / LCELL)
 		LU[jj0:jj1 + 1, ii0:ii1 + 1] = lu
+		d, k = cKDTree(route_xy).query(c)
+		if d > 10.0:   # 이음 오솔길
+			links.append((id, tuple(route_xy[k]), tuple(c), route))
+			route = id + "_path"
 		a = anchor(id, name, typ, c[0], c[1], notes, route, r=max(rx, rz), view=view); a["y"] = round(yy, 2); a["slot"] = [rx * 2, rz * 2]
 		slots.append(a); return a
-	# 재 마루 쉼터(이미 있는 서낭당·장승·주막 앞): 길 북쪽 마당
+	k_top = int(np.argmin(np.hypot(pass_route[:, 0] - 35.4, pass_route[:, 1] + 978.6)))
+	ytop = float(sample(H, *pass_route[k_top])[0])
 	anchor("yw_jaemaru", "여원재 재 마루(고갯마루)", "재 마루", 35.4, -978.6, "섬진·낙동 분수계. 서낭당 돌무더기·신목·장승 한 쌍·고갯마루 주막(배치 ea_yw_*)이 이미 있다.", "tongyeong_byeolro",
 		r=25.0, refs=["ea_yw_seonghwangdang_01", "ea_yw_sinmok_01", "ea_yw_jangseung_01", "ea_yw_jangseung_02", "ea_yw_jumak_01"], view=-110.0)
-	anchor("yw_seonang", "여원재 서낭당 돌무더기", "서낭당·장승", 37.0, -988.0, "돌을 얹고 지나가는 자리. 장승 한 쌍이 길 양쪽에 선다.", "tongyeong_byeolro", r=6.0, refs=["ea_yw_seonghwangdang_01", "ea_yw_jangseung_01", "ea_yw_jangseung_02"])
-	anchor("yw_top_jumak", "고갯마루 주막(쉼터)", "주막·쉼터", 75.0, -986.0, "재를 넘는 길손이 쉬는 주막 — 이미 배치(ea_yw_jumak_01).", "tongyeong_byeolro", refs=["ea_yw_jumak_01"])
-	slot("yw_top_swimteo", "재 마루 쉼터 마당", "쉼터 터", (12.0, -965.0), 7.0, 5.0, "재 마루 서쪽 너럭 마당(빈 터) — 남원 쪽으로 내려다보인다.", "tongyeong_byeolro", y=ytop, view=-110.0)
-	anchor("yw_lower_jumak", "여원재 아랫주막", "주막·쉼터", -326.0, -876.0, "오르막 들머리 주막(ea_yj_*).", "tongyeong_byeolro", refs=["ea_yj_jumak_01", "ea_yj_choga_01"])
-	anchor("yw_maaebul", "여원치 마애불", "바위·마애불", -40.8, -938.8, "재 마루 조금 못 미친 길가 바위 얼굴(landmark).", "tongyeong_byeolro", refs=["ea_yw_maaebul_01"])
-	# 계곡길 자리: 굴 어귀(가장 큰 폭포 위쪽 벼랑 곁), 암자 터(능선길 봉우리 아래 남쪽 너럭), 화전·산촌(대로 갈지자 북쪽 완만한 비탈)
-	if falls:
+	anchor("yw_seonang", "여원재 서낭당 돌무더기", "서낭당·장승", 37.0, -988.0, "돌을 얹고 지나가는 자리. 장승 한 쌍이 길 양쪽에 선다.", "tongyeong_byeolro", r=10.0, refs=["ea_yw_seonghwangdang_01", "ea_yw_jangseung_01", "ea_yw_jangseung_02"])
+	anchor("yw_top_jumak", "고갯마루 주막(쉼터)", "주막·쉼터", 75.0, -986.0, "재를 넘는 길손이 쉬는 주막 — 이미 배치(ea_yw_jumak_01).", "tongyeong_byeolro", r=14.0, refs=["ea_yw_jumak_01"])
+	slot("yw_top_swimteo", "재 마루 쉼터 마당", "쉼터 터", (12.0, -965.0), 7.0, 5.0, "재 마루 서쪽 너럭 마당(빈 터) — 남원 쪽으로 내려다보인다.", "tongyeong_byeolro", pass_route, y=ytop, view=-110.0)
+	anchor("yw_lower_jumak", "여원재 아랫주막", "주막·쉼터", -326.0, -876.0, "오르막 들머리 주막(ea_yj_*).", "tongyeong_byeolro", r=14.0, refs=["ea_yj_jumak_01", "ea_yj_choga_01"])
+	anchor("yw_maaebul", "여원치 마애불", "바위·마애불", -40.8, -938.8, "재 마루 조금 못 미친 길가 바위 얼굴(landmark).", "tongyeong_byeolro", r=16.0, refs=["ea_yw_maaebul_01"])
+	if falls and cave is not None:
 		k = min(falls[0][1] + 6, len(gol_xy) - 1)
 		fx, fz = gol_xy[k]
 		up = gol_xy[max(falls[0][1] - 2, 0)] - gol_xy[k]; up /= np.linalg.norm(up); nrm = np.array([-up[1], up[0]])
-		cave = np.array([fx, fz]) + nrm * 9.0 + up * 2.0
-		cy = flatten_pad(H, cave[0], cave[1], 3.0, 2.5, math.atan2(up[0], up[1]), edge=4.0)
-		ry = math.atan2(-nrm[0], -nrm[1])
+		ry = math.atan2(-up[0], -up[1])   # 벼랑 앞면(+z)이 아래쪽(굴 어귀·길 쪽)을 본다
 		props.append({ "id": "mt_cave_cliff", "kit": "nature/cliff", "params": { "w": 9.0, "h": 7.0, "d": 3.0, "seed": 7 },
-			"x": round(float(cave[0] + nrm[0] * 4.0), 2), "z": round(float(cave[1] + nrm[1] * 4.0), 2), "ry": round(ry, 4), "y": None, "flatten": False, "clear_veg": True, "group": "여원치 골(산 지형)" })
+			"x": round(float(cave[0] + up[0] * 4.5), 2), "z": round(float(cave[1] + up[1] * 4.5), 2), "ry": round(ry, 4), "y": None, "flatten": False, "clear_veg": True, "group": "여원치 골(산 지형)" })
 		a = anchor("yw_cave", "여원치 골 바위굴 어귀", "동굴·바위굴", cave[0], cave[1], "폭포 곁 벼랑 밑 움푹한 바위굴 어귀(빈 자리 — 굴 안 공간은 아직 없음).", "yw_gully_trail", r=4.0)
-		a["y"] = round(cy, 2); a["slot"] = [6.0, 5.0]
-		anchor("yw_cliff", "여원치 골 벼랑", "바위·벼랑", fx + up[0] * 6, fz + up[1] * 6, "폭포를 이루는 바위 벼랑(가파른 바위 비탈 — 토지이용 바위).", "yw_gully_trail")
-	b = best_spot(rxy, len(rxy) * 0.55, len(rxy) * 0.9, 10.0, 30.0)
-	slot("yw_amja_teo", "능선 아래 암자 터", "산사·암자 터", b[1], 8.0, 6.0, "마루금 아래 남쪽 너럭 — 작은 암자가 앉을 빈 터(돌축대 자리).", "yw_ridge_trail")
-	b = best_spot(pass_route, len(pass_route) * 0.45, len(pass_route) * 0.8, 20.0, 60.0)
-	ha = slot("yw_hwajeon", "여원치 화전 터", "화전·산촌", b[1], 14.0, 9.0, "갈지자 고갯길 곁 볕 드는 비탈 — 화전 밭뙈기·산막 한 채가 앉을 자리(밭 토지이용).", "tongyeong_byeolro", lu=3)
-	b2 = best_spot(pass_route, len(pass_route) * 0.2, len(pass_route) * 0.45, 25.0, 60.0)
-	slot("yw_sanchon", "여원치 산촌 터", "화전·산촌", b2[1], 12.0, 8.0, "골 어귀 위 완만한 등 — 산촌 두어 집 자리(빈 터).", "tongyeong_byeolro", lu=1)
-	anchor("yw_peak_view", "능선 북쪽 봉우리 전망 바위", "전망·봉우리", peak[0], peak[1], "운봉 고원·지리산 줄기·남원 분지가 함께 보이는 바위 봉우리.", "yw_ridge_trail", r=6.0, view=-120.0)
+		a["slot"] = [6.0, 5.0]
+		anchor("yw_cliff", "여원치 골 벼랑", "바위·벼랑", fx + up[0] * 6, fz + up[1] * 6, "폭포를 이루는 바위 벼랑(가파른 바위 비탈 — 토지이용 바위).", "yw_gully_trail", r=10.0)
+	b = best_spot(rxy, len(rxy) * 0.55, len(rxy) * 0.9, 10.0, 26.0)
+	slot("yw_amja_teo", "능선 아래 암자 터", "산사·암자 터", b[1], 8.0, 6.0, "마루금 아래 남쪽 너럭 — 작은 암자가 앉을 빈 터(돌축대 자리).", "yw_ridge_trail", rxy)
+	b = best_spot(pass_route, len(pass_route) * 0.45, len(pass_route) * 0.8, 16.0, 40.0)
+	slot("yw_hwajeon", "여원치 화전 터", "화전·산촌", b[1], 14.0, 9.0, "갈지자 고갯길 곁 볕 드는 비탈 — 화전 밭뙈기·산막 한 채가 앉을 자리(밭 토지이용).", "tongyeong_byeolro", pass_route, lu=3)
+	b2 = best_spot(pass_route, len(pass_route) * 0.2, len(pass_route) * 0.45, 18.0, 40.0)
+	slot("yw_sanchon", "여원치 산촌 터", "화전·산촌", b2[1], 12.0, 8.0, "골 어귀 위 완만한 등 — 산촌 두어 집 자리(빈 터).", "tongyeong_byeolro", pass_route, lu=1)
+	anchor("yw_peak_view", "능선 북쪽 봉우리 전망 바위", "전망·봉우리", peak[0], peak[1], "운봉 고원·지리산 줄기·남원 분지가 함께 보이는 바위 봉우리.", "yw_ridge_trail", r=6.0, view=-120.0)["y"] = round(ypk, 2)
 	anchor("yw_forest_path", "여원치 계곡 숲길", "숲길", *vxy[len(vxy) // 3], "참나무·소나무 섞인 골짜기 숲 속 오솔길.", "yw_valley_trail")
 	anchor("yw_switchback", "여원재 갈지자 고갯길", "고갯길", *pass_route[int(len(pass_route) * 0.7)], "아랫주막 위에서 재 마루까지 갈지자로 오르는 대로.", "tongyeong_byeolro")
-	# 교룡산
 	b = best_spot(gxy, len(gxy) * 0.45, len(gxy) * 0.62, 6.0, 20.0)
-	slot("gy_sanseong_gate", "교룡산성 동문 터", "산성 터", b[1], 6.0, 4.0, "산성 동쪽 문 자리(빈 터 — 성돌 무너진 자리).", "gyoryong_trail")
-	b = best_spot(gxy, len(gxy) * 0.62, len(gxy) * 0.85, 10.0, 34.0)
-	slot("gy_seonguksa_teo", "선국사 터(산사)", "산사·암자 터", b[1], 12.0, 9.0, "산성 안 골짜기 절 자리(빈 터 — 법당 축대 자리).", "gyoryong_trail")
-	yg = flatten_pad(H, gy_peak[0], gy_peak[1], 5.0, 4.0, 0.0, y=float(sample(H, *gy_peak)[0]) - 0.6, edge=5.0)
+	slot("gy_sanseong_gate", "교룡산성 동문 터", "산성 터", b[1], 6.0, 4.0, "산성 동쪽 문 자리(빈 터 — 성돌 무너진 자리).", "gyoryong_trail", gxy)
+	b = best_spot(gxy, len(gxy) * 0.66, len(gxy) * 0.9, 10.0, 30.0)
+	slot("gy_seonguksa_teo", "선국사 터(산사)", "산사·암자 터", b[1], 12.0, 9.0, "산성 안 골짜기 절 자리(빈 터 — 법당 축대 자리).", "gyoryong_trail", gxy)
 	anchor("gy_peak", "교룡산 정상 마루", "전망·봉우리", gy_peak[0], gy_peak[1], "남원 진산 꼭대기 — 읍성과 요천 들, 동쪽 여원재 줄기가 내려다보인다.", "gyoryong_trail", r=6.0, view=120.0)["y"] = round(yg, 2)
 	anchor("gy_forest_path", "교룡산 솔숲길", "숲길", *gxy[len(gxy) // 3], "남원 북쪽에서 진산으로 오르는 솔숲 오솔길.", "gyoryong_trail")
 	anchor("nw_baesan", "남원 배산(교룡산 남동 줄기 끝)", "배산", -3545.0, -20.0, "읍성 서북쪽 뒤로 내려온 교룡산 남동 줄기의 끝 봉우리 — 서문 밖·성황사 오솔길 뒤로 솟는다(그림 값으로 끌어내림).", None, r=60.0)
+	# 폭포 보는 자리: 가장 가까운 산길에서 12m 넘게 떨어진 폭포는 소 가장자리(7m)까지 이음 오솔길
+	tr_xy = [(tr["id"], tr["xy"]) for tr in TRAILS if tr["id"] != "tongyeong_byeolro"]
+	for a in anchors:
+		if a["type"] != "폭포·소": continue
+		best = None
+		for tid, txy in tr_xy:
+			d, k = cKDTree(txy).query((a["x"], a["z"]))
+			if best is None or d < best[0]: best = (d, tid, txy[k])
+		a["route"] = best[1]
+		if best[0] > 12.0:
+			c = np.array([a["x"], a["z"]]); v = best[2] - c; v /= np.linalg.norm(v)
+			links.append((a["id"], tuple(best[2]), tuple(c + v * 7.5), best[1])); a["route"] = a["id"] + "_path"
+	# 이음 오솔길(길에서 10m 넘게 떨어진 터)
+	link_xy = {}
+	for sid, a, b, rid in links:
+		p = astar(H, a, b, 0.2, 0.5, avoid=pl_av + water_av, pad=30.0, side_w=0.5, turn_w=5.0)
+		p = smooth_path(p, 1.5)
+		lxy, _, lt, _ = lay(sid + "_path", p, 1.2, 0.45, 2, 1.0, 8.0, 0.8, y0=float(sample(H, *p[0])[0]), y1=float(sample(H, *p[-1])[0]))
+		link_xy[sid] = (lxy, rid)
+
+	# ---- 6b) 다시 깎기: 터 고르기·봉우리 너럭이 길 끝·가장자리를 건드린 곳을 길 높이로 되돌린다(끝점 높이는 처음 값 그대로)
+	for tr in TRAILS:
+		y1 = tr["y1"] if tr["y1"] is not None else float(sample(H, *tr["xy"][-1])[0])
+		xy2, _, t2 = road_profile(H, tr["xy"], tr["gmax"], win=tr["win"], y0=tr["y0"], y1=y1)
+		carve(H, xy2, t2, tr["hw"], bank=tr["bank"], reach=tr["reach"], landuse=LU, lu_val=4, lu_hw=tr["lu_hw"], keep=river_core)
+		tr["t"] = t2
+	for tr in TRAILS:
+		log("  길 %-22s %5.0fm  최대 구배(10m) %3.0f%%" % (tr["id"], len(tr["xy"]), g10(tr["t"])))
+
+	# ---- 6c) 길 기록 + 건널목(물길 핵심 칸을 지나는 곳마다 — 여울·징검다리)
+	tong["points"] = tong_head + [[round(float(a), 1), round(float(b), 1)] for a, b in pass_route[::3]] + tong_tail
+	new_roads.append(road_rec("yw_valley_trail", "여원치 계곡길(골물 따라 폭포 소·마애불)", "산길", 2.4, vxy, 2, ["mountain-terrain(2026-10-21): 재매핑 지형 A*(구배 ≤ 36%) — 지리 놀이 공간(이야기 없음)"], "아랫주막 동쪽에서 골물 북안을 따라 오르다 폭포 소를 지나 마애불 앞에서 대로에 붙는다."))
+	if gully_end is not None:
+		new_roads.append(road_rec("yw_gully_trail", "여원치 남쪽 골 오름길(폭포·바위굴)", "산길", 2.2, uxy, 2, ["mountain-terrain(2026-10-21) A*(구배 ≤ 55%)"], "마애불 앞에서 남쪽 골물을 거슬러 폭포 둘을 지나 바위굴 어귀까지(가파른 오르막)."))
+	new_roads.append(road_rec("yw_ridge_trail", "여원재 능선길(대간 마루금 → 북쪽 봉우리)", "산길", 2.2, rxy, 2, ["mountain-terrain(2026-10-21): 마루금 선호 A*"], "재 마루에서 북쪽 마루금을 타고 전망 바위 봉우리까지."))
+	new_roads.append(road_rec("gyoryong_trail", "교룡산 산길(북쪽 길 → 배산 줄기 → 산성 동문 터 → 선국사 터 → 정상)", "산길", 2.4, gxy, 2, ["교룡산성·선국사: 남원 교룡산(고증 참고 — 위치는 게임 지형에 맞춤)", "mountain-terrain(2026-10-21) A*"], "namwon_north_road에서 갈라져 교룡산 남동 줄기를 타고 정상 마루까지."))
+	for sid, (lxy, rid) in link_xy.items():
+		new_roads.append(road_rec(sid + "_path", "이음 오솔길(" + sid + ")", "산길", 2.0, lxy, 2, ["mountain-terrain(2026-10-21)"], f"{rid}에서 빈 터 {sid}로 드는 오솔길."))
+	rmeta = []
+	for r in all_rivers:
+		rp = np.array([p[:2] for p in r["points"]])
+		rmeta.append((r, cKDTree(rp), max(float(r.get("width_m", 2.5)), 5.2) / 2 * 0.8 + 0.4))
+	for tr in TRAILS:
+		xyt = tr["xy"]; inr = np.zeros(len(xyt), bool); which = [None] * len(xyt)
+		for r, tree, hw_ in rmeta:
+			d, _ = tree.query(xyt, distance_upper_bound=hw_ + 2.5)
+			hit = d < hw_ + 1.0
+			for k in np.nonzero(hit)[0]: inr[k] = True; which[k] = r
+		k = 0; n = 0
+		while k < len(xyt):
+			if inr[k]:
+				k2 = k
+				while k2 + 1 < len(xyt) and inr[k2 + 1]: k2 += 1
+				km = (k + k2) // 2; r = which[km]; n += 1
+				new_cross.append({ "id": f"x_mt_{tr['id']}_{n}", "name": "%s 건널목" % r.get("name", "물"), "type": "여울" if r.get("grade", "D") == "D" else "징검다리",
+					"river_id": r["id"], "road_id": tr["id"], "x": round(float(xyt[km][0]), 1), "z": round(float(xyt[km][1]), 1), "confidence": "가설",
+					"notes": "mountain-terrain: 길이 물길을 건너는 곳(물속을 걸어 건넘)" })
+				k = k2 + 1
+			else: k += 1
+	log("건널목 %d곳" % len(new_cross))
 
 	# ---- 7) 바위·벼랑: 아주 가파른 숲 비탈 → 토지이용 7
 	gy, gx = np.gradient(ndimage.uniform_filter(H, 3), CELL); slope = np.hypot(gx, gy)
@@ -675,7 +732,7 @@ def main():
 			{ "id": "yeowonchi", "name": "여원치(여원재) 고갯길", "roads": ["tongyeong_byeolro", "yw_valley_trail", "yw_gully_trail", "yw_ridge_trail"],
 			  "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in pass_route[::25]] + [[round(float(pass_route[-1][0]), 1), round(float(pass_route[-1][1]), 1)]] },
 			{ "id": "yw_valley", "name": "여원치 계곡길", "roads": ["yw_valley_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in vxy[::20]] + [[round(float(vxy[-1][0]), 1), round(float(vxy[-1][1]), 1)]] },
-			{ "id": "yw_gully", "name": "여원치 남쪽 골 오름길", "roads": ["yw_gully_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in uxy[::12]] + [[round(float(uxy[-1][0]), 1), round(float(uxy[-1][1]), 1)]] } if gully_end is not None else None,
+			{ "id": "yw_gully", "name": "여원치 남쪽 골 오름길", "roads": ["yw_gully_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in uxy[::12]] } if gully_end is not None else None,
 			{ "id": "yw_ridge", "name": "여원재 능선길", "roads": ["yw_ridge_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in rxy[::20]] + [[round(float(rxy[-1][0]), 1), round(float(rxy[-1][1]), 1)]] },
 			{ "id": "gyoryong", "name": "교룡산 산길", "roads": ["gyoryong_trail"], "walk": [[round(float(a), 1), round(float(b), 1)] for a, b in gxy[::20]] + [[round(float(gxy[-1][0]), 1), round(float(gxy[-1][1]), 1)]] },
 		],
@@ -689,7 +746,6 @@ def main():
 		for name, d in pl.items(): json.dump(d, open(os.path.join(DATA, name), "w"), ensure_ascii=False, indent=1)
 		json.dump({ "area": "산 지형(여원치 골·교룡산)", "note": "mountain-terrain(2026-10-21): 지리 소품만(폭포·벼랑). 이야기 없음. tools/mountain/build_mountain.py가 만든다.", "items": props },
 			open(os.path.join(DATA, "placement_mountain.json"), "w"), ensure_ascii=False, indent=1)
-		remap_parcels()
 	if os.environ.get("MTN_PNG"): debug_png(H, LU, R, anchors, os.environ["MTN_PNG"])
 	log("높이 범위 %.1f..%.1f, 자리 %d, 새 길 %d, 새 물 %d, 건널목 %d, 소품 %d" % (lo, hi, len(anchors), len(new_roads), len(new_rivers), len(new_cross), len(props)))
 	for a in anchors: log("  ANCHOR %-18s %-14s (%.0f, %.1f, %.0f) %s" % (a["id"], a["type"], a["x"], a["y"], a["z"], a["name"]))
