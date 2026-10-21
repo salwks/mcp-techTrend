@@ -762,6 +762,7 @@ func _apply_atmo() -> void:
 	world.scatter_far = clampf(1.9 / maxf(float(s.dens), 0.001), 90.0, 320.0) if fog_on else 600.0
 	if args.has("lod0"): world.lod0_dist = float(args.lod0)
 	if args.has("scatterfar"): world.scatter_far = float(args.scatterfar)
+	if args.has("khsfar"): world.khs_far_base = float(args.khsfar)
 	_scatter_base = world.scatter_far
 	if rig != null and (rig.sailing or rig.riding): world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
 	_canopy_sync()
@@ -856,6 +857,8 @@ const AO_STRENGTH := 0.85   # 먹 그늘 세기(0~1)
 const AO_RADIUS := 1.2      # m — 3인칭(벽 밑·기단·인물 발밑)
 const AO_RADIUS_FP := 0.5   # 1인칭(가까워 같은 화면 크기)
 # 설정 '화면 품질' 낮음(시험·촬영은 늘 높음 — 바꾸려면 --gfx=low)
+const KhsTreesRM := preload("res://kit/nature/khs_trees.gd")
+var _trees_low = null
 func gfx_low() -> bool:
 	if args.has("gfx"): return String(args.gfx) == "low"
 	return not _view_automation() and GameSettings.get_v("gfx") == "low"
@@ -882,6 +885,10 @@ func _update_dof(dt: float) -> void:
 	# 먹 그늘(post_effect AO — visual-pass): 설정 '화면 품질' 낮음이면 표본 반. --noao 비교 끄기
 	post.ao_strength = 0.0 if args.has("noao") else float(args.get("ao", str(AO_STRENGTH)))
 	post.ao_low = gfx_low()
+	if world.tree_lod != null and _trees_low != post.ao_low:   # trees-khs: 화면 품질 낮음이면 가까운 사실 나무 벌을 줄인다
+		_trees_low = post.ao_low
+		KhsTreesRM.set_low(_trees_low)
+		world.tree_lod.dirty = true
 	post.ao_radius = AO_RADIUS_FP if fp_view() else AO_RADIUS
 	post.dof_far_scale += (float(sp.scale) - post.dof_far_scale) * k
 	post.dof_margin += (float(sp.margin) - post.dof_margin) * k
