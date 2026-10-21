@@ -1,0 +1,24 @@
+{ "sets": { "mtn": {
+  "views": [
+    {"id": "n_town_north", "mode": "town", "x": -3228, "z": 110},
+    {"id": "n_std_north", "mode": "std", "x": -3228, "z": 110},
+    {"id": "n_town_west", "mode": "town", "x": -3480, "z": 80},
+    {"id": "n_town_hyanggyo", "mode": "town", "x": -3247, "z": -70},
+    {"id": "n_fp_gyoryong", "mode": "fp", "x": -3228, "z": 380, "yaw": -48, "pitch": 4},
+    {"id": "n_fp_yeowon", "mode": "fp", "x": -3110, "z": 470, "yaw": 70, "pitch": 3},
+    {"id": "n_fp_jiri", "mode": "fp", "x": -3110, "z": 470, "yaw": 112, "pitch": 3},
+    {"id": "p_town_ibaek", "mode": "std", "x": -1290, "z": -215},
+    {"id": "p_std_foot", "mode": "std", "x": -725, "z": -732},
+    {"id": "p_fp_foot", "mode": "fp", "x": -725, "z": -732, "yaw": 60, "pitch": 6},
+    {"id": "p_std_jumak", "mode": "std", "x": -310, "z": -872},
+    {"id": "p_std_upper", "mode": "std", "x": -166, "z": -917},
+    {"id": "p_std_top", "mode": "std", "x": 30, "z": -970},
+    {"id": "p_game_top", "mode": "town", "x": 14, "z": -966},
+    {"id": "p_fp_top_back", "mode": "fp", "x": 14, "z": -966, "yaw": -110, "pitch": -3},
+    {"id": "p_fp_top_east", "mode": "fp", "x": 70, "z": -975, "yaw": 95, "pitch": 0},
+    {"id": "p_fp_ridge", "mode": "fp", "x": -326, "z": -1134, "yaw": -120, "pitch": -2},
+    {"id": "p_fp_ridge_jiri", "mode": "fp", "x": -326, "z": -1134, "yaw": 150, "pitch": 1},
+    {"id": "p_over_pass", "mode": "over", "x": -250, "z": -900, "pitch": 30, "yaw": -150, "dist": 700, "fov": 40, "fog": true, "wait": 3.0},
+    {"id": "n_over_town", "mode": "over", "x": -3400, "z": 0, "pitch": 22, "yaw": 160, "dist": 900, "fov": 40, "fog": true, "wait": 3.0}
+  ]
+}}}

@@ -1,0 +1,77 @@
+{
+ "area": "산 지형(여원치 골·교룡산)",
+ "note": "mountain-terrain(2026-10-21): 지리 소품만(폭포·벼랑). 이야기 없음. tools/mountain/build_mountain.py가 만든다.",
+ "items": [
+  {
+   "id": "mt_falls_01",
+   "kit": "route/waterfall",
+   "params": {
+    "seed": 81,
+    "h": 6.1,
+    "w": 1.6,
+    "r": 3.4,
+    "water_y": 0.06
+   },
+   "x": -50.0,
+   "z": -836.6,
+   "ry": 3.1227,
+   "y": 247.647,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_falls_02",
+   "kit": "route/waterfall",
+   "params": {
+    "seed": 82,
+    "h": 6.86,
+    "w": 1.6,
+    "r": 3.4,
+    "water_y": 0.06
+   },
+   "x": -32.9,
+   "z": -887.99,
+   "ry": 2.4337,
+   "y": 222.493,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_falls_03",
+   "kit": "route/waterfall",
+   "params": {
+    "seed": 83,
+    "h": 6.42,
+    "w": 1.6,
+    "r": 3.4,
+    "water_y": 0.06
+   },
+   "x": -116.61,
+   "z": -918.83,
+   "ry": -1.9682,
+   "y": 176.097,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_cave_cliff",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.0,
+    "h": 7.0,
+    "d": 3.0,
+    "seed": 7
+   },
+   "x": -63.03,
+   "z": -834.85,
+   "ry": 1.5519,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  }
+ ]
+}
