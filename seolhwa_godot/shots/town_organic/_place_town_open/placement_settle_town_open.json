@@ -1,0 +1,12261 @@
+{
+ "note": "도시·마을 빌더 견본 소도시(무성읍치) 견본 — tools/bldg/settlement_place.gd",
+ "tier": "town",
+ "majors": [
+  {
+   "role": "gwana",
+   "kit": "landmark/hyeon_gwana",
+   "at": [
+    -3482.6,
+    905.91
+   ]
+  },
+  {
+   "role": "gwana_hongsal",
+   "kit": "bldg/gate",
+   "at": [
+    -3476.42,
+    930.13
+   ]
+  },
+  {
+   "role": "gaeksa",
+   "kit": "bldg/building",
+   "at": [
+    -3527.95,
+    917.49
+   ]
+  },
+  {
+   "role": "sachang",
+   "kit": "bldg/lot",
+   "at": [
+    -3512.46,
+    988.67
+   ]
+  },
+  {
+   "role": "sajikdan",
+   "kit": "landmark/sajikdan",
+   "at": [
+    -3597.6,
+    956.74
+   ]
+  },
+  {
+   "role": "yeodan",
+   "kit": "landmark/yeodan",
+   "at": [
+    -3501.01,
+    833.82
+   ]
+  },
+  {
+   "role": "seonghwangsa",
+   "kit": "landmark/seonghwangsa",
+   "at": [
+    -3559.9,
+    834.41
+   ]
+  },
+  {
+   "role": "dangsan",
+   "kit": "nature/big_tree",
+   "at": [
+    -3546.88,
+    836.87
+   ]
+  },
+  {
+   "role": "hyanggyo",
+   "kit": "landmark/hyanggyo",
+   "at": [
+    -3377.98,
+    895.3
+   ]
+  },
+  {
+   "role": "hyanggyo_hongsal",
+   "kit": "bldg/gate",
+   "at": [
+    -3368.08,
+    934.05
+   ]
+  },
+  {
+   "role": "hyanggyo_hama",
+   "kit": "bldg/stone",
+   "at": [
+    -3372.43,
+    937.23
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3489.31,
+    961.29
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3488.27,
+    965.36
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3487.23,
+    969.43
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3486.19,
+    973.5
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3485.15,
+    977.57
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3484.12,
+    981.64
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3483.08,
+    985.71
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3482.04,
+    989.78
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3481.0,
+    993.85
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3479.96,
+    997.92
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3480.4,
+    959.02
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3479.36,
+    963.08
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3478.32,
+    967.15
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3477.28,
+    971.22
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3476.24,
+    975.29
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3475.2,
+    979.36
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3474.16,
+    983.43
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3473.12,
+    987.5
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3472.08,
+    991.57
+   ]
+  },
+  {
+   "role": "jwapan",
+   "kit": "village/jwapan",
+   "at": [
+    -3471.05,
+    995.64
+   ]
+  }
+ ],
+ "districts": [
+  {
+   "id": "in",
+   "area": [
+    [
+     -3569.06,
+     893.1
+    ],
+    [
+     -3443.1,
+     860.94
+    ],
+    [
+     -3410.94,
+     986.9
+    ],
+    [
+     -3536.9,
+     1019.06
+    ]
+   ],
+   "lots": 15,
+   "items": 70,
+   "streets": 2
+  },
+  {
+   "id": "out_s",
+   "area": [
+    [
+     -3558.63,
+     1039.06
+    ],
+    [
+     -3382.28,
+     994.03
+    ],
+    [
+     -3363.48,
+     1067.67
+    ],
+    [
+     -3539.82,
+     1112.7
+    ]
+   ],
+   "lots": 21,
+   "items": 46,
+   "streets": 5
+  }
+ ],
+ "supersede": [],
+ "alleys": [
+  {
+   "id": "st_town_open_in_street4",
+   "points": [
+    [
+     -3436.81,
+     940.45
+    ],
+    [
+     -3437.15,
+     937.47
+    ],
+    [
+     -3438.35,
+     934.8
+    ],
+    [
+     -3440.19,
+     932.46
+    ],
+    [
+     -3442.41,
+     930.45
+    ],
+    [
+     -3444.57,
+     928.36
+    ],
+    [
+     -3446.61,
+     926.16
+    ],
+    [
+     -3448.54,
+     923.87
+    ],
+    [
+     -3450.34,
+     921.47
+    ],
+    [
+     -3452.03,
+     918.99
+    ],
+    [
+     -3453.29,
+     916.29
+    ],
+    [
+     -3454.13,
+     913.42
+    ],
+    [
+     -3454.56,
+     910.45
+    ],
+    [
+     -3455.47,
+     907.59
+    ],
+    [
+     -3456.45,
+     904.76
+    ],
+    [
+     -3457.48,
+     901.94
+    ],
+    [
+     -3458.51,
+     899.13
+    ],
+    [
+     -3459.66,
+     896.35
+    ],
+    [
+     -3460.66,
+     893.53
+    ],
+    [
+     -3461.57,
+     890.67
+    ],
+    [
+     -3462.43,
+     887.8
+    ],
+    [
+     -3462.94,
+     884.84
+    ],
+    [
+     -3463.25,
+     881.86
+    ],
+    [
+     -3463.42,
+     878.86
+    ],
+    [
+     -3463.48,
+     875.86
+    ],
+    [
+     -3462.82,
+     872.94
+    ],
+    [
+     -3461.83,
+     870.12
+    ],
+    [
+     -3461.05,
+     868.28
+    ]
+   ],
+   "width_m": 3.95,
+   "kind": "street"
+  },
+  {
+   "id": "st_town_open_in_alley5",
+   "points": [
+    [
+     -3456.16,
+     899.81
+    ],
+    [
+     -3453.25,
+     899.05
+    ],
+    [
+     -3450.31,
+     898.49
+    ],
+    [
+     -3447.34,
+     898.15
+    ],
+    [
+     -3444.34,
+     898.1
+    ],
+    [
+     -3441.34,
+     898.17
+    ],
+    [
+     -3438.34,
+     898.35
+    ],
+    [
+     -3436.35,
+     898.5
+    ]
+   ],
+   "width_m": 2.4,
+   "kind": "alley"
+  },
+  {
+   "id": "st_town_open_out_s_street2",
+   "points": [
+    [
+     -3458.18,
+     1072.7
+    ],
+    [
+     -3461.04,
+     1073.61
+    ],
+    [
+     -3463.9,
+     1074.52
+    ],
+    [
+     -3466.76,
+     1075.4
+    ],
+    [
+     -3469.64,
+     1076.25
+    ],
+    [
+     -3471.8,
+     1078.33
+    ],
+    [
+     -3473.76,
+     1080.6
+    ],
+    [
+     -3475.1,
+     1083.16
+    ],
+    [
+     -3475.39,
+     1086.15
+    ],
+    [
+     -3474.44,
+     1088.99
+    ],
+    [
+     -3472.94,
+     1091.56
+    ],
+    [
+     -3471.77,
+     1093.18
+    ]
+   ],
+   "width_m": 3.71,
+   "kind": "street"
+  },
+  {
+   "id": "st_town_open_out_s_street3",
+   "points": [
+    [
+     -3540.3,
+     1040.65
+    ],
+    [
+     -3538.62,
+     1043.14
+    ],
+    [
+     -3537.07,
+     1045.71
+    ],
+    [
+     -3535.7,
+     1048.37
+    ],
+    [
+     -3534.55,
+     1051.14
+    ],
+    [
+     -3533.45,
+     1053.93
+    ],
+    [
+     -3532.56,
+     1056.79
+    ],
+    [
+     -3531.71,
+     1059.67
+    ],
+    [
+     -3530.74,
+     1062.51
+    ],
+    [
+     -3530.22,
+     1065.46
+    ],
+    [
+     -3530.01,
+     1068.44
+    ],
+    [
+     -3529.77,
+     1071.42
+    ],
+    [
+     -3529.1,
+     1074.34
+    ],
+    [
+     -3528.64,
+     1077.31
+    ],
+    [
+     -3527.27,
+     1079.88
+    ],
+    [
+     -3525.49,
+     1082.3
+    ],
+    [
+     -3523.79,
+     1084.77
+    ]
+   ],
+   "width_m": 3.99,
+   "kind": "street"
+  },
+  {
+   "id": "st_town_open_out_s_street4",
+   "points": [
+    [
+     -3406.61,
+     1006.74
+    ],
+    [
+     -3406.15,
+     1009.7
+    ],
+    [
+     -3405.88,
+     1012.68
+    ],
+    [
+     -3405.79,
+     1015.68
+    ],
+    [
+     -3405.87,
+     1018.68
+    ],
+    [
+     -3406.29,
+     1021.65
+    ],
+    [
+     -3406.82,
+     1024.6
+    ],
+    [
+     -3407.8,
+     1027.37
+    ],
+    [
+     -3409.6,
+     1029.77
+    ],
+    [
+     -3411.49,
+     1032.1
+    ],
+    [
+     -3413.26,
+     1034.52
+    ],
+    [
+     -3414.97,
+     1036.98
+    ],
+    [
+     -3416.68,
+     1039.45
+    ]
+   ],
+   "width_m": 3.34,
+   "kind": "street"
+  },
+  {
+   "id": "st_town_open_out_s_alley5",
+   "points": [
+    [
+     -3467.29,
+     1037.02
+    ],
+    [
+     -3469.49,
+     1039.06
+    ],
+    [
+     -3470.68,
+     1041.68
+    ],
+    [
+     -3471.33,
+     1044.61
+    ],
+    [
+     -3471.92,
+     1047.55
+    ],
+    [
+     -3472.58,
+     1050.48
+    ],
+    [
+     -3473.26,
+     1053.4
+    ],
+    [
+     -3473.84,
+     1056.34
+    ],
+    [
+     -3474.23,
+     1059.32
+    ],
+    [
+     -3474.71,
+     1062.28
+    ],
+    [
+     -3474.65,
+     1065.25
+    ],
+    [
+     -3473.95,
+     1068.12
+    ],
+    [
+     -3472.55,
+     1070.77
+    ],
+    [
+     -3471.14,
+     1073.42
+    ],
+    [
+     -3469.74,
+     1076.07
+    ]
+   ],
+   "width_m": 2.48,
+   "kind": "alley"
+  },
+  {
+   "id": "st_town_open_out_s_alley6",
+   "points": [
+    [
+     -3405.92,
+     1027.06
+    ],
+    [
+     -3402.92,
+     1027.1
+    ],
+    [
+     -3399.92,
+     1027.14
+    ],
+    [
+     -3396.92,
+     1027.14
+    ],
+    [
+     -3393.92,
+     1027.07
+    ],
+    [
+     -3390.92,
+     1026.99
+    ],
+    [
+     -3388.02,
+     1026.35
+    ],
+    [
+     -3385.14,
+     1025.5
+    ],
+    [
+     -3382.23,
+     1024.79
+    ]
+   ],
+   "width_m": 2.67,
+   "kind": "alley"
+  },
+  {
+   "id": "st_town_open_ns",
+   "points": [
+    [
+     -3451.65,
+     1090.18
+    ],
+    [
+     -3473.92,
+     1002.98
+    ],
+    [
+     -3492.57,
+     929.92
+    ]
+   ],
+   "width_m": 3.6,
+   "kind": "trunk"
+  },
+  {
+   "id": "st_town_open_ew",
+   "points": [
+    [
+     -3587.88,
+     981.09
+    ],
+    [
+     -3549.12,
+     971.2
+    ],
+    [
+     -3423.16,
+     939.03
+    ],
+    [
+     -3384.4,
+     929.14
+    ]
+   ],
+   "width_m": 3.6,
+   "kind": "trunk"
+  },
+  {
+   "id": "st_town_open_to_hyanggyo",
+   "points": [
+    [
+     -3423.15,
+     922.93
+    ],
+    [
+     -3397.46,
+     918.43
+    ],
+    [
+     -3373.62,
+     912.35
+    ],
+    [
+     -3366.6,
+     939.87
+    ]
+   ],
+   "width_m": 2.6,
+   "kind": "trunk"
+  },
+  {
+   "id": "st_town_open_out_ew",
+   "points": [
+    [
+     -3557.64,
+     1042.93
+    ],
+    [
+     -3468.97,
+     1022.36
+    ],
+    [
+     -3381.29,
+     997.91
+    ]
+   ],
+   "width_m": 3.0,
+   "kind": "trunk"
+  }
+ ],
+ "urban": [
+  [
+   -3569.1,
+   860.9,
+   -3410.9,
+   1019.1
+  ]
+ ],
+ "items": [
+  {
+   "id": "st_town_open_gwana01",
+   "kit": "landmark/hyeon_gwana",
+   "params": {
+    "seed": 3005
+   },
+   "x": -3482.6,
+   "z": 905.91,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "gwana"
+   },
+   "footprint": [
+    38.0,
+    42.0
+   ]
+  },
+  {
+   "id": "st_town_open_gwana_hongsal02",
+   "kit": "bldg/gate",
+   "params": {
+    "type": "hongsal",
+    "seed": 3006
+   },
+   "x": -3476.42,
+   "z": 930.13,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "gwana_hongsal"
+   },
+   "footprint": [
+    4.4,
+    1.2
+   ]
+  },
+  {
+   "id": "st_town_open_gaeksa03",
+   "kit": "bldg/building",
+   "params": {
+    "type": "gaeksa",
+    "region": "south",
+    "seed": 3007
+   },
+   "x": -3527.95,
+   "z": 917.49,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "gaeksa"
+   },
+   "footprint": [
+    41.9,
+    13.8
+   ]
+  },
+  {
+   "id": "st_town_open_sachang04",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "sachang",
+    "seed": 3004,
+    "fp": [
+     29.0,
+     23.0
+    ],
+    "pieces": [
+     {
+      "tag": "chang0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "official",
+       "seed": 3054
+      },
+      "x": 0.0,
+      "z": -6.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "chang1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "official",
+       "seed": 3054
+      },
+      "x": -9.5,
+      "z": 1.0,
+      "ry": 1.5707963267949
+     },
+     {
+      "tag": "chang2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "official",
+       "seed": 3054
+      },
+      "x": 9.5,
+      "z": 1.0,
+      "ry": -1.5707963267949
+     },
+     {
+      "tag": "wall_n",
+      "kit": "village/todam",
+      "params": {
+       "seed": 3058,
+       "ax": -14.0,
+       "az": -11.0,
+       "bx": 14.0,
+       "bz": -11.0,
+       "h": 1.95,
+       "cap": "tile",
+       "tile_seg": 0.5,
+       "miter_a": 1.0,
+       "miter_b": 1.0
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wall_w",
+      "kit": "village/todam",
+      "params": {
+       "seed": 3059,
+       "ax": -14.0,
+       "az": -11.0,
+       "bx": -14.0,
+       "bz": 11.0,
+       "h": 1.95,
+       "cap": "tile",
+       "tile_seg": 0.5,
+       "miter_a": -1.0,
+       "miter_b": -1.0
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wall_e",
+      "kit": "village/todam",
+      "params": {
+       "seed": 3060,
+       "ax": 14.0,
+       "az": -11.0,
+       "bx": 14.0,
+       "bz": 11.0,
+       "h": 1.95,
+       "cap": "tile",
+       "tile_seg": 0.5,
+       "miter_a": 1.0,
+       "miter_b": 1.0
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wall_f0",
+      "kit": "village/todam",
+      "params": {
+       "seed": 3099,
+       "ax": -14.0,
+       "az": 11.0,
+       "bx": -1.12,
+       "bz": 11.0,
+       "h": 1.95,
+       "cap": "tile",
+       "tile_seg": 0.5,
+       "miter_a": -1.0
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wall_f1",
+      "kit": "village/todam",
+      "params": {
+       "seed": 3100,
+       "ax": 1.12,
+       "az": 11.0,
+       "bx": 14.0,
+       "bz": 11.0,
+       "h": 1.95,
+       "cap": "tile",
+       "tile_seg": 0.5,
+       "miter_b": -1.0
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 3057,
+       "wall_h": 1.95
+      },
+      "x": 0.0,
+      "z": 11.0,
+      "ry": 0.0
+     }
+    ]
+   },
+   "x": -3512.46,
+   "z": 988.67,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "sachang"
+   },
+   "footprint": [
+    29.0,
+    23.0
+   ]
+  },
+  {
+   "id": "st_town_open_sajikdan05",
+   "kit": "landmark/sajikdan",
+   "params": {
+    "seed": 3015
+   },
+   "x": -3597.6,
+   "z": 956.74,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "sajikdan"
+   },
+   "footprint": [
+    25.0,
+    25.0
+   ]
+  },
+  {
+   "id": "st_town_open_yeodan06",
+   "kit": "landmark/yeodan",
+   "params": {
+    "seed": 3016
+   },
+   "x": -3501.01,
+   "z": 833.82,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "yeodan"
+   },
+   "footprint": [
+    19.0,
+    19.0
+   ]
+  },
+  {
+   "id": "st_town_open_seonghwangsa07",
+   "kit": "landmark/seonghwangsa",
+   "params": {
+    "seed": 3017
+   },
+   "x": -3559.9,
+   "z": 834.41,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "seonghwangsa"
+   },
+   "footprint": [
+    20.0,
+    18.0
+   ]
+  },
+  {
+   "id": "st_town_open_dangsan08",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 3018,
+    "variant": "zelkova",
+    "h": 12.0
+   },
+   "x": -3546.88,
+   "z": 836.87,
+   "ry": 0.25,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "dangsan"
+   },
+   "footprint": [
+    6.0,
+    6.0
+   ]
+  },
+  {
+   "id": "st_town_open_hyanggyo09",
+   "kit": "landmark/hyanggyo",
+   "params": {
+    "seed": 3019
+   },
+   "x": -3377.98,
+   "z": 895.3,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "hyanggyo"
+   },
+   "footprint": [
+    42.0,
+    62.0
+   ]
+  },
+  {
+   "id": "st_town_open_hyanggyo_hongsal10",
+   "kit": "bldg/gate",
+   "params": {
+    "type": "hongsal",
+    "seed": 3020
+   },
+   "x": -3368.08,
+   "z": 934.05,
+   "ry": 0.25,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "hyanggyo_hongsal"
+   },
+   "footprint": [
+    4.0,
+    1.2
+   ]
+  },
+  {
+   "id": "st_town_open_hyanggyo_hama11",
+   "kit": "bldg/stone",
+   "params": {
+    "kind": "bi",
+    "kind_bi": "hama",
+    "seed": 3021
+   },
+   "x": -3372.43,
+   "z": 937.23,
+   "ry": 0.25,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "hyanggyo_hama"
+   },
+   "footprint": [
+    1.2,
+    1.0
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan12",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300400,
+    "goods": "grain",
+    "awning": true
+   },
+   "x": -3489.31,
+   "z": 961.29,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan13",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300401,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3488.27,
+   "z": 965.36,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan14",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300402,
+    "goods": "straw",
+    "awning": true
+   },
+   "x": -3487.23,
+   "z": 969.43,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan15",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300403,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3486.19,
+   "z": 973.5,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan16",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300404,
+    "goods": "grain",
+    "awning": true
+   },
+   "x": -3485.15,
+   "z": 977.57,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan17",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300405,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3484.12,
+   "z": 981.64,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan18",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300406,
+    "goods": "straw",
+    "awning": true
+   },
+   "x": -3483.08,
+   "z": 985.71,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan19",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300407,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3482.04,
+   "z": 989.78,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan20",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300408,
+    "goods": "grain",
+    "awning": true
+   },
+   "x": -3481.0,
+   "z": 993.85,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan21",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300409,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3479.96,
+   "z": 997.92,
+   "ry": -1.3208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan22",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300410,
+    "goods": "straw",
+    "awning": true
+   },
+   "x": -3480.4,
+   "z": 959.02,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan23",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300411,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3479.36,
+   "z": 963.08,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan24",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300412,
+    "goods": "grain",
+    "awning": true
+   },
+   "x": -3478.32,
+   "z": 967.15,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan25",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300413,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3477.28,
+   "z": 971.22,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan26",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300414,
+    "goods": "straw",
+    "awning": true
+   },
+   "x": -3476.24,
+   "z": 975.29,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan27",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300415,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3475.2,
+   "z": 979.36,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan28",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300416,
+    "goods": "grain",
+    "awning": true
+   },
+   "x": -3474.16,
+   "z": 983.43,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan29",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300417,
+    "goods": "onggi",
+    "awning": false
+   },
+   "x": -3473.12,
+   "z": 987.5,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan30",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300418,
+    "goods": "straw",
+    "awning": true
+   },
+   "x": -3472.08,
+   "z": 991.57,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_jwapan31",
+   "kit": "village/jwapan",
+   "params": {
+    "seed": 300419,
+    "goods": "cloth",
+    "awning": false
+   },
+   "x": -3471.05,
+   "z": 995.64,
+   "ry": 1.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "settlement": {
+    "role": "jwapan"
+   },
+   "footprint": [
+    2.4,
+    1.6
+   ]
+  },
+  {
+   "id": "st_town_open_in_lot000",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "shop",
+    "seed": 93125000,
+    "fp": [
+     8.0,
+     15.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93125006
+      },
+      "x": 0.0,
+      "z": 3.49,
+      "ry": 0.025
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125094,
+       "ax": -5.0,
+       "az": 1.5,
+       "bx": -5.0,
+       "bz": 8.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         4.65,
+         8.15
+        ],
+        [
+         4.65,
+         -6.29
+        ],
+        [
+         4.55,
+         -6.91
+        ],
+        [
+         4.27,
+         -7.03
+        ],
+        [
+         3.78,
+         -6.63
+        ],
+        [
+         0.25,
+         -2.75
+        ],
+        [
+         -3.68,
+         0.79
+        ],
+        [
+         -4.22,
+         1.41
+        ],
+        [
+         -4.54,
+         2.12
+        ],
+        [
+         -4.65,
+         2.96
+        ],
+        [
+         -4.65,
+         8.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125300,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×4",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -5.0,
+      8.5
+     ],
+     [
+      5.0,
+      8.5
+     ],
+     [
+      5.0,
+      -8.5
+     ],
+     [
+      0.0,
+      -3.0
+     ],
+     [
+      -5.0,
+      1.5
+     ]
+    ]
+   },
+   "x": -3500.43,
+   "z": 943.18,
+   "ry": 1.8207,
+   "y": null,
+   "flat_at": [
+    [
+     -3490.0,
+     943.61
+    ],
+    [
+     -3490.75,
+     940.71
+    ],
+    [
+     -3491.49,
+     937.8
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    8.0,
+    15.0
+   ],
+   "organic": {
+    "lot": 0,
+    "zone": 0.95,
+    "street": "ns",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_in_lot001",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "shop",
+    "seed": 93125001,
+    "fp": [
+     11.5,
+     24.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93125015
+      },
+      "x": 2.0,
+      "z": 1.92,
+      "ry": -0.0028
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125092,
+       "ax": 6.74,
+       "az": 13.25,
+       "bx": 6.74,
+       "bz": -13.25,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125093,
+       "ax": 6.74,
+       "az": -13.25,
+       "bx": 0.0,
+       "bz": -4.25,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125094,
+       "ax": 0.0,
+       "az": -4.25,
+       "bx": -6.74,
+       "bz": 6.25,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125095,
+       "ax": -6.74,
+       "az": 6.25,
+       "bx": -6.74,
+       "bz": 13.25,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         6.39,
+         -12.2
+        ],
+        [
+         0.29,
+         -4.05
+        ],
+        [
+         -1.61,
+         -1.09
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125301,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -1.88,
+         -0.67
+        ],
+        [
+         -5.69,
+         5.26
+        ],
+        [
+         -6.08,
+         6.0
+        ],
+        [
+         -6.31,
+         6.79
+        ],
+        [
+         -6.39,
+         7.65
+        ],
+        [
+         -6.39,
+         12.9
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125302,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -6.74,
+      13.25
+     ],
+     [
+      6.74,
+      13.25
+     ],
+     [
+      6.74,
+      -13.25
+     ],
+     [
+      0.0,
+      -4.25
+     ],
+     [
+      -6.74,
+      6.25
+     ]
+    ]
+   },
+   "x": -3542.1,
+   "z": 953.26,
+   "ry": 0.2501,
+   "y": null,
+   "flat_at": [
+    [
+     -3542.37,
+     968.55
+    ],
+    [
+     -3538.45,
+     967.55
+    ],
+    [
+     -3534.53,
+     966.55
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    11.5,
+    24.5
+   ],
+   "organic": {
+    "lot": 1,
+    "zone": 0.45,
+    "street": "ew",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_in_lot002",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_g",
+    "seed": 93125002,
+    "fp": [
+     22.4,
+     31.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "giwajip",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125014
+      },
+      "x": -3.22,
+      "z": -8.15,
+      "ry": -0.0034
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125054
+      },
+      "x": -8.85,
+      "z": 2.03,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125036
+      },
+      "x": 3.66,
+      "z": 13.27,
+      "ry": 3.1416
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93125045,
+       "s": 1.07714052954689
+      },
+      "x": 6.83,
+      "z": -1.36,
+      "ry": 3.1416
+     },
+     {
+      "tag": "gotgan",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125092
+      },
+      "x": 0.0,
+      "z": 4.27,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125093,
+       "ax": 12.21,
+       "az": 16.75,
+       "bx": 12.21,
+       "bz": -2.25,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125094,
+       "ax": 12.21,
+       "az": -2.25,
+       "bx": 0.0,
+       "bz": -15.75,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125095,
+       "ax": 0.0,
+       "az": -15.75,
+       "bx": -7.33,
+       "bz": -16.75,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125096,
+       "ax": -7.33,
+       "az": -16.75,
+       "bx": -12.21,
+       "bz": -9.75,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125097,
+       "ax": -12.21,
+       "az": -9.75,
+       "bx": -12.21,
+       "bz": 16.75,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 93125017,
+       "wall_h": 1.95
+      },
+      "x": -3.56,
+      "z": 16.4,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         3.66,
+         -11.18
+        ],
+        [
+         -0.17,
+         -15.42
+        ],
+        [
+         -7.16,
+         -16.37
+        ],
+        [
+         -11.86,
+         -9.64
+        ],
+        [
+         -11.86,
+         16.4
+        ],
+        [
+         -4.73,
+         16.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125302,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×4",
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         -2.39,
+         16.4
+        ],
+        [
+         11.86,
+         16.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125303,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         11.86,
+         -2.12
+        ],
+        [
+         3.93,
+         -10.89
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125304,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -12.21,
+      16.75
+     ],
+     [
+      12.21,
+      16.75
+     ],
+     [
+      12.21,
+      -2.25
+     ],
+     [
+      0.0,
+      -15.75
+     ],
+     [
+      -7.33,
+      -16.75
+     ],
+     [
+      -12.21,
+      -9.75
+     ]
+    ]
+   },
+   "x": -3524.61,
+   "z": 945.17,
+   "ry": 0.2501,
+   "y": null,
+   "flat_at": [
+    [
+     -3527.09,
+     964.64
+    ],
+    [
+     -3519.99,
+     962.83
+    ],
+    [
+     -3512.9,
+     961.02
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    22.4,
+    31.5
+   ],
+   "organic": {
+    "lot": 2,
+    "zone": 0.45,
+    "street": "ew",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_town_open_in_lot003",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93125003,
+    "fp": [
+     11.1,
+     17.0
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93125021,
+       "w": 7.3,
+       "d": 5.9
+      },
+      "x": 0.0,
+      "z": 3.13,
+      "ry": -0.0125
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93125022,
+       "s": 0.88231713520363
+      },
+      "x": 3.67,
+      "z": -0.34,
+      "ry": -0.0125
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125094,
+       "ax": 6.55,
+       "az": 9.5,
+       "bx": 6.55,
+       "bz": 3.0,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125095,
+       "ax": 6.55,
+       "az": 3.0,
+       "bx": -6.55,
+       "bz": -9.5,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -6.55,
+      9.5
+     ],
+     [
+      6.55,
+      9.5
+     ],
+     [
+      6.55,
+      3.0
+     ],
+     [
+      -6.55,
+      -9.5
+     ]
+    ]
+   },
+   "x": -3504.64,
+   "z": 947.56,
+   "ry": 0.2501,
+   "y": null,
+   "flat_at": [
+    [
+     -3505.72,
+     959.19
+    ],
+    [
+     -3501.91,
+     958.21
+    ],
+    [
+     -3498.11,
+     957.24
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    11.1,
+    17.0
+   ],
+   "organic": {
+    "lot": 3,
+    "zone": 0.8,
+    "street": "ew",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_in_lot004",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "giwa_house",
+    "seed": 93125004,
+    "fp": [
+     27.0,
+     15.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "giwajip",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125028
+      },
+      "x": -2.03,
+      "z": -0.09,
+      "ry": -0.0167
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93125051,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -3.64,
+      "z": 5.85,
+      "ry": 3.1416
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125095,
+       "ax": 14.5,
+       "az": 8.75,
+       "bx": 14.5,
+       "bz": 2.25,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125096,
+       "ax": 14.5,
+       "az": 2.25,
+       "bx": -2.42,
+       "bz": -8.25,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 93125031,
+       "wall_h": 1.95
+      },
+      "x": 7.92,
+      "z": 8.4,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         9.09,
+         8.4
+        ],
+        [
+         14.15,
+         8.4
+        ],
+        [
+         14.15,
+         2.44
+        ],
+        [
+         -2.55,
+         -7.92
+        ],
+        [
+         -4.68,
+         -8.36
+        ],
+        [
+         -5.84,
+         -6.68
+        ],
+        [
+         -7.0,
+         -4.99
+        ],
+        [
+         -9.42,
+         -3.49
+        ],
+        [
+         -11.84,
+         0.01
+        ],
+        [
+         -14.15,
+         1.44
+        ],
+        [
+         -14.15,
+         8.4
+        ],
+        [
+         6.75,
+         8.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125304,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "계획된 기와 갓 담·평지 — 곧은 줄 ×9",
+        "비탈 등고선을 따라 굽음(옆·뒤 담) ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -14.5,
+      8.75
+     ],
+     [
+      14.5,
+      8.75
+     ],
+     [
+      14.5,
+      2.25
+     ],
+     [
+      -2.42,
+      -8.25
+     ],
+     [
+      -4.83,
+      -8.75
+     ],
+     [
+      -7.25,
+      -5.25
+     ],
+     [
+      -9.67,
+      -3.75
+     ],
+     [
+      -12.08,
+      -0.25
+     ],
+     [
+      -14.5,
+      1.25
+     ]
+    ]
+   },
+   "x": -3464.68,
+   "z": 938.13,
+   "ry": 0.2501,
+   "y": null,
+   "flat_at": [
+    [
+     -3470.03,
+     949.94
+    ],
+    [
+     -3461.6,
+     947.79
+    ],
+    [
+     -3453.17,
+     945.64
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    27.0,
+    15.5
+   ],
+   "organic": {
+    "lot": 4,
+    "zone": 0.95,
+    "street": "ew",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_in_lot004",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "shop",
+    "seed": 93125004,
+    "fp": [
+     12.0,
+     7.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93125033
+      },
+      "x": -0.39,
+      "z": -0.39,
+      "ry": -0.0134
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -6.63,
+         -4.4
+        ],
+        [
+         -2.4,
+         -4.4
+        ],
+        [
+         -1.0,
+         -3.8
+        ],
+        [
+         -0.37,
+         -3.58
+        ],
+        [
+         0.27,
+         -3.47
+        ],
+        [
+         0.96,
+         -3.47
+        ],
+        [
+         5.33,
+         -3.78
+        ],
+        [
+         6.05,
+         -3.69
+        ],
+        [
+         6.48,
+         -3.3
+        ],
+        [
+         6.63,
+         -2.57
+        ],
+        [
+         6.63,
+         4.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125304,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×4",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      6.98,
+      4.75
+     ],
+     [
+      -6.98,
+      4.75
+     ],
+     [
+      -6.98,
+      -4.75
+     ],
+     [
+      -2.33,
+      -4.75
+     ],
+     [
+      0.0,
+      -3.75
+     ],
+     [
+      6.98,
+      -4.25
+     ]
+    ]
+   },
+   "x": -3517.54,
+   "z": 970.52,
+   "ry": -2.8915,
+   "y": null,
+   "flat_at": [
+    [
+     -3523.24,
+     965.52
+    ],
+    [
+     -3519.18,
+     964.49
+    ],
+    [
+     -3515.12,
+     963.45
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    12.0,
+    7.5
+   ],
+   "organic": {
+    "lot": 4,
+    "zone": 0.46,
+    "street": "ew",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_in_lot005",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "shop",
+    "seed": 93125005,
+    "fp": [
+     10.7,
+     18.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93125044
+      },
+      "x": -2.0,
+      "z": 1.61,
+      "ry": -0.0168
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125096,
+       "ax": -6.33,
+       "az": -10.25,
+       "bx": -6.33,
+       "bz": 10.25,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -5.98,
+         -9.36
+        ],
+        [
+         5.09,
+         2.44
+        ],
+        [
+         5.58,
+         3.1
+        ],
+        [
+         5.88,
+         3.85
+        ],
+        [
+         5.98,
+         4.69
+        ],
+        [
+         5.98,
+         9.9
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125305,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      6.33,
+      10.25
+     ],
+     [
+      -6.33,
+      10.25
+     ],
+     [
+      -6.33,
+      -10.25
+     ],
+     [
+      6.33,
+      3.25
+     ]
+    ]
+   },
+   "x": -3466.71,
+   "z": 963.21,
+   "ry": -2.8915,
+   "y": null,
+   "flat_at": [
+    [
+     -3473.29,
+     952.76
+    ],
+    [
+     -3469.62,
+     951.82
+    ],
+    [
+     -3465.94,
+     950.88
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    10.7,
+    18.5
+   ],
+   "organic": {
+    "lot": 5,
+    "zone": 0.95,
+    "street": "ew",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_in_lot006",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_c",
+    "seed": 93125006,
+    "fp": [
+     17.0,
+     29.5
+    ],
+    "pieces": [
+     {
+      "tag": "house",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93125042
+      },
+      "x": 0.32,
+      "z": 7.36,
+      "ry": 0.0251
+     },
+     {
+      "tag": "jangdok",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93125045,
+       "w": 2.0,
+       "d": 1.5
+      },
+      "x": 8.86,
+      "z": 5.81,
+      "ry": 0.0251
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93125053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -7.06,
+      "z": -4.48,
+      "ry": 1.5708
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93125053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -7.34,
+      "z": -9.68,
+      "ry": 3.1416
+     },
+     {
+      "tag": "gotgan",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93125053
+      },
+      "x": 2.93,
+      "z": -1.59,
+      "ry": 3.1416
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93125053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -3.96,
+      "z": -8.46,
+      "ry": 4.7124
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -9.17,
+         -15.4
+        ],
+        [
+         -3.82,
+         -15.4
+        ],
+        [
+         -3.0,
+         -15.3
+        ],
+        [
+         -2.25,
+         -15.02
+        ],
+        [
+         -1.56,
+         -14.52
+        ],
+        [
+         8.52,
+         -5.2
+        ],
+        [
+         8.88,
+         -4.77
+        ],
+        [
+         9.1,
+         -4.28
+        ],
+        [
+         9.17,
+         -3.71
+        ],
+        [
+         9.17,
+         -2.38
+        ],
+        [
+         9.17,
+         -0.15
+        ],
+        [
+         8.27,
+         2.07
+        ],
+        [
+         9.17,
+         4.29
+        ],
+        [
+         9.17,
+         6.51
+        ],
+        [
+         9.17,
+         8.73
+        ],
+        [
+         9.17,
+         10.96
+        ],
+        [
+         9.17,
+         13.18
+        ],
+        [
+         9.17,
+         14.51
+        ],
+        [
+         9.08,
+         15.0
+        ],
+        [
+         8.79,
+         15.3
+        ],
+        [
+         8.29,
+         15.4
+        ],
+        [
+         6.26,
+         15.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125306,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "비탈 등고선을 따라 굽음(옆·뒤 담) ×1",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         4.02,
+         15.4
+        ],
+        [
+         -9.17,
+         15.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125307,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      9.52,
+      15.75
+     ],
+     [
+      -9.52,
+      15.75
+     ],
+     [
+      -9.52,
+      -15.75
+     ],
+     [
+      -2.38,
+      -15.75
+     ],
+     [
+      9.52,
+      -4.75
+     ]
+    ]
+   },
+   "x": -3449.99,
+   "z": 964.61,
+   "ry": -2.8915,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    17.0,
+    29.5
+   ],
+   "organic": {
+    "lot": 6,
+    "zone": 0.79,
+    "street": "ew",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_in_lot007",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "shop",
+    "seed": 93125007,
+    "fp": [
+     9.5,
+     29.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "giwajip",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125049
+      },
+      "x": -0.48,
+      "z": -7.35,
+      "ry": 1.5624
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -5.41,
+         -14.91
+        ],
+        [
+         4.11,
+         -15.33
+        ],
+        [
+         4.83,
+         -15.22
+        ],
+        [
+         5.26,
+         -14.81
+        ],
+        [
+         5.41,
+         -14.08
+        ],
+        [
+         5.41,
+         15.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93125307,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      5.76,
+      15.75
+     ],
+     [
+      -5.76,
+      15.75
+     ],
+     [
+      -5.76,
+      -15.25
+     ],
+     [
+      5.76,
+      -15.75
+     ]
+    ]
+   },
+   "x": -3435.18,
+   "z": 960.83,
+   "ry": -2.8915,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    9.5,
+    29.5
+   ],
+   "organic": {
+    "lot": 7,
+    "zone": 0.45,
+    "street": "ew",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_in_lot008",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_g",
+    "seed": 93125008,
+    "fp": [
+     6.8,
+     29.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93125059
+      },
+      "x": 0.0,
+      "z": -1.47,
+      "ry": 1.5477
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 93125059,
+       "wall_h": 1.95
+      },
+      "x": 0.0,
+      "z": 15.4,
+      "ry": 6.2832
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         -1.17,
+         15.4
+        ],
+        [
+         -4.04,
+         15.4
+        ],
+        [
+         -4.04,
+         9.27
+        ],
+        [
+         -3.86,
+         7.25
+        ],
+        [
+         -3.67,
+         5.23
+        ],
+        [
+         -3.49,
+         3.21
+        ],
+        [
+         -3.31,
+         1.19
+        ],
+        [
+         -3.13,
+         -0.83
+        ],
+        [
+         -2.95,
+         -2.85
+        ],
+        [
+         -2.77,
+         -4.87
+        ],
+        [
+         -2.59,
+         -6.89
+        ],
+        [
+         -1.51,
+         -8.83
+        ],
+        [
+         -2.23,
+         -10.93
+        ],
+        [
+         -2.05,
+         -12.95
+        ],
+        [
+         -1.87,
+         -14.97
+        ],
+        [
+         -0.04,
+         -15.38
+        ],
+        [
+         2.16,
+         -14.38
+        ],
+        [
+         4.04,
+         -14.81
+        ],
+        [
+         4.04,
+         15.4
+        ],
+        [
+         1.17,
+         15.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125308,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "곧은 필지 경계 ×5",
+        "비탈 등고선을 따라 굽음(옆·뒤 담) ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      4.39,
+      15.75
+     ],
+     [
+      -4.39,
+      15.75
+     ],
+     [
+      -4.39,
+      9.25
+     ],
+     [
+      -2.19,
+      -15.25
+     ],
+     [
+      0.0,
+      -15.75
+     ],
+     [
+      2.19,
+      -14.75
+     ],
+     [
+      4.39,
+      -15.25
+     ]
+    ]
+   },
+   "x": -3425.35,
+   "z": 958.32,
+   "ry": -2.8915,
+   "y": null,
+   "flat_at": [
+    [
+     -3432.16,
+     942.26
+    ],
+    [
+     -3429.61,
+     941.61
+    ],
+    [
+     -3427.06,
+     940.96
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    6.8,
+    29.5
+   ],
+   "organic": {
+    "lot": 8,
+    "zone": 0.45,
+    "street": "ew",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_in_lot009",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93125009,
+    "fp": [
+     9.0,
+     12.0
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93125063,
+       "w": 5.0,
+       "d": 4.8
+      },
+      "x": -0.14,
+      "z": 1.67,
+      "ry": -0.0245
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93125064,
+       "s": 1.08364971876144
+      },
+      "x": 2.44,
+      "z": -1.15,
+      "ry": -0.0245
+     }
+    ],
+    "poly": [
+     [
+      -4.95,
+      6.82
+     ],
+     [
+      4.41,
+      6.98
+     ],
+     [
+      5.49,
+      -6.98
+     ],
+     [
+      -5.49,
+      -0.16
+     ]
+    ]
+   },
+   "x": -3454.32,
+   "z": 931.13,
+   "ry": 2.2926,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    9.0,
+    12.0
+   ],
+   "organic": {
+    "lot": 9,
+    "zone": 0.45,
+    "street": "street4",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_in_lot010",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_g",
+    "seed": 93125010,
+    "fp": [
+     18.0,
+     10.8
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "giwajip",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93125070
+      },
+      "x": -2.16,
+      "z": -1.28,
+      "ry": -0.0283
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 93125073,
+       "wall_h": 1.95
+      },
+      "x": 5.39,
+      "z": 3.6,
+      "ry": 6.4594
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         3.34,
+         -4.2
+        ],
+        [
+         8.95,
+         -3.03
+        ],
+        [
+         9.62,
+         2.85
+        ],
+        [
+         6.54,
+         3.39
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125310,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "계획된 기와 갓 담·평지 — 곧은 줄 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         4.24,
+         3.8
+        ],
+        [
+         -8.1,
+         6.0
+        ],
+        [
+         -9.61,
+         6.04
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125311,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "계획된 기와 갓 담·평지 — 곧은 줄 ×1",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         -8.32,
+         -5.25
+        ],
+        [
+         -5.51,
+         -6.04
+        ],
+        [
+         3.05,
+         -4.26
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93125312,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "계획된 기와 갓 담·평지 — 곧은 줄 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.0,
+      3.13
+     ],
+     [
+      -8.07,
+      6.35
+     ],
+     [
+      -10.0,
+      6.4
+     ],
+     [
+      -8.64,
+      -5.53
+     ],
+     [
+      -5.52,
+      -6.4
+     ],
+     [
+      9.27,
+      -3.32
+     ]
+    ]
+   },
+   "x": -3439.4,
+   "z": 922.73,
+   "ry": -1.0203,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    18.0,
+    10.8
+   ],
+   "organic": {
+    "lot": 10,
+    "zone": 0.45,
+    "street": "street4",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_town_open_in_lot011",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93125011,
+    "fp": [
+     6.7,
+     10.0
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93125077,
+       "w": 4.7,
+       "d": 4.4
+      },
+      "x": -0.09,
+      "z": 0.97,
+      "ry": -0.0062
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93125078,
+       "s": 1.06430797385983
+      },
+      "x": 2.26,
+      "z": -1.63,
+      "ry": -0.0062
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125102,
+       "ax": -3.93,
+       "az": -1.31,
+       "bx": -4.36,
+       "bz": 5.18,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125103,
+       "ax": 3.57,
+       "az": -5.99,
+       "bx": -3.93,
+       "bz": -1.31,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93125104,
+       "ax": 4.36,
+       "az": 5.99,
+       "bx": 3.57,
+       "bz": -5.99,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      4.36,
+      5.99
+     ],
+     [
+      -4.36,
+      5.18
+     ],
+     [
+      -3.93,
+      -1.31
+     ],
+     [
+      3.57,
+      -5.99
+     ]
+    ]
+   },
+   "x": -3446.08,
+   "z": 911.31,
+   "ry": -1.199,
+   "y": null,
+   "flat_at": [
+    [
+     -3451.95,
+     916.44
+    ],
+    [
+     -3452.67,
+     913.91
+    ],
+    [
+     -3453.39,
+     911.39
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    6.7,
+    10.0
+   ],
+   "organic": {
+    "lot": 11,
+    "zone": 0.45,
+    "street": "street4",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_in_lot012",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93125012,
+    "fp": [
+     18.8,
+     16.6
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93125084
+      },
+      "x": -0.3,
+      "z": 1.72,
+      "ry": 0.0114
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93125087,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 5.57,
+      "z": 7.2,
+      "ry": 6.5192
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         5.06,
+         -1.02
+        ],
+        [
+         6.62,
+         -0.59
+        ],
+        [
+         7.14,
+         -0.35
+        ],
+        [
+         7.51,
+         0.02
+        ],
+        [
+         7.74,
+         0.56
+        ],
+        [
+         8.08,
+         1.91
+        ],
+        [
+         8.95,
+         4.05
+        ],
+        [
+         9.53,
+         5.31
+        ],
+        [
+         9.64,
+         5.8
+        ],
+        [
+         9.48,
+         6.15
+        ],
+        [
+         9.01,
+         6.37
+        ],
+        [
+         6.66,
+         6.94
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93125312,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×2",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         4.48,
+         7.46
+        ],
+        [
+         2.07,
+         7.78
+        ],
+        [
+         -0.23,
+         8.6
+        ],
+        [
+         -2.44,
+         8.69
+        ],
+        [
+         -4.65,
+         8.95
+        ],
+        [
+         -7.24,
+         8.12
+        ],
+        [
+         -9.07,
+         7.77
+        ],
+        [
+         -9.5,
+         7.6
+        ],
+        [
+         -9.65,
+         7.29
+        ],
+        [
+         -9.53,
+         6.84
+        ],
+        [
+         -8.96,
+         5.69
+        ],
+        [
+         -8.24,
+         3.68
+        ],
+        [
+         -7.68,
+         1.61
+        ],
+        [
+         -6.95,
+         -0.39
+        ],
+        [
+         -6.03,
+         -2.33
+        ],
+        [
+         -5.25,
+         -4.31
+        ],
+        [
+         -4.68,
+         -6.38
+        ],
+        [
+         -4.06,
+         -8.21
+        ],
+        [
+         -4.04,
+         -8.33
+        ],
+        [
+         -4.07,
+         -8.44
+        ],
+        [
+         -4.14,
+         -8.54
+        ],
+        [
+         -4.36,
+         -8.76
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93125313,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -4.31,
+         -8.75
+        ],
+        [
+         -3.96,
+         -8.85
+        ],
+        [
+         -3.82,
+         -8.86
+        ],
+        [
+         -3.69,
+         -8.83
+        ],
+        [
+         -3.57,
+         -8.74
+        ],
+        [
+         -2.16,
+         -7.26
+        ],
+        [
+         -0.68,
+         -5.51
+        ],
+        [
+         1.11,
+         -4.07
+        ],
+        [
+         2.88,
+         -3.4
+        ],
+        [
+         3.35,
+         -3.17
+        ],
+        [
+         3.75,
+         -2.85
+        ],
+        [
+         4.1,
+         -2.44
+        ],
+        [
+         4.78,
+         -1.44
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93125314,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×3",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.38,
+      6.4
+     ],
+     [
+      -0.17,
+      8.94
+     ],
+     [
+      -4.68,
+      9.31
+     ],
+     [
+      -10.38,
+      7.85
+     ],
+     [
+      -4.14,
+      -9.03
+     ],
+     [
+      -3.33,
+      -8.23
+     ],
+     [
+      -5.89,
+      -8.65
+     ],
+     [
+      -3.63,
+      -9.31
+     ],
+     [
+      1.3,
+      -4.37
+     ],
+     [
+      3.87,
+      -3.4
+     ],
+     [
+      5.28,
+      -1.32
+     ],
+     [
+      7.78,
+      -0.63
+     ]
+    ]
+   },
+   "x": -3452.02,
+   "z": 881.18,
+   "ry": -1.6168,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    18.8,
+    16.6
+   ],
+   "organic": {
+    "lot": 12,
+    "zone": 0.45,
+    "street": "street4",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_town_open_in_lot013",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93125013,
+    "fp": [
+     11.8,
+     15.8
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93125091,
+       "w": 6.8,
+       "d": 5.3
+      },
+      "x": 0.35,
+      "z": 2.09,
+      "ry": -0.0075
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93125092,
+       "s": 0.973843797389418
+      },
+      "x": 3.75,
+      "z": -1.08,
+      "ry": -0.0075
+     }
+    ],
+    "poly": [
+     [
+      -6.23,
+      8.74
+     ],
+     [
+      6.04,
+      8.91
+     ],
+     [
+      6.88,
+      -0.05
+     ],
+     [
+      1.93,
+      -8.91
+     ],
+     [
+      -6.88,
+      1.77
+     ]
+    ]
+   },
+   "x": -3443.92,
+   "z": 887.99,
+   "ry": 0.0182,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    11.8,
+    15.8
+   ],
+   "organic": {
+    "lot": 13,
+    "zone": 0.45,
+    "street": "alley5",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_in_lot014",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93125014,
+    "fp": [
+     5.8,
+     9.5
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93125098,
+       "w": 4.1,
+       "d": 4.0
+      },
+      "x": 0.06,
+      "z": 1.25,
+      "ry": 0.0471
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93125099,
+       "s": 1.04614468347281
+      },
+      "x": 1.99,
+      "z": -1.22,
+      "ry": 0.0471
+     }
+    ],
+    "poly": [
+     [
+      3.92,
+      5.76
+     ],
+     [
+      -3.92,
+      5.73
+     ],
+     [
+      -3.39,
+      -5.76
+     ],
+     [
+      3.62,
+      -0.73
+     ]
+    ]
+   },
+   "x": -3442.04,
+   "z": 905.59,
+   "ry": 3.113,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    5.8,
+    9.5
+   ],
+   "organic": {
+    "lot": 14,
+    "zone": 0.45,
+    "street": "alley5",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_in_garden016",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 0,
+    "w": 6.9,
+    "d": 5.6
+   },
+   "x": -3451.62,
+   "z": 863.79,
+   "ry": -0.365,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden017",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 1,
+    "w": 5.2,
+    "d": 5.4
+   },
+   "x": -3447.71,
+   "z": 862.8,
+   "ry": 0.0295,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden018",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 3,
+    "w": 6.4,
+    "d": 5.3
+   },
+   "x": -3483.62,
+   "z": 871.53,
+   "ry": 0.1196,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat019",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 6,
+    "w": 4.12589315278456,
+    "d": 3.67817339692265
+   },
+   "x": -3445.28,
+   "z": 871.19,
+   "ry": 0.0049,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree020",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 7,
+    "s": 0.971296976064332
+   },
+   "x": -3517.5,
+   "z": 882.07,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat021",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 8,
+    "w": 5.41550130024552,
+    "d": 3.88740943288431
+   },
+   "x": -3510.7,
+   "z": 878.84,
+   "ry": -0.1272,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat022",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 9,
+    "w": 4.47312401840463,
+    "d": 3.8932369611226
+   },
+   "x": -3502.76,
+   "z": 879.84,
+   "ry": -0.1801,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat023",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 10,
+    "w": 5.92034863028675,
+    "d": 3.96370108919218
+   },
+   "x": -3498.04,
+   "z": 882.97,
+   "ry": -0.064,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree024",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 12,
+    "s": 1.03979683804791
+   },
+   "x": -3477.78,
+   "z": 878.69,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden025",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 14,
+    "w": 5.1,
+    "d": 4.2
+   },
+   "x": -3526.84,
+   "z": 888.16,
+   "ry": 0.1099,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat026",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 15,
+    "w": 5.69969264278188,
+    "d": 3.34033492477611
+   },
+   "x": -3523.07,
+   "z": 884.04,
+   "ry": 0.0309,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden027",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 16,
+    "w": 4.8,
+    "d": 4.5
+   },
+   "x": -3516.21,
+   "z": 884.56,
+   "ry": 0.1011,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat028",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 19,
+    "w": 5.4498798828572,
+    "d": 3.08223432311788
+   },
+   "x": -3553.76,
+   "z": 893.2,
+   "ry": -0.1739,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden029",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 21,
+    "w": 4.7,
+    "d": 5.6
+   },
+   "x": -3537.22,
+   "z": 895.01,
+   "ry": 0.3035,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree030",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 24,
+    "s": 1.03419317908119
+   },
+   "x": -3514.26,
+   "z": 897.99,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat031",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 26,
+    "w": 5.81038797087967,
+    "d": 3.61817732965574
+   },
+   "x": -3563.4,
+   "z": 899.47,
+   "ry": 0.0262,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat032",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 27,
+    "w": 4.78775828471407,
+    "d": 3.58212316827849
+   },
+   "x": -3560.05,
+   "z": 901.52,
+   "ry": -0.2918,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden033",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 28,
+    "w": 5.5,
+    "d": 4.2
+   },
+   "x": -3551.93,
+   "z": 899.76,
+   "ry": -0.2097,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat034",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 32,
+    "w": 4.41577153140679,
+    "d": 4.14393918262795
+   },
+   "x": -3512.0,
+   "z": 902.04,
+   "ry": 0.1322,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden035",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 34,
+    "w": 5.0,
+    "d": 4.7
+   },
+   "x": -3552.25,
+   "z": 908.21,
+   "ry": -0.0198,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden036",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 35,
+    "w": 6.0,
+    "d": 4.3
+   },
+   "x": -3434.58,
+   "z": 910.59,
+   "ry": -0.1448,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden037",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 36,
+    "w": 5.8,
+    "d": 5.3
+   },
+   "x": -3556.3,
+   "z": 914.02,
+   "ry": -0.1255,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden038",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 37,
+    "w": 6.7,
+    "d": 5.8
+   },
+   "x": -3431.13,
+   "z": 917.95,
+   "ry": -0.0582,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden039",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 38,
+    "w": 6.0,
+    "d": 5.8
+   },
+   "x": -3555.53,
+   "z": 927.42,
+   "ry": 0.0575,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden040",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 39,
+    "w": 6.3,
+    "d": 5.5
+   },
+   "x": -3507.29,
+   "z": 924.86,
+   "ry": 0.2379,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden041",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 41,
+    "w": 6.7,
+    "d": 5.4
+   },
+   "x": -3549.68,
+   "z": 934.67,
+   "ry": -0.0967,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat042",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 45,
+    "w": 5.47803744534031,
+    "d": 3.21890309611335
+   },
+   "x": -3467.21,
+   "z": 930.36,
+   "ry": 0.2194,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden043",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 47,
+    "w": 4.5,
+    "d": 5.1
+   },
+   "x": -3554.5,
+   "z": 940.49,
+   "ry": 0.1948,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden044",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 48,
+    "w": 5.7,
+    "d": 4.8
+   },
+   "x": -3547.32,
+   "z": 942.14,
+   "ry": 0.1557,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden045",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 49,
+    "w": 6.8,
+    "d": 5.5
+   },
+   "x": -3546.02,
+   "z": 938.43,
+   "ry": -0.1149,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree046",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 50,
+    "s": 1.13073312890483
+   },
+   "x": -3481.93,
+   "z": 938.03,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden047",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 52,
+    "w": 5.0,
+    "d": 5.4
+   },
+   "x": -3465.95,
+   "z": 939.65,
+   "ry": -0.1389,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden048",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 56,
+    "w": 4.9,
+    "d": 5.9
+   },
+   "x": -3545.2,
+   "z": 944.69,
+   "ry": 0.0134,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden049",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 57,
+    "w": 4.9,
+    "d": 5.1
+   },
+   "x": -3493.12,
+   "z": 949.54,
+   "ry": 0.0289,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat050",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 62,
+    "w": 4.78717583278194,
+    "d": 3.68398822713643
+   },
+   "x": -3418.45,
+   "z": 961.37,
+   "ry": 0.1907,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden051",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 63,
+    "w": 5.7,
+    "d": 5.0
+   },
+   "x": -3503.7,
+   "z": 966.94,
+   "ry": 0.2648,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden052",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 65,
+    "w": 4.6,
+    "d": 4.5
+   },
+   "x": -3469.85,
+   "z": 969.99,
+   "ry": -0.2369,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden053",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 68,
+    "w": 5.7,
+    "d": 5.5
+   },
+   "x": -3467.29,
+   "z": 978.27,
+   "ry": -0.1279,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden054",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 74,
+    "w": 6.7,
+    "d": 4.5
+   },
+   "x": -3533.49,
+   "z": 985.5,
+   "ry": 0.2462,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden055",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 75,
+    "w": 5.5,
+    "d": 4.8
+   },
+   "x": -3492.15,
+   "z": 987.53,
+   "ry": 0.1526,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat056",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 78,
+    "w": 5.96123516373336,
+    "d": 3.74224618384615
+   },
+   "x": -3449.73,
+   "z": 981.45,
+   "ry": 0.2653,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree057",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 79,
+    "s": 1.03391991407843
+   },
+   "x": -3448.76,
+   "z": 985.46,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree058",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 82,
+    "s": 1.03263306114823
+   },
+   "x": -3419.56,
+   "z": 982.22,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden059",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 86,
+    "w": 4.5,
+    "d": 4.8
+   },
+   "x": -3487.84,
+   "z": 989.04,
+   "ry": -0.333,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden060",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 87,
+    "w": 4.7,
+    "d": 4.3
+   },
+   "x": -3484.53,
+   "z": 992.61,
+   "ry": -0.3193,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_tree061",
+   "kit": "nature/persimmon",
+   "params": {
+    "seed": 90,
+    "s": 1.08189911515219
+   },
+   "x": -3450.85,
+   "z": 993.88,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat062",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 91,
+    "w": 5.24605513783172,
+    "d": 3.59007413350046
+   },
+   "x": -3447.54,
+   "z": 994.38,
+   "ry": 0.2801,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_teotbat063",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 95,
+    "w": 5.06015798263252,
+    "d": 3.33607750665396
+   },
+   "x": -3537.3,
+   "z": 998.72,
+   "ry": 0.1705,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden064",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 96,
+    "w": 6.2,
+    "d": 5.1
+   },
+   "x": -3528.9,
+   "z": 1000.54,
+   "ry": 0.0503,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden065",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 98,
+    "w": 6.3,
+    "d": 6.0
+   },
+   "x": -3466.14,
+   "z": 998.54,
+   "ry": -0.3958,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden066",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 99,
+    "w": 6.0,
+    "d": 5.9
+   },
+   "x": -3532.11,
+   "z": 1008.5,
+   "ry": -0.3942,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden067",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 101,
+    "w": 5.4,
+    "d": 4.0
+   },
+   "x": -3522.02,
+   "z": 1010.48,
+   "ry": 0.1057,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden068",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 105,
+    "w": 5.6,
+    "d": 5.6
+   },
+   "x": -3530.63,
+   "z": 1016.43,
+   "ry": 0.2598,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_in_garden069",
+   "kit": "nature/garden_plot",
+   "params": {
+    "seed": 106,
+    "w": 5.0,
+    "d": 5.1
+   },
+   "x": -3520.33,
+   "z": 1013.45,
+   "ry": 0.3425,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_lot000",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93132000,
+    "fp": [
+     21.3,
+     31.0
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93132000,
+       "w": 8.0,
+       "d": 8.0
+      },
+      "x": 1.66,
+      "z": -4.14,
+      "ry": -0.0394
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132001,
+       "s": 0.982186405989341
+      },
+      "x": 8.66,
+      "z": -11.97,
+      "ry": -0.0394
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132091,
+       "ax": -11.64,
+       "az": -6.5,
+       "bx": -11.64,
+       "bz": 16.5,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132092,
+       "ax": 0.0,
+       "az": -12.0,
+       "bx": -11.64,
+       "bz": -6.5,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132093,
+       "ax": 4.65,
+       "az": -16.0,
+       "bx": 0.0,
+       "bz": -12.0,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      11.64,
+      16.5
+     ],
+     [
+      -11.64,
+      16.5
+     ],
+     [
+      -11.64,
+      -6.5
+     ],
+     [
+      0.0,
+      -12.0
+     ],
+     [
+      4.65,
+      -16.0
+     ],
+     [
+      6.98,
+      -16.5
+     ],
+     [
+      11.64,
+      -11.0
+     ]
+    ]
+   },
+   "x": -3436.34,
+   "z": 1073.74,
+   "ry": -1.3207,
+   "y": null,
+   "flat_at": [
+    [
+     -3452.08,
+     1084.85
+    ],
+    [
+     -3453.81,
+     1078.08
+    ],
+    [
+     -3455.53,
+     1071.32
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    21.3,
+    31.0
+   ],
+   "organic": {
+    "lot": 0,
+    "zone": 0.2,
+    "street": "ns",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot001",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93132001,
+    "fp": [
+     11.7,
+     21.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132007
+      },
+      "x": -0.29,
+      "z": -5.29,
+      "ry": 0.0273
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132057
+      },
+      "x": 3.33,
+      "z": 4.59,
+      "ry": -1.5708
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132092,
+       "ax": -6.85,
+       "az": -9.0,
+       "bx": -6.85,
+       "bz": 11.5,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132093,
+       "ax": -4.57,
+       "az": -8.5,
+       "bx": -6.85,
+       "bz": -9.0,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132094,
+       "ax": -2.28,
+       "az": -10.0,
+       "bx": -4.57,
+       "bz": -8.5,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132095,
+       "ax": 0.0,
+       "az": -9.5,
+       "bx": -2.28,
+       "bz": -10.0,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132096,
+       "ax": 4.56,
+       "az": -11.5,
+       "bx": 0.0,
+       "bz": -9.5,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132097,
+       "ax": 6.85,
+       "az": -11.5,
+       "bx": 4.56,
+       "bz": -11.5,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132098,
+       "ax": 6.85,
+       "az": 11.5,
+       "bx": 6.85,
+       "bz": -11.5,
+       "drop": 1.0,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "sarip",
+       "seed": 93132010
+      },
+      "x": 0.0,
+      "z": 11.15,
+      "ry": 6.2832
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -6.5,
+         -8.56
+        ],
+        [
+         -5.3,
+         -8.3
+        ],
+        [
+         -4.78,
+         -8.25
+        ],
+        [
+         -4.29,
+         -8.34
+        ],
+        [
+         -3.81,
+         -8.58
+        ],
+        [
+         -2.85,
+         -9.21
+        ],
+        [
+         -2.42,
+         -9.42
+        ],
+        [
+         -1.96,
+         -9.51
+        ],
+        [
+         -1.47,
+         -9.46
+        ],
+        [
+         -0.57,
+         -9.27
+        ],
+        [
+         -0.17,
+         -9.21
+        ],
+        [
+         0.22,
+         -9.23
+        ],
+        [
+         0.62,
+         -9.32
+        ],
+        [
+         2.44,
+         -9.91
+        ],
+        [
+         3.99,
+         -10.78
+        ],
+        [
+         4.43,
+         -10.99
+        ],
+        [
+         4.89,
+         -11.11
+        ],
+        [
+         5.38,
+         -11.15
+        ],
+        [
+         6.05,
+         -11.15
+        ],
+        [
+         6.29,
+         -11.1
+        ],
+        [
+         6.43,
+         -10.96
+        ],
+        [
+         6.46,
+         -10.71
+        ],
+        [
+         6.31,
+         -9.12
+        ],
+        [
+         6.49,
+         -7.1
+        ],
+        [
+         6.48,
+         -5.07
+        ],
+        [
+         6.3,
+         -3.04
+        ],
+        [
+         6.25,
+         -1.01
+        ],
+        [
+         6.42,
+         1.01
+        ],
+        [
+         6.52,
+         3.04
+        ],
+        [
+         6.38,
+         5.07
+        ],
+        [
+         6.24,
+         7.1
+        ],
+        [
+         6.33,
+         9.12
+        ],
+        [
+         6.43,
+         10.34
+        ],
+        [
+         6.38,
+         10.79
+        ],
+        [
+         6.14,
+         11.05
+        ],
+        [
+         5.68,
+         11.14
+        ],
+        [
+         3.66,
+         11.13
+        ],
+        [
+         0.83,
+         11.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132301,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×4",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "흙·돌담 모서리를 둥글게 ×6"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -0.83,
+         11.15
+        ],
+        [
+         -3.66,
+         11.1
+        ],
+        [
+         -6.5,
+         11.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132302,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      6.85,
+      11.5
+     ],
+     [
+      -6.85,
+      11.5
+     ],
+     [
+      -6.85,
+      -9.0
+     ],
+     [
+      -4.57,
+      -8.5
+     ],
+     [
+      -2.28,
+      -10.0
+     ],
+     [
+      0.0,
+      -9.5
+     ],
+     [
+      4.56,
+      -11.5
+     ],
+     [
+      6.85,
+      -11.5
+     ]
+    ]
+   },
+   "x": -3445.76,
+   "z": 1057.07,
+   "ry": -1.3208,
+   "y": null,
+   "flat_at": [
+    [
+     -3457.33,
+     1064.3
+    ],
+    [
+     -3458.35,
+     1060.32
+    ],
+    [
+     -3459.36,
+     1056.33
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    11.7,
+    21.0
+   ],
+   "organic": {
+    "lot": 1,
+    "zone": 0.2,
+    "street": "ns",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot002",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93132002,
+    "fp": [
+     21.0,
+     19.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132014
+      },
+      "x": 2.88,
+      "z": -0.12,
+      "ry": -0.005
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132045,
+       "s": 0.869102630845737
+      },
+      "x": 7.12,
+      "z": 5.79,
+      "ry": 4.7124
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93132075,
+       "variant": "broadleaf",
+       "h": 9.2345464953687
+      },
+      "x": -7.45,
+      "z": 1.81,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132093,
+       "ax": -11.52,
+       "az": 3.5,
+       "bx": -11.52,
+       "bz": 10.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132094,
+       "ax": 2.3,
+       "az": -10.0,
+       "bx": -11.52,
+       "bz": 3.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132095,
+       "ax": 4.6,
+       "az": -9.5,
+       "bx": 2.3,
+       "bz": -10.0,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132096,
+       "ax": 6.91,
+       "az": -10.5,
+       "bx": 4.6,
+       "bz": -9.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132097,
+       "ax": 9.21,
+       "az": -9.5,
+       "bx": 6.91,
+       "bz": -10.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132098,
+       "ax": 11.52,
+       "az": -10.0,
+       "bx": 9.21,
+       "bz": -9.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -0.83,
+         10.15
+        ],
+        [
+         -2.9,
+         10.16
+        ],
+        [
+         -4.96,
+         10.09
+        ],
+        [
+         -7.03,
+         9.91
+        ],
+        [
+         -9.1,
+         9.94
+        ],
+        [
+         -10.34,
+         10.07
+        ],
+        [
+         -10.8,
+         10.02
+        ],
+        [
+         -11.07,
+         9.78
+        ],
+        [
+         -11.17,
+         9.32
+        ],
+        [
+         -11.18,
+         7.98
+        ],
+        [
+         -11.01,
+         5.82
+        ],
+        [
+         -11.1,
+         4.49
+        ],
+        [
+         -11.07,
+         3.97
+        ],
+        [
+         -10.87,
+         3.52
+        ],
+        [
+         -10.5,
+         3.13
+        ],
+        [
+         -9.49,
+         2.34
+        ],
+        [
+         -8.11,
+         0.74
+        ],
+        [
+         -6.65,
+         -0.78
+        ],
+        [
+         -5.02,
+         -2.13
+        ],
+        [
+         -3.44,
+         -3.54
+        ],
+        [
+         -2.04,
+         -5.12
+        ],
+        [
+         -0.62,
+         -6.68
+        ],
+        [
+         0.98,
+         -8.07
+        ],
+        [
+         1.84,
+         -9.0
+        ],
+        [
+         2.25,
+         -9.32
+        ],
+        [
+         2.71,
+         -9.47
+        ],
+        [
+         3.24,
+         -9.44
+        ],
+        [
+         4.08,
+         -9.26
+        ],
+        [
+         4.45,
+         -9.21
+        ],
+        [
+         4.8,
+         -9.25
+        ],
+        [
+         5.17,
+         -9.36
+        ],
+        [
+         6.21,
+         -9.82
+        ],
+        [
+         6.67,
+         -9.95
+        ],
+        [
+         7.13,
+         -9.95
+        ],
+        [
+         7.6,
+         -9.82
+        ],
+        [
+         8.55,
+         -9.41
+        ],
+        [
+         8.97,
+         -9.27
+        ],
+        [
+         9.39,
+         -9.23
+        ],
+        [
+         9.84,
+         -9.28
+        ],
+        [
+         10.64,
+         -9.45
+        ],
+        [
+         10.92,
+         -9.46
+        ],
+        [
+         11.08,
+         -9.32
+        ],
+        [
+         11.11,
+         -9.03
+        ],
+        [
+         10.94,
+         -7.38
+        ],
+        [
+         10.95,
+         -5.19
+        ],
+        [
+         11.15,
+         -2.99
+        ],
+        [
+         11.15,
+         -0.8
+        ],
+        [
+         10.95,
+         1.39
+        ],
+        [
+         10.94,
+         3.58
+        ],
+        [
+         11.13,
+         5.77
+        ],
+        [
+         11.16,
+         7.96
+        ],
+        [
+         11.16,
+         9.32
+        ],
+        [
+         11.08,
+         9.77
+        ],
+        [
+         10.81,
+         10.01
+        ],
+        [
+         10.34,
+         10.06
+        ],
+        [
+         9.1,
+         9.92
+        ],
+        [
+         7.03,
+         9.93
+        ],
+        [
+         4.96,
+         10.12
+        ],
+        [
+         2.9,
+         10.15
+        ],
+        [
+         0.83,
+         10.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132302,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "곧은 필지 경계 ×4",
+        "흙·돌담 모서리를 둥글게 ×8"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      11.52,
+      10.5
+     ],
+     [
+      -11.52,
+      10.5
+     ],
+     [
+      -11.52,
+      3.5
+     ],
+     [
+      2.3,
+      -10.0
+     ],
+     [
+      4.6,
+      -9.5
+     ],
+     [
+      6.91,
+      -10.5
+     ],
+     [
+      9.21,
+      -9.5
+     ],
+     [
+      11.52,
+      -10.0
+     ]
+    ]
+   },
+   "x": -3451.27,
+   "z": 1039.53,
+   "ry": -1.3208,
+   "y": null,
+   "flat_at": [
+    [
+     -3461.23,
+     1048.88
+    ],
+    [
+     -3462.94,
+     1042.19
+    ],
+    [
+     -3464.65,
+     1035.49
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    21.0,
+    19.0
+   ],
+   "organic": {
+    "lot": 2,
+    "zone": 0.39,
+    "street": "ns",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot003",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93132003,
+    "fp": [
+     18.5,
+     22.5
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93132021,
+       "w": 8.0,
+       "d": 7.6
+      },
+      "x": -1.6,
+      "z": 1.05,
+      "ry": -0.0215
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132022,
+       "s": 0.802225903444924
+      },
+      "x": 4.36,
+      "z": -3.39,
+      "ry": -0.0215
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132094,
+       "ax": -10.26,
+       "az": -12.25,
+       "bx": -10.26,
+       "bz": 12.25,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.26,
+      12.25
+     ],
+     [
+      -10.26,
+      12.25
+     ],
+     [
+      -10.26,
+      -12.25
+     ],
+     [
+      -7.98,
+      -11.75
+     ],
+     [
+      10.26,
+      4.75
+     ]
+    ]
+   },
+   "x": -3514.69,
+   "z": 1047.7,
+   "ry": -2.9136,
+   "y": null,
+   "flat_at": [
+    [
+     -3524.0,
+     1035.76
+    ],
+    [
+     -3518.0,
+     1034.37
+    ],
+    [
+     -3512.01,
+     1032.98
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    18.5,
+    22.5
+   ],
+   "organic": {
+    "lot": 3,
+    "zone": 0.2,
+    "street": "out_ew",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot004",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93132004,
+    "fp": [
+     20.2,
+     22.5
+    ],
+    "pieces": [
+     {
+      "tag": "anchae",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132028
+      },
+      "x": 1.22,
+      "z": 1.82,
+      "ry": 0.0361
+     },
+     {
+      "tag": "heotgan",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132039
+      },
+      "x": -6.48,
+      "z": 6.28,
+      "ry": 1.6069
+     },
+     {
+      "tag": "dwitgan",
+      "kit": "village/dwitgan",
+      "params": {
+       "seed": 931320283,
+       "s": 1.4
+      },
+      "x": 9.71,
+      "z": 10.04,
+      "ry": -1.5347
+     },
+     {
+      "tag": "teotbat",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 931320284,
+       "w": 4.2,
+       "d": 3.0
+      },
+      "x": 7.91,
+      "z": 7.11,
+      "ry": 0.0361
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132095,
+       "ax": -11.09,
+       "az": 1.75,
+       "bx": -11.09,
+       "bz": 12.25,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -10.74,
+         1.94
+        ],
+        [
+         -8.94,
+         0.82
+        ],
+        [
+         -7.06,
+         -0.15
+        ],
+        [
+         -5.24,
+         -1.24
+        ],
+        [
+         -3.54,
+         -2.52
+        ],
+        [
+         -1.8,
+         -3.72
+        ],
+        [
+         0.08,
+         -4.71
+        ],
+        [
+         1.93,
+         -5.75
+        ],
+        [
+         3.64,
+         -7.0
+        ],
+        [
+         5.36,
+         -8.24
+        ],
+        [
+         7.21,
+         -9.27
+        ],
+        [
+         9.09,
+         -10.27
+        ],
+        [
+         10.08,
+         -11.08
+        ],
+        [
+         10.44,
+         -11.28
+        ],
+        [
+         10.65,
+         -11.18
+        ],
+        [
+         10.71,
+         -10.76
+        ],
+        [
+         10.68,
+         -9.48
+        ],
+        [
+         10.5,
+         -7.34
+        ],
+        [
+         10.54,
+         -5.2
+        ],
+        [
+         10.73,
+         -3.06
+        ],
+        [
+         10.71,
+         -0.93
+        ],
+        [
+         10.52,
+         1.21
+        ],
+        [
+         10.51,
+         3.35
+        ],
+        [
+         10.7,
+         5.49
+        ],
+        [
+         10.74,
+         7.62
+        ],
+        [
+         10.56,
+         9.76
+        ],
+        [
+         10.67,
+         11.04
+        ],
+        [
+         10.61,
+         11.51
+        ],
+        [
+         10.36,
+         11.76
+        ],
+        [
+         9.89,
+         11.81
+        ],
+        [
+         8.3,
+         11.65
+        ],
+        [
+         5.85,
+         11.75
+        ],
+        [
+         3.41,
+         11.9
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132304,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         1.75,
+         11.9
+        ],
+        [
+         -0.33,
+         11.74
+        ],
+        [
+         -2.42,
+         11.91
+        ],
+        [
+         -4.5,
+         11.85
+        ],
+        [
+         -6.58,
+         11.67
+        ],
+        [
+         -8.66,
+         11.68
+        ],
+        [
+         -10.74,
+         11.9
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132305,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      11.09,
+      12.25
+     ],
+     [
+      -11.09,
+      12.25
+     ],
+     [
+      -11.09,
+      1.75
+     ],
+     [
+      11.09,
+      -12.25
+     ]
+    ]
+   },
+   "x": -3493.9,
+   "z": 1042.87,
+   "ry": -2.9136,
+   "y": null,
+   "flat_at": [
+    [
+     -3503.49,
+     1030.98
+    ],
+    [
+     -3497.0,
+     1029.48
+    ],
+    [
+     -3490.52,
+     1027.98
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    20.2,
+    22.5
+   ],
+   "organic": {
+    "lot": 4,
+    "zone": 0.28,
+    "street": "out_ew",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot005",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93132005,
+    "fp": [
+     6.3,
+     8.5
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93132035,
+       "w": 4.4,
+       "d": 4.0
+      },
+      "x": 0.0,
+      "z": 0.15,
+      "ry": -0.0314
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132036,
+       "s": 0.860454328055494
+      },
+      "x": 2.26,
+      "z": -2.0,
+      "ry": -0.0314
+     }
+    ],
+    "poly": [
+     [
+      4.15,
+      5.25
+     ],
+     [
+      -4.15,
+      5.25
+     ],
+     [
+      -4.15,
+      -1.75
+     ],
+     [
+      0.0,
+      -2.75
+     ],
+     [
+      4.15,
+      -5.25
+     ]
+    ]
+   },
+   "x": -3480.63,
+   "z": 1032.61,
+   "ry": -2.9137,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    6.3,
+    8.5
+   ],
+   "organic": {
+    "lot": 5,
+    "zone": 0.59,
+    "street": "out_ew",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot006",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_c",
+    "seed": 93132006,
+    "fp": [
+     18.4,
+     19.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132042
+      },
+      "x": -2.68,
+      "z": -0.6,
+      "ry": -0.0059
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93132053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -7.19,
+      "z": 7.12,
+      "ry": 4.7124
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93132053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 3.78,
+      "z": 7.65,
+      "ry": 4.7124
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93132045,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 0.0,
+      "z": 10.15,
+      "ry": 6.2832
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         2.78,
+         -3.4
+        ],
+        [
+         8.97,
+         3.19
+        ],
+        [
+         9.46,
+         3.85
+        ],
+        [
+         9.76,
+         4.59
+        ],
+        [
+         9.86,
+         5.44
+        ],
+        [
+         9.86,
+         8.85
+        ],
+        [
+         9.72,
+         9.57
+        ],
+        [
+         9.3,
+         10.0
+        ],
+        [
+         8.56,
+         10.15
+        ],
+        [
+         1.12,
+         10.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93132306,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -1.12,
+         10.15
+        ],
+        [
+         -9.86,
+         10.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93132307,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -9.86,
+         -6.79
+        ],
+        [
+         -4.64,
+         -9.47
+        ],
+        [
+         -3.9,
+         -9.7
+        ],
+        [
+         -3.23,
+         -9.59
+        ],
+        [
+         -2.59,
+         -9.12
+        ],
+        [
+         2.64,
+         -3.55
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93132308,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.21,
+      10.5
+     ],
+     [
+      -10.21,
+      10.5
+     ],
+     [
+      -10.21,
+      -7.0
+     ],
+     [
+      -3.4,
+      -10.5
+     ],
+     [
+      10.21,
+      4.0
+     ]
+    ]
+   },
+   "x": -3446.62,
+   "z": 1029.21,
+   "ry": -2.8697,
+   "y": null,
+   "flat_at": [
+    [
+     -3455.85,
+     1019.33
+    ],
+    [
+     -3449.95,
+     1017.68
+    ],
+    [
+     -3444.05,
+     1016.04
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    18.4,
+    19.0
+   ],
+   "organic": {
+    "lot": 6,
+    "zone": 0.66,
+    "street": "out_ew",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot007",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93132007,
+    "fp": [
+     21.6,
+     15.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132049
+      },
+      "x": 5.41,
+      "z": -0.13,
+      "ry": 0.027
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132093
+      },
+      "x": -4.67,
+      "z": 3.88,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         11.44,
+         8.4
+        ],
+        [
+         9.38,
+         8.25
+        ],
+        [
+         7.31,
+         8.14
+        ],
+        [
+         5.25,
+         8.28
+        ],
+        [
+         3.18,
+         8.42
+        ],
+        [
+         1.12,
+         8.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93132307,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -1.12,
+         8.4
+        ],
+        [
+         -3.18,
+         8.21
+        ],
+        [
+         -5.25,
+         8.15
+        ],
+        [
+         -7.31,
+         8.31
+        ],
+        [
+         -9.37,
+         8.42
+        ],
+        [
+         -10.61,
+         8.41
+        ],
+        [
+         -11.06,
+         8.31
+        ],
+        [
+         -11.31,
+         8.04
+        ],
+        [
+         -11.37,
+         7.58
+        ],
+        [
+         -11.2,
+         5.42
+        ],
+        [
+         -11.36,
+         3.5
+        ],
+        [
+         -11.3,
+         2.86
+        ],
+        [
+         -11.03,
+         2.33
+        ],
+        [
+         -10.52,
+         1.91
+        ],
+        [
+         -9.14,
+         1.12
+        ],
+        [
+         -7.75,
+         0.15
+        ],
+        [
+         -7.22,
+         -0.15
+        ],
+        [
+         -6.65,
+         -0.34
+        ],
+        [
+         -6.02,
+         -0.4
+        ],
+        [
+         -5.16,
+         -0.4
+        ],
+        [
+         -4.8,
+         -0.44
+        ],
+        [
+         -4.46,
+         -0.56
+        ],
+        [
+         -4.15,
+         -0.77
+        ],
+        [
+         -2.19,
+         -2.44
+        ],
+        [
+         -0.22,
+         -3.03
+        ],
+        [
+         1.77,
+         -3.55
+        ],
+        [
+         3.78,
+         -3.96
+        ],
+        [
+         5.75,
+         -4.57
+        ],
+        [
+         7.66,
+         -5.33
+        ],
+        [
+         8.84,
+         -5.7
+        ],
+        [
+         9.33,
+         -5.9
+        ],
+        [
+         9.78,
+         -6.17
+        ],
+        [
+         10.18,
+         -6.54
+        ],
+        [
+         11.44,
+         -7.87
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93132308,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×5"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      11.79,
+      8.75
+     ],
+     [
+      -11.79,
+      8.75
+     ],
+     [
+      -11.79,
+      2.25
+     ],
+     [
+      -7.07,
+      -0.75
+     ],
+     [
+      -4.72,
+      -0.75
+     ],
+     [
+      -2.36,
+      -2.75
+     ],
+     [
+      9.43,
+      -6.25
+     ],
+     [
+      11.79,
+      -8.75
+     ]
+    ]
+   },
+   "x": -3425.9,
+   "z": 1021.61,
+   "ry": -2.8696,
+   "y": null,
+   "flat_at": [
+    [
+     -3435.56,
+     1013.67
+    ],
+    [
+     -3428.75,
+     1011.77
+    ],
+    [
+     -3421.94,
+     1009.87
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    21.6,
+    15.5
+   ],
+   "organic": {
+    "lot": 7,
+    "zone": 0.43,
+    "street": "out_ew",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot008",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93132008,
+    "fp": [
+     14.0,
+     8.5
+    ],
+    "pieces": [
+     {
+      "tag": "house",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132056
+      },
+      "x": -0.68,
+      "z": -1.28,
+      "ry": -0.0167
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132102,
+       "ax": 8.0,
+       "az": -1.25,
+       "bx": 3.43,
+       "bz": -4.75,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132103,
+       "ax": 8.0,
+       "az": 5.25,
+       "bx": 8.0,
+       "bz": -1.25,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -7.65,
+         4.9
+        ],
+        [
+         -7.54,
+         2.72
+        ],
+        [
+         -7.67,
+         0.54
+        ],
+        [
+         -7.66,
+         -0.77
+        ],
+        [
+         -7.6,
+         -1.33
+        ],
+        [
+         -7.44,
+         -1.86
+        ],
+        [
+         -7.17,
+         -2.38
+        ],
+        [
+         -6.02,
+         -4.15
+        ],
+        [
+         -5.65,
+         -4.55
+        ],
+        [
+         -5.2,
+         -4.78
+        ],
+        [
+         -4.65,
+         -4.82
+        ],
+        [
+         -3.33,
+         -4.73
+        ],
+        [
+         -1.13,
+         -4.41
+        ],
+        [
+         1.08,
+         -4.32
+        ],
+        [
+         2.41,
+         -4.37
+        ],
+        [
+         2.98,
+         -4.33
+        ],
+        [
+         3.5,
+         -4.15
+        ],
+        [
+         3.98,
+         -3.84
+        ],
+        [
+         5.4,
+         -2.64
+        ],
+        [
+         7.65,
+         -1.08
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132308,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      8.0,
+      5.25
+     ],
+     [
+      -8.0,
+      5.25
+     ],
+     [
+      -8.0,
+      -1.75
+     ],
+     [
+      -5.71,
+      -5.25
+     ],
+     [
+      3.43,
+      -4.75
+     ],
+     [
+      8.0,
+      -1.25
+     ]
+    ]
+   },
+   "x": -3389.48,
+   "z": 1007.82,
+   "ry": -2.8697,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    14.0,
+    8.5
+   ],
+   "organic": {
+    "lot": 8,
+    "zone": 0.2,
+    "street": "out_ew",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot009",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93132009,
+    "fp": [
+     12.3,
+     8.4
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93132063,
+       "w": 8.0,
+       "d": 4.0
+      },
+      "x": 0.22,
+      "z": -0.87,
+      "ry": -0.0237
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132105,
+       "ax": 1.04,
+       "az": -3.46,
+       "bx": -1.45,
+       "bz": -3.66,
+       "drop": 1.7,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132106,
+       "ax": 1.15,
+       "az": -3.56,
+       "bx": -1.45,
+       "bz": -3.66,
+       "drop": 1.7,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_11",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132110,
+       "ax": 2.46,
+       "az": -3.46,
+       "bx": -1.2,
+       "bz": -3.55,
+       "drop": 1.7,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_12",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132111,
+       "ax": 2.46,
+       "az": -3.46,
+       "bx": -1.44,
+       "bz": -3.79,
+       "drop": 1.7,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_13",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132112,
+       "ax": -1.44,
+       "az": -3.79,
+       "bx": -7.14,
+       "bz": 0.27,
+       "drop": 1.7,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -7.14,
+      0.27
+     ],
+     [
+      -5.72,
+      2.29
+     ],
+     [
+      -0.9,
+      4.8
+     ],
+     [
+      1.51,
+      5.18
+     ],
+     [
+      4.27,
+      3.93
+     ],
+     [
+      7.14,
+      0.9
+     ],
+     [
+      1.04,
+      -3.46
+     ],
+     [
+      -1.45,
+      -3.66
+     ],
+     [
+      1.15,
+      -3.56
+     ],
+     [
+      3.17,
+      -5.18
+     ],
+     [
+      0.19,
+      -2.86
+     ],
+     [
+      -1.2,
+      -3.55
+     ],
+     [
+      2.46,
+      -3.46
+     ],
+     [
+      -1.44,
+      -3.79
+     ]
+    ]
+   },
+   "x": -3467.62,
+   "z": 1084.27,
+   "ry": -1.8927,
+   "y": null,
+   "flat_at": [
+    [
+     -3466.08,
+     1076.05
+    ],
+    [
+     -3466.79,
+     1076.26
+    ],
+    [
+     -3467.5,
+     1076.47
+    ],
+    [
+     -3469.58,
+     1077.61
+    ],
+    [
+     -3470.75,
+     1078.74
+    ],
+    [
+     -3471.92,
+     1079.88
+    ],
+    [
+     -3473.55,
+     1081.87
+    ],
+    [
+     -3473.89,
+     1082.52
+    ],
+    [
+     -3474.22,
+     1083.17
+    ],
+    [
+     -3474.44,
+     1084.86
+    ],
+    [
+     -3474.35,
+     1085.77
+    ],
+    [
+     -3474.25,
+     1086.67
+    ],
+    [
+     -3473.45,
+     1088.78
+    ],
+    [
+     -3472.86,
+     1089.89
+    ],
+    [
+     -3472.27,
+     1090.99
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    12.3,
+    8.4
+   ],
+   "organic": {
+    "lot": 9,
+    "zone": 0.2,
+    "street": "street2",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot010",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "jungnong",
+    "seed": 93132010,
+    "fp": [
+     19.3,
+     16.7
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132070
+      },
+      "x": -1.18,
+      "z": -1.39,
+      "ry": -0.0051
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132109,
+       "ax": 10.67,
+       "az": 2.58,
+       "bx": 10.19,
+       "bz": -1.11,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_10",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132110,
+       "ax": 7.29,
+       "az": 8.71,
+       "bx": 10.67,
+       "bz": 2.58,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -3.41,
+         8.2
+        ],
+        [
+         -4.34,
+         8.62
+        ],
+        [
+         -4.71,
+         8.7
+        ],
+        [
+         -5.02,
+         8.59
+        ],
+        [
+         -5.26,
+         8.28
+        ],
+        [
+         -5.92,
+         6.9
+        ],
+        [
+         -6.87,
+         4.9
+        ],
+        [
+         -8.16,
+         3.08
+        ],
+        [
+         -8.71,
+         1.03
+        ],
+        [
+         -9.09,
+         -1.07
+        ],
+        [
+         -9.49,
+         -3.17
+        ],
+        [
+         -9.96,
+         -4.37
+        ],
+        [
+         -10.06,
+         -4.87
+        ],
+        [
+         -9.95,
+         -5.32
+        ],
+        [
+         -9.62,
+         -5.72
+        ],
+        [
+         -8.04,
+         -7.07
+        ],
+        [
+         -6.41,
+         -8.43
+        ],
+        [
+         -5.99,
+         -8.68
+        ],
+        [
+         -5.53,
+         -8.77
+        ],
+        [
+         -5.02,
+         -8.68
+        ],
+        [
+         -3.87,
+         -8.28
+        ],
+        [
+         -2.0,
+         -7.45
+        ],
+        [
+         -0.13,
+         -6.66
+        ],
+        [
+         1.83,
+         -6.09
+        ],
+        [
+         3.01,
+         -5.76
+        ],
+        [
+         3.51,
+         -5.58
+        ],
+        [
+         3.97,
+         -5.32
+        ],
+        [
+         4.39,
+         -4.98
+        ],
+        [
+         5.67,
+         -3.8
+        ],
+        [
+         7.75,
+         -2.34
+        ],
+        [
+         9.02,
+         -1.48
+        ],
+        [
+         9.5,
+         -1.06
+        ],
+        [
+         9.82,
+         -0.54
+        ],
+        [
+         9.99,
+         0.09
+        ],
+        [
+         10.19,
+         1.65
+        ],
+        [
+         10.21,
+         2.21
+        ],
+        [
+         10.1,
+         2.74
+        ],
+        [
+         9.85,
+         3.26
+        ],
+        [
+         9.17,
+         4.38
+        ],
+        [
+         7.98,
+         6.21
+        ],
+        [
+         7.44,
+         7.53
+        ],
+        [
+         7.21,
+         7.88
+        ],
+        [
+         6.89,
+         8.0
+        ],
+        [
+         6.48,
+         7.87
+        ],
+        [
+         5.48,
+         7.32
+        ],
+        [
+         2.4,
+         6.7
+        ],
+        [
+         -0.78,
+         7.03
+        ],
+        [
+         -1.36,
+         7.29
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132310,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×9",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×1",
+        "흙·돌담 모서리를 둥글게 ×7"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      7.29,
+      8.71
+     ],
+     [
+      5.36,
+      7.65
+     ],
+     [
+      2.39,
+      7.05
+     ],
+     [
+      -0.69,
+      7.38
+     ],
+     [
+      -5.11,
+      9.34
+     ],
+     [
+      -8.49,
+      3.21
+     ],
+     [
+      -10.67,
+      -5.29
+     ],
+     [
+      -5.86,
+      -9.34
+     ],
+     [
+      3.96,
+      -5.85
+     ],
+     [
+      10.19,
+      -1.11
+     ],
+     [
+      10.67,
+      2.58
+     ]
+    ]
+   },
+   "x": -3484.53,
+   "z": 1087.5,
+   "ry": 1.5945,
+   "y": null,
+   "flat_at": [
+    [
+     -3475.12,
+     1079.35
+    ],
+    [
+     -3475.42,
+     1079.94
+    ],
+    [
+     -3475.73,
+     1080.52
+    ],
+    [
+     -3475.84,
+     1081.76
+    ],
+    [
+     -3476.0,
+     1082.66
+    ],
+    [
+     -3476.16,
+     1083.55
+    ],
+    [
+     -3475.96,
+     1085.52
+    ],
+    [
+     -3475.84,
+     1086.44
+    ],
+    [
+     -3475.72,
+     1087.36
+    ],
+    [
+     -3475.43,
+     1089.64
+    ],
+    [
+     -3474.8,
+     1090.95
+    ],
+    [
+     -3474.18,
+     1092.26
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    19.3,
+    16.7
+   ],
+   "organic": {
+    "lot": 10,
+    "zone": 0.2,
+    "street": "street2",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot011",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93132011,
+    "fp": [
+     24.7,
+     23.6
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132077
+      },
+      "x": 2.7,
+      "z": -0.44,
+      "ry": -0.0164
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132118
+      },
+      "x": -6.82,
+      "z": 7.15,
+      "ry": 1.5708
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132054,
+       "s": 1.06232838649303
+      },
+      "x": 5.93,
+      "z": 9.28,
+      "ry": 4.7124
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132105,
+       "ax": 11.44,
+       "az": -12.82,
+       "bx": -2.05,
+       "bz": -5.78,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132106,
+       "ax": -2.05,
+       "az": -5.78,
+       "bx": -9.07,
+       "bz": 1.23,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132107,
+       "ax": -9.07,
+       "az": 1.23,
+       "bx": -11.17,
+       "bz": 4.55,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132108,
+       "ax": -11.17,
+       "az": 4.55,
+       "bx": -13.33,
+       "bz": 5.9,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132109,
+       "ax": -13.33,
+       "az": 5.9,
+       "bx": -12.25,
+       "bz": 12.82,
+       "drop": 2.5,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -11.96,
+         12.44
+        ],
+        [
+         -9.61,
+         12.06
+        ],
+        [
+         -7.25,
+         11.72
+        ],
+        [
+         -4.87,
+         11.67
+        ],
+        [
+         -2.5,
+         11.51
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132311,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -0.27,
+         11.29
+        ],
+        [
+         1.9,
+         11.07
+        ],
+        [
+         4.33,
+         11.33
+        ],
+        [
+         6.78,
+         11.37
+        ],
+        [
+         9.19,
+         11.82
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132312,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         12.93,
+         -12.21
+        ],
+        [
+         12.07,
+         -12.36
+        ],
+        [
+         11.7,
+         -12.38
+        ],
+        [
+         11.34,
+         -12.33
+        ],
+        [
+         10.98,
+         -12.19
+        ],
+        [
+         9.59,
+         -11.47
+        ],
+        [
+         7.72,
+         -10.4
+        ],
+        [
+         5.9,
+         -9.25
+        ],
+        [
+         3.96,
+         -8.31
+        ],
+        [
+         1.97,
+         -7.48
+        ],
+        [
+         0.08,
+         -6.46
+        ],
+        [
+         -1.84,
+         -5.5
+        ],
+        [
+         -3.57,
+         -3.75
+        ],
+        [
+         -5.28,
+         -1.99
+        ],
+        [
+         -6.88,
+         -0.11
+        ],
+        [
+         -8.8,
+         1.45
+        ],
+        [
+         -10.4,
+         3.99
+        ],
+        [
+         -10.77,
+         4.5
+        ],
+        [
+         -11.21,
+         4.93
+        ],
+        [
+         -11.73,
+         5.32
+        ],
+        [
+         -12.95,
+         6.08
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132313,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -12.25,
+      12.82
+     ],
+     [
+      1.9,
+      11.43
+     ],
+     [
+      9.48,
+      12.2
+     ],
+     [
+      13.33,
+      -12.5
+     ],
+     [
+      11.44,
+      -12.82
+     ],
+     [
+      -2.05,
+      -5.78
+     ],
+     [
+      -9.07,
+      1.23
+     ],
+     [
+      -11.17,
+      4.55
+     ],
+     [
+      -13.33,
+      5.9
+     ]
+    ]
+   },
+   "x": -3517.95,
+   "z": 1056.81,
+   "ry": -1.333,
+   "y": null,
+   "flat_at": [
+    [
+     -3533.84,
+     1050.42
+    ],
+    [
+     -3532.43,
+     1054.45
+    ],
+    [
+     -3531.03,
+     1058.48
+    ],
+    [
+     -3529.38,
+     1063.99
+    ],
+    [
+     -3529.07,
+     1066.25
+    ],
+    [
+     -3528.76,
+     1068.52
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    24.7,
+    23.6
+   ],
+   "organic": {
+    "lot": 11,
+    "zone": 0.2,
+    "street": "street3",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot012",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93132012,
+    "fp": [
+     12.3,
+     24.3
+    ],
+    "pieces": [
+     {
+      "tag": "house",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132087
+      },
+      "x": -0.03,
+      "z": 4.89,
+      "ry": 0.0101
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132055,
+       "s": 0.964200363284908
+      },
+      "x": -0.92,
+      "z": -1.08,
+      "ry": 4.7124
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132104,
+       "ax": 7.14,
+       "az": 11.59,
+       "bx": 0.87,
+       "bz": -12.09,
+       "drop": 1.75,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132105,
+       "ax": 0.87,
+       "az": -12.09,
+       "bx": -2.82,
+       "bz": -13.14,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132106,
+       "ax": -2.82,
+       "az": -13.14,
+       "bx": -4.69,
+       "bz": -11.53,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132107,
+       "ax": -3.08,
+       "az": -13.07,
+       "bx": -4.69,
+       "bz": -11.53,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132108,
+       "ax": 4.22,
+       "az": -12.56,
+       "bx": -3.08,
+       "bz": -13.07,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132109,
+       "ax": 4.22,
+       "az": -12.56,
+       "bx": -0.13,
+       "bz": -11.74,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132110,
+       "ax": 1.71,
+       "az": -12.76,
+       "bx": -0.13,
+       "bz": -11.74,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132111,
+       "ax": 1.71,
+       "az": -12.76,
+       "bx": -0.74,
+       "bz": -12.37,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_10",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132112,
+       "ax": -0.74,
+       "az": -12.37,
+       "bx": -7.14,
+       "bz": 11.79,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         6.71,
+         11.34
+        ],
+        [
+         6.03,
+         9.27
+        ],
+        [
+         5.61,
+         7.12
+        ],
+        [
+         4.94,
+         5.05
+        ],
+        [
+         4.23,
+         2.99
+        ],
+        [
+         3.77,
+         0.86
+        ],
+        [
+         3.38,
+         -1.29
+        ],
+        [
+         2.74,
+         -3.37
+        ],
+        [
+         2.01,
+         -5.43
+        ],
+        [
+         1.52,
+         -7.55
+        ],
+        [
+         1.14,
+         -9.71
+        ],
+        [
+         0.8,
+         -10.97
+        ],
+        [
+         0.59,
+         -11.46
+        ],
+        [
+         0.24,
+         -11.82
+        ],
+        [
+         -0.26,
+         -12.05
+        ],
+        [
+         -1.87,
+         -12.51
+        ],
+        [
+         -2.42,
+         -12.58
+        ],
+        [
+         -2.92,
+         -12.47
+        ],
+        [
+         -3.4,
+         -12.16
+        ],
+        [
+         -4.39,
+         -11.26
+        ],
+        [
+         -5.97,
+         -9.66
+        ],
+        [
+         -7.7,
+         -8.24
+        ],
+        [
+         -9.52,
+         -6.93
+        ],
+        [
+         -11.18,
+         -5.43
+        ],
+        [
+         -12.75,
+         -3.83
+        ],
+        [
+         -13.87,
+         -3.06
+        ],
+        [
+         -14.2,
+         -2.84
+        ],
+        [
+         -13.92,
+         -3.13
+        ],
+        [
+         -12.87,
+         -4.0
+        ],
+        [
+         -11.17,
+         -5.47
+        ],
+        [
+         -9.66,
+         -7.15
+        ],
+        [
+         -8.1,
+         -8.78
+        ],
+        [
+         -6.36,
+         -10.21
+        ],
+        [
+         -4.66,
+         -11.69
+        ],
+        [
+         -3.73,
+         -12.8
+        ],
+        [
+         -3.35,
+         -13.14
+        ],
+        [
+         -2.92,
+         -13.32
+        ],
+        [
+         -2.4,
+         -13.34
+        ],
+        [
+         -1.18,
+         -13.2
+        ],
+        [
+         0.84,
+         -12.9
+        ],
+        [
+         2.88,
+         -12.81
+        ],
+        [
+         4.92,
+         -12.85
+        ],
+        [
+         6.14,
+         -12.77
+        ],
+        [
+         6.5,
+         -12.73
+        ],
+        [
+         6.51,
+         -12.65
+        ],
+        [
+         6.16,
+         -12.54
+        ],
+        [
+         4.68,
+         -12.2
+        ],
+        [
+         2.42,
+         -11.6
+        ],
+        [
+         0.11,
+         -11.29
+        ],
+        [
+         -1.29,
+         -11.11
+        ],
+        [
+         -1.71,
+         -11.09
+        ],
+        [
+         -1.75,
+         -11.2
+        ],
+        [
+         -1.4,
+         -11.44
+        ],
+        [
+         -0.2,
+         -12.1
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132312,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×6",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×6"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -0.46,
+         -12.06
+        ],
+        [
+         -0.9,
+         -10.08
+        ],
+        [
+         -1.26,
+         -8.07
+        ],
+        [
+         -1.83,
+         -6.12
+        ],
+        [
+         -2.53,
+         -4.2
+        ],
+        [
+         -3.05,
+         -2.24
+        ],
+        [
+         -3.39,
+         -0.22
+        ],
+        [
+         -3.86,
+         1.75
+        ],
+        [
+         -4.54,
+         3.68
+        ],
+        [
+         -5.16,
+         5.62
+        ],
+        [
+         -5.55,
+         7.61
+        ],
+        [
+         -5.93,
+         9.62
+        ],
+        [
+         -6.7,
+         11.51
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132313,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -7.14,
+      11.79
+     ],
+     [
+      0.81,
+      13.14
+     ],
+     [
+      7.14,
+      11.59
+     ],
+     [
+      0.87,
+      -12.09
+     ],
+     [
+      -2.82,
+      -13.14
+     ],
+     [
+      -4.69,
+      -11.53
+     ],
+     [
+      -3.08,
+      -13.07
+     ],
+     [
+      4.22,
+      -12.56
+     ],
+     [
+      -0.13,
+      -11.74
+     ],
+     [
+      1.71,
+      -12.76
+     ],
+     [
+      -0.74,
+      -12.37
+     ]
+    ]
+   },
+   "x": -3514.07,
+   "z": 1071.67,
+   "ry": -1.2289,
+   "y": null,
+   "flat_at": [
+    [
+     -3528.77,
+     1070.77
+    ],
+    [
+     -3528.35,
+     1073.15
+    ],
+    [
+     -3527.93,
+     1075.53
+    ],
+    [
+     -3526.72,
+     1078.74
+    ],
+    [
+     -3525.64,
+     1080.37
+    ],
+    [
+     -3524.57,
+     1082.01
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    12.3,
+    24.3
+   ],
+   "organic": {
+    "lot": 12,
+    "zone": 0.2,
+    "street": "street3",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot013",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93132013,
+    "fp": [
+     20.2,
+     16.3
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132091
+      },
+      "x": -0.03,
+      "z": 1.54,
+      "ry": -0.0226
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132056,
+       "s": 0.863377101160586
+      },
+      "x": -1.71,
+      "z": -3.81,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132110,
+       "ax": 7.52,
+       "az": 0.18,
+       "bx": 5.79,
+       "bz": -3.13,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132111,
+       "ax": 9.59,
+       "az": 1.84,
+       "bx": 7.52,
+       "bz": 0.18,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132112,
+       "ax": 11.12,
+       "az": 8.16,
+       "bx": 9.59,
+       "bz": 1.84,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93132094,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 8.11,
+      "z": 7.98,
+      "ry": 0.0569
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -6.49,
+         -8.74
+        ],
+        [
+         -4.39,
+         -8.13
+        ],
+        [
+         -2.23,
+         -7.9
+        ],
+        [
+         -0.95,
+         -7.66
+        ],
+        [
+         -0.41,
+         -7.5
+        ],
+        [
+         0.09,
+         -7.26
+        ],
+        [
+         0.55,
+         -6.91
+        ],
+        [
+         1.7,
+         -5.87
+        ],
+        [
+         3.65,
+         -4.45
+        ],
+        [
+         5.51,
+         -2.9
+        ],
+        [
+         7.25,
+         0.41
+        ],
+        [
+         8.47,
+         1.38
+        ],
+        [
+         8.93,
+         1.86
+        ],
+        [
+         9.26,
+         2.41
+        ],
+        [
+         9.44,
+         3.07
+        ],
+        [
+         9.75,
+         4.99
+        ],
+        [
+         10.5,
+         7.28
+        ],
+        [
+         10.54,
+         7.58
+        ],
+        [
+         10.41,
+         7.78
+        ],
+        [
+         10.1,
+         7.86
+        ],
+        [
+         9.23,
+         7.91
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132313,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "곧은 필지 경계 ×1",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         6.99,
+         8.04
+        ],
+        [
+         4.69,
+         7.92
+        ],
+        [
+         2.41,
+         8.13
+        ],
+        [
+         0.13,
+         8.44
+        ],
+        [
+         -2.16,
+         8.48
+        ],
+        [
+         -4.46,
+         8.44
+        ],
+        [
+         -6.73,
+         8.82
+        ],
+        [
+         -8.71,
+         8.45
+        ],
+        [
+         -10.69,
+         8.12
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132314,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      11.12,
+      8.16
+     ],
+     [
+      -6.75,
+      9.17
+     ],
+     [
+      -11.12,
+      8.4
+     ],
+     [
+      -6.89,
+      -9.1
+     ],
+     [
+      -4.37,
+      -9.17
+     ],
+     [
+      -5.22,
+      -8.85
+     ],
+     [
+      0.06,
+      -7.82
+     ],
+     [
+      5.79,
+      -3.13
+     ],
+     [
+      7.52,
+      0.18
+     ],
+     [
+      9.59,
+      1.84
+     ]
+    ]
+   },
+   "x": -3543.82,
+   "z": 1059.58,
+   "ry": 1.8758,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    20.2,
+    16.3
+   ],
+   "organic": {
+    "lot": 13,
+    "zone": 0.2,
+    "street": "street3",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot014",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_c",
+    "seed": 93132014,
+    "fp": [
+     26.5,
+     17.9
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132098
+      },
+      "x": -2.13,
+      "z": -4.83,
+      "ry": -0.004
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132140
+      },
+      "x": -6.33,
+      "z": 3.36,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132151
+      },
+      "x": 8.91,
+      "z": -3.14,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132119
+      },
+      "x": 5.56,
+      "z": 5.19,
+      "ry": 3.1416
+     },
+     {
+      "tag": "jangdok",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93132103,
+       "w": 2.0,
+       "d": 1.5
+      },
+      "x": -12.03,
+      "z": -8.13,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132106,
+       "ax": -14.23,
+       "az": -9.93,
+       "bx": -8.82,
+       "bz": 9.84,
+       "drop": 0.75,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132107,
+       "ax": 14.23,
+       "az": -7.43,
+       "bx": -14.23,
+       "bz": -9.93,
+       "drop": 2.25,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132108,
+       "ax": 9.48,
+       "az": 9.93,
+       "bx": 14.23,
+       "bz": -7.43,
+       "drop": 2.25,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93132101,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 0.28,
+      "z": 7.95,
+      "ry": -0.1748
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -1.32,
+         7.67
+        ],
+        [
+         -3.78,
+         8.07
+        ],
+        [
+         -6.15,
+         8.85
+        ],
+        [
+         -7.72,
+         9.22
+        ],
+        [
+         -8.21,
+         9.24
+        ],
+        [
+         -8.53,
+         9.02
+        ],
+        [
+         -8.71,
+         8.55
+        ],
+        [
+         -8.9,
+         7.25
+        ],
+        [
+         -9.62,
+         5.18
+        ],
+        [
+         -10.32,
+         3.11
+        ],
+        [
+         -10.76,
+         0.96
+        ],
+        [
+         -11.2,
+         -1.18
+        ],
+        [
+         -11.9,
+         -3.25
+        ],
+        [
+         -12.62,
+         -5.32
+        ],
+        [
+         -13.09,
+         -7.46
+        ],
+        [
+         -13.5,
+         -8.73
+        ],
+        [
+         -13.55,
+         -9.17
+        ],
+        [
+         -13.36,
+         -9.41
+        ],
+        [
+         -12.91,
+         -9.47
+        ],
+        [
+         -11.64,
+         -9.36
+        ],
+        [
+         -9.52,
+         -9.12
+        ],
+        [
+         -7.42,
+         -8.75
+        ],
+        [
+         -5.3,
+         -8.59
+        ],
+        [
+         -3.17,
+         -8.59
+        ],
+        [
+         -1.05,
+         -8.41
+        ],
+        [
+         1.05,
+         -8.04
+        ],
+        [
+         3.17,
+         -7.81
+        ],
+        [
+         5.3,
+         -7.8
+        ],
+        [
+         7.42,
+         -7.69
+        ],
+        [
+         9.53,
+         -7.34
+        ],
+        [
+         11.64,
+         -7.05
+        ],
+        [
+         12.92,
+         -7.09
+        ],
+        [
+         13.37,
+         -7.02
+        ],
+        [
+         13.58,
+         -6.76
+        ],
+        [
+         13.56,
+         -6.29
+        ],
+        [
+         13.23,
+         -5.03
+        ],
+        [
+         12.54,
+         -2.98
+        ],
+        [
+         11.82,
+         -0.94
+        ],
+        [
+         11.35,
+         1.16
+        ],
+        [
+         10.95,
+         3.29
+        ],
+        [
+         10.3,
+         5.35
+        ],
+        [
+         9.56,
+         7.39
+        ],
+        [
+         9.36,
+         8.67
+        ],
+        [
+         9.2,
+         9.12
+        ],
+        [
+         8.88,
+         9.33
+        ],
+        [
+         8.39,
+         9.3
+        ],
+        [
+         6.66,
+         8.83
+        ],
+        [
+         4.0,
+         8.58
+        ],
+        [
+         1.38,
+         8.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93132314,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "흙·돌담 모서리를 둥글게 ×4"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      9.48,
+      9.93
+     ],
+     [
+      -1.3,
+      8.03
+     ],
+     [
+      -8.82,
+      9.84
+     ],
+     [
+      -14.23,
+      -9.93
+     ],
+     [
+      14.23,
+      -7.43
+     ]
+    ]
+   },
+   "x": -3538.74,
+   "z": 1079.88,
+   "ry": 1.9048,
+   "y": null,
+   "flat_at": [
+    [
+     -3531.17,
+     1068.67
+    ],
+    [
+     -3530.65,
+     1071.91
+    ],
+    [
+     -3530.13,
+     1075.16
+    ],
+    [
+     -3528.46,
+     1080.21
+    ],
+    [
+     -3527.2,
+     1082.16
+    ],
+    [
+     -3525.95,
+     1084.12
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    26.5,
+    17.9
+   ],
+   "organic": {
+    "lot": 14,
+    "zone": 0.2,
+    "street": "street3",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot015",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93132015,
+    "fp": [
+     5.8,
+     17.7
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93132105,
+       "w": 4.1,
+       "d": 6.3
+      },
+      "x": -0.11,
+      "z": 3.0,
+      "ry": -0.036
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132106,
+       "s": 0.806343596498482
+      },
+      "x": 2.07,
+      "z": -0.68,
+      "ry": -0.036
+     }
+    ],
+    "poly": [
+     [
+      -3.92,
+      9.84
+     ],
+     [
+      3.92,
+      9.65
+     ],
+     [
+      3.18,
+      -9.83
+     ],
+     [
+      -3.63,
+      2.34
+     ]
+    ]
+   },
+   "x": -3404.1,
+   "z": 1042.11,
+   "ry": -2.2148,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    5.8,
+    17.7
+   ],
+   "organic": {
+    "lot": 15,
+    "zone": 0.2,
+    "street": "street4",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot016",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93132016,
+    "fp": [
+     20.0,
+     15.2
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132113
+      },
+      "x": -1.99,
+      "z": 1.74,
+      "ry": -0.0213
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132114,
+       "ax": 5.37,
+       "az": -0.65,
+       "bx": 2.92,
+       "bz": -0.81,
+       "drop": 0.65,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132115,
+       "ax": 7.79,
+       "az": 1.47,
+       "bx": 5.37,
+       "bz": -0.65,
+       "drop": 0.65,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_11",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132117,
+       "ax": 10.99,
+       "az": 7.35,
+       "bx": 9.12,
+       "bz": 1.12,
+       "drop": 0.65,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93132115,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 5.82,
+      "z": 7.95,
+      "ry": 0.1824
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         5.22,
+         -0.31
+        ],
+        [
+         7.33,
+         1.54
+        ],
+        [
+         7.59,
+         1.7
+        ],
+        [
+         7.86,
+         1.77
+        ],
+        [
+         8.17,
+         1.73
+        ],
+        [
+         8.6,
+         1.62
+        ],
+        [
+         8.76,
+         1.61
+        ],
+        [
+         8.88,
+         1.68
+        ],
+        [
+         8.95,
+         1.83
+        ],
+        [
+         9.48,
+         4.38
+        ],
+        [
+         10.12,
+         6.0
+        ],
+        [
+         10.23,
+         6.61
+        ],
+        [
+         10.0,
+         7.04
+        ],
+        [
+         9.4,
+         7.29
+        ],
+        [
+         6.92,
+         7.74
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132316,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         4.72,
+         8.15
+        ],
+        [
+         4.22,
+         8.24
+        ],
+        [
+         0.54,
+         7.8
+        ],
+        [
+         -1.67,
+         7.02
+        ],
+        [
+         -3.9,
+         6.32
+        ],
+        [
+         -6.05,
+         5.39
+        ],
+        [
+         -8.27,
+         4.64
+        ],
+        [
+         -9.72,
+         4.3
+        ],
+        [
+         -10.15,
+         4.11
+        ],
+        [
+         -10.33,
+         3.78
+        ],
+        [
+         -10.26,
+         3.31
+        ],
+        [
+         -9.82,
+         2.1
+        ],
+        [
+         -9.35,
+         0.02
+        ],
+        [
+         -8.63,
+         -2.0
+        ],
+        [
+         -7.86,
+         -4.0
+        ],
+        [
+         -7.33,
+         -6.07
+        ],
+        [
+         -7.05,
+         -7.37
+        ],
+        [
+         -6.87,
+         -7.78
+        ],
+        [
+         -6.56,
+         -7.97
+        ],
+        [
+         -6.11,
+         -7.93
+        ],
+        [
+         -4.95,
+         -7.58
+        ],
+        [
+         -3.25,
+         -6.28
+        ],
+        [
+         -1.62,
+         -4.87
+        ],
+        [
+         -0.02,
+         -3.43
+        ],
+        [
+         1.72,
+         -2.17
+        ],
+        [
+         3.52,
+         -0.99
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132317,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         4.79,
+         0.0
+        ],
+        [
+         6.33,
+         1.5
+        ],
+        [
+         8.14,
+         2.67
+        ],
+        [
+         9.17,
+         3.43
+        ],
+        [
+         9.48,
+         3.65
+        ],
+        [
+         9.23,
+         3.36
+        ],
+        [
+         8.16,
+         2.39
+        ],
+        [
+         6.47,
+         0.83
+        ],
+        [
+         4.8,
+         -0.75
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132318,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_3",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         4.58,
+         -0.95
+        ],
+        [
+         2.57,
+         -2.81
+        ],
+        [
+         2.17,
+         -3.1
+        ],
+        [
+         2.0,
+         -3.01
+        ],
+        [
+         2.08,
+         -2.51
+        ],
+        [
+         2.51,
+         -0.97
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132319,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.99,
+      7.35
+     ],
+     [
+      4.23,
+      8.6
+     ],
+     [
+      0.46,
+      8.15
+     ],
+     [
+      -10.99,
+      4.34
+     ],
+     [
+      -7.12,
+      -8.6
+     ],
+     [
+      -4.79,
+      -7.9
+     ],
+     [
+      3.65,
+      -1.33
+     ],
+     [
+      2.46,
+      -2.43
+     ],
+     [
+      2.92,
+      -0.81
+     ],
+     [
+      5.37,
+      -0.65
+     ],
+     [
+      7.79,
+      1.47
+     ],
+     [
+      9.12,
+      1.12
+     ]
+    ]
+   },
+   "x": -3418.29,
+   "z": 1025.31,
+   "ry": 1.2557,
+   "y": null,
+   "flat_at": [
+    [
+     -3406.67,
+     1017.99
+    ],
+    [
+     -3406.94,
+     1020.03
+    ],
+    [
+     -3407.22,
+     1022.08
+    ],
+    [
+     -3407.68,
+     1025.04
+    ],
+    [
+     -3408.16,
+     1026.07
+    ],
+    [
+     -3408.64,
+     1027.1
+    ],
+    [
+     -3411.35,
+     1030.75
+    ],
+    [
+     -3413.5,
+     1033.66
+    ],
+    [
+     -3415.65,
+     1036.57
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    20.0,
+    15.2
+   ],
+   "organic": {
+    "lot": 16,
+    "zone": 0.2,
+    "street": "street4",
+    "walls": 4
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot017",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93132017,
+    "fp": [
+     22.9,
+     21.3
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132119
+      },
+      "x": -4.92,
+      "z": -0.88,
+      "ry": 0.0102
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132172
+      },
+      "x": 5.94,
+      "z": 4.92,
+      "ry": -1.5708
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93132064,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -2.76,
+      "z": 7.92,
+      "ry": 1.5708
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132111,
+       "ax": 12.45,
+       "az": 3.5,
+       "bx": 5.44,
+       "bz": -2.44,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132112,
+       "ax": 11.6,
+       "az": 9.94,
+       "bx": 12.45,
+       "bz": 3.5,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93132122,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 1.11,
+      "z": 10.44,
+      "ry": 0.0812
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -12.01,
+         -10.98
+        ],
+        [
+         -10.25,
+         -9.88
+        ],
+        [
+         -8.57,
+         -8.66
+        ],
+        [
+         -6.8,
+         -7.59
+        ],
+        [
+         -4.92,
+         -6.69
+        ],
+        [
+         -3.13,
+         -5.66
+        ],
+        [
+         -1.35,
+         -4.59
+        ],
+        [
+         0.8,
+         -3.62
+        ],
+        [
+         3.06,
+         -2.97
+        ],
+        [
+         5.26,
+         -2.13
+        ],
+        [
+         6.83,
+         -0.52
+        ],
+        [
+         8.53,
+         0.92
+        ],
+        [
+         10.36,
+         2.22
+        ],
+        [
+         11.46,
+         3.13
+        ],
+        [
+         11.79,
+         3.5
+        ],
+        [
+         11.96,
+         3.93
+        ],
+        [
+         11.97,
+         4.44
+        ],
+        [
+         11.82,
+         5.63
+        ],
+        [
+         11.55,
+         7.62
+        ],
+        [
+         11.4,
+         8.82
+        ],
+        [
+         11.25,
+         9.26
+        ],
+        [
+         10.95,
+         9.53
+        ],
+        [
+         10.49,
+         9.62
+        ],
+        [
+         9.01,
+         9.64
+        ],
+        [
+         6.76,
+         10.0
+        ],
+        [
+         4.48,
+         10.09
+        ],
+        [
+         2.22,
+         10.35
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93132317,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "비탈 등고선을 따라 굽음(옆·뒤 담) ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -0.01,
+         10.54
+        ],
+        [
+         -2.28,
+         10.73
+        ],
+        [
+         -4.55,
+         10.84
+        ],
+        [
+         -6.83,
+         10.84
+        ],
+        [
+         -9.08,
+         11.27
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93132318,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      11.6,
+      9.94
+     ],
+     [
+      -9.39,
+      11.65
+     ],
+     [
+      -12.45,
+      -11.65
+     ],
+     [
+      -1.2,
+      -4.91
+     ],
+     [
+      5.44,
+      -2.44
+     ],
+     [
+      12.45,
+      3.5
+     ]
+    ]
+   },
+   "x": -3484.48,
+   "z": 1047.97,
+   "ry": 1.2768,
+   "y": null,
+   "flat_at": [
+    [
+     -3471.06,
+     1044.3
+    ],
+    [
+     -3472.39,
+     1050.47
+    ],
+    [
+     -3473.73,
+     1056.64
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    22.9,
+    21.3
+   ],
+   "organic": {
+    "lot": 17,
+    "zone": 0.58,
+    "street": "alley5",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot018",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93132018,
+    "fp": [
+     17.7,
+     23.8
+    ],
+    "pieces": [
+     {
+      "tag": "house",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132126
+      },
+      "x": -2.31,
+      "z": 7.23,
+      "ry": 0.02
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132061,
+       "s": 0.939645836967975
+      },
+      "x": -0.83,
+      "z": -0.31,
+      "ry": 0.0
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93132089,
+       "s": 1.02257191075478
+      },
+      "x": 2.49,
+      "z": 2.63,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -7.57,
+         12.28
+        ],
+        [
+         -8.53,
+         9.45
+        ],
+        [
+         -9.11,
+         7.72
+        ],
+        [
+         -9.23,
+         7.02
+        ],
+        [
+         -9.09,
+         6.37
+        ],
+        [
+         -8.69,
+         5.75
+        ],
+        [
+         -7.52,
+         4.46
+        ],
+        [
+         -5.62,
+         2.25
+        ],
+        [
+         -4.72,
+         0.43
+        ],
+        [
+         -3.92,
+         -1.43
+        ],
+        [
+         -2.92,
+         -3.2
+        ],
+        [
+         -1.97,
+         -4.99
+        ],
+        [
+         -1.24,
+         -6.88
+        ],
+        [
+         -0.52,
+         -8.78
+        ],
+        [
+         0.41,
+         -10.58
+        ],
+        [
+         0.88,
+         -11.7
+        ],
+        [
+         1.14,
+         -12.07
+        ],
+        [
+         1.48,
+         -12.2
+        ],
+        [
+         1.92,
+         -12.08
+        ],
+        [
+         3.18,
+         -11.43
+        ],
+        [
+         5.31,
+         -10.79
+        ],
+        [
+         7.37,
+         -9.97
+        ],
+        [
+         8.65,
+         -9.47
+        ],
+        [
+         9.05,
+         -9.22
+        ],
+        [
+         9.19,
+         -8.88
+        ],
+        [
+         9.07,
+         -8.42
+        ],
+        [
+         8.53,
+         -7.28
+        ],
+        [
+         7.94,
+         -5.29
+        ],
+        [
+         7.44,
+         -3.27
+        ],
+        [
+         6.75,
+         -1.31
+        ],
+        [
+         5.91,
+         0.6
+        ],
+        [
+         5.23,
+         2.57
+        ],
+        [
+         4.74,
+         4.59
+        ],
+        [
+         4.13,
+         6.58
+        ],
+        [
+         3.3,
+         8.5
+        ],
+        [
+         2.55,
+         10.43
+        ],
+        [
+         2.13,
+         12.48
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132318,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      2.36,
+      12.89
+     ],
+     [
+      -2.48,
+      11.86
+     ],
+     [
+      -5.16,
+      12.02
+     ],
+     [
+      -7.8,
+      12.7
+     ],
+     [
+      -9.87,
+      6.54
+     ],
+     [
+      -5.91,
+      2.05
+     ],
+     [
+      1.02,
+      -12.89
+     ],
+     [
+      9.87,
+      -9.37
+     ]
+    ]
+   },
+   "x": -3488.39,
+   "z": 1064.74,
+   "ry": 1.733,
+   "y": null,
+   "flat_at": [
+    [
+     -3474.74,
+     1060.69
+    ],
+    [
+     -3474.81,
+     1062.17
+    ],
+    [
+     -3474.88,
+     1063.66
+    ],
+    [
+     -3474.67,
+     1065.86
+    ],
+    [
+     -3474.49,
+     1066.65
+    ],
+    [
+     -3474.31,
+     1067.43
+    ],
+    [
+     -3474.06,
+     1068.87
+    ],
+    [
+     -3473.73,
+     1069.62
+    ],
+    [
+     -3473.41,
+     1070.37
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    17.7,
+    23.8
+   ],
+   "organic": {
+    "lot": 18,
+    "zone": 0.3,
+    "street": "alley5",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot019",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93132019,
+    "fp": [
+     10.5,
+     8.7
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93132133,
+       "w": 6.9,
+       "d": 4.2
+      },
+      "x": -0.23,
+      "z": 0.46,
+      "ry": -0.0374
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93132134,
+       "s": 0.886978782201186
+      },
+      "x": 3.34,
+      "z": -1.92,
+      "ry": -0.0374
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132112,
+       "ax": 5.22,
+       "az": -5.37,
+       "bx": -0.85,
+       "bz": -5.11,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132113,
+       "ax": -0.85,
+       "az": -5.11,
+       "bx": -5.59,
+       "bz": -1.59,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93132114,
+       "ax": -5.59,
+       "az": -1.59,
+       "bx": -6.27,
+       "bz": 4.87,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -6.27,
+      4.87
+     ],
+     [
+      -0.14,
+      5.37
+     ],
+     [
+      6.27,
+      4.58
+     ],
+     [
+      5.22,
+      -5.37
+     ],
+     [
+      -0.85,
+      -5.11
+     ],
+     [
+      -5.59,
+      -1.59
+     ]
+    ]
+   },
+   "x": -3390.89,
+   "z": 1019.74,
+   "ry": 0.1322,
+   "y": null,
+   "flat_at": [
+    [
+     -3395.87,
+     1026.69
+    ],
+    [
+     -3394.03,
+     1026.6
+    ],
+    [
+     -3392.18,
+     1026.5
+    ],
+    [
+     -3388.03,
+     1025.84
+    ],
+    [
+     -3386.16,
+     1025.35
+    ],
+    [
+     -3384.28,
+     1024.86
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    10.5,
+    8.7
+   ],
+   "organic": {
+    "lot": 19,
+    "zone": 0.2,
+    "street": "alley6",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_town_open_out_s_lot020",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93132020,
+    "fp": [
+     21.3,
+     31.2
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93132140
+      },
+      "x": -4.94,
+      "z": -2.72,
+      "ry": 0.0176
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132180
+      },
+      "x": -4.56,
+      "z": 7.22,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93132190
+      },
+      "x": 5.16,
+      "z": 9.56,
+      "ry": -1.5708
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "sarip",
+       "seed": 93132143
+      },
+      "x": 1.68,
+      "z": 15.51,
+      "ry": 6.2
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -10.92,
+         -13.53
+        ],
+        [
+         -9.57,
+         -12.01
+        ],
+        [
+         -7.95,
+         -10.81
+        ],
+        [
+         -6.35,
+         -9.58
+        ],
+        [
+         -4.91,
+         -8.17
+        ],
+        [
+         -3.33,
+         -6.92
+        ],
+        [
+         -1.12,
+         -5.93
+        ],
+        [
+         1.01,
+         -4.76
+        ],
+        [
+         2.53,
+         -4.22
+        ],
+        [
+         2.99,
+         -3.99
+        ],
+        [
+         3.35,
+         -3.65
+        ],
+        [
+         3.63,
+         -3.2
+        ],
+        [
+         4.11,
+         -2.07
+        ],
+        [
+         5.27,
+         -0.38
+        ],
+        [
+         6.31,
+         1.37
+        ],
+        [
+         7.16,
+         3.23
+        ],
+        [
+         8.08,
+         5.05
+        ],
+        [
+         9.21,
+         6.75
+        ],
+        [
+         10.33,
+         8.46
+        ],
+        [
+         10.92,
+         9.54
+        ],
+        [
+         11.12,
+         10.02
+        ],
+        [
+         11.2,
+         10.51
+        ],
+        [
+         11.17,
+         11.04
+        ],
+        [
+         10.96,
+         12.23
+        ],
+        [
+         10.55,
+         14.22
+        ],
+        [
+         10.55,
+         15.44
+        ],
+        [
+         10.46,
+         15.88
+        ],
+        [
+         10.2,
+         16.13
+        ],
+        [
+         9.74,
+         16.18
+        ],
+        [
+         8.54,
+         16.09
+        ],
+        [
+         6.53,
+         15.86
+        ],
+        [
+         4.53,
+         15.52
+        ],
+        [
+         2.5,
+         15.58
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132320,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         0.85,
+         15.44
+        ],
+        [
+         -0.75,
+         15.31
+        ],
+        [
+         -2.92,
+         15.38
+        ],
+        [
+         -5.05,
+         15.7
+        ],
+        [
+         -7.15,
+         16.21
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93132321,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.85,
+      16.62
+     ],
+     [
+      -0.74,
+      15.66
+     ],
+     [
+      -7.46,
+      16.61
+     ],
+     [
+      -11.67,
+      -16.62
+     ],
+     [
+      -10.63,
+      -13.73
+     ],
+     [
+      -3.14,
+      -7.22
+     ],
+     [
+      3.55,
+      -4.22
+     ],
+     [
+      11.67,
+      10.18
+     ]
+    ]
+   },
+   "x": -3388.8,
+   "z": 1044.16,
+   "ry": -3.0297,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본",
+   "footprint": [
+    21.3,
+    31.2
+   ],
+   "organic": {
+    "lot": 20,
+    "zone": 0.2,
+    "street": "alley6",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_town_open_out_s_tree021",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 2,
+    "s": 1.20113039799035
+   },
+   "x": -3401.68,
+   "z": 1011.93,
+   "ry": 5.131,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree022",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 4,
+    "s": 0.915413856320083
+   },
+   "x": -3511.26,
+   "z": 1027.24,
+   "ry": 3.3817,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree023",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 11,
+    "s": 1.18354000449181
+   },
+   "x": -3422.04,
+   "z": 1041.96,
+   "ry": 3.5609,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree024",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 12,
+    "s": 1.17794866170734
+   },
+   "x": -3414.65,
+   "z": 1043.07,
+   "ry": 0.8189,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree025",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 17,
+    "s": 1.22927095908672
+   },
+   "x": -3421.74,
+   "z": 1052.54,
+   "ry": 5.4593,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree026",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 18,
+    "s": 1.14149180855602
+   },
+   "x": -3413.7,
+   "z": 1050.88,
+   "ry": 2.7291,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree027",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 19,
+    "s": 1.22419685190544
+   },
+   "x": -3405.57,
+   "z": 1049.97,
+   "ry": 2.5502,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_hay028",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 21,
+    "s": 1.13520946359495
+   },
+   "x": -3430.33,
+   "z": 1058.98,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_hay029",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 24,
+    "s": 1.06978057648521
+   },
+   "x": -3402.32,
+   "z": 1056.72,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree030",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 32,
+    "s": 0.890909731108695
+   },
+   "x": -3391.37,
+   "z": 1063.81,
+   "ry": 3.9002,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_hay031",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 33,
+    "s": 0.88750342130661
+   },
+   "x": -3382.27,
+   "z": 1063.16,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree032",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 37,
+    "s": 1.17594807529822
+   },
+   "x": -3495.27,
+   "z": 1072.67,
+   "ry": 6.0499,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat033",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 42,
+    "w": 4.00690790871158,
+    "d": 3.98587312577292
+   },
+   "x": -3400.66,
+   "z": 1073.52,
+   "ry": 0.1033,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat034",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 45,
+    "w": 5.26285951491445,
+    "d": 3.68776089828461
+   },
+   "x": -3375.69,
+   "z": 1069.69,
+   "ry": -0.1325,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree035",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 46,
+    "s": 0.925085589662194
+   },
+   "x": -3507.19,
+   "z": 1081.22,
+   "ry": 4.6509,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat036",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 50,
+    "w": 5.41986249713227,
+    "d": 3.30566038554534
+   },
+   "x": -3515.75,
+   "z": 1086.87,
+   "ry": 0.0745,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat037",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 51,
+    "w": 5.67940275883302,
+    "d": 3.97683755960315
+   },
+   "x": -3509.86,
+   "z": 1091.05,
+   "ry": -0.1391,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree038",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 53,
+    "s": 1.14483744231984
+   },
+   "x": -3497.13,
+   "z": 1085.69,
+   "ry": 2.1342,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree039",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 56,
+    "s": 0.935694375727326
+   },
+   "x": -3514.72,
+   "z": 1094.01,
+   "ry": 2.4919,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_hay040",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 57,
+    "s": 1.10055647934787
+   },
+   "x": -3507.67,
+   "z": 1094.25,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat041",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 58,
+    "w": 4.55905616050586,
+    "d": 3.92864529769868
+   },
+   "x": -3503.48,
+   "z": 1094.81,
+   "ry": 0.0446,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat042",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 60,
+    "w": 4.02839161362499,
+    "d": 3.62044939454645
+   },
+   "x": -3535.66,
+   "z": 1105.56,
+   "ry": -0.1903,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree043",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 61,
+    "s": 1.21297248285264
+   },
+   "x": -3522.47,
+   "z": 1104.92,
+   "ry": 4.9406,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_teotbat044",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 63,
+    "w": 5.03493743995205,
+    "d": 3.01416963720694
+   },
+   "x": -3493.88,
+   "z": 1099.85,
+   "ry": 0.2965,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  },
+  {
+   "id": "st_town_open_out_s_tree045",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 64,
+    "s": 1.00224896343425
+   },
+   "x": -3537.2,
+   "z": 1107.07,
+   "ry": 3.9428,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 소도시(무성읍치) 견본"
+  }
+ ]
+}

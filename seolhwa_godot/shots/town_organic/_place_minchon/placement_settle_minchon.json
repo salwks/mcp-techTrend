@@ -1,0 +1,4340 @@
+{
+ "note": "도시·마을 빌더 견본 민촌 견본 — tools/bldg/settlement_place.gd",
+ "tier": "village",
+ "majors": [
+  {
+   "role": "jangseung_l",
+   "kit": "village/jangseung",
+   "at": [
+    -3891.62,
+    697.31
+   ]
+  },
+  {
+   "role": "jangseung_r",
+   "kit": "village/jangseung",
+   "at": [
+    -3885.72,
+    699.8
+   ]
+  },
+  {
+   "role": "sotdae",
+   "kit": "village/sotdae",
+   "at": [
+    -3884.31,
+    703.65
+   ]
+  },
+  {
+   "role": "dangsan",
+   "kit": "village/village_square",
+   "at": [
+    -3896.11,
+    680.21
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3955.19,
+    681.28
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3942.44,
+    689.93
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3929.69,
+    698.58
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3913.44,
+    698.94
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3900.69,
+    707.59
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3887.94,
+    716.23
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3871.68,
+    716.59
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3858.93,
+    725.24
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3846.18,
+    733.89
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3829.93,
+    734.24
+   ]
+  },
+  {
+   "role": "seonghwangdang",
+   "kit": "village/seonghwangdang",
+   "at": [
+    -3812.96,
+    545.18
+   ]
+  },
+  {
+   "role": "well",
+   "kit": "village/well",
+   "at": [
+    -3850.3,
+    630.91
+   ]
+  }
+ ],
+ "districts": [
+  {
+   "id": "all",
+   "area": [
+    [
+     -3900.46,
+     508.18
+    ],
+    [
+     -3743.88,
+     574.38
+    ],
+    [
+     -3771.42,
+     650.41
+    ],
+    [
+     -3825.3,
+     701.46
+    ],
+    [
+     -3934.9,
+     655.12
+    ],
+    [
+     -3935.82,
+     580.9
+    ]
+   ],
+   "lots": 6,
+   "items": 130,
+   "streets": 2
+  }
+ ],
+ "supersede": [],
+ "alleys": [
+  {
+   "id": "st_minchon_all_street1",
+   "points": [
+    [
+     -3852.88,
+     604.09
+    ],
+    [
+     -3855.85,
+     603.64
+    ],
+    [
+     -3858.84,
+     603.54
+    ],
+    [
+     -3861.83,
+     603.72
+    ],
+    [
+     -3864.8,
+     604.09
+    ],
+    [
+     -3867.68,
+     604.95
+    ],
+    [
+     -3870.43,
+     606.13
+    ],
+    [
+     -3873.03,
+     607.6
+    ],
+    [
+     -3875.46,
+     609.37
+    ],
+    [
+     -3877.77,
+     611.27
+    ],
+    [
+     -3880.05,
+     613.23
+    ],
+    [
+     -3881.55,
+     614.55
+    ]
+   ],
+   "width_m": 3.21,
+   "kind": "street"
+  },
+  {
+   "id": "st_minchon_all_alley2",
+   "points": [
+    [
+     -3873.63,
+     610.02
+    ],
+    [
+     -3872.1,
+     612.6
+    ],
+    [
+     -3870.38,
+     615.06
+    ],
+    [
+     -3868.47,
+     617.36
+    ],
+    [
+     -3866.36,
+     619.49
+    ],
+    [
+     -3863.6,
+     620.68
+    ],
+    [
+     -3860.84,
+     621.86
+    ],
+    [
+     -3858.31,
+     622.95
+    ]
+   ],
+   "width_m": 2.77,
+   "kind": "alley"
+  },
+  {
+   "id": "st_minchon_main",
+   "points": [
+    [
+     -3895.68,
+     715.13
+    ],
+    [
+     -3861.33,
+     649.31
+    ],
+    [
+     -3857.3,
+     614.1
+    ],
+    [
+     -3835.96,
+     581.6
+    ],
+    [
+     -3828.79,
+     556.94
+    ]
+   ],
+   "width_m": 3.2,
+   "kind": "trunk"
+  }
+ ],
+ "urban": [],
+ "items": [
+  {
+   "id": "st_minchon_jangseung_l01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 3005
+   },
+   "x": -3891.62,
+   "z": 697.31,
+   "ry": 1.1708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "jangseung_l"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_minchon_jangseung_r02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 3006,
+    "female": true
+   },
+   "x": -3885.72,
+   "z": 699.8,
+   "ry": -1.9708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "jangseung_r"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_minchon_sotdae03",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 3007
+   },
+   "x": -3884.31,
+   "z": 703.65,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "sotdae"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_minchon_dangsan04",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 3008,
+    "tree": "nature"
+   },
+   "x": -3896.11,
+   "z": 680.21,
+   "ry": -0.4,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "dangsan"
+   },
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "st_minchon_forest05",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3035,
+    "s": 1.2
+   },
+   "x": -3955.19,
+   "z": 681.28,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest06",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3036,
+    "s": 1.2
+   },
+   "x": -3942.44,
+   "z": 689.93,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest07",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3037,
+    "s": 1.2
+   },
+   "x": -3929.69,
+   "z": 698.58,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest08",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3038,
+    "s": 1.2
+   },
+   "x": -3913.44,
+   "z": 698.94,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest09",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3039,
+    "s": 1.2
+   },
+   "x": -3900.69,
+   "z": 707.59,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest10",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3040,
+    "s": 1.2
+   },
+   "x": -3887.94,
+   "z": 716.23,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest11",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3041,
+    "s": 1.2
+   },
+   "x": -3871.68,
+   "z": 716.59,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest12",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3042,
+    "s": 1.2
+   },
+   "x": -3858.93,
+   "z": 725.24,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest13",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3043,
+    "s": 1.2
+   },
+   "x": -3846.18,
+   "z": 733.89,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest14",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3044,
+    "s": 1.2
+   },
+   "x": -3829.93,
+   "z": 734.24,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_seonghwangdang15",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 3009
+   },
+   "x": -3812.96,
+   "z": 545.18,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "seonghwangdang"
+   },
+   "footprint": [
+    4.0,
+    4.0
+   ]
+  },
+  {
+   "id": "st_minchon_well16",
+   "kit": "village/well",
+   "params": {
+    "seed": 3010,
+    "roof": true
+   },
+   "x": -3850.3,
+   "z": 630.91,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "well"
+   },
+   "footprint": [
+    2.4,
+    2.4
+   ]
+  },
+  {
+   "id": "st_minchon_all_lot000",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156000,
+    "fp": [
+     17.6,
+     31.4
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156001
+      },
+      "x": 1.51,
+      "z": 4.37,
+      "ry": -0.0012
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93156003,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": -0.1,
+      "z": 15.75,
+      "ry": -0.0623
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         6.83,
+         -17.14
+        ],
+        [
+         9.15,
+         -16.67
+        ],
+        [
+         9.77,
+         -16.42
+        ],
+        [
+         9.93,
+         -16.0
+        ],
+        [
+         9.63,
+         -15.4
+        ],
+        [
+         -8.12,
+         7.13
+        ],
+        [
+         -8.57,
+         7.83
+        ],
+        [
+         -8.87,
+         8.59
+        ],
+        [
+         -9.02,
+         9.44
+        ],
+        [
+         -9.34,
+         13.87
+        ],
+        [
+         -9.24,
+         14.6
+        ],
+        [
+         -8.85,
+         15.05
+        ],
+        [
+         -8.13,
+         15.25
+        ],
+        [
+         -1.22,
+         15.68
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156300,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×3",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         1.02,
+         15.82
+        ],
+        [
+         9.22,
+         16.33
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156301,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -9.8,
+      15.5
+     ],
+     [
+      9.6,
+      16.71
+     ],
+     [
+      7.21,
+      -16.71
+     ],
+     [
+      9.8,
+      -16.19
+     ],
+     [
+      -9.27,
+      8.02
+     ]
+    ]
+   },
+   "x": -3857.49,
+   "z": 580.95,
+   "ry": 1.0611,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    17.6,
+    31.4
+   ],
+   "organic": {
+    "lot": 0,
+    "zone": 0.61,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_minchon_all_lot001",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "jungnong",
+    "seed": 93156001,
+    "fp": [
+     22.3,
+     33.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156007
+      },
+      "x": -2.24,
+      "z": -12.72,
+      "ry": -0.0009
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156047
+      },
+      "x": -7.22,
+      "z": 6.59,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156057
+      },
+      "x": 8.04,
+      "z": 6.25,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156027
+      },
+      "x": 2.63,
+      "z": -2.44,
+      "ry": 3.1416
+     },
+     {
+      "tag": "jangdok",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93156012,
+       "w": 2.0,
+       "d": 1.5
+      },
+      "x": -9.95,
+      "z": -15.72,
+      "ry": 0.0
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93156044,
+       "s": 0.858847253804561
+      },
+      "x": 0.32,
+      "z": 5.03,
+      "ry": 3.1416
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93156010,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 0.25,
+      "z": 16.35,
+      "ry": 0.0686
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -11.29,
+         17.14
+        ],
+        [
+         -9.22,
+         16.75
+        ],
+        [
+         -7.13,
+         16.77
+        ],
+        [
+         -5.04,
+         16.73
+        ],
+        [
+         -2.96,
+         16.44
+        ],
+        [
+         -0.87,
+         16.43
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156301,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         1.36,
+         16.27
+        ],
+        [
+         3.43,
+         15.93
+        ],
+        [
+         5.53,
+         15.97
+        ],
+        [
+         7.61,
+         15.83
+        ],
+        [
+         9.68,
+         15.5
+        ],
+        [
+         10.95,
+         15.53
+        ],
+        [
+         11.39,
+         15.46
+        ],
+        [
+         11.61,
+         15.2
+        ],
+        [
+         11.61,
+         14.75
+        ],
+        [
+         11.36,
+         13.53
+        ],
+        [
+         11.36,
+         11.48
+        ],
+        [
+         11.32,
+         9.43
+        ],
+        [
+         11.04,
+         7.39
+        ],
+        [
+         10.73,
+         5.36
+        ],
+        [
+         10.64,
+         3.31
+        ],
+        [
+         10.66,
+         1.26
+        ],
+        [
+         10.48,
+         -0.79
+        ],
+        [
+         10.13,
+         -2.82
+        ],
+        [
+         9.95,
+         -4.86
+        ],
+        [
+         9.97,
+         -6.91
+        ],
+        [
+         9.88,
+         -8.96
+        ],
+        [
+         9.57,
+         -10.99
+        ],
+        [
+         9.29,
+         -13.03
+        ],
+        [
+         9.25,
+         -15.08
+        ],
+        [
+         9.24,
+         -16.32
+        ],
+        [
+         9.15,
+         -16.76
+        ],
+        [
+         8.88,
+         -16.99
+        ],
+        [
+         8.43,
+         -17.02
+        ],
+        [
+         7.22,
+         -16.85
+        ],
+        [
+         5.19,
+         -16.74
+        ],
+        [
+         3.18,
+         -16.4
+        ],
+        [
+         1.17,
+         -16.06
+        ],
+        [
+         -0.86,
+         -15.95
+        ],
+        [
+         -2.9,
+         -15.91
+        ],
+        [
+         -4.91,
+         -15.67
+        ],
+        [
+         -6.92,
+         -15.28
+        ],
+        [
+         -8.94,
+         -15.07
+        ],
+        [
+         -10.98,
+         -15.04
+        ],
+        [
+         -13.01,
+         -14.9
+        ],
+        [
+         -15.01,
+         -14.54
+        ],
+        [
+         -17.02,
+         -14.22
+        ],
+        [
+         -19.05,
+         -14.14
+        ],
+        [
+         -20.28,
+         -14.1
+        ],
+        [
+         -20.64,
+         -14.09
+        ],
+        [
+         -20.28,
+         -14.14
+        ],
+        [
+         -18.99,
+         -14.26
+        ],
+        [
+         -16.95,
+         -14.81
+        ],
+        [
+         -14.88,
+         -15.16
+        ],
+        [
+         -12.78,
+         -15.35
+        ],
+        [
+         -10.71,
+         -15.71
+        ],
+        [
+         -8.68,
+         -16.31
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156302,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -11.67,
+      17.52
+     ],
+     [
+      12.15,
+      15.88
+     ],
+     [
+      9.55,
+      -17.52
+     ],
+     [
+      -12.15,
+      -15.33
+     ],
+     [
+      -9.07,
+      -15.88
+     ]
+    ]
+   },
+   "x": -3850.5,
+   "z": 563.62,
+   "ry": 1.2101,
+   "y": null,
+   "flat_at": [
+    [
+     -3835.39,
+     576.5
+    ],
+    [
+     -3833.33,
+     569.64
+    ],
+    [
+     -3831.26,
+     562.78
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    22.3,
+    33.0
+   ],
+   "organic": {
+    "lot": 1,
+    "zone": 0.35,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_minchon_all_lot002",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156002,
+    "fp": [
+     16.3,
+     17.8
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156016
+      },
+      "x": 1.34,
+      "z": 4.08,
+      "ry": -0.0064
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93156017,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": -4.91,
+      "z": 7.28,
+      "ry": 6.0522
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         6.95,
+         1.4
+        ],
+        [
+         7.09,
+         2.1
+        ],
+        [
+         8.6,
+         8.43
+        ],
+        [
+         8.61,
+         8.8
+        ],
+        [
+         8.45,
+         9.07
+        ],
+        [
+         8.11,
+         9.23
+        ],
+        [
+         7.16,
+         9.48
+        ],
+        [
+         4.76,
+         9.55
+        ],
+        [
+         -3.82,
+         7.53
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156302,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -6.0,
+         7.02
+        ],
+        [
+         -8.75,
+         6.37
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156303,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -5.03,
+         -9.24
+        ],
+        [
+         2.85,
+         -2.05
+        ],
+        [
+         4.45,
+         1.22
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156304,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_3",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         5.2,
+         1.21
+        ],
+        [
+         5.0,
+         0.33
+        ],
+        [
+         4.99,
+         0.01
+        ],
+        [
+         5.14,
+         -0.19
+        ],
+        [
+         5.46,
+         -0.27
+        ],
+        [
+         6.15,
+         -0.29
+        ],
+        [
+         6.42,
+         -0.25
+        ],
+        [
+         6.6,
+         -0.11
+        ],
+        [
+         6.7,
+         0.15
+        ],
+        [
+         6.91,
+         1.2
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156305,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      9.17,
+      9.32
+     ],
+     [
+      7.2,
+      9.83
+     ],
+     [
+      4.73,
+      9.9
+     ],
+     [
+      -9.17,
+      6.63
+     ],
+     [
+      -5.24,
+      -9.9
+     ],
+     [
+      3.13,
+      -2.26
+     ],
+     [
+      4.85,
+      1.23
+     ],
+     [
+      4.42,
+      -0.59
+     ],
+     [
+      6.9,
+      -0.66
+     ],
+     [
+      7.43,
+      2.02
+     ]
+    ]
+   },
+   "x": -3843.7,
+   "z": 613.02,
+   "ry": -1.9183,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    16.3,
+    17.8
+   ],
+   "organic": {
+    "lot": 2,
+    "zone": 0.79,
+    "street": "main",
+    "walls": 4
+   }
+  },
+  {
+   "id": "st_minchon_all_lot003",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156003,
+    "fp": [
+     18.8,
+     21.5
+    ],
+    "pieces": [
+     {
+      "tag": "anchae",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156021
+      },
+      "x": -1.47,
+      "z": -1.59,
+      "ry": -0.0492
+     },
+     {
+      "tag": "teotbat",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 931560214,
+       "w": 4.2,
+       "d": 3.0
+      },
+      "x": -8.67,
+      "z": 6.37,
+      "ry": -0.0492
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93156050,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -3.28,
+      "z": 7.46,
+      "ry": 4.7124
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/pine",
+      "params": {
+       "seed": 93156080,
+       "s": 0.835454064817168
+      },
+      "x": 8.55,
+      "z": -0.85,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "sarip",
+       "seed": 93156021
+      },
+      "x": 0.0,
+      "z": 11.4,
+      "ry": 6.2832
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -10.04,
+         -11.1
+        ],
+        [
+         -8.22,
+         -9.92
+        ],
+        [
+         -5.96,
+         -9.17
+        ],
+        [
+         -4.54,
+         -9.02
+        ],
+        [
+         -3.94,
+         -8.91
+        ],
+        [
+         -3.36,
+         -8.71
+        ],
+        [
+         -2.8,
+         -8.4
+        ],
+        [
+         -1.29,
+         -7.42
+        ],
+        [
+         0.95,
+         -6.81
+        ],
+        [
+         3.19,
+         -6.19
+        ],
+        [
+         5.49,
+         -5.85
+        ],
+        [
+         7.78,
+         -5.48
+        ],
+        [
+         9.24,
+         -5.15
+        ],
+        [
+         9.68,
+         -4.96
+        ],
+        [
+         9.94,
+         -4.63
+        ],
+        [
+         10.02,
+         -4.15
+        ],
+        [
+         9.98,
+         -2.92
+        ],
+        [
+         10.05,
+         -0.88
+        ],
+        [
+         9.89,
+         1.17
+        ],
+        [
+         9.78,
+         3.22
+        ],
+        [
+         9.91,
+         5.26
+        ],
+        [
+         10.06,
+         7.31
+        ],
+        [
+         9.97,
+         9.35
+        ],
+        [
+         10.01,
+         10.58
+        ],
+        [
+         9.94,
+         11.03
+        ],
+        [
+         9.68,
+         11.28
+        ],
+        [
+         9.22,
+         11.33
+        ],
+        [
+         7.74,
+         11.2
+        ],
+        [
+         5.43,
+         11.16
+        ],
+        [
+         3.13,
+         11.36
+        ],
+        [
+         0.83,
+         11.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93156303,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -0.83,
+         11.4
+        ],
+        [
+         -3.13,
+         11.14
+        ],
+        [
+         -5.44,
+         11.32
+        ],
+        [
+         -7.74,
+         11.41
+        ],
+        [
+         -10.04,
+         11.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93156304,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.39,
+      11.75
+     ],
+     [
+      -10.39,
+      11.75
+     ],
+     [
+      -10.39,
+      -11.75
+     ],
+     [
+      -8.08,
+      -10.25
+     ],
+     [
+      -3.46,
+      -9.25
+     ],
+     [
+      -1.16,
+      -7.75
+     ],
+     [
+      10.39,
+      -5.25
+     ]
+    ]
+   },
+   "x": -3831.29,
+   "z": 599.9,
+   "ry": -2.1518,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    18.8,
+    21.5
+   ],
+   "organic": {
+    "lot": 3,
+    "zone": 0.64,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_minchon_all_lot004",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156004,
+    "fp": [
+     33.3,
+     33.6
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156028
+      },
+      "x": -5.73,
+      "z": -12.65,
+      "ry": 0.0043
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156068
+      },
+      "x": -11.02,
+      "z": 0.3,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156078
+      },
+      "x": 12.91,
+      "z": -2.89,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156048
+      },
+      "x": -4.79,
+      "z": 12.88,
+      "ry": 3.1416
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93156047,
+       "s": 1.09444151052739
+      },
+      "x": -0.37,
+      "z": 4.16,
+      "ry": 1.5708
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93156047,
+       "s": 0.935490348516032
+      },
+      "x": 3.63,
+      "z": 1.16,
+      "ry": 4.7124
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93156047,
+       "s": 0.859362587588839
+      },
+      "x": -5.26,
+      "z": -4.49,
+      "ry": 0.0
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93156077,
+       "variant": "broadleaf",
+       "h": 8.93582454882562
+      },
+      "x": 3.77,
+      "z": -6.5,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156099,
+       "ax": 11.6,
+       "az": -11.57,
+       "bx": 4.55,
+       "bz": -13.09,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156100,
+       "ax": 17.63,
+       "az": -8.66,
+       "bx": 11.6,
+       "bz": -11.57,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         3.55,
+         15.51
+        ],
+        [
+         -11.07,
+         17.27
+        ],
+        [
+         -11.8,
+         17.21
+        ],
+        [
+         -12.29,
+         16.85
+        ],
+        [
+         -12.55,
+         16.14
+        ],
+        [
+         -17.04,
+         -13.74
+        ],
+        [
+         -17.0,
+         -14.47
+        ],
+        [
+         -16.65,
+         -14.96
+        ],
+        [
+         -15.95,
+         -15.22
+        ],
+        [
+         -1.03,
+         -17.46
+        ],
+        [
+         0.37,
+         -17.1
+        ],
+        [
+         0.94,
+         -16.89
+        ],
+        [
+         1.44,
+         -16.56
+        ],
+        [
+         1.87,
+         -16.1
+        ],
+        [
+         3.77,
+         -13.55
+        ],
+        [
+         4.19,
+         -13.1
+        ],
+        [
+         4.69,
+         -12.77
+        ],
+        [
+         5.3,
+         -12.57
+        ],
+        [
+         6.73,
+         -12.26
+        ],
+        [
+         9.11,
+         -11.75
+        ],
+        [
+         11.49,
+         -11.23
+        ],
+        [
+         13.41,
+         -10.31
+        ],
+        [
+         15.33,
+         -9.38
+        ],
+        [
+         16.48,
+         -8.82
+        ],
+        [
+         16.89,
+         -8.53
+        ],
+        [
+         17.1,
+         -8.13
+        ],
+        [
+         17.12,
+         -7.61
+        ],
+        [
+         14.03,
+         12.98
+        ],
+        [
+         13.78,
+         13.71
+        ],
+        [
+         13.29,
+         14.19
+        ],
+        [
+         12.54,
+         14.42
+        ],
+        [
+         5.78,
+         15.24
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156304,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "곧은 필지 경계 ×5",
+        "비탈 등고선을 따라 굽음(옆·뒤 담) ×2",
+        "흙·돌담 모서리를 둥글게 ×6"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      14.14,
+      14.58
+     ],
+     [
+      -12.65,
+      17.81
+     ],
+     [
+      -17.63,
+      -15.32
+     ],
+     [
+      -1.01,
+      -17.81
+     ],
+     [
+      1.51,
+      -17.18
+     ],
+     [
+      4.55,
+      -13.09
+     ],
+     [
+      11.6,
+      -11.57
+     ],
+     [
+      17.63,
+      -8.66
+     ]
+    ]
+   },
+   "x": -3816.25,
+   "z": 578.03,
+   "ry": -2.0028,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    33.3,
+    33.6
+   ],
+   "organic": {
+    "lot": 4,
+    "zone": 0.37,
+    "street": "main",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_minchon_all_lot005",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156005,
+    "fp": [
+     39.3,
+     32.6
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156035
+      },
+      "x": -4.34,
+      "z": -8.07,
+      "ry": 0.0024
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156075
+      },
+      "x": -7.45,
+      "z": 3.46,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156085
+      },
+      "x": 14.15,
+      "z": 7.81,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93156056
+      },
+      "x": -0.47,
+      "z": 10.7,
+      "ry": 3.1416
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93156052,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 3.43,
+      "z": -1.82,
+      "ry": 0.0
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93156052,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 8.58,
+      "z": 3.84,
+      "ry": 4.7124
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93156052,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 8.64,
+      "z": 8.83,
+      "ry": 3.1416
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156098,
+       "ax": -20.66,
+       "az": -13.82,
+       "bx": -8.32,
+       "bz": 17.32,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         3.27,
+         13.36
+        ],
+        [
+         -6.88,
+         16.51
+        ],
+        [
+         -7.61,
+         16.59
+        ],
+        [
+         -8.18,
+         16.32
+        ],
+        [
+         -8.6,
+         15.68
+        ],
+        [
+         -19.73,
+         -12.4
+        ],
+        [
+         -19.86,
+         -13.12
+        ],
+        [
+         -19.62,
+         -13.66
+        ],
+        [
+         -18.98,
+         -14.05
+        ],
+        [
+         -12.11,
+         -16.51
+        ],
+        [
+         -11.31,
+         -16.7
+        ],
+        [
+         -10.51,
+         -16.68
+        ],
+        [
+         -9.69,
+         -16.45
+        ],
+        [
+         4.29,
+         -10.69
+        ],
+        [
+         13.59,
+         -3.48
+        ],
+        [
+         14.21,
+         -2.91
+        ],
+        [
+         14.73,
+         -2.26
+        ],
+        [
+         15.16,
+         -1.5
+        ],
+        [
+         19.74,
+         8.52
+        ],
+        [
+         19.99,
+         9.3
+        ],
+        [
+         20.01,
+         10.09
+        ],
+        [
+         19.81,
+         10.91
+        ],
+        [
+         18.54,
+         14.1
+        ],
+        [
+         18.14,
+         14.73
+        ],
+        [
+         17.57,
+         15.01
+        ],
+        [
+         16.81,
+         14.95
+        ],
+        [
+         11.22,
+         13.33
+        ],
+        [
+         5.96,
+         13.35
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156305,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "곧은 필지 경계 ×6",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×1",
+        "흙·돌담 모서리를 둥글게 ×6"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      18.27,
+      15.74
+     ],
+     [
+      11.17,
+      13.68
+     ],
+     [
+      3.33,
+      13.71
+     ],
+     [
+      -8.32,
+      17.32
+     ],
+     [
+      -20.66,
+      -13.82
+     ],
+     [
+      -10.88,
+      -17.32
+     ],
+     [
+      4.47,
+      -10.99
+     ],
+     [
+      14.9,
+      -2.9
+     ],
+     [
+      20.66,
+      9.69
+     ]
+    ]
+   },
+   "x": -3879.8,
+   "z": 592.96,
+   "ry": 0.345,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    39.3,
+    32.6
+   ],
+   "organic": {
+    "lot": 5,
+    "zone": 0.69,
+    "street": "street1",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_minchon_all_tree006",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 1,
+    "s": 1.20889528710395
+   },
+   "x": -3885.5,
+   "z": 514.99,
+   "ry": 0.2317,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree007",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 2,
+    "s": 1.19647615831345
+   },
+   "x": -3899.39,
+   "z": 517.98,
+   "ry": 0.8853,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree008",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 6,
+    "s": 1.21901940014213
+   },
+   "x": -3901.76,
+   "z": 525.11,
+   "ry": 0.2739,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree009",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 7,
+    "s": 0.929876527562737
+   },
+   "x": -3894.93,
+   "z": 529.48,
+   "ry": 1.3305,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree010",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 10,
+    "s": 1.15391127280891
+   },
+   "x": -3872.08,
+   "z": 525.81,
+   "ry": 5.2026,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree011",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 11,
+    "s": 1.09819690929726
+   },
+   "x": -3866.97,
+   "z": 527.5,
+   "ry": 1.1438,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree012",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 14,
+    "s": 1.24711324693635
+   },
+   "x": -3892.41,
+   "z": 535.08,
+   "ry": 6.1134,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat013",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 17,
+    "w": 4.68314766697586,
+    "d": 3.66799308964983
+   },
+   "x": -3875.42,
+   "z": 532.48,
+   "ry": 0.2103,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay014",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 21,
+    "s": 0.846867001825012
+   },
+   "x": -3916.19,
+   "z": 542.85,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree015",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 22,
+    "s": 1.16629856768996
+   },
+   "x": -3908.16,
+   "z": 539.01,
+   "ry": 3.8142,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree016",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 23,
+    "s": 0.898015447147191
+   },
+   "x": -3899.77,
+   "z": 540.71,
+   "ry": 0.465,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree017",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 26,
+    "s": 1.03542025582865
+   },
+   "x": -3880.76,
+   "z": 542.18,
+   "ry": 1.3728,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree018",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 28,
+    "s": 0.920940687786788
+   },
+   "x": -3863.44,
+   "z": 544.79,
+   "ry": 3.9286,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat019",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 29,
+    "w": 4.60188125446439,
+    "d": 3.68657058281824
+   },
+   "x": -3855.58,
+   "z": 542.53,
+   "ry": -0.268,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree020",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 31,
+    "s": 1.15774351572618
+   },
+   "x": -3844.39,
+   "z": 542.11,
+   "ry": 4.2751,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay021",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 34,
+    "s": 0.808485228859354
+   },
+   "x": -3915.18,
+   "z": 552.75,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree022",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 35,
+    "s": 0.968765189964324
+   },
+   "x": -3909.14,
+   "z": 549.31,
+   "ry": 1.1493,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree023",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 38,
+    "s": 0.907302331365645
+   },
+   "x": -3885.61,
+   "z": 550.65,
+   "ry": 2.4009,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree024",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 41,
+    "s": 1.1870221639052
+   },
+   "x": -3849.42,
+   "z": 549.84,
+   "ry": 2.0027,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat025",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 43,
+    "w": 4.70765592716634,
+    "d": 3.43729078341275
+   },
+   "x": -3837.82,
+   "z": 546.41,
+   "ry": 0.1564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree026",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 44,
+    "s": 1.17880184575915
+   },
+   "x": -3830.24,
+   "z": 549.64,
+   "ry": 5.5406,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree027",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 45,
+    "s": 0.870738290250301
+   },
+   "x": -3805.87,
+   "z": 549.77,
+   "ry": 6.2149,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree028",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 48,
+    "s": 1.18020425597206
+   },
+   "x": -3911.02,
+   "z": 560.28,
+   "ry": 4.2914,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree029",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 53,
+    "s": 0.903262856975198
+   },
+   "x": -3868.68,
+   "z": 553.7,
+   "ry": 4.816,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat030",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 54,
+    "w": 5.57048506196588,
+    "d": 3.1985468798317
+   },
+   "x": -3810.31,
+   "z": 557.79,
+   "ry": 0.032,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat031",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 55,
+    "w": 4.03669909154996,
+    "d": 3.27050356222317
+   },
+   "x": -3803.12,
+   "z": 558.17,
+   "ry": -0.1496,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree032",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 57,
+    "s": 0.986301480047405
+   },
+   "x": -3786.89,
+   "z": 556.31,
+   "ry": 0.2315,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree033",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 58,
+    "s": 1.14785248078406
+   },
+   "x": -3926.18,
+   "z": 564.05,
+   "ry": 1.423,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree034",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 60,
+    "s": 1.14917533965781
+   },
+   "x": -3910.83,
+   "z": 562.39,
+   "ry": 0.024,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat035",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 61,
+    "w": 4.84250719798729,
+    "d": 3.57250036429614
+   },
+   "x": -3900.83,
+   "z": 563.72,
+   "ry": 0.2632,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree036",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 65,
+    "s": 1.24153835372999
+   },
+   "x": -3874.19,
+   "z": 561.77,
+   "ry": 2.4267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree037",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 69,
+    "s": 1.1415271946229
+   },
+   "x": -3778.97,
+   "z": 565.48,
+   "ry": 0.1929,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat038",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 73,
+    "w": 5.39884380344301,
+    "d": 4.0420649218373
+   },
+   "x": -3916.71,
+   "z": 570.45,
+   "ry": 0.2123,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree039",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 75,
+    "s": 0.998902190476656
+   },
+   "x": -3902.25,
+   "z": 568.53,
+   "ry": 1.9301,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree040",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 77,
+    "s": 0.969589411746711
+   },
+   "x": -3885.85,
+   "z": 570.76,
+   "ry": 4.4665,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay041",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 80,
+    "s": 1.09384940027958
+   },
+   "x": -3787.83,
+   "z": 572.18,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree042",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 83,
+    "s": 1.14239885164425
+   },
+   "x": -3769.4,
+   "z": 570.37,
+   "ry": 2.9926,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree043",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 84,
+    "s": 1.24465638939291
+   },
+   "x": -3924.43,
+   "z": 581.94,
+   "ry": 3.5721,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree044",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 85,
+    "s": 0.874173229001462
+   },
+   "x": -3916.68,
+   "z": 581.77,
+   "ry": 3.1638,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree045",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 86,
+    "s": 0.896368762943894
+   },
+   "x": -3907.73,
+   "z": 578.95,
+   "ry": 4.1439,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree046",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 87,
+    "s": 1.22929254537448
+   },
+   "x": -3904.05,
+   "z": 582.42,
+   "ry": 0.6125,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree047",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 88,
+    "s": 0.902589537017047
+   },
+   "x": -3871.02,
+   "z": 576.7,
+   "ry": 3.2292,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree048",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 91,
+    "s": 1.0564913132228
+   },
+   "x": -3787.78,
+   "z": 581.96,
+   "ry": 5.1563,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree049",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 94,
+    "s": 0.868445098772645
+   },
+   "x": -3930.17,
+   "z": 588.28,
+   "ry": 0.2209,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree050",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 96,
+    "s": 1.2328542035073
+   },
+   "x": -3917.86,
+   "z": 586.26,
+   "ry": 5.7482,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay051",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 97,
+    "s": 1.07731770223472
+   },
+   "x": -3908.03,
+   "z": 589.66,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat052",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 98,
+    "w": 4.90172004140913,
+    "d": 3.55310835158452
+   },
+   "x": -3863.44,
+   "z": 583.45,
+   "ry": 0.2652,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree053",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 103,
+    "s": 1.23023155862466
+   },
+   "x": -3901.88,
+   "z": 594.06,
+   "ry": 2.7564,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree054",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 104,
+    "s": 0.938219768833369
+   },
+   "x": -3758.55,
+   "z": 595.82,
+   "ry": 4.4759,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree055",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 106,
+    "s": 0.871606048662215
+   },
+   "x": -3929.23,
+   "z": 600.1,
+   "ry": 6.0902,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay056",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 111,
+    "s": 0.93669591548387
+   },
+   "x": -3895.96,
+   "z": 601.09,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay057",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 114,
+    "s": 1.02000342033571
+   },
+   "x": -3772.29,
+   "z": 602.39,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat058",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 115,
+    "w": 5.77761278115213,
+    "d": 3.99962290897965
+   },
+   "x": -3764.93,
+   "z": 602.48,
+   "ry": 0.0637,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay059",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 126,
+    "s": 1.06563227310544
+   },
+   "x": -3784.55,
+   "z": 608.97,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree060",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 129,
+    "s": 0.871025051362812
+   },
+   "x": -3758.21,
+   "z": 610.16,
+   "ry": 2.5103,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree061",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 135,
+    "s": 1.06738062603399
+   },
+   "x": -3893.14,
+   "z": 618.6,
+   "ry": 6.2432,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree062",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 136,
+    "s": 1.24468244081363
+   },
+   "x": -3890.46,
+   "z": 614.79,
+   "ry": 4.6261,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree063",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 138,
+    "s": 1.07499389853328
+   },
+   "x": -3863.92,
+   "z": 614.87,
+   "ry": 4.6102,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree064",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 139,
+    "s": 1.09719666112214
+   },
+   "x": -3808.87,
+   "z": 618.63,
+   "ry": 1.967,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat065",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 140,
+    "w": 4.38339435495436,
+    "d": 3.857561619021
+   },
+   "x": -3805.41,
+   "z": 615.21,
+   "ry": 0.1661,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree066",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 145,
+    "s": 1.17187740625814
+   },
+   "x": -3766.04,
+   "z": 619.54,
+   "ry": 2.0302,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay067",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 147,
+    "s": 0.886016576003749
+   },
+   "x": -3923.0,
+   "z": 622.41,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree068",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 149,
+    "s": 0.96610613502562
+   },
+   "x": -3907.52,
+   "z": 627.81,
+   "ry": 0.5021,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat069",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 150,
+    "w": 4.77355330158025,
+    "d": 3.38279167804867
+   },
+   "x": -3899.41,
+   "z": 622.79,
+   "ry": 0.2218,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree070",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 152,
+    "s": 1.21541709313169
+   },
+   "x": -3885.78,
+   "z": 626.55,
+   "ry": 3.2843,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree071",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 155,
+    "s": 0.926113726943731
+   },
+   "x": -3816.52,
+   "z": 624.07,
+   "ry": 5.2456,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree072",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 158,
+    "s": 1.19961030911654
+   },
+   "x": -3796.8,
+   "z": 625.9,
+   "ry": 0.7066,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay073",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 160,
+    "s": 1.05675449755508
+   },
+   "x": -3782.23,
+   "z": 626.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree074",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 164,
+    "s": 1.23218340985477
+   },
+   "x": -3926.07,
+   "z": 633.78,
+   "ry": 1.3358,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree075",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 167,
+    "s": 0.923181102890521
+   },
+   "x": -3900.94,
+   "z": 631.55,
+   "ry": 3.2896,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree076",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 172,
+    "s": 0.86587820937857
+   },
+   "x": -3868.01,
+   "z": 628.67,
+   "ry": 0.0873,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree077",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 176,
+    "s": 1.14932534201071
+   },
+   "x": -3801.42,
+   "z": 633.99,
+   "ry": 2.9514,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree078",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 177,
+    "s": 1.23661643769592
+   },
+   "x": -3799.0,
+   "z": 631.3,
+   "ry": 3.8647,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree079",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 181,
+    "s": 1.04597659325227
+   },
+   "x": -3933.91,
+   "z": 642.59,
+   "ry": 0.1656,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree080",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 182,
+    "s": 1.21855472838506
+   },
+   "x": -3924.38,
+   "z": 641.27,
+   "ry": 0.5599,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat081",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 183,
+    "w": 4.00377827417105,
+    "d": 3.95487060528249
+   },
+   "x": -3915.54,
+   "z": 642.02,
+   "ry": 0.1122,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree082",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 184,
+    "s": 0.960716342646629
+   },
+   "x": -3907.91,
+   "z": 638.07,
+   "ry": 5.3912,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree083",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 189,
+    "s": 1.10574804032221
+   },
+   "x": -3869.29,
+   "z": 640.33,
+   "ry": 1.0608,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree084",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 190,
+    "s": 1.22568821553141
+   },
+   "x": -3834.09,
+   "z": 640.94,
+   "ry": 2.0388,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree085",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 192,
+    "s": 1.00883655827492
+   },
+   "x": -3821.46,
+   "z": 640.43,
+   "ry": 0.1228,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree086",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 193,
+    "s": 1.22675818614662
+   },
+   "x": -3815.52,
+   "z": 641.11,
+   "ry": 2.1817,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay087",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 194,
+    "s": 0.805115746927913
+   },
+   "x": -3807.56,
+   "z": 637.48,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree088",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 202,
+    "s": 1.17300670212135
+   },
+   "x": -3906.29,
+   "z": 646.17,
+   "ry": 3.7789,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat089",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 203,
+    "w": 4.74971327418461,
+    "d": 4.16442884132266
+   },
+   "x": -3902.34,
+   "z": 644.08,
+   "ry": 0.2771,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree090",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 204,
+    "s": 1.20176770836115
+   },
+   "x": -3891.97,
+   "z": 644.77,
+   "ry": 5.8882,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree091",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 207,
+    "s": 1.20106064705178
+   },
+   "x": -3839.67,
+   "z": 647.43,
+   "ry": 2.2292,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree092",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 209,
+    "s": 1.18247788613662
+   },
+   "x": -3825.82,
+   "z": 648.51,
+   "ry": 3.2629,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree093",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 212,
+    "s": 0.860403614211828
+   },
+   "x": -3807.07,
+   "z": 644.12,
+   "ry": 2.7138,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree094",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 215,
+    "s": 0.970142204593867
+   },
+   "x": -3784.9,
+   "z": 646.78,
+   "ry": 1.8814,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree095",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 219,
+    "s": 1.04429309861735
+   },
+   "x": -3919.05,
+   "z": 656.82,
+   "ry": 6.0261,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree096",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 220,
+    "s": 0.942127319145948
+   },
+   "x": -3911.0,
+   "z": 652.17,
+   "ry": 4.1483,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree097",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 221,
+    "s": 1.08282593302429
+   },
+   "x": -3902.95,
+   "z": 657.15,
+   "ry": 0.3441,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree098",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 223,
+    "s": 0.907742236275226
+   },
+   "x": -3889.26,
+   "z": 657.0,
+   "ry": 4.1787,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree099",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 224,
+    "s": 1.17931615216658
+   },
+   "x": -3881.99,
+   "z": 656.04,
+   "ry": 2.6147,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree100",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 227,
+    "s": 1.15354949198663
+   },
+   "x": -3837.69,
+   "z": 652.66,
+   "ry": 5.3217,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree101",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 228,
+    "s": 0.993633382674307
+   },
+   "x": -3827.6,
+   "z": 657.91,
+   "ry": 5.3043,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree102",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 229,
+    "s": 1.02197996396571
+   },
+   "x": -3817.81,
+   "z": 657.34,
+   "ry": 2.283,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay103",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 233,
+    "s": 1.14813120000763
+   },
+   "x": -3786.15,
+   "z": 651.27,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree104",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 234,
+    "s": 1.20241681206971
+   },
+   "x": -3779.11,
+   "z": 654.61,
+   "ry": 5.3524,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat105",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 236,
+    "w": 5.51588647253811,
+    "d": 3.57481042351574
+   },
+   "x": -3908.86,
+   "z": 662.2,
+   "ry": 0.061,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay106",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 238,
+    "s": 0.966840205574408
+   },
+   "x": -3894.85,
+   "z": 660.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree107",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 240,
+    "s": 1.19418311230838
+   },
+   "x": -3848.63,
+   "z": 661.78,
+   "ry": 2.6325,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree108",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 243,
+    "s": 1.23999285213649
+   },
+   "x": -3830.2,
+   "z": 659.78,
+   "ry": 1.1162,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat109",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 244,
+    "w": 4.58357776654884,
+    "d": 3.57081598145887
+   },
+   "x": -3821.34,
+   "z": 658.43,
+   "ry": -0.1588,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree110",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 246,
+    "s": 1.19413184924051
+   },
+   "x": -3803.74,
+   "z": 659.49,
+   "ry": 2.859,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree111",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 248,
+    "s": 1.06265219738707
+   },
+   "x": -3792.11,
+   "z": 664.23,
+   "ry": 4.4645,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree112",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 252,
+    "s": 1.19129494521767
+   },
+   "x": -3853.96,
+   "z": 666.81,
+   "ry": 2.9168,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay113",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 253,
+    "s": 1.14741931471508
+   },
+   "x": -3851.96,
+   "z": 668.96,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree114",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 255,
+    "s": 0.856552474014461
+   },
+   "x": -3837.99,
+   "z": 669.34,
+   "ry": 4.6615,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree115",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 256,
+    "s": 0.933627070114017
+   },
+   "x": -3830.41,
+   "z": 667.68,
+   "ry": 4.3789,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree116",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 258,
+    "s": 1.00684942575172
+   },
+   "x": -3815.04,
+   "z": 672.78,
+   "ry": 0.8572,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat117",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 261,
+    "w": 5.19925143243745,
+    "d": 3.18115829480812
+   },
+   "x": -3885.69,
+   "z": 674.95,
+   "ry": 0.0794,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat118",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 263,
+    "w": 5.37035088334233,
+    "d": 3.27483573462814
+   },
+   "x": -3849.0,
+   "z": 676.61,
+   "ry": -0.2267,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree119",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 264,
+    "s": 1.11172423092648
+   },
+   "x": -3842.17,
+   "z": 675.33,
+   "ry": 0.2805,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree120",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 267,
+    "s": 1.06420575845987
+   },
+   "x": -3818.64,
+   "z": 676.68,
+   "ry": 2.9768,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree121",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 268,
+    "s": 0.978507671877742
+   },
+   "x": -3812.92,
+   "z": 676.63,
+   "ry": 2.5009,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay122",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 273,
+    "s": 0.906061910954304
+   },
+   "x": -3839.51,
+   "z": 683.9,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree123",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 274,
+    "s": 1.20914686657488
+   },
+   "x": -3831.2,
+   "z": 681.08,
+   "ry": 3.4449,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree124",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 277,
+    "s": 1.2035985887982
+   },
+   "x": -3811.12,
+   "z": 687.42,
+   "ry": 1.6672,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay125",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 278,
+    "s": 1.13438552912557
+   },
+   "x": -3849.86,
+   "z": 689.14,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay126",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 279,
+    "s": 0.828446874790825
+   },
+   "x": -3841.2,
+   "z": 694.68,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree127",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 281,
+    "s": 1.19641771735623
+   },
+   "x": -3829.07,
+   "z": 694.5,
+   "ry": 2.2693,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree128",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 283,
+    "s": 1.22450414272025
+   },
+   "x": -3835.62,
+   "z": 696.91,
+   "ry": 2.8418,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat129",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 284,
+    "w": 4.76019762363285,
+    "d": 3.07021715389565
+   },
+   "x": -3821.88,
+   "z": 697.15,
+   "ry": 0.1635,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  }
+ ]
+}

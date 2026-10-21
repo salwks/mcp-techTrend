@@ -1,0 +1,8128 @@
+{
+ "note": "도시·마을 빌더 견본 산촌(비탈·축대) 견본 — tools/bldg/settlement_place.gd",
+ "tier": "village",
+ "majors": [
+  {
+   "role": "jangseung_l",
+   "kit": "village/jangseung",
+   "at": [
+    -3070.2,
+    693.0
+   ]
+  },
+  {
+   "role": "jangseung_r",
+   "kit": "village/jangseung",
+   "at": [
+    -3063.8,
+    693.0
+   ]
+  },
+  {
+   "role": "sotdae",
+   "kit": "village/sotdae",
+   "at": [
+    -3061.0,
+    696.0
+   ]
+  },
+  {
+   "role": "dangsan",
+   "kit": "village/village_square",
+   "at": [
+    -3081.0,
+    679.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3135.0,
+    703.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3119.89,
+    706.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3104.78,
+    709.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3089.67,
+    703.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3074.56,
+    706.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3059.44,
+    709.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3044.33,
+    703.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3029.22,
+    706.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3014.11,
+    709.0
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -2999.0,
+    703.0
+   ]
+  },
+  {
+   "role": "seonghwangdang",
+   "kit": "village/seonghwangdang",
+   "at": [
+    -3057.0,
+    522.25
+   ]
+  },
+  {
+   "role": "well",
+   "kit": "village/well",
+   "at": [
+    -3058.0,
+    615.75
+   ]
+  }
+ ],
+ "districts": [
+  {
+   "id": "all",
+   "area": [
+    [
+     -3152.0,
+     522.25
+    ],
+    [
+     -2982.0,
+     522.25
+    ],
+    [
+     -2977.75,
+     603.0
+    ],
+    [
+     -3007.5,
+     671.0
+    ],
+    [
+     -3126.5,
+     671.0
+    ],
+    [
+     -3156.25,
+     603.0
+    ]
+   ],
+   "lots": 16,
+   "items": 124,
+   "streets": 5
+  }
+ ],
+ "supersede": [],
+ "alleys": [
+  {
+   "id": "st_sanchon_all_street1",
+   "points": [
+    [
+     -3063.91,
+     650.59
+    ],
+    [
+     -3066.88,
+     651.03
+    ],
+    [
+     -3069.81,
+     651.65
+    ],
+    [
+     -3072.69,
+     652.47
+    ],
+    [
+     -3075.5,
+     653.52
+    ],
+    [
+     -3078.32,
+     654.54
+    ],
+    [
+     -3081.26,
+     654.94
+    ],
+    [
+     -3084.26,
+     655.07
+    ],
+    [
+     -3087.25,
+     655.25
+    ],
+    [
+     -3090.13,
+     654.41
+    ],
+    [
+     -3092.91,
+     653.29
+    ],
+    [
+     -3095.55,
+     651.89
+    ],
+    [
+     -3098.03,
+     650.2
+    ]
+   ],
+   "width_m": 3.6,
+   "kind": "street"
+  },
+  {
+   "id": "st_sanchon_all_street2",
+   "points": [
+    [
+     -3066.58,
+     568.85
+    ],
+    [
+     -3069.57,
+     569.02
+    ],
+    [
+     -3072.57,
+     569.22
+    ],
+    [
+     -3075.56,
+     569.48
+    ],
+    [
+     -3078.54,
+     569.82
+    ],
+    [
+     -3081.53,
+     570.0
+    ],
+    [
+     -3084.52,
+     570.23
+    ],
+    [
+     -3087.51,
+     570.44
+    ],
+    [
+     -3090.51,
+     570.53
+    ],
+    [
+     -3093.51,
+     570.42
+    ],
+    [
+     -3096.48,
+     570.02
+    ],
+    [
+     -3099.43,
+     569.5
+    ],
+    [
+     -3102.39,
+     569.0
+    ],
+    [
+     -3105.38,
+     569.27
+    ],
+    [
+     -3108.37,
+     569.36
+    ],
+    [
+     -3111.37,
+     569.33
+    ],
+    [
+     -3114.37,
+     569.21
+    ],
+    [
+     -3117.17,
+     568.13
+    ],
+    [
+     -3119.84,
+     566.78
+    ],
+    [
+     -3121.58,
+     565.79
+    ]
+   ],
+   "width_m": 3.64,
+   "kind": "street"
+  },
+  {
+   "id": "st_sanchon_all_alley3",
+   "points": [
+    [
+     -3061.87,
+     670.0
+    ],
+    [
+     -3059.68,
+     667.94
+    ],
+    [
+     -3057.63,
+     665.76
+    ],
+    [
+     -3055.71,
+     663.46
+    ],
+    [
+     -3053.93,
+     661.05
+    ],
+    [
+     -3052.39,
+     658.47
+    ],
+    [
+     -3051.07,
+     655.78
+    ],
+    [
+     -3050.27,
+     653.95
+    ]
+   ],
+   "width_m": 2.79,
+   "kind": "alley"
+  },
+  {
+   "id": "st_sanchon_all_alley4",
+   "points": [
+    [
+     -3088.56,
+     652.99
+    ],
+    [
+     -3088.0,
+     650.04
+    ],
+    [
+     -3087.5,
+     647.09
+    ],
+    [
+     -3087.37,
+     644.13
+    ],
+    [
+     -3087.9,
+     641.17
+    ],
+    [
+     -3088.47,
+     638.23
+    ],
+    [
+     -3089.37,
+     635.37
+    ],
+    [
+     -3090.07,
+     633.5
+    ]
+   ],
+   "width_m": 2.51,
+   "kind": "alley"
+  },
+  {
+   "id": "st_sanchon_all_alley5",
+   "points": [
+    [
+     -3108.72,
+     567.54
+    ],
+    [
+     -3109.87,
+     564.77
+    ],
+    [
+     -3111.04,
+     562.01
+    ],
+    [
+     -3111.87,
+     559.17
+    ],
+    [
+     -3111.97,
+     556.17
+    ],
+    [
+     -3112.18,
+     553.18
+    ],
+    [
+     -3112.88,
+     550.29
+    ],
+    [
+     -3113.52,
+     548.39
+    ]
+   ],
+   "width_m": 2.67,
+   "kind": "alley"
+  },
+  {
+   "id": "st_sanchon_main",
+   "points": [
+    [
+     -3067.0,
+     711.0
+    ],
+    [
+     -3061.0,
+     637.0
+    ],
+    [
+     -3071.0,
+     603.0
+    ],
+    [
+     -3064.0,
+     564.75
+    ],
+    [
+     -3067.0,
+     539.25
+    ]
+   ],
+   "width_m": 3.2,
+   "kind": "trunk"
+  }
+ ],
+ "urban": [],
+ "items": [
+  {
+   "id": "st_sanchon_jangseung_l01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 3008
+   },
+   "x": -3070.2,
+   "z": 693.0,
+   "ry": 1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "jangseung_l"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_sanchon_jangseung_r02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 3009,
+    "female": true
+   },
+   "x": -3063.8,
+   "z": 693.0,
+   "ry": -1.5708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "jangseung_r"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_sanchon_sotdae03",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 3010
+   },
+   "x": -3061.0,
+   "z": 696.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "sotdae"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_sanchon_dangsan04",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 3011,
+    "tree": "nature"
+   },
+   "x": -3081.0,
+   "z": 679.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "dangsan"
+   },
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "st_sanchon_forest05",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3038,
+    "s": 1.2
+   },
+   "x": -3135.0,
+   "z": 703.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest06",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3039,
+    "s": 1.2
+   },
+   "x": -3119.89,
+   "z": 706.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest07",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3040,
+    "s": 1.2
+   },
+   "x": -3104.78,
+   "z": 709.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest08",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3041,
+    "s": 1.2
+   },
+   "x": -3089.67,
+   "z": 703.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest09",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3042,
+    "s": 1.2
+   },
+   "x": -3074.56,
+   "z": 706.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest10",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3043,
+    "s": 1.2
+   },
+   "x": -3059.44,
+   "z": 709.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest11",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3044,
+    "s": 1.2
+   },
+   "x": -3044.33,
+   "z": 703.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest12",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3045,
+    "s": 1.2
+   },
+   "x": -3029.22,
+   "z": 706.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest13",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3046,
+    "s": 1.2
+   },
+   "x": -3014.11,
+   "z": 709.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_forest14",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3047,
+    "s": 1.2
+   },
+   "x": -2999.0,
+   "z": 703.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_sanchon_seonghwangdang15",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 3012
+   },
+   "x": -3057.0,
+   "z": 522.25,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "seonghwangdang"
+   },
+   "footprint": [
+    4.0,
+    4.0
+   ]
+  },
+  {
+   "id": "st_sanchon_well16",
+   "kit": "village/well",
+   "params": {
+    "seed": 3013,
+    "roof": true
+   },
+   "x": -3058.0,
+   "z": 615.75,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "settlement": {
+    "role": "well"
+   },
+   "footprint": [
+    2.4,
+    2.4
+   ]
+  },
+  {
+   "id": "st_sanchon_all_lot000",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249000,
+    "fp": [
+     20.1,
+     12.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249000
+      },
+      "x": 1.78,
+      "z": -0.97,
+      "ry": -0.021
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249094,
+       "ax": 2.28,
+       "az": -4.97,
+       "bx": -6.97,
+       "bz": -3.76,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249096,
+       "ax": -5.66,
+       "az": -3.72,
+       "bx": -9.7,
+       "bz": -0.77,
+       "drop": 3.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249097,
+       "ax": -9.7,
+       "az": -0.77,
+       "bx": -11.07,
+       "bz": 6.6,
+       "drop": 3.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249003,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": -8.09,
+      "z": 6.67,
+      "ry": -0.1411
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -10.66,
+         6.31
+        ],
+        [
+         -9.2,
+         6.52
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249300,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -6.67,
+         6.87
+        ],
+        [
+         -4.52,
+         6.37
+        ],
+        [
+         -2.38,
+         5.85
+        ],
+        [
+         -0.19,
+         5.59
+        ],
+        [
+         2.0,
+         5.35
+        ],
+        [
+         4.15,
+         4.85
+        ],
+        [
+         6.28,
+         4.31
+        ],
+        [
+         8.47,
+         4.03
+        ],
+        [
+         10.66,
+         3.79
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249301,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         8.7,
+         -6.77
+        ],
+        [
+         6.58,
+         -6.07
+        ],
+        [
+         4.52,
+         -5.2
+        ],
+        [
+         2.36,
+         -4.63
+        ],
+        [
+         -0.09,
+         -4.16
+        ],
+        [
+         -2.58,
+         -3.98
+        ],
+        [
+         -3.81,
+         -4.02
+        ],
+        [
+         -4.33,
+         -3.98
+        ],
+        [
+         -4.81,
+         -3.82
+        ],
+        [
+         -5.27,
+         -3.54
+        ],
+        [
+         -6.95,
+         -2.23
+        ],
+        [
+         -9.38,
+         -0.57
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249302,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -11.07,
+      6.6
+     ],
+     [
+      -6.66,
+      7.23
+     ],
+     [
+      11.07,
+      4.08
+     ],
+     [
+      8.97,
+      -7.23
+     ],
+     [
+      2.28,
+      -4.97
+     ],
+     [
+      -6.97,
+      -3.76
+     ],
+     [
+      -5.66,
+      -3.72
+     ],
+     [
+      -9.7,
+      -0.77
+     ]
+    ]
+   },
+   "x": -3071.28,
+   "z": 631.21,
+   "ry": 1.6734,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    20.1,
+    12.5
+   ],
+   "organic": {
+    "lot": 0,
+    "zone": 0.2,
+    "street": "main",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot001",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249001,
+    "fp": [
+     26.8,
+     23.9
+    ],
+    "pieces": [
+     {
+      "tag": "anchae",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "poor",
+       "seed": 93249007
+      },
+      "x": -2.16,
+      "z": -0.16,
+      "ry": 0.0277
+     },
+     {
+      "tag": "heotgan",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249018
+      },
+      "x": 5.26,
+      "z": 3.56,
+      "ry": -1.5431
+     },
+     {
+      "tag": "dwitgan",
+      "kit": "village/dwitgan",
+      "params": {
+       "seed": 932490073,
+       "s": 1.4
+      },
+      "x": -9.65,
+      "z": 9.35,
+      "ry": 1.5985
+     },
+     {
+      "tag": "teotbat",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 932490074,
+       "w": 4.2,
+       "d": 3.0
+      },
+      "x": -8.03,
+      "z": 6.3,
+      "ry": 0.0277
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249044,
+       "s": 0.921069938712753
+      },
+      "x": 9.21,
+      "z": -8.2,
+      "ry": 1.5708
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249044,
+       "s": 0.983472879067995
+      },
+      "x": -7.42,
+      "z": 8.63,
+      "ry": 1.5708
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249044,
+       "s": 0.911933800054248
+      },
+      "x": 4.31,
+      "z": -8.98,
+      "ry": 3.1416
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249094,
+       "ax": 9.54,
+       "az": 9.97,
+       "bx": 14.4,
+       "bz": -10.46,
+       "drop": 1.85,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249095,
+       "ax": 14.4,
+       "az": -10.46,
+       "bx": 12.62,
+       "bz": -12.94,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249096,
+       "ax": 12.62,
+       "az": -12.94,
+       "bx": 3.82,
+       "bz": -11.64,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249097,
+       "ax": 3.82,
+       "az": -11.64,
+       "bx": -2.68,
+       "bz": -8.74,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249098,
+       "ax": -2.68,
+       "az": -8.74,
+       "bx": -10.26,
+       "bz": -0.77,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249099,
+       "ax": -10.26,
+       "az": -0.77,
+       "bx": -14.4,
+       "bz": 1.76,
+       "drop": 1.85,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249100,
+       "ax": -14.4,
+       "az": 1.76,
+       "bx": -11.74,
+       "bz": 12.94,
+       "drop": 1.85,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         14.02,
+         -10.39
+        ],
+        [
+         13.08,
+         -11.7
+        ],
+        [
+         12.62,
+         -12.16
+        ],
+        [
+         12.07,
+         -12.4
+        ],
+        [
+         11.4,
+         -12.41
+        ],
+        [
+         3.92,
+         -11.3
+        ],
+        [
+         -2.47,
+         -8.45
+        ],
+        [
+         -10.04,
+         -0.5
+        ],
+        [
+         -12.89,
+         1.25
+        ],
+        [
+         -13.47,
+         1.76
+        ],
+        [
+         -13.74,
+         2.39
+        ],
+        [
+         -13.7,
+         3.19
+        ],
+        [
+         -11.78,
+         11.26
+        ],
+        [
+         -11.47,
+         11.93
+        ],
+        [
+         -10.96,
+         12.26
+        ],
+        [
+         -10.21,
+         12.24
+        ],
+        [
+         -4.52,
+         10.98
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249301,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×6",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -2.71,
+         10.58
+        ],
+        [
+         4.4,
+         9.0
+        ],
+        [
+         7.34,
+         9.08
+        ],
+        [
+         9.28,
+         9.54
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249302,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -11.74,
+      12.94
+     ],
+     [
+      4.43,
+      9.35
+     ],
+     [
+      7.3,
+      9.43
+     ],
+     [
+      9.54,
+      9.97
+     ],
+     [
+      14.4,
+      -10.46
+     ],
+     [
+      12.62,
+      -12.94
+     ],
+     [
+      3.82,
+      -11.64
+     ],
+     [
+      -2.68,
+      -8.74
+     ],
+     [
+      -10.26,
+      -0.77
+     ],
+     [
+      -14.4,
+      1.76
+     ]
+    ]
+   },
+   "x": -3081.9,
+   "z": 608.74,
+   "ry": 1.6234,
+   "y": null,
+   "flat_at": [
+    [
+     -3067.84,
+     617.12
+    ],
+    [
+     -3069.17,
+     612.34
+    ],
+    [
+     -3070.51,
+     607.55
+    ],
+    [
+     -3071.49,
+     602.54
+    ],
+    [
+     -3071.51,
+     601.68
+    ],
+    [
+     -3071.53,
+     600.82
+    ],
+    [
+     -3071.61,
+     599.56
+    ],
+    [
+     -3071.49,
+     598.88
+    ],
+    [
+     -3071.37,
+     598.2
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    26.8,
+    23.9
+   ],
+   "organic": {
+    "lot": 1,
+    "zone": 0.4,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot002",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249002,
+    "fp": [
+     17.0,
+     19.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249014
+      },
+      "x": -1.98,
+      "z": 2.95,
+      "ry": -0.028
+     },
+     {
+      "tag": "jangdok",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249019,
+       "w": 2.0,
+       "d": 1.5
+      },
+      "x": -7.28,
+      "z": -8.7,
+      "ry": 0.0
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249049,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -6.67,
+      "z": -4.72,
+      "ry": 3.1416
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249094,
+       "ax": 9.48,
+       "az": 4.0,
+       "bx": -4.74,
+       "bz": -6.5,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249095,
+       "ax": -4.74,
+       "az": -6.5,
+       "bx": -7.11,
+       "bz": -9.5,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249096,
+       "ax": -7.11,
+       "az": -9.5,
+       "bx": -9.48,
+       "bz": -10.5,
+       "drop": 3.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249097,
+       "ax": -9.48,
+       "az": -10.5,
+       "bx": -9.48,
+       "bz": 10.5,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         6.23,
+         10.15
+        ],
+        [
+         7.97,
+         10.15
+        ],
+        [
+         8.61,
+         10.02
+        ],
+        [
+         9.0,
+         9.64
+        ],
+        [
+         9.13,
+         8.99
+        ],
+        [
+         9.13,
+         5.48
+        ],
+        [
+         9.02,
+         4.68
+        ],
+        [
+         8.68,
+         3.99
+        ],
+        [
+         8.08,
+         3.4
+        ],
+        [
+         -4.99,
+         -6.25
+        ],
+        [
+         -6.84,
+         -8.6
+        ],
+        [
+         -7.19,
+         -8.97
+        ],
+        [
+         -7.59,
+         -9.27
+        ],
+        [
+         -8.05,
+         -9.52
+        ],
+        [
+         -8.7,
+         -9.79
+        ],
+        [
+         -8.94,
+         -9.84
+        ],
+        [
+         -9.08,
+         -9.75
+        ],
+        [
+         -9.13,
+         -9.5
+        ],
+        [
+         -9.13,
+         8.85
+        ],
+        [
+         -8.99,
+         9.57
+        ],
+        [
+         -8.56,
+         10.0
+        ],
+        [
+         -7.83,
+         10.15
+        ],
+        [
+         3.99,
+         10.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249302,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "곧은 필지 경계 ×5",
+        "흙·돌담 모서리를 둥글게 ×5"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -9.48,
+      10.5
+     ],
+     [
+      9.48,
+      10.5
+     ],
+     [
+      9.48,
+      4.0
+     ],
+     [
+      -4.74,
+      -6.5
+     ],
+     [
+      -7.11,
+      -9.5
+     ],
+     [
+      -9.48,
+      -10.5
+     ]
+    ]
+   },
+   "x": -3081.07,
+   "z": 587.48,
+   "ry": 1.3898,
+   "y": null,
+   "flat_at": [
+    [
+     -3070.27,
+     594.96
+    ],
+    [
+     -3069.24,
+     589.37
+    ],
+    [
+     -3068.22,
+     583.77
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    17.0,
+    19.0
+   ],
+   "organic": {
+    "lot": 2,
+    "zone": 0.56,
+    "street": "main",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot003",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "jungnong",
+    "seed": 93249003,
+    "fp": [
+     16.0,
+     19.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249021
+      },
+      "x": 3.04,
+      "z": 0.74,
+      "ry": -0.001
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249046,
+       "s": 0.892532351333648
+      },
+      "x": -5.12,
+      "z": 6.18,
+      "ry": 3.1416
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249094,
+       "ax": 9.0,
+       "az": 10.75,
+       "bx": 9.0,
+       "bz": -10.75,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249095,
+       "ax": 9.0,
+       "az": -10.75,
+       "bx": 4.5,
+       "bz": -9.25,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249096,
+       "ax": 4.5,
+       "az": -9.25,
+       "bx": -4.5,
+       "bz": -0.75,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249024,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 0.0,
+      "z": 10.4,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         1.12,
+         10.4
+        ],
+        [
+         7.35,
+         10.4
+        ],
+        [
+         8.07,
+         10.26
+        ],
+        [
+         8.5,
+         9.83
+        ],
+        [
+         8.65,
+         9.1
+        ],
+        [
+         8.65,
+         -8.96
+        ],
+        [
+         8.52,
+         -9.64
+        ],
+        [
+         8.11,
+         -9.94
+        ],
+        [
+         7.42,
+         -9.85
+        ],
+        [
+         4.69,
+         -8.94
+        ],
+        [
+         -4.23,
+         -0.53
+        ],
+        [
+         -6.01,
+         2.24
+        ],
+        [
+         -6.38,
+         2.71
+        ],
+        [
+         -6.83,
+         3.1
+        ],
+        [
+         -7.37,
+         3.41
+        ],
+        [
+         -8.14,
+         3.75
+        ],
+        [
+         -8.42,
+         3.94
+        ],
+        [
+         -8.59,
+         4.2
+        ],
+        [
+         -8.65,
+         4.54
+        ],
+        [
+         -8.65,
+         9.1
+        ],
+        [
+         -8.51,
+         9.82
+        ],
+        [
+         -8.08,
+         10.25
+        ],
+        [
+         -7.35,
+         10.4
+        ],
+        [
+         -1.12,
+         10.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249303,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "곧은 필지 경계 ×6",
+        "흙·돌담 모서리를 둥글게 ×5"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -9.0,
+      10.75
+     ],
+     [
+      9.0,
+      10.75
+     ],
+     [
+      9.0,
+      -10.75
+     ],
+     [
+      4.5,
+      -9.25
+     ],
+     [
+      -4.5,
+      -0.75
+     ],
+     [
+      -6.75,
+      2.75
+     ],
+     [
+      -9.0,
+      3.75
+     ]
+    ]
+   },
+   "x": -3078.62,
+   "z": 551.28,
+   "ry": 1.6879,
+   "y": null,
+   "flat_at": [
+    [
+     -3065.85,
+     555.07
+    ],
+    [
+     -3066.48,
+     549.71
+    ],
+    [
+     -3067.11,
+     544.34
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    16.0,
+    19.5
+   ],
+   "organic": {
+    "lot": 3,
+    "zone": 0.45,
+    "street": "main",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot004",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249004,
+    "fp": [
+     26.5,
+     31.4
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249028
+      },
+      "x": -5.08,
+      "z": -0.89,
+      "ry": -0.0254
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249068
+      },
+      "x": -7.48,
+      "z": 9.31,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249078
+      },
+      "x": 7.13,
+      "z": 7.59,
+      "ry": -1.5708
+     },
+     {
+      "tag": "jangdok",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249033,
+       "w": 2.0,
+       "d": 1.5
+      },
+      "x": -12.05,
+      "z": -14.88,
+      "ry": 0.0
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249047,
+       "s": 0.969669226463884
+      },
+      "x": -1.86,
+      "z": 7.71,
+      "ry": 0.0
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93249075,
+       "s": 0.908500424469821
+      },
+      "x": -6.8,
+      "z": -5.91,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249102,
+       "ax": 14.25,
+       "az": 8.54,
+       "bx": 7.51,
+       "bz": -2.07,
+       "drop": 2.25,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249103,
+       "ax": 13.06,
+       "az": 14.94,
+       "bx": 14.25,
+       "bz": 8.54,
+       "drop": 2.25,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249031,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 1.32,
+      "z": 14.32,
+      "ry": 6.4525
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         12.78,
+         14.54
+        ],
+        [
+         10.53,
+         14.19
+        ],
+        [
+         8.32,
+         13.66
+        ],
+        [
+         6.04,
+         13.51
+        ],
+        [
+         2.43,
+         14.13
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249304,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         0.22,
+         14.51
+        ],
+        [
+         -1.87,
+         14.72
+        ],
+        [
+         -3.96,
+         14.96
+        ],
+        [
+         -6.0,
+         15.45
+        ],
+        [
+         -8.04,
+         15.94
+        ],
+        [
+         -9.3,
+         16.14
+        ],
+        [
+         -9.76,
+         16.13
+        ],
+        [
+         -10.06,
+         15.91
+        ],
+        [
+         -10.21,
+         15.46
+        ],
+        [
+         -10.35,
+         14.24
+        ],
+        [
+         -10.61,
+         12.2
+        ],
+        [
+         -11.23,
+         10.24
+        ],
+        [
+         -11.18,
+         8.18
+        ],
+        [
+         -11.46,
+         6.15
+        ],
+        [
+         -11.84,
+         4.13
+        ],
+        [
+         -12.01,
+         2.09
+        ],
+        [
+         -12.03,
+         0.04
+        ],
+        [
+         -12.2,
+         -2.0
+        ],
+        [
+         -12.58,
+         -4.02
+        ],
+        [
+         -12.86,
+         -6.05
+        ],
+        [
+         -12.91,
+         -8.1
+        ],
+        [
+         -12.99,
+         -10.15
+        ],
+        [
+         -13.31,
+         -12.17
+        ],
+        [
+         -13.66,
+         -14.19
+        ],
+        [
+         -13.78,
+         -15.46
+        ],
+        [
+         -13.74,
+         -15.86
+        ],
+        [
+         -13.51,
+         -16.06
+        ],
+        [
+         -13.1,
+         -16.05
+        ],
+        [
+         -12.42,
+         -15.9
+        ],
+        [
+         -12.14,
+         -15.8
+        ],
+        [
+         -11.89,
+         -15.66
+        ],
+        [
+         -11.66,
+         -15.45
+        ],
+        [
+         -10.47,
+         -14.11
+        ],
+        [
+         -8.67,
+         -12.75
+        ],
+        [
+         -6.96,
+         -11.29
+        ],
+        [
+         -5.42,
+         -9.65
+        ],
+        [
+         -3.64,
+         -8.29
+        ],
+        [
+         -2.19,
+         -6.16
+        ],
+        [
+         -1.04,
+         -4.84
+        ],
+        [
+         -0.66,
+         -4.47
+        ],
+        [
+         -0.23,
+         -4.19
+        ],
+        [
+         0.28,
+         -3.98
+        ],
+        [
+         1.45,
+         -3.63
+        ],
+        [
+         3.36,
+         -2.91
+        ],
+        [
+         5.26,
+         -2.14
+        ],
+        [
+         6.47,
+         -1.92
+        ],
+        [
+         6.96,
+         -1.76
+        ],
+        [
+         7.34,
+         -1.46
+        ],
+        [
+         7.63,
+         -1.03
+        ],
+        [
+         8.16,
+         0.1
+        ],
+        [
+         9.37,
+         1.76
+        ],
+        [
+         10.59,
+         3.41
+        ],
+        [
+         11.62,
+         5.19
+        ],
+        [
+         12.57,
+         7.01
+        ],
+        [
+         13.88,
+         8.62
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249305,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×7",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×5"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      13.06,
+      14.94
+     ],
+     [
+      6.04,
+      13.87
+     ],
+     [
+      -10.4,
+      16.68
+     ],
+     [
+      -11.58,
+      10.29
+     ],
+     [
+      -14.25,
+      -16.68
+     ],
+     [
+      -11.8,
+      -16.12
+     ],
+     [
+      -3.38,
+      -8.52
+     ],
+     [
+      -0.29,
+      -4.52
+     ],
+     [
+      7.51,
+      -2.07
+     ],
+     [
+      14.25,
+      8.54
+     ]
+    ]
+   },
+   "x": -3045.83,
+   "z": 629.38,
+   "ry": -1.4682,
+   "y": null,
+   "flat_at": [
+    [
+     -3060.33,
+     643.55
+    ],
+    [
+     -3060.23,
+     641.43
+    ],
+    [
+     -3060.12,
+     639.3
+    ],
+    [
+     -3061.4,
+     633.63
+    ],
+    [
+     -3062.75,
+     628.81
+    ],
+    [
+     -3064.09,
+     623.99
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    26.5,
+    31.4
+   ],
+   "organic": {
+    "lot": 4,
+    "zone": 0.2,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot005",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "jungnong",
+    "seed": 93249005,
+    "fp": [
+     17.7,
+     32.3
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249035
+      },
+      "x": -1.48,
+      "z": 8.18,
+      "ry": -0.0066
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249097,
+       "ax": -2.12,
+       "az": -17.15,
+       "bx": -9.87,
+       "bz": 15.44,
+       "drop": 1.25,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249098,
+       "ax": 2.36,
+       "az": -15.57,
+       "bx": -2.12,
+       "bz": -17.15,
+       "drop": 1.25,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249099,
+       "ax": 3.62,
+       "az": -10.65,
+       "bx": 2.36,
+       "bz": -15.57,
+       "drop": 1.25,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249100,
+       "ax": 3.62,
+       "az": -10.65,
+       "bx": -1.95,
+       "bz": -8.34,
+       "drop": 1.25,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249101,
+       "ax": -1.95,
+       "az": -8.34,
+       "bx": -4.18,
+       "bz": -3.49,
+       "drop": 1.25,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249102,
+       "ax": -4.18,
+       "az": -3.49,
+       "bx": 8.13,
+       "bz": 7.46,
+       "drop": 1.25,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249038,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 2.84,
+      "z": 15.92,
+      "ry": 6.4967
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -1.87,
+         -16.69
+        ],
+        [
+         0.06,
+         -15.88
+        ],
+        [
+         1.27,
+         -15.54
+        ],
+        [
+         1.73,
+         -15.32
+        ],
+        [
+         2.06,
+         -14.98
+        ],
+        [
+         2.27,
+         -14.49
+        ],
+        [
+         2.61,
+         -13.08
+        ],
+        [
+         2.97,
+         -11.74
+        ],
+        [
+         3.01,
+         -11.21
+        ],
+        [
+         2.82,
+         -10.78
+        ],
+        [
+         2.38,
+         -10.45
+        ],
+        [
+         0.57,
+         -9.55
+        ],
+        [
+         -1.12,
+         -8.98
+        ],
+        [
+         -1.77,
+         -8.65
+        ],
+        [
+         -2.26,
+         -8.18
+        ],
+        [
+         -2.61,
+         -7.53
+        ],
+        [
+         -3.22,
+         -5.92
+        ],
+        [
+         -4.2,
+         -4.13
+        ],
+        [
+         -4.36,
+         -3.67
+        ],
+        [
+         -4.28,
+         -3.25
+        ],
+        [
+         -3.97,
+         -2.86
+        ],
+        [
+         -3.02,
+         -2.06
+        ],
+        [
+         -1.35,
+         -0.81
+        ],
+        [
+         0.2,
+         0.58
+        ],
+        [
+         1.63,
+         2.1
+        ],
+        [
+         3.16,
+         3.5
+        ],
+        [
+         4.83,
+         4.75
+        ],
+        [
+         6.43,
+         6.07
+        ],
+        [
+         7.26,
+         7.02
+        ],
+        [
+         7.59,
+         7.45
+        ],
+        [
+         7.84,
+         7.93
+        ],
+        [
+         8.02,
+         8.46
+        ],
+        [
+         8.37,
+         9.92
+        ],
+        [
+         8.74,
+         12.24
+        ],
+        [
+         9.16,
+         13.59
+        ],
+        [
+         9.22,
+         14.1
+        ],
+        [
+         9.01,
+         14.44
+        ],
+        [
+         8.51,
+         14.61
+        ],
+        [
+         6.65,
+         14.87
+        ],
+        [
+         3.94,
+         15.68
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249305,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×7",
+        "흙·돌담 모서리를 둥글게 ×6"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         1.75,
+         16.15
+        ],
+        [
+         -1.21,
+         16.8
+        ],
+        [
+         -3.27,
+         16.39
+        ],
+        [
+         -5.32,
+         15.94
+        ],
+        [
+         -7.34,
+         15.35
+        ],
+        [
+         -9.44,
+         15.16
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249306,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      9.87,
+      14.75
+     ],
+     [
+      -1.21,
+      17.15
+     ],
+     [
+      -9.87,
+      15.44
+     ],
+     [
+      -2.12,
+      -17.15
+     ],
+     [
+      2.36,
+      -15.57
+     ],
+     [
+      3.62,
+      -10.65
+     ],
+     [
+      -1.95,
+      -8.34
+     ],
+     [
+      -4.18,
+      -3.49
+     ],
+     [
+      8.13,
+      7.46
+     ]
+    ]
+   },
+   "x": -3051.25,
+   "z": 603.4,
+   "ry": -1.5183,
+   "y": null,
+   "flat_at": [
+    [
+     -3067.5,
+     612.27
+    ],
+    [
+     -3068.39,
+     608.99
+    ],
+    [
+     -3069.29,
+     605.7
+    ],
+    [
+     -3069.62,
+     600.9
+    ],
+    [
+     -3069.24,
+     598.28
+    ],
+    [
+     -3068.87,
+     595.66
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    17.7,
+    32.3
+   ],
+   "organic": {
+    "lot": 5,
+    "zone": 0.44,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot006",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249006,
+    "fp": [
+     17.4,
+     31.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249042
+      },
+      "x": 0.0,
+      "z": -13.01,
+      "ry": 0.0049
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249082
+      },
+      "x": -6.58,
+      "z": -1.57,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249092
+      },
+      "x": 6.81,
+      "z": -3.55,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249062
+      },
+      "x": -1.94,
+      "z": 13.16,
+      "ry": 3.1416
+     },
+     {
+      "tag": "jangdok",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249047,
+       "w": 2.0,
+       "d": 1.5
+      },
+      "x": -7.52,
+      "z": -14.95,
+      "ry": 0.0
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 1.43,
+      "z": -6.18,
+      "ry": 0.0
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249053,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 3.22,
+      "z": 4.98,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249045,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 5.25,
+      "z": 16.4,
+      "ry": 6.2832
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         9.37,
+         0.45
+        ],
+        [
+         9.37,
+         15.2
+        ],
+        [
+         9.24,
+         15.86
+        ],
+        [
+         8.85,
+         16.26
+        ],
+        [
+         8.17,
+         16.4
+        ],
+        [
+         6.37,
+         16.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249306,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×1",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         4.13,
+         16.4
+        ],
+        [
+         -9.37,
+         16.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249307,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -9.37,
+         -16.4
+        ],
+        [
+         8.07,
+         -16.4
+        ],
+        [
+         8.79,
+         -16.26
+        ],
+        [
+         9.22,
+         -15.83
+        ],
+        [
+         9.37,
+         -15.1
+        ],
+        [
+         9.37,
+         -7.57
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249308,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      9.72,
+      16.75
+     ],
+     [
+      -9.72,
+      16.75
+     ],
+     [
+      -9.72,
+      -16.75
+     ],
+     [
+      9.72,
+      -16.75
+     ]
+    ]
+   },
+   "x": -3048.96,
+   "z": 587.81,
+   "ry": -1.7518,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    17.4,
+    31.5
+   ],
+   "organic": {
+    "lot": 6,
+    "zone": 0.58,
+    "street": "main",
+    "walls": 3
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot007",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249007,
+    "fp": [
+     26.6,
+     32.8
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249049
+      },
+      "x": -0.33,
+      "z": -13.0,
+      "ry": -0.0097
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249089
+      },
+      "x": -9.5,
+      "z": -10.1,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249099
+      },
+      "x": 9.61,
+      "z": -10.65,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249069
+      },
+      "x": 2.53,
+      "z": 11.4,
+      "ry": 3.1416
+     },
+     {
+      "tag": "gotgan",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249046
+      },
+      "x": -0.99,
+      "z": -6.1,
+      "ry": 0.0
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249054,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -6.37,
+      "z": 3.57,
+      "ry": 1.5708
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249054,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": 4.78,
+      "z": 2.39,
+      "ry": 4.7124
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93249078,
+       "s": 1.02341831296217
+      },
+      "x": -7.64,
+      "z": 11.72,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249099,
+       "ax": -14.32,
+       "az": -16.06,
+       "bx": -9.35,
+       "bz": 17.07,
+       "drop": 3.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249100,
+       "ax": 0.25,
+       "az": -17.41,
+       "bx": -14.32,
+       "bz": -16.06,
+       "drop": 3.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249052,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": -5.08,
+      "z": 16.12,
+      "ry": 6.4228
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -13.92,
+         -15.74
+        ],
+        [
+         0.25,
+         -17.06
+        ],
+        [
+         12.63,
+         -15.57
+        ],
+        [
+         13.32,
+         -15.35
+        ],
+        [
+         13.69,
+         -14.87
+        ],
+        [
+         13.73,
+         -14.13
+        ],
+        [
+         9.25,
+         15.74
+        ],
+        [
+         9.0,
+         16.43
+        ],
+        [
+         8.51,
+         16.81
+        ],
+        [
+         7.76,
+         16.87
+        ],
+        [
+         -2.25,
+         15.72
+        ],
+        [
+         -3.97,
+         15.96
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249307,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×3",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -6.19,
+         16.28
+        ],
+        [
+         -9.06,
+         16.68
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93249308,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      9.35,
+      17.41
+     ],
+     [
+      -2.25,
+      16.08
+     ],
+     [
+      -9.35,
+      17.07
+     ],
+     [
+      -14.32,
+      -16.06
+     ],
+     [
+      0.25,
+      -17.41
+     ],
+     [
+      14.32,
+      -15.72
+     ]
+    ]
+   },
+   "x": -3045.98,
+   "z": 566.44,
+   "ry": -1.6028,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    26.6,
+    32.8
+   ],
+   "organic": {
+    "lot": 7,
+    "zone": 0.57,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot008",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "jungnong",
+    "seed": 93249008,
+    "fp": [
+     14.1,
+     31.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249056
+      },
+      "x": 0.0,
+      "z": -13.04,
+      "ry": 0.0059
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249096
+      },
+      "x": -4.41,
+      "z": -1.8,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249106
+      },
+      "x": 4.53,
+      "z": -4.7,
+      "ry": -1.5708
+     },
+     {
+      "tag": "wing23",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "poor",
+       "seed": 93249077
+      },
+      "x": -1.61,
+      "z": 13.12,
+      "ry": 3.1416
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249099,
+       "ax": -8.04,
+       "az": -16.75,
+       "bx": -8.04,
+       "bz": 16.75,
+       "drop": 3.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249100,
+       "ax": 8.04,
+       "az": -16.75,
+       "bx": -8.04,
+       "bz": -16.75,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         7.69,
+         16.4
+        ],
+        [
+         5.43,
+         16.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249308,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         3.19,
+         16.4
+        ],
+        [
+         1.01,
+         16.27
+        ],
+        [
+         -1.16,
+         16.14
+        ],
+        [
+         -3.34,
+         16.27
+        ],
+        [
+         -5.52,
+         16.42
+        ],
+        [
+         -6.87,
+         16.41
+        ],
+        [
+         -7.32,
+         16.31
+        ],
+        [
+         -7.57,
+         16.04
+        ],
+        [
+         -7.62,
+         15.58
+        ],
+        [
+         -7.51,
+         14.35
+        ],
+        [
+         -7.69,
+         12.3
+        ],
+        [
+         -7.67,
+         10.25
+        ],
+        [
+         -7.49,
+         8.2
+        ],
+        [
+         -7.45,
+         6.15
+        ],
+        [
+         -7.63,
+         4.1
+        ],
+        [
+         -7.71,
+         2.05
+        ],
+        [
+         -7.56,
+         0.0
+        ],
+        [
+         -7.43,
+         -2.05
+        ],
+        [
+         -7.55,
+         -4.1
+        ],
+        [
+         -7.71,
+         -6.15
+        ],
+        [
+         -7.64,
+         -8.2
+        ],
+        [
+         -7.46,
+         -10.25
+        ],
+        [
+         -7.48,
+         -12.3
+        ],
+        [
+         -7.66,
+         -14.35
+        ],
+        [
+         -7.68,
+         -15.58
+        ],
+        [
+         -7.6,
+         -16.02
+        ],
+        [
+         -7.34,
+         -16.27
+        ],
+        [
+         -6.88,
+         -16.31
+        ],
+        [
+         -5.5,
+         -16.17
+        ],
+        [
+         -3.3,
+         -16.19
+        ],
+        [
+         -1.1,
+         -16.39
+        ],
+        [
+         1.1,
+         -16.38
+        ],
+        [
+         3.3,
+         -16.18
+        ],
+        [
+         5.5,
+         -16.18
+        ],
+        [
+         7.69,
+         -16.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249309,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      8.04,
+      16.75
+     ],
+     [
+      -8.04,
+      16.75
+     ],
+     [
+      -8.04,
+      -16.75
+     ],
+     [
+      8.04,
+      -16.75
+     ]
+    ]
+   },
+   "x": -3047.05,
+   "z": 546.61,
+   "ry": -1.4537,
+   "y": null,
+   "flat_at": [
+    [
+     -3064.61,
+     553.53
+    ],
+    [
+     -3065.18,
+     548.74
+    ],
+    [
+     -3065.74,
+     543.95
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    14.1,
+    31.5
+   ],
+   "organic": {
+    "lot": 8,
+    "zone": 0.44,
+    "street": "main",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot009",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93249009,
+    "fp": [
+     33.3,
+     17.1
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93249063,
+       "w": 8.0,
+       "d": 6.6
+      },
+      "x": -3.08,
+      "z": 3.9,
+      "ry": -0.0372
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249104,
+       "ax": 7.89,
+       "az": 9.57,
+       "bx": 17.67,
+       "bz": -9.57,
+       "drop": 2.4,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249105,
+       "ax": 17.67,
+       "az": -9.57,
+       "bx": -11.4,
+       "bz": -5.43,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249106,
+       "ax": -11.4,
+       "az": -5.43,
+       "bx": -17.67,
+       "bz": 2.4,
+       "drop": 0.9,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -14.26,
+      9.08
+     ],
+     [
+      -9.23,
+      7.39
+     ],
+     [
+      -4.67,
+      6.58
+     ],
+     [
+      -1.62,
+      6.55
+     ],
+     [
+      5.55,
+      8.49
+     ],
+     [
+      7.89,
+      9.57
+     ],
+     [
+      17.67,
+      -9.57
+     ],
+     [
+      -11.4,
+      -5.43
+     ],
+     [
+      -17.67,
+      2.4
+     ]
+    ]
+   },
+   "x": -3091.46,
+   "z": 663.32,
+   "ry": 3.0152,
+   "y": null,
+   "flat_at": [
+    [
+     -3075.8,
+     655.82
+    ],
+    [
+     -3077.36,
+     656.13
+    ],
+    [
+     -3078.92,
+     656.44
+    ],
+    [
+     -3081.02,
+     656.42
+    ],
+    [
+     -3082.4,
+     656.48
+    ],
+    [
+     -3083.79,
+     656.55
+    ],
+    [
+     -3086.38,
+     655.82
+    ],
+    [
+     -3087.29,
+     655.72
+    ],
+    [
+     -3088.2,
+     655.61
+    ],
+    [
+     -3091.5,
+     655.44
+    ],
+    [
+     -3093.56,
+     654.59
+    ],
+    [
+     -3095.62,
+     653.74
+    ],
+    [
+     -3097.56,
+     653.06
+    ],
+    [
+     -3098.22,
+     652.65
+    ],
+    [
+     -3098.87,
+     652.24
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    33.3,
+    17.1
+   ],
+   "organic": {
+    "lot": 9,
+    "zone": 0.2,
+    "street": "street1",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot010",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249010,
+    "fp": [
+     25.3,
+     29.5
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249070
+      },
+      "x": 4.47,
+      "z": -1.18,
+      "ry": -0.0155
+     },
+     {
+      "tag": "front1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249110
+      },
+      "x": -4.59,
+      "z": 7.67,
+      "ry": 1.5708
+     },
+     {
+      "tag": "wing2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "poor",
+       "seed": 93249121
+      },
+      "x": 6.98,
+      "z": 7.94,
+      "ry": -1.5708
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93249083,
+       "variant": "zelkova",
+       "h": 7.22503696754575
+      },
+      "x": 1.92,
+      "z": 7.28,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249102,
+       "ax": 10.3,
+       "az": 15.29,
+       "bx": 13.67,
+       "bz": -14.02,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249103,
+       "ax": 13.67,
+       "az": -14.02,
+       "bx": 11.58,
+       "bz": -15.77,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249104,
+       "ax": 9.02,
+       "az": -11.55,
+       "bx": 11.58,
+       "bz": -15.77,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249105,
+       "ax": 9.02,
+       "az": -11.55,
+       "bx": -3.0,
+       "bz": -2.96,
+       "drop": 2.0,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249106,
+       "ax": -3.0,
+       "az": -2.96,
+       "bx": -11.75,
+       "bz": 5.58,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249108,
+       "ax": -13.67,
+       "az": 8.82,
+       "bx": -12.87,
+       "bz": 15.77,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249073,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": -1.29,
+      "z": 14.29,
+      "ry": -6.1859
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         13.3,
+         -13.87
+        ],
+        [
+         12.32,
+         -14.69
+        ],
+        [
+         11.91,
+         -14.92
+        ],
+        [
+         11.53,
+         -14.88
+        ],
+        [
+         11.17,
+         -14.55
+        ],
+        [
+         10.31,
+         -13.37
+        ],
+        [
+         9.28,
+         -11.31
+        ],
+        [
+         7.67,
+         -9.92
+        ],
+        [
+         5.84,
+         -8.84
+        ],
+        [
+         4.13,
+         -7.59
+        ],
+        [
+         2.52,
+         -6.21
+        ],
+        [
+         0.81,
+         -4.97
+        ],
+        [
+         -1.02,
+         -3.89
+        ],
+        [
+         -2.77,
+         -2.7
+        ],
+        [
+         -4.2,
+         -1.25
+        ],
+        [
+         -5.52,
+         0.29
+        ],
+        [
+         -6.96,
+         1.72
+        ],
+        [
+         -8.53,
+         3.0
+        ],
+        [
+         -10.03,
+         4.37
+        ],
+        [
+         -11.48,
+         5.79
+        ],
+        [
+         -12.87,
+         8.14
+        ],
+        [
+         -13.09,
+         8.65
+        ],
+        [
+         -13.17,
+         9.18
+        ],
+        [
+         -13.11,
+         9.75
+        ],
+        [
+         -12.82,
+         11.03
+        ],
+        [
+         -12.74,
+         13.22
+        ],
+        [
+         -12.63,
+         14.57
+        ],
+        [
+         -12.51,
+         15.01
+        ],
+        [
+         -12.22,
+         15.23
+        ],
+        [
+         -11.76,
+         15.24
+        ],
+        [
+         -10.55,
+         15.02
+        ],
+        [
+         -8.53,
+         14.74
+        ],
+        [
+         -6.48,
+         14.69
+        ],
+        [
+         -4.43,
+         14.61
+        ],
+        [
+         -2.4,
+         14.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249310,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×6",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -0.17,
+         14.18
+        ],
+        [
+         0.94,
+         14.07
+        ],
+        [
+         3.21,
+         14.3
+        ],
+        [
+         5.48,
+         14.39
+        ],
+        [
+         7.76,
+         14.44
+        ],
+        [
+         9.99,
+         14.91
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249311,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -12.87,
+      15.77
+     ],
+     [
+      0.95,
+      14.42
+     ],
+     [
+      10.3,
+      15.29
+     ],
+     [
+      13.67,
+      -14.02
+     ],
+     [
+      11.58,
+      -15.77
+     ],
+     [
+      9.02,
+      -11.55
+     ],
+     [
+      -3.0,
+      -2.96
+     ],
+     [
+      -11.75,
+      5.58
+     ],
+     [
+      -13.67,
+      8.82
+     ]
+    ]
+   },
+   "x": -3092.6,
+   "z": 587.12,
+   "ry": 3.088,
+   "y": null,
+   "flat_at": [
+    [
+     -3080.95,
+     570.87
+    ],
+    [
+     -3085.11,
+     571.05
+    ],
+    [
+     -3089.28,
+     571.23
+    ],
+    [
+     -3095.1,
+     570.97
+    ],
+    [
+     -3097.89,
+     570.56
+    ],
+    [
+     -3100.68,
+     570.15
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    25.3,
+    29.5
+   ],
+   "organic": {
+    "lot": 10,
+    "zone": 0.51,
+    "street": "street2",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot011",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249011,
+    "fp": [
+     33.1,
+     35.8
+    ],
+    "pieces": [
+     {
+      "tag": "anchae",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249077
+      },
+      "x": 0.5,
+      "z": 5.76,
+      "ry": -0.0419
+     },
+     {
+      "tag": "dwitgan",
+      "kit": "village/dwitgan",
+      "params": {
+       "seed": 932490773,
+       "s": 1.4
+      },
+      "x": -7.24,
+      "z": 13.09,
+      "ry": 1.5289
+     },
+     {
+      "tag": "teotbat",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 932490774,
+       "w": 4.2,
+       "d": 3.0
+      },
+      "x": -5.42,
+      "z": 10.16,
+      "ry": -0.0419
+     },
+     {
+      "tag": "gotgan",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249045
+      },
+      "x": 4.85,
+      "z": -7.83,
+      "ry": 3.1416
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249054,
+       "s": 0.996618883300107
+      },
+      "x": -8.25,
+      "z": -8.73,
+      "ry": 3.1416
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249054,
+       "s": 1.08882285517175
+      },
+      "x": 10.99,
+      "z": 2.7,
+      "ry": 1.5708
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93249082,
+       "s": 1.10402152952738
+      },
+      "x": -0.28,
+      "z": -1.94,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249104,
+       "ax": 11.7,
+       "az": 15.1,
+       "bx": 17.54,
+       "bz": -17.89,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249105,
+       "ax": 17.54,
+       "az": -17.89,
+       "bx": 7.38,
+       "bz": -18.92,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249106,
+       "ax": 7.38,
+       "az": -18.92,
+       "bx": -6.49,
+       "bz": -17.13,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249107,
+       "ax": -6.49,
+       "az": -17.13,
+       "bx": -14.99,
+       "bz": -12.06,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249108,
+       "ax": -14.99,
+       "az": -12.06,
+       "bx": -17.54,
+       "bz": -7.15,
+       "drop": 0.65,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249109,
+       "ax": -12.6,
+       "az": -10.13,
+       "bx": -17.54,
+       "bz": -7.15,
+       "drop": 0.65,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_9",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249110,
+       "ax": -12.6,
+       "az": -10.13,
+       "bx": -7.46,
+       "bz": 18.92,
+       "drop": 0.65,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         2.74,
+         14.75
+        ],
+        [
+         3.44,
+         14.49
+        ],
+        [
+         6.33,
+         14.44
+        ],
+        [
+         9.23,
+         14.41
+        ],
+        [
+         10.6,
+         14.6
+        ],
+        [
+         11.06,
+         14.57
+        ],
+        [
+         11.38,
+         14.34
+        ],
+        [
+         11.56,
+         13.9
+        ],
+        [
+         11.79,
+         12.69
+        ],
+        [
+         12.01,
+         10.65
+        ],
+        [
+         12.23,
+         8.61
+        ],
+        [
+         12.68,
+         6.61
+        ],
+        [
+         13.2,
+         4.62
+        ],
+        [
+         13.51,
+         2.59
+        ],
+        [
+         13.69,
+         0.54
+        ],
+        [
+         14.05,
+         -1.47
+        ],
+        [
+         14.58,
+         -3.46
+        ],
+        [
+         14.99,
+         -5.47
+        ],
+        [
+         15.18,
+         -7.52
+        ],
+        [
+         15.44,
+         -9.55
+        ],
+        [
+         15.94,
+         -11.54
+        ],
+        [
+         16.43,
+         -13.54
+        ],
+        [
+         16.69,
+         -15.57
+        ],
+        [
+         16.95,
+         -16.78
+        ],
+        [
+         16.96,
+         -17.22
+        ],
+        [
+         16.75,
+         -17.48
+        ],
+        [
+         16.31,
+         -17.58
+        ],
+        [
+         14.67,
+         -17.58
+        ],
+        [
+         12.25,
+         -18.03
+        ],
+        [
+         9.82,
+         -18.31
+        ],
+        [
+         7.38,
+         -18.57
+        ],
+        [
+         5.12,
+         -18.02
+        ],
+        [
+         2.81,
+         -17.91
+        ],
+        [
+         0.51,
+         -17.69
+        ],
+        [
+         -1.76,
+         -17.2
+        ],
+        [
+         -4.05,
+         -16.85
+        ],
+        [
+         -5.44,
+         -16.82
+        ],
+        [
+         -6.04,
+         -16.75
+        ],
+        [
+         -6.59,
+         -16.56
+        ],
+        [
+         -7.13,
+         -16.25
+        ],
+        [
+         -8.35,
+         -15.37
+        ],
+        [
+         -10.44,
+         -14.11
+        ],
+        [
+         -12.63,
+         -13.05
+        ],
+        [
+         -14.0,
+         -12.23
+        ],
+        [
+         -14.44,
+         -11.92
+        ],
+        [
+         -14.81,
+         -11.54
+        ],
+        [
+         -15.12,
+         -11.07
+        ],
+        [
+         -15.7,
+         -9.96
+        ],
+        [
+         -16.27,
+         -8.84
+        ],
+        [
+         -16.4,
+         -8.47
+        ],
+        [
+         -16.28,
+         -8.34
+        ],
+        [
+         -15.9,
+         -8.45
+        ],
+        [
+         -14.37,
+         -9.17
+        ],
+        [
+         -13.03,
+         -10.18
+        ],
+        [
+         -12.62,
+         -10.37
+        ],
+        [
+         -12.32,
+         -10.28
+        ],
+        [
+         -12.1,
+         -9.88
+        ],
+        [
+         -11.73,
+         -8.66
+        ],
+        [
+         -11.52,
+         -6.55
+        ],
+        [
+         -11.26,
+         -4.45
+        ],
+        [
+         -10.75,
+         -2.39
+        ],
+        [
+         -10.25,
+         -0.33
+        ],
+        [
+         -9.99,
+         1.77
+        ],
+        [
+         -9.78,
+         3.88
+        ],
+        [
+         -9.33,
+         5.94
+        ],
+        [
+         -8.79,
+         8.0
+        ],
+        [
+         -8.47,
+         10.09
+        ],
+        [
+         -8.29,
+         12.2
+        ],
+        [
+         -7.9,
+         14.28
+        ],
+        [
+         -7.34,
+         16.33
+        ],
+        [
+         -7.25,
+         17.6
+        ],
+        [
+         -7.13,
+         18.02
+        ],
+        [
+         -6.86,
+         18.18
+        ],
+        [
+         -6.43,
+         18.06
+        ],
+        [
+         -5.23,
+         17.45
+        ],
+        [
+         -3.16,
+         16.75
+        ],
+        [
+         -1.05,
+         16.16
+        ],
+        [
+         1.0,
+         15.4
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249311,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×9",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×1",
+        "흙·돌담 모서리를 둥글게 ×7"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -7.46,
+      18.92
+     ],
+     [
+      3.51,
+      14.84
+     ],
+     [
+      9.21,
+      14.76
+     ],
+     [
+      11.7,
+      15.1
+     ],
+     [
+      17.54,
+      -17.89
+     ],
+     [
+      7.38,
+      -18.92
+     ],
+     [
+      -6.49,
+      -17.13
+     ],
+     [
+      -14.99,
+      -12.06
+     ],
+     [
+      -17.54,
+      -7.15
+     ],
+     [
+      -12.6,
+      -10.13
+     ]
+    ]
+   },
+   "x": -3115.46,
+   "z": 586.6,
+   "ry": 2.7982,
+   "y": null,
+   "flat_at": [
+    [
+     -3103.83,
+     569.95
+    ],
+    [
+     -3107.34,
+     569.99
+    ],
+    [
+     -3110.85,
+     570.04
+    ],
+    [
+     -3114.95,
+     569.58
+    ],
+    [
+     -3116.57,
+     569.03
+    ],
+    [
+     -3118.19,
+     568.48
+    ],
+    [
+     -3119.98,
+     567.92
+    ],
+    [
+     -3120.65,
+     567.57
+    ],
+    [
+     -3121.32,
+     567.23
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    33.1,
+    35.8
+   ],
+   "organic": {
+    "lot": 11,
+    "zone": 0.34,
+    "street": "street2",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot012",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "jungnong",
+    "seed": 93249012,
+    "fp": [
+     19.4,
+     18.6
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249084
+      },
+      "x": -1.24,
+      "z": 0.75,
+      "ry": 0.007
+     },
+     {
+      "tag": "jangdok2",
+      "kit": "village/jangdok",
+      "params": {
+       "seed": 93249059,
+       "w": 2.2,
+       "d": 1.6
+      },
+      "x": -2.67,
+      "z": -4.8,
+      "ry": 4.7124
+     },
+     {
+      "tag": "ytree",
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93249085,
+       "variant": "broadleaf",
+       "h": 7.32577082864009
+      },
+      "x": -2.93,
+      "z": 8.6,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249104,
+       "ax": -9.77,
+       "az": 1.6,
+       "bx": -10.69,
+       "bz": 9.55,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249105,
+       "ax": -4.61,
+       "az": -6.34,
+       "bx": -9.77,
+       "bz": 1.6,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249106,
+       "ax": -0.72,
+       "az": -10.3,
+       "bx": -4.61,
+       "bz": -6.34,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249107,
+       "ax": 9.89,
+       "az": 2.02,
+       "bx": -0.72,
+       "bz": -10.3,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249108,
+       "ax": 10.69,
+       "az": 8.98,
+       "bx": 9.89,
+       "bz": 2.02,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93249087,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": 0.0,
+      "z": 9.62,
+      "ry": 0.0933
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -1.12,
+         9.73
+        ],
+        [
+         -3.47,
+         9.95
+        ],
+        [
+         -5.73,
+         9.5
+        ],
+        [
+         -8.0,
+         9.25
+        ],
+        [
+         -9.38,
+         9.24
+        ],
+        [
+         -9.87,
+         9.14
+        ],
+        [
+         -10.12,
+         8.85
+        ],
+        [
+         -10.12,
+         8.33
+        ],
+        [
+         -9.82,
+         6.76
+        ],
+        [
+         -9.5,
+         4.25
+        ],
+        [
+         -9.46,
+         2.66
+        ],
+        [
+         -9.38,
+         2.07
+        ],
+        [
+         -9.18,
+         1.51
+        ],
+        [
+         -8.84,
+         0.99
+        ],
+        [
+         -7.96,
+         -0.1
+        ],
+        [
+         -6.74,
+         -2.1
+        ],
+        [
+         -5.62,
+         -4.16
+        ],
+        [
+         -4.34,
+         -6.12
+        ],
+        [
+         -2.54,
+         -7.95
+        ],
+        [
+         -1.37,
+         -9.14
+        ],
+        [
+         -0.96,
+         -9.42
+        ],
+        [
+         -0.56,
+         -9.41
+        ],
+        [
+         -0.16,
+         -9.1
+        ],
+        [
+         0.72,
+         -8.07
+        ],
+        [
+         2.04,
+         -6.23
+        ],
+        [
+         3.5,
+         -4.52
+        ],
+        [
+         5.12,
+         -2.94
+        ],
+        [
+         6.6,
+         -1.24
+        ],
+        [
+         7.92,
+         0.6
+        ],
+        [
+         8.92,
+         1.56
+        ],
+        [
+         9.28,
+         1.99
+        ],
+        [
+         9.51,
+         2.48
+        ],
+        [
+         9.61,
+         3.04
+        ],
+        [
+         9.71,
+         4.34
+        ],
+        [
+         9.8,
+         6.53
+        ],
+        [
+         10.1,
+         7.81
+        ],
+        [
+         10.11,
+         8.29
+        ],
+        [
+         9.9,
+         8.6
+        ],
+        [
+         9.43,
+         8.75
+        ],
+        [
+         8.0,
+         8.89
+        ],
+        [
+         5.7,
+         9.01
+        ],
+        [
+         3.38,
+         9.05
+        ],
+        [
+         1.11,
+         9.52
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249312,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×6",
+        "비탈 등고선을 따라 굽음(옆·뒤 담) ×1",
+        "흙·돌담 모서리를 둥글게 ×5"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      10.69,
+      8.98
+     ],
+     [
+      -3.47,
+      10.3
+     ],
+     [
+      -10.69,
+      9.55
+     ],
+     [
+      -9.77,
+      1.6
+     ],
+     [
+      -4.61,
+      -6.34
+     ],
+     [
+      -0.72,
+      -10.3
+     ],
+     [
+      9.89,
+      2.02
+     ]
+    ]
+   },
+   "x": -3089.36,
+   "z": 558.1,
+   "ry": -0.0536,
+   "y": null,
+   "flat_at": [
+    [
+     -3081.26,
+     569.04
+    ],
+    [
+     -3085.52,
+     569.21
+    ],
+    [
+     -3089.79,
+     569.38
+    ],
+    [
+     -3095.79,
+     569.11
+    ],
+    [
+     -3097.94,
+     568.77
+    ],
+    [
+     -3100.09,
+     568.43
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    19.4,
+    18.6
+   ],
+   "organic": {
+    "lot": 12,
+    "zone": 0.51,
+    "street": "street2",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot013",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93249013,
+    "fp": [
+     13.8,
+     21.3
+    ],
+    "pieces": [
+     {
+      "tag": "field",
+      "kit": "nature/garden_plot",
+      "params": {
+       "seed": 93249091,
+       "w": 6.3,
+       "d": 7.2
+      },
+      "x": -0.05,
+      "z": 3.49,
+      "ry": 0.0082
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93249092,
+       "s": 1.00844584098086
+      },
+      "x": 3.05,
+      "z": -0.84,
+      "ry": 0.0082
+     }
+    ],
+    "poly": [
+     [
+      6.86,
+      11.65
+     ],
+     [
+      -2.34,
+      11.36
+     ],
+     [
+      -4.6,
+      11.61
+     ],
+     [
+      -7.92,
+      -11.65
+     ],
+     [
+      -0.24,
+      -6.28
+     ],
+     [
+      7.92,
+      4.23
+     ]
+    ]
+   },
+   "x": -3041.77,
+   "z": 666.06,
+   "ry": -2.1247,
+   "y": null,
+   "flat_at": [
+    [
+     -3055.71,
+     663.82
+    ],
+    [
+     -3054.19,
+     661.52
+    ],
+    [
+     -3052.66,
+     659.22
+    ],
+    [
+     -3050.87,
+     656.45
+    ],
+    [
+     -3050.57,
+     655.83
+    ],
+    [
+     -3050.28,
+     655.22
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    13.8,
+    21.3
+   ],
+   "organic": {
+    "lot": 13,
+    "zone": 0.2,
+    "street": "alley3",
+    "walls": 0
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot014",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93249014,
+    "fp": [
+     12.2,
+     9.6
+    ],
+    "pieces": [
+     {
+      "tag": "house",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "poor",
+       "seed": 93249102
+      },
+      "x": 0.39,
+      "z": -0.22,
+      "ry": 0.0251
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249111,
+       "ax": 5.7,
+       "az": 5.2,
+       "bx": 7.1,
+       "bz": -1.66,
+       "drop": 0.75,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -4.63,
+         5.41
+        ],
+        [
+         -4.79,
+         3.37
+        ],
+        [
+         -5.24,
+         1.38
+        ],
+        [
+         -5.83,
+         -0.57
+        ],
+        [
+         -6.24,
+         -2.56
+        ],
+        [
+         -6.49,
+         -3.76
+        ],
+        [
+         -6.5,
+         -4.18
+        ],
+        [
+         -6.29,
+         -4.41
+        ],
+        [
+         -5.85,
+         -4.44
+        ],
+        [
+         -4.59,
+         -4.26
+        ],
+        [
+         -4.04,
+         -4.22
+        ],
+        [
+         -3.5,
+         -4.27
+        ],
+        [
+         -2.96,
+         -4.42
+        ],
+        [
+         -0.96,
+         -5.11
+        ],
+        [
+         -0.32,
+         -5.28
+        ],
+        [
+         0.32,
+         -5.34
+        ],
+        [
+         1.0,
+         -5.29
+        ],
+        [
+         1.89,
+         -5.15
+        ],
+        [
+         2.27,
+         -5.05
+        ],
+        [
+         2.63,
+         -4.89
+        ],
+        [
+         2.96,
+         -4.66
+        ],
+        [
+         5.03,
+         -2.93
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249314,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×4"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         5.26,
+         -2.74
+        ],
+        [
+         6.13,
+         -2.01
+        ],
+        [
+         6.43,
+         -1.66
+        ],
+        [
+         6.57,
+         -1.26
+        ],
+        [
+         6.54,
+         -0.78
+        ],
+        [
+         6.22,
+         0.59
+        ],
+        [
+         5.86,
+         2.73
+        ],
+        [
+         5.42,
+         4.86
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93249315,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 필지 경계 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      5.7,
+      5.2
+     ],
+     [
+      -2.34,
+      5.4
+     ],
+     [
+      -4.9,
+      5.81
+     ],
+     [
+      -7.1,
+      -4.97
+     ],
+     [
+      -3.79,
+      -4.49
+     ],
+     [
+      -0.04,
+      -5.81
+     ],
+     [
+      2.64,
+      -5.38
+     ],
+     [
+      7.1,
+      -1.66
+     ]
+    ]
+   },
+   "x": -3081.5,
+   "z": 638.21,
+   "ry": -1.4128,
+   "y": null,
+   "flat_at": [
+    [
+     -3087.36,
+     643.77
+    ],
+    [
+     -3087.8,
+     641.39
+    ],
+    [
+     -3088.24,
+     639.02
+    ],
+    [
+     -3088.79,
+     635.78
+    ],
+    [
+     -3089.03,
+     635.04
+    ],
+    [
+     -3089.27,
+     634.3
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    12.2,
+    9.6
+   ],
+   "organic": {
+    "lot": 14,
+    "zone": 0.2,
+    "street": "alley4",
+    "walls": 2
+   }
+  },
+  {
+   "id": "st_sanchon_all_lot015",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93249015,
+    "fp": [
+     10.5,
+     20.4
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "mountain",
+       "cls": "commoner",
+       "seed": 93249105
+      },
+      "x": -2.7,
+      "z": -0.35,
+      "ry": 1.5521
+     },
+     {
+      "tag": "terrace_3",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249108,
+       "ax": -5.51,
+       "az": -11.22,
+       "bx": -6.27,
+       "bz": 8.77,
+       "drop": 3.2,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93249109,
+       "ax": 2.53,
+       "az": -3.93,
+       "bx": -5.51,
+       "bz": -11.22,
+       "drop": 2.65,
+       "tiers": 3,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -1.1,
+         9.42
+        ],
+        [
+         -3.91,
+         8.65
+        ],
+        [
+         -5.11,
+         8.53
+        ],
+        [
+         -5.54,
+         8.4
+        ],
+        [
+         -5.76,
+         8.12
+        ],
+        [
+         -5.78,
+         7.66
+        ],
+        [
+         -5.58,
+         6.36
+        ],
+        [
+         -5.66,
+         4.26
+        ],
+        [
+         -5.69,
+         2.15
+        ],
+        [
+         -5.47,
+         0.05
+        ],
+        [
+         -5.25,
+         -2.04
+        ],
+        [
+         -5.28,
+         -4.15
+        ],
+        [
+         -5.36,
+         -6.25
+        ],
+        [
+         -5.2,
+         -8.35
+        ],
+        [
+         -5.19,
+         -9.65
+        ],
+        [
+         -5.13,
+         -10.03
+        ],
+        [
+         -4.96,
+         -10.1
+        ],
+        [
+         -4.66,
+         -9.85
+        ],
+        [
+         -3.86,
+         -8.93
+        ],
+        [
+         -2.37,
+         -7.6
+        ],
+        [
+         -0.76,
+         -6.39
+        ],
+        [
+         0.75,
+         -5.08
+        ],
+        [
+         1.64,
+         -4.27
+        ],
+        [
+         1.99,
+         -3.89
+        ],
+        [
+         2.27,
+         -3.46
+        ],
+        [
+         2.48,
+         -2.97
+        ],
+        [
+         2.87,
+         -1.78
+        ],
+        [
+         3.47,
+         0.19
+        ],
+        [
+         3.93,
+         2.2
+        ],
+        [
+         4.57,
+         4.16
+        ],
+        [
+         5.08,
+         5.29
+        ],
+        [
+         5.27,
+         5.62
+        ],
+        [
+         5.38,
+         5.6
+        ],
+        [
+         5.41,
+         5.22
+        ],
+        [
+         5.38,
+         4.1
+        ],
+        [
+         5.39,
+         4.0
+        ],
+        [
+         5.49,
+         4.06
+        ],
+        [
+         5.59,
+         4.22
+        ],
+        [
+         5.63,
+         4.3
+        ],
+        [
+         5.66,
+         4.46
+        ],
+        [
+         5.74,
+         6.49
+        ],
+        [
+         5.78,
+         8.66
+        ],
+        [
+         5.86,
+         9.96
+        ],
+        [
+         5.79,
+         10.42
+        ],
+        [
+         5.53,
+         10.68
+        ],
+        [
+         5.05,
+         10.73
+        ],
+        [
+         2.68,
+         10.46
+        ],
+        [
+         1.06,
+         10.02
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93249315,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×2",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "곧은 필지 경계 ×2",
+        "흙·돌담 모서리를 둥글게 ×7"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      6.27,
+      11.22
+     ],
+     [
+      2.62,
+      10.81
+     ],
+     [
+      -3.97,
+      9.0
+     ],
+     [
+      -6.27,
+      8.77
+     ],
+     [
+      -5.51,
+      -11.22
+     ],
+     [
+      2.53,
+      -3.93
+     ],
+     [
+      5.03,
+      3.7
+     ],
+     [
+      5.0,
+      2.63
+     ],
+     [
+      6.0,
+      4.22
+     ]
+    ]
+   },
+   "x": -3100.99,
+   "z": 551.94,
+   "ry": -1.2077,
+   "y": null,
+   "flat_at": [
+    [
+     -3110.5,
+     562.14
+    ],
+    [
+     -3110.77,
+     561.07
+    ],
+    [
+     -3111.05,
+     560.0
+    ],
+    [
+     -3111.79,
+     556.94
+    ],
+    [
+     -3111.99,
+     554.9
+    ],
+    [
+     -3112.19,
+     552.86
+    ],
+    [
+     -3112.22,
+     550.2
+    ],
+    [
+     -3112.4,
+     549.53
+    ],
+    [
+     -3112.58,
+     548.86
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본",
+   "footprint": [
+    10.5,
+    20.4
+   ],
+   "organic": {
+    "lot": 15,
+    "zone": 0.22,
+    "street": "alley5",
+    "walls": 1
+   }
+  },
+  {
+   "id": "st_sanchon_all_well016",
+   "kit": "village/well",
+   "params": {
+    "seed": 3,
+    "roof": false
+   },
+   "x": -3076.87,
+   "z": 565.65,
+   "ry": 2.1432,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree017",
+   "kit": "nature/big_tree",
+   "params": {
+    "seed": 6,
+    "variant": "zelkova",
+    "h": 10.1197510096245
+   },
+   "x": -3074.52,
+   "z": 573.62,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_bench018",
+   "kit": "village/props",
+   "params": {
+    "seed": 9,
+    "kind": "pyeongsang"
+   },
+   "x": -3069.01,
+   "z": 564.68,
+   "ry": 2.0489,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay019",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 5,
+    "s": 0.921048524230719
+   },
+   "x": -3136.69,
+   "z": 526.94,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree020",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 8,
+    "s": 0.863308133836836
+   },
+   "x": -3111.54,
+   "z": 525.31,
+   "ry": 4.62,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree021",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 9,
+    "s": 0.877410174719989
+   },
+   "x": -3106.43,
+   "z": 526.29,
+   "ry": 0.8004,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay022",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 11,
+    "s": 0.884652989497408
+   },
+   "x": -3090.4,
+   "z": 529.08,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat023",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 14,
+    "w": 5.89068845985457,
+    "d": 3.7135440370068
+   },
+   "x": -3067.75,
+   "z": 523.44,
+   "ry": 0.1256,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay024",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 15,
+    "s": 0.907703545119148
+   },
+   "x": -3062.17,
+   "z": 522.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree025",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 20,
+    "s": 1.03569310605526
+   },
+   "x": -3024.83,
+   "z": 527.05,
+   "ry": 3.0456,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat026",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 21,
+    "w": 4.2188070975244,
+    "d": 3.71604430312291
+   },
+   "x": -3018.69,
+   "z": 527.48,
+   "ry": -0.1445,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay027",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 23,
+    "s": 0.847170802752953
+   },
+   "x": -2999.54,
+   "z": 529.49,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat028",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 25,
+    "w": 4.11530384980142,
+    "d": 4.12820448875427
+   },
+   "x": -2988.65,
+   "z": 524.08,
+   "ry": 0.1541,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree029",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 26,
+    "s": 1.0896713768132
+   },
+   "x": -2982.84,
+   "z": 527.05,
+   "ry": 0.9674,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay030",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 27,
+    "s": 1.08095592721365
+   },
+   "x": -3149.26,
+   "z": 530.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree031",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 30,
+    "s": 1.22415733588859
+   },
+   "x": -3127.7,
+   "z": 536.21,
+   "ry": 4.955,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay032",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 31,
+    "s": 0.803116911859252
+   },
+   "x": -3125.1,
+   "z": 532.46,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay033",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 35,
+    "s": 1.11443790571066
+   },
+   "x": -3089.35,
+   "z": 531.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree034",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 36,
+    "s": 0.937305975519121
+   },
+   "x": -3082.57,
+   "z": 536.69,
+   "ry": 4.4096,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree035",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 37,
+    "s": 1.150264834892
+   },
+   "x": -3074.56,
+   "z": 535.29,
+   "ry": 2.7346,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat036",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 38,
+    "w": 4.80874028149992,
+    "d": 3.11250822823495
+   },
+   "x": -3071.12,
+   "z": 535.57,
+   "ry": -0.0187,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat037",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 39,
+    "w": 5.08238434419036,
+    "d": 3.00212625442073
+   },
+   "x": -3061.62,
+   "z": 534.16,
+   "ry": -0.1777,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat038",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 40,
+    "w": 5.27176561485976,
+    "d": 3.99931438565254
+   },
+   "x": -3053.08,
+   "z": 533.53,
+   "ry": -0.111,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree039",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 43,
+    "s": 0.92462348099798
+   },
+   "x": -3023.5,
+   "z": 535.03,
+   "ry": 5.5942,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay040",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 47,
+    "s": 0.939470358740073
+   },
+   "x": -2992.7,
+   "z": 531.02,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree041",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 50,
+    "s": 1.13326798621565
+   },
+   "x": -3145.27,
+   "z": 540.5,
+   "ry": 2.3766,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat042",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 52,
+    "w": 4.04647127585486,
+    "d": 3.86419376721606
+   },
+   "x": -3129.82,
+   "z": 538.49,
+   "ry": -0.0692,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat043",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 54,
+    "w": 4.74599296366796,
+    "d": 4.08554850518703
+   },
+   "x": -3111.67,
+   "z": 539.33,
+   "ry": -0.0038,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat044",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 55,
+    "w": 5.85547785600647,
+    "d": 3.36612032018602
+   },
+   "x": -3107.27,
+   "z": 538.82,
+   "ry": 0.3,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree045",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 58,
+    "s": 1.1958580900915
+   },
+   "x": -3014.86,
+   "z": 540.3,
+   "ry": 5.8615,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree046",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 59,
+    "s": 1.18719313638285
+   },
+   "x": -3008.91,
+   "z": 542.26,
+   "ry": 0.9058,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay047",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 60,
+    "s": 0.890836609224789
+   },
+   "x": -3004.26,
+   "z": 543.31,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree048",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 74,
+    "s": 1.07240159502253
+   },
+   "x": -2996.85,
+   "z": 550.72,
+   "ry": 4.7882,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree049",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 78,
+    "s": 0.859885475225747
+   },
+   "x": -3128.11,
+   "z": 558.78,
+   "ry": 3.992,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree050",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 80,
+    "s": 1.11038977131248
+   },
+   "x": -3116.09,
+   "z": 554.8,
+   "ry": 3.0056,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree051",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 81,
+    "s": 0.902638654503971
+   },
+   "x": -3019.97,
+   "z": 553.96,
+   "ry": 2.2946,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree052",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 83,
+    "s": 0.898898479808122
+   },
+   "x": -2999.51,
+   "z": 555.66,
+   "ry": 5.5286,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree053",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 85,
+    "s": 1.13435877440497
+   },
+   "x": -2990.67,
+   "z": 552.52,
+   "ry": 0.7063,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay054",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 88,
+    "s": 0.909826334100217
+   },
+   "x": -3136.73,
+   "z": 565.05,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree055",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 101,
+    "s": 0.939407761022448
+   },
+   "x": -3130.01,
+   "z": 567.57,
+   "ry": 2.1029,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat056",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 102,
+    "w": 4.37777356710285,
+    "d": 3.51525003304705
+   },
+   "x": -3017.78,
+   "z": 570.59,
+   "ry": 0.0504,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat057",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 103,
+    "w": 4.7687816475518,
+    "d": 3.07359559033066
+   },
+   "x": -3009.86,
+   "z": 569.96,
+   "ry": 0.0203,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree058",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 106,
+    "s": 1.10123134786263
+   },
+   "x": -2985.18,
+   "z": 570.95,
+   "ry": 1.0939,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree059",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 107,
+    "s": 1.15776914702728
+   },
+   "x": -2981.89,
+   "z": 573.49,
+   "ry": 3.7205,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat060",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 110,
+    "w": 4.6684294003062,
+    "d": 3.34522710889578
+   },
+   "x": -3134.12,
+   "z": 578.18,
+   "ry": 0.0302,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree061",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 111,
+    "s": 1.03810268575326
+   },
+   "x": -3071.38,
+   "z": 577.06,
+   "ry": 0.7173,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree062",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 118,
+    "s": 0.856136648356914
+   },
+   "x": -2980.31,
+   "z": 579.66,
+   "ry": 3.6767,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat063",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 122,
+    "w": 4.59255785215646,
+    "d": 3.35871169874445
+   },
+   "x": -3023.71,
+   "z": 587.32,
+   "ry": -0.0306,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree064",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 128,
+    "s": 1.01770598618314
+   },
+   "x": -2980.7,
+   "z": 585.87,
+   "ry": 3.1833,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree065",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 130,
+    "s": 1.1554625059478
+   },
+   "x": -3142.08,
+   "z": 593.29,
+   "ry": 0.4748,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree066",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 135,
+    "s": 0.931475794501603
+   },
+   "x": -2996.93,
+   "z": 591.22,
+   "ry": 3.3801,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree067",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 137,
+    "s": 0.990099126286805
+   },
+   "x": -2981.88,
+   "z": 595.88,
+   "ry": 2.7858,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree068",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 142,
+    "s": 0.87298732874915
+   },
+   "x": -3018.08,
+   "z": 603.66,
+   "ry": 5.6523,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree069",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 144,
+    "s": 1.21186907133088
+   },
+   "x": -3004.69,
+   "z": 600.39,
+   "ry": 4.3838,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree070",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 146,
+    "s": 1.15373553009704
+   },
+   "x": -2990.41,
+   "z": 600.45,
+   "ry": 4.6923,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree071",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 151,
+    "s": 0.938544905558228
+   },
+   "x": -3123.07,
+   "z": 608.82,
+   "ry": 2.4626,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree072",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 152,
+    "s": 1.04839108418673
+   },
+   "x": -3114.85,
+   "z": 609.37,
+   "ry": 2.8592,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay073",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 153,
+    "s": 1.01074610401411
+   },
+   "x": -3104.85,
+   "z": 609.74,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat074",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 157,
+    "w": 5.6395108429715,
+    "d": 3.83951564216986
+   },
+   "x": -3029.0,
+   "z": 611.17,
+   "ry": -0.1117,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree075",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 161,
+    "s": 1.23636189429089
+   },
+   "x": -2999.74,
+   "z": 606.36,
+   "ry": 6.1764,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay076",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 163,
+    "s": 0.80780724924989
+   },
+   "x": -2986.72,
+   "z": 608.65,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay077",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 165,
+    "s": 0.840586019097827
+   },
+   "x": -3142.36,
+   "z": 616.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat078",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 167,
+    "w": 5.5562159572728,
+    "d": 3.44716824218631
+   },
+   "x": -3131.99,
+   "z": 614.99,
+   "ry": -0.0615,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat079",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 169,
+    "w": 4.95085374824703,
+    "d": 3.0962021115236
+   },
+   "x": -3113.12,
+   "z": 615.41,
+   "ry": 0.1377,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree080",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 170,
+    "s": 1.05090452842414
+   },
+   "x": -3108.7,
+   "z": 618.45,
+   "ry": 4.9457,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree081",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 171,
+    "s": 0.931735624093562
+   },
+   "x": -3100.93,
+   "z": 612.77,
+   "ry": 4.8635,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay082",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 172,
+    "s": 0.886805217899382
+   },
+   "x": -3094.04,
+   "z": 614.33,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree083",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 174,
+    "s": 1.10921269739047
+   },
+   "x": -3020.03,
+   "z": 616.95,
+   "ry": 5.2012,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat084",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 178,
+    "w": 4.64086007187143,
+    "d": 4.13124855933711
+   },
+   "x": -2986.93,
+   "z": 615.86,
+   "ry": 0.1971,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay085",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 179,
+    "s": 0.811645367229357
+   },
+   "x": -3144.74,
+   "z": 620.79,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree086",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 181,
+    "s": 1.1736914364621
+   },
+   "x": -3130.22,
+   "z": 622.69,
+   "ry": 0.1042,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree087",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 182,
+    "s": 1.0265261628665
+   },
+   "x": -3119.5,
+   "z": 622.27,
+   "ry": 1.2325,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat088",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 185,
+    "w": 5.14010863751173,
+    "d": 3.16875400459394
+   },
+   "x": -3103.17,
+   "z": 625.54,
+   "ry": 0.0129,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat089",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 186,
+    "w": 4.41447083419189,
+    "d": 3.03912127185613
+   },
+   "x": -3091.72,
+   "z": 626.86,
+   "ry": -0.2024,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree090",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 188,
+    "s": 0.86249534599483
+   },
+   "x": -3031.02,
+   "z": 624.59,
+   "ry": 4.3424,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree091",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 189,
+    "s": 1.12089616572484
+   },
+   "x": -3027.81,
+   "z": 623.21,
+   "ry": 4.7284,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree092",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 191,
+    "s": 0.960074635408819
+   },
+   "x": -3007.09,
+   "z": 626.35,
+   "ry": 3.5881,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree093",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 193,
+    "s": 1.20466741062701
+   },
+   "x": -2997.67,
+   "z": 622.6,
+   "ry": 4.1922,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree094",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 198,
+    "s": 1.08424946665764
+   },
+   "x": -3115.23,
+   "z": 629.64,
+   "ry": 5.4253,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree095",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 201,
+    "s": 0.901268307678401
+   },
+   "x": -3094.16,
+   "z": 627.92,
+   "ry": 0.5212,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat096",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 202,
+    "w": 4.57744407420978,
+    "d": 3.98234770679846
+   },
+   "x": -3031.17,
+   "z": 631.1,
+   "ry": -0.2968,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree097",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 203,
+    "s": 1.03505571279675
+   },
+   "x": -3027.37,
+   "z": 632.99,
+   "ry": 3.4529,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree098",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 206,
+    "s": 1.08652273714542
+   },
+   "x": -3003.21,
+   "z": 628.3,
+   "ry": 0.9115,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree099",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 207,
+    "s": 0.901988388597965
+   },
+   "x": -2992.39,
+   "z": 632.19,
+   "ry": 0.7685,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree100",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 210,
+    "s": 1.09885028749704
+   },
+   "x": -3128.82,
+   "z": 639.37,
+   "ry": 0.8511,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay101",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 211,
+    "s": 0.890157744300086
+   },
+   "x": -3125.74,
+   "z": 639.86,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat102",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 216,
+    "w": 5.37442550249398,
+    "d": 4.15209885919467
+   },
+   "x": -3042.89,
+   "z": 641.61,
+   "ry": 0.1856,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree103",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 217,
+    "s": 0.883503792993724
+   },
+   "x": -3033.36,
+   "z": 639.92,
+   "ry": 5.9661,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree104",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 221,
+    "s": 1.11115316282958
+   },
+   "x": -3002.48,
+   "z": 638.71,
+   "ry": 0.5547,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree105",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 223,
+    "s": 1.21994842858985
+   },
+   "x": -3128.8,
+   "z": 647.35,
+   "ry": 2.9881,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree106",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 225,
+    "s": 0.940591910295188
+   },
+   "x": -3111.6,
+   "z": 649.42,
+   "ry": 0.903,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree107",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 226,
+    "s": 1.14363494683057
+   },
+   "x": -3105.66,
+   "z": 642.52,
+   "ry": 1.3003,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree108",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 228,
+    "s": 1.02600846765563
+   },
+   "x": -3076.06,
+   "z": 647.1,
+   "ry": 3.7052,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree109",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 231,
+    "s": 1.23129431130365
+   },
+   "x": -3041.11,
+   "z": 643.49,
+   "ry": 3.8185,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat110",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 232,
+    "w": 4.12161125335842,
+    "d": 4.16066990364343
+   },
+   "x": -3031.51,
+   "z": 648.31,
+   "ry": -0.0296,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat111",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 233,
+    "w": 4.89553862484172,
+    "d": 3.07692783465609
+   },
+   "x": -3021.51,
+   "z": 643.89,
+   "ry": -0.0469,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree112",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 234,
+    "s": 0.93978519262746
+   },
+   "x": -3014.16,
+   "z": 643.58,
+   "ry": 3.8777,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat113",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 235,
+    "w": 4.69883676897734,
+    "d": 3.2577822200954
+   },
+   "x": -3007.96,
+   "z": 642.72,
+   "ry": 0.2853,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat114",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 237,
+    "w": 5.16882439842448,
+    "d": 4.12736127879471
+   },
+   "x": -3130.27,
+   "z": 651.79,
+   "ry": -0.0348,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay115",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 238,
+    "s": 0.814485469192732
+   },
+   "x": -3119.49,
+   "z": 651.63,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_teotbat116",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 243,
+    "w": 5.37057678913698,
+    "d": 4.19714953070507
+   },
+   "x": -3023.08,
+   "z": 656.58,
+   "ry": -0.2276,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree117",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 246,
+    "s": 1.02407586714253
+   },
+   "x": -3005.17,
+   "z": 654.66,
+   "ry": 2.1597,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree118",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 249,
+    "s": 0.975902338884771
+   },
+   "x": -3115.7,
+   "z": 657.54,
+   "ry": 5.4672,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree119",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 250,
+    "s": 1.06034903200343
+   },
+   "x": -3032.78,
+   "z": 660.47,
+   "ry": 2.5242,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay120",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 251,
+    "s": 0.887269751541316
+   },
+   "x": -3026.73,
+   "z": 661.01,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree121",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 254,
+    "s": 1.04925483195111
+   },
+   "x": -3117.66,
+   "z": 666.26,
+   "ry": 4.7319,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_hay122",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 255,
+    "s": 1.07576817434747
+   },
+   "x": -3070.88,
+   "z": 666.15,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  },
+  {
+   "id": "st_sanchon_all_tree123",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 256,
+    "s": 1.19977857070044
+   },
+   "x": -3015.62,
+   "z": 665.35,
+   "ry": 5.591,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 산촌(비탈·축대) 견본"
+  }
+ ]
+}
