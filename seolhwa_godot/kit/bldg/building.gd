@@ -439,7 +439,11 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			if k == "open": continue
 			if k == "wall": m.box_c(x - 0.08, x + 0.08, zb, zf)
 			else:
-				m.box_c(x - 0.08, x + 0.08, zb, -0.45); m.box_c(x - 0.08, x + 0.08, 0.45, zf)
+				# 트임: 옛 치수는 ±0.45 그대로. 실제 크기(dw_k>1)면 그려진 문 너비(door1 0.74·door2 1.35 × dw_k)의 반에서 0.03 안쪽
+				var gk: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[0])
+				var gh := 0.45
+				if gk > 1.001: gh = maxf(0.45, ((minf(zf - zb - 0.35, 1.35 * gk) if k == "door2" else 0.74 * gk) / 2.0) - 0.03)
+				m.box_c(x - 0.08, x + 0.08, zb, -gh); m.box_c(x - 0.08, x + 0.08, gh, zf)
 	if raised:
 		for c in cols: m.circle(c[0], c[1], cr + 0.05)
 

@@ -176,7 +176,10 @@ static func real_scale(sp: Dictionary) -> void:
 	var kh: float = k[0]; var kv: float = k[1]
 	sp.real_scale = [kh, kv]
 	if sp.has("wall_h"): sp.wall_h = snappedf(float(sp.wall_h) * kv, 0.01)
-	if sp.has("floor_dh"): sp.floor_dh = snappedf(float(sp.floor_dh) * kv, 0.01)
+	# 기단 위 바닥 높이: 칸막이 문지방 밑(걷기 바닥이 끊긴 띠)에서 한 걸음(MAX_STEP 0.32m)을 넘으면 방↔대청을 못 지나므로 0.3 안으로
+	if sp.has("floor_dh"):
+		var fd := float(sp.floor_dh)
+		sp.floor_dh = snappedf(fd * kv, 0.01) if fd > 0.32 or fd * kv <= 0.3 else maxf(fd, 0.3)
 	if sp.get("base") is Dictionary and (sp.base as Dictionary).has("h"): sp.base.h = snappedf(float(sp.base.h) * kv, 0.01)
 	if sp.get("roof") is Dictionary:
 		for kk in ["eave", "lift", "rc"]:
@@ -197,7 +200,10 @@ static func real_scale(sp: Dictionary) -> void:
 			if w.has(kk): w[kk] = snappedf(float(w[kk]) * kv, 0.01)
 		for b in w.get("bays", []):
 			b.w = snappedf(float(b.w) * kh, 0.01)
-			if b.has("floor_up"): b.floor_up = snappedf(float(b.floor_up) * kv, 0.01)
+			# 칸 사이 바닥 단(방↔대청)은 한 걸음(MAX_STEP 0.32m) 안이어야 걸어 넘는다 — 옛 값이 한 걸음 안이면 0.3을 넘기지 않는다
+			if b.has("floor_up"):
+				var fu := float(b.floor_up)
+				b.floor_up = snappedf(fu * kv, 0.01) if fu > 0.32 or fu * kv <= 0.3 else maxf(fu, 0.3)
 	for a in sp.get("attach", []):
 		for kk in ["x", "z"]:
 			if a.has(kk): a[kk] = snappedf(float(a[kk]) * kh, 0.01)

@@ -47,7 +47,17 @@ func _walk_to(t: Vector3) -> bool:
 		if v.length() < 0.06: break
 		var st := v.normalized() * minf(0.05, v.length())
 		var q = w.move_circle(pos, st.x, st.y, main.player.radius)
-		if q == null: break
+		if q == null:
+			var why := "slope/step"
+			if w.blocked(pos.x + st.x, pos.z + st.y, main.player.radius):
+				why = "collider r=%.2f" % main.player.radius
+				for c in w.colliders:
+					if c.type != "circle" and Vector2(pos.x + st.x - clampf(pos.x + st.x, c.minX, c.maxX), pos.z + st.y - clampf(pos.z + st.y, c.minZ, c.maxZ)).length() < main.player.radius:
+						why += " box(%.2f..%.2f,%.2f..%.2f)" % [c.minX, c.maxX, c.minZ, c.maxZ]
+					elif c.type == "circle" and Vector2(pos.x + st.x - c.x, pos.z + st.y - c.z).length() < main.player.radius + c.r:
+						why += " circ(%.2f,%.2f r%.2f)" % [c.x, c.z, c.r]
+			print("BISTALL at=(%.2f,%.2f) to=(%.2f,%.2f) %s h=%.2f→%.2f" % [pos.x, pos.z, t.x, t.z, why, w.height_at(pos.x, pos.z), w.height_at(pos.x + st.x, pos.z + st.y)])
+			break
 		pos = Vector3(q.x, w.height_at(q.x, q.z), q.z)
 		main.player.facing = main.facing_from(st.x, st.y, main.player.facing)
 	main.player_pos = pos
@@ -158,14 +168,29 @@ func run(spec: String) -> void:
 		print("BIWALK anchae_daecheong reached=%s foot=%.2f" % [ok3 and ok4, foot.call()])
 		_ok(ok3 and ok4, "안채 계단 → 툇마루 → 대청(발 %.2f)" % foot.call())
 		# 안방: 대청 옆 방 가운데로(문 열림)
-		var x := -La / 2; var room_x := 0.0
+		# 대청(adae)과 맞닿은 방 칸(가장 가까운 방)
+		var x := -La / 2; var room_x := 0.0; var room_x0 := 0.0; var room_x1 := 0.0
+		var best := INF
 		for b in aw.bays:
-			if b.fn == "room": room_x = x + float(b.w) / 2; break
+			if b.fn == "room":
+				var cxr := x + float(b.w) / 2
+				if absf(cxr - (adae as Vector3).x) < best: best = absf(cxr - (adae as Vector3).x); room_x = cxr; room_x0 = x; room_x1 = x + float(b.w)
 			x += float(b.w)
+		print("BIDBG bays=%s" % str(aw.bays.map(func(b): return "%s:%.2f" % [b.fn, float(b.w)])))
 		# 대청 가운데 → 칸막이 문(가운데 0.9m 트임) → 방 가운데
-		var ok5 := _walk_to(axf * Vector3((adae as Vector3).x, 0, 0.0))
-		ok5 = _walk_to(axf * Vector3(room_x, 0, 0.0)) and ok5
-		var ok6 := _walk_to(axf * Vector3(room_x, 0, -0.3)) and ok5
+		#   칸막이 문은 날개 로컬 z=0(날개 깊이 가운데)에 난다 — 툇마루가 있는 날개는 집 로컬과 z가 어긋나므로 문 줄을 앞뒤로 찾아 든다
+		var ok5 := false
+		var p_dae: Vector3 = main.player_pos
+		for dz in [0.0, 0.42, -0.42, 0.8, -0.8]:
+			main.player_pos = p_dae; main.player.position = p_dae
+			if not _walk_to(axf * Vector3((adae as Vector3).x, 0, dz)): continue
+			_walk_to(axf * Vector3(room_x, 0, dz))
+			# 방 가운데에 보료·서안이 올 수 있다 — 방 칸 안(칸막이를 0.3m 넘게 지남)이면 든 것
+			var lpr: Vector3 = axf.affine_inverse() * main.player_pos
+			print("BIDBG dz=%.2f end_local=(%.2f,%.2f) world=(%.2f,%.2f)" % [dz, lpr.x, lpr.z, main.player_pos.x, main.player_pos.z])
+			if lpr.x > room_x0 + 0.3 and lpr.x < room_x1 - 0.3: ok5 = true; break
+		print("BIDBG room_x=%.2f La=%.2f Da=%.2f local=%s" % [room_x, La, Da, str(axf.affine_inverse() * main.player_pos)])
+		var ok6 := ok5
 		var room_stop: Vector3 = main.player_pos
 		if not ok6 and ok5:
 			# 실제 크기로 방이 넓어져 방 가운데에 가구(보료·서안)가 올 수 있다 — 방 칸 안 다른 자리로(문 쪽 가까이)
