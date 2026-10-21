@@ -532,6 +532,17 @@ func _block_lot(si: int, side: float, s0: float, s1: float, ds: Array, bk: float
 		var di := clampi(int(round(sv - 0.5)), 0, ds.size() - 1)
 		var d: float = float(ds[di]) - 0.5   # 뒤 필지와 0.5m 뒷길(처마 물받이) — 등을 맞대는 담 사이
 		front.append(F); back.append(F + nrm * d); nn.append(nrm)
+	# 다른 길(막다른 고샅 끝·갈래 시작 등)을 덮으면 깊이를 줄인다
+	for att in 5:
+		var bad := false
+		var pq: Array = front.duplicate()
+		for k in range(back.size() - 1, -1, -1): pq.append(back[k])
+		for j in streets.size():
+			if j == si: continue
+			if poly_line_dist(pq, streets[j].pts) < float(streets[j].w) / 2 + 0.3: bad = true; break
+		if not bad: break
+		if att == 4: return {}
+		for k in back.size(): back[k] = (front[k] as Vector2).lerp(back[k], 0.82)
 	# 앞 변이 거의 곧으면 가운데 점을 줄인다(담 마디 수)
 	var fpts := [front[0]]
 	for k in range(1, front.size() - 1):
@@ -831,7 +842,9 @@ func _fill_court(li: int, lot: Dictionary, t: String) -> Dictionary:
 	if gtype != "none":
 		for gq in [0.5, 0.35, 0.65, 0.22, 0.78, 0.12, 0.88]:
 			var G: Vector2 = at(fpts, fl * gq)[0]
-			var ok := _gate_clear(G, n)
+			var ok := _gate_clear(G, n) and G.distance_to(fpts[0]) > 2.4 and G.distance_to(fpts[fpts.size() - 1]) > 2.4   # 모서리(담이 꺾이는 자리)에 문을 내지 않는다
+			for vi in range(1, fpts.size() - 1):
+				if G.distance_to(fpts[vi]) < 1.4 and absf(((fpts[vi] as Vector2) - fpts[vi - 1]).angle_to((fpts[vi + 1] as Vector2) - fpts[vi])) > 0.12: ok = false
 			for q in placed:
 				if poly_line_dist(q[0], [G, G - n * 4.0]) < 0.6: ok = false; break
 			if ok:
@@ -998,7 +1011,7 @@ func _fill(li: int, lot: Dictionary, t: String) -> Dictionary:
 		var tries := [0.5, 0.38, 0.62, 0.28, 0.72, 0.2, 0.8]
 		for tt in tries:
 			var G: Vector2 = (at(fpts, fl * tt)[0] as Vector2)
-			if not _gate_clear(G, lot.n): continue
+			if not _gate_clear(G, lot.n) or G.distance_to(fpts[0]) < 2.4 or G.distance_to(fpts[fpts.size() - 1]) < 2.4: continue
 			# 묶음 로컬 (gx, Z1) → G, 로컬 +z → 앞 법선(ry)
 			var O: Vector2 = G - rot(Vector2(gate_l.x, Z1), ry)
 			var ok := true
@@ -1213,7 +1226,8 @@ func _wall_runs(li: int, lot: Dictionary, t: String, wk: String, cut: Array, out
 			var v: Vector2 = to_local.call(q[0])
 			if lp.is_empty() or Vector2(float(lp[lp.size() - 1][0]), float(lp[lp.size() - 1][1])).distance_to(v) > 0.08: lp.append([snappedf(v.x, 0.01), snappedf(v.y, 0.01)])
 		if lp.size() < 2: continue
-		var closed: bool = closed_all and runs.size() == 1
+		# 닫힌 고리: 이 줄의 첫 끝·마지막 끝이 같은 점이고 둘 다 열린 끝(대문·건물)이 아닐 때만
+		var closed: bool = closed_all and runs.size() == 1 and not bool(run[0][4]) and not bool(run[run.size() - 1][5]) and (run[0][0] as Vector2).distance_to(run[run.size() - 1][1]) < 0.05
 		if closed and Vector2(float(lp[0][0]), float(lp[0][1])).distance_to(Vector2(float(lp[lp.size() - 1][0]), float(lp[lp.size() - 1][1]))) < 0.1: lp.pop_back()
 		var h: float = { todam_tile = CP.WH_TILE, todam_thatch = CP.WH_THATCH, stone = CP.WH_STONE, fence = 1.15 }.get(wk, 1.7)
 		var wy := []
@@ -1356,14 +1370,26 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 			var G := Vector2(float(gate.x), float(gate.z))
 			var hf2 := GT.half(gate.params)
 			var ns := []
+			# 대문이 닿는 앞 마디(가장 가까운 것)의 방향을 문이 따른다 — 앞 변이 여러 마디로 굽으면 이웃 마디에서도 문 자리(G 둘레 반폭)를 판다
+			var best_d := INF; var best_u := Vector2.RIGHT
+			for sg in segs:
+				if not sg[2]: continue
+				var dd := seg_dist(G, sg[0], sg[1])
+				if dd < best_d: best_d = dd; best_u = ((sg[1] as Vector2) - (sg[0] as Vector2)).normalized()
 			for sg in segs:
 				if not sg[2]: ns.append(sg); continue
 				var a: Vector2 = sg[0]; var b: Vector2 = sg[1]
-				if seg_dist(G, a, b) > 0.6: ns.append(sg); continue
-				var u := (b - a).normalized()
-				var tg := (G - a).dot(u)
-				if tg - hf2 > 0.3: ns.append([a, a + u * (tg - hf2), true, sg[3], "gate_b"])
-				if a.distance_to(b) - (tg + hf2) > 0.3: ns.append([a + u * (tg + hf2), b, true, sg[3], "gate_a"])
+				if seg_dist(G, a, b) > hf2 + 0.05: ns.append(sg); continue
+				# |a + (b−a)t − G| < hf2 인 t 구간을 판다
+				var d := b - a; var f := a - G
+				var A := d.dot(d); var Bq := 2.0 * f.dot(d); var Cq := f.dot(f) - (hf2 + 0.05) * (hf2 + 0.05)
+				var disc := Bq * Bq - 4.0 * A * Cq
+				if disc <= 0.0 or A < 1e-6: ns.append(sg); continue
+				var t0 := (-Bq - sqrt(disc)) / (2.0 * A); var t1 := (-Bq + sqrt(disc)) / (2.0 * A)
+				if t0 * d.length() > 0.3: ns.append([a, a + d * clampf(t0, 0.0, 1.0), true, sg[3], "gate_b"])
+				if (1.0 - t1) * d.length() > 0.3: ns.append([a + d * clampf(t1, 0.0, 1.0), b, true, sg[3], "gate_a"])
+			if best_d <= 0.6:
+				var u := best_u
 				# 대문은 이 변의 방향을 따른다(앞 변이 꺾였으면 그 마디)
 				var gry := atan2(-u.y, u.x)   # 로컬 x(문 너비) = 변 방향 · 로컬 +z = 길 쪽
 				var gq: Dictionary = gate.duplicate(true)

@@ -166,6 +166,12 @@ func run(spec: String) -> void:
 		var ok5 := _walk_to(axf * Vector3((adae as Vector3).x, 0, 0.0))
 		ok5 = _walk_to(axf * Vector3(room_x, 0, 0.0)) and ok5
 		var ok6 := _walk_to(axf * Vector3(room_x, 0, -0.3)) and ok5
+		var room_stop: Vector3 = main.player_pos
+		if not ok6 and ok5:
+			# 실제 크기로 방이 넓어져 방 가운데에 가구(보료·서안)가 올 수 있다 — 방 칸 안 다른 자리로(문 쪽 가까이)
+			for alt in [Vector3(room_x, 0, 0.6), Vector3(room_x + 0.7, 0, 0.0), Vector3(room_x - 0.7, 0, 0.0)]:
+				main.player_pos = room_stop; main.player.position = room_stop
+				if _walk_to(axf * alt): ok6 = true; break
 		var inn = main.world.interior_at(main.player_pos.x, main.player_pos.z)
 		print("BIWALK anchae_room reached=%s interior=%s foot=%.2f" % [ok6, inn != null, foot.call()])
 		_ok(ok6 and inn != null, "대청에서 칸막이 문으로 안방에 들어서고(발 %.2f), 실내(잘라 보기) 상자 안이다" % foot.call())

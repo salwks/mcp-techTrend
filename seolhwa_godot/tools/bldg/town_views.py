@@ -42,7 +42,8 @@ for a in streets:
     if len(p) >= 2:
         dx = p[-2][0] - p[-1][0]; dz = p[-2][1] - p[-1][1]; L = max(1e-6, (dx * dx + dz * dz) ** 0.5)
         k = min(1.5, L * 0.5) / L; p[-1] = [p[-1][0] + dx * k, p[-1][1] + dz * k]
-    pts = p[::3] + ([p[-1]] if (len(p) - 1) % 3 else [])
+    st = 1 if len(p) < 14 else 2   # 굽은 길의 현(chord)이 담을 가로지르지 않게 촘촘히
+    pts = p[::st] + ([p[-1]] if (len(p) - 1) % st else [])
     walks.append(dict(id=a['id'].replace(pre + '_', ''), label=a['id'], pts=[[round(x, 1), round(z, 1)] for x, z in pts], shots=[]))
 if fx.get('lane'): walks.append(dict(id='lane', label='큰길', pts=fx['lane'], shots=[]))
 xs = [p[0] for p in D['area']]; zs = [p[1] for p in D['area']]

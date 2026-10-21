@@ -107,7 +107,7 @@ func _views(name: String, cfg: Dictionary, res: Dictionary, bb: Rect2) -> Dictio
 				views.append({ id = "f%d" % k, label = "%s 1인칭" % String(a.id), mode = "fp", x = float(m[0]), z = float(m[1]), yaw = snappedf(yaw, 1), pitch = 3 })
 			k += 1
 		var pts := []
-		var step := maxi(1, p.size() / 6)
+		var step := 1 if p.size() < 14 else 2
 		var i := 0
 		while i < p.size():
 			pts.append([snappedf(float(p[i][0]), 0.1), snappedf(float(p[i][1]), 0.1)]); i += step

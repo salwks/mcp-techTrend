@@ -120,15 +120,17 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 			seed = X.seed * 31 + k * 7 + 1, prefix = "%s_%s" % [X.pre, String(d.id)], group = X.group, region = d.get("region", X.region),
 			area = d.area, trunks = [], keep = X.keep + (cfg.get("keep", []) as Array), keep_poly = X.keep_poly, rivers = rivers,
 			plazas = d.get("plazas", []), centers = d.get("centers", []), base_density = d.get("base_density", 0.3),
-			branch = d.get("branch", { gap_a = 22.0, gap_b = 36.0, p = 0.9, len_a = 30.0, len_b = 80.0, alley_gap_a = 16.0, alley_gap_b = 26.0, alley_p = 0.7 }),
+			branch = d.get("branch", { gap_a = 36.0, gap_b = 52.0, p = 0.92, len_a = 30.0, len_b = 85.0, alley_gap_a = 24.0, alley_gap_b = 38.0, alley_p = 0.4 }),
+			street_spacing = d.get("street_spacing", 40.0), alley_spacing = d.get("alley_spacing", 22.0), court_gap = d.get("court_gap", 0.6), block_front = d.get("block_front", [16.0, 21.0]),
+			partial_walls = d.get("partial_walls", 0.25), inner_inset = d.get("inner_inset", 0.6),
 			junction_plaza_p = d.get("junction_plaza_p", 0.3), empty_out = d.get("empty_out", 0.08), empty_in = d.get("empty_in", 0.0),
-			table = d.get("table", {}), trunk_shop = d.get("trunk_shop", 0.0), terrace = true, trees = d.get("trees", 0.35 if String(d.id).begins_with("in") else 0.8), partial_walls = d.get("partial_walls", 0.25),
+			table = d.get("table", {}), trunk_shop = d.get("trunk_shop", 0.0), terrace = true, trees = d.get("trees", 0.35 if String(d.id).begins_with("in") else 0.8),
 		}
 		# 성 안(읍내) 구역: 촘촘하게(마당 흙·곁채·깊은 필지·빈 땅은 채마밭) — 남원 읍성 안 남쪽(eup)과 같은 값
 		var urban: bool = d.get("urban", String(d.id).begins_with("in"))
 		if urban:
-			for kk in ["extras_ratio", "extras_max", "front_in", "depth_in", "lot_gap", "inner_inset", "front_yard", "extras_gap"]:
-				oc[kk] = d.get(kk, { extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.6, front_yard = [3.4, 5.5], extras_gap = 0.9 }[kk])
+			for kk in ["extras_ratio", "extras_max", "front_in", "depth_in", "lot_gap", "inner_inset", "front_yard", "extras_gap", "court_gap"]:
+				oc[kk] = d.get(kk, { extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.45, front_yard = [3.4, 5.5], extras_gap = 0.9, court_gap = 0.5 }[kk])
 			oc.urban = true
 			var ab := OG._bbox(apoly_of(d.area))
 			urban_rects.append([snappedf(ab.position.x, 0.1), snappedf(ab.position.y, 0.1), snappedf(ab.end.x, 0.1), snappedf(ab.end.y, 0.1)])
