@@ -94,6 +94,13 @@ static func ensure() -> void:
 	var b = load("res://assets/pbr/pbr_b.res")
 	if a != null: RenderingServer.global_shader_parameter_set("pbr_a", a)
 	if b != null: RenderingServer.global_shader_parameter_set("pbr_b", b)
+	# 사진 스캔 층(integ-mountain — assets/pbr_scan, tools/pbr_scan): 없으면 예전 구운 층으로
+	var sa = load("res://assets/pbr_scan/scan_a.res") if ResourceLoader.exists("res://assets/pbr_scan/scan_a.res") else null
+	var sb = load("res://assets/pbr_scan/scan_b.res") if ResourceLoader.exists("res://assets/pbr_scan/scan_b.res") else null
+	if sa != null and sb != null:
+		RenderingServer.global_shader_parameter_set("scan_a", sa); RenderingServer.global_shader_parameter_set("scan_b", sb)
+	var noscan := "--noscan" in OS.get_cmdline_user_args()
+	RenderingServer.global_shader_parameter_set("scan_on", 1.0 if sa != null and sb != null and not noscan else 0.0)
 	if a == null or b == null:
 		push_warning("PBR textures missing — run tools/matlight/bake_pbr.gd")
 		RenderingServer.global_shader_parameter_set("look_pbr", 0.0)

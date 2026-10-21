@@ -62,10 +62,11 @@ void fragment() {
 	else if (c == 3) col = mix(vec3(0.64, 0.54, 0.37), vec3(0.56, 0.61, 0.36), 0.4 + n1 * 0.4);
 	else if (c == 5) col = vec3(0.42, 0.47, 0.50);
 	else if (c == 6 || c == 4) col = mix(vec3(0.616, 0.651, 0.420), vec3(0.788, 0.671, 0.471), 0.35);
-	else if (c == 7) col = mix(vec3(0.557, 0.525, 0.463), vec3(0.416, 0.396, 0.357), 0.4 + n1);
-	else if (c == 8) col = vec3(0.80, 0.76, 0.64);
+	// integ-mountain: 산 지형 권역(aer_k)에서 바위 칸은 바위틈 숲이 섞인 회록색, 너덜은 회갈색 — 먼 산이 모래·황토빛으로 읽히지 않게
+	else if (c == 7) col = mix(mix(vec3(0.557, 0.525, 0.463), vec3(0.416, 0.396, 0.357), 0.4 + n1), mix(canopy_color(p, v_wp.y), vec3(0.47, 0.47, 0.45), 0.45), aer_k);
+	else if (c == 8) col = mix(vec3(0.80, 0.76, 0.64), vec3(0.50, 0.48, 0.44), aer_k);
 	else col = mix(vec3(0.616, 0.651, 0.420), vec3(0.525, 0.596, 0.361), 0.5 + n1);
-	col = mix(col, vec3(0.557, 0.525, 0.463), smoothstep(1.0, 1.5, slope) * 0.6);
+	col = mix(col, mix(vec3(0.557, 0.525, 0.463), vec3(0.45, 0.45, 0.43), aer_k), mix(smoothstep(1.0, 1.5, slope) * 0.6, smoothstep(1.4, 2.0, slope) * 0.5, aer_k));
 	col = mix(col, vec3(0.553, 0.576, 0.486), smoothstep(200.0, 520.0, v_wp.y) * 0.25);
 	if (dress_on > 0.0) {
 		float ed = texture(dress_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size)).r * 255.0 - 128.0;

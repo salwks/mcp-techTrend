@@ -15,8 +15,8 @@ uniform float canopy_d1 = 220.0;    // 여기서 다 바뀜(식생 그리는 거
 vec3 canopy_color(vec2 p, float y) {
 	float a = r_vnoise(p * 0.13);                         // 나무 한 그루 크기(≈8m) 덩이
 	float b = r_vnoise(p * 0.035 + vec2(13.0, 7.0));      // 숲 얼룩(솔밭·참나무 무리)
-	vec3 pine = vec3(0.235, 0.318, 0.196);
-	vec3 oak = vec3(0.345, 0.392, 0.224);
+	vec3 pine = vec3(0.19, 0.275, 0.2);    // integ-mountain: 여름 산 — 짙은 청록(솔)·짙은 녹(참나무)
+	vec3 oak = vec3(0.27, 0.345, 0.205);
 	vec3 c = mix(pine, oak, clamp(smoothstep(0.35, 0.75, b) * 0.7 + smoothstep(120.0, 420.0, y) * 0.5, 0.0, 1.0));
 	float crown = smoothstep(0.35, 0.75, a);
 	return c * (0.72 + 0.42 * crown);                     // 수관 위는 밝고 사이는 어둡다

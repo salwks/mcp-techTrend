@@ -1,0 +1,181 @@
+{
+ "about": "사진 스캔 PBR 층(CC0). 원본은 assets/pbr_scan/src/(깃 밖) — tools/pbr_scan/fetch.py로 다시 받는다.",
+ "layers": [
+  {
+   "files": {
+    "zip": "https://ambientcg.com/get?file=Rock030_2K-JPG.zip"
+   },
+   "id": "Rock030",
+   "index": 0.0,
+   "ko": "화강암 벼랑·바위(회색, 풍화)",
+   "license": "CC0 1.0 (https://docs.ambientcg.com/license/)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "granite",
+   "page": "https://ambientcg.com/view?id=Rock030",
+   "site": "ambientcg",
+   "tile_m": 4.0
+  },
+  {
+   "files": {
+    "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_ao_2k.jpg",
+    "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_diff_2k.jpg",
+    "height": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_disp_2k.jpg",
+    "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_nor_gl_2k.jpg",
+    "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_rough_2k.jpg"
+   },
+   "id": "mossy_rock",
+   "index": 1.0,
+   "ko": "이끼·지의 낀 바위",
+   "license": "CC0 1.0 (https://polyhaven.com/license)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "mossy_rock",
+   "page": "https://polyhaven.com/a/mossy_rock",
+   "site": "polyhaven",
+   "tile_m": 3.0
+  },
+  {
+   "files": {
+    "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_ao_2k.jpg",
+    "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_diff_2k.jpg",
+    "height": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_disp_2k.jpg",
+    "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_nor_gl_2k.jpg",
+    "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_rough_2k.jpg"
+   },
+   "id": "brown_mud_leaves_01",
+   "index": 2.0,
+   "ko": "숲 바닥(부엽토·이끼 얼룩·잎)",
+   "license": "CC0 1.0 (https://polyhaven.com/license)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "forest_floor",
+   "page": "https://polyhaven.com/a/brown_mud_leaves_01",
+   "site": "polyhaven",
+   "tile_m": 3.0
+  },
+  {
+   "files": {
+    "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dry_decay_leaves/dry_decay_leaves_ao_2k.jpg",
+    "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dry_decay_leaves/dry_decay_leaves_diff_2k.jpg",
+    "height": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dry_decay_leaves/dry_decay_leaves_disp_2k.jpg",
+    "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dry_decay_leaves/dry_decay_leaves_nor_gl_2k.jpg",
+    "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dry_decay_leaves/dry_decay_leaves_rough_2k.jpg"
+   },
+   "id": "dry_decay_leaves",
+   "index": 3.0,
+   "ko": "낙엽 깔린 바닥",
+   "license": "CC0 1.0 (https://polyhaven.com/license)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "leaf_litter",
+   "page": "https://polyhaven.com/a/dry_decay_leaves",
+   "site": "polyhaven",
+   "tile_m": 2.5
+  },
+  {
+   "files": {
+    "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_ground_04/forest_ground_04_ao_2k.jpg",
+    "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_ground_04/forest_ground_04_diff_2k.jpg",
+    "height": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_ground_04/forest_ground_04_disp_2k.jpg",
+    "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_ground_04/forest_ground_04_nor_gl_2k.jpg",
+    "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_ground_04/forest_ground_04_rough_2k.jpg"
+   },
+   "id": "forest_ground_04",
+   "index": 4.0,
+   "ko": "다져진 산길 흙(짙은 흙·돌)",
+   "license": "CC0 1.0 (https://polyhaven.com/license)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "trail_soil",
+   "page": "https://polyhaven.com/a/forest_ground_04",
+   "site": "polyhaven",
+   "tile_m": 3.0
+  },
+  {
+   "files": {
+    "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rocky_trail/rocky_trail_ao_2k.jpg",
+    "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rocky_trail/rocky_trail_diff_2k.jpg",
+    "height": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rocky_trail/rocky_trail_disp_2k.jpg",
+    "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rocky_trail/rocky_trail_nor_gl_2k.jpg",
+    "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rocky_trail/rocky_trail_rough_2k.jpg"
+   },
+   "id": "rocky_trail",
+   "index": 5.0,
+   "ko": "마사토·자갈 섞인 풍화 화강암 흙",
+   "license": "CC0 1.0 (https://polyhaven.com/license)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "masato",
+   "page": "https://polyhaven.com/a/rocky_trail",
+   "site": "polyhaven",
+   "tile_m": 3.0
+  },
+  {
+   "files": {
+    "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/ganges_river_pebbles/ganges_river_pebbles_ao_2k.jpg",
+    "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/ganges_river_pebbles/ganges_river_pebbles_diff_2k.jpg",
+    "height": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/ganges_river_pebbles/ganges_river_pebbles_disp_2k.jpg",
+    "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/ganges_river_pebbles/ganges_river_pebbles_nor_gl_2k.jpg",
+    "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/ganges_river_pebbles/ganges_river_pebbles_rough_2k.jpg"
+   },
+   "id": "ganges_river_pebbles",
+   "index": 6.0,
+   "ko": "냇돌·자갈(하상)",
+   "license": "CC0 1.0 (https://polyhaven.com/license)",
+   "maps": [
+    "ao.jpg",
+    "color.jpg",
+    "height.jpg",
+    "normal.jpg",
+    "rough.jpg"
+   ],
+   "name": "river_pebbles",
+   "page": "https://polyhaven.com/a/ganges_river_pebbles",
+   "site": "polyhaven",
+   "tile_m": 2.0
+  }
+ ],
+ "packed": {
+  "a": "rgb sRGB albedo, a height",
+  "b": "r roughness, g normal.y (GL), b AO, a normal.x",
+  "compression": "S3TC/BC3 + mipmaps",
+  "files": [
+   "scan_a.res",
+   "scan_b.res"
+  ],
+  "resolution": 2048
+ },
+ "resolution": "2K source",
+ "vram_bytes": 78294048
+}

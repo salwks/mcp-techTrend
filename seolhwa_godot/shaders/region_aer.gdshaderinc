@@ -8,8 +8,9 @@ const float AER_PLATEAU = 0.55;    // 가까운 안개(exp²)가 여기까지만
 //   (물체 재질 Materials.FOG_CODE·캐릭터·키트 물도 같은 식 — 같은 거리의 나무와 땅이 같은 만큼 흐리다)
 float aer_haze(float fog_f, float d, float y, float base, float dens) {
 	if (aer_k <= 0.0) return fog_f;
-	float L = 1400.0 * 0.0085 / max(dens, 1e-4);
-	float hz = 0.93 * (1.0 - exp(-d / L));
+	// integ-mountain: 먼 산이 뿌옇게 묻히지 않게 조금 맑게(1400 → 1900m 눈금, 끝 0.93 → 0.86) — 남원 뒤 산 덩이가 실제 산으로 읽히게
+	float L = 1900.0 * 0.0085 / max(dens, 1e-4);
+	float hz = 0.86 * (1.0 - exp(-d / L));
 	// 골짜기 안개: 보는 이(발)보다 낮은 먼 땅
 	float low = 1.0 - smoothstep(-40.0, 50.0, y - base);
 	hz = 1.0 - (1.0 - hz) * (1.0 - 0.35 * low * smoothstep(150.0, 700.0, d));

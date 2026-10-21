@@ -5,7 +5,8 @@
 #define GROUND_MASK
 
 // 토지이용별 풀 덮임: 숲 풀밭 논 밭 길 물 마을 바위 모래 대숲
-const float LU_GRASS[10] = float[](0.75, 1.0, 0.9, 0.85, 0.8, 0.0, 0.62, 0.12, 0.05, 0.55);
+// integ-mountain: 숲(0)·대숲(9)은 풀이 숲 틈에만(0.75 → 0.32 · 0.55 → 0.25) — 숲 바닥은 부엽토·낙엽(ground_real 스캔 층)
+const float LU_GRASS[10] = float[](0.32, 1.0, 0.9, 0.85, 0.8, 0.0, 0.62, 0.12, 0.05, 0.25);
 
 float gm_lu(vec2 p) {
 	vec2 f = (p - lu_meta.xy) * lu_meta.z;

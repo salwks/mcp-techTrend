@@ -26,7 +26,7 @@ const FOG_CODE := """
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
 	if (aer_k > 0.0) {   // 공기원근(mountain-terrain — shaders/region_aer.gdshaderinc와 같은 식): 가까운 안개는 0.55에서 멈추고 먼 거리는 천천히
-		float aer_hz = 0.93 * (1.0 - exp(-fog_d * max(fog_density, 1e-4) / (1400.0 * 0.0085)));
+		float aer_hz = 0.86 * (1.0 - exp(-fog_d * max(fog_density, 1e-4) / (1900.0 * 0.0085)));
 		fog_f = mix(fog_f, max(min(fog_f, 0.55), aer_hz), aer_k);
 	}
 	// 먼 물체 사라짐(식생 그리는 거리 끝에서 점무늬로 녹는다 — 그 너머는 땅의 수관·지붕 빛이 맡는다)
@@ -207,6 +207,23 @@ const PBR_CODE := """
 			ao *= mix(1.0, 0.55 + 0.45 * hrel, min(1.0, abs(ar) * 30.0));
 			h = mix(h, hrel, 0.6);
 		}
+		// 바위·벼랑(자연석 칸): 사진 스캔 화강암을 세 축 투영으로 + 위를 보는 면·그늘에 이끼(integ-mountain — shaders/pbr_scan.gdshaderinc)
+		bool p_scan = mid == M_ROCK && scan_on > 0.5;
+		vec3 p_snw = p_gn;
+		if (p_scan) {
+			ScanS sR = scan_tri(S_GRANITE, p_wp, p_gn, 0.8, p_snw);
+			float mn = texture(scan_a, vec3(p_wp.xz / 7.0 + p_wp.y * 0.05, float(S_FOREST))).a;
+			float moss = smoothstep(0.42, 0.72, p_gn.y * 0.55 + mn * 0.45) * (1.0 - smoothstep(0.0, 6.0, p_wp.y - MODEL_MATRIX[3].y) * 0.5);
+			if (moss > 0.01) {
+				vec3 nm;
+				ScanS sM = scan_tri(S_MOSSROCK, p_wp, p_gn, 0.8, nm);
+				float km = scan_hk(moss, sR.h, sM.h, 2.0);
+				sR = scan_mix(sR, sM, km); p_snw = normalize(mix(p_snw, nm, km));
+			}
+			vec3 kt = albedo_color.rgb * a_col * COLOR.rgb;
+			alb = sR.alb * mix(vec3(1.0), clamp(kt / max(dot(kt, vec3(0.333)), 0.03), vec3(0.75), vec3(1.25)), 0.3);
+			h = sR.h; rough = sR.r; ao = sR.ao;
+		}
 		float trans = MP_TRANS[mid];
 		float nmix = 1.0;
 		float s_cov, puddle;
@@ -219,6 +236,7 @@ const PBR_CODE := """
 			ao = mix(ao, 1.0, s_cov * 0.8);
 		}
 		NORMAL = normalize(TBN * nt);
+		if (p_scan) NORMAL = normalize((VIEW_MATRIX * vec4(normalize(mix(p_snw, p_gn, s_cov * 0.8)), 0.0)).xyz);
 		ALBEDO = alb;
 		ROUGHNESS = clamp(rough, 0.03, 1.0);
 		BACKLIGHT = vec3(trans);
@@ -255,6 +273,7 @@ static func world_shader(lit: bool, blend: bool, double_sided: bool) -> Shader:
 	code += GLOBALS
 	if Pbr.real: code += "#define LOOK_PBR\n"   # 사실 재질·빛(컴파일 때 고름 — 실행 중 분기는 큰 셰이더에서 1ms 넘게 든다)
 	code += "#include \"res://shaders/pbr_common.gdshaderinc\"\n"
+	code += "#include \"res://shaders/pbr_scan.gdshaderinc\"\n"
 	code += """
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable, hint_default_white;
 uniform sampler2D emission_tex : filter_linear_mipmap, repeat_enable, hint_default_black;

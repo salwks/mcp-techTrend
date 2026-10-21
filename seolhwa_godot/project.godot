@@ -122,6 +122,18 @@ pbr_b={
 "type": "sampler2DArray",
 "value": "res://assets/pbr/pbr_b.res"
 }
+scan_a={
+"type": "sampler2DArray",
+"value": "res://assets/pbr_scan/scan_a.res"
+}
+scan_b={
+"type": "sampler2DArray",
+"value": "res://assets/pbr_scan/scan_b.res"
+}
+scan_on={
+"type": "float",
+"value": 1.0
+}
 pbr_ids={
 "type": "sampler2D",
 "value": ""

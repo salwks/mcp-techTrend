@@ -149,7 +149,7 @@ const FOG := """
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
 	if (aer_k > 0.0) {   // 공기원근(mountain-terrain — Materials.FOG_CODE와 같은 식)
-		float aer_hz = 0.93 * (1.0 - exp(-fog_d * max(fog_density, 1e-4) / (1400.0 * 0.0085)));
+		float aer_hz = 0.86 * (1.0 - exp(-fog_d * max(fog_density, 1e-4) / (1900.0 * 0.0085)));
 		fog_f = mix(fog_f, max(min(fog_f, 0.55), aer_hz), aer_k);
 	}
 	if (fog_d > obj_fade.x && fract(sin(dot(floor(FRAGCOORD.xy), vec2(12.9898, 78.233))) * 43758.5453) < smoothstep(obj_fade.x, obj_fade.y, fog_d)) discard;

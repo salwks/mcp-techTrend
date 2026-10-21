@@ -7,6 +7,7 @@ render_mode cull_back;
 
 #include "res://shaders/region_common.gdshaderinc"
 #include "res://shaders/pbr_common.gdshaderinc"
+#include "res://shaders/pbr_scan.gdshaderinc"
 #include "res://shaders/region_far_look.gdshaderinc"
 
 global uniform vec3 hemi_sky;
@@ -606,7 +607,7 @@ void fragment() {
 	// 먼 숲 = 수관 빛(나무를 그리지 않는 거리부터 — region_far_look). 바위 비탈은 그대로
 	float cam_d = length(VERTEX);
 	float fw = mix(mix(float(ca == 0 || ca == 9), float(cb == 0 || cb == 9), t.x), mix(float(cc == 0 || cc == 9), float(cd == 0 || cd == 9), t.x), t.y);
-	col = mix(col, canopy_color(p, v_wp.y), fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.05, 1.5, slope)));
+	col = mix(col, canopy_color(p, v_wp.y), fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.5, 2.0, slope)));
 	// 길·마당 칠하기(웹 마을 가운데 흙길 느낌): 흙길 + 바퀴·발 자국 + 가장자리 풀 섶, 건물 둘레 2~4m 흙 마당
 	vec4 pt = texture(paint_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size));
 	float rd = pt.r * 16.0, rhw = pt.g * 8.0, yd = pt.b * 16.0;
@@ -634,7 +635,7 @@ void fragment() {
 		dirt = max(dirt, road);
 	}
 	// 먼 고을 = 처마 안 땅을 지붕 빛으로(건물이 안개에 묻히는 거리부터)
-	float far_canopy = fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.05, 1.5, slope));   // 사실 땅도 같은 비율로(ground_real)
+	float far_canopy = fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.5, 2.0, slope));   // 사실 땅도 같은 비율로(ground_real)
 	float far_roof = 0.0;
 	if (dress_on > 0.0 && cam_d > canopy_d0) {
 		float ed = texture(dress_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size)).r * 255.0 - 128.0;
