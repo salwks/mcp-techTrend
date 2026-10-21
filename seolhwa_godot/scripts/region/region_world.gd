@@ -32,7 +32,7 @@ const MID_R := 4         # 중경 반경(타일)
 const KEEP := 1          # 근경에서 벗어나도 이만큼은 유지(경계에서 왔다 갔다 할 때 다시 짓지 않게)
 const MID_STEP := 4
 const CHUNK := 64        # 근경 메시 조각(화면 밖 조각은 그리지 않게)
-const FAR_STEP := 32
+const FAR_STEP := 16      # 원경 격자(m) — 산 지형(mountain-terrain): 32 → 16, 먼 능선 실루엣이 걸을 수 있는 땅과 같은 모양으로 읽히게
 const SKIRT := 6.0
 const GRID := 32.0       # 충돌체 격자 칸(m)
 const MAX_JOBS := 2
@@ -48,6 +48,13 @@ var data_dir := ""
 var region := {}
 var is_route := false       # 노정(route.json) 공간
 var K := 0.30               # 압축(region.json projection.K) — 권역마다 다르다
+# 세로 되살림(region.json height.remap, mountain-terrain): 원래 y((해발−60)·K) → 게임 y. 없으면 그대로
+var remap_src := PackedFloat32Array()
+var remap_dst := PackedFloat32Array()
+# 산 자리(region_data/<id>/mountain.json): 이름 붙은 지리 자리(anchors)·산길 경로(routes) — 이야기가 쓸 자리, 이야기 자체는 없다
+var mountain := {}
+const SLOPE_BLOCK := 1.0     # 길 밖 땅 기울기(tan)가 이보다 가파르면 들어설 수 없다(약 45° — 바위 비탈·벼랑). 길·걷기 면 위는 MAX_SLOPE만
+const VIEW_FRAME := { pitch = 16.0, distance = 15.0, fov = 40.0 }   # 전망 자리(재 마루·봉우리): 낮게 서서 먼 산줄기까지 — 바라보는 쪽(view_yaw)으로 돈다
 var block_water := true
 var markers := true
 var use_scatter := true
@@ -71,7 +78,7 @@ var mat_far: ShaderMaterial
 var mat_water: ShaderMaterial
 var mesh_near: ArrayMesh
 var mesh_mid: ArrayMesh
-var far_node: MeshInstance3D
+var far_node: Node3D           # 원경 조각들(MeshInstance3D)의 부모
 var terrain_root: Node3D
 var water_root: Node3D
 var statics_root: Node3D
@@ -169,6 +176,16 @@ func load_region(dir := "") -> void:
 	var pj = region.get("projection")
 	K = float(pj.get("K", 0.3)) if pj is Dictionary else 0.3
 	var hm: Dictionary = region.height
+	remap_src = PackedFloat32Array(); remap_dst = PackedFloat32Array()
+	if hm.get("remap") is Dictionary:
+		remap_src = PackedFloat32Array(hm.remap.src); remap_dst = PackedFloat32Array(hm.remap.dst)
+	var Sc = load(SCATTER_PATH) if FileAccess.file_exists(SCATTER_PATH) else null
+	if Sc != null and "remap_src" in Sc:
+		Sc.remap_src = remap_src; Sc.remap_dst = remap_dst
+	mountain = {}
+	if FileAccess.file_exists(data_dir + "mountain.json"):
+		var mj = JSON.parse_string(FileAccess.get_file_as_string(data_dir + "mountain.json"))
+		if mj is Dictionary: mountain = mj
 	var hd := PngRaw.load_gray(ProjectSettings.globalize_path(data_dir + hm.file))
 	hbytes = hd.bytes; hbpp = hd.bpp
 	hnx = hd.w; hnz = hd.h
@@ -382,7 +399,7 @@ func _dress_commit() -> void:
 	var img := Image.create_from_data(hnx, hnz, false, Image.FORMAT_RGBA8, dbytes)
 	if dress_tex == null:
 		dress_tex = ImageTexture.create_from_image(img)
-		for m in [mat_near, mat_mid]:
+		for m in [mat_near, mat_mid, mat_far]:
 			if m != null: m.set_shader_parameter("dress_tex", dress_tex); m.set_shader_parameter("dress_on", 1.0)
 	else: dress_tex.update(img)
 
@@ -433,6 +450,13 @@ func _build_camera_zones() -> void:
 	for p in region.get("passes", []):
 		var r := 45.0
 		camera_zones.append(_zone(String(p.get("name", "고개")), float(p.x) - r, float(p.x) + r, float(p.z) - r, float(p.z) + r, CAM_PASS))
+	# 전망 자리(산 자리 중 view_yaw가 있는 것): 낮게 서서 바라보는 쪽으로 돈다(재 마루에서 남원 쪽, 봉우리에서 먼 줄기)
+	for a in mountain.get("anchors", []):
+		if not a.has("view_yaw"): continue
+		var r := clampf(float(a.get("r", 8.0)), 8.0, 18.0)
+		var vz := _zone(String(a.name), float(a.x) - r, float(a.x) + r, float(a.z) - r, float(a.z) + r, VIEW_FRAME)
+		vz.fov = VIEW_FRAME.fov; vz.yaw = -float(a.view_yaw); vz.lookAhead = 0.0; vz.view = true
+		camera_zones.append(vz)
 	for z in region.get("camera_zones", []):
 		var zz: Dictionary = z.duplicate()
 		if String(z.get("src", "")) == "north": zz = town_cam(zz)   # 도성 안·운종가·육조거리·평양 내성·함흥 성 안(배치 생성 도시 구역)
@@ -515,6 +539,7 @@ func _make_materials() -> void:
 	mat_far = ShaderMaterial.new(); mat_far.shader = load("res://shaders/region_far.gdshader")
 	_common_params(mat_far)
 	mat_far.set_shader_parameter("grid_step", float(FAR_STEP))
+	mat_far.set_shader_parameter("ramp_tex", Materials.ramp_texture())
 	WaterFX.ensure_globals()   # 물 셰이더가 쓰는 전역 uniform(water_*) — 셰이더를 읽기 전에
 	Kit.material("water"); Kit.material("water_refl")   # 키트 물 재질은 여기(주 스레드)서 먼저 — 키트 짓기 일꾼 스레드가 셰이더를 읽지 않게
 	mat_water = ShaderMaterial.new(); mat_water.shader = load("res://shaders/region_water.gdshader")
@@ -534,12 +559,40 @@ static func _noise_texture() -> ImageTexture:
 	return ImageTexture.create_from_image(img)
 
 # 지형 재질 전부에 같은 값 넣기(시간대·안개 기준 높이 등 — region_main이 부른다)
+const FAR_SHARED := ["far_ink", "mist_base", "canopy_d0", "canopy_d1"]   # 원경(region_far)도 같은 값을 받는다(먼 땅 보기 — region_far_look)
 func set_terrain_param(name: String, v: Variant) -> void:
 	for m in [mat_near, mat_mid, mat_water] + _water_mats:
 		if m: m.set_shader_parameter(name, v)
+	if mat_far and name in FAR_SHARED: mat_far.set_shader_parameter(name, v)
 
 func set_far_param(name: String, v: Variant) -> void:
 	if mat_far: mat_far.set_shader_parameter(name, v)
+
+# 원래 y(재매핑 전 — (해발−60)·K) → 게임 y. 해발에서 게임 y를 셀 때(눈선 등)
+func remap_y(y_src: float) -> float:
+	return _pl(y_src, remap_src, remap_dst)
+
+# 게임 y → 해발(m)
+func alt_of(y: float) -> float:
+	return _pl(y, remap_dst, remap_src) / K + 60.0
+
+static func _pl(v: float, a: PackedFloat32Array, b: PackedFloat32Array) -> float:
+	if a.size() < 2: return v
+	var k := 0
+	while k < a.size() - 2 and v > a[k + 1]: k += 1
+	return lerpf(b[k], b[k + 1], (v - a[k]) / maxf(a[k + 1] - a[k], 1e-6))
+
+# 산 자리 하나(mountain.json anchors[id]) — 없으면 빈 사전. 이야기 데이터가 자리 이름으로 위치를 찾을 때
+func mountain_anchor(id: String) -> Dictionary:
+	for a in mountain.get("anchors", []):
+		if String(a.get("id", "")) == id: return a
+	return {}
+
+# 땅 기울기(tan, 2m 중앙 차분 — 데이터 높이)
+func slope_at(x: float, z: float) -> float:
+	var gx := (data_height(x + 2.0, z) - data_height(x - 2.0, z)) * 0.25
+	var gz := (data_height(x, z + 2.0) - data_height(x, z - 2.0)) * 0.25
+	return sqrt(gx * gx + gz * gz)
 
 # ---------------------------------------------------------------------------
 # 높이·토지이용 (셰이더와 같은 식)
@@ -644,6 +697,12 @@ func climb_ok(fx: float, fz: float, tx: float, tz: float, r := 0.0) -> bool:
 	if indoor != null: return super.climb_ok(fx, fz, tx, tz, r)
 	var hf := height_at(fx, fz); var ht := height_at(tx, tz)
 	var dist := maxf(Vector2(tx - fx, tz - fz).length(), 1e-6)
+	# 산 비탈 규칙(mountain-terrain): 길·걷기 면 밖의 땅이 SLOPE_BLOCK보다 가파르면(바위 비탈·벼랑) 오르내림 모두 못 들어선다.
+	#   이미 가파른 곳에 서 있으면(떨어뜨려 놓은 경우) 덜 가파른 쪽으로는 나갈 수 있다. 평지 고을·건물 바닥은 해당 없음.
+	if not remap_dst.is_empty():
+		var st := slope_at(tx, tz)
+		if st > SLOPE_BLOCK and road_distance(tx, tz) > 0.5 and not _on_floor(tx, tz) and walk_at(tx, tz) == null:
+			if st >= slope_at(fx, fz) - 0.01: return false
 	if (ht - hf) / dist > MAX_SLOPE:
 		if _floor_grid.is_empty() or ht - hf > MAX_STEP: return false
 		if not (_on_floor(tx, tz) or _on_floor(fx, fz)): return false
@@ -724,27 +783,46 @@ static func _grid_mesh(n: int, step: int) -> ArrayMesh:
 	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
 	return m
 
+const FAR_CHUNK := 64          # 원경 조각 한 변 칸 수(16m × 64 = 1024m) — 조각마다 높이 범위 AABB라 화면 밖 조각은 그리지 않는다
 func _build_far() -> void:
 	var x0 := floorf(hx0 / FAR_STEP) * FAR_STEP; var z0 := floorf(hz0 / FAR_STEP) * FAR_STEP
 	var nx := int(ceil((hx0 + (hnx - 1) * hstep - x0) / FAR_STEP)); var nz := int(ceil((hz0 + (hnz - 1) * hstep - z0) / FAR_STEP))
-	var v := PackedVector3Array(); var idx := PackedInt32Array()
-	for j in nz + 1:
-		for i in nx + 1:
-			v.append(Vector3(i * FAR_STEP, 0, j * FAR_STEP))
-	for j in nz:
-		for i in nx:
-			var a := j * (nx + 1) + i; var b := a + 1; var c := a + nx + 1; var d := c + 1
-			idx.append_array(PackedInt32Array([a, b, c, b, d, c]))
-	var arr := []; arr.resize(Mesh.ARRAY_MAX)
-	arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_INDEX] = idx
-	var m := ArrayMesh.new(); m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
-	far_node = MeshInstance3D.new(); far_node.name = "far"
-	far_node.mesh = m
-	far_node.material_override = mat_far
-	far_node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	far_node.position = Vector3(x0, 0, z0)
-	far_node.custom_aabb = AABB(Vector3(0, hy0 - 10, 0), Vector3(nx * FAR_STEP, hscale * 65535.0 + 20, nz * FAR_STEP))
+	far_node = Node3D.new(); far_node.name = "far"
 	add_child(far_node)
+	var cj := 0
+	while cj < nz:
+		var ci := 0
+		while ci < nx:
+			var cw := mini(FAR_CHUNK, nx - ci); var ch := mini(FAR_CHUNK, nz - cj)
+			var v := PackedVector3Array(); var idx := PackedInt32Array()
+			var lo := INF; var hi := -INF
+			for j in ch + 1:
+				for i in cw + 1:
+					v.append(Vector3(i * FAR_STEP, 0, j * FAR_STEP))
+					var h := data_height(x0 + (ci + i) * FAR_STEP, z0 + (cj + j) * FAR_STEP)
+					lo = minf(lo, h); hi = maxf(hi, h)
+			for j in ch:
+				for i in cw:
+					var a := j * (cw + 1) + i; var b := a + 1; var c := a + cw + 1; var d := c + 1
+					idx.append_array(PackedInt32Array([a, b, c, b, d, c]))
+			var arr := []; arr.resize(Mesh.ARRAY_MAX)
+			arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_INDEX] = idx
+			var m := ArrayMesh.new(); m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+			var mi := MeshInstance3D.new(); mi.name = "far_%d_%d" % [ci, cj]
+			mi.mesh = m
+			mi.material_override = mat_far
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			mi.position = Vector3(x0 + ci * FAR_STEP, 0, z0 + cj * FAR_STEP)
+			mi.custom_aabb = AABB(Vector3(0, lo - 12.0, 0), Vector3(cw * FAR_STEP, hi - lo + 24.0, ch * FAR_STEP))
+			far_node.add_child(mi)
+			ci += FAR_CHUNK
+		cj += FAR_CHUNK
+
+# 원경 조각 모두의 렌더 층(물 반사 카메라 — water_fx)
+func set_far_layers(l: int) -> void:
+	if far_node == null: return
+	for c in far_node.get_children():
+		if c is VisualInstance3D: c.layers = l
 
 # ---------------------------------------------------------------------------
 # 하천 물: region.json.rivers의 수면 높이·폭으로 띠 메시(약 250m씩 잘라 화면 밖은 그리지 않게)

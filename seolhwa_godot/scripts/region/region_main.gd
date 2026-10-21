@@ -108,6 +108,9 @@ var _bench_dir := 0.0
 var _bench_speed := RUN
 var _bench_dist := 0.0
 var _bench_start := Vector3.ZERO
+# --benchroute=<길 id>[:x0,z0,x1,z1] — 자동 걷기가 그 길의 점(범위 안)을 차례로 따라간다(산 지형 성능: 여원재 오르막 등)
+var _bench_route := PackedVector2Array()
+var _bench_rk := 0
 var _lights_seen := -1
 var _glow_shader: Shader
 var _glow_mats := {}   # 종류 → [ShaderMaterial, QuadMesh]
@@ -229,6 +232,10 @@ func _ready() -> void:
 	if args.has("nochars"): player.visible = false
 	if args.has("noworld"): world.visible = false
 	if args.has("nofar"): world.far_node.visible = false
+	# 먼 땅 보기(공기원근·먼 물체 녹임 — mountain-terrain): 산 지형 권역(height.remap)만. --noaer로 끄고 견주기
+	_aer = 0.0 if args.has("noaer") or world.remap_dst.is_empty() else 1.0
+	RenderingServer.global_shader_parameter_set("aer_k", _aer)
+	_canopy_sync()
 	if args.has("nowater"): world.water_root.visible = false
 	if args.has("noocc"): world.occluders.clear()
 	if args.has("notilt") or args.has("nodof"): post.dof = false   # --nodof(새 이름) · --notilt(옛 이름) 깊이 흐림 끄기
@@ -253,6 +260,17 @@ func _ready() -> void:
 	if args.has("devtravel"): DevTravel.set_on(true)
 	if args.has("bench"):
 		_bench_left = float(args.bench)
+		if args.has("benchroute"):
+			var sp_: PackedStringArray = String(args.benchroute).split(":")
+			var bb := [-1e9, -1e9, 1e9, 1e9]
+			if sp_.size() > 1:
+				var q_: PackedStringArray = sp_[1].split(",")
+				bb = [float(q_[0]), float(q_[1]), float(q_[2]), float(q_[3])]
+			for r_ in world.region.get("roads", []):
+				if String(r_.id) != sp_[0]: continue
+				for p_ in r_.points:
+					if float(p_[0]) >= bb[0] and float(p_[1]) >= bb[1] and float(p_[0]) <= bb[2] and float(p_[1]) <= bb[3]: _bench_route.append(Vector2(float(p_[0]), float(p_[1])))
+			if not _bench_route.is_empty(): teleport(_bench_route[0].x, _bench_route[0].y)
 		_bench_speed = float(args.get("benchspeed", str(RUN)))
 		_bench_start = player_pos
 		Engine.max_fps = 0
@@ -285,6 +303,8 @@ func _ready() -> void:
 		_ride_test = load("res://scripts/region/bldg_integ.gd").new(self); _ride_test.run.call_deferred(String(args.bldginteg))
 	elif args.has("bldgallery"):   # 건물 빌더 갤러리 촬영(마을 카메라·기본·1인칭·실내) — scripts/region/bldg_gallery.gd
 		_ride_test = load("res://scripts/region/bldg_gallery.gd").new(self); _ride_test.run.call_deferred(String(args.bldgallery))
+	elif args.has("mtncheck"):   # 산 지형 점검(산길 걷기·땅/충돌·앉음·비탈 규칙·카메라 / 성능) — scripts/region/mountain_check.gd
+		_ride_test = load("res://scripts/region/mountain_check.gd").new(self); _ride_test.run.call_deferred(String(args.mtncheck))
 	elif args.has("bldgrollout"):   # 건물 빌더 세계 반영 점검(구역 전후 화면·걷기·대문) — scripts/region/bldg_rollout.gd
 		_ride_test = load("res://scripts/region/bldg_rollout.gd").new(self); _ride_test.run.call_deferred(String(args.bldgrollout))
 	elif args.has("mlshots"):   # 재질·빛 점검 촬영(material-lighting) — scripts/region/matlight_shots.gd
@@ -733,8 +753,17 @@ func _apply_atmo() -> void:
 	if args.has("scatterfar"): world.scatter_far = float(args.scatterfar)
 	_scatter_base = world.scatter_far
 	if rig != null and (rig.sailing or rig.riding): world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
+	_canopy_sync()
 	post.state = s
 	if look != null: look.atmo(s, dir)
+
+# 먼 땅 보기(mountain-terrain): 나무를 그리지 않는 거리부터 숲 땅을 수관 빛으로 바꾼다(식생 그리는 거리와 맞춤)
+var _aer := 0.0
+func _canopy_sync() -> void:
+	world.set_terrain_param("canopy_d0", world.scatter_far * 0.55)
+	world.set_terrain_param("canopy_d1", world.scatter_far * 0.95)
+	var fd := Vector2(world.scatter_far * 0.82, world.scatter_far * 0.98) if _aer > 0.0 else Vector2(1e9, 1e9)
+	RenderingServer.global_shader_parameter_set("obj_fade", fd)
 
 static func _srgb(v: Vector3) -> Color:
 	return Color(v.x, v.y, v.z).linear_to_srgb()
@@ -925,6 +954,7 @@ const FP_PITCH := 1.2217      # 위아래 ±70°
 const FP_LOOK_SEC := 0.4      # 말하는 이·물건 쪽으로 돌아보는 시간
 const FP_CUT_IN := 0.6        # 눈높이 → 저작 구도(shot은 바로)
 const FP_CUT_OUT := 0.5       # 저작 구도 → 눈높이(shot이었으면 바로)
+const FP_FAR_MTN := 4500.0    # 산 지형 권역(height.remap — mountain-terrain): 1인칭에서도 실제 먼 산줄기(지형·원경)가 보이게. 물체는 안개로 200m 남짓에서 사라진다
 const FP_FAR := 260.0         # 1인칭 카메라 먼 끝(m) — 3인칭 6000. 한양 1인칭(2048×1536): 6000 → 45fps · 420 → 62 · 250 → 82 — 안개 너머라 화면은 같다
 var first_person := false
 var fp_active := false
@@ -948,7 +978,7 @@ func _view_automation() -> bool:
 	if _auto != null: return _auto
 	_auto = false
 	for k in args:
-		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "bldgallery", "bldginteg", "roofshots", "bldgrollout", "mlshots"]: _auto = true
+		if String(k).ends_with("test") or String(k) in ["bench", "seattest", "shot", "tour", "walkroute", "fasttravel", "talkshot", "prepshot", "p2prepshot", "storyshots", "fpshots", "watershots", "bldgallery", "bldginteg", "roofshots", "bldgrollout", "mlshots", "mtncheck"]: _auto = true
 	return _auto
 
 static func _yaw_of(facing: String) -> float:
@@ -999,7 +1029,7 @@ func _fp_cam_eye(on: bool) -> void:
 	if on:
 		cam.cull_mask &= ~PLAYER_LAYER
 		cam.near = 0.1   # 벽 곁에서 벽이 잘리지 않게
-		cam.far = float(args.get("fpfar", str(FP_FAR)))   # 눈높이는 지평선 너머 도시 전체가 든다 — 멀리는 하늘 그림판의 먼 산·안개가 맡는다
+		cam.far = float(args.get("fpfar", str(FP_FAR_MTN if not world.remap_dst.is_empty() else FP_FAR)))   # 눈높이는 지평선 너머 도시 전체가 든다 — 멀리는 하늘 그림판의 먼 산·안개가 맡는다
 	else:
 		cam.cull_mask |= PLAYER_LAYER
 		cam.near = 0.5
@@ -1186,6 +1216,9 @@ func _process(delta: float) -> void:
 			print("BENCH initial_load_s=%.1f" % _bench_load_t)
 	elif _bench_left > 0.0:
 		mv = Vector2(sin(_bench_dir), -cos(_bench_dir))
+		if not _bench_route.is_empty():
+			while _bench_rk < _bench_route.size() and Vector2(_bench_route[_bench_rk].x - player_pos.x, _bench_route[_bench_rk].y - player_pos.z).length() < 0.6: _bench_rk += 1
+			mv = (_bench_route[_bench_rk] - Vector2(player_pos.x, player_pos.z)).normalized() if _bench_rk < _bench_route.size() else Vector2.ZERO
 		speed = _bench_speed
 		_bench_left -= delta
 		_bench_frames += 1; _bench_time += delta
@@ -1217,7 +1250,8 @@ func _process(delta: float) -> void:
 			player.set_anim("run" if speed > WALK else "walk")
 		else:
 			player.set_anim("idle")
-			if _bench_left > 0.0: _bench_dir += 1.3 + randf()  # 막히면 방향을 바꾼다
+			if _bench_left > 0.0 and _bench_route.is_empty(): _bench_dir += 1.3 + randf()  # 막히면 방향을 바꾼다
+			elif _bench_left > 0.0: _bench_rk += 1; print("BENCH route blocked at ", player_pos)   # 길 따라 걷기: 막히면 다음 점
 	else:
 		player.set_anim("idle")
 	if _bench_left > 0.0: _bench_dir += sin(clock * 0.21) * 0.004
@@ -1777,6 +1811,7 @@ func _story_talking() -> bool:
 func _apply_low_view() -> void:
 	var low: bool = rig.sailing or rig.riding
 	world.scatter_far = minf(_scatter_base, SAIL_SCATTER) if low else _scatter_base
+	_canopy_sync()
 	world.update_scatter_lod(player_pos, true)
 	# 낮은 시점은 그림자 거리 안에 기슭이 넓게 들어와 그림자 그리기가 무겁다(60m → 28m: 배·사람 그림자는 그대로)
 	var sd := float(args.get("shadowdist", "60"))

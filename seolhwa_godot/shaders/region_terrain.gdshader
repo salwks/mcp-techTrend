@@ -7,6 +7,7 @@ render_mode cull_back;
 
 #include "res://shaders/region_common.gdshaderinc"
 #include "res://shaders/pbr_common.gdshaderinc"
+#include "res://shaders/region_far_look.gdshaderinc"
 
 global uniform vec3 hemi_sky;
 global uniform vec3 hemi_ground;
@@ -135,7 +136,12 @@ vec3 lu_color(int c, vec2 p, float n1, float n2, vec4 cq, float block_edge, inou
 			vec3 c5 = mix(grav, C_BOULDER * (0.9 + 0.2 * n1), rock);
 			return mix(c5, C_BASALT * 0.6, rim * 0.7);
 		}
-		return C_BED;
+		// 하상(mountain-terrain): 물에 닳은 둥근 돌·자갈 바닥 — 물이 반투명이라 비친다
+		float bv = r_vnoise(p * 0.8) * 0.65 + r_vnoise(p * 2.1 + vec2(3.7, 1.9)) * 0.35;
+		float st = smoothstep(0.56, 0.62, bv);
+		vec3 bed = mix(C_BED, C_BED * 1.25, clamp(0.5 + n2, 0.0, 1.0));
+		bed = mix(bed, C_BOULDER * (0.8 + 0.25 * n1), st);
+		return mix(bed, C_BED * 0.6, (smoothstep(0.5, 0.55, bv) - st) * 0.6);
 	}
 	// 마을 터: 웹 마을 땅처럼 풀밭 + 마른 흙 얼룩(맨 흙은 건물 둘레·길에만 — 칠하기 텍스처)
 	if (c == 6) {
@@ -143,8 +149,23 @@ vec3 lu_color(int c, vec2 p, float n1, float n2, vec4 cq, float block_edge, inou
 		g = mix(g, C_DRY, clamp(n2 * 0.5 + 0.1, 0.0, 0.4));
 		return mix(g, C_LANE, smoothstep(0.25, 0.55, n1 + n2 * 0.2) * 0.35);
 	}
-	if (c == 7) return mix(C_ROCK, C_CLIFF, clamp(0.5 + n1 * 1.5, 0.0, 1.0));
-	if (c == 8) return mix(C_SAND, C_BANK, clamp(0.5 + n2, 0.0, 1.0));
+	if (c == 7) {
+		// 드러난 바위(mountain-terrain): 화강암 바탕 + 층리(높이 따라 결) + 금(먹빛 갈라짐) + 이끼·지의 얼룩
+		vec3 rk = mix(C_ROCK * 1.08, C_CLIFF, clamp(0.5 + n1 * 1.5, 0.0, 1.0));
+		float strata = smoothstep(0.82, 0.95, fract(v_wp.y * 0.55 + r_vnoise(p * 0.12) * 1.4));
+		rk = mix(rk, C_CLIFF * 0.72, strata * 0.55);
+		float crack = 1.0 - smoothstep(0.0, 0.035, abs(r_vnoise(p * 0.35 + vec2(7.0, 2.0)) - 0.5));
+		rk = mix(rk, vec3(0.20, 0.19, 0.18), crack * 0.5);
+		return mix(rk, C_FOREST2 * 0.9, smoothstep(0.62, 0.8, r_vnoise(p * 0.07 + vec2(1.3, 9.1))) * 0.45);
+	}
+	if (c == 8) {
+		// 자갈·모래 기슭 / 너덜: 모래 바탕에 둥근 돌(물가에서 멀수록 모난 돌이 많다 — 셰이더는 한 무늬)
+		vec3 sb = mix(C_SAND, C_BANK, clamp(0.5 + n2, 0.0, 1.0));
+		float gv = r_vnoise(p * 1.1) * 0.6 + r_vnoise(p * 3.0 + vec2(5.1, 2.3)) * 0.4;
+		float pb = smoothstep(0.58, 0.64, gv);
+		sb = mix(sb, C_BOULDER * (0.85 + 0.2 * n1), pb);
+		return mix(sb, C_CLIFF * 0.7, (smoothstep(0.53, 0.58, gv) - pb) * 0.5);
+	}
 	return mix(C_BAMBOO, C_FOREST2, clamp(0.5 + n1, 0.0, 1.0));
 }
 
@@ -568,6 +589,9 @@ void fragment() {
 			mix(lu_color(cc, p, n1, n2, cq, block_edge, wc), lu_color(cd, p, n1, n2, cq, block_edge, wd), t.x), t.y);
 		water = mix(mix(wa, wb, t.x), mix(wc, wd, t.x), t.y);
 	}
+	// 젖은 기슭(mountain-terrain): 물(5) 칸 곁은 짙고 푸르스름하게
+	float wetb = mix(mix(float(ca == 5), float(cb == 5), t.x), mix(float(cc == 5), float(cd == 5), t.x), t.y);
+	col = mix(col, col * vec3(0.72, 0.76, 0.78), clamp(wetb * 2.0, 0.0, 1.0) * (1.0 - water));
 	// 붓질 같은 얼룩(웹과 같은 식)
 	float br = tn(vec2(p.x * 0.044 + p.y * 0.015, p.y * 0.0625) + vec2(0.8, 0.4));
 	col = mix(col, C_FOREST2, clamp(br - 0.15, 0.0, 0.3) * 0.5);
@@ -579,6 +603,10 @@ void fragment() {
 	col = mix(col, C_CLIFF, smoothstep(1.2, 1.9, slope) * 0.9);
 	// 높은 산은 조금 차갑고 옅게
 	col = mix(col, C_HIGH, smoothstep(200.0, 520.0, v_wp.y) * 0.35);
+	// 먼 숲 = 수관 빛(나무를 그리지 않는 거리부터 — region_far_look). 바위 비탈은 그대로
+	float cam_d = length(VERTEX);
+	float fw = mix(mix(float(ca == 0 || ca == 9), float(cb == 0 || cb == 9), t.x), mix(float(cc == 0 || cc == 9), float(cd == 0 || cd == 9), t.x), t.y);
+	col = mix(col, canopy_color(p, v_wp.y), fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.05, 1.5, slope)));
 	// 길·마당 칠하기(웹 마을 가운데 흙길 느낌): 흙길 + 바퀴·발 자국 + 가장자리 풀 섶, 건물 둘레 2~4m 흙 마당
 	vec4 pt = texture(paint_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size));
 	float rd = pt.r * 16.0, rhw = pt.g * 8.0, yd = pt.b * 16.0;
@@ -604,6 +632,14 @@ void fragment() {
 		rc = mix(rc, C_PATH * 0.86, rut * (cls >= 2.5 ? 0.45 : 0.25));
 		col = mix(col, rc, road);
 		dirt = max(dirt, road);
+	}
+	// 먼 고을 = 처마 안 땅을 지붕 빛으로(건물이 안개에 묻히는 거리부터)
+	float far_canopy = fw * smoothstep(canopy_d0, canopy_d1, cam_d) * (1.0 - smoothstep(1.05, 1.5, slope));   // 사실 땅도 같은 비율로(ground_real)
+	float far_roof = 0.0;
+	if (dress_on > 0.0 && cam_d > canopy_d0) {
+		float ed = texture(dress_tex, ((p - h_meta.xy) * h_meta.z + 0.5) / vec2(h_size)).r * 255.0 - 128.0;
+		far_roof = (1.0 - smoothstep(-6.0, 2.0, ed)) * smoothstep(canopy_d0, canopy_d1, cam_d);
+		col = mix(col, roof_color(p), far_roof);
 	}
 	vec3 gtx = texture(ground_tex, p / 7.0).rgb;
 #ifdef LOOK_PBR
@@ -667,7 +703,9 @@ void fragment() {
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, v_wp.y - mist_base)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
-	vec3 fc = fog_color;
+	// 먼 땅은 공기원근으로 남는다(region_far_look — 원경 region_far와 같은 식)
+	fog_f = aer_haze(fog_f, fog_d, v_wp.y, mist_base, fog_density);
+	vec3 fc = aer_tint(fog_color, far_ink, fog_d, v_wp.y, mist_base, wn.y);
 	if (far_k > 0.0) {
 		// 원경: 안개에 묻히는 대신 하늘 그림판의 먼 산처럼 — 높은 능선은 먹빛, 골짜기·산발치는 안개빛
 		float far = smoothstep(120.0, 500.0, fog_d) * far_k;

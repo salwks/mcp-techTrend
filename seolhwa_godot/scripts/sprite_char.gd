@@ -137,6 +137,8 @@ global uniform vec3 hemi_ground;
 global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
+global uniform float aer_k;
+global uniform vec2 obj_fade;
 global uniform float fog_base;
 global uniform float wet;
 """
@@ -146,6 +148,11 @@ const FOG := """
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
+	if (aer_k > 0.0) {   // 공기원근(mountain-terrain — Materials.FOG_CODE와 같은 식)
+		float aer_hz = 0.93 * (1.0 - exp(-fog_d * max(fog_density, 1e-4) / (1400.0 * 0.0085)));
+		fog_f = mix(fog_f, max(min(fog_f, 0.55), aer_hz), aer_k);
+	}
+	if (fog_d > obj_fade.x && fract(sin(dot(floor(FRAGCOORD.xy), vec2(12.9898, 78.233))) * 43758.5453) < smoothstep(obj_fade.x, obj_fade.y, fog_d)) discard;
 	FOG = vec4(fog_color, fog_f);
 """
 # 본 그림: MeshLambertMaterial + alphaTest 0.5, 좌우 반전돼도 법선을 뒤집지 않는다(NORMAL_FIX)

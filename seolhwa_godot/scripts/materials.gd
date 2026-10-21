@@ -25,6 +25,12 @@ const FOG_CODE := """
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(fog_base - 2.0, fog_base + 7.0, fog_wp.y)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
+	if (aer_k > 0.0) {   // 공기원근(mountain-terrain — shaders/region_aer.gdshaderinc와 같은 식): 가까운 안개는 0.55에서 멈추고 먼 거리는 천천히
+		float aer_hz = 0.93 * (1.0 - exp(-fog_d * max(fog_density, 1e-4) / (1400.0 * 0.0085)));
+		fog_f = mix(fog_f, max(min(fog_f, 0.55), aer_hz), aer_k);
+	}
+	// 먼 물체 사라짐(식생 그리는 거리 끝에서 점무늬로 녹는다 — 그 너머는 땅의 수관·지붕 빛이 맡는다)
+	if (fog_d > obj_fade.x && fract(sin(dot(floor(FRAGCOORD.xy), vec2(12.9898, 78.233))) * 43758.5453) < smoothstep(obj_fade.x, obj_fade.y, fog_d)) discard;
 	FOG = vec4(pbr_fog_color(fog_color, normalize(fog_wp - CAMERA_POSITION_WORLD)), fog_f);
 """
 
@@ -78,6 +84,8 @@ global uniform vec3 hemi_ground;
 global uniform float hemi_i;
 global uniform vec3 fog_color;
 global uniform float fog_density;
+global uniform float aer_k;
+global uniform vec2 obj_fade;
 global uniform float fog_base;
 global uniform float glow_k;
 global uniform vec3 occ_a;

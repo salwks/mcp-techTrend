@@ -101,12 +101,13 @@ float w_fresnel(vec3 n, vec3 v) {
 	return 0.14 + 0.84 * pow(1.0 - c, 3.0);
 }
 
+#include "res://shaders/region_aer.gdshaderinc"
 // 안개(다른 권역 셰이더와 같은 식)
 vec4 w_fog(vec3 fog_c, float dens, float mist_b, float wy, float d) {
 	float fog_f = 1.0 - exp(-dens * dens * d * d);
 	float fog_mist = dens * 24.0 * (1.0 - smoothstep(-2.0, 7.0, wy - mist_b)) * smoothstep(14.0, 48.0, d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
-	return vec4(fog_c, fog_f);
+	return vec4(fog_c, aer_haze(fog_f, d, wy, mist_b, dens));   // 먼 물도 땅과 같은 공기원근(region_aer)
 }
 
 // light()에서: 붓 바림 확산 + 해 반짝임(단단한 점으로 끊음 — 그늘에선 없다, 밤엔 달빛·등불만큼)

@@ -81,6 +81,18 @@ const SCALE := {
 }
 
 static var _cache := {}
+# 세로 되살림(region.json height.remap — mountain-terrain): 게임 y → 재매핑 전 y로 되돌려 해발을 셈한다(수종 해발대가 실제 해발을 따르게).
+#   region_world가 권역을 읽을 때 넣는다(없으면 빈 배열 = 그대로). 작업 스레드에서는 읽기만 한다.
+static var remap_src := PackedFloat32Array()
+static var remap_dst := PackedFloat32Array()
+static func alt_of(y: float) -> float:
+	var n := remap_dst.size()
+	if n >= 2:
+		var k := 0
+		while k < n - 2 and y > remap_dst[k + 1]: k += 1
+		var t := (y - remap_dst[k]) / maxf(remap_dst[k + 1] - remap_dst[k], 1e-6)
+		y = lerpf(remap_src[k], remap_src[k + 1], t)
+	return y / K + 60.0
 static var _mtx := Mutex.new()
 static var _names: PackedStringArray
 static var _ids := {}
@@ -516,7 +528,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			var l := lu[k]
 			if l == 4: continue
 			var cx := gx0 + (i + 0.5) * CELL; var cz := gz0 + (j + 0.5) * CELL
-			var alt := hg[k] / K + 60.0
+			var alt := alt_of(hg[k])
 			var gxv := (hg[k + 1] - hg[k - 1]) / (2.0 * CELL); var gzv := (hg[k + W] - hg[k - W]) / (2.0 * CELL)
 			var slope := sqrt(gxv * gxv + gzv * gzv)   # tan(경사각)
 			var r_d := rd[k]; var w_d := wd[k]
@@ -618,7 +630,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 							zelkova_done = true
 							J.emit(k_zel, 1.0, cx, cz, slope, r_d)
 				7: # 바위·벼랑
-					if slope > 0.7 and r_d >= 3 and rng.randf() < 0.07:
+					# 벼랑: 가파를수록 많이(mountain-terrain — 세로 되살림 땅의 45° 넘는 바위 비탈은 벼랑이 이어지게)
+					if slope > 0.7 and r_d >= 3 and rng.randf() < 0.07 + 0.16 * clampf((slope - 1.0) / 0.6, 0.0, 1.0):
 						var ry := atan2(-gxv, -gzv)   # 정면(+z)을 내리막으로
 						J.put(k_cliff, cx + (rng.randf() - 0.5) * 2, cz + (rng.randf() - 0.5) * 2, ry, lerpf(0.8, 1.2, rng.randf()), slope, r_d, false, 0.4 + slope * 1.2)
 					J.emit(k_boul, 0.04, cx, cz, slope, r_d)
@@ -628,11 +641,18 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 					if tree_ok:
 						J.emit(k_pine if alt < 1100.0 else k_gus, 0.07, cx, cz, slope, r_d)
 						if alt > 1000.0: J.emit(k_dead, 0.04, cx, cz, slope, r_d)
-				8: # 모래톱·자갈
-					J.emit(k_cs, 0.3, cx, cz, slope, r_d)
-					J.emit(k_stones, 0.06, cx, cz, slope, r_d)
-					if w_d <= 1: J.emit(k_cr, 0.15, cx, cz, slope, r_d)
-					if tree_ok: J.emit(k_wil, 0.005, cx, cz, slope, r_d)
+				8: # 모래톱·자갈(물가) / 너덜(물에서 먼 벼랑 발치 — mountain-terrain)
+					if w_d > 2:
+						J.emit(k_ck, 0.35, cx, cz, slope, r_d)
+						J.emit(k_rock, 0.3, cx, cz, slope, r_d)
+						J.emit(k_rockb, 0.05, cx, cz, slope, r_d)
+						J.emit(k_boul, 0.015, cx, cz, slope, r_d)
+					else:
+						J.emit(k_cs, 0.3, cx, cz, slope, r_d)
+						J.emit(k_stones, 0.06 if alt < 300.0 else 0.14, cx, cz, slope, r_d)
+						if w_d <= 1: J.emit(k_cr, 0.15, cx, cz, slope, r_d)
+						if alt > 300.0 or slope > 0.25: J.emit(k_boul, 0.02, cx, cz, slope, r_d)
+						if tree_ok: J.emit(k_wil, 0.005, cx, cz, slope, r_d)
 				9: # 대숲
 					if r_d >= 1 and w_d >= 1 and not road_n: J.emit(k_bam, (0.35 if r_d >= 2 else 0.15) * tree_k, cx, cz, slope, r_d)
 					elif road_n and r_d >= 1: J.emit(k_under, 0.4, cx, cz, slope, r_d)   # 카메라 통로: 대숲(8m) 대신 덤불

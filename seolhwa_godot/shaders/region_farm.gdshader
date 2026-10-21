@@ -3,6 +3,7 @@
 // COLOR.rgb = sRGB 바탕색, COLOR.a = 무늬(0 흙·풀, 0.5 막돌 석축, 1 현무암 돌담)
 shader_type spatial;
 render_mode specular_disabled, cull_back;
+#include "res://shaders/region_aer.gdshaderinc"
 
 global uniform vec3 hemi_sky;
 global uniform vec3 hemi_ground;
@@ -87,6 +88,7 @@ void fragment() {
 	float fog_f = 1.0 - exp(-fog_density * fog_density * fog_d * fog_d);
 	float fog_mist = fog_density * 24.0 * (1.0 - smoothstep(-2.0, 7.0, v_wp.y - mist_base)) * smoothstep(14.0, 48.0, fog_d);
 	fog_f = 1.0 - (1.0 - fog_f) * (1.0 - clamp(fog_mist, 0.0, 0.8));
+	fog_f = aer_haze(fog_f, fog_d, v_wp.y, mist_base, fog_density);   // 먼 논밭도 땅과 같은 공기원근(region_aer)
 	FOG = vec4(fog_color, fog_f);
 }
 

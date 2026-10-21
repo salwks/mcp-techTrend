@@ -85,6 +85,7 @@ func params(pos: Vector3, interior) -> Dictionary:
 	if zone != null:
 		for k in ["pitch", "distance", "fov", "lookAhead", "aimZ"]:
 			if zone.has(k): p[k] = float(zone[k])
+		if zone.has("yaw"): p.yaw = float(zone.yaw)   # 전망 자리(산 자리 view_yaw): 바라보는 쪽으로 돈다(도)
 	return p
 
 func update(dt: float, pos: Vector3, facing: String, interior, snap := false) -> void:
@@ -118,6 +119,8 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 		want_yaw = atan2(back2.x, back2.y)
 	elif talk_yaw != null and not sailing and not riding and shot == null:
 		want_yaw = float(talk_yaw)
+	elif p.has("yaw") and override == null and focus == null:
+		want_yaw = deg_to_rad(float(p.yaw))
 	var ky := 1.0 if snap else 1.0 - exp(-dt * (0.45 if riding else (1.1 if sailing else 1.6)))   # 말: 천천히 돈다
 	if _gl != null and _gl.has("yaw0"):
 		var wy := smoothstep(0.0, 1.0, clampf((_gl.t + dt) / maxf(_gl.dur, 0.01), 0.0, 1.0))
@@ -143,10 +146,30 @@ func update(dt: float, pos: Vector3, facing: String, interior, snap := false) ->
 	var cp := target + off
 	if sailing or riding or yaw != 0.0:   # 낮은 시점: 기슭·둑 속으로 들어가지 않게
 		cp.y = maxf(cp.y, world.height_at(cp.x, cp.z) + 1.6)
+	if interior == null and world.has_method("ground_at"): cp = _clear_terrain(cp, target)
 	cp.y += shake_y
 	camera.position = cp
 	camera.look_at(target, Vector3.UP)
 	camera.fov = cur.fov
+
+# 산 비탈 가림(mountain-terrain): 겨냥점 → 카메라 선분이 땅(지형만 — 건물 바닥·다리 면은 보지 않음)에 걸리면 카메라를 들어 올린다.
+#   당기기(거리 줄이기) 대신 올리기 — 화면 크기(거리)는 그대로, 비탈 위에서 내려다보는 각만 깊어진다. 평지 고을에서는 걸리는 일이 없어 그대로.
+#   급히 튀지 않게 올린 양은 부드럽게 줄인다(_lift).
+var _lift := 0.0
+func _clear_terrain(cp: Vector3, tgt: Vector3) -> Vector3:
+	var need := 0.0
+	var gc: float = world.ground_at(cp.x, cp.z) + 1.4
+	need = maxf(need, gc - cp.y)
+	for k in range(1, 8):
+		var t := 0.22 + 0.78 * k / 8.0
+		var q := tgt.lerp(cp, t)
+		var g: float = world.ground_at(q.x, q.z) + 0.9
+		if g > q.y:   # 이 표본에서 선분이 땅에 묻힘 → 카메라 높이 c가 tgt.y + (g − tgt.y)/t 이상이어야 한다
+			need = maxf(need, tgt.y + (g - tgt.y) / t - cp.y)
+	if need > _lift: _lift = need
+	else: _lift = maxf(need, _lift - 0.25)
+	cp.y += _lift
+	return cp
 
 # 연출 미끄러짐 시작: 지금 화면에서 출발해 sec초 동안 새 focus/override(또는 평소 시점)로 천천히 옮긴다.
 # 부르기 전에 focus·override를 목표로 바꿔 둔다. to_point = null이면 평소 겨냥점(플레이어)으로.

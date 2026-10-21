@@ -14,7 +14,13 @@
 		float g_wd = g_dv.b * 255.0 / 16.0;
 		float g_pav = g_dv.a * 255.0;
 		float pav_k = g_pav > 0.5 ? smoothstep(0.0, 0.25, (g_pav - 1.0) / 32.0 - 1.0) : 0.0;
-		float rock_k = smoothstep(0.75, 1.15, slope);
+		// 산 지형 토지이용 마스크(integ-mountain): 바위(7)·자갈 모래 너덜(8)·하상(5) — 칸 경계는 풀 잡음으로 흔든다
+		float g_l7 = mix(mix(float(ca == 7), float(cb == 7), t.x), mix(float(cc == 7), float(cd == 7), t.x), t.y);
+		float g_l8 = mix(mix(float(ca == 8), float(cb == 8), t.x), mix(float(cc == 8), float(cd == 8), t.x), t.y);
+		float g_n0 = texture(noise_tex, p * 0.21 + vec2(0.31, 0.77)).r;
+		float scree_k = smoothstep(0.3, 0.7, g_l8 + (g_n0 - 0.5) * 0.5);
+		float bed_k = smoothstep(0.3, 0.7, bankw0 + (g_n0 - 0.5) * 0.4);
+		float rock_k = max(smoothstep(0.75, 1.15, slope), smoothstep(0.3, 0.7, g_l7 + (g_n0 - 0.5) * 0.5));
 		float road_k = (rd < rhw + 3.0) ? 1.0 - smoothstep(-0.2, 0.2, rd - rhw + pn * 0.45) : 0.0;
 		float g_n = gm_noise(p);
 		float gw = gm_grass(p, slope, pt, g_dv, g_n) * (1.0 - water);
@@ -41,6 +47,14 @@
 				if (g_near) rB = textureGrad(pbr_b, vec3(p / tr, float(rl)), g_gx / tr, g_gy / tr);
 			}
 		}
+		// 자갈·너덜·하상 돌: 자연석 층을 작게(0.7m) — 높이(a)가 높은 데가 돌, 낮은 데는 모래·물때
+		vec4 qA = vec4(0.5, 0.5, 0.5, 0.4), qB = vec4(0.6, 0.5, 1.0, 0.5);
+		if (g_dfar > 0.0 && scree_k + bed_k > 0.02) {
+			float tq = 0.7;
+			vec2 pq = mat2(vec2(0.6, -0.8), vec2(0.8, 0.6)) * p / tq;
+			qA = textureGrad(pbr_a, vec3(pq, float(M_ROCK)), g_gx / tq, g_gy / tq);
+			if (g_near) qB = textureGrad(pbr_b, vec3(pq, float(M_ROCK)), g_gx / tq, g_gy / tq);
+		}
 		// 되풀이 지우기: 같은 흙 층을 크게(4.3배) 돌려서
 		{
 			vec2 pm = mat2(vec2(0.8, 0.6), vec2(-0.6, 0.8)) * p / (tl * 4.3);
@@ -65,12 +79,20 @@
 		vec3 a_grass = grassc * pow(gA.rgb * 2.0, vec3(1.2)) * (1.0 + mac * 0.8);
 		vec3 a_rock = (pav_k > rock_k ? vec3(0.325, 0.30, 0.247) : C_ROCKL * mix(vec3(1.0), clamp(colL / vec3(0.27, 0.24, 0.19), vec3(0.5), vec3(1.6)), 0.4)) * pow(rA.rgb * 2.0, vec3(1.3));
 		vec3 alb = mix(a_soil, a_grass, gcov);
+		// 자갈·모래 기슭 / 너덜: 모래 바탕에 둥근 돌 · 하상: 물때 낀 돌(짙고 푸르스름 — 물이 반투명이라 비친다)
+		float pebble = smoothstep(0.42, 0.58, qA.a + (g_n0 - 0.5) * 0.3);
+		vec3 sandL = vec3(0.30, 0.26, 0.20), stoneL = vec3(0.26, 0.25, 0.23) * (0.8 + 0.4 * texture(noise_tex, p * 0.9).r);
+		vec3 a_scree = mix(sandL * (qA.rgb * 2.0), stoneL * pow(qA.rgb * 2.0, vec3(1.3)), pebble);
+		vec3 a_bed = mix(vec3(0.10, 0.095, 0.075), vec3(0.16, 0.16, 0.14) * pow(qA.rgb * 2.0, vec3(1.2)), pebble);
+		alb = mix(alb, a_scree, scree_k * (1.0 - bed_k));
+		alb = mix(alb, a_bed, bed_k);
+		float qk = max(scree_k, bed_k);
 		float rk2 = max(rock_k, pav_k);
 		alb = mix(alb, a_rock, rk2);
-		float dh = mix(mix(sA.a, gA.a, gcov), rA.a, rk2);
-		float dr = mix(mix(sB.r, gB.r, gcov), rB.r, rk2);
-		float dao = mix(mix(sB.b, gB.b, gcov), rB.b, rk2);
-		vec2 dsl = mix(mix(sB.ag * 2.0 - 1.0, (gB.ag * 2.0 - 1.0) * 1.3, gcov), rB.ag * 2.0 - 1.0, rk2) * 1.7;   // 법선 세기 ×1.7(3인칭 거리에서 읽히게)
+		float dh = mix(mix(mix(sA.a, gA.a, gcov), qA.a, qk), rA.a, rk2);
+		float dr = mix(mix(mix(sB.r, gB.r, gcov), mix(qB.r, 0.3, bed_k), qk), rB.r, rk2);
+		float dao = mix(mix(mix(sB.b, gB.b, gcov), qB.b, qk), rB.b, rk2);
+		vec2 dsl = mix(mix(mix(sB.ag * 2.0 - 1.0, (gB.ag * 2.0 - 1.0) * 1.3, gcov), (qB.ag * 2.0 - 1.0) * 1.4, qk), (rB.ag * 2.0 - 1.0) * 1.5, rk2) * 1.7;   // 법선 세기 ×1.7(3인칭 거리에서 읽히게) · 바위 결은 더 세게
 		// ---- 큰 굴곡(m) ----
 		float hm = 0.0;
 		if (road_k > 0.0) {
@@ -131,6 +153,10 @@
 			if (pud > 0.01) dsl += pbr_ripple(p, TIME) * pud * wet;
 		}
 		alb = mix(alb, alb * vec3(0.5, 0.58, 0.58), water);
+		// ---- 먼 숲 수관·먼 고을 지붕(region_far_look — 나무·건물을 그리지 않는 거리부터) ----
+		alb = mix(alb, srgb(canopy_color(p, v_wp.y)) * 0.8, far_canopy);
+		alb = mix(alb, srgb(roof_color(p)) * 0.7, far_roof);
+		rough = mix(rough, 0.9, max(far_canopy, far_roof));
 		// ---- 눈 ----
 		vec3 tn_ = vec3(dsl * (1.0 - t_cov * 0.7), 1.0);
 		if (t_cov > 0.0) {

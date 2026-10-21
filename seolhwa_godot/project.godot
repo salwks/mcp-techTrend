@@ -54,6 +54,14 @@ fog_base={
 "type": "float",
 "value": 0.0
 }
+aer_k={
+"type": "float",
+"value": 0.0
+}
+obj_fade={
+"type": "vec2",
+"value": Vector2(1e+09, 1e+09)
+}
 occ_a={
 "type": "vec3",
 "value": Vector3(0, 0, 0)

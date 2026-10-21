@@ -1,0 +1,3820 @@
+{
+ "area": "산 지형(여원치 골·교룡산)",
+ "note": "mountain-terrain(2026-10-21): 지리 소품만(폭포·벼랑). 이야기 없음. tools/mountain/build_mountain.py가 만든다.",
+ "items": [
+  {
+   "id": "mt_falls_01",
+   "kit": "route/waterfall",
+   "params": {
+    "seed": 81,
+    "h": 6.1,
+    "w": 1.6,
+    "r": 3.4,
+    "water_y": 0.06
+   },
+   "x": -50.0,
+   "z": -836.6,
+   "ry": 3.1227,
+   "y": 247.647,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_falls_02",
+   "kit": "route/waterfall",
+   "params": {
+    "seed": 82,
+    "h": 6.86,
+    "w": 1.6,
+    "r": 3.4,
+    "water_y": 0.06
+   },
+   "x": -32.9,
+   "z": -887.99,
+   "ry": 2.4337,
+   "y": 222.493,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_falls_03",
+   "kit": "route/waterfall",
+   "params": {
+    "seed": 83,
+    "h": 6.42,
+    "w": 1.6,
+    "r": 3.4,
+    "water_y": 0.06
+   },
+   "x": -116.61,
+   "z": -918.83,
+   "ry": -1.9682,
+   "y": 176.097,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_cave_cliff",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.0,
+    "h": 7.0,
+    "d": 3.0,
+    "seed": 7
+   },
+   "x": -59.12,
+   "z": -830.27,
+   "ry": 3.1227,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_cliff_000",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 100
+   },
+   "x": -370.92,
+   "z": -1137.31,
+   "ry": -1.3391,
+   "y": 207.73,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_001",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 101
+   },
+   "x": -315.6,
+   "z": -834.54,
+   "ry": -2.5804,
+   "y": 148.28,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_002",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.4,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 102
+   },
+   "x": -357.71,
+   "z": -1105.53,
+   "ry": -0.605,
+   "y": 206.03,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_003",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.1,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 103
+   },
+   "x": -346.12,
+   "z": -1164.12,
+   "ry": -2.3564,
+   "y": 223.76,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_004",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 104
+   },
+   "x": -118.51,
+   "z": -617.64,
+   "ry": -2.15,
+   "y": 291.83,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_005",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 105
+   },
+   "x": -297.02,
+   "z": -834.82,
+   "ry": -2.7951,
+   "y": 158.28,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_006",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 106
+   },
+   "x": -382.63,
+   "z": -1163.45,
+   "ry": -2.0747,
+   "y": 188.37,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_007",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.9,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 107
+   },
+   "x": -320.66,
+   "z": -1033.07,
+   "ry": -0.2226,
+   "y": 173.2,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_008",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 108
+   },
+   "x": -339.89,
+   "z": -1099.67,
+   "ry": -0.6832,
+   "y": 216.46,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_009",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 109
+   },
+   "x": -502.58,
+   "z": -1298.47,
+   "ry": -1.0349,
+   "y": 218.89,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_010",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 110
+   },
+   "x": -332.63,
+   "z": -828.93,
+   "ry": -2.929,
+   "y": 139.17,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_011",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 111
+   },
+   "x": -110.99,
+   "z": -810.83,
+   "ry": -2.8056,
+   "y": 238.98,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_012",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.4,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 112
+   },
+   "x": -381.11,
+   "z": -1249.21,
+   "ry": -0.3773,
+   "y": 241.9,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_013",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.1,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 113
+   },
+   "x": -99.03,
+   "z": -798.82,
+   "ry": -2.7924,
+   "y": 262.68,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_014",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 114
+   },
+   "x": -178.46,
+   "z": -869.72,
+   "ry": -2.1805,
+   "y": 187.44,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_015",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 115
+   },
+   "x": -213.48,
+   "z": -636.61,
+   "ry": -2.6239,
+   "y": 232.6,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_016",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 116
+   },
+   "x": -375.54,
+   "z": -1105.42,
+   "ry": -0.5374,
+   "y": 191.24,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_017",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.9,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 117
+   },
+   "x": -685.51,
+   "z": -630.96,
+   "ry": 2.9777,
+   "y": 86.37,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_018",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 118
+   },
+   "x": -122.27,
+   "z": -780.99,
+   "ry": -3.053,
+   "y": 271.45,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_019",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 119
+   },
+   "x": -363.9,
+   "z": -1158.32,
+   "ry": -2.4552,
+   "y": 214.97,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_020",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 120
+   },
+   "x": -178.95,
+   "z": -850.56,
+   "ry": -1.7586,
+   "y": 192.49,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_021",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 121
+   },
+   "x": -166.95,
+   "z": -759.48,
+   "ry": -1.3962,
+   "y": 236.84,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_022",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.4,
+    "h": 13.1,
+    "d": 3.5,
+    "seed": 122
+   },
+   "x": -483.55,
+   "z": -1285.43,
+   "ry": -0.5445,
+   "y": 224.07,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_023",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.1,
+    "h": 11.6,
+    "d": 3.5,
+    "seed": 123
+   },
+   "x": -165.7,
+   "z": -882.47,
+   "ry": -2.5402,
+   "y": 188.15,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_024",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 124
+   },
+   "x": -142.95,
+   "z": -753.44,
+   "ry": -1.3824,
+   "y": 268.64,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_025",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 125
+   },
+   "x": -277.88,
+   "z": -835.0,
+   "ry": 3.1026,
+   "y": 167.95,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_026",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.2,
+    "h": 11.9,
+    "d": 3.5,
+    "seed": 126
+   },
+   "x": -352.43,
+   "z": -1088.24,
+   "ry": -0.9448,
+   "y": 191.85,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_027",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.9,
+    "h": 13.5,
+    "d": 3.5,
+    "seed": 127
+   },
+   "x": -338.64,
+   "z": -1027.07,
+   "ry": -0.2145,
+   "y": 162.09,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_028",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.6,
+    "h": 12.8,
+    "d": 3.5,
+    "seed": 128
+   },
+   "x": -388.99,
+   "z": -1143.72,
+   "ry": -1.4784,
+   "y": 184.69,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_029",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 129
+   },
+   "x": -333.15,
+   "z": -750.77,
+   "ry": -2.749,
+   "y": 161.91,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_030",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.0,
+    "h": 13.3,
+    "d": 3.5,
+    "seed": 130
+   },
+   "x": -124.99,
+   "z": -646.24,
+   "ry": -1.6494,
+   "y": 272.72,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_031",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.7,
+    "h": 12.8,
+    "d": 3.5,
+    "seed": 131
+   },
+   "x": -375.37,
+   "z": -1219.33,
+   "ry": -0.4746,
+   "y": 217.19,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_032",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.4,
+    "h": 13.5,
+    "d": 3.5,
+    "seed": 132
+   },
+   "x": -466.65,
+   "z": -1262.59,
+   "ry": -1.0829,
+   "y": 217.53,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_033",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.1,
+    "h": 13.1,
+    "d": 3.5,
+    "seed": 133
+   },
+   "x": -466.0,
+   "z": -1279.76,
+   "ry": -0.73,
+   "y": 228.56,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_034",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 134
+   },
+   "x": -112.9,
+   "z": -699.24,
+   "ry": -1.3141,
+   "y": 271.08,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_035",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.5,
+    "h": 13.4,
+    "d": 3.5,
+    "seed": 135
+   },
+   "x": -200.84,
+   "z": -828.88,
+   "ry": -2.8563,
+   "y": 196.4,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_036",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 136
+   },
+   "x": -237.16,
+   "z": -744.77,
+   "ry": -2.7434,
+   "y": 208.21,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_037",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.9,
+    "h": 13.5,
+    "d": 3.5,
+    "seed": 137
+   },
+   "x": -130.12,
+   "z": -606.12,
+   "ry": -2.356,
+   "y": 289.61,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_038",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 138
+   },
+   "x": -520.44,
+   "z": -1262.25,
+   "ry": -0.9486,
+   "y": 180.08,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_039",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 139
+   },
+   "x": -200.61,
+   "z": -697.06,
+   "ry": -0.2045,
+   "y": 221.21,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_040",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.0,
+    "h": 12.2,
+    "d": 3.5,
+    "seed": 140
+   },
+   "x": -460.97,
+   "z": -652.4,
+   "ry": -1.7048,
+   "y": 153.84,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_041",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 141
+   },
+   "x": -184.04,
+   "z": -769.8,
+   "ry": -0.7487,
+   "y": 232.08,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_042",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.4,
+    "h": 13.0,
+    "d": 3.5,
+    "seed": 142
+   },
+   "x": -399.92,
+   "z": -1249.7,
+   "ry": -0.6958,
+   "y": 232.82,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_043",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.1,
+    "h": 12.5,
+    "d": 3.5,
+    "seed": 143
+   },
+   "x": -284.64,
+   "z": -1039.07,
+   "ry": -0.2144,
+   "y": 192.41,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_044",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.8,
+    "h": 12.7,
+    "d": 3.5,
+    "seed": 144
+   },
+   "x": -128.08,
+   "z": -805.0,
+   "ry": -3.1137,
+   "y": 242.38,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_045",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.5,
+    "h": 13.3,
+    "d": 3.5,
+    "seed": 145
+   },
+   "x": -155.0,
+   "z": -771.84,
+   "ry": -1.5161,
+   "y": 259.2,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_046",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.2,
+    "h": 13.0,
+    "d": 3.5,
+    "seed": 146
+   },
+   "x": -302.71,
+   "z": -1027.08,
+   "ry": -0.238,
+   "y": 174.96,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_047",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.9,
+    "h": 12.1,
+    "d": 3.5,
+    "seed": 147
+   },
+   "x": -106.35,
+   "z": -875.86,
+   "ry": -2.2415,
+   "y": 215.34,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_048",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 148
+   },
+   "x": -177.44,
+   "z": -750.63,
+   "ry": -2.6414,
+   "y": 231.19,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_049",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.3,
+    "h": 13.4,
+    "d": 3.5,
+    "seed": 149
+   },
+   "x": 81.85,
+   "z": -865.0,
+   "ry": -3.0929,
+   "y": 235.11,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_050",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.0,
+    "h": 13.1,
+    "d": 3.5,
+    "seed": 150
+   },
+   "x": -189.87,
+   "z": -840.35,
+   "ry": -2.4684,
+   "y": 189.03,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_051",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 151
+   },
+   "x": -340.77,
+   "z": -1130.85,
+   "ry": -1.1773,
+   "y": 242.23,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_052",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.4,
+    "h": 13.5,
+    "d": 3.5,
+    "seed": 152
+   },
+   "x": -526.81,
+   "z": -1280.96,
+   "ry": -1.2167,
+   "y": 182.96,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_053",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.1,
+    "h": 13.1,
+    "d": 3.5,
+    "seed": 153
+   },
+   "x": -358.97,
+   "z": -1071.57,
+   "ry": -1.428,
+   "y": 174.81,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_054",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.8,
+    "h": 13.7,
+    "d": 3.5,
+    "seed": 154
+   },
+   "x": -404.96,
+   "z": -1003.16,
+   "ry": -0.3269,
+   "y": 131.87,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_055",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.5,
+    "h": 13.4,
+    "d": 3.5,
+    "seed": 155
+   },
+   "x": -147.24,
+   "z": -792.73,
+   "ry": -2.7169,
+   "y": 256.22,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_056",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.2,
+    "h": 11.3,
+    "d": 3.5,
+    "seed": 156
+   },
+   "x": -320.92,
+   "z": -1099.15,
+   "ry": -0.3134,
+   "y": 230.56,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_057",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.9,
+    "h": 12.5,
+    "d": 3.5,
+    "seed": 157
+   },
+   "x": -326.78,
+   "z": -1164.9,
+   "ry": -2.8797,
+   "y": 243.44,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_058",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.6,
+    "h": 13.6,
+    "d": 3.5,
+    "seed": 158
+   },
+   "x": -542.65,
+   "z": -1189.07,
+   "ry": -0.2186,
+   "y": 146.38,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_059",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.3,
+    "h": 13.1,
+    "d": 3.5,
+    "seed": 159
+   },
+   "x": -454.71,
+   "z": -671.29,
+   "ry": -2.0167,
+   "y": 151.24,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_060",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.0,
+    "h": 13.0,
+    "d": 3.5,
+    "seed": 160
+   },
+   "x": -225.41,
+   "z": -828.65,
+   "ry": -2.6509,
+   "y": 188.67,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_061",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.7,
+    "h": 13.2,
+    "d": 3.5,
+    "seed": 161
+   },
+   "x": -740.48,
+   "z": -642.96,
+   "ry": -2.9801,
+   "y": 73.82,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_062",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.4,
+    "h": 11.9,
+    "d": 3.5,
+    "seed": 162
+   },
+   "x": -333.58,
+   "z": -1045.45,
+   "ry": -0.554,
+   "y": 187.98,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_063",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.1,
+    "h": 13.2,
+    "d": 3.5,
+    "seed": 163
+   },
+   "x": -213.22,
+   "z": -744.74,
+   "ry": -2.7239,
+   "y": 220.32,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_064",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.8,
+    "h": 12.2,
+    "d": 3.5,
+    "seed": 164
+   },
+   "x": -351.76,
+   "z": -744.43,
+   "ry": -2.5157,
+   "y": 159.25,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_amneung_000",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "seed": 300
+   },
+   "x": -362.0,
+   "z": -1144.0,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_001",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.7,
+    "seed": 301
+   },
+   "x": -230.0,
+   "z": -1132.0,
+   "ry": 1.7,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_002",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.0,
+    "seed": 302
+   },
+   "x": -560.0,
+   "z": -622.0,
+   "ry": 3.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_003",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.3,
+    "seed": 303
+   },
+   "x": -128.0,
+   "z": -766.0,
+   "ry": 5.1,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_004",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.6,
+    "seed": 304
+   },
+   "x": -332.0,
+   "z": -1150.0,
+   "ry": 0.517,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_005",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.9,
+    "seed": 305
+   },
+   "x": -278.0,
+   "z": -820.0,
+   "ry": 2.217,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_006",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.2,
+    "seed": 306
+   },
+   "x": -140.0,
+   "z": -778.0,
+   "ry": 3.917,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_007",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.5,
+    "seed": 307
+   },
+   "x": -458.0,
+   "z": -1108.0,
+   "ry": 5.617,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_008",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.8,
+    "seed": 308
+   },
+   "x": -434.0,
+   "z": -1120.0,
+   "ry": 1.034,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_009",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.1,
+    "seed": 309
+   },
+   "x": -446.0,
+   "z": -1114.0,
+   "ry": 2.734,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_010",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.4,
+    "seed": 310
+   },
+   "x": -470.0,
+   "z": -1096.0,
+   "ry": 4.434,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_011",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.7,
+    "seed": 311
+   },
+   "x": -290.0,
+   "z": -820.0,
+   "ry": 6.134,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_012",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.0,
+    "seed": 312
+   },
+   "x": -164.0,
+   "z": -1150.0,
+   "ry": 1.551,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_013",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.3,
+    "seed": 313
+   },
+   "x": -158.0,
+   "z": -862.0,
+   "ry": 3.251,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_014",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "seed": 314
+   },
+   "x": -146.0,
+   "z": -838.0,
+   "ry": 4.951,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_015",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.9,
+    "seed": 315
+   },
+   "x": -182.0,
+   "z": -784.0,
+   "ry": 0.368,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_016",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.2,
+    "seed": 316
+   },
+   "x": -404.0,
+   "z": -1018.0,
+   "ry": 2.068,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_017",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.5,
+    "seed": 317
+   },
+   "x": -374.0,
+   "z": -1270.0,
+   "ry": 3.768,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_018",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.8,
+    "seed": 318
+   },
+   "x": -440.0,
+   "z": -652.0,
+   "ry": 5.468,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_019",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.1,
+    "seed": 319
+   },
+   "x": -380.0,
+   "z": -1114.0,
+   "ry": 0.885,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_020",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "seed": 320
+   },
+   "x": -794.0,
+   "z": -880.0,
+   "ry": 2.585,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_021",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.7,
+    "seed": 321
+   },
+   "x": -242.0,
+   "z": -1120.0,
+   "ry": 4.285,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_022",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.0,
+    "seed": 322
+   },
+   "x": 40.0,
+   "z": -670.0,
+   "ry": 5.985,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_023",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.3,
+    "seed": 323
+   },
+   "x": -320.0,
+   "z": -1150.0,
+   "ry": 1.402,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_024",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.6,
+    "seed": 324
+   },
+   "x": -524.0,
+   "z": -1072.0,
+   "ry": 3.102,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_025",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.9,
+    "seed": 325
+   },
+   "x": -422.0,
+   "z": -616.0,
+   "ry": 4.802,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_026",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.2,
+    "seed": 326
+   },
+   "x": -782.0,
+   "z": -874.0,
+   "ry": 0.219,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_027",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.5,
+    "seed": 327
+   },
+   "x": -320.0,
+   "z": -1054.0,
+   "ry": 1.919,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_028",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.8,
+    "seed": 328
+   },
+   "x": -332.0,
+   "z": -1126.0,
+   "ry": 3.619,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_029",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.1,
+    "seed": 329
+   },
+   "x": -98.0,
+   "z": -754.0,
+   "ry": 5.319,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_030",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.4,
+    "seed": 330
+   },
+   "x": -284.0,
+   "z": -724.0,
+   "ry": 0.736,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_031",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.7,
+    "seed": 331
+   },
+   "x": -302.0,
+   "z": -820.0,
+   "ry": 2.436,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_032",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.0,
+    "seed": 332
+   },
+   "x": -182.0,
+   "z": -730.0,
+   "ry": 4.136,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_033",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.3,
+    "seed": 333
+   },
+   "x": -80.0,
+   "z": -988.0,
+   "ry": 5.836,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_034",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "seed": 334
+   },
+   "x": 94.0,
+   "z": -850.0,
+   "ry": 1.253,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_035",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.9,
+    "seed": 335
+   },
+   "x": -2.0,
+   "z": -658.0,
+   "ry": 2.953,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_036",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.2,
+    "seed": 336
+   },
+   "x": -440.0,
+   "z": -1288.0,
+   "ry": 4.653,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_037",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.5,
+    "seed": 337
+   },
+   "x": -218.0,
+   "z": -1162.0,
+   "ry": 0.07,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_038",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.8,
+    "seed": 338
+   },
+   "x": -440.0,
+   "z": -700.0,
+   "ry": 1.77,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_039",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.1,
+    "seed": 339
+   },
+   "x": -404.0,
+   "z": -1030.0,
+   "ry": 3.47,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_cliff_065",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 165
+   },
+   "x": -4173.0,
+   "z": -367.94,
+   "ry": -1.5502,
+   "y": 106.72,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_066",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 166
+   },
+   "x": -3970.91,
+   "z": -227.2,
+   "ry": 0.3718,
+   "y": 138.22,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_067",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.9,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 167
+   },
+   "x": -3850.48,
+   "z": -532.59,
+   "ry": 2.6097,
+   "y": 94.11,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_068",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 168
+   },
+   "x": -4166.9,
+   "z": -434.77,
+   "ry": -1.8308,
+   "y": 117.28,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_069",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 169
+   },
+   "x": -3987.12,
+   "z": -409.16,
+   "ry": 1.2875,
+   "y": 195.67,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_070",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 170
+   },
+   "x": -4014.79,
+   "z": -514.89,
+   "ry": -2.875,
+   "y": 108.97,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_071",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 171
+   },
+   "x": -4172.96,
+   "z": -385.54,
+   "ry": -1.4168,
+   "y": 117.11,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_072",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.4,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 172
+   },
+   "x": -3978.61,
+   "z": -526.94,
+   "ry": -2.9373,
+   "y": 107.27,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_073",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.1,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 173
+   },
+   "x": -4057.22,
+   "z": -478.74,
+   "ry": -2.723,
+   "y": 131.6,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_074",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 174
+   },
+   "x": -4021.4,
+   "z": -460.65,
+   "ry": -2.6548,
+   "y": 181.01,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_075",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 175
+   },
+   "x": -4032.78,
+   "z": -514.9,
+   "ry": -2.88,
+   "y": 103.84,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_076",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 176
+   },
+   "x": -3933.05,
+   "z": -253.44,
+   "ry": 1.3836,
+   "y": 128.98,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_077",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.9,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 177
+   },
+   "x": -3868.55,
+   "z": -532.63,
+   "ry": 2.6378,
+   "y": 108.75,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_078",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 178
+   },
+   "x": -3699.4,
+   "z": -363.49,
+   "ry": 2.091,
+   "y": 61.15,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_079",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 179
+   },
+   "x": -4033.3,
+   "z": -472.7,
+   "ry": -2.6938,
+   "y": 155.37,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_080",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 180
+   },
+   "x": -3958.36,
+   "z": -239.49,
+   "ry": 0.5789,
+   "y": 149.72,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_081",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.7,
+    "h": 13.9,
+    "d": 3.5,
+    "seed": 181
+   },
+   "x": -4008.83,
+   "z": -472.88,
+   "ry": -2.8602,
+   "y": 171.15,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_082",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.4,
+    "h": 13.3,
+    "d": 3.5,
+    "seed": 182
+   },
+   "x": -3996.83,
+   "z": -520.88,
+   "ry": -2.8602,
+   "y": 109.84,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_083",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.1,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 183
+   },
+   "x": -4148.95,
+   "z": -398.56,
+   "ry": -1.7601,
+   "y": 147.36,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_084",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 184
+   },
+   "x": -3951.01,
+   "z": -272.22,
+   "ry": 1.6441,
+   "y": 158.56,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_085",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 185
+   },
+   "x": -4140.97,
+   "z": -347.16,
+   "ry": -0.3309,
+   "y": 131.89,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_086",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 186
+   },
+   "x": -4057.37,
+   "z": -460.67,
+   "ry": -2.667,
+   "y": 157.54,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_087",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.9,
+    "h": 13.7,
+    "d": 3.5,
+    "seed": 187
+   },
+   "x": -3960.7,
+   "z": -526.92,
+   "ry": -2.9063,
+   "y": 113.66,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_088",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.6,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 188
+   },
+   "x": -3681.37,
+   "z": -303.45,
+   "ry": 2.0741,
+   "y": 72.45,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_089",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 189
+   },
+   "x": -3881.23,
+   "z": -550.9,
+   "ry": 2.8827,
+   "y": 92.59,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_090",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 190
+   },
+   "x": -4010.37,
+   "z": -264.16,
+   "ry": -0.9096,
+   "y": 170.32,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_091",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 191
+   },
+   "x": -3975.0,
+   "z": -385.94,
+   "ry": 1.5497,
+   "y": 172.93,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_092",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.4,
+    "h": 13.6,
+    "d": 3.5,
+    "seed": 192
+   },
+   "x": -4021.25,
+   "z": -484.73,
+   "ry": -2.7119,
+   "y": 148.51,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_093",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.1,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 193
+   },
+   "x": -3711.83,
+   "z": -376.08,
+   "ry": 2.3351,
+   "y": 64.3,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_094",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.8,
+    "h": 13.8,
+    "d": 3.5,
+    "seed": 194
+   },
+   "x": -3990.84,
+   "z": -502.88,
+   "ry": -2.8571,
+   "y": 137.47,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_095",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 195
+   },
+   "x": -4166.97,
+   "z": -416.44,
+   "ry": -1.7175,
+   "y": 119.17,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_096",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 196
+   },
+   "x": -4160.11,
+   "z": -353.86,
+   "ry": -0.7779,
+   "y": 126.36,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_097",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.9,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 197
+   },
+   "x": -4111.13,
+   "z": -424.78,
+   "ry": -2.7547,
+   "y": 153.86,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_098",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.6,
+    "h": 13.7,
+    "d": 3.5,
+    "seed": 198
+   },
+   "x": -3997.27,
+   "z": -179.28,
+   "ry": -0.4379,
+   "y": 91.98,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_099",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 199
+   },
+   "x": -4063.6,
+   "z": -436.54,
+   "ry": -2.5803,
+   "y": 184.26,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_100",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.0,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 200
+   },
+   "x": -3924.18,
+   "z": -538.99,
+   "ry": -3.081,
+   "y": 108.88,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_101",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.7,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 201
+   },
+   "x": -3832.32,
+   "z": -532.48,
+   "ry": 2.5457,
+   "y": 79.59,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_102",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.4,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 202
+   },
+   "x": -3987.0,
+   "z": -427.9,
+   "ry": 1.5364,
+   "y": 198.57,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_103",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 8.1,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 203
+   },
+   "x": -4068.34,
+   "z": -377.02,
+   "ry": -0.1128,
+   "y": 169.3,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_104",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.8,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 204
+   },
+   "x": -3687.27,
+   "z": -351.24,
+   "ry": 1.9984,
+   "y": 53.14,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_105",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.5,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 205
+   },
+   "x": -3927.78,
+   "z": -425.99,
+   "ry": 0.835,
+   "y": 145.21,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_106",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 9.2,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 206
+   },
+   "x": -4003.17,
+   "z": -197.24,
+   "ry": -0.4009,
+   "y": 110.59,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_107",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 7.9,
+    "h": 13.9,
+    "d": 3.5,
+    "seed": 207
+   },
+   "x": -4122.83,
+   "z": -359.12,
+   "ry": -0.2802,
+   "y": 155.44,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_108",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 11.6,
+    "h": 13.7,
+    "d": 3.5,
+    "seed": 208
+   },
+   "x": -3989.8,
+   "z": -227.01,
+   "ry": 0.0651,
+   "y": 147.85,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_cliff_109",
+   "kit": "nature/cliff",
+   "params": {
+    "w": 10.3,
+    "h": 14.0,
+    "d": 3.5,
+    "seed": 209
+   },
+   "x": -3855.41,
+   "z": -270.49,
+   "ry": 1.0429,
+   "y": 103.33,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "벼랑(산 지형)"
+  },
+  {
+   "id": "mt_amneung_040",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "seed": 340
+   },
+   "x": -3990.0,
+   "z": -278.0,
+   "ry": 5.17,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_041",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.7,
+    "seed": 341
+   },
+   "x": -4152.0,
+   "z": -440.0,
+   "ry": 0.587,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_042",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.0,
+    "seed": 342
+   },
+   "x": -4002.0,
+   "z": -434.0,
+   "ry": 2.287,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_043",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.3,
+    "seed": 343
+   },
+   "x": -4158.0,
+   "z": -368.0,
+   "ry": 3.987,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_044",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.6,
+    "seed": 344
+   },
+   "x": -4002.0,
+   "z": -278.0,
+   "ry": 5.687,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_045",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.9,
+    "seed": 345
+   },
+   "x": -4128.0,
+   "z": -398.0,
+   "ry": 1.104,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_046",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.2,
+    "seed": 346
+   },
+   "x": -4002.0,
+   "z": -302.0,
+   "ry": 2.804,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_047",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.5,
+    "seed": 347
+   },
+   "x": -3990.0,
+   "z": -452.0,
+   "ry": 4.504,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_048",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.8,
+    "seed": 348
+   },
+   "x": -4098.0,
+   "z": -386.0,
+   "ry": 6.204,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_049",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.1,
+    "seed": 349
+   },
+   "x": -4110.0,
+   "z": -380.0,
+   "ry": 1.621,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_050",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.4,
+    "seed": 350
+   },
+   "x": -4002.0,
+   "z": -422.0,
+   "ry": 3.321,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_051",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.7,
+    "seed": 351
+   },
+   "x": -4062.0,
+   "z": -422.0,
+   "ry": 5.021,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_052",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.0,
+    "seed": 352
+   },
+   "x": -4014.0,
+   "z": -428.0,
+   "ry": 0.438,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_053",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.3,
+    "seed": 353
+   },
+   "x": -4002.0,
+   "z": -410.0,
+   "ry": 2.138,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_054",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "seed": 354
+   },
+   "x": -3834.0,
+   "z": -368.0,
+   "ry": 3.838,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_055",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.9,
+    "seed": 355
+   },
+   "x": -3810.0,
+   "z": -350.0,
+   "ry": 5.538,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_056",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.2,
+    "seed": 356
+   },
+   "x": -4134.0,
+   "z": -386.0,
+   "ry": 0.955,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_057",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.5,
+    "seed": 357
+   },
+   "x": -3990.0,
+   "z": -326.0,
+   "ry": 2.655,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_058",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.8,
+    "seed": 358
+   },
+   "x": -3822.0,
+   "z": -458.0,
+   "ry": 4.355,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_059",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.1,
+    "seed": 359
+   },
+   "x": -4200.0,
+   "z": -482.0,
+   "ry": 6.055,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_060",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.4,
+    "seed": 360
+   },
+   "x": -3972.0,
+   "z": -272.0,
+   "ry": 1.472,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_061",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.7,
+    "seed": 361
+   },
+   "x": -4002.0,
+   "z": -374.0,
+   "ry": 3.172,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_062",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.0,
+    "seed": 362
+   },
+   "x": -3804.0,
+   "z": -458.0,
+   "ry": 4.872,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_063",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 4.3,
+    "seed": 363
+   },
+   "x": -4008.0,
+   "z": -446.0,
+   "ry": 0.289,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_amneung_064",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 3.6,
+    "seed": 364
+   },
+   "x": -3960.0,
+   "z": -266.0,
+   "ry": 1.989,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "암릉(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_30",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.81,
+    "seed": 30
+   },
+   "x": -55.72,
+   "z": -807.18,
+   "ry": 4.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_84",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 84
+   },
+   "x": -37.24,
+   "z": -859.98,
+   "ry": 3.74,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_138",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.59,
+    "seed": 138
+   },
+   "x": -23.51,
+   "z": -906.36,
+   "ry": 2.543,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_156",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.37,
+    "seed": 156
+   },
+   "x": -29.97,
+   "z": -926.63,
+   "ry": 3.138,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_174",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 174
+   },
+   "x": -51.01,
+   "z": -927.2,
+   "ry": 3.778,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_210",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 210
+   },
+   "x": -77.05,
+   "z": -928.24,
+   "ry": 0.75,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_228",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.39,
+    "seed": 228
+   },
+   "x": -91.15,
+   "z": -936.66,
+   "ry": 3.952,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_264",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.71,
+    "seed": 264
+   },
+   "x": -103.48,
+   "z": -931.55,
+   "ry": 6.142,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_300",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 300
+   },
+   "x": -117.67,
+   "z": -929.83,
+   "ry": 5.138,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_354",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 354
+   },
+   "x": -150.09,
+   "z": -918.9,
+   "ry": 1.617,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_390",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 390
+   },
+   "x": -169.11,
+   "z": -905.66,
+   "ry": 2.142,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_408",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.41,
+    "seed": 408
+   },
+   "x": -183.97,
+   "z": -917.85,
+   "ry": 3.051,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_426",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.74,
+    "seed": 426
+   },
+   "x": -191.44,
+   "z": -914.73,
+   "ry": 3.517,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_444",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.81,
+    "seed": 444
+   },
+   "x": -208.78,
+   "z": -907.87,
+   "ry": 3.062,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_462",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 462
+   },
+   "x": -225.59,
+   "z": -903.38,
+   "ry": 3.535,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_480",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.72,
+    "seed": 480
+   },
+   "x": -238.85,
+   "z": -888.0,
+   "ry": 4.348,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_498",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "seed": 498
+   },
+   "x": -256.6,
+   "z": -884.19,
+   "ry": 2.051,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_516",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.66,
+    "seed": 516
+   },
+   "x": -267.34,
+   "z": -887.58,
+   "ry": 2.278,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_534",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.05,
+    "seed": 534
+   },
+   "x": -281.63,
+   "z": -898.97,
+   "ry": 3.437,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_570",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 570
+   },
+   "x": -303.73,
+   "z": -869.81,
+   "ry": 3.228,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_588",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 588
+   },
+   "x": -323.8,
+   "z": -872.0,
+   "ry": 2.533,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_606",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.94,
+    "seed": 606
+   },
+   "x": -339.2,
+   "z": -874.55,
+   "ry": 0.558,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_624",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 624
+   },
+   "x": -356.53,
+   "z": -866.99,
+   "ry": 2.613,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_642",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.41,
+    "seed": 642
+   },
+   "x": -369.79,
+   "z": -882.18,
+   "ry": 2.042,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_678",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.88,
+    "seed": 678
+   },
+   "x": -388.77,
+   "z": -886.78,
+   "ry": 2.068,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_696",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 696
+   },
+   "x": -390.84,
+   "z": -885.69,
+   "ry": 1.476,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_714",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 714
+   },
+   "x": -402.28,
+   "z": -901.94,
+   "ry": 5.873,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_732",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 732
+   },
+   "x": -417.37,
+   "z": -899.55,
+   "ry": 4.482,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_750",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.66,
+    "seed": 750
+   },
+   "x": -432.68,
+   "z": -903.67,
+   "ry": 5.893,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_768",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 768
+   },
+   "x": -450.98,
+   "z": -894.03,
+   "ry": 4.859,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_786",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 786
+   },
+   "x": -465.8,
+   "z": -901.16,
+   "ry": 1.871,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_804",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.46,
+    "seed": 804
+   },
+   "x": -484.46,
+   "z": -900.53,
+   "ry": 3.738,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_822",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.7,
+    "seed": 822
+   },
+   "x": -498.84,
+   "z": -889.77,
+   "ry": 5.881,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_840",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.53,
+    "seed": 840
+   },
+   "x": -513.23,
+   "z": -884.14,
+   "ry": 4.717,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_858",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 858
+   },
+   "x": -530.71,
+   "z": -875.75,
+   "ry": 5.388,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_876",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.69,
+    "seed": 876
+   },
+   "x": -550.23,
+   "z": -877.64,
+   "ry": 3.765,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_894",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.5,
+    "seed": 894
+   },
+   "x": -563.5,
+   "z": -865.4,
+   "ry": 5.044,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_912",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 912
+   },
+   "x": -572.04,
+   "z": -846.62,
+   "ry": 5.214,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_930",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 930
+   },
+   "x": -576.0,
+   "z": -845.33,
+   "ry": 6.087,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_948",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.79,
+    "seed": 948
+   },
+   "x": -577.53,
+   "z": -845.23,
+   "ry": 4.529,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_966",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.57,
+    "seed": 966
+   },
+   "x": -575.34,
+   "z": -846.44,
+   "ry": 0.165,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_984",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.73,
+    "seed": 984
+   },
+   "x": -580.74,
+   "z": -851.3,
+   "ry": 2.313,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1002",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.29,
+    "seed": 1002
+   },
+   "x": -580.7,
+   "z": -845.95,
+   "ry": 0.523,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1020",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.6,
+    "seed": 1020
+   },
+   "x": -581.99,
+   "z": -840.69,
+   "ry": 5.451,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1038",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.51,
+    "seed": 1038
+   },
+   "x": -601.6,
+   "z": -837.33,
+   "ry": 2.157,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1056",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1056
+   },
+   "x": -611.77,
+   "z": -820.46,
+   "ry": 5.664,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1074",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 1.8,
+    "seed": 1074
+   },
+   "x": -626.31,
+   "z": -809.85,
+   "ry": 3.212,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1092",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1092
+   },
+   "x": -645.88,
+   "z": -806.41,
+   "ry": 3.045,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1110",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.62,
+    "seed": 1110
+   },
+   "x": -660.25,
+   "z": -795.54,
+   "ry": 3.172,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1128",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1128
+   },
+   "x": -670.68,
+   "z": -779.07,
+   "ry": 0.753,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1146",
+   "kit": "nature/boulder",
+   "params": {
+    "s": 2.68,
+    "seed": 1146
+   },
+   "x": -685.24,
+   "z": -768.48,
+   "ry": 2.093,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1164",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1164
+   },
+   "x": -704.42,
+   "z": -764.49,
+   "ry": 6.067,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1182",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1182
+   },
+   "x": -719.55,
+   "z": -754.71,
+   "ry": 5.131,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1200",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1200
+   },
+   "x": -734.06,
+   "z": -744.06,
+   "ry": 5.697,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_gol_rock_1218",
+   "kit": "nature/slab_rock",
+   "params": {
+    "seed": 1218
+   },
+   "x": -749.02,
+   "z": -734.03,
+   "ry": 4.527,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "여원치 골(산 지형)"
+  },
+  {
+   "id": "mt_x_mt_tongyeong_byeolro_1_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 234
+   },
+   "x": -375.2,
+   "z": -876.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_x_mt_tongyeong_byeolro_2_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 235
+   },
+   "x": -363.4,
+   "z": -878.3,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_x_mt_tongyeong_byeolro_3_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 236
+   },
+   "x": -289.5,
+   "z": -888.7,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_x_mt_yw_valley_trail_1_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 237
+   },
+   "x": -290.7,
+   "z": -887.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_x_mt_yw_valley_trail_2_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 238
+   },
+   "x": -135.0,
+   "z": -909.8,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_x_mt_yw_valley_trail_3_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 239
+   },
+   "x": -84.8,
+   "z": -933.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  },
+  {
+   "id": "mt_x_mt_yw_falls_2_path_1_stones",
+   "kit": "nature/stream_stones",
+   "params": {
+    "seed": 240
+   },
+   "x": -40.0,
+   "z": -883.2,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "건널목 징검돌(보기)"
+  }
+ ]
+}
