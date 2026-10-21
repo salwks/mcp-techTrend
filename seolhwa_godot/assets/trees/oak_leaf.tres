@@ -1,0 +1,19 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/tree_leaf.gdshader" id="1_lfgiy"]
+[ext_resource type="Texture2D" path="res://assets/trees/oak_leaf_bca.res" id="2_3ts2i"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_lfgiy")
+shader_parameter/lod_band = Vector4(-1, -1, 1000000, 1000000)
+shader_parameter/wind_k = 0.35
+shader_parameter/wind_dir = Vector2(0.86, 0.5)
+shader_parameter/albedo_tex = ExtResource("2_3ts2i")
+shader_parameter/leaf_tint = Color(0.5, 0.6, 0.4, 1)
+shader_parameter/leaf_sat = 0.8
+shader_parameter/leaf_bright = 0.7
+shader_parameter/leaf_var = 0.4
+shader_parameter/leaf_trans = 0.4
+shader_parameter/leaf_alpha = 0.5
+shader_parameter/lod_cam = Vector3(0, 0, 0)
