@@ -399,6 +399,7 @@ func _build_scene() -> void:
 	world.split_scatter = not args.has("nosplit")
 	root.add_child(world)
 	world.loading = true
+	if args.has("placedir"): world.extra_place_dirs = Array(String(args.placedir).split(";", false))
 	world.load_region(_data_dir)
 	world.set_terrain_param("dress_far", 45.0 if gfx_low() else 75.0)   # 땅 꾸밈 무늬 거리(설정 '화면 품질')
 	if not args.has("nobackdrop"): _backdrop = load("res://scripts/region/backdrop.gd").new(self, world.data_dir)   # 권역 밖 먼 산(배산임수) — 하늘 그림판 능선

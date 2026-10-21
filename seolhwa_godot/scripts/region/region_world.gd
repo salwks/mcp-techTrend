@@ -45,6 +45,7 @@ const LU_DETAIL := [1.0, 0.8, 0.12, 0.45, 0.35, 0.0, 0.35, 1.5, 0.3, 1.0]
 const M32 := 0xffffffff
 
 var data_dir := ""
+var extra_place_dirs := []   # --placedir 폴더(시험 배치) — 그 placement_*.json의 alleys·urban도 칠한다(town-organic)
 var region := {}
 var is_route := false       # 노정(route.json) 공간
 var K := 0.30               # 압축(region.json projection.K) — 권역마다 다르다
@@ -242,9 +243,14 @@ func _paint_roads() -> void:
 	pbytes = img.get_data()
 	var all_roads: Array = region.get("roads", []).duplicate()
 	# 배치가 내보낸 마을 고샅(placement_*.json 최상위 alleys)도 마을길로 칠한다
-	for f in DirAccess.get_files_at(data_dir):
+	var pfiles := []
+	for dd in [data_dir] + extra_place_dirs:
+		if not DirAccess.dir_exists_absolute(dd): continue
+		for f in DirAccess.get_files_at(dd): pfiles.append(String(dd).path_join(f))
+	for fp in pfiles:
+		var f: String = String(fp).get_file()
 		if f.begins_with("placement_") and f.ends_with(".json"):
-			var pj = JSON.parse_string(FileAccess.get_file_as_string(data_dir.path_join(f)))
+			var pj = JSON.parse_string(FileAccess.get_file_as_string(fp))
 			if pj is Dictionary:
 				for al in pj.get("alleys", []):
 					all_roads.append({ "width_m": float(al.get("width_m", 3.0)), "class": "마을길", "points": al.get("points", []) })

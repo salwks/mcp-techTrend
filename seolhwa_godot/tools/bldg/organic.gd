@@ -39,6 +39,12 @@ const DISTRICTS := {
 		base_density = 0.45,
 		branch = { gap_a = 22.0, gap_b = 36.0, p = 0.9, len_a = 30.0, len_b = 80.0, alley_gap_a = 15.0, alley_gap_b = 26.0, alley_p = 0.7 },
 		junction_plaza_p = 0.3, empty_out = 0.05, empty_in = 0.0,
+		# 문헌 규칙으로 더하는 공해(settlement-rules.md §2): 향청·작청은 관아(외삼문 −3162, 239.5) 앞 동서대로 건너에서 관아를 봄, 사창은 성 안 서남, 관아 앞 하마비
+		majors = [
+			{ tag = "hyangcheong", kit = "bldg/building", params = { type = "gangdang", region = "south", seed = 1874 }, at = [-3184.0, 262.0], ry = PI, fp = true },
+			{ tag = "jakcheong", kit = "bldg/building", params = { type = "haengrang", region = "south", cls = "official", seed = 1875 }, at = [-3150.0, 261.0], ry = PI, fp = true },
+			{ tag = "hama", kit = "bldg/stone", params = { kind = "bi", kind_bi = "hama", seed = 1876 }, at = [-3171.5, 243.6], ry = 0.0, fp = false },
+		],
 		table = {
 			"dense": [["house_g", 0.3], ["giwa_house", 0.18], ["yangban", 0.08], ["house_c", 0.2], ["choga_house", 0.08], ["shop", 0.16]],
 			"mid": [["house_g", 0.22], ["giwa_house", 0.14], ["yangban", 0.06], ["house_c", 0.3], ["choga_house", 0.2], ["jungnong", 0.08]],
@@ -126,6 +132,22 @@ func _initialize() -> void:
 		var i := clampi(int(round((x - float(hm.x0)) / float(hm.cell))), 0, himg.get_width() - 1)
 		var j := clampi(int(round((z - float(hm.z0)) / float(hm.cell))), 0, himg.get_height() - 1)
 		return float(hm.y_min) + himg.get_pixel(i, j).r * (float(hm.y_max) - float(hm.y_min))
+	# 큰 건물(문헌 규칙 공해 — majors): 먼저 놓고 그 자리를 비운다(keep_poly)
+	var major_items := []
+	var kpoly := []
+	for mj in D.get("majors", []):
+		var c := Vector2(float(mj.at[0]), float(mj.at[1])); var ry := float(mj.ry)
+		var it := { id = "%s_%s" % [pre, String(mj.tag)], kit = mj.kit, params = mj.params, x = c.x, z = c.y, ry = snappedf(ry, 0.0001), y = null, flatten = bool(mj.fp), clear_veg = true, group = D.group, settlement = { role = mj.tag } }
+		if bool(mj.fp):
+			var bb: Rect2 = preload("res://kit/bldg/building.gd").bounds(preload("res://kit/bldg/_spec.gd").resolve(mj.params))
+			it.footprint = [snappedf(bb.size.x, 0.1), snappedf(bb.size.y, 0.1)]
+			var poly := []
+			for q in [bb.position, Vector2(bb.end.x, bb.position.y), bb.end, Vector2(bb.position.x, bb.end.y)]:
+				var g2: Vector2 = (q as Vector2) + (q - bb.get_center()).normalized() * 2.0
+				poly.append([c.x + g2.x * cos(ry) + g2.y * sin(ry), c.y - g2.x * sin(ry) + g2.y * cos(ry)])
+			kpoly.append(poly)
+		major_items.append(it)
+	D.keep_poly = kpoly
 	var t0 := Time.get_ticks_msec()
 	var g := OG.new(D, hfn)
 	var res := g.run()
@@ -150,6 +172,7 @@ func _initialize() -> void:
 			for p in t.pts:
 				if OG.pip(area, Vector2(float(p[0]), float(p[1]))): pts.append(p)
 			if pts.size() >= 2: al.append({ id = pre + "_" + String(t.id), points = pts, width_m = float(t.w), kind = "street" })
+	out.items.append_array(major_items)
 	out.items.append_array(res.items)
 	out.alleys.append_array(al)
 	out.supersede.append_array(sup)

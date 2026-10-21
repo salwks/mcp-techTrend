@@ -20,11 +20,13 @@ func _init() -> void:
 	var sp := Vector2(float(reg.spawn.x), float(reg.spawn.z))
 	var cands := []
 	var x0: float = lu.x0; var z0: float = lu.z0; var cell: float = lu.cell
-	for cz in range(int(sp.y) - 1500, int(sp.y) + 1500, 20):
-		for cx in range(int(sp.x) - 1500, int(sp.x) + 1500, 20):
+	var RR := int(args.get("r", "1500"))
+	for cz in range(int(sp.y) - RR, int(sp.y) + RR, 20):
+		for cx in range(int(sp.x) - RR * 2, int(sp.x) + RR * 2, 20):
 			var c := Vector2(cx, cz)
 			var bad := false
 			for p in items:
+				if args.has("anyitems"): break
 				if absf(p.x - cx) < W / 2 + 25 and absf(p.y - cz) < Dd / 2 + 25: bad = true; break
 			if bad: continue
 			var nbad := 0; var n := 0
@@ -34,8 +36,9 @@ func _init() -> void:
 					if px < 0 or pz < 0 or px >= img.get_width() or pz >= img.get_height(): nbad += 999; continue
 					var k := int(round(img.get_pixel(px, pz).r * 255.0))
 					n += 1
-					if not (k in [1, 2, 3]): nbad += 1
-			if nbad * 50 > n: continue   # 2% 넘게 물·길·숲이면 버림
+					if not (k in ([0, 1, 2, 3, 6] if args.has("forest") else [1, 2, 3])): nbad += 1
+					if k == 5 and args.has("nowater"): nbad += 9999   # 물(강·개울)이 하나라도 있으면 버림
+			if nbad * int(args.get("tol", "50")) > n: continue   # 2% 넘게 물·길·숲이면 버림(--tol=10이면 10%)
 			cands.append([c.distance_to(sp), c, nbad])
 	cands.sort_custom(func(a, b): return a[0] < b[0])
 	for k in mini(8, cands.size()): print("SITE ", cands[k])
