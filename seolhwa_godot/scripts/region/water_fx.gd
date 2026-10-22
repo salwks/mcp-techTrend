@@ -123,6 +123,7 @@ var _scan_t := 0.0
 var _skip := 0
 var _last_z := Vector3.BACK
 var _have_plane := false
+var zone_mtn := false   # look.gd 구역: 산이면 반사를 1/3 해상도·3프레임에 한 번(성능 풀이)
 var stats := { on = false, y = 0.0, size = Vector2i.ZERO }
 
 func setup(m) -> void:
@@ -315,14 +316,14 @@ func _update_reflection() -> void:
 	# 1인칭에서 고개를 빨리 돌릴 때(초당 60° 넘게)는 매 프레임
 	var turn := rad_to_deg(cam.global_transform.basis.z.angle_to(_last_z)) / maxf(get_process_delta_time(), 1e-3)
 	_last_z = cam.global_transform.basis.z
-	var every := int(main.args.get("reflrate", str(REFL_EVERY)))
+	var every := int(main.args.get("reflrate", str(3 if zone_mtn else REFL_EVERY)))
 	_skip += 1
 	if _skip < every and turn < 60.0:
 		vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		return
 	_skip = 0
 	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
-	var want_size: Vector2i = main.scene_vp.size / int(main.args.get("refldiv", str(REFL_DIV_FP if main.fp_view() else REFL_DIV)))
+	var want_size: Vector2i = main.scene_vp.size / int(main.args.get("refldiv", str(REFL_DIV_FP if main.fp_view() else (3 if zone_mtn else REFL_DIV))))
 	if vp.size != want_size: vp.size = want_size
 	stats.size = vp.size
 	# 거울 카메라: 자리와 바라보는 쪽을 물면(y = plane_y)에 비춘다. 위쪽은 세계 위(반사 그림을 투영 행렬로 읽으므로 뒤집힘은 상관없다)

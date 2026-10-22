@@ -19,7 +19,13 @@ var exposure_target := 1.0
 var _shelter_tex: Texture2D = null
 var _fp_shadow := false
 var _cloud := 0.0
-var _hidden_shadow := {}   # 실내 잘라 보기로 숨긴 지붕: 그림자만 드리우게 바꾼 메시 → 원래 cast_shadow
+var _hidden_shadow := {}
+# 성능 풀이 — 구역별 그림자·반사(산 = 고을·마을·장시·역·절에서 350m 넘게 떨어진 곳): 산에서는 그림자 판 2048(그림자 드리우는 것이 나무·바위뿐)
+#   물 반사 1/3 해상도·3프레임에 한 번. 화면 품질 낮음은 어디서나 그림자 판 2048. --nozone 끔 · --shadowsize=n 고정
+var zone_mtn := false
+var _zone_t := 0.0
+var _zone_pts := PackedVector2Array()
+var _atlas := 0   # 실내 잘라 보기로 숨긴 지붕: 그림자만 드리우게 바꾼 메시 → 원래 cast_shadow
 
 func setup(m) -> void:
 	main = m
@@ -38,6 +44,7 @@ func setup(m) -> void:
 		if not main.args.has("nograss"):   # 가까운 풀잎(scripts/render/grass.gd) — --nograss 비교
 			var g = load("res://scripts/render/grass.gd").new()
 			main.scene_vp.add_child(g); g.setup(main)
+	if low and not main.args.has("shadowsize"): _set_atlas(2048)
 	print("LOOK real=%s low=%s pom=%s splits=%d" % [real, low, not (low or main.args.has("nopom")), main.sun.directional_shadow_mode])
 
 func _setup_sun() -> void:
@@ -72,8 +79,35 @@ func atmo(s: Dictionary, dir: Vector3) -> void:
 	RenderingServer.global_shader_parameter_set("amb_k", lerpf(0.85, AMB_K, day) * (1.0 + 0.6 * _cloud))
 	if main.fog_on: RenderingServer.global_shader_parameter_set("fog_density", float(s.dens) * lerpf(FOG_K, 1.0, _cloud))
 
+func _set_atlas(n: int) -> void:
+	if n == _atlas: return
+	_atlas = n
+	RenderingServer.directional_shadow_atlas_set_size(n, true)
+
+func _update_zone(dt: float) -> void:
+	_zone_t -= dt
+	if _zone_t > 0.0: return
+	_zone_t = 1.0
+	if main.args.has("nozone"): return
+	if _zone_pts.is_empty():
+		for st in main.world.region.get("settlements", []):
+			if String(st.get("kind", st.get("type", ""))) in ["주막", "성황당"]: continue
+			if st.has("x") and st.has("z"): _zone_pts.append(Vector2(float(st.x), float(st.z)))
+		if _zone_pts.is_empty(): return
+	var p := Vector2(main.player_pos.x, main.player_pos.z)
+	var best := INF
+	for q in _zone_pts: best = minf(best, p.distance_squared_to(q))
+	best = sqrt(best)
+	var m := best > (320.0 if zone_mtn else 380.0)   # 되돌림 여유 60m(경계에서 깜빡이지 않게)
+	if m == zone_mtn and _atlas != 0: return
+	zone_mtn = m
+	if main.water_fx != null and "zone_mtn" in main.water_fx: main.water_fx.zone_mtn = m
+	if not main.args.has("shadowsize"): _set_atlas(2048 if (low or m) else 4096)
+	print("ZONE mtn=%s d=%.0f atlas=%d" % [m, best, _atlas])
+
 func _process(dt: float) -> void:
 	if main == null or main.world == null: return
+	_update_zone(dt)
 	var w = main.world
 	if w.dress_tex != _shelter_tex and w.dress_tex != null:
 		_shelter_tex = w.dress_tex

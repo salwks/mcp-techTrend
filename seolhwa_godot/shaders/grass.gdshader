@@ -32,6 +32,8 @@ uniform float radius = 24.0;       // 이 거리(초점에서)까지, 끝 25%에
 uniform float inner = 0.0;         // 이 안(초점에서 정사각)은 비운다(가까운 벌이 맡음)
 uniform vec3 focus = vec3(0.0);    // 풀밭 가운데(플레이어 · 1인칭이면 카메라 앞)
 uniform float tall = 1.0;          // 키 배율
+uniform float cut = 1e6;           // 이 밖(초점에서 정사각)은 비운다(바깥 고리가 맡음)
+uniform float wide = 1.0;          // 포기 퍼짐 배율(성긴 바깥 고리 — 덮임을 맞춘다)
 
 #include "res://shaders/ground_mask.gdshaderinc"
 
@@ -47,9 +49,14 @@ void vertex() {
 	vec2 p = vec2(cell) * spacing + (vec2(h0, h1) - 0.5) * spacing * 0.95;
 	vec2 dq = abs(p - focus.xz);
 	float dfo = max(dq.x, dq.y);
-	float keep = (1.0 - smoothstep(radius * 0.72, radius, length(p - focus.xz))) * step(inner, dfo);
+	float keep = (1.0 - smoothstep(radius * 0.72, radius, length(p - focus.xz))) * step(inner, dfo) * step(dfo, cut);
 	float gw = 0.0;
-	float hgt = r_height(p);
+	// 화면 밖 포기(카메라 뒤·옆)는 일찍 버린다: 높이·덮임 표본을 안 읽고 잎을 한 점으로 접는다(성능 풀이 — 보이는 풀은 같다)
+	float hgt = r_hdata(p);
+	vec4 cq = PROJECTION_MATRIX * (VIEW_MATRIX * vec4(p.x, hgt + 0.15, p.y, 1.0));
+	float mg = 1.1 * cq.w + 0.6;
+	keep *= (cq.w > -0.6 && abs(cq.x) < mg && abs(cq.y) < mg) ? 1.0 : 0.0;
+	if (keep > 0.001) hgt = r_height(p);
 	if (keep > 0.001) {
 		float hx = r_hdata(p + vec2(1.0, 0.0)), hz = r_hdata(p + vec2(0.0, 1.0));
 		float slope = length(vec2(hx - hgt, hz - hgt));
@@ -71,7 +78,7 @@ void vertex() {
 	// 바람: 끝일수록 휜다(두 박자 + 세계 자리 위상)
 	float ph = dot(p, vec2(0.21, 0.17)) + TIME * 1.7;
 	vec2 wind = vec2(0.8, 0.45) * (sin(ph) * 0.6 + sin(ph * 2.3 + 1.7) * 0.3 + 0.35) * 0.09 * t * t * H / 0.24;
-	vec3 wp = vec3(p.x + xz.x * sz + wind.x, hgt - 0.04 + lv.y * H, p.y + xz.y * sz + wind.y);
+	vec3 wp = vec3(p.x + xz.x * sz * wide + wind.x, hgt - 0.04 + lv.y * H, p.y + xz.y * sz * wide + wind.y);
 	VERTEX = wp - org;   // 포기 변환은 옮김뿐(grass.gd)
 	// 법선: 잎 면 + 위쪽(땅빛과 어울리게 · 뒷면 검지 않게)
 	vec3 bn = normalize(vec3(-xz.y, 0.0, xz.x) + vec3(0.0, 1e-3, 0.0));

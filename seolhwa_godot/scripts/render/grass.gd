@@ -13,6 +13,14 @@ var _copy_t := 0
 const PARAMS := ["hmap", "lumap", "h_meta", "h_range", "h_size", "lu_meta", "lu_size", "detail_amp", "paint_tex", "dress_tex", "dress_on",
 	"farm_tex", "farm_meta", "farm_size", "farm_on", "noise_tex", "urban_ground"]
 
+# 성능 풀이: 두 벌 — 안쪽(초점에서 정사각 INNER m 안)은 촘촘히, 바깥 고리는 1.42배 성기게(포기 퍼짐을 그만큼 넓혀 덮임은 같다).
+#   바깥 고리는 카메라에서 멀어 포기 하나하나가 읽히지 않는다 · --grass1 예전 한 벌
+const INNER := 12.0
+const OUTER_K := 1.42
+var _mats: Array = []
+var _outer: MultiMeshInstance3D = null
+var _sp_out := 0.0
+
 func setup(m) -> void:
 	main = m
 	name = "Grass"
@@ -20,24 +28,56 @@ func setup(m) -> void:
 	spacing = 0.42 if low else 0.33
 	radius = 14.0 if low else 22.0
 	if main.args.has("grassr"): radius = float(main.args.grassr)
-	var n := int(ceil(radius * 2.0 / spacing))
-	_mat = ShaderMaterial.new()
-	_mat.shader = load("res://shaders/grass.gdshader")
-	_mat.set_shader_parameter("spacing", spacing)
-	_mat.set_shader_parameter("radius", radius)
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = _clump_mesh()
-	mm.instance_count = n * n
-	var h := (n - 1) * 0.5
-	for j in n:
-		for i in n:
-			mm.set_instance_transform(j * n + i, Transform3D(Basis(), Vector3((i - h) * spacing, 0.0, (j - h) * spacing)))
-	multimesh = mm
+	var two: bool = not main.args.has("grass1") and radius > INNER + 4.0
+	var mesh := _clump_mesh()
+	_mat = _new_mat(spacing, 0.0, 1.0)
+	var half_in: float = INNER + spacing if two else radius
+	if two: _mat.set_shader_parameter("cut", INNER)
+	multimesh = _grid(mesh, spacing, half_in, 0.0)
 	material_override = _mat
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	custom_aabb = AABB(Vector3(-radius - 2.0, -2000.0, -radius - 2.0), Vector3(radius * 2.0 + 4.0, 4000.0, radius * 2.0 + 4.0))
-	print("GRASS instances=%d spacing=%.2f radius=%.0f" % [n * n, spacing, radius])
+	var n_all := multimesh.instance_count
+	if two:
+		_sp_out = spacing * OUTER_K
+		var om := _new_mat(_sp_out, INNER, OUTER_K)
+		_outer = MultiMeshInstance3D.new()
+		_outer.name = "GrassOuter"
+		_outer.multimesh = _grid(mesh, _sp_out, radius, INNER - _sp_out)
+		_outer.material_override = om
+		_outer.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_outer.custom_aabb = custom_aabb
+		_outer.top_level = true
+		add_child(_outer)
+		n_all += _outer.multimesh.instance_count
+	print("GRASS instances=%d spacing=%.2f radius=%.0f rings=%d" % [n_all, spacing, radius, 2 if two else 1])
+
+func _new_mat(sp: float, inner: float, wide: float) -> ShaderMaterial:
+	var mt := ShaderMaterial.new()
+	mt.shader = load("res://shaders/grass.gdshader")
+	mt.set_shader_parameter("spacing", sp)
+	mt.set_shader_parameter("radius", radius)
+	mt.set_shader_parameter("inner", inner)
+	mt.set_shader_parameter("wide", wide)
+	_mats.append(mt)
+	return mt
+
+# 격자 포기: 반 너비 half 안, 정사각 skip 안(바깥 고리의 구멍)은 뺀다
+func _grid(mesh: Mesh, sp: float, half: float, skip: float) -> MultiMesh:
+	var n := int(ceil(half * 2.0 / sp))
+	var h := (n - 1) * 0.5
+	var pts := []
+	for j in n:
+		for i in n:
+			var x := (i - h) * sp; var z := (j - h) * sp
+			if skip > 0.0 and absf(x) < skip and absf(z) < skip: continue
+			pts.append(Vector3(x, 0.0, z))
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = mesh
+	mm.instance_count = pts.size()
+	for k in pts.size(): mm.set_instance_transform(k, Transform3D(Basis(), pts[k]))
+	return mm
 
 # 포기 하나: 잎 BLADES장, 잎마다 3단(뿌리·가운데·끝 한 점). VERTEX.xz = 퍼짐(m, 포기 크기 1일 때), y = 높이 비율, UV.y = 잎 위 자리, COLOR.r = 잎 난수
 func _clump_mesh() -> ArrayMesh:
@@ -82,8 +122,10 @@ func _process(_dt: float) -> void:
 		_copy_t = 20
 		for p in PARAMS:
 			var val = w.mat_near.get_shader_parameter(p)
-			if val != null and _mat.get_shader_parameter(p) != val: _mat.set_shader_parameter(p, val)
+			for mt in _mats:
+				if val != null and mt.get_shader_parameter(p) != val: mt.set_shader_parameter(p, val)
 	var f: Vector3 = main.player_pos
 	if main.fp_view(): f = main.cam.global_position - main.cam.global_transform.basis.z * radius * 0.55
-	_mat.set_shader_parameter("focus", f)
+	for mt in _mats: mt.set_shader_parameter("focus", f)
 	global_position = Vector3(roundf(f.x / spacing) * spacing, 0.0, roundf(f.z / spacing) * spacing)
+	if _outer != null: _outer.global_position = Vector3(roundf(f.x / _sp_out) * _sp_out, 0.0, roundf(f.z / _sp_out) * _sp_out)
