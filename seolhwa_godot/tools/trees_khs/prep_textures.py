@@ -147,6 +147,112 @@ def _paste_clip(dst, src, x, y):
     if sx1 <= sx0 or sy1 <= sy0: return
     dst.alpha_composite(src.crop((sx0, sy0, sx1, sy1)), (x + sx0, y + sy0))
 
+# ------------------------------------------------------------------ 마을·들 활엽수 잎 뭉치(두 번째 아틀라스, 2K = 4분면 × 2×2 칸 512)
+#   분면 0 버드나무(LeafSet013 — 늘어진 가는 가지에 좁은 잎) · 1 감나무(LeafSet022 — 둥근 잎 + 주황 감) · 2 밤나무(LeafSet014 — 긴 톱니 잎) · 3 느티나무(LeafSet001 — 작은 톱니 잎, 잔가지)
+#   모든 카드: 가지 쪽 밑점이 칸의 (0.5, 0.9). 버드나무는 메시에서 카드를 거꾸로(아래로) 매단다.
+def _leaves(name):
+    col = np.asarray(Image.open(os.path.join(CC0, '%s/%s_2K-JPG_Color.jpg' % (name, name))).convert('RGB'), np.float32) / 255.0
+    op = np.asarray(Image.open(os.path.join(CC0, '%s/%s_2K-JPG_Opacity.jpg' % (name, name))).convert('L'), np.float32) / 255.0
+    from scipy import ndimage
+    lab, n = ndimage.label(op > 0.5)
+    out = []
+    for sl in ndimage.find_objects(lab):
+        if (sl[0].stop - sl[0].start) * (sl[1].stop - sl[1].start) < 4000: continue
+        y0, y1, x0, x1 = sl[0].start, sl[0].stop, sl[1].start, sl[1].stop
+        rgba = np.concatenate([col[y0:y1, x0:x1], op[y0:y1, x0:x1, None]], -1)
+        out.append(Image.fromarray((rgba * 255).astype(np.uint8), 'RGBA'))
+    return out
+
+def _stick(card, lf, px, py, rot, sc, rnd, dark=(0.62, 0.92), hue=(0.82, 0.95, 0.75, 0.95)):
+    w, h = lf.size
+    lf2 = lf.resize((max(4, int(w * sc)), max(4, int(h * sc))), Image.LANCZOS)
+    arr = np.asarray(lf2, np.float32) / 255.0
+    g = rnd.uniform(*dark)
+    arr[..., 0] *= g * rnd.uniform(hue[0], hue[1]); arr[..., 1] *= g; arr[..., 2] *= g * rnd.uniform(hue[2], hue[3])
+    lf2 = Image.fromarray((np.clip(arr, 0, 1) * 255).astype(np.uint8), 'RGBA')
+    pad = max(lf2.size) * 2
+    canvas = Image.new('RGBA', (pad, pad), (0, 0, 0, 0))
+    canvas.paste(lf2, (pad // 2 - lf2.size[0] // 2, pad // 2 - lf2.size[1]), lf2)
+    canvas = canvas.rotate(-rot, resample=Image.BICUBIC, center=(pad // 2, pad // 2))
+    _paste_clip(card, canvas, int(px - pad // 2), int(py - pad // 2))
+
+def _card_radiate(C, leaves, rnd, n_tw, spread, L0, L1, per, sc0, sc1, fruit=0):
+    from PIL import ImageDraw
+    card = Image.new('RGBA', (C, C), (0, 0, 0, 0)); dr = ImageDraw.Draw(card)
+    base = (C * 0.5, C * 0.9); items = []; tips = []
+    for t in range(n_tw):
+        ang = math.radians(-90 + (t - (n_tw - 1) / 2) * (spread + rnd.uniform(-6, 6)))
+        L = C * rnd.uniform(L0, L1)
+        tip = (base[0] + math.cos(ang) * L, base[1] + math.sin(ang) * L); tips.append(tip)
+        dr.line([base, tip], fill=(84, 70, 52, 255), width=max(2, int(C * 0.01)))
+        for k in range(per):
+            tt = rnd.uniform(0.85, 1.0) if k < per // 2 else rnd.uniform(0.3, 0.85)
+            px = base[0] + (tip[0] - base[0]) * tt; py = base[1] + (tip[1] - base[1]) * tt
+            rot = math.degrees(ang) + 90 + rnd.uniform(-55, 55) + ((k % 5) - 2) * 30
+            items.append((rnd.random(), px, py, rot, rnd.uniform(sc0, sc1), rnd.randrange(len(leaves))))
+    items.sort()
+    for _, px, py, rot, sc, li in items: _stick(card, leaves[li], px, py, rot, sc, rnd)
+    if fruit:
+        from PIL import ImageDraw as D2
+        d = D2.Draw(card)
+        for f in range(fruit):
+            tp = tips[rnd.randrange(len(tips))]
+            fx = tp[0] + rnd.uniform(-0.12, 0.12) * C; fy = tp[1] + rnd.uniform(0.02, 0.18) * C; r = C * rnd.uniform(0.045, 0.06)
+            for k in range(6, 0, -1):   # 주황 감(위쪽 밝게)
+                c = (int(200 + 8 * k), int(88 + 10 * k), int(28 + 3 * k), 255)
+                d.ellipse([fx - r * k / 6, fy - r * k / 6 - r * (6 - k) * 0.05, fx + r * k / 6, fy + r * k / 6 - r * (6 - k) * 0.05], fill=c)
+            d.rectangle([fx - r * 0.5, fy - r * 1.05, fx + r * 0.5, fy - r * 0.8], fill=(70, 80, 40, 255))
+    return card
+
+def _card_twig(C, leaves, rnd, n_tw, spread, L0, L1, per, sc0, sc1, side=70, branch=False, dark=(0.62, 0.92)):
+    # 잎이 가지 따라 어긋나기(버드나무·느티나무) — 잎 끝이 가지 끝 쪽으로
+    from PIL import ImageDraw
+    card = Image.new('RGBA', (C, C), (0, 0, 0, 0)); dr = ImageDraw.Draw(card)
+    base = (C * 0.5, C * 0.92); items = []
+    segs = []
+    for t in range(n_tw):
+        ang = math.radians(-90 + (t - (n_tw - 1) / 2) * (spread + rnd.uniform(-5, 5)))
+        L = C * rnd.uniform(L0, L1)
+        tip = (base[0] + math.cos(ang) * L, base[1] + math.sin(ang) * L)
+        segs.append((base, tip, ang))
+        if branch:
+            for b in range(2):
+                tt = rnd.uniform(0.35, 0.7); bp = (base[0] + (tip[0] - base[0]) * tt, base[1] + (tip[1] - base[1]) * tt)
+                ba = ang + math.radians(rnd.choice([-1, 1]) * rnd.uniform(30, 50)); bl = L * rnd.uniform(0.3, 0.45)
+                segs.append((bp, (bp[0] + math.cos(ba) * bl, bp[1] + math.sin(ba) * bl), ba))
+    for (b, tip, ang) in segs:
+        dr.line([b, tip], fill=(92, 78, 56, 255), width=max(2, int(C * 0.007)))
+        n = per
+        for k in range(n):
+            tt = 0.12 + 0.88 * (k + rnd.uniform(0, 0.6)) / n
+            px = b[0] + (tip[0] - b[0]) * tt; py = b[1] + (tip[1] - b[1]) * tt
+            rot = math.degrees(ang) + 90 + (side if k % 2 else -side) * rnd.uniform(0.5, 1.0)
+            items.append((rnd.random(), px, py, rot, rnd.uniform(sc0, sc1) * (0.75 + 0.25 * tt), rnd.randrange(len(leaves))))
+    items.sort()
+    for _, px, py, rot, sc, li in items: _stick(card, leaves[li], px, py, rot, sc, rnd, dark=dark, hue=(0.95, 1.05, 0.7, 0.85) if dark[0] > 0.7 else (0.82, 0.95, 0.75, 0.95))
+    return card
+
+def do_broad2():
+    S = 2048; Q = S // 2; C = Q // 2
+    atlas = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+    rnd = random.Random(11)
+    specs = [
+        ('LeafSet013', lambda L: _card_twig(C, L, rnd, 3, 8, 0.78, 0.86, 11, 0.14, 0.18, side=28, dark=(0.85, 1.05))),
+        ('LeafSet022', lambda L: _card_radiate(C, L, rnd, 3, 30, 0.42, 0.55, 8, 0.13, 0.17, fruit=rnd.choice([0, 1, 2, 3]))),
+        ('LeafSet014', lambda L: _card_radiate(C, L, rnd, 3, 26, 0.45, 0.58, 8, 0.12, 0.16)),
+        ('LeafSet001', lambda L: _card_twig(C, L, rnd, 3, 24, 0.55, 0.7, 7, 0.1, 0.13, side=55, branch=True)),
+    ]
+    for q, (name, fn) in enumerate(specs):
+        lv = _leaves(name)
+        for c in range(4):
+            card = fn(lv)
+            atlas.paste(card, ((q % 2) * Q + (c % 2) * C, (q // 2) * Q + (c // 2) * C))
+    a = np.asarray(atlas, np.float32) / 255.0
+    a[..., 3] = np.where(a[..., 3] > 0.5, 1.0, a[..., 3] * 0.6)
+    a[..., :3] = dilate(a[..., :3], a[..., 3], 24)
+    Image.fromarray((a * 255).astype(np.uint8), 'RGBA').save(os.path.join(WORK, 'broad2_leaf_atlas_preview.png'))
+    write_mip(os.path.join(WORK, 'broad2_leaf_bca.mip'), mip_chain(a))
+
 # ------------------------------------------------------------------ 임포스터
 def do_imp():
     for f in sorted(os.listdir(WORK)):
@@ -163,4 +269,5 @@ if __name__ == '__main__':
     what = sys.argv[1] if len(sys.argv) > 1 else 'all'
     if what in ('leaf', 'all'): do_leaf()
     if what in ('oak', 'all'): do_oak()
+    if what in ('broad2', 'all'): do_broad2()
     if what in ('imp', 'all'): do_imp()

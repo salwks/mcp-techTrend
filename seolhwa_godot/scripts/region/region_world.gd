@@ -41,6 +41,8 @@ var loading := false
 const SCATTER_PATH := "res://kit/nature/scatter.gd"
 const KhsTrees := preload("res://kit/nature/khs_trees.gd")
 const TreeLod := preload("res://scripts/region/tree_lod.gd")
+const FarForest := preload("res://scripts/region/far_forest.gd")
+var far_forest: Node3D = null   # trees-khs: 먼 숲 임포스터 층(khs_far 너머)
 var khs_far_base := 560.0   # trees-khs 임포스터 거리(--khsfar=m)
 var _khs_far_set := -1.0
 var tree_lod: Node3D = null   # trees-khs: 가까운 사실 나무 LOD0·LOD1(scripts/region/tree_lod.gd)
@@ -256,6 +258,7 @@ func load_region(dir := "") -> void:
 					print("REGION scatter warm ms=", Time.get_ticks_msec() - tw)
 			if KhsTrees.available() and KhsTrees.imp_mesh != null:
 				tree_lod = TreeLod.new(); tree_lod.name = "tree_lod"; add_child(tree_lod)
+				far_forest = FarForest.new(); far_forest.name = "far_forest"; far_forest.world = self; add_child(far_forest)
 		else: push_warning("kit/nature/scatter.gd를 쓸 수 없어 식생을 건너뛴다")
 	if markers: _place_markers()
 	print("REGION data=%s %dx%d cell=%.1f tiles=%s..%s scatter=%s load_ms=%d" % [data_dir, hnx, hnz, hstep, tile_min, tile_max, _scatter_script != null, Time.get_ticks_msec() - t0])
@@ -1610,6 +1613,7 @@ func _set_tile(t: Vector2i, lod: int) -> void:
 		node.get_child(0).custom_aabb = AABB(Vector3(-1, all.x - SKIRT * 2.0 - 2.0, -1), Vector3(TILE + 2, all.y - all.x + SKIRT * 2.0 + 4.0, TILE + 2))
 		terrain_root.add_child(node)
 		if tile_listener.is_valid(): tile_listener.call(t)
+		if far_forest != null: far_forest.request(t)
 		_gen += 1
 		st = { lod = -1, node = node, scatter_nodes = [], scatter_job = -1, scatter_hold = null, has0 = false, has1 = false, gen = _gen }
 		tiles[t] = st
@@ -1656,6 +1660,7 @@ func _drop_tile(t: Vector2i) -> void:
 		_scatter_orphans.append([st.scatter_job, st.scatter_hold])
 		st.scatter_job = -1; st.scatter_hold = null
 	if farm != null: farm.tile_lod(t, -1)
+	if far_forest != null: far_forest.drop(t)
 	_unscatter(t)
 	_attach_statics(t, 2)
 	terrain_root.remove_child(st.node)
@@ -1899,10 +1904,11 @@ func update_scatter_lod(player: Vector3, force := false) -> void:
 	_lod_dirty = false
 	var p := Vector2(player.x, player.z)
 	# trees-khs: 임포스터는 싸서 식생 거리보다 멀리(근경 타일 끝까지) — 산이 멀리서도 숲으로 읽히게. 끝에서 점무늬로 녹는다
-	var khs_far := maxf(scatter_far, khs_far_base * (0.65 if KhsTrees.r0 < 20.0 else 1.0))
+	var khs_far := maxf(scatter_far, khs_far_base * (0.65 if KhsTrees.r0 < 12.0 else 1.0))
 	if tree_lod != null and KhsTrees.imp_mat != null and absf(khs_far - _khs_far_set) > 1.0:
 		_khs_far_set = khs_far
 		KhsTrees.imp_mat.set_shader_parameter("imp_fade", Vector2(khs_far * 0.8, khs_far * 0.97))
+		FarForest.set_far(khs_far, TILE * (MID_R + 0.5))
 	for t in tiles:
 		for e in tiles[t].scatter_nodes:
 			var r: Rect2 = e.rect
@@ -2354,6 +2360,7 @@ func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
 func reset_edits() -> void:
 	# 작업 스레드(필지 짓기·식생)가 hbytes·lbytes를 읽는 중에 배열을 갈아 끼우면 해제된 메모리를 읽는다 — 먼저 기다린다
 	if farm != null: farm.wait_jobs()
+	if far_forest != null: far_forest.wait_all()
 	for t in tiles:
 		if tiles[t].scatter_job >= 0:
 			Jobs.wait(tiles[t].scatter_job); tiles[t].scatter_job = -1

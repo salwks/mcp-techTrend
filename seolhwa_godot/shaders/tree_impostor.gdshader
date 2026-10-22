@@ -8,7 +8,7 @@ render_mode cull_disabled, depth_draw_opaque;
 
 uniform sampler2DArray imp_alb : source_color, filter_linear_mipmap, repeat_disable;
 uniform sampler2DArray imp_nrm : filter_linear_mipmap, repeat_disable;
-uniform vec4 imp_box[16];          // 층마다 (중심 x, 중심 z, 폭, 높이) — 로컬 m
+uniform vec4 imp_box[24];          // 층마다 (중심 x, 중심 z, 폭, 높이) — 로컬 m
 uniform float leaf_trans = 0.35;
 uniform float imp_alpha = 0.5;
 uniform float imp_tilt = 0.45;      // 카메라 높이각의 이만큼 사각을 카메라 쪽으로 눕힌다(내려다볼 때 나무가 납작해지지 않게)
@@ -32,8 +32,10 @@ void vertex() {
 	float si, so;
 	v_sin = 1.0; v_sout = 0.0;
 	int L = int(INSTANCE_CUSTOM.r + 0.5);
-	vec4 box = imp_box[clamp(L, 0, 15)];
-	if (!tree_band(d, si, so)) {
+	vec4 box = imp_box[clamp(L, 0, 23)];
+	bool vis = tree_band(d, si, so);
+	vis = tree_time(INSTANCE_CUSTOM, si, so) && vis;
+	if (!vis) {
 		VERTEX = vec3(0.0);
 		v_view = vec4(0.0);
 	} else {
@@ -68,9 +70,10 @@ void fragment() {
 	float L = v_view.w;
 	vec4 a0 = texture(imp_alb, vec3(cell_uv(v_view.x, uv), L));
 	vec4 a1 = texture(imp_alb, vec3(cell_uv(v_view.y, uv), L));
-	vec4 n0 = texture(imp_nrm, vec3(cell_uv(v_view.x, uv), L));
-	vec4 n1 = texture(imp_nrm, vec3(cell_uv(v_view.y, uv), L));
 	float t = v_view.z;
+	// 법선은 가까운 칸 하나만(표본 줄임) — 바탕색·알파만 두 칸을 섞는다
+	float iv = t < 0.5 ? v_view.x : v_view.y;
+	vec4 nn = texture(imp_nrm, vec3(cell_uv(iv, uv), L));
 	// 알파: 두 칸을 그대로 섞으면 가운데에서 성겨진다 — 섞은 뒤 문턱을 조금 낮춘다
 	float al = mix(a0.a, a1.a, t);
 	ALPHA = al;
@@ -78,20 +81,14 @@ void fragment() {
 	vec3 alb = mix(a0.rgb, a1.rgb, t);
 	alb *= mix(vec3(1.0), vec3(1.08, 1.0, 0.86), (v_rnd - 0.5) * 0.6);
 	// 법선: 칸마다 구운 카메라 틀(오른쪽·위·카메라 쪽)로 로컬 법선을 되살려 섞는다
-	vec3 n_loc = vec3(0.0);
-	for (int k = 0; k < 2; k++) {
-		float i = k == 0 ? v_view.x : v_view.y;
-		vec4 nn = k == 0 ? n0 : n1;
-		vec2 xy = nn.rg * 2.0 - 1.0;
-		float z = sqrt(max(1.0 - dot(xy, xy), 0.0));
-		vec3 d = view_dir(i);
-		vec3 r = vec3(d.z, 0.0, -d.x);
-		n_loc += (r * xy.x + vec3(0.0, 1.0, 0.0) * xy.y + d * z) * (k == 0 ? 1.0 - t : t);
-	}
+	vec2 xy = nn.rg * 2.0 - 1.0;
+	float z = sqrt(max(1.0 - dot(xy, xy), 0.0));
+	vec3 dv = view_dir(iv);
+	vec3 n_loc = vec3(dv.z, 0.0, -dv.x) * xy.x + vec3(0.0, 1.0, 0.0) * xy.y + dv * z;
 	mat3 B = mat3(MODEL_MATRIX);
 	vec3 nw = normalize(B * n_loc);
 	NORMAL = normalize((VIEW_MATRIX * vec4(nw, 0.0)).xyz);
-	float leaf = mix(n0.b, n1.b, t);
+	float leaf = nn.b;
 	alb *= 1.0 - 0.3 * wet;
 	ALBEDO = alb;
 	ROUGHNESS = mix(0.85, 0.75, leaf);

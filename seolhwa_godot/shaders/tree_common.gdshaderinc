@@ -25,6 +25,8 @@ global uniform float snow_line;
 
 // 거리 띠(카메라 → 나무 밑동): x,y = 들어오는 점무늬 구간(이 아래는 안 그림), z,w = 나가는 구간(이 위는 안 그림). 들어옴이 없으면 x=y=-1
 uniform vec4 lod_band = vec4(-1.0, -1.0, 1e6, 1e6);
+uniform float lod_time = 0.0;       // tree_lod.gd가 프레임마다(초) — 인스턴스 자료 z(시작 시각)·w(+1 들어옴, -1 나감)로 시간 섞기
+uniform float lod_fade = 0.35;
 uniform float wind_k = 0.35;        // 바람 세기(0 고요 ~ 1 강풍) — tree_lod.gd가 날씨에서 넣는다
 uniform vec2 wind_dir = vec2(0.86, 0.5);
 
@@ -37,6 +39,15 @@ bool tree_band(float d, out float s_in, out float s_out) {
 	s_in = lod_band.x < 0.0 ? 1.0 : smoothstep(lod_band.x, lod_band.y, d);
 	s_out = smoothstep(lod_band.z, lod_band.w, d);
 	return s_in > 0.0 && s_out < 1.0;
+}
+
+// 시간 섞기: 인스턴스 자료(층, 색, 시작 시각, 방향) — 방향 0이면 그대로. 거리 띠 값에 겹친다. 다 나간 것은 false
+bool tree_time(vec4 ic, inout float s_in, inout float s_out) {
+	if (ic.w == 0.0) return true;
+	float f = clamp((lod_time - ic.z) / lod_fade, 0.0, 1.0);
+	if (ic.w > 0.0) { s_in = min(s_in, f); return true; }
+	s_out = max(s_out, f);
+	return f < 1.0;
 }
 
 // 점무늬: 들어올 때는 (1-b) < s_in, 나갈 때는 b < 1 - s_out — 이웃 띠(같은 구간의 나감/들어옴)와 정확히 갈린다

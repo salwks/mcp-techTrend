@@ -8,6 +8,7 @@ cd "$(dirname "$0")/../.."
 PY=${PY:-/Users/sinjaeho/miniconda3/bin/python3}; GODOT=${GODOT:-/opt/homebrew/bin/godot}
 $PY -I tools/trees_khs/prep_textures.py leaf
 $PY -I tools/trees_khs/prep_textures.py oak
+$PY -I tools/trees_khs/prep_textures.py broad2
 $GODOT --path . -s res://tools/trees_khs/build.gd -- --stage=tex,mesh,bake
 $PY -I tools/trees_khs/prep_textures.py imp
 $GODOT --path . -s res://tools/trees_khs/build.gd -- --stage=pack

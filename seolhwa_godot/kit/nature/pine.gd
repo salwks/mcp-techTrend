@@ -23,38 +23,11 @@ static func build(params: Dictionary) -> Dictionary:
 	return _build_proc(params)
 
 static func _build_khs(params: Dictionary) -> Dictionary:
-	Khs.init()
 	var seed := int(params.get("seed", 1))
 	var s := float(params.get("s", 1.0))
 	var layer: int = [Khs.L_A, Khs.L_C, Khs.L_B, Khs.L_A][absi(seed) % 4]
 	var h := (8.5 + float(absi(seed * 7) % 9) * 0.5) * s * (0.8 if layer == Khs.L_B else 1.0)
-	var k := h / Khs.height(layer)
-	var root := Node3D.new()
-	root.name = "소나무"
-	var ry := float(absi(seed * 13) % 360) * PI / 180.0
-	for lod in 2:
-		var mi := MeshInstance3D.new()
-		mi.name = "lod%d" % lod
-		mi.mesh = Khs.mesh(layer, lod, "st")
-		mi.transform = Transform3D(Basis(Vector3.UP, ry).scaled(Vector3(k, k, k)), Vector3.ZERO)
-		if lod == 0:
-			mi.visibility_range_end = 32.0
-			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		else:
-			mi.visibility_range_end = 80.0   # 그림자 전용(LOD1)
-			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
-		root.add_child(mi)
-	var far := MeshInstance3D.new()
-	far.name = "lod1_far"
-	far.mesh = Khs.mesh(layer, 1, "st")
-	far.transform = (root.get_child(1) as MeshInstance3D).transform
-	far.visibility_range_begin = 32.0
-	far.visibility_range_end = 600.0
-	far.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	root.add_child(far)
-	var ext := 5.0 * k
-	return { node = root, mesh = far.mesh, colliders = [{ type = "circle", x = 0.0, z = 0.0, r = 0.3 * s }], lights = [], occluder = false,
-		footprint = Vector2(ext * 2, ext * 2), anchors = {}, tris = 0, height = h }
+	return Khs.build_static(layer, h, float(absi(seed * 13) % 360) * PI / 180.0, "소나무", [{ type = "circle", x = 0.0, z = 0.0, r = 0.3 * s }])
 
 static func _build_proc(params: Dictionary) -> Dictionary:
 	var r := Kit.Rng.new(int(params.get("seed", 1)))

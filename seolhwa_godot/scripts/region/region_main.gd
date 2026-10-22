@@ -411,6 +411,7 @@ func _build_scene() -> void:
 	sun.shadow_normal_bias = 1.2
 	sun.shadow_blur = 1.5
 	root.add_child(sun)
+	if args.has("shadowq"): RenderingServer.directional_soft_shadow_filter_set_quality(int(args.shadowq))   # 해 그림자 거르기 품질(0~5) 견주기
 
 	cam = Camera3D.new()
 	cam.near = 0.5; cam.far = 6000.0; cam.fov = 30.0

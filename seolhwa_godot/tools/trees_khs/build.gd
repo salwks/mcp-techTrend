@@ -10,11 +10,11 @@ const OUT := "res://assets/trees/"
 const KHS := "res://assets/trees/khs_gomsol/src/"
 const WORK := "res://assets/trees/_work/"
 const CELL := Vector2i(512, 1024)     # 굽는 칸(파이썬이 반으로 줄여 256×512 — 층 1024²)
-const CARD_K := [1.22, 1.55]          # 곰솔 잎 카드 키움(LOD0, LOD1 — LOD1은 복제가 적어 더 키운다)
+const CARD_K := [1.22, 1.8]          # 곰솔 잎 카드 키움(LOD0, LOD1 — LOD1은 복제가 적어 더 키운다)
 
 # 변형 표 — 층 번호 = 순서(kit/nature/khs_trees.gd VARIANTS와 같다)
 const GOMSOL := [
-	{ name = "gomsol_A_natural", dup0 = 0.25, dup1 = 0.0 },
+	{ name = "gomsol_A_natural", dup0 = 0.2, dup1 = 0.0 },
 	{ name = "gomsol_B_umbrella", dup0 = 0.45, dup1 = 0.1 },
 	{ name = "gomsol_C_tall_layered", dup0 = 0.3, dup1 = 0.0 },
 	{ name = "gomsol_D_windswept", dup0 = 0.2, dup1 = 0.0 },
@@ -26,6 +26,15 @@ const OAKS := [
 	{ name = "oak_sangsuri_b", H = 12.0, bole = 2.6, tr = 0.27, ns = 5, cr = 4.6, sy = 0.7, cs = 1.6, nc = 460, seed = 23, lean = 0.6 },
 	{ name = "oak_singal", H = 10.5, bole = 2.2, tr = 0.26, ns = 4, cr = 4.0, sy = 0.66, cs = 1.5, nc = 400, seed = 37, lean = 1.0 },
 	{ name = "oak_broad", H = 15.0, bole = 3.0, tr = 0.45, ns = 6, cr = 7.0, sy = 0.55, cs = 1.9, nc = 680, seed = 51, lean = 0.2 },
+	# 마을·들 나무(두 번째 잎 아틀라스 broad2 — q 분면: 0 버드나무 1 감나무 2 밤나무 3 느티나무). hang: 잎 카드를 아래로 매단다(버드나무)
+	{ name = "willow_a", H = 10.0, bole = 2.0, tr = 0.36, ns = 5, cr = 4.6, sy = 0.8, cs = 2.4, nc = 460, seed = 61, lean = 0.9, leaf = "broad2", q = 0, hang = true, blen = 0.8, crop = [0.3, 0.7], el = [48.0, 72.0] },
+	{ name = "willow_b", H = 8.0, bole = 1.6, tr = 0.3, ns = 4, cr = 3.8, sy = 0.85, cs = 2.0, nc = 380, seed = 67, lean = 1.4, leaf = "broad2", q = 0, hang = true, blen = 0.8, crop = [0.3, 0.7], el = [45.0, 70.0] },
+	{ name = "persimmon", H = 7.5, bole = 1.7, tr = 0.24, ns = 4, cr = 3.5, sy = 0.78, cs = 1.25, nc = 420, seed = 71, lean = 0.7, leaf = "broad2", q = 1 },
+	{ name = "chestnut", H = 11.0, bole = 2.4, tr = 0.32, ns = 5, cr = 5.0, sy = 0.66, cs = 1.5, nc = 520, seed = 79, lean = 0.4, leaf = "broad2", q = 2 },
+	{ name = "zelkova_dangsan", H = 17.0, bole = 2.6, tr = 0.85, ns = 7, cr = 9.0, sy = 0.56, cs = 1.8, nc = 900, seed = 83, lean = 0.2, leaf = "broad2", q = 3, el = [24.0, 50.0] },
+	# 덤불(숲 밑·울타리 가): 밑에서 여러 줄기
+	{ name = "shrub_oak", H = 1.9, bole = 0.15, tr = 0.045, ns = 6, cr = 1.15, sy = 0.8, cs = 0.8, nc = 60, seed = 89, lean = 0.5, el = [40.0, 72.0], sub = 1, sides = 3 },
+	{ name = "shrub_twig", H = 1.4, bole = 0.1, tr = 0.035, ns = 5, cr = 0.9, sy = 0.85, cs = 0.68, nc = 52, seed = 97, lean = 0.6, leaf = "broad2", q = 3, el = [45.0, 75.0], sub = 1, sides = 3 },
 ]
 
 var stages := PackedStringArray()
@@ -100,6 +109,9 @@ func _stage_tex() -> void:
 		{ normal_flip_y = 1.0 })   # 곰솔 껍질 법선은 DirectX식(초록 뒤집힘) — 바탕색 밝기 기울기와 견줘 확인(trees-khs 보고서)
 	_mat("oak_leaf", "res://shaders/tree_leaf.gdshader", { albedo_tex = OUT + "oak_leaf_bca.res" },
 		{ leaf_tint = Color(0.5, 0.6, 0.4), leaf_sat = 0.8, leaf_bright = 0.7, leaf_var = 0.4, leaf_trans = 0.4 })
+	_save_tex(_load_mip(WORK + "broad2_leaf_bca.mip"), OUT + "broad2_leaf_bca.res", "rgba")
+	_mat("broad2_leaf", "res://shaders/tree_leaf.gdshader", { albedo_tex = OUT + "broad2_leaf_bca.res" },
+		{ leaf_tint = Color(0.74, 0.8, 0.68), leaf_sat = 0.88, leaf_bright = 0.82, leaf_var = 0.35, leaf_trans = 0.42 })
 	_mat("oak_bark", "res://shaders/tree_bark.gdshader", { albedo_tex = OUT + "oak_bark_bc.res", orm_tex = OUT + "oak_bark_orm.res", normal_tex = OUT + "oak_bark_nrm.res" },
 		{ bark_low = Color(0.8, 0.78, 0.74), bark_high = Color(0.85, 0.82, 0.76), bark_bright = 1.25 })
 
@@ -118,10 +130,10 @@ func _stage_mesh() -> void:
 	var vlist := []
 	for gi in GOMSOL.size():
 		var g: Dictionary = GOMSOL[gi]
-		var info := { name = g.name, family = "pine", layer = vlist.size() }
+		var info := { name = g.name, family = "pine", bark = "pine", layer = vlist.size() }
 		for lod in 2:
 			var src := _gltf_mesh(KHS + g.name + "/" + g.name + "_LOD%d.gltf" % lod, "_LOD%d" % lod)
-			var res := _process_khs(src, g.dup0 if lod == 0 else g.dup1, 1000 + gi * 17 + lod, CARD_K[lod])
+			var res := _process_khs(src, g.dup0 if lod == 0 else g.dup1, 1000 + gi * 17 + lod, CARD_K[lod], 1.0 if lod == 0 else 0.62)
 			var p := OUT + "%s_lod%d.res" % [g.name, lod]
 			print("TREES mesh ", p, " tris=", res.tris, " err=", ResourceSaver.save(res.mesh, p, ResourceSaver.FLAG_COMPRESS))
 			info["tris%d" % lod] = res.tris
@@ -130,7 +142,7 @@ func _stage_mesh() -> void:
 		vlist.append(info)
 	for oi in OAKS.size():
 		var o: Dictionary = OAKS[oi]
-		var info := { name = o.name, family = "oak", layer = vlist.size() }
+		var info := { name = o.name, family = String(o.get("leaf", "oak")), bark = "oak", layer = vlist.size() }
 		for lod in 2:
 			var res := _oak(o, lod)
 			var p := OUT + "%s_lod%d.res" % [o.name, lod]
@@ -201,7 +213,7 @@ func _ax_at(ax: PackedVector2Array, y: float) -> Vector2:
 	return ax[i].lerp(ax[i + 1], clampf(y - i, 0.0, 1.0))
 
 # 곰솔: 잎 카드 섬을 복제해 수관을 채우고(줄기 축 둘레로 돌리고 조금 줄임), 법선을 수관 바깥쪽으로 섞고, 바람·그늘 자료를 넣는다
-func _process_khs(src: ArrayMesh, dup: float, seed: int, card_k: float) -> Dictionary:
+func _process_khs(src: ArrayMesh, dup: float, seed: int, card_k: float, keep := 1.0) -> Dictionary:
 	var rng := RandomNumberGenerator.new(); rng.seed = seed
 	var ab := src.surface_get_arrays(0)
 	var al := src.surface_get_arrays(1)
@@ -226,7 +238,23 @@ func _process_khs(src: ArrayMesh, dup: float, seed: int, card_k: float) -> Dicti
 	var nisl := isl.size()
 	var isl_ph := PackedFloat32Array()
 	for k in nisl: isl_ph.append(rng.randf())
+	# LOD1: 섬을 솎는다(남은 카드를 더 키워 덮임을 맞춘다 — 잎 겹침·삼각형을 줄이려고)
+	if keep < 1.0:
+		var li2 := PackedInt32Array()
+		var drop := {}
+		for k in nisl:
+			if rng.randf() > keep: drop[k] = true
+		for t in range(0, li.size(), 3):
+			if not drop.has(isl_of[li[t]]): li2.append_array([li[t], li[t + 1], li[t + 2]])
+		li = li2
+		tri_of.clear()
+		for t in range(0, li.size(), 3):
+			var k := isl_of[li[t]]
+			if not tri_of.has(k): tri_of[k] = PackedInt32Array()
+			tri_of[k].append(t)
+	var Htop := H
 	for k in nisl:
+		if not tri_of.has(k): continue
 		if rng.randf() >= dup: continue
 		var I: Isl = isl[k]
 		var c := Vector3.ZERO
@@ -239,16 +267,31 @@ func _process_khs(src: ArrayMesh, dup: float, seed: int, card_k: float) -> Dicti
 		var inward := rng.randf_range(0.0, 0.1)
 		var dy := rng.randf_range(-0.35, 0.35)
 		var rot := Basis(Vector3.UP, ang)
+		# 위쪽 수관(높이 55% 위)의 복제는 카드를 위로 눕힌다 — 위에서 내려다볼 때(들·산 구도) 수관이 성기지 않게
+		var tilt := Basis.IDENTITY
+		var piv := c
+		if c.y > Htop * 0.55:
+			var nav := Vector3.ZERO
+			for v in I.verts: nav += ln[v]
+			nav = nav.normalized()
+			if nav.y < 0.0: nav = -nav
+			var tgt := (nav + Vector3.UP * 1.6).normalized()
+			var axv := nav.cross(tgt)
+			if axv.length() > 1e-3: tilt = Basis(axv.normalized(), nav.angle_to(tgt) * rng.randf_range(0.6, 1.0))
+			var bd2 := INF
+			for v in I.verts:
+				var dd := Vector2(lv0[v].x, lv0[v].z).distance_to(a0)
+				if dd < bd2: bd2 = dd; piv = lv0[v]
 		var map := {}
 		for v in I.verts:
-			var p := lv0[v]
+			var p := piv + tilt * (lv0[v] - piv)
 			var q := (p - c) * sc + c
 			var rel := Vector3(q.x - a0.x, q.y + dy, q.z - a0.y)
 			rel = rot * rel
 			rel.x *= 1.0 - inward; rel.z *= 1.0 - inward
 			map[v] = lv.size()
 			lv.append(Vector3(rel.x + a0.x, rel.y, rel.z + a0.y))
-			ln.append(rot * ln[v])
+			ln.append(rot * (tilt * ln[v]))
 			luv.append(luv[v])
 		isl_ph.append(rng.randf())
 		for t in tri_of[k]:
@@ -380,7 +423,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 	var rng := RandomNumberGenerator.new(); rng.seed = int(o.seed)
 	var H: float = o.H; var cr: float = o.cr; var tr: float = o.tr
 	var T := Tube.new()
-	var sides0 := 9 if lod == 0 else 6
+	var sides0 := int(o.get("sides", 9 if lod == 0 else 6)) if lod == 0 else mini(int(o.get("sides", 6)), 6)
 	# 줄기(밑동 퍼짐 + 기울기)
 	var lean := Vector3(rng.randf_range(-1, 1), 0, rng.randf_range(-1, 1)).normalized() * float(o.lean) * 0.12
 	var trunk := _curve(Vector3(0, -0.3, 0), Vector3(0, 1, 0) + lean, float(o.bole) + 0.3, 6, 0.05, rng, 0.08)
@@ -394,7 +437,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 	var lrad := []
 	for i in leader.size(): lrad.append(tr * 0.8 * lerpf(1.0, 0.25, float(i) / leader.size()))
 	_tube(T, trunk, trad, sides0, H, cr, axis)
-	_tube(T, leader, lrad, maxi(5, sides0 - 2), H, cr, axis)
+	_tube(T, leader, lrad, maxi(3, sides0 - 2), H, cr, axis)
 	var ends := []   # 잎 붙일 자리: [점, 방향]
 	var ns: int = o.ns
 	for s in ns:
@@ -402,15 +445,16 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 		var hstart := float(o.bole) * rng.randf_range(0.85, 1.0) + float(s % 2) * 0.5
 		var src: Vector3 = trunk[trunk.size() - 1] if s % 3 != 2 else leader[mini(2, leader.size() - 1)]
 		src.y = minf(src.y, hstart + 0.6)
-		var el := deg_to_rad(rng.randf_range(32.0, 58.0))
+		var elr: Array = o.get("el", [32.0, 58.0])
+		var el := deg_to_rad(rng.randf_range(elr[0], elr[1]))
 		var dir := Vector3(cos(az) * cos(el), sin(el), sin(az) * cos(el))
-		var L := cr * rng.randf_range(0.95, 1.2) / cos(el) * 0.85
+		var L := cr * rng.randf_range(0.95, 1.2) / cos(el) * 0.85 * float(o.get("blen", 1.0))
 		var sc := _curve(src, dir, L, 6, 0.04, rng, 0.14)
 		var srad := []
 		for i in sc.size(): srad.append(tr * 0.55 * lerpf(1.0, 0.18, float(i) / (sc.size() - 1)))
-		_tube(T, sc, srad, maxi(5, sides0 - 3), H, cr, axis)
+		_tube(T, sc, srad, maxi(3, sides0 - 3), H, cr, axis)
 		# 곁가지
-		var nsub := (5 if lod == 0 else 3) + rng.randi_range(0, 2)
+		var nsub := (int(o.get("sub", 5)) if lod == 0 else 3) + rng.randi_range(0, 2)
 		for k in nsub:
 			var t := rng.randf_range(0.3, 0.95)
 			var ii := int(t * (sc.size() - 1))
@@ -422,7 +466,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 			var sb := _curve(p0, d2, L2, 3, 0.06, rng, 0.2)
 			if lod == 0 or k % 2 == 0:
 				var r0: float = float(srad[ii]) * 0.6
-				_tube(T, sb, [r0, r0 * 0.6, r0 * 0.35, r0 * 0.15], 4, H, cr, axis)
+				_tube(T, sb, [r0, r0 * 0.6, r0 * 0.35, r0 * 0.15], mini(4, sides0), H, cr, axis)
 			for q in range(1, sb.size()): ends.append([sb[q], d2])
 		for q in range(2, sc.size()): ends.append([sc[q], dir])
 	# 잎 카드: 가지 끝 둘레에 흩고, 수관 껍질(타원체) 안쪽으로 묶는다
@@ -431,6 +475,10 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 	var cs: float = float(o.cs) * (1.12 if lod == 0 else 1.5)
 	var ctr := Vector3(axis.x, cy, axis.y)
 	var ry := (H - float(o.bole)) * 0.5 * 1.05
+	var hang: bool = o.get("hang", false)
+	var b2: bool = String(o.get("leaf", "oak")) == "broad2"
+	var q2: int = int(o.get("q", 0))
+	var crop: Array = o.get("crop", [0.0, 1.0])
 	for c in nc:
 		var e: Array = ends[rng.randi() % ends.size()]
 		var p: Vector3 = (e[0] as Vector3) + Vector3(rng.randf_range(-1, 1), rng.randf_range(-0.6, 0.8), rng.randf_range(-1, 1)) * cs * 0.6
@@ -446,17 +494,23 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 		var out := Vector3((p.x - ctr.x) / cr, (p.y - ctr.y) / ry * 0.8 + 0.35, (p.z - ctr.z) / cr).normalized()
 		# 카드 위쪽(잎 끝 방향) = 가지 방향과 바깥쪽 사이, 카드 면은 그 축 둘레로 아무렇게나
 		var upv := ((e[1] as Vector3) * 0.5 + out * 0.5 + Vector3(0, 0.3, 0)).normalized()
+		if hang: p += Vector3(0, cs * 0.35, 0)   # 늘어진 가지는 가지 끝 위에서 시작(가지 끝이 수관 위로 삐죽 나오지 않게)
+		if hang: upv = (Vector3(0, -1, 0) + out * Vector3(0.25, 0, 0.25) + Vector3(rng.randf_range(-0.1, 0.1), 0, rng.randf_range(-0.1, 0.1))).normalized()   # 버드나무: 늘어진 가지
 		var side := upv.cross(Vector3(rng.randf_range(-1, 1), rng.randf_range(-1, 1), rng.randf_range(-1, 1)).normalized())
 		if side.length() < 0.1: side = upv.cross(Vector3.RIGHT)
 		side = side.normalized()
 		var fn := side.cross(upv).normalized()
 		var s := cs * rng.randf_range(0.8, 1.15)
 		var cell := rng.randi() % 4
-		var u0 := float(cell % 2) * 0.5; var v0 := float(cell / 2) * 0.5
+		var cw := 0.5 if not b2 else 0.25
+		var u0 := float(cell % 2) * cw; var v0 := float(cell / 2) * cw
+		if b2: u0 += float(q2 % 2) * 0.5; v0 += float(q2 / 2) * 0.5
+		var ua := u0 + cw * float(crop[0]); var ub := u0 + cw * float(crop[1])
+		var sw := s * (float(crop[1]) - float(crop[0]))
 		# 카드 밑(잎자루 모임)은 칸 (0.5, 0.9) — 그 점이 p에 오게
 		var b0 := p - upv * s * 0.1
-		var corners := [b0 - side * s * 0.5 - upv * s * 0.0, b0 + side * s * 0.5, b0 + side * s * 0.5 + upv * s, b0 - side * s * 0.5 + upv * s]
-		var uvs := [Vector2(u0, v0 + 0.5 * 0.92), Vector2(u0 + 0.5, v0 + 0.5 * 0.92), Vector2(u0 + 0.5, v0), Vector2(u0, v0)]
+		var corners := [b0 - side * sw * 0.5, b0 + side * sw * 0.5, b0 + side * sw * 0.5 + upv * s, b0 - side * sw * 0.5 + upv * s]
+		var uvs := [Vector2(ua, v0 + cw * 0.92), Vector2(ub, v0 + cw * 0.92), Vector2(ub, v0), Vector2(ua, v0)]
 		var ph := rng.randf()
 		var base := lv.size()
 		for k in 4:
@@ -486,10 +540,10 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 	return { mesh = am, tris = (T.idx.size() + li.size()) / 3, height = hh, crown_r = cr }
 
 # ------------------------------------------------------------------ 임포스터 굽기(8방향 · 바탕색/법선)
-func _bake_mats(fam: String, mode: float) -> Array:
+func _bake_mats(fam: String, bark_fam: String, mode: float) -> Array:
 	var out := []
 	for part in ["bark", "leaf"]:
-		var src: ShaderMaterial = load(OUT + "%s_%s.tres" % [fam, part])
+		var src: ShaderMaterial = load(OUT + "%s_%s.tres" % [bark_fam if part == "bark" else fam, part])
 		var m := ShaderMaterial.new()
 		m.shader = load("res://shaders/tree_bake.gdshader")
 		for p in ["albedo_tex", "orm_tex", "leaf_tint", "leaf_sat", "leaf_bright", "leaf_var", "leaf_alpha", "bark_low", "bark_high", "bark_red", "bark_bright"]:
@@ -528,7 +582,7 @@ func _stage_bake() -> void:
 		cam.near = 0.1; cam.far = rad * 8.0 + 80.0
 		var albs := []; var nrms := []
 		for mode in [0.0, 1.0]:
-			var mats := _bake_mats(v.family, mode)
+			var mats := _bake_mats(v.family, String(v.get("bark", v.family)), mode)
 			for s in 2: mi.set_surface_override_material(s, mats[s])
 			for i in 8:
 				var a := i * PI / 4.0
@@ -571,6 +625,6 @@ func _stage_pack() -> void:
 	m.set_shader_parameter("imp_nrm", load(OUT + "imp_nrm.res"))
 	var arr := PackedVector4Array()
 	for b in box: arr.append(Vector4(b[0], b[1], b[2], b[3]))
-	while arr.size() < 16: arr.append(Vector4(0, 0, 1, 1))
+	while arr.size() < 24: arr.append(Vector4(0, 0, 1, 1))
 	m.set_shader_parameter("imp_box", arr)
 	print("TREES mat ", mp, " err=", ResourceSaver.save(m, mp))

@@ -34,7 +34,9 @@ void vertex() {
 	float d = distance(O.xz, lod_cam.xz);
 	float si, so;
 	v_sin = 1.0; v_sout = 0.0;
-	if (!tree_band(d, si, so)) {
+	bool vis = tree_band(d, si, so);
+	vis = tree_time(INSTANCE_CUSTOM, si, so) && vis;
+	if (!vis) {
 		VERTEX = vec3(0.0);
 	} else {
 		v_sin = si; v_sout = so;
@@ -87,9 +89,12 @@ void fragment() {
 	AO = ao;
 	AO_LIGHT_AFFECT = 0.35;
 	tree_occ(v_wp, FRAGCOORD.xy);
-	EMISSION = tree_ambient(alb, NORMAL, VIEW, INV_VIEW_MATRIX, rough, ao, spec);
 #ifdef TREE_LEAF
-	EMISSION *= 1.0 + trans * 0.8;   // 잎은 얇아 하늘빛이 겹겹이 비쳐 든다 — 그늘 쪽 수관이 새까매지지 않게
+	// 잎: 하늘빛 난반사만(환경 정반사·GGX는 뺀다 — 숲 한가운데 잎 겹침에서 조각 셰이더 값이 크다). 얇은 잎이라 하늘빛을 조금 더
+	vec3 nwl = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	EMISSION = alb * pbr_irr(nwl, hemi_sky, hemi_ground, fog_color, hemi_i) * ao * amb_k / PI * (1.0 + trans * 0.8);
+#else
+	EMISSION = tree_ambient(alb, NORMAL, VIEW, INV_VIEW_MATRIX, rough, ao, spec);
 #endif
 	vec3 fwp = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	TREE_FADE_DISCARD(-VERTEX.z, FRAGCOORD.xy)
@@ -97,8 +102,17 @@ void fragment() {
 }
 
 void light() {
+#ifdef TREE_LEAF
+	// 잎: 램버트(감싸기) + 비침만
+	float a = ATTENUATION * (LIGHT_IS_DIRECTIONAL ? sun_k : 1.0);
+	float ndl = dot(NORMAL, LIGHT);
+	vec3 Ei = a * LIGHT_COLOR / (PI * PI);
+	float back = pow(max(dot(-VIEW, LIGHT), 0.0), 5.0);
+	DIFFUSE_LIGHT += Ei * (max(ndl, 0.0) + BACKLIGHT.r * 0.6 * max(-ndl, 0.0) * 0.8) + Ei * BACKLIGHT.r * back * 0.9 * vec3(0.9, 1.0, 0.6);
+#else
 	vec3 dl = vec3(0.0), sl = vec3(0.0);
 	tree_light(NORMAL, LIGHT, VIEW, LIGHT_COLOR, ATTENUATION, LIGHT_IS_DIRECTIONAL, ROUGHNESS, BACKLIGHT.r, ALBEDO, dl, sl);
 	DIFFUSE_LIGHT += dl;
 	SPECULAR_LIGHT += sl * 0.35;
+#endif
 }
