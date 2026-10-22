@@ -45,6 +45,7 @@ const LU_DETAIL := [1.0, 0.8, 0.12, 0.45, 0.35, 0.0, 0.35, 1.5, 0.3, 1.0]
 const M32 := 0xffffffff
 
 var data_dir := ""
+var extra_place_dirs := []   # --placedir 폴더(시험 배치) — 그 placement_*.json의 alleys·urban도 칠한다(town-organic)
 var region := {}
 var is_route := false       # 노정(route.json) 공간
 var K := 0.30               # 압축(region.json projection.K) — 권역마다 다르다
@@ -259,9 +260,14 @@ func _paint_roads() -> void:
 	pbytes = img.get_data()
 	var all_roads: Array = region.get("roads", []).duplicate()
 	# 배치가 내보낸 마을 고샅(placement_*.json 최상위 alleys)도 마을길로 칠한다
-	for f in DirAccess.get_files_at(data_dir):
+	var pfiles := []
+	for dd in [data_dir] + extra_place_dirs:
+		if not DirAccess.dir_exists_absolute(dd): continue
+		for f in DirAccess.get_files_at(dd): pfiles.append(String(dd).path_join(f))
+	for fp in pfiles:
+		var f: String = String(fp).get_file()
 		if f.begins_with("placement_") and f.ends_with(".json"):
-			var pj = JSON.parse_string(FileAccess.get_file_as_string(data_dir.path_join(f)))
+			var pj = JSON.parse_string(FileAccess.get_file_as_string(fp))
 			if pj is Dictionary:
 				for al in pj.get("alleys", []):
 					all_roads.append({ "width_m": float(al.get("width_m", 3.0)), "class": "마을길", "points": al.get("points", []) })
@@ -288,6 +294,8 @@ func _paint_roads() -> void:
 						pbytes[k] = dq; pbytes[k + 1] = clampi(roundi(hw * 32.0), 0, 255); pbytes[k + 3] = cls * 60
 	_paint_urban()
 	_p_roads = pbytes.duplicate()
+	# 식생 흩뿌리기도 배치 고샅을 길로 안다(고샅 한가운데 나무가 나서 길을 막지 않게 — town-organic)
+	_roads_arg = all_roads
 
 # 도시 땅(placement_*.json 최상위 urban: [[x0,z0,x1,z1],…] — 도성·평양 내성 골목 구역): 마을 터(6)·길(4) 칸을 모두 마당 흙(B=0)으로,
 # 그 사각형 안 식생(풀·꽃·나무)은 비운다. 궁궐·종묘·정원 자리는 배치가 사각형에서 뺐다. 지형 셰이더 urban_ground=1이면 길섶 풀 띠도 흙 위에선 끈다.
@@ -2354,6 +2362,44 @@ func reset_edits() -> void:
 
 # 회전된 사각형(중심 c, y축 회전 ry, 반폭 half) 안을 높이 y로 고른다. 바깥 edge m에 걸쳐 원래 땅으로 부드럽게.
 # 안쪽 토지이용 칸에는 "고른 땅" 비트를 켜 잡음 디테일을 없앤다. y가 NAN이면 사각형 안 데이터 높이의 평균.
+# 손대기 전 땅 높이(터 고르기 이전)
+func height_orig(x: float, z: float) -> float:
+	var fx := clampf((x - hx0) / hstep, 0.0, hnx - 1.001)
+	var fz := clampf((z - hz0) / hstep, 0.0, hnz - 1.001)
+	var i := int(fx); var j := int(fz)
+	var tx := fx - i; var tz := fz - j
+	var hr := func(ii: int, jj: int) -> float:
+		ii = clampi(ii, 0, hnx - 1); jj = clampi(jj, 0, hnz - 1)
+		var k := jj * hnx + ii
+		if hbpp == 2: return hy0 + float(_h_orig[k * 2] * 256 + _h_orig[k * 2 + 1]) * hscale
+		return hy0 + float(_h_orig[k] * 256) * hscale
+	return lerpf(lerpf(hr.call(i, j), hr.call(i + 1, j), tx), lerpf(hr.call(i, j + 1), hr.call(i + 1, j + 1), tx), tz)
+
+# 길 터 고르기(town-organic): 길 가운데 줄을 따라 원래 땅 높이를 고르게(±6m 이동 평균) 한 길바닥을 깐다 — 길가 필지 터가 각자 고른 높이로
+#   길이 톱니·둔덕이 되지 않게(필지 터 고르기 뒤에 부른다). 가장자리 2.5m는 둘레 땅과 섞는다.
+func terrace_road(pts: Array, w: float) -> int:
+	if pts.size() < 2: return 0
+	var P := []
+	for q in pts: P.append(Vector2(float(q[0]), float(q[1])))
+	var S := []   # [자리, 방향]
+	for i in P.size() - 1:
+		var a: Vector2 = P[i]; var b: Vector2 = P[i + 1]
+		var L := a.distance_to(b)
+		var n := maxi(1, int(ceil(L / 2.0)))
+		for k in n:
+			S.append([a.lerp(b, float(k) / n), (b - a).normalized()])
+	S.append([P[P.size() - 1], ((P[P.size() - 1] as Vector2) - P[P.size() - 2]).normalized()])
+	var hs := []
+	for e in S: hs.append(height_orig((e[0] as Vector2).x, (e[0] as Vector2).y))
+	var cnt := 0
+	for i in S.size():
+		var sum := 0.0; var nn := 0
+		for k in range(maxi(0, i - 3), mini(S.size(), i + 4)): sum += float(hs[k]); nn += 1
+		var dv: Vector2 = S[i][1]
+		flatten_rect(S[i][0], atan2(dv.x, dv.y), Vector2(w / 2.0 + 0.4, 1.3), sum / nn, 2.5)
+		cnt += 1
+	return cnt
+
 func flatten_rect(c: Vector2, ry: float, half: Vector2, y: float, edge := 5.0) -> float:
 	var ca := cos(ry); var sa := sin(ry)
 	var R := half.length() + edge

@@ -1,0 +1,20 @@
+{
+	"items": [
+		{
+			"clear_veg": true,
+			"flatten": true,
+			"id": "integ_yangban",
+			"kit": "bldg/compound",
+			"params": {
+				"interior": true,
+				"region": "south",
+				"seed": 3,
+				"type": "yangban"
+			},
+			"ry": 0.0,
+			"x": -3487.0,
+			"z": 526.0
+		}
+	],
+	"note": "건물 빌더 시험 배치(integ) — tools/bldg/gallery_place.gd가 만든다"
+}

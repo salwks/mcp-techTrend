@@ -11,6 +11,7 @@ static func build(params: Dictionary) -> Dictionary:
 	var m := C.M.new(int(params.get("seed", 1)))
 	var W: float = params.get("w", 7.2); var D: float = params.get("d", 4.4)
 	var o := { w = W, d = D, open = true, hump = (m.r() - 0.5) * 0.2, gourd = m.r() < 0.4 }
+	if params.has("wall_h"): o.wall_h = float(params.wall_h)
 	H.draw(m, o)
 	var zf := D / 2
 	# 평상 + 소반 + 사발·술병

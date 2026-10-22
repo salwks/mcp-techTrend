@@ -1,0 +1,8033 @@
+{
+ "note": "도시·마을 빌더 견본 민촌 견본 — tools/bldg/settlement_place.gd",
+ "tier": "village",
+ "majors": [
+  {
+   "role": "jangseung_l",
+   "kit": "village/jangseung",
+   "at": [
+    -3891.62,
+    697.31
+   ]
+  },
+  {
+   "role": "jangseung_r",
+   "kit": "village/jangseung",
+   "at": [
+    -3885.72,
+    699.8
+   ]
+  },
+  {
+   "role": "sotdae",
+   "kit": "village/sotdae",
+   "at": [
+    -3884.31,
+    703.65
+   ]
+  },
+  {
+   "role": "dangsan",
+   "kit": "village/village_square",
+   "at": [
+    -3896.11,
+    680.21
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3955.19,
+    681.28
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3942.44,
+    689.93
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3929.69,
+    698.58
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3913.44,
+    698.94
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3900.69,
+    707.59
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3887.94,
+    716.23
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3871.68,
+    716.59
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3858.93,
+    725.24
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3846.18,
+    733.89
+   ]
+  },
+  {
+   "role": "forest",
+   "kit": "nature/pine",
+   "at": [
+    -3829.93,
+    734.24
+   ]
+  },
+  {
+   "role": "seonghwangdang",
+   "kit": "village/seonghwangdang",
+   "at": [
+    -3812.96,
+    545.18
+   ]
+  },
+  {
+   "role": "well",
+   "kit": "village/well",
+   "at": [
+    -3850.3,
+    630.91
+   ]
+  }
+ ],
+ "districts": [
+  {
+   "id": "all",
+   "area": [
+    [
+     -3900.46,
+     508.18
+    ],
+    [
+     -3743.88,
+     574.38
+    ],
+    [
+     -3771.42,
+     650.41
+    ],
+    [
+     -3825.3,
+     701.46
+    ],
+    [
+     -3934.9,
+     655.12
+    ],
+    [
+     -3935.82,
+     580.9
+    ]
+   ],
+   "lots": 10,
+   "items": 116,
+   "streets": 2
+  }
+ ],
+ "supersede": [],
+ "alleys": [
+  {
+   "id": "st_minchon_all_street1",
+   "points": [
+    [
+     -3860.34,
+     624.84
+    ],
+    [
+     -3863.25,
+     625.56
+    ],
+    [
+     -3866.07,
+     626.58
+    ],
+    [
+     -3868.72,
+     627.94
+    ],
+    [
+     -3871.17,
+     629.68
+    ],
+    [
+     -3873.09,
+     631.98
+    ],
+    [
+     -3874.77,
+     634.46
+    ],
+    [
+     -3876.14,
+     637.11
+    ],
+    [
+     -3877.13,
+     639.94
+    ],
+    [
+     -3877.56,
+     642.91
+    ],
+    [
+     -3877.61,
+     645.9
+    ],
+    [
+     -3877.4,
+     648.89
+    ],
+    [
+     -3877.05,
+     651.87
+    ],
+    [
+     -3876.56,
+     654.83
+    ],
+    [
+     -3876.4,
+     655.82
+    ]
+   ],
+   "width_m": 3.0,
+   "kind": "street",
+   "terrace": true
+  },
+  {
+   "id": "st_minchon_all_street2",
+   "points": [
+    [
+     -3834.46,
+     570.01
+    ],
+    [
+     -3837.44,
+     570.41
+    ],
+    [
+     -3840.37,
+     571.01
+    ],
+    [
+     -3843.29,
+     571.7
+    ],
+    [
+     -3846.21,
+     572.38
+    ],
+    [
+     -3849.12,
+     573.14
+    ],
+    [
+     -3852.01,
+     573.94
+    ],
+    [
+     -3853.93,
+     574.5
+    ]
+   ],
+   "width_m": 3.87,
+   "kind": "street",
+   "terrace": true
+  },
+  {
+   "id": "st_minchon_main",
+   "points": [
+    [
+     -3895.68,
+     715.13
+    ],
+    [
+     -3861.33,
+     649.31
+    ],
+    [
+     -3857.3,
+     614.1
+    ],
+    [
+     -3835.96,
+     581.6
+    ],
+    [
+     -3828.79,
+     556.94
+    ]
+   ],
+   "width_m": 3.2,
+   "kind": "trunk",
+   "terrace": true
+  }
+ ],
+ "urban": [],
+ "items": [
+  {
+   "id": "st_minchon_jangseung_l01",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 3005
+   },
+   "x": -3891.62,
+   "z": 697.31,
+   "ry": 1.1708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "jangseung_l"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_minchon_jangseung_r02",
+   "kit": "village/jangseung",
+   "params": {
+    "seed": 3006,
+    "female": true
+   },
+   "x": -3885.72,
+   "z": 699.8,
+   "ry": -1.9708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "jangseung_r"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_minchon_sotdae03",
+   "kit": "village/sotdae",
+   "params": {
+    "seed": 3007
+   },
+   "x": -3884.31,
+   "z": 703.65,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "sotdae"
+   },
+   "footprint": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "st_minchon_dangsan04",
+   "kit": "village/village_square",
+   "params": {
+    "seed": 3008,
+    "tree": "nature"
+   },
+   "x": -3896.11,
+   "z": 680.21,
+   "ry": -0.4,
+   "y": null,
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "dangsan"
+   },
+   "footprint": [
+    8.0,
+    7.6
+   ]
+  },
+  {
+   "id": "st_minchon_forest05",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3035,
+    "s": 1.2
+   },
+   "x": -3955.19,
+   "z": 681.28,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest06",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3036,
+    "s": 1.2
+   },
+   "x": -3942.44,
+   "z": 689.93,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest07",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3037,
+    "s": 1.2
+   },
+   "x": -3929.69,
+   "z": 698.58,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest08",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3038,
+    "s": 1.2
+   },
+   "x": -3913.44,
+   "z": 698.94,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest09",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3039,
+    "s": 1.2
+   },
+   "x": -3900.69,
+   "z": 707.59,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest10",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3040,
+    "s": 1.2
+   },
+   "x": -3887.94,
+   "z": 716.23,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest11",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3041,
+    "s": 1.2
+   },
+   "x": -3871.68,
+   "z": 716.59,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest12",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3042,
+    "s": 1.2
+   },
+   "x": -3858.93,
+   "z": 725.24,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest13",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3043,
+    "s": 1.2
+   },
+   "x": -3846.18,
+   "z": 733.89,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_forest14",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 3044,
+    "s": 1.2
+   },
+   "x": -3829.93,
+   "z": 734.24,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "forest"
+   }
+  },
+  {
+   "id": "st_minchon_seonghwangdang15",
+   "kit": "village/seonghwangdang",
+   "params": {
+    "seed": 3009
+   },
+   "x": -3812.96,
+   "z": 545.18,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "seonghwangdang"
+   },
+   "footprint": [
+    4.0,
+    4.0
+   ]
+  },
+  {
+   "id": "st_minchon_well16",
+   "kit": "village/well",
+   "params": {
+    "seed": 3010,
+    "roof": true
+   },
+   "x": -3850.3,
+   "z": 630.91,
+   "ry": -0.4,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "settlement": {
+    "role": "well"
+   },
+   "footprint": [
+    2.4,
+    2.4
+   ]
+  },
+  {
+   "id": "st_minchon_all_lot000",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93156000,
+    "fp": [
+     36.7,
+     26.1
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93156000,
+       "nbays": 3
+      },
+      "x": 7.05,
+      "z": 5.14,
+      "ry": -1.5708
+     },
+     {
+      "tag": "out1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156064
+      },
+      "x": -15.36,
+      "z": 0.38,
+      "ry": -1.5708
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156400,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -15.88,
+      "z": 6.29,
+      "ry": -1.1636
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156401,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -13.65,
+      "z": 6.16,
+      "ry": 3.7269
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156402,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -10.46,
+      "z": 6.5,
+      "ry": 3.2248
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156403,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -8.28,
+      "z": 7.02,
+      "ry": 2.4523
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156404,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -6.3,
+      "z": 7.49,
+      "ry": 1.2231
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156405,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -3.33,
+      "z": 8.2,
+      "ry": 4.5593
+     },
+     {
+      "tag": "weed6",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156406,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -1.18,
+      "z": 8.71,
+      "ry": 4.1667
+     },
+     {
+      "tag": "weed7",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156407,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 1.48,
+      "z": 9.34,
+      "ry": 3.3148
+     },
+     {
+      "tag": "weed8",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156408,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 5.89,
+      "z": 10.39,
+      "ry": -1.1492
+     },
+     {
+      "tag": "weed9",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156409,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 8.79,
+      "z": 11.08,
+      "ry": 3.5667
+     },
+     {
+      "tag": "weed10",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156410,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 10.6,
+      "z": 11.51,
+      "ry": -1.0294
+     },
+     {
+      "tag": "weed11",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156411,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 13.13,
+      "z": 12.11,
+      "ry": 1.0387
+     },
+     {
+      "tag": "weed12",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156412,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 15.92,
+      "z": 12.78,
+      "ry": 0.3591
+     },
+     {
+      "tag": "weed13",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156413,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 17.23,
+      "z": 12.06,
+      "ry": -0.4105
+     },
+     {
+      "tag": "weed14",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156414,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 17.81,
+      "z": 9.61,
+      "ry": 1.2872
+     },
+     {
+      "tag": "weed15",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156415,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 17.36,
+      "z": 7.21,
+      "ry": 4.1402
+     },
+     {
+      "tag": "weed16",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156416,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 15.78,
+      "z": 6.3,
+      "ry": 1.4632
+     },
+     {
+      "tag": "weed17",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156417,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 13.44,
+      "z": 4.73,
+      "ry": 2.0887
+     },
+     {
+      "tag": "weed18",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156418,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 11.3,
+      "z": 3.58,
+      "ry": 2.5531
+     },
+     {
+      "tag": "weed19",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156419,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 10.18,
+      "z": 2.14,
+      "ry": -0.9661
+     },
+     {
+      "tag": "weed20",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156420,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 8.23,
+      "z": -0.36,
+      "ry": -0.7203
+     },
+     {
+      "tag": "weed21",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156421,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 6.77,
+      "z": -2.22,
+      "ry": -0.7371
+     },
+     {
+      "tag": "weed22",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156422,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.45,
+      "z": -3.93,
+      "ry": 0.462
+     },
+     {
+      "tag": "weed23",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156423,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 3.48,
+      "z": -7.06,
+      "ry": -0.3096
+     },
+     {
+      "tag": "weed24",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156424,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 2.9,
+      "z": -9.14,
+      "ry": 0.7249
+     },
+     {
+      "tag": "weed25",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156425,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 1.55,
+      "z": -11.38,
+      "ry": -1.1898
+     },
+     {
+      "tag": "weed26",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156426,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -1.99,
+      "z": -12.32,
+      "ry": 0.1731
+     },
+     {
+      "tag": "weed27",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156427,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -3.73,
+      "z": -10.7,
+      "ry": 4.301
+     },
+     {
+      "tag": "weed28",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156428,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -5.97,
+      "z": -8.63,
+      "ry": 2.8779
+     },
+     {
+      "tag": "weed29",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156429,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -8.48,
+      "z": -6.84,
+      "ry": 4.3106
+     },
+     {
+      "tag": "weed30",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156430,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -11.19,
+      "z": -5.9,
+      "ry": 2.462
+     },
+     {
+      "tag": "weed31",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156431,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -13.53,
+      "z": -5.08,
+      "ry": 4.4751
+     },
+     {
+      "tag": "weed32",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156432,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -15.13,
+      "z": -3.99,
+      "ry": 2.1275
+     },
+     {
+      "tag": "weed33",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156433,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -16.48,
+      "z": -2.4,
+      "ry": 2.3609
+     },
+     {
+      "tag": "weed34",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156434,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -18.2,
+      "z": 0.86,
+      "ry": 2.24
+     },
+     {
+      "tag": "weed35",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156435,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -17.48,
+      "z": 3.89,
+      "ry": -0.479
+     },
+     {
+      "tag": "teotbat",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 93156500,
+       "w": 3.8,
+       "d": 2.6
+      },
+      "x": 14.99,
+      "z": 9.38,
+      "ry": -1.5708
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93156600,
+       "s": 1.0128128077602
+      },
+      "x": 12.22,
+      "z": 5.28,
+      "ry": -1.2233
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "sarip",
+       "seed": 93156003
+      },
+      "x": 3.6,
+      "z": 10.36,
+      "ry": -0.2335
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         9.42,
+         0.35
+        ],
+        [
+         8.41,
+         -1.75
+        ],
+        [
+         7.15,
+         -3.92
+        ],
+        [
+         5.58,
+         -5.62
+        ],
+        [
+         4.76,
+         -6.04
+        ],
+        [
+         4.46,
+         -6.26
+        ],
+        [
+         4.29,
+         -6.56
+        ],
+        [
+         4.25,
+         -6.94
+        ],
+        [
+         4.32,
+         -8.22
+        ],
+        [
+         3.34,
+         -10.19
+        ],
+        [
+         2.96,
+         -10.81
+        ],
+        [
+         2.47,
+         -11.34
+        ],
+        [
+         1.86,
+         -11.77
+        ],
+        [
+         0.38,
+         -12.62
+        ],
+        [
+         -0.64,
+         -13.22
+        ],
+        [
+         -1.1,
+         -13.4
+        ],
+        [
+         -1.56,
+         -13.41
+        ],
+        [
+         -2.03,
+         -13.25
+        ],
+        [
+         -3.63,
+         -12.4
+        ],
+        [
+         -5.35,
+         -10.21
+        ],
+        [
+         -6.21,
+         -10.31
+        ],
+        [
+         -7.36,
+         -8.35
+        ],
+        [
+         -7.69,
+         -7.91
+        ],
+        [
+         -8.09,
+         -7.57
+        ],
+        [
+         -8.6,
+         -7.31
+        ],
+        [
+         -9.8,
+         -6.86
+        ],
+        [
+         -12.58,
+         -6.49
+        ],
+        [
+         -14.77,
+         -5.18
+        ],
+        [
+         -16.85,
+         -4.06
+        ],
+        [
+         -17.99,
+         -1.62
+        ],
+        [
+         -18.58,
+         -0.8
+        ],
+        [
+         -18.78,
+         -0.42
+        ],
+        [
+         -18.85,
+         -0.03
+        ],
+        [
+         -18.79,
+         0.4
+        ],
+        [
+         -18.23,
+         2.37
+        ],
+        [
+         -18.14,
+         5.45
+        ],
+        [
+         -17.61,
+         6.38
+        ],
+        [
+         -17.33,
+         6.71
+        ],
+        [
+         -16.98,
+         6.88
+        ],
+        [
+         -16.54,
+         6.9
+        ],
+        [
+         -14.63,
+         6.62
+        ],
+        [
+         -12.32,
+         6.73
+        ],
+        [
+         -11.79,
+         6.79
+        ],
+        [
+         -11.3,
+         6.95
+        ],
+        [
+         -10.81,
+         7.19
+        ],
+        [
+         -9.77,
+         7.82
+        ],
+        [
+         -7.54,
+         8.65
+        ],
+        [
+         -5.02,
+         8.43
+        ],
+        [
+         -2.97,
+         9.86
+        ],
+        [
+         -1.56,
+         10.37
+        ],
+        [
+         -0.05,
+         10.08
+        ],
+        [
+         2.79,
+         10.17
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156300,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×9",
+        "마당 나무 둘레를 비켜 감 ×31",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×7"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         4.41,
+         10.55
+        ],
+        [
+         7.11,
+         11.35
+        ],
+        [
+         8.59,
+         12.77
+        ],
+        [
+         11.39,
+         13.02
+        ],
+        [
+         12.96,
+         13.8
+        ],
+        [
+         14.25,
+         13.1
+        ],
+        [
+         16.27,
+         13.44
+        ],
+        [
+         16.93,
+         13.44
+        ],
+        [
+         17.46,
+         13.18
+        ],
+        [
+         17.86,
+         12.63
+        ],
+        [
+         18.6,
+         11.12
+        ],
+        [
+         19.06,
+         8.46
+        ],
+        [
+         18.98,
+         7.62
+        ],
+        [
+         18.9,
+         7.3
+        ],
+        [
+         18.7,
+         7.08
+        ],
+        [
+         18.39,
+         6.94
+        ],
+        [
+         17.4,
+         6.7
+        ],
+        [
+         16.99,
+         6.57
+        ],
+        [
+         16.61,
+         6.36
+        ],
+        [
+         16.26,
+         6.08
+        ],
+        [
+         15.3,
+         5.14
+        ],
+        [
+         14.85,
+         4.77
+        ],
+        [
+         14.36,
+         4.49
+        ],
+        [
+         13.79,
+         4.3
+        ],
+        [
+         12.84,
+         4.08
+        ],
+        [
+         12.48,
+         3.92
+        ],
+        [
+         12.23,
+         3.66
+        ],
+        [
+         12.1,
+         3.28
+        ],
+        [
+         11.83,
+         1.72
+        ],
+        [
+         9.54,
+         0.51
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156301,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "마당 나무 둘레를 비켜 감 ×11",
+        "곧은 필지 경계 ×3",
+        "흙·돌담 모서리를 둥글게 ×5"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -17.52,
+      7.39
+     ],
+     [
+      -14.61,
+      6.97
+     ],
+     [
+      -11.55,
+      7.11
+     ],
+     [
+      17.63,
+      14.06
+     ],
+     [
+      19.35,
+      6.81
+     ],
+     [
+      16.92,
+      6.23
+     ],
+     [
+      14.84,
+      4.19
+     ],
+     [
+      12.41,
+      3.61
+     ],
+     [
+      4.53,
+      -6.48
+     ],
+     [
+      3.14,
+      -11.44
+     ],
+     [
+      -1.38,
+      -14.06
+     ],
+     [
+      -7.98,
+      -7.92
+     ],
+     [
+      -14.97,
+      -5.48
+     ],
+     [
+      -19.35,
+      -0.34
+     ]
+    ]
+   },
+   "x": -3860.83,
+   "z": 597.99,
+   "ry": 1.2233,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    36.7,
+    26.1
+   ],
+   "organic": {
+    "lot": 0,
+    "zone": 0.6,
+    "street": "main",
+    "walls": 2,
+    "zone_name": "minchon",
+    "kind": "front",
+    "cls": "poor",
+    "flen": 35.0,
+    "depth": 14.1
+   }
+  },
+  {
+   "id": "st_minchon_all_lot001",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156001,
+    "fp": [
+     32.4,
+     26.9
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156007,
+       "nbays": 4
+      },
+      "x": -11.33,
+      "z": 1.53,
+      "ry": 1.5708
+     },
+     {
+      "tag": "out1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156072
+      },
+      "x": 13.06,
+      "z": 8.55,
+      "ry": 1.5708
+     },
+     {
+      "tag": "out2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156085
+      },
+      "x": 8.43,
+      "z": 10.59,
+      "ry": 3.1416
+     },
+     {
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93156310,
+       "s": 1.17781751181465
+      },
+      "tag": "ytree0",
+      "x": -11.43,
+      "z": -8.94,
+      "ry": 1.9183
+     },
+     {
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93156311,
+       "s": 0.998740000720136
+      },
+      "tag": "ytree1",
+      "x": -7.64,
+      "z": -9.03,
+      "ry": 1.9183
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156407,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 15.17,
+      "z": 13.3,
+      "ry": 5.693
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156408,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 11.95,
+      "z": 13.37,
+      "ry": 4.4756
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156409,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.61,
+      "z": 11.88,
+      "ry": 5.0871
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156410,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 3.09,
+      "z": 11.29,
+      "ry": 5.2133
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156411,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 0.75,
+      "z": 10.73,
+      "ry": 6.215
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156412,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -1.45,
+      "z": 10.22,
+      "ry": 5.9038
+     },
+     {
+      "tag": "weed6",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156413,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -3.6,
+      "z": 9.71,
+      "ry": 7.5985
+     },
+     {
+      "tag": "weed7",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156414,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -8.19,
+      "z": 8.63,
+      "ry": 6.8256
+     },
+     {
+      "tag": "weed8",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156415,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -10.39,
+      "z": 8.11,
+      "ry": 5.0162
+     },
+     {
+      "tag": "weed9",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156416,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -14.71,
+      "z": 7.09,
+      "ry": 6.001
+     },
+     {
+      "tag": "weed10",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156417,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -15.95,
+      "z": 5.77,
+      "ry": 7.2604
+     },
+     {
+      "tag": "weed11",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156418,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -15.37,
+      "z": 3.31,
+      "ry": 1.9869
+     },
+     {
+      "tag": "weed12",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156419,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -14.87,
+      "z": 1.19,
+      "ry": 3.3105
+     },
+     {
+      "tag": "weed13",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156420,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -14.43,
+      "z": -0.65,
+      "ry": 4.3503
+     },
+     {
+      "tag": "weed14",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156421,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -13.33,
+      "z": -5.26,
+      "ry": 5.4337
+     },
+     {
+      "tag": "weed15",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156422,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -12.8,
+      "z": -7.51,
+      "ry": 3.0484
+     },
+     {
+      "tag": "weed16",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156423,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -12.27,
+      "z": -9.73,
+      "ry": 7.8808
+     },
+     {
+      "tag": "weed17",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156424,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -11.84,
+      "z": -11.51,
+      "ry": 7.25
+     },
+     {
+      "tag": "weed18",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156425,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -10.75,
+      "z": -12.26,
+      "ry": 7.3771
+     },
+     {
+      "tag": "weed19",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156426,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -9.14,
+      "z": -10.88,
+      "ry": 4.0511
+     },
+     {
+      "tag": "weed20",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156427,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -7.4,
+      "z": -9.8,
+      "ry": 6.7132
+     },
+     {
+      "tag": "weed21",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156428,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -5.25,
+      "z": -8.92,
+      "ry": 4.1668
+     },
+     {
+      "tag": "weed22",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156429,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -2.44,
+      "z": -7.78,
+      "ry": 5.5686
+     },
+     {
+      "tag": "weed23",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156430,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 1.5,
+      "z": -5.81,
+      "ry": 2.8307
+     },
+     {
+      "tag": "weed24",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156431,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 3.47,
+      "z": -4.07,
+      "ry": 2.4984
+     },
+     {
+      "tag": "weed25",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156432,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.04,
+      "z": -2.67,
+      "ry": 6.319
+     },
+     {
+      "tag": "weed26",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156433,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 6.73,
+      "z": -1.17,
+      "ry": 5.8257
+     },
+     {
+      "tag": "weed27",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156434,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 8.21,
+      "z": 0.15,
+      "ry": 2.1088
+     },
+     {
+      "tag": "weed28",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156435,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 10.36,
+      "z": 1.54,
+      "ry": 4.3536
+     },
+     {
+      "tag": "weed29",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156436,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 9.13,
+      "z": -1.05,
+      "ry": 5.9162
+     },
+     {
+      "tag": "weed30",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156437,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 8.32,
+      "z": -2.74,
+      "ry": 2.3953
+     },
+     {
+      "tag": "weed31",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156438,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 7.52,
+      "z": -4.41,
+      "ry": 4.6497
+     },
+     {
+      "tag": "weed32",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156439,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 6.3,
+      "z": -6.97,
+      "ry": 2.5264
+     },
+     {
+      "tag": "weed33",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156440,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.13,
+      "z": -9.41,
+      "ry": 2.664
+     },
+     {
+      "tag": "weed34",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156441,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 4.27,
+      "z": -11.22,
+      "ry": 2.6556
+     },
+     {
+      "tag": "weed35",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156442,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 3.43,
+      "z": -12.96,
+      "ry": 2.9722
+     },
+     {
+      "tag": "weed36",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156443,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 2.53,
+      "z": -14.86,
+      "ry": 5.0044
+     },
+     {
+      "tag": "weed37",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156444,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 1.72,
+      "z": -16.56,
+      "ry": 2.8526
+     },
+     {
+      "tag": "weed38",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156445,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 0.86,
+      "z": -18.36,
+      "ry": 7.2762
+     },
+     {
+      "tag": "weed39",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156446,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -0.31,
+      "z": -20.79,
+      "ry": 4.34
+     },
+     {
+      "tag": "weed40",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156447,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -1.62,
+      "z": -23.53,
+      "ry": 5.8107
+     },
+     {
+      "tag": "weed41",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156448,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -2.65,
+      "z": -25.69,
+      "ry": 3.6719
+     },
+     {
+      "tag": "weed42",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156449,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -3.77,
+      "z": -28.04,
+      "ry": 5.7101
+     },
+     {
+      "tag": "weed43",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156450,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -4.58,
+      "z": -29.73,
+      "ry": 4.6182
+     },
+     {
+      "tag": "weed44",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156451,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -5.87,
+      "z": -32.44,
+      "ry": 2.9473
+     },
+     {
+      "tag": "weed45",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156452,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -6.79,
+      "z": -34.35,
+      "ry": 7.1898
+     },
+     {
+      "tag": "weed46",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156453,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -7.83,
+      "z": -36.55,
+      "ry": 3.9904
+     },
+     {
+      "tag": "weed47",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156454,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -8.73,
+      "z": -38.42,
+      "ry": 6.5791
+     },
+     {
+      "tag": "weed48",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156455,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -9.52,
+      "z": -40.09,
+      "ry": 6.2596
+     },
+     {
+      "tag": "weed49",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156456,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -10.25,
+      "z": -41.67,
+      "ry": 3.1606
+     },
+     {
+      "tag": "weed50",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156457,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -9.06,
+      "z": -39.39,
+      "ry": 3.3667
+     },
+     {
+      "tag": "weed51",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156458,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -7.71,
+      "z": -36.77,
+      "ry": 3.4585
+     },
+     {
+      "tag": "weed52",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156459,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -6.47,
+      "z": -34.38,
+      "ry": 7.3386
+     },
+     {
+      "tag": "weed53",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156460,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -5.61,
+      "z": -32.71,
+      "ry": 3.3136
+     },
+     {
+      "tag": "weed54",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156461,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -4.2,
+      "z": -29.98,
+      "ry": 4.5904
+     },
+     {
+      "tag": "weed55",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156462,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -3.26,
+      "z": -28.17,
+      "ry": 1.9253
+     },
+     {
+      "tag": "weed56",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156463,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -1.92,
+      "z": -25.58,
+      "ry": 2.4205
+     },
+     {
+      "tag": "weed57",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156464,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -0.9,
+      "z": -23.6,
+      "ry": 6.3986
+     },
+     {
+      "tag": "weed58",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156465,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -0.03,
+      "z": -21.93,
+      "ry": 4.0518
+     },
+     {
+      "tag": "weed59",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156466,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 0.99,
+      "z": -19.95,
+      "ry": 7.6336
+     },
+     {
+      "tag": "weed60",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156467,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 1.96,
+      "z": -18.08,
+      "ry": 6.1349
+     },
+     {
+      "tag": "weed61",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156468,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 3.23,
+      "z": -15.63,
+      "ry": 6.0585
+     },
+     {
+      "tag": "weed62",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156469,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 4.12,
+      "z": -13.9,
+      "ry": 7.4097
+     },
+     {
+      "tag": "weed63",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156470,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 5.55,
+      "z": -11.15,
+      "ry": 8.0561
+     },
+     {
+      "tag": "weed64",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156471,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 6.82,
+      "z": -8.69,
+      "ry": 7.9849
+     },
+     {
+      "tag": "weed65",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156472,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 7.77,
+      "z": -6.84,
+      "ry": 6.625
+     },
+     {
+      "tag": "weed66",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156473,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 8.72,
+      "z": -5.01,
+      "ry": 3.8936
+     },
+     {
+      "tag": "weed67",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156474,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 10.04,
+      "z": -2.45,
+      "ry": 4.5006
+     },
+     {
+      "tag": "weed68",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156475,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 11.08,
+      "z": -0.44,
+      "ry": 4.8136
+     },
+     {
+      "tag": "weed69",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156476,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 12.39,
+      "z": 2.07,
+      "ry": 3.8749
+     },
+     {
+      "tag": "weed70",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156477,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 13.48,
+      "z": 4.19,
+      "ry": 7.2354
+     },
+     {
+      "tag": "weed71",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156478,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 14.41,
+      "z": 5.99,
+      "ry": 2.6374
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "chomun",
+       "seed": 93156010,
+       "wall_h": 1.7,
+       "w": 1.9
+      },
+      "x": -6.46,
+      "z": 9.55,
+      "ry": 6.0517
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         15.13,
+         6.65
+        ],
+        [
+         15.49,
+         9.01
+        ],
+        [
+         16.23,
+         11.27
+        ],
+        [
+         16.56,
+         12.66
+        ],
+        [
+         16.58,
+         13.19
+        ],
+        [
+         16.34,
+         13.54
+        ],
+        [
+         15.84,
+         13.72
+        ],
+        [
+         12.89,
+         14.11
+        ],
+        [
+         10.25,
+         13.55
+        ],
+        [
+         8.9,
+         12.9
+        ],
+        [
+         7.1,
+         12.7
+        ],
+        [
+         4.12,
+         12.63
+        ],
+        [
+         1.94,
+         12.54
+        ],
+        [
+         0.95,
+         12.42
+        ],
+        [
+         -0.7,
+         11.75
+        ],
+        [
+         -2.89,
+         11.26
+        ],
+        [
+         -5.37,
+         9.81
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93156301,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "마당 나무 둘레를 비켜 감 ×8",
+        "흙·돌담 모서리를 둥글게 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -7.55,
+         9.29
+        ],
+        [
+         -9.35,
+         9.45
+        ],
+        [
+         -12.13,
+         8.03
+        ],
+        [
+         -13.6,
+         8.39
+        ],
+        [
+         -16.79,
+         7.11
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93156302,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1",
+        "마당 나무 둘레를 비켜 감 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_2",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "stone",
+       "pts": [
+        [
+         -11.81,
+         -13.83
+        ],
+        [
+         -9.03,
+         -12.57
+        ],
+        [
+         -8.41,
+         -11.31
+        ],
+        [
+         -8.13,
+         -10.92
+        ],
+        [
+         -7.76,
+         -10.65
+        ],
+        [
+         -7.29,
+         -10.52
+        ],
+        [
+         -6.12,
+         -10.39
+        ],
+        [
+         -3.83,
+         -8.76
+        ],
+        [
+         -0.76,
+         -7.53
+        ],
+        [
+         1.02,
+         -6.91
+        ],
+        [
+         2.72,
+         -5.59
+        ],
+        [
+         5.19,
+         -4.36
+        ],
+        [
+         6.62,
+         -2.87
+        ],
+        [
+         7.26,
+         -1.41
+        ],
+        [
+         9.07,
+         0.65
+        ],
+        [
+         10.52,
+         1.66
+        ],
+        [
+         10.83,
+         1.85
+        ],
+        [
+         10.62,
+         1.53
+        ],
+        [
+         9.76,
+         0.62
+        ],
+        [
+         9.71,
+         -4.12
+        ],
+        [
+         9.55,
+         -4.08
+        ],
+        [
+         7.05,
+         -5.34
+        ],
+        [
+         9.46,
+         -6.62
+        ],
+        [
+         5.62,
+         -7.48
+        ],
+        [
+         7.03,
+         -10.38
+        ],
+        [
+         5.29,
+         -12.83
+        ],
+        [
+         4.11,
+         -13.74
+        ],
+        [
+         3.76,
+         -14.01
+        ],
+        [
+         4.11,
+         -13.74
+        ],
+        [
+         5.3,
+         -12.83
+        ],
+        [
+         7.17,
+         -10.64
+        ],
+        [
+         5.6,
+         -7.51
+        ],
+        [
+         7.04,
+         -5.26
+        ],
+        [
+         10.36,
+         -4.57
+        ],
+        [
+         9.88,
+         -4.15
+        ],
+        [
+         9.39,
+         -0.55
+        ],
+        [
+         11.79,
+         0.48
+        ],
+        [
+         11.88,
+         3.62
+        ],
+        [
+         13.36,
+         5.04
+        ],
+        [
+         15.06,
+         6.35
+        ]
+       ],
+       "closed": false,
+       "h": 1.4,
+       "seed": 93156303,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×5",
+        "마당 나무 둘레를 비켜 감 ×71",
+        "곧은 필지 경계 ×1",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      17.21,
+      13.89
+     ],
+     [
+      12.88,
+      14.47
+     ],
+     [
+      -17.21,
+      7.38
+     ],
+     [
+      -12.02,
+      -14.47
+     ],
+     [
+      -7.88,
+      -10.91
+     ],
+     [
+      1.2,
+      -7.21
+     ],
+     [
+      11.49,
+      1.92
+     ],
+     [
+      13.15,
+      5.4
+     ],
+     [
+      12.32,
+      3.79
+     ],
+     [
+      15.37,
+      6.15
+     ]
+    ]
+   },
+   "x": -3836.67,
+   "z": 607.02,
+   "ry": -1.9183,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    32.4,
+    26.9
+   ],
+   "organic": {
+    "lot": 1,
+    "zone": 0.6,
+    "street": "main",
+    "walls": 3,
+    "zone_name": "minchon",
+    "kind": "front",
+    "cls": "commoner",
+    "flen": 36.3,
+    "depth": 15.7
+   }
+  },
+  {
+   "id": "st_minchon_all_lot002",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_g",
+    "seed": 93156002,
+    "fp": [
+     37.6,
+     30.3
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "giwajip",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156014,
+       "nbays": 3
+      },
+      "x": -12.26,
+      "z": 8.66,
+      "ry": 1.5708
+     },
+     {
+      "tag": "out1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156078
+      },
+      "x": -16.56,
+      "z": -9.64,
+      "ry": -1.5708
+     },
+     {
+      "tag": "out2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156080
+      },
+      "x": 2.25,
+      "z": -11.38,
+      "ry": 0.0
+     },
+     {
+      "tag": "out3",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156087
+      },
+      "x": -15.77,
+      "z": -5.02,
+      "ry": -1.5708
+     },
+     {
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93156325,
+       "variant": "chestnut",
+       "h": 5.88751178281382
+      },
+      "tag": "ytree0",
+      "x": -12.57,
+      "z": -12.0,
+      "ry": 2.0028
+     },
+     {
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93156322,
+       "variant": "broadleaf",
+       "h": 5.39003684436902
+      },
+      "tag": "ytree1",
+      "x": -16.18,
+      "z": 0.24,
+      "ry": 2.0028
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156414,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 13.79,
+      "z": 12.51,
+      "ry": 4.9781
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156415,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 11.17,
+      "z": 12.23,
+      "ry": 2.2179
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156416,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 7.16,
+      "z": 12.04,
+      "ry": 3.3659
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156417,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 4.4,
+      "z": 12.44,
+      "ry": 7.804
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156418,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 2.31,
+      "z": 12.74,
+      "ry": 7.4331
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156419,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 0.16,
+      "z": 13.05,
+      "ry": 7.7576
+     },
+     {
+      "tag": "weed6",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156420,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -2.55,
+      "z": 13.43,
+      "ry": 6.4142
+     },
+     {
+      "tag": "weed7",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156421,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -4.79,
+      "z": 13.75,
+      "ry": 3.4508
+     },
+     {
+      "tag": "weed8",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156422,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -16.2,
+      "z": 5.76,
+      "ry": 6.23
+     },
+     {
+      "tag": "weed9",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156423,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -16.49,
+      "z": 3.8,
+      "ry": 6.1088
+     },
+     {
+      "tag": "weed10",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156424,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -16.89,
+      "z": 1.17,
+      "ry": 4.2807
+     },
+     {
+      "tag": "weed11",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156425,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -17.32,
+      "z": -1.74,
+      "ry": 3.9997
+     },
+     {
+      "tag": "weed12",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156426,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -13.43,
+      "z": -12.42,
+      "ry": 5.3583
+     },
+     {
+      "tag": "weed13",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156427,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -10.85,
+      "z": -12.76,
+      "ry": 7.1485
+     },
+     {
+      "tag": "weed14",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156428,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -9.05,
+      "z": -13.0,
+      "ry": 6.8779
+     },
+     {
+      "tag": "weed15",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156429,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -6.33,
+      "z": -13.35,
+      "ry": 8.2496
+     },
+     {
+      "tag": "weed16",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156430,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 4.04,
+      "z": -14.72,
+      "ry": 2.0223
+     },
+     {
+      "tag": "weed17",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156431,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 6.8,
+      "z": -15.08,
+      "ry": 8.1389
+     },
+     {
+      "tag": "weed18",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156432,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 9.36,
+      "z": -15.19,
+      "ry": 7.445
+     },
+     {
+      "tag": "weed19",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156433,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 11.35,
+      "z": -15.0,
+      "ry": 6.9373
+     },
+     {
+      "tag": "weed20",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156434,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 13.25,
+      "z": -14.81,
+      "ry": 4.6172
+     },
+     {
+      "tag": "weed21",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156435,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 15.23,
+      "z": -14.62,
+      "ry": 5.5201
+     },
+     {
+      "tag": "weed22",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156436,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 18.67,
+      "z": -13.29,
+      "ry": 5.2521
+     },
+     {
+      "tag": "weed23",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156437,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 18.37,
+      "z": -11.27,
+      "ry": 2.9096
+     },
+     {
+      "tag": "weed24",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156438,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 17.91,
+      "z": -8.25,
+      "ry": 5.2338
+     },
+     {
+      "tag": "weed25",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156439,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 17.5,
+      "z": -5.51,
+      "ry": 6.7049
+     },
+     {
+      "tag": "weed26",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156440,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 17.23,
+      "z": -3.7,
+      "ry": 7.4873
+     },
+     {
+      "tag": "weed27",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156441,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 16.86,
+      "z": -1.23,
+      "ry": 4.6825
+     },
+     {
+      "tag": "weed28",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156442,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 16.39,
+      "z": 1.86,
+      "ry": 7.8668
+     },
+     {
+      "tag": "weed29",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156443,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 15.98,
+      "z": 4.63,
+      "ry": 7.8049
+     },
+     {
+      "tag": "weed30",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156444,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 15.62,
+      "z": 7.03,
+      "ry": 3.8027
+     },
+     {
+      "tag": "weed31",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156445,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 15.26,
+      "z": 9.4,
+      "ry": 3.2467
+     },
+     {
+      "tag": "weed32",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156446,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 14.91,
+      "z": 11.77,
+      "ry": 7.5746
+     },
+     {
+      "tag": "teotbat",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 93156514,
+       "w": 3.8,
+       "d": 2.6
+      },
+      "x": -12.41,
+      "z": -0.18,
+      "ry": 1.5708
+     },
+     {
+      "tag": "terrace_4",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156096,
+       "ax": 19.79,
+       "az": -15.04,
+       "bx": 8.35,
+       "bz": -16.14,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 93156017,
+       "wall_h": 1.95
+      },
+      "x": -6.9,
+      "z": 14.56,
+      "ry": 6.4251
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         -15.41,
+         14.36
+        ],
+        [
+         -19.39,
+         -12.14
+        ],
+        [
+         8.36,
+         -15.79
+        ],
+        [
+         19.39,
+         -14.72
+        ],
+        [
+         15.2,
+         13.16
+        ],
+        [
+         8.16,
+         12.41
+        ],
+        [
+         -5.74,
+         14.39
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93156302,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "계획된 기와 갓 담·평지 — 곧은 줄 ×5",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         -8.06,
+         14.72
+        ],
+        [
+         -15.21,
+         15.75
+        ],
+        [
+         -15.38,
+         14.55
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93156303,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "계획된 기와 갓 담·평지 — 곧은 줄 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      15.5,
+      13.54
+     ],
+     [
+      8.17,
+      12.76
+     ],
+     [
+      -15.5,
+      16.14
+     ],
+     [
+      -19.79,
+      -12.44
+     ],
+     [
+      8.35,
+      -16.14
+     ],
+     [
+      19.79,
+      -15.04
+     ]
+    ]
+   },
+   "x": -3818.95,
+   "z": 579.92,
+   "ry": -2.0028,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    37.6,
+    30.3
+   ],
+   "organic": {
+    "lot": 2,
+    "zone": 0.6,
+    "street": "main",
+    "walls": 2,
+    "zone_name": "minchon",
+    "kind": "front",
+    "cls": "middle",
+    "flen": 30.7,
+    "depth": 28.9
+   }
+  },
+  {
+   "id": "st_minchon_all_lot003",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "house_g",
+    "seed": 93156003,
+    "fp": [
+     60.7,
+     41.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "giwajip",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156021,
+       "nbays": 4
+      },
+      "x": 21.12,
+      "z": 4.88,
+      "ry": -1.5708
+     },
+     {
+      "tag": "out1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "araechae",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156084
+      },
+      "x": -7.16,
+      "z": -16.79,
+      "ry": 0.0
+     },
+     {
+      "tag": "out2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "middle",
+       "seed": 93156092
+      },
+      "x": 27.28,
+      "z": 7.44,
+      "ry": 1.5708
+     },
+     {
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93156328,
+       "variant": "broadleaf",
+       "h": 4.98510601762682
+      },
+      "tag": "ytree0",
+      "x": 27.58,
+      "z": 12.99,
+      "ry": -1.0406
+     },
+     {
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93156329,
+       "variant": "broadleaf",
+       "h": 4.62616212759167
+      },
+      "tag": "ytree1",
+      "x": 26.26,
+      "z": 1.25,
+      "ry": -1.0406
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156421,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 25.24,
+      "z": 15.26,
+      "ry": -0.821
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156422,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 23.09,
+      "z": 13.96,
+      "ry": 1.3885
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156423,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 21.2,
+      "z": 13.14,
+      "ry": 4.0187
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156424,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 19.42,
+      "z": 12.66,
+      "ry": 2.7375
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156425,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 13.39,
+      "z": 12.06,
+      "ry": 1.9691
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156426,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 11.13,
+      "z": 12.11,
+      "ry": 0.7167
+     },
+     {
+      "tag": "weed6",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156427,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 8.03,
+      "z": 12.46,
+      "ry": 0.6438
+     },
+     {
+      "tag": "weed7",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156428,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.35,
+      "z": 13.31,
+      "ry": 1.9684
+     },
+     {
+      "tag": "weed8",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156429,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 3.09,
+      "z": 14.33,
+      "ry": 3.4217
+     },
+     {
+      "tag": "weed9",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156430,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 1.09,
+      "z": 15.7,
+      "ry": 4.7613
+     },
+     {
+      "tag": "weed10",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156431,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -1.07,
+      "z": 17.2,
+      "ry": -0.4498
+     },
+     {
+      "tag": "weed11",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156432,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -3.05,
+      "z": 18.55,
+      "ry": 1.9665
+     },
+     {
+      "tag": "weed12",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156433,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -4.88,
+      "z": 19.82,
+      "ry": 4.3658
+     },
+     {
+      "tag": "weed13",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156434,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -6.34,
+      "z": 19.61,
+      "ry": 2.7963
+     },
+     {
+      "tag": "weed14",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156435,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -7.86,
+      "z": 17.77,
+      "ry": 3.7918
+     },
+     {
+      "tag": "weed15",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156436,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -9.83,
+      "z": 15.4,
+      "ry": 0.1667
+     },
+     {
+      "tag": "weed16",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156437,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -11.81,
+      "z": 13.01,
+      "ry": 5.0854
+     },
+     {
+      "tag": "weed17",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156438,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -13.15,
+      "z": 11.4,
+      "ry": -1.0396
+     },
+     {
+      "tag": "weed18",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156439,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -14.45,
+      "z": 9.82,
+      "ry": 1.9482
+     },
+     {
+      "tag": "weed19",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156440,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -15.85,
+      "z": 8.14,
+      "ry": -0.501
+     },
+     {
+      "tag": "weed20",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156441,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -17.21,
+      "z": 6.5,
+      "ry": -0.0926
+     },
+     {
+      "tag": "weed21",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156442,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -18.76,
+      "z": 4.63,
+      "ry": 4.365
+     },
+     {
+      "tag": "weed22",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156443,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -20.02,
+      "z": 3.11,
+      "ry": 0.0046
+     },
+     {
+      "tag": "weed23",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156444,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -21.57,
+      "z": 1.24,
+      "ry": 4.1636
+     },
+     {
+      "tag": "weed24",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156445,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -23.18,
+      "z": -0.7,
+      "ry": 2.2997
+     },
+     {
+      "tag": "weed25",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156446,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -24.45,
+      "z": -2.24,
+      "ry": -1.0359
+     },
+     {
+      "tag": "weed26",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156447,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -26.24,
+      "z": -4.39,
+      "ry": 4.9848
+     },
+     {
+      "tag": "weed27",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156448,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -27.87,
+      "z": -6.36,
+      "ry": 3.4431
+     },
+     {
+      "tag": "weed28",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156449,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -29.31,
+      "z": -8.1,
+      "ry": -0.116
+     },
+     {
+      "tag": "weed29",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156450,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -29.2,
+      "z": -9.52,
+      "ry": 0.695
+     },
+     {
+      "tag": "weed30",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156451,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -27.23,
+      "z": -10.68,
+      "ry": 2.7971
+     },
+     {
+      "tag": "weed31",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156452,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -25.3,
+      "z": -11.81,
+      "ry": -0.2949
+     },
+     {
+      "tag": "weed32",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156453,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -23.55,
+      "z": -12.83,
+      "ry": 4.9894
+     },
+     {
+      "tag": "weed33",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156454,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -20.92,
+      "z": -14.38,
+      "ry": 2.6712
+     },
+     {
+      "tag": "weed34",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156455,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -18.8,
+      "z": -15.63,
+      "ry": 2.3274
+     },
+     {
+      "tag": "weed35",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156456,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -16.59,
+      "z": -16.92,
+      "ry": 4.6015
+     },
+     {
+      "tag": "weed36",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156457,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -13.99,
+      "z": -18.45,
+      "ry": 1.751
+     },
+     {
+      "tag": "weed37",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156458,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -9.48,
+      "z": -20.15,
+      "ry": 3.307
+     },
+     {
+      "tag": "weed38",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156459,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 0.95,
+      "z": -19.03,
+      "ry": 5.1962
+     },
+     {
+      "tag": "weed39",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156460,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 3.43,
+      "z": -18.54,
+      "ry": 5.1248
+     },
+     {
+      "tag": "weed40",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156461,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 6.19,
+      "z": -17.16,
+      "ry": -0.7377
+     },
+     {
+      "tag": "weed41",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156462,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 7.82,
+      "z": -16.35,
+      "ry": 3.6209
+     },
+     {
+      "tag": "weed42",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156463,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 10.11,
+      "z": -15.2,
+      "ry": 0.1691
+     },
+     {
+      "tag": "weed43",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156464,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 11.75,
+      "z": -14.39,
+      "ry": 3.3382
+     },
+     {
+      "tag": "weed44",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156465,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 13.85,
+      "z": -13.34,
+      "ry": 4.8852
+     },
+     {
+      "tag": "weed45",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156466,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 16.01,
+      "z": -11.77,
+      "ry": 0.668
+     },
+     {
+      "tag": "weed46",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156467,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 17.16,
+      "z": -10.25,
+      "ry": -0.1834
+     },
+     {
+      "tag": "weed47",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156468,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 18.86,
+      "z": -7.99,
+      "ry": 1.8548
+     },
+     {
+      "tag": "weed48",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156469,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 20.17,
+      "z": -6.26,
+      "ry": 5.1141
+     },
+     {
+      "tag": "weed49",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156470,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 22.35,
+      "z": -3.74,
+      "ry": 2.1981
+     },
+     {
+      "tag": "weed50",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156471,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 25.85,
+      "z": -0.76,
+      "ry": 0.9429
+     },
+     {
+      "tag": "weed51",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156472,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 27.73,
+      "z": 1.56,
+      "ry": 2.0312
+     },
+     {
+      "tag": "weed52",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156473,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 28.41,
+      "z": 3.84,
+      "ry": 3.1087
+     },
+     {
+      "tag": "weed53",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156474,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 29.98,
+      "z": 9.1,
+      "ry": 0.9808
+     },
+     {
+      "tag": "weed54",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156475,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 29.77,
+      "z": 11.34,
+      "ry": -0.4219
+     },
+     {
+      "tag": "weed55",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156476,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 27.97,
+      "z": 13.52,
+      "ry": -0.825
+     },
+     {
+      "tag": "terrace_5",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156098,
+       "ax": -31.36,
+       "az": -9.24,
+       "bx": -5.86,
+       "bz": 21.52,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_6",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156099,
+       "ax": -10.44,
+       "az": -21.52,
+       "bx": -31.36,
+       "bz": -9.24,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_7",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156100,
+       "ax": -7.31,
+       "az": -20.1,
+       "bx": -10.44,
+       "bz": -21.52,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_8",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156101,
+       "ax": 2.75,
+       "az": -19.83,
+       "bx": -7.31,
+       "bz": -20.1,
+       "drop": 1.5,
+       "tiers": 2,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "pyeong",
+       "seed": 93156024,
+       "wall_h": 1.95
+      },
+      "x": 15.31,
+      "z": 12.52,
+      "ry": 0.0222
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_tile",
+       "pts": [
+        [
+         14.14,
+         12.55
+        ],
+        [
+         9.07,
+         12.66
+        ],
+        [
+         4.14,
+         14.21
+        ],
+        [
+         -5.8,
+         21.05
+        ],
+        [
+         -30.82,
+         -9.14
+        ],
+        [
+         -10.42,
+         -21.13
+        ],
+        [
+         -7.39,
+         -19.75
+        ],
+        [
+         2.66,
+         -19.48
+        ],
+        [
+         15.73,
+         -12.96
+        ],
+        [
+         21.95,
+         -4.73
+        ],
+        [
+         27.89,
+         0.31
+        ],
+        [
+         30.97,
+         10.69
+        ],
+        [
+         26.21,
+         16.43
+        ],
+        [
+         21.97,
+         13.87
+        ],
+        [
+         16.88,
+         12.49
+        ]
+       ],
+       "closed": false,
+       "h": 1.95,
+       "seed": 93156303,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×2",
+        "굽은 길 가장자리를 따라 꺾임(앞 담) ×3",
+        "곧은 필지 경계 ×9"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      26.28,
+      16.89
+     ],
+     [
+      21.83,
+      14.19
+     ],
+     [
+      16.84,
+      12.84
+     ],
+     [
+      9.12,
+      13.01
+     ],
+     [
+      4.29,
+      14.53
+     ],
+     [
+      -5.86,
+      21.52
+     ],
+     [
+      -31.36,
+      -9.24
+     ],
+     [
+      -10.44,
+      -21.52
+     ],
+     [
+      -7.31,
+      -20.1
+     ],
+     [
+      2.75,
+      -19.83
+     ],
+     [
+      15.96,
+      -13.24
+     ],
+     [
+      22.21,
+      -4.97
+     ],
+     [
+      28.19,
+      0.11
+     ],
+     [
+      31.36,
+      10.77
+     ]
+    ]
+   },
+   "x": -3894.11,
+   "z": 638.76,
+   "ry": 1.0406,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    60.7,
+    41.0
+   ],
+   "organic": {
+    "lot": 3,
+    "zone": 0.6,
+    "street": "street1",
+    "walls": 1,
+    "zone_name": "minchon",
+    "kind": "front",
+    "cls": "middle",
+    "flen": 33.0,
+    "depth": 28.9
+   }
+  },
+  {
+   "id": "st_minchon_all_lot004",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "choga_house",
+    "seed": 93156004,
+    "fp": [
+     13.6,
+     25.9
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156029,
+       "nbays": 3
+      },
+      "x": -0.59,
+      "z": 5.56,
+      "ry": 0.0
+     },
+     {
+      "tag": "out1",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156095
+      },
+      "x": -4.6,
+      "z": -4.9,
+      "ry": -1.5708
+     },
+     {
+      "tag": "out2",
+      "kit": "bldg/building",
+      "params": {
+       "type": "dwitgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156107
+      },
+      "x": -4.66,
+      "z": -0.82,
+      "ry": -1.5708
+     },
+     {
+      "kit": "nature/big_tree",
+      "params": {
+       "seed": 93156335,
+       "variant": "broadleaf",
+       "h": 4.54537276886404
+      },
+      "tag": "ytree0",
+      "x": 1.53,
+      "z": 0.93,
+      "ry": -0.2413
+     },
+     {
+      "kit": "nature/persimmon",
+      "params": {
+       "seed": 93156332,
+       "s": 1.00790910709184
+      },
+      "tag": "ytree1",
+      "x": -5.79,
+      "z": -9.53,
+      "ry": -0.2413
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156428,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 5.69,
+      "z": 13.09,
+      "ry": 3.0797
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156429,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 3.51,
+      "z": 13.09,
+      "ry": 2.4349
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156430,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -2.18,
+      "z": 13.11,
+      "ry": 2.4455
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156431,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -4.34,
+      "z": 13.11,
+      "ry": 4.564
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156432,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -5.9,
+      "z": 12.11,
+      "ry": 4.2057
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156433,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -6.3,
+      "z": 2.03,
+      "ry": 1.7186
+     },
+     {
+      "tag": "weed6",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156434,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -6.72,
+      "z": -8.51,
+      "ry": 0.3353
+     },
+     {
+      "tag": "weed7",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156435,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -6.21,
+      "z": -10.65,
+      "ry": 2.4282
+     },
+     {
+      "tag": "weed8",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156436,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -4.38,
+      "z": -8.38,
+      "ry": 2.2428
+     },
+     {
+      "tag": "weed9",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156437,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -0.77,
+      "z": -3.89,
+      "ry": 3.1419
+     },
+     {
+      "tag": "weed10",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156438,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 0.54,
+      "z": -2.26,
+      "ry": 1.4947
+     },
+     {
+      "tag": "weed11",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156439,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 2.81,
+      "z": 0.74,
+      "ry": 1.684
+     },
+     {
+      "tag": "weed12",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156440,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 6.89,
+      "z": 8.22,
+      "ry": 3.7858
+     },
+     {
+      "tag": "weed13",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156441,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 6.8,
+      "z": 10.45,
+      "ry": 1.6376
+     },
+     {
+      "tag": "hay",
+      "kit": "village/haystack",
+      "params": {
+       "seed": 93156628,
+       "s": 0.878721338300966
+      },
+      "x": -1.4,
+      "z": -2.27,
+      "ry": -0.2413
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         4.68,
+         2.75
+        ],
+        [
+         6.74,
+         5.99
+        ],
+        [
+         7.12,
+         6.74
+        ],
+        [
+         7.33,
+         7.53
+        ],
+        [
+         7.38,
+         8.39
+        ],
+        [
+         7.23,
+         12.29
+        ],
+        [
+         7.06,
+         13.0
+        ],
+        [
+         6.61,
+         13.44
+        ],
+        [
+         5.87,
+         13.59
+        ],
+        [
+         0.99,
+         13.6
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156304,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 필지 경계 ×2",
+        "곧은 길 앞 — 곧은 담 ×1",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "todam_thatch",
+       "pts": [
+        [
+         -1.25,
+         13.6
+        ],
+        [
+         -5.04,
+         13.61
+        ],
+        [
+         -5.76,
+         13.47
+        ],
+        [
+         -6.21,
+         13.05
+        ],
+        [
+         -6.39,
+         12.31
+        ],
+        [
+         -7.34,
+         -11.62
+        ],
+        [
+         -7.28,
+         -12.23
+        ],
+        [
+         -7.03,
+         -12.33
+        ],
+        [
+         -6.58,
+         -11.91
+        ],
+        [
+         2.68,
+         -0.4
+        ],
+        [
+         4.57,
+         2.58
+        ]
+       ],
+       "closed": false,
+       "h": 1.7,
+       "seed": 93156305,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "곧은 필지 경계 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      7.51,
+      13.94
+     ],
+     [
+      -6.67,
+      13.96
+     ],
+     [
+      -7.79,
+      -13.96
+     ],
+     [
+      2.97,
+      -0.6
+     ],
+     [
+      7.79,
+      6.99
+     ]
+    ]
+   },
+   "x": -3850.0,
+   "z": 556.68,
+   "ry": 0.2413,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    13.6,
+    25.9
+   ],
+   "organic": {
+    "lot": 4,
+    "zone": 0.6,
+    "street": "street2",
+    "walls": 2,
+    "zone_name": "minchon",
+    "kind": "front",
+    "cls": "commoner",
+    "flen": 14.0,
+    "depth": 17.4
+   }
+  },
+  {
+   "id": "st_minchon_all_lot005",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93156005,
+    "fp": [
+     11.2,
+     11.0
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93156035,
+       "nbays": 3
+      },
+      "x": 2.22,
+      "z": -0.09,
+      "ry": -1.5708
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156435,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -4.71,
+      "z": 5.64,
+      "ry": 0.6335
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156436,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 0.96,
+      "z": 5.64,
+      "ry": -0.5591
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156437,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 3.98,
+      "z": 5.64,
+      "ry": 3.2742
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156438,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.47,
+      "z": -1.98,
+      "ry": 0.1814
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156439,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 5.6,
+      "z": -4.13,
+      "ry": 3.4882
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156440,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -1.93,
+      "z": -5.59,
+      "ry": 3.6808
+     },
+     {
+      "tag": "weed6",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156441,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -4.55,
+      "z": -5.62,
+      "ry": 1.3681
+     },
+     {
+      "tag": "weed7",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156442,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -5.45,
+      "z": -4.63,
+      "ry": -0.2233
+     },
+     {
+      "tag": "weed8",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156443,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -5.5,
+      "z": -2.73,
+      "ry": 0.8569
+     },
+     {
+      "tag": "weed9",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156444,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -5.57,
+      "z": 0.22,
+      "ry": 0.6175
+     },
+     {
+      "tag": "weed10",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156445,
+       "kind": "short",
+       "n": 12
+      },
+      "x": -5.65,
+      "z": 3.36,
+      "ry": 4.6474
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156097,
+       "ax": 6.58,
+       "az": -6.33,
+       "bx": -6.25,
+       "bz": -6.49,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -6.22,
+         6.14
+        ],
+        [
+         -2.75,
+         6.14
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156305,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -1.09,
+         6.14
+        ],
+        [
+         1.55,
+         7.24
+        ],
+        [
+         2.63,
+         6.68
+        ],
+        [
+         5.49,
+         6.14
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156306,
+       "open_a": true,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×1",
+        "마당 나무 둘레를 비켜 감 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -6.58,
+      6.49
+     ],
+     [
+      5.82,
+      6.49
+     ],
+     [
+      6.58,
+      -6.33
+     ],
+     [
+      -6.25,
+      -6.49
+     ]
+    ]
+   },
+   "x": -3886.23,
+   "z": 667.86,
+   "ry": 1.0898,
+   "y": null,
+   "flat_at": [
+    [
+     -3881.07,
+     675.25
+    ],
+    [
+     -3879.35,
+     671.95
+    ],
+    [
+     -3877.63,
+     668.65
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    11.2,
+    11.0
+   ],
+   "organic": {
+    "lot": 5,
+    "zone": 0.5,
+    "street": "main",
+    "walls": 2,
+    "zone_name": "minchon",
+    "kind": "gap",
+    "cls": "poor",
+    "flen": 12.4,
+    "depth": 12.9
+   }
+  },
+  {
+   "id": "st_minchon_all_gapwall006",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "stone",
+    "pts": [
+     [
+      -0.77,
+      6.71
+     ],
+     [
+      -0.6,
+      5.22
+     ],
+     [
+      -0.43,
+      3.73
+     ],
+     [
+      -0.26,
+      2.24
+     ],
+     [
+      -0.09,
+      0.75
+     ],
+     [
+      0.09,
+      -0.75
+     ],
+     [
+      0.26,
+      -2.24
+     ],
+     [
+      0.43,
+      -3.73
+     ],
+     [
+      0.6,
+      -5.22
+     ],
+     [
+      0.77,
+      -6.71
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3862.49,
+   "z": 636.55,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_gapwall007",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "stone",
+    "pts": [
+     [
+      -0.17,
+      1.49
+     ],
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.17,
+      -1.49
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3860.58,
+   "z": 619.91,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_gapwall008",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "stone",
+    "pts": [
+     [
+      -2.25,
+      5.09
+     ],
+     [
+      -1.43,
+      3.83
+     ],
+     [
+      -0.61,
+      2.58
+     ],
+     [
+      -0.04,
+      1.61
+     ],
+     [
+      0.6,
+      0.25
+     ],
+     [
+      1.0,
+      -0.77
+     ],
+     [
+      1.41,
+      -2.21
+     ],
+     [
+      1.83,
+      -3.65
+     ],
+     [
+      2.25,
+      -5.09
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3838.87,
+   "z": 579.64,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_gapwall009",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "stone",
+    "pts": [
+     [
+      -1.26,
+      4.32
+     ],
+     [
+      -0.84,
+      2.88
+     ],
+     [
+      -0.42,
+      1.44
+     ],
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.42,
+      -1.44
+     ],
+     [
+      0.84,
+      -2.88
+     ],
+     [
+      1.26,
+      -4.32
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3832.85,
+   "z": 561.59,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_gapwall010",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "todam_thatch",
+    "pts": [
+     [
+      -1.04,
+      1.99
+     ],
+     [
+      -0.35,
+      0.66
+     ],
+     [
+      0.35,
+      -0.66
+     ],
+     [
+      1.04,
+      -1.99
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3861.34,
+   "z": 654.94,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_gapwall011",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "stone",
+    "pts": [
+     [
+      -0.17,
+      1.49
+     ],
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.17,
+      -1.49
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3855.53,
+   "z": 621.5,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_lot006",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "hut",
+    "seed": 93156006,
+    "fp": [
+     11.9,
+     8.2
+    ],
+    "pieces": [
+     {
+      "tag": "main0",
+      "kit": "bldg/building",
+      "params": {
+       "type": "choga",
+       "region": "south",
+       "cls": "poor",
+       "seed": 93156042,
+       "nbays": 2
+      },
+      "x": 1.03,
+      "z": 0.5,
+      "ry": 3.1416
+     },
+     {
+      "tag": "weed0",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156442,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": -2.33,
+      "z": 3.83,
+      "ry": 3.9982
+     },
+     {
+      "tag": "weed1",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156443,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 0.66,
+      "z": 3.96,
+      "ry": 5.4484
+     },
+     {
+      "tag": "weed2",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156444,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 5.76,
+      "z": 1.53,
+      "ry": 3.986
+     },
+     {
+      "tag": "weed3",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156445,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 5.26,
+      "z": -0.81,
+      "ry": 2.4676
+     },
+     {
+      "tag": "weed4",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156446,
+       "kind": "short",
+       "n": 12
+      },
+      "x": 4.75,
+      "z": -3.2,
+      "ry": 4.2413
+     },
+     {
+      "tag": "weed5",
+      "kit": "nature/grass",
+      "params": {
+       "seed": 93156447,
+       "kind": "meadow",
+       "n": 12
+      },
+      "x": 3.58,
+      "z": -3.93,
+      "ry": 5.6288
+     },
+     {
+      "tag": "gate",
+      "kit": "bldg/gate",
+      "params": {
+       "type": "sarip",
+       "seed": 93156045
+      },
+      "x": -3.66,
+      "z": 4.09,
+      "ry": -0.1904
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -6.41,
+         3.56
+        ],
+        [
+         -4.47,
+         3.93
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156306,
+       "open_a": false,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_1",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -2.84,
+         4.24
+        ],
+        [
+         -1.31,
+         4.54
+        ],
+        [
+         -0.64,
+         4.61
+        ],
+        [
+         0.03,
+         4.57
+        ],
+        [
+         0.71,
+         4.41
+        ],
+        [
+         2.36,
+         3.88
+        ],
+        [
+         4.27,
+         3.47
+        ],
+        [
+         5.64,
+         3.11
+        ],
+        [
+         6.15,
+         2.87
+        ],
+        [
+         6.45,
+         2.48
+        ],
+        [
+         6.56,
+         1.92
+        ],
+        [
+         6.57,
+         0.27
+        ],
+        [
+         5.99,
+         -2.03
+        ],
+        [
+         5.37,
+         -3.63
+        ],
+        [
+         5.01,
+         -4.19
+        ],
+        [
+         4.51,
+         -4.47
+        ],
+        [
+         3.83,
+         -4.47
+        ],
+        [
+         1.89,
+         -4.1
+        ],
+        [
+         -0.07,
+         -3.75
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156307,
+       "open_a": true,
+       "open_b": true,
+       "why": [
+        "곧은 길 앞 — 곧은 담 ×1",
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "마당 나무 둘레를 비켜 감 ×6",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -6.97,
+      3.8
+     ],
+     [
+      -0.27,
+      5.09
+     ],
+     [
+      6.97,
+      3.12
+     ],
+     [
+      5.22,
+      -5.1
+     ],
+     [
+      -2.46,
+      -3.67
+     ]
+    ]
+   },
+   "x": -3866.84,
+   "z": 635.59,
+   "ry": -2.4196,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    11.9,
+    8.2
+   ],
+   "organic": {
+    "lot": 6,
+    "zone": 0.5,
+    "street": "street1",
+    "walls": 2,
+    "zone_name": "minchon",
+    "kind": "gap",
+    "cls": "poor",
+    "flen": 16.0,
+    "depth": 8.6
+   }
+  },
+  {
+   "id": "st_minchon_all_gapwall013",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "todam_thatch",
+    "pts": [
+     [
+      1.56,
+      -0.45
+     ],
+     [
+      0.1,
+      -0.09
+     ],
+     [
+      -1.56,
+      0.45
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3863.42,
+   "z": 623.29,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_gapwall014",
+   "kit": "bldg/wall",
+   "params": {
+    "kind": "stone",
+    "pts": [
+     [
+      6.44,
+      -1.61
+     ],
+     [
+      5.06,
+      -1.31
+     ],
+     [
+      3.6,
+      -0.97
+     ],
+     [
+      2.13,
+      -0.62
+     ],
+     [
+      0.67,
+      -0.28
+     ],
+     [
+      -0.72,
+      0.06
+     ],
+     [
+      -2.17,
+      0.43
+     ],
+     [
+      -3.58,
+      0.81
+     ],
+     [
+      -5.02,
+      1.21
+     ],
+     [
+      -6.44,
+      1.61
+     ]
+    ],
+    "seed": 931560,
+    "why": [
+     [
+      "길가 틈 담"
+     ]
+    ]
+   },
+   "x": -3845.29,
+   "z": 575.1,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_lot007",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93156007,
+    "fp": [
+     9.0,
+     7.0
+    ],
+    "pieces": [
+     {
+      "tag": "garden0",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 93156007,
+       "w": 3.8,
+       "d": 2.8
+      },
+      "x": 2.1,
+      "z": -1.5,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -5.15,
+         -4.15
+        ],
+        [
+         -3.09,
+         -3.9
+        ],
+        [
+         -1.03,
+         -3.97
+        ],
+        [
+         1.03,
+         -4.15
+        ],
+        [
+         3.09,
+         -4.12
+        ],
+        [
+         4.33,
+         -4.14
+        ],
+        [
+         4.78,
+         -4.06
+        ],
+        [
+         5.04,
+         -3.79
+        ],
+        [
+         5.11,
+         -3.33
+        ],
+        [
+         5.04,
+         -2.08
+        ],
+        [
+         5.17,
+         0.0
+        ],
+        [
+         5.05,
+         2.08
+        ],
+        [
+         5.11,
+         3.32
+        ],
+        [
+         5.04,
+         3.77
+        ],
+        [
+         4.79,
+         4.02
+        ],
+        [
+         4.33,
+         4.08
+        ],
+        [
+         3.09,
+         3.96
+        ],
+        [
+         1.03,
+         3.9
+        ],
+        [
+         -1.03,
+         4.06
+        ],
+        [
+         -3.09,
+         4.17
+        ],
+        [
+         -5.15,
+         4.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156307,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -5.5,
+      -4.5
+     ],
+     [
+      5.5,
+      -4.5
+     ],
+     [
+      5.5,
+      4.5
+     ],
+     [
+      -5.5,
+      4.5
+     ]
+    ]
+   },
+   "x": -3863.72,
+   "z": 539.98,
+   "ry": 0.0,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    9.0,
+    7.0
+   ],
+   "organic": {
+    "lot": 7,
+    "zone": 0.4,
+    "street": "main",
+    "walls": 1,
+    "zone_name": "garden",
+    "kind": "garden",
+    "cls": "garden",
+    "flen": 11.0,
+    "depth": 9.0
+   }
+  },
+  {
+   "id": "st_minchon_all_lot008",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93156008,
+    "fp": [
+     9.0,
+     7.0
+    ],
+    "pieces": [
+     {
+      "tag": "shed",
+      "kit": "bldg/building",
+      "params": {
+       "type": "gotgan",
+       "region": "south",
+       "cls": "commoner",
+       "seed": 93156085,
+       "nbays": 2
+      },
+      "x": -0.51,
+      "z": -0.98,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_1",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156099,
+       "ax": 5.5,
+       "az": 4.5,
+       "bx": 5.5,
+       "bz": -4.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "terrace_2",
+      "kit": "village/stone_terrace",
+      "params": {
+       "seed": 93156100,
+       "ax": -5.5,
+       "az": 4.5,
+       "bx": 5.5,
+       "bz": 4.5,
+       "drop": 0.5,
+       "tiers": 1,
+       "step": 0.5,
+       "wall": false
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -5.15,
+         -4.15
+        ],
+        [
+         -3.09,
+         -3.94
+        ],
+        [
+         -1.03,
+         -3.91
+        ],
+        [
+         1.03,
+         -4.09
+        ],
+        [
+         3.09,
+         -4.16
+        ],
+        [
+         4.33,
+         -4.16
+        ],
+        [
+         4.78,
+         -4.06
+        ],
+        [
+         5.04,
+         -3.79
+        ],
+        [
+         5.11,
+         -3.33
+        ],
+        [
+         5.06,
+         -2.08
+        ],
+        [
+         5.17,
+         0.0
+        ],
+        [
+         5.03,
+         2.08
+        ],
+        [
+         5.1,
+         3.33
+        ],
+        [
+         5.04,
+         3.78
+        ],
+        [
+         4.79,
+         4.04
+        ],
+        [
+         4.33,
+         4.11
+        ],
+        [
+         3.09,
+         4.05
+        ],
+        [
+         1.03,
+         4.17
+        ],
+        [
+         -1.03,
+         4.05
+        ],
+        [
+         -3.09,
+         3.89
+        ],
+        [
+         -5.15,
+         4.15
+        ]
+       ],
+       "closed": false,
+       "h": 1.15,
+       "seed": 93156308,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×3",
+        "흙·돌담 모서리를 둥글게 ×2"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -5.5,
+      -4.5
+     ],
+     [
+      5.5,
+      -4.5
+     ],
+     [
+      5.5,
+      4.5
+     ],
+     [
+      -5.5,
+      4.5
+     ]
+    ]
+   },
+   "x": -3841.52,
+   "z": 549.08,
+   "ry": 0.0,
+   "y": null,
+   "flat_at": [
+    [
+     -3844.82,
+     543.08
+    ],
+    [
+     -3841.52,
+     543.08
+    ],
+    [
+     -3838.22,
+     543.08
+    ]
+   ],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    9.0,
+    7.0
+   ],
+   "organic": {
+    "lot": 8,
+    "zone": 0.4,
+    "street": "main",
+    "walls": 1,
+    "zone_name": "garden",
+    "kind": "garden",
+    "cls": "garden",
+    "flen": 11.0,
+    "depth": 9.0
+   }
+  },
+  {
+   "id": "st_minchon_all_lot009",
+   "kit": "bldg/lot",
+   "params": {
+    "type": "field",
+    "seed": 93156009,
+    "fp": [
+     9.0,
+     7.0
+    ],
+    "pieces": [
+     {
+      "tag": "garden0",
+      "kit": "village/teotbat",
+      "params": {
+       "seed": 93156009,
+       "w": 3.8,
+       "d": 2.8
+      },
+      "x": 2.1,
+      "z": -1.5,
+      "ry": 0.0
+     },
+     {
+      "tag": "wallrun_0",
+      "kit": "bldg/wall",
+      "params": {
+       "kind": "fence",
+       "pts": [
+        [
+         -5.15,
+         -4.15
+        ],
+        [
+         -3.09,
+         -3.98
+        ],
+        [
+         -1.03,
+         -4.15
+        ],
+        [
+         1.03,
+         -4.11
+        ],
+        [
+         3.09,
+         -3.93
+        ],
+        [
+         4.33,
+         -4.06
+        ],
+        [
+         4.77,
+         -4.02
+        ],
+        [
+         5.03,
+         -3.78
+        ],
+        [
+         5.1,
+         -3.32
+        ],
+        [
+         5.03,
+         -2.08
+        ],
+        [
+         5.17,
+         0.0
+        ],
+        [
+         5.06,
+         2.08
+        ],
+        [
+         5.11,
+         3.33
+        ],
+        [
+         5.04,
+         3.77
+        ],
+        [
+         4.79,
+         4.03
+        ],
+        [
+         4.33,
+         4.1
+        ],
+        [
+         3.09,
+         4.02
+        ],
+        [
+         1.03,
+         4.17
+        ],
+        [
+         -1.03,
+         4.08
+        ],
+        [
+         -3.09,
+         3.9
+        ],
+        [
+         -4.33,
+         4.05
+        ],
+        [
+         -4.78,
+         4.02
+        ],
+        [
+         -5.05,
+         3.78
+        ],
+        [
+         -5.13,
+         3.32
+        ],
+        [
+         -5.11,
+         2.08
+        ],
+        [
+         -5.15,
+         0.0
+        ],
+        [
+         -4.98,
+         -2.08
+        ]
+       ],
+       "closed": true,
+       "h": 1.15,
+       "seed": 93156309,
+       "open_a": false,
+       "open_b": false,
+       "why": [
+        "마을 막돌담·싸리울 — 손으로 쌓아 조금씩 굽음 ×4",
+        "흙·돌담 모서리를 둥글게 ×3"
+       ]
+      },
+      "x": 0.0,
+      "z": 0.0,
+      "ry": 0.0
+     }
+    ],
+    "poly": [
+     [
+      -5.5,
+      -4.5
+     ],
+     [
+      5.5,
+      -4.5
+     ],
+     [
+      5.5,
+      4.5
+     ],
+     [
+      -5.5,
+      4.5
+     ]
+    ]
+   },
+   "x": -3874.82,
+   "z": 585.48,
+   "ry": 0.0,
+   "y": null,
+   "flat_at": [],
+   "flatten": true,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본",
+   "footprint": [
+    9.0,
+    7.0
+   ],
+   "organic": {
+    "lot": 9,
+    "zone": 0.4,
+    "street": "main",
+    "walls": 1,
+    "zone_name": "garden",
+    "kind": "garden",
+    "cls": "garden",
+    "flen": 11.0,
+    "depth": 9.0
+   }
+  },
+  {
+   "id": "st_minchon_all_tree018",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 0,
+    "s": 0.949987065419555
+   },
+   "x": -3900.56,
+   "z": 520.96,
+   "ry": 5.5418,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree019",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 2,
+    "s": 0.882467321772128
+   },
+   "x": -3886.07,
+   "z": 521.41,
+   "ry": 3.2726,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat020",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 3,
+    "w": 5.12871344247833,
+    "d": 3.58236563717946
+   },
+   "x": -3877.9,
+   "z": 519.01,
+   "ry": 0.0442,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree021",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 6,
+    "s": 0.861637210100889
+   },
+   "x": -3885.73,
+   "z": 529.7,
+   "ry": 2.6823,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree022",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 7,
+    "s": 0.890554503723979
+   },
+   "x": -3879.2,
+   "z": 530.2,
+   "ry": 5.6613,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree023",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 13,
+    "s": 1.22144057294354
+   },
+   "x": -3886.37,
+   "z": 532.27,
+   "ry": 1.3111,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree024",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 17,
+    "s": 0.876178081706166
+   },
+   "x": -3849.15,
+   "z": 534.81,
+   "ry": 3.3965,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat025",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 19,
+    "w": 4.46342884236947,
+    "d": 3.50020957114175
+   },
+   "x": -3905.3,
+   "z": 544.99,
+   "ry": -0.2758,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree026",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 20,
+    "s": 0.888088427484035
+   },
+   "x": -3897.15,
+   "z": 541.88,
+   "ry": 5.3028,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree027",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 26,
+    "s": 1.10100656300783
+   },
+   "x": -3917.65,
+   "z": 552.46,
+   "ry": 3.1176,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree028",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 32,
+    "s": 0.915764249581844
+   },
+   "x": -3873.31,
+   "z": 551.44,
+   "ry": 5.6117,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree029",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 33,
+    "s": 1.16779390061274
+   },
+   "x": -3865.41,
+   "z": 549.33,
+   "ry": 0.9992,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat030",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 34,
+    "w": 4.68127887835726,
+    "d": 3.04076287848875
+   },
+   "x": -3832.81,
+   "z": 549.06,
+   "ry": 0.2484,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree031",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 35,
+    "s": 1.14766420116648
+   },
+   "x": -3827.81,
+   "z": 552.29,
+   "ry": 3.1831,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay032",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 36,
+    "s": 0.887516495923046
+   },
+   "x": -3822.95,
+   "z": 549.02,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree033",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 39,
+    "s": 1.13199799740687
+   },
+   "x": -3918.34,
+   "z": 557.72,
+   "ry": 4.9737,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay034",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 42,
+    "s": 0.896687647374347
+   },
+   "x": -3896.44,
+   "z": 556.56,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree035",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 43,
+    "s": 1.10867172963917
+   },
+   "x": -3890.37,
+   "z": 557.94,
+   "ry": 1.5092,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree036",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 46,
+    "s": 1.06600323487073
+   },
+   "x": -3864.38,
+   "z": 559.55,
+   "ry": 1.3914,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree037",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 47,
+    "s": 1.06888923989609
+   },
+   "x": -3818.73,
+   "z": 555.18,
+   "ry": 0.7232,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat038",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 50,
+    "w": 5.83262571599334,
+    "d": 3.14473296040669
+   },
+   "x": -3800.19,
+   "z": 558.23,
+   "ry": 0.1687,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree039",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 52,
+    "s": 1.1433446129784
+   },
+   "x": -3917.13,
+   "z": 567.48,
+   "ry": 3.2708,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree040",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 54,
+    "s": 0.86108187623322
+   },
+   "x": -3903.63,
+   "z": 566.18,
+   "ry": 6.0936,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree041",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 55,
+    "s": 1.0469876114279
+   },
+   "x": -3892.22,
+   "z": 565.42,
+   "ry": 5.129,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat042",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 63,
+    "w": 5.66160795371979,
+    "d": 3.50753705855459
+   },
+   "x": -3776.6,
+   "z": 567.28,
+   "ry": -0.0159,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat043",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 64,
+    "w": 4.43536272179335,
+    "d": 3.17870254414156
+   },
+   "x": -3769.87,
+   "z": 567.51,
+   "ry": 0.1442,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay044",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 67,
+    "s": 1.02996041871374
+   },
+   "x": -3909.67,
+   "z": 571.28,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree045",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 70,
+    "s": 1.09955887822434
+   },
+   "x": -3888.05,
+   "z": 573.14,
+   "ry": 5.766,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree046",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 71,
+    "s": 0.961605596076697
+   },
+   "x": -3879.7,
+   "z": 571.83,
+   "ry": 4.4604,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay047",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 72,
+    "s": 0.994887728709728
+   },
+   "x": -3870.46,
+   "z": 571.37,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree048",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 73,
+    "s": 0.957420887704939
+   },
+   "x": -3864.66,
+   "z": 574.33,
+   "ry": 5.3694,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat049",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 76,
+    "w": 4.75824343180284,
+    "d": 3.22148775234818
+   },
+   "x": -3781.01,
+   "z": 570.65,
+   "ry": -0.1547,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree050",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 80,
+    "s": 1.08943220442161
+   },
+   "x": -3927.12,
+   "z": 578.44,
+   "ry": 2.8269,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat051",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 86,
+    "w": 5.1641984237358,
+    "d": 3.12991895293817
+   },
+   "x": -3871.96,
+   "z": 577.43,
+   "ry": 0.2927,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree052",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 87,
+    "s": 0.906273191329092
+   },
+   "x": -3852.63,
+   "z": 579.26,
+   "ry": 6.1581,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay053",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 90,
+    "s": 0.947331849194597
+   },
+   "x": -3787.63,
+   "z": 581.24,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat054",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 96,
+    "w": 4.51649261265993,
+    "d": 3.32914187796414
+   },
+   "x": -3911.24,
+   "z": 588.21,
+   "ry": -0.2453,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree055",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 98,
+    "s": 1.08454071376473
+   },
+   "x": -3896.94,
+   "z": 588.99,
+   "ry": 3.5829,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree056",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 99,
+    "s": 0.907885704468936
+   },
+   "x": -3889.83,
+   "z": 590.1,
+   "ry": 5.8218,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree057",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 101,
+    "s": 0.877819252200425
+   },
+   "x": -3933.35,
+   "z": 591.34,
+   "ry": 0.6222,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree058",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 102,
+    "s": 1.18455265974626
+   },
+   "x": -3926.66,
+   "z": 596.98,
+   "ry": 1.118,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay059",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 104,
+    "s": 1.04082184068393
+   },
+   "x": -3909.14,
+   "z": 595.07,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree060",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 105,
+    "s": 0.913053005002439
+   },
+   "x": -3898.6,
+   "z": 591.81,
+   "ry": 4.1291,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree061",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 106,
+    "s": 0.89973502131179
+   },
+   "x": -3891.15,
+   "z": 595.97,
+   "ry": 4.4443,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree062",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 112,
+    "s": 1.02787534017116
+   },
+   "x": -3899.04,
+   "z": 599.79,
+   "ry": 5.9952,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat063",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 116,
+    "w": 4.92020915076137,
+    "d": 3.80843388028443
+   },
+   "x": -3771.27,
+   "z": 602.08,
+   "ry": 0.1716,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree064",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 117,
+    "s": 0.858440438657999
+   },
+   "x": -3770.3,
+   "z": 601.65,
+   "ry": 5.8213,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree065",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 123,
+    "s": 0.926210002973676
+   },
+   "x": -3899.83,
+   "z": 607.57,
+   "ry": 1.8288,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree066",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 126,
+    "s": 1.08967667957768
+   },
+   "x": -3876.2,
+   "z": 609.48,
+   "ry": 2.2675,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree067",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 127,
+    "s": 1.01463488638401
+   },
+   "x": -3873.84,
+   "z": 608.46,
+   "ry": 0.1516,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree068",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 128,
+    "s": 1.19009027723223
+   },
+   "x": -3801.08,
+   "z": 609.82,
+   "ry": 0.6602,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree069",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 134,
+    "s": 0.860777675174177
+   },
+   "x": -3757.95,
+   "z": 606.52,
+   "ry": 4.3612,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay070",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 136,
+    "s": 1.08484129669378
+   },
+   "x": -3927.12,
+   "z": 618.91,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat071",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 138,
+    "w": 5.09454893087968,
+    "d": 3.88924908796325
+   },
+   "x": -3908.42,
+   "z": 619.16,
+   "ry": -0.247,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree072",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 140,
+    "s": 0.894526139553636
+   },
+   "x": -3809.73,
+   "z": 619.73,
+   "ry": 4.161,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree073",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 144,
+    "s": 1.04611169472337
+   },
+   "x": -3780.6,
+   "z": 613.77,
+   "ry": 5.0848,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree074",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 145,
+    "s": 1.20669555962086
+   },
+   "x": -3776.71,
+   "z": 619.6,
+   "ry": 4.9545,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree075",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 148,
+    "s": 1.14673602310941
+   },
+   "x": -3927.98,
+   "z": 627.84,
+   "ry": 5.4327,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree076",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 152,
+    "s": 1.04492340898141
+   },
+   "x": -3804.53,
+   "z": 623.06,
+   "ry": 4.024,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat077",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 153,
+    "w": 5.41973336786032,
+    "d": 3.58607891444117
+   },
+   "x": -3799.51,
+   "z": 625.73,
+   "ry": -0.1785,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat078",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 155,
+    "w": 4.46111144311726,
+    "d": 4.12255351049826
+   },
+   "x": -3779.09,
+   "z": 621.09,
+   "ry": 0.1394,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree079",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 157,
+    "s": 0.937096610572189
+   },
+   "x": -3768.83,
+   "z": 622.64,
+   "ry": 2.0574,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree080",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 159,
+    "s": 1.21552406260744
+   },
+   "x": -3922.96,
+   "z": 634.55,
+   "ry": 1.2704,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat081",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 163,
+    "w": 5.26281522074714,
+    "d": 3.74566936148331
+   },
+   "x": -3805.82,
+   "z": 633.25,
+   "ry": -0.0918,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree082",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 165,
+    "s": 1.10537762446329
+   },
+   "x": -3791.65,
+   "z": 629.35,
+   "ry": 0.2287,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree083",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 172,
+    "s": 1.24550832360983
+   },
+   "x": -3825.83,
+   "z": 640.05,
+   "ry": 0.0093,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay084",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 174,
+    "s": 1.08396827734541
+   },
+   "x": -3810.38,
+   "z": 637.4,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat085",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 175,
+    "w": 4.0170020647347,
+    "d": 3.44867004733533
+   },
+   "x": -3803.06,
+   "z": 639.64,
+   "ry": -0.1203,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree086",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 176,
+    "s": 0.862098857201636
+   },
+   "x": -3797.74,
+   "z": 642.05,
+   "ry": 1.6709,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree087",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 178,
+    "s": 0.976774365454912
+   },
+   "x": -3781.79,
+   "z": 642.6,
+   "ry": 1.1449,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree088",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 180,
+    "s": 1.06298114629462
+   },
+   "x": -3769.73,
+   "z": 638.49,
+   "ry": 4.7633,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay089",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 181,
+    "s": 1.03566537218867
+   },
+   "x": -3928.95,
+   "z": 646.61,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat090",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 189,
+    "w": 5.56992163183168,
+    "d": 3.50010120486841
+   },
+   "x": -3798.25,
+   "z": 644.58,
+   "ry": -0.1322,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree091",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 191,
+    "s": 1.12457620305941
+   },
+   "x": -3781.64,
+   "z": 649.27,
+   "ry": 2.3884,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree092",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 199,
+    "s": 0.973611040227115
+   },
+   "x": -3822.94,
+   "z": 656.73,
+   "ry": 6.2687,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree093",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 200,
+    "s": 1.04772616494447
+   },
+   "x": -3809.48,
+   "z": 655.02,
+   "ry": 3.5989,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_hay094",
+   "kit": "village/haystack",
+   "params": {
+    "seed": 202,
+    "s": 1.05630482765846
+   },
+   "x": -3797.69,
+   "z": 657.52,
+   "ry": 0.0,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat095",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 205,
+    "w": 5.7817605221644,
+    "d": 3.90414492124692
+   },
+   "x": -3925.16,
+   "z": 658.66,
+   "ry": -0.1108,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat096",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 206,
+    "w": 5.27993798488751,
+    "d": 3.23973962282762
+   },
+   "x": -3905.33,
+   "z": 663.07,
+   "ry": 0.2617,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat097",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 207,
+    "w": 4.00509639782831,
+    "d": 3.26749890781939
+   },
+   "x": -3846.46,
+   "z": 661.83,
+   "ry": -0.0073,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree098",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 208,
+    "s": 1.22631204221398
+   },
+   "x": -3844.51,
+   "z": 661.53,
+   "ry": 4.9273,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree099",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 209,
+    "s": 0.942431819532067
+   },
+   "x": -3832.71,
+   "z": 661.4,
+   "ry": 0.5309,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree100",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 210,
+    "s": 0.999171181488782
+   },
+   "x": -3827.3,
+   "z": 665.03,
+   "ry": 4.7905,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree101",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 212,
+    "s": 1.09276824286208
+   },
+   "x": -3811.34,
+   "z": 665.41,
+   "ry": 1.7159,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree102",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 215,
+    "s": 0.964060401916504
+   },
+   "x": -3787.22,
+   "z": 661.76,
+   "ry": 3.2799,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree103",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 217,
+    "s": 1.17238237103447
+   },
+   "x": -3856.34,
+   "z": 666.47,
+   "ry": 5.3693,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat104",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 218,
+    "w": 4.08066649595276,
+    "d": 3.71635713335127
+   },
+   "x": -3850.4,
+   "z": 666.31,
+   "ry": -0.2539,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree105",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 219,
+    "s": 1.01370696881786
+   },
+   "x": -3843.27,
+   "z": 671.58,
+   "ry": 0.0978,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree106",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 221,
+    "s": 1.10303581031039
+   },
+   "x": -3826.92,
+   "z": 672.83,
+   "ry": 1.1071,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree107",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 222,
+    "s": 0.954380832519382
+   },
+   "x": -3817.66,
+   "z": 666.77,
+   "ry": 5.2486,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree108",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 224,
+    "s": 0.85186842950061
+   },
+   "x": -3802.91,
+   "z": 670.39,
+   "ry": 5.76,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat109",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 225,
+    "w": 5.72574530495331,
+    "d": 4.19495223686099
+   },
+   "x": -3793.93,
+   "z": 669.66,
+   "ry": -0.0258,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree110",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 226,
+    "s": 1.23915742151439
+   },
+   "x": -3858.72,
+   "z": 675.87,
+   "ry": 2.3342,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree111",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 227,
+    "s": 1.07599292434752
+   },
+   "x": -3851.87,
+   "z": 676.9,
+   "ry": 4.6077,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_teotbat112",
+   "kit": "village/teotbat",
+   "params": {
+    "seed": 232,
+    "w": 4.12494562985376,
+    "d": 3.74294184744358
+   },
+   "x": -3812.58,
+   "z": 675.87,
+   "ry": -0.1846,
+   "y": null,
+   "flatten": false,
+   "clear_veg": true,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree113",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 237,
+    "s": 1.07871936513111
+   },
+   "x": -3845.29,
+   "z": 681.12,
+   "ry": 0.8208,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree114",
+   "kit": "nature/oak",
+   "params": {
+    "seed": 241,
+    "s": 0.911191149614751
+   },
+   "x": -3815.22,
+   "z": 681.75,
+   "ry": 0.4797,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  },
+  {
+   "id": "st_minchon_all_tree115",
+   "kit": "nature/pine",
+   "params": {
+    "seed": 243,
+    "s": 1.13086012471467
+   },
+   "x": -3832.81,
+   "z": 689.97,
+   "ry": 1.1128,
+   "y": null,
+   "flatten": false,
+   "clear_veg": false,
+   "group": "고을 빌더 견본 민촌 견본"
+  }
+ ]
+}

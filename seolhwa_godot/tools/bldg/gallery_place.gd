@@ -22,6 +22,7 @@ func _init() -> void:
 	if set == "block": _block()
 	elif set == "town": _town(out)
 	elif set == "ruin": _ruin_set(out)
+	elif set == "scale": _scale_set()
 	elif set == "integ": _put(_e("integ_yangban", "통합 점검 양반가", "integ", "bldg/compound", { type = "yangban", region = "south", seed = 3, interior = true }), -3487.0, 526.0)
 	else: _gallery()
 	var f := FileAccess.open(ProjectSettings.globalize_path(out.path_join("placement_bldg_%s.json" % set)), FileAccess.WRITE)
@@ -86,6 +87,21 @@ func _e(id: String, label: String, group: String, kit: String, params: Dictionar
 			# 진입 길(대문 → 마당 → 중문·내외담 → 안마당) 점: 묶음 로컬
 			e.approach = _approach_path(params)
 	return e
+
+# 실제 크기(town-organic): 같은 명세를 옛 치수(rs=false) ↔ 새 치수로 나란히 — 인물(플레이어)이 대문·처마 앞에 선 채 찍힌다
+#   + 새 치수 실내(안채·초가·주막 방·부엌·대청 — 실내 카메라·문 드나듦 확인)
+func _scale_set() -> void:
+	var K := []
+	for q in [["choga", "south", 1, "초가 남부 #1"], ["choga", "south", 3, "초가 툇마루 #3"], ["choga", "central", 1, "초가 중부 ㄱ자"], ["giwajip", "south", 1, "읍내 기와집"],
+			["anchae", "south", 1, "안채(기와)"], ["jumak", "south", 1, "주막"], ["sijeon", "south", 1, "시전"], ["dongheon", "south", 1, "동헌"]]:
+		for rs in [false, true]:
+			K.append(_e("sc_%s_%s%d_%s" % [q[0], q[1], q[2], "new" if rs else "old"], "%s · %s" % [q[3], "새 치수" if rs else "옛 치수"], "compare", "bldg/building", { type = q[0], region = q[1], seed = q[2], rs = rs }))
+	var I := []
+	for q in [["anchae", "south", 1, "안채"], ["choga", "south", 3, "초가"], ["jumak", "south", 1, "주막"]]:
+		I.append(_e("sci_%s" % q[0], "%s 실내(새 치수)" % q[3], "interior", "bldg/building", { type = q[0], region = q[1], seed = q[2], interior = true }))
+	var cx := -3607.0; var cz := 470.0
+	var z := _rows(K, cx, cz, 150.0, 8.0)
+	_rows(I, cx, z + 18.0, 150.0, 10.0)
 
 func _gallery() -> void:
 	var V := []

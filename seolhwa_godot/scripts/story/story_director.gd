@@ -233,6 +233,7 @@ func _setup_case(id: String, dd: Dictionary, fresh: bool) -> bool:
 		return false
 	case_id = id
 	data = dd
+	_remap_anchors()
 	_filter_space()
 	events = data.get("events", {})
 	S = StoryState.new(case_id)
@@ -684,6 +685,33 @@ func camera(spec) -> void:
 # ---------------------------------------------------------------------------
 # 자리
 # ---------------------------------------------------------------------------
+# 옛 키트 실제 크기(placement_loader plan_scale): 키운 집 둘레 자리를 집과 같은 배율로 옮긴다(대문·마당 연출 자리)
+func _remap_anchors() -> void:
+	var pl = main.get("placement")
+	if pl == null or not pl.has_method("plan_remap") or (pl.plan_items as Array).is_empty(): return
+	var an: Dictionary = data.get("anchors", {})
+	if an.is_empty(): return
+	data = data.duplicate()
+	var an2 := {}
+	for k in an: an2[k] = _remap_v(an[k], pl)
+	data.anchors = an2
+
+func _remap_v(v, pl):
+	if v is Array and v.size() >= 2 and (v[0] is float or v[0] is int):
+		var q: Vector2 = pl.plan_remap(Vector2(float(v[0]), float(v[1])))
+		var o := (v as Array).duplicate(); o[0] = q.x; o[1] = q.y
+		return o
+	if v is Vector2: return pl.plan_remap(v)
+	if v is Dictionary:
+		var o2 := (v as Dictionary).duplicate()
+		if o2.has("x") and o2.has("z"):
+			var q2: Vector2 = pl.plan_remap(Vector2(float(o2.x), float(o2.z)))
+			o2.x = q2.x; o2.z = q2.y
+			return o2
+		for kk in o2: o2[kk] = _remap_v(o2[kk], pl)
+		return o2
+	return v
+
 func anchor(at) -> Vector2:
 	if at is Vector2: return at
 	if at is Array and at.size() >= 2: return Vector2(float(at[0]), float(at[1]))

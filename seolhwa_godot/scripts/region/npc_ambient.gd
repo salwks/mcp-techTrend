@@ -201,6 +201,7 @@ func _settle_info(s: Dictionary, arch: Dictionary) -> Dictionary:
 
 func _build(input: Dictionary) -> void:
 	var t0 := Time.get_ticks_msec()
+	_tag_cur = 0
 	var reg: Dictionary = input.region
 	var arch: Dictionary = reg.get("archetypes", {}) if reg.get("archetypes") is Dictionary else {}
 	var sts: Array = []
@@ -214,24 +215,34 @@ func _build(input: Dictionary) -> void:
 	var lines: Array = []
 	for r in reg.get("roads", []):
 		if r is Dictionary: lines.append({ pts = r.get("points", []), w = float(r.get("width_m", 4.0)), cls = String(r.get("class", "지선")), alley = false })
+	# 갈음 배치(머리에 supersede가 있는 파일 — 고을 짜임): 갈음된 옛 항목은 자리 순번만 지키고(n=0) 사람을 세우지 않으며,
+	#   갈음 파일의 자리는 맨 뒤로 보낸다 — 고을 사람 뽑기(_h(si, i))가 자리 순번을 씨앗으로 쓰므로 다른 곳 사람이 바뀌지 않게
+	var datas: Array = []
+	var sup := {}
 	for f in input.files:
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
 		if not (d is Dictionary): continue
+		datas.append(d)
+		for sid in d.get("supersede", []): sup[String(sid)] = true
+	for d in datas:
+		var late: bool = d.has("supersede")
 		for al in d.get("alleys", []):
-			if al is Dictionary: lines.append({ pts = al.get("points", []), w = float(al.get("width_m", 3.0)), cls = "마을길", alley = true })
+			if al is Dictionary: lines.append({ pts = al.get("points", []), w = float(al.get("width_m", 3.0)), cls = "마을길", alley = true, late = late })
 		for it in d.get("items", []):
 			if not (it is Dictionary) or not it.has("kit"): continue
 			if it.has("when"): continue   # 조건부 차림(F-11)은 늘 있지 않다 — 고을 사람 자리로 쓰지 않는다
+			var tagv := 2 if late else (1 if sup.has(String(it.get("id", ""))) else 0)   # 0 보통 · 1 갈음됨(자리만) · 2 갈음 파일(맨 뒤)
 			var kit := String(it.kit)
 			var mode: String = ANCHOR.get(kit, "")
 			if mode == "":
 				for hh in HOUSE_HINT:
 					if kit.ends_with(hh): mode = "yard"; break
-			if mode != "": anchors.append([mode, Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0))), float(it.get("ry", 0.0)), kit])
+			if mode != "": anchors.append([mode, Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0))), float(it.get("ry", 0.0)), kit, tagv])
 			var sk := _seat_key(kit, it)
-			if sk != "": seats.append([sk, it])
+			if sk != "": seats.append([sk, it, tagv])
 	var route_acc := 0.0
 	for L in lines:
+		_tag(out_sites, 2 if L.get("late", false) else 0)
 		var raw: Array = L.pts
 		if raw.size() < 2: continue
 		var pts := PackedVector2Array()
@@ -268,6 +279,7 @@ func _build(input: Dictionary) -> void:
 			s += STEP
 	# 닻 자리
 	for a in anchors:
+		_tag(out_sites, int(a[4]))
 		var mode: String = a[0]; var p: Vector2 = a[1]
 		var st = _settle_at(sts, p)
 		var pool: Array = st.pool if st != null else ["villager_m", "villager_f"]
@@ -308,6 +320,7 @@ func _build(input: Dictionary) -> void:
 		out_sites.append(site)
 	# 앉은 사람 자리(장꾼·주막 손님·평상·사공·툇마루·나무 그늘·정자·관아 앞)
 	for e in seats:
+		_tag(out_sites, int(e[2]))
 		var it: Dictionary = e[1]
 		var d: Dictionary = SEAT_KIT[e[0]]
 		var p := Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0)))
@@ -325,6 +338,7 @@ func _build(input: Dictionary) -> void:
 		out_sites.append({ p = p, ry = float(it.get("ry", 0.0)), mode = "seat", n = int(d.n), pres = pres, pool = pool, kind_cls = "people", out = true, r = 0.0,
 			anim = "sit", night = float(d.night), seat = { key = e[0], id = String(it.get("id", "")), goods = goods,
 				fd = float(fp[1]) if fp.size() > 1 else 6.0, fw = float(fp[0]) if fp.size() > 0 else 6.0 } })
+	_tag(out_sites, 0)
 	# 고을 둘레 들·풀밭, 바닷가 갈매기
 	for st in sts:
 		var c: Vector2 = st.c
@@ -349,7 +363,26 @@ func _build(input: Dictionary) -> void:
 			for k in 2:
 				out_sites.append({ p = c + Vector2(cos(k * 2.4 + 0.7), sin(k * 2.4 + 0.7)) * (st.r * 0.6), mode = "gull", n = 3, pres = 0.8, pool = ["gull"],
 					kind_cls = "animal", out = false, r = 18.0 })
+	_tag(out_sites, 0)
+	var keep: Array = []; var tail: Array = []
+	for site in out_sites:
+		var tg := int(site.get("_tag", 0))
+		site.erase("_tag")
+		if tg == 1: site.n = 0
+		if tg == 2: tail.append(site)
+		else: keep.append(site)
+	out_sites = keep + tail
+	_built_split = [keep.size(), tail.size()]
 	_built = { sites = out_sites, paths = out_paths, ms = Time.get_ticks_msec() - t0, sts = sts }
+
+# 새로 붙은 자리(아직 _tag 없음)에 지금 출처 표를 붙이고, 다음 출처의 표를 기억한다
+var _tag_cur := 0
+var _built_split := [0, 0]
+func _tag(arr: Array, next: int) -> void:
+	for k in range(arr.size() - 1, -1, -1):
+		if (arr[k] as Dictionary).has("_tag"): break
+		arr[k]["_tag"] = _tag_cur
+	_tag_cur = next
 
 static func _seat_key(kit: String, it: Dictionary) -> String:
 	if SEAT_KIT.has(kit): return kit
@@ -479,7 +512,7 @@ func _finish_build() -> void:
 		for p in _bank_src[k].pages:
 			if not want.has(p) and not _tex_cache.has(p): want.append(p)
 	_task = WorkerThreadPool.add_task(_load_pages.bind(want), false, "npc_ambient pages")
-	print("NPC sites=%d paths=%d kinds=%d pages=%d build_ms=%d amb=%s builder=%s variants=%d" % [sites.size(), paths.size(), _bank_src.size(), want.size(), _built.ms, _amb, _bset,
+	print("NPC late_sites=%d " % _built_split[1]); print("NPC sites=%d paths=%d kinds=%d pages=%d build_ms=%d amb=%s builder=%s variants=%d" % [sites.size(), paths.size(), _bank_src.size(), want.size(), _built.ms, _amb, _bset,
 		_variants.values().reduce(func(a, l): return a + l.size(), 0)])
 	_built = {}
 
