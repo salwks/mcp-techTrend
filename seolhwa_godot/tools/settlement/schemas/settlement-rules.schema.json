@@ -1,0 +1,12 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "settlement-rules/1",
+ "type": "object",
+ "required": ["schema", "sources", "parameters", "profiles", "institution_variants", "objectives", "acceptance"],
+ "properties": {
+  "schema": {"enum": ["settlement-rules/1"]},
+  "parameters": {"type": "object", "additionalProperties": {"$ref": "#/$defs/param"}},
+  "profiles": {"type": "object"}, "institution_variants": {"type": "object"}, "objectives": {"type": "object"}
+ },
+ "$defs": {"param": {"type": "object", "required": ["value", "unit", "source", "confidence", "kind"]}}
+}

@@ -1,0 +1,381 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "settlement-plan/1",
+ "title": "settlement-plan/1 (Layers 0–2)",
+ "type": "object",
+ "required": [
+  "schema",
+  "id",
+  "status",
+  "provenance",
+  "territory",
+  "site",
+  "program",
+  "frame",
+  "alternatives",
+  "diagnostics",
+  "revision_requests",
+  "geometry",
+  "validation"
+ ],
+ "properties": {
+  "schema": {
+   "enum": [
+    "settlement-plan/1"
+   ]
+  },
+  "id": {
+   "type": "string"
+  },
+  "status": {
+   "enum": [
+    "valid",
+    "failed",
+    "insufficient_capacity",
+    "no_candidate_found"
+   ]
+  },
+  "status_reason": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "provenance": {
+   "type": "object",
+   "required": [
+    "generator",
+    "rules_hash",
+    "input_hashes",
+    "dependencies",
+    "seed",
+    "tier",
+    "family"
+   ],
+   "properties": {
+    "rules_hash": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{64}$"
+    },
+    "seed": {
+     "type": "integer"
+    }
+   }
+  },
+  "territory": {
+   "type": "object",
+   "required": [
+    "preferred",
+    "allowed",
+    "protected",
+    "sources",
+    "permissions"
+   ],
+   "properties": {
+    "preferred": {
+     "$ref": "#/$defs/gref"
+    },
+    "allowed": {
+     "$ref": "#/$defs/gref"
+    },
+    "protected": {
+     "$ref": "#/$defs/gref_or_null"
+    }
+   }
+  },
+  "locks": {
+   "type": "array"
+  },
+  "site": {
+   "type": "object",
+   "required": [
+    "fields",
+    "features",
+    "summary"
+   ]
+  },
+  "program": {
+   "type": "object",
+   "required": [
+    "households",
+    "institutions",
+    "area_ledger",
+    "historical_households",
+    "representation_ratio",
+    "scale"
+   ],
+   "properties": {
+    "households": {
+     "type": "object",
+     "required": [
+      "represented",
+      "by_class",
+      "status"
+     ],
+     "properties": {
+      "represented": {
+       "type": "integer",
+       "minimum": 0
+      }
+     }
+    },
+    "institutions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "key",
+       "name",
+       "inside_wall",
+       "envelope"
+      ]
+     }
+    },
+    "area_ledger": {
+     "type": "object",
+     "required": [
+      "territory_m2",
+      "categories",
+      "residual_m2"
+     ]
+    },
+    "historical_households": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "representation_ratio": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "scale": {
+     "type": "object",
+     "required": [
+      "scale_applied"
+     ],
+     "properties": {
+      "scale_applied": {
+       "enum": [
+        true
+       ]
+      }
+     }
+    }
+   }
+  },
+  "frame": {
+   "$ref": "#/$defs/frame"
+  },
+  "alternatives": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "rank",
+     "id",
+     "family",
+     "territory",
+     "objective"
+    ],
+    "properties": {
+     "territory": {
+      "$ref": "#/$defs/gref"
+     }
+    }
+   }
+  },
+  "diagnostics": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "code",
+     "severity",
+     "layer",
+     "message"
+    ],
+    "properties": {
+     "severity": {
+      "enum": [
+       "error",
+       "warning",
+       "info"
+      ]
+     }
+    }
+   }
+  },
+  "revision_requests": {
+   "type": "array"
+  },
+  "geometry": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "required": [
+     "type",
+     "coordinates"
+    ]
+   }
+  },
+  "validation": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "layer",
+     "pass",
+     "applicable"
+    ]
+   }
+  }
+ },
+ "$defs": {
+  "gref": {
+   "type": "string",
+   "pattern": "^g-[0-9a-f]{12}$"
+  },
+  "gref_or_null": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "frame": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "required": [
+    "id",
+    "family",
+    "territory",
+    "wall",
+    "openings",
+    "civic_reserves",
+    "primary_corridors",
+    "water_access",
+    "access_contracts"
+   ],
+   "properties": {
+    "family": {
+     "enum": [
+      "plain",
+      "plain_hill",
+      "mountain",
+      "unwalled"
+     ]
+    },
+    "territory": {
+     "$ref": "#/$defs/gref"
+    },
+    "wall": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "required": [
+      "id",
+      "ring",
+      "length_m",
+      "closed"
+     ]
+    },
+    "openings": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "type",
+       "chainage",
+       "wraps",
+       "width_m"
+      ],
+      "properties": {
+       "type": {
+        "enum": [
+         "gate",
+         "water_passage"
+        ]
+       },
+       "chainage": {
+        "type": "array",
+        "items": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      }
+     }
+    },
+    "civic_reserves": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "key",
+       "variant",
+       "envelope",
+       "forecourt",
+       "entrance_socket",
+       "bearing_deg"
+      ],
+      "properties": {
+       "envelope": {
+        "$ref": "#/$defs/gref"
+       },
+       "forecourt": {
+        "$ref": "#/$defs/gref"
+       }
+      }
+     }
+    },
+    "primary_corridors": {
+     "type": "object",
+     "required": [
+      "nodes",
+      "links",
+      "reservation"
+     ],
+     "properties": {
+      "links": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "id",
+         "nodes",
+         "centerline",
+         "width_m",
+         "grade_max",
+         "profile"
+        ],
+        "properties": {
+         "centerline": {
+          "$ref": "#/$defs/gref"
+         },
+         "grade_max": {
+          "type": "number",
+          "minimum": 0
+         }
+        }
+       }
+      }
+     }
+    },
+    "water_access": {
+     "type": "array"
+    },
+    "access_contracts": {
+     "type": "array"
+    }
+   }
+  }
+ }
+}

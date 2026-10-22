@@ -1,0 +1,18 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "settlement-input/1",
+ "type": "object",
+ "required": ["schema", "id", "seed", "coordinates", "height", "tier", "wall_type", "territory", "features", "locks", "historical_households"],
+ "properties": {
+  "schema": {"enum": ["settlement-input/1"]},
+  "id": {"type": "string"}, "seed": {"type": "integer"},
+  "coordinates": {"type": "object", "required": ["units", "north_xz"]},
+  "height": {"type": "object", "required": ["file", "origin_xz", "cell_m", "decode", "already_remapped"],
+   "properties": {"already_remapped": {"type": "boolean"}, "cell_m": {"type": "number", "minimum": 0}}},
+  "tier": {"type": "string"},
+  "wall_type": {"enum": ["auto", "plain", "plain_hill", "mountain", "unwalled"]},
+  "territory": {"type": "object", "required": ["preferred", "allowed", "protected"]},
+  "features": {"type": "string"}, "locks": {"type": "array"},
+  "historical_households": {"type": ["integer", "null"]}
+ }
+}

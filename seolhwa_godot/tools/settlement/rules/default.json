@@ -1,0 +1,2493 @@
+{
+ "acceptance": {
+  "checks": [
+   "L0.decode",
+   "L0.alignment",
+   "L0.water",
+   "L0.probes",
+   "L1.ledger",
+   "L1.rounding",
+   "L1.scale_once",
+   "L2.ring",
+   "L2.crossings",
+   "L2.containment",
+   "L2.intrusion",
+   "L2.corridors",
+   "L2.openings"
+  ]
+ },
+ "institution_variants": {
+  "community": {
+   "inside_wall": true,
+   "name": "당산·정자 마당",
+   "variants": {
+    "compact": {
+     "contents": [
+      "당산나무",
+      "정자"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 56
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 13.4
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 4
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 13.4
+     }
+    },
+    "full": {
+     "contents": [
+      "당산나무",
+      "정자",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 80
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 16
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 4
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 16
+     }
+    }
+   }
+  },
+  "dongheon": {
+   "inside_wall": true,
+   "name": "동헌·내아",
+   "variants": {
+    "compact": {
+     "contents": [
+      "동헌",
+      "내아",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 480
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 38.7
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 12
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 62.0
+     }
+    },
+    "full": {
+     "contents": [
+      "동헌",
+      "내아",
+      "마당",
+      "부속"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 800
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 50
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 12
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 80
+     }
+    }
+   }
+  },
+  "gaeksa": {
+   "inside_wall": true,
+   "name": "객사",
+   "variants": {
+    "compact": {
+     "contents": [
+      "정청",
+      "동익헌",
+      "서익헌",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 360
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 38.7
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 12
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 46.5
+     }
+    },
+    "full": {
+     "contents": [
+      "정청",
+      "동익헌",
+      "서익헌",
+      "마당",
+      "부속"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 600
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 50
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 12
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 60
+     }
+    }
+   }
+  },
+  "gunchang": {
+   "inside_wall": true,
+   "name": "군창(산성 곡물 창고)",
+   "variants": {
+    "compact": {
+     "contents": [
+      "창고",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 60
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 15.5
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 23.2
+     }
+    },
+    "full": {
+     "contents": [
+      "창고",
+      "마당",
+      "관리 건물"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 100
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 20
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 30
+     }
+    }
+   }
+  },
+  "hyangcheong": {
+   "inside_wall": true,
+   "name": "향청",
+   "variants": {
+    "compact": {
+     "contents": [
+      "청"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 90
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 23.2
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 23.2
+     }
+    },
+    "full": {
+     "contents": [
+      "청",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 150
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 30
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 30
+     }
+    }
+   }
+  },
+  "hyanggyo": {
+   "inside_wall": false,
+   "name": "향교",
+   "variants": {
+    "compact": {
+     "contents": [
+      "대성전",
+      "명륜당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 300
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 38.7
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 12
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 46.5
+     }
+    },
+    "full": {
+     "contents": [
+      "대성전",
+      "명륜당",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 500
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 50
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 12
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 60
+     }
+    }
+   }
+  },
+  "jakcheong": {
+   "inside_wall": true,
+   "name": "작청·질청",
+   "variants": {
+    "compact": {
+     "contents": [
+      "청"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 60
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 15.5
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 23.2
+     }
+    },
+    "full": {
+     "contents": [
+      "청",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 100
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 20
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 30
+     }
+    }
+   }
+  },
+  "jangdae": {
+   "inside_wall": true,
+   "name": "장대(지휘소)",
+   "variants": {
+    "compact": {
+     "contents": [
+      "장대"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 36
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 11.6
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 15.5
+     }
+    },
+    "full": {
+     "contents": [
+      "장대",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 60
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 15
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 20
+     }
+    }
+   }
+  },
+  "jongga": {
+   "inside_wall": true,
+   "name": "종가·사당",
+   "variants": {
+    "compact": {
+     "contents": [
+      "종가",
+      "사당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 180
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 27.1
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 31.0
+     }
+    },
+    "full": {
+     "contents": [
+      "종가",
+      "사당",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 300
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 35
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 40
+     }
+    }
+   }
+  },
+  "pond": {
+   "inside_wall": true,
+   "name": "연못·우물(산성 물)",
+   "variants": {
+    "compact": {
+     "contents": [
+      "못"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 0
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 12.5
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 4
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 12.5
+     }
+    },
+    "full": {
+     "contents": [
+      "못",
+      "우물"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 0
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 15
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 4
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 15
+     }
+    }
+   }
+  },
+  "prison": {
+   "inside_wall": true,
+   "name": "옥",
+   "variants": {
+    "compact": {
+     "contents": [
+      "옥사"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 60
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 18.6
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 19.4
+     }
+    },
+    "full": {
+     "contents": [
+      "옥사",
+      "담장 안 마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 100
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 24
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 25
+     }
+    }
+   }
+  },
+  "storage": {
+   "inside_wall": true,
+   "name": "관창(행정 곡물 창고)",
+   "variants": {
+    "compact": {
+     "contents": [
+      "창고"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 90
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 23.2
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 23.2
+     }
+    },
+    "full": {
+     "contents": [
+      "창고",
+      "마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 150
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 30
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 6
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 30
+     }
+    }
+   }
+  },
+  "well": {
+   "inside_wall": true,
+   "name": "우물 터",
+   "variants": {
+    "compact": {
+     "contents": [
+      "우물"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 28
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 10.0
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 4
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 10.0
+     }
+    },
+    "full": {
+     "contents": [
+      "우물",
+      "빨래터 마당"
+     ],
+     "court_min_m2": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m2",
+      "value": 40
+     },
+     "depth": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 12
+     },
+     "entrance_clearance": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "world_m",
+      "value": 4
+     },
+     "width": {
+      "confidence": "provisional",
+      "kind": "design",
+      "source": "design",
+      "unit": "historical_m",
+      "value": 12
+     }
+    }
+   }
+  }
+ },
+ "mapping": {
+  "family_auto": {
+   "hill_min_tpi300_m": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "design",
+    "unit": "world_m",
+    "value": 8
+   },
+   "mountain_min_slope_deg": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "design",
+    "unit": "deg",
+    "value": 18
+   },
+   "plain_max_relief_m": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "design",
+    "unit": "world_m",
+    "value": 12
+   }
+  },
+  "tier_by_type": {
+   "읍성": {
+    "L": "medium_eupchi",
+    "M": "small_eupchi",
+    "S": "small_eupchi",
+    "XL": "large_seat"
+   },
+   "장시": "market_town"
+  },
+  "village_by_archetype": {
+   "coast": "waterside_village",
+   "eupchi": "minchon",
+   "island": "waterside_village",
+   "mountain": "sanchon",
+   "pass": "sanchon",
+   "plain": "minchon",
+   "river": "waterside_village",
+   "temple": "minchon"
+  }
+ },
+ "objectives": {
+  "ranges": {
+   "access_cost_per_gate": {
+    "confidence": "provisional",
+    "kind": "objective",
+    "source": "design",
+    "unit": "cost_m",
+    "value": [
+     0,
+     1500
+    ]
+   },
+   "axis_deg": {
+    "confidence": "provisional",
+    "kind": "objective",
+    "source": "design",
+    "unit": "deg",
+    "value": [
+     0,
+     90
+    ]
+   },
+   "compactness_iq": {
+    "confidence": "provisional",
+    "kind": "objective",
+    "source": "design",
+    "unit": "ratio",
+    "value": [
+     0.45,
+     0.9
+    ]
+   },
+   "unbuildable_fraction": {
+    "confidence": "provisional",
+    "kind": "objective",
+    "source": "design",
+    "unit": "ratio",
+    "value": [
+     0.0,
+     0.6
+    ]
+   }
+  },
+  "site_score": {
+   "A": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.15
+   },
+   "B": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.25
+   },
+   "D": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.05
+   },
+   "F": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.2
+   },
+   "K": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.1
+   },
+   "P": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.1
+   },
+   "W": {
+    "confidence": "provisional",
+    "kind": "design",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.15
+   }
+  },
+  "weights": {
+   "access": {
+    "confidence": "agreed",
+    "kind": "objective",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.25
+   },
+   "axis": {
+    "confidence": "agreed",
+    "kind": "objective",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.1
+   },
+   "civic_fit": {
+    "confidence": "agreed",
+    "kind": "objective",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.25
+   },
+   "compactness": {
+    "confidence": "agreed",
+    "kind": "objective",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.2
+   },
+   "terrain_economy": {
+    "confidence": "agreed",
+    "kind": "objective",
+    "source": "spec_L0_2",
+    "unit": "weight",
+    "value": 0.2
+   }
+  }
+ },
+ "parameters": {
+  "acceptance.class_rounding_error": {
+   "confidence": "agreed",
+   "kind": "acceptance",
+   "source": "spec_L0_2",
+   "unit": "households",
+   "value": 1.0
+  },
+  "acceptance.intrusion_m2": {
+   "confidence": "agreed",
+   "kind": "acceptance",
+   "source": "spec_L0_2",
+   "unit": "world_m2",
+   "value": 0.01
+  },
+  "acceptance.ledger_residual_m2": {
+   "confidence": "agreed",
+   "kind": "acceptance",
+   "source": "spec_L0_2",
+   "unit": "world_m2",
+   "value": 0.1
+  },
+  "agriculture.farmland_classes": {
+   "confidence": "agreed",
+   "kind": "data",
+   "source": "region_data",
+   "unit": "class",
+   "value": [
+    2,
+    3
+   ]
+  },
+  "agriculture.radii_m": {
+   "confidence": "agreed",
+   "kind": "analysis",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": [
+    300,
+    600
+   ]
+  },
+  "civic.beam_width": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 6
+  },
+  "civic.bearing_step_deg": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": 15
+  },
+  "civic.bundle_tries": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 24
+  },
+  "civic.diversity_m": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "world_m",
+   "value": 20
+  },
+  "civic.max_relief_m": {
+   "confidence": "agreed",
+   "kind": "buildability",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "civic.per_state": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 8
+  },
+  "civic.site_limit": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 400
+  },
+  "civic.site_step_m": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 10
+  },
+  "civic.spacing_m": {
+   "confidence": "provisional",
+   "kind": "reservation",
+   "source": "design",
+   "unit": "world_m",
+   "value": 6.0
+  },
+  "drainage.corridor_margin_m": {
+   "confidence": "agreed",
+   "kind": "reservation",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 3.0
+  },
+  "flood.R_bank_decay_m": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 60
+  },
+  "flood.R_height_m": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "source": "spec_L0_2",
+   "unit": "source_vertical_m",
+   "value": 5
+  },
+  "flood.exclusion_offset": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "source": "spec_L0_2",
+   "unit": "source_vertical_m",
+   "value": 3
+  },
+  "flood.max_reach_m": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "note": "static bathtub screen limited to this horizontal reach from mapped water (prevents nearest-surface leakage over ridges); HAND/flow routing deferred",
+   "source": "design",
+   "unit": "world_m",
+   "value": 300
+  },
+  "flood.stage_offsets": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "source": "spec_L0_2",
+   "unit": "source_vertical_m",
+   "value": [
+    1,
+    3,
+    5
+   ]
+  },
+  "frame.alternatives": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "count",
+   "value": 8
+  },
+  "frame.dedupe_iou": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "ratio",
+   "value": 0.92
+  },
+  "frame.eval_limit": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 24
+  },
+  "frame.level_count": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 10
+  },
+  "frame.level_step_m": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "frame.min_wall_segment_m": {
+   "confidence": "provisional",
+   "kind": "geometry",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.0
+  },
+  "frame.plain.aspect_max": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 1.6
+  },
+  "frame.plain.aspect_min": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 1.0
+  },
+  "frame.plain.bearing_step_deg": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": 15
+  },
+  "frame.plain.center_lattice_m": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "world_m",
+   "value": 20
+  },
+  "frame.plain.chamfer_frac": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "ratio",
+   "value": 0.15
+  },
+  "frame.plain.prefilter_top": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 24
+  },
+  "frame.plain.size_step_m": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 10
+  },
+  "frame.plain.vertex_passes": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "count",
+   "value": 4
+  },
+  "frame.plain.vertex_step_m": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "frame.rear_sector_half_deg": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "deg",
+   "value": 60
+  },
+  "frame.simplify_m": {
+   "confidence": "provisional",
+   "kind": "geometry",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "frame.smooth_m": {
+   "confidence": "provisional",
+   "kind": "geometry",
+   "source": "design",
+   "unit": "world_m",
+   "value": 6.0
+  },
+  "frame.unwalled.growth_m": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "world_m",
+   "value": [
+    40,
+    60,
+    90,
+    130
+   ]
+  },
+  "frame.unwalled.min_cluster_m2": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 400
+  },
+  "frame.vertex_flood_weight": {
+   "confidence": "provisional",
+   "kind": "objective",
+   "source": "design",
+   "unit": "ratio",
+   "value": 0.5
+  },
+  "frame.vertex_perimeter_weight": {
+   "confidence": "provisional",
+   "kind": "objective",
+   "source": "design",
+   "unit": "world_m2_per_m",
+   "value": 2.0
+  },
+  "frame.wall_inner_reserve_m": {
+   "confidence": "provisional",
+   "kind": "reservation",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.0
+  },
+  "gates.approach_limit_m": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "world_m",
+   "value": 400
+  },
+  "gates.candidates_per_cluster": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "count",
+   "value": 8
+  },
+  "gates.cluster_bearing_deg": {
+   "confidence": "provisional",
+   "kind": "search",
+   "source": "design",
+   "unit": "deg",
+   "value": 45
+  },
+  "gates.max": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "spec_L0_2",
+   "unit": "count",
+   "value": 4
+  },
+  "gates.min": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "spec_L0_2",
+   "unit": "count",
+   "value": 2
+  },
+  "gates.min_spacing_m": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "design",
+   "unit": "world_m",
+   "value": 40
+  },
+  "gates.sample_step_m": {
+   "confidence": "agreed",
+   "kind": "search",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 4.0
+  },
+  "gates.serve_tolerance_m": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "design",
+   "unit": "world_m",
+   "value": 16
+  },
+  "gates.width_m": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "design",
+   "unit": "world_m",
+   "value": 7.2
+  },
+  "geometry.endpoint_match": {
+   "confidence": "agreed",
+   "kind": "engineering",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 0.1
+  },
+  "geometry.grid": {
+   "confidence": "agreed",
+   "kind": "engineering",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 0.05
+  },
+  "geometry.repair_area_tolerance_m2": {
+   "confidence": "provisional",
+   "kind": "engineering",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 0.5
+  },
+  "program.f_lanes": {
+   "confidence": "agreed",
+   "kind": "program",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 0.12
+  },
+  "program.f_open": {
+   "confidence": "agreed",
+   "kind": "program",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 0.2
+  },
+  "program.household_size": {
+   "confidence": "provisional",
+   "kind": "program",
+   "source": "spec_L0_2",
+   "unit": "persons",
+   "value": 4.5
+  },
+  "program.market_stall_m2": {
+   "confidence": "provisional",
+   "kind": "program",
+   "source": "spec_L0_2",
+   "unit": "historical_m2",
+   "value": 15
+  },
+  "residential.access_max_m": {
+   "confidence": "provisional",
+   "kind": "program",
+   "source": "design",
+   "unit": "world_m",
+   "value": 80
+  },
+  "residential.min_component_area_m2": {
+   "confidence": "provisional",
+   "kind": "program",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 300
+  },
+  "residential.min_component_width_m": {
+   "confidence": "provisional",
+   "kind": "program",
+   "source": "design",
+   "unit": "world_m",
+   "value": 12
+  },
+  "routing.corridor_width_m": {
+   "confidence": "agreed",
+   "kind": "reservation",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 7.2
+  },
+  "routing.grade_cost_k": {
+   "confidence": "agreed",
+   "kind": "routing",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 8.0
+  },
+  "routing.neighbours": {
+   "confidence": "agreed",
+   "kind": "routing",
+   "source": "spec_L0_2",
+   "unit": "count",
+   "value": 8
+  },
+  "routing.primary_max_grade": {
+   "confidence": "agreed",
+   "kind": "routing",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 0.1
+  },
+  "routing.window_margin_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "source": "design",
+   "unit": "world_m",
+   "value": 240
+  },
+  "site.halo_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 1000
+  },
+  "site.planning_margin_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "design",
+   "unit": "world_m",
+   "value": 160
+  },
+  "site.relief_radius_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "design",
+   "unit": "world_m",
+   "value": 50
+  },
+  "site.smooth_sigma_m": {
+   "confidence": "agreed",
+   "kind": "analysis",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "site.tpi_radii_m": {
+   "confidence": "agreed",
+   "kind": "analysis",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": [
+    30,
+    100,
+    300
+   ]
+  },
+  "slope.civic_max_deg": {
+   "confidence": "agreed",
+   "kind": "buildability",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": 10
+  },
+  "slope.civic_pref_deg": {
+   "confidence": "agreed",
+   "kind": "buildability",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": 5
+  },
+  "slope.housing_max_deg": {
+   "confidence": "agreed",
+   "kind": "buildability",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": 15
+  },
+  "slope.housing_pref_deg": {
+   "confidence": "agreed",
+   "kind": "buildability",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": 8
+  },
+  "water.landuse_water_class": {
+   "confidence": "agreed",
+   "kind": "data",
+   "source": "region_data",
+   "unit": "class",
+   "value": 5
+  },
+  "water.min_channel_width_m": {
+   "confidence": "provisional",
+   "kind": "data",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "water.surface_tolerance_m": {
+   "confidence": "provisional",
+   "kind": "data_check",
+   "source": "design",
+   "unit": "world_m",
+   "value": 1.5
+  },
+  "water_access.limit_m": {
+   "confidence": "agreed",
+   "kind": "access",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 300
+  },
+  "water_access.reservation_m": {
+   "confidence": "provisional",
+   "kind": "reservation",
+   "source": "design",
+   "unit": "world_m",
+   "value": 12
+  },
+  "water_access.target_m": {
+   "confidence": "agreed",
+   "kind": "access",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": 150
+  },
+  "water_passage.margin_m": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "water_passage.max_span_m": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "design",
+   "unit": "world_m",
+   "value": 40.0
+  },
+  "water_passage.sluice_min_width_m": {
+   "confidence": "provisional",
+   "kind": "design",
+   "source": "design",
+   "unit": "world_m",
+   "value": 8.0
+  },
+  "world.area_scale": {
+   "confidence": "agreed",
+   "kind": "scale",
+   "source": "metrics",
+   "unit": "ratio",
+   "value": 1.44
+  },
+  "world.length_scale": {
+   "confidence": "agreed",
+   "kind": "scale",
+   "source": "metrics",
+   "unit": "ratio",
+   "value": 1.2
+  }
+ },
+ "profiles": {
+  "large_seat": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.08,
+     "ordinary": 0.7,
+     "specialist": 0.22
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 2.5
+   },
+   "institutions": [
+    "gaeksa",
+    "dongheon",
+    "hyangcheong",
+    "jakcheong",
+    "storage",
+    "prison",
+    "hyanggyo"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "clerical": 0.2,
+      "landholding": 0.8
+     },
+     "ordinary": {
+      "agriculture": 0.5,
+      "craft": 0.2,
+      "service": 0.15,
+      "trade": 0.15
+     },
+     "specialist": {
+      "clerical": 0.5,
+      "craft": 0.3,
+      "trade": 0.2
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 80
+   },
+   "name": "대 감영급",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 350,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 40
+   },
+   "settlement_kind": "eupchi",
+   "urban": true
+  },
+  "market_town": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.03,
+     "ordinary": 0.85,
+     "specialist": 0.12
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "well",
+    "community"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "clerical": 0.2,
+      "landholding": 0.8
+     },
+     "ordinary": {
+      "agriculture": 0.5,
+      "craft": 0.2,
+      "service": 0.15,
+      "trade": 0.15
+     },
+     "specialist": {
+      "clerical": 0.5,
+      "craft": 0.3,
+      "trade": 0.2
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 20
+   },
+   "name": "장시 마을",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 350,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 15
+   },
+   "settlement_kind": "market",
+   "urban": true
+  },
+  "medium_eupchi": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.07,
+     "ordinary": 0.75,
+     "specialist": 0.18
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.5
+   },
+   "institutions": [
+    "gaeksa",
+    "dongheon",
+    "hyangcheong",
+    "jakcheong",
+    "storage",
+    "prison",
+    "hyanggyo"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "clerical": 0.2,
+      "landholding": 0.8
+     },
+     "ordinary": {
+      "agriculture": 0.5,
+      "craft": 0.2,
+      "service": 0.15,
+      "trade": 0.15
+     },
+     "specialist": {
+      "clerical": 0.5,
+      "craft": 0.3,
+      "trade": 0.2
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 40
+   },
+   "name": "중 목·부 읍치",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 350,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 25
+   },
+   "settlement_kind": "eupchi",
+   "urban": true
+  },
+  "minchon": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.03,
+     "ordinary": 0.95,
+     "specialist": 0.02
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "well",
+    "community"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "landholding": 1.0
+     },
+     "ordinary": {
+      "agriculture": 0.85,
+      "craft": 0.1,
+      "service": 0.05
+     },
+     "specialist": {
+      "craft": 0.6,
+      "trade": 0.4
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 0
+   },
+   "name": "민촌",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 550,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 3
+   },
+   "settlement_kind": "village",
+   "urban": false
+  },
+  "sanchon": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.03,
+     "ordinary": 0.95,
+     "specialist": 0.02
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "well",
+    "community"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "landholding": 1.0
+     },
+     "ordinary": {
+      "agriculture": 0.5,
+      "forest_products": 0.4,
+      "service": 0.1
+     },
+     "specialist": {
+      "craft": 0.6,
+      "trade": 0.4
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 0
+   },
+   "name": "산촌",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 550,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 2
+   },
+   "settlement_kind": "village",
+   "urban": false
+  },
+  "sanseong_refuge": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.02,
+     "ordinary": 0.8,
+     "specialist": 0.18
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "jangdae",
+    "gunchang",
+    "pond"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "command": 1.0
+     },
+     "ordinary": {
+      "agriculture": 0.3,
+      "forest_products": 0.2,
+      "garrison": 0.5
+     },
+     "specialist": {
+      "garrison": 0.6,
+      "temple_or_storage": 0.4
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "count",
+    "value": 0
+   },
+   "name": "산성(입보 산성)",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 550,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 5
+   },
+   "settlement_kind": "fortress",
+   "urban": false
+  },
+  "small_eupchi": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.05,
+     "ordinary": 0.8,
+     "specialist": 0.15
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "gaeksa",
+    "dongheon",
+    "hyangcheong",
+    "jakcheong",
+    "storage",
+    "prison",
+    "hyanggyo"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "clerical": 0.2,
+      "landholding": 0.8
+     },
+     "ordinary": {
+      "agriculture": 0.5,
+      "craft": 0.2,
+      "service": 0.15,
+      "trade": 0.15
+     },
+     "specialist": {
+      "clerical": 0.5,
+      "craft": 0.3,
+      "trade": 0.2
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 20
+   },
+   "name": "소 군·현 읍치",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 350,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 15
+   },
+   "settlement_kind": "eupchi",
+   "urban": true
+  },
+  "waterside_village": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.03,
+     "ordinary": 0.95,
+     "specialist": 0.02
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "well",
+    "community"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "landholding": 1.0
+     },
+     "ordinary": {
+      "agriculture": 0.35,
+      "fishing": 0.5,
+      "salt_or_boat": 0.15
+     },
+     "specialist": {
+      "craft": 0.5,
+      "trade": 0.5
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 0
+   },
+   "name": "물가 마을",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 550,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 3
+   },
+   "settlement_kind": "village",
+   "urban": false
+  },
+  "yangban_village": {
+   "class_shares": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": {
+     "elite": 0.25,
+     "ordinary": 0.7,
+     "specialist": 0.05
+    }
+   },
+   "institution_area_factor": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "ratio",
+    "value": 1.0
+   },
+   "institutions": [
+    "well",
+    "community",
+    "jongga"
+   ],
+   "livelihood_given_class": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "ratio",
+    "value": {
+     "elite": {
+      "landholding": 1.0
+     },
+     "ordinary": {
+      "agriculture": 0.85,
+      "craft": 0.1,
+      "service": 0.05
+     },
+     "specialist": {
+      "craft": 0.6,
+      "trade": 0.4
+     }
+    }
+   },
+   "market_stalls": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "spec_L0_2",
+    "unit": "count",
+    "value": 0
+   },
+   "name": "양반 마을",
+   "parcel_median_m2": {
+    "confidence": "measured",
+    "kind": "program",
+    "source": "metrics",
+    "unit": "historical_m2",
+    "value": {
+     "elite": 1800,
+     "ordinary": 550,
+     "specialist": 900
+    }
+   },
+   "residential_min_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "source": "design",
+    "unit": "households",
+    "value": 4
+   },
+   "settlement_kind": "village",
+   "urban": false
+  }
+ },
+ "schema": "settlement-rules/1",
+ "sources": {
+  "design": {
+   "description": "Session A provisional defaults (generator design assumptions)"
+  },
+  "engineering": {
+   "description": "numerical/engineering tolerances"
+  },
+  "metrics": {
+   "path": "docs/reports/settlement-metrics.md"
+  },
+  "region_data": {
+   "description": "region_data/<REGION>/region.json conventions"
+  },
+  "spec_L0_2": {
+   "description": "Layers 0–2 agreed spec (Claude↔Codex session A)",
+   "path": "docs/reports/settlement-v2-L0-2.md"
+  }
+ }
+}
