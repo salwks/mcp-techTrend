@@ -110,6 +110,25 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 		"city": _city(X)
 		"town": _town(X)
 		_: _village(X, String(cfg.get("kind", "minchon")))
+	# 옹성 옆 트임 문: 큰길을 옹성 안으로 돌려 놓는다(구역 짜임 전에 — 필지가 돌아간 길을 비켜 간다)
+	var detours := []
+	for it in X.items:
+		if String(it.kit) == "landmark/namwon_eupseong":
+			var hs: float = float(it.params.get("side", 200.0)) / 2.0
+			var op = it.params.get("ongseong", false)
+			if op is Dictionary:
+				for sd in op:
+					var ds = _ong_detour(X, hs, String(sd), String(op[sd]))
+					if ds != null: detours.append(ds)
+	for t in X.trunks:
+		if detours.is_empty() or not t.get("paint", true): continue
+		var P0 := []
+		for q in t.pts: P0.append(Vector2(float(q[0]), float(q[1])))
+		for dt in detours:
+			P0 = _apply_detour(P0, dt)
+		var np := []
+		for q in P0: np.append([snappedf((q as Vector2).x, 0.01), snappedf((q as Vector2).y, 0.01)])
+		t.pts = np
 	# 구역마다 고을 짜임(갈래길·필지·집)
 	var alleys := []
 	var dsum := []
@@ -211,6 +230,60 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 			alleys.append({ id = "%s_%s%s" % [X.pre, t.id, "" if ri == 0 else "_%d" % ri], points = pp, width_m = 3.6 if rn[0] else full, kind = "trunk", terrace = true })
 			ri += 1
 	return { items = X.items, alleys = alleys, majors = X.majors, districts = dsum, log = X.log, tier = tier, label = TIERS.get(tier, {}).get("label", tier), urban = urban_rects }
+
+# 옹성 문이 옆으로 트였으면 큰길은 곧장 옹성 벽을 뚫지 않고 문 → 옹성 안마당 → 옆 트임 → 바깥으로 돌아 나간다.
+# 성 둘레·옹성 크기는 landmark/namwon_eupseong · seongmun 과 같은 값(성벽 T, 문 깊이 T+1, 반지름 11)
+const ONG_LOCAL_PX := { S = "east", E = "north", N = "west", W = "south" }
+const ONG_SIDE_RY := { S = 0.0, E = PI / 2, N = PI, W = -PI / 2 }
+static func _ong_detour(X: Ctx, hs: float, sd: String, ow: String):
+	if ow in ["front", "none", "false"] or not ONG_SIDE_RY.has(sd): return null
+	var sx := 1.0 if ow == ONG_LOCAL_PX[sd] else -1.0
+	var t := 4.6
+	var zc := hs - t / 2.0
+	var zo := (t + 1.0) / 2.0 - 0.5
+	var R := 11.0
+	var bs := Basis(Vector3.UP, float(ONG_SIDE_RY[sd]))
+	var loc := [Vector2(0, zc + zo + 3.5), Vector2(sx * R * 0.55, zc + zo + 4.5), Vector2(sx * (R + 3.5), zc + zo + 5.5),
+		Vector2(sx * (R + 1.0), zc + zo + R + 6.0), Vector2(0, zc + zo + R + 12.0)]
+	var w := []
+	for q in loc:
+		var v := bs * Vector3(q.x, 0, q.y)
+		var a: Array = X.Wa(v.x, v.z)
+		w.append(Vector2(float(a[0]), float(a[1])))
+	var g3 := bs * Vector3(0, 0, zc); var o3 := bs * Vector3(0, 0, 1)
+	var ga: Array = X.Wa(g3.x, g3.z)
+	var g := Vector2(float(ga[0]), float(ga[1]))
+	var oa: Array = X.Wa(g3.x + o3.x, g3.z + o3.z)
+	var o := (Vector2(float(oa[0]), float(oa[1])) - g).normalized()
+	return [g, o, w, zo + R + 12.0]
+
+# 문을 지나는 큰길의 바깥 토막(문~옹성 너머)을 돌아가는 점들로 바꾼다
+static func _apply_detour(P: Array, dt: Array) -> Array:
+	var g: Vector2 = dt[0]; var o: Vector2 = dt[1]; var w: Array = dt[2]; var reach: float = dt[3]
+	var hit := false
+	for i in P.size() - 1:
+		if OG.seg_dist(g, P[i], P[i + 1]) < 2.0: hit = true; break
+	if not hit: return P
+	var Q := OG.resample(P, 1.0)
+	var inside := func(q: Vector2) -> bool:
+		var d := q - g
+		var along := d.dot(o)
+		return along > 0.5 and along < reach and absf(d.dot(Vector2(-o.y, o.x))) < 3.0
+	var out := []
+	var done := false
+	var i := 0
+	while i < Q.size():
+		var q: Vector2 = Q[i]
+		if not done and inside.call(q):
+			var j := i
+			while j < Q.size() and inside.call(Q[j]): j += 1
+			var fwd: bool = (Q[mini(j, Q.size() - 1)] as Vector2 - g).dot(o) > (q - g).dot(o)
+			var seq := w.duplicate()
+			if not fwd: seq.reverse()
+			for s in seq: out.append(s)
+			done = true; i = j; continue
+		out.append(q); i += 1
+	return out
 
 static func apoly_of(area: Array) -> Array:
 	var out := []

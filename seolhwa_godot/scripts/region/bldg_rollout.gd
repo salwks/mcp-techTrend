@@ -182,6 +182,10 @@ func _stall_why(pos: Vector3, st: Vector2) -> void:
 				why = "collider %s %s" % [c.type, str(c.get("tag", c.get("name", c.get("id", ""))))]
 				if c.type == "circle": why += " at=(%.1f,%.1f) r=%.2f" % [c.x, c.z, c.r]
 				else: why += " box=(%.1f..%.1f, %.1f..%.1f)" % [c.minX, c.maxX, c.minZ, c.maxZ]
+				for t in w._statics:
+					for e in w._statics[t]:
+						if e.colliders.has(c):
+							why += " src=%s/%s" % [str(e.get("tag", "")), (str(e.node.name) if is_instance_valid(e.node) else "")]
 				break
 	else:
 		why = "slope dh=%.2f over %.2f" % [w.height_at(tx, tz) - w.height_at(pos.x, pos.z), st.length()]

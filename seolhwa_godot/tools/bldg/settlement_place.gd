@@ -109,8 +109,12 @@ func _views(name: String, cfg: Dictionary, res: Dictionary, bb: Rect2) -> Dictio
 		var pts := []
 		var step := 1 if p.size() < 14 else 2
 		var i := 0
+		var V := func(j: int) -> Vector2: return Vector2(float(p[j][0]), float(p[j][1]))
 		while i < p.size():
-			pts.append([snappedf(float(p[i][0]), 0.1), snappedf(float(p[i][1]), 0.1)]); i += step
+			# 성긴 꺾임점(옹성 돌아가는 길 등)은 건너뛰지 않는다 — 건너뛰면 걷기가 모서리를 질러 벽을 뚫으려 했다
+			var keep: bool = i % step == 0 or (i > 0 and (V.call(i) as Vector2).distance_to(V.call(i - 1)) > 1.3) or (i + 1 < p.size() and (V.call(i) as Vector2).distance_to(V.call(i + 1)) > 1.3)
+			if keep: pts.append([snappedf(float(p[i][0]), 0.1), snappedf(float(p[i][1]), 0.1)])
+			i += 1
 		if (pts[pts.size() - 1] as Array) != [snappedf(float(p[p.size() - 1][0]), 0.1), snappedf(float(p[p.size() - 1][1]), 0.1)]: pts.append([snappedf(float(p[p.size() - 1][0]), 0.1), snappedf(float(p[p.size() - 1][1]), 0.1)])
 		if walks.size() < 14: walks.append({ id = String(a.id).replace("st_" + name + "_", ""), label = String(a.id), pts = pts, shots = [] })
 	return { label = "고을 빌더 견본 " + name, views = views, walks = walks,

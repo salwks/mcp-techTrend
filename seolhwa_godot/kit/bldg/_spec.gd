@@ -45,9 +45,19 @@ static func resolve(params: Dictionary) -> Dictionary:
 	if params.has("nbays") and (sp.get("wings", []) as Array).size() == 1:
 		var bl: Array = sp.wings[0].bays
 		var nb := clampi(int(params.nbays), 1, bl.size())
+		var l0 := 0.0
+		for b in bl: l0 += float(b.w)
 		bl = bl.slice(0, nb)
 		while bl.size() > 1 and String(bl[bl.size() - 1].fn) == "gate": bl.pop_back()
 		sp.wings[0].bays = bl
+		# 곁 것(장작·장독 등)은 줄어든 몸채 끝으로 따라온다 — 옛 길이 그대로면 필지 밖·길 위에 남았다
+		var l1 := 0.0
+		for b in bl: l1 += float(b.w)
+		if l1 < l0 - 0.01:
+			for a in sp.get("attach", []):
+				if not a.has("x"): continue
+				var x := float(a.x)
+				a.x = x * l1 / l0 if absf(x) < l0 / 2 else signf(x) * (absf(x) - (l0 - l1) / 2)
 	return normalize(sp)
 
 static func normalize(sp: Dictionary) -> Dictionary:
