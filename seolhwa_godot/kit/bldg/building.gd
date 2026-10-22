@@ -688,11 +688,26 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			if r[1] - r[0] < 0.02 or r[3] - r[2] < 0.02: continue
 			nr.append_array(RU.wall_rects(m, part, rzf, r, sp.wall != "stone"))
 		rects = nr
+	# 남부 하부 돌벽 + 상부 흙벽(stone_mud — 낙안읍성 ㄱ자집·헛간): 벽 채움을 돌 띠 높이에서 나눠 아래는 막돌, 위는 흙
+	var stone_y := -INF
+	if sp.wall == "stone_mud" and wkey == "mud":
+		stone_y = y0 + minf(0.9 * float((sp.get("real_scale", [1.0, 1.0]) as Array)[1]), H * 0.45)
+		var sr := []
+		for r in rects:
+			if r[2] < stone_y and r[3] > stone_y + 0.02:
+				sr.append([r[0], r[1], r[2], stone_y]); sr.append([r[0], r[1], stone_y, r[3]])
+			else: sr.append(r)
+		rects = sr
 	for r in rects:
 		if r[1] - r[0] < 0.02 or r[3] - r[2] < 0.02: continue
+		var is_stone: bool = r[3] <= stone_y + 0.001
 		# 벽 채움: 위아래 0.4cm 물려(창방 밑면·바닥과 같은 평면에 겹치지 않게)
 		var g := Kit.box(r[1] - r[0], r[3] - r[2] - 0.008, t, (r[0] + r[1]) / 2, (r[2] + r[3]) / 2, 0)
-		if wkey == "panbyeok":
+		if is_stone:
+			# 막돌 아래 띠: 바깥으로 4cm 더 나온다(돌 면이 흙벽 밖으로) — 안쪽 면은 흙벽과 같아 방 안 도배는 그대로
+			var gs := Kit.box(r[1] - r[0], r[3] - r[2] - 0.008, t + 0.04, (r[0] + r[1]) / 2, (r[2] + r[3]) / 2, 0.02)
+			_wall_tiled(m, part, "rock", gs, [0x8a8478, 0x5e5950], 0.06, R, stone_y, 1.2)
+		elif wkey == "panbyeok":
 			m.add(part, "wood", C.PA(g, [0x6a4e36, 0x4e3a28], 0.03, R), 0.015)
 			A.add(m, part, "panbyeok", A.panel(r[1] - r[0], r[3] - r[2], (r[0] + r[1]) / 2, (r[2] + r[3]) / 2, t / 2 + 0.004), 0)
 		elif wkey == "stone":
@@ -1115,7 +1130,9 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		"neowa":
 			C.board_roof(m, "roof", hw * 2, hd * 2, top + 0.1 + lowr, rise * 1.1, "neowa", L, D, top, lod > 0)
 		_:
-			var eave := top + 0.3 + lowr   # 이엉 처마: 도리(벽 위 0.48m)를 덮을 만큼 — 낮은 지붕(제주)에서 도리가 이엉 밖으로 나오지 않게
+			# 이엉 처마(eave = 처마 띠 윗선, 밑선은 eave − 0.32): 예전엔 벽 위 +0.3 고정. droop가 있으면 낙안 실측처럼 처마 밑선을 벽 위끝보다
+			#   droop만큼 내린다(_thatch_dy — 벽 줄 위 띠는 도리 위에 남고, 문 머리 + 0.1 아래로는 안 내린다)
+			var eave := top + _thatch_dy(sp, ctx) + lowr
 			if ends[0] == "gable" and ends[1] == "gable":
 				RF.thatch_gable(m, "roof", { hw = hw, hd = hd, eave = eave, rise = rise, lod = lod, L = L, D = D, cols = rf.get("cols", C.THATCH), wall_top = top + 0.2 })
 			else:
@@ -1222,6 +1239,47 @@ static func _rod_geo(a: Vector3, b: Vector3, r: float) -> Kit.Geo:
 
 # 이엉 변주(rollout ②): 명세 roof에 적힌 값이 있으면 그대로, 없으면 시드·낡음으로 — 같은 남부 초가라도 지붕 꼴이 다르게
 #   bulge(단면 볼록) · hip_k(옆 비탈 배율 → 용마루 길이·둥근 정도) · sag(용마루 처짐) · patch(덧이엉 조각) · edge(처마 끝 ragged|combed) · bands(켜 띠)
+# 이엉 처마 높이(벽 위끝 top 기준, 처마 띠 윗선) — 집 한 채에 한 값(ㄱ·ㄷ 날개 이음이 맞게 날개마다 필요한 값 중 가장 높은 것)
+#   droop 없음: +0.3(예전). droop(낙안읍성 실측 — 처마 끝 밑선이 도리보다 0.3~0.5m 아래): 밑선 = top − droop, 단
+#   ① 벽 줄(처마 안쪽 끝 e = ov)에서 지붕 겉 − 두께 ≥ 도리 위(top + 0.48) + 0.13 — 벽 위 띠는 그대로 벽·도리를 덮는다(뚫지 않음)
+#   ② 처마 밑선 ≥ 그 날개 앞뒤 문 머리 + 0.10(문 높이는 지금 배율 그대로 — 처마가 문을 가리지 않게)
+const THATCH_T := 0.32
+static func _thatch_dy(sp: Dictionary, ctx: Dictionary) -> float:
+	var rf: Dictionary = sp.roof
+	var droop: float = float(rf.get("droop", 0.0))
+	if droop <= 0.0 or String(rf.kind) != "thatch": return 0.3
+	# ㄱ·ㄷ 날개 이음: 한 날개의 처진 처마가 다른 날개 벽(이음 안쪽 모서리) 위를 지나며 벽을 뚫었다(roof_check WALLCLEAR) — 날개 집은 예전 높이
+	if (sp.wings as Array).size() > 1: return 0.3
+	var tv := _thatch_vary(sp)
+	var b: float = clampf(float(tv.bulge), 0.15, 0.85)
+	var dk: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[1])
+	var hi: bool = ctx.hi
+	var dy := -droop + THATCH_T
+	for w in sp.wings:
+		var fr := _roof_frame(sp, ctx, w)
+		var top: float = fr.top
+		var ov: float = float(rf.eave)
+		var t := clampf(ov / maxf(float(fr.hd), 0.1), 0.0, 1.0)
+		dy = maxf(dy, 0.48 + 0.13 + THATCH_T - float(fr.rise) * t * (1.0 + b - b * t))
+		var y0w: float = float(ctx.Ff) + float(w.floor_up)
+		for bb in w.bays:
+			for side in ["front", "back"]:
+				var f = bb.get(side)
+				if not (f is Dictionary): continue
+				var k := String(f.get("kind", "wall"))
+				var y0: float = y0w + float(bb.get("floor_up", 0.0))
+				var H: float = top - y0
+				var hd := -1.0
+				match k:
+					"door2": hd = minf(H - 0.35, (1.85 if hi else 1.7) * dk)
+					"door1", "plank": hd = minf(H - 0.3, 1.72 * dk)
+					"plank2": hd = minf(H - 0.3, 1.8 * dk)
+					"door4", "bunhap_up": hd = H - (0.5 if H > 2.4 else 0.35)
+					"gate": hd = H - 0.3
+					"shop", "open": hd = H - 0.25
+				if hd > 0.0: dy = maxf(dy, (y0 + hd + 0.10) - top + THATCH_T)
+	return minf(dy, 0.3)
+
 static func _thatch_vary(sp: Dictionary) -> Dictionary:
 	var rf: Dictionary = sp.roof
 	var r := Kit.Rng.new(int(sp.seed) * 131 + 17)

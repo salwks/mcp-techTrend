@@ -35,7 +35,7 @@ const DISTRICTS := {
 	},
 	# 읍성 안 남쪽 절반(남문 ↔ 십자로, 서문 ↔ 동문 사이) — 옛 배치는 바둑판 줄(house_compound·giwa·choga). 북쪽 객사·관아(이야기 자리)는 그대로
 	eup = {
-		seed = 1881, prefix = "orge", group = "남원 읍성 안 남쪽(고을 짜임)", region = "south",
+		seed = 1886, prefix = "orge", group = "남원 읍성 안 남쪽(고을 짜임)", region = "south",
 		area = [[-3315, 253], [-3140, 253], [-3140, 336], [-3315, 336]],
 		trunk_ids = { namwon_eup_street = 5.0, namwon_eup_street_ew = 5.0 },
 		# 성 안 둘레길(순성로 — 성벽 안쪽을 도는 길): 남·서·동 안쪽
