@@ -625,6 +625,10 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 	# 실제 크기 배율(_spec.real_scale): 문·창 높이·너비를 벽 높이와 같이 키운다(문턱·창 밑 높이는 사람 크기라 그대로)
 	var dk: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[1])
 	var dw_k: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[0])
+	# 드나드는 문(pdoor): 걸어 들어가는 집(interior)의 앞문·방 사이 문 — 지금 배율 높이 그대로. 그 밖(뒷문·곳간·외양간·못 들어가는 방)은
+	#   낙안읍성 실측 문 높이 1.41~1.60m × 배율(집마다 한 값, dm) — 처마가 그 쪽에서 실측만큼 내려온다(_thatch_droop)
+	var pdoor: bool = is_player_door(sp, part, f)
+	var dm: float = door_measured(sp)
 	match kind:
 		"open", "rail":
 			if kind == "rail":
@@ -652,21 +656,24 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			op = [-0.45, 0.45, y0 + 1.35 * dk, y0 + 1.8 * dk]
 		"door2":
 			var dw := minf(xb - xa - 0.35, (1.5 if hi else 1.35) * dw_k)
-			op = [-dw / 2, dw / 2, y0 + 0.05, y0 + minf(H - 0.35, (1.85 if hi else 1.7) * dk)]
+			op = [-dw / 2, dw / 2, y0 + 0.05, y0 + minf(H - 0.35, (1.85 if hi else 1.7) * dk if pdoor else dm)]
 		"door1":
 			var dw := 0.74 * dw_k
 			var off: float = 0.0 if inner else clampf(float(f.get("off", 0.0)), -(xb - xa) / 2 + 0.5, (xb - xa) / 2 - 0.5)
-			op = [off - dw / 2, off + dw / 2, y0 + 0.05, y0 + minf(H - 0.3, 1.7 * dk)]
+			op = [off - dw / 2, off + dw / 2, y0 + 0.05, y0 + minf(H - 0.3, 1.7 * dk if pdoor else dm)]
 		"door4", "bunhap_up":
 			op = [xa + 0.02, xb - 0.02, y0 + 0.05, y0 + H - (0.5 if H > 2.4 else 0.35)]
 		"plank":
-			op = [-0.45 * dw_k, 0.45 * dw_k, y0 + 0.03, y0 + minf(H - 0.3, 1.72 * dk)]
+			op = [-0.45 * dw_k, 0.45 * dw_k, y0 + 0.03, y0 + minf(H - 0.3, 1.72 * dk if pdoor else dm)]
 		"plank2":
-			op = [-0.75 * dw_k, 0.75 * dw_k, y0 + 0.03, y0 + minf(H - 0.3, 1.8 * dk)]
+			op = [-0.75 * dw_k, 0.75 * dw_k, y0 + 0.03, y0 + minf(H - 0.3, 1.8 * dk if pdoor else dm)]
 		"gate":
 			op = [xa + 0.05, xb - 0.05, y0, y0 + H - 0.3]
 		"shop":
 			op = [xa, xb, y0 + 0.0, y0 + H - 0.25]
+	# 드나드는 문 기록(roof_check DOORCLEAR: 처마 밑선 ≥ 문 머리 + 0.10)
+	if pdoor and not inner and lod == 0 and op.size() == 4 and kind in DOOR_KINDS and ctx.has("pdoors"):
+		(ctx.pdoors as Array).append({ p = m.xform * Vector3((op[0] + op[1]) / 2, 0, t / 2), out = m.xform.basis.z, head = float(op[3]) })
 	# 벽 채움(구멍 둘레) — 흙·회벽은 짜임(인방) 사이 채움
 	var rects := []
 	# 모서리 끝(ext): 벽 채움만 늘린다(구멍 자리는 그대로). +1 → w/2 + t/2(옆벽 바깥면), −1 → w/2 − t/2(앞·뒷벽 안쪽면)
@@ -1130,11 +1137,11 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		"neowa":
 			C.board_roof(m, "roof", hw * 2, hd * 2, top + 0.1 + lowr, rise * 1.1, "neowa", L, D, top, lod > 0)
 		_:
-			# 이엉 처마(eave = 처마 띠 윗선, 밑선은 eave − 0.32): 예전엔 벽 위 +0.3 고정. droop가 있으면 낙안 실측처럼 처마 밑선을 벽 위끝보다
-			#   droop만큼 내린다(_thatch_dy — 벽 줄 위 띠는 도리 위에 남고, 문 머리 + 0.1 아래로는 안 내린다)
-			var eave := top + _thatch_dy(sp, ctx) + lowr
+			var eave := top + 0.3 + lowr   # 이엉 처마 띠 윗선: 도리(벽 위 0.48m)를 덮을 만큼 — 처짐(droop)은 벽 줄 밖 띠만(_thatch_droop)
+			var dr := _thatch_droop(sp, ctx, w, top)
 			if ends[0] == "gable" and ends[1] == "gable":
-				RF.thatch_gable(m, "roof", { hw = hw, hd = hd, eave = eave, rise = rise, lod = lod, L = L, D = D, cols = rf.get("cols", C.THATCH), wall_top = top + 0.2 })
+				RF.thatch_gable(m, "roof", { hw = hw, hd = hd, eave = eave, rise = rise, lod = lod, L = L, D = D, cols = rf.get("cols", C.THATCH), wall_top = top + 0.2,
+					droop = dr, ov = float(rf.eave) })
 			else:
 				# 처마 둥근 모서리 반지름: 벽·기둥 모서리(+0.3m 여유)를 덮을 만큼만 — 크면 모서리 벽이 이엉 밖으로 나온다
 				var oxv: float = float(rf.eave) * 0.9; var ozv: float = float(rf.eave)
@@ -1142,7 +1149,7 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 				while rcv > 0.3 and pow(rcv - oxv, 2) + pow(rcv - ozv, 2) > pow(rcv - 0.32, 2): rcv -= 0.05
 				var tv := _thatch_vary(sp)
 				var rr := RF.thatch(m, "roof", { hw = hw, hd = hd, eave = eave, rise = rise, rc = rcv, lod = lod, L = L, D = D,
-					ov = minf(float(rf.eave), float(rf.eave) * 0.9), wall_top = top + 0.48, hide_under = _hide_under(sp, ctx, w, cxr, czr),
+					ov = minf(float(rf.eave), float(rf.eave) * 0.9), wall_top = top + 0.48, hide_under = _hide_under(sp, ctx, w, cxr, czr), droop = dr,
 					cols = rf.get("cols", C.THATCH), net = int(rf.get("net", 0)), wear = sp.wear,
 					seed = int(sp.seed) * 7 + int(w.get("x", 0.0) * 13.0), bulge = tv.bulge, hip_k = tv.hip_k, sag = tv.sag, patch = tv.patch, edge = tv.edge, bands = tv.bands })
 				info.thatch = { hw = hw, hd = hd, rc = float(rf.get("rc", 1.1)), eave = eave, rise = rise, cx = cxr, cz = czr }
@@ -1239,46 +1246,59 @@ static func _rod_geo(a: Vector3, b: Vector3, r: float) -> Kit.Geo:
 
 # 이엉 변주(rollout ②): 명세 roof에 적힌 값이 있으면 그대로, 없으면 시드·낡음으로 — 같은 남부 초가라도 지붕 꼴이 다르게
 #   bulge(단면 볼록) · hip_k(옆 비탈 배율 → 용마루 길이·둥근 정도) · sag(용마루 처짐) · patch(덧이엉 조각) · edge(처마 끝 ragged|combed) · bands(켜 띠)
-# 이엉 처마 높이(벽 위끝 top 기준, 처마 띠 윗선) — 집 한 채에 한 값(ㄱ·ㄷ 날개 이음이 맞게 날개마다 필요한 값 중 가장 높은 것)
-#   droop 없음: +0.3(예전). droop(낙안읍성 실측 — 처마 끝 밑선이 도리보다 0.3~0.5m 아래): 밑선 = top − droop, 단
-#   ① 벽 줄(처마 안쪽 끝 e = ov)에서 지붕 겉 − 두께 ≥ 도리 위(top + 0.48) + 0.13 — 벽 위 띠는 그대로 벽·도리를 덮는다(뚫지 않음)
-#   ② 처마 밑선 ≥ 그 날개 앞뒤 문 머리 + 0.10(문 높이는 지금 배율 그대로 — 처마가 문을 가리지 않게)
+const DOOR_KINDS := ["door2", "door1", "door4", "plank", "plank2", "bunhap_up"]
+# 드나드는 문: 걸어 들어가는 집(sp.interior — 이야기 집·들어가는 집)의 앞면 문과 방 사이 문. 나머지는 못 드나드는 문
+static func is_player_door(sp: Dictionary, part: String, f: Dictionary) -> bool:
+	if bool(f.get("inner", false)): return true
+	return bool(sp.get("interior", false)) and part == "front"
+
+# 실측 문 높이(낙안읍성 ㄱ자집·주막·이방댁 1.41~1.60m) × 세로 배율 — 집마다 한 값
+static func door_measured(sp: Dictionary) -> float:
+	var r := Kit.Rng.new(int(sp.get("seed", 1)) * 977 + 41)
+	return snappedf(r.between(1.41, 1.60) * float((sp.get("real_scale", [1.0, 1.0]) as Array)[1]), 0.01)
+
+# 이엉 처마 처짐(면마다, 처마 끝에서 m): 지붕은 벽 줄 안쪽에서 예전 그대로(처마 띠 윗선 = 벽 위 + 0.3, 밑선 ≈ 벽 위 − 0.02)이고
+#   벽 줄 밖 처마 띠만 끝으로 갈수록 내린다 — 끝 밑선 = 벽 위끝 − droop(낙안 실측 0.3~0.5m × 배율). 드나드는 문이 있는 면은
+#   처마 끝 밑선 ≥ 그 문 머리 + 0.10. 면: zp(앞 +z) · zn(뒤) · xp · xn(옆 끝)
 const THATCH_T := 0.32
-static func _thatch_dy(sp: Dictionary, ctx: Dictionary) -> float:
+static func _thatch_droop(sp: Dictionary, ctx: Dictionary, w: Dictionary, top: float) -> Dictionary:
+	var out := { zp = 0.0, zn = 0.0, xp = 0.0, xn = 0.0 }
 	var rf: Dictionary = sp.roof
 	var droop: float = float(rf.get("droop", 0.0))
-	if droop <= 0.0 or String(rf.kind) != "thatch": return 0.3
-	# ㄱ·ㄷ 날개 이음: 한 날개의 처진 처마가 다른 날개 벽(이음 안쪽 모서리) 위를 지나며 벽을 뚫었다(roof_check WALLCLEAR) — 날개 집은 예전 높이
-	if (sp.wings as Array).size() > 1: return 0.3
-	var tv := _thatch_vary(sp)
-	var b: float = clampf(float(tv.bulge), 0.15, 0.85)
+	if droop <= 0.0 or String(rf.kind) != "thatch": return out
+	var full := maxf(droop - 0.02, 0.0)
+	for k in out: out[k] = full
 	var dk: float = float((sp.get("real_scale", [1.0, 1.0]) as Array)[1])
 	var hi: bool = ctx.hi
-	var dy := -droop + THATCH_T
-	for w in sp.wings:
-		var fr := _roof_frame(sp, ctx, w)
-		var top: float = fr.top
-		var ov: float = float(rf.eave)
-		var t := clampf(ov / maxf(float(fr.hd), 0.1), 0.0, 1.0)
-		dy = maxf(dy, 0.48 + 0.13 + THATCH_T - float(fr.rise) * t * (1.0 + b - b * t))
-		var y0w: float = float(ctx.Ff) + float(w.floor_up)
-		for bb in w.bays:
-			for side in ["front", "back"]:
-				var f = bb.get(side)
-				if not (f is Dictionary): continue
-				var k := String(f.get("kind", "wall"))
-				var y0: float = y0w + float(bb.get("floor_up", 0.0))
-				var H: float = top - y0
-				var hd := -1.0
-				match k:
-					"door2": hd = minf(H - 0.35, (1.85 if hi else 1.7) * dk)
-					"door1", "plank": hd = minf(H - 0.3, 1.72 * dk)
-					"plank2": hd = minf(H - 0.3, 1.8 * dk)
-					"door4", "bunhap_up": hd = H - (0.5 if H > 2.4 else 0.35)
-					"gate": hd = H - 0.3
-					"shop", "open": hd = H - 0.25
-				if hd > 0.0: dy = maxf(dy, (y0 + hd + 0.10) - top + THATCH_T)
-	return minf(dy, 0.3)
+	var y0w: float = float(ctx.Ff) + float(w.floor_up)
+	var under0 := top + 0.3 - THATCH_T   # 처지기 전 처마 끝 밑선
+	for bb in w.bays:
+		for side in ["front", "back"]:
+			var f = bb.get(side)
+			if not (f is Dictionary): continue
+			var k := String(f.get("kind", "wall"))
+			if not k in DOOR_KINDS: continue
+			var pd := is_player_door(sp, "front" if side == "front" else "body", f)
+			var y0: float = y0w + float(bb.get("floor_up", 0.0))
+			var H: float = top - y0
+			var hd := 0.0
+			if not pd:
+				# 못 드나드는 문(실측 높이): 낙안처럼 처마 끝 밑선이 문틀 위에 닿을 만큼까지만(문 머리를 처마가 가리지 않게, 여유 0)
+				if k in ["door2", "door1", "plank", "plank2"]:
+					hd = minf(H - (0.35 if k == "door2" else 0.3), door_measured(sp))
+					var key0 := "zp" if side == "front" else "zn"
+					out[key0] = clampf(minf(float(out[key0]), under0 - (y0 + hd)), 0.0, full)
+				continue
+			match k:
+				"door2": hd = minf(H - 0.35, (1.85 if hi else 1.7) * dk)
+				"door1": hd = minf(H - 0.3, 1.7 * dk)
+				"plank": hd = minf(H - 0.3, 1.72 * dk)
+				"plank2": hd = minf(H - 0.3, 1.8 * dk)
+				_: hd = H - (0.5 if H > 2.4 else 0.35)
+			var key := "zp" if side == "front" else "zn"
+			# 드나드는 문: 처마 끝 가장 낮은 데(들쭉날쭉 끝 0.08 + 짚 술 0.10 포함) ≥ 문 머리 + 0.10
+			out[key] = clampf(minf(float(out[key]), under0 - 0.18 - (y0 + hd + 0.10)), 0.0, full)
+	return out
 
 static func _thatch_vary(sp: Dictionary) -> Dictionary:
 	var rf: Dictionary = sp.roof
@@ -1667,6 +1687,7 @@ static func footprint(params: Dictionary) -> Vector2:
 static func roof_geos(sp: Dictionary) -> Array:
 	sp = S.normalize(sp)
 	var ctx := _ctx(sp)
+	ctx.pdoors = []
 	var out := []
 	var wi := 0
 	for w in sp.wings:
@@ -1679,6 +1700,7 @@ static func roof_geos(sp: Dictionary) -> Array:
 		var wl := []
 		for p in ["body", "front"]:
 			if m.parts.has(p): wl.append_array(m.parts[p].parts.get("atlas", []))
-		if b != null: out.append({ wing = String(w.id), geo = Kit.merge(b.parts.get("atlas", [])), walls = Kit.merge(wl), top = _roof_frame(sp, ctx, w).top })
+		if b != null: out.append({ wing = String(w.id), geo = Kit.merge(b.parts.get("atlas", [])), walls = Kit.merge(wl), top = _roof_frame(sp, ctx, w).top, pdoors = (ctx.pdoors as Array).duplicate(), wings = (sp.wings as Array).size(), droop = float(sp.roof.get("droop", 0.0)) })
+		(ctx.pdoors as Array).clear()
 		wi += 1
 	return out

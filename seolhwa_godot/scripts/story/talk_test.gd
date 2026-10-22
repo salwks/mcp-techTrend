@@ -94,7 +94,11 @@ func _round(sid: String, n: int, gossip_first := false) -> void:
 		var ap := Vector2(ag.pos.x, ag.pos.z)
 		var off := Vector2(0.9, 0.0).rotated(float(key % 8) * PI / 4.0)
 		main.teleport(ap.x + off.x, ap.y + off.y)
-		await main._wait_frames(14)   # 다음 훑기(0.4초)까지 — 가까운 사람 목록이 새로 든다
+		# 다음 훑기(npc_ambient SCAN 0.4초)까지 — 가까운 사람 목록이 새로 든다. 프레임 수(14)로 기다리면 빠른 기계(60fps 넘게)에서
+		#   훑기 전에 E 대상을 봐서 '대상 없음'으로 셌다 → 시간으로 기다린다(최소 14프레임)
+		var t0 := Time.get_ticks_msec()
+		await main._wait_frames(14)
+		while Time.get_ticks_msec() - t0 < 520: await main._wait_frames(1)
 		if not npc.agents.has(key): continue
 		# E 대상이 되는가(배·말 안내가 있으면 비켜 주니 셈하지 않는다)
 		if String(main.boats.prompt) == "" and String(main.horse_ride.prompt) == "":

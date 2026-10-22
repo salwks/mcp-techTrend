@@ -466,7 +466,7 @@ static func _gotgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	for i in n: bays.append(bay(r.between(2.2, 2.6), "store" if i > 0 or r.next() < 0.5 else "shed"))
 	var giwa := cls == "yangban"
 	var sp := { cls = cls, wear = r.between(0.3, 0.8), base = { kind = "earth", h = 0.2 }, floor_dh = 0.0, wall = "board" if giwa else "mud", wall_h = 2.0,
-		roof = { kind = "giwa", form = "gable", eave = 0.8, rise_k = 0.52, lift = 0.1 } if giwa else { kind = "thatch", form = "gable", eave = 0.7, rise_k = 0.6 },
+		roof = { kind = "giwa", form = "gable", eave = 0.8, rise_k = 0.52, lift = 0.1 } if giwa else { kind = "thatch", form = "gable", eave = 0.7, rise_k = 0.6, droop = 0.4 },
 		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [2.4], bays = bays, ends = ["gable", "gable"] }] }
 	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
 	return sp
@@ -475,7 +475,7 @@ static func _gotgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 static func _dwitgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	var giwa := cls in ["yangban", "middle"] and r.next() < 0.4
 	var sp := { cls = cls, wear = r.between(0.4, 0.9), base = { kind = "earth", h = 0.15 }, floor_dh = 0.0, wall = "mud", wall_h = 1.75,
-		roof = { kind = "giwa", form = "gable", eave = 0.6, rise_k = 0.5, lift = 0.05 } if giwa else { kind = "thatch", form = "gable", eave = 0.55, rise_k = 0.6 },
+		roof = { kind = "giwa", form = "gable", eave = 0.6, rise_k = 0.5, lift = 0.05 } if giwa else { kind = "thatch", form = "gable", eave = 0.55, rise_k = 0.6, droop = 0.35 },
 		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [r.between(1.6, 1.9)], bays = [bay(r.between(1.6, 2.0), "store" if r.next() < 0.5 else "shed")], ends = ["gable", "gable"] }] }
 	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
 	return sp
@@ -485,7 +485,7 @@ static func _oeyang(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	var bays := [bay(r.between(2.2, 2.6), "stable")]
 	if r.next() < 0.6: bays.append(bay(r.between(1.6, 2.0), "shed"))
 	var sp := { cls = cls, wear = r.between(0.4, 0.9), base = { kind = "earth", h = 0.15 }, floor_dh = 0.0, wall = "mud", wall_h = 1.9,
-		roof = { kind = "thatch", form = "gable", eave = 0.65, rise_k = 0.6 }, chimney = { kind = "none" }, attach = [],
+		roof = { kind = "thatch", form = "gable", eave = 0.65, rise_k = 0.6, droop = 0.4 }, chimney = { kind = "none" }, attach = [],
 		wings = [{ id = "main", depth = [r.between(2.2, 2.6)], bays = bays, ends = ["gable", "gable"] }] }
 	sp.roof.cols = thatch_cols(sp.wear)
 	return sp
@@ -521,7 +521,7 @@ static func _araechae(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	if r.next() < 0.5: bays.reverse()
 	var wear := r.between(0.3, 0.9)
 	return { cls = cls, wear = wear, base = { kind = "earth", h = 0.25 }, floor_dh = 0.25, wall_h = 1.85,
-		roof = { kind = "thatch", form = "hip", eave = 0.85, rise_k = 0.68, rc = 1.0, cols = thatch_cols(wear) },
+		roof = { kind = "thatch", form = "hip", eave = 0.85, rise_k = 0.68, rc = 1.0, droop = 0.4, cols = thatch_cols(wear) },
 		chimney = { kind = "mud", at = "back_left" }, attach = [], refs = ["jungnong"],
 		wings = [{ id = "main", depth = [r.between(2.2, 2.5)], toet = { kind = "jjok", d = 0.5 }, bays = bays }] }
 

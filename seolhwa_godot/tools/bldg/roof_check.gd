@@ -31,6 +31,11 @@ func _init() -> void:
 			for rg in ["south", "central", "north", "jeju"]:
 				for s in [1, 2, 3]:
 					fails += _check_building("%s/%s/%d" % [t, rg, s], S.resolve({ type = t, region = rg, seed = s }))
+		# 걸어 들어가는 집(interior — 드나드는 문 있음): DOORCLEAR · 처진 처마
+		for t in ["choga", "jumak", "gotgan", "araechae", "oeyang"]:
+			for rg in ["south", "central"]:
+				for s in [1, 2, 3]:
+					fails += _check_building("%s/%s/%d/int" % [t, rg, s], S.resolve({ type = t, region = rg, seed = s, interior = true }))
 		for t in ["choga_house", "jungnong", "giwa_house", "yangban", "jumak_yard"]:
 			for rg in ["south", "central"]:
 				for s in [1, 2, 3, 4, 5, 6]:
@@ -78,6 +83,16 @@ func _init() -> void:
 		if not c.ok: nc += 1
 		mc = minf(mc, c.min_clear)
 	print("WALLCLEAR total fail=%d checked=%d min_clear=%.2f" % [nc, clear_report.size(), mc])
+	var nd := 0; var nd_doors := 0; var dm := 99.0
+	for c in door_report:
+		if c.bad > 0: nd += 1
+		nd_doors += int(c.doors)
+		if int(c.doors) > 0: dm = minf(dm, c.min_margin)
+	print("DOORCLEAR total fail=%d buildings=%d player_doors=%d min_margin=%.2f" % [nd, door_report.size(), nd_doors, dm])
+	var nb := 0
+	for c in band_report:
+		if int(c.through) > 2: nb += 1
+	print("EAVEBAND total fail=%d checked=%d" % [nb, band_report.size()])
 	var f2 := FileAccess.open(ProjectSettings.globalize_path(out.get_basename() + "_wallclear.json"), FileAccess.WRITE)
 	f2.store_string(JSON.stringify(clear_report, "\t")); f2.close()
 	print("ROOFCHECK total fail=%d checked=%d" % [fails, report.size()])
@@ -199,6 +214,8 @@ func _check_building(name: String, sp: Dictionary) -> int:
 # 벽·기둥·도리 윗면이 지붕 밑면보다 낮은가(처마 밖으로 나온 벽 모서리·이엉을 뚫는 벽이 없나) — 칸마다 여유 CLEAR
 const CLEAR := 0.03
 var clear_report := []
+var door_report := []
+var band_report := []
 var ruin_mode := false
 func _check_clear(name: String, sp: Dictionary) -> int:
 	# 벽·기둥 윗면(벽 높이 top 이하) ↔ 지붕 밑면: 여유 CLEAR 이상 · 창방·도리(top 위) ↔ 지붕 겉면: 뚫고 나오지 않음 · 처마 밖 벽 칸 없음
@@ -208,6 +225,23 @@ func _check_clear(name: String, sp: Dictionary) -> int:
 		rasterize(roof, e.geo.pos, e.geo.col, Transform3D.IDENTITY, true)
 		rasterize_band(wall, e.walls.pos, e.walls.col, t - 0.6, t + 0.02)
 		rasterize_band(beam, e.walls.pos, e.walls.col, t + 0.02, t + 1.2)
+	# DOORCLEAR: 드나드는 문(building.is_player_door) 앞 처마 밑면 ≥ 문 머리 + 0.10 — 문 바깥 3m까지 문 너비 가운데 줄
+	var doors := []; var multi := false; var droop := 0.0
+	for e in B.roof_geos(sp):
+		doors.append_array(e.get("pdoors", []))
+		multi = int(e.get("wings", 1)) > 1; droop = float(e.get("droop", 0.0))
+	var dmin := 99.0; var dbad := 0
+	for d in doors:
+		var p3: Vector3 = d.p; var o3: Vector3 = d.out
+		for i in 20:
+			var q := p3 + o3 * (0.15 * (i + 1))
+			var k := Vector2i(floori(q.x / CELL), floori(q.z / CELL))
+			if not roof.under.has(k): continue
+			var mg: float = _under(roof, k) - (float(d.head) + 0.10)
+			dmin = minf(dmin, mg)
+			if mg < -0.02: dbad += 1
+	door_report.append({ name = name, doors = doors.size(), bad = dbad, min_margin = snappedf(dmin, 0.01) })
+	if dbad > 0: print("DOORCLEAR %s FAIL doors=%d bad_cells=%d min_margin=%.2f" % [name, doors.size(), dbad, dmin])
 	var n_out := 0; var n_hit := 0; var n_top := 0; var at := Vector2.ZERO; var minc := 99.0
 	for k in wall.top:
 		var wy: float = wall.top[k]
@@ -222,7 +256,11 @@ func _check_clear(name: String, sp: Dictionary) -> int:
 		if (not roof.top.has(k) and not ruin_mode) or (roof.top.has(k) and beam.top[k] > roof.top[k] - 0.02):
 			n_top += 1
 			if OS.get_cmdline_user_args().has("--dbg"): print("  DBGB %s cell=(%.2f,%.2f) beam_y=%.2f roof_top=%s" % [name, (k.x + 0.5) * CELL, (k.y + 0.5) * CELL, beam.top[k], str(roof.top.get(k))])
-	var ok := (n_out <= 2 or ruin_mode) and n_hit <= 2 and n_top <= 2
+	if multi and droop > 0.0:
+		# EAVEBAND: ㄱ·ㄷ 날개 집의 처진 처마 띠가 이웃 날개 벽·지붕을 뚫지 않나(벽 칸 뚫음 = WALLCLEAR through, 지붕끼리 = ROOFCHECK roof_poke)
+		band_report.append({ name = name, through = n_hit, min_clear = snappedf(minc, 0.01) })
+		if n_hit > 2: print("EAVEBAND %s FAIL through=%d min_clear=%.2f" % [name, n_hit, minc])
+	var ok := (n_out <= 2 or ruin_mode) and n_hit <= 2 and n_top <= 2 and dbad == 0
 	clear_report.append({ name = name, ok = ok, wall_cells = wall.top.size(), outside = n_out, through = n_hit, beam_through_top = n_top, min_clear = snappedf(minc, 0.01), at = [snappedf(at.x, 0.1), snappedf(at.y, 0.1)] })
 	if not ok: print("WALLCLEAR %s FAIL outside=%d through=%d beam_top=%d min_clear=%.2f at=%s" % [name, n_out, n_hit, n_top, minc, str(at)])
 	return 0 if ok else 1

@@ -417,6 +417,31 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 				var L2 := p.length()
 				if L2 > 0.01: pts[i] = p + p / L2 * (_hn(float(i), float(k), sd) - 0.5) * amp * 2.0
 		rings.append([pts, Hf.call(e), e])
+	# 처마 처짐(droop, 면마다 m — building._thatch_droop): 벽 줄(e0) 밖 띠만 끝으로 갈수록 내린다 — 벽 줄 안 지붕은 그대로.
+	#   ㄱ·ㄷ 이음(회첨) 가까이(다른 날개 방 위 0.7m 안)는 처지지 않고 2.8m에 걸쳐 되살아난다(처진 띠가 이웃 날개를 뚫지 않게)
+	var drp: Dictionary = o.get("droop", {})
+	var hide0 = o.get("hide_under")
+	var dmax := 0.0
+	for kk in drp: dmax = maxf(dmax, float(drp[kk]))
+	var rdd := []
+	for k in rings.size():
+		var pts: Array = rings[k][0]; var e: float = rings[k][2]
+		var arr := PackedFloat32Array(); arr.resize(pts.size())
+		if dmax > 0.001 and e < e0:
+			var wv := pow(1.0 - e / e0, 1.4)
+			for q in pts.size():
+				var p: Vector2 = pts[q]
+				var ang := atan2(absf(p.y) * hw, absf(p.x) * hd) / (PI / 2)
+				var sb := smoothstep(0.35, 0.65, ang)
+				var dv := lerpf(float(drp.get("xp" if p.x > 0 else "xn", 0.0)), float(drp.get("zp" if p.y > 0 else "zn", 0.0)), sb)
+				if hide0 is Callable and dv > 0.0:
+					var f := 1.0
+					for r in [0.0, 0.7, 1.4, 2.1, 2.8]:
+						if (hide0 as Callable).call(p.x + r, p.y) or (hide0 as Callable).call(p.x - r, p.y) or (hide0 as Callable).call(p.x, p.y + r) or (hide0 as Callable).call(p.x, p.y - r):
+							f = clampf((r - 0.7) / 2.1, 0.0, 1.0); break
+					dv *= f
+				arr[q] = dv * wv
+		rdd.append(arr)
 	var top := Kit.Geo.new(); var bot := Kit.Geo.new()
 	var lips := Kit.Geo.new()   # 켜 턱(짧은 처마)
 	var n: int = (rings[0][0] as Array).size()
@@ -427,10 +452,11 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		var e0k: float = rings[k][2]; var e1: float = rings[k + 1][2]
 		var y0: float = float(rings[k][1]) + (STEP if bands.has(k) else 0.0)
 		var y1: float = rings[k + 1][1]
+		var dd0: PackedFloat32Array = rdd[k]; var dd1: PackedFloat32Array = rdd[k + 1]
 		for i in n:
 			var i2 := (i + 1) % n
-			var a := Vector3(r0[i].x, y0 - sagf.call(r0[i].x, e0k), r0[i].y); var b := Vector3(r0[i2].x, y0 - sagf.call(r0[i2].x, e0k), r0[i2].y)
-			var c := Vector3(r1[i2].x, y1 - sagf.call(r1[i2].x, e1), r1[i2].y); var d := Vector3(r1[i].x, y1 - sagf.call(r1[i].x, e1), r1[i].y)
+			var a := Vector3(r0[i].x, y0 - sagf.call(r0[i].x, e0k) - dd0[i], r0[i].y); var b := Vector3(r0[i2].x, y0 - sagf.call(r0[i2].x, e0k) - dd0[i2], r0[i2].y)
+			var c := Vector3(r1[i2].x, y1 - sagf.call(r1[i2].x, e1) - dd1[i2], r1[i2].y); var d := Vector3(r1[i].x, y1 - sagf.call(r1[i].x, e1) - dd1[i], r1[i].y)
 			# 이엉 결: u = 둘레 쪽, v = 비탈(안쪽 거리)
 			var ua := Vector2(_tu(a), e0k / 1.6); var ub := Vector2(_tu(b), e0k / 1.6); var uc := Vector2(_tu(c), e1 / 1.6); var ud := Vector2(_tu(d), e1 / 1.6)
 			if absf(ub.x - ua.x) > 2.0: ub.x = ua.x + 0.3
@@ -441,7 +467,7 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 				# 켜 턱: 위 켜 시작(y0) → 아래 켜 위로 조금 나와(3.5cm) 내려옴 — 켜 사이 짧은 그림자
 				var oa := Vector3(r0[i].x, 0, r0[i].y).normalized() * 0.035; var ob := Vector3(r0[i2].x, 0, r0[i2].y).normalized() * 0.035
 				var ya := y0 - STEP - 0.015; var yb := y0 - STEP - 0.015
-				var la := Vector3(a.x + oa.x, ya - sagf.call(r0[i].x, e0k), a.z + oa.z); var lb := Vector3(b.x + ob.x, yb - sagf.call(r0[i2].x, e0k), b.z + ob.z)
+				var la := Vector3(a.x + oa.x, ya - sagf.call(r0[i].x, e0k) - dd0[i], a.z + oa.z); var lb := Vector3(b.x + ob.x, yb - sagf.call(r0[i2].x, e0k) - dd0[i2], b.z + ob.z)
 				var out := Vector3(a.x + b.x, 0.3, a.z + b.z)
 				tw(lips, la, lb, b, Vector2(_tu(a), 0.3), Vector2(_tu(a) + a.distance_to(b) / 1.2, 0.3), Vector2(_tu(a) + a.distance_to(b) / 1.2, 0.0), out)
 				tw(lips, la, b, a, Vector2(_tu(a), 0.3), Vector2(_tu(a) + a.distance_to(b) / 1.2, 0.0), Vector2(_tu(a), 0.0), out)
@@ -469,9 +495,10 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		drop.append(dv if lod == 0 else 0.0)
 	for i in n:
 		var i2 := (i + 1) % n
-		var a := Vector3(r0[i].x, eave, r0[i].y); var b := Vector3(r0[i2].x, eave, r0[i2].y)
+		var dz0: PackedFloat32Array = rdd[0]
+		var a := Vector3(r0[i].x, eave - dz0[i], r0[i].y); var b := Vector3(r0[i2].x, eave - dz0[i2], r0[i2].y)
 		if hide is Callable and (hide as Callable).call((a.x + b.x) * 0.5, (a.z + b.z) * 0.5): continue   # 다른 날개 방 위 — 처마 띠·밑면 없음
-		var a1 := Vector3(r0[i].x * grow, eave - thick - float(drop[i]), r0[i].y * grow); var b1 := Vector3(r0[i2].x * grow, eave - thick - float(drop[i2]), r0[i2].y * grow)
+		var a1 := Vector3(r0[i].x * grow, eave - thick - float(drop[i]) - dz0[i], r0[i].y * grow); var b1 := Vector3(r0[i2].x * grow, eave - thick - float(drop[i2]) - dz0[i2], r0[i2].y * grow)
 		var out := Vector3(a.x + b.x, 0, a.z + b.z)
 		var ua := _tu(a); var ub := ua + a.distance_to(b) / 1.2
 		tw(lip, a1, b1, b, Vector2(ua, 0.35), Vector2(ub, 0.35), Vector2(ub, 0.0), out)
@@ -590,7 +617,15 @@ static func thatch(m: C.M, part: String, o: Dictionary) -> Dictionary:
 				if absf(ze) <= absf(zw) + 0.1: continue
 				# 서까래: 벽 줄(도리 위)에서 처마 끝 밑으로 내려간다 — 벽 위를 지나지 않게
 				var yw: float = float(o.get("wall_top", eave)) + 0.02
-				_rod(g, Vector3(x, yw, zw), Vector3(x, eave - thick + 0.03, ze), 0.05)
+				var dze := 0.0
+				if dmax > 0.001:
+					var dz0r: PackedFloat32Array = rdd[0]; var r0r: Array = rings[0][0]
+					var bq := 0; var bd := INF
+					for q in r0r.size():
+						var dq := (r0r[q] as Vector2).distance_squared_to(Vector2(x, ze))
+						if dq < bd: bd = dq; bq = q
+					dze = dz0r[bq]
+				_rod(g, Vector3(x, yw, zw), Vector3(x, eave - thick + 0.03 - dze, ze), 0.05)
 		m.add(part, "bark", C.P(g, 0x6e5a46, 0x4a3b2e, 0.04), 0.01)
 	# 새끼 그물(제주·바닷가): 앞뒤로 넘어가는 줄 + 길이 줄
 	var net: int = o.get("net", 0)
@@ -633,16 +668,23 @@ static func thatch_gable(m: C.M, part: String, o: Dictionary) -> Dictionary:
 	var nz: int = [5, 3, 2][lod]
 	var top := Kit.Geo.new(); var lip := Kit.Geo.new()
 	var thick := 0.28
+	# 처마 처짐(앞 zp · 뒤 zn, m): 벽 줄(처마 끝에서 ov) 밖 띠만 끝으로 갈수록 내린다
+	var drp: Dictionary = o.get("droop", {})
+	var ovg: float = maxf(float(o.get("ov", 0.0)), 0.01)
+	var dg := func(sgn: float, sv: float) -> float:
+		var e := sv * hd
+		if e >= ovg: return 0.0
+		return float(drp.get("zp" if sgn > 0 else "zn", 0.0)) * pow(1.0 - e / ovg, 1.4)
 	for sgn in [-1.0, 1.0]:
 		for k in nz:
 			var s0 := float(k) / nz; var s1 := float(k + 1) / nz
 			var z0: float = sgn * hd * (1.0 - s0); var z1: float = sgn * hd * (1.0 - s1)
-			var y0 := eave + rise * prof_thatch(s0); var y1 := eave + rise * prof_thatch(s1)
+			var y0: float = eave + rise * prof_thatch(s0) - dg.call(sgn, s0); var y1: float = eave + rise * prof_thatch(s1) - dg.call(sgn, s1)
 			var x0 := hw - 0.15 * s0; var x1 := hw - 0.15 * s1
 			var a := Vector3(-x0, y0, z0); var b := Vector3(x0, y0, z0); var c := Vector3(x1, y1, z1); var d := Vector3(-x1, y1, z1)
 			tw(top, a, b, c, Vector2(-x0 / 2, s0 * hd / 1.6), Vector2(x0 / 2, s0 * hd / 1.6), Vector2(x1 / 2, s1 * hd / 1.6), Vector3(0, 1, sgn))
 			tw(top, a, c, d, Vector2(-x0 / 2, s0 * hd / 1.6), Vector2(x1 / 2, s1 * hd / 1.6), Vector2(-x1 / 2, s1 * hd / 1.6), Vector3(0, 1, sgn))
-		var a0 := Vector3(-hw, eave, sgn * hd); var b0 := Vector3(hw, eave, sgn * hd); var dn := Vector3(0, -thick, sgn * 0.03)
+		var a0 := Vector3(-hw, eave - dg.call(sgn, 0.0), sgn * hd); var b0 := Vector3(hw, eave - dg.call(sgn, 0.0), sgn * hd); var dn := Vector3(0, -thick, sgn * 0.03)
 		tw(lip, a0 + dn, b0 + dn, b0, Vector2(-hw / 1.2, 0.35), Vector2(hw / 1.2, 0.35), Vector2(hw / 1.2, 0), Vector3(0, 0, sgn))
 		tw(lip, a0 + dn, b0, a0, Vector2(-hw / 1.2, 0.35), Vector2(hw / 1.2, 0), Vector2(-hw / 1.2, 0), Vector3(0, 0, sgn))
 		# 박공 끝 이엉 두께(옆)
@@ -650,8 +692,8 @@ static func thatch_gable(m: C.M, part: String, o: Dictionary) -> Dictionary:
 			var g := Kit.Geo.new()
 			for k in nz:
 				var s0 := float(k) / nz; var s1 := float(k + 1) / nz
-				var p0 := Vector3(sx * (hw - 0.15 * s0), eave + rise * prof_thatch(s0), sgn * hd * (1.0 - s0))
-				var p1 := Vector3(sx * (hw - 0.15 * s1), eave + rise * prof_thatch(s1), sgn * hd * (1.0 - s1))
+				var p0 := Vector3(sx * (hw - 0.15 * s0), eave + rise * prof_thatch(s0) - dg.call(sgn, s0), sgn * hd * (1.0 - s0))
+				var p1 := Vector3(sx * (hw - 0.15 * s1), eave + rise * prof_thatch(s1) - dg.call(sgn, s1), sgn * hd * (1.0 - s1))
 				var q := Vector3(0, -thick, 0)
 				tw(lip, p0 + q, p1 + q, p1, Vector2(0, 0.35), Vector2(0.3, 0.35), Vector2(0.3, 0), Vector3(sx, 0, 0))
 				tw(lip, p0 + q, p1, p0, Vector2(0, 0.35), Vector2(0.3, 0), Vector2(0, 0), Vector3(sx, 0, 0))
@@ -660,7 +702,12 @@ static func thatch_gable(m: C.M, part: String, o: Dictionary) -> Dictionary:
 	# 밑면
 	var bot := Kit.Geo.new()
 	for sgn in [-1.0, 1.0]:
-		C.qf(bot, Vector3(-hw, eave - thick, sgn * hd), Vector3(hw, eave - thick, sgn * hd), Vector3(hw, eave + rise * 0.8 - thick, 0), Vector3(-hw, eave + rise * 0.8 - thick, 0), Vector3(0, -1, 0))
+		# 밑면: 벽 줄 안은 예전 곧은 판, 밖은 처진 처마 끝까지 따로
+		var zw := hd - minf(ovg, hd * 0.9)
+		var yw := eave - thick + rise * 0.8 * (1.0 - zw / hd)
+		var dt0: float = dg.call(sgn, 0.0)
+		C.qf(bot, Vector3(-hw, eave - thick - dt0, sgn * hd), Vector3(hw, eave - thick - dt0, sgn * hd), Vector3(hw, yw, sgn * zw), Vector3(-hw, yw, sgn * zw), Vector3(0, -1, 0))
+		C.qf(bot, Vector3(-hw, yw, sgn * zw), Vector3(hw, yw, sgn * zw), Vector3(hw, eave + rise * 0.8 - thick, 0), Vector3(-hw, eave + rise * 0.8 - thick, 0), Vector3(0, -1, 0))
 	m.add(part, "flat", C.P(bot, 0x5a4a36, 0x3e3226, 0.03), 0)
 	var ridge_y := eave + rise
 	if lod < 2:
