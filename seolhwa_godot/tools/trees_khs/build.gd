@@ -27,14 +27,16 @@ const OAKS := [
 	{ name = "oak_singal", H = 10.5, bole = 2.2, tr = 0.26, ns = 4, cr = 4.0, sy = 0.66, cs = 1.5, nc = 400, seed = 37, lean = 1.0 },
 	{ name = "oak_broad", H = 15.0, bole = 3.0, tr = 0.45, ns = 6, cr = 7.0, sy = 0.55, cs = 1.9, nc = 680, seed = 51, lean = 0.2 },
 	# 마을·들 나무(두 번째 잎 아틀라스 broad2 — q 분면: 0 버드나무 1 감나무 2 밤나무 3 느티나무). hang: 잎 카드를 아래로 매단다(버드나무)
-	{ name = "willow_a", H = 10.0, bole = 2.0, tr = 0.36, ns = 5, cr = 4.6, sy = 0.8, cs = 2.4, nc = 460, seed = 61, lean = 0.9, leaf = "broad2", q = 0, hang = true, blen = 0.8, crop = [0.3, 0.7], el = [48.0, 72.0] },
-	{ name = "willow_b", H = 8.0, bole = 1.6, tr = 0.3, ns = 4, cr = 3.8, sy = 0.85, cs = 2.0, nc = 380, seed = 67, lean = 1.4, leaf = "broad2", q = 0, hang = true, blen = 0.8, crop = [0.3, 0.7], el = [45.0, 70.0] },
+	# 능수버들·왕버들: 굵고 짧게 비틀린 줄기, 넓게 퍼지는 큰 가지, 둥근 수관 위에서 땅 가까이까지 늘어진 가지(밝은 연두)
+	{ name = "willow_a", H = 8.5, bole = 1.7, tr = 0.55, ns = 6, cr = 5.0, sy = 0.62, cs = 3.6, nc = 620, seed = 61, lean = 1.2, wob = 0.22, leaf = "broad2", q = 0, hang = true, blen = 0.9, crop = [0.3, 0.7], el = [22.0, 46.0], ao_min = 0.75 },
+	{ name = "willow_b", H = 7.5, bole = 1.4, tr = 0.48, ns = 5, cr = 4.4, sy = 0.66, cs = 3.2, nc = 540, seed = 67, lean = 1.8, wob = 0.25, leaf = "broad2", q = 0, hang = true, blen = 0.9, crop = [0.3, 0.7], el = [20.0, 44.0], ao_min = 0.75 },
 	{ name = "persimmon", H = 7.5, bole = 1.7, tr = 0.24, ns = 4, cr = 3.5, sy = 0.78, cs = 1.25, nc = 420, seed = 71, lean = 0.7, leaf = "broad2", q = 1 },
 	{ name = "chestnut", H = 11.0, bole = 2.4, tr = 0.32, ns = 5, cr = 5.0, sy = 0.66, cs = 1.5, nc = 520, seed = 79, lean = 0.4, leaf = "broad2", q = 2 },
 	{ name = "zelkova_dangsan", H = 17.0, bole = 2.6, tr = 0.85, ns = 7, cr = 9.0, sy = 0.56, cs = 1.8, nc = 900, seed = 83, lean = 0.2, leaf = "broad2", q = 3, el = [24.0, 50.0] },
 	# 덤불(숲 밑·울타리 가): 밑에서 여러 줄기
-	{ name = "shrub_oak", H = 1.9, bole = 0.15, tr = 0.045, ns = 6, cr = 1.15, sy = 0.8, cs = 0.8, nc = 60, seed = 89, lean = 0.5, el = [40.0, 72.0], sub = 1, sides = 3 },
-	{ name = "shrub_twig", H = 1.4, bole = 0.1, tr = 0.035, ns = 5, cr = 0.9, sy = 0.85, cs = 0.68, nc = 52, seed = 97, lean = 0.6, leaf = "broad2", q = 3, el = [45.0, 75.0], sub = 1, sides = 3 },
+	# 덤불: 고르지 않은 윤곽(줄기 길이·방향 제각각, 수관 타원체로 묶지 않음), 밝게(수관 속 그늘 약하게) — 멀리서 짙은 둥근 점이 되지 않게
+	{ name = "shrub_oak", H = 1.9, bole = 0.15, tr = 0.045, ns = 7, cr = 1.2, sy = 0.8, cs = 0.8, nc = 64, seed = 89, lean = 0.5, el = [18.0, 80.0], sub = 1, sides = 3, loose = true, ao_min = 0.85 },
+	{ name = "shrub_twig", H = 1.4, bole = 0.1, tr = 0.035, ns = 6, cr = 0.95, sy = 0.85, cs = 0.68, nc = 56, seed = 97, lean = 0.6, leaf = "broad2", q = 3, el = [20.0, 80.0], sub = 1, sides = 3, loose = true, ao_min = 0.85 },
 ]
 
 var stages := PackedStringArray()
@@ -426,7 +428,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 	var sides0 := int(o.get("sides", 9 if lod == 0 else 6)) if lod == 0 else mini(int(o.get("sides", 6)), 6)
 	# 줄기(밑동 퍼짐 + 기울기)
 	var lean := Vector3(rng.randf_range(-1, 1), 0, rng.randf_range(-1, 1)).normalized() * float(o.lean) * 0.12
-	var trunk := _curve(Vector3(0, -0.3, 0), Vector3(0, 1, 0) + lean, float(o.bole) + 0.3, 6, 0.05, rng, 0.08)
+	var trunk := _curve(Vector3(0, -0.3, 0), Vector3(0, 1, 0) + lean, float(o.bole) + 0.3, 6, 0.05, rng, float(o.get("wob", 0.08)))
 	var trad := []
 	for i in trunk.size(): trad.append(tr * (1.0 + 0.45 * exp(-float(i) * 1.6)) * lerpf(1.0, 0.8, float(i) / trunk.size()))
 	var top: Vector3 = trunk[trunk.size() - 1]
@@ -448,7 +450,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 		var elr: Array = o.get("el", [32.0, 58.0])
 		var el := deg_to_rad(rng.randf_range(elr[0], elr[1]))
 		var dir := Vector3(cos(az) * cos(el), sin(el), sin(az) * cos(el))
-		var L := cr * rng.randf_range(0.95, 1.2) / cos(el) * 0.85 * float(o.get("blen", 1.0))
+		var L := cr * rng.randf_range(0.95, 1.2) / cos(el) * 0.85 * float(o.get("blen", 1.0)) * (rng.randf_range(0.55, 1.35) if o.get("loose", false) else 1.0)
 		var sc := _curve(src, dir, L, 6, 0.04, rng, 0.14)
 		var srad := []
 		for i in sc.size(): srad.append(tr * 0.55 * lerpf(1.0, 0.18, float(i) / (sc.size() - 1)))
@@ -488,9 +490,13 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 			var rr := rng.randf_range(0.62, 1.0)
 			p = ctr + Vector3(dv.x * cr, dv.y * ry, dv.z * cr) * rr
 			e = [p, (dv + Vector3(0, 0.4, 0)).normalized()]
-		# 수관 타원체 안으로 당김
+		if hang:
+			# 버드나무: 둥근 수관 윗반구에서 늘어진 가지가 시작
+			var dh := Vector3(rng.randf_range(-1, 1), rng.randf_range(-0.15, 1), rng.randf_range(-1, 1)).normalized()
+			p = ctr + Vector3(dh.x * cr, dh.y * ry, dh.z * cr) * rng.randf_range(0.7, 1.05)
+		# 수관 타원체 안으로 당김(덤불은 묶지 않아 윤곽이 고르지 않게)
 		var rel := (p - ctr); var q := Vector3(rel.x / cr, rel.y / ry, rel.z / cr)
-		if q.length() > 1.0: p = ctr + rel / q.length() * rng.randf_range(0.9, 1.0)
+		if q.length() > 1.0 and not o.get("loose", false): p = ctr + rel / q.length() * rng.randf_range(0.9, 1.0)
 		var out := Vector3((p.x - ctr.x) / cr, (p.y - ctr.y) / ry * 0.8 + 0.35, (p.z - ctr.z) / cr).normalized()
 		# 카드 위쪽(잎 끝 방향) = 가지 방향과 바깥쪽 사이, 카드 면은 그 축 둘레로 아무렇게나
 		var upv := ((e[1] as Vector3) * 0.5 + out * 0.5 + Vector3(0, 0.3, 0)).normalized()
@@ -500,7 +506,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 		if side.length() < 0.1: side = upv.cross(Vector3.RIGHT)
 		side = side.normalized()
 		var fn := side.cross(upv).normalized()
-		var s := cs * rng.randf_range(0.8, 1.15)
+		var s := cs * (rng.randf_range(0.6, 1.25) if hang else rng.randf_range(0.8, 1.15))
 		var cell := rng.randi() % 4
 		var cw := 0.5 if not b2 else 0.25
 		var u0 := float(cell % 2) * cw; var v0 := float(cell / 2) * cw
@@ -522,7 +528,7 @@ func _oak(o: Dictionary, lod: int) -> Dictionary:
 			ln.append(nn.lerp(radial, 0.7).normalized())
 			luv.append(uvs[k])
 			var rn := clampf(Vector3(dd.x / cr, (cp.y - cy) / ry, dd.y / cr).length(), 0.0, 1.0)
-			lc.append(Color(lerpf(0.55, 1.0, smoothstep(0.25, 0.95, rn)), ph, 1.0, 1.0))
+			lc.append(Color(lerpf(float(o.get("ao_min", 0.55)), 1.0, smoothstep(0.25, 0.95, rn)), ph, 1.0, 1.0))
 			lcu.append_array([cp.y / H, clampf(dd.length() / cr, 0.0, 1.0), ph, 0.0 if k < 2 else 1.0])
 		li.append_array([base, base + 1, base + 2, base, base + 2, base + 3])
 	var am := ArrayMesh.new()

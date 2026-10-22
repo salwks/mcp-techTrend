@@ -383,6 +383,21 @@ func _shots() -> void:
 		await _fake(null)
 		main.player.visible = true
 		_cam_reset()
+	if "khs" in want:
+		# trees-khs: 이야기 단계로 놓이는 나무 확인(광한루 그네 버드나무 둘 · 관아 감나무) — 끝맺음(epilogue) 단계는 둘 다 놓인다
+		await _go(-3330.0, 470.0)
+		main.player.visible = false
+		await _fake({ case_id = "", cases = { namwon_chunhyang = { phase = "epilogue" } }, vars = {} })
+		_hide_placeholders()
+		_shot_cam([-3330.0, 7.0, 476.0], [-3330.0, 4.5, 446.0], 50.0)
+		await _snap("khs_swing_willow")
+		_shot_cam([-3352.0, 2.0, 458.0], [-3330.0, 5.0, 446.0], 55.0)
+		await _snap("khs_swing_willow_low")
+		await _go(-3145.6, 252.0)
+		_shot_cam([-3145.0, 5.5, 251.0], [-3145.6, 4.0, 235.6], 50.0)
+		await _snap("khs_persimmon_gwana")
+		await _fake(null)
+		_cam_reset()
 	if "dano1a" in want:
 		await _go(-3250.0, 447.0)   # 광한루 footprint 밖(안이면 지붕 잘라 보기가 켜진다) — 군중 C구역
 		main.player.visible = false

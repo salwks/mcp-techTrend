@@ -5,7 +5,7 @@ extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
 const Khs := preload("res://kit/nature/khs_trees.gd")
 # trees-khs: 사실 나무 stand-in 층·키 배율(예전 덩이 키 h × 배율 = 실제 키 m)
-const KHS_MAP := { zelkova = [13, 2.2], willow = [9, 2.0], broadleaf = [8, 2.0], chestnut = [12, 1.8], persimmon = [11, 1.45] }
+const KHS_MAP := { zelkova = [13, 2.2], willow = [9, 1.6], broadleaf = [8, 2.0], chestnut = [12, 1.8], persimmon = [11, 1.45] }
 
 const PRESET := {
 	zelkova = { h = 7.2, spread = 4.6, trunk = 0.55, branches = 5, leaf = [["#a2ab66", "#5f6c3e"], ["#94a05e", "#566238"]] },

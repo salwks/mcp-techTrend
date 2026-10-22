@@ -229,7 +229,7 @@ def _card_twig(C, leaves, rnd, n_tw, spread, L0, L1, per, sc0, sc1, side=70, bra
             rot = math.degrees(ang) + 90 + (side if k % 2 else -side) * rnd.uniform(0.5, 1.0)
             items.append((rnd.random(), px, py, rot, rnd.uniform(sc0, sc1) * (0.75 + 0.25 * tt), rnd.randrange(len(leaves))))
     items.sort()
-    for _, px, py, rot, sc, li in items: _stick(card, leaves[li], px, py, rot, sc, rnd, dark=dark, hue=(0.95, 1.05, 0.7, 0.85) if dark[0] > 0.7 else (0.82, 0.95, 0.75, 0.95))
+    for _, px, py, rot, sc, li in items: _stick(card, leaves[li], px, py, rot, sc, rnd, dark=dark, hue=(0.98, 1.08, 0.62, 0.78) if dark[0] > 0.7 else (0.82, 0.95, 0.75, 0.95))
     return card
 
 def do_broad2():
@@ -237,7 +237,7 @@ def do_broad2():
     atlas = Image.new('RGBA', (S, S), (0, 0, 0, 0))
     rnd = random.Random(11)
     specs = [
-        ('LeafSet013', lambda L: _card_twig(C, L, rnd, 3, 8, 0.78, 0.86, 11, 0.14, 0.18, side=28, dark=(0.85, 1.05))),
+        ('LeafSet013', lambda L: _card_twig(C, L, rnd, 3, 6, 0.8, 0.88, 12, 0.12, 0.16, side=24, dark=(1.0, 1.2))),   # 버드나무: 밝은 연두, 가는 잎
         ('LeafSet022', lambda L: _card_radiate(C, L, rnd, 3, 30, 0.42, 0.55, 8, 0.13, 0.17, fruit=rnd.choice([0, 1, 2, 3]))),
         ('LeafSet014', lambda L: _card_radiate(C, L, rnd, 3, 26, 0.45, 0.58, 8, 0.12, 0.16)),
         ('LeafSet001', lambda L: _card_twig(C, L, rnd, 3, 24, 0.55, 0.7, 7, 0.1, 0.13, side=55, branch=True)),
