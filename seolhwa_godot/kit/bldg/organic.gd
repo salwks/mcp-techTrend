@@ -2321,7 +2321,7 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 		for vi in range(1, fpts.size() - 1):
 			if G.distance_to(fpts[vi]) < 1.4 and absf(((fpts[vi] as Vector2) - fpts[vi - 1]).angle_to((fpts[vi + 1] as Vector2) - fpts[vi])) > 0.12: ok = false
 		for q in placed:
-			if poly_line_dist(q[0], [G, G - n * 2.2]) < 0.6: ok = false; break
+			if poly_line_dist(q[0], [G, G - n * 2.2]) < 1.0: ok = false; break   # 굴뚝·부엌 덧채가 바운딩 밖에 나올 수 있어 1m
 		if ok:
 			var gp := { type = gtype, seed = seed0 + 3 }
 			if gtype == "pyeong": gp.wall_h = CP.WH_TILE
@@ -2386,7 +2386,7 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 	for sd in [1.0, -1.0]:
 		var jd: Vector2 = (mainq[2] as Vector2) + mface * (mbb.size.y / 2 + 1.4) + mr * sd * (mbb.size.x / 2 - 1.2)
 		var jrc := [jd + Vector2(-1.1, -0.8), jd + Vector2(1.1, -0.8), jd + Vector2(1.1, 0.8), jd + Vector2(-1.1, 0.8)]
-		if pip(inner, jd) and free.call(jrc, 0.3) and poly_line_dist(jrc, path) > 1.0:
+		if pip(inner, jd) and free.call(jrc, 0.3) and poly_line_dist(jrc, path) > 1.6:   # 대문 → 마당 길(사람 지나는 폭)
 			pieces.append({ tag = "jangdok", kit = "village/jangdok", params = { seed = seed0 + 5, w = 2.0, d = 1.5 }, x = jd.x, z = jd.y, ry = mainq[3], world = true })
 			break
 	var wk: String = P.wall_u if urban else P.wall
