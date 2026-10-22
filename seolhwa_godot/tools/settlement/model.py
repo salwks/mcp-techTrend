@@ -55,6 +55,7 @@ class SiteInput:
     provenance: dict = field(default_factory=dict)
     diagnostics: list = field(default_factory=list)
     meta: dict = field(default_factory=dict)
+    flood_exempt: np.ndarray | None = None  # water cells that are not flood sources (springs, summit ponds)
 
 
 def diag(code: str, severity: str, layer: str, message: str, **data) -> dict:

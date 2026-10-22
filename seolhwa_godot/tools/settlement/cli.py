@@ -23,7 +23,7 @@ from .rules import DEFAULT, Rules
 
 REAL_SITES = [("JL_NAMWON_UNBONG", "namwon_eup"), ("GS_GYEONGJU", "bulguksa_village"),
               ("JL_NAMWON_UNBONG", "banseon"), ("GW_GANGNEUNG", "anmok_village")]
-SYN_SITES = ["syn_terrace", "syn_basin", "syn_ridge", "syn_estuary"]
+SYN_SITES = ["syn_terrace", "syn_basin", "syn_ridge", "syn_estuary", "syn_mountain"]  # last one supplementary
 FAIL_SITES = ["fail_blocked_access", "fail_impossible_civic", "fail_water_crossing"]
 
 
@@ -87,10 +87,30 @@ def run(inp, rules, out_dir, label=None):
         fam_info.update({"resolved": family, "terrain_stats": stats})
     L1 = program.standalone(A, rules, inp.tier, inp.historical_households)
     F = frame.solve(A, L1, rules, family)
+    if inp.family == "auto" and not F["ranked"]:
+        # terrain statistics are a prior, not a verdict: try the other walled families in fixed order
+        tried = [{"family": family, "valid": False, "generated": F["generated"]}]
+        for alt in ("plain", "plain_hill", "mountain"):
+            if alt == family:
+                continue
+            F2 = frame.solve(A, L1, rules, alt)
+            tried.append({"family": alt, "valid": bool(F2["ranked"]), "generated": F2["generated"]})
+            if F2["ranked"]:
+                F, family = F2, alt
+                break
+        fam_info["fallback_tried"] = tried
+        fam_info["resolved"] = family
     plan, extras, store = PL.build(inp, A, family, fam_info, L1, F, rules, dependencies())
     plan["validation"] = []
     plan = _sanitize(plan)
     plan["validation"] = _sanitize(validate.run(plan, inp, A, L1, F, rules))
+    failed = [c["id"] for c in plan["validation"] if c["pass"] is False]
+    if failed and plan["status"] == "valid":
+        # independent validation gates publication
+        plan["status"] = "failed"
+        plan["status_reason"] = "validation:" + ",".join(failed)
+        plan["diagnostics"].append({"code": "validation_failed", "severity": "error", "layer": "plan",
+                                    "message": "independent checks failed; plan not publishable", "data": {"checks": failed}})
     plan = _sanitize(plan)
     if label:
         plan["variant"] = label

@@ -433,8 +433,14 @@ def frame_svg(plan, inp, A, extras, view, F):
         b.append(f'<text x="{_f(e.x)}" y="{_f(e.y + fs / 3)}" font-family="{FONT}" font-size="{_f(fs)}" text-anchor="middle" font-weight="bold" fill="#fff">{n + 1}</text>')
     for w in fr["water_access"]:
         b.append(P(path_d(_g(plan, w["reservation"])), fill="#1f6fb2", fop=0.9))
+    rejected = plan["status"] != "valid"
+    if rejected:
+        c = poly.centroid
+        fs = 16 / view.px
+        b.append(f'<text x="{_f(c.x)}" y="{_f(c.y)}" font-family="{FONT}" font-size="{_f(fs)}" text-anchor="middle" font-weight="bold" fill="#b42318">기각 후보(진단용) — 확정 아님</text>')
     if fr["wall"]:
-        b.append(P(path_d(_g(plan, fr["wall"]["ring"])), stroke="#111", sw=3.2))
+        b.append(P(path_d(_g(plan, fr["wall"]["ring"])), stroke="#b42318" if rejected else "#111", sw=2.0 if rejected else 3.2,
+                   dash="8 5" if rejected else None))
         for o in fr["openings"]:
             x, z = o["center"]
             if o["type"] == "gate":

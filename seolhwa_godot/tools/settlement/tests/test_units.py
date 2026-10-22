@@ -102,3 +102,9 @@ def test_layer0_probes_terrace():
     i, j = A.win.ij(0, -128)
     assert A.floods[1][j, i]
     assert not A.floods[5][A.win.ij(0, 100)[1], A.win.ij(0, 100)[0]]
+
+
+def test_packing_exact_codex_case():
+    """Codex review reproduction: greedy gave 7, exact packing fits 8."""
+    hh = P.solve_households([("c1", 2520.0), ("c2", 2304.0)], R.profile("small_eupchi"), R)
+    assert hh["N"] == 8

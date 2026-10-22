@@ -32,8 +32,10 @@ class Ctx:
         t = A.inp.territory
         self.allowed = G.polygonal(shapely.set_precision(t["allowed"], G.GRID))
         self.preferred = G.polygonal(shapely.set_precision(t["preferred"], G.GRID))
-        self.region = G.polygonal(self.allowed.difference(A.protected_poly, grid_size=G.GRID)) \
-            if not A.protected_poly.is_empty else self.allowed
+        # protection forbids occupation, not enclosure: boundaries may take in protected farmland
+        # (no reserves or capacity there), but never another settlement's allocation
+        self.region = G.polygonal(self.allowed.difference(A.neigh_poly, grid_size=G.GRID)) \
+            if not A.neigh_poly.is_empty else self.allowed
         if not A.lock_poly.is_empty:
             self.region = G.polygonal(self.region.difference(A.lock_poly, grid_size=G.GRID))
         self.profile = L1["profile"]
@@ -265,9 +267,15 @@ def gen_plain_hill(ctx: Ctx) -> list[dict]:
             poly = G.largest(G.polygonal(poly.intersection(ctx.region, grid_size=G.GRID)))
             if poly.is_empty or not poly.contains(Point(sx, sz)):
                 continue
+            # 평산성 must actually take in the rear hill: enclosed rear ground rises ≥ min_rear_rise
+            inside = Rr.rasterize(A.win, poly) & wedge
+            rise = float(A.h[inside].max() - hs) if inside.any() else 0.0
+            if rise < R.p("frame.plain_hill.min_rear_rise_m"):
+                continue
             out.append({"family": "plain_hill", "poly": Polygon(poly.exterior.coords),
                         "params": {"seed": [G.r2(sx), G.r2(sz)], "h_low": round(hl, 2), "h_high": round(hh, 2),
-                                   "rear_bearing": round(rear, 1), "rear_source": rear_src}})
+                                   "rear_bearing": round(rear, 1), "rear_source": rear_src,
+                                   "rear_rise_m": round(rise, 2)}})
     return out
 
 
@@ -523,12 +531,24 @@ def civic_place(ctx: Ctx, frame_poly, bundle, approach_pts, comp=None):
 
 
 # ====================================================================== gates & corridors
-def corridor_passable(ctx, sub, interior, civic):
+def corridor_passable(ctx, sub, interior, civic, forecourts=None):
+    """Centre-line cells whose full 7.2 m reservation stays clear of water, protection,
+    locks and civic envelopes (all dilated by the corridor half-width)."""
     A = ctx.A
-    ero = ndimage.binary_erosion(interior, structure=np.ones((3, 3), bool), iterations=ctx.corr_cells)
+    st = np.ones((3, 3), bool)
+    k = ctx.corr_cells
+    ero = ndimage.binary_erosion(interior, structure=st, iterations=k)
     water_block = sub.a(A.water) & ~sub.a(ctx.small_channel)
-    obst = ndimage.binary_dilation(civic, iterations=1) if civic.any() else civic
-    return ero & sub.a(A.cov) & ~water_block & ~obst & ~sub.a(A.protected) & ~sub.a(A.locks)
+    hard = water_block | sub.a(A.protected) | sub.a(A.locks)
+    hard = ndimage.binary_dilation(hard, structure=st, iterations=k) if hard.any() else hard
+    small_ok = ndimage.binary_dilation(sub.a(ctx.small_channel), structure=st, iterations=k) & ~ndimage.binary_dilation(
+        water_block & ~sub.a(ctx.small_channel), structure=st, iterations=k) if sub.a(ctx.small_channel).any() else None
+    if small_ok is not None:
+        hard &= ~(small_ok & ~sub.a(A.protected) & ~sub.a(A.locks))
+    obst = ndimage.binary_dilation(civic, structure=st, iterations=k) if civic.any() else civic
+    if forecourts is not None:
+        obst &= ~forecourts
+    return ero & sub.a(A.cov) & ~hard & ~obst
 
 
 def tree_network(sub, pred, gate_cells, socket_cells):
@@ -795,9 +815,12 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
     outside = poly.difference(ctx.allowed).area
     if outside > tol:
         cons.append(diag("outside_allowed", "error", "L2", "frame leaves allowed territory", area_m2=round(outside, 2)))
-    prot = poly.intersection(A.protected_poly).area if not A.protected_poly.is_empty else 0.0
-    if prot > tol:
-        cons.append(diag("protected_intrusion", "error", "L2", "frame encloses protected land", area_m2=round(prot, 2)))
+    nb = poly.intersection(A.neigh_poly).area if not A.neigh_poly.is_empty else 0.0
+    if nb > tol:
+        cons.append(diag("neighbour_enclosed", "error", "L2", "frame takes in a neighbouring settlement allocation",
+                         area_m2=round(nb, 2)))
+    if not A.protected_poly.is_empty:
+        ev["protected_enclosed_m2"] = round(poly.intersection(A.protected_poly).area, 1)
     if not A.lock_poly.is_empty:
         li = poly.intersection(A.lock_poly).area
         if li > tol and abs(li - A.lock_poly.area) > tol:
@@ -834,8 +857,9 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
     recs = {r["key"]: r for r in ctx.insts}
     result = None
     first_fail = None
+    forced_last = False
     for b in ctx.bundles:
-        if len(tried) >= tries and b is not ctx.bundles[-1]:
+        if (len(tried) >= tries or forced_last) and b is not ctx.bundles[-1]:
             continue
         items = set(b["variants"].items())
         if any(fp <= items for fp in failed_prefixes):
@@ -865,11 +889,15 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
         frame_level = {c["code"] for c in r["constraints"] if c["severity"] == "error"} & FRAME_LEVEL
         if frame_level:
             result = r
-            break  # access failure of the boundary itself: a smaller civic bundle cannot fix it
-        if r["status"] == "ok" and r["households"]["N"] >= nmin:
+            last = ctx.bundles[-1]
+            if b is last or any(t["bundle"] == last["name"] for t in tried):
+                break
+            forced_last = True  # civic layout changes gates: try the smallest bundle before giving up
+            continue
+        if r["status"] == "ok" and r.get("households", {"N": 0})["N"] >= nmin:
             result = r
             break
-        if result is None or (r["status"] == "ok" and (result["status"] != "ok" or r["households"]["N"] > result["households"]["N"])):
+        if result is None or (r["status"] == "ok" and (result["status"] != "ok" or r["households"]["N"] > result.get("households", {"N": -1})["N"])):
             result = r
     ev["bundles_tried"] = tried
     if result is None:
@@ -877,13 +905,30 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
         return ev
     ev.update({k: v for k, v in result.items() if k != "constraints"})
     cons.extend(result["constraints"])
-    if result["status"] == "ok" and result["households"]["N"] < nmin:
+    if result["status"] == "ok" and result.get("households", {"N": 0})["N"] < nmin:
         cons.append(diag("insufficient_capacity", "error", "L2", "households below profile residential minimum",
                          households=result["households"]["N"], minimum=nmin))
     ev["valid"] = not any(c["severity"] == "error" for c in cons)
-    if ev["valid"] or "households" in ev:
+    if "ledger" in ev:
         ev["objective"] = objective(ctx, ev)
     return ev
+
+
+def _walk_reach(ctx, sub, poly, corr_poly, gates_out, civic_union):
+    """Land reachable on foot from the corridor network within residential.access_max_m
+    (8-neighbour walking cost, no water/protected/civic crossing) — replaces Euclidean distance."""
+    A, R = ctx.A, ctx.rules
+    if corr_poly is None or corr_poly.is_empty:
+        return Polygon()
+    walk = Rr.rasterize(sub.grid, poly) & sub.a(A.cov) & ~(sub.a(A.water) & ~sub.a(ctx.small_channel)) & ~sub.a(A.protected)
+    walk &= ~Rr.rasterize(sub.grid, civic_union)
+    src_m = Rr.rasterize(sub.grid, corr_poly) & walk
+    if not src_m.any():
+        return Polygon()
+    g = Rt.build_graph(sub.grid, sub.a(A.h), walk, radius=1, grade_k=R.p("routing.grade_cost_k"))
+    d, _ = Rt.dijkstra(g, np.flatnonzero(src_m), limit=R.p("residential.access_max_m"))
+    reach = np.isfinite(d.reshape(sub.grid.shape))
+    return Rr.mask_to_polygon(sub.grid, reach)
 
 
 def _corridor_components(ctx, sub, interior, poly):
@@ -916,18 +961,26 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
     cons = []
     civic_union = shapely.union_all([p["rect"] for p in placed])
     civic_mask = Rr.rasterize(sub.grid, civic_union)
-    pas = corridor_passable(ctx, sub, interior, civic_mask)
+    fore_mask = Rr.rasterize(sub.grid, shapely.union_all([p["strip"] for p in placed])) & ~civic_mask
+    pas = corridor_passable(ctx, sub, interior, civic_mask, fore_mask)
     if not ctx.walled:
         # unwalled corridors may use roads and allowed land between clusters
         allowed_m = Rr.rasterize(sub.grid, ctx.allowed)
-        road_m = sub.a(A.road_mask)
-        extra = (allowed_m | road_m) & sub.a(A.cov) & ~(sub.a(A.water) & ~sub.a(ctx.small_channel) & ~road_m)
-        extra &= ~ndimage.binary_dilation(civic_mask, iterations=1) & ~sub.a(A.protected)
+        road_m = sub.a(A.road_mask) & ~(sub.a(A.water) & ~sub.a(A.bridge_mask))
+        extra = (allowed_m | road_m) & sub.a(A.cov) & ~(sub.a(A.water) & ~sub.a(ctx.small_channel) & ~sub.a(A.bridge_mask))
+        extra &= ~(ndimage.binary_dilation(civic_mask, iterations=ctx.corr_cells) & ~fore_mask) & ~sub.a(A.protected)
         pas = pas | extra
     sockets = {}
     for p in placed:
         sx, sz = G.front_point(p["xz"][0], p["xz"][1], p["env"]["depth_m"], p["bearing"], p["env"]["entrance_clearance_m"] / 2)
         c = nearest_true(pas, sub.grid, sx, sz, max(6.0, p["env"]["entrance_clearance_m"] + 4))
+        if c is not None:
+            cx_, cz_ = sub.xz(c)
+            seg = LineString([(sx, sz), (cx_, cz_)]) if (cx_, cz_) != (sx, sz) else None
+            walk_ok = G.polygonal(poly).buffer(0.01)
+            if seg is not None and (seg.intersects(civic_union.buffer(-0.05)) or not walk_ok.contains(seg)
+                                    or seg.intersects(A.water_poly)):
+                c = None
         if c is None:
             cons.append(diag("civic_entrance_blocked", "error", "L2", "civic entrance not on corridor land", civic=p["key"]))
             continue
@@ -935,9 +988,9 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
         pas.ravel()[c] = True
     gcorr = Rt.build_graph(sub.grid, sub.a(A.h), pas, radius=1, grade_k=R.p("routing.grade_cost_k"),
                            grade_cap=R.p("routing.primary_max_grade"))
-    if not sockets:
-        return {"status": "fail", "constraints": cons, "households": {"N": 0}}
     main_key = placed[0]["key"]
+    if main_key not in sockets:
+        return {"status": "fail", "constraints": cons, "bundle": bundle, "placed": placed}
     dist, pred = Rt.dijkstra(gcorr, list(sockets.values()))
     # civic sockets mutually connected
     d0, p0 = Rt.dijkstra(gcorr, [sockets[main_key]])
@@ -1083,8 +1136,7 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
                 ("primary_corridor", corr_poly)]
     if ws is not None:
         reserves.append(("water_supply", ws["geom"]))
-    access_geom = shapely.union_all([corr_poly] + [Point(g["center"]).buffer(R.p("gates.width_m")) for g in gates_out]) \
-        if (gates_out or not corr_poly.is_empty) else None
+    access_geom = _walk_reach(ctx, sub, poly, corr_poly, gates_out, civic_union)
     T, entries, comps, frags, residual = P.partition(poly, A, reserves, access_geom, R)
     fl, fo = R.p("program.f_lanes"), R.p("program.f_open")
     comps_eff = [(f"c{i + 1:02d}", p.area * (1 - fl - fo)) for i, (p, _) in enumerate(comps)]

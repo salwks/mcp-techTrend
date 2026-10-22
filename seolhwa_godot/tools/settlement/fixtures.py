@@ -161,6 +161,28 @@ def estuary():
                "waterside_village", "unwalled", crossings=cross, notes="coastal estuary; sea x>=160 level 0")
 
 
+def mountain_height(X, Z):
+    r = np.sqrt(X * X + Z * Z)
+    return 10 + 30 * np.exp(-(r / 260) ** 4)
+
+
+def mountain():
+    """Supplementary 산성 fixture (not in spec §4): flat-topped hill with gentle (≤~17 %)
+    flanks and a summit pond, so ≤10 % 8-neighbour approaches exist."""
+    X, Z = _xz()
+    h = mountain_height(X, Z)
+    pond = Point(-40, -30).buffer(14, 32)
+    h = np.where(rasterize(GRID, pond), h - 1.0, h)
+    feats = [(WaterFeature("pond_top", "spring", True, pond, None, 0.0), "terrain-1")]
+    roads = [Road("road_n", "북쪽 길", "중로", 4.0, LineString([(0, -512), (0, -330)])),
+             Road("road_e", "동쪽 길", "중로", 4.0, LineString([(512, 40), (330, 40)]))]
+    pref = Point(0, 0).buffer(320, 64)
+    s = _mk("syn_mountain", "평정 산(합성, 보충 산성 시험)", h, feats, roads, pref, pref, Polygon(),
+            "sanseong_refuge", "mountain", notes="supplementary fixture: flat-topped hill with summit spring pond (not a flood source)")
+    s.flood_exempt = s.water_mask.copy()
+    return s
+
+
 # ---------------------------------------------------------------- failure fixtures
 def blocked_access():
     X, Z = _xz()
@@ -198,6 +220,7 @@ def water_crossing():
 
 
 SYNTHETIC = {"syn_terrace": terrace, "syn_basin": basin, "syn_ridge": ridge, "syn_estuary": estuary,
+             "syn_mountain": mountain,
              "syn_basin_sanseong": lambda: basin("mountain", "syn_basin_sanseong")}
 FAILURES = {"fail_blocked_access": blocked_access, "fail_impossible_civic": impossible_civic,
             "fail_water_crossing": water_crossing}

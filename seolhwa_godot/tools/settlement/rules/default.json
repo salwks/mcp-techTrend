@@ -1313,6 +1313,14 @@
     5
    ]
   },
+  "flood.stage_units": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "note": "source_m: stage offsets are real-world metres × local vertical scale (region K·remap slope). world_m: offsets applied directly in game metres. Open decision for owner/Codex.",
+   "source": "design",
+   "unit": "enum(source_m|world_m)",
+   "value": "source_m"
+  },
   "frame.alternatives": {
    "confidence": "agreed",
    "kind": "search",
@@ -1417,6 +1425,14 @@
    "source": "spec_L0_2",
    "unit": "world_m",
    "value": 2.0
+  },
+  "frame.plain_hill.min_rear_rise_m": {
+   "confidence": "provisional",
+   "kind": "family_definition",
+   "note": "평산성 encloses habitable terrace + rear hill; candidates whose enclosed rear sector rises less are plain frames, not 평산성",
+   "source": "design",
+   "unit": "world_m",
+   "value": 8.0
   },
   "frame.rear_sector_half_deg": {
    "confidence": "provisional",

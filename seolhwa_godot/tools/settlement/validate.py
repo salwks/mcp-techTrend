@@ -116,7 +116,7 @@ def run(plan, inp, A, L1, F, rules):
     if n:
         edge = np.zeros(lab.shape, bool)
         edge[0, :] = edge[-1, :] = edge[:, 0] = edge[:, -1] = True
-        ids = set(np.unique(lab[A.water & A.floods[3]]).tolist()) | set(np.unique(lab[edge]).tolist())
+        ids = set(np.unique(lab[A.water & A.floods[3]]).tolist())  # (spring cells are not sources) | set(np.unique(lab[edge]).tolist())
         touch = set(range(1, n + 1)) <= ids | {0}  # components may connect to water outside the window
     _chk(out, "L0.water", "L0", w_ok and mono and touch,
          {"feature_cells": det, "flood_monotonic": mono, "flood_components_touch_water": bool(touch)})
@@ -206,14 +206,30 @@ def run(plan, inp, A, L1, F, rules):
         _chk(out, "L2.containment", "L2", outside <= tol and civ_out <= tol and corr_out <= tol,
              {"frame_outside_allowed_m2": round(outside, 3), "civic_outside_frame_m2": round(civ_out, 3),
               "corridor_outside_frame_m2": round(corr_out, 3), "tolerance_m2": round(tol, 3)})
+        def ltol(g, other):
+            # local precision tolerance: serialized vertices move ≤ grid/2 along the shared boundary only
+            near = g.boundary.intersection(other.boundary.buffer(G.GRID)).length
+            return R.p("acceptance.intrusion_m2") + near * G.GRID / 2
         intr = 0.0
+        excess = []
         if prot is not None:
-            intr = sum(g.intersection(prot).area for g in res_geoms if g is not None) + poly.intersection(prot).area
+            for g in res_geoms:
+                if g is None:
+                    continue
+                a_ = g.intersection(prot).area
+                intr += a_
+                if a_ > ltol(g, prot):
+                    excess.append(round(a_, 3))
+        neigh = A.neigh_poly
+        nb = poly.intersection(neigh).area if not neigh.is_empty else 0.0
+        if nb > ltol(poly, neigh) if not neigh.is_empty else False:
+            excess.append(("neighbour", round(nb, 3)))
         lock_i = 0.0
         if not A.lock_poly.is_empty:
             lock_i = sum(g.intersection(A.lock_poly).area for g in res_geoms if g is not None)
-        _chk(out, "L2.intrusion", "L2", intr <= tol and lock_i <= tol,
-             {"protected_m2": round(intr, 3), "locks_m2": round(lock_i, 3), "tolerance_m2": round(tol, 3)})
+        _chk(out, "L2.intrusion", "L2", not excess and lock_i <= R.p("acceptance.intrusion_m2") + 1e-6,
+             {"reserves_on_protected_m2": round(intr, 3), "excess": excess, "locks_m2": round(lock_i, 3),
+              "neighbour_enclosed_m2": round(nb, 3), "rule": "zero up to local grid tolerance on shared boundaries"})
         pc = fr.get("primary_corridors")
         if pc:
             import networkx as nx  # small vector graph (spec: NetworkX only for small graphs)

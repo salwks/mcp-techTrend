@@ -50,7 +50,8 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     A.full_grid = full
 
     # nearest water surface W(x) and distance d
-    known = water & np.isfinite(inp.water_surface)
+    exempt = inp.flood_exempt if inp.flood_exempt is not None else np.zeros(full.shape, bool)
+    known = water & np.isfinite(inp.water_surface) & ~exempt
     if known.any():
         dist_px, (ij, ii) = ndimage.distance_transform_edt(~known, return_indices=True)
         Wn = inp.water_surface[ij, ii]
@@ -79,20 +80,23 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     vs = inp.vertical_scale
     floods = {}
     reach = rules.p("flood.max_reach_m")
+    unit_scale = vs if rules.p("flood.stage_units") == "source_m" else 1.0
+    A.flood_unit_scale = unit_scale
     for off in rules.p("flood.stage_offsets"):
-        dg = off * vs
-        m = ((h_raw <= Wn + dg) & np.isfinite(Wn) & (wdist <= reach)) | water
+        dg = off * unit_scale
+        m = ((h_raw <= Wn + dg) & np.isfinite(Wn) & (wdist <= reach)) | (water & ~exempt)
         lab, n = Rr.label(m)
-        keep = np.unique(lab[water])
+        keep = np.unique(lab[water & ~exempt])
         keep = keep[keep > 0]
         floods[off] = np.isin(lab, keep) & cov
     ex_off = rules.p("flood.exclusion_offset")
     flood_ex = floods[ex_off]
-    Hsrc = (h_raw - Wn) / vs
+    Hsrc = (h_raw - Wn) / unit_scale
     Rh = rules.p("flood.R_height_m")
     R = np.exp(-wdist / rules.p("flood.R_bank_decay_m")) * np.clip(1 - Hsrc / Rh, 0, 1)
     R = np.where(np.isfinite(R), R, 0.0)
     R = np.maximum(flood_ex.astype(float), R)
+    A.flood_exempt = exempt
 
     # drainage corridors: channel half-width + margin each side
     margin = rules.p("drainage.corridor_margin_m")
@@ -169,6 +173,7 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     A.road_mask = Rr.rasterize(win, A.road_poly)
     on_water = A.road_mask & A.water
     A.existing_crossings = []
+    A.bridge_mask = np.zeros(win.shape, bool)
     if on_water.any():
         lab, n = Rr.label(on_water)
         for k in range(1, n + 1):
@@ -183,12 +188,15 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
                                          "id": match["id"] if match else f"crossing-{k:02d}"})
             if match is None:
                 A.diagnostics.append(diag("unmapped_route_crossing", "warning", "L0",
-                                          "route crosses water without a mapped crossing record",
+                                          "route crosses water without a mapped crossing record; treated as impassable",
                                           xz=[G.r2(x), G.r2(z)]))
-    A.passable = A.cov & (~A.water | A.road_mask)
+            else:
+                A.bridge_mask |= lab == k  # typed, mapped crossing footprint
+    A.passable = A.cov & (~A.water | A.bridge_mask)
     k = rules.p("routing.grade_cost_k")
     A.graph8 = Rt.build_graph(win, A.h, A.passable, radius=1, grade_k=k)
     road_cells = np.flatnonzero(A.road_mask & A.passable)
+    A.neigh_mask = Rr.rasterize(win, A.neigh_poly)
     A.route_cost, A.route_pred = Rt.dijkstra(A.graph8, road_cells)
     A.route_cost = A.route_cost.reshape(win.shape)
     bank = ndimage.binary_dilation(A.fresh, structure=np.ones((3, 3), bool)) & ~A.water & A.cov

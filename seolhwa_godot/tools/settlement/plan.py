@@ -171,7 +171,7 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
     plan["frame"] = frame_rec
     # ---------------- program (final from frame, or allocation estimate)
     prof = L1["profile"]
-    if shown is not None and shown.get("households"):
+    if shown is not None and shown.get("households") and "ledger" in shown:
         prog = P.program_record(inp.tier, prof, L1["insts"], shown["bundle"], shown["households"], R, inp.historical_households)
         T, entries, comps, frags, residual, comps_eff = shown["ledger"]
         prog["area_ledger"] = P.ledger_record(T, entries, residual, R, comps_eff)

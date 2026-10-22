@@ -98,8 +98,8 @@ def solve_households(components: list[tuple[str, float]], profile: dict, rules) 
     """Max represented households N s.t. integer per-component packing fits.
 
     components: (id, effective parcel area = (1-f_lanes-f_open)*A_j).
-    Class counts: largest remainder of profile shares; packing: households in
-    descending parcel area, each into the component with most remaining area.
+    Class counts: largest remainder of profile shares; packing: greedy, then exact
+    bounded DFS (_pack). `optimal` is false if a larger N hit the DFS node limit.
     """
     shares = val(profile["class_shares"])
     a = parcel_areas(profile, rules)
@@ -107,32 +107,98 @@ def solve_households(components: list[tuple[str, float]], profile: dict, rules) 
     amin = min(a.values())
     upper = int(total // amin) if amin > 0 else 0
     tried = 0
+    uncertain = False
     for n in range(upper, -1, -1):
         tried += 1
         counts = largest_remainder(shares, n, CLASS_ORDER)
         need = sum(counts[c] * a[c] for c in CLASS_ORDER)
         if need > total + 1e-9:
             continue
-        rem = [[cid, e] for cid, e in components]
-        assign = {cid: {c: 0 for c in CLASS_ORDER} for cid, _ in components}
-        ok = True
-        for c in sorted(CLASS_ORDER, key=lambda c: -a[c]):
-            for _ in range(counts[c]):
-                rem.sort(key=lambda t: (-t[1], t[0]))
-                if not rem or rem[0][1] + 1e-9 < a[c]:
-                    ok = False
-                    break
-                rem[0][1] -= a[c]
-                assign[rem[0][0]][c] += 1
-            if not ok:
-                break
+        assign, method = _pack(counts, a, components)
+        if assign is None and method == "greedy_lower_bound":
+            uncertain = True
+        ok = assign is not None
         if ok:
             return {"N": n, "by_class": counts, "by_component": assign, "parcel_area_m2": a,
                     "parcel_area_used_m2": round(need, 2), "effective_area_m2": round(total, 2),
-                    "search": {"upper": upper, "tried": tried, "exhausted": False}}
+                    "search": {"upper": upper, "tried": tried, "exhausted": False, "method": method,
+                               "optimal": not uncertain}}
     return {"N": 0, "by_class": {c: 0 for c in CLASS_ORDER}, "by_component": {}, "parcel_area_m2": a,
             "parcel_area_used_m2": 0.0, "effective_area_m2": round(total, 2),
             "search": {"upper": upper, "tried": tried, "exhausted": True}}
+
+
+def _pack(counts, a, components, node_limit=200000):
+    """Integer assignment of households to components (capacity per component).
+
+    Greedy first; if it fails, exact depth-first search over per-component class counts
+    (memoized on remaining demand) with a node limit. Returns (assignment, method).
+    """
+    order = sorted(CLASS_ORDER, key=lambda c: -a[c])
+    rem = [[cid, e] for cid, e in components]
+    assign = {cid: {c: 0 for c in CLASS_ORDER} for cid, _ in components}
+    ok = True
+    for c in order:
+        for _ in range(counts[c]):
+            rem.sort(key=lambda t: (-t[1], t[0]))
+            if not rem or rem[0][1] + 1e-9 < a[c]:
+                ok = False
+                break
+            rem[0][1] -= a[c]
+            assign[rem[0][0]][c] += 1
+        if not ok:
+            break
+    if ok:
+        return assign, "greedy"
+    comps = list(components)
+    nodes = [0]
+    seen = set()
+
+    def fill(i, need):
+        if all(v == 0 for v in need):
+            return {}
+        if i >= len(comps):
+            return None
+        key = (i, need)
+        if key in seen:
+            return None
+        nodes[0] += 1
+        if nodes[0] > node_limit:
+            raise TimeoutError
+        cid, cap = comps[i]
+        rest_cap = sum(e for _, e in comps[i:])
+        if sum(n * a[c] for n, c in zip(need, order)) > rest_cap + 1e-9:
+            seen.add(key)
+            return None
+        # enumerate class counts for this component, largest classes first
+        def rec(k, left, take):
+            if k == len(order):
+                nxt = tuple(n - t for n, t in zip(need, take))
+                sub = fill(i + 1, nxt)
+                if sub is not None:
+                    sub[cid] = dict(zip(order, take))
+                return sub
+            c = order[k]
+            mx = min(need[k], int((left + 1e-9) // a[c]))
+            for t in range(mx, -1, -1):
+                r = rec(k + 1, left - t * a[c], take + (t,))
+                if r is not None:
+                    return r
+            return None
+        out = rec(0, cap, ())
+        if out is None:
+            seen.add(key)
+        return out
+    try:
+        res = fill(0, tuple(counts[c] for c in order))
+    except TimeoutError:
+        return None, "greedy_lower_bound"
+    if res is None:
+        return None, "exact"
+    full = {cid: {c: 0 for c in CLASS_ORDER} for cid, _ in components}
+    for cid, d in res.items():
+        full[cid].update(d)
+    return full, "exact"
 
 
 def livelihoods(by_class: dict, profile: dict) -> dict:
@@ -192,7 +258,7 @@ def partition(T, A, reserves: list[tuple[str, object]], access_geom, rules):
             reason = "below_min_area"
         elif p.buffer(-min_w / 2).is_empty:
             reason = "below_min_width"
-        elif access_geom is not None and not access_geom.is_empty and p.distance(access_geom) > acc:
+        elif access_geom is not None and (access_geom.is_empty or not p.intersects(access_geom)):
             reason = "inaccessible"
         (frags if reason else comps).append((p, reason))
     res = G.polygonal(shapely.union_all([p for p, _ in comps])) if comps else Polygon()
@@ -248,8 +314,8 @@ def standalone(A, rules, profile_name: str, historical=None):
     profile = rules.profile(profile_name)
     insts = institutions(profile, rules)
     T = G.polygonal(A.inp.territory["preferred"].intersection(A.inp.territory["allowed"]))
-    access = A.road_poly
-    T, entries, comps, frags, residual = partition(T, A, [], access, rules)
+    # no corridors exist yet: access is not filtered here (Layer 2 re-solves with walking reach)
+    T, entries, comps, frags, residual = partition(T, A, [], None, rules)
     fl, fo = rules.p("program.f_lanes"), rules.p("program.f_open")
     usable = sum(p.area for p, _ in comps)
     corridor_est = rules.p("routing.corridor_width_m") * 2 * math.sqrt(max(usable, 0))
