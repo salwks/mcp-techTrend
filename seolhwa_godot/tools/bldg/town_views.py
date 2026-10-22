@@ -34,7 +34,10 @@ for j, a in enumerate(streets[:4]):
 cx, cz = fx.get('center', D['area'][0])
 views += [dict(id='o1', label='구역 내려다보기', mode='over', x=cx, z=cz, dist=130, pitch=55, yaw=0),
           dict(id='o2', label='높은 비스듬히(참고 그림 각, 동남에서)', mode='over', x=cx, z=cz, dist=170, pitch=28, yaw=45),
-          dict(id='o3', label='남쪽에서 비스듬히', mode='over', x=cx, z=cz - 5, dist=180, pitch=34, yaw=0)]
+          dict(id='o3', label='남쪽에서 비스듬히', mode='over', x=cx, z=cz - 5, dist=180, pitch=34, yaw=0),
+          # 참고 그림 각(ACON 2203 #1 남문 위 낮은 비스듬히 · #5 길 위 가까운 비스듬히)
+          dict(id='r1', label='참고 각 #1(남문 위 낮게)', mode='over', x=cx, z=cz - 12, dist=95, pitch=17, yaw=0),
+          dict(id='r5', label='참고 각 #5(길 위 가깝게)', mode='over', x=cx + 4, z=cz + 12, dist=42, pitch=30, yaw=35)]
 walks = []
 for a in streets:
     p = [list(q) for q in a['points']]

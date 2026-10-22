@@ -1431,7 +1431,7 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 			if kind == "gotgan": built += absf(area(mine))
 			added += 1
 	# 마당 나무(감나무·느티·대추 자리): 집 뒤·옆 빈 구석에 0~1그루 — 지붕 사이로 나무가 솟는 그림(참고 그림)
-	if t in ["house_c", "house_g", "choga_house", "jungnong", "giwa_house", "yangban", "hut"] and r.next() < 0.55:
+	if t in ["house_c", "house_g", "choga_house", "jungnong", "giwa_house", "yangban", "hut"] and bool(cfg.get("ytree", true)) and r.next() < 0.55:
 		var inner3 := inset(poly, 1.6)
 		for k3 in 14:
 			var c3: Vector2 = _centroid(poly) + Vector2(r.between(-1, 1), r.between(-1, 1)) * sqrt(absf(area(poly))) * 0.5
@@ -1702,7 +1702,7 @@ func run() -> Dictionary:
 	auto_plazas()
 	var t1 := Time.get_ticks_msec()
 	if cfg.get("lots", "blocks") == "measured":
-		cfg.pack = false; cfg.extras_max = 0
+		cfg.pack = false; cfg.extras_max = 0; cfg.ytree = false
 		cut_lots_measured()
 	elif cfg.get("lots", "blocks") == "blocks":
 		cut_lots_blocks()
@@ -1723,7 +1723,7 @@ func run() -> Dictionary:
 		if s.kind == "trunk": continue
 		var pts := []
 		for p in s.pts: pts.append([snappedf(p.x, 0.01), snappedf(p.y, 0.01)])
-		alleys.append({ id = String(s.id), points = pts, width_m = snappedf(float(s.w), 0.01), kind = String(s.kind) })
+		alleys.append({ id = String(s.id), points = pts, width_m = snappedf(float(s.w), 0.01), kind = String(s.kind), terrace = bool(cfg.get("road_terrace", true)) })
 	return { items = items, alleys = alleys, streets = streets, lots = lots, plazas = plazas, log = log }
 
 # =====================================================================================================
@@ -1740,14 +1740,14 @@ const ZONES := {
 	"side": { front = [12.0, 16.8, 24.0], ratio = [1.4, 2.2], cls = [["commoner", 0.5], ["middle", 0.28], ["poor", 0.12], ["hyangri", 0.1]], row = false, lanes = true },
 	"rear": { front = [14.4, 19.0, 28.8], ratio = [0.8, 1.5], cls = [["commoner", 0.45], ["middle", 0.3], ["hyangri", 0.15], ["poor", 0.1]], row = false, lanes = false },
 	"market": { front = [9.6, 13.0, 19.2], ratio = [1.4, 2.2], cls = [["shop", 0.5], ["commoner", 0.4], ["poor", 0.1]], row = true, lanes = true },
-	"out": { front = [14.4, 19.0, 28.8], ratio = [1.0, 1.6], cls = [["commoner", 0.6], ["poor", 0.2], ["middle", 0.2]], row = false, lanes = true },
+	"out": { front = [14.4, 24.0, 36.0], ratio = [1.0, 1.8], cls = [["commoner", 0.6], ["poor", 0.2], ["middle", 0.2]], row = false, lanes = true },
 	"minchon": { front = [21.6, 28.0, 42.0], ratio = [0.8, 1.5], cls = [["commoner", 0.6], ["poor", 0.25], ["middle", 0.15]], row = false, lanes = false },
 	"banchon": { front = [30.0, 40.0, 60.0], ratio = [0.8, 1.4], cls = [["yangban", 0.45], ["hyangri", 0.35], ["middle", 0.2]], row = false, lanes = false },
 	"sanchon": { front = [18.0, 24.0, 36.0], ratio = [0.6, 1.2], cls = [["commoner", 0.55], ["poor", 0.45]], row = false, lanes = false },
 }
 # 계층 짜임(§3.3): 안채 · 부속 수 · 부속 종류 · 대문 · 담(읍내/마을)
 const PROGRAM := {
-	"poor": { main = [["choga", "poor"]], nb = [2, 3], outs = ["dwitgan", "gotgan"], nout = [1, 1], gate = "sarip", wall = "fence", wall_u = "todam_thatch", t = "hut" },
+	"poor": { main = [["choga", "poor"]], nb = [2, 3], outs = ["dwitgan", "gotgan"], nout = [1, 1], gate = "sarip", wall = "fence", wall_u = "fence", t = "hut" },   # 싸리 울타리(가난한 집 — 읍내도)
 	"commoner": { main = [["choga", "commoner"]], nb = [3, 5], outs = ["gotgan", "dwitgan", "oeyang", "araechae"], nout = [1, 2], gate = "chomun", wall = "stone", wall_u = "todam_thatch", t = "choga_house" },
 	"middle": { main = [["giwajip", "middle"], ["choga", "commoner"]], nb = [4, 6], outs = ["araechae", "gotgan", "dwitgan"], nout = [2, 3], gate = "pyeong", wall = "todam_tile", wall_u = "todam_tile", t = "house_g" },
 	"shop": { main = [["choga", "commoner"], ["giwajip", "middle"]], nb = [2, 4], outs = ["dwitgan", "gotgan"], nout = [1, 2], gate = "chomun", wall = "todam_thatch", wall_u = "todam_thatch", t = "shop", front = ["sijeon"] },
@@ -2180,7 +2180,8 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 				continue
 			var ry0: float = lry if faces_street else lry + PI
 			var slack: float = maxf(0.0, (lb.size.x - 2.0 * ii - bb.size.x) / 2.0)
-			for zb in [0.0, 0.6, 1.2, 2.0]:
+			# 등이 길이면 뒤 굴뚝·덧채가 길로 나오지 않게 1.2m 물린다
+			for zb in ([0.0, 0.6, 1.2, 2.0] if faces_street else [1.2, 1.8, 2.4]):
 				if placed.size() > 0: break
 				for xo in [side1 * slack, side1 * slack * 0.5, 0.0]:
 					var lc := Vector2(xo, lb.end.y - ii - bb.size.y / 2 - zb) - (bb.get_center() if faces_street else rot(bb.get_center(), PI))
@@ -2389,6 +2390,100 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 		if pip(inner, jd) and free.call(jrc, 0.3) and poly_line_dist(jrc, path) > 1.6:   # 대문 → 마당 길(사람 지나는 폭)
 			pieces.append({ tag = "jangdok", kit = "village/jangdok", params = { seed = seed0 + 5, w = 2.0, d = 1.5 }, x = jd.x, z = jd.y, ry = mainq[3], world = true })
 			break
+	_green_m(li, cls, poly, lry, placed, pieces, path, yard, mainq, seed0)
 	var wk: String = P.wall_u if urban else P.wall
 	if not urban and cls == "commoner": wk = _wall_kind("choga_house", float(lot.get("zone", 0.4)))
 	return _emit(li, lot, C, lry, pieces, String(P.t), Vector2(lb.size.x, lb.size.y), [wk, true], gate)
+
+# 마당 푸름(문서 settlement-metrics §3.6): 집마다 마당 나무 1~3그루(감·대추·살구·밤, 향리·양반은 느티 하나 더), 담 밑 풀·잡초, 집 뒤 텃밭 이랑, 짚가리.
+#   근거: 김홍도 「타작」·「점심」, 신윤복 「단오풍정」, 김준근 풍속화(마당 가 감나무·담 밑 풀), 낙안읍성·외암마을 사진(집마다 감나무, 담 밑 풀, 뒤뜰 텃밭)
+const TREES_PER := { poor = [0, 1], commoner = [1, 2], middle = [1, 2], shop = [0, 1], hyangri = [2, 3] }
+func _green_m(li: int, cls: String, poly: Array, lry: float, placed: Array, pieces: Array, path: Array, yard: Array, mainq: Array, seed0: int) -> void:
+	var inner := inset(poly, 1.0)
+	if inner.size() < 3: return
+	var bb := _bbox(inner)
+	var taken := []   # [자리, 반지름]
+	var clear_of := func(p: Vector2, rad: float) -> bool:
+		if not pip(inner, p): return false
+		for q in placed:
+			if poly_dist(q[0], [p]) < rad: return false
+		if poly_dist(yard, [p]) < 0.8 or poly_line_dist([p], path) < 1.6: return false
+		for t0 in taken:
+			if p.distance_to(t0[0]) < rad + float(t0[1]): return false
+		return true
+	var mface := Vector2(sin(float(mainq[3])), cos(float(mainq[3])))
+	var mc: Vector2 = mainq[2]
+	# 1) 마당 나무: 집 뒤(안채 뒤)·옆 구석 먼저, 그다음 앞마당 가장자리
+	var nt_r: Array = TREES_PER.get(cls, [1, 1])
+	var nt := int(round(r.between(float(nt_r[0]), float(nt_r[1]) + 0.49)))
+	var cands := []
+	var y := bb.position.y
+	while y <= bb.end.y:
+		var x := bb.position.x
+		while x <= bb.end.x:
+			var p := Vector2(x, y)
+			var behind := (p - mc).dot(mface) < 0.0
+			cands.append([(0.0 if behind else 6.0) + absf(_poly_edge_d(poly, p) - 1.6) + r.next() * 2.0, p])
+			x += 1.2
+		y += 1.2
+	cands.sort_custom(func(a, b): return a[0] < b[0])
+	var placed_t := 0
+	for cq in cands:
+		if placed_t >= nt: break
+		var p: Vector2 = cq[1]
+		if not clear_of.call(p, 1.6): continue
+		var u := r.next()
+		var tk: Dictionary
+		if cls == "hyangri" and placed_t == 0: tk = { kit = "nature/big_tree", params = { seed = seed0 + 301, variant = "zelkova", h = r.between(7.5, 9.5) } }
+		elif u < 0.45: tk = { kit = "nature/persimmon", params = { seed = seed0 + 303 + placed_t, s = r.between(0.9, 1.2) } }                      # 감나무
+		elif u < 0.75: tk = { kit = "nature/big_tree", params = { seed = seed0 + 307 + placed_t, variant = "broadleaf", h = r.between(4.2, 5.6) } }   # 대추·살구(작은 활엽수 대역)
+		else: tk = { kit = "nature/big_tree", params = { seed = seed0 + 311 + placed_t, variant = "chestnut", h = r.between(5.5, 7.0) } }            # 밤나무(집 뒤)
+		tk.tag = "ytree%d" % placed_t; tk.x = p.x; tk.z = p.y; tk.ry = 0.0; tk.world = true
+		pieces.append(tk); taken.append([p, 2.0]); placed_t += 1
+	# 1-2) 길가 나무: 필지 넷 중 하나쯤 앞 모퉁이 안쪽에 큰 나무(느티·버들) — 가지가 길 위로(김홍도 「주막」·마을 어귀 그림)
+	if r.next() < float(cfg.get("street_tree_p", 0.28)):
+		for vi in [0, 1]:
+			var cpt: Vector2 = (poly[vi] as Vector2).lerp(_centroid(poly), 0.18)
+			if not clear_of.call(cpt, 2.2): continue
+			pieces.append({ tag = "stree", kit = "nature/big_tree", params = { seed = seed0 + 331, variant = "zelkova" if r.next() < 0.7 else "willow", h = r.between(7.0, 9.5) }, x = cpt.x, z = cpt.y, ry = 0.0, world = true })
+			taken.append([cpt, 2.6])
+			break
+	# 2) 담 밑 풀·잡초: 안쪽 담 줄을 따라 2.5m마다(건물·대문 길 비킴)
+	var wl := inset(poly, 0.85)
+	var k := 0
+	for i in wl.size():
+		var a: Vector2 = wl[i]; var b: Vector2 = wl[(i + 1) % wl.size()]
+		var L := a.distance_to(b)
+		var sv := 1.0
+		while sv < L - 0.8:
+			var p := a.lerp(b, sv / L)
+			sv += r.between(1.8, 3.2)
+			var ok := true
+			for q in placed:
+				if poly_dist(q[0], [p]) < 0.5: ok = false; break
+			if not ok or poly_line_dist([p], path) < 1.3: continue
+			pieces.append({ tag = "weed%d" % k, kit = "nature/grass", params = { seed = seed0 + 400 + k, kind = "meadow" if r.next() < 0.6 else "short", n = 12 }, x = p.x, z = p.y, ry = r.between(0, TAU), world = true })
+			k += 1
+	# 3) 집 뒤 텃밭 이랑(서민·중인·향리, 자리가 있으면) · 짚가리(가난·서민)
+	if cls in ["commoner", "middle", "hyangri", "poor"]:
+		for cq in cands:
+			var p: Vector2 = cq[1]
+			if (p - mc).dot(mface) >= 0.0: continue
+			var rc := [p + Vector2(-2.0, -1.5), p + Vector2(2.0, -1.5), p + Vector2(2.0, 1.5), p + Vector2(-2.0, 1.5)]
+			var ok := pip(inner, p)
+			for q in rc: if not pip(inner, q): ok = false
+			for q in placed:
+				if ok and poly_dist(q[0], rc) < 0.4: ok = false
+			for t0 in taken:
+				if ok and poly_dist(rc, [t0[0]]) < 1.4: ok = false
+			if not ok or poly_line_dist(rc, path) < 1.4: continue
+			pieces.append({ tag = "teotbat", kit = "village/teotbat", params = { seed = seed0 + 500, w = 3.8, d = 2.6 }, x = p.x, z = p.y, ry = float(mainq[3]), world = true })
+			taken.append([p, 2.4])
+			break
+	if cls in ["poor", "commoner"] and r.next() < 0.45:
+		for cq in cands:
+			var p: Vector2 = cq[1]
+			if not clear_of.call(p, 1.3): continue
+			pieces.append({ tag = "hay", kit = "village/haystack", params = { seed = seed0 + 600, s = r.between(0.8, 1.05) }, x = p.x, z = p.y, ry = 0.0, world = true })
+			taken.append([p, 1.2])
+			break

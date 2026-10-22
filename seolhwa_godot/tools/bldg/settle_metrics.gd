@@ -13,7 +13,7 @@ const RDIR := "res://region_data/JL_NAMWON_UNBONG/"
 
 # 목표(실측 × 세계 배율): 넓이 ㎡ ×1.44, 길이 ×1.2
 const T_AREA := { arterial = [115.0, 360.0], side = [216.0, 576.0], rear = [475.0, 1150.0], market = [173.0, 504.0], out = [300.0, 900.0], minchon = [432.0, 1296.0], banchon = [864.0, 5760.0], sanchon = [360.0, 1008.0] }
-const T_FRONT := { arterial = [7.2, 16.8], side = [12.0, 24.0], rear = [14.4, 28.8], market = [9.6, 19.2], out = [14.4, 28.8], minchon = [21.6, 42.0], banchon = [30.0, 60.0], sanchon = [18.0, 36.0] }
+const T_FRONT := { arterial = [7.2, 16.8], side = [12.0, 24.0], rear = [14.4, 28.8], market = [9.6, 19.2], out = [14.4, 36.0], minchon = [21.6, 42.0], banchon = [30.0, 60.0], sanchon = [18.0, 36.0] }
 const T_NB := { poor = [1, 2], commoner = [2, 3], middle = [2, 4], shop = [1, 4], hyangri = [3, 4], yangban = [4, 7], garden = [0, 1] }
 const T_ROOF := { arterial_band = [0.35, 0.50], walled = [0.22, 0.32], market_band = [0.25, 0.40], out = [0.10, 0.25], minchon = [0.04, 0.10], banchon = [0.03, 0.08] }   # 마을: 실측 밀도(3~9호/ha · 호당 1.5~2동 · 동당 지붕 약 50㎡)에서 — 문서 §3.4 고침
 const T_W := { trunk = [6.0, 8.4], street = [4.1, 6.0], alley = [2.4, 3.6], lane = [1.8, 3.0] }
@@ -178,6 +178,8 @@ func _initialize() -> void:
 					"bldg/gate": gates.append(pc)
 			if not by_zone.has(zn): by_zone[zn] = { area = [], front = [], ratio = [] }
 			var la := absf(OG.area(poly))
+			if String(og.get("kind", "")) == "gap": zn = "gap"   # 길가 틈 메움 필지는 틈 길이대로라 분포 판정에서 뺀다(채 수·덮임엔 든다)
+			if not by_zone.has(zn): by_zone[zn] = { area = [], front = [], ratio = [] }
 			by_zone[zn].area.append(la)
 			if float(og.get("flen", 0.0)) > 0.0:
 				by_zone[zn].front.append(float(og.flen))

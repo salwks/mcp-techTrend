@@ -28,6 +28,6 @@ for dn in sys.argv[1:]:
     town = [v['id'] for v in vs if v['mode'] == 'town']
     sheets.append(dict(out='res://shots/town_organic/%s_town_a.jpg' % dn, title='고을 짜임 %s — 마을 카메라(22°·×0.64) 전 ↔ 후' % dn, cols=2, cells=pairs(town[:5])))
     sheets.append(dict(out='res://shots/town_organic/%s_town_b.jpg' % dn, title='고을 짜임 %s — 마을 카메라(길 위) 전 ↔ 후' % dn, cols=2, cells=pairs(town[5:])))
-    sheets.append(dict(out='res://shots/town_organic/%s_over.jpg' % dn, title='고을 짜임 %s — 내려다보기 · 참고 그림 각(동남 28°) · 남쪽 34° 전 ↔ 후' % dn, cols=2, cells=pairs(['o1', 'o2', 'o3'])))
+    sheets.append(dict(out='res://shots/town_organic/%s_over.jpg' % dn, title='고을 짜임 %s — 내려다보기 · 참고 그림 각(동남 28°) · 남쪽 34° 전 ↔ 후' % dn, cols=2, cells=pairs(['o1', 'o2', 'o3', 'r1', 'r5'])))
     sheets.append(dict(out='res://shots/town_organic/%s_std_fp.jpg' % dn, title='고을 짜임 %s — 기본 카메라(40°) · 1인칭(길 걷기) 전 ↔ 후' % dn, cols=2, cells=pairs([v['id'] for v in vs if v['mode'] in ('std', 'fp')])))
 print(json.dumps(dict(sheets=sheets), ensure_ascii=False, indent=1))

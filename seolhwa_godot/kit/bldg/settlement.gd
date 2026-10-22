@@ -155,7 +155,7 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 				oc[kk] = d.get(kk, { extras_ratio = 0.55, extras_max = 4, front_in = [11.5, 15.0], depth_in = [28.0, 40.0], lot_gap = [0.4, 0.8], inner_inset = 0.45, front_yard = [3.4, 5.5], extras_gap = 0.9, court_gap = 0.5 }[kk])
 			oc.urban = true
 			var ab := OG._bbox(apoly_of(d.area))
-			urban_rects.append([snappedf(ab.position.x, 0.1), snappedf(ab.position.y, 0.1), snappedf(ab.end.x, 0.1), snappedf(ab.end.y, 0.1)])
+			if bool(d.get("urban_ground", false)): urban_rects.append([snappedf(ab.position.x, 0.1), snappedf(ab.position.y, 0.1), snappedf(ab.end.x, 0.1), snappedf(ab.end.y, 0.1)])   # 구역 흙 칠하기는 끔(마당만 흙)
 		# 이 구역에 닿는 큰길(구역 둘레 40m 안 마디)
 		var apoly := []
 		for q in d.area: apoly.append(Vector2(float(q[0]), float(q[1])))
@@ -177,7 +177,7 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 		dsum.append({ id = d.id, area = d.area, lots = res.lots.size(), items = res.items.size(), streets = res.streets.size() - oc.trunks.size() })
 		for l in res.log: X.log.append("[%s] %s" % [d.id, l])
 	for t in X.trunks:
-		if t.get("paint", true): alleys.append({ id = "%s_%s" % [X.pre, t.id], points = t.pts, width_m = snappedf(float(t.w) - 0.4, 0.01), kind = "trunk" })
+		if t.get("paint", true): alleys.append({ id = "%s_%s" % [X.pre, t.id], points = t.pts, width_m = snappedf(float(t.w) - 0.4, 0.01), kind = "trunk", terrace = true })
 	return { items = X.items, alleys = alleys, majors = X.majors, districts = dsum, log = X.log, tier = tier, label = TIERS.get(tier, {}).get("label", tier), urban = urban_rects }
 
 static func apoly_of(area: Array) -> Array:

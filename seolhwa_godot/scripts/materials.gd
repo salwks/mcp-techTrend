@@ -45,7 +45,13 @@ const DITHER := """
 			// 먹선 껍질(먹색 버텍스)은 카메라 16m 안에서 그리지 않는다 — 카메라가 잎덩이 안에 들면 껍질 안쪽이 화면을 검게 덮는다
 			// occ_near는 거리 배율(1 = 바깥 6~12m). 단면 실내에서는 작게(region_main) — 실내 카메라(10~13m)가 바닥·가구를 비우지 않게
 			if (cd < 16.0 * occ_near && distance(COLOR.rgb, vec3(0.0242, 0.0194, 0.0160)) < 0.012) discard;
-			keep = min(keep, smoothstep(6.0 * occ_near, 12.0 * occ_near, cd));
+			// 카메라 앞 비우기는 카메라→플레이어 선분 둘레(5m 안)에 든 것만 — 길가 담·집이 화면 가에서 유령처럼 흐려지지 않게(town-organic).
+			//   카메라 3m 안(잎덩이 속 등)은 어느 쪽이든 비운다
+			vec3 ab2 = occ_b - occ_a;
+			float ot2 = clamp(dot(owp - occ_a, ab2) / max(dot(ab2, ab2), 1e-4), 0.0, 1.0);
+			float od2 = length(owp - (occ_a + ab2 * ot2));
+			float between = max(1.0 - smoothstep(4.0, 6.0, od2), 1.0 - smoothstep(2.5, 3.5, cd));
+			keep = min(keep, mix(1.0, smoothstep(6.0 * occ_near, 12.0 * occ_near, cd), between));
 		}
 		ivec2 q = ivec2(FRAGCOORD.xy) % 4;
 		const float BAYER[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);

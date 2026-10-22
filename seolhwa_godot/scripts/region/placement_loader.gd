@@ -28,6 +28,7 @@ const Jobs := preload("res://scripts/region/jobs.gd")
 const PlacementGate := preload("res://scripts/region/placement_gate.gd")
 
 const FLAT_MARGIN := 2.0
+var _terrace_roads := []   # [점들, 폭] — 길 터 고르기
 const FLAT_EDGE := 5.0
 const VEG_MARGIN := 1.0
 const TAG := "placement"
@@ -108,6 +109,7 @@ func load_all() -> void:
 	#   원본 배치(namwon.py 생성물)를 고치지 않아 생성기를 다시 돌려도·되돌려도(이 파일을 지우면 끝) 충돌이 없다.
 	var sup := {}
 	var fdata := []
+	_terrace_roads = []
 	for f in files():
 		_mtimes[f] = FileAccess.get_modified_time(f)
 		var d = JSON.parse_string(FileAccess.get_file_as_string(f))
@@ -128,6 +130,9 @@ func load_all() -> void:
 			if item.has("when") and not item.has("case"):
 				item = item.duplicate(); item["case"] = fcase
 			raw.append(_resolve_placeholder(item))
+		if world.has_method("terrace_road"):
+			for al in d.get("alleys", []):
+				if al is Dictionary and bool(al.get("terrace", false)): _terrace_roads.append([al.get("points", []), float(al.get("width_m", 3.0))])
 		for c in d.get("crowds", []):
 			if not (c is Dictionary) or not c.has("id"): continue
 			var cc: Dictionary = c.duplicate(true)
@@ -222,6 +227,8 @@ func load_all() -> void:
 		elif r.get("yard", true) and _yard_kit(r):   # 항목 "yard": false면 제 마당 흙을 칠하지 않는다(도성 안 소품 — 둘레 집 마당이 이미 칠함)
 			world.paint_yard(c, r.ry, fp * 0.5)
 			stats.yards += 1
+	# 길 터 고르기(town-organic): 배치 alleys 중 terrace 표가 있는 길(고을 짜임이 비탈에서 낸 길)
+	for fd in _terrace_roads: stats.road_terrace = int(stats.get("road_terrace", 0)) + world.terrace_road(fd[0], float(fd[1]))
 	# 못 파기: build 결과 water {y, outline}(로컬) — 터 고르기 뒤 높이 기준
 	for r in place:
 		var info = _cache.get(_key(r.kit, r.params))

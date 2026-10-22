@@ -2260,6 +2260,44 @@ func reset_edits() -> void:
 
 # 회전된 사각형(중심 c, y축 회전 ry, 반폭 half) 안을 높이 y로 고른다. 바깥 edge m에 걸쳐 원래 땅으로 부드럽게.
 # 안쪽 토지이용 칸에는 "고른 땅" 비트를 켜 잡음 디테일을 없앤다. y가 NAN이면 사각형 안 데이터 높이의 평균.
+# 손대기 전 땅 높이(터 고르기 이전)
+func height_orig(x: float, z: float) -> float:
+	var fx := clampf((x - hx0) / hstep, 0.0, hnx - 1.001)
+	var fz := clampf((z - hz0) / hstep, 0.0, hnz - 1.001)
+	var i := int(fx); var j := int(fz)
+	var tx := fx - i; var tz := fz - j
+	var hr := func(ii: int, jj: int) -> float:
+		ii = clampi(ii, 0, hnx - 1); jj = clampi(jj, 0, hnz - 1)
+		var k := jj * hnx + ii
+		if hbpp == 2: return hy0 + float(_h_orig[k * 2] * 256 + _h_orig[k * 2 + 1]) * hscale
+		return hy0 + float(_h_orig[k] * 256) * hscale
+	return lerpf(lerpf(hr.call(i, j), hr.call(i + 1, j), tx), lerpf(hr.call(i, j + 1), hr.call(i + 1, j + 1), tx), tz)
+
+# 길 터 고르기(town-organic): 길 가운데 줄을 따라 원래 땅 높이를 고르게(±6m 이동 평균) 한 길바닥을 깐다 — 길가 필지 터가 각자 고른 높이로
+#   길이 톱니·둔덕이 되지 않게(필지 터 고르기 뒤에 부른다). 가장자리 2.5m는 둘레 땅과 섞는다.
+func terrace_road(pts: Array, w: float) -> int:
+	if pts.size() < 2: return 0
+	var P := []
+	for q in pts: P.append(Vector2(float(q[0]), float(q[1])))
+	var S := []   # [자리, 방향]
+	for i in P.size() - 1:
+		var a: Vector2 = P[i]; var b: Vector2 = P[i + 1]
+		var L := a.distance_to(b)
+		var n := maxi(1, int(ceil(L / 2.0)))
+		for k in n:
+			S.append([a.lerp(b, float(k) / n), (b - a).normalized()])
+	S.append([P[P.size() - 1], ((P[P.size() - 1] as Vector2) - P[P.size() - 2]).normalized()])
+	var hs := []
+	for e in S: hs.append(height_orig((e[0] as Vector2).x, (e[0] as Vector2).y))
+	var cnt := 0
+	for i in S.size():
+		var sum := 0.0; var nn := 0
+		for k in range(maxi(0, i - 3), mini(S.size(), i + 4)): sum += float(hs[k]); nn += 1
+		var dv: Vector2 = S[i][1]
+		flatten_rect(S[i][0], atan2(dv.x, dv.y), Vector2(w / 2.0 + 0.4, 1.3), sum / nn, 2.5)
+		cnt += 1
+	return cnt
+
 func flatten_rect(c: Vector2, ry: float, half: Vector2, y: float, edge := 5.0) -> float:
 	var ca := cos(ry); var sa := sin(ry)
 	var R := half.length() + edge

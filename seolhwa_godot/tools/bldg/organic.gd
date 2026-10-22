@@ -16,7 +16,7 @@ const REPLACE_KITS := ["village/choga", "village/house_compound", "village/giwa"
 const DISTRICTS := {
 	# 서문 밖 장터길 민가 구역(building-rollout-1 west 자리) — 동쪽 = 장터길(읍성 서벽 앞), 서쪽 = 개울 r055, 가운데를 성황사 오솔길이 지난다
 	west = {
-		seed = 1873, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
+		seed = 1875, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
 		area = [[-3341, 200], [-3341, 359], [-3460, 368], [-3445, 345], [-3434, 320], [-3424, 300], [-3410, 285], [-3410, 262], [-3428, 249], [-3428, 230], [-3405, 200]],
 		trunk_ids = { namwon_market_lane = 3.6, namwon_west_gate_lane = 3.6, path_namwon_seonghwangsa = 3.0 },
 		plazas = [{ c = [-3349, 246], r = 7.5, kind = "gate" }, { c = [-3350, 291], r = 6.0, kind = "well" }],
@@ -203,7 +203,8 @@ func _initialize() -> void:
 	var plz := []
 	for pz in res.plazas: plz.append({ c = [snappedf(pz.c.x, 0.01), snappedf(pz.c.y, 0.01)], r = snappedf(float(pz.r), 0.01), kind = pz.kind })
 	var urb := []
-	if D.get("urban", false):
+	# 구역 전체 흙 칠하기(urban)는 끈다 — 마당 가운데만 흙(필지 마당 칠), 담 밑·길섶은 풀(낙안·외암 사진, 결정 2026-10-22)
+	if D.get("urban", false) and D.get("urban_ground", false):
 		var ab := OG._bbox(area)
 		urb = [[snappedf(ab.position.x, 0.1), snappedf(ab.position.y, 0.1), snappedf(ab.end.x, 0.1), snappedf(ab.end.y, 0.1)]]
 	if not out.has("urban"): out.urban = []
