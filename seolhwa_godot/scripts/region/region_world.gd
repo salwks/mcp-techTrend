@@ -85,6 +85,12 @@ var mat_mid: ShaderMaterial
 var mat_far: ShaderMaterial
 var mat_water: ShaderMaterial
 var mesh_near: ArrayMesh
+# 근경 조각 거리 LOD(성능 풀이): 높이 자료가 2m 칸이라 1m 격자는 가까이(잔무늬 잡음)만 몫이 있다 — 먼 조각은 2m·4m 격자
+#   [1m, 2m, 4m] 메시 · 조각 가운데까지 수평 거리 문턱(m) · --noterrlod 끔(견주기)
+var mesh_near_l: Array = []
+var terr_lod_d := Vector2(112.0, 240.0)
+var terr_lod_on := true
+var _terr_lod_t := 0.0
 var mesh_mid: ArrayMesh
 var far_node: Node3D           # 원경 조각들(MeshInstance3D)의 부모
 var terrain_root: Node3D
@@ -236,6 +242,7 @@ func load_region(dir := "") -> void:
 	props = PropStates.new(self)
 	decals = Decals.new(); decals.setup(self); add_child(decals)
 	mesh_near = _grid_mesh(CHUNK, 1)
+	mesh_near_l = [mesh_near, _grid_mesh(CHUNK / 2, 2), _grid_mesh(CHUNK / 4, 4)]
 	mesh_mid = _grid_mesh(TILE / MID_STEP, MID_STEP)
 	_build_far()
 	_build_rivers()
@@ -1648,6 +1655,29 @@ func _new_tile_node() -> Node3D:
 			mi.position = Vector3(ci * CHUNK, 0, cj * CHUNK)
 			node.add_child(mi)
 	return node
+
+# 근경 조각 LOD 고르기(region_main이 매 프레임 부른다 — 0.2초마다 일한다)
+func terrain_lod(cam_pos: Vector3, dt: float) -> void:
+	_terr_lod_t -= dt
+	if _terr_lod_t > 0.0 or mesh_near_l.is_empty(): return
+	_terr_lod_t = 0.2
+	var n := TILE / CHUNK
+	var h := CHUNK * 0.5
+	for t in tiles:
+		var st: Dictionary = tiles[t]
+		if st.lod != 0: continue
+		var kids: Array = st.node.get_children()
+		var o: Vector3 = st.node.position
+		for cj in n:
+			for ci in n:
+				var mi: MeshInstance3D = kids[1 + cj * n + ci]
+				var k := 0
+				if terr_lod_on:
+					var dx := absf(o.x + ci * CHUNK + h - cam_pos.x) - h; var dz := absf(o.z + cj * CHUNK + h - cam_pos.z) - h
+					var d := Vector2(maxf(dx, 0.0), maxf(dz, 0.0)).length()   # 조각 가장자리까지
+					k = 2 if d > terr_lod_d.y else (1 if d > terr_lod_d.x else 0)
+				var m: ArrayMesh = mesh_near_l[k]
+				if mi.mesh != m: mi.mesh = m
 
 # 64m 칸의 데이터 높이 범위(16m 간격 표본 + 여유)
 func _chunk_y(x0: float, z0: float) -> Vector2:

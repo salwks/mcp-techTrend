@@ -197,7 +197,7 @@ func _ready() -> void:
 	_render_scale = scale
 	scene_vp = SubViewport.new()
 	scene_vp.own_world_3d = true
-	scene_vp.msaa_3d = Viewport.MSAA_4X
+	scene_vp.msaa_3d = Viewport.MSAA_2X if gfx_low() else Viewport.MSAA_4X   # 화면 품질 낮음: 2배(성능 풀이)
 	scene_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(scene_vp)
 	fit_window(get_window())
@@ -415,7 +415,10 @@ func _build_scene() -> void:
 	sun.shadow_normal_bias = 1.2
 	sun.shadow_blur = 1.5
 	root.add_child(sun)
-	if args.has("shadowq"): RenderingServer.directional_soft_shadow_filter_set_quality(int(args.shadowq))   # 해 그림자 거르기 품질(0~5) 견주기
+	# 해 그림자 거르기 품질(0~5) 견주기 · 화면 품질 낮음은 1(성능 풀이)
+	if args.has("shadowq"): RenderingServer.directional_soft_shadow_filter_set_quality(int(args.shadowq))
+	elif gfx_low(): RenderingServer.directional_soft_shadow_filter_set_quality(1)
+	if args.has("shadowsize"): RenderingServer.directional_shadow_atlas_set_size(int(args.shadowsize), true)   # 해 그림자 판 크기 견주기(없으면 look.gd가 구역·품질로 정한다)
 
 	cam = Camera3D.new()
 	cam.near = 0.5; cam.far = 6000.0; cam.fov = 30.0
@@ -575,6 +578,7 @@ func teleport(x: float, z: float) -> void:
 	var _t0 := Time.get_ticks_usec()
 	var _ev: String = world.stats.get("event", "")
 	world.focus(player_pos)
+	world.terrain_lod(cam.global_position if cam != null else player_pos, 1.0)
 	var _t1 := Time.get_ticks_usec()
 
 func _nearest_free(x: float, z: float, r: float) -> Vector2:
@@ -768,6 +772,11 @@ func _apply_atmo() -> void:
 	world.scatter_far = clampf(1.9 / maxf(float(s.dens), 0.001), 90.0, 320.0) if fog_on else 600.0
 	if args.has("lod0"): world.lod0_dist = float(args.lod0)
 	if args.has("scatterfar"): world.scatter_far = float(args.scatterfar)
+	world.terr_lod_on = not args.has("noterrlod")
+	if gfx_low(): world.terr_lod_d = Vector2(64.0, 160.0)
+	if args.has("terrlod"):
+		var tl := String(args.terrlod).split(",")
+		world.terr_lod_d = Vector2(float(tl[0]), float(tl[1]) if tl.size() > 1 else float(tl[0]) * 2.0)
 	if args.has("khsfar"): world.khs_far_base = float(args.khsfar)
 	_scatter_base = world.scatter_far
 	if rig != null and (rig.sailing or rig.riding): world.scatter_far = minf(_scatter_base, SAIL_SCATTER)
@@ -1291,6 +1300,7 @@ func _process(delta: float) -> void:
 	var _t0 := Time.get_ticks_usec()
 	var _ev: String = world.stats.get("event", "")
 	world.focus(player_pos)
+	world.terrain_lod(cam.global_position if cam != null else player_pos, dt)
 	var _t1 := Time.get_ticks_usec()
 	world.set_terrain_param("mist_base", player_pos.y)
 	RenderingServer.global_shader_parameter_set("fog_base", player_pos.y) # 키트·캐릭터 산안개도 발 높이 기준
@@ -1355,6 +1365,40 @@ func _process(delta: float) -> void:
 	if args.has("bench") and _bench_time > 2.0 and delta > 0.03 and not _bench_loading:
 		print("  SLOW f=%d %.1fms focus=%.1f update=%.1f near=%d jobs=%d done=%d" % [Engine.get_process_frames(), delta * 1000.0, (_t1 - _t0) / 1000.0, (_t3 - _t2) / 1000.0, world.stats.near, world.stats.jobs, world.stats.scatter_done])
 
+# 성능 풀이(--perfdump): 화면 거리 안에 보이는 메시의 삼각형을 무리(노드 경로 앞 두 마디)별로 어림 — 그림자·반사 몫은 빠진다
+func _perf_dump() -> void:
+	var cp: Vector3 = cam.global_position
+	var fr := cam.get_frustum()
+	var acc := {}
+	for n in scene_vp.find_children("*", "GeometryInstance3D", true, false):
+		var gi := n as GeometryInstance3D
+		if not gi.is_visible_in_tree(): continue
+		var mesh: Mesh = null; var inst := 1
+		if gi is MeshInstance3D: mesh = (gi as MeshInstance3D).mesh
+		elif gi is MultiMeshInstance3D and (gi as MultiMeshInstance3D).multimesh != null:
+			var mm := (gi as MultiMeshInstance3D).multimesh
+			mesh = mm.mesh; inst = mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+		if mesh == null: continue
+		var d := cp.distance_to(gi.global_position)
+		if gi.visibility_range_end > 0.0 and (d > gi.visibility_range_end + gi.visibility_range_end_margin or d < gi.visibility_range_begin - gi.visibility_range_begin_margin): continue
+		var bb := gi.global_transform * gi.get_aabb()
+		var inside := true
+		for pl in fr:
+			var c := bb.get_center(); var e := bb.size * 0.5
+			if pl.distance_to(c) > absf(pl.normal.x) * e.x + absf(pl.normal.y) * e.y + absf(pl.normal.z) * e.z: inside = false; break
+		if not inside: continue
+		var t := 0
+		for si in mesh.get_surface_count():
+			var ia = mesh.surface_get_arrays(si)[Mesh.ARRAY_INDEX] if mesh is ArrayMesh else null
+			t += (ia.size() / 3) if ia != null and ia.size() > 0 else 0
+		var path := str(gi.get_path()).split("/")
+		var key := "/".join(path.slice(3, 6)) if path.size() > 6 else str(gi.get_path())
+		key = key.rstrip("0123456789@_")
+		if not acc.has(key): acc[key] = [0, 0]
+		acc[key][0] += t * inst; acc[key][1] += 1
+	var ks := acc.keys(); ks.sort_custom(func(a, b): return acc[a][0] > acc[b][0])
+	for k in ks.slice(0, 25): print("PERFDUMP %8dk tris  n=%4d  %s" % [acc[k][0] / 1000, acc[k][1], k])
+
 func _bench_report() -> void:
 	var a := Array(_bench_dts); a.sort()
 	var p99: float = a[int(a.size() * 0.99)] if a.size() > 0 else 0.0
@@ -1367,6 +1411,7 @@ func _bench_report() -> void:
 	print("BENCH avg_fps=%.1f tris=%dk draws=%d worst_ms=%.1f p99_ms=%.1f over33=%d frames=%d render=%s speed=%.1f dist=%.0fm tiles_near=%d mid=%d scatter=%d statics=%d" % [
 		_bench_frames / _bench_time, int(_bench_gpu / maxf(1.0, a.size()) / 1000.0), int(_bench_draws / maxf(1.0, a.size())), _bench_worst * 1000.0, p99 * 1000.0, over, _bench_frames, scene_vp.size, _bench_speed,
 		_bench_dist, world.stats.near, world.stats.mid, world.stats.scatter_done, world.stats.statics])
+	if args.has("perfdump"): _perf_dump()
 	# 인물 그림 비용(인물 빌더 1~3단계 측정): 텍스처 VRAM 전체 · 사람 종류(그림) 수 · 화면 안 사람
 	var banks := {}
 	if npcs_amb != null:
