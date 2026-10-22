@@ -866,6 +866,7 @@ func _plan_scale(raw: Array, story_pts: Array) -> void:
 					if j != i and rects[j] != null and not _poly_overlap(orig, rects[j]): neigh.append(j)
 		var road0: bool = road_hit.call(orig)
 		var k := 1.0
+		if road0: plan_capped += 1; continue   # 이미 길에 닿은 집(길가 가게 등)은 키우면 길로 더 나온다 — 그대로
 		for kk in [target, 1.0 + (target - 1.0) * 0.75, 1.0 + (target - 1.0) * 0.5, 1.0 + (target - 1.0) * 0.25]:
 			# 바깥 담·처마 끝까지 같은 비로 커진다고 보고 검사(평면만 키우므로 바닥 사각만)
 			var rc := _prect(c, h0 * float(kk), ry)

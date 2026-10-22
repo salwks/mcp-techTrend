@@ -104,6 +104,11 @@ static func init() -> void:
 	imp_far_mesh = imp_mesh.duplicate()
 	imp_far_mesh.surface_set_material(0, imp_far_mat)
 	_apply_bands()
+	# 배치 나무(build_static) 메시를 메인 스레드에서 미리 읽어 둔다 — 키트 캐시가 빈 첫 불러오기에서 일꾼 스레드가 load()를 부르다
+	#   메인 스레드(불러오기 화면이 일을 기다림)와 엇갈려 멈췄다(town-organic: 마당 나무가 많은 고을, 캐시 없음 → 무한 대기)
+	for li in NAMES.size():
+		if ResourceLoader.exists(DIR + "%s_lod0.res" % NAMES[li]):
+			for lod in [0, 1]: mesh(li, lod, "st")
 
 static func set_low(low: bool) -> void:
 	# 화면 품질 낮음: 가까운 벌·예산을 줄인다

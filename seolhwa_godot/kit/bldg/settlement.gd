@@ -179,8 +179,37 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 			alleys.append(a)
 		dsum.append({ id = d.id, area = d.area, lots = res.lots.size(), items = res.items.size(), streets = res.streets.size() - oc.trunks.size() })
 		for l in res.log: X.log.append("[%s] %s" % [d.id, l])
+	# 성문 목(throat): 큰길은 성문 앞뒤 8m에서 문 트임 폭(4m)으로 좁아져 문을 지난다(길이 문으로 모임) — 칠한 길을 그 자리에서 잘라 좁은 토막으로
+	var gates := []
+	for it in X.items:
+		if String(it.kit) == "landmark/namwon_eupseong":
+			var hs: float = float(it.params.get("side", 200.0)) / 2.0
+			for q in [Vector2(0, hs), Vector2(0, -hs), Vector2(hs, 0), Vector2(-hs, 0)]:
+				var wq: Array = X.Wa(q.x, q.y)
+				gates.append(Vector2(float(wq[0]), float(wq[1])))
 	for t in X.trunks:
-		if t.get("paint", true): alleys.append({ id = "%s_%s" % [X.pre, t.id], points = t.pts, width_m = snappedf(float(t.w) - 0.4, 0.01), kind = "trunk", terrace = true })
+		if not t.get("paint", true): continue
+		var full: float = snappedf(float(t.w) - 0.4, 0.01)
+		if gates.is_empty() or float(t.w) <= 4.4:
+			alleys.append({ id = "%s_%s" % [X.pre, t.id], points = t.pts, width_m = full, kind = "trunk", terrace = true }); continue
+		var P := []
+		for q in t.pts: P.append(Vector2(float(q[0]), float(q[1])))
+		var pts := OG.resample(P, 1.0)
+		var runs := []   # [좁음?, 점들]
+		for q in pts:
+			var near := false
+			for g in gates: if (q as Vector2).distance_to(g) < 8.0: near = true
+			if runs.is_empty() or bool(runs[runs.size() - 1][0]) != near:
+				var start := [] if runs.is_empty() else [runs[runs.size() - 1][1][runs[runs.size() - 1][1].size() - 1]]
+				runs.append([near, start])
+			runs[runs.size() - 1][1].append(q)
+		var ri := 0
+		for rn in runs:
+			if (rn[1] as Array).size() < 2: continue
+			var pp := []
+			for q in rn[1]: pp.append([snappedf((q as Vector2).x, 0.01), snappedf((q as Vector2).y, 0.01)])
+			alleys.append({ id = "%s_%s%s" % [X.pre, t.id, "" if ri == 0 else "_%d" % ri], points = pp, width_m = 3.6 if rn[0] else full, kind = "trunk", terrace = true })
+			ri += 1
 	return { items = X.items, alleys = alleys, majors = X.majors, districts = dsum, log = X.log, tier = tier, label = TIERS.get(tier, {}).get("label", tier), urban = urban_rects }
 
 static func apoly_of(area: Array) -> Array:

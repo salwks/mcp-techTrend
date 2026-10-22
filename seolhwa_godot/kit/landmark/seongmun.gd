@@ -142,8 +142,12 @@ static func build(params: Dictionary) -> Dictionary:
 			S.stone_face(b, rng, f1, f0, 0.0, S.H - 0.3, out, 0.25) if out.cross(f1 - f0) > 0 else S.stone_face(b, rng, f0, f1, 0.0, S.H - 0.3, out, 0.25)
 			var q0 := p0 + out * (tt / 2 - S.PARA_T / 2); var q1 := p1 + out * (tt / 2 - S.PARA_T / 2)
 			S.parapet(b, rng, q0, q1, S.H - 0.3, out)
-			var m := (p0 + p1) / 2
-			cols.append({ type = "circle", x = m.x, z = m.y, r = tt / 2 + 0.6 })
+			# 충돌: 보이는 옹성 몸체를 따라 작은 원 줄(두께 반 + 5cm) — 큰 원 하나(두께 반 + 0.6m)는 옹성 문 트임과 길까지 막았다
+			var segl := p0.distance_to(p1)
+			var ncol := maxi(1, int(ceil(segl / maxf(tt * 0.6, 0.6))))
+			for ci in ncol + 1:
+				var mq := p0.lerp(p1, float(ci) / ncol)
+				cols.append({ type = "circle", x = mq.x, z = mq.y, r = tt / 2 + 0.05 })
 		fz = zo + R + 3.0
 		var ox := (R + 3.0) if east else -(R + 3.0)
 		anchors.outside = Vector3(0, 0, zo + R + 3.0) if front else Vector3(ox * 0.85, 0, zo + 1.5)

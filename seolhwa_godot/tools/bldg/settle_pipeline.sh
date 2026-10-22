@@ -9,7 +9,7 @@ ONLY=$(echo $EX | tr ' ' ',')
 for n in $EX; do
   timeout 3000 $G --path . res://scenes/region.tscn --resolution 1920x1080 -- --region=JL_NAMWON_UNBONG --placedir=res://shots/town_organic/_place_$n/ \
     --bldgrollout=res://tools/bldg/town_views.json --brset=$n --brtag=after --brout=shots/town_organic/raw --savefile=user://town_test_$n.json \
-    --kitcache=/tmp/seolhwa_town_kit_cache/ --nostory --notitle --time=11 --weather=clear --nodof > /tmp/town_logs/br_$n.log 2>&1
+    --kitcache=${KITCACHE:-/tmp/seolhwa_town_kit_cache/} --nostory --notitle --time=11 --weather=clear --nodof > /tmp/town_logs/br_$n.log 2>&1
   echo "$n $(grep -E 'BRPASS' /tmp/town_logs/br_$n.log | tail -1)" >> /tmp/town_logs/settle_pipe.txt
 done
 echo DONE >> /tmp/town_logs/settle_pipe.txt

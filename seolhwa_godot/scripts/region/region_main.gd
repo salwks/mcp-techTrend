@@ -100,6 +100,9 @@ var _bench_frames := 0
 var _bench_time := 0.0
 var _bench_worst := 0.0
 var _bench_dts := PackedFloat32Array()
+var _bench_cpu_ms := 0.0     # 성능 풀이(perf pass): 3D 뷰포트 렌더 CPU·GPU 시간(ms) 합
+var _bench_gpu_ms := 0.0
+var _bench_shadow_draws := 0.0
 var _bench_gpu := 0.0   # 프레임당 삼각형 합
 var _bench_draws := 0.0
 var _bench_loading := true
@@ -260,6 +263,7 @@ func _ready() -> void:
 	if args.has("devtravel"): DevTravel.set_on(true)
 	if args.has("bench"):
 		_bench_left = float(args.bench)
+		RenderingServer.viewport_set_measure_render_time(scene_vp.get_viewport_rid(), true)   # 성능 풀이: 렌더 CPU·GPU 시간
 		if args.has("benchroute"):
 			var sp_: PackedStringArray = String(args.benchroute).split(":")
 			var bb := [-1e9, -1e9, 1e9, 1e9]
@@ -1248,6 +1252,10 @@ func _process(delta: float) -> void:
 		if _bench_time > 2.0:
 			_bench_gpu += RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
 			_bench_draws += RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+			var vr := scene_vp.get_viewport_rid()
+			_bench_cpu_ms += RenderingServer.viewport_get_measured_render_time_cpu(vr)
+			_bench_gpu_ms += RenderingServer.viewport_get_measured_render_time_gpu(vr)
+			_bench_shadow_draws += RenderingServer.viewport_get_render_info(vr, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_SHADOW, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME)
 			_bench_worst = maxf(_bench_worst, delta)
 			_bench_dts.append(delta)
 		if _bench_left <= 0.0: _bench_report()
@@ -1354,6 +1362,8 @@ func _bench_report() -> void:
 	for d in a:
 		if d > 0.0334: over += 1
 	print("BENCH weather=%s wet=%.2f snow=%.2f" % [weather.kind if weather else "-", weather.wet if weather else 0.0, weather.snow if weather else 0.0])
+	var nfr := maxf(1.0, a.size())
+	print("BENCH render_cpu_ms=%.2f render_gpu_ms=%.2f shadow_draws=%d frame_ms=%.2f" % [_bench_cpu_ms / nfr, _bench_gpu_ms / nfr, int(_bench_shadow_draws / nfr), 1000.0 * _bench_time / maxf(1.0, _bench_frames)])
 	print("BENCH avg_fps=%.1f tris=%dk draws=%d worst_ms=%.1f p99_ms=%.1f over33=%d frames=%d render=%s speed=%.1f dist=%.0fm tiles_near=%d mid=%d scatter=%d statics=%d" % [
 		_bench_frames / _bench_time, int(_bench_gpu / maxf(1.0, a.size()) / 1000.0), int(_bench_draws / maxf(1.0, a.size())), _bench_worst * 1000.0, p99 * 1000.0, over, _bench_frames, scene_vp.size, _bench_speed,
 		_bench_dist, world.stats.near, world.stats.mid, world.stats.scatter_done, world.stats.statics])

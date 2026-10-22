@@ -16,7 +16,7 @@ const REPLACE_KITS := ["village/choga", "village/house_compound", "village/giwa"
 const DISTRICTS := {
 	# 서문 밖 장터길 민가 구역(building-rollout-1 west 자리) — 동쪽 = 장터길(읍성 서벽 앞), 서쪽 = 개울 r055, 가운데를 성황사 오솔길이 지난다
 	west = {
-		seed = 1885, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
+		seed = 1886, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
 		area = [[-3341, 200], [-3341, 359], [-3460, 368], [-3445, 345], [-3434, 320], [-3424, 300], [-3410, 285], [-3410, 262], [-3428, 249], [-3428, 230], [-3405, 200]],
 		trunk_ids = { namwon_market_lane = 3.6, namwon_west_gate_lane = 3.6, path_namwon_seonghwangsa = 3.0 },
 		plazas = [{ c = [-3349, 246], r = 7.5, kind = "gate" }, { c = [-3350, 291], r = 6.0, kind = "well" }],
@@ -35,7 +35,7 @@ const DISTRICTS := {
 	},
 	# 읍성 안 남쪽 절반(남문 ↔ 십자로, 서문 ↔ 동문 사이) — 옛 배치는 바둑판 줄(house_compound·giwa·choga). 북쪽 객사·관아(이야기 자리)는 그대로
 	eup = {
-		seed = 1877, prefix = "orge", group = "남원 읍성 안 남쪽(고을 짜임)", region = "south",
+		seed = 1881, prefix = "orge", group = "남원 읍성 안 남쪽(고을 짜임)", region = "south",
 		area = [[-3315, 253], [-3140, 253], [-3140, 336], [-3315, 336]],
 		trunk_ids = { namwon_eup_street = 5.0, namwon_eup_street_ew = 5.0 },
 		# 성 안 둘레길(순성로 — 성벽 안쪽을 도는 길): 남·서·동 안쪽

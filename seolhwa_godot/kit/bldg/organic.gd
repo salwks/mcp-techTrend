@@ -2256,7 +2256,7 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 			var G: Vector2 = at(fpts0, tt)[0]
 			var okg := true
 			for q in placed + extra:
-				if poly_line_dist(q[0] if q is Array and q.size() > 0 and q[0] is Array else q, [G, G - (lot.n as Vector2) * 2.2]) < 0.6: okg = false; break
+				if poly_line_dist(q[0] if q is Array and q.size() > 0 and q[0] is Array else q, [G, G - (lot.n as Vector2) * 3.4]) < 0.9: okg = false; break
 			if okg: return true
 			tt += 1.0
 		return false
@@ -2355,7 +2355,7 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 		for vi in range(1, fpts.size() - 1):
 			if G.distance_to(fpts[vi]) < 1.4 and absf(((fpts[vi] as Vector2) - fpts[vi - 1]).angle_to((fpts[vi + 1] as Vector2) - fpts[vi])) > 0.12: ok = false
 		for q in placed:
-			if poly_line_dist(q[0], [G, G - n * 2.2]) < 1.0: ok = false; break   # 굴뚝·부엌 덧채가 바운딩 밖에 나올 수 있어 1m
+			if poly_line_dist(q[0], [G, G - n * 3.4]) < 1.0: ok = false; break   # 굴뚝·부엌 덧채가 바운딩 밖에 나올 수 있어 1m
 		if ok:
 			var gp := { type = gtype, seed = seed0 + 3 }
 			if gtype == "pyeong": gp.wall_h = CP.WH_TILE
@@ -2430,7 +2430,7 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 
 # 마당 푸름(문서 settlement-metrics §3.6): 집마다 마당 나무 1~3그루(감·대추·살구·밤, 향리·양반은 느티 하나 더), 담 밑 풀·잡초, 집 뒤 텃밭 이랑, 짚가리.
 #   근거: 김홍도 「타작」·「점심」, 신윤복 「단오풍정」, 김준근 풍속화(마당 가 감나무·담 밑 풀), 낙안읍성·외암마을 사진(집마다 감나무, 담 밑 풀, 뒤뜰 텃밭)
-const TREES_PER := { poor = [0, 1], commoner = [1, 2], middle = [1, 2], shop = [0, 1], hyangri = [2, 3] }
+const TREES_PER := { poor = [0, 0], commoner = [1, 1], middle = [1, 1], shop = [0, 1], shop_g = [0, 1], hyangri = [2, 2] }   # 2026-10-22: 35~40% 줄임(사실 나무 수관이 크다)
 func _green_m(li: int, cls: String, poly: Array, lry: float, placed: Array, pieces: Array, path: Array, yard: Array, mainq: Array, seed0: int) -> void:
 	var inner := inset(poly, 1.0)
 	if inner.size() < 3: return
@@ -2449,6 +2449,8 @@ func _green_m(li: int, cls: String, poly: Array, lry: float, placed: Array, piec
 	# 1) 마당 나무: 집 뒤(안채 뒤)·옆 구석 먼저, 그다음 앞마당 가장자리
 	var nt_r: Array = TREES_PER.get(cls, [1, 1])
 	var nt := int(round(r.between(float(nt_r[0]), float(nt_r[1]) + 0.49)))
+	if absf(area(poly)) < 140.0: nt = 0                     # 좁은 길가 필지는 나무 없음
+	elif cls in ["commoner", "middle"] and r.next() < 0.12: nt = 0
 	var cands := []
 	var y := bb.position.y
 	while y <= bb.end.y:
@@ -2456,7 +2458,8 @@ func _green_m(li: int, cls: String, poly: Array, lry: float, placed: Array, piec
 		while x <= bb.end.x:
 			var p := Vector2(x, y)
 			var behind := (p - mc).dot(mface) < 0.0
-			cands.append([(0.0 if behind else 6.0) + absf(_poly_edge_d(poly, p) - 1.6) + r.next() * 2.0, p])
+			var fd: float = minf(seg_dist(p, poly[0], poly[1]), INF)   # 앞 변(길)에서 거리 — 길가 5m 안에는 나무를 두지 않는다(길가 지붕이 보이게)
+			if fd > 5.0: cands.append([(0.0 if behind else 6.0) + absf(_poly_edge_d(poly, p) - 1.6) + r.next() * 2.0, p])
 			x += 1.2
 		y += 1.2
 	cands.sort_custom(func(a, b): return a[0] < b[0])
@@ -2467,14 +2470,16 @@ func _green_m(li: int, cls: String, poly: Array, lry: float, placed: Array, piec
 		if not clear_of.call(p, 1.6): continue
 		var u := r.next()
 		var tk: Dictionary
-		if cls == "hyangri" and placed_t == 0: tk = { kit = "nature/big_tree", params = { seed = seed0 + 301, variant = "zelkova", h = r.between(7.5, 9.5) } }
-		elif u < 0.45: tk = { kit = "nature/persimmon", params = { seed = seed0 + 303 + placed_t, s = r.between(0.9, 1.2) } }                      # 감나무
-		elif u < 0.75: tk = { kit = "nature/big_tree", params = { seed = seed0 + 307 + placed_t, variant = "broadleaf", h = r.between(4.2, 5.6) } }   # 대추·살구(작은 활엽수 대역)
-		else: tk = { kit = "nature/big_tree", params = { seed = seed0 + 311 + placed_t, variant = "chestnut", h = r.between(5.5, 7.0) } }            # 밤나무(집 뒤)
+		# 실제 마당 나무 키(사실 나무 키트 배율 KHS_MAP을 나눠 넣는다): 감 5~7m · 대추·살구 4~6m · 밤 6~9m · 향리 느티 하나
+		if cls == "hyangri" and placed_t == 0: tk = { kit = "nature/big_tree", params = { seed = seed0 + 301, variant = "zelkova", h = r.between(5.0, 6.5) } }
+		elif u < 0.45: tk = { kit = "nature/big_tree", params = { seed = seed0 + 303 + placed_t, variant = "persimmon", h = r.between(5.0, 7.0) / 1.45 } }   # 감나무
+		elif u < 0.75: tk = { kit = "nature/big_tree", params = { seed = seed0 + 307 + placed_t, variant = "broadleaf", h = r.between(4.0, 6.0) / 2.0 } }    # 대추·살구(작은 활엽수 대역)
+		else: tk = { kit = "nature/big_tree", params = { seed = seed0 + 311 + placed_t, variant = "chestnut", h = r.between(6.0, 9.0) / 1.8 } }              # 밤나무(집 뒤)
+		if (tk.params as Dictionary).has("h"): tk.params.h = snappedf(float(tk.params.h), 0.25)   # 키를 0.25m 단위로 — 사실 나무 메시 캐시가 나무마다 따로 지어지지 않게
 		tk.tag = "ytree%d" % placed_t; tk.x = p.x; tk.z = p.y; tk.ry = 0.0; tk.world = true
 		pieces.append(tk); taken.append([p, 2.0]); placed_t += 1
 	# 1-2) 길가 나무: 필지 넷 중 하나쯤 앞 모퉁이 안쪽에 큰 나무(느티·버들) — 가지가 길 위로(김홍도 「주막」·마을 어귀 그림)
-	if r.next() < float(cfg.get("street_tree_p", 0.28)):
+	if r.next() < float(cfg.get("street_tree_p", 0.0)):   # 길가 큰 느티는 광장·당산에만(2026-10-22)
 		for vi in [0, 1]:
 			var cpt: Vector2 = (poly[vi] as Vector2).lerp(_centroid(poly), 0.18)
 			if not clear_of.call(cpt, 2.2): continue
