@@ -4268,6 +4268,97 @@
      "z": 247.4
     }
    ]
+  },
+  "oldkit": {
+   "label": "옛 키트 실제 크기",
+   "views": [
+    {
+     "id": "t_wolmae",
+     "label": "월매 집(nw_house_158) 마을 카메라",
+     "mode": "town",
+     "x": -3213.0,
+     "z": 456.0
+    },
+    {
+     "id": "o_wolmae",
+     "label": "월매 집(nw_house_158) 비스듬히",
+     "mode": "over",
+     "x": -3213.0,
+     "z": 450.0,
+     "dist": 34,
+     "pitch": 30,
+     "yaw": 25
+    },
+    {
+     "id": "t_jumak",
+     "label": "주막(nw_jumak_east) 마을 카메라",
+     "mode": "town",
+     "x": -3005.7,
+     "z": 229.0
+    },
+    {
+     "id": "o_jumak",
+     "label": "주막(nw_jumak_east) 비스듬히",
+     "mode": "over",
+     "x": -3005.7,
+     "z": 223.0,
+     "dist": 34,
+     "pitch": 30,
+     "yaw": 25
+    },
+    {
+     "id": "t_naru",
+     "label": "나루 주막 마을 카메라",
+     "mode": "town",
+     "x": -3206.9,
+     "z": 492.0
+    },
+    {
+     "id": "o_naru",
+     "label": "나루 주막 비스듬히",
+     "mode": "over",
+     "x": -3206.9,
+     "z": 486.0,
+     "dist": 34,
+     "pitch": 30,
+     "yaw": 25
+    },
+    {
+     "id": "t_eastv",
+     "label": "동쪽 마을(옛 배치) 마을 카메라",
+     "mode": "town",
+     "x": 805.0,
+     "z": -610.9
+    },
+    {
+     "id": "o_eastv",
+     "label": "동쪽 마을(옛 배치) 비스듬히",
+     "mode": "over",
+     "x": 805.0,
+     "z": -616.9,
+     "dist": 34,
+     "pitch": 30,
+     "yaw": 25
+    },
+    {
+     "id": "t_ighouse",
+     "label": "이겸 거처(이야기 묶음 — 그대로) 마을 카메라",
+     "mode": "town",
+     "x": -3192.0,
+     "z": 708.0
+    },
+    {
+     "id": "o_ighouse",
+     "label": "이겸 거처(이야기 묶음 — 그대로) 비스듬히",
+     "mode": "over",
+     "x": -3192.0,
+     "z": 702.0,
+     "dist": 34,
+     "pitch": 30,
+     "yaw": 25
+    }
+   ],
+   "walks": []
   }
  }
 }

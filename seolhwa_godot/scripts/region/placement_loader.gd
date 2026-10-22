@@ -127,6 +127,8 @@ func load_all() -> void:
 			if not (it is Dictionary and it.has("kit")): continue
 			if not sup.is_empty() and sup.has(String(it.get("id", ""))) and not (d.get("supersede", []) as Array).has(it.get("id", "")): continue
 			var item: Dictionary = it
+			if f.get_file().begins_with("placement_story_"):
+				item = item.duplicate(); item["_story_file"] = true
 			if item.has("when") and not item.has("case"):
 				item = item.duplicate(); item["case"] = fcase
 			raw.append(_resolve_placeholder(item))
@@ -140,6 +142,12 @@ func load_all() -> void:
 			if not cc.has("_anchors"): cc["_anchors"] = d.get("anchors", {})   # 구경(watch) 앵커 이름 → 자리
 			cc["_file"] = f
 			crowds.append(cc)
+	# 옛 키트 실제 크기: 이야기 배치 자리(사람·소품)는 비킨다
+	var story_pts := []
+	for fd in fdata:
+		if String(fd[0]).get_file().begins_with("placement_story_") and fd[1] is Dictionary:
+			for it in fd[1].get("items", []): story_pts.append(Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0))))
+	_plan_scale(raw, story_pts)
 	var gated := 0
 	for it in raw:
 		if _when_of(it) != "": gated += 1
@@ -259,6 +267,7 @@ func load_all() -> void:
 	for t in world.tiles: request_tile(t)
 	stats.ms = Time.get_ticks_msec() - t0
 	if world.get("decals") != null: world.decals.reload_data()   # 데칼은 터 고르기 뒤 높이로
+	print("PLANSCALE scaled=%d capped=%d" % [plan_scaled, plan_capped])
 	print("PLACEMENT files=%d items=%d pieces=%d built_now=%d flatten=%d yards=%d walks=%d missing=%d gated=%d crowds=%d ms=%d (나머지는 타일이 가까워질 때 백그라운드로 짓는다)" % [stats.files, stats.items, place.size(), stats.builds_now, stats.flatten, stats.yards, stats.walks, stats.missing, stats.gated, crowds.size(), stats.ms])
 	print("DRESS buildings=%d props_planned=%d excl=%d" % [stats.get("dress_buildings", 0), stats.get("dress_planned", 0), _dress_excl.size()])
 
@@ -748,3 +757,141 @@ func _build_all(todo: Dictionary, cache: Dictionary) -> void:
 	for i in keys.size():
 		cache[keys[i]] = holders[i].info if holders[i].info is Dictionary else {}
 		stats.builds += 1
+
+# ---- 옛 키트 실제 크기(town-organic 2단계) ----
+# 빌더 건물(×1.16~1.22, 인물 2.0m)에 맞춰 옛 village/* 집을 키운다: 평면(w·d)과 벽 높이(wall_h)만 — 바닥·기단 높이는 그대로(계단 한 걸음 0.32m를 지킨다).
+#   이웃 항목·이야기 자리·길과 새로 겹치면 겹치지 않을 만큼만(1.0~목표 배율). 큰 건물(landmark/*)과 고을 짜임(bldg/*)은 건드리지 않는다.
+#   --noplanscale로 끈다(비교).
+const PLAN_K := { "village/choga": 1.2, "village/giwa": 1.22, "village/jumak": 1.2, "village/market_shop": 1.2, "village/neowa_house": 1.16, "village/gulpi_house": 1.16,
+	"village/heotgan": 1.16, "village/oeyanggan": 1.16, "village/mulbang_a": 1.16, "village/didil_bang_a": 1.16, "village/house_compound": 1.2 }
+const PLAN_DEF := { "village/choga": [6.0, 4.0, 1.85], "village/giwa": [9.0, 5.4, 2.3], "village/jumak": [7.2, 4.4, 1.85], "village/market_shop": [6.0, 3.0, 0.0],
+	"village/neowa_house": [6.4, 4.2, 1.85], "village/gulpi_house": [6.0, 4.0, 1.85], "village/heotgan": [4.0, 2.8, 0.0], "village/oeyanggan": [3.6, 3.0, 0.0],
+	"village/mulbang_a": [3.6, 4.4, 0.0], "village/didil_bang_a": [4.0, 3.0, 0.0] }
+var plan_scaled := 0
+var plan_capped := 0
+var plan_items := []   # [가운데, ry, 반폭(키우기 전), k] — 이야기 자리 옮기기(plan_remap)
+
+# 이야기 자리(앵커) 옮기기: 키운 집 둘레(반폭×k + 6m) 안 점은 집 가운데를 기준으로 같은 배율로 — 대문·마당 자리가 커진 집을 따라간다
+func plan_remap(p: Vector2) -> Vector2:
+	var best = null; var bd := INF
+	for e in plan_items:
+		var c: Vector2 = e[0]; var ry: float = e[1]; var h: Vector2 = e[2]; var k: float = e[3]
+		var d := p - c
+		var lx := d.x * cos(ry) - d.y * sin(ry); var lz := d.x * sin(ry) + d.y * cos(ry)
+		if absf(lx) <= h.x * k + 6.0 and absf(lz) <= h.y * k + 6.0 and d.length() < bd: bd = d.length(); best = e
+	if best == null: return p
+	return (best[0] as Vector2) + (p - (best[0] as Vector2)) * float(best[3])
+
+static func _prect(c: Vector2, half: Vector2, ry: float) -> Array:
+	var out := []
+	for q in [Vector2(-half.x, -half.y), Vector2(half.x, -half.y), Vector2(half.x, half.y), Vector2(-half.x, half.y)]:
+		out.append(c + Vector2(q.x * cos(ry) + q.y * sin(ry), -q.x * sin(ry) + q.y * cos(ry)))
+	return out
+
+static func _poly_overlap(A: Array, B: Array) -> bool:
+	# 볼록 사각 둘: 분리축 검사
+	for P in [A, B]:
+		for i in P.size():
+			var e: Vector2 = (P[(i + 1) % P.size()] as Vector2) - P[i]
+			var n := Vector2(-e.y, e.x)
+			var a0 := INF; var a1 := -INF; var b0 := INF; var b1 := -INF
+			for q in A: var t: float = n.dot(q); a0 = minf(a0, t); a1 = maxf(a1, t)
+			for q in B: var t2: float = n.dot(q); b0 = minf(b0, t2); b1 = maxf(b1, t2)
+			if a1 <= b0 or b1 <= a0: return false
+	return true
+
+func _plan_half(it: Dictionary) -> Vector2:
+	var fp = it.get("footprint")
+	if fp is Array: return Vector2(float(fp[0]), float(fp[1])) * 0.5
+	var df = PLAN_DEF.get(String(it.kit))
+	var p: Dictionary = it.get("params", {})
+	if df is Array: return Vector2(float(p.get("w", df[0])) + 2.0, float(p.get("d", df[1])) + 2.4) * 0.5
+	return Vector2(1.5, 1.5)
+
+func _plan_scale(raw: Array, story_pts: Array) -> void:
+	plan_scaled = 0; plan_capped = 0; plan_items = []
+	if world == null or world.get("region") == null: return
+	var args := {}
+	for a in OS.get_cmdline_user_args(): args[a.trim_prefix("--").split("=")[0]] = true
+	if args.has("noplanscale"): return
+	# 격자(30m)에 항목 사각
+	var grid := {}
+	var rects := []
+	for i in raw.size():
+		var it: Dictionary = raw[i]
+		var c := Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0)))
+		var h := _plan_half(it)
+		var kk0 := String(it.kit)
+		var solid := kk0.begins_with("landmark/") or kk0.begins_with("bldg/") or PLAN_K.has(kk0) or kk0 in ["village/todam", "village/wall_run", "village/stone_wall", "village/daemun", "village/jwapan", "village/well", "village/jeongja", "village/seonghwangdang"]
+		if h.length() < 0.8 or not solid: rects.append(null); continue   # 마당 소품·짚가리·텃밭은 비키지 않는다(집이 커지면 옮겨 놓을 것들)
+		var rc := _prect(c, h, float(it.get("ry", 0.0)))
+		rects.append(rc)
+		var g := Vector2i(floori(c.x / 30.0), floori(c.y / 30.0))
+		if not grid.has(g): grid[g] = []
+		grid[g].append(i)
+	var roads: Array = world.region.get("roads", []) if world.region.get("roads") is Array else []
+	var road_lines := []
+	for rd in roads:
+		var pts := PackedVector2Array()
+		for q in rd.get("points", []): pts.append(Vector2(float(q[0]), float(q[1])))
+		if pts.size() >= 2: road_lines.append([pts, float(rd.get("width_m", 3.0)) * 0.5])
+	var road_hit := func(rc: Array) -> bool:
+		var cc := (rc[0] as Vector2).lerp(rc[2], 0.5)
+		for rl in road_lines:
+			var pts: PackedVector2Array = rl[0]
+			for j in pts.size() - 1:
+				var a := pts[j]; var b := pts[j + 1]
+				if Geometry2D.get_closest_point_to_segment(cc, a, b).distance_to(cc) > 40.0: continue
+				for q in rc + [cc]:
+					if Geometry2D.get_closest_point_to_segment(q, a, b).distance_to(q) < float(rl[1]): return true
+				# 길이 사각 안을 지나는 경우
+				if Geometry2D.is_point_in_polygon(Geometry2D.get_closest_point_to_segment(cc, a, b), PackedVector2Array(rc)): return true
+		return false
+	for i in raw.size():
+		var it: Dictionary = raw[i]
+		var kit := String(it.kit)
+		if not PLAN_K.has(kit) or rects[i] == null: continue
+		if String(it.get("id", "")).begins_with("org") or it.has("plan_k") or bool(it.get("_story_file", false)): continue   # 이야기 배치 묶음(집 + 마당 소품 + 연출 동선)은 그대로
+		var target: float = PLAN_K[kit]
+		if kit == "village/house_compound": target = { small = 1.16, medium = 1.2, large = 1.22 }.get(String((it.get("params", {}) as Dictionary).get("size", "small")), 1.2)
+		var c := Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0)))
+		var ry := float(it.get("ry", 0.0))
+		var h0 := _plan_half(it)
+		var orig: Array = rects[i]
+		var g0 := Vector2i(floori(c.x / 30.0), floori(c.y / 30.0))
+		var neigh := []
+		for dz in range(-1, 2):
+			for dx in range(-1, 2):
+				for j in grid.get(g0 + Vector2i(dx, dz), []):
+					if j != i and rects[j] != null and not _poly_overlap(orig, rects[j]): neigh.append(j)
+		var road0: bool = road_hit.call(orig)
+		var k := 1.0
+		for kk in [target, 1.0 + (target - 1.0) * 0.75, 1.0 + (target - 1.0) * 0.5, 1.0 + (target - 1.0) * 0.25]:
+			# 바깥 담·처마 끝까지 같은 비로 커진다고 보고 검사(평면만 키우므로 바닥 사각만)
+			var rc := _prect(c, h0 * float(kk), ry)
+			var ok := true
+			for j in neigh:
+				if _poly_overlap(rc, rects[j]): ok = false; break
+			if ok:
+				for sp in story_pts:
+					if (sp as Vector2).distance_to(c) < h0.length() * float(kk) + 1.0 and Geometry2D.is_point_in_polygon(sp, PackedVector2Array(_prect(c, h0 * float(kk) + Vector2(0.8, 0.8), ry))) and not Geometry2D.is_point_in_polygon(sp, PackedVector2Array(_prect(c, h0 + Vector2(0.8, 0.8), ry))): ok = false; break
+			if ok and not road0 and road_hit.call(rc): ok = false
+			if ok: k = float(kk); break
+		if OS.has_environment("PLAN_DBG") and String(it.get("id", "")) == OS.get_environment("PLAN_DBG"): print("PLANDBG %s k=%.3f road0=%s neigh=%d h0=%s" % [it.id, k, road0, neigh.size(), str(h0)])
+		if k <= 1.001: plan_capped += 1; continue
+		if k < target - 0.001: plan_capped += 1
+		var it2: Dictionary = it.duplicate(true)
+		var p: Dictionary = it2.get("params", {})
+		if kit == "village/house_compound":
+			p.k = snappedf(k, 0.001)
+		else:
+			var df: Array = PLAN_DEF[kit]
+			p.w = snappedf(float(p.get("w", df[0])) * k, 0.01); p.d = snappedf(float(p.get("d", df[1])) * k, 0.01)
+			if float(df[2]) > 0.0: p.wall_h = snappedf(float(p.get("wall_h", df[2])) * k, 0.01)
+		it2.params = p
+		if it2.get("footprint") is Array: it2.footprint = [snappedf(float(it2.footprint[0]) * k, 0.01), snappedf(float(it2.footprint[1]) * k, 0.01)]
+		it2.plan_k = snappedf(k, 0.001)
+		plan_items.append([c, ry, h0, k])
+		rects[i] = _prect(c, h0 * k, ry)
+		raw[i] = it2
+		plan_scaled += 1

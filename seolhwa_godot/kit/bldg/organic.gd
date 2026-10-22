@@ -1554,11 +1554,12 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 			var n := maxi(2, int(L / 0.1))
 			var run_a := -1.0
 			var near_ws := []
+			var sh_d: float = float(cfg.get("shared_d", 1.6))
 			if not sg[2] and bool(cfg.get("shared_walls", true)):
 				var dv0 := (b - a) / maxf(L, 1e-4)
 				for ws in wall_segs:
 					if absf(dv0.dot(((ws[1] as Vector2) - (ws[0] as Vector2)).normalized())) < 0.85: continue
-					if seg_seg_dist(a, b, ws[0], ws[1]) < float(cfg.get("shared_d", 1.6)): near_ws.append(ws)
+					if seg_seg_dist(a, b, ws[0], ws[1]) < sh_d: near_ws.append(ws)
 			for k in n + 1:
 				var tk := float(k) / n
 				var p := a.lerp(b, tk)
@@ -1568,7 +1569,7 @@ func _emit(li: int, lot: Dictionary, anchor: Vector2, ry: float, pieces: Array, 
 				# 맞담: 옆·뒤 담 자리에 이웃 필지 담이 이미 나란히(1.3m 안) 서 있으면 이 필지는 담을 두지 않는다
 				if not inb:
 					for ws in near_ws:
-						if seg_dist(p, ws[0], ws[1]) < float(cfg.get("shared_d", 1.6)): inb = true; shared_cut += 1; break
+						if seg_dist(p, ws[0], ws[1]) < sh_d: inb = true; shared_cut += 1; break
 				if not inb and run_a < 0: run_a = tk
 				if (inb or k == n) and run_a >= 0:
 					var t1 := tk if not inb else float(k - 1) / n
@@ -1751,6 +1752,7 @@ const PROGRAM := {
 	"commoner": { main = [["choga", "commoner"]], nb = [3, 5], outs = ["gotgan", "dwitgan", "oeyang", "araechae"], nout = [1, 2], gate = "chomun", wall = "stone", wall_u = "todam_thatch", t = "choga_house" },
 	"middle": { main = [["giwajip", "middle"], ["choga", "commoner"]], nb = [4, 6], outs = ["araechae", "gotgan", "dwitgan"], nout = [2, 3], gate = "pyeong", wall = "todam_tile", wall_u = "todam_tile", t = "house_g" },
 	"shop": { main = [["choga", "commoner"], ["giwajip", "middle"]], nb = [2, 4], outs = ["dwitgan", "gotgan"], nout = [1, 2], gate = "chomun", wall = "todam_thatch", wall_u = "todam_thatch", t = "shop", front = ["sijeon"] },
+	"shop_g": { main = [["giwajip", "middle"], ["choga", "commoner"]], nb = [2, 4], outs = ["dwitgan", "gotgan"], nout = [1, 2], gate = "pyeong", wall = "todam_tile", wall_u = "todam_tile", t = "shop", front = ["sijeon"] },   # 기와 가게(상인 — 간선변)
 	"hyangri": { main = [["giwajip", "middle"]], nb = [4, 6], outs = ["sarang", "araechae", "gotgan", "dwitgan"], nout = [2, 3], gate = "pyeong", wall = "todam_tile", wall_u = "todam_tile", t = "giwa_house" },
 }
 
@@ -1870,7 +1872,7 @@ func _interior_gardens() -> void:
 				if String(l.get("kind", "")) == "garden": continue
 				if (l.bb as Rect2).grow(6.0).has_point(c) and poly_dist(poly, l.poly) < float(cfg.get("garden_near", 3.0)): near_lot = true; break
 			if not near_lot: continue
-			var lot := { poly = poly, bb = _bbox(poly), fa = poly[3], fb = poly[2], n = Vector2(0, 1), street = 0, zone = 0.4, side = 1.0, flen = gw, depth = gd, nfront = 1, kind = "garden", zone_name = "garden" }
+			var lot := { poly = poly, bb = _bbox(poly), fa = poly[3], fb = poly[2], n = Vector2(0, 1), street = 0, zone = 0.4, side = 1.0, flen = gw, depth = gd, nfront = 0, kind = "garden", zone_name = "garden" }
 			lots.append(lot)
 			var li := lots.size() - 1
 			var it := _garden_lot(li, lot)
@@ -2023,9 +2025,29 @@ func _lane_lots(lsi: int) -> void:
 			items.append(it)
 			s += float(lot.flen) + 0.3
 
+# 기와 비율 기울기(문서 §3.3a): 관아 가까이·간선변은 기와(향리·아전·상인), 성 가장자리·성 밖·마을은 초가
+#   목표 기와 몫: 관아 70m 안 55% · 간선변 45% · 성 안 그 밖 20% · 성 밖 장시 15% · 성 밖 8% · 민촌 5% · 반촌 윗마을은 양반 짜임
+func giwa_target(lot: Dictionary) -> float:
+	var zn := String(lot.get("zone_name", ""))
+	var c := _centroid(lot.poly)
+	if cfg.has("gwana_c") and c.distance_to(Vector2(float(cfg.gwana_c[0]), float(cfg.gwana_c[1]))) < 70.0 and zn in ["arterial", "side", "rear"]: return 0.55
+	match zn:
+		"arterial": return 0.45
+		"side", "rear": return 0.2
+		"market": return 0.15
+		"out": return 0.08
+		"minchon", "sanchon": return 0.05
+	return -1.0
+
 func _fill_m(li: int, lot: Dictionary, Z: Dictionary) -> Dictionary:
 	var la := absf(area(lot.poly))
 	var cls := _wpick(Z.cls)
+	# 기와 몫을 맞춘다: 기와 계층(중인·향리 — 기와 몸채) 비율을 자리 목표로
+	var gt := giwa_target(lot)
+	if gt >= 0.0 and cls == "shop" and r.next() < gt: cls = "shop_g"
+	elif gt >= 0.0 and cls in ["commoner", "middle", "hyangri", "poor"]:
+		if r.next() < gt: cls = "hyangri" if (gt > 0.5 and r.next() < 0.3) else "middle"
+		elif cls in ["middle", "hyangri"]: cls = "commoner"
 	# 넓이에 맞는 계층(§3.2): 작은 필지는 가난·서민, 큰 필지는 향리·양반
 	if la < 120.0 and cls in ["middle", "hyangri"]: cls = "commoner"
 	if la < 160.0 and cls == "commoner": cls = "poor"   # 작은 필지(실측 110㎡ 안): 2~3칸 + 측간(낙안 영세농)
@@ -2053,6 +2075,11 @@ func _tag_m(it: Dictionary, lot: Dictionary, cls: String) -> Dictionary:
 	it.organic.zone_name = String(lot.get("zone_name", ""))
 	it.organic.kind = String(lot.get("kind", "front"))
 	it.organic.cls = cls
+	var roof := "choga"
+	for e in it.params.get("pieces", []):
+		if String(e.get("tag", "")).begins_with("main") and String(e.kit) == "bldg/building": roof = "giwa" if String(e.params.get("type", "")) in ["giwajip", "sijeon", "haengrang", "sarang", "anchae"] and String(e.params.get("cls", "")) != "commoner" else "choga"
+	if cls == "yangban" or cls == "shop_g": roof = "giwa"
+	it.organic.roof = roof
 	it.organic.flen = snappedf(float(lot.get("flen", 0.0)), 0.1)
 	it.organic.depth = snappedf(float(lot.get("depth", 0.0)), 0.1)
 	return it
@@ -2102,7 +2129,7 @@ func _garden_lot(li: int, lot: Dictionary) -> Dictionary:
 # 한 필지 집(§3.3·낙안 배치 규칙)
 func _house_m(li: int, lot: Dictionary, cls: String, row: bool) -> Dictionary:
 	var it := _house_m1(li, lot, cls, row)
-	if it.is_empty() and (row or PROGRAM[cls].has("front")) and cls != "shop": it = _house_m1(li, lot, cls, false, true)
+	if it.is_empty() and (row or PROGRAM[cls].has("front")) and not cls in ["shop", "shop_g"]: it = _house_m1(li, lot, cls, false, true)
 	return it
 
 func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := false) -> Dictionary:
@@ -2132,7 +2159,7 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 	var lry_n: float = atan2((lot.n as Vector2).x, (lot.n as Vector2).y)
 	var ew_street: bool = absf(sin(lry_n)) > 0.7
 	# 간선변(가게 아닌 집): 안채가 곧 길가 채 — 길가 선에 바짝(남쪽 길이면 길을 보고, 북쪽 길이면 등이 길 = 남향, 동·서 길이면 길을 봄)
-	var row_main: bool = row and not no_front and cls != "shop"
+	var row_main: bool = row and not no_front and not cls in ["shop", "shop_g"]
 	if row_main:
 		var faces_street: bool = cos(lry_n) > -0.3   # 길 쪽(+z)이 남·동·서 → 길을 봄 · 북 → 등이 길
 		# 간선변 살림집 절반은 앞너비를 다 차지하고 길로 바로 드나든다(대문 대신 집 — 간선변 건물 벽 40~70%, 문서 §3.5)
@@ -2140,10 +2167,16 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 		var side1: float = -1.0 if (li % 2 == 0) else 1.0
 		var mains0: Array = P.main
 		var nbr0: Array = P.nb
-		for k in 10:
+		# 몸채 후보 순서: 첫째 몸채(기와 계층이면 기와집)를 대문 자리 두고 → 대문 없이 → 다음 몸채…(기와 몫을 지킨다)
+		var order0 := []
+		var gr0 := gate_room
+		for mi in mains0.size():
+			for sd in 3: order0.append([mi, gr0])
+			for sd in 2: order0.append([mi, 0.0])   # 좁은 길가 필지: 집이 앞너비를 다 차지하고 길로 바로 드나든다(대문 없음 — 수원·대구 간선변 세장형 필지)
+		for k in order0.size():
 			if placed.size() > 0: break
-			if k == 6: gate_room = 0.0   # 좁은 길가 필지: 집이 앞너비를 다 차지하고 길로 바로 드나든다(대문 없음 — 수원·대구 간선변 세장형 필지)
-			var mm0: Array = mains0[k % mains0.size()]
+			gate_room = float(order0[k][1])
+			var mm0: Array = mains0[int(order0[k][0])]
 			var fp: Dictionary = { type = mm0[0], region = rg, cls = mm0[1], seed = seed0 + 20 + k }
 			var bb := _bounds(fp)
 			if (S.resolve(fp).wings as Array).size() == 1:
@@ -2188,14 +2221,14 @@ func _house_m1(li: int, lot: Dictionary, cls: String, row: bool, no_front := fal
 					var c: Vector2 = W.call(lc.x, lc.y)
 					if _rect_in(bb, c, ry0, inner):
 						placed.append([_rect_world(bb, c, ry0, 0.2), fp, c, ry0, "main"]); break
-	if not row_main and (row or P.has("front")) and not no_front and not (ew_street and cls != "shop"):
+	if not row_main and (row or P.has("front")) and not no_front and not (ew_street and not cls in ["shop", "shop_g"]):
 		var fronts: Array = P.get("front", ["haengrang", "araechae", "gotgan"] if cls in ["middle", "hyangri"] else ["araechae", "gotgan", "oeyang"])
-		var shopf: bool = cls == "shop"
+		var shopf: bool = cls in ["shop", "shop_g"]
 		var side0: float = -1.0 if (li % 2 == 0) else 1.0
 		var done := false
 		for k in 6:
 			if done: break
-			var fp: Dictionary = { type = fronts[k % fronts.size()], region = rg, cls = "middle" if cls in ["middle", "hyangri", "shop"] else "commoner", seed = seed0 + 20 + k }
+			var fp: Dictionary = { type = fronts[k % fronts.size()], region = rg, cls = "yangban" if cls == "shop_g" else ("middle" if cls in ["middle", "hyangri", "shop"] else "commoner"), seed = seed0 + 20 + k }
 			var bb := _bounds(fp)
 			if (S.resolve(fp).wings as Array).size() == 1:
 				var nb: int = (S.resolve(fp).wings[0].bays as Array).size()

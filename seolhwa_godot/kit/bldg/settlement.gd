@@ -128,6 +128,9 @@ static func build(cfg: Dictionary, height: Callable = Callable(), rivers: Array 
 		}
 		# 실측 규칙 짜임(docs/reports/settlement-metrics.md): 구역 종류별 길 간격·필지 분포·집 짜임(세계 배율 ×1.2)
 		var did := String(d.id)
+		# 관아 자리(기와 비율 기울기 — 문서 §3.3a)
+		for mj in X.majors:
+			if String(mj.role) in ["gwana", "gamyeong"]: oc.gwana_c = mj.at
 		oc.lots = "measured"; oc.street_w = [4.1, 6.0]; oc.alley_w = [2.4, 3.6]; oc.block_depth = 60.0; oc.gate_corner = 1.8; oc.yard_min = 2.0
 		var vkind := String(cfg.get("kind", "minchon"))
 		if did.begins_with("in"):

@@ -16,7 +16,7 @@ const REPLACE_KITS := ["village/choga", "village/house_compound", "village/giwa"
 const DISTRICTS := {
 	# 서문 밖 장터길 민가 구역(building-rollout-1 west 자리) — 동쪽 = 장터길(읍성 서벽 앞), 서쪽 = 개울 r055, 가운데를 성황사 오솔길이 지난다
 	west = {
-		seed = 1875, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
+		seed = 1885, prefix = "orgw", group = "남원 서문 밖(고을 짜임)", region = "south",
 		area = [[-3341, 200], [-3341, 359], [-3460, 368], [-3445, 345], [-3434, 320], [-3424, 300], [-3410, 285], [-3410, 262], [-3428, 249], [-3428, 230], [-3405, 200]],
 		trunk_ids = { namwon_market_lane = 3.6, namwon_west_gate_lane = 3.6, path_namwon_seonghwangsa = 3.0 },
 		plazas = [{ c = [-3349, 246], r = 7.5, kind = "gate" }, { c = [-3350, 291], r = 6.0, kind = "well" }],
@@ -47,7 +47,7 @@ const DISTRICTS := {
 		base_density = 0.45,
 		# 실측: 지선 간격 80~120m(× 1.2) — 읍성 안 남쪽은 남북대로·동서대로·둘레길로 이미 블록 약 85×80m라 새 지선을 내지 않는다
 		branch = { gap_a = 96.0, gap_b = 144.0, p = 0.0, len_a = 30.0, len_b = 80.0, alley_gap_a = 96.0, alley_gap_b = 144.0, alley_p = 0.0 },
-		street_spacing = 96.0, alley_spacing = 40.0, block_depth = 60.0, gate_corner = 1.8, lots = "measured", zone_trunk = "arterial", zone_side = "side",
+		street_spacing = 96.0, alley_spacing = 40.0, block_depth = 60.0, gwana_c = [-3165.0, 222.0], gate_corner = 1.8, lots = "measured", zone_trunk = "arterial", zone_side = "side",
 		street_zone = { inner_ring_s = "side", inner_ring_w = "side", inner_ring_e = "side" }, block_front = [11.0, 15.0], block_front_out = [12.0, 16.0], pack_ratio = 0.7, pack_max = 7, yard_min = 2.0, front_min_depth = 14.0,
 		junction_plaza_p = 0.3, empty_out = 0.05, empty_in = 0.0,
 		# 성 안: 촘촘하게 — 마당 흙(urban), 빈터 나무 적게, 한 필지에 곁채 여럿(낙안읍성 필지 실측: 집마다 헛간채·아래채·가게채 2~4채)

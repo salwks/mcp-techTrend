@@ -13,7 +13,7 @@ static func build(params: Dictionary) -> Dictionary:
 
 static func draw(m: C.M, o: Dictionary) -> Dictionary:
 	var W: float = o.get("w", 9.0); var D: float = o.get("d", 5.4)
-	var F := 0.75; var wallH := 2.3; var zf := D / 2; var t := 0.18; var top := F + wallH
+	var F := 0.75; var wallH: float = float(o.get("wall_h", 2.3)); var zf := D / 2; var t := 0.18; var top := F + wallH   # wall_h: 옛 키트 실제 크기(로더 plan_scale)
 	var R := m.rng
 	var plain: bool = o.get("plain", false)
 	var bays: int = o.get("bays", 5)

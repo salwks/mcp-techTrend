@@ -14,7 +14,7 @@ const RDIR := "res://region_data/JL_NAMWON_UNBONG/"
 # 목표(실측 × 세계 배율): 넓이 ㎡ ×1.44, 길이 ×1.2
 const T_AREA := { arterial = [115.0, 360.0], side = [216.0, 576.0], rear = [475.0, 1150.0], market = [173.0, 504.0], out = [300.0, 900.0], minchon = [432.0, 1296.0], banchon = [864.0, 5760.0], sanchon = [360.0, 1008.0] }
 const T_FRONT := { arterial = [7.2, 16.8], side = [12.0, 24.0], rear = [14.4, 28.8], market = [9.6, 19.2], out = [14.4, 36.0], minchon = [21.6, 42.0], banchon = [30.0, 60.0], sanchon = [18.0, 36.0] }
-const T_NB := { poor = [1, 2], commoner = [2, 3], middle = [2, 4], shop = [1, 4], hyangri = [3, 4], yangban = [4, 7], garden = [0, 1] }
+const T_NB := { poor = [1, 2], commoner = [2, 3], middle = [2, 4], shop = [1, 4], shop_g = [1, 4], hyangri = [3, 4], yangban = [4, 7], garden = [0, 1] }
 const T_ROOF := { arterial_band = [0.35, 0.50], walled = [0.22, 0.32], market_band = [0.25, 0.40], out = [0.10, 0.25], minchon = [0.04, 0.10], banchon = [0.03, 0.08] }   # 마을: 실측 밀도(3~9호/ha · 호당 1.5~2동 · 동당 지붕 약 50㎡)에서 — 문서 §3.4 고침
 const T_W := { trunk = [6.0, 8.4], street = [4.1, 6.0], alley = [2.4, 3.6], lane = [1.8, 3.0] }
 const T_W_VILLAGE := [3.0, 5.0]   # 마을 큰길(하회·외암 마을길 위계 위쪽 2.5~4m × 1.2)
@@ -188,7 +188,7 @@ func _initialize() -> void:
 				nb_n += 1
 				if nbld >= int(T_NB[cls][0]) and nbld <= int(T_NB[cls][1]): nb_ok += 1
 				elif args.has("verbose"): print("NBMISS %s %s n=%d area=%.0f" % [it.id, cls, nbld, absf(OG.area(poly))])
-			lots.append({ poly = poly, zone = zn, cls = cls, n = nbld })
+			lots.append({ poly = poly, zone = zn, cls = cls, n = nbld, roof = String(og.get("roof", "")) })
 		elif kit == "bldg/building":
 			if OG.pip(area, base): brect.append(OG._rect_world(_bounds(it.params), base, bry, 0.0))
 		elif kit == "bldg/wall" and String(it.id).begins_with(pref):
@@ -221,6 +221,28 @@ func _initialize() -> void:
 			var mf := _med(Z.front)
 			_ok("앞너비 %s" % zn, "가운데 %.1fm" % mf, "%.1f~%.1fm" % [T_FRONT[zn][0], T_FRONT[zn][1]], mf >= T_FRONT[zn][0] * 0.9 and mf <= T_FRONT[zn][1] * 1.1)
 			_info("깊이/앞너비 %s" % zn, "가운데 %.2f" % _med(Z.ratio))
+	# 기와 몫(문서 §3.3a): 관아 70m 안 55% · 간선변 45% · 성 안 그 밖 20% · 장시 15% · 성 밖 8% · 마을 5% — ±15%p
+	var gw_c = null
+	if args.has("district") and ODG.DISTRICTS[name].has("gwana_c"): gw_c = Vector2(float(ODG.DISTRICTS[name].gwana_c[0]), float(ODG.DISTRICTS[name].gwana_c[1]))
+	elif args.has("settle"):
+		for mj in d.get("majors", []):
+			if String(mj.get("role", "")) in ["gwana", "gamyeong"]: gw_c = Vector2(float(mj.at[0]), float(mj.at[1]))
+	var gsum := {}
+	for L2 in lots:
+		if L2.roof == "" or L2.cls == "garden": continue
+		var grp := String(L2.zone)
+		if gw_c != null and OG._centroid(L2.poly).distance_to(gw_c) < 70.0 and grp in ["arterial", "side", "rear"]: grp = "gwana70"
+		if grp in ["side", "rear"]: grp = "side"
+		if grp in ["minchon", "sanchon"]: grp = "village"
+		if not gsum.has(grp): gsum[grp] = [0, 0]
+		gsum[grp][1] += 1
+		if L2.roof == "giwa": gsum[grp][0] += 1
+	var GT := { gwana70 = 0.55, arterial = 0.45, side = 0.2, market = 0.15, out = 0.08, village = 0.05 }
+	for grp in gsum:
+		if not GT.has(grp): continue
+		var sh: float = float(gsum[grp][0]) / maxf(gsum[grp][1], 1)
+		if gsum[grp][1] < 5: _info("기와 몫 %s(표본 %d — 판정 안 함)" % [grp, gsum[grp][1]], "%.0f%% · 목표 %.0f%%" % [sh * 100, GT[grp] * 100]); continue
+		_ok("기와 몫 %s" % grp, "%.0f%% (%d/%d)" % [sh * 100, gsum[grp][0], gsum[grp][1]], "%.0f%% ±15%%p" % (GT[grp] * 100), absf(sh - GT[grp]) <= 0.15)
 	if nb_n > 0: _ok("필지당 채 수(계층 표 안)", "%d / %d" % [nb_ok, nb_n], "≥80%", float(nb_ok) / nb_n >= 0.8)
 	if not mains.is_empty():
 		var s45 := 0
@@ -311,7 +333,7 @@ func _initialize() -> void:
 	if args.has("tier_village"):
 		# 집 밀도(호/ha): 실측 3~9호/ha(낙안 8.9 · 외암 3.4 · 왕곡 2.8 · 양동 1.7) ÷ 1.44(세계 넓이 배율)
 		var nh := 0
-		for L1 in lots: if String(L1.cls) in ["poor", "commoner", "middle", "hyangri", "yangban", "shop"]: nh += 1
+		for L1 in lots: if String(L1.cls) in ["poor", "commoner", "middle", "hyangri", "yangban", "shop", "shop_g"]: nh += 1
 		var ha: float = absf(OG.area(area)) / 10000.0   # 마을 구역 전체(실측 지정구역 넓이와 같은 잣대)
 		var dens: float = nh / maxf(ha, 0.01)
 		_ok("집 밀도", "%.1f호/ha (집 %d · 마을 구역 %.1fha)" % [dens, nh, ha], "%.1f~%.1f호/ha (±10%%)" % [1.2, 6.3], dens >= 1.2 * 0.9 and dens <= 6.3 * 1.1)
@@ -393,7 +415,9 @@ func _initialize() -> void:
 			var Bw: Array = walls[j]
 			if A[2] == Bw[2]: continue
 			if absf(ua.dot(((Bw[1] as Vector2) - Bw[0]).normalized())) < 0.9: continue
-			if OG.seg_dist(((A[0] as Vector2) + A[1]) / 2.0, Bw[0], Bw[1]) < 1.3: dbl += (A[0] as Vector2).distance_to(A[1])
+			if OG.seg_dist(((A[0] as Vector2) + A[1]) / 2.0, Bw[0], Bw[1]) < 1.3:
+				dbl += (A[0] as Vector2).distance_to(A[1])
+				if args.has("verbose"): print("DBLWALL %s %s at %s len %.1f" % [A[2], Bw[2], str(((A[0] as Vector2) + A[1]) / 2.0), (A[0] as Vector2).distance_to(A[1])])
 	_ok("두 겹 담(나란한 이웃 담 1.3m 안)", "%.0fm" % dbl, "0m(±10)", dbl <= 10.0)
 	# --- 보고 ---
 	print("METRICS %s 필지 %d · 건물 %d · 담 마디 %d" % [name, lots.size(), brect.size(), walls.size()])

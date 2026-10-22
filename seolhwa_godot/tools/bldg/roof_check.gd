@@ -45,6 +45,15 @@ func _init() -> void:
 		fails += _check_single_old("village/giwa/giyeok", "village/giwa", { seed = 1, plan = "giyeok" })
 		fails += _check_single_old("village/choga/giyeok", "village/choga", { seed = 1, plan = "giyeok" })
 		for st in ["tile", "soseul", "thatch"]: fails += _check_single_old("village/daemun/" + st, "village/daemun", { seed = 1, style = st })
+		# 옛 키트 실제 크기(placement_loader plan_scale): 묶음 k · 한 채 w·d·wall_h × k
+		for sz in ["small", "medium", "large"]:
+			var kk: float = { small = 1.16, medium = 1.2, large = 1.22 }[sz]
+			for s in [1, 2]:
+				fails += _check_old("village/house_compound/%s/%d/k%.2f" % [sz, s, kk], "village/house_compound", { seed = s, size = sz, k = kk })
+		fails += _check_single_old("village/giwa/k1.22", "village/giwa", { seed = 1, w = 9.0 * 1.22, d = 5.4 * 1.22, wall_h = 2.3 * 1.22 })
+		fails += _check_single_old("village/giwa/giyeok/k1.22", "village/giwa", { seed = 1, plan = "giyeok", w = 9.0 * 1.22, d = 5.4 * 1.22, wall_h = 2.3 * 1.22 })
+		fails += _check_single_old("village/choga/k1.2", "village/choga", { seed = 1, w = 7.2, d = 4.8, wall_h = 2.22 })
+		fails += _check_single_old("village/choga/giyeok/k1.2", "village/choga", { seed = 1, plan = "giyeok", w = 7.2, d = 4.8, wall_h = 2.22 })
 	if set == "ruin":
 		# 폐가 단계마다(자른 지붕·처짐·기울기 포함): 남은 지붕 밑에서 벽이 뚫고 나오지 않나 — 지붕이 없어진 자리의 벽('outside')은 폐가라 셈하지 않는다
 		for t in ["choga", "anchae", "sarang", "gotgan", "araechae", "jumak", "giwajip", "haengrang"]:

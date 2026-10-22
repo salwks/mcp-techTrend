@@ -29,7 +29,8 @@ const YARD := { small = [7.0, -6.5, 6.5], medium = [9.6, -8.2, 7.6], large = [12
 static func footprint(params: Dictionary) -> Vector2:
 	var y: Array = YARD.get(params.get("size", "small"), YARD.small)
 	var extra := 2.6 if params.get("size", "small") == "large" else 1.0
-	return Vector2(y[0] * 2 + 0.8, y[2] - y[1] + extra)
+	var k := float(params.get("k", 1.0))
+	return Vector2(y[0] * 2 * k + 0.8, (y[2] - y[1]) * k + extra)
 
 static func layout(params: Dictionary) -> Array:
 	if int(params.get("lod", 0)) == 1 or params.get("merged", false):
@@ -65,7 +66,9 @@ static func entries(params: Dictionary) -> Array:
 	var r := Kit.Rng.new(int(params.get("seed", 1)))
 	var size: String = params.get("size", "small")
 	var Y: Array = YARD.get(size, YARD.small)
-	var X: float = Y[0]; var Z0: float = Y[1]; var Z1: float = Y[2]
+	# k: 실제 크기 배율(옛 키트 — 로더 plan_scale): 마당·담·건물 자리와 건물 평면·벽 높이를 키운다(바닥·기단 높이·대문은 그대로)
+	var k := float(params.get("k", 1.0))
+	var X: float = Y[0] * k; var Z0: float = Y[1] * k; var Z1: float = Y[2] * k
 	var L := []
 	var s0 := int(params.get("seed", 1)) * 10
 	match size:
@@ -93,6 +96,18 @@ static func entries(params: Dictionary) -> Array:
 			L.append(_e("firewood", "firewood", { seed = s0 + 5, style = "row", len = 2.4, rows = 4 }, -4.7, -2.8, Wf))
 			_walls(L, params, s0, X, Z0, Z1, 0.75, "fence", _e("gate", "saripmun", { seed = s0 + 8, w = 1.4, open = true }, 0, Z1, 0))
 	_roofs(L, params)
+	if absf(k - 1.0) > 0.001:
+		for e in L:
+			var tg: String = e.tag
+			if tg.begins_with("wall") or tg == "gate": continue
+			e.x = float(e.x) * k; e.z = float(e.z) * k
+			var pp: Dictionary = (e.params as Dictionary).duplicate()
+			if e.kit in ["village/choga", "village/giwa", "village/neowa_house", "village/gulpi_house", "village/heotgan", "village/oeyanggan", "village/choga_low", "village/guitul_house"]:
+				var dw: Array = { "village/choga": [6.0, 4.0], "village/giwa": [9.0, 5.4], "village/neowa_house": [6.4, 4.2], "village/gulpi_house": [6.0, 4.0], "village/heotgan": [4.0, 2.8], "village/oeyanggan": [3.6, 3.0] }.get(e.kit, [6.0, 4.0])
+				pp.w = float(pp.get("w", dw[0])) * k; pp.d = float(pp.get("d", dw[1])) * k
+				if e.kit in ["village/choga", "village/neowa_house", "village/gulpi_house"]: pp.wall_h = 1.85 * k
+				elif e.kit == "village/giwa": pp.wall_h = 2.3 * k
+			e.params = pp
 	return L
 
 # 안채·사랑채 지붕 재료·가옥형 바꾸기
@@ -126,9 +141,9 @@ static func _walls(L: Array, params: Dictionary, s0: int, X: float, Z0: float, Z
 		"none":
 			return
 		"todam":
-			_enclose(L, s0 + 20, -X, X, Z0, Z1, gh, "todam_tile" if large else "todam_thatch")
+			_enclose(L, s0 + 20, -X, X, Z0, Z1, gh, "todam_tile" if large else "todam_thatch", float(params.get("k", 1.0)))
 		_:
-			_enclose(L, s0 + 20, -X, X, Z0, Z1, gh if wall == "todam" else 0.75, wall)
+			_enclose(L, s0 + 20, -X, X, Z0, Z1, gh if wall == "todam" else 0.75, wall, float(params.get("k", 1.0)))
 	if wall == "todam" or gate.kit == "village/saripmun": L.append(gate)
 	else: L.append(_e("gate", "saripmun", { seed = s0 + 8, w = 1.4, open = true }, 0, Z1, 0))
 
@@ -136,16 +151,17 @@ static func _e(tag: String, kit: String, p: Dictionary, x: float, z: float, ry: 
 	return { tag = tag, kit = "village/" + kit, params = p, x = x, z = z, ry = ry }
 
 # 둘레 담 조각: 점이 마당 로컬 좌표(조각 자리는 원점)
-static func _enclose(L: Array, seed: int, x0: float, x1: float, z0: float, z1: float, gh: float, kind: String) -> void:
+static func _enclose(L: Array, seed: int, x0: float, x1: float, z0: float, z1: float, gh: float, kind: String, wk := 1.0) -> void:
 	var segs := [["wall_n", x0, z0, x1, z0], ["wall_w", x0, z0, x0, z1], ["wall_e", x1, z0, x1, z1], ["wall_sw", x0, z1, -gh, z1], ["wall_se", gh, z1, x1, z1]]
 	var i := 0
 	for s in segs:
 		var p := { seed = seed + i, ax = s[1], az = s[2], bx = s[3], bz = s[4] }
+		var hk: float = 1.0 if (s[0] == "wall_sw" or s[0] == "wall_se") else wk   # 대문(옛 크기)에 닿는 앞 담 두 토막은 대문 지붕 밑 높이 그대로
 		match kind:
 			"fence": p.lite = true; L.append(_e(s[0], "fence", p, 0, 0, 0))
-			"todam_thatch": p.h = 1.5; p.cap = "thatch"; L.append(_e(s[0], "todam", p, 0, 0, 0))
-			"todam_tile": p.h = 1.6; p.cap = "tile"; p.tile_seg = 0.5; L.append(_e(s[0], "todam", p, 0, 0, 0))
-			"stone": p.lite = true; p.sparse = true; p.h = 1.2; L.append(_e(s[0], "stone_wall", p, 0, 0, 0))
+			"todam_thatch": p.h = 1.5 * hk; p.cap = "thatch"; L.append(_e(s[0], "todam", p, 0, 0, 0))
+			"todam_tile": p.h = 1.6 * hk; p.cap = "tile"; p.tile_seg = 0.5; L.append(_e(s[0], "todam", p, 0, 0, 0))
+			"stone": p.lite = true; p.sparse = true; p.h = 1.2 * hk; L.append(_e(s[0], "stone_wall", p, 0, 0, 0))
 			"stone_terrace":
 				# 비탈 집터: 앞(남) 두 토막은 축대(원점 = 마당 높이) + 돌담, 나머지는 돌담
 				if s[0] == "wall_sw" or s[0] == "wall_se":
