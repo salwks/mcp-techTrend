@@ -3,6 +3,9 @@
 # params: seed, variant("zelkova"), h, spread, trunk, branches, lod(0|1), bare(false)
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
+const Khs := preload("res://kit/nature/khs_trees.gd")
+# trees-khs: 사실 나무 stand-in 층·키 배율(예전 덩이 키 h × 배율 = 실제 키 m)
+const KHS_MAP := { zelkova = [13, 2.2], willow = [9, 1.6], broadleaf = [8, 2.0], chestnut = [12, 1.8], persimmon = [11, 1.45] }
 
 const PRESET := {
 	zelkova = { h = 7.2, spread = 4.6, trunk = 0.55, branches = 5, leaf = [["#a2ab66", "#5f6c3e"], ["#94a05e", "#566238"]] },
@@ -14,7 +17,17 @@ const PRESET := {
 const NAMES := { chestnut = "밤나무", zelkova = "느티나무", willow = "버드나무", broadleaf = "활엽수", persimmon = "감나무" }
 
 static func build(params: Dictionary) -> Dictionary:
-	var variant := str(params.get("variant", "zelkova"))
+	var v0 := str(params.get("variant", "zelkova"))
+	if Khs.available() and int(params.get("lod", 0)) == 0 and not bool(params.get("bare", false)) and not params.get("proc", false) and KHS_MAP.has(v0):
+		# 배치한 큰 나무(당산나무·개울가 버드나무 등) — 충돌 원은 예전과 같다(밑동 + 0.15)
+		var o0: Dictionary = PRESET.get(v0, PRESET.zelkova)
+		var m: Array = KHS_MAP[v0]
+		var layer: int = m[0]
+		if v0 == "willow" and int(params.get("seed", 1)) % 2 == 1: layer = Khs.L_WILLOW_B
+		var h := float(params.get("h", o0.h)) * float(m[1])
+		var tr := float(params.get("trunk", o0.trunk))
+		return Khs.build_static(layer, h, float(absi(int(params.get("seed", 1)) * 13) % 360) * PI / 180.0, NAMES.get(v0, "큰나무"), [{ type = "circle", x = 0.0, z = 0.0, r = tr + 0.15 }])
+	var variant := v0
 	var o: Dictionary = PRESET.get(variant, PRESET.zelkova).duplicate()
 	for k in params: o[k] = params[k]
 	var r := Kit.Rng.new(int(o.get("seed", 1)))

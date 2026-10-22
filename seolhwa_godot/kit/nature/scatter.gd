@@ -21,6 +21,21 @@ const K := 0.30
 const BAYER := [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5]
 const HWIDE := 1.3      # 나무 가로 배율(수관 넓게)
 const N := "res://kit/nature/"
+const Khs := preload("res://kit/nature/khs_trees.gd")
+# trees-khs: 사실 나무로 그리는 종류 → [고르기, 키 최소, 키 최대(m)]. 고르기: "pine"(자리 규칙) · 층 번호 목록(자리 해시로)
+#   배치(자리·난수 순서)와 충돌체(col × 흩뿌리기 배율)는 예전 그대로 — 그리는 메시와 크기만 바꾼다(이야기 싸움터 충돌이 바뀌지 않게)
+const KHS_KINDS := {
+	pine = ["pine", 10.0, 17.0], small_pine = [[4], 3.6, 5.6], sapling_pine = [[4], 1.8, 3.4],
+	sangsuri = [[5, 6], 9.0, 13.0], singal = [[7], 7.0, 10.5], broadleaf = [[8, 5, 12], 10.0, 14.0], zelkova = [[13], 15.0, 20.0],
+	small_oak = [[14, 15, 6], 2.6, 4.4], sapling_oak = [[14, 15], 1.4, 2.6], sapling_singal = [[14, 15], 1.4, 2.6],   # 작은 참나무를 작게 줄인 둥근 수관은 멀리서 공처럼 보였다 → 고르지 않은 덤불꼴
+	# 마을·들·물가 나무(2차): 버드나무·감나무·밤나무·당산 느티나무, 덤불(둥근 덩이 대신 여러 줄기 잎 덤불)
+	willow = [[9, 10], 7.0, 9.5], persimmon = [[11], 5.5, 8.5], chestnut = [[12], 9.0, 13.0], bush = [[14, 15], 0.9, 2.0],
+}
+# 소나무 변형별 키(m) — 같은 u(흩뿌리기 배율 위치)에서: A 자연형 · B 우산형(능선, 낮게) · C 층층(크게) · D 해송 · E 어린
+const PINE_H := [[11.0, 17.0], [7.0, 10.5], [13.0, 19.0], [7.0, 10.5], [6.0, 9.0]]
+# 해수면(y) — region_world가 바다 권역이면 넣는다(바닷가 해송 판정)
+static var sea_y := NAN
+static var _kkhs := PackedByteArray()
 
 # 종류: 스크립트, 기본 params, 변형 수(seed 다름), 그림자, 줄기 충돌 반지름(배율 1 기준, 0=없음), 원거리(lod1)에서 뺄지
 const KINDS := {
@@ -116,6 +131,7 @@ static func _init_tables() -> void:
 			_ktree.append(1 if sp.get("tree", false) else 0); _kfar.append(1 if sp.get("far_skip", false) else 0)
 			var sr: Array = SCALE.get(n, [0.8, 1.25])
 			_ks0.append(sr[0]); _ks1.append(sr[1]); _kmg.append(float(sp.get("mg", -1.0)))
+			_kkhs.append(1 if (Khs.available() and KHS_KINDS.has(n)) else 0)
 		_names = names
 	_mtx.unlock()
 
@@ -148,7 +164,9 @@ static func model(kind: String, variant: int, lod: int) -> Dictionary:
 static func warm(lod := 0) -> int:
 	_init_tables()
 	var t := Time.get_ticks_usec()
+	Khs.init()
 	for kind in KINDS:
+		if _kkhs[_ids[kind]] == 1: continue
 		for v in int(KINDS[kind].v):
 			var tr: bool = KINDS[kind].get("tree", false)
 			model(kind, v, lod if tr else 0)
@@ -273,6 +291,12 @@ class Job:
 	var kmg_: PackedFloat32Array
 	var names_: PackedStringArray
 	var model_fn: Callable
+	# trees-khs: 사실 나무(임포스터 자료) 묶음별 버퍼(16 float/개: 변환 12 + 층·색 난수) · 지금 칸의 자리 성질
+	var khs_ := PackedByteArray()
+	var khs_groups := {}
+	var c_ridge := false
+	var c_edge := false
+	var c_coast := false
 
 	func add_rect(r: Rect2) -> void:
 		ex_rects.append(r)
@@ -348,6 +372,26 @@ class Job:
 					break
 			put(k, px, pz, rng.randf() * TAU, lerpf(ks0_[k], ks1_[k], rng.randf()), slope, r_d, true)
 
+	# 사실 나무 하나: 층(변형)·키는 자리 해시와 배율 위치로(난수를 더 쓰지 않는다), 가로 넓힘 없음
+	func _put_khs(k: int, px: float, pz: float, y: float, ry: float, sc: float, slope: float, ch: int) -> void:
+		var spec: Array = KHS_KINDS[names_[k]]
+		var layer := 0
+		var hr: Array = [spec[1], spec[2]]
+		if spec[0] is String:
+			layer = Khs.pick_pine(px, pz, c_ridge, c_edge, c_coast, slope)
+			hr = PINE_H[layer]
+		else:
+			var ls: Array = spec[0]
+			layer = ls[mini(int(Khs.h01(px, pz, 2.0) * ls.size()), ls.size() - 1)]
+		var u := clampf((sc - ks0_[k]) / maxf(ks1_[k] - ks0_[k], 1e-4), 0.0, 1.0)
+		var rs := lerpf(hr[0], hr[1], u) / Khs.height(layer)
+		var c := cos(ry) * rs; var s := sin(ry) * rs
+		var arr = khs_groups.get(ch)
+		if arr == null:
+			arr = []
+			khs_groups[ch] = arr
+		(arr as Array).append_array([c, 0.0, s, px, 0.0, rs, 0.0, y, -s, 0.0, c, pz, float(layer), Khs.h01(px, pz, 3.0), 0.0, 0.0])
+
 	# 하나 놓기: 길 가장자리 정밀 검사 → 높이 → 변환 → 묶음에 추가 → 충돌체
 	func put(k: int, px: float, pz: float, ry: float, sc: float, slope: float, r_d: int, check: bool, sink := -999.0) -> bool:
 		var tree := ktree_[k] == 1
@@ -384,8 +428,14 @@ class Job:
 		y -= sink
 		var c := cos(ry) * sc; var s := sin(ry) * sc
 		var ci := clampi(int((px - x0) / CHUNK), 0, nch - 1); var cj := clampi(int((pz - z0) / CHUNK), 0, nch - 1)
-		# 변형은 묶음마다 하나(그리기 호출 절약) — 이웃 묶음끼리는 다른 변형이 나오게
 		var ch := cj * nch + ci
+		if not khs_.is_empty() and khs_[k] == 1:
+			_put_khs(k, px, pz, y, ry, sc, slope, ch)
+			counts[k] += 1
+			var crk := kcol_[k]
+			if crk > 0.0: colliders.append({ type = "circle", x = px, z = pz, r = crk * sc })
+			return true
+		# 변형은 묶음마다 하나(그리기 호출 절약) — 이웃 묶음끼리는 다른 변형이 나오게
 		var nv := kv_[k]
 		var v := (k * 7 + ch * 13 + salt) % nv if nv > 1 else 0
 		var key := (k * 8 + v) * 64 + ch
@@ -499,6 +549,7 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			if big.grow(er).has_point(Vector2(ex, ez)): J.ex_circles.append_array([ex, ez, er])
 	J.ks0_ = _ks0; J.ks1_ = _ks1; J.ktree_ = _ktree; J.kfar_ = _kfar; J.kcol_ = _kcol; J.kv_ = _kv; J.kmg_ = _kmg; J.names_ = _names
 	J.model_fn = model
+	if Khs.available() and Khs.imp_mesh != null: J.khs_ = _kkhs
 	var rng := J.rng
 	var crop_axis := 0.0 if rng.randf() < 0.5 else PI / 2
 	var zelkova_done := false
@@ -532,6 +583,13 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			var alt := alt_of(hg[k])
 			var gxv := (hg[k + 1] - hg[k - 1]) / (2.0 * CELL); var gzv := (hg[k + W] - hg[k - W]) / (2.0 * CELL)
 			var slope := sqrt(gxv * gxv + gzv * gzv)   # tan(경사각)
+			if not J.khs_.is_empty():
+				# trees-khs 자리 성질: 능선(8m 둘레보다 볼록) · 숲 가(이웃 칸이 숲·바위가 아님) · 바닷가(해수면 가까이·물 3칸 안)
+				var i2 := clampi(i, 2, W - 3); var j2 := clampi(j, 2, H - 3); var k2 := j2 * W + i2
+				var conv := hg[k2] - 0.25 * (hg[k2 - 2] + hg[k2 + 2] + hg[k2 - 2 * W] + hg[k2 + 2 * W])
+				J.c_ridge = conv > 0.9
+				J.c_edge = l == 0 and not (_fz(lu[k - 1]) and _fz(lu[k + 1]) and _fz(lu[k - W]) and _fz(lu[k + W]) and _fz(lu[k2 - 2]) and _fz(lu[k2 + 2]) and _fz(lu[k2 - 2 * W]) and _fz(lu[k2 + 2 * W]))
+				J.c_coast = not is_nan(sea_y) and hg[k] < sea_y + 10.0 and wd[k] <= 4
 			var r_d := rd[k]; var w_d := wd[k]
 			# 길 북쪽(카메라 반대편, -z) 12m 안에 길이 있으면 이 칸의 큰 나무는 길을 가린다 → 나무 대신 낮은 것(§32 시각 간격)
 			# §9 카메라 통로: 이 칸의 북쪽 4~20m(1~5칸)에 길이 있으면 = 길 남쪽 띠. 카메라가 플레이어 남쪽 13~17m·높이 14~15m에
@@ -551,6 +609,8 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 						#   산 지형 권역(세로 되살림 — remap)만: 다른 권역은 예전 밀도(이야기 싸움터·길목 충돌 배치를 바꾸지 않게 — gyeongju:A 싸움이 갈렸다)
 						var tk := ((0.46 if slope < 1.0 else 0.34) if mtn_k else (0.28 if slope < 1.0 else 0.18)) * tree_k * (0.35 if bald else 1.0)
 						J.emit_mix(mix_village_ids if near > 0.3 else mix_ids(alt), tk, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+						# trees-khs: 산 지형 권역 숲은 수관이 닫히게 사실 나무를 더 심는다(자리·종류는 자리 해시 — 난수 순서를 건드리지 않아 다른 식생 배치는 그대로)
+						if mtn_k and not J.khs_.is_empty(): _khs_fill(J, mix_village_ids if near > 0.3 else mix_ids(alt), (0.2 if slope < 1.0 else 0.14) * tree_k * (0.35 if bald else 1.0), cx, cz, slope, r_d)
 					if bald:
 						J.emit(k_cm, 0.3, cx, cz, slope, r_d)
 						J.emit(k_jin, 0.1 * bush_k, cx, cz, slope, r_d)
@@ -638,7 +698,9 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 						var ry := atan2(-gxv, -gzv)   # 정면(+z)을 내리막으로
 						J.put(k_cliff, cx + (rng.randf() - 0.5) * 2, cz + (rng.randf() - 0.5) * 2, ry, lerpf(0.8, 1.2, rng.randf()), slope, r_d, false, 0.4 + slope * 1.2)
 					# integ-mountain: 바위 칸이라도 덜 가파른 데(노두 사이)는 소나무·신갈이 바위틈에 선다 — 산 비탈이 맨 바위로 비지 않게
-					if mtn_k and tree_ok and slope < 1.3: J.emit_mix(mix_ids(alt), (0.22 if slope < 1.0 else 0.12) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+					if mtn_k and tree_ok and slope < 1.3:
+						J.emit_mix(mix_ids(alt), (0.22 if slope < 1.0 else 0.12) * tree_k, cx, cz, slope, r_d, (j % 4) * 4 + (i % 4))
+						if not J.khs_.is_empty(): _khs_fill(J, mix_ids(alt), (0.12 if slope < 1.0 else 0.06) * tree_k, cx, cz, slope, r_d)
 					if mtn_k and slope < 1.3: J.emit_even(k_under, 0.12 * bush_k, cx, cz, slope, r_d, ((j + 2) % 4) * 4 + ((i + 1) % 4))
 					J.emit(k_boul, 0.04, cx, cz, slope, r_d)
 					J.emit(k_rockb, 0.07, cx, cz, slope, r_d)
@@ -734,11 +796,28 @@ static func scatter(tile_rect: Rect2, height_at: Callable, landuse_at: Callable,
 			mi.mesh = _merge(pair[0])
 			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if pair[1] else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			nodes.append(mi); buffers.append(null)
+	# trees-khs: 묶음마다 임포스터 MultiMesh 하나(모든 변형 — 층은 인스턴스 자료). 가까운 나무 메시는 tree_lod.gd가 따로 그린다
+	var khs_n := 0
+	for ch in J.khs_groups:
+		var buf := PackedFloat32Array(J.khs_groups[ch])
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_custom_data = true
+		mm.mesh = Khs.imp_mesh
+		mm.instance_count = buf.size() / 16
+		mm.buffer = buf
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "khs_c%d" % ch
+		mmi.multimesh = mm
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		nodes.append(mmi); buffers.append(buf)
+		khs_n += mm.instance_count
+		tris_main += mm.instance_count * 2
 	var total := Time.get_ticks_usec() - t0
 	var counts := {}
 	for i in _names.size():
 		if J.counts[i] > 0: counts[_names[i]] = J.counts[i]
-	return { nodes = nodes, buffers = buffers, colliders = J.colliders, stats = { tris_main = tris_main, tris_shadow = tris_shadow, usec = total, grid_usec = t_grid, sample_usec = t_sample, place_usec = t_place, counts = counts, draw_nodes = nodes.size(), merged_instances = merged_inst } }
+	return { nodes = nodes, buffers = buffers, colliders = J.colliders, stats = { tris_main = tris_main, tris_shadow = tris_shadow, usec = total, grid_usec = t_grid, sample_usec = t_sample, place_usec = t_place, counts = counts, draw_nodes = nodes.size(), merged_instances = merged_inst, khs = khs_n } }
 
 static func _mmi(mesh: Mesh, buf: PackedFloat32Array, name: String) -> MultiMeshInstance3D:
 	var mm := MultiMesh.new()
@@ -773,6 +852,28 @@ static func _merge(items: Array) -> ArrayMesh:
 	am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
 	am.surface_set_material(0, Kit.material("atlas"))
 	return am
+
+# 사실 나무 더 심기(산 지형 권역): 기대 개수 ex를 자리 해시로 — 사실 나무 종류만(구상나무·고사목 등은 건너뜀)
+static func _khs_fill(J: Job, mix: Array, ex: float, cx: float, cz: float, slope: float, r_d: int) -> void:
+	var n := int(ex)
+	if Khs.h01(cx, cz, 11.0) < ex - n: n += 1
+	var tot := 0.0
+	for m in mix: tot += float(m[1])
+	for q in n:
+		var px := cx + (Khs.h01(cx, cz, 12.0 + q) - 0.5) * CELL
+		var pz := cz + (Khs.h01(cx, cz, 13.0 + q) - 0.5) * CELL
+		var a := Khs.h01(px, pz, 14.0) * tot
+		var k: int = mix[mix.size() - 1][0]
+		for m in mix:
+			a -= float(m[1])
+			if a <= 0.0:
+				k = m[0]
+				break
+		if J.khs_[k] != 1: continue
+		J.put(k, px, pz, Khs.h01(px, pz, 15.0) * TAU, lerpf(J.ks0_[k], J.ks1_[k], Khs.h01(px, pz, 16.0)), slope, r_d, true)
+
+static func _fz(l: int) -> bool:
+	return l == 0 or l == 7
 
 static func _edge(mask: PackedByteArray, W: int, k: int) -> bool:
 	return mask[k - 1] == 0 or mask[k + 1] == 0 or mask[k - W] == 0 or mask[k + W] == 0

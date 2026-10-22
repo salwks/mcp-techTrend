@@ -1,0 +1,91 @@
+{
+ "note": "trees-khs 사실 나무 자산 — tools/trees_khs/build.sh로 다시 짓는다. 원본(src·_work)은 깃 밖.",
+ "sources": [
+  {
+   "id": "khs_gomsol",
+   "what": "곰솔(소나무) 3D 스캔 모델 — 천연기념물 태안 신두리 해안사구 곰솔(SM_Black_Pine.fbx), 게임용 5변형으로 최적화(khs_assets/tools/gomsol_trees.py)",
+   "attribution": "국가유산청",
+   "license": "공공누리 제1유형(출처표시) — KOGL Type 1",
+   "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
+   "used_in": [
+    "gomsol_*_lod0.res",
+    "gomsol_*_lod1.res",
+    "pine_leaf_bca.res",
+    "pine_leaf_orm.res",
+    "pine_bark_*.res",
+    "imp_alb.res 층 0~4",
+    "imp_nrm.res 층 0~4"
+   ],
+   "changes": "잎 카드 복제·확대(수관 채움), 법선을 수관 바깥쪽으로 섞음, 바람·그늘 정점 자료, 색 보정(짙은 청록 솔잎·붉은 윗줄기)은 셰이더에서, 8방향 임포스터는 다듬은 메시를 Godot에서 구움"
+  },
+  {
+   "id": "ambientcg_LeafSet016",
+   "what": "참나무 잎 6장 사진(Color·Opacity) — 잔가지에 붙여 잎 뭉치 카드 4종 아틀라스로 합성(tools/trees_khs/prep_textures.py)",
+   "attribution": "ambientCG (ambientcg.com) — LeafSet016",
+   "license": "CC0 1.0",
+   "source_url": "https://ambientcg.com/view?id=LeafSet016",
+   "used_in": [
+    "oak_leaf_bca.res",
+    "imp_alb.res 층 5~8"
+   ]
+  },
+  {
+   "id": "ambientcg_Bark012",
+   "what": "참나무 껍질 사진 스캔(Color·NormalGL·Roughness·AO), 1K로 줄임",
+   "attribution": "ambientCG (ambientcg.com) — Bark012",
+   "license": "CC0 1.0",
+   "source_url": "https://ambientcg.com/view?id=Bark012",
+   "used_in": [
+    "oak_bark_bc.res",
+    "oak_bark_nrm.res",
+    "oak_bark_orm.res"
+   ]
+  },
+  {
+   "id": "ambientcg_LeafSet013",
+   "what": "버드나무 잎(좁은 잎) — 늘어진 잔가지 카드로 합성",
+   "attribution": "ambientCG (ambientcg.com) — LeafSet013",
+   "license": "CC0 1.0",
+   "source_url": "https://ambientcg.com/view?id=LeafSet013",
+   "used_in": [
+    "broad2_leaf_bca.res",
+    "imp_alb.res 층 9~15"
+   ]
+  },
+  {
+   "id": "ambientcg_LeafSet022",
+   "what": "감나무 잎(둥근 잎) — 잎 뭉치 카드로 합성, 주황 감은 그려 넣음",
+   "attribution": "ambientCG (ambientcg.com) — LeafSet022",
+   "license": "CC0 1.0",
+   "source_url": "https://ambientcg.com/view?id=LeafSet022",
+   "used_in": [
+    "broad2_leaf_bca.res",
+    "imp_alb.res 층 9~15"
+   ]
+  },
+  {
+   "id": "ambientcg_LeafSet014",
+   "what": "밤나무 잎(긴 톱니 잎) — 잎 뭉치 카드로 합성",
+   "attribution": "ambientCG (ambientcg.com) — LeafSet014",
+   "license": "CC0 1.0",
+   "source_url": "https://ambientcg.com/view?id=LeafSet014",
+   "used_in": [
+    "broad2_leaf_bca.res",
+    "imp_alb.res 층 9~15"
+   ]
+  },
+  {
+   "id": "ambientcg_LeafSet001",
+   "what": "느티나무·덤불 잎(작은 톱니 잎) — 어긋나기 잔가지 카드로 합성",
+   "attribution": "ambientCG (ambientcg.com) — LeafSet001",
+   "license": "CC0 1.0",
+   "source_url": "https://ambientcg.com/view?id=LeafSet001",
+   "used_in": [
+    "broad2_leaf_bca.res",
+    "imp_alb.res 층 9~15"
+   ]
+  }
+ ],
+ "procedural": "참나무·버드나무·감나무·밤나무·당산 느티나무·덤불 stand-in의 줄기·가지·잎 카드 배치는 tools/trees_khs/build.gd가 절차로 만든다(외부 모델 없음).",
+ "credits_line": "나무 3D 스캔: 국가유산청(공공누리 제1유형) · 잎·껍질 사진: ambientCG(CC0)"
+}

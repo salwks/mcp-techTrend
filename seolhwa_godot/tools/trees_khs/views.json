@@ -1,0 +1,158 @@
+{
+ "sets": {
+  "trees": {
+   "views": [
+    {
+     "id": "t01_field_east",
+     "label": "남원 동쪽 들 큰길 — 들·산 구도(산 쪽)",
+     "mode": "town",
+     "x": -2767,
+     "z": 126
+    },
+    {
+     "id": "t02_field_east_gaze",
+     "label": "남원 동쪽 들 — 바라보기(V)",
+     "mode": "town",
+     "x": -2767,
+     "z": 126,
+     "gaze": true
+    },
+    {
+     "id": "t03_unbong_gaze",
+     "label": "운봉 들 — 바라보기(V)",
+     "mode": "town",
+     "x": 600,
+     "z": -400,
+     "gaze": true
+    },
+    {
+     "id": "t04_valley_stream",
+     "label": "계곡 개울(게임 카메라)",
+     "mode": "town",
+     "x": -210,
+     "z": -893
+    },
+    {
+     "id": "t05_valley_forest",
+     "label": "계곡길 숲(게임 카메라)",
+     "mode": "town",
+     "x": -170,
+     "z": -905
+    },
+    {
+     "id": "t06_pass",
+     "label": "여원재 오르막 — 산 구도",
+     "mode": "town",
+     "x": -736,
+     "z": -685
+    },
+    {
+     "id": "t07_pass_gaze",
+     "label": "여원재 오르막 — 바라보기",
+     "mode": "town",
+     "x": -736,
+     "z": -685,
+     "gaze": true
+    },
+    {
+     "id": "t08_fp_ridge_w",
+     "label": "능선 봉우리 1인칭(서)",
+     "mode": "fp",
+     "x": -326,
+     "z": -1134,
+     "yaw": -120,
+     "pitch": 0
+    },
+    {
+     "id": "t09_fp_ridge_se",
+     "label": "능선 봉우리 1인칭(남동)",
+     "mode": "fp",
+     "x": -326,
+     "z": -1134,
+     "yaw": 150,
+     "pitch": 0
+    },
+    {
+     "id": "t10_town",
+     "label": "남원 장터 — 마을 구도",
+     "mode": "town",
+     "x": -3341,
+     "z": 290
+    },
+    {
+     "id": "t11_north_road",
+     "label": "남원 북쪽 큰길(교룡산 아래)",
+     "mode": "town",
+     "x": -3295,
+     "z": -487
+    },
+    {
+     "id": "t12_fp_gyoryong_forest",
+     "label": "교룡산 산길 숲 1인칭",
+     "mode": "fp",
+     "x": -3698,
+     "z": -336,
+     "yaw": 100,
+     "pitch": 2
+    },
+    {
+     "id": "t13_fp_south_gate",
+     "label": "남원 남문 밖 1인칭 → 교룡산",
+     "mode": "fp",
+     "x": -3228,
+     "z": 380,
+     "yaw": -48,
+     "pitch": 4
+    },
+    {
+     "id": "t14_fp_top",
+     "label": "재 마루 1인칭 → 남원 분지",
+     "mode": "fp",
+     "x": 14,
+     "z": -966,
+     "yaw": -110,
+     "pitch": 0
+    },
+    {
+     "id": "t15_fp_pine_close",
+     "label": "소나무 가까이(약 5m) 1인칭 — 여원재 오르막 위 비탈",
+     "mode": "fp",
+     "x": -729.0,
+     "z": -660.5,
+     "yaw": 50,
+     "pitch": 14
+    },
+    {
+     "id": "t16_fp_pine_close_b",
+     "label": "우산형 소나무 가까이 1인칭 — 여원재 대로 아래",
+     "mode": "fp",
+     "x": -723.5,
+     "z": -690.0,
+     "yaw": -135,
+     "pitch": 12
+    },
+    {
+     "id": "t17_swing_willow",
+     "label": "광한루 그네 버드나무(배치 big_tree willow)",
+     "mode": "town",
+     "x": -3330.0,
+     "z": 458.0
+    },
+    {
+     "id": "t18_sinmok_zelkova",
+     "label": "성황사 신목 느티나무(배치 big_tree zelkova)",
+     "mode": "town",
+     "x": -3631.5,
+     "z": 266.0
+    },
+    {
+     "id": "t19_persimmon_gwana",
+     "label": "관아 감나무(배치 nature/persimmon)",
+     "mode": "town",
+     "x": -3145.6,
+     "z": 242.0
+    }
+   ]
+  }
+ }
+}

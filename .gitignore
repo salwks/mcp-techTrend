@@ -49,3 +49,7 @@ htmlcov/
 # OS / misc
 Thumbs.db
 *.log
+# trees-khs: 원본(국가유산청 곰솔 glTF·PNG, CC0 내려받기)은 깃 밖 — tools/trees_khs/build.gd가 묶은 .res만 깃에
+/seolhwa_godot/assets/trees/khs_gomsol/src/
+/seolhwa_godot/assets/trees/src_cc0/
+/seolhwa_godot/assets/trees/_work/

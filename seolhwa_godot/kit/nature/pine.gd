@@ -2,6 +2,7 @@
 # params: seed, s(크기 배율, 1), lod(0 기본 / 1 원거리)
 extends RefCounted
 const C := preload("res://kit/nature/_common.gd")
+const Khs := preload("res://kit/nature/khs_trees.gd")
 const LEAF := [["#6c8256", "#2c3a2a"], ["#617a52", "#283728"], ["#77885a", "#334230"]]   # integ-mountain: 산 솔잎은 짙고 푸르스름하게
 
 # 솔잎 뭉치: 납작한 타원체(윗면 밝고 아랫면 짙은 바림) + 위에 작은 덩이
@@ -14,7 +15,21 @@ static func needle_clump(b: Kit.Batch, r: Kit.Rng, cx: float, cy: float, cz: flo
 		Kit.xf(g2, cx + (r.next() - 0.5) * rad * 0.4, cy + rad * 0.22, cz, 0, r.next() * 3, 0, 1, 0.34, 0.8)
 		b.add("needle", Kit.paint(g2, C.c(col[0]), C.c(col[0]), 0.03, r), 0.035 * s)
 
+# trees-khs: 배치한 소나무(나정 솔숲 등)는 국가유산청 곰솔 스캔 메시로 — 줄기 충돌 원은 예전과 같다(0.3 × s).
+#   흩뿌리기는 이 build()를 쓰지 않는다(scatter.gd KHS_KINDS). params.proc = true 이면 예전 덩이 소나무
 static func build(params: Dictionary) -> Dictionary:
+	if Khs.available() and not params.get("proc", false) and int(params.get("lod", 0)) == 0:
+		return _build_khs(params)
+	return _build_proc(params)
+
+static func _build_khs(params: Dictionary) -> Dictionary:
+	var seed := int(params.get("seed", 1))
+	var s := float(params.get("s", 1.0))
+	var layer: int = [Khs.L_A, Khs.L_C, Khs.L_B, Khs.L_A][absi(seed) % 4]
+	var h := (8.5 + float(absi(seed * 7) % 9) * 0.5) * s * (0.8 if layer == Khs.L_B else 1.0)
+	return Khs.build_static(layer, h, float(absi(seed * 13) % 360) * PI / 180.0, "소나무", [{ type = "circle", x = 0.0, z = 0.0, r = 0.3 * s }])
+
+static func _build_proc(params: Dictionary) -> Dictionary:
 	var r := Kit.Rng.new(int(params.get("seed", 1)))
 	var s := float(params.get("s", 1.0))
 	var lod := int(params.get("lod", 0))

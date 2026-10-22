@@ -39,6 +39,13 @@ const MAX_JOBS := 2
 const MAX_JOBS_LOADING := 6   # 시작 불러오기 화면 동안은 프레임 예산을 따지지 않는다
 var loading := false
 const SCATTER_PATH := "res://kit/nature/scatter.gd"
+const KhsTrees := preload("res://kit/nature/khs_trees.gd")
+const TreeLod := preload("res://scripts/region/tree_lod.gd")
+const FarForest := preload("res://scripts/region/far_forest.gd")
+var far_forest: Node3D = null   # trees-khs: 먼 숲 임포스터 층(khs_far 너머)
+var khs_far_base := 560.0   # trees-khs 임포스터 거리(--khsfar=m)
+var _khs_far_set := -1.0
+var tree_lod: Node3D = null   # trees-khs: 가까운 사실 나무 LOD0·LOD1(scripts/region/tree_lod.gd)
 const DEFAULT_DIRS := ["res://region_data/JL_NAMWON_UNBONG/", "res://shots/region/tmp_data/"]
 # shaders/region_common.gdshaderinc의 LU_DETAIL과 같아야 한다
 const LU_DETAIL := [1.0, 0.8, 0.12, 0.45, 0.35, 0.0, 0.35, 1.5, 0.3, 1.0]
@@ -183,6 +190,9 @@ func load_region(dir := "") -> void:
 	var Sc = load(SCATTER_PATH) if FileAccess.file_exists(SCATTER_PATH) else null
 	if Sc != null and "remap_src" in Sc:
 		Sc.remap_src = remap_src; Sc.remap_dst = remap_dst
+	if Sc != null and "sea_y" in Sc:   # trees-khs: 바닷가 해송 판정
+		var sea = region.get("sea")
+		Sc.sea_y = float(sea.get("y", 0.0)) if sea is Dictionary and String(sea.get("kind", "sea")) != "river" else NAN
 	mountain = {}
 	if FileAccess.file_exists(data_dir + "mountain.json"):
 		var mj = JSON.parse_string(FileAccess.get_file_as_string(data_dir + "mountain.json"))
@@ -247,6 +257,9 @@ func load_region(dir := "") -> void:
 					var tw := Time.get_ticks_msec()
 					scr.warm(0); scr.warm(1)
 					print("REGION scatter warm ms=", Time.get_ticks_msec() - tw)
+			if KhsTrees.available() and KhsTrees.imp_mesh != null:
+				tree_lod = TreeLod.new(); tree_lod.name = "tree_lod"; add_child(tree_lod)
+				far_forest = FarForest.new(); far_forest.name = "far_forest"; far_forest.world = self; add_child(far_forest)
 		else: push_warning("kit/nature/scatter.gd를 쓸 수 없어 식생을 건너뛴다")
 	if markers: _place_markers()
 	print("REGION data=%s %dx%d cell=%.1f tiles=%s..%s scatter=%s load_ms=%d" % [data_dir, hnx, hnz, hstep, tile_min, tile_max, _scatter_script != null, Time.get_ticks_msec() - t0])
@@ -1608,6 +1621,7 @@ func _set_tile(t: Vector2i, lod: int) -> void:
 		node.get_child(0).custom_aabb = AABB(Vector3(-1, all.x - SKIRT * 2.0 - 2.0, -1), Vector3(TILE + 2, all.y - all.x + SKIRT * 2.0 + 4.0, TILE + 2))
 		terrain_root.add_child(node)
 		if tile_listener.is_valid(): tile_listener.call(t)
+		if far_forest != null: far_forest.request(t)
 		_gen += 1
 		st = { lod = -1, node = node, scatter_nodes = [], scatter_job = -1, scatter_hold = null, has0 = false, has1 = false, gen = _gen }
 		tiles[t] = st
@@ -1654,6 +1668,7 @@ func _drop_tile(t: Vector2i) -> void:
 		_scatter_orphans.append([st.scatter_job, st.scatter_hold])
 		st.scatter_job = -1; st.scatter_hold = null
 	if farm != null: farm.tile_lod(t, -1)
+	if far_forest != null: far_forest.drop(t)
 	_unscatter(t)
 	_attach_statics(t, 2)
 	terrain_root.remove_child(st.node)
@@ -1671,6 +1686,7 @@ func _unscatter(t: Vector2i) -> void:
 	_gen += 1
 	st.gen = _gen
 	_scatter_grid.erase(t)
+	if tree_lod != null: tree_lod.drop_tile(t)
 	_tall.erase(t)
 	for k in _cut.keys():
 		if k[0] == t: _cut.erase(k)
@@ -1717,7 +1733,8 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 			var stride := 12 + (4 if mm.use_colors else 0) + (4 if mm.use_custom_data else 0)
 			var base: Transform3D = n0.transform
 			var ab := mm.mesh.get_aabb() if mm.mesh else AABB()
-			var is_tall := ab.size.y >= 2.5
+			var khs: bool = mm.mesh != null and mm.mesh.has_meta("khs")   # trees-khs 임포스터 묶음: 가림 축소(_tall)는 하지 않는다(가까이선 tree_lod 메시가 그린다)
+			var is_tall := ab.size.y >= 2.5 and not khs
 			var cr := maxf(ab.size.x, ab.size.z) * 0.5
 			var cast: bool = n0.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF and lod == 0 and ab.size.y >= SHADOW_MIN_H
 			var groups := {}
@@ -1735,7 +1752,7 @@ static func _scatter_job(scr: Script, rect: Rect2, ha: Callable, la: Callable, s
 			for k in groups:
 				var g: Dictionary = groups[k]
 				var e := { xf = base, mat = n0.material_override, mesh = mm.mesh, colors = mm.use_colors, custom = mm.use_custom_data, buf = g.buf, count = g.n,
-					lod = lod, rect = Rect2(g.lo, g.hi - g.lo), cast = cast, mm = null, node = null }
+					lod = lod, rect = Rect2(g.lo, g.hi - g.lo), cast = cast, mm = null, node = null, khs = khs }
 				out.append(e)
 				if is_tall and lod == 0:
 					for i in int(g.n):
@@ -1847,6 +1864,7 @@ func _poll_jobs() -> void:
 			if e.node != null and not e.node.is_inside_tree(): e.node.free()
 			continue
 		var b0: PackedFloat32Array = e.get("buf", PackedFloat32Array())
+		if tree_lod != null and e.get("khs", false) and e.lod == 0: tree_lod.add(t, e, b0)
 		_make_node(e)
 		if not b0.is_empty() and _veg_cond_touches(e.rect): e.src = b0   # 조건부 식생 비우기 영역에 걸친 묶음은 원래 자료를 지닌다(숨김·되살림·셈)
 		if not _veg_cond.is_empty(): _veg_cond_entry(e)
@@ -1893,11 +1911,20 @@ func update_scatter_lod(player: Vector3, force := false) -> void:
 	if not force and not _lod_dirty and _lod_frame % 6 != 0: return
 	_lod_dirty = false
 	var p := Vector2(player.x, player.z)
+	# trees-khs: 임포스터는 싸서 식생 거리보다 멀리(근경 타일 끝까지) — 산이 멀리서도 숲으로 읽히게. 끝에서 점무늬로 녹는다
+	var khs_far := maxf(scatter_far, khs_far_base * (0.65 if KhsTrees.r0 < 12.0 else 1.0))
+	if tree_lod != null and KhsTrees.imp_mat != null and absf(khs_far - _khs_far_set) > 1.0:
+		_khs_far_set = khs_far
+		KhsTrees.imp_mat.set_shader_parameter("imp_fade", Vector2(khs_far * 0.8, khs_far * 0.97))
+		FarForest.set_far(khs_far, TILE * (MID_R + 0.5))
 	for t in tiles:
 		for e in tiles[t].scatter_nodes:
 			var r: Rect2 = e.rect
 			var d := Vector2(maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x), maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)).length()
 			var on: bool = (d < lod0_dist) if e.lod == 0 else (d >= lod0_dist and d < scatter_far)
+			if e.get("khs", false):
+				# 사실 나무 임포스터: 가까운 벌(lod 0) 자료가 있으면 그것만 먼 끝까지(가까운 나무 메시와 같은 자리), 없을 때만 먼 벌
+				on = d < khs_far and (e.lod == 0 or not tiles[t].has0)
 			if on != e.shown:
 				e.shown = on
 				e.node.visible = on
@@ -2341,6 +2368,7 @@ func update_cutaway(dt: float, player: Vector3, cam: Vector3) -> void:
 func reset_edits() -> void:
 	# 작업 스레드(필지 짓기·식생)가 hbytes·lbytes를 읽는 중에 배열을 갈아 끼우면 해제된 메모리를 읽는다 — 먼저 기다린다
 	if farm != null: farm.wait_jobs()
+	if far_forest != null: far_forest.wait_all()
 	for t in tiles:
 		if tiles[t].scatter_job >= 0:
 			Jobs.wait(tiles[t].scatter_job); tiles[t].scatter_job = -1
@@ -2551,6 +2579,7 @@ func _veg_cond_apply_all(area := Rect2()) -> void:
 				if c.get("type", "circle") != "circle": p = Vector2((float(c.minX) + float(c.maxX)) * 0.5, (float(c.minZ) + float(c.maxZ)) * 0.5)
 				if all or area.grow(1.0).has_point(p) or c.get("off", false): c.off = _in_veg_cond(p)
 	veg_cond_hidden = 0
+	if tree_lod != null: tree_lod.dirty = true
 	for t in tiles:
 		for e in tiles[t].scatter_nodes:
 			if e.has("hid"): veg_cond_hidden += (e.hid as Dictionary).size()
