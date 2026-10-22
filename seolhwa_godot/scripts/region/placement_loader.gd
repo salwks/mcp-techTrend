@@ -128,7 +128,7 @@ func load_all() -> void:
 			if not sup.is_empty() and sup.has(String(it.get("id", ""))) and not (d.get("supersede", []) as Array).has(it.get("id", "")): continue
 			var item: Dictionary = it
 			if f.get_file().begins_with("placement_story_"):
-				item = item.duplicate(); item["_story_file"] = true
+				item = item.duplicate(); item["_story_file"] = true; item["_story_src"] = f.get_file()
 			if item.has("when") and not item.has("case"):
 				item = item.duplicate(); item["case"] = fcase
 			raw.append(_resolve_placeholder(item))
@@ -895,3 +895,56 @@ func _plan_scale(raw: Array, story_pts: Array) -> void:
 		rects[i] = _prect(c, h0 * k, ry)
 		raw[i] = it2
 		plan_scaled += 1
+	_plan_story_bundles(raw, rects)
+
+# 이야기 배치 묶음(이겸 거처·외딴집 등): 집 + 마당 소품 + 평상 + 마당(clearing)을 집 가운데 기준 같은 배율로 한 덩이로 — 집만 커지고
+#   소품이 제자리면 동선이 막힌다(first15 거처 → 주막). 이야기 자리는 plan_items로 같이 옮겨진다(story_director). 바닥 높이는 그대로.
+func _plan_story_bundles(raw: Array, rects: Array) -> void:
+	var R := 22.0
+	for i in raw.size():
+		var H: Dictionary = raw[i]
+		if not bool(H.get("_story_file", false)) or not PLAN_K.has(String(H.kit)) or H.has("plan_k") or String(H.kit) == "village/house_compound": continue
+		if not bool((H.get("params", {}) as Dictionary).get("interior", false)): continue   # 묶음의 머리 = 실내 있는 이야기 집
+		var c := Vector2(float(H.get("x", 0.0)), float(H.get("z", 0.0)))
+		var src := String(H.get("_story_src", ""))
+		var mem := []
+		var lo := Vector2(INF, INF); var hi := Vector2(-INF, -INF)
+		for j in raw.size():
+			var it: Dictionary = raw[j]
+			if String(it.get("_story_src", "")) != src: continue
+			var p := Vector2(float(it.get("x", 0.0)), float(it.get("z", 0.0)))
+			if p.distance_to(c) > R: continue
+			mem.append(j)
+			var hh := _plan_half(it)
+			lo = Vector2(minf(lo.x, p.x - hh.x), minf(lo.y, p.y - hh.y)); hi = Vector2(maxf(hi.x, p.x + hh.x), maxf(hi.y, p.y + hh.y))
+		var target: float = PLAN_K[String(H.kit)]
+		var k := 1.0
+		var bb0 := [lo, Vector2(hi.x, lo.y), hi, Vector2(lo.x, hi.y)]
+		for kk in [target, 1.0 + (target - 1.0) * 0.5]:
+			var bbk := []
+			for q in bb0: bbk.append(c + ((q as Vector2) - c) * float(kk))
+			var ok := true
+			for j in rects.size():
+				if rects[j] == null or bool(raw[j].get("_story_file", false)): continue
+				if _poly_overlap(bbk, rects[j]) and not _poly_overlap(bb0, rects[j]): ok = false; break
+			if ok: k = float(kk); break
+		if k <= 1.001: plan_capped += 1; continue
+		for j in mem:
+			var it2: Dictionary = (raw[j] as Dictionary).duplicate(true)
+			var p := Vector2(float(it2.get("x", 0.0)), float(it2.get("z", 0.0)))
+			var q := c + (p - c) * k
+			it2.x = q.x; it2.z = q.y
+			var kit := String(it2.kit)
+			var prm: Dictionary = it2.get("params", {})
+			if PLAN_DEF.has(kit):
+				var df: Array = PLAN_DEF[kit]
+				prm.w = snappedf(float(prm.get("w", df[0])) * k, 0.01); prm.d = snappedf(float(prm.get("d", df[1])) * k, 0.01)
+				if float(df[2]) > 0.0: prm.wall_h = snappedf(float(prm.get("wall_h", df[2])) * k, 0.01)
+				if it2.get("footprint") is Array: it2.footprint = [float(it2.footprint[0]) * k, float(it2.footprint[1]) * k]
+			elif kit == "story/clearing":
+				prm.w = float(prm.get("w", 6.0)) * k; prm.d = float(prm.get("d", 6.0)) * k
+			it2.params = prm
+			it2.plan_k = snappedf(k, 0.001)
+			raw[j] = it2
+		plan_items.append([c, float(H.get("ry", 0.0)), (hi - lo) * 0.5, k])
+		plan_scaled += mem.size()
