@@ -159,7 +159,10 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
             for c in e["constraints"]:
                 if c["severity"] == "error":
                     codes[c["code"]] = codes.get(c["code"], 0) + 1
-        reason = max(sorted(codes), key=lambda k: codes[k]) if codes else "unknown"
+        prio = ["water_crossing_required", "blocked_access", "untyped_route_crossing", "neighbour_enclosed",
+                "insufficient_capacity", "civic_fit_failed"]
+        hit = [k for k in prio if k in codes]
+        reason = hit[0] if hit else (max(sorted(codes), key=lambda k: codes[k]) if codes else "unknown")
         if reason in ("civic_fit_failed", "insufficient_capacity"):
             status = "insufficient_capacity"
     plan["status"] = status

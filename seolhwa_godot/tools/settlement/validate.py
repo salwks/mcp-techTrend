@@ -116,7 +116,8 @@ def run(plan, inp, A, L1, F, rules):
     if n:
         edge = np.zeros(lab.shape, bool)
         edge[0, :] = edge[-1, :] = edge[:, 0] = edge[:, -1] = True
-        ids = set(np.unique(lab[A.water & A.floods[3]]).tolist())  # (spring cells are not sources) | set(np.unique(lab[edge]).tolist())
+        # springs are not sources; components may continue to water outside the window
+        ids = set(np.unique(lab[A.water & A.floods[3]]).tolist()) | set(np.unique(lab[edge]).tolist())
         touch = set(range(1, n + 1)) <= ids | {0}  # components may connect to water outside the window
     _chk(out, "L0.water", "L0", w_ok and mono and touch,
          {"feature_cells": det, "flood_monotonic": mono, "flood_components_touch_water": bool(touch)})
