@@ -179,3 +179,15 @@ godot --path . res://scenes/region.tscn -- --region=JL_NAMWON_UNBONG --warp=-336
 # 다시 생성: godot --headless --path . -s res://tools/bldg/organic.gd -- --district=eup   (되돌리기 --revert)
 # 견본 생성·점검: tools/bldg/settle_pipeline.sh [metro city …]
 ```
+
+---
+
+## 12. 후속(2026-10-22): 실측 규칙 짜임 · 마당 푸름 · 옛 키트 실제 크기 · integ
+
+- **실측 규칙**: `settlement-metrics.md`(지적원도·양안·국가유산청 지정자료) → 생성기 `lots="measured"`(구역별 앞너비·깊이 분포, 막다른 골목·뒤 필지, 길가 틈 필지/담, 담 두른 텃밭, 안채 남향·대문 일직선·부속 옆 담·간선변 길가 채, 맞담, 기와 몫 자리별). 지표 자동 보고 `tools/bldg/settle_metrics.gd`·`metrics_all.sh`, 씨앗 고르기 `organic_pick.sh`.
+- **지표**: 남원 eup 14/14 · west 13/13 통과(integ 산 지형 높이장에서 다시 생성). 견본 16구역은 구역마다 실패 0~2(대도시 성 안 북쪽 덮임, 일부 길가 막힘 80%대, 반촌 윗마을 필지 크기).
+- **푸름·땅**: 마당 나무(계층별 0~3), 길가 모퉁이 나무, 담 밑 풀, 텃밭 이랑, 짚가리, 싸리울, 마당만 흙(구역 흙 칠하기 끔), 길 터 고르기(terrace), 카메라 앞 가림은 사이에 든 것만.
+- **옛 키트 실제 크기**: `placement_loader` plan_scale — village/* 집·집 묶음 평면·벽 ×1.16~1.22(바닥 그대로), 이웃·길·이야기 자리와 새로 겹치지 않는 만큼(남원 302채, 142채는 덜). 이야기 배치 묶음(이겸 거처·외딴집)은 집 + 소품 + 마당을 한 덩이로 같은 배율, 이야기 자리는 같은 배율로 옮김.
+- **검사**: 이야기 시험 93/94(알려진 p2a 굽기 오래됨만), first15 셋·talk·view 통과. 빌더 smoke 0 · 지붕 0/288 · 처마 여유 0. 걷기·대문 integ: west 70/1 · eup 63/1(대문 바로 안 장독·디딤 0.4m 좁음).
+- **시트**: `shots/town_organic/eup_over.jpg`·`west_over.jpg`(참고 각 r1·r5 포함), `oldkit_scale.jpg`, integ `integ_town.jpg`. 참고 그림 대조는 ACON 그림이 들어 있어 저장소 밖(스크래치패드)에만.
+- **약점**: integ의 사실 나무는 실제 크기라 수관이 커서 낮은 참고 각에서 앞쪽 집을 가린다(마당 나무 수·크기 손질 필요). 견본 걷기(넓힌 큰길이 성문 문루 기둥에 걸림). 월매 집은 이웃 때문에 ×1.08까지만.
