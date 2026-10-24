@@ -1,0 +1,8 @@
+﻿id,title,url,inspection,use,limit
+F01,산림청 산림공간정보서비스,https://map.forest.go.kr/forest/,공식 UI 본문 확인,수종/밀도/토양 입력,현대 분포; 조선 적용 미검증
+S01,흙토람 작물별 토양적성도,https://soil.rda.go.kr/soilmap/crop.do,공식 본문 확인,토성/배수/자갈,현대 작물 및 특정 지역 미검증
+G01,KIGAM 지질환경정보,https://data.kigam.re.kr/gives/mapService/,서비스 UI 확인,지질 조사 후보,지도 레이어/암종 미판독
+W01,USGS Fluvial sediments 1963,https://www.usgs.gov/publications/fluvial-sediments-a-summary-source-transportation-deposition-and-measurement-sediment,기관 연구 요약 확인,운반/입도/퇴적 관계,연구 전문/현장 자료 미검토
+W02,NPS Meandering Stream,https://www.nps.gov/articles/meandering-stream.htm,기관 설명 확인,사행 하천 침식/퇴적,암반 계곡에 일괄 적용 금지
+E01,Godot Standard Material 3D,https://docs.godotengine.org/en/stable/tutorials/3d/standard_material_3d.html,공식 설명 확인,재질 채널/투명 비용,프로젝트 4.7.1 Mobile 실측 아님
+M01,문경시 문경새재,https://www.gbmg.go.kr/tour/contents.do?mId=0101010200,검색 설명 확인; 본문 재접속 실패,관문/원터 추가 조사,정밀 위치/사진 미검증
