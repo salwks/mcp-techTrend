@@ -309,11 +309,16 @@ def program_record(profile_name, profile, insts, bundle, hh, rules, historical=N
     return rec
 
 
-def standalone(A, rules, profile_name: str, historical=None):
-    """Layer 1 on the allocation alone (area-only civic bundle choice)."""
+def standalone(A, rules, profile_name: str, historical=None, territory: str = "preferred"):
+    """Layer 1 on the allocation alone (area-only civic bundle choice).
+    territory='allowed' estimates what the whole planning envelope could hold (ranking target)."""
     profile = rules.profile(profile_name)
     insts = institutions(profile, rules)
-    T = G.polygonal(A.inp.territory["preferred"].intersection(A.inp.territory["allowed"]))
+    if territory == "allowed":
+        T = G.polygonal(A.inp.territory["allowed"].difference(A.neigh_poly)) if not A.neigh_poly.is_empty \
+            else A.inp.territory["allowed"]
+    else:
+        T = G.polygonal(A.inp.territory["preferred"].intersection(A.inp.territory["allowed"]))
     # no corridors exist yet: access is not filtered here (Layer 2 re-solves with walking reach)
     T, entries, comps, frags, residual = partition(T, A, [], None, rules)
     fl, fo = rules.p("program.f_lanes"), rules.p("program.f_open")

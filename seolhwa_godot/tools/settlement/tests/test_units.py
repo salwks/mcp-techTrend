@@ -98,10 +98,10 @@ def test_layer0_probes_terrace():
     i, j = A.win.ij(0, 200)
     exp = math.degrees(math.atan(0.004 + 5 / 12 * (1 - math.tanh((200 + 80) / 12) ** 2)))
     assert abs(A.slope[j, i] - exp) < 0.05
-    # river surface 3, lowland y≈3.4 near z=-140: +1 m screen floods next to the river
+    # river surface 3, lowland y≈3.44 near z=-140: the +0.5 game-m stage floods next to the river
     i, j = A.win.ij(0, -128)
-    assert A.floods[1][j, i]
-    assert not A.floods[5][A.win.ij(0, 100)[1], A.win.ij(0, 100)[0]]
+    assert A.floods[0.5][j, i]
+    assert not A.floods[3.0][A.win.ij(0, 100)[1], A.win.ij(0, 100)[0]]
 
 
 def test_packing_exact_codex_case():

@@ -17,7 +17,7 @@ import shutil
 import subprocess
 import sys
 
-from . import fixtures, frame, geometry as G, plan as PL, program, site, svg, validate
+from . import envelope, fixtures, frame, geometry as G, plan as PL, program, site, svg, validate
 from .adapters import region as RA
 from .rules import DEFAULT, Rules
 
@@ -76,7 +76,7 @@ def input_record(inp, family):
             "vertical_scale": inp.vertical_scale, "provenance": inp.provenance.get("input_hashes", {})}
 
 
-def run(inp, rules, out_dir, label=None):
+def run(inp, rules, out_dir, label=None, proposal=None):
     G.set_grid(rules.p("geometry.grid"))
     os.makedirs(out_dir, exist_ok=True)
     A = site.analyze(inp, rules)
@@ -114,6 +114,12 @@ def run(inp, rules, out_dir, label=None):
     plan = _sanitize(plan)
     if label:
         plan["variant"] = label
+    if proposal is not None:
+        # a proposed site change is never published as valid (audit K2)
+        plan["proposal"] = proposal
+        if plan["status"] == "valid":
+            plan["status"] = "proposed"
+            plan["status_reason"] = proposal["kind"]
     dump(os.path.join(out_dir, "plan.json"), plan)
     dump(os.path.join(out_dir, "input.json"), _sanitize(input_record(inp, family)))
     dump(os.path.join(out_dir, "site.geojson"), _sanitize(PL.site_geojson(inp, A)))
@@ -139,11 +145,38 @@ def run(inp, rules, out_dir, label=None):
 
 def summary_line(plan):
     v = plan["validation"]
+    props = "".join(f" | proposal {p['proposed']['status']} hh={p['proposed']['households']} +{p['added_area_m2']:.0f}m²"
+                    for p in plan.get("proposals", []))
     fails = [c["id"] for c in v if c["pass"] is False]
     fr = plan.get("frame") or {}
     gates = sum(1 for o in (fr.get("openings") or []) if o["type"] == "gate")
     return (f"{plan['id']:<24} {plan['status']:<22} hh={plan['program']['households']['represented']:<4} "
-            f"gates={gates} alts={len(plan['alternatives'])} checks_failed={fails}")
+            f"gates={gates} alts={len(plan['alternatives'])} checks_failed={fails}{props}")
+
+
+def _auto(inp, rules):
+    inp.diagnostics = [d for d in inp.diagnostics if d["code"] != "expansion_zero"]
+    envelope.auto(inp, rules)
+    return inp
+
+
+def run_real(reg, st, rules, out_dir, label=None, propose=True, **load_kw):
+    """Baseline on the existing allocation (expansion 0) + the automatic envelope as a
+    *proposed* alternative with an impact report (audit K2)."""
+    base_in = RA.load(reg, st, rules, **load_kw)
+    base = run(base_in, rules, out_dir, label)
+    if not propose or load_kw.get("allowed") is not None:
+        return base
+    prop_in = _auto(RA.load(reg, st, rules, **load_kw), rules)
+    pdir = os.path.join(out_dir, "proposals", "auto_envelope")
+    stub = {"kind": "site_change:auto_envelope", "status": "proposed", "requires_owner_approval": True}
+    prop = run(prop_in, rules, pdir, label, proposal=stub)
+    imp = envelope.impact(prop_in, base, prop)
+    prop["proposal"] = imp
+    dump(os.path.join(pdir, "plan.json"), prop)
+    base["proposals"] = [dict(imp, id="proposal-auto-envelope", plan="proposals/auto_envelope/plan.json")]
+    dump(os.path.join(out_dir, "plan.json"), base)
+    return base
 
 
 def bake_cmd(a, rules):
@@ -152,11 +185,14 @@ def bake_cmd(a, rules):
         env = G.from_geojson(json.load(open(a.envelope)))
     if a.allowed:
         allowed = G.from_geojson(json.load(open(a.allowed)))
-    inp = RA.load(a.region, a.settlement, rules, envelope=env, allowed=allowed, family=a.family)
-    if a.tier:
-        inp.tier = a.tier
     out = os.path.join(a.out, a.settlement + (f"@{a.label}" if a.label else ""))
-    p = run(inp, rules, out, a.label)
+    if a.tier:
+        inp = RA.load(a.region, a.settlement, rules, envelope=env, allowed=allowed, family=a.family)
+        inp.tier = a.tier
+        p = run(inp, rules, out, a.label)
+    else:
+        p = run_real(a.region, a.settlement, rules, out, a.label, propose=not a.no_auto_envelope,
+                     envelope=env, allowed=allowed, family=a.family)
     print(summary_line(p))
 
 
@@ -166,7 +202,7 @@ def all_cmd(out, rules, include_failures=True, variants=True):
         p = run(fixtures.load(name), rules, os.path.join(out, name))
         lines.append(summary_line(p)); print(lines[-1], flush=True)
     for reg, st in REAL_SITES:
-        p = run(RA.load(reg, st, rules), rules, os.path.join(out, st))
+        p = run_real(reg, st, rules, os.path.join(out, st))
         lines.append(summary_line(p)); print(lines[-1], flush=True)
     if include_failures:
         for name in FAIL_SITES:
@@ -196,7 +232,7 @@ def determinism_cmd(out, rules, names):
                 run(fixtures.load(n), rules, os.path.join(d, n))
             else:
                 reg, st = n.split("/")
-                run(RA.load(reg, st, rules), rules, os.path.join(d, st))
+                run_real(reg, st, rules, os.path.join(d, st))
     ha, hb = _hash_tree(a), _hash_tree(b)
     same = ha == hb
     diff = sorted(k for k in set(ha) | set(hb) if ha.get(k) != hb.get(k))
@@ -234,6 +270,7 @@ def main(argv=None):
     b.add_argument("--tier")
     b.add_argument("--family")
     b.add_argument("--label")
+    b.add_argument("--no-auto-envelope", action="store_true")
     f = sp.add_parser("fixture")
     f.add_argument("--name", required=True)
     al = sp.add_parser("all")

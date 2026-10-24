@@ -290,5 +290,6 @@ def load(region_id: str, settlement_id: str, rules, *, envelope=None, allowed=No
         provenance={"input_hashes": hs, "vertical": vert, "height_window_px": [i0, j0, i1, j1],
                     "settlement_record": {k: s.get(k) for k in ("type", "size", "x", "z", "radius_m", "area_m2", "core", "bbox")},
                     "archetype": (s.get("profile") or {}).get("archetype")},
-        diagnostics=diags, meta={"fixture": False})
+        diagnostics=diags, meta={"fixture": False, "landuse": lu2,
+                                 "landuse_classes": {int(k): v for k, v in lm.get("classes", {}).items()}})
     return inp

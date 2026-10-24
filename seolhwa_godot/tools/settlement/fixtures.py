@@ -59,8 +59,8 @@ def _water(feats, height, const_surface=None):
     for f, s in feats:
         m = rasterize(GRID, f.area) & ~mask
         mask |= m
-        if s == "terrain-1":
-            surf[m] = height[m] - 1.0
+        if isinstance(s, str) and s.startswith("terrain-"):
+            surf[m] = height[m] - float(s.split("-", 1)[1])
         else:
             surf[m] = float(s)
         fresh[m] = f.freshwater
@@ -137,7 +137,11 @@ def basin(family="plain_hill", id_="syn_basin"):
 def ridge(family="mountain"):
     X, Z = _xz()
     h = ridge_height(X, Z)
-    feats = [(_river("stream_x0", _band_x(0, 4), LineString([(0, -512), (0, 512)]), 4.0, kind="stream"), "terrain-1")]
+    # streams run in the x=0 valley floor only: one reach in the bowl, one outside each saddle;
+    # none climbs over the ridge crest (surface = valley floor − 0.5 m)
+    feats = [(_river("stream_bowl", _band_x(0, 4, -110, 110), LineString([(0, -110), (0, 110)]), 4.0, kind="stream"), "terrain-0.5"),
+             (_river("stream_n", _band_x(0, 4, -512, -260), LineString([(0, -512), (0, -260)]), 4.0, kind="stream"), "terrain-0.5"),
+             (_river("stream_s", _band_x(0, 4, 260, 512), LineString([(0, 260), (0, 512)]), 4.0, kind="stream"), "terrain-0.5")]
     roads = [Road("road_n", "북쪽 고갯길", "중로", 4.0, LineString([(12, -512), (12, 0)])),
              Road("road_s", "남쪽 고갯길", "중로", 4.0, LineString([(-12, 512), (-12, 0)]))]
     pref = Point(0, 0).buffer(300, 64)

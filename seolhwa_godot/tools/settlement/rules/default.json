@@ -1138,6 +1138,14 @@
     "unit": "weight",
     "value": 0.1
    },
+   "capacity": {
+    "confidence": "agreed",
+    "kind": "objective",
+    "note": "households fitted / households the allowed territory could hold; weights are renormalized",
+    "source": "coordinator",
+    "unit": "weight",
+    "value": 0.25
+   },
    "civic_fit": {
     "confidence": "agreed",
     "kind": "objective",
@@ -1262,9 +1270,10 @@
   "civic.spacing_m": {
    "confidence": "provisional",
    "kind": "reservation",
+   "note": "≥ primary corridor width (7.2) + clearance cells, so a ≤10 % corridor can pass between civic reserves (6 m trapped entrances: civic_disconnected on large frames)",
    "source": "design",
    "unit": "world_m",
-   "value": 6.0
+   "value": 12.0
   },
   "drainage.corridor_margin_m": {
    "confidence": "agreed",
@@ -1272,6 +1281,46 @@
    "source": "spec_L0_2",
    "unit": "world_m",
    "value": 3.0
+  },
+  "envelope.eupchi_max_expand_m": {
+   "confidence": "provisional",
+   "kind": "territory",
+   "source": "design",
+   "unit": "world_m",
+   "value": 400
+  },
+  "envelope.overhead": {
+   "confidence": "provisional",
+   "kind": "territory",
+   "note": "corridors, water supply and fragments on top of civic+residential minimum",
+   "source": "design",
+   "unit": "ratio",
+   "value": 0.25
+  },
+  "envelope.road_corridor_margin_m": {
+   "confidence": "provisional",
+   "kind": "territory",
+   "note": "road half-width + margin excluded from expansion",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "envelope.village_walk_m": {
+   "confidence": "agreed",
+   "kind": "territory",
+   "source": "coordinator",
+   "unit": "world_m",
+   "value": [
+    150,
+    250
+   ]
+  },
+  "envelope.village_walk_min_m": {
+   "confidence": "provisional",
+   "kind": "territory",
+   "source": "design",
+   "unit": "world_m",
+   "value": 40
   },
   "flood.R_bank_decay_m": {
    "confidence": "provisional",
@@ -1284,15 +1333,16 @@
    "confidence": "provisional",
    "kind": "hazard",
    "source": "spec_L0_2",
-   "unit": "source_vertical_m",
-   "value": 5
+   "unit": "stage_units",
+   "value": 3.0
   },
   "flood.exclusion_offset": {
    "confidence": "provisional",
    "kind": "hazard",
-   "source": "spec_L0_2",
-   "unit": "source_vertical_m",
-   "value": 3
+   "note": "= water.stage_states high_major (exclusion=true)",
+   "source": "owner",
+   "unit": "world_m",
+   "value": 1.5
   },
   "flood.max_reach_m": {
    "confidence": "provisional",
@@ -1305,21 +1355,22 @@
   "flood.stage_offsets": {
    "confidence": "provisional",
    "kind": "hazard",
-   "source": "spec_L0_2",
-   "unit": "source_vertical_m",
+   "note": "derived from water.stage_states (screen=true); kept for compatibility and checked equal",
+   "source": "owner",
+   "unit": "world_m",
    "value": [
-    1,
-    3,
-    5
+    0.5,
+    1.5,
+    3.0
    ]
   },
   "flood.stage_units": {
    "confidence": "provisional",
    "kind": "hazard",
-   "note": "source_m: stage offsets are real-world metres × local vertical scale (region K·remap slope). world_m: offsets applied directly in game metres. Open decision for owner/Codex.",
-   "source": "design",
-   "unit": "enum(source_m|world_m)",
-   "value": "source_m"
+   "note": "owner decision 2026-10-25: GAME metres (provisional test values tied to river-segment stage states, audit K3)",
+   "source": "owner",
+   "unit": "enum(world_m|source_m)",
+   "value": "world_m"
   },
   "frame.alternatives": {
    "confidence": "agreed",
@@ -1495,6 +1546,14 @@
    "unit": "world_m",
    "value": 4.0
   },
+  "gates.approach_band_m": {
+   "confidence": "provisional",
+   "kind": "search",
+   "note": "civic entrances must share a corridor component with the boundary band within this distance of a route approach",
+   "source": "design",
+   "unit": "world_m",
+   "value": 120.0
+  },
   "gates.approach_limit_m": {
    "confidence": "provisional",
    "kind": "search",
@@ -1642,6 +1701,90 @@
    "unit": "ratio",
    "value": 8.0
   },
+  "routing.mountain.applies_to": {
+   "confidence": "agreed",
+   "kind": "routing",
+   "source": "coordinator",
+   "unit": "set",
+   "value": {
+    "families": [
+     "mountain"
+    ],
+    "profiles": [
+     "sanchon",
+     "sanseong_refuge"
+    ]
+   }
+  },
+  "routing.mountain.edge_grade": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "segment end-to-end grade cap (margin under 0.15 so smoothing cannot push the sustained grade over)",
+   "source": "design",
+   "unit": "ratio",
+   "value": 0.14
+  },
+  "routing.mountain.local_max_grade": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "max grade between 2 m sub-samples inside one segment (no cliff hidden inside a segment)",
+   "source": "design",
+   "unit": "ratio",
+   "value": 0.25
+  },
+  "routing.mountain.max_grade": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "sustained grade on the smoothed centreline (산성 길·고갯길)",
+   "source": "coordinator",
+   "unit": "ratio",
+   "value": 0.15
+  },
+  "routing.mountain.radius_cells": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "32 headings, segments 2–7.2 m: the smoothed-centreline lattice that makes switchbacks representable",
+   "source": "design",
+   "unit": "cells",
+   "value": 3
+  },
+  "routing.mountain.smooth_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "the 32-heading segment lattice is the smoothed centreline; extra plan smoothing cuts across hairpins (±3 m gave 0.94 local / 0.27 sustained between adjacent switchback legs), so grade is the sustained 10 m-window grade along the segment polyline",
+   "source": "design",
+   "unit": "world_m",
+   "value": 0.0
+  },
+  "routing.mountain.switchback_cost_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "added per hairpin when ranking (post-hoc; no heading-state search)",
+   "source": "design",
+   "unit": "cost_m",
+   "value": 15.0
+  },
+  "routing.mountain.switchback_turn_deg": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "source": "design",
+   "unit": "deg",
+   "value": 120
+  },
+  "routing.mountain.width_m": {
+   "confidence": "provisional",
+   "kind": "reservation",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.8
+  },
+  "routing.mountain.window_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "source": "design",
+   "unit": "world_m",
+   "value": 10.0
+  },
   "routing.neighbours": {
    "confidence": "agreed",
    "kind": "routing",
@@ -1743,6 +1886,46 @@
    "source": "design",
    "unit": "world_m",
    "value": 2.0
+  },
+  "water.stage_states": {
+   "confidence": "provisional",
+   "kind": "hazard",
+   "note": "owner decision 2026-10-25 (audit K3): game metres; the flood screen offsets are the named stage states of each WaterReach (mapped normal surface + offset); provisional test values, status proposed",
+   "source": "owner",
+   "unit": "world_m",
+   "value": [
+    {
+     "key": "low",
+     "name": "갈수",
+     "offset": -0.5,
+     "screen": false
+    },
+    {
+     "key": "normal",
+     "name": "평수",
+     "offset": 0.0,
+     "screen": false
+    },
+    {
+     "key": "high_minor",
+     "name": "증수(작은 물)",
+     "offset": 0.5,
+     "screen": true
+    },
+    {
+     "exclusion": true,
+     "key": "high_major",
+     "name": "증수(큰물)",
+     "offset": 1.5,
+     "screen": true
+    },
+    {
+     "key": "flood",
+     "name": "범람",
+     "offset": 3.0,
+     "screen": true
+    }
+   ]
   },
   "water.surface_tolerance_m": {
    "confidence": "provisional",
@@ -1867,6 +2050,14 @@
     "unit": "count",
     "value": 80
    },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 360
+   },
    "name": "대 감영급",
    "parcel_median_m2": {
     "confidence": "measured",
@@ -1941,6 +2132,14 @@
     "source": "spec_L0_2",
     "unit": "count",
     "value": 20
+   },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 90
    },
    "name": "장시 마을",
    "parcel_median_m2": {
@@ -2022,6 +2221,14 @@
     "unit": "count",
     "value": 40
    },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 180
+   },
    "name": "중 목·부 읍치",
    "parcel_median_m2": {
     "confidence": "measured",
@@ -2093,6 +2300,14 @@
     "source": "spec_L0_2",
     "unit": "count",
     "value": 0
+   },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 30
    },
    "name": "민촌",
    "parcel_median_m2": {
@@ -2166,6 +2381,14 @@
     "unit": "count",
     "value": 0
    },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 18
+   },
    "name": "산촌",
    "parcel_median_m2": {
     "confidence": "measured",
@@ -2238,6 +2461,14 @@
     "source": "design",
     "unit": "count",
     "value": 0
+   },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 40
    },
    "name": "산성(입보 산성)",
    "parcel_median_m2": {
@@ -2319,6 +2550,14 @@
     "unit": "count",
     "value": 20
    },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 80
+   },
    "name": "소 군·현 읍치",
    "parcel_median_m2": {
     "confidence": "measured",
@@ -2390,6 +2629,14 @@
     "source": "spec_L0_2",
     "unit": "count",
     "value": 0
+   },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 35
    },
    "name": "물가 마을",
    "parcel_median_m2": {
@@ -2464,6 +2711,14 @@
     "unit": "count",
     "value": 0
    },
+   "max_households": {
+    "confidence": "provisional",
+    "kind": "program",
+    "note": "round-1 represented budget used as program maximum (cap), not a target",
+    "source": "spec_L0_2",
+    "unit": "households",
+    "value": 40
+   },
    "name": "양반 마을",
    "parcel_median_m2": {
     "confidence": "measured",
@@ -2489,6 +2744,9 @@
  },
  "schema": "settlement-rules/1",
  "sources": {
+  "coordinator": {
+   "description": "coordinator decisions 2026-10-23 (flood units, mountain road class, auto envelopes, capacity in ranking)"
+  },
   "design": {
    "description": "Session A provisional defaults (generator design assumptions)"
   },
@@ -2497,6 +2755,9 @@
   },
   "metrics": {
    "path": "docs/reports/settlement-metrics.md"
+  },
+  "owner": {
+   "description": "owner decisions relayed by the coordinator (2026-10-23/25)"
   },
   "region_data": {
    "description": "region_data/<REGION>/region.json conventions"

@@ -43,7 +43,7 @@ def _norm_interval(s0, s1, L):
     return [round(a, 2), round(b, 2)], b < a
 
 
-def corridor_network(ev, store, sub, h, rules, walled):
+def corridor_network(ev, store, sub, h, rules, walled, ctx=None):
     """Split shortest-path-tree corridors at explicit nodes → nodes + links."""
     nodes, links = {}, []
     node_of_cell = {}
@@ -93,15 +93,18 @@ def corridor_network(ev, store, sub, h, rules, walled):
                 prev_node = end_node
                 continue
             line = LineString(pts) if len(pts) > 1 else LineString([pts[0], pts[0]])
+            from .frame import measure_grade
             simp = line.simplify(1.0)
-            ss, ys, gm = Rt.grade_profile(sub.grid, h, list(simp.coords))
-            if gm > rules.p("routing.primary_max_grade") + 1e-6:
+            gm, det = measure_grade(ctx, sub.grid, h, list(simp.coords))
+            if gm > ctx.rc["limit"] + 1e-6:
                 simp = line
-                ss, ys, gm = Rt.grade_profile(sub.grid, h, list(line.coords))
+                gm, det = measure_grade(ctx, sub.grid, h, list(line.coords))
+            ss, ys, _ = Rt.grade_profile(sub.grid, h, list(simp.coords))
             lid = f"pc-{len(links) + 1:02d}"
             seen[key] = lid
             links.append({"id": lid, "nodes": [prev_node, end_node], "centerline": store.add(simp),
-                          "width_m": rules.p("routing.corridor_width_m"), "hierarchy": "primary",
+                          "width_m": ctx.corr_width, "hierarchy": "primary" if ctx.road_class == "primary" else "mountain_access",
+                          "grade_measure": det, "grade_limit": ctx.rc["limit"],
                           "grade_max": round(gm, 4), "length_m": round(simp.length, 2),
                           "profile": {"step_m": 2.0, "chainage": [round(v, 2) for v in ss],
                                       "y": [round(v, 2) for v in ys]},
@@ -127,6 +130,7 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
         "preferred": store.add(terr["preferred"]), "allowed": store.add(terr["allowed"]),
         "protected": store.add(A.protected_poly), "frame_permitted": store.add(F["ctx"].region),
         "sources": terr.get("sources", {}), "disagreements": terr.get("disagreements", []),
+        "auto_envelope": terr.get("auto_envelope"),
         "permissions": {"expansion": terr["allowed"].difference(terr["preferred"]).area > 0.5,
                         "farmland_conversion": "inside preferred only (counted as displacement)",
                         "water": "no occupation; enclosure allowed with typed passages"},
@@ -136,10 +140,18 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
     # ---------------- site
     plan["site"] = {"fields": "site-fields.npz", "features": "site.geojson", "summary": A.summary,
                     "water_features": [{"id": f.id, "kind": f.kind, "freshwater": f.freshwater, "width_m": f.width_m,
-                                        "centerline": store.add(f.centerline) if f.centerline is not None else None}
+                                        "centerline": store.add(f.centerline) if f.centerline is not None else None,
+                                        # WaterReach stage states (audit K3): same offsets the flood screen uses
+                                        "stage_states": [{"key": st["key"], "name": st["name"], "offset_world_m": st["offset"],
+                                                          "surface_rule": "mapped normal surface + offset",
+                                                          "screen": bool(st.get("screen")), "exclusion": bool(st.get("exclusion")),
+                                                          "status": "proposed"} for st in A.stage_states]}
                                        for f in inp.water_features],
                     "drainage_reserve": store.add(A.drain_poly),
-                    "flood_screen": {str(k): store.add(v) for k, v in A.flood_polys.items()},
+                    "flood_screen": {A.stage_names[k]: {"offset_world_m": k, "units": A.stage_units,
+                                                        "exclusion": k == A.stage_ex, "geometry": store.add(v),
+                                                        "status": "proposed"}
+                                     for k, v in A.flood_polys.items()},
                     "axes": inp.axes,
                     "deferred": ["flow_accumulation", "sun", "viewshed", "auto_jinsan_ansan", "earthworks"]}
     diags = list(A.diagnostics) + list(L1["diagnostics"]) + list(F["diagnostics"])
@@ -279,9 +291,15 @@ def frame_record(ev, store, A, F, R, inp):
     rec["primary_corridors"] = {"nodes": [], "links": [], "reservation": None}
     rec["reroutes"], rec["connectors"] = [], []
     if sub is not None:
-        nodes, links = corridor_network(ev, store, sub, sub.a(A.h), R, walled)
+        nodes, links = corridor_network(ev, store, sub, sub.a(A.h), R, walled, ctx)
         extras["corridor_lines"] = [l.pop("_line") for l in links]
-        rec["primary_corridors"] = {"nodes": [nodes[k] for k in sorted(nodes)], "links": links,
+        paths = []
+        for c in ev.get("corridors", []):
+            paths.append({"id": f"path-{c['kind']}-{c['ref']}", "role": c["kind"], "ref": c["ref"],
+                          "centerline": store.add(c["line"]), "grade_max": round(c["grade_max"], 4),
+                          "grade_measure": c.get("grade_detail"), "length_m": round(c["length_m"], 2)})
+        rec["primary_corridors"] = {"road_class": ctx.road_class, "grade_limit": ctx.rc["limit"],
+                                    "paths": paths, "nodes": [nodes[k] for k in sorted(nodes)], "links": links,
                                     "reservation": store.add(ev.get("corridor_poly"))}
         rr = []
         for n_, r in enumerate(ev.get("reroutes", [])):
@@ -327,7 +345,8 @@ def site_geojson(inp, A, store=None):
         feats.append({"type": "Feature", "properties": dict(kind=kind, **props), "geometry": G.to_geojson(geom)})
     add("water", A.water_poly)
     for k, v in A.flood_polys.items():
-        add("flood_screen", v, offset_source_m=k, offset_game_m=round(k * inp.vertical_scale, 3))
+        add("flood_screen", v, offset=k, units=A.stage_units, exclusion=(k == A.stage_ex),
+            offset_game_m=round(k * A.flood_unit_scale, 3))
     add("drainage_reserve", A.drain_poly)
     add("protected", A.protected_poly)
     add("farmland", A.farm_poly)
@@ -346,6 +365,6 @@ def site_fields(A):
             "water_distance_m": np.where(np.isfinite(A.wdist), A.wdist, -1).astype(np.float32),
             "route_cost_m": np.where(np.isfinite(A.route_cost), A.route_cost, -1).astype(np.float32),
             "water_cost_m": np.where(np.isfinite(A.water_cost), A.water_cost, -1).astype(np.float32),
-            "flood1": A.floods[1], "flood3": A.floods[3], "flood5": A.floods[5],
+            **{f"flood_{k:g}": A.floods[k] for k in A.stages},
             "usable_housing": A.house_ok, "usable_civic": A.civic_ok,
             "origin_cell": np.array([A.win.x0, A.win.z0, A.win.cell], dtype=np.float64)}

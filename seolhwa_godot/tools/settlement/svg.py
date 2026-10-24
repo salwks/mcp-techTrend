@@ -27,7 +27,7 @@ CAT_COL = {"water": "#4a90d9", "drainage_reserve": "#7fb7e6", "protected": "#c05
            "residential_gross": "#7cbf5a", "unusable_fragment": "#d6c36a"}
 CAT_KO = {"water": "물", "drainage_reserve": "물길 예비", "protected": "보호지", "locks": "고정 장소",
           "civic_reserve": "관아·공공 터", "civic_forecourt": "앞마당·진입", "primary_corridor": "주 가로(7.2 m)",
-          "water_supply": "우물·물터", "flood_exclusion": "범람 +3 제외", "unbuildable_slope": "급경사 제외",
+          "water_supply": "우물·물터", "flood_exclusion": "범람 점유 제외", "unbuildable_slope": "급경사 제외",
           "residential_gross": "주거 가능지", "unusable_fragment": "자투리(쓸 수 없음)"}
 
 
@@ -249,7 +249,7 @@ def site_svg(plan, inp, A, view):
     b.append(P(path_d(A.farm_poly), fill="#a0743c", fop=0.35))
     b.append(P(path_d(A.house_poly), fill="#4caf50", fop=0.22))
     b.append(P(path_d(A.civic_poly), stroke="#2e7d32", sw=0.8, fill="none"))
-    for k, col, op in ((5, "#bfeaf0", 0.55), (3, "#5bc8d8", 0.55), (1, "#1c9fb3", 0.6)):
+    for k, col, op in zip(reversed(A.stages), ("#bfeaf0", "#5bc8d8", "#1c9fb3"), (0.55, 0.55, 0.6)):
         b.append(P(path_d(A.flood_polys[k]), fill=col, fop=op))
     b.append(P(path_d(A.drain_poly), fill="url(#hatchB)", stroke="#3d7fc4", sw=0.6))
     b.append(_water_layers(plan, A))
@@ -265,18 +265,17 @@ def site_svg(plan, inp, A, view):
     b.append(north_and_scale(view))
     st = s["site_score"]
     side = [text(0, 14, "Layer 0 — 땅 읽기", 15, weight="bold"),
-            legend([("rect", "#4caf50", "주거 가능(경사≤15°, 물·범람+3·물길·보호 제외)"),
+            legend([("rect", "#4caf50", f"주거 가능(경사≤15°, 물·범람+{A.stage_ex:g}·물길·보호 제외)"),
                     ("line", "#2e7d32", "관아 가능 테두리(경사≤10°)"),
-                    ("rect", "#1c9fb3", f"범람 화면 +1 m(원지형) = 게임 {inp.vertical_scale * 1:.2f} m"),
-                    ("rect", "#5bc8d8", f"범람 화면 +3 m(점유 제외) = {inp.vertical_scale * 3:.2f} m"),
-                    ("rect", "#bfeaf0", f"범람 화면 +5 m = {inp.vertical_scale * 5:.2f} m"),
+                    *[("rect", c, f"범람 화면 +{k:g} {'게임 m' if A.stage_units == 'world_m' else '원지형 m'}"
+                       + (" (점유 제외)" if k == A.stage_ex else "")) for k, c in zip(A.stages, ("#1c9fb3", "#5bc8d8", "#bfeaf0"))],
                     ("hatch", "hatchB", "물길 예비(폭/2+3 m)"), ("rect", "#4a90d9", "물"),
                     ("hatch", "hatchR", "보호지(배정 밖 농지·이웃 마을)"), ("rect", "#a0743c", "농지(논·밭)"),
                     ("line", "#e07b00", "기존 길 / ○ 건널목"), ("dash", "#000", "배정(preferred)"),
                     ("dash", "#333", "허용(allowed)"), ("line", "#7b3fa0", "축(진산→안산, 주어진 값)")], 4, 44)]
     y = 44 + 13 * 18 + 10
     lines = [f"경사 중앙 {s['slope_deg']['median']}° / p90 {s['slope_deg']['p90']}°  기복 {s['relief_m']} m",
-             f"범람 비율 +1/+3/+5: {s['frac_flood']['1']:.2f} / {s['frac_flood']['3']:.2f} / {s['frac_flood']['5']:.2f}",
+             "범람 비율 " + " / ".join(f"+{float(k):g}: {v:.2f}" for k, v in s['frac_flood'].items()),
              f"주거 가능 {s['frac_housing_buildable']:.2f} · 관아 가능 {s['frac_civic_buildable']:.2f}",
              f"물 접근 비용 중앙 {s['water_access_cost_m']['median']} m (목표 150, 한계 300)",
              f"길 접근 비용 중앙 {s['route_access_cost_m']['median']} m",
@@ -386,7 +385,7 @@ def program_svg(plan, inp, A, L1, extras, view):
 def frame_svg(plan, inp, A, extras, view, F):
     fr = plan["frame"]
     b = [_map_open(view, "frame"), relief_image(A, view, faint=True), contours(A, view)]
-    b.append(P(path_d(A.flood_polys[3]), fill="#5bc8d8", fop=0.35))
+    b.append(P(path_d(A.flood_polys[A.stage_ex]), fill="#5bc8d8", fop=0.35))
     b.append(P(path_d(A.drain_poly), fill="url(#hatchB)"))
     b.append(_water_layers(plan, A))
     b.append(P(path_d(A.protected_poly), fill="url(#hatchR)", stroke="#c0504d", sw=0.6))
@@ -491,7 +490,7 @@ def frame_svg(plan, inp, A, extras, view, F):
                         ("rect", "#1565c0", "수문·수구(물길 교차)"), ("rect", "#b5651d", "관아·공공 터(번호)"),
                         ("rect", "#e8b27a", "앞마당·진입 여유"), ("rect", "#f5a623", "주 가로 7.2 m(≤10%)"),
                         ("dash", "#e07b00", "바깥 연결로"), ("dash", "#d62728", "길 우회(성 밖)"),
-                        ("rect", "#1f6fb2", "물 확보 터"), ("rect", "#5bc8d8", "범람 +3 m 제외"),
+                        ("rect", "#1f6fb2", "물 확보 터"), ("rect", "#5bc8d8", "범람 점유 제외 구역"),
                         ("dash", "#666", "다른 대안(2–8위)")], 0, y + 14))
     side.append(text(0, y + 14 + 11 * 18 + 8, "신뢰도: 규칙값 대부분 잠정(provisional) · 축은 region 주어진 값", 10, fill="#a33"))
     return _doc(view, "".join(b), "".join(side), f"{inp.name} — 02 틀")

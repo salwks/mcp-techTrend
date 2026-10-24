@@ -110,14 +110,15 @@ def run(plan, inp, A, L1, F, rules):
             n = int(Rr.rasterize(full, f.area).sum())
             det[f.id] = n
             w_ok &= n > 0
-    mono = bool((A.floods[1] <= A.floods[3]).all() and (A.floods[3] <= A.floods[5]).all())
+    st = A.stages
+    mono = all(bool((A.floods[a] <= A.floods[b]).all()) for a, b in zip(st, st[1:]))
     touch = True
-    lab, n = Rr.label(A.floods[3])
+    lab, n = Rr.label(A.floods[A.stage_ex])
     if n:
         edge = np.zeros(lab.shape, bool)
         edge[0, :] = edge[-1, :] = edge[:, 0] = edge[:, -1] = True
         # springs are not sources; components may continue to water outside the window
-        ids = set(np.unique(lab[A.water & A.floods[3]]).tolist()) | set(np.unique(lab[edge]).tolist())
+        ids = set(np.unique(lab[A.water & A.floods[A.stage_ex]]).tolist()) | set(np.unique(lab[edge]).tolist())
         touch = set(range(1, n + 1)) <= ids | {0}  # components may connect to water outside the window
     _chk(out, "L0.water", "L0", w_ok and mono and touch,
          {"feature_cells": det, "flood_monotonic": mono, "flood_components_touch_water": bool(touch)})
@@ -242,14 +243,21 @@ def run(plan, inp, A, L1, F, rules):
             roots = list(range(len(comps)))
             connected = len(roots) <= 1
             gmax = 0.0
-            sub = None
-            for l in pc["links"]:
+            lim = R.p("routing.primary_max_grade")
+            # continuous gate→entrance paths (windows cross link junctions), then the split links
+            for l in list(pc.get("paths", [])) + list(pc["links"]):
                 line = geom(plan, l["centerline"])
-                _, _, gm = Rt.grade_profile(A.win, A.h, list(line.coords))
+                if l.get("grade_measure", {}).get("measure") == "sustained_smoothed_centreline":
+                    gm = Rt.sustained_grade(A.win, A.h, list(line.coords), R.p("routing.mountain.window_m"),
+                                            R.p("routing.mountain.smooth_m"))[0]
+                    lim = R.p("routing.mountain.max_grade")
+                else:
+                    _, _, gm = Rt.grade_profile(A.win, A.h, list(line.coords))
                 gmax = max(gmax, gm)
             gate_nodes = sum(1 for n in pc["nodes"] if n["kind"] in ("gate", "route_entrance"))
-            _chk(out, "L2.corridors", "L2", connected and gmax <= R.p("routing.primary_max_grade") + 1e-6 and gate_nodes >= 1,
-                 {"connected": connected, "grade_max_recomputed": round(gmax, 4), "links": len(pc["links"]),
+            _chk(out, "L2.corridors", "L2", connected and gmax <= lim + 1e-6 and gate_nodes >= 1,
+                 {"connected": connected, "grade_max_recomputed": round(gmax, 4), "limit": lim,
+                  "road_class": pc.get("road_class"), "links": len(pc["links"]),
                   "access_nodes": gate_nodes})
         else:
             _chk(out, "L2.corridors", "L2", False, "no corridors")

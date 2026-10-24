@@ -43,7 +43,18 @@ class Ctx:
         self.bundles = L1["bundles"]
         self.axes = list(A.inp.axes)
         self.walled = family != "unwalled"
-        corr_w = rules.p("routing.corridor_width_m")
+        ap = rules.p("routing.mountain.applies_to")
+        self.road_class = "mountain" if (family in ap["families"] or L1["program"]["profile"] in ap["profiles"]) else "primary"
+        if self.road_class == "mountain":
+            self.rc = {"radius": rules.p("routing.mountain.radius_cells"), "cap": rules.p("routing.mountain.edge_grade"),
+                       "sub_cap": rules.p("routing.mountain.local_max_grade"), "limit": rules.p("routing.mountain.max_grade"),
+                       "measure": "sustained_smoothed_centreline"}
+            corr_w = rules.p("routing.mountain.width_m")
+        else:
+            self.rc = {"radius": 1, "cap": rules.p("routing.primary_max_grade"), "sub_cap": None,
+                       "limit": rules.p("routing.primary_max_grade"), "measure": "per_segment"}
+            corr_w = rules.p("routing.corridor_width_m")
+        self.corr_width = corr_w
         self.corr_half = corr_w / 2
         self.corr_cells = int(math.ceil(self.corr_half / A.win.cell))
         # small channels (culvert-crossable) vs rivers needing bridges
@@ -51,6 +62,24 @@ class Ctx:
         small = [c["line"].buffer(c["width"] / 2 + 0.5, cap_style="flat") for c in A.channels if c["width"] < thr]
         self.small_channel = (Rr.rasterize(A.win, G.polygonal(shapely.union_all(small))) & A.water) if small \
             else np.zeros(A.win.shape, bool)
+
+
+def access_graph(ctx, grid, h, pas):
+    """Road graph of the frame's access class (primary ≤10 % per segment, or mountain)."""
+    rc = ctx.rc
+    return Rt.build_graph(grid, h, pas, radius=rc["radius"], grade_k=ctx.rules.p("routing.grade_cost_k"),
+                          grade_cap=rc["cap"], sub_cap=rc["sub_cap"])
+
+
+def measure_grade(ctx, grid, h, pts):
+    """(grade used for the limit, detail dict)."""
+    if ctx.rc["measure"] == "per_segment":
+        _, _, gm = Rt.grade_profile(grid, h, pts)
+        return gm, {"measure": "per_segment"}
+    R = ctx.rules
+    sus, loc, _, _, _ = Rt.sustained_grade(grid, h, pts, R.p("routing.mountain.window_m"), R.p("routing.mountain.smooth_m"))
+    return sus, {"measure": "sustained_smoothed_centreline", "local_max": round(loc, 4),
+                 "switchbacks": Rt.count_switchbacks(pts, R.p("routing.mountain.switchback_turn_deg"))}
 
 
 class Sub:
@@ -196,14 +225,33 @@ def vertex_optimize(ctx, poly, region, usable):
     return Polygon(pts), moves
 
 
+def _chaikin(coords, it=2):
+    pts = list(coords)[:-1]
+    for _ in range(it):
+        out = []
+        n = len(pts)
+        for i in range(n):
+            a, b = pts[i], pts[(i + 1) % n]
+            out.append((0.75 * a[0] + 0.25 * b[0], 0.75 * a[1] + 0.25 * b[1]))
+            out.append((0.25 * a[0] + 0.75 * b[0], 0.25 * a[1] + 0.75 * b[1]))
+        pts = out
+    return pts + [pts[0]]
+
+
 def _smooth(p, r, tol):
+    """Open/close by r, fill holes, simplify, then Chaikin corner cutting so contour-derived
+    rings (평산성 rear arcs, 산성 ridges) are tangent-continuous instead of notched."""
     q = p.buffer(r, join_style="round").buffer(-2 * r, join_style="round").buffer(r, join_style="round")
     q = G.polygonal(q)
     q = G.largest(q)
     if q.is_empty:
         return q
     q = Polygon(q.exterior.coords)  # fill holes
-    return G.simplify_ring_polygon(q, tol)
+    q = G.simplify_ring_polygon(q, tol)
+    c = Polygon(_chaikin(q.exterior.coords))
+    if c.is_valid and not c.is_empty:
+        q = G.simplify_ring_polygon(c, 0.5)
+    return q
 
 
 def _seed(ctx):
@@ -437,7 +485,7 @@ def civic_place(ctx: Ctx, frame_poly, bundle, approach_pts, comp=None):
             rk_, sk_ = rects[ok], strips[ok]
             fx, fz = G.bearing_vec(b)
             if comp is not None:
-                lab, sgrid, good = comp
+                lab, sgrid, good = comp[:3]
                 sx_ = xs_ + fx * (d / 2 + clr / 2)
                 sz_ = zs_ + fz * (d / 2 + clr / 2)
                 ii = np.clip(np.round((sx_ - sgrid.x0) / sgrid.cell).astype(int), 0, sgrid.nx - 1)
@@ -499,10 +547,15 @@ def civic_place(ctx: Ctx, frame_poly, bundle, approach_pts, comp=None):
                 free = np.ones(len(rows), bool)
             taken = 0
             took = []
+            check = comp[3] if (st["placed"] and comp is not None and len(comp) > 3) else None
             for ri in np.nonzero(free)[0]:
                 (s, x, z, b, relief, lb, rect, strip) = rows[ri]
                 if any(math.hypot(x - tx, z - tz) < sep for tx, tz in took):
                     continue
+                if check is not None:
+                    cand = {"key": key, "xz": (x, z), "bearing": b, "rect": rect, "strip": strip, "env": env}
+                    if not check(st["placed"] + [cand]):
+                        continue  # some entrance (incl. this one) no longer reachable by the access class
                 rel = 0.0
                 if st["placed"]:
                     anchor = st["placed"][0]
@@ -579,15 +632,14 @@ def solve_gates(ctx, sub, frame_poly, ring, interior, inner_cost, inner_pred, pa
     # outside graph: connectors run outside the wall
     outside_pass = sub.a(A.passable) & ~ndimage.binary_erosion(interior, iterations=1)
     # new approach connectors are roads too: same 8-neighbour ≤10 % rule as primary corridors
-    gout = Rt.build_graph(sub.grid, sub.a(A.h), outside_pass, radius=1, grade_k=R.p("routing.grade_cost_k"),
-                          grade_cap=R.p("routing.primary_max_grade"))
+    gout = access_graph(ctx, sub.grid, sub.a(A.h), outside_pass)
     # inner cost at sample: min over nearby passable inner cells
     inner_c = []
     inner_cell = []
     ic = inner_cost.reshape(sub.grid.shape)
     fin = np.isfinite(ic)
     hsub = sub.a(A.h)
-    gmax = R.p("routing.primary_max_grade")
+    gmax = ctx.rc["cap"]
     for p in pts:
         c = nearest_true(fin, sub.grid, p.x, p.y, ctx.corr_half + 6.0)
         if c is not None:
@@ -850,7 +902,7 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
                 pa, _ = nearest_points(road.line, poly)
                 appr.append((pa.x, pa.y))
     # ---- bundles, largest first
-    comp = _corridor_components(ctx, sub, interior, poly)
+    comp = _corridor_components(ctx, sub, interior, poly, appr) + (_reach_fn(ctx, poly),)
     tried, failed_prefixes = [], []
     nmin = val(ctx.profile["residential_min_households"])
     tries = R.p("civic.bundle_tries")
@@ -931,14 +983,47 @@ def _walk_reach(ctx, sub, poly, corr_poly, gates_out, civic_union):
     return Rr.mask_to_polygon(sub.grid, reach)
 
 
-def _corridor_components(ctx, sub, interior, poly):
+def _reach_fn(ctx, poly):
+    """Factory: for a partial civic placement, cells reachable by the access-class corridor
+    graph from the first entrance, with placed envelopes as obstacles (cached)."""
+    A = ctx.A
+    subp = Sub(A, poly.bounds, 12.0)
+    inter = Rr.rasterize(subp.grid, poly)
+    cache = {}
+
+    def fn(placed):
+        key = tuple((p["key"], p["xz"], p["bearing"]) for p in placed)
+        if key in cache:
+            return cache[key]
+        civ = Rr.rasterize(subp.grid, shapely.union_all([p["rect"] for p in placed]))
+        fore = Rr.rasterize(subp.grid, shapely.union_all([p["strip"] for p in placed])) & ~civ
+        pas = corridor_passable(ctx, subp, inter, civ, fore)
+        socks = []
+        for p in placed:
+            sx, sz = G.front_point(p["xz"][0], p["xz"][1], p["env"]["depth_m"], p["bearing"], p["env"]["entrance_clearance_m"] / 2)
+            c = nearest_true(pas, subp.grid, sx, sz, max(6.0, p["env"]["entrance_clearance_m"] + 4))
+            if c is None:
+                cache[key] = False
+                return False
+            socks.append(c)
+        pas2 = pas.copy()
+        for c in socks:
+            pas2.ravel()[c] = True
+        g = access_graph(ctx, subp.grid, subp.a(A.h), pas2)
+        dd, _ = Rt.dijkstra(g, [socks[0]])
+        res = bool(all(np.isfinite(dd[c]) for c in socks))
+        cache[key] = res
+        return res
+    return fn
+
+
+def _corridor_components(ctx, sub, interior, poly, appr=None):
     """Connected components of the ≤10 % corridor graph inside the frame; civic entrances
     must share one component that also reaches the boundary (gate side) or a route."""
     from scipy.sparse.csgraph import connected_components
     A, R = ctx.A, ctx.rules
     pas = corridor_passable(ctx, sub, interior, np.zeros(sub.grid.shape, bool))
-    g = Rt.build_graph(sub.grid, sub.a(A.h), pas, radius=1, grade_k=R.p("routing.grade_cost_k"),
-                       grade_cap=R.p("routing.primary_max_grade"))
+    g = access_graph(ctx, sub.grid, sub.a(A.h), pas)
     n, lab = connected_components(g, directed=False)
     lab = lab.reshape(sub.grid.shape)
     lab = np.where(pas, lab, -1)
@@ -947,6 +1032,13 @@ def _corridor_components(ctx, sub, interior, poly):
         band = interior & ~ndimage.binary_erosion(interior, iterations=ctx.corr_cells + 4)
     else:
         band = ndimage.binary_dilation(sub.a(A.road_mask), iterations=ctx.corr_cells + 4)
+    if appr:
+        # prefer the components whose boundary band faces the route approaches (gates go there)
+        X, Z = np.meshgrid(sub.grid.xs(), sub.grid.zs())
+        near = np.zeros(sub.grid.shape, bool)
+        for (ax, az) in appr:
+            near |= (X - ax) ** 2 + (Z - az) ** 2 <= ctx.rules.p("gates.approach_band_m") ** 2
+        band = band & near  # strict: no component facing an approach → no civic site
     touch = np.unique(lab[band & pas])
     touch = touch[touch >= 0]
     if touch.size == 0:
@@ -986,8 +1078,7 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
             continue
         sockets[p["key"]] = c
         pas.ravel()[c] = True
-    gcorr = Rt.build_graph(sub.grid, sub.a(A.h), pas, radius=1, grade_k=R.p("routing.grade_cost_k"),
-                           grade_cap=R.p("routing.primary_max_grade"))
+    gcorr = access_graph(ctx, sub.grid, sub.a(A.h), pas)
     main_key = placed[0]["key"]
     if main_key not in sockets:
         return {"status": "fail", "constraints": cons, "bundle": bundle, "placed": placed}
@@ -1095,18 +1186,18 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
             pts = [gc] + pts
         line_raw = LineString(pts) if len(pts) > 1 else LineString([pts[0], pts[0]])
         simp = line_raw.simplify(1.0)
-        _, _, gmax_s = Rt.grade_profile(sub.grid, sub.a(A.h), list(simp.coords))
-        _, ys_raw, gmax_r = Rt.grade_profile(sub.grid, sub.a(A.h), pts)
-        if gmax_s <= R.p("routing.primary_max_grade") + 1e-6:
-            geom, gm = simp, gmax_s
+        gmax_s, det_s = measure_grade(ctx, sub.grid, sub.a(A.h), list(simp.coords))
+        gmax_r, det_r = measure_grade(ctx, sub.grid, sub.a(A.h), pts)
+        if gmax_s <= ctx.rc["limit"] + 1e-6:
+            geom, gm, det = simp, gmax_s, det_s
         else:
-            geom, gm = line_raw, gmax_r
+            geom, gm, det = line_raw, gmax_r, det_r
         culverts = int(sum(1 for c in cells if sub.a(ctx.small_channel).ravel()[c]))
         corridors.append({"kind": kind, "ref": ref, "line": geom, "grade_max": gm, "length_m": geom.length,
-                          "cells": cells, "culvert_cells": culverts})
-        if gm > R.p("routing.primary_max_grade") + 1e-6:
-            cons.append(diag("corridor_grade", "error", "L2", "primary corridor exceeds grade limit",
-                             corridor=f"{kind}-{ref}", grade=round(gm, 4)))
+                          "cells": cells, "culvert_cells": culverts, "grade_detail": det})
+        if gm > ctx.rc["limit"] + 1e-6:
+            cons.append(diag("corridor_grade", "error", "L2", f"{ctx.road_class} corridor exceeds grade limit",
+                             corridor=f"{kind}-{ref}", grade=round(gm, 4), measure=det["measure"]))
     corr_poly = G.polygonal(shapely.union_all([c["line"].buffer(ctx.corr_half, cap_style="round") for c in corridors],
                                               grid_size=G.GRID)) if corridors else Polygon()
     corr_poly = G.polygonal(corr_poly.intersection(poly, grid_size=G.GRID)) if not corr_poly.is_empty else corr_poly
@@ -1156,8 +1247,7 @@ def _no_gate_reason(ctx, sub, interior, gs):
     if not gs["approaches"]:
         return "blocked_access", "no route approaches the frame"
     wet = sub.a(A.cov) & ~ndimage.binary_erosion(interior, iterations=1)
-    g = Rt.build_graph(sub.grid, sub.a(A.h), wet, radius=1, grade_k=R.p("routing.grade_cost_k"),
-                       grade_cap=R.p("routing.primary_max_grade"))
+    g = access_graph(ctx, sub.grid, sub.a(A.h), wet)
     for a in gs["approaches"]:
         d, _ = Rt.dijkstra(g, [sub.cell_of(*a["xz"])])
         if any(np.isfinite(d[c]) and not np.isfinite(a["_dist"][c]) for c in gs["sample_cells"]):
@@ -1168,7 +1258,7 @@ def _no_gate_reason(ctx, sub, interior, gs):
 
 def objective(ctx, ev):
     R = ctx.rules
-    w = {k: R.objective_weight(k) for k in ("civic_fit", "access", "compactness", "terrain_economy", "axis")}
+    w = {k: R.objective_weight(k) for k in ("civic_fit", "access", "compactness", "terrain_economy", "axis", "capacity")}
     placed = ev.get("placed") or []
     full_area = sum(r["variants"]["full"]["area_m2"] for r in ctx.insts if r["inside_wall"])
     b_area = ev["bundle"]["area_m2"] if ev.get("bundle") else 0.0
@@ -1177,7 +1267,9 @@ def objective(ctx, ev):
         civic = 0.5 * (sum(p["score"] for p in placed) / len(placed)) + 0.5 * (b_area / full_area if full_area else 1.0)
     lo, hi = R.objective_range("access_cost_per_gate")
     gates = ev.get("gates") or []
-    costs = [c["length_m"] * (1 + R.p("routing.grade_cost_k") * c["grade_max"] ** 2) for c in ev.get("corridors", []) if c["kind"] == "gate"]
+    costs = [c["length_m"] * (1 + R.p("routing.grade_cost_k") * c["grade_max"] ** 2)
+             + R.p("routing.mountain.switchback_cost_m") * c.get("grade_detail", {}).get("switchbacks", 0)
+             for c in ev.get("corridors", []) if c["kind"] == "gate"]
     acc = 1 - np.clip((np.mean(costs) - lo) / (hi - lo), 0, 1) if costs else 0.0
     lo, hi = R.objective_range("compactness_iq")
     poly = ev["poly"]
@@ -1192,15 +1284,20 @@ def objective(ctx, ev):
         ax = 1 - float(np.clip((G.angle_diff(placed[0]["bearing"], ctx.axes[0]["bearing"]) - lo) / (hi - lo), 0, 1))
     else:
         ax = 0.5
+    N = ev["households"]["N"] if ev.get("households") else 0
+    cap = min(1.0, N / max(1, ctx.capacity_target))
     terms = {"civic_fit": round(float(civic), 4), "access": round(float(acc), 4), "compactness": round(comp, 4),
-             "terrain_economy": round(terr, 4), "axis": round(ax, 4)}
-    return {"terms": terms, "score": round(sum(w[k] * terms[k] for k in terms), 6),
-            "notes": {"axis": "neutral 0.5 without supplied axis evidence"}}
+             "terrain_economy": round(terr, 4), "axis": round(ax, 4), "capacity": round(cap, 4)}
+    return {"terms": terms, "score": round(sum(w[k] * terms[k] for k in terms) / sum(w.values()), 6),
+            "capacity_target": ctx.capacity_target,
+            "notes": {"axis": "neutral 0.5 without supplied axis evidence",
+                      "capacity": "households fitted / L1 estimate over the allowed envelope; weights renormalized"}}
 
 
 # ====================================================================== driver
 def solve(A, L1, rules, family):
     ctx = Ctx(A, L1, rules, family)
+    ctx.capacity_target = P.standalone(A, rules, L1["program"]["profile"], territory="allowed")["program"]["households"]["represented"]
     gen = GENERATORS[family]
     cands = gen(ctx)
     diags = []

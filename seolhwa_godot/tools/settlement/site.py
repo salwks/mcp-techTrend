@@ -90,6 +90,16 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
         keep = keep[keep > 0]
         floods[off] = np.isin(lab, keep) & cov
     ex_off = rules.p("flood.exclusion_offset")
+    A.stages = sorted(floods)
+    A.stage_ex = ex_off
+    states = rules.p("water.stage_states")
+    A.stage_states = states
+    A.stage_names = {st["offset"]: st["key"] for st in states}
+    scr = sorted(st["offset"] for st in states if st.get("screen"))
+    exs = [st["offset"] for st in states if st.get("exclusion")]
+    if scr != A.stages or exs != [ex_off]:
+        raise ValueError("flood.stage_offsets / exclusion_offset disagree with water.stage_states")
+    A.stage_units = rules.p("flood.stage_units")
     flood_ex = floods[ex_off]
     Hsrc = (h_raw - Wn) / unit_scale
     Rh = rules.p("flood.R_height_m")

@@ -30,6 +30,7 @@
   "status": {
    "enum": [
     "valid",
+    "proposed",
     "failed",
     "insufficient_capacity",
     "no_candidate_found"
