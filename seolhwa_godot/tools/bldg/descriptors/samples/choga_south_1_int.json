@@ -1,0 +1,2099 @@
+{
+ "bay_spacing": [
+  {
+   "depths": [
+    2.69
+   ],
+   "toet": {
+    "d": 0.95,
+    "kind": "toet"
+   },
+   "widths": [
+    2.34,
+    2.71,
+    3.07
+   ],
+   "wing": 0
+  }
+ ],
+ "collision": {
+  "colliders": [
+   {
+    "id": "col:0",
+    "maxX": -2.89,
+    "maxZ": -0.665,
+    "minX": -3.93,
+    "minZ": -1.185,
+    "type": "box"
+   },
+   {
+    "id": "col:1",
+    "r": 0.16,
+    "type": "circle",
+    "x": -2.07,
+    "z": -0.725
+   },
+   {
+    "id": "col:2",
+    "maxX": -0.55,
+    "maxZ": -0.665,
+    "minX": -1.59,
+    "minZ": -1.185,
+    "type": "box"
+   },
+   {
+    "id": "col:3",
+    "r": 0.16,
+    "type": "circle",
+    "x": -1.37,
+    "z": 0.895
+   },
+   {
+    "id": "col:4",
+    "r": 0.388,
+    "type": "circle",
+    "x": 0.44,
+    "z": 0.795
+   },
+   {
+    "id": "col:5",
+    "maxX": 1.84,
+    "maxZ": 1.0,
+    "minX": 1.04,
+    "minZ": -1.2,
+    "type": "box"
+   },
+   {
+    "id": "col:6",
+    "r": 0.257,
+    "type": "circle",
+    "x": 3.66,
+    "z": -0.895
+   },
+   {
+    "id": "col:7",
+    "maxX": 4.06,
+    "maxZ": 1.345,
+    "minX": 3.06,
+    "minZ": 0.145,
+    "type": "box"
+   },
+   {
+    "id": "col:8",
+    "maxX": -1.72,
+    "maxZ": -1.225,
+    "minX": -4.06,
+    "minZ": -1.465,
+    "type": "box"
+   },
+   {
+    "id": "col:9",
+    "maxX": -3.94,
+    "maxZ": 1.345,
+    "minX": -4.18,
+    "minZ": -1.345,
+    "type": "box"
+   },
+   {
+    "id": "col:10",
+    "maxX": -3.34,
+    "maxZ": 1.445,
+    "minX": -4.06,
+    "minZ": 1.245,
+    "type": "box"
+   },
+   {
+    "id": "col:11",
+    "maxX": -1.72,
+    "maxZ": 1.445,
+    "minX": -2.44,
+    "minZ": 1.245,
+    "type": "box"
+   },
+   {
+    "id": "col:12",
+    "maxX": 0.99,
+    "maxZ": -1.225,
+    "minX": -1.72,
+    "minZ": -1.465,
+    "type": "box"
+   },
+   {
+    "id": "col:13",
+    "maxX": -0.815,
+    "maxZ": 1.445,
+    "minX": -1.72,
+    "minZ": 1.245,
+    "type": "box"
+   },
+   {
+    "id": "col:14",
+    "maxX": 0.99,
+    "maxZ": 1.445,
+    "minX": 0.085,
+    "minZ": 1.245,
+    "type": "box"
+   },
+   {
+    "id": "col:15",
+    "maxX": 4.06,
+    "maxZ": -1.225,
+    "minX": 0.99,
+    "minZ": -1.465,
+    "type": "box"
+   },
+   {
+    "id": "col:16",
+    "maxX": 4.18,
+    "maxZ": 1.345,
+    "minX": 3.94,
+    "minZ": -1.345,
+    "type": "box"
+   },
+   {
+    "id": "col:17",
+    "maxX": 2.075,
+    "maxZ": 1.445,
+    "minX": 0.99,
+    "minZ": 1.245,
+    "type": "box"
+   },
+   {
+    "id": "col:18",
+    "maxX": 4.06,
+    "maxZ": 1.445,
+    "minX": 2.975,
+    "minZ": 1.245,
+    "type": "box"
+   },
+   {
+    "id": "col:19",
+    "maxX": -1.64,
+    "maxZ": -0.45,
+    "minX": -1.8,
+    "minZ": -1.345,
+    "type": "box"
+   },
+   {
+    "id": "col:20",
+    "maxX": -1.64,
+    "maxZ": 1.345,
+    "minX": -1.8,
+    "minZ": 0.45,
+    "type": "box"
+   },
+   {
+    "id": "col:21",
+    "maxX": 1.07,
+    "maxZ": -0.45,
+    "minX": 0.91,
+    "minZ": -1.345,
+    "type": "box"
+   },
+   {
+    "id": "col:22",
+    "maxX": 1.07,
+    "maxZ": 1.345,
+    "minX": 0.91,
+    "minZ": 0.45,
+    "type": "box"
+   },
+   {
+    "id": "col:23",
+    "r": 0.4,
+    "type": "circle",
+    "x": -4.66,
+    "z": -0.895
+   },
+   {
+    "id": "col:24",
+    "maxX": 5.52,
+    "maxZ": 1.05,
+    "minX": 4.52,
+    "minZ": -1.53,
+    "type": "box"
+   },
+   {
+    "id": "col:25",
+    "maxX": 5.42,
+    "maxZ": 0.95,
+    "minX": 4.62,
+    "minZ": -1.43,
+    "type": "box"
+   },
+   {
+    "id": "col:26",
+    "maxX": -2.13,
+    "maxZ": -2.35,
+    "minX": -3.59,
+    "minZ": -3.45,
+    "type": "box"
+   }
+  ],
+  "footprint": [
+   11.508,
+   8.31
+  ],
+  "walk": [
+   {
+    "id": "walk:0",
+    "maxX": 0.99,
+    "maxZ": 3.295,
+    "minX": -4.56,
+    "minZ": -1.845,
+    "y": 0.23
+   },
+   {
+    "id": "walk:1",
+    "maxX": -1.77,
+    "maxZ": 1.325,
+    "minX": -4.01,
+    "minZ": -1.245,
+    "y": 0.542
+   },
+   {
+    "id": "walk:2",
+    "maxX": 0.94,
+    "maxZ": 1.325,
+    "minX": -1.67,
+    "minZ": -1.245,
+    "y": 0.542
+   },
+   {
+    "id": "walk:3",
+    "maxX": 4.01,
+    "maxZ": 1.325,
+    "minX": 1.04,
+    "minZ": -1.245,
+    "y": 0.04
+   },
+   {
+    "id": "walk:4",
+    "maxX": 0.99,
+    "maxZ": 2.295,
+    "minX": -4.21,
+    "minZ": 1.325,
+    "y": 0.532
+   },
+   {
+    "id": "walk:5",
+    "maxX": -2.52,
+    "maxZ": 2.705,
+    "minX": -3.26,
+    "minZ": 2.275,
+    "y": 0.38
+   },
+   {
+    "id": "walk:6",
+    "maxX": 0.005,
+    "maxZ": 2.705,
+    "minX": -0.735,
+    "minZ": 2.275,
+    "y": 0.38
+   }
+  ]
+ },
+ "column_grid": [
+  {
+   "column_section": {
+    "d": 0.19,
+    "kind": "square"
+   },
+   "column_top": 2.77,
+   "columns": [
+    [
+     -4.06,
+     -1.345,
+     0.23,
+     2.77
+    ],
+    [
+     -4.06,
+     1.345,
+     0.23,
+     2.77
+    ],
+    [
+     -4.06,
+     2.295,
+     0.23,
+     2.77
+    ],
+    [
+     -1.72,
+     -1.345,
+     0.23,
+     2.77
+    ],
+    [
+     -1.72,
+     1.345,
+     0.23,
+     2.77
+    ],
+    [
+     -1.72,
+     2.295,
+     0.23,
+     2.77
+    ],
+    [
+     0.99,
+     -1.345,
+     0.0,
+     2.77
+    ],
+    [
+     0.99,
+     1.345,
+     0.0,
+     2.77
+    ],
+    [
+     0.99,
+     2.295,
+     0.23,
+     2.77
+    ],
+    [
+     4.06,
+     -1.345,
+     0.0,
+     2.77
+    ],
+    [
+     4.06,
+     1.345,
+     0.0,
+     2.77
+    ]
+   ],
+   "place": {
+    "ry_deg": 0.0,
+    "x": 0.0,
+    "z": 0.0
+   },
+   "toet_line": 2.295,
+   "wing": 0,
+   "wing_id": "main",
+   "x_lines": [
+    -4.06,
+    -1.72,
+    0.99,
+    4.06
+   ],
+   "z_lines": [
+    -1.345,
+    1.345
+   ]
+  }
+ ],
+ "condition": "worn",
+ "doors": [
+  {
+   "at": [
+    -2.89,
+    0.58,
+    1.345
+   ],
+   "connects": [
+    "room:w0.room0",
+    "exterior"
+   ],
+   "facade": "facade:0:w0.b0.front",
+   "head_y": 2.42,
+   "height_class": "player",
+   "id": "door:0",
+   "kind": "door2",
+   "note": "",
+   "outward": [
+    0.0,
+    1.0
+   ],
+   "player_use": true,
+   "role": "door",
+   "sill_y": 0.58,
+   "width": 1.62
+  },
+  {
+   "at": [
+    -0.365,
+    0.58,
+    1.345
+   ],
+   "connects": [
+    "room:w0.room1",
+    "exterior"
+   ],
+   "facade": "facade:2:w0.b1.front",
+   "head_y": 2.42,
+   "height_class": "player",
+   "id": "door:1",
+   "kind": "door2",
+   "note": "",
+   "outward": [
+    0.0,
+    1.0
+   ],
+   "player_use": true,
+   "role": "door",
+   "sill_y": 0.58,
+   "width": 1.62
+  },
+  {
+   "at": [
+    2.525,
+    0.07,
+    1.345
+   ],
+   "connects": [
+    "room:w0.kitchen2",
+    "exterior"
+   ],
+   "facade": "facade:4:w0.b2.front",
+   "head_y": 2.104,
+   "height_class": "player",
+   "id": "door:2",
+   "kind": "plank",
+   "note": "",
+   "outward": [
+    0.0,
+    1.0
+   ],
+   "player_use": true,
+   "role": "plank_door",
+   "sill_y": 0.07,
+   "width": 1.08
+  },
+  {
+   "at": [
+    2.525,
+    0.07,
+    -1.345
+   ],
+   "connects": [
+    "room:w0.kitchen2",
+    "exterior"
+   ],
+   "facade": "facade:5:w0.b2.back",
+   "head_y": 1.89,
+   "height_class": "measured",
+   "id": "door:3",
+   "kind": "plank",
+   "note": "",
+   "outward": [
+    0.0,
+    -1.0
+   ],
+   "player_use": false,
+   "role": "plank_door",
+   "sill_y": 0.07,
+   "width": 1.08
+  },
+  {
+   "at": [
+    -1.72,
+    0.58,
+    0.0
+   ],
+   "connects": [
+    "room:w0.room1",
+    "room:w0.room0"
+   ],
+   "facade": "facade:8:w0.b1.partition",
+   "head_y": 2.47,
+   "height_class": "player",
+   "id": "door:4",
+   "kind": "door1",
+   "note": "",
+   "outward": [
+    1.0,
+    0.0
+   ],
+   "player_use": true,
+   "role": "door",
+   "sill_y": 0.58,
+   "width": 0.888
+  },
+  {
+   "at": [
+    0.99,
+    0.58,
+    0.0
+   ],
+   "connects": [
+    "room:w0.kitchen2",
+    "room:w0.room1"
+   ],
+   "facade": "facade:9:w0.b2.partition",
+   "head_y": 2.47,
+   "height_class": "player",
+   "id": "door:5",
+   "kind": "door1",
+   "note": "floor_step 0.49 > 0.32 (부엌 쪽 문턱 — 사람 길 아님)",
+   "outward": [
+    1.0,
+    0.0
+   ],
+   "player_use": false,
+   "role": "door",
+   "sill_y": 0.58,
+   "width": 0.888
+  }
+ ],
+ "facades": [
+  {
+   "axis": [
+    1.0,
+    0.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b0",
+   "center": [
+    -2.89,
+    0.0,
+    1.345
+   ],
+   "collision_refs": [
+    "col:9",
+    "col:10",
+    "col:11",
+    "col:13",
+    "col:20"
+   ],
+   "faces": [
+    "room:w0.room0",
+    "exterior"
+   ],
+   "id": "facade:0:w0.b0.front",
+   "intervals": [
+    {
+     "a": -1.17,
+     "b": -0.81,
+     "kind": "solid"
+    },
+    {
+     "a": -0.81,
+     "b": 0.81,
+     "kind": "opening",
+     "role": "door",
+     "y0": 0.58,
+     "y1": 2.42
+    },
+    {
+     "a": 0.81,
+     "b": 1.17,
+     "kind": "solid"
+    }
+   ],
+   "kind": "door2",
+   "outward": [
+    0.0,
+    1.0
+   ],
+   "part": "front",
+   "side": "front",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.34,
+   "wing": 0
+  },
+  {
+   "axis": [
+    -1.0,
+    0.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b0",
+   "center": [
+    -2.89,
+    0.0,
+    -1.345
+   ],
+   "collision_refs": [
+    "col:8",
+    "col:9",
+    "col:12",
+    "col:19"
+   ],
+   "faces": [
+    "room:w0.room0",
+    "exterior"
+   ],
+   "id": "facade:1:w0.b0.back",
+   "intervals": [
+    {
+     "a": -1.17,
+     "b": -0.55,
+     "kind": "solid"
+    },
+    {
+     "a": -0.55,
+     "b": -0.05,
+     "kind": "opening",
+     "role": "window",
+     "y0": 1.79,
+     "y1": 2.33
+    },
+    {
+     "a": -0.05,
+     "b": 1.17,
+     "kind": "solid"
+    }
+   ],
+   "kind": "smallwin",
+   "outward": [
+    0.0,
+    -1.0
+   ],
+   "part": "body",
+   "side": "back",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.34,
+   "wing": 0
+  },
+  {
+   "axis": [
+    1.0,
+    0.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b1",
+   "center": [
+    -0.365,
+    0.0,
+    1.345
+   ],
+   "collision_refs": [
+    "col:11",
+    "col:13",
+    "col:14",
+    "col:17",
+    "col:20",
+    "col:22"
+   ],
+   "faces": [
+    "room:w0.room1",
+    "exterior"
+   ],
+   "id": "facade:2:w0.b1.front",
+   "intervals": [
+    {
+     "a": -1.355,
+     "b": -0.81,
+     "kind": "solid"
+    },
+    {
+     "a": -0.81,
+     "b": 0.81,
+     "kind": "opening",
+     "role": "door",
+     "y0": 0.58,
+     "y1": 2.42
+    },
+    {
+     "a": 0.81,
+     "b": 1.355,
+     "kind": "solid"
+    }
+   ],
+   "kind": "door2",
+   "outward": [
+    0.0,
+    1.0
+   ],
+   "part": "front",
+   "side": "front",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.71,
+   "wing": 0
+  },
+  {
+   "axis": [
+    -1.0,
+    0.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b1",
+   "center": [
+    -0.365,
+    0.0,
+    -1.345
+   ],
+   "collision_refs": [
+    "col:5",
+    "col:8",
+    "col:12",
+    "col:15",
+    "col:19",
+    "col:21"
+   ],
+   "faces": [
+    "room:w0.room1",
+    "exterior"
+   ],
+   "id": "facade:3:w0.b1.back",
+   "intervals": [
+    {
+     "a": -1.355,
+     "b": -0.55,
+     "kind": "solid"
+    },
+    {
+     "a": -0.55,
+     "b": -0.05,
+     "kind": "opening",
+     "role": "window",
+     "y0": 1.79,
+     "y1": 2.33
+    },
+    {
+     "a": -0.05,
+     "b": 1.355,
+     "kind": "solid"
+    }
+   ],
+   "kind": "smallwin",
+   "outward": [
+    0.0,
+    -1.0
+   ],
+   "part": "body",
+   "side": "back",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.71,
+   "wing": 0
+  },
+  {
+   "axis": [
+    1.0,
+    0.0
+   ],
+   "base_y": 0.04,
+   "bay": "w0.b2",
+   "center": [
+    2.525,
+    0.0,
+    1.345
+   ],
+   "collision_refs": [
+    "col:7",
+    "col:14",
+    "col:16",
+    "col:17",
+    "col:18",
+    "col:22"
+   ],
+   "faces": [
+    "room:w0.kitchen2",
+    "exterior"
+   ],
+   "id": "facade:4:w0.b2.front",
+   "intervals": [
+    {
+     "a": -1.535,
+     "b": -0.54,
+     "kind": "solid"
+    },
+    {
+     "a": -0.54,
+     "b": 0.54,
+     "kind": "opening",
+     "role": "plank_door",
+     "y0": 0.07,
+     "y1": 2.104
+    },
+    {
+     "a": 0.54,
+     "b": 1.535,
+     "kind": "solid"
+    }
+   ],
+   "kind": "plank",
+   "outward": [
+    0.0,
+    1.0
+   ],
+   "part": "front",
+   "side": "front",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 3.07,
+   "wing": 0
+  },
+  {
+   "axis": [
+    -1.0,
+    0.0
+   ],
+   "base_y": 0.04,
+   "bay": "w0.b2",
+   "center": [
+    2.525,
+    0.0,
+    -1.345
+   ],
+   "collision_refs": [
+    "col:5",
+    "col:12",
+    "col:15",
+    "col:16",
+    "col:21"
+   ],
+   "faces": [
+    "room:w0.kitchen2",
+    "exterior"
+   ],
+   "id": "facade:5:w0.b2.back",
+   "intervals": [
+    {
+     "a": -1.535,
+     "b": -0.54,
+     "kind": "solid"
+    },
+    {
+     "a": -0.54,
+     "b": 0.54,
+     "kind": "opening",
+     "role": "plank_door",
+     "y0": 0.07,
+     "y1": 1.89
+    },
+    {
+     "a": 0.54,
+     "b": 1.535,
+     "kind": "solid"
+    }
+   ],
+   "kind": "plank",
+   "outward": [
+    0.0,
+    -1.0
+   ],
+   "part": "body",
+   "side": "back",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 3.07,
+   "wing": 0
+  },
+  {
+   "axis": [
+    0.0,
+    1.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b0",
+   "center": [
+    -4.06,
+    0.0,
+    0.0
+   ],
+   "collision_refs": [
+    "col:0",
+    "col:8",
+    "col:9",
+    "col:10"
+   ],
+   "faces": [
+    "room:w0.room0",
+    "exterior"
+   ],
+   "id": "facade:6:w0.b0.left",
+   "intervals": [
+    {
+     "a": -1.345,
+     "b": 1.345,
+     "kind": "solid",
+     "material": "mud"
+    }
+   ],
+   "kind": "wall",
+   "outward": [
+    -1.0,
+    0.0
+   ],
+   "part": "body",
+   "side": "left",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.69,
+   "wing": 0
+  },
+  {
+   "axis": [
+    0.0,
+    -1.0
+   ],
+   "base_y": 0.04,
+   "bay": "w0.b2",
+   "center": [
+    4.06,
+    0.0,
+    0.0
+   ],
+   "collision_refs": [
+    "col:7",
+    "col:15",
+    "col:16",
+    "col:18"
+   ],
+   "faces": [
+    "room:w0.kitchen2",
+    "exterior"
+   ],
+   "id": "facade:7:w0.b2.right",
+   "intervals": [
+    {
+     "a": -1.345,
+     "b": -0.45,
+     "kind": "solid"
+    },
+    {
+     "a": -0.45,
+     "b": 0.45,
+     "kind": "opening",
+     "role": "vent_window",
+     "y0": 1.66,
+     "y1": 2.2
+    },
+    {
+     "a": 0.45,
+     "b": 1.345,
+     "kind": "solid"
+    }
+   ],
+   "kind": "salchang",
+   "outward": [
+    1.0,
+    0.0
+   ],
+   "part": "body",
+   "side": "right",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.69,
+   "wing": 0
+  },
+  {
+   "axis": [
+    0.0,
+    -1.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b1",
+   "center": [
+    -1.72,
+    0.0,
+    0.0
+   ],
+   "collision_refs": [
+    "col:2",
+    "col:8",
+    "col:11",
+    "col:12",
+    "col:13",
+    "col:19",
+    "col:20"
+   ],
+   "faces": [
+    "room:w0.room1",
+    "room:w0.room0"
+   ],
+   "id": "facade:8:w0.b1.partition",
+   "intervals": [
+    {
+     "a": -1.345,
+     "b": -0.444,
+     "kind": "solid"
+    },
+    {
+     "a": -0.444,
+     "b": 0.444,
+     "kind": "opening",
+     "role": "door",
+     "y0": 0.58,
+     "y1": 2.47
+    },
+    {
+     "a": 0.444,
+     "b": 1.345,
+     "kind": "solid"
+    }
+   ],
+   "kind": "door1",
+   "outward": [
+    1.0,
+    0.0
+   ],
+   "part": "interior",
+   "side": "partition",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.69,
+   "wing": 0
+  },
+  {
+   "axis": [
+    0.0,
+    -1.0
+   ],
+   "base_y": 0.53,
+   "bay": "w0.b2",
+   "center": [
+    0.99,
+    0.0,
+    0.0
+   ],
+   "collision_refs": [
+    "col:5",
+    "col:12",
+    "col:14",
+    "col:15",
+    "col:17",
+    "col:21",
+    "col:22"
+   ],
+   "faces": [
+    "room:w0.kitchen2",
+    "room:w0.room1"
+   ],
+   "id": "facade:9:w0.b2.partition",
+   "intervals": [
+    {
+     "a": -1.345,
+     "b": -0.444,
+     "kind": "solid"
+    },
+    {
+     "a": -0.444,
+     "b": 0.444,
+     "kind": "opening",
+     "role": "door",
+     "y0": 0.58,
+     "y1": 2.47
+    },
+    {
+     "a": 0.444,
+     "b": 1.345,
+     "kind": "solid"
+    }
+   ],
+   "kind": "door1",
+   "outward": [
+    1.0,
+    0.0
+   ],
+   "part": "interior",
+   "side": "partition",
+   "thickness": 0.14,
+   "top_y": 2.77,
+   "width": 2.69,
+   "wing": 0
+  }
+ ],
+ "floor_base": {
+  "base_h": 0.23,
+  "base_kind": "stone",
+  "floor_dh": 0.3,
+  "floors": [
+   {
+    "base_top_y": 0.23,
+    "bay_floors": [
+     0.53,
+     0.53,
+     0.04
+    ],
+    "floor_y": 0.53,
+    "front_margin": 1.95,
+    "raised": false,
+    "wing": 0
+   }
+  ],
+  "foundation": [
+   {
+    "bays": [
+     0,
+     1
+    ],
+    "bottom_y": 0.0,
+    "corner": false,
+    "kind": "stone",
+    "poly": [
+     [
+      -4.56,
+      -1.845
+     ],
+     [
+      0.99,
+      -1.845
+     ],
+     [
+      0.99,
+      3.295
+     ],
+     [
+      -4.56,
+      3.295
+     ]
+    ],
+    "top_y": 0.23,
+    "wing": 0
+   }
+  ],
+  "ground_ref": "building origin y = 0 (placement ground)",
+  "site_fit": {
+   "note": "경사 대지 맞춤(건물별 바닥 편집)은 WP8 — 지금은 평평한 원점 기준",
+   "status": "unknown"
+  },
+  "steps": [
+   {
+    "at": [
+     -2.89,
+     0.38,
+     2.495
+    ],
+    "bay": "w0.b0",
+    "kind": "daetdol",
+    "top_y": 0.38,
+    "wing": 0
+   },
+   {
+    "at": [
+     -0.365,
+     0.38,
+     2.495
+    ],
+    "bay": "w0.b1",
+    "kind": "daetdol",
+    "top_y": 0.38,
+    "wing": 0
+   }
+  ]
+ },
+ "frame": {
+  "forward": "+z",
+  "origin": "main wing center at ground",
+  "up": "+y"
+ },
+ "function_faces": [
+  {
+   "area_m2": 6.295,
+   "bays": [
+    "w0.b0"
+   ],
+   "doors": [
+    "door:0",
+    "door:4"
+   ],
+   "explicit_room": "",
+   "floor_y": 0.53,
+   "fn": "room",
+   "heated": true,
+   "id": "room:w0.room0",
+   "poly": [
+    [
+     -4.06,
+     -1.345
+    ],
+    [
+     -1.72,
+     -1.345
+    ],
+    [
+     -1.72,
+     1.345
+    ],
+    [
+     -4.06,
+     1.345
+    ]
+   ],
+   "roles": [
+    "witbang"
+   ],
+   "structural_bay_count": 1
+  },
+  {
+   "area_m2": 7.29,
+   "bays": [
+    "w0.b1"
+   ],
+   "doors": [
+    "door:1",
+    "door:4",
+    "door:5"
+   ],
+   "explicit_room": "",
+   "floor_y": 0.53,
+   "fn": "room",
+   "heated": true,
+   "id": "room:w0.room1",
+   "poly": [
+    [
+     -1.72,
+     -1.345
+    ],
+    [
+     0.99,
+     -1.345
+    ],
+    [
+     0.99,
+     1.345
+    ],
+    [
+     -1.72,
+     1.345
+    ]
+   ],
+   "roles": [
+    "anbang"
+   ],
+   "structural_bay_count": 1
+  },
+  {
+   "area_m2": 8.258,
+   "bays": [
+    "w0.b2"
+   ],
+   "doors": [
+    "door:2",
+    "door:3",
+    "door:5"
+   ],
+   "explicit_room": "",
+   "floor_y": 0.04,
+   "fn": "kitchen",
+   "heated": false,
+   "id": "room:w0.kitchen2",
+   "poly": [
+    [
+     0.99,
+     -1.345
+    ],
+    [
+     4.06,
+     -1.345
+    ],
+    [
+     4.06,
+     1.345
+    ],
+    [
+     0.99,
+     1.345
+    ]
+   ],
+   "roles": [],
+   "structural_bay_count": 1
+  }
+ ],
+ "heating": [
+  {
+   "chimney": "socket:chimney",
+   "far_bay": "w0.b0",
+   "fire": "socket:agungi:w0.b2",
+   "flue_end_rendered": true,
+   "gudeul": [
+    "socket:gudeul:w0.b1",
+    "socket:gudeul:w0.b0"
+   ],
+   "id": "heat:0",
+   "kind": "kitchen",
+   "rooms": [
+    "room:w0.room1",
+    "room:w0.room0"
+   ],
+   "status": "proposed"
+  }
+ ],
+ "maru": {
+  "gaps": [
+   {
+    "bay": "w0.b2",
+    "reason": "agungi_work",
+    "wing": 0,
+    "x0": 0.99,
+    "x1": 4.06
+   }
+  ],
+  "surfaces": [
+   {
+    "bays": [
+     "w0.b0",
+     "w0.b1"
+    ],
+    "id": "maru:w0.0-1",
+    "kind": "toet",
+    "poly": [
+     [
+      -4.21,
+      1.345
+     ],
+     [
+      0.99,
+      1.345
+     ],
+     [
+      0.99,
+      2.295
+     ],
+     [
+      -4.21,
+      2.295
+     ]
+    ],
+    "support": {
+     "bears_on": "base_top",
+     "kind": "toet_columns",
+     "points": [
+      [
+       -4.06,
+       0.23,
+       2.295
+      ],
+      [
+       -1.72,
+       0.23,
+       2.295
+      ],
+      [
+       0.99,
+       0.23,
+       2.295
+      ]
+     ]
+    },
+    "wing": 0,
+    "x_range": [
+     -4.21,
+     0.99
+    ],
+    "y": 0.53
+   }
+  ]
+ },
+ "members": [
+  {
+   "count": 11,
+   "kind": "dumbeong",
+   "ko": "주춧돌",
+   "part": "chochumdol"
+  },
+  {
+   "count": 11,
+   "d": 0.19,
+   "ko": "기둥",
+   "length_m": 28.86,
+   "part": "column",
+   "section": "square"
+  },
+  {
+   "count": 2,
+   "ko": "창방",
+   "length_m": 16.24,
+   "part": "changbang"
+  },
+  {
+   "count": 2,
+   "ko": "도리",
+   "length_m": 16.24,
+   "part": "dori"
+  },
+  {
+   "area_m2": 50.3,
+   "count": 19,
+   "ko": "벽체(mud)",
+   "part": "wall_infill"
+  },
+  {
+   "count": 2,
+   "ko": "창호·문(door2)",
+   "part": "opening:door2"
+  },
+  {
+   "count": 2,
+   "ko": "창호·문(smallwin)",
+   "part": "opening:smallwin"
+  },
+  {
+   "count": 2,
+   "ko": "창호·문(plank)",
+   "part": "opening:plank"
+  },
+  {
+   "count": 1,
+   "ko": "창호·문(salchang)",
+   "part": "opening:salchang"
+  },
+  {
+   "count": 2,
+   "ko": "창호·문(door1)",
+   "part": "opening:door1"
+  },
+  {
+   "area_m2": 4.94,
+   "count": 1,
+   "independent_posts": 0,
+   "ko": "툇마루·쪽마루",
+   "part": "toetmaru"
+  },
+  {
+   "count": 2,
+   "ko": "댓돌",
+   "part": "daetdol"
+  },
+  {
+   "area_m2": 28.527,
+   "count": 1,
+   "height_m": 0.23,
+   "ko": "기단(stone)",
+   "part": "gidan"
+  },
+  {
+   "count": 1,
+   "form": "hip",
+   "ko": "이엉 지붕",
+   "part": "roof",
+   "plan_area_m2": 77.312
+  },
+  {
+   "count": 1,
+   "height_m": 1.25,
+   "kind": "mud",
+   "ko": "굴뚝",
+   "part": "chimney"
+  },
+  {
+   "count": 1,
+   "ko": "아궁이(부뚜막)",
+   "part": "agungi"
+  }
+ ],
+ "meta": {
+  "hypothesis": false,
+  "lock_scope": [],
+  "provenance": {
+   "generator": "kit/bldg/descriptor.gd/1",
+   "inputs": {
+    "interior": true,
+    "region": "south",
+    "seed": 1,
+    "stable_id": "choga.south.1.int",
+    "type": "choga"
+   },
+   "rules_hash": "42275ad28bfb72e92c6799971c2c0a80af02861a4a456800287356d243b3d516",
+   "sources": [
+    "kit/bldg/_spec.gd:choga",
+    "khs:nagan_houses"
+   ]
+  },
+  "revision": "c45cbecd9e3dc445dd24d3eb4bade9467a30a8658e8bfef633115402e3bf1583",
+  "rule_version": "bldg-descriptor/1",
+  "stable_id": "building:choga.south.1.int",
+  "status": "proposed"
+ },
+ "partitions": [
+  {
+   "between": [
+    "room:w0.room0",
+    "room:w0.room1"
+   ],
+   "kind": "door1",
+   "rendered": true,
+   "wing": 0,
+   "x": -1.72
+  },
+  {
+   "between": [
+    "room:w0.room1",
+    "room:w0.kitchen2"
+   ],
+   "kind": "door1",
+   "rendered": true,
+   "wing": 0,
+   "x": 0.99
+  }
+ ],
+ "roof": {
+  "drip_lines": [
+   {
+    "drains": true,
+    "note": "",
+    "p0": [
+     -5.554,
+     3.955
+    ],
+    "p1": [
+     5.554,
+     3.955
+    ],
+    "roof": "roof:w0",
+    "side": "front",
+    "y": 2.75
+   },
+   {
+    "drains": true,
+    "note": "",
+    "p0": [
+     5.554,
+     3.955
+    ],
+    "p1": [
+     5.554,
+     -3.005
+    ],
+    "roof": "roof:w0",
+    "side": "right",
+    "y": 2.22
+   },
+   {
+    "drains": true,
+    "note": "",
+    "p0": [
+     5.554,
+     -3.005
+    ],
+    "p1": [
+     -5.554,
+     -3.005
+    ],
+    "roof": "roof:w0",
+    "side": "back",
+    "y": 2.38
+   },
+   {
+    "drains": true,
+    "note": "",
+    "p0": [
+     -5.554,
+     -3.005
+    ],
+    "p1": [
+     -5.554,
+     3.955
+    ],
+    "roof": "roof:w0",
+    "side": "left",
+    "y": 2.22
+   }
+  ],
+  "kind": "thatch",
+  "surfaces": [
+   {
+    "droop": 0.55,
+    "eave_dy": null,
+    "eave_to_ridge": 2.638,
+    "eave_under_y": {
+     "back": 2.38,
+     "front": 2.75,
+     "left": 2.22,
+     "right": 2.22
+    },
+    "eave_y": {
+     "back": 3.07,
+     "front": 3.07,
+     "left": 3.07,
+     "right": 3.07
+    },
+    "ends": [
+     "hip",
+     "hip"
+    ],
+    "form": "hip",
+    "half_depth": 3.48,
+    "id": "roof:w0",
+    "kind": "thatch",
+    "measured": {
+     "lowest_y": 2.025,
+     "ridge_y": 5.708
+    },
+    "outline": [
+     [
+      -5.554,
+      -3.005
+     ],
+     [
+      5.554,
+      -3.005
+     ],
+     [
+      5.554,
+      3.955
+     ],
+     [
+      -5.554,
+      3.955
+     ]
+    ],
+    "overhang": 1.66,
+    "pitch_deg": 37.164,
+    "ridge_y": 5.708,
+    "rise": 2.597,
+    "wing": 0
+   }
+  ],
+  "valleys": []
+ },
+ "roof_support": [
+  {
+   "bearing_lines_z": [
+    -1.345,
+    2.295
+   ],
+   "changbang": [
+    2.77,
+    2.99
+   ],
+   "column_top_y": 2.77,
+   "dori_top_y": 3.17,
+   "lower": 0.0,
+   "roof_up": 0.0,
+   "wing": 0
+  }
+ ],
+ "scale": {
+  "applied_at": "_spec.real_scale (preset resolve, once)",
+  "axes": [
+   "plan",
+   "height"
+  ],
+  "factor": 1.2,
+  "not_rescaled": false,
+  "region_profile": "region:JL_NAMWON_UNBONG",
+  "region_profile_factor": 1.2,
+  "rules_value_path": "res://tools/settlement/rules/default.json#parameters.world.length_scale",
+  "source": "RegionProfile.scale_policy.building.factor",
+  "spec_real_scale": [
+   1.2,
+   1.2
+  ]
+ },
+ "scale_applied": true,
+ "schema": "building-descriptor/1",
+ "sockets": [
+  {
+   "at": [
+    -4.66,
+    0.0,
+    -0.895
+   ],
+   "chimney_kind": "mud",
+   "id": "socket:chimney",
+   "kind": "chimney",
+   "moved": "heat_fix",
+   "placement": "side_left",
+   "top_y": 1.25
+  },
+  {
+   "bay": "w0.b1",
+   "id": "socket:gudeul:w0.b1",
+   "kind": "gudeul",
+   "poly": [
+    [
+     -1.72,
+     -1.345
+    ],
+    [
+     0.99,
+     -1.345
+    ],
+    [
+     0.99,
+     1.345
+    ],
+    [
+     -1.72,
+     1.345
+    ]
+   ],
+   "y_range": [
+    0.23,
+    0.53
+   ]
+  },
+  {
+   "bay": "w0.b0",
+   "id": "socket:gudeul:w0.b0",
+   "kind": "gudeul",
+   "poly": [
+    [
+     -4.06,
+     -1.345
+    ],
+    [
+     -1.72,
+     -1.345
+    ],
+    [
+     -1.72,
+     1.345
+    ],
+    [
+     -4.06,
+     1.345
+    ]
+   ],
+   "y_range": [
+    0.23,
+    0.53
+   ]
+  },
+  {
+   "at": [
+    1.34,
+    0.04,
+    0.0
+   ],
+   "bay": "w0.b2",
+   "feeds": [
+    "socket:gudeul:w0.b1",
+    "socket:gudeul:w0.b0"
+   ],
+   "fuel_from": "kitchen_front",
+   "id": "socket:agungi:w0.b2",
+   "kind": "agungi",
+   "work_face": "room:w0.kitchen2"
+  },
+  {
+   "id": "socket:maru_support:w0.0-1",
+   "kind": "maru_support",
+   "maru": "maru:w0.0-1",
+   "points": [
+    [
+     -4.06,
+     0.23,
+     2.295
+    ],
+    [
+     -1.72,
+     0.23,
+     2.295
+    ],
+    [
+     0.99,
+     0.23,
+     2.295
+    ]
+   ],
+   "support": "toet_columns"
+  },
+  {
+   "at": [
+    -2.89,
+    0.58,
+    1.945
+   ],
+   "door": "door:0",
+   "id": "socket:entrance:0",
+   "kind": "entrance",
+   "player_use": true
+  },
+  {
+   "at": [
+    -0.365,
+    0.58,
+    1.945
+   ],
+   "door": "door:1",
+   "id": "socket:entrance:1",
+   "kind": "entrance",
+   "player_use": true
+  },
+  {
+   "at": [
+    2.525,
+    0.07,
+    1.945
+   ],
+   "door": "door:2",
+   "id": "socket:entrance:2",
+   "kind": "entrance",
+   "player_use": true
+  },
+  {
+   "at": [
+    2.525,
+    0.07,
+    -1.945
+   ],
+   "door": "door:3",
+   "id": "socket:entrance:3",
+   "kind": "service_door",
+   "player_use": false
+  },
+  {
+   "at": [
+    -1.12,
+    0.58,
+    0.0
+   ],
+   "door": "door:4",
+   "id": "socket:entrance:4",
+   "kind": "entrance",
+   "player_use": true
+  },
+  {
+   "at": [
+    5.02,
+    0.0,
+    -0.24
+   ],
+   "id": "socket:service:firewood:10",
+   "kind": "service",
+   "role": "fuel_store"
+  },
+  {
+   "at": [
+    -2.86,
+    0.0,
+    -2.9
+   ],
+   "id": "socket:service:jangdok_s:11",
+   "kind": "service",
+   "role": "jangdok"
+  },
+  {
+   "at": [
+    -2.65,
+    0.0,
+    3.26
+   ],
+   "id": "socket:service:soguri:12",
+   "kind": "service",
+   "role": "yard_item"
+  },
+  {
+   "at": [
+    -1.61,
+    0.53,
+    1.82
+   ],
+   "id": "socket:anchor:maru",
+   "kind": "anchor",
+   "name": "maru"
+  },
+  {
+   "at": [
+    -2.89,
+    0.0,
+    3.595
+   ],
+   "id": "socket:anchor:door",
+   "kind": "anchor",
+   "name": "door"
+  },
+  {
+   "at": [
+    2.525,
+    0.04,
+    1.945
+   ],
+   "id": "socket:anchor:kitchen",
+   "kind": "anchor",
+   "name": "kitchen"
+  },
+  {
+   "at": [
+    -4.66,
+    1.45,
+    -0.895
+   ],
+   "id": "socket:anchor:chimney",
+   "kind": "anchor",
+   "name": "chimney"
+  }
+ ],
+ "structural_bays": [
+  {
+   "collapsed": false,
+   "floor_y": 0.53,
+   "fn": "room",
+   "id": "w0.b0",
+   "index": 0,
+   "poly": [
+    [
+     -4.06,
+     -1.345
+    ],
+    [
+     -1.72,
+     -1.345
+    ],
+    [
+     -1.72,
+     1.345
+    ],
+    [
+     -4.06,
+     1.345
+    ]
+   ],
+   "role": "witbang",
+   "width": 2.34,
+   "wing": 0,
+   "x0": -4.06,
+   "x1": -1.72,
+   "z0": -1.345,
+   "z1": 1.345
+  },
+  {
+   "collapsed": false,
+   "floor_y": 0.53,
+   "fn": "room",
+   "id": "w0.b1",
+   "index": 1,
+   "poly": [
+    [
+     -1.72,
+     -1.345
+    ],
+    [
+     0.99,
+     -1.345
+    ],
+    [
+     0.99,
+     1.345
+    ],
+    [
+     -1.72,
+     1.345
+    ]
+   ],
+   "role": "anbang",
+   "width": 2.71,
+   "wing": 0,
+   "x0": -1.72,
+   "x1": 0.99,
+   "z0": -1.345,
+   "z1": 1.345
+  },
+  {
+   "collapsed": false,
+   "floor_y": 0.04,
+   "fn": "kitchen",
+   "id": "w0.b2",
+   "index": 2,
+   "poly": [
+    [
+     0.99,
+     -1.345
+    ],
+    [
+     4.06,
+     -1.345
+    ],
+    [
+     4.06,
+     1.345
+    ],
+    [
+     0.99,
+     1.345
+    ]
+   ],
+   "role": "",
+   "width": 3.07,
+   "wing": 0,
+   "x0": 0.99,
+   "x1": 4.06,
+   "z0": -1.345,
+   "z1": 1.345
+  }
+ ],
+ "type_basis": {
+  "cls": "commoner",
+  "evidence": [
+   {
+    "applied": true,
+    "key": "choga.base_h",
+    "note": "기단+바닥 0.48–0.67",
+    "range": [
+     0.165,
+     0.245
+    ],
+    "region_profile": "south",
+    "sources": [
+     "khs:nagan_houses"
+    ],
+    "status": "proposed"
+   },
+   {
+    "applied": true,
+    "key": "choga.depth",
+    "note": "몸채 깊이 2.14–2.18(툇칸은 따로)",
+    "range": [
+     2.1,
+     2.3
+    ],
+    "region_profile": "south",
+    "sources": [
+     "khs:nagan_houses"
+    ],
+    "status": "proposed"
+   },
+   {
+    "applied": true,
+    "key": "choga.droop",
+    "note": "처마 끝 밑선 = 벽 위끝 −0.3~0.5, 드나드는 문 머리 +0.10 이상(DOORCLEAR)",
+    "range": [
+     0.3,
+     0.5
+    ],
+    "region_profile": "south",
+    "sources": [
+     "khs:nagan_houses"
+    ],
+    "status": "proposed"
+   },
+   {
+    "applied": true,
+    "key": "choga.eave",
+    "note": "내밀기 본채 1.2–1.8 실측, 1.1–1.4 채택(이전 eave v2)",
+    "range": [
+     1.1,
+     1.4
+    ],
+    "region_profile": "south",
+    "sources": [
+     "khs:nagan_houses"
+    ],
+    "status": "proposed"
+   },
+   {
+    "applied": true,
+    "key": "choga.rise_k",
+    "note": "처마 끝→용마루 2.8 m(대다수 같은 키트 지붕)",
+    "range": [
+     0.72,
+     0.76
+    ],
+    "region_profile": "south",
+    "sources": [
+     "khs:nagan_houses"
+    ],
+    "status": "proposed"
+   }
+  ],
+  "note": "프리셋 집 — 실측 사례 복제가 아님. 보정 항목의 status는 근거 수준(_calib.gd)",
+  "period": {
+   "label": "조선 후기 제작 제안",
+   "status": "proposed"
+  },
+  "plan": "il",
+  "preset": "choga",
+  "refs": [
+   "choga"
+  ],
+  "region": "south",
+  "seed": 1,
+  "spec_locked": false
+ },
+ "units": "world_m",
+ "wear": 0.862
+}
