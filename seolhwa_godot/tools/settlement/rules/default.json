@@ -1646,6 +1646,116 @@
    "unit": "world_m2",
    "value": 0.5
   },
+  "ground.alluvium": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m / deg",
+   "value": {
+    "max_hand_m": 3.0,
+    "max_slope_deg": 5.0
+   }
+  },
+  "ground.cliff_min_deg": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); game-height slope",
+   "source": "design",
+   "unit": "deg",
+   "value": 50.0
+  },
+  "ground.cliff_rock_min_deg": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); with landuse rock class",
+   "source": "design",
+   "unit": "deg",
+   "value": 35.0
+  },
+  "ground.landuse_classes": {
+   "confidence": "agreed",
+   "kind": "data",
+   "note": "region_data landuse 7 바위·벼랑, 8 모래톱·자갈",
+   "source": "region_data",
+   "unit": "class",
+   "value": {
+    "bar": 8,
+    "rock": 7
+   }
+  },
+  "ground.patch_min_m2": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m2",
+   "value": {
+    "alluvium": 400.0,
+    "bar_gravel": 50.0,
+    "cliff": 20.0,
+    "rock_exposure": 50.0,
+    "talus": 50.0
+   }
+  },
+  "ground.rock_convex_tpi_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 0.5
+  },
+  "ground.rock_exposure_min_deg": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); with convex TPI30",
+   "source": "design",
+   "unit": "deg",
+   "value": 38.0
+  },
+  "ground.talus_runout_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); debris below a cliff along steepest descent",
+   "source": "design",
+   "unit": "world_m",
+   "value": 40.0
+  },
+  "ground.talus_slope_deg": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "deg",
+   "value": [
+    20.0,
+    40.0
+   ]
+  },
+  "habitat.landuse_management": {
+   "confidence": "provisional",
+   "kind": "data",
+   "note": "only cultivation/yard follows from landuse; forest management types are unknown until WP10 (no source)",
+   "source": "design",
+   "unit": "class → management",
+   "value": {
+    "0": "unknown",
+    "1": "unknown",
+    "2": "cultivated_yard",
+    "3": "cultivated_yard",
+    "6": "cultivated_yard",
+    "9": "unknown"
+   }
+  },
+  "habitat.patch_min_m2": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 400.0
+  },
   "locks.anchor_radius_m": {
    "confidence": "provisional",
    "kind": "lock",
@@ -1744,6 +1854,80 @@
    "source": "design",
    "unit": "world_m",
    "value": 12
+  },
+  "routes.cross_slope": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "grade",
+   "value": {
+    "flat": 0.05,
+    "steep": 0.5
+   }
+  },
+  "routes.cut_rise_grade": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); uphill side steeper than this → cut face",
+   "source": "design",
+   "unit": "grade",
+   "value": 0.7
+  },
+  "routes.drainage_area_m2": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); unmapped drainage line crossing a route",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 2000.0
+  },
+  "routes.saddle_match_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); a route crossing a ridge within this of a saddle uses that 안부",
+   "source": "design",
+   "unit": "world_m",
+   "value": 120.0
+  },
+  "routes.sag_depth_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 0.3
+  },
+  "routes.side_sample_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); terrain sampled this far beyond each road edge",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.0
+  },
+  "routes.station_step_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 10.0
+  },
+  "routes.support_drop_grade": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); downhill side steeper than this right off the edge → retaining-support candidate (not forced)",
+   "source": "design",
+   "unit": "grade",
+   "value": 0.7
+  },
+  "routes.wet_hand_m": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); route on ground this close above drainage = wet ground",
+   "source": "design",
+   "unit": "world_m",
+   "value": 1.5
   },
   "routing.corridor_width_m": {
    "confidence": "agreed",
@@ -1931,6 +2115,274 @@
    "unit": "deg",
    "value": 8
   },
+  "terrain.analysis_cell_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "coarse grid for flow routing / catchments / ridges (block mean of the 2 m height)",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 8.0
+  },
+  "terrain.burn_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "mapped water cells lowered before routing so catchments follow mapped water (stream burning)",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "terrain.catchment_min_m2": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); smaller edge-outlet catchments are fringe (window artefacts, no ridges)",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 20000.0
+  },
+  "terrain.channel_area_m2": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); DEM drainage line where upslope area >= this",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 20000.0
+  },
+  "terrain.fill_eps_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "priority-flood epsilon so flats drain (Barnes et al. 2014)",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 0.001
+  },
+  "terrain.foot_slope": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); 산록 완경사: lower part of a slope next to a floor",
+   "source": "design",
+   "unit": "deg / world_m",
+   "value": {
+    "max_dist_m": 150.0,
+    "max_hand_m": 20.0,
+    "max_slope_deg": 15.0
+   }
+  },
+  "terrain.max_fill_depth_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); deeper closed depressions are kept as internal sinks, not filled",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "terrain.patch_min_m2": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 2000.0
+  },
+  "terrain.plain": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "deg / world_m",
+   "value": {
+    "max_relief_m": 10.0,
+    "max_slope_deg": 3.0,
+    "relief_radius_m": 150.0
+   }
+  },
+  "terrain.ridge_band_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); landform 'ridge' band either side of a ridge line",
+   "source": "design",
+   "unit": "world_m",
+   "value": 12.0
+  },
+  "terrain.ridge_min_tpi_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); mean TPI300 along a divide below this = flat divide, not a ridge",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "terrain.saddle_min_rise_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); a saddle is an interior low point of a ridge with this rise on both sides",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.0
+  },
+  "terrain.saddle_radius_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); landform 'saddle' around a saddle point",
+   "source": "design",
+   "unit": "world_m",
+   "value": 30.0
+  },
+  "terrain.saddle_sample_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 8.0
+  },
+  "terrain.summit_min_tpi_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 8.0
+  },
+  "terrain.summit_radius_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 100.0
+  },
+  "terrain.valley_floor": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); HAND = height above nearest drainage",
+   "source": "design",
+   "unit": "deg / world_m",
+   "value": {
+    "max_hand_m": 4.0,
+    "max_slope_deg": 6.0
+   }
+  },
+  "water.bank_zone_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); bank top = highest terrain within this distance outside the channel edge",
+   "source": "design",
+   "unit": "world_m",
+   "value": 3.0
+  },
+  "water.bed.thresholds": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); reach classes named after Montgomery & Buffington 1997 (bedrock, step-pool, pool-riffle, dune-ripple/alluvial) — thresholds are test values",
+   "source": "design",
+   "unit": "grade / fraction / ratio",
+   "value": {
+    "riffle_grade": 0.008,
+    "rock_adjacent_frac": 0.3,
+    "rock_grade": 0.02,
+    "steep_grade": 0.04,
+    "unconfined_ratio": 4.0
+   }
+  },
+  "water.crossing.match_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 60.0
+  },
+  "water.crossing_rules": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); deck heights, ford depths, ferry limits are unknown in sources; region crossing notes marked 가설 (e.g. 섶다리 removed at 큰물) are the only basis",
+   "source": "design",
+   "unit": "per crossing type",
+   "value": {
+    "bridge": {
+     "deck_above_bank_m": 0.5,
+     "modes": [
+      "foot",
+      "pack_horse",
+      "cart"
+     ],
+     "rule": "deck"
+    },
+    "brush_bridge": {
+     "fallback": "ford",
+     "modes": [
+      "foot",
+      "pack_horse"
+     ],
+     "removed_from": "high_major",
+     "rule": "seasonal"
+    },
+    "ferry": {
+     "modes": [
+      "foot",
+      "pack_horse",
+      "cart"
+     ],
+     "rule": "operating",
+     "suspended_from": "high_major"
+    },
+    "ford": {
+     "max_depth_m": {
+      "cart": 0.4,
+      "foot": 0.5,
+      "pack_horse": 0.6
+     },
+     "modes": [
+      "foot",
+      "pack_horse",
+      "cart"
+     ],
+     "rule": "depth"
+    },
+    "stepping_stones": {
+     "modes": [
+      "foot"
+     ],
+     "rule": "stone_top",
+     "stone_top_above_normal_m": 0.3
+    },
+    "stone_bridge": {
+     "deck_above_bank_m": 0.5,
+     "modes": [
+      "foot",
+      "pack_horse",
+      "cart"
+     ],
+     "rule": "deck"
+    }
+   }
+  },
+  "water.crossing_types": {
+   "confidence": "agreed",
+   "kind": "data",
+   "source": "region_data",
+   "unit": "region crossing type → class",
+   "value": {
+    "나루": "ferry",
+    "다리": "bridge",
+    "돌다리": "stone_bridge",
+    "섶다리": "brush_bridge",
+    "여울": "ford",
+    "징검다리": "stepping_stones"
+   }
+  },
+  "water.flow": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); foam only where a cause exists (GEO-06)",
+   "source": "design",
+   "unit": "grade / world_m",
+   "value": {
+    "drop_m": 0.5,
+    "flat_tolerance_m": 0.05,
+    "rapid_grade": 0.03,
+    "still_grade": 0.001,
+    "window_m": 10.0
+   }
+  },
   "water.landuse_water_class": {
    "confidence": "agreed",
    "kind": "data",
@@ -1942,6 +2394,50 @@
    "confidence": "provisional",
    "kind": "data",
    "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "water.reach_max_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); longer channel runs are split",
+   "source": "design",
+   "unit": "world_m",
+   "value": 400.0
+  },
+  "water.section.bank_ratio": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact)",
+   "source": "design",
+   "unit": "horizontal per vertical",
+   "value": 1.0
+  },
+  "water.section.depth_by_bed": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "WP4 terrain·water data layer; provisional test value (not a fact); design channel depth only — no measured section exists (21: river.sections U)",
+   "source": "design",
+   "unit": "world_m below the normal surface",
+   "value": {
+    "alluvial_sand_gravel": 0.8,
+    "bedrock": 0.4,
+    "riffle_pool_gravel": 0.6,
+    "step_pool_boulder": 0.5
+   }
+  },
+  "water.section_half_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "note": "cross-section terrain samples to each side",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 80.0
+  },
+  "water.section_step_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "engineering",
    "unit": "world_m",
    "value": 2.0
   },
@@ -1984,6 +2480,13 @@
      "screen": true
     }
    ]
+  },
+  "water.station_step_m": {
+   "confidence": "provisional",
+   "kind": "analysis",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 10.0
   },
   "water.surface_tolerance_m": {
    "confidence": "provisional",

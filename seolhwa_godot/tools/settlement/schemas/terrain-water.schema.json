@@ -1,0 +1,510 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "terrain-water/1",
+ "title": "WP4 terrain · water data layer (terrain-water.json)",
+ "description": "Written next to plan.json. TerrainPatch / WaterReach / HabitatPatch follow settlement-contract/1 (+ WP4 fields). Missing = null + reason. Stage states = rules water.stage_states only.",
+ "type": "object",
+ "required": [
+  "schema",
+  "id",
+  "region",
+  "order",
+  "units",
+  "natural_profile",
+  "terrain",
+  "habitats",
+  "water",
+  "routes",
+  "fields",
+  "provenance",
+  "geometry"
+ ],
+ "properties": {
+  "schema": {
+   "enum": [
+    "terrain-water/1"
+   ]
+  },
+  "units": {
+   "enum": [
+    "world_m"
+   ]
+  },
+  "terrain": {
+   "type": "object",
+   "required": [
+    "summary",
+    "catchments",
+    "ridges",
+    "saddles",
+    "summits",
+    "patches"
+   ],
+   "properties": {
+    "catchments": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "meta",
+       "drains_to",
+       "area_m2",
+       "geometry",
+       "truncated_by_window"
+      ],
+      "properties": {
+       "meta": {
+        "$ref": "#/$defs/meta"
+       },
+       "geometry": {
+        "$ref": "#/$defs/gref"
+       }
+      }
+     }
+    },
+    "ridges": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "meta",
+       "kind",
+       "between",
+       "line",
+       "length_m",
+       "saddles"
+      ],
+      "properties": {
+       "kind": {
+        "enum": [
+         "main",
+         "spur",
+         "flat_divide"
+        ]
+       },
+       "meta": {
+        "$ref": "#/$defs/meta"
+       },
+       "line": {
+        "$ref": "#/$defs/gref"
+       }
+      }
+     }
+    },
+    "saddles": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "meta",
+       "xz",
+       "y",
+       "ridge",
+       "derived",
+       "mapped_pass"
+      ],
+      "properties": {
+       "meta": {
+        "$ref": "#/$defs/meta"
+       }
+      }
+     }
+    },
+    "patches": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/TerrainPatch"
+     }
+    }
+   }
+  },
+  "habitats": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/HabitatPatch"
+   }
+  },
+  "water": {
+   "type": "object",
+   "required": [
+    "stage_states",
+    "stage_units",
+    "reaches",
+    "water_bodies",
+    "crossings",
+    "crossing_candidates",
+    "stage_impacts"
+   ],
+   "properties": {
+    "reaches": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/WaterReach"
+     }
+    },
+    "crossings": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "meta",
+       "class",
+       "mapped",
+       "xz",
+       "states",
+       "evidence"
+      ],
+      "properties": {
+       "meta": {
+        "$ref": "#/$defs/meta"
+       },
+       "mapped": {
+        "enum": [
+         true
+        ]
+       },
+       "class": {
+        "enum": [
+         "ford",
+         "stepping_stones",
+         "brush_bridge",
+         "stone_bridge",
+         "bridge",
+         "ferry",
+         "unknown"
+        ]
+       }
+      }
+     }
+    },
+    "crossing_candidates": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "meta",
+       "mapped",
+       "applied"
+      ],
+      "properties": {
+       "mapped": {
+        "enum": [
+         false
+        ]
+       },
+       "applied": {
+        "enum": [
+         false
+        ]
+       },
+       "meta": {
+        "$ref": "#/$defs/meta"
+       }
+      }
+     }
+    },
+    "stage_impacts": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "key",
+       "offset_world_m",
+       "crossings",
+       "routes",
+       "flooded_by_landuse_m2",
+       "riverside_work_cells_flooded",
+       "locks_flooded",
+       "status"
+      ]
+     }
+    }
+   }
+  },
+  "geometry": {
+   "type": "object"
+  }
+ },
+ "$defs": {
+  "id": {
+   "type": "string",
+   "pattern": "^[a-z_]+:[A-Za-z0-9_.\\-]+(:[A-Za-z0-9_.\\-]+)*$"
+  },
+  "hash": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^[0-9a-f]{64}$"
+  },
+  "gref": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^g-[0-9a-f]{12}$"
+  },
+  "status": {
+   "enum": [
+    "confirmed",
+    "proposed",
+    "unknown"
+   ]
+  },
+  "lock_scope": {
+   "type": "array",
+   "items": {
+    "enum": [
+     "position",
+     "shape",
+     "access",
+     "material",
+     "event_ref",
+     "state"
+    ]
+   }
+  },
+  "meta": {
+   "type": "object",
+   "required": [
+    "stable_id",
+    "provenance",
+    "rule_version",
+    "status",
+    "lock_scope",
+    "revision"
+   ],
+   "properties": {
+    "stable_id": {
+     "$ref": "#/$defs/id"
+    },
+    "provenance": {
+     "type": "object",
+     "required": [
+      "sources",
+      "generator"
+     ],
+     "properties": {
+      "sources": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "generator": {
+       "type": "string"
+      },
+      "rules_hash": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "inputs": {
+       "type": "object"
+      }
+     }
+    },
+    "rule_version": {
+     "type": "string"
+    },
+    "status": {
+     "$ref": "#/$defs/status"
+    },
+    "lock_scope": {
+     "$ref": "#/$defs/lock_scope"
+    },
+    "revision": {
+     "$ref": "#/$defs/hash"
+    },
+    "hypothesis": {
+     "type": "boolean"
+    }
+   }
+  },
+  "measure": {
+   "type": "object",
+   "required": [
+    "value",
+    "unit",
+    "status"
+   ],
+   "properties": {
+    "value": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "unit": {
+     "type": "string"
+    },
+    "status": {
+     "$ref": "#/$defs/status"
+    },
+    "missing_reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "TerrainPatch": {
+   "type": "object",
+   "required": [
+    "meta",
+    "original",
+    "modified",
+    "landform",
+    "rock_body",
+    "rock_type",
+    "structure_dir",
+    "exposure",
+    "change_reason",
+    "kind",
+    "area_m2",
+    "catchments"
+   ],
+   "properties": {
+    "meta": {
+     "$ref": "#/$defs/meta"
+    },
+    "landform": {
+     "enum": [
+      "plain",
+      "valley_floor",
+      "foot_slope",
+      "slope",
+      "ridge",
+      "saddle",
+      "summit",
+      "water",
+      "unknown"
+     ]
+    },
+    "kind": {
+     "enum": [
+      "landform",
+      "ground"
+     ]
+    },
+    "rock_body": {
+     "type": "object"
+    }
+   }
+  },
+  "WaterReach": {
+   "type": "object",
+   "required": [
+    "meta",
+    "upstream",
+    "downstream",
+    "long_profile",
+    "cross_section",
+    "plan",
+    "flow",
+    "bed_mix",
+    "states",
+    "feature",
+    "banks",
+    "catchment"
+   ],
+   "properties": {
+    "meta": {
+     "$ref": "#/$defs/meta"
+    },
+    "states": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "key",
+       "offset_world_m",
+       "status",
+       "wetted_width_m",
+       "dry_bed_fraction",
+       "bank_overtopped_fraction",
+       "flooded_beyond_bank_m"
+      ]
+     }
+    },
+    "bed_mix": {
+     "type": "object",
+     "required": [
+      "type",
+      "basis",
+      "components",
+      "status"
+     ],
+     "properties": {
+      "type": {
+       "enum": [
+        "bedrock",
+        "step_pool_boulder",
+        "riffle_pool_gravel",
+        "alluvial_sand_gravel"
+       ]
+      }
+     }
+    },
+    "long_profile": {
+     "type": "object",
+     "required": [
+      "stations",
+      "length_m",
+      "grade"
+     ]
+    },
+    "cross_section": {
+     "type": "object",
+     "required": [
+      "representative",
+      "status"
+     ]
+    }
+   }
+  },
+  "HabitatPatch": {
+   "type": "object",
+   "required": [
+    "meta",
+    "community",
+    "management",
+    "soil",
+    "moisture",
+    "season",
+    "geometry",
+    "catchments",
+    "management_basis"
+   ],
+   "properties": {
+    "meta": {
+     "$ref": "#/$defs/meta"
+    },
+    "management": {
+     "enum": [
+      "natural",
+      "protected",
+      "village_grove",
+      "use_forest",
+      "cultivated_yard",
+      "abandoned",
+      "unknown"
+     ]
+    }
+   }
+  }
+ }
+}

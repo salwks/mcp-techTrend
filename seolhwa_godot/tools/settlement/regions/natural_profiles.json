@@ -1,0 +1,91 @@
+{
+ "schema": "region-natural-profiles/1",
+ "description": "WP4: natural-layer RegionProfile fields (terrain · rock · water · forest) transcribed from spec 21-regional-profiles.md and regions/21-<REGION>.md (§0, §1, §5, §8). Values are the documents' wording, not new research. grade: A=original photo/drawing/map read directly, B=official/encyclopaedia text read, C=search excerpt only, U=not confirmed. status follows the document's §8 column; the loader enforces confirmed ⇒ grade A/B and at least one source id (otherwise it is downgraded to proposed and flagged). Numbers that the documents mark U are null. Nothing here is used to shape terrain (spec 16 GEO-01: rock type alone never decides form); fields are recorded inputs for later layers and for review.",
+ "source_documents": [
+  "docs/reports/environment-reference-v1/specification/21-regional-profiles.md (2026-10-25 draft, untracked)",
+  "docs/reports/environment-reference-v1/specification/regions/21-<REGION>.md + sources-<REGION>.csv"
+ ],
+ "regions": {
+  "JL_NAMWON_UNBONG": {
+   "terrain.basins": {"value": "동 운봉 고원분지(450–550 m, 화강암) / 서 남원분지(~100 m); 둘레 산지는 편마암·분지는 화강암 → 차별침식", "grade": "B", "status": "confirmed", "sources": ["JL25", "JL17"]},
+   "terrain.unbong_floor": {"value": "비고 ≤70 m 구릉 산재 + 곡저평야, 동쪽 산지 출구 선상지", "grade": "B", "status": "confirmed", "sources": ["JL17"]},
+   "terrain.sw_gorge": {"value": "고원 남서 주촌천 V자 협곡·천이점(하천쟁탈)", "grade": "B", "status": "confirmed", "sources": ["JL16", "JL17"]},
+   "rock_candidates": {"value": "분지: 화강암 / 둘레 산지: 편마암", "grade": "B", "status": "confirmed", "sources": ["JL25", "JL17"], "note": "기록 입력일 뿐 형태를 정하지 않는다(GEO-01). 개별 지점 암종은 미대조"},
+   "river.yocheon": {"value": "섬진강 지류, 남원 중앙 관류", "grade": "B", "status": "confirmed", "sources": ["JL25"]},
+   "river.ram_name": {"value": "람천(濫川)/광천(廣川)/남천(藍川) 표기 혼재 → 표시명 결정 필요", "grade": "B", "status": "proposed", "sources": ["JL16", "JL17", "JL25"]},
+   "river.ram_course": {"value": "고원 → (산내에서 만수천 합류) → 엄천강·남강", "grade": "B", "status": "confirmed", "sources": ["JL16", "JL17", "JL25"], "note": "'임천' 명칭은 U"},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "하폭·하상·수위 자료 없음. 요천 '모래 바닥 얕은 내'(region 메모)는 근거 없음"},
+   "forest.notes": {"value": "운봉 고원 둘레 오리나무 → 목기(생업 경관); 바래봉 철쭉군락은 1971 이후(1870 제외)", "grade": "B", "status": "confirmed", "sources": ["JL17"]},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "관리 유형(송금·마을숲 등) 원자료 없음"}
+  },
+  "GS_GYEONGJU": {
+   "terrain.basin_type": {"value": "화강암 구조·침식분지, 북쪽(안강 방향) 개방", "grade": "B", "status": "confirmed", "sources": ["GJ29", "GJ31"]},
+   "rock_candidates": {"value": "분지 바닥: 화강암 / 토함산·감포 해안: 미대조", "grade": "B", "status": "confirmed", "sources": ["GJ31"], "note": "토함산·해안 암종은 U"},
+   "river.main": {"value": "형산강 분지 서쪽 가장자리 북류; 북천(알천) 선상지(자갈·모래 넓은 하상)", "grade": "B", "status": "confirmed", "sources": ["GJ29", "GJ30"], "note": "선상지 하상 성격은 설계 해석(proposed)"},
+   "river.flood_hint": {"value": "북천 증수가 읍성 북·동쪽을 위협(1467 기록)", "grade": "B", "status": "proposed", "sources": ["GJ02"], "note": "상태값 수치 U"},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "하천 단면·하상 사진 미확보"},
+   "forest.notes": {"value": "반가 뒤 숲·대숲 띠 사례(근암 북서 반원 수림대, 향단 북서 대숲, 관가정 북쪽 수목열) — 수종 U", "grade": "A", "status": "proposed", "sources": ["GJ24", "GJ26", "GJ27"], "note": "양동 사례(권역 밖일 수 있음)"},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "계림·나정 솔숲 서술 미대조"}
+  },
+  "GW_GANGNEUNG": {
+   "terrain.divide": {"value": "대관령 832 m, 동 남대천 / 서 송천; 서쪽 고위평탄면, 동사면 급경사", "grade": "B", "status": "confirmed", "sources": ["GN22", "GN21"]},
+   "rock_candidates": {"value": "경포 일대 쥐라기 강릉 화강암(석영질 조립 모래) / 남대천 유역 대보화강암 우세, 고생대 석회암·평안층군 분포", "grade": "B", "status": "confirmed", "sources": ["GN24", "GN25"]},
+   "river.namdaecheon": {"value": "삽당령 발원 33.5 km; 1870 하류 곡류·망류·모래톱·넓은 범람원(현재 직강화)", "grade": "B", "status": "confirmed", "sources": ["GN25"], "note": "형태만 confirmed, 폭 unknown. region.json 하도는 현대(OSM)"},
+   "lagoon.gyeongpo": {"value": "1870 윤곽은 현대(0.9 km²)보다 큼(1910년대 1.74 km²), 바다 출구·조위 역류 상태", "grade": "B", "status": "confirmed", "sources": ["GN24"], "note": "방향만 confirmed, 윤곽 unknown"},
+   "lagoon.states": {"value": "출구 개방/폐쇄·염수 역류를 상태로", "grade": "B", "status": "proposed", "sources": ["GN24"]},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": []},
+   "forest.notes": {"value": "선교장 뒤 언덕 솔숲; 사주 솔숲은 검색 발췌만", "grade": "A", "status": "proposed", "sources": ["GN16"]},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": []}
+  },
+  "HG_HAMHEUNG": {
+   "terrain.plain": {"value": "반룡산(319 m) 외 대부분 충적평야(해발 약 21 m)", "grade": "B", "status": "confirmed", "sources": ["HG02"]},
+   "rock_candidates": {"value": "화강편마암, 평야는 충적층", "grade": "B", "status": "confirmed", "sources": ["HG02"]},
+   "river.main_form": {"value": "성천강 망상유로(갈래 물길+모래섬), 하류 토사 하상, 수운 부적합", "grade": "B", "status": "confirmed", "sources": ["HG02", "HG03", "HG18"]},
+   "river.levee": {"value": "제방 없음(1929 이전)", "grade": "B", "status": "confirmed", "sources": ["HG02"]},
+   "river.flood_state": {"value": "잦은 범람 — 증수 시 넓은 모래톱 침수·갈래 물길 합쳐짐", "grade": "B", "status": "proposed", "sources": ["HG02"], "note": "형상 수치 U"},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": []},
+   "forest.notes": {"value": "본궁 뜰 고목·반송, 본궁 둘레 숲 띠; 구릉 식생 성김(근대·위치 불확실)", "grade": "B", "status": "proposed", "sources": ["HG01", "HG15", "HG14"]},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "조선 후기 숲 이용 강도 U"}
+  },
+  "HH_HWANGJU": {
+   "terrain.form": {"value": "낙랑준평원 남쪽 끝, 50 m 이하 파랑성 구릉 + 범람원", "grade": "B", "status": "confirmed", "sources": ["HH01"]},
+   "rock_candidates": {"value": "석회암 계열(테라로사) 후보", "grade": "B", "status": "proposed", "sources": ["HH01", "PA07"], "note": "군 단위 일반 서술"},
+   "river.main": {"value": "황주천: 읍 남쪽 서류, 하류 심한 곡류·퇴적지", "grade": "B", "status": "confirmed", "sources": ["HH02", "HH07"]},
+   "river.bank_at_town": {"value": "읍 남쪽 하안 절벽(월파루, '층암절벽 아래 황주천')", "grade": "B", "status": "confirmed", "sources": ["HH02"], "note": "절벽 암종 U"},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": []},
+   "forest.notes": {"value": "산림 약 30%, 소나무·참나무(현대 북한 서술); 과수원은 근대 이후(제외)", "grade": "B", "status": "proposed", "sources": ["HH01"]},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": []}
+  },
+  "JJ_JEJU": {
+   "terrain.oreum": {"value": "스코리아 분석구, 원추형·말굽형, 화구 기본 건조(화구호는 이름 있는 예외)", "grade": "B", "status": "confirmed", "sources": ["JJ22"]},
+   "terrain.gotjawal": {"value": "암괴+덤불 숲, 토양 얇음, 동부 완경사 중산간", "grade": "B", "status": "confirmed", "sources": ["JJ21"]},
+   "rock_candidates": {"value": "현무암질(스코리아·용암류)", "grade": "B", "status": "confirmed", "sources": ["JJ22", "JJ21"]},
+   "river.form": {"value": "건천(투수성) — 평시 마른 하상", "grade": "B", "status": "proposed", "sources": ["JJ22", "JJ21"], "note": "원리 수준; 한천·산지천 개별 수문 U"},
+   "water.coast": {"value": "해안 용천수 물터", "grade": "C", "status": "proposed", "sources": ["JJ29"]},
+   "water.eupseong": {"value": "성안 무수 → 성 밖 물을 겹성으로 감쌈(제주목)", "grade": "B", "status": "confirmed", "sources": ["JJ25"], "note": "형태 U"},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": []},
+   "forest.notes": {"value": "곶자왈 덩굴·덤불 원시림; 마을 팽나무·느티나무(성읍); 중산간 초지는 새(지붕 재료) 채취지", "grade": "B", "status": "proposed", "sources": ["JJ21", "JJ01", "JJ18", "JJ15"]},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": []}
+  },
+  "PA_PYEONGYANG": {
+   "terrain.form": {"value": "대동강 경계 북 평양 준평원 / 남 황주 준평원; 모란대 하안 절벽, 능라도·양각도 하중도", "grade": "B", "status": "confirmed", "sources": ["PA07"]},
+   "rock_candidates": {"value": "하류 주변 화강암·화강편마암·변성퇴적암, 중하류 상원계 석회암", "grade": "B", "status": "confirmed", "sources": ["PA07"], "note": "성곽 구간 암종 U"},
+   "river.tide": {"value": "감조하천, 평양 부근 조차 ≈1 m", "grade": "B", "status": "confirmed", "sources": ["PA07"], "note": "근대 측정"},
+   "river.ice": {"value": "결빙 ≈83일(12월 초·중순–3월 초)", "grade": "B", "status": "confirmed", "sources": ["PA07"], "note": "근대; 나룻배 운휴 여부 U"},
+   "river.bank": {"value": "대동문 앞 덕바위 암반, 연광정 아래 노출 암반 위 축대·모래 하안", "grade": "B", "status": "confirmed", "sources": ["PA03", "PA04", "PA17"]},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": []},
+   "forest.notes": {"value": "십리장림(대동강 건너 긴 숲), 모란봉 수림 — 수종 U", "grade": "B", "status": "proposed", "sources": ["PA02", "PA12", "PA15"]},
+   "forest.management": {"value": null, "grade": "U", "status": "unknown", "sources": []}
+  },
+  "GG_HANYANG": {
+   "terrain.form": {"value": "내사산(백악·인왕·낙산·목멱) 고리, 개천이 서→동, 지류가 빗살처럼 모임", "grade": "A", "status": "proposed", "sources": ["GG24"], "note": "회화식 지도(남쪽이 위) 판독 — 회화는 원형 확정 근거가 아니므로 proposed(PUB-09)"},
+   "rock_candidates": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "지역 기반암 서술 없음(성벽 석재 편암계 할석은 재료 기록, GG10)"},
+   "river.gaecheon": {"value": "개천: 토사 퇴적·여름 침수, 영조 때 준설·양안 석축", "grade": "B", "status": "confirmed", "sources": ["GG13"]},
+   "river.gaecheon_state": {"value": "하상에 모래흙이 쌓이는 상태(산허리 개간 → 토사 → 준설)", "grade": "B", "status": "proposed", "sources": ["FU02"], "note": "21 §5.1; 수치 U"},
+   "water.stage_naming": {"value": "수표 4단계 눈금 경·진·지·평(1760)", "grade": "B", "status": "proposed", "sources": ["GG03"], "note": "갈수·평수·증수 상태 이름으로 둘 수 있음(제안); 각 단계 높이 U. 상태 값은 rules water.stage_states 하나만 쓴다"},
+   "river.sections": {"value": null, "grade": "U", "status": "unknown", "sources": [], "note": "복원 하천 사진은 현대 석축 단면이라 쓰지 않음"},
+   "forest.notes": {"value": "목멱산 소나무, 궁궐 뒤 수림(회화 관습 주의); 사산 송금 위반·벌채", "grade": "B", "status": "proposed", "sources": ["GG17", "GG24", "FU02"]},
+   "forest.management": {"value": "금산(송금) 구역이나 벌채·개간 압력 기록", "grade": "B", "status": "proposed", "sources": ["FU02"], "note": "보호림 안 헐벗은 곳 허용(21 §5.1)"}
+  }
+ }
+}

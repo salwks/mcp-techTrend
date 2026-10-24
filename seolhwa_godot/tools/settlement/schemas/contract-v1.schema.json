@@ -2,7 +2,7 @@
  "$schema": "https://json-schema.org/draft/2020-12/schema",
  "$id": "settlement-contract/1",
  "title": "Common data contract v1 (WP1, spec 04 TOOL-01) — required items only",
- "description": "Every object carries `meta`. Missing values are null with a reason, never 0 (a 0 in a drawing table is not a 0 m dimension). No object is created as confirmed by a generator; confirmed requires sources (V18).",
+ "description": "Every object carries `meta`. Missing values are null with a reason, never 0 (a 0 in a drawing table is not a 0 m dimension). No object is created as confirmed by a generator; confirmed requires sources (V18). WP4 additions (additive, still settlement-contract/1): TerrainPatch.landform + foot_slope/summit/water; HabitatPatch.management + cultivated_yard (경작지·마당) and abandoned (방치지) — `cultivated` stays readable.",
  "type": "object",
  "$defs": {
   "id": {"type": "string", "pattern": "^[a-z_]+:[A-Za-z0-9_.\\-]+(:[A-Za-z0-9_.\\-]+)*$"},
@@ -67,11 +67,11 @@
     "units_confirmed": {"type": "boolean"}}
   },
   "TerrainPatch": {"type": "object", "required": ["meta", "original", "modified", "landform", "rock_body", "rock_type", "structure_dir", "exposure", "change_reason"],
-   "properties": {"meta": {"$ref": "#/$defs/meta"}, "landform": {"enum": ["ridge", "saddle", "valley_floor", "slope", "plain", "unknown"]}}},
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "landform": {"enum": ["ridge", "saddle", "valley_floor", "slope", "plain", "foot_slope", "summit", "water", "unknown"]}}},
   "WaterReach": {"type": "object", "required": ["meta", "upstream", "downstream", "long_profile", "cross_section", "plan", "flow", "bed_mix", "states"],
    "properties": {"meta": {"$ref": "#/$defs/meta"}, "states": {"type": "array", "items": {"type": "object", "required": ["key", "offset_world_m", "status"]}}}},
   "HabitatPatch": {"type": "object", "required": ["meta", "community", "management", "soil", "moisture", "season"],
-   "properties": {"meta": {"$ref": "#/$defs/meta"}, "management": {"enum": ["natural", "protected", "village_grove", "use_forest", "cultivated", "unknown"]}}},
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "management": {"enum": ["natural", "protected", "village_grove", "use_forest", "cultivated", "cultivated_yard", "abandoned", "unknown"]}}},
   "Route": {"type": "object", "required": ["meta", "purpose", "nodes", "modes", "width_section", "long_profile", "support_drainage", "centerline"],
    "properties": {"meta": {"$ref": "#/$defs/meta"}, "centerline": {"$ref": "#/$defs/gref"},
     "modes": {"type": "array", "items": {"type": "object", "required": ["mode", "passable", "limit", "status"],
