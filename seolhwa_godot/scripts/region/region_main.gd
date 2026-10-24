@@ -416,6 +416,8 @@ func _build_scene() -> void:
 	sun.shadow_blur = 1.5
 	root.add_child(sun)
 	# 해 그림자 거르기 품질(0~5) 견주기 · 화면 품질 낮음은 1(성능 풀이)
+	# 기와 줄(빌더 기와 지붕 40m 안 수키와 줄): 화질 낮음이면 끈다 · --giwarows=0|1로 견주기
+	PlacementLoader.giwa_high = String(args.giwarows) != "0" if args.has("giwarows") else not gfx_low()
 	if args.has("shadowq"): RenderingServer.directional_soft_shadow_filter_set_quality(int(args.shadowq))
 	elif gfx_low(): RenderingServer.directional_soft_shadow_filter_set_quality(1)
 	if args.has("shadowsize"): RenderingServer.directional_shadow_atlas_set_size(int(args.shadowsize), true)   # 해 그림자 판 크기 견주기(없으면 look.gd가 구역·품질로 정한다)
@@ -1411,6 +1413,14 @@ func _bench_report() -> void:
 	print("BENCH avg_fps=%.1f tris=%dk draws=%d worst_ms=%.1f p99_ms=%.1f over33=%d frames=%d render=%s speed=%.1f dist=%.0fm tiles_near=%d mid=%d scatter=%d statics=%d" % [
 		_bench_frames / _bench_time, int(_bench_gpu / maxf(1.0, a.size()) / 1000.0), int(_bench_draws / maxf(1.0, a.size())), _bench_worst * 1000.0, p99 * 1000.0, over, _bench_frames, scene_vp.size, _bench_speed,
 		_bench_dist, world.stats.near, world.stats.mid, world.stats.scatter_done, world.stats.statics])
+	# 기와 줄(빌더 기와 지붕): 놓인 줄 조각 수 · 카메라 40m 안(보이는 것) · 그 삼각형
+	var gr_all := 0; var gr_near := 0; var gr_tris := 0
+	for n in get_tree().root.find_children("giwa_rows", "MeshInstance3D", true, false):
+		gr_all += 1
+		var mi := n as MeshInstance3D
+		if mi.is_visible_in_tree() and cam.global_position.distance_to(mi.global_transform * mi.get_aabb().get_center()) < 40.0:
+			gr_near += 1; gr_tris += mi.mesh.surface_get_array_len(0) / 3 + (mi.mesh.surface_get_array_len(1) / 3 if mi.mesh.get_surface_count() > 1 else 0)
+	print("BENCH giwa_rows=%d near40=%d near40_tris=%d" % [gr_all, gr_near, gr_tris])
 	if args.has("perfdump"): _perf_dump()
 	# 인물 그림 비용(인물 빌더 1~3단계 측정): 텍스처 VRAM 전체 · 사람 종류(그림) 수 · 화면 안 사람
 	var banks := {}

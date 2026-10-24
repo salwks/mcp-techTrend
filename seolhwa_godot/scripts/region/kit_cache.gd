@@ -102,7 +102,7 @@ static func _save(info: Dictionary, scn: String, inf: String) -> void:
 		if mi.mesh == null: continue
 		for s in mi.mesh.get_surface_count():
 			var m = mi.mesh.surface_get_material(s)
-			for kind in ["atlas", "cloth", "water", "water_refl"]:
+			for kind in ["atlas", "cloth", "water", "water_refl", "giwa_khs", "giwa_khs_rows"]:
 				if m != null and m == Kit.material(kind):
 					mats.append([str(root.get_path_to(mi)), s, kind])
 					restore.append([mi.mesh, s, m])

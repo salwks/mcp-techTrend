@@ -126,7 +126,7 @@ class M:
 			if merge_parts:
 				# 자식 MeshInstance3D만 옮겨 단계 하나 줄임
 				var mi: Node = n.get_child(0)
-				n.remove_child(mi); mi.name = "mesh"; root.add_child(mi); n.free()
+				n.remove_child(mi); mi.name = "mesh" if p == "all" else p; root.add_child(mi); n.free()   # 따로 둔 조각(기와 줄 giwa_*)은 제 이름
 			else:
 				root.add_child(n)
 		return root

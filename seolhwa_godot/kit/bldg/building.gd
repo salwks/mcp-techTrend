@@ -19,6 +19,11 @@ const FW := preload("res://kit/village/firewood.gd")
 const DP := preload("res://kit/village/dress_props.gd")
 
 const RANGES := [[0.0, 55.0], [55.0, 160.0], [160.0, 0.0]]
+# 기와 줄(kit/bldg/_roof.gd _rows — 국가유산청 수키와 단면·간격, 그림판 기와): 가까운 단계 안에서 다시 둘로 나눈다
+#   giwa_rows(수키와 줄·수막새, 그림자 없음, 32~40m 점무늬로 사라짐) · giwa_hi(그림판 암키와 겉·암막새 띠, 0~GIWA_NEAR)
+#   giwa_lo(예전 아틀라스 기와 겉·막새 띠, GIWA_NEAR~55m). 화질 낮음(set_giwa_detail(…, false))이면 줄·그림판 벌을 끄고 아틀라스 벌을 0m부터
+const GIWA_NEAR := 40.0
+static var GIWA_ROWS := true   # 짓기 스위치(측정 전후 비교용 — 끄면 예전과 같은 지붕)
 const LOD_NAMES := ["near", "mid", "far"]
 const OPEN_FNS := ["hall", "maru", "shed", "mill", "forge", "shop", "stable"]
 
@@ -63,6 +68,7 @@ static func build(params: Dictionary) -> Dictionary:
 				g.visibility_range_begin_margin = 2.0 if lod > 0 else 0.0
 				g.visibility_range_end_margin = 2.0 if lod < 2 else 0.0
 				if lod == 2: g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if lod == 0: _giwa_ranges(node, want < 0)
 		root.add_child(node)
 		if res.is_empty():
 			res = { colliders = m.colliders, lights = m.lights, anchors = m.anchors, occluder = true, footprint = info.footprint }
@@ -72,7 +78,7 @@ static func build(params: Dictionary) -> Dictionary:
 	if inside:
 		var near := root.get_node_or_null("near")
 		var hide := []
-		for p in ["roof", "front"]:
+		for p in ["roof", "front", "giwa_rows", "giwa_hi", "giwa_lo"]:
 			var n = near.get_node_or_null(p) if near else null
 			if n: hide.append(n)
 		var b: Rect2 = res.info.body
@@ -83,6 +89,27 @@ static func build(params: Dictionary) -> Dictionary:
 	if res.info.has("chimney"): res.anchors["chimney"] = res.info.chimney
 	res.erase("info")
 	return res
+
+# 가까운 단계의 기와 줄 조각 거리·그림자. three(세 단계)가 아니면(lod 0만) 아틀라스 벌을 빼서 두 겉이 겹치지 않게
+static func _giwa_ranges(near: Node, three: bool) -> void:
+	var rows := near.get_node_or_null("giwa_rows") as GeometryInstance3D
+	var hi := near.get_node_or_null("giwa_hi") as GeometryInstance3D
+	var lo := near.get_node_or_null("giwa_lo") as GeometryInstance3D
+	if rows: rows.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if not three:
+		if lo: near.remove_child(lo); lo.free()
+		return
+	for g in [rows, hi]:
+		if g: g.visibility_range_end = GIWA_NEAR; g.visibility_range_end_margin = 0.0
+	if lo: lo.visibility_range_begin = GIWA_NEAR; lo.visibility_range_begin_margin = 0.0
+
+# 화질 스위치(놓은 뒤 언제든): high = 수키와 줄·그림판 기와(0~40m) / low = 예전 아틀라스 기와만(0~55m). 묶음·고을 노드도 통째로
+static func set_giwa_detail(root: Node, high: bool) -> void:
+	for n in root.find_children("giwa_*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		match String(g.name):
+			"giwa_rows", "giwa_hi": g.visible = high
+			"giwa_lo": g.visibility_range_begin = GIWA_NEAR if high else 0.0
 
 # ---------------------------------------------------------------------------------------------------
 # 한 단계 그리기
@@ -1179,7 +1206,8 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 				RF.giwa(m, "roof", { hw = shw, hd = hd, eave = eave, rise = rise, thick = 0.24, lift = float(rf.lift), ends = se, hap = 0.45, clip = clip,
 					lift_ends = [0.0 if float(sext[0]) > 0.0 or (gate.size() == 2 and sxa == gate[1]) else 1.0, 0.0 if float(sext[1]) > 0.0 or (gate.size() == 2 and sxb == gate[0]) else 1.0],
 					L = minf(L, sxb - sxa), wx0 = maxf(-L / 2, sxa) - scx, wx1 = minf(L / 2, sxb) - scx, D = info.zf - info.zb + (zcol - info.zf), lod = lod, buyeon = rf.get("buyeon", false), sag = float(sp.wear) * 0.12 + float(ctx.ruin.get("sag", 0.0)),
-					rafter_col = ctx.col if ctx.paint != "none" else ctx.wood, c_top = 0x8f9296 if sp.wear < 0.5 else 0x878a84, c_low = 0x6d7176 })
+					rafter_col = ctx.col if ctx.paint != "none" else ctx.wood, c_top = 0x8f9296 if sp.wear < 0.5 else 0x878a84, c_low = 0x6d7176,
+					rows = GIWA_ROWS and not sp.has("_rz"), kh = float((sp.get("real_scale", [1.0, 1.0]) as Array)[0]) })
 				# 맞배 끝: 풍판(박공 아래 널) — 다른 지붕에 묻히는 끝·대문 쪽 끝은 없음
 				if lod == 0:
 					for sd in [-1.0, 1.0]:
@@ -1763,10 +1791,16 @@ static func roof_geos(sp: Dictionary) -> Array:
 		m.pop(old)
 		if sp.has("_rz"): _ruin_post(m, sp, sp._rz, 0, true, false)   # 폐가: 자른 지붕·기울기까지(검사가 실제 모양을 보게)
 		var b = m.parts.get("roof")
+		# 기와 줄을 켠 가까운 단계: 기와 겉(그림판 벌)·수키와 줄도 지붕으로 본다(줄이 다른 지붕·벽을 뚫는지까지). 아틀라스 벌(giwa_lo)은 같은 겉이라 뺀다
+		var rgs := []
+		if b != null: rgs.append_array(b.parts.get("atlas", []))
+		for gp in ["giwa_hi", "giwa_rows"]:
+			if m.parts.has(gp):
+				for mk in m.parts[gp].parts: rgs.append_array(m.parts[gp].parts[mk])
 		var wl := []
 		for p in ["body", "front"]:
 			if m.parts.has(p): wl.append_array(m.parts[p].parts.get("atlas", []))
-		if b != null: out.append({ wing = String(w.id), geo = Kit.merge(b.parts.get("atlas", [])), walls = Kit.merge(wl), top = _roof_frame(sp, ctx, w).top, pdoors = (ctx.pdoors as Array).duplicate(), wings = (sp.wings as Array).size(), droop = float(sp.roof.get("droop", 0.0)) })
+		if b != null: out.append({ wing = String(w.id), geo = Kit.merge(rgs), walls = Kit.merge(wl), top = _roof_frame(sp, ctx, w).top, pdoors = (ctx.pdoors as Array).duplicate(), wings = (sp.wings as Array).size(), droop = float(sp.roof.get("droop", 0.0)) })
 		(ctx.pdoors as Array).clear()
 		wi += 1
 	return out

@@ -263,8 +263,11 @@ const PBR_CODE := """
 """
 
 # lit: 툰 조명 / unlit: 무광(MeshBasic) / blend: 반투명 / cull: 양면 여부
-static func world_shader(lit: bool, blend: bool, double_sided: bool) -> Shader:
-	var key := "%s%s%s" % [int(lit), int(blend), int(double_sided)]
+# khs: 국가유산청 기와 그림판(바탕·법선·ORM)을 쓰는 기와 재질(Kit.material("giwa_khs*") — kit/bldg/_roof.gd 기와 줄).
+#   층은 기와(M_TILE)로 두고(젖음·눈·하늘빛은 기와 그대로) 바탕색·법선·거칠기·오목만 그림판에서. khs_fade(시작, 끝 m)가 있으면 그 거리에서 점무늬로 사라진다.
+#   khs = false면 셰이더 글은 예전과 한 글자도 다르지 않다.
+static func world_shader(lit: bool, blend: bool, double_sided: bool, khs := false) -> Shader:
+	var key := "%s%s%s%s" % [int(lit), int(blend), int(double_sided), "k" if khs else ""]
 	if _shaders.has(key):
 		return _shaders[key]
 	# 사실 재질(look_pbr)은 light()가 정반사를 직접 더한다 — specular_disabled를 두지 않는다(툰 쪽은 더하지 않으니 예전과 같다)
@@ -277,7 +280,8 @@ static func world_shader(lit: bool, blend: bool, double_sided: bool) -> Shader:
 		modes.append("depth_draw_always")
 	var code := "shader_type spatial;\nrender_mode %s;\n" % ", ".join(modes)
 	code += GLOBALS
-	if Pbr.real: code += "#define LOOK_PBR\n"   # 사실 재질·빛(컴파일 때 고름 — 실행 중 분기는 큰 셰이더에서 1ms 넘게 든다)
+	if Pbr.real: code += "#define LOOK_PBR\n"
+	if khs: code += "#define KHS_TEX\n"   # 사실 재질·빛(컴파일 때 고름 — 실행 중 분기는 큰 셰이더에서 1ms 넘게 든다)
 	code += "#include \"res://shaders/pbr_common.gdshaderinc\"\n"
 	code += "#include \"res://shaders/pbr_scan.gdshaderinc\"\n"
 	code += """
@@ -293,7 +297,7 @@ uniform float fade = 1.0;
 // kit_tiling = 0(glTF 마을 등)이면 예전과 똑같이 UV를 그대로 쓴다.
 uniform float kit_tiling = 0.0;
 varying vec4 v_rect;
-
+%KHSUNI%
 void vertex() {
 	v_rect = CUSTOM0;
 }
@@ -312,13 +316,20 @@ void fragment() {
 	vec4 t = kit_tiling > 0.5 ? textureGrad(albedo_tex, a_uv + uv_offset, dFdx(a_cont), dFdy(a_cont)) : texture(albedo_tex, UV + uv_offset);
 	vec3 base = albedo_color.rgb * t.rgb * COLOR.rgb;
 	ALBEDO = base;
-%INK%%DITHER%
+%KHSFADE%%INK%%DITHER%
 """
 	code = code.replace("%DITHER%", "" if blend else DITHER)
+	code = code.replace("%KHSUNI%", KHS_UNI if khs else "").replace("%KHSFADE%", KHS_FADE if khs else "")
 	# 사실 재질에서는 먹선 껍질(먹색 버텍스)을 그리지 않는다
 	code = code.replace("%INK%", "" if blend or not Pbr.real else "\tif (distance(COLOR.rgb, vec3(0.0242, 0.0194, 0.0160)) < 0.012) discard;\n")
 	if lit:
-		code += "#ifdef LOOK_PBR\n\t{\n" + PBR_CODE.replace("%CLOTH%", "true" if double_sided else "false") + "\t}\n#else\n\t{\n" + WEATHER_CODE + """
+		var pc: String = PBR_CODE.replace("%CLOTH%", "true" if double_sided else "false")
+		if khs:
+			pc = pc.replace("if (p_solid && %s) mid = M_CLOTH;" % ("true" if double_sided else "false"), "mid = M_TILE; p_solid = false;")
+			pc = pc.replace("if (pbr_q > 0.5 && MP_POM[mid] > 0.5", "if (false")
+			pc = pc.replace("float ar = p_solid ? 0.0 : MP_ARELIEF[mid];", "float ar = 0.0;")
+			pc = pc.replace("\t\tfloat trans = MP_TRANS[mid];", KHS_PBR + "\t\tfloat trans = MP_TRANS[mid];")
+		code += "#ifdef LOOK_PBR\n\t{\n" + pc + "\t}\n#else\n\t{\n" + WEATHER_CODE + """
 	vec3 wn = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	vec3 hemi = mix(hemi_ground, hemi_sky, 0.5 * wn.y + 0.5) * hemi_i;
 	EMISSION = base * hemi / PI + emissive_color * texture(emission_tex, a_uv).rgb * glow_k * use_emission;
@@ -347,6 +358,29 @@ void light() {
 	_shaders[key] = sh
 	return sh
 
+const KHS_UNI := """uniform sampler2D khs_nrm : filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D khs_orm : filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float khs_nrm_k = 1.0;
+uniform float khs_ny = 1.0;
+uniform vec2 khs_fade = vec2(0.0);
+"""
+const KHS_FADE := """	if (khs_fade.y > 0.0) {
+		ivec2 kq = ivec2(FRAGCOORD.xy) % 4;
+		const float KB[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
+		if ((KB[kq.y * 4 + kq.x] + 0.5) / 16.0 < smoothstep(khs_fade.x, khs_fade.y, length(VERTEX))) discard;
+	}
+"""
+const KHS_PBR := """		{
+			vec2 kdx = dFdx(a_cont), kdy = dFdy(a_cont);
+			vec3 korm = textureGrad(khs_orm, a_uv, kdx, kdy).rgb;
+			vec3 kn = textureGrad(khs_nrm, a_uv, kdx, kdy).rgb * 2.0 - 1.0;
+			alb = albedo_color.rgb * t.rgb * COLOR.rgb;
+			ao = korm.r; rough = korm.g; h = 0.5;
+			TBN = pbr_frame(NORMAL, VERTEX, a_cont);
+			sxy = vec2(kn.x, kn.y * khs_ny) / max(kn.z, 0.2) * khs_nrm_k;
+		}
+"""
+
 # glTF 재질 → 셰이더 재질
 static func from_standard(m: BaseMaterial3D, glow: bool) -> ShaderMaterial:
 	var lit := m.shading_mode != BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -373,8 +407,8 @@ static func faded_copy(sm: ShaderMaterial) -> ShaderMaterial:
 	var lit := not code.contains("unshaded")
 	var ds := code.contains("cull_disabled")
 	var f := ShaderMaterial.new()
-	f.shader = world_shader(lit, true, ds)
-	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset", "kit_tiling"]:
+	f.shader = world_shader(lit, true, ds, code.contains("#define KHS_TEX"))
+	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset", "kit_tiling", "khs_nrm", "khs_orm", "khs_nrm_k", "khs_ny", "khs_fade"]:
 		var v = sm.get_shader_parameter(p)
 		if v != null:
 			f.set_shader_parameter(p, v)

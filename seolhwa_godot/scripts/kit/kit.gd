@@ -370,6 +370,11 @@ static func texture(name: String) -> Texture2D:
 	return t
 
 # 'atlas'(거의 전부, 창호지·초롱은 밤에 빛남) / 'cloth'(양면 천) / 'water'(반투명 물결, 웹 개울과 같은 재질)
+# 국가유산청 기와 그림판은 매우 어둡다(암키와 칸 평균 선형 0.020 대 빌더 아틀라스 기와 칸 0.574). 같은 꼭짓점 색에서
+#   가까운 기와(그림판)와 중경 기와(아틀라스)가 같은 평균 밝기가 되게 곱한다 — 40m에서 바뀔 때 밝기가 튀지 않게
+const GIWA_KHS_TINT := Vector4(28.7, 30.2, 30.9, 1.0)
+const GIWA_ROW_FADE := Vector2(32.0, 40.0)   # 수키와 줄이 점무늬로 사라지는 거리(m) — building.GIWA_NEAR(40m)에서 다 사라진다
+
 static func material(kind := "atlas") -> ShaderMaterial:
 	_lock.lock()
 	var m0: ShaderMaterial = _mats.get(kind)
@@ -394,6 +399,18 @@ static func _make_material(kind: String) -> ShaderMaterial:
 		m.set_shader_parameter("wnrm_tex", WaterFX.normal_tex())
 		var c := hex(0xb4cac8)
 		m.set_shader_parameter("albedo_color", Vector4(c.r, c.g, c.b, 0.88))
+		return m
+	if kind.begins_with("giwa_khs"):
+		# 국가유산청 기와 그림판(정읍 김명관 고택 안채 MI_Giwa, 공공누리 1유형 — assets/kit/khs_giwa/modules.json source).
+		#   'giwa_khs' 기와 겉(암키와 칸)·처마 띠 / 'giwa_khs_rows' 수키와 줄·막새(GIWA_ROW_FADE 거리에서 점무늬로 사라짐)
+		m.shader = Materials.world_shader(true, false, false, true)
+		m.set_shader_parameter("ramp_tex", Materials.ramp_texture())
+		m.set_shader_parameter("kit_tiling", 1.0)
+		m.set_shader_parameter("albedo_tex", texture("khs_giwa/giwa_bca"))
+		m.set_shader_parameter("khs_nrm", texture("khs_giwa/giwa_nrm"))
+		m.set_shader_parameter("khs_orm", texture("khs_giwa/giwa_orm"))
+		m.set_shader_parameter("albedo_color", GIWA_KHS_TINT)
+		if kind == "giwa_khs_rows": m.set_shader_parameter("khs_fade", GIWA_ROW_FADE)
 		return m
 	m.shader = Materials.world_shader(true, false, kind == "cloth")
 	m.set_shader_parameter("ramp_tex", Materials.ramp_texture())

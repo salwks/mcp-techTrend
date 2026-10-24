@@ -3,6 +3,7 @@
 #   godot --headless --path . -s res://tools/bldg/gallery_place.gd -- [--set=gallery|block] [--out=res://shots/building_builder/_place/]
 #   --set=gallery  : 다양성·비교·실내(기본) — 터 가운데 (-3607, 526), 330×230m
 #   --set=block    : 성능 시험용 30채 마을 한 구역(남원 읍성 서쪽, 고을 사람이 보는 거리) — (-3487, 526)
+#   --set=giwablock: 같은 자리 30채를 모두 기와집으로(기와 줄 최악 견줌 — tools/bldg/giwa_bench.sh)
 # 배치 파일은 shots/ 아래(깃 밖) — 실제 세계 배치(region_data)는 건드리지 않는다.
 extends SceneTree
 const B := preload("res://kit/bldg/building.gd")
@@ -20,6 +21,7 @@ func _init() -> void:
 	var out: String = args.get("out", "res://shots/building_builder/_place_%s/" % set)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
 	if set == "block": _block()
+	elif set == "giwablock": _block(true)
 	elif set == "town": _town(out)
 	elif set == "ruin": _ruin_set(out)
 	elif set == "scale": _scale_set()
@@ -234,9 +236,10 @@ func _ruin_set(out: String) -> void:
 	vf.close()
 
 # 성능 시험 마을 블록: 30채(서민 초가·중농·주막·양반가·시전 섞임) — 길을 사이에 두고 두 줄 + 안쪽 줄
-func _block() -> void:
+func _block(giwa := false) -> void:
 	var L := []
-	var types := [["choga", "south"], ["choga", "central"], ["choga", "south"], ["jumak", "south"], ["choga", "south"], ["gotgan", "south"],
+	var types := [["anchae", "central"], ["sarang", "south"], ["giwajip", "central"], ["anchae", "south"], ["sijeon", "south"], ["haengrang", "south"],
+		["sarang", "central"], ["giwajip", "south"], ["anchae", "central"], ["sadang", "south"]] if giwa else [["choga", "south"], ["choga", "central"], ["choga", "south"], ["jumak", "south"], ["choga", "south"], ["gotgan", "south"],
 		["araechae", "south"], ["choga", "south"], ["sarang", "south"], ["anchae", "south"], ["sijeon", "south"], ["choga", "central"]]
 	var rr := Kit.Rng.new(4242)
 	var n := 0

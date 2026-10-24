@@ -24,6 +24,9 @@
 extends RefCounted
 
 const KitCache := preload("res://scripts/region/kit_cache.gd")
+const BLDG := preload("res://kit/bldg/building.gd")
+# 기와 줄(빌더 기와 지붕 가까운 단계의 수키와 줄·국가유산청 기와 그림판): false(화질 낮음 · --giwarows=0)면 놓을 때 끈다
+static var giwa_high := true
 const Jobs := preload("res://scripts/region/jobs.gd")
 const PlacementGate := preload("res://scripts/region/placement_gate.gd")
 
@@ -380,6 +383,7 @@ func _place_one(r: Dictionary) -> void:
 		var ps: PackedScene = _packed.get(k)
 		node = ps.instantiate() if ps != null else info.node.duplicate()
 	node.name = String(r.id) if r.id != "" else node.name
+	if not giwa_high and String(r.kit).begins_with("bldg/"): BLDG.set_giwa_detail(node, false)
 	var entry = world.add_static(node, r.xf, info, TAG)
 	if world.get("props") != null and entry is Dictionary: world.props.register(String(r.id), node, entry, info, r.get("state"))
 	if r.when != "" and entry is Dictionary:

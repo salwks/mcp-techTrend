@@ -51,6 +51,7 @@ func _check(sp: Dictionary, dbg: bool) -> Dictionary:
 	var ink := Kit.hex(Kit.INK)
 	var tris := []   # [a, b, c, n, d]
 	for p in m.parts:
+		if p == "giwa_lo": continue   # 기와 줄을 켠 지붕의 아틀라스 겉: giwa_hi와 같은 면이지만 거리로 갈려 함께 그려지지 않는다(building.GIWA_NEAR)
 		var bt: Kit.Batch = m.parts[p]
 		for mk in bt.parts:
 			for g in bt.parts[mk]:
