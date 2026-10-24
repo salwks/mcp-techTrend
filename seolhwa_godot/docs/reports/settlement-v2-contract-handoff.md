@@ -67,3 +67,30 @@
 - **RegionProfile.natural**: 21 지역 값이다. confirmed는 A/B와 출처가 있을 때만이다.
 - **계약 enum 추가**: landform `foot_slope/summit/water`, management `cultivated_yard/abandoned`.
 - **불변식 `WP4.layer`** 만 게시를 막는다. V01–V67 결과는 발견(finding)으로 보고한다.
+
+## WP5 Layers 3–5 구역·길·물·필지 — 추가된 것(2026-10-25)
+
+자세한 것은 `settlement-v2-wp5-layout.md`를 본다.
+
+- **층 파일**: `layout.json`(`settlement-layout/1`, `schemas/settlement-layout.schema.json`). 계획서에는 `plan.layout{file, status, revision, summary, checks, revision_requests}`만 둔다. 불변식 `WP5.layer`만 게시를 막는다. 굳은 검사(hard)가 실패하면 layout 상태가 `incomplete`가 되고 `revision_requests`가 남는다.
+- **구역**(`districts`): 역할 + 가구 혼합(계급·생업·묶음은 따로). 비건축 영역(`regions`: 언덕·빈터·물길·보호 경작지·과원/채마)도 영역이다. 구역 경계는 길·담이 아니다(계획 표지).
+- **가구**(`households[]`): `hh:<범위>:<nnnn>`, 계급·생업·묶음·구역·필지. 한 번만 배정된다(성 밖 마을 가구는 `hamlet`).
+- **길**(`streets`): `nodes`·`links`(primary=L2 회랑, route=지도 길, secondary·lane·cul_de_sac·gosat). 링크마다 `modes{foot, pack_horse, cart}`·`grade`·`reason`·`bends[]{reason}`·`width_basis`. 광장은 프로그램에서만(앞마당·장터·우물).
+- **물**(`water`): `channels[]{effective_wet(파인 골 단면), mapped_width_m(별도 속성), width_disagreement}`, `crossings[]`(지도 WP4·L2 회랑·새 길, 여울은 `riffle_section`), `drains[]{invert, fall, outlet, terminal}`, `wall_passages`.
+- **필지**(`parcels[]`): 계약 Parcel(use·zones·access·yards(null+이유)·buildable·axes(null+이유)) + role·block·district·household·frontage.
+- **세분 그래프**(`subdivision`): `edges[]`는 한 번만 저장(`left_face`·`right_face`), `faces[].rings`는 부호 있는 변(`e+`/`e-`).
+
+### WP6(경계·담·문·수구)이 받을 것
+
+- 변마다: `adjacency`(양쪽 면 범주), `purpose`(street_frontage·party_boundary·rear_or_side_boundary·town_wall_inner·gate_opening·water_edge·lock_boundary…), `geometry_reason`(이 변을 만든 선: street_edge·frontage_normal·frontage_depth·rear_split·easement·civic_envelope·water_setback·town_wall·lock_shape·territory_edge…), `allowed_closures`(계약 Boundary.implementation + fence·hedge; 하나를 WP6이 고른다), `implementation: null`, `level{left_y, right_y, difference_m}`·`level_change`(0.6 m 넘으면 `retaining_wall` 선택지 추가).
+- 공유 변은 하나다: 양쪽 필지가 같은 변을 반대 방향으로 참조한다. 담을 양쪽에서 따로 만들지 않는다(V41 준비).
+- 성벽 안쪽 변은 `fortification`만 허용, 문 구간은 `gate_opening`(L2 opening id). WP5는 성벽 개구부를 새로 만들지 않는다.
+- **수구 요청**: 길 배수가 성벽에 닿았는데 수구가 없으면 `revision_requests[]{target:"WP6/수구", reason:"wall_outlet_needed", data.xz}` — WP6이 수구 Opening을 만들 자리다.
+- 통행권(`easements[]`)은 경계가 아니라 면이다(수혜 필지·폭·양끝 입구).
+
+### WP8(L6–7 집 짜임·단차)이 받을 것
+
+- 필지의 `buildable`(쓸 땅 ∩ 필지), `zones.rear_garden`, `frontage{street_hierarchy, width_m}`, `depth_m`, `household`(계급·생업은 `households[]`).
+- `axes`는 null이다: 방위는 L6에서 남향을 가중치로만 정한다(K6). `yards`도 null(L6).
+- 변의 `level`은 정지 전 지형값(시험)이다. 단차·옹벽·배수 해결은 WP8 몫이다. 경사 0.5 % 미만 길 배수는 `needs: grading_contract_or_culvert`.
+- 장터·빈터의 상태(`activity_sites[]`: 평시/장날, 평시/조련/활쏘기)는 상시 형상이 아니다.

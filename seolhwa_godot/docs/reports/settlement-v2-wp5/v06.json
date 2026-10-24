@@ -1,0 +1,665 @@
+{
+ "V06": {
+  "pass": true,
+  "pass_layers_3_5": true,
+  "per_terrain_seed": [
+   {
+    "layers_3_5": true,
+    "pass": true,
+    "seed": 2203,
+    "terrain": "terrace"
+   },
+   {
+    "layers_3_5": true,
+    "pass": true,
+    "seed": 7919,
+    "terrain": "terrace"
+   },
+   {
+    "layers_3_5": true,
+    "pass": true,
+    "seed": 2203,
+    "terrain": "basin"
+   },
+   {
+    "layers_3_5": true,
+    "pass": true,
+    "seed": 7919,
+    "terrain": "basin"
+   }
+  ]
+ },
+ "note": "seed only reorders alternatives the rules cannot separate (frame.seed_tie_epsilon)",
+ "rows": [
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 11,
+   "family": "plain",
+   "frame_id": "frame-f789210269",
+   "gates": 3,
+   "households": 85,
+   "layout": {
+    "activities": [
+     "laundry",
+     "market"
+    ],
+    "district_groups": [
+     "clerical",
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "cul_de_sac",
+     "lane",
+     "primary",
+     "secondary"
+    ],
+    "households_on_parcels": 85,
+    "loops": 3,
+    "pub04": true,
+    "roles": [
+     "clerical",
+     "elite_urban",
+     "rear_residential",
+     "urban_primary",
+     "urban_secondary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 11,
+   "family": "plain",
+   "frame_id": "frame-f789210269",
+   "gates": 3,
+   "households": 85,
+   "layout": {
+    "activities": [
+     "laundry",
+     "market"
+    ],
+    "district_groups": [
+     "clerical",
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "lane",
+     "primary",
+     "secondary"
+    ],
+    "households_on_parcels": 85,
+    "loops": 2,
+    "pub04": true,
+    "roles": [
+     "clerical",
+     "elite_urban",
+     "urban_primary",
+     "urban_secondary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 3,
+   "family": "unwalled",
+   "frame_id": "frame-ded19d87f8",
+   "gates": 0,
+   "households": 27,
+   "layout": {
+    "activities": [
+     "laundry"
+    ],
+    "district_groups": [
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 27,
+    "loops": 2,
+    "pub04": false,
+    "roles": [
+     "village_elite",
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 3,
+   "family": "unwalled",
+   "frame_id": "frame-ded19d87f8",
+   "gates": 0,
+   "households": 27,
+   "layout": {
+    "activities": [
+     "laundry"
+    ],
+    "district_groups": [
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 27,
+    "loops": 2,
+    "pub04": false,
+    "roles": [
+     "village_elite",
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-80cf97cc13",
+   "gates": 0,
+   "households": 8,
+   "layout": {
+    "activities": [
+     "landing_or_fishing_access",
+     "laundry"
+    ],
+    "district_groups": [
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 8,
+    "loops": 1,
+    "pub04": false,
+    "roles": [
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-80cf97cc13",
+   "gates": 0,
+   "households": 8,
+   "layout": {
+    "activities": [
+     "landing_or_fishing_access",
+     "laundry"
+    ],
+    "district_groups": [
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 8,
+    "loops": 1,
+    "pub04": false,
+    "roles": [
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 12,
+   "family": "plain_hill",
+   "frame_id": "frame-db16f2843f",
+   "gates": 2,
+   "households": 125,
+   "layout": {
+    "activities": [
+     "market"
+    ],
+    "district_groups": [
+     "clerical",
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "lane",
+     "primary",
+     "secondary"
+    ],
+    "households_on_parcels": 125,
+    "loops": 3,
+    "pub04": true,
+    "roles": [
+     "clerical",
+     "elite_urban",
+     "rear_residential",
+     "urban_primary",
+     "urban_secondary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 12,
+   "family": "plain_hill",
+   "frame_id": "frame-db16f2843f",
+   "gates": 2,
+   "households": 125,
+   "layout": {
+    "activities": [
+     "market"
+    ],
+    "district_groups": [
+     "clerical",
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "lane",
+     "primary",
+     "secondary"
+    ],
+    "households_on_parcels": 125,
+    "loops": 4,
+    "pub04": true,
+    "roles": [
+     "clerical",
+     "elite_urban",
+     "rear_residential",
+     "urban_primary",
+     "urban_secondary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-d3fbffe3d9",
+   "gates": 0,
+   "households": 25,
+   "layout": {
+    "activities": [],
+    "district_groups": [
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 25,
+    "loops": 2,
+    "pub04": false,
+    "roles": [
+     "village_elite",
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-d3fbffe3d9",
+   "gates": 0,
+   "households": 25,
+   "layout": {
+    "activities": [],
+    "district_groups": [
+     "craft",
+     "elite",
+     "market_trade",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "lane",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 25,
+    "loops": 3,
+    "pub04": false,
+    "roles": [
+     "village_elite",
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-89f5761376",
+   "gates": 0,
+   "households": 15,
+   "layout": {
+    "activities": [
+     "landing_or_fishing_access"
+    ],
+    "district_groups": [
+     "elite",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 15,
+    "loops": 1,
+    "pub04": false,
+    "roles": [
+     "village_elite",
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-89f5761376",
+   "gates": 0,
+   "households": 15,
+   "layout": {
+    "activities": [
+     "landing_or_fishing_access"
+    ],
+    "district_groups": [
+     "elite",
+     "ordinary"
+    ],
+    "hierarchy": [
+     "gosat",
+     "primary",
+     "route"
+    ],
+    "households_on_parcels": 15,
+    "loops": 1,
+    "pub04": false,
+    "roles": [
+     "village_elite",
+     "village_ordinary"
+    ],
+    "status": "complete"
+   },
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  }
+ ],
+ "seed_changed_frame_for": []
+}

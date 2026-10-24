@@ -1,0 +1,4247 @@
+{
+ "anmok_village": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 10.02,
+   "households": {
+    "on_parcels": 8,
+    "programmed": 10
+   },
+   "parcels_by_role": {
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       439.4,
+       1196.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 736.85,
+      "median_within_15pct": true,
+      "n": 8,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       439.4,
+       872.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 516.9,
+      "median_within_15pct": false,
+      "n": 8,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       18.41,
+       31.19
+      ],
+      "iqr_overlaps_target": true,
+      "median": 18.41,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 8,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 389.0,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 1,
+   "districts": 2,
+   "drains": 14,
+   "edges": 123,
+   "faces": 31,
+   "households": 10,
+   "households_on_parcels": 8,
+   "parcels_by_use": {
+    "residential": 8,
+    "residual_nonbuildable": 1
+   },
+   "regions": 19,
+   "revision_requests": 1,
+   "streets_by_hierarchy": {
+    "gosat": 4,
+    "primary": 7,
+    "route": 4
+   }
+  }
+ },
+ "anmok_village@proposal": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 8.76,
+   "households": {
+    "on_parcels": 7,
+    "programmed": 10
+   },
+   "parcels_by_role": {
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       588.7,
+       1414.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 670.5,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       488.6,
+       1270.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 588.7,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       18.25,
+       33.28
+      ],
+      "iqr_overlaps_target": true,
+      "median": 24.51,
+      "median_within_15pct": false,
+      "n": 5,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 7,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 389.0,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 1,
+   "districts": 2,
+   "drains": 14,
+   "edges": 117,
+   "faces": 30,
+   "households": 10,
+   "households_on_parcels": 7,
+   "parcels_by_use": {
+    "residential": 7,
+    "residual_nonbuildable": 1
+   },
+   "regions": 19,
+   "revision_requests": 1,
+   "streets_by_hierarchy": {
+    "gosat": 4,
+    "primary": 7,
+    "route": 4
+   }
+  }
+ },
+ "banseon": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 8.3,
+   "households": {
+    "on_parcels": 6,
+    "programmed": 6
+   },
+   "parcels_by_role": {
+    "sanchon": {
+     "area": {
+      "iqr": [
+       326.1,
+       776.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 438.5,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 602.4,
+      "target_range": [
+       360.0,
+       1008.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       253.2,
+       451.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 341.2,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 602.4,
+      "target_range": [
+       360.0,
+       1008.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       18.29,
+       20.08
+      ],
+      "iqr_overlaps_target": true,
+      "median": 19.18,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 6,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 932.3,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "cluster_unreachable",
+   "cluster_unreachable",
+   "rear_access_missing",
+   "rear_access_missing"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 4,
+   "districts": 8,
+   "drains": 32,
+   "edges": 196,
+   "faces": 48,
+   "households": 6,
+   "households_on_parcels": 6,
+   "parcels_by_use": {
+    "garden": 4,
+    "open_ground": 2,
+    "residential": 6,
+    "residual_garden": 5
+   },
+   "regions": 42,
+   "revision_requests": 4,
+   "streets_by_hierarchy": {
+    "gosat": 8,
+    "primary": 20,
+    "route": 7
+   }
+  }
+ },
+ "banseon@proposal": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 8.3,
+   "households": {
+    "on_parcels": 6,
+    "programmed": 6
+   },
+   "parcels_by_role": {
+    "sanchon": {
+     "area": {
+      "iqr": [
+       306.8,
+       776.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 438.5,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 602.4,
+      "target_range": [
+       360.0,
+       1008.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       253.2,
+       451.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 331.55,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 602.4,
+      "target_range": [
+       360.0,
+       1008.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       16.32,
+       18.12
+      ],
+      "iqr_overlaps_target": true,
+      "median": 17.22,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 6,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 932.3,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "cluster_unreachable",
+   "cluster_unreachable",
+   "rear_access_missing",
+   "rear_access_missing"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 4,
+   "districts": 8,
+   "drains": 32,
+   "edges": 201,
+   "faces": 49,
+   "households": 6,
+   "households_on_parcels": 6,
+   "parcels_by_use": {
+    "garden": 5,
+    "open_ground": 2,
+    "residential": 6,
+    "residual_garden": 5
+   },
+   "regions": 42,
+   "revision_requests": 4,
+   "streets_by_hierarchy": {
+    "gosat": 8,
+    "primary": 20,
+    "route": 7
+   }
+  }
+ },
+ "bulguksa_village": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 7.32,
+   "households": {
+    "on_parcels": 45,
+    "programmed": 45
+   },
+   "parcels_by_role": {
+    "village_elite": {
+     "area": {
+      "iqr": [
+       2448.5,
+       3615.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 3032.2,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 2230.84,
+      "target_range": [
+       864.0,
+       5760.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       2448.5,
+       3615.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 3032.2,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 2230.84,
+      "target_range": [
+       864.0,
+       5760.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       21.2,
+       41.59
+      ],
+      "iqr_overlaps_target": true,
+      "median": 31.4,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 46.48,
+      "target_range": [
+       30.0,
+       72.0
+      ]
+     },
+     "judged": true,
+     "n": 4,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       452.0,
+       1128.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 713.2,
+      "median_within_15pct": true,
+      "n": 41,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       452.0,
+       992.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 667.4,
+      "median_within_15pct": true,
+      "n": 41,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       28.0,
+       34.79
+      ],
+      "iqr_overlaps_target": true,
+      "median": 32.0,
+      "median_within_15pct": true,
+      "n": 41,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 41,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 1791.5,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "rear_access_missing"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 4,
+   "districts": 8,
+   "drains": 52,
+   "edges": 329,
+   "faces": 72,
+   "households": 45,
+   "households_on_parcels": 45,
+   "parcels_by_use": {
+    "garden": 6,
+    "residential": 45,
+    "residual_nonbuildable": 4
+   },
+   "regions": 62,
+   "revision_requests": 1,
+   "streets_by_hierarchy": {
+    "gosat": 22,
+    "lane": 3,
+    "primary": 5,
+    "route": 11
+   }
+  }
+ },
+ "bulguksa_village@proposal": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": 37.2,
+    "n": 1
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 7.39,
+   "households": {
+    "on_parcels": 35,
+    "programmed": 35
+   },
+   "parcels_by_role": {
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       514.6,
+       1651.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 725.1,
+      "median_within_15pct": true,
+      "n": 35,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       492.7,
+       1175.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 700.1,
+      "median_within_15pct": true,
+      "n": 35,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       26.96,
+       34.42
+      ],
+      "iqr_overlaps_target": true,
+      "median": 31.19,
+      "median_within_15pct": true,
+      "n": 35,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 35,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 1628.1,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [],
+  "status": "complete",
+  "summary": {
+   "crossings": 4,
+   "districts": 13,
+   "drains": 48,
+   "edges": 332,
+   "faces": 69,
+   "households": 35,
+   "households_on_parcels": 35,
+   "parcels_by_use": {
+    "garden": 4,
+    "residential": 35,
+    "residual_garden": 2,
+    "residual_nonbuildable": 13
+   },
+   "regions": 36,
+   "revision_requests": 0,
+   "streets_by_hierarchy": {
+    "cul_de_sac": 1,
+    "gosat": 20,
+    "primary": 6,
+    "route": 10
+   }
+  }
+ },
+ "fail_blocked_access": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": false,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": false,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": false,
+   "V28": false,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": false,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": 37.53,
+    "n": 1
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 5.67,
+   "households": {
+    "on_parcels": 28,
+    "programmed": 28
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       736.6,
+       2262.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1499.65,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       736.6,
+       2262.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1499.65,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       20.0,
+       20.0
+      ],
+      "iqr_overlaps_target": false,
+      "median": 20.0,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": false,
+     "n": 2,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       562.9,
+       774.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 680.5,
+      "median_within_15pct": true,
+      "n": 5,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       562.9,
+       680.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 674.9,
+      "median_within_15pct": true,
+      "n": 5,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       18.0,
+       29.52
+      ],
+      "iqr_overlaps_target": true,
+      "median": 18.0,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 5,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       64.6,
+       172.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 101.9,
+      "median_within_15pct": false,
+      "n": 9,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       64.6,
+       172.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 101.9,
+      "median_within_15pct": false,
+      "n": 9,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       6.96,
+       12.65
+      ],
+      "iqr_overlaps_target": true,
+      "median": 11.15,
+      "median_within_15pct": true,
+      "n": 9,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 9,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       267.2,
+       420.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 342.55,
+      "median_within_15pct": true,
+      "n": 12,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       240.5,
+       420.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 342.55,
+      "median_within_15pct": true,
+      "n": 12,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       8.91,
+       16.35
+      ],
+      "iqr_overlaps_target": true,
+      "median": 13.34,
+      "median_within_15pct": false,
+      "n": 11,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 12,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 203.5,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": [
+   "L5.access",
+   "L4.connected"
+  ],
+  "revision_requests": [
+   "unreachable_demand",
+   "unreachable_demand",
+   "rear_access_missing"
+  ],
+  "status": "diagnostic_only",
+  "summary": {
+   "crossings": 0,
+   "districts": 23,
+   "drains": 14,
+   "edges": 190,
+   "faces": 62,
+   "households": 28,
+   "households_on_parcels": 28,
+   "parcels_by_use": {
+    "garden": 5,
+    "hill": 2,
+    "residential": 28,
+    "residual_garden": 2,
+    "residual_nonbuildable": 1
+   },
+   "regions": 26,
+   "revision_requests": 3,
+   "streets_by_hierarchy": {
+    "cul_de_sac": 1,
+    "lane": 3,
+    "primary": 10
+   }
+  }
+ },
+ "fail_impossible_civic": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": null,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 7.25,
+   "households": {
+    "on_parcels": 41,
+    "programmed": 41
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       1613.7,
+       1946.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1779.9,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1218.2,
+       1613.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1415.95,
+      "median_within_15pct": true,
+      "n": 4,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       25.35,
+       34.77
+      ],
+      "iqr_overlaps_target": true,
+      "median": 30.06,
+      "median_within_15pct": true,
+      "n": 4,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 4,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       1407.5,
+       1407.5
+      ],
+      "iqr_overlaps_target": false,
+      "median": 1407.5,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1407.5,
+       1407.5
+      ],
+      "iqr_overlaps_target": false,
+      "median": 1407.5,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       52.0,
+       52.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 52.0,
+      "median_within_15pct": true,
+      "n": 1,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": false,
+     "n": 1,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       833.8,
+       1297.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1065.85,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       833.8,
+       1297.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1065.85,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "n": 0
+     },
+     "judged": false,
+     "n": 2,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       148.1,
+       229.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 182.2,
+      "median_within_15pct": true,
+      "n": 12,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       129.8,
+       229.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 166.45,
+      "median_within_15pct": false,
+      "n": 12,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       11.09,
+       12.95
+      ],
+      "iqr_overlaps_target": true,
+      "median": 12.09,
+      "median_within_15pct": true,
+      "n": 12,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 12,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       207.4,
+       398.2
+      ],
+      "iqr_overlaps_target": true,
+      "median": 247.25,
+      "median_within_15pct": false,
+      "n": 22,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       207.4,
+       398.2
+      ],
+      "iqr_overlaps_target": true,
+      "median": 247.25,
+      "median_within_15pct": false,
+      "n": 22,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       15.39,
+       20.55
+      ],
+      "iqr_overlaps_target": true,
+      "median": 16.51,
+      "median_within_15pct": true,
+      "n": 22,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 22,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [
+     46.2
+    ],
+    "judged": false,
+    "median": 46.24,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 649.3,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand",
+   "unreachable_demand",
+   "rear_access_missing"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 0,
+   "districts": 24,
+   "drains": 33,
+   "edges": 257,
+   "faces": 75,
+   "households": 41,
+   "households_on_parcels": 41,
+   "parcels_by_use": {
+    "garden": 11,
+    "residential": 41,
+    "residual_garden": 1,
+    "residual_nonbuildable": 1
+   },
+   "regions": 30,
+   "revision_requests": 3,
+   "streets_by_hierarchy": {
+    "primary": 30,
+    "route": 9,
+    "secondary": 2
+   }
+  }
+ },
+ "fail_water_crossing": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 4.58,
+   "households": {
+    "on_parcels": 7,
+    "programmed": 7
+   },
+   "parcels_by_role": {
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       138.5,
+       138.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 138.5,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       138.5,
+       138.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 138.5,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       16.0,
+       16.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 16.0,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": false,
+     "n": 1,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       289.1,
+       422.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 407.15,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       289.1,
+       422.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 359.35,
+      "median_within_15pct": true,
+      "n": 6,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       17.39,
+       20.31
+      ],
+      "iqr_overlaps_target": true,
+      "median": 19.51,
+      "median_within_15pct": true,
+      "n": 6,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 6,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 282.0,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [],
+  "status": "complete",
+  "summary": {
+   "crossings": 1,
+   "districts": 17,
+   "drains": 26,
+   "edges": 159,
+   "faces": 48,
+   "households": 7,
+   "households_on_parcels": 7,
+   "parcels_by_use": {
+    "garden": 14,
+    "residential": 7,
+    "residual_garden": 4
+   },
+   "regions": 23,
+   "revision_requests": 0,
+   "streets_by_hierarchy": {
+    "lane": 1,
+    "primary": 23,
+    "route": 5,
+    "secondary": 2
+   }
+  }
+ },
+ "namwon_eup": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": true,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 8.94,
+   "households": {
+    "on_parcels": 47,
+    "programmed": 47
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       897.0,
+       1301.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1099.0,
+      "median_within_15pct": true,
+      "n": 2,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       897.0,
+       917.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 907.2,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       32.0,
+       36.61
+      ],
+      "iqr_overlaps_target": true,
+      "median": 34.3,
+      "median_within_15pct": true,
+      "n": 2,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": false,
+     "n": 2,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       1206.1,
+       1731.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1206.1,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1206.1,
+       1660.3
+      ],
+      "iqr_overlaps_target": false,
+      "median": 1206.1,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       42.33,
+       60.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 42.33,
+      "median_within_15pct": true,
+      "n": 3,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": true,
+     "n": 3,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       724.2,
+       1257.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 990.95,
+      "median_within_15pct": false,
+      "n": 4,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       724.2,
+       751.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 737.75,
+      "median_within_15pct": true,
+      "n": 4,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       24.0,
+       28.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 24.0,
+      "median_within_15pct": true,
+      "n": 3,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 4,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       156.9,
+       315.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 185.8,
+      "median_within_15pct": true,
+      "n": 9,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       143.1,
+       315.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 185.8,
+      "median_within_15pct": true,
+      "n": 9,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       12.0,
+       13.07
+      ],
+      "iqr_overlaps_target": true,
+      "median": 12.25,
+      "median_within_15pct": true,
+      "n": 9,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 9,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       245.8,
+       390.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 301.4,
+      "median_within_15pct": true,
+      "n": 29,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       245.8,
+       349.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 286.2,
+      "median_within_15pct": false,
+      "n": 29,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       14.85,
+       19.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 16.69,
+      "median_within_15pct": true,
+      "n": 29,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 29,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 2344.5,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand",
+   "rear_access_missing",
+   "rear_access_missing"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 6,
+   "districts": 46,
+   "drains": 71,
+   "edges": 1070,
+   "faces": 303,
+   "households": 47,
+   "households_on_parcels": 47,
+   "parcels_by_use": {
+    "garden": 19,
+    "open_ground": 2,
+    "residential": 47,
+    "residual_garden": 26,
+    "residual_nonbuildable": 6
+   },
+   "regions": 96,
+   "revision_requests": 3,
+   "streets_by_hierarchy": {
+    "lane": 12,
+    "primary": 28,
+    "route": 33,
+    "secondary": 5
+   }
+  }
+ },
+ "namwon_eup@proposal": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": true,
+   "L5.treatments": true,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": 37.54,
+    "n": 1
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 8.94,
+   "households": {
+    "on_parcels": 47,
+    "programmed": 47
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       897.0,
+       1209.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1053.05,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       825.5,
+       897.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 861.25,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       32.0,
+       35.06
+      ],
+      "iqr_overlaps_target": true,
+      "median": 33.53,
+      "median_within_15pct": true,
+      "n": 2,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": false,
+     "n": 2,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       974.2,
+       2555.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1764.75,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       974.2,
+       2520.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1747.35,
+      "median_within_15pct": false,
+      "n": 2,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       39.98,
+       60.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 49.99,
+      "median_within_15pct": true,
+      "n": 2,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": false,
+     "n": 2,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       455.9,
+       1596.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 896.8,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       455.9,
+       896.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 752.9,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       24.0,
+       28.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 26.37,
+      "median_within_15pct": true,
+      "n": 6,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 7,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       136.8,
+       315.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 170.8,
+      "median_within_15pct": false,
+      "n": 11,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       136.8,
+       315.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 153.1,
+      "median_within_15pct": false,
+      "n": 11,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       11.92,
+       12.25
+      ],
+      "iqr_overlaps_target": true,
+      "median": 12.0,
+      "median_within_15pct": true,
+      "n": 11,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 11,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       228.7,
+       413.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 298.1,
+      "median_within_15pct": false,
+      "n": 25,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       202.2,
+       373.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 284.4,
+      "median_within_15pct": false,
+      "n": 25,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       15.76,
+       19.57
+      ],
+      "iqr_overlaps_target": true,
+      "median": 16.02,
+      "median_within_15pct": true,
+      "n": 25,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 25,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 2382.1,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 6,
+   "districts": 46,
+   "drains": 74,
+   "edges": 1075,
+   "faces": 303,
+   "households": 47,
+   "households_on_parcels": 47,
+   "parcels_by_use": {
+    "garden": 18,
+    "open_ground": 1,
+    "residential": 47,
+    "residual_garden": 25,
+    "residual_nonbuildable": 8
+   },
+   "regions": 96,
+   "revision_requests": 1,
+   "streets_by_hierarchy": {
+    "cul_de_sac": 1,
+    "lane": 13,
+    "primary": 28,
+    "route": 33,
+    "secondary": 5
+   }
+  }
+ },
+ "syn_basin": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 7.88,
+   "households": {
+    "on_parcels": 125,
+    "programmed": 125
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       720.5,
+       1995.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1137.15,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       720.5,
+       1995.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1137.15,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       27.03,
+       40.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 33.05,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 10,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       2575.3,
+       3222.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 2611.6,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       2009.5,
+       3222.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 2575.3,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       40.28,
+       54.08
+      ],
+      "iqr_overlaps_target": true,
+      "median": 49.68,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": true,
+     "n": 7,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       616.3,
+       1579.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 872.35,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       616.3,
+       1579.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 872.35,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       22.51,
+       31.51
+      ],
+      "iqr_overlaps_target": true,
+      "median": 29.76,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 6,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       143.2,
+       528.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 190.0,
+      "median_within_15pct": true,
+      "n": 17,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       143.2,
+       528.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 190.0,
+      "median_within_15pct": true,
+      "n": 17,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       10.69,
+       13.27
+      ],
+      "iqr_overlaps_target": true,
+      "median": 12.05,
+      "median_within_15pct": true,
+      "n": 17,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 17,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       311.4,
+       494.2
+      ],
+      "iqr_overlaps_target": true,
+      "median": 388.4,
+      "median_within_15pct": true,
+      "n": 85,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       311.4,
+       494.2
+      ],
+      "iqr_overlaps_target": true,
+      "median": 388.4,
+      "median_within_15pct": true,
+      "n": 85,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       15.61,
+       20.77
+      ],
+      "iqr_overlaps_target": true,
+      "median": 18.27,
+      "median_within_15pct": true,
+      "n": 85,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 85,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 1874.0,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand",
+   "unreachable_demand",
+   "unreachable_demand",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 1,
+   "districts": 31,
+   "drains": 60,
+   "edges": 568,
+   "faces": 170,
+   "households": 125,
+   "households_on_parcels": 125,
+   "parcels_by_use": {
+    "garden": 15,
+    "residential": 125,
+    "residual_garden": 3,
+    "residual_nonbuildable": 2
+   },
+   "regions": 24,
+   "revision_requests": 27,
+   "streets_by_hierarchy": {
+    "lane": 10,
+    "primary": 16,
+    "secondary": 20
+   }
+  }
+ },
+ "syn_estuary": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": null,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": null,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": 37.2,
+    "n": 1
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 7.69,
+   "households": {
+    "on_parcels": 59,
+    "programmed": 59
+   },
+   "parcels_by_role": {
+    "village_elite": {
+     "area": {
+      "iqr": [
+       4888.6,
+       4888.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 4888.6,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 2230.84,
+      "target_range": [
+       864.0,
+       5760.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       4106.1,
+       4106.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 4106.1,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 2230.84,
+      "target_range": [
+       864.0,
+       5760.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       64.0,
+       64.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 64.0,
+      "median_within_15pct": false,
+      "n": 1,
+      "target_mid": 46.48,
+      "target_range": [
+       30.0,
+       72.0
+      ]
+     },
+     "judged": false,
+     "n": 1,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       549.8,
+       1448.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 790.25,
+      "median_within_15pct": true,
+      "n": 58,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       549.5,
+       1092.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 772.8,
+      "median_within_15pct": true,
+      "n": 58,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       27.58,
+       37.05
+      ],
+      "iqr_overlaps_target": true,
+      "median": 32.0,
+      "median_within_15pct": true,
+      "n": 47,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 58,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 1758.5,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "rear_access_missing"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 2,
+   "districts": 7,
+   "drains": 27,
+   "edges": 332,
+   "faces": 91,
+   "households": 59,
+   "households_on_parcels": 59,
+   "parcels_by_use": {
+    "garden": 4,
+    "residential": 59,
+    "residual_garden": 3,
+    "residual_nonbuildable": 1
+   },
+   "regions": 9,
+   "revision_requests": 1,
+   "streets_by_hierarchy": {
+    "cul_de_sac": 1,
+    "gosat": 21,
+    "primary": 3,
+    "route": 14
+   }
+  }
+ },
+ "syn_mountain": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": null,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": 37.24,
+    "n": 2
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 7.25,
+   "households": {
+    "on_parcels": 205,
+    "programmed": 205
+   },
+   "parcels_by_role": {
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       635.2,
+       1400.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 865.9,
+      "median_within_15pct": false,
+      "n": 205,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       635.2,
+       1367.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 856.1,
+      "median_within_15pct": true,
+      "n": 205,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       28.48,
+       37.96
+      ],
+      "iqr_overlaps_target": true,
+      "median": 33.02,
+      "median_within_15pct": true,
+      "n": 192,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 205,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 4727.5,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "rear_access_missing",
+   "rear_access_missing",
+   "rear_access_missing",
+   "rear_access_missing",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 0,
+   "districts": 5,
+   "drains": 117,
+   "edges": 931,
+   "faces": 254,
+   "households": 205,
+   "households_on_parcels": 205,
+   "parcels_by_use": {
+    "garden": 12,
+    "residential": 205,
+    "residual_nonbuildable": 3
+   },
+   "regions": 12,
+   "revision_requests": 45,
+   "streets_by_hierarchy": {
+    "cul_de_sac": 2,
+    "gosat": 76,
+    "lane": 6,
+    "primary": 17
+   }
+  }
+ },
+ "syn_ridge": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": true,
+   "V28": true,
+   "V33.data": null,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": true,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 1.56,
+   "households": {
+    "on_parcels": 44,
+    "programmed": 44
+   },
+   "parcels_by_role": {
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       686.8,
+       1508.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 850.8,
+      "median_within_15pct": true,
+      "n": 44,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       680.6,
+       1299.2
+      ],
+      "iqr_overlaps_target": true,
+      "median": 831.7,
+      "median_within_15pct": true,
+      "n": 44,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       27.65,
+       36.48
+      ],
+      "iqr_overlaps_target": true,
+      "median": 31.62,
+      "median_within_15pct": true,
+      "n": 44,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 44,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 2305.5,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 3,
+   "districts": 33,
+   "drains": 74,
+   "edges": 699,
+   "faces": 206,
+   "households": 44,
+   "households_on_parcels": 44,
+   "parcels_by_use": {
+    "garden": 124,
+    "hill": 4,
+    "residential": 44,
+    "residual_garden": 4,
+    "residual_nonbuildable": 5
+   },
+   "regions": 75,
+   "revision_requests": 22,
+   "streets_by_hierarchy": {
+    "gosat": 26,
+    "lane": 1,
+    "primary": 19
+   }
+  }
+ },
+ "syn_stream": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": null,
+   "V49": true,
+   "V70": true,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 5.47,
+   "households": {
+    "on_parcels": 74,
+    "programmed": 74
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       1554.5,
+       2344.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1676.7,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1554.5,
+       2344.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1676.7,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       32.68,
+       42.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 34.0,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 7,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       1320.4,
+       2012.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1320.4,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1320.4,
+       2012.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1320.4,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       44.67,
+       47.32
+      ],
+      "iqr_overlaps_target": true,
+      "median": 44.67,
+      "median_within_15pct": true,
+      "n": 3,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": true,
+     "n": 3,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       988.7,
+       1864.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 988.7,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       988.7,
+       1864.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 988.7,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       25.19,
+       26.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 25.19,
+      "median_within_15pct": true,
+      "n": 3,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 3,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       130.6,
+       321.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 173.8,
+      "median_within_15pct": true,
+      "n": 13,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       130.6,
+       321.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 173.8,
+      "median_within_15pct": true,
+      "n": 13,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       11.1,
+       14.74
+      ],
+      "iqr_overlaps_target": true,
+      "median": 12.68,
+      "median_within_15pct": false,
+      "n": 13,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 13,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       234.8,
+       509.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 391.75,
+      "median_within_15pct": true,
+      "n": 48,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       234.8,
+       509.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 391.75,
+      "median_within_15pct": true,
+      "n": 48,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       16.32,
+       20.31
+      ],
+      "iqr_overlaps_target": true,
+      "median": 18.41,
+      "median_within_15pct": true,
+      "n": 48,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 48,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [
+     123.1
+    ],
+    "judged": false,
+    "median": 123.14,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 678.8,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand",
+   "unreachable_demand",
+   "rear_access_missing",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 4,
+   "districts": 35,
+   "drains": 34,
+   "edges": 504,
+   "faces": 155,
+   "households": 74,
+   "households_on_parcels": 74,
+   "parcels_by_use": {
+    "garden": 50,
+    "residential": 74,
+    "residual_garden": 1,
+    "residual_nonbuildable": 1
+   },
+   "regions": 34,
+   "revision_requests": 13,
+   "streets_by_hierarchy": {
+    "lane": 1,
+    "primary": 16,
+    "secondary": 7
+   }
+  }
+ },
+ "syn_terrace": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": null,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": true,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 6.43,
+   "households": {
+    "on_parcels": 86,
+    "programmed": 86
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       1059.3,
+       1840.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1182.9,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1059.3,
+       1840.6
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1182.9,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       27.35,
+       34.89
+      ],
+      "iqr_overlaps_target": true,
+      "median": 32.3,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 10,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       1367.9,
+       4998.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1367.9,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1367.9,
+       1613.0
+      ],
+      "iqr_overlaps_target": false,
+      "median": 1367.9,
+      "median_within_15pct": false,
+      "n": 3,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       50.24,
+       53.76
+      ],
+      "iqr_overlaps_target": true,
+      "median": 50.24,
+      "median_within_15pct": true,
+      "n": 3,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": true,
+     "n": 3,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       200.0,
+       330.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 251.2,
+      "median_within_15pct": false,
+      "n": 12,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       200.0,
+       269.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 224.15,
+      "median_within_15pct": true,
+      "n": 12,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       12.15,
+       14.29
+      ],
+      "iqr_overlaps_target": true,
+      "median": 12.7,
+      "median_within_15pct": false,
+      "n": 12,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 12,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       310.8,
+       531.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 362.7,
+      "median_within_15pct": true,
+      "n": 53,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       310.8,
+       531.1
+      ],
+      "iqr_overlaps_target": true,
+      "median": 362.7,
+      "median_within_15pct": true,
+      "n": 53,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       15.6,
+       21.65
+      ],
+      "iqr_overlaps_target": true,
+      "median": 18.34,
+      "median_within_15pct": true,
+      "n": 53,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 53,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "village_ordinary": {
+     "area": {
+      "iqr": [
+       710.5,
+       912.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 800.15,
+      "median_within_15pct": true,
+      "n": 8,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       710.5,
+       912.7
+      ],
+      "iqr_overlaps_target": true,
+      "median": 800.15,
+      "median_within_15pct": true,
+      "n": 8,
+      "target_mid": 748.25,
+      "target_range": [
+       432.0,
+       1296.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       27.93,
+       35.88
+      ],
+      "iqr_overlaps_target": true,
+      "median": 31.45,
+      "median_within_15pct": true,
+      "n": 8,
+      "target_mid": 30.12,
+      "target_range": [
+       21.6,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 8,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [
+     14.1
+    ],
+    "judged": false,
+    "median": 14.14,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 892.7,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand",
+   "unreachable_demand",
+   "unreachable_demand",
+   "unreachable_demand",
+   "rear_access_missing",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 0,
+   "districts": 33,
+   "drains": 27,
+   "edges": 435,
+   "faces": 131,
+   "households": 86,
+   "households_on_parcels": 86,
+   "parcels_by_use": {
+    "garden": 23,
+    "residential": 86,
+    "residual_garden": 1
+   },
+   "regions": 27,
+   "revision_requests": 18,
+   "streets_by_hierarchy": {
+    "primary": 18,
+    "route": 2,
+    "secondary": 7
+   }
+  }
+ },
+ "syn_terrace_locked": {
+  "checks": {
+   "L3.quotas": true,
+   "L4.connected": true,
+   "L4.drain_outlets": true,
+   "L4.planar": true,
+   "L4.typed_crossings": true,
+   "L4.wall_openings": true,
+   "L5.access": true,
+   "L5.households_once": true,
+   "L5.locks": true,
+   "L5.treatments": null,
+   "L5.twin_edges": true,
+   "PUB-04": true,
+   "V14": true,
+   "V28": true,
+   "V33.data": true,
+   "V40": null,
+   "V43": true,
+   "V46": true,
+   "V48": null,
+   "V49": true,
+   "V70": null,
+   "WP5.layer": true
+  },
+  "metrics": {
+   "cul_de_sac_length_m": {
+    "limit": 36.0,
+    "max": null,
+    "n": 0
+   },
+   "deferred": [
+    "roof coverage 35–50 % / 22–32 % and frontage enclosure 85–100 % are Layer 6–7 checks (WP8/WP6)"
+   ],
+   "density_households_per_ha": 6.65,
+   "households": {
+    "on_parcels": 90,
+    "programmed": 90
+   },
+   "parcels_by_role": {
+    "clerical": {
+     "area": {
+      "iqr": [
+       1047.2,
+       1883.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1299.95,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1047.2,
+       1883.5
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1276.45,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 1247.08,
+      "target_range": [
+       864.0,
+       1800.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       24.0,
+       39.32
+      ],
+      "iqr_overlaps_target": true,
+      "median": 31.02,
+      "median_within_15pct": true,
+      "n": 10,
+      "target_mid": 31.75,
+      "target_range": [
+       24.0,
+       42.0
+      ]
+     },
+     "judged": true,
+     "n": 10,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "elite_urban": {
+     "area": {
+      "iqr": [
+       1103.1,
+       2554.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1353.35,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       1103.1,
+       2554.4
+      ],
+      "iqr_overlaps_target": true,
+      "median": 1353.35,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 2494.15,
+      "target_range": [
+       1728.0,
+       3600.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       36.0,
+       47.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 38.0,
+      "median_within_15pct": false,
+      "n": 6,
+      "target_mid": 46.48,
+      "target_range": [
+       36.0,
+       60.0
+      ]
+     },
+     "judged": true,
+     "n": 6,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "rear_residential": {
+     "area": {
+      "iqr": [
+       632.3,
+       1194.0
+      ],
+      "iqr_overlaps_target": true,
+      "median": 845.2,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       632.3,
+       1090.8
+      ],
+      "iqr_overlaps_target": true,
+      "median": 640.7,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 739.89,
+      "target_range": [
+       475.2,
+       1152.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       24.63,
+       32.62
+      ],
+      "iqr_overlaps_target": true,
+      "median": 28.0,
+      "median_within_15pct": true,
+      "n": 7,
+      "target_mid": 25.46,
+      "target_range": [
+       18.0,
+       36.0
+      ]
+     },
+     "judged": true,
+     "n": 7,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_primary": {
+     "area": {
+      "iqr": [
+       218.9,
+       334.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 251.7,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       218.9,
+       334.3
+      ],
+      "iqr_overlaps_target": true,
+      "median": 251.7,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 203.65,
+      "target_range": [
+       115.2,
+       360.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       12.0,
+       15.45
+      ],
+      "iqr_overlaps_target": true,
+      "median": 14.83,
+      "median_within_15pct": false,
+      "n": 7,
+      "target_mid": 11.0,
+      "target_range": [
+       7.2,
+       16.8
+      ]
+     },
+     "judged": true,
+     "n": 7,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    },
+    "urban_secondary": {
+     "area": {
+      "iqr": [
+       284.5,
+       514.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 389.0,
+      "median_within_15pct": true,
+      "n": 60,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "area_without_rear_garden": {
+      "iqr": [
+       284.5,
+       514.9
+      ],
+      "iqr_overlaps_target": true,
+      "median": 389.0,
+      "median_within_15pct": true,
+      "n": 60,
+      "target_mid": 352.73,
+      "target_range": [
+       216.0,
+       576.0
+      ]
+     },
+     "frontage": {
+      "iqr": [
+       15.92,
+       20.38
+      ],
+      "iqr_overlaps_target": true,
+      "median": 17.82,
+      "median_within_15pct": true,
+      "n": 60,
+      "target_mid": 16.97,
+      "target_range": [
+       12.0,
+       24.0
+      ]
+     },
+     "judged": true,
+     "n": 60,
+     "note": "area includes rear gardens merged behind the lot (narrow deep lots with gardens behind)"
+    }
+   },
+   "secondary_spacing_m": {
+    "gaps": [],
+    "judged": false,
+    "median": null,
+    "target": [
+     96.0,
+     144.0
+    ]
+   },
+   "street_width_compliance": {
+    "by_length": 1.0,
+    "length_m": 937.8,
+    "note": "new streets take the rules default width (inside the range by construction); primary corridors are recorded Layer-2 exceptions"
+   }
+  },
+  "reason": null,
+  "revision_requests": [
+   "unreachable_demand",
+   "unreachable_demand",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed",
+   "wall_outlet_needed"
+  ],
+  "status": "complete",
+  "summary": {
+   "crossings": 0,
+   "districts": 31,
+   "drains": 34,
+   "edges": 465,
+   "faces": 143,
+   "households": 90,
+   "households_on_parcels": 90,
+   "parcels_by_use": {
+    "garden": 25,
+    "residential": 90,
+    "residual_garden": 2,
+    "residual_nonbuildable": 2
+   },
+   "regions": 24,
+   "revision_requests": 16,
+   "streets_by_hierarchy": {
+    "lane": 3,
+    "primary": 19,
+    "secondary": 10
+   }
+  }
+ }
+}
