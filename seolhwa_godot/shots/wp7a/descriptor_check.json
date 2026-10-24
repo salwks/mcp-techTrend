@@ -1,0 +1,6139 @@
+{
+	"civic_fit": [
+		{
+			"bearing_deg": 0.0,
+			"building_d": 11.16,
+			"building_entrance_local": [
+				-2.16,
+				0.0,
+				7.96
+			],
+			"building_w": 24.302,
+			"fits": true,
+			"key": "dongheon",
+			"margin_d": 62.32,
+			"margin_w": 93.278,
+			"note": "본채 한 채만 — 문 겹·마당 묶음은 WP7b",
+			"preset": "dongheon",
+			"reserve": "civic-dongheon",
+			"reserve_d": 73.48,
+			"reserve_entrance": [
+				50.0,
+				147.25
+			],
+			"reserve_w": 117.58,
+			"scale_check": true,
+			"status": "proposed"
+		},
+		{
+			"bearing_deg": 0.0,
+			"building_d": 12.0,
+			"building_entrance_local": [
+				-3.6,
+				0.0,
+				8.12
+			],
+			"building_w": 34.752,
+			"fits": true,
+			"key": "gaeksa",
+			"margin_d": 61.48,
+			"margin_w": 53.428,
+			"note": "본채 한 채만 — 문 겹·마당 묶음은 WP7b",
+			"preset": "gaeksa",
+			"reserve": "civic-gaeksa",
+			"reserve_d": 73.48,
+			"reserve_entrance": [
+				100.0,
+				-42.75
+			],
+			"reserve_w": 88.18,
+			"scale_check": true,
+			"status": "proposed"
+		},
+		{
+			"bearing_deg": 0.0,
+			"building_d": 10.2,
+			"building_entrance_local": [
+				-3.24,
+				0.0,
+				6.96
+			],
+			"building_w": 17.4,
+			"fits": true,
+			"key": "hyangcheong",
+			"margin_d": 33.89,
+			"margin_w": 26.69,
+			"note": "본채 한 채만 — 문 겹·마당 묶음은 WP7b",
+			"preset": "gangdang",
+			"reserve": "civic-hyangcheong",
+			"reserve_d": 44.09,
+			"reserve_entrance": [
+				160.0,
+				54.95
+			],
+			"reserve_w": 44.09,
+			"scale_check": true,
+			"status": "proposed"
+		},
+		{
+			"bearing_deg": 0.0,
+			"building_d": 4.56,
+			"building_entrance_local": null,
+			"building_w": 7.092,
+			"fits": true,
+			"key": "storage",
+			"margin_d": 39.53,
+			"margin_w": 36.998,
+			"note": "본채 한 채만 — 문 겹·마당 묶음은 WP7b",
+			"preset": "gotgan",
+			"reserve": "civic-storage",
+			"reserve_d": 44.09,
+			"reserve_entrance": [
+				-170.0,
+				14.95
+			],
+			"reserve_w": 44.09,
+			"scale_check": true,
+			"status": "proposed"
+		},
+		{
+			"bearing_deg": 0.0,
+			"building_d": 5.16,
+			"building_entrance_local": [
+				-7.47,
+				0.0,
+				3.73
+			],
+			"building_w": 18.85,
+			"fits": true,
+			"key": "jakcheong",
+			"margin_d": 24.23,
+			"margin_w": 25.24,
+			"note": "본채 한 채만 — 문 겹·마당 묶음은 WP7b",
+			"preset": "haengrang",
+			"reserve": "civic-jakcheong",
+			"reserve_d": 29.39,
+			"reserve_entrance": [
+				-50.0,
+				212.3
+			],
+			"reserve_w": 44.09,
+			"scale_check": true,
+			"status": "proposed"
+		},
+		{
+			"key": "prison",
+			"note": "본채 프리셋 대응 없음(빈터·우물·연못 등)",
+			"reserve": "civic-prison",
+			"status": "unknown"
+		},
+		{
+			"key": "market",
+			"note": "본채 프리셋 대응 없음(빈터·우물·연못 등)",
+			"reserve": "civic-market",
+			"status": "unknown"
+		}
+	],
+	"items": [
+		{
+			"building": "choga/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/central/3",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/3",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/1",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/1",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sijeon/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sijeon/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/3",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\", \"heat:3 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/1",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\", \"heat:3 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/3",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/1",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\", \"heat:3 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/3",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\", \"heat:3 hamsil (implied)\", \"heat:4 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/3",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/2",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/3",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/3",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/2",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/2",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/3",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\", \"heat:3 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/1",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\", \"heat:3 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/3",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/2",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/3",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "haengrang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sadang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sadang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dwitgan/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "giwajip/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/3",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "dongheon/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/1",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/1",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/2",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/2",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/3",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/3",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/1",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/1",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/2",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/2",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/3",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/3",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/1",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/1",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/2",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/2",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/3",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/3",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/1",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/1",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/2",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/2",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/3",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/3",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/1",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/1",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/2",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/2",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/3",
+			"detail": "[\"heat:0 hamsil (implied)\", \"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/3",
+			"detail": "[\"w0 step 1.08→1.47 (드나드는 문 없음 — 보기 디딤)\", \"w0 step 1.47→1.86 (드나드는 문 없음 — 보기 디딤)\"]",
+			"ok": true,
+			"v": "V58",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gaeksa/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeseong/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeseong/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/1",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/2",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/3",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gangdang/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jeongja/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jeongja/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "nugak/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "nugak/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "mill/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "mill/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/3",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/1",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/2",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/3",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "smithy/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/south/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/south/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/south/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/central/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/central/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/central/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/north/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/north/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/north/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/jeju/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/jeju/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/jeju/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/mountain/1",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/mountain/2",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "daeung/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "daeung/mountain/3",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1/int",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1/int",
+			"detail": "[\"door:5 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "choga/central/2/int",
+			"detail": "[\"door:3 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "choga/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "choga/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/1/int",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/2/int",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/1/int",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/2/int",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "jumak/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/1/int",
+			"detail": "[\"door:0 player-scale door into closed store (box collider)\", \"door:1 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/2/int",
+			"detail": "[\"door:0 player-scale door into closed store (box collider)\", \"door:1 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/1/int",
+			"detail": "[\"door:0 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/2/int",
+			"detail": "[\"door:0 player-scale door into closed store (box collider)\", \"door:1 player-scale door into closed store (box collider)\", \"door:2 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "gotgan/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "araechae/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "oeyang/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/1/int",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/2/int",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1/int",
+			"detail": "[\"heat:1 hamsil (implied)\", \"heat:2 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1/int",
+			"detail": "[\"door:9 player-scale door into closed store (box collider)\"]",
+			"ok": true,
+			"v": "V55",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/2/int",
+			"detail": "[\"heat:1 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "anchae/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/1/int",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/2/int",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/south/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/1/int",
+			"detail": "[\"heat:0 hamsil (implied)\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/1/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/2/int",
+			"detail": "[\"heat:0 flue end not rendered\"]",
+			"ok": true,
+			"v": "V27",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "sarang/central/2/int",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		},
+		{
+			"building": "v57/kitchen_two_bays",
+			"detail": "[]",
+			"ok": true,
+			"v": "V60",
+			"warn": true
+		},
+		{
+			"building": "v57/kitchen_two_bays",
+			"detail": "[]",
+			"ok": true,
+			"v": "V62",
+			"warn": true
+		}
+	],
+	"tally": {
+		"SCALE1": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 0
+		},
+		"SCHEMA": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 0
+		},
+		"V09": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 0
+		},
+		"V18": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 0
+		},
+		"V27": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 139
+		},
+		"V54": {
+			"fail": 0,
+			"pass": 40,
+			"warn": 0
+		},
+		"V55": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 7
+		},
+		"V57": {
+			"fail": 0,
+			"pass": 1,
+			"warn": 0
+		},
+		"V58": {
+			"fail": 0,
+			"pass": 184,
+			"warn": 15
+		},
+		"V60": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 344
+		},
+		"V62": {
+			"fail": 0,
+			"pass": 344,
+			"warn": 344
+		}
+	}
+}
