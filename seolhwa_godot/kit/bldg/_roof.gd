@@ -26,6 +26,10 @@ const KHS_SU_RECT := [0.2656, 0.5, 0.3613, 0.75]
 const KHS_AM_RECT := [0.8970, 0.5, 0.9780, 0.75]
 const KHS_AMMAKSE_RECT := [0.02, 0.866, 0.093, 0.93]
 const KHS_SUMAKSE := [0.2148, 0.9033, 0.0244]
+const KHS_RIDGE_RECT := [0.0, 0.08, 1.0, 0.185]   # 마루 켜 옆(그림판 위쪽 적새 결 — 가는 가로줄 여럿)
+const KHS_BAND_RECT := [0.2656, 0.52, 0.3613, 0.6]   # 처마 띠 바탕(수키와 몸 빛 — 무늬 없는 기와 빛)
+const KHS_AMMAKSE_ASPECT := 1.25   # 그림판 암막새 무늬 너비 : 높이(150 × 120 px, 2048)
+const ATLAS_SU0 := 0.0685          # 아틀라스 기와 칸(inset 2px 뒤 124px)에서 첫 수키와 결 가운데(10.5px) 자리
 const ROW_STEP := 0.12         # 줄을 따라 면 살피는 간격(m)
 const ROW_SEG := 0.5           # 줄 띠 한 마디 최대 길이(m)
 
@@ -130,11 +134,12 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 	# 기와 줄(o.rows, 가까운 단계만): 기와 겉·처마 띠를 두 벌 — 그림판 벌(giwa_hi: 암키와 칸·암막새, 0~40m)과 아틀라스 벌(giwa_lo, 40~55m)
 	var rows_on: bool = lod == 0 and bool(o.get("rows", false))
 	var kp := {}
-	var topk := Kit.Geo.new(); var band_k := Kit.Geo.new()
-	if rows_on:
+	var topk := Kit.Geo.new(); var band_k := Kit.Geo.new(); var band_a := Kit.Geo.new()
+	if o.has("kh"):
 		var kh: float = float(o.get("kh", 1.0))
 		var bxn := m.xform.basis.x.normalized(); var bzn := m.xform.basis.z.normalized()
-		# 줄 자리는 건물 틀 좌표로 맞춘다(ㄱ자 날개 지붕과 몸채 모퉁이 지붕의 수키와 줄이 이어지게)
+		# 줄 자리는 건물 틀 좌표로 맞춘다(ㄱ자 날개 지붕과 몸채 모퉁이 지붕의 수키와 줄이 이어지게).
+		#   모든 단계의 아틀라스 기와 겉 줄무늬·막새 띠도 같은 자리에 맞춘다(40m에서 줄 → 그림 줄로 바뀔 때 자리가 튀지 않게)
 		kp = { kh = kh, pitch = KHS_PITCH * kh, phx = m.xform.origin.dot(bxn), phz = m.xform.origin.dot(bzn) }
 	var col_t: Color = Kit.hex(o.get("c_top", 0x8f9296)); var col_l: Color = Kit.hex(o.get("c_low", 0x6d7176))
 	# 구역: [x 목록, zone(-1 왼끝, 0 가운데, 1 오른끝), 끝 꼴]
@@ -166,21 +171,23 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 				elif zone == 1: main_diag = front
 				elif zone == -1: main_diag = not front
 				var tris := [[p00, p10, p11], [p00, p11, p01]] if main_diag else [[p00, p10, p01], [p10, p11, p01]]
-				for t in tris: _roof_tri(top, bot, t[0], t[1], t[2], thick, col_t, col_l, eave, rise, topk, kp)
+				for t in tris: _roof_tri(top, bot, t[0], t[1], t[2], thick, col_t, col_l, eave, rise, topk if rows_on else null, kp)
 		# 처마 끝 띠(막새) · 박공 끝(verge)
 		var is_corner: bool = zone != 0 and ends[0 if zone < 0 else 1] == "corner"
 		for i in xs.size() - 1:
 			for zz in [-hd, hd]:
 				if is_corner and zz > 0.0: continue   # 앞 끝은 날개 지붕으로 이어진다(띠 없음)
 				var x0: float = xs[i]; var x1: float = xs[i + 1]
-				_band(band, Vector3(x0, H.call(x0, zz, zone), zz), Vector3(x1, H.call(x1, zz, zone), zz), thick, Vector3(0, 0, signf(zz)))
-				if rows_on: _band_k(band_k, Vector3(x0, H.call(x0, zz, zone), zz), Vector3(x1, H.call(x1, zz, zone), zz), thick, Vector3(0, 0, signf(zz)), (x0 + float(kp.phx)) / float(kp.pitch), (x1 + float(kp.phx)) / float(kp.pitch))
+				var sa := Vector2(x0 + float(kp.phx), x1 + float(kp.phx)) if not kp.is_empty() else Vector2(NAN, NAN)
+				_band(band, Vector3(x0, H.call(x0, zz, zone), zz), Vector3(x1, H.call(x1, zz, zone), zz), thick, Vector3(0, 0, signf(zz)), sa, float(kp.get("pitch", 0.0)))
+				if rows_on: _band_k(band_k, band_a, Vector3(x0, H.call(x0, zz, zone), zz), Vector3(x1, H.call(x1, zz, zone), zz), thick, Vector3(0, 0, signf(zz)), sa, kp)
 		if zone != 0:
 			var xe: float = -hw if zone == -1 else hw
 			for j in zs.size() - 1:
 				var z0: float = zs[j]; var z1: float = zs[j + 1]
-				_band(band, Vector3(xe, H.call(xe, z0, zone), z0), Vector3(xe, H.call(xe, z1, zone), z1), thick, Vector3(signf(xe), 0, 0))
-				if rows_on: _band_k(band_k, Vector3(xe, H.call(xe, z0, zone), z0), Vector3(xe, H.call(xe, z1, zone), z1), thick, Vector3(signf(xe), 0, 0), (z0 + float(kp.phz)) / float(kp.pitch), (z1 + float(kp.phz)) / float(kp.pitch))
+				var sz := Vector2(z0 + float(kp.phz), z1 + float(kp.phz)) if not kp.is_empty() else Vector2(NAN, NAN)
+				_band(band, Vector3(xe, H.call(xe, z0, zone), z0), Vector3(xe, H.call(xe, z1, zone), z1), thick, Vector3(signf(xe), 0, 0), sz, float(kp.get("pitch", 0.0)))
+				if rows_on: _band_k(band_k, band_a, Vector3(xe, H.call(xe, z0, zone), z0), Vector3(xe, H.call(xe, z1, zone), z1), thick, Vector3(signf(xe), 0, 0), sz, kp)
 	# 맞배 끝: 박공 널(verge) — 가운데 구역 끝이 x=±hw일 때
 	for sd in [-1, 1]:
 		var f: String = ends[0 if sd < 0 else 1]
@@ -190,6 +197,8 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 			var z0: float = zs[j]; var z1: float = zs[j + 1]
 			var a := Vector3(xe, H.call(xe, z0, 0), z0); var b := Vector3(xe, H.call(xe, z1, 0), z1)
 			_verge(verge, a, b, thick + 0.12, Vector3(sd, 0, 0))
+	# 막새 띠(아틀라스): 흰 꼭짓점 색이면 막새가 하얗게 떠 보인다 — 짙은 기와 빛 쪽으로(그림판 암막새 띠와 같은 쪽)
+	for i in band.col.size(): band.col[i] = Color(0.3, 0.3, 0.31)
 	if rows_on:
 		# 먹선 껍질은 지붕 조각(0~55m)에 하나만 — 두 벌 겉이 같이 쓴다
 		var hl := Kit.hull(Kit.apply(top.copy(), m.xform), 0.05 * Kit.OUTLINE_SCALE)
@@ -197,13 +206,19 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		_put_tiled(m, "giwa_lo", "giwa", top)
 		_put_tiled(m, "giwa_lo", "makse", band)
 		_put_rect(m, "giwa_hi", "giwa_khs", topk, KHS_AM_RECT, true)
+		kp.col_t = col_t; kp.col_l = col_l
 		var rg := _rows(o, H, clip, ends, hw, hd, xl, xr, kp)
-		# 꼭짓점 색: 기와 겉과 같은 빛(그림판 곱 GIWA_KHS_TINT가 아틀라스 평균에 맞춘 값이라 같은 꼭짓점 색이어야 밝기가 맞다)
-		for g in [rg[0], rg[1], band_k]:
-			for i in (g as Kit.Geo).col.size(): (g as Kit.Geo).col[i] = col_t if g == rg[0] else col_l
-		_put_rect(m, "giwa_hi", "giwa_khs", band_k, KHS_AMMAKSE_RECT, true)
-		_put_rect(m, "giwa_rows", "giwa_khs_rows", rg[0], KHS_SU_RECT, false)
-		_put_rect(m, "giwa_rows", "giwa_khs_rows", rg[1], [], true)
+		# 꼭짓점 색: 기와 겉과 같은 빛(그림판 곱 GIWA_KHS_TINT가 아틀라스 평균에 맞춘 값이라 같은 꼭짓점 색이어야 밝기가 맞다). 줄·골은 _rows가 장마다 칠함
+		for g in [rg.disc, band_k, band_a]:
+			for i in (g as Kit.Geo).col.size(): (g as Kit.Geo).col[i] = col_l
+		var gc: Kit.Geo = rg.cap
+		for i in gc.col.size(): gc.col[i] = Color(0.026, 0.025, 0.023)   # 와구토(흰 회): 그림판 흰 띠 × 곱(≈29) → 바탕빛 약 0.6
+		_put_rect(m, "giwa_hi", "giwa_khs", band_k, KHS_BAND_RECT, true)
+		_put_rect(m, "giwa_hi", "giwa_khs", band_a, KHS_AMMAKSE_RECT, true)
+		_put_rect(m, "giwa_rows", "giwa_khs_rows", rg.rows, KHS_SU_RECT, false)
+		_put_rect(m, "giwa_rows", "giwa_khs_rows", rg.disc, [], true)
+		_put_rect(m, "giwa_rows", "giwa_khs_rows", rg.cap, [], true)
+		_put_rect(m, "giwa_am", "giwa_khs_am", rg.am, KHS_AM_RECT, false)
 	else:
 		A.add_tiled(m, part, "giwa", top, 0.05 if lod < 2 else 0.0)
 	if lod < 2: A.add_tiled(m, part, "soffit", bot, 0.0)
@@ -266,15 +281,15 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 	for k in rpts.size() - 1:
 		var a: Vector3 = rpts[k]; var b: Vector3 = rpts[k + 1]
 		var g := C.beam(a + Vector3(0, -0.05, 0), b + Vector3(0, -0.05, 0), rw, 0.62)
-		m.add(part, "flat", C.P(g, rc[0], rc[1], 0.02), 0.03 if lod < 2 else 0.0)
+		_madd(m, part, rows_on, "flat", C.P(g, rc[0], rc[1], 0.02), 0.03 if lod < 2 else 0.0)
 		if lod == 0:
-			m.add(part, "flat", C.P(C.beam(a + Vector3(0, 0.3, 0), b + Vector3(0, 0.3, 0), rw * 0.62, 0.1), 0x55585c, 0x45474a, 0.02), 0.0)
+			_madd(m, part, rows_on, "flat", C.P(C.beam(a + Vector3(0, 0.3, 0), b + Vector3(0, 0.3, 0), rw * 0.62, 0.1), 0x55585c, 0x45474a, 0.02), 0.0)
 	if lod == 0:
 		# 망와(용마루 끝을 치켜든 기와)
 		for sd in [-1, 1]:
 			if ends[0 if sd < 0 else 1] in ["open", "corner"]: continue
 			var e: Vector3 = rpts[0] if sd < 0 else rpts[rpts.size() - 1]
-			m.add(part, "flat", C.P(Kit.xf(Kit.box(0.42, 0.34, rw * 0.95), e.x + sd * 0.12, e.y + 0.3, 0, 0, 0, -sd * 0.6), rc[0], rc[1], 0.02), 0.03)
+			_madd(m, part, rows_on, "flat", C.P(Kit.xf(Kit.box(0.42, 0.34, rw * 0.95), e.x + sd * 0.12, e.y + 0.3, 0, 0, 0, -sd * 0.6), rc[0], rc[1], 0.02), 0.03)
 	# 내림·추녀마루
 	var hips := []
 	for sd in [-1, 1]:
@@ -318,7 +333,24 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		for line in hips:
 			for k in line.size() - 1:
 				var a: Vector3 = line[k]; var b: Vector3 = line[k + 1]
-				m.add(part, "flat", C.P(C.beam(a + Vector3(0, 0.06, 0), b + Vector3(0, 0.06, 0), 0.24, 0.3), rc[0], rc[1], 0.02), 0.02 if lod == 0 else 0.0)
+				_madd(m, part, rows_on, "flat", C.P(C.beam(a + Vector3(0, 0.06, 0), b + Vector3(0, 0.06, 0), 0.24, 0.3), rc[0], rc[1], 0.02), 0.02 if lod == 0 else 0.0)
+	if rows_on:
+		# 그림판 마루(giwa_hi): 용마루 착고·적새 4켜·숫마루장 + 망와, 내림·추녀마루 착고·적새 2켜·숫마루장
+		var kh2: float = kp.kh
+		var gl := Kit.Geo.new(); var gs := Kit.Geo.new(); var gm := Kit.Geo.new()
+		var rcol := col_l * 0.85; rcol.a = 1.0
+		for k in rpts.size() - 1:
+			_ridge_k(gl, gs, rpts[k], rpts[k + 1], 0.46, 4, 0.075, kh2, rcol)
+		for sd in [-1, 1]:
+			if ends[0 if sd < 0 else 1] in ["open", "corner"]: continue
+			var e: Vector3 = rpts[0] if sd < 0 else rpts[rpts.size() - 1]
+			_mangwa_k(gm, e, Vector3(sd, 0, 0), 0.2, rcol * 1.1)
+		for line in hips:
+			for k in line.size() - 1:
+				_ridge_k(gl, gs, line[k], line[k + 1], 0.32, 2, 0.065, kh2, rcol)
+		_put_rect(m, "giwa_hi", "giwa_khs", gl, KHS_RIDGE_RECT, true)
+		_put_rect(m, "giwa_hi", "giwa_khs", gs, KHS_SU_RECT, true)
+		_put_rect(m, "giwa_hi", "giwa_khs", gm, [], true)
 	# 서까래 끝(처마 밑) · 부연 · 추녀
 	if lod == 0 and o.get("rafters", true):
 		_giwa_rafters(m, part, o, H, nzone, s, xl, xr)
@@ -333,9 +365,13 @@ static func _roof_tri(top: Kit.Geo, bot: Kit.Geo, a: Vector3, b: Vector3, c: Vec
 		c = t
 	n = (b - a).cross(c - a).normalized()
 	var side := absf(n.x) > absf(n.z)
+	# 아틀라스 기와 칸(6골): kp가 있으면 골 간격 = 수키와 줄 간격, 칸의 수키와 결(가운데 밝은 둥근 띠)이 줄 자리에 오게(ATLAS_SU0)
+	var tu: float = 6.0 * float(kp.pitch) if not kp.is_empty() else TILE_P
+	var ox: float = float(kp.get("phx", 0.0)); var oz: float = float(kp.get("phz", 0.0))
+	var u0: float = ATLAS_SU0 if not kp.is_empty() else 0.0
 	var uvf := func(p: Vector3) -> Vector2:
 		# 기와 골이 비탈 아래로 서게: 앞뒤 면은 u = x, 옆(추녀) 면은 u = z
-		return Vector2(p.z / TILE_P, -p.x * 1.1 / TILE_P) if side else Vector2(p.x / TILE_P, (p.z if n.z > 0 else -p.z) * 1.1 / TILE_P)
+		return Vector2((p.z + oz) / tu + u0, -p.x * 1.1 / TILE_P) if side else Vector2((p.x + ox) / tu + u0, (p.z if n.z > 0 else -p.z) * 1.1 / TILE_P)
 	var base := top.pos.size()
 	top.tri(a, b, c, uvf.call(a), uvf.call(b), uvf.call(c))
 	for q in 3:
@@ -357,10 +393,13 @@ static func _roof_tri(top: Kit.Geo, bot: Kit.Geo, a: Vector3, b: Vector3, c: Vec
 	for q in 3: bot.col[b0 + q] = Kit.hex(0xb8ab98)
 
 # 처마 끝 두께 띠: a→b(지붕 겉 가장자리), 아래로 thick, 바깥 want
-static func _band(g: Kit.Geo, a: Vector3, b: Vector3, thick: float, want: Vector3) -> void:
+#   sa(건물 틀 좌표 a·b)와 pt(줄 간격)가 있으면 막새 그림 하나 = 줄 간격, 막새가 수키와 줄 자리에(칸 가운데 원)
+static func _band(g: Kit.Geo, a: Vector3, b: Vector3, thick: float, want: Vector3, sa := Vector2(NAN, NAN), pt := 0.0) -> void:
 	var dn := Vector3(0, -thick, 0)
 	var l := a.distance_to(b)
 	var u0 := (a.x + a.z) / MAKSE_P; var u1 := u0 + l / MAKSE_P
+	if not is_nan(sa.x) and pt > 0.0:
+		u0 = sa.x / pt + 0.5; u1 = sa.y / pt + 0.5
 	tw(g, a + dn, b + dn, b, Vector2(u0, 1), Vector2(u1, 1), Vector2(u1, 0), want)
 	tw(g, a + dn, b, a, Vector2(u0, 1), Vector2(u1, 0), Vector2(u0, 0), want)
 
@@ -369,11 +408,40 @@ static func _verge(g: Kit.Geo, a: Vector3, b: Vector3, h: float, want: Vector3) 
 	var dn := Vector3(0, -h, 0); var o := want * 0.04
 	C.qf(g, a + dn + o, b + dn + o, b + o + Vector3(0, 0.03, 0), a + o + Vector3(0, 0.03, 0), want)
 
-# 처마 띠(그림판 암막새): u = 줄 간격 단위(칸 이음 = 수키와 줄 → 줄 사이 가운데에 암막새 무늬 하나), v = 띠 위 → 아래
-static func _band_k(g: Kit.Geo, a: Vector3, b: Vector3, thick: float, want: Vector3, u0: float, u1: float) -> void:
+# 처마 띠(그림판): 띠 전체는 민 기와 빛(KHS_BAND_RECT), 그 앞 6mm에 수키와 줄 사이마다 암막새 무늬 한 장 —
+#   너비 = 줄 간격 − 수키와 폭, 높이 = 너비 / KHS_AMMAKSE_ASPECT(그림 비율 그대로, 띠 두께의 0.8 이하). 띠 조각 이음에 걸린 장은 잘라서 잇는다
+static func _band_k(g: Kit.Geo, ga: Kit.Geo, a: Vector3, b: Vector3, thick: float, want: Vector3, sa: Vector2, kp: Dictionary) -> void:
 	var dn := Vector3(0, -thick, 0)
-	tw(g, a + dn, b + dn, b, Vector2(u0, 1), Vector2(u1, 1), Vector2(u1, 0), want)
-	tw(g, a + dn, b, a, Vector2(u0, 1), Vector2(u1, 0), Vector2(u0, 0), want)
+	var pt: float = kp.pitch
+	var u0: float = sa.x / pt; var u1: float = sa.y / pt
+	tw(g, a + dn, b + dn, b, Vector2(u0, 0.35), Vector2(u1, 0.35), Vector2(u1, 0), want)
+	tw(g, a + dn, b, a, Vector2(u0, 0.35), Vector2(u1, 0), Vector2(u0, 0), want)
+	var gap: float = pt - 2.0 * KHS_SU_HALF * float(kp.kh)
+	var h: float = minf(gap / KHS_AMMAKSE_ASPECT, thick * 0.8)
+	var lo: float = minf(sa.x, sa.y); var hi: float = maxf(sa.x, sa.y)
+	if hi - lo < 1e-4: return
+	var off := want.normalized() * 0.006
+	for nn in range(floori(lo / pt - 0.5) - 1, ceili(hi / pt) + 1):
+		var c: float = (nn + 0.5) * pt
+		var i0: float = maxf(c - gap / 2.0, lo); var i1: float = minf(c + gap / 2.0, hi)
+		if i1 - i0 < 0.005: continue
+		var t0: float = (i0 - sa.x) / (sa.y - sa.x); var t1: float = (i1 - sa.x) / (sa.y - sa.x)
+		var pa: Vector3 = a.lerp(b, t0) + off; var pb: Vector3 = a.lerp(b, t1) + off
+		var ua: float = (i0 - (c - gap / 2.0)) / gap; var ubb: float = (i1 - (c - gap / 2.0)) / gap
+		var dh := Vector3(0, -h, 0)
+		tw(ga, pa + dh, pb + dh, pb, Vector2(ua, 1), Vector2(ubb, 1), Vector2(ubb, 0), want)
+		tw(ga, pa + dh, pb, pa, Vector2(ua, 1), Vector2(ubb, 0), Vector2(ua, 0), want)
+
+# 기와 줄을 켠 가까운 단계면 아틀라스 마루(덮개 상자)는 giwa_lo(40m 밖)로, 아니면 예전처럼 지붕 조각에
+static func _madd(m, part: String, rows_on: bool, key: String, g: Kit.Geo, outline: float) -> void:
+	if not rows_on:
+		m.add(part, key, g, outline); return
+	if g.size() == 0: return
+	if m.xform != Transform3D.IDENTITY: Kit.apply(g, m.xform)
+	if key in Kit.FACETED: Kit.face_normals(g)
+	else: Kit.smooth_normals(g)
+	Kit.remap_uv(g, key)
+	_put(m, "giwa_lo", true, "atlas", g)
 
 # 조각 넣기(기와 줄용): sep이면 묶음(merge_parts)과 상관없이 제 이름 조각으로 — building.build가 거리 범위·그림자를 따로 준다
 static func _batch(m, part: String, sep: bool) -> Kit.Batch:
@@ -417,21 +485,23 @@ static func _rect_all(g: Kit.Geo, r: Array) -> void:
 	for i in g.uv.size():
 		g.rect[i * 4] = r[0]; g.rect[i * 4 + 1] = r[1]; g.rect[i * 4 + 2] = r[2]; g.rect[i * 4 + 3] = r[3]
 
-# 수키와 줄 ------------------------------------------------------------------------------------------------
-# 지붕 겉(H, clip 포함)을 따라 비탈 아래로 내려가는 반원 띠(단면 6마디, 국가유산청 수키와 폭·높이)를 줄 간격마다 놓는다.
-#   z줄(앞뒤 비탈, x 고정)과 x줄(옆 비탈·회첨 모퉁이의 날개 비탈, z 고정)을 지붕 끝에서 끝까지 ROW_STEP마다 살펴,
-#   그 자리 비탈 방향(기울기의 큰 축과 아래쪽 부호)이 줄과 같고, 줄 양옆(수키와 반폭 × 1.15)도 같은 면이며, 다른 지붕 밑(clip)이
-#   아니고, 높이가 갑자기 뛰지 않는(합각 틈) 구간만 한 줄로 이어 그린다. 그래서 줄은 용마루(0.12m 앞)·추녀·내림마루·회첨골·합각벽
-#   앞에서 멈춘다(마루 덮개 밑으로 들어간다). 처마 끝(지붕 둘레)에서 시작한 줄은 수막새(그림판 막새 무늬 원판)로 닫는다.
-# 반환 [줄 띠 Geo(둥근 법선 g.nrm 포함, uv = 수키와 칸 반복 좌표), 막새 Geo(uv = 그림판 좌표)]
-static func _rows(o: Dictionary, H: Callable, clip, ends: Array, hw: float, hd: float, xl: float, xr: float, kp: Dictionary) -> Array:
+# 수키와 줄·암키와 골 ------------------------------------------------------------------------------------------
+# 국가유산청 김명관 고택 안채 기와(assets/kit/khs_giwa/modules.json)의 짜임을 따라 지붕 겉(H, clip 포함) 위에 장마다 놓는다.
+#   수키와: 한 장 0.3104 × kh — 장 아래끝(입술, 지름 그대로) → 몸 → 위끝 미구(목, 0.8배로 좁아짐) 바로 위에 다음 장 입술이
+#     덮는다(원본에서 이음마다 높이 0.106 → 0.080 → 0.106). 장마다 정해진 흔들림(옆 ±6mm·위 ±5mm)이라 줄 윤곽이 계단진다.
+#   암키와 골(줄 사이): 한 켜 0.1275 × kh — 켜 아래끝(입술)이 0.032 × kh 들리고 위끝은 다음 켜 밑으로(원본 톱니 0.035),
+#     골 단면은 오목(0.02 × kh). 골은 따로 둔 조각(giwa_am, 가까이만)이고 그 너머는 기와 겉 셰이더가 같은 켜·오목을 법선·그늘로 그린다.
+#   줄 자리(z줄 앞뒤 비탈 · x줄 옆 비탈·회첨 모퉁이 날개 비탈)를 ROW_STEP마다 살펴 같은 면(giwa_face)·양옆도 같은 면·다른 지붕 밑 아님·
+#   높이 튐 없음인 구간만 잇는다 → 용마루(0.12m 앞)·추녀·내림마루·회첨골·합각벽 앞에서 멈춘다. 처마에서 시작한 수키와 줄은 수막새,
+#   그 밖 위끝은 와구토(흰 회 마개)로 닫는다.
+# 반환 { rows, disc, cap, am } — rows·am은 g.nrm(둥근·꺾인 법선)·꼭짓점 색(장·켜마다 빛 ±10%, 닳은 등, 젖은 골, 처마 쪽 이끼)까지 채움
+static func _rows(o: Dictionary, H: Callable, clip, ends: Array, hw: float, hd: float, xl: float, xr: float, kp: Dictionary) -> Dictionary:
 	var kh: float = kp.kh; var pt: float = kp.pitch
 	var a: float = KHS_SU_HALF * kh; var hh: float = KHS_SU_H * kh
 	var rb: float = a                    # 반원 반지름
 	var c0: float = hh - rb              # 반원 중심 높이(아래는 곧은 홍두께흙 턱)
 	var embed := 0.012
-	var lat: float = a * 1.15
-	# 단면(왼 → 오른): 바닥 턱, 반원 다섯 점, 바닥 턱 — 6마디
+	var gap: float = pt - 2.0 * a
 	var prof := [Vector2(-a, 0.0)]
 	var pn := [Vector2(-1, 0)]
 	for k in 5:
@@ -441,132 +511,315 @@ static func _rows(o: Dictionary, H: Callable, clip, ends: Array, hw: float, hd: 
 	prof.append(Vector2(a, 0.0)); pn.append(Vector2(1, 0))
 	var pu := [0.0]
 	for k in range(1, prof.size()): pu.append(float(pu[k - 1]) + (prof[k] as Vector2).distance_to(prof[k - 1]))
-	var plen: float = pu[pu.size() - 1]
 	var Hf := func(x: float, z: float) -> float: return H.call(x, z, 99)
 	var under := func(x: float, z: float) -> bool:
 		return clip is Callable and (clip as Callable).call(x, z) < giwa_h(o, x, z) - 0.005
-	# 그 자리 줄 표지: 0 = 줄 없음, ±1 = 비탈 아래 쪽 부호. ax 0이면 z줄(앞뒤 비탈), 1이면 x줄(옆 비탈·날개 비탈) — 면 가르기는 giwa_face
 	var label := func(x: float, z: float, ax: int) -> int:
 		if absf(x) > hw + 1e-4 or absf(z) > hd + 1e-4: return 0
 		if under.call(x, z): return 0
 		var f := giwa_face(o, x, z)
 		return f.y if f.x == ax else 0
-	var geo := Kit.Geo.new(); var disc := Kit.Geo.new()
-	for ax in [0, 1]:
-		var span_l: float = hw if ax == 0 else hd   # 줄 자리 축 반길이
-		var span_m: float = hd if ax == 0 else hw   # 줄 따라 축 반길이
-		var ph: float = float(kp.phx) if ax == 0 else float(kp.phz)
-		var k0 := ceili((-span_l + a + ph) / pt); var k1 := floori((span_l - a + ph) / pt)
-		var dl := Vector2(lat, 0) if ax == 0 else Vector2(0, lat)
-		for k in range(k0, k1 + 1):
-			var q: float = k * pt - ph   # 줄 자리(로컬): 건물 틀 좌표 = 줄 간격의 정수배
-			var P := func(t: float) -> Vector2: return Vector2(q, t) if ax == 0 else Vector2(t, q)
-			var n := maxi(2, ceili(2.0 * span_m / ROW_STEP))
-			var ts := []; var ls := []
-			var prev_h := NAN
-			for i in n + 1:
-				var t := lerpf(-span_m, span_m, float(i) / n)
-				var p: Vector2 = P.call(t)
-				var lb: int = label.call(p.x, p.y, ax)
-				if lb != 0:
-					var pl: Vector2 = p + dl; var pr: Vector2 = p - dl
-					if label.call(pl.x, pl.y, ax) != lb or label.call(pr.x, pr.y, ax) != lb: lb = 0
-				var h: float = Hf.call(p.x, p.y)
-				if lb != 0 and not is_nan(prev_h) and absf(h - prev_h) > ROW_STEP * 2.5: lb = 0
-				prev_h = h
-				ts.append(t); ls.append(lb)
-			# 같은 표지 구간 → 줄 하나
-			var i := 0
-			while i <= n:
-				if int(ls[i]) == 0:
-					i += 1; continue
-				var j := i
-				while j + 1 <= n and int(ls[j + 1]) == int(ls[i]): j += 1
-				var sgn: int = ls[i]
-				var ta: float = ts[i]; var tb: float = ts[j]
-				# 비탈 아래 끝이 지붕 둘레(처마)인가
-				var down_t: float = tb if sgn > 0 else ta
-				var eave_end: bool = absf(absf(down_t) - span_m) < 1e-3
-				if eave_end:
-					var pe: Vector2 = P.call(down_t)
-					var zone_end := 0
-					if ax == 0: zone_end = -1 if pe.x < xl else (1 if pe.x > xr else 0)
-					else: zone_end = -1 if pe.x < 0.0 else 1
-					var f: String = ends[0 if zone_end < 0 else 1] if zone_end != 0 else ""
-					if ax == 0 and f == "corner" and pe.y > 0.0: eave_end = false   # 회첨 모퉁이 앞 끝 = 날개 지붕으로 이어짐
-					if ax == 1 and f in ["gable", "open"]: eave_end = false
-				# 끝 다듬기: 처마가 아닌 위 끝은 0.12m 안으로(마루 덮개 밑), 처마가 아닌 아래 끝(회첨골 등)은 0.06m
-				if sgn > 0:
-					ta += 0.12
-					if not eave_end: tb -= 0.06
-				else:
-					tb -= 0.12
-					if not eave_end: ta += 0.06
-				if tb - ta > 0.25:
-					_row_strip(geo, disc, P, Hf, ax, ta, tb, sgn, eave_end, prof, pn, pu, plen, embed, c0, rb, kh)
-				i = j + 1
-	return [geo, disc]
+	var out := { rows = Kit.Geo.new(), disc = Kit.Geo.new(), cap = Kit.Geo.new(), am = Kit.Geo.new() }
+	var ctx := { prof = prof, pn = pn, pu = pu, embed = embed, c0 = c0, rb = rb, kh = kh, gap = gap, col_t = kp.get("col_t", Color(0.2, 0.2, 0.2)), col_l = kp.get("col_l", Color(0.12, 0.12, 0.12)) }
+	for fam in [0, 1]:   # 0 수키와 줄 · 1 암키와 골(줄 사이 가운데)
+		var lat: float = a * 1.15 if fam == 0 else gap * 0.5
+		var offq: float = 0.0 if fam == 0 else 0.5 * pt
+		for ax in [0, 1]:
+			var span_l: float = hw if ax == 0 else hd
+			var span_m: float = hd if ax == 0 else hw
+			var ph: float = float(kp.phx) if ax == 0 else float(kp.phz)
+			var k0 := ceili((-span_l + lat + ph - offq) / pt); var k1 := floori((span_l - lat + ph - offq) / pt)
+			var dl := Vector2(lat, 0) if ax == 0 else Vector2(0, lat)
+			for k in range(k0, k1 + 1):
+				var q: float = k * pt - ph + offq   # 줄 자리(로컬): 건물 틀 좌표 = 줄 간격의 정수배(골은 반 칸 옆)
+				var P := func(t: float) -> Vector2: return Vector2(q, t) if ax == 0 else Vector2(t, q)
+				var n := maxi(2, ceili(2.0 * span_m / ROW_STEP))
+				var ts := []; var ls := []
+				var prev_h := NAN
+				for i in n + 1:
+					var t := lerpf(-span_m, span_m, float(i) / n)
+					var p: Vector2 = P.call(t)
+					var lb: int = label.call(p.x, p.y, ax)
+					if lb != 0:
+						var pl: Vector2 = p + dl; var pr: Vector2 = p - dl
+						if label.call(pl.x, pl.y, ax) != lb or label.call(pr.x, pr.y, ax) != lb: lb = 0
+					var h: float = Hf.call(p.x, p.y)
+					if lb != 0 and not is_nan(prev_h) and absf(h - prev_h) > ROW_STEP * 2.5: lb = 0
+					prev_h = h
+					ts.append(t); ls.append(lb)
+				var i := 0
+				while i <= n:
+					if int(ls[i]) == 0:
+						i += 1; continue
+					var j := i
+					while j + 1 <= n and int(ls[j + 1]) == int(ls[i]): j += 1
+					var sgn: int = ls[i]
+					var ta: float = ts[i]; var tb: float = ts[j]
+					var down_t: float = tb if sgn > 0 else ta
+					var eave_end: bool = absf(absf(down_t) - span_m) < 1e-3
+					if eave_end:
+						var pe: Vector2 = P.call(down_t)
+						var zone_end := 0
+						if ax == 0: zone_end = -1 if pe.x < xl else (1 if pe.x > xr else 0)
+						else: zone_end = -1 if pe.x < 0.0 else 1
+						var f: String = ends[0 if zone_end < 0 else 1] if zone_end != 0 else ""
+						if ax == 0 and f == "corner" and pe.y > 0.0: eave_end = false   # 회첨 모퉁이 앞 끝 = 날개 지붕으로 이어짐
+						if ax == 1 and f in ["gable", "open"]: eave_end = false
+					if sgn > 0:
+						ta += 0.12
+						if not eave_end: tb -= 0.06
+					else:
+						tb -= 0.12
+						if not eave_end: ta += 0.06
+					if tb - ta > 0.25:
+						var path := _path(P, Hf, ax, ta, tb, sgn)
+						var seed: int = k * 7919 + ax * 104729 + fam * 31337
+						if fam == 0: _su_tiles(out, path, ax, sgn, eave_end, ctx, seed)
+						else: _am_courses(out.am, path, ax, sgn, ctx, seed)
+					i = j + 1
+	return out
 
-static func _row_strip(geo: Kit.Geo, disc: Kit.Geo, P: Callable, Hf: Callable, ax: int, ta: float, tb: float, sgn: int, eave_end: bool, prof: Array, pn: Array, pu: Array, plen: float, embed: float, c0: float, rb: float, kh: float) -> void:
-	var nseg := maxi(1, ceili((tb - ta) / ROW_SEG))
-	var rep: float = KHS_SU_REP * kh
-	var d_axis := Vector3(0, 0, 1) if ax == 0 else Vector3(1, 0, 0)
-	var l_axis := Vector3(1, 0, 0) if ax == 0 else Vector3(0, 0, 1)
-	var pts := []
-	for s in nseg + 1:
-		var p2: Vector2 = P.call(lerpf(ta, tb, float(s) / nseg))
-		pts.append(Vector3(p2.x, Hf.call(p2.x, p2.y), p2.y))
-	var rows := []   # 마디 점마다 [단면 점들, 법선들, 거리]
+# 줄 가운데 선: 비탈 아래 끝(0) → 위 끝, 5cm마다 [자리, 면 법선, 겉 따라 잰 거리]
+static func _path(P: Callable, Hf: Callable, ax: int, ta: float, tb: float, sgn: int) -> Array:
+	var n := maxi(2, ceili((tb - ta) / 0.05))
+	var out := []
 	var dist := 0.0
-	for s in pts.size():
-		var p: Vector3 = pts[s]
+	for s in n + 1:
+		var t := lerpf(tb, ta, float(s) / n) if sgn > 0 else lerpf(ta, tb, float(s) / n)
+		var p2: Vector2 = P.call(t)
+		var p := Vector3(p2.x, Hf.call(p2.x, p2.y), p2.y)
 		var e := 0.03
 		var gx := 0.0; var gz := 0.0
 		if ax == 0: gz = (Hf.call(p.x, p.z + e) - Hf.call(p.x, p.z - e)) / (2.0 * e)
 		else: gx = (Hf.call(p.x + e, p.z) - Hf.call(p.x - e, p.z)) / (2.0 * e)
-		var N := Vector3(-gx, 1.0, -gz).normalized()
-		var L := (l_axis - N * l_axis.dot(N)).normalized()
-		if s > 0: dist += p.distance_to(pts[s - 1])
-		var ring := []; var rn := []
+		if s > 0: dist += p.distance_to(out[s - 1][0])
+		out.append([p, Vector3(-gx, 1.0, -gz).normalized(), dist])
+	return out
+
+# 거리 d 자리(선형): [자리, 법선]
+static func _path_at(path: Array, d: float) -> Array:
+	if d <= 0.0: return [path[0][0], path[0][1]]
+	for s in range(1, path.size()):
+		var d1: float = path[s][2]
+		if d1 >= d:
+			var d0: float = path[s - 1][2]
+			var f := (d - d0) / maxf(d1 - d0, 1e-6)
+			return [(path[s - 1][0] as Vector3).lerp(path[s][0], f), (path[s - 1][1] as Vector3).lerp(path[s][1], f).normalized()]
+	var l: Array = path[path.size() - 1]
+	return [l[0], l[1]]
+
+static func _hz(a: float, b: float) -> float:
+	var v := sin(a * 12.9898 + b * 78.233) * 43758.5453
+	return v - floorf(v)
+
+# 수키와 장들: 고리 [거리, 배율, 장 번호] 사이를 단면으로 잇는다. 배율이 바뀌는 고리 사이(미구 목·입술 턱)는 꺾인 법선
+static func _su_tiles(out: Dictionary, path: Array, ax: int, sgn: int, eave_end: bool, ctx: Dictionary, seed: int) -> void:
+	var g: Kit.Geo = out.rows
+	var kh: float = ctx.kh; var embed: float = ctx.embed
+	var prof: Array = ctx.prof; var pn: Array = ctx.pn; var pu: Array = ctx.pu
+	var plen: float = pu[pu.size() - 1]
+	var total: float = path[path.size() - 1][2]
+	var L: float = 0.3104 * kh
+	var nt := maxi(1, ceili(total / L - 0.15))
+	var la := Vector3(1, 0, 0) if ax == 0 else Vector3(0, 0, 1)
+	var dd := (Vector3(0, 0, 1) if ax == 0 else Vector3(1, 0, 0)) * float(sgn)   # 비탈 아래 쪽
+	var rings := []
+	for t in nt:
+		var d0 := t * L; var d1 := minf((t + 1) * L, total) if t < nt - 1 else total
+		rings.append([d0, 1.0, t])
+		if d1 - d0 > 0.05: rings.append([d1 - 0.014 * kh, 1.0, t])
+		rings.append([d1 - 0.002, 0.8, t] if t < nt - 1 else [d1, 1.0, t])
+	var col_t: Color = ctx.col_t
+	var moss := Kit.hex(0x4f5a3a)
+	var R := []   # 고리마다 [점들, 법선들, 꼭짓점 색들, v]
+	for r in rings:
+		var d: float = r[0]; var sc: float = r[1]; var t: int = r[2]
+		var pa: Array = _path_at(path, d)
+		var p: Vector3 = pa[0]; var N: Vector3 = pa[1]
+		var Lv := (la - N * la.dot(N)).normalized()
+		var jl := (_hz(seed, t * 1.7) - 0.5) * 0.012 * kh; var ju := (_hz(seed + 3, t * 2.3) - 0.5) * 0.01 * kh
+		var val := 1.0 + 0.2 * (_hz(seed + 7, t * 3.1) - 0.5)
+		var c := col_t * val; c.a = 1.0
+		if t < 2 and _hz(seed + 11, t * 5.3) < 0.12: c = c.lerp(moss * 0.9, 0.45)
+		var pts := []; var nrs := []; var cs := []
 		for k in prof.size():
 			var pv: Vector2 = prof[k]; var nv: Vector2 = pn[k]
-			ring.append(p + L * pv.x + N * (pv.y - embed))
-			rn.append((L * nv.x + N * nv.y).normalized())
-		rows.append([ring, rn, dist])
-	var total: float = dist
-	for s in rows.size() - 1:
-		var r0: Array = rows[s]; var r1: Array = rows[s + 1]
-		# v는 비탈 아래 끝에서 잰다(그림판 수키와 장 이음이 처마부터 맞게)
-		var v0: float = ((total - float(r0[2])) if sgn > 0 else float(r0[2])) / rep
-		var v1: float = ((total - float(r1[2])) if sgn > 0 else float(r1[2])) / rep
+			pts.append(p + Lv * (pv.x * sc + jl) + N * (pv.y * sc - embed + ju))
+			nrs.append((Lv * nv.x + N * nv.y).normalized())
+			cs.append(c * (1.04 if k >= 2 and k <= 4 else 0.97))   # 닳은 등은 조금 밝게, 옆은 조금 어둡게
+		var vloc := 1.0 - clampf((d - t * L) / L, 0.0, 1.0)
+		R.append([pts, nrs, cs, 0.5 * (t % 2) + 0.5 * vloc, sc])
+	for s in R.size() - 1:
+		var r0: Array = R[s]; var r1: Array = R[s + 1]
+		var flat: bool = absf(float(r0[4]) - float(r1[4])) > 0.05
 		for k in prof.size() - 1:
 			var u0: float = float(pu[k]) / plen; var u1: float = float(pu[k + 1]) / plen
 			var A0: Vector3 = r0[0][k]; var B0: Vector3 = r0[0][k + 1]; var A1: Vector3 = r1[0][k]; var B1: Vector3 = r1[0][k + 1]
 			var nA0: Vector3 = r0[1][k]; var nB0: Vector3 = r0[1][k + 1]; var nA1: Vector3 = r1[1][k]; var nB1: Vector3 = r1[1][k + 1]
 			var want: Vector3 = nA0 + nB0 + nA1 + nB1
-			_tri_n(geo, A0, B0, B1, Vector2(u0, v0), Vector2(u1, v0), Vector2(u1, v1), nA0, nB0, nB1, want)
-			_tri_n(geo, A0, B1, A1, Vector2(u0, v0), Vector2(u1, v1), Vector2(u0, v1), nA0, nB1, nA1, want)
+			if flat:
+				# 미구 목·입술 턱: 비탈 위·아래를 보는 꺾인 면
+				var fn := (B0 - A0).cross(A1 - A0).normalized()
+				if fn.dot(want) < 0.0: fn = -fn
+				fn = (fn + want.normalized() * 0.3).normalized()
+				nA0 = fn; nB0 = fn; nA1 = fn; nB1 = fn
+			var b0 := g.pos.size()
+			_tri_n(g, A0, B0, B1, Vector2(u0, r0[3]), Vector2(u1, r0[3]), Vector2(u1, r1[3]), nA0, nB0, nB1, want)
+			_tri_n(g, A0, B1, A1, Vector2(u0, r0[3]), Vector2(u1, r1[3]), Vector2(u0, r1[3]), nA0, nB1, nA1, want)
+			for q in range(b0, g.pos.size()):
+				# 꼭짓점 색: 가까운 고리의 단면 점 색
+				var pq: Vector3 = g.pos[q]
+				var best: Color = r0[2][k]; var bd := INF
+				for cand in [[A0, r0[2][k]], [B0, r0[2][k + 1]], [A1, r1[2][k]], [B1, r1[2][k + 1]]]:
+					var dq := pq.distance_squared_to(cand[0])
+					if dq < bd: bd = dq; best = cand[1]
+				g.col[q] = best
+	# 처마 끝 수막새 · 위 끝 와구토
+	var cr: float = ctx.rb
 	if eave_end:
-		# 수막새: 처마 끝 단면 반원 중심에 원판(10마디) + 둘레 두께, 비탈 아래를 본다
-		var re: Array = rows[rows.size() - 1] if sgn > 0 else rows[0]
-		var pe: Vector3 = pts[pts.size() - 1] if sgn > 0 else pts[0]
-		var N: Vector3 = re[1][3]   # 단면 꼭대기 법선 = 면 법선
-		var L: Vector3 = ((re[0][prof.size() - 1] as Vector3) - (re[0][0] as Vector3)).normalized()
-		var fw: Vector3 = L.cross(N).normalized()
-		if fw.dot(d_axis * float(sgn)) < 0.0: fw = -fw
-		var cen: Vector3 = pe + N * (c0 - embed) + fw * 0.012
-		var r: float = rb * 1.04
-		var cu: float = KHS_SUMAKSE[0]; var cv: float = KHS_SUMAKSE[1]; var cr: float = KHS_SUMAKSE[2]
+		var r0: Array = R[0]
+		var p0: Vector3 = _path_at(path, 0.0)[0]
+		var N: Vector3 = r0[1][3]
+		var Lv: Vector3 = ((r0[0][prof.size() - 1] as Vector3) - (r0[0][0] as Vector3)).normalized()
+		var fw: Vector3 = Lv.cross(N).normalized()
+		if fw.dot(dd) < 0.0: fw = -fw
+		var jl := (_hz(seed, 0.0) - 0.5) * 0.012 * kh; var ju := (_hz(seed + 3, 0.0) - 0.5) * 0.01 * kh
+		var cen: Vector3 = p0 + Lv * jl + N * (float(ctx.c0) - embed + ju) + fw * 0.012
+		var r: float = cr * 1.04
+		var cu: float = KHS_SUMAKSE[0]; var cv: float = KHS_SUMAKSE[1]; var cw: float = KHS_SUMAKSE[2]
 		var ns := 10
 		for k in ns:
 			var a0 := TAU * k / ns; var a1 := TAU * (k + 1) / ns
-			var o0 := L * cos(a0) + N * sin(a0); var o1 := L * cos(a1) + N * sin(a1)
-			var p0 := cen + o0 * r; var p1 := cen + o1 * r
-			var uv0 := Vector2(cu + cos(a0) * cr, cv - sin(a0) * cr); var uv1 := Vector2(cu + cos(a1) * cr, cv - sin(a1) * cr)
-			tw(disc, cen, p0, p1, Vector2(cu, cv), uv0, uv1, fw)
-			var q0 := p0 - fw * 0.03; var q1 := p1 - fw * 0.03
-			tw(disc, p0, q0, q1, uv0, uv0, uv1, o0 + o1)
-			tw(disc, p0, q1, p1, uv0, uv1, uv1, o0 + o1)
+			var o0 := Lv * cos(a0) + N * sin(a0); var o1 := Lv * cos(a1) + N * sin(a1)
+			var q0 := cen + o0 * r; var q1 := cen + o1 * r
+			var uv0 := Vector2(cu + cos(a0) * cw, cv - sin(a0) * cw); var uv1 := Vector2(cu + cos(a1) * cw, cv - sin(a1) * cw)
+			tw(out.disc, cen, q0, q1, Vector2(cu, cv), uv0, uv1, fw)
+			tw(out.disc, q0, q0 - fw * 0.03, q1 - fw * 0.03, uv0, uv0, uv1, o0 + o1)
+			tw(out.disc, q0, q1 - fw * 0.03, q1, uv0, uv1, uv1, o0 + o1)
+	# 위 끝(마루·추녀·골 앞): 와구토 — 단면을 흰 회로 메운다(그림판 아래 흰 띠)
+	var rl: Array = R[R.size() - 1]
+	var pl: Vector3 = _path_at(path, total)[0]
+	var cen2: Vector3 = (rl[0][0] as Vector3).lerp(rl[0][prof.size() - 1], 0.5)
+	for k in prof.size() - 1:
+		tw(out.cap, cen2, rl[0][k], rl[0][k + 1], Vector2(0.5, 0.975), Vector2(0.45, 0.97), Vector2(0.55, 0.97), -dd)
+
+# 암키와 골: 켜마다 입술(들림) → 위끝(낮음), 다음 켜 입술이 위에 겹친 턱. 단면 오목 4점
+static func _am_courses(g: Kit.Geo, path: Array, ax: int, sgn: int, ctx: Dictionary, seed: int) -> void:
+	var kh: float = ctx.kh
+	var total: float = path[path.size() - 1][2]
+	var Lc: float = 0.1275 * kh
+	var nc := maxi(1, ceili(total / Lc))
+	var w: float = float(ctx.gap) + 0.04 * kh
+	var sag: float = 0.02 * kh
+	var hhi: float = 0.022 * kh; var base := 0.005
+	var xs := [-w / 2.0, -w / 6.0, w / 6.0, w / 2.0]
+	var la := Vector3(1, 0, 0) if ax == 0 else Vector3(0, 0, 1)
+	var dd := (Vector3(0, 0, 1) if ax == 0 else Vector3(1, 0, 0)) * float(sgn)
+	var col_l: Color = ctx.col_l; var col_t: Color = ctx.col_t
+	var moss := Kit.hex(0x4f5a3a)
+	var R := []
+	for c in nc:
+		var d0 := c * Lc
+		for e in 2:
+			var d: float = d0 if e == 0 else minf(d0 + Lc - 0.003, total)
+			if e == 1 and c == nc - 1: d = total
+			var hgt: float = hhi if e == 0 else 0.0
+			var pa: Array = _path_at(path, d)
+			var p: Vector3 = pa[0]; var N: Vector3 = pa[1]
+			var Lv := (la - N * la.dot(N)).normalized()
+			var val := 1.0 + 0.2 * (_hz(seed + 5, c * 1.9) - 0.5)
+			var cc := col_t * 0.95 * val; cc.a = 1.0   # 원본처럼 수키와와 거의 같은 빛(골이 바둑판처럼 어둡지 않게)
+			if c < 4 and _hz(seed + 13, c * 2.7) < 0.15: cc = cc.lerp(moss * 0.85, 0.5)
+			var pts := []; var nrs := []; var cs := []
+			for k in 4:
+				var x: float = xs[k]
+				var y: float = sag * pow(x / (w / 2.0), 2.0)
+				pts.append(p + Lv * x + N * (base + hgt + y))
+				var sl: float = 2.0 * sag * x / pow(w / 2.0, 2.0)
+				nrs.append((N - Lv * sl).normalized())
+				cs.append(cc * (0.92 if k == 1 or k == 2 else 1.0))   # 골 가운데는 젖어 조금 어둡게
+			R.append([pts, nrs, cs, 0.2 * (c % 5) + (0.2 if e == 0 else 0.0), e])
+	for s in R.size() - 1:
+		var r0: Array = R[s]; var r1: Array = R[s + 1]
+		var step: bool = int(r0[4]) == 1   # 위끝 → 다음 켜 입술: 턱
+		for k in 3:
+			var u0 := k / 3.0; var u1 := (k + 1) / 3.0
+			var A0: Vector3 = r0[0][k]; var B0: Vector3 = r0[0][k + 1]; var A1: Vector3 = r1[0][k]; var B1: Vector3 = r1[0][k + 1]
+			var nA0: Vector3 = r0[1][k]; var nB0: Vector3 = r0[1][k + 1]; var nA1: Vector3 = r1[1][k]; var nB1: Vector3 = r1[1][k + 1]
+			var want: Vector3 = nA0 + nB0 + nA1 + nB1
+			var v0: float = r0[3]; var v1: float = r1[3]
+			if step:
+				want = dd + want.normalized() * 0.2
+				var fn := (B0 - A0).cross(A1 - A0).normalized()
+				if fn.dot(want) < 0.0: fn = -fn
+				nA0 = fn; nB0 = fn; nA1 = fn; nB1 = fn
+				v1 = v0
+			var b0 := g.pos.size()
+			_tri_n(g, A0, B0, B1, Vector2(u0, v0), Vector2(u1, v0), Vector2(u1, v1), nA0, nB0, nB1, want)
+			_tri_n(g, A0, B1, A1, Vector2(u0, v0), Vector2(u1, v1), Vector2(u0, v1), nA0, nB1, nA1, want)
+			var ca: Color = r0[2][k]; var cb: Color = r0[2][k + 1]; var cc1: Color = r1[2][k]; var cd: Color = r1[2][k + 1]
+			if step: ca = ca * 0.78; cb = cb * 0.78   # 턱 밑 그늘
+			var cs4 := [ca, cb, cd, ca, cd, cc1]
+			for q in 6: g.col[b0 + q] = cs4[q]
+
+# 마루(용마루·내림·추녀마루) — 국가유산청 그림판 마루 칸으로 켜켜이: 착고·부고 한 켜 + 적새 n켜(켜마다 양옆 1.5cm 들임 → 켜 그늘) + 숫마루장(수키와)
+#   a→b 지붕 겉 선(마루 밑), w 밑 너비, nl 적새 켜 수, hl 켜 높이. 반환 없음: gl(켜 옆·윗면, KHS_RIDGE_RECT), gs(숫마루장, KHS_SU_RECT)
+static func _ridge_k(gl: Kit.Geo, gs: Kit.Geo, a: Vector3, b: Vector3, w: float, nl: int, hl: float, kh: float, col: Color) -> void:
+	var dv := (b - a); dv.y = 0.0
+	if dv.length() < 1e-4: return
+	var side := Vector3.UP.cross(dv.normalized()).normalized()
+	var y0 := -0.06
+	var layers := [[w, 0.10]]   # 착고·부고
+	for i in nl: layers.append([w - 0.07 - i * 0.03, hl])
+	var su0 := (a.x + a.z) / 3.35; var su1 := su0 + a.distance_to(b) / 3.35
+	var yb := y0
+	for li in layers.size():
+		var lw: float = layers[li][0]; var lh: float = layers[li][1]
+		var hs := side * (lw / 2.0)
+		var lo := Vector3(0, yb, 0); var hi := Vector3(0, yb + lh, 0)
+		var shade := 1.0 - 0.06 * (layers.size() - 1 - li)
+		var cc := col * shade; cc.a = 1.0
+		var b0 := gl.pos.size()
+		for sg in [-1.0, 1.0]:
+			var o: Vector3 = hs * float(sg)
+			tw(gl, a + o + lo, b + o + lo, b + o + hi, Vector2(su0, 1), Vector2(su1, 1), Vector2(su1, 0), o)
+			tw(gl, a + o + lo, b + o + hi, a + o + hi, Vector2(su0, 1), Vector2(su1, 0), Vector2(su0, 0), o)
+		tw(gl, a - hs + hi, b - hs + hi, b + hs + hi, Vector2(su0, 0.2), Vector2(su1, 0.2), Vector2(su1, 0.0), Vector3.UP)
+		tw(gl, a - hs + hi, b + hs + hi, a + hs + hi, Vector2(su0, 0.2), Vector2(su1, 0.0), Vector2(su0, 0.0), Vector3.UP)
+		for q in range(b0, gl.pos.size()): gl.col[q] = cc
+		yb += lh
+	# 숫마루장: 반원(지름 = 맨 위 켜 너비의 0.8)
+	var r: float = minf((layers[layers.size() - 1][0] as float) * 0.42, 0.1 * kh)
+	var nsg := 5
+	var dn := dv.normalized()
+	var su_len := a.distance_to(b) / (KHS_SU_REP * kh)
+	for k in nsg:
+		var t0 := PI * k / nsg; var t1 := PI * (k + 1) / nsg
+		var o0 := side * cos(t0) * r + Vector3(0, sin(t0) * r + yb - 0.01, 0); var o1 := side * cos(t1) * r + Vector3(0, sin(t1) * r + yb - 0.01, 0)
+		var b0 := gs.pos.size()
+		tw(gs, a + o0, b + o0, b + o1, Vector2(float(k) / nsg, 0), Vector2(float(k) / nsg, su_len), Vector2(float(k + 1) / nsg, su_len), o0 + o1 - Vector3(0, yb, 0) * 2.0)
+		tw(gs, a + o0, b + o1, a + o1, Vector2(float(k) / nsg, 0), Vector2(float(k + 1) / nsg, su_len), Vector2(float(k + 1) / nsg, 0), o0 + o1 - Vector3(0, yb, 0) * 2.0)
+		for q in range(b0, gs.pos.size()): gs.col[q] = col * 1.05
+
+
+# 망와: 마루 끝에서 바깥을 보는 원판(12마디, 그림판 수막새 무늬) — 조금 젖혀 세운다
+static func _mangwa_k(g: Kit.Geo, e: Vector3, out: Vector3, r: float, col: Color) -> void:
+	var up := Vector3.UP
+	var fw := (out + up * 0.35).normalized()
+	var side := up.cross(out).normalized()
+	var upv := fw.cross(side).normalized()
+	if upv.y < 0.0: upv = -upv
+	var cen := e + out * 0.1 + Vector3(0, 0.3, 0)
+	var cu: float = KHS_SUMAKSE[0]; var cv: float = KHS_SUMAKSE[1]; var cw: float = KHS_SUMAKSE[2]
+	var ns := 12
+	var b0 := g.pos.size()
+	for k in ns:
+		var a0 := TAU * k / ns; var a1 := TAU * (k + 1) / ns
+		var q0 := cen + (side * cos(a0) + upv * sin(a0)) * r; var q1 := cen + (side * cos(a1) + upv * sin(a1)) * r
+		tw(g, cen, q0, q1, Vector2(cu, cv), Vector2(cu + cos(a0) * cw, cv - sin(a0) * cw), Vector2(cu + cos(a1) * cw, cv - sin(a1) * cw), fw)
+		tw(g, q0, q0 - fw * 0.05, q1 - fw * 0.05, Vector2(cu, cv), Vector2(cu, cv), Vector2(cu, cv), q0 + q1 - cen * 2.0)
+		tw(g, q0, q1 - fw * 0.05, q1, Vector2(cu, cv), Vector2(cu, cv), Vector2(cu, cv), q0 + q1 - cen * 2.0)
+	for q in range(b0, g.pos.size()): g.col[q] = col
 
 # 삼각형 + 꼭짓점 법선(want 쪽을 보게)
 static func _tri_n(g: Kit.Geo, a: Vector3, b: Vector3, c: Vector3, ua: Vector2, ub: Vector2, uc: Vector2, na: Vector3, nb: Vector3, nc: Vector3, want: Vector3) -> void:

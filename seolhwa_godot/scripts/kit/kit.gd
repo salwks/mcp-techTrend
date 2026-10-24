@@ -373,7 +373,9 @@ static func texture(name: String) -> Texture2D:
 # 국가유산청 기와 그림판은 매우 어둡다(암키와 칸 평균 선형 0.020 대 빌더 아틀라스 기와 칸 0.574). 같은 꼭짓점 색에서
 #   가까운 기와(그림판)와 중경 기와(아틀라스)가 같은 평균 밝기가 되게 곱한다 — 40m에서 바뀔 때 밝기가 튀지 않게
 const GIWA_KHS_TINT := Vector4(28.7, 30.2, 30.9, 1.0)
-const GIWA_ROW_FADE := Vector2(32.0, 40.0)   # 수키와 줄이 점무늬로 사라지는 거리(m) — building.GIWA_NEAR(40m)에서 다 사라진다
+const GIWA_STRIPE_GAIN := 1.8   # 줄이 사라지는 동안 기와 겉 수키와 자리 밝기 배율(줄 띠 꼭짓점 색 c_top ÷ 겉 평균 × 그림판 수키와/암키와 ≈ 1.8)
+const GIWA_ROW_FADE := Vector2(32.0, 40.0)
+const GIWA_AM_FADE := Vector2(18.0, 24.0)   # 암키와 골(켜 턱) 조각이 사라지는 거리 — 그 너머는 기와 겉 셰이더(khs_course)가 같은 켜·오목을 그린다   # 수키와 줄이 점무늬로 사라지는 거리(m) — building.GIWA_NEAR(40m)에서 다 사라진다
 
 static func material(kind := "atlas") -> ShaderMaterial:
 	_lock.lock()
@@ -411,6 +413,10 @@ static func _make_material(kind: String) -> ShaderMaterial:
 		m.set_shader_parameter("khs_orm", texture("khs_giwa/giwa_orm"))
 		m.set_shader_parameter("albedo_color", GIWA_KHS_TINT)
 		if kind == "giwa_khs_rows": m.set_shader_parameter("khs_fade", GIWA_ROW_FADE)
+		elif kind == "giwa_khs_am": m.set_shader_parameter("khs_fade", GIWA_AM_FADE)
+		else:
+			m.set_shader_parameter("khs_stripe", Vector3(GIWA_ROW_FADE.x, GIWA_ROW_FADE.y, GIWA_STRIPE_GAIN))
+			m.set_shader_parameter("khs_course", Vector4(5.0, 0.16, 0.3, 0.25))
 		return m
 	m.shader = Materials.world_shader(true, false, kind == "cloth")
 	m.set_shader_parameter("ramp_tex", Materials.ramp_texture())

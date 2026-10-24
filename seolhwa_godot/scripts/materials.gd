@@ -363,6 +363,8 @@ uniform sampler2D khs_orm : filter_linear_mipmap_anisotropic, repeat_enable;
 uniform float khs_nrm_k = 1.0;
 uniform float khs_ny = 1.0;
 uniform vec2 khs_fade = vec2(0.0);
+uniform vec3 khs_stripe = vec3(0.0);
+uniform vec4 khs_course = vec4(0.0);   // 기와 겉 암키와 켜·골(조각이 없는 거리): (UV v 한 칸의 켜 수, 켜 기울기, 턱 밑 그늘, 골 오목 기울기)   // 기와 겉: (시작, 끝 m, 밝기 배율) — 그 거리에서 수키와 줄 자리(UV u 정수)에 수키와 빛 띠가 들어온다(줄이 사라지는 만큼)
 """
 const KHS_FADE := """	if (khs_fade.y > 0.0) {
 		ivec2 kq = ivec2(FRAGCOORD.xy) % 4;
@@ -373,11 +375,28 @@ const KHS_FADE := """	if (khs_fade.y > 0.0) {
 const KHS_PBR := """		{
 			vec2 kdx = dFdx(a_cont), kdy = dFdy(a_cont);
 			vec3 korm = textureGrad(khs_orm, a_uv, kdx, kdy).rgb;
-			vec3 kn = textureGrad(khs_nrm, a_uv, kdx, kdy).rgb * 2.0 - 1.0;
+			// 그림판 법선은 RG 두 채널(B = 0, BC5 꼴) — z는 되살린다. Y는 그림 아래쪽(DirectX 꼴, 수막새 볼록 무늬로 확인) = B(+v)와 같은 쪽
+			vec2 kxy = textureGrad(khs_nrm, a_uv, kdx, kdy).rg * 2.0 - 1.0;
+			vec3 kn = vec3(kxy, sqrt(max(1.0 - dot(kxy, kxy), 0.0)));
 			alb = albedo_color.rgb * t.rgb * COLOR.rgb;
-			ao = korm.r; rough = korm.g; h = 0.5;
+			if (khs_stripe.y > 0.0) {
+				float klu = fract(UV.x);
+				float km = 1.0 - smoothstep(0.17, 0.25, min(klu, 1.0 - klu));
+				alb *= 1.0 + (khs_stripe.z - 1.0) * km * smoothstep(khs_stripe.x, khs_stripe.y, length(VERTEX));
+			}
+			ao = korm.r; rough = max(korm.g, 0.8); h = 0.5;   // 구운 흙 — 무광
 			TBN = pbr_frame(NORMAL, VERTEX, a_cont);
 			sxy = vec2(kn.x, kn.y * khs_ny) / max(kn.z, 0.2) * khs_nrm_k;
+			if (khs_course.x > 0.0) {
+				// 켜: v(비탈 아래로 증가) 한 켜 안에서 아래로 갈수록 들리고(법선이 비탈 위로 기움) 켜 끝 턱에서 떨어진다 — 턱 바로 밑은 그늘, 턱 끝은 밝게
+				float kc = fract(UV.y * khs_course.x);
+				sxy.y -= khs_course.y;
+				ao *= mix(1.0 - khs_course.z, 1.0, smoothstep(0.0, 0.18, kc));
+				alb *= 1.0 + 0.12 * smoothstep(0.88, 1.0, kc);
+				// 골: 수키와 줄(u 정수) 사이가 오목 — 가운데로 기운다
+				float ku = fract(UV.x) - 0.5;
+				sxy.x -= khs_course.w * ku * 2.0;
+			}
 		}
 """
 
@@ -408,7 +427,7 @@ static func faded_copy(sm: ShaderMaterial) -> ShaderMaterial:
 	var ds := code.contains("cull_disabled")
 	var f := ShaderMaterial.new()
 	f.shader = world_shader(lit, true, ds, code.contains("#define KHS_TEX"))
-	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset", "kit_tiling", "khs_nrm", "khs_orm", "khs_nrm_k", "khs_ny", "khs_fade"]:
+	for p in ["albedo_color", "albedo_tex", "ramp_tex", "emissive_color", "emission_tex", "use_emission", "uv_offset", "kit_tiling", "khs_nrm", "khs_orm", "khs_nrm_k", "khs_ny", "khs_fade", "khs_stripe"]:
 		var v = sm.get_shader_parameter(p)
 		if v != null:
 			f.set_shader_parameter(p, v)

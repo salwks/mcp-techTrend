@@ -18,3 +18,7 @@ shot "$S" sarang_ref "--time=11 --dist=20 --yaw=-20 --pitch=22"
 shot "$S" sarang_low "--time=17 --dist=20 --yaw=-20 --pitch=22"
 shot "$S" sarang_fp "--time=11 --center=3,3.6,2 --dist=6 --yaw=35 --pitch=-12 --fov=60 --fit=0"
 shot "$S" sarang_hap "--time=8 --center=4,4.6,0 --dist=8 --yaw=70 --pitch=26 --fov=60 --fit=0"
+# 가까이(같은 각, 거리만): 사랑채 앞 비탈 처마 모퉁이 쪽, 낮은 해(8시) 스치는 빛 — 3·7·15·30m
+for d in 3 7 15 30; do shot "$S" sarang_c${d} "--time=8 --center=3.5,4.3,3.2 --dist=$d --yaw=30 --pitch=28 --fov=50 --fit=0"; done
+# 거리별(40m 바뀜 앞뒤): 안채 기준 각, 거리만 — 시트는 같은 크기로 잘라 키운다(giwa_sheet.py)
+for d in 34 38 42 46; do shot "$A" anchae_d${d} "--time=11 --dist=$d --yaw=-20 --pitch=22 --fov=30"; done

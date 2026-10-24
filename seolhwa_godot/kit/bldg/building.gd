@@ -23,6 +23,11 @@ const RANGES := [[0.0, 55.0], [55.0, 160.0], [160.0, 0.0]]
 #   giwa_rows(수키와 줄·수막새, 그림자 없음, 32~40m 점무늬로 사라짐) · giwa_hi(그림판 암키와 겉·암막새 띠, 0~GIWA_NEAR)
 #   giwa_lo(예전 아틀라스 기와 겉·막새 띠, GIWA_NEAR~55m). 화질 낮음(set_giwa_detail(…, false))이면 줄·그림판 벌을 끄고 아틀라스 벌을 0m부터
 const GIWA_NEAR := 40.0
+const GIWA_AM_NEAR := 24.0   # 암키와 골 조각(giwa_am) 끝 — 셰이더 점무늬 18~24m
+# 기와 꼭짓점 빛(모든 단계 같음): 짙은 숯빛 구운 기와(예전 0x8f9296·0x878a84·0x6d7176은 밝은 잿빛이었다)
+const GIWA_TOP := 0x63666a
+const GIWA_TOP_WORN := 0x5f615c
+const GIWA_LOW := 0x4a4d51
 static var GIWA_ROWS := true   # 짓기 스위치(측정 전후 비교용 — 끄면 예전과 같은 지붕)
 const LOD_NAMES := ["near", "mid", "far"]
 const OPEN_FNS := ["hall", "maru", "shed", "mill", "forge", "shop", "stable"]
@@ -36,6 +41,7 @@ static func _rec_on(lod: int) -> bool:
 static func build(params: Dictionary) -> Dictionary:
 	var t0 := Time.get_ticks_usec()
 	var sp := S.resolve(params)
+	if params.has("giwa_rows"): sp._rows = bool(params.giwa_rows)   # 견줌·촬영용(kit_preview --params) — 놀이는 GIWA_ROWS + 화질 스위치
 	# 폐가(ruin): 단계 값 풀기 · 낡음 끌어올림(빛) · 실내 들어가기(단계 3부터 없음) — 없으면 아무것도 바꾸지 않는다
 	var rz := RU.resolve(sp)
 	if not rz.is_empty():
@@ -78,7 +84,7 @@ static func build(params: Dictionary) -> Dictionary:
 	if inside:
 		var near := root.get_node_or_null("near")
 		var hide := []
-		for p in ["roof", "front", "giwa_rows", "giwa_hi", "giwa_lo"]:
+		for p in ["roof", "front", "giwa_rows", "giwa_hi", "giwa_lo", "giwa_am"]:
 			var n = near.get_node_or_null(p) if near else null
 			if n: hide.append(n)
 		var b: Rect2 = res.info.body
@@ -96,6 +102,10 @@ static func _giwa_ranges(near: Node, three: bool) -> void:
 	var hi := near.get_node_or_null("giwa_hi") as GeometryInstance3D
 	var lo := near.get_node_or_null("giwa_lo") as GeometryInstance3D
 	if rows: rows.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var am := near.get_node_or_null("giwa_am") as GeometryInstance3D
+	if am:
+		am.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if three: am.visibility_range_end = GIWA_AM_NEAR
 	if not three:
 		if lo: near.remove_child(lo); lo.free()
 		return
@@ -108,7 +118,7 @@ static func set_giwa_detail(root: Node, high: bool) -> void:
 	for n in root.find_children("giwa_*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		match String(g.name):
-			"giwa_rows", "giwa_hi": g.visible = high
+			"giwa_rows", "giwa_hi", "giwa_am": g.visible = high
 			"giwa_lo": g.visibility_range_begin = GIWA_NEAR if high else 0.0
 
 # ---------------------------------------------------------------------------------------------------
@@ -1206,8 +1216,8 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 				RF.giwa(m, "roof", { hw = shw, hd = hd, eave = eave, rise = rise, thick = 0.24, lift = float(rf.lift), ends = se, hap = 0.45, clip = clip,
 					lift_ends = [0.0 if float(sext[0]) > 0.0 or (gate.size() == 2 and sxa == gate[1]) else 1.0, 0.0 if float(sext[1]) > 0.0 or (gate.size() == 2 and sxb == gate[0]) else 1.0],
 					L = minf(L, sxb - sxa), wx0 = maxf(-L / 2, sxa) - scx, wx1 = minf(L / 2, sxb) - scx, D = info.zf - info.zb + (zcol - info.zf), lod = lod, buyeon = rf.get("buyeon", false), sag = float(sp.wear) * 0.12 + float(ctx.ruin.get("sag", 0.0)),
-					rafter_col = ctx.col if ctx.paint != "none" else ctx.wood, c_top = 0x8f9296 if sp.wear < 0.5 else 0x878a84, c_low = 0x6d7176,
-					rows = GIWA_ROWS and not sp.has("_rz"), kh = float((sp.get("real_scale", [1.0, 1.0]) as Array)[0]) })
+					rafter_col = ctx.col if ctx.paint != "none" else ctx.wood, c_top = GIWA_TOP if sp.wear < 0.5 else GIWA_TOP_WORN, c_low = GIWA_LOW,
+					rows = bool(sp.get("_rows", GIWA_ROWS)) and not sp.has("_rz"), kh = float((sp.get("real_scale", [1.0, 1.0]) as Array)[0]) })
 				# 맞배 끝: 풍판(박공 아래 널) — 다른 지붕에 묻히는 끝·대문 쪽 끝은 없음
 				if lod == 0:
 					for sd in [-1.0, 1.0]:
@@ -1794,7 +1804,7 @@ static func roof_geos(sp: Dictionary) -> Array:
 		# 기와 줄을 켠 가까운 단계: 기와 겉(그림판 벌)·수키와 줄도 지붕으로 본다(줄이 다른 지붕·벽을 뚫는지까지). 아틀라스 벌(giwa_lo)은 같은 겉이라 뺀다
 		var rgs := []
 		if b != null: rgs.append_array(b.parts.get("atlas", []))
-		for gp in ["giwa_hi", "giwa_rows"]:
+		for gp in ["giwa_hi", "giwa_rows", "giwa_am"]:
 			if m.parts.has(gp):
 				for mk in m.parts[gp].parts: rgs.append_array(m.parts[gp].parts[mk])
 		var wl := []
