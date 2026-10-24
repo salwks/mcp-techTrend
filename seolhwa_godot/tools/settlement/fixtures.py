@@ -211,6 +211,34 @@ def terrace_locked():
     return s
 
 
+def stream_town():
+    """WP5 fixture (supplementary, not in spec §4): the terrace with a small mapped stream
+    running north–south through the town (V49). The stream lies in a 2.4 m deep, 80 m wide
+    swale (banks ≤10 %) whose carved wet section is wider than the mapped 4 m (carved vs mapped width disagreement, coordinator
+    decision 2026-10-25); the east–west road fords it at a mapped 여울 (riffle section)."""
+    X, Z = _xz()
+    h = terrace_height(X, Z)
+    xs = -40.0
+    d = np.abs(X - xs)
+    cut = np.where(d < 40.0, 0.5 * (1.0 + np.cos(np.pi * np.minimum(d, 40.0) / 40.0)), 0.0) * 2.4
+    h = h - cut
+    line = LineString([(xs, -95), (xs, 512)])
+    area = _band_x(xs, 4.0, -95, 512)
+    feats = [(_river("river_n", _band_z(-140, 20), LineString([(-512, -140), (512, -140)]), 20), 3.0),
+             # mapped surface 0.2 m above the swale floor ("terrain--0.2" = terrain + 0.2): the carved wet
+             # section (~11 m) is wider than the mapped 4 m band
+             (_river("stream_x", area, line, 4.0, kind="stream"), "terrain--0.2")]
+    roads = [Road("road_ew", "동서 큰길", "대로", 5.0, LineString([(-512, 10), (512, 10)])),
+             Road("road_s", "남쪽 길", "중로", 4.0, LineString([(40, 512), (40, 10)]))]
+    cross = [{"id": "ford_ew", "type": "여울", "road_id": "road_ew", "river_id": "stream_x", "xz": [xs, 10]}]
+    pref = box(-200, -60, 200, 240)
+    allowed = box(-230, -75, 230, 260)
+    prot = box(-512, -130, 512, -95).union(box(260, -40, 512, 300))
+    return _mk("syn_stream", "하안단구 + 마을 관통 개울(합성, WP5)", h, feats, roads, pref, allowed, prot,
+               "medium_eupchi", "plain", crossings=cross,
+               notes="stream through the town: water passages, street crossings, carved-vs-mapped width, ford riffle")
+
+
 # ---------------------------------------------------------------- V06 matrix
 V06_PROGRAMS = {
     # same rule system, different programs: walled seat · farming village · ferry/waterside village
@@ -280,7 +308,8 @@ def water_crossing():
 
 SYNTHETIC = {"syn_terrace": terrace, "syn_basin": basin, "syn_ridge": ridge, "syn_estuary": estuary,
              "syn_mountain": mountain, "syn_terrace_locked": terrace_locked,
-             "syn_basin_sanseong": lambda: basin("mountain", "syn_basin_sanseong")}
+             "syn_basin_sanseong": lambda: basin("mountain", "syn_basin_sanseong"),
+             "syn_stream": stream_town}
 FAILURES = {"fail_blocked_access": blocked_access, "fail_impossible_civic": impossible_civic,
             "fail_water_crossing": water_crossing}
 

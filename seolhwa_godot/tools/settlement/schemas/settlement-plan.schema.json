@@ -234,6 +234,14 @@
      "applicable"
     ]
    }
+  },
+  "layout": {
+   "type": "object",
+   "required": [
+    "file",
+    "status"
+   ],
+   "description": "WP5 Layers 3–5 reference (layout.json): status, revision, summary, check summary"
   }
  },
  "$defs": {

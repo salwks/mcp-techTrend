@@ -17,7 +17,7 @@ import shutil
 import subprocess
 import sys
 
-from . import envelope, fixtures, frame, geometry as G, plan as PL, program, site, svg, svg_tw, terrain as TR, tw, validate
+from . import envelope, fixtures, frame, geometry as G, layout, plan as PL, program, site, svg, svg_layout, svg_tw, terrain as TR, tw, validate
 from . import registry as REG
 from .adapters import region as RA
 from .rules import DEFAULT, Rules
@@ -25,6 +25,7 @@ from .rules import DEFAULT, Rules
 REAL_SITES = [("JL_NAMWON_UNBONG", "namwon_eup"), ("GS_GYEONGJU", "bulguksa_village"),
               ("JL_NAMWON_UNBONG", "banseon"), ("GW_GANGNEUNG", "anmok_village")]
 SYN_SITES = ["syn_terrace", "syn_basin", "syn_ridge", "syn_estuary", "syn_mountain"]  # last one supplementary
+WP5_SITES = ["syn_stream", "syn_terrace_locked"]  # supplementary WP5 fixtures (stream through town / story locks)
 FAIL_SITES = ["fail_blocked_access", "fail_impossible_civic", "fail_water_crossing"]
 
 
@@ -107,6 +108,7 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
     # identity ids (persistent) vs revisions (content) — WP2 / audit K10
     reg = registry if registry is not None else REG.Registry()
     scope = inp.id if proposal is None else f"{inp.id}@proposal"  # proposals never take baseline identities
+    from .contract import revision as _rev
     plan["identity"] = REG.assign(plan, reg, rules, scope=scope)
     plan = _sanitize(plan)
     # WP4 terrain · water layer (own file; plan keeps a reference, revision and check summary)
@@ -131,6 +133,19 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
                              "checks": [{"id": c["id"], "pass": c["pass"], "applicable": c["applicable"], "kind": c["kind"]}
                                         for c in layer["checks"]],
                              "note": "V checks on given data are findings (kind=finding) and do not gate the plan; WP4.layer invariants do"}
+    # WP5 Layers 3–5 (own file; only the structural invariant WP5.layer gates the plan)
+    lay = _sanitize(layout.build(plan, inp, A, layer, rules, reg, scope))
+    plan["layout"] = {"file": "layout.json", "status": lay["status"], "status_reason": lay.get("status_reason") or lay.get("reason"),
+                      "revision": _rev({k: v for k, v in lay.items() if k != "checks"}),
+                      "summary": lay.get("summary"),
+                      "checks": [{"id": c["id"], "pass": c["pass"], "applicable": c["applicable"], "kind": c["kind"]}
+                                 for c in lay.get("checks", [])],
+                      "revision_requests": len(lay.get("revision_requests", [])),
+                      "note": "invariant WP5.layer gates the plan; hard checks make the layout 'incomplete' (with revision requests); V checks are findings"}
+    for c in lay.get("checks", []):
+        if c["kind"] == "invariant":
+            plan["validation"].append({"id": c["id"], "layer": "WP5", "pass": c["pass"], "applicable": c["applicable"],
+                                       "detail": c["detail"]})
     failed = [c["id"] for c in plan["validation"] if c["pass"] is False]
     if failed and plan["status"] == "valid":
         # independent validation gates publication
@@ -149,6 +164,7 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
             plan["status_reason"] = proposal["kind"]
     dump(os.path.join(out_dir, "plan.json"), plan)
     dump(os.path.join(out_dir, "terrain-water.json"), layer)
+    dump(os.path.join(out_dir, "layout.json"), lay)
     dump(os.path.join(out_dir, "input.json"), _sanitize(input_record(inp, family)))
     dump(os.path.join(out_dir, "site.geojson"), _sanitize(PL.site_geojson(inp, A)))
     from .raster import write_npz
@@ -178,6 +194,20 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
             f.write(s)
     with open(os.path.join(out_dir, "combined-terrain-water.svg"), "w", encoding="utf-8") as f:
         f.write(svg.combined([s3, s4, s5], f"{inp.name} — {inp.region}/{inp.id} · WP4 지형·물·길 지지/배수"))
+    if lay["status"] != "skipped":
+        from shapely.ops import unary_union
+        from shapely.geometry import shape as _shape
+        hs = [_shape(lay["geometry"][h["geometry"]]) for h in lay["districts"]["extramural"].get("hamlets", [])]
+        vl = svg.view_for(unary_union([_shape(plan["geometry"][plan["frame"]["territory"]])] + hs).bounds,
+                          margin_frac=0.08, min_margin=30)
+        ss = [svg_layout.districts_svg(lay, plan, inp, A, vl), svg_layout.streets_svg(lay, plan, inp, A, vl),
+              svg_layout.parcels_svg(lay, plan, inp, A, vl)]
+        for name, s_ in zip(("03-districts.svg", "04-streets-water.svg", "05-parcels.svg"), ss):
+            with open(os.path.join(out_dir, name), "w", encoding="utf-8") as f:
+                f.write(s_)
+        with open(os.path.join(out_dir, "combined-layout.svg"), "w", encoding="utf-8") as f:
+            f.write(svg.combined(ss, f"{inp.name} — {inp.region}/{inp.id} · WP5 구역·길·물·필지 · layout {lay['status']}"
+                                 + (f" · {label}" if label else "")))
     return plan
 
 
@@ -188,8 +218,9 @@ def summary_line(plan):
     fails = [c["id"] for c in v if c["pass"] is False]
     fr = plan.get("frame") or {}
     gates = sum(1 for o in (fr.get("openings") or []) if o["type"] == "gate")
+    lay = plan.get("layout") or {}
     return (f"{plan['id']:<24} {plan['status']:<22} hh={plan['program']['households']['represented']:<4} "
-            f"gates={gates} alts={len(plan['alternatives'])} checks_failed={fails}{props}")
+            f"gates={gates} alts={len(plan['alternatives'])} checks_failed={fails} layout={lay.get('status')}{props}")
 
 
 def _auto(inp, rules):
@@ -239,6 +270,9 @@ def all_cmd(out, rules, include_failures=True, variants=True):
     for name in SYN_SITES:
         p = run(fixtures.load(name), rules, os.path.join(out, name))
         lines.append(summary_line(p)); print(lines[-1], flush=True)
+    for name in WP5_SITES:
+        p = run(fixtures.load(name), rules, os.path.join(out, name))
+        lines.append(summary_line(p)); print(lines[-1], flush=True)
     for reg, st in REAL_SITES:
         p = run_real(reg, st, rules, os.path.join(out, st))
         lines.append(summary_line(p)); print(lines[-1], flush=True)
@@ -263,7 +297,9 @@ def v06_cmd(out, rules, seeds=(2203, 7919)):
                 gates = sum(1 for o in fr.get("openings", []) if o["type"] == "gate")
                 pc = fr.get("primary_corridors") or {}
                 liv = p["program"]["households"].get("livelihood", {})
+                lay = json.load(open(os.path.join(out, inp.id, "layout.json"), encoding="utf-8"))
                 rows.append({"terrain": terrain, "program": prog, "seed": seed, "status": p["status"],
+                             "layout": _v06_layout(lay),
                              "family": p["provenance"]["family"], "walled": bool(fr.get("wall")), "gates": gates,
                              "civic": civ, "households": p["program"]["households"]["represented"],
                              "road_class": pc.get("road_class"), "corridor_links": len(pc.get("links", [])),
@@ -272,6 +308,7 @@ def v06_cmd(out, rules, seeds=(2203, 7919)):
                              "frame_id": fr.get("id"), "checks_failed": [c["id"] for c in p["validation"] if c["pass"] is False]})
                 print(rows[-1], flush=True)
     # acceptance: per terrain and seed the three programs differ in function and circulation
+    # (Layers 0–2) and in districts, street hierarchy, parcel roles and water work (Layers 3–5)
     verdict = []
     for terrain in ("terrace", "basin"):
         for seed in seeds:
@@ -283,15 +320,52 @@ def v06_cmd(out, rules, seeds=(2203, 7919)):
                   and "fishing" not in v["livelihood_ordinary"]
                   and all(x["status"] in ("valid", "proposed") for x in (e, v, w))
                   and not any(x["checks_failed"] for x in (e, v, w)))
-            verdict.append({"terrain": terrain, "seed": seed, "pass": ok})
+            le, lv, lw = e["layout"], v["layout"], w["layout"]
+            ok35 = (lv["status"] != "skipped" and le["status"] != "skipped" and lw["status"] != "skipped"
+                    and "market_trade" in le["district_groups"] and {"secondary", "lane"} & set(le["hierarchy"])
+                    and any(r.startswith("urban") or r in ("clerical", "elite_urban", "rear_residential") for r in le["roles"])
+                    and le["pub04"] and "gosat" in lv["hierarchy"] and all(r.startswith("village") or r == "sanchon" for r in lv["roles"])
+                    and "landing_or_fishing_access" in lw["activities"] and "landing_or_fishing_access" not in lv["activities"])
+            verdict.append({"terrain": terrain, "seed": seed, "pass": ok, "layers_3_5": bool(ok35)})
     seed_effect = sorted({(x["terrain"], x["program"]) for x in rows
                           if len({y["frame_id"] for y in rows if y["terrain"] == x["terrain"] and y["program"] == x["program"]}) > 1})
-    rep = {"V06": {"pass": all(v["pass"] for v in verdict), "per_terrain_seed": verdict},
+    rep = {"V06": {"pass": all(v["pass"] for v in verdict), "pass_layers_3_5": all(v["layers_3_5"] for v in verdict),
+                   "per_terrain_seed": verdict},
            "rows": rows, "seed_changed_frame_for": [list(t) for t in seed_effect],
            "note": "seed only reorders alternatives the rules cannot separate (frame.seed_tie_epsilon)"}
     dump(os.path.join(out, "v06.json"), rep)
     print(json.dumps(rep["V06"], ensure_ascii=False))
     return rep
+
+
+def _v06_layout(lay):
+    if lay.get("status") == "skipped":
+        return {"status": "skipped"}
+    roles = sorted({p["role"] for p in lay["parcels"] if p["use"] == "residential"})
+    return {"status": lay["status"], "district_groups": sorted({d["group"] for d in lay["districts"]["districts"]}),
+            "hierarchy": sorted({l["hierarchy"] for l in lay["streets"]["links"]}), "roles": roles,
+            "pub04": bool(lay["districts"]["pub04"]["pass"] and lay["districts"]["pub04"]["walled"]),
+            "activities": sorted({a["activity"] for a in lay["activity_sites"]}),
+            "households_on_parcels": lay["summary"]["households_on_parcels"],
+            "loops": next((c["detail"]["network"]["independent_loops"] for c in lay["checks"] if c["id"] == "V46" and c["detail"].get("network")), None)}
+
+
+def wp5_cmd(out):
+    """WP5 summary over an `all` output tree: per-site layout status, checks and metrics."""
+    rows = {}
+    for name in SYN_SITES + ["syn_stream", "syn_terrace_locked"] + [st for _, st in REAL_SITES] + FAIL_SITES:
+        for p in (os.path.join(out, name, "layout.json"), os.path.join(out, name, "proposals", "auto_envelope", "layout.json")):
+            if os.path.exists(p):
+                lay = json.load(open(p, encoding="utf-8"))
+                key = name + ("@proposal" if "proposals" in p else "")
+                rows[key] = {"status": lay["status"], "reason": lay.get("status_reason") or lay.get("reason"),
+                             "summary": lay.get("summary"),
+                             "checks": {c["id"]: c["pass"] for c in lay.get("checks", [])},
+                             "metrics": lay.get("metrics"), "revision_requests": [r["reason"] for r in lay.get("revision_requests", [])]}
+    dump(os.path.join(out, "wp5.json"), rows)
+    for n, r in rows.items():
+        print(f"{n:<34} {r['status']:<16} " + " ".join(f"{k}={'P' if v is True else 'F' if v is False else '-'}" for k, v in r["checks"].items()))
+    return rows
 
 
 def wp4_cmd(out):
@@ -381,7 +455,7 @@ def sheet_cmd(out):
     """Rasterize each combined.svg to combined.png with headless Chrome (review only)."""
     chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     for root, _, files in os.walk(out):
-        for name in ("combined.svg", "combined-terrain-water.svg"):
+        for name in ("combined.svg", "combined-terrain-water.svg", "combined-layout.svg"):
             if name not in files:
                 continue
             p = os.path.join(root, name)
@@ -416,7 +490,8 @@ def main(argv=None):
     sh = sp.add_parser("sheet")
     v6 = sp.add_parser("v06")
     w4 = sp.add_parser("wp4")
-    for p in (b, f, al, dt, sh, v6, w4):
+    w5 = sp.add_parser("wp5")
+    for p in (b, f, al, dt, sh, v6, w4, w5):
         p.add_argument("--rules", default=DEFAULT)
         p.add_argument("--out", default=os.path.join(os.path.dirname(__file__), "out"))
     a = ap.parse_args(argv)
@@ -436,6 +511,8 @@ def main(argv=None):
         sheet_cmd(a.out)
     elif a.cmd == "wp4":
         wp4_cmd(a.out)
+    elif a.cmd == "wp5":
+        wp5_cmd(a.out)
     elif a.cmd == "v06":
         rep = v06_cmd(a.out, rules)
         sys.exit(0 if rep["V06"]["pass"] else 1)

@@ -1,0 +1,339 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "settlement-layout/1",
+ "title": "WP5 Layers 3–5 — districts, streets & water network, blocks and shared-edge parcels (layout.json)",
+ "description": "Written next to plan.json. World metres. Parcel follows contract-v1 Parcel (use, zones, access, yards, buildable, axes; missing = null + reason). Subdivision edges are stored once with left/right faces; faces reference signed edges. Every edge carries adjacency, purpose, geometry_reason and allowed_closures (WP6 picks the implementation).",
+ "type": "object",
+ "required": [
+  "schema",
+  "id",
+  "status",
+  "units",
+  "scale",
+  "districts",
+  "households",
+  "streets",
+  "water",
+  "blocks",
+  "parcels",
+  "easements",
+  "activity_sites",
+  "subdivision",
+  "metrics",
+  "revision_requests",
+  "geometry"
+ ],
+ "properties": {
+  "schema": {
+   "enum": [
+    "settlement-layout/1"
+   ]
+  },
+  "units": {
+   "enum": [
+    "world_m"
+   ]
+  },
+  "status": {
+   "enum": [
+    "complete",
+    "incomplete",
+    "diagnostic_only",
+    "skipped",
+    null
+   ]
+  },
+  "districts": {
+   "type": "object",
+   "required": [
+    "districts",
+    "regions",
+    "allocation",
+    "market",
+    "extramural",
+    "pub04"
+   ],
+   "properties": {
+    "districts": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "group",
+       "role",
+       "households",
+       "household_mix",
+       "geometry",
+       "area_m2",
+       "status"
+      ],
+      "properties": {
+       "geometry": {
+        "$ref": "#/$defs/gref"
+       }
+      }
+     }
+    },
+    "regions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "kind",
+       "geometry",
+       "area_m2",
+       "reason"
+      ],
+      "properties": {
+       "geometry": {
+        "$ref": "#/$defs/gref"
+       }
+      }
+     }
+    }
+   }
+  },
+  "households": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "class",
+     "livelihood",
+     "group",
+     "district",
+     "parcel"
+    ]
+   }
+  },
+  "streets": {
+   "type": "object",
+   "required": [
+    "nodes",
+    "links",
+    "plazas",
+    "obligations",
+    "planarity"
+   ],
+   "properties": {
+    "nodes": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "xz",
+       "kind",
+       "degree"
+      ]
+     }
+    },
+    "links": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "nodes",
+       "centerline",
+       "hierarchy",
+       "width_m",
+       "reason",
+       "bends",
+       "modes",
+       "grade",
+       "length_m"
+      ],
+      "properties": {
+       "centerline": {
+        "$ref": "#/$defs/gref"
+       },
+       "hierarchy": {
+        "enum": [
+         "primary",
+         "route",
+         "secondary",
+         "lane",
+         "cul_de_sac",
+         "gosat"
+        ]
+       },
+       "modes": {
+        "type": "object",
+        "required": [
+         "foot",
+         "pack_horse",
+         "cart"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  "water": {
+   "type": "object",
+   "required": [
+    "channels",
+    "crossings",
+    "drains",
+    "wall_passages"
+   ],
+   "properties": {
+    "drains": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "street",
+       "geometry",
+       "invert",
+       "fall",
+       "outlet",
+       "terminal"
+      ]
+     }
+    },
+    "channels": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "reach",
+       "effective_wet",
+       "mapped_width_m",
+       "width_disagreement"
+      ]
+     }
+    }
+   }
+  },
+  "parcels": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "meta",
+     "use",
+     "zones",
+     "access",
+     "yards",
+     "buildable",
+     "axes",
+     "block",
+     "area_m2",
+     "household"
+    ],
+    "properties": {
+     "meta": {
+      "$ref": "#/$defs/meta"
+     },
+     "buildable": {
+      "$ref": "#/$defs/gref"
+     }
+    }
+   }
+  },
+  "subdivision": {
+   "type": "object",
+   "required": [
+    "vertices",
+    "edges",
+    "faces",
+    "diagnostics"
+   ],
+   "properties": {
+    "edges": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "geometry",
+       "nodes",
+       "left_face",
+       "right_face",
+       "adjacency",
+       "purpose",
+       "geometry_reason",
+       "allowed_closures",
+       "implementation",
+       "level"
+      ],
+      "properties": {
+       "geometry": {
+        "$ref": "#/$defs/gref"
+       },
+       "allowed_closures": {
+        "type": "array",
+        "items": {
+         "enum": [
+          "free_wall",
+          "building_wall",
+          "gatehouse",
+          "retaining_wall",
+          "open",
+          "fortification",
+          "fence",
+          "hedge",
+          "layer2_opening"
+         ]
+        }
+       }
+      }
+     }
+    },
+    "faces": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "kind",
+       "rings",
+       "geometry",
+       "area_m2"
+      ]
+     }
+    }
+   }
+  },
+  "geometry": {
+   "type": "object"
+  }
+ },
+ "$defs": {
+  "gref": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^g-[0-9a-f]{12}$"
+  },
+  "meta": {
+   "type": "object",
+   "required": [
+    "stable_id",
+    "provenance",
+    "rule_version",
+    "status",
+    "lock_scope",
+    "revision"
+   ],
+   "properties": {
+    "status": {
+     "enum": [
+      "confirmed",
+      "proposed",
+      "unknown"
+     ]
+    }
+   }
+  }
+ }
+}
