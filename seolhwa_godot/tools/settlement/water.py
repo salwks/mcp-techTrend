@@ -416,7 +416,21 @@ def _crossings(inp, A, W, rules):
             rec["distance_to_channel_m"] = round(d, 1)
             if cls in rules_c:
                 bt = np.nanmax([r["bank_left"][q], r["bank_right"][q]])
-                rec["states"] = crossing_states(cls, rules_c[cls], W, r["depth"], float(r["y"][q]), float(bt))
+                depth = r["depth"]
+                rl = rules_c[cls]
+                if rl["rule"] == "depth" or rl.get("fallback") == "ford":
+                    # coordinator 2026-10-25 (WP4 open issue 2): a mapped ford is a riffle — a local
+                    # shallow section, not the pool/run design depth (which stays on the reach)
+                    riffle = rules.p("water.section.ford_riffle_depth_m")
+                    depth = min(depth, riffle)
+                    hl = rules.p("water.section.ford_riffle_length_factor") * float(r["w"][q]) / 2
+                    rec["riffle_section"] = {
+                        "depth_normal_m": C.measure(depth, "world_m", source="water.section.ford_riffle_depth_m (test value)"),
+                        "pool_design_depth_m": C.measure(r["depth"], "world_m", source="water.section.depth_by_bed (test value)"),
+                        "chainage": [round(rec["chainage"] - hl, 1), round(rec["chainage"] + hl, 1)],
+                        "basis": "coordinator decision 2026-10-25: mapped ford = riffle (local shallow section); pools/runs keep the design depth",
+                        "status": "proposed"}
+                rec["states"] = crossing_states(cls, rl, W, depth, float(r["y"][q]), float(bt))
             else:
                 rec["states"] = None
                 rec["missing_reason"] = f"crossing type {c.get('type')!r} has no rule"

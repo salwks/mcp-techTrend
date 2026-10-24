@@ -5,7 +5,7 @@
  "description": "Every object carries `meta`. Missing values are null with a reason, never 0 (a 0 in a drawing table is not a 0 m dimension). No object is created as confirmed by a generator; confirmed requires sources (V18). WP4 additions (additive, still settlement-contract/1): TerrainPatch.landform + foot_slope/summit/water; HabitatPatch.management + cultivated_yard (경작지·마당) and abandoned (방치지) — `cultivated` stays readable.",
  "type": "object",
  "$defs": {
-  "id": {"type": "string", "pattern": "^[a-z_]+:[A-Za-z0-9_.\\-]+(:[A-Za-z0-9_.\\-]+)*$"},
+  "id": {"type": "string", "pattern": "^[a-z_]+:[A-Za-z0-9_.@\\-]+(:[A-Za-z0-9_.@\\-]+)*$"},
   "hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
   "gref": {"type": ["string", "null"], "pattern": "^g-[0-9a-f]{12}$"},
   "xz": {"type": "array", "items": {"type": "number"}},

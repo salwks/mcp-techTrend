@@ -1756,6 +1756,712 @@
    "unit": "world_m2",
    "value": 400.0
   },
+  "layout.craft.upslope_drop_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); cell counts as upslope of the supply when higher by this much",
+   "source": "design",
+   "unit": "world_m",
+   "value": 0.5
+  },
+  "layout.craft.water_supply_setback_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); potentially polluting craft kept off land upslope of / near the drinking-water reservation (craft subtypes unknown → all crafts treated as potentially polluting, hypothesis)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 60.0
+  },
+  "layout.district.cell_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); L3-8 §1 allocation cells",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.0
+  },
+  "layout.district.groups": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §1 preference families; class·wealth·livelihood stay separate attributes",
+   "source": "spec_L0_2",
+   "unit": "livelihood → district group",
+   "value": {
+    "agriculture": "ordinary",
+    "clerical": "clerical",
+    "command": "clerical",
+    "craft": "craft",
+    "fishing": "ordinary",
+    "forest_products": "ordinary",
+    "garrison": "ordinary",
+    "landholding": "elite",
+    "salt_or_boat": "ordinary",
+    "service": "market_trade",
+    "temple_or_storage": "craft",
+    "trade": "market_trade"
+   }
+  },
+  "layout.district.interface_beta": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); β·L_interfaces",
+   "source": "design",
+   "unit": "cost per like neighbour (of 8)",
+   "value": 0.06
+  },
+  "layout.district.iterations": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "price (λ) iterations; deterministic",
+   "source": "engineering",
+   "unit": "count",
+   "value": 80
+  },
+  "layout.district.min_part_cells": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); smaller disconnected parts are relabelled to the neighbouring district",
+   "source": "design",
+   "unit": "cells",
+   "value": 4
+  },
+  "layout.district.quota_tolerance": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §1",
+   "source": "spec_L0_2",
+   "unit": "fraction (or one cell)",
+   "value": 0.02
+  },
+  "layout.district.ranges_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); fixed normalisation ranges",
+   "source": "design",
+   "unit": "world_m / deg",
+   "value": {
+    "approach_frontage": [
+     0,
+     80
+    ],
+    "civic_access": [
+     0,
+     300
+    ],
+    "gate_access": [
+     0,
+     400
+    ],
+    "livelihood_access": [
+     0,
+     300
+    ],
+    "quiet": [
+     0,
+     80
+    ],
+    "slope_deg": [
+     0,
+     15
+    ],
+    "transport": [
+     0,
+     200
+    ],
+    "water": [
+     0,
+     200
+    ]
+   }
+  },
+  "layout.district.weights": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §1 initial preference weights",
+   "source": "spec_L0_2",
+   "unit": "weights",
+   "value": {
+    "clerical": {
+     "civic_access": 0.6,
+     "dry_level": 0.4
+    },
+    "craft": {
+     "transport": 0.5,
+     "water_compat": 0.5
+    },
+    "elite": {
+     "land_quality": 0.6,
+     "quiet": 0.4
+    },
+    "garden_open": {
+     "garden": 1.0
+    },
+    "market_trade": {
+     "approach_frontage": 0.6,
+     "gate_access": 0.4
+    },
+    "ordinary": {
+     "land_quality": 0.5,
+     "livelihood_access": 0.5
+    }
+   }
+  },
+  "layout.drains.min_fall": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §2 default minimum fall 0.5 %",
+   "source": "spec_L0_2",
+   "unit": "ratio",
+   "value": 0.005
+  },
+  "layout.drains.outlet_search_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); downhill search for an outlet (channel, drainage reserve, water passage)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 300.0
+  },
+  "layout.edges.closures": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); allowed closure types per adjacency for WP6 (one is chosen there); retaining is an attachment, added where the level change exceeds layout.edges.level_change_m",
+   "source": "design",
+   "unit": "contract Boundary.implementation (+fence/hedge)",
+   "value": {
+    "any|lock": [
+     "open"
+    ],
+    "any|town_wall": [
+     "fortification"
+    ],
+    "any|water": [
+     "retaining_wall",
+     "free_wall",
+     "open"
+    ],
+    "default": [
+     "free_wall",
+     "fence",
+     "hedge",
+     "open"
+    ],
+    "garden|garden": [
+     "fence",
+     "hedge",
+     "open",
+     "free_wall"
+    ],
+    "garden|nonbuilt": [
+     "fence",
+     "hedge",
+     "open",
+     "retaining_wall"
+    ],
+    "residential|civic": [
+     "free_wall",
+     "building_wall"
+    ],
+    "residential|garden": [
+     "free_wall",
+     "building_wall",
+     "fence",
+     "hedge",
+     "open"
+    ],
+    "residential|nonbuilt": [
+     "free_wall",
+     "building_wall",
+     "fence",
+     "hedge",
+     "retaining_wall"
+    ],
+    "residential|residential": [
+     "free_wall",
+     "building_wall",
+     "fence",
+     "hedge"
+    ],
+    "street|civic": [
+     "free_wall",
+     "gatehouse"
+    ],
+    "street|garden": [
+     "free_wall",
+     "fence",
+     "hedge",
+     "open"
+    ],
+    "street|nonbuilt": [
+     "open",
+     "fence",
+     "retaining_wall"
+    ],
+    "street|plaza": [
+     "open"
+    ],
+    "street|residential": [
+     "free_wall",
+     "building_wall",
+     "gatehouse",
+     "open"
+    ],
+    "street|street": [
+     "open"
+    ]
+   }
+  },
+  "layout.edges.level_change_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); edges with a larger ground difference across them are retaining candidates (WP6/WP8 resolve)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 0.6
+  },
+  "layout.extramural": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); L3-8 §1 outside-wall hamlets: part of the agriculture households live on dry edges of paddies outside the wall; 5–15 per cluster; never on protected farmland",
+   "source": "design",
+   "unit": "share / households / world_m",
+   "value": {
+    "agriculture_share": 0.25,
+    "applies_to_walled": true,
+    "approach_max_m": 250.0,
+    "cluster_max": 15,
+    "cluster_min": 5,
+    "paddy_edge_m": 60.0
+   }
+  },
+  "layout.gate_route_weights": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); main gate = program-weighted route demand / (1 + civic access length/100 m) (L3-8 §1)",
+   "source": "design",
+   "unit": "weight per route class",
+   "value": {
+    "default": 1.0,
+    "대로": 3.0,
+    "소로": 1.0,
+    "중로": 2.0
+   }
+  },
+  "layout.market.clear_corridor_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); clear travel width kept through market space on 장날 (cart 2.4 + passing)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 3.6
+  },
+  "layout.market.placement": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); 'program' keeps the Layer-2 market reserve; the outside-gate variant is always evaluated and reported (applied only when chosen or when the program funds stalls but Layer 2 placed no market)",
+   "source": "design",
+   "unit": "program | outside_gate",
+   "value": "program"
+  },
+  "layout.open_ground.states": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "PUB-05/V70: event occupation is a state of the same open ground; no permanent props",
+   "source": "spec_L0_2",
+   "unit": "state keys",
+   "value": [
+    "peacetime",
+    "drill",
+    "archery"
+   ]
+  },
+  "layout.parcels.corner_clear_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); no split line starts within this distance of a frontage-run end (junction visibility)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 3.0
+  },
+  "layout.parcels.departure_deg": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §3 split departure angle",
+   "source": "spec_L0_2",
+   "unit": "deg",
+   "value": [
+    70,
+    110
+   ]
+  },
+  "layout.parcels.garden_depth_max_hist_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); rear land merged into a frontage lot as its garden only up to this total depth (narrow deep lots with gardens behind)",
+   "source": "design",
+   "unit": "historical_m",
+   "value": 50.0
+  },
+  "layout.parcels.retries": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §3 bounded retries",
+   "source": "spec_L0_2",
+   "unit": "count",
+   "value": {
+    "access": 3,
+    "split": 8
+   }
+  },
+  "layout.parcels.roles": {
+   "confidence": "measured",
+   "kind": "layout",
+   "note": "settlement-metrics §3.2 target ranges (수원·대구·낙안·하회·양동); world = ×factor (lengths) ×factor² (areas) once",
+   "source": "metrics",
+   "unit": "historical_m / ratio / historical_m2",
+   "value": {
+    "clerical": {
+     "area": [
+      600,
+      1250
+     ],
+     "frontage": [
+      20,
+      35
+     ],
+     "ratio": [
+      1.0,
+      1.5
+     ]
+    },
+    "elite_urban": {
+     "area": [
+      1200,
+      2500
+     ],
+     "frontage": [
+      30,
+      50
+     ],
+     "ratio": [
+      1.0,
+      1.5
+     ]
+    },
+    "extramural_market": {
+     "area": [
+      120,
+      350
+     ],
+     "frontage": [
+      8,
+      16
+     ],
+     "ratio": [
+      1.2,
+      2.0
+     ]
+    },
+    "rear_residential": {
+     "area": [
+      330,
+      800
+     ],
+     "frontage": [
+      15,
+      30
+     ],
+     "ratio": [
+      0.8,
+      1.5
+     ]
+    },
+    "sanchon": {
+     "area": [
+      250,
+      700
+     ],
+     "frontage": [
+      15,
+      30
+     ],
+     "ratio": [
+      0.6,
+      1.2
+     ]
+    },
+    "urban_primary": {
+     "area": [
+      80,
+      250
+     ],
+     "frontage": [
+      6,
+      14
+     ],
+     "ratio": [
+      1.3,
+      2.5
+     ]
+    },
+    "urban_secondary": {
+     "area": [
+      150,
+      400
+     ],
+     "frontage": [
+      10,
+      20
+     ],
+     "ratio": [
+      1.2,
+      2.0
+     ]
+    },
+    "village_elite": {
+     "area": [
+      600,
+      4000
+     ],
+     "frontage": [
+      25,
+      60
+     ],
+     "ratio": [
+      0.8,
+      1.5
+     ]
+    },
+    "village_ordinary": {
+     "area": [
+      300,
+      900
+     ],
+     "frontage": [
+      18,
+      35
+     ],
+     "ratio": [
+      0.8,
+      1.5
+     ]
+    }
+   }
+  },
+  "layout.parcels.sliver": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §3 sliver trigger",
+   "source": "spec_L0_2",
+   "unit": "fraction / historical_m",
+   "value": {
+    "area_frac": 0.5,
+    "neck_hist_m": 1.5
+   }
+  },
+  "layout.parcels.strip_depth_max_hist_m": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §3 max frontage-strip depth 30 world m",
+   "source": "spec_L0_2",
+   "unit": "historical_m",
+   "value": 25.0
+  },
+  "layout.streets.bend_deg": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); a vertex turning more than this needs a geometry reason or is straightened",
+   "source": "design",
+   "unit": "deg",
+   "value": 12.0
+  },
+  "layout.streets.flood_cost_k": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "c_e = l(1+8g²+2R) (implemented as l(1+8g²)(1+2R) on the routing grid)",
+   "source": "spec_L0_2",
+   "unit": "×R",
+   "value": 2.0
+  },
+  "layout.streets.hierarchy": {
+   "confidence": "measured",
+   "kind": "layout",
+   "note": "settlement-metrics §3.1 (제주 1914 지적원도·경국대전 교로·하회/외암 막다른 골목 ≤30 m); world values = ×scale_policy.building.factor once",
+   "source": "metrics",
+   "unit": "historical_m (×building factor once)",
+   "value": {
+    "cul_de_sac": {
+     "length_hist_max_m": 30,
+     "width_hist_default_m": 2.0,
+     "width_hist_m": [
+      1.5,
+      2.5
+     ]
+    },
+    "easement": {
+     "width_hist_default_m": 1.5,
+     "width_hist_m": [
+      1.2,
+      2.0
+     ]
+    },
+    "gosat": {
+     "width_hist_default_m": 2.0,
+     "width_hist_m": [
+      1.0,
+      3.0
+     ]
+    },
+    "lane": {
+     "width_hist_default_m": 2.5,
+     "width_hist_m": [
+      2.0,
+      3.0
+     ]
+    },
+    "secondary": {
+     "spacing_hist_m": [
+      80,
+      120
+     ],
+     "width_hist_default_m": 4.0,
+     "width_hist_m": [
+      3.4,
+      5.0
+     ]
+    }
+   }
+  },
+  "layout.streets.max_new": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "bounded street additions per settlement",
+   "source": "engineering",
+   "unit": "count",
+   "value": 60
+  },
+  "layout.streets.min_demand_m2": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); uncovered residential patches smaller than this do not get a street (rear access in Layer 5)",
+   "source": "design",
+   "unit": "world_m2",
+   "value": 900.0
+  },
+  "layout.streets.min_radius_m": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §2",
+   "source": "spec_L0_2",
+   "unit": "world_m",
+   "value": {
+    "gosat": 2.4,
+    "lane": 2.4,
+    "secondary": 6.0
+   }
+  },
+  "layout.streets.mode_width_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); per-mode minimum clear width (gameplay/test values)",
+   "source": "design",
+   "unit": "world_m clear width",
+   "value": {
+    "cart": 2.4,
+    "foot": 0.9,
+    "pack_horse": 1.5
+   }
+  },
+  "layout.streets.reach_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); residential land farther than this from any street requests a street (frontage strip ≤30 m + rear lots via cul-de-sac ≤36 m)",
+   "source": "design",
+   "unit": "world_m",
+   "value": {
+    "urban": 60.0,
+    "village": 45.0
+   }
+  },
+  "layout.streets.simplify_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "stair-step removal on the 2 m routing grid (L3-8 asks 0.5 m; the 2 m grid needs 1.0 m)",
+   "source": "engineering",
+   "unit": "world_m",
+   "value": 1.0
+  },
+  "layout.streets.tee_tolerance": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "prefer a T to an existing street when costs are within 10 %",
+   "source": "spec_L0_2",
+   "unit": "fraction of cost",
+   "value": 0.1
+  },
+  "layout.streets.village_loop": {
+   "confidence": "agreed",
+   "kind": "layout",
+   "note": "L3-8 §2 village loops; loops never justify a bridge",
+   "source": "spec_L0_2",
+   "unit": "ratio / households",
+   "value": {
+    "detour": 1.8,
+    "min_households": 8
+   }
+  },
+  "layout.streets.wall_access_strip_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "optional wall-access strip; 0 = not reserved (no forced perimeter ring road, L3-8 §2)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 0.0
+  },
+  "layout.water.bank_setback_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); occupation setback from the effective wet edge",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "layout.water.carved_half_m": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); cross-section half width sampled on the heightfield for the carved channel",
+   "source": "design",
+   "unit": "world_m",
+   "value": 40.0
+  },
+  "layout.water.new_bridge": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); bank-to-bank candidates within 20° of the channel normal, dry abutments, supported span variant (L3-8 §2); new fords are never generated (need depth/season data)",
+   "source": "design",
+   "unit": "deg / world_m",
+   "value": {
+    "abutment_m": 3.0,
+    "cost_m": 60.0,
+    "max_angle_deg": 20.0,
+    "max_span_m": {
+     "culvert": 3.0,
+     "slab_bridge": 6.0,
+     "timber_bridge": 14.0
+    }
+   }
+  },
+  "layout.water.width_disagreement": {
+   "confidence": "provisional",
+   "kind": "layout",
+   "note": "coordinator decision 2026-10-25 (WP4 open issue 1): plan with the carved section; flag reaches where |carved − mapped| exceeds both",
+   "source": "coordinator",
+   "unit": "world_m / ratio",
+   "value": {
+    "abs_m": 1.0,
+    "rel": 0.3
+   }
+  },
   "locks.anchor_radius_m": {
    "confidence": "provisional",
    "kind": "lock",
@@ -2425,6 +3131,22 @@
     "riffle_pool_gravel": 0.6,
     "step_pool_boulder": 0.5
    }
+  },
+  "water.section.ford_riffle_depth_m": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "coordinator decision 2026-10-25 (WP4 open issue 2): a mapped ford is a riffle section — local shallow cross-section ≤0.4 m at 평수 instead of the pool/run design depth (water.section.depth_by_bed keeps pools/runs); test value",
+   "source": "coordinator",
+   "unit": "world_m below the normal surface",
+   "value": 0.4
+  },
+  "water.section.ford_riffle_length_factor": {
+   "confidence": "provisional",
+   "kind": "hydraulic",
+   "note": "riffle extent around a mapped ford (design inference for drawings / bed records)",
+   "source": "coordinator",
+   "unit": "× channel width along the reach",
+   "value": 3.0
   },
   "water.section_half_m": {
    "confidence": "provisional",
@@ -3308,7 +4030,7 @@
  "schema": "settlement-rules/1",
  "sources": {
   "coordinator": {
-   "description": "coordinator decisions 2026-10-23 (flood units, mountain road class, auto envelopes, capacity in ranking)"
+   "description": "coordinator decisions 2026-10-23 (flood units, mountain road class, auto envelopes, capacity in ranking; 2026-10-25 WP4 open issues 1–2: carved wet section for planning, ford riffle section)"
   },
   "design": {
    "description": "Session A provisional defaults (generator design assumptions)"
