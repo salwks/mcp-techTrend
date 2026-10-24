@@ -37,15 +37,20 @@ def test_estuary_unwalled_valid(outdir):
 
 
 @pytest.mark.parametrize("name,expect", [
-    ("fail_blocked_access", {"failed", "insufficient_capacity"}),
-    ("fail_impossible_civic", {"insufficient_capacity"}),
-    ("fail_water_crossing", {"failed", "insufficient_capacity"}),
+    ("fail_blocked_access", {"blocked_access", "water_crossing_required", "corridor_grade", "civic_fit_failed"}),
+    ("fail_impossible_civic", {"civic_fit_failed", "insufficient_capacity"}),
+    ("fail_water_crossing", {"water_crossing_required", "civic_fit_failed", "untyped_route_crossing"}),
 ])
-def test_failure_fixtures_fail_with_named_constraints(outdir, name, expect):
+def test_failure_fixtures_adapt_and_report_initial_constraints(outdir, name, expect):
+    """Owner 2026-10-25: the standard solve's failure is recorded (named constraints) and the
+    builder adapts instead of stopping; the adaptation steps are recorded."""
     p = cli.run(fixtures.load(name), R, str(outdir / name))
-    assert p["status"] in expect, (p["status"], p["candidates"])
-    assert p["candidates"]["rejections"] or p["status"] == "no_candidate_found"
-    assert p["revision_requests"]
+    ad = p["adaptation"]
+    assert ad is not None and ad["initial"]["rejections"] or ad["initial"]["L1"], ad
+    assert set(ad["initial"]["rejections"]) & expect or ad["initial"]["L1"], ad["initial"]
+    assert ad["tried"]
+    if ad.get("result"):
+        assert p["status"] in ("valid", "proposed"), (p["status"], p["validation"])
 
 
 def test_repeat_runs_byte_identical(outdir):

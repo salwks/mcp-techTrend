@@ -17,7 +17,7 @@ import shutil
 import subprocess
 import sys
 
-from . import envelope, fixtures, frame, geometry as G, layout, plan as PL, program, site, svg, svg_layout, svg_tw, terrain as TR, tw, validate
+from . import adapt, envelope, fixtures, frame, geometry as G, layout, plan as PL, program, site, svg, svg_layout, svg_tw, terrain as TR, tw, validate
 from . import registry as REG
 from .adapters import region as RA
 from .rules import DEFAULT, Rules
@@ -102,14 +102,20 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
                 break
         fam_info["fallback_tried"] = tried
         fam_info["resolved"] = family
+    # owner 2026-10-25: never end with "no settlement" — adapt (raised platforms, terraces,
+    # unwalled clusters, smaller program, site extent, steeper terraces); every step recorded
+    inp, A, rules, family, L1, F, adapt_rec = adapt.ladder(inp, A, rules, family, L1, F)
+    if adapt_rec is not None and getattr(A, "flood_polys_orig", None) is not None:
+        A.flood_polys = A.flood_polys_orig   # records and drawings keep the real flood screen
     plan, extras, store = PL.build(inp, A, family, fam_info, L1, F, rules, dependencies())
+    plan["adaptation"] = adapt_rec
     plan["validation"] = []
     plan = _sanitize(plan)
     # identity ids (persistent) vs revisions (content) — WP2 / audit K10
     reg = registry if registry is not None else REG.Registry()
     scope = inp.id if proposal is None else f"{inp.id}@proposal"  # proposals never take baseline identities
     from .contract import revision as _rev
-    plan["identity"] = REG.assign(plan, reg, rules, scope=scope)
+    plan["identity"] = REG.assign(plan, reg, rules, scope=scope, retire=False)  # retired after WP5 claims
     plan = _sanitize(plan)
     # WP4 terrain · water layer (own file; plan keeps a reference, revision and check summary)
     layer = _sanitize(tw.build(inp, A, rules, plan))
@@ -142,6 +148,9 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
                                  for c in lay.get("checks", [])],
                       "revision_requests": len(lay.get("revision_requests", [])),
                       "note": "invariant WP5.layer gates the plan; hard checks make the layout 'incomplete' (with revision requests); V checks are findings"}
+    # identities not produced by this accepted bake (L0–2 and WP5 objects) are retired, never reused
+    plan["identity"]["retired"] = reg.retire_unclaimed(scope) if plan["status"] in ("valid", "proposed") else []
+    plan["identity"]["claimed"] = sum(1 for i in reg.claimed if reg.data["entries"][i]["scope"] == scope)
     for c in lay.get("checks", []):
         if c["kind"] == "invariant":
             plan["validation"].append({"id": c["id"], "layer": "WP5", "pass": c["pass"], "applicable": c["applicable"],
@@ -162,6 +171,9 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
         if plan["status"] == "valid":
             plan["status"] = "proposed"
             plan["status_reason"] = proposal["kind"]
+    if plan["status"] not in ("valid", "proposed") and lay.get("export") == "playable":
+        lay["export"] = "diagnostic"   # a playable export needs an accepted plan as well
+    plan["layout"]["export"] = lay.get("export")
     dump(os.path.join(out_dir, "plan.json"), plan)
     dump(os.path.join(out_dir, "terrain-water.json"), layer)
     dump(os.path.join(out_dir, "layout.json"), lay)

@@ -317,7 +317,7 @@ def frame_record(ev, store, A, F, R, inp):
                           "grade_measure": c.get("grade_detail"), "length_m": round(c["length_m"], 2)})
         rec["primary_corridors"] = {"road_class": ctx.road_class, "grade_limit": ctx.rc["limit"],
                                     "paths": paths, "nodes": [nodes[k] for k in sorted(nodes)], "links": links,
-                                    "reservation": store.add(ev.get("corridor_poly"))}
+                                    "reservation": store.add(_around_locks(ev.get("corridor_poly"), A))}
         rr = []
         for n_, r in enumerate(ev.get("reroutes", [])):
             pts = Rt.cells_to_xz(sub.grid, r["cells"])
@@ -351,6 +351,13 @@ def frame_record(ev, store, A, F, R, inp):
     rec["access_contracts"] = contracts
     rec["households"] = ev["households"]["N"] if ev.get("households") else None
     return rec, extras
+
+
+def _around_locks(poly, A):
+    """The corridor reservation narrows around locked story footprints (locks are never moved)."""
+    if poly is None or poly.is_empty or A.lock_poly.is_empty:
+        return poly
+    return G.polygonal(poly.difference(A.lock_poly))
 
 
 def site_geojson(inp, A, store=None):

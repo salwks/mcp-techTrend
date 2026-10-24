@@ -119,7 +119,8 @@ def test_every_household_exactly_once(locked_run):
     p, lay, _ = locked_run
     hh = [h["id"] for h in lay["households"]]
     assert len(hh) == p["program"]["households"]["represented"] == len(set(hh))
-    on = [x["household"] for x in lay["parcels"] if x.get("household")]
+    on = [x["household"] for x in lay["parcels"] if x.get("household")] + \
+         [h for x in lay["parcels"] for h in x.get("co_households", [])]
     assert sorted(on) == sorted(hh)
     assert all(h["parcel"] for h in lay["households"])
 

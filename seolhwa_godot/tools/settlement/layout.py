@@ -27,7 +27,7 @@ from .layout_ctx import Ctx, union
 
 SCHEMA = "settlement-layout/1"
 PUBLIC = ("street", "plaza", "cul_de_sac", "lane_access")
-REASON_PRIORITY = ["lock_shape", "town_wall", "water_setback", "civic_envelope", "civic_forecourt", "program_plaza",
+REASON_PRIORITY = ["lock_shape", "gate_opening", "water_passage", "town_wall", "water_setback", "civic_envelope", "civic_forecourt", "program_plaza",
                    "rear_access_demand", "easement", "rear_split", "street_edge", "frontage_normal", "frontage_depth", "hamlet_extent",
                    "territory_edge", "protected_field_edge", "block_residual"]
 
@@ -173,7 +173,12 @@ def build(plan, inp, A, layer, rules, reg=None, scope=None):
     blocks.sort(key=lambda b: b.id)
     # ---------------------------------------------------------------- Layer 5 parcels
     link_index = [{"line": l["line"], "hierarchy": l["hierarchy"], "width_m": l["width_m"]} for l in net.links]
-    public = union([street_space] + [p["_g"] for p in plazas])
+    # frontage counts only on street space that carries a street line (fragments cut off by water
+    # or reserves are verges) and on program plazas
+    _ll = [l["line"] for l in net.links]
+    _st = [q for q in G.parts(G.polygonal(street_space.intersection(domain)))
+           if any(x.intersection(q).length >= 0.5 for x in _ll)]
+    public = union(_st + [p["_g"] for p in plazas])
     P5 = PA.build(C, blocks, public, link_index, hh)
     # access additions become street links (connected to the parent centreline)
     for acc in P5["access_added"]:
@@ -242,7 +247,10 @@ def build(plan, inp, A, layer, rules, reg=None, scope=None):
                 faces.append({"id": pid, "kind": "parcel", "of": blk.id, "geom": prt, "public": False, "use": lot2.get("use")})
     for k, rf in enumerate(residual_faces):
         faces.append({"id": f"face:{C.scope}:residual:{k + 1:03d}", "kind": "residual", "of": None, "geom": rf, "public": False})
-    sub = SB.build(C, faces, domain)
+    from . import treatment as TR
+    treatments, tsum = TR.build(C, parcels, None, fin, drains)
+    op_lines = opening_lines(C)
+    sub = SB.build(C, faces, domain, extra_lines=op_lines, reason_of=reason_lookup(C))
     # ---------------------------------------------------------------- records
     rec = {"schema": SCHEMA, "id": plan["id"], "mode": mode, "status": None,
            "units": "world_m", "scope": C.scope,
@@ -250,6 +258,7 @@ def build(plan, inp, A, layer, rules, reg=None, scope=None):
                      "source": "RegionProfile.scale_policy.building.factor"},
            "plan": {"status": plan["status"], "frame": fr.get("stable_id", fr["id"]),
                     "households": plan["program"]["households"]["represented"]},
+           "adaptation": plan.get("adaptation"),
            "districts": {k: v for k, v in dist.items() if k != "households"},
            "households": [{k: v for k, v in h.items() if not k.startswith("_")} for h in hh]}
     face_of = {f["id"]: f for f in faces}
@@ -263,6 +272,8 @@ def build(plan, inp, A, layer, rules, reg=None, scope=None):
     for p in out_parcels:
         if p.get("household"):
             hmap[p["household"]] = p["id"]
+        for h2 in p.get("co_households") or []:
+            hmap[h2] = p["id"]
     for h in rec["households"]:
         h["parcel"] = hmap.get(h["id"])
     rec["streets"] = {"nodes": fin["nodes"], "links": fin["links"], "planarity": fin["planarity"],
@@ -296,6 +307,8 @@ def build(plan, inp, A, layer, rules, reg=None, scope=None):
     rec["easements"] = [{"id": e["id"], "geometry": C.add(e["poly"]), "width_m": e["width_m"], "purpose": e["purpose"],
                          "beneficiaries": sorted(x for x in eadj.get(f"face:{C.scope}:easement:{e['id']}", ()) if x.startswith("parcel:")),
                          "entrances": e["entrances"], "note": e["note"]} for e in P5["easements"]]
+    rec["site_treatments"] = treatments
+    rec["site_treatment_summary"] = tsum
     rec["activity_sites"] = activity + dist.get("open_ground_sites", []) + _market_states(C, plazas, fin)
     # subdivision edges with attributes
     edges = _edge_records(C, sub, face_of, pmap)
@@ -315,6 +328,8 @@ def build(plan, inp, A, layer, rules, reg=None, scope=None):
     hard_fail = [c["id"] for c in rec["checks"] if c["kind"] in ("invariant", "hard") and c["pass"] is False]
     rec["status"] = ("diagnostic_only" if mode == "diagnostic_only" else
                      ("complete" if not hard_fail else "incomplete"))
+    # export class (design review #6): playable/reviewable only with every mandatory check passing
+    rec["export"] = "playable" if rec["status"] == "complete" else "diagnostic"
     rec["status_reason"] = hard_fail or None
     rec["summary"] = _summary(rec)
     return rec
@@ -481,46 +496,68 @@ PURPOSE = {frozenset(["street", "residential"]): "street_frontage", frozenset(["
            frozenset(["street", "easement"]): "easement_entrance"}
 
 
+def reason_lookup(C):
+    """Vectorised reason of each construction-line piece (highest-priority line within 0.08 m)."""
+    items = [(g, r, s) for g, r, s in C.reason_lines]
+    tree = shapely.STRtree([g for g, _, _ in items]) if items else None
+
+    def fn(points):
+        out = [("unclassified", None)] * len(points)
+        if tree is None or not points:
+            return out
+        idx = tree.query(points, predicate="dwithin", distance=0.08)
+        best = {}
+        for pi, gi in zip(idx[0], idx[1]):
+            g, r, s_ = items[int(gi)]
+            base = r.split(":")[0]
+            pr = REASON_PRIORITY.index(base) if base in REASON_PRIORITY else 99
+            k = (pr, str(s_), r)
+            if int(pi) not in best or k < best[int(pi)][0]:
+                best[int(pi)] = (k, r, s_)
+        for pi, (_, r, s_) in best.items():
+            out[pi] = (r, s_ if isinstance(s_, (str, type(None))) else str(s_))
+        return out
+    return fn
+
+
+def opening_lines(C):
+    """Layer-2 openings as ring intervals: their endpoints split the authoritative edges."""
+    if not C.walled:
+        return []
+    from .geometry import ring_interval
+    ring = C.g(C.fr["wall"]["ring"])
+    out = []
+    for o in C.fr.get("openings", []):
+        ln = ring_interval(ring, o["chainage"][0], o["chainage"][1])
+        out.append(ln)
+        C.reason(ln, "gate_opening" if o["type"] == "gate" else "water_passage", o.get("stable_id", o["id"]))
+    return out
+
+
 def _edge_records(C, sub, face_of, pmap):
     R, A = C.R, C.A
-    items = [(g, r, s) for g, r, s in C.reason_lines]
-    geoms = [g for g, _, _ in items]
-    tree = shapely.STRtree(geoms) if geoms else None
     lvl = R.p("layout.edges.level_change_m")
-    ring = C.g(C.fr["wall"]["ring"]) if C.walled else None
-    openings = C.fr.get("openings", []) if C.walled else []
+    surf = getattr(C, "treated_h", None)
+    hfun = (lambda xs, zs: Rr.bilinear(A.win, surf, xs, zs)) if surf is not None else C.height
+    openings = {o.get("stable_id", o["id"]): o for o in C.fr.get("openings", [])} if C.walled else {}
     out = []
     for e in sub["edges"]:
         line = e["_line"]
-        mid = line.interpolate(0.5, normalized=True)
-        reason, source = "unclassified", None
-        if tree is not None:
-            hits = tree.query(mid, predicate="dwithin", distance=0.08)
-            best = None
-            for h in hits:
-                g, r, s = items[int(h)]
-                base = r.split(":")[0]
-                pr = REASON_PRIORITY.index(base) if base in REASON_PRIORITY else 99
-                if best is None or (pr, str(s)) < best[0]:
-                    best = ((pr, str(s)), r, s)
-            if best is not None:
-                reason, source = best[1], best[2]
+        reason, source = e["_reason"]
         fl, fr_ = face_of.get(e["left_face"]), face_of.get(e["right_face"])
         ca, cb = _cat(C, fl), _cat(C, fr_)
         purpose = None
         extra = {}
-        if C.walled and "exterior" in (ca, cb) and ring is not None and ring.distance(mid) < 0.2:
-            s = ring.project(mid)
-            op = next((o for o in openings if _in_iv(s, o["chainage"], ring.length)), None)
-            if op is not None:
-                purpose = "gate_opening" if op["type"] == "gate" else "water_passage"
-                extra["opening"] = op.get("stable_id", op["id"])
-                clos = ["layer2_opening"]
-            else:
-                ca = "town_wall" if ca == "exterior" else ca
-                cb = "town_wall" if cb == "exterior" else cb
-                purpose = "town_wall_inner"
-                clos = _closures(C, ca, cb)
+        base = reason.split(":")[0]
+        if base in ("gate_opening", "water_passage") and "exterior" in (ca, cb):
+            purpose = base
+            extra["opening"] = source
+            clos = ["layer2_opening"]
+        elif base == "town_wall" and "exterior" in (ca, cb):
+            ca = "town_wall" if ca == "exterior" else ca
+            cb = "town_wall" if cb == "exterior" else cb
+            purpose = "town_wall_inner"
+            clos = _closures(C, ca, cb)
         else:
             clos = _closures(C, ca, cb)
         if purpose is None:
@@ -531,22 +568,37 @@ def _edge_records(C, sub, face_of, pmap):
                 purpose = "lock_boundary"
             elif "exterior" in (ca, cb):
                 purpose = "domain_edge"
-        # ground on both sides (level change → retaining candidate, resolved in WP6/WP8)
-        a, b = line.coords[0], line.coords[-1]
-        dx, dz = b[0] - a[0], b[1] - a[1]
-        n = math.hypot(dx, dz) or 1.0
-        ylft = float(C.height([mid.x - dz / n * 1.5], [mid.y + dx / n * 1.5])[0])
-        yrgt = float(C.height([mid.x + dz / n * 1.5], [mid.y - dx / n * 1.5])[0])
-        dy = abs(ylft - yrgt)
+        # both-side ground profiles along the edge (treated surface where WP5 resolved a treatment)
+        Ln = line.length
+        k = max(2, min(60, int(Ln / 2.0) + 1))
+        ss = np.linspace(0, Ln, k)
+        pts = [line.interpolate(t) for t in ss]
+        lx, lz, rx, rz = [], [], [], []
+        for t, p_ in zip(ss, pts):
+            a_ = line.interpolate(max(0.0, t - 0.5))
+            b_ = line.interpolate(min(Ln, t + 0.5))
+            dx, dz = b_.x - a_.x, b_.y - a_.y
+            n = math.hypot(dx, dz) or 1.0
+            lx.append(p_.x - dz / n * 1.5); lz.append(p_.y + dx / n * 1.5)
+            rx.append(p_.x + dz / n * 1.5); rz.append(p_.y - dx / n * 1.5)
+        yl = np.asarray(hfun(lx, lz), float)
+        yr = np.asarray(hfun(rx, rz), float)
+        dy = float(np.max(np.abs(yl - yr)))
         clos = list(clos)
-        level = {"left_y": round(ylft, 2), "right_y": round(yrgt, 2), "difference_m": round(dy, 2),
-                 "basis": "smoothed terrain 1.5 m either side (pre-grading)", "status": "proposed"}
+        level = {"chainage": [round(float(t), 2) for t in ss], "left_y": [round(float(v), 2) for v in yl],
+                 "right_y": [round(float(v), 2) for v in yr], "difference_m": round(dy, 2),
+                 "retained_side": ("left" if float(np.mean(yl - yr)) > 0 else "right") if dy > lvl else None,
+                 "basis": "1.5 m either side; treated surface (platforms/benches) where WP5 resolved one",
+                 "status": "proposed"}
         if dy > lvl and "retaining_wall" not in clos and purpose not in ("gate_opening", "water_passage"):
             clos.append("retaining_wall")
         rec = {"id": e["id"], "geometry": C.add(line), "nodes": e["nodes"], "left_face": e["left_face"],
                "right_face": e["right_face"], "length_m": e["length_m"], "adjacency": [ca, cb], "purpose": purpose,
-               "geometry_reason": reason, "reason_source": source, "allowed_closures": clos, "implementation": None,
-               "implementation_note": "chosen in WP6 (one of allowed_closures); shared edge → one owner",
+               "geometry_reason": reason, "reason_source": source,
+               "reason_intervals": [{"chainage": [0.0, round(Ln, 2)], "reason": reason, "constraint": source, "tolerance_m": 0.08}],
+               "lineage": {"identity": "registry (side faces + reason, matched within 0.5 m)", "split_from": None},
+               "allowed_closures": clos, "implementation": None,
+               "implementation_note": "chosen in WP6 (one of allowed_closures; retaining is a separate support component); shared edge → one owner",
                "level": level, "level_change": dy > lvl}
         rec.update(extra)
         out.append(rec)
@@ -587,10 +639,31 @@ def _parcel_record(C, blk, lot, sub):
             "yards_missing_reason": "courts and yards are solved in Layer 6 (WP8)",
             "buildable": buildable, "buildable_m2": round(lot.get("buildable_m2") or 0.0, 1),
             "axes": None, "axes_missing_reason": "orientation is decided in Layer 6 with south as a weighted preference (K6); not confirmed here",
+            "co_households": list(lot.get("co_households") or []),
             "rear_garden": bool(lot.get("rear_garden")), "garden_depth_exceeded": bool(lot.get("garden_depth_exceeded")),
             "rear_garden_m2": round(G.polygonal(lot["garden_poly"].intersection(p)).area, 1) if lot.get("garden_poly") is not None else 0.0,
             "residual": bool(lot.get("residual")), "vacant_reason": lot.get("vacant_reason"),
             "xz": [G.r2(rp.x), G.r2(rp.y)]}
+    ad = []
+    for nm, attr, why in (("raised_platform", "raised", "flood-screen land: house on a raised 기단/집터 (adaptation)"),
+                          ("terrace", "terraced", "slope above the standard limit: 축대/석축 terrace (adaptation)")):
+        m = getattr(C.A, attr, None)
+        if m is None or lot.get("use") != "residential":
+            continue
+        xmin, zmin, xmax, zmax = p.bounds
+        xs = np.arange(xmin + 1, xmax, 2.0)
+        zs = np.arange(zmin + 1, zmax, 2.0)
+        pts = [(x, z) for z in zs for x in xs if p.contains(Point(x, z))]
+        if not pts:
+            continue
+        frac = float(np.mean(C.sample(m, [q[0] for q in pts], [q[1] for q in pts])))
+        if frac > 0.05:
+            ad.append({"kind": nm, "fraction": round(frac, 3), "basis": why, "status": "proposed"})
+    if lot.get("co_households"):
+        ad.append({"kind": "shared_yard", "basis": "a second household in the same compound (shared yard; adaptation)"})
+    if lot.get("densified"):
+        ad.append({"kind": "densified", "basis": "lot halved along the frontage normal to seat every household (adaptation)"})
+    body["adaptations"] = ad
     body["meta"] = Ct.meta(pid, status="proposed", rules_hash=C.R.hash, content={k: v for k, v in body.items() if k != "id"})
     return body
 

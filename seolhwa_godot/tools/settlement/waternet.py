@@ -408,7 +408,7 @@ def _resolve_chains(drains):
     by_street = {}
     for d in drains:
         by_street.setdefault(d["street"], []).append(d)
-    term = ("channel_or_drainage_reserve", "wall_water_passage", "wall_outlet_needed", "open_land_runoff")
+    term = ("channel_or_drainage_reserve", "wall_water_passage", "wall_outlet_needed", "open_land_runoff", "soakaway")
     for d in drains:
         seen = set()
         cur = d
@@ -478,12 +478,15 @@ def _outlet_search(C, pt, wmask, ring, passages, search):
                 if best is None or gr > best[0]:
                     best = (gr, a, b, math.hypot(di, dj))
         if best is None:
-            return {"kind": "none", "reason": "local low point (pit) — needs grading or soakaway decision",
-                    "xz": [G.r2(x), G.r2(z)], "length_m": round(L, 1)}
+            return {"kind": "soakaway", "reason": "local low point: stone-filled soakaway / grading (adaptation)",
+                    "xz": [G.r2(x), G.r2(z)], "length_m": round(L, 1), "status": "proposed", "hypothesis": True}
         path.append((best[1], best[2]))
         seen.add((best[1], best[2]))
         L += best[3] * win.cell
-    return {"kind": "none", "reason": f"no channel within {search} m of descending path", "length_m": round(L, 1)}
+    ci, cj = path[-1]
+    x, z = win.xz(ci, cj)
+    return {"kind": "soakaway", "reason": f"no channel within {search} m of the descending path: soakaway at the low end (adaptation)",
+            "xz": [G.r2(x), G.r2(z)], "length_m": round(L, 1), "status": "proposed", "hypothesis": True}
 
 
 def laundry(C, net):

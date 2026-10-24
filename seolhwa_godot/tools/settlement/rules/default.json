@@ -1191,6 +1191,25 @@
    "unit": "world_m2",
    "value": 0.1
   },
+  "adapt.limits": {
+   "confidence": "provisional",
+   "kind": "adaptation",
+   "note": "owner correction 2026-10-25: the builder adapts instead of refusing — houses on 축대/석축 terraces up to these slopes; flood-screen land on raised 기단; test values",
+   "source": "owner",
+   "unit": "deg",
+   "value": {
+    "bench_access_reach_m": 500.0,
+    "bench_min_area_m2": 200.0,
+    "bench_min_width_m": 7.0,
+    "civic_steep_slope_deg": 20.0,
+    "civic_terrace_slope_deg": 15.0,
+    "fuller_fraction": 0.25,
+    "minimal_civic_factor": 0.6,
+    "steep_access_reach_m": 160.0,
+    "steep_terrace_slope_deg": 32.0,
+    "terrace_slope_deg": 25.0
+   }
+  },
   "agriculture.farmland_classes": {
    "confidence": "agreed",
    "kind": "data",
@@ -2346,7 +2365,7 @@
    "note": "WP5 Layers 3–5; provisional test value (not a fact); uncovered residential patches smaller than this do not get a street (rear access in Layer 5)",
    "source": "design",
    "unit": "world_m2",
-   "value": 900.0
+   "value": 300.0
   },
   "layout.streets.min_radius_m": {
    "confidence": "agreed",
@@ -2437,7 +2456,7 @@
   "layout.water.new_bridge": {
    "confidence": "provisional",
    "kind": "layout",
-   "note": "WP5 Layers 3–5; provisional test value (not a fact); bank-to-bank candidates within 20° of the channel normal, dry abutments, supported span variant (L3-8 §2); new fords are never generated (need depth/season data)",
+   "note": "WP5 Layers 3–5; provisional test value (not a fact); bank-to-bank candidates within 20° of the channel normal, dry abutments, supported span variant (L3-8 §2); new fords are never generated (need depth/season data); spans beyond a single timber span use a multi-span bridge on piers (consistent internal rule, owner 2026-10-25)",
    "source": "design",
    "unit": "deg / world_m",
    "value": {
@@ -2446,6 +2465,7 @@
     "max_angle_deg": 20.0,
     "max_span_m": {
      "culvert": 3.0,
+     "multi_span_bridge": 80.0,
      "slab_bridge": 6.0,
      "timber_bridge": 14.0
     }
@@ -2965,6 +2985,21 @@
    "value": {
     "max_hand_m": 4.0,
     "max_slope_deg": 6.0
+   }
+  },
+  "treatment.rules": {
+   "confidence": "provisional",
+   "kind": "adaptation",
+   "note": "SiteTreatment (owner 2026-10-25): raised 기단 freeboard above the design water state, single 축대 lift, navigation step, ramp and stair riser — test values",
+   "source": "design",
+   "unit": "world_m / ratio",
+   "value": {
+    "freeboard_m": 0.3,
+    "ramp_grade": 0.1,
+    "ramp_max_rise_m": 0.6,
+    "riser_m": 0.18,
+    "single_lift_m": 1.2,
+    "step_m": 0.32
    }
   },
   "water.bank_zone_m": {

@@ -21,7 +21,8 @@
   "subdivision",
   "metrics",
   "revision_requests",
-  "geometry"
+  "geometry",
+  "site_treatments"
  ],
  "properties": {
   "schema": {
@@ -263,7 +264,9 @@
        "geometry_reason",
        "allowed_closures",
        "implementation",
-       "level"
+       "level",
+       "reason_intervals",
+       "lineage"
       ],
       "properties": {
        "geometry": {

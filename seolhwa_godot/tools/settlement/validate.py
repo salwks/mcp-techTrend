@@ -219,7 +219,8 @@ def run(plan, inp, A, L1, F, rules):
         excess = []
         if prot is not None:
             for g in res_geoms:
-                if g is None:
+                if g is None or (g is corr and not fr.get("wall")):
+                    # an unwalled access corridor is circulation along field edges, not occupation
                     continue
                 a_ = g.intersection(prot).area
                 intr += a_
@@ -232,7 +233,12 @@ def run(plan, inp, A, L1, F, rules):
         lock_i = 0.0
         allk = shapely.union_all([A.lock_poly, A.anchor_poly])
         if not allk.is_empty:
-            lock_i = sum(g.intersection(allk).area for g in res_geoms if g is not None)
+            # occupied reserves may cover no lock; a corridor (circulation) may pass a point story
+            # anchor (events happen on streets) but never a locked footprint
+            occ_geoms = [g for g in res_geoms if g is not None and g is not corr]
+            lock_i = sum(g.intersection(allk).area for g in occ_geoms)
+            if corr is not None and not A.lock_poly.is_empty:
+                lock_i += corr.intersection(A.lock_poly).area
         _chk(out, "L2.intrusion", "L2", not excess and lock_i <= R.p("acceptance.intrusion_m2") + 1e-6,
              {"reserves_on_protected_m2": round(intr, 3), "excess": excess, "locks_m2": round(lock_i, 3),
               "neighbour_enclosed_m2": round(nb, 3), "rule": "zero up to local grid tolerance on shared boundaries"})
@@ -246,6 +252,11 @@ def run(plan, inp, A, L1, F, rules):
             comps = [c for c in nx.connected_components(gx) if c & set(req)]
             roots = list(range(len(comps)))
             connected = len(roots) <= 1
+            if not fr.get("wall"):
+                # unwalled clusters may each reach the route network on their own (the mapped route
+                # links them): every component with a required node must hold a route entrance
+                ent = {n["id"] for n in pc["nodes"] if n["kind"] == "route_entrance"}
+                connected = all(c & ent for c in comps)
             gmax = 0.0
             lim = R.p("routing.primary_max_grade")
             # continuous gate→entrance paths (windows cross link junctions), then the split links

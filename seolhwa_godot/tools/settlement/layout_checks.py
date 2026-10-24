@@ -98,11 +98,11 @@ def run(C, rec, sub, faces, edge_lines, domain):
     unclassified = sum(1 for e in rec["subdivision"]["edges"] if "unclassified" in (e["left_face"], e["right_face"]))
     hh_seen = {}
     for p in rec["parcels"]:
-        if p.get("household"):
-            hh_seen[p["household"]] = hh_seen.get(p["household"], 0) + 1
+        for h_ in ([p["household"]] if p.get("household") else []) + list(p.get("co_households") or []):
+            hh_seen[h_] = hh_seen.get(h_, 0) + 1
     multi = sorted(h for h, n in hh_seen.items() if n > 1)
     v18 = Ct.v18_violations({k: v for k, v in rec.items() if k != "checks"})
-    inv_ok = (not errs and not dup and not bad_ref and not bad_face and not twin_bad and not multi and not v18
+    inv_ok = (not errs and not dup and not bad_ref and not bad_face and not twin_bad and not area_bad and not multi and not v18
               and diag["unassigned_pieces"] == 0 and unclassified == 0 and cover <= max(1.0, 1e-5 * domain.area))
     out.append(_c("WP5.layer", inv_ok, {
         "schema_errors": errs[:5], "duplicate_ids": dup[:5], "dangling_geometry": bad_ref[:5], "dangling_faces": bad_face[:5],
@@ -122,7 +122,9 @@ def run(C, rec, sub, faces, edge_lines, domain):
         a, b = e["left_face"], e["right_face"]
         adj.setdefault(a, set()).add(b)
         adj.setdefault(b, set()).add(a)
-    public = {f["id"] for f in faces if f.get("public")}
+    soft_locks = {l["id"] for l in C.inp.locks if not l.get("hard", True)}
+    # point story anchors are spots in public space (events happen on them): walkable, never moved
+    public = {f["id"] for f in faces if f.get("public") or (f["kind"] == "lock" and f["of"] in soft_locks)}
     # street faces connected through links (bridges/culverts keep the street graph connected over water)
     links = rec["streets"]["links"]
     lgeom = {l["id"]: shape(rec["geometry"][l["centerline"]]) for l in links}
@@ -166,6 +168,26 @@ def run(C, rec, sub, faces, edge_lines, domain):
     for fid in fids:
         if fmap[fid]["kind"] in ("street", "cul_de_sac", "lane") and any(face_geoms[fid].distance(l) < 2.0 for l in rl):
             roots.add(find(fid))
+    # the street network itself may leave the planning domain (mapped routes between clusters):
+    # a public face is reached when it carries a link of a link-graph component that holds a gate,
+    # an entrance or a mapped route
+    import networkx as nx
+    lg_ = nx.Graph()
+    for l in links:
+        if l["id"] in unsupported:
+            continue
+        lg_.add_edge(l["nodes"][0], l["nodes"][1], id=l["id"])
+    root_nodes = {n["id"] for n in gate_nodes} | {x for l in links if l["hierarchy"] == "route" for x in l["nodes"]}
+    good_links = set()
+    for comp in nx.connected_components(lg_):
+        if comp & root_nodes:
+            good_links |= {d_["id"] for a_, b_, d_ in lg_.subgraph(comp).edges(data=True)}
+    if tree is not None:
+        for lid in good_links:
+            for i in tree.query(lgeom[lid], predicate="intersects"):
+                fid = fids[int(i)]
+                if lgeom[lid].intersection(face_geoms[fid]).length >= 0.5:
+                    roots.add(find(fid))
     reach_pub = {f for f in public if find(f) in roots}
     # ------------------------------------------------------------------ V46 — occupied parcels accessible
     occ = [p for p in rec["parcels"] if p["use"] == "residential"]
@@ -194,13 +216,17 @@ def run(C, rec, sub, faces, edge_lines, domain):
                   {"programmed": len(rec["households"]), "unplaced": len(unplaced), "multi": len(multi)}, kind="hard"))
     # ------------------------------------------------------------------ locks preserved (immutable faces)
     lk = []
-    for l in C.inp.locks:
-        f = next((x for x in faces if x["kind"] == "lock" and x["of"] == l["id"]), None)
-        if f is None:
-            continue
-        if abs(f["geom"].area - l["geom"].intersection(domain).area) > 0.05:
-            lk.append(l["id"])
-    locked = sum(1 for x in faces if x["kind"] == "lock")
+    import shapely as _sh
+    lf = [x["geom"] for x in faces if x["kind"] == "lock"]
+    locked = len(lf)
+    if lf:
+        lu = _sh.union_all(lf)
+        want = _sh.union_all([l["geom"] for l in C.inp.locks]).intersection(domain)
+        if abs(lu.area - want.area) > 0.05 or lu.symmetric_difference(want).area > 0.05:
+            lk.append("lock_union_changed")
+        for x in faces:
+            if x["kind"] in ("parcel", "street", "civic", "cul_de_sac", "lane", "easement") and x["geom"].intersection(want).area > 0.05:
+                lk.append(x["id"])
     out.append(_c("L5.locks", not lk, {"lock_faces": locked, "altered": lk[:5], "policy": "locks are immutable faces; never moved"},
                   kind="hard", applicable=locked > 0))
     # ------------------------------------------------------------------ wall openings preserved
@@ -297,6 +323,16 @@ def run(C, rec, sub, faces, edge_lines, domain):
     out.append(_c("L3.quotas", all(a["within_tolerance"] for a in alloc), {"components": [
         {"component": a["component"], "within": a["within_tolerance"], "error_cells": a["quota_error_cells"]} for a in alloc]}))
     out.append(_c("L4.planar", rec["streets"]["planarity"]["pass"], rec["streets"]["planarity"], kind="hard"))
+    # V14 (rewritten, design review #6): the builder completes an adaptation while preserving locks and ids
+    ad = rec.get("adaptation")
+    lk_ok = next((c["pass"] for c in out if c["id"] == "L5.locks"), None) is not False
+    out.append(_c("V14", lk_ok and (ad is None or bool(ad.get("result"))),
+                  {"adapted": ad is not None, "applied": (ad or {}).get("applied"), "locks_preserved": lk_ok,
+                   "rule": "a site that does not fit the standard solve is adapted (benches, platforms, terraces, clusters, compact forms), locks immutable"},
+                  applicable=True))
+    # treated surface: raised platforms clear of the design water state
+    ts = rec.get("site_treatment_summary") or {}
+    out.append(_c("L5.treatments", not ts.get("flooded_after_treatment"), ts, kind="hard", applicable=bool(ts.get("treatments"))))
     return out
 
 

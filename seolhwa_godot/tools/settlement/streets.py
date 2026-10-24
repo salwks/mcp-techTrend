@@ -208,7 +208,7 @@ def build(C, demand_polys, pre_links=()):
             if not ob.get("added"):
                 C.request("L2/water_access", "shared water access cannot be reached by a street (bank setback / grade); "
                           "move the reservation or approve a bank path", "water_access_unreachable",
-                          target=ob["target"], distance_m=ob["distance_m"])
+                          water_access=ob["target"], distance_m=ob["distance_m"])
         obligations.append(ob)
     # ---------------- villages: MST over clusters + entrances + water, then loops
     if not C.urban:
@@ -219,7 +219,16 @@ def build(C, demand_polys, pre_links=()):
         nm = net_mask()
         if not nm.any():
             break
-        dist_e = ndimage.distance_transform_edt(~nm) * g.cell
+        # coverage by walking cost on the street graph (a cluster across water or a cliff is not
+        # "near" a street just because it is close in plan)
+        grc, pasc = graph("lane" if C.urban else "gosat")
+        srcc = np.flatnonzero(nm & pasc)
+        if srcc.size:
+            dcov, _ = Rt.dijkstra(grc, srcc, limit=reach * 4)
+            dist_e = dcov.reshape(g.shape)
+        else:
+            dist_e = ndimage.distance_transform_edt(~nm) * g.cell
+        dist_e = np.where(np.isfinite(dist_e), dist_e, 1e6)
         unc = demand & (dist_e > reach)
         if not unc.any():
             break
@@ -486,9 +495,9 @@ def finalize(C, net):
     R, A = C.R, C.A
     tol = R.p("geometry.endpoint_match")
     # node every genuine same-level intersection (bridges are separate structures)
+    joined = []
     # close near misses: a dead end within 2.5 m (4 m to a mapped route / Layer-2 corridor end) of
     # another street is joined to it as a T (no accidental gaps or near-miss crossings)
-    joined = []
     for _ in range(2):
         for l in sorted(net.links, key=lambda x: x["_id"]):
             for end in (0, -1):
@@ -498,13 +507,48 @@ def finalize(C, net):
                     continue
                 o = min(others, key=lambda o: (o["line"].distance(pe), o["_id"]))
                 d = o["line"].distance(pe)
-                lim = 4.0 if (o["hierarchy"] in ("route", "primary") or l["hierarchy"] in ("route", "primary")) else 2.5
+                lim = 6.0 if (o["hierarchy"] in ("route", "primary") or l["hierarchy"] in ("route", "primary")) else 2.5
                 if d <= lim:
                     q = nearest_points(o["line"], pe)[0]
                     cs = list(l["line"].coords)
                     cs = [(G.r2(q.x), G.r2(q.y))] + cs if end == 0 else cs + [(G.r2(q.x), G.r2(q.y))]
                     l["line"] = LineString(cs)
                     joined.append({"link": l["_id"], "to": o["_id"], "gap_m": round(d, 2)})
+    # join street components that run within 6 m of each other (a short connector, T at both ends)
+    for _ in range(4):
+        n_ = len(net.links)
+        par = list(range(n_))
+
+        def fd(i):
+            while par[i] != i:
+                par[i] = par[par[i]]
+                i = par[i]
+            return i
+        for i in range(n_):
+            for j in range(i + 1, n_):
+                if net.links[i]["line"].distance(net.links[j]["line"]) <= tol:
+                    par[fd(i)] = fd(j)
+        comps = {}
+        for i in range(n_):
+            comps.setdefault(fd(i), []).append(i)
+        if len(comps) <= 1:
+            break
+        keys = sorted(comps, key=lambda k: min(comps[k]))
+        best = None
+        for a_ in range(len(keys)):
+            ua = union([net.links[i]["line"] for i in comps[keys[a_]]])
+            for b_ in range(a_ + 1, len(keys)):
+                ub = union([net.links[i]["line"] for i in comps[keys[b_]]])
+                d = ua.distance(ub)
+                if d <= 6.0 and (best is None or d < best[0]):
+                    best = (d, ua, ub)
+        if best is None:
+            break
+        pa, pb = nearest_points(best[1], best[2])
+        con = LineString([(G.r2(pa.x), G.r2(pa.y)), (G.r2(pb.x), G.r2(pb.y))])
+        if con.length > 0.05:
+            net.add(con, "gosat", width_world(C, "gosat"), purpose="component_connector", generation=3, bends=[], serves=[])
+            joined.append({"connector_m": round(con.length, 2)})
     lines = net.lines()
     noded = shapely.union_all(lines, grid_size=G.GRID) if lines else MultiLineString()
     pieces = [p for p in getattr(noded, "geoms", [noded]) if p.geom_type == "LineString" and p.length > 0.05]

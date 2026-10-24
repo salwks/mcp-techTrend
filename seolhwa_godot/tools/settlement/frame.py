@@ -874,7 +874,9 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
                          area_m2=round(nb, 2)))
     if not A.protected_poly.is_empty:
         ev["protected_enclosed_m2"] = round(poly.intersection(A.protected_poly).area, 1)
-    if ctx.inp.locks:
+    if ctx.inp.locks and ctx.walled:
+        # only a wall may not run through a story spot; an unwalled cluster edge is a planning
+        # label — locks inside or across it become immutable faces in Layer 5
         bnd = poly.boundary
         hit = sorted(l["id"] for l in ctx.inp.locks if bnd.intersects(l["geom"]))
         if hit:
@@ -978,6 +980,11 @@ def _walk_reach(ctx, sub, poly, corr_poly, gates_out, civic_union):
     walk = Rr.rasterize(sub.grid, poly) & sub.a(A.cov) & ~(sub.a(A.water) & ~sub.a(ctx.small_channel)) & ~sub.a(A.protected)
     walk &= ~Rr.rasterize(sub.grid, civic_union)
     src_m = Rr.rasterize(sub.grid, corr_poly) & walk
+    if not ctx.walled:
+        # unwalled clusters are also reached from the mapped route network across open,
+        # unprotected land (WP3 decision 4: access lanes are circulation, not occupation)
+        walk = walk | unwalled_connectors(ctx, sub)
+        src_m = src_m | (sub.a(A.road_mask) & walk)
     if not src_m.any():
         return Polygon()
     g = Rt.build_graph(sub.grid, sub.a(A.h), walk, radius=1, grade_k=R.p("routing.grade_cost_k"))

@@ -28,12 +28,15 @@ def _lines_of(geom):
     return [b] if b.geom_type == "LineString" else list(getattr(b, "geoms", []))
 
 
-def build(C, faces, domain):
-    """faces: list of {id, kind, use, geom, public(bool), ...}; returns (record, face_index)."""
+def build(C, faces, domain, extra_lines=(), reason_of=None):
+    """faces: list of {id, kind, use, geom, public(bool), ...}; extra_lines: construction lines
+    whose endpoints must split edges (opening intervals); reason_of(points) → [(reason, source)]
+    per noded segment, so an edge never spans two geometry reasons."""
     grid = G.GRID
     lines = []
     for f in faces:
         lines += _lines_of(f["geom"])
+    lines += [l for l in extra_lines if l is not None and not l.is_empty]
     noded = shapely.union_all(lines, grid_size=grid)
     polys, cuts, dangles, invalid = shapely.polygonize_full([noded])
     polys = [p for p in getattr(polys, "geoms", []) if not p.is_empty]
@@ -82,8 +85,30 @@ def build(C, faces, domain):
         for pi, gi in zip(idx[0], idx[1]):
             out[int(pi)] = face_of_piece[int(gi)]
         return out
-    L = locate(lefts)
-    Rr = locate(rights)
+    # exact side assignment from the polygonized rings (interior is left of a CCW exterior and
+    # of a CW hole); probes only as a fallback for segments missing from the rings
+    from shapely.geometry.polygon import orient as _orient
+    side = {}
+    for pi, poly in enumerate(polys):
+        op = _orient(poly, 1.0)
+        for ring in [op.exterior] + list(op.interiors):
+            cs = list(ring.coords)
+            for a, b in zip(cs, cs[1:]):
+                side[(a, b)] = face_of_piece[pi]
+    PL = locate(lefts)
+    PR = locate(rights)
+    L, Rr = [], []
+    fb = 0
+    for k, (a, b) in enumerate(segs):
+        l_ = side.get((a, b))
+        r_ = side.get((b, a))
+        if l_ is None and r_ is None:
+            fb += 1
+            l_, r_ = PL[k], PR[k]
+        L.append(l_ if l_ is not None else "exterior")
+        Rr.append(r_ if r_ is not None else "exterior")
+    mids_pts = [Point((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) for a, b in segs]
+    RS = reason_of(mids_pts) if reason_of is not None else [("none", None)] * len(segs)
     # merge consecutive segments into edges between break nodes (degree != 2 or face change)
     keep = [k for k in range(len(segs)) if L[k] != Rr[k]]
     internal = len(segs) - len(keep)
@@ -96,7 +121,7 @@ def build(C, faces, domain):
 
     def lab_from(k, node):
         a, b = segs[k]
-        return ((L[k], Rr[k]), b) if a == node else ((Rr[k], L[k]), a)
+        return ((L[k], Rr[k], RS[k]), b) if a == node else ((Rr[k], L[k], RS[k]), a)
 
     brk = set(p_ for p_, d in deg.items() if d != 2)
     for p_, d in deg.items():
@@ -104,7 +129,7 @@ def build(C, faces, domain):
             j, k = adj[p_]
             (lj, _), (lk, _) = lab_from(j, p_), lab_from(k, p_)
             # passing through: incoming j reversed must equal outgoing k
-            if (lj[1], lj[0]) != lk:
+            if (lj[1], lj[0], lj[2]) != lk:
                 brk.add(p_)
     used = set()
     edges = []
@@ -127,7 +152,7 @@ def build(C, faces, domain):
             cur = nx2
             if cur == start:
                 break
-        return {"pts": pts, "left": lab[0], "right": lab[1]}
+        return {"pts": pts, "left": lab[0], "right": lab[1], "reason": lab[2]}
 
     for p_ in sorted(brk):
         for k in sorted(adj.get(p_, [])):
@@ -144,12 +169,19 @@ def build(C, faces, domain):
         for p in (e["pts"][0], e["pts"][-1]):
             if p not in nodes:
                 nodes[p] = f"v{len(nodes) + 1:05d}"
-    edges.sort(key=lambda e: (min(e["left"], e["right"]), max(e["left"], e["right"]), e["pts"][0][1], e["pts"][0][0]))
+    edges.sort(key=lambda e: (min(e["left"], e["right"]), max(e["left"], e["right"]), str(e["reason"][0]),
+                              e["pts"][0][1], e["pts"][0][0]))
     face_ids = {f["id"] for f in faces}
     out_edges = []
     for n, e in enumerate(edges):
-        e["id"] = f"e{n + 1:05d}"
         e["line"] = LineString(e["pts"])
+        if C is not None and getattr(C, "reg", None) is not None:
+            # persistent boundary identity (registry: side faces + reason, matched by position)
+            m = e["line"].interpolate(0.5, normalized=True)
+            e["id"] = C.claim("boundary", key=f"{min(e['left'], e['right'])}|{max(e['left'], e['right'])}|{e['reason'][0]}",
+                              xz=[G.r2(m.x), G.r2(m.y)], tol=0.5, content=G.to_geojson(e["line"]))
+        else:
+            e["id"] = f"e{n + 1:05d}"
         e["nodes"] = [nodes[e["pts"][0]], nodes[e["pts"][-1]]]
     # rings per face
     half = {}
@@ -189,14 +221,14 @@ def build(C, faces, domain):
     fmap = {f["id"]: f for f in faces}
     for e in edges:
         rec_edges.append({"id": e["id"], "nodes": e["nodes"], "left_face": e["left"], "right_face": e["right"],
-                          "length_m": round(e["line"].length, 3), "_line": e["line"]})
+                          "length_m": round(e["line"].length, 3), "_line": e["line"], "_reason": e["reason"]})
     rec = {"vertices": [{"id": v, "xz": [G.r2(p[0]), G.r2(p[1])]} for p, v in sorted(nodes.items(), key=lambda kv: kv[1])],
            "edges": rec_edges,
            "faces": [{"id": fid, "rings": rings.get(fid, [])} for fid in sorted(fmap)],
            "diagnostics": {"polygonize_cuts": len(getattr(cuts, "geoms", [])), "polygonize_dangles": len(getattr(dangles, "geoms", [])),
                            "polygonize_invalid_rings": len(getattr(invalid, "geoms", [])), "snapping_slivers": slivers,
                            "unassigned_pieces": unassigned, "internal_edges_dropped": internal,
-                           "ring_failures": sorted(set(ring_fail)), "pieces": len(polys)},
+                           "ring_failures": sorted(set(ring_fail)), "pieces": len(polys), "side_probe_fallbacks": fb},
            "_polys": polys, "_piece_face": face_of_piece}
     return rec
 

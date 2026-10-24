@@ -87,7 +87,7 @@ def _rev(rec: dict) -> str:
     return revision({k: v for k, v in rec.items() if k not in ("stable_id", "revision")})
 
 
-def assign(plan: dict, reg: Registry, rules, scope: str | None = None) -> dict:
+def assign(plan: dict, reg: Registry, rules, scope: str | None = None, retire: bool = True) -> dict:
     """Attach identity `stable_id` + content `revision` to frame records; returns a report."""
     scope = scope or plan["id"]
     tol = rules.p("registry.match_tol_m")
@@ -136,5 +136,5 @@ def assign(plan: dict, reg: Registry, rules, scope: str | None = None) -> dict:
     fr["revision"] = _rev(fr)
     report["claimed"] = sum(1 for i in reg.claimed if reg.data["entries"][i]["scope"] == scope)
     # only an accepted (valid/proposed) bake retires identities it no longer produces
-    report["retired"] = reg.retire_unclaimed(scope) if plan.get("status") in ("valid", "proposed") else []
+    report["retired"] = (reg.retire_unclaimed(scope) if retire and plan.get("status") in ("valid", "proposed") else [])
     return report

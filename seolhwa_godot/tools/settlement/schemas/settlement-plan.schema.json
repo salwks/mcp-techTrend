@@ -242,6 +242,13 @@
     "status"
    ],
    "description": "WP5 Layers 3–5 reference (layout.json): status, revision, summary, check summary"
+  },
+  "adaptation": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "adaptive siting record (owner 2026-10-25): initial failure, steps tried, applied step, raised/terraced areas"
   }
  },
  "$defs": {

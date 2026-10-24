@@ -445,6 +445,8 @@ def build(C, blocks, public, link_index, households):
     slv = _slivers(C, blocks)
     # ---- households (district first, then group, then any); unused lots merge or become gardens
     unplaced = _assign(C, blocks, households)
+    if unplaced:
+        unplaced = _densify(C, blocks, households, unplaced, public)
     _surplus(C, blocks)
     return {"blocks": blocks, "access_added": added_access, "easements": easements, "slivers": slv,
             "unplaced": unplaced, "public": public}
@@ -585,6 +587,100 @@ def _deficits(C, blocks, households):
         k = h.get("hamlet") or h.get("district") or f"group:{h['group']}"
         need[k] = need.get(k, 0) + 1
     return {k: need[k] - have.get(k, 0) for k in need}
+
+
+def _densify(C, blocks, households, unplaced, public=None):
+    """Adaptation (owner 2026-10-25): households still without a lot get one by halving the widest
+    street-fronting lots along a frontage normal (smaller compounds), never by dropping them."""
+    hmap = {h["id"]: h for h in households}
+    left = list(unplaced)
+    guard = 0
+    while left and guard < 400:
+        guard += 1
+        cands = []
+        for blk in blocks:
+            for lot in blk.lots:
+                if lot.get("run") is None or not lot.get("width") or lot.get("run_line") is None:
+                    continue
+                if lot.get("use") not in ("residential", "garden"):
+                    continue
+                dims = role_dims(C, lot["role"]) if lot["role"] in C.R.p("layout.parcels.roles") else None
+                lo = dims["frontage"][0] if dims else 6.0
+                amin = dims["area"][0] if dims else 100.0
+                # compact compounds (smaller functional plan variants): half a lot when it is twice
+                # the role's minimum area and the halves keep a usable street frontage
+                if lot["width"] >= 2 * lo * 0.9 or (lot["poly"].area >= 2 * amin and lot["width"] >= 2 * max(0.5 * lo, 6.0)):
+                    cands.append((-lot["poly"].area, blk.id, lot["s"][0], blk, lot))
+        if not cands:
+            break
+        cands.sort(key=lambda t: (t[0], t[1], t[2]))
+        _, _, _, blk, lot = cands[0]
+        sm = (lot["s"][0] + lot["s"][1]) / 2
+        L = math.sqrt(lot["poly"].area) * 4 + 10
+        cut = _cut(lot["run_line"], sm, blk.poly, L)
+        pieces = split_poly(lot["poly"], [cut])
+        if len(pieces) != 2:
+            lot["width"] = 0.0  # cannot split cleanly; do not retry
+            continue
+        C.reason(cut.intersection(lot["poly"].buffer(0.01)), "frontage_normal", blk.id)
+        a, b = sorted(pieces, key=lambda q: lot["run_line"].project(q.representative_point()))
+        new = dict(lot)
+        lot["poly"], new["poly"] = a, b
+        lot["s"], new["s"] = (lot["s"][0], sm), (sm, lot["s"][1])
+        lot["width"] = new["width"] = (lot["s"][1] - lot["s"][0])
+        new["garden_poly"] = None
+        new["densified"] = lot["densified"] = True
+        h = hmap[left.pop(0)]
+        if lot.get("household") is None:
+            lot["household"], lot["use"] = h["id"], "residential"
+            lot.pop("vacant_reason", None)
+            if left:
+                h2 = hmap[left.pop(0)]
+                new["household"], new["use"] = h2["id"], "residential"
+                new.pop("vacant_reason", None)
+            else:
+                new["household"], new["use"] = None, "garden"
+        else:
+            new["household"], new["use"] = h["id"], "residential"
+            new.pop("vacant_reason", None)
+        new["eligible"] = True
+        blk.lots.append(new)
+    if left and public is not None:
+        # last: a street-fronting garden / open parcel big enough for a compact compound
+        for blk in blocks:
+            for lot in sorted(blk.lots, key=lambda l: -l["poly"].area):
+                if not left:
+                    break
+                if lot.get("household") or lot.get("use") not in ("garden", "open_ground", "residual_garden", None):
+                    continue
+                role = "rear_residential" if C.urban else ("sanchon" if C.sanchon else "village_ordinary")
+                amin = role_dims(C, role)["area"][0]
+                if lot["poly"].area < 0.5 * amin or lot["poly"].boundary.intersection(public.buffer(0.05)).length < 2.0:
+                    continue
+                h = hmap[left.pop(0)]
+                lot.update({"household": h["id"], "use": "residential", "role": role, "eligible": True,
+                            "garden_converted": True})
+                lot.pop("vacant_reason", None)
+    if left:
+        # shared-yard compounds (한 울안 두 집 / 곁채): a second household in the largest compounds
+        occ = sorted((l for b in blocks for l in b.lots if l.get("household") and l.get("use") == "residential"
+                      and not l.get("co_households")), key=lambda l: -l["poly"].area)
+        for lot in occ:
+            if not left:
+                break
+            amin = role_dims(C, lot["role"])["area"][0] if lot["role"] in C.R.p("layout.parcels.roles") else 300.0
+            if lot["poly"].area < 1.5 * amin:
+                continue
+            lot["co_households"] = [left.pop(0)]
+    if left:
+        C.request("L5/parcels", "households without a parcel after densification (quota loss is never silent)",
+                  "household_unplaced", households=len(left))
+    else:
+        C.revision_requests[:] = [r for r in C.revision_requests if r["reason"] != "household_unplaced"]
+    C.diagnostics.append({"code": "densified", "severity": "info", "layer": "L5",
+                          "message": "lots halved along frontage normals to seat every household (adaptation)",
+                          "data": {"households": len(unplaced) - len(left)}})
+    return left
 
 
 def _surplus(C, blocks):
