@@ -203,6 +203,7 @@ static func real_scale(sp: Dictionary) -> void:
 	if sp.get("roof") is Dictionary:
 		for kk in ["eave", "lift", "rc"]:
 			if (sp.roof as Dictionary).has(kk): sp.roof[kk] = snappedf(float(sp.roof[kk]) * kh, 0.01)
+		if (sp.roof as Dictionary).has("droop"): sp.roof.droop = snappedf(float(sp.roof.droop) * kv, 0.01)
 	for w in sp.get("wings", []):
 		for kk in ["x", "z"]:
 			if w.has(kk): w[kk] = snappedf(float(w[kk]) * kh, 0.01)
@@ -240,9 +241,10 @@ static func _choga(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	var poor := cls == "poor"
 	var bw := r.between(2.0, 2.5) if not poor else r.between(1.9, 2.2)
 	var kl := r.next() < 0.5   # 부엌이 왼쪽
-	var sp := { cls = cls, wear = wear, base = { kind = "earth" if (poor or r.next() < 0.5) else "stone", h = snappedf(r.between(0.22, 0.4), 0.01) },
+	# 낙안읍성 실측(국가유산청 3D, khs_assets/godot_ready/buildings/README.md): 기단 0.20~0.30(배율 뒤) · 처마 내밀기 본채 1.1~1.4 · 처마 끝 밑선 벽 위끝 −0.3~−0.5
+	var sp := { cls = cls, wear = wear, base = { kind = "earth" if (poor or r.next() < 0.5) else "stone", h = snappedf(r.between(0.165, 0.245), 0.01) },
 		floor_dh = snappedf(r.between(0.2, 0.32), 0.01), wall_h = snappedf(r.between(1.8, 2.0), 0.01), lattice = _pick(r, ["ddi", "ddi", "yong"]),
-		roof = { kind = "thatch", form = "hip", eave = snappedf(r.between(0.75, 0.95), 0.01), rise_k = r.between(0.68, 0.85), rc = r.between(1.5, 2.2) },
+		roof = { kind = "thatch", form = "hip", eave = snappedf(r.between(1.1, 1.4), 0.01), rise_k = r.between(0.68, 0.85), rc = r.between(1.5, 2.2) },
 		chimney = { kind = _pick(r, ["mud", "pot", "mud"]), at = "side_right" if kl else "side_left" }, attach = [], refs = ["choga"] }
 	var wings := []
 	match region:
@@ -268,7 +270,7 @@ static func _choga(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 			for b in bays:
 				if b.fn == "room": b.front = { kind = "window" if r.next() < 0.6 else "smallwin" }
 			sp.base = { kind = "earth", h = 0.18 }; sp.floor_dh = 0.22
-			sp.roof.eave = r.between(0.6, 0.75); sp.roof.rise_k = r.between(0.55, 0.7)
+			sp.roof.eave = r.between(0.6, 0.75); sp.roof.rise_k = r.between(0.55, 0.7); sp.roof.droop = 0.0
 			sp.chimney = { kind = "log", at = "side_right" if kl else "side_left" }
 			wings = [{ id = "main", depth = [2.2, 2.0], toet = { kind = "none", d = 0.0 }, bays = bays }]
 			sp.refs = ["choga"]
@@ -303,7 +305,7 @@ static func _choga(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 			if kl: bays.reverse()
 			var tk: String = _pick(r, ["toet", "toet", "jjok", "none"]) if not poor else _pick(r, ["jjok", "none"])
 			wings = [{ id = "main", depth = [r.between(2.2, 2.8)], toet = { kind = tk, d = snappedf(r.between(0.75, 0.95), 0.01) if tk == "toet" else 0.55 }, bays = bays }]
-			sp.roof.eave = r.between(0.75, 1.0)
+			sp.roof.eave = r.between(1.1, 1.4)
 			sp.roof.rise_k = r.between(0.6, 0.95)
 			sp.wall_tint = r.next()
 	sp.wings = wings
@@ -318,6 +320,9 @@ static func _choga(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	if region != "jeju" and region != "mountain" and r.next() < 0.45: sp.attach.append({ kind = "gourd" })
 	if r.next() < 0.6: sp.attach.append({ kind = "soguri", x = r.between(-L / 3, L / 3), z = D / 2 + 1.6 })
 	if r.next() < 0.4: sp.attach.append({ kind = "tools", x = -ks * (L / 2 - 0.6), z = -D / 2 - 0.35, ry = PI })
+	# 처마 처짐(낙안 실측) · 남부 하부 돌벽 + 상부 흙벽(낙안 ㄱ자집·헛간) — 새 난수는 끝에서 뽑는다(앞 값들이 씨앗마다 그대로)
+	if sp.roof.kind == "thatch" and region in ["south", "central"]: sp.roof.droop = snappedf(r.between(0.3, 0.5), 0.01)
+	if region == "south" and r.next() < 0.35: sp.wall = "stone_mud"
 	return sp
 
 # 주막: 부엌이 마당으로 트인 초가(술청) + 봉놋방 + 마루 + 평상·용수·술독·한데부뚜막
@@ -338,9 +343,9 @@ static func _jumak(r: Kit.Rng, region: String) -> Dictionary:
 		# 꺾인 날개(부엌 반대쪽): 헛간·외양간(길손 말·나귀)
 		add_wing(wings[0], wings, -sx, D, L, 2.4, [bay(D, "shed"), bay(r.between(2.2, 3.0), "stable")], "hip", false)
 	var sp := { cls = "commoner", wear = wear, base = { kind = "stone", h = 0.3 }, floor_dh = 0.25, wall_h = 1.95, lattice = "ddi",
-		roof = { kind = "thatch", form = "hip", eave = 1.0, rise_k = 0.7, rc = 1.8, cols = thatch_cols(wear) },
+		roof = { kind = "thatch", form = "hip", eave = 1.25, rise_k = 0.7, rc = 1.8, droop = 0.35, cols = thatch_cols(wear) },
 		chimney = { kind = "mud", at = "side_left" if not kl else "side_right" }, wings = wings, refs = ["jumak"], attach = [] }
-	if region == "central" or region == "north": sp.roof.eave = 0.85
+	if region == "central" or region == "north": sp.roof.eave = 1.1
 	var kx := sx * (L / 2 - bw * 0.6)
 	sp.attach.append({ kind = "pyeongsang", x = r.between(-L / 4, L / 6), z = D / 2 + 3.0 + r.between(0, 1.0), ry = r.between(-0.2, 0.2), w = r.between(1.9, 2.4), soban = true })
 	if r.next() < 0.65: sp.attach.append({ kind = "pyeongsang", x = -sx * (L / 2 - 0.4) + r.between(-0.5, 0.5), z = D / 2 + 4.6, ry = PI / 2 + r.between(-0.2, 0.2), w = 1.8, soban = r.next() < 0.5 })
@@ -461,7 +466,7 @@ static func _gotgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	for i in n: bays.append(bay(r.between(2.2, 2.6), "store" if i > 0 or r.next() < 0.5 else "shed"))
 	var giwa := cls == "yangban"
 	var sp := { cls = cls, wear = r.between(0.3, 0.8), base = { kind = "earth", h = 0.2 }, floor_dh = 0.0, wall = "board" if giwa else "mud", wall_h = 2.0,
-		roof = { kind = "giwa", form = "gable", eave = 0.8, rise_k = 0.52, lift = 0.1 } if giwa else { kind = "thatch", form = "gable", eave = 0.7, rise_k = 0.6 },
+		roof = { kind = "giwa", form = "gable", eave = 0.8, rise_k = 0.52, lift = 0.1 } if giwa else { kind = "thatch", form = "gable", eave = 0.7, rise_k = 0.6, droop = 0.4 },
 		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [2.4], bays = bays, ends = ["gable", "gable"] }] }
 	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
 	return sp
@@ -470,7 +475,7 @@ static func _gotgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 static func _dwitgan(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	var giwa := cls in ["yangban", "middle"] and r.next() < 0.4
 	var sp := { cls = cls, wear = r.between(0.4, 0.9), base = { kind = "earth", h = 0.15 }, floor_dh = 0.0, wall = "mud", wall_h = 1.75,
-		roof = { kind = "giwa", form = "gable", eave = 0.6, rise_k = 0.5, lift = 0.05 } if giwa else { kind = "thatch", form = "gable", eave = 0.55, rise_k = 0.6 },
+		roof = { kind = "giwa", form = "gable", eave = 0.6, rise_k = 0.5, lift = 0.05 } if giwa else { kind = "thatch", form = "gable", eave = 0.55, rise_k = 0.6, droop = 0.35 },
 		chimney = { kind = "none" }, attach = [], wings = [{ id = "main", depth = [r.between(1.6, 1.9)], bays = [bay(r.between(1.6, 2.0), "store" if r.next() < 0.5 else "shed")], ends = ["gable", "gable"] }] }
 	if not giwa: sp.roof.cols = thatch_cols(sp.wear)
 	return sp
@@ -480,7 +485,7 @@ static func _oeyang(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	var bays := [bay(r.between(2.2, 2.6), "stable")]
 	if r.next() < 0.6: bays.append(bay(r.between(1.6, 2.0), "shed"))
 	var sp := { cls = cls, wear = r.between(0.4, 0.9), base = { kind = "earth", h = 0.15 }, floor_dh = 0.0, wall = "mud", wall_h = 1.9,
-		roof = { kind = "thatch", form = "gable", eave = 0.65, rise_k = 0.6 }, chimney = { kind = "none" }, attach = [],
+		roof = { kind = "thatch", form = "gable", eave = 0.65, rise_k = 0.6, droop = 0.4 }, chimney = { kind = "none" }, attach = [],
 		wings = [{ id = "main", depth = [r.between(2.2, 2.6)], bays = bays, ends = ["gable", "gable"] }] }
 	sp.roof.cols = thatch_cols(sp.wear)
 	return sp
@@ -516,7 +521,7 @@ static func _araechae(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	if r.next() < 0.5: bays.reverse()
 	var wear := r.between(0.3, 0.9)
 	return { cls = cls, wear = wear, base = { kind = "earth", h = 0.25 }, floor_dh = 0.25, wall_h = 1.85,
-		roof = { kind = "thatch", form = "hip", eave = 0.85, rise_k = 0.68, rc = 1.0, cols = thatch_cols(wear) },
+		roof = { kind = "thatch", form = "hip", eave = 0.85, rise_k = 0.68, rc = 1.0, droop = 0.4, cols = thatch_cols(wear) },
 		chimney = { kind = "mud", at = "back_left" }, attach = [], refs = ["jungnong"],
 		wings = [{ id = "main", depth = [r.between(2.2, 2.5)], toet = { kind = "jjok", d = 0.5 }, bays = bays }] }
 
