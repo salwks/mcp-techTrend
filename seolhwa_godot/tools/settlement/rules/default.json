@@ -1492,6 +1492,14 @@
    "unit": "deg",
    "value": 60
   },
+  "frame.seed_tie_epsilon": {
+   "confidence": "provisional",
+   "kind": "search",
+   "note": "TOOL-04: seed varies results only among alternatives the rules cannot separate",
+   "source": "design",
+   "unit": "objective",
+   "value": 0.005
+  },
   "frame.simplify_m": {
    "confidence": "provisional",
    "kind": "geometry",
@@ -1660,6 +1668,18 @@
    "source": "design",
    "unit": "world_m",
    "value": 4.0
+  },
+  "movement.mode_limits": {
+   "confidence": "provisional",
+   "kind": "routing",
+   "note": "audit K5: per-mode test values (not facts); passability is recorded for given routes, never used to delete them",
+   "source": "design",
+   "unit": "sustained grade (10 m window)",
+   "value": {
+    "cart": 0.1,
+    "foot": 0.25,
+    "pack_horse": 0.15
+   }
   },
   "program.f_lanes": {
    "confidence": "agreed",

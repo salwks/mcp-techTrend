@@ -221,6 +221,10 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
 
     from .locks import site_conflicts
     A.diagnostics += site_conflicts(inp, A)
+    # movement & livelihood layer (audit K9) — read by the frame for its approaches
+    from . import livelihood
+    A.full_h = h_s
+    A.movement = livelihood.build(inp, A, rules)
 
     # ---------------- summary & probes ----------------
     pm = Rr.rasterize(win, preferred)

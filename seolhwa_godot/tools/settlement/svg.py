@@ -397,7 +397,7 @@ def frame_svg(plan, inp, A, extras, view, F):
     side = [text(0, 14, "Layer 2 — 틀(성곽·문·관아 터·주 가로)", 15, weight="bold")]
     st = plan["status"]
     side.append(text(0, 36, f"상태: {st}" + (f" ({plan['status_reason']})" if plan["status_reason"] else ""), 13,
-                     weight="bold", fill="#1a7f37" if st == "valid" else "#b42318"))
+                     weight="bold", fill="#1a7f37" if st == "valid" else ("#8a6d00" if st == "proposed" else "#b42318")))
     if fr is None:
         b.append("</svg>")
         b.append(north_and_scale(view))
@@ -432,11 +432,12 @@ def frame_svg(plan, inp, A, extras, view, F):
         b.append(f'<text x="{_f(e.x)}" y="{_f(e.y + fs / 3)}" font-family="{FONT}" font-size="{_f(fs)}" text-anchor="middle" font-weight="bold" fill="#fff">{n + 1}</text>')
     for w in fr["water_access"]:
         b.append(P(path_d(_g(plan, w["reservation"])), fill="#1f6fb2", fop=0.9))
-    rejected = plan["status"] != "valid"
-    if rejected:
+    rejected = plan["status"] not in ("valid", "proposed")
+    if plan["status"] != "valid":
         c = poly.centroid
         fs = 16 / view.px
-        b.append(f'<text x="{_f(c.x)}" y="{_f(c.y)}" font-family="{FONT}" font-size="{_f(fs)}" text-anchor="middle" font-weight="bold" fill="#b42318">기각 후보(진단용) — 확정 아님</text>')
+        lab = "제안 — 소유자 승인 전(부지 변경)" if plan["status"] == "proposed" else "기각 후보(진단용) — 확정 아님"
+        b.append(f'<text x="{_f(c.x)}" y="{_f(c.y)}" font-family="{FONT}" font-size="{_f(fs)}" text-anchor="middle" font-weight="bold" fill="#b42318">{lab}</text>')
     if fr["wall"]:
         b.append(P(path_d(_g(plan, fr["wall"]["ring"])), stroke="#b42318" if rejected else "#111", sw=2.0 if rejected else 3.2,
                    dash="8 5" if rejected else None))

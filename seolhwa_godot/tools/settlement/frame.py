@@ -39,6 +39,8 @@ class Ctx:
         # locks are not subtracted: a frame may enclose story spots; the wall may not cross them
         self.profile = L1["profile"]
         self.insts = L1["insts"]
+        from .livelihood import frame_roads
+        self.roads = frame_roads(A.inp, A)   # approaches come from the movement layer (K9)
         self.bundles = L1["bundles"]
         self.axes = list(A.inp.axes)
         self.walled = family != "unwalled"
@@ -657,7 +659,7 @@ def solve_gates(ctx, sub, frame_poly, ring, interior, inner_cost, inner_pred, pa
     cen = frame_poly.centroid
     approaches = []
     lim = R.p("gates.approach_limit_m")
-    for road in ctx.inp.roads:
+    for road in ctx.roads:
         xs = G.line_crossings(road.line, ring)
         for n_, (x, z) in enumerate(xs):
             approaches.append({"road_id": road.id, "kind": "crossing", "xz": (x, z), "seq": n_,
@@ -894,7 +896,7 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
         return ev
     # ---- approach points for civic scoring
     appr = []
-    for road in ctx.inp.roads:
+    for road in ctx.roads:
         if road.line.distance(poly) <= R.p("gates.approach_limit_m"):
             for (x, z) in (G.line_crossings(road.line, ev["ring"]) if ctx.walled else []):
                 appr.append((x, z))
@@ -1018,12 +1020,23 @@ def _reach_fn(ctx, poly):
     return fn
 
 
+def unwalled_connectors(ctx, sub):
+    """Land an unwalled settlement's access lanes may cross to reach the route network: any
+    passable, non-protected, non-locked ground (a lane is circulation, not occupation), plus
+    mapped crossings — never open water."""
+    A = ctx.A
+    wet = sub.a(A.water) & ~sub.a(ctx.small_channel) & ~sub.a(A.bridge_mask)
+    return sub.a(A.cov) & sub.a(A.passable) & ~wet & ~sub.a(A.protected) & ~sub.a(A.locks)
+
+
 def _corridor_components(ctx, sub, interior, poly, appr=None):
     """Connected components of the ≤10 % corridor graph inside the frame; civic entrances
     must share one component that also reaches the boundary (gate side) or a route."""
     from scipy.sparse.csgraph import connected_components
     A, R = ctx.A, ctx.rules
     pas = corridor_passable(ctx, sub, interior, np.zeros(sub.grid.shape, bool))
+    if not ctx.walled:
+        pas = pas | unwalled_connectors(ctx, sub)
     g = access_graph(ctx, sub.grid, sub.a(A.h), pas)
     n, lab = connected_components(g, directed=False)
     lab = lab.reshape(sub.grid.shape)
@@ -1057,11 +1070,8 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
     fore_mask = Rr.rasterize(sub.grid, shapely.union_all([p["strip"] for p in placed])) & ~civic_mask
     pas = corridor_passable(ctx, sub, interior, civic_mask, fore_mask)
     if not ctx.walled:
-        # unwalled corridors may use roads and allowed land between clusters
-        allowed_m = Rr.rasterize(sub.grid, ctx.allowed)
-        road_m = sub.a(A.road_mask) & ~(sub.a(A.water) & ~sub.a(A.bridge_mask))
-        extra = (allowed_m | road_m) & sub.a(A.cov) & ~(sub.a(A.water) & ~sub.a(ctx.small_channel) & ~sub.a(A.bridge_mask))
-        extra &= ~(ndimage.binary_dilation(civic_mask, iterations=ctx.corr_cells) & ~fore_mask) & ~sub.a(A.protected)
+        extra = unwalled_connectors(ctx, sub)
+        extra &= ~(ndimage.binary_dilation(civic_mask, iterations=ctx.corr_cells) & ~fore_mask)
         pas = pas | extra
     sockets = {}
     for p in placed:
@@ -1071,7 +1081,8 @@ def _complete(ctx, ev, sub, interior, poly, bundle, placed, passages):
             cx_, cz_ = sub.xz(c)
             seg = LineString([(sx, sz), (cx_, cz_)]) if (cx_, cz_) != (sx, sz) else None
             walk_ok = G.polygonal(poly).buffer(0.01)
-            if seg is not None and (seg.intersects(civic_union.buffer(-0.05)) or not walk_ok.contains(seg)
+            leaves = ctx.walled and not walk_ok.contains(seg) if seg is not None else False
+            if seg is not None and (seg.intersects(civic_union.buffer(-0.05)) or leaves
                                     or seg.intersects(A.water_poly)):
                 c = None
         if c is None:
@@ -1314,6 +1325,16 @@ def solve(A, L1, rules, family):
     for e in evaluated:
         e["stable_id"] = G.stable_id("frame", e["poly"]) if "poly" in e else f"frame-none-{e['index']}"
     valid.sort(key=lambda e: (-e["objective"]["score"], e["stable_id"]))
+    # seed-derived variation (TOOL-04): among alternatives within the tie epsilon of the best,
+    # order by hash(seed, alternative id) — results depend on seed only where the rules are indifferent
+    if valid:
+        import hashlib
+        eps = rules.p("frame.seed_tie_epsilon")
+        top = valid[0]["objective"]["score"]
+        tie = [e for e in valid if top - e["objective"]["score"] <= eps]
+        rest = [e for e in valid if top - e["objective"]["score"] > eps]
+        tie.sort(key=lambda e: hashlib.sha1(f"{A.inp.seed}:{e['stable_id']}".encode()).hexdigest())
+        valid = tie + rest
     ranked = []
     for e in valid:
         if any(G.iou(e["poly"], r["poly"]) > rules.p("frame.dedupe_iou") for r in ranked):

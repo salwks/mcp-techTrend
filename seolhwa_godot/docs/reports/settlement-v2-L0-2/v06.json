@@ -1,0 +1,367 @@
+{
+ "V06": {
+  "pass": true,
+  "per_terrain_seed": [
+   {
+    "pass": true,
+    "seed": 2203,
+    "terrain": "terrace"
+   },
+   {
+    "pass": true,
+    "seed": 7919,
+    "terrain": "terrace"
+   },
+   {
+    "pass": true,
+    "seed": 2203,
+    "terrain": "basin"
+   },
+   {
+    "pass": true,
+    "seed": 7919,
+    "terrain": "basin"
+   }
+  ]
+ },
+ "note": "seed only reorders alternatives the rules cannot separate (frame.seed_tie_epsilon)",
+ "rows": [
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 11,
+   "family": "plain",
+   "frame_id": "frame-f789210269",
+   "gates": 3,
+   "households": 85,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 11,
+   "family": "plain",
+   "frame_id": "frame-f789210269",
+   "gates": 3,
+   "households": 85,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 3,
+   "family": "unwalled",
+   "frame_id": "frame-ded19d87f8",
+   "gates": 0,
+   "households": 27,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 3,
+   "family": "unwalled",
+   "frame_id": "frame-ded19d87f8",
+   "gates": 0,
+   "households": 27,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-80cf97cc13",
+   "gates": 0,
+   "households": 8,
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-80cf97cc13",
+   "gates": 0,
+   "households": 8,
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "terrace",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 12,
+   "family": "plain_hill",
+   "frame_id": "frame-db16f2843f",
+   "gates": 2,
+   "households": 125,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "dongheon",
+    "gaeksa",
+    "hyangcheong",
+    "jakcheong",
+    "market",
+    "prison",
+    "storage"
+   ],
+   "corridor_links": 12,
+   "family": "plain_hill",
+   "frame_id": "frame-db16f2843f",
+   "gates": 2,
+   "households": 125,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service",
+    "trade"
+   ],
+   "program": "eupchi",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": true,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-d3fbffe3d9",
+   "gates": 0,
+   "households": 25,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-d3fbffe3d9",
+   "gates": 0,
+   "households": 25,
+   "livelihood_ordinary": [
+    "agriculture",
+    "craft",
+    "service"
+   ],
+   "program": "village",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-89f5761376",
+   "gates": 0,
+   "households": 15,
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 2203,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  },
+  {
+   "checks_failed": [],
+   "civic": [
+    "community",
+    "well"
+   ],
+   "corridor_links": 5,
+   "family": "unwalled",
+   "frame_id": "frame-89f5761376",
+   "gates": 0,
+   "households": 15,
+   "livelihood_ordinary": [
+    "agriculture",
+    "fishing",
+    "salt_or_boat"
+   ],
+   "program": "waterside",
+   "road_class": "primary",
+   "seed": 7919,
+   "status": "valid",
+   "terrain": "basin",
+   "walled": false,
+   "water_access": [
+    "well"
+   ]
+  }
+ ],
+ "seed_changed_frame_for": []
+}

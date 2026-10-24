@@ -176,7 +176,8 @@ def sustained_grade(grid: Grid, height: np.ndarray, pts, window: float = 10.0, s
     L = line.length
     n = max(2, int(math.ceil(L / step)) + 1)
     ss = np.linspace(0, L, n)
-    xy = np.array([line.interpolate(v).coords[0] for v in ss])
+    import shapely as _sh
+    xy = _sh.get_coordinates(_sh.line_interpolate_point(line, ss))
     k = max(0, int(round(smooth / step)))
     if k > 0 and n > 2 * k + 1:
         ker = np.ones(2 * k + 1) / (2 * k + 1)

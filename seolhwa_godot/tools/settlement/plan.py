@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 
 import numpy as np
@@ -157,6 +158,13 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
                     "axes": inp.axes,
                     "deferred": ["flow_accumulation", "sun", "viewshed", "auto_jinsan_ansan", "earthworks"]}
     diags = list(A.diagnostics) + list(L1["diagnostics"]) + list(F["diagnostics"])
+    mv = json.loads(json.dumps(A.movement, default=lambda o: None))
+    rd = {r.id: r for r in inp.roads}
+    for rt in mv["routes"]:
+        if rt["source_id"] in rd:
+            rt["centerline"] = store.add(rd[rt["source_id"]].line)
+    plan["inputs"] = {"movement_livelihood": mv, "seed": inp.seed,
+                      "seed_use": "tie-break among alternatives within frame.seed_tie_epsilon only"}
     # ---------------- frame
     ranked = F["ranked"]
     chosen = ranked[0] if ranked else None

@@ -211,6 +211,37 @@ def terrace_locked():
     return s
 
 
+# ---------------------------------------------------------------- V06 matrix
+V06_PROGRAMS = {
+    # same rule system, different programs: walled seat · farming village · ferry/waterside village
+    "eupchi": {"tier": "small_eupchi", "family": "auto"},
+    "village": {"tier": "minchon", "family": "unwalled"},
+    "waterside": {"tier": "waterside_village", "family": "unwalled"},
+}
+V06_ALLOC = {  # allocation per terrain × program (given data, not tuned per result)
+    ("terrace", "eupchi"): box(-200, -60, 200, 240),
+    ("terrace", "village"): box(-260, 20, -60, 200),
+    ("terrace", "waterside"): box(-120, -110, 120, -20),
+    ("basin", "eupchi"): box(-190, -300, 190, 120),
+    ("basin", "village"): box(40, -60, 240, 110),
+    ("basin", "waterside"): box(-120, 60, 120, 172),
+}
+
+
+def v06(terrain: str, program: str, seed: int) -> SiteInput:
+    s = terrace() if terrain == "terrace" else basin()
+    prog = V06_PROGRAMS[program]
+    a = V06_ALLOC[(terrain, program)]
+    s.id = f"v06_{terrain}_{program}_{seed}"
+    s.name = f"V06 {terrain}·{program}·seed {seed}"
+    s.seed = seed
+    s.tier = prog["tier"]
+    s.family = prog["family"]
+    s.territory = dict(s.territory, preferred=a, allowed=a)
+    s.provenance["input_hashes"]["v06"] = hashlib.sha256(f"{terrain}:{program}:{seed}".encode()).hexdigest()
+    return s
+
+
 # ---------------------------------------------------------------- failure fixtures
 def blocked_access():
     X, Z = _xz()

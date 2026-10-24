@@ -217,6 +217,51 @@ def all_cmd(out, rules, include_failures=True, variants=True):
     return lines
 
 
+def v06_cmd(out, rules, seeds=(2203, 7919)):
+    """V06: 읍성·농촌·나루 on two terrains and two seeds with one rule system; report the
+    functional / circulation differences (not just size)."""
+    rows = []
+    for terrain in ("terrace", "basin"):
+        for prog in ("eupchi", "village", "waterside"):
+            for seed in seeds:
+                inp = fixtures.v06(terrain, prog, seed)
+                p = run(inp, rules, os.path.join(out, inp.id))
+                fr = p.get("frame") or {}
+                civ = sorted(c["key"] for c in fr.get("civic_reserves", []))
+                gates = sum(1 for o in fr.get("openings", []) if o["type"] == "gate")
+                pc = fr.get("primary_corridors") or {}
+                liv = p["program"]["households"].get("livelihood", {})
+                rows.append({"terrain": terrain, "program": prog, "seed": seed, "status": p["status"],
+                             "family": p["provenance"]["family"], "walled": bool(fr.get("wall")), "gates": gates,
+                             "civic": civ, "households": p["program"]["households"]["represented"],
+                             "road_class": pc.get("road_class"), "corridor_links": len(pc.get("links", [])),
+                             "water_access": [w["kind"] for w in fr.get("water_access", [])],
+                             "livelihood_ordinary": sorted((liv.get("ordinary") or {}).keys()),
+                             "frame_id": fr.get("id"), "checks_failed": [c["id"] for c in p["validation"] if c["pass"] is False]})
+                print(rows[-1], flush=True)
+    # acceptance: per terrain and seed the three programs differ in function and circulation
+    verdict = []
+    for terrain in ("terrace", "basin"):
+        for seed in seeds:
+            r = {x["program"]: x for x in rows if x["terrain"] == terrain and x["seed"] == seed}
+            e, v, w = r["eupchi"], r["village"], r["waterside"]
+            ok = (e["walled"] and e["gates"] >= 2 and {"gaeksa", "dongheon"} <= set(e["civic"])
+                  and not v["walled"] and set(v["civic"]) == {"community", "well"}
+                  and not w["walled"] and "fishing" in w["livelihood_ordinary"]
+                  and "fishing" not in v["livelihood_ordinary"]
+                  and all(x["status"] in ("valid", "proposed") for x in (e, v, w))
+                  and not any(x["checks_failed"] for x in (e, v, w)))
+            verdict.append({"terrain": terrain, "seed": seed, "pass": ok})
+    seed_effect = sorted({(x["terrain"], x["program"]) for x in rows
+                          if len({y["frame_id"] for y in rows if y["terrain"] == x["terrain"] and y["program"] == x["program"]}) > 1})
+    rep = {"V06": {"pass": all(v["pass"] for v in verdict), "per_terrain_seed": verdict},
+           "rows": rows, "seed_changed_frame_for": [list(t) for t in seed_effect],
+           "note": "seed only reorders alternatives the rules cannot separate (frame.seed_tie_epsilon)"}
+    dump(os.path.join(out, "v06.json"), rep)
+    print(json.dumps(rep["V06"], ensure_ascii=False))
+    return rep
+
+
 def _hash_tree(d):
     out = {}
     for root, _, files in os.walk(d):
@@ -283,7 +328,8 @@ def main(argv=None):
     dt = sp.add_parser("determinism")
     dt.add_argument("--names", nargs="+", default=["syn_terrace", "syn_estuary", "JL_NAMWON_UNBONG/namwon_eup"])
     sh = sp.add_parser("sheet")
-    for p in (b, f, al, dt, sh):
+    v6 = sp.add_parser("v06")
+    for p in (b, f, al, dt, sh, v6):
         p.add_argument("--rules", default=DEFAULT)
         p.add_argument("--out", default=os.path.join(os.path.dirname(__file__), "out"))
     a = ap.parse_args(argv)
@@ -301,6 +347,9 @@ def main(argv=None):
         sys.exit(0 if ok else 1)
     elif a.cmd == "sheet":
         sheet_cmd(a.out)
+    elif a.cmd == "v06":
+        rep = v06_cmd(a.out, rules)
+        sys.exit(0 if rep["V06"]["pass"] else 1)
 
 
 if __name__ == "__main__":

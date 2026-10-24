@@ -136,3 +136,23 @@ $PY -m pytest -q tools/settlement/tests
 - L2가 이미 내보내는 것: 걸어서 닿는 주거 성분 다각형(안정 id)·성분별 정수 호수 배정, 관아 터(내용·마당 최소·입구 소켓·방위), 주 가로 노드·링크(분기점 명시, 2 m 경사 단면, 7.2 m 예비 다각형), 성벽 사슬과 문·수문 구간, 길 우회·연결로, 물 확보 터(불확실성), 보호·잠금·허가 의미, revision_requests.
 - 아직 없는 것(Codex 지적): 구역 면적 분포(중앙값만 있음), 성 밖 의무(향교·사직단·여단·장터 성 밖 안)의 배치, 건널목 예비(Layer 4 다리), 접근 계약의 완전한 입구 연결, 수정 요청의 대상별 형식(접근·수문·배정·프로그램).
 - 열린 결정 2개: 범람 단위, 산성 회랑 경사 측정법.
+
+## 9. 3회차 갱신(2026-10-23 조정자 결정 · 2026-10-25 소유자 결정 · 감사 K1–K3·K9–K11)
+
+이 절이 §6보다 우선한다. 자세한 내용은 `settlement-v2-wp0-baseline.md`·`settlement-v2-wp1-contract.md`·`settlement-v2-wp2-identity-locks.md`·`settlement-v2-wp3-align.md`.
+
+| 시트 | 곳 | 상태(기준안) | 비고 |
+|---|---|---|---|
+| 01 | syn_terrace | valid, 86호, 문 3 | |
+| 02 | syn_basin | valid, **125호**, 문 2 | 수용력 순위 + 관아 입구 상호 도달 검사로 15호 → 125호 |
+| 03 | syn_ridge | **valid**, 44호, 문 2 | 산 길 등급(갈지자 약 1 km), 물길을 골짜기로 |
+| 04 | syn_estuary | valid, 33호 | |
+| 05 / 09 | 남원 읍 | insufficient_capacity 3호 / 제안안 insufficient 3호 | 이야기 잠금 304개, 후보 20/24가 잠금 충돌 |
+| 06 / 10 | 불국사 마을 | insufficient 0호 / **제안안 proposed 21호** | 제안안은 숲 5.3 ha 잠식·불국사 50 m 안 — 승인 필요 |
+| 07 / 11 | 반선 | no_candidate_found / 제안안 동일 | 급경사 |
+| 08 / 12 | 안목 | insufficient 1호 / 제안안 1호 | |
+| 13 | syn_mountain | valid, 205호 | 보충 산성 |
+| 14 | syn_terrace_locked | valid, 90호 | V14 잠금 픽스처 |
+| 15–17 | 실패 3종 | failed / insufficient | |
+
+범람은 게임 m(+0.5/+1.5/+3.0, +1.5 점유 제외)로 바뀌어 §6의 수치(원지형 m)와 다르다.
