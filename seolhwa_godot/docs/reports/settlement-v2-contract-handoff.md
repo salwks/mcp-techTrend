@@ -44,3 +44,26 @@
 
 - `tools/settlement/registry.py`(`settlement-id-registry/1`). 의미 키·위치(30 m)로 알아보고, 은퇴는 하되 재사용하지 않는다. 제안안은 `<id>@proposal` 범위.
 - 굽기 기본은 새 등록부라서 결정적이다. 영속 편집층 경로와 병합 규칙은 아직 정하지 않았다.
+
+## WP4 지형·물 데이터층 — 추가된 것(2026-10-25)
+
+자세한 것은 `settlement-v2-wp4-terrain-water.md` §4를 본다.
+
+- **층 파일**: `terrain-water.json`(`terrain-water/1`, `schemas/terrain-water.schema.json`)과 `terrain-fields.npz`.
+- **계획서 연결**:
+  - `plan.terrain_water{file, revision, summary, checks}`
+  - `plan.site.water_features[].reaches[]`
+- **Route**: 다음 필드를 채웠다.
+  - `long_profile`(chainage·y·ascent/descent)
+  - `width_section.sections`(지지 후보·절취면)
+  - `support_drainage`(배수선 횡단의 처리는 null+후보)
+  - `divide_crossings`, `catchments_at_ends`, `cliff_traversal_m`, `modes[].reasons`
+- **WaterReach·건널목**: 같은 상태 키를 쓴다.
+  - WaterReach: 종단·횡단·평면·하상 유형(혼합 비율 null)·흐름 원인·상태별 젖은 폭/둑 넘음
+  - 건널목: 상태 × 수단 통과
+  - 지도에 없는 건널목은 후보(`applied:false`)일 뿐이다.
+- **TerrainPatch**: landform(8 m)과 ground(2 m 절벽·암체·너덜·모래톱·충적)로 나뉜다. 암종은 기록만 하며 분류에 쓰지 않는다.
+- **HabitatPatch**: 관리 유형 자리표시다. 경작지·마당만 정해져 있고 나머지는 unknown(WP10).
+- **RegionProfile.natural**: 21 지역 값이다. confirmed는 A/B와 출처가 있을 때만이다.
+- **계약 enum 추가**: landform `foot_slope/summit/water`, management `cultivated_yard/abandoned`.
+- **불변식 `WP4.layer`** 만 게시를 막는다. V01–V67 결과는 발견(finding)으로 보고한다.

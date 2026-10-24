@@ -1,0 +1,192 @@
+{
+ "V63": {
+  "assumption": "one rock type for all synthetic sites (classification never reads it)",
+  "limit": "synthetic relief only; real granite areas (JL 운봉·GS 분지) not compared at the same rock",
+  "pass": true,
+  "rock_type_used_for_shape": false,
+  "sites": [
+   "syn_ridge",
+   "syn_mountain",
+   "syn_basin"
+  ],
+  "total_variation": {
+   "syn_mountain|syn_basin": {
+    "ground_tv": 0.0434,
+    "landform_tv": 0.3369
+   },
+   "syn_ridge|syn_basin": {
+    "ground_tv": 0.2612,
+    "landform_tv": 0.3461
+   },
+   "syn_ridge|syn_mountain": {
+    "ground_tv": 0.2177,
+    "landform_tv": 0.3829
+   }
+  }
+ },
+ "V66_contrast": {
+  "alluvial_reaches": 70,
+  "design_depth_m": {
+   "alluvial": 0.8,
+   "rock": 0.5
+  },
+  "median_confinement": {
+   "alluvial": 11.0,
+   "rock": 4.0
+  },
+  "median_grade": {
+   "alluvial": 0.0016,
+   "rock": 0.1566
+  },
+  "pass": true,
+  "rock_reaches": 29,
+  "sites_alluvial": [
+   "anmok_village",
+   "bulguksa_village",
+   "fail_blocked_access",
+   "fail_impossible_civic",
+   "fail_water_crossing",
+   "namwon_eup",
+   "syn_terrace"
+  ],
+  "sites_rock": [
+   "banseon",
+   "bulguksa_village"
+  ]
+ },
+ "note": "data-level checks; no in-game screen judgement was made",
+ "per_site": {
+  "anmok_village": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": null,
+   "V65": false,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "banseon": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": null,
+   "V65": false,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "bulguksa_village": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": false,
+   "V65": false,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "fail_blocked_access": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": null,
+   "V64": null,
+   "V65": true,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "fail_impossible_civic": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": null,
+   "V64": null,
+   "V65": true,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "fail_water_crossing": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": null,
+   "V64": null,
+   "V65": false,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "namwon_eup": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": true,
+   "V65": false,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "syn_basin": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": false,
+   "V65": true,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "syn_estuary": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": false,
+   "V65": true,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "syn_mountain": {
+   "V01": true,
+   "V02": true,
+   "V03": null,
+   "V19": null,
+   "V64": null,
+   "V65": null,
+   "V66": null,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "syn_ridge": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": null,
+   "V64": true,
+   "V65": true,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  },
+  "syn_terrace": {
+   "V01": true,
+   "V02": true,
+   "V03": true,
+   "V19": true,
+   "V64": null,
+   "V65": true,
+   "V66": true,
+   "V67": true,
+   "WP4.layer": true
+  }
+ }
+}
