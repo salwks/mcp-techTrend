@@ -14,19 +14,23 @@
 #     { id, x, z, ry, depth: [앞뒤 칸 깊이…](1개 = 홑집, 2개 = 겹집), toet: { kind "none"|"jjok"(쪽마루)|"toet"(툇마루 + 퇴기둥), d },
 #       ends: [왼끝, 오른끝] 지붕 끝 꼴("hip"|"gable"|"hipgable"), open_end: [false,false](꺾여 붙는 끝은 벽 없음), lower(지붕 낮춤),
 #       roof_up(지붕 올림 — 객사 정청), floor_up(바닥 더 올림 — 누각),
-#       bays: [ { w, fn, role?, front: {kind, lattice?}, back: {kind}, side: {kind}, goods? } … ] }
+#       bays: [ { w, fn, role?, room?, front: {kind, lattice?}, back: {kind}, side: {kind}, goods? } … ] }
+#     room(기능 면 열쇠, WP7a HOUSE-01): 같은 room 값을 가진 이웃 칸은 한 방·부엌(기능 면)이 여러 구조 칸에 걸친 것 — 칸막이 없음.
+#         없으면 칸 하나 = 기능 면 하나(대청·사당처럼 트인 같은 쓰임 칸은 서술자가 한 면으로 묶는다)
 #     fn: "room"|"hall"(대청)|"kitchen"|"store"(곳간)|"shop"|"maru"(트인 마루·누마루)|"shed"(헛간)|"stable"(외양간)|"gate"(대문간)
 #         |"jeongju"(정주간)|"mill"(방앗간)|"forge"(대장간)|"shrine"(사당·감실)
 #     면 kind: "door2"|"door1"|"door4"(분합 닫힘)|"bunhap_up"(분합 들어 올림)|"window"|"smallwin"|"plank"|"plank2"|"salchang"|"wall"
 #              |"open"|"shop"(들창)|"gate"(판문 대문)|"board"(판벽)|"rail"(외양간 가로대)|"join"(날개가 붙음)
 #   roof      { kind "thatch"|"giwa"|"neowa", form "hip"|"gable"|"hipgable", eave(처마 내밀기 m), rise_k(높이/반깊이), lift(앙곡), buyeon, net(새끼 그물 줄), rc }
-#   chimney   { kind "mud"|"stone"|"log"|"pot"|"tile"|"none", wing, at "back_left"|"back_right"|"side_left"|"side_right" }
+#   chimney   { kind "mud"|"stone"|"log"|"pot"|"tile"|"none", wing, at "back_left"|"back_right"|"side_left"|"side_right"|"back_bay"(bay: 그 칸 뒤) }
+#             — 아궁이–구들–굴뚝(V27): resolve가 굴뚝이 데운 방(구들) 끝·뒤에 있는지 보고, 부엌·헛간 곁에 있으면 데운 줄 끝으로 옮긴다(heat_fix)
 #   attach    [ { kind, x, z, ry, … } ] 몸에 붙은 것·곁 것: jangdok_s(작은 장독) | firewood | pyeongsang | yongsu | gamasot | sul_dok(술독)
 #             | wheel(물레바퀴) | forge_out | anvil | trough | canopy(가가 차양) | gourd(박 넝쿨) | soguri | meongseok | laundry | tools | dwiju
 #   refs      참고 그림 열쇠(docs/reports/building_refs.json 키)
 #
 # 명세 묶음(compound: kit/bldg/compound.gd)은 건물 명세 여럿 + 담·문·마당 것.
 extends RefCounted
+const CB := preload("res://kit/bldg/_calib.gd")
 
 const REGION_ALIAS := { JL = "south", GS = "south", GG = "central", HY = "central", GW = "mountain", HG = "north", PA = "north", HH = "north", JJ = "jeju" }
 
@@ -58,7 +62,10 @@ static func resolve(params: Dictionary) -> Dictionary:
 				if not a.has("x"): continue
 				var x := float(a.x)
 				a.x = x * l1 / l0 if absf(x) < l0 / 2 else signf(x) * (absf(x) - (l0 - l1) / 2)
-	return normalize(sp)
+	sp = normalize(sp)
+	# 아궁이–구들–굴뚝(WP7a, V27): 프리셋 집만(통째로 적은 이야기 집 params.spec은 손대지 않는다)
+	if not params.has("spec"): heat_fix(sp)
+	return sp
 
 static func normalize(sp: Dictionary) -> Dictionary:
 	var d := { type = "choga", region = "south", cls = "commoner", seed = 1, wear = 0.4, interior = false,
@@ -189,10 +196,23 @@ static func generate(type: String, region: String, cls: String, seed: int, rs :=
 #   kh = kv(한 배율)로 둔다: 가로·세로를 달리 키우면(1.16/1.24) 이엉 처마 밑 여유(벽 위 0.3m 고정)가 ㄱ자 날개 이음에서 깨졌다(roof_check WALLCLEAR).
 #   기둥 굵기(col)는 키우지 않는다(실제 굵기 0.2~0.3m 그대로 — 굵히면 끝 칸 모서리 문틀과 겹쳐 corner_check 틈이 났다).
 #   발 걸음(0.32)·문지방(0.18)·가구·장독은 사람 크기라 그대로. 명세를 통째로 적은 집(params.spec — 이야기 집 잠금)은 다시 키우지 않는다.
-const SCALE_CLS := { poor = [1.16, 1.16], commoner = [1.22, 1.22], middle = [1.22, 1.22], yangban = [1.22, 1.22], official = [1.2, 1.2] }
+#   WP7a(감사 K1, 소유자 결정 2026-10-25): 배율 기록은 RegionProfile.scale_policy.building.factor 하나뿐 — 평면·높이 같은 1.2, 굽기에서 한 번.
+#   옛 신분별 SCALE_CLS(1.16/1.22/1.2)는 버렸다. 값은 그 기록의 출처(tools/settlement/rules/default.json world.length_scale)에서 읽고,
+#   읽지 못하면(내보낸 게임) 같은 값의 상수를 쓴다 — descriptor_check가 셋(규칙·상수·명세 real_scale)이 같은지 본다(SCALE1).
+const SCALE_FACTOR_FALLBACK := 1.2
+const RULES_PATH := "res://tools/settlement/rules/default.json"
+static var _factor := -1.0
+static func profile_factor() -> float:
+	if _factor > 0.0: return _factor
+	_factor = SCALE_FACTOR_FALLBACK
+	if FileAccess.file_exists(RULES_PATH):
+		var d = JSON.parse_string(FileAccess.get_file_as_string(RULES_PATH))
+		if d is Dictionary and (d.get("parameters", {}) as Dictionary).has("world.length_scale"):
+			_factor = float(d.parameters["world.length_scale"].value)
+	return _factor
+
 static func real_scale(sp: Dictionary) -> void:
-	var k: Array = SCALE_CLS.get(String(sp.get("cls", "commoner")), [1.22, 1.22])
-	var kh: float = k[0]; var kv: float = k[1]
+	var kh: float = profile_factor(); var kv: float = kh
 	sp.real_scale = [kh, kv]
 	if sp.has("wall_h"): sp.wall_h = snappedf(float(sp.wall_h) * kv, 0.01)
 	# 기단 위 바닥 높이: 칸막이 문지방 밑(걷기 바닥이 끊긴 띠)에서 한 걸음(MAX_STEP 0.32m)을 넘으면 방↔대청을 못 지나므로 0.3 안으로
@@ -204,6 +224,7 @@ static func real_scale(sp: Dictionary) -> void:
 		for kk in ["eave", "lift", "rc"]:
 			if (sp.roof as Dictionary).has(kk): sp.roof[kk] = snappedf(float(sp.roof[kk]) * kh, 0.01)
 		if (sp.roof as Dictionary).has("droop"): sp.roof.droop = snappedf(float(sp.roof.droop) * kv, 0.01)
+		if (sp.roof as Dictionary).has("eave_dy"): sp.roof.eave_dy = snappedf(float(sp.roof.eave_dy) * kv, 0.01)
 	for w in sp.get("wings", []):
 		for kk in ["x", "z"]:
 			if w.has(kk): w[kk] = snappedf(float(w[kk]) * kh, 0.01)
@@ -304,9 +325,10 @@ static func _choga(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 			elif r.next() < 0.25: bays.append(bay(r.between(1.6, 2.0), "store"))      # 끝 칸 광
 			if kl: bays.reverse()
 			var tk: String = _pick(r, ["toet", "toet", "jjok", "none"]) if not poor else _pick(r, ["jjok", "none"])
-			wings = [{ id = "main", depth = [r.between(2.2, 2.8)], toet = { kind = tk, d = snappedf(r.between(0.75, 0.95), 0.01) if tk == "toet" else 0.55 }, bays = bays }]
+			# 낙안 실측 보정(_calib.gd choga.south): 몸채 깊이 2.1–2.3(툇칸은 따로) · 지붕 rise_k 0.72–0.76 — 난수 자리는 그대로
+			wings = [{ id = "main", depth = [CB.between(r, "choga", region, "depth", 2.2, 2.8)], toet = { kind = tk, d = snappedf(r.between(0.75, 0.95), 0.01) if tk == "toet" else 0.55 }, bays = bays }]
 			sp.roof.eave = r.between(1.1, 1.4)
-			sp.roof.rise_k = r.between(0.6, 0.95)
+			sp.roof.rise_k = CB.between(r, "choga", region, "rise_k", 0.6, 0.95)
 			sp.wall_tint = r.next()
 	sp.wings = wings
 	sp.roof.cols = thatch_cols(wear)
@@ -386,7 +408,7 @@ static func _sijeon(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 
 # 양반가 건물 ------------------------------------------------------------------------------------------
 static func _anchae(r: Kit.Rng, region: String, cls: String) -> Dictionary:
-	var bw := r.between(2.5, 2.9)
+	var bw := CB.between(r, "yangban", region, "bay_w", 2.5, 2.9)   # KHS 보정: 호남 2.0–2.4 · 서울 2.4–2.6 · 그 밖 2.2–2.6(근거 없음)
 	var plan: String = _pick(r, ["giyeok", "giyeok", "digeut", "il"]) if region != "south" else _pick(r, ["il", "giyeok", "il"])
 	var kl := r.next() < 0.5
 	var hall_n := 2 if r.next() < 0.6 else 1
@@ -395,9 +417,9 @@ static func _anchae(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	bays.append(bay(bw, "room", { role = "geonneon" }))
 	if r.next() < 0.5: bays.push_front(bay(bw * 0.9, "room", { role = "witbang" }))
 	var D := r.between(2.6, 3.0)
-	var sp := { cls = cls, wear = r.between(0.1, 0.6), base = { kind = "jangdae", h = snappedf(r.between(0.55, 0.85), 0.01), tiers = 2 }, floor_dh = 0.3,
+	var sp := { cls = cls, wear = r.between(0.1, 0.6), base = { kind = "jangdae", h = snappedf(CB.between(r, "yangban", region, "base_h", 0.55, 0.85), 0.01), tiers = 2 }, floor_dh = 0.3,
 		cho = "dressed", column = "square" if r.next() < 0.6 else "round", col = 0.22, wall = "plaster", wall_h = 2.3, lattice = _pick(r, ["ddi", "a", "yong"]), meoreum = true,
-		roof = { kind = "giwa", form = "hipgable" if r.next() < 0.6 else "gable", eave = r.between(1.15, 1.4), rise_k = r.between(0.55, 0.66), lift = r.between(0.3, 0.5) },
+		roof = { kind = "giwa", form = "hipgable" if r.next() < 0.6 else "gable", eave = r.between(1.15, 1.4), rise_k = CB.between(r, "yangban", region, "rise_k", 0.55, 0.66), lift = r.between(0.3, 0.5) },
 		chimney = { kind = "stone" }, refs = ["yangban"], attach = [] }
 	var L := 0.0
 	for b in bays: L += b.w
@@ -418,19 +440,32 @@ static func _anchae(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	if sp.roof.form == "gable" and plan != "il":
 		sp.roof.form = "hipgable"
 	sp.chimney.at = "back_left" if kl else "back_right"
+	_yangban_cal(r, region, sp)
 	return sp
 
+# 양반가 KHS 보정 중 옛 프리셋에 없던 값(벽 높이·툇칸·처마 높이) — 새 난수는 끝에서 뽑는다(앞 값들이 씨앗마다 그대로)
+static func _yangban_cal(r: Kit.Rng, region: String, sp: Dictionary) -> void:
+	if CB.has("yangban", region, "wall_h"): sp.wall_h = snappedf(CB.between(r, "yangban", region, "wall_h", 2.3, 2.3), 0.01)
+	if CB.has("yangban", region, "toet_d"):
+		var td := snappedf(CB.between(r, "yangban", region, "toet_d", 0.9, 0.9), 0.01)
+		if sp.wings[0].toet.kind == "toet": sp.wings[0].toet.d = td
+	if CB.has("yangban", region, "eave_dy"): sp.roof.eave_dy = snappedf(CB.between(r, "yangban", region, "eave_dy", 0.26, 0.26), 0.01)
+	# 낮은 기단(호남 0.17–0.28)은 장대석 한 단
+	if float(sp.base.h) < 0.35: sp.base.tiers = 1
+
 static func _sarang(r: Kit.Rng, region: String, cls: String) -> Dictionary:
-	var bw := r.between(2.5, 2.9)
+	var bw := CB.between(r, "yangban", region, "bay_w", 2.5, 2.9)
 	var bays := [bay(bw, "room", { role = "sarang" }), bay(bw * 1.05, "hall"), bay(bw, "room", { role = "chaekbang" })]
 	if r.next() < 0.55: bays.append(bay(bw * 1.1, "maru", { role = "numaru", front = { kind = "open" }, floor_up = 0.55 }))
 	if r.next() < 0.4: bays.push_front(bay(bw * 0.9, "kitchen", { role = "hamsil" }))   # 사랑 부엌(함실)
 	if r.next() < 0.5: bays.reverse()
-	return { cls = cls, wear = r.between(0.1, 0.5), base = { kind = "jangdae", h = snappedf(r.between(0.6, 0.95), 0.01), tiers = 2 }, floor_dh = 0.32,
+	var sp := { cls = cls, wear = r.between(0.1, 0.5), base = { kind = "jangdae", h = snappedf(CB.between(r, "yangban", region, "base_h", 0.6, 0.95), 0.01), tiers = 2 }, floor_dh = 0.32,
 		cho = "dressed", column = _pick(r, ["round", "square"]), col = 0.23, wall = "plaster", wall_h = 2.35, lattice = _pick(r, ["a", "yong", "ddi"]), meoreum = true,
-		roof = { kind = "giwa", form = "hipgable", eave = r.between(1.2, 1.45), rise_k = r.between(0.55, 0.65), lift = r.between(0.35, 0.55) },
+		roof = { kind = "giwa", form = "hipgable", eave = r.between(1.2, 1.45), rise_k = CB.between(r, "yangban", region, "rise_k", 0.55, 0.65), lift = r.between(0.35, 0.55) },
 		chimney = { kind = "stone", at = "back_right" }, refs = ["yangban"], attach = [],
 		wings = [{ id = "main", depth = [r.between(2.6, 3.0)], toet = { kind = "toet", d = 0.95 }, bays = bays }] }
+	_yangban_cal(r, region, sp)
+	return sp
 
 static func _haengrang(r: Kit.Rng, region: String, cls: String) -> Dictionary:
 	var n := 5 + int(r.next() * 4)
@@ -639,3 +674,125 @@ static func _daeung(r: Kit.Rng, region: String) -> Dictionary:
 		wall = "plaster", wall_h = 3.2, lattice = "kkot", paint = "full", roof = { kind = "giwa", form = "hipgable", eave = 1.7, rise_k = 0.66, lift = 0.75, buyeon = true },
 		chimney = { kind = "none" }, refs = ["temple"], attach = [],
 		wings = [{ id = "main", depth = [3.0, 3.0], bays = bays, ends = ["hipgable", "hipgable"] }] }
+
+# 아궁이–구들–굴뚝(WP7a, 감사 C10 접합 · V27) --------------------------------------------------------------
+# 데우는 칸: 방·정주간(누각처럼 띄운 바닥은 아님). 불 때는 칸: 부엌(사랑 함실·쇠죽 부엌 포함).
+const HEATED_FNS := ["room", "jeongju"]
+static func is_heated(sp: Dictionary, w: Dictionary, b: Dictionary) -> bool:
+	if not String(b.fn) in HEATED_FNS: return false
+	return float(sp.get("floor_dh", 0.0)) + float(w.get("floor_up", 0.0)) < 1.2
+
+# 이웃 칸(같은 날개 좌우 + ㄱ·ㄷ 모퉁이 칸(앞이 join)은 몸채 끝 칸) → [[wi, bi, dir]] dir: 그 방향으로 이어 가는 칸 걸음(+1/−1)
+static func _bay_neighbors(sp: Dictionary, wi: int, bi: int) -> Array:
+	var w: Dictionary = sp.wings[wi]
+	var n: int = (w.bays as Array).size()
+	var out := []
+	if bi > 0: out.append([wi, bi - 1, -1])
+	if bi < n - 1: out.append([wi, bi + 1, 1])
+	var b: Dictionary = w.bays[bi]
+	if wi > 0 and String((b.get("front", {}) as Dictionary).get("kind", "")) == "join":
+		var m: Dictionary = sp.wings[0]
+		var mn: int = (m.bays as Array).size()
+		if float(w.get("x", 0.0)) > 0.0: out.append([0, mn - 1, -1])
+		else: out.append([0, 0, 1])
+	return out
+
+# 불 계통: [{ kind:"kitchen"|"hamsil", fire:[wi,bi]|null, rooms:[[wi,bi]…], far:[wi,bi] }]
+#   부엌에 붙은 데운 칸 줄(같은 방향으로 이어지는 방들) = 한 고래 줄 — 끝 칸 밖·뒤가 굴뚝 자리.
+#   부엌에 닿지 않는 데운 방은 함실(밖에서 불 때는 아궁이) 계통 하나씩.
+static func heat_systems(sp: Dictionary) -> Array:
+	var out := []
+	var fed := {}
+	for wi in (sp.wings as Array).size():
+		var w: Dictionary = sp.wings[wi]
+		for bi in (w.bays as Array).size():
+			if String(w.bays[bi].fn) != "kitchen": continue
+			for nb in _bay_neighbors(sp, wi, bi):
+				var cw: int = nb[0]; var ci: int = nb[1]; var dir: int = nb[2]
+				var rooms := []
+				while ci >= 0 and ci < (sp.wings[cw].bays as Array).size() and is_heated(sp, sp.wings[cw], sp.wings[cw].bays[ci]):
+					if fed.has("%d.%d" % [cw, ci]) and rooms.is_empty(): break
+					rooms.append([cw, ci]); fed["%d.%d" % [cw, ci]] = true
+					ci += dir
+				if not rooms.is_empty(): out.append({ kind = "kitchen", fire = [wi, bi], rooms = rooms, far = rooms[rooms.size() - 1] })
+	for wi in (sp.wings as Array).size():
+		var w: Dictionary = sp.wings[wi]
+		for bi in (w.bays as Array).size():
+			if fed.has("%d.%d" % [wi, bi]) or not is_heated(sp, w, w.bays[bi]): continue
+			out.append({ kind = "hamsil", fire = null, rooms = [[wi, bi]], far = [wi, bi] })
+	return out
+
+# 굴뚝이 붙은 칸 [wi, bi, "side"|"back"] (없으면 [])
+static func chimney_bay(sp: Dictionary) -> Array:
+	var ch: Dictionary = sp.chimney
+	if String(ch.get("kind", "none")) == "none": return []
+	var wi := int(ch.get("wing", 0))
+	var w: Dictionary = sp.wings[wi]
+	var bays: Array = w.bays
+	var at := String(ch.get("at", "side_right"))
+	match at:
+		"side_left": return [wi, 0, "side"]
+		"back_bay": return [wi, clampi(int(ch.get("bay", 0)), 0, bays.size() - 1), "back"]
+		"back_left", "back_right":
+			var L := 0.0
+			for b in bays: L += float(b.w)
+			var x := -L / 2 + 0.9 if at == "back_left" else L / 2 - 0.9
+			var acc := -L / 2
+			for i in bays.size():
+				acc += float(bays[i].w)
+				if x <= acc + 1e-4: return [wi, i, "back"]
+			return [wi, bays.size() - 1, "back"]
+	return [wi, bays.size() - 1, "side"]
+
+# 굴뚝이 데운 방(구들) 곁에 있나 — 부엌·광·외양간 곁이면 모순(불길이 방 밑을 지나지 않고 나감)
+static func chimney_ok(sp: Dictionary) -> bool:
+	var cb := chimney_bay(sp)
+	if cb.is_empty(): return true
+	var w: Dictionary = sp.wings[int(cb[0])]
+	return is_heated(sp, w, w.bays[int(cb[1])])
+
+# 끝 칸 옆이 비었나(날개가 붙거나 트인 끝이 아님)
+static func _end_free(w: Dictionary, bi: int) -> bool:
+	var n: int = (w.bays as Array).size()
+	var sd := -1
+	if bi == 0: sd = 0
+	elif bi == n - 1: sd = 1
+	if sd < 0: return false
+	if (w.get("open_end", [false, false]) as Array)[sd]: return false
+	if (w.get("base_cut", [false, false]) as Array)[sd]: return false
+	if (w.get("butt", [false, false]) as Array)[sd]: return false
+	return String((w.bays[bi].get("front", {}) as Dictionary).get("kind", "")) != "join"
+
+# 모순이면 옮긴다: 부엌 계통(안방 든 줄 먼저, 없으면 긴 줄)의 끝 칸 — 끝이 비었으면 옆, 아니면 그 칸 뒤.
+#   부엌 계통이 없으면 지금 자리에서 가장 가까운 데운 방 뒤. 데운 방이 하나도 없으면 굴뚝을 없앤다.
+static func heat_fix(sp: Dictionary) -> void:
+	if chimney_ok(sp): return
+	var sys := heat_systems(sp)
+	if sys.is_empty():
+		# 데운 방이 하나도 없는 채(광·외양간만 남은 행랑 등)의 굴뚝은 이을 고래가 없다 — 없앤다
+		sp.chimney.kind = "none"; sp.chimney.moved = "no_heated_room"
+		return
+	var best = null
+	for s in sys:
+		if s.kind != "kitchen": continue
+		var has_an := false
+		for rb in s.rooms:
+			if String(sp.wings[rb[0]].bays[rb[1]].get("role", "")) == "anbang": has_an = true
+		var score: float = (100.0 if has_an else 0.0) + (s.rooms as Array).size()
+		if best == null or score > float(best[0]): best = [score, s]
+	var far: Array
+	if best != null: far = best[1].far
+	else:
+		var cb := chimney_bay(sp)
+		var bd := 1e9
+		for s in sys:
+			var d: float = absf(float(s.far[1]) - float(cb[1])) + (0.0 if int(s.far[0]) == int(cb[0]) else 50.0)
+			if d < bd: bd = d; far = s.far
+	var w: Dictionary = sp.wings[int(far[0])]
+	sp.chimney.wing = int(far[0])
+	sp.chimney.erase("bay")
+	if _end_free(w, int(far[1])):
+		sp.chimney.at = "side_left" if int(far[1]) == 0 else "side_right"
+	else:
+		sp.chimney.at = "back_bay"; sp.chimney.bay = int(far[1])
+	sp.chimney.moved = "heat_fix"

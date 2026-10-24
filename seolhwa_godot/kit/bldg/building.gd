@@ -22,6 +22,12 @@ const RANGES := [[0.0, 55.0], [55.0, 160.0], [160.0, 0.0]]
 const LOD_NAMES := ["near", "mid", "far"]
 const OPEN_FNS := ["hall", "maru", "shed", "mill", "forge", "shop", "stable"]
 
+# 서술자 기록(WP7a, kit/bldg/descriptor.gd): null이 아니면 가장 가까운 단계(lod 0)를 그리면서 날개 짜임·면(구멍 구간)·기단·마루·댓돌·굴뚝을
+#   여기에 적는다. 놀이에서는 늘 null(그리기·캐시 결과는 그대로). 기록은 건물 로컬(몸채 가운데 땅, 앞 +z) 좌표.
+static var REC = null
+static func _rec_on(lod: int) -> bool:
+	return REC != null and lod == 0
+
 static func build(params: Dictionary) -> Dictionary:
 	var t0 := Time.get_ticks_usec()
 	var sp := S.resolve(params)
@@ -89,6 +95,7 @@ static func draw(m: C.M, sp: Dictionary, lod: int) -> Dictionary:
 	var wi := 0
 	for w in sp.wings:
 		var old := m.push(float(w.x), 0, float(w.z), float(w.ry))
+		if _rec_on(lod): REC.cur_wing = wi; REC.cur_bays = w.bays
 		var info := _wing(m, sp, ctx, w, lod, wi)
 		if wi == int(sp.chimney.get("wing", 0)) and sp.chimney.kind != "none" and float(ctx.ruin.get("stage", 0.0)) < 2.5:
 			chimney_at = _chimney(m, sp, ctx, info, lod)
@@ -104,6 +111,13 @@ static func draw(m: C.M, sp: Dictionary, lod: int) -> Dictionary:
 	if lod == 0 and float(ctx.ruin.get("stage", 0.0)) < 2.25: _attachments(m, sp, ctx)
 	var out := { body = body, footprint = Vector2(maxf(absf(fp_box.position.x), absf(fp_box.end.x)) * 2.0 + 0.4, maxf(absf(fp_box.position.y), absf(fp_box.end.y)) * 2.0 + 0.4) }
 	if chimney_at != null: out.chimney = chimney_at
+	return out
+
+static func _rec_poly(m: C.M, x0: float, x1: float, z0: float, z1: float) -> Array:
+	var out := []
+	for q in [Vector3(x0, 0, z0), Vector3(x1, 0, z0), Vector3(x1, 0, z1), Vector3(x0, 0, z1)]:
+		var p: Vector3 = m.xform * q
+		out.append([p.x, p.z])
 	return out
 
 static func _xf_rect(r: Rect2, xf: Transform3D) -> Rect2:
@@ -189,12 +203,14 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			var x1: float = xs[rn[1] + 1] + (mside if rn[1] == bays.size() - 1 and not w.open_end[1] and not butt[1] else 0.0)
 			_base(m, sp, ctx, x0, x1, zb - mback, zf + mfront, Fb - 0.016 * wi, lod)   # 날개 기단은 몸채보다 1.6cm 낮게(겹친 앞 여유가 한 평면이 되지 않게)
 			m.walk_floor(x0, x1, zb - mback, zf + mfront, Fb)
+			if _rec_on(lod): REC.bases.append({ wing = wi, kind = String(sp.base.kind), top = Fb - 0.016 * wi, poly = _rec_poly(m, x0, x1, zb - mback, zf + mfront), bays = [rn[0], rn[1]], corner = false })
 		# ㄱ자 모퉁이 칸(앞이 몸채 끝 벽): 앞 여유 없이(몸채 기단과 겹치지 않게)
 		for rn in _runs(bays, func(b): return b.front.kind == "join" and not (b.fn in ["kitchen", "gate"])):
 			var x0: float = xs[rn[0]] - (mside if rn[0] == 0 and not w.open_end[0] else 0.0)
 			var x1: float = xs[rn[1] + 1] + (mside if rn[1] == bays.size() - 1 and not w.open_end[1] else 0.0)
 			_base(m, sp, ctx, x0, x1, zb - mback, zf - 0.004, Fb - 0.004, lod)
 			m.walk_floor(x0, x1, zb - mback, zf, Fb)
+			if _rec_on(lod): REC.bases.append({ wing = wi, kind = String(sp.base.kind), top = Fb - 0.004, poly = _rec_poly(m, x0, x1, zb - mback, zf), bays = [rn[0], rn[1]], corner = true })
 	# 바닥 몸(기단 위 ~ 방·마루 바닥): 고막이
 	if Ff - Fb > 0.02 and not raised:
 		for rn in _runs(bays, func(b): return not (b.fn in ["kitchen", "gate", "shed", "stable", "mill", "forge"])):
@@ -249,6 +265,9 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 				if _has_maru(b): ok = true
 			if ok: cols.append([x, zcol, Fb])
 	var cr: float = float(sp.col) / 2.0
+	if _rec_on(lod):
+		REC.wings.append({ wing = wi, id = String(w.id), xform = m.xform, L = L, D = D, xs = xs.duplicate(), zlines = zlines.duplicate(), zf = zf, zb = zb, zcol = zcol, T = T, tk = tk,
+			Fb = Fb, Ff = Ff, top = top, floors = floors.duplicate(), raised = raised, mfront = mfront, cols = cols.duplicate(true), col = float(sp.col), collapsed = colset.duplicate() })
 	for c in cols:
 		var ctop := top
 		if not colset.is_empty():
@@ -398,19 +417,32 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 			A.add(m, "front", "maru", A.floor_quad(x1 - x0, T, (x0 + x1) / 2, y + 0.006, zf + T / 2), 0)
 			m.add("front", "wood", C.PA(Kit.box(x1 - x0 + 0.04, 0.14, 0.12, (x0 + x1) / 2, y - 0.07, zf + T - 0.04), ctx.wood, 0.03, R), 0.015)
 			if tk == "jjok":
-				var n := maxi(2, int((x1 - x0) / 1.6) + 1)
+				var n := maxi(2, ceili((x1 - x0 - 0.3) / 1.6) + 1)   # 쪽마루 받침 간격 ≤ 1.6m(한 칸짜리도 가운데 받침 — V58)
 				for k in n:
 					var px := lerpf(x0 + 0.15, x1 - 0.15, float(k) / (n - 1))
 					m.add("front", "wood", C.PA(Kit.box(0.1, y - Fb, 0.1, px, (y + Fb) / 2, zf + T - 0.08), ctx.wood), 0)
 			m.walk_floor(x0, x1, zf - 0.02, zf + T, y + 0.002)
 			m.anchor("maru" if wi == 0 else "maru%d" % wi, Vector3((x0 + x1) / 2, y, zf + T * 0.5))
+			if _rec_on(lod):
+				var posts := []
+				if tk == "jjok":
+					var n2 := maxi(2, ceili((x1 - x0 - 0.3) / 1.6) + 1)
+					for k in n2: posts.append(m.xform * Vector3(lerpf(x0 + 0.15, x1 - 0.15, float(k) / (n2 - 1)), Fb, zf + T - 0.08))
+				else:
+					for i in range(rn[0], rn[1] + 2): posts.append(m.xform * Vector3(float(xs[i]), Fb, zf + T))
+				REC.marus.append({ wing = wi, kind = tk, bays = [rn[0], rn[1]], y = y, poly = _rec_poly(m, x0, x1, zf, zf + T), posts = posts, x0 = x0, x1 = x1 })
 	# 댓돌 · 계단
 	_steps(m, sp, ctx, w, wi, bays, xs, floors, zf, T, tk, Fb, Ff, mfront, raised)
 
 	# --- 칸 속 살림(트인 칸은 늘, 닫힌 방은 실내일 때) -------------------------------------------
+	#   한 기능 면이 여러 구조 칸에 걸치면(room 열쇠) 살림은 그 면 전체에 한 벌(칸마다 되풀이하지 않음 — HOUSE-01, V57)
 	for i in bays.size():
 		var b: Dictionary = bays[i]
-		var x0: float = xs[i]; var x1: float = xs[i + 1]
+		var rk := String(b.get("room", ""))
+		if rk != "" and i > 0 and String(bays[i - 1].get("room", "")) == rk: continue
+		var j := i
+		while rk != "" and j + 1 < bays.size() and String(bays[j + 1].get("room", "")) == rk: j += 1
+		var x0: float = xs[i]; var x1: float = xs[j + 1]
 		if not (sp.interior or _is_open(b) or b.fn == "kitchen" and b.front.kind == "open"): continue
 		if colset.has(i) or (not rz.is_empty() and bool(rz.salvaged) and float(rz.stage) >= 0.5): continue   # 폐가: 살림은 떼어 감(빈 방)
 		_furnish(m, sp, ctx, b, x0, x1, zb, zf, floors[i], i, bays, top)
@@ -428,7 +460,9 @@ static func _wing(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 		if not (b.back.kind in ["open", "gate"]) and not raised: m.box_c(x0, x1, zb - 0.12, zb + 0.12)
 		if i == 0 and not w.open_end[0] and not raised and b.fn != "maru": m.box_c(x0 - 0.12, x0 + 0.12, zb, zf)
 		if i == bays.size() - 1 and not w.open_end[1] and not raised and b.fn != "maru": m.box_c(x1 - 0.12, x1 + 0.12, zb, zf)
-		if sp.interior and b.fn in ["room", "kitchen", "shrine", "jeongju"] and b.front.kind != "open":
+		if sp.interior and b.fn in ["room", "kitchen", "shrine", "jeongju"] and b.front.kind == "wall":
+			m.box_c(x0, x1, zf - 0.1, zf + 0.1)   # 막힌 앞벽(여러 칸에 걸친 방의 문 없는 칸)은 트지 않는다
+		elif sp.interior and b.fn in ["room", "kitchen", "shrine", "jeongju"] and b.front.kind != "open":
 			# 앞벽: 문 자리(가운데 0.9m)만 트임
 			var cx := (x0 + x1) / 2
 			m.box_c(x0, cx - 0.45, zf - 0.1, zf + 0.1); m.box_c(cx + 0.45, x1, zf - 0.1, zf + 0.1)
@@ -507,6 +541,8 @@ static func _is_open(b: Dictionary) -> bool:
 
 static func _partition_kind(a: Dictionary, b: Dictionary) -> String:
 	var fa: String = a.fn; var fb: String = b.fn
+	# 한 기능 면이 여러 구조 칸에 걸침(room 열쇠가 같음, HOUSE-01): 칸막이 없음
+	if String(a.get("room", "")) != "" and a.get("room") == b.get("room"): return "open"
 	if fa in ["hall", "maru"] and fb in ["hall", "maru"]: return "open"
 	if fa == "room" and fb == "room": return "door1"
 	if (fa == "room" and fb in ["hall", "maru"]) or (fb == "room" and fa in ["hall", "maru"]): return "door2"
@@ -671,6 +707,14 @@ static func _face(m: C.M, part: String, sp: Dictionary, ctx: Dictionary, c: Vect
 			op = [xa + 0.05, xb - 0.05, y0, y0 + H - 0.3]
 		"shop":
 			op = [xa, xb, y0 + 0.0, y0 + H - 0.25]
+	if _rec_on(lod):
+		var side := "partition" if inner else ("front" if absf(ry) < 0.01 else ("back" if absf(absf(ry) - PI) < 0.01 else ("left" if ry < 0.0 else "right")))
+		var bidx := -1
+		var cb: Array = REC.get("cur_bays", [])
+		for k in cb.size():
+			if is_same(cb[k], b): bidx = k; break
+		REC.faces.append({ wing = int(REC.get("cur_wing", 0)), part = part, side = side, kind = kind, bay = bidx, ry = ry, c = m.xform.origin, ax = m.xform.basis.x, out = m.xform.basis.z,
+			w = w, y0 = y0, y1 = y1, op = op.duplicate(), pdoor = pdoor and op.size() == 4 and kind in DOOR_KINDS, inner = inner, t = 0.14 })
 	# 드나드는 문 기록(roof_check DOORCLEAR: 처마 밑선 ≥ 문 머리 + 0.10)
 	if pdoor and not inner and lod == 0 and op.size() == 4 and kind in DOOR_KINDS and ctx.has("pdoors"):
 		(ctx.pdoors as Array).append({ p = m.xform * Vector3((op[0] + op[1]) / 2, 0, t / 2), out = m.xform.basis.z, head = float(op[3]) })
@@ -937,6 +981,7 @@ static func _steps(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, wi: i
 			for sx in [-1.0, 1.0]:
 				m.add("base", "stone", C.P(Kit.box(0.16, Fb + 0.05, (n - 1) * 0.32 + 0.05, cx + sx * (sw / 2 + 0.086), (Fb + 0.05) / 2, zedge + (n - 1) * 0.16), 0xa8a294, 0x857f74, 0.03, R), 0.015)
 		m.anchor("steps" if wi == 0 else "steps%d" % wi, Vector3(cx, 0, zedge + n * 0.32 + 0.6))
+		if REC != null: REC.steps.append({ wing = wi, kind = "stair", bay = main_i, n = n, rise = rise, at = m.xform * Vector3(cx, 0, zedge + (n - 1) * 0.16), top = Fb })
 	# 댓돌: 마루·방 바닥이 기단보다 높으면 방문·대청 앞에
 	if Ff - Fb > 0.12 and not raised:
 		var zs := (zf + T + 0.2) if tk != "none" else zf + 0.2   # 툇마루 앞 끝에 붙여(틈 없이) 놓는다
@@ -950,6 +995,7 @@ static func _steps(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, wi: i
 			var s := Kit.box(0.74, hh - Fb + 0.06, 0.42, cx, Fb + (hh - Fb) / 2 - 0.03, zs)
 			m.add("base", "stone", C.P(s, 0xbbb5a8, 0x918c81, 0.05, R), 0.015)
 			m.walk_floor(cx - 0.37, cx + 0.37, zs - 0.22, zs + 0.21, hh)
+			if REC != null: REC.steps.append({ wing = wi, kind = "daetdol", bay = i, top = hh, at = m.xform * Vector3(cx, hh, zs) })
 	# 누각: 나무 계단(옆, 마루까지)
 	if raised and sp.get("stair", false):
 		var L: float = xs[xs.size() - 1] - xs[0]
@@ -1044,7 +1090,18 @@ static func _roof_frame(sp: Dictionary, ctx: Dictionary, w: Dictionary) -> Dicti
 		if sxw > 0: xa = lx
 		else: xb = lx
 	return { L = L, D = D, top = top, zcol = zcol, xa = xa, xb = xb, za = za, zb2 = zb2, cxr = (xa + xb) / 2, czr = (za + zb2) / 2,
-		hw = (xb - xa) / 2, hd = hd, rise = float(rf.rise_k) * hd, eave = top + 0.26 - float(w.get("lower", 0.0)), ends = ends, ext = ext }
+		hw = (xb - xa) / 2, hd = hd, rise = float(rf.rise_k) * hd, eave = top + giwa_eave_dy(rf, ov, hd, bool(sp.get("interior", false))) - float(w.get("lower", 0.0)), ends = ends, ext = ext }
+
+# 기와 처마 끝 높이(기둥 위끝 top 기준): 옛 값 +0.26. 보정 프리셋(roof.eave_dy, KHS 실측 −0.4~0)은 그대로 쓰되
+#   벽 줄(처마 끝에서 ov·0.92 안)에서 지붕 밑면이 도리 윗면(top + 0.48)보다 0.05 위에 있도록 아래를 묶는다(WALLCLEAR) — 지붕 단면(prof_giwa)은 그대로
+const GIWA_THICK := 0.24
+#   걸어 들어가는 집(interior)은 드나드는 문 머리(≤ 벽 위 − 0.35) + 0.10 ≤ 처마 밑면(DOORCLEAR) → eave_dy ≥ −0.35 + 0.10 + 두께
+static func giwa_eave_dy(rf: Dictionary, ov: float, hd: float, interior := false) -> float:
+	if not rf.has("eave_dy") or String(rf.get("kind", "")) != "giwa": return 0.26
+	var s := clampf(ov * 0.92 / maxf(hd, 0.01), 0.0, 1.0)
+	var need := 0.48 + GIWA_THICK + 0.05 - float(rf.rise_k) * hd * RF.prof_giwa(s)
+	if interior: need = maxf(need, -0.35 + 0.10 + GIWA_THICK + 0.01)
+	return minf(maxf(float(rf.eave_dy), need), 0.26)
 
 # 이엉 처마 밑면·처마 띠를 다른 날개 방 위에서는 그리지 않는다(ㄱ자: 날개 처마 밑면이 몸채 방 안으로 들어가지 않게)
 static func _hide_under(sp: Dictionary, ctx: Dictionary, w: Dictionary, cx: float, cz: float) -> Variant:
@@ -1104,7 +1161,7 @@ static func _roof(m: C.M, sp: Dictionary, ctx: Dictionary, w: Dictionary, lod: i
 	var old := m.push(cxr, 0, czr)
 	match kind:
 		"giwa":
-			var eave := top + 0.26 + lowr
+			var eave: float = float(fr.eave)   # = top + 0.26(옛) 또는 보정 eave_dy(giwa_eave_dy) − 낮춤
 			# 솟을대문 칸이 있으면 지붕을 그 칸에서 끊어 두 토막(대문 쪽 끝은 맞배) — 대문 지붕이 한 층 위에 따로 선다(겹친 판 아님)
 			var gate := _soseul_span(w, info)
 			var segs := [[xa, xb, ends[0], ends[1], ext]]
@@ -1373,10 +1430,18 @@ static func _chimney(m: C.M, sp: Dictionary, ctx: Dictionary, info: Dictionary, 
 	match at:
 		"back_left": p = Vector3(-L / 2 + 0.9, 0, -D / 2 - 0.85)
 		"back_right": p = Vector3(L / 2 - 0.9, 0, -D / 2 - 0.85)
+		"back_bay":   # 데운 방(구들 끝) 뒤 — _spec.heat_fix
+			var xs: Array = info.xs
+			var bi := clampi(int(sp.chimney.get("bay", 0)), 0, xs.size() - 2)
+			p = Vector3((float(xs[bi]) + float(xs[bi + 1])) / 2, 0, -D / 2 - 0.85)
 		"side_left": p = Vector3(-L / 2 - 0.6, 0, -D / 2 + 0.45)
 		_: p = Vector3(L / 2 + 0.6, 0, -D / 2 + 0.45)
 	var R := m.rng
 	var kind: String = sp.chimney.kind
+	# 뒤 굴뚝의 뒷면이 처마 띠(뒤 처마 줄 −D/2 − 내밀기)와 한 평면에 놓이면(우연히 같은 거리) 깜빡인다 — 4cm 뒤로
+	if at.begins_with("back"):
+		var hw := { stone = 0.31, mud = 0.24, pot = 0.25, log = 0.24 }.get(kind, 0.25) as float
+		if absf((-D / 2 - float(sp.roof.eave)) - (p.z - hw)) < 0.02: p.z -= 0.04
 	var h := 1.6
 	match kind:
 		"log":
@@ -1408,6 +1473,7 @@ static func _chimney(m: C.M, sp: Dictionary, ctx: Dictionary, info: Dictionary, 
 					m.add("chimney", "stone", C.P(Kit.xf(s, p.x + 0.24, 0.3 + k * 0.45, p.z + (m.r() - 0.5) * 0.3), 0xa8a294, 0x857f74, 0.05, R), 0)
 				m.add("chimney", "flat", C.P(Kit.box(0.62, 0.08, 0.62, p.x, h + 0.02, p.z), 0x6f6452), 0.015)
 	if lod == 0: m.circle(p.x, p.z, 0.4)
+	if _rec_on(lod): REC.chimney = { wing = int(REC.get("cur_wing", 0)), at = at, kind = kind, base = m.xform * Vector3(p.x, 0, p.z), top = h, r = 0.4 }
 	return m.xform * Vector3(p.x, h + 0.2, p.z)
 
 # ---------------------------------------------------------------------------------------------------

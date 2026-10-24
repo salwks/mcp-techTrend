@@ -169,8 +169,15 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 		A.add(m, part, "panbyeok", C.P(g, 0x8a7258, 0x6a5440, 0.03), 0.0)
 		# 합각 박공 널(세모 위 두 변)
 		if lod < 2:
+			var top_k := 0
+			for k in pts.size():
+				if (pts[k] as Vector3).y > (pts[top_k] as Vector3).y: top_k = k
 			for k in pts.size() - 1:
 				var a: Vector3 = pts[k] + Vector3(signf(xg) * 0.04, 0.02, 0); var b: Vector3 = pts[k + 1] + Vector3(signf(xg) * 0.04, 0.02, 0)
+				# 꼭대기에서 만나는 두 널은 0.1m 물려 끝낸다 — 가파른 지붕(보정 rise_k)에서 두 널 옆면이 한 평면에 겹쳐 깜빡였다(FACECHECK). 꼭대기는 용마루 끝이 덮는다
+				var dv := (b - a).normalized()
+				if k + 1 == top_k: b -= dv * 0.1
+				if k == top_k: a += dv * 0.1
 				m.add(part, "wood", C.P(C.beam(a, b, 0.08, 0.2), 0x4a3a2c, 0x3a2d22, 0.02), 0.012 if lod == 0 else 0.0)
 	# 용마루 · 마루들
 	var ridge_y: float = H.call(0.0, 0.0, 0)

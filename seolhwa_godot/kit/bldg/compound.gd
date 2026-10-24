@@ -172,7 +172,15 @@ static func _giwa_house(r: Kit.Rng, region: String, seed: int, lot := Vector2(IN
 	var gp := { type = "gotgan", region = region, cls = "middle", seed = seed + 11 }
 	var gb := B.bounds(S.resolve(gp))
 	if X - 0.6 - gb.size.y >= 2.6 and r.next() < 0.75:
-		L.append(_b("gotgan", gp, sx * (X - 0.6 + gb.position.y), az + bb.end.y + 0.8 + gb.size.x / 2, -sx * PI / 2))
+		# 곳간은 몸채 앞 처마에서 앞 담 안쪽(앞 담 줄 − 0.6)까지 들어가야 한다 — 칸이 길면 칸 수를 줄이고, 한 칸도 안 들면 두지 않는다
+		#   (WP7a: 이 조건이 없어 긴 곳간이 앞 담을 뚫고 나갔다 — 배율 1.2 통일로 이엉 처마가 4cm 낮아지자 담 갓이 처마에 닿아 드러남)
+		var z0g := az + bb.end.y + 0.8
+		var room := (Z1 - 0.6) - z0g
+		var nb := ((S.resolve(gp).wings[0].bays) as Array).size()
+		while gb.size.x > room and nb > 1:
+			nb -= 1; gp.nbays = nb; gb = B.bounds(S.resolve(gp))
+		if gb.size.x <= room:
+			L.append(_b("gotgan", gp, sx * (X - 0.6 + gb.position.y), z0g + gb.size.x / 2, -sx * PI / 2))
 	L.append(_v("jangdok", "village/jangdok", { seed = seed * 10 + 3, w = 2.4, d = 1.8 }, -sx * (X - 1.8), Z0 + 1.0, 0))
 	if r.next() < 0.55: L.append(_v("tree", "nature/persimmon", { seed = seed * 10 + 6, s = 0.9 }, -sx * (X - 1.4), Z1 - 1.8, 0))
 	var gx := -sx * r.between(0.5, maxf(0.6, X - 3.0))

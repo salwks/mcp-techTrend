@@ -159,7 +159,7 @@ static func dok(m: C.M, part: String, x: float, y: float, z: float, s := 1.0) ->
 # 부엌 부뚜막: 길이 L(x), 깊이 0.8, 높이 0.62 — 앞(+z 로컬)에 아궁이, 위에 솥 n개
 static func buttumak(m: C.M, part: String, x: float, y: float, z: float, ry: float, L := 2.0, n := 2, fire := false) -> void:
 	var o := _at(m, x, y, z, ry)
-	m.add(part, "mud", C.PA(Kit.box(L, 0.585, 0.8, 0, 0.2925, 0), [0xb59a72, 0x8a7254], 0.04, m.rng), 0.02)
+	m.add(part, "mud", C.PA(Kit.box(L, 0.575, 0.8, 0, 0.2875, 0), [0xb59a72, 0x8a7254], 0.04, m.rng), 0.02)   # 몸 윗면은 덮개(0.595~0.645) 속 — 문지방 윗면과 한 평면에 겹치지 않게
 	m.add(part, "mud", C.P(Kit.box(L + 0.04, 0.05, 0.84, 0, 0.62, 0), 0x9a8462, 0x7a6648), 0.01)
 	for i in n:
 		var px := -L / 2 + L * (i + 0.5) / n
