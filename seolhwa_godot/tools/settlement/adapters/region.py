@@ -200,9 +200,24 @@ def load(region_id: str, settlement_id: str, rules, *, envelope=None, allowed=No
             continue
         cl = max(getattr(clip, "geoms", [clip]), key=lambda g: g.length) if clip.geom_type != "LineString" else clip
         wmed = float(np.median(ws))
+        # WP4: the longest run of mapped points inside the window (keeps given order and surface y)
+        inside = [gb.contains(Point(p[0], p[1])) for p in pts]
+        runs, cur = [], []
+        for k, ok in enumerate(inside):
+            if ok:
+                cur.append(k)
+            elif cur:
+                runs.append(cur); cur = []
+        if cur:
+            runs.append(cur)
+        run = max(runs, key=len) if runs else []
         feats.append(WaterFeature(id=r["id"], kind="river" if wmed >= 6 else "stream", freshwater=True,
                                   area=area, centerline=cl, width_m=round(wmed, 2),
-                                  surface_note=f"points y; grade {r.get('grade')}"))
+                                  surface_note=f"points y; grade {r.get('grade')}",
+                                  points3=[[float(pts[k][0]), float(pts[k][1]), float(pts[k][2])] for k in run] or None,
+                                  widths=[float(ws[k]) for k in run] or None,
+                                  attrs={k: r.get(k) for k in ("name", "grade", "flows_to", "parent", "catchment_km2",
+                                                               "source", "confidence")}))
     lakes = region.get("lakes", []) or []
     lake_mask = np.zeros(grid.shape, bool)
     for lk in lakes:
@@ -253,7 +268,8 @@ def load(region_id: str, settlement_id: str, rules, *, envelope=None, allowed=No
             roads.append(Road(id=rd["id"] if n_ == 0 else f"{rd['id']}#{n_}", name=rd.get("name", rd["id"]),
                               klass=rd.get("class", ""), width_m=float(rd.get("width_m", 3.0)), line=g))
     crossings = [{"id": c["id"], "type": c.get("type", ""), "road_id": c.get("road_id"), "river_id": c.get("river_id"),
-                  "xz": [c["x"], c["z"]]} for c in region.get("crossings", [])
+                  "xz": [c["x"], c["z"]], "name": c.get("name"), "confidence": c.get("confidence"),
+                  "notes": c.get("notes")} for c in region.get("crossings", [])
                  if gb.contains(Point(c["x"], c["z"]))]
     # ---------------- neighbours, axes
     neighbours = []
@@ -292,5 +308,7 @@ def load(region_id: str, settlement_id: str, rules, *, envelope=None, allowed=No
                     "settlement_record": {k: s.get(k) for k in ("type", "size", "x", "z", "radius_m", "area_m2", "core", "bbox")},
                     "archetype": (s.get("profile") or {}).get("archetype")},
         diagnostics=diags, meta={"fixture": False, "landuse": lu2,
+                                 "passes": [dict(p_, xz=[p_["x"], p_["z"]]) for p_ in region.get("passes", []) or []
+                                            if gb.contains(Point(p_["x"], p_["z"]))],
                                  "landuse_classes": {int(k): v for k, v in lm.get("classes", {}).items()}})
     return inp

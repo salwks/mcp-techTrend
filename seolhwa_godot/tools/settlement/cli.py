@@ -17,7 +17,7 @@ import shutil
 import subprocess
 import sys
 
-from . import envelope, fixtures, frame, geometry as G, plan as PL, program, site, svg, validate
+from . import envelope, fixtures, frame, geometry as G, plan as PL, program, site, svg, svg_tw, terrain as TR, tw, validate
 from . import registry as REG
 from .adapters import region as RA
 from .rules import DEFAULT, Rules
@@ -109,7 +109,28 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
     scope = inp.id if proposal is None else f"{inp.id}@proposal"  # proposals never take baseline identities
     plan["identity"] = REG.assign(plan, reg, rules, scope=scope)
     plan = _sanitize(plan)
+    # WP4 terrain · water layer (own file; plan keeps a reference, revision and check summary)
+    layer = _sanitize(tw.build(inp, A, rules, plan))
+    reach_of = {}
+    for r in layer["water"]["reaches"]:
+        reach_of.setdefault(r["feature"], []).append(r["meta"]["stable_id"])
+    for wf in plan["site"]["water_features"]:
+        wf["reaches"] = reach_of.get(wf["id"], [])
     plan["validation"] = _sanitize(validate.run(plan, inp, A, L1, F, rules))
+    layer["checks"] = _sanitize(tw.checks(layer, plan, inp, A, rules))
+    inv = [c for c in layer["checks"] if c["kind"] == "invariant"]
+    for c in inv:
+        plan["validation"].append({"id": c["id"], "layer": "WP4", "pass": c["pass"], "applicable": c["applicable"],
+                                   "detail": c["detail"]})
+    from .contract import revision as _rev
+    plan["terrain_water"] = {"file": "terrain-water.json", "fields": "terrain-fields.npz",
+                             "revision": _rev({k: v for k, v in layer.items() if k != "checks"}),
+                             "summary": layer["terrain"]["summary"],
+                             "reaches": len(layer["water"]["reaches"]), "crossings": len(layer["water"]["crossings"]),
+                             "crossing_candidates": len(layer["water"]["crossing_candidates"]),
+                             "checks": [{"id": c["id"], "pass": c["pass"], "applicable": c["applicable"], "kind": c["kind"]}
+                                        for c in layer["checks"]],
+                             "note": "V checks on given data are findings (kind=finding) and do not gate the plan; WP4.layer invariants do"}
     failed = [c["id"] for c in plan["validation"] if c["pass"] is False]
     if failed and plan["status"] == "valid":
         # independent validation gates publication
@@ -127,10 +148,12 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
             plan["status"] = "proposed"
             plan["status_reason"] = proposal["kind"]
     dump(os.path.join(out_dir, "plan.json"), plan)
+    dump(os.path.join(out_dir, "terrain-water.json"), layer)
     dump(os.path.join(out_dir, "input.json"), _sanitize(input_record(inp, family)))
     dump(os.path.join(out_dir, "site.geojson"), _sanitize(PL.site_geojson(inp, A)))
     from .raster import write_npz
     write_npz(os.path.join(out_dir, "site-fields.npz"), PL.site_fields(A))
+    write_npz(os.path.join(out_dir, "terrain-fields.npz"), TR.fields(A.terrain, A))
     # drawings
     sh = extras.get("shown")
     focus = inp.territory["allowed"]
@@ -146,6 +169,15 @@ def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
     title = f"{inp.name} — {inp.region}/{inp.id} · {family} · {plan['status']}" + (f" · {label}" if label else "")
     with open(os.path.join(out_dir, "combined.svg"), "w", encoding="utf-8") as f:
         f.write(svg.combined([s0, s1, s2], title))
+    vtw = svg.view_for(A.win.bounds(), margin_frac=0.0, min_margin=0.0)  # whole work window
+    s3 = svg_tw.terrain_svg(layer, plan, inp, A, vtw)
+    s4 = svg_tw.water_svg(layer, plan, inp, A, vtw)
+    s5 = svg_tw.routes_svg(layer, plan, inp, A)
+    for name, s in (("03-terrain.svg", s3), ("04-water.svg", s4), ("05-routes.svg", s5)):
+        with open(os.path.join(out_dir, name), "w", encoding="utf-8") as f:
+            f.write(s)
+    with open(os.path.join(out_dir, "combined-terrain-water.svg"), "w", encoding="utf-8") as f:
+        f.write(svg.combined([s3, s4, s5], f"{inp.name} — {inp.region}/{inp.id} · WP4 지형·물·길 지지/배수"))
     return plan
 
 
@@ -262,6 +294,58 @@ def v06_cmd(out, rules, seeds=(2203, 7919)):
     return rep
 
 
+def wp4_cmd(out):
+    """WP4 summary over an `all` output tree: per-site V checks + cross-site V63 / V66."""
+    rows = {}
+    for name in SYN_SITES + [st for _, st in REAL_SITES] + FAIL_SITES:
+        p = os.path.join(out, name, "terrain-water.json")
+        if os.path.exists(p):
+            rows[name] = json.load(open(p, encoding="utf-8"))
+    per = {n: {c["id"]: c["pass"] for c in l["checks"]} for n, l in rows.items()}
+    # V63: same (assumed) rock type, different relief → different landform / exposure mix;
+    # the rock type is never a classification input
+    v63_sites = [n for n in ("syn_ridge", "syn_mountain", "syn_basin") if n in rows]
+
+    def mix(l):
+        a = l["terrain"]["summary"]["landform_area_m2"]
+        g = l["terrain"]["summary"]["ground_area_m2"]
+        ta, tg = sum(a.values()) or 1, sum(v for k, v in g.items() if k != "water") or 1
+        return ({k: v / ta for k, v in a.items()}, {k: v / tg for k, v in g.items() if k != "water"})
+    dists = {}
+    for i, a in enumerate(v63_sites):
+        for b in v63_sites[i + 1:]:
+            (la, ga), (lb, gb) = mix(rows[a]), mix(rows[b])
+            dl = sum(abs(la.get(k, 0) - lb.get(k, 0)) for k in set(la) | set(lb)) / 2
+            dg = sum(abs(ga.get(k, 0) - gb.get(k, 0)) for k in set(ga) | set(gb)) / 2
+            dists[f"{a}|{b}"] = {"landform_tv": round(dl, 4), "ground_tv": round(dg, 4)}
+    used = any(p["rock_type"]["used_for_classification"] for n in v63_sites for p in rows[n]["terrain"]["patches"])
+    v63 = {"pass": bool(dists) and not used and all(d["landform_tv"] >= 0.2 for d in dists.values()),
+           "sites": v63_sites, "assumption": "one rock type for all synthetic sites (classification never reads it)",
+           "total_variation": dists, "rock_type_used_for_shape": used,
+           "limit": "synthetic relief only; real granite areas (JL 운봉·GS 분지) not compared at the same rock"}
+    # V66: bedrock / step-pool reaches vs alluvial reaches differ in section and are not one template
+    rs = [(n, r) for n, l in rows.items() for r in l["water"]["reaches"]]
+    rock = [(n, r) for n, r in rs if r["bed_mix"]["type"] in ("bedrock", "step_pool_boulder")]
+    allu = [(n, r) for n, r in rs if r["bed_mix"]["type"] == "alluvial_sand_gravel"]
+    med = lambda xs: sorted(xs)[len(xs) // 2] if xs else None
+    v66 = {"rock_reaches": len(rock), "alluvial_reaches": len(allu),
+           "sites_rock": sorted({n for n, _ in rock}), "sites_alluvial": sorted({n for n, _ in allu}),
+           "median_grade": {"rock": med([r["bed_mix"]["basis"]["grade"] for _, r in rock]),
+                            "alluvial": med([r["bed_mix"]["basis"]["grade"] for _, r in allu])},
+           "median_confinement": {"rock": med([r["bed_mix"]["basis"]["confinement_ratio"] for _, r in rock]),
+                                  "alluvial": med([r["bed_mix"]["basis"]["confinement_ratio"] for _, r in allu])},
+           "design_depth_m": {"rock": med([r["cross_section"]["representative"]["channel"]["depth_m"]["value"] for _, r in rock]),
+                              "alluvial": med([r["cross_section"]["representative"]["channel"]["depth_m"]["value"] for _, r in allu])}}
+    v66["pass"] = bool(rock and allu) and v66["median_confinement"]["rock"] < v66["median_confinement"]["alluvial"]
+    rep = {"V63": v63, "V66_contrast": v66, "per_site": per,
+           "note": "data-level checks; no in-game screen judgement was made"}
+    dump(os.path.join(out, "wp4.json"), rep)
+    print(json.dumps({"V63": v63["pass"], "V66_contrast": v66["pass"]}, ensure_ascii=False))
+    for n, c in per.items():
+        print(f"{n:<24} " + " ".join(f"{k}={'P' if v is True else 'F' if v is False else '-'}" for k, v in c.items()))
+    return rep
+
+
 def _hash_tree(d):
     out = {}
     for root, _, files in os.walk(d):
@@ -297,13 +381,15 @@ def sheet_cmd(out):
     """Rasterize each combined.svg to combined.png with headless Chrome (review only)."""
     chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     for root, _, files in os.walk(out):
-        if "combined.svg" in files:
-            p = os.path.join(root, "combined.svg")
+        for name in ("combined.svg", "combined-terrain-water.svg"):
+            if name not in files:
+                continue
+            p = os.path.join(root, name)
             head = open(p, encoding="utf-8").read(400)
             import re
             m = re.search(r'width="(\d+)" height="(\d+)"', head)
             w, h = m.group(1), m.group(2)
-            png = os.path.join(root, "combined.png")
+            png = os.path.join(root, name.replace(".svg", ".png"))
             subprocess.run([chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--window-size={w},{h}",
                             f"--screenshot={png}", "file://" + os.path.abspath(p)], check=False,
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=120)
@@ -329,7 +415,8 @@ def main(argv=None):
     dt.add_argument("--names", nargs="+", default=["syn_terrace", "syn_estuary", "JL_NAMWON_UNBONG/namwon_eup"])
     sh = sp.add_parser("sheet")
     v6 = sp.add_parser("v06")
-    for p in (b, f, al, dt, sh, v6):
+    w4 = sp.add_parser("wp4")
+    for p in (b, f, al, dt, sh, v6, w4):
         p.add_argument("--rules", default=DEFAULT)
         p.add_argument("--out", default=os.path.join(os.path.dirname(__file__), "out"))
     a = ap.parse_args(argv)
@@ -347,6 +434,8 @@ def main(argv=None):
         sys.exit(0 if ok else 1)
     elif a.cmd == "sheet":
         sheet_cmd(a.out)
+    elif a.cmd == "wp4":
+        wp4_cmd(a.out)
     elif a.cmd == "v06":
         rep = v06_cmd(a.out, rules)
         sys.exit(0 if rep["V06"]["pass"] else 1)

@@ -221,6 +221,12 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
 
     from .locks import site_conflicts
     A.diagnostics += site_conflicts(inp, A)
+    # WP4 terrain · water data layer (spec order: terrain·water → movement·livelihood)
+    from . import terrain as TR, water as WT
+    A.full_h = h_s
+    A.full_wsurf = Wn
+    A.terrain = TR.build(inp, A, rules)
+    A.waterlayer = WT.build(inp, A, A.terrain, rules)
     # movement & livelihood layer (audit K9) — read by the frame for its approaches
     from . import livelihood
     A.full_h = h_s

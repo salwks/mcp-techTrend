@@ -142,7 +142,43 @@ def region_profile(inp, rules) -> dict:
         "hypotheses": [{"topic": "flood stage offsets", "status": "proposed"},
                        {"topic": "period/region values (rock type, river sections, bay sizes)", "status": "unknown"}],
     }
+    body["natural"] = natural_profile(rid if not fixture else None)
     src = ["owner_decision:2026-10-25"]
     body["meta"] = meta(f"region:{rid}", status="proposed", sources=src, rules_hash=rules.hash,
                         content={k: v for k, v in body.items() if k != "meta"})
     return body
+
+
+# ---------------------------------------------------------------- natural profile (WP4)
+NATURAL_PATH = os.path.join(os.path.dirname(__file__), "regions", "natural_profiles.json")
+_NAT = None
+
+
+def natural_profile(region):
+    """Natural-layer RegionProfile fields from spec 21 (terrain · rock · water · forest).
+    confirmed only with grade A/B and at least one source id; otherwise downgraded to proposed
+    and flagged. Unknown regions (fixtures) get an empty, explicitly unknown block."""
+    global _NAT
+    if _NAT is None:
+        with open(NATURAL_PATH, encoding="utf-8") as f:
+            _NAT = json.load(f)
+    src = "tools/settlement/regions/natural_profiles.json"
+    rows = (_NAT["regions"].get(region) if region else None)
+    if not rows:
+        return {"source": src, "fields": {}, "status": "unknown",
+                "missing_reason": "no regional profile (synthetic fixture or region not drafted)"}
+    out = {}
+    for k in sorted(rows):
+        v = dict(rows[k])
+        st = v.get("status", "unknown")
+        if st not in ("confirmed", "proposed", "unknown"):
+            st = "unknown"
+        if st == "confirmed" and (v.get("grade") not in ("A", "B") or not v.get("sources")):
+            st = "proposed"
+            v["downgraded"] = True
+        if v.get("value") is None:
+            st = "unknown"
+        v["status"] = st
+        out[k] = v
+    return {"source": src, "fields": out, "status": "proposed",
+            "note": "transcribed from spec 21 drafts; recorded inputs only, never used to shape terrain (GEO-01)"}

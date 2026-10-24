@@ -17,6 +17,9 @@ class WaterFeature:
     centerline: object = None   # LineString for channels
     width_m: float = 0.0
     surface_note: str = ""
+    points3: list | None = None   # WP4: mapped [x, z, surface_y] points, upstream → downstream as given
+    widths: list | None = None    # WP4: per-point widths (world m) when mapped
+    attrs: dict = field(default_factory=dict)  # WP4: name, grade, flows_to, parent, catchment_km2, source, confidence
 
 
 @dataclass
