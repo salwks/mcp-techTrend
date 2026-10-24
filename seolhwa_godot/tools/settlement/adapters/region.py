@@ -23,6 +23,7 @@ from scipy import ndimage
 from shapely.geometry import LineString, Point, Polygon, box, shape
 
 from .. import geometry as G
+from .. import locks as L
 from ..model import Road, SiteInput, WaterFeature, diag
 from ..raster import Grid, rasterize
 
@@ -286,7 +287,7 @@ def load(region_id: str, settlement_id: str, rules, *, envelope=None, allowed=No
                    "sources": {"preferred": src, "allowed": "explicit" if allowed is not None else "= preferred (expansion 0)",
                                "protected": "farmland outside preferred ∪ neighbouring allocations"},
                    "disagreements": notes},
-        locks=[], axes=axes, neighbours=neighbours, historical_households=None,
+        locks=L.for_region(region_id, gb.bounds, rules), axes=axes, neighbours=neighbours, historical_households=None,
         provenance={"input_hashes": hs, "vertical": vert, "height_window_px": [i0, j0, i1, j1],
                     "settlement_record": {k: s.get(k) for k in ("type", "size", "x", "z", "radius_m", "area_m2", "core", "bbox")},
                     "archetype": (s.get("profile") or {}).get("archetype")},

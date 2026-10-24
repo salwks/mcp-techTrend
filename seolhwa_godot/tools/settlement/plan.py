@@ -137,7 +137,8 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
                         "water": "no occupation; enclosure allowed with typed passages"},
         "areas_m2": {"preferred": round(terr["preferred"].area, 1), "allowed": round(terr["allowed"].area, 1)},
     }
-    plan["locks"] = [{"id": l["id"], "geometry": store.add(l["geom"])} for l in inp.locks]
+    from .locks import record as lock_record
+    plan["locks"] = [lock_record(l, store) for l in inp.locks]
     # ---------------- site
     plan["site"] = {"fields": "site-fields.npz", "features": "site.geojson", "summary": A.summary,
                     "water_features": [{"id": f.id, "kind": f.kind, "freshwater": f.freshwater, "width_m": f.width_m,
@@ -214,6 +215,13 @@ def build(inp, A, family, fam_info, L1, F, rules, dependencies):
     plan["candidates"] = {"generated": F["generated"], "evaluated": len(F["evaluated"]),
                           "rejections": _rejections(F["evaluated"])}
     plan["diagnostics"] = diags
+    lock_codes = ("lock_in_water", "lock_in_flood_exclusion", "lock_unreachable_from_routes", "lock_conflict")
+    lr = [d for d in diags if d["code"] in lock_codes]
+    for e in F["evaluated"]:
+        for c in e["constraints"]:
+            if c["code"] == "lock_conflict":
+                lr.append(dict(c, data=dict(c.get("data", {}), candidate=e.get("stable_id"))))
+    plan["lock_report"] = {"locks": len(inp.locks), "conflicts": lr, "policy": "locks are never moved; conflicts are reported"}
     plan["revision_requests"] = []
     if status != "valid":
         plan["revision_requests"].append({"id": "rr-01", "target": "L1/territory",

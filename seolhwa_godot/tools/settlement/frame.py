@@ -36,8 +36,7 @@ class Ctx:
         # (no reserves or capacity there), but never another settlement's allocation
         self.region = G.polygonal(self.allowed.difference(A.neigh_poly, grid_size=G.GRID)) \
             if not A.neigh_poly.is_empty else self.allowed
-        if not A.lock_poly.is_empty:
-            self.region = G.polygonal(self.region.difference(A.lock_poly, grid_size=G.GRID))
+        # locks are not subtracted: a frame may enclose story spots; the wall may not cross them
         self.profile = L1["profile"]
         self.insts = L1["insts"]
         self.bundles = L1["bundles"]
@@ -827,7 +826,7 @@ def water_supply(ctx, sub, interior, socket_cost, frame_poly, reserved_union):
             return {"kind": "bank_access", "xz": (x, z), "cost_m": round(float(cand.ravel()[k]), 1),
                     "geom": g, "freshwater_uncertainty": "surface water; potability unknown"}
     # well: usable housing cell close to civic socket, outside reserves
-    hok = sub.a(A.house_ok) & interior & ~sub.a(A.protected)
+    hok = sub.a(A.house_ok) & interior & ~sub.a(A.protected) & ~sub.a(A.locks) & ~sub.a(A.anchor_mask)
     if not reserved_union.is_empty:
         hok &= ~Rr.rasterize(sub.grid, reserved_union.buffer(size / 2))
     cand = np.where(hok & np.isfinite(sc), sc, np.inf)
@@ -873,10 +872,12 @@ def evaluate(ctx: Ctx, cand: dict, idx: int) -> dict:
                          area_m2=round(nb, 2)))
     if not A.protected_poly.is_empty:
         ev["protected_enclosed_m2"] = round(poly.intersection(A.protected_poly).area, 1)
-    if not A.lock_poly.is_empty:
-        li = poly.intersection(A.lock_poly).area
-        if li > tol and abs(li - A.lock_poly.area) > tol:
-            cons.append(diag("lock_cut", "error", "L2", "frame boundary cuts a lock"))
+    if ctx.inp.locks:
+        bnd = poly.boundary
+        hit = sorted(l["id"] for l in ctx.inp.locks if bnd.intersects(l["geom"]))
+        if hit:
+            cons.append(diag("lock_conflict", "error", "L2", "frame boundary crosses locked story spots (locks are never moved)",
+                             locks=hit))
     if ctx.walled:
         ring = G.canon_ring(poly)
         if not ring.is_simple or not poly.is_valid:

@@ -18,6 +18,7 @@ import subprocess
 import sys
 
 from . import envelope, fixtures, frame, geometry as G, plan as PL, program, site, svg, validate
+from . import registry as REG
 from .adapters import region as RA
 from .rules import DEFAULT, Rules
 
@@ -76,7 +77,7 @@ def input_record(inp, family):
             "vertical_scale": inp.vertical_scale, "provenance": inp.provenance.get("input_hashes", {})}
 
 
-def run(inp, rules, out_dir, label=None, proposal=None):
+def run(inp, rules, out_dir, label=None, proposal=None, registry=None):
     G.set_grid(rules.p("geometry.grid"))
     os.makedirs(out_dir, exist_ok=True)
     A = site.analyze(inp, rules)
@@ -102,6 +103,11 @@ def run(inp, rules, out_dir, label=None, proposal=None):
         fam_info["resolved"] = family
     plan, extras, store = PL.build(inp, A, family, fam_info, L1, F, rules, dependencies())
     plan["validation"] = []
+    plan = _sanitize(plan)
+    # identity ids (persistent) vs revisions (content) — WP2 / audit K10
+    reg = registry if registry is not None else REG.Registry()
+    scope = inp.id if proposal is None else f"{inp.id}@proposal"  # proposals never take baseline identities
+    plan["identity"] = REG.assign(plan, reg, rules, scope=scope)
     plan = _sanitize(plan)
     plan["validation"] = _sanitize(validate.run(plan, inp, A, L1, F, rules))
     failed = [c["id"] for c in plan["validation"] if c["pass"] is False]

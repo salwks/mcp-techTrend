@@ -230,8 +230,9 @@ def run(plan, inp, A, L1, F, rules):
         if nb > ltol(poly, neigh) if not neigh.is_empty else False:
             excess.append(("neighbour", round(nb, 3)))
         lock_i = 0.0
-        if not A.lock_poly.is_empty:
-            lock_i = sum(g.intersection(A.lock_poly).area for g in res_geoms if g is not None)
+        allk = shapely.union_all([A.lock_poly, A.anchor_poly])
+        if not allk.is_empty:
+            lock_i = sum(g.intersection(allk).area for g in res_geoms if g is not None)
         _chk(out, "L2.intrusion", "L2", not excess and lock_i <= R.p("acceptance.intrusion_m2") + 1e-6,
              {"reserves_on_protected_m2": round(intr, 3), "excess": excess, "locks_m2": round(lock_i, 3),
               "neighbour_enclosed_m2": round(nb, 3), "rule": "zero up to local grid tolerance on shared boundaries"})
@@ -270,6 +271,8 @@ def run(plan, inp, A, L1, F, rules):
             if c["applicable"]:
                 c["detail"] = {"rejected_candidate_result": c["pass"], "detail": c["detail"]}
                 c["pass"], c["applicable"] = None, False
+    # ---------------- WP2 locks: V16 reference list preserved (positions unchanged, none dropped)
+    _chk(out, "WP2.locks_preserved", "WP2", *_locks_preserved(plan, inp))
     # ---------------- refs & schema
     refs = set()
 
@@ -322,3 +325,33 @@ def _probes(inp, A):
         rec["pass"] = bool(ok)
         out.append(rec)
     return out
+
+
+def _locks_preserved(plan, inp):
+    """Every baseline story anchor / item / station inside the input window must appear as a
+    lock with the same position (V16)."""
+    import json as _j
+    import os as _o
+    from shapely.geometry import Point as _P, box as _b
+    path = _o.path.join(_o.path.dirname(__file__), "baseline", "wp0_baseline.json")
+    if inp.meta.get("fixture") or not _o.path.exists(path):
+        ids = {l["id"] for l in plan.get("locks", [])}
+        exp = {l["id"] for l in inp.locks}
+        return ids == exp, {"locks": len(ids), "source": "fixture locks"}
+    b = _j.load(open(path, encoding="utf-8"))
+    win = _b(*inp.grid.bounds())
+    want = {}
+    for a in b["story_anchors"]:
+        if a["region"] == inp.region and win.contains(_P(a["xz"])):
+            want[f"lock:{a['id']}"] = a["xz"]
+    for it in b["story_items"]:
+        if it["region"] == inp.region and it["xz"][0] is not None and win.contains(_P(it["xz"])):
+            want[f"lock:{it['id']}"] = it["xz"]
+    for s in b["station_anchors"]:
+        if s.get("space") == inp.region and win.contains(_P(s["xz"])):
+            want[f"lock:{s['id']}"] = s["xz"]
+    have = {l["id"]: l["geometry_xz"] for l in plan.get("locks", [])}
+    missing = sorted(k for k in want if k not in have)
+    moved = sorted(k for k in want if k in have and (abs(have[k][0] - want[k][0]) > 1e-6 or abs(have[k][1] - want[k][1]) > 1e-6))
+    return not missing and not moved, {"baseline_in_window": len(want), "locks": len(have), "missing": missing[:10],
+                                       "moved": moved[:10]}

@@ -187,6 +187,30 @@ def mountain():
     return s
 
 
+def terrace_locked():
+    """V14 fixture: the terrace with locked story spots — a point anchor on the likely south
+    wall line, one inside the town, and a locked house footprint (never moved by generation)."""
+    from .locks import _footprint
+    s = terrace()
+    s.id = "syn_terrace_locked"
+    s.name = "평탄 하안단구 + 잠긴 이야기 자리(합성)"
+    locks = [
+        {"id": "lock:anchor:fixture:south_gate_spot", "kind": "story_anchor", "xz": [100.0, 257.0], "radius_m": 3.0,
+         "geom": Point(100.0, 257.0).buffer(3.0, 16), "hard": False, "source": "fixture",
+         "lock_scope": ["position", "access", "event_ref"]},
+        {"id": "lock:anchor:fixture:well_talk", "kind": "story_anchor", "xz": [0.0, 100.0], "radius_m": 3.0,
+         "geom": Point(0.0, 100.0).buffer(3.0, 16), "hard": False, "source": "fixture",
+         "lock_scope": ["position", "access", "event_ref"]},
+        {"id": "lock:item:fixture:old_house", "kind": "story_item", "xz": [-100.0, 100.0], "radius_m": None,
+         "geom": _footprint(-100.0, 100.0, 10.0, 8.0, 0.3).buffer(2.0, join_style="mitre"), "hard": True,
+         "source": "fixture", "lock_scope": ["position", "shape", "access"]},
+    ]
+    s.locks = locks
+    s.provenance["input_hashes"]["locks"] = hashlib.sha256(Gm.canonical_json(
+        [{"id": l["id"], "xz": l["xz"]} for l in locks]).encode()).hexdigest()
+    return s
+
+
 # ---------------------------------------------------------------- failure fixtures
 def blocked_access():
     X, Z = _xz()
@@ -224,7 +248,7 @@ def water_crossing():
 
 
 SYNTHETIC = {"syn_terrace": terrace, "syn_basin": basin, "syn_ridge": ridge, "syn_estuary": estuary,
-             "syn_mountain": mountain,
+             "syn_mountain": mountain, "syn_terrace_locked": terrace_locked,
              "syn_basin_sanseong": lambda: basin("mountain", "syn_basin_sanseong")}
 FAILURES = {"fail_blocked_access": blocked_access, "fail_impossible_civic": impossible_civic,
             "fail_water_crossing": water_crossing}

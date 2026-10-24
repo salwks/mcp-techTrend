@@ -163,9 +163,11 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     A.neigh_poly = neigh
     A.farm_poly = farm_poly
     A.farm_displaced = G.polygonal(farm_poly.intersection(preferred)) if not farm_poly.is_empty else Polygon()
-    A.lock_poly = _poly_union([l["geom"] for l in inp.locks])
+    A.lock_poly = _poly_union([l["geom"] for l in inp.locks if l.get("hard", True)])     # shape locks
+    A.anchor_poly = _poly_union([l["geom"] for l in inp.locks if not l.get("hard", True)])  # point locks
     A.protected = Rr.rasterize(win, A.protected_poly)
     A.locks = Rr.rasterize(win, A.lock_poly)
+    A.anchor_mask = Rr.rasterize(win, A.anchor_poly)
     A.water_poly = Rr.mask_to_polygon(win, A.water)
 
     # ---------------- buildability ----------------
@@ -176,7 +178,8 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     A.civic_pref = A.civic_ok & (A.slope <= rules.p("slope.civic_pref_deg"))
     occ_ex = A.protected | A.locks
     A.house_poly = Rr.mask_to_polygon(win, A.house_ok & ~occ_ex)
-    A.civic_poly = Rr.mask_to_polygon(win, A.civic_ok & ~occ_ex)
+    # civic reserves must not cover a story spot either (point locks)
+    A.civic_poly = Rr.mask_to_polygon(win, A.civic_ok & ~occ_ex & ~A.anchor_mask)
     A.flood_polys = {k: Rr.mask_to_polygon(win, v & ~A.water) for k, v in A.floods.items()}
 
     # ---------------- routing fields ----------------
@@ -215,6 +218,9 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     A.bank = bank
     A.water_cost, _ = Rt.dijkstra(A.graph8, np.flatnonzero(bank))
     A.water_cost = A.water_cost.reshape(win.shape)
+
+    from .locks import site_conflicts
+    A.diagnostics += site_conflicts(inp, A)
 
     # ---------------- summary & probes ----------------
     pm = Rr.rasterize(win, preferred)

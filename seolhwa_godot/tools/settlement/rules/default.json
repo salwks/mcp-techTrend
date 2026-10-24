@@ -1638,6 +1638,29 @@
    "unit": "world_m2",
    "value": 0.5
   },
+  "locks.anchor_radius_m": {
+   "confidence": "provisional",
+   "kind": "lock",
+   "note": "story anchor position tolerance (point lock disk)",
+   "source": "design",
+   "unit": "world_m",
+   "value": 3.0
+  },
+  "locks.item_clearance_m": {
+   "confidence": "provisional",
+   "kind": "lock",
+   "note": "clearance around a story placement footprint",
+   "source": "design",
+   "unit": "world_m",
+   "value": 2.0
+  },
+  "locks.station_radius_m": {
+   "confidence": "provisional",
+   "kind": "lock",
+   "source": "design",
+   "unit": "world_m",
+   "value": 4.0
+  },
   "program.f_lanes": {
    "confidence": "agreed",
    "kind": "program",
@@ -1665,6 +1688,21 @@
    "source": "spec_L0_2",
    "unit": "historical_m2",
    "value": 15
+  },
+  "registry.junction_tol_m": {
+   "confidence": "provisional",
+   "kind": "identity",
+   "source": "design",
+   "unit": "world_m",
+   "value": 15.0
+  },
+  "registry.match_tol_m": {
+   "confidence": "provisional",
+   "kind": "identity",
+   "note": "an object within this distance of a registered one of the same kind keeps its identity",
+   "source": "design",
+   "unit": "world_m",
+   "value": 30.0
   },
   "residential.access_max_m": {
    "confidence": "provisional",
