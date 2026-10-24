@@ -1,0 +1,98 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "settlement-contract/1",
+ "title": "Common data contract v1 (WP1, spec 04 TOOL-01) — required items only",
+ "description": "Every object carries `meta`. Missing values are null with a reason, never 0 (a 0 in a drawing table is not a 0 m dimension). No object is created as confirmed by a generator; confirmed requires sources (V18).",
+ "type": "object",
+ "$defs": {
+  "id": {"type": "string", "pattern": "^[a-z_]+:[A-Za-z0-9_.\\-]+(:[A-Za-z0-9_.\\-]+)*$"},
+  "hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+  "gref": {"type": ["string", "null"], "pattern": "^g-[0-9a-f]{12}$"},
+  "xz": {"type": "array", "items": {"type": "number"}},
+  "status": {"enum": ["confirmed", "proposed", "unknown"]},
+  "lock_scope": {"type": "array", "items": {"enum": ["position", "shape", "access", "material", "event_ref", "state"]}},
+  "meta": {
+   "type": "object",
+   "required": ["stable_id", "provenance", "rule_version", "status", "lock_scope", "revision"],
+   "properties": {
+    "stable_id": {"$ref": "#/$defs/id"},
+    "provenance": {"type": "object", "required": ["sources", "generator"],
+     "properties": {"sources": {"type": "array", "items": {"type": "string"}}, "generator": {"type": "string"},
+                    "rules_hash": {"type": ["string", "null"]}, "inputs": {"type": "object"}}},
+    "rule_version": {"type": "string"},
+    "status": {"$ref": "#/$defs/status"},
+    "lock_scope": {"$ref": "#/$defs/lock_scope"},
+    "revision": {"$ref": "#/$defs/hash"},
+    "hypothesis": {"type": "boolean"}
+   }
+  },
+  "measure": {
+   "type": "object",
+   "required": ["value", "unit", "status"],
+   "properties": {"value": {"type": ["number", "null"]}, "unit": {"type": "string"}, "status": {"$ref": "#/$defs/status"},
+                  "missing_reason": {"type": ["string", "null"]}, "source": {"type": ["string", "null"]}}
+  },
+  "RegionProfile": {
+   "type": "object",
+   "required": ["schema", "meta", "region", "period", "coordinates", "elevation", "data_resolution", "scale_policy", "water_states", "hypotheses"],
+   "properties": {
+    "schema": {"enum": ["region-profile/1"]},
+    "meta": {"$ref": "#/$defs/meta"},
+    "region": {"type": "string"},
+    "period": {"type": "object", "required": ["label", "status"]},
+    "coordinates": {"type": "object", "required": ["units", "north_xz", "source_projection"]},
+    "elevation": {"type": "object", "required": ["units", "datum", "decode", "already_remapped"]},
+    "data_resolution": {"type": "object", "required": ["height_cell_m", "landuse_cell_m"]},
+    "scale_policy": {
+     "type": "object",
+     "required": ["terrain", "building", "rules_hold", "apply_once_at"],
+     "properties": {
+      "terrain": {"type": "object", "required": ["horizontal_K", "vertical", "purpose"]},
+      "building": {"type": "object", "required": ["factor", "axes", "purpose", "status", "decided_by"],
+       "properties": {"factor": {"type": "number", "minimum": 0}, "axes": {"type": "array", "items": {"enum": ["plan", "height"]}}}},
+      "rules_hold": {"enum": ["measured_values"]},
+      "apply_once_at": {"enum": ["bake"]}
+     }
+    },
+    "water_states": {"type": "object", "required": ["units", "states", "status"],
+     "properties": {"units": {"enum": ["world_m", "source_m"]}, "states": {"type": "array", "items": {"type": "object", "required": ["key", "name", "offset"]}}}},
+    "hypotheses": {"type": "array"}
+   }
+  },
+  "SourceRecord": {
+   "type": "object",
+   "required": ["meta", "title", "url", "written", "depicts", "kind", "access_scope", "observations", "limits", "units_confirmed"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"},
+    "kind": {"enum": ["current_state", "after_repair", "restoration", "excavation", "survey", "painting", "search_excerpt", "text", "data", "design_decision"]},
+    "units_confirmed": {"type": "boolean"}}
+  },
+  "TerrainPatch": {"type": "object", "required": ["meta", "original", "modified", "landform", "rock_body", "rock_type", "structure_dir", "exposure", "change_reason"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "landform": {"enum": ["ridge", "saddle", "valley_floor", "slope", "plain", "unknown"]}}},
+  "WaterReach": {"type": "object", "required": ["meta", "upstream", "downstream", "long_profile", "cross_section", "plan", "flow", "bed_mix", "states"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "states": {"type": "array", "items": {"type": "object", "required": ["key", "offset_world_m", "status"]}}}},
+  "HabitatPatch": {"type": "object", "required": ["meta", "community", "management", "soil", "moisture", "season"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "management": {"enum": ["natural", "protected", "village_grove", "use_forest", "cultivated", "unknown"]}}},
+  "Route": {"type": "object", "required": ["meta", "purpose", "nodes", "modes", "width_section", "long_profile", "support_drainage", "centerline"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "centerline": {"$ref": "#/$defs/gref"},
+    "modes": {"type": "array", "items": {"type": "object", "required": ["mode", "passable", "limit", "status"],
+     "properties": {"mode": {"enum": ["foot", "pack_horse", "cart"]}}}}}},
+  "Parcel": {"type": "object", "required": ["meta", "use", "zones", "access", "yards", "buildable", "axes"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "Boundary": {"type": "object", "required": ["meta", "sides", "purpose", "implementation", "shared_id", "geometry", "section", "ends"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"},
+    "implementation": {"enum": ["free_wall", "building_wall", "gatehouse", "retaining_wall", "open", "fortification"]}}},
+  "Opening": {"type": "object", "required": ["meta", "use", "width_m", "height_m", "access_sides", "swing_side", "state", "host"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "use": {"enum": ["passage", "drainage", "delivery"]},
+    "chainage": {"type": "array", "items": {"type": "number", "minimum": 0}}}},
+  "Building": {"type": "object", "required": ["meta", "type_basis", "column_grid", "bay_spacing", "function_faces", "floor_base", "roof_support", "members", "condition", "scale_applied"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "scale_applied": {"enum": [true]},
+    "condition": {"enum": ["normal", "worn", "partly_damaged", "abandoned", "collapsed"]}}},
+  "ActivitySite": {"type": "object", "required": ["meta", "activity", "users", "spaces", "state"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "SurfaceProfile": {"type": "object", "required": ["meta", "material_id", "base", "real_size_m", "channels", "exposure", "weather_response", "wear"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "WallSection": {"type": "object", "required": ["meta", "outer", "inner", "foundation", "fill", "top", "drainage", "ground_both_sides"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "Fortification": {"type": "object", "required": ["meta", "function", "terrain", "access", "water_source", "sections", "features"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "DefenseFeature": {"type": "object", "required": ["meta", "kind", "host_boundary", "chainage"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "LandUseProfile": {"type": "object", "required": ["meta", "cultivation", "forest_use", "management_state", "basis"], "properties": {"meta": {"$ref": "#/$defs/meta"}}},
+  "Lock": {"type": "object", "required": ["meta", "kind", "geometry_xz", "radius_m", "source"],
+   "properties": {"meta": {"$ref": "#/$defs/meta"}, "kind": {"enum": ["story_anchor", "story_item", "station_anchor", "manual"]}}}
+ }
+}

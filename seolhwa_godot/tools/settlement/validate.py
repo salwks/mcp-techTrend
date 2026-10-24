@@ -142,8 +142,11 @@ def run(plan, inp, A, L1, F, rules):
     s1 = all(abs(pa[c] - med[c] * R.p("world.area_scale")) < 1e-6 for c in med)
     s2 = all(abs(i["envelope"]["area_m2"] - i["envelope"]["hist_area_m2"] * R.p("world.area_scale")) < 0.05
              for i in prog["institutions"])
-    _chk(out, "L1.scale_once", "L1", s1 and s2 and prog["scale"]["scale_applied"],
-         {"parcel_areas": s1, "institution_areas": s2})
+    rp = plan.get("region_profile") or {}
+    bf = ((rp.get("scale_policy") or {}).get("building") or {}).get("factor")
+    s3 = bf is not None and abs(bf * bf - R.p("world.area_scale")) < 1e-9 and abs(prog["scale"]["length"] - bf) < 1e-12
+    _chk(out, "L1.scale_once", "L1", s1 and s2 and s3 and prog["scale"]["scale_applied"],
+         {"parcel_areas": s1, "institution_areas": s2, "single_record_in_region_profile": s3, "factor": bf})
     # ---------------- L2
     fr = plan.get("frame")
     applicable = fr is not None

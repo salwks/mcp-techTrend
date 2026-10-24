@@ -1979,6 +1979,7 @@
   "world.area_scale": {
    "confidence": "agreed",
    "kind": "scale",
+   "note": "derived = length_scale²; not applied separately (checked by L1.scale_once)",
    "source": "metrics",
    "unit": "ratio",
    "value": 1.44
@@ -1986,6 +1987,7 @@
   "world.length_scale": {
    "confidence": "agreed",
    "kind": "scale",
+   "note": "default for RegionProfile.scale_policy.building.factor (owner 2026-10-25: one uniform factor for plan and height, recorded once, applied once at bake — audit K1)",
    "source": "metrics",
    "unit": "ratio",
    "value": 1.2

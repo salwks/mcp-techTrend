@@ -37,6 +37,8 @@ def analyze(inp: SiteInput, rules) -> SiteAnalysis:
     A.inp = inp
     A.rules = rules
     A.diagnostics = list(inp.diagnostics)
+    from .contract import region_profile
+    A.region_profile = region_profile(inp, rules)
     full = inp.grid
     cell = full.cell
     terr = inp.territory

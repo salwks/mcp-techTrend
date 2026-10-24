@@ -117,7 +117,8 @@ def corridor_network(ev, store, sub, h, rules, walled, ctx=None):
 def build(inp, A, family, fam_info, L1, F, rules, dependencies):
     store = GeomStore()
     R = rules
-    plan = {"schema": "settlement-plan/1", "id": inp.id, "name": inp.name, "region": inp.region}
+    plan = {"schema": "settlement-plan/2", "id": inp.id, "name": inp.name, "region": inp.region,
+            "region_profile": A.region_profile}
     plan["provenance"] = {
         "generator": GENERATOR_VERSION, "rules_hash": R.hash, "input_hashes": dict(sorted(inp.provenance.get("input_hashes", {}).items())),
         "dependencies": dependencies, "seed": inp.seed, "tier": inp.tier, "family": family, "family_selection": fam_info,

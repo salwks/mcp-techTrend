@@ -19,12 +19,19 @@ CLASS_ORDER = ("elite", "specialist", "ordinary")
 
 
 # ------------------------------------------------------------------ scaling (once)
+def building_factor(rules) -> float:
+    """The one building/plot scale (RegionProfile.scale_policy.building.factor, audit K1).
+    Rules keep measured (historical) values; this factor is applied exactly once here."""
+    return rules.p("world.length_scale")
+
+
 def world_len(hist_m: float, rules) -> float:
-    return hist_m * rules.p("world.length_scale")
+    return hist_m * building_factor(rules)
 
 
 def world_area(hist_m2: float, rules) -> float:
-    return hist_m2 * rules.p("world.area_scale")
+    f = building_factor(rules)
+    return hist_m2 * f * f
 
 
 def largest_remainder(shares: dict, n: int, order=None) -> dict:
