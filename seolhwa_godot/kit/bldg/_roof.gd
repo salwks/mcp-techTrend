@@ -345,9 +345,23 @@ static func giwa(m: C.M, part: String, o: Dictionary) -> Dictionary:
 			if ends[0 if sd < 0 else 1] in ["open", "corner"]: continue
 			var e: Vector3 = rpts[0] if sd < 0 else rpts[rpts.size() - 1]
 			_mangwa_k(gm, e, Vector3(sd, 0, 0), 0.2, rcol * 1.1)
-		for line in hips:
+		for li in hips.size():
+			var line: Array = hips[li]
 			for k in line.size() - 1:
-				_ridge_k(gl, gs, line[k], line[k + 1], 0.32, 2, 0.065, kh2, rcol)
+				# 맞배 끝 내림마루는 조금 좁게(바깥 옆면이 박공 널 면과 겹치지 않게)
+				var gab: bool = absf(absf(float(line[0].x)) - (hw - 0.12)) < 1e-3 and absf(float(line[line.size() - 1].x) - float(line[0].x)) < 1e-3
+				# 높이 들임: 합각 박공 널 윗면(널 축 위 0.02 + 0.1/cos 기울기)과 켜 윗면이 6mm 안으로 겹치지 않는 값 — 줄마다 고르는 순서를 달리(겹친 마루끼리도 갈리게)
+				var dv: Vector3 = (line[k + 1] as Vector3) - (line[k] as Vector3)
+				var cs: float = Vector2(dv.x, dv.z).length() / maxf(dv.length(), 1e-4)
+				var bt: float = 0.02 + 0.1 / maxf(cs, 0.3)
+				var cands := [0.012, 0.024, 0.036, 0.048]
+				var st: int = int(_hz(float(line[0].x) * 3.1 + li, float(line[0].z) * 1.7) * 4.0)
+				var yo: float = 0.012
+				for ci in 4:
+					var c: float = cands[(st + ci) % 4]
+					if absf(0.105 + c - bt) > 0.006 and absf(0.04 + c - bt) > 0.006 and absf(0.17 + c - bt) > 0.006:
+						yo = c; break
+				_ridge_k(gl, gs, line[k], line[k + 1], 0.29 if gab else 0.32, 2, 0.065, kh2, rcol, yo)
 		_put_rect(m, "giwa_hi", "giwa_khs", gl, KHS_RIDGE_RECT, true)
 		_put_rect(m, "giwa_hi", "giwa_khs", gs, KHS_SU_RECT, true)
 		_put_rect(m, "giwa_hi", "giwa_khs", gm, [], true)
@@ -764,11 +778,12 @@ static func _am_courses(g: Kit.Geo, path: Array, ax: int, sgn: int, ctx: Diction
 
 # 마루(용마루·내림·추녀마루) — 국가유산청 그림판 마루 칸으로 켜켜이: 착고·부고 한 켜 + 적새 n켜(켜마다 양옆 1.5cm 들임 → 켜 그늘) + 숫마루장(수키와)
 #   a→b 지붕 겉 선(마루 밑), w 밑 너비, nl 적새 켜 수, hl 켜 높이. 반환 없음: gl(켜 옆·윗면, KHS_RIDGE_RECT), gs(숫마루장, KHS_SU_RECT)
-static func _ridge_k(gl: Kit.Geo, gs: Kit.Geo, a: Vector3, b: Vector3, w: float, nl: int, hl: float, kh: float, col: Color) -> void:
+#   yoff: 마루마다 조금씩 다른 높이(4mm 단위) — 겹쳐 만나는 마루(날개 용마루↔몸채 모퉁이 마루, 합각 박공 널)와 같은 평면이 되지 않게(FACECHECK)
+static func _ridge_k(gl: Kit.Geo, gs: Kit.Geo, a: Vector3, b: Vector3, w: float, nl: int, hl: float, kh: float, col: Color, yoff := 0.0) -> void:
 	var dv := (b - a); dv.y = 0.0
 	if dv.length() < 1e-4: return
 	var side := Vector3.UP.cross(dv.normalized()).normalized()
-	var y0 := -0.06
+	var y0 := -0.06 + yoff
 	var layers := [[w, 0.10]]   # 착고·부고
 	for i in nl: layers.append([w - 0.07 - i * 0.03, hl])
 	var su0 := (a.x + a.z) / 3.35; var su1 := su0 + a.distance_to(b) / 3.35
@@ -784,8 +799,12 @@ static func _ridge_k(gl: Kit.Geo, gs: Kit.Geo, a: Vector3, b: Vector3, w: float,
 			var o: Vector3 = hs * float(sg)
 			tw(gl, a + o + lo, b + o + lo, b + o + hi, Vector2(su0, 1), Vector2(su1, 1), Vector2(su1, 0), o)
 			tw(gl, a + o + lo, b + o + hi, a + o + hi, Vector2(su0, 1), Vector2(su1, 0), Vector2(su0, 0), o)
-		tw(gl, a - hs + hi, b - hs + hi, b + hs + hi, Vector2(su0, 0.2), Vector2(su1, 0.2), Vector2(su1, 0.0), Vector3.UP)
-		tw(gl, a - hs + hi, b + hs + hi, a + hs + hi, Vector2(su0, 0.2), Vector2(su1, 0.0), Vector2(su0, 0.0), Vector3.UP)
+		# 윗면은 가운데가 조금 솟은 두 쪽(가로 기울기 10%) — 켜 윗면이 지붕 겉·박공 널 윗면과 나란한 같은 평면이 되지 않게(FACECHECK), 둥글게 보이게
+		var cr := Vector3(0, lw * 0.05, 0)
+		for sg in [-1.0, 1.0]:
+			var o: Vector3 = hs * float(sg)
+			tw(gl, a + o + hi, b + o + hi, b + hi + cr, Vector2(su0, 0.2), Vector2(su1, 0.2), Vector2(su1, 0.1), Vector3.UP + o)
+			tw(gl, a + o + hi, b + hi + cr, a + hi + cr, Vector2(su0, 0.2), Vector2(su1, 0.1), Vector2(su0, 0.1), Vector3.UP + o)
 		for q in range(b0, gl.pos.size()): gl.col[q] = cc
 		yb += lh
 	# 숫마루장: 반원(지름 = 맨 위 켜 너비의 0.8)

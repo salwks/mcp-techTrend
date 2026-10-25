@@ -18,6 +18,7 @@ func _init() -> void:
 	var types: PackedStringArray = String(args.get("types", "choga,jumak,sijeon,anchae,sarang,haengrang,sadang,gotgan,araechae,dongheon,gaeksa,daeseong,gangdang,jeongja,nugak,mill,smithy,daeung,giwajip")).split(",")
 	var regions: PackedStringArray = String(args.get("regions", "south,central,north,jeju")).split(",")
 	var seeds := int(args.get("seeds", "2"))
+	no_rows = args.has("norows")
 	var modes: Array = [true, false] if String(args.get("interior", "both")) == "both" else [String(args.interior) == "1"]
 	var fails := 0; var n := 0
 	var report := []
@@ -45,7 +46,9 @@ func _init() -> void:
 	print("FACECHECK total fail=%d checked=%d" % [fails, n])
 	quit(1 if fails > 0 else 0)
 
+static var no_rows := false   # --norows: 기와 줄 끄고(견줌 — 줄 탓인지 가리기)
 func _check(sp: Dictionary, dbg: bool) -> Dictionary:
+	if no_rows: sp._rows = false
 	var m := C.M.new(int(sp.seed) * 31 + 7, false)
 	B.draw(m, sp, 0)
 	var ink := Kit.hex(Kit.INK)
