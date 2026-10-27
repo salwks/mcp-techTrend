@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-10-27T00:47:58.666120Z",
+  "generated_at": "2026-10-27T01:58:25.434663Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 424,
-  "pending_count": 424,
-  "observed_total_count": 707,
+  "archive_count": 425,
+  "pending_count": 425,
+  "observed_total_count": 708,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,36 @@
   ],
   "posts": [
     {
+      "post_id": "4016824429686248177",
+      "published_at": "2026-10-27T01:00:08Z",
+      "text": "🚨 Cohere가 Qwen 모델의 '베이징 업로드' 기록 원본을 공개했습니다.\n\n원본을 열어 보니 모델은 처음부터 bash 도구를 받았고 \"도구를 써서 임무를 완수하라\"는 지시도 있었는데요.\n\n재현 결과에서는 알리바바 클라우드 주소와 함께 7월 말부터 8월 중순 날짜가 찍힌 경로가 반복해서 나왔습니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/De-oIloj1Lx",
+      "media": null,
+      "engagement": {
+        "likes": 12,
+        "replies": 15,
+        "reposts": 1,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-10-27T01:58:25.434663Z",
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
+    },
+    {
       "post_id": "4016809290153050362",
       "published_at": "2026-10-27T00:30:03Z",
       "text": "와.. 정말 충격적인 결과네요.\n\n40억 파라미터 오픈 모델 Qwen3.5 4B 안의 뉴런 두 개를 건드렸더니 AI가 악당으로 변했습니다.\n\n모델 파일은 그대로 뒀는데, 재현 실험에서는 위험한 요청을 거절하는 비율이 90%에서 8%로 떨어졌습니다. 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/De-ksR2D8D6",
       "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/870165784_17993727912112832_4653296980589967256_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=NDAxNjgwOTI5MDE1MzA1MDM2Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMjUxMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=9bEr1cWTBisQ7kNvwGmQHQS&_nc_oc=AdqYsyR0WXB3u_wT0_pEMMRNZJg-Qzr7NCzYfVDW_ZBWWcNB22Hg5u1KZNtDlw1RzDc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQMpAccfW7Y7gso4rdtklO1RBXXihyIesF0htF1x7nkZuA&oe=6AE5DE39"
+        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/870165784_17993727912112832_4653296980589967256_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=NDAxNjgwOTI5MDE1MzA1MDM2Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMjUxMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=9bEr1cWTBisQ7kNvwHcXy3t&_nc_oc=Adr1H4Z0VyagDU3zLpQVXECbCb0aFmpbZYEn784bRFFoGLek5dcA_GxzE3rOczdF53M&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQM7src1MroIgkwXBQ3giybt4XDqRphDFvmFerYoKoEc8A&oe=6AE5DE39"
       ],
       "engagement": {
-        "likes": 17,
-        "replies": 11,
-        "reposts": 2,
-        "quotes": 1
+        "likes": 45,
+        "replies": 13,
+        "reposts": 5,
+        "quotes": 2
       },
       "first_seen_at": "2026-10-27T00:36:58.303257Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016769479270675994",
@@ -36,16 +51,16 @@
       "text": "🚨 속보) 와.. 오픈AI가 수학, 컴퓨터과학, 물리학에서 오래된 난제 세 개를 한꺼번에 풀었다고 발표했습니다.\n\n1999년부터 수백 편의 논문이 전제로 써 온 '지수 시간 가설'이 틀렸다는 증명과, 밀레니엄 문제의 일부인 양-밀스 이론의 존재 증명까지 들어 있는데요.\n\n이번에는 가설을 처음 세운 학자들과 노벨상 수상자에게 검증을 맡겼습니다. 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/De-bo9EjzYa",
       "media": [
-        "https://scontent-dfw5-1.cdninstagram.com/v/t51.82787-15/864336974_17993721957112832_877106877005531872_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=NDAxNjc2OTQ3OTI3MDY3NTk5NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=X1BFCQazENUQ7kNvwEtTXuo&_nc_oc=Adr8CUrW_nJ4xVce6W6NkDxA2gnNO2wjaW5ySegPEPVIXIyzUzUzXTJ8xiPx_erNMQ4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQNnNWXOYlzWph0yRL1FwO_LqF84oeDzYKdMva0_Laylog&oe=6AE5C360"
+        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/864336974_17993721957112832_877106877005531872_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=NDAxNjc2OTQ3OTI3MDY3NTk5NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=2YyJhfQ9HOQQ7kNvwExDX2R&_nc_oc=Ado4AovhR1GiFsdDgm4omM6zS7uwM_stJ5a106cbv3YsEjGzITySKI91GboaYvN4cYk&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQPpTc6fSHg9yytpSzQeSf1mE-rx-thZ0PgIyd44faOb1g&oe=6AE5C360"
       ],
       "engagement": {
-        "likes": 61,
+        "likes": 72,
         "replies": 14,
         "reposts": 5,
         "quotes": 0
       },
       "first_seen_at": "2026-10-27T00:06:51.819019Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016764348319991564",
@@ -53,16 +68,16 @@
       "text": "전 구글 CEO 에릭 슈미트는 “지능의 부상은 지금까지 중 가장 거대한 파도”라며, PC 대 맥, 안드로이드 대 아이폰의 경쟁보다 훨씬 잔혹한 패권 전쟁이 벌어지고 있다고 진단했습니다.\n\n그는 앤스로픽의 기록적인 매출 성장을 예로 들며 AI가 결코 버블이 아니며 실제 유료 고객이 지불하는 진짜 경제적 실체라고 강조했습니다.\n\n특히 주목할 점은 극단적인 시간 압축입니다. 과거와 달리 “기술 사이클마다 시간이 압축된다”며, 수억 달러를 들여 6개월간 개발한 첨단 모델이 불과 5개월 만에 구식이 되어버리는 극심한 속도전을 짚었습니다.\n\n오픈AI, 앤스로픽, 구글 등이 심층 추론(Deep Reasoning) 성능을 두고 몇 개월, 나아가 며칠 단위로 주도권을 주고받는 초경쟁 국면에 접어들었다는 분석입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De-aeSgEQcM",
       "media": [
-        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQNDQeLWKSalzSfLekr4AumWQ1sFuX6ftd7f1RHVYuDoWxHUWT5r6U2CcOM2nB-sC_sZOLSlH4Mr_WKa0ZmgMaMdINwSDfPdF4lqVPo.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=CwVz-VScZ_wQ7kNvwEpAAh1&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTI4ODE3MzIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTcyLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=5ca3db3b0bc11dc8&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yMjA2NjNBNUVBMTA0MUM2QjI2NUY4MTgyQTc1NURENF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0JFMkI4Qjg4RUM5MDQ5RkRBODUwMjA3MDM3RERFODlGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAx4bCx5v2PxUCKAJDMywXQGWPXCj1wo8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNk594nH0_NFnPdMJ77ZPIPdEWMU0URRbE3CKzynykfdg&oe=6AE1CF7B"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQNDQeLWKSalzSfLekr4AumWQ1sFuX6ftd7f1RHVYuDoWxHUWT5r6U2CcOM2nB-sC_sZOLSlH4Mr_WKa0ZmgMaMdINwSDfPdF4lqVPo.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=CwVz-VScZ_wQ7kNvwEY0kxP&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTI4ODE3MzIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTcyLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=5ca3db3b0bc11dc8&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yMjA2NjNBNUVBMTA0MUM2QjI2NUY4MTgyQTc1NURENF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0JFMkI4Qjg4RUM5MDQ5RkRBODUwMjA3MDM3RERFODlGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAx4bCx5v2PxUCKAJDMywXQGWPXCj1wo8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMW8qqlOmQlBCbam1D7dFe6D-V7LfQdREwTdoFY0Ld9kQ&oe=6AE1CF7B"
       ],
       "engagement": {
-        "likes": 13,
+        "likes": 15,
         "replies": 2,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-10-27T00:06:51.819019Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016733810287848088",
@@ -70,16 +85,16 @@
       "text": "정말 무서운 시대입니다.\n\n한 사용자가 Claude Code로 오래된 아이폰 백업을 분석하다 몇 년 전에 삭제한 사진과 스크린샷을 발견했다고 합니다.\n\n아이폰에서 삭제했더라도 컴퓨터에 저장된 과거 백업에는 남아 있을 수 있다는 건데요.\n\n앞으로 AI 모델의 성능이 발전할수록 과거에는 전문 지식이 필요했던 데이터 복구나 보안 취약점 탐색도 훨씬 쉬워질 것으로 보입니다.\n\nAI가 발전할수록 개인정보와 보안 관리도 더 중요해질 것 같습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De-Th5vgiqY",
       "media": [
-        "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQMnhwcriKguJ1HaJDvMG3XAnOxr7Ulhh1Q46ohhAnKcega7A0XLR8EtbwKxaKvxHZL-y_XuxCj5ulTiEwwY0Gyy0yjcMz4OfTFn9tM.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=_3oKBvfpvboQ7kNvwHxpaOd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy40ODAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5MzY3MzE4MDExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo0OCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=e2773e0aa4f42daa&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82MEUzODQ4NjM4RDY0RDgwQjE4REVEN0VBQzYzRjBERV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzEyQ0FENkEyMzgyMjQ2RkRBNTk2OEU0QTQwREVBQUUzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAn9eh0Mn2PxUCKAJDMywXQEhxBiTdLxsYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOmzdOetL2A_CvwWTJdqbWJwft46LWQgE59IegbTyfH8Q&oe=6AE1E5CA"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMnhwcriKguJ1HaJDvMG3XAnOxr7Ulhh1Q46ohhAnKcega7A0XLR8EtbwKxaKvxHZL-y_XuxCj5ulTiEwwY0Gyy0yjcMz4OfTFn9tM.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=_3oKBvfpvboQ7kNvwENGUpB&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy40ODAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5MzY3MzE4MDExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjo0OCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=e2773e0aa4f42daa&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82MEUzODQ4NjM4RDY0RDgwQjE4REVEN0VBQzYzRjBERV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzEyQ0FENkEyMzgyMjQ2RkRBNTk2OEU0QTQwREVBQUUzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAn9eh0Mn2PxUCKAJDMywXQEhxBiTdLxsYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQPE188FQKBteVWEt2kcHXClhF4aWurV_S3cuv879DASRA&oe=6AE1E5CA"
       ],
       "engagement": {
-        "likes": 113,
-        "replies": 5,
-        "reposts": 9,
+        "likes": 151,
+        "replies": 7,
+        "reposts": 13,
         "quotes": 2
       },
       "first_seen_at": "2026-10-26T22:34:45.406578Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016703745056091893",
@@ -87,7 +102,7 @@
       "text": "AI 에이전트가 12시간도 안 돼 앤트로픽의 내부 시스템에 침투했다는 보도가 나왔습니다.\n\n워싱턴포스트에 따르면 전 DOGE 직원들이 설립한 보안 스타트업 Cathedral이 외부 업무용 소프트웨어의 취약점을 이용했는데요.\n\n직원 급여, 회의록, AI 모델 관련 Slack 메시지에 접근했다고 합니다.\n\n다만 앤트로픽이 허용한 보안 테스트였으며, 앤트로픽은 접근 범위가 일부 업무 시스템에 한정됐고 Claude 대화와 소스코드, 모델 가중치는 유출되지 않았다고 밝혔습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De-MsZUDK71",
       "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/861649987_17993672667112832_3289477707110281539_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=NDAxNjcwMzc0NTA1NjA5MTg5Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM0Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=DwuczbNmsvQQ7kNvwEsA8iC&_nc_oc=AdoFGijVaWvk_TjE2TfdULeRYlfKdXgfvwC2M-4H-CnmqN3a4qmOiDxrSHOIzJwB07o&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQMZ65TZfui78ky8qP0I4s3n-_NDuPJ992vl5uW46C0pPQ&oe=6AE5D349"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/861649987_17993672667112832_3289477707110281539_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=NDAxNjcwMzc0NTA1NjA5MTg5Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM0Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=DwuczbNmsvQQ7kNvwGbnp2T&_nc_oc=Ado9ncdHBrmvnD0XxK0GuN2YEei9L-h63mLaYhqpzwXwctN8gO99e-yvkOWRvObpVd8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQNHbV-2c56rrGaYGpVz6dKExCt4m1fqWrjhF6bmRik7NQ&oe=6AE5D349"
       ],
       "engagement": {
         "likes": 10,
@@ -96,7 +111,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-10-26T22:34:45.406578Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016658532522543746",
@@ -104,16 +119,16 @@
       "text": "뭔가 폭풍전야 같은 느낌입니다.\n\nMicrosoft가 전체 직원의 약 27%인 6만 명을 대상으로 희망퇴직을 제안했다는 소식인데요.\n\nMicrosoft가 전체 직원의 약 27%인 6만 명에게 희망퇴직을 제안했습니다.\nBloomberg에 따르면 미국, 캐나다, 영국, 인도 일부 직원이 대상으로 6만 명을 해고한다는 뜻은 아닙니다.\n\nMicrosoft는 지난해 약 1만 5천 명을 감원한 데 이어 올해 AI 인프라에 약 1,750억 달러를 투자할 것으로 알려졌습니다.\n\nAI 투자에는 막대한 돈을 쓰면서 인건비는 줄이는 흐름이 나타나고 있습니다.\n\n앞으로 일자리 시장에도 적지 않은 변화가 예상됩니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De-Cad3DEqC",
       "media": [
-        "https://scontent-dfw5-3.cdninstagram.com/v/t51.82787-15/871103256_17993673492112832_2279905065981815984_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=1&ig_cache_key=NDAxNjY1ODUzMjUyMjU0Mzc0Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=OuOJ-lxOScIQ7kNvwGXL2qM&_nc_oc=AdrkMzGHGmsieOm5ea48o-WDOP51qwGpopIStjpMFM5ajX4g7KWQ-xgkKwhW2dMRkuo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-3.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQOr871YeP3tePwrnB_DqSh9hb8W1bgXayxls2lYurSLtg&oe=6AE5ABE6"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/871103256_17993673492112832_2279905065981815984_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=1&ig_cache_key=NDAxNjY1ODUzMjUyMjU0Mzc0Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=OuOJ-lxOScIQ7kNvwHPPGpq&_nc_oc=AdqcF4Yb4m-O5odFlzLM7yRsy9TGrYGcW6_WUQgfyEiJ32i2ha0T_EmaI2GHGZDz6sU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQM9WUsgALobD_UaZ0TP1WLdmI-Po0Cax3e1-O5K48fAog&oe=6AE5E426"
       ],
       "engagement": {
-        "likes": 126,
+        "likes": 136,
         "replies": 8,
         "reposts": 6,
         "quotes": 0
       },
       "first_seen_at": "2026-10-26T20:12:17.299051Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016616739034850811",
@@ -121,16 +136,16 @@
       "text": "🚨속보) 와.. 미친 Astra보다 싸고 뛰어난 GPT 6.1 Terra 출시.",
       "permalink": "https://www.threads.com/@choi.openai/post/De946SpD2X7",
       "media": [
-        "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQM4hdO8Y0xAFOLo98Fu7wngHtx0NfDlNZ0cSTXd-9UsJ_wcocNuGLzZm118UZ_GTjcFZ0WJzaIvCXV3g7Hb4e0_r0oUI_W2VkaqmMw.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=NDaZKep9BpMQ7kNvwGYXEUz&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTM2ODg2OTYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2135749eb0a222c7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9COEQ5OTcyMkFBNTY0RTZGQjE0MDFCMkYwNkRGQTFFM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y3MjNERDg3NEM4QjRFREU4RUY0QTNCOTE4NDE1RDcxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAm_Luw8r2PxUCKAJDMywXQD91P3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMjTa2cb8mk2cuNb6Piw6m9YC3zj3tl8bEi1VoSBrQzxQ&oe=6AE1C69A"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQM4hdO8Y0xAFOLo98Fu7wngHtx0NfDlNZ0cSTXd-9UsJ_wcocNuGLzZm118UZ_GTjcFZ0WJzaIvCXV3g7Hb4e0_r0oUI_W2VkaqmMw.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=NDaZKep9BpMQ7kNvwEpfbf9&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTM2ODg2OTYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=2135749eb0a222c7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9COEQ5OTcyMkFBNTY0RTZGQjE0MDFCMkYwNkRGQTFFM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0Y3MjNERDg3NEM4QjRFREU4RUY0QTNCOTE4NDE1RDcxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAm_Luw8r2PxUCKAJDMywXQD91P3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQONhcm01ZfYZfxk-bjZlZ-Ni4aZk_yjJ35rqdqHiZyF1g&oe=6AE1FEDA"
       ],
       "engagement": {
-        "likes": 290,
+        "likes": 325,
         "replies": 24,
-        "reposts": 26,
+        "reposts": 29,
         "quotes": 5
       },
       "first_seen_at": "2026-10-26T20:12:17.299051Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016612770661253612",
@@ -138,16 +153,16 @@
       "text": "🚨 와.. 미친.. 중국 모델을 사용하고 있다면 꼭 읽어보세요.\n\n알리바바 AI 모델이 보안 과제를 받자 자기가 돌던 컴퓨터를 뒤지고 베이징 서버로 파일을 올리려 했습니다.\n\nCohere가 오픈웨이트 모델 Qwen3.8-Flash-Next를 시험하다 잡아낸 장면인데요.\n\n모델은 추론 과정에 \"도구는 쓰지 않겠다\"고 적어 놓고 같은 차례에 명령어를 실행했습니다. 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/De94Aizj8Hs",
       "media": [
-        "https://scontent-dfw5-2.cdninstagram.com/v/t51.82787-15/866565032_17993687034112832_6061930107411291495_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=NDAxNjYxMjc3MDY2MTI1MzYxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNTkwLnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=6Lc2eDIRRQkQ7kNvwFuu7_E&_nc_oc=AdolinEPkKe5cjaysWMGViK4oCtvveYP_RHD5YLW46ryZkVXIjna6ObHkC_mw-Fzm4I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQOYdSSV-BpNV9O7bSeIYwBztKm6FlYxkD7E2JIAc-EBWg&oe=6AE5C2F2"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/866565032_17993687034112832_6061930107411291495_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=NDAxNjYxMjc3MDY2MTI1MzYxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNTkwLnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=6Lc2eDIRRQkQ7kNvwHvEEIz&_nc_oc=AdrQGB0giyFutyenyqIs7UUB_i0ZRxRrNBzpXz1EXNW8MXBkA5T1gUvPZupYvnp8ACE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQO55CrOdbWX4iz3uaZIzz0CmxTHMcinjXnQ7e1fDB6O9A&oe=6AE5C2F2"
       ],
       "engagement": {
-        "likes": 126,
-        "replies": 25,
-        "reposts": 14,
-        "quotes": 9
+        "likes": 144,
+        "replies": 30,
+        "reposts": 16,
+        "quotes": 11
       },
       "first_seen_at": "2026-10-26T20:12:17.299051Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016567878396572333",
@@ -155,16 +170,16 @@
       "text": "Claude Mythos를 활용해 소프트웨어 보안 취약점을 찾아 수정하는 AI 서비스가 공개됐습니다.\n\nCognition이 발표한 Devin Security인데요.\n\nClaude Mythos와 최신 사이버 보안 AI 모델을 활용해 코드의 취약점을 검사하고, 실제 공격 가능성을 평가한 뒤 수정과 테스트까지 진행합니다.\n\n기존 보안 검사에서 발견한 문제도 다시 검증할 수 있습니다.\n\nCognition은 기업 고객에게 무료 정밀 검사와 취약점 수정에 사용할 수 있는 대규모 Devin 크레딧도 제공한다고 밝혔습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De9tzRoEnKt",
       "media": [
-        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQON6VLN-glIkwnCErBblguCcU_2h5X6HvZb85hZDUbj1De8sMmWfJUJUrA9mMg-mqAWhhnzL-RWP-bp0xmICySEpr9fpRAAwgRGCGc.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=fC4gTgSYMB8Q7kNvwFyH0gW&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTM2NjYwODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=a42f641c9df9d46d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC80OTc5REIwQTg5RUM0QjJFODA3RUFEMTNGQjkxNkUxNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QzRkFDQ0YxRkRGMjQ2Rjc4OTNBRENGM0U1N0VGMzEwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsK6zm8n2PxUCKAJDMywXQGBJiTdLxqgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQOW_IMWmZAmddvq9bRhF9nH3NNwZLmQcJ1IWs8XcoruTA&oe=6AE1DB42"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQON6VLN-glIkwnCErBblguCcU_2h5X6HvZb85hZDUbj1De8sMmWfJUJUrA9mMg-mqAWhhnzL-RWP-bp0xmICySEpr9fpRAAwgRGCGc.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=fC4gTgSYMB8Q7kNvwG0TBM4&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTM2NjYwODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=a42f641c9df9d46d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC80OTc5REIwQTg5RUM0QjJFODA3RUFEMTNGQjkxNkUxNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0QzRkFDQ0YxRkRGMjQ2Rjc4OTNBRENGM0U1N0VGMzEwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAsK6zm8n2PxUCKAJDMywXQGBJiTdLxqgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMAz3H1a28lUioiZp8EXDicZ0DIsqJ7ZDmIP3lICB0-gQ&oe=6AE1DB42"
       ],
       "engagement": {
-        "likes": 12,
+        "likes": 13,
         "replies": 1,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-10-26T17:15:58.659629Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016517415701547088",
@@ -172,16 +187,16 @@
       "text": "🚨 꼭 한 번 읽어주세요.\n\n앤트로픽이 드디어 나스닥 상장을 신청했습니다.\n\n이번에 공개된 재무제표가 충격적입니다. 상반기 매출만 약 23조 원, 순손실은 무려 114조 원에 달합니다.\n그런데 2분기에는 첫 영업흑자까지 기록했고, 기업가치는 약 1조 달러로 추산되는데요.\n\n하지만, 중요한 내용은 따로 있습니다.\n\n앤트로픽의 상장 신고서에서 드러난 AI 시장과 흐름 그리고 차기 모델까지 정리했습니다. 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/De9iU8lD4hQ",
       "media": [
-        "https://scontent-dfw5-1.cdninstagram.com/v/t51.82787-15/866016591_17993636970112832_3337267777178410525_n.webp?_nc_cat=105&ig_cache_key=NDAxNjUxNzQxNTcwMTU0NzA4OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=4Egs1iM_iLcQ7kNvwFHNM3B&_nc_oc=AdqWnUH04mqQylccc6zK9hflyZDUfZAHWAgNTvnLKmenn2nZ0d6KChstnXlKTlTDC3k&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQMUQWUyb4jcE0VFLJUxFD-IJSSLUoGeDAhYcktfAOT5UA&oe=6AE5B66D"
+        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/866016591_17993636970112832_3337267777178410525_n.webp?_nc_cat=105&ig_cache_key=NDAxNjUxNzQxNTcwMTU0NzA4OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=4Egs1iM_iLcQ7kNvwGmou8-&_nc_oc=AdqvaV0VE46PGaa_kH_nqJO7a7tTlleOkHi0qP_UUFzVDLZ1x--BBlI2bldrNtIKOI8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQPdC6UXJ0uEDUPRPFwL2N74r_T-xbdMV07SKIgCPeVKwg&oe=6AE5EEAD"
       ],
       "engagement": {
-        "likes": 233,
+        "likes": 246,
         "replies": 52,
-        "reposts": 33,
+        "reposts": 34,
         "quotes": 1
       },
       "first_seen_at": "2026-10-26T15:27:37.733928Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016465851817392854",
@@ -189,7 +204,7 @@
       "text": "🚨 긴급속보) 앤트로픽이 공식적으로 기업공개(IPO) 절차에 돌입했습니다.\n\n앤트로픽은 미국 증권거래위원회(SEC)에 상장을 위한 S-1 증권신고서를 제출했다고 발표했습니다.\n\nS-1에는 기업의 매출, 손익, 사업 위험 등이 담기는 만큼 Claude를 개발하는 앤트로픽의 재무 상황과 AI 사업의 수익성을 살펴볼 수 있는 계기가 될 것으로 보입니다.\n\n다만 아직 상장이 확정된 것은 아니며, SEC의 신고서 효력 발생 전에는 주식을 판매할 수 없습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De9Wml-D_rW",
       "media": [
-        "https://scontent-dfw6-2.cdninstagram.com/v/t51.82787-15/867420620_17993631297112832_8456094350759135708_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=NDAxNjQ2NTg1MTgxNzM5Mjg1NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTUyNi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=rnAOuBEqUqgQ7kNvwHt57Wb&_nc_oc=Adr9zc_bIJLaTjDEWBwHK1g5surtevNzDSl2668SO0_RVUzwR0BUtC1uJz8oNh9E-Zk&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQPUJMJ2n_LYD7NHuVSS5xvg7HXpqpJCI91Umd9Bb5P54Q&oe=6AE5C24D"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/867420620_17993631297112832_8456094350759135708_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=110&ig_cache_key=NDAxNjQ2NTg1MTgxNzM5Mjg1NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTUyNi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=rnAOuBEqUqgQ7kNvwG1XN9M&_nc_oc=AdoVaU6px2Yrl71ng_S_CUI0IQcB8tSRhmY8fcHtXPZuPDfdmdNkUia14WVinloT41A&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQOLv_mpjj8eKGxDvzJ_ipooEJCN9kDOjDi55EDxRqfQzg&oe=6AE5C24D"
       ],
       "engagement": {
         "likes": 72,
@@ -198,7 +213,7 @@
         "quotes": 1
       },
       "first_seen_at": "2026-10-26T14:25:34.857266Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016462212075396484",
@@ -206,16 +221,16 @@
       "text": "샘 알트만(Sam Altman)은 “인간이 항상 미래의 통제권을 쥐고 있어야 한다”고 강조했습니다.\n\n그는 AI에 의사결정 권한을 돌이킬 수 없이 넘겨주거나 통제력을 잃어서는 안 된다고 경고했습니다.\n특히 “지능 지수(IQ) 100억 수준의 AI 하나에 권력이 집중되거나 소수에게 독점되는 것을 경계해야 한다”며 기술 권력의 민주적 분산을 역설했습니다.\n\nAI의 발전 속도 제한과 안전 규제에 대해서는 ‘모든 규제를 반대하는 극단’과 ‘발전을 전면 중단하자는 극단’ 모두 잘못되었다고 지적했습니다.\n\n지능의 폭발적 성장 속에서 인류가 감당 가능한 한계를 설정하고 권력을 분산하는 사회적 합의가 특이점 시대를 대비하는 핵심 과제입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De9VxoMiJ2E",
       "media": [
-        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQN3WvYEhfRpwXf9wpdwBRugbaDQf8wR1QC2Ib8ftxwhlR8HIlW4CSG5G5kJeoPWJ7DWBfrx9xrfTn2yDaNWX3cTfWTP3MGo9PWqKpU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=47DBXhrSzqQQ7kNvwF0EGQd&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTI4ODAxMTIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=d1853bc21e4e364f&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84NDVCQ0M4Nzk3RUY0RTFGQjdENzFDQ0NBQzJCQ0M1QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzcwNTlFQkUyMUI5MzQwQ0Y4QzgxMzFFNENCMDA4NDkzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA04y5u5v2PxUCKAJDMywXQFciHKwIMScYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQNa5RaboDtgwSGQXuYTxI9ZpFRtomBC-QrQwaYDTPSugg&oe=6AE1BC91"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQN3WvYEhfRpwXf9wpdwBRugbaDQf8wR1QC2Ib8ftxwhlR8HIlW4CSG5G5kJeoPWJ7DWBfrx9xrfTn2yDaNWX3cTfWTP3MGo9PWqKpU.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=7bcYNfuc8A4Q7kNvwG-uq08&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTI4ODAxMTIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=d1853bc21e4e364f&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84NDVCQ0M4Nzk3RUY0RTFGQjdENzFDQ0NBQzJCQ0M1QV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzcwNTlFQkUyMUI5MzQwQ0Y4QzgxMzFFNENCMDA4NDkzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA04y5u5v2PxUCKAJDMywXQFciHKwIMScYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMvUBM3iA8Ffdt_xsEPilKewFTmWsh27vc3tdwOttDUfw&oe=6AE1F4D1"
       ],
       "engagement": {
-        "likes": 18,
+        "likes": 19,
         "replies": 1,
         "reposts": 1,
         "quotes": 0
       },
       "first_seen_at": "2026-10-26T14:25:34.857266Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016449345696003514",
@@ -223,16 +238,16 @@
       "text": "🚨 큰거 옵니다..\n\nBloomberg에 따르면 앤트로픽이 오늘 기업공개(IPO)를 위한 S-1 서류를 한국시간 새벽 1시에 공개할 예정이라고 합니다.\n\n그동안 공개되지 않았던 매출과 적자, AI 개발 비용이 드러나면서 AI 기업의 실제 가치가 시장에서 평가받게 되는데요.\n\n한편 IPO를 앞두고 Fable 5.5가 출시될 것이라는 관측도 나오고 있습니다.\n\n신규 모델 출시 경쟁뿐 아니라 AI 산업 전체의 기업가치와 투자 흐름에도 영향을 줄 수 있는 시점입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De9S2Zcj3W6",
       "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/870005676_17993624334112832_5851460323594574753_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=NDAxNjQ0OTM0NTY5NjAwMzUxNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTYzMy5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=JYV8Gc5ExJEQ7kNvwEV5xOv&_nc_oc=AdrusrHpPmLYgc93IaYIM8gRbQd1BM4bX3B2jWH-Ip4aGRbxZLuPa9n1eZRjvWgls7s&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&oh=00_AQMVHTGoWxj8yD-SCTAwgWrrOIpKdhNxwOGkiggfimib2g&oe=6AE5C4A4"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/870005676_17993624334112832_5851460323594574753_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=NDAxNjQ0OTM0NTY5NjAwMzUxNA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTYzMy5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=JYV8Gc5ExJEQ7kNvwG6XOQO&_nc_oc=AdoyMEMBGpQNL8ymnj--CrGeruY6O0mkawKFytliQCYkRL8ASSHfsjuu0O0KPEly2KY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&oh=00_AQPdhE-V3YIdHg4JB_NTjpBt628vsg1s8S9NenT-HRQoHg&oe=6AE5C4A4"
       ],
       "engagement": {
-        "likes": 75,
+        "likes": 76,
         "replies": 2,
         "reposts": 4,
         "quotes": 0
       },
       "first_seen_at": "2026-10-26T14:25:34.857266Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016431890118100762",
@@ -240,16 +255,16 @@
       "text": "전 구글 CEO 에릭 슈미트는 미래 기업이 겪을 인력과 조직 구조의 변화에 대해 “기업 내 조정 비용(조정세)은 비즈니스용 AI 플랫폼에 의해 제거될 수 있다”고 전망했습니다.\n\n그는 1만 명 규모 대기업의 막대한 회의 시간과 소통 비효율을 지적하며, 미래 기업은 훨씬 적은 인원으로 훨씬 더 높은 효율을 낼 것이라고 분석했습니다.\n\n특히 기획이나 수치 조율 등 단순 관리직인 “접착제 역할의 인력(glue people)”은 더 이상 필요 없게 되어 대규모 감원이 불가피하다고 보았습니다.\n\n대신 “제품을 만드는 뛰어난 발명가와 프로그래머, 인간적 교감이 필수적인 영업 인력, 리더, 규제 당국과 소통할 전문가”만이 핵심 인재로 남을 것이라고 강조했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/De9O4YrCkca",
       "media": [
-        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMjLNMZU1Z_H-Ze224rMz1LIZjmhAurWOFP8yF9bNs22MyR356iGHNn0yE50MBDkn3xeMCsdfbeE9lX55RRqk6sx1sz_a5lBwXI2-4.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=MnlsdJBe4ksQ7kNvwHIIyhc&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTI4ODE3MDUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=a1b598cd9ccbcd8d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNUQ5NTlCNTQzMEQ0RDI3OUU3NEI2OTJBMjUxMjI0NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0RUY4Mzg3QUZDMDQ4MDhBNTBDMDRGOTdBMkVFRURGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA1Kaox5v2PxUCKAJDMywXQGBZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=ZbiwrAoLCOgqn6PAHwtpQw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQN0ferkyVzfa77aQgyt0duIRfuTh6i4ky6o6lezTjAyIQ&oe=6AE1E69C"
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMjLNMZU1Z_H-Ze224rMz1LIZjmhAurWOFP8yF9bNs22MyR356iGHNn0yE50MBDkn3xeMCsdfbeE9lX55RRqk6sx1sz_a5lBwXI2-4.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=MnlsdJBe4ksQ7kNvwFYNgPN&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTI4ODE3MDUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTMwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=a1b598cd9ccbcd8d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNUQ5NTlCNTQzMEQ0RDI3OUU3NEI2OTJBMjUxMjI0NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzk0RUY4Mzg3QUZDMDQ4MDhBNTBDMDRGOTdBMkVFRURGX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA1Kaox5v2PxUCKAJDMywXQGBZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=exC2X2us-him0XLDGmLuvg&_nc_ss=7a20f&_nc_zt=28&oh=00_AQMu0c7YlotLrSt3F9Q_kQGch323mUJf8YSq8uq3tpM-4A&oe=6AE1E69C"
       ],
       "engagement": {
-        "likes": 27,
+        "likes": 29,
         "replies": 2,
-        "reposts": 0,
+        "reposts": 1,
         "quotes": 1
       },
       "first_seen_at": "2026-10-26T14:25:34.857266Z",
-      "last_seen_at": "2026-10-27T00:47:58.666120Z"
+      "last_seen_at": "2026-10-27T01:58:25.434663Z"
     },
     {
       "post_id": "4016401611219448643",
