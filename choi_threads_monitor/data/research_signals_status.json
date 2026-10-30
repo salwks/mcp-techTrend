@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-10-30T07:10:19.524870Z",
+  "sources": {
+    "hf_daily_papers": {
+      "status": "ok",
+      "fetched": 100,
+      "new": 100
+    },
+    "openai_research": {
+      "status": "ok",
+      "fetched": 1337,
+      "new": 1336
+    },
+    "deepmind_research": {
+      "status": "error",
+      "error": "not well-formed (invalid token): line 1, column 0"
+    },
+    "bair_research": {
+      "status": "ok",
+      "fetched": 10,
+      "new": 10
+    }
+  }
+}
