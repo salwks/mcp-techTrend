@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-30T07:16:08.870848Z",
+  "generated_at": "2026-10-30T07:16:37.524234Z",
   "window_hours": 6,
-  "total_candidates": 79,
+  "total_candidates": 81,
   "counts_by_group": {
     "choi": 6,
     "external": 48,
-    "research": 25
+    "research": 27
   },
   "source_status": {
     "choi": "ok",
@@ -35,8 +35,10 @@
         "skipped_old_or_undated": 1319
       },
       "deepmind_research": {
-        "status": "error",
-        "error": "not well-formed (invalid token): line 1, column 0"
+        "status": "ok",
+        "fetched": 100,
+        "new": 0,
+        "skipped_old_or_undated": 98
       },
       "bair_research": {
         "status": "ok",
@@ -563,6 +565,16 @@
     },
     {
       "group": "research",
+      "source": "deepmind_research",
+      "id": "deepmind_research:https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
+      "title": "Gemini 4 Carbon: Our next frontier model",
+      "url": "https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
+      "published_at": "2026-10-28T17:00:58Z",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
       "source": "openai_research",
       "id": "openai_research:https://openai.com/index/openai-servicenow-partnership-expansion",
       "title": "OpenAI and ServiceNow expand partnership across enterprise workflows",
@@ -591,6 +603,17 @@
       "url": "https://openai.com/index/legora",
       "published_at": "2026-10-28T09:30:00Z",
       "abstract": "See how Legora uses OpenAI models, ChatGPT, and Codex to accelerate legal workflows, expand contract analysis, and free lawyers to focus on higher-value work.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "deepmind_research",
+      "id": "deepmind_research:https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
+      "title": "Genie 4: A new generation of world simulation",
+      "url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
+      "published_at": "2026-10-27T16:01:38Z",
+      "abstract": "Genie 4: our new world model unlocking unprecedented realism in real-time simulation.",
       "upvotes": null,
       "signal_type": "lab_announcement"
     },

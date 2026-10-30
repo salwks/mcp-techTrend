@@ -1,6 +1,6 @@
-# AI News six-hour intake — 2026-10-30T07:16:08.870848Z
+# AI News six-hour intake — 2026-10-30T07:16:37.524234Z
 
-Candidates: 79 (CHOI 6, external 48, research 25)
+Candidates: 81 (CHOI 6, external 48, research 27)
 
 > Unverified candidates. Check original sources before publishing.
 
@@ -64,12 +64,15 @@ Candidates: 79 (CHOI 6, external 48, research 25)
   Abstract: OpenAI uses layered monitoring to detect frontier model misalignment and unauthorized agent behavior so responders can intervene before incidents escalate.
 - [research/openai_research] How Ropes & Gray is developing AI for transactional diligence (2026-10-29T07:00:00Z) — https://openai.com/index/ropes-gray-ai-diligence
   Abstract: Ropes & Gray is developing AI for transactional diligence with OpenAI. Lawyers review grouped documents, summaries, and reports before advising clients.
+- [research/deepmind_research] Gemini 4 Carbon: Our next frontier model (2026-10-28T17:00:58Z) — https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/
 - [research/openai_research] OpenAI and ServiceNow expand partnership across enterprise workflows (2026-10-28T13:15:00Z) — https://openai.com/index/openai-servicenow-partnership-expansion
   Abstract: OpenAI and ServiceNow expand their partnership to bring OpenAI models and agents into ServiceNow and ServiceNow workflows into ChatGPT and Codex.
 - [research/openai_research] The future of the firm (2026-10-28T10:00:00Z) — https://openai.com/index/the-future-of-the-firm
   Abstract: How AI might enter the org chart—beneath, beside, and between us.
 - [research/openai_research] Legora is building the agentic operating system for legal work (2026-10-28T09:30:00Z) — https://openai.com/index/legora
   Abstract: See how Legora uses OpenAI models, ChatGPT, and Codex to accelerate legal workflows, expand contract analysis, and free lawyers to focus on higher-value work.
+- [research/deepmind_research] Genie 4: A new generation of world simulation (2026-10-27T16:01:38Z) — https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/
+  Abstract: Genie 4: our new world model unlocking unprecedented realism in real-time simulation.
 - [research/openai_research] Retell uses OpenAI models to help power 100M monthly calls (2026-10-27T15:00:00Z) — https://openai.com/index/retell-ai
   Abstract: GPT-6 Astra tops Retell’s voice agent benchmark, while Codex helps it reach a $1.6M annual revenue run rate per employee.
 - [research/openai_research] OpenAI expands partnership with Oracle to bring its apps to ChatGPT (2026-10-27T07:00:00Z) — https://openai.com/index/oracle-apps-in-chatgpt
