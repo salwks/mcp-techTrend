@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T07:19:28.384338Z",
+  "generated_at": "2026-10-30T07:19:39.254909Z",
   "window_hours": 6,
   "total_candidates": 114,
   "counts_by_group": {
@@ -25,7 +25,7 @@
       "hf_daily_papers": {
         "status": "ok",
         "fetched": 196,
-        "new": 189,
+        "new": 0,
         "skipped_old_or_undated": 0
       },
       "openai_research": {
@@ -538,7 +538,7 @@
       "url": "https://huggingface.co/papers/2610.39633",
       "published_at": "2026-10-29T00:00:00Z",
       "abstract": "One-step and few-step text-to-image generation must accurately render the details specified in the prompt despite limited opportunities for refinement. Distribution matching distillation (DMD) uses score differences to bring the generated distribution closer to a reference distribution. Following prior work, we estimate this difference with internal velocity branches, avoiding a separate fake-score network. We ask whether an explicit moment constraint improves this learned score supervision. A decomposition of the reverse-KL field into a Gaussian moment component and a non-Gaussian residual identifies statistics that can be constrained explic",
-      "upvotes": 65,
+      "upvotes": 66,
       "signal_type": "paper"
     },
     {
@@ -549,7 +549,7 @@
       "url": "https://huggingface.co/papers/2610.38568",
       "published_at": "2026-10-28T00:00:00Z",
       "abstract": "Recursive self-improvement requires models not only to acquire useful training experience, but also to decide when their current experience has ceased to be useful. Existing methods often focus on what experience to generate next, while paying less attention to when fresh experience should be introduced. Many also construct training targets through self-consistency or majority voting, making supervision depend on the model's own uncertain predictions. We address these two questions separately: training dynamics determine when to acquire new experience, while the answers to new tasks remain independently checkable. A-RSI monitors reward variat",
-      "upvotes": 29,
+      "upvotes": 30,
       "signal_type": "paper"
     },
     {

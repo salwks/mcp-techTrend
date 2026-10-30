@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-30T07:19:15.954138Z",
+  "generated_at": "2026-10-30T07:19:37.611608Z",
   "retention_days": 7,
   "items_count": 216,
   "sources": {
     "hf_daily_papers": {
       "status": "ok",
       "fetched": 196,
-      "new": 189,
+      "new": 0,
       "skipped_old_or_undated": 0
     },
     "openai_research": {
@@ -41,7 +41,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/how-we-detect-frontier-model-misalignment",
@@ -55,7 +55,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/ropes-gray-ai-diligence",
@@ -69,7 +69,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.40599",
@@ -89,7 +89,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.40454",
@@ -109,7 +109,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.40362",
@@ -129,7 +129,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.39664",
@@ -149,7 +149,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.39633",
@@ -161,7 +161,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.39633",
       "published_at": "2026-10-29T00:00:00Z",
       "summary": "One-step and few-step text-to-image generation must accurately render the details specified in the prompt despite limited opportunities for refinement. Distribution matching distillation (DMD) uses score differences to bring the generated distribution closer to a reference distribution. Following prior work, we estimate this difference with internal velocity branches, avoiding a separate fake-score network. We ask whether an explicit moment constraint improves this learned score supervision. A decomposition of the reverse-KL field into a Gaussian moment component and a non-Gaussian residual identifies statistics that can be constrained explicitly. We introduce Intrinsic Distribution Matching (IDM), which retains the full DMD correction and matches feature means and per-coordinate standard deviations using the generator's exponential-moving-average (EMA) copy, requiring no external feature encoder. Experiments use full-parameter and low-rank adaptation (LoRA) tuning on Z-Image-Turbo 6B and Qwen-Image 20B. At two network evaluations, IDM reaches 94.25% and 90.20% on Chinese and English LongText-Bench, the highest scores among the compared methods at this budget. Controlled ablations show gains from the added moment loss, while generator EMA features perform competitively with an external DINOv2 encoder across the five reported metrics. Code is available at https://github.com/inclusionAI/IDM.",
-      "upvotes": 65,
+      "upvotes": 66,
       "comments": 1,
       "has_code": true,
       "project_page": "https://www.inclusion-ai.org/IDM/?lang=zh",
@@ -169,7 +169,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.39264",
@@ -189,7 +189,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "deepmind_research:https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
@@ -203,7 +203,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:16:18.134200Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/openai-servicenow-partnership-expansion",
@@ -217,7 +217,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/the-future-of-the-firm",
@@ -231,7 +231,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/legora",
@@ -245,7 +245,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.38678",
@@ -265,7 +265,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.38568",
@@ -277,7 +277,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.38568",
       "published_at": "2026-10-28T00:00:00Z",
       "summary": "Recursive self-improvement requires models not only to acquire useful training experience, but also to decide when their current experience has ceased to be useful. Existing methods often focus on what experience to generate next, while paying less attention to when fresh experience should be introduced. Many also construct training targets through self-consistency or majority voting, making supervision depend on the model's own uncertain predictions. We address these two questions separately: training dynamics determine when to acquire new experience, while the answers to new tasks remain independently checkable. A-RSI monitors reward variation and accuracy in training logs to refresh a task pool when its learning signal declines, without consulting validation or test scores. A static library of model-authored programs produces multimodal questions and derives their reference answers; we specify the task-generation contract, automatically verify chosen properties of the reward and refresh rules, and separately audit the generated answers. The training loop uses no external training examples or human-written answer labels. On the primary eleven-benchmark suite, A-RSI raises the performance average from 57.77 to 61.05 with 800 fresh tasks.",
-      "upvotes": 29,
+      "upvotes": 30,
       "comments": 1,
       "has_code": false,
       "project_page": "https://seerray-lab.github.io/A-RSI/",
@@ -285,7 +285,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.38425",
@@ -305,7 +305,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.38352",
@@ -325,7 +325,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.38342",
@@ -345,7 +345,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "deepmind_research:https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
@@ -359,7 +359,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:16:18.134200Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/retell-ai",
@@ -373,7 +373,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/oracle-apps-in-chatgpt",
@@ -387,7 +387,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/check-point-daybreak",
@@ -401,7 +401,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37786",
@@ -421,7 +421,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37666",
@@ -441,7 +441,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37662",
@@ -461,7 +461,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37649",
@@ -481,7 +481,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37626",
@@ -501,7 +501,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37624",
@@ -521,7 +521,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37585",
@@ -541,7 +541,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37386",
@@ -561,7 +561,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37381",
@@ -581,7 +581,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37364",
@@ -601,7 +601,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37341",
@@ -621,7 +621,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37255",
@@ -641,7 +641,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37230",
@@ -661,7 +661,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37219",
@@ -681,7 +681,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37175",
@@ -701,7 +701,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37161",
@@ -721,7 +721,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37037",
@@ -741,7 +741,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36791",
@@ -761,7 +761,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36729",
@@ -781,7 +781,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36671",
@@ -801,7 +801,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36466",
@@ -821,7 +821,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36456",
@@ -841,7 +841,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36420",
@@ -861,7 +861,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35864",
@@ -881,7 +881,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2509.05512",
@@ -901,7 +901,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/greptile-code-review-codex-astra",
@@ -915,7 +915,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/building-scientific-understanding-with-academic-communities",
@@ -929,7 +929,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/gpt-6-1-sol-coderabbit-code-security",
@@ -943,7 +943,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/chatgpt-expanding-world-of-work",
@@ -957,7 +957,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/openai-cut-incident-investigation",
@@ -971,7 +971,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/fanatics-streamline-fan-experience",
@@ -985,7 +985,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/introducing-gpt-6-1-terra",
@@ -999,7 +999,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36269",
@@ -1019,7 +1019,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36192",
@@ -1039,7 +1039,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36184",
@@ -1059,7 +1059,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36095",
@@ -1079,7 +1079,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36082",
@@ -1099,7 +1099,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36077",
@@ -1119,7 +1119,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36068",
@@ -1139,7 +1139,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.36022",
@@ -1159,7 +1159,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35845",
@@ -1179,7 +1179,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35724",
@@ -1199,7 +1199,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35684",
@@ -1219,7 +1219,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35671",
@@ -1239,7 +1239,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35518",
@@ -1259,7 +1259,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35450",
@@ -1279,7 +1279,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35439",
@@ -1299,7 +1299,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35434",
@@ -1319,7 +1319,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35385",
@@ -1339,7 +1339,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35328",
@@ -1359,7 +1359,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35295",
@@ -1379,7 +1379,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35193",
@@ -1399,7 +1399,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35138",
@@ -1419,7 +1419,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35013",
@@ -1439,7 +1439,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35001",
@@ -1459,7 +1459,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34921",
@@ -1479,7 +1479,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34894",
@@ -1499,7 +1499,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34886",
@@ -1519,7 +1519,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34735",
@@ -1539,7 +1539,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34724",
@@ -1559,7 +1559,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34714",
@@ -1579,7 +1579,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34674",
@@ -1599,7 +1599,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34662",
@@ -1619,7 +1619,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34654",
@@ -1639,7 +1639,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.26185",
@@ -1659,7 +1659,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.22543",
@@ -1679,7 +1679,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2602.10657",
@@ -1699,7 +1699,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.35962",
@@ -1719,7 +1719,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34638",
@@ -1739,7 +1739,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34634",
@@ -1759,7 +1759,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34577",
@@ -1779,7 +1779,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34491",
@@ -1799,7 +1799,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34467",
@@ -1819,7 +1819,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34415",
@@ -1839,7 +1839,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34386",
@@ -1859,7 +1859,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34356",
@@ -1879,7 +1879,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34283",
@@ -1899,7 +1899,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34241",
@@ -1919,7 +1919,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34238",
@@ -1939,7 +1939,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34186",
@@ -1959,7 +1959,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34149",
@@ -1979,7 +1979,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.34073",
@@ -1999,7 +1999,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33966",
@@ -2019,7 +2019,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33956",
@@ -2039,7 +2039,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.18683",
@@ -2059,7 +2059,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.37695",
@@ -2079,7 +2079,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33877",
@@ -2099,7 +2099,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33861",
@@ -2119,7 +2119,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33845",
@@ -2139,7 +2139,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33817",
@@ -2159,7 +2159,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33732",
@@ -2179,7 +2179,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33718",
@@ -2199,7 +2199,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33645",
@@ -2219,7 +2219,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33624",
@@ -2239,7 +2239,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33608",
@@ -2259,7 +2259,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33568",
@@ -2279,7 +2279,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33512",
@@ -2299,7 +2299,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33503",
@@ -2319,7 +2319,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33472",
@@ -2339,7 +2339,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33413",
@@ -2359,7 +2359,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/scaling-storage-one-billion-users-part-two",
@@ -2373,7 +2373,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "openai_research:https://openai.com/index/securing-our-frontier-model-training-environment",
@@ -2387,7 +2387,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33245",
@@ -2407,7 +2407,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33169",
@@ -2427,7 +2427,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33135",
@@ -2447,7 +2447,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32965",
@@ -2467,7 +2467,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32909",
@@ -2487,7 +2487,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32894",
@@ -2507,7 +2507,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32770",
@@ -2527,7 +2527,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32749",
@@ -2547,7 +2547,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32411",
@@ -2567,7 +2567,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32285",
@@ -2587,7 +2587,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32253",
@@ -2607,7 +2607,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32250",
@@ -2627,7 +2627,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32195",
@@ -2647,7 +2647,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32177",
@@ -2667,7 +2667,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32093",
@@ -2687,7 +2687,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32046",
@@ -2707,7 +2707,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32004",
@@ -2727,7 +2727,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31670",
@@ -2747,7 +2747,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2609.16158",
@@ -2767,7 +2767,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2606.00778",
@@ -2787,7 +2787,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2601.15351",
@@ -2807,7 +2807,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33106",
@@ -2827,7 +2827,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.32002",
@@ -2847,7 +2847,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31931",
@@ -2867,7 +2867,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31924",
@@ -2887,7 +2887,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31819",
@@ -2907,7 +2907,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31818",
@@ -2927,7 +2927,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31810",
@@ -2947,7 +2947,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31779",
@@ -2967,7 +2967,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31734",
@@ -2987,7 +2987,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31716",
@@ -3007,7 +3007,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31668",
@@ -3027,7 +3027,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31635",
@@ -3047,7 +3047,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31572",
@@ -3067,7 +3067,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31569",
@@ -3087,7 +3087,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31566",
@@ -3107,7 +3107,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31423",
@@ -3127,7 +3127,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31309",
@@ -3147,7 +3147,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31288",
@@ -3167,7 +3167,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31162",
@@ -3187,7 +3187,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.31066",
@@ -3207,7 +3207,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30970",
@@ -3227,7 +3227,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30932",
@@ -3247,7 +3247,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.01352",
@@ -3267,7 +3267,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33079",
@@ -3287,7 +3287,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30524",
@@ -3307,7 +3307,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30435",
@@ -3327,7 +3327,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30132",
@@ -3347,7 +3347,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30006",
@@ -3367,7 +3367,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29927",
@@ -3387,7 +3387,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29915",
@@ -3407,7 +3407,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29702",
@@ -3427,7 +3427,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29552",
@@ -3447,7 +3447,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29477",
@@ -3467,7 +3467,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29139",
@@ -3487,7 +3487,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.29003",
@@ -3507,7 +3507,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.28490",
@@ -3527,7 +3527,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33066",
@@ -3547,7 +3547,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.27782",
@@ -3567,7 +3567,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.27597",
@@ -3587,7 +3587,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.27528",
@@ -3607,7 +3607,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.26030",
@@ -3627,7 +3627,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.24520",
@@ -3647,7 +3647,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.24481",
@@ -3667,7 +3667,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.23234",
@@ -3687,7 +3687,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.27364",
@@ -3707,7 +3707,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.27103",
@@ -3727,7 +3727,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.27100",
@@ -3747,7 +3747,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.25118",
@@ -3767,7 +3767,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.24451",
@@ -3787,7 +3787,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.14465",
@@ -3807,7 +3807,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.22990",
@@ -3827,7 +3827,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.14018",
@@ -3847,7 +3847,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.22684",
@@ -3867,7 +3867,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.22507",
@@ -3887,7 +3887,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.21561",
@@ -3907,7 +3907,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.21240",
@@ -3927,7 +3927,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.21143",
@@ -3947,7 +3947,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.21109",
@@ -3967,7 +3967,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.20832",
@@ -3987,7 +3987,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.20117",
@@ -4007,7 +4007,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.19687",
@@ -4027,7 +4027,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.19589",
@@ -4047,7 +4047,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.17821",
@@ -4067,7 +4067,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.14253",
@@ -4087,7 +4087,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.19025",
@@ -4107,7 +4107,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.17117",
@@ -4127,7 +4127,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33024",
@@ -4147,7 +4147,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.28655",
@@ -4167,7 +4167,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.33005",
@@ -4187,7 +4187,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.23928",
@@ -4207,7 +4207,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     },
     {
       "id": "hf:2610.30161",
@@ -4227,7 +4227,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:15.954138Z"
+      "last_seen_at": "2026-10-30T07:19:37.611608Z"
     }
   ]
 }
