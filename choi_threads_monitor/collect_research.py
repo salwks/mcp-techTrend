@@ -31,27 +31,37 @@ def utc(value):
         try:return email.utils.parsedate_to_datetime(value).astimezone(dt.timezone.utc).isoformat().replace("+00:00","Z")
         except (ValueError,TypeError):return None
 def hf():
-    rows=json.loads(get("https://huggingface.co/api/daily_papers?limit=100&sort=trending"))
-    if not isinstance(rows,list):raise ValueError("unexpected Hugging Face response")
+    # Daily Papers is an editorial calendar, not the publication-date leaderboard.
+    # Fetch each calendar day explicitly and paginate until exhausted.
+    today=dt.datetime.now(dt.timezone.utc).date()
     out=[]
-    for entry in rows:
-        if not isinstance(entry,dict):continue
-        p=entry.get("paper") or entry
-        pid=p.get("id") or p.get("paperId")
-        if not pid:continue
-        url="https://huggingface.co/papers/"+str(pid)
-        out.append({
-            "id":"hf:"+str(pid),"source":"hf_daily_papers","type":"paper",
-            "title":p.get("title") or entry.get("title"),
-            "url":url,"arxiv_url":"https://arxiv.org/abs/"+str(pid),
-            "published_at":utc(p.get("publishedAt") or entry.get("publishedAt")),
-            "summary":(p.get("summary") or "")[:3200],
-            "upvotes":p.get("upvotes",entry.get("upvotes",0)),
-            "comments":p.get("numComments",entry.get("numComments",0)),
-            "has_code":bool(p.get("githubRepo") or p.get("repository")),
-            "project_page":p.get("projectPage"),
-            "signals":["huggingface_curated"],
-        })
+    for day_offset in range(7):
+        date=(today-dt.timedelta(days=day_offset)).isoformat()
+        for page in range(20):
+            params=urllib.parse.urlencode({"date":date,"p":page,"limit":100,"sort":"publishedAt"})
+            rows=json.loads(get("https://huggingface.co/api/daily_papers?"+params))
+            if not isinstance(rows,list):raise ValueError("unexpected Hugging Face response")
+            for entry in rows:
+                if not isinstance(entry,dict):continue
+                p=entry.get("paper") or entry
+                pid=p.get("id") or p.get("paperId")
+                if not pid:continue
+                out.append({
+                    "id":"hf:"+str(pid),"source":"hf_daily_papers","type":"paper",
+                    "daily_papers_date":date,
+                    "title":p.get("title") or entry.get("title"),
+                    "url":"https://huggingface.co/papers/"+str(pid),
+                    "arxiv_url":"https://arxiv.org/abs/"+str(pid),
+                    "published_at":utc(p.get("publishedAt") or entry.get("publishedAt")),
+                    "summary":(p.get("summary") or "")[:3200],
+                    "upvotes":p.get("upvotes",entry.get("upvotes",0)),
+                    "comments":p.get("numComments",entry.get("numComments",0)),
+                    "has_code":bool(p.get("githubRepo") or p.get("repository")),
+                    "project_page":p.get("projectPage"),
+                    "signals":["huggingface_daily_papers"],
+                })
+            if len(rows)<100:break
+        else:raise ValueError("Hugging Face daily pagination exceeded 20 pages")
     return out
 def rss(source,url):
     raw=get(url)
@@ -91,7 +101,7 @@ def main():
             skipped=0
             for x in found:
                 published=utc(x.get("published_at"))
-                if not published or dt.datetime.fromisoformat(published.replace("Z","+00:00")) < cutoff_date:
+                if (not x.get("daily_papers_date")) and (not published or dt.datetime.fromisoformat(published.replace("Z","+00:00")) < cutoff_date):
                     skipped+=1
                     continue
                 key=x["id"]
@@ -104,7 +114,7 @@ def main():
             report[name]={"status":"error","error":str(e)[:240]}
     cutoff=(now-dt.timedelta(days=7)).isoformat()
     # Seven days from first observation; don't reset the age on rediscovery.
-    kept=[x for x in items.values() if (x.get("first_seen_at") or stamp)>=cutoff and x.get("published_at") and x["published_at"]>=cutoff]
+    kept=[x for x in items.values() if (x.get("first_seen_at") or stamp)>=cutoff and (x.get("daily_papers_date") and x["daily_papers_date"] >= (now-dt.timedelta(days=6)).date().isoformat() or x.get("published_at") and x["published_at"]>=cutoff)]
     kept.sort(key=lambda x:(x.get("published_at") or "",x["id"]),reverse=True)
     DATA.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps({"generated_at":stamp,"retention_days":7,"items_count":len(kept),"sources":report,"items":kept},ensure_ascii=False,indent=2)+ "\n",encoding="utf-8")
