@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Daily AI News</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f6f9;font-family:Arial,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#182235;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;background:#f4f6f9;">
+    <tr><td align="center" style="padding:28px 12px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:720px;border-collapse:collapse;background:#ffffff;">
+        <tr><td style="padding:28px 30px 16px;border-bottom:2px solid #244b88;">
+          <h1 style="margin:0;font-size:30px;line-height:1.35;color:#15335d;">Daily AI News</h1>
+          <p style="margin:8px 0 0;font-size:14px;color:#68788e;">{{EDITION_DATE}} · AI 뉴스 · 기술 동향 · 학술 연구</p>
+        </td></tr>
+        <tr><td style="padding:22px 30px 8px;">
+          <p style="margin:0 0 12px;font-size:15px;line-height:1.8;">{{EDITORIAL_INTRO}}</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#edf3fb;border-collapse:collapse;">
+            <tr><td style="padding:14px 16px;font-size:14px;line-height:2;color:#15335d;">
+              <strong>목차</strong><br>
+              <a href="#section-main" style="color:#244b88;text-decoration:underline;">01 주요 뉴스</a>
+              &nbsp; | &nbsp;
+              <a href="#section-briefs" style="color:#244b88;text-decoration:underline;">02 AI 단신</a>
+              &nbsp; | &nbsp;
+              <a href="#section-research" style="color:#244b88;text-decoration:underline;">03 학술 연구</a>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:18px 30px 8px;">
+          <a id="section-main" name="section-main"></a>
+          <h2 style="font-size:23px;color:#15335d;border-bottom:1px solid #dbe3ef;padding-bottom:10px;">01. 주요 뉴스</h2>
+          <!-- Full major news articles, each with source link and verification context -->
+          {{MAIN_NEWS_HTML}}
+        </td></tr>
+        <tr><td style="padding:18px 30px 8px;">
+          <a id="section-briefs" name="section-briefs"></a>
+          <h2 style="font-size:23px;color:#15335d;border-bottom:1px solid #dbe3ef;padding-bottom:10px;">02. AI 단신</h2>
+          <!-- Include every distinct relevant minor news item -->
+          {{AI_BRIEFS_HTML}}
+        </td></tr>
+        <tr><td style="padding:18px 30px 28px;">
+          <a id="section-research" name="section-research"></a>
+          <h2 style="font-size:23px;color:#15335d;border-bottom:1px solid #dbe3ef;padding-bottom:10px;">03. 학술 연구</h2>
+          <p style="margin:0 0 18px;font-size:13px;color:#64748b;">{{RESEARCH_DATE}} Hugging Face Daily Papers 전체 {{RESEARCH_TOTAL}}건 중 메이저 {{RESEARCH_MAJOR}}건 · 마이너 {{RESEARCH_MINOR}}건</p>
+          <h3 style="color:#1c406d;font-size:18px;">메이저 연구 — 상세 분석</h3>
+          {{RESEARCH_MAJOR_HTML}}
+          <h3 style="color:#1c406d;font-size:18px;">마이너 연구 — 단신</h3>
+          {{RESEARCH_MINOR_HTML}}
+        </td></tr>
+        <tr><td style="padding:20px 30px;background:#edf3fb;font-size:12px;line-height:1.7;color:#62728a;">
+          출처 링크와 연구 논문의 한계 및 검증 상태를 함께 확인하세요.<br>
+          이메일 앱에 따라 상단 목차의 내부 이동 기능이 제한될 수 있습니다. 이 경우 아래 섹션을 순서대로 읽으시면 됩니다.
+          {{FOOTER_HTML}}
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
