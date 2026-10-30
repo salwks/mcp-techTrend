@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T08:23:13.709321Z",
+  "generated_at": "2026-10-30T08:23:46.096864Z",
   "window_hours": 6,
   "window_type": "rolling_preview",
   "production_batch": "Supabase public.ai_news_6h_batches",
@@ -25,8 +25,8 @@
     "research": {
       "hf_daily_papers": {
         "status": "ok",
-        "fetched": 23,
-        "new": 1,
+        "fetched": 26,
+        "new": 3,
         "skipped_old_or_undated": 0
       },
       "openai_research": {

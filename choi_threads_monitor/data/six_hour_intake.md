@@ -1,4 +1,4 @@
-# AI News six-hour intake — 2026-10-30T08:23:13.709321Z
+# AI News six-hour intake — 2026-10-30T08:23:46.096864Z
 
 Candidates: 44 (CHOI 5, external 39)
 
