@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-30T07:15:55.457968Z",
+  "generated_at": "2026-10-30T07:16:18.134200Z",
   "retention_days": 7,
-  "items_count": 25,
+  "items_count": 27,
   "sources": {
     "hf_daily_papers": {
       "status": "ok",
@@ -16,8 +16,10 @@
       "skipped_old_or_undated": 1319
     },
     "deepmind_research": {
-      "status": "error",
-      "error": "not well-formed (invalid token): line 1, column 0"
+      "status": "ok",
+      "fetched": 100,
+      "new": 2,
+      "skipped_old_or_undated": 98
     },
     "bair_research": {
       "status": "ok",
@@ -39,7 +41,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/how-we-detect-frontier-model-misalignment",
@@ -53,7 +55,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/ropes-gray-ai-diligence",
@@ -67,7 +69,21 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
+    },
+    {
+      "id": "deepmind_research:https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
+      "source": "deepmind_research",
+      "type": "lab_announcement",
+      "title": "Gemini 4 Carbon: Our next frontier model",
+      "url": "https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
+      "published_at": "2026-10-28T17:00:58Z",
+      "summary": "",
+      "signals": [
+        "official_lab_publication"
+      ],
+      "first_seen_at": "2026-10-30T07:16:18.134200Z",
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/openai-servicenow-partnership-expansion",
@@ -81,7 +97,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/the-future-of-the-firm",
@@ -95,7 +111,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/legora",
@@ -109,7 +125,21 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
+    },
+    {
+      "id": "deepmind_research:https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
+      "source": "deepmind_research",
+      "type": "lab_announcement",
+      "title": "Genie 4: A new generation of world simulation",
+      "url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
+      "published_at": "2026-10-27T16:01:38Z",
+      "summary": "Genie 4: our new world model unlocking unprecedented realism in real-time simulation.",
+      "signals": [
+        "official_lab_publication"
+      ],
+      "first_seen_at": "2026-10-30T07:16:18.134200Z",
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/retell-ai",
@@ -123,7 +153,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/oracle-apps-in-chatgpt",
@@ -137,7 +167,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/check-point-daybreak",
@@ -151,7 +181,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.37662",
@@ -170,7 +200,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.36729",
@@ -189,7 +219,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/greptile-code-review-codex-astra",
@@ -203,7 +233,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/building-scientific-understanding-with-academic-communities",
@@ -217,7 +247,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/gpt-6-1-sol-coderabbit-code-security",
@@ -231,7 +261,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/chatgpt-expanding-world-of-work",
@@ -245,7 +275,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/openai-cut-incident-investigation",
@@ -259,7 +289,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/fanatics-streamline-fan-experience",
@@ -273,7 +303,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/introducing-gpt-6-1-terra",
@@ -287,7 +317,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.35845",
@@ -306,7 +336,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.35724",
@@ -325,7 +355,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.34467",
@@ -344,7 +374,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.33966",
@@ -363,7 +393,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "hf:2610.33845",
@@ -382,7 +412,7 @@
         "huggingface_curated"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/scaling-storage-one-billion-users-part-two",
@@ -396,7 +426,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     },
     {
       "id": "openai_research:https://openai.com/index/securing-our-frontier-model-training-environment",
@@ -410,7 +440,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:15:55.457968Z"
+      "last_seen_at": "2026-10-30T07:16:18.134200Z"
     }
   ]
 }

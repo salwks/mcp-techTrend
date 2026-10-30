@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T07:15:55.457968Z",
+  "generated_at": "2026-10-30T07:16:18.134200Z",
   "sources": {
     "hf_daily_papers": {
       "status": "ok",
@@ -14,8 +14,10 @@
       "skipped_old_or_undated": 1319
     },
     "deepmind_research": {
-      "status": "error",
-      "error": "not well-formed (invalid token): line 1, column 0"
+      "status": "ok",
+      "fetched": 100,
+      "new": 2,
+      "skipped_old_or_undated": 98
     },
     "bair_research": {
       "status": "ok",
