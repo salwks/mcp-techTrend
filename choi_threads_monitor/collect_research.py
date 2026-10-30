@@ -32,10 +32,10 @@ def utc(value):
         except (ValueError,TypeError):return None
 def hf():
     # Daily Papers is an editorial calendar, not the publication-date leaderboard.
-    # Fetch each calendar day explicitly and paginate until exhausted.
+    # Fetch only today from the Daily Papers calendar; retain prior days from stored data.
     today=dt.datetime.now(dt.timezone.utc).date()
     out=[]
-    for day_offset in range(7):
+    for day_offset in range(1):
         date=(today-dt.timedelta(days=day_offset)).isoformat()
         for page in range(20):
             params=urllib.parse.urlencode({"date":date,"p":page,"limit":100,"sort":"publishedAt"})
