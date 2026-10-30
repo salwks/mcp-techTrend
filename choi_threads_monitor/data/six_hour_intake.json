@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-30T07:14:06.200546Z",
+  "generated_at": "2026-10-30T07:16:08.870848Z",
   "window_hours": 6,
-  "total_candidates": 56,
+  "total_candidates": 79,
   "counts_by_group": {
     "choi": 6,
-    "external": 50,
-    "research": 0
+    "external": 48,
+    "research": 25
   },
   "source_status": {
     "choi": "ok",
@@ -25,12 +25,14 @@
       "hf_daily_papers": {
         "status": "ok",
         "fetched": 100,
-        "new": 100
+        "new": 0,
+        "skipped_old_or_undated": 93
       },
       "openai_research": {
         "status": "ok",
         "fetched": 1337,
-        "new": 1336
+        "new": 0,
+        "skipped_old_or_undated": 1319
       },
       "deepmind_research": {
         "status": "error",
@@ -39,7 +41,8 @@
       "bair_research": {
         "status": "ok",
         "fetched": 10,
-        "new": 10
+        "new": 0,
+        "skipped_old_or_undated": 10
       }
     }
   },
@@ -526,22 +529,279 @@
       "hn_score": 7
     },
     {
-      "group": "external",
-      "source": "hackernews",
-      "id": "hackernews:50298692",
-      "title": "The AI Data Center Explained – From Electricity to ChatGPT [video]",
-      "url": "https://www.youtube.com/watch?v=ckoi0RTEgcY",
-      "published_at": "2026-10-30T01:15:43Z",
-      "hn_score": 1
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/updated-model-spec",
+      "title": "An updated Model Spec for more capable and beneficial AI",
+      "url": "https://openai.com/index/updated-model-spec",
+      "published_at": "2026-10-29T17:00:00Z",
+      "abstract": "OpenAI’s updated Model Spec outlines five core values to guide more capable AI toward sound judgment, human agency, and faithfulness to human intent.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
     },
     {
-      "group": "external",
-      "source": "techmeme",
-      "id": "techmeme:737f0b15329b4c992b7c4cd2",
-      "title": "Twilio reports Q3 revenue up 20% YoY to $1.56B, vs. $1.52B est., net income up 333% to $161M, and expects slower Q4 revenue growth; TWLO drops 15%+ after hours (Elias Schisgall/MarketWatch)",
-      "url": "https://www.techmeme.com/261029/p66#a261029p66",
-      "published_at": "2026-10-30T01:15:00Z",
-      "hn_score": null
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/how-we-detect-frontier-model-misalignment",
+      "title": "How we detect frontier model misalignment",
+      "url": "https://openai.com/index/how-we-detect-frontier-model-misalignment",
+      "published_at": "2026-10-29T09:00:00Z",
+      "abstract": "OpenAI uses layered monitoring to detect frontier model misalignment and unauthorized agent behavior so responders can intervene before incidents escalate.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/ropes-gray-ai-diligence",
+      "title": "How Ropes & Gray is developing AI for transactional diligence",
+      "url": "https://openai.com/index/ropes-gray-ai-diligence",
+      "published_at": "2026-10-29T07:00:00Z",
+      "abstract": "Ropes & Gray is developing AI for transactional diligence with OpenAI. Lawyers review grouped documents, summaries, and reports before advising clients.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/openai-servicenow-partnership-expansion",
+      "title": "OpenAI and ServiceNow expand partnership across enterprise workflows",
+      "url": "https://openai.com/index/openai-servicenow-partnership-expansion",
+      "published_at": "2026-10-28T13:15:00Z",
+      "abstract": "OpenAI and ServiceNow expand their partnership to bring OpenAI models and agents into ServiceNow and ServiceNow workflows into ChatGPT and Codex.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/the-future-of-the-firm",
+      "title": "The future of the firm",
+      "url": "https://openai.com/index/the-future-of-the-firm",
+      "published_at": "2026-10-28T10:00:00Z",
+      "abstract": "How AI might enter the org chart—beneath, beside, and between us.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/legora",
+      "title": "Legora is building the agentic operating system for legal work",
+      "url": "https://openai.com/index/legora",
+      "published_at": "2026-10-28T09:30:00Z",
+      "abstract": "See how Legora uses OpenAI models, ChatGPT, and Codex to accelerate legal workflows, expand contract analysis, and free lawyers to focus on higher-value work.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/retell-ai",
+      "title": "Retell uses OpenAI models to help power 100M monthly calls",
+      "url": "https://openai.com/index/retell-ai",
+      "published_at": "2026-10-27T15:00:00Z",
+      "abstract": "GPT-6 Astra tops Retell’s voice agent benchmark, while Codex helps it reach a $1.6M annual revenue run rate per employee.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/oracle-apps-in-chatgpt",
+      "title": "OpenAI expands partnership with Oracle to bring its apps to ChatGPT",
+      "url": "https://openai.com/index/oracle-apps-in-chatgpt",
+      "published_at": "2026-10-27T07:00:00Z",
+      "abstract": "OpenAI and Oracle are expanding their partnership to bring business applications and AI agents into ChatGPT and power new Oracle offerings.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.36729",
+      "title": "Hy-Nomas: Towards Free-form Interactive World Generation",
+      "url": "https://huggingface.co/papers/2610.36729",
+      "published_at": "2026-10-27T00:00:00Z",
+      "abstract": "Interactive world generation requires models to follow successive commands while preserving relevant history and action consequences. We present Hy-Nomas, a video world model with an 8B diffusion backbone that supports free-form text instructions and continuous camera control across multiple interaction turns. It generates variable-length segments conditioned on current inputs and cached history. Our central design aligns structured video captions with action-aware causal attention: descriptive context remains accessible across segments, while action instructions are restricted to their intended temporal windows. A vision-language Prompt Enha",
+      "upvotes": 126,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.37662",
+      "title": "Can Discrete Tokens Serve as Semantically Lossless Representations of Visual Signals?",
+      "url": "https://huggingface.co/papers/2610.37662",
+      "published_at": "2026-10-27T00:00:00Z",
+      "abstract": "Discrete visual tokens represent vision in a discrete form analogous to language, offering a native interface for multimodal modeling under a shared next-token prediction objective. However, quantization error is widely assumed to cause unavoidable semantic loss, fundamentally limiting the semantic fidelity of discrete visual tokens and positioning continuous visual representations as an intrinsic upper bound. Using multimodal understanding as a proxy for semantic fidelity, we revisit this assumption and find quantization error unreliable, as discrete representations with substantially larger errors can achieve better understanding. Instead, ",
+      "upvotes": 60,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/check-point-daybreak",
+      "title": "How Check Point accelerates vulnerability research with Daybreak",
+      "url": "https://openai.com/index/check-point-daybreak",
+      "published_at": "2026-10-27T00:00:00Z",
+      "abstract": "With OpenAI Daybreak, Check Point speeds up the research behind new security protections, enabling its analysts to turn vulnerability intelligence into customer defenses faster.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/greptile-code-review-codex-astra",
+      "title": "Greptile takes bug detection beyond code review with GPT-6 Astra",
+      "url": "https://openai.com/index/greptile-code-review-codex-astra",
+      "published_at": "2026-10-26T22:00:00Z",
+      "abstract": "How Greptile uses GPT-6 Astra to test user workflows, Daybreak to strengthen security, and Codex to reduce rework.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/building-scientific-understanding-with-academic-communities",
+      "title": "Working with academic communities to build scientific understanding",
+      "url": "https://openai.com/index/building-scientific-understanding-with-academic-communities",
+      "published_at": "2026-10-26T14:30:00Z",
+      "abstract": "OpenAI shares model results on the Kakeya conjecture, Exponential Time Hypothesis, and quantum chromodynamics—and how researchers can verify and build on them.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/gpt-6-1-sol-coderabbit-code-security",
+      "title": "GPT-6.1 Sol helps CodeRabbit strengthen security across complex codebases",
+      "url": "https://openai.com/index/gpt-6-1-sol-coderabbit-code-security",
+      "published_at": "2026-10-26T13:45:00Z",
+      "abstract": "CodeRabbit uses GPT-6.1 Sol to investigate security risks across complex codebases. Its security agent helps developers review findings and proposed fixes.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/chatgpt-expanding-world-of-work",
+      "title": "ChatGPT’s expanding world of work",
+      "url": "https://openai.com/index/chatgpt-expanding-world-of-work",
+      "published_at": "2026-10-26T10:00:00Z",
+      "abstract": "Explore OpenAI Signals data on 165 work activities across nearly 100 countries, revealing how people use ChatGPT for work and how usage changes over time.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/openai-cut-incident-investigation",
+      "title": "How Ultrafast cut incident investigation from hours to minutes at OpenAI",
+      "url": "https://openai.com/index/openai-cut-incident-investigation",
+      "published_at": "2026-10-26T07:00:00Z",
+      "abstract": "See how OpenAI engineers use Codex Ultrafast to investigate incidents in minutes. Explore faster security analysis, code refactoring, and daily workflows.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/fanatics-streamline-fan-experience",
+      "title": "How Fanatics and OpenAI streamline the fan experience",
+      "url": "https://openai.com/index/fanatics-streamline-fan-experience",
+      "published_at": "2026-10-26T07:00:00Z",
+      "abstract": "Fanatics uses OpenAI to help fans complete their game-day outfits with Shop the Look. Testing across roughly 30,000 MLB products showed 10% higher engagement.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.35845",
+      "title": "Work Agents: Systems, Capabilities, and Optimization",
+      "url": "https://huggingface.co/papers/2610.35845",
+      "published_at": "2026-10-26T00:00:00Z",
+      "abstract": "As foundation models evolve from information generation to digital work execution, agents are increasingly capable of completing complex tasks across tools, applications, and workflows. However, existing research lacks a unified perspective on how agents reliably accomplish delegated work. To address this gap, we present a work-centric, system-level perspective that views work agents as systems combining foundation models and runtime harnesses to execute tasks in stateful workspaces and deliver verifiable outcomes. We introduce two complementary dimensions, work persistence and work openness, to characterize working conditions, and classify d",
+      "upvotes": 119,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.35724",
+      "title": "MatAnyone-E: Sparse Memory Propagation for Efficient High-Resolution Video Matting",
+      "url": "https://huggingface.co/papers/2610.35724",
+      "published_at": "2026-10-26T00:00:00Z",
+      "abstract": "High-resolution video matting requires preserving fine details, such as hair strands and soft transparency, while maintaining consistency across frames. Memory-based methods achieve strong matting quality by matching current-frame features with information stored from earlier frames, but this process becomes increasingly costly as resolution grows. We present MatAnyone-E, an efficient extension of MatAnyone 2 that focuses computation where it is most needed. Our approach first performs low-resolution propagation to identify uncertain regions that require closer inspection and the memory candidates most relevant to them. It then performs high-",
+      "upvotes": 19,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/introducing-gpt-6-1-terra",
+      "title": "Introducing GPT-6.1 Terra",
+      "url": "https://openai.com/index/introducing-gpt-6-1-terra",
+      "published_at": "2026-10-26T00:00:00Z",
+      "abstract": "Bringing fast and capable computer use to everyone",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.34467",
+      "title": "DynaFlow: Learning Free-Form Multi-Agent Orchestration",
+      "url": "https://huggingface.co/papers/2610.34467",
+      "published_at": "2026-10-25T00:00:00Z",
+      "abstract": "Multi-agent systems often rely on predefined collaboration structures, limiting their ability to adapt to diverse task requirements. We introduce DynaFlow, a framework that integrates free-form executable workflow synthesis into the action space of the main agent. The agent decides when collaboration is needed and generates task-specific programs that coordinate sub-agents through sequential or parallel execution, structured information exchange, and verification. Execution results and traces inform subsequent actions, enabling the agent to adapt collaboration as reasoning progresses. We train only the main agent through supervised fine-tunin",
+      "upvotes": 142,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.33966",
+      "title": "InteractiveWorld: A Verifiable Human-Centric Environment for Building Better Interactive MLLM Assistants",
+      "url": "https://huggingface.co/papers/2610.33966",
+      "published_at": "2026-10-25T00:00:00Z",
+      "abstract": "People have long dreamed of an assistant that is always there to guide them and remind what they forget, from new dishes to lost keys. Powered by multimodal large language models (MLLMs), egocentric AI assistants on wearable devices are bringing this dream within reach: they see what the user sees and give instructions for user's physical work when necessary. However, testing such assistance is challenging and usually requires real people. The expensive and rare real interaction data leaves a key question unanswered: Can today's MLLMs truly help people in physical world? To answer this question, we propose InteractiveWorld, the first verifiab",
+      "upvotes": 126,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "hf_daily_papers",
+      "id": "hf:2610.33845",
+      "title": "Build, Don't Play: Self-Improving LLM Research Agents Develop a Hearthstone Battlegrounds AI That Rivals Top Players",
+      "url": "https://huggingface.co/papers/2610.33845",
+      "published_at": "2026-10-24T00:00:00Z",
+      "abstract": "Can LLM agents carry a hard real-world problem from raw data to a system that holds its own against people? We study this in Hearthstone Battlegrounds, an eight-player auto-battler with stochastic shops and battles, hidden information and nearly a thousand interacting cards. We present AutoTavern, a self-improving research system: specialised LLM research agents share a typed research memory, every claim passes verification gates, and live games close the loop, so the agents improve the simulator, opponents and policy and, from the same feedback, their own research process; a human sets goals and rules on ambiguous mechanics. In 20 days AutoT",
+      "upvotes": 27,
+      "signal_type": "paper"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/scaling-storage-one-billion-users-part-two",
+      "title": "Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II)",
+      "url": "https://openai.com/index/scaling-storage-one-billion-users-part-two",
+      "published_at": "2026-10-23T17:00:00Z",
+      "abstract": "Learn how OpenAI scaled Habitat with reliable multi-tenancy, global caching, and Azure Cosmos DB to deliver 12× faster reads for ChatGPT.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
+    },
+    {
+      "group": "research",
+      "source": "openai_research",
+      "id": "openai_research:https://openai.com/index/securing-our-frontier-model-training-environment",
+      "title": "Securing our frontier model training environment",
+      "url": "https://openai.com/index/securing-our-frontier-model-training-environment",
+      "published_at": "2026-10-23T10:00:00Z",
+      "abstract": "OpenAI explains how we strengthened containment for frontier model training and evaluation, including offline environments and high-compute red-teaming.",
+      "upvotes": null,
+      "signal_type": "lab_announcement"
     }
   ]
 }
