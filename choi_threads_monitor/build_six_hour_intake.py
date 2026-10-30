@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Build a compact six-hour AI-news intake, without LLM or full article bodies."""
+"""Build a rolling operator preview; Supabase fixed 6-hour batches are authoritative."""
 import datetime as dt
 import json
+import sys
 from pathlib import Path
 
 DATA=Path(__file__).resolve().parent/"data"
 NOW=dt.datetime.now(dt.timezone.utc)
 WINDOW_HOURS=6
-LIMITS={"choi":150,"external":250,"research":60}
+LIMITS={"choi":150,"external":250}
 
 def timestamp(s):
     try:return dt.datetime.fromisoformat(str(s).replace("Z","+00:00")).astimezone(dt.timezone.utc)
@@ -39,24 +40,24 @@ def main():
     for x in ext.get("items",[]):
         add("external",x.get("source"),x.get("id"),x.get("title"),x.get("url"),x.get("published_at"),hn_score=x.get("hn_score"))
     research=load("research_signals.json")
-    for x in research.get("items",[]):
-        add("research",x.get("source"),x.get("id"),x.get("title"),x.get("url"),x.get("published_at"),x.get("summary"),candidate_seen_at=x.get("first_seen_at"),upvotes=x.get("upvotes"),signal_type=x.get("type"))
     news.sort(key=lambda x:x["published_at"],reverse=True)
     selected=[]
     for group,cap in LIMITS.items():
         group_items=[x for x in news if x["group"]==group]
-        if group=="research":group_items.sort(key=lambda x:(x.get("upvotes") or 0,x["published_at"]),reverse=True)
         selected.extend(group_items[:cap])
     selected.sort(key=lambda x:x["published_at"],reverse=True)
-    result={"generated_at":NOW.isoformat().replace("+00:00","Z"),"window_hours":WINDOW_HOURS,"total_candidates":len(selected),"counts_by_group":{k:sum(x["group"]==k for x in selected) for k in LIMITS},"source_status":{"choi":choi.get("collection_status"),"external":ext.get("sources"),"research":research.get("sources")},"caveat":"Candidate discovery only. Not fact-checked or semantically deduplicated; select and verify before publishing.","items":selected}
+    result={"generated_at":NOW.isoformat().replace("+00:00","Z"),"window_hours":WINDOW_HOURS,"window_type":"rolling_preview","production_batch":"Supabase public.ai_news_6h_batches","total_candidates":len(selected),"counts_by_group":{k:sum(x["group"]==k for x in selected) for k in LIMITS},"source_status":{"choi":choi.get("collection_status"),"external":ext.get("sources"),"research":research.get("sources")},"caveat":"Operator preview only; Supabase fixed :45 batches are authoritative. Not fact-checked or semantically deduplicated.","items":selected}
     DATA.mkdir(parents=True,exist_ok=True)
     (DATA/"six_hour_intake.json").write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    lines=[f"# AI News six-hour intake — {result['generated_at']}","",f"Candidates: {len(selected)} (CHOI {result['counts_by_group']['choi']}, external {result['counts_by_group']['external']}, research {result['counts_by_group']['research']})","","> Unverified candidates. Check original sources before publishing.",""]
+    lines=[f"# AI News six-hour intake — {result['generated_at']}","",f"Candidates: {len(selected)} (CHOI {result['counts_by_group']['choi']}, external {result['counts_by_group']['external']})","","> Unverified candidates. Check original sources before publishing.",""]
     for x in selected:
         lines.append(f"- [{x['group']}/{x['source']}] {x['title']} ({x['published_at']}) — {x['url']}")
         if x.get("abstract"):lines.append("  Abstract: "+x["abstract"])
     (DATA/"six_hour_intake.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
-    # Full calendar-day HF list is NOT reduced by the six-hour review window.
+    if "--update-daily-papers" not in sys.argv:
+        print(json.dumps(result["counts_by_group"]))
+        return
+    # Full calendar-day HF list is generated ONLY by the daily research collector.
     # This separate file guarantees the Daily Papers page is completely represented.
     today=NOW.date().isoformat()
     hf_today=[x for x in research.get("items",[]) if x.get("source")=="hf_daily_papers" and x.get("daily_papers_date")==today]
