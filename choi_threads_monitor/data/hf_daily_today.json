@@ -1,6 +1,6 @@
 {
   "date": "2026-10-30",
-  "items_count": 22,
+  "items_count": 23,
   "items": [
     {
       "id": "hf:2610.29927",
@@ -13,14 +13,14 @@
       "published_at": "2026-10-21T00:00:00Z",
       "summary": "A benchmark is not merely a collection of test questions; it naturally induces an empirical measure over difficulty. In this work, we develop this measure-based view of benchmark evaluation. This perspective allows us to identify and formalize two central failure modes: measure mismatch, where the benchmark difficulty distribution differs from the intended difficulty distribution, and coverage gaps, where uncovered regions along the difficulty axis prevent benchmarks from detecting meaningful localized training progress. We propose two diagnostic metrics that capture these two failure modes and provide rigorous theoretical guarantees. Empirically, we analyze 25 popular benchmarks spanning 7 domains using carefully estimated item difficulties. Our results show that many benchmarks implicitly overweight certain difficulty regions, so their leaderboard conclusions should be interpreted with caution; others leave substantial portions of the difficulty axis uncovered, limiting their ability to monitor the model improvement process. Finally, we turn diagnosis into action by introducing BenchFill, a simple difficulty-targeted item rewriting algorithm that effectively reduces local coverage gaps.",
       "upvotes": 133,
-      "comments": 1,
+      "comments": 2,
       "has_code": true,
       "project_page": "https://benchmark-difficulty-measure.github.io/",
       "signals": [
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.39633",
@@ -32,7 +32,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.39633",
       "published_at": "2026-10-29T00:00:00Z",
       "summary": "One-step and few-step text-to-image generation must accurately render the details specified in the prompt despite limited opportunities for refinement. Distribution matching distillation (DMD) uses score differences to bring the generated distribution closer to a reference distribution. Following prior work, we estimate this difference with internal velocity branches, avoiding a separate fake-score network. We ask whether an explicit moment constraint improves this learned score supervision. A decomposition of the reverse-KL field into a Gaussian moment component and a non-Gaussian residual identifies statistics that can be constrained explicitly. We introduce Intrinsic Distribution Matching (IDM), which retains the full DMD correction and matches feature means and per-coordinate standard deviations using the generator's exponential-moving-average (EMA) copy, requiring no external feature encoder. Experiments use full-parameter and low-rank adaptation (LoRA) tuning on Z-Image-Turbo 6B and Qwen-Image 20B. At two network evaluations, IDM reaches 94.25% and 90.20% on Chinese and English LongText-Bench, the highest scores among the compared methods at this budget. Controlled ablations show gains from the added moment loss, while generator EMA features perform competitively with an external DINOv2 encoder across the five reported metrics. Code is available at https://github.com/inclusionAI/IDM.",
-      "upvotes": 68,
+      "upvotes": 77,
       "comments": 1,
       "has_code": true,
       "project_page": "https://www.inclusion-ai.org/IDM/?lang=zh",
@@ -40,7 +40,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.36671",
@@ -52,7 +52,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.36671",
       "published_at": "2026-10-27T00:00:00Z",
       "summary": "Diffusion vision-language models (DVLMs) process their entire input at every denoising step. Since visual tokens make up 89-97% of this input on the benchmarks we study, most of the decoding computation is spent repeatedly processing the same image. Visual token pruning methods partially relieve this burden by removing part of the visual tokens, but they lose the removed information and still process the remaining image at every step. To measure how often the image is actually needed, we compare LLaDA-V's predictions with and without the image at every decoding step and find that removing the image changes a token being unmasked at only 22.8% of steps on average and at as few as 7.9%. We therefore propose LOWN, a decoding method that decides at every step whether to process the image and how many tokens to unmask. LOWN predicts the masked tokens without the image and processes the image only when this prediction disagrees with the last image-conditioned prediction. Agreement certifies the earlier prediction for reuse, and the number of certified tokens sets how many are unmasked in that step. We further observe that the need for the image differs across benchmarks, so LOWN's adaptive decision is needed rather than a fixed schedule. Without training or a tuned threshold, LOWN retains 99.6% of LLaDA-V's score on ten benchmarks at 35.3% of the decoding FLOPs on average. LOWN also generalizes across LLaDA-based DVLMs, composes orthogonally with visual token pruning, and runs under key-value caching for further efficiency gains. Code and project page are available at https://hyeon9698.github.io/LOWN/",
-      "upvotes": 32,
+      "upvotes": 37,
       "comments": 1,
       "has_code": true,
       "project_page": "https://hyeon9698.github.io/LOWN/",
@@ -60,7 +60,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.38568",
@@ -80,7 +80,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.37161",
@@ -100,7 +100,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.32411",
@@ -120,7 +120,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.33106",
@@ -140,7 +140,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.35138",
@@ -160,7 +160,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.38352",
@@ -180,7 +180,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.40599",
@@ -200,7 +200,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.38425",
@@ -220,7 +220,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.37786",
@@ -240,7 +240,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.38678",
@@ -260,7 +260,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.40454",
@@ -280,7 +280,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.39664",
@@ -300,7 +300,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.38342",
@@ -320,7 +320,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.21143",
@@ -340,7 +340,27 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
+    },
+    {
+      "id": "hf:2610.40614",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-10-30",
+      "title": "L3G-World: Real-Time Infinite World Generation with Latent 3D Gaussian Memory",
+      "url": "https://huggingface.co/papers/2610.40614",
+      "arxiv_url": "https://arxiv.org/abs/2610.40614",
+      "published_at": "2026-10-29T00:00:00Z",
+      "summary": "Interactive world models generate visual content conditioned on user actions, yet maintaining spatial consistency over long-horizon exploration in real time remains challenging. Existing approaches rely on either temporal context or explicit 3D memory, both of which scale poorly because memory grows with the length of the generated stream. Moreover, explicit 3D memories condition latent video generators by re-encoding RGB renderings, which precludes real-time generation. In this paper, we introduce a Latent 3D Gaussian Memory (L3G) that combines the efficiency of feed-forward reconstruction with a compact, rapidly renderable scene representation. Building on this memory, we propose L3G-World, in which a memory updater and a video diffusion transformer (DiT) alternate autoregressively to generate spatially consistent worlds. The memory updater spawns Gaussians in newly observed regions and refines existing ones, so that the memory grows with scene extent rather than stream length. Each Gaussian further stores a VAE latent feature, allowing the memory to be rendered directly into the DiT's latent space without VAE re-encoding. Experiments show that L3G-World achieves state-of-the-art generation quality and long-horizon spatial consistency, with up to 38.6times fewer 3D primitives, 3.2times faster memory updates, and 359times faster memory rendering relative to the most efficient prior 3D-memory baseline for each metric, enabling real-time world generation at 9 FPS.",
+      "upvotes": 2,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://cvlab-kaist.github.io/L3G-World/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-10-30T07:21:16.727074Z",
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.37695",
@@ -360,7 +380,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.40362",
@@ -380,7 +400,27 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
+    },
+    {
+      "id": "hf:2610.40647",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-10-30",
+      "title": "Read, Allocate, Route: Role-Coupled Tokenization for Pixel-Space Generative Transformers",
+      "url": "https://huggingface.co/papers/2610.40647",
+      "arxiv_url": "https://arxiv.org/abs/2610.40647",
+      "published_at": "2026-10-29T00:00:00Z",
+      "summary": "Pixel-space generative Transformers typically use one token per image patch, so capturing finer detail requires more tokens and makes global attention increasingly expensive. We observe that finer detail does not necessarily require more global communication: low-frequency structure benefits from global exchange, while high-frequency detail can be modeled locally. Based on this insight, we introduce SpecSlot, a pixel-space rectified-flow Transformer that decouples output detail from the length of the global attention sequence. SpecSlot expands each spatial anchor into multiple slots, each assigned a disjoint band of DCT coefficients; this separates anchor density from spectral subdivision. Only the lowest-frequency slot from each anchor participates in global attention, while all slots interact locally. This allows the model to increase spectral detail without enlarging the global sequence. A spatial head further adds a local correction to the spectral prediction, while the generative state, target, and loss remain in pixel space. On ImageNet-256, SpecSlot achieves a comparable final FID to a FLOPs-matched JiT control while converging faster. On ImageNet-512, it improves FID by 2.84 over the control with 3.9% fewer FLOPs, and comes within only 0.69 FID of JiT-B/16 at 38.2% lower cost. On text-to-image generation, SpecSlot surpasses JiT-B/8 on DPG-Bench by 1.06 at 40.6% lower forward cost.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://yangjiongfan.site/specslot/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-10-30T07:26:28.566635Z",
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.39264",
@@ -400,7 +440,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     },
     {
       "id": "hf:2610.36420",
@@ -420,27 +460,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
-    },
-    {
-      "id": "hf:2610.40614",
-      "source": "hf_daily_papers",
-      "type": "paper",
-      "daily_papers_date": "2026-10-30",
-      "title": "L3G-World: Real-Time Infinite World Generation with Latent 3D Gaussian Memory",
-      "url": "https://huggingface.co/papers/2610.40614",
-      "arxiv_url": "https://arxiv.org/abs/2610.40614",
-      "published_at": "2026-10-29T00:00:00Z",
-      "summary": "Interactive world models generate visual content conditioned on user actions, yet maintaining spatial consistency over long-horizon exploration in real time remains challenging. Existing approaches rely on either temporal context or explicit 3D memory, both of which scale poorly because memory grows with the length of the generated stream. Moreover, explicit 3D memories condition latent video generators by re-encoding RGB renderings, which precludes real-time generation. In this paper, we introduce a Latent 3D Gaussian Memory (L3G) that combines the efficiency of feed-forward reconstruction with a compact, rapidly renderable scene representation. Building on this memory, we propose L3G-World, in which a memory updater and a video diffusion transformer (DiT) alternate autoregressively to generate spatially consistent worlds. The memory updater spawns Gaussians in newly observed regions and refines existing ones, so that the memory grows with scene extent rather than stream length. Each Gaussian further stores a VAE latent feature, allowing the memory to be rendered directly into the DiT's latent space without VAE re-encoding. Experiments show that L3G-World achieves state-of-the-art generation quality and long-horizon spatial consistency, with up to 38.6times fewer 3D primitives, 3.2times faster memory updates, and 359times faster memory rendering relative to the most efficient prior 3D-memory baseline for each metric, enabling real-time world generation at 9 FPS.",
-      "upvotes": 0,
-      "comments": 1,
-      "has_code": true,
-      "project_page": "https://cvlab-kaist.github.io/L3G-World/",
-      "signals": [
-        "huggingface_daily_papers"
-      ],
-      "first_seen_at": "2026-10-30T07:21:16.727074Z",
-      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+      "last_seen_at": "2026-10-30T07:26:28.566635Z"
     }
   ]
 }

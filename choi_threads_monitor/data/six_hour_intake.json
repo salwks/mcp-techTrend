@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T07:21:17.586331Z",
+  "generated_at": "2026-10-30T07:26:29.019445Z",
   "window_hours": 6,
   "total_candidates": 114,
   "counts_by_group": {
@@ -24,7 +24,7 @@
     "research": {
       "hf_daily_papers": {
         "status": "ok",
-        "fetched": 22,
+        "fetched": 23,
         "new": 1,
         "skipped_old_or_undated": 0
       },
@@ -538,7 +538,7 @@
       "url": "https://huggingface.co/papers/2610.39633",
       "published_at": "2026-10-29T00:00:00Z",
       "abstract": "One-step and few-step text-to-image generation must accurately render the details specified in the prompt despite limited opportunities for refinement. Distribution matching distillation (DMD) uses score differences to bring the generated distribution closer to a reference distribution. Following prior work, we estimate this difference with internal velocity branches, avoiding a separate fake-score network. We ask whether an explicit moment constraint improves this learned score supervision. A decomposition of the reverse-KL field into a Gaussian moment component and a non-Gaussian residual identifies statistics that can be constrained explic",
-      "upvotes": 68,
+      "upvotes": 77,
       "signal_type": "paper"
     },
     {
@@ -637,7 +637,7 @@
       "url": "https://huggingface.co/papers/2610.36671",
       "published_at": "2026-10-27T00:00:00Z",
       "abstract": "Diffusion vision-language models (DVLMs) process their entire input at every denoising step. Since visual tokens make up 89-97% of this input on the benchmarks we study, most of the decoding computation is spent repeatedly processing the same image. Visual token pruning methods partially relieve this burden by removing part of the visual tokens, but they lose the removed information and still process the remaining image at every step. To measure how often the image is actually needed, we compare LLaDA-V's predictions with and without the image at every decoding step and find that removing the image changes a token being unmasked at only 22.8%",
-      "upvotes": 32,
+      "upvotes": 37,
       "signal_type": "paper"
     },
     {
