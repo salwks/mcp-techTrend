@@ -7,7 +7,8 @@ on:
       - ".github/workflows/research-signals.yml"
       - "choi_threads_monitor/collect_research.py"
   schedule:
-    - cron: "31 1,13 * * *"
+    # 12:00 Asia/Seoul (03:00 UTC), daily
+    - cron: "0 3 * * *"
 
 permissions:
   contents: write
