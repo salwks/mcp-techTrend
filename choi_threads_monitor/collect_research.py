@@ -55,7 +55,8 @@ def hf():
     return out
 def rss(source,url):
     raw=get(url)
-    if raw.lstrip().startswith(b"<html") or raw.lstrip().startswith(b"<!DOCTYPE html"):\n        raise ValueError("RSS endpoint returned HTML rather than XML")
+    if raw.lstrip().startswith(b"<html") or raw.lstrip().startswith(b"<!DOCTYPE html"):
+        raise ValueError("RSS endpoint returned HTML rather than XML")
     root=ET.fromstring(raw)
     out=[]
     rss_items=root.findall(".//item")
@@ -106,8 +107,10 @@ def main():
     kept=[x for x in items.values() if (x.get("first_seen_at") or stamp)>=cutoff and x.get("published_at") and x["published_at"]>=cutoff]
     kept.sort(key=lambda x:(x.get("published_at") or "",x["id"]),reverse=True)
     DATA.mkdir(parents=True,exist_ok=True)
-    OUT.write_text(json.dumps({"generated_at":stamp,"retention_days":7,"items_count":len(kept),"sources":report,"items":kept},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    STATE.write_text(json.dumps({"generated_at":stamp,"sources":report},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    OUT.write_text(json.dumps({"generated_at":stamp,"retention_days":7,"items_count":len(kept),"sources":report,"items":kept},ensure_ascii=False,indent=2)+"
+",encoding="utf-8")
+    STATE.write_text(json.dumps({"generated_at":stamp,"sources":report},ensure_ascii=False,indent=2)+"
+",encoding="utf-8")
     print(json.dumps({"items_count":len(kept),"sources":report},ensure_ascii=False))
     if all(v["status"]=="error" for v in report.values()):raise SystemExit("All research feeds unavailable")
 if __name__=="__main__":main()
