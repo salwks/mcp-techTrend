@@ -1,6 +1,6 @@
 {
   "date": "2026-10-30",
-  "items_count": 21,
+  "items_count": 22,
   "items": [
     {
       "id": "hf:2610.29927",
@@ -20,7 +20,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.39633",
@@ -32,7 +32,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.39633",
       "published_at": "2026-10-29T00:00:00Z",
       "summary": "One-step and few-step text-to-image generation must accurately render the details specified in the prompt despite limited opportunities for refinement. Distribution matching distillation (DMD) uses score differences to bring the generated distribution closer to a reference distribution. Following prior work, we estimate this difference with internal velocity branches, avoiding a separate fake-score network. We ask whether an explicit moment constraint improves this learned score supervision. A decomposition of the reverse-KL field into a Gaussian moment component and a non-Gaussian residual identifies statistics that can be constrained explicitly. We introduce Intrinsic Distribution Matching (IDM), which retains the full DMD correction and matches feature means and per-coordinate standard deviations using the generator's exponential-moving-average (EMA) copy, requiring no external feature encoder. Experiments use full-parameter and low-rank adaptation (LoRA) tuning on Z-Image-Turbo 6B and Qwen-Image 20B. At two network evaluations, IDM reaches 94.25% and 90.20% on Chinese and English LongText-Bench, the highest scores among the compared methods at this budget. Controlled ablations show gains from the added moment loss, while generator EMA features perform competitively with an external DINOv2 encoder across the five reported metrics. Code is available at https://github.com/inclusionAI/IDM.",
-      "upvotes": 66,
+      "upvotes": 68,
       "comments": 1,
       "has_code": true,
       "project_page": "https://www.inclusion-ai.org/IDM/?lang=zh",
@@ -40,7 +40,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.36671",
@@ -60,7 +60,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38568",
@@ -80,7 +80,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.37161",
@@ -100,7 +100,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.32411",
@@ -120,7 +120,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.33106",
@@ -140,7 +140,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.35138",
@@ -160,7 +160,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38352",
@@ -180,7 +180,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.40599",
@@ -200,7 +200,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38425",
@@ -220,7 +220,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.37786",
@@ -240,7 +240,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38678",
@@ -260,7 +260,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.40454",
@@ -280,7 +280,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.39664",
@@ -300,7 +300,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38342",
@@ -320,7 +320,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.21143",
@@ -340,7 +340,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.37695",
@@ -360,7 +360,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.40362",
@@ -380,7 +380,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.39264",
@@ -400,7 +400,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.36420",
@@ -420,7 +420,27 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+    },
+    {
+      "id": "hf:2610.40614",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-10-30",
+      "title": "L3G-World: Real-Time Infinite World Generation with Latent 3D Gaussian Memory",
+      "url": "https://huggingface.co/papers/2610.40614",
+      "arxiv_url": "https://arxiv.org/abs/2610.40614",
+      "published_at": "2026-10-29T00:00:00Z",
+      "summary": "Interactive world models generate visual content conditioned on user actions, yet maintaining spatial consistency over long-horizon exploration in real time remains challenging. Existing approaches rely on either temporal context or explicit 3D memory, both of which scale poorly because memory grows with the length of the generated stream. Moreover, explicit 3D memories condition latent video generators by re-encoding RGB renderings, which precludes real-time generation. In this paper, we introduce a Latent 3D Gaussian Memory (L3G) that combines the efficiency of feed-forward reconstruction with a compact, rapidly renderable scene representation. Building on this memory, we propose L3G-World, in which a memory updater and a video diffusion transformer (DiT) alternate autoregressively to generate spatially consistent worlds. The memory updater spawns Gaussians in newly observed regions and refines existing ones, so that the memory grows with scene extent rather than stream length. Each Gaussian further stores a VAE latent feature, allowing the memory to be rendered directly into the DiT's latent space without VAE re-encoding. Experiments show that L3G-World achieves state-of-the-art generation quality and long-horizon spatial consistency, with up to 38.6times fewer 3D primitives, 3.2times faster memory updates, and 359times faster memory rendering relative to the most efficient prior 3D-memory baseline for each metric, enabling real-time world generation at 9 FPS.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://cvlab-kaist.github.io/L3G-World/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-10-30T07:21:16.727074Z",
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     }
   ]
-}\n
+}

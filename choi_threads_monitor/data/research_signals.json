@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-30T07:19:37.611608Z",
+  "generated_at": "2026-10-30T07:21:16.727074Z",
   "retention_days": 7,
-  "items_count": 216,
+  "items_count": 217,
   "sources": {
     "hf_daily_papers": {
       "status": "ok",
-      "fetched": 196,
-      "new": 0,
+      "fetched": 22,
+      "new": 1,
       "skipped_old_or_undated": 0
     },
     "openai_research": {
@@ -41,7 +41,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/how-we-detect-frontier-model-misalignment",
@@ -55,7 +55,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/ropes-gray-ai-diligence",
@@ -69,7 +69,27 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
+    },
+    {
+      "id": "hf:2610.40614",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-10-30",
+      "title": "L3G-World: Real-Time Infinite World Generation with Latent 3D Gaussian Memory",
+      "url": "https://huggingface.co/papers/2610.40614",
+      "arxiv_url": "https://arxiv.org/abs/2610.40614",
+      "published_at": "2026-10-29T00:00:00Z",
+      "summary": "Interactive world models generate visual content conditioned on user actions, yet maintaining spatial consistency over long-horizon exploration in real time remains challenging. Existing approaches rely on either temporal context or explicit 3D memory, both of which scale poorly because memory grows with the length of the generated stream. Moreover, explicit 3D memories condition latent video generators by re-encoding RGB renderings, which precludes real-time generation. In this paper, we introduce a Latent 3D Gaussian Memory (L3G) that combines the efficiency of feed-forward reconstruction with a compact, rapidly renderable scene representation. Building on this memory, we propose L3G-World, in which a memory updater and a video diffusion transformer (DiT) alternate autoregressively to generate spatially consistent worlds. The memory updater spawns Gaussians in newly observed regions and refines existing ones, so that the memory grows with scene extent rather than stream length. Each Gaussian further stores a VAE latent feature, allowing the memory to be rendered directly into the DiT's latent space without VAE re-encoding. Experiments show that L3G-World achieves state-of-the-art generation quality and long-horizon spatial consistency, with up to 38.6times fewer 3D primitives, 3.2times faster memory updates, and 359times faster memory rendering relative to the most efficient prior 3D-memory baseline for each metric, enabling real-time world generation at 9 FPS.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://cvlab-kaist.github.io/L3G-World/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-10-30T07:21:16.727074Z",
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.40599",
@@ -89,7 +109,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.40454",
@@ -109,7 +129,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.40362",
@@ -129,7 +149,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.39664",
@@ -149,7 +169,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.39633",
@@ -161,7 +181,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.39633",
       "published_at": "2026-10-29T00:00:00Z",
       "summary": "One-step and few-step text-to-image generation must accurately render the details specified in the prompt despite limited opportunities for refinement. Distribution matching distillation (DMD) uses score differences to bring the generated distribution closer to a reference distribution. Following prior work, we estimate this difference with internal velocity branches, avoiding a separate fake-score network. We ask whether an explicit moment constraint improves this learned score supervision. A decomposition of the reverse-KL field into a Gaussian moment component and a non-Gaussian residual identifies statistics that can be constrained explicitly. We introduce Intrinsic Distribution Matching (IDM), which retains the full DMD correction and matches feature means and per-coordinate standard deviations using the generator's exponential-moving-average (EMA) copy, requiring no external feature encoder. Experiments use full-parameter and low-rank adaptation (LoRA) tuning on Z-Image-Turbo 6B and Qwen-Image 20B. At two network evaluations, IDM reaches 94.25% and 90.20% on Chinese and English LongText-Bench, the highest scores among the compared methods at this budget. Controlled ablations show gains from the added moment loss, while generator EMA features perform competitively with an external DINOv2 encoder across the five reported metrics. Code is available at https://github.com/inclusionAI/IDM.",
-      "upvotes": 66,
+      "upvotes": 68,
       "comments": 1,
       "has_code": true,
       "project_page": "https://www.inclusion-ai.org/IDM/?lang=zh",
@@ -169,7 +189,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.39264",
@@ -189,7 +209,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "deepmind_research:https://deepmind.google/blog/gemini-4-carbon-our-next-frontier-model/",
@@ -203,7 +223,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:16:18.134200Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/openai-servicenow-partnership-expansion",
@@ -217,7 +237,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/the-future-of-the-firm",
@@ -231,7 +251,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/legora",
@@ -245,7 +265,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38678",
@@ -265,7 +285,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38568",
@@ -285,7 +305,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38425",
@@ -305,7 +325,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38352",
@@ -325,7 +345,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.38342",
@@ -345,7 +365,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "deepmind_research:https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
@@ -359,7 +379,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:16:18.134200Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/retell-ai",
@@ -373,7 +393,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/oracle-apps-in-chatgpt",
@@ -387,7 +407,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/check-point-daybreak",
@@ -401,7 +421,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.37786",
@@ -421,7 +441,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.37666",
@@ -721,7 +741,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.37037",
@@ -801,7 +821,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.36466",
@@ -861,7 +881,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.35864",
@@ -915,7 +935,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/building-scientific-understanding-with-academic-communities",
@@ -929,7 +949,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/gpt-6-1-sol-coderabbit-code-security",
@@ -943,7 +963,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/chatgpt-expanding-world-of-work",
@@ -957,7 +977,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/openai-cut-incident-investigation",
@@ -971,7 +991,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/fanatics-streamline-fan-experience",
@@ -985,7 +1005,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/introducing-gpt-6-1-terra",
@@ -999,7 +1019,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.36269",
@@ -1419,7 +1439,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.35013",
@@ -2079,7 +2099,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.33877",
@@ -2373,7 +2393,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "openai_research:https://openai.com/index/securing-our-frontier-model-training-environment",
@@ -2387,7 +2407,7 @@
         "official_lab_publication"
       ],
       "first_seen_at": "2026-10-30T07:10:19.524870Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.33245",
@@ -2567,7 +2587,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.32285",
@@ -2827,7 +2847,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.32002",
@@ -3387,7 +3407,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.29915",
@@ -3947,7 +3967,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-10-30T07:19:15.954138Z",
-      "last_seen_at": "2026-10-30T07:19:37.611608Z"
+      "last_seen_at": "2026-10-30T07:21:16.727074Z"
     },
     {
       "id": "hf:2610.21109",
