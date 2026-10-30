@@ -25,7 +25,7 @@ def main():
     news=[]
     counts={}
     def add(group,source,id,title,url,when,abstract="",**other):
-        if not recent(when) or not title:return
+        if not recent(other.pop("candidate_seen_at",when)) or not title:return
         key=str(id or url)
         if key in seen:return
         seen.add(key)
@@ -40,7 +40,7 @@ def main():
         add("external",x.get("source"),x.get("id"),x.get("title"),x.get("url"),x.get("published_at"),hn_score=x.get("hn_score"))
     research=load("research_signals.json")
     for x in research.get("items",[]):
-        add("research",x.get("source"),x.get("id"),x.get("title"),x.get("url"),x.get("published_at"),x.get("summary"),upvotes=x.get("upvotes"),signal_type=x.get("type"))
+        add("research",x.get("source"),x.get("id"),x.get("title"),x.get("url"),x.get("published_at"),x.get("summary"),candidate_seen_at=x.get("first_seen_at"),upvotes=x.get("upvotes"),signal_type=x.get("type"))
     news.sort(key=lambda x:x["published_at"],reverse=True)
     selected=[]
     for group,cap in LIMITS.items():
