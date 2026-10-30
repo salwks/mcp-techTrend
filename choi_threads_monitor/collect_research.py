@@ -119,6 +119,15 @@ def main():
     DATA.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps({"generated_at":stamp,"retention_days":7,"items_count":len(kept),"sources":report,"items":kept},ensure_ascii=False,indent=2)+ "\n",encoding="utf-8")
     STATE.write_text(json.dumps({"generated_at":stamp,"sources":report},ensure_ascii=False,indent=2)+ "\n",encoding="utf-8")
+    # The full calendar-day paper listing is owned by this daily collector.
+    today_kst=(now+dt.timedelta(hours=9)).date().isoformat()
+    papers=[x for x in kept if x.get("source")=="hf_daily_papers" and x.get("daily_papers_date")==today_kst]
+    papers.sort(key=lambda x:(x.get("upvotes") or 0,x.get("title") or ""),reverse=True)
+    (DATA/"hf_daily_today.json").write_text(json.dumps({"date":today_kst,"items_count":len(papers),"items":papers},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    md=["# Hugging Face Daily Papers — "+today_kst,"","Total: "+str(len(papers)),""]
+    for i,x in enumerate(papers,1):
+        md.extend([f"### {i}. {x.get('title') or '(untitled)'}",f"Paper: {x.get('url') or ''}",f"Upvotes: {x.get('upvotes') or 0}","",str(x.get("summary") or "(No abstract supplied)"),""])
+    (DATA/"hf_daily_today.md").write_text("\n".join(md)+"\n",encoding="utf-8")
     print(json.dumps({"items_count":len(kept),"sources":report},ensure_ascii=False))
     if all(v["status"]=="error" for v in report.values()):raise SystemExit("All research feeds unavailable")
 if __name__=="__main__":main()
