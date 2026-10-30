@@ -1,10 +1,23 @@
-# AI News six-hour intake — 2026-10-30T08:23:46.096864Z
+# AI News six-hour intake — 2026-10-30T08:26:10.981956Z
 
-Candidates: 44 (CHOI 5, external 39)
+Candidates: 57 (CHOI 5, external 52)
 
 > Unverified candidates. Check original sources before publishing.
 
-- [external/hackernews] Show HN: Arsaze–Like Cursor, but for video editing(Tab-complete and agent edits) (2026-10-30T06:55:33Z) — https://www.arsaze.com
+- [external/hackernews] Chopin – A real-time multiplayer, agentic planning environment (2026-10-30T08:25:58Z) — https://githubnext.com/projects/chopin/
+- [external/hackernews] Building fine-grained version control with Rust and Durable Objects (2026-10-30T08:25:34Z) — https://delta.dev/blog/fine-grained-version-control-for-agents
+- [external/hackernews] Etsy to restrict AI-generated content in effort to combat seller slop (2026-10-30T08:23:31Z) — https://www.nbcnews.com/business/consumer/etsy-restricts-ai-generated-seller-slop-rcna605216
+- [external/hackernews] How (not) to use AI for pull requests and code reviews (2026-10-30T08:23:22Z) — https://paulbakker.io/writing/how-not-to-use-ai-for-pull-requests-and-code-changes/
+- [external/hackernews] Spotify aims to launch AI music remix service early next year (2026-10-30T08:16:44Z) — https://www.ft.com/content/50286bd0-7158-4347-81d8-011cd164f75b
+- [external/hackernews] Show HN: AI agents trade privately on BitcoinZ, with proof of delivery (2026-10-30T08:05:56Z) — https://github.com/ZKStamp/AgentWallet
+- [external/hackernews] Confused NYPD Abandons East Village E-Bike Raid (2026-10-30T08:04:51Z) — https://nyc.streetsblog.org/2026/10/29/confused-nypd-abandons-east-village-e-bike-raid
+- [external/hackernews] Malicious Claude Code Extension Found in Cursor Marketplace (2026-10-30T08:04:26Z) — https://cursor.com/blog/claude-code-extension-security-notice
+- [external/hackernews] Binance hot wallet signed 50 EIP-7702 delegations 3 minutes before the drain (2026-10-30T08:00:36Z) — https://808bits.com/articles/binance-hot-wallet-eip-7702-delegations/
+- [external/hackernews] Orca is the place for working with a fleet of agents (e.g. G (2026-10-30T08:00:24Z) — https://news.ycombinator.com/item?id=50300978
+- [external/hackernews] Show HN: HiveOS – Multi-agent enterprise OS with PII pills and 3-model consensus (2026-10-30T07:31:48Z) — https://gethiveos.com/
+- [external/hackernews] Patterns in AI-Driven Software Development (2026-10-30T07:21:56Z) — https://akos.ma/blog/patterns-in-ai-driven-software-development/
+- [external/hackernews] Official Claude Code extension compromise (2026-10-30T07:09:12Z) — https://phorion.io/blog/offical-claude-code-vsx-compromise/
+- [external/hackernews] Show HN: Arsaze – Cursor for video editing (Tab-complete and agent edits) (2026-10-30T06:55:33Z) — https://www.arsaze.com
 - [external/hackernews] AI will bring in universal income and everyone will get wealthier (2026-10-30T06:48:23Z) — https://www.thenationalnews.com/business/money/2026/10/28/ai-will-bring-in-universal-income-and-everyone-will-get-wealthier-oracles-larry-ellison-says/
 - [external/hackernews] AI Powered Cold Email (2026-10-30T06:45:03Z) — https://usemailrush.com
 - [external/techmeme] How a wave of startups are betting on AI to make formal software verification practical and essential, including &Truth, which launches with a $70M seed (Paresh Dave/Wired) (2026-10-30T06:30:03Z) — https://www.techmeme.com/261030/p4#a261030p4

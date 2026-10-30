@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-30T07:05:00.788169Z",
+  "generated_at": "2026-10-30T08:26:07.613592Z",
   "retention_days": 7,
-  "items_count": 93,
+  "items_count": 106,
   "sources": {
     "techmeme": {
       "status": "ok",
@@ -11,21 +11,177 @@
     "hackernews": {
       "status": "ok",
       "fetched": 77,
-      "new": 0
+      "new": 13
     }
   },
   "items": [
     {
+      "id": "hackernews:50301148",
+      "source": "hackernews",
+      "title": "Chopin – A real-time multiplayer, agentic planning environment",
+      "url": "https://githubnext.com/projects/chopin/",
+      "published_at": "2026-10-30T08:25:58Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301145",
+      "source": "hackernews",
+      "title": "Building fine-grained version control with Rust and Durable Objects",
+      "url": "https://delta.dev/blog/fine-grained-version-control-for-agents",
+      "published_at": "2026-10-30T08:25:34Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301134",
+      "source": "hackernews",
+      "title": "Etsy to restrict AI-generated content in effort to combat seller slop",
+      "url": "https://www.nbcnews.com/business/consumer/etsy-restricts-ai-generated-seller-slop-rcna605216",
+      "published_at": "2026-10-30T08:23:31Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301130",
+      "source": "hackernews",
+      "title": "How (not) to use AI for pull requests and code reviews",
+      "url": "https://paulbakker.io/writing/how-not-to-use-ai-for-pull-requests-and-code-changes/",
+      "published_at": "2026-10-30T08:23:22Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301102",
+      "source": "hackernews",
+      "title": "Spotify aims to launch AI music remix service early next year",
+      "url": "https://www.ft.com/content/50286bd0-7158-4347-81d8-011cd164f75b",
+      "published_at": "2026-10-30T08:16:44Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301018",
+      "source": "hackernews",
+      "title": "Show HN: AI agents trade privately on BitcoinZ, with proof of delivery",
+      "url": "https://github.com/ZKStamp/AgentWallet",
+      "published_at": "2026-10-30T08:05:56Z",
+      "hn_score": 2,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301008",
+      "source": "hackernews",
+      "title": "Confused NYPD Abandons East Village E-Bike Raid",
+      "url": "https://nyc.streetsblog.org/2026/10/29/confused-nypd-abandons-east-village-e-bike-raid",
+      "published_at": "2026-10-30T08:04:51Z",
+      "hn_score": 1,
+      "hn_comments": 1,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50301004",
+      "source": "hackernews",
+      "title": "Malicious Claude Code Extension Found in Cursor Marketplace",
+      "url": "https://cursor.com/blog/claude-code-extension-security-notice",
+      "published_at": "2026-10-30T08:04:26Z",
+      "hn_score": 2,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50300979",
+      "source": "hackernews",
+      "title": "Binance hot wallet signed 50 EIP-7702 delegations 3 minutes before the drain",
+      "url": "https://808bits.com/articles/binance-hot-wallet-eip-7702-delegations/",
+      "published_at": "2026-10-30T08:00:36Z",
+      "hn_score": 2,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50300978",
+      "source": "hackernews",
+      "title": "Orca is the place for working with a fleet of agents (e.g. G",
+      "url": "https://news.ycombinator.com/item?id=50300978",
+      "published_at": "2026-10-30T08:00:24Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50300800",
+      "source": "hackernews",
+      "title": "Show HN: HiveOS – Multi-agent enterprise OS with PII pills and 3-model consensus",
+      "url": "https://gethiveos.com/",
+      "published_at": "2026-10-30T07:31:48Z",
+      "hn_score": 1,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50300745",
+      "source": "hackernews",
+      "title": "Patterns in AI-Driven Software Development",
+      "url": "https://akos.ma/blog/patterns-in-ai-driven-software-development/",
+      "published_at": "2026-10-30T07:21:56Z",
+      "hn_score": 2,
+      "hn_comments": 0,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
+      "id": "hackernews:50300683",
+      "source": "hackernews",
+      "title": "Official Claude Code extension compromise",
+      "url": "https://phorion.io/blog/offical-claude-code-vsx-compromise/",
+      "published_at": "2026-10-30T07:09:12Z",
+      "hn_score": 4,
+      "hn_comments": 1,
+      "discovered_via": "newstories",
+      "first_seen_at": "2026-10-30T08:26:07.613592Z",
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
+    },
+    {
       "id": "hackernews:50300618",
       "source": "hackernews",
-      "title": "Show HN: Arsaze–Like Cursor, but for video editing(Tab-complete and agent edits)",
+      "title": "Show HN: Arsaze – Cursor for video editing (Tab-complete and agent edits)",
       "url": "https://www.arsaze.com",
       "published_at": "2026-10-30T06:55:33Z",
-      "hn_score": 3,
+      "hn_score": 41,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300566",
@@ -34,10 +190,10 @@
       "url": "https://www.thenationalnews.com/business/money/2026/10/28/ai-will-bring-in-universal-income-and-everyone-will-get-wealthier-oracles-larry-ellison-says/",
       "published_at": "2026-10-30T06:48:23Z",
       "hn_score": 1,
-      "hn_comments": 1,
+      "hn_comments": 3,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300545",
@@ -49,7 +205,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:5de12bd5c2918c0526598de5",
@@ -59,7 +215,7 @@
       "published_at": "2026-10-30T06:30:03Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300397",
@@ -67,11 +223,11 @@
       "title": "Canada to invest up to $1.6B in Toronto-based AI company Cohere",
       "url": "https://www.cbc.ca/news/business/canada-cohere-ai-investment-9.7401367",
       "published_at": "2026-10-30T06:11:52Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300396",
@@ -83,7 +239,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300385",
@@ -95,7 +251,7 @@
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300354",
@@ -103,11 +259,11 @@
       "title": "Laid off 60 days in: what is the tech industry doing to developers?",
       "url": "https://samueleast.co.uk/playground/laid-off-from-plex-60-days-in",
       "published_at": "2026-10-30T06:01:00Z",
-      "hn_score": 2,
+      "hn_score": 4,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300299",
@@ -115,11 +271,11 @@
       "title": "Blockchain analysis firm TRM says North Korea behind Binance crypto theft",
       "url": "https://www.reuters.com/legal/government/blockchain-analysis-firm-trm-says-north-korea-behind-binance-crypto-theft-2026-10-30/",
       "published_at": "2026-10-30T05:51:10Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300279",
@@ -131,7 +287,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300277",
@@ -139,11 +295,11 @@
       "title": "Anthropic now lets Claude users jump out of plane without parachute",
       "url": "https://www.theregister.com/ai-and-ml/2026/10/27/anthropic-now-lets-claude-users-jump-out-of-plane-without-parachute/5305807",
       "published_at": "2026-10-30T05:48:27Z",
-      "hn_score": 4,
+      "hn_score": 5,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300268",
@@ -155,7 +311,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300177",
@@ -167,7 +323,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300112",
@@ -175,11 +331,11 @@
       "title": "Trojanized Claude Code Extension Plants an SSH Backdoor",
       "url": "https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor",
       "published_at": "2026-10-30T05:20:20Z",
-      "hn_score": 9,
+      "hn_score": 13,
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300101",
@@ -191,7 +347,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300097",
@@ -203,7 +359,7 @@
       "hn_comments": 4,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300039",
@@ -211,11 +367,11 @@
       "title": "The case of a customer who said that all they could see was a black screen",
       "url": "https://devblogs.microsoft.com/oldnewthing/20261029-00/?p=112808/",
       "published_at": "2026-10-30T05:03:27Z",
-      "hn_score": 3,
+      "hn_score": 4,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:fdec55726fc3bb24d580c063",
@@ -225,7 +381,7 @@
       "published_at": "2026-10-30T05:00:14Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300006",
@@ -237,7 +393,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50300003",
@@ -249,7 +405,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:e24191d5727ad398ce860fbe",
@@ -259,7 +415,7 @@
       "published_at": "2026-10-30T04:50:00Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299847",
@@ -271,7 +427,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299796",
@@ -283,7 +439,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299777",
@@ -291,11 +447,11 @@
       "title": "Key oddity of quantum physics may run even deeper than anticipated",
       "url": "https://www.newscientist.com/article/2596105-key-oddity-of-quantum-physics-may-run-even-deeper-than-anticipated/",
       "published_at": "2026-10-30T04:09:29Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299763",
@@ -307,7 +463,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:6cf88ea2edcde0bc718b4cba",
@@ -317,7 +473,7 @@
       "published_at": "2026-10-30T04:01:16Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299645",
@@ -329,7 +485,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299603",
@@ -337,11 +493,11 @@
       "title": "A Defense Contractor Gave Their AI Agent Access to a Secure Pentagon System",
       "url": "https://www.wired.com/story/a-defense-contractor-gave-their-personal-ai-agent-access-to-a-secure-pentagon-system/",
       "published_at": "2026-10-30T03:37:14Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:12decb4a90b21727feecab46",
@@ -351,7 +507,7 @@
       "published_at": "2026-10-30T03:35:00Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299573",
@@ -363,7 +519,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299521",
@@ -375,7 +531,7 @@
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299507",
@@ -383,11 +539,11 @@
       "title": "China increasingly depends on copying American AI",
       "url": "https://www.economist.com/science-and-technology/2026/10/25/china-increasingly-depends-on-copying-american-ai",
       "published_at": "2026-10-30T03:21:06Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:bde062bcb4a762f7c29b8b7e",
@@ -397,7 +553,7 @@
       "published_at": "2026-10-30T03:10:00Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299390",
@@ -409,7 +565,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299388",
@@ -417,11 +573,11 @@
       "title": "The Four Academics Who Dreamed Up California's Billionaire Tax",
       "url": "https://www.wsj.com/finance/the-four-academics-who-dreamed-up-californias-billionaire-tax-b0d05dcc",
       "published_at": "2026-10-30T03:00:07Z",
-      "hn_score": 1,
+      "hn_score": 2,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299288",
@@ -433,7 +589,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299276",
@@ -445,7 +601,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299275",
@@ -453,11 +609,11 @@
       "title": "The hard problem of AI therapy",
       "url": "https://www.theseedsofscience.pub/p/the-hard-problem-of-ai-therapy",
       "published_at": "2026-10-30T02:45:50Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:3c1c5739a8044e75e70c2777",
@@ -467,7 +623,7 @@
       "published_at": "2026-10-30T02:40:01Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299051",
@@ -475,11 +631,11 @@
       "title": "How I Built the Most AI-Pilled Company in the World",
       "url": "https://x.com/jsnnsa/status/2115623382721126826?a=fjiH4cVowfsIKfO0urI&s=46",
       "published_at": "2026-10-30T02:12:57Z",
-      "hn_score": 1,
+      "hn_score": 2,
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:a05072dd38f493bb1f51080d",
@@ -489,7 +645,7 @@
       "published_at": "2026-10-30T02:10:01Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299033",
@@ -501,7 +657,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50299030",
@@ -513,7 +669,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298964",
@@ -521,11 +677,11 @@
       "title": "Pico CSS is no longer maintained",
       "url": "https://github.com/picocss/pico/discussions/754",
       "published_at": "2026-10-30T01:58:44Z",
-      "hn_score": 100,
-      "hn_comments": 33,
+      "hn_score": 114,
+      "hn_comments": 44,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298949",
@@ -537,7 +693,7 @@
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298905",
@@ -549,7 +705,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:66f7c7745386d618012ff4c9",
@@ -559,7 +715,7 @@
       "published_at": "2026-10-30T01:35:00Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298799",
@@ -567,11 +723,11 @@
       "title": "Six popular sugar substitutes linked to faster brain aging",
       "url": "https://www.sciencedaily.com/releases/2026/10/261028234238.htm",
       "published_at": "2026-10-30T01:32:18Z",
-      "hn_score": 7,
+      "hn_score": 8,
       "hn_comments": 6,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298692",
@@ -583,7 +739,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:737f0b15329b4c992b7c4cd2",
@@ -593,7 +749,7 @@
       "published_at": "2026-10-30T01:15:00Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:dabb3b308a7e7b350a2edf17",
@@ -603,7 +759,7 @@
       "published_at": "2026-10-30T01:10:01Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298649",
@@ -615,7 +771,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298463",
@@ -627,7 +783,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:b97ef603aba3178fb1467b55",
@@ -637,7 +793,7 @@
       "published_at": "2026-10-30T00:40:02Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298367",
@@ -649,7 +805,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298275",
@@ -661,7 +817,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:078f74637071c2bc5616b8d5",
@@ -671,7 +827,7 @@
       "published_at": "2026-10-30T00:20:02Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298218",
@@ -683,7 +839,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298118",
@@ -691,11 +847,11 @@
       "title": "Josh Kushner's Thrive and OpenAI to buy home security firm ADT",
       "url": "https://www.ft.com/content/f88e30a0-1252-4695-97b0-03da22e5fd42",
       "published_at": "2026-10-30T00:10:09Z",
-      "hn_score": 6,
+      "hn_score": 7,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298057",
@@ -707,7 +863,7 @@
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298017",
@@ -715,11 +871,11 @@
       "title": "Meta discussed 'whisper strategy' against social media critic Jonathan Haidt",
       "url": "https://www.theguardian.com/technology/2026/oct/29/meta-staff-us-social-media-critic-jonathan-haidt-court-documents",
       "published_at": "2026-10-30T00:02:51Z",
-      "hn_score": 8,
+      "hn_score": 9,
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50298001",
@@ -731,7 +887,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297971",
@@ -743,7 +899,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297955",
@@ -755,7 +911,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297939",
@@ -763,11 +919,11 @@
       "title": "A Diary Has a Creditor: What Character.ai's Bankruptcy Hits Freedom of Thought",
       "url": "https://www.techdirt.com/2026/10/29/your-diary-has-a-creditor-what-character-ais-bankruptcy-does-to-freedom-of-thought/",
       "published_at": "2026-10-29T23:54:07Z",
-      "hn_score": 2,
+      "hn_score": 3,
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297928",
@@ -779,7 +935,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297926",
@@ -791,7 +947,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297872",
@@ -803,7 +959,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297846",
@@ -815,7 +971,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297748",
@@ -827,7 +983,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:08c4c5dd988a22567e139ce4",
@@ -837,7 +993,7 @@
       "published_at": "2026-10-29T23:30:01Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297720",
@@ -849,7 +1005,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297697",
@@ -857,11 +1013,11 @@
       "title": "Show HN: I Turned DOOM into a Transformer",
       "url": "https://github.com/mottopanikeiku/doomformer",
       "published_at": "2026-10-29T23:25:46Z",
-      "hn_score": 71,
-      "hn_comments": 22,
+      "hn_score": 82,
+      "hn_comments": 24,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "techmeme:b8744c038478b1a993221ecf",
@@ -871,7 +1027,7 @@
       "published_at": "2026-10-29T23:20:02Z",
       "discovered_via": "rss",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297636",
@@ -883,7 +1039,7 @@
       "hn_comments": 2,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297631",
@@ -895,7 +1051,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297601",
@@ -907,7 +1063,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297585",
@@ -919,7 +1075,7 @@
       "hn_comments": 0,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297510",
@@ -931,7 +1087,7 @@
       "hn_comments": 1,
       "discovered_via": "newstories",
       "first_seen_at": "2026-10-30T06:59:26.095098Z",
-      "last_seen_at": "2026-10-30T07:05:00.788169Z"
+      "last_seen_at": "2026-10-30T08:26:07.613592Z"
     },
     {
       "id": "hackernews:50297445",

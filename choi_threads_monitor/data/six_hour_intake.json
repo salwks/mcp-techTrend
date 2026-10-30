@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-30T08:23:46.096864Z",
+  "generated_at": "2026-10-30T08:26:10.981956Z",
   "window_hours": 6,
   "window_type": "rolling_preview",
   "production_batch": "Supabase public.ai_news_6h_batches",
-  "total_candidates": 44,
+  "total_candidates": 57,
   "counts_by_group": {
     "choi": 5,
-    "external": 39
+    "external": 52
   },
   "source_status": {
     "choi": "ok",
@@ -19,7 +19,7 @@
       "hackernews": {
         "status": "ok",
         "fetched": 77,
-        "new": 0
+        "new": 13
       }
     },
     "research": {
@@ -54,11 +54,128 @@
     {
       "group": "external",
       "source": "hackernews",
+      "id": "hackernews:50301148",
+      "title": "Chopin – A real-time multiplayer, agentic planning environment",
+      "url": "https://githubnext.com/projects/chopin/",
+      "published_at": "2026-10-30T08:25:58Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301145",
+      "title": "Building fine-grained version control with Rust and Durable Objects",
+      "url": "https://delta.dev/blog/fine-grained-version-control-for-agents",
+      "published_at": "2026-10-30T08:25:34Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301134",
+      "title": "Etsy to restrict AI-generated content in effort to combat seller slop",
+      "url": "https://www.nbcnews.com/business/consumer/etsy-restricts-ai-generated-seller-slop-rcna605216",
+      "published_at": "2026-10-30T08:23:31Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301130",
+      "title": "How (not) to use AI for pull requests and code reviews",
+      "url": "https://paulbakker.io/writing/how-not-to-use-ai-for-pull-requests-and-code-changes/",
+      "published_at": "2026-10-30T08:23:22Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301102",
+      "title": "Spotify aims to launch AI music remix service early next year",
+      "url": "https://www.ft.com/content/50286bd0-7158-4347-81d8-011cd164f75b",
+      "published_at": "2026-10-30T08:16:44Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301018",
+      "title": "Show HN: AI agents trade privately on BitcoinZ, with proof of delivery",
+      "url": "https://github.com/ZKStamp/AgentWallet",
+      "published_at": "2026-10-30T08:05:56Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301008",
+      "title": "Confused NYPD Abandons East Village E-Bike Raid",
+      "url": "https://nyc.streetsblog.org/2026/10/29/confused-nypd-abandons-east-village-e-bike-raid",
+      "published_at": "2026-10-30T08:04:51Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50301004",
+      "title": "Malicious Claude Code Extension Found in Cursor Marketplace",
+      "url": "https://cursor.com/blog/claude-code-extension-security-notice",
+      "published_at": "2026-10-30T08:04:26Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300979",
+      "title": "Binance hot wallet signed 50 EIP-7702 delegations 3 minutes before the drain",
+      "url": "https://808bits.com/articles/binance-hot-wallet-eip-7702-delegations/",
+      "published_at": "2026-10-30T08:00:36Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300978",
+      "title": "Orca is the place for working with a fleet of agents (e.g. G",
+      "url": "https://news.ycombinator.com/item?id=50300978",
+      "published_at": "2026-10-30T08:00:24Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300800",
+      "title": "Show HN: HiveOS – Multi-agent enterprise OS with PII pills and 3-model consensus",
+      "url": "https://gethiveos.com/",
+      "published_at": "2026-10-30T07:31:48Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300745",
+      "title": "Patterns in AI-Driven Software Development",
+      "url": "https://akos.ma/blog/patterns-in-ai-driven-software-development/",
+      "published_at": "2026-10-30T07:21:56Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300683",
+      "title": "Official Claude Code extension compromise",
+      "url": "https://phorion.io/blog/offical-claude-code-vsx-compromise/",
+      "published_at": "2026-10-30T07:09:12Z",
+      "hn_score": 4
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
       "id": "hackernews:50300618",
-      "title": "Show HN: Arsaze–Like Cursor, but for video editing(Tab-complete and agent edits)",
+      "title": "Show HN: Arsaze – Cursor for video editing (Tab-complete and agent edits)",
       "url": "https://www.arsaze.com",
       "published_at": "2026-10-30T06:55:33Z",
-      "hn_score": 3
+      "hn_score": 41
     },
     {
       "group": "external",
@@ -94,7 +211,7 @@
       "title": "Canada to invest up to $1.6B in Toronto-based AI company Cohere",
       "url": "https://www.cbc.ca/news/business/canada-cohere-ai-investment-9.7401367",
       "published_at": "2026-10-30T06:11:52Z",
-      "hn_score": 2
+      "hn_score": 3
     },
     {
       "group": "external",
@@ -121,7 +238,7 @@
       "title": "Laid off 60 days in: what is the tech industry doing to developers?",
       "url": "https://samueleast.co.uk/playground/laid-off-from-plex-60-days-in",
       "published_at": "2026-10-30T06:01:00Z",
-      "hn_score": 2
+      "hn_score": 4
     },
     {
       "group": "choi",
@@ -146,7 +263,7 @@
       "title": "Blockchain analysis firm TRM says North Korea behind Binance crypto theft",
       "url": "https://www.reuters.com/legal/government/blockchain-analysis-firm-trm-says-north-korea-behind-binance-crypto-theft-2026-10-30/",
       "published_at": "2026-10-30T05:51:10Z",
-      "hn_score": 2
+      "hn_score": 3
     },
     {
       "group": "external",
@@ -164,7 +281,7 @@
       "title": "Anthropic now lets Claude users jump out of plane without parachute",
       "url": "https://www.theregister.com/ai-and-ml/2026/10/27/anthropic-now-lets-claude-users-jump-out-of-plane-without-parachute/5305807",
       "published_at": "2026-10-30T05:48:27Z",
-      "hn_score": 4
+      "hn_score": 5
     },
     {
       "group": "external",
@@ -191,7 +308,7 @@
       "title": "Trojanized Claude Code Extension Plants an SSH Backdoor",
       "url": "https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor",
       "published_at": "2026-10-30T05:20:20Z",
-      "hn_score": 9
+      "hn_score": 13
     },
     {
       "group": "external",
@@ -218,7 +335,7 @@
       "title": "The case of a customer who said that all they could see was a black screen",
       "url": "https://devblogs.microsoft.com/oldnewthing/20261029-00/?p=112808/",
       "published_at": "2026-10-30T05:03:27Z",
-      "hn_score": 3
+      "hn_score": 4
     },
     {
       "group": "choi",
@@ -289,7 +406,7 @@
       "title": "Key oddity of quantum physics may run even deeper than anticipated",
       "url": "https://www.newscientist.com/article/2596105-key-oddity-of-quantum-physics-may-run-even-deeper-than-anticipated/",
       "published_at": "2026-10-30T04:09:29Z",
-      "hn_score": 2
+      "hn_score": 3
     },
     {
       "group": "external",
@@ -333,7 +450,7 @@
       "title": "A Defense Contractor Gave Their AI Agent Access to a Secure Pentagon System",
       "url": "https://www.wired.com/story/a-defense-contractor-gave-their-personal-ai-agent-access-to-a-secure-pentagon-system/",
       "published_at": "2026-10-30T03:37:14Z",
-      "hn_score": 2
+      "hn_score": 3
     },
     {
       "group": "external",
@@ -369,7 +486,7 @@
       "title": "China increasingly depends on copying American AI",
       "url": "https://www.economist.com/science-and-technology/2026/10/25/china-increasingly-depends-on-copying-american-ai",
       "published_at": "2026-10-30T03:21:06Z",
-      "hn_score": 2
+      "hn_score": 3
     },
     {
       "group": "external",
@@ -404,7 +521,7 @@
       "title": "The Four Academics Who Dreamed Up California's Billionaire Tax",
       "url": "https://www.wsj.com/finance/the-four-academics-who-dreamed-up-californias-billionaire-tax-b0d05dcc",
       "published_at": "2026-10-30T03:00:07Z",
-      "hn_score": 1
+      "hn_score": 2
     },
     {
       "group": "external",
@@ -431,7 +548,7 @@
       "title": "The hard problem of AI therapy",
       "url": "https://www.theseedsofscience.pub/p/the-hard-problem-of-ai-therapy",
       "published_at": "2026-10-30T02:45:50Z",
-      "hn_score": 2
+      "hn_score": 3
     },
     {
       "group": "external",
