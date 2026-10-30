@@ -1,0 +1,42 @@
+name: AI Research Signal Collector
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/research-signals.yml"
+      - "choi_threads_monitor/collect_research.py"
+  schedule:
+    - cron: "31 1,13 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-signal-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Collect curated AI research signals
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git reset --hard "origin/${GITHUB_REF_NAME}"
+            python3 choi_threads_monitor/collect_research.py
+            git add choi_threads_monitor/data/research_signals.json choi_threads_monitor/data/research_signals_status.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "chore: refresh curated AI research signals"
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then exit 0; fi
+          done
+          exit 1
