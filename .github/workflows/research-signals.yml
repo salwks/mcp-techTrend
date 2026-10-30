@@ -9,6 +9,8 @@ on:
   schedule:
     # 12:00 Asia/Seoul (03:00 UTC), daily
     - cron: "0 3 * * *"
+    # 23:30 KST: metadata-only late-day HF completeness check
+    - cron: "30 14 * * *"
 
 permissions:
   contents: write
@@ -34,7 +36,11 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin "${GITHUB_REF_NAME}"
             git reset --hard "origin/${GITHUB_REF_NAME}"
-            python3 choi_threads_monitor/collect_research.py
+            if [ "${{ github.event.schedule }}" = "30 14 * * *" ]; then
+              python3 choi_threads_monitor/hf_daily_late_check.py
+            else
+              python3 choi_threads_monitor/collect_research.py
+            fi
             python3 choi_threads_monitor/build_six_hour_intake.py
             git add choi_threads_monitor/data/research_signals.json choi_threads_monitor/data/research_signals_status.json choi_threads_monitor/data/six_hour_intake.json choi_threads_monitor/data/six_hour_intake.md choi_threads_monitor/data/hf_daily_today.json choi_threads_monitor/data/hf_daily_today.md
             if git diff --cached --quiet; then exit 0; fi
