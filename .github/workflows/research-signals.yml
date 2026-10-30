@@ -1,22 +1,16 @@
-name: AI Research Signal Collector
+name: Hugging Face Daily Papers Collector
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/research-signals.yml"
-      - "choi_threads_monitor/collect_research.py"
   schedule:
-    # 12:00 Asia/Seoul (03:00 UTC), daily
+    # 12:00 KST (03:00 UTC), exactly once a day
     - cron: "0 3 * * *"
-    # 23:30 KST: metadata-only late-day HF completeness check
-    - cron: "30 14 * * *"
 
 permissions:
   contents: write
 
 concurrency:
-  group: research-signal-collector
+  group: huggingface-daily-papers
   cancel-in-progress: false
 
 jobs:
@@ -27,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Collect curated AI research signals
+      - name: Collect Hugging Face Daily Papers only
         shell: bash
         run: |
           set -euo pipefail
@@ -36,15 +30,10 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin "${GITHUB_REF_NAME}"
             git reset --hard "origin/${GITHUB_REF_NAME}"
-            if [ "${{ github.event.schedule }}" = "30 14 * * *" ]; then
-              python3 choi_threads_monitor/hf_daily_late_check.py
-            else
-              python3 choi_threads_monitor/collect_research.py
-            fi
-            python3 choi_threads_monitor/build_six_hour_intake.py
-            git add choi_threads_monitor/data/research_signals.json choi_threads_monitor/data/research_signals_status.json choi_threads_monitor/data/six_hour_intake.json choi_threads_monitor/data/six_hour_intake.md choi_threads_monitor/data/hf_daily_today.json choi_threads_monitor/data/hf_daily_today.md
+            python3 choi_threads_monitor/collect_research.py
+            git add choi_threads_monitor/data/research_signals.json choi_threads_monitor/data/research_signals_status.json choi_threads_monitor/data/hf_daily_today.json choi_threads_monitor/data/hf_daily_today.md
             if git diff --cached --quiet; then exit 0; fi
-            git commit -m "chore: refresh curated AI research signals"
+            git commit -m "chore: refresh Hugging Face Daily Papers"
             if git push origin "HEAD:${GITHUB_REF_NAME}"; then exit 0; fi
           done
           exit 1
