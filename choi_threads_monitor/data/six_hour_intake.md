@@ -1,6 +1,6 @@
-# AI News six-hour intake — 2026-10-30T08:26:19.242325Z
+# AI News six-hour intake — 2026-10-30T08:29:15.037655Z
 
-Candidates: 57 (CHOI 5, external 52)
+Candidates: 59 (CHOI 7, external 52)
 
 > Unverified candidates. Check original sources before publishing.
 
@@ -8,6 +8,7 @@ Candidates: 57 (CHOI 5, external 52)
 - [external/hackernews] Building fine-grained version control with Rust and Durable Objects (2026-10-30T08:25:34Z) — https://delta.dev/blog/fine-grained-version-control-for-agents
 - [external/hackernews] Etsy to restrict AI-generated content in effort to combat seller slop (2026-10-30T08:23:31Z) — https://www.nbcnews.com/business/consumer/etsy-restricts-ai-generated-seller-slop-rcna605216
 - [external/hackernews] How (not) to use AI for pull requests and code reviews (2026-10-30T08:23:22Z) — https://paulbakker.io/writing/how-not-to-use-ai-for-pull-requests-and-code-changes/
+- [choi/choi_threads] 🚨 오픈AI가 GPT의 행동 원칙을 다시 썼습니다. 에이전트가 사람 대신 일하는 시대에 맞춰 다섯 가지 가치를 새 기준으로 세웠는데요. 무엇이 바뀌었는지 정리했습니다 🧵 (2026-10-30T08:20:47Z) — https://www.threads.com/@choi.openai/post/DfHI8qqDxp3
 - [external/hackernews] Spotify aims to launch AI music remix service early next year (2026-10-30T08:16:44Z) — https://www.ft.com/content/50286bd0-7158-4347-81d8-011cd164f75b
 - [external/hackernews] Show HN: AI agents trade privately on BitcoinZ, with proof of delivery (2026-10-30T08:05:56Z) — https://github.com/ZKStamp/AgentWallet
 - [external/hackernews] Confused NYPD Abandons East Village E-Bike Raid (2026-10-30T08:04:51Z) — https://nyc.streetsblog.org/2026/10/29/confused-nypd-abandons-east-village-e-bike-raid
@@ -17,6 +18,7 @@ Candidates: 57 (CHOI 5, external 52)
 - [external/hackernews] Show HN: HiveOS – Multi-agent enterprise OS with PII pills and 3-model consensus (2026-10-30T07:31:48Z) — https://gethiveos.com/
 - [external/hackernews] Patterns in AI-Driven Software Development (2026-10-30T07:21:56Z) — https://akos.ma/blog/patterns-in-ai-driven-software-development/
 - [external/hackernews] Official Claude Code extension compromise (2026-10-30T07:09:12Z) — https://phorion.io/blog/offical-claude-code-vsx-compromise/
+- [choi/choi_threads] 🚨 오픈AI가 자사 AI를 감시하는 시스템을 처음으로 자세히 공개했습니다. 허깅페이스 사건 기록을 새 감시 시스템에 다시 돌려보니, 에이전트가 샌드박스를 빠져나간 지 30분 만에 보안팀에 경보가 갔다고 합니다. AI가 몰래 외부 서버에 접근하고, 서로 연락하고, 감시까지 무력화한 사건도 있었는데요. 실제로 발생한 AI의 이상 행동 사례와 감시 결과를 정리했습니다🧵 (2026-10-30T07:00:35Z) — https://www.threads.com/@choi.openai/post/DfG_xSWj7O3
 - [external/hackernews] Show HN: Arsaze – Cursor for video editing (Tab-complete and agent edits) (2026-10-30T06:55:33Z) — https://www.arsaze.com
 - [external/hackernews] AI will bring in universal income and everyone will get wealthier (2026-10-30T06:48:23Z) — https://www.thenationalnews.com/business/money/2026/10/28/ai-will-bring-in-universal-income-and-everyone-will-get-wealthier-oracles-larry-ellison-says/
 - [external/hackernews] AI Powered Cold Email (2026-10-30T06:45:03Z) — https://usemailrush.com

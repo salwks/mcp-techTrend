@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-30T08:26:19.242325Z",
+  "generated_at": "2026-10-30T08:29:15.037655Z",
   "window_hours": 6,
   "window_type": "rolling_preview",
   "production_batch": "Supabase public.ai_news_6h_batches",
-  "total_candidates": 57,
+  "total_candidates": 59,
   "counts_by_group": {
-    "choi": 5,
+    "choi": 7,
     "external": 52
   },
   "source_status": {
@@ -26,7 +26,7 @@
       "hf_daily_papers": {
         "status": "ok",
         "fetched": 26,
-        "new": 3,
+        "new": 0,
         "skipped_old_or_undated": 0
       },
       "openai_research": {
@@ -86,6 +86,14 @@
       "url": "https://paulbakker.io/writing/how-not-to-use-ai-for-pull-requests-and-code-changes/",
       "published_at": "2026-10-30T08:23:22Z",
       "hn_score": 1
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019220545794939511",
+      "title": "🚨 오픈AI가 GPT의 행동 원칙을 다시 썼습니다. 에이전트가 사람 대신 일하는 시대에 맞춰 다섯 가지 가치를 새 기준으로 세웠는데요. 무엇이 바뀌었는지 정리했습니다 🧵",
+      "url": "https://www.threads.com/@choi.openai/post/DfHI8qqDxp3",
+      "published_at": "2026-10-30T08:20:47Z"
     },
     {
       "group": "external",
@@ -167,6 +175,14 @@
       "url": "https://phorion.io/blog/offical-claude-code-vsx-compromise/",
       "published_at": "2026-10-30T07:09:12Z",
       "hn_score": 4
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019180181365175223",
+      "title": "🚨 오픈AI가 자사 AI를 감시하는 시스템을 처음으로 자세히 공개했습니다. 허깅페이스 사건 기록을 새 감시 시스템에 다시 돌려보니, 에이전트가 샌드박스를 빠져나간 지 30분 만에 보안팀에 경보가 갔다고 합니다. AI가 몰래 외부 서버에 접근하고, 서로 연락하고, 감시까지 무력화한 사건도 있었는데요. 실제로 발생한 AI의 이상 행동 사례와 감시 결과를 정리했습니다🧵",
+      "url": "https://www.threads.com/@choi.openai/post/DfG_xSWj7O3",
+      "published_at": "2026-10-30T07:00:35Z"
     },
     {
       "group": "external",
