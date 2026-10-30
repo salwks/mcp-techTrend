@@ -54,7 +54,9 @@ def hf():
         })
     return out
 def rss(source,url):
-    root=ET.fromstring(get(url))
+    raw=get(url)
+    if raw.lstrip().startswith(b"<html") or raw.lstrip().startswith(b"<!DOCTYPE html"):\n        raise ValueError("RSS endpoint returned HTML rather than XML")
+    root=ET.fromstring(raw)
     out=[]
     rss_items=root.findall(".//item")
     if rss_items:
@@ -79,23 +81,29 @@ def main():
     items={x["id"]:x for x in old.get("items",[]) if x.get("id")}
     report={}
     sources=[("hf_daily_papers",hf)]+[(k,lambda k=k,v=v:rss(k,v)) for k,v in FEEDS.items()]
+    cutoff_date=now-dt.timedelta(days=7)
     for name,fn in sources:
         try:
             found=fn()
             if not found:raise ValueError("no entries")
             fresh=0
+            skipped=0
             for x in found:
+                published=utc(x.get("published_at"))
+                if not published or dt.datetime.fromisoformat(published.replace("Z","+00:00")) < cutoff_date:
+                    skipped+=1
+                    continue
                 key=x["id"]
                 if key not in items:fresh+=1
                 x["first_seen_at"]=items.get(key,{}).get("first_seen_at",stamp)
                 x["last_seen_at"]=stamp
                 items[key]=x
-            report[name]={"status":"ok","fetched":len(found),"new":fresh}
+            report[name]={"status":"ok","fetched":len(found),"new":fresh,"skipped_old_or_undated":skipped}
         except Exception as e:
             report[name]={"status":"error","error":str(e)[:240]}
     cutoff=(now-dt.timedelta(days=7)).isoformat()
     # Seven days from first observation; don't reset the age on rediscovery.
-    kept=[x for x in items.values() if (x.get("first_seen_at") or stamp)>=cutoff]
+    kept=[x for x in items.values() if (x.get("first_seen_at") or stamp)>=cutoff and x.get("published_at") and x["published_at"]>=cutoff]
     kept.sort(key=lambda x:(x.get("published_at") or "",x["id"]),reverse=True)
     DATA.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps({"generated_at":stamp,"retention_days":7,"items_count":len(kept),"sources":report,"items":kept},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
