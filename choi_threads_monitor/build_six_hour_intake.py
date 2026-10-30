@@ -2,7 +2,6 @@
 """Build a rolling operator preview; Supabase fixed 6-hour batches are authoritative."""
 import datetime as dt
 import json
-import sys
 from pathlib import Path
 
 DATA=Path(__file__).resolve().parent/"data"
@@ -39,7 +38,6 @@ def main():
     ext=load("external_news.json")
     for x in ext.get("items",[]):
         add("external",x.get("source"),x.get("id"),x.get("title"),x.get("url"),x.get("published_at"),hn_score=x.get("hn_score"))
-    research=load("research_signals.json")
     news.sort(key=lambda x:x["published_at"],reverse=True)
     selected=[]
     for group,cap in LIMITS.items():
@@ -54,18 +52,5 @@ def main():
         lines.append(f"- [{x['group']}/{x['source']}] {x['title']} ({x['published_at']}) — {x['url']}")
         if x.get("abstract"):lines.append("  Abstract: "+x["abstract"])
     (DATA/"six_hour_intake.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
-    if "--update-daily-papers" not in sys.argv:
-        print(json.dumps(result["counts_by_group"]))
-        return
-    # Full calendar-day HF list is generated ONLY by the daily research collector.
-    # This separate file guarantees the Daily Papers page is completely represented.
-    today=NOW.date().isoformat()
-    hf_today=[x for x in research.get("items",[]) if x.get("source")=="hf_daily_papers" and x.get("daily_papers_date")==today]
-    hf_today.sort(key=lambda x:(x.get("upvotes") or 0,x.get("title") or ""),reverse=True)
-    (DATA/"hf_daily_today.json").write_text(json.dumps({"date":today,"items_count":len(hf_today),"items":hf_today},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    md=["# Hugging Face Daily Papers — "+today,"","Total: "+str(len(hf_today)),""]
-    for i,x in enumerate(hf_today,1):
-        md.extend([f"### {i}. {x.get('title') or '(untitled)'}",f"Paper: {x.get('url') or ''}",f"Upvotes: {x.get('upvotes') or 0}","",str(x.get('summary') or '(No abstract supplied)'),""])
-    (DATA/"hf_daily_today.md").write_text("\n".join(md)+"\n",encoding="utf-8")
     print(json.dumps(result["counts_by_group"]))
 if __name__=="__main__":main()
