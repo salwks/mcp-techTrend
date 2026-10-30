@@ -1,0 +1,42 @@
+name: External AI News Collector
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/external-ai-news.yml"
+      - "choi_threads_monitor/collect_external.py"
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: external-ai-news-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Collect and persist
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git reset --hard "origin/${GITHUB_REF_NAME}"
+            python3 choi_threads_monitor/collect_external.py
+            git add choi_threads_monitor/data/external_news.json choi_threads_monitor/data/external_news_status.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "chore: refresh external AI news feed"
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then exit 0; fi
+          done
+          exit 1
