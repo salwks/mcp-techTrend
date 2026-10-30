@@ -80,11 +80,11 @@ def main():
         except Exception as exc:
             diagnostics[name]={"status":"error","error":str(exc)[:300]}
     DATA.mkdir(parents=True,exist_ok=True)
-    # Keep a rolling 30-day history while preserving source errors in a separate status file.
-    cutoff=(now-dt.timedelta(days=30)).isoformat()
+    # Keep a rolling 7-day history while preserving source errors in a separate status file.
+    cutoff=(now-dt.timedelta(days=7)).isoformat()
     items=[x for x in by_id.values() if (x.get("first_seen_at") or stamp)>=cutoff]
     items.sort(key=lambda x:(x.get("published_at") or "",x["id"]),reverse=True)
-    payload={"generated_at":stamp,"retention_days":30,"items_count":len(items),"sources":diagnostics,"items":items}
+    payload={"generated_at":stamp,"retention_days":7,"items_count":len(items),"sources":diagnostics,"items":items}
     OUTPUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     STATUS.write_text(json.dumps({"generated_at":stamp,"sources":diagnostics},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"items_count":len(items),"sources":diagnostics},ensure_ascii=False))
