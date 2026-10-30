@@ -61,10 +61,10 @@ def main():
     today=NOW.date().isoformat()
     hf_today=[x for x in research.get("items",[]) if x.get("source")=="hf_daily_papers" and x.get("daily_papers_date")==today]
     hf_today.sort(key=lambda x:(x.get("upvotes") or 0,x.get("title") or ""),reverse=True)
-    (DATA/"hf_daily_today.json").write_text(json.dumps({"date":today,"items_count":len(hf_today),"items":hf_today},ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+    (DATA/"hf_daily_today.json").write_text(json.dumps({"date":today,"items_count":len(hf_today),"items":hf_today},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     md=["# Hugging Face Daily Papers — "+today,"","Total: "+str(len(hf_today)),""]
     for i,x in enumerate(hf_today,1):
         md.extend([f"### {i}. {x.get('title') or '(untitled)'}",f"Paper: {x.get('url') or ''}",f"Upvotes: {x.get('upvotes') or 0}","",str(x.get('summary') or '(No abstract supplied)'),""])
-    (DATA/"hf_daily_today.md").write_text("\\n".join(md)+"\\n",encoding="utf-8")
+    (DATA/"hf_daily_today.md").write_text("\n".join(md)+"\n",encoding="utf-8")
     print(json.dumps(result["counts_by_group"]))
 if __name__=="__main__":main()
