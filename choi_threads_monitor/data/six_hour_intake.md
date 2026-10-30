@@ -1,0 +1,62 @@
+# AI News six-hour intake — 2026-10-30T07:14:06.200546Z
+
+Candidates: 56 (CHOI 6, external 50, research 0)
+
+> Unverified candidates. Check original sources before publishing.
+
+- [external/hackernews] Show HN: Arsaze–Like Cursor, but for video editing(Tab-complete and agent edits) (2026-10-30T06:55:33Z) — https://www.arsaze.com
+- [external/hackernews] AI will bring in universal income and everyone will get wealthier (2026-10-30T06:48:23Z) — https://www.thenationalnews.com/business/money/2026/10/28/ai-will-bring-in-universal-income-and-everyone-will-get-wealthier-oracles-larry-ellison-says/
+- [external/hackernews] AI Powered Cold Email (2026-10-30T06:45:03Z) — https://usemailrush.com
+- [external/techmeme] How a wave of startups are betting on AI to make formal software verification practical and essential, including &Truth, which launches with a $70M seed (Paresh Dave/Wired) (2026-10-30T06:30:03Z) — https://www.techmeme.com/261030/p4#a261030p4
+- [external/hackernews] Canada to invest up to $1.6B in Toronto-based AI company Cohere (2026-10-30T06:11:52Z) — https://www.cbc.ca/news/business/canada-cohere-ai-investment-9.7401367
+- [external/hackernews] Plan R: AI Safety by ASICs (2026-10-30T06:11:45Z) — https://www.lesswrong.com/posts/n8u3BfqFoGh4jnzpo/plan-r-ai-safety-by-asics
+- [external/hackernews] Dell workstation with 96GB Nvidia GPU may cost less than graphics card alone (2026-10-30T06:08:42Z) — https://videocardz.com/newz/complete-dell-workstation-with-96gb-nvidia-gpu-may-cost-less-than-graphics-card-alone
+- [external/hackernews] Laid off 60 days in: what is the tech industry doing to developers? (2026-10-30T06:01:00Z) — https://samueleast.co.uk/playground/laid-off-from-plex-60-days-in
+- [choi/choi_threads] 🚨 북한 해킹 조직들이 이제 AI를 일상 업무처럼 쓰고 있습니다. 마이크로소프트가 북한 해킹 조직 8곳을 분석했는데, 한 주 만에 위장 회사 3곳을 내세워 공격하고 맞춤형 미끼 문서 수십 개를 몇 분 만에 찍어냈습니다. 한국 사용자를 노린 PDF 미끼만 100개가 넘고, 국내 금융사를 뚫은 그 AI 해킹 도구 ARTEX까지 쓰기 시작했습니다. 🧵 (2026-10-30T06:00:30Z) — https://www.threads.com/@choi.openai/post/DfG45LPj-9b
+- [choi/choi_threads] 얀 르쿤(Yann LeCun)은 현재 유행하는 영상 생성 기반의 접근법은 “진정한 월드 모델이 아니다”라고 지적했습니다. 그는 픽셀 단위로 다음 프레임을 예측하는 생성 모델은 불필요한 노이즈와 예측 불가능한 세부 사항에 얽매여 비효율적이라고 비판했습니다. 텍스트 이산 기호만 다루는 현재의 거대언어모델(LLM) 역시 물리 세계의 고차원 연속 데이터를 이해하는 데 명확한 한계를 지닌다고 짚었습니다. 르쿤은 해결책으로 JEPA 아키텍처를 제시했습니다. 사소한 픽셀 노이즈를 과감히 버리고, 추상적 표현 공간에서 세계의 핵심 역학을 모델링해야만 진정한 물리 지능과 자율 제어가 (2026-10-30T06:00:04Z) — https://www.threads.com/@choi.openai/post/DfG42FBiWbc
+- [external/hackernews] Blockchain analysis firm TRM says North Korea behind Binance crypto theft (2026-10-30T05:51:10Z) — https://www.reuters.com/legal/government/blockchain-analysis-firm-trm-says-north-korea-behind-binance-crypto-theft-2026-10-30/
+- [external/hackernews] ChatGPT release notes October 29, 2026 (2026-10-30T05:48:49Z) — https://help.openai.com/en/articles/6825453-chatgpt-release-notes
+- [external/hackernews] Anthropic now lets Claude users jump out of plane without parachute (2026-10-30T05:48:27Z) — https://www.theregister.com/ai-and-ml/2026/10/27/anthropic-now-lets-claude-users-jump-out-of-plane-without-parachute/5305807
+- [external/hackernews] Time Dilation in the Movie Project Hail Mary Visualized [video] (2026-10-30T05:46:10Z) — https://www.youtube.com/watch?v=8FT-oz9aZU4
+- [external/hackernews] Show HN: Korea-data-MCP – Korean public APIs that agents can't misread (2026-10-30T05:29:51Z) — https://github.com/YoungsoonLee/korea-data-mcp
+- [external/hackernews] Trojanized Claude Code Extension Plants an SSH Backdoor (2026-10-30T05:20:20Z) — https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor
+- [external/hackernews] Show HN: Gates – My attempt to end free-trial abuse through email aliases (2026-10-30T05:17:04Z) — https://github.com/IrondomeDev/GATES
+- [external/hackernews] A Claude Code agent's test escaped into my Mac. I only noticed because it talked (2026-10-30T05:16:33Z) — https://www.marutpandya.com/posts/2026/10/my-mac-started-reading-json-aloud/
+- [external/hackernews] The case of a customer who said that all they could see was a black screen (2026-10-30T05:03:27Z) — https://devblogs.microsoft.com/oldnewthing/20261029-00/?p=112808/
+- [choi/choi_threads] 🚨 Claude가 답을 마칠 때마다 그 대화가 위험한지 스스로 평가하고 있었습니다. 앤트로픽이 6월부터 써 온 '자기 평가' 기술을 공개했는데요. 한 API 고객에게서 아동 성착취 경고를 10만 건 넘게 잡아내 신고까지 이어졌습니다. 🧵 (2026-10-30T05:00:50Z) — https://www.threads.com/@choi.openai/post/DfGyEJZj8ee
+- [external/techmeme] TRM Labs attributes the Binance hack to North Korea-based TraderTraitor, which drained ~$6.36B from Binance wallets across 10 blockchains, mostly in ~20 minutes (Tom Westbrook/Reuters) (2026-10-30T05:00:14Z) — https://www.techmeme.com/261030/p3#a261030p3
+- [external/hackernews] Qwenputer turns Gated DeltaNet state into exact RAM for a CPU (2026-10-30T04:58:44Z) — https://theainewsreport.com/2026-10-29-qwenputer-deltanet-state-as-exact-ram-explained.html
+- [external/hackernews] What Claude Code's 30-second agent summary call costs, read from the binary (2026-10-30T04:58:26Z) — https://theainewsreport.com/2026-10-29-claude-code-agent-summary-cost-explained.html
+- [external/techmeme] Binance pledges to cover all losses from a ~$6.3B hack, potentially the largest crypto theft ever, surpassing the $1.5B Bybit hack in February 2025 (South China Morning Post) (2026-10-30T04:50:00Z) — https://www.techmeme.com/261030/p2#a261030p2
+- [external/hackernews] Show HN: Breatic – Collaborative canvases and documents with an AI agent (2026-10-30T04:23:59Z) — https://github.com/orime-org/breatic
+- [external/hackernews] Sam Altman: local inference is a terrible allocation of scarce resources (2026-10-30T04:13:28Z) — https://www.linkedin.com/posts/boucetta-abderahmane_sam-altman-local-inference-is-a-terrible-activity-7521718579914981376-WZzP
+- [external/hackernews] Key oddity of quantum physics may run even deeper than anticipated (2026-10-30T04:09:29Z) — https://www.newscientist.com/article/2596105-key-oddity-of-quantum-physics-may-run-even-deeper-than-anticipated/
+- [external/hackernews] Same agent-memory accuracy with 8x fewer tokens by changing the embedding model (2026-10-30T04:06:35Z) — https://github.com/goyohan0611-png/turnbook
+- [external/techmeme] CrowdStrike: China-linked hackers used AI tool ARTEX with a DeepSeek LLM and another model to target 200+ organizations in 11 days, compromising at least nine (Kevin Collier/NBC News) (2026-10-30T04:01:16Z) — https://www.techmeme.com/261030/p1#a261030p1
+- [choi/choi_threads] 지금 한국에서 가장 핫한 서비스는 '산사'일겁니다. 비개발자 문과생이 만든 방석 20개로 시작한 온라인 절인데, 하루 만에 1만 2천 명이 몰려 서버가 터졌고, 복구하고 나니 5만 명, 그리고 하루 10만 명까지 들어왔다고 합니다. 그런데 제가 더 주목하는 부분은 산사가 뜨자마자 온라인 성당, 온라인 교회 같은 카피 서비스가 여기저기서 나오고 있다는 점이었는데요. 며칠 걸리던 걸 이제는 AI로 몇 시간이면 따라 만들 수 있으니, 소프트웨어 자체의 해자는 이제 거의 없다고 봐야 하지 않을까 싶습니다. 하지만 오히려 더욱 강하게 느껴진 부분은 오리지널리티의 중요성입니다. (2026-10-30T03:59:50Z) — https://www.threads.com/@choi.openai/post/DfGrFX4D8gh
+- [external/hackernews] Show HN: HiPath AI – CS learning roadmaps where a quiz unlocks each lesson (2026-10-30T03:45:17Z) — https://www.hipathai.me
+- [external/hackernews] A Defense Contractor Gave Their AI Agent Access to a Secure Pentagon System (2026-10-30T03:37:14Z) — https://www.wired.com/story/a-defense-contractor-gave-their-personal-ai-agent-access-to-a-secure-pentagon-system/
+- [external/techmeme] Sources: DeepSeek doubled its latest round's size due to surging black market Nvidia Blackwell chip prices, with Chinese state-owned investors representing 27% (The Information) (2026-10-30T03:35:00Z) — https://www.techmeme.com/261029/p71#a261029p71
+- [external/hackernews] AI killed my software career [video] (2026-10-30T03:31:38Z) — https://www.youtube.com/watch?v=cwsy-6gu5p4
+- [external/hackernews] I Built the Most AI-Pilled Company in the World (2026-10-30T03:23:31Z) — https://twitter.com/jsnnsa/status/2115623382721126826
+- [external/hackernews] China increasingly depends on copying American AI (2026-10-30T03:21:06Z) — https://www.economist.com/science-and-technology/2026/10/25/china-increasingly-depends-on-copying-american-ai
+- [external/techmeme] S-1: Anthropic says it heavily depends on TSMC chips made in Taiwan and warns of risks from "potential disruption" amid geopolitical tensions with China (Joseph C. Sternberg/Wall Street Journal) (2026-10-30T03:10:00Z) — https://www.techmeme.com/261029/p70#a261029p70
+- [external/hackernews] Ambition in the Age of AI (2026-10-30T03:00:27Z) — https://aumitleon.dev/ambition-in-the-age-of-ai
+- [choi/choi_threads] 구글 딥마인드가 AGI가 언제, 어떻게 경제를 바꾸는지 다룬 108쪽 논문을 냈습니다. 주목할 점은 저자에 셰인 레그가 들어가 있다는 것인데요. AI가 똑똑해지는 것만으로는 경제가 잘 바뀌지 않고, AI끼리 협업하는 능력이 어느 선을 넘을 때 한꺼번에 바뀐다는 결론입니다. 그 변화는 고용 통계보다 임금에서 먼저 나타난다고 합니다 🧵 (2026-10-30T03:00:18Z) — https://www.threads.com/@choi.openai/post/DfFXtpdEYEW
+- [external/hackernews] The Four Academics Who Dreamed Up California's Billionaire Tax (2026-10-30T03:00:07Z) — https://www.wsj.com/finance/the-four-academics-who-dreamed-up-californias-billionaire-tax-b0d05dcc
+- [external/hackernews] Claim – Humanity vs. the Machine (2026-10-30T02:47:18Z) — https://theaigame.app/
+- [external/hackernews] Show HN: 100% automated tech deal site (built with Grok bot) (2026-10-30T02:45:54Z) — https://gadgetsteal.com/
+- [external/hackernews] The hard problem of AI therapy (2026-10-30T02:45:50Z) — https://www.theseedsofscience.pub/p/the-hard-problem-of-ai-therapy
+- [external/techmeme] Sources: Indian AI infrastructure company AM Intelligence seeks to raise as much as $3B to fund a previously announced purchase of Nvidia Vera Rubin systems (Bloomberg) (2026-10-30T02:40:01Z) — https://www.techmeme.com/261029/p69#a261029p69
+- [external/hackernews] How I Built the Most AI-Pilled Company in the World (2026-10-30T02:12:57Z) — https://x.com/jsnnsa/status/2115623382721126826?a=fjiH4cVowfsIKfO0urI&s=46
+- [external/techmeme] NYSE owner ICE plans US-regulated Hyperliquid-based perpetual markets with Trade.xyz, a market operator on the crypto platform, and takes a stake in Trade.xyz (Katherine Doherty/Bloomberg) (2026-10-30T02:10:01Z) — https://www.techmeme.com/261029/p68#a261029p68
+- [external/hackernews] Elephant-goldfish-model: skills for designing and reviewing software with agents (2026-10-30T02:09:30Z) — https://github.com/google/elephant-goldfish-model
+- [external/hackernews] GitHub Copilot Fusion orchestrates between models at half the cost (2026-10-30T02:09:03Z) — https://twitter.com/ArtificialAnlys/status/2115477376981508419
+- [choi/choi_threads] 샘 알트만 오픈AI CEO는 시장의 일시적 과열이나 침체와 상관없이 “우리는 언제나 더 많은 연산 자원(compute)을 원한다”고 강조했습니다. 그는 충분히 뛰어난 성능의 모델을 극도로 저렴한 가격에 공급받으려는 수요는 폭발적으로 늘어날 수밖에 없으며, 이 거대한 흐름에 대비하기 위해 자체 고효율 AI 칩 설계부터 데이터센터 구축까지 직접 준비 중이라고 밝혔습니다. 특히 알트만은 “자가 복제 데이터센터(self-replicating data centers)”라는 흥미로운 미래 비전을 제시했습니다. AI가 로봇을 제어해 반도체 공장을 가동하고 태양광 패널을 설치하며  (2026-10-30T02:00:01Z) — https://www.threads.com/@choi.openai/post/DfGdX5LgDQ0
+- [external/hackernews] Pico CSS is no longer maintained (2026-10-30T01:58:44Z) — https://github.com/picocss/pico/discussions/754
+- [external/hackernews] Google eng is sure AI will destroy humanity he's stopped saving for retirement (2026-10-30T01:56:00Z) — https://finance.yahoo.com/technology/ai/articles/former-google-engineer-sure-ai-103000827.html
+- [external/hackernews] Show HN: NovelHiveAI – A tool to turn novels into a multi-Voice audiobook (2026-10-30T01:48:46Z) — https://novelhive.ai/
+- [external/techmeme] Binance "temporarily suspended" all deposits and withdrawals as it investigates security issues and works with law enforcement; Binance.US says it's unaffected (George Steer/Financial Times) (2026-10-30T01:35:00Z) — https://www.techmeme.com/261029/p67#a261029p67
+- [external/hackernews] Six popular sugar substitutes linked to faster brain aging (2026-10-30T01:32:18Z) — https://www.sciencedaily.com/releases/2026/10/261028234238.htm
+- [external/hackernews] The AI Data Center Explained – From Electricity to ChatGPT [video] (2026-10-30T01:15:43Z) — https://www.youtube.com/watch?v=ckoi0RTEgcY
+- [external/techmeme] Twilio reports Q3 revenue up 20% YoY to $1.56B, vs. $1.52B est., net income up 333% to $161M, and expects slower Q4 revenue growth; TWLO drops 15%+ after hours (Elias Schisgall/MarketWatch) (2026-10-30T01:15:00Z) — https://www.techmeme.com/261029/p66#a261029p66

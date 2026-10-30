@@ -1,0 +1,547 @@
+{
+  "generated_at": "2026-10-30T07:14:06.200546Z",
+  "window_hours": 6,
+  "total_candidates": 56,
+  "counts_by_group": {
+    "choi": 6,
+    "external": 50,
+    "research": 0
+  },
+  "source_status": {
+    "choi": "ok",
+    "external": {
+      "techmeme": {
+        "status": "ok",
+        "fetched": 15,
+        "new": 0
+      },
+      "hackernews": {
+        "status": "ok",
+        "fetched": 77,
+        "new": 0
+      }
+    },
+    "research": {
+      "hf_daily_papers": {
+        "status": "ok",
+        "fetched": 100,
+        "new": 100
+      },
+      "openai_research": {
+        "status": "ok",
+        "fetched": 1337,
+        "new": 1336
+      },
+      "deepmind_research": {
+        "status": "error",
+        "error": "not well-formed (invalid token): line 1, column 0"
+      },
+      "bair_research": {
+        "status": "ok",
+        "fetched": 10,
+        "new": 10
+      }
+    }
+  },
+  "caveat": "Candidate discovery only. Not fact-checked or semantically deduplicated; select and verify before publishing.",
+  "items": [
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300618",
+      "title": "Show HN: Arsaze–Like Cursor, but for video editing(Tab-complete and agent edits)",
+      "url": "https://www.arsaze.com",
+      "published_at": "2026-10-30T06:55:33Z",
+      "hn_score": 3
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300566",
+      "title": "AI will bring in universal income and everyone will get wealthier",
+      "url": "https://www.thenationalnews.com/business/money/2026/10/28/ai-will-bring-in-universal-income-and-everyone-will-get-wealthier-oracles-larry-ellison-says/",
+      "published_at": "2026-10-30T06:48:23Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300545",
+      "title": "AI Powered Cold Email",
+      "url": "https://usemailrush.com",
+      "published_at": "2026-10-30T06:45:03Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:5de12bd5c2918c0526598de5",
+      "title": "How a wave of startups are betting on AI to make formal software verification practical and essential, including &Truth, which launches with a $70M seed (Paresh Dave/Wired)",
+      "url": "https://www.techmeme.com/261030/p4#a261030p4",
+      "published_at": "2026-10-30T06:30:03Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300397",
+      "title": "Canada to invest up to $1.6B in Toronto-based AI company Cohere",
+      "url": "https://www.cbc.ca/news/business/canada-cohere-ai-investment-9.7401367",
+      "published_at": "2026-10-30T06:11:52Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300396",
+      "title": "Plan R: AI Safety by ASICs",
+      "url": "https://www.lesswrong.com/posts/n8u3BfqFoGh4jnzpo/plan-r-ai-safety-by-asics",
+      "published_at": "2026-10-30T06:11:45Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300385",
+      "title": "Dell workstation with 96GB Nvidia GPU may cost less than graphics card alone",
+      "url": "https://videocardz.com/newz/complete-dell-workstation-with-96gb-nvidia-gpu-may-cost-less-than-graphics-card-alone",
+      "published_at": "2026-10-30T06:08:42Z",
+      "hn_score": 3
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300354",
+      "title": "Laid off 60 days in: what is the tech industry doing to developers?",
+      "url": "https://samueleast.co.uk/playground/laid-off-from-plex-60-days-in",
+      "published_at": "2026-10-30T06:01:00Z",
+      "hn_score": 2
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019149937161793371",
+      "title": "🚨 북한 해킹 조직들이 이제 AI를 일상 업무처럼 쓰고 있습니다. 마이크로소프트가 북한 해킹 조직 8곳을 분석했는데, 한 주 만에 위장 회사 3곳을 내세워 공격하고 맞춤형 미끼 문서 수십 개를 몇 분 만에 찍어냈습니다. 한국 사용자를 노린 PDF 미끼만 100개가 넘고, 국내 금융사를 뚫은 그 AI 해킹 도구 ARTEX까지 쓰기 시작했습니다. 🧵",
+      "url": "https://www.threads.com/@choi.openai/post/DfG45LPj-9b",
+      "published_at": "2026-10-30T06:00:30Z"
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019149724325603036",
+      "title": "얀 르쿤(Yann LeCun)은 현재 유행하는 영상 생성 기반의 접근법은 “진정한 월드 모델이 아니다”라고 지적했습니다. 그는 픽셀 단위로 다음 프레임을 예측하는 생성 모델은 불필요한 노이즈와 예측 불가능한 세부 사항에 얽매여 비효율적이라고 비판했습니다. 텍스트 이산 기호만 다루는 현재의 거대언어모델(LLM) 역시 물리 세계의 고차원 연속 데이터를 이해하는 데 명확한 한계를 지닌다고 짚었습니다. 르쿤은 해결책으로 JEPA 아키텍처를 제시했습니다. 사소한 픽셀 노이즈를 과감히 버리고, 추상적 표현 공간에서 세계의 핵심 역학을 모델링해야만 진정한 물리 지능과 자율 제어가",
+      "url": "https://www.threads.com/@choi.openai/post/DfG42FBiWbc",
+      "published_at": "2026-10-30T06:00:04Z"
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300299",
+      "title": "Blockchain analysis firm TRM says North Korea behind Binance crypto theft",
+      "url": "https://www.reuters.com/legal/government/blockchain-analysis-firm-trm-says-north-korea-behind-binance-crypto-theft-2026-10-30/",
+      "published_at": "2026-10-30T05:51:10Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300279",
+      "title": "ChatGPT release notes October 29, 2026",
+      "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+      "published_at": "2026-10-30T05:48:49Z",
+      "hn_score": 3
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300277",
+      "title": "Anthropic now lets Claude users jump out of plane without parachute",
+      "url": "https://www.theregister.com/ai-and-ml/2026/10/27/anthropic-now-lets-claude-users-jump-out-of-plane-without-parachute/5305807",
+      "published_at": "2026-10-30T05:48:27Z",
+      "hn_score": 4
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300268",
+      "title": "Time Dilation in the Movie Project Hail Mary Visualized [video]",
+      "url": "https://www.youtube.com/watch?v=8FT-oz9aZU4",
+      "published_at": "2026-10-30T05:46:10Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300177",
+      "title": "Show HN: Korea-data-MCP – Korean public APIs that agents can't misread",
+      "url": "https://github.com/YoungsoonLee/korea-data-mcp",
+      "published_at": "2026-10-30T05:29:51Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300112",
+      "title": "Trojanized Claude Code Extension Plants an SSH Backdoor",
+      "url": "https://opensourcemalware.com/blog/trojanized-claude-code-extension-plants-persistent-ssh-backdoor",
+      "published_at": "2026-10-30T05:20:20Z",
+      "hn_score": 9
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300101",
+      "title": "Show HN: Gates – My attempt to end free-trial abuse through email aliases",
+      "url": "https://github.com/IrondomeDev/GATES",
+      "published_at": "2026-10-30T05:17:04Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300097",
+      "title": "A Claude Code agent's test escaped into my Mac. I only noticed because it talked",
+      "url": "https://www.marutpandya.com/posts/2026/10/my-mac-started-reading-json-aloud/",
+      "published_at": "2026-10-30T05:16:33Z",
+      "hn_score": 8
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300039",
+      "title": "The case of a customer who said that all they could see was a black screen",
+      "url": "https://devblogs.microsoft.com/oldnewthing/20261029-00/?p=112808/",
+      "published_at": "2026-10-30T05:03:27Z",
+      "hn_score": 3
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019119904770738078",
+      "title": "🚨 Claude가 답을 마칠 때마다 그 대화가 위험한지 스스로 평가하고 있었습니다. 앤트로픽이 6월부터 써 온 '자기 평가' 기술을 공개했는데요. 한 API 고객에게서 아동 성착취 경고를 10만 건 넘게 잡아내 신고까지 이어졌습니다. 🧵",
+      "url": "https://www.threads.com/@choi.openai/post/DfGyEJZj8ee",
+      "published_at": "2026-10-30T05:00:50Z"
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:fdec55726fc3bb24d580c063",
+      "title": "TRM Labs attributes the Binance hack to North Korea-based TraderTraitor, which drained ~$6.36B from Binance wallets across 10 blockchains, mostly in ~20 minutes (Tom Westbrook/Reuters)",
+      "url": "https://www.techmeme.com/261030/p3#a261030p3",
+      "published_at": "2026-10-30T05:00:14Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300006",
+      "title": "Qwenputer turns Gated DeltaNet state into exact RAM for a CPU",
+      "url": "https://theainewsreport.com/2026-10-29-qwenputer-deltanet-state-as-exact-ram-explained.html",
+      "published_at": "2026-10-30T04:58:44Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50300003",
+      "title": "What Claude Code's 30-second agent summary call costs, read from the binary",
+      "url": "https://theainewsreport.com/2026-10-29-claude-code-agent-summary-cost-explained.html",
+      "published_at": "2026-10-30T04:58:26Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:e24191d5727ad398ce860fbe",
+      "title": "Binance pledges to cover all losses from a ~$6.3B hack, potentially the largest crypto theft ever, surpassing the $1.5B Bybit hack in February 2025 (South China Morning Post)",
+      "url": "https://www.techmeme.com/261030/p2#a261030p2",
+      "published_at": "2026-10-30T04:50:00Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299847",
+      "title": "Show HN: Breatic – Collaborative canvases and documents with an AI agent",
+      "url": "https://github.com/orime-org/breatic",
+      "published_at": "2026-10-30T04:23:59Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299796",
+      "title": "Sam Altman: local inference is a terrible allocation of scarce resources",
+      "url": "https://www.linkedin.com/posts/boucetta-abderahmane_sam-altman-local-inference-is-a-terrible-activity-7521718579914981376-WZzP",
+      "published_at": "2026-10-30T04:13:28Z",
+      "hn_score": 3
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299777",
+      "title": "Key oddity of quantum physics may run even deeper than anticipated",
+      "url": "https://www.newscientist.com/article/2596105-key-oddity-of-quantum-physics-may-run-even-deeper-than-anticipated/",
+      "published_at": "2026-10-30T04:09:29Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299763",
+      "title": "Same agent-memory accuracy with 8x fewer tokens by changing the embedding model",
+      "url": "https://github.com/goyohan0611-png/turnbook",
+      "published_at": "2026-10-30T04:06:35Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:6cf88ea2edcde0bc718b4cba",
+      "title": "CrowdStrike: China-linked hackers used AI tool ARTEX with a DeepSeek LLM and another model to target 200+ organizations in 11 days, compromising at least nine (Kevin Collier/NBC News)",
+      "url": "https://www.techmeme.com/261030/p1#a261030p1",
+      "published_at": "2026-10-30T04:01:16Z",
+      "hn_score": null
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019089202708727841",
+      "title": "지금 한국에서 가장 핫한 서비스는 '산사'일겁니다. 비개발자 문과생이 만든 방석 20개로 시작한 온라인 절인데, 하루 만에 1만 2천 명이 몰려 서버가 터졌고, 복구하고 나니 5만 명, 그리고 하루 10만 명까지 들어왔다고 합니다. 그런데 제가 더 주목하는 부분은 산사가 뜨자마자 온라인 성당, 온라인 교회 같은 카피 서비스가 여기저기서 나오고 있다는 점이었는데요. 며칠 걸리던 걸 이제는 AI로 몇 시간이면 따라 만들 수 있으니, 소프트웨어 자체의 해자는 이제 거의 없다고 봐야 하지 않을까 싶습니다. 하지만 오히려 더욱 강하게 느껴진 부분은 오리지널리티의 중요성입니다.",
+      "url": "https://www.threads.com/@choi.openai/post/DfGrFX4D8gh",
+      "published_at": "2026-10-30T03:59:50Z"
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299645",
+      "title": "Show HN: HiPath AI – CS learning roadmaps where a quiz unlocks each lesson",
+      "url": "https://www.hipathai.me",
+      "published_at": "2026-10-30T03:45:17Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299603",
+      "title": "A Defense Contractor Gave Their AI Agent Access to a Secure Pentagon System",
+      "url": "https://www.wired.com/story/a-defense-contractor-gave-their-personal-ai-agent-access-to-a-secure-pentagon-system/",
+      "published_at": "2026-10-30T03:37:14Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:12decb4a90b21727feecab46",
+      "title": "Sources: DeepSeek doubled its latest round's size due to surging black market Nvidia Blackwell chip prices, with Chinese state-owned investors representing 27% (The Information)",
+      "url": "https://www.techmeme.com/261029/p71#a261029p71",
+      "published_at": "2026-10-30T03:35:00Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299573",
+      "title": "AI killed my software career [video]",
+      "url": "https://www.youtube.com/watch?v=cwsy-6gu5p4",
+      "published_at": "2026-10-30T03:31:38Z",
+      "hn_score": 5
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299521",
+      "title": "I Built the Most AI-Pilled Company in the World",
+      "url": "https://twitter.com/jsnnsa/status/2115623382721126826",
+      "published_at": "2026-10-30T03:23:31Z",
+      "hn_score": 6
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299507",
+      "title": "China increasingly depends on copying American AI",
+      "url": "https://www.economist.com/science-and-technology/2026/10/25/china-increasingly-depends-on-copying-american-ai",
+      "published_at": "2026-10-30T03:21:06Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:bde062bcb4a762f7c29b8b7e",
+      "title": "S-1: Anthropic says it heavily depends on TSMC chips made in Taiwan and warns of risks from \"potential disruption\" amid geopolitical tensions with China (Joseph C. Sternberg/Wall Street Journal)",
+      "url": "https://www.techmeme.com/261029/p70#a261029p70",
+      "published_at": "2026-10-30T03:10:00Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299390",
+      "title": "Ambition in the Age of AI",
+      "url": "https://aumitleon.dev/ambition-in-the-age-of-ai",
+      "published_at": "2026-10-30T03:00:27Z",
+      "hn_score": 2
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4018722534455345430",
+      "title": "구글 딥마인드가 AGI가 언제, 어떻게 경제를 바꾸는지 다룬 108쪽 논문을 냈습니다. 주목할 점은 저자에 셰인 레그가 들어가 있다는 것인데요. AI가 똑똑해지는 것만으로는 경제가 잘 바뀌지 않고, AI끼리 협업하는 능력이 어느 선을 넘을 때 한꺼번에 바뀐다는 결론입니다. 그 변화는 고용 통계보다 임금에서 먼저 나타난다고 합니다 🧵",
+      "url": "https://www.threads.com/@choi.openai/post/DfFXtpdEYEW",
+      "published_at": "2026-10-30T03:00:18Z"
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299388",
+      "title": "The Four Academics Who Dreamed Up California's Billionaire Tax",
+      "url": "https://www.wsj.com/finance/the-four-academics-who-dreamed-up-californias-billionaire-tax-b0d05dcc",
+      "published_at": "2026-10-30T03:00:07Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299288",
+      "title": "Claim – Humanity vs. the Machine",
+      "url": "https://theaigame.app/",
+      "published_at": "2026-10-30T02:47:18Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299276",
+      "title": "Show HN: 100% automated tech deal site (built with Grok bot)",
+      "url": "https://gadgetsteal.com/",
+      "published_at": "2026-10-30T02:45:54Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299275",
+      "title": "The hard problem of AI therapy",
+      "url": "https://www.theseedsofscience.pub/p/the-hard-problem-of-ai-therapy",
+      "published_at": "2026-10-30T02:45:50Z",
+      "hn_score": 2
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:3c1c5739a8044e75e70c2777",
+      "title": "Sources: Indian AI infrastructure company AM Intelligence seeks to raise as much as $3B to fund a previously announced purchase of Nvidia Vera Rubin systems (Bloomberg)",
+      "url": "https://www.techmeme.com/261029/p69#a261029p69",
+      "published_at": "2026-10-30T02:40:01Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299051",
+      "title": "How I Built the Most AI-Pilled Company in the World",
+      "url": "https://x.com/jsnnsa/status/2115623382721126826?a=fjiH4cVowfsIKfO0urI&s=46",
+      "published_at": "2026-10-30T02:12:57Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:a05072dd38f493bb1f51080d",
+      "title": "NYSE owner ICE plans US-regulated Hyperliquid-based perpetual markets with Trade.xyz, a market operator on the crypto platform, and takes a stake in Trade.xyz (Katherine Doherty/Bloomberg)",
+      "url": "https://www.techmeme.com/261029/p68#a261029p68",
+      "published_at": "2026-10-30T02:10:01Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299033",
+      "title": "Elephant-goldfish-model: skills for designing and reviewing software with agents",
+      "url": "https://github.com/google/elephant-goldfish-model",
+      "published_at": "2026-10-30T02:09:30Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50299030",
+      "title": "GitHub Copilot Fusion orchestrates between models at half the cost",
+      "url": "https://twitter.com/ArtificialAnlys/status/2115477376981508419",
+      "published_at": "2026-10-30T02:09:03Z",
+      "hn_score": 6
+    },
+    {
+      "group": "choi",
+      "source": "choi_threads",
+      "id": "4019028902767768628",
+      "title": "샘 알트만 오픈AI CEO는 시장의 일시적 과열이나 침체와 상관없이 “우리는 언제나 더 많은 연산 자원(compute)을 원한다”고 강조했습니다. 그는 충분히 뛰어난 성능의 모델을 극도로 저렴한 가격에 공급받으려는 수요는 폭발적으로 늘어날 수밖에 없으며, 이 거대한 흐름에 대비하기 위해 자체 고효율 AI 칩 설계부터 데이터센터 구축까지 직접 준비 중이라고 밝혔습니다. 특히 알트만은 “자가 복제 데이터센터(self-replicating data centers)”라는 흥미로운 미래 비전을 제시했습니다. AI가 로봇을 제어해 반도체 공장을 가동하고 태양광 패널을 설치하며 ",
+      "url": "https://www.threads.com/@choi.openai/post/DfGdX5LgDQ0",
+      "published_at": "2026-10-30T02:00:01Z"
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50298964",
+      "title": "Pico CSS is no longer maintained",
+      "url": "https://github.com/picocss/pico/discussions/754",
+      "published_at": "2026-10-30T01:58:44Z",
+      "hn_score": 100
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50298949",
+      "title": "Google eng is sure AI will destroy humanity he's stopped saving for retirement",
+      "url": "https://finance.yahoo.com/technology/ai/articles/former-google-engineer-sure-ai-103000827.html",
+      "published_at": "2026-10-30T01:56:00Z",
+      "hn_score": 3
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50298905",
+      "title": "Show HN: NovelHiveAI – A tool to turn novels into a multi-Voice audiobook",
+      "url": "https://novelhive.ai/",
+      "published_at": "2026-10-30T01:48:46Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:66f7c7745386d618012ff4c9",
+      "title": "Binance \"temporarily suspended\" all deposits and withdrawals as it investigates security issues and works with law enforcement; Binance.US says it's unaffected (George Steer/Financial Times)",
+      "url": "https://www.techmeme.com/261029/p67#a261029p67",
+      "published_at": "2026-10-30T01:35:00Z",
+      "hn_score": null
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50298799",
+      "title": "Six popular sugar substitutes linked to faster brain aging",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261028234238.htm",
+      "published_at": "2026-10-30T01:32:18Z",
+      "hn_score": 7
+    },
+    {
+      "group": "external",
+      "source": "hackernews",
+      "id": "hackernews:50298692",
+      "title": "The AI Data Center Explained – From Electricity to ChatGPT [video]",
+      "url": "https://www.youtube.com/watch?v=ckoi0RTEgcY",
+      "published_at": "2026-10-30T01:15:43Z",
+      "hn_score": 1
+    },
+    {
+      "group": "external",
+      "source": "techmeme",
+      "id": "techmeme:737f0b15329b4c992b7c4cd2",
+      "title": "Twilio reports Q3 revenue up 20% YoY to $1.56B, vs. $1.52B est., net income up 333% to $161M, and expects slower Q4 revenue growth; TWLO drops 15%+ after hours (Elias Schisgall/MarketWatch)",
+      "url": "https://www.techmeme.com/261029/p66#a261029p66",
+      "published_at": "2026-10-30T01:15:00Z",
+      "hn_score": null
+    }
+  ]
+}
