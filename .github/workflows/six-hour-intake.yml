@@ -7,7 +7,8 @@ on:
       - "choi_threads_monitor/build_six_hour_intake.py"
       - ".github/workflows/six-hour-intake.yml"
   schedule:
-    - cron: "45 0,6,12,18 * * *"
+    # Matches Supabase fixed window boundaries (01:45, 07:45, 13:45, 19:45 KST)
+    - cron: "45 4,10,16,22 * * *"
 
 permissions:
   contents: write
