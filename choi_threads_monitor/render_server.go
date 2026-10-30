@@ -262,7 +262,7 @@ func backgroundCollector() {
 		if _, err := collect(true); err != nil {
 			fmt.Printf("BACKGROUND_COLLECT_ERROR %s\n", err)
 		}
-		time.Sleep(5 * time.Minute)
+		time.Sleep(1 * time.Hour)
 	}
 }
 
