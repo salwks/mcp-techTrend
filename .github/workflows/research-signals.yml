@@ -3,8 +3,8 @@ name: Hugging Face Daily Papers Collector
 on:
   workflow_dispatch:
   schedule:
-    # 12:00 KST (03:00 UTC), exactly once a day
-    - cron: "0 3 * * *"
+    # 12:00 KST (03:00 UTC), weekdays only: no Daily Papers release on weekends
+    - cron: "0 3 * * 1-5"
 
 permissions:
   contents: write
