@@ -31,7 +31,7 @@ jobs:
             git fetch origin "${GITHUB_REF_NAME}"
             git reset --hard "origin/${GITHUB_REF_NAME}"
             python3 choi_threads_monitor/collect_research.py
-            git add choi_threads_monitor/data/research_signals.json choi_threads_monitor/data/research_signals_status.json choi_threads_monitor/data/hf_daily_today.json choi_threads_monitor/data/hf_daily_today.md
+            git add -- choi_threads_monitor/data/hf_daily_today.json choi_threads_monitor/data/hf_daily_today.md
             if git diff --cached --quiet; then exit 0; fi
             git commit -m "chore: refresh Hugging Face Daily Papers"
             if git push origin "HEAD:${GITHUB_REF_NAME}"; then exit 0; fi
