@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Collect only Hugging Face Daily Papers, once per day at 12:00 KST.
 
-No lab RSS, arXiv, or OpenAlex API requests. Preserve recent HF paper
-metadata for seven calendar days; keep the complete current-day listing
-separate from the six-hour general-news intake.
+No lab RSS, arXiv, or OpenAlex API requests. Keep the current-day HF
+snapshot strictly separate from the general-news data outputs.
 """
 import datetime as dt
 import json
@@ -12,8 +11,6 @@ import urllib.request
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent / "data"
-OUT = DATA / "research_signals.json"
-STATE = DATA / "research_signals_status.json"
 TODAY_JSON = DATA / "hf_daily_today.json"
 TODAY_MD = DATA / "hf_daily_today.md"
 KST = dt.timezone(dt.timedelta(hours=9))
@@ -97,7 +94,7 @@ def main():
     # Fetch and validate first. An API failure must not erase saved papers.
     current = collect_daily(date.isoformat())
     try:
-        old = json.loads(OUT.read_text(encoding="utf-8"))
+        old = json.loads(TODAY_JSON.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         old = {"items": []}
     previously = {
@@ -129,26 +126,8 @@ def main():
     if len(todays) != len(current):
         raise ValueError("Today's paper list count differs from fetched unique IDs")
 
-    status = {
-        "hf_daily_papers": {
-            "status": "ok",
-            "fetched": len(current),
-            "new": seen,
-            "skipped_old_or_undated": 0,
-        }
-    }
+    # Write only Hugging Face Daily Papers files, not shared news state.
     DATA.mkdir(parents=True, exist_ok=True)
-    write_json(
-        OUT,
-        {
-            "generated_at": stamp,
-            "retention_days": 7,
-            "items_count": len(kept),
-            "sources": status,
-            "items": kept,
-        },
-    )
-    write_json(STATE, {"generated_at": stamp, "sources": status})
     write_json(
         TODAY_JSON,
         {"date": date.isoformat(), "items_count": len(todays), "items": todays},
@@ -166,7 +145,7 @@ def main():
         ])
     TODAY_MD.write_text("\n".join(md) + "\n", encoding="utf-8")
     print(json.dumps({"date": date.isoformat(), "papers": len(todays),
-                      "new": seen, "retained": len(kept)}))
+                      "new": seen, "retained": len(todays)}))
 
 
 if __name__ == "__main__":
