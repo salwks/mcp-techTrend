@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Collect only Hugging Face Daily Papers, once per day at 12:00 KST.
+"""Collect Hugging Face Daily Papers once near noon KST for previous business day.
 
-No lab RSS, arXiv, or OpenAlex API requests. Keep the current-day HF
+No lab RSS, arXiv, or OpenAlex API requests. Keep the source-date HF
 snapshot strictly separate from the general-news data outputs.
 """
 import datetime as dt
@@ -88,7 +88,12 @@ def write_json(path, data):
 
 def main():
     now = dt.datetime.now(dt.timezone.utc)
-    date = now.astimezone(KST).date()
+    # The Hugging Face Daily Papers list is not guaranteed to be complete
+    # for today's KST date at local noon. Report the previous business day.
+    local_date = now.astimezone(KST).date()
+    date = local_date - dt.timedelta(days=1)
+    while date.weekday() >= 5:
+        date -= dt.timedelta(days=1)
     stamp = now.isoformat().replace("+00:00", "Z")
 
     # Fetch and validate first. An API failure must not erase saved papers.
@@ -124,7 +129,7 @@ def main():
     todays = [x for x in kept if x.get("daily_papers_date") == date.isoformat()]
     todays.sort(key=lambda x: (x.get("upvotes") or 0, x["id"]), reverse=True)
     if len(todays) != len(current):
-        raise ValueError("Today's paper list count differs from fetched unique IDs")
+        raise ValueError("Target paper list count differs from fetched unique IDs")
 
     # Write only Hugging Face Daily Papers files, not shared news state.
     DATA.mkdir(parents=True, exist_ok=True)
