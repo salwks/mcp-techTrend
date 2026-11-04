@@ -128,10 +128,13 @@ def main():
 
     # Write only Hugging Face Daily Papers files, not shared news state.
     DATA.mkdir(parents=True, exist_ok=True)
-    write_json(
-        TODAY_JSON,
-        {"date": date.isoformat(), "items_count": len(todays), "items": todays},
-    )
+    snapshot = {"date": date.isoformat(), "items_count": len(todays), "items": todays}
+    write_json(TODAY_JSON, snapshot)
+    # Preserve a date-addressable snapshot. The following day's report must
+    # not depend on when GitHub Actions overwrites hf_daily_today.json.
+    archive_dir = DATA / "hf_daily_archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    write_json(archive_dir / (date.isoformat() + ".json"), snapshot)
     md = ["# Hugging Face Daily Papers — " + date.isoformat(), "",
           "Total: " + str(len(todays)), ""]
     for i, x in enumerate(todays, 1):
