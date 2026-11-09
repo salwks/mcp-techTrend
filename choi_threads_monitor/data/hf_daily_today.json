@@ -1,7 +1,67 @@
 {
   "date": "2026-11-09",
-  "items_count": 8,
+  "items_count": 24,
   "items": [
+    {
+      "id": "hf:2611.08264",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "SplatAnything: Gaussian Spacing Normalization for Feed-forward 3DGS across Arbitrary Scenes",
+      "url": "https://huggingface.co/papers/2611.08264",
+      "arxiv_url": "https://arxiv.org/abs/2611.08264",
+      "published_at": "2026-11-05T16:37:29Z",
+      "summary": "We identify a key limitation of existing feed-forward 3DGS methods: Gaussian attributes are typically predicted in a radial-distance-normalized space that canonicalizes a global radial statistic of the reconstructed geometry, while the spacing between neighboring Gaussian centers can still vary substantially across scene scales and camera configurations. This mismatch induces systematic shifts in Gaussian-scale targets, leading to ambiguous supervision. To address this, we propose SplatAnything with Gaussian Spacing Normalization (GSNorm), which canonicalizes a robust scene-level statistic of Gaussian spacing to provide a more consistent spatial reference for Gaussian prediction. To rigorously assess our method, we further establish a systematic benchmark spanning diverse datasets, input sparsity levels, and challenging extrapolated viewpoints. Extensive experiments demonstrate that SplatAnything achieves state-of-the-art performance, with particularly strong gains under substantial variations in scene scale and viewpoint.",
+      "upvotes": 57,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://zju3dv.github.io/SplatAnything/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.03953",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "P^2-MOPD: Accelerating Multi-Teacher On-Policy Distillation via Parameter Priors",
+      "url": "https://huggingface.co/papers/2611.03953",
+      "arxiv_url": "https://arxiv.org/abs/2611.03953",
+      "published_at": "2026-11-02T20:53:15Z",
+      "summary": "Multi-teacher on-policy distillation consolidates expert capabilities by supervising student-generated trajectories, whereas task arithmetic offers a training-free alternative through linear parameter combinations. We view the linear combination of student and expert parameters as a single differentiable model and propose P^2-MOPD, which jointly optimizes the mixing coefficients and the student weights under the same on-policy distillation objective. Unlike task arithmetic, which stays within the span of the frozen student and expert parameters for any choice of merging coefficients, P^2-MOPD keeps the student trainable, so the experts act as parameter priors without confining it to this span. Across four domains at 1.7B and 4B scales, P^2-MOPD achieves faster and more balanced recovery than MOPD from the same initialization, surpassing its final average recovery in half the training steps. At the end of training, our 1.7B model reaches 94.7% average recovery, versus 80.9% for MOPD.",
+      "upvotes": 28,
+      "comments": 5,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.06856",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "LongBanana: An Expert-Verified Benchmark for Long-Context Multi-Reference Image Synthesis",
+      "url": "https://huggingface.co/papers/2611.06856",
+      "arxiv_url": "https://arxiv.org/abs/2611.06856",
+      "published_at": "2026-11-04T18:11:56Z",
+      "summary": "We introduce LongBanana, to our knowledge the first expert-designed and expert-verified benchmark for long-context multi-reference image synthesis in the age of agent-driven image generation. The task requires retrieving dispersed visual evidence, rejecting distractors, binding entities and relations, and composing one coherent final image from multiple references. LongBanana contains 90 carefully designed tasks organized by a 3-by-3 taxonomy; each task includes about 32 reference images, 20 constraints, and 50 evaluation items, yielding 4,670 expert-specified atomic evaluation items in total. Its graph-grounded evaluation design instantiates each task with reference images and an entity-relation graph, then converts node, edge, and whole-graph obligations into checklist items for Content Fidelity, Relational Binding, and Global Constraint Satisfaction. Reviewed expert labels include a 15% double-labeled subset with 89.4% exact agreement and 0.83 quadratic weighted kappa. We further introduce LongBanana-Gen, an agent-harness framework for long-horizon image generation; experiments show that minimal agent harnesses improve over direct generation, while a ReAct-Plan-Exec-Reflect (RPR) workflow yields harness-dependent gains by strengthening evidence grounding and repair. Together, LongBanana provides an auditable testbed for measuring dense visual evidence use and a shared target for developing stronger agent-driven image-generation systems. Code and data are available at the project page: https://long-banana.com/.",
+      "upvotes": 22,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://klingairesearch.github.io/LongBanana/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
     {
       "id": "hf:2611.07624",
       "source": "hf_daily_papers",
@@ -12,7 +72,7 @@
       "arxiv_url": "https://arxiv.org/abs/2611.07624",
       "published_at": "2026-11-05T00:00:00Z",
       "summary": "Agent harness evolution enables recursive self-improvement (RSI) without updating model weights. We examine whether higher benchmark scores yield reliable, efficient, and transferable improvement. We evaluate four methods across harnesses, general and coding tasks. Repeated evaluations, controlled agent expansion, component interventions, and admission replays reveal recurring patterns. All sixteen evolved agents gain previously uncovered tasks while losing previously covered ones. In one general-task case, reliability rises by 5.2 points despite losing ten previously covered tasks. Most reliability gains also increase deployment cost. Specific changes usually outperform generic reminders, but their benefits can change when combined. The highest-scoring agent does not yield the largest mean improvement in any of our four pools, and stricter admission can discard useful alternatives. Transfer selectively preserves gains: coverage usually falls on the general-task target across both harness types and paradigms, but rises on the coding target with the outer-layer-only harness. These findings motivate preservation-aware evaluation, tested decision rules, and explicit applicability conditions. As a constructive follow-up, EvoAudit turns these diagnostics into revisions of select, analyze, mutate, and gate, achieving the best performance.",
-      "upvotes": 12,
+      "upvotes": 20,
       "comments": 1,
       "has_code": false,
       "project_page": null,
@@ -20,7 +80,7 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
       "id": "hf:2611.06748",
@@ -32,7 +92,7 @@
       "arxiv_url": "https://arxiv.org/abs/2611.06748",
       "published_at": "2026-11-04T16:26:45Z",
       "summary": "Generative video models are increasingly used as visual world simulators, yet their primary strength lies in rendering plausible pixels rather than reasoning about how a world should evolve. Coherent world evolution requires more than visual fidelity: when an event occurs, a model must infer its consequences for the entities in the world and then render the resulting state. For example, after a wild beast appears, the model should not only depict the wild beast, but also infer whether a nearby person should flee, take cover, or fight back based on the realized scene. Existing diffusion-based video models lack an explicit mechanism for maintaining world state and reasoning over such event-conditioned consequences, often producing visually plausible but behaviorally static or causally inconsistent outputs. To make this reasoning gap concrete and measurable, we propose a new problem, Out-of-Sight Causal Evolution, which requires a model to render an event, reason about its consequences for the evolving world state, and reveal a causally plausible outcome as the world continues to evolve, even out of sight. As a baseline reference solution, we introduce EvoWorld, a brain-renderer collaboration framework in which a vision-language model serves as the world brain: it observes generated segments, maintains an evolving account of the world, and reasons about plausible state transitions, while a segment-autoregressive video renderer realizes them visually. We further introduce EvoWorld-Data and EvoWorld-Bench for training and evaluating event realization, causal reactions, and revisit consistency. Experiments show that EvoWorld substantially improves event-conditioned causal evolution over recent models while preserving visual quality and consistency, establishing a reference point for reasoning-guided, autonomous world evolution beyond the current field of view.",
-      "upvotes": 9,
+      "upvotes": 18,
       "comments": 1,
       "has_code": true,
       "project_page": "https://tommy-bie.github.io/projects/evoworld/",
@@ -40,27 +100,27 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
-      "id": "hf:2611.09894",
+      "id": "hf:2611.01182",
       "source": "hf_daily_papers",
       "type": "paper",
       "daily_papers_date": "2026-11-09",
-      "title": "Video-Coder: Reinforcing Agentic Coding for Video Generation",
-      "url": "https://huggingface.co/papers/2611.09894",
-      "arxiv_url": "https://arxiv.org/abs/2611.09894",
-      "published_at": "2026-11-06T00:00:00Z",
-      "summary": "Recent years have witnessed remarkable progress in video generation in terms of visual quality and temporal consistency. However, generating videos with precise spatial structure, coherent motion dynamics, and controllable scene composition remains challenging. In this paper, we introduce Video-Coder, the first attempt to train a code-driven video generation agent, which autonomously writes and executes code to construct a dynamic 3D scene (Draft Video) that provides structure and motion signals to downstream video generators. To support this paradigm, we design a dedicated data pipeline and curate two high-quality datasets, Video-Coder-SFT-6k and Video-Coder-RL-2k, which contain diverse prompts and ground-truth reference videos. We further develop the Video- Coder Harness, a unified interactive environment integrating code execution, 3D scene rendering, and execution feedback for agent training and inference. We then train Video-Coder with SFT fol- lowed by harness-native agentic reinforcement learning with dual reward feedback, which combines execution-based and video-based rewards. Additionally, we design an annealing training strategy that gradually reduces the execution reward over time, allowing the model to rely more on the video reward in the later training stages. Experiments show that Video-Coder achieves significant gains, improving Minimax-H3 by approximately 7 points on PhyGenBench and 24 points on VBench-2.0. We hope this work can serve as an open foundation for coding agents in video generation, and we fully open-source our data, models, and code",
-      "upvotes": 4,
+      "title": "Fast and Exact Relative-Position Attention via Structure-Aware Kernels",
+      "url": "https://huggingface.co/papers/2611.01182",
+      "arxiv_url": "https://arxiv.org/abs/2611.01182",
+      "published_at": "2026-10-31T00:00:00Z",
+      "summary": "Relative-position attention mechanisms offer compelling alternatives to RoPE across various transformer architectures, delivering superior performance in domains such as audio. These mechanisms typically modify attention scores by adding content-position or bias-position terms. Unlike RoPE, which encodes position via per-token rotations directly on the queries and keys, relative-position terms generally require pairwise offset-dependent computation or lookups, complicating their integration into fused attention kernels and introducing severe memory, bandwidth, and compute overheads as sequences scale. To address this bottleneck, we propose an exact attention algorithm that incorporates additive relative-position terms into FlashAttention-style tiled computation. Our method (1) uses offset-aware tiling to avoid redundant indexing and memory accesses, (2) computes only the necessary key/query-relation products and reuses them across token pairs in both forward and backward passes, and (3) uses offset-based gradient sharding and aggregation, eliminating atomic contention. We provide a unified, efficient Triton implementation across diverse relative-position attention mechanisms and evaluate it against naive and specialized implementations. For 8K-token sequences, our method speeds up the forward (backward) pass by 1.8-6.4times (2.0-21times) and reduces peak memory up to 2.9-128times (1.4-54times) over the strongest baseline for each mechanism, enabling long-context end-to-end transcription that is 1.8times faster and uses 2.4times less memory. Our method thus provides a drop-in, hardware-efficient solution for scaling relative-position attention transformers.",
+      "upvotes": 11,
       "comments": 1,
-      "has_code": true,
-      "project_page": "https://cywang735.github.io/Video-Coder/",
+      "has_code": false,
+      "project_page": null,
       "signals": [
         "huggingface_daily_papers"
       ],
-      "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
       "id": "hf:2611.06043",
@@ -72,7 +132,7 @@
       "arxiv_url": "https://arxiv.org/abs/2611.06043",
       "published_at": "2026-11-04T06:46:50Z",
       "summary": "Streaming speech recognition is increasingly consumed by machines, such as translators and voice agents, that act on each token as it appears. A token that is later revised costs wasted work or a wrong action. In this work, we present Confucius4-R2T2 (short for Real Real-Time Transcription), a stable-prefix streaming ASR model that never modifies its earlier output while maintaining high accuracy and low latency. R2T2 is obtained by post-training Qwen3-ASR-1.7B on 1,500 hours of Chinese and English audio while freezing its pre-trained audio encoder and projector. The adaptation is based on the concept of Longest Stable Prefix (LSP), a new notion that we introduce in this work. We prove that LSP is monotone under the prefix order, consistent with the full-audio output, and maximal among labels that equal a whole earlier output. Learning from LSP labels converts a full-context model into a stable-prefix streaming one without any architectural change. Extensive evaluations show that R2T2 brings streaming recognition close to the base model's full-context quality while delivering stable text with low emission lag. Its gains extend beyond the post-training languages, demonstrating a practical path from full-context ASR to stable streaming. We open-source the model weights and code at https://huggingface.co/netease-youdao/Confucius4-R2T2 and https://github.com/netease-youdao/Confucius4-R2T2.",
-      "upvotes": 4,
+      "upvotes": 10,
       "comments": 1,
       "has_code": true,
       "project_page": "https://r2t2.ai/",
@@ -80,27 +140,27 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
-      "id": "hf:2611.09382",
+      "id": "hf:2611.09894",
       "source": "hf_daily_papers",
       "type": "paper",
       "daily_papers_date": "2026-11-09",
-      "title": "Exploring Weight-Space Programming: Capabilities, Generalization, and Limitations",
-      "url": "https://huggingface.co/papers/2611.09382",
-      "arxiv_url": "https://arxiv.org/abs/2611.09382",
+      "title": "Video-Coder: Reinforcing Agentic Coding for Video Generation",
+      "url": "https://huggingface.co/papers/2611.09894",
+      "arxiv_url": "https://arxiv.org/abs/2611.09894",
       "published_at": "2026-11-06T00:00:00Z",
-      "summary": "Weight-Space Programming (WSP) enables reasoning agents to directly inspect and modify neural network parameters, offering an alternative to gradient-based model adaptation. However, its capabilities, cross-task generalization, and practical limitations remain insufficiently understood. We systematically investigate WSP through 16 editing trajectories across seven benchmarks and two model scales (Qwen3.5-0.8B and Qwen3.5-9B). Our findings reveal three key insights. First, WSP can achieve substantial performance gains through highly localized interventions. On full held-out evaluations, accuracy improves by up to 29.45, 4.42, 36.72, and 17.11 percentage points on MATH-500, GPQA Diamond, IFEval, and SciBench, respectively. Notably, modifying only 1,023 parameters yields a 29.45-point improvement. Second, WSP exhibits promising but uneven cross-task generalization. A Math-edited checkpoint improves GPQA Diamond, IFEval, and SciBench by 3.03, 12.18, and 20.10 points, respectively, without further editing, while leaving SciCode performance unchanged. Third, effective editing remains challenging and inconsistent. Outcomes vary substantially across trajectories, and six of the 16 trajectories retain the original weights when candidate improvements cannot be reliably validated. Together, these results highlight WSP's potential for highly localized model adaptation while revealing important challenges in intervention discovery, reliability, and cross-task transfer.\n  Homepage: https://wsp-scope.github.io/ GitHub: https://github.com/WSP-Scope/WSP-Scope-Project",
-      "upvotes": 3,
+      "summary": "Recent years have witnessed remarkable progress in video generation in terms of visual quality and temporal consistency. However, generating videos with precise spatial structure, coherent motion dynamics, and controllable scene composition remains challenging. In this paper, we introduce Video-Coder, the first attempt to train a code-driven video generation agent, which autonomously writes and executes code to construct a dynamic 3D scene (Draft Video) that provides structure and motion signals to downstream video generators. To support this paradigm, we design a dedicated data pipeline and curate two high-quality datasets, Video-Coder-SFT-6k and Video-Coder-RL-2k, which contain diverse prompts and ground-truth reference videos. We further develop the Video- Coder Harness, a unified interactive environment integrating code execution, 3D scene rendering, and execution feedback for agent training and inference. We then train Video-Coder with SFT fol- lowed by harness-native agentic reinforcement learning with dual reward feedback, which combines execution-based and video-based rewards. Additionally, we design an annealing training strategy that gradually reduces the execution reward over time, allowing the model to rely more on the video reward in the later training stages. Experiments show that Video-Coder achieves significant gains, improving Minimax-H3 by approximately 7 points on PhyGenBench and 24 points on VBench-2.0. We hope this work can serve as an open foundation for coding agents in video generation, and we fully open-source our data, models, and code",
+      "upvotes": 8,
       "comments": 1,
       "has_code": true,
-      "project_page": "https://wsp-scope.github.io/",
+      "project_page": "https://cywang735.github.io/Video-Coder/",
       "signals": [
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
       "id": "hf:2610.35959",
@@ -112,7 +172,7 @@
       "arxiv_url": "https://arxiv.org/abs/2610.35959",
       "published_at": "2026-10-25T00:00:00Z",
       "summary": "Solving long-horizon agentic tasks requires language agents to interact with their environments over multiple steps, and reliable performance often comes from the expensive capable models available through cloud providers. Meanwhile, alternative efficient models with inferior performance but a much lower cost are emerging, including lower-tier cloud models and smaller open-weights models deployable on local hardware. This raises a natural question that remains less explored than traditional query-level routing: can capable and efficient models collaborate within a single long-horizon agentic task to substantially reduce cost while preserving task accuracy? In this paper, we systematically investigate key design choices for such collaboration through model handoffs, where one model takes over from another, focusing on handoff direction and context transfer. We find that efficient-to-capable handoffs generally underperform capable-only execution with limited or even no cost reduction, whereas capable-to-efficient handoffs at suitable stages of task progress largely preserve or even improve accuracy while substantially reducing cost. These findings suggest that a one-time, simple, well-timed handoff strategy is good enough for cost-effective agent collaboration, motivating AgentBaton, a lightweight detector that learns when to hand off from recurring patterns in task progress. Across 11 model pairs and two representative benchmarks, AgentBaton reduces API costs by 65.9% on average while largely preserving task accuracy, with accuracy gains of up to 8.8 percentage points over capable-only execution. Experiments across various reasoning-effort settings further show that AgentBaton extends the empirical accuracy-cost Pareto frontier.",
-      "upvotes": 3,
+      "upvotes": 8,
       "comments": 1,
       "has_code": false,
       "project_page": null,
@@ -120,27 +180,127 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
-      "id": "hf:2611.07461",
+      "id": "hf:2611.09382",
       "source": "hf_daily_papers",
       "type": "paper",
       "daily_papers_date": "2026-11-09",
-      "title": "The Last Mile to the Real World: Agent-Native Primitives as Reusable Building Blocks for Solving Real-World Tasks",
-      "url": "https://huggingface.co/papers/2611.07461",
-      "arxiv_url": "https://arxiv.org/abs/2611.07461",
-      "published_at": "2026-11-05T00:00:00Z",
-      "summary": "How can an agent handle a real-world task end to end? Frontier models with their own harnesses still fall short on real-world benchmarks: on Terminal-Bench 4.0, GPT-5.6 Sol with Codex resolves 37.3% of the tasks and Claude Opus 5 with Claude Code 51.8%. These tasks fail at the step from reaching a resource to applying it, which we call the last mile to the real world. Existing approaches put the resource within reach but leave the competence to apply it with the caller, so each harness rebuilds that competence. We introduce agent-native primitives, reusable units that equip a resource with a resident LLM that applies it in context and communicates with other primitives, and HEELO (Harness Engineering around Evolving Agent-Native Primitives for the Last Mile to Real-WOrld Tasks), a harness engineering framework that builds each task's harness from a library of such primitives. HEELO composes the primitives a task needs into a task-specific graph, verifies the result against evidence from the environment, revises the primitives a failure implicates, and admits new or improved primitives after validation. We instantiate HEELO with eight primitive families, each built for one kind of task, and evaluate them on more than twenty benchmarks. Dev-Primitives raise Terminal-Bench 4.0 resolution from 37.3% under Codex to 55.5% on the same backbone, Harness Primitives composed per task raise Terminal-Bench 2.0 Pass@1 from 60.0% for the seed harness to 72.2%, Tool Primitives raise ToolBench pass rate from 55.8% to 75.1%, and Navigation Primitives raise GAIA-Text-103 accuracy from 45.6% to 58.3%. On the 46 real-world tasks of our heelo.dev platform, Claude Opus 5.5 with Claude Code and GPT-6.1 Sol with Codex complete 9 each on their own and 39 and 35 when connected to HEELO through our MCP server, with 1.9times and 2.3times less time and 1.55times lower cost per completed task.",
-      "upvotes": 0,
+      "title": "Exploring Weight-Space Programming: Capabilities, Generalization, and Limitations",
+      "url": "https://huggingface.co/papers/2611.09382",
+      "arxiv_url": "https://arxiv.org/abs/2611.09382",
+      "published_at": "2026-11-06T00:00:00Z",
+      "summary": "Weight-Space Programming (WSP) enables reasoning agents to directly inspect and modify neural network parameters, offering an alternative to gradient-based model adaptation. However, its capabilities, cross-task generalization, and practical limitations remain insufficiently understood. We systematically investigate WSP through 16 editing trajectories across seven benchmarks and two model scales (Qwen3.5-0.8B and Qwen3.5-9B). Our findings reveal three key insights. First, WSP can achieve substantial performance gains through highly localized interventions. On full held-out evaluations, accuracy improves by up to 29.45, 4.42, 36.72, and 17.11 percentage points on MATH-500, GPQA Diamond, IFEval, and SciBench, respectively. Notably, modifying only 1,023 parameters yields a 29.45-point improvement. Second, WSP exhibits promising but uneven cross-task generalization. A Math-edited checkpoint improves GPQA Diamond, IFEval, and SciBench by 3.03, 12.18, and 20.10 points, respectively, without further editing, while leaving SciCode performance unchanged. Third, effective editing remains challenging and inconsistent. Outcomes vary substantially across trajectories, and six of the 16 trajectories retain the original weights when candidate improvements cannot be reliably validated. Together, these results highlight WSP's potential for highly localized model adaptation while revealing important challenges in intervention discovery, reliability, and cross-task transfer.\n  Homepage: https://wsp-scope.github.io/ GitHub: https://github.com/WSP-Scope/WSP-Scope-Project",
+      "upvotes": 7,
       "comments": 1,
-      "has_code": false,
-      "project_page": "https://www.heelo.dev/",
+      "has_code": true,
+      "project_page": "https://wsp-scope.github.io/",
       "signals": [
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.09017",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "Frontier3DBench: Benchmarking Coding Agents for 3D Creation across Objects, Scenes, and Interactive Open Worlds",
+      "url": "https://huggingface.co/papers/2611.09017",
+      "arxiv_url": "https://arxiv.org/abs/2611.09017",
+      "published_at": "2026-11-06T00:00:00Z",
+      "summary": "Coding agents combine visual understanding with program execution, offering a new route to automated 3D creation. By translating images and instructions into editable programs, they bring reconstruction, generation, and editing into a shared workflow. Yet existing benchmarks fragment evaluation across task scopes and protocols, leaving their capabilities across construction levels unclear. We propose Frontier3DBench, a unified benchmark of 145 tasks across 9 categories spanning object, scene, and interactive open-world creation, with joint evaluation of appearance, structure, and behavior. Experiments with 11 model-harness configurations reveal strengths that vary by level: GPT-6.1-sol leads the object and scene levels and achieves the highest overall score of 66.02/100, whereas GPT-6-astra leads interactive world construction. However, all configurations score lower on reference reconstruction than on text-driven generation in object and scene tasks. Producing plausible content thus remains easier than reproducing specified geometry, layouts, and visual details. Moreover, generated worlds average 83.08/100 on local mechanisms but only 20.82 on motion clearance and 30.26 on stateful workflows: individual mechanisms often function, whereas complete activities that require coordinated actions and persistent state remain difficult. These results identify reference fidelity and coordinated activity completion as central bottlenecks for coding agents in 3D creation.",
+      "upvotes": 6,
+      "comments": 0,
+      "has_code": false,
+      "project_page": "https://lab.einsia.ai/frontier3dbench/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2610.36896",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "PREEN: Exemplar-Based Color Style Transfer with Smartphone Editor Presets",
+      "url": "https://huggingface.co/papers/2610.36896",
+      "arxiv_url": "https://arxiv.org/abs/2610.36896",
+      "published_at": "2026-10-27T00:00:00Z",
+      "summary": "We present PREEN (Preset Regression via an Exemplar-based Editor Network), which casts color style transfer as regression onto the 29 parameters of a deterministic image editor. Given a content image and a style reference, PREEN predicts a preset, a vector of editor slider values that is interpretable and editor-consumable, not a raster image. The key obstacle is supervision, since an arbitrary real reference lacks a preset ground truth. We therefore supervise with a style-transfer teacher, whose target looks we invert into the editor's parameter space as pseudo-presets, then pretrain a CLIP-conditioned regressor and refine it with LoRA under an image-level CIELAB loss. On the human-curated PST50 benchmark, PREEN applies the reference's color while preserving structural fidelity, leading the baselines on pixel- and perceptual-fidelity metrics. The preset is compact and predicted at sub-second on-device latency. The low-dimensional subspace also exposes a single inference-time strength knob that traces a continuous default-to-vivid trajectory in one forward pass, with every intermediate state a valid editor preset. A two-axis human study shows that raters prefer the vivid end for matching the reference but the default as a standalone photo, a trade-off the knob spans without retraining.",
+      "upvotes": 4,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.09055",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "OmniLatent: Unified Latent for 3D Part Modeling",
+      "url": "https://huggingface.co/papers/2611.09055",
+      "arxiv_url": "https://arxiv.org/abs/2611.09055",
+      "published_at": "2026-11-06T00:00:00Z",
+      "summary": "3D part decomposition is a central capability for editable asset creation, yet existing workflows typically segment a completed mesh as a post-processing step, making the result sensitive to geometric artifacts, texture ambiguity, and limited part-level annotations. We present OmniLatent, a unified latent modeling framework for 3D part decomposition. Instead of predicting part labels in isolation, OmniLatent learns a shared latent space that jointly encodes geometry, deformation, appearance, and binary part IDs, allowing data-rich geometric and visual priors to support data-scarce part learning. Given a single input image, the base model generates geometry, deformation, texture, and surface part IDs in one pass, producing a part-aware 3D asset without a separate segmentation stage. We further tune the pretrained model for two extensions: a point-prompt adapter that maps arbitrary 3D point prompts with binary part IDs into latent tokens for full segmentation, refinement, and part subdivision, and an amodal part completion model that completes partial surface masks into a coherent full-object decomposition through dynamic per-part token allocation, cross-attention to the given geometry latent, and alternating part-local and global attention. Extensive experiments show that OmniLatent produces semantically meaningful part segmentations with precise boundaries, supports interactive part editing, and completes partial part observations while preserving global object consistency.",
+      "upvotes": 3,
+      "comments": 0,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.06808",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "LLMs Don't Know What They Know: Benchmarking Temporal Self-Knowledge for Financial Backtesting",
+      "url": "https://huggingface.co/papers/2611.06808",
+      "arxiv_url": "https://arxiv.org/abs/2611.06808",
+      "published_at": "2026-11-04T00:00:00Z",
+      "summary": "Financial backtests of large language models (LLMs) are meaningful only if the model did not already know the outcomes it is asked to predict. Practitioners guard against this by trusting a vendor's stated knowledge cutoff, by asking the model what it knows, or by instructing it to answer as of a past date. To verify whether any of these safeguards can be trusted, we introduce FinDendro, a benchmark of 2,226 dated U.S. facts from 1999 to 2026, covering monthly macroeconomic series, month-end stock prices and Federal Reserve decisions. Each fact yields four prompts: a value question, Recall and Predict questions that pair each candidate value with a claim of knowing or guessing without a declared date, and a Predict question with a historical declared date. Controls for persistence and dominant outcomes keep chance accuracy near 0.27. Results show that for most frontier models, self-reports understate knowledge. GPT-5 answers 76% of controlled facts correctly but claims to know 38%, and answers 61% of the facts it says it does not know. Knowledge claims can persist beyond the measured knowledge boundary, by up to seven quarters, and a declared date removes most of the claims of prior knowledge while leaving accuracy unchanged. Backtests inside a model's training window therefore cannot be certified leak-free by self-report, instruction or stated cutoff. These findings motivate behavioral measurement of temporal knowledge boundaries, and FinDendro provides a benchmark and procedure for selecting backtest periods based on demonstrated factual knowledge.",
+      "upvotes": 3,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.08290",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "AutoCompress: Automated Hardware-Guided Model Compression",
+      "url": "https://huggingface.co/papers/2611.08290",
+      "arxiv_url": "https://arxiv.org/abs/2611.08290",
+      "published_at": "2026-11-05T16:53:48Z",
+      "summary": "LLM pruning must preserve quality while meeting hardware- and workload-specific constraints on latency, throughput, and memory. Existing pruning workflows often target parameter counts, requiring practitioners to manually select model sizes that meet latency, throughput, and GPU memory limits. However, parameter count alone does not predict these metrics, which depend on the model architecture, workload, hardware, and serving engine. We introduce AutoCompress, a hardware-guided compression framework that directly incorporates such constraints into differentiable architecture search. AutoCompress jointly optimizes global and per-layer structure to produce heterogeneous architectures, guided by serving-engine cost models validated against end-to-end latency, throughput, and memory measurements. We evaluate AutoCompress on long-context local coding, batched datacenter serving, and latency-sensitive in-game interaction. Compared to the state-of-the-art Minitron pruning framework, AutoCompress improves average accuracy across eight benchmarks by 6.57, 2.35, and 0.57 percentage points on RTX 5070, RTX 5080, and H100, respectively. AutoCompress also compresses Nemotron 3.5 Super from 120B to 74B parameters for single-B200 BF16 serving at 128K context, retaining 95% of its mean benchmark score.",
+      "upvotes": 2,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     },
     {
       "id": "hf:2611.04434",
@@ -152,7 +312,7 @@
       "arxiv_url": "https://arxiv.org/abs/2611.04434",
       "published_at": "2026-11-03T07:25:42Z",
       "summary": "Language models are accurate on most long-arithmetic problems, but their accuracy is estimated on samples and carries no guarantee for an unseen input; tool use is exact but moves the computation outside the network. We show that exactness at all input lengths becomes a finite, checkable property of a network when each of its steps reads only a bounded view of an external working memory. In Sketchpad, Qwen3.5-0.8B with a low-rank adapter executes arithmetic procedures on a rendered sheet. Each forward pass reads a three-cell view and emits one step: a digit, a carry or borrow, and the next operation. A fixed runtime moves the view and writes no digit of a result. We prove in Lean that the model is then exact on all inputs of any length if and only if it is exact on the finite set of views the runtime presents, that no finite test suffices when steps also read earlier steps, and that the guarantee tolerates bounded numerical perturbation and extends to compositions of procedures. All 2,446 views pass on the deployment device, a laptop GPU running the model in a web browser. The certified model performs signed addition and subtraction, long multiplication and division, square roots and greatest common divisors at arbitrary length. It solved 200 of 200 pre-registered problems in the browser, and 220 of 220 sums of up to 1,000 digits and products of up to 20 digits, of which GPT-6.1 Sol, the strongest of ten other models, solved 217. A symbolic runtime built on these procedures solves, expands and factors polynomials with every number computed by the model, and a multiplicative gate on the adapter recovers the base model exactly when the sheet is not in use.",
-      "upvotes": 0,
+      "upvotes": 2,
       "comments": 1,
       "has_code": true,
       "project_page": "https://neovand.github.io/sketchpad/",
@@ -160,7 +320,167 @@
         "huggingface_daily_papers"
       ],
       "first_seen_at": "2026-11-09T04:36:29.323689Z",
-      "last_seen_at": "2026-11-09T04:36:29.323689Z"
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.01362",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "\"PRISM\" Is Not All You Need: Cross-Topic Name Collisions and Scientific Paper Retrieval",
+      "url": "https://huggingface.co/papers/2611.01362",
+      "arxiv_url": "https://arxiv.org/abs/2611.01362",
+      "published_at": "2026-11-01T00:00:08Z",
+      "summary": "Scientific names increasingly connect papers from different research topics, leaving readers to recover a paper's identity from context. We study this convergence in 564,861 AI-related arXiv records. Cross-topic name collision grows 4.33-fold from a pooled 2020-2022 reference to 2026, compared with 1.12-fold within topics. A second sentence encoder reproduces the pattern, and name-group resampling quantifies its uncertainty. Fixed word-frequency bands locate the main increase in an intermediate-frequency vocabulary shared by many research areas. We then measure the ambiguity that remains after supplying research clues. With the same three-term query construction, shared-name targets retain matched identification deficits of 25.7 percentage points under title-based BM25 and 6.9 points under title-plus-abstract E5. Within fixed same-name candidates, listwise language-model ranking reaches 89.2% using the query and candidate titles. Topic-specific comparisons show that context resolves more cross-topic ambiguity. The evaluation separates candidate competition, document fields, and contextual ranking through lexical, dense, and language-model baselines. Source-linked cases and a portable evaluation collection make the phenomenon inspectable and reusable for scientific retrieval and research assistants.",
+      "upvotes": 2,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.09113",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "Authorization Drift in LLM Agents: Evaluating Boundary Compliance in Multi-Step Tool Use",
+      "url": "https://huggingface.co/papers/2611.09113",
+      "arxiv_url": "https://arxiv.org/abs/2611.09113",
+      "published_at": "2026-11-06T07:47:25Z",
+      "summary": "LLM agents can exceed their authorization boundaries while pursuing user goals without an adversary. We formalize this phenomenon as authorization drift across data, tool, scope, and time, and introduce the Authorization Drift Benchmark (ADB): 648 samples across seven domains, each pairing a sufficient compliant path with an attractive unauthorized shortcut. To ensure executable tasks, tempting shortcuts, and feasible compliant paths, Staged Execution-Reflective Synthesis (SERS) grounds benchmark validation in real agent rollouts rather than LLM self-critique. Across 13 LLMs and three frameworks (25,207 trajectories), greater capability accompanies greater drift, with frontier-capable models exhibiting drift rates of 0.43 to 0.61. Yet 86.18% of tasks admit an observed clean-success trajectory, showing that drift is avoidable. Drift is persistent and dominated by early data over-collection; apparent improvements under agentic scaffolds coincide with collapsing clean-completion performance. To understand potential harms to individuals and society, we map drift points to legal provisions across four jurisdictions, connecting overreach to privacy and information-security concerns. Data minimisation is the most frequently implicated provision, and 93.5% of legally grounded drifting runs map to multiple jurisdictions, making the potential consequences of authorization drift more interpretable.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.07461",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "The Last Mile to the Real World: Agent-Native Primitives as Reusable Building Blocks for Solving Real-World Tasks",
+      "url": "https://huggingface.co/papers/2611.07461",
+      "arxiv_url": "https://arxiv.org/abs/2611.07461",
+      "published_at": "2026-11-05T00:00:00Z",
+      "summary": "How can an agent handle a real-world task end to end? Frontier models with their own harnesses still fall short on real-world benchmarks: on Terminal-Bench 4.0, GPT-5.6 Sol with Codex resolves 37.3% of the tasks and Claude Opus 5 with Claude Code 51.8%. These tasks fail at the step from reaching a resource to applying it, which we call the last mile to the real world. Existing approaches put the resource within reach but leave the competence to apply it with the caller, so each harness rebuilds that competence. We introduce agent-native primitives, reusable units that equip a resource with a resident LLM that applies it in context and communicates with other primitives, and HEELO (Harness Engineering around Evolving Agent-Native Primitives for the Last Mile to Real-WOrld Tasks), a harness engineering framework that builds each task's harness from a library of such primitives. HEELO composes the primitives a task needs into a task-specific graph, verifies the result against evidence from the environment, revises the primitives a failure implicates, and admits new or improved primitives after validation. We instantiate HEELO with eight primitive families, each built for one kind of task, and evaluate them on more than twenty benchmarks. Dev-Primitives raise Terminal-Bench 4.0 resolution from 37.3% under Codex to 55.5% on the same backbone, Harness Primitives composed per task raise Terminal-Bench 2.0 Pass@1 from 60.0% for the seed harness to 72.2%, Tool Primitives raise ToolBench pass rate from 55.8% to 75.1%, and Navigation Primitives raise GAIA-Text-103 accuracy from 45.6% to 58.3%. On the 46 real-world tasks of our heelo.dev platform, Claude Opus 5.5 with Claude Code and GPT-6.1 Sol with Codex complete 9 each on their own and 39 and 35 when connected to HEELO through our MCP server, with 1.9times and 2.3times less time and 1.55times lower cost per completed task.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": false,
+      "project_page": "https://www.heelo.dev/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T04:36:29.323689Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.06844",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "Where to Connect? Boosting MLLMs via Dynamic Gated Pathways across ALL ViT and LLM Layers",
+      "url": "https://huggingface.co/papers/2611.06844",
+      "arxiv_url": "https://arxiv.org/abs/2611.06844",
+      "published_at": "2026-11-04T00:00:00Z",
+      "summary": "A central yet under-explored question in Multimodal Large Language Models (MLLMs) is where to connect---how visual information from a hierarchical vision encoder should be wired into the layer-wise semantics of a large language model. Mainstream MLLMs inject a fixed single-layer visual representation into the LLM and treat all LLM layers as a single consumer, ignoring that different layers demand different visual granularities. Recent multi-layer fusion methods either compress hierarchical features on the encoder side or rely on predefined sparse or hierarchical layer-to-layer connections, and therefore stop short of modeling adaptive cross-layer interactions between the ViT and LLM hierarchies. We address this gap with DGP (Dynamic Gated Pathways), a routing mechanism that establishes all-to-all connections between every ViT layer and every LLM layer, with each LLM layer dynamically gating its preference over visual layers conditioned on its own semantic state. Built on top of LLaVA-1.5-7B and 13B, DGP delivers consistent gains over the LLaVA-1.5-7B baseline (e.g., +4.2 on SQA^{I}, +3.3 on MM-Vet, +3.1 on VizWiz and LLaVA^{W}) and surpasses prior multi-layer visual fusion methods on most benchmarks. Layer-wise routing analyses further show that different LLM layers do select different visual granularities on demand, supporting both the effectiveness and interpretability of the proposed dynamic gated pathways. The code is available: https://github.com/YingyingYan1/DGP.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2610.41711",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "Hierarchical Residuals: A Minimalist Decoupling of Residual Width from Compute Width",
+      "url": "https://huggingface.co/papers/2610.41711",
+      "arxiv_url": "https://arxiv.org/abs/2610.41711",
+      "published_at": "2026-10-30T13:18:22Z",
+      "summary": "Residual connections underpin Transformers, but they implicitly tie the residual width carried through depth to the compute width used inside each layer. We introduce Hierarchical Residuals (HiRes), a minimalist architectural change that decouples these dimensions, widening the residual state while keeping per-layer compute width fixed. HiRes groups layers into blocks: standard d-dimensional PreNorm layers operate inside each block, while a wider D-dimensional PostNorm outer residual connects blocks. Learned read/write projections bridge the two spaces at block boundaries, leaving individual Transformer layers unchanged. Across different model sizes and depths, HiRes consistently outperforms vanilla residual addition, with fitted scaling laws indicating a 1.30-fold improvement in FLOPs efficiency. On OLMoE-1B-7B pretraining for 500B tokens, HiRes achieves 0.0208 lower training loss and 1.14-point higher downstream accuracy. HiRes is also competitive with other residual expansion methods such as VWN, mHC and AttnRes with less activation memory and I/O costs. Built from only dense projections and normalizations, it requires neither specialized kernels nor infrastructure-level optimizations. HiRes thus exposes residual width as a practical scaling variable using only standard operators.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.07723",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "Static Recovery Is Not Dynamic Stability: Dynamics-Aware Benchmarking of Protein Motif Scaffolding",
+      "url": "https://huggingface.co/papers/2611.07723",
+      "arxiv_url": "https://arxiv.org/abs/2611.07723",
+      "published_at": "2026-11-05T09:38:23Z",
+      "summary": "Protein motif scaffolding benchmarks assess whether generative models can build scaffolds around functionally important residues. Their conclusions depend on which motifs are tested and which criteria define success. Existing benchmarks typically use small hand-curated motif sets and static refolding criteria, but protein function often depends on conformational ensembles and transitions. Here, we address both benchmark scope and success criteria. We introduce BILBY-PRO, a systematically derived benchmark of structurally conserved functional motifs from PROSITE-linked experimental structures, comprising 220 cases from 174 PROSITE motif-pattern entries. Evaluating six recent scaffold-generation models reveals distinct patterns in target coverage and unique-solution yield: RFDiffusion and Proteina solve more targets, whereas ESM3 produces more unique successful scaffolds on the targets it solves. We further introduce BILBY-MD, a reference-based all-atom molecular dynamics evaluation framework. Applied to statically solved designs from the original MotifBench benchmark, it compares motif drift, scaffold drift, motif-contact preservation, and motif-dihedral free-energy landscapes against reference simulations. Of 55 statically solved model-problem pairs, 31 satisfy our MD-supported criterion and only 8 pass all checks. Compact, self-contained motifs are often MD-supported, whereas interface-like or context-dependent motifs fail more frequently. Static refolding success therefore provides useful evidence of local motif recovery but does not establish dynamical fidelity of the full scaffold. BILBY highlights three complementary axes of motif-scaffolding evaluation: target coverage, unique-solution yield, and MD-supported dynamical fidelity.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://huggingface.co/HFMI-PROFOUND",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.04720",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "OneTrans-GSR: A Generative Slate Ranking Paradigm Unifying Reranking and Mix-Ranking with One Autoregressive Transformer",
+      "url": "https://huggingface.co/papers/2611.04720",
+      "arxiv_url": "https://arxiv.org/abs/2611.04720",
+      "published_at": "2026-11-03T00:00:00Z",
+      "summary": "Industrial recommender systems allocate substantial computation to pointwise candidate scoring, yet separate reranking and mix-ranking stages still assemble the final exposure slate using hand-crafted rules and specialized low-capacity models. Mix-ranking combines product cards, short videos, livestreams, and advertising cards supplied by distinct upstream business channels. Although these rules and models encode valuable domain knowledge, they are inherently limited in leveraging additional data and computation. They constrain the combinatorial space of candidate slates and determine objective trade-offs through manual tuning. To enable scalable and effective slate generation, we reformulate reranking and mix-ranking as a unified learning problem whose performance can improve with computation. Specifically, we instantiate this formulation across the reranking and mix-ranking stages and propose OneTrans-GSR, a single decoder-only policy that extends our deployed OneTrans backbone to generate the exposure slate end-to-end. During training, a reward model evaluates complete slates and guides reinforcement learning toward slate-level and long-term objectives. During decoding, business constraints are explicitly enforced. Offline evaluation shows that slate quality consistently improves as reward-model and policy compute increase. Deployed in a large-scale industrial recommendation system, OneTrans-GSR mixes heterogeneous content types within a unified slate. In online A/B tests, it improves GMV/u by 2.63%, advertiser value by 2.06%, and repurchase rate by 2.03%, while reducing end-to-end latency across the reranking and mix-ranking stages by 13%. These results mark a paradigm shift in slate generation: moving beyond human-engineered heuristics toward a general learned policy creates a scalable path for further algorithmic optimization and compute-driven improvement.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
+    },
+    {
+      "id": "hf:2611.00448",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-09",
+      "title": "Learning to evolve by matching velocities",
+      "url": "https://huggingface.co/papers/2611.00448",
+      "arxiv_url": "https://arxiv.org/abs/2611.00448",
+      "published_at": "2026-10-30T23:03:28Z",
+      "summary": "Learning the continuous-time evolution of nonlinear dynamical systems relies on trajectory-based objectives, which require simulating the learned dynamics during training and backpropagating through the numerical scheme, at a cost that grows with the rollout horizon. We show that trajectory-based objectives degenerate as the rollout horizon increases, hindering gradient-based optimization, and that the numerical scheme biases the learned dynamics by constraining the spectrum of the learned Jacobian to its absolute stability region. To overcome these limitations, we introduce Velocity Matching (VM), a simulation-free objective that relies on piecewise-linear interpolation and stochastic collocation, and approximates the velocity population risk to second order in the sampling step. We develop a theoretical framework for velocity-based learning, introducing stability estimates that control trajectory errors in terms of velocity errors, which enable us to establish universal and continuous-time approximation results when the learned velocity field is parameterized by deep neural networks. Building on a bias-variance decomposition of the VM objective, we show that its higher-order approximation of the velocity population risk yields a consistent minimizer; that it relates to the residual of an A-stable continuous-stage Runge-Kutta scheme, thus connecting VM to implicit integration without requiring any implicit solve; and that it implicitly matches the action of the learned Jacobian to that of the true one along the observed trajectories, without requiring access to the underlying velocity field or its Jacobian. Numerical experiments on nonlinear ordinary differential equations and semi-discretized time-dependent partial differential equations show that VM improves accuracy over trajectory-based objectives, while avoiding both the cost of simulation and the instabilities of long rollouts.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-09T11:22:06.281851Z",
+      "last_seen_at": "2026-11-09T11:22:06.281851Z"
     }
   ]
 }
