@@ -1,10 +1,10 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-11-09T07:50:53.157885Z",
+  "generated_at": "2026-11-09T18:40:04.234273Z",
   "source": "tamnd/threads-cli anonymous public crawler",
   "collection_limit": 100,
   "collection_status": "ok",
-  "latest_good_generated_at": "2026-11-09T07:50:53.157885Z",
+  "latest_good_generated_at": "2026-11-09T18:40:04.234273Z",
   "limitations": [
     "Anonymous crawler surface exposes recent public posts, not guaranteed full account history.",
     "At most 100 recent records are collected per primary run.",
@@ -13,31 +13,337 @@
   "post_count": 15,
   "posts": [
     {
-      "post_id": "4025906976483435684",
-      "published_at": "2026-11-08T13:45:32Z",
-      "text": "🚨 이번 주도 AI 업계는 정말 미친 한 주였습니다.\n\n오픈AI는 해킹 특화 GPT-6 Cyber를 공개했고, 앤트로픽의 비공개 AI는 18년간 풀리지 않은 수학 문제의 증명을 찾아냈습니다.\n\n심지어 AI가 다른 AI의 가중치 0.016%만 수정해 수학 점수를 7.9%에서 48.1%로 높이는 일까지 벌어졌습니다.\n\n절대 놓쳐선 안 될 핵심 AI 소식 45가지를 정리했습니다🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dfe5RCgD-Sk",
-      "media": null,
+      "post_id": "4026775053396055517",
+      "published_at": "2026-11-09T18:30:15Z",
+      "text": "ByteDance가 이미지 생성 모델 Seedream 5.5를 발표했습니다.\n\n가장 주목할 부분은 이미지 편집인데요.\n\n개발사에 따르면 같은 이미지를 100번 연속 수정해도 편집하지 않은 영역을 픽셀 단위로 유지하고 화질 저하를 줄일 수 있다고 합니다.\n\n예를 들어 인물의 귀걸이만 바꿔도 얼굴이나 배경은 그대로 유지하는 방식입니다.\n\n투명·반투명 이미지 생성도 지원하며, 피부 질감과 조명, 작은 글자 표현도 개선됐습니다.\n\nDreamina, CapCut, BytePlus에 제공될 예정입니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dfh-pOIE5Xd",
+      "media": [
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMJCGwot8YLLDF6Bbm7D_9IfCl--rOjRuJfKy-emKMF91YVGK-FNrfHg8I8Ijrgp45As6RRnYHJQNiVeKVj0k_gTaxqmF1ljf856bI.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=OQUHYHYhlSQQ7kNvwHB6k3J&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYxMDE2NjIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=acd4d67c68848d8&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zOTA0RTZGOEFGQzQ0QjU4QUI4MzMwRjUwODY1ODA5NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc4OEI1NzY5NUIwNzRBNTk5NTBDNDUwQTlEOUExMkI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8cvu_db3PxUCKAJDMywXQEPFP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQ7aQOrOnjFzLAjxueUuhl8DaiH7VgatJ_Y28IqWCaquQ&oe=6AF3F737"
+      ],
       "engagement": {
-        "likes": 78,
-        "replies": 45,
-        "reposts": 4,
+        "likes": 4,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026775053396055517",
+        "shortcode": "Dfh-pOIE5Xd",
+        "text": "ByteDance가 이미지 생성 모델 Seedream 5.5를 발표했습니다.\n\n가장 주목할 부분은 이미지 편집인데요.\n\n개발사에 따르면 같은 이미지를 100번 연속 수정해도 편집하지 않은 영역을 픽셀 단위로 유지하고 화질 저하를 줄일 수 있다고 합니다.\n\n예를 들어 인물의 귀걸이만 바꿔도 얼굴이나 배경은 그대로 유지하는 방식입니다.\n\n투명·반투명 이미지 생성도 지원하며, 피부 질감과 조명, 작은 글자 표현도 개선됐습니다.\n\nDreamina, CapCut, BytePlus에 제공될 예정입니다.",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMJCGwot8YLLDF6Bbm7D_9IfCl--rOjRuJfKy-emKMF91YVGK-FNrfHg8I8Ijrgp45As6RRnYHJQNiVeKVj0k_gTaxqmF1ljf856bI.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=OQUHYHYhlSQQ7kNvwHB6k3J&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYxMDE2NjIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=acd4d67c68848d8&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zOTA0RTZGOEFGQzQ0QjU4QUI4MzMwRjUwODY1ODA5NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc4OEI1NzY5NUIwNzRBNTk5NTBDNDUwQTlEOUExMkI1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA8cvu_db3PxUCKAJDMywXQEPFP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQ7aQOrOnjFzLAjxueUuhl8DaiH7VgatJ_Y28IqWCaquQ&oe=6AF3F737"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/Dfh-pOIE5Xd",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T18:30:15Z",
+        "like_count": 4,
+        "reply_count": 1,
+        "repost_count": 0,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962173248Z"
+      }
+    },
+    {
+      "post_id": "4026771665933251921",
+      "published_at": "2026-11-09T18:23:31Z",
+      "text": "🚨 속보) 메타가 가장 작고 싼 모델 Muse Ember를 공개했습니다.\n\n독립 평가에서 Claude Haiku 5.5 최고 설정과 같은 점수를 받았는데, 작업 하나당 비용은 3분의 1입니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dfh937TjzVR",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/893736249_17996130810112832_7050708528248895255_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ig_cache_key=NDAyNjc3MTY2NTkzMzI1MTkyMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMzI0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=PAYIu9mVoxYQ7kNvwErpWB-&_nc_oc=AdqTtNKfkYMhJJ0bLQxNkoWo7xgAmtaSavZamMJgmglV7iaYHMn0D9SJeCwngHb6Mgo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&oh=00_AQRsUHU9A4_6irdj0U_vwBLrTmWeGjeM3bkQil-caaZT1g&oe=6AF7E614"
+      ],
+      "engagement": {
+        "likes": 1,
+        "replies": 11,
+        "reposts": 0,
         "quotes": 1
       },
       "raw": {
-        "id": "4025906976483435684",
-        "shortcode": "Dfe5RCgD-Sk",
-        "text": "🚨 이번 주도 AI 업계는 정말 미친 한 주였습니다.\n\n오픈AI는 해킹 특화 GPT-6 Cyber를 공개했고, 앤트로픽의 비공개 AI는 18년간 풀리지 않은 수학 문제의 증명을 찾아냈습니다.\n\n심지어 AI가 다른 AI의 가중치 0.016%만 수정해 수학 점수를 7.9%에서 48.1%로 높이는 일까지 벌어졌습니다.\n\n절대 놓쳐선 안 될 핵심 AI 소식 45가지를 정리했습니다🧵",
-        "media_type": "TEXT_POST",
-        "permalink": "https://www.threads.com/@choi.openai/post/Dfe5RCgD-Sk",
+        "id": "4026771665933251921",
+        "shortcode": "Dfh937TjzVR",
+        "text": "🚨 속보) 메타가 가장 작고 싼 모델 Muse Ember를 공개했습니다.\n\n독립 평가에서 Claude Haiku 5.5 최고 설정과 같은 점수를 받았는데, 작업 하나당 비용은 3분의 1입니다. 🧵",
+        "media_type": "IMAGE",
+        "media_urls": [
+          "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/893736249_17996130810112832_7050708528248895255_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ig_cache_key=NDAyNjc3MTY2NTkzMzI1MTkyMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMzI0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=PAYIu9mVoxYQ7kNvwErpWB-&_nc_oc=AdqTtNKfkYMhJJ0bLQxNkoWo7xgAmtaSavZamMJgmglV7iaYHMn0D9SJeCwngHb6Mgo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&oh=00_AQRsUHU9A4_6irdj0U_vwBLrTmWeGjeM3bkQil-caaZT1g&oe=6AF7E614"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/Dfh937TjzVR",
         "username": "choi.openai",
         "user_id": "63452224831",
-        "timestamp": "2026-11-08T13:45:32Z",
-        "like_count": 78,
-        "reply_count": 45,
-        "repost_count": 4,
+        "timestamp": "2026-11-09T18:23:31Z",
+        "like_count": 1,
+        "reply_count": 11,
+        "repost_count": 0,
         "quote_count": 1,
-        "fetched_at": "2026-11-09T07:50:56.210792892Z"
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962191522Z"
+      }
+    },
+    {
+      "post_id": "4026745124435369580",
+      "published_at": "2026-11-09T17:30:47Z",
+      "text": "보스턴 다이나믹스가 새롭게 공개한 아틀라스 영상",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dfh31snAZ5s",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMeSV27yECQuMJrZTDqPbrOWbVPj0drCJKqG2glEzHHQJxHH8ZH-K7Wvz5G4Mr7IhGx-3cj4IEjPg4Sc8y0wCMYZKaKCWkYzC7wHxQ.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=OyccfhRgV24Q7kNvwHqvfz0&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYxMDg5ODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTcwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=678d0a7aaf0d4432&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zNTdDNTYwOTU2N0Q0MEMwQjFCNjAxMEE5MTg2NUQ4Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzNGN0Q1OTFCNTVFQzQwOTU5ODRFNjEyRjJFMjZCQjlDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA5Ky2tNf3PxUCKAJDMywXQGVZcKPXCj0YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQbTv6eEx7Ye7vJRbQCcNkz0RdKq7oQ-0lX2mKux4l8Cw&oe=6AF3F85C"
+      ],
+      "engagement": {
+        "likes": 28,
+        "replies": 6,
+        "reposts": 2,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026745124435369580",
+        "shortcode": "Dfh31snAZ5s",
+        "text": "보스턴 다이나믹스가 새롭게 공개한 아틀라스 영상",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMeSV27yECQuMJrZTDqPbrOWbVPj0drCJKqG2glEzHHQJxHH8ZH-K7Wvz5G4Mr7IhGx-3cj4IEjPg4Sc8y0wCMYZKaKCWkYzC7wHxQ.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=OyccfhRgV24Q7kNvwHqvfz0&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYxMDg5ODUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTcwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=678d0a7aaf0d4432&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zNTdDNTYwOTU2N0Q0MEMwQjFCNjAxMEE5MTg2NUQ4Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzNGN0Q1OTFCNTVFQzQwOTU5ODRFNjEyRjJFMjZCQjlDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA5Ky2tNf3PxUCKAJDMywXQGVZcKPXCj0YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQbTv6eEx7Ye7vJRbQCcNkz0RdKq7oQ-0lX2mKux4l8Cw&oe=6AF3F85C"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/Dfh31snAZ5s",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T17:30:47Z",
+        "like_count": 28,
+        "reply_count": 6,
+        "repost_count": 2,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962226818Z"
+      }
+    },
+    {
+      "post_id": "4026719007872634835",
+      "published_at": "2026-11-09T16:38:53Z",
+      "text": "AI 시대에 사람에게 가장 필요한 능력도 결국 이 다섯 가지로 모입니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dfhx5pqj8_T",
+      "media": null,
+      "engagement": {
+        "likes": 24,
+        "replies": 24,
+        "reposts": 6,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026719007872634835",
+        "shortcode": "Dfhx5pqj8_T",
+        "text": "AI 시대에 사람에게 가장 필요한 능력도 결국 이 다섯 가지로 모입니다. 🧵",
+        "media_type": "TEXT_POST",
+        "permalink": "https://www.threads.com/@choi.openai/post/Dfhx5pqj8_T",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T16:38:53Z",
+        "like_count": 24,
+        "reply_count": 24,
+        "repost_count": 6,
+        "quote_count": 0,
+        "fetched_at": "2026-11-09T18:40:06.96224393Z"
+      }
+    },
+    {
+      "post_id": "4026680943684186217",
+      "published_at": "2026-11-09T15:30:18Z",
+      "text": "🚨 대구글.. 구글이 1년 만에 8세대 TPU를 네 종류나 내놨습니다.\n\n칩은 두 개인데, 패키지와 보안, 네트워크만 바꿔서 학습·추론·기밀 연산·초장문 맥락용 시스템을 따로 만들었습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfhpPvoIXBp",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOznNwuJHqzDZjO09--MY8EPupCSXhK_yozRQ3IwefnwM1ycAE3nrYFhbUxFXPyljGK9vozNBl53VKtwvLItWDgCWczL1TJ_ZfYXDg.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=3wbQOEA-YwEQ7kNvwEbZ-qg&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5NjEwNTQxMjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoxMTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=822df4aacf93bd1e&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9BMjRFNzIzOTFCNDk0OTJBOUZFQUQ4NUVCRkYwNTAxQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzIzMjlGMjJBRUE5RjREQTJCRUI4NzMxQTc1MENGNjM5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAx-_mmdf3PxUCKAJDMywXQFxzMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSgVVOK_kA1ikQfeLvegg2NBmN4xWugIXXZ2ufgJBnnCw&oe=6AF4053C"
+      ],
+      "engagement": {
+        "likes": 23,
+        "replies": 10,
+        "reposts": 1,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026680943684186217",
+        "shortcode": "DfhpPvoIXBp",
+        "text": "🚨 대구글.. 구글이 1년 만에 8세대 TPU를 네 종류나 내놨습니다.\n\n칩은 두 개인데, 패키지와 보안, 네트워크만 바꿔서 학습·추론·기밀 연산·초장문 맥락용 시스템을 따로 만들었습니다 🧵",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOznNwuJHqzDZjO09--MY8EPupCSXhK_yozRQ3IwefnwM1ycAE3nrYFhbUxFXPyljGK9vozNBl53VKtwvLItWDgCWczL1TJ_ZfYXDg.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=3wbQOEA-YwEQ7kNvwEbZ-qg&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy43MjAuZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5NjEwNTQxMjExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoxMTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=822df4aacf93bd1e&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9BMjRFNzIzOTFCNDk0OTJBOUZFQUQ4NUVCRkYwNTAxQl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzIzMjlGMjJBRUE5RjREQTJCRUI4NzMxQTc1MENGNjM5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAx-_mmdf3PxUCKAJDMywXQFxzMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSgVVOK_kA1ikQfeLvegg2NBmN4xWugIXXZ2ufgJBnnCw&oe=6AF4053C"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/DfhpPvoIXBp",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T15:30:18Z",
+        "like_count": 23,
+        "reply_count": 10,
+        "repost_count": 1,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962277313Z"
+      }
+    },
+    {
+      "post_id": "4026639287432297749",
+      "published_at": "2026-11-09T14:00:30Z",
+      "text": "구글 딥마인드 CEO 데미스 하사비스는 전 세계 프론티어 AI 시장이 6~8개 소수 기업의 각축전이 될 것이라 전망했습니다.\n\n모델 간 격차는 불과 3~6개월 단위로 엎치락뒤치락할 것이며, “모든 중요 영역에서 동시에 최고가 되기는 매우 어렵다”고 말했습니다.\n코딩이나 멀티모달 등 모델마다 특화된 강점이 달라질 것이라는 분석입니다.\n\n또한 오픈소스 모델 역시 6개월~1년 정도의 시차만 두고 빠르게 추격할 것으로 내다봤습니다.\n\n그는 모든 국가나 기업이 막대한 비용을 들여 자체 프론티어 모델을 만들 필요는 없다고 짚었습니다.\n\n대신 프론티어 AI를 “원자재(commodity)”처럼 활용하고, 헬스케어 등 다운스트림 영역에서 고유의 민감 데이터를 결합해 독자적 가치를 구축하는 것이 훨씬 현실적인 경제 전략이라고 조언했습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfhfxkOCL0V",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQM5G0KeJSxpXqHeF_9_tCzqLJx2z4Mibz0n_G3QeJz9EPa1vxTXjHnEnyTeGV8bjyaq6VBtxeLaCgk7Kv3S2R2L1yJTpSNNMglYnzs.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=bskja4C9LaQQ7kNvwEBPuUt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU2MzQ1NDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjozLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTAwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=d237562e46762193&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNENFQTk2QUVENkY0NUY2OTQwQTRDOUUwMEVDRTlCRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NGM0IwRkI2QjI5QjQ3RkE4NzBBREI0RDVDMThFMTZBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAuKXF5bv3PxUCKAJDMywXQFkzMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQTA3wUwB1YSroJfFkwox8PzLG3M2l-J7u7gX8NdeZEIvQ&oe=6AF3E9B9"
+      ],
+      "engagement": {
+        "likes": 12,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026639287432297749",
+        "shortcode": "DfhfxkOCL0V",
+        "text": "구글 딥마인드 CEO 데미스 하사비스는 전 세계 프론티어 AI 시장이 6~8개 소수 기업의 각축전이 될 것이라 전망했습니다.\n\n모델 간 격차는 불과 3~6개월 단위로 엎치락뒤치락할 것이며, “모든 중요 영역에서 동시에 최고가 되기는 매우 어렵다”고 말했습니다.\n코딩이나 멀티모달 등 모델마다 특화된 강점이 달라질 것이라는 분석입니다.\n\n또한 오픈소스 모델 역시 6개월~1년 정도의 시차만 두고 빠르게 추격할 것으로 내다봤습니다.\n\n그는 모든 국가나 기업이 막대한 비용을 들여 자체 프론티어 모델을 만들 필요는 없다고 짚었습니다.\n\n대신 프론티어 AI를 “원자재(commodity)”처럼 활용하고, 헬스케어 등 다운스트림 영역에서 고유의 민감 데이터를 결합해 독자적 가치를 구축하는 것이 훨씬 현실적인 경제 전략이라고 조언했습니다.",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQM5G0KeJSxpXqHeF_9_tCzqLJx2z4Mibz0n_G3QeJz9EPa1vxTXjHnEnyTeGV8bjyaq6VBtxeLaCgk7Kv3S2R2L1yJTpSNNMglYnzs.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=bskja4C9LaQQ7kNvwEBPuUt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU2MzQ1NDExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjozLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTAwLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=d237562e46762193&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNENFQTk2QUVENkY0NUY2OTQwQTRDOUUwMEVDRTlCRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0NGM0IwRkI2QjI5QjQ3RkE4NzBBREI0RDVDMThFMTZBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAuKXF5bv3PxUCKAJDMywXQFkzMzMzMzMYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQTA3wUwB1YSroJfFkwox8PzLG3M2l-J7u7gX8NdeZEIvQ&oe=6AF3E9B9"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/DfhfxkOCL0V",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T14:00:30Z",
+        "like_count": 12,
+        "reply_count": 1,
+        "repost_count": 0,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962317258Z"
+      }
+    },
+    {
+      "post_id": "4026593980099700623",
+      "published_at": "2026-11-09T12:30:29Z",
+      "text": "오픈AI CEO 샘 알트만(Sam Altman)은 핵심 인재들의 잇단 이탈과 독자 창업 현상에 대해 “걸려 있는 판돈(stakes)이 너무나 크기 때문”이라고 분석했습니다.\n\n그는 인류 문명과 경제 질서를 바꿀 AGI 개발 경쟁에서 사람들이 “오직 자기 자신만이 이 기술을 안전하고 올바르게 구축할 수 있다”고 믿게 된다고 설명했습니다.\n\n단순한 기술적 접근 방식의 차이나 조직 내 불화의 문제가 아닙니다.\n상대방의 방향성이 잘못되었다고 느끼는 순간 권력이 한 사람에게 집중되는 것을 용납할 수 없게 되며, 결국 권력 집중과 개발 방식에 대한 불안이 맞물려 독자 노선으로 이어진다는 것입니다.\n\n“상대방의 방식이 틀렸으니 그 사람에게 힘이 집중되게 둘 수 없다”는 신념이 충돌하며, 초지능을 향한 기술 헤게모니 경쟁은 더욱 다변화되고 치열해지고 있습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfhVeQekaeP",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPfXaziaDFITe70yz77xiBndRBEzjDjKMWdHON8Qx5h6w57dX9krq2oe2jpZahAtnUSqcfTjH8AtqSlIhRoPbiQFskaND3CmWj91Hg.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=3fp-87AEdYgQ7kNvwG79_Vo&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTUyOTA5MzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo1LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=7ba46e66007c60ab&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8xNEU5OTg4NjJBRDA0OUE1ODhDNkY4QTQwMUI5Nzg2RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzcyRjA3NDA0MzU1MzQ1QzY4NTZENzc4QjlFOENFRTRDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA24O-5af3PxUCKAJDMywXQFPZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSjq4nWuT6M2HvOjLU2geUkmNmAXN1tIk2aT9DpoHl2aQ&oe=6AF4039C"
+      ],
+      "engagement": {
+        "likes": 25,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026593980099700623",
+        "shortcode": "DfhVeQekaeP",
+        "text": "오픈AI CEO 샘 알트만(Sam Altman)은 핵심 인재들의 잇단 이탈과 독자 창업 현상에 대해 “걸려 있는 판돈(stakes)이 너무나 크기 때문”이라고 분석했습니다.\n\n그는 인류 문명과 경제 질서를 바꿀 AGI 개발 경쟁에서 사람들이 “오직 자기 자신만이 이 기술을 안전하고 올바르게 구축할 수 있다”고 믿게 된다고 설명했습니다.\n\n단순한 기술적 접근 방식의 차이나 조직 내 불화의 문제가 아닙니다.\n상대방의 방향성이 잘못되었다고 느끼는 순간 권력이 한 사람에게 집중되는 것을 용납할 수 없게 되며, 결국 권력 집중과 개발 방식에 대한 불안이 맞물려 독자 노선으로 이어진다는 것입니다.\n\n“상대방의 방식이 틀렸으니 그 사람에게 힘이 집중되게 둘 수 없다”는 신념이 충돌하며, 초지능을 향한 기술 헤게모니 경쟁은 더욱 다변화되고 치열해지고 있습니다.",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPfXaziaDFITe70yz77xiBndRBEzjDjKMWdHON8Qx5h6w57dX9krq2oe2jpZahAtnUSqcfTjH8AtqSlIhRoPbiQFskaND3CmWj91Hg.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=3fp-87AEdYgQ7kNvwG79_Vo&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTUyOTA5MzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo1LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=7ba46e66007c60ab&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8xNEU5OTg4NjJBRDA0OUE1ODhDNkY4QTQwMUI5Nzg2RF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzcyRjA3NDA0MzU1MzQ1QzY4NTZENzc4QjlFOENFRTRDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA24O-5af3PxUCKAJDMywXQFPZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSjq4nWuT6M2HvOjLU2geUkmNmAXN1tIk2aT9DpoHl2aQ&oe=6AF4039C"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/DfhVeQekaeP",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T12:30:29Z",
+        "like_count": 25,
+        "reply_count": 1,
+        "repost_count": 0,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962330242Z"
+      }
+    },
+    {
+      "post_id": "4026548501344219166",
+      "published_at": "2026-11-09T11:00:07Z",
+      "text": "독일 연방 노동장관 알렉산더 슈바이처(Alexander Schweitzer)는 급격한 산업 전환기 속에서 “선형적인 직업 경로는 더 이상 존재하지 않는다”고 강조했습니다.\n\n과거처럼 하나의 전공과 직업을 평생 유지하는 것이 아니라, 완전히 다른 분야로 전환하는 것이 결코 비정상이 아닌 “새로운 표준(New Normal)”이 되었다는 진단입니다.\n\n특히 AI와 자동화로 인한 일자리 변화에 대응해 실업이라는 공백 없이 전환이 이뤄져야 한다고 역설했습니다.\n“실업이라는 중간 단계를 거치지 않고 현직(On the Job)에서 재교육과 역량 강화를 이뤄내야 합니다.”\n\n노동자가 시장에서 탈락하면 개인적 비극일 뿐 아니라 국가 경제에도 막대한 손실인 만큼, 기술 전환기 노동자를 끝까지 지켜내는 교육과 안전망 구축이 핵심 과제라고 짚었습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfhLIdFgPAe",
+      "media": [
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQOPLIkrfftJboQM9UspDhxY_MsMPBeZRt6p8_yA7PqfRi3cK9MLREPEC0h2Y-m54XMCjZDuKhGyzP3ZDEJXW2BWBwvhPcqs5amK3zo.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=mFj6SG1DNxoQ7kNvwEVOFfE&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU1MTE5NDMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTM5LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=7b1a29b8c49f079d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82QUI1ODcwOTJGRkE0Nzk5OUEwNkY4MjI3MEJEMDE2N192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I3QjRGRThGRkVDODQzMTVCNDA0MEZCNTNFN0Y3NTA3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAot2O1LT3PxUCKAJDMywXQGFnrhR64UgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQLk-YetAo-2gGLYR7zTf8zOKwuCFtPMmgk38m9HnWmWA&oe=6AF3EAC3"
+      ],
+      "engagement": {
+        "likes": 18,
+        "replies": 2,
+        "reposts": 1,
+        "quotes": 1
+      },
+      "raw": {
+        "id": "4026548501344219166",
+        "shortcode": "DfhLIdFgPAe",
+        "text": "독일 연방 노동장관 알렉산더 슈바이처(Alexander Schweitzer)는 급격한 산업 전환기 속에서 “선형적인 직업 경로는 더 이상 존재하지 않는다”고 강조했습니다.\n\n과거처럼 하나의 전공과 직업을 평생 유지하는 것이 아니라, 완전히 다른 분야로 전환하는 것이 결코 비정상이 아닌 “새로운 표준(New Normal)”이 되었다는 진단입니다.\n\n특히 AI와 자동화로 인한 일자리 변화에 대응해 실업이라는 공백 없이 전환이 이뤄져야 한다고 역설했습니다.\n“실업이라는 중간 단계를 거치지 않고 현직(On the Job)에서 재교육과 역량 강화를 이뤄내야 합니다.”\n\n노동자가 시장에서 탈락하면 개인적 비극일 뿐 아니라 국가 경제에도 막대한 손실인 만큼, 기술 전환기 노동자를 끝까지 지켜내는 교육과 안전망 구축이 핵심 과제라고 짚었습니다.",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQOPLIkrfftJboQM9UspDhxY_MsMPBeZRt6p8_yA7PqfRi3cK9MLREPEC0h2Y-m54XMCjZDuKhGyzP3ZDEJXW2BWBwvhPcqs5amK3zo.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=mFj6SG1DNxoQ7kNvwEVOFfE&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU1MTE5NDMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTM5LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=7b1a29b8c49f079d&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82QUI1ODcwOTJGRkE0Nzk5OUEwNkY4MjI3MEJEMDE2N192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I3QjRGRThGRkVDODQzMTVCNDA0MEZCNTNFN0Y3NTA3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAot2O1LT3PxUCKAJDMywXQGFnrhR64UgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQLk-YetAo-2gGLYR7zTf8zOKwuCFtPMmgk38m9HnWmWA&oe=6AF3EAC3"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/DfhLIdFgPAe",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T11:00:07Z",
+        "like_count": 18,
+        "reply_count": 2,
+        "repost_count": 1,
+        "quote_count": 1,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962343226Z"
+      }
+    },
+    {
+      "post_id": "4026503136088589136",
+      "published_at": "2026-11-09T09:29:59Z",
+      "text": "오픈AI의 그렉 브록만(Greg Brockman)은 AI 모델의 연산 효율과 경제성에 대해 강력한 확신을 밝혔습니다.\n\n그는 동일한 지능 수준을 유지하면서도 “해마다 비용을 10배, 때로는 100배 가까이 낮추는 놀라운 효율 개선”을 반복해 왔다고 설명했습니다.\n\n동시에 시장에서는 최고의 지능을 지닌 프론티어 모델에 자본이 집중되는 양극화가 뚜렷해지고 있다고 짚었습니다. \n가장 똑똑한 모델이 창출하는 경제적 가치가 워낙 막대하기 때문에, 기업 고객들은 프론티어 모델의 가격에 “때로는 비이성적일 정도로 둔감하다”는 분석입니다.\n\n“가장 뛰어난 모델만 달라”며 성능에 아낌없이 투자하는 최상위 수요와, 압도적인 효율로 토큰 비용을 낮춘 보급형 모델이 결합해 AI 생태계의 폭발적인 성장을 이끌고 있다는 평가입니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfhA0TZjoNQ",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMYgh0C4cMQVDTy-XP99c07Qa-LAAPicPBGXEVSclrF0D2_2TKSSMIBeClHoFYA4f3FXyMvDbsClu-JxDnx7HbI16fqxL_D9tozVsc.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=qnTDZOGFnqwQ7kNvwHE9P4-&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU1MDc4MDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=caa81a85d4db2673&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zOTY5QjNGQjAzMzc0OEM1OTU4MTg1RUE1RTk5NDlBNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YxNjU1MzIxNTBGNjQ3NUJBRjU5RTJGNTQ1MUMyQjUyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAzJ6otbT3PxUCKAJDMywXQFgAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQTAmWTNgnl19aUREyBdowaljMoLCGxTpj57HQsA-oYigw&oe=6AF3E526"
+      ],
+      "engagement": {
+        "likes": 9,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026503136088589136",
+        "shortcode": "DfhA0TZjoNQ",
+        "text": "오픈AI의 그렉 브록만(Greg Brockman)은 AI 모델의 연산 효율과 경제성에 대해 강력한 확신을 밝혔습니다.\n\n그는 동일한 지능 수준을 유지하면서도 “해마다 비용을 10배, 때로는 100배 가까이 낮추는 놀라운 효율 개선”을 반복해 왔다고 설명했습니다.\n\n동시에 시장에서는 최고의 지능을 지닌 프론티어 모델에 자본이 집중되는 양극화가 뚜렷해지고 있다고 짚었습니다. \n가장 똑똑한 모델이 창출하는 경제적 가치가 워낙 막대하기 때문에, 기업 고객들은 프론티어 모델의 가격에 “때로는 비이성적일 정도로 둔감하다”는 분석입니다.\n\n“가장 뛰어난 모델만 달라”며 성능에 아낌없이 투자하는 최상위 수요와, 압도적인 효율로 토큰 비용을 낮춘 보급형 모델이 결합해 AI 생태계의 폭발적인 성장을 이끌고 있다는 평가입니다.",
+        "media_type": "VIDEO",
+        "media_urls": [
+          "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMYgh0C4cMQVDTy-XP99c07Qa-LAAPicPBGXEVSclrF0D2_2TKSSMIBeClHoFYA4f3FXyMvDbsClu-JxDnx7HbI16fqxL_D9tozVsc.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=qnTDZOGFnqwQ7kNvwHE9P4-&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU1MDc4MDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjo0LCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=caa81a85d4db2673&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zOTY5QjNGQjAzMzc0OEM1OTU4MTg1RUE1RTk5NDlBNl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0YxNjU1MzIxNTBGNjQ3NUJBRjU5RTJGNTQ1MUMyQjUyX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAzJ6otbT3PxUCKAJDMywXQFgAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQTAmWTNgnl19aUREyBdowaljMoLCGxTpj57HQsA-oYigw&oe=6AF3E526"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/DfhA0TZjoNQ",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T09:29:59Z",
+        "like_count": 9,
+        "reply_count": 1,
+        "repost_count": 0,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962357613Z"
+      }
+    },
+    {
+      "post_id": "4026458818669912329",
+      "published_at": "2026-11-09T08:01:56Z",
+      "text": "\"중국이 재귀적 자기개선을 풀었다\"는 글이 주말 사이 커뮤니티에서 퍼졌습니다.\n\n텐센트 연구진이 27B 모델을 스스로 푼 기록으로 다시 학습시켜 터미널 작업 성공률을 20.68%에서 50.58%로 끌어올린 논문인데요.\n\n실제로 모델이 무엇을 스스로 했고, 무엇은 사람이 정했는지 정리했습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dfg2vZljyEJ",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/896222502_17996053605112832_4917996310191111737_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&_nc_map=urlgen_bucketless&ig_cache_key=NDAyNjQ1ODgxODY2OTkxMjMyOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQwNi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=ef5Sma9YX1kQ7kNvwGUFnma&_nc_oc=Adr9Q6HlNS3mZZcKJw0TgNlkji1tCBYqj5FBdurUpOZkGdW6KthcNN6Fi5Cb9guvM5s&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&oh=00_AQTAUTaWVkb9lGKeb_7u00DVCWCoRZUgX1Bs96ZnhJfbGw&oe=6AF7CFBE"
+      ],
+      "engagement": {
+        "likes": 86,
+        "replies": 9,
+        "reposts": 9,
+        "quotes": 0
+      },
+      "raw": {
+        "id": "4026458818669912329",
+        "shortcode": "Dfg2vZljyEJ",
+        "text": "\"중국이 재귀적 자기개선을 풀었다\"는 글이 주말 사이 커뮤니티에서 퍼졌습니다.\n\n텐센트 연구진이 27B 모델을 스스로 푼 기록으로 다시 학습시켜 터미널 작업 성공률을 20.68%에서 50.58%로 끌어올린 논문인데요.\n\n실제로 모델이 무엇을 스스로 했고, 무엇은 사람이 정했는지 정리했습니다 🧵",
+        "media_type": "IMAGE",
+        "media_urls": [
+          "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/896222502_17996053605112832_4917996310191111737_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&_nc_map=urlgen_bucketless&ig_cache_key=NDAyNjQ1ODgxODY2OTkxMjMyOQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQwNi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=ef5Sma9YX1kQ7kNvwGUFnma&_nc_oc=Adr9Q6HlNS3mZZcKJw0TgNlkji1tCBYqj5FBdurUpOZkGdW6KthcNN6Fi5Cb9guvM5s&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&oh=00_AQTAUTaWVkb9lGKeb_7u00DVCWCoRZUgX1Bs96ZnhJfbGw&oe=6AF7CFBE"
+        ],
+        "permalink": "https://www.threads.com/@choi.openai/post/Dfg2vZljyEJ",
+        "username": "choi.openai",
+        "user_id": "63452224831",
+        "timestamp": "2026-11-09T08:01:56Z",
+        "like_count": 86,
+        "reply_count": 9,
+        "repost_count": 9,
+        "quote_count": 0,
+        "has_media": true,
+        "fetched_at": "2026-11-09T18:40:06.962370328Z"
       }
     },
     {
@@ -47,9 +353,9 @@
       "permalink": "https://www.threads.com/@choi.openai/post/DfgscokD_bE",
       "media": null,
       "engagement": {
-        "likes": 17,
+        "likes": 37,
         "replies": 12,
-        "reposts": 3,
+        "reposts": 5,
         "quotes": 0
       },
       "raw": {
@@ -61,11 +367,11 @@
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-11-09T06:32:00Z",
-        "like_count": 17,
+        "like_count": 37,
         "reply_count": 12,
-        "repost_count": 3,
+        "repost_count": 5,
         "quote_count": 0,
-        "fetched_at": "2026-11-09T07:50:56.210939119Z"
+        "fetched_at": "2026-11-09T18:40:06.962400454Z"
       }
     },
     {
@@ -74,12 +380,12 @@
       "text": "🚨 Jev가 나온 지 두 달 만에, 누구나 받을 수 있는 오픈 모델이 Jev를 체스로 이겼습니다.\n\n홍콩대 연구진이 공개한 StartLux-Decision 27B는 Jev와 256판을 둬 58.4%를 기록했고, 판단 능력 점수표에서도 4B 모델부터 Jev를 앞섰습니다. 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DfgP7VNodcV",
       "media": [
-        "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQMKQCMhW0TCV2JgnWHQ6yGB82IXoL3hqbQTPhg_iGRIgR2FVGIhwJyG0B_7tKcroEHQ2S1jucknDNDDktuOssM3mPrgXzg1xEWGuUQ.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=HNlK3SR_iPwQ7kNvwEHbs1J&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYwMjU4NDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=886f0ce47a537dd1&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQ0JEREExQzM5N0E0RkMxQUEzRjg1MEUyMkVEQ0VBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgKTXgcnS9z8VAigCQzMsF0BD0AAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRsVuMdTkbTdbVvesfP1czlvlYARTO6dtQxkMYWeVAbHQ&oe=6AF36B43"
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMKQCMhW0TCV2JgnWHQ6yGB82IXoL3hqbQTPhg_iGRIgR2FVGIhwJyG0B_7tKcroEHQ2S1jucknDNDDktuOssM3mPrgXzg1xEWGuUQ.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=98VdVTAvuUgQ7kNvwHJyc4Z&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYwMjU4NDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=886f0ce47a537dd1&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQ0JEREExQzM5N0E0RkMxQUEzRjg1MEUyMkVEQ0VBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgKTXgcnS9z8VAigCQzMsF0BD0AAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQR3QLxRgmPt5xtbHOHMH52Nszf6vW0cCNJpTpFR6r9HIQ&oe=6AF3DBC3"
       ],
       "engagement": {
-        "likes": 58,
+        "likes": 94,
         "replies": 10,
-        "reposts": 8,
+        "reposts": 12,
         "quotes": 0
       },
       "raw": {
@@ -88,18 +394,18 @@
         "text": "🚨 Jev가 나온 지 두 달 만에, 누구나 받을 수 있는 오픈 모델이 Jev를 체스로 이겼습니다.\n\n홍콩대 연구진이 공개한 StartLux-Decision 27B는 Jev와 256판을 둬 58.4%를 기록했고, 판단 능력 점수표에서도 4B 모델부터 Jev를 앞섰습니다. 🧵",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQMKQCMhW0TCV2JgnWHQ6yGB82IXoL3hqbQTPhg_iGRIgR2FVGIhwJyG0B_7tKcroEHQ2S1jucknDNDDktuOssM3mPrgXzg1xEWGuUQ.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=HNlK3SR_iPwQ7kNvwEHbs1J&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYwMjU4NDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=886f0ce47a537dd1&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQ0JEREExQzM5N0E0RkMxQUEzRjg1MEUyMkVEQ0VBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgKTXgcnS9z8VAigCQzMsF0BD0AAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRsVuMdTkbTdbVvesfP1czlvlYARTO6dtQxkMYWeVAbHQ&oe=6AF36B43"
+          "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMKQCMhW0TCV2JgnWHQ6yGB82IXoL3hqbQTPhg_iGRIgR2FVGIhwJyG0B_7tKcroEHQ2S1jucknDNDDktuOssM3mPrgXzg1xEWGuUQ.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=98VdVTAvuUgQ7kNvwHJyc4Z&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTYwMjU4NDkxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=886f0ce47a537dd1&_nc_vs=HBkcFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GQ0JEREExQzM5N0E0RkMxQUEzRjg1MEUyMkVEQ0VBMl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmgKTXgcnS9z8VAigCQzMsF0BD0AAAAAAAGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHXqB2XongEA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQR3QLxRgmPt5xtbHOHMH52Nszf6vW0cCNJpTpFR6r9HIQ&oe=6AF3DBC3"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/DfgP7VNodcV",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-11-09T05:00:10Z",
-        "like_count": 58,
+        "like_count": 94,
         "reply_count": 10,
-        "repost_count": 8,
+        "repost_count": 12,
         "quote_count": 0,
         "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.210966841Z"
+        "fetched_at": "2026-11-09T18:40:06.962430891Z"
       }
     },
     {
@@ -108,12 +414,12 @@
       "text": "AI가 작성한 개발 설계서를 다른 AI가 검토하는 오픈소스 플러그인이 공개됐습니다.\n\n구글의 Elephant-Goldfish Model인데요.\n\nElephant는 프로젝트의 전체 맥락을 파악해 설계서를 작성하고, Goldfish는 이전 대화 내용을 전달받지 않은 상태에서 설계서의 문제점과 빠진 내용을 검토합니다.\n\n개발자는 검토 결과를 확인하고 설계를 승인한 뒤 코딩을 진행합니다.\n\nAntigravity, Claude, Codex, ChatGPT에서 활용할 수 있습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfgXo3cD92v",
       "media": [
-        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQN4--huVOZtXa46AQ1iKSmctmJPODFSrgZkbZU39ojpdDQavXQcoQzRON6xrt3nZIn8Q4x9JX0ukapMhq9lwDtT7rzWw797JkYIPrM.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=h1h8B1dAtgwQ7kNvwFmYgKE&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTE5NjUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=92317bd8a1754f05&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QTc5MDU5MTVENDM0RDcxOEQ2RUYxNTNEQkNFRjk5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGODhGNEJCOUQ0RDRDOEQ5RjI1OEU1M0QxRTcwMjA4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAqLTEos73PxUCKAJDMywXQFB90vGp--cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQSseRb2080Wi_W-2wWmNJkjG7bMWjApDdZj43_NS-Lv9Q&oe=6AF36C24"
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQN4--huVOZtXa46AQ1iKSmctmJPODFSrgZkbZU39ojpdDQavXQcoQzRON6xrt3nZIn8Q4x9JX0ukapMhq9lwDtT7rzWw797JkYIPrM.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=h1h8B1dAtgwQ7kNvwEx_6xD&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTE5NjUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=92317bd8a1754f05&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QTc5MDU5MTVENDM0RDcxOEQ2RUYxNTNEQkNFRjk5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGODhGNEJCOUQ0RDRDOEQ5RjI1OEU1M0QxRTcwMjA4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAqLTEos73PxUCKAJDMywXQFB90vGp--cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSwOY8H3SE8Dk5flsuqXeQP7Fe0aEVAUVPqfQZFi-9y8Q&oe=6AF3DCA4"
       ],
       "engagement": {
-        "likes": 65,
+        "likes": 93,
         "replies": 4,
-        "reposts": 16,
+        "reposts": 22,
         "quotes": 1
       },
       "raw": {
@@ -122,18 +428,18 @@
         "text": "AI가 작성한 개발 설계서를 다른 AI가 검토하는 오픈소스 플러그인이 공개됐습니다.\n\n구글의 Elephant-Goldfish Model인데요.\n\nElephant는 프로젝트의 전체 맥락을 파악해 설계서를 작성하고, Goldfish는 이전 대화 내용을 전달받지 않은 상태에서 설계서의 문제점과 빠진 내용을 검토합니다.\n\n개발자는 검토 결과를 확인하고 설계를 승인한 뒤 코딩을 진행합니다.\n\nAntigravity, Claude, Codex, ChatGPT에서 활용할 수 있습니다.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQN4--huVOZtXa46AQ1iKSmctmJPODFSrgZkbZU39ojpdDQavXQcoQzRON6xrt3nZIn8Q4x9JX0ukapMhq9lwDtT7rzWw797JkYIPrM.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=h1h8B1dAtgwQ7kNvwFmYgKE&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTE5NjUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=92317bd8a1754f05&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QTc5MDU5MTVENDM0RDcxOEQ2RUYxNTNEQkNFRjk5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGODhGNEJCOUQ0RDRDOEQ5RjI1OEU1M0QxRTcwMjA4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAqLTEos73PxUCKAJDMywXQFB90vGp--cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQSseRb2080Wi_W-2wWmNJkjG7bMWjApDdZj43_NS-Lv9Q&oe=6AF36C24"
+          "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQN4--huVOZtXa46AQ1iKSmctmJPODFSrgZkbZU39ojpdDQavXQcoQzRON6xrt3nZIn8Q4x9JX0ukapMhq9lwDtT7rzWw797JkYIPrM.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=h1h8B1dAtgwQ7kNvwEx_6xD&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTE5NjUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=92317bd8a1754f05&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83QTc5MDU5MTVENDM0RDcxOEQ2RUYxNTNEQkNFRjk5Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGODhGNEJCOUQ0RDRDOEQ5RjI1OEU1M0QxRTcwMjA4X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAqLTEos73PxUCKAJDMywXQFB90vGp--cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSwOY8H3SE8Dk5flsuqXeQP7Fe0aEVAUVPqfQZFi-9y8Q&oe=6AF3DCA4"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/DfgXo3cD92v",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-11-09T03:30:10Z",
-        "like_count": 65,
+        "like_count": 93,
         "reply_count": 4,
-        "repost_count": 16,
+        "repost_count": 22,
         "quote_count": 1,
         "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.210990856Z"
+        "fetched_at": "2026-11-09T18:40:06.962463833Z"
       }
     },
     {
@@ -143,9 +449,9 @@
       "permalink": "https://www.threads.com/@choi.openai/post/DfgOkChj4Ot",
       "media": null,
       "engagement": {
-        "likes": 84,
+        "likes": 109,
         "replies": 34,
-        "reposts": 8,
+        "reposts": 11,
         "quotes": 1
       },
       "raw": {
@@ -157,11 +463,11 @@
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-11-09T02:10:52Z",
-        "like_count": 84,
+        "like_count": 109,
         "reply_count": 34,
-        "repost_count": 8,
+        "repost_count": 11,
         "quote_count": 1,
-        "fetched_at": "2026-11-09T07:50:56.21100002Z"
+        "fetched_at": "2026-11-09T18:40:06.962476477Z"
       }
     },
     {
@@ -170,10 +476,10 @@
       "text": "Claude가 로봇팔을 움직여 수채화를 완성한 사례가 공개됐습니다.\n\n개발자 nil이 잠들기 전 Claude에게 가을 나무를 그려달라고 요청했는데요.\n\n그림을 그리던 중 필요한 색이 없자, Claude가 빨간색과 갈색 계열 물감을 직접 희석하고 사진으로 색을 확인하며 새로운 색을 만들었다고 합니다.\n\n사용된 로봇팔은 xArm 7이며, 총 303번의 붓질로 약 4시간 30분 만에 그림을 완성했습니다.\n\n얀 르쿤은 LLM만으로 공간지능을 구현하기 어렵다고 주장하지만, 모델 규모가 커지면서 나타나는 능력들을 보면 신기합니다.\n\n물론 로봇 제어에 필요한 컴퓨팅 비용과 전용 모델 대비 가성비는 따져봐야겠죠.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dffx6f5gLRh",
       "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMa8eMLgEwhxAkFp4o8tJS1dfXY8_yA4XoEphGPfYI4VEI9QghxZ0B3DuBgpFpSzfWZz5qmX1ePYeHFr9JFij731e5AbAiykAfew6Q.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=XKVZqWwd75AQ7kNvwENE9-N&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy44MDguZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5NTk1MzMzOTExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoyNCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=6d2d43c73498c3e2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zQkUwNDNBM0Y5OEI0OEFDQURBRDBEQTMwOUY5QkZFNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJFQUM2OUNFQ0U4RDQxOEI4Qjk5QTEzQkRDQzBCODEzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9uDirM73PxUCKAJDMywXQDf3S8an754YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRcPTPN0Kp5mRCfG5FgmmSckWvc95TWuRXFVFO2SA-1AQ&oe=6AF357CD"
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMa8eMLgEwhxAkFp4o8tJS1dfXY8_yA4XoEphGPfYI4VEI9QghxZ0B3DuBgpFpSzfWZz5qmX1ePYeHFr9JFij731e5AbAiykAfew6Q.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=XKVZqWwd75AQ7kNvwEK-Ylv&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy44MDguZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5NTk1MzMzOTExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjEsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoyNCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=6d2d43c73498c3e2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zQkUwNDNBM0Y5OEI0OEFDQURBRDBEQTMwOUY5QkZFNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJFQUM2OUNFQ0U4RDQxOEI4Qjk5QTEzQkRDQzBCODEzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9uDirM73PxUCKAJDMywXQDf3S8an754YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQWrDFkQtI42oXGdLg6drM9w3tYEHkODIfplThxeGBzMQ&oe=6AF4008D"
       ],
       "engagement": {
-        "likes": 32,
+        "likes": 43,
         "replies": 3,
         "reposts": 2,
         "quotes": 1
@@ -184,330 +490,30 @@
         "text": "Claude가 로봇팔을 움직여 수채화를 완성한 사례가 공개됐습니다.\n\n개발자 nil이 잠들기 전 Claude에게 가을 나무를 그려달라고 요청했는데요.\n\n그림을 그리던 중 필요한 색이 없자, Claude가 빨간색과 갈색 계열 물감을 직접 희석하고 사진으로 색을 확인하며 새로운 색을 만들었다고 합니다.\n\n사용된 로봇팔은 xArm 7이며, 총 303번의 붓질로 약 4시간 30분 만에 그림을 완성했습니다.\n\n얀 르쿤은 LLM만으로 공간지능을 구현하기 어렵다고 주장하지만, 모델 규모가 커지면서 나타나는 능력들을 보면 신기합니다.\n\n물론 로봇 제어에 필요한 컴퓨팅 비용과 전용 모델 대비 가성비는 따져봐야겠죠.",
         "media_type": "VIDEO",
         "media_urls": [
-          "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMa8eMLgEwhxAkFp4o8tJS1dfXY8_yA4XoEphGPfYI4VEI9QghxZ0B3DuBgpFpSzfWZz5qmX1ePYeHFr9JFij731e5AbAiykAfew6Q.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=XKVZqWwd75AQ7kNvwENE9-N&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy44MDguZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5NTk1MzMzOTExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoyNCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=6d2d43c73498c3e2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zQkUwNDNBM0Y5OEI0OEFDQURBRDBEQTMwOUY5QkZFNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJFQUM2OUNFQ0U4RDQxOEI4Qjk5QTEzQkRDQzBCODEzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9uDirM73PxUCKAJDMywXQDf3S8an754YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRcPTPN0Kp5mRCfG5FgmmSckWvc95TWuRXFVFO2SA-1AQ&oe=6AF357CD"
+          "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMa8eMLgEwhxAkFp4o8tJS1dfXY8_yA4XoEphGPfYI4VEI9QghxZ0B3DuBgpFpSzfWZz5qmX1ePYeHFr9JFij731e5AbAiykAfew6Q.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=XKVZqWwd75AQ7kNvwEK-Ylv&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy44MDguZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5NTk1MzMzOTExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjEsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjoyNCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=6d2d43c73498c3e2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8zQkUwNDNBM0Y5OEI0OEFDQURBRDBEQTMwOUY5QkZFNF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJFQUM2OUNFQ0U4RDQxOEI4Qjk5QTEzQkRDQzBCODEzX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA9uDirM73PxUCKAJDMywXQDf3S8an754YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=cCL5vVmM84RKR4ufNuQzhA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQWrDFkQtI42oXGdLg6drM9w3tYEHkODIfplThxeGBzMQ&oe=6AF4008D"
         ],
         "permalink": "https://www.threads.com/@choi.openai/post/Dffx6f5gLRh",
         "username": "choi.openai",
         "user_id": "63452224831",
         "timestamp": "2026-11-08T22:00:31Z",
-        "like_count": 32,
+        "like_count": 43,
         "reply_count": 3,
         "repost_count": 2,
         "quote_count": 1,
         "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211115172Z"
-      }
-    },
-    {
-      "post_id": "4026155837055537066",
-      "published_at": "2026-11-08T21:59:58Z",
-      "text": "와.. 미친.. 진짜 Meta가 캐릭터 챗봇 시장을 다 가져갈 수도 있겠네요.\n\nMeta의 Muse Realtime Avatar를 사용해보니 진짜 전 세계로 출시했을때 파급력이 얼마나 클지 상상이 안갑니다.\n\nAI 캐릭터와 영상통화하듯 대화할 수 있는데, 말하는 내용에 맞춰 표정과 몸짓까지 실시간으로 반응합니다.\n사람이나 동물 등 원하는 캐릭터로 꾸미고 목소리도 선택할 수 있는데요.\n\n캐릭터 챗봇 시장에서 중요한 건 몰입감과 커스터마이징이라고 생각합니다.\n\n직접 만든 캐릭터가 표정까지 지으며 대화한다면, 텍스트 챗봇과는 체감이 상당히 다를 것 같습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dffx2b-D4-q",
-      "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMIIUGCcCJKkGfOvJXbWdSdrSMPLetYLOJ1P4Hs5pk3VvaoY-hkZtkZqz_33Mge6LXujs8hwAV5RYFHKcO8X4xyIgBwDNa56ZlTtVU.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=DDq2ZiTsTqkQ7kNvwEIVVli&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMTMyLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTIyOTIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=9af35715e0483d06&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83N0FFOTcxNDNGNkU0REIxOEYzMkQ5Mjc2NDg0MkU1RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzMxQTIwNDM0RjcyNzQ2QTVBQ0U2N0VDMTc1MDkxQTgwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAp6H8pM73PxUCKAJDMywXQERu2RaHKwIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRvl7h4JDxrwmWhXU9cLzoB7FtMyS_hqAiPy6RZCGIiXw&oe=6AF34FDE"
-      ],
-      "engagement": {
-        "likes": 239,
-        "replies": 29,
-        "reposts": 28,
-        "quotes": 2
-      },
-      "raw": {
-        "id": "4026155837055537066",
-        "shortcode": "Dffx2b-D4-q",
-        "text": "와.. 미친.. 진짜 Meta가 캐릭터 챗봇 시장을 다 가져갈 수도 있겠네요.\n\nMeta의 Muse Realtime Avatar를 사용해보니 진짜 전 세계로 출시했을때 파급력이 얼마나 클지 상상이 안갑니다.\n\nAI 캐릭터와 영상통화하듯 대화할 수 있는데, 말하는 내용에 맞춰 표정과 몸짓까지 실시간으로 반응합니다.\n사람이나 동물 등 원하는 캐릭터로 꾸미고 목소리도 선택할 수 있는데요.\n\n캐릭터 챗봇 시장에서 중요한 건 몰입감과 커스터마이징이라고 생각합니다.\n\n직접 만든 캐릭터가 표정까지 지으며 대화한다면, 텍스트 챗봇과는 체감이 상당히 다를 것 같습니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQMIIUGCcCJKkGfOvJXbWdSdrSMPLetYLOJ1P4Hs5pk3VvaoY-hkZtkZqz_33Mge6LXujs8hwAV5RYFHKcO8X4xyIgBwDNa56ZlTtVU.mp4?_nc_cat=102&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=DDq2ZiTsTqkQ7kNvwEIVVli&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMTMyLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTIyOTIxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NDAsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=9af35715e0483d06&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC83N0FFOTcxNDNGNkU0REIxOEYzMkQ5Mjc2NDg0MkU1RV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzMxQTIwNDM0RjcyNzQ2QTVBQ0U2N0VDMTc1MDkxQTgwX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAp6H8pM73PxUCKAJDMywXQERu2RaHKwIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRvl7h4JDxrwmWhXU9cLzoB7FtMyS_hqAiPy6RZCGIiXw&oe=6AF34FDE"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/Dffx2b-D4-q",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T21:59:58Z",
-        "like_count": 239,
-        "reply_count": 29,
-        "repost_count": 28,
-        "quote_count": 2,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211127079Z"
-      }
-    },
-    {
-      "post_id": "4026035442796785555",
-      "published_at": "2026-11-08T18:00:46Z",
-      "text": "AI 캐릭터와 대화하는 방식도 빠르게 달라지고 있습니다.\n\nShizuku AI가 캐릭터 전용 음성 모델 Shizuku-Duplex를 발표했는데요.\n\n상대방이 말하는 중에도 듣고 반응하며, 언제 말하고 기다릴지 스스로 판단합니다.\n\n대화하면서 필요한 정보를 검색할 수 있고, 긴 대화도 이어갈 수 있도록 설계됐습니다.\n\n특히 음성에 맞춰 캐릭터의 표정과 움직임까지 제어할 수 있다는 점이 눈에 띕니다.\n\n캐릭터 챗봇의 몰입감을 높이는 데 중요한 기술이 될 것 같습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DffWeeFCO-T",
-      "media": [
-        "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMNVdUHpzU6Ss3RSpDa8kpMYDDh525fGjy_eTJe1Xe09ToL2qNp6BCi9LOTeSBbY6rN4-osC9A1DRnjA7L9qb8XJzlcHVmPAcBdqyA.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=9B-3p90HtPwQ7kNvwGmGnns&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTMyNjExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTI0LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=ceef7555d2c0e08a&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNTAyMEJBNkU0MEI0RDAyQkExM0IzM0MyNTIyQjA4Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQ5RkJBMzVERDIxRDRGMTY5RjlGQ0QwMUIyNjFBNDMxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAuK-YrM73PxUCKAJDMywXQF8qn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQQj2d9RVSw-pHcYvMExsjfIn-bhltoYXzyzHuSwg8rLig&oe=6AF33D90"
-      ],
-      "engagement": {
-        "likes": 74,
-        "replies": 7,
-        "reposts": 11,
-        "quotes": 1
-      },
-      "raw": {
-        "id": "4026035442796785555",
-        "shortcode": "DffWeeFCO-T",
-        "text": "AI 캐릭터와 대화하는 방식도 빠르게 달라지고 있습니다.\n\nShizuku AI가 캐릭터 전용 음성 모델 Shizuku-Duplex를 발표했는데요.\n\n상대방이 말하는 중에도 듣고 반응하며, 언제 말하고 기다릴지 스스로 판단합니다.\n\n대화하면서 필요한 정보를 검색할 수 있고, 긴 대화도 이어갈 수 있도록 설계됐습니다.\n\n특히 음성에 맞춰 캐릭터의 표정과 움직임까지 제어할 수 있다는 점이 눈에 띕니다.\n\n캐릭터 챗봇의 몰입감을 높이는 데 중요한 기술이 될 것 같습니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-dfw5-2.cdninstagram.com/o1/v/t16/f2/m84/AQMNVdUHpzU6Ss3RSpDa8kpMYDDh525fGjy_eTJe1Xe09ToL2qNp6BCi9LOTeSBbY6rN4-osC9A1DRnjA7L9qb8XJzlcHVmPAcBdqyA.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_ohc=9B-3p90HtPwQ7kNvwGmGnns&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTMyNjExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTI0LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=ceef7555d2c0e08a&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GNTAyMEJBNkU0MEI0RDAyQkExM0IzM0MyNTIyQjA4Nl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzQ5RkJBMzVERDIxRDRGMTY5RjlGQ0QwMUIyNjFBNDMxX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAuK-YrM73PxUCKAJDMywXQF8qn752yLQYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQQj2d9RVSw-pHcYvMExsjfIn-bhltoYXzyzHuSwg8rLig&oe=6AF33D90"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/DffWeeFCO-T",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T18:00:46Z",
-        "like_count": 74,
-        "reply_count": 7,
-        "repost_count": 11,
-        "quote_count": 1,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211132668Z"
-      }
-    },
-    {
-      "post_id": "4025974847209279788",
-      "published_at": "2026-11-08T16:00:23Z",
-      "text": "중국 AI 모델의 정치적 답변 성향을 미세 조정으로 바꾼 사례가 공개됐습니다.\n\nNous Research가 Qwen3.8-27B를 기반으로 Arete-27B를 발표했는데요.\n\n표현의 자유, 민주주의, 개인정보 보호 등 7개 분야에서 약 5,300만 토큰을 추가 학습시켰습니다.\n\n자체 평가에서 중국 정부의 공식 입장을 따르는 답변 비율이 22%에서 약 1%로 감소했고, 일반 성능은 거의 유지됐다고 합니다.\n\nAI 모델의 정치적 성향도 비교적 적은 추가 학습으로 크게 달라질 수 있다는 점을 보여줍니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DffIssCkREs",
-      "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPIi8YOtxnXvKwCGgvsfY_NEw46Xh8joYB1FOnRqyCxh8BIh1wf77eyEN8p-HcIheXuGOmKsyhRMf4rDs9eZy7UJ8rveGoC_j_S99s.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=NYKuvR6deIwQ7kNvwFzw4fa&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMDc2LmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTk2MTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1a5bba41eb9daa66&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DNTc0NDJCM0U4NEY0NjlCOEI4RkQ2QjY5Njc5NUIyOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzMzOTM3NEFBODBENjQ5OTBBQjNEQjc4MjQ4OTQ5OTE1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAmoLE2873PxUCKAJDMywXQDrqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQTTh31OzWn4tEiUmemxApKNvqNbFMkviEeBe0wbArCL5A&oe=6AF35E23"
-      ],
-      "engagement": {
-        "likes": 35,
-        "replies": 1,
-        "reposts": 2,
-        "quotes": 1
-      },
-      "raw": {
-        "id": "4025974847209279788",
-        "shortcode": "DffIssCkREs",
-        "text": "중국 AI 모델의 정치적 답변 성향을 미세 조정으로 바꾼 사례가 공개됐습니다.\n\nNous Research가 Qwen3.8-27B를 기반으로 Arete-27B를 발표했는데요.\n\n표현의 자유, 민주주의, 개인정보 보호 등 7개 분야에서 약 5,300만 토큰을 추가 학습시켰습니다.\n\n자체 평가에서 중국 정부의 공식 입장을 따르는 답변 비율이 22%에서 약 1%로 감소했고, 일반 성능은 거의 유지됐다고 합니다.\n\nAI 모델의 정치적 성향도 비교적 적은 추가 학습으로 크게 달라질 수 있다는 점을 보여줍니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-dfw6-1.cdninstagram.com/o1/v/t16/f2/m84/AQPIi8YOtxnXvKwCGgvsfY_NEw46Xh8joYB1FOnRqyCxh8BIh1wf77eyEN8p-HcIheXuGOmKsyhRMf4rDs9eZy7UJ8rveGoC_j_S99s.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_ohc=NYKuvR6deIwQ7kNvwFzw4fa&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMDc2LmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU5NTk2MTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjcsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1a5bba41eb9daa66&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DNTc0NDJCM0U4NEY0NjlCOEI4RkQ2QjY5Njc5NUIyOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzMzOTM3NEFBODBENjQ5OTBBQjNEQjc4MjQ4OTQ5OTE1X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAmoLE2873PxUCKAJDMywXQDrqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQTTh31OzWn4tEiUmemxApKNvqNbFMkviEeBe0wbArCL5A&oe=6AF35E23"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/DffIssCkREs",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T16:00:23Z",
-        "like_count": 35,
-        "reply_count": 1,
-        "repost_count": 2,
-        "quote_count": 1,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211142953Z"
-      }
-    },
-    {
-      "post_id": "4025839191547954783",
-      "published_at": "2026-11-08T11:30:51Z",
-      "text": "용량이 22MB에 불과한 이미지 분석 AI가 공개됐습니다.\n\nCactus Compute가 발표한 Mirage인데요.\n\n사진 속 사물을 찾고, 글자를 읽고, 물체의 위치 관계까지 한 번에 분석합니다.\n\n개발사에 따르면 Galaxy S26에서 이미지 한 장을 분석하는 데 NPU 기준 74ms, CPU 기준 107ms가 걸립니다.\n\n분석 결과를 Qwen3-0.6B에 전달했더니 이미지 관련 질문의 정답률도 9.3%에서 31.3%로 높아졌다고 합니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/Dfep2o3D8Zf",
-      "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/893458511_17995880919112832_9035480991581767840_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=NDAyNTgzOTE5MTU0Nzk1NDc4Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=GiPsjAFBjH0Q7kNvwH-Wv7k&_nc_oc=Adr7HipN2zX55EotVhfJEBL-aCDXZXcNk2mPhSfBDM6YMOq_7kVYyL7ljPd6nq_MexY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&oh=00_AQQkuWxEEgjMMh7o5T9oHeJ3LquSzLaK2j25o77KSEg2Jg&oe=6AF743F4"
-      ],
-      "engagement": {
-        "likes": 156,
-        "replies": 2,
-        "reposts": 25,
-        "quotes": 2
-      },
-      "raw": {
-        "id": "4025839191547954783",
-        "shortcode": "Dfep2o3D8Zf",
-        "text": "용량이 22MB에 불과한 이미지 분석 AI가 공개됐습니다.\n\nCactus Compute가 발표한 Mirage인데요.\n\n사진 속 사물을 찾고, 글자를 읽고, 물체의 위치 관계까지 한 번에 분석합니다.\n\n개발사에 따르면 Galaxy S26에서 이미지 한 장을 분석하는 데 NPU 기준 74ms, CPU 기준 107ms가 걸립니다.\n\n분석 결과를 Qwen3-0.6B에 전달했더니 이미지 관련 질문의 정답률도 9.3%에서 31.3%로 높아졌다고 합니다.",
-        "media_type": "IMAGE",
-        "media_urls": [
-          "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/893458511_17995880919112832_9035480991581767840_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=NDAyNTgzOTE5MTU0Nzk1NDc4Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=GiPsjAFBjH0Q7kNvwH-Wv7k&_nc_oc=Adr7HipN2zX55EotVhfJEBL-aCDXZXcNk2mPhSfBDM6YMOq_7kVYyL7ljPd6nq_MexY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&oh=00_AQQkuWxEEgjMMh7o5T9oHeJ3LquSzLaK2j25o77KSEg2Jg&oe=6AF743F4"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/Dfep2o3D8Zf",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T11:30:51Z",
-        "like_count": 156,
-        "reply_count": 2,
-        "repost_count": 25,
-        "quote_count": 2,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211153228Z"
-      }
-    },
-    {
-      "post_id": "4025793458484392459",
-      "published_at": "2026-11-08T09:59:59Z",
-      "text": "AI가 말하는 도중에도 사용자의 말을 듣고, 다른 작업까지 처리하는 음성 AI가 공개됐습니다.\n\nMOSS가 발표한 MOSS-Live인데요.\n\n대화 중 끼어들면 말을 멈추고, 잠시 생각하는 침묵이나 다른 사람과의 대화는 구분합니다.\n\n예를 들어 여행 계획을 설명하면서 호텔을 검색하고, 중간에 질문을 받아도 끊겼던 설명을 이어갈 수 있습니다.\n\n화면 공유와 실시간 영상 인식, 동시통역도 지원합니다.\n\n대화 담당 AI와 작업 담당 AI가 정보를 공유하며 동시에 작동하는 방식입니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DfefdIoDbIL",
-      "media": [
-        "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQNoNdMURZEVMpEXPOQeh0Eq9i9s-Ge6acpNF7_F-aDwtZCrr4ufbKBVju29ZcPfKkhOHpTXMXrKG-OwR6S4cFfyTyfcCJ-dQgySOys.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=2j1BBFRUaaIQ7kNvwHmByak&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU4ODA2MzQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=6d50b1b7446bd2bd&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNkFBRDczQkVERDg0NzhFODBENDEyQTc0OEExQzQ1NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ZCMDJDOUNFQzk3MzRGOTI4QzM4NUI0MzRGQkQ4QUFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA7e6Jj8r3PxUCKAJDMywXQFi3bItDlYEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRywBPQt2KY2sKJzc637XN_svcoZAw4k2Mic_tDHFnvlQ&oe=6AF34937"
-      ],
-      "engagement": {
-        "likes": 31,
-        "replies": 1,
-        "reposts": 1,
-        "quotes": 1
-      },
-      "raw": {
-        "id": "4025793458484392459",
-        "shortcode": "DfefdIoDbIL",
-        "text": "AI가 말하는 도중에도 사용자의 말을 듣고, 다른 작업까지 처리하는 음성 AI가 공개됐습니다.\n\nMOSS가 발표한 MOSS-Live인데요.\n\n대화 중 끼어들면 말을 멈추고, 잠시 생각하는 침묵이나 다른 사람과의 대화는 구분합니다.\n\n예를 들어 여행 계획을 설명하면서 호텔을 검색하고, 중간에 질문을 받아도 끊겼던 설명을 이어갈 수 있습니다.\n\n화면 공유와 실시간 영상 인식, 동시통역도 지원합니다.\n\n대화 담당 AI와 작업 담당 AI가 정보를 공유하며 동시에 작동하는 방식입니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-dfw5-1.cdninstagram.com/o1/v/t16/f2/m84/AQNoNdMURZEVMpEXPOQeh0Eq9i9s-Ge6acpNF7_F-aDwtZCrr4ufbKBVju29ZcPfKkhOHpTXMXrKG-OwR6S4cFfyTyfcCJ-dQgySOys.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_ohc=2j1BBFRUaaIQ7kNvwHmByak&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU4ODA2MzQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=6d50b1b7446bd2bd&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yNkFBRDczQkVERDg0NzhFODBENDEyQTc0OEExQzQ1NV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ZCMDJDOUNFQzk3MzRGOTI4QzM4NUI0MzRGQkQ4QUFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA7e6Jj8r3PxUCKAJDMywXQFi3bItDlYEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQRywBPQt2KY2sKJzc637XN_svcoZAw4k2Mic_tDHFnvlQ&oe=6AF34937"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/DfefdIoDbIL",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T09:59:59Z",
-        "like_count": 31,
-        "reply_count": 1,
-        "repost_count": 1,
-        "quote_count": 1,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211163403Z"
-      }
-    },
-    {
-      "post_id": "4025763468774724487",
-      "published_at": "2026-11-08T09:00:24Z",
-      "text": "와.. 진짜 거의 다 왔습니다.\n\n최근 Claude에서 Fable 5.5로 연결되는 A/B 테스트가 포착됐는데, 결과물이 미쳤습니다.\n\n이미지·영상 생성 AI 없이 코드만으로 92초짜리 애니메이션을 만들고, 8개 AI 에이전트 팀이 협업해 83초짜리 영화까지 제작했습니다.\n\n애니메이션 제작 방식이 바뀌고 있습니다.\n\n놀라운 사례 12가지를 정리했습니다🧵",
-      "permalink": "https://www.threads.com/@choi.openai/post/DfeYouiD9OH",
-      "media": null,
-      "engagement": {
-        "likes": 426,
-        "replies": 30,
-        "reposts": 88,
-        "quotes": 3
-      },
-      "raw": {
-        "id": "4025763468774724487",
-        "shortcode": "DfeYouiD9OH",
-        "text": "와.. 진짜 거의 다 왔습니다.\n\n최근 Claude에서 Fable 5.5로 연결되는 A/B 테스트가 포착됐는데, 결과물이 미쳤습니다.\n\n이미지·영상 생성 AI 없이 코드만으로 92초짜리 애니메이션을 만들고, 8개 AI 에이전트 팀이 협업해 83초짜리 영화까지 제작했습니다.\n\n애니메이션 제작 방식이 바뀌고 있습니다.\n\n놀라운 사례 12가지를 정리했습니다🧵",
-        "media_type": "TEXT_POST",
-        "permalink": "https://www.threads.com/@choi.openai/post/DfeYouiD9OH",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T09:00:24Z",
-        "like_count": 426,
-        "reply_count": 30,
-        "repost_count": 88,
-        "quote_count": 3,
-        "fetched_at": "2026-11-09T07:50:56.211175301Z"
-      }
-    },
-    {
-      "post_id": "4025733412198896672",
-      "published_at": "2026-11-08T08:00:41Z",
-      "text": "컴퓨터에서 AI 모델을 실행하는 속도가 최대 3배가량 빨라졌습니다.\n\n무료 오픈소스 프로그램 Strata가 0.2.12 버전으로 업데이트됐는데요.\n\nRTX 3060 12GB에서 Qwen3.8-Flash-Next의 프롬프트 처리 속도가 초당 87토큰에서 264토큰으로 증가했습니다.\n\nAMD Strix Halo에서는 최대 2.14배, Mac M5 Max에서는 답변 생성 속도가 약 10~13% 개선됐습니다.\n\n메모리 관리와 도구 호출 오류도 수정됐으며, 성능 향상 폭은 하드웨어와 작업에 따라 다릅니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DfeRzWKiVQg",
-      "media": [
-        "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/890606810_17995880481112832_3310400469388594044_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=NDAyNTczMzQxMjE5ODg5NjY3Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=uk6uC0MceqUQ7kNvwF7OywO&_nc_oc=AdpmhwPCRQkvwkgNITqh5gNKl6mwrFI3xeJZX1dvjNrrOtcC1WEOE_QGgIPmP15dYf4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&oh=00_AQT4ifWjzyM3L9sd5j9f2fvML-UiiS8OlzegpXMeauF3nA&oe=6AF73716"
-      ],
-      "engagement": {
-        "likes": 157,
-        "replies": 5,
-        "reposts": 30,
-        "quotes": 1
-      },
-      "raw": {
-        "id": "4025733412198896672",
-        "shortcode": "DfeRzWKiVQg",
-        "text": "컴퓨터에서 AI 모델을 실행하는 속도가 최대 3배가량 빨라졌습니다.\n\n무료 오픈소스 프로그램 Strata가 0.2.12 버전으로 업데이트됐는데요.\n\nRTX 3060 12GB에서 Qwen3.8-Flash-Next의 프롬프트 처리 속도가 초당 87토큰에서 264토큰으로 증가했습니다.\n\nAMD Strix Halo에서는 최대 2.14배, Mac M5 Max에서는 답변 생성 속도가 약 10~13% 개선됐습니다.\n\n메모리 관리와 도구 호출 오류도 수정됐으며, 성능 향상 폭은 하드웨어와 작업에 따라 다릅니다.",
-        "media_type": "IMAGE",
-        "media_urls": [
-          "https://scontent-dfw6-1.cdninstagram.com/v/t51.82787-15/890606810_17995880481112832_3310400469388594044_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=NDAyNTczMzQxMjE5ODg5NjY3Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=uk6uC0MceqUQ7kNvwF7OywO&_nc_oc=AdpmhwPCRQkvwkgNITqh5gNKl6mwrFI3xeJZX1dvjNrrOtcC1WEOE_QGgIPmP15dYf4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw6-1.cdninstagram.com&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&oh=00_AQT4ifWjzyM3L9sd5j9f2fvML-UiiS8OlzegpXMeauF3nA&oe=6AF73716"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/DfeRzWKiVQg",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T08:00:41Z",
-        "like_count": 157,
-        "reply_count": 5,
-        "repost_count": 30,
-        "quote_count": 1,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211195091Z"
-      }
-    },
-    {
-      "post_id": "4025702907840148295",
-      "published_at": "2026-11-08T07:00:05Z",
-      "text": "일반 동영상만으로 3D 캐릭터의 움직임을 만들 수 있는 무료 프로그램이 공개됐습니다.\n\nRGB MoCap은 영상 속 사람의 동작을 3D 뼈대 움직임으로 변환하는 Windows 프로그램인데요.\n\n특히 캐릭터의 발이 바닥에서 미끄러지거나 공중에 뜨는 문제를 직접 수정할 수 있습니다.\n\n완성한 동작은 Blender, Unity, Unreal, MMD에서 활용할 수 있고, Codex를 이용한 설치 안내도 제공합니다.\n\n프로그램은 MIT 라이선스지만 AI 모델은 별도 이용 조건이 있으며, NVIDIA GPU가 필요합니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DfeK3cxEbNH",
-      "media": [
-        "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQMw_4L0ilmCPssyXOKzyv7wuCCeVjOSc9YulhhkBLzeSnY9wff4hBMGfh8Q1AiVklAhGtNo-eT_hyapnVZFVuILtA4pKOUOrLInRzA.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=kOVHH2IO1nwQ7kNvwG7HrmB&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU4Nzk5MTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=45626c4faf19f64&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GMzMzMDBEQjkxODg0NTgzQjhBRkM2NkExOThENDIwNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0FDNDU5OEE1RjM5MjRFNzM5OTdBQ0VGQjc2RjA1MUI3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAgq7Yicr3PxUCKAJDMywXQDcAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQShWlEvu0R0SzY_0dYhIpOxqGk0KP8CadHyE_-fc0kQow&oe=6AF366D4"
-      ],
-      "engagement": {
-        "likes": 181,
-        "replies": 5,
-        "reposts": 47,
-        "quotes": 3
-      },
-      "raw": {
-        "id": "4025702907840148295",
-        "shortcode": "DfeK3cxEbNH",
-        "text": "일반 동영상만으로 3D 캐릭터의 움직임을 만들 수 있는 무료 프로그램이 공개됐습니다.\n\nRGB MoCap은 영상 속 사람의 동작을 3D 뼈대 움직임으로 변환하는 Windows 프로그램인데요.\n\n특히 캐릭터의 발이 바닥에서 미끄러지거나 공중에 뜨는 문제를 직접 수정할 수 있습니다.\n\n완성한 동작은 Blender, Unity, Unreal, MMD에서 활용할 수 있고, Codex를 이용한 설치 안내도 제공합니다.\n\n프로그램은 MIT 라이선스지만 AI 모델은 별도 이용 조건이 있으며, NVIDIA GPU가 필요합니다.",
-        "media_type": "VIDEO",
-        "media_urls": [
-          "https://scontent-dfw6-2.cdninstagram.com/o1/v/t16/f2/m84/AQMw_4L0ilmCPssyXOKzyv7wuCCeVjOSc9YulhhkBLzeSnY9wff4hBMGfh8Q1AiVklAhGtNo-eT_hyapnVZFVuILtA4pKOUOrLInRzA.mp4?_nc_cat=108&_nc_sid=5e9851&_nc_ht=scontent-dfw6-2.cdninstagram.com&_nc_ohc=kOVHH2IO1nwQ7kNvwG7HrmB&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTU4Nzk5MTExMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=45626c4faf19f64&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9GMzMzMDBEQjkxODg0NTgzQjhBRkM2NkExOThENDIwNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0FDNDU5OEE1RjM5MjRFNzM5OTdBQ0VGQjc2RjA1MUI3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAgq7Yicr3PxUCKAJDMywXQDcAAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&_nc_zt=28&oh=00_AQShWlEvu0R0SzY_0dYhIpOxqGk0KP8CadHyE_-fc0kQow&oe=6AF366D4"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/DfeK3cxEbNH",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T07:00:05Z",
-        "like_count": 181,
-        "reply_count": 5,
-        "repost_count": 47,
-        "quote_count": 3,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211203053Z"
-      }
-    },
-    {
-      "post_id": "4025672925277476947",
-      "published_at": "2026-11-08T06:00:31Z",
-      "text": "이미지 생성에 필요한 과정을 4~8단계에서 1~2단계로 줄인 AI 모델이 공개됐습니다.\n\nDar-Yen Chen과 Yi-Zhe Song이 발표한 NitroFusion2인데요.\n\n이미지를 생성하는 과정에서 글자, 사물, 그림체를 구분해 평가하도록 학습시켜 적은 단계에서도 선명한 이미지와 읽기 쉬운 글자를 만들 수 있도록 했습니다.\n\n논문에서는 기존 방식과 비슷한 화질을 유지하면서 생성 단계를 줄였다고 설명합니다.\n\n모델 가중치와 ComfyUI 워크플로우도 공개됐습니다.",
-      "permalink": "https://www.threads.com/@choi.openai/post/DfeEDJVElhT",
-      "media": [
-        "https://scontent-dfw5-2.cdninstagram.com/v/t51.82787-15/891043215_17995879845112832_6858799156517210321_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=NDAyNTY3MjkyNTI3NzQ3Njk0Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=mRTe4VYHeS8Q7kNvwHhgkGj&_nc_oc=Adocf_i8UGXyGg4qCeCy6-EkMFx1jNRp7SqhznhFMTzBDm6MwbeZjT6IlXN3UcvlLgw&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&oh=00_AQQfMcw0TqhwNiAxXuVcIYc3rugzxOK6t3xuJU11KjtYvQ&oe=6AF764B8"
-      ],
-      "engagement": {
-        "likes": 39,
-        "replies": 1,
-        "reposts": 4,
-        "quotes": 1
-      },
-      "raw": {
-        "id": "4025672925277476947",
-        "shortcode": "DfeEDJVElhT",
-        "text": "이미지 생성에 필요한 과정을 4~8단계에서 1~2단계로 줄인 AI 모델이 공개됐습니다.\n\nDar-Yen Chen과 Yi-Zhe Song이 발표한 NitroFusion2인데요.\n\n이미지를 생성하는 과정에서 글자, 사물, 그림체를 구분해 평가하도록 학습시켜 적은 단계에서도 선명한 이미지와 읽기 쉬운 글자를 만들 수 있도록 했습니다.\n\n논문에서는 기존 방식과 비슷한 화질을 유지하면서 생성 단계를 줄였다고 설명합니다.\n\n모델 가중치와 ComfyUI 워크플로우도 공개됐습니다.",
-        "media_type": "IMAGE",
-        "media_urls": [
-          "https://scontent-dfw5-2.cdninstagram.com/v/t51.82787-15/891043215_17995879845112832_6858799156517210321_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=NDAyNTY3MjkyNTI3NzQ3Njk0Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=mRTe4VYHeS8Q7kNvwHhgkGj&_nc_oc=Adocf_i8UGXyGg4qCeCy6-EkMFx1jNRp7SqhznhFMTzBDm6MwbeZjT6IlXN3UcvlLgw&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_gid=QqFCdRDmkWTTGAQaOAFAXw&_nc_ss=7a20f&oh=00_AQQfMcw0TqhwNiAxXuVcIYc3rugzxOK6t3xuJU11KjtYvQ&oe=6AF764B8"
-        ],
-        "permalink": "https://www.threads.com/@choi.openai/post/DfeEDJVElhT",
-        "username": "choi.openai",
-        "user_id": "63452224831",
-        "timestamp": "2026-11-08T06:00:31Z",
-        "like_count": 39,
-        "reply_count": 1,
-        "repost_count": 4,
-        "quote_count": 1,
-        "has_media": true,
-        "fetched_at": "2026-11-09T07:50:56.211298144Z"
+        "fetched_at": "2026-11-09T18:40:06.96250995Z"
       }
     }
   ],
   "watchdog": {
     "status": "ok",
-    "checked_at": "2026-11-09T07:50:53.157885Z",
+    "checked_at": "2026-11-09T18:40:04.234273Z",
     "backup_base_url": "https://choi-threads-backup-collector.onrender.com",
     "endpoint": "/archive",
-    "backup_collected_at": "2026-11-09T07:51:01.672594661Z",
-    "backup_archive_count": 15,
-    "backup_post_count": 15,
-    "backup_only_current_count": 0,
+    "backup_collected_at": "2026-11-09T18:40:15.405259612Z",
+    "backup_archive_count": 17,
+    "backup_post_count": 17,
+    "backup_only_current_count": 2,
     "recovered_to_archive_count": 0,
     "recovered_keys": [],
     "limitations": [
