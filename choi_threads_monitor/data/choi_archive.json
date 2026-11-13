@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-11-12T18:47:47.440080Z",
+  "generated_at": "2026-11-13T00:05:22.163759Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 762,
-  "pending_count": 762,
-  "observed_total_count": 1045,
+  "archive_count": 767,
+  "pending_count": 767,
+  "observed_total_count": 1050,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,21 +14,106 @@
   ],
   "posts": [
     {
+      "post_id": "4029115401887721917",
+      "published_at": "2026-11-13T00:00:06Z",
+      "text": "생각보다 재미있게 흘러가네요. 어제의 적이 오늘의 동료가 됐습니다.\n\n젠슨 황이 NVIDIA에서 물러나자마자 오픈AI와 앤트로픽이 손을 잡았습니다.\nBloomberg에 따르면 오픈AI가 중국의 AI 반도체 수입을 제한하는 미국의 초당적 법안을 지지하기로 했다고 합니다.\n\n이미 규제 강화를 지지하던 앤트로픽과 같은 편에 선 건데요.\n\n해당 법안은 중국에 대한 AI 반도체와 반도체 제조 장비 수출을 제한하는 내용입니다.\n경쟁 관계인 샘 알트만과 다리오 아모데이가 반도체 규제에서는 뜻을 같이하게 됐습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfqSxxgkqm9",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/905125221_17996711250112832_8421178771108969653_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ig_cache_key=NDAyOTExNTQwMTg4NzcyMTkxNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTEyOS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=7xoEuTXfVzQQ7kNvwE2bmRJ&_nc_oc=AdrCwYD150-LC_Fpr6-VAisaxNCPJ3QOgCQ876FOdAHa-l35MEdCXWkZBD4MtVTdr_U&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQRLMKvsR4vz10cBG6gd6BfaZ6rb0yp7pw_gF0Arc6_qRQ&oe=6AFC1D33"
+      ],
+      "engagement": {
+        "likes": 11,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-13T00:05:22.163759Z",
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
+    },
+    {
+      "post_id": "4029086371658312218",
+      "published_at": "2026-11-12T23:02:25Z",
+      "text": "젠슨 황의 사임을 둘러싼 이야기가 점점 심상치 않네요.\n\n전 오픈AI 연구원이 공개된 모델 파일만 분석해서, 중국 AI 기업 4곳이 수출이 막힌 엔비디아 Blackwell 칩으로 최신 모델을 만든 흔적을 찾아냈습니다.\n\nDeepSeek, Moonshot, MiniMax, Ant Group의 모델 가중치에서 GPU의 흔적을 찾아냈다고 하는데요.\n\n일부 모델은 실제 Blackwell 칩으로 검증했으며, 사용된 장비 규모가 5억 달러를 넘을 것으로 추정했습니다. 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfqMLVAD6oa",
+      "media": [
+        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/905389448_17996715168112832_5008311635604489910_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=NDAyOTA4NjM3MTY1ODMxMjIxOA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzM5LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=Z5B130fJXMUQ7kNvwF8c9wO&_nc_oc=AdpeozZgoEvQZ9Nj67cGE64dHtnfGnM5eZAPdEpPDItVb9hJofkUqQLrbPcd1GgLlJ8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQQFN_EwtSGWsKh53zL7oP4SXC0oaBUTfgSyLfgCDqLuoA&oe=6AFC36FD"
+      ],
+      "engagement": {
+        "likes": 105,
+        "replies": 23,
+        "reposts": 9,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-11-13T00:05:22.163759Z",
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
+    },
+    {
+      "post_id": "4029055482455103954",
+      "published_at": "2026-11-12T22:01:03Z",
+      "text": "와.. 이제 Claude가 화상회의에 직접 참석해 사람들과 함께 일합니다.\n\n앤트로피이 Claude Meetings를 공개했는데요.\n\nGoogle Meet에 Claude를 초대하면 회의 내용을 듣고 실시간으로 문서와 화이트보드를 만들어줍니다.\n\n참석자들은 Claude가 작업하는 과정을 보면서 수정도 요청할 수 있습니다.\n\n회의가 끝나면 녹취록과 회의록, 할 일 목록까지 자동으로 정리됩니다.\n\n현재 Team과 Enterprise 요금제에 베타로 제공되며, 다른 화상회의 서비스도 지원할 예정입니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfqFJ1ME5nS",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQN-GlSQWO01Ylw_ckz9SYN6ToGT6nzFzE94cnPDK4nM1xpj9eD5d-hSXMB92znu-c1PAtZZosiGLZmHc0aXCHMyaolFDjAdixGQBOo.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=AAjlgyOd_70Q7kNvwGvtjoO&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY3MDg3MDAxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NjIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a9560b42e6385eda&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82ODRBMTIzMUExMTM0NzRBQUEyRjk3QUFBRDZGMzZBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzY2RkQ4OTY2QUJFMTRBM0U4OEM2NjlBN0MwMkFFMzg2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAn5LTqPr3PxUCKAJDMywXQE9FP3ztkWgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQwnAg29DqoV1b67aF-hh50QwawR5_s270fYpTUqLdZdw&oe=6AF8299C"
+      ],
+      "engagement": {
+        "likes": 69,
+        "replies": 6,
+        "reposts": 10,
+        "quotes": 2
+      },
+      "first_seen_at": "2026-11-13T00:05:22.163759Z",
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
+    },
+    {
+      "post_id": "4029009667896044818",
+      "published_at": "2026-11-12T20:30:01Z",
+      "text": "와.. 오픈AI가 아직 공개하지 않은 사이버 보안 AI 모델의 성능이 상당하다고 합니다.\n\n오픈AI 내부 모델이 해킹 취약점 공격 능력을 평가하는 ExploitGym에서 77%를 기록했다는 소식인데요.\n\n참고로 앤트로픽의 Mythos 5.2는 38.1%, 구글의 Gemini 4 Carbon은 54.8%를 기록했었습니다.\n\nGreg Brockman은 다음 모델이 성능을 한 단계 끌어올릴 것이라고 언급했습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/Dfp6vJDju0S",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOm5bf25Xe68vtSPk4vy2NI7doUOAH2CwxsIyPtW-AfNVt23-i1WRaTMsqtGYid1ZRAKgLIDsXOnJOrZ4eGwB_oHFuiLsSDogFmqE8.mp4?_nc_cat=104&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=cSfMrPtCmNkQ7kNvwEYtMhj&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjY4LmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY2OTA1OTUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=38cd199072934e3&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9DQ0I1RDlFRUYxNjc0OTY0QkY5NEEwNkU4QkIyOUJDOV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzg4MjgxRkFDRTUwODRFQkQ5NEQ4OUEzQUIyQTJGMERCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAnu_gofn3PxUCKAJDMywXQDlu2RaHKwIYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQTEDYqzlgkg2x7OzXamqSBSj3lFJJVHIYTTbFB_lSjilA&oe=6AF82F50"
+      ],
+      "engagement": {
+        "likes": 20,
+        "replies": 0,
+        "reposts": 2,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-13T00:05:22.163759Z",
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
+    },
+    {
+      "post_id": "4028964693120765738",
+      "published_at": "2026-11-12T19:00:40Z",
+      "text": "오래 기다리셨습니다! 드디어 구글과 삼성의 AI 스마트 안경이 나왔습니다.\n\n구글이 삼성전자, Gentle Monster, Warby Parker와 협력해 Gemini가 탑재된 스마트 안경을 공개하고 사전예약을 시작했는데요.\n\n눈앞에 보이는 외국어를 번역하고, 길을 찾거나 사진을 찍는 것도 말로 요청할 수 있습니다.\n\n12MP 카메라로 최대 3K 영상을 촬영하며, 배터리는 최대 9시간 사용할 수 있다고 합니다.\n\n특히 한국 계정도 지원합니다. 이제 스마트폰을 꺼내지 않고 AI를 사용하는 시대가 가까워졌네요.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DfpwgrCDc8q",
+      "media": [
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQORszGgZJkdGAkeTodwZ2jXxLgyqCKZT1AbFSlwcRPldCx0fD-VlLlFwA5CwjWz2i9F56NH--LLOXUnQNugaeCqLwkjQOVqNw4_RNQ.mp4?_nc_cat=110&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=wDtfVy9OTRsQ7kNvwEmh_hf&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY2ODI1NjQxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MjgsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=42bfd5fbff3d76b7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9BQTJDNDA5OUI0Q0U0RTExODFBMTkwQTZBOTA1NDVEMF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0I1Q0UwRjIyRjgyQzQwNDRCNjhDMEE2QUU5RTZCQkM2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAx_T15fj3PxUCKAJDMywXQDyqfvnbItEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQS_PbsPMAEowP4fnUqj0IxSwmwIomlJG2q5lzWRn4aNaw&oe=6AF81B8A"
+      ],
+      "engagement": {
+        "likes": 86,
+        "replies": 6,
+        "reposts": 8,
+        "quotes": 3
+      },
+      "first_seen_at": "2026-11-13T00:05:22.163759Z",
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
+    },
+    {
       "post_id": "4028923802557554901",
       "published_at": "2026-11-12T17:39:25Z",
       "text": "🚨 속보) 구글 Gemini 4 Hydrogen 출시.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpnNoujyDV",
       "media": [
-        "https://scontent-lga3-2.cdninstagram.com/v/t51.82787-15/904750922_17996684736112832_6389655044295547328_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=104&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODkyMzgwMjU1NzU1NDkwMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTUzMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=wW0BlfsOynMQ7kNvwG6WGYe&_nc_oc=AdqV_FVuZS5bh86S3Ob9wfFXosfqiR02cN6NoVT0_ymt4Hjysuy3DyLtZGOcJCmI3sA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQQGPdv8KSQJdGvJ2cDA_i7NC3cmtQnWoXgDycQVQDe3vw&oe=6AFBDCDC"
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/904750922_17996684736112832_6389655044295547328_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=104&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODkyMzgwMjU1NzU1NDkwMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTUzMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=wW0BlfsOynMQ7kNvwEaX5sm&_nc_oc=AdrH2Xy5lDMZwTJgbC1throg7DFQmORQKVpJ85pVMzeHsh1d1RiCqG9y5mB0OwV7PaY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQR1Cxme3wx69CdwPuUiHiIjwWeK9DmMytrctZcHTaBxgw&oe=6AFC151C"
       ],
       "engagement": {
-        "likes": 35,
-        "replies": 17,
-        "reposts": 2,
-        "quotes": 0
+        "likes": 137,
+        "replies": 22,
+        "reposts": 14,
+        "quotes": 1
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028910753876519570",
@@ -36,16 +121,16 @@
       "text": "앞으로 2년 동안 워싱턴이 가장 눈치를 볼 사람은 대통령이 아닐 수도 있습니다.\n\n매출은 오픈AI를 넘었고, 의회는 우군이 가져갔고, 경쟁자의 가장 큰 후원자는 사라졌는데요.\n\n다리오 아모데이가 자기 에세이에서 가장 두려워한다고 쓴 장면을 그의 회사가 직접 만들게 될지, 젠슨 황 사임 이후의 시나리오를 오픈AI, 오픈웨이트, 칩, 중국, 한국 순서로 정리했습니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpkPwMj6qS",
       "media": [
-        "https://scontent-lga3-1.cdninstagram.com/v/t51.82787-15/900795427_17996680599112832_8289906156646941620_n.webp?_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODkxMDc1Mzg3NjUxOTU3MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzAwLnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=zQ916DSlQLoQ7kNvwFe8vL4&_nc_oc=AdrmBMiJj_CeaMRzy8E42_-dCETRhO4QvuhN8pobW3jf9g1pw9epjoBdJtDU1pxfIH0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-1.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQTaOV_F8_iFWlmTkO4PSGacpCwF4rlMprFTjyq-m69MgA&oe=6AFBCE78"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/900795427_17996680599112832_8289906156646941620_n.webp?_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODkxMDc1Mzg3NjUxOTU3MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNzAwLnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=zQ916DSlQLoQ7kNvwGDCqbm&_nc_oc=AdpIEKqRVw0Pqxnze3gWIQJicLEMHXpeT4ndjUaalkwNd595sZoARv05v1zhfDAuLDU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQRokAEOPo2Vl82xUGL-G3t6rgFfSeTKTpMqiDYyGr3Vag&oe=6AFC3EF8"
       ],
       "engagement": {
-        "likes": 65,
-        "replies": 42,
-        "reposts": 9,
-        "quotes": 1
+        "likes": 257,
+        "replies": 51,
+        "reposts": 33,
+        "quotes": 2
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028861808848665994",
@@ -53,16 +138,16 @@
       "text": "우연이라기엔 겹치는 게 많습니다.\n\n봄에 쓰인 기밀 메모가 중간선거 닷새 전에 보도됐고, 민주당이 의회를 가져간 지 9일 만에 젠슨 황이 사임했는데요.\n\n그사이 가장 많은 것을 얻은 쪽은 2년 동안 칩 수출통제에 4,000만 달러를 쓴 앤트로픽입니다.\n\n젠슨 황 사임을 둘러싼 배후설을 정리했습니다. 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpZHglj_2K",
       "media": [
-        "https://scontent-lga3-3.cdninstagram.com/v/t51.82787-15/902008118_17996664522112832_5243632714215380047_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=1&ig_cache_key=NDAyODg2MTgwODg0ODY2NTk5NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNjU0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=ZZZZqfHCz3MQ7kNvwESSxfw&_nc_oc=AdoJLuf9sI2BKrcKFNzpWfZXT1p45QUpYCOdQqWrnrBE7k99IX1PdojZw5R9rlzjPZU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-3.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQTdOAedXCeG20Kmw1tqwdvi8edpuVLNu79eEYDJtYGtZg&oe=6AFBC0DB"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/902008118_17996664522112832_5243632714215380047_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=1&ig_cache_key=NDAyODg2MTgwODg0ODY2NTk5NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNjU0LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=ZZZZqfHCz3MQ7kNvwF1g-gd&_nc_oc=AdrgcCZkcAaWMU-G1CLtPJa9M2wTrrJWsaxJ6wY9ti7DIi73o5Pjh2xPc2w-gYYBdj4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQQRdeV_huxnjtiRtI-54VBxpqk-QGff4vaCBhupMLFoig&oe=6AFC315B"
       ],
       "engagement": {
-        "likes": 644,
-        "replies": 86,
-        "reposts": 123,
-        "quotes": 15
+        "likes": 2607,
+        "replies": 235,
+        "reposts": 456,
+        "quotes": 41
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028810346005260340",
@@ -70,16 +155,16 @@
       "text": "🚨 속보) NVIDIA 창업자 젠슨 황이 CEO와 이사회에서 즉시 사임했으며, CFO인 Colette Kress가 임시 CEO로 임명됐습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpNaoFD-g0",
       "media": [
-        "https://scontent-lga3-2.cdninstagram.com/v/t51.82787-15/902764552_17996650533112832_392567707327469755_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODgxMDM0NjAwNTI2MDM0MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTcyMi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Rq_v6u5a34EQ7kNvwEpJpE1&_nc_oc=AdqPBZ3-P53rJVDcmjAXnhZAJF41sQBlLyT8hjnBDt-L1zCGxtUJpQLg-w4qfOieUUE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQRir5_U0mbQuRZp66fgzd5U3EHypOuu7m4ids7P5WPkmA&oe=6AFBDDF2"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/902764552_17996650533112832_392567707327469755_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=1&ig_cache_key=NDAyODgxMDM0NjAwNTI2MDM0MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTcyMi5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Rq_v6u5a34EQ7kNvwHIUhQV&_nc_oc=AdqgyxQqNpMh7jRb-blrjh_-DYRTur63hxCsxhw4NHGURN8BIVGRXtTgIimd-eoVvfY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQT_8DFFU0QXZXjsEHUp39rBx3PCKbfyTYmvV_9dCAyYjw&oe=6AFC1632"
       ],
       "engagement": {
-        "likes": 375,
-        "replies": 43,
+        "likes": 407,
+        "replies": 45,
         "reposts": 18,
         "quotes": 6
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028798662074189294",
@@ -87,16 +172,16 @@
       "text": "팔란티어 CEO 알렉스 카프(Alex Karp)는 현재의 AI 열풍에 대해 “이미 타오르고 있는 불에 휘발유를 붓는 격”이라고 경고했습니다.\n\n지난 수십 년간 소수 엘리트가 막대한 부를 독점하는 동안 일반 노동자의 삶은 실질적으로 나아지지 않았는데, AI가 이러한 양극화와 사회적 분열을 극복하기는커녕 가속하고 있다는 지적입니다.\n\n특히 그는 AI 연구소 리더들이 대중에게 “당신의 일자리는 사라지고 삶은 엉망이 되겠지만, 결국 내가 주는 돈에 의존하면 된다”는 식의 오만한 태도를 취하고 있다고 강하게 비판했습니다.\n\n실리콘밸리가 고립된 섬처럼 대중과 단절된 채, 사람들의 현실적인 삶을 개선하는 경제적 가치와 국가적 비전을 제시하지 못하고 있다고 꼬집었습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpKwmkgEXu",
       "media": [
-        "https://scontent-lga3-1.cdninstagram.com/o1/v/t16/f2/m84/AQMnGLMyHfP4whi_XjD8-mQ1YmKzqKMDnkdkhmS-2V4iDpKjABerePrzFP7ZjL0cmFMzEPYaD5xkloRXFcIrN0y3nf7cadXspNnB-9c.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-lga3-1.cdninstagram.com&_nc_ohc=lcesHQz2OcgQ7kNvwGGA6UW&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjQ4NzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=203ce3dddc8a68c1&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82NjhEQTE3OUIwMzY0MzYyODM0NzE5N0E0MjcwRkFCNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0VGMzVCRTdBQkNDMjQxMzNBODBERTMwNUUyQTNBMkE5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA773_5en3PxUCKAJDMywXQGHok3S8an8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQRVuK-VetsKQL6v8qCIApH6X85Phu83pALufiQkELcrsg&oe=6AF7EA1D"
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMnGLMyHfP4whi_XjD8-mQ1YmKzqKMDnkdkhmS-2V4iDpKjABerePrzFP7ZjL0cmFMzEPYaD5xkloRXFcIrN0y3nf7cadXspNnB-9c.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=lcesHQz2OcgQ7kNvwFtAxoJ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjQ4NzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=203ce3dddc8a68c1&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC82NjhEQTE3OUIwMzY0MzYyODM0NzE5N0E0MjcwRkFCNV92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0VGMzVCRTdBQkNDMjQxMzNBODBERTMwNUUyQTNBMkE5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaA773_5en3PxUCKAJDMywXQGHok3S8an8YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQ2It59DgyMzhxKdXcVLaEBs4M_PgeMBFqk8suvU-JLnw&oe=6AF8225D"
       ],
       "engagement": {
-        "likes": 14,
+        "likes": 20,
         "replies": 1,
         "reposts": 0,
         "quotes": 0
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028774581946761242",
@@ -104,16 +189,16 @@
       "text": "저는 이 말에 동의합니다.\n\nGTA 6는 인류가 인간의 노동력만으로 쌓아 올린 마지막 피라미드가 될겁니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpFSMND0Aa",
       "media": [
-        "https://scontent-lga3-2.cdninstagram.com/v/t51.82787-15/902592047_17996641032112832_3852590117277714827_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc3NDU4MTk0Njc2MTI0Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE3OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=IbyTaMO8GyMQ7kNvwEF7xgM&_nc_oc=AdqxJvhDBXw9wS5V9T6uChWWLdIJ0_dNprJrVGVM1JAxsz0okUXeHz9IId_x8-mCg44&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQT46ums2CRgk2IpyTW-7ykXAN_TIOdL_mc7-bGZ8GDu4w&oe=6AFBF2DA"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/902592047_17996641032112832_3852590117277714827_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc3NDU4MTk0Njc2MTI0Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE3OS5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=IbyTaMO8GyMQ7kNvwG2SjZr&_nc_oc=AdpeXoryi0HrwFN7cIsF1anQos0rxWSOBCbDmKh6yV_PldtfpLIRHH3unnbKhpNfzKc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQTafP8X9PnBwmjFMwRv9cZgbR2NgNbe6zTZXsEwcX1d6A&oe=6AFC2B1A"
       ],
       "engagement": {
-        "likes": 413,
-        "replies": 10,
-        "reposts": 13,
+        "likes": 501,
+        "replies": 12,
+        "reposts": 14,
         "quotes": 1
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028773215861932906",
@@ -121,17 +206,17 @@
       "text": "GPT 6.2 Sol과 GPT 6.2 Astra의 가격 정보가 잠시 유출되었네요.\n\nGPT 6.2 Sol은 100만 토큰당 입력 2달러, 출력 10달러로 Opus 5.5의 절반 가격입니다.\n반면 GPT 6.2 Astra는 입력 10달러, 출력 50달러로, Fable 5.2보다 비싼 가격이자 이전 Fable 5.1과 동일한 가격 수준입니다.\n\n결국 앤트로픽이 Fable 5.5라는 이름으로 출시하지 않은 이유는 Astra 6.2를 겨냥해 가격 경쟁력을 확보하는 동시에, 내부적으로 준비 중인 5.5 모델과 그다음 세대 모델의 경쟁력을 어필하려는 전략으로 보입니다.\n\n결국 중요한 건 성능이겠죠.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpE-T8DwNq",
       "media": [
-        "https://scontent-lga3-1.cdninstagram.com/v/t51.82787-15/902591886_17996640462112832_911646219890753604_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc3MTAzOTI4MTMwNjA5Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuODE2LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=-4EMJdWyYa0Q7kNvwGlQ7wD&_nc_oc=AdrT65wrz5SpgKQ19W66OF3vUeqJyoBIO6kf7IkDaCmn4PUmaw7q0eUTprA5nmpbwmY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-1.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQR_1tPEs5ox-rDUZXSJJHk7ih-C_-dGv3zqK4sDaQ902w&oe=6AFBD23F",
-        "https://scontent-lga3-2.cdninstagram.com/v/t51.82787-15/902591853_17996640486112832_4448917048479137034_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc3MTA1Njg5NzM4MTUzMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuODM5LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=OzhMAB0hziYQ7kNvwEucMNJ&_nc_oc=AdpFAQFj5c4N7VkKlEFVefKtXcgP5aImfn5BtXowJQQPegMQdhQvwLwfP5tFKCEnLxM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQTBESOsD4WKBxGxC54dcMDgT0GAhTz2qnqTiZIHhA3C-w&oe=6AFBE9E3"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/902591886_17996640462112832_911646219890753604_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc3MTAzOTI4MTMwNjA5Nw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuODE2LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=-4EMJdWyYa0Q7kNvwEVE0aP&_nc_oc=Adp_3dTs4qe2aKNb9k0bUjzCGDUpJ-ezt3lYT00dVKbwztFT5Jc9Wy9B_f-wmSNld4E&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQQaQAvheqO1KsRVznAHS82wZYc5nGR2kIOD2Db82wB33A&oe=6AFC42BF",
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/902591853_17996640486112832_4448917048479137034_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc3MTA1Njg5NzM4MTUzMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuODM5LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=OzhMAB0hziYQ7kNvwGRCEK2&_nc_oc=AdopS9RSHdJYRFAlyPymOkchcyivhHm-FjzSOV6sYQWg5MdD0aTAb8rZ1dDeaSLm9n0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQSidtkpt5PG_ZVQEOL7UwNny7gO34h3YbHhVCf32Flxrw&oe=6AFC2223"
       ],
       "engagement": {
-        "likes": 83,
+        "likes": 102,
         "replies": 6,
         "reposts": 1,
         "quotes": 1
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028765054224511122",
@@ -139,17 +224,17 @@
       "text": "한국의 특징이라고 한다면 스마트 안경이라고 해서 스마트 안경에만 혈안이 된다는 문제가 있다.\n\n이번 세무사 시험 AI 안경 논란을 보면 많은 생각이 들게 하는 것 같은데, 나 역시 스마트글래스(레이벤)를 직접 사용하고 개발하면서 관련된 이야기를 꽤 많이 들어왔고 할려면 할 수 있는 방법들이 너무 많다.\n\n어차피 AI 모델을 사용하려면 인터넷에 연결되는 디바이스를 통해야하기 때문에 소형 카메라와 통신 모듈, 분별할 장치만 있으면 이미 가능하다.\n\n당장 G2 스마트글래스만 해도 카메라가 없는 제품이다. 외관상 일반 안경과 구분하기 어려운 데다 디스플레이를 통해 정보를 표시할 수 있다.\n\n아래 같이 스마트 펜을 쓴다면 안경을 쓰지 않고서라도 받아서 사용할 수 있어서 정말 별의 별 방법이 다 동원될거다.\n\n세무사 시험을 AI 치팅을 인정하는 순간 결국 전문직에 대한 전문성 논란에 대한 이야기는 피할 수 없어 보이고 결국 과거에 이야기 했던 책임을 위해서만 남는 직업으로 바뀌지 않을가 싶다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfpDHi0jzCS",
       "media": [
-        "https://scontent-lga3-3.cdninstagram.com/v/t51.82787-15/902442513_17996638224112832_4836409929700223321_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc2NTA0Njk3Njc0OTE1Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=tIEEWAKq5DQQ7kNvwF1QpE6&_nc_oc=AdpX06N12SRrIJCk08cep6Hb6cGjP1PpGujQ9oodhQ4O4GDYYDRqP9F8YZlw5NCIJww&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-3.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQSB_lboERJcbgu26qtNvWxdbVCRIFyC6LatFz_5laebRw&oe=6AFBEB85",
-        "https://scontent-lga3-2.cdninstagram.com/v/t51.82787-15/901883995_17996638242112832_8991272924139635522_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc2NTA0NzA1MjI4MTMxOA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTUwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=bHBAaPvHAW0Q7kNvwG49olj&_nc_oc=Adoq8dUriJSKGAbfg54-owFbAQRZ80DmddJifYXUqm8aXsI9U86E0fG2FSwkDgHBlBU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&oh=00_AQSReOffSVLvZ3zjDwheqr8MonpcEP1KtVAvG1rX6avh-g&oe=6AFBC2D0"
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/902442513_17996638224112832_4836409929700223321_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc2NTA0Njk3Njc0OTE1Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTIwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=tIEEWAKq5DQQ7kNvwF8ZSn3&_nc_oc=AdqZaBQcMtpYEiNUxpzRoMrpH18X2fHYTjqd7sXv9Blx7wDZ9ZGOKYzzbkd-U9yVS-4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQQmXQuOvG_tI-RBmAzQY9u-xu8q2lLbelKi0Av_jugX6w&oe=6AFC23C5",
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/901883995_17996638242112832_8991272924139635522_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ig_cache_key=NDAyODc2NTA0NzA1MjI4MTMxOA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTUwMC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=PuIRZKj0PH0Q7kNvwFaafuE&_nc_oc=AdoCkVWQXx2DAmFIvSQY2SqMD10rnL5SJepJ0KvkApSTiCwpV1D0jkq-1EH2S-Q-35o&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&oh=00_AQRQLHc-slaYyrkryMutg9rjnW__PzfBSsXCqudXVCLx4w&oe=6AFC3350"
       ],
       "engagement": {
-        "likes": 172,
-        "replies": 22,
-        "reposts": 15,
+        "likes": 210,
+        "replies": 26,
+        "reposts": 19,
         "quotes": 2
       },
       "first_seen_at": "2026-11-12T18:47:47.440080Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028708161082508251",
@@ -157,7 +242,7 @@
       "text": "빌 게이츠는 AI 기술이 “인류 역사상 가장 격동적인 시기”를 열고 있다고 경고했습니다.\n\n불과 1~2년 전만 해도 기대가 앞섰지만, 최근 1년 사이 모델의 성능이 비약적으로 발전하며 이미 “위험 임계값을 넘어섰다”고 진단했습니다.\n\n그는 동일한 AI 기술이 보건과 교육을 획기적으로 개선할 수 있는 반면, 생물 테러나 치명적인 사이버 공격의 도구로 악용될 수 있다는 점을 지적했습니다.\n\n특히 규제와 감시 체계를 단순히 테크 업계의 자율에만 맡겨둘 수는 없다며, “학계와 싱크탱크, 정책 입안자 등 사회 전체가 나서서 명확한 규칙을 마련해야 한다”고 강조했습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dfo2Lo9CkPb",
       "media": [
-        "https://scontent-lga3-2.cdninstagram.com/o1/v/t16/f2/m84/AQOuSladFZJsEtdRVwepu7NJw5A3segK9LT5-dEIX9jRfYnoF2oL9-AXNGAFvj7dgbduJ6Tb-UkyruEa0mbo_guQkB3GppZFtZcKbh8.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-lga3-2.cdninstagram.com&_nc_ohc=YW0m8qdo0kkQ7kNvwEWvwha&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjYxMzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a490b14e09d54bd7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81NkY3QkRENDgzNDM0MzlCODc0QUNBNkI3MjFERjExQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0E0OTA3QTkxQzBDQzRFMTg5MTZCMkIwRUEwOUVGNzVDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAu46x7-n3PxUCKAJDMywXQFdfjU_fO2QYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQynBs33vOAjWyDV0TWOmqTDjifD07yrFF-zUsURkUMCw&oe=6AF7DB2B"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQOuSladFZJsEtdRVwepu7NJw5A3segK9LT5-dEIX9jRfYnoF2oL9-AXNGAFvj7dgbduJ6Tb-UkyruEa0mbo_guQkB3GppZFtZcKbh8.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=YW0m8qdo0kkQ7kNvwFVTOmm&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjYxMzYxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTMsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=a490b14e09d54bd7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81NkY3QkRENDgzNDM0MzlCODc0QUNBNkI3MjFERjExQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0E0OTA3QTkxQzBDQzRFMTg5MTZCMkIwRUEwOUVGNzVDX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAu46x7-n3PxUCKAJDMywXQFdfjU_fO2QYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQS93HDUZ4dIGMtN0FUmmKYdI7z0arYok6cvtlB18I_inw&oe=6AF84BAB"
       ],
       "engagement": {
         "likes": 23,
@@ -166,7 +251,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-11-12T10:53:08.603086Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028662413154661745",
@@ -174,7 +259,7 @@
       "text": "팔란티어 CEO 알렉스 카프(Alex Karp)는 부유세 부과가 필연적으로 감시 사회를 부를 것이라고 경고했습니다.\n\n그는 개인의 자산을 일일이 평가하는 과정이 AI 기술로 인해 현실화되고 있다고 지적했습니다.\n방대한 데이터를 기반으로 \"AI는 당신이 소유한 모든 것을 추정해낼 수 있다\"며, 부유세 집행에 필요한 가치 산정이 기술적으로 가능해졌다고 설명했습니다.\n\n하지만 이러한 경제 정책은 빈곤층을 돕지 못할 뿐만 아니라 기술 생태계와 사회적 합의를 무너뜨린다고 강조했습니다.\n\n궁극적으로 \"그 논리적 귀결은 당신의 사생활에 대한 전면적인 감시\"가 될 것이라며, AI가 결합된 조세 행정이 초래할 위험성을 꼬집었습니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/Dforx64DTVx",
       "media": [
-        "https://scontent-lga3-1.cdninstagram.com/o1/v/t16/f2/m84/AQO_r55Vkvjq_8uL-lKFIQH3Vx9BhjfVXiNXIVxPU5IpescSM4PnAQkE15QKuXiswaBI1L144dsi-eERQ84jZF7PsltwlwVyMFXFvrk.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-lga3-1.cdninstagram.com&_nc_ohc=pNYXUCwwUpUQ7kNvwHXDFaJ&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjQ4MjUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=48c726778ef3bfd2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FMEUwREQwNUNGRkI0NEEyQjE5MDZEM0RBRTI2MTAyRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzU5OTdFOTFCMDI2NDRGRDE4MDUyQjkzQUIzQzQxNzA2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaApOzO5en3PxUCKAJDMywXQEuBiTdLxqgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQEytTCtfci98sLjgtFN5ae4gD_cTWocVtQ_y-ZXtCXTw&oe=6AF7CEA5"
+        "https://scontent-iad6-1.cdninstagram.com/o1/v/t16/f2/m84/AQO_r55Vkvjq_8uL-lKFIQH3Vx9BhjfVXiNXIVxPU5IpescSM4PnAQkE15QKuXiswaBI1L144dsi-eERQ84jZF7PsltwlwVyMFXFvrk.mp4?_nc_cat=103&_nc_sid=5e9851&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_ohc=pNYXUCwwUpUQ7kNvwE-Qit6&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjQ4MjUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTUsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=48c726778ef3bfd2&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9FMEUwREQwNUNGRkI0NEEyQjE5MDZEM0RBRTI2MTAyRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzU5OTdFOTFCMDI2NDRGRDE4MDUyQjkzQUIzQzQxNzA2X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaApOzO5en3PxUCKAJDMywXQEuBiTdLxqgYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=8Bxx91HTJi4WM7oIg15q8g&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSm09y8azT2uixWzXtnL62uJLO5xgDlOHeAm_eKKHTHFQ&oe=6AF83F25"
       ],
       "engagement": {
         "likes": 14,
@@ -183,7 +268,7 @@
         "quotes": 0
       },
       "first_seen_at": "2026-11-12T10:53:08.603086Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028617172964013591",
@@ -191,16 +276,16 @@
       "text": "마이크로소프트 창업자 빌 게이츠(Bill Gates)는 현재의 AI 기술 발전을 단순한 도구의 진화가 아니라 일종의 “진화적 사건”이자 “우리가 창조해낸 외계 지능”의 등장으로 규정했습니다.\n\n그는 외계인의 침공에 맞서 미·중이 전례 없이 협력하는 SF 영화를 비유로 들며, 지금 인류가 마주한 상황이 바로 그와 같다고 진단했습니다.\n차이가 있다면 위협이 우주에서 온 것이 아니라 인간이 직접 만들어냈다는 점뿐입니다.\n\n기술 발전의 가속도가 통제 수준을 앞지르면서 일자리와 경제 구조 전반의 거대한 충격이 예고되는 가운데, 게이츠는 AI가 “핵무기보다도 통제하기 훨씬 더 어려운 기술”이라고 경고했습니다.\n\n폭발적인 성능 향상 속도에 맞춰 글로벌 차원의 공조와 안전 규제 체계 마련이 시급하다는 메시지입니다.",
       "permalink": "https://www.threads.com/@choi.openai/post/DfohflqjvYX",
       "media": [
-        "https://scontent-lga3-1.cdninstagram.com/o1/v/t16/f2/m84/AQO9a70-xXAiEM8oJTjU0dY9-TR00mGo6gY7efv5l_EJ1j9lSoV3e08zegJ7Nb-Zbq4I8WkMbzVPcc3fxKULqPxINVsrO5AILsAVnhw.mp4?_nc_cat=100&_nc_sid=5e9851&_nc_ht=scontent-lga3-1.cdninstagram.com&_nc_ohc=bg7SXoMCT9IQ7kNvwG4heQa&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjYxNDgxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=293edb494996d25b&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yN0EyQzI2RTZBMDA0QjA1ODg2RUYwODJEQzE5QzFEQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ExQTgyQzMzNkYzMjREQ0JCRjk4MkJBRjI5MDg2QkRFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAp8e87-n3PxUCKAJDMywXQEwHCj1wo9cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=MAwp8-cNE30cLD1zDr1yYA&_nc_ss=7a20f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQQVn0Hz_PI3bBxg1xDjLHfJQlHXoyzEDdlltR5Kt2F5Hg&oe=6AF7F8B4"
+        "https://instagram.fsgn5-9.fna.fbcdn.net/o1/v/t16/f2/m84/AQO9a70-xXAiEM8oJTjU0dY9-TR00mGo6gY7efv5l_EJ1j9lSoV3e08zegJ7Nb-Zbq4I8WkMbzVPcc3fxKULqPxINVsrO5AILsAVnhw.mp4?_nc_cat=100&_nc_oc=Adqj_1YsK85EZD8ugp1dxnD-xA8KB5VVW0kL9uCVCxTgxtAgH0H0Lx9_rKPguRI2YSk&_nc_sid=5e9851&_nc_ht=instagram.fsgn5-9.fna.fbcdn.net&_nc_ohc=bg7SXoMCT9IQ7kNvwE6lCTR&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTY0MjYxNDgxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6NTYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=293edb494996d25b&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yN0EyQzI2RTZBMDA0QjA1ODg2RUYwODJEQzE5QzFEQ192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ExQTgyQzMzNkYzMjREQ0JCRjk4MkJBRjI5MDg2QkRFX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAp8e87-n3PxUCKAJDMywXQEwHCj1wo9cYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=52wV0f1nUdH2J3XQ9rdnCg&_nc_map=urlgen_bucketless&_nc_zt=28&_nc_ss=7a20f&oh=00_AQTL0M5p7ecof_jaSHnx-FYrVHx1VW1MiIQ_l30wf-eiCw&oe=6AF830F4"
       ],
       "engagement": {
-        "likes": 19,
-        "replies": 1,
-        "reposts": 1,
-        "quotes": 0
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-11-12T10:53:08.603086Z",
-      "last_seen_at": "2026-11-12T18:47:47.440080Z"
+      "last_seen_at": "2026-11-13T00:05:22.163759Z"
     },
     {
       "post_id": "4028571870118758493",
@@ -12890,6 +12975,6 @@
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
-    "backup_only_current_count": 0
+    "backup_only_current_count": 1
   }
 }
