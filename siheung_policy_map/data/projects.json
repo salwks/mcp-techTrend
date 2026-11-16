@@ -1,19 +1,23 @@
 {
  "updated_at": "2026-11-09T02:44:01Z",
- "checked_at": "2026-11-09T02:44:01Z",
- "new_this_run": 19,
+ "checked_at": "2026-11-16T02:50:47Z",
+ "new_this_run": 0,
  "sources": [
   {
    "id": "press",
    "name": "보도자료",
-   "count": 30,
-   "errors": []
+   "count": 0,
+   "errors": [
+    "https://www.siheung.go.kr/media/bbs/list.do?ptIdx=82&mId=0100000000: <urlopen error timed out>"
+   ]
   },
   {
    "id": "gosi",
    "name": "고시·공고",
-   "count": 27,
-   "errors": []
+   "count": 0,
+   "errors": [
+    "https://www.siheung.go.kr/main/saeol/gosi/list.do?mId=0401040000: <urlopen error timed out>"
+   ]
   }
  ],
  "projects": [
