@@ -1,0 +1,526 @@
+{
+  "date": "2026-11-18",
+  "items_count": 26,
+  "items": [
+    {
+      "id": "hf:2611.22115",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "TeleChat to Xing4: Advancing Frontier Agentic Models on Domestic Chips and Frameworks",
+      "url": "https://huggingface.co/papers/2611.22115",
+      "arxiv_url": "https://arxiv.org/abs/2611.22115",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "We present Xing 4, a series of large language models that extends the TeleChat lineage through coordinated advances in model architecture and training infrastructure on Ascend. This report describes the design principles and systems engineering behind the series, spanning architecture selection, large-scale pretraining, and reasoning and agentic post-training. We study how sparse activation, attention design, model depth and width, and speculative decoding balance model capacity with computation, memory access, and execution overhead. Our pretraining infrastructure builds on MindSpore HyperParallel, combining topology-aware hybrid sharding, efficient distributed optimizer execution, and coordinated management of long-sequence workloads and activation memory. CPU affinity and core isolation further reduce host scheduling interference. Together, these mechanisms support the pretraining of a 285B-parameter model on 8,192 Ascend 910C cards, providing a concrete setting for the architectural and systems studies. For post-training, we introduce TeleGym, a unified agent execution platform that connects execution, evaluation, and trajectory construction to policy optimization. Disaggregated asynchronous execution, bounded oversampling, and partial rollout accommodate heterogeneous task durations while preserving trajectory continuity across policy updates. Together, these advances establish an Ascend-oriented training foundation for the continued development of Xing 4 across model scales and increasingly demanding reasoning and agent workloads.",
+      "upvotes": 143,
+      "comments": 2,
+      "has_code": false,
+      "project_page": "https://github.com/XingChen-AGI",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.17621",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "AscendGYM: A Cost-Aware Kernel Optimization Benchmark for Real-World Workloads on Ascend NPUs",
+      "url": "https://huggingface.co/papers/2611.17621",
+      "arxiv_url": "https://arxiv.org/abs/2611.17621",
+      "published_at": "2026-11-13T00:00:00Z",
+      "summary": "Kernel optimization is essential for efficient large language model (LLM) training and inference on Ascend NPUs. Existing Ascend kernel benchmarks primarily focus on kernel generation, with less emphasis on the ability of agents to optimize existing implementations under input configurations drawn from real workloads. To address this requirement, we introduce AscendGYM, a benchmark whose initial suite comprises 48 kernels across three difficulty levels. Each kernel is paired with test cases whose data types and tensor shapes are collected from real-world training and inference tasks. Consequently, performance improvements on AscendGYM map directly to the corresponding workloads. In terms of usability, two evaluation modes are supported in AscendGYM: model evaluation and model-harness evaluation. The kernel optimization capabilities of both trained models and custom agents are allowed to be measured. It provides a complete execution environment that closely reproduces how Ascend kernels are invoked in practical pipelines. For model evaluation, it additionally includes a built-in harness equipped with search orchestration and experience accumulation. Finally, we propose a new metric, the Speedup-Token Score (STS), which quantifies performance gains relative to token cost. By jointly considering speedup and cost, STS enables the assessment of practical kernel optimization capability of a model or harness under an acceptable budget. AscendGYM is available at https://github.com/SLAI-AITP/AscendGYM.",
+      "upvotes": 88,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://slai-aitp.github.io/AscendGYM/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.22055",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Weight-Space Programming Doesn't Need Transformers",
+      "url": "https://huggingface.co/papers/2611.22055",
+      "arxiv_url": "https://arxiv.org/abs/2611.22055",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Standard neural architectures such as the Transformer were chosen because they train well with gradient descent and run fast on GPUs. In weight-space programming, a large language model (LLM) writes target weights by hand without gradient-based training, so those reasons no longer apply. Should we keep the Transformer? Given minimal guidance, ten labeled examples, and a sandbox, mainly on multiple-choice questions, we task three frontier LLMs with either generating the weights of a fixed architecture or designing the architecture themselves. When free to design, all three compile plain-text facts into a sparse table queried by a fixed procedure, reaching up to 54.4% test accuracy. An LLM-designed model achieves higher test accuracy than the most accurate released Transformer that the same LLM wrote while using about 1,800x fewer parameters. Without gradients, they choose a table, in which the LLM can state what each weight means and can find and rewrite a wrong one. Each wrong answer points to one row, and removing a row changes about one other answer. From this, we propose an associative-memory-based model up to 17x faster on GPUs than a same-sized Transformer. We also test pretrained weights, other benchmarks, and tasks where models generate answers. Pretrained LLMs remain more accurate; the claim concerns which structure to build when writing weights.",
+      "upvotes": 40,
+      "comments": 2,
+      "has_code": true,
+      "project_page": "https://wsp-no-transformer.github.io/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.21099",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models",
+      "url": "https://huggingface.co/papers/2611.21099",
+      "arxiv_url": "https://arxiv.org/abs/2611.21099",
+      "published_at": "2026-11-16T00:00:00Z",
+      "summary": "Frontier multimodal models can now control robots zero-shot from images, yet many manipulation tasks depend on contact forces that images cannot show. Bringing force to an API-only frozen model raises two challenges. First, contact evolves much faster than an API model can decide, so the system must close the loop on force beneath the model. Second, a frozen model cannot interpret raw force streams, so force must be returned in a form the model can reason about. Therefore, we present ForceHarness, a harness that lets frozen models use force without demonstrations or finetuning. After calibrating hand force from a wrist sensor or joint torques alone, ForceHarness addresses the first challenge with self-terminating force primitives that regulate force on their own and return at a contact event. To address the second challenge, a physics translation layer turns each force trace into physical quantities with uncertainty as the tool result. To evaluate ForceHarness against expert force controllers and learned policies under identical conditions, we also build HiddenPhys, a seven-task MuJoCo benchmark with hidden physical variables. On a real arm without a wrist force sensor, ForceHarness raises the zero-shot success rate of GPT-6 Astra from 3.3% to 90.0%. In simulation, it adds 17.5 percentage points on the public ForceBench suite and 34.3 percentage points on HiddenPhys, surpassing force-aware policies trained on demonstrations on both benchmarks and matching hand-written expert controllers on HiddenPhys. Ablations further show that smaller models make significantly better decisions when given physical quantities rather than raw force values.",
+      "upvotes": 39,
+      "comments": 2,
+      "has_code": true,
+      "project_page": "https://showlab.github.io/ForceHarness/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.15348",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Breath-Dx: A Time Series Classification Benchmark for Disease Screening with eNose",
+      "url": "https://huggingface.co/papers/2611.15348",
+      "arxiv_url": "https://arxiv.org/abs/2611.15348",
+      "published_at": "2026-11-11T00:00:00Z",
+      "summary": "Electronic nose (eNose) technology offers a portable, non-invasive route for disease screening via exhaled breath analysis. However, progress in the field is hindered by the lack of systematic benchmarks that compare machine learning methods under realistic conditions, particularly sensor drift, a known but rarely quantified failure mode. Most existing studies rely on small, private datasets with inconsistent protocols, rendering results non-comparable and slowing progress. We introduce Breath-Dx, the first comprehensive benchmark of time series classification methods for breath-based disease screening. Our work leverages the Scent of Health (S-OH) dataset, the largest public clinical eNose collection to date, comprising 1,234 patients across nine diagnostic groups, each providing a 17-channel multivariate time series with explicit temporal train/test splits that account for sensor drift. We systematically evaluate 10 methods spanning four families: feature-based tabular learners, convolution-based models, graph-based, and time series architectures. All methods degrade significantly under temporal validation (0.05-0.12 AUC drop compared to random cross-validation), confirming that drift embeds a strong temporal signal. Under this realistic evaluation, the best methods achieve ROC AUC of 0.74-0.76 for some lung conditions, though others remain near chance. Recurrent architectures show the most consistent performance across diseases, while specialized time series methods achieve the highest peak results. Demographic confounders matter: breath signals provide independent diagnostic value for some conditions but add little beyond age for others. We release the S-OH dataset, all temporal splits, evaluation protocols, and code to enable reproducible research and accelerate progress in clinical breathomics.",
+      "upvotes": 33,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.19800",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Multi-Branch Transformer",
+      "url": "https://huggingface.co/papers/2611.19800",
+      "arxiv_url": "https://arxiv.org/abs/2611.19800",
+      "published_at": "2026-11-15T00:00:00Z",
+      "summary": "Transformer language models are commonly scaled by making their blocks wider or stacking them deeper. In this work, we explore a complementary path: branching, the parallel composition of full Transformer blocks. We introduce the Multi-Branch Transformer (MBT), which processes the input through shared initial layers, executes independently parameterized branches of sequential blocks in parallel, and fuses their outputs before shared final layers. At comparable training compute, we study three MBT variants: Wide-Shallow preserves block width, Narrow-Deep preserves sequential depth, and Balanced interpolates between them. In controlled pretraining experiments at four mixture-of-experts scales (0.8B to 2.1B total parameters), 2-branch Wide-Shallow MBTs consistently outperform sequential Transformers under matched parameter and training-compute budgets. Balanced MBTs improve further and retain comparable quality as the number of branches increases. To improve inference efficiency at long contexts, we introduce Joint-KV, which constructs a shared KV cache from branch representations at each depth. Our final recipe combines Balanced MBTs with Joint-KV, supported by an inference engine that exploits branch grouping and shared-cache reuse. Fitted scaling curves indicate that standard Transformers require up to 1.26x as much training body compute to match our final models' validation loss. These models reduce full-model KV-cache storage by up to 34% and deliver up to 51.4% higher decoding throughput on a single H200 GPU. Ablation studies show that branching yields gains beyond changes in width and depth, enables an effective KV-sharing strategy (Joint-KV), remains robust across fusion functions, and performs best in the middle layers. These findings show that branching offers a practical path for scaling language models toward both better modeling quality and faster inference.",
+      "upvotes": 31,
+      "comments": 2,
+      "has_code": true,
+      "project_page": "https://gaotangli.github.io/project_page/Multi-Branch-Transformer/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.18856",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Self-Improvement Memory Enables Continual Recursive Self-Improvement",
+      "url": "https://huggingface.co/papers/2611.18856",
+      "arxiv_url": "https://arxiv.org/abs/2611.18856",
+      "published_at": "2026-11-13T00:00:00Z",
+      "summary": "Harness optimization is often studied with a fixed policy model and benchmark. When either changes, the optimizer must decide which parts of an evolved harness to reuse or revise, but the harness alone may not explain why earlier edits were made or how they performed. In this work, we study Continual Recursive Self-Improvement (CRSI), a setting for continuing existing harness-optimization methods across compatible benchmarks or policy models. We propose Self-Improvement Memory (SIM) for the harness optimizer, rather than the task-solving policy. SIM groups edits by recurring harness problem and records their rationale, predicted and observed outcomes, and evaluation context. New attempts extend this history as optimization continues. In our experiments across four domains, SIM achieves higher final scores than harness-only and root-cause-only continuation in cross-dataset and pairwise cross-model comparisons. Across ten independent source runs in coding, paired continuations with SIM improve final scores by an average of 2.36 points over harness-only continuation (p=0.003).",
+      "upvotes": 27,
+      "comments": 2,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23143",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "TCP4D: A Unified Tool-Center-Point Tracking and Generation Model for Robot Manipulation",
+      "url": "https://huggingface.co/papers/2611.23143",
+      "arxiv_url": "https://arxiv.org/abs/2611.23143",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Robot manipulation videos provide a rich visual experience, yet recovering robot action and gripper-state annotations from RGB observations still remains challenging. Using the embodiment-agnostic tool-center-point (TCP) pose as the action space, we present TCP4D, a unified model in which a shared 4D scene representation both tracks observed TCP motion and generates future TCP trajectories. Given a monocular video and initial 2D TCP queries, the tracker directly recovers metric TCP poses in SE(3) and gripper states alongside scene geometry and camera parameters. The generator samples local features from the same 4D representation along the recovered TCP tracks, then combines them with robot observations and language instructions to predict future TCP states. Our new cross-embodiment augmentation pipeline converts existing RGB videos into demonstrations for alternative embodiments by retargeting the recovered motion and synthesizing the corresponding observations, without recorded source-robot states. Experiments show that the tracker achieves absolute trajectory errors of 7.60 and 16.07 mm on DROID and RoboLab and adapts to a new embodiment with only ten demonstrations. The generator achieves 69.19% mean success on RoboTwin and outperforms well-established policy models on two real-world tasks, while joint training on source and augmented demonstrations improves target-robot success by 41.5% over augmented-only training.",
+      "upvotes": 23,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://livioni.github.io/TCP4D/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23226",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "FastFrames: Video Generation at Interactive Latency",
+      "url": "https://huggingface.co/papers/2611.23226",
+      "arxiv_url": "https://arxiv.org/abs/2611.23226",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Autoregressive video diffusion models generate frames based on new observations and inputs, making them a promising medium for interactive visual experiences. However, existing models are orders of magnitude too slow for fluid interaction. This paper introduces FastFrames, a family of fast autoregressive video diffusion models that achieves interactive latency without compromising quality. We profile the inference pipeline of state-of-the-art models and find that operations often treated as fixed implementation details, such as VAE decoding and KV cache updates, in fact account for over half of end-to-end inference latency. We challenge the assumption that these components are indispensable and replace them with lightweight alternatives. Our 1.3B variant runs at 36 ms per frame, or 28 responses per second (RPS), on a single B200 GPU while matching the generation quality of a state-of-the-art model that is nearly 8x slower. Our 14B variant runs at 45 ms per frame, or 22 RPS, on an 8x B200 GPU node and yields significantly better visual quality and realism. We show that FastFrames enables real-time interaction in applications such as camera-conditioned and physics-conditioned video generation.",
+      "upvotes": 20,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://apple-aiml-research.github.io/ml-fastframes/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.21392",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "VideoNexus: Video Perception Beyond the Reasoning Context",
+      "url": "https://huggingface.co/papers/2611.21392",
+      "arxiv_url": "https://arxiv.org/abs/2611.21392",
+      "published_at": "2026-11-16T00:00:00Z",
+      "summary": "Understanding long videos requires locating evidence, resolving visual details, and integrating observations into an answer. Even when relevant evidence is present, performing these operations within long, dense visual sequences burdens both perception and reasoning. Video agents enable selective inspection, but returning frames to the planner still accumulates visual information in its reasoning context. Delegating perception reduces this burden, yet sparse sampling can miss decisive details, and per-frame descriptions can preserve context growth. We introduce VideoNexus, a training-free framework that separates detailed video perception from evidence-driven planning and reasoning. The planner controls where to inspect, what to resolve, and how densely to sample. Perception sub-agents process native audio-video in independent contexts and return compact, temporally grounded evidence for iterative search and verification. Using Gemini 3.8 Flash for both planning and perception, VideoNexus achieves 88.6% accuracy on full LVBench, exceeding same-backbone static ingestion and built-in agentic processing by 3.6 and 1.1 points, respectively, at 44% of the latter's measured API cost. A paired LVBench subset ablation shows lower planner input and higher accuracy. With Kimi K3 as the shared backbone, VideoNexus improves over the official Video-GAIA ReAct harness by 8.5 points in our evaluation. These results support compact evidence exchange for combining detailed observation with efficient planning and reasoning.",
+      "upvotes": 18,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.22275",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Heave-Ho: Decentralized Long-Horizon Multi-Humanoid Collaboration",
+      "url": "https://huggingface.co/papers/2611.22275",
+      "arxiv_url": "https://arxiv.org/abs/2611.22275",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Collaboration promises to extend humanoid capabilities beyond what individual robots can achieve. However, realizing this potential requires coordinated whole-body interactions, coherent long-horizon planning, and precise synchronization across robots. We introduce Heave-Ho, a decentralized framework for long-horizon collaborative multi-humanoid loco-manipulation. At the low level, we develop a multi-agent post-training framework that adapts a humanoid foundation tracking model to physically coupled interactions between humanoids, enabling coordinated decentralized control from local observations alone. At the high level, we train a vision-language planner and design a speech-based leader-follower coordination mechanism to synchronize decentralized execution without network communication. Trained with two identical humanoids, our system scales to teams of up to ten robots and generalizes to heterogeneous teams without retraining. To benchmark these capabilities, we introduce HH-Bench, comprising 12 tasks involving teams of 2 to 10 humanoids, including heterogeneous teams. Systematic evaluations show that Heave-Ho consistently outperforms baseline methods, while real-world experiments demonstrate robust decentralized collaboration across challenging tasks.",
+      "upvotes": 16,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://heaveho-humanoid.github.io/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23108",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "FMT: Lossless Image Compression in a Fixed Number of Parallel Steps",
+      "url": "https://huggingface.co/papers/2611.23108",
+      "arxiv_url": "https://arxiv.org/abs/2611.23108",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Learned lossless codecs make smaller files than common classical codecs, yet the images we archive and train on still use classical codecs. A main reason is time: a learned codec takes seconds to decode a photo that a classical codec opens in milliseconds, and their faster variants give up most of their gain in size. We argue that much of this time is spent waiting, not computing: the network waits for the values it conditions on, and the arithmetic decoder reads them one at a time. We introduce FMT (Fixed-step Multiscale Tree), a lossless image format whose decoding order and entropy coder are designed together so that neither wait grows with the image. FMT stores an image as a coarse-to-fine tree whose steps hold independent values: a GPU predicts each step at once and decodes it in parallel rANS lanes that carry their states from step to step, so an image of any size decodes in a fixed number of sequential steps. On this tree we build a family of bit-exact codecs, from a rule with no network to large networks, and no codec we ran on the same GPU beats any of them on both size and speed. Without a network, FMT beats NVIDIA's HTJ2K on size and speed; with a large one, it decodes Kodak photos 9 to 61X faster than learned codecs we ran on the same A100, at the same size or smaller.",
+      "upvotes": 15,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.20992",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "MedJev: A System One Vision-Language Decision Model for Fast and Effective Medical Image Understanding",
+      "url": "https://huggingface.co/papers/2611.20992",
+      "arxiv_url": "https://arxiv.org/abs/2611.20992",
+      "published_at": "2026-11-16T00:00:00Z",
+      "summary": "Medical image understanding with vision-language models (VLMs) typically relies on autoregressively generating reasoning and answer tokens. These unnecessary tokens make the inference cost scale with the response length and force the answer to be parsed from free-form text, incurring avoidable latency and decision errors. To this end, we introduce MedJev, a system one vision-language decision model that maps medical images, questions, and candidate answers directly to decisions in a single multimodal forward pass, without any autoregressive generation process. For fast inference, MedJev removes the upper language layers and the generative output pathway, while keeping the full vision pathway and all visual tokens. On this shortened backbone, a decision head scores each candidate by pretrained query--key matching and refines the scores with a lightweight multilayer perceptron (MLP) residual, coupling the pretrained matching structure with task-specific nonlinear discrimination. Built on Qwen3.5-4B, MedJev-4B improves both accuracy and speed over the original model on each of four medical image classification and visual question answering benchmarks, with an absolute accuracy gain of 7.93\\% and a 6.04times end-to-end speedup. Further comparison with 20 cutting-edge models shows that MedJev-4B achieves state-of-the-art performance and inference speed among 4B--9B general and medical VLMs, indicating that direct multimodal decision making is an effective route to fast and effective medical image understanding.",
+      "upvotes": 12,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23144",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "π^4: A Foundation Model for 4D Scene Geometry and Motion",
+      "url": "https://huggingface.co/papers/2611.23144",
+      "arxiv_url": "https://arxiv.org/abs/2611.23144",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "π^4 is a unified foundation model for 4D scene perception. From diverse, uncalibrated RGB observations in the wild---a single image, an unordered collection, or a video sequence---it recovers dense geometry, camera poses, and metric scale, together with 2D/3D point tracks and moving-object masks for multi-image inputs. It couples a geometry branch with a geometry-conditioned motion branch, which predicts image-space correspondences that are lifted into 3D using reconstructed target-view geometry. Across diverse benchmarks, π^4 achieves the best overall average rank in geometry evaluation, alongside competitive performance in single- and multiview 2D/3D point tracking and moving-object segmentation. With a shared backbone, the full geometry-and-motion system contains approximately 0.5B parameters---less than half the size of most baselines. It produces joint reconstructions and tracks in one forward pass, including large-scale scenes with thousands of input images despite training with contexts of at most 64 views. We further present the data and training recipe underlying these capabilities, together with empirical studies of key design choices. Code and models are available at https://github.com/yyfz/Pi4.",
+      "upvotes": 9,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://yyfz.github.io/pi4",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.21791",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Regularized Score Centering",
+      "url": "https://huggingface.co/papers/2611.21791",
+      "arxiv_url": "https://arxiv.org/abs/2611.21791",
+      "published_at": "2026-11-16T00:00:00Z",
+      "summary": "Asynchronous reinforcement learning increases training throughput, but data from stale policies and numerical mismatch between training and inference can destabilize learning. To stabilize off-policy learning, score centering (SC) removes the effect of reward baselines on the expected update. Our gradient diagnostics show less extreme gradients with SC than with importance sampling (IS), but SC can still fail when the learner moves far from the behavior policy that generated the data. To limit this policy mismatch, we introduce Regularized Score Centering (RSC), which adds a reverse Kullback-Leibler (KL) penalty to encourage the learner's next-token distribution to stay close to the behavior policy's next-token distribution. RSC works with or without truncated importance sampling (TIS), which caps token importance weights. Our theoretical analysis supports this approach, showing that KL regularization improves convergence guarantees. We evaluate dense and mixture-of-experts models on mathematical reasoning and agentic tasks, including online shopping, tool use, games, and fully asynchronous software engineering. RSC with TIS substantially improves sample efficiency across all agentic benchmarks, attaining higher training rewards with the same number of sampled responses. In final evaluations, it achieves top performance across all six agentic tasks, improving by 14.3% on AppWorld and reaching 9.9 times the strongest baseline's score on BabyAI.",
+      "upvotes": 9,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.21152",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "From Repositories to Training Environments: Scaling Long-Horizon Coding Agents with Environment Evolution Loop",
+      "url": "https://huggingface.co/papers/2611.21152",
+      "arxiv_url": "https://arxiv.org/abs/2611.21152",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Training coding agents for long-horizon tasks requires environments with verifiable feedback. Existing pipelines often follow a linear process that ends with validation, establishing usability but providing little guidance on improving training value. Recursive self-improvement (RSI) often requires model rollouts or model training followed by downstream evaluation, with costs and feedback delays amplified on long-horizon tasks. How can we use timely, reliable proxy signals to improve training value and synthesize environments at scale? We present RepoFactory, an automated pipeline that converts real repositories into verifiable environments where agents build complete projects from scratch given a language specification. Its Environment Evolution Loop optimizes a multiplicative objective combining validity, structural coupling, and implementation scope through proxy feedback. RepoFactory produces 10,159 environments across 17 software domains. Training Qwen3.5-35B-A3B on these environments yields RepoHorizen-35B-A3B, which achieves gains of 22.6 percentage points on NL2Repo-Bench and 8.5 points on average across five benchmarks covering long-horizon coding and agentic tasks in real-world production settings, compared with 17.5 and 6.4 points without environment evolution. These results highlight the training value of RepoFactory environments and the additional gains from the Environment Evolution Loop.",
+      "upvotes": 9,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://huggingface.co/IQuestLab/RepoFactory",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.19559",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "ResWAM: Learning What Changes, Not What Stays, for World-Action Models",
+      "url": "https://huggingface.co/papers/2611.19559",
+      "arxiv_url": "https://arxiv.org/abs/2611.19559",
+      "published_at": "2026-11-14T00:00:00Z",
+      "summary": "World-action models (WAMs) augment vision-language-action policies (VLAs) with future prediction so that the policy can anticipate how its actions will affect the physical world. Existing WAMs supervise complete future observations. However, observations typically change little over an action chunk, so the future loss is dominated by copying static background content rather than learning task-relevant robot and object motion, limiting policy learning. Moreover, existing WAMs rely on large video generation models or separate world models, incurring heavy training and inference compute that hinders closed-loop deployment. To improve policy performance, we propose visual residual learning, supervising only the feature change from the current frame to the future frame in a frozen DINOv3 space. Compared with complete future features, this residual learning target yields a higher feature rank with richer and more diverse representations of scene changes, and spatially concentrates on the robot arm and manipulated objects rather than the background. To further improve computational efficiency, we present ResWAM, a residual world-action model with 2.3B parameters in total, including a lightweight 0.5B dual-branch DiT that jointly trains an action branch and a residual branch via conditional flow matching. Without robot pretraining (i.e., pretraining on external robot action trajectories beyond the benchmark demonstrations), ResWAM achieves top average success rates on LIBERO-Plus (81.1%), RoboTwin 2.0 (93.8%), and RoboDojo (9.40% success, 13.41 score) at the lowest training (2.7-4.0 TFLOPs) and inference compute (1.0-1.4 TFLOPs), and leads real-robot Open, Put, and Stack (80.0% average, +10.0% over π_{0.5}) at 92.7 ms latency.",
+      "upvotes": 9,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://chongyu-fan.netlify.app/posts/reswam/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.19244",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Agentic On-Policy Distillation Implicitly Reshapes LLMs' ReAct Patterns",
+      "url": "https://huggingface.co/papers/2611.19244",
+      "arxiv_url": "https://arxiv.org/abs/2611.19244",
+      "published_at": "2026-11-14T00:00:00Z",
+      "summary": "On-policy distillation (OPD) transfers specialized capabilities to language-model agents, but its cross-domain effects on interaction remain unclear. We investigate how OPD reshapes ReAct interaction patterns across mathematics, ALFWorld, and τ^2-bench, focusing on reasoning, actions, and observation acquisition. General-reasoning supervision reduces mathematical tool attempts from 70.4% to 14.4% while increasing accuracy from 16.7% to 38.0%; code-interpreter supervision improves household actions and retail queries. In contrast, ALFWorld supervision reduces τ^2-bench accuracy from 41.5% to 6.6%, accompanied by frequent tool calls that violate user-information dependencies. To address negative transfer using only source-domain training trajectories, we explore selective OPD guided by teacher preference changes before and after domain-specific RL. Retaining the top 95% of positions raises τ^2 accuracy from 11.5% to 29.9% with a source-learning trade-off.",
+      "upvotes": 9,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.12069",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "MPEG-Diffusion: Mixed-Resolution Video Generation",
+      "url": "https://huggingface.co/papers/2611.12069",
+      "arxiv_url": "https://arxiv.org/abs/2611.12069",
+      "published_at": "2026-11-09T00:00:00Z",
+      "summary": "Video diffusion transformers (DiTs) generate realistic videos, but their heavy computational cost limits broader real-world applications. Mixed-resolution generation reduces this cost by generating the visually important region at high resolution (HR) and the rest at low resolution (LR), yet existing methods suffer a severe quality drop on videos and require knowing the HR region in advance. We show that these failures are not inherent to mixed resolution, and propose MPEG-Diffusion to address their three root causes: (1) dual-resolution attention to mitigate the curse of mixed resolution, where each query reads the K/V of its own resolution, (2) a mixed-resolution decoder to blend the HR and LR latents before decoding and resolve distortion, and (3) a self-selected HR region using the DiT's knowledge to find the visually important region without requiring it in advance. Processing only 30% of full-resolution tokens, MPEG-Diffusion speeds up denoising by 4.8times on Wan2.1 14B (3.8times on 1.3B), outperforming prior methods on nearly every metric. In the user study, we demonstrate the high quality of MPEG-Diffusion, with raters preferring it over prior mixed-resolution methods in over 90% of pairs and rating it close to full resolution.",
+      "upvotes": 9,
+      "comments": 2,
+      "has_code": false,
+      "project_page": "https://dennismenn.github.io/mpeg-diffusion/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23219",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Do LLM Agents Still Need to Be Told How to Self-Improve?",
+      "url": "https://huggingface.co/papers/2611.23219",
+      "arxiv_url": "https://arxiv.org/abs/2611.23219",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "LLM agents increasingly drive their own learning. Self-improvement methods delegate various components of model optimization to the models themselves. As models become more capable, this motivates a basic question: do these increasingly capable models still need us to specify how they should self-improve? In this paper we study an autonomous paradigm in which, given basic primitives, resources, and a general goal for self-improvement, agents construct their own self-learning algorithm for context-based optimization. Using the setting of gameplay as a testbed, a frozen LLM agent is given a compute budget and tools for collecting experience and updating text documents, and allowed to freely experiment without an externally imposed loop or access to real-world data. We find that sufficiently capable models do self-improve under these conditions, demonstrating strategies that align with classic cognitive frameworks for self-regulated learning and constructs from machine learning literature on self-generated curricula. Furthermore, we study the extent to which the learned text artifacts transfer to external benchmarks, observing improvement across different game horizons, mechanics, and 3D navigation.",
+      "upvotes": 8,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://ssundaram21.github.io/self-org/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23034",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "M3OPD-Reasoner: An Open Recipe for Post-Training Multimodal Reasoning with Multi-Teacher On-Policy Distillation",
+      "url": "https://huggingface.co/papers/2611.23034",
+      "arxiv_url": "https://arxiv.org/abs/2611.23034",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Multi-Teacher On-Policy Distillation (MOPD) enables a single student to absorb the skills of several domain teachers by learning from its own generated responses. We present Multimodal Model Multi-Teacher On-Policy Distillation Reasoner (M3OPD-Reasoner), a fully open recipe for post-training vision-language models (VLMs) over three reasoning domains: image STEM, image perception, and video. We curate two datasets, M3OPD-SFT-1.35M for supervised fine-tuning (SFT) and M3OPD-RL-193K for reinforcement learning (RL) with verifiable rewards. On these data, we compare post-training recipes that start from Qwen3.5-9B: training one model on the mixed data of all domains (MixSFT and MixRL), and training one teacher per domain with Group Sequence Policy Optimization (GSPO), directly or after an SFT warm-up, and distilling the teachers into one student with MOPD. We evaluate on 21 image STEM, image perception, and video reasoning benchmarks after we decontaminate the training data against them. The comparison establishes MOPD of teachers trained with GSPO directly from Qwen3.5-9B as the best recipe: the student closely matches each teacher on its own domain and is on average above the mixed-training baselines on the same prompts. Since MOPD already merges the domain capabilities that MixRL would otherwise have to learn, its student is a stronger starting point for RL, and we ask whether the same data can carry the model further from there: we add MixRL on top of the MOPD student, on the same prompts and with the same settings, which, to our knowledge, no prior VLM recipe has studied. The same prompts still improve the MOPD student, with no collapse, and give our main model, M3OPD-Reasoner-9B. MOPD and MixRL can therefore work as consecutive stages that get more out of the same data. We release all data, the training code, and the checkpoints of every stage.",
+      "upvotes": 8,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://ngquangtrung57.github.io/m3opd-reasoner-page/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.23026",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "TPHC: Improving Hyper-Connections with Tensor-Parallel Grouped Updates",
+      "url": "https://huggingface.co/papers/2611.23026",
+      "arxiv_url": "https://arxiv.org/abs/2611.23026",
+      "published_at": "2026-11-17T00:00:00Z",
+      "summary": "Hyper-Connections (HC) expand the residual stream of a Transformer into N parallel streams, and manifold-constrained HC (mHC) stabilizes them at scale. However, mHC benefits little from more than four streams, partly because each sublayer writes a single output to all streams, limiting how differently they can be updated. In this work, we propose TPHC, which integrates tensor-parallel (TP) shards with HC streams to promote greater independence across streams. Specifically, we route a separate mixture of the residual streams to each TP shard and keep the individual shard outputs separate during write-back, so each stream can receive a different mixture of those outputs. This design makes the residual-stream updates more expressive without adding parameters or FLOPs to the attention or FFN sublayers. With native support for stream sharding under TP, TPHC requires only 9% more training time than mHC on an 8B model when both use four streams. Increasing the number of streams from four to sixteen raises its training time by only 19%. On a 1.1B model trained on 100B tokens, TPHC reduces validation loss by 0.7-1.0% and raises average zero-shot accuracy across six commonsense reasoning benchmarks by 0.3-0.7 percentage points relative to mHC at matched stream counts Nin{4,8,16}. Our code is available at https://github.com/wuyou2002/TPHC.",
+      "upvotes": 8,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.08922",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Glyph: An Interpretability Engine for AI-Driven Scientific Discovery in Clinical Data",
+      "url": "https://huggingface.co/papers/2611.08922",
+      "arxiv_url": "https://arxiv.org/abs/2611.08922",
+      "published_at": "2026-11-06T00:00:00Z",
+      "summary": "Automated scientific discovery has the potential to advance understanding of disease mechanisms and accelerate identification of early disease markers. Manual data annotation is infeasible at population scale, motivating methods that automatically extract pre-defined phenotypes in multimodal and unstructured clinical data. Such pre-defined feature sets determine and limit which associations these approaches can discover. This limitation extends to agentic AI systems that use these tools to query population-scale data. In contrast, foundation models (FMs) trained on large volumes of clinical data can perform tasks beyond their training objectives. This suggests their latent embeddings may represent novel or unexplored features that could yield insights into disease mechanisms, yet such latent features remain difficult to interpret. To address this challenge, we introduce Glyph, an automated multistage framework that extracts features from multimodal and unstructured clinical data using FMs and sparse autoencoders, interprets them as coded clinical concepts, and evaluates their value for clinical scientific discovery. We applied Glyph to abdominal CT volumes, CT radiology reports and laboratory measurements from 41,628 patients across different institutions. We identified 397 predictive concepts supported by 4,463 Bonferroni-significant associations. Moreover, a majority of discovered associations were automatically reproducible in held-out cohorts across different sites. Glyph concepts provided complementary associations to literature-derived markers, leading to gains in predictive power. We envision that interpretability can extend beyond a mechanistic understanding of neural networks to connecting implicitly learned features with clinical knowledge and establishing their significance for patient outcomes. We release Glyph at https://github.com/StanfordMIMI/Glyph.",
+      "upvotes": 8,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://stanfordmimi.github.io/Glyph-research/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.17048",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "Beyond Answering: Learning to Speak First and Act in Streaming Video",
+      "url": "https://huggingface.co/papers/2611.17048",
+      "arxiv_url": "https://arxiv.org/abs/2611.17048",
+      "published_at": "2026-11-15T00:00:00Z",
+      "summary": "Most AI assistants respond only when prompted, remaining silent even when events in the video stream offer meaningful opportunities for conversation. To move beyond purely user-driven interaction, we present AURA 2.0, a streaming video large language model that introduces three core upgrades to AURA. The key advance is Model-Initiated Conversation (MIC), which enables the model to identify topics worth discussing in the evolving visual stream and initiate conversations at appropriate moments without a user query. Stream-Aware Tool Calling (SATC) lets the model act on what it sees by invoking external tools using the current visual and conversational context and incorporating returned information into the ongoing interaction. Interactive Visual Grounding (IVG) supports visual grounding in both user inputs and model outputs. The model can identify objects marked by users on video frames and produce frame-aligned bounding boxes to link its responses to specific objects and regions. To develop these capabilities, we construct a dedicated streaming interaction dataset and adopt a three-stage training scheme to integrate the new behaviors with AURA's existing streaming interaction abilities. We further incorporate Long-Horizon Interaction Memory (LHIM) to maintain contextual continuity over extended video streams. Evaluations on public streaming benchmarks show that AURA 2.0 achieves leading performance among open-source streaming models, while targeted evaluations further validate its new interaction capabilities.",
+      "upvotes": 7,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://aurateam2026.github.io/Aura-2.0/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.15671",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "The Noise Floor of a Quantization Comparison: Engine, restart, batch and kernel drift, measured against 8-bit and 4-bit effects in two decision models",
+      "url": "https://huggingface.co/papers/2611.15671",
+      "arxiv_url": "https://arxiv.org/abs/2611.15671",
+      "published_at": "2026-11-11T00:00:00Z",
+      "summary": "A quantized model is usually judged by comparing it with its BF16 original, but that comparison changes more than the weights. It often changes the serving engine, it always runs on a different server instance, it may change how requests are batched, and on some stacks the library selects a different kernel depending only on which packages import. We measure each of these sources on the same 2,400 public decisions for two of Cloudflare's decision models, Clef-flash (9B) and Clef (27B), on an NVIDIA GB10, and state every quantization effect as the excess over them. Sources that are not quantization move between 0 and 0.92% of decisions. llama.cpp restarts are bit-identical on every record for both models. vLLM restarts flip 0, 5 and 20 decisions at BF16, FP8 and NVFP4 on Clef-flash and 4, 0 and 22 on Clef; a third instance of Clef's quantized builds (exploratory) leaves FP8 at 0 and puts NVFP4 at 4 to 22, depending on which two instances are compared. An engine change at BF16 flips 6 to 16, a batch-size change 8 to 15, and the Gated DeltaNet kernel transformers selects unasked 10 to 14. Quantization inside one engine moves more: for Clef-flash and Clef, 0.88% and 1.04% at Q8_0, 2.12% and 1.62% at FP8, 5.79% and 3.50% at Q4_K_M, and 5.79% and 5.67% at NVFP4. On both models, every 4-bit interval excludes every non-quantization source. Two of our five pre-registered predictions failed, and the same two fail when the tests are rerun on the 27B: FP8 is not inside restart noise, and changing engine moves fewer decisions than 8-bit quantization does. Accuracy hides most of this. Over the full 31,275 public questions, Clef's Q4_K_M build moves accuracy by a net six questions (-0.02 points [-0.20, +0.16]) while 436 of its decisions get worse (exploratory), and NVFP4 costs Clef-flash 0.95 points and Clef 0.65. We release the code, quantization recipes, per-record outputs and the pre-registration.",
+      "upvotes": 5,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://www.level5.pro/signal/our-ai-changed-its-mind-after-a-nap",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    },
+    {
+      "id": "hf:2611.19857",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-18",
+      "title": "PanDWM: Panoramic 4D Driving World Models",
+      "url": "https://huggingface.co/papers/2611.19857",
+      "arxiv_url": "https://arxiv.org/abs/2611.19857",
+      "published_at": "2026-11-15T00:00:00Z",
+      "summary": "Driving world models usually generate videos from six pinhole cameras with separate optical centres and small overlaps, and must learn to keep these views consistent. We present PanDWM, which stitches them into one 360^circ panoramic band. Camera boundaries then fall inside one image, so keeping the views consistent means keeping the image continuous, and each pixel still records its camera ray. Conditioned on layouts, a causal student generates the band window by window in four steps; it is distilled from a causal teacher and trained on its own rollouts. A feed-forward decoder lifts each frame along these rays into 3D Gaussians, and static Gaussians from neighbouring frames complete them into 4D scenes. On nuScenes, scored in one stitched 360^circ view, PanDWM has lower FID and FVD than the multi-camera baselines at 8-46times their speed, and keeps its 50-step teacher's FID while lowering FVD by 22-25%.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://aigeeksgroup.github.io/PanDWM/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-18T11:30:16.810170Z",
+      "last_seen_at": "2026-11-18T11:30:16.810170Z"
+    }
+  ]
+}
