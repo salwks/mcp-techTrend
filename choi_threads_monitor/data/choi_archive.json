@@ -1,11 +1,11 @@
 {
   "account": "choi.openai",
-  "generated_at": "2026-11-25T12:32:22.775453Z",
+  "generated_at": "2026-11-25T22:22:10.462454Z",
   "source": "pending unreported posts merged from GitHub Actions primary collector and Render backup watchdog",
   "queue_mode": "pending_unreported",
-  "archive_count": 1014,
-  "pending_count": 1014,
-  "observed_total_count": 1297,
+  "archive_count": 1026,
+  "pending_count": 1026,
+  "observed_total_count": 1309,
   "limitations": [
     "This file intentionally retains only posts not yet acknowledged in choi_report_state.json.",
     "Already-emitted posts are not re-added even if the crawler sees them again.",
@@ -14,19 +14,215 @@
   ],
   "posts": [
     {
+      "post_id": "4038477521921982598",
+      "published_at": "2026-11-25T22:00:57Z",
+      "text": "AI의 대부 제프리 힌튼(Geoffrey Hinton)은 AI의 지배 위험뿐만 아니라 사이버 공격, 생물학 무기 제조, 선거 개입, 대규모 실업 등 당장 눈앞의 단기적 위협도 심각하다고 경고했습니다.\n\n그는 2030년까지 AI 위험이 0%라고 주장한 젠슨 황을 향해 “실질적 멸망 위험을 알고도 말하지 않는 것이야말로 무책임한 일”이라고 정면으로 반박했습니다.\n\n또한 자신의 예측이 다 틀렸다는 지적에 대해, 과거 젠슨 황보다 3년 앞서 “신경망 연구를 하려면 모두 엔비디아 칩을 사야 할 것”이라고 정확히 예측했던 일화를 꼽으며 경고의 정당성을 강조했습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgLjejPj0CG",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQOPx8G30Z7evGzpnz8B3hJIW7nkHQjCPKgiRIUWMfQJu02dSj14adbdKwSxNCeid48Q2N7ryqzjPVmm4Rpnom7LD4PkjqHQgtAlL2M.mp4?_nc_cat=105&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=EFNgcvQdPWcQ7kNvwHVNE6T&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTg1NzMzMDUxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MTUyLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=ab11a041d2a70725&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC9BQUNBMEY0MTBFQUE0MzMxQkYyNDY1MjVDRjQ1NEY0Ml92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyL0ZDMzg5NzAxREQ1RDQxMzk5MEUxRUMxRUYwODNFQUE5X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwOIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRJjb3B5X3NhbXBsZV9ncm91cHMBMRUAACaApIWF7eb4PxUCKAJDMywXQGMQo9cKPXEYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_map=urlgen_bucketless&_nc_zt=28&_nc_enc=Uuju4Nxw3TUy_TEpZboHhLNEYHLTqE5Xyr6zR5hvxWJo4g8aJ0fQGXBg6N7LLvNB0vHmvYaZJaZFXvWAMKwS68jaLVhnE1FZs8hVdM2dm7p6dnTGJyqmaocmdvA&oh=00_AQShiF54rct-B8NeiNrvfdwDTSlywLtlDHxkraJwH3678w&oe=6B09272B"
+      ],
+      "engagement": {
+        "likes": 6,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038446891229254704",
+      "published_at": "2026-11-25T21:00:06Z",
+      "text": "오픈AI 연구원 노암 브라운(Noam Brown)은 AI가 스스로 차세대 모델을 개선하는 ‘재귀적 자기 개선(RSI)’이 인류 기술 발전의 거대한 순환 고리와 본질적으로 같다고 진단했습니다.\n\n과거 인류가 망원경을 만들어 우주를 더 깊이 탐구하고, 펀치카드에서 컴파일러로, 다시 거대언어모델(LLM)로 발전하며 연구 속도를 가속해 온 과정 자체가 하나의 거대한 RSI 루프라는 설명입니다.\n실제로 오픈AI 역시 수년 전부터 기존 LLM을 활용해 차세대 모델의 사전학습 데이터 품질을 검증하는 등 이미 자기 개선 방식을 적용해 왔습니다.\n\n기술이 발전할 때마다 인간의 역할은 ‘모델이 아직 잘하지 못하는 고르지 못한(jagged) 영역’으로 이동해 왔습니다.\n\n브라운은 오늘날의 변화 역시 본질은 과거와 같지만, “기술의 범용성과 변화가 일어나는 압도적인 속도라는 두 가지 측면에서 결정적인 차이가 있다”고 강조했습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgLcg0MABQw",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQPsAhNAV9TAltWxzXunEl_jcWW1IuVJ5bt5xoXUL-bWnwrBwRblWOQ1lm5FNAdr-fEQW0pLdV-kMP3R61uwkz7JEX-Xmb83Ya2MfAo.mp4?_nc_cat=111&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=b8RVhEucvqwQ7kNvwEkJdpI&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTg0NjEyMTMxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjoxLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6OTksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=1a15a2ecec5b46c7&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC84RjdCMTg1NTZGQ0E0RDRGOURFQkY1MEI0ODAwN0RGRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzE3OTg2Q0MwNzg4RDQ2NDc5NkE3NjYzNzQ1MjI4OEI3X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwOIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRJjb3B5X3NhbXBsZV9ncm91cHMBMRUAACaA6OPxqeD4PxUCKAJDMywXQFjTpeNT988YEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_map=urlgen_bucketless&_nc_zt=28&_nc_enc=UmSB8UrfGIF20isJyvJYj9d7xXekRXMhRYIkvvXMz8G-hhqLG66BLgeDN0Z9jLCpkY6djQEv8EnzMeZxF3-ReFutrgkL2bmljwySVN_51m55hNTNM9rZ-tVtZr8&oh=00_AQQxDegPbfrnnJeLReEn-OiBCZZBJCQnaBHQYow2_JVAzQ&oe=6B094D5D"
+      ],
+      "engagement": {
+        "likes": 10,
+        "replies": 1,
+        "reposts": 0,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038416965793808496",
+      "published_at": "2026-11-25T20:00:39Z",
+      "text": "초지능 AI가 인간보다 판단을 잘한다면, 결정권도 넘겨야 할까요?\n\nAxios에 따르면 앤트로픽 내부 일부 직원들은 초지능 AI에 의사결정 권한을 넘기는 데 긍정적이라고 합니다.\n\n다리오 아모데이도 생명과 안전이 걸린 상황에서는 AI에 판단을 맡기는 편이 낫다고 언급했는데요.\n\n반면 Meta의 알렉산더 왕과 오픈AI의 샘 알트만은 인간이 통제권을 유지해야 한다고 강조했습니다.\n\nAI가 얼마나 똑똑해지느냐보다, 최종 결정권을 누가 갖느냐가 더 큰 논쟁이 될 수 있습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgLVtV9DQBw",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/v/t51.82787-15/928226050_17998613796112832_2814960090156647178_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=109&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODQxNjk2NTc5MzgwODQ5Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTY2NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=hwwmEltKLuAQ7kNvwFXXylC&_nc_oc=AdpSPF4VkrIZUdMnIsVocWJDPuwA7ohPjSCOriEAI7n27EmCkIzI4UCY8eFDm5qJ7XA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQSFi-H4w8sKhNj-zT9AH15LtCxNs0WwFHB12BzklpPTuA&oe=6B0D31CD"
+      ],
+      "engagement": {
+        "likes": 5,
+        "replies": 2,
+        "reposts": 0,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038386709812103343",
+      "published_at": "2026-11-25T19:00:32Z",
+      "text": "중국 AI 기업들이 모델 개발을 포기하는 상황까지 고민하고 있다고 합니다.\n\nThe Information에 따르면 DeepSeek 연구진은 미국과 중국의 AI 기술 격차가 현재 3~6개월에서 최대 9개월까지 벌어질 수 있다고 예상했는데요.\n\n미국의 첨단 반도체 수출 규제에 더해 오픈AI와 앤트로픽이 증류 방지 조치를 강화하고 있기 때문입니다.\n\n이제 AI 경쟁에서는 반도체뿐 아니라 경쟁 모델에 접근할 수 있는지도 중요한 변수가 되고 있습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgLO1D4Akiv",
+      "media": [
+        "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/931333656_17998614078112832_5361479787257229711_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODM4NjcwOTgxMjEwMzM0Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuNDQyLnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=6lZFY3TEHMkQ7kNvwHIyd2j&_nc_oc=AdoRUNyvQ0S8YYUCjVleZcgt9wJW85LKepp3-vB_qs_Nj4scKXgQ60coff_nQgUOBFc&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQR--Ns5oFjEZILa2ORly0_LeNkKyo1ou5MW1RFPij_tYQ&oe=6B0D3E38"
+      ],
+      "engagement": {
+        "likes": 29,
+        "replies": 2,
+        "reposts": 1,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038356408156024907",
+      "published_at": "2026-11-25T18:00:20Z",
+      "text": "비전이 있나요? 야망이 있나요?\n\n16살 고등학생 Cinna Davis가 GPT-6.2 Astra를 활용해 Caiolo–Ferroni–Hoster 추측의 반례를 찾았다고 발표했습니다.\n\n53자리 음수 두 개로 기존 수학 논문의 추측이 틀렸다고 주장한 건데요. 검증 코드도 GitHub에 공개했습니다.\n\n심지어 100개 이상의 추측을 해결했다고 합니다.\n\n아직 독립 검증은 필요하지만, AI를 활용해 전문 연구자들의 문제에 도전하는 진입장벽이 낮아지고 있습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgLH8HQj_BL",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/930587720_17998613742112832_1380380036122691344_n.jpg?stp=cp6_dst-jpg_e35_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODM1NjQwODE1NjAyNDkwNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE2NC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=yFN84tVFEUQQ7kNvwGwnZrf&_nc_oc=AdoMEAY027QmszOCyAL0LKHFg8HOgH3MRVA9i6g3KvMmkmiptrJ4I-kY_-EarTpVwTg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQQKi3WLk_plTy304-FVNnQthmklcSPID58OZPms799gHw&oe=6B0D2F9D"
+      ],
+      "engagement": {
+        "likes": 24,
+        "replies": 1,
+        "reposts": 3,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038326382736026948",
+      "published_at": "2026-11-25T17:00:40Z",
+      "text": "Tripo가 Tripo H3.5 Preview를 공개했습니다.\n\n참고 이미지의 형태를 더 정확하게 반영하고, 물체의 경계와 세부 구조를 깔끔하게 표현하도록 개선됐는데요.\n\n특히 3D 프린팅과 게임용 3D 모델 제작에 초점을 맞췄습니다.\n\nTripo Studio에서는 3D 모델 생성부터 출력 가능 여부 확인, 문제 자동 수정까지 진행할 수 있습니다.\n\n현재 누구나 Tripo Studio에서 체험할 수 있습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgLBHL6Ea1E",
+      "media": [
+        "https://scontent-iad3-2.cdninstagram.com/o1/v/t16/f2/m84/AQMjnMJRbIahCSTws749pTV14LbenHej726ZrLs2AzlwnJSaU0PxJLrT7lveH2gJsaYDsaMw9mxKpSIbDrTKxBORuDONKKJNfSTmcqg.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent-iad3-2.cdninstagram.com&_nc_ohc=yPEV6RemwqgQ7kNvwGY88Wi&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy4xMjgwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc5OTg2MTMzMzcxMTI4MzIsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDE2NCwiZHVyYXRpb25fcyI6MzksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=f795efd417fe0838&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC8yRjg4OEUxRkVBOEY0OTc2QUQ4OEYyMjMwMTJDODFDM192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzE1RDQwNDBCNDQyRDRDQUI5ODEzMzk0REYzOUZBQjlEX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwOIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRJjb3B5X3NhbXBsZV9ncm91cHMBMRUAACaAhMSml-n4PxUCKAJDMywXQEPZmZmZmZoYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_map=urlgen_bucketless&_nc_zt=28&_nc_enc=UoJGtXrcbMLe9lJAvhEtrqhJaFZzAXh5ZVKdkZh0IfHzZ_DE4ia3ZaiTsMuPJvHEzmaBoLvXs3b3rTebzaZiW7G_5Gy_LRpZHLR0mrgtf4FSmITE1CZCyKefUyc&oh=00_AQSM-LetWolRMI35j0KP1tNDcbhJz6p4yQR8pvXU0Mz3hA&oe=6B092959"
+      ],
+      "engagement": {
+        "likes": 25,
+        "replies": 0,
+        "reposts": 1,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038296002652902941",
+      "published_at": "2026-11-25T16:00:19Z",
+      "text": "전 xAI 창립 멤버들이 설립한 Epochal이 AI를 과거로 보내는 Time Portal을 공개했습니다.\n\n지난 30년간의 웹페이지 수조 개를 활용해 AI가 특정 날짜의 인터넷만 탐색하도록 하는 방식인데요.\n\n예를 들어 AI를 2007년으로 보내 당시 정보만으로 금융위기를 예측하게 하고, 실제 결과와 비교할 수 있습니다.\n\nAI가 이미 정답을 아는 상태에서 문제를 푸는 것이 아니라, 미래를 모르는 상태에서 예측 능력을 평가하고 개선하는 것입니다.\n\n현재 무료 체험판이 공개됐습니다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgK6NGQAZYd",
+      "media": [
+        "https://scontent-iad3-1.cdninstagram.com/o1/v/t16/f2/m84/AQNllS4s97n3EKljVzF1lRwAHPzOW57TFF0-kw3A6GlqIrbDIAQpnexyhjrsE_MNaZs2nvJFoq4Y_VAalKXMolz3OWMmyPpy980CUFI.mp4?_nc_cat=106&_nc_sid=5e9851&_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_ohc=7JBV5nTUKBQQ7kNvwHwD0yx&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uRkVFRC5DMy45NDguZGFzaF9iYXNlbGluZV8xX3YxIiwieHB2X2Fzc2V0X2lkIjoxNzk5ODUxMzQ4ODExMjgzMiwiYXNzZXRfYWdlX2RheXMiOjAsInZpX3VzZWNhc2VfaWQiOjEwMTY0LCJkdXJhdGlvbl9zIjozMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=39c2584e7a95051b&_nc_vs=HBksFQIYTGlnX2JhY2tmaWxsX3RpbWVsaW5lX3ZvZC81RTJCNzA4MUY1ODY0MzdCOUQ3QTU4Q0M5QjMxRDc0OF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzZEQzNDM0YwQUZENTRDNDY5QzBDNTQwREQ4RUFGQzk0X2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwOIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRJjb3B5X3NhbXBsZV9ncm91cHMBMRUAACaAs42vr-P4PxUCKAJDMywXQECQAAAAAAAYEmRhc2hfYmFzZWxpbmVfMV92MREAdeoHZeieAQA&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_map=urlgen_bucketless&_nc_zt=28&oh=00_AQSOz2NUYNpRoJ63GJSsx-OrXyFSDG3VW9kFZZRlis4xeg&oe=6B0948B2"
+      ],
+      "engagement": {
+        "likes": 56,
+        "replies": 1,
+        "reposts": 11,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038286980180526141",
+      "published_at": "2026-11-25T15:42:23Z",
+      "text": "RSA 암호체계가 뚫렸을 수도 있다는 소문이 들려온다.",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgK4JzavsQ9",
+      "media": null,
+      "engagement": {
+        "likes": 149,
+        "replies": 34,
+        "reposts": 10,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038272208610471124",
+      "published_at": "2026-11-25T15:13:02Z",
+      "text": "우리가 쓰는 암호는 \"아직 아무도 빨리 못 푼다\"는 믿음 위에 있습니다.\n\n그 믿음을 이번 주 AI가 수학 정리로 바꾸기 시작했습니다.\n\n구글 AI 에이전트 Cogentic이 Gemini 4로 쓴 소인수분해와 이산로그, 나시 균형 논문 6편을 정리했습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgK0y2UjyzU",
+      "media": null,
+      "engagement": {
+        "likes": 27,
+        "replies": 12,
+        "reposts": 3,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038250679541661394",
+      "published_at": "2026-11-25T14:30:16Z",
+      "text": "🚨 와.. 대학에서 배운 알고리즘 교과서 한 장이 바뀌게 생겼습니다.\n\n컴퓨터 과학자들이 언젠가 2가 될 거라고 믿어 온 숫자가 2.25에서 멈춘다는 111쪽짜리 증명을 오픈AI의 미공개 모델이 내놨는데요.\n\n행렬 곱셈이 왜 AI의 심장이고, 이 한계가 왜 중요한지 쉽게 정리했습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgKv5j0D37S",
+      "media": [
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/929763055_17998577046112832_114603407912237774_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODI1MDY3OTU0MTY2MTM5NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTI1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=-20bZ5rT6xIQ7kNvwHDWCDu&_nc_oc=AdogSdi8nU2L_qkavHZm1mVN6wnLv7gU8NdTNZ0sJbWn4kFB2anExJaOTBpZu8rVnHQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQS5qr9dPMDXgPltbtcnbDdWFHrIUftoerW7X_qvQkvPhQ&oe=6B0D3487"
+      ],
+      "engagement": {
+        "likes": 143,
+        "replies": 21,
+        "reposts": 19,
+        "quotes": 0
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038229346262952910",
+      "published_at": "2026-11-25T13:47:53Z",
+      "text": "학벌이 필요 없어진다고 말하는 사람을 경계하세요.\n\n당신은 스스로 발가벗고 시험장에 들어가게 될 것입니다.🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgKrDHpj6vO",
+      "media": null,
+      "engagement": {
+        "likes": 292,
+        "replies": 59,
+        "reposts": 43,
+        "quotes": 3
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
+      "post_id": "4038205322162037286",
+      "published_at": "2026-11-25T13:00:09Z",
+      "text": "사이버 공격이 늘수록 보안주가 오를 거라는 생각을 저는 다르게 보고 있습니다 🧵",
+      "permalink": "https://www.threads.com/@choi.openai/post/DgKllhdj2Im",
+      "media": null,
+      "engagement": {
+        "likes": 141,
+        "replies": 27,
+        "reposts": 19,
+        "quotes": 1
+      },
+      "first_seen_at": "2026-11-25T22:22:10.462454Z",
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
+    },
+    {
       "post_id": "4038160025885024845",
       "published_at": "2026-11-25T11:30:09Z",
       "text": "내년에 영상업계 피토나올 수도 있겠는데..\n\nAI 모델의 코딩 성능이 좋아지면서 영상 생성 AI 없이도 애니메이션부터 음악, 음성까지 코드만으로 구현하고 있습니다.\n\n지금의 발전 속도라면 내년에는 완성도 높은 영상 제작까지 가능해질 것 같습니다.\n\nClaude Opus 5.6의 놀라운 영상 구현 사례들을 정리했습니다🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DgKbSYBDyJN",
       "media": null,
       "engagement": {
-        "likes": 98,
-        "replies": 17,
-        "reposts": 22,
-        "quotes": 1
+        "likes": 262,
+        "replies": 30,
+        "reposts": 49,
+        "quotes": 4
       },
       "first_seen_at": "2026-11-25T12:32:22.775453Z",
-      "last_seen_at": "2026-11-25T12:32:22.775453Z"
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
     },
     {
       "post_id": "4038122810169604882",
@@ -35,13 +231,13 @@
       "permalink": "https://www.threads.com/@choi.openai/post/DgKS00Lj7sS",
       "media": null,
       "engagement": {
-        "likes": 36,
-        "replies": 9,
-        "reposts": 0,
+        "likes": 56,
+        "replies": 11,
+        "reposts": 1,
         "quotes": 0
       },
       "first_seen_at": "2026-11-25T12:32:22.775453Z",
-      "last_seen_at": "2026-11-25T12:32:22.775453Z"
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
     },
     {
       "post_id": "4038100035576992810",
@@ -49,16 +245,16 @@
       "text": "정말 읽을 가치가 아주 높은 글입니다.\n\n스킬을 많이 깔수록 AI가 똑똑해진다고 믿었다면, 지금 당신의 AI는 설명서를 읽느라 돈을 쓰고 있습니다.\n\n저도 9월에 여러 스킬과 커넥터가 병목 같아서 다 걷어내는 중이라고 썼는데, 우버가 같은 이야기를 실험 결과로 내놨는데요.\n\n스킬을 5,300개나 만든 우버가 전 직원에게 기본으로 켜 둔 스킬은 약 100개였고, 시험한 11개 중 4개는 모델이 이미 할 줄 아는 일이었습니다.\n\n한 달에 스킬을 100만 번 실행하는 우버가 스킬을 평가하고 지우고 고치는 방법을 공개한 글을 정리했습니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DgKNpZsDxQq",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/927679355_17998558854112832_6382735460244752670_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODEwMDAzNTU3Njk5MjgxMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTU3Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=kBLtJ-UAeAsQ7kNvwGMm3Ng&_nc_oc=AdoJ9jBweLUiCAV3jEckbWcFMyI8HOHLPJ37CPE8SvmGSCU6bUEIzQPLCRqg4m3c_Tw&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=4y4uDyK-tCiEkESqbwL74A&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQQrDdwcp66khSEBJS4r3gwNqv_BZFazIMD_uizInI4lbA&oe=6B0CBD75"
+        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/927679355_17998558854112832_6382735460244752670_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODEwMDAzNTU3Njk5MjgxMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTU3Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=kBLtJ-UAeAsQ7kNvwHAWGEa&_nc_oc=AdpTxqBzqpoVBfS7LOUgyysB72lFYAPvfTcVEwV85LN0VOcf6-iro1oECC20AS7PeAE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=N4XaKnPd7ORmdKplK2WiVw&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQSzVbPdkTEr7FEk-3a60NaYYARSkqiridhoybkHYIHqzw&oe=6B0D2DF5"
       ],
       "engagement": {
-        "likes": 145,
+        "likes": 247,
         "replies": 17,
-        "reposts": 26,
-        "quotes": 2
+        "reposts": 52,
+        "quotes": 3
       },
       "first_seen_at": "2026-11-25T12:32:22.775453Z",
-      "last_seen_at": "2026-11-25T12:32:22.775453Z"
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
     },
     {
       "post_id": "4038054432453140099",
@@ -66,16 +262,16 @@
       "text": "신약용 AI와 당신이 쓰는 범용 AI는 다른 세계라고 알고 계셨다면, 그 경계가 이번 주에 바뀌었습니다.\n\n오픈AI가 GPT-6 계열에게 전용 단백질 모델을 쓰지 못하게 막고 추론과 파이썬 코드만 주었는데, 도킹 예측에서 전용 모델 DiffDock-L의 50%를 두 배 가까이 앞선 96%가 나왔는데요.\n\n실험실에서도 다섯 표적 모두에서 결합하는 단백질이 나왔습니다.\n\n범용 모델이 전문 모델의 자리를 어디까지 가져갔는지 보여 준 183쪽짜리 논문을 정리했습니다 🧵",
       "permalink": "https://www.threads.com/@choi.openai/post/DgKDRyeD56D",
       "media": [
-        "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/930874713_17998507470112832_2968562898823991730_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODA1NDQzMjQ1MzE0MDA5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=2eD34kwCl6AQ7kNvwGCYfNX&_nc_oc=Adp6nZ6irQDD8eJcWagYNzdbv4baZJJme807rfRyAENE2Xu8I0a6xCabMiD77TXWHUk&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_gid=4y4uDyK-tCiEkESqbwL74A&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQRv5qNE3NMR0y6AleW03db2LaT_4I6SACRrMgLrt0dYxg&oe=6B0CB3C3"
+        "https://instagram.fsgn5-21.fna.fbcdn.net/v/t51.82787-15/930874713_17998507470112832_2968562898823991730_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=NDAzODA1NDQzMjQ1MzE0MDA5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=2eD34kwCl6AQ7kNvwHuck08&_nc_oc=AdpOMBo9Ek3EgnwYNltDCACY7fbPazryKfyjDXiNcYPv5vzUXYDpWlHOBNDqN5_dxjk&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fsgn5-21.fna&_nc_gid=crDXu9cApEyRF_XCjvf4EQ&_nc_ss=7a30f&_nc_ct=RQosPBUIFQIlBAAAAA&oh=00_AQSthl8bEQZHGZWEzRqSDkIDl8I1bPbJagljiSvpOiDLSw&oe=6B0D2443"
       ],
       "engagement": {
-        "likes": 40,
-        "replies": 18,
-        "reposts": 11,
-        "quotes": 2
+        "likes": null,
+        "replies": null,
+        "reposts": null,
+        "quotes": null
       },
       "first_seen_at": "2026-11-25T12:32:22.775453Z",
-      "last_seen_at": "2026-11-25T12:32:22.775453Z"
+      "last_seen_at": "2026-11-25T22:22:10.462454Z"
     },
     {
       "post_id": "4038009044648157857",
@@ -17143,6 +17339,6 @@
   "watchdog": {
     "status": "ok",
     "recovered_to_archive_count": 0,
-    "backup_only_current_count": 0
+    "backup_only_current_count": 1
   }
 }
