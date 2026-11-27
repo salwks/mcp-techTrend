@@ -1,0 +1,346 @@
+{
+  "date": "2026-11-27",
+  "items_count": 17,
+  "items": [
+    {
+      "id": "hf:2611.34051",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Stable Gated DeltaNet-2: Understanding and Mitigating Recurrent State Instability",
+      "url": "https://huggingface.co/papers/2611.34051",
+      "arxiv_url": "https://arxiv.org/abs/2611.34051",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Linear attention offers an efficient solution for long-sequence modeling via linear complexity and fixed-size recurrent states. Gated DeltaNet-2 (GDN-2) introduces independent channel-wise control over erasure and writing, enhancing state-update expressiveness and in-context retrieval, yet it suffers from training failures during long-context training. We trace these failures to the asymmetry between reading and modification directions during erasure, which yields non-normal erase operators whose directional gains accumulate across tokens, triggering exponential state growth even without new writes. To resolve this, we propose , employing symmetric erasure to ensure non-expansive state propagation and decay-regulated residual writing to preserve writing flexibility. Theoretically, we establish an O(T) upper bound on recurrent state growth while retaining chunkwise parallel computation. Experiments on ~1.6B parameter models show that  achieves stable training alongside improved long-context retrieval. Compared to GDN-2, it boosts the 128K average RULER score by 6.80 points in the recurrent setting and average accuracy across nine downstream tasks by 0.62 points in the hybrid setting.",
+      "upvotes": 104,
+      "comments": 2,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34232",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "OS-Omni: Benchmarking Generalist Computer-Using Agents on Long-Horizon Workflows Across Platforms",
+      "url": "https://huggingface.co/papers/2611.34232",
+      "arxiv_url": "https://arxiv.org/abs/2611.34232",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Computer-using agents are increasingly expected to complete realistic user goals rather than isolated GUI actions. However, existing benchmarks typically isolate web, mobile, or desktop environments, leaving it unclear whether a single generalist agent can execute long-horizon workflows that span multiple operating systems and persistent application states. We introduce OS-Omni, a live cross-platform benchmark and execution environment for evaluating computer-using agents across Windows, Ubuntu, macOS, iOS, Android, and Web environments. OS-Omni is released in versioned waves of 300 tasks each; this paper focuses on the first release, v1, which contains 48 tasks per platform and 12 cross-platform workflows that pair a desktop with an Android phone. OS-Omni provides reproducible initialization, platform-specific adapters, trajectory logging, and executable final-state evaluators, and includes controlled service-backed applications for workflows involving account, cart, budget, calendar, message, and other persistent state. Human studies show that OS-Omni tasks require 67.54 interaction steps, substantially exceeding OSWorld references of 15.0 steps. On v1, the strongest evaluated agent, Claude Opus 5.5, reaches 68.5% average success, trailing the 77.3% human reference by 8.8 points; the gap is uneven across platforms, with frontier models exceeding humans on Linux but trailing them by more than 25 points on iOS and macOS. These results indicate that current agents remain far from platform-robust, long-horizon computer use, especially when success requires sustained state tracking and durable final-state changes.",
+      "upvotes": 96,
+      "comments": 2,
+      "has_code": true,
+      "project_page": "https://os-copilot.github.io/OS-Omni-Home/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.31619",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "What a Forecasting Leaderboard Can Establish: Resolution Reporting for Zero-Shot Time-Series Models",
+      "url": "https://huggingface.co/papers/2611.31619",
+      "arxiv_url": "https://arxiv.org/abs/2611.31619",
+      "published_at": "2026-11-23T00:00:00Z",
+      "summary": "A foundation model for time series is pretrained once and then asked to forecast series it has never seen, so the evidence for it is its score on held-out datasets. Such datasets are scarce, and a few public leaderboards carry most comparisons, yet none of them states how small a difference its datasets can detect. We call that quantity the resolution of a board and introduce Vernier, a tool that computes it from the files a board already publishes. Vernier also reports which entries a board cannot separate from its leader and whether its order changes when unrelated parties submit. GIFT-Eval resolves 6.8 rank places, and its displayed neighbours sit 0.91 apart. The ten places of its top ten hold fewer than two resolvable steps. fev-bench, Chronos Benchmark II and TIME show the same pattern: their resolution is 3.6 to 19 times the gap between neighbours. With each of its 2,554 series as an independent source, BOOM is the one board that resolves its top ten. Below the resolution the order depends on who else submitted: across four boards, rules that rank against the pool reversed 43 top-ten pairs with neither entry rerun, in one update in seven. Boards also do not record how much history a model receives. On 70 configurations, shortening it raised the error of three of four open models, two of them by 15%. We release Vernier, which runs this report with one command on any leaderboard that publishes per-dataset scores: https://github.com/therealram18/vernier",
+      "upvotes": 37,
+      "comments": 3,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34457",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "ProxyGenBench: Benchmarking Proxy-Guided Video Generation",
+      "url": "https://huggingface.co/papers/2611.34457",
+      "arxiv_url": "https://arxiv.org/abs/2611.34457",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Recent video generators produce realistic videos, yet controlling how scenes unfold remains challenging. Structural proxies, such as animated 3D blockouts, guide generation by specifying scene layout, motion, camera behavior, and event order. However, these coarse inputs leave details unspecified and may contain artifacts that should not be reproduced. Successful proxy-guided generation must therefore Preserve intended structure, Complete missing content and correct proxy artifacts, and Bind text, image, and audio conditions to the right entities and events. We introduce ProxyGenBench to study these interacting requirements, with 312 evaluation cases from 60 scenes across three scene tasks and controlled variations in proxy fidelity, text detail, and multimodal inputs. We evaluate five video generators using verified, case-specific checklists. Experiments show that proxies improve spatiotemporal control, but greater proxy detail can coincide with poorer completion, while strong structural adherence does not ensure correct binding.",
+      "upvotes": 35,
+      "comments": 2,
+      "has_code": true,
+      "project_page": "https://2kxx.github.io/ProxyGenBench/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34290",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "StateWeaver: Multi-Agent Coordination of Story-State Transitions for Long-Horizon Video Generation",
+      "url": "https://huggingface.co/papers/2611.34290",
+      "arxiv_url": "https://arxiv.org/abs/2611.34290",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Modern video foundation models generate high-quality short clips, but preserving long-video consistency and correctly depicting event-driven state changes remain challenging. Existing agentic workflows face these challenges because continual planning and repair accumulate context, while reference updates remain limited. We introduce StateWeaver, which combines Active States and Hierarchical Collaboration to connect review-driven visual reference updates with cross-shot state inheritance. Active States translate state discrepancies identified during review into concrete visual asset requirements that guide reference construction, validation, and regeneration, preserving identity and already-correct content while repairing target attributes. Confirmed generation results are linked to the corresponding asset states, story time, and reference versions for verification and reuse by subsequent shots. Hierarchical Collaboration isolates execution contexts by task, clip, and repair round, and uses hierarchical memory to organize this process across multiple sets. Across multiple benchmarks, StateWeaver outperforms existing methods and produces long videos with sustained cross-shot consistency under predefined and autonomously planned storyboards.",
+      "upvotes": 22,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://ghost233lism.github.io/StateWeaver-page/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34693",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "ShowNow: Fine-Grained Speculative Streaming for Responsive World Models",
+      "url": "https://huggingface.co/papers/2611.34693",
+      "arxiv_url": "https://arxiv.org/abs/2611.34693",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Interactive world models must generate video continuously while responding promptly to user actions. Real-time throughput alone leaves input latency unresolved: coarse generation blocks delay action updates, and generation after input adds work to the response path. We introduce ShowNow, a fine-grained speculative streaming framework that uses computation available during playback to prepare action-conditioned futures before input arrives. Single-latent commitment enables frequent decisions, while configurable preparation covers one to eight actions. We construct a matched multi-future dataset to train alternative continuations from a common state; shared-history tree execution and fused commitment make their preparation efficient. On a single H100, our 5B model sustains 480p generation at 16 fps with eight prepared futures. In ViZDoom, the complete ShowNow deployment reduces median input-to-display latency from 620 to 208 ms relative to the native-block SolarWM-FT deployment. Matched-policy experiments reduce restart empty ticks from 1.56% to 0.09% (94%) and improve on-time responses to action changes. These results establish complementary roles for fine-grained commitment and advance preparation, with measured trade-offs in visual fidelity and long-horizon consistency. ShowNow turns playback-time computation into responsive visual interaction. Project: https://github.com/showlab/ShowNow.",
+      "upvotes": 19,
+      "comments": 2,
+      "has_code": true,
+      "project_page": "https://github.com/showlab/ShowNow",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34852",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "DRBench Pro: A Knowledge-Centric Benchmark for Professional Deep Research Agents",
+      "url": "https://huggingface.co/papers/2611.34852",
+      "arxiv_url": "https://arxiv.org/abs/2611.34852",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Deep research agents gather information from multiple sources and synthesize it into reports on complex, open-ended questions. Existing benchmarks assess report quality along several dimensions, but lack a dedicated knowledge-centric evaluation of which research directions a report covers and how deeply it explores them. We introduce DRBench Pro, a benchmark that makes structured knowledge coverage the primary evaluation target. Our automated pipeline builds local knowledge trees from Wikipedia and uses sampled subgraphs to generate research queries and evidence-grounded rubrics. Each rubric corresponds to a relation in the tree, preserving the structure of the knowledge being evaluated. Agents receive only the research query. This structure allows us to measure breadth across major research directions and depth along related knowledge chains, with their geometric mean giving overall coverage. The benchmark includes 144 cases across 24 domains and 44,102 rubrics. Evaluating 16 deep research agents reveals different strengths in breadth and depth, with the best-performing agent reaching 57.04% overall coverage. Rubric judgments agree closely with human annotations, and agent rankings remain stable across the tested metric configurations.",
+      "upvotes": 16,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://zjureal.com/DRBenchPro/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34813",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Solve Vision with Code: Coding Agents Are Stronger Visual Reasoners Than Video Models",
+      "url": "https://huggingface.co/papers/2611.34813",
+      "arxiv_url": "https://arxiv.org/abs/2611.34813",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Video generation models are increasingly evaluated as visual reasoners: given a first frame and a natural-language prompt, can the model produce the video in which the specified task is carried out? The paradigm is considered advantageous because the reasoning is native to the visual medium, unfolding directly in the frames rather than through language or code. Whether this native route is in fact the more reliable path to visual reasoning has not been tested against a symbolic alternative under the same conditions. We therefore pose the same tasks, with identical inputs, output specification and evaluator, to both media: rather than denoising pixels, a coding agent writes a program that renders the answer video, which an unmodified rule-based evaluator scores. On VBVR-Pro-Bench (Xu et al., 2026), a 500-instance suite spanning five cognitive categories with symbolic ground truth, the agent receives the same first frame and prompt as the video model, with no access to ground truth, metadata or generation models, and one attempt per instance. Three closed-model agents (Codex with gpt-6-astra, Claude Code with Fable 5.1 and Gemini CLI with Gemini 3.1 Pro) score 0.923, 0.894 and 0.893, each more than 0.22 above the strongest video model. Among 23 runnable open-weight models, the best, GLM-5, reaches 0.572, above all video models except the RL-trained one. Together, we show that for tasks whose solutions can be computed from a first frame and a prompt, program synthesis is currently a substantially more reliable route to visual reasoning than video generation. We further distinguish depictive programs, which navigate the image to recover a transferable scheme, from propositional programs, which operate on hard-coded values, revealing how visual reasoning unfolds in agent-written programs and what it implies for its nature of reasoning in general.",
+      "upvotes": 9,
+      "comments": 1,
+      "has_code": false,
+      "project_page": "https://solve-vision-with-code.com/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.32238",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Boundary-Aware Policy Learning for Agent-Orchestrated Robot Manipulation",
+      "url": "https://huggingface.co/papers/2611.32238",
+      "arxiv_url": "https://arxiv.org/abs/2611.32238",
+      "published_at": "2026-11-24T00:00:00Z",
+      "summary": "Agent-orchestrated robot systems combine the general reasoning capability of multimodal agents with the precise physical control of learned visuomotor policies. Yet such systems often fail at the moment of handoff: a policy is reliable only from a limited set of start states, while the agent may invoke it outside this region. We call this region the policy's handoff boundary. Existing whole-task policies typically have handoff boundaries that are narrow and difficult for an agent to characterize, making reliable coordination challenging. We propose Boundary-Aware Policy Learning, which explicitly shapes and then expands the handoff boundary of a visuomotor policy. First, Boundary-Explicit Training fine-tunes the policy on contact segments with diverse start poses, yielding a wide and well-defined boundary that can be communicated to the agent through a simple handoff protocol. Second, Boundary-Expanding Self-Improvement retrains the policy on curated successful system rollouts, extending the boundary toward earlier stages of each task and allowing the agent to hand over sooner with fewer language-model calls. Across RoboTwin 2.0 and RoboDojo, our system outperforms the strongest baseline by over 26 percentage points, reaching 98.4% success in randomized RoboTwin 2.0 scenes, while further reducing its API cost and execution time by 41.3% and 37.5%, respectively. These results suggest that the key to robust agent-policy orchestration lies not only in improving either component individually, but also in explicitly shaping the boundary between them.",
+      "upvotes": 7,
+      "comments": 1,
+      "has_code": false,
+      "project_page": "https://kaipengfang.github.io/bapl-agentic-manip/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.30483",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "When an AI agent makes a mistake in a database, what decides the damage?",
+      "url": "https://huggingface.co/papers/2611.30483",
+      "arxiv_url": "https://arxiv.org/abs/2611.30483",
+      "published_at": "2026-11-23T00:00:00Z",
+      "summary": "AI agents now run statements against production databases, and several of the incidents that followed deleted production data, which came back only through backups or the provider's help. We ask what decides the damage when such an agent makes a mistake: the model, a guard layer in front of the database, or the database engine itself. The study has two preregistered layers. In Layer A, a frozen library of 22 canonical mistakes is applied by script, with no model involved, to four relational engines under five permission arms and two recovery arms, followed by an engine-native recovery drill (792 cells; 874 drill runs including 10-minute repeats). In Layer B, a minimal tool-calling agent driven by six small open-weight models (4B to 12B parameters, plus one 35B mixture-of-experts model with about 3B active, served locally) works on tasks that contain hazards across nine engines: PostgreSQL, MySQL, SQLite, ClickHouse, Apache Cassandra, MongoDB, Valkey, Apache Kafka and OpenSearch (9,468 trials). A secondary run added MariaDB, Redis and Elasticsearch (2,916 trials); each behaved like its closest core engine. Out of the box, the engines differ less in what a mistake destroys than in what they let you undo. Three of the seven preregistered hypotheses met their decision rule: H2 (for one of nine damage classes) and H3 largely by construction of the arms, and H4 only under its original measure. Four did not; one of them (H5) was uninformative, because in its task the agents never found the credential. The post-hoc analyses (S1-S13) are exploratory and uncorrected for multiple comparisons; on PostgreSQL, MySQL, OpenSearch and ClickHouse the preregistered outcome and original-row loss disagree about G1. We report all of them, with every deviation from the preregistration and its timing.",
+      "upvotes": 4,
+      "comments": 2,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34719",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Reading, Not Adapting: Unlocking Frozen Visual Knowledge for AI-Generated Image Detection",
+      "url": "https://huggingface.co/papers/2611.34719",
+      "arxiv_url": "https://arxiv.org/abs/2611.34719",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Generalization to unseen image generators has driven efforts to adapt pretrained visual representations for detection. Yet recent findings show that vision foundation models already encode transferable detection knowledge, while further adaptation can impair generalization. This motivates a shift from backbone adaptation to knowledge readout. Conventional linear probing offers a direct way to read this knowledge but is limited to final-layer RGB features. Multi-cue detectors broaden the evidence base, but their designs introduce other tradeoffs: adaptation may compromise pretrained transferability, heterogeneous encoders complicate feature integration, and late fusion precludes intermediate cross-view interaction. To overcome these limitations, we propose ReMoT, a Mixture-of-Transformers-inspired framework that reads complementary knowledge from spatially aligned RGB and wavelet views within a fully frozen visual foundation. ReMoT employs staged joint attention to enable controlled local and global cross-view interaction, while learnable fusion queries progressively read complementary evidence across Transformer depth without writeback. ReMoT achieves 91.2% average accuracy across eight benchmark groups with 3,074 trainable parameters, attaining the highest overall average among the evaluated methods. These results support structured knowledge readout as a promising alternative to backbone adaptation. Code is available at https://github.com/yunncheng/ReMoT.",
+      "upvotes": 2,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.34782",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Generation as Reverse Encoding",
+      "url": "https://huggingface.co/papers/2611.34782",
+      "arxiv_url": "https://arxiv.org/abs/2611.34782",
+      "published_at": "2026-11-25T00:00:00Z",
+      "summary": "Pretrained visual representations accelerate generative learning by abstracting away appearance and spatial detail. Yet the same abstraction makes the return to pixels far harder, shifting much of the burden onto a larger decoder. We ask why the representation-to-pixel path should be learned independently when the encoder already provides a learned pixel-to-semantics path (the semantic encoding path). We introduce RevFlow, based on the principle of generation as reverse encoding. RevFlow uses intermediate representations of a frozen encoder as successive generative targets, first generating deep semantic representations, then shallow representations that retain appearance and spatial detail, before decoding to pixels. To learn these transitions without training a separate generator for each stage, we develop HyC-DiT, a unified generative model with a standard DiT backbone shared across stages and stage-specific condition injection. We further show that native matching in semantic representation space enables few-step generation. RevFlow accelerates both learning and sampling. On ImageNet 256 times 256, RevFlow reaches 1.96 FID at 690M and 1.74 FID at 1.55B after only 5 training epochs. It also achieves 30.25 dB reconstruction PSNR with an 89M decoder. After a short native-matching adaptation phase, RevFlow-XL achieves 2.85 FID using a single sampling step in each stage. Our code repository is at https://github.com/ChengShiest/RevFlow",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.32993",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Decision-Native Multimodal Clinical Modeling via Anatomical Grounding and Confidence Calibration",
+      "url": "https://huggingface.co/papers/2611.32993",
+      "arxiv_url": "https://arxiv.org/abs/2611.32993",
+      "published_at": "2026-11-24T00:00:00Z",
+      "summary": "Structured clinical decisions from volumetric computed tomography (CT) require anatomically grounded predictions and calibrated confidence estimates. However, existing 3D medical multimodal models often suffer from uncalibrated autoregressive decoding and shortcut reliance on irrelevant anatomical regions. We introduce Radev, a decision-native multimodal model that integrates anatomy-guided visual compression, direct candidate prediction, and counterfactual confidence supervision. To bridge global context with fine-grained slice details, a frozen 3D encoder extracts reusable organ-level features, which are dynamically selected by the query to attend to 2D slice features within predicted anatomical bounds. The resulting compact visual tokens enable the language backbone to estimate candidate probabilities in a single forward pass without autoregressive decoding. We further propose Counterfactual-Calibrated Training (CCT) to compare predictions under intact and intervened organ representations. CCT encourages confidence to decrease when removing target-organ evidence degrades decision quality, while penalizing excessive confidence drops under unrelated-organ removal. To facilitate rigorous evaluation, we construct CT-Verdict, a comprehensive benchmark spanning binary finding presence, multiple-choice questions, and ordinal severity assessment across both in-distribution and external cohorts. Extensive experiments demonstrate that Radev significantly outperforms state-of-the-art methods in both decision accuracy and confidence calibration, while generalizing robustly under distribution shifts. Project page at https://juntaojianggavin.github.io/projects/Radev/",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://juntaojianggavin.github.io/projects/Radev/",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.28849",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Guarding with Judgment: Learning to Intervene for Multimodal Safety",
+      "url": "https://huggingface.co/papers/2611.28849",
+      "arxiv_url": "https://arxiv.org/abs/2611.28849",
+      "published_at": "2026-11-21T00:00:00Z",
+      "summary": "When visual context makes an ordinary request unsafe to answer as asked, a blanket refusal may leave the user's need unresolved. Choosing how to help requires distinguishing an established hazard from a condition that still needs verification, a distinction that binary safety labels leave unspecified. We formulate this decision through four actions: allow, warn, review, and refuse. To ground these decisions in verifiable evidence, we build a corpus of 20,126 training audits and the JudiBench benchmark, connecting each action to diagnostic judgments, source evidence, and controlled context changes. Our guard, JudiAct, separately states what the source establishes, what condition governs the help, and how the rules apply. It then checks these three brief review items against the original inputs to predict diagnostic labels and a handling action. Supervised training learns individual judgments while comparing label assignments across related cases. A second stage swaps one review item at a time, using the resulting audit feedback to refine review generation. On JudiBench, JudiAct improves request and answer Macro-F1 by more than 28 percentage points over its 4B backbone. Across nine public benchmarks, it outperforms state-of-the-art guards on the mean delivered-answer score in both pre-generation and post-generation settings, cutting MM-SafetyBench attack success from 40.78% to 25.30%.",
+      "upvotes": 1,
+      "comments": 1,
+      "has_code": false,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.31516",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "InitFree-SfM: When Initialization-Free Bundle Adjustment meets Learned Structure-from-Motion",
+      "url": "https://huggingface.co/papers/2611.31516",
+      "arxiv_url": "https://arxiv.org/abs/2611.31516",
+      "published_at": "2026-11-23T00:00:00Z",
+      "summary": "Initialization-free bundle adjustment (InitFree BA) aims to jointly recover camera poses and scene structure without requiring an initial global estimate. It is a very challenging problem, especially compared to traditional BA where a good estimation is assumed. While recent methods optimize surrogate Object Space Error (OSE) objectives from random initialization, a low objective value does not necessarily yield an accurate reconstruction, revealing a gap between optimization and reconstruction. We show that existing InitFree BA pipelines struggle to produce accurate 3D reconstructions on modern SfM benchmarks, and demonstrate that incorporating learned metric depth substantially improves their practical feasibility. We introduce InitFree-SfM, a complete initialization-free SfM pipeline combining learned correspondences, metric depth, depth-consistent track construction, and joint metric refinement. Within this framework, we propose a simple depth-augmented OSE (dOSE), which complements the directional constraints of OSE by constraining landmark positions along their viewing rays. Our approach substantially outperforms existing InitFree BA methods and achieves competitive accuracy with established SfM pipelines, including on challenging low-overlap image collections. Importantly, our analysis challenges the prevailing emphasis on surrogate objectives in previous InitFree BA research, revealing that geometric constraints play a central role in accurate reconstruction, while OSE-based optimization provides further improvements.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.31491",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "Pretrained Tabular Features and the Measurement of Financial Proximity",
+      "url": "https://huggingface.co/papers/2611.31491",
+      "arxiv_url": "https://arxiv.org/abs/2611.31491",
+      "published_at": "2026-11-23T00:00:00Z",
+      "summary": "Spatial arbitrage pricing theory (S-APT) extends factor models to allow returns to spill over between connected firms, beyond what common risk factors explain. In recent years, tabular foundation models (TFMs) have matched or outperformed tuned gradient-boosted and bagged ensembles on small and medium-sized tabular benchmarks. Although their predictive performance is strong, these models reveal little about what they have learned, which limits their use in regulated financial applications that require explanation. Internal representations are widely used to probe what neural networks learn and to measure similarity. In this paper, we use the frozen representations of four TFMs as a measure of financial dissimilarity in a spatial asset-pricing model of US equities from 2011 to 2025, and find that their estimated gains over a direct distance between the same disclosures become consistently positive once broad SEC filing data are included. This reframes tabular foundation models from black-box predictors into instruments for measuring economic structure, with immediate applications to peer selection, risk attribution and network-based asset pricing. More broadly, our findings suggest that the internal representations of foundation models, not only their predictions, deserve study as economic objects, opening a new line of research on what pretrained models know about firms.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": null,
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    },
+    {
+      "id": "hf:2611.31155",
+      "source": "hf_daily_papers",
+      "type": "paper",
+      "daily_papers_date": "2026-11-27",
+      "title": "So Many Ways to Multiply 3times3 Matrices: A Large Dataset of Rank-23 Schemes",
+      "url": "https://huggingface.co/papers/2611.31155",
+      "arxiv_url": "https://arxiv.org/abs/2611.31155",
+      "published_at": "2026-11-23T00:00:00Z",
+      "summary": "A publicly available dataset of 62029 rank-23 schemes for 3times3 matrix multiplication is presented. Every scheme in it has its own rank pattern, an invariant formed by the ranks of the factor matrices of a scheme, so all schemes are pairwise inequivalent. The schemes were obtained by a numerical method combining gradient descent with alternating least squares and by flip graph search, and have ternary, integer or rational coefficients. Rank 23 is the best known for this format and is optimal for schemes with integer coefficients, but the number of essentially different schemes of this rank was poorly understood: the existing collections of Heule et al. and Mårtensson et al. contain many schemes that share only a small number of rank patterns (17376 schemes with 387 patterns and 15316 schemes with 568 patterns respectively). The dataset shows that the number of different rank patterns is much larger than previously known.",
+      "upvotes": 0,
+      "comments": 1,
+      "has_code": true,
+      "project_page": "https://github.com/dronperminov/rank23_3x3_dataset",
+      "signals": [
+        "huggingface_daily_papers"
+      ],
+      "first_seen_at": "2026-11-27T12:02:15.889161Z",
+      "last_seen_at": "2026-11-27T12:02:15.889161Z"
+    }
+  ]
+}
